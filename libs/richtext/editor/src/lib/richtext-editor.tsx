@@ -11,10 +11,12 @@ import { Box, css, Paper } from '@mui/material';
 import { BubbleMenu } from './editor/bubble-menu';
 import { editorConfig } from './richtext-editor.config';
 import { DragHandle } from './editor/drag-handle';
+import { CaretLinkPopover } from './editor/link-popover';
 import { FooterActions } from './editor/footer-actions';
 import { RichtextJSONDocument } from '@wepublish/richtext';
 import { forwardRef, useEffect, useMemo } from 'react';
 import { equals } from 'ramda';
+import { useTranslation } from 'react-i18next';
 
 export const RichtextEditorWrapper = styled(Paper)``;
 
@@ -169,14 +171,41 @@ type RichtextEditorProps = {
   disabled?: boolean;
   autofocus?: boolean;
   onChange?: (values: { json: RichtextJSONDocument; html: string }) => void;
+  'aria-label'?: string;
+  'aria-labelledby'?: string;
 };
 
+const accessibleNameAttributes = (
+  ariaLabel: string | undefined,
+  ariaLabelledBy: string | undefined
+) => ({
+  'aria-multiline': 'true',
+  ...(ariaLabel ? { 'aria-label': ariaLabel } : {}),
+  ...(ariaLabelledBy ? { 'aria-labelledby': ariaLabelledBy } : {}),
+});
+
 export const RichtextEditor = forwardRef<HTMLDivElement, RichtextEditorProps>(
-  ({ defaultValue, value, onChange, disabled, autofocus }, ref) => {
+  (
+    {
+      defaultValue,
+      value,
+      onChange,
+      disabled,
+      autofocus,
+      'aria-label': ariaLabel,
+      'aria-labelledby': ariaLabelledBy,
+    },
+    ref
+  ) => {
+    const { t } = useTranslation();
     const editor = useEditor({
       ...editorConfig,
+      editorProps: {
+        ...editorConfig.editorProps,
+        attributes: accessibleNameAttributes(ariaLabel, ariaLabelledBy),
+      },
       content: null,
-      autofocus,
+      autofocus: autofocus ?? false,
       editable: !disabled,
       onUpdate: arg => {
         onChange?.({
@@ -195,6 +224,19 @@ export const RichtextEditor = forwardRef<HTMLDivElement, RichtextEditorProps>(
 
       editor.setEditable(!disabled, false);
     }, [editorReady, disabled, editor]);
+
+    useEffect(() => {
+      if (!editorReady) {
+        return;
+      }
+
+      editor.setOptions({
+        editorProps: {
+          ...editor.options.editorProps,
+          attributes: accessibleNameAttributes(ariaLabel, ariaLabelledBy),
+        },
+      });
+    }, [editorReady, editor, ariaLabel, ariaLabelledBy]);
 
     useEffect(() => {
       if (editorReady && autofocus) {
@@ -223,6 +265,8 @@ export const RichtextEditor = forwardRef<HTMLDivElement, RichtextEditorProps>(
         >
           {editorReady && (
             <Box
+              role="toolbar"
+              aria-label={t('richtext.menuBar.label')}
               sx={{
                 display: 'flex',
                 flexWrap: 'wrap',
@@ -231,6 +275,12 @@ export const RichtextEditor = forwardRef<HTMLDivElement, RichtextEditorProps>(
                 p: 1,
                 borderBottom: 1,
                 borderColor: 'divider',
+                position: 'sticky',
+                top: 'var(--wep-sticky-top, 0px)',
+                zIndex: 2,
+                bgcolor: 'background.paper',
+                borderTopLeftRadius: 'inherit',
+                borderTopRightRadius: 'inherit',
               }}
             >
               <MenuBar />
@@ -238,6 +288,7 @@ export const RichtextEditor = forwardRef<HTMLDivElement, RichtextEditorProps>(
           )}
 
           {editorReady && <BubbleMenu />}
+          {editorReady && <CaretLinkPopover />}
           {editorReady && <DragHandle />}
 
           <Editor

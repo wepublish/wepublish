@@ -3,24 +3,22 @@ static/
 .nx/
 .next/
 
-# GraphQL codegen output (codegen.yml and its afterAllFileWrite hook
-# tools/generateApiIndex.js). Regenerate it, never format it: the pre-commit
-# hook (pretty-quick --staged) would rewrite it, and every later
+# GraphQL codegen output (codegen.yml). Regenerate it, never format it: the
+# pre-commit hook (pretty-quick --staged) would rewrite it, and every later
 # `pnpm run generate-api` would then show a diff of the whole file.
 libs/editor/api/src/lib/gql/
 libs/editor/api/src/lib/schema-types.ts
 libs/editor/api/src/lib/possible-types.ts
-libs/editor/api/src/index.ts
 libs/website/api/src/lib/gql/
 libs/website/api/src/lib/schema-types.ts
 libs/website/api/src/lib/possible-types.ts
-libs/website/api/src/index.ts
 libs/peering/api/src/lib/remote/schema.ts
 libs/peering/api/src/lib/remote/graphql.ts
-libs/testing/src/graphql/schema-public.ts
-libs/testing/src/graphql/graphql-public.ts
-
-libs/api/__tests__/api/private/index.ts
-libs/api/__tests__/api/public/index.ts
 
 apps/**/*/next-env.d.ts
+
+# TanStack Router's generated route tree. The plugin rewrites it on every dev
+# start and build, unformatted; the pre-commit hook would reformat it right
+# back, so the file shows up modified after every single run. Its own header
+# says not to touch it ("exclude this file from your linter and/or formatter").
+apps/*/src/routeTree.gen.ts

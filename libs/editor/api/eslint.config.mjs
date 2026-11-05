@@ -21,7 +21,4 @@ export default [
     // Override or add rules here
     rules: {},
   },
-  {
-    ignores: ['lib/graphql.ts'],
-  },
 ];

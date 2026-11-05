@@ -4,19 +4,20 @@ import {
   Badge,
   Box,
   Button,
+  Checkbox,
   Drawer,
   FormControl,
   FormControlLabel,
+  FormGroup,
   FormLabel,
   IconButton,
   InputAdornment,
-  Checkbox,
-  FormGroup,
   Stack,
   Tab,
   Tabs,
   TextField,
 } from '@mui/material';
+import { visuallyHidden } from '@mui/utils';
 import {
   CommentItemType,
   FullAuthorFragment,
@@ -32,12 +33,13 @@ import {
   CanPublishArticle,
 } from '@wepublish/permissions';
 import { slugify } from '@wepublish/utils';
-import { useMemo, useState } from 'react';
+import { useId, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import {
   MdAutoFixHigh,
   MdComment,
   MdListAlt,
+  MdNoteAdd,
   MdSettings,
   MdShare,
   MdTrackChanges,
@@ -78,6 +80,7 @@ import { SeoBlockContext } from './seoBlockContext';
 import { getSeoPreviewData, SeoContentType } from './seoPreviewData';
 import { SocialPreviews } from './seoPreviews';
 import { SeoTab } from './seoTab';
+import { useTabPanel } from './useTabPanel';
 
 const ValueInput = styled(TextField)`
   width: 60%;
@@ -85,12 +88,13 @@ const ValueInput = styled(TextField)`
 
 const KeyInput = styled(TextField)`
   width: 40%;
-  margin-right: 8px;
 `;
 
 const FlexRow = styled.div`
   display: flex;
   flex-direction: row;
+  align-items: center;
+  gap: 8px;
 `;
 
 const Stats = styled.div`
@@ -100,8 +104,6 @@ const Stats = styled.div`
 
 const PropertyFlag = styled('div')`
   flex-shrink: 0;
-  padding-top: 6px;
-  padding-left: 8px;
   white-space: nowrap;
 `;
 
@@ -148,10 +150,12 @@ export interface ArticleMetadataPanelProps {
   peerId: string | null | undefined;
   value: ArticleMetadata;
   infoData: InfoData;
+  isTemplate?: boolean;
   seoContext?: SeoBlockContext;
 
   onSave?(): void;
   onClose?(): void;
+  onCreateTemplate?(): void;
   onChange?(value: ArticleMetadata): void;
 }
 
@@ -160,9 +164,11 @@ function ArticleMetadataPanel({
   peerId,
   value,
   infoData,
+  isTemplate,
   seoContext,
   onSave,
   onClose,
+  onCreateTemplate,
   onChange,
 }: ArticleMetadataPanelProps) {
   const {
@@ -193,6 +199,10 @@ function ArticleMetadataPanel({
   } = value;
 
   const [activeKey, setActiveKey] = useState(MetaDataType.General);
+  const { tabProps, panelProps } = useTabPanel(activeKey);
+  const hasTrackingError = !!trackingPixels?.find(
+    trackingPixel => !!trackingPixel?.error
+  );
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
@@ -208,6 +218,7 @@ function ArticleMetadataPanel({
   );
 
   const { t } = useTranslation();
+  const tagsLabelId = useId();
 
   const isAuthorized = useAuthorisation(CanCreateArticle.id);
 
@@ -341,18 +352,14 @@ function ArticleMetadataPanel({
               fullWidth
             />
 
-            <FormControl fullWidth>
-              <FormLabel>
-                {t('articleEditor.panels.socialMediaAuthors')}
-              </FormLabel>
-              <AuthorCheckPicker
-                disabled={!isAuthorized}
-                list={socialMediaAuthors}
-                onChange={authors =>
-                  onChange?.({ ...value, socialMediaAuthors: authors })
-                }
-              />
-            </FormControl>
+            <AuthorCheckPicker
+              label={t('articleEditor.panels.socialMediaAuthors')}
+              disabled={!isAuthorized}
+              list={socialMediaAuthors}
+              onChange={authors =>
+                onChange?.({ ...value, socialMediaAuthors: authors })
+              }
+            />
 
             <SocialPreviews
               data={getSeoPreviewData(
@@ -478,60 +485,64 @@ function ArticleMetadataPanel({
               fullWidth
             />
 
-            <TextField
-              id="articleSlug"
-              name="slug"
-              label={
-                <>
-                  {t('articleEditor.panels.slug')}{' '}
-                  <InfoTooltip text={t('articleEditor.panels.slugInfo')} />
-                </>
-              }
-              value={slug}
-              onChange={event =>
-                onChange?.({ ...value, slug: event.target.value })
-              }
-              onBlur={() =>
-                onChange?.({ ...value, slug: slug ? slugify(slug) : null })
-              }
-              helperText={
-                <>
-                  {t('articleEditor.panels.dontChangeSlug')}{' '}
-                  <a
-                    href="https://wepublish.ch/just-another-page-2/"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    {t('articleEditor.panels.slugGuide')}
-                  </a>
-                </>
-              }
-              slotProps={{
-                input: {
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButtonTooltip
-                        caption={t('articleEditor.panels.slugifySeoTitle')}
-                      >
-                        <IconButton
-                          aria-label={t('articleEditor.panels.slugifySeoTitle')}
-                          onClick={() => {
-                            onChange?.({
-                              ...value,
-                              title,
-                              slug: slugify(seoTitle),
-                            });
-                          }}
+            {!isTemplate && (
+              <TextField
+                id="articleSlug"
+                name="slug"
+                label={
+                  <>
+                    {t('articleEditor.panels.slug')}{' '}
+                    <InfoTooltip text={t('articleEditor.panels.slugInfo')} />
+                  </>
+                }
+                value={slug}
+                onChange={event =>
+                  onChange?.({ ...value, slug: event.target.value })
+                }
+                onBlur={() =>
+                  onChange?.({ ...value, slug: slug ? slugify(slug) : null })
+                }
+                helperText={
+                  <>
+                    {t('articleEditor.panels.dontChangeSlug')}{' '}
+                    <a
+                      href="https://wepublish.ch/just-another-page-2/"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {t('articleEditor.panels.slugGuide')}
+                    </a>
+                  </>
+                }
+                slotProps={{
+                  input: {
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButtonTooltip
+                          caption={t('articleEditor.panels.slugifySeoTitle')}
                         >
-                          <MdAutoFixHigh />
-                        </IconButton>
-                      </IconButtonTooltip>
-                    </InputAdornment>
-                  ),
-                },
-              }}
-              fullWidth
-            />
+                          <IconButton
+                            aria-label={t(
+                              'articleEditor.panels.slugifySeoTitle'
+                            )}
+                            onClick={() => {
+                              onChange?.({
+                                ...value,
+                                title,
+                                slug: slugify(seoTitle),
+                              });
+                            }}
+                          >
+                            <MdAutoFixHigh />
+                          </IconButton>
+                        </IconButtonTooltip>
+                      </InputAdornment>
+                    ),
+                  },
+                }}
+                fullWidth
+              />
+            )}
 
             <TextField
               id="articleCanonicalUrl"
@@ -585,8 +596,11 @@ function ArticleMetadataPanel({
             </FormSectionTitle>
 
             <FormControl fullWidth>
-              <FormLabel>{t('articleEditor.panels.tags')}</FormLabel>
+              <FormLabel id={tagsLabelId}>
+                {t('articleEditor.panels.tags')}
+              </FormLabel>
               <SelectTags
+                aria-labelledby={tagsLabelId}
                 defaultTags={defaultTags}
                 disabled={!isAuthorized}
                 selectedTags={tags}
@@ -687,29 +701,53 @@ function ArticleMetadataPanel({
               )}
             </FormGroup>
 
-            <FormSectionTitle>{t('metadataSections.stats')}</FormSectionTitle>
+            {!isTemplate && (
+              <>
+                <FormSectionTitle>
+                  {t('metadataSections.stats')}
+                </FormSectionTitle>
 
-            <Stats>
-              {t('articleEditor.panels.totalCharCount', {
-                totalCharCount: infoData.charCount,
-              })}
-            </Stats>
+                <Stats>
+                  {t('articleEditor.panels.totalCharCount', {
+                    totalCharCount: infoData.charCount,
+                  })}
+                </Stats>
 
-            <TextField
-              label={
-                <>
-                  {t('articleEditor.panels.likeCount', { likeCount: likes })}{' '}
-                  <InfoTooltip text={t('articleEditor.panels.likeCountInfo')} />
-                </>
-              }
-              type="number"
-              name="likes"
-              value={likes}
-              onChange={event =>
-                onChange?.({ ...value, likes: +event.target.value })
-              }
-              fullWidth
-            />
+                <TextField
+                  label={
+                    <>
+                      {t('articleEditor.panels.likeCount', {
+                        likeCount: likes,
+                      })}{' '}
+                      <InfoTooltip
+                        text={t('articleEditor.panels.likeCountInfo')}
+                      />
+                    </>
+                  }
+                  type="number"
+                  name="likes"
+                  value={likes}
+                  onChange={event =>
+                    onChange?.({ ...value, likes: +event.target.value })
+                  }
+                  fullWidth
+                />
+              </>
+            )}
+
+            {onCreateTemplate && !isTemplate && (
+              <PermissionControl
+                qualifyingPermissions={['CAN_CREATE_ARTICLE_TEMPLATE']}
+              >
+                <Button
+                  variant="outlined"
+                  startIcon={<MdNoteAdd />}
+                  onClick={onCreateTemplate}
+                >
+                  {t('articleEditor.panels.createTemplate')}
+                </Button>
+              </PermissionControl>
+            )}
           </FormFields>
         );
 
@@ -746,14 +784,14 @@ function ArticleMetadataPanel({
                 {({ value, onChange }) => (
                   <FlexRow>
                     <KeyInput
-                      placeholder={t('articleEditor.panels.key')}
+                      label={t('articleEditor.panels.key')}
                       value={value.key}
                       onChange={event =>
                         onChange({ ...value, key: event.target.value })
                       }
                     />
                     <ValueInput
-                      placeholder={t('articleEditor.panels.value')}
+                      label={t('articleEditor.panels.value')}
                       value={value.value}
                       onChange={event =>
                         onChange({ ...value, value: event.target.value })
@@ -842,24 +880,28 @@ function ArticleMetadataPanel({
       >
         <Tab
           value={MetaDataType.General}
+          {...tabProps(MetaDataType.General)}
           icon={<MdSettings />}
           iconPosition="start"
           label={<>{t('articleEditor.panels.general')}</>}
         />
         <Tab
           value={MetaDataType.SocialMedia}
+          {...tabProps(MetaDataType.SocialMedia)}
           icon={<MdShare />}
           iconPosition="start"
           label={<>{t('articleEditor.panels.socialMedia')}</>}
         />
         <Tab
           value={MetaDataType.Seo}
+          {...tabProps(MetaDataType.Seo)}
           icon={<MdTravelExplore />}
           iconPosition="start"
           label={<>{t('seoTab.title')}</>}
         />
         <Tab
           value={MetaDataType.Properties}
+          {...tabProps(MetaDataType.Properties)}
           icon={<MdListAlt />}
           iconPosition="start"
           label={<>{t('articleEditor.panels.properties')}</>}
@@ -867,29 +909,43 @@ function ArticleMetadataPanel({
         {articleID && (
           <Tab
             value={MetaDataType.Comments}
+            {...tabProps(MetaDataType.Comments)}
             icon={<MdComment />}
             iconPosition="start"
             label={<>{t('articleEditor.panels.comments')}</>}
           />
         )}
-        <Tab
-          value={MetaDataType.Tracking}
-          icon={
-            <Badge
-              variant="dot"
-              color="error"
-              invisible={
-                !trackingPixels?.find(trackingPixel => !!trackingPixel?.error)
-              }
-            >
-              <MdTrackChanges />
-            </Badge>
-          }
-          iconPosition="start"
-          label={<>{t('articleEditor.panels.tracking')}</>}
-        />
+        {!isTemplate && (
+          <Tab
+            value={MetaDataType.Tracking}
+            {...tabProps(MetaDataType.Tracking)}
+            icon={
+              <Badge
+                variant="dot"
+                color="error"
+                invisible={!hasTrackingError}
+              >
+                <MdTrackChanges />
+              </Badge>
+            }
+            iconPosition="start"
+            label={
+              <>
+                {t('articleEditor.panels.tracking')}
+                {hasTrackingError && (
+                  <Box
+                    component="span"
+                    sx={visuallyHidden}
+                  >
+                    {`, ${t('articleEditor.panels.hasErrors')}`}
+                  </Box>
+                )}
+              </>
+            }
+          />
+        )}
       </Tabs>
-      <DrawerBody>{currentContent()}</DrawerBody>
+      <DrawerBody {...panelProps}>{currentContent()}</DrawerBody>
 
       <Drawer
         anchor="right"

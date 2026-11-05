@@ -5,4 +5,5 @@ export default createVitestConfig({
   dir: __dirname,
   environment: 'node',
   react: false,
+  nest: true,
 });

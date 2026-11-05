@@ -1,13 +1,21 @@
-import { render } from '@testing-library/react';
-import * as stories from './richtext-block.stories';
-import { composeStories } from '@storybook/react';
+import { screen } from '@testing-library/react';
+import {
+  mockRichTextBlock,
+  mockRichTextParagraph,
+  renderWithProviders,
+} from '@wepublish/mocks/website';
+import { RichTextBlock } from './richtext-block';
 
-const storiesCmp = composeStories(stories);
+describe('RichTextBlock', () => {
+  it('renders the rich text document', () => {
+    renderWithProviders(
+      <RichTextBlock
+        {...mockRichTextBlock({
+          richText: mockRichTextParagraph('Once upon a time'),
+        })}
+      />
+    );
 
-describe('Richtext Block', () => {
-  Object.entries(storiesCmp).forEach(([story, Component]) => {
-    it(`should render ${story}`, () => {
-      render(<Component />);
-    });
+    expect(screen.getByText('Once upon a time').tagName).toBe('P');
   });
 });

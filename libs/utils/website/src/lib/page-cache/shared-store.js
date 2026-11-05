@@ -1,6 +1,7 @@
 const { readFileSync } = require('fs');
 
 const CONNECTION_TIMEOUT_MS = 1000;
+const KEEP_ALIVE_INITIAL_DELAY_MS = 5000;
 // Dragonfly stalls commands for about a second while it writes a snapshot.
 const COMMAND_TIMEOUT_MS = 2000;
 const SILENT_CONNECTION_MS = 5000;
@@ -77,25 +78,8 @@ const tlsOptions = (env, url, logger) => {
   }
 };
 
-const restoreFastStringPrototype = () => {
-  const probe = Object.setPrototypeOf({}, String.prototype);
-  let found = 0;
-
-  for (let i = 0; i < 1000; i++) {
-    if (probe.charCodeAt) {
-      found++;
-    }
-  }
-
-  return found;
-};
-
-const createRedisClient = options => {
-  const client = require('@keyv/redis').createClient(options);
-  restoreFastStringPrototype();
-
-  return client;
-};
+const createRedisClient = options =>
+  require('@redis/client').createClient(options);
 
 function createSharedStore({
   env,
@@ -125,9 +109,13 @@ function createSharedStore({
   const options = {
     url: env.REDIS_URL,
     disableOfflineQueue: true,
+    RESP: 2,
+    maintNotifications: 'disabled',
+    commandOptions: { timeout: undefined },
     socket: {
       connectTimeout: CONNECTION_TIMEOUT_MS,
       reconnectStrategy: false,
+      keepAliveInitialDelay: KEEP_ALIVE_INITIAL_DELAY_MS,
       ...tls,
     },
   };

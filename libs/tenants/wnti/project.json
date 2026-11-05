@@ -1,0 +1,14 @@
+{
+  "name": "tenant-wnti",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/tenants/wnti/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "test": {
+      "options": {
+        "config": "../../../{projectRoot}/vitest.config.ts"
+      }
+    }
+  }
+}

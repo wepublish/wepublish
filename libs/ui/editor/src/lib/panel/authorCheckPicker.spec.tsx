@@ -101,6 +101,80 @@ describe('AuthorCheckPicker', () => {
     );
   });
 
+  it('keeps the search text when the results come back', async () => {
+    mockedUseQuery.mockImplementation((_document, { variables }) => ({
+      data: {
+        authors: {
+          nodes: [ada, grace].filter(({ name }) =>
+            name.toLowerCase().includes(variables.filter ?? '')
+          ),
+        },
+      },
+      loading: false,
+    }));
+    renderPicker({ list: [ada] });
+
+    type('gra');
+
+    await waitFor(() => expect(screen.getByText('Grace Hopper')).toBeVisible());
+    expect(screen.getByRole('combobox')).toHaveValue('gra');
+    expect(mockedUseQuery.mock.lastCall?.[1]?.variables?.filter).toBe('gra');
+  });
+
+  it('clears the search text once an author is picked', async () => {
+    renderPicker();
+
+    type('gra');
+    fireEvent.click(await screen.findByText('Grace Hopper'));
+
+    expect(screen.getByRole('combobox')).toHaveValue('');
+  });
+
+  it('pages through the authors the search found', async () => {
+    mockedUseQuery.mockReturnValue({
+      data: { authors: { nodes: [ada, grace], totalCount: 25 } },
+      loading: false,
+    });
+    renderPicker();
+
+    open();
+    fireEvent.click(
+      await screen.findByRole('button', {
+        name: 'listView.pagination.page:2',
+      })
+    );
+
+    await waitFor(() =>
+      expect(mockedUseQuery.mock.lastCall?.[1]?.variables).toMatchObject({
+        take: 10,
+        skip: 10,
+      })
+    );
+  });
+
+  it('starts a new search on the first page', async () => {
+    mockedUseQuery.mockReturnValue({
+      data: { authors: { nodes: [ada, grace], totalCount: 25 } },
+      loading: false,
+    });
+    renderPicker();
+
+    open();
+    fireEvent.click(
+      await screen.findByRole('button', {
+        name: 'listView.pagination.page:2',
+      })
+    );
+    type('gra');
+
+    await waitFor(() =>
+      expect(mockedUseQuery.mock.lastCall?.[1]?.variables).toMatchObject({
+        filter: 'gra',
+        skip: 0,
+      })
+    );
+  });
+
   it('looks up the name of an author it was handed by id alone', async () => {
     mockedUseQuery.mockReturnValue({
       data: { authors: { nodes: [grace] } },
@@ -129,6 +203,22 @@ describe('AuthorCheckPicker', () => {
     renderPicker({ list: [ada] });
 
     expect(screen.getByRole('combobox')).not.toHaveAttribute('placeholder');
+  });
+
+  it('keeps its name once somebody is picked', () => {
+    renderPicker({ list: [ada] });
+
+    expect(
+      screen.getByRole('combobox', { name: 'blocks.quote.author' })
+    ).toBeInTheDocument();
+  });
+
+  it('takes the label the caller gives it', () => {
+    renderPicker({ label: 'Social media authors' });
+
+    expect(
+      screen.getByRole('combobox', { name: 'Social media authors' })
+    ).toBeInTheDocument();
   });
 
   it('can be disabled', () => {

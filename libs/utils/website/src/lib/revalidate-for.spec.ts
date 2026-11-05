@@ -15,6 +15,58 @@ const crowdfunding = {
 const richText = { __typename: 'RichTextBlock', richText: { type: 'doc' } };
 
 describe('revalidateFor', () => {
+  describe('timed blocks', () => {
+    const timedArticle = (blocksChangeAt: string | null) => ({
+      __typename: 'Article',
+      id: 'a1',
+      latest: {
+        __typename: 'ArticleRevision',
+        blocksChangeAt,
+        blocks: [richText],
+      },
+    });
+
+    beforeEach(() => {
+      vi.useFakeTimers().setSystemTime(new Date('2026-01-05T09:00:00Z'));
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    it('re-renders an untimed article after an hour', () => {
+      expect(revalidateFor(timedArticle(null))).toBe(60 * 60);
+    });
+
+    it('re-renders once the displayed blocks change', () => {
+      expect(revalidateFor(timedArticle('2026-01-05T09:10:00.000Z'))).toBe(600);
+    });
+
+    it('keeps the hourly window when the change is further away', () => {
+      expect(revalidateFor(timedArticle('2026-01-06T09:00:00.000Z'))).toBe(
+        60 * 60
+      );
+    });
+
+    it('re-renders right away for a change that is already due', () => {
+      expect(revalidateFor(timedArticle('2026-01-05T08:00:00.000Z'))).toBe(1);
+    });
+
+    it('still re-renders a live block every minute', () => {
+      expect(
+        revalidateFor({
+          __typename: 'Article',
+          id: 'a1',
+          latest: {
+            __typename: 'ArticleRevision',
+            blocksChangeAt: '2026-01-05T09:10:00.000Z',
+            blocks: [poll],
+          },
+        })
+      ).toBe(60);
+    });
+  });
+
   it('re-renders an article with a poll every minute', () => {
     expect(revalidateFor(article([richText, poll]))).toBe(60);
   });

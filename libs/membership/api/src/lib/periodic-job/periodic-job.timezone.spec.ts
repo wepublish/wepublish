@@ -138,6 +138,7 @@ describe('PeriodicJobService outside UTC', () => {
       {} as never,
       {} as never,
       {} as never,
+      {} as never,
       {} as never
     );
   });

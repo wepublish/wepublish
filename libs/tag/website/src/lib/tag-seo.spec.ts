@@ -1,4 +1,4 @@
-import { mockTag } from '@wepublish/storybook/mocks';
+import { mockTag } from '@wepublish/mocks/website';
 
 import { getTagSEO } from './tag-seo';
 

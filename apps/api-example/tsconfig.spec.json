@@ -3,6 +3,8 @@
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
     "module": "commonjs",
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
     "types": ["vitest/globals", "node"]
   },
   "include": ["src/**/*.test.ts", "src/**/*.spec.ts", "src/**/*.d.ts"]

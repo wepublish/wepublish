@@ -10,7 +10,9 @@ import { MailTemplateService } from './mail-template.service';
 import { UsedMailTemplateDataloader } from './used-mail-template.dataloader';
 import { INestApplication, Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { ApolloDriverConfig } from '@nestjs/apollo';
+import { NodeAdapter } from '@nestjs/platform-node';
+import { NodeApolloDriver } from '@wepublish/utils/api';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { APP_GUARD } from '@nestjs/core';
 import { PermissionsGuard } from '@wepublish/permissions/api';
@@ -20,6 +22,7 @@ import {
   registerPaymentMethodModule,
 } from '../testing/module-registrars';
 import { PaymentsModule } from '@wepublish/payment/api';
+import { NamespacedCacheTestingModule } from '@wepublish/kv-ttl-cache/api/testing';
 
 const mailTemplatesQuery = `
   query MailTemplates {
@@ -97,11 +100,12 @@ const mailTemplateServiceMock = {
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
+      driver: NodeApolloDriver,
       autoSchemaFile: true,
       path: '/',
     }),
     PrismaModule,
+    NamespacedCacheTestingModule.forRoot(),
     registerMailsModule(),
     registerPaymentMethodModule(),
     PaymentsModule,
@@ -126,8 +130,8 @@ describe('MailTemplatesResolver', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
-    app = module.createNestApplication();
-    await app.init();
+    app = module.createNestApplication(new NodeAdapter());
+    await app.listen(0, '127.0.0.1');
   });
 
   beforeEach(async () => {

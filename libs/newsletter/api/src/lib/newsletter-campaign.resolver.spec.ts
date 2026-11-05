@@ -1,8 +1,11 @@
 import type { Mock } from 'vitest';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { ApolloDriverConfig } from '@nestjs/apollo';
+import { NodeAdapter } from '@nestjs/platform-node';
+import { NodeApolloDriver } from '@wepublish/utils/api';
 import { INestApplication } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { Test } from '@nestjs/testing';
+import { NewsletterCampaignStatus } from '@prisma/client';
 import { FeaturesService } from '@wepublish/features/api';
 import { ImageDataloaderService } from '@wepublish/image/api';
 import type { NewsletterDocument } from '@wepublish/newsletter/email';
@@ -25,11 +28,12 @@ const campaign = {
   title: 'Ausgabe 1',
   document,
   blockCount: 2,
-  status: 'active',
+  status: NewsletterCampaignStatus.active,
   createdAt: new Date('2026-10-01'),
   modifiedAt: new Date('2026-10-02'),
   mailchimpCampaignId: null,
   mailchimpCampaignWebId: null,
+  mailchimpEditUrl: undefined,
 };
 
 const image = {
@@ -64,7 +68,7 @@ describe('NewsletterCampaignResolver', () => {
     const module = await Test.createTestingModule({
       imports: [
         GraphQLModule.forRoot<ApolloDriverConfig>({
-          driver: ApolloDriver,
+          driver: NodeApolloDriver,
           autoSchemaFile: true,
           path: '/',
           cache: 'bounded',
@@ -82,8 +86,8 @@ describe('NewsletterCampaignResolver', () => {
       ],
     }).compile();
 
-    app = module.createNestApplication();
-    await app.init();
+    app = module.createNestApplication(new NodeAdapter());
+    await app.listen(0, '127.0.0.1');
   });
 
   beforeEach(() => {

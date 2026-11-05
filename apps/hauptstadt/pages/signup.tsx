@@ -4,6 +4,7 @@ import {
   useUser,
 } from '@wepublish/authentication/website';
 import { PageContainer } from '@wepublish/page/website';
+import { HauptstadtContentFullWidth } from '@wepublish/tenant/hauptstadt';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
@@ -16,7 +17,6 @@ import { deleteCookie, getCookie } from 'cookies-next';
 import { GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 
-import { HauptstadtContentFullWidth } from '../src/components/hauptstadt-content-wrapper';
 import { HAS_FORM_FIELDS } from './mitmachen';
 
 export default function SignUp() {

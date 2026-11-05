@@ -1,4 +1,10 @@
 import { HealthIndicatorService } from '@nestjs/terminus';
+import {
+  DragonflyHealth,
+  type DragonflyStatus,
+  MemoryDragonflyConnection,
+} from '@wepublish/dragonfly/api';
+import { FakeDragonfly } from '@wepublish/dragonfly/api/testing';
 import { DragonflyHealthIndicator } from './dragonfly.health';
 import { HealthController } from './health.controller';
 
@@ -7,10 +13,12 @@ vi.mock('@wepublish/authentication/api', () => ({
 }));
 
 describe('DragonflyHealthIndicator', () => {
-  const indicator = (status: string) =>
+  const indicator = (status: DragonflyStatus) =>
     new DragonflyHealthIndicator(new HealthIndicatorService(), {
-      dragonflyStatus: vi.fn().mockResolvedValue(status),
-    } as any);
+      status: vi.fn().mockResolvedValue(status),
+    } satisfies Pick<DragonflyHealth, 'status'> as unknown as DragonflyHealth);
+
+  const options = { keyPrefix: 'test', production: false, releaseId: 'dev' };
 
   it('is up while Dragonfly answers', async () => {
     await expect(
@@ -18,12 +26,44 @@ describe('DragonflyHealthIndicator', () => {
     ).resolves.toEqual({ dragonfly: { status: 'up' } });
   });
 
-  it.each([
+  it.each<[DragonflyStatus, string]>([
     ['not-configured', 'REDIS_URL is not set'],
     ['unreachable', 'Dragonfly is unreachable or refuses writes'],
   ])('is down when Dragonfly is %s', async (status, message) => {
     await expect(indicator(status).isHealthy('dragonfly')).resolves.toEqual({
       dragonfly: { status: 'down', message },
+    });
+  });
+
+  it('asks the Dragonfly connection itself', async () => {
+    const dragonfly = new FakeDragonfly();
+    const health = new DragonflyHealthIndicator(
+      new HealthIndicatorService(),
+      new DragonflyHealth(dragonfly, { ...options, url: 'redis://dragonfly' })
+    );
+
+    await expect(health.isHealthy('dragonfly')).resolves.toEqual({
+      dragonfly: { status: 'up' },
+    });
+
+    dragonfly.down();
+
+    await expect(health.isHealthy('dragonfly')).resolves.toEqual({
+      dragonfly: {
+        status: 'down',
+        message: 'Dragonfly is unreachable or refuses writes',
+      },
+    });
+  });
+
+  it('is down without REDIS_URL', async () => {
+    const health = new DragonflyHealthIndicator(
+      new HealthIndicatorService(),
+      new DragonflyHealth(new MemoryDragonflyConnection(), options)
+    );
+
+    await expect(health.isHealthy('dragonfly')).resolves.toEqual({
+      dragonfly: { status: 'down', message: 'REDIS_URL is not set' },
     });
   });
 });

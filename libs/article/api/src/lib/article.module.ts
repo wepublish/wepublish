@@ -1,4 +1,4 @@
-import { GraphqlResponseCacheModule } from '@wepublish/kv-ttl-cache/api';
+import { PublicContentInvalidatorModule } from '@wepublish/public-content-cache/api';
 import { ArticlePublicationWatcher } from './article-publication.watcher';
 import { forwardRef, Module } from '@nestjs/common';
 import { ImageModule } from '@wepublish/image/api';
@@ -15,19 +15,28 @@ import {
   HasOptionalArticleLcResolver,
   HasOptionalArticleResolver,
 } from './has-article/has-article.resolver';
-import { BlockContentModule } from '@wepublish/block-content/api';
+import {
+  BlockContentModule,
+  BlockTemplateModule,
+} from '@wepublish/block-content/api';
 import { SettingModule } from '@wepublish/settings/api';
 import { TagModule } from '@wepublish/tag/api';
+import {
+  ArticleTemplateMetadataResolver,
+  ArticleTemplateResolver,
+} from './article-template/article-template.resolver';
+import { ArticleTemplateService } from './article-template/article-template.service';
 
 @Module({
   imports: [
-    GraphqlResponseCacheModule,
+    PublicContentInvalidatorModule,
     PrismaModule,
     ImageModule,
     AuthorModule,
     SettingModule,
     TagModule,
     forwardRef(() => BlockContentModule),
+    forwardRef(() => BlockTemplateModule),
   ],
   providers: [
     ArticlePublicationWatcher,
@@ -36,6 +45,9 @@ import { TagModule } from '@wepublish/tag/api';
     ArticleService,
     ArticleResolver,
     ArticleRevisionResolver,
+    ArticleTemplateService,
+    ArticleTemplateResolver,
+    ArticleTemplateMetadataResolver,
 
     HasArticleResolver,
     HasArticleLcResolver,

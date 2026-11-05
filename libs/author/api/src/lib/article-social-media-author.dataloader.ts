@@ -1,8 +1,8 @@
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import {
   CONTENT_CACHE_TTL_SECONDS,
-  KvTtlCacheService,
   contentCacheNamespace,
-} from '@wepublish/kv-ttl-cache/api';
+} from '@wepublish/public-content-cache/api';
 import { DataLoaderService } from '@wepublish/utils/api';
 import { Author, PrismaClient } from '@prisma/client';
 import { Injectable, Scope } from '@nestjs/common';
@@ -16,7 +16,7 @@ export class ArticleSocialMediaAuthorDataloader extends DataLoaderService<
 > {
   constructor(
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService
+    private kv: NamespacedCache
   ) {
     super();
   }

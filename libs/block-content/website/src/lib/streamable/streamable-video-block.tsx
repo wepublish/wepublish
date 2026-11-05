@@ -5,7 +5,6 @@ import {
 } from '@wepublish/website/api';
 import { BuilderStreamableVideoBlockProps } from '@wepublish/website/builder';
 import { useEffect, useState } from 'react';
-import ReactPlayer from 'react-player';
 
 export const isStreamableVideoBlock = (
   block: Partial<Pick<FullBlockFragment, '__typename'>>
@@ -23,9 +22,10 @@ const AspectBox = styled('div')<{ $aspectRatio: number }>`
   }
 `;
 
-const StreamableVideoBlockPlayer = styled(ReactPlayer)`
-  width: 100% !important;
-  height: 100% !important;
+const StreamableVideoBlockPlayer = styled('iframe')`
+  width: 100%;
+  height: 100%;
+  border: 0;
 `;
 
 export function StreamableVideoBlock({
@@ -74,13 +74,10 @@ export function StreamableVideoBlock({
     <StreamableVideoBlockWrapper className={className}>
       <AspectBox $aspectRatio={aspectRatio}>
         <StreamableVideoBlockPlayer
-          src={streamableUrl}
-          controls
-          playsInline
-          width="100%"
-          height="100%"
-          // wenn Streamable mal spinnt, bleiben wir einfach beim aktuellen Ratio
-          onError={() => setAspectRatio(r => r || 16 / 9)}
+          src={`https://streamable.com/e/${encodeURIComponent(videoID ?? '')}`}
+          title="Embedded Streamable Video"
+          allow="autoplay; encrypted-media"
+          allowFullScreen
         />
       </AspectBox>
     </StreamableVideoBlockWrapper>

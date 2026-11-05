@@ -6,6 +6,7 @@ import {
   useUser,
 } from '@wepublish/authentication/website';
 import { ContentWrapper } from '@wepublish/content/website';
+import { BajourContainer as Container } from '@wepublish/tenant/bajour';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
@@ -17,8 +18,6 @@ import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { deleteCookie, getCookie } from 'cookies-next';
 import { GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
-
-import { Container } from '../src/components/layout/container';
 
 const SignupWrapper = styled(ContentWrapper)`
   justify-content: center;

@@ -1,9 +1,12 @@
 import styled from '@emotion/styled';
+import { formatForDisplay } from '@tanstack/react-hotkeys';
 import { useTranslation } from 'react-i18next';
 import { MdSearch } from 'react-icons/md';
 
-import { useCommandPalette } from './commandPaletteContext';
-import { modifierKeyLabel } from './modifierKeyLabel';
+import {
+  COMMAND_PALETTE_HOTKEY,
+  useCommandPalette,
+} from './commandPaletteContext';
 
 const Trigger = styled.button`
   display: grid;
@@ -57,7 +60,9 @@ export function CommandPaletteTrigger({ className }: { className?: string }) {
     >
       <MdSearch aria-hidden />
       {t('commandPalette.trigger')}
-      <Shortcut aria-hidden>{modifierKeyLabel()} K</Shortcut>
+      <Shortcut aria-hidden>
+        {formatForDisplay(COMMAND_PALETTE_HOTKEY)}
+      </Shortcut>
     </Trigger>
   );
 }

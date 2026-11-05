@@ -100,7 +100,9 @@
       "validationFailedGeneric": "Impossible d’enregistrer. Corrigez les erreurs signalées.",
       "saveValidationFailed": "Échec de l’enregistrement",
       "publishValidationFailed": "Échec de la publication",
+      "title": "Modifier l’article",
       "overview": {
+        "loadingTemplate": "Chargement du modèle…",
         "articlePending": "Article en attente",
         "articlePublished": "Article publié",
         "back": "Retour",
@@ -126,6 +128,7 @@
         "warningLabel": "Attention"
       },
       "panels": {
+        "createTemplate": "Créer un modèle à partir de l'article",
         "firstPublishedAtDate": "Première publication le {{firstPublishedAtDate, dd.MM.yyyy HH:mm}}",
         "notPublishedYet": "L’article n’est pas encore publié",
         "addSlug": "Veuillez ajouter un slug",
@@ -233,6 +236,7 @@
         "paywall": "Paywall",
         "likeCount": "Likes",
         "tracking": "Suivi",
+        "hasErrors": "contient des erreurs",
         "likeCountInfo": "Nombre de « j’aime » que les lecteur·trice·s ont donnés à cet article sur le site. Vous pouvez corriger ce nombre ici si nécessaire.",
         "slugInfo": "La dernière partie de l’adresse web de l’article, p.ex. …/a/mon-article. Utilisez uniquement des minuscules, des chiffres et des tirets.",
         "hideAuthorsInfo": "Les auteur·trice·s ne sont pas affiché·e·s sur le site pour cet article. Ils et elles restent enregistré·e·s dans l’éditeur.",
@@ -243,9 +247,17 @@
         "contentUrlInfo": "L’adresse web vers laquelle les lecteur·trice·s sont dirigé·e·s en cliquant sur le teaser.",
         "teaserPropertiesInfo": "Paires clé-valeur supplémentaires que votre site peut utiliser pour des affichages particuliers. Nécessaire uniquement si les personnes qui développent votre site vous l’ont demandé. Les propriétés publiques sont visibles via l’API publique.",
         "enterSocialMediaImage": "Veuillez ajouter une image pour les réseaux sociaux"
-      }
+      },
+      "unsavedChanges": "modifications non enregistrées",
+      "unpublishedChanges": "modifications pas encore publiées"
     },
     "articles": {
+      "createModal": {
+        "title": "Nouvel article",
+        "blank": "Article vide",
+        "search": "Rechercher des modèles",
+        "noResults": "Aucun modèle trouvé"
+      },
       "overview": {
         "slug": "Slug",
         "articles": "Articles",
@@ -351,7 +363,8 @@
           "style": "Style",
           "role": "Rôle",
           "styleInfo": "Nom de style optionnel pour le bouton, p.ex. « outline ». N’a d’effet que si votre site le prend en charge.",
-          "roleInfo": "« Principal » met le bouton en avant. « Annuler » ferme la bannière au lieu d’ouvrir le lien. « Autre » affiche un bouton normal."
+          "roleInfo": "« Principal » met le bouton en avant. « Annuler » ferme la bannière au lieu d’ouvrir le lien. « Autre » affiche un bouton normal.",
+          "group": "Action {{number}}"
         },
         "content": "Contenu",
         "mustNotBeNegative": "La valeur ne doit pas être négative",
@@ -447,6 +460,7 @@
           "invalidURL": "URL ou code iframe non valide",
           "socialMediaList": "Message/vidéo Facebook, message Instagram, tweet Twitter, vidéo Vimeo, vidéo YouTube, vidéo TikTok, conversation Polis formatée par exemple comme :"
         },
+        "tweetBy": "Tweet de @{{user}}",
         "streamableVideo": "Vidéo Streamable"
       },
       "event": {
@@ -820,6 +834,8 @@
       "panels": {
         "approve": "Approuver",
         "approveComment": "Approuver le commentaire",
+        "inReplyTo": "En réponse à {{name}}",
+        "earlierRevisions": "Versions précédentes ({{count}})",
         "cancel": "Annuler",
         "createdAt": "Créé le",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
@@ -848,6 +864,7 @@
         "areYouSure": "Êtes-vous sûr·e ?",
         "areYouSureBody": "L’évaluation « {{ answer }} » sera supprimée définitivement et cette action est irréversible.",
         "areYouSureConfirmation": "Supprimer l’évaluation",
+        "type": "Type",
         "loading": "Chargement",
         "newAnswer": "Ajouter une évaluation",
         "placeholder": "Nom de l’évaluation",
@@ -925,6 +942,7 @@
       "dragToMove": "Glisser pour déplacer",
       "moveUp": "Monter",
       "moveDown": "Descendre",
+      "cardMoved": "{{card}} déplacé en position {{position}} sur {{total}}",
       "resetLayout": "Rétablir par défaut",
       "configureDone": "Terminé",
       "activity": "Dernière activité",
@@ -939,6 +957,8 @@
       "newUser": "Nouvel·le <0>utilisateur·trice</0> ajouté·e",
       "dashboard": "Tableau de bord",
       "notifications": "Notifications",
+      "moreNotifications_one": "+{{count}} autre notification",
+      "moreNotifications_other": "+{{count}} autres notifications",
       "showAllNotifications": "Tout afficher",
       "greeting": "Bonjour, {{name}} !",
       "noData": "Pas de données actuelles sur les abonnés",
@@ -961,7 +981,8 @@
       "nextSaturday": "Samedi prochain",
       "now": "Maintenant",
       "today": "Aujourd’hui",
-      "tomorrow": "Demain"
+      "tomorrow": "Demain",
+      "clear": "Effacer la date"
     },
     "deactivated": "Désactivé",
     "delete": "Supprimer",
@@ -977,6 +998,9 @@
       "ignoreDeactivatedSubscriptions": "Les e-mails destinés aux abonnements désactivés ne sont pas envoyés !"
     },
     "edit": "Modifier",
+    "editorHeader": {
+      "moreActions": "Plus d'actions"
+    },
     "errors": {
       "uniqueEmail": "Cette adresse e-mail est déjà utilisée.",
       "uniqueField": "Cette valeur est déjà utilisée ({{field}}).",
@@ -1027,6 +1051,7 @@
         "cancelled": "Annulé",
         "description": "Description",
         "endsAt": "Fin",
+        "endsBeforeStart": "La fin ne peut pas précéder le début",
         "externalSource": "Source externe (pour les événements importés)",
         "image": "Image",
         "location": "Lieu",
@@ -1123,7 +1148,126 @@
         "updatedAt": "{{updatedAt, ccc PP p}}",
         "upload": "Téléverser",
         "uploadDocument": "Téléverser un document",
-        "uploadFailed": "Le téléversement a échoué. Veuillez réessayer."
+        "uploadFailed": "Le téléversement a échoué. Veuillez réessayer.",
+        "openOriginal": "Ouvrir l'original",
+        "replaceFile": "Choisir un autre fichier"
+      }
+    },
+    "videos": {
+      "overview": {
+        "description": "Description",
+        "videoLibrary": "Bibliothèque de vidéos",
+        "copyLink": "Copier le lien",
+        "edit": "Modifier",
+        "fileSize": "Taille du fichier",
+        "filename": "Nom du fichier",
+        "noDescription": "Pas de description",
+        "openLink": "Ouvrir",
+        "preview": "Aperçu",
+        "storageFull": "Limite de stockage atteinte",
+        "storageUsage": "{{used}} / {{limit}} utilisés ({{count}} fichier(s))",
+        "storageWarning": "Stockage presque plein",
+        "title": "Titre",
+        "unlimited": "Illimité",
+        "untitled": "Sans titre",
+        "uploadVideo": "Téléverser une vidéo",
+        "storageUsageInfo": "Taille totale de toutes les vidéos téléversées. Une fois la limite atteinte, vous ne pourrez téléverser de nouvelles vidéos qu’après en avoir supprimé d’anciennes."
+      },
+      "panels": {
+        "cancel": "Annuler",
+        "close": "Fermer",
+        "confirm": "Confirmer",
+        "created": "Créé",
+        "createdAt": "{{createdAt, ccc PP p}}",
+        "deleteVideo": "Supprimer la vidéo ?",
+        "description": "Description",
+        "videoUpdated": "Vidéo mise à jour",
+        "dropVideo": "Déposez un fichier ici ou cliquez pour sélectionner",
+        "editVideo": "Modifier la vidéo",
+        "fileSize": "Taille du fichier",
+        "fileTooLarge": "Le fichier est trop volumineux. Taille maximale : {{maxSize}} Mo.",
+        "filename": "Nom du fichier",
+        "information": "Informations",
+        "maxFileSize": "Taille maximale du fichier : {{maxSize}} Mo",
+        "invalidVideo": "Type de fichier non pris en charge. Formats acceptés : MP4, WebM, OGG, MOV, M4V, MPEG",
+        "linkCopied": "Lien copié dans le presse-papiers",
+        "notFound": "Vidéo introuvable !",
+        "publicLink": "Lien public",
+        "title": "Titre",
+        "untitled": "Sans titre",
+        "updated": "Mis à jour",
+        "updatedAt": "{{updatedAt, ccc PP p}}",
+        "upload": "Téléverser",
+        "uploadVideo": "Téléverser une vidéo",
+        "uploadFailed": "Le téléversement a échoué. Veuillez réessayer.",
+        "attribution": "Attribution",
+        "source": "Source",
+        "link": "Lien",
+        "license": "Licence",
+        "urlPlaceholder": "https://",
+        "sourceLink": "Lien vers la source originale du fichier.",
+        "openOriginal": "Ouvrir l'original",
+        "bitrate": "Débit",
+        "dimensions": "Dimensions",
+        "dimensionsValue": "{{width}} × {{height}}",
+        "replaceFile": "Choisir un autre fichier"
+      }
+    },
+    "audio": {
+      "overview": {
+        "description": "Description",
+        "audioLibrary": "Bibliothèque audio",
+        "copyLink": "Copier le lien",
+        "edit": "Modifier",
+        "fileSize": "Taille du fichier",
+        "filename": "Nom du fichier",
+        "noDescription": "Pas de description",
+        "openLink": "Ouvrir",
+        "storageFull": "Limite de stockage atteinte",
+        "storageUsage": "{{used}} / {{limit}} utilisés ({{count}} fichier(s))",
+        "storageWarning": "Stockage presque plein",
+        "title": "Titre",
+        "unlimited": "Illimité",
+        "untitled": "Sans titre",
+        "uploadAudio": "Téléverser un fichier audio",
+        "storageUsageInfo": "Taille totale de tous les fichiers audio téléversés. Une fois la limite atteinte, vous ne pourrez téléverser de nouveaux fichiers qu’après en avoir supprimé d’anciens."
+      },
+      "panels": {
+        "cancel": "Annuler",
+        "close": "Fermer",
+        "confirm": "Confirmer",
+        "created": "Créé",
+        "createdAt": "{{createdAt, ccc PP p}}",
+        "deleteAudio": "Supprimer le fichier audio ?",
+        "description": "Description",
+        "audioUpdated": "Fichier audio mis à jour",
+        "dropAudio": "Déposez un fichier ici ou cliquez pour sélectionner",
+        "editAudio": "Modifier le fichier audio",
+        "fileSize": "Taille du fichier",
+        "fileTooLarge": "Le fichier est trop volumineux. Taille maximale : {{maxSize}} Mo.",
+        "filename": "Nom du fichier",
+        "information": "Informations",
+        "maxFileSize": "Taille maximale du fichier : {{maxSize}} Mo",
+        "invalidAudio": "Type de fichier non pris en charge. Formats acceptés : MP3, OGG, WAV, WebM, AAC, M4A, FLAC",
+        "linkCopied": "Lien copié dans le presse-papiers",
+        "notFound": "Fichier audio introuvable !",
+        "publicLink": "Lien public",
+        "title": "Titre",
+        "untitled": "Sans titre",
+        "updated": "Mis à jour",
+        "updatedAt": "{{updatedAt, ccc PP p}}",
+        "upload": "Téléverser",
+        "uploadAudio": "Téléverser un fichier audio",
+        "uploadFailed": "Le téléversement a échoué. Veuillez réessayer.",
+        "attribution": "Attribution",
+        "source": "Source",
+        "link": "Lien",
+        "license": "Licence",
+        "urlPlaceholder": "https://",
+        "sourceLink": "Lien vers la source originale du fichier.",
+        "openOriginal": "Ouvrir l'original",
+        "bitrate": "Débit",
+        "replaceFile": "Choisir un autre fichier"
       }
     },
     "images": {
@@ -1174,6 +1318,7 @@
         "uploadImage": "Téléverser une image",
         "urlPlaceholder": "https://www.lien.com",
         "focalPoint": "Point focal",
+        "focalPointPosition": "{{x}} % depuis la gauche, {{y}} % depuis le haut",
         "focalPointInfo": "Faites glisser le point sur la partie la plus importante de l’image. Lorsque l’image est recadrée, p.ex. dans les teasers, cette zone reste visible.",
         "descriptionInfo": "Décrivez ce que l’on voit sur l’image. Le texte sert de texte alternatif pour les personnes utilisant un lecteur d’écran et pour les moteurs de recherche.",
         "linkUrlInfo": "Adresse web qui s’ouvre lorsque les lecteur·trice·s cliquent sur l’image. Laissez vide si l’image ne doit pas être un lien."
@@ -1205,7 +1350,27 @@
         "description": "Description",
         "goodie": "Goodie",
         "status": "Statut",
-        "idCopied": "ID de facture copié"
+        "idCopied": "ID de facture copié",
+        "paidAt": "Payée le",
+        "paidVia": "Payée via",
+        "paymentState": "Statut du paiement",
+        "manuallyPaidBy": "Marquée payée par",
+        "canceledAt": "Annulée le",
+        "scheduledDeactivationAt": "Désactivation si impayée",
+        "createdAt": "Créée le",
+        "modifiedAt": "Dernière modification",
+        "mail": "E-mail de facturation",
+        "positions": "Positions"
+      },
+      "paymentState": {
+        "created": "Créé",
+        "submitted": "Soumis",
+        "requiresUserAction": "Action requise",
+        "processing": "En cours",
+        "paid": "Payé",
+        "canceled": "Annulé",
+        "declined": "Refusé",
+        "chargeback": "Rétrofacturation"
       }
     },
     "linkPageBreakEditPanel": {
@@ -1255,7 +1420,8 @@
       "submit": "Envoyer le lien",
       "sent": "Si un compte existe avec cette adresse e-mail, un lien de réinitialisation a été envoyé. Veuillez vérifier votre boîte de réception.",
       "notConfigured": "La réinitialisation du mot de passe n’est pas configurée. Veuillez contacter votre administrateur.",
-      "backToLogin": "Retour à la connexion"
+      "backToLogin": "Retour à la connexion",
+      "title": "Réinitialiser le mot de passe"
     },
     "setNewPassword": {
       "description": "Entrez votre nouveau mot de passe.",
@@ -1301,7 +1467,8 @@
         "sampleSubscriptionHelp": "Choisissez un abonnement existant pour remplir l’aperçu et l’e-mail de test avec ses données réelles. Sans sélection, des données d’exemple fictives sont utilisées. L’e-mail de test n’est envoyé qu’à vous.",
         "bodyModeHelp": "Visuel : modifiez le contenu comme dans un traitement de texte. HTML : modifiez directement le code source – pour utilisateur·trice·s avancé·e·s. Texte brut : la version texte pour les programmes de messagerie sans HTML ; elle est générée automatiquement.",
         "backgroundHelp": "Couleur de la surface autour du contenu de l’e-mail.",
-        "contentWidthHelp": "Largeur maximale du contenu en pixels. 600 px est une valeur éprouvée qui s’affiche bien dans la plupart des programmes de messagerie. Sur les petits écrans, le contenu se rétrécit automatiquement."
+        "contentWidthHelp": "Largeur maximale du contenu en pixels. 600 px est une valeur éprouvée qui s’affiche bien dans la plupart des programmes de messagerie. Sur les petits écrans, le contenu se rétrécit automatiquement.",
+        "bodyMode": "Mode d’édition"
       },
       "editor": {
         "undo": "Annuler",
@@ -1350,7 +1517,8 @@
         "appendJwtDone": "Jeton de connexion déjà présent — le destinataire est connecté au clic.",
         "frameTitle": "Éditeur du contenu de l’e-mail",
         "imageAltHelp": "Décrit l’image en quelques mots. Affiché si l’image ne se charge pas et lu par les lecteurs d’écran.",
-        "imageWidthHelp": "Laissez vide pour utiliser la taille d’origine. L’image n’est jamais plus large que l’e-mail."
+        "imageWidthHelp": "Laissez vide pour utiliser la taille d’origine. L’image n’est jamais plus large que l’e-mail.",
+        "toolbar": "Mise en forme"
       },
       "goToPlaceholders": "Espaces réservés disponibles",
       "htmlContent": "Contenu HTML",
@@ -1527,7 +1695,9 @@
         "optional_invoices_0_description": "Description de la dernière facture."
       },
       "statusHelp": "Une coche signifie qu’un e-mail automatique utilise ce modèle. « Inutilisé » signifie qu’aucun e-mail automatique ne l’utilise – vous pouvez tout de même l’envoyer manuellement via « Envoyer un e-mail ».",
-      "placeholdersInfo": "Les espaces réservés sont remplacés automatiquement à l’envoi par les données de chaque destinataire, p. ex. son prénom. Chaque e-mail devient ainsi personnel."
+      "placeholdersInfo": "Les espaces réservés sont remplacés automatiquement à l’envoi par les données de chaque destinataire, p. ex. son prénom. Chaque e-mail devient ainsi personnel.",
+      "searchPlaceholdersLabel": "Rechercher des espaces réservés",
+      "empty": "Aucun modèle d’e-mail pour le moment."
     },
     "mailTemplateSelect": {
       "noMailSentSelectNow": "Ne pas envoyer d’e-mail"
@@ -1606,10 +1776,13 @@
       "events": "Événements",
       "eventTags": "Tags",
       "documentLibrary": "Documents",
+      "videoLibrary": "Videos",
       "imageLibrary": "Images",
       "importableEvents": "Événements importables",
       "media": "Fichiers",
       "menu": "Menu",
+      "mainNavigation": "Navigation principale",
+      "skipToContent": "Aller au contenu principal",
       "colorMode": {
         "title": "Apparence",
         "light": "Clair",
@@ -1621,6 +1794,7 @@
       "memberPlans": "Plans d’abonnement",
       "navigations": "Menus",
       "pages": "Pages",
+      "pageTemplates": "Modèles de pages",
       "paymentMethods": "Méthodes de paiement",
       "peerArticles": "Articles peerables",
       "networkContent": "Réseau We.Publish",
@@ -1652,7 +1826,143 @@
         "polls": "Sondages",
         "topMenu": "Blocs de contenu"
       },
-      "language": "Langue"
+      "articleTemplates": "Modèles d'articles",
+      "language": "Langue",
+      "audioLibrary": "Audio"
+    },
+    "pageTitles": {
+      "login": "Connexion",
+      "impersonate": "Se connecter en tant qu’utilisateur·trice",
+      "resetPassword": "Réinitialiser le mot de passe",
+      "setPassword": "Définir un nouveau mot de passe",
+      "dashboard": "Tableau de bord",
+      "notifications": "Notifications",
+      "auditLog": "Journal d’audit",
+      "apps": "Applications",
+      "externalApp": "Application",
+      "articles": "Articles",
+      "articleCreate": "Nouvel article",
+      "articleEdit": "Modifier l’article",
+      "peerArticles": "Articles peerables",
+      "articleTags": "Tags d’articles",
+      "articleTagCreate": "Nouveau tag d’article",
+      "articleTagEdit": "Modifier le tag d’article",
+      "paywalls": "Paywalls",
+      "paywallCreate": "Nouveau paywall",
+      "paywallEdit": "Modifier le paywall",
+      "pages": "Pages",
+      "pageCreate": "Nouvelle page",
+      "pageEdit": "Modifier la page",
+      "pageTags": "Tags de pages",
+      "pageTagCreate": "Nouveau tag de page",
+      "pageTagEdit": "Modifier le tag de page",
+      "blockStyles": "Styles de blocs",
+      "blockTemplates": "Modèles de blocs",
+      "blockTemplateCreate": "Nouveau modèle de bloc",
+      "blockTemplateEdit": "Modifier le modèle de bloc",
+      "articleTemplates": "Modèles d'articles",
+      "articleTemplateCreate": "Nouveau modèle d'article",
+      "articleTemplateEdit": "Modifier le modèle d'article",
+      "pageTemplates": "Modèles de pages",
+      "pageTemplateCreate": "Nouveau modèle de page",
+      "pageTemplateEdit": "Modifier le modèle de page",
+      "crowdfundings": "Crowdfundings",
+      "crowdfundingCreate": "Nouveau crowdfunding",
+      "crowdfundingEdit": "Modifier le crowdfunding",
+      "polls": "Sondages",
+      "pollEdit": "Modifier le sondage",
+      "pollVotes": "Votes du sondage",
+      "comments": "Commentaires",
+      "commentEdit": "Modifier le commentaire",
+      "commentTags": "Tags de commentaires",
+      "commentTagCreate": "Nouveau tag de commentaire",
+      "commentTagEdit": "Modifier le tag de commentaire",
+      "commentRating": "Système d’évaluation",
+      "events": "Événements",
+      "eventCreate": "Nouvel événement",
+      "eventEdit": "Modifier l’événement",
+      "eventTags": "Tags d’événements",
+      "eventTagCreate": "Nouveau tag d’événement",
+      "eventTagEdit": "Modifier le tag d’événement",
+      "importableEvents": "Événements importables",
+      "images": "Images",
+      "imageUpload": "Téléverser des images",
+      "imageEdit": "Modifier l’image",
+      "documents": "Documents",
+      "documentUpload": "Téléverser des documents",
+      "documentEdit": "Modifier le document",
+      "videos": "Vidéos",
+      "videoUpload": "Téléverser des vidéos",
+      "videoEdit": "Modifier la vidéo",
+      "audio": "Audio",
+      "audioUpload": "Téléverser de l’audio",
+      "audioEdit": "Modifier l’audio",
+      "navigations": "Menus",
+      "navigationCreate": "Nouveau menu",
+      "navigationEdit": "Modifier le menu",
+      "newsletter": "Newsletter",
+      "newsletterEdit": "Modifier la newsletter",
+      "newsletterPreview": "Aperçu de la newsletter",
+      "banners": "Bannières",
+      "bannerCreate": "Nouvelle bannière",
+      "bannerEdit": "Modifier la bannière",
+      "authors": "Auteur·trice·s",
+      "authorCreate": "Nouvel·le auteur·trice",
+      "authorEdit": "Modifier l’auteur·trice",
+      "authorTags": "Tags d’auteur·trice·s",
+      "authorTagCreate": "Nouveau tag d’auteur·trice",
+      "authorTagEdit": "Modifier le tag d’auteur·trice",
+      "users": "Utilisateur·trice·s",
+      "userCreate": "Nouvel·le utilisateur·trice",
+      "userEdit": "Modifier l’utilisateur·trice",
+      "userRoles": "Rôles des utilisateur·trice·s",
+      "userRoleCreate": "Nouveau rôle d’utilisateur·trice",
+      "userRoleEdit": "Modifier le rôle d’utilisateur·trice",
+      "audience": "Audience",
+      "subscriptions": "Abonnements",
+      "subscriptionCreate": "Nouvel abonnement",
+      "subscriptionEdit": "Modifier l’abonnement",
+      "memberPlans": "Plans d’abonnement",
+      "memberPlanCreate": "Nouveau plan d’abonnement",
+      "memberPlanEdit": "Modifier le plan d’abonnement",
+      "paymentMethods": "Méthodes de paiement",
+      "paymentMethodCreate": "Nouvelle méthode de paiement",
+      "paymentMethodEdit": "Modifier la méthode de paiement",
+      "discountCodes": "Codes de réduction",
+      "discountCodeCreate": "Nouveau code de réduction",
+      "discountCodeEdit": "Modifier le code de réduction",
+      "discountCodeUsage": "Utilisation du code de réduction",
+      "goodies": "Goodies",
+      "goodieCreate": "Nouveau goodie",
+      "goodieEdit": "Modifier le goodie",
+      "consents": "Consentements",
+      "consentCreate": "Nouveau consentement",
+      "consentEdit": "Modifier le consentement",
+      "userConsents": "Consentements des utilisateur·trice·s",
+      "userConsentCreate": "Nouveau consentement d’utilisateur·trice",
+      "userConsentEdit": "Modifier le consentement d’utilisateur·trice",
+      "automaticEmails": "E-mails automatiques",
+      "mailTemplates": "Modèles d’e-mail",
+      "mailTemplateCreate": "Nouveau modèle d’e-mail",
+      "mailTemplateEdit": "Modifier le modèle d’e-mail",
+      "systemMails": "E-mails de compte et de connexion",
+      "mailSend": "Envoyer un e-mail",
+      "mailLog": "E-mails envoyés",
+      "networkContent": "Réseau We.Publish",
+      "peers": "Peers",
+      "peerCreate": "Nouveau peer",
+      "peerEdit": "Modifier le peer",
+      "peerProfile": "Profil de peering",
+      "apiTokens": "Clés API",
+      "apiTokenGenerate": "Nouvelle clé API",
+      "tokens": "Tokens",
+      "tokenGenerate": "Nouveau token",
+      "integrations": "Intégrations",
+      "integrationEdit": "Modifier l’intégration",
+      "settings": "Paramètres",
+      "websiteSettings": "Paramètres du site",
+      "seo": "Liste de contrôle SEO",
+      "logout": "Déconnexion"
     },
     "navigation": {
       "overview": {
@@ -1677,6 +1987,7 @@
         "linkTypeArticle": "Article",
         "linkTypePage": "Page",
         "linkTypeExternal": "Lien externe",
+        "linkType": "Type de lien",
         "keyInfo": "Nom technique utilisé par votre site pour trouver cette navigation, p.ex. « main » ou « footer ». À modifier uniquement en accord avec les personnes qui développent votre site."
       }
     },
@@ -1699,6 +2010,7 @@
       "validationFailedGeneric": "Impossible d’enregistrer. Corrigez les erreurs signalées.",
       "saveValidationFailed": "Échec de l’enregistrement",
       "publishValidationFailed": "Échec de la publication",
+      "title": "Modifier la page",
       "overview": {
         "createComment": "Créer un commentaire",
         "duplicate": "Dupliquer",
@@ -1717,7 +2029,8 @@
         "publishedAt": "{{publicationDate, ccc PP p}}",
         "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}",
         "unpublish": "Dépublier",
-        "unpublished": "Non publié"
+        "unpublished": "Non publié",
+        "loadingTemplate": "Chargement du modèle…"
       },
       "panels": {
         "chooseBlock": "Choisir le bloc",
@@ -1765,8 +2078,11 @@
         "hideHeaderInfo": "Masque l’en-tête du site sur cette page, p.ex. pour les landing pages.",
         "hideFooter": "Masquer le pied de page",
         "hideFooterInfo": "Masque le pied de page du site sur cette page, p.ex. pour les landing pages.",
-        "enterSocialMediaImage": "Veuillez ajouter une image pour les réseaux sociaux"
-      }
+        "enterSocialMediaImage": "Veuillez ajouter une image pour les réseaux sociaux",
+        "createTemplate": "Créer un modèle à partir de la page"
+      },
+      "unsavedChanges": "modifications non enregistrées",
+      "unpublishedChanges": "modifications pas encore publiées"
     },
     "pages": {
       "overview": {
@@ -1798,6 +2114,12 @@
         "untitled": "Sans titre",
         "updatedAt": "Mis à jour le",
         "updatedAtDate": "{{updatedAtDate, ccc PP pp}}"
+      },
+      "createModal": {
+        "title": "Nouvelle page",
+        "blank": "Page vide",
+        "search": "Rechercher des modèles",
+        "noResults": "Aucun modèle trouvé"
       }
     },
     "paymentMethodList": {
@@ -1926,7 +2248,9 @@
       "insertYourNewAnswer": "Saisir une nouvelle réponse",
       "urlCopied": "Lien de vote copié dans le presse-papiers.",
       "urlCopyingFailed": "Le lien de vote n’a pas pu être copié.",
-      "votes": "votes"
+      "votes": "votes",
+      "answerLabel": "Réponse {{number}}",
+      "deleteAnswer": "Supprimer la réponse « {{answer}} »"
     },
     "pollEditView": {
       "addAndSaveNewAnswer": "Ajouter une réponse",
@@ -1954,7 +2278,9 @@
       "emptySource": "Veuillez saisir le nom de la source.",
       "newSourcePlaceholder": "Nom de la source du vote (p. ex. Facebook)",
       "sourceHeaderCell": "Source",
-      "noPollAvailable": "Aucun sondage disponible."
+      "noPollAvailable": "Aucun sondage disponible.",
+      "deleteSource": "Supprimer la source « {{source}} »",
+      "votesFor": "Votes pour « {{answer}} » de la source {{source}}"
     },
     "pollList": {
       "closedAt": "Fermé le",
@@ -1978,7 +2304,9 @@
       "fingerprint": "Empreinte numérique",
       "deleteItems": "Supprimer les éléments",
       "userIdInfo": "Renseigné uniquement si la personne était connectée lors du vote. Vide pour les votes anonymes.",
-      "fingerprintInfo": "Un code anonyme dérivé de la connexion internet et du navigateur de la personne qui vote. De nombreux votes avec la même empreinte proviennent probablement du même appareil ; vous pouvez les sélectionner et les supprimer."
+      "fingerprintInfo": "Un code anonyme dérivé de la connexion internet et du navigateur de la personne qui vote. De nombreux votes avec la même empreinte proviennent probablement du même appareil ; vous pouvez les sélectionner et les supprimer.",
+      "selectAll": "Sélectionner tous les votes",
+      "selectVote": "Sélectionner le vote du {{date}}"
     },
     "pollStateIndication": {
       "closed": "Sondage fermé",
@@ -1995,7 +2323,33 @@
     "richtext": {
       "menuBar": {
         "paragraph": "Paragraphe",
-        "heading": "Titre {{level}}"
+        "heading": "Titre {{level}}",
+        "label": "Mise en forme",
+        "textStyle": "Style de texte",
+        "formatting": "Mise en forme du texte",
+        "undo": "Annuler",
+        "redo": "Rétablir",
+        "bold": "Gras",
+        "italic": "Italique",
+        "underline": "Souligné",
+        "strike": "Barré",
+        "subscript": "Indice",
+        "superscript": "Exposant",
+        "textColor": "Couleur du texte",
+        "backgroundColor": "Couleur de fond",
+        "lists": "Listes",
+        "bulletList": "Liste à puces",
+        "orderedList": "Liste numérotée",
+        "alignment": "Alignement",
+        "alignLeft": "Aligner à gauche",
+        "alignCenter": "Centrer",
+        "alignRight": "Aligner à droite",
+        "link": "Lien",
+        "editLink": "Modifier le lien",
+        "table": "Insérer un tableau",
+        "codeBlock": "Bloc de code",
+        "blockquote": "Citation",
+        "invisibleCharacters": "Afficher les caractères invisibles"
       },
       "link": {
         "title": "Lier le texte avec",
@@ -2013,6 +2367,22 @@
         "variantButtonMain": "Bouton (principal)",
         "variantButtonSecondary": "Bouton (secondaire)"
       },
+      "table": {
+        "label": "Tableau",
+        "addColumnBefore": "Insérer une colonne à gauche",
+        "addColumnAfter": "Insérer une colonne à droite",
+        "deleteColumn": "Supprimer la colonne",
+        "addRowBefore": "Insérer une ligne au-dessus",
+        "addRowAfter": "Insérer une ligne en dessous",
+        "deleteRow": "Supprimer la ligne",
+        "mergeCells": "Fusionner les cellules",
+        "splitCell": "Scinder la cellule",
+        "headerCell": "Cellule d'en-tête",
+        "columns": "Colonnes",
+        "rows": "Lignes",
+        "cells": "Cellules"
+      },
+      "dragHandle": "Faire glisser pour déplacer",
       "colorPicker": {
         "clear": "Réinitialiser la couleur"
       },
@@ -2050,6 +2420,8 @@
       "successTitle": "Enregistré",
       "subscriptionPlans": "Plans d’abonnement",
       "subscriptionUpgradeModel": "Lors d’une mise à niveau, facturer la différence de prix complète (au lieu du crédit restant au prorata)",
+      "subscriptionExtendWindowDays": "Fenêtre de renouvellement (jours avant l’échéance)",
+      "paymentMethodChangeExpiryDays": "Délai pour un changement de moyen de paiement (jours)",
       "warnings": {
         "askOperators": "Attention : la modification d’un ou de plusieurs des paramètres peut entraîner la rupture de la page ou avoir d’autres conséquences imprévisibles. En cas de doute, il est conseillé de consulter les opérateurs. Dans le cas contraire, vous pouvez continuer.",
         "guestCommenting": "Autoriser les commentaires des utilisateur·trice·s non authentifié·e·s.",
@@ -2081,6 +2453,8 @@
       "info": {
         "allowCommentEditing": "Les lecteur·trice·s peuvent encore modifier le texte de leurs propres commentaires après les avoir publiés.",
         "commentCharLimit": "Nombre maximal de caractères qu’un commentaire peut contenir. Les commentaires plus longs ne peuvent pas être envoyés.",
+        "subscriptionExtendWindowDays": "Combien de jours avant l’échéance d’un abonnement les lecteur·trice·s voient «Renouveler maintenant» dans leur profil. 30 = comme avant ; 365 = à tout moment, tant qu’aucune facture n’est ouverte.",
+        "paymentMethodChangeExpiryDays": "Combien de jours un changement de moyen de paiement commencé attend le paiement de la facture ouverte ou la confirmation du prestataire de paiement. Ensuite, il expire et l’abonnement garde son moyen de paiement actuel.",
         "newSubscriptionsApiPublic": "Rend les nouveaux abonnements d’une période choisie accessibles sans connexion via l’API publique, p.ex. pour afficher des chiffres en direct sur votre site. Les données sont anonymisées. Laissez cette option désactivée si vous n’en avez pas besoin.",
         "activeSubscriptionsApiPublic": "Rend tous les abonnements actuellement actifs accessibles sans connexion via l’API publique, p.ex. pour afficher des chiffres en direct sur votre site. Les données sont anonymisées. Laissez cette option désactivée si vous n’en avez pas besoin.",
         "renewingSubscriptionsApiPublic": "Rend les abonnements qui se renouvellent pendant une période choisie accessibles sans connexion via l’API publique, p.ex. pour afficher des chiffres en direct sur votre site. Les données sont anonymisées. Laissez cette option désactivée si vous n’en avez pas besoin.",
@@ -2172,7 +2546,8 @@
           "description": "Part lorsqu’un abonnement est résilié – par la personne sur le site web ou par vous dans l’éditeur. La résiliation pour facture impayée est gérée par la chronologie.",
           "example": "« Dommage de vous voir partir – votre abonnement court jusqu’au 31 décembre. »"
         }
-      }
+      },
+      "moveMail": "Déplacer «{{title}}»"
     },
     "subscriptionList": {
       "filter": {
@@ -2363,6 +2738,14 @@
       }
     },
     "userSubscriptionEdit": {
+      "paymentMethodChange": {
+        "pending": "Le·la lecteur·trice passe à {{paymentMethod}} : {{waitingFor}}. D’ici là, le moyen de paiement actuel reste en place. Le changement expire le {{expiresAt, PP}}.",
+        "waitingFor": {
+          "invoicePayment": "en attente du paiement de la facture ouverte",
+          "authorization": "en attente de la confirmation du prestataire de paiement",
+          "immediate": "appliqué immédiatement"
+        }
+      },
       "autoRenew": "Renouvellement automatique",
       "autoRenewDescription": "Renouveler l’abonnement automatiquement",
       "createTitle": "Créer un abonnement",
@@ -2478,6 +2861,62 @@
       "subscriptionStartsAt": "L’abonnement débute le {{date}}",
       "unexpectedErrorNoInvoice": "Erreur inattendue : facture inexistante."
     },
+    "articleTemplates": {
+      "list": {
+        "action": "Action",
+        "copy": "Copier",
+        "title": "Modèles d'articles",
+        "newTemplate": "Nouveau modèle d'article",
+        "name": "Nom",
+        "noName": "Sans nom",
+        "info": "Les modèles d'articles définissent le contenu et les métadonnées avec lesquels un nouvel article commence. Modifier un modèle n'affecte pas les articles déjà créés à partir de celui-ci."
+      },
+      "edit": {
+        "loadingTemplate": "Chargement du modèle…",
+        "loadingArticle": "Chargement de l'article…",
+        "copyName": "{{name}} (copie)",
+        "name": "Nom",
+        "backToList": "Retour à la liste",
+        "metadata": "Métadonnées",
+        "saved": "Enregistré",
+        "created": "Créé",
+        "new": "Nouveau",
+        "editing": "En cours d'édition",
+        "empty": "Ce modèle n'a pas encore de blocs. Ajoute le premier avec +."
+      },
+      "delete": {
+        "title": "Supprimer le modèle d'article ?",
+        "body": "Voulez-vous vraiment supprimer le modèle d'article « {{name}} » ? Les articles créés à partir de celui-ci ne sont pas affectés."
+      }
+    },
+    "pageTemplates": {
+      "list": {
+        "action": "Action",
+        "copy": "Copier",
+        "title": "Modèles de pages",
+        "newTemplate": "Nouveau modèle de page",
+        "name": "Nom",
+        "noName": "Sans nom",
+        "info": "Les modèles de pages définissent le contenu et les métadonnées avec lesquels une nouvelle page commence. Modifier un modèle n'affecte pas les pages déjà créées à partir de celui-ci."
+      },
+      "edit": {
+        "loadingTemplate": "Chargement du modèle…",
+        "loadingPage": "Chargement de la page…",
+        "copyName": "{{name}} (copie)",
+        "name": "Nom",
+        "backToList": "Retour à la liste",
+        "metadata": "Métadonnées",
+        "saved": "Enregistré",
+        "created": "Créé",
+        "new": "Nouveau",
+        "editing": "En cours d'édition",
+        "empty": "Ce modèle n'a pas encore de blocs. Ajoute le premier avec +."
+      },
+      "delete": {
+        "title": "Supprimer le modèle de page ?",
+        "body": "Veux-tu vraiment supprimer le modèle de page « {{name}} » ? Les pages créées à partir de celui-ci ne sont pas affectées."
+      }
+    },
     "blockTemplates": {
       "list": {
         "title": "Modèles de blocs",
@@ -2498,7 +2937,8 @@
         "editing": "Modification",
         "saveConfirmMessage": "L’enregistrement met immédiatement à jour le contenu de ce modèle dans tous les articles et pages qui l’utilisent, y compris ceux déjà publiés.",
         "saveConfirmTitle": "Enregistrer le modèle ?",
-        "created": "Créé"
+        "created": "Créé",
+        "empty": "Ce modèle n'a pas encore de blocs. Ajoute le premier avec +."
       }
     },
     "yes": "Oui",
@@ -2673,6 +3113,7 @@
         "noActivityDay": "Aucun mouvement d’abonnement ce jour-là",
         "noActivityMonth": "Aucun mouvement d’abonnement ce mois-ci",
         "flowsTitle": "Entrées et sorties",
+        "keyboardHint": "Utilisez les flèches du clavier pour parcourir les dates. La vue tableau du tableau de bord Audience affiche les mêmes chiffres.",
         "net": "Solde",
         "since": "depuis le {{date}}",
         "flowsInfo": "Chaque barre montre combien d’abonnements ont été gagnés (au-dessus de la ligne) ou perdus (en dessous) par jour ou par mois. Survolez une barre pour voir le détail et le solde."
@@ -2682,9 +3123,9 @@
           "totalActiveSubscriptionCount": "Abonnements actifs et payés à la date de référence, ou qui seront payés et potentiellement encore actifs à l’avenir.",
           "overdueSubscriptionCount": "Abonnements renouvelés dont le paiement est dû. Ne sont pas inclus les abonnements achetés pour la première fois et qui n’ont pas été payés.",
           "renewedSubscriptionCount": "Abonnements renouvelés et payés pour une nouvelle période.",
-          "createdSubscriptionCount": "Abonnements entièrement nouveaux avec seulement une période payée jusqu’à présent.",
-          "deactivatedSubscriptionCount": "Abonnements désactivés/résiliés et non renouvelés.",
-          "replacedSubscriptionCount": "Abonnements remplacés par un autre (p. ex. abonnements d’essai).",
+          "createdSubscriptionCount": "Abonnements entièrement nouveaux avec seulement une période payée jusqu’à présent. Les abonnements qui en remplacent un autre (upgrades) ne sont pas inclus.",
+          "deactivatedSubscriptionCount": "Abonnements désactivés/résiliés et non renouvelés. Les abonnements remplacés par un upgrade ne sont pas inclus.",
+          "replacedSubscriptionCount": "Abonnements remplacés par un autre, p. ex. lors d’un upgrade. L’abonnement remplacé ne compte pas comme désactivé, le nouveau pas comme nouvel abonnement.",
           "predictedSubscriptionRenewalCount": "Nombre d’abonnements arrivant à expiration et prêts à être renouvelés.\n Abonnements pour la première fois, par rapport aux …\n Abonnements avec un historique de renouvellement (renouvellements subséquents)\n Les renouvellements sont affichés depuis le début de la période sélectionnée (ou la date actuelle, si la période commence dans le passé)\n Les renouvellements sont représentés par le nombre d’abonnements actuellement payés et actifs configurés pour se renouveler automatiquement.",
           "endingSubscriptionCount": "Abonnements qui expirent à la fin de leur période, excluant ceux configurés pour se renouveler automatiquement."
         },
@@ -2740,8 +3181,8 @@
       "showUsers": "Afficher les détails",
       "byDate": "Par",
       "totalNewSubscriptionsInfo": "Somme des abonnements remplacés, nouveaux et renouvelés. Seules les colonnes actives sont additionnées.",
-      "renewalRateInfo": "Part des abonnements qui ont été renouvelés à la fin de leur période. Les abonnements remplacés, renouvelés et désactivés sont pris en compte. Les abonnements renouvelés et non payés réduisent le taux de renouvellement jusqu’à ce qu’ils soient payés.",
-      "cancellationRateInfo": "Part des abonnements qui n’ont pas été renouvelés mais résiliés à la fin de leur période. Les abonnements remplacés, renouvelés et désactivés sont pris en compte. Les abonnements renouvelés et non payés augmentent le taux de résiliation jusqu’à ce qu’ils soient payés.",
+      "renewalRateInfo": "Part des abonnements qui ont été renouvelés à la fin de leur période, comptée le jour de la décision. Les abonnements renouvelés, remplacés et désactivés sont pris en compte ; un upgrade compte une fois comme renouvellement. Les abonnements renouvelés et non payés réduisent le taux de renouvellement jusqu’à ce qu’ils soient payés.",
+      "cancellationRateInfo": "Part des abonnements qui n’ont pas été renouvelés mais résiliés à la fin de leur période, comptée le jour de la décision. Les abonnements renouvelés, remplacés et désactivés sont pris en compte ; un upgrade compte une fois comme renouvellement. Les abonnements renouvelés et non payés augmentent le taux de résiliation jusqu’à ce qu’ils soient payés.",
       "predictedSubscriptionRenewalCountPerDay": {
         "highProbabilityInfo": "Abonnements payés avec renouvellement automatique, déjà renouvelés au moins une fois, qui arrivent de nouveau à renouvellement à la fin de leur période.",
         "lowProbabilityInfo": "Abonnements payés avec renouvellement automatique qui arrivent pour la première fois à renouvellement à la fin de leur première période."
@@ -2858,7 +3299,9 @@
         "memberPlans": "Plans d’abonnement",
         "activeInfo": "Seuls les goodies actifs sont proposés aux lecteur·rice·s lors de la souscription d’un abonnement.",
         "stockInfo": "Nombre total de pièces que vous pouvez offrir. Une fois toutes attribuées, le goodie n’est plus proposé. Laissez vide pour un nombre illimité.",
-        "memberPlansInfo": "Le goodie n’est proposé qu’avec ces plans d’abonnement."
+        "memberPlansInfo": "Le goodie n’est proposé qu’avec ces plans d’abonnement.",
+        "paymentPeriodicities": "Périodicités de paiement",
+        "paymentPeriodicitiesInfo": "Le goodie n’est proposé qu’avec ces périodicités de paiement, p. ex. uniquement avec un abonnement de 2 ans. Laissez vide pour le proposer avec chaque périodicité du plan d’abonnement."
       },
       "overview": {
         "title": "Goodies",
@@ -2968,6 +3411,8 @@
         "bexioMarkInvoiceAsOpenInfo": "Si activé, Bexio passe la facture à « ouverte » après l’envoi, au lieu de la laisser en brouillon."
       },
       "placeholderSecret": "Inchangé (masqué)",
+      "secretNotSet": "Non défini",
+      "secretStored": "Enregistré (masqué) – laisser vide pour le conserver",
       "mailSettings": {
         "type": "Type",
         "fromAddress": "Adresse de l’expéditeur",
@@ -3013,6 +3458,7 @@
         "analytics": "Analytique",
         "invalidFile": "Le fichier d’identifiants Google Analytics est invalide",
         "credentialsReadyToBeSaved": "Les identifiants sont prêts à être enregistrés !",
+        "credentialsStored": "Identifiants enregistrés – glissez-déposez un nouveau fichier ici pour les remplacer",
         "dropCredentialsFile": "Déposez le fichier d’identifiants ici !",
         "dragCredentialsFileHere": "Glissez-déposez le fichier d’identifiants Google Analytics ici",
         "articlePrefix": "Préfixe d’URL des articles We.Publish (généralement /a/)",
@@ -3247,8 +3693,7 @@
           "text": "Texte",
           "textPrimary": "La couleur du texte du site",
           "default": "Par défaut",
-          "paper": "Papier",
-          "pickColor": "Choisir la couleur"
+          "paper": "Papier"
         },
         "typography": {
           "fontFamily": "Famille de polices",
@@ -3258,6 +3703,7 @@
           "letterSpacing": "Espacement des lettres",
           "textTransform": "Transformation du texte",
           "textTransformDefault": "Par défaut",
+          "unitFor": "Unité pour {{label}}",
           "textTransformCapitalize": "Première lettre en majuscule",
           "textTransformUppercase": "Majuscules",
           "textTransformLowercase": "Minuscules",
@@ -3293,12 +3739,52 @@
           "fontWeightBold": "Gras",
           "fontWeightExtraBold": "Extra-gras",
           "fontWeightBlack": "Noir",
-          "fontFamilyInfo": "Choisissez parmi les polices ajoutées sous « Polices ». « Par défaut » utilise la police standard du site.",
+          "fontFamilyInfo": "Choisissez parmi les polices ajoutées sous « Polices ». « Par défaut » utilise la police de « Base de tous les styles ».",
+          "baseFontFamilyInfo": "Choisissez parmi les polices ajoutées sous « Polices ». « Par défaut » utilise la police standard du navigateur.",
           "fontSizeInfo": "La taille du texte. rem se réfère à la taille de base du site (1rem correspond généralement à 16px), px est une taille fixe en pixels.",
           "lineHeightInfo": "L’espace entre les lignes d’un paragraphe. 1.5em correspond à une fois et demie la taille de police.",
           "letterSpacingInfo": "L’espace entre les lettres. 0 correspond à l’espacement normal de la police ; de petites valeurs comme 0.02em suffisent généralement.",
           "textTransformInfo": "Modifie automatiquement la casse – p. ex. « Majuscules » affiche tout le texte en capitales, quelle que soit la saisie.",
-          "overrideInfo": "Activez pour définir une valeur propre à ce style de texte. Désactivé, la valeur générale en haut de cet onglet s’applique."
+          "overrideInfo": "Activez pour définir une valeur propre à ce style de texte. Désactivé, la valeur de « Base de tous les styles » s’applique, ou la valeur par défaut intégrée si elle n’y est pas définie non plus.",
+          "screenSizes": "Tailles d’écran",
+          "baseline": "Valeur de départ",
+          "belowWidth": "Moins de {{width}}px",
+          "fromWidth": "dès {{width}}px",
+          "addScreenSize": "Ajouter une taille d’écran",
+          "screenSizeRemoved": "{{name}} retiré",
+          "removeScreenSizeHint": "Appuyez sur Suppr pour retirer cette taille d’écran",
+          "undo": "Annuler",
+          "screenSizeInfo": "Ces valeurs s’appliquent aux écrans d’au moins {{width}}px de large. Ce qui est désactivé est repris de la taille d’écran immédiatement inférieure.",
+          "inheritedFromBaseline": "Hérité : {{value}} de la « Valeur de départ »",
+          "inheritedFromWidth": "Hérité : {{value}} de « {{name}} » (dès {{width}}px)",
+          "inheritedFromGeneral": "Hérité : {{value}} de « Base de tous les styles »",
+          "inheritedNone": "Rien à hériter – la valeur par défaut intégrée s’applique",
+          "inheritedFromTheme": "Hérité : {{value}}, la valeur par défaut intégrée de ce style",
+          "inheritedFromBrowser": "Hérité : {{value}}, la valeur standard du navigateur",
+          "replacesFromBaseline": "Remplace {{value}} de la « Valeur de départ »",
+          "replacesFromWidth": "Remplace {{value}} de « {{name}} » (dès {{width}}px)",
+          "replacesFromGeneral": "Remplace {{value}} de « Base de tous les styles »",
+          "replacesFromTheme": "Remplace {{value}}, la valeur par défaut intégrée de ce style",
+          "replacesFromBrowser": "Remplace {{value}}, la valeur standard du navigateur",
+          "replacesNone": "Remplace la valeur par défaut intégrée",
+          "fieldAtWidth": "{{label}} en {{name}} (dès {{width}}px)",
+          "unitOf": "Unité de {{label}}",
+          "hasErrors": "(contient des erreurs)",
+          "notSet": "Défaut",
+          "base": "Base de tous les styles",
+          "baseInfo": "Tous les styles ci-dessous héritent de ces valeurs, sauf s’ils définissent les leurs.",
+          "screenSizeOverrides": "Valeurs propres aux tailles d’écran : {{names}}",
+          "screenSizeName": "{{name}} (dès {{width}}px)",
+          "preview": "Aperçu",
+          "previewScreenSize": "Taille d’écran de l’aperçu",
+          "groups": {
+            "headings": "Titres",
+            "text": "Texte",
+            "teasers": "Teasers",
+            "article": "Article",
+            "banner": "Bannière",
+            "blocks": "Blocs"
+          }
         },
         "tabs": "Onglets du thème",
         "paletteTab": "Palette",
@@ -3317,12 +3803,22 @@
       "saveSuccess": "Les paramètres du site ont été enregistrés avec succès"
     },
     "externalApps": {
+      "apiKey": {
+        "expiresSoon": "La clé API «{{name}}» expire le {{expiresAt, PP}}. Créez une nouvelle clé, enregistrez-la dans l’app et associez-la ici.",
+        "expired": "La clé API «{{name}}» a expiré le {{expiresAt, PP}} – l’app ne peut plus lire de données.",
+        "revoked": "La clé API «{{name}}» a été révoquée – l’app ne peut plus lire de données."
+      },
       "apps": "Applications",
       "noAppsFound": "Aucune application externe configurée.",
       "notFound": "Application externe introuvable",
       "appsInfo": "Raccourcis vers des outils externes qui apparaissent sur le tableau de bord sous « We.Publish Apps ». « Cible » détermine si une app s’ouvre dans un nouvel onglet du navigateur ou directement dans l’éditeur. Certains sites ne peuvent pas être affichés dans l’éditeur – ouvrez-les dans un nouvel onglet."
     },
     "externalAppForm": {
+      "apiKey": "Clé API",
+      "apiKeyOption": "{{name}} ({{prefix}}…)",
+      "noApiKey": "Aucune clé API",
+      "apiKeyHelp": "La clé API avec laquelle l’app lit l’API We.Publish. L’éditeur indique alors quand elle expire ou a été révoquée. La clé elle-même est enregistrée dans l’app.",
+      "apiKeyDetails": "{{prefix}}… · {{scopes}} autorisations · expire le {{expiresAt, PP}}",
       "create": "Créer",
       "update": "Mettre à jour",
       "delete": "Supprimer",
@@ -4078,6 +4574,7 @@
       "message": "Les modifications que vous avez apportées ne seront peut-être pas enregistrées."
     },
     "action": "Actions",
+    "moreInfo": "Plus d’informations",
     "trackingPixels": {
       "errorHeader": "Erreur",
       "noPixelInfoDescription": "C’est le cas, par exemple, si aucun suivi n’est configuré ou pour les anciens articles.",
@@ -4109,16 +4606,74 @@
       "addBlock": "Ajouter un bloc",
       "hideBlock": "Masquer le bloc sur le site",
       "showBlock": "Afficher à nouveau le bloc sur le site",
+      "timeBlock": "Définir quand ce bloc s'affiche",
       "deleteBlock": "Supprimer le bloc",
       "moveBlockUp": "Déplacer le bloc vers le haut",
       "moveBlockDown": "Déplacer le bloc vers le bas",
+      "movedTo": "Bloc déplacé en position {{position}} sur {{count}}",
+      "deleted": "Bloc supprimé",
       "styleHelp": "Modifie l’apparence de ce bloc sur le site. Laissez vide pour l’affichage par défaut. Les styles se gèrent sous « Styles de blocs »."
+    },
+    "blockTiming": {
+      "title": "Programmer ce bloc",
+      "offAir": "Masqué sur le site pour le moment, car hors de son calendrier.",
+      "dateRange": "Dates",
+      "dateRangeEmpty": "N'importe quelle date",
+      "dateRangeHelp": "Le bloc s'affiche du début du premier jour jusqu'à la fin du dernier.",
+      "weekdays": "Jours",
+      "weekdaysHelp": "N'en choisissez aucun pour afficher le bloc tous les jours.",
+      "timeOfDay": "Heure",
+      "timeOfDayFrom": "De",
+      "timeOfDayTo": "à",
+      "timeOfDayHelp": "Les heures suivent le fuseau horaire du site. Une fin avant le début passe minuit, p. ex. 22:00 à 02:00.",
+      "sameTimes": "Le début et la fin sont identiques, le bloc ne s'affiche donc jamais. Modifiez l'une des heures ou choisissez « Toute la journée ».",
+      "clearTimeOfDay": "Toute la journée",
+      "clear": "Retirer le calendrier",
+      "done": "Terminé",
+      "summary": {
+        "always": "S'affiche toujours. Ajoutez des dates, des jours ou une heure pour limiter l'affichage.",
+        "never": "Ne s'affiche jamais, car le début et la fin sont identiques.",
+        "shows": "S'affiche {{conditions}}.",
+        "between": "du {{from}} au {{to}}",
+        "since": "à partir du {{from}}",
+        "until": "jusqu'au {{to}}",
+        "days": "{{days}}",
+        "hours": "de {{from}} à {{to}}"
+      }
+    },
+    "weekday": {
+      "Monday": "lundi",
+      "Tuesday": "mardi",
+      "Wednesday": "mercredi",
+      "Thursday": "jeudi",
+      "Friday": "vendredi",
+      "Saturday": "samedi",
+      "Sunday": "dimanche"
+    },
+    "weekdayRecurring": {
+      "Monday": "le lundi",
+      "Tuesday": "le mardi",
+      "Wednesday": "le mercredi",
+      "Thursday": "le jeudi",
+      "Friday": "le vendredi",
+      "Saturday": "le samedi",
+      "Sunday": "le dimanche"
+    },
+    "weekdayShort": {
+      "Monday": "lun.",
+      "Tuesday": "mar.",
+      "Wednesday": "mer.",
+      "Thursday": "jeu.",
+      "Friday": "ven.",
+      "Saturday": "sam.",
+      "Sunday": "dim."
     },
     "placeholderInput": {
       "add": "Ajouter"
     },
     "colorPicker": {
-      "pickColor": "Choisir la couleur"
+      "pickColor": "Choisir la couleur",
+      "pickColorFor": "Choisir la couleur : {{label}}"
     },
     "flexTile": {
       "moreActions": "Plus d’actions"
@@ -4147,12 +4702,22 @@
         "cancel": "Annuler"
       },
       "table": {
-        "empty": "Rien à afficher"
+        "empty": "Rien à afficher",
+        "label": "Tableau",
+        "loading": "Chargement",
+        "resizeColumn": "Redimensionner la colonne {{column}}"
       },
       "pagination": {
         "total": "{{count}} entrées",
         "pageSize": "Entrées par page",
-        "perPage": "{{count}} / page"
+        "perPage": "{{count}} / page",
+        "label": "Pagination",
+        "page": "Aller à la page {{page}}",
+        "currentPage": "Page {{page}}",
+        "first": "Aller à la première page",
+        "last": "Aller à la dernière page",
+        "next": "Aller à la page suivante",
+        "previous": "Aller à la page précédente"
       }
     },
     "dateRange": {
@@ -4175,6 +4740,8 @@
       "title": "Palette de commandes",
       "placeholder": "Où voulez-vous aller ?",
       "empty": "Aucun résultat pour",
+      "resultCount_one": "{{count}} résultat",
+      "resultCount_other": "{{count}} résultats",
       "groups": {
         "favourite": "Favoris",
         "navigate": "Aller à",
@@ -4191,9 +4758,11 @@
       },
       "create": {
         "article": "Créer un article",
+        "articleTemplate": "Créer un modèle d'article",
         "articleTag": "Créer un tag d'article",
         "paywall": "Créer un paywall",
         "page": "Créer une page",
+        "pageTemplate": "Créer un modèle de page",
         "pageTag": "Créer un tag de page",
         "crowdfunding": "Créer un crowdfunding",
         "blockTemplate": "Créer un modèle de bloc",
@@ -4202,6 +4771,8 @@
         "eventTag": "Créer un tag d'événement",
         "image": "Téléverser une image",
         "document": "Téléverser un document",
+        "video": "Téléverser une vidéo",
+        "audio": "Téléverser un audio",
         "navigation": "Créer une navigation",
         "banner": "Créer une bannière",
         "author": "Créer un auteur",
@@ -4363,7 +4934,8 @@
         "nothingToCompare": "L’audience Mailchimp n’a ni champs de contact ni groupes d’intérêt propres — aucune condition n’est possible.",
         "pickGroup": "Choisir un groupe …",
         "stored": "Enregistré dans le document",
-        "value": "Valeur"
+        "value": "Valeur",
+        "operator": "Comparaison"
       },
       "editor": {
         "back": "Retour à l’aperçu général",
@@ -4417,7 +4989,8 @@
         "mergeTagTitle": "Insérer une balise de fusion Mailchimp",
         "noTag": "Aucune balise trouvée.",
         "remove": "Retirer",
-        "searchTag": "Rechercher une balise …"
+        "searchTag": "Rechercher une balise …",
+        "linkUrl": "URL du lien"
       },
       "report": {
         "clipped": "Gmail tronque ce numéro et cache la fin — mentions légales, lien de désinscription et adresse — derrière «Message tronqué».",

@@ -1,4 +1,4 @@
-import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
+import { PublicContentCacheInvalidator } from '@wepublish/public-content-cache/api';
 import { Injectable } from '@nestjs/common';
 import { Prisma, PrismaClient, TagType } from '@prisma/client';
 import { getMaxTake, PrimeDataLoader, SortOrder } from '@wepublish/utils/api';

@@ -15,7 +15,7 @@ import {
   sessionWithPermissions,
 } from '@wepublish/ui/editor';
 import * as v2Client from '@wepublish/editor/api';
-import { BrowserRouter } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import { SettingList } from './settings-list';
 import { createTheme, ThemeProvider } from '@mui/material';
 
@@ -100,9 +100,11 @@ describe('SettingList', () => {
             mocks={[settingsListMock, updateSettingMock, paywallListMock]}
             addTypename={false}
           >
-            <BrowserRouter>
-              <SettingList />
-            </BrowserRouter>
+            <RouterProvider
+              router={createMemoryRouter([
+                { path: '*', element: <SettingList /> },
+              ])}
+            />
           </MockedProvider>
         </AuthContext.Provider>
       </ThemeProvider>
@@ -141,9 +143,11 @@ describe('SettingList', () => {
             mocks={[settingsListMock, updateSettingMock, paywallListMock]}
             addTypename={false}
           >
-            <BrowserRouter>
-              <SettingList />
-            </BrowserRouter>
+            <RouterProvider
+              router={createMemoryRouter([
+                { path: '*', element: <SettingList /> },
+              ])}
+            />
           </MockedProvider>
         </AuthContext.Provider>
       </ThemeProvider>
@@ -173,9 +177,11 @@ describe('SettingList', () => {
             mocks={[settingsListMock, updateSettingMock, paywallListMock]}
             addTypename={false}
           >
-            <BrowserRouter>
-              <SettingList />
-            </BrowserRouter>
+            <RouterProvider
+              router={createMemoryRouter([
+                { path: '*', element: <SettingList /> },
+              ])}
+            />
           </MockedProvider>
         </AuthContext.Provider>
       </ThemeProvider>
@@ -201,9 +207,11 @@ describe('SettingList', () => {
             mocks={[settingsListMock, updateSettingMock, paywallListMock]}
             addTypename={false}
           >
-            <BrowserRouter>
-              <SettingList />
-            </BrowserRouter>
+            <RouterProvider
+              router={createMemoryRouter([
+                { path: '*', element: <SettingList /> },
+              ])}
+            />
           </MockedProvider>
         </AuthContext.Provider>
       </ThemeProvider>
@@ -213,7 +221,9 @@ describe('SettingList', () => {
       expect(screen.getByText('settingList.ms')).toBeInTheDocument()
     );
     expect(screen.getAllByText('settingList.minutes')).toHaveLength(2);
-    expect(screen.getByText('settingList.days')).toBeInTheDocument();
+    // session lifetime, the subscription renewal window and the expiry of a
+    // pending payment method change
+    expect(screen.getAllByText('settingList.days')).toHaveLength(3);
   });
 
   test('spaces every card in the second column alike', async () => {
@@ -224,9 +234,11 @@ describe('SettingList', () => {
             mocks={[settingsListMock, updateSettingMock, paywallListMock]}
             addTypename={false}
           >
-            <BrowserRouter>
-              <SettingList />
-            </BrowserRouter>
+            <RouterProvider
+              router={createMemoryRouter([
+                { path: '*', element: <SettingList /> },
+              ])}
+            />
           </MockedProvider>
         </AuthContext.Provider>
       </ThemeProvider>
@@ -244,6 +256,45 @@ describe('SettingList', () => {
     );
   });
 
+  test('names each control by its label alone, with the help beside it', async () => {
+    render(
+      <ThemeProvider theme={theme}>
+        <AuthContext.Provider value={sessionWithPermissions}>
+          <MockedProvider
+            mocks={[settingsListMock, updateSettingMock, paywallListMock]}
+            addTypename={false}
+          >
+            <RouterProvider
+              router={createMemoryRouter([
+                { path: '*', element: <SettingList /> },
+              ])}
+            />
+          </MockedProvider>
+        </AuthContext.Provider>
+      </ThemeProvider>
+    );
+
+    await waitFor(() =>
+      expect(
+        screen.getByRole('checkbox', { name: 'settingList.guestCommenting' })
+      ).toBeInTheDocument()
+    );
+
+    expect(
+      screen.getByRole('spinbutton', { name: 'settingList.peerToken' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('combobox', { name: 'settingList.newArticlePaywall' })
+    ).toBeInTheDocument();
+    expect(
+      screen
+        .getByRole('button', {
+          name: 'settingList.warnings.guestCommenting',
+        })
+        .closest('label')
+    ).toBeNull();
+  });
+
   test('renders the setting list view with settings', async () => {
     render(
       <ThemeProvider theme={theme}>
@@ -252,9 +303,11 @@ describe('SettingList', () => {
             mocks={[settingsListMock, updateSettingMock, paywallListMock]}
             addTypename={false}
           >
-            <BrowserRouter>
-              <SettingList />
-            </BrowserRouter>
+            <RouterProvider
+              router={createMemoryRouter([
+                { path: '*', element: <SettingList /> },
+              ])}
+            />
           </MockedProvider>
         </AuthContext.Provider>
       </ThemeProvider>

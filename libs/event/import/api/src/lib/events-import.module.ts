@@ -1,4 +1,4 @@
-import { GraphqlResponseCacheModule } from '@wepublish/kv-ttl-cache/api';
+import { PublicContentInvalidatorModule } from '@wepublish/public-content-cache/api';
 import {
   DynamicModule,
   Module,
@@ -24,8 +24,10 @@ export type EventsImportOptionsFactory = {
   createEventProviders(): Promise<EventsProvider[]> | EventsProvider[];
 };
 
-export interface EventsImportAsyncOptions
-  extends Pick<ModuleMetadata, 'imports'> {
+export interface EventsImportAsyncOptions extends Pick<
+  ModuleMetadata,
+  'imports'
+> {
   useExisting?: Type<EventsImportOptionsFactory>;
   useClass?: Type<EventsImportOptionsFactory>;
   useFactory?: (...args: any[]) => Promise<EventsProvider[]> | EventsProvider[];
@@ -34,7 +36,7 @@ export interface EventsImportAsyncOptions
 
 @Module({
   imports: [
-    GraphqlResponseCacheModule,
+    PublicContentInvalidatorModule,
     PrismaModule,
     CacheModule.register(),
     ImageFetcherModule,

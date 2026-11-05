@@ -1,6 +1,13 @@
 import { useApolloClient, useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import { Autocomplete, Button, TextField } from '@mui/material';
+import {
+  Autocomplete,
+  Button,
+  Divider,
+  Paper,
+  PaperProps,
+  TextField,
+} from '@mui/material';
 import {
   AuthorDocument,
   AuthorListDocument,
@@ -10,18 +17,26 @@ import {
   FullAuthorFragment,
 } from '@wepublish/editor/api';
 import { slugify } from '@wepublish/utils';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { PeerAvatar } from '../atoms/peer/peerAvatar';
+import { Pagination } from '../listView/pagination';
 import { getOperationNameFromDocument } from '../utility';
 
 const ButtonWrapper = styled.div`
   margin: 8px;
 `;
 
+const StyledPagination = styled(Pagination)`
+  padding: 8px 12px 12px;
+`;
+
+const take = 10;
+
 export interface AuthorCheckPickerProps {
   list: FullAuthorFragment[];
+  label?: string;
   disabled?: boolean;
   onClose?(): void;
   onChange?(authors: FullAuthorFragment[]): void;
@@ -29,22 +44,57 @@ export interface AuthorCheckPickerProps {
 
 export function AuthorCheckPicker({
   list,
+  label,
   disabled,
   onChange,
 }: AuthorCheckPickerProps) {
   const { t } = useTranslation();
   const client = useApolloClient();
   const [authorsFilter, setAuthorsFilter] = useState('');
+  const [page, setPage] = useState(1);
   const [known, setKnown] = useState<FullAuthorFragment[]>([]);
   const requestedIds = useRef<Set<string>>(new Set());
 
-  const authorsVariables = { filter: authorsFilter || undefined, take: 10 };
+  const authorsVariables = {
+    filter: authorsFilter || undefined,
+    take,
+    skip: (page - 1) * take,
+  };
 
   const { data, loading } = useQuery(AuthorListDocument, {
     variables: authorsVariables,
   });
 
   const nodes = data?.authors?.nodes;
+  const totalCount = data?.authors?.totalCount ?? 0;
+
+  const PaperWithPager = useCallback(
+    ({ children, ...props }: PaperProps) => (
+      <Paper {...props}>
+        {children}
+
+        {totalCount > take && (
+          <>
+            <Divider />
+
+            <div onMouseDown={event => event.preventDefault()}>
+              <StyledPagination
+                compact
+                state={{
+                  page,
+                  limit: take,
+                  setPage,
+                  setLimit: () => undefined,
+                }}
+                totalCount={totalCount}
+              />
+            </div>
+          </>
+        )}
+      </Paper>
+    ),
+    [page, totalCount]
+  );
 
   const remember = (authors: FullAuthorFragment[]) =>
     setKnown(previous => {
@@ -137,8 +187,15 @@ export function AuthorCheckPicker({
       getOptionLabel={author => author.name}
       isOptionEqualToValue={(option, selected) => option.id === selected.id}
       filterOptions={options => options}
-      onInputChange={(_event, searchKeyword) => setAuthorsFilter(searchKeyword)}
+      inputValue={authorsFilter}
+      onInputChange={(_event, searchKeyword, reason) => {
+        if (reason !== 'reset') {
+          setAuthorsFilter(searchKeyword);
+          setPage(1);
+        }
+      }}
       onChange={(_event, authors) => onChange?.(authors)}
+      slots={{ paper: PaperWithPager }}
       renderOption={({ key, ...props }, author) => (
         <li
           key={key}
@@ -165,9 +222,7 @@ export function AuthorCheckPicker({
       renderInput={params => (
         <TextField
           {...params}
-          placeholder={
-            selectedAuthors.length ? undefined : t('blocks.quote.author')
-          }
+          label={label ?? t('blocks.quote.author')}
         />
       )}
       fullWidth

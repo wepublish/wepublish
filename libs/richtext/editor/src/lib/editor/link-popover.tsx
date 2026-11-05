@@ -15,7 +15,14 @@ import {
   Typography,
 } from '@mui/material';
 import styled from '@emotion/styled';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { TbExternalLink, TbLinkPlus } from 'react-icons/tb';
 import { useHeadings } from './use-headings';
 import {
@@ -29,6 +36,7 @@ import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import {
   EditorStateSnapshot,
+  posToDOMRect,
   useCurrentEditor,
   useEditorState,
 } from '@tiptap/react';
@@ -102,9 +110,11 @@ function stripMailto(href: string | undefined) {
 }
 
 type LinkPopoverProps = {
+  id?: string;
   open: boolean;
   anchorEl: PopperProps['anchorEl'];
   onClose: () => void;
+  onDismiss?: () => void;
 };
 
 const createLinkSchema = (t: TFunction) => {
@@ -156,8 +166,15 @@ const selectLinkState = ({ editor }: EditorStateSnapshot) => {
   };
 };
 
-export function LinkPopover({ open, anchorEl, onClose }: LinkPopoverProps) {
+export function LinkPopover({
+  id,
+  open,
+  anchorEl,
+  onClose,
+  onDismiss = onClose,
+}: LinkPopoverProps) {
   const { t } = useTranslation();
+  const titleId = useId();
   const headings = useHeadings();
 
   const editor = useCurrentEditor().editor!;
@@ -243,13 +260,17 @@ export function LinkPopover({ open, anchorEl, onClose }: LinkPopoverProps) {
 
   return (
     <ElevatedPopper
+      id={id}
+      role="dialog"
+      aria-labelledby={titleId}
       open={open}
       anchorEl={anchorEl}
       placement="bottom-start"
       disablePortal
       onKeyDown={e => {
         if (e.key === 'Escape') {
-          onClose();
+          e.stopPropagation();
+          onDismiss();
         }
 
         if (e.key === 'Enter' && e.target instanceof HTMLInputElement) {
@@ -260,6 +281,7 @@ export function LinkPopover({ open, anchorEl, onClose }: LinkPopoverProps) {
     >
       <Form>
         <Typography
+          id={titleId}
           variant="subtitle1"
           component={Title}
         >
@@ -440,7 +462,7 @@ export function LinkPopover({ open, anchorEl, onClose }: LinkPopoverProps) {
             fullWidth
             variant="contained"
             disableElevation
-            onClick={onClose}
+            onClick={onDismiss}
             type="button"
           >
             {t('cancel')}
@@ -462,14 +484,22 @@ export function LinkPopover({ open, anchorEl, onClose }: LinkPopoverProps) {
 }
 
 export function LinkPopoverButton({ isLink }: { isLink: boolean }) {
+  const { t } = useTranslation();
   const anchorRef = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
+  const popoverId = useId();
 
   return (
     <>
       <IconButton
         size="small"
         ref={anchorRef}
+        aria-label={
+          isLink ? t('richtext.menuBar.editLink') : t('richtext.menuBar.link')
+        }
+        aria-haspopup="dialog"
+        aria-expanded={open}
+        aria-controls={open ? popoverId : undefined}
         color={isLink ? 'primary' : undefined}
         onClick={() => setOpen(true)}
       >
@@ -477,10 +507,50 @@ export function LinkPopoverButton({ isLink }: { isLink: boolean }) {
       </IconButton>
 
       <LinkPopover
+        id={popoverId}
         open={open}
         anchorEl={() => anchorRef.current!}
         onClose={() => setOpen(false)}
+        onDismiss={() => {
+          setOpen(false);
+          anchorRef.current?.focus();
+        }}
       />
     </>
+  );
+}
+
+export function CaretLinkPopover() {
+  const editor = useCurrentEditor().editor!;
+  const [anchorEl, setAnchorEl] = useState<PopperProps['anchorEl']>(null);
+
+  useEffect(() => {
+    const openLinkMenu = () => {
+      const { empty, from, to } = editor.state.selection;
+
+      if (!empty) {
+        return;
+      }
+
+      const rect = posToDOMRect(editor.view, from, to);
+      setAnchorEl({ getBoundingClientRect: () => rect });
+    };
+
+    editor.on('openLinkMenu', openLinkMenu);
+
+    return () => {
+      editor.off('openLinkMenu', openLinkMenu);
+    };
+  }, [editor]);
+
+  return (
+    <LinkPopover
+      open={!!anchorEl}
+      anchorEl={anchorEl}
+      onClose={() => {
+        setAnchorEl(null);
+        editor.commands.focus();
+      }}
+    />
   );
 }

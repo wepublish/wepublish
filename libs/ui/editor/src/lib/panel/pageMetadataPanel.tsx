@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
 import {
   Alert,
-  Checkbox,
   Box,
   Button,
+  Checkbox,
   Drawer,
   FormControl,
   FormControlLabel,
@@ -26,10 +26,11 @@ import {
   CanGetPages,
   CanPublishPage,
 } from '@wepublish/permissions';
-import { SetStateAction, useCallback, useState } from 'react';
+import { SetStateAction, useCallback, useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdListAlt,
+  MdNoteAdd,
   MdSettings,
   MdShare,
   MdTravelExplore,
@@ -62,6 +63,7 @@ import { SeoBlockContext } from './seoBlockContext';
 import { getSeoPreviewData, SeoContentType } from './seoPreviewData';
 import { SocialPreviews } from './seoPreviews';
 import { SeoTab } from './seoTab';
+import { useTabPanel } from './useTabPanel';
 
 const InputWidth60 = styled(TextField)`
   width: 60%;
@@ -69,18 +71,17 @@ const InputWidth60 = styled(TextField)`
 
 const InputWidth40 = styled(TextField)`
   width: 40%;
-  margin-right: 8px;
 `;
 
 const InputList = styled.div`
   display: flex;
   flex-direction: row;
+  align-items: center;
+  gap: 8px;
 `;
 
 const PropertyFlag = styled(Box)`
   flex-shrink: 0;
-  padding-top: 6px;
-  padding-left: 8px;
   white-space: nowrap;
 `;
 
@@ -111,19 +112,23 @@ export interface PageMetadata {
 
 export interface PageMetadataPanelProps {
   value: PageMetadata;
+  isTemplate?: boolean;
   seoContext?: SeoBlockContext;
 
   onSave?(): void;
   onClose?(): void;
+  onCreateTemplate?(): void;
 
   onChange?(value: PageMetadata): void;
 }
 
 function PageMetadataPanel({
   value,
+  isTemplate,
   seoContext,
   onSave,
   onClose,
+  onCreateTemplate,
   onChange,
 }: PageMetadataPanelProps) {
   const {
@@ -148,6 +153,7 @@ function PageMetadataPanel({
   const [isEditModalOpen, setEditModalOpen] = useState(false);
 
   const [activeKey, setActiveKey] = useState(MetaDataType.General);
+  const { tabProps, panelProps } = useTabPanel(activeKey);
 
   const isAuthorized = useAuthorisation(CanCreatePage.id);
 
@@ -163,6 +169,7 @@ function PageMetadataPanel({
   );
 
   const { t } = useTranslation();
+  const tagsLabelId = useId();
 
   const handleMetadataPropertiesChange = useCallback(
     (updatedProperties: SetStateAction<ListValue<PageMetadataProperty>[]>) => {
@@ -362,30 +369,35 @@ function PageMetadataPanel({
               fullWidth
             />
 
-            <TextField
-              id="pageSlug"
-              name="slug"
-              label={
-                <>
-                  {t('pageEditor.panels.slug')}{' '}
-                  <InfoTooltip text={t('pageEditor.panels.slugInfo')} />
-                </>
-              }
-              disabled={!isAuthorized}
-              value={slug}
-              onChange={event =>
-                onChange?.({ ...value, slug: event.target.value })
-              }
-              fullWidth
-            />
+            {!isTemplate && (
+              <TextField
+                id="pageSlug"
+                name="slug"
+                label={
+                  <>
+                    {t('pageEditor.panels.slug')}{' '}
+                    <InfoTooltip text={t('pageEditor.panels.slugInfo')} />
+                  </>
+                }
+                disabled={!isAuthorized}
+                value={slug}
+                onChange={event =>
+                  onChange?.({ ...value, slug: event.target.value })
+                }
+                fullWidth
+              />
+            )}
 
             <FormSectionTitle>
               {t('metadataSections.publication')}
             </FormSectionTitle>
 
             <FormControl fullWidth>
-              <FormLabel>{t('pageEditor.panels.tags')}</FormLabel>
+              <FormLabel id={tagsLabelId}>
+                {t('pageEditor.panels.tags')}
+              </FormLabel>
               <SelectTags
+                aria-labelledby={tagsLabelId}
                 defaultTags={defaultTags}
                 disabled={!isAuthorized}
                 selectedTags={tags}
@@ -451,6 +463,20 @@ function PageMetadataPanel({
                 }
               />
             </FormGroup>
+
+            {onCreateTemplate && !isTemplate && (
+              <PermissionControl
+                qualifyingPermissions={['CAN_CREATE_PAGE_TEMPLATE']}
+              >
+                <Button
+                  variant="outlined"
+                  startIcon={<MdNoteAdd />}
+                  onClick={onCreateTemplate}
+                >
+                  {t('pageEditor.panels.createTemplate')}
+                </Button>
+              </PermissionControl>
+            )}
           </FormFields>
         );
 
@@ -486,14 +512,14 @@ function PageMetadataPanel({
                 {({ value, onChange }) => (
                   <InputList>
                     <InputWidth40
-                      placeholder={t('pageEditor.panels.key')}
+                      label={t('pageEditor.panels.key')}
                       value={value.key}
                       onChange={event => {
                         onChange({ ...value, key: event.target.value });
                       }}
                     />
                     <InputWidth60
-                      placeholder={t('pageEditor.panels.value')}
+                      label={t('pageEditor.panels.value')}
                       value={value.value}
                       onChange={event => {
                         onChange({ ...value, value: event.target.value });
@@ -554,30 +580,34 @@ function PageMetadataPanel({
       >
         <Tab
           value={MetaDataType.General}
+          {...tabProps(MetaDataType.General)}
           icon={<MdSettings />}
           iconPosition="start"
           label={<>{t('articleEditor.panels.general')}</>}
         />
         <Tab
           value={MetaDataType.SocialMedia}
+          {...tabProps(MetaDataType.SocialMedia)}
           icon={<MdShare />}
           iconPosition="start"
           label={<>{t('articleEditor.panels.socialMedia')}</>}
         />
         <Tab
           value={MetaDataType.Seo}
+          {...tabProps(MetaDataType.Seo)}
           icon={<MdTravelExplore />}
           iconPosition="start"
           label={<>{t('seoTab.title')}</>}
         />
         <Tab
           value={MetaDataType.Properties}
+          {...tabProps(MetaDataType.Properties)}
           icon={<MdListAlt />}
           iconPosition="start"
           label={<>{t('pageEditor.panels.properties')}</>}
         />
       </Tabs>
-      <DrawerBody>{currentContent()}</DrawerBody>
+      <DrawerBody {...panelProps}>{currentContent()}</DrawerBody>
 
       <Drawer
         anchor="right"

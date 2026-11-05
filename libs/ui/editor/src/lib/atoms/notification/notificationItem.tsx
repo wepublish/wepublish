@@ -32,6 +32,23 @@ const TitleRow = styled.div`
   flex-wrap: wrap;
 `;
 
+const TitleButton = styled.button`
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+`;
+
 const Content = styled.div`
   display: flex;
   align-items: center;
@@ -59,6 +76,8 @@ export interface NotificationItemProps {
   sourceTag?: string;
   actions?: ReactNode;
   children?: ReactNode;
+  /** Leaves out the body, so only the title row and the actions remain */
+  compact?: boolean;
   onClick?: () => void;
 }
 
@@ -68,9 +87,12 @@ export function NotificationItem({
   tags,
   sourceTag,
   actions,
-  children,
+  children: body,
+  compact,
   onClick,
 }: NotificationItemProps) {
+  const children = compact ? undefined : body;
+
   return (
     <Wrapper
       clickable={!!onClick}
@@ -80,7 +102,17 @@ export function NotificationItem({
       <Alert severity={severity}>
         <AlertTitle>
           <TitleRow>
-            <strong>{title}</strong>
+            {onClick ?
+              <TitleButton
+                type="button"
+                onClick={(event: MouseEvent) => {
+                  event.stopPropagation();
+                  onClick();
+                }}
+              >
+                {title}
+              </TitleButton>
+            : <strong>{title}</strong>}
             {tags}
             {sourceTag && (
               <Chip

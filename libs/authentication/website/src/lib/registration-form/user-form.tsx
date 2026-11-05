@@ -6,14 +6,13 @@ import {
   BuilderUserFormProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import dynamic from 'next/dynamic';
-import { useReducer } from 'react';
+import { lazy, Suspense, useReducer } from 'react';
 import { Controller } from 'react-hook-form';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import { CountrySelect } from './country-select';
 
-const BirthdayField = dynamic(() =>
-  import('./birthday-field').then(mod => mod.BirthdayField)
+const BirthdayField = lazy(() =>
+  import('./birthday-field').then(mod => ({ default: mod.BirthdayField }))
 );
 
 export const UserFormWrapper = styled('div')`
@@ -173,11 +172,13 @@ export function UserForm<T extends BuilderUserFormFields>({
           name={'birthday'}
           control={control}
           render={({ field, fieldState: { error } }) => (
-            <BirthdayField
-              field={field}
-              error={error}
-              label={t('user.form.birthday')}
-            />
+            <Suspense>
+              <BirthdayField
+                field={field}
+                error={error}
+                label={t('user.form.birthday')}
+              />
+            </Suspense>
           )}
         />
       )}

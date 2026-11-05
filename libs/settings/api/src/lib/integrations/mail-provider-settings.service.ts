@@ -11,10 +11,11 @@ import {
 } from './mail-provider-settings.model';
 import { PrimeDataLoader } from '@wepublish/utils/api';
 import { MailProviderSettingsDataloaderService } from './mail-provider-settings-dataloader.service';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from './secrets-crypto';
 import { ProviderSettingsChanged } from './provider-settings-changed';
 import { clearProviderConfig } from './clear-provider-config';
+import { encryptSecrets } from './encrypt-secrets';
 
 @Injectable()
 export class MailProviderSettingsService {
@@ -22,27 +23,16 @@ export class MailProviderSettingsService {
 
   constructor(
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService,
+    private resets: NamespaceResets,
     private providerSettingsChanged: ProviderSettingsChanged
   ) {}
 
   private encryptSecretsIfPresent<
     T extends { apiKey?: string | null; webhookEndpointSecret?: string | null },
   >(data: T): T {
-    let result = { ...data };
-    if (typeof data.apiKey === 'string' && data.apiKey.length > 0) {
-      result = { ...result, apiKey: this.crypto.encrypt(data.apiKey) };
-    }
-    if (
-      typeof data.webhookEndpointSecret === 'string' &&
-      data.webhookEndpointSecret.length > 0
-    ) {
-      result = {
-        ...result,
-        webhookEndpointSecret: this.crypto.encrypt(data.webhookEndpointSecret),
-      };
-    }
-    return result;
+    return encryptSecrets(data, ['apiKey', 'webhookEndpointSecret'], value =>
+      this.crypto.encrypt(value)
+    );
   }
 
   @PrimeDataLoader(MailProviderSettingsDataloaderService, 'id')
@@ -92,7 +82,7 @@ export class MailProviderSettingsService {
       data: output,
     });
 
-    await this.kv.resetNamespace('settings:mailprovider');
+    await this.resets.reset('settings:mailprovider');
     await this.providerSettingsChanged.notify('Mail provider');
     return returnValue;
   }
@@ -137,7 +127,7 @@ export class MailProviderSettingsService {
       data,
     });
 
-    await this.kv.resetNamespace('settings:mailprovider');
+    await this.resets.reset('settings:mailprovider');
     await this.providerSettingsChanged.notify('Mail provider');
     return returnValue;
   }
@@ -169,7 +159,7 @@ export class MailProviderSettingsService {
       where: { id },
     });
 
-    await this.kv.resetNamespace('settings:mailprovider');
+    await this.resets.reset('settings:mailprovider');
     await this.providerSettingsChanged.notify('Mail provider');
     return returnValue;
   }

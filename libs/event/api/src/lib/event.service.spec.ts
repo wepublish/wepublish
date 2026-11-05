@@ -1,4 +1,4 @@
-import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
+import { PublicContentCacheInvalidator } from '@wepublish/public-content-cache/api';
 import { Test, TestingModule } from '@nestjs/testing';
 import { EventService } from './event.service';
 import { PrismaClient } from '@prisma/client';
@@ -41,7 +41,13 @@ describe('EventService', () => {
         { provide: PrismaClient, useValue: prismaMock },
         {
           provide: PublicContentCacheInvalidator,
-          useValue: { invalidate: vi.fn(), invalidateAt: vi.fn() },
+          useValue: {
+            invalidate: vi.fn(),
+            invalidateAt: vi.fn(),
+          } satisfies Pick<
+            PublicContentCacheInvalidator,
+            'invalidate' | 'invalidateAt'
+          >,
         },
         {
           provide: EventDataloaderService,

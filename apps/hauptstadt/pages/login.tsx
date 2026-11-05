@@ -5,7 +5,9 @@ import {
   useUser,
 } from '@wepublish/authentication/website';
 import { PageContainer } from '@wepublish/page/website';
-import { getApiUrl, handleJwtLogin } from '@wepublish/utils/website';
+import { HauptstadtContentFullWidth } from '@wepublish/tenant/hauptstadt';
+import { getApiUrl } from '@wepublish/utils/website';
+import { handleJwtLogin } from '@wepublish/utils/website/next';
 import {
   FullSessionWithTokenWithoutUserFragment,
   PageDocument,
@@ -17,8 +19,6 @@ import { add } from 'date-fns';
 import { NextPageContext } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useRef } from 'react';
-
-import { HauptstadtContentFullWidth } from '../src/components/hauptstadt-content-wrapper';
 
 type LoginProps = { sessionToken?: FullSessionWithTokenWithoutUserFragment };
 

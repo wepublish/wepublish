@@ -7,8 +7,9 @@ import {
 } from './ai-settings.model';
 import { PrimeDataLoader } from '@wepublish/utils/api';
 import { AISettingsDataloaderService } from './ai-settings-dataloader.service';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from './secrets-crypto';
+import { encryptSecrets } from './encrypt-secrets';
 
 @Injectable()
 export class AISettingsService {
@@ -16,19 +17,15 @@ export class AISettingsService {
 
   constructor(
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService
+    private resets: NamespaceResets
   ) {}
 
   private encryptSecretsIfPresent<T extends { apiKey?: string | null }>(
     data: T
   ): T {
-    if (typeof data.apiKey === 'string' && data.apiKey.length > 0) {
-      return {
-        ...data,
-        apiKey: this.crypto.encrypt(data.apiKey),
-      };
-    }
-    return data;
+    return encryptSecrets(data, ['apiKey'], value =>
+      this.crypto.encrypt(value)
+    );
   }
 
   @PrimeDataLoader(AISettingsDataloaderService, 'id')
@@ -68,7 +65,7 @@ export class AISettingsService {
       create: data,
       update: {},
     });
-    await this.kv.resetNamespace('settings:ai');
+    await this.resets.reset('settings:ai');
     return returnValue;
   }
 
@@ -94,7 +91,7 @@ export class AISettingsService {
       where: { id },
       data: filteredUpdateData,
     });
-    await this.kv.resetNamespace('settings:ai');
+    await this.resets.reset('settings:ai');
     return returnValue;
   }
 
@@ -111,7 +108,7 @@ export class AISettingsService {
     const returnValue = await this.prisma.settingAIProvider.delete({
       where: { id },
     });
-    await this.kv.resetNamespace('settings:ai');
+    await this.resets.reset('settings:ai');
     return returnValue;
   }
 }

@@ -5,6 +5,7 @@ import mailchimp, {
 import { captureException } from '@sentry/nextjs';
 import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
+import { DailyBriefingContext } from '@wepublish/tenant/tsri';
 import {
   getApiUrl,
   getPageShell,
@@ -20,8 +21,6 @@ import {
 import { LinkContext } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
 import { ResponseError } from 'superagent';
-
-import { DailyBriefingContext } from '../src/components/teasers/teaser-sidebar-daily-briefing-context';
 
 type IndexProps = {
   campaigns: campaigns.Campaigns[];

@@ -4,7 +4,7 @@ import {
   UpsertPeerProfileInput,
   RemotePeerProfile,
 } from './peer-profile.model';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCache, NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { createSafeHostUrl } from './create-safe-host-url';
 import { GraphQLClient } from 'graphql-request';
 import { createHash } from 'crypto';
@@ -27,7 +27,8 @@ export class PeerProfileService {
   constructor(
     private prisma: PrismaClient,
     protected peer: PeerDataloaderService,
-    private kv: KvTtlCacheService
+    private kv: NamespacedCache,
+    private resets: NamespaceResets
   ) {}
 
   async getPeerProfile() {
@@ -141,7 +142,7 @@ export class PeerProfileService {
             callToActionText: peerProfile.callToActionText as any,
           },
         });
-    await this.kv.resetNamespace(LOCAL_PEER_PROFILE_CACHE_NAMESPACE);
+    await this.resets.reset(LOCAL_PEER_PROFILE_CACHE_NAMESPACE);
 
     return saved;
   }

@@ -29,7 +29,6 @@ import { Controller, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 import { CanGetSettings, CanUpdateSettings } from '@wepublish/permissions';
 import {
-  Box,
   Button,
   Card,
   CardContent,
@@ -59,16 +58,11 @@ const DescriptionListItemWrapper = styled(DescriptionListItem)`
   min-width: 100px;
 `;
 
-type SettingLabelProps = {
-  label: string;
-  info: string;
-};
-
-const SettingLabel = ({ label, info }: SettingLabelProps) => (
-  <>
-    {label} <InfoTooltip text={info} />
-  </>
-);
+const SettingRow = styled('div')`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing(0.5)};
+`;
 
 const SETTINGS = {
   [SettingName.AllowGuestCommenting]: {
@@ -147,6 +141,14 @@ const SETTINGS = {
     label: 'settingList.subscriptionUpgradeModel',
     value: false,
   },
+  [SettingName.SubscriptionExtendWindowDays]: {
+    label: 'settingList.subscriptionExtendWindowDays',
+    value: 30,
+  },
+  [SettingName.PaymentMethodChangeExpiryDays]: {
+    label: 'settingList.paymentMethodChangeExpiryDays',
+    value: 14,
+  },
 } as Record<SettingName, { label: string; value: unknown }>;
 
 type SettingValues = Record<SettingName, unknown>;
@@ -161,6 +163,8 @@ const NUMBER_FALLBACK_RANGES: Partial<Record<SettingName, [number, number]>> = {
   [SettingName.ResetPasswordJwtExpiresMin]: [10, 10080],
   [SettingName.PeeringTimeoutMs]: [1000, 10000],
   [SettingName.CommentCharLimit]: [0, 10000],
+  [SettingName.SubscriptionExtendWindowDays]: [0, 366],
+  [SettingName.PaymentMethodChangeExpiryDays]: [1, 90],
 };
 
 type Restrictions = Partial<
@@ -298,12 +302,13 @@ function SettingList() {
   );
 
   const renderToggle = (name: SettingName, info: string) => (
-    <Box>
+    <SettingRow>
       <Controller
         control={control}
         name={name}
         render={({ field }) => (
           <FormControlLabel
+            sx={{ marginRight: 0 }}
             control={
               <Checkbox
                 {...field}
@@ -311,16 +316,12 @@ function SettingList() {
                 checked={field.value as boolean}
               />
             }
-            label={
-              <SettingLabel
-                label={t(SETTINGS[name].label)}
-                info={info}
-              />
-            }
+            label={t(SETTINGS[name].label)}
           />
         )}
       />
-    </Box>
+      <InfoTooltip text={info} />
+    </SettingRow>
   );
 
   const renderNumberInput = (
@@ -335,12 +336,7 @@ function SettingList() {
         <TextField
           {...field}
           value={field.value as number}
-          label={
-            <SettingLabel
-              label={t(SETTINGS[name].label)}
-              info={info}
-            />
-          }
+          label={t(SETTINGS[name].label)}
           type="number"
           disabled={isDisabled}
           onChange={event => field.onChange(+event.target.value)}
@@ -349,10 +345,12 @@ function SettingList() {
           fullWidth
           slotProps={{
             input: {
-              endAdornment:
-                unit ?
-                  <InputAdornment position="end">{unit}</InputAdornment>
-                : undefined,
+              endAdornment: (
+                <InputAdornment position="end">
+                  {unit}
+                  <InfoTooltip text={info} />
+                </InputAdornment>
+              ),
             },
           }}
         />
@@ -407,7 +405,7 @@ function SettingList() {
             container
             spacing={2}
           >
-            <Grid size={{ xs: 6 }}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <Grid
                 container
                 spacing={2}
@@ -524,6 +522,18 @@ function SettingList() {
                           SettingName.SubscriptionUpgradeBillsFullDifference,
                           t('settingList.warnings.subscriptionUpgradeModel')
                         )}
+
+                        {renderNumberInput(
+                          SettingName.SubscriptionExtendWindowDays,
+                          t('settingList.info.subscriptionExtendWindowDays'),
+                          t('settingList.days')
+                        )}
+
+                        {renderNumberInput(
+                          SettingName.PaymentMethodChangeExpiryDays,
+                          t('settingList.info.paymentMethodChangeExpiryDays'),
+                          t('settingList.days')
+                        )}
                       </Stack>
                     </CardContent>
                   </Card>
@@ -531,7 +541,7 @@ function SettingList() {
               </Grid>
             </Grid>
 
-            <Grid size={{ xs: 6 }}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <Grid
                 container
                 spacing={2}
@@ -602,20 +612,21 @@ function SettingList() {
                         )}
 
                         <FormControl fullWidth>
-                          <FormLabel>
-                            <SettingLabel
-                              label={t(
-                                SETTINGS[SettingName.NewArticlePaywall].label
-                              )}
-                              info={t('settingList.warnings.newArticlePaywall')}
+                          <SettingRow>
+                            <FormLabel id="setting-new-article-paywall-label">
+                              {t(SETTINGS[SettingName.NewArticlePaywall].label)}
+                            </FormLabel>
+                            <InfoTooltip
+                              text={t('settingList.warnings.newArticlePaywall')}
                             />
-                          </FormLabel>
+                          </SettingRow>
 
                           <Controller
                             control={control}
                             name={SettingName.NewArticlePaywall}
                             render={({ field }) => (
                               <SelectPaywall
+                                aria-labelledby="setting-new-article-paywall-label"
                                 disabled={isDisabled}
                                 selectedPaywall={field.value as string | null}
                                 setSelectedPaywall={field.onChange}

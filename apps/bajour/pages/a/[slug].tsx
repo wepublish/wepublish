@@ -13,6 +13,17 @@ import { ArticleAuthor } from '@wepublish/author/website';
 import { PollBlock } from '@wepublish/block-content/website';
 import { Comment } from '@wepublish/comments/website';
 import { ContentWrapper } from '@wepublish/content/website';
+import {
+  BajourComment,
+  BajourContainer as Container,
+  BajourTeaserSlider,
+  BriefingNewsletter,
+  CommentListContainer,
+  FdTArticle,
+  FdtPollBlock,
+  SEARCH_SLIDER_TAG,
+  SearchSlider,
+} from '@wepublish/tenant/bajour';
 import { getApiUrl, revalidateFor } from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
@@ -39,16 +50,6 @@ import {
 import { GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import { ComponentProps } from 'react';
-
-import { BriefingNewsletter } from '../../src/components/briefing-newsletter/briefing-newsletter';
-import { FdTArticle } from '../../src/components/frage-des-tages/fdt-article';
-import { FdtPollBlock } from '../../src/components/frage-des-tages/fdt-poll-block';
-import { Container } from '../../src/components/layout/container';
-import { SEARCH_SLIDER_TAG } from '../../src/components/search-slider/search-slider';
-import { SearchSlider } from '../../src/components/search-slider/search-slider';
-import { BajourComment } from '../../src/components/website-builder-overwrites/blocks/comment/comment';
-import { CommentListContainer } from '../../src/components/website-builder-overwrites/blocks/comment-list-container/comment-list-container';
-import { BajourTeaserSlider } from '../../src/components/website-builder-overwrites/blocks/teaser-slider/bajour-teaser-slider';
 
 const uppercase = css`
   text-transform: uppercase;

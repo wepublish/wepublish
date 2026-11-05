@@ -65,6 +65,35 @@ describe('LruMap', () => {
       expect(map.bytes).toBe(5);
     });
 
+    it('removes the old value when the new one is larger than the size limit', () => {
+      const map = new LruMap<string, string>(100, 10);
+
+      map.set('a', '1234');
+      map.set('a', '1234567890');
+
+      expect(map.has('a')).toBe(false);
+      expect(map.bytes).toBe(0);
+    });
+
+    it('measures entries with a custom size', () => {
+      const map = new LruMap<string, { text: string }>(
+        100,
+        10,
+        (key, value) => key.length + value.text.length
+      );
+
+      map.set('a', { text: '1234' });
+      map.set('b', { text: '1234' });
+      map.set('c', { text: '1234' });
+
+      expect([...map.keys()]).toEqual(['b', 'c']);
+      expect(map.bytes).toBe(10);
+
+      map.delete('b');
+
+      expect(map.bytes).toBe(5);
+    });
+
     it('frees the size of deleted entries', () => {
       const map = new LruMap<string, string>(100, 10);
 

@@ -1,4 +1,4 @@
-import { mockEvent } from '@wepublish/storybook/mocks';
+import { mockEvent } from '@wepublish/mocks/website';
 
 import { getEventSEO } from './event-seo';
 

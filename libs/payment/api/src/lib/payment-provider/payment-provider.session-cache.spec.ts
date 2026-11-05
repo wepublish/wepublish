@@ -1,11 +1,22 @@
 import bodyParser from 'body-parser';
 import { PaymentState, PrismaClient } from '@prisma/client';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import {
+  createNamespacedCacheTesting,
+  type NamespacedCacheTesting,
+} from '@wepublish/kv-ttl-cache/api/testing';
 import { SESSION_CACHE_NAMESPACE } from '@wepublish/authentication/api';
 import { IntentState } from './payment-provider';
 import { MolliePaymentProvider } from './mollie-payment-provider';
 
 describe('payment provider customers', () => {
+  let testing: NamespacedCacheTesting;
+
+  beforeEach(async () => {
+    testing = await createNamespacedCacheTesting();
+  });
+
+  afterEach(() => testing.close());
+
   const buildPrismaMock = () => ({
     payment: {
       findUnique: vi.fn().mockResolvedValue({
@@ -48,15 +59,22 @@ describe('payment provider customers', () => {
 
   it('clears cached sessions when it stores a new customer id, since sessions carry the customers', async () => {
     const prisma = buildPrismaMock();
-    const kv = {
-      getOrLoadNs: vi.fn().mockResolvedValue({ offSessionPayments: true }),
-      resetNamespace: vi.fn().mockResolvedValue(undefined),
-    };
+    await testing.cache.setNs(
+      'settings:paymentprovider',
+      'mollie',
+      { offSessionPayments: true },
+      60
+    );
+    const reset = vi.spyOn(testing.resets, 'reset');
+    const sessionsBefore = await testing.versions.current(
+      SESSION_CACHE_NAMESPACE
+    );
     const provider = new MolliePaymentProvider({
       id: 'mollie',
       incomingRequestHandler: bodyParser.urlencoded({ extended: true }),
       prisma: prisma as unknown as PrismaClient,
-      kv: kv as unknown as KvTtlCacheService,
+      kv: testing.cache,
+      resets: testing.resets,
     });
 
     await provider.updatePaymentWithIntentState({
@@ -69,6 +87,9 @@ describe('payment provider customers', () => {
     });
 
     expect(prisma.user.update).toHaveBeenCalled();
-    expect(kv.resetNamespace).toHaveBeenCalledWith(SESSION_CACHE_NAMESPACE);
+    expect(reset).toHaveBeenCalledWith(SESSION_CACHE_NAMESPACE);
+    await expect(
+      testing.versions.current(SESSION_CACHE_NAMESPACE)
+    ).resolves.not.toBe(sessionsBefore);
   });
 });

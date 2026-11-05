@@ -190,6 +190,54 @@ export const CanRevokeAllApiTokens: Permission = {
   deprecated: false,
 };
 
+export const CanCreateVideo: Permission = {
+  id: 'CAN_CREATE_VIDEO',
+  description: 'Allows to create videos',
+  deprecated: false,
+};
+
+export const CanGetVideo: Permission = {
+  id: 'CAN_GET_VIDEO',
+  description: 'Allows to get video',
+  deprecated: false,
+};
+
+export const CanGetVideos: Permission = {
+  id: 'CAN_GET_VIDEOS',
+  description: 'Allows to get all videos',
+  deprecated: false,
+};
+
+export const CanDeleteVideo: Permission = {
+  id: 'CAN_DELETE_VIDEO',
+  description: 'Allows to delete videos',
+  deprecated: false,
+};
+
+export const CanCreateAudio: Permission = {
+  id: 'CAN_CREATE_AUDIO',
+  description: 'Allows to create audios',
+  deprecated: false,
+};
+
+export const CanGetAudio: Permission = {
+  id: 'CAN_GET_AUDIO',
+  description: 'Allows to get audio',
+  deprecated: false,
+};
+
+export const CanGetAudios: Permission = {
+  id: 'CAN_GET_AUDIOS',
+  description: 'Allows to get all audios',
+  deprecated: false,
+};
+
+export const CanDeleteAudio: Permission = {
+  id: 'CAN_DELETE_AUDIO',
+  description: 'Allows to delete audios',
+  deprecated: false,
+};
+
 export const CanCreateArticle: Permission = {
   id: 'CAN_CREATE_ARTICLE',
   description: 'Allows to create articles',
@@ -989,6 +1037,50 @@ export const CanPublishNewsletterCampaign: Permission = {
 };
 
 /**
+ * Article Templates
+ */
+
+export const CanCreateArticleTemplate: Permission = {
+  id: 'CAN_CREATE_ARTICLE_TEMPLATE',
+  description: 'Allows to create an article template',
+  deprecated: false,
+};
+
+export const CanUpdateArticleTemplate: Permission = {
+  id: 'CAN_UPDATE_ARTICLE_TEMPLATE',
+  description: 'Allows to update an article template',
+  deprecated: false,
+};
+
+export const CanDeleteArticleTemplate: Permission = {
+  id: 'CAN_DELETE_ARTICLE_TEMPLATE',
+  description: 'Allows to delete an article template',
+  deprecated: false,
+};
+
+/**
+ * Page Templates
+ */
+
+export const CanCreatePageTemplate: Permission = {
+  id: 'CAN_CREATE_PAGE_TEMPLATE',
+  description: 'Allows to create a page template',
+  deprecated: false,
+};
+
+export const CanUpdatePageTemplate: Permission = {
+  id: 'CAN_UPDATE_PAGE_TEMPLATE',
+  description: 'Allows to update a page template',
+  deprecated: false,
+};
+
+export const CanDeletePageTemplate: Permission = {
+  id: 'CAN_DELETE_PAGE_TEMPLATE',
+  description: 'Allows to delete a page template',
+  deprecated: false,
+};
+
+/**
  * Paywall
  */
 export const CanCreatePaywall: Permission = {
@@ -1283,6 +1375,14 @@ export const AllPermissions = [
   CanGetAllApiTokens,
   CanRevokeApiToken,
   CanRevokeAllApiTokens,
+  CanCreateVideo,
+  CanGetVideo,
+  CanGetVideos,
+  CanDeleteVideo,
+  CanCreateAudio,
+  CanGetAudio,
+  CanGetAudios,
+  CanDeleteAudio,
   CanCreateArticle,
   CanGetArticle,
   CanGetArticles,
@@ -1396,6 +1496,12 @@ export const AllPermissions = [
   CanCreateBlockTemplate,
   CanUpdateBlockTemplate,
   CanDeleteBlockTemplate,
+  CanCreateArticleTemplate,
+  CanUpdateArticleTemplate,
+  CanDeleteArticleTemplate,
+  CanCreatePageTemplate,
+  CanUpdatePageTemplate,
+  CanDeletePageTemplate,
   CanGetNewsletterCampaigns,
   CanCreateNewsletterCampaign,
   CanUpdateNewsletterCampaign,
@@ -1469,9 +1575,15 @@ export const EditorPermissions = [
   CanDeleteDocument,
   CanCreateApiToken,
   CanGetApiTokens,
-  CanGetAllApiTokens,
   CanRevokeApiToken,
-  CanRevokeAllApiTokens,
+  CanCreateVideo,
+  CanGetVideo,
+  CanGetVideos,
+  CanDeleteVideo,
+  CanCreateAudio,
+  CanGetAudio,
+  CanGetAudios,
+  CanDeleteAudio,
   CanCreateArticle,
   CanGetArticle,
   CanGetArticles,
@@ -1514,6 +1626,12 @@ export const EditorPermissions = [
   CanCreateBlockTemplate,
   CanUpdateBlockTemplate,
   CanDeleteBlockTemplate,
+  CanCreateArticleTemplate,
+  CanUpdateArticleTemplate,
+  CanDeleteArticleTemplate,
+  CanCreatePageTemplate,
+  CanUpdatePageTemplate,
+  CanDeletePageTemplate,
   CanGetNewsletterCampaigns,
   CanCreateNewsletterCampaign,
   CanUpdateNewsletterCampaign,

@@ -1,4 +1,7 @@
-import { createKvMock } from '@wepublish/kv-ttl-cache/api';
+import {
+  createNamespacedCacheTesting,
+  type NamespacedCacheTesting,
+} from '@wepublish/kv-ttl-cache/api/testing';
 import {
   extractLinks,
   LOG_MAIL_BODY_MAX_LENGTH,
@@ -6,18 +9,27 @@ import {
   readableBody,
 } from './log-mail-provider';
 
+const harnesses: NamespacedCacheTesting[] = [];
+
+afterEach(async () => {
+  await Promise.all(harnesses.splice(0).map(testing => testing.close()));
+});
+
 const makeProvider = async () => {
-  const kv = createKvMock();
+  const testing = await createNamespacedCacheTesting();
+  const kv = testing.cache;
+  harnesses.push(testing);
 
   await kv.setNs(
     'settings:mailprovider',
     'log',
-    JSON.stringify({
+    {
       id: 'log',
       type: 'log',
       name: 'Log',
       fromAddress: 'dev@wepublish.ch',
-    })
+    },
+    60
   );
 
   return new LogMailProvider({ id: 'log', kv, prisma: {} as never });

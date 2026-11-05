@@ -1,24 +1,36 @@
-import { Test } from '@nestjs/testing';
+import { Test, type TestingModule } from '@nestjs/testing';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCacheTestingModule } from '@wepublish/kv-ttl-cache/api/testing';
 import {
-  KvTtlCacheModule,
-  KvTtlCacheService,
+  PUBLIC_CONTENT_SHARED_NAMESPACES,
   PublicContentCacheInvalidator,
-} from '@wepublish/kv-ttl-cache/api';
+  PublicContentInvalidatorModule,
+} from '@wepublish/public-content-cache/api';
 import { ImageDataloaderService } from './image-dataloader.service';
 
 describe('image content cache', () => {
-  let kv: KvTtlCacheService;
+  let module: TestingModule;
+  let kv: NamespacedCache;
+  let invalidator: PublicContentCacheInvalidator;
   const prisma = { image: { findMany: vi.fn() } };
 
   beforeEach(async () => {
-    const module = await Test.createTestingModule({
-      imports: [KvTtlCacheModule],
+    module = await Test.createTestingModule({
+      imports: [
+        NamespacedCacheTestingModule.forRoot({
+          sharedNamespaces: PUBLIC_CONTENT_SHARED_NAMESPACES,
+        }),
+        PublicContentInvalidatorModule,
+      ],
     }).compile();
-    kv = module.get(KvTtlCacheService);
+    kv = module.get(NamespacedCache);
+    invalidator = module.get(PublicContentCacheInvalidator);
     prisma.image.findMany
       .mockReset()
       .mockResolvedValue([{ id: 'image-1', createdAt: new Date() }]);
   });
+
+  afterEach(() => module.close());
 
   it('loads an image from the database once across requests', async () => {
     await new ImageDataloaderService(prisma as any, kv).load('image-1');
@@ -32,7 +44,7 @@ describe('image content cache', () => {
 
   it('loads it again once images changed', async () => {
     await new ImageDataloaderService(prisma as any, kv).load('image-1');
-    await new PublicContentCacheInvalidator(kv).invalidateDraft('images');
+    await invalidator.invalidateDraft('images');
     await new ImageDataloaderService(prisma as any, kv).load('image-1');
 
     expect(prisma.image.findMany).toHaveBeenCalledTimes(2);

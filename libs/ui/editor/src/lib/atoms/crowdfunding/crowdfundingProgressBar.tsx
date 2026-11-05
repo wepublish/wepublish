@@ -3,6 +3,7 @@ import {
   CrowdfundingGoalType,
   FullCrowdfundingFragment,
 } from '@wepublish/editor/api';
+import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 
 function formatMoney(amount: number): string {
@@ -19,10 +20,15 @@ export function CrowdfundingProgressBar({
 }) {
   const { t } = useTranslation();
   const progress = Math.round(crowdfunding.activeGoal?.progress || 0);
+  const headingId = useId();
 
   return (
     <>
-      <Typography variant="h3">
+      <Typography
+        variant="h3"
+        component="p"
+        id={headingId}
+      >
         {crowdfunding.goalType === CrowdfundingGoalType.Revenue ?
           t('crowdfunding.form.revenue', {
             revenue: formatMoney(crowdfunding.revenue || 0),
@@ -37,6 +43,8 @@ export function CrowdfundingProgressBar({
         <LinearProgress
           variant="determinate"
           value={Math.min(progress, 100)}
+          aria-labelledby={headingId}
+          aria-valuetext={`${progress}%`}
           sx={{ flex: 1 }}
         />
 

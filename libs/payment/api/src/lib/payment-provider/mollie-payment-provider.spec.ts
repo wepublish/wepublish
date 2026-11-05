@@ -2,8 +2,9 @@ import {
   CheckIntentProps,
   CreatePaymentIntentProps,
   IntentState,
+  PaymentProviderProps,
 } from './payment-provider';
-import express from 'express';
+import type { NodeRequest } from '@nestjs/platform-node';
 import {
   calculateAndFormatAmount,
   mapMollieEventToPaymentStatus,
@@ -13,7 +14,10 @@ import bodyParser from 'body-parser';
 import { PaymentState, SubscriptionDeactivationReason } from '@prisma/client';
 import { PaymentMethod } from '@mollie/api-client';
 import { PrismaClient } from '@prisma/client';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import {
+  createNamespacedCacheTesting,
+  type NamespacedCacheTesting,
+} from '@wepublish/kv-ttl-cache/api/testing';
 import { mapMolliePaymentMethods } from '../payment.methode.mapper';
 import type { Mock } from 'vitest';
 const mollieApiPaymentGet = {
@@ -90,46 +94,58 @@ vi.mock('@mollie/api-client', async () => {
   };
 });
 
+const harnesses: NamespacedCacheTesting[] = [];
+
+const cacheWith = async (
+  config: object
+): Promise<Pick<PaymentProviderProps, 'kv' | 'resets'>> => {
+  const testing = await createNamespacedCacheTesting();
+  harnesses.push(testing);
+  await testing.cache.setNs('settings:paymentprovider', 'mollie', config, 60);
+
+  return { kv: testing.cache, resets: testing.resets };
+};
+
+afterEach(async () => {
+  await Promise.all(harnesses.splice(0).map(testing => testing.close()));
+});
+
 describe('MolliePaymentProvider', () => {
   let mollieOffSession: MolliePaymentProvider;
   let mollieOnSession: MolliePaymentProvider;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     const mockPrisma = {} as PrismaClient;
-    const mockKvOffSession = {
-      getOrLoadNs: vi.fn().mockResolvedValue({
-        name: 'Mollie',
-        offSessionPayments: true,
-        webhookEndpointSecret: 'secret',
-        mollie_apiBaseUrl: 'https://api.wepublish.works',
-        apiKey: 'secret',
-        mollie_methods: ['PAYPAL'],
-      }),
-    } as unknown as KvTtlCacheService;
+    const offSessionCache = await cacheWith({
+      name: 'Mollie',
+      offSessionPayments: true,
+      webhookEndpointSecret: 'secret',
+      mollie_apiBaseUrl: 'https://api.wepublish.works',
+      apiKey: 'secret',
+      mollie_methods: ['PAYPAL'],
+    });
 
-    const mockKvOnSession = {
-      getOrLoadNs: vi.fn().mockResolvedValue({
-        name: 'Mollie',
-        offSessionPayments: false,
-        webhookEndpointSecret: 'secret',
-        mollie_apiBaseUrl: 'https://api.wepublish.works',
-        apiKey: 'secret',
-        mollie_methods: ['PAYPAL'],
-      }),
-    } as unknown as KvTtlCacheService;
+    const onSessionCache = await cacheWith({
+      name: 'Mollie',
+      offSessionPayments: false,
+      webhookEndpointSecret: 'secret',
+      mollie_apiBaseUrl: 'https://api.wepublish.works',
+      apiKey: 'secret',
+      mollie_methods: ['PAYPAL'],
+    });
 
     mollieOffSession = new MolliePaymentProvider({
       id: 'mollie',
       incomingRequestHandler: bodyParser.urlencoded({ extended: true }),
       prisma: mockPrisma,
-      kv: mockKvOffSession,
+      ...offSessionCache,
     });
 
     mollieOnSession = new MolliePaymentProvider({
       id: 'mollie',
       incomingRequestHandler: bodyParser.urlencoded({ extended: true }),
       prisma: mockPrisma,
-      kv: mockKvOnSession,
+      ...onSessionCache,
     });
   });
 
@@ -138,7 +154,7 @@ describe('MolliePaymentProvider', () => {
       const response = await mollieOffSession.webhookForPaymentIntent({
         req: {
           body: {},
-        } as unknown as express.Request,
+        } as unknown as NodeRequest,
       });
       expect(response.status).toEqual(403);
     });
@@ -148,7 +164,7 @@ describe('MolliePaymentProvider', () => {
         req: {
           query: { key: 'secret' },
           body: {},
-        } as unknown as express.Request,
+        } as unknown as NodeRequest,
       });
       expect(response.status).toEqual(200);
       expect(response.paymentStates).toEqual([]);
@@ -161,7 +177,7 @@ describe('MolliePaymentProvider', () => {
         req: {
           query: { key: 'secret' },
           body: { id: transaction.id }, // Pass the transaction id as form data
-        } as unknown as express.Request,
+        } as unknown as NodeRequest,
       });
       expect(response.status).toEqual(200);
       expect(response.paymentStates).toEqual([
@@ -185,7 +201,7 @@ describe('MolliePaymentProvider', () => {
         req: {
           query: { key: 'secret' },
           body: { id: transaction.id }, // Pass the transaction id as form data
-        } as unknown as express.Request,
+        } as unknown as NodeRequest,
       });
       expect(response.status).toEqual(200);
       expect(response.paymentStates).toEqual([
@@ -561,9 +577,7 @@ describe('MolliePaymentProvider', () => {
         id: 'mollie',
         incomingRequestHandler: bodyParser.urlencoded({ extended: true }),
         prisma: prismaMock as unknown as PrismaClient,
-        kv: {
-          getOrLoadNs: vi.fn().mockResolvedValue({ offSessionPayments: true }),
-        } as unknown as KvTtlCacheService,
+        ...(await cacheWith({ offSessionPayments: true })),
       });
 
       await provider.updatePaymentWithIntentState({
@@ -593,9 +607,7 @@ describe('MolliePaymentProvider', () => {
         id: 'mollie',
         incomingRequestHandler: bodyParser.urlencoded({ extended: true }),
         prisma: prismaMock as unknown as PrismaClient,
-        kv: {
-          getOrLoadNs: vi.fn().mockResolvedValue({ offSessionPayments: true }),
-        } as unknown as KvTtlCacheService,
+        ...(await cacheWith({ offSessionPayments: true })),
       });
 
       await provider.updatePaymentWithIntentState({
@@ -630,7 +642,7 @@ describe('MolliePaymentProvider', () => {
         req: {
           query: { key: 'secret' },
           body: { id: 'tr_1' },
-        } as unknown as express.Request,
+        } as unknown as NodeRequest,
       });
 
       expect(response.paymentStates?.[0]?.state).toEqual(
@@ -694,14 +706,18 @@ describe('MolliePaymentProvider', () => {
       };
     };
 
+    let cache: Pick<PaymentProviderProps, 'kv' | 'resets'>;
+
+    beforeEach(async () => {
+      cache = await cacheWith({ offSessionPayments: true });
+    });
+
     const buildProvider = (prismaMock: unknown) =>
       new MolliePaymentProvider({
         id: 'mollie',
         incomingRequestHandler: bodyParser.urlencoded({ extended: true }),
         prisma: prismaMock as PrismaClient,
-        kv: {
-          getOrLoadNs: vi.fn().mockResolvedValue({ offSessionPayments: true }),
-        } as unknown as KvTtlCacheService,
+        ...cache,
       });
 
     it('reverses the invoice and rolls the paid period back on a chargeback', async () => {

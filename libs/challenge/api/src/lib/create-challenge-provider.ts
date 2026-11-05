@@ -1,12 +1,12 @@
 import { ChallengeProviderType, PrismaClient } from '@prisma/client';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import { ChallengeProvider } from './challenge-provider.interface';
 import { CFTurnstileProvider } from './providers/cf-turnstile.provider';
 import { HCaptchaProvider } from './providers/h-captcha.provider';
 
 export type ChallengeProviderDeps = {
   prisma: PrismaClient;
-  kv: KvTtlCacheService;
+  kv: NamespacedCache;
 };
 
 export const createChallengeProvider = (

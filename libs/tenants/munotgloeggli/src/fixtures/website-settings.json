@@ -1,0 +1,146 @@
+{
+  "theme": {
+    "palette": {
+      "info": {
+        "dark": "#01579b",
+        "main": "#0288d1",
+        "light": "#03a9f4",
+        "contrastText": "#fff"
+      },
+      "text": {
+        "primary": "#000000ff"
+      },
+      "error": {
+        "dark": "#c62828",
+        "main": "#d32f2f",
+        "light": "#ef5350",
+        "contrastText": "#fff"
+      },
+      "accent": {
+        "dark": "#ABB24664",
+        "main": "#F5FF64",
+        "light": "#A4EFEF",
+        "contrastText": "#000000ff"
+      },
+      "divider": "#0000000C",
+      "primary": {
+        "dark": "#A3154564",
+        "main": "#dc0d15",
+        "light": "#ED4B8264",
+        "contrastText": "#fff"
+      },
+      "success": {
+        "dark": "#1b5e20",
+        "main": "#2e7d32",
+        "light": "#4caf50",
+        "contrastText": "#fff"
+      },
+      "warning": {
+        "dark": "#e65100",
+        "main": "#ed6c02",
+        "light": "#ff9800",
+        "contrastText": "#fff"
+      },
+      "secondary": {
+        "dark": "#00000064",
+        "main": "#000",
+        "light": "#33333364",
+        "contrastText": "#fff"
+      },
+      "background": {
+        "paper": "#fff",
+        "default": "#fff"
+      }
+    },
+    "typography": {
+      "h1": {
+        "fontSize": "6rem",
+        "fontWeight": 600,
+        "lineHeight": "1.15em"
+      },
+      "h2": {
+        "fontSize": "3rem",
+        "fontWeight": 600,
+        "lineHeight": "1.15em"
+      },
+      "h3": {
+        "fontSize": "3rem",
+        "fontWeight": 600,
+        "lineHeight": "1.15em"
+      },
+      "h4": {
+        "fontSize": "1.625rem",
+        "fontWeight": 600,
+        "lineHeight": "1.15em"
+      },
+      "h5": {
+        "fontSize": "1.5rem",
+        "fontWeight": 600,
+        "lineHeight": "1.15em"
+      },
+      "h6": {
+        "fontSize": "1.25rem",
+        "fontWeight": 300,
+        "lineHeight": "1.15em"
+      },
+      "body1": {
+        "fontSize": "1rem",
+        "fontWeight": 400
+      },
+      "body2": {
+        "fontSize": "0.875rem",
+        "fontWeight": 400
+      },
+      "caption": {
+        "fontSize": "0.75rem",
+        "fontWeight": 400
+      },
+      "bannerCta": {
+        "fontSize": "1.25rem",
+        "lineHeight": "1.15em"
+      },
+      "bannerText": {},
+      "blockQuote": {
+        "fontSize": "1.625rem",
+        "fontWeight": 600,
+        "lineHeight": "1.15em"
+      },
+      "teaserLead": {
+        "fontSize": "1rem",
+        "fontWeight": 300,
+        "lineHeight": "1.7em"
+      },
+      "teaserMeta": {
+        "fontSize": "0.75rem"
+      },
+      "allVariants": {
+        "lineHeight": "1.4em"
+      },
+      "bannerTitle": {
+        "fontSize": "1.5rem",
+        "lineHeight": "1.15em"
+      },
+      "teaserTitle": {
+        "fontSize": "1.625rem",
+        "fontWeight": 600,
+        "lineHeight": "1.15em"
+      },
+      "articleAuthors": {},
+      "blockBreakBody": {},
+      "teaserPretitle": {
+        "fontSize": "0.875rem",
+        "fontWeight": 300
+      },
+      "blockBreakTitle": {
+        "fontSize": "84px",
+        "fontStyle": "italic",
+        "fontWeight": 600,
+        "lineHeight": "1.15em",
+        "textTransform": "uppercase"
+      },
+      "peerInformation": {},
+      "blockTitlePreTitle": {}
+    }
+  },
+  "fonts": []
+}

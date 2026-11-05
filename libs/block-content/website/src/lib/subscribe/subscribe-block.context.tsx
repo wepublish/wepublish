@@ -11,7 +11,10 @@ import {
   UpgradeSubscriptionInfoQuery,
   UpgradeSubscriptionInfoQueryVariables,
 } from '@wepublish/website/api';
-import { BuilderSubscribeProps } from '@wepublish/website/builder';
+import {
+  BuilderSubscribeProps,
+  BuilderUpgradeProps,
+} from '@wepublish/website/builder';
 
 import { ComponentProps, createContext, useContext } from 'react';
 
@@ -31,11 +34,13 @@ export type SubscribeBlockContextProps = {
     ResubscribeMutation,
     ResubscribeMutationVariables
   >;
-  upgradeInfo: useLazyQuery.ResultTuple<
-    UpgradeSubscriptionInfoQuery,
-    UpgradeSubscriptionInfoQueryVariables,
-    'complete' | 'empty' | 'streaming'
-  >;
+  upgradeInfo: [
+    useLazyQuery.ExecFunction<
+      UpgradeSubscriptionInfoQuery,
+      UpgradeSubscriptionInfoQueryVariables
+    >,
+    BuilderUpgradeProps['upgradeInfo'],
+  ];
   register: ReturnType<typeof useRegister>['register'];
 
   redirectPages: ComponentProps<typeof PaymentForm>['redirectPages'];

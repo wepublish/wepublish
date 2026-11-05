@@ -9,6 +9,7 @@ import {
 import { ArticleListWrapper } from '@wepublish/article/website';
 import { CommentListContainer } from '@wepublish/comments/website';
 import { ContentWrapper } from '@wepublish/content/website';
+import { TsriAdHeader, TsriAttentionCatcher } from '@wepublish/tenant/tsri';
 import { H2 } from '@wepublish/ui';
 import { getApiUrl, revalidateFor } from '@wepublish/utils/website';
 import {
@@ -26,9 +27,6 @@ import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import { ComponentProps } from 'react';
-
-import { TsriAttentionCatcher } from '../../src/components/break-blocks/tsri-attention-catcher';
-import TsriAdHeader from '../../src/components/tsri-ad-header';
 
 const AfterArticleWrapper = styled(DefaultArticleWrapper)`
   background-color: transparent !important;

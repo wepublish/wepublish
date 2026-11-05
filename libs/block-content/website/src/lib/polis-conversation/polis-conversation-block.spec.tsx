@@ -1,13 +1,19 @@
-import { render } from '@testing-library/react';
-import * as stories from './polis-conversation-block.stories';
-import { composeStories } from '@storybook/react';
+import {
+  mockPolisConversationBlock,
+  renderWithProviders,
+} from '@wepublish/mocks/website';
+import { PolisConversationBlock } from './polis-conversation-block';
 
-const storiesCmp = composeStories(stories);
+describe('PolisConversationBlock', () => {
+  it('does not embed the conversation', () => {
+    const { container } = renderWithProviders(
+      <PolisConversationBlock
+        {...mockPolisConversationBlock()}
+        className="polis"
+      />
+    );
 
-describe('Polis Conversaion Block', () => {
-  Object.entries(storiesCmp).forEach(([story, Component]) => {
-    it(`should render ${story}`, () => {
-      render(<Component />);
-    });
+    expect(container.querySelector('.polis')).toBeEmptyDOMElement();
+    expect(container.querySelector('iframe, script')).toBeNull();
   });
 });

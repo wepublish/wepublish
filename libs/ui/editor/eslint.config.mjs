@@ -83,8 +83,6 @@ export default [
     files: [
       '**/*.test.ts',
       '**/*.test.tsx',
-      '**/*.stories.ts',
-      '**/*.stories.tsx',
       '**/*.spec.ts',
       '**/*.spec.tsx',
     ],

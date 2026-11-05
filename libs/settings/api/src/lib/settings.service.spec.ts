@@ -5,7 +5,7 @@ import { PrismaClient, Setting } from '@prisma/client';
 import { SettingName } from './setting';
 import { GraphQLSettingValueType } from './settings.model';
 import { SettingDataloaderService } from './setting-dataloader.service';
-import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCacheTestingModule } from '@wepublish/kv-ttl-cache/api/testing';
 
 describe('SettingsService', () => {
   let service: SettingsService;
@@ -13,7 +13,7 @@ describe('SettingsService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [PrismaModule, KvTtlCacheModule],
+      imports: [PrismaModule, NamespacedCacheTestingModule.forRoot()],
       providers: [
         SettingsService,
         GraphQLSettingValueType,

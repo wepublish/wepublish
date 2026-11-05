@@ -10,7 +10,7 @@ import {
   PrimeDataLoader,
   SortOrder,
 } from '@wepublish/utils/api';
-import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
+import { PublicContentCacheInvalidator } from '@wepublish/public-content-cache/api';
 import { PollDataloaderService } from './poll-dataloader.service';
 import {
   CreatePollExternalVoteSourceInput,

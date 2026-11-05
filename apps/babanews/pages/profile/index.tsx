@@ -1,13 +1,12 @@
 import styled from '@emotion/styled';
 import { ContentWrapper } from '@wepublish/content/website';
 import { PersonalDataFormContainer } from '@wepublish/user/website';
+import { getApiUrl, ssrAuthLink } from '@wepublish/utils/website';
 import {
-  getApiUrl,
   getSessionTokenProps,
   handleJwtLogin,
-  ssrAuthLink,
   withAuthGuard,
-} from '@wepublish/utils/website';
+} from '@wepublish/utils/website/next';
 import {
   addClientCacheToProps,
   getApiClient,

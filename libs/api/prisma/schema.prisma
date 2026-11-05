@@ -319,7 +319,7 @@ model ApiToken {
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   name      String
-  tokenHash String   @unique
+  tokenHash String
   prefix    String
   scopes    String[]
 
@@ -330,9 +330,61 @@ model ApiToken {
   createdById String?
   createdBy   User?   @relation(fields: [createdById], references: [id], onDelete: SetNull)
 
+  externalApps ExternalApps[]
+
   @@index([createdAt])
   @@index([createdById])
+  @@index([prefix])
   @@map("api-tokens.tokens")
+}
+
+model Video {
+  id          String   @id
+  createdAt   DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt  DateTime @updatedAt @db.Timestamptz(3)
+  filename    String?
+  title       String?
+  description String?
+  mimeType    String
+  fileSize    Int
+  extension   String
+
+  width       Int?
+  height      Int?
+  duration    Float?
+  hasPoster   Boolean  @default(false)
+
+  source      String?
+  link        String?
+  license     String?
+
+  @@index([createdAt])
+  @@index([modifiedAt])
+  @@index([title])
+  @@map("videos")
+}
+
+model Audio {
+  id          String   @id
+  createdAt   DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt  DateTime @updatedAt @db.Timestamptz(3)
+  filename    String?
+  title       String?
+  description String?
+  mimeType    String
+  fileSize    Int
+  extension   String
+
+  duration    Float?
+
+  source      String?
+  link        String?
+  license     String?
+
+  @@index([createdAt])
+  @@index([modifiedAt])
+  @@index([title])
+  @@map("audios")
 }
 
 enum CommentItemType {
@@ -971,10 +1023,12 @@ model PaymentMethod {
   image   Image?  @relation(fields: [imageId], references: [id])
   imageId String?
 
-  Subscription      Subscription[]
-  Payment           Payment[]
-  subscriptionFlows SubscriptionFlow[]
-  migrateFromPlans  MemberPlan[]       @relation("PaymentMethodMigration")
+  Subscription             Subscription[]
+  Payment                  Payment[]
+  subscriptionFlows        SubscriptionFlow[]
+  migrateFromPlans         MemberPlan[]                      @relation("PaymentMethodMigration")
+  paymentMethodChangesFrom SubscriptionPaymentMethodChange[] @relation("PaymentMethodChangeFrom")
+  paymentMethodChangesTo   SubscriptionPaymentMethodChange[] @relation("PaymentMethodChangeTo")
 
   @@map("payment.methods")
 }
@@ -1003,6 +1057,8 @@ model Payment {
 
   paymentMethodID String
   paymentMethod   PaymentMethod @relation(fields: [paymentMethodID], references: [id])
+
+  paymentMethodChanges SubscriptionPaymentMethodChange[]
 
   @@index([intentID])
   @@map("payments")
@@ -1169,9 +1225,68 @@ model Subscription {
 
   mailSendJobEntries MailSendJobRecipient[]
 
+  paymentMethodChanges SubscriptionPaymentMethodChange[]
+
   @@index([userID])
   @@index([memberPlanID, createdAt, id])
   @@map("subscriptions")
+}
+
+enum PaymentMethodChangeKind {
+  /// The open invoice is paid with the new payment method.
+  invoicePayment @map("invoicePayment")
+  /// The reader authorizes the new payment method without being charged.
+  authorization  @map("authorization")
+  /// The new payment method needs no authorization (e.g. invoice).
+  immediate      @map("immediate")
+}
+
+enum PaymentMethodChangeState {
+  pending   @map("pending")
+  completed @map("completed")
+  failed    @map("failed")
+  expired   @map("expired")
+  canceled  @map("canceled")
+}
+
+/// A reader's request to move a subscription to another payment method. The
+/// subscription keeps its current payment method until the change completes.
+model SubscriptionPaymentMethodChange {
+  id         String   @id @default(dbgenerated("uuidv7()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  kind  PaymentMethodChangeKind
+  state PaymentMethodChangeState @default(pending)
+
+  subscriptionID String
+  subscription   Subscription @relation(fields: [subscriptionID], references: [id], onDelete: Cascade)
+
+  fromPaymentMethodID String
+  fromPaymentMethod   PaymentMethod @relation("PaymentMethodChangeFrom", fields: [fromPaymentMethodID], references: [id])
+
+  paymentMethodID String
+  paymentMethod   PaymentMethod @relation("PaymentMethodChangeTo", fields: [paymentMethodID], references: [id])
+
+  /// The payment of the open invoice (kind invoicePayment).
+  paymentID String?
+  payment   Payment? @relation(fields: [paymentID], references: [id], onDelete: SetNull)
+
+  /// The provider's authorization (kind authorization), never captured.
+  intentID     String?
+  intentSecret String?
+  intentData   String?
+  /// Amount held for the authorization, in cents.
+  amount       Int      @default(0)
+  currency     Currency
+
+  expiresAt   DateTime  @db.Timestamptz(3)
+  completedAt DateTime? @db.Timestamptz(3)
+
+  @@index([subscriptionID, state])
+  @@index([intentID])
+  @@index([paymentID])
+  @@map("subscriptions.payment-method-changes")
 }
 
 model UserAddress {
@@ -1647,7 +1762,34 @@ model BlockTemplate {
   name   String @unique
   blocks Json
 
+  articleTemplate ArticleTemplate?
+  pageTemplate    PageTemplate?
+
   @@map("block_templates")
+}
+
+model ArticleTemplate {
+  id         String   @id @default(dbgenerated("uuidv7()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  blockTemplateId String        @unique
+  blockTemplate   BlockTemplate @relation(fields: [blockTemplateId], references: [id], onDelete: Cascade)
+  metadata        Json
+
+  @@map("article_templates")
+}
+
+model PageTemplate {
+  id         String   @id @default(dbgenerated("uuidv7()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  blockTemplateId String        @unique
+  blockTemplate   BlockTemplate @relation(fields: [blockTemplateId], references: [id], onDelete: Cascade)
+  metadata        Json
+
+  @@map("page_templates")
 }
 
 enum NewsletterCampaignStatus {
@@ -2119,6 +2261,12 @@ model ExternalApps {
   target      ExternalAppsTarget
   icon        String?
 
+  /// The API key the app reads the We.Publish API with, so the editor can
+  /// show when it expires. The secret itself is only in the app.
+  apiTokenId String?
+  apiToken   ApiToken? @relation(fields: [apiTokenId], references: [id], onDelete: SetNull)
+
+  @@index([apiTokenId])
   @@map("apps.external")
 }
 
@@ -2252,6 +2400,9 @@ model Goodie {
   description Json?
   stock       Int?
   active      Boolean @default(true)
+
+  /// Empty = offered with every payment periodicity of the member plan
+  paymentPeriodicities PaymentPeriodicity[] @default([])
 
   imageID String?
   image   Image?  @relation(fields: [imageID], references: [id], onDelete: SetNull)

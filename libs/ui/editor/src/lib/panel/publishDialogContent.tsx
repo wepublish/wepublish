@@ -195,7 +195,7 @@ export function PublishDialogContent({
           <DateTimePicker
             dateTime={publishedAt}
             label={dateLabel}
-            helperText={dateHelperText}
+            helpInfo={dateHelperText}
             changeDate={date => setPublishedAt(date)}
           />
 

@@ -20,10 +20,26 @@ fragment Invoice on Invoice {
   description
   mail
   manuallySetAsPaidByUserId
+  manuallySetAsPaidByUser {
+    id
+    firstName
+    name
+  }
   canceledAt
+  scheduledDeactivationAt
   modifiedAt
   createdAt
   currency
+  payments {
+    id
+    state
+    createdAt
+    paymentMethod {
+      id
+      name
+      paymentProviderID
+    }
+  }
 }
 
 query Invoices(

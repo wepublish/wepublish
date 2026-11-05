@@ -1,12 +1,14 @@
 import {
   CanCreateApiToken,
   CanCreateArticle,
+  CanCreateArticleTemplate,
   CanCreateAuthor,
   CanCreateBanner,
   CanCreateBlockTemplate,
   CanCreateConsent,
   CanCreateCrowdfunding,
   CanCreateDiscountCode,
+  CanCreateAudio,
   CanCreateDocument,
   CanCreateEvent,
   CanCreateGoodie,
@@ -15,6 +17,7 @@ import {
   CanCreateMemberPlan,
   CanCreateNavigation,
   CanCreatePage,
+  CanCreatePageTemplate,
   CanCreatePaymentMethod,
   CanCreatePaywall,
   CanCreatePeer,
@@ -24,6 +27,7 @@ import {
   CanCreateUser,
   CanCreateUserConsent,
   CanCreateUserRole,
+  CanCreateVideo,
 } from '@wepublish/permissions';
 import {
   MdAccountCircle,
@@ -36,6 +40,7 @@ import {
   MdCountertops,
   MdCreditCard,
   MdDashboard,
+  MdAudiotrack,
   MdDescription,
   MdEvent,
   MdFactCheck,
@@ -44,12 +49,14 @@ import {
   MdLocationPin,
   MdMail,
   MdMoney,
+  MdNoteAdd,
   MdPayment,
   MdPersonAddAlt1,
   MdPhoto,
   MdSell,
   MdSignpost,
   MdVpnKey,
+  MdVideoLibrary,
 } from 'react-icons/md';
 
 import type { CommandDefinition } from './commandDefinition';
@@ -61,6 +68,13 @@ export const CREATE_COMMANDS: CommandDefinition[] = [
     icon: <MdDescription />,
     permissions: [CanCreateArticle.id],
     perform: ({ navigate }) => navigate('/articles/create'),
+  },
+  {
+    id: 'createArticleTemplate',
+    titleKey: 'commandPalette.create.articleTemplate',
+    icon: <MdNoteAdd />,
+    permissions: [CanCreateArticleTemplate.id],
+    perform: ({ navigate }) => navigate('/articles/templates/create'),
   },
   {
     id: 'createArticleTag',
@@ -82,6 +96,13 @@ export const CREATE_COMMANDS: CommandDefinition[] = [
     icon: <MdDashboard />,
     permissions: [CanCreatePage.id],
     perform: ({ navigate }) => navigate('/pages/create'),
+  },
+  {
+    id: 'createPageTemplate',
+    titleKey: 'commandPalette.create.pageTemplate',
+    icon: <MdNoteAdd />,
+    permissions: [CanCreatePageTemplate.id],
+    perform: ({ navigate }) => navigate('/pages/templates/create'),
   },
   {
     id: 'createPageTag',
@@ -138,6 +159,22 @@ export const CREATE_COMMANDS: CommandDefinition[] = [
     icon: <MdDescription />,
     permissions: [CanCreateDocument.id],
     perform: ({ navigate }) => navigate('/documents/upload'),
+  },
+  {
+    id: 'uploadVideo',
+    titleKey: 'commandPalette.create.video',
+    icon: <MdVideoLibrary />,
+    permissions: [CanCreateVideo.id],
+    feature: 'video-audio-uploads',
+    perform: ({ navigate }) => navigate('/videos/upload'),
+  },
+  {
+    id: 'uploadAudio',
+    titleKey: 'commandPalette.create.audio',
+    icon: <MdAudiotrack />,
+    permissions: [CanCreateAudio.id],
+    feature: 'video-audio-uploads',
+    perform: ({ navigate }) => navigate('/audio/upload'),
   },
   {
     id: 'createNavigation',

@@ -1,0 +1,14 @@
+{
+  "name": "tenant-eenews",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/tenants/eenews/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "test": {
+      "options": {
+        "config": "../../../{projectRoot}/vitest.config.ts"
+      }
+    }
+  }
+}

@@ -1,20 +1,20 @@
 {
     "i18n-ally.localesPaths": [
-        "apps/fazetten/locales",
-        "apps/flimmer/locales",
+        "libs/tenants/fazetten/src/locales",
+        "libs/tenants/flimmer/src/locales",
         "apps/ganzgraz/locales",
-        "apps/gruppetto/locales",
-        "apps/hauptstadt/locales",
-        "apps/munotgloeggli/locales",
-        "apps/onlinereports/locales",
-        "apps/reflekt/locales",
+        "libs/tenants/gruppetto/src/locales",
+        "libs/tenants/hauptstadt/src/locales",
+        "libs/tenants/munotgloeggli/src/locales",
+        "libs/tenants/onlinereports/src/locales",
+        "libs/tenants/reflekt/src/locales",
         "apps/tsri/locales",
         "apps/wepublish-site/locales",
-        "apps/wnti/locales",
-        "apps/zwoelf/locales",
+        "libs/tenants/wnti/src/locales",
+        "libs/tenants/zwoelf/src/locales",
         "apps/editor/src/app/locales",
         "libs/website/translations/src/lib",
-        "apps/factuel/locales"
+        "libs/tenants/factuel/src/locales"
     ],
     "i18n-ally.keystyle": "nested"
 }

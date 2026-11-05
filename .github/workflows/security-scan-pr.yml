@@ -26,7 +26,7 @@ jobs:
           fetch-depth: 0
 
       - name: Run TruffleHog (PR diff)
-        uses: trufflesecurity/trufflehog@4c282f54c0160102ccbebba421b89f3c3af6404d # v3.98.1
+        uses: trufflesecurity/trufflehog@e76dff8a7e57d6df0c60ad8cbf5d5cba505a8fc9 # v3.99.2
         with:
           version: 3.98.1
           base: ${{ github.event.pull_request.base.sha }}

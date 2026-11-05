@@ -35,6 +35,12 @@ const StyledTextArea = styled('textarea', {
   text-align: ${({ align }) => align};
   outline: none !important;
 
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.vars.palette.primary.main} !important;
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
   ${({ variant }) => ({ ...stylesForTypographyVariant(variant) })}
 
   &::placeholder {
@@ -60,9 +66,10 @@ export const TypographicTextArea = forwardRef<
 
   useImperativeHandle(forwardRef, () => ref.current!, []);
 
+  // Also resize when the value is set from outside, e.g. after a query loads.
   useLayoutEffect(() => {
     handleResize();
-  }, []);
+  }, [props.value]);
 
   useEffect(() => {
     if (typeof ResizeObserver !== 'undefined') {
@@ -103,6 +110,7 @@ export const TypographicTextArea = forwardRef<
       align={align}
       onChange={handleChange}
       rows={1}
+      aria-label={props['aria-labelledby'] ? undefined : props.placeholder}
       {...props}
     />
   );

@@ -26,7 +26,6 @@ import {
   SCOPED_JWT_VERIFIER,
   ScopedJwtGuard,
 } from '@wepublish/authentication/api';
-import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
 
 export interface SessionModuleOptions {
   sessionTTL: number;
@@ -36,8 +35,10 @@ export interface SessionModuleOptions {
   websiteURL: string;
 }
 
-export interface SessionModuleAsyncOptions
-  extends Pick<ModuleMetadata, 'imports'> {
+export interface SessionModuleAsyncOptions extends Pick<
+  ModuleMetadata,
+  'imports'
+> {
   useFactory: (
     ...args: any[]
   ) => Promise<SessionModuleOptions> | SessionModuleOptions;
@@ -51,7 +52,6 @@ export interface SessionModuleAsyncOptions
     ChallengeModule,
     SettingModule,
     SessionCacheModule,
-    KvTtlCacheModule,
   ],
   exports: [SessionService, JwtService, SCOPED_JWT_VERIFIER, ScopedJwtGuard],
 })

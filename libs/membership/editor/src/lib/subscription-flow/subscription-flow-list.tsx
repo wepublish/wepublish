@@ -374,8 +374,11 @@ function SubscriptionFlowList() {
   return (
     <>
       <PageIntro>
-        <Typography variant="h2">
-          <MdTune />
+        <Typography
+          variant="h2"
+          component="h1"
+        >
+          <MdTune aria-hidden />
 
           {defaultFlowOnly ?
             t('automaticMails.title')

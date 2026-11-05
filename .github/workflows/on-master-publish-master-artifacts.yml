@@ -71,10 +71,6 @@ jobs:
         ghcr.io/wepublish/media:${{ github.ref_name }}-${{ needs.date_sha_tag.outputs.tag }}
         ghcr.io/wepublish/media:${{ github.ref_name }}
         wepublishch/media:${{ github.ref_name }}
-      storybook_tags: |
-        ghcr.io/wepublish/storybook:${{ github.ref_name }}-${{ needs.date_sha_tag.outputs.tag }}
-        ghcr.io/wepublish/storybook:${{ github.ref_name }}
-        wepublishch/storybook:${{ github.ref_name }}
     secrets: inherit
 
   publish_master_docker_website:

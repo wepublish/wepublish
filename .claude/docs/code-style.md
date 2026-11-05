@@ -105,11 +105,24 @@ export const Wrapper = styled(ContentWrapper)<{ fadeout?: boolean }>`
   …/>} label={…} />` — no separate «on/off» text. Radii come from the theme:
   `theme.shape.borderRadius` (8px) for cards and panels, `calc(… * 0.75)` for
   controls and inner boxes; in `sx` that is `borderRadius: 1` and `0.75`.
+- **Accessibility plumbing (WCAG 2.2 AA):** fields get a visible `label`, never
+  a placeholder alone, and an `aria-label` must contain the visible text (2.5.3).
+  `DrawerTitle` names its enclosing `role="dialog"` itself — use it rather than
+  a bare `Typography` in drawers. Tabs with a content area use `useTabPanel`
+  (`libs/ui/editor/src/lib/panel/useTabPanel.ts`) for `id`/`aria-controls`/
+  `role="tabpanel"`. Snackbars render inside a `role="status"` stack; error and
+  warning entries are `role="alert"`. Editor blocks that validate pass a focus ref as the third
+  argument of `useRegisterValidator` so a failed save can focus them. Every
+  page renders exactly one `h1` (`EditorTemplate`/`LoginTemplate` take a
+  `title` for that).
 - **Document editors use `EditorHeader`** (`@wepublish/ui/editor`) inside
   `EditorTemplate`: status chip + last-saved on the left, `EditorHeaderButton`s
   on the right (secondary subtle, Save/Publish primary). Labels collapse to
   icons by container width (`collapse="md" | "sm" | false`). The bar bleeds to
   the content card's edges through `--wep-page-padding-*` set in `base.tsx`.
+  The bar is sticky; `EditorTemplate` publishes its measured height as
+  `--wep-sticky-top`, so anything else sticky (the richtext toolbar) uses
+  `top: var(--wep-sticky-top, 0px)` instead of hardcoding it.
 - **An edit panel's form *is* the record.** `useForm` fetches what it edits
   through `defaultValues` as an async callback (`useApolloClient().query`),
   rather than a `useQuery` whose result is copied into a parallel set of
@@ -132,6 +145,15 @@ export const Wrapper = styled(ContentWrapper)<{ fadeout?: boolean }>`
   multi-column view. `FormSectionTitle` heads a *group*; a heading over one
   control is that control's `FormLabel`. Never wrap `RichTextBlock` in a card or a bordered box —
   the editor draws its own outlined surface, so a wrapper is a second border.
+- **`useSeededState` is for the code that already has it, never for new code.**
+  It copies an external value into local state and re-copies when the value
+  changes — a mirror, and mirrors drift. Where the source is a query feeding a
+  form, `useForm`'s `values` (with `resetOptions: {keepDirtyValues: true}`)
+  does the same job and keeps what the user has typed, which the seed throws
+  away on every refetch; `videoEditPanel.tsx` is the worked example. Where the
+  source is the route, derive straight from it — `videoList.tsx` opens its
+  drawers on `location.pathname` and closes them by navigating, so there is no
+  second copy to fall out of step.
 - **A dialog's confirming action goes last**, so it lands bottom-right with
   the dismissive one to its left — Material's order, and what the rest of the
   editor's 57 dialogs now do. It is `variant="contained"` (a destructive one
@@ -152,8 +174,7 @@ export const Wrapper = styled(ContentWrapper)<{ fadeout?: boolean }>`
 - Website components are built through the **Website Builder** — get shared
   components from `useWebsiteBuilder()` rather than importing them directly, so
   tenants can override them.
-- Every new website component needs a Storybook story; stories are how these
-  components are tested. See [testing.md](testing.md).
+- Every new website component needs a spec; see [testing.md](testing.md).
 - Forms use React Hook Form with Zod resolvers. Icons come from React Icons.
   User-facing strings go through react-i18next — never hardcode copy; see
   [Translations](#translations).
@@ -165,6 +186,13 @@ key to all three. `locales.spec.ts` fails when a literal `t('…')` key is
 missing or the three catalogs drift apart. Zod messages live at module level,
 so use `lazyMessage('key')` from `apps/editor/src/app/utility.ts` instead of
 `t()`.
+
+Website copy lives in `libs/website/translations/src/lib/{de,fr}.json`, and
+`catalogs.spec.ts` fails when the two drift apart. A tenant overrides single
+keys in `libs/tenants/<tenant>/src/locales/*.json` through its config's
+`translations.overrides`; the app passes them to `initWePublishTranslator`, and
+specs load them with `applyTenantTranslations(tenant)`. Override a key there rather than editing the shared catalog for one
+site.
 
 - **German:** Swiss Standard German (no `ß`), lowercase `du`. `E-Mail`, never
   `Mail` — compounds too (`E-Mail-Vorlage`, `Test-E-Mail`, `E-Mail-Server`).

@@ -15,8 +15,9 @@ import {
 } from './sync-provider-settings.model';
 import { PrimeDataLoader } from '@wepublish/utils/api';
 import { SyncProviderSettingsDataloaderService } from './sync-provider-settings-dataloader.service';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from './secrets-crypto';
+import { encryptSecrets } from './encrypt-secrets';
 
 @Injectable()
 export class SyncProviderSettingsService {
@@ -24,23 +25,15 @@ export class SyncProviderSettingsService {
 
   constructor(
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService
+    private resets: NamespaceResets
   ) {}
 
   private encryptSecretsIfPresent<
     T extends { mailchimp_apiKey?: string | null },
   >(data: T): T {
-    let result = { ...data };
-    if (
-      typeof data.mailchimp_apiKey === 'string' &&
-      data.mailchimp_apiKey.length > 0
-    ) {
-      result = {
-        ...result,
-        mailchimp_apiKey: this.crypto.encrypt(data.mailchimp_apiKey),
-      };
-    }
-    return result;
+    return encryptSecrets(data, ['mailchimp_apiKey'], value =>
+      this.crypto.encrypt(value)
+    );
   }
 
   @PrimeDataLoader(SyncProviderSettingsDataloaderService, 'id')
@@ -82,7 +75,7 @@ export class SyncProviderSettingsService {
     const returnValue = await this.prisma.settingSyncProvider.create({
       data: output as any,
     });
-    await this.kv.resetNamespace('settings:syncprovider');
+    await this.resets.reset('settings:syncprovider');
     return returnValue;
   }
 
@@ -112,7 +105,7 @@ export class SyncProviderSettingsService {
       where: { id },
       data: filteredUpdateData,
     });
-    await this.kv.resetNamespace('settings:syncprovider');
+    await this.resets.reset('settings:syncprovider');
     return returnValue;
   }
 
@@ -131,7 +124,7 @@ export class SyncProviderSettingsService {
     const returnValue = await this.prisma.settingSyncProvider.delete({
       where: { id },
     });
-    await this.kv.resetNamespace('settings:syncprovider');
+    await this.resets.reset('settings:syncprovider');
     return returnValue;
   }
 

@@ -4,7 +4,8 @@ import {
   LoginFormContainer,
   useUser,
 } from '@wepublish/authentication/website';
-import { getApiUrl, handleJwtLogin } from '@wepublish/utils/website';
+import { getApiUrl } from '@wepublish/utils/website';
+import { handleJwtLogin } from '@wepublish/utils/website/next';
 import {
   FullSessionWithTokenWithoutUserFragment,
   getApiClient,

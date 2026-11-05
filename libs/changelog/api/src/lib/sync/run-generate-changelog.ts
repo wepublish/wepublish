@@ -45,10 +45,12 @@ function resolveBaseRef(explicitBase?: string): string {
 function gatherGitContext(baseRef: string) {
   const excludes = [
     ':(exclude)package-lock.json',
-    ':(exclude)libs/editor/api/src/lib/graphql.ts',
-    ':(exclude)libs/website/api/src/lib/graphql.ts',
+    ':(exclude)libs/editor/api/src/lib/gql/**',
+    ':(exclude)libs/website/api/src/lib/gql/**',
+    ':(exclude)libs/*/api/src/lib/schema-types.ts',
+    ':(exclude)libs/*/api/src/lib/possible-types.ts',
+    ':(exclude)libs/peering/api/src/lib/remote/schema.ts',
     ':(exclude)libs/peering/api/src/lib/remote/graphql.ts',
-    ':(exclude)libs/testing/src/graphql/graphql-public.ts',
     ':(exclude)apps/api-example/schema-v2.graphql',
   ];
 

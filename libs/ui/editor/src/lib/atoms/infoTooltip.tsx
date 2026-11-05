@@ -20,6 +20,17 @@ const TriggerButton = styled('button')`
   vertical-align: middle;
   cursor: help;
 
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 24px;
+    height: 24px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+  }
+
   &:hover,
   &:focus-visible {
     color: ${({ theme }) => theme.vars.palette.text.primary};
@@ -59,12 +70,13 @@ export interface InfoTooltipProps {
 export function InfoTooltip({
   text,
   label,
-  placement = 'top',
+  placement = 'bottom',
 }: InfoTooltipProps) {
   return (
     <Tooltip
       placement={placement}
       title={<TooltipText>{text}</TooltipText>}
+      describeChild={Boolean(label)}
     >
       <InfoTrigger
         aria-label={label ?? (typeof text === 'string' ? text : undefined)}

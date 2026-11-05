@@ -1,8 +1,9 @@
 import styled from '@emotion/styled';
 import { Modal as MuiModal } from '@mui/material';
-import { PropsWithChildren } from 'react';
+import { Children, PropsWithChildren, ReactNode, useId } from 'react';
 
 import { Button } from '../button/button';
+import { H5 } from '../typography/typography';
 
 export const ModalWrapper = styled('section')`
   position: absolute;
@@ -25,6 +26,11 @@ export const ModalContent = styled('div')`
   padding-bottom: 0;
 `;
 
+export const ModalBody = styled('div')`
+  display: grid;
+  gap: ${({ theme }) => theme.spacing(2)};
+`;
+
 export const ModalActions = styled('div')`
   display: flex;
   justify-content: end;
@@ -34,6 +40,7 @@ export const ModalActions = styled('div')`
 export type ModalProps = PropsWithChildren<{
   className?: string;
   open: boolean;
+  title: ReactNode;
   submitText: string;
   cancelText?: string;
   onCancel: () => void;
@@ -43,19 +50,39 @@ export type ModalProps = PropsWithChildren<{
 export const Modal = ({
   className,
   open,
+  title,
   onCancel,
   onSubmit,
   submitText,
   cancelText = 'Abbrechen',
   children,
 }: ModalProps) => {
+  const titleId = useId();
+  const bodyId = useId();
+  const hasBody = Children.toArray(children).length > 0;
+
   return (
     <MuiModal
       open={open}
       onClose={onCancel}
     >
-      <ModalWrapper className={className}>
-        <ModalContent>{children}</ModalContent>
+      <ModalWrapper
+        className={className}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        aria-describedby={hasBody ? bodyId : undefined}
+      >
+        <ModalContent>
+          <H5
+            id={titleId}
+            component="h1"
+          >
+            {title}
+          </H5>
+
+          {hasBody && <ModalBody id={bodyId}>{children}</ModalBody>}
+        </ModalContent>
 
         <ModalActions>
           <Button

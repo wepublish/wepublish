@@ -1,5 +1,6 @@
 import { CombinedGraphQLErrors } from '@apollo/client';
 import { PageContainer } from '@wepublish/page/website';
+import { EenewsPageShell } from '@wepublish/tenant/eenews';
 import {
   getApiUrl,
   getPageShell,
@@ -16,8 +17,6 @@ import {
 import { GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import { ComponentProps } from 'react';
-
-import { EenewsPageShell } from '../src/components/eenews-page-shell';
 
 export default function PageBySlugOrId() {
   const {

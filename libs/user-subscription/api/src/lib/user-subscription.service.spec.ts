@@ -23,6 +23,7 @@ describe('UserSubscriptionService', () => {
     paymentMethod: { findFirst: Mock; findUnique: Mock };
     subscription: { findUnique: Mock; update: Mock };
     settingPaymentProvider: { findMany: Mock };
+    invoice: { findMany: Mock };
   };
 
   let memberContextMock: {
@@ -32,6 +33,7 @@ describe('UserSubscriptionService', () => {
     createSubscription: Mock;
     deactivateSubscription: Mock;
     handleSubscriptionChange: Mock;
+    renewSubscriptionForUser: Mock;
   };
 
   let memberPlanDataloaderMock: {
@@ -49,6 +51,10 @@ describe('UserSubscriptionService', () => {
 
   let subscriptionServiceMock: {
     reactivateSubscription: Mock;
+  };
+
+  let goodieServiceMock: {
+    getValidGoodie: Mock;
   };
 
   beforeAll(() => {
@@ -69,6 +75,7 @@ describe('UserSubscriptionService', () => {
       },
       subscription: { findUnique: vi.fn(), update: vi.fn() },
       settingPaymentProvider: { findMany: vi.fn().mockResolvedValue([]) },
+      invoice: { findMany: vi.fn().mockResolvedValue([]) },
     };
 
     memberContextMock = {
@@ -85,6 +92,7 @@ describe('UserSubscriptionService', () => {
       }),
       deactivateSubscription: vi.fn().mockResolvedValue(undefined),
       handleSubscriptionChange: vi.fn().mockResolvedValue({}),
+      renewSubscriptionForUser: vi.fn().mockResolvedValue({ id: 'invoiceId' }),
     };
 
     memberPlanDataloaderMock = {
@@ -111,6 +119,10 @@ describe('UserSubscriptionService', () => {
       reactivateSubscription: vi.fn(),
     };
 
+    goodieServiceMock = {
+      getValidGoodie: vi.fn(),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UserSubscriptionService,
@@ -126,10 +138,7 @@ describe('UserSubscriptionService', () => {
           useValue: { getMemberPlanBySlug: vi.fn() },
         },
         { provide: PaymentsService, useValue: paymentsMock },
-        {
-          provide: GoodieService,
-          useValue: { getValidGoodie: vi.fn() },
-        },
+        { provide: GoodieService, useValue: goodieServiceMock },
         { provide: PrismaClient, useValue: prismaMock },
         { provide: SubscriptionService, useValue: subscriptionServiceMock },
       ],
@@ -191,6 +200,23 @@ describe('UserSubscriptionService', () => {
             discount: undefined,
             discountCodeId: undefined,
           })
+        );
+      });
+
+      it('validates a chosen goodie against the member plan and the payment periodicity', async () => {
+        await service.createSubscription('userId', {
+          ...baseArgs,
+          paymentPeriodicity: PaymentPeriodicity.yearly,
+          goodieId: 'goodieId',
+        });
+
+        expect(goodieServiceMock.getValidGoodie).toHaveBeenCalledWith(
+          'goodieId',
+          'memberPlanId',
+          PaymentPeriodicity.yearly
+        );
+        expect(memberContextMock.createSubscription).toHaveBeenCalledWith(
+          expect.objectContaining({ goodieId: 'goodieId' })
         );
       });
 
@@ -389,6 +415,55 @@ describe('UserSubscriptionService', () => {
         })
       ).rejects.toThrow('payment configuration invalid');
       expect(prismaMock.subscription.update).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('extendSubscription', () => {
+    const paymentMethods: Record<string, object> = {
+      currentPm: { id: 'currentPm', paymentProviderID: 'mollie' },
+    };
+
+    const subscription = {
+      id: 'subscriptionId',
+      userID: 'userId',
+      memberPlanID: 'memberPlanId',
+      paymentMethodID: 'currentPm',
+      paymentPeriodicity: PaymentPeriodicity.yearly,
+      autoRenew: true,
+      extendable: true,
+      memberPlan: { id: 'memberPlanId', migrateToTargetPaymentMethodID: null },
+    };
+
+    beforeEach(() => {
+      prismaMock.subscription.findUnique.mockResolvedValue({ ...subscription });
+      prismaMock.subscription.update.mockImplementation(
+        async ({ data }: { data: object }) => ({ ...subscription, ...data })
+      );
+      prismaMock.paymentMethod.findUnique.mockImplementation(
+        async ({ where }: { where: { id: string } }) =>
+          paymentMethods[where.id] ?? null
+      );
+      prismaMock.invoice.findMany.mockResolvedValue([]);
+      // no retired payment providers
+      prismaMock.settingPaymentProvider.findMany.mockResolvedValue([]);
+      memberContextMock.renewSubscriptionForUser.mockResolvedValue({
+        id: 'invoiceId',
+      });
+      // not off-session, so the payment is created with the provider
+      paymentsMock.getProviders.mockReturnValue([
+        { id: 'mollie', isOffSession: async () => false },
+      ]);
+    });
+
+    it("renews with the subscription's payment method", async () => {
+      await service.extendSubscription('userId', {
+        subscriptionId: 'subscriptionId',
+      });
+
+      expect(prismaMock.subscription.update).not.toHaveBeenCalled();
+      expect(paymentsMock.createPaymentWithProvider).toHaveBeenCalledWith(
+        expect.objectContaining({ paymentMethodID: 'currentPm' })
+      );
     });
   });
 

@@ -13,17 +13,17 @@ import {
 } from './crowdfunding.model';
 import { CrowdfundingGoalWithProgress } from './crowdfunding-goal.model';
 import { PrimeDataLoader } from '@wepublish/utils/api';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import { CrowdfundingDataloaderService } from './crowdfunding-dataloader.service';
+import { CROWDFUNDING_CACHE_NAMESPACE } from './crowdfunding-cache';
 
-const CROWDFUNDING_CACHE_NS = 'crowdfunding';
 const SUBSCRIPTIONS_CACHE_TTL_SECONDS = 60;
 
 @Injectable()
 export class CrowdfundingService {
   constructor(
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService
+    private kv: NamespacedCache
   ) {}
 
   public getActiveGoalWithProgress({
@@ -127,7 +127,7 @@ export class CrowdfundingService {
     ].join(':');
 
     return this.kv.getOrLoadNs(
-      CROWDFUNDING_CACHE_NS,
+      CROWDFUNDING_CACHE_NAMESPACE,
       cacheKey,
       () =>
         this.prisma.subscription.findMany({
