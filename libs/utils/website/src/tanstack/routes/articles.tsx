@@ -10,7 +10,7 @@ import {
   ArticlePageProps,
   loadArticle,
 } from '../pages/article-page';
-import { loadTag, TagPage } from '../pages/tag-page';
+import { DEFAULT_TAG_TAKE, loadTag, TagPage } from '../pages/tag-page';
 import {
   ApolloRouterContext,
   bailOutNotFound,
@@ -76,7 +76,9 @@ export const articleBySlugRoute = articleRouteFor('slug');
 export const articleByIdRoute = articleRouteFor('id');
 
 /** `pages/a/tag/[tag].tsx` */
-export const tagRoute = () => ({
+export const tagRoute = ({
+  take = DEFAULT_TAG_TAKE,
+}: { take?: number } = {}) => ({
   validateSearch: pageSearchSchema,
   loader: async ({
     context,
@@ -85,7 +87,7 @@ export const tagRoute = () => ({
     context: ApolloRouterContext;
     params: { tag: string };
   }) => {
-    const { apollo, found } = await loadTag({ data: { tag } });
+    const { apollo, found } = await loadTag({ data: { tag, take } });
 
     mergeApolloCache(context.apolloClient, apollo);
 
@@ -93,6 +95,6 @@ export const tagRoute = () => ({
       await bailOutNotFound(context);
     }
   },
-  component: TagPage,
+  component: () => <TagPage take={take} />,
   notFoundComponent: FourOhFourPage,
 });

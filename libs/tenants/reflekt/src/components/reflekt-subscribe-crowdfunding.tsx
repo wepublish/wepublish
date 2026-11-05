@@ -120,7 +120,7 @@ const ItemAmount = styled('div')`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: ${[euclidCircularB.style.fontFamily, 'sans-serif'].join(',')};
+  font-family: ${[euclidCircularB.family, 'sans-serif'].join(',')};
   font-weight: 500;
   font-size: clamp(3rem, 43cqi, 10rem);
   line-height: 1;
@@ -138,7 +138,7 @@ const ItemFreeAmountSlot = styled('div')`
 `;
 
 const ItemFreeAmountLabel = styled('span')`
-  font-family: ${[robotoMono.style.fontFamily, 'sans-serif'].join(',')};
+  font-family: ${[robotoMono.family, 'sans-serif'].join(',')};
   font-weight: 400;
   font-size: clamp(0.8rem, 6.5cqi, 1.4rem);
   line-height: 1.3;
@@ -163,7 +163,7 @@ const ItemFreeAmountBox = styled('div')`
   justify-items: center;
   background-color: ${({ theme }) => theme.palette.common.white};
   color: ${({ theme }) => theme.palette.common.black};
-  font-family: ${[euclidCircularB.style.fontFamily, 'sans-serif'].join(',')};
+  font-family: ${[euclidCircularB.family, 'sans-serif'].join(',')};
   font-weight: 500;
   font-size: clamp(1.25rem, 10cqi, 2.25rem);
   line-height: 1;
@@ -182,7 +182,7 @@ const ItemFreeAmountError = styled('span')`
   left: 0;
   right: 0;
   margin-top: 4px;
-  font-family: ${[robotoMono.style.fontFamily, 'sans-serif'].join(',')};
+  font-family: ${[robotoMono.family, 'sans-serif'].join(',')};
   font-size: clamp(0.65rem, 4.5cqi, 1rem);
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -229,7 +229,7 @@ const ItemFreeAmountSpinner = styled(CurrencyNumberSpinner, {
   }
 
   input {
-    font-family: ${[euclidCircularB.style.fontFamily, 'sans-serif'].join(',')};
+    font-family: ${[euclidCircularB.family, 'sans-serif'].join(',')};
     font-weight: 500;
     font-size: clamp(1.25rem, 10cqi, 2.25rem);
     line-height: 1;
@@ -273,7 +273,7 @@ const ItemFreeAmountSpinner = styled(CurrencyNumberSpinner, {
 `;
 
 const ItemPerYear = styled('span')`
-  font-family: ${[robotoMono.style.fontFamily, 'sans-serif'].join(',')};
+  font-family: ${[robotoMono.family, 'sans-serif'].join(',')};
   font-weight: 400;
   font-size: clamp(0.65rem, 4.5cqi, 1.1rem);
   letter-spacing: 0.05em;

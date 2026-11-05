@@ -1,10 +1,10 @@
-import { useRouter } from 'next/router';
-import { MouseEvent, useCallback, useRef, useState } from 'react';
+import { BuilderRouterContext } from '@wepublish/website/builder';
+import { MouseEvent, useCallback, useContext, useRef, useState } from 'react';
 
 export const PRESS_DURATION_MS = 220;
 
 export function usePressAnimation(href?: string) {
-  const router = useRouter();
+  const { navigate } = useContext(BuilderRouterContext);
   const [isPressing, setIsPressing] = useState(false);
   const navigationLockRef = useRef(false);
 
@@ -33,7 +33,10 @@ export function usePressAnimation(href?: string) {
             return;
           }
 
-          router.push(href!).finally(() => {
+          const navigation =
+            navigate ? navigate(href!) : window.location.assign(href!);
+
+          Promise.resolve(navigation).finally(() => {
             navigationLockRef.current = false;
           });
         }, PRESS_DURATION_MS);
@@ -43,7 +46,7 @@ export function usePressAnimation(href?: string) {
       setIsPressing(true);
       window.setTimeout(() => setIsPressing(false), PRESS_DURATION_MS);
     },
-    [href, router]
+    [href, navigate]
   );
 
   return { isPressing, onClick };

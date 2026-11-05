@@ -229,6 +229,15 @@ Two rules follow:
    `createTheme` merges it; every other tenant's is `createTheme: () => theme`
    and ignores the argument on purpose. Do not wire the prop into a tenant
    whose config does not read it — that is a behaviour change dressed as a fix.
+3. **A tenant config with its own `builder.elements` loses them** when the
+   app passes `extra={{ elements: { Link } }}`: `TenantProviders` spreads
+   `extra` over the builder props, and `elements` is replaced, not merged.
+   Spread the config's elements in — `{ ...tenant.builder.elements, Link }`,
+   as `apps/reflekt/src/app.tsx` does.
+4. **Every TanStack tenant needs a `/search` route**, linked or not. The
+   shared `SearchPage` navigates to `'/search'`, typed against the app's
+   generated route tree, so a tenant without the route fails `typecheck`
+   inside the library (reflekt never had one in Next; it has one now).
 
 `gruppetto` composes `WebsiteProvider` + `WebsiteBuilderProvider` by hand
 instead of `TenantProviders`, so the shell-parity markers for the providers do
@@ -410,6 +419,10 @@ week-old HTML — Next never did that. Keep the long SWR window on
 - SVG imports are URL strings under Vite, objects under Next (`markUrl.src`).
 - Stale `dist/` inside the project gets linted; keep it in `.gitignore` *and*
   the eslint ignores.
+- `cacheDir` must not be `node_modules/.vite/<project>`: `vitest.shared.ts`
+  keeps the project's Vitest cache there, and `nx test <app>` rewrites it under
+  a running dev server, whose pre-bundled deps then fail to import. reflekt
+  uses `node_modules/.vite/<project>-dev`; the other tenants still collide.
 
 ---
 

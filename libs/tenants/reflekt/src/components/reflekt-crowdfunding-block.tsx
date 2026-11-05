@@ -76,7 +76,7 @@ const BarLabel = styled('span')`
   top: 50%;
   right: ${({ theme }) => theme.spacing(2)};
   transform: translateY(-50%);
-  font-family: ${[euclidCircularB.style.fontFamily, 'sans-serif'].join(',')};
+  font-family: ${[euclidCircularB.family, 'sans-serif'].join(',')};
   font-weight: 700;
   font-size: 1.25rem;
   line-height: 1;
@@ -91,7 +91,7 @@ const HeroBarTitle = styled('span')`
   top: 50%;
   left: ${({ theme }) => theme.spacing(2)};
   transform: translateY(-50%);
-  font-family: ${[robotoMono.style.fontFamily, 'monospace'].join(',')};
+  font-family: ${[robotoMono.family, 'monospace'].join(',')};
   font-weight: 700;
   font-size: 0.75rem;
   line-height: 1;
@@ -104,7 +104,7 @@ const HeroBarTitle = styled('span')`
 
 const HeroDays = styled(Typography)<{ component?: ElementType }>`
   text-align: right;
-  font-family: ${[robotoMono.style.fontFamily, 'monospace'].join(',')};
+  font-family: ${[robotoMono.family, 'monospace'].join(',')};
   color: ${({ theme }) => theme.palette.common.white};
 `;
 
@@ -136,7 +136,7 @@ const HeroGoalMarker = styled('div', {
 `;
 
 const HeroGoalMarkerLabel = styled('span')`
-  font-family: ${[robotoMono.style.fontFamily, 'monospace'].join(',')};
+  font-family: ${[robotoMono.family, 'monospace'].join(',')};
   font-weight: 700;
   font-size: 0.75rem;
   line-height: 1;

@@ -143,7 +143,7 @@ export const TeaserTime = styled('time')`
   grid-column: -1 / 1;
   visibility: visible;
   text-align: center;
-  font-family: ${robotoMono.style.fontFamily};
+  font-family: ${robotoMono.family};
   font-size: 0.75rem;
   padding-top: 0.75rem;
 `;

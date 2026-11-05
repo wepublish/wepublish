@@ -4,4 +4,5 @@ export const sitemapConfig: SitemapSiteConfig = {
   title: 'Reflekt',
   mode: 'index',
   pageUrls: ['/team', '/login', '/signup', '/mitmachen'],
+  sitemapPath: '/sitemap',
 };

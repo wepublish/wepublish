@@ -63,7 +63,7 @@ const articleDate = (isFlexBlockHero: boolean) => (theme: Theme) => css`
 `;
 
 const ArticleDateWrapper = styled('span')`
-  font-family: ${robotoMono.style.fontFamily};
+  font-family: ${robotoMono.family};
   font-size: 0.75rem;
   line-height: 1;
 
