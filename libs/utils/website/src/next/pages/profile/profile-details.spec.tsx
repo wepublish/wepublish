@@ -59,7 +59,9 @@ describe('ProfileDetails', () => {
       await screen.findByRole('region', { name: 'Sicherheit' });
 
       expect(
-        within(section('Benutzerdaten')).queryByLabelText('Passwort')
+        within(section('Benutzerdaten')).queryByLabelText(
+          'Neues Passwort festlegen'
+        )
       ).not.toBeInTheDocument();
       expect(
         within(section('Sicherheit')).getByRole('heading', {
@@ -68,7 +70,7 @@ describe('ProfileDetails', () => {
         })
       ).toBeInTheDocument();
       expect(
-        within(section('Sicherheit')).getByLabelText('Passwort')
+        within(section('Sicherheit')).getByLabelText('Neues Passwort festlegen')
       ).toBeInTheDocument();
     });
 
@@ -115,7 +117,7 @@ describe('ProfileDetails', () => {
 
     it('keeps the global messages without it', async () => {
       renderWith([]);
-      await screen.findByLabelText('Passwort');
+      await screen.findByLabelText('Neues Passwort festlegen');
 
       await clearStreet();
 
@@ -167,7 +169,9 @@ describe('ProfileDetails', () => {
     expect(
       await screen.findByRole('heading', { level: 1, name: 'Profil' })
     ).toBeInTheDocument();
-    expect(screen.getByLabelText('Passwort')).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Neues Passwort festlegen')
+    ).toBeInTheDocument();
     expect(
       screen.queryByRole('region', { name: 'Sicherheit' })
     ).not.toBeInTheDocument();

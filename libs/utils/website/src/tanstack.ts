@@ -33,6 +33,7 @@ export * from './tanstack/website-shell';
 export * from './tanstack/routes';
 
 export * from './tanstack/pages/404-page';
+export * from './tanstack/pages/daily-briefing';
 export * from './tanstack/pages/article-list-page';
 export * from './tanstack/pages/article-page';
 export * from './tanstack/pages/author-list-page';

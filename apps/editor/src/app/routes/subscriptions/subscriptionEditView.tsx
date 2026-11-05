@@ -73,7 +73,7 @@ import {
   UserSearch,
   UserSubscriptionDeactivatePanel,
 } from '@wepublish/ui/editor';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useId, useMemo, useState } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import {
@@ -172,6 +172,8 @@ const periodMinAmountOf = (
 
 function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
   const { t } = useTranslation();
+  const formId = useId();
+  const labelId = (field: string) => `${formId}-${field}-label`;
   const navigate = useNavigate();
   const params = useParams();
   const location = useLocation();
@@ -738,7 +740,10 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
 
   return (
     <TableWrapper>
-      <form onSubmit={handleSubmit(handleSave)}>
+      <form
+        noValidate
+        onSubmit={handleSubmit(handleSave)}
+      >
         <SingleViewTitle
           loading={isCreating || isUpdating}
           disabled={isDisabled || isDeactivated}
@@ -830,7 +835,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                 <FormFields>
                   <TwoUp>
                     <div>
-                      <FormLabel>
+                      <FormLabel id={labelId('user')}>
                         {user?.id ?
                           <Link
                             to={`/users/edit/${user.id}`}
@@ -855,6 +860,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                         render={({ field, fieldState: { error } }) => (
                           <>
                             <UserSearch
+                              aria-labelledby={labelId('user')}
                               name={field.name}
                               user={field.value}
                               disableClearable
@@ -872,21 +878,20 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                     </div>
 
                     <div>
-                      <FormLabel>
+                      <FormLabel
+                        id={labelId('memberPlan')}
+                        required
+                      >
                         {memberPlan?.id ?
                           <Link
                             to={`/memberplans/edit/${memberPlan?.id}`}
                             target="_blank"
                           >
-                            {toggleRequiredLabel(
-                              t('userSubscriptionEdit.selectMemberPlan')
-                            )}
+                            {t('userSubscriptionEdit.selectMemberPlan')}
                             <ExternalLinkIcon />
                           </Link>
-                        : <Typography>
-                            {toggleRequiredLabel(
-                              t('userSubscriptionEdit.selectMemberPlan')
-                            )}
+                        : <Typography component="span">
+                            {t('userSubscriptionEdit.selectMemberPlan')}
                           </Typography>
                         }
                       </FormLabel>
@@ -937,6 +942,10 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                             error={Boolean(error)}
                             helperText={error?.message}
                             fullWidth
+                            required
+                            slotProps={{
+                              select: { labelId: labelId('memberPlan') },
+                            }}
                           >
                             {memberPlans.map(mp => (
                               <MenuItem
@@ -1001,10 +1010,11 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
 
                   <TwoUp>
                     <div>
-                      <FormLabel>
-                        {toggleRequiredLabel(
-                          t('memberPlanList.paymentPeriodicities')
-                        )}
+                      <FormLabel
+                        id={labelId('paymentPeriodicity')}
+                        required
+                      >
+                        {t('memberPlanList.paymentPeriodicities')}
                       </FormLabel>
 
                       <Controller
@@ -1023,6 +1033,12 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                             error={Boolean(error)}
                             helperText={error?.message}
                             fullWidth
+                            required
+                            slotProps={{
+                              select: {
+                                labelId: labelId('paymentPeriodicity'),
+                              },
+                            }}
                           >
                             {ALL_PAYMENT_PERIODICITIES.map(pp => (
                               <MenuItem
@@ -1038,7 +1054,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                     </div>
 
                     <div>
-                      <FormLabel>
+                      <FormLabel id={labelId('monthlyAmount')}>
                         {toggleRequiredLabel(
                           t('userSubscriptionEdit.periodAmount')
                         )}
@@ -1050,6 +1066,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                         render={({ field, fieldState: { error } }) => (
                           <>
                             <CurrencyInput
+                              aria-labelledby={labelId('monthlyAmount')}
                               name={field.name}
                               currency={currency}
                               centAmount={periodAmount}
@@ -1086,10 +1103,11 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                   </TwoUp>
 
                   <div>
-                    <FormLabel>
-                      {toggleRequiredLabel(
-                        t('userSubscriptionEdit.paymentMethod')
-                      )}
+                    <FormLabel
+                      id={labelId('paymentMethod')}
+                      required
+                    >
+                      {t('userSubscriptionEdit.paymentMethod')}
                     </FormLabel>
 
                     <Controller
@@ -1114,6 +1132,10 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                           error={Boolean(error)}
                           helperText={error?.message}
                           fullWidth
+                          required
+                          slotProps={{
+                            select: { labelId: labelId('paymentMethod') },
+                          }}
                         >
                           {paymentMethods.map(pm => (
                             <MenuItem
@@ -1138,7 +1160,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                 <FormFields>
                   <TwoUp>
                     <div>
-                      <FormLabel>
+                      <FormLabel id={labelId('startsAt')}>
                         {t('userSubscriptionEdit.startsAt')}
                       </FormLabel>
 
@@ -1147,6 +1169,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                         name="startsAt"
                         render={({ field, fieldState: { error } }) => (
                           <DatePicker
+                            aria-labelledby={labelId('startsAt')}
                             value={field.value ?? null}
                             disabled={
                               isDisabled ||
@@ -1164,13 +1187,16 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
 
                     <div>
                       <FormLabel>
-                        {t('userSubscriptionEdit.paidUntil')}{' '}
+                        <span id={labelId('paidUntil')}>
+                          {t('userSubscriptionEdit.paidUntil')}
+                        </span>{' '}
                         <InfoTooltip
                           text={t('userSubscriptionEdit.paidUntilInfo')}
                         />
                       </FormLabel>
 
                       <DatePicker
+                        aria-labelledby={labelId('paidUntil')}
                         value={paidUntil ?? null}
                         disabled
                         onChange={() => undefined}

@@ -1,6 +1,8 @@
 import type * as SentryTypes from '@sentry/tanstackstart-react';
 import {
   getBaseConfig,
+  getBrowserDenyUrls,
+  getBrowserIgnoreErrors,
   getBrowserTracePropagationTargets,
   setCommonTags,
 } from '@wepublish/utils';
@@ -26,6 +28,8 @@ export const registerSentryClient = async (router: RouterLike) => {
     Sentry.init({
       ...getBaseConfig(),
       tracePropagationTargets: getBrowserTracePropagationTargets(),
+      denyUrls: getBrowserDenyUrls(),
+      ignoreErrors: getBrowserIgnoreErrors(),
       integrations: [
         Sentry.tanstackRouterBrowserTracingIntegration(router),
         Sentry.replayIntegration({

@@ -3,6 +3,7 @@ import '@testing-library/jest-dom/vitest';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { ReactNode } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import {
@@ -10,6 +11,12 @@ import {
   DiscountCodeFormValues,
   discountCodeSchema,
 } from './discountCodeForm';
+
+vi.mock('@apollo/client/react', async importOriginal => ({
+  ...(await importOriginal<typeof import('@apollo/client/react')>()),
+  useQuery: () => ({ data: undefined, loading: false }),
+  useLazyQuery: () => [vi.fn(), { data: undefined, loading: false }],
+}));
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
@@ -22,9 +29,6 @@ const features = vi.hoisted(() => ({ referrals: true }));
 
 vi.mock('@wepublish/ui/editor', async importOriginal => ({
   ...(await importOriginal<typeof import('@wepublish/ui/editor')>()),
-  // Both would otherwise query the API.
-  SelectMemberPlan: () => null,
-  DateTimePicker: () => null,
   useFeature: (key: string) => key === 'referrals' && features.referrals,
 }));
 
@@ -43,7 +47,7 @@ const values: DiscountCodeFormValues = {
 
 const theme = createTheme({ cssVariables: true });
 
-const Form = ({
+const ValidatedForm = ({
   defaultValues,
   onSubmit,
 }: {
@@ -77,7 +81,7 @@ describe('DiscountCodeForm conditions', () => {
   it('offers no conditions while referrals are switched off for the medium', () => {
     features.referrals = false;
     render(
-      <Form
+      <ValidatedForm
         defaultValues={values}
         onSubmit={vi.fn()}
       />
@@ -90,7 +94,7 @@ describe('DiscountCodeForm conditions', () => {
 
   it('keeps the conditions closed for a code without conditions', () => {
     render(
-      <Form
+      <ValidatedForm
         defaultValues={values}
         onSubmit={vi.fn()}
       />
@@ -101,7 +105,7 @@ describe('DiscountCodeForm conditions', () => {
 
   it('opens the conditions for a code with conditions', () => {
     render(
-      <Form
+      <ValidatedForm
         defaultValues={{ ...values, minReferrals: 3 }}
         onSubmit={vi.fn()}
       />
@@ -118,7 +122,7 @@ describe('DiscountCodeForm conditions', () => {
   it('saves the minimum number of referrals', async () => {
     const onSubmit = vi.fn();
     render(
-      <Form
+      <ValidatedForm
         defaultValues={values}
         onSubmit={onSubmit}
       />
@@ -144,7 +148,7 @@ describe('DiscountCodeForm conditions', () => {
   it('removes the condition when the field is emptied', async () => {
     const onSubmit = vi.fn();
     render(
-      <Form
+      <ValidatedForm
         defaultValues={{ ...values, minReferrals: 3 }}
         onSubmit={onSubmit}
       />
@@ -173,5 +177,56 @@ describe('DiscountCodeForm conditions', () => {
     expect(
       discountCodeSchema.safeParse({ ...values, minReferrals: 2 }).success
     ).toBe(true);
+  });
+});
+
+function Form({ children }: { children: ReactNode }) {
+  const form = useForm({
+    defaultValues: { memberPlanId: '', validFrom: '', validTo: '' },
+  });
+
+  return (
+    <FormProvider {...form}>
+      {children}
+      <button
+        type="button"
+        aria-label="focus validTo"
+        onClick={() => form.setFocus('validTo')}
+      />
+    </FormProvider>
+  );
+}
+
+describe('DiscountCodeForm', () => {
+  it('lets the form focus a date field with an error', async () => {
+    render(
+      <ThemeProvider theme={createTheme({ cssVariables: true })}>
+        <Form>
+          <DiscountCodeForm />
+        </Form>
+      </ThemeProvider>
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'focus validTo' }));
+
+    await waitFor(() =>
+      expect(
+        screen.getByRole('textbox', { name: 'discountCode.form.validTo' })
+      ).toHaveFocus()
+    );
+  });
+
+  it('names the member plan picker after its label', () => {
+    render(
+      <ThemeProvider theme={createTheme({ cssVariables: true })}>
+        <Form>
+          <DiscountCodeForm />
+        </Form>
+      </ThemeProvider>
+    );
+
+    expect(
+      screen.getByRole('combobox', { name: 'discountCode.form.memberPlan' })
+    ).toBeInTheDocument();
   });
 });

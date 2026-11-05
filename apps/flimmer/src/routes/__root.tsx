@@ -194,7 +194,12 @@ function RootDocument({ children }: { children: ReactNode }) {
         <CacheProvider value={emotionCache}>
           <ThemeProvider theme={flimmerTheme}>
             <WepublishApolloProvider client={apolloClient}>
-              <App websiteSettings={websiteSettings}>{children}</App>
+              <App
+                websiteSettings={websiteSettings}
+                stripeKey={publicEnv?.STRIPE_PUBLIC_KEY as string | undefined}
+              >
+                {children}
+              </App>
             </WepublishApolloProvider>
           </ThemeProvider>
         </CacheProvider>
