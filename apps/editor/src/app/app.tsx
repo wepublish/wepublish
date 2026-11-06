@@ -124,6 +124,7 @@ import { ApiTokenGenerateRoute } from './routes/apiTokens/apiTokenGenerateRoute'
 import { ApiTokenList } from './routes/apiTokens/apiTokenList';
 import { TokenList } from './routes/tokens/tokenList';
 import { UserRoleList } from './routes/userRoles/userRoleList';
+import { UserCreateView } from './routes/users/userCreateView';
 import { UserEditView } from './routes/users/userEditView';
 import { UserList } from './routes/users/userList';
 import { WebsiteSettingsItem } from './routes/website-settings/website-settings-item';
@@ -839,7 +840,7 @@ function AppRoutes() {
           path="users/create"
           element={
             <Base>
-              <UserEditView />
+              <UserCreateView />
             </Base>
           }
         />

@@ -123,6 +123,8 @@ describe('FormErrorSummary', () => {
         'apps/editor/src/app/routes/paywall/paywallEditView.tsx',
         'apps/editor/src/app/routes/tags/tagCreateView.tsx',
         'apps/editor/src/app/routes/tags/tagEditView.tsx',
+        'apps/editor/src/app/routes/users/userCreateView.tsx',
+        'apps/editor/src/app/routes/users/userEditView.tsx',
         'apps/editor/src/app/routes/website-settings/website-ads.tsx',
         'apps/editor/src/app/routes/website-settings/website-analytics.tsx',
         'apps/editor/src/app/routes/website-settings/website-fonts.tsx',

@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import type { EditorComponents } from '../components';
 import { editorForm, type SubmitContext } from '../editor-form';
 import type { FormMode, FormPaths, FormView, ViewFields } from './form-view';
+import { isSaveCancelled } from './save-cancelled';
 import {
   applyRule,
   hasFieldErrors,
@@ -231,6 +232,10 @@ function useFormController<S extends AnyFormSchema>(
       });
     } catch (error) {
       setPending(null);
+
+      if (isSaveCancelled(error)) {
+        return;
+      }
 
       const rule = matchingRule(view.serverErrors, mode, error);
 

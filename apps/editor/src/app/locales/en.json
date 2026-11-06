@@ -912,9 +912,6 @@
       "sendLoginLink": "Send login link by email?",
       "sendLoginLinkContent": "Do you want to send {{email}} a link that {{firstName}} {{name}} can use to log in with their existing permissions?"
     },
-    "createOrUpdateUserPassword": {
-      "unexpectedErrorNoUserFound": "Unexpected Error: no user found"
-    },
     "currency": {
       "chf": "chf"
     },
@@ -1163,7 +1160,6 @@
       "minimalAmountPerMonth": "The minimum amount per month is {{amount}} {{currency}}.",
       "amountTooLowErrorMessage": "The amount is below the minimum of this subscription plan",
       "noAmountErrorMessage": "Default amount will be set to 5.00 if empty",
-      "noEmailErrorMessage": "Please enter an email address",
       "noMemberPlanErrorMessage": "Please enter a subscription plan",
       "noNameErrorMessage": "Please enter a name",
       "noQuestionErrorMessage": "Please enter a question",
@@ -2871,9 +2867,9 @@
       "confirm": "Confirm",
       "country": "Country",
       "createNewUser": "Create new user",
+      "editTitle": "Edit {{name}}",
       "deleteUser": "Delete User?",
       "email": "Email",
-      "errorCreatingUser": "User could not be created. Unexpected error: {{error}}",
       "errorOnUpdate": "Error while updating the user: {{error}}",
       "firstName": "First Name",
       "flair": "Flair",
@@ -2889,6 +2885,7 @@
       "totpExemptLabel": "Exempt from 2FA requirement",
       "totpExemptWarning": "⚠️ SECURITY WARNING ⚠️\n\nYou are about to DISABLE the two-factor authentication requirement for this user!\n\nThis significantly reduces the security of this account. The user will be able to log in to the editor with only a password, without any second factor.\n\nThis should only be used in exceptional circumstances.\n\nAre you sure you want to proceed?",
       "properties": "Properties",
+      "addProperty": "Add property",
       "resetPassword": "Reset Password",
       "resetPasswordFor": "Reset the password for {{userName}}",
       "selectUserImage": "Choose profile picture",
@@ -2899,7 +2896,6 @@
       "streetAddress2": "Street 2",
       "streetAddress2Number": "House number",
       "subscriptionsHeader": "Subscriptions",
-      "successfullyCreatedUser": "User successfully created",
       "successfullyUpdatedUser": "User successfully updated",
       "Unknown": "Unknown",
       "userDataTitle": "User Data",
