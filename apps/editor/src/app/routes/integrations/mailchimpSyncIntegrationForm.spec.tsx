@@ -1,6 +1,8 @@
+import '@testing-library/jest-dom/vitest';
+
 import { useMutation, useQuery } from '@apollo/client/react';
 import { createTheme, ThemeProvider } from '@mui/material';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import {
   MailchimpInterestGroupsDocument,
   MailchimpListsDocument,
@@ -243,6 +245,61 @@ describe('MailchimpSyncIntegrationForm', () => {
       expect(screen.getByDisplayValue('Newsletter (list-1)')).toBeTruthy();
       expect(screen.getByDisplayValue('First name (FNAME)')).toBeTruthy();
       expect(screen.getByDisplayValue('Topics: Politics (grp-1)')).toBeTruthy();
+    });
+  });
+
+  describe('interest group mappings', () => {
+    const AUTO_ADD = 'integrations.mailchimpSyncSettings.interestGroupAutoAdd';
+    const AUTO_REMOVE =
+      'integrations.mailchimpSyncSettings.interestGroupAutoRemove';
+
+    beforeEach(() => {
+      queryStore.set(SyncProviderSettingsDocument, {
+        syncProviderSettings: [setting],
+      });
+      givenMailchimpLists();
+      givenMailchimpListDetails();
+    });
+
+    it('adds and removes interest groups automatically unless told otherwise', () => {
+      renderForm();
+
+      fireEvent.click(
+        screen.getByRole('button', {
+          name: 'integrations.mailchimpSyncSettings.addInterestGroup',
+        })
+      );
+
+      const checkboxes = [
+        ...screen.getAllByRole('checkbox', { name: AUTO_ADD }),
+        ...screen.getAllByRole('checkbox', { name: AUTO_REMOVE }),
+      ];
+      expect(checkboxes).toHaveLength(4);
+      for (const checkbox of checkboxes) {
+        expect(checkbox).toBeChecked();
+      }
+    });
+
+    it('saves an interest group that is no longer removed automatically', async () => {
+      renderForm();
+
+      fireEvent.click(screen.getByRole('checkbox', { name: AUTO_REMOVE }));
+      fireEvent.click(screen.getByRole('button', { name: 'save' }));
+
+      await waitFor(() =>
+        expect(create).toHaveBeenCalledWith({
+          variables: expect.objectContaining({
+            mailchimp_interestGroupMappings: [
+              {
+                groupId: 'grp-1',
+                expression: 'slug:contains:abo',
+                autoAdd: true,
+                autoRemove: false,
+              },
+            ],
+          }),
+        })
+      );
     });
   });
 });
