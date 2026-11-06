@@ -53,6 +53,26 @@ registerEnumType(MailEmailFilter, {
   name: 'MailEmailFilter',
 });
 
+/**
+ * Who can still be reached by email. `placeholder` is recognised by the
+ * address pattern of the letter integration; the others are the stored
+ * email quality level (see EmailQualityLevel), `unknown` including people
+ * never evaluated. Picking several means any of them.
+ */
+export enum MailEmailSegment {
+  placeholder = 'placeholder',
+  dead = 'dead',
+  unresponsive = 'unresponsive',
+  unknown = 'unknown',
+  active = 'active',
+}
+
+registerEnumType(MailEmailSegment, {
+  name: 'MailEmailSegment',
+  description:
+    'placeholder: generated address, reachable by letter only. dead: bounced, invalid, complained or unsubscribed. unresponsive: mails delivered, no login or click for a long time. unknown: nothing decided yet. active: logged in or clicked recently.',
+});
+
 registerEnumType(MailRecipientBase, {
   name: 'MailRecipientBase',
   description: 'Base set of users a manual-send audience is drawn from.',
@@ -125,10 +145,73 @@ export class LetterPrintInput {
   printSpectrum?: LetterPrintSpectrum;
 }
 
+/** How several mail-history conditions combine. */
+export enum MailHistoryMatch {
+  all = 'all',
+  any = 'any',
+}
+
+registerEnumType(MailHistoryMatch, {
+  name: 'MailHistoryMatch',
+  description:
+    'all: every condition must hold (AND). any: one condition suffices (OR).',
+});
+
+@InputType()
+export class MailHistoryCondition {
+  @Field({ description: 'The mail template that was, or was not, sent.' })
+  mailTemplateId!: string;
+
+  @Field({
+    nullable: true,
+    description:
+      'true: keeps people who did NOT receive such a mail, including people with no mail at all.',
+  })
+  negate?: boolean;
+
+  @Field(() => [MailLogState], {
+    nullable: true,
+    description:
+      'Only mails that ended in one of these states. Empty or absent means any.',
+  })
+  states?: MailLogState[];
+
+  @Field(() => MailChannel, {
+    nullable: true,
+    description: 'Only mails sent on this channel. Absent means either.',
+  })
+  channel?: MailChannel;
+
+  @Field(() => Date, { nullable: true, description: 'Sent on or after.' })
+  from?: Date;
+
+  @Field(() => Date, { nullable: true, description: 'Sent on or before.' })
+  to?: Date;
+}
+
+@InputType()
+export class MailHistoryFilterInput {
+  @Field(() => MailHistoryMatch, {
+    nullable: true,
+    description: 'Defaults to all.',
+  })
+  match?: MailHistoryMatch;
+
+  @Field(() => [MailHistoryCondition])
+  conditions!: MailHistoryCondition[];
+}
+
 @InputType()
 export class MailAudienceInput {
   @Field(() => MailRecipientBase)
   base!: MailRecipientBase;
+
+  @Field(() => MailHistoryFilterInput, {
+    nullable: true,
+    description:
+      'Applies to every base: which mails the person did or did not receive. An empty list means no restriction.',
+  })
+  mailHistory?: MailHistoryFilterInput;
 
   @Field(() => MailEmailFilter, {
     nullable: true,
@@ -136,6 +219,13 @@ export class MailAudienceInput {
       'Restrict to placeholder or real email addresses. Defaults to all.',
   })
   emailFilter?: MailEmailFilter;
+
+  @Field(() => [MailEmailSegment], {
+    nullable: true,
+    description:
+      'Restrict to people in any of these email segments. Empty or absent means everyone.',
+  })
+  emailSegments?: MailEmailSegment[];
 
   @Field(() => [String], {
     nullable: true,
@@ -364,6 +454,45 @@ export class MailLogSyncModel {
 }
 
 @ObjectType()
+export class EmailQualityRefreshModel extends MailLogSyncModel {
+  @Field(() => Int, {
+    description: 'People whose email level was re-evaluated.',
+  })
+  recomputed!: number;
+}
+
+@ObjectType()
+export class MailSegmentCount {
+  @Field(() => MailEmailSegment)
+  segment!: MailEmailSegment;
+
+  @Field(() => Int)
+  userCount!: number;
+}
+
+@ObjectType()
+export class MailSendJobOutcome {
+  @Field(() => Int, {
+    description: 'Mails the provider reported as delivered.',
+  })
+  delivered!: number;
+
+  @Field(() => Int, {
+    description: 'Mails that bounced or were rejected by the provider.',
+  })
+  bounced!: number;
+
+  @Field(() => Int, {
+    description:
+      'Recipients whose address counts as dead by now, from this or a later mail.',
+  })
+  dead!: number;
+
+  @Field(() => Int, { description: 'Mails somebody clicked a link in.' })
+  clicked!: number;
+}
+
+@ObjectType()
 export class MailSendJobModel {
   @Field()
   id!: string;
@@ -426,6 +555,12 @@ export class MailSendJobModel {
 
   @Field(() => MailLogTemplate, { nullable: true })
   mailTemplate?: MailLogTemplate | null;
+
+  @Field(() => MailSendJobOutcome, {
+    description:
+      'What became of the mails after sending. Bounces arrive over hours or days; refresh to pull late ones.',
+  })
+  outcome?: MailSendJobOutcome;
 }
 
 @ObjectType()
@@ -497,6 +632,11 @@ export class MailSendRecipientModel {
       'Whether the user has a postal address a letter can be sent to. A letter send skips recipients without one.',
   })
   hasAddress!: boolean;
+
+  @Field(() => MailEmailSegment, {
+    description: 'Which email segment the recipient falls into.',
+  })
+  emailSegment!: MailEmailSegment;
 }
 
 @ObjectType()
@@ -579,4 +719,10 @@ export class MailSendRecipientPreview {
       'How many of the recipients have no usable postal address and would be skipped by a letter send.',
   })
   withoutAddressCount!: number;
+
+  @Field(() => [MailSegmentCount], {
+    description:
+      'How the people of this audience split into email segments, ignoring the segments picked, so the split stays visible while choosing.',
+  })
+  segments!: MailSegmentCount[];
 }

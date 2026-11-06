@@ -173,6 +173,7 @@ import {
   MdKey,
   MdLocationPin,
   MdMail,
+  MdMarkunreadMailbox,
   MdMoney,
   MdMultilineChart,
   MdNewspaper,
@@ -605,6 +606,15 @@ export const NAVIGATION_COMMANDS: CommandDefinition[] = [
       CanUpdateSystemMails.id,
     ],
     perform: ({ navigate }) => navigate('/communicationflows/edit/default'),
+  },
+  {
+    id: 'deliverySuggestions',
+    titleKey: 'navbar.deliverySuggestions',
+    sectionKey: 'navbar.communication',
+    icon: <MdMarkunreadMailbox />,
+    permissions: [CanGetUsers.id],
+    feature: 'paper-letter-flow',
+    perform: ({ navigate }) => navigate('/deliverychannel'),
   },
   {
     id: 'mailTemplates',

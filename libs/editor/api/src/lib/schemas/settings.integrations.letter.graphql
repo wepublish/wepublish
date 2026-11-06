@@ -10,6 +10,10 @@ query LetterProviderSettings {
     name
     organisationId
     placeholderEmailContains
+    defaultAddressPosition
+    defaultDeliveryProduct
+    defaultPrintMode
+    defaultPrintSpectrum
     type
   }
 }
@@ -24,6 +28,10 @@ mutation UpdateLetterProviderSetting(
   $name: String
   $organisationId: String
   $placeholderEmailContains: String
+  $defaultAddressPosition: LetterAddressPosition
+  $defaultDeliveryProduct: LetterDeliveryProduct
+  $defaultPrintMode: LetterPrintMode
+  $defaultPrintSpectrum: LetterPrintSpectrum
   $webhookSigningKey: String
 ) {
   updateLetterProviderSetting(
@@ -36,6 +44,10 @@ mutation UpdateLetterProviderSetting(
     name: $name
     organisationId: $organisationId
     placeholderEmailContains: $placeholderEmailContains
+    defaultAddressPosition: $defaultAddressPosition
+    defaultDeliveryProduct: $defaultDeliveryProduct
+    defaultPrintMode: $defaultPrintMode
+    defaultPrintSpectrum: $defaultPrintSpectrum
     webhookSigningKey: $webhookSigningKey
   ) {
     autoSend
@@ -48,6 +60,10 @@ mutation UpdateLetterProviderSetting(
     name
     organisationId
     placeholderEmailContains
+    defaultAddressPosition
+    defaultDeliveryProduct
+    defaultPrintMode
+    defaultPrintSpectrum
     type
   }
 }

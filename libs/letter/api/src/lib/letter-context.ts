@@ -1,9 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import {
   LetterAddressPosition,
-  LetterDeliveryProduct,
   LetterPrintMode,
-  LetterPrintSpectrum,
   MailChannel,
   MailLogState,
   MailLogType,
@@ -16,7 +14,13 @@ import {
   LetterAddress,
   LetterState,
 } from './letter-provider/letter-provider.interface';
-import { toLetterAddress, UserWithAddress } from './letter-recipient';
+import { LetterSender } from '@wepublish/mail/api';
+import {
+  canReceiveLetters,
+  toLetterAddress,
+  UserWithAddress,
+} from './letter-recipient';
+import { LetterPrintSettings, printSettings } from './letter-print-defaults';
 import {
   composeLetter,
   LetterLayoutContent,
@@ -39,13 +43,7 @@ export interface LetterContextProps {
  */
 const APPENDIX_COUNTRY = 'CH';
 
-/** How a letter is printed and posted. Chosen per send, not per template. */
-export interface LetterPrintSettings {
-  addressPosition: LetterAddressPosition;
-  deliveryProduct: LetterDeliveryProduct;
-  printMode: LetterPrintMode;
-  printSpectrum: LetterPrintSpectrum;
-}
+export type { LetterPrintSettings } from './letter-print-defaults';
 
 export interface RenderLetterProps {
   template: LetterTemplateContent;
@@ -62,10 +60,17 @@ export interface SendTemplateLetterProps {
   mailTemplateId: string;
   recipient: UserWithAddress;
   data: Record<string, any>;
-  print: LetterPrintSettings;
+  /** Omitted by automated sends, which print with the provider's defaults. */
+  print?: LetterPrintSettings;
   /** Id the log entry has to be written under, so the caller can reference it. */
   mailLogId?: string;
   mailSendJobId?: string | null;
+  /**
+   * Bookkeeping an automated send hands in: the identifier a retried run
+   * recognises the letter by, and which flow it came from. A manual send is
+   * logged under its own id.
+   */
+  log?: { mailIdentifier?: string; type?: MailLogType };
 }
 
 /** The letter states that map onto a mail log state one-to-one. */
@@ -88,7 +93,7 @@ export function toProviderState(state: LetterState): MailLogState {
  * same templates, same log, different medium.
  */
 @Injectable()
-export class LetterContext {
+export class LetterContext implements LetterSender {
   private readonly logger = new Logger('LetterContext');
 
   letterProvider: BaseLetterProvider;
@@ -230,9 +235,32 @@ export class LetterContext {
    * the mail log. Throws if either step fails; the log entry is written either
    * way, so a failed letter leaves a trace like a failed mail does.
    */
+  /** Whether the user's postal address is complete enough to be posted to. */
+  canReceiveLetters(user: UserWithAddress): boolean {
+    return canReceiveLetters(user);
+  }
+
+  /**
+   * Print options for a send nobody chose them for: the provider's defaults,
+   * where set, over the built-in ones.
+   */
+  async resolvePrintDefaults(): Promise<LetterPrintSettings> {
+    const settings = await this.prisma.settingLetterProvider.findUnique({
+      where: { id: this.letterProvider.id },
+    });
+
+    return printSettings({
+      addressPosition: settings?.defaultAddressPosition,
+      deliveryProduct: settings?.defaultDeliveryProduct,
+      printMode: settings?.defaultPrintMode,
+      printSpectrum: settings?.defaultPrintSpectrum,
+    });
+  }
+
   async sendLetter(props: SendTemplateLetterProps): Promise<string> {
     const mailLogId = props.mailLogId ?? randomUUID();
     const address = toLetterAddress(props.recipient);
+    const print = props.print ?? (await this.resolvePrintDefaults());
 
     const template = await this.prisma.mailTemplate.findUnique({
       where: { id: props.mailTemplateId },
@@ -248,18 +276,18 @@ export class LetterContext {
           htmlContent: template.htmlContent,
           letterAppendixId: template.letterAppendixId,
         },
-        addressPosition: props.print.addressPosition,
+        addressPosition: print.addressPosition,
         data: props.data,
         recipient: address,
         layout: await this.resolveLayout(template.letterLayoutId),
-        printMode: props.print.printMode,
+        printMode: print.printMode,
       });
 
       const result = await this.letterProvider.sendLetter({
         letterLogID: mailLogId,
         file,
         recipient: address,
-        ...props.print,
+        ...print,
       });
 
       await this.writeLog(mailLogId, props, template.subject, address, {
@@ -302,11 +330,11 @@ export class LetterContext {
             { mailSendJob: { connect: { id: props.mailSendJobId } } }
           : {}),
           state: outcome.state,
-          type: MailLogType.manual,
+          type: props.log?.type ?? MailLogType.manual,
           sentDate: new Date(),
           subject,
           mailProviderID: this.letterProvider.id,
-          mailIdentifier: mailLogId,
+          mailIdentifier: props.log?.mailIdentifier ?? mailLogId,
           providerLetterID: outcome.providerLetterID ?? null,
           mailData: outcome.letterData ?? null,
           error: outcome.error ?? null,
