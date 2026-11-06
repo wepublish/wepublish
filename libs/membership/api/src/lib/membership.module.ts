@@ -7,9 +7,9 @@ import { SystemMailModule } from './system-mail/system-mail.module';
 import { PeriodicJobModule } from './periodic-job/periodic-job.module';
 import { MemberContextModule } from './legacy/member-context.module';
 import { MailchimpSyncModule } from './mailchimp-sync/mailchimp-sync.module';
+import { EmailQualityModule } from './email-quality/email-quality.module';
 import { ActionMailModule } from './action-mail/action-mail.module';
 import { PaymentMethodChangeModule } from './payment-method-change/payment-method-change.module';
-import { EmailQualityModule } from './email-quality/email-quality.module';
 
 @Module({
   imports: [
@@ -21,9 +21,9 @@ import { EmailQualityModule } from './email-quality/email-quality.module';
     PeriodicJobModule,
     MemberContextModule,
     MailchimpSyncModule,
+    EmailQualityModule,
     ActionMailModule,
     PaymentMethodChangeModule,
-    EmailQualityModule,
   ],
 })
 export class MembershipModule {}

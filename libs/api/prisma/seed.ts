@@ -221,6 +221,17 @@ const seedSettings = (prisma: PrismaClient) =>
     }),
     prisma.setting.upsert({
       where: {
+        name: SettingName.EMAIL_QUALITY_UNRESPONSIVE_AFTER_DAYS,
+      },
+      update: {},
+      create: {
+        name: SettingName.EMAIL_QUALITY_UNRESPONSIVE_AFTER_DAYS,
+        value: 180,
+        settingRestriction: { minValue: 1, maxValue: 3650 },
+      },
+    }),
+    prisma.setting.upsert({
+      where: {
         name: SettingName.SUBSCRIPTION_EXTEND_WINDOW_DAYS,
       },
       update: {},
@@ -232,6 +243,17 @@ const seedSettings = (prisma: PrismaClient) =>
     }),
     prisma.setting.upsert({
       where: {
+        name: SettingName.EMAIL_QUALITY_MIN_MAILS_FOR_UNRESPONSIVE,
+      },
+      update: {},
+      create: {
+        name: SettingName.EMAIL_QUALITY_MIN_MAILS_FOR_UNRESPONSIVE,
+        value: 1,
+        settingRestriction: { minValue: 1, maxValue: 100 },
+      },
+    }),
+    prisma.setting.upsert({
+      where: {
         name: SettingName.PAYMENT_METHOD_CHANGE_EXPIRY_DAYS,
       },
       update: {},
@@ -239,22 +261,6 @@ const seedSettings = (prisma: PrismaClient) =>
         name: SettingName.PAYMENT_METHOD_CHANGE_EXPIRY_DAYS,
         value: 14,
         settingRestriction: { minValue: 1, maxValue: 90 },
-      },
-    }),
-    prisma.setting.upsert({
-      where: {
-        name: SettingName.EMAIL_QUALITY,
-      },
-      update: {},
-      create: {
-        name: SettingName.EMAIL_QUALITY,
-        value: {
-          placeholderPatterns: [],
-          importMarkerProperties: [],
-          flowPaperMailEnabled: false,
-          flowPaperMailLevels: ['placeholder', 'undeliverable'],
-          flowSkipLevels: ['blocked'],
-        },
       },
     }),
 
