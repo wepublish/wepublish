@@ -25,9 +25,13 @@
       "options": {
         "commands": [
           "tsc --noEmit -p apps/editor/tsconfig.app.json",
-          "tsc --noEmit -p apps/editor/tsconfig.server.json"
+          "tsc --noEmit -p apps/editor/tsconfig.server.json",
+          "tsc --noEmit -p apps/editor/tsconfig.spec.json --incremental --tsBuildInfoFile tmp/tsc-cache/editor-spec.tsbuildinfo"
         ],
-        "parallel": false
+        "parallel": false,
+        "env": {
+          "NODE_OPTIONS": "--max-old-space-size=8192"
+        }
       }
     },
     "test": {

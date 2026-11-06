@@ -23,7 +23,6 @@ export * from './imageUploadAndEditPanel';
 export * from './imageUploadPanel';
 export * from './invoiceListPanel';
 export * from './linkPageBreakEditPanel';
-export * from './navigationEditPanel';
 export * from './pageMetadataPanel';
 export * from './paymentMethodEditPanel';
 export * from './peerEditPanel';

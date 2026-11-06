@@ -373,15 +373,16 @@
         "showForLoginStatusInfo": "Choisissez quel·le·s visiteur·euse·s voient la bannière, p.ex. uniquement celles et ceux sans abonnement. Si plusieurs bannières actives correspondent, celle avec le public cible le plus précis est affichée.",
         "showOnPagesInfo": "La bannière apparaît sur les pages sélectionnées ici. Laissez vide si elle ne doit apparaître sur aucune page.",
         "ctaInfo": "Courte phrase au-dessus des boutons qui invite les lecteur·trice·s à agir, p.ex. « Soutenez-nous avec un abonnement ».",
-        "htmlInfo": "Optionnel : votre propre code HTML pour la bannière. S’il est renseigné, il remplace le titre, le texte, le call to action et les boutons."
+        "htmlInfo": "Optionnel : votre propre code HTML pour la bannière. S’il est renseigné, il remplace le titre, le texte, le call to action et les boutons.",
+        "customContent": "Code personnalisé",
+        "timing": "Minutage"
       },
       "list": {
         "title": "Bannières",
         "text": "Texte",
         "createNew": "Créer une nouvelle bannière",
         "active": "Actif",
-        "edit": "Modifier",
-        "delete": "Supprimer"
+        "edit": "Modifier"
       },
       "actions": {
         "add": "Ajouter une action",
@@ -1193,7 +1194,6 @@
         "title": "Modifier l’événement"
       },
       "form": {
-        "cancelled": "Annulé",
         "description": "Description",
         "endsAt": "Fin",
         "endsBeforeStart": "La fin ne peut pas précéder le début",
@@ -1202,13 +1202,22 @@
         "location": "Lieu",
         "name": "Nom",
         "lead": "Chapeau",
-        "postponed": "Reporté",
-        "rescheduled": "Reprogrammé",
-        "scheduled": "Prévu",
         "startsAt": "Début",
         "status": "Statut",
         "tags": "Tags",
-        "statusInfo": "Indique aux moteurs de recherche si l’événement a lieu comme prévu ou s’il a été annulé, reporté ou déplacé à une nouvelle date."
+        "statusInfo": "Indique aux moteurs de recherche si l’événement a lieu comme prévu ou s’il a été annulé, reporté ou déplacé à une nouvelle date.",
+        "statuses": {
+          "Scheduled": "Prévu",
+          "Cancelled": "Annulé",
+          "Postponed": "Reporté",
+          "Rescheduled": "Reprogrammé"
+        },
+        "sections": {
+          "details": "Détails",
+          "schedule": "Horaire",
+          "content": "Contenu",
+          "media": "Médias et tags"
+        }
       },
       "list": {
         "create": "Créer un nouvel événement",
@@ -2133,7 +2142,15 @@
         "linkTypePage": "Page",
         "linkTypeExternal": "Lien externe",
         "linkType": "Type de lien",
-        "keyInfo": "Nom technique utilisé par votre site pour trouver cette navigation, p.ex. « main » ou « footer ». À modifier uniquement en accord avec les personnes qui développent votre site."
+        "keyInfo": "Nom technique utilisé par votre site pour trouver cette navigation, p.ex. « main » ou « footer ». À modifier uniquement en accord avec les personnes qui développent votre site.",
+        "linkTypes": {
+          "External": "Lien externe",
+          "Page": "Page",
+          "Article": "Article"
+        },
+        "links": "Liens",
+        "addLink": "Ajouter un lien",
+        "keyTaken": "Un menu avec la clé « {{key}} » existe déjà. Veuillez choisir une autre clé."
       }
     },
     "notifications": {
@@ -2545,6 +2562,8 @@
     "save": "Enregistrer",
     "saveAndClose": "Enregistrer et fermer",
     "settingList": {
+      "commentsAndPolls": "Commentaires et sondages",
+      "confirmTitle": "Enregistrer ces paramètres ?",
       "allowGuestCommentRating": "Autoriser les évaluations anonymes des commentaires",
       "comments": "Commentaires",
       "days": "jours",
@@ -2609,7 +2628,12 @@
         "loginMinutes": "Durée de validité, en minutes, des liens de connexion envoyés par e-mail (60 = 1 heure, 1440 = 1 jour, 10080 = 1 semaine). Ensuite, un nouveau lien doit être demandé.",
         "passwordToken": "Durée de validité, en minutes, du lien envoyé par e-mail pour réinitialiser le mot de passe (60 = 1 heure, 1440 = 1 jour).",
         "peerToken": "Durée d’attente des médias partenaires (peers) lors du chargement de leurs articles, en millisecondes (1000 = 1 seconde). Ensuite, la requête est annulée."
-      }
+      },
+      "errors": {
+        "invalid": "Le serveur a refusé cette valeur."
+      },
+      "publicApi": "API de statistiques publique",
+      "publicApiInfo": "Rend les chiffres d’une période choisie disponibles via l’API publique sans connexion, p. ex. pour des chiffres en direct sur votre site. Les données sont anonymisées. Laissez un chiffre désactivé si vous n’en avez pas besoin."
     },
     "automaticMails": {
       "title": "E-mails automatiques",
@@ -2742,6 +2766,14 @@
         "colorInfo": "Certains designs de site utilisent cette couleur pour mettre le tag en évidence, p. ex. comme fond de l’étiquette.",
         "descriptionInfo": "Affichée en haut de la page du tag sur votre site, qui liste tous les contenus avec ce tag. Les moteurs de recherche l’utilisent aussi.",
         "markAsMainInfo": "Les tags principaux représentent un thème. Certains designs de site les affichent en évidence, p. ex. comme label de thème au-dessus d’un article."
+      },
+      "form": {
+        "sections": {
+          "details": "Détails",
+          "display": "Affichage sur le site"
+        },
+        "titleCreate": "Créer un tag",
+        "uniqueConstraint": "Un tag « {{tag}} » existe déjà ici."
       }
     },
     "tokenList": {
@@ -2775,7 +2807,13 @@
       "titleEdit": "Modifier le consentement de l’utilisateur",
       "user": "Utilisateur·trice",
       "value": "Valeur",
-      "uniqueConstraint": "Un consentement d’utilisateur avec le slug « {{slug}} » existe déjà. Veuillez choisir un autre slug."
+      "uniqueConstraint": "Un consentement d’utilisateur avec le slug « {{slug}} » existe déjà. Veuillez choisir un autre slug.",
+      "sections": {
+        "assignment": "Attribution",
+        "assignmentInfo": "L’utilisateur·trice et le consentement ne peuvent plus être modifiés après la création.",
+        "decision": "Décision"
+      },
+      "alreadyExists": "Cette personne a déjà répondu à ce consentement."
     },
     "userCreateOrEditView": {
       "addressTitle": "Adresse",
@@ -3359,18 +3397,26 @@
         "bypasses": "Contournements",
         "bypassToken": "Token de contournement",
         "newBypassToken": "Créer un nouveau token de contournement",
-        "addBypass": "Ajouter",
+        "addBypass": "Ajouter un token de contournement",
         "qrCodeTitle": "Code QR pour le token de contournement",
         "downloadSvg": "Télécharger SVG",
         "baseUrl": "URL du site web (baseurl). P. ex. https://wepublish.ch",
         "upgrade": "Textes lorsque le paywall permet et prend en charge la mise à niveau",
+        "upgradeDescription": "Texte de mise à niveau (visible par l’utilisateur)",
+        "upgradeCircumventDescription": "Texte de mise à niveau lorsque le contenu de l’article n’est pas masqué (visible par l’utilisateur)",
+        "nameTaken": "Un paywall « {{name}} » existe déjà.",
         "display": "Options d’affichage",
         "hideContentAfter": "Masquer le contenu après X blocs",
         "fadeout": "Fondu des blocs masqués",
         "fadeoutHelpText": "Le fondu permet d’afficher un aperçu du reste du contenu.",
         "bypassesInfo": "Codes secrets permettant de lire les articles derrière ce paywall sans abonnement, p. ex. pour une campagne imprimée ou un événement. Partagez le lien ou le code QR : toute personne qui l’ouvre obtient un accès libre pendant quelques heures.",
         "showQrCode": "Afficher le code QR",
-        "hideContentAfterInfo": "Nombre de blocs de l’article (p. ex. titre, chapeau, paragraphes) que les lecteur·rice·s sans accès voient encore avant que le reste ne soit masqué. Par défaut : 3."
+        "hideContentAfterInfo": "Nombre de blocs de l’article (p. ex. titre, chapeau, paragraphes) que les lecteur·rice·s sans accès voient encore avant que le reste ne soit masqué. Par défaut : 3.",
+        "sections": {
+          "general": "Général",
+          "texts": "Textes du paywall",
+          "access": "Accès"
+        }
       },
       "overview": {
         "areYouSure": "Êtes-vous sûr·e ?",
@@ -3747,21 +3793,28 @@
           "gtm": "<url>Google Tag Manager</url> est un outil de Google qui vous permet de gérer les scripts de suivi et de marketing sur votre site sans modifier le code à chaque fois.",
           "gtmLocator": "Vous le trouverez dans le <url>tableau de bord admin</url> sous Balise Google",
           "gaInvalid": "Doit être un ID GA valide (p. ex. G-XXXXXXXXXX ou UA-XXXXXXXX-X)",
-          "gtmInvalid": "Doit être un ID GTM valide (p. ex. GTM-XXXXXXX)"
+          "gtmInvalid": "Doit être un ID GTM valide (p. ex. GTM-XXXXXXX)",
+          "gaId": "ID Google Analytics",
+          "gaPlaceholder": "G-XXXXXXXXXX",
+          "gtmId": "ID Google Tag Manager",
+          "gtmPlaceholder": "GTM-XXXXXXX"
         },
         "plausible": {
           "title": "Plausible",
           "enable": "Activer Plausible",
           "pa": "<url>Plausible Analytics</url> est une alternative respectueuse de la vie privée à Google Analytics.",
           "paLocator": "Vous le trouverez dans les <url>paramètres du site</url> de votre tableau de bord admin",
-          "paInvalid": "Doit être un ID PA valide (p. ex. pa-XXXXXXXXXXXXXXXXXXXX)"
+          "paInvalid": "Doit être un ID PA valide (p. ex. pa-XXXXXXXXXXXXXXXXXXXX)",
+          "paId": "ID Plausible",
+          "paPlaceholder": "pa-XXXXXXXXXXXXXXXXXXXXX"
         },
         "piwik": {
           "title": "Piwik PRO",
           "enable": "Activer Piwik PRO",
           "pro": "<url>Piwik PRO</url> est une plateforme d’analyse respectueuse de la vie privée et une alternative à Google Analytics.",
-          "proLocator": "Tu le trouves dans le Menu > Administration > Site > ID de ton panneau d’administration",
-          "proInvalid": "Doit être un ID Piwik valide (p. ex. xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)"
+          "proLocator": "Vous le trouverez dans Menu > Administration > Site > ID de votre panneau d’administration",
+          "proId": "ID Piwik PRO",
+          "proPlaceholder": "xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
         }
       },
       "mail": {

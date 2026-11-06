@@ -373,15 +373,16 @@
         "showForLoginStatusInfo": "Choose which visitors see the banner, e.g. only visitors without a subscription. If several active banners fit a visitor, the one with the most specific target group is shown.",
         "showOnPagesInfo": "The banner appears on the pages selected here. Leave empty if it should not appear on any page.",
         "ctaInfo": "Short sentence above the buttons that invites readers to act, e.g. «Support us with a subscription».",
-        "htmlInfo": "Optional: your own HTML code for the banner. If filled in, it replaces the title, text, call to action and buttons."
+        "htmlInfo": "Optional: your own HTML code for the banner. If filled in, it replaces the title, text, call to action and buttons.",
+        "customContent": "Custom code",
+        "timing": "Timing"
       },
       "list": {
         "title": "Banners",
         "text": "Text",
         "createNew": "Create new",
         "active": "Active",
-        "edit": "Edit",
-        "delete": "Delete"
+        "edit": "Edit"
       },
       "actions": {
         "add": "Add action",
@@ -1193,22 +1194,30 @@
         "title": "Edit Event"
       },
       "form": {
-        "cancelled": "Canceled",
         "description": "Description",
         "endsAt": "Ends at",
-        "endsBeforeStart": "The end must not be before the start",
+        "endsBeforeStart": "The end cannot be before the start",
         "externalSource": "External source (for imported events)",
         "image": "Image",
         "location": "Location",
         "name": "Name",
         "lead": "Lead",
-        "postponed": "Postponed",
-        "rescheduled": "Rescheduled",
-        "scheduled": "Scheduled",
         "startsAt": "Starts at",
         "status": "Status",
         "tags": "Tags",
-        "statusInfo": "Tells search engines whether the event takes place as planned or was cancelled, postponed or moved to a new date."
+        "statusInfo": "Tells search engines whether the event takes place as planned or was cancelled, postponed or moved to a new date.",
+        "statuses": {
+          "Scheduled": "Scheduled",
+          "Cancelled": "Canceled",
+          "Postponed": "Postponed",
+          "Rescheduled": "Rescheduled"
+        },
+        "sections": {
+          "details": "Details",
+          "schedule": "Schedule",
+          "content": "Content",
+          "media": "Media & tags"
+        }
       },
       "list": {
         "create": "Create new event",
@@ -2134,7 +2143,15 @@
         "linkTypePage": "Page",
         "linkTypeExternal": "External link",
         "linkType": "Link type",
-        "keyInfo": "Technical name your website uses to find this navigation, e.g. «main» or «footer». Only change it together with the people who develop your website."
+        "keyInfo": "Technical name your website uses to find this navigation, e.g. «main» or «footer». Only change it together with the people who develop your website.",
+        "linkTypes": {
+          "External": "External link",
+          "Page": "Page",
+          "Article": "Article"
+        },
+        "links": "Links",
+        "addLink": "Add link",
+        "keyTaken": "A navigation with the key \"{{key}}\" already exists. Please choose a different key."
       }
     },
     "notifications": {
@@ -2546,6 +2563,8 @@
     "save": "Save",
     "saveAndClose": "Save & Close",
     "settingList": {
+      "commentsAndPolls": "Comments & polls",
+      "confirmTitle": "Save these settings?",
       "activeSubscriptionsApiPublic": "Make the active subscriptions API accessible by the public",
       "allowCommentEditing": "Allow comment editing",
       "allowGuestCommentRating": "Allow guest ratings on comments",
@@ -2575,11 +2594,11 @@
       "settings": "Settings",
       "successMessage": "Settings updated successfully!",
       "successTitle": "Saved",
-      "articlePage": "Articles & Pages",
+      "articlePage": "Articles & pages",
       "showPendingWhenNotPublished": "Show a pending article or page even when not published yet.",
       "newArticlePeering": "Freshly created articles will be peered by default",
       "newArticlePaywall": "Freshly created articles will require a subscription by default",
-      "subscriptionPlans": "Subscription Plans",
+      "subscriptionPlans": "Subscription plans",
       "subscriptionUpgradeModel": "On upgrade, bill the full price difference (instead of the pro-rated remaining credit)",
       "subscriptionExtendWindowDays": "Renewal window (days before the end)",
       "paymentMethodChangeExpiryDays": "Payment method change waiting time (days)",
@@ -2610,7 +2629,12 @@
         "loginMinutes": "How long login links sent by e-mail stay valid, in minutes (60 = 1 hour, 1440 = 1 day, 10080 = 1 week). After that, a new link must be requested.",
         "passwordToken": "How long the e-mail link for resetting a password stays valid, in minutes (60 = 1 hour, 1440 = 1 day).",
         "peerToken": "How long to wait for partner media (peers) when loading their articles, in milliseconds (1000 = 1 second). After that, the request is cancelled."
-      }
+      },
+      "errors": {
+        "invalid": "The server rejected this value."
+      },
+      "publicApi": "Public statistics API",
+      "publicApiInfo": "Makes figures of a chosen period available through the public API without login, e.g. for live figures on your website. The data is anonymised. Leave a figure off if you don't need it."
     },
     "automaticMails": {
       "title": "Automatic emails",
@@ -2784,6 +2808,14 @@
         "colorInfo": "Some website designs use this color to highlight the tag, e.g. as the background of the tag label.",
         "descriptionInfo": "Shown at the top of the tag page on your website, which lists all content with this tag. Search engines also use it.",
         "markAsMainInfo": "Main tags stand for a topic. Some website designs show them prominently, e.g. as the topic label above an article."
+      },
+      "form": {
+        "sections": {
+          "details": "Details",
+          "display": "Display on the website"
+        },
+        "titleCreate": "Create Tag",
+        "uniqueConstraint": "A tag named “{{tag}}” already exists here."
       }
     },
     "toast": {
@@ -2823,7 +2855,13 @@
       "titleEdit": "Edit User Consent",
       "user": "User",
       "value": "Value",
-      "uniqueConstraint": "A user consent with slug '{{slug}}' already exists. Please choose a different slug."
+      "uniqueConstraint": "A user consent with slug '{{slug}}' already exists. Please choose a different slug.",
+      "sections": {
+        "assignment": "Assignment",
+        "assignmentInfo": "User and consent cannot be changed once the entry exists.",
+        "decision": "Decision"
+      },
+      "alreadyExists": "This user has already answered this consent."
     },
     "userCreateOrEditView": {
       "addressTitle": "Address",
@@ -3427,18 +3465,26 @@
         "bypasses": "Bypasses",
         "bypassToken": "Bypass token",
         "newBypassToken": "Create new bypass token",
-        "addBypass": "Add",
+        "addBypass": "Add bypass token",
         "qrCodeTitle": "QR Code for Bypass Token",
         "downloadSvg": "Download SVG",
         "baseUrl": "Website URL (baseurl). E.g. https://wepublish.ch",
         "upgrade": "Texts when paywall allows and supports upgrading",
+        "upgradeDescription": "Upgrade text (visible to the user)",
+        "upgradeCircumventDescription": "Upgrade text when the article content is not hidden (visible to the user)",
+        "nameTaken": "A paywall named “{{name}}” already exists.",
         "display": "Display options",
         "hideContentAfter": "Hide content after X blocks",
         "fadeout": "Fade out hidden blocks",
         "fadeoutHelpText": "Fading out allows a preview of the rest of the content to be shown.",
         "bypassesInfo": "Secret codes that let people read articles behind this paywall without a subscription, e.g. for a print or event campaign. Share the link or QR code: whoever opens it gets free access for a few hours.",
         "showQrCode": "Show QR code",
-        "hideContentAfterInfo": "How many blocks of the article (e.g. title, lead, paragraphs) readers without access still see before the rest is hidden. Default: 3."
+        "hideContentAfterInfo": "How many blocks of the article (e.g. title, lead, paragraphs) readers without access still see before the rest is hidden. Default: 3.",
+        "sections": {
+          "general": "General",
+          "texts": "Paywall texts",
+          "access": "Access"
+        }
       },
       "overview": {
         "areYouSure": "Are you sure?",
@@ -3815,21 +3861,28 @@
           "gtm": "<url>Google Tag Manager</url> is a tool from Google that lets you manage tracking and marketing scripts on your website without changing the site’s code each time.",
           "gtmLocator": "You can find it in the <url>admin dashboard</url> under Google tag",
           "gaInvalid": "Must be a valid GA ID (e.g., G-XXXXXXXXXX or UA-XXXXXXXX-X)",
-          "gtmInvalid": "Must be a valid GTM ID (e.g., GTM-XXXXXXX)"
+          "gtmInvalid": "Must be a valid GTM ID (e.g., GTM-XXXXXXX)",
+          "gaId": "Google Analytics ID",
+          "gaPlaceholder": "G-XXXXXXXXXX",
+          "gtmId": "Google Tag Manager ID",
+          "gtmPlaceholder": "GTM-XXXXXXX"
         },
         "plausible": {
           "title": "Plausible",
           "enable": "Enable Plausible",
           "pa": "<url>Plausible Analytics</url> is a privacy-focused alternative to Google Analytics.",
           "paLocator": "You can find it in the <url>website settings</url> of your admin dashboard",
-          "paInvalid": "Must be a valid PA ID (e.g., pa-XXXXXXXXXXXXXXXXXXXX)"
+          "paInvalid": "Must be a valid PA ID (e.g., pa-XXXXXXXXXXXXXXXXXXXX)",
+          "paId": "Plausible ID",
+          "paPlaceholder": "pa-XXXXXXXXXXXXXXXXXXXXX"
         },
         "piwik": {
           "title": "Piwik PRO",
           "enable": "Enable Piwik PRO",
           "pro": "<url>Piwik PRO</url> is a privacy-focused analytics platform and an alternative to Google Analytics.",
           "proLocator": "You can find it in the Menu > Administration > Site > ID of your administration panel",
-          "proInvalid": "Must be a valid Piwik ID (e.g., xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)"
+          "proId": "Piwik PRO ID",
+          "proPlaceholder": "xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
         }
       },
       "mail": {

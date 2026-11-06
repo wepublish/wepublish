@@ -25,11 +25,12 @@ vi.mock('react-i18next', () => ({
   }),
 }));
 
-const mockedUseQuery = useQuery as Mock;
+const mockedUseQuery = useQuery as unknown as Mock;
 
 const entry = (
   overrides: Partial<ChangelogEntryFragment> = {}
 ): ChangelogEntryFragment => ({
+  __typename: 'ChangelogEntry',
   id: 'entry-1',
   name: '20260825120000_entry',
   releasedAt: '2026-08-25T12:00:00.000Z',

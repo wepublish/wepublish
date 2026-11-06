@@ -125,8 +125,8 @@ const editorPalette = (mode: ColorMode) => ({
   success: augmentColor({
     color: {
       light: '#e1f8de',
-      main: '#52ad4a',
-      dark: '#3d8237',
+      main: mode === 'dark' ? '#52ad4a' : '#387a32',
+      dark: mode === 'dark' ? '#3d8237' : '#2f6b2a',
     },
   }),
   warning: augmentColor({

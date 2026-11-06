@@ -1,11 +1,5 @@
 import { createTheme, ThemeProvider } from '@mui/material';
-import {
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-  within,
-} from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 import { NavigationList } from './navigationList';
@@ -40,20 +34,6 @@ vi.mock('@wepublish/ui/editor', async importOriginal => ({
     <T,>(component: T) =>
       component,
   PermissionControl: ({ children }: { children?: unknown }) => children,
-  NavigationEditPanel: ({
-    id,
-    onClose,
-  }: {
-    id?: string;
-    onClose: () => void;
-  }) => (
-    <button
-      type="button"
-      onClick={onClose}
-    >
-      {`close ${id ?? 'new'}`}
-    </button>
-  ),
 }));
 
 const renderAt = (path: string) =>
@@ -80,42 +60,6 @@ beforeEach(() => {
 });
 
 describe('NavigationList', () => {
-  it('opens the edit drawer again for a navigation that was just closed', async () => {
-    renderAt('/navigations/edit/navigation-1');
-
-    fireEvent.click(
-      within(screen.getByRole('dialog')).getByRole('button', {
-        name: 'close navigation-1',
-      })
-    );
-    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
-
-    fireEvent.click(screen.getByRole('link', { name: 'Main' }));
-
-    expect(
-      within(await screen.findByRole('dialog')).getByRole('button', {
-        name: 'close navigation-1',
-      })
-    ).toBeInTheDocument();
-  });
-
-  it('keeps showing the closed navigation while the drawer slides out', () => {
-    renderAt('/navigations/edit/navigation-1');
-
-    fireEvent.click(
-      within(screen.getByRole('dialog')).getByRole('button', {
-        name: 'close navigation-1',
-      })
-    );
-
-    expect(
-      screen.getByRole('button', { name: 'close navigation-1', hidden: true })
-    ).toBeInTheDocument();
-    expect(
-      screen.queryByRole('button', { name: 'close new', hidden: true })
-    ).toBeNull();
-  });
-
   it('names the delete button after its navigation', () => {
     renderAt('/navigations');
 

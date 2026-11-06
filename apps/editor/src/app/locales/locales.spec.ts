@@ -364,4 +364,38 @@ export const useDemo = () =>
       prefixes: [],
     });
   });
+
+  it('finds the keys of the migrated forms', () => {
+    expect(usedKeys()).toEqual(
+      expect.arrayContaining([
+        'consents.slugInfo',
+        'userConsents.alreadyExists',
+        'banner.form.mustNotBeNegative',
+        'banner.form.timing',
+        'event.form.endsBeforeStart',
+        'event.form.sections.media',
+        'navigation.panels.keyTaken',
+        'navigation.panels.addLink',
+        'paywall.form.nameTaken',
+        'paywall.form.sections.access',
+        'tags.form.uniqueConstraint',
+        'tags.form.sections.display',
+        'event.create.title',
+        'settingList.publicApi',
+        'websiteSettings.analytics.plausible.paPlaceholder',
+        'websiteSettings.analytics.google.title',
+        'form.errors.required',
+        'banner.actions.add',
+        'form.color.invalid',
+      ])
+    );
+    expect(usedPrefixes()).toEqual(
+      expect.arrayContaining([
+        'banner.actions.role.',
+        'banner.form.loginStatus.',
+        'event.form.statuses.',
+        'navigation.panels.linkTypes.',
+      ])
+    );
+  });
 });

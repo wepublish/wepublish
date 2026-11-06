@@ -22,7 +22,7 @@ import { z } from 'zod';
 import { WebsiteSettingsHeader } from './website-settings-header';
 
 import { lazyMessage } from '../../utility';
-import { Explainer, WebsiteAnalyticsWrapper } from './website-analytics';
+import { Explainer, WebsiteAnalyticsWrapper } from './website-settings-layout';
 
 const mailSchema = z.object({
   mailchimp: z.object({
