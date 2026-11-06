@@ -2908,15 +2908,16 @@
       },
       "panels": {
         "cancel": "Abbrechen",
-        "close": "Schliessen",
         "confirm": "Bestätigen",
-        "createUserRole": "Userrolle erstellen",
+        "createUserRole": "Benutzerrolle erstellen",
         "deleteUserRole": "Benutzerrolle löschen?",
         "description": "Beschreibung",
         "editUserRole": "Benutzerrolle bearbeiten",
         "name": "Name",
+        "nameTaken": "Eine Benutzerrolle «{{name}}» gibt es bereits.",
         "permissions": "Berechtigungen",
-        "systemRole": "ist eine Systemrolle und kann nicht bearbeitet werden",
+        "selectPermissions": "Berechtigungen auswählen",
+        "systemRole": "Dies ist eine Systemrolle und kann nicht bearbeitet werden.",
         "Unknown": "Unbekannt"
       }
     },

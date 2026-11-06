@@ -2908,15 +2908,16 @@
       },
       "panels": {
         "cancel": "Annuler",
-        "close": "Fermer",
         "confirm": "Confirmer",
         "createUserRole": "Créer un rôle d’utilisateur·trice",
         "deleteUserRole": "Supprimer le rôle d’utilisateur·trice ?",
         "description": "Description",
         "editUserRole": "Modifier le rôle d’utilisateur·trice",
         "name": "Nom",
+        "nameTaken": "Un rôle d’utilisateur·trice « {{name}} » existe déjà.",
         "permissions": "Autorisations",
-        "systemRole": "est un rôle système et ne peut être modifié",
+        "selectPermissions": "Sélectionner les autorisations",
+        "systemRole": "Ceci est un rôle système et ne peut pas être modifié.",
         "Unknown": "Inconnu"
       }
     },
