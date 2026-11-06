@@ -6,5 +6,12 @@
   "article": {
     "related": "Cela pourrait également vous intéresser",
     "comments": "Commentaires"
+  },
+  "subscribe": {
+    "support": {
+      "subscribeForPeriod": "Je soutiens Courant {monthlyAmount, select, 0 {gratuitement} other {à hauteur de {formattedAmount} {renewalPeriodL}}}",
+      "payForPeriod": "Je soutiens Courant {monthlyAmount, select, 0 {gratuitement} other {à hauteur de {formattedAmount} {paymentPeriodL}}}",
+      "pay": "Je soutiens Courant {monthlyAmount, select, 0 {gratuitement} other {à hauteur de {formattedAmount}}}"
+    }
   }
 }
