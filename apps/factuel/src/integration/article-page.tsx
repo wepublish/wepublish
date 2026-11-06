@@ -1,9 +1,7 @@
 import { useQuery } from '@apollo/client/react';
-import {
-  ArticleContainer,
-  ArticleListContainer,
-} from '@wepublish/article/website';
+import { ArticleContainer } from '@wepublish/article/website';
 import { CommentListContainer } from '@wepublish/comments/website';
+import { CourantRelatedArticles } from '@wepublish/tenant/factuel';
 import { useQueryParams } from '@wepublish/utils/website/tanstack';
 import { ArticleDocument, CommentItemType } from '@wepublish/website/api';
 
@@ -30,19 +28,7 @@ export function FactuelArticlePage() {
         id={id as never}
       />
 
-      {data?.article && (
-        <ArticleListContainer
-          variables={{
-            filter: { tags: data.article.tags.map(tag => tag.id) },
-            take: 4,
-          }}
-          filter={articles =>
-            articles
-              .filter(article => article.id !== data.article?.id)
-              .splice(0, 3)
-          }
-        />
-      )}
+      {data?.article && <CourantRelatedArticles article={data.article} />}
 
       {data?.article && !data.article.disableComments && (
         <CommentListContainer

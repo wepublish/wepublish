@@ -1,44 +1,21 @@
 import styled from '@emotion/styled';
-import { FullArticleTeaserFragment, TeaserType } from '@wepublish/website/api';
+import { articleToTeaser } from '@wepublish/article/website';
+import { FullArticleTeaserFragment } from '@wepublish/website/api';
 import {
   BuilderArticleListProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import { courantTokens } from '../brand-tokens';
 
-const { pageGap, pageMaxWidth } = courantTokens.layout;
+const { pageMaxWidth } = courantTokens.layout;
 
 const CourantArticleListWrapper = styled('section')`
-  display: grid;
-  row-gap: ${({ theme }) => theme.spacing(pageGap.xs)};
   width: 100%;
   max-width: ${pageMaxWidth}px;
   margin-inline: auto;
 `;
-
-const CourantArticleListHeading = styled('h2')`
-  margin: 0;
-  font-family: var(--courant-display);
-  font-size: ${courantTokens.typography.headings.page.h4};
-  font-weight: 500;
-  letter-spacing: -0.0075em;
-  line-height: 1;
-`;
-
-const articleToTeaser = (
-  article: FullArticleTeaserFragment['article']
-): FullArticleTeaserFragment => ({
-  __typename: 'ArticleTeaser',
-  type: TeaserType.Article,
-  article,
-  image: null,
-  lead: null,
-  preTitle: null,
-  title: null,
-});
 
 export const CourantArticleList = ({
   data,
@@ -47,7 +24,6 @@ export const CourantArticleList = ({
   const {
     blocks: { TeaserGrid },
   } = useWebsiteBuilder();
-  const { t } = useTranslation();
 
   const teasers = useMemo(
     () =>
@@ -63,10 +39,6 @@ export const CourantArticleList = ({
 
   return (
     <CourantArticleListWrapper className={className}>
-      <CourantArticleListHeading>
-        {t('article.related')}
-      </CourantArticleListHeading>
-
       <TeaserGrid
         title={null}
         numColumns={3}

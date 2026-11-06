@@ -11,6 +11,7 @@ export {
 } from './components/courant-content-wrapper';
 export * from './components/courant-footer';
 export * from './components/courant-navbar';
+export { CourantRelatedArticles } from './components/courant-related-articles';
 export { CourantTeaser } from './components/courant-teaser';
 export * from './courant-config';
 export { default as courantTheme } from './theme';
