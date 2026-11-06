@@ -1990,6 +1990,8 @@
       "auditLog": "Audit-Log",
       "apps": "Apps",
       "externalApp": "App",
+      "appCreate": "Neue App",
+      "appEdit": "App bearbeiten",
       "articles": "Artikel",
       "articleCreate": "Neuer Artikel",
       "articleEdit": "Artikel bearbeiten",
@@ -4023,34 +4025,30 @@
       },
       "apps": "Apps",
       "noAppsFound": "Keine externen Apps konfiguriert.",
+      "createNew": "Neue App",
       "notFound": "Externe App nicht gefunden",
       "appsInfo": "Verknüpfungen zu externen Tools, die auf dem Dashboard unter «We.Publish Apps» erscheinen. «Ziel» bestimmt, ob eine App in einem neuen Browser-Tab oder direkt im Editor geöffnet wird. Manche Websites lassen sich nicht im Editor anzeigen – öffne sie in einem neuen Tab."
     },
     "externalAppForm": {
       "apiKey": "API-Schlüssel",
       "apiKeyOption": "{{name}} ({{prefix}}…)",
-      "noApiKey": "Kein API-Schlüssel",
       "apiKeyHelp": "Der API-Schlüssel, mit dem die App die We.Publish-API liest. Der Editor zeigt dann an, wann er abläuft oder widerrufen wurde. Den Schlüssel selbst hinterlegst du in der App.",
       "apiKeyDetails": "{{prefix}}… · {{scopes}} Berechtigungen · läuft am {{expiresAt, PP}} ab",
-      "create": "Erstellen",
-      "update": "Aktualisieren",
       "delete": "Löschen",
       "name": "Name",
       "description": "Beschreibung",
       "url": "URL",
       "target": "Ziel",
-      "successUpdate": "Externe App erfolgreich aktualisiert",
-      "errorUpdate": "Fehler beim Aktualisieren der externen App",
-      "successCreate": "Externe App erfolgreich erstellt",
-      "errorCreate": "Fehler beim Erstellen der externen App",
       "successDelete": "Externe App erfolgreich gelöscht",
-      "errorDelete": "Fehler beim Löschen der externen App",
       "deleteConfirmationTitle": "Externe App löschen",
       "deleteConfirmationText": "Möchtest du diese externe App wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
-      "icon": "Icon-URL",
-      "targetBlank": "Neuer Browser-Tab",
-      "targetIframe": "Im Editor",
-      "selectIcon": "Symbol auswählen"
+      "icon": "Symbol",
+      "targets": {
+        "BLANK": "Neuer Browser-Tab",
+        "IFRAME": "Im Editor"
+      },
+      "createTitle": "App erstellen",
+      "editTitle": "App bearbeiten"
     },
     "networkContentDashboard": {
       "errorLoading": "Netzwerkartikel konnten nicht geladen werden.",
@@ -4994,7 +4992,8 @@
         "peer": "Peer erstellen",
         "userRole": "Benutzerrolle erstellen",
         "token": "Token generieren",
-        "apiToken": "API-Schlüssel generieren"
+        "apiToken": "API-Schlüssel generieren",
+        "app": "App erstellen"
       },
       "trigger": "Suchen oder springen…",
       "keys": {

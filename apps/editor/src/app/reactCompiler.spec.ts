@@ -7,6 +7,13 @@ import { DiscountCodeCreateForm } from './routes/discountCode/discountCodeCreate
 import { DiscountCodeEditForm } from './routes/discountCode/discountCodeEditView';
 import { EventCreateView } from './routes/events/eventCreateView';
 import { EventEditView } from './routes/events/eventEditView';
+import {
+  ExternalAppCreateForm,
+  ExternalAppDrawer,
+  ExternalAppEditForm,
+} from './routes/externalApps/externalAppDrawer';
+import { IconPickerField } from './routes/externalApps/iconPicker';
+import { LinkedApiKeyWarning } from './routes/externalApps/linkedApiKeyWarning';
 import { GoodieCreateForm } from './routes/goodie/goodieCreateView';
 import { GoodieEditForm } from './routes/goodie/goodieEditView';
 import {
@@ -54,6 +61,11 @@ describe('the editor under test', () => {
     ['DiscountCodeEditForm', DiscountCodeEditForm],
     ['EventCreateView', EventCreateView],
     ['EventEditView', EventEditView],
+    ['ExternalAppCreateForm', ExternalAppCreateForm],
+    ['ExternalAppEditForm', ExternalAppEditForm],
+    ['ExternalAppDrawer', ExternalAppDrawer],
+    ['IconPickerField', IconPickerField],
+    ['LinkedApiKeyWarning', LinkedApiKeyWarning],
     ['GoodieCreateForm', GoodieCreateForm],
     ['GoodieEditForm', GoodieEditForm],
     ['NavigationCreateForm', NavigationCreateForm],

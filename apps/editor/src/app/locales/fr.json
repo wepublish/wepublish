@@ -1990,6 +1990,8 @@
       "auditLog": "Journal d’audit",
       "apps": "Applications",
       "externalApp": "Application",
+      "appCreate": "Nouvelle application",
+      "appEdit": "Modifier l’application",
       "articles": "Articles",
       "articleCreate": "Nouvel article",
       "articleEdit": "Modifier l’article",
@@ -4015,34 +4017,30 @@
       },
       "apps": "Applications",
       "noAppsFound": "Aucune application externe configurée.",
+      "createNew": "Nouvelle application",
       "notFound": "Application externe introuvable",
       "appsInfo": "Raccourcis vers des outils externes qui apparaissent sur le tableau de bord sous « We.Publish Apps ». « Cible » détermine si une app s’ouvre dans un nouvel onglet du navigateur ou directement dans l’éditeur. Certains sites ne peuvent pas être affichés dans l’éditeur – ouvrez-les dans un nouvel onglet."
     },
     "externalAppForm": {
       "apiKey": "Clé API",
       "apiKeyOption": "{{name}} ({{prefix}}…)",
-      "noApiKey": "Aucune clé API",
       "apiKeyHelp": "La clé API avec laquelle l’app lit l’API We.Publish. L’éditeur indique alors quand elle expire ou a été révoquée. La clé elle-même est enregistrée dans l’app.",
       "apiKeyDetails": "{{prefix}}… · {{scopes}} autorisations · expire le {{expiresAt, PP}}",
-      "create": "Créer",
-      "update": "Mettre à jour",
       "delete": "Supprimer",
       "name": "Nom",
       "description": "Description",
       "url": "URL",
       "target": "Cible",
-      "successUpdate": "Application externe mise à jour avec succès",
-      "errorUpdate": "Échec de la mise à jour de l’application externe",
-      "successCreate": "Application externe créée avec succès",
-      "errorCreate": "Échec de la création de l’application externe",
       "successDelete": "Application externe supprimée avec succès",
-      "errorDelete": "Échec de la suppression de l’application externe",
       "deleteConfirmationTitle": "Supprimer l’application externe",
       "deleteConfirmationText": "Êtes-vous sûr·e de vouloir supprimer cette application externe ? Cette action est irréversible.",
-      "icon": "URL de l’icône",
-      "targetBlank": "Nouvel onglet du navigateur",
-      "targetIframe": "Dans l’éditeur",
-      "selectIcon": "Choisir une icône"
+      "icon": "Icône",
+      "targets": {
+        "BLANK": "Nouvel onglet du navigateur",
+        "IFRAME": "Dans l’éditeur"
+      },
+      "createTitle": "Créer une application",
+      "editTitle": "Modifier l’application"
     },
     "networkContentDashboard": {
       "errorLoading": "Impossible de charger les articles du réseau.",
@@ -4994,7 +4992,8 @@
         "peer": "Créer un peer",
         "userRole": "Créer un rôle utilisateur",
         "token": "Générer un token",
-        "apiToken": "Générer une clé API"
+        "apiToken": "Générer une clé API",
+        "app": "Créer une application"
       },
       "trigger": "Rechercher ou aller à…",
       "keys": {
