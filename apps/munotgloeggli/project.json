@@ -1,53 +1,48 @@
 {
   "name": "munotgloeggli",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/munotgloeggli",
+  "sourceRoot": "apps/munotgloeggli/src",
   "projectType": "application",
   "tags": [],
   "targets": {
-    "typecheck": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "tsc --noEmit -p apps/munotgloeggli/tsconfig.json"
-      }
-    },
     "build": {
-      "executor": "@nx/next:build",
+      "executor": "nx:run-commands",
+      "cache": true,
       "dependsOn": [],
-      "outputs": ["{options.outputPath}"],
-      "defaultConfiguration": "production",
+      "inputs": ["production", "^production"],
+      "outputs": [
+        "{workspaceRoot}/dist/apps/{projectName}",
+        "{projectRoot}/src/routeTree.gen.ts"
+      ],
       "options": {
-        "outputPath": "dist/apps/munotgloeggli"
-      },
-      "configurations": {
-        "development": {
-          "outputPath": "apps/munotgloeggli"
-        },
-        "production": {}
+        "command": "NODE_OPTIONS=--max-old-space-size=8192 vite build && NODE_OPTIONS=--max-old-space-size=8192 vite build --config vite.instrument.config.mts",
+        "cwd": "{projectRoot}"
       }
     },
     "serve": {
-      "executor": "@nx/next:server",
-      "defaultConfiguration": "development",
+      "executor": "nx:run-commands",
+      "continuous": true,
       "options": {
-        "buildTarget": "munotgloeggli:build",
-        "dev": true
-      },
-      "configurations": {
-        "development": {
-          "buildTarget": "munotgloeggli:build:development",
-          "dev": true
-        },
-        "production": {
-          "buildTarget": "munotgloeggli:build:production",
-          "dev": false
-        }
+        "command": "vite dev --port 4202",
+        "cwd": "{projectRoot}"
       }
     },
-    "export": {
-      "executor": "@nx/next:export",
+    "preview": {
+      "executor": "nx:run-commands",
+      "continuous": true,
+      "dependsOn": ["build"],
       "options": {
-        "buildTarget": "munotgloeggli:build:production"
+        "command": "node --import ../../dist/apps/munotgloeggli/.output/server/instrument.server.mjs ../../dist/apps/munotgloeggli/.output/server/index.mjs",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "inputs": ["production", "^production"],
+      "options": {
+        "command": "tsc -p tsconfig.json --noEmit",
+        "cwd": "{projectRoot}"
       }
     },
     "test": {

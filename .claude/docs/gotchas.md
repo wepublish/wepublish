@@ -865,6 +865,9 @@ a case in `use-seeded-state.spec.tsx`.
 The same render guards the cure: a view with async `defaultValues` should
 return nothing until `formState.isLoading` clears.
 
+Don't reach for the hook in new code at all — see code-style.md. It is kept
+for the views that still use it.
+
 ---
 
 ### ⚠️ `DataTable`'s body memo must depend on the columns
@@ -1148,6 +1151,103 @@ Pinned by `render.spec.tsx`, `newsletter-render.service.spec.ts`,
 `react-dom`, `@react-email/components`, and `tslib`, because the API's webpack
 gives `.tsx` to ts-loader with `importHelpers`, not swc) must stay in
 `apps/api-example/package.json` — see [infrastructure.md](infrastructure.md).
+
+---
+
+### ⚠️ An inline script in a route's `head()` re-runs on every navigation
+
+`head()` can return `scripts`, and `RouterManagedScriptTag` takes `children`,
+so an inline snippet type-checks and server-renders correctly. It is still the
+wrong home for anything that must run once.
+
+`HeadContent` is a `"use client"` component that renders those tags from
+reactive router state, on the server *and* the client. Measured on the built
+server: a counter in the root route's `head().scripts` read 1 after hydration,
+then 2 and 3 after two client-side navigations, with the `<script>` tags
+piling up in `<head>`. Being identical across routes does not help — the tag
+is re-rendered per match.
+
+So analytics initialisers (`gtag('config')`, the GTM IIFE, the Plausible
+shim) stay in the `Analytics` component. They are not idempotent, and moving
+them would double-fire them on every navigation.
+
+For a one-shot bootstrap — `window.PUBLIC_ENV`, `window.WEBSITE_SETTINGS` —
+use `ScriptOnce` from `@tanstack/react-router`. It renders server-side only,
+carries the CSP nonce from `router.options.ssr.nonce`, and appends
+`document.currentScript.remove()` so nothing survives in the hydrated DOM.
+
+---
+
+### ⚠️ A TanStack build that works locally can still ship a broken `.output`
+
+[`apps/gruppetto/vite.config.mts`](../../apps/gruppetto/vite.config.mts) aliases
+two specifiers to their ESM equivalents in `resolve.alias`. They look
+redundant — nothing in the app imports React from a CJS module, and the build
+is green without them.
+
+Vite externalises `react` for the SSR environment. Rolldown then inlines any
+CJS dependency it cannot externalise safely and emits a literal
+`__require("react")` inside it, which nitro's second pass cannot rewrite. The
+call resolves against `node_modules` on disk, and `.output` ships without one,
+so every SSR render dies with `Cannot find module 'react'` — while `nx build`
+exits 0. The offenders here are `react-transition-group/cjs` (reached through
+MUI) and `use-sync-external-store/shim` (reached through `swr` and
+`@tanstack/react-store`). Upstream closed this as working-as-intended:
+[rolldown#10643](https://github.com/rolldown/rolldown/issues/10643).
+
+Whether it happens depends on whether the package is reachable from the **root**
+`node_modules`. A workspace carrying hoisted leftovers from the npm era
+resolves them to their ESM builds and never reproduces it; CI's clean
+`pnpm install --frozen-lockfile` does. To reproduce a CI build locally,
+`git archive` the branch into a temp directory and install there — do not trust
+your own `node_modules`.
+
+Do **not** "fix" it by adding `react` to the nitro `traceDeps`. The require then
+resolves to a second React copy, hooks fail against the bundled copy's
+dispatcher, and SSR degrades to an empty shell while still returning 200.
+`ssr.noExternal: ['react']` removes the require too, but hands react-dom/server
+its own copy and every render dies on a null hook dispatcher — hence the
+aliases.
+
+[`docker/check-nitro-output.js`](../../docker/check-nitro-output.js) runs in the
+`build-website-tanstack` stage and fails the image build on any specifier —
+`require()`, dynamic `import()` or static `import ... from` — that is neither
+bundled, traced, nor a node builtin. The same bug hid
+`@sentry/server-runtime-injection`, which `@sentry/node` imports and nitro did
+not trace, and later `@sentry/tanstackstart-react`, which the `--import`
+preload resolves at runtime from a build of its own.
+
+### ⚠️ A migrated tenant can pass every gate and still render the wrong page
+
+mannschaft.com, cültür.ch and ganzgraz.at each shipped a regression that
+survived `nx build`, `lint`, `typecheck`, the specs,
+[`docker/check-nitro-output.js`](../../docker/check-nitro-output.js) and
+[`tools/tanstack-route-parity.mjs`](../../tools/tanstack-route-parity.mjs).
+Verified live on 2026-11-04: munotgloeggli.ch and ganzgraz.at served MUI's
+default pink `#e91e63` ten and twelve times in their rendered `<style>`, with
+their configured primary (`#dc0d15`, `#4E2996`) present only inside the
+`WEBSITE_SETTINGS` JSON; mannschaft.com logged `Not allowed to load local
+resource: file:///wepublish/.output/server/_ssr/fonts/Plain-Light.otf`.
+
+The route check asks whether every URL still answers. None of these changed a
+status code. What was lost each time was something the Next `pages/_app.tsx`
+or `pages/index.tsx` did that the shared route factories do not:
+`settingsTheme` on `TenantProviders`, `thirdParty: {stripe}`, a
+`DailyBriefingContext.Provider` that only the home page mounted, a
+`styled(PageContainer)` wrapper, and a `fullWidth={false}` that a grep for the
+component name read as "present, so copy the usual one".
+
+**Load-bearing:** [`tools/tanstack-shell-parity.mjs`](../../tools/tanstack-shell-parity.mjs)
+diffs those two file pairs per tenant and fails on anything the Next side
+mentions and the TanStack side does not. Run it for every migration; it would
+have caught five of the six. The sixth is the font URL — emotion emits
+`@font-face` during SSR, where `import.meta.url` is a path on disk, so fonts
+must be static asset imports and the proof is
+`grep -r "file://" dist/apps/<tenant>/.output/server` finding nothing.
+
+Only `ganzgraz` and `munotgloeggli` take `settingsTheme`; every other tenant's
+`createTheme: () => theme` ignores it deliberately, so wiring the prop
+elsewhere is a behaviour change, not a fix.
 
 ---
 

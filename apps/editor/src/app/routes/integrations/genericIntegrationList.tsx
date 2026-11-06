@@ -183,6 +183,7 @@ export function GenericIntegrationList<
           onChange={event => setSearchValue(event.target.value)}
           placeholder={t('search')}
           slotProps={{
+            htmlInput: { 'aria-label': t('search') },
             input: {
               startAdornment: (
                 <InputAdornment position="start">

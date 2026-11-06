@@ -35,10 +35,7 @@ describe('SubscriptionListContainer with its own list', () => {
   it('renders the given list with the subscriptions, invoices and actions', async () => {
     const List = vi.fn((_: BuilderSubscriptionListProps) => null);
 
-    renderWithProviders(
-      <SubscriptionListContainer List={List} />,
-      { mocks }
-    );
+    renderWithProviders(<SubscriptionListContainer List={List} />, { mocks });
 
     await waitFor(() => {
       const props = List.mock.lastCall?.[0];

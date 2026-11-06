@@ -1,6 +1,7 @@
 import { css, Global } from '@emotion/react';
 import styled from '@emotion/styled';
-import { Dialog } from '@mui/material';
+import { Box, Dialog } from '@mui/material';
+import { visuallyHidden } from '@mui/utils';
 import {
   KeyboardEvent as ReactKeyboardEvent,
   useEffect,
@@ -232,6 +233,13 @@ export function CommandPalette() {
     [groups]
   );
 
+  const trimmedQuery = query.trim();
+  const announcement =
+    !trimmedQuery ? ''
+    : displayed.length ?
+      t('commandPalette.resultCount', { count: displayed.length })
+    : `${t('commandPalette.empty')} ${trimmedQuery}`;
+
   const [wasOpen, setWasOpen] = useState(isOpen);
 
   if (isOpen !== wasOpen) {
@@ -388,10 +396,17 @@ export function CommandPalette() {
 
           {!displayed.length && (
             <Empty>
-              {t('commandPalette.empty')} <strong>{query.trim()}</strong>
+              {t('commandPalette.empty')} <strong>{trimmedQuery}</strong>
             </Empty>
           )}
         </Results>
+
+        <Box
+          role="status"
+          sx={visuallyHidden}
+        >
+          {announcement}
+        </Box>
 
         <Hints>
           <Hint>

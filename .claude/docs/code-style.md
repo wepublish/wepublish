@@ -105,6 +105,16 @@ export const Wrapper = styled(ContentWrapper)<{ fadeout?: boolean }>`
   …/>} label={…} />` — no separate «on/off» text. Radii come from the theme:
   `theme.shape.borderRadius` (8px) for cards and panels, `calc(… * 0.75)` for
   controls and inner boxes; in `sx` that is `borderRadius: 1` and `0.75`.
+- **Accessibility plumbing (WCAG 2.2 AA):** fields get a visible `label`, never
+  a placeholder alone, and an `aria-label` must contain the visible text (2.5.3).
+  `DrawerTitle` names its enclosing `role="dialog"` itself — use it rather than
+  a bare `Typography` in drawers. Tabs with a content area use `useTabPanel`
+  (`libs/ui/editor/src/lib/panel/useTabPanel.ts`) for `id`/`aria-controls`/
+  `role="tabpanel"`. Snackbars render inside a `role="status"` stack; error and
+  warning entries are `role="alert"`. Editor blocks that validate pass a focus ref as the third
+  argument of `useRegisterValidator` so a failed save can focus them. Every
+  page renders exactly one `h1` (`EditorTemplate`/`LoginTemplate` take a
+  `title` for that).
 - **Document editors use `EditorHeader`** (`@wepublish/ui/editor`) inside
   `EditorTemplate`: status chip + last-saved on the left, `EditorHeaderButton`s
   on the right (secondary subtle, Save/Publish primary). Labels collapse to
@@ -135,6 +145,15 @@ export const Wrapper = styled(ContentWrapper)<{ fadeout?: boolean }>`
   multi-column view. `FormSectionTitle` heads a *group*; a heading over one
   control is that control's `FormLabel`. Never wrap `RichTextBlock` in a card or a bordered box —
   the editor draws its own outlined surface, so a wrapper is a second border.
+- **`useSeededState` is for the code that already has it, never for new code.**
+  It copies an external value into local state and re-copies when the value
+  changes — a mirror, and mirrors drift. Where the source is a query feeding a
+  form, `useForm`'s `values` (with `resetOptions: {keepDirtyValues: true}`)
+  does the same job and keeps what the user has typed, which the seed throws
+  away on every refetch; `videoEditPanel.tsx` is the worked example. Where the
+  source is the route, derive straight from it — `videoList.tsx` opens its
+  drawers on `location.pathname` and closes them by navigating, so there is no
+  second copy to fall out of step.
 - **A dialog's confirming action goes last**, so it lands bottom-right with
   the dismissive one to its left — Material's order, and what the rest of the
   editor's 57 dialogs now do. It is `variant="contained"` (a destructive one

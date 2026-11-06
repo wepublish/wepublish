@@ -111,4 +111,40 @@ describe('UserSubscriptionsList', () => {
 
     expect(names).toEqual(['Current-Abo', 'Lapsed-Abo', 'Old-Abo']);
   });
+
+  it('says there are no subscriptions in a row spanning every column', () => {
+    renderWithTheme(
+      <MemoryRouter>
+        <UserSubscriptionsList
+          subscriptions={[]}
+          userId="user-1"
+        />
+      </MemoryRouter>
+    );
+
+    const headers = screen.getAllByRole('columnheader');
+    const cell = screen.getByRole('cell', {
+      name: 'userList.overview.noSubscriptions',
+    });
+
+    expect(cell.getAttribute('colspan')).toBe(String(headers.length));
+  });
+
+  it('lets keyboard users scroll the wide table as a named region', () => {
+    renderWithTheme(
+      <MemoryRouter>
+        <UserSubscriptionsList
+          subscriptions={[]}
+          userId="user-1"
+        />
+      </MemoryRouter>
+    );
+
+    const region = screen.getByRole('region', {
+      name: 'userList.overview.subscriptions',
+    });
+
+    expect(region.tabIndex).toBe(0);
+    expect(region.contains(screen.getByRole('table'))).toBe(true);
+  });
 });

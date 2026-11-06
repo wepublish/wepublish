@@ -1,8 +1,10 @@
 import styled from '@emotion/styled';
 import { Button, IconButton, InputAdornment, TextField } from '@mui/material';
+import { useForkRef } from '@mui/material/utils';
 import {
   createContext,
   forwardRef,
+  KeyboardEvent,
   ReactNode,
   Ref,
   useCallback,
@@ -96,6 +98,7 @@ type FieldProps = {
   size?: 'small' | 'medium';
   name?: string;
   'aria-labelledby'?: string;
+  inputRef?: Ref<HTMLInputElement>;
   onClear?: () => void;
 };
 
@@ -112,14 +115,18 @@ const PickerInput = forwardRef(function PickerInput(
     id,
     onClear,
     value,
+    inputRef,
     ...props
   }: FieldProps & { value?: string },
   ref: Ref<HTMLInputElement>
 ) {
+  const { t } = useTranslation();
+  const forkedRef = useForkRef(ref, inputRef);
+
   return (
     <TextField
       {...props}
-      inputRef={ref}
+      inputRef={forkedRef}
       value={value ?? ''}
       label={label}
       placeholder={placeholder}
@@ -133,6 +140,7 @@ const PickerInput = forwardRef(function PickerInput(
       slotProps={{
         htmlInput: {
           'aria-labelledby': props['aria-labelledby'],
+          'aria-haspopup': 'dialog',
           autoComplete: 'off',
         },
         input: {
@@ -142,7 +150,7 @@ const PickerInput = forwardRef(function PickerInput(
                 <IconButton
                   size="small"
                   edge="end"
-                  aria-label="clear"
+                  aria-label={t('dateTimePicker.clear')}
                   disabled={disabled}
                   onMouseDown={event => event.stopPropagation()}
                   onClick={event => {
@@ -174,16 +182,27 @@ export interface DatePickerProps extends FieldProps {
 
 function Wrapper({
   fullWidth,
+  isOpen,
   children,
 }: {
   fullWidth?: boolean;
+  isOpen: () => boolean;
   children: ReactNode;
 }) {
   const [anchor, setAnchor] = useState<HTMLElement | null>(null);
   const Element = fullWidth ? FullWidthWrapper : InlineWrapper;
 
+  const keepEscapeInCalendar = (event: KeyboardEvent) => {
+    if (event.key === 'Escape' && isOpen()) {
+      event.stopPropagation();
+    }
+  };
+
   return (
-    <Element ref={setAnchor}>
+    <Element
+      ref={setAnchor}
+      onKeyDown={keepEscapeInCalendar}
+    >
       <PopperAnchorContext.Provider value={anchor}>
         {children}
       </PopperAnchorContext.Provider>
@@ -206,9 +225,16 @@ export function DatePicker({
 }: DatePickerProps) {
   const picker = useRef<ReactDatePicker>(null);
   const close = useCallback(() => picker.current?.setOpen(false), []);
+  const isOpen = useCallback(
+    () => Boolean(picker.current?.isCalendarOpen()),
+    []
+  );
 
   return (
-    <Wrapper fullWidth={field.fullWidth}>
+    <Wrapper
+      fullWidth={field.fullWidth}
+      isOpen={isOpen}
+    >
       <MaterialCalendarStyles />
 
       <ReactDatePicker
@@ -265,11 +291,18 @@ export function DateRangePicker({
 }: DateRangePickerProps) {
   const picker = useRef<ReactDatePicker>(null);
   const close = useCallback(() => picker.current?.setOpen(false), []);
+  const isOpen = useCallback(
+    () => Boolean(picker.current?.isCalendarOpen()),
+    []
+  );
 
   const [pendingStart, setPendingStart] = useState<Date | null>(null);
 
   return (
-    <Wrapper fullWidth={field.fullWidth}>
+    <Wrapper
+      fullWidth={field.fullWidth}
+      isOpen={isOpen}
+    >
       <MaterialCalendarStyles />
 
       <ReactDatePicker

@@ -169,6 +169,11 @@ function ArticleTemplateEditView() {
   return (
     <TemplateEditorLayout
       i18nPrefix="articleTemplates"
+      title={
+        isNew ?
+          t('pageTitles.articleTemplateCreate')
+        : t('pageTitles.articleTemplateEdit')
+      }
       backPath="/articles/templates"
       permissions={{
         create: CanCreateArticleTemplate.id,

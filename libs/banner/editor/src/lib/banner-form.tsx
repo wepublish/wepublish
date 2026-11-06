@@ -6,7 +6,7 @@ import {
   LoginStatus,
   PageListDocument,
 } from '@wepublish/editor/api';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import {
   Controller,
   useFieldArray,
@@ -33,8 +33,8 @@ import {
   Drawer,
   FormControl,
   FormControlLabel,
-  FormHelperText,
   FormLabel,
+  InputAdornment,
   Radio,
   RadioGroup,
   Switch,
@@ -70,11 +70,25 @@ interface BannerFormProps {
 
 const BannerFormContainer = styled('div')`
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: 16px;
   grid-template-areas:
-    'displayoptions content'
-    'actions        actions';
+    'displayoptions'
+    'content'
+    'actions';
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    grid-template-areas:
+      'displayoptions content'
+      'actions        actions';
+  }
+`;
+
+const LabelRow = styled('div')`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing(0.5)};
 `;
 
 export const BannerForm = (props: BannerFormProps) => {
@@ -95,6 +109,11 @@ export const BannerForm = (props: BannerFormProps) => {
   const pages = pageData?.pages.nodes ?? [];
   const [isChooseModalOpen, setChooseModalOpen] = useState(false);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const fieldId = useId();
+  const loginStatusLabelId = `${fieldId}-login-status`;
+  const pagesLabelId = `${fieldId}-pages`;
+  const htmlId = `${fieldId}-html`;
+  const imageLabelId = `${fieldId}-image`;
 
   return (
     <BannerFormContainer>
@@ -104,7 +123,10 @@ export const BannerForm = (props: BannerFormProps) => {
       >
         <CardContent>
           <FormFields>
-            <Typography variant="h3">
+            <Typography
+              variant="h3"
+              component="h2"
+            >
               {t('banner.form.displayOptions')}
             </Typography>
 
@@ -128,20 +150,19 @@ export const BannerForm = (props: BannerFormProps) => {
               control={control}
               name="collapsible"
               render={({ field }) => (
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={Boolean(field.value)}
-                      onChange={(_event, checked) => field.onChange(checked)}
-                    />
-                  }
-                  label={
-                    <>
-                      {t('banner.form.collapsible')}{' '}
-                      <InfoTooltip text={t('banner.form.collapsibleInfo')} />
-                    </>
-                  }
-                />
+                <LabelRow>
+                  <FormControlLabel
+                    sx={{ marginRight: 0 }}
+                    control={
+                      <Switch
+                        checked={Boolean(field.value)}
+                        onChange={(_event, checked) => field.onChange(checked)}
+                      />
+                    }
+                    label={t('banner.form.collapsible')}
+                  />
+                  <InfoTooltip text={t('banner.form.collapsibleInfo')} />
+                </LabelRow>
               )}
             />
 
@@ -151,17 +172,21 @@ export const BannerForm = (props: BannerFormProps) => {
               render={({ field, fieldState: { error } }) => (
                 <TextField
                   {...field}
-                  label={
-                    <>
-                      {t('banner.form.delay')}{' '}
-                      <InfoTooltip text={t('banner.form.delayInfo')} />
-                    </>
-                  }
+                  label={t('banner.form.delay')}
                   type="number"
                   onChange={event => field.onChange(+event.target.value)}
                   error={Boolean(error)}
                   helperText={error?.message}
                   fullWidth
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <InfoTooltip text={t('banner.form.delayInfo')} />
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
                 />
               )}
             />
@@ -183,16 +208,21 @@ export const BannerForm = (props: BannerFormProps) => {
             />
 
             <FormControl>
-              <FormLabel>
-                {t('banner.form.showForLoginStatus')}{' '}
+              <LabelRow>
+                <FormLabel id={loginStatusLabelId}>
+                  {t('banner.form.showForLoginStatus')}
+                </FormLabel>
                 <InfoTooltip text={t('banner.form.showForLoginStatusInfo')} />
-              </FormLabel>
+              </LabelRow>
 
               <Controller
                 control={control}
                 name="showForLoginStatus"
                 render={({ field }) => (
-                  <RadioGroup {...field}>
+                  <RadioGroup
+                    {...field}
+                    aria-labelledby={loginStatusLabelId}
+                  >
                     {Object.values(LoginStatus).map((status: LoginStatus) => (
                       <FormControlLabel
                         key={status}
@@ -223,10 +253,12 @@ export const BannerForm = (props: BannerFormProps) => {
             />
 
             <FormControl fullWidth>
-              <FormLabel>
-                {t('banner.form.showOnPages')}{' '}
+              <LabelRow>
+                <FormLabel id={pagesLabelId}>
+                  {t('banner.form.showOnPages')}
+                </FormLabel>
                 <InfoTooltip text={t('banner.form.showOnPagesInfo')} />
-              </FormLabel>
+              </LabelRow>
 
               <Controller
                 control={control}
@@ -249,6 +281,13 @@ export const BannerForm = (props: BannerFormProps) => {
                       <TextField
                         {...params}
                         placeholder={t('navigation.panels.selectPage')}
+                        slotProps={{
+                          ...params.slotProps,
+                          htmlInput: {
+                            ...params.slotProps.htmlInput,
+                            'aria-labelledby': pagesLabelId,
+                          },
+                        }}
                       />
                     )}
                   />
@@ -265,7 +304,12 @@ export const BannerForm = (props: BannerFormProps) => {
       >
         <CardContent>
           <FormFields>
-            <Typography variant="h3">{t('banner.form.content')}</Typography>
+            <Typography
+              variant="h3"
+              component="h2"
+            >
+              {t('banner.form.content')}
+            </Typography>
 
             <Controller
               control={control}
@@ -304,27 +348,32 @@ export const BannerForm = (props: BannerFormProps) => {
                 <TextField
                   {...field}
                   value={field.value ?? ''}
-                  label={
-                    <>
-                      {t('banner.form.cta')}{' '}
-                      <InfoTooltip text={t('banner.form.ctaInfo')} />
-                    </>
-                  }
+                  label={t('banner.form.cta')}
                   error={Boolean(error)}
                   helperText={error?.message}
                   fullWidth
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <InfoTooltip text={t('banner.form.ctaInfo')} />
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
                 />
               )}
             />
 
             <FormControl fullWidth>
-              <FormLabel>{t('banner.form.image')}</FormLabel>
+              <FormLabel id={imageLabelId}>{t('banner.form.image')}</FormLabel>
 
               <Controller
                 control={control}
                 name="image"
                 render={({ field }) => (
                   <ChooseEditImage
+                    aria-labelledby={imageLabelId}
                     onSelect={image => {
                       setChooseModalOpen(false);
                       setValue('imageId', image.id);
@@ -344,10 +393,10 @@ export const BannerForm = (props: BannerFormProps) => {
             </FormControl>
 
             <FormControl fullWidth>
-              <FormLabel>
-                {t('banner.form.html')}{' '}
+              <LabelRow>
+                <FormLabel htmlFor={htmlId}>{t('banner.form.html')}</FormLabel>
                 <InfoTooltip text={t('banner.form.htmlInfo')} />
-              </FormLabel>
+              </LabelRow>
 
               <Controller
                 control={control}
@@ -355,6 +404,7 @@ export const BannerForm = (props: BannerFormProps) => {
                 render={({ field, fieldState: { error } }) => (
                   <TextField
                     {...field}
+                    id={htmlId}
                     value={field.value ?? ''}
                     rows={5}
                     multiline
@@ -365,23 +415,20 @@ export const BannerForm = (props: BannerFormProps) => {
               />
             </FormControl>
 
-            <FormControl fullWidth>
-              <FormLabel>{t('banner.form.embedUrl')}</FormLabel>
-
-              <Controller
-                control={control}
-                name="embedUrl"
-                render={({ field, fieldState: { error } }) => (
-                  <TextField
-                    {...field}
-                    value={field.value ?? ''}
-                    error={Boolean(error)}
-                    helperText={error?.message}
-                  />
-                )}
-              />
-              <FormHelperText>{t('banner.form.embedUrlHelp')}</FormHelperText>
-            </FormControl>
+            <Controller
+              control={control}
+              name="embedUrl"
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  value={field.value ?? ''}
+                  label={t('banner.form.embedUrl')}
+                  error={Boolean(error)}
+                  helperText={error?.message ?? t('banner.form.embedUrlHelp')}
+                  fullWidth
+                />
+              )}
+            />
           </FormFields>
         </CardContent>
       </Card>
@@ -392,7 +439,12 @@ export const BannerForm = (props: BannerFormProps) => {
       >
         <CardContent>
           <Box>
-            <Typography variant="h3">{t('banner.form.actions')}</Typography>
+            <Typography
+              variant="h3"
+              component="h2"
+            >
+              {t('banner.form.actions')}
+            </Typography>
             <BannerActionList
               actions={actions as unknown as CreateBannerActionInput[]}
               onAdd={append}

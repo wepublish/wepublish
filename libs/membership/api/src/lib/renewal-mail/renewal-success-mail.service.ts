@@ -10,8 +10,7 @@ import { ActionMailNoMailReason } from '../action-mail/action-mail-reason';
 import { SubscriptionEventDictionary } from '../subscription-event-dictionary/subscription-event-dictionary';
 
 export type PaymentMail =
-  | { mailTemplateId: string }
-  | { noMailReason: ActionMailNoMailReason };
+  { mailTemplateId: string } | { noMailReason: ActionMailNoMailReason };
 
 type TemplateLookupSubscription = {
   id: string;
