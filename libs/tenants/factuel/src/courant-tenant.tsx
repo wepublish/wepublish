@@ -13,6 +13,7 @@ import { CourantContentWrapper } from './components/courant-content-wrapper';
 import { CourantFooter } from './components/courant-footer';
 import { CourantNavbar } from './components/courant-navbar';
 import { CourantRichTextBlock } from './components/courant-richtext-block';
+import { CourantSubscribeBlock } from './components/courant-subscribe-block';
 import { CourantTeaser } from './components/courant-teaser';
 import { CourantTitleBlock } from './components/courant-title-block';
 import frOverridden from './locales/frOverridden.json';
@@ -39,6 +40,7 @@ export const courantTenant: WebsiteTenantConfig = {
       BaseTeaser: CourantTeaser,
       Blocks: CourantBlocks,
       RichText: CourantRichTextBlock,
+      Subscribe: CourantSubscribeBlock,
       Title: CourantTitleBlock,
     },
     elements: { Link: NextWepublishLink },
