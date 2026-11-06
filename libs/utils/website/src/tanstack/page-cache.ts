@@ -172,6 +172,45 @@ const revalidateSeconds = (response: Response) => {
 const storedHeaders = (response: Response) =>
   [...response.headers].filter(([name]) => !TRANSFER_HEADERS.has(name));
 
+/**
+ * The longest Cloudflare may keep a document. A publish only reaches this
+ * cache (`nsv:website:path:<path>`); nothing purges the edge. `s-maxage` is
+ * this cache's revalidation window (an hour for a static article, see
+ * `contentCacheControl`), and Cloudflare honours it too, so without this an
+ * edit stayed invisible at the edge for up to an hour (fazetten, 2026-11-06).
+ * A minute matches what `next.config.js` sent the edge before the TanStack
+ * migration.
+ */
+const EDGE_SECONDS = 60;
+const EDGE_CACHE_CONTROL = 'cloudflare-cdn-cache-control';
+
+/**
+ * Cloudflare reads `Cloudflare-CDN-Cache-Control` instead of `cache-control`
+ * and strips it before the browser sees it. Applied to every response this
+ * wrapper returns, fresh or replayed, so stored copies need no migration.
+ *
+ * A stale copy is answered while the page re-renders in the background. Kept
+ * at the edge, it would hold the old page for another minute after a publish;
+ * kept out, the next request through the edge gets the re-render.
+ */
+const withEdgeWindow = (response: Response, stale = false) => {
+  const revalidate = revalidateSeconds(response);
+
+  if (revalidate === undefined) {
+    return response;
+  }
+
+  const capped = new Response(response.body, response);
+  capped.headers.set(
+    EDGE_CACHE_CONTROL,
+    stale ? 'no-store' : (
+      `public, s-maxage=${Math.min(revalidate, EDGE_SECONDS)}, stale-if-error=86400`
+    )
+  );
+
+  return capped;
+};
+
 const toResponse = (value: PageCacheValue, stale: boolean) =>
   new Response(value.html ?? '', {
     status: value.status ?? 200,
@@ -296,7 +335,7 @@ export const createStartPageCache = (
     });
 
     if (!entry?.value) {
-      return renderAndServe(fetch, request, opts, key);
+      return withEdgeWindow(await renderAndServe(fetch, request, opts, key));
     }
 
     const stale = entry.lastModified === STALE;
@@ -305,7 +344,7 @@ export const createStartPageCache = (
       renderInBackground(fetch, request, opts, key);
     }
 
-    return toResponse(entry.value, stale);
+    return withEdgeWindow(toResponse(entry.value, stale), stale);
   };
 };
 
