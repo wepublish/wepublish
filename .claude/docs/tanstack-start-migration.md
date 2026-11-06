@@ -192,6 +192,11 @@ no equivalent. Two things replace it:
    namespace versions the API writes. It reads `s-maxage` off the response, so
    the window from step 1 is the one it stores against — this header is the ISR
    window, not merely a hint to the CDN. No-ops without `REDIS_URL`.
+   Cloudflare honours that `s-maxage` too, and a publish never purges the
+   edge, so the wrapper also sends `Cloudflare-CDN-Cache-Control` capped at
+   60 s, and `no-store` on a stale copy so the background re-render reaches
+   the next visitor. Without it, an edited article stayed stale at the edge for
+   an hour (fazetten, 2026-11-06). Keep both if you touch the headers.
 
 ---
 
