@@ -11,6 +11,7 @@ import {
   TypeText,
 } from '@mui/material';
 import { ColorPicker } from '@wepublish/ui/editor';
+import { useId } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { MdExpandLess, MdExpandMore } from 'react-icons/md';
@@ -60,10 +61,15 @@ export const PaletteListItem = <
   const { t } = useTranslation();
   const { control } = useFormContext();
   const value = useWatch({ control, name });
+  const collapseId = useId();
 
   return (
     <>
-      <ListItemButton onClick={onOpen}>
+      <ListItemButton
+        onClick={onOpen}
+        aria-expanded={isOpen}
+        aria-controls={collapseId}
+      >
         <ListItemText primary={t(`websiteSettings.theme.${name}`)} />
 
         <ThemeColorReel>
@@ -83,6 +89,7 @@ export const PaletteListItem = <
       </ListItemButton>
 
       <Collapse
+        id={collapseId}
         timeout="auto"
         in={isOpen}
         mountOnEnter

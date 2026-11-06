@@ -48,6 +48,7 @@ export function EventsList({
           example={event.example}
         >
           <MailTemplateSelect
+            label={event.title}
             mailTemplates={mailTemplates}
             subscriptionInterval={intervalForEvent(event)}
             subscriptionFlow={subscriptionFlow}

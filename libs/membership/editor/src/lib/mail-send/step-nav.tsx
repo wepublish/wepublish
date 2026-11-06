@@ -44,16 +44,20 @@ export function WizardStepper({
   step,
   canGoTo,
   onStep,
+  vertical = false,
 }: {
   steps: { title: ReactNode; description: ReactNode }[];
   step: number;
   canGoTo: (target: number) => boolean;
   onStep: (target: number) => void;
+  /** Stacks the steps, for screens too narrow to fit them side by side. */
+  vertical?: boolean;
 }) {
   return (
     <Stepper
       activeStep={step}
       nonLinear
+      orientation={vertical ? 'vertical' : 'horizontal'}
       sx={{ marginTop: 3, marginBottom: 1 }}
     >
       {steps.map(({ title, description }, index) => (

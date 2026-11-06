@@ -143,6 +143,8 @@ export function DeliveryChannelAssignView() {
                 state={state}
                 onChange={update}
                 baseLabel={null}
+                segmentCounts={preview?.segments}
+                onSegmentsRefreshed={() => refetch()}
               />
             </CardContent>
           </Card>
@@ -154,23 +156,11 @@ export function DeliveryChannelAssignView() {
             userCount={userCount}
             channel={MailChannel.Mail}
             withoutAddressCount={0}
-            segmentCounts={preview?.segments ?? []}
-            selectedSegments={state.emailSegments}
-            onPickSegment={segment =>
-              update({
-                emailSegments:
-                  state.emailSegments.includes(segment) ?
-                    state.emailSegments.filter(item => item !== segment)
-                  : [...state.emailSegments, segment],
-              })
-            }
-            onRefreshed={() => refetch()}
             missing={[]}
             onShowRecipients={
               canListRecipients ? () => setRecipientsOpen(true) : undefined
             }
             showRecipientsLabel={t('deliveryChannel.overview.showPeople')}
-            segmentsLabel={t('deliveryChannel.assign.segmentsLabel')}
           />
 
           {canListRecipients && (

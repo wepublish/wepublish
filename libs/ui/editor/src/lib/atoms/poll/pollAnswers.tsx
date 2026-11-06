@@ -16,7 +16,7 @@ import {
   DeletePollAnswerDocument,
   FullPollFragment,
 } from '@wepublish/editor/api';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete } from 'react-icons/md';
 
@@ -120,6 +120,21 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
     PollAnswerFragment | undefined
   >(undefined);
   const [newAnswer, setNewAnswer] = useState<string>('');
+  const [answerMissing, setAnswerMissing] = useState(false);
+  const answerInputs = useRef(new Map<string, HTMLInputElement | null>());
+  const newAnswerInput = useRef<HTMLInputElement>(null);
+  const focusAfterDelete = useRef<string | null>(null);
+
+  useEffect(() => {
+    const pending = focusAfterDelete.current;
+
+    if (pending === null) {
+      return;
+    }
+
+    focusAfterDelete.current = null;
+    (answerInputs.current.get(pending) ?? newAnswerInput.current)?.focus();
+  }, [poll?.answers]);
 
   const [createAnswerMutation, { loading }] = useMutation(
     CreatePollAnswerDocument,
@@ -143,10 +158,8 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
     }
 
     if (!newAnswer) {
-      enqueueSnackbar(t('pollAnswer.answerMissing'), {
-        variant: 'error',
-        autoHideDuration: 8000,
-      });
+      setAnswerMissing(true);
+      newAnswerInput.current?.focus();
       return;
     }
 
@@ -201,6 +214,11 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
       return;
     }
 
+    const neighbour =
+      updatedPoll.answers[deleteIndex + 1] ??
+      updatedPoll.answers[deleteIndex - 1];
+
+    focusAfterDelete.current = neighbour?.id ?? '';
     updatedPoll.answers.splice(deleteIndex, 1);
 
     // delete external vote sources
@@ -238,10 +256,13 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
 
   return (
     <>
-      {poll?.answers?.map(answer => (
+      {poll?.answers?.map((answer, index) => (
         <Grid key={answer.id}>
           <TextField
             name={`answer-${answer.id}`}
+            inputRef={(element: HTMLInputElement | null) => {
+              answerInputs.current.set(answer.id, element);
+            }}
             value={answer.answer}
             onChange={event => {
               updateAnswer({
@@ -250,6 +271,11 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
               });
             }}
             slotProps={{
+              htmlInput: {
+                'aria-label': t('pollAnswer.answerLabel', {
+                  number: index + 1,
+                }),
+              },
               input: {
                 endAdornment: (
                   <InputAdornment position="end">
@@ -264,7 +290,9 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
 
           <IconButtonTooltip caption={t('delete')}>
             <IconButton
-              aria-label={t('delete')}
+              aria-label={t('pollAnswer.deleteAnswer', {
+                answer: answer.answer,
+              })}
               size="small"
               color="error"
               onClick={() => {
@@ -283,9 +311,18 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
       <Grid css={{ marginTop: 24, marginBottom: 0 }}>
         <TextField
           name="createNewFormAnswer"
+          inputRef={newAnswerInput}
           placeholder={t('pollAnswer.insertYourNewAnswer')}
           value={newAnswer}
-          onChange={event => setNewAnswer(event.target.value)}
+          error={answerMissing}
+          helperText={answerMissing ? t('pollAnswer.answerMissing') : undefined}
+          slotProps={{
+            htmlInput: { 'aria-label': t('pollAnswer.insertYourNewAnswer') },
+          }}
+          onChange={event => {
+            setNewAnswer(event.target.value);
+            setAnswerMissing(false);
+          }}
         />
 
         <Button

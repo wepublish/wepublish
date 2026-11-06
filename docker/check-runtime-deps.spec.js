@@ -1,22 +1,17 @@
-const { describe, it } = require('node:test');
-const assert = require('node:assert/strict');
 const { compareRuntimeDeps, peerNames } = require('./check-runtime-deps');
 
 describe('peerNames', () => {
   it('includes optional peers declared only in peerDependenciesMeta', () => {
-    assert.deepEqual(
-      peerNames({
+    expect(peerNames({
         peerDependencies: { '@nestjs/core': '^12' },
         peerDependenciesMeta: {
           '@as-integrations/express5': { optional: true },
         },
-      }),
-      ['@nestjs/core', '@as-integrations/express5']
-    );
+      })).toEqual(['@nestjs/core', '@as-integrations/express5']);
   });
 
   it('copes with a manifest without peers', () => {
-    assert.deepEqual(peerNames({}), []);
+    expect(peerNames({})).toEqual([]);
   });
 });
 
@@ -27,7 +22,7 @@ describe('compareRuntimeDeps', () => {
       'const b = require("@nestjs/core");',
     ];
 
-    assert.deepEqual(compareRuntimeDeps(bundle, ['@nestjs/core', 'express']), {
+    expect(compareRuntimeDeps(bundle, ['@nestjs/core', 'express'])).toEqual({
       missing: [],
       unused: [],
     });
@@ -36,13 +31,13 @@ describe('compareRuntimeDeps', () => {
   it('reports a package the bundle loads but the manifest does not list', () => {
     const bundle = ['require("express"); require("cors");'];
 
-    assert.deepEqual(compareRuntimeDeps(bundle, ['express']).missing, ['cors']);
+    expect(compareRuntimeDeps(bundle, ['express']).missing).toEqual(['cors']);
   });
 
   it('reports a listed package the bundle never loads', () => {
     const bundle = ['require("express");'];
 
-    assert.deepEqual(compareRuntimeDeps(bundle, ['express', 'react']).unused, [
+    expect(compareRuntimeDeps(bundle, ['express', 'react']).unused).toEqual([
       'react',
     ]);
   });
@@ -52,14 +47,11 @@ describe('compareRuntimeDeps', () => {
     const peersOf = name =>
       name === '@nestjs/core' ? ['@nestjs/platform-express'] : [];
 
-    assert.deepEqual(
-      compareRuntimeDeps(
+    expect(compareRuntimeDeps(
         bundle,
         ['@nestjs/core', '@nestjs/platform-express'],
         peersOf
-      ),
-      { missing: [], unused: [] }
-    );
+      )).toEqual({ missing: [], unused: [] });
   });
 
   it('still reports a listed peer whose package the bundle never loads', () => {
@@ -67,11 +59,8 @@ describe('compareRuntimeDeps', () => {
     const peersOf = name =>
       name === '@nestjs/core' ? ['@nestjs/platform-express'] : [];
 
-    assert.deepEqual(
-      compareRuntimeDeps(bundle, ['express', '@nestjs/platform-express'], peersOf)
-        .unused,
-      ['@nestjs/platform-express']
-    );
+    expect(compareRuntimeDeps(bundle, ['express', '@nestjs/platform-express'], peersOf)
+        .unused).toEqual(['@nestjs/platform-express']);
   });
 
   it('reduces subpath imports to their package name', () => {
@@ -79,16 +68,13 @@ describe('compareRuntimeDeps', () => {
       'require("@sentry/nestjs/setup"); require("date-fns/locale");',
     ];
 
-    assert.deepEqual(
-      compareRuntimeDeps(bundle, ['@sentry/nestjs', 'date-fns']),
-      { missing: [], unused: [] }
-    );
+    expect(compareRuntimeDeps(bundle, ['@sentry/nestjs', 'date-fns'])).toEqual({ missing: [], unused: [] });
   });
 
   it('counts dynamic imports', () => {
     const bundle = ['await import("sharp");'];
 
-    assert.deepEqual(compareRuntimeDeps(bundle, []).missing, ['sharp']);
+    expect(compareRuntimeDeps(bundle, []).missing).toEqual(['sharp']);
   });
 
   it('ignores single-quoted requires from third-party code inlined into the bundle', () => {
@@ -96,7 +82,7 @@ describe('compareRuntimeDeps', () => {
       "try { convert = require('encoding').convert; } catch (e) {}",
     ];
 
-    assert.deepEqual(compareRuntimeDeps(bundle, []).missing, []);
+    expect(compareRuntimeDeps(bundle, []).missing).toEqual([]);
   });
 
   it('ignores node builtins and relative chunks', () => {
@@ -104,7 +90,7 @@ describe('compareRuntimeDeps', () => {
       'require("fs"); require("node:path"); require("fs/promises"); require("./3.js");',
     ];
 
-    assert.deepEqual(compareRuntimeDeps(bundle, []), {
+    expect(compareRuntimeDeps(bundle, [])).toEqual({
       missing: [],
       unused: [],
     });

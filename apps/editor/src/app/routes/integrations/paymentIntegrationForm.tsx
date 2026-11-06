@@ -20,6 +20,7 @@ import payrexxLogo from './assets/payrexx.webp';
 import stripeLogo from './assets/stripe.svg';
 import { FieldDefinition } from './genericIntegrationForm';
 import { GenericIntegrationList } from './genericIntegrationList';
+import { secretPlaceholder } from './secretPlaceholder';
 
 // Mirrors the API's `isSimulatedPaymentAllowed`, which also refuses to create
 // the simulated provider on production; this only keeps it out of the picker.
@@ -162,7 +163,7 @@ export function PaymentIntegrationForm() {
             info: t('integrations.paymentSettings.apiKeyInfo'),
             type: 'password',
             autoComplete: 'one-time-code',
-            placeholder: t('integrations.placeholderSecret'),
+            placeholder: secretPlaceholder(setting.isApiKeySet, t),
           },
           {
             name: 'webhookEndpointSecret',
@@ -170,7 +171,10 @@ export function PaymentIntegrationForm() {
             info: t('integrations.paymentSettings.webhookEndpointSecretInfo'),
             type: 'password',
             autoComplete: 'one-time-code',
-            placeholder: t('integrations.placeholderSecret'),
+            placeholder: secretPlaceholder(
+              setting.isWebhookEndpointSecretSet,
+              t
+            ),
           },
         ];
 

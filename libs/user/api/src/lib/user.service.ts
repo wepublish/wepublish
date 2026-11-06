@@ -12,10 +12,7 @@ import {
 } from '@prisma/client';
 import { hash as argon2Hash } from '@node-rs/argon2';
 import { Validator } from '@wepublish/user';
-import {
-  SessionCacheInvalidator,
-  unselectPassword,
-} from '@wepublish/authentication/api';
+import { SessionCacheInvalidator } from '@wepublish/authentication/api';
 import { PublicContentCacheInvalidator } from '@wepublish/public-content-cache/api';
 import {
   getMaxTake,
@@ -67,6 +64,7 @@ export class UserService {
           equals: email,
         },
       },
+      omit: { password: false },
       include: {
         address: true,
         paymentProviderCustomers: true,
@@ -96,7 +94,7 @@ export class UserService {
         take: getMaxTake(take) + 1,
         orderBy,
         cursor: cursorId ? { id: cursorId } : undefined,
-        select: unselectPassword,
+        include: { address: true, paymentProviderCustomers: true },
       }),
     ]);
 
@@ -129,7 +127,7 @@ export class UserService {
       data: {
         password: await this.hashPassword(password),
       },
-      select: unselectPassword,
+      include: { address: true, paymentProviderCustomers: true },
     });
     await this.endSessions(userId, keepSessionId);
     await this.sessionCache.invalidate();
@@ -197,7 +195,7 @@ export class UserService {
           create: address ?? {},
         },
       },
-      select: unselectPassword,
+      include: { address: true, paymentProviderCustomers: true },
     });
 
     if (!skipMail) {
@@ -258,7 +256,7 @@ export class UserService {
           : undefined,
         properties: properties as any,
       },
-      select: unselectPassword,
+      include: { address: true, paymentProviderCustomers: true },
     });
     await this.sessionCache.invalidate();
 
@@ -300,7 +298,7 @@ export class UserService {
       where: {
         id,
       },
-      select: unselectPassword,
+      include: { address: true, paymentProviderCustomers: true },
     });
     await this.sessionCache.invalidate();
 
@@ -344,7 +342,7 @@ export class UserService {
           password ?? crypto.randomBytes(48).toString('base64')
         ),
       },
-      select: unselectPassword,
+      include: { address: true, paymentProviderCustomers: true },
     });
     await this.endSessions(id);
     await this.sessionCache.invalidate();
@@ -375,7 +373,7 @@ export class UserService {
         pendingEmail: newEmail,
         pendingEmailAt: new Date(),
       },
-      select: unselectPassword,
+      include: { address: true, paymentProviderCustomers: true },
     });
     await this.sessionCache.invalidate();
 
@@ -398,7 +396,7 @@ export class UserService {
   async confirmEmailChange(userId: string, newEmail: string) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
-      select: unselectPassword,
+      include: { address: true, paymentProviderCustomers: true },
     });
 
     if (!user) {
@@ -437,7 +435,7 @@ export class UserService {
         pendingEmail: null,
         pendingEmailAt: null,
       },
-      select: unselectPassword,
+      include: { address: true, paymentProviderCustomers: true },
     });
     await this.sessionCache.invalidate();
 
