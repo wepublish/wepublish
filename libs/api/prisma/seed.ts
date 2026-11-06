@@ -241,6 +241,22 @@ const seedSettings = (prisma: PrismaClient) =>
         settingRestriction: { minValue: 1, maxValue: 90 },
       },
     }),
+    prisma.setting.upsert({
+      where: {
+        name: SettingName.EMAIL_QUALITY,
+      },
+      update: {},
+      create: {
+        name: SettingName.EMAIL_QUALITY,
+        value: {
+          placeholderPatterns: [],
+          importMarkerProperties: [],
+          flowPaperMailEnabled: false,
+          flowPaperMailLevels: ['placeholder', 'undeliverable'],
+          flowSkipLevels: ['blocked'],
+        },
+      },
+    }),
 
     prisma.settingAIProvider.upsert({
       where: {

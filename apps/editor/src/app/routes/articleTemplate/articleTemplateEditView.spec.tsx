@@ -475,7 +475,9 @@ describe('ArticleTemplateEditView', () => {
       onlyPermitted(CanCreateArticleTemplate.id);
       renderWithTheme(view());
 
-      expect(screen.getByRole('button', { name: /^save(,|$)/i })).toBeDisabled();
+      expect(
+        screen.getByRole('button', { name: /^save(,|$)/i })
+      ).toBeDisabled();
     });
 
     it('should allow creating a template with the create permission', () => {
