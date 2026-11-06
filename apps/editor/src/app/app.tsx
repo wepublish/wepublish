@@ -28,6 +28,8 @@ import { ImportableEventListView } from '@wepublish/event/import/editor';
 import {
   MailLogList,
   MailSendPage,
+  LetterLayoutEdit,
+  LetterLayoutList,
   MailTemplateEdit,
   MailTemplateList,
   MemberPlanEdit,
@@ -1082,6 +1084,30 @@ function AppRoutes() {
           element={
             <Base>
               <MailTemplateEdit />
+            </Base>
+          }
+        />
+        <Route
+          path="letterlayouts"
+          element={
+            <Base>
+              <LetterLayoutList />
+            </Base>
+          }
+        />
+        <Route
+          path="letterlayouts/create"
+          element={
+            <Base>
+              <LetterLayoutEdit />
+            </Base>
+          }
+        />
+        <Route
+          path="letterlayouts/edit/:id"
+          element={
+            <Base>
+              <LetterLayoutEdit />
             </Base>
           }
         />

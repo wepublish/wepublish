@@ -1,4 +1,4 @@
-import { useLazyQuery, useMutation } from '@apollo/client/react';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client/react';
 import {
   Alert,
   Autocomplete,
@@ -22,10 +22,15 @@ import {
   CreateMailTemplateDocument,
   MailTemplateByIdDocument,
   MailTemplateContext,
+  MailTemplateLetterPreviewDocument,
+  MailTemplateLetterPreviewQuery,
+  MailTemplateLetterPreviewQueryVariables,
   MailTemplatePreviewDocument,
   MailTemplatePreviewInput,
   MailTemplatePreviewQuery,
   MailTemplatePreviewQueryVariables,
+  LetterChannelAvailableDocument,
+  LetterLayoutsDocument,
   MailTemplateSubscriptionsDocument,
   SendTestMailTemplateDocument,
   UpdateMailTemplateDocument,
@@ -55,9 +60,12 @@ import {
   readShellSettings,
 } from './mail-html';
 import { MailColorPicker } from './color-picker';
+import { LetterAppendixPicker } from './letter-appendix-picker';
+import { LetterPreview } from './letter-preview';
 import { MailPreview } from './mail-preview';
 import { MAIL_PLACEHOLDER_CONTEXTS } from './mail-placeholders';
 import { PlaceholderPicker } from './placeholder-picker';
+import { testMailInput } from './test-mail-input';
 import {
   CanCreateMailTemplates,
   CanGetMailTemplates,
@@ -126,6 +134,8 @@ function MailTemplateEdit() {
     background: `${fieldId}-background`,
     width: `${fieldId}-width`,
     bodyMode: `${fieldId}-body-mode`,
+    letterLayout: `${fieldId}-letter-layout`,
+    letterAppendix: `${fieldId}-letter-appendix`,
   };
 
   // The canonical HTML lives in a ref so typing never re-renders the page
@@ -138,6 +148,9 @@ function MailTemplateEdit() {
   // The mail type must be chosen explicitly so preview/test use the data a real
   // mail of that type would carry (more realistic than a generic dump).
   const [contextId, setContextId] = useState<MailTemplateContext | null>(null);
+  // Stationery for the letter version; null prints on the default layout.
+  const [letterLayoutId, setLetterLayoutId] = useState<string | null>(null);
+  const [letterAppendixId, setLetterAppendixId] = useState<string | null>(null);
   const [subscriptionId, setSubscriptionId] = useState<string | null>(null);
   const [previewHtml, setPreviewHtml] = useState<string | null>(null);
   const [previewSubject, setPreviewSubject] = useState('');
@@ -157,6 +170,16 @@ function MailTemplateEdit() {
   const [previewLoading, setPreviewLoading] = useState(false);
   const [previewError, setPreviewError] = useState<string | null>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [letterPdf, setLetterPdf] = useState<string | null>(null);
+  const [letterLoading, setLetterLoading] = useState(false);
+  // Without a letter integration there is nothing to render a letter with.
+  const { data: letterChannelData } = useQuery(LetterChannelAvailableDocument);
+  const letterAvailable = !!letterChannelData?.letterChannelAvailable;
+  const { data: letterLayoutData } = useQuery(LetterLayoutsDocument, {
+    skip: !letterAvailable,
+  });
+  const letterLayouts = letterLayoutData?.letterLayouts ?? [];
+  const defaultLetterLayout = letterLayouts.find(layout => layout.isDefault);
   const [sendTest, { loading: testLoading }] = useMutation(
     SendTestMailTemplateDocument,
     DEFAULT_MUTATION_OPTIONS(t)
@@ -179,6 +202,8 @@ function MailTemplateEdit() {
       setSubject(template.subject);
       setTextContent(template.textContent ?? '');
       setContextId(template.context ?? null);
+      setLetterLayoutId(template.letterLayoutId ?? null);
+      setLetterAppendixId(template.letterAppendixId ?? null);
       htmlRef.current = template.htmlContent || createEmptyEmailHtml();
       const shell = readShellSettings(htmlRef.current);
       setBackgroundColor(shell.backgroundColor);
@@ -263,6 +288,8 @@ function MailTemplateEdit() {
     // The text fallback is always regenerated from the HTML on save.
     textContent: deriveTextFromHtml(htmlRef.current),
     context: contextId,
+    letterLayoutId,
+    letterAppendixId,
   });
 
   const save = async (close: boolean) => {
@@ -312,6 +339,8 @@ function MailTemplateEdit() {
     subject,
     htmlContent: htmlRef.current,
     textContent,
+    letterLayoutId,
+    letterAppendixId,
   });
 
   // Preview/test never block on a missing mail type: fall back to `custom`
@@ -350,11 +379,40 @@ function MailTemplateEdit() {
     }
   };
 
+  // Rendered by the same pdf renderer a letter send uses, so the sheet shows
+  // exactly what would be printed.
+  const doPreviewLetter = async () => {
+    const ctx = effectiveContext();
+    setLetterLoading(true);
+    setPreviewError(null);
+    try {
+      const { data, error } = await client.query<
+        MailTemplateLetterPreviewQuery,
+        MailTemplateLetterPreviewQueryVariables
+      >({
+        query: MailTemplateLetterPreviewDocument,
+        variables: { input: previewInput(ctx) },
+        fetchPolicy: 'no-cache',
+        errorPolicy: 'all',
+      });
+      if (error) {
+        throw error;
+      }
+      setLetterPdf(data!.mailTemplateLetterPreview.pdf);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      setPreviewError(message);
+      enqueueSnackbar(message, { variant: 'error' });
+    } finally {
+      setLetterLoading(false);
+    }
+  };
+
   const doSendTest = async () => {
     const ctx = effectiveContext();
     await sendTest({
       variables: {
-        input: previewInput(ctx),
+        input: testMailInput(previewInput(ctx)),
       },
     });
     enqueueSnackbar(t('mailTemplates.edit.testSent'), { variant: 'success' });
@@ -558,6 +616,63 @@ function MailTemplateEdit() {
                     }}
                   />
                 </FormControl>
+                {letterAvailable && (
+                  <FormControl
+                    style={{ flex: 1, minWidth: 200, marginBottom: 0 }}
+                    fullWidth
+                  >
+                    <FieldLabel
+                      id={ids.letterLayout}
+                      label={t('mailTemplates.edit.letterLayout')}
+                      help={t('mailTemplates.edit.letterLayoutHelp')}
+                    />
+                    <TextField
+                      select
+                      value={letterLayoutId ?? ''}
+                      onChange={event =>
+                        setLetterLayoutId(event.target.value || null)
+                      }
+                      slotProps={{
+                        select: {
+                          displayEmpty: true,
+                          labelId: ids.letterLayout,
+                        },
+                      }}
+                    >
+                      <MenuItem value="">
+                        {defaultLetterLayout ?
+                          t('mailTemplates.edit.letterLayoutDefault', {
+                            name: defaultLetterLayout.name,
+                          })
+                        : t('mailTemplates.edit.letterLayoutNone')}
+                      </MenuItem>
+                      {letterLayouts.map(layout => (
+                        <MenuItem
+                          key={layout.id}
+                          value={layout.id}
+                        >
+                          {layout.name}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </FormControl>
+                )}
+                {letterAvailable && (
+                  <FormControl
+                    style={{ flex: 1, minWidth: 200, marginBottom: 0 }}
+                    fullWidth
+                  >
+                    <FieldLabel
+                      id={ids.letterAppendix}
+                      label={t('mailTemplates.edit.letterAppendix')}
+                      help={t('mailTemplates.edit.letterAppendixHelp')}
+                    />
+                    <LetterAppendixPicker
+                      value={letterAppendixId}
+                      onChange={setLetterAppendixId}
+                    />
+                  </FormControl>
+                )}
               </div>
             </Stack>
           </CardContent>
@@ -635,6 +750,15 @@ function MailTemplateEdit() {
                 >
                   {t('mailTemplates.edit.preview')}
                 </Button>
+                {letterAvailable && (
+                  <Button
+                    variant="outlined"
+                    loading={letterLoading}
+                    onClick={doPreviewLetter}
+                  >
+                    {t('mailTemplates.edit.previewLetter')}
+                  </Button>
+                )}
                 <Button
                   variant="outlined"
                   loading={testLoading}
@@ -865,6 +989,17 @@ function MailTemplateEdit() {
         </DialogTitle>
         <DialogContent style={{ height: '85vh' }}>
           <MailPreview html={previewHtml ?? ''} />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        fullScreen
+        open={!!letterPdf}
+        onClose={() => setLetterPdf(null)}
+      >
+        <DialogTitle>{t('mailTemplates.edit.letterPreviewTitle')}</DialogTitle>
+        <DialogContent style={{ height: '85vh' }}>
+          {letterPdf && <LetterPreview pdf={letterPdf} />}
         </DialogContent>
       </Dialog>
     </div>
