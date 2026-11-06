@@ -3238,10 +3238,13 @@
         "revenue": "Déjà CHF {{revenue}} financé",
         "goals": "Objectifs",
         "subscriptions": "Déjà {{subscriptions}} abonnés",
+        "progress": "Progression",
         "crowdfunding": "Crowdfunding",
         "goalType": "Type d’objectif",
-        "goalType_Revenue": "Revenus",
-        "goalType_Subscription": "Nombre d’abonnements",
+        "goalTypes": {
+          "Revenue": "Revenus",
+          "Subscription": "Nombre d’abonnements"
+        },
         "additionalRevenueInfo": "Argent récolté en dehors de We.Publish, p.ex. par virement bancaire direct. Il est ajouté aux revenus de la barre de progression.",
         "additionalSubscriptionsInfo": "Abonnements vendus en dehors de We.Publish, p.ex. payés par virement bancaire direct. Ils sont ajoutés au nombre de la barre de progression.",
         "memberPlansInfo": "Seuls les abonnements des plans sélectionnés comptent pour le crowdfunding. Vous pouvez affiner la période avec les dates ci-dessous.",
@@ -3253,7 +3256,6 @@
         "description": "Description",
         "amount": "Montant cible",
         "amountSubscriptions": "Nombre d’abonnements cible",
-        "remove": "Supprimer",
         "add": "Ajouter un objectif"
       }
     },
