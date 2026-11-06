@@ -1,3 +1,10 @@
+export type {
+  CourantColorOverrides,
+  CourantPaletteColors,
+} from './brand-colors';
+export { courantColors } from './brand-colors';
+export { courantTokens } from './brand-tokens';
+export { CourantGlobalStyles } from './components/courant-global-styles';
 export {
   CourantContentFullWidth,
   CourantContentWrapper,
@@ -6,3 +13,4 @@ export * from './components/courant-footer';
 export * from './components/courant-navbar';
 export * from './courant-tenant';
 export { default as courantTheme } from './theme';
+export { createCourantTheme } from './theme';
