@@ -3499,7 +3499,12 @@
         "stockInfo": "Nombre total de pièces que vous pouvez offrir. Une fois toutes attribuées, le goodie n’est plus proposé. Laissez vide pour un nombre illimité.",
         "memberPlansInfo": "Le goodie n’est proposé qu’avec ces plans d’abonnement.",
         "paymentPeriodicities": "Périodicités de paiement",
-        "paymentPeriodicitiesInfo": "Le goodie n’est proposé qu’avec ces périodicités de paiement, p. ex. uniquement avec un abonnement de 2 ans. Laissez vide pour le proposer avec chaque périodicité du plan d’abonnement."
+        "paymentPeriodicitiesInfo": "Le goodie n’est proposé qu’avec ces périodicités de paiement, p. ex. uniquement avec un abonnement de 2 ans. Laissez vide pour le proposer avec chaque périodicité du plan d’abonnement.",
+        "sections": {
+          "details": "Détails",
+          "availability": "Disponibilité",
+          "media": "Médias"
+        }
       },
       "overview": {
         "title": "Goodies",

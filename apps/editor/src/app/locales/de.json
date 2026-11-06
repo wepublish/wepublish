@@ -3507,7 +3507,12 @@
         "stockInfo": "Gesamtzahl Stück, die du vergeben kannst. Sind alle vergeben, wird das Goodie nicht mehr angeboten. Leer lassen für eine unbegrenzte Anzahl.",
         "memberPlansInfo": "Das Goodie wird nur bei diesen Abo-Plänen angeboten.",
         "paymentPeriodicities": "Zahlungsintervalle",
-        "paymentPeriodicitiesInfo": "Das Goodie wird nur bei diesen Zahlungsintervallen angeboten, z.B. nur bei einem 2-Jahres-Abo. Leer lassen, damit es bei jedem Intervall des Abo-Plans angeboten wird."
+        "paymentPeriodicitiesInfo": "Das Goodie wird nur bei diesen Zahlungsintervallen angeboten, z.B. nur bei einem 2-Jahres-Abo. Leer lassen, damit es bei jedem Intervall des Abo-Plans angeboten wird.",
+        "sections": {
+          "details": "Details",
+          "availability": "Verfügbarkeit",
+          "media": "Medien"
+        }
       },
       "overview": {
         "title": "Goodies",
