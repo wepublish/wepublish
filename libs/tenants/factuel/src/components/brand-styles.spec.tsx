@@ -88,14 +88,14 @@ describe('rendered Courant brand styles', () => {
       const button = getComputedStyle(
         screen.getByRole('button', { name: 'Primary action' })
       );
-      expect(title.fontFamily).toBe('local, serif');
+      expect(title.fontFamily).toBe('CourantDisplay, serif');
       expect(title.fontWeight).toBe('500');
       expect(title.fontSize).toBe('26px');
-      expect(kicker.fontFamily).toBe('local, sans-serif');
+      expect(kicker.fontFamily).toBe('CourantSansKicker, sans-serif');
       expect(kicker.fontWeight).toBe('400');
       expect(kicker.fontSize).toBe('12.8px');
       expect(kicker.padding).toBe('0px');
-      expect(caption.fontFamily).toBe('local, sans-serif');
+      expect(caption.fontFamily).toBe('CourantSansCaptions, sans-serif');
       expect(caption.lineHeight).toBe('1.4');
       expect(button.lineHeight).toBe('1.2');
       expect(button.fontWeight).toBe('700');

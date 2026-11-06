@@ -10,8 +10,11 @@ import {
   TeaserSlotsBlockTeasers,
 } from '@wepublish/block-content/website';
 import { ContentWrapperStyled } from '@wepublish/content/website';
-import { BuilderContentWrapperProps } from '@wepublish/website/builder';
-import { useRouter } from 'next/router';
+import {
+  BuilderContentWrapperProps,
+  BuilderRouterContext,
+} from '@wepublish/website/builder';
+import { useContext } from 'react';
 
 import { courantTokens } from '../brand-tokens';
 
@@ -90,8 +93,8 @@ const CourantArticleContentWrapperStyled = styled(CourantContentWrapperStyled)`
 `;
 
 export const CourantContentWrapper = (props: BuilderContentWrapperProps) => {
-  const router = useRouter();
-  const isArticle = router.pathname.startsWith('/a/');
+  const { asPath } = useContext(BuilderRouterContext);
+  const isArticle = asPath.startsWith('/a/');
   const Wrapper =
     isArticle ?
       CourantArticleContentWrapperStyled

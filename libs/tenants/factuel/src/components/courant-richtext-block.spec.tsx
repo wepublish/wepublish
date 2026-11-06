@@ -63,7 +63,7 @@ describe('CourantRichTextBlock inside Courant blocks', () => {
   it('renders richtext in sans on Page blocks', () => {
     renderWithProviders(<BlocksPage type="Page" />, { tenant: courantConfig });
     const style = getComputedStyle(screen.getByText('Article body paragraph.'));
-    expect(style.fontFamily).toBe('local, sans-serif');
+    expect(style.fontFamily).toBe('CourantSans, sans-serif');
   });
 
   it('renders richtext in the editorial serif on Article blocks', () => {
@@ -71,7 +71,7 @@ describe('CourantRichTextBlock inside Courant blocks', () => {
       tenant: courantConfig,
     });
     const style = getComputedStyle(screen.getByText('Article body paragraph.'));
-    expect(style.fontFamily).toBe('local, serif');
+    expect(style.fontFamily).toBe('CourantEditorial, serif');
     expect(style.fontWeight).toBe('300');
   });
 
