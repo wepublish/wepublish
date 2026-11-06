@@ -40,24 +40,18 @@ const renderNavbar = (
     />
   );
 
-const menuButton = () => screen.queryByRole('button', { name: 'Menu' });
-const headerLink = () => screen.queryByRole('link', { name: 'Agenda' });
-const subscribeLink = () =>
-  screen.queryByRole('link', { name: t('navbar.subscribe') });
-
 describe('CourantNavbar', () => {
-  it('shows neither the menu, the header links nor the subscribe button', () => {
-    const { unmount } = renderNavbar(Navbar);
-
-    expect(menuButton()).toBeInTheDocument();
-    expect(headerLink()).toHaveAttribute('href', 'https://example.com/agenda');
-    expect(subscribeLink()).toBeInTheDocument();
-    unmount();
-
+  it('renders the custom logo, menu toggle and subscribe action', () => {
     renderNavbar(CourantNavbar);
 
-    expect(menuButton()).not.toBeInTheDocument();
-    expect(headerLink()).not.toBeInTheDocument();
-    expect(subscribeLink()).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Menu' })).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: 'Courant' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: t('navbar.subscribe') })
+    ).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Agenda' })).toHaveAttribute(
+      'href',
+      'https://example.com/agenda'
+    );
   });
 });

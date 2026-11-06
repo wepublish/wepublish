@@ -12,7 +12,7 @@ import {
   NavbarContainer,
 } from '@wepublish/navigation/website';
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
-import { courantTenant } from '@wepublish/tenant/factuel';
+import { courantTokens, courantTenant } from '@wepublish/tenant/factuel';
 import {
   authLink,
   getWebsiteShell,
@@ -28,9 +28,9 @@ import {
 import { TenantProviders } from '@wepublish/website';
 import { previewLink } from '@wepublish/website/admin';
 import {
+  createWithApiClient,
   FullSessionWithTokenWithoutUserFragment,
   WebsiteSettingsFragment,
-  createWithApiClient,
 } from '@wepublish/website/api';
 import { setDefaultOptions } from 'date-fns';
 import { AppProps } from 'next/app';
@@ -44,34 +44,38 @@ setDefaultOptions({
   locale: courantTenant.dateLocale,
 });
 
-initWePublishTranslator(
+const i18n = initWePublishTranslator(
   courantTenant.translations.overrides?.[courantTenant.translations.lng]
-).changeLanguage(courantTenant.translations.lng);
+);
+
+i18n.changeLanguage(courantTenant.translations.lng);
 
 z.setErrorMap(zodI18nMap);
+
+const { shell: shellTokens } = courantTokens.layout;
 
 const Spacer = styled('div')`
   display: grid;
   align-items: flex-start;
   grid-template-rows: min-content 1fr min-content;
-  gap: ${({ theme }) => theme.spacing(3)};
+  gap: ${({ theme }) => theme.spacing(shellTokens.gap)};
   min-height: 100vh;
 `;
 
 const MainSpacer = styled(Container)`
   display: grid;
-  gap: ${({ theme }) => theme.spacing(5)};
+  gap: ${({ theme }) => theme.spacing(shellTokens.mainGap)};
 
   ${({ theme }) => css`
     ${theme.breakpoints.up('md')} {
-      gap: ${theme.spacing(10)};
+      gap: ${theme.spacing(shellTokens.desktopMainGap)};
     }
   `}
 `;
 
 const NavBar = styled(NavbarContainer)`
   grid-column: -1/1;
-  z-index: 11;
+  z-index: ${shellTokens.navbarZIndex};
 `;
 
 export type CustomAppProps = AppProps<
