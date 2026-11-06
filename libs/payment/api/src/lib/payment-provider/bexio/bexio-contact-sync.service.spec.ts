@@ -1,6 +1,8 @@
 import { PrismaClient } from '@prisma/client';
+import { addErrorContext } from '@wepublish/utils/api';
 import { PaymentsService } from '../../payments.service';
 import { BexioContactSyncService } from './bexio-contact-sync.service';
+import { ResponseNOK } from './bexio-errors';
 import { BexioPaymentProvider } from './bexio-payment-provider';
 
 const reader = (overrides: Record<string, unknown> = {}) => ({
@@ -172,4 +174,53 @@ describe('BexioContactSyncService', () => {
       })
     );
   });
+
+  // The provider reaches the service behind withProviderErrorContext, which
+  // wraps the SDK's plain {code} rejections and renames its own errors.
+  it('stops on a rate limit the provider wrapper reports', async () => {
+    const { service, provider } = setup({
+      known: [
+        link(),
+        link({ userId: 'user-2', User: reader({ id: 'user-2' }) }),
+      ],
+    });
+    provider.syncContact.mockRejectedValueOnce(
+      addErrorContext({ code: 429, message: 'Too Many Requests' }, 'wrapped')
+    );
+
+    await service.syncAll();
+
+    expect(provider.syncContact).toHaveBeenCalledTimes(1);
+  });
+
+  it.each([
+    ['the provider', () => new ResponseNOK(401)],
+    ['the bexio SDK', () => ({ code: 401, message: 'Unauthorized' })],
+  ])(
+    'stops at the first rejected API key from %s and says so',
+    async (_, rejection) => {
+      const { service, provider, prisma } = setup({
+        known: [
+          link(),
+          link({ userId: 'user-2', User: reader({ id: 'user-2' }) }),
+        ],
+      });
+      provider.syncContact.mockRejectedValueOnce(
+        addErrorContext(rejection(), 'wrapped')
+      );
+
+      await service.syncAll();
+
+      expect(provider.syncContact).toHaveBeenCalledTimes(1);
+      expect(prisma.settingPaymentProvider.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            bexio_contactSyncError: expect.stringMatching(
+              /^bexio rejects the API key \(HTTP 401\)/
+            ),
+          }),
+        })
+      );
+    }
+  );
 });

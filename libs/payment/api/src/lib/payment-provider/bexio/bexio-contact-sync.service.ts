@@ -49,6 +49,7 @@ export class BexioContactSyncService {
     ];
     let failed = 0;
     let firstError: string | undefined;
+    let keyRejected = false;
 
     for (const reader of readers) {
       try {
@@ -61,9 +62,18 @@ export class BexioContactSyncService {
         );
 
         // Nothing is lost: the next night starts where this one stopped.
-        if (isRateLimited(error)) {
+        if (bexioStatus(error) === 429) {
           this.logger.error(
             `bexio ${provider.id} rate-limits the contact sync; stopping for tonight`
+          );
+          break;
+        }
+
+        // A rejected key fails every reader the same way.
+        if (bexioStatus(error) === 401) {
+          keyRejected = true;
+          this.logger.error(
+            `bexio ${provider.id} rejects the API key; stopping the contact sync`
           );
           break;
         }
@@ -81,7 +91,9 @@ export class BexioContactSyncService {
       data: {
         bexio_contactSyncAt: started,
         bexio_contactSyncError:
-          failed ?
+          keyRejected ?
+            `bexio rejects the API key (HTTP 401); stopped at the first of ${readers.length} readers. Enter a valid key in the integration. ${firstError}`
+          : failed ?
             `${failed} of ${readers.length} readers failed: ${firstError}`
           : null,
       },
@@ -127,8 +139,19 @@ export class BexioContactSyncService {
   }
 }
 
-const isRateLimited = (error: unknown) =>
-  (error as { code?: number } | null)?.code === 429;
+// The HTTP status of a failed bexio call: the SDK rejects with {code}, the
+// provider throws ResponseNOK {status}, and the provider error wrapper puts a
+// non-Error rejection under `cause`.
+const bexioStatus = (error: unknown): number | undefined => {
+  const { code, status, cause } =
+    (error as { code?: unknown; status?: unknown; cause?: unknown } | null) ??
+    {};
+  const own = [code, status].find(value => typeof value === 'number');
+
+  return (
+    (own as number | undefined) ?? (cause ? bexioStatus(cause) : undefined)
+  );
+};
 
 const pause = (ms: number) =>
   ms > 0 ? new Promise(resolve => setTimeout(resolve, ms)) : undefined;
