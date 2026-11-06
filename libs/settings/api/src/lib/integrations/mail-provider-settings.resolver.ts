@@ -1,4 +1,12 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
+import type { SettingMailProvider as SettingMailProviderRow } from '@prisma/client';
 import {
   CanCreateMailProviderSettings,
   CanGetMailProviderSettings,
@@ -14,7 +22,7 @@ import {
 import { MailProviderSettingsService } from './mail-provider-settings.service';
 import { MailProviderSettingsDataloaderService } from './mail-provider-settings-dataloader.service';
 
-@Resolver()
+@Resolver(() => SettingMailProvider)
 export class MailProviderSettingsResolver {
   constructor(
     private mailProviderSettingsService: MailProviderSettingsService,
@@ -58,6 +66,22 @@ export class MailProviderSettingsResolver {
   })
   updateMailProviderSetting(@Args() input: UpdateSettingMailProviderInput) {
     return this.mailProviderSettingsService.updateMailProviderSetting(input);
+  }
+
+  @ResolveField(() => Boolean, {
+    description:
+      'Whether an API key is stored. The key itself is never returned.',
+  })
+  isApiKeySet(@Parent() setting: SettingMailProviderRow) {
+    return !!setting.apiKey;
+  }
+
+  @ResolveField(() => Boolean, {
+    description:
+      'Whether a webhook signing secret is stored. The secret itself is never returned.',
+  })
+  isWebhookEndpointSecretSet(@Parent() setting: SettingMailProviderRow) {
+    return !!setting.webhookEndpointSecret;
   }
 
   /** DISABLE FOR NOW

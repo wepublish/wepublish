@@ -7,26 +7,28 @@ import {
   PaymentMethodListDocument,
   PaymentPeriodicity,
 } from '@wepublish/editor/api';
-import { DateRangeFilter, InfoTooltip } from '@wepublish/ui/editor';
+import { DateRangeFilter } from '@wepublish/ui/editor';
 import {
   Autocomplete,
   Divider,
   FormControl,
   FormControlLabel,
   FormHelperText,
-  FormLabel,
   InputAdornment,
   MenuItem,
   Radio,
   RadioGroup,
   Stack,
   TextField,
+  ToggleButton,
   Typography,
 } from '@mui/material';
-import { ReactNode } from 'react';
+import { ReactNode, useId } from 'react';
 import { useTranslation } from 'react-i18next';
+import { FieldLabel } from '../../field-label';
 import { AudienceFilterState, EndedMode, TriState } from './audience-state';
 import { MailHistoryFilter } from './mail-history-filter';
+import { EmailQualityRefreshButton } from '../email-quality-refresh-button';
 
 export type AudienceFilterProps = {
   state: AudienceFilterState;
@@ -35,7 +37,20 @@ export type AudienceFilterProps = {
   children?: ReactNode;
   /** The label over the base choice; null when the surroundings name it already. */
   baseLabel?: ReactNode | null;
+  /** People of this audience per email status, regardless of the statuses picked. */
+  segmentCounts?: { segment: MailEmailSegment; userCount: number }[];
+  /** After the statuses were refreshed from the mail provider. */
+  onSegmentsRefreshed?: () => void;
 };
+
+/** Best to worst; the last two are the people only a letter reaches. */
+const EMAIL_SEGMENT_ORDER = [
+  MailEmailSegment.Active,
+  MailEmailSegment.Unresponsive,
+  MailEmailSegment.Unknown,
+  MailEmailSegment.Placeholder,
+  MailEmailSegment.Dead,
+];
 
 /**
  * The controls that narrow an audience: the base, the email segments, what
@@ -48,8 +63,12 @@ export function AudienceFilter({
   onChange,
   children,
   baseLabel,
+  segmentCounts,
+  onSegmentsRefreshed,
 }: AudienceFilterProps) {
   const { t } = useTranslation();
+  const fieldId = useId();
+  const labelId = (field: string) => `${fieldId}-${field}`;
   const { data: memberPlanData } = useQuery(MemberPlanListDocument, {
     variables: { take: 100 },
   });
@@ -60,13 +79,18 @@ export function AudienceFilter({
   const memberPlans = memberPlanData?.memberPlans.nodes ?? [];
 
   const triStateSelect = (
+    field: string,
     label: ReactNode,
     value: TriState,
     patch: (value: TriState) => Partial<AudienceFilterState>,
-    hint?: string
+    { hint, help }: { hint?: string; help?: string } = {}
   ) => (
     <FormControl fullWidth>
-      <FormLabel>{label}</FormLabel>
+      <FieldLabel
+        id={labelId(field)}
+        label={label}
+        help={help}
+      />
       <TextField
         select
         value={value}
@@ -74,6 +98,7 @@ export function AudienceFilter({
           onChange(patch((event.target.value as TriState) ?? 'any'))
         }
         fullWidth
+        slotProps={{ select: { labelId: labelId(field) } }}
       >
         <MenuItem value="any">{t('mailSend.any')}</MenuItem>
         <MenuItem value="true">{t('mailSend.yes')}</MenuItem>
@@ -85,7 +110,10 @@ export function AudienceFilter({
 
   const memberPlanPicker = (
     <FormControl fullWidth>
-      <FormLabel>{t('mailSend.memberPlans')}</FormLabel>
+      <FieldLabel
+        id={labelId('member-plans')}
+        label={t('mailSend.memberPlans')}
+      />
       <Autocomplete
         multiple
         disableCloseOnSelect
@@ -101,6 +129,13 @@ export function AudienceFilter({
           <TextField
             {...params}
             placeholder={t('mailSend.memberPlansAll')}
+            slotProps={{
+              ...params.slotProps,
+              htmlInput: {
+                ...params.slotProps.htmlInput,
+                'aria-labelledby': labelId('member-plans'),
+              },
+            }}
           />
         )}
       />
@@ -114,9 +149,13 @@ export function AudienceFilter({
     >
       <FormControl fullWidth>
         {baseLabel !== null && (
-          <FormLabel>{baseLabel ?? t('mailSend.base.label')}</FormLabel>
+          <FieldLabel
+            id={labelId('base')}
+            label={baseLabel ?? t('mailSend.base.label')}
+          />
         )}
         <RadioGroup
+          aria-labelledby={baseLabel !== null ? labelId('base') : undefined}
           value={state.base}
           onChange={(_event, value) =>
             onChange({ base: value as MailRecipientBase })
@@ -159,23 +198,50 @@ export function AudienceFilter({
       {/* Placeholder vs real is the `placeholder` segment and its complement,
           so one control covers it. */}
       <FormControl fullWidth>
-        <FormLabel>{t('mailSend.emailSegments.label')}</FormLabel>
-        <Autocomplete
-          multiple
-          disableCloseOnSelect
-          options={Object.values(MailEmailSegment)}
-          getOptionLabel={segment => t(`mailSend.emailSegments.${segment}`)}
-          value={state.emailSegments}
-          onChange={(_event, value) =>
-            onChange({ emailSegments: value as MailEmailSegment[] })
-          }
-          renderInput={params => (
-            <TextField
-              {...params}
-              placeholder={t('mailSend.emailSegments.pick')}
-            />
-          )}
+        <FieldLabel
+          id={labelId('email-segments')}
+          label={t('mailSend.emailSegments.label')}
         />
+        {/* One toggle per status, so the count of each sits on the control
+            that picks it. Several picked statuses combine as "or". */}
+        <Stack
+          role="group"
+          aria-labelledby={labelId('email-segments')}
+          direction="row"
+          spacing={1}
+          useFlexGap
+          sx={{ alignItems: 'center', flexWrap: 'wrap', marginTop: 0.5 }}
+        >
+          {EMAIL_SEGMENT_ORDER.map(segment => {
+            const picked = state.emailSegments.includes(segment);
+            const people = segmentCounts?.find(
+              count => count.segment === segment
+            )?.userCount;
+
+            return (
+              <ToggleButton
+                key={segment}
+                value={segment}
+                size="small"
+                color="primary"
+                selected={picked}
+                onChange={() =>
+                  onChange({
+                    emailSegments:
+                      picked ?
+                        state.emailSegments.filter(item => item !== segment)
+                      : [...state.emailSegments, segment],
+                  })
+                }
+                sx={{ textTransform: 'none', textAlign: 'left' }}
+              >
+                {t(`mailSend.emailSegments.${segment}`)}
+                {segmentCounts && `: ${people ?? 0}`}
+              </ToggleButton>
+            );
+          })}
+          <EmailQualityRefreshButton onDone={onSegmentsRefreshed} />
+        </Stack>
         <FormHelperText>{t('mailSend.emailSegments.hint')}</FormHelperText>
       </FormControl>
 
@@ -189,8 +255,12 @@ export function AudienceFilter({
         <>
           <Divider />
           <FormControl fullWidth>
-            <FormLabel>{t('mailSend.endedWindow.label')}</FormLabel>
+            <FieldLabel
+              id={labelId('ended-window')}
+              label={t('mailSend.endedWindow.label')}
+            />
             <RadioGroup
+              aria-labelledby={labelId('ended-window')}
               row
               value={state.endedMode}
               onChange={(_event, value) =>
@@ -222,7 +292,11 @@ export function AudienceFilter({
                     }
                   }}
                   slotProps={{
-                    htmlInput: { min: 1, max: 3650 },
+                    htmlInput: {
+                      min: 1,
+                      max: 3650,
+                      'aria-label': t('mailSend.endedWindow.relative'),
+                    },
                     input: {
                       endAdornment: (
                         <InputAdornment position="end">
@@ -266,10 +340,11 @@ export function AudienceFilter({
           {memberPlanPicker}
 
           <FormControl fullWidth>
-            <FormLabel>
-              {t('mailSend.state.label')}{' '}
-              <InfoTooltip text={t('mailSend.stateHelp')} />
-            </FormLabel>
+            <FieldLabel
+              id={labelId('state')}
+              label={t('mailSend.state.label')}
+              help={t('mailSend.stateHelp')}
+            />
             <TextField
               select
               value={state.subscriptionState ?? ''}
@@ -280,7 +355,9 @@ export function AudienceFilter({
                 })
               }
               fullWidth
-              slotProps={{ select: { displayEmpty: true } }}
+              slotProps={{
+                select: { displayEmpty: true, labelId: labelId('state') },
+              }}
             >
               <MenuItem value="">{t('mailSend.state.any')}</MenuItem>
 
@@ -296,16 +373,18 @@ export function AudienceFilter({
           </FormControl>
 
           {triStateSelect(
-            <>
-              {t('mailSend.autoRenew')}{' '}
-              <InfoTooltip text={t('mailSend.autoRenewHelp')} />
-            </>,
+            'auto-renew',
+            t('mailSend.autoRenew'),
             state.autoRenew,
-            autoRenew => ({ autoRenew })
+            autoRenew => ({ autoRenew }),
+            { help: t('mailSend.autoRenewHelp') }
           )}
 
           <FormControl fullWidth>
-            <FormLabel>{t('mailSend.paymentMethod')}</FormLabel>
+            <FieldLabel
+              id={labelId('payment-method')}
+              label={t('mailSend.paymentMethod')}
+            />
             <TextField
               select
               value={state.paymentMethodID ?? ''}
@@ -313,7 +392,12 @@ export function AudienceFilter({
                 onChange({ paymentMethodID: event.target.value || null })
               }
               fullWidth
-              slotProps={{ select: { displayEmpty: true } }}
+              slotProps={{
+                select: {
+                  displayEmpty: true,
+                  labelId: labelId('payment-method'),
+                },
+              }}
             >
               <MenuItem value="">{t('mailSend.any')}</MenuItem>
 
@@ -329,7 +413,10 @@ export function AudienceFilter({
           </FormControl>
 
           <FormControl fullWidth>
-            <FormLabel>{t('mailSend.periodicity')}</FormLabel>
+            <FieldLabel
+              id={labelId('periodicity')}
+              label={t('mailSend.periodicity')}
+            />
             <TextField
               select
               value={state.periodicity ?? ''}
@@ -340,7 +427,9 @@ export function AudienceFilter({
                 })
               }
               fullWidth
-              slotProps={{ select: { displayEmpty: true } }}
+              slotProps={{
+                select: { displayEmpty: true, labelId: labelId('periodicity') },
+              }}
             >
               <MenuItem value="">{t('mailSend.any')}</MenuItem>
 
@@ -377,22 +466,25 @@ export function AudienceFilter({
           </FormControl>
 
           {triStateSelect(
+            'is-paid',
             t('mailSend.isPaid'),
             state.isPaid,
             isPaid => ({ isPaid }),
-            t('mailSend.isPaidHint')
+            { hint: t('mailSend.isPaidHint') }
           )}
           {triStateSelect(
+            'is-canceled',
             t('mailSend.isCanceled'),
             state.isCanceled,
             isCanceled => ({ isCanceled }),
-            t('mailSend.isCanceledHint')
+            { hint: t('mailSend.isCanceledHint') }
           )}
           {triStateSelect(
+            'has-replaced',
             t('mailSend.hasReplacedSubscription'),
             state.hasReplaced,
             hasReplaced => ({ hasReplaced }),
-            t('mailSend.hasReplacedSubscriptionHint')
+            { hint: t('mailSend.hasReplacedSubscriptionHint') }
           )}
         </>
       )}

@@ -32,7 +32,6 @@ import {
   getPeriodPriceRange,
   logger,
 } from '@wepublish/utils/api';
-import { unselectPassword } from '@wepublish/authentication/api';
 import {
   calculateAmountForPeriodicity,
   GoodieService,
@@ -330,7 +329,7 @@ export class UserSubscriptionService {
 
       const fullUser = await this.prisma.user.findUnique({
         where: { id: subscription.userID },
-        select: unselectPassword,
+        include: { address: true, paymentProviderCustomers: true },
       });
 
       if (!fullUser) {

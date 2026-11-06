@@ -1,5 +1,5 @@
 import { createTheme, ThemeProvider } from '@mui/material';
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
 import { MailChannel, MailEmailSegment } from '@wepublish/editor/api';
 
 import { RecipientSummary } from './recipient-summary';
@@ -18,7 +18,6 @@ vi.mock('react-i18next', () => ({
 const renderSummary = (
   overrides: Partial<Parameters<typeof RecipientSummary>[0]> = {}
 ) => {
-  const onPickSegment = vi.fn();
   const onShowRecipients = vi.fn();
 
   render(
@@ -29,10 +28,6 @@ const renderSummary = (
         userCount={10}
         channel={MailChannel.Mail}
         withoutAddressCount={0}
-        segmentCounts={[{ segment: MailEmailSegment.Dead, userCount: 2 }]}
-        selectedSegments={[]}
-        onPickSegment={onPickSegment}
-        onRefreshed={() => undefined}
         missing={[]}
         onShowRecipients={onShowRecipients}
         {...overrides}
@@ -40,7 +35,7 @@ const renderSummary = (
     </ThemeProvider>
   );
 
-  return { onPickSegment, onShowRecipients };
+  return { onShowRecipients };
 };
 
 describe('RecipientSummary', () => {
@@ -63,14 +58,26 @@ describe('RecipientSummary', () => {
     expect(screen.queryByText(/recipientsCountPerPerson/)).toBeNull();
   });
 
-  it('toggles a segment from its tile', () => {
-    const { onPickSegment } = renderSummary();
+  it('lists the email statuses it is given as counts, not as controls', () => {
+    renderSummary({
+      segmentCounts: [
+        { segment: MailEmailSegment.Dead, userCount: 2 },
+        { segment: MailEmailSegment.Active, userCount: 9 },
+      ],
+    });
 
-    fireEvent.click(
-      screen.getByRole('button', { name: 'mailSend.emailSegments.dead: 2' })
-    );
+    expect(screen.getByText('mailSend.emailSegments.overview')).toBeTruthy();
+    expect(screen.getByText('mailSend.emailSegments.dead: 2')).toBeTruthy();
+    expect(screen.getByText('mailSend.emailSegments.active: 9')).toBeTruthy();
+    expect(
+      screen.queryByRole('button', { name: /mailSend\.emailSegments/ })
+    ).toBeNull();
+  });
 
-    expect(onPickSegment).toHaveBeenCalledWith(MailEmailSegment.Dead);
+  it('leaves the email statuses to the filter unless asked for them', () => {
+    renderSummary();
+
+    expect(screen.queryByText('mailSend.emailSegments.overview')).toBeNull();
   });
 
   it('counts letters for a letter', () => {
@@ -98,13 +105,6 @@ describe('RecipientSummary', () => {
     expect(
       screen.queryByRole('button', { name: 'mailSend.showRecipients' })
     ).toBeNull();
-  });
-
-  it('names the email-status split the way the caller wants', () => {
-    renderSummary({ segmentsLabel: 'Leute nach Status' });
-
-    expect(screen.getByText('Leute nach Status')).toBeTruthy();
-    expect(screen.queryByText('mailSend.emailSegments.overview')).toBeNull();
   });
 
   it('names the list the way the caller wants, as the people are not always recipients', () => {

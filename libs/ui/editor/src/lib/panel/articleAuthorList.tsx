@@ -80,7 +80,7 @@ export function ArticleAuthorList({
           <RoleInput
             value={articleAuthor.role ?? ''}
             disabled={disabled}
-            placeholder={t('articleEditor.panels.authorRole')}
+            label={t('articleEditor.panels.authorRole')}
             onChange={event =>
               onItemChange({ ...articleAuthor, role: event.target.value })
             }

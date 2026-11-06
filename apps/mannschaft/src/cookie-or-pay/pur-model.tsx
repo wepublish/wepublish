@@ -1,5 +1,5 @@
 import { useHasActiveSubscription } from '@wepublish/membership/website';
-import Head from 'next/head';
+import { Head } from '@wepublish/utils/website/tanstack';
 import { useEffect } from 'react';
 
 declare global {

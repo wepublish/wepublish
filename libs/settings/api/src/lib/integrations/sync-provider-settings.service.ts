@@ -17,6 +17,7 @@ import { PrimeDataLoader } from '@wepublish/utils/api';
 import { SyncProviderSettingsDataloaderService } from './sync-provider-settings-dataloader.service';
 import { NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from './secrets-crypto';
+import { encryptSecrets } from './encrypt-secrets';
 
 @Injectable()
 export class SyncProviderSettingsService {
@@ -33,28 +34,11 @@ export class SyncProviderSettingsService {
       mailchimp_webhookSecret?: string | null;
     },
   >(data: T): T {
-    let result = { ...data };
-    if (
-      typeof data.mailchimp_apiKey === 'string' &&
-      data.mailchimp_apiKey.length > 0
-    ) {
-      result = {
-        ...result,
-        mailchimp_apiKey: this.crypto.encrypt(data.mailchimp_apiKey),
-      };
-    }
-    if (
-      typeof data.mailchimp_webhookSecret === 'string' &&
-      data.mailchimp_webhookSecret.length > 0
-    ) {
-      result = {
-        ...result,
-        mailchimp_webhookSecret: this.crypto.encrypt(
-          data.mailchimp_webhookSecret
-        ),
-      };
-    }
-    return result;
+    return encryptSecrets(
+      data,
+      ['mailchimp_apiKey', 'mailchimp_webhookSecret'],
+      value => this.crypto.encrypt(value)
+    );
   }
 
   /** One config with its secrets readable, enabled or not; for the webhook and its registration. */

@@ -1,0 +1,105 @@
+/**
+ * Shared handlers for the `pages/api/*` endpoints every tenant duplicated.
+ *
+ * ## Why these are handlers and not route-option factories
+ *
+ * Page routes can be built from a factory (`createFileRoute(p)(articleRoute())`)
+ * because their options are plain data. Server routes **cannot**: the TanStack
+ * Vite plugin strips the client bundle by deleting the literal
+ * `server: { handlers: { ... } }` property from the `createFileRoute` call. If
+ * the options come back from a function call the plugin cannot see that
+ * property, nothing is stripped, and the server-only imports behind it get
+ * pulled into the browser build — which fails with
+ * `"Readable" is not exported by "__vite-browser-external"`.
+ *
+ * So a route file must always spell the block out:
+ *
+ * ```ts
+ * export const Route = createFileRoute('/rss.xml')({
+ *   server: {
+ *     handlers: { GET: ({ request }) => feedHandler(request, …, 'rss2') },
+ *   },
+ * });
+ * ```
+ *
+ * Everything referenced *inside* the handler is then tree-shaken out of the
+ * client bundle along with it.
+ */
+
+/** Feeds and sitemaps are CDN cached for ten minutes, as in the Next apps. */
+/**
+ * Byte-for-byte the policy the Next feed endpoints served. Do not "tidy" the
+ * ordering or drop a directive: `stale-while-revalidate` is what keeps feeds
+ * cheap under load, and the value is asserted in `server-routes.spec.ts`
+ * precisely because an earlier port silently dropped it.
+ */
+export const FEED_CACHE_CONTROL =
+  's-maxage=599, stale-while-revalidate=599, max-age=599, stale-if-error=86400, public';
+
+/**
+ * `pages/api/health.ts`.
+ *
+ * Keep this on `/api/health`: it is the liveness/readiness/startup probe path
+ * in `helm/charts/wepublish-website/templates/website.yaml`, shared by every
+ * website deployment.
+ */
+export const healthHandler = () =>
+  Response.json({ status: 'ok' }, { headers: { 'cache-control': 'no-store' } });
+
+/**
+ * A permanent redirect, for the legacy `/api/rss-feed`-style paths.
+ *
+ * Those URLs are baked into existing feed-reader subscriptions and
+ * already-crawled `<link rel="alternate">` tags, so they must keep resolving
+ * rather than 404.
+ */
+export const legacyRedirectHandler = (to: string) =>
+  new Response(null, {
+    status: 301,
+    headers: {
+      location: to,
+      'cache-control': 'public, max-age=86400, s-maxage=86400',
+    },
+  });
+
+/*
+ * There is no sitemap handler here on purpose. Sitemaps are rendered by
+ * `createSitemapFetchHandlers` in `@wepublish/feed/website`, the Fetch API
+ * sibling of the handler pair the Next tenants use, so both stacks share the
+ * chunk parsing and the per-period cache policy instead of this file owning
+ * a second, simpler copy.
+ */
+
+export type FeedFormat = 'rss2' | 'atom1' | 'json1';
+
+const FEED_CONTENT_TYPE: Record<FeedFormat, string> = {
+  rss2: 'application/xml',
+  atom1: 'application/xml',
+  json1: 'application/feed+json',
+};
+
+/** `pages/api/{rss,atom,json}-feed.ts`, now `/rss.xml`, `/atom.xml`, `/feed.json`. */
+export const feedHandler = async (
+  request: Request,
+  getFeed: (
+    requestUrl: string,
+    siteUrl: string
+  ) => Promise<Record<FeedFormat, () => string>>,
+  getSiteUrl: () => string,
+  format: FeedFormat
+) => {
+  const feed = await getFeed(request.url, getSiteUrl());
+
+  return new Response(feed[format](), {
+    headers: {
+      'content-type': FEED_CONTENT_TYPE[format],
+      'cache-control': FEED_CACHE_CONTROL,
+      // Cloudflare ignores `cache-control` once `cdn-cache-control` is present
+      // on any route, and Vercel reads its own header ahead of both, so a feed
+      // missing either falls back to the origin policy. The Next endpoints set
+      // all three; so must these.
+      'cdn-cache-control': FEED_CACHE_CONTROL,
+      'vercel-cdn-cache-control': FEED_CACHE_CONTROL,
+    },
+  });
+};

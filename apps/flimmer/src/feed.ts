@@ -1,35 +1,36 @@
-import { getApiUrl } from '@wepublish/utils/website';
+import { generateFeed } from '@wepublish/feed/website';
+import { createSsrClient } from '@wepublish/utils/website/tanstack/server';
 import {
   ArticleListDocument,
   ArticleListQueryVariables,
   ArticleSort,
-  getApiClient,
   SortOrder,
 } from '@wepublish/website/api';
-import { generateFeed } from '@wepublish/website/server';
-import { NextApiRequest } from 'next';
-import process from 'node:process';
 
-export const getFeed = async (req: NextApiRequest) => {
-  const siteUrl = process.env.WEBSITE_URL || '';
+/**
+ * Port of `apps/flimmer/src/feed.ts`. Took a `NextApiRequest`; now takes the
+ * plain `Request` URL that the TanStack server route handler receives.
+ */
+export const getFeed = async (requestUrl: string, siteUrl: string) => {
+  const { pathname, search } = new URL(requestUrl);
+  const self = `${siteUrl}${pathname}${search}`;
 
   const generate = await generateFeed({
-    id: `${siteUrl + req.url}`,
-    link: siteUrl,
-    title: 'Flimmer',
+    id: self,
+    link: self,
+    title: 'We.Publish',
     ttl: 10, // in minutes
-    copyright: 'Flimmer',
-    categories: ['Zuerich', 'Journalism'],
+    copyright: 'We.Publish',
+    categories: ['OSS', 'CMS', 'Journalism'],
     updated: new Date(),
     feedLinks: {
-      json: `${siteUrl + req.url}/api/json-feed`,
-      atom: `${siteUrl + req.url}/api/atom-feed`,
-      rss: `${siteUrl + req.url}/api/rss-feed`,
+      json: `${siteUrl}/feed.json`,
+      atom: `${siteUrl}/atom.xml`,
+      rss: `${siteUrl}/rss.xml`,
     },
   });
-  const client = getApiClient(getApiUrl(), [], {
-    typePolicies: {},
-  });
+
+  const client = createSsrClient();
 
   const { data } = await client.query({
     query: ArticleListDocument,

@@ -137,7 +137,11 @@ describe('DeliveryChannelHistoryView', () => {
 
     expect(variablesOf()[0]).toEqual({ skip: 0, take: 20, channel: undefined });
 
-    fireEvent.click(screen.getByRole('button', { name: /page 2/i }));
+    fireEvent.click(
+      screen.getByRole('button', {
+        name: 'listView.pagination.page:{"page":2}',
+      })
+    );
 
     expect(variablesOf().at(-1)).toEqual(
       expect.objectContaining({ skip: 20, take: 20 })
@@ -147,7 +151,11 @@ describe('DeliveryChannelHistoryView', () => {
   it('narrows to one channel, and starts the pages over', () => {
     totalCount = 45;
     renderView();
-    fireEvent.click(screen.getByRole('button', { name: /page 2/i }));
+    fireEvent.click(
+      screen.getByRole('button', {
+        name: 'listView.pagination.page:{"page":2}',
+      })
+    );
 
     fireEvent.click(
       screen.getByRole('button', { name: 'deliveryMode.channel.letter' })
