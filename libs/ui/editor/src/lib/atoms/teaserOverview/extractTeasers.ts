@@ -50,10 +50,7 @@ export type TeaserFlexBlockPath = {
 };
 
 export type TeaserPath =
-  | TeaserGridPath
-  | TeaserFlexPath
-  | TeaserSlotsPath
-  | TeaserFlexBlockPath;
+  TeaserGridPath | TeaserFlexPath | TeaserSlotsPath | TeaserFlexBlockPath;
 
 export type ExtractedTeaser = {
   address: TeaserPath;

@@ -169,10 +169,23 @@ describe('DeliveryChannelAssignView', () => {
       })
     ).toBeTruthy();
     expect(screen.queryByText(/mailSend\.showRecipients/)).toBeNull();
-    expect(
-      screen.getByText('deliveryChannel.assign.segmentsLabel')
-    ).toBeTruthy();
     expect(screen.queryByText(/mailSend\.emailSegments\.overview/)).toBeNull();
+  });
+
+  it('hands the email-status counts to the filter, the one place to pick them', () => {
+    preview = {
+      userCount: 12,
+      withoutAddressCount: 0,
+      segments: [{ segment: 'dead', userCount: 2 }],
+    };
+    renderView();
+
+    expect(filterProps).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        segmentCounts: [{ segment: 'dead', userCount: 2 }],
+      })
+    );
+    expect(screen.queryByText(/mailSend\.emailSegments\.dead/)).toBeNull();
   });
 
   it('explains a missing address in its own terms inside the list', () => {

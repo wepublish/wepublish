@@ -65,6 +65,21 @@ describe('editor command registry', () => {
     expect(ids(['newsletter-editor'])).toContain('newsletter');
   });
 
+  it('hides the video and audio libraries while their feature is off', () => {
+    const t = ((key: string) => key) as TFunction;
+    const i18n = { getFixedT: () => t } as unknown as I18n;
+    const ids = (features: string[]) =>
+      allowedCommands(
+        editorCommands(t, i18n),
+        undefined,
+        new Set(features)
+      ).map(({ id }) => id);
+    const media = ['videos', 'uploadVideo', 'audio', 'uploadAudio'];
+
+    media.forEach(id => expect(ids([])).not.toContain(id));
+    expect(ids(['video-audio-uploads'])).toEqual(expect.arrayContaining(media));
+  });
+
   it('leaves a command that acts rather than navigates out of the routes', () => {
     expect(commandPaths().length).toBeLessThanOrEqual(allCommands.length);
   });

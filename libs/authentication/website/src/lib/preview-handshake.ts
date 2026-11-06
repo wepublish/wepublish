@@ -1,8 +1,5 @@
 export type PreviewHandshakeState =
-  | 'unknown'
-  | 'pending'
-  | 'succeeded'
-  | 'failed';
+  'unknown' | 'pending' | 'succeeded' | 'failed';
 
 let state: PreviewHandshakeState = 'unknown';
 const listeners = new Set<() => void>();
