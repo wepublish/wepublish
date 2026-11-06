@@ -3,7 +3,6 @@ import { useQuery } from '@apollo/client/react';
 import {
   ArticleContainer,
   ArticleListContainer,
-  ArticleWrapper,
 } from '@wepublish/article/website';
 import { CommentListContainer } from '@wepublish/comments/website';
 import { getApiUrl, revalidateFor } from '@wepublish/utils/website';
@@ -18,20 +17,14 @@ import {
   NavigationListDocument,
   PeerProfileDocument,
 } from '@wepublish/website/api';
-import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import { ComponentProps } from 'react';
-import { useTranslation } from 'react-i18next';
 
 export default function ArticleBySlugOrId() {
-  const { t } = useTranslation();
   const {
     query: { slug, id },
   } = useRouter();
-  const {
-    elements: { H3 },
-  } = useWebsiteBuilder();
 
   const { data } = useQuery(ArticleDocument, {
     fetchPolicy: 'cache-only',
@@ -51,31 +44,24 @@ export default function ArticleBySlugOrId() {
       <ArticleContainer {...containerProps} />
 
       {data?.article && (
-        <ArticleWrapper>
-          <H3 component={'h2'}>{t('article.related')}</H3>
-
-          <ArticleListContainer
-            variables={{
-              filter: { tags: data.article.tags.map(tag => tag.id) },
-              take: 4,
-            }}
-            filter={articles =>
-              articles
-                .filter(article => article.id !== data.article?.id)
-                .splice(0, 3)
-            }
-          />
-        </ArticleWrapper>
+        <ArticleListContainer
+          variables={{
+            filter: { tags: data.article.tags.map(tag => tag.id) },
+            take: 4,
+          }}
+          filter={articles =>
+            articles
+              .filter(article => article.id !== data.article?.id)
+              .splice(0, 3)
+          }
+        />
       )}
 
       {data?.article && !data?.article?.disableComments && (
-        <ArticleWrapper>
-          <H3 component={'h2'}>{t('article.comments')}</H3>
-          <CommentListContainer
-            id={data!.article!.id}
-            type={CommentItemType.Article}
-          />
-        </ArticleWrapper>
+        <CommentListContainer
+          id={data!.article!.id}
+          type={CommentItemType.Article}
+        />
       )}
     </>
   );

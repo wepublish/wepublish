@@ -4,7 +4,11 @@ import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 
 import { CourantGlobalStyles } from './components/courant-global-styles';
+import { CourantArticleAuthors } from './components/courant-article-authors';
+import { CourantArticleList } from './components/courant-article-list';
+import { CourantAuthorChip } from './components/courant-author-chip';
 import { CourantBlocks } from './components/courant-blocks';
+import { CourantCommentList } from './components/courant-comment-list';
 import { CourantContentWrapper } from './components/courant-content-wrapper';
 import { CourantFooter } from './components/courant-footer';
 import { CourantNavbar } from './components/courant-navbar';
@@ -27,6 +31,10 @@ export const courantTenant: WebsiteTenantConfig = {
     ContentWrapper: CourantContentWrapper,
     Navbar: CourantNavbar,
     Footer: CourantFooter,
+    ArticleAuthors: CourantArticleAuthors,
+    ArticleList: CourantArticleList,
+    AuthorChip: CourantAuthorChip,
+    CommentList: CourantCommentList,
     blocks: {
       BaseTeaser: CourantTeaser,
       Blocks: CourantBlocks,
