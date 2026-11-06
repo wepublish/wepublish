@@ -12,7 +12,12 @@ import {
   SortOrder,
 } from '@wepublish/utils/api';
 
-import { generateApiToken, hashApiToken, prefixOf } from './api-token.crypto';
+import {
+  generateApiToken,
+  hashApiToken,
+  prefixOf,
+  verifyApiToken,
+} from './api-token.crypto';
 import {
   ApiTokenListArgs,
   ApiTokenSort,
@@ -107,7 +112,7 @@ export class ApiTokenService {
         name,
         scopes,
         expiresAt,
-        tokenHash: hashApiToken(token),
+        tokenHash: await hashApiToken(token),
         prefix: prefixOf(token),
         createdById: creator.userId,
       },
@@ -117,9 +122,18 @@ export class ApiTokenService {
   }
 
   async resolveToken(token: string): Promise<ApiToken | null> {
-    const apiToken = await this.prisma.apiToken.findUnique({
-      where: { tokenHash: hashApiToken(token) },
+    const candidates = await this.prisma.apiToken.findMany({
+      where: { prefix: prefixOf(token) },
     });
+
+    let apiToken: ApiToken | undefined;
+
+    for (const candidate of candidates) {
+      if (await verifyApiToken(candidate.tokenHash, token)) {
+        apiToken = candidate;
+        break;
+      }
+    }
 
     if (!apiToken || apiToken.revokedAt) {
       return null;

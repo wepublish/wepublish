@@ -11,7 +11,7 @@ import {
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 
 import { CourantColorOverrides } from '../brand-colors';
-import { courantTenant } from '../courant-tenant';
+import { courantConfig } from '../courant-config';
 import { createCourantTheme } from '../theme';
 import { CourantFooter } from './courant-footer';
 
@@ -69,7 +69,7 @@ const renderBrand = (
 ) =>
   renderWithProviders(<BrandPage withImage={withImage} />, {
     tenant: {
-      ...courantTenant,
+      ...courantConfig,
       createTheme: () => createCourantTheme(settingsTheme, overrides),
     },
   });

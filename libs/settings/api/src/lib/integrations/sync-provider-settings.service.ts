@@ -17,6 +17,7 @@ import { PrimeDataLoader } from '@wepublish/utils/api';
 import { SyncProviderSettingsDataloaderService } from './sync-provider-settings-dataloader.service';
 import { NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from './secrets-crypto';
+import { encryptSecrets } from './encrypt-secrets';
 
 @Injectable()
 export class SyncProviderSettingsService {
@@ -30,17 +31,9 @@ export class SyncProviderSettingsService {
   private encryptSecretsIfPresent<
     T extends { mailchimp_apiKey?: string | null },
   >(data: T): T {
-    let result = { ...data };
-    if (
-      typeof data.mailchimp_apiKey === 'string' &&
-      data.mailchimp_apiKey.length > 0
-    ) {
-      result = {
-        ...result,
-        mailchimp_apiKey: this.crypto.encrypt(data.mailchimp_apiKey),
-      };
-    }
-    return result;
+    return encryptSecrets(data, ['mailchimp_apiKey'], value =>
+      this.crypto.encrypt(value)
+    );
   }
 
   @PrimeDataLoader(SyncProviderSettingsDataloaderService, 'id')

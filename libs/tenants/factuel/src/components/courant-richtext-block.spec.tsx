@@ -6,7 +6,7 @@ import {
 } from '@wepublish/mocks/website';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 
-import { courantTenant } from '../courant-tenant';
+import { courantConfig } from '../courant-config';
 
 const BlocksPage = ({
   type,
@@ -61,14 +61,14 @@ const BlocksWithBold = ({ type }: { type: 'Page' | 'Article' }) => {
 
 describe('CourantRichTextBlock inside Courant blocks', () => {
   it('renders richtext in sans on Page blocks', () => {
-    renderWithProviders(<BlocksPage type="Page" />, { tenant: courantTenant });
+    renderWithProviders(<BlocksPage type="Page" />, { tenant: courantConfig });
     const style = getComputedStyle(screen.getByText('Article body paragraph.'));
     expect(style.fontFamily).toBe('local, sans-serif');
   });
 
   it('renders richtext in the editorial serif on Article blocks', () => {
     renderWithProviders(<BlocksPage type="Article" />, {
-      tenant: courantTenant,
+      tenant: courantConfig,
     });
     const style = getComputedStyle(screen.getByText('Article body paragraph.'));
     expect(style.fontFamily).toBe('local, serif');
@@ -77,7 +77,7 @@ describe('CourantRichTextBlock inside Courant blocks', () => {
 
   it('renders bold text in the editorial medium weight on Article blocks', () => {
     renderWithProviders(<BlocksWithBold type="Article" />, {
-      tenant: courantTenant,
+      tenant: courantConfig,
     });
     const style = getComputedStyle(screen.getByText('bold word'));
     expect(style.fontWeight).toBe('500');

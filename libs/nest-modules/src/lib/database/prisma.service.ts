@@ -18,7 +18,14 @@ export class PrismaService
       idleTimeoutMillis: 300_000,
     });
 
-    super({ adapter });
+    super({
+      adapter,
+      // A user's password hash and TOTP secret stay out of every query result,
+      // nested relations included. The two places that need them ask for them
+      // by name: the login lookup with `omit: { password: false }`, the TOTP
+      // check with an explicit `select`.
+      omit: { user: { password: true, totpSecret: true } },
+    });
   }
 
   public async onModuleInit() {

@@ -28,6 +28,32 @@ describe('ClickPopover', () => {
     expect(screen.getByText('Really delete this?')).toBeInTheDocument();
   });
 
+  it('tells assistive technology what the trigger opens', () => {
+    renderPopover();
+
+    const trigger = screen.getByRole('button', { name: 'Open' });
+
+    expect(trigger).toHaveAttribute('aria-haspopup', 'dialog');
+    expect(trigger).toHaveAttribute('aria-expanded', 'false');
+
+    fireEvent.click(trigger);
+
+    expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    expect(
+      document.getElementById(trigger.getAttribute('aria-controls') ?? '')
+    ).toContainElement(screen.getByText('Really delete this?'));
+  });
+
+  it('names the open popover after its trigger', () => {
+    renderPopover();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Open' }));
+
+    expect(screen.getByRole('dialog', { name: 'Open' })).toContainElement(
+      screen.getByText('Really delete this?')
+    );
+  });
+
   it('closes when the user clicks away', async () => {
     const { baseElement } = renderPopover();
 

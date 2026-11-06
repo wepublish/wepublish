@@ -3,6 +3,7 @@ import {
   generateApiToken,
   hashApiToken,
   prefixOf,
+  verifyApiToken,
 } from './api-token.crypto';
 
 describe('generateApiToken', () => {
@@ -30,24 +31,39 @@ describe('generateApiToken', () => {
 });
 
 describe('hashApiToken', () => {
-  it('is deterministic, so a token can be looked up by its hash', () => {
-    const token = generateApiToken();
-
-    expect(hashApiToken(token)).toBe(hashApiToken(token));
+  it('hashes with argon2id', async () => {
+    expect(await hashApiToken(generateApiToken())).toMatch(/^\$argon2id\$/);
   });
 
-  it('does not reveal the token', () => {
+  it('does not reveal the token', async () => {
     const token = generateApiToken();
-    const hash = hashApiToken(token);
+    const hash = await hashApiToken(token);
 
     expect(hash).not.toContain(token.slice(API_TOKEN_PREFIX.length));
-    expect(hash).toHaveLength(64);
   });
 
-  it('gives different tokens different hashes', () => {
-    expect(hashApiToken(generateApiToken())).not.toBe(
-      hashApiToken(generateApiToken())
-    );
+  it('salts every hash, so equal tokens never share one', async () => {
+    const token = generateApiToken();
+
+    expect(await hashApiToken(token)).not.toBe(await hashApiToken(token));
+  });
+});
+
+describe('verifyApiToken', () => {
+  it('accepts the token the hash was made from', async () => {
+    const token = generateApiToken();
+
+    expect(await verifyApiToken(await hashApiToken(token), token)).toBe(true);
+  });
+
+  it('rejects any other token', async () => {
+    const hash = await hashApiToken(generateApiToken());
+
+    expect(await verifyApiToken(hash, generateApiToken())).toBe(false);
+  });
+
+  it('rejects a malformed hash instead of throwing', async () => {
+    expect(await verifyApiToken('not-a-hash', generateApiToken())).toBe(false);
   });
 });
 

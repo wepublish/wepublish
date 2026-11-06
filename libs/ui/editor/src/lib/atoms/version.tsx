@@ -6,19 +6,29 @@ import {
   OneChannelStatusDocument,
   VersionInformationDocument,
 } from '@wepublish/editor/api';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { paletteColor } from '../paletteColor';
 
-const StyledVersion = styled.div`
+const StyledVersion = styled.button`
   padding: 4px 8px 10px 16px;
   display: flex;
   align-items: center;
   gap: 10px;
   width: 100%;
   box-sizing: border-box;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  text-align: left;
   cursor: default;
   background-color: ${({ theme }) => theme.vars.palette.background.default};
+
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.vars.palette.primary.main};
+    outline-offset: -2px;
+  }
 `;
 
 const StatusDot = styled.span<{ dotColor: string }>`
@@ -50,9 +60,16 @@ const DOT_COLORS: Record<OneChannelConnectionState, string> = {
   [OneChannelConnectionState.NotConfigured]: 'error.main',
 };
 
+const STATE_LABELS = {
+  [OneChannelConnectionState.Connected]: 'oneChannel.connected',
+  [OneChannelConnectionState.Failing]: 'oneChannel.failing',
+  [OneChannelConnectionState.NotConfigured]: 'oneChannel.notConfigured',
+} as const satisfies Record<OneChannelConnectionState, string>;
+
 export function Version() {
   const { t } = useTranslation();
   const theme = useTheme();
+  const [detailsOpen, setDetailsOpen] = useState(false);
   const { data: versionData } = useQuery(VersionInformationDocument);
   const { data: channelData } = useQuery(OneChannelStatusDocument);
 
@@ -125,20 +142,27 @@ export function Version() {
   };
 
   const tooltip = buildTooltip();
+  const state = status?.state ?? OneChannelConnectionState.NotConfigured;
 
   return (
-    <Tooltip title={<span style={{ whiteSpace: 'pre-line' }}>{tooltip}</span>}>
-      <StyledVersion aria-label={tooltip}>
+    <Tooltip
+      describeChild
+      open={detailsOpen}
+      onOpen={() => setDetailsOpen(true)}
+      onClose={() => setDetailsOpen(false)}
+      title={<span style={{ whiteSpace: 'pre-line' }}>{tooltip}</span>}
+    >
+      <StyledVersion
+        type="button"
+        onClick={() => setDetailsOpen(open => !open)}
+      >
         <StatusDot
-          dotColor={paletteColor(
-            theme,
-            status ?
-              DOT_COLORS[status.state]
-            : DOT_COLORS[OneChannelConnectionState.NotConfigured]
-          )}
-          role="img"
+          dotColor={paletteColor(theme, DOT_COLORS[state])}
+          aria-hidden
         />
-        <ConnectorLabel>{t('oneChannel.label')}</ConnectorLabel>
+        <ConnectorLabel>
+          {status ? t(STATE_LABELS[state]) : t('oneChannel.label')}
+        </ConnectorLabel>
       </StyledVersion>
     </Tooltip>
   );

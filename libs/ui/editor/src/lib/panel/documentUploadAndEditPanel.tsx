@@ -18,6 +18,7 @@ export function DocumentUploadAndEditPanel({
       <DocumentEditPanel
         file={file}
         onClose={onClose}
+        onReplace={() => setFile(null)}
         onSave={onUpload}
       />
     : <DocumentUploadPanel
