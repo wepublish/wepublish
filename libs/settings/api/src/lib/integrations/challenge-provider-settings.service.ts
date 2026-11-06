@@ -15,6 +15,7 @@ import { NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from './secrets-crypto';
 import { ProviderSettingsChanged } from './provider-settings-changed';
 import { clearProviderConfig } from './clear-provider-config';
+import { encryptSecrets } from './encrypt-secrets';
 
 @Injectable()
 export class ChallengeProviderSettingsService {
@@ -28,13 +29,9 @@ export class ChallengeProviderSettingsService {
   private encryptSecretsIfPresent<T extends { secret?: string | null }>(
     data: T
   ): T {
-    if (typeof data.secret === 'string' && data.secret.length > 0) {
-      return {
-        ...data,
-        secret: this.crypto.encrypt(data.secret),
-      };
-    }
-    return data;
+    return encryptSecrets(data, ['secret'], value =>
+      this.crypto.encrypt(value)
+    );
   }
 
   @PrimeDataLoader(ChallengeProviderSettingsDataloaderService, 'id')

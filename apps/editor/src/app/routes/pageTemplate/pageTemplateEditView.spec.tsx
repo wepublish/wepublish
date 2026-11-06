@@ -70,7 +70,7 @@ vi.mock('@wepublish/ui/editor', async importOriginal => ({
       component,
   PermissionControl: ({ children }: { children?: unknown }) => children,
   useAuthorisation: (permission: string) => isAuthorised(permission),
-  useUnsavedChangesDialog: () => () => true,
+  useUnsavedChangesDialog: () => undefined,
 }));
 
 vi.mock('react-i18next', () => ({
@@ -204,7 +204,7 @@ describe('PageTemplateEditView', () => {
     renderWithTheme(view());
 
     fireEvent.change(nameInput(), { target: { value: 'Renamed Template' } });
-    fireEvent.click(screen.getByRole('button', { name: /^save$/i }));
+    fireEvent.click(screen.getByRole('button', { name: /^save(,|$)/i }));
 
     await waitFor(() => expect(updatePageTemplate).toHaveBeenCalled());
 
@@ -439,14 +439,16 @@ describe('PageTemplateEditView', () => {
       renderWithTheme(view());
 
       expect(nameInput()).toBeEnabled();
-      expect(screen.getByRole('button', { name: /^save$/i })).toBeEnabled();
+      expect(screen.getByRole('button', { name: /^save(,|$)/i })).toBeEnabled();
     });
 
     it('should not allow saving an existing template with the create permission only', () => {
       onlyPermitted(CanCreatePageTemplate.id);
       renderWithTheme(view());
 
-      expect(screen.getByRole('button', { name: /^save$/i })).toBeDisabled();
+      expect(
+        screen.getByRole('button', { name: /^save(,|$)/i })
+      ).toBeDisabled();
     });
 
     it('should allow creating a template with the create permission', () => {

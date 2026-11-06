@@ -40,6 +40,7 @@ export function ResetPassword() {
   const [email, setEmail] = useState(searchParams.get('email') || '');
   const [sent, setSent] = useState(false);
   const emailInputRef = useRef<HTMLInputElement>(null);
+  const backLinkRef = useRef<HTMLAnchorElement>(null);
   const { t } = useTranslation();
 
   const [sendPasswordReset, { loading }] = useMutation(
@@ -49,6 +50,12 @@ export function ResetPassword() {
   useEffect(() => {
     emailInputRef.current?.focus();
   }, []);
+
+  useEffect(() => {
+    if (sent) {
+      backLinkRef.current?.focus();
+    }
+  }, [sent]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -75,13 +82,16 @@ export function ResetPassword() {
   }
 
   return (
-    <LoginTemplate backgroundChildren={<Background />}>
+    <LoginTemplate
+      title={t('resetPassword.title')}
+      backgroundChildren={<Background />}
+    >
       <Form>
         <Stack
           direction="column"
           spacing={3}
         >
-          <Description>
+          <Description role="status">
             {sent ? t('resetPassword.sent') : t('resetPassword.description')}
           </Description>
 
@@ -108,7 +118,12 @@ export function ResetPassword() {
             </>
           )}
 
-          <BackLink href="/login">{t('resetPassword.backToLogin')}</BackLink>
+          <BackLink
+            ref={backLinkRef}
+            href="/login"
+          >
+            {t('resetPassword.backToLogin')}
+          </BackLink>
         </Stack>
       </Form>
     </LoginTemplate>

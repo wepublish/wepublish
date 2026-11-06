@@ -41,7 +41,6 @@ import {
   PermissionControl,
   TableWrapper,
   useListViewState,
-  useSeededState,
   PageTitle,
 } from '@wepublish/ui/editor';
 import { useEffect, useMemo, useState } from 'react';
@@ -77,13 +76,9 @@ function AuthorList() {
   const isCreateRoute = location.pathname.includes('create');
   const isEditRoute = location.pathname.includes('edit');
 
-  const [isEditModalOpen, setEditModalOpen] = useState(
-    isEditRoute || isCreateRoute
-  );
-
-  const [editID, setEditID] = useState<string | undefined>(
-    isEditRoute ? id : undefined
-  );
+  const isEditModalOpen = isEditRoute || isCreateRoute;
+  const editID = isEditRoute ? id : undefined;
+  const closeDrawer = () => navigate('/authors');
 
   const [page, setPage] = useState(1);
   const { filter, setFilter, sortField, sortOrder, setSort, limit, setLimit } =
@@ -131,14 +126,6 @@ function AuthorList() {
   const [deleteAuthor, { loading: isDeleting }] = useMutation(
     DeleteAuthorDocument,
     {}
-  );
-
-  useSeededState(
-    isCreateRoute || isEditRoute ? location.pathname : undefined,
-    () => {
-      setEditID(isEditRoute ? id : undefined);
-      setEditModalOpen(true);
-    }
   );
 
   return (
@@ -204,6 +191,7 @@ function AuthorList() {
             {
               id: 'image',
               label: '',
+              columnLabel: t('authors.panels.image'),
               width: 72,
               render: row => <Avatar src={row.image?.squareURL || undefined} />,
             },
@@ -281,21 +269,12 @@ function AuthorList() {
           },
         }}
         open={isEditModalOpen}
-        onClose={() => {
-          setEditModalOpen(false);
-          navigate('/authors');
-        }}
+        onClose={closeDrawer}
       >
         <AuthorEditPanel
           id={editID}
-          onClose={() => {
-            setEditModalOpen(false);
-            navigate('/authors');
-          }}
-          onSave={() => {
-            setEditModalOpen(false);
-            navigate('/authors');
-          }}
+          onClose={closeDrawer}
+          onSave={closeDrawer}
         />
       </Drawer>
 

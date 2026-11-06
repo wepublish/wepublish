@@ -1,5 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { Goodie, Prisma, PrismaClient } from '@prisma/client';
+import {
+  Goodie,
+  PaymentPeriodicity,
+  Prisma,
+  PrismaClient,
+} from '@prisma/client';
 import { getMaxTake, PrimeDataLoader, SortOrder } from '@wepublish/utils/api';
 import { GoodieDataloader } from './goodie.dataloader';
 import {
@@ -66,12 +71,17 @@ export class GoodieService {
   }
 
   @PrimeDataLoader(GoodieDataloader)
-  async createGoodie({ memberPlanIDs, ...input }: CreateGoodieInput) {
+  async createGoodie({
+    memberPlanIDs,
+    paymentPeriodicities,
+    ...input
+  }: CreateGoodieInput) {
     validateGoodie(input);
 
     return this.prisma.goodie.create({
       data: {
         ...input,
+        paymentPeriodicities: paymentPeriodicities ?? [],
         memberPlans: {
           connect: memberPlanIDs.map(id => ({ id })),
         },
@@ -80,7 +90,12 @@ export class GoodieService {
   }
 
   @PrimeDataLoader(GoodieDataloader)
-  async updateGoodie({ id, memberPlanIDs, ...input }: UpdateGoodieInput) {
+  async updateGoodie({
+    id,
+    memberPlanIDs,
+    paymentPeriodicities,
+    ...input
+  }: UpdateGoodieInput) {
     validateGoodie(input);
 
     return this.prisma.goodie.update({
@@ -89,6 +104,7 @@ export class GoodieService {
       },
       data: {
         ...input,
+        paymentPeriodicities: paymentPeriodicities ?? undefined,
         memberPlans:
           memberPlanIDs ?
             {
@@ -171,7 +187,11 @@ export class GoodieService {
     );
   }
 
-  async getValidGoodie(goodieId: string, memberPlanId: string) {
+  async getValidGoodie(
+    goodieId: string,
+    memberPlanId: string,
+    paymentPeriodicity: PaymentPeriodicity
+  ) {
     const goodie = await this.prisma.goodie.findFirst({
       where: {
         id: goodieId,
@@ -187,6 +207,15 @@ export class GoodieService {
     if (!goodie) {
       throw new BadRequestException(
         'Goodie is not available for this member plan.'
+      );
+    }
+
+    if (
+      goodie.paymentPeriodicities.length &&
+      !goodie.paymentPeriodicities.includes(paymentPeriodicity)
+    ) {
+      throw new BadRequestException(
+        'Goodie is not available for this payment periodicity.'
       );
     }
 

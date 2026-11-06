@@ -1,6 +1,13 @@
 import styled from '@emotion/styled';
 import { InfoTooltip as SharedInfoTooltip } from '@wepublish/ui/editor';
-import { PropsWithChildren, ReactNode, useId, useState } from 'react';
+import {
+  createContext,
+  PropsWithChildren,
+  ReactNode,
+  useContext,
+  useId,
+  useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdExpandMore } from 'react-icons/md';
 
@@ -105,7 +112,14 @@ const Chevron = styled(MdExpandMore, {
   transition: transform 150ms ease;
 `;
 
-const BlockTitle = styled('h3')`
+const TitleLine = styled('div')`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+`;
+
+const BlockTitle = styled('h2')`
   display: flex;
   align-items: center;
   gap: 8px;
@@ -145,7 +159,7 @@ const SubsectionHeader = styled('div')`
   padding: 16px 20px 4px;
 `;
 
-const SubsectionTitle = styled('h4')`
+const SubsectionTitle = styled('h3')`
   display: flex;
   align-items: center;
   gap: 6px;
@@ -185,7 +199,7 @@ const RowLabel = styled('div')`
   min-width: 0;
 `;
 
-const RowTitle = styled('h5')`
+const RowTitle = styled('h3')`
   display: flex;
   align-items: center;
   gap: 4px;
@@ -195,6 +209,8 @@ const RowTitle = styled('h5')`
   line-height: 1.4;
   color: ${({ theme }) => theme.vars.palette.text.primary};
 `;
+
+const RowHeadingLevel = createContext<'h3' | 'h4'>('h3');
 
 const RowHint = styled('span')`
   font-size: 13px;
@@ -284,26 +300,28 @@ export function MailBlock({
     <Block aria-labelledby={headingId}>
       <BlockHeader collapsed={!expanded}>
         <HeaderMain>
-          <BlockTitle>
-            {collapsible ?
-              <ToggleButton
-                type="button"
-                aria-expanded={expanded}
-                aria-controls={contentId}
-                onClick={() => setExpanded(current => !current)}
-              >
-                <Chevron
-                  size={20}
-                  expanded={expanded}
-                />
-                {icon}
-                <span id={headingId}>{title}</span>
-              </ToggleButton>
-            : <>
-                {icon}
-                <span id={headingId}>{title}</span>
-              </>
-            }
+          <TitleLine>
+            <BlockTitle>
+              {collapsible ?
+                <ToggleButton
+                  type="button"
+                  aria-expanded={expanded}
+                  aria-controls={contentId}
+                  onClick={() => setExpanded(current => !current)}
+                >
+                  <Chevron
+                    size={20}
+                    expanded={expanded}
+                  />
+                  {icon}
+                  <span id={headingId}>{title}</span>
+                </ToggleButton>
+              : <>
+                  {icon}
+                  <span id={headingId}>{title}</span>
+                </>
+              }
+            </BlockTitle>
 
             {description && (
               <InfoTooltip
@@ -311,7 +329,7 @@ export function MailBlock({
                 example={example}
               />
             )}
-          </BlockTitle>
+          </TitleLine>
 
           {summary && <Summary>{summary}</Summary>}
         </HeaderMain>
@@ -336,9 +354,11 @@ export function MailSubsection({
     <Subsection>
       {title && (
         <SubsectionHeader>
-          <SubsectionTitle>
-            {icon}
-            {title}
+          <TitleLine>
+            <SubsectionTitle>
+              {icon}
+              {title}
+            </SubsectionTitle>
 
             {description && (
               <InfoTooltip
@@ -346,13 +366,15 @@ export function MailSubsection({
                 example={example}
               />
             )}
-          </SubsectionTitle>
+          </TitleLine>
 
           {actions && <HeaderActions>{actions}</HeaderActions>}
         </SubsectionHeader>
       )}
 
-      {children}
+      <RowHeadingLevel.Provider value={title ? 'h4' : 'h3'}>
+        {children}
+      </RowHeadingLevel.Provider>
     </Subsection>
   );
 }
@@ -371,11 +393,13 @@ export function EventRow({
   example,
   children,
 }: PropsWithChildren<EventRowProps>) {
+  const headingLevel = useContext(RowHeadingLevel);
+
   return (
     <Row>
       <RowLabel>
-        <RowTitle>
-          {title}
+        <TitleLine>
+          <RowTitle as={headingLevel}>{title}</RowTitle>
 
           {description && (
             <InfoTooltip
@@ -383,7 +407,7 @@ export function EventRow({
               example={example}
             />
           )}
-        </RowTitle>
+        </TitleLine>
 
         {hint && <RowHint>{hint}</RowHint>}
       </RowLabel>

@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { Button, Card, CardContent, CardHeader } from '@mui/material';
-import { ActivityFeed, InfoTooltip } from '@wepublish/ui/editor';
+import { visuallyHidden } from '@mui/utils';
+import { ActivityFeed, InfoTooltip, PageTitle } from '@wepublish/ui/editor';
 import { ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdChevronRight, MdTune } from 'react-icons/md';
@@ -67,6 +68,11 @@ const DashboardCard = styled.div`
     min-height: 0;
   }
 
+  &[data-dashboard-card='notifications'] .MuiCardContent-root {
+    max-height: 520px;
+    overflow-y: auto;
+  }
+
   &[data-dashboard-card='network'] .MuiCardContent-root {
     min-height: 360px;
     overflow: hidden;
@@ -104,7 +110,7 @@ export function Dashboard() {
               <InfoTooltip text={t('dashboard.networkContentInfo')} />
             </>
           }
-          slotProps={{ title: { variant: 'h2' } }}
+          slotProps={{ title: { variant: 'h2', component: 'h2' } }}
           action={
             <Button
               component={RouterLink}
@@ -132,7 +138,7 @@ export function Dashboard() {
               <InfoTooltip text={t('dashboard.activityInfo')} />
             </>
           }
-          slotProps={{ title: { variant: 'h2' } }}
+          slotProps={{ title: { variant: 'h2', component: 'h2' } }}
         />
 
         <CardContent>
@@ -145,7 +151,7 @@ export function Dashboard() {
       <Card>
         <CardHeader
           title={t('dashboard.audience')}
-          slotProps={{ title: { variant: 'h2' } }}
+          slotProps={{ title: { variant: 'h2', component: 'h2' } }}
           action={
             <Button
               component={RouterLink}
@@ -177,7 +183,7 @@ export function Dashboard() {
               <InfoTooltip text={t('dashboard.externalAppsInfo')} />
             </>
           }
-          slotProps={{ title: { variant: 'h2' } }}
+          slotProps={{ title: { variant: 'h2', component: 'h2' } }}
         />
 
         <CardContent>
@@ -189,6 +195,8 @@ export function Dashboard() {
 
   return (
     <>
+      <PageTitle sx={visuallyHidden}>{t('navbar.dashboard')}</PageTitle>
+
       <DashboardToolbar>
         <Button
           variant="text"

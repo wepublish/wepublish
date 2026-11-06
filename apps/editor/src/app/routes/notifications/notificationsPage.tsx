@@ -25,6 +25,9 @@ const TabContent = styled.div`
   padding: 20px 4px;
 `;
 
+const tabId = (tab: NotificationsTab) => `notifications-tab-${tab}`;
+const panelId = (tab: NotificationsTab) => `notifications-panel-${tab}`;
+
 export function NotificationsPage() {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<NotificationsTab>(
@@ -41,6 +44,9 @@ export function NotificationsPage() {
       </ListViewContainer>
 
       <Tabs
+        variant="scrollable"
+        scrollButtons="auto"
+        allowScrollButtonsMobile
         value={activeTab}
         onChange={(_event, activeKey) =>
           setActiveTab(activeKey as NotificationsTab)
@@ -48,23 +54,33 @@ export function NotificationsPage() {
       >
         <Tab
           value={NotificationsTab.WhatsNew}
+          id={tabId(NotificationsTab.WhatsNew)}
+          aria-controls={panelId(NotificationsTab.WhatsNew)}
           label={t('changelog.whatsNew')}
         />
 
         <Tab
           value={NotificationsTab.TeamMessages}
+          id={tabId(NotificationsTab.TeamMessages)}
+          aria-controls={panelId(NotificationsTab.TeamMessages)}
           label={t('oneMessages.header')}
         />
 
         {canSeeJobLogs && (
           <Tab
             value={NotificationsTab.JobLogs}
+            id={tabId(NotificationsTab.JobLogs)}
+            aria-controls={panelId(NotificationsTab.JobLogs)}
             label={t('periodicJobsLog.title')}
           />
         )}
       </Tabs>
 
-      <TabContent>
+      <TabContent
+        role="tabpanel"
+        id={panelId(activeTab)}
+        aria-labelledby={tabId(activeTab)}
+      >
         {activeTab === NotificationsTab.WhatsNew && (
           <ChangelogDashboard
             take={10}
