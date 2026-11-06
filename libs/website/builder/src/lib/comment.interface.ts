@@ -37,8 +37,7 @@ export type BuilderCommentListCloseAction = {
 };
 
 export type BuilderCommentListActions =
-  | BuilderCommentListOpenAction
-  | BuilderCommentListCloseAction;
+  BuilderCommentListOpenAction | BuilderCommentListCloseAction;
 
 export type BuilderCommentListState = Record<
   `${BuilderCommentListStateTypes}:${string | null}`,
