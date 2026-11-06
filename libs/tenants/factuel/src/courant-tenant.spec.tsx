@@ -7,6 +7,7 @@ import { fr } from 'date-fns/locale';
 import { CourantContentWrapper } from './components/courant-content-wrapper';
 import { CourantFooter } from './components/courant-footer';
 import { CourantNavbar } from './components/courant-navbar';
+import { CourantTeaser } from './components/courant-teaser';
 import { courantTenant } from './courant-tenant';
 import websiteSettings from './fixtures/website-settings.json';
 import frOverridden from './locales/frOverridden.json';
@@ -80,6 +81,7 @@ describe('courantTenant', () => {
       })
     );
     expect(courantTenant.builder.elements?.Link).toBeDefined();
+    expect(courantTenant.builder.blocks?.BaseTeaser).toBe(CourantTeaser);
     expect(courantTenant.blockStyles).toBeUndefined();
   });
 

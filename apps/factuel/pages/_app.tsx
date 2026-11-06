@@ -35,6 +35,7 @@ import {
 import { setDefaultOptions } from 'date-fns';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import Script from 'next/script';
 import PlausibleProvider from 'next-plausible';
 import { z } from 'zod';
@@ -62,6 +63,7 @@ const Spacer = styled('div')`
   min-height: 100vh;
 `;
 
+// Courant: max-content width is 1200px, regardless of theme breakpoints.
 const MainSpacer = styled(Container)`
   display: grid;
   gap: ${({ theme }) => theme.spacing(shellTokens.mainGap)};
@@ -71,6 +73,10 @@ const MainSpacer = styled(Container)`
       gap: ${theme.spacing(shellTokens.desktopMainGap)};
     }
   `}
+
+  &.page-measure {
+    max-width: ${courantTokens.layout.pageMaxWidth}px;
+  }
 `;
 
 const NavBar = styled(NavbarContainer)`
@@ -95,6 +101,8 @@ function CustomApp({
   websiteSettings,
 }: CustomAppProps) {
   const siteTitle = courantTenant.builder.meta?.siteTitle;
+  const router = useRouter();
+  const isArticle = router.pathname.startsWith('/a/');
 
   // Emotion cache from _document is not supplied when client side rendering
   // Compat removes certain warnings that are irrelevant to us
@@ -140,7 +148,10 @@ function CustomApp({
             )}
 
             <main>
-              <MainSpacer maxWidth="lg">
+              <MainSpacer
+                maxWidth="lg"
+                className={isArticle ? undefined : 'page-measure'}
+              >
                 <Component {...pageProps} />
               </MainSpacer>
             </main>
