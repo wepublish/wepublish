@@ -435,6 +435,9 @@ catalogs:
     pg:
       specifier: ^8.23.1
       version: 8.23.1
+    pingen2-sdk-js:
+      specifier: ^0.3.0
+      version: 0.3.0
     pino:
       specifier: ^6.14.0
       version: 6.14.0
@@ -935,6 +938,9 @@ importers:
       pg:
         specifier: 'catalog:'
         version: 8.23.1
+      pingen2-sdk-js:
+        specifier: 'catalog:'
+        version: 0.3.0
       pino:
         specifier: 'catalog:'
         version: 6.14.0
@@ -1717,6 +1723,9 @@ importers:
       passport-http-bearer:
         specifier: 'catalog:'
         version: 1.0.1
+      pingen2-sdk-js:
+        specifier: 'catalog:'
+        version: 0.3.0
       pino:
         specifier: 'catalog:'
         version: 6.14.0
@@ -14822,6 +14831,10 @@ packages:
   pify@3.0.0:
     resolution: {integrity: sha512-C3FsVNH1udSEX48gGX1xfvwTWfsYWj5U+8/uK15BGzIGrKoUpghX8hWZwa/OFnakBiiVNmBvemTJR5mcy7iPcg==}
     engines: {node: '>=4'}
+
+  pingen2-sdk-js@0.3.0:
+    resolution: {integrity: sha512-KOx8O5SRH7naXXxWqynYfuavMAbyYpMgUnpVry34Ai/34W+qSAYnI3kzV4G930jYwk/CBcA2JHu0TeXqHQaQ/g==}
+    engines: {node: '>=18.0.0'}
 
   pino-abstract-transport@3.0.0:
     resolution: {integrity: sha512-wlfUczU+n7Hy/Ha5j9a/gZNy7We5+cXp8YL+X+PG8S0KXxw7n/JXA3c46Y0zQznIJ83URJiwy7Lh56WLokNuxg==}
@@ -33048,6 +33061,8 @@ snapshots:
   pify@2.3.0: {}
 
   pify@3.0.0: {}
+
+  pingen2-sdk-js@0.3.0: {}
 
   pino-abstract-transport@3.0.0:
     dependencies:

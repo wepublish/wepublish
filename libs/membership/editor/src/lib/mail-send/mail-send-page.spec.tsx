@@ -1,7 +1,7 @@
 import type { Mock } from 'vitest';
 import { useQuery } from '@apollo/client/react';
 import { createTheme, ThemeProvider } from '@mui/material';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import {
   MailSendRecipientPreviewDocument,
   MailTemplateDocument,
@@ -29,7 +29,10 @@ const results = new Map<unknown, unknown>([
     MailSendRecipientPreviewDocument,
     { mailSendRecipientPreview: { count: 11, userCount: 11, recipients: [] } },
   ],
-  [MailTemplateDocument, { mailTemplates: [] }],
+  [
+    MailTemplateDocument,
+    { mailTemplates: [{ id: 'template-1', name: 'Newsletter' }] },
+  ],
 ]);
 
 const renderPage = () =>
@@ -43,6 +46,21 @@ const renderPage = () =>
     </MemoryRouter>
   );
 
+const goToAudience = () => {
+  fireEvent.mouseDown(
+    screen.getByRole('combobox', { name: /^mailSend\.template/ })
+  );
+  fireEvent.click(
+    within(screen.getByRole('listbox')).getByRole('option', {
+      name: 'Newsletter',
+    })
+  );
+
+  const next = screen.getByRole('button', { name: 'mailSend.next' });
+  next.focus();
+  fireEvent.click(next);
+};
+
 describe('MailSendPage', () => {
   beforeEach(() => {
     (useQuery as unknown as Mock).mockImplementation((document: unknown) => ({
@@ -54,6 +72,7 @@ describe('MailSendPage', () => {
 
   it('names the audience choice', () => {
     renderPage();
+    goToAudience();
 
     expect(
       screen.getByRole('radiogroup', { name: 'mailSend.base.label' })
@@ -62,11 +81,14 @@ describe('MailSendPage', () => {
 
   it('announces the recipient count politely', () => {
     renderPage();
+    goToAudience();
 
     expect(
       screen
         .getAllByRole('status')
-        .some(status => status.textContent === 'mailSend.recipientsCount')
+        .some(
+          status => status.textContent === 'mailSend.recipientsCountPerPerson'
+        )
     ).toBe(true);
   });
 
@@ -76,18 +98,23 @@ describe('MailSendPage', () => {
     expect(screen.queryByRole('alert')).toBeNull();
   });
 
-  it('moves focus to the next step and labels its template select', () => {
+  it('labels the template select of the first step', () => {
     renderPage();
 
-    const next = screen.getByRole('button', { name: 'mailSend.next' });
-    next.focus();
-    fireEvent.click(next);
-
-    expect(
-      screen.getByRole('heading', { level: 2, name: 'mailSend.template' })
-    ).toHaveFocus();
     expect(
       screen.getByRole('combobox', { name: /^mailSend\.template/ })
     ).toBeTruthy();
+  });
+
+  it('moves focus to the next step', () => {
+    renderPage();
+    goToAudience();
+
+    expect(
+      screen.getByRole('heading', {
+        level: 2,
+        name: 'mailSend.audience.title',
+      })
+    ).toHaveFocus();
   });
 });

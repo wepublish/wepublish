@@ -48,6 +48,16 @@ query MailTemplatePreview($input: MailTemplatePreviewInput!) {
   }
 }
 
+query LetterChannelAvailable {
+  letterChannelAvailable
+}
+
+query MailTemplateLetterPreview($input: MailTemplatePreviewInput!) {
+  mailTemplateLetterPreview(input: $input) {
+    pdf
+  }
+}
+
 mutation SendTestMailTemplate($input: SendTestMailTemplateInput!) {
   sendTestMailTemplate(input: $input)
 }

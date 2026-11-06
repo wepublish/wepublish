@@ -16,6 +16,7 @@ import {
   Typography,
 } from '@mui/material';
 import {
+  MailChannel,
   MailLogState,
   MailLogType,
   MailLogsDocument,
@@ -33,6 +34,7 @@ import { DEFAULT_MUTATION_OPTIONS } from '../common';
 import {
   formatDateTime,
   MailErrorCell,
+  MailLogChannelCell,
   mailLogTypeLabel,
   MailLogStateLegend,
   MailLogStateTag,
@@ -127,6 +129,7 @@ export function MailLogTable() {
     : null
   );
   const [type, setType] = useState<MailLogType | null>(null);
+  const [channel, setChannel] = useState<MailChannel | null>(null);
 
   const { data: templateData } = useQuery(MailTemplateDocument);
 
@@ -139,6 +142,7 @@ export function MailLogTable() {
         mailTemplateId: templateId ?? undefined,
         state: state ?? undefined,
         type: type ?? undefined,
+        channel: channel ?? undefined,
         mailSendJobId: jobId ?? undefined,
       },
       skip: (page - 1) * PAGE_SIZE,
@@ -180,6 +184,11 @@ export function MailLogTable() {
     label: value,
     value,
   }));
+  const channelOptions = Object.values(MailChannel).map(value => ({
+    label: t(`mailLog.channels.${value}`),
+    value,
+  }));
+
   const typeOptions = Object.values(MailLogType).map(value => ({
     label: mailLogTypeLabel(value, t),
     description: t(`mailLog.typeDescriptions.${value}`),
@@ -215,13 +224,14 @@ export function MailLogTable() {
     setSearchParams(next);
   };
 
-  const hasFilters = !!(jobId || templateId || state || type);
+  const hasFilters = !!(jobId || templateId || state || type || channel);
 
   const resetFilters = () => {
     setPage(1);
     setTemplateId(null);
     setState(null);
     setType(null);
+    setChannel(null);
     setSearchParams({});
   };
 
@@ -350,6 +360,32 @@ export function MailLogTable() {
                 </TextField>
               )}
             </FilterField>
+            <FilterField label={t('mailLog.filter.channel')}>
+              {({ labelId }) => (
+                <TextField
+                  select
+                  value={channel ?? ''}
+                  onChange={event =>
+                    resetPageThen(setChannel)(
+                      (event.target.value as MailChannel) || null
+                    )
+                  }
+                  slotProps={{ select: { displayEmpty: true, labelId } }}
+                  fullWidth
+                >
+                  <MenuItem value="">{t('mailLog.filter.all')}</MenuItem>
+
+                  {channelOptions.map(option => (
+                    <MenuItem
+                      key={option.value}
+                      value={option.value}
+                    >
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            </FilterField>
             <FilterField
               label={t('mailLog.filter.type')}
               hint={t('mailLog.filter.typeHint')}
@@ -419,6 +455,9 @@ export function MailLogTable() {
                 <strong>{t('mailLog.subject')}</strong>
               </TableCell>
               <TableCell>
+                <strong>{t('mailLog.channel')}</strong>
+              </TableCell>
+              <TableCell>
                 <strong>{t('mailLog.type')}</strong>
               </TableCell>
               <TableCell>
@@ -449,6 +488,12 @@ export function MailLogTable() {
                 <TableCell>{log.recipient.email}</TableCell>
                 <TableCell>{log.mailTemplate.name}</TableCell>
                 <TableCell>{log.subject ?? '—'}</TableCell>
+                <TableCell>
+                  <MailLogChannelCell
+                    channel={log.channel}
+                    address={log.address}
+                  />
+                </TableCell>
                 <TableCell>{mailLogTypeLabel(log.type, t)}</TableCell>
                 <TableCell>
                   <MailLogStateTag state={log.state} />

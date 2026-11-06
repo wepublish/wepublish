@@ -539,7 +539,20 @@ function UserEditView() {
                             required
                             disabled={isDisabled}
                             error={Boolean(error)}
-                            helperText={error?.message}
+                            helperText={
+                              error?.message ??
+                              // derived from bounces, logins and clicks; read-only
+                              (user?.emailQuality &&
+                                t('userCreateOrEditView.emailQuality', {
+                                  level: t(
+                                    `mailSend.emailSegments.${user.emailQuality.level}`
+                                  ),
+                                  reason: user.emailQuality.reason,
+                                  since: new Date(
+                                    user.emailQuality.since
+                                  ).toLocaleDateString(),
+                                }))
+                            }
                             fullWidth
                           />
                         )}
