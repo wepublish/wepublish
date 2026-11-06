@@ -1,4 +1,12 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
+import type { SettingAnalyticsProvider as SettingRow } from '@prisma/client';
 import {
   CanCreateAnalyticsProviderSettings,
   CanGetAnalyticsProviderSettings,
@@ -14,7 +22,7 @@ import {
 import { AnalyticsProviderSettingsService } from './analytics-provider-settings.service';
 import { AnalyticsProviderSettingsDataloaderService } from './analytics-provider-settings-dataloader.service';
 
-@Resolver()
+@Resolver(() => SettingAnalyticsProvider)
 export class AnalyticsProviderSettingsResolver {
   constructor(
     private analyticsProviderSettingsService: AnalyticsProviderSettingsService,
@@ -79,4 +87,12 @@ export class AnalyticsProviderSettingsResolver {
     return this.analyticsProviderSettingsService.deleteAnalyticsProviderSetting(id);
   }
     **/
+
+  @ResolveField(() => Boolean, {
+    description:
+      'Whether service account credentials are stored. They are never returned.',
+  })
+  isCredentialsSet(@Parent() setting: SettingRow) {
+    return !!setting.credentials;
+  }
 }

@@ -175,7 +175,13 @@ export const Upgrade = ({
       return [];
     }
 
-    return selectedMemberPlan?.goodies ?? [];
+    return (selectedMemberPlan?.goodies ?? []).filter(
+      goodie =>
+        !goodie.paymentPeriodicities.length ||
+        goodie.paymentPeriodicities.includes(
+          subscriptionToUpgrade.paymentPeriodicity
+        )
+    );
   }, [
     hideGoodieForExistingGoodie,
     monthlyAmount,

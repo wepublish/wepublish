@@ -28,6 +28,7 @@ const renderEditor = (props: ComponentProps<typeof RichtextEditor> = {}) => {
   const ui = (editorProps: ComponentProps<typeof RichtextEditor>) => (
     <MockedProvider mocks={[websiteSettings]}>
       <ThemeProvider theme={editorTheme}>
+        <span id="label">Biography</span>
         <RichtextEditor
           onChange={onChange}
           {...editorProps}
@@ -76,7 +77,8 @@ describe('RichtextEditor', () => {
     const user = userEvent.setup();
     const { onChange } = renderEditor();
 
-    await user.type(await findContent(), 'Neu');
+    const content = await findContent();
+    await user.type(content.querySelector('p') ?? content, 'Neu');
 
     await waitFor(() =>
       expect(onChange).toHaveBeenLastCalledWith({
@@ -261,5 +263,47 @@ describe('RichtextEditor', () => {
     expect(
       tableBar.getByRole('button', { name: t('richtext.table.headerCell') })
     ).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('names the editable area with aria-label', async () => {
+    renderEditor({ 'aria-label': 'Description' });
+
+    const textbox = await screen.findByRole('textbox', {
+      name: 'Description',
+    });
+    expect(textbox).toHaveAttribute('aria-multiline', 'true');
+  });
+
+  it('names the editable area with aria-labelledby', async () => {
+    renderEditor({ 'aria-labelledby': 'label' });
+
+    expect(
+      await screen.findByRole('textbox', { name: 'Biography' })
+    ).toBeInTheDocument();
+  });
+
+  it('follows a changed label', async () => {
+    const { rerender } = renderEditor({ 'aria-label': 'Description' });
+
+    await screen.findByRole('textbox', { name: 'Description' });
+    rerender({ 'aria-label': 'Lead' });
+
+    expect(
+      await screen.findByRole('textbox', { name: 'Lead' })
+    ).toBeInTheDocument();
+  });
+
+  it('renders the drag handle as a named, non-submitting button', async () => {
+    renderEditor();
+
+    await findContent();
+
+    const handle = document.querySelector<HTMLButtonElement>(
+      `button[aria-label="${t('richtext.dragHandle')}"]`
+    );
+
+    expect(handle).not.toBeNull();
+    expect(handle).toHaveAttribute('type', 'button');
+    expect(handle).toHaveAttribute('tabindex', '-1');
   });
 });

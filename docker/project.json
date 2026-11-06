@@ -1,0 +1,14 @@
+{
+  "name": "docker-scripts",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "docker",
+  "tags": [],
+  "targets": {
+    "test": {
+      "options": {
+        "config": "../{projectRoot}/vitest.config.ts"
+      }
+    }
+  }
+}

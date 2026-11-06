@@ -1,6 +1,8 @@
 import { css, GlobalStyles } from '@mui/material';
 import { memo } from 'react';
 
+import { MannschaftFontFaces } from './theme';
+
 const globalCSS = css`
   html {
     hyphenate-limit-chars: auto 10 10;
@@ -10,5 +12,10 @@ const globalCSS = css`
 `;
 
 export const MannschaftGlobalStyles = memo(function MannschaftGlobalStyles() {
-  return <GlobalStyles styles={globalCSS} />;
+  return (
+    <>
+      <MannschaftFontFaces />
+      <GlobalStyles styles={globalCSS} />
+    </>
+  );
 });

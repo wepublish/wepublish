@@ -47,6 +47,7 @@ import {
 } from '../drawer';
 import { enqueueSnackbar } from '../snackbar';
 import { TeaserForm, TeaserFormValues } from './teaserForm';
+import { useTabPanel } from './useTabPanel';
 
 const SearchField = styled(TextField)`
   margin-bottom: ${({ theme }) => theme.spacing(1)};
@@ -134,6 +135,7 @@ export function TeaserSelectPanel({
   const customTeaser = { type: TeaserType.Custom } as Teaser;
 
   const [type, setType] = useState<TeaserType>(TeaserType.Article);
+  const { tabProps, panelProps } = useTabPanel(type);
   const [customValues, setCustomValues] = useState<TeaserFormValues>({
     preTitle: '',
     title: '',
@@ -375,31 +377,35 @@ export function TeaserSelectPanel({
       >
         <Tab
           value={TeaserType.Article}
+          {...tabProps(TeaserType.Article)}
           icon={<MdDescription />}
           iconPosition="start"
           label={t('resources.teaserType.article')}
         />
         <Tab
           value={TeaserType.Page}
+          {...tabProps(TeaserType.Page)}
           icon={<MdDashboard />}
           iconPosition="start"
           label={t('resources.teaserType.page')}
         />
         <Tab
           value={TeaserType.Event}
+          {...tabProps(TeaserType.Event)}
           icon={<MdEvent />}
           iconPosition="start"
           label={t('resources.teaserType.event')}
         />
         <Tab
           value={TeaserType.Custom}
+          {...tabProps(TeaserType.Custom)}
           icon={<MdSettings />}
           iconPosition="start"
           label={t('resources.teaserType.custom')}
         />
       </Tabs>
 
-      <DrawerBody>
+      <DrawerBody {...panelProps}>
         {(type === TeaserType.Article || type === TeaserType.Page) && (
           <SearchField
             label={t('articleEditor.panels.search')}

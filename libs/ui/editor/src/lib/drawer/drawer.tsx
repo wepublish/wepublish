@@ -1,8 +1,10 @@
 import styled from '@emotion/styled';
 import { Typography, TypographyProps } from '@mui/material';
+import { useId, useLayoutEffect, useRef } from 'react';
 
 export const DrawerHeader = styled.div`
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: ${({ theme }) => theme.spacing(2)};
@@ -11,13 +13,43 @@ export const DrawerHeader = styled.div`
   flex-shrink: 0;
 `;
 
-export const DrawerTitle = styled((props: TypographyProps) => (
-  <Typography
-    variant="h6"
-    component="h2"
-    {...props}
-  />
-))`
+function DialogNamingTitle({ id, ...props }: TypographyProps) {
+  const generatedId = useId();
+  const titleId = id ?? generatedId;
+  const ref = useRef<HTMLSpanElement>(null);
+
+  useLayoutEffect(() => {
+    const dialog = ref.current?.closest('[role="dialog"]');
+
+    if (
+      !dialog ||
+      dialog.hasAttribute('aria-label') ||
+      dialog.hasAttribute('aria-labelledby')
+    ) {
+      return;
+    }
+
+    dialog.setAttribute('aria-labelledby', titleId);
+
+    return () => {
+      if (dialog.getAttribute('aria-labelledby') === titleId) {
+        dialog.removeAttribute('aria-labelledby');
+      }
+    };
+  }, [titleId]);
+
+  return (
+    <Typography
+      ref={ref}
+      id={titleId}
+      variant="h6"
+      component="h2"
+      {...props}
+    />
+  );
+}
+
+export const DrawerTitle = styled(DialogNamingTitle)`
   font-size: 1.125rem;
   font-weight: 600;
   margin: 0;

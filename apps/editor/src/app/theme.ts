@@ -10,7 +10,8 @@ import type { ColorMode } from './colorMode';
  * article/page status badges. Darker main/dark variants are derived from the
  * same hue so every palette family is internally consistent.
  *
- *  blue   #3498ff  – primary brand colour (buttons, links, focus rings)
+ *  blue   #3498ff  – primary brand colour on dark surfaces; #1468c4 on light
+ *                    surfaces so white text and links keep a 4.5:1 contrast
  *  pink   #f8def2  – pending state background  → secondary palette
  *  green  #e1f8de  – published state background → success palette
  *  cream  #f8efde  – draft state background     → warning palette
@@ -87,13 +88,33 @@ const editorPalette = (mode: ColorMode) => ({
   mode,
   ...(mode === 'dark' ? darkSurfaces : lightSurfaces),
   primary: augmentColor({
-    color: {
-      light: '#76bcff',
-      main: '#3498ff',
-      dark: '#1a7ee0',
-      contrastText: '#ffffff',
-    },
+    color:
+      mode === 'dark' ?
+        {
+          light: '#76bcff',
+          main: '#3498ff',
+          dark: '#1a7ee0',
+          contrastText: '#0a0d12',
+        }
+      : {
+          light: '#76bcff',
+          main: '#1468c4',
+          dark: '#0f559f',
+          contrastText: '#ffffff',
+        },
   }),
+  ...(mode === 'dark' ?
+    {
+      error: augmentColor({
+        color: {
+          light: '#e57373',
+          main: '#f44336',
+          dark: '#e53935',
+          contrastText: '#0a0d12',
+        },
+      }),
+    }
+  : {}),
   secondary: augmentColor({
     color: {
       light: '#f8def2',
@@ -122,6 +143,10 @@ const editorPalette = (mode: ColorMode) => ({
     },
   }),
 });
+
+const insetFocusRing = {
+  '&.Mui-focusVisible': { outlineOffset: -2 },
+};
 
 export const createEditorTheme = () =>
   createTheme({
@@ -183,16 +208,6 @@ export const createEditorTheme = () =>
           }),
         },
       },
-      MuiTab: {
-        defaultProps: {},
-        styleOverrides: {
-          root: ({ theme }) => ({
-            minHeight: 40,
-            paddingBlock: theme.spacing(1),
-            textTransform: 'none',
-          }),
-        },
-      },
       MuiFormControl: {
         defaultProps: {
           margin: 'none',
@@ -207,7 +222,7 @@ export const createEditorTheme = () =>
       MuiCardHeader: {
         defaultProps: {
           slotProps: {
-            title: { component: 'div' as 'span' },
+            title: { component: 'h2' as 'span' },
           },
         },
         styleOverrides: {
@@ -220,6 +235,79 @@ export const createEditorTheme = () =>
       MuiButtonBase: {
         defaultProps: {
           disableTouchRipple: true,
+        },
+        styleOverrides: {
+          root: ({ theme }) => ({
+            '&.Mui-focusVisible': {
+              outline: `2px solid ${theme.vars.palette.primary.main}`,
+              outlineOffset: 2,
+            },
+          }),
+        },
+      },
+      MuiListItemButton: {
+        styleOverrides: {
+          root: insetFocusRing,
+        },
+      },
+      MuiMenuItem: {
+        styleOverrides: {
+          root: insetFocusRing,
+        },
+      },
+      MuiTab: {
+        defaultProps: {},
+        styleOverrides: {
+          root: ({ theme }) => ({
+            minHeight: 40,
+            paddingBlock: theme.spacing(1),
+            textTransform: 'none',
+            ...insetFocusRing,
+          }),
+        },
+      },
+      MuiIconButton: {
+        styleOverrides: {
+          root: insetFocusRing,
+        },
+      },
+      MuiCheckbox: {
+        styleOverrides: {
+          root: insetFocusRing,
+        },
+      },
+      MuiRadio: {
+        styleOverrides: {
+          root: insetFocusRing,
+        },
+      },
+      MuiSwitch: {
+        styleOverrides: {
+          switchBase: insetFocusRing,
+        },
+      },
+      MuiAccordionSummary: {
+        styleOverrides: {
+          root: insetFocusRing,
+        },
+      },
+      MuiToggleButton: {
+        styleOverrides: {
+          root: insetFocusRing,
+        },
+      },
+      MuiCardActionArea: {
+        styleOverrides: {
+          root: insetFocusRing,
+        },
+      },
+      MuiOutlinedInput: {
+        styleOverrides: {
+          notchedOutline: {
+            '& legend :is(a, button, input, select, textarea, [tabindex])': {
+              visibility: 'hidden',
+            },
+          },
         },
       },
       MuiButton: {
