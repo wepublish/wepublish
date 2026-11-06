@@ -10,10 +10,10 @@ import {
 import { useTranslation } from 'react-i18next';
 import { MdAdd } from 'react-icons/md';
 
-import { CommentPreview, RevisionProps } from './commentPreview';
+import { CommentPreview } from './commentPreview';
 import { CreateCommentBtn } from './createCommentBtn';
 
-interface ChildCommentsProps extends RevisionProps {
+interface ChildCommentsProps {
   comments?: FullCommentFragment[];
   comment: FullCommentFragment;
   originComment?: FullCommentFragment;
@@ -23,8 +23,6 @@ function ChildComments({
   comments,
   comment,
   originComment,
-  revision,
-  setRevision,
 }: ChildCommentsProps) {
   if (!comments) {
     return null;
@@ -57,16 +55,12 @@ function ChildComments({
             originComment={
               childComment.id === originComment?.id ? originComment : undefined
             }
-            revision={revision}
-            setRevision={setRevision}
           />
           {/* some fancy recursion */}
           <ChildComments
             comments={comments}
             comment={childComment}
             originComment={originComment}
-            revision={revision}
-            setRevision={setRevision}
           />
         </div>
       ))}
@@ -74,7 +68,7 @@ function ChildComments({
   );
 }
 
-interface CommentHistoryProps extends RevisionProps {
+interface CommentHistoryProps {
   commentItemType: CommentItemType;
   commentItemID: string;
   originComment?: FullCommentFragment;
@@ -83,8 +77,6 @@ interface CommentHistoryProps extends RevisionProps {
 export function CommentHistory({
   commentItemType,
   commentItemID,
-  revision,
-  setRevision,
   originComment,
 }: CommentHistoryProps) {
   const { t } = useTranslation();
@@ -142,15 +134,11 @@ export function CommentHistory({
                 <CommentPreview
                   comment={tmpComment}
                   originComment={originComment}
-                  revision={revision}
-                  setRevision={setRevision}
                 />
                 <ChildComments
                   comment={tmpComment}
                   originComment={originComment}
                   comments={comments}
-                  revision={revision}
-                  setRevision={setRevision}
                 />
               </>
             )}

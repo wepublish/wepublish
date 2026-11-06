@@ -788,10 +788,12 @@
       "featured": "Hervorgehoben",
       "actions": "Aktionen",
       "comment": "Kommentartext",
+      "sections": {
+        "content": "Kommentar"
+      },
       "commentContextHeader": "Kommentar-Historie",
       "goToArticle": "Zum Artikel",
       "lead": "Lead",
-      "noOverride": "Nicht überschreiben",
       "ratingOverrides": "Kommentarbewertung überschreiben",
       "source": "Quelle",
       "tags": "Tags",
@@ -800,7 +802,7 @@
       "variousPanelHeader": "Tags & Quelle",
       "featuredHelpText": "Der Kommentar erscheint zuoberst in der Liste der Kommentare.",
       "sourceInfo": "Wird auf der Website neben dem Namen der verfassenden Person angezeigt, z. B. woher der Kommentar stammt. Gibst du eine Webadresse ein, wird sie verlinkt.",
-      "ratingOverridesInfo": "Ersetzt die durchschnittliche Bewertung, die Leserinnen und Leser bei diesem Kommentar sehen, durch einen festen Wert. Wähle «Nicht überschreiben», um die tatsächliche Bewertung anzuzeigen.",
+      "ratingOverridesInfo": "Ersetzt die durchschnittliche Bewertung, die Leserinnen und Leser bei diesem Kommentar sehen, durch einen festen Wert. Wähle «Keine Auswahl», um die tatsächliche Bewertung anzuzeigen.",
       "goToPage": "Zur Seite"
     },
     "commentHistory": {
@@ -817,7 +819,6 @@
     },
     "comments": {
       "edit": {
-        "success": "Kommentar erfolgreich bearbeitet",
         "title": "Kommentar bearbeiten",
         "unnamedTag": "<Unbenannter Tag>",
         "unnamedPaywall": "<Unbenannte Paywall>"

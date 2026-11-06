@@ -788,10 +788,12 @@
       "featured": "En vedette",
       "actions": "Actions",
       "comment": "Texte du commentaire",
+      "sections": {
+        "content": "Commentaire"
+      },
       "commentContextHeader": "Historique des commentaires",
       "goToArticle": "Aller à l’article",
       "lead": "Chapeau",
-      "noOverride": "Ne pas remplacer",
       "ratingOverrides": "Remplacer l’évaluation du commentaire",
       "source": "Source",
       "tags": "Tags",
@@ -800,7 +802,7 @@
       "variousPanelHeader": "Tags et source",
       "featuredHelpText": "Le commentaire apparaît en haut de la liste des commentaires.",
       "sourceInfo": "Affiché sur le site à côté du nom de l’auteur·e, p. ex. la provenance du commentaire. Si vous saisissez une adresse web, elle devient un lien.",
-      "ratingOverridesInfo": "Remplace la note moyenne que les lecteur·trice·s voient pour ce commentaire par une valeur fixe. Choisissez « Ne pas remplacer » pour afficher la note réelle.",
+      "ratingOverridesInfo": "Remplace la note moyenne que les lecteur·trice·s voient pour ce commentaire par une valeur fixe. Choisissez « Aucune sélection » pour afficher la note réelle.",
       "goToPage": "Aller à la page"
     },
     "commentHistory": {
@@ -817,7 +819,6 @@
     },
     "comments": {
       "edit": {
-        "success": "Commentaire mis à jour avec succès",
         "title": "Modifier le commentaire",
         "unnamedTag": "<Tag sans nom>",
         "unnamedPaywall": "<Paywall sans nom>"

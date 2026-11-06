@@ -788,10 +788,12 @@
       "featured": "Featured",
       "actions": "Actions",
       "comment": "Comment text",
+      "sections": {
+        "content": "Comment"
+      },
       "commentContextHeader": "Comment history",
       "goToArticle": "Go to article",
       "lead": "Lead",
-      "noOverride": "Don't override",
       "ratingOverrides": "Override comment rating",
       "source": "Source",
       "tags": "Tags",
@@ -800,7 +802,7 @@
       "variousPanelHeader": "Tags & Source",
       "featuredHelpText": "The comment is shown at the top of the comment list.",
       "sourceInfo": "Shown next to the author's name on the website, e.g. where the comment comes from. If you enter a web address, it becomes a link.",
-      "ratingOverridesInfo": "Replaces the average rating that readers see for this comment with a fixed value. Choose \"Don't override\" to show the readers' actual rating.",
+      "ratingOverridesInfo": "Replaces the average rating that readers see for this comment with a fixed value. Choose \"None\" to show the readers' actual rating.",
       "goToPage": "To the page"
     },
     "commentHistory": {
@@ -817,7 +819,6 @@
     },
     "comments": {
       "edit": {
-        "success": "Comment successfully updated",
         "title": "Edit Comment",
         "unnamedTag": "<Unnamed Tag>",
         "unnamedPaywall": "<Unnamed Paywall>"

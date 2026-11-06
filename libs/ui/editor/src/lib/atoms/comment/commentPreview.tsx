@@ -4,26 +4,16 @@ import {
   AccordionSummary,
   Box,
   Button,
-  FormLabel,
   Grid,
   Stack,
-  TextField,
   Typography,
 } from '@mui/material';
 import {
   CommentRevisionFragment,
-  CommentRevisionInput,
   FullCommentFragment,
 } from '@wepublish/editor/api';
 import { toPlaintext } from '@wepublish/richtext';
-import {
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useId,
-  useMemo,
-  useState,
-} from 'react';
+import { useId, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdAttachFile,
@@ -34,8 +24,6 @@ import {
 } from 'react-icons/md';
 import { Link as RouterLink } from 'react-router-dom';
 
-import { RichTextBlock } from '../../blocks/richTextBlock/rich-text-block';
-import { RichTextBlockValue } from '../../blocks/types';
 import { humanReadableCommentState } from './commentStateDropdown';
 import { CreateCommentBtn } from './createCommentBtn';
 
@@ -142,12 +130,7 @@ function CommentSource({
   );
 }
 
-export interface RevisionProps {
-  revision?: CommentRevisionInput;
-  setRevision?: Dispatch<SetStateAction<CommentRevisionInput | undefined>>;
-}
-
-interface CommentPreviewProps extends RevisionProps {
+interface CommentPreviewProps {
   comment: FullCommentFragment;
   originComment?: FullCommentFragment;
 }
@@ -155,13 +138,8 @@ interface CommentPreviewProps extends RevisionProps {
 export function CommentPreview({
   comment,
   originComment,
-  revision,
-  setRevision,
 }: CommentPreviewProps) {
   const { t } = useTranslation();
-  const revisions = comment.revisions;
-  const lastRevision =
-    revisions?.length ? revisions[revisions.length - 1] : undefined;
   const expanded = useMemo(
     () => comment.id === originComment?.id,
     [comment.id, originComment?.id]
@@ -172,18 +150,6 @@ export function CommentPreview({
   );
   const [panelExpanded, setPanelExpanded] = useState<boolean>(!!expanded);
   const panelId = useId();
-  const commentLabelId = useId();
-
-  useEffect(() => {
-    if (!expanded) {
-      return;
-    }
-    const element = document.getElementById(`comment-${comment.id}`);
-    if (!element) {
-      return;
-    }
-    element.scrollIntoView({ behavior: 'smooth' });
-  }, [originComment]);
 
   function getPanelHeader() {
     const createdAtReadable = new Date(displayComment.createdAt).toLocaleString(
@@ -243,95 +209,29 @@ export function CommentPreview({
       </AccordionSummary>
 
       <AccordionDetails>
-        {!expanded && (
+        <Grid
+          container
+          spacing={2}
+          style={{ maxWidth: '100%' }}
+        >
           <Grid
             container
             spacing={2}
             style={{ maxWidth: '100%' }}
           >
-            <Grid
-              container
-              spacing={2}
-              style={{ maxWidth: '100%' }}
-            >
-              <Grid size={{ xs: 9 }}>
-                <CommentRevisionView revision={lastRevision} />
-              </Grid>
-              <Grid size={{ xs: 3 }}>
-                <div>
-                  <CommentTags comment={displayComment} />
-                </div>
-                <div style={{ marginTop: '20px' }}>
-                  <CommentSource comment={displayComment} />
-                </div>
-              </Grid>
+            <Grid size={{ xs: 9 }}>
+              <CommentRevisionView revision={displayComment.revisions.at(-1)} />
+            </Grid>
+            <Grid size={{ xs: 3 }}>
+              <div>
+                <CommentTags comment={displayComment} />
+              </div>
+              <div style={{ marginTop: '20px' }}>
+                <CommentSource comment={displayComment} />
+              </div>
             </Grid>
           </Grid>
-        )}
-        {expanded && (
-          <Grid
-            container
-            spacing={2}
-            style={{ maxWidth: '100%' }}
-          >
-            <Grid
-              container
-              spacing={2}
-            >
-              <Grid size={{ xs: 12 }}>
-                <TextField
-                  name="commentTitle"
-                  label={t('commentEditView.title')}
-                  value={revision?.title || ''}
-                  placeholder={t('commentEditView.title')}
-                  onChange={event => {
-                    if (setRevision) {
-                      const title = event.target.value;
-                      setRevision(oldRevision => ({ ...oldRevision, title }));
-                    }
-                  }}
-                  fullWidth
-                />
-              </Grid>
-              <Grid size={{ xs: 12 }}>
-                <TextField
-                  name="commentLead"
-                  label={t('commentEditView.lead')}
-                  value={revision?.lead || ''}
-                  placeholder={t('commentEditView.lead')}
-                  onChange={event => {
-                    if (setRevision) {
-                      const lead = event.target.value;
-                      setRevision(oldRevision => ({ ...oldRevision, lead }));
-                    }
-                  }}
-                  fullWidth
-                />
-              </Grid>
-              <Grid
-                size={{ xs: 12 }}
-                style={{ marginTop: '20px' }}
-              >
-                <FormLabel id={commentLabelId}>
-                  {t('commentEditView.comment')}
-                </FormLabel>
-
-                <RichTextBlock
-                  aria-labelledby={commentLabelId}
-                  value={revision?.text}
-                  onChange={text => {
-                    if (setRevision) {
-                      setRevision(oldRevision => ({
-                        ...oldRevision,
-                        text: text as RichTextBlockValue['richText'],
-                      }));
-                    }
-                  }}
-                />
-              </Grid>
-            </Grid>
-          </Grid>
-        )}
+        </Grid>
 
         <Grid
           size={{ xs: 12 }}

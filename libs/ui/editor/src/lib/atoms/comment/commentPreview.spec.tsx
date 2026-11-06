@@ -82,12 +82,4 @@ describe('CommentPreview', () => {
       })
     ).toBeInTheDocument();
   });
-
-  it('names the comment editor after its label', () => {
-    renderPreview(comment);
-
-    expect(
-      screen.getByRole('textbox', { name: 'commentEditView.comment' })
-    ).toBeInTheDocument();
-  });
 });
