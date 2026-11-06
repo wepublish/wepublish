@@ -10,7 +10,6 @@ export * from './lib/public.decorator';
 export * from './lib/public.guard';
 export * from './lib/authenticated.decorator';
 export * from './lib/authenticated.guard';
-export * from './lib/unselect-password';
 export * from './lib/scoped-jwt.decorator';
 export * from './lib/scoped-jwt.guard';
 export * from './lib/auth-token.decorator';

@@ -277,3 +277,21 @@ describe('the apps dashboard', () => {
     expect(screen.queryByText(/externalApps\.apiKey\./)).toBeNull();
   });
 });
+
+describe('deleting an external app', () => {
+  it('lands on cancel, not on the irreversible delete', async () => {
+    render(withPermissions([], <ExternalAppForm app={app() as never} />));
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'externalAppForm.delete' })
+    );
+
+    const dialog = await screen.findByRole('dialog');
+
+    await waitFor(() =>
+      expect(
+        within(dialog).getByRole('button', { name: 'cancel' })
+      ).toHaveFocus()
+    );
+  });
+});

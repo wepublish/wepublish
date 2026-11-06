@@ -11,6 +11,7 @@ import { z } from 'zod';
 import cloudflareLogo from './assets/cloudflare.svg';
 import hcaptchaLogo from './assets/hcaptcha.webp';
 import { GenericIntegrationList } from './genericIntegrationList';
+import { secretPlaceholder } from './secretPlaceholder';
 
 const challengeSettingsSchema = z.object({
   name: z.string().nullish().or(z.literal('')),
@@ -42,7 +43,7 @@ export function ChallengeIntegrationForm() {
           hcaptchaLogo
         : cloudflareLogo
       }
-      fields={[
+      fields={setting => [
         {
           name: 'type',
           label: t('integrations.challengeSettings.type'),
@@ -71,7 +72,7 @@ export function ChallengeIntegrationForm() {
           label: t('integrations.challengeSettings.secret'),
           info: t('integrations.challengeSettings.secretInfo'),
           type: 'password',
-          placeholder: t('integrations.placeholderSecret'),
+          placeholder: secretPlaceholder(setting.isSecretSet, t),
           autoComplete: 'one-time-code',
         },
       ]}

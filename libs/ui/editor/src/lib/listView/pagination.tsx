@@ -16,6 +16,7 @@ type PaginationProps = {
   totalCount?: number;
   compact?: boolean;
   className?: string;
+  label?: string;
 };
 
 export function Pagination({
@@ -23,6 +24,7 @@ export function Pagination({
   totalCount,
   compact,
   className,
+  label,
 }: PaginationProps) {
   const { limit, setLimit, page, setPage } = state;
   const { t } = useTranslation();
@@ -49,6 +51,8 @@ export function Pagination({
         <Typography
           variant="body2"
           color="text.secondary"
+          role="status"
+          aria-atomic
         >
           {t('listView.pagination.total', { count: total })}
         </Typography>
@@ -95,6 +99,7 @@ export function Pagination({
         )}
 
         <MuiPagination
+          aria-label={label ?? t('listView.pagination.label')}
           shape="rounded"
           size={compact ? 'small' : 'medium'}
           count={pageCount}
@@ -107,6 +112,22 @@ export function Pagination({
           showFirstButton={!compact}
           showLastButton={!compact}
           onChange={(_event, next) => setPage(next)}
+          getItemAriaLabel={(type, item, selected) => {
+            switch (type) {
+              case 'first':
+                return t('listView.pagination.first');
+              case 'last':
+                return t('listView.pagination.last');
+              case 'next':
+                return t('listView.pagination.next');
+              case 'previous':
+                return t('listView.pagination.previous');
+              default:
+                return selected ?
+                    t('listView.pagination.currentPage', { page: item })
+                  : t('listView.pagination.page', { page: item });
+            }
+          }}
         />
       </Box>
     </Box>

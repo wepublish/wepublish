@@ -351,3 +351,80 @@ describe('MailSendPage (characterisation)', () => {
     });
   });
 });
+
+describe('MailSendPage (accessibility)', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    queries.mockImplementation((name: string) => answer(name));
+  });
+
+  afterEach(cleanup);
+
+  it('names the audience choice', () => {
+    renderPage();
+    goToAudience();
+
+    expect(
+      screen.getByRole('radiogroup', { name: 'mailSend.base.label' })
+    ).toBeTruthy();
+  });
+
+  it('announces the recipient count politely', () => {
+    renderPage();
+    goToAudience();
+
+    expect(
+      screen
+        .getAllByRole('status')
+        .some(status =>
+          status.textContent?.startsWith('mailSend.recipientsCount')
+        )
+    ).toBe(true);
+  });
+
+  it('keeps the static preview hint out of the alert role', () => {
+    renderPage();
+
+    expect(screen.queryByRole('alert')).toBeNull();
+  });
+
+  it('labels the template select of the first step', () => {
+    renderPage();
+
+    expect(
+      screen.getByRole('combobox', { name: /^mailSend\.template/ })
+    ).toBeTruthy();
+  });
+
+  it('moves focus to the next step', () => {
+    renderPage();
+    goToAudience();
+
+    expect(
+      screen.getByRole('heading', {
+        level: 2,
+        name: 'mailSend.audience.title',
+      })
+    ).toHaveFocus();
+  });
+
+  it('labels each audience filter', () => {
+    renderPage();
+    goToAudience();
+    pickBase('hasSubscription');
+
+    for (const name of [
+      'mailSend.emailSegments.label',
+      'mailSend.memberPlans',
+      'mailSend.state.label',
+      'mailSend.autoRenew',
+      'mailSend.paymentMethod',
+      'mailSend.periodicity',
+      'mailSend.isPaid',
+      'mailSend.isCanceled',
+      'mailSend.hasReplacedSubscription',
+    ]) {
+      expect(screen.getByRole('combobox', { name })).toBeTruthy();
+    }
+  });
+});

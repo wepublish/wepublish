@@ -21,9 +21,20 @@ vi.mock('@apollo/client/react', async importOriginal => {
       loading: false,
       refetch: vi.fn(),
     }),
+    useLazyQuery: () => [vi.fn(), { data: undefined, loading: false }],
     useMutation: () => [vi.fn(), { loading: false }],
   };
 });
+
+vi.mock('@wepublish/ui/editor', async importOriginal => ({
+  ...(await importOriginal<typeof import('@wepublish/ui/editor')>()),
+  RichTextBlock: (props: { 'aria-labelledby'?: string }) => (
+    <div
+      role="textbox"
+      aria-labelledby={props['aria-labelledby']}
+    />
+  ),
+}));
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
@@ -63,6 +74,30 @@ const Harness = ({
 };
 
 describe('GoodieForm', () => {
+  it('names the description editor after its label', () => {
+    render(<Harness onSubmit={vi.fn()} />);
+
+    expect(
+      screen.getByRole('textbox', { name: 'goodie.form.description' })
+    ).toBeInTheDocument();
+  });
+
+  it('names the image chooser after its label', () => {
+    render(<Harness onSubmit={vi.fn()} />);
+
+    expect(
+      screen.getByRole('group', { name: 'goodie.form.image' })
+    ).toBeInTheDocument();
+  });
+
+  it('names the member plan picker after its label', () => {
+    render(<Harness onSubmit={vi.fn()} />);
+
+    expect(
+      screen.getByRole('combobox', { name: 'goodie.form.memberPlans' })
+    ).toBeInTheDocument();
+  });
+
   it('lets the editor restrict the goodie to payment periodicities', async () => {
     const onSubmit = vi.fn();
     const { container } = render(<Harness onSubmit={onSubmit} />);

@@ -15,7 +15,7 @@ import {
   TagType,
 } from '@wepublish/editor/api';
 import { CanUpdateEvent } from '@wepublish/permissions';
-import { useReducer, useState } from 'react';
+import { useId, useReducer, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdEdit } from 'react-icons/md';
 import { Link as RouterLink } from 'react-router-dom';
@@ -57,6 +57,7 @@ export function SelectEventPanel({
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
   const { t } = useTranslation();
+  const tagsLabelId = useId();
 
   const { data, loading } = useQuery(EventListDocument, {
     variables: {
@@ -109,9 +110,12 @@ export function SelectEventPanel({
             fullWidth
             sx={{ marginBottom: 3 }}
           >
-            <FormLabel>{t('blocks.event.filterByTag')}</FormLabel>
+            <FormLabel id={tagsLabelId}>
+              {t('blocks.event.filterByTag')}
+            </FormLabel>
 
             <SelectTags
+              aria-labelledby={tagsLabelId}
               defaultTags={[]}
               name="tags"
               tagType={TagType.Event}

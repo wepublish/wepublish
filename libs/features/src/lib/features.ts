@@ -45,6 +45,11 @@ export const FEATURES = [
       'Per-user delivery mode: automated subscription mails printed as letters, with suggestions from the email quality',
     stage: 'alpha',
   },
+  {
+    key: 'video-audio-uploads',
+    description: 'Media: video and audio libraries with uploads',
+    stage: 'alpha',
+  },
 ] as const satisfies readonly Feature[];
 
 export type FeatureKey = (typeof FEATURES)[number]['key'];

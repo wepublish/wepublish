@@ -8,6 +8,7 @@ import { fr } from 'date-fns/locale';
 import { FactuelContentWrapper } from './components/factuel-content-wrapper';
 import { FactuelFooter } from './components/factuel-footer';
 import { FactuelNavbar } from './components/factuel-navbar';
+import { factuelConfig } from './factuel-config';
 import { factuelTenant } from './factuel-tenant';
 import websiteSettings from './fixtures/website-settings.json';
 import frOverridden from './locales/frOverridden.json';
@@ -59,6 +60,17 @@ describe('factuelTenant', () => {
     expect(factuelTenant.builder.elements?.Link).toBeDefined();
     expect(factuelTenant.builder.blocks).toBeUndefined();
     expect(factuelTenant.blockStyles).toBeUndefined();
+  });
+
+  it('is the framework-neutral config plus the next link', () => {
+    expect(factuelConfig.builder.elements).toBeUndefined();
+    expect(factuelTenant).toEqual({
+      ...factuelConfig,
+      builder: {
+        ...factuelConfig.builder,
+        elements: { Link: factuelTenant.builder.elements?.Link },
+      },
+    });
   });
 
   it('does not inject next specific builder props', () => {

@@ -1,4 +1,14 @@
-import { BuilderRenderLeafProps, Link } from '@wepublish/website/builder';
+import {
+  BuilderRenderLeafProps,
+  Button,
+  BuilderButtonProps,
+  Link,
+} from '@wepublish/website/builder';
+
+const buttonLinkColors: Record<string, BuilderButtonProps['color']> = {
+  buttonLinkMain: 'primary',
+  buttonLinkSecondary: 'secondary',
+};
 
 export const RenderLeaf = ({ mark, children }: BuilderRenderLeafProps) => {
   if (mark.type === 'bold') {
@@ -31,10 +41,30 @@ export const RenderLeaf = ({ mark, children }: BuilderRenderLeafProps) => {
       target,
       rel,
       id,
+      variant,
       class: className,
     } = mark.attrs as typeof mark.attrs & {
       class?: string | null;
     };
+
+    const buttonColor = variant ? buttonLinkColors[variant] : undefined;
+
+    if (buttonColor) {
+      return (
+        <Button
+          variant="contained"
+          color={buttonColor}
+          LinkComponent={Link}
+          href={href}
+          target={target}
+          rel={rel}
+          id={id}
+          className={className ?? undefined}
+        >
+          {children}
+        </Button>
+      );
+    }
 
     return (
       <Link

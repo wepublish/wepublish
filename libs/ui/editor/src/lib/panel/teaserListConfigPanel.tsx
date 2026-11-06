@@ -6,6 +6,7 @@ import {
   TeaserListBlockSort,
   TeaserType,
 } from '@wepublish/editor/api';
+import { useId } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
@@ -80,6 +81,7 @@ export function TeaserListConfigPanel({
 }: TeaserListConfigPanelProps) {
   const { t } = useTranslation();
   const teaserTypeText = useTeaserTypeText();
+  const tagsLabelId = useId();
 
   const { control, handleSubmit, setValue } = useForm<TeaserListConfigValues>({
     resolver: zodResolver(teaserListSchema),
@@ -227,13 +229,16 @@ export function TeaserListConfigPanel({
 
           {sort !== TeaserListBlockSort.HotAndTrending && (
             <TagsField>
-              <FormLabel>{t('blocks.teaserList.tagsLabel')}</FormLabel>
+              <FormLabel id={tagsLabelId}>
+                {t('blocks.teaserList.tagsLabel')}
+              </FormLabel>
 
               <Controller
                 control={control}
                 name="tags"
                 render={({ field }) => (
                   <SelectTags
+                    aria-labelledby={tagsLabelId}
                     defaultTags={value.filter.tagObjects}
                     name={field.name}
                     tagType={tagTypeFor(teaserType)}
