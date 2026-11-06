@@ -23,6 +23,16 @@ import { BypassQrDialog } from './routes/paywall/bypassQrDialog';
 import { BypassTokenRow } from './routes/paywall/bypassTokenRow';
 import { PaywallCreateForm } from './routes/paywall/paywallCreateView';
 import { PaywallEditForm } from './routes/paywall/paywallEditView';
+import {
+  PeerCreateForm,
+  PeerDrawer,
+  PeerEditForm,
+} from './routes/peers/peerDrawer';
+import {
+  PeerProfileDrawer,
+  PeerProfileForm,
+} from './routes/peers/peerProfileDrawer';
+import { RemotePeerProfile } from './routes/peers/remotePeerProfile';
 import { TagCreateForm } from './routes/tags/tagCreateView';
 import { TagEditForm } from './routes/tags/tagEditView';
 import { SystemRoleNotice } from './routes/userRoles/systemRoleNotice';
@@ -56,6 +66,12 @@ describe('the editor under test', () => {
     ['PaywallEditForm', PaywallEditForm],
     ['BypassTokenRow', BypassTokenRow],
     ['BypassQrDialog', BypassQrDialog],
+    ['PeerCreateForm', PeerCreateForm],
+    ['PeerEditForm', PeerEditForm],
+    ['PeerDrawer', PeerDrawer],
+    ['RemotePeerProfile', RemotePeerProfile],
+    ['PeerProfileForm', PeerProfileForm],
+    ['PeerProfileDrawer', PeerProfileDrawer],
     ['TagCreateForm', TagCreateForm],
     ['TagEditForm', TagEditForm],
     ['UserRoleCreateForm', UserRoleCreateForm],

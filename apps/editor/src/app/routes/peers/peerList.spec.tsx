@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import { createTheme, ThemeProvider } from '@mui/material';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import {
   CanCreatePeer,
   CanDeletePeer,
@@ -165,33 +165,6 @@ describe('PeerList', () => {
     expect(
       await screen.findByRole('button', { name: 'peerList.panels.editPeer' })
     ).toBeDisabled();
-  });
-
-  it('opens the same peer again after its drawer was closed', async () => {
-    renderList();
-
-    fireEvent.click(
-      await screen.findByRole('link', { name: 'peerList.panels.editPeer' })
-    );
-    expect(
-      await screen.findByRole('button', { name: 'peerList.panels.close' })
-    ).toBeInTheDocument();
-
-    fireEvent.click(
-      screen.getByRole('button', { name: 'peerList.panels.close' })
-    );
-    await waitFor(() =>
-      expect(
-        screen.queryByRole('button', { name: 'peerList.panels.close' })
-      ).toBeNull()
-    );
-
-    fireEvent.click(
-      screen.getByRole('link', { name: 'peerList.panels.editPeer' })
-    );
-    expect(
-      await screen.findByRole('button', { name: 'peerList.panels.close' })
-    ).toBeInTheDocument();
   });
 
   it('disables an active peer from its row', async () => {

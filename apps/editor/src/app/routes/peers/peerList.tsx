@@ -9,7 +9,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Drawer,
   Link,
   Typography,
 } from '@mui/material';
@@ -33,8 +32,6 @@ import {
   DataTable,
   DescriptionList,
   DescriptionListItem,
-  DRAWER_WIDTHS,
-  enqueueSnackbar,
   IconButton,
   IconButtonTooltip,
   InfoTooltip,
@@ -42,8 +39,6 @@ import {
   ListViewContainer,
   ListViewHeader,
   PageTitle,
-  PeerEditPanel,
-  PeerInfoEditPanel,
   PermissionControl,
   TableWrapper,
 } from '@wepublish/ui/editor';
@@ -57,12 +52,11 @@ import {
   MdVisibility,
   MdVisibilityOff,
 } from 'react-icons/md';
-import {
-  Link as RouterLink,
-  useLocation,
-  useNavigate,
-  useParams,
-} from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
+
+import { peerRoutes } from './peer.view';
+import { PeerDrawer } from './peerDrawer';
+import { PeerProfileDrawer } from './peerProfileDrawer';
 
 const ProfileCard = styled(Card)`
   display: flex;
@@ -98,19 +92,6 @@ type Peer = NonNullable<PeerListQuery['peers']>[number];
 const initials = (name?: string | null) => name?.slice(0, 2).toUpperCase();
 
 function PeerList() {
-  const location = useLocation();
-  const params = useParams();
-  const navigate = useNavigate();
-  const { id } = params;
-
-  const isCreateRoute = location.pathname.includes('create');
-  const isPeerEditRoute = location.pathname.includes('peering/edit');
-  const isPeerProfileEditModalOpen = location.pathname.includes(
-    'peering/profile/edit'
-  );
-  const isEditModalOpen = isCreateRoute || isPeerEditRoute;
-  const editID = isPeerEditRoute ? id : undefined;
-
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
   const [currentPeer, setCurrentPeer] = useState<Peer>();
 
@@ -196,7 +177,7 @@ function PeerList() {
           <PermissionControl qualifyingPermissions={[CanUpdatePeerProfile.id]}>
             <Button
               component={RouterLink}
-              to="/peering/profile/edit"
+              to={peerRoutes.profile}
               variant="outlined"
               startIcon={<MdEdit />}
             >
@@ -217,7 +198,7 @@ function PeerList() {
           <ListViewActions>
             <Button
               component={RouterLink}
-              to="/peering/create"
+              to={peerRoutes.create}
               variant="contained"
               startIcon={<MdAdd />}
               disabled={isPeerListLoading}
@@ -394,62 +375,8 @@ function PeerList() {
         />
       </TableWrapper>
 
-      <Drawer
-        anchor="right"
-        slotProps={{
-          paper: {
-            sx: {
-              width: DRAWER_WIDTHS.sm,
-              maxWidth: '100vw',
-            },
-          },
-        }}
-        open={isPeerProfileEditModalOpen}
-        onClose={() => {
-          navigate('/peering');
-        }}
-      >
-        <PeerInfoEditPanel
-          onClose={() => {
-            navigate('/peering');
-          }}
-        />
-      </Drawer>
-
-      <Drawer
-        anchor="right"
-        slotProps={{
-          paper: {
-            sx: {
-              width: DRAWER_WIDTHS.sm,
-              maxWidth: '100vw',
-            },
-          },
-        }}
-        open={isEditModalOpen}
-        onClose={() => {
-          navigate('/peering');
-        }}
-      >
-        {peerInfoData?.peerProfile.hostURL && (
-          <PeerEditPanel
-            id={editID}
-            hostURL={peerInfoData.peerProfile.hostURL}
-            onClose={() => {
-              navigate('/peering');
-            }}
-            onSave={() => {
-              enqueueSnackbar(
-                editID ?
-                  t('peerList.panels.peerUpdated')
-                : t('peerList.panels.peerCreated'),
-                { variant: 'success', autoHideDuration: 2000 }
-              );
-              navigate('/peering');
-            }}
-          />
-        )}
-      </Drawer>
+      <PeerProfileDrawer />
+      <PeerDrawer />
 
       <Dialog
         open={isConfirmationDialogOpen}
