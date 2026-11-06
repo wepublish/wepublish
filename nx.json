@@ -228,6 +228,8 @@
         "libs/event/website/**/*",
         "libs/external-apps/api/**/*",
         "libs/feed/website/**/*",
+        "libs/form/core/**/*",
+        "libs/form/editor/**/*",
         "libs/google-analytics/api/**/*",
         "libs/health/api/**/*",
         "libs/image/website/**/*",

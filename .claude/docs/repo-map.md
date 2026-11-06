@@ -34,6 +34,7 @@ the schema and generated types flow downstream from it.
 | `libs/website` | The **Website Builder** — `builder/` provides `useWebsiteBuilder()`, the provider that lets each tenant override any component. Also `api/` (generated website GraphQL) and `admin/`. |
 | `libs/editor` | Editor shell + `editor/api` (generated editor GraphQL) |
 | `libs/ui` | Shared presentational primitives |
+| `libs/form` | Schema-driven editor forms: `form/core` (framework-free engine on react-hook-form + `zod/v4`) and `form/editor` (`editorForm`, MUI fields, pickers). New and migrated editor forms use it: [README](../../libs/form/README.md) |
 | `libs/utils` | Shared helpers, split `utils/api` and `utils/website` |
 | `libs/testing` | API test helpers — see [testing.md](testing.md) |
 | `libs/mocks/website` | `@wepublish/mocks/website`: seeded fake API data, Apollo mocks and `renderWithProviders` for website specs. Hidden from Nx: [README](../../libs/mocks/website/README.md) |

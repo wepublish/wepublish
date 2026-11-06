@@ -70,6 +70,11 @@
       "@wepublish/event/website": ["libs/event/website/src/index.ts"],
       "@wepublish/external-apps/api": ["libs/external-apps/api/src/index.ts"],
       "@wepublish/feed/website": ["libs/feed/website/src/index.ts"],
+      "@wepublish/form/core": ["libs/form/core/src/index.ts"],
+      "@wepublish/form/editor": ["libs/form/editor/src/index.ts"],
+      "@wepublish/form/editor/testing": [
+        "libs/form/editor/src/testing/index.tsx"
+      ],
       "@wepublish/google-analytics/api": [
         "libs/google-analytics/api/src/index.ts"
       ],
