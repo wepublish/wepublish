@@ -56,6 +56,7 @@ const blockStylesMock = [
 
 const defaultProps: ComponentProps<typeof TemplateEditorLayout> = {
   i18nPrefix: 'thingTemplates',
+  title: 'Edit thing template',
   backPath: '/things/templates',
   permissions: { create: 'CREATE', update: 'UPDATE' },
   isNew: false,
@@ -99,6 +100,24 @@ beforeEach(() => {
 });
 
 describe('TemplateEditorLayout', () => {
+  it('should name the page with a level one heading', () => {
+    renderLayout();
+
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'Edit thing template' })
+    ).toBeInTheDocument();
+  });
+
+  it('should announce unsaved changes on the save button', () => {
+    renderLayout({ hasChanged: true });
+
+    expect(
+      screen.getByRole('button', {
+        name: 'save, articleEditor.unsavedChanges',
+      })
+    ).toBeInTheDocument();
+  });
+
   it('should edit the name of the template', () => {
     const onNameChange = vi.fn();
     renderLayout({ onNameChange });

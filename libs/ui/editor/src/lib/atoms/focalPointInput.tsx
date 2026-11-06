@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 
 import { useLayoutEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { MdCropSquare } from 'react-icons/md';
 
 import { Draggable, DraggableContainer, Point } from './draggable';
@@ -84,6 +85,7 @@ export function FocalPointInput({
   disabled,
   onChange,
 }: FocalPointInputProps) {
+  const { t } = useTranslation();
   const containerRef = useRef<HTMLDivElement>(null);
   const imageContainer = useRef<HTMLDivElement>(null);
 
@@ -134,6 +136,13 @@ export function FocalPointInput({
                   point={focalPoint}
                   onChange={onChange}
                   disabled={disabled}
+                  label={t('images.panels.focalPoint')}
+                  valueText={point =>
+                    t('images.panels.focalPointPosition', {
+                      x: Math.round(point.x * 100),
+                      y: Math.round(point.y * 100),
+                    })
+                  }
                 >
                   <FocalPoint />
                 </Draggable>

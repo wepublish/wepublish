@@ -214,7 +214,7 @@ describe('ArticleTemplateEditView', () => {
     renderWithTheme(view());
 
     fireEvent.change(nameInput(), { target: { value: 'Renamed Template' } });
-    fireEvent.click(screen.getByRole('button', { name: /^save$/i }));
+    fireEvent.click(screen.getByRole('button', { name: /^save(,|$)/i }));
 
     await waitFor(() => expect(updateArticleTemplate).toHaveBeenCalled());
 
@@ -468,14 +468,16 @@ describe('ArticleTemplateEditView', () => {
       renderWithTheme(view());
 
       expect(nameInput()).toBeEnabled();
-      expect(screen.getByRole('button', { name: /^save$/i })).toBeEnabled();
+      expect(screen.getByRole('button', { name: /^save(,|$)/i })).toBeEnabled();
     });
 
     it('should not allow saving an existing template with the create permission only', () => {
       onlyPermitted(CanCreateArticleTemplate.id);
       renderWithTheme(view());
 
-      expect(screen.getByRole('button', { name: /^save$/i })).toBeDisabled();
+      expect(
+        screen.getByRole('button', { name: /^save(,|$)/i })
+      ).toBeDisabled();
     });
 
     it('should allow creating a template with the create permission', () => {

@@ -22,6 +22,14 @@ vi.mock('./member-plan.model', () => ({
   MemberPlanListArgs: class {},
   CreateMemberPlanInput: class {},
   UpdateMemberPlanInput: class {},
+  // emitDecoratorMetadata turns every decorated parameter type into a runtime
+  // reference, so the classes member-plan.service.ts imports have to exist on
+  // the mock even though the tests never touch them.
+  MemberPlanFilter: class {},
+  MemberPlanListArgs: class {},
+  CreateMemberPlanInput: class {},
+  UpdateMemberPlanInput: class {},
+  PeriodicityPriceInput: class {},
 }));
 
 describe('MemberPlanService cache', () => {

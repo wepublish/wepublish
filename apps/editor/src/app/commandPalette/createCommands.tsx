@@ -8,6 +8,7 @@ import {
   CanCreateConsent,
   CanCreateCrowdfunding,
   CanCreateDiscountCode,
+  CanCreateAudio,
   CanCreateDocument,
   CanCreateEvent,
   CanCreateGoodie,
@@ -26,6 +27,7 @@ import {
   CanCreateUser,
   CanCreateUserConsent,
   CanCreateUserRole,
+  CanCreateVideo,
 } from '@wepublish/permissions';
 import {
   MdAccountCircle,
@@ -38,6 +40,7 @@ import {
   MdCountertops,
   MdCreditCard,
   MdDashboard,
+  MdAudiotrack,
   MdDescription,
   MdEvent,
   MdFactCheck,
@@ -53,6 +56,7 @@ import {
   MdSell,
   MdSignpost,
   MdVpnKey,
+  MdVideoLibrary,
 } from 'react-icons/md';
 
 import type { CommandDefinition } from './commandDefinition';
@@ -155,6 +159,22 @@ export const CREATE_COMMANDS: CommandDefinition[] = [
     icon: <MdDescription />,
     permissions: [CanCreateDocument.id],
     perform: ({ navigate }) => navigate('/documents/upload'),
+  },
+  {
+    id: 'uploadVideo',
+    titleKey: 'commandPalette.create.video',
+    icon: <MdVideoLibrary />,
+    permissions: [CanCreateVideo.id],
+    feature: 'video-audio-uploads',
+    perform: ({ navigate }) => navigate('/videos/upload'),
+  },
+  {
+    id: 'uploadAudio',
+    titleKey: 'commandPalette.create.audio',
+    icon: <MdAudiotrack />,
+    permissions: [CanCreateAudio.id],
+    feature: 'video-audio-uploads',
+    perform: ({ navigate }) => navigate('/audio/upload'),
   },
   {
     id: 'createNavigation',
