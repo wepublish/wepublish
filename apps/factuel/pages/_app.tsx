@@ -12,7 +12,7 @@ import {
   NavbarContainer,
 } from '@wepublish/navigation/website';
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
-import { factuelTenant } from '@wepublish/tenant/factuel';
+import { courantTenant } from '@wepublish/tenant/factuel';
 import {
   authLink,
   getWebsiteShell,
@@ -41,12 +41,12 @@ import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
 setDefaultOptions({
-  locale: factuelTenant.dateLocale,
+  locale: courantTenant.dateLocale,
 });
 
 initWePublishTranslator(
-  factuelTenant.translations.overrides?.[factuelTenant.translations.lng]
-).changeLanguage(factuelTenant.translations.lng);
+  courantTenant.translations.overrides?.[courantTenant.translations.lng]
+).changeLanguage(courantTenant.translations.lng);
 
 z.setErrorMap(zodI18nMap);
 
@@ -90,7 +90,7 @@ function CustomApp({
   emotionCache,
   websiteSettings,
 }: CustomAppProps) {
-  const siteTitle = factuelTenant.builder.meta?.siteTitle;
+  const siteTitle = courantTenant.builder.meta?.siteTitle;
 
   // Emotion cache from _document is not supplied when client side rendering
   // Compat removes certain warnings that are irrelevant to us
@@ -113,7 +113,7 @@ function CustomApp({
     >
       <AppCacheProvider emotionCache={cache}>
         <TenantProviders
-          config={factuelTenant}
+          config={courantTenant}
           settingsTheme={settings?.theme as ThemeOptions | undefined}
           extra={{ Head, Script }}
         >

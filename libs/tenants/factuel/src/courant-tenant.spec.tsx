@@ -5,24 +5,24 @@ import { minimalTheme } from '@wepublish/ui';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { fr } from 'date-fns/locale';
 
-import { FactuelContentWrapper } from './components/factuel-content-wrapper';
-import { FactuelFooter } from './components/factuel-footer';
-import { FactuelNavbar } from './components/factuel-navbar';
-import { factuelTenant } from './factuel-tenant';
+import { CourantContentWrapper } from './components/courant-content-wrapper';
+import { CourantFooter } from './components/courant-footer';
+import { CourantNavbar } from './components/courant-navbar';
+import { courantTenant } from './courant-tenant';
 import websiteSettings from './fixtures/website-settings.json';
 import frOverridden from './locales/frOverridden.json';
 
-describe('factuelTenant', () => {
+describe('courantTenant', () => {
   it('identifies the tenant', () => {
-    expect(factuelTenant.id).toBe('factuel');
-    expect(factuelTenant.builder.meta).toEqual({
+    expect(courantTenant.id).toBe('factuel');
+    expect(courantTenant.builder.meta).toEqual({
       siteTitle: 'Courant',
       locale: 'fr-CH',
     });
   });
 
   it('builds the minimal theme when no settings theme is given', () => {
-    const theme = factuelTenant.createTheme();
+    const theme = courantTenant.createTheme();
 
     expect(theme.palette.primary.main).toBe(minimalTheme.palette.primary.main);
     expect(theme.typography.fontFamily).toBe(
@@ -31,7 +31,7 @@ describe('factuelTenant', () => {
   });
 
   it('lets the website settings theme win over the minimal theme', () => {
-    const theme = factuelTenant.createTheme({
+    const theme = courantTenant.createTheme({
       palette: { primary: { main: '#123456' } },
       typography: { fontFamily: 'Settings Font' },
     });
@@ -41,39 +41,39 @@ describe('factuelTenant', () => {
   });
 
   it('carries the french translation overrides and date locale', () => {
-    expect(factuelTenant.translations).toEqual({
+    expect(courantTenant.translations).toEqual({
       lng: 'fr',
       overrides: { fr: frOverridden },
     });
-    expect(factuelTenant.dateLocale).toBe(fr);
+    expect(courantTenant.dateLocale).toBe(fr);
   });
 
   it('overrides the components the app overrode', () => {
-    expect(factuelTenant.builder).toEqual(
+    expect(courantTenant.builder).toEqual(
       expect.objectContaining({
-        ContentWrapper: FactuelContentWrapper,
-        Navbar: FactuelNavbar,
-        Footer: FactuelFooter,
+        ContentWrapper: CourantContentWrapper,
+        Navbar: CourantNavbar,
+        Footer: CourantFooter,
       })
     );
-    expect(factuelTenant.builder.elements?.Link).toBeDefined();
-    expect(factuelTenant.builder.blocks).toBeUndefined();
-    expect(factuelTenant.blockStyles).toBeUndefined();
+    expect(courantTenant.builder.elements?.Link).toBeDefined();
+    expect(courantTenant.builder.blocks).toBeUndefined();
+    expect(courantTenant.blockStyles).toBeUndefined();
   });
 
   it('does not inject next specific builder props', () => {
-    expect(factuelTenant.builder).not.toHaveProperty('Head');
-    expect(factuelTenant.builder).not.toHaveProperty('Script');
-    expect(factuelTenant.builder).not.toHaveProperty('thirdParty');
+    expect(courantTenant.builder).not.toHaveProperty('Head');
+    expect(courantTenant.builder).not.toHaveProperty('Script');
+    expect(courantTenant.builder).not.toHaveProperty('thirdParty');
   });
 
-  it('formats dates the factuel way', () => {
+  it('formats dates the Courant way', () => {
     const date = new Date(2024, 0, 5, 9, 7);
 
-    expect(factuelTenant.builder.date?.format?.(date)).toBe(
+    expect(courantTenant.builder.date?.format?.(date)).toBe(
       '05. janvier 2024 à 09:07'
     );
-    expect(factuelTenant.builder.date?.format?.(date, false)).toBe(
+    expect(courantTenant.builder.date?.format?.(date, false)).toBe(
       '05. janvier 2024'
     );
   });
@@ -81,9 +81,9 @@ describe('factuelTenant', () => {
 
 const settingsTheme = websiteSettings.theme as unknown as ThemeOptions;
 
-const factuelWithSettings = {
-  ...factuelTenant,
-  createTheme: () => factuelTenant.createTheme(settingsTheme),
+const courantWithSettings = {
+  ...courantTenant,
+  createTheme: () => courantTenant.createTheme(settingsTheme),
 };
 
 const TenantPage = () => {
@@ -111,9 +111,9 @@ const TenantPage = () => {
   );
 };
 
-describe('a page rendered with the factuel tenant and its website settings', () => {
+describe('a page rendered with the Courant tenant and its website settings', () => {
   it('uses the primary colour from the website settings', () => {
-    renderWithProviders(<TenantPage />, { tenant: factuelWithSettings });
+    renderWithProviders(<TenantPage />, { tenant: courantWithSettings });
 
     expect(
       getComputedStyle(screen.getByRole('button', { name: 'Abonner' }))
@@ -122,7 +122,7 @@ describe('a page rendered with the factuel tenant and its website settings', () 
   });
 
   it('sets the block titles in the font from the website settings', () => {
-    renderWithProviders(<TenantPage />, { tenant: factuelWithSettings });
+    renderWithProviders(<TenantPage />, { tenant: courantWithSettings });
 
     expect(
       getComputedStyle(

@@ -1,8 +1,8 @@
 export {
-  FactuelContentFullWidth,
-  FactuelContentWrapper,
-} from './components/factuel-content-wrapper';
-export * from './components/factuel-footer';
-export * from './components/factuel-navbar';
-export * from './factuel-tenant';
-export { default as factuelTheme } from './theme';
+  CourantContentFullWidth,
+  CourantContentWrapper,
+} from './components/courant-content-wrapper';
+export * from './components/courant-footer';
+export * from './components/courant-navbar';
+export * from './courant-tenant';
+export { default as courantTheme } from './theme';

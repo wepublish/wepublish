@@ -9,7 +9,7 @@ import { Navbar } from '@wepublish/navigation/website';
 import { t } from 'i18next';
 import { ComponentProps, ComponentType } from 'react';
 
-import { FactuelNavbar } from './factuel-navbar';
+import { CourantNavbar } from './courant-navbar';
 
 const navigations = [
   ...mockNavigations(),
@@ -45,7 +45,7 @@ const headerLink = () => screen.queryByRole('link', { name: 'Agenda' });
 const subscribeLink = () =>
   screen.queryByRole('link', { name: t('navbar.subscribe') });
 
-describe('FactuelNavbar', () => {
+describe('CourantNavbar', () => {
   it('shows neither the menu, the header links nor the subscribe button', () => {
     const { unmount } = renderNavbar(Navbar);
 
@@ -54,7 +54,7 @@ describe('FactuelNavbar', () => {
     expect(subscribeLink()).toBeInTheDocument();
     unmount();
 
-    renderNavbar(FactuelNavbar);
+    renderNavbar(CourantNavbar);
 
     expect(menuButton()).not.toBeInTheDocument();
     expect(headerLink()).not.toBeInTheDocument();

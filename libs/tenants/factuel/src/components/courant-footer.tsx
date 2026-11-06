@@ -13,7 +13,7 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 
-export const FactuelFooterContact = styled(FooterCategory)`
+export const CourantFooterContact = styled(FooterCategory)`
   order: -1;
   gap: ${({ theme }) => theme.spacing(2)};
 
@@ -24,7 +24,7 @@ export const FactuelFooterContact = styled(FooterCategory)`
   }
 `;
 
-export const FactuelFooterContactLinks = styled(FooterCategoryLinks)`
+export const CourantFooterContactLinks = styled(FooterCategoryLinks)`
   gap: ${({ theme }) => theme.spacing(1)};
   font-weight: ${({ theme }) => theme.typography.fontWeightRegular};
   color: ${({ theme }) => alpha(theme.palette.common.white, 0.8)};
@@ -39,7 +39,7 @@ export const FactuelFooterContactLinks = styled(FooterCategoryLinks)`
   }
 `;
 
-export const FactuelFooterBrand = styled(FooterName)`
+export const CourantFooterBrand = styled(FooterName)`
   font-size: ${({ theme }) => theme.typography.h5.fontSize};
   text-transform: none;
   color: ${({ theme }) => theme.palette.common.white};
@@ -57,17 +57,17 @@ const StyledFooter = styled(Footer)`
   }
 `;
 
-export const FactuelFooter = (props: BuilderFooterProps) => {
+export const CourantFooter = (props: BuilderFooterProps) => {
   const {
     elements: { H6 },
   } = useWebsiteBuilder();
 
   return (
     <StyledFooter {...props}>
-      <FactuelFooterContact>
-        <FactuelFooterBrand>courant.ch</FactuelFooterBrand>
+      <CourantFooterContact>
+        <CourantFooterBrand>courant.ch</CourantFooterBrand>
 
-        <FactuelFooterContactLinks>
+        <CourantFooterContactLinks>
           <H6 component="span">
             Association Pour un nouveau journalisme genevois
           </H6>
@@ -81,8 +81,8 @@ export const FactuelFooter = (props: BuilderFooterProps) => {
               contact@courant.ch
             </Link>
           </H6>
-        </FactuelFooterContactLinks>
-      </FactuelFooterContact>
+        </CourantFooterContactLinks>
+      </CourantFooterContact>
     </StyledFooter>
   );
 };

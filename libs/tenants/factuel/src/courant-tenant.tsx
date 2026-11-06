@@ -6,29 +6,29 @@ import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { mergeDeepRight } from 'ramda';
 
-import { FactuelContentWrapper } from './components/factuel-content-wrapper';
-import { FactuelFooter } from './components/factuel-footer';
-import { FactuelNavbar } from './components/factuel-navbar';
+import { CourantContentWrapper } from './components/courant-content-wrapper';
+import { CourantFooter } from './components/courant-footer';
+import { CourantNavbar } from './components/courant-navbar';
 import frOverridden from './locales/frOverridden.json';
-import factuelTheme from './theme';
+import courantTheme from './theme';
 
 const dateFormatter = (date: Date, includeTime = true) =>
   includeTime ?
     `${format(date, 'dd. MMMM yyyy', { locale: fr })} à ${format(date, 'HH:mm', { locale: fr })}`
   : format(date, 'dd. MMMM yyyy', { locale: fr });
 
-export const factuelTenant: WebsiteTenantConfig = {
+export const courantTenant: WebsiteTenantConfig = {
   id: 'factuel',
   name: 'Courant',
   createTheme: settingsTheme =>
     createTheme(
       minimalTheme,
-      mergeDeepRight(factuelTheme, (settingsTheme ?? {}) as object)
+      mergeDeepRight(courantTheme, (settingsTheme ?? {}) as object)
     ),
   builder: {
-    ContentWrapper: FactuelContentWrapper,
-    Navbar: FactuelNavbar,
-    Footer: FactuelFooter,
+    ContentWrapper: CourantContentWrapper,
+    Navbar: CourantNavbar,
+    Footer: CourantFooter,
     elements: { Link: NextWepublishLink },
     date: { format: dateFormatter },
     meta: { siteTitle: 'Courant', locale: 'fr-CH' },

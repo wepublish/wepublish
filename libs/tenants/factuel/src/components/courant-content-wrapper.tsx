@@ -1,12 +1,12 @@
 import styled from '@emotion/styled';
 import { ContentWrapperStyled } from '@wepublish/content/website';
 
-export const FactuelContentFullWidth = styled.div`
+export const CourantContentFullWidth = styled.div`
   display: grid;
   row-gap: var(--page-content-row-gap);
 `;
 
-export const FactuelContentWrapper = styled(ContentWrapperStyled)`
+export const CourantContentWrapper = styled(ContentWrapperStyled)`
   display: grid;
   row-gap: var(--page-content-row-gap);
 

@@ -1,11 +1,11 @@
 import { screen } from '@testing-library/react';
 import { mockNavigations, renderWithProviders } from '@wepublish/mocks/website';
 
-import { FactuelFooter } from './factuel-footer';
+import { CourantFooter } from './courant-footer';
 
 const renderFooter = () =>
   renderWithProviders(
-    <FactuelFooter
+    <CourantFooter
       data={{ __typename: 'Query', navigations: mockNavigations() }}
       loading={false}
       slug="main"
@@ -15,7 +15,7 @@ const renderFooter = () =>
     />
   );
 
-describe('FactuelFooter', () => {
+describe('CourantFooter', () => {
   it('shows who publishes courant and how to reach them', () => {
     renderFooter();
 
