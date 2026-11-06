@@ -109,6 +109,9 @@ import { WebsiteAds } from './routes/website-settings/website-ads';
 import { WebsiteAnalytics } from './routes/website-settings/website-analytics';
 import { WebsiteFontRow } from './routes/website-settings/website-font-row';
 import { WebsiteFonts } from './routes/website-settings/website-fonts';
+import { WebsiteTheme } from './routes/website-settings/website-theme';
+import { WebsiteThemeTabs } from './routes/website-settings/website-theme-tabs';
+import { WebsiteThemeTransfer } from './routes/website-settings/website-theme-transfer';
 
 const isCompiled = (code: string) => /\$\[\d+\]/.test(code);
 
@@ -198,6 +201,9 @@ describe('the editor under test', () => {
     ['WebsiteFonts', WebsiteFonts],
     ['WebsiteFontRow', WebsiteFontRow],
     ['FontPickerField', FontPickerField],
+    ['WebsiteTheme', WebsiteTheme],
+    ['WebsiteThemeTabs', WebsiteThemeTabs],
+    ['WebsiteThemeTransfer', WebsiteThemeTransfer],
   ])(
     'runs %s through the React Compiler like the production build',
     (_name, component) => {

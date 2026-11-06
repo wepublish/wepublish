@@ -1,4 +1,4 @@
-import { typographySchema } from './schema';
+import { typographySchema } from './theme.schema';
 import { typographyGroups } from './typography-groups';
 
 describe('typographyGroups', () => {

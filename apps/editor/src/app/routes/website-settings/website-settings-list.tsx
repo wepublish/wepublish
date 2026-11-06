@@ -32,10 +32,10 @@ import {
   MdWarning,
 } from 'react-icons/md';
 import { Link as RouterLink } from 'react-router-dom';
-import { z } from 'zod';
+import type { z } from 'zod/v4';
 
 import { ThemeColorItem } from './theme/palette-list-item';
-import { themeSchema } from './theme/schema';
+import type { themeSchema } from './theme/theme.schema';
 
 const WebsiteSettingsListWrapper = styled.div`
   display: grid;

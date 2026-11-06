@@ -15,7 +15,8 @@ const unitConfig: UnitConfig = {
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
-    t: (key: string) => key,
+    t: (key: string, options?: Record<string, unknown>) =>
+      options ? `${key} ${JSON.stringify(options)}` : key,
     i18n: { language: 'en' },
   }),
 }));
@@ -180,6 +181,18 @@ describe('LengthSlider', () => {
       screen.getByRole('slider', { name: 'Letter spacing' })
     ).toHaveAccessibleDescription(
       'Helper Value must be between -0.1em and 0.2em.'
+    );
+  });
+
+  it('translates a validation key with its parameters', () => {
+    renderSlider('1em', {
+      type: 'custom',
+      message: 'websiteSettings.theme.lengthOutOfRange',
+      params: { min: '-0.1em', max: '0.2em' },
+    } as FieldError);
+
+    expect(input()).toHaveAccessibleDescription(
+      'Helper websiteSettings.theme.lengthOutOfRange {"min":"-0.1em","max":"0.2em"}'
     );
   });
 

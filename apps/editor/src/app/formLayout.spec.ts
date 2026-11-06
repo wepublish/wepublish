@@ -178,6 +178,7 @@ import { demoView } from './demo.view';
         'apps/editor/src/app/routes/website-settings/website-analytics.tsx',
         'apps/editor/src/app/routes/website-settings/website-font-row.tsx',
         'apps/editor/src/app/routes/website-settings/website-fonts.tsx',
+        'apps/editor/src/app/routes/website-settings/website-theme.tsx',
         'libs/banner/editor/src/lib/create-banner-form.tsx',
         'libs/banner/editor/src/lib/edit-banner-form.tsx',
         'libs/consent/editor/src/lib/consent-create-view.tsx',

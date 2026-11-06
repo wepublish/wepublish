@@ -111,8 +111,8 @@ export const TypographyTab = memo<TypographyTabProps>(({ name }) => {
       <Box
         sx={{
           position: 'sticky',
-          top: theme.spacing(3),
-          maxHeight: `calc(100vh - ${theme.spacing(6)})`,
+          top: `calc(var(--wep-sticky-top, 0px) + ${theme.spacing(3)})`,
+          maxHeight: `calc(100vh - var(--wep-sticky-top, 0px) - var(--wep-page-padding-y, 0px) - ${theme.spacing(6)})`,
           overflowY: 'auto',
           border: 1,
           borderColor: 'divider',

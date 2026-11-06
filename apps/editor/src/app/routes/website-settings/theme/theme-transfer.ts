@@ -1,29 +1,22 @@
 import { createTheme } from '@mui/material';
-import {
-  FontStyle,
-  FontWeight,
-  WebsiteRemoteFontInput,
-} from '@wepublish/editor/api';
+import { WebsiteRemoteFontInput } from '@wepublish/editor/api';
 import { minimalTheme } from '@wepublish/ui';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
-import { normalizeTheme, themeSchema } from './schema';
+import {
+  type Theme,
+  normalizeTheme,
+  themeFontSchema,
+  themeSchema,
+} from './theme.schema';
 
 export const THEME_EXPORT_VERSION = 1;
-
-type Theme = z.infer<typeof themeSchema>;
 
 export type ThemeExport = {
   version: typeof THEME_EXPORT_VERSION;
   theme: Theme;
   fonts: WebsiteRemoteFontInput[];
 };
-
-const fontSchema = z.object({
-  name: z.string().min(1),
-  weight: z.array(z.nativeEnum(FontWeight)),
-  style: z.array(z.nativeEnum(FontStyle)),
-});
 
 const isObject = (value: unknown): value is Record<string, unknown> =>
   !!value && typeof value === 'object' && !Array.isArray(value);
@@ -91,7 +84,7 @@ export const parseThemeImport = (
     )
   );
   const fonts =
-    isCurrentFormat ? z.array(fontSchema).parse(json['fonts'] ?? []) : [];
+    isCurrentFormat ? z.array(themeFontSchema).parse(json['fonts'] ?? []) : [];
 
   return { theme, fonts };
 };
