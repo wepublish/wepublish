@@ -307,14 +307,15 @@
       },
       "panels": {
         "bioInformation": "Éléments biographiques",
-        "close": "Fermer",
         "createAuthor": "Créer un·e auteur·trice",
         "editAuthor": "Modifier l’auteur·trice",
         "image": "Image",
         "jobTitle": "Fonction",
         "link": "Lien",
         "links": "Liens",
+        "addLink": "Ajouter un lien",
         "name": "Nom",
+        "slugTaken": "L’URL « {{slug}} » issue de ce nom est déjà prise. Veuillez choisir un autre nom.",
         "title": "Titre",
         "tags": "Tags"
       }
@@ -3200,7 +3201,7 @@
       }
     },
     "authorEditPanel": {
-      "hideAuthor": "Masquer les auteurs",
+      "hideAuthor": "Masquer l’auteur·trice",
       "hideOnTeam": "Masquer sur la page de l’équipe",
       "hideOnArticle": "Masquer sur les articles",
       "hideOnTeaser": "Masquer sur les teasers"

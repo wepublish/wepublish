@@ -6,7 +6,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Drawer,
   InputAdornment,
   TextField,
 } from '@mui/material';
@@ -23,12 +22,10 @@ import {
   CanGetAuthors,
 } from '@wepublish/permissions';
 import {
-  AuthorEditPanel,
   createCheckedPermissionComponent,
   DataTable,
   DescriptionList,
   DescriptionListItem,
-  DRAWER_WIDTHS,
   IconButton,
   IconButtonTooltip,
   Link,
@@ -46,12 +43,10 @@ import {
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete, MdSearch } from 'react-icons/md';
-import {
-  Link as RouterLink,
-  useLocation,
-  useNavigate,
-  useParams,
-} from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
+
+import { authorRoutes } from './author.view';
+import { AuthorDrawer } from './authorDrawer';
 
 function mapColumFieldToGraphQLField(columnField: string): AuthorSort | null {
   switch (columnField) {
@@ -68,17 +63,6 @@ function mapColumFieldToGraphQLField(columnField: string): AuthorSort | null {
 
 function AuthorList() {
   const { t } = useTranslation();
-  const location = useLocation();
-  const params = useParams();
-  const navigate = useNavigate();
-  const { id } = params;
-
-  const isCreateRoute = location.pathname.includes('create');
-  const isEditRoute = location.pathname.includes('edit');
-
-  const isEditModalOpen = isEditRoute || isCreateRoute;
-  const editID = isEditRoute ? id : undefined;
-  const closeDrawer = () => navigate('/authors');
 
   const [page, setPage] = useState(1);
   const { filter, setFilter, sortField, sortOrder, setSort, limit, setLimit } =
@@ -139,7 +123,7 @@ function AuthorList() {
           <ListViewActions>
             <Button
               component={RouterLink}
-              to="/authors/create"
+              to={authorRoutes.create}
               variant="contained"
               startIcon={<MdAdd />}
               disabled={isLoading}
@@ -258,26 +242,6 @@ function AuthorList() {
         />
       </TableWrapper>
 
-      <Drawer
-        anchor="right"
-        slotProps={{
-          paper: {
-            sx: {
-              width: DRAWER_WIDTHS.sm,
-              maxWidth: '100vw',
-            },
-          },
-        }}
-        open={isEditModalOpen}
-        onClose={closeDrawer}
-      >
-        <AuthorEditPanel
-          id={editID}
-          onClose={closeDrawer}
-          onSave={closeDrawer}
-        />
-      </Drawer>
-
       <Dialog
         open={isConfirmationDialogOpen}
         onClose={() => setConfirmationDialogOpen(false)}
@@ -322,6 +286,8 @@ function AuthorList() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <AuthorDrawer />
     </>
   );
 }

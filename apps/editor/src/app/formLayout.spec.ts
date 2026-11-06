@@ -161,6 +161,7 @@ import { demoView } from './demo.view';
   it('scans the migrated forms and their item layouts', () => {
     expect(checkedFiles().map(file => relative(root, file))).toEqual(
       expect.arrayContaining([
+        'apps/editor/src/app/routes/authors/authorDrawer.tsx',
         'apps/editor/src/app/routes/events/eventCreateView.tsx',
         'apps/editor/src/app/routes/events/eventEditView.tsx',
         'apps/editor/src/app/routes/navigations/navigationDrawer.tsx',
