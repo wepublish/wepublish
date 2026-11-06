@@ -9,6 +9,11 @@ import {
   NavigationDrawer,
   NavigationEditForm,
 } from './routes/navigations/navigationDrawer';
+import {
+  PaymentMethodCreateForm,
+  PaymentMethodDrawer,
+  PaymentMethodEditForm,
+} from './routes/paymentMethods/paymentMethodDrawer';
 import { BypassQrDialog } from './routes/paywall/bypassQrDialog';
 import { BypassTokenRow } from './routes/paywall/bypassTokenRow';
 import { PaywallCreateForm } from './routes/paywall/paywallCreateView';
@@ -36,6 +41,9 @@ describe('the editor under test', () => {
     ['NavigationCreateForm', NavigationCreateForm],
     ['NavigationEditForm', NavigationEditForm],
     ['NavigationDrawer', NavigationDrawer],
+    ['PaymentMethodCreateForm', PaymentMethodCreateForm],
+    ['PaymentMethodEditForm', PaymentMethodEditForm],
+    ['PaymentMethodDrawer', PaymentMethodDrawer],
     ['PaywallCreateForm', PaywallCreateForm],
     ['PaywallEditForm', PaywallEditForm],
     ['BypassTokenRow', BypassTokenRow],

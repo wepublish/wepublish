@@ -5,7 +5,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Drawer,
 } from '@mui/material';
 import {
   DeletePaymentMethodDocument,
@@ -23,7 +22,6 @@ import {
   DataTable,
   DescriptionList,
   DescriptionListItem,
-  DRAWER_WIDTHS,
   IconButton,
   IconButtonTooltip,
   InfoTooltip,
@@ -31,7 +29,6 @@ import {
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
-  PaymentMethodEditPanel,
   PermissionControl,
   TableWrapper,
   PageTitle,
@@ -39,12 +36,10 @@ import {
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete } from 'react-icons/md';
-import {
-  Link as RouterLink,
-  useLocation,
-  useNavigate,
-  useParams,
-} from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
+
+import { paymentMethodRoutes } from './paymentMethod.view';
+import { PaymentMethodDrawer } from './paymentMethodDrawer';
 
 const hasBrokenPaymentProvider = ({
   paymentProvider,
@@ -52,17 +47,6 @@ const hasBrokenPaymentProvider = ({
 
 function PaymentMethodList() {
   const { t } = useTranslation();
-  const location = useLocation();
-  const params = useParams();
-  const navigate = useNavigate();
-  const { id } = params;
-
-  const isCreateRoute = location.pathname.includes('create');
-  const isEditRoute = location.pathname.includes('edit');
-
-  const isEditModalOpen = isEditRoute || isCreateRoute;
-  const editID = isEditRoute ? id : undefined;
-  const closeDrawer = () => navigate('/paymentmethods');
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
   const [currentPaymentMethod, setCurrentPaymentMethod] =
@@ -90,7 +74,7 @@ function PaymentMethodList() {
           <ListViewActions>
             <Button
               component={RouterLink}
-              to="/paymentmethods/create"
+              to={paymentMethodRoutes.create}
               variant="contained"
               disabled={isLoading}
               startIcon={<MdAdd />}
@@ -172,32 +156,6 @@ function PaymentMethodList() {
         />
       </TableWrapper>
 
-      <Drawer
-        anchor="right"
-        slotProps={{
-          paper: {
-            sx: {
-              width: DRAWER_WIDTHS.sm,
-              maxWidth: '100vw',
-            },
-          },
-        }}
-        open={isEditModalOpen}
-        onClose={closeDrawer}
-      >
-        <PaymentMethodEditPanel
-          id={editID}
-          onClose={async () => {
-            closeDrawer();
-            await refetch();
-          }}
-          onSave={async () => {
-            closeDrawer();
-            await refetch();
-          }}
-        />
-      </Drawer>
-
       <Dialog
         fullWidth
         open={isConfirmationDialogOpen}
@@ -242,6 +200,8 @@ function PaymentMethodList() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <PaymentMethodDrawer />
     </>
   );
 }
