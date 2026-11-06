@@ -5,7 +5,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Drawer,
 } from '@mui/material';
 import {
   DeleteTokenDocument,
@@ -20,7 +19,6 @@ import {
 import {
   createCheckedPermissionComponent,
   DataTable,
-  DRAWER_WIDTHS,
   enqueueSnackbar,
   getOperationNameFromDocument,
   IconButton,
@@ -29,23 +27,18 @@ import {
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
+  PageTitle,
   PermissionControl,
   TableWrapper,
-  TokenGeneratePanel,
-  PageTitle,
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdDelete, MdGeneratingTokens } from 'react-icons/md';
-import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
+
+import { TokenGenerateDrawer } from './tokenGenerateDrawer';
 
 function TokenList() {
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  const isGenerateRoute = location.pathname.includes('generate');
-
-  const closeDrawer = () => navigate('/tokens');
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
   const [currentToken, setCurrentToken] = useState<FullTokenFragment>();
 
@@ -136,21 +129,7 @@ function TokenList() {
         />
       </TableWrapper>
 
-      <Drawer
-        anchor="right"
-        slotProps={{
-          paper: {
-            sx: {
-              width: DRAWER_WIDTHS.sm,
-              maxWidth: '100vw',
-            },
-          },
-        }}
-        open={isGenerateRoute}
-        onClose={closeDrawer}
-      >
-        <TokenGeneratePanel onClose={closeDrawer} />
-      </Drawer>
+      <TokenGenerateDrawer />
 
       <Dialog
         open={isConfirmationDialogOpen}

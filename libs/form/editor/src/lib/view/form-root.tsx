@@ -18,6 +18,7 @@ import { useNavigate } from 'react-router-dom';
 import type { EditorComponents } from '../components';
 import { editorForm } from '../editor-form';
 import { FormErrorSummary } from '../form-error-summary';
+import { hasResult } from './create-result';
 import { FormSections } from './form-sections';
 import type { FormViewSection } from './form-view';
 import {
@@ -102,6 +103,11 @@ export function FormRoot<S extends AnyFormSchema>({
 
 export function FormBody() {
   const { controller } = useFormViewContext();
+
+  if (hasResult(controller.result)) {
+    return <Body>{controller.result}</Body>;
+  }
+
   const sections: readonly FormViewSection<AnyFormSchema>[] =
     controller.view.sections;
   const shown = sections.filter(

@@ -2829,14 +2829,16 @@
       },
       "panels": {
         "cancel": "Cancel",
-        "close": "Close",
         "confirm": "Confirm",
+        "copy": "Copy token",
+        "copied": "Token copied",
         "creationSuccess": "Token created successfully",
         "deleteToken": "Delete Token?",
         "deleteTokenText": "Do you want to delete {{name}}?",
         "generate": "Generate",
         "generateToken": "Generate Token",
         "name": "Name",
+        "nameTaken": "A token named “{{name}}” already exists.",
         "tokenWarning": "Tokens cannot be retrieved later. It is recommended that you copy and save your token somewhere safe."
       }
     },
@@ -5036,7 +5038,6 @@
       "panels": {
         "generateToken": "Create API key",
         "generate": "Create",
-        "close": "Close",
         "name": "Name",
         "scopes": "Permissions",
         "scopesHelp": "You can only grant permissions you hold yourself.",
@@ -5048,7 +5049,6 @@
         "revokeTokenText": "Really revoke «{{name}}»? Anything using this key stops working immediately.",
         "cancel": "Cancel",
         "confirm": "Revoke",
-        "noScopes": "Pick at least one permission.",
         "expiresAt": "Expires",
         "expiresAtHelp": "At most three years from today.",
         "expiresInThePast": "That date has already passed.",
@@ -5056,7 +5056,6 @@
         "in90Days": "90 days",
         "inAYear": "A year",
         "in3Years": "3 years",
-        "expiresRequired": "Pick a date. A key has to expire.",
         "expiresTooLate": "A key cannot last longer than three years.",
         "longLivedWarning": "A key that lives longer than a year is not recommended. The longer it exists, the longer a leaked key keeps working."
       }

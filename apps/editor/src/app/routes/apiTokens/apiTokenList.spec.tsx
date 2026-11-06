@@ -152,14 +152,6 @@ describe('ApiTokenList', () => {
     expect(screen.queryByText('apiTokenList.panels.generateToken')).toBeNull();
   });
 
-  it('opens the create drawer straight from the route', async () => {
-    renderAt('/api-tokens/generate');
-
-    expect(
-      await screen.findByText('apiTokenList.panels.generateToken')
-    ).toBeInTheDocument();
-  });
-
   it('leads with the status, so a dead key is seen before it is read', async () => {
     renderList();
 

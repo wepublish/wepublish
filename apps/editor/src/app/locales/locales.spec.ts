@@ -34,7 +34,7 @@ const usesFormLibrary = /from\s+['"]@wepublish\/form\//;
 const usesZodV4 = /from\s+['"]zod\/v4['"]/;
 const formSchemaFile = /\.schema\.tsx?$/;
 const formMetaKey =
-  /(?<![\w-])(?:label|addLabel|description|helperText|placeholder|error|title|unit|successToast)\s*[:=]\s*\{?\s*['"]([\w.-]+)['"]/g;
+  /(?<![\w-])(?:label|addLabel|description|helperText|placeholder|error|title|unit|successToast|submitLabel)\s*[:=]\s*\{?\s*['"]([\w.-]+)['"]/g;
 const formMetaPrefix =
   /(?<![\w-])optionLabelPrefix\s*[:=]\s*\{?\s*['"]([\w.-]+)['"]/g;
 const fieldErrorKey =
@@ -335,6 +335,7 @@ export const useDemo = () =>
   useCreateForm(demoView, {
     title: 'demo.titleCreate',
     successToast: 'demo.saved',
+    submitLabel: 'demo.generate',
     save: async () => undefined,
   });
 `;
@@ -346,6 +347,7 @@ export const useDemo = () =>
         'form.units.days',
         'demo.titleCreate',
         'demo.saved',
+        'demo.generate',
       ])
     );
   });
