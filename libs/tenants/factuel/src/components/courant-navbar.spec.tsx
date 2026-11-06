@@ -25,7 +25,8 @@ const navigations = [
 ];
 
 const renderNavbar = (
-  Component: ComponentType<ComponentProps<typeof Navbar>>
+  Component: ComponentType<ComponentProps<typeof Navbar>>,
+  overrides: Partial<ComponentProps<typeof Navbar>> = {}
 ) =>
   renderWithProviders(
     <Component
@@ -37,6 +38,7 @@ const renderNavbar = (
       iconSlug="icons"
       hasRunningSubscription={false}
       hasUnpaidInvoices={false}
+      {...overrides}
     />
   );
 
@@ -53,5 +55,20 @@ describe('CourantNavbar', () => {
       'href',
       'https://example.com/agenda'
     );
+  });
+
+  it('shows the unpaid-invoice action pointing to the profile when invoices are open', () => {
+    renderNavbar(CourantNavbar, { hasUnpaidInvoices: true });
+
+    const invoiceLink = screen.getByRole('link', {
+      name: new RegExp(t('navbar.invoice')),
+    });
+    expect(invoiceLink).toHaveAttribute('href', '/profile');
+    expect(
+      screen.queryByRole('link', { name: t('navbar.subscribe') })
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('link', { name: t('navbar.myAccount') })
+    ).not.toBeInTheDocument();
   });
 });

@@ -16,6 +16,17 @@ import { FullNavigationFragment } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { PropsWithChildren, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
+import { MdWarning } from 'react-icons/md';
+
+import { courantTokens } from '../brand-tokens';
+
+const { alert } = courantTokens.colors;
+
+const alertButtonSx = {
+  backgroundColor: alert[500],
+  color: '#fff',
+  '&:hover': { backgroundColor: alert[600] },
+};
 
 // Still work to do on custom modal styling
 export type CourantNavPaperProps = PropsWithChildren<{
@@ -86,7 +97,20 @@ export const CourantNavPaper = ({
         <NavPaperActions>
           {paperActions}
 
-          {!hasRunningSubscription && subscribeBtn && (
+          {hasUnpaidInvoices && profileBtn && (
+            <Button
+              LinkComponent={Link}
+              variant="contained"
+              onClick={closeMenu}
+              startIcon={<MdWarning />}
+              sx={alertButtonSx}
+              {...profileBtn}
+            >
+              {t('navbar.unpaid')} {t('navbar.invoice')}
+            </Button>
+          )}
+
+          {!hasRunningSubscription && !hasUnpaidInvoices && subscribeBtn && (
             <Button
               LinkComponent={Link}
               variant="contained"

@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
-import { AppBar, css, Theme } from '@mui/material';
+import { AppBar, Box, css, Theme } from '@mui/material';
+import { MdWarning } from 'react-icons/md';
 import {
   ExtendedNavbarProps,
   NavbarActions,
@@ -25,6 +26,13 @@ import { CourantNavPaper } from './courant-nav-paper';
 import { MenuCloseIcon, MenuOpenIcon } from './courant-menu-icons';
 
 const { pageInline, pageMaxWidth } = courantTokens.layout;
+const { alert } = courantTokens.colors;
+
+const alertButtonSx = {
+  backgroundColor: alert[500],
+  color: '#fff',
+  '&:hover': { backgroundColor: alert[600] },
+};
 
 const CourantNavbarWrapper = styled(NavbarWrapper)`
   --navbar-height: 56px;
@@ -209,6 +217,21 @@ export const CourantNavbar = ({
 
           <NavbarActions isMenuOpen={isMenuOpen}>
             {navbarActions}
+
+            {hasUnpaidInvoices && profileBtn && (
+              <Button
+                LinkComponent={Link}
+                size="medium"
+                startIcon={<MdWarning />}
+                sx={alertButtonSx}
+                {...profileBtn}
+              >
+                <Box sx={{ display: { xs: 'none', md: 'unset' } }}>
+                  {t('navbar.unpaid')}
+                </Box>
+                &nbsp;{t('navbar.invoice')}
+              </Button>
+            )}
 
             {!hasRunningSubscription && !hasUnpaidInvoices && subscribeBtn && (
               <Button
