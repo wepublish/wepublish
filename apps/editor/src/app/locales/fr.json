@@ -3843,9 +3843,11 @@
         "sparkLoop": {
           "title": "SparkLoop",
           "enable": "Activer SparkLoop",
-          "sparkLoop": "<url>SparkLoop</url> est une plateforme de recommandation et de parrainage de newsletters qui t’aide à développer ton audience.",
+          "sparkLoop": "<url>SparkLoop</url> est une plateforme de recommandation et de parrainage de newsletters qui vous aide à développer votre audience.",
           "idLocator": "Vous trouverez votre ID dans la <url>section script</url> de votre tableau de bord SparkLoop.",
-          "idInvalid": "Doit être un ID SparkLoop valide (p. ex. pub_xxxxxxxxxxxx)"
+          "idInvalid": "Doit être un ID SparkLoop valide (p. ex. pub_xxxxxxxxxxxx)",
+          "id": "ID SparkLoop",
+          "idPlaceholder": "pub_xxxxxxxxxxxx"
         }
       },
       "theme": {
@@ -4006,8 +4008,10 @@
         "title": "Polices",
         "addFont": "Ajouter une police",
         "default": "Par défaut",
-        "description": "Utilise <Link>Google Fonts</Link>. La recherche d’une police idéale se fait mieux directement là-bas.",
-        "searchPlaceholder": "Rechercher dans Google Fonts …"
+        "description": "Utilise <url>Google Fonts</url>. La recherche d’une police idéale se fait mieux directement là-bas.",
+        "searchPlaceholder": "Rechercher dans Google Fonts …",
+        "googleFonts": "Google Fonts",
+        "font": "Police"
       },
       "saveSuccess": "Les paramètres du site ont été enregistrés avec succès"
     },

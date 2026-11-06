@@ -3913,7 +3913,9 @@
           "enable": "Enable SparkLoop",
           "sparkLoop": "<url>SparkLoop</url> is a newsletter referral and recommendation platform that helps you grow your audience.",
           "idLocator": "You can find your ID in the <url>script section</url> of your SparkLoop dashboard.",
-          "idInvalid": "Must be a valid SparkLoop ID (e.g., pub_xxxxxxxxxxxx)"
+          "idInvalid": "Must be a valid SparkLoop ID (e.g., pub_xxxxxxxxxxxx)",
+          "id": "SparkLoop ID",
+          "idPlaceholder": "pub_xxxxxxxxxxxx"
         }
       },
       "theme": {
@@ -4074,8 +4076,10 @@
         "title": "Fonts",
         "addFont": "Add Font",
         "default": "Default",
-        "description": "Uses <Link>Google Fonts</Link>. The best way to look for an ideal font is directly there.",
-        "searchPlaceholder": "Search Google Fonts …"
+        "description": "Uses <url>Google Fonts</url>. The best way to look for an ideal font is directly there.",
+        "searchPlaceholder": "Search Google Fonts …",
+        "googleFonts": "Google Fonts",
+        "font": "Font"
       },
       "saveSuccess": "Successfully saved the website settings"
     },

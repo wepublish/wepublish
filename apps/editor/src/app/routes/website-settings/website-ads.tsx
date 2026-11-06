@@ -1,198 +1,48 @@
-import { useLazyQuery, useMutation } from '@apollo/client/react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  Button,
-  Checkbox,
-  CircularProgress,
-  FormControlLabel,
-  InputAdornment,
-  Link as MuiLink,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { useMutation } from '@apollo/client/react';
 import {
   UpdateWebsiteSettingsDocument,
   WebsiteSettingsDocument,
 } from '@wepublish/editor/api';
-import { enqueueSnackbar, humanizeError } from '@wepublish/ui/editor';
-import { Controller, useForm, useWatch } from 'react-hook-form';
-import { Trans, useTranslation } from 'react-i18next';
-import { z } from 'zod';
+import {
+  type ViewFields,
+  FormPage,
+  useQueryLoader,
+  useSingletonForm,
+} from '@wepublish/form/editor';
 
-import { WebsiteSettingsHeader } from './website-settings-header';
+import { websiteAdsSchema } from './website-ads.schema';
+import { websiteAdsView } from './website-ads.view';
+import { settingsHint } from './website-settings-hint';
 
-import { lazyMessage } from '../../utility';
-import { Explainer, WebsiteAnalyticsWrapper } from './website-settings-layout';
-
-const adsSchema = z.object({
-  sparkLoop: z.object({
-    enabled: z.boolean(),
-    key: z
-      .string({
-        errorMap: lazyMessage('websiteSettings.ads.sparkLoop.idInvalid'),
-      })
-      .regex(/^pub_[a-f0-9]{12}$/)
-      .or(z.literal(''))
-      .nullish(),
-  }),
-});
+const hints: ViewFields<typeof websiteAdsSchema> = {
+  'sparkLoop.enabled': {
+    helperText: settingsHint(
+      'websiteSettings.ads.sparkLoop.sparkLoop',
+      'https://sparkloop.app'
+    ),
+  },
+  'sparkLoop.key': {
+    helperText: settingsHint(
+      'websiteSettings.ads.sparkLoop.idLocator',
+      'https://dash.sparkloop.app/settings/script'
+    ),
+  },
+};
 
 export const WebsiteAds = () => {
-  const { t } = useTranslation();
-  const [loadSettings] = useLazyQuery(WebsiteSettingsDocument);
-  const [updateWebsiteSettings, { loading: saving }] = useMutation(
-    UpdateWebsiteSettingsDocument,
-    {
-      onCompleted: () => {
-        enqueueSnackbar(t('websiteSettings.saveSuccess'), {
-          variant: 'success',
-          autoHideDuration: 3000,
-        });
-      },
-      onError: error => {
-        enqueueSnackbar(humanizeError(error), {
-          variant: 'error',
-          autoHideDuration: 8000,
-        });
-      },
-    }
+  const load = useQueryLoader(
+    WebsiteSettingsDocument,
+    {},
+    data => data.websiteSettings.ads
   );
-
-  const {
-    control,
-    handleSubmit,
-    formState: { isLoading },
-  } = useForm<z.infer<typeof adsSchema>>({
-    resolver: zodResolver(adsSchema),
-    mode: 'onTouched',
-    defaultValues: async payload => {
-      const data = await loadSettings();
-
-      return (
-        data.data?.websiteSettings.ads ?? (payload as z.infer<typeof adsSchema>)
-      );
-    },
+  const [updateWebsiteSettings] = useMutation(UpdateWebsiteSettingsDocument);
+  const ads = useSingletonForm(websiteAdsView, {
+    title: 'websiteSettings.ads.title',
+    closePath: '/settings/website',
+    fields: hints,
+    load,
+    save: values => updateWebsiteSettings({ variables: { ads: values } }),
   });
 
-  const sparkLoopEnabled = useWatch({ control, name: 'sparkLoop.enabled' });
-
-  const onSubmit = handleSubmit(data => {
-    updateWebsiteSettings({
-      variables: {
-        ads: data,
-      },
-    });
-  }, console.warn);
-
-  if (isLoading) {
-    return (
-      <CircularProgress
-        size={14}
-        color="inherit"
-        sx={{ mr: 1 }}
-      />
-    );
-  }
-
-  return (
-    <WebsiteAnalyticsWrapper onSubmit={onSubmit}>
-      <WebsiteSettingsHeader title={t('websiteSettings.ads.title')}>
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          loading={saving}
-        >
-          {t('save')}
-        </Button>
-      </WebsiteSettingsHeader>
-      <Typography variant="h3">
-        {t('websiteSettings.ads.sparkLoop.title')}
-      </Typography>
-      <Controller
-        name="sparkLoop.enabled"
-        control={control}
-        render={({ field }) => (
-          <div>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  {...field}
-                  checked={!!field.value}
-                />
-              }
-              label={t('websiteSettings.ads.sparkLoop.enable')}
-            />
-
-            <Typography
-              variant="body2"
-              component={Explainer}
-            >
-              <Trans
-                i18nKey="websiteSettings.ads.sparkLoop.sparkLoop"
-                components={{
-                  url: (
-                    <MuiLink
-                      href="https://sparkloop.app"
-                      target="_blank"
-                      rel="noreferrer"
-                    />
-                  ),
-                }}
-              />
-            </Typography>
-          </div>
-        )}
-      />
-      <Controller
-        name="sparkLoop.key"
-        control={control}
-        render={({ field, fieldState: { error } }) =>
-          sparkLoopEnabled ?
-            <TextField
-              {...field}
-              label="SparkLoop ID"
-              placeholder="pub_xxxxxxxxxxxx"
-              error={!!error}
-              helperText={
-                error?.message || (
-                  <Trans
-                    i18nKey="websiteSettings.ads.sparkLoop.idLocator"
-                    components={{
-                      url: (
-                        <MuiLink
-                          href="https://dash.sparkloop.app/settings/script"
-                          target="_blank"
-                          rel="noreferrer"
-                        />
-                      ),
-                    }}
-                  />
-                )
-              }
-              slotProps={{
-                input: {
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          fontFamily: 'monospace',
-                          fontWeight: 600,
-                          color: 'text.secondary',
-                          fontSize: '0.8rem',
-                        }}
-                      >
-                        ID
-                      </Typography>
-                    </InputAdornment>
-                  ),
-                },
-              }}
-            />
-          : <></>
-        }
-      />
-    </WebsiteAnalyticsWrapper>
-  );
+  return <FormPage controller={ads} />;
 };
