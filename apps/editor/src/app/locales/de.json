@@ -3451,7 +3451,13 @@
         "memberPlan": "Abo-Plan",
         "codeInfo": "Diesen Code geben Leser:innen beim Abschliessen eines Abos ein, um den Rabatt zu erhalten.",
         "discountPercentInfo": "Prozentsatz, der beim Einlösen vom Preis der ersten Zahlungsperiode abgezogen wird.",
-        "memberPlanInfo": "Der Code gilt nur für diesen Abo-Plan."
+        "memberPlanInfo": "Der Code gilt nur für diesen Abo-Plan.",
+        "validToBeforeValidFrom": "«Gültig bis» darf nicht vor «Gültig ab» liegen",
+        "codeTaken": "Den Code «{{code}}» gibt es für diesen Abo-Plan bereits.",
+        "sections": {
+          "discount": "Rabatt",
+          "validity": "Gültigkeit"
+        }
       },
       "overview": {
         "title": "Rabattcodes",

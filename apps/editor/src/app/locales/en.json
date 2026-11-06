@@ -3511,7 +3511,13 @@
         "memberPlan": "Subscription plan",
         "codeInfo": "Readers enter this code when they take out a subscription to get the discount.",
         "discountPercentInfo": "Percentage deducted from the price of the first payment period when the code is used.",
-        "memberPlanInfo": "The code only works for this subscription plan."
+        "memberPlanInfo": "The code only works for this subscription plan.",
+        "validToBeforeValidFrom": "“Valid to” cannot be before “Valid from”",
+        "codeTaken": "The code “{{code}}” already exists for this subscription plan.",
+        "sections": {
+          "discount": "Discount",
+          "validity": "Validity"
+        }
       },
       "overview": {
         "title": "Discount codes",

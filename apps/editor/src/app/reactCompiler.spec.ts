@@ -1,3 +1,5 @@
+import { DiscountCodeCreateForm } from './routes/discountCode/discountCodeCreateView';
+import { DiscountCodeEditForm } from './routes/discountCode/discountCodeEditView';
 import { EventCreateView } from './routes/events/eventCreateView';
 import { EventEditView } from './routes/events/eventEditView';
 import {
@@ -23,6 +25,8 @@ const isCompiled = (code: string) => /\$\[\d+\]/.test(code);
 
 describe('the editor under test', () => {
   it.each([
+    ['DiscountCodeCreateForm', DiscountCodeCreateForm],
+    ['DiscountCodeEditForm', DiscountCodeEditForm],
     ['EventCreateView', EventCreateView],
     ['EventEditView', EventEditView],
     ['NavigationCreateForm', NavigationCreateForm],
