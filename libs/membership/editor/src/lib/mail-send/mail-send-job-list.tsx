@@ -552,7 +552,10 @@ function JobRecipientTable({ jobId, poll }: { jobId: string; poll: boolean }) {
                 </TableCell>
                 <TableCell>
                   <strong>{t('mailJobs.queue.attempts')}</strong>{' '}
-                  <InfoTooltip text={t('mailJobs.queue.attemptsHelp')} />
+                  <InfoTooltip
+                    text={t('mailJobs.queue.attemptsHelp')}
+                    label={t('moreInfo')}
+                  />
                 </TableCell>
                 <TableCell>
                   <strong>{t('mailLog.error')}</strong>

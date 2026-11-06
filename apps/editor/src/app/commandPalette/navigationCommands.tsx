@@ -10,6 +10,7 @@ import {
   CanCreateConsent,
   CanCreateCrowdfunding,
   CanCreateDiscountCode,
+  CanCreateAudio,
   CanCreateDocument,
   CanCreateExternalApp,
   CanCreateGoodie,
@@ -36,6 +37,7 @@ import {
   CanDeleteBlockTemplate,
   CanDeleteCommentRatingSystem,
   CanDeleteConsent,
+  CanDeleteAudio,
   CanDeleteDocument,
   CanDeleteEvent,
   CanDeleteExternalApp,
@@ -69,6 +71,8 @@ import {
   CanGetComments,
   CanGetCrowdfunding,
   CanGetCrowdfundings,
+  CanGetAudio,
+  CanGetAudios,
   CanGetDocument,
   CanGetDocuments,
   CanGetEvent,
@@ -135,6 +139,10 @@ import {
   CanUpdateTag,
   CanUpdateUserConsent,
   CanUpdateWebsiteSettings,
+  CanCreateVideo,
+  CanDeleteVideo,
+  CanGetVideo,
+  CanGetVideos,
 } from '@wepublish/permissions';
 import {
   MdAccountCircle,
@@ -152,6 +160,7 @@ import {
   MdCountertops,
   MdCreditCard,
   MdDashboard,
+  MdAudiotrack,
   MdDescription,
   MdEvent,
   MdEventAvailable,
@@ -188,6 +197,7 @@ import {
   MdSync,
   MdTravelExplore,
   MdVpnKey,
+  MdVideoLibrary,
 } from 'react-icons/md';
 
 import type { CommandDefinition } from './commandDefinition';
@@ -444,6 +454,34 @@ export const NAVIGATION_COMMANDS: CommandDefinition[] = [
       CanDeleteDocument.id,
     ],
     perform: ({ navigate }) => navigate('/documents'),
+  },
+  {
+    id: 'videos',
+    titleKey: 'navbar.videoLibrary',
+    sectionKey: 'navbar.media',
+    icon: <MdVideoLibrary />,
+    permissions: [
+      CanGetVideos.id,
+      CanGetVideo.id,
+      CanCreateVideo.id,
+      CanDeleteVideo.id,
+    ],
+    feature: 'video-audio-uploads',
+    perform: ({ navigate }) => navigate('/videos'),
+  },
+  {
+    id: 'audio',
+    titleKey: 'navbar.audioLibrary',
+    sectionKey: 'navbar.media',
+    icon: <MdAudiotrack />,
+    permissions: [
+      CanGetAudios.id,
+      CanGetAudio.id,
+      CanCreateAudio.id,
+      CanDeleteAudio.id,
+    ],
+    feature: 'video-audio-uploads',
+    perform: ({ navigate }) => navigate('/audio'),
   },
   {
     id: 'navigations',

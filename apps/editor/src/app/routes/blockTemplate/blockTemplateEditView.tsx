@@ -148,6 +148,11 @@ function BlockTemplateEditView() {
     <>
       <TemplateEditorLayout
         i18nPrefix="blockTemplates"
+        title={
+          isNew ?
+            t('blockTemplates.list.newBlockTemplate')
+          : t('blockTemplates.edit.title')
+        }
         backPath="/block-content/templates"
         permissions={{
           create: CanCreateBlockTemplate.id,

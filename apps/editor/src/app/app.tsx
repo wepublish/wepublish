@@ -45,6 +45,7 @@ import {
   useReportQueryErrors,
 } from '@wepublish/ui/editor';
 import { lazy, Suspense, useContext, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   createBrowserRouter,
   Navigate,
@@ -81,6 +82,12 @@ import { DiscountCodeEditView } from './routes/discountCode/discountCodeEditView
 import { DiscountCodeList } from './routes/discountCode/discountCodeList';
 import { DiscountCodeUsageView } from './routes/discountCode/discountCodeUsageView';
 import { DocumentList } from './routes/documents/documentList';
+import { AudioEditRoute } from './routes/audio/audioEditRoute';
+import { AudioList as UncheckedAudioList } from './routes/audio/audioList';
+import { AudioUploadRoute } from './routes/audio/audioUploadRoute';
+import { VideoEditRoute } from './routes/videos/videoEditRoute';
+import { VideoList as UncheckedVideoList } from './routes/videos/videoList';
+import { VideoUploadRoute } from './routes/videos/videoUploadRoute';
 import { EventCreateView } from './routes/events/eventCreateView';
 import { EventEditView } from './routes/events/eventEditView';
 import { EventListView } from './routes/events/eventListView';
@@ -139,6 +146,12 @@ const NewsletterCampaignEditor = withNewsletterFeature(
 const NewsletterCampaignPreview = withNewsletterFeature(
   lazy(() => newsletter().then(m => ({ default: m.NewsletterCampaignPreview })))
 );
+
+const withMediaUploadsFeature = createCheckedFeatureComponent(
+  'video-audio-uploads'
+);
+const VideoList = withMediaUploadsFeature(UncheckedVideoList);
+const AudioList = withMediaUploadsFeature(UncheckedAudioList);
 
 const LogoutMutation = gql`
   mutation Logout {
@@ -642,6 +655,42 @@ function AppRoutes() {
             </Base>
           }
         />
+        {/* Videos Routes */}
+        <Route
+          path="videos"
+          element={
+            <Base>
+              <VideoList />
+            </Base>
+          }
+        >
+          <Route
+            path="upload"
+            element={<VideoUploadRoute />}
+          />
+          <Route
+            path="edit/:id"
+            element={<VideoEditRoute />}
+          />
+        </Route>
+        {/* Audio Routes */}
+        <Route
+          path="audio"
+          element={
+            <Base>
+              <AudioList />
+            </Base>
+          }
+        >
+          <Route
+            path="upload"
+            element={<AudioUploadRoute />}
+          />
+          <Route
+            path="edit/:id"
+            element={<AudioEditRoute />}
+          />
+        </Route>
         {/* Navigations Routes */}
         <Route
           path="navigations"
@@ -1229,6 +1278,7 @@ const router = createBrowserRouter([{ path: '*', element: <AppRoutes /> }]);
 
 export function App() {
   const { session } = useContext(AuthContext);
+  const { t } = useTranslation();
 
   useReportQueryErrors();
 
@@ -1309,7 +1359,7 @@ export function App() {
         `}
       />
       <EditorGlobalStyles />
-      <SnackbarHost />
+      <SnackbarHost label={t('navbar.notifications')} />
       <RouterProvider router={router} />
     </>
   );

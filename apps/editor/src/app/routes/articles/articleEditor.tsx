@@ -319,6 +319,8 @@ function ArticleEditor() {
   const skipRepopulate = useRef(false);
 
   useUnsavedChangesDialog(hasChanged);
+  const hasUnpublishedDraft =
+    !!articleData?.article?.draft || !articleData?.article?.published;
 
   const previewUrl = articleData?.article?.previewUrl;
   const publishedUrl =
@@ -560,8 +562,9 @@ function ArticleEditor() {
         <strong>{header}</strong>
         <div>{summaries || t('articleEditor.validationFailedGeneric')}</div>
       </>,
-      { variant: 'error', autoHideDuration: 8000 }
+      { variant: 'error', autoHideDuration: null }
     );
+    result.failures.find(failure => failure.focus)?.focus?.();
     return false;
   }
 
@@ -703,6 +706,9 @@ function ArticleEditor() {
   return (
     <>
       <EditorTemplate
+        title={
+          isNew ? t('articles.overview.newArticle') : t('articleEditor.title')
+        }
         maxWidth={showPreview ? '80vw' : undefined}
         navigationChildren={
           <EditorHeader
@@ -820,6 +826,11 @@ function ArticleEditor() {
                       variant="outlined"
                       icon={<MdSave />}
                       label={t('save')}
+                      aria-label={
+                        hasChanged ?
+                          `${t('save')}, ${t('articleEditor.unsavedChanges')}`
+                        : t('save')
+                      }
                       collapse="sm"
                       disabled={isDisabled}
                       onClick={() => handleSave()}
@@ -832,15 +843,17 @@ function ArticleEditor() {
                     <Badge
                       variant="dot"
                       color="warning"
-                      invisible={
-                        !articleData?.article?.draft &&
-                        !!articleData?.article?.published
-                      }
+                      invisible={!hasUnpublishedDraft}
                     >
                       <EditorHeaderButton
                         variant="contained"
                         icon={<MdCloudUpload />}
                         label={t('articleEditor.overview.publish')}
+                        aria-label={
+                          hasUnpublishedDraft ?
+                            `${t('articleEditor.overview.publish')}, ${t('articleEditor.unpublishedChanges')}`
+                          : t('articleEditor.overview.publish')
+                        }
                         collapse={false}
                         disabled={isDisabled}
                         onClick={() => {
