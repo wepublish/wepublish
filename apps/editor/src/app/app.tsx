@@ -182,6 +182,12 @@ const Logout = () => {
   );
 };
 
+// Stationery only exists for letters, which ship dark.
+const PaperLetterLayoutList =
+  createCheckedFeatureComponent('paper-letters')(LetterLayoutList);
+const PaperLetterLayoutEdit =
+  createCheckedFeatureComponent('paper-letters')(LetterLayoutEdit);
+
 function AppRoutes() {
   return (
     <RouteErrorBoundary>
@@ -1091,7 +1097,7 @@ function AppRoutes() {
           path="letterlayouts"
           element={
             <Base>
-              <LetterLayoutList />
+              <PaperLetterLayoutList />
             </Base>
           }
         />
@@ -1099,7 +1105,7 @@ function AppRoutes() {
           path="letterlayouts/create"
           element={
             <Base>
-              <LetterLayoutEdit />
+              <PaperLetterLayoutEdit />
             </Base>
           }
         />
@@ -1107,7 +1113,7 @@ function AppRoutes() {
           path="letterlayouts/edit/:id"
           element={
             <Base>
-              <LetterLayoutEdit />
+              <PaperLetterLayoutEdit />
             </Base>
           }
         />

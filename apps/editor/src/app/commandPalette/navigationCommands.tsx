@@ -620,6 +620,7 @@ export const NAVIGATION_COMMANDS: CommandDefinition[] = [
     sectionKey: 'navbar.communication',
     icon: <MdDescription />,
     permissions: [CanGetMailTemplates.id, CanUpdateMailTemplates.id],
+    feature: 'paper-letters',
     perform: ({ navigate }) => navigate('/letterlayouts'),
   },
   {

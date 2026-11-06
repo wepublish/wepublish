@@ -2,7 +2,6 @@ import { useMutation, useQuery } from '@apollo/client/react';
 import {
   CreateMailSendJobDocument,
   LetterAddressPosition,
-  LetterChannelAvailableDocument,
   LetterDeliveryProduct,
   LetterPrintMode,
   LetterPrintSpectrum,
@@ -88,6 +87,7 @@ import {
   MdSend,
 } from 'react-icons/md';
 import { Link } from 'react-router-dom';
+import { useLetterChannel } from '../mail-template/use-letter-channel';
 import { mailErrorHelpKey } from './mail-log-common';
 import { FieldLabel } from '../field-label';
 import {
@@ -254,8 +254,7 @@ function MailSendPage() {
     useQuery(MailTemplateDocument);
   // Without a letter integration every send is a mail, so there is no channel
   // to choose and nothing to say about it.
-  const { data: letterChannelData } = useQuery(LetterChannelAvailableDocument);
-  const letterAvailable = !!letterChannelData?.letterChannelAvailable;
+  const { letterAvailable } = useLetterChannel();
   const { data: memberPlanData } = useQuery(MemberPlanListDocument, {
     variables: { take: 100 },
   });

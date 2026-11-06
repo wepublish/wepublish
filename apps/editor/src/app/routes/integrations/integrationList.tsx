@@ -17,12 +17,14 @@ import {
   CanGetPdfRendererSettings,
   CanGetTrackingPixelSettings,
 } from '@wepublish/permissions';
+import type { FeatureKey } from '@wepublish/features';
 import {
+  FeatureControl,
   InfoTooltip,
   PageTitle,
   PermissionControl,
 } from '@wepublish/ui/editor';
-import { useId } from 'react';
+import { type ElementType, useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdAnalytics,
@@ -81,13 +83,24 @@ const IntegrationLogo = styled.img`
   object-fit: contain;
 `;
 
+type Integration = {
+  title: string;
+  info?: string;
+  permission: string;
+  path: string;
+  icon: ElementType;
+  logos: { src: string; name: string }[];
+  /** Set for integrations that ship dark behind a feature. */
+  feature?: FeatureKey;
+};
+
 export function IntegrationList() {
   const { t } = useTranslation();
   const listId = useId();
   const titleId = (path: string) =>
     `${listId}${path.replace(/\//g, '-')}-title`;
 
-  const integrations = [
+  const integrations: Integration[] = [
     {
       title: t('integrations.ai'),
       info: t('integrations.aiInfo'),
@@ -143,6 +156,7 @@ export function IntegrationList() {
     {
       title: t('integrations.letterProvider'),
       permission: CanGetLetterProviderSettings.id,
+      feature: 'paper-letters',
       path: '/integrations/letter',
       icon: MdMarkunreadMailbox,
       logos: [{ src: pingenLogo, name: 'Pingen' }],
@@ -150,6 +164,7 @@ export function IntegrationList() {
     {
       title: t('integrations.pdfRenderer'),
       permission: CanGetPdfRendererSettings.id,
+      feature: 'paper-letters',
       path: '/integrations/pdf-renderer',
       icon: MdPictureAsPdf,
       logos: [{ src: cloudflareLogo, name: 'Cloudflare' }],
@@ -178,51 +193,64 @@ export function IntegrationList() {
         {t('integrations.title')}{' '}
         <InfoTooltip text={t('integrations.infoText')} />
       </Title>
-      {integrations.map(integration => (
-        <PermissionControl
-          key={integration.title}
-          qualifyingPermissions={[integration.permission]}
-        >
-          <Card
-            variant="outlined"
-            sx={{ borderRadius: 1 }}
+      {integrations.map(integration => {
+        const card = (
+          <PermissionControl
+            key={integration.title}
+            qualifyingPermissions={[integration.permission]}
           >
-            <CardContent>
-              <Typography
-                variant="h6"
-                component="h2"
-                sx={{
-                  marginBottom: 2,
-                }}
-              >
-                <span id={titleId(integration.path)}>{integration.title}</span>{' '}
-                <InfoTooltip text={integration.info} />
-              </Typography>
+            <Card
+              variant="outlined"
+              sx={{ borderRadius: 1 }}
+            >
+              <CardContent>
+                <Typography
+                  variant="h6"
+                  component="h2"
+                  sx={{
+                    marginBottom: 2,
+                  }}
+                >
+                  <span id={titleId(integration.path)}>
+                    {integration.title}
+                  </span>{' '}
+                  <InfoTooltip text={integration.info} />
+                </Typography>
 
-              <LogoList>
-                {integration.logos.map(logo => (
-                  <IntegrationLogo
-                    key={logo.name}
-                    src={logo.src}
-                    alt={logo.name}
-                  />
-                ))}
-              </LogoList>
-            </CardContent>
+                <LogoList>
+                  {integration.logos.map(logo => (
+                    <IntegrationLogo
+                      key={logo.name}
+                      src={logo.src}
+                      alt={logo.name}
+                    />
+                  ))}
+                </LogoList>
+              </CardContent>
 
-            <CardActions>
-              <Button
-                component={RouterLink}
-                to={integration.path}
-                size="small"
-                aria-describedby={titleId(integration.path)}
-              >
-                {t('edit')}
-              </Button>
-            </CardActions>
-          </Card>
-        </PermissionControl>
-      ))}
+              <CardActions>
+                <Button
+                  component={RouterLink}
+                  to={integration.path}
+                  size="small"
+                  aria-describedby={titleId(integration.path)}
+                >
+                  {t('edit')}
+                </Button>
+              </CardActions>
+            </Card>
+          </PermissionControl>
+        );
+
+        return integration.feature ?
+            <FeatureControl
+              key={integration.title}
+              feature={integration.feature}
+            >
+              {card}
+            </FeatureControl>
+          : card;
+      })}
     </Wrapper>
   );
 }
