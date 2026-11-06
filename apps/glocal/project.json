@@ -1,0 +1,63 @@
+{
+  "name": "glocal",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/glocal",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit -p apps/glocal/tsconfig.json"
+      }
+    },
+    "build": {
+      "executor": "@nx/next:build",
+      "dependsOn": [],
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/apps/glocal"
+      },
+      "configurations": {
+        "development": {
+          "outputPath": "apps/glocal"
+        },
+        "production": {}
+      }
+    },
+    "serve": {
+      "executor": "@nx/next:server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "glocal:build",
+        "dev": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "glocal:build:development",
+          "dev": true
+        },
+        "production": {
+          "buildTarget": "glocal:build:production",
+          "dev": false
+        }
+      }
+    },
+    "export": {
+      "executor": "@nx/next:export",
+      "options": {
+        "buildTarget": "glocal:build:production"
+      }
+    },
+    "test": {
+      "options": {
+        "config": "../../{projectRoot}/vitest.config.ts"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    }
+  }
+}
