@@ -4,6 +4,7 @@ import {
   List,
   ListItemIcon,
   MenuItem,
+  useMediaQuery,
 } from '@mui/material';
 import {
   CanCreateArticle,
@@ -42,6 +43,14 @@ import {
   CanDeleteCommentRatingSystem,
   CanDeleteConsent,
   CanDeleteDocument,
+  CanCreateAudio,
+  CanCreateVideo,
+  CanDeleteAudio,
+  CanDeleteVideo,
+  CanGetAudio,
+  CanGetAudios,
+  CanGetVideo,
+  CanGetVideos,
   CanDeleteEvent,
   CanDeleteExternalApp,
   CanDeleteImage,
@@ -146,7 +155,15 @@ import {
   Version,
 } from '@wepublish/ui/editor';
 import { de, enUS, fr } from 'date-fns/locale';
-import { ReactNode, useEffect, useState } from 'react';
+import {
+  ElementType,
+  ReactNode,
+  RefObject,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdAccountCircle,
@@ -164,6 +181,8 @@ import {
   MdDarkMode,
   MdDashboard,
   MdDescription,
+  MdAudiotrack,
+  MdVideoLibrary,
   MdEvent,
   MdExtension,
   MdFactCheck,
@@ -203,6 +222,7 @@ import {
   MdKey,
   MdVpnKey,
 } from 'react-icons/md';
+import { useLocation } from 'react-router-dom';
 
 import { ColorModePreference, useColorMode } from './colorMode';
 import { useMobileNavigation } from './mobileNavigation';
@@ -232,7 +252,8 @@ function useStickyState(defaultValue: string, key: string) {
   return [value, setValue];
 }
 
-const mobile = '@media (max-width: 899px)';
+const MOBILE_QUERY = '(max-width: 899px)';
+const mobile = `@media ${MOBILE_QUERY}`;
 
 const Wrapper = styled.div`
   display: flex;
@@ -243,6 +264,27 @@ const Wrapper = styled.div`
   ${mobile} {
     flex-direction: column;
     height: 100dvh;
+  }
+`;
+
+const SkipLink = styled.a`
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 1100;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background-color: ${({ theme }) => theme.vars.palette.background.paper};
+  color: ${({ theme }) => theme.vars.palette.text.primary};
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: var(--wep-elevated-shadow);
+  transform: translateY(calc(-100% - 16px));
+
+  &:focus {
+    transform: none;
+    outline: 2px solid ${({ theme }) => theme.vars.palette.primary.main};
+    outline-offset: 2px;
   }
 `;
 
@@ -331,7 +373,7 @@ const Search = styled(CommandPaletteTrigger)`
   width: calc(100% - 24px);
 `;
 
-const Sidenav = styled(List)`
+const Sidenav = styled(List)<{ component?: ElementType }>`
   flex: 1 1 auto;
   overflow-y: auto;
   padding: 0 12px 12px;
@@ -413,7 +455,7 @@ const MobileBrand = styled(Brand)`
   }
 `;
 
-const ChildrenContainer = styled('div')`
+const ChildrenContainer = styled('main')`
   --wep-page-padding-y: 32px;
   --wep-page-padding-x: 32px;
 
@@ -429,6 +471,10 @@ const ChildrenContainer = styled('div')`
   border: 1px solid var(--wep-shell-border);
   border-radius: 14px;
   box-shadow: var(--wep-surface-shadow);
+
+  &:focus {
+    outline: none;
+  }
 
   ${mobile} {
     --wep-page-padding-y: 20px;
@@ -448,12 +494,49 @@ const colorModeIcons = {
 
 const colorModePreferences: ColorModePreference[] = ['system', 'light', 'dark'];
 
+function useFocusMainWhenFocusIsLost(
+  mainRef: RefObject<HTMLElement | null>,
+  pathname: string
+) {
+  const lastPathRef = useRef(pathname);
+
+  useEffect(() => {
+    if (lastPathRef.current === pathname) {
+      return;
+    }
+
+    lastPathRef.current = pathname;
+
+    window.setTimeout(() => {
+      const active = document.activeElement;
+
+      if (!active || active === document.body || !active.isConnected) {
+        mainRef.current?.focus();
+      }
+    });
+  }, [mainRef, pathname]);
+}
+
 export function Base({ children }: BaseProps) {
   const { t, i18n } = useTranslation();
   const { preference: colorModePreference, setPreference: setColorMode } =
     useColorMode();
-  const mobileNavigation = useMobileNavigation();
+  const {
+    open: mobileNavigationOpen,
+    toggle: toggleMobileNavigation,
+    close: closeMobileNavigation,
+    triggerRef: mobileNavigationTriggerRef,
+    panelRef: mobileNavigationPanelRef,
+  } = useMobileNavigation();
   const { openMenus, followsRoute, toggleMenu } = useSidebarMenu();
+  const { pathname } = useLocation();
+  const isMobile = useMediaQuery(MOBILE_QUERY, { noSsr: true });
+  const sidebarIsModal = isMobile && mobileNavigationOpen;
+  const sidebarIsHidden = isMobile && !mobileNavigationOpen;
+  const sidebarId = useId();
+  const mainRef = useRef<HTMLElement>(null);
+
+  useFocusMainWhenFocusIsLost(mainRef, pathname);
 
   const [uiLanguage, setUILanguage] = useStickyState(
     AVAILABLE_LANG[0].id,
@@ -466,11 +549,24 @@ export function Base({ children }: BaseProps) {
 
   return (
     <Wrapper>
-      <MobileTopBar>
+      <SkipLink
+        href="#main-content"
+        inert={sidebarIsModal}
+        onClick={event => {
+          event.preventDefault();
+          mainRef.current?.focus();
+        }}
+      >
+        {t('navbar.skipToContent')}
+      </SkipLink>
+
+      <MobileTopBar inert={sidebarIsModal}>
         <IconButton
-          onClick={mobileNavigation.toggle}
+          ref={mobileNavigationTriggerRef}
+          onClick={toggleMobileNavigation}
           aria-label={t('navbar.menu')}
-          aria-expanded={mobileNavigation.open}
+          aria-expanded={mobileNavigationOpen}
+          aria-controls={sidebarId}
         >
           <MdMenu />
         </IconButton>
@@ -482,10 +578,18 @@ export function Base({ children }: BaseProps) {
         </MobileBrand>
       </MobileTopBar>
 
-      {mobileNavigation.open && <Backdrop onClick={mobileNavigation.close} />}
+      {mobileNavigationOpen && <Backdrop onClick={closeMobileNavigation} />}
 
       <Layout>
-        <Sidebar data-open={mobileNavigation.open}>
+        <Sidebar
+          ref={mobileNavigationPanelRef}
+          id={sidebarId}
+          data-open={mobileNavigationOpen}
+          inert={sidebarIsHidden}
+          role={sidebarIsModal ? 'dialog' : undefined}
+          aria-modal={sidebarIsModal ? 'true' : undefined}
+          aria-label={sidebarIsModal ? t('navbar.menu') : undefined}
+        >
           <Brand
             to="/dashboard"
             aria-label="We.Publish"
@@ -495,7 +599,10 @@ export function Base({ children }: BaseProps) {
 
           <Search />
 
-          <Sidenav>
+          <Sidenav
+            component="nav"
+            aria-label={t('navbar.mainNavigation')}
+          >
             <SidebarNav>
               <SidebarNavMenu
                 title={t('navbar.dashboard')}
@@ -964,6 +1071,40 @@ export function Base({ children }: BaseProps) {
                       {t('navbar.documentLibrary')}
                     </SidebarNavItem>
                   </PermissionControl>
+
+                  <FeatureControl feature="video-audio-uploads">
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        CanGetVideos.id,
+                        CanGetVideo.id,
+                        CanCreateVideo.id,
+                        CanDeleteVideo.id,
+                      ]}
+                    >
+                      <SidebarNavItem
+                        href="/videos"
+                        icon={<MdVideoLibrary />}
+                      >
+                        {t('navbar.videoLibrary')}
+                      </SidebarNavItem>
+                    </PermissionControl>
+
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        CanGetAudios.id,
+                        CanGetAudio.id,
+                        CanCreateAudio.id,
+                        CanDeleteAudio.id,
+                      ]}
+                    >
+                      <SidebarNavItem
+                        href="/audio"
+                        icon={<MdAudiotrack />}
+                      >
+                        {t('navbar.audioLibrary')}
+                      </SidebarNavItem>
+                    </PermissionControl>
+                  </FeatureControl>
                 </SidebarNavMenu>
               </PermissionControl>
 
@@ -1525,6 +1666,9 @@ export function Base({ children }: BaseProps) {
                 AVAILABLE_LANG.map(lang => (
                   <MenuItem
                     key={lang.id}
+                    lang={lang.id}
+                    role="menuitemradio"
+                    aria-checked={lang.id === i18n.language}
                     selected={lang.id === i18n.language}
                     onClick={() => {
                       setUILanguage(lang.id);
@@ -1553,6 +1697,8 @@ export function Base({ children }: BaseProps) {
                 colorModePreferences.map(preference => (
                   <MenuItem
                     key={preference}
+                    role="menuitemradio"
+                    aria-checked={preference === colorModePreference}
                     selected={preference === colorModePreference}
                     onClick={() => {
                       setColorMode(preference);
@@ -1569,7 +1715,14 @@ export function Base({ children }: BaseProps) {
 
           <Version />
         </Sidebar>
-        <ChildrenContainer>{children}</ChildrenContainer>
+        <ChildrenContainer
+          ref={mainRef}
+          id="main-content"
+          tabIndex={-1}
+          inert={sidebarIsModal}
+        >
+          {children}
+        </ChildrenContainer>
       </Layout>
     </Wrapper>
   );

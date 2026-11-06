@@ -9,6 +9,7 @@ import {
   SitemapContext,
   SitemapSiteConfig,
 } from './render';
+import { siteUrlFor } from './site-url';
 
 type Options = {
   getClient?: () => SitemapClient;
@@ -17,23 +18,6 @@ type Options = {
 
 const firstValue = (value: string | string[] | undefined) =>
   Array.isArray(value) ? value[0] : value;
-
-const siteUrlFromRequest = (req: NextApiRequest) => {
-  const host = firstValue(req.headers['x-forwarded-host'] ?? req.headers.host);
-
-  if (!host) {
-    return '';
-  }
-
-  const protocol =
-    firstValue(req.headers['x-forwarded-proto']) ??
-    (host.startsWith('localhost') ? 'http' : 'https');
-
-  return `${protocol}://${host}`;
-};
-
-const siteUrlFor = (req: NextApiRequest) =>
-  (process.env.WEBSITE_URL || siteUrlFromRequest(req)).replace(/\/$/, '');
 
 export const createSitemapHandlers = (
   config: SitemapSiteConfig,
@@ -50,7 +34,7 @@ export const createSitemapHandlers = (
   ) => {
     const context = {
       client: getClient(),
-      siteUrl: siteUrlFor(req),
+      siteUrl: siteUrlFor(name => req.headers[name]),
       now: now(),
     };
 

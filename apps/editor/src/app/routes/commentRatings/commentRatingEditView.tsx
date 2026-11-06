@@ -40,7 +40,7 @@ import {
   TableWrapper,
   useSeededState,
 } from '@wepublish/ui/editor';
-import { useCallback, useState } from 'react';
+import { RefObject, useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete, MdOutlineSave, MdReplay } from 'react-icons/md';
 
@@ -93,6 +93,7 @@ function CommentRatingEditView() {
   const [ratingSystem, setRatingSystem] =
     useState<FullCommentRatingSystemFragment | null>(null);
   const [answerToDelete, setAnswerToDelete] = useState<string | null>(null);
+  const newAnswerButton = useRef<HTMLButtonElement>(null);
 
   const [t] = useTranslation();
 
@@ -180,6 +181,7 @@ function CommentRatingEditView() {
         {ratingSystem && (
           <ListViewActions>
             <Button
+              ref={newAnswerButton}
               variant="contained"
               startIcon={<MdAdd />}
               onClick={() => {
@@ -223,6 +225,7 @@ function CommentRatingEditView() {
             answers={ratingSystem.answers}
             onDeleteAnswer={setAnswerToDelete}
             onUpdateAnswer={updateAnswerLocally}
+            emptyFocusRef={newAnswerButton}
           />
         )}
       </TableWrapper>
@@ -286,21 +289,50 @@ type PollAnswersProps = {
     name: string | null | undefined,
     type: RatingSystemType
   ): void;
+  emptyFocusRef?: RefObject<HTMLElement | null>;
 };
 
 export function RatingAnswers({
   answers,
   onDeleteAnswer,
   onUpdateAnswer,
+  emptyFocusRef,
 }: PollAnswersProps) {
   const { t } = useTranslation();
+  const answerInputs = useRef(new Map<string, HTMLInputElement | null>());
+  const previousAnswers = useRef(answers);
+
+  useEffect(() => {
+    const previous = previousAnswers.current;
+    previousAnswers.current = answers;
+
+    const ids = new Set(answers.map(answer => answer.id));
+    const removedIndex = previous.findIndex(answer => !ids.has(answer.id));
+
+    if (removedIndex === -1) {
+      return;
+    }
+
+    const neighbour = previous
+      .slice(removedIndex + 1)
+      .concat(previous.slice(0, removedIndex).reverse())
+      .find(answer => ids.has(answer.id));
+
+    (
+      (neighbour && answerInputs.current.get(neighbour.id)) ??
+      emptyFocusRef?.current
+    )?.focus();
+  }, [answers, emptyFocusRef]);
 
   return (
     <AnswerList>
       {answers?.map(answer => (
         <AnswerRow key={answer.id}>
           <TextField
-            placeholder={t('comments.ratingEdit.placeholder')}
+            inputRef={(element: HTMLInputElement | null) => {
+              answerInputs.current.set(answer.id, element);
+            }}
+            label={t('comments.ratingEdit.placeholder')}
             value={answer.answer || ''}
             onChange={event =>
               onUpdateAnswer(answer.id, event.target.value, answer.type)
@@ -310,6 +342,7 @@ export function RatingAnswers({
 
           <TextField
             select
+            label={t('comments.ratingEdit.type')}
             value={answer.type}
             onChange={event =>
               onUpdateAnswer(
@@ -332,7 +365,7 @@ export function RatingAnswers({
 
           <IconButtonTooltip caption={t('delete')}>
             <IconButton
-              aria-label={t('delete')}
+              aria-label={`${t('delete')} ${answer.answer || ''}`.trim()}
               size="small"
               color="error"
               onClick={() => onDeleteAnswer(answer.id)}

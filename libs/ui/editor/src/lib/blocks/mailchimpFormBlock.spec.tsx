@@ -276,6 +276,28 @@ describe('MailchimpFormBlock', () => {
     );
   });
 
+  it('should name the layout radio group after its label', () => {
+    renderWithGroupsInput();
+
+    expect(
+      screen.getByRole('radiogroup', {
+        name: 'blocks.mailchimpForm.optionsLayout',
+      })
+    ).toBeInTheDocument();
+  });
+
+  it('should group the interest option image controls under its label', () => {
+    renderWithGroupsInput();
+
+    fireEvent.click(screen.getByText('blocks.mailchimpForm.addInterestOption'));
+
+    expect(
+      screen.getByRole('group', {
+        name: 'blocks.mailchimpForm.interestOptionImage',
+      })
+    ).toBeInTheDocument();
+  });
+
   it('should add, edit and remove interest options', () => {
     const latest = renderWithGroupsInput();
 
@@ -653,7 +675,7 @@ describe('MailchimpFormBlock', () => {
       },
     });
 
-    expect(screen.getAllByLabelText('colorPicker.pickColor')).toHaveLength(3);
+    expect(screen.getAllByLabelText(/^colorPicker\.pickColor/)).toHaveLength(3);
 
     fireEvent.change(
       screen.getByRole('textbox', { name: 'blocks.mailchimpForm.buttonColor' }),
