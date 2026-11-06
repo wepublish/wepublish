@@ -1,4 +1,6 @@
 import { createTheme, ThemeOptions } from '@mui/material/styles';
+import { flimmerTenant } from '@wepublish/tenant/flimmer';
+import { baseTheme, minimalTheme, theme as sharedTheme } from '@wepublish/ui';
 
 import { CourantColorOverrides, CourantPaletteColors } from './brand-colors';
 import websiteSettings from './fixtures/website-settings.json';
@@ -16,6 +18,25 @@ const deepFreeze = <T>(value: T): T => {
 };
 
 describe('Courant theme ownership', () => {
+  it('leaves shared themes and another tenant theme unchanged', () => {
+    const sharedBefore = JSON.stringify({
+      baseTheme,
+      minimalTheme,
+      sharedTheme,
+    });
+    const siblingBefore = JSON.stringify(flimmerTenant.createTheme());
+
+    createCourantTheme(websiteSettings.theme as unknown as ThemeOptions);
+    createCourantTheme(undefined, {
+      palette: { primary: { main: '#123456' } },
+    });
+
+    expect(JSON.stringify({ baseTheme, minimalTheme, sharedTheme })).toBe(
+      sharedBefore
+    );
+    expect(JSON.stringify(flimmerTenant.createTheme())).toBe(siblingBefore);
+  });
+
   it('ignores CMS typography, responsive rules, layout, and component overrides', () => {
     const baseline = createCourantTheme();
     const theme = createCourantTheme({
