@@ -1217,6 +1217,14 @@ function AppRoutes() {
             </Base>
           }
         />
+        <Route
+          path="integrations/:type/edit/:id"
+          element={
+            <Base>
+              <IntegrationEditView />
+            </Base>
+          }
+        />
         {/* Settings Routes */}
         <Route
           path="settings"

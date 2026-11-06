@@ -164,6 +164,7 @@ import { demoView } from './demo.view';
         'apps/editor/src/app/routes/authors/authorDrawer.tsx',
         'apps/editor/src/app/routes/events/eventCreateView.tsx',
         'apps/editor/src/app/routes/events/eventEditView.tsx',
+        'apps/editor/src/app/routes/integrations/paymentIntegrationForm.tsx',
         'apps/editor/src/app/routes/navigations/navigationDrawer.tsx',
         'apps/editor/src/app/routes/paywall/bypassTokenRow.tsx',
         'apps/editor/src/app/routes/paywall/paywallCreateView.tsx',

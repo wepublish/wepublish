@@ -1,186 +1,68 @@
-import { css } from '@emotion/react';
-import styled from '@emotion/styled';
-import { lighten } from '@mui/material';
+import { useMutation } from '@apollo/client/react';
 import {
   AnalyticsProviderType,
   CreateAnalyticsProviderSettingDocument,
-  SettingAnalyticsProvider,
   SettingsIntegrationsAnalyticsDocument,
   UpdateAnalyticsProviderSettingDocument,
 } from '@wepublish/editor/api';
-import { enqueueSnackbar, humanizeError } from '@wepublish/ui/editor';
-import { ComponentProps, forwardRef, useCallback } from 'react';
-import { useDropzone } from 'react-dropzone';
-import { useTranslation } from 'react-i18next';
-import { z } from 'zod';
+import {
+  bindComponent,
+  FormDrawerPanel,
+  useEditForm,
+  useQueryLoader,
+} from '@wepublish/form/editor';
+import { CanUpdateAnalyticsProviderSettings } from '@wepublish/permissions';
 
+import {
+  type AnalyticsSetting,
+  fromAnalyticsSetting,
+} from './analyticsIntegration.schema';
+import { analyticsSettingView } from './analyticsIntegration.view';
 import googleLogo from './assets/google.svg';
-import { CustomField } from './genericIntegrationForm';
-import { GenericIntegrationList } from './genericIntegrationList';
+import { CredentialsDropzoneField } from './credentialsDropzone';
+import { findSetting, settingName } from './integrationPaths';
+import { IntegrationSettings } from './integrationSettings';
 
-const credentialsSchema = z.object({
-  type: z.string(),
-  project_id: z.string(),
-  private_key_id: z.string(),
-  private_key: z.string(),
-  client_email: z.string(),
-  client_id: z.string(),
-});
+const writePermissions = [CanUpdateAnalyticsProviderSettings.id];
 
-const analyticsSettingsSchema = z.object({
-  property: z.string().nullish().or(z.literal('')),
-  articlePrefix: z.string().nullish().or(z.literal('')),
-  credentials: credentialsSchema.nullish(),
-});
-
-type IntegrationFormValues = z.infer<typeof analyticsSettingsSchema>;
-
-const showErrors = (error: Error): void => {
-  enqueueSnackbar(humanizeError(error), {
-    variant: 'error',
-    autoHideDuration: 8000,
-  });
-};
-
-const CustomDropzoneWrapper = styled.div<{ dragging: boolean; valid: boolean }>`
-  aspect-ratio: 16/9;
-  border: 2px dashed ${({ theme }) => theme.vars.palette.grey['300']};
-  background-color: ${({ theme }) => theme.vars.palette.grey['100']};
-
-  [data-mui-color-scheme='dark'] & {
-    border-color: ${({ theme }) => theme.vars.palette.grey['700']};
-    background-color: ${({ theme }) => theme.vars.palette.grey['900']};
-  }
-
-  display: grid;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  border-radius: ${({ theme }) => `calc(${theme.shape.borderRadius}px * 0.75)`};
-  cursor: pointer;
-
-  ${({ valid, theme }) =>
-    valid &&
-    css`
-      border-color: ${lighten(theme.palette.success.light, 0.5)};
-      background-color: ${lighten(theme.palette.success.light, 0.9)};
-
-      [data-mui-color-scheme='dark'] & {
-        border-color: rgba(${theme.vars.palette.success.mainChannel} / 0.5);
-        background-color: rgba(
-          ${theme.vars.palette.success.mainChannel} / 0.12
-        );
-      }
-    `}
-
-  ${({ dragging, theme }) =>
-    dragging &&
-    css`
-      border-color: ${theme.vars.palette.grey['200']};
-      background-color: ${theme.vars.palette.grey['50']};
-
-      [data-mui-color-scheme='dark'] & {
-        border-color: ${theme.vars.palette.grey['600']};
-        background-color: ${theme.vars.palette.grey['800']};
-      }
-    `}
-`;
-
-/** Credentials never come back from the API; `stored` says whether some are. */
-export const credentialsDropzoneText = (
-  {
-    dragging,
-    newFile,
-    stored,
-  }: { dragging: boolean; newFile: boolean; stored: boolean },
-  t: (key: string) => string
-) =>
-  dragging ? t('integrations.analyticsSettings.dropCredentialsFile')
-  : newFile ? t('integrations.analyticsSettings.credentialsReadyToBeSaved')
-  : stored ? t('integrations.analyticsSettings.credentialsStored')
-  : t('integrations.analyticsSettings.dragCredentialsFileHere');
-
-const CustomDropzone = forwardRef<
-  HTMLInputElement,
-  ComponentProps<
-    CustomField<IntegrationFormValues['credentials']>['render']
-  > & { stored?: boolean }
->(({ onChange, disabled, value, stored = false }, ref) => {
-  const { t } = useTranslation();
-
-  const onDrop = useCallback(
-    ([acceptedFile]: File[]) => {
-      const reader = new FileReader();
-      reader.onload = event => {
-        try {
-          const json = JSON.parse(event.target?.result as string);
-          const value = credentialsSchema.parse(json);
-
-          onChange(value);
-        } catch (error) {
-          showErrors(
-            new Error(t('integrations.analyticsSettings.invalidFile'))
-          );
-        }
-      };
-      reader.onerror = () => {
-        showErrors(
-          new Error(t('integrations.analyticsSettings.readFileError'))
-        );
-      };
-      reader.readAsText(acceptedFile);
-    },
-    [onChange, t]
+export function AnalyticsSettingForm({
+  setting,
+}: {
+  setting: AnalyticsSetting;
+}) {
+  const load = useQueryLoader(
+    SettingsIntegrationsAnalyticsDocument,
+    {},
+    data =>
+      fromAnalyticsSetting(
+        findSetting(data.analyticsProviderSettings, setting.id)
+      )
   );
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    accept: {
-      'text/plain': [],
-      'application/json': [],
+  const [updateSetting] = useMutation(UpdateAnalyticsProviderSettingDocument);
+  const controller = useEditForm(analyticsSettingView, {
+    title: 'integrations.editSetting',
+    titleParams: () => ({ name: settingName(setting) }),
+    writePermissions,
+    fields: {
+      credentials: {
+        component: bindComponent(CredentialsDropzoneField, {
+          stored: setting.isCredentialsSet,
+        }),
+      },
     },
-    multiple: false,
-    onError: showErrors,
-    preventDropOnDocument: true,
-    disabled,
+    load,
+    save: values => updateSetting({ variables: { id: setting.id, ...values } }),
   });
 
-  return (
-    <CustomDropzoneWrapper
-      {...getRootProps()}
-      dragging={isDragActive}
-      valid={!!value}
-    >
-      <input {...getInputProps()} />
-
-      {credentialsDropzoneText(
-        { dragging: isDragActive, newFile: !!value, stored },
-        t
-      )}
-    </CustomDropzoneWrapper>
-  );
-});
-
-const StoredCredentialsDropzone = forwardRef<
-  HTMLInputElement,
-  ComponentProps<CustomField<IntegrationFormValues['credentials']>['render']>
->((props, ref) => (
-  <CustomDropzone
-    {...props}
-    ref={ref}
-    stored
-  />
-));
+  return <FormDrawerPanel controller={controller} />;
+}
 
 export function AnalyticsIntegrationForm() {
-  const { t } = useTranslation();
-
   return (
-    <GenericIntegrationList<SettingAnalyticsProvider, IntegrationFormValues>
+    <IntegrationSettings<AnalyticsSetting>
+      type="analytics"
       query={SettingsIntegrationsAnalyticsDocument}
-      mutation={UpdateAnalyticsProviderSettingDocument}
       dataKey="analyticsProviderSettings"
-      schema={analyticsSettingsSchema}
       fixedProvider={{
         id: 'google-analytics',
         type: AnalyticsProviderType.Google,
@@ -188,32 +70,8 @@ export function AnalyticsIntegrationForm() {
         createMutation: CreateAnalyticsProviderSettingDocument,
       }}
       getLogo={() => googleLogo}
-      fields={setting => [
-        {
-          name: 'articlePrefix',
-          label: t('integrations.analyticsSettings.articlePrefix'),
-          info: t('integrations.analyticsSettings.articlePrefixInfo'),
-          type: 'text',
-          autoComplete: 'one-time-code',
-        },
-        {
-          name: 'property',
-          label: t('integrations.analyticsSettings.property'),
-          info: t('integrations.analyticsSettings.propertyInfo'),
-          type: 'text',
-          autoComplete: 'one-time-code',
-        },
-        {
-          name: 'credentials',
-          label: t('integrations.analyticsSettings.credentials'),
-          info: t('integrations.analyticsSettings.credentialsInfo'),
-          type: 'custom',
-          render:
-            setting.isCredentialsSet ?
-              StoredCredentialsDropzone
-            : CustomDropzone,
-        },
-      ]}
-    />
+    >
+      {setting => <AnalyticsSettingForm setting={setting} />}
+    </IntegrationSettings>
   );
 }

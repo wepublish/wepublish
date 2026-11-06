@@ -3616,6 +3616,7 @@
       "updateError": "Settings update failed",
       "noSettingsFound": "No settings found",
       "lastLoaded": "Last loaded",
+      "editSetting": "Edit {{name}}",
       "aiSettings": {
         "apiKey": "API Key",
         "systemPrompt": "System Prompt",
@@ -3642,6 +3643,10 @@
         "vatRate": "VAT Rate",
         "declineRenewals": "Decline renewals (simulate failed recurring payments)",
         "webhookEndpointSecret": "Webhook Endpoint Secret",
+        "credentials": "Credentials",
+        "provider": "Provider settings",
+        "bexioAccounting": "Bexio accounting",
+        "bexioInvoice": "Bexio invoice",
         "bexioUserId": "Bexio User ID",
         "bexioCountryId": "Bexio Country ID",
         "bexioUnitId": "Bexio Unit ID",

@@ -1,4 +1,4 @@
-import { credentialsDropzoneText } from './analyticsIntegrationForm';
+import { credentialsDropzoneText } from './credentialsDropzoneText';
 
 const text = (state: Parameters<typeof credentialsDropzoneText>[0]) =>
   credentialsDropzoneText(state, key => key);

@@ -35,6 +35,13 @@ import { IconPickerField } from './routes/externalApps/iconPicker';
 import { LinkedApiKeyWarning } from './routes/externalApps/linkedApiKeyWarning';
 import { GoodieCreateForm } from './routes/goodie/goodieCreateView';
 import { GoodieEditForm } from './routes/goodie/goodieEditView';
+import { AISettingForm } from './routes/integrations/aiIntegrationForm';
+import { AnalyticsSettingForm } from './routes/integrations/analyticsIntegrationForm';
+import { ChallengeSettingForm } from './routes/integrations/challengeIntegrationForm';
+import { CredentialsDropzoneField } from './routes/integrations/credentialsDropzone';
+import { IntegrationSettings } from './routes/integrations/integrationSettings';
+import { PaymentSettingForm } from './routes/integrations/paymentIntegrationForm';
+import { TrackingPixelSettingForm } from './routes/integrations/trackingPixelIntegrationForm';
 import {
   NavigationCreateForm,
   NavigationDrawer,
@@ -126,6 +133,13 @@ describe('the editor under test', () => {
     ['LinkedApiKeyWarning', LinkedApiKeyWarning],
     ['GoodieCreateForm', GoodieCreateForm],
     ['GoodieEditForm', GoodieEditForm],
+    ['AISettingForm', AISettingForm],
+    ['AnalyticsSettingForm', AnalyticsSettingForm],
+    ['ChallengeSettingForm', ChallengeSettingForm],
+    ['CredentialsDropzoneField', CredentialsDropzoneField],
+    ['IntegrationSettings', IntegrationSettings],
+    ['PaymentSettingForm', PaymentSettingForm],
+    ['TrackingPixelSettingForm', TrackingPixelSettingForm],
     ['NavigationCreateForm', NavigationCreateForm],
     ['NavigationEditForm', NavigationEditForm],
     ['NavigationDrawer', NavigationDrawer],
