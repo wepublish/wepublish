@@ -3554,7 +3554,8 @@
         "memberCount_other": "{{count}} membres",
         "enabledInfo": "Si activé, We.Publish transfère chaque nuit tous les comptes utilisateur actifs et leurs données d’abonnement vers l’audience Mailchimp. « Synchroniser maintenant » ne fonctionne que si cette option est activée.",
         "apiKeyInfo": "La clé API de votre compte Mailchimp (« Profil » → « Extras » → « Clés API »), se terminant par -us1, -us2, etc. Enregistrez-la d’abord pour que les audiences, champs de fusion et groupes ci-dessous puissent être chargés.",
-        "listIdInfo": "L’audience Mailchimp vers laquelle les comptes utilisateur sont transférés. Une fois la clé API enregistrée, vous pouvez la choisir dans la liste ; sinon, saisissez son ID figurant dans les paramètres de l’audience dans Mailchimp.",
+        "listIdInfo": "L’audience Mailchimp vers laquelle les comptes utilisateur sont transférés. Choisissez-la dans la liste ou saisissez son ID figurant dans les paramètres de l’audience dans Mailchimp.",
+        "saveWorkingApiKey": "Enregistrez une clé API Mailchimp valide pour choisir ici l’audience, les champs de fusion et les groupes d’intérêts.",
         "dryRunInfo": "Montre quels contacts seraient modifiés dans Mailchimp, sans rien y changer. La limite d’essai vérifie un échantillon aléatoire de ce nombre de comptes ; laissez vide pour tout vérifier."
       },
       "typeChangeTitle": "Changer vraiment le type ?",

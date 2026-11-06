@@ -3623,7 +3623,8 @@
         "memberCount_other": "{{count}} members",
         "enabledInfo": "When enabled, We.Publish transfers all active user accounts with their subscription data to the Mailchimp audience every night. «Sync Now» only works when this is on.",
         "apiKeyInfo": "The API key of your Mailchimp account («Profile» → «Extras» → «API keys»), ending in -us1, -us2 etc. Save it first so that the audiences, merge fields and groups below can be loaded.",
-        "listIdInfo": "The Mailchimp audience the user accounts are transferred to. Once the API key is saved, you can pick it from the list; otherwise enter its ID from the audience settings in Mailchimp.",
+        "listIdInfo": "The Mailchimp audience the user accounts are transferred to. Pick it from the list, or enter its ID from the audience settings in Mailchimp.",
+        "saveWorkingApiKey": "Save a working Mailchimp API key to pick the audience, merge fields and interest groups here.",
         "dryRunInfo": "Shows which contacts would change in Mailchimp, without changing anything there. The dry run limit checks a random sample of that many users; leave it empty to check everyone."
       },
       "typeChangeTitle": "Really change the type?",

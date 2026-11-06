@@ -1135,7 +1135,8 @@ export class MailchimpSyncService {
   async getMailchimpLists(
     configId: string
   ): Promise<{ id: string; name: string; memberCount: number }[]> {
-    const config = await this.getConfigById(configId);
+    const config =
+      await this.syncProviderSettingsService.getSyncConfig(configId);
     this.configureMailchimpClient(config);
 
     try {
@@ -1160,7 +1161,8 @@ export class MailchimpSyncService {
     configId: string,
     listId: string
   ): Promise<{ tag: string; name: string; type: string }[]> {
-    const config = await this.getConfigById(configId);
+    const config =
+      await this.syncProviderSettingsService.getSyncConfig(configId);
     this.configureMailchimpClient(config);
 
     try {
@@ -1185,7 +1187,8 @@ export class MailchimpSyncService {
     configId: string,
     listId: string
   ): Promise<{ id: string; name: string }[]> {
-    const config = await this.getConfigById(configId);
+    const config =
+      await this.syncProviderSettingsService.getSyncConfig(configId);
     this.configureMailchimpClient(config);
 
     try {

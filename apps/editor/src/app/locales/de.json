@@ -3562,7 +3562,8 @@
         "memberCount_other": "{{count}} Mitglieder",
         "enabledInfo": "Wenn aktiviert, überträgt We.Publish jede Nacht alle aktiven Benutzerkonten samt Abo-Daten in die Mailchimp-Zielgruppe. «Jetzt synchronisieren» geht nur, wenn das aktiviert ist.",
         "apiKeyInfo": "Der API-Schlüssel deines Mailchimp-Kontos («Profil» → «Extras» → «API-Schlüssel»), er endet auf -us1, -us2 usw. Speichere ihn zuerst, damit unten Zielgruppen, Merge-Felder und Gruppen geladen werden können.",
-        "listIdInfo": "Die Mailchimp-Zielgruppe, in die die Benutzerkonten übertragen werden. Sobald der API-Schlüssel gespeichert ist, kannst du sie aus der Liste wählen; sonst gib ihre ID aus den Zielgruppen-Einstellungen in Mailchimp ein.",
+        "listIdInfo": "Die Mailchimp-Zielgruppe, in die die Benutzerkonten übertragen werden. Wähle sie aus der Liste oder gib ihre ID aus den Zielgruppen-Einstellungen in Mailchimp ein.",
+        "saveWorkingApiKey": "Speichere einen gültigen Mailchimp-API-Schlüssel, um hier Zielgruppe, Merge-Felder und Gruppen auszuwählen.",
         "dryRunInfo": "Zeigt, welche Kontakte sich in Mailchimp ändern würden, ohne dort etwas zu verändern. Das Testlauf-Limit prüft eine zufällige Auswahl von so vielen Benutzerkonten; leer gelassen, werden alle geprüft."
       },
       "typeChangeTitle": "Typ wirklich wechseln?",
