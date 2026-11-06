@@ -907,7 +907,6 @@
       "checkedByDefault": "Cochée par défaut"
     },
     "create": "Créer",
-    "createAndClose": "Créer & fermer",
     "createOrEditUserPassword": {
       "sendLoginLink": "Envoyer le lien de login par e-mail ?",
       "sendLoginLinkContent": "Voulez-vous envoyer un lien à {{email}} avec lequel {{firstName}} {{name}} peut se connecter avec ses autorisations existantes ?"
@@ -1160,13 +1159,10 @@
       "minimalAmountPerMonth": "Le montant minimum / mois est de {{amount}} {{currency}}.",
       "amountTooLowErrorMessage": "Le montant est inférieur au minimum de ce plan d'abonnement",
       "noAmountErrorMessage": "Le montant par défaut sera fixé à 5.00 si le champ est laissé vide",
-      "noMemberPlanErrorMessage": "Veuillez sélectionner un plan d’abonnement",
       "noNameErrorMessage": "Veuillez entrer un nom",
       "noQuestionErrorMessage": "Veuillez saisir une question",
       "noPasswordErrorMessage": "Veuillez entrer un mot de passe",
-      "noPaymentMethodErrorMessage": "Veuillez sélectionner une méthode de paiement",
       "noPaymentPeriodicityErrorMessage": "Veuillez sélectionner une périodicité de paiement",
-      "noUserErrorMessage": "Veuillez sélectionner un·e utilisateur·trice",
       "passwordTooShortErrorMessage": "Le mot de passe doit comporter au moins 12 caractères.",
       "passwordCompromisedErrorMessage": "Ce mot de passe est apparu dans une fuite de données. Veuillez choisir un autre mot de passe.",
       "required": "Ce champ est requis",
@@ -2935,7 +2931,6 @@
         "date": "Date de désactivation",
         "help": "Les abonnements désactivés peuvent encore être utilisés jusqu’à la date « payée jusqu’à ». Mais ils ne seront pas renouvelés automatiquement, même si l’option de renouvellement automatique est activée. Une désactivation peut être annulée dans l’éditeur.",
         "cancellation": "Date d’annulation",
-        "isDeactivated": "L’abonnement est désactivé depuis {{date, ccc PP p}} et ne peut plus être modifié. Raison : {{reason}}. Il peut être réactivé ou un nouvel abonnement peut être souscrit.",
         "modalMessage": {
           "activated": "Voulez-vous désactiver l’abonnement de « {{userName}} » avec l’adresse e-mail « {{userEmail}} » ?"
         },
@@ -2950,8 +2945,7 @@
         "reasonChargeback": "Rétrofacturation",
         "title": {
           "activated": "Désactiver l’abonnement"
-        },
-        "willBeDeactivated": "L’abonnement sera désactivé le {{date, ccc PP p}}"
+        }
       },
       "revertUpgrade": {
         "title": "Annuler le changement",
@@ -3169,6 +3163,8 @@
     },
     "subscriptionEditView": {
       "detailsTitle": "Offre et paiement",
+      "openUser": "Ouvrir l’utilisateur·trice",
+      "openMemberPlan": "Ouvrir le plan d’abonnement",
       "renewalTitle": "Durée et renouvellement",
       "trialSubscriptionConfigured": "Cet abonnement est configuré comme un abonnement d’essai.",
       "nonExtendableNotCompatibleWithAutoRenew": "Un abonnement à renouvellement automatique doit pouvoir être prolongé. Modifiez l’un de ces paramètres.",

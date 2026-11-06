@@ -3,9 +3,6 @@ import styled from '@emotion/styled';
 import {
   Alert,
   Button,
-  Card,
-  CardContent,
-  CardHeader,
   Dialog,
   DialogActions,
   DialogContent,
@@ -392,51 +389,29 @@ function InvoiceListPanel({
     onInvoicePaid();
   }
 
-  const panelTitle = t('invoice.panel.invoiceHistory');
-
   if (!subscriptionId) {
     return (
-      <Card>
-        <CardHeader title={panelTitle} />
-
-        <CardContent>
-          <Alert severity="error">
-            {t('invoice.panel.missingSubscriptionId')}
-          </Alert>
-        </CardContent>
-      </Card>
+      <Alert severity="error">{t('invoice.panel.missingSubscriptionId')}</Alert>
     );
   }
 
   if (!invoices?.length) {
-    return (
-      <Card>
-        <CardHeader title={panelTitle} />
-
-        <CardContent>
-          <Alert severity="info">{t('invoice.panel.noInvoices')}</Alert>
-        </CardContent>
-      </Card>
-    );
+    return <Alert severity="info">{t('invoice.panel.noInvoices')}</Alert>;
   }
 
   return (
-    <Card>
-      <CardHeader title={panelTitle} />
-
-      <CardContent>
-        <DataTable
-          data={sortedInvoices}
-          sortable={['dueAt']}
-          sortColumn="dueAt"
-          sortOrder={sortType}
-          onSort={(_column, order) => setSortType(order)}
-          getRowId={row => row.id}
-          storageKey="invoices"
-          exportRows={() => sortedInvoices}
-          columns={columns}
-        />
-      </CardContent>
+    <>
+      <DataTable
+        data={sortedInvoices}
+        sortable={['dueAt']}
+        sortColumn="dueAt"
+        sortOrder={sortType}
+        onSort={(_column, order) => setSortType(order)}
+        getRowId={row => row.id}
+        storageKey="invoices"
+        exportRows={() => sortedInvoices}
+        columns={columns}
+      />
 
       <Dialog
         open={!!invoiceToPay}
@@ -459,7 +434,7 @@ function InvoiceListPanel({
       </Dialog>
 
       {actionMailDialog}
-    </Card>
+    </>
   );
 }
 const CheckedPermissionComponent = createCheckedPermissionComponent([

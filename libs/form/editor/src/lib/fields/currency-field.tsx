@@ -6,20 +6,23 @@ import { fieldAnatomy, textFieldProps } from '../field-anatomy';
 
 export type CurrencyFieldProps = {
   currency: string;
+  scale?: number;
 };
 
 const amountText = (raw: string) => raw.match(/\d*[.,]?\d{0,2}/)?.[0] ?? '';
 
-const centsFrom = (text: string): number | null => {
+const centsFrom = (text: string, scale: number): number | null => {
   const amount = Number(text.replace(',', '.'));
 
-  return text === '' || Number.isNaN(amount) ? null : Math.round(amount * 100);
+  return text === '' || Number.isNaN(amount) ?
+      null
+    : Math.round(amount * 100) / scale;
 };
 
-const textFrom = (cents: unknown) =>
-  typeof cents === 'number' ? (cents / 100).toFixed(2) : '';
+const textFrom = (cents: unknown, scale: number) =>
+  typeof cents === 'number' ? ((cents * scale) / 100).toFixed(2) : '';
 
-export function CurrencyField({ currency }: CurrencyFieldProps) {
+export function CurrencyField({ currency, scale = 1 }: CurrencyFieldProps) {
   const { ref, ...field } = useField<number | null | undefined>();
   const [draft, setDraft] = useState<string | null>(null);
   const currencyId = `${field.id}-currency`;
@@ -43,12 +46,12 @@ export function CurrencyField({ currency }: CurrencyFieldProps) {
         htmlInput: { inputMode: 'decimal', 'aria-describedby': describedBy },
       })}
       inputRef={ref}
-      value={draft ?? textFrom(field.value)}
+      value={draft ?? textFrom(field.value, scale)}
       onChange={event => {
         const text = amountText(event.target.value);
 
         setDraft(text);
-        field.onChange(centsFrom(text));
+        field.onChange(centsFrom(text, scale));
       }}
       onBlur={() => {
         setDraft(null);

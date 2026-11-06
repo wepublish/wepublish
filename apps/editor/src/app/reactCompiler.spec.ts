@@ -45,6 +45,17 @@ import {
   PeerProfileForm,
 } from './routes/peers/peerProfileDrawer';
 import { RemotePeerProfile } from './routes/peers/remotePeerProfile';
+import { PeriodAmountField } from './routes/subscriptions/periodAmountField';
+import { SubscriptionActions } from './routes/subscriptions/subscriptionActions';
+import {
+  SubscriptionCreateForm,
+  SubscriptionEditForm,
+} from './routes/subscriptions/subscriptionEditView';
+import {
+  PendingPaymentMethodChange,
+  RenewalActions,
+  SubscriptionInvoices,
+} from './routes/subscriptions/subscriptionSections';
 import { TagCreateForm } from './routes/tags/tagCreateView';
 import { TagEditForm } from './routes/tags/tagEditView';
 import { GeneratedToken } from './routes/tokens/generatedToken';
@@ -107,6 +118,13 @@ describe('the editor under test', () => {
     ['RemotePeerProfile', RemotePeerProfile],
     ['PeerProfileForm', PeerProfileForm],
     ['PeerProfileDrawer', PeerProfileDrawer],
+    ['SubscriptionCreateForm', SubscriptionCreateForm],
+    ['SubscriptionEditForm', SubscriptionEditForm],
+    ['SubscriptionActions', SubscriptionActions],
+    ['PendingPaymentMethodChange', PendingPaymentMethodChange],
+    ['RenewalActions', RenewalActions],
+    ['SubscriptionInvoices', SubscriptionInvoices],
+    ['PeriodAmountField', PeriodAmountField],
     ['TagCreateForm', TagCreateForm],
     ['TagEditForm', TagEditForm],
     ['TokenGenerateForm', TokenGenerateForm],
