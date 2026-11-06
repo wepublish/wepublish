@@ -1905,8 +1905,7 @@
         "showHistory": "Afficher dans l’historique",
         "again": "Nouveau changement",
         "unreachableEmail": "{{count}} personnes avec une adresse e-mail injoignable (fictive ou morte) sont tout de même changées – les e-mails ne leur parviendront pas.",
-        "filterTitle": "Filtrer le groupe d’utilisateurs",
-        "segmentsLabel": "Filtrer le groupe d’utilisateurs par statut e-mail"
+        "filterTitle": "Filtrer le groupe d’utilisateurs"
       },
       "history": {
         "allChannels": "Tous"
@@ -4290,7 +4289,6 @@
         "unresponsive": "Sans réaction",
         "unknown": "Inconnu",
         "active": "Active",
-        "pick": "Tous les statuts",
         "hint": "Plusieurs statuts signifient « l’un ou l’autre ». « Sans réaction » : des e-mails ont été remis, mais aucune connexion ni aucun clic depuis longtemps (réglage « Qualité des e-mails »). À atteindre par courrier : substitution + injoignable.",
         "overview": "Personnes de cette audience par statut e-mail (indépendamment de la sélection)",
         "refresh": "Actualiser les statuts",

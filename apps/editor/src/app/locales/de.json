@@ -1905,8 +1905,7 @@
         "showHistory": "Im Verlauf anzeigen",
         "again": "Neue Umstellung",
         "unreachableEmail": "{{count}} User mit nicht erreichbarer E-Mail-Adresse (Platzhalter oder unzustellbar) werden trotzdem umgestellt – Mitteilungen per E-Mail kommen dort nicht an.",
-        "filterTitle": "Benutzergruppe filtern",
-        "segmentsLabel": "Benutzergruppe nach E-Mail-Status filtern"
+        "filterTitle": "Benutzergruppe filtern"
       },
       "history": {
         "allChannels": "Alle"
@@ -4298,7 +4297,6 @@
         "unresponsive": "Reagiert nicht",
         "unknown": "Unbekannt",
         "active": "Aktiv",
-        "pick": "Alle Status",
         "hint": "Mehrere Status gelten als «oder». «Reagiert nicht»: Mails wurden zugestellt, aber seit längerem kein Login und kein Klick (Einstellung «E-Mail-Qualität»). Per Brief erreichen: Platzhalter + Nicht erreichbar.",
         "overview": "User dieser Zielgruppe nach E-Mail-Status (unabhängig von der Auswahl)",
         "refresh": "Status aktualisieren",

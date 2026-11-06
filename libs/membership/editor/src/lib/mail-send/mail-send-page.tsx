@@ -151,7 +151,6 @@ function MailSendPage() {
     update: updateAudience,
     audience,
   } = useAudienceState();
-  const emailSegments = audienceState.emailSegments;
 
   // The lasting switch of this audience lives in the delivery channel area;
   // the send page only points there, for those who may switch at all.
@@ -303,17 +302,8 @@ function MailSendPage() {
       userCount={userCount}
       channel={channel}
       withoutAddressCount={withoutAddressCount}
-      segmentCounts={segmentCounts}
-      selectedSegments={emailSegments}
-      onPickSegment={segment =>
-        updateAudience({
-          emailSegments:
-            emailSegments.includes(segment) ?
-              emailSegments.filter(item => item !== segment)
-            : [...emailSegments, segment],
-        })
-      }
-      onRefreshed={() => refetchPreview()}
+      // On the audience step the filter shows them, on the toggles that pick them.
+      segmentCounts={action ? segmentCounts : undefined}
       missing={showMissing ? missing : []}
       onShowRecipients={() => setRecipientsOpen(true)}
       action={action}
@@ -443,6 +433,8 @@ function MailSendPage() {
                   <AudienceFilter
                     state={audienceState}
                     onChange={updateAudience}
+                    segmentCounts={segmentCounts}
+                    onSegmentsRefreshed={() => refetchPreview()}
                   >
                     {/* What the picked base means for the template's
                         placeholders is the send page's business, not the

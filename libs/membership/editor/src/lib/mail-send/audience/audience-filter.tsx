@@ -20,6 +20,7 @@ import {
   RadioGroup,
   Stack,
   TextField,
+  ToggleButton,
   Typography,
 } from '@mui/material';
 import { ReactNode, useId } from 'react';
@@ -27,6 +28,7 @@ import { useTranslation } from 'react-i18next';
 import { FieldLabel } from '../../field-label';
 import { AudienceFilterState, EndedMode, TriState } from './audience-state';
 import { MailHistoryFilter } from './mail-history-filter';
+import { EmailQualityRefreshButton } from '../email-quality-refresh-button';
 
 export type AudienceFilterProps = {
   state: AudienceFilterState;
@@ -35,7 +37,20 @@ export type AudienceFilterProps = {
   children?: ReactNode;
   /** The label over the base choice; null when the surroundings name it already. */
   baseLabel?: ReactNode | null;
+  /** People of this audience per email status, regardless of the statuses picked. */
+  segmentCounts?: { segment: MailEmailSegment; userCount: number }[];
+  /** After the statuses were refreshed from the mail provider. */
+  onSegmentsRefreshed?: () => void;
 };
+
+/** Best to worst; the last two are the people only a letter reaches. */
+const EMAIL_SEGMENT_ORDER = [
+  MailEmailSegment.Active,
+  MailEmailSegment.Unresponsive,
+  MailEmailSegment.Unknown,
+  MailEmailSegment.Placeholder,
+  MailEmailSegment.Dead,
+];
 
 /**
  * The controls that narrow an audience: the base, the email segments, what
@@ -48,6 +63,8 @@ export function AudienceFilter({
   onChange,
   children,
   baseLabel,
+  segmentCounts,
+  onSegmentsRefreshed,
 }: AudienceFilterProps) {
   const { t } = useTranslation();
   const fieldId = useId();
@@ -185,29 +202,46 @@ export function AudienceFilter({
           id={labelId('email-segments')}
           label={t('mailSend.emailSegments.label')}
         />
-        <Autocomplete
-          multiple
-          disableCloseOnSelect
-          options={Object.values(MailEmailSegment)}
-          getOptionLabel={segment => t(`mailSend.emailSegments.${segment}`)}
-          value={state.emailSegments}
-          onChange={(_event, value) =>
-            onChange({ emailSegments: value as MailEmailSegment[] })
-          }
-          renderInput={params => (
-            <TextField
-              {...params}
-              placeholder={t('mailSend.emailSegments.pick')}
-              slotProps={{
-                ...params.slotProps,
-                htmlInput: {
-                  ...params.slotProps.htmlInput,
-                  'aria-labelledby': labelId('email-segments'),
-                },
-              }}
-            />
-          )}
-        />
+        {/* One toggle per status, so the count of each sits on the control
+            that picks it. Several picked statuses combine as "or". */}
+        <Stack
+          role="group"
+          aria-labelledby={labelId('email-segments')}
+          direction="row"
+          spacing={1}
+          useFlexGap
+          sx={{ alignItems: 'center', flexWrap: 'wrap', marginTop: 0.5 }}
+        >
+          {EMAIL_SEGMENT_ORDER.map(segment => {
+            const picked = state.emailSegments.includes(segment);
+            const people = segmentCounts?.find(
+              count => count.segment === segment
+            )?.userCount;
+
+            return (
+              <ToggleButton
+                key={segment}
+                value={segment}
+                size="small"
+                color="primary"
+                selected={picked}
+                onChange={() =>
+                  onChange({
+                    emailSegments:
+                      picked ?
+                        state.emailSegments.filter(item => item !== segment)
+                      : [...state.emailSegments, segment],
+                  })
+                }
+                sx={{ textTransform: 'none', textAlign: 'left' }}
+              >
+                {t(`mailSend.emailSegments.${segment}`)}
+                {segmentCounts && `: ${people ?? 0}`}
+              </ToggleButton>
+            );
+          })}
+          <EmailQualityRefreshButton onDone={onSegmentsRefreshed} />
+        </Stack>
         <FormHelperText>{t('mailSend.emailSegments.hint')}</FormHelperText>
       </FormControl>
 

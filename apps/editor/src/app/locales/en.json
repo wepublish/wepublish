@@ -1906,8 +1906,7 @@
         "showHistory": "Show in history",
         "again": "New switch",
         "unreachableEmail": "{{count}} people with an unreachable email address (placeholder or dead) are switched anyway – email will not reach them.",
-        "filterTitle": "Filter the user group",
-        "segmentsLabel": "Filter the user group by email status"
+        "filterTitle": "Filter the user group"
       },
       "history": {
         "allChannels": "All"
@@ -4317,7 +4316,6 @@
         "unresponsive": "Unresponsive",
         "unknown": "Unknown",
         "active": "Active",
-        "pick": "Any status",
         "hint": "Several statuses mean any of them. “Unresponsive”: mails were delivered but there has been no login or click for a long time (setting “Email quality”). Reachable by letter: placeholder + dead.",
         "overview": "People in this audience by email status (regardless of the selection)",
         "refresh": "Refresh statuses",

@@ -248,21 +248,39 @@ describe('MailSendPage (characterisation)', () => {
     });
   });
 
-  it('toggles an email segment from its tile', () => {
+  it('picks an email status in one place, the filter, with its count', () => {
     renderPage();
     goToAudience();
 
-    const tile = screen.getByRole('button', {
+    const [toggle, ...others] = screen.getAllByRole('button', {
       name: 'mailSend.emailSegments.placeholder: 3',
     });
 
-    fireEvent.click(tile);
+    expect(others).toEqual([]);
+    expect(screen.queryByText('mailSend.emailSegments.overview')).toBeNull();
+
+    fireEvent.click(toggle);
     expect(lastPreviewAudience().audience.emailSegments).toEqual([
       'placeholder',
     ]);
+    expect(toggle.getAttribute('aria-pressed')).toBe('true');
 
-    fireEvent.click(tile);
+    fireEvent.click(toggle);
     expect(lastPreviewAudience().audience.emailSegments).toBeUndefined();
+  });
+
+  it('repeats the email-status counts read-only before sending', () => {
+    renderPage();
+    goToAudience();
+    fireEvent.click(screen.getByRole('button', { name: /mailSend\.next/ }));
+
+    expect(screen.getByText('mailSend.emailSegments.overview')).toBeTruthy();
+    expect(
+      screen.getByText('mailSend.emailSegments.placeholder: 3')
+    ).toBeTruthy();
+    expect(
+      screen.queryByRole('button', { name: /mailSend\.emailSegments/ })
+    ).toBeNull();
   });
 
   it('lists the recipients fifty at a time once asked', () => {
@@ -413,8 +431,11 @@ describe('MailSendPage (accessibility)', () => {
     goToAudience();
     pickBase('hasSubscription');
 
+    expect(
+      screen.getByRole('group', { name: 'mailSend.emailSegments.label' })
+    ).toBeTruthy();
+
     for (const name of [
-      'mailSend.emailSegments.label',
       'mailSend.memberPlans',
       'mailSend.state.label',
       'mailSend.autoRenew',

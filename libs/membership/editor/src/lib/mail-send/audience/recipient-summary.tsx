@@ -10,7 +10,6 @@ import {
 import { ReactElement, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { deliveryChannel } from '../../delivery-mode/channels';
-import { EmailQualityRefreshButton } from '../email-quality-refresh-button';
 
 /**
  * How many messages the current audience resolves to, plus the warnings about
@@ -26,13 +25,9 @@ export function RecipientSummary({
   channel,
   withoutAddressCount,
   segmentCounts,
-  selectedSegments,
-  onPickSegment,
-  onRefreshed,
   missing,
   onShowRecipients,
   showRecipientsLabel,
-  segmentsLabel,
   action,
 }: {
   loading: boolean;
@@ -42,17 +37,16 @@ export function RecipientSummary({
   userCount: number;
   channel: MailChannel;
   withoutAddressCount: number;
-  segmentCounts: { segment: MailEmailSegment; userCount: number }[];
-  selectedSegments: MailEmailSegment[];
-  onPickSegment: (segment: MailEmailSegment) => void;
-  onRefreshed: () => void;
+  /**
+   * People per email status, shown for reading only: they are picked in the
+   * audience filter. Passed where the filter is out of sight, before sending.
+   */
+  segmentCounts?: { segment: MailEmailSegment; userCount: number }[];
   missing: string[];
   /** Absent when the viewer may not see the list. */
   onShowRecipients?: () => void;
   /** The people are recipients only in the send tool; others name them. */
   showRecipientsLabel?: ReactNode;
-  /** Over the email-status tiles; the send tool and the switch word it differently. */
-  segmentsLabel?: ReactNode;
   action?: ReactElement;
 }) {
   const { t } = useTranslation();
@@ -93,36 +87,33 @@ export function RecipientSummary({
           {action}
         </Stack>
 
-        {/* The split of the audience by email status: the analog people are
-            placeholder + dead, and a tile toggles its segment in the filter. */}
-        {segmentCounts.length > 0 && (
-          <Stack
-            direction="row"
-            spacing={1}
-            useFlexGap
-            sx={{ alignItems: 'center', flexWrap: 'wrap' }}
+        {!!segmentCounts?.length && (
+          <Typography
+            component="div"
+            variant="caption"
+            sx={{ color: 'text.secondary' }}
             style={{ marginTop: 12 }}
           >
-            <Typography
-              variant="caption"
-              sx={{ color: 'text.secondary' }}
+            <div>{t('mailSend.emailSegments.overview')}</div>
+            <Stack
+              component="ul"
+              direction="row"
+              spacing={2}
+              useFlexGap
+              sx={{
+                flexWrap: 'wrap',
+                listStyle: 'none',
+                margin: 0,
+                padding: 0,
+              }}
             >
-              {segmentsLabel ?? t('mailSend.emailSegments.overview')}
-            </Typography>
-            {segmentCounts.map(({ segment, userCount: people }) => (
-              <Button
-                key={segment}
-                size="small"
-                variant={
-                  selectedSegments.includes(segment) ? 'contained' : 'outlined'
-                }
-                onClick={() => onPickSegment(segment)}
-              >
-                {t(`mailSend.emailSegments.${segment}`)}: {people}
-              </Button>
-            ))}
-            <EmailQualityRefreshButton onDone={onRefreshed} />
-          </Stack>
+              {segmentCounts.map(({ segment, userCount: people }) => (
+                <li key={segment}>
+                  {t(`mailSend.emailSegments.${segment}`)}: {people}
+                </li>
+              ))}
+            </Stack>
+          </Typography>
         )}
 
         {needsPostalAddress && withoutAddressCount > 0 && (
