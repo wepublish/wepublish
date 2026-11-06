@@ -64,6 +64,10 @@ interface MergeFieldMapping {
 interface InterestGroupMapping {
   groupId: string;
   expression: string;
+  /** Flip the group to true for a new matching subscription. Absent means true. */
+  autoAdd?: boolean;
+  /** Flip the group to false once matching subscriptions ended. Absent means true. */
+  autoRemove?: boolean;
 }
 
 export interface DryRunChange {
@@ -968,6 +972,7 @@ export class MailchimpSyncService {
     if (hasActive) {
       const newestActive = activeSubs[0];
       if (
+        mapping.autoAdd !== false &&
         !currentValue &&
         now.getTime() - newestActive.startsAt.getTime() <=
           NEW_SUBSCRIPTION_WINDOW_MS &&
@@ -978,7 +983,11 @@ export class MailchimpSyncService {
       return currentValue;
     }
 
-    if (currentValue && this.isDefinitivelyEnded(matchingSubs, now)) {
+    if (
+      mapping.autoRemove !== false &&
+      currentValue &&
+      this.isDefinitivelyEnded(matchingSubs, now)
+    ) {
       return false;
     }
 
@@ -1135,7 +1144,8 @@ export class MailchimpSyncService {
   async getMailchimpLists(
     configId: string
   ): Promise<{ id: string; name: string; memberCount: number }[]> {
-    const config = await this.getConfigById(configId);
+    const config =
+      await this.syncProviderSettingsService.getSyncConfig(configId);
     this.configureMailchimpClient(config);
 
     try {
@@ -1160,7 +1170,8 @@ export class MailchimpSyncService {
     configId: string,
     listId: string
   ): Promise<{ tag: string; name: string; type: string }[]> {
-    const config = await this.getConfigById(configId);
+    const config =
+      await this.syncProviderSettingsService.getSyncConfig(configId);
     this.configureMailchimpClient(config);
 
     try {
@@ -1185,7 +1196,8 @@ export class MailchimpSyncService {
     configId: string,
     listId: string
   ): Promise<{ id: string; name: string }[]> {
-    const config = await this.getConfigById(configId);
+    const config =
+      await this.syncProviderSettingsService.getSyncConfig(configId);
     this.configureMailchimpClient(config);
 
     try {
