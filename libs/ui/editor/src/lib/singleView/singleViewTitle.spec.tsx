@@ -1,5 +1,5 @@
 import { createTheme, ThemeProvider } from '@mui/material';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { ReactNode } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
@@ -66,5 +66,91 @@ describe('SingleViewTitle', () => {
 
     expect(screen.getByTestId('saveButton')).toBeDisabled();
     expect(screen.getByTestId('saveAndCloseButton')).toBeDisabled();
+  });
+
+  it('tells the form which of its buttons submitted it', () => {
+    renderTitle();
+
+    expect(screen.getByTestId('saveButton')).toHaveAttribute('name', 'intent');
+    expect(screen.getByTestId('saveButton')).toHaveAttribute('value', 'save');
+    expect(screen.getByTestId('saveAndCloseButton')).toHaveAttribute(
+      'name',
+      'intent'
+    );
+    expect(screen.getByTestId('saveAndCloseButton')).toHaveAttribute(
+      'value',
+      'close'
+    );
+  });
+
+  it('keeps saving as the first submit button so that Enter saves', () => {
+    const { container } = renderTitle(<span>Status</span>);
+
+    expect(container.querySelector('button[type="submit"]')).toBe(
+      screen.getByTestId('saveButton')
+    );
+  });
+
+  it('still reports closing to views that track it themselves', () => {
+    const setCloseFn = vi.fn();
+
+    render(
+      <ThemeProvider theme={theme}>
+        <MemoryRouter>
+          <form onSubmit={event => event.preventDefault()}>
+            <SingleViewTitle
+              loading={false}
+              title="Kultur"
+              saveBtnTitle="save"
+              saveAndCloseBtnTitle="saveAndClose"
+              closePath="/articles/tags"
+              setCloseFn={setCloseFn}
+            />
+          </form>
+        </MemoryRouter>
+      </ThemeProvider>
+    );
+
+    fireEvent.click(screen.getByTestId('saveButton'));
+    expect(setCloseFn).not.toHaveBeenCalled();
+
+    fireEvent.click(screen.getByTestId('saveAndCloseButton'));
+    expect(setCloseFn).toHaveBeenCalledWith(true);
+  });
+
+  it('submits with the close intent without a close callback', () => {
+    const intents: Array<string | null> = [];
+    const errors: unknown[] = [];
+    const onError = (event: ErrorEvent) => errors.push(event.error);
+
+    window.addEventListener('error', onError);
+
+    render(
+      <ThemeProvider theme={theme}>
+        <MemoryRouter>
+          <form
+            onSubmit={event => {
+              event.preventDefault();
+              const submitter = (event.nativeEvent as SubmitEvent).submitter;
+              intents.push(submitter?.getAttribute('value') ?? null);
+            }}
+          >
+            <SingleViewTitle
+              loading={false}
+              title="Kultur"
+              saveBtnTitle="save"
+              saveAndCloseBtnTitle="saveAndClose"
+              closePath="/articles/tags"
+            />
+          </form>
+        </MemoryRouter>
+      </ThemeProvider>
+    );
+
+    fireEvent.click(screen.getByTestId('saveAndCloseButton'));
+    window.removeEventListener('error', onError);
+
+    expect(errors).toEqual([]);
+    expect(intents).toEqual(['close']);
   });
 });

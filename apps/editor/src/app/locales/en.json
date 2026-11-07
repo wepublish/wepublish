@@ -1005,6 +1005,151 @@
       "network": "No connection to the server. Please check your internet connection and try again.",
       "unexpected": "Something went wrong. Please try again – if the problem persists, contact support."
     },
+    "form": {
+      "loading": "Loading …",
+      "loadError": {
+        "title": "The data could not be loaded",
+        "retry": "Try again"
+      },
+      "errorSummary": {
+        "title": "Please fix these entries before saving"
+      },
+      "field": {
+        "moreInfo": "More information"
+      },
+      "select": {
+        "empty": "None"
+      },
+      "password": {
+        "show": "Show password",
+        "hide": "Hide password"
+      },
+      "array": {
+        "add": "Add entry",
+        "remove": "Remove entry {{position}}",
+        "reorder": "Reorder",
+        "dragHandle": "Drag to reorder entry {{position}}",
+        "roleDescription": "sortable entry",
+        "dragInstructions": "To pick up an entry, press Space or Enter. Move it with the arrow keys, then press Space or Enter again to drop it, or Escape to cancel.",
+        "dragStart": "Picked up entry {{position}}.",
+        "dragOver": "Entry {{position}} is over position {{target}}.",
+        "dragEnd": "Entry {{position}} dropped at position {{target}}.",
+        "dragCancel": "Moving cancelled. Entry {{position}} is back in its place.",
+        "empty": "No entries yet",
+        "actions": "Actions"
+      },
+      "union": {
+        "type": "Type"
+      },
+      "autocomplete": {
+        "noOptions": "No options",
+        "clear": "Clear",
+        "open": "Open list",
+        "close": "Close list",
+        "loading": "Loading …"
+      },
+      "date": {
+        "today": "Today",
+        "tomorrow": "Tomorrow",
+        "now": "Now"
+      },
+      "color": {
+        "pick": "Pick color",
+        "invalid": "Please enter a hex color such as #1a2b3c"
+      },
+      "secret": {
+        "show": "Show value",
+        "hide": "Hide value"
+      },
+      "view": {
+        "readOnly": "Read only",
+        "discard": "Discard changes",
+        "discardChanges": {
+          "title": "Discard unsaved changes?",
+          "body": "Your changes have not been saved and will be lost.",
+          "keep": "Keep editing",
+          "discard": "Discard"
+        },
+        "sectionErrors_one": "{{count}} error",
+        "sectionErrors_other": "{{count}} errors"
+      },
+      "value": {
+        "on": "On",
+        "off": "Off",
+        "empty": "(empty)",
+        "changed": "changed"
+      },
+      "units": {
+        "seconds": "seconds",
+        "seconds_one": "second",
+        "minutes": "minutes",
+        "minutes_one": "minute",
+        "days": "days",
+        "days_one": "day",
+        "milliseconds": "milliseconds",
+        "milliseconds_one": "millisecond"
+      },
+      "errors": {
+        "required": "This field is required",
+        "invalid": "This value is not valid",
+        "invalid_value": "Please choose one of the available options",
+        "not_multiple_of": "Please enter a multiple of {{divisor}}",
+        "unexpected": "The form could not be checked. Please try again.",
+        "server": "Saving failed. Please try again.",
+        "invalid_type": {
+          "string": "Please enter a text",
+          "number": "Please enter a number",
+          "int": "Please enter a whole number",
+          "boolean": "Please choose yes or no",
+          "date": "Please enter a valid date",
+          "array": "Please enter a list of values",
+          "object": "These details are incomplete"
+        },
+        "invalid_format": {
+          "default": "The format is not valid",
+          "email": "Please enter a valid email address",
+          "url": "Please enter a valid URL",
+          "regex": "The format is not valid",
+          "uuid": "Please enter a valid UUID"
+        },
+        "too_small": {
+          "string": {
+            "min": "Please enter at least {{minimum}} characters",
+            "exact": "Please enter exactly {{minimum}} characters"
+          },
+          "array": {
+            "min": "Please add at least {{minimum}} entries",
+            "exact": "Please add exactly {{minimum}} entries"
+          },
+          "number": {
+            "inclusive": "Please enter {{minimum}} or more",
+            "exclusive": "Please enter more than {{minimum}}"
+          },
+          "date": {
+            "inclusive": "Please choose {{minimum, P}} or later",
+            "exclusive": "Please choose a date after {{minimum, P}}"
+          }
+        },
+        "too_big": {
+          "string": {
+            "max": "Please enter at most {{maximum}} characters",
+            "exact": "Please enter exactly {{maximum}} characters"
+          },
+          "array": {
+            "max": "Please add at most {{maximum}} entries",
+            "exact": "Please add exactly {{maximum}} entries"
+          },
+          "number": {
+            "inclusive": "Please enter {{maximum}} or less",
+            "exclusive": "Please enter less than {{maximum}}"
+          },
+          "date": {
+            "inclusive": "Please choose {{maximum, P}} or earlier",
+            "exclusive": "Please choose a date before {{maximum, P}}"
+          }
+        }
+      }
+    },
     "errorMessages": {
       "invalidEmailErrorMessage": "Please enter a valid email address",
       "invalidRange": "Value out of range. Please input a number between {{min}} and {{max}}.",

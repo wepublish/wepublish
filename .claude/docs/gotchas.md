@@ -893,6 +893,12 @@ compiler before ("Compilation Skipped: Use of incompatible library"); removing
 `watch` lets it compile them, which can surface fresh `set-state-in-effect`
 errors in code that was never checked.
 
+Two siblings, linted in `libs/form/*`: spreading RHF's form object
+(`{ ...form, extra }` is memoised on `form`, whose `formState` RHF swaps every
+render, so `isLoading` stays `true`) and reading `useFormContext().formState`
+(frozen at its first value) — use the `useSchemaForm` handle and
+`useFormState`/`useFormStatus` ([libs/form/README.md](../../libs/form/README.md#react-compiler-rules)).
+
 ---
 
 ### ⚠️ The compiler turns a hoisted inner function into a `const`
@@ -1191,6 +1197,12 @@ misses included, is kept for at most 30 s, so the media server goes back to R2
 more often for the length of the outage.
 A Dragonfly misconfiguration crash-loops the media pod, as it does the API's,
 so the media image ships `/wepublish/ca.crt` for `NODE_EXTRA_CA_CERTS`.
+
+---
+
+### ⚠️ Prisma 7 with the pg adapter names the unique index, not the fields
+
+The API sends ``Unique constraint failed on the constraint: `consents_slug_key` ``, which `humanizeError`'s `fields: (…)` regex misses; match it with `uniqueConstraint(...)` from `@wepublish/form/editor` (pinned by `libs/form/editor/src/lib/view/unique-constraint.spec.ts`).
 
 ---
 
