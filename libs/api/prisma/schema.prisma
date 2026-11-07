@@ -2377,6 +2377,7 @@ model SettingPaymentProvider {
   bexio_invoiceMailSubjectRenewalMembership String?
   bexio_invoiceMailBodyRenewalMembership    String?
   bexio_markInvoiceAsOpen                   Boolean?
+  bexio_testMailbox                         String?
   // Nightly push of reader data (name, email, address) to bexio contacts;
   // when it last ran and what went wrong, for the integration form.
   bexio_contactSync                         Boolean?
