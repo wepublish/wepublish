@@ -1,12 +1,13 @@
 import styled from '@emotion/styled';
 import { Container, css, ThemeOptions } from '@mui/material';
+import { useLocation } from '@tanstack/react-router';
 import { withErrorSnackbar } from '@wepublish/errors/website';
 import {
   FooterContainer,
   NavbarContainer,
 } from '@wepublish/navigation/website';
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
-import { factuelConfig } from '@wepublish/tenant/factuel';
+import { courantConfig, courantTokens } from '@wepublish/tenant/factuel';
 import { withJwtHandler, withSessionProvider } from '@wepublish/utils/website';
 import {
   Analytics,
@@ -22,28 +23,35 @@ import { TenantProviders } from '@wepublish/website';
 import { WebsiteSettingsFragment } from '@wepublish/website/api';
 import { PropsWithChildren } from 'react';
 
+const { shell: shellTokens } = courantTokens.layout;
+
 const Spacer = styled('div')`
   display: grid;
   align-items: flex-start;
   grid-template-rows: min-content 1fr min-content;
-  gap: ${({ theme }) => theme.spacing(3)};
+  gap: ${({ theme }) => theme.spacing(shellTokens.gap)};
   min-height: 100vh;
 `;
 
+// Courant: max-content width is 1200px, regardless of theme breakpoints.
 const MainSpacer = styled(Container)`
   display: grid;
-  gap: ${({ theme }) => theme.spacing(5)};
+  gap: ${({ theme }) => theme.spacing(shellTokens.mainGap)};
 
   ${({ theme }) => css`
     ${theme.breakpoints.up('md')} {
-      gap: ${theme.spacing(10)};
+      gap: ${theme.spacing(shellTokens.desktopMainGap)};
     }
   `}
+
+  &.page-measure {
+    max-width: ${courantTokens.layout.pageMaxWidth}px;
+  }
 `;
 
 const NavBar = styled(NavbarContainer)`
   grid-column: -1/1;
-  z-index: 11;
+  z-index: ${shellTokens.navbarZIndex};
 `;
 
 type AppShellProps = PropsWithChildren<{
@@ -63,10 +71,12 @@ type AppShellProps = PropsWithChildren<{
  */
 function AppShell({ websiteSettings, children }: AppShellProps) {
   const shell = useWebsiteShell();
+  const { pathname } = useLocation();
+  const isArticle = pathname.startsWith('/a/');
 
   return (
     <TenantProviders
-      config={factuelConfig}
+      config={courantConfig}
       settingsTheme={websiteSettings?.theme as ThemeOptions | undefined}
       extra={{ Head, Script, elements: { Link: WepublishLink } }}
     >
@@ -81,7 +91,12 @@ function AppShell({ websiteSettings, children }: AppShellProps) {
         )}
 
         <main>
-          <MainSpacer maxWidth="lg">{children}</MainSpacer>
+          <MainSpacer
+            maxWidth="lg"
+            className={isArticle ? undefined : 'page-measure'}
+          >
+            {children}
+          </MainSpacer>
         </main>
 
         {shell.showFooter && (

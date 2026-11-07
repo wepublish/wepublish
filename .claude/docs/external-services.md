@@ -39,6 +39,10 @@
   (`invoiceMailRecipient`); the contact keeps the reader's address. Ignored,
   refused on save and hidden in the editor unless `APP_ENVIRONMENT` is set and
   not `production` (`isTestEnvironment`, `libs/utils/api`).
+  **Invoice footer:** the provider sets the closing itself, signed with the
+  name of bexio user `bexio_userId` (`GET /3.0/users/{id}`, cached a day).
+  Left out, bexio's default footer names the API token's owner instead. If
+  the name can't be read, the invoice goes out with that default.
 
 - Simulated (`simulated` type) — no external service: `createIntent` sends the
   customer to a checkout page served by the API at

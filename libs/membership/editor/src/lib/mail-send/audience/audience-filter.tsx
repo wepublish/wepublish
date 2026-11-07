@@ -20,6 +20,7 @@ import {
   RadioGroup,
   Stack,
   TextField,
+  ToggleButton,
   Typography,
 } from '@mui/material';
 import { ReactNode, useId } from 'react';
@@ -27,6 +28,7 @@ import { useTranslation } from 'react-i18next';
 import { FieldLabel } from '../../field-label';
 import { AudienceFilterState, EndedMode, TriState } from './audience-state';
 import { MailHistoryFilter } from './mail-history-filter';
+import { EmailQualityRefreshButton } from '../email-quality-refresh-button';
 
 export type AudienceFilterProps = {
   state: AudienceFilterState;
@@ -35,7 +37,20 @@ export type AudienceFilterProps = {
   children?: ReactNode;
   /** The label over the base choice; null when the surroundings name it already. */
   baseLabel?: ReactNode | null;
+  /** People of this audience per email status, regardless of the statuses picked. */
+  segmentCounts?: { segment: MailEmailSegment; userCount: number }[];
+  /** After the statuses were refreshed from the mail provider. */
+  onSegmentsRefreshed?: () => void;
 };
+
+/** Best to worst; the last two are the people only a letter reaches. */
+const EMAIL_SEGMENT_ORDER = [
+  MailEmailSegment.Active,
+  MailEmailSegment.Unresponsive,
+  MailEmailSegment.Unknown,
+  MailEmailSegment.Placeholder,
+  MailEmailSegment.Dead,
+];
 
 /**
  * The controls that narrow an audience: the base, the email segments, what
@@ -48,9 +63,12 @@ export function AudienceFilter({
   onChange,
   children,
   baseLabel,
+  segmentCounts,
+  onSegmentsRefreshed,
 }: AudienceFilterProps) {
   const { t } = useTranslation();
   const fieldId = useId();
+  const labelId = (field: string) => `${fieldId}-${field}`;
   const { data: memberPlanData } = useQuery(MemberPlanListDocument, {
     variables: { take: 100 },
   });
@@ -61,7 +79,7 @@ export function AudienceFilter({
   const memberPlans = memberPlanData?.memberPlans.nodes ?? [];
 
   const triStateSelect = (
-    id: string,
+    field: string,
     label: ReactNode,
     value: TriState,
     patch: (value: TriState) => Partial<AudienceFilterState>,
@@ -69,7 +87,7 @@ export function AudienceFilter({
   ) => (
     <FormControl fullWidth>
       <FieldLabel
-        id={id}
+        id={labelId(field)}
         label={label}
         help={help}
       />
@@ -80,7 +98,7 @@ export function AudienceFilter({
           onChange(patch((event.target.value as TriState) ?? 'any'))
         }
         fullWidth
-        slotProps={{ select: { labelId: id } }}
+        slotProps={{ select: { labelId: labelId(field) } }}
       >
         <MenuItem value="any">{t('mailSend.any')}</MenuItem>
         <MenuItem value="true">{t('mailSend.yes')}</MenuItem>
@@ -93,7 +111,7 @@ export function AudienceFilter({
   const memberPlanPicker = (
     <FormControl fullWidth>
       <FieldLabel
-        id={`${fieldId}-plans`}
+        id={labelId('member-plans')}
         label={t('mailSend.memberPlans')}
       />
       <Autocomplete
@@ -115,7 +133,7 @@ export function AudienceFilter({
               ...params.slotProps,
               htmlInput: {
                 ...params.slotProps.htmlInput,
-                'aria-labelledby': `${fieldId}-plans`,
+                'aria-labelledby': labelId('member-plans'),
               },
             }}
           />
@@ -132,12 +150,12 @@ export function AudienceFilter({
       <FormControl fullWidth>
         {baseLabel !== null && (
           <FieldLabel
-            id={`${fieldId}-base`}
+            id={labelId('base')}
             label={baseLabel ?? t('mailSend.base.label')}
           />
         )}
         <RadioGroup
-          aria-labelledby={baseLabel !== null ? `${fieldId}-base` : undefined}
+          aria-labelledby={baseLabel !== null ? labelId('base') : undefined}
           value={state.base}
           onChange={(_event, value) =>
             onChange({ base: value as MailRecipientBase })
@@ -181,32 +199,49 @@ export function AudienceFilter({
           so one control covers it. */}
       <FormControl fullWidth>
         <FieldLabel
-          id={`${fieldId}-segments`}
+          id={labelId('email-segments')}
           label={t('mailSend.emailSegments.label')}
         />
-        <Autocomplete
-          multiple
-          disableCloseOnSelect
-          options={Object.values(MailEmailSegment)}
-          getOptionLabel={segment => t(`mailSend.emailSegments.${segment}`)}
-          value={state.emailSegments}
-          onChange={(_event, value) =>
-            onChange({ emailSegments: value as MailEmailSegment[] })
-          }
-          renderInput={params => (
-            <TextField
-              {...params}
-              placeholder={t('mailSend.emailSegments.pick')}
-              slotProps={{
-                ...params.slotProps,
-                htmlInput: {
-                  ...params.slotProps.htmlInput,
-                  'aria-labelledby': `${fieldId}-segments`,
-                },
-              }}
-            />
-          )}
-        />
+        {/* One toggle per status, so the count of each sits on the control
+            that picks it. Several picked statuses combine as "or". */}
+        <Stack
+          role="group"
+          aria-labelledby={labelId('email-segments')}
+          direction="row"
+          spacing={1}
+          useFlexGap
+          sx={{ alignItems: 'center', flexWrap: 'wrap', marginTop: 0.5 }}
+        >
+          {EMAIL_SEGMENT_ORDER.map(segment => {
+            const picked = state.emailSegments.includes(segment);
+            const people = segmentCounts?.find(
+              count => count.segment === segment
+            )?.userCount;
+
+            return (
+              <ToggleButton
+                key={segment}
+                value={segment}
+                size="small"
+                color="primary"
+                selected={picked}
+                onChange={() =>
+                  onChange({
+                    emailSegments:
+                      picked ?
+                        state.emailSegments.filter(item => item !== segment)
+                      : [...state.emailSegments, segment],
+                  })
+                }
+                sx={{ textTransform: 'none', textAlign: 'left' }}
+              >
+                {t(`mailSend.emailSegments.${segment}`)}
+                {segmentCounts && `: ${people ?? 0}`}
+              </ToggleButton>
+            );
+          })}
+          <EmailQualityRefreshButton onDone={onSegmentsRefreshed} />
+        </Stack>
         <FormHelperText>{t('mailSend.emailSegments.hint')}</FormHelperText>
       </FormControl>
 
@@ -221,11 +256,11 @@ export function AudienceFilter({
           <Divider />
           <FormControl fullWidth>
             <FieldLabel
-              id={`${fieldId}-ended`}
+              id={labelId('ended-window')}
               label={t('mailSend.endedWindow.label')}
             />
             <RadioGroup
-              aria-labelledby={`${fieldId}-ended`}
+              aria-labelledby={labelId('ended-window')}
               row
               value={state.endedMode}
               onChange={(_event, value) =>
@@ -306,7 +341,7 @@ export function AudienceFilter({
 
           <FormControl fullWidth>
             <FieldLabel
-              id={`${fieldId}-state`}
+              id={labelId('state')}
               label={t('mailSend.state.label')}
               help={t('mailSend.stateHelp')}
             />
@@ -321,7 +356,7 @@ export function AudienceFilter({
               }
               fullWidth
               slotProps={{
-                select: { displayEmpty: true, labelId: `${fieldId}-state` },
+                select: { displayEmpty: true, labelId: labelId('state') },
               }}
             >
               <MenuItem value="">{t('mailSend.state.any')}</MenuItem>
@@ -338,7 +373,7 @@ export function AudienceFilter({
           </FormControl>
 
           {triStateSelect(
-            `${fieldId}-autoRenew`,
+            'auto-renew',
             t('mailSend.autoRenew'),
             state.autoRenew,
             autoRenew => ({ autoRenew }),
@@ -347,7 +382,7 @@ export function AudienceFilter({
 
           <FormControl fullWidth>
             <FieldLabel
-              id={`${fieldId}-paymentMethod`}
+              id={labelId('payment-method')}
               label={t('mailSend.paymentMethod')}
             />
             <TextField
@@ -360,7 +395,7 @@ export function AudienceFilter({
               slotProps={{
                 select: {
                   displayEmpty: true,
-                  labelId: `${fieldId}-paymentMethod`,
+                  labelId: labelId('payment-method'),
                 },
               }}
             >
@@ -379,7 +414,7 @@ export function AudienceFilter({
 
           <FormControl fullWidth>
             <FieldLabel
-              id={`${fieldId}-periodicity`}
+              id={labelId('periodicity')}
               label={t('mailSend.periodicity')}
             />
             <TextField
@@ -393,10 +428,7 @@ export function AudienceFilter({
               }
               fullWidth
               slotProps={{
-                select: {
-                  displayEmpty: true,
-                  labelId: `${fieldId}-periodicity`,
-                },
+                select: { displayEmpty: true, labelId: labelId('periodicity') },
               }}
             >
               <MenuItem value="">{t('mailSend.any')}</MenuItem>
@@ -434,21 +466,21 @@ export function AudienceFilter({
           </FormControl>
 
           {triStateSelect(
-            `${fieldId}-isPaid`,
+            'is-paid',
             t('mailSend.isPaid'),
             state.isPaid,
             isPaid => ({ isPaid }),
             { hint: t('mailSend.isPaidHint') }
           )}
           {triStateSelect(
-            `${fieldId}-isCanceled`,
+            'is-canceled',
             t('mailSend.isCanceled'),
             state.isCanceled,
             isCanceled => ({ isCanceled }),
             { hint: t('mailSend.isCanceledHint') }
           )}
           {triStateSelect(
-            `${fieldId}-hasReplaced`,
+            'has-replaced',
             t('mailSend.hasReplacedSubscription'),
             state.hasReplaced,
             hasReplaced => ({ hasReplaced }),

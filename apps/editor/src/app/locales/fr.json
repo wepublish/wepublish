@@ -976,9 +976,9 @@
       "now": "Maintenant",
       "today": "Aujourd’hui",
       "tomorrow": "Demain",
+      "clear": "Effacer la date",
       "yesterday": "Hier",
-      "done": "OK",
-      "clear": "Effacer la date"
+      "done": "OK"
     },
     "deactivated": "Désactivé",
     "delete": "Supprimer",
@@ -1469,11 +1469,11 @@
         "bodyModeHelp": "Visuel : modifiez le contenu comme dans un traitement de texte. HTML : modifiez directement le code source – pour utilisateur·trice·s avancé·e·s. Texte brut : la version texte pour les programmes de messagerie sans HTML ; elle est générée automatiquement.",
         "backgroundHelp": "Couleur de la surface autour du contenu de l’e-mail.",
         "contentWidthHelp": "Largeur maximale du contenu en pixels. 600 px est une valeur éprouvée qui s’affiche bien dans la plupart des programmes de messagerie. Sur les petits écrans, le contenu se rétrécit automatiquement.",
+        "bodyMode": "Mode d’édition",
         "letterLayout": "Papier à lettres",
         "letterLayoutDefault": "Par défaut ({{name}})",
         "letterLayoutNone": "Par défaut (aucun)",
-        "letterLayoutHelp": "En-tête et pied de page lorsque ce modèle est imprimé en lettre. Sans effet pour les e-mails.",
-        "bodyMode": "Mode d’édition"
+        "letterLayoutHelp": "En-tête et pied de page lorsque ce modèle est imprimé en lettre. Sans effet pour les e-mails."
       },
       "editor": {
         "undo": "Annuler",
@@ -1905,8 +1905,7 @@
         "showHistory": "Afficher dans l’historique",
         "again": "Nouveau changement",
         "unreachableEmail": "{{count}} personnes avec une adresse e-mail injoignable (fictive ou morte) sont tout de même changées – les e-mails ne leur parviendront pas.",
-        "filterTitle": "Filtrer le groupe d’utilisateurs",
-        "segmentsLabel": "Filtrer le groupe d’utilisateurs par statut e-mail"
+        "filterTitle": "Filtrer le groupe d’utilisateurs"
       },
       "history": {
         "allChannels": "Tous"
@@ -3599,6 +3598,8 @@
         "bexioContactSyncLastRunFailed": "Dernière exécution : {{date}}. Erreur : {{error}}"
       },
       "placeholderSecret": "Inchangé (masqué)",
+      "secretNotSet": "Non défini",
+      "secretStored": "Enregistré (masqué) – laisser vide pour le conserver",
       "pdfRendererSettings": {
         "type": "Type",
         "cloudflareAccountId": "ID de compte Cloudflare",
@@ -3608,8 +3609,6 @@
         "gotenbergPassword": "Mot de passe Gotenberg",
         "timeoutMs": "Délai d'attente (ms)"
       },
-      "secretNotSet": "Non défini",
-      "secretStored": "Enregistré (masqué) – laisser vide pour le conserver",
       "mailSettings": {
         "type": "Type",
         "fromAddress": "Adresse de l’expéditeur",
@@ -4327,7 +4326,6 @@
         "unresponsive": "Sans réaction",
         "unknown": "Inconnu",
         "active": "Active",
-        "pick": "Tous les statuts",
         "hint": "Plusieurs statuts signifient « l’un ou l’autre ». « Sans réaction » : des e-mails ont été remis, mais aucune connexion ni aucun clic depuis longtemps (réglage « Qualité des e-mails »). À atteindre par courrier : substitution + injoignable.",
         "overview": "Personnes de cette audience par statut e-mail (indépendamment de la sélection)",
         "refresh": "Actualiser les statuts",

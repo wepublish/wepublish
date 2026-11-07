@@ -976,9 +976,9 @@
       "now": "Jetzt",
       "today": "Heute",
       "tomorrow": "Morgen",
+      "clear": "Datum löschen",
       "yesterday": "Gestern",
-      "done": "OK",
-      "clear": "Datum löschen"
+      "done": "OK"
     },
     "deactivated": "Deaktiviert",
     "delete": "Löschen",
@@ -1469,11 +1469,11 @@
         "bodyModeHelp": "Visuell: Inhalt wie in einem Textprogramm bearbeiten. HTML: den Quellcode direkt bearbeiten – nur für Fortgeschrittene. Text-Inhalt: die reine Textversion für E-Mail-Programme ohne HTML; sie wird automatisch erzeugt.",
         "backgroundHelp": "Farbe der Fläche rund um den Inhalt der E-Mail.",
         "contentWidthHelp": "Maximale Breite des Inhalts in Pixeln. 600 px ist ein bewährter Wert, der in den meisten E-Mail-Programmen gut aussieht. Auf schmalen Bildschirmen wird der Inhalt automatisch schmaler.",
+        "bodyMode": "Bearbeitungsmodus",
         "letterLayout": "Briefpapier",
         "letterLayoutDefault": "Standard ({{name}})",
         "letterLayoutNone": "Standard (keines vorhanden)",
-        "letterLayoutHelp": "Kopf- und Fusszeile, wenn diese Vorlage als Brief gedruckt wird. Für E-Mails ohne Bedeutung.",
-        "bodyMode": "Bearbeitungsmodus"
+        "letterLayoutHelp": "Kopf- und Fusszeile, wenn diese Vorlage als Brief gedruckt wird. Für E-Mails ohne Bedeutung."
       },
       "editor": {
         "undo": "Rückgängig",
@@ -1905,8 +1905,7 @@
         "showHistory": "Im Verlauf anzeigen",
         "again": "Neue Umstellung",
         "unreachableEmail": "{{count}} User mit nicht erreichbarer E-Mail-Adresse (Platzhalter oder unzustellbar) werden trotzdem umgestellt – Mitteilungen per E-Mail kommen dort nicht an.",
-        "filterTitle": "Benutzergruppe filtern",
-        "segmentsLabel": "Benutzergruppe nach E-Mail-Status filtern"
+        "filterTitle": "Benutzergruppe filtern"
       },
       "history": {
         "allChannels": "Alle"
@@ -3608,6 +3607,8 @@
         "bexioContactSyncLastRunFailed": "Letzter Lauf: {{date}}. Fehler: {{error}}"
       },
       "placeholderSecret": "Unverändert (versteckt)",
+      "secretNotSet": "Nicht gesetzt",
+      "secretStored": "Gespeichert (versteckt) – leer lassen, um ihn zu behalten",
       "pdfRendererSettings": {
         "type": "Typ",
         "cloudflareAccountId": "Cloudflare Account-ID",
@@ -3631,8 +3632,6 @@
         "defaultPrintMode": "Druck (automatische Briefe)",
         "defaultPrintSpectrum": "Farbe (automatische Briefe)"
       },
-      "secretNotSet": "Nicht gesetzt",
-      "secretStored": "Gespeichert (versteckt) – leer lassen, um ihn zu behalten",
       "mailSettings": {
         "type": "Typ",
         "fromAddress": "Absenderadresse",
@@ -4335,7 +4334,6 @@
         "unresponsive": "Reagiert nicht",
         "unknown": "Unbekannt",
         "active": "Aktiv",
-        "pick": "Alle Status",
         "hint": "Mehrere Status gelten als «oder». «Reagiert nicht»: Mails wurden zugestellt, aber seit längerem kein Login und kein Klick (Einstellung «E-Mail-Qualität»). Per Brief erreichen: Platzhalter + Nicht erreichbar.",
         "overview": "User dieser Zielgruppe nach E-Mail-Status (unabhängig von der Auswahl)",
         "refresh": "Status aktualisieren",

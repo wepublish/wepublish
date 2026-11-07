@@ -24,7 +24,7 @@ import {
   PageTitle,
   PermissionControl,
 } from '@wepublish/ui/editor';
-import { ElementType, useId } from 'react';
+import { type ElementType, useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdAnalytics,

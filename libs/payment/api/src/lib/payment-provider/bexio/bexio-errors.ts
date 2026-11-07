@@ -46,7 +46,7 @@ class WebhookNotImplementedError extends Error {
 }
 
 class ResponseNOK extends Error {
-  constructor(status: number) {
+  constructor(readonly status: number) {
     super(`Bexio response is NOK with status: ${status}`);
   }
 }

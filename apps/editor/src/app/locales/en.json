@@ -976,9 +976,9 @@
       "now": "Now",
       "today": "Today",
       "tomorrow": "Tomorrow",
+      "clear": "Clear date",
       "yesterday": "Yesterday",
-      "done": "OK",
-      "clear": "Clear date"
+      "done": "OK"
     },
     "deactivated": "Deactivated",
     "delete": "Delete",
@@ -1470,11 +1470,11 @@
         "bodyModeHelp": "Visual: edit the content like in a word processor. HTML: edit the source code directly — for advanced users. Plain text: the text-only version for email programs without HTML; it is generated automatically.",
         "backgroundHelp": "Color of the area around the email's content.",
         "contentWidthHelp": "Maximum width of the content in pixels. 600 px is a proven value that looks good in most email programs. On narrow screens the content shrinks automatically.",
+        "bodyMode": "Editor mode",
         "letterLayout": "Stationery",
         "letterLayoutDefault": "Default ({{name}})",
         "letterLayoutNone": "Default (none yet)",
-        "letterLayoutHelp": "Header and footer when this template is printed as a letter. Ignored for emails.",
-        "bodyMode": "Editor mode"
+        "letterLayoutHelp": "Header and footer when this template is printed as a letter. Ignored for emails."
       },
       "editor": {
         "undo": "Undo",
@@ -1906,8 +1906,7 @@
         "showHistory": "Show in history",
         "again": "New switch",
         "unreachableEmail": "{{count}} people with an unreachable email address (placeholder or dead) are switched anyway – email will not reach them.",
-        "filterTitle": "Filter the user group",
-        "segmentsLabel": "Filter the user group by email status"
+        "filterTitle": "Filter the user group"
       },
       "history": {
         "allChannels": "All"
@@ -3669,6 +3668,8 @@
         "bexioContactSyncLastRunFailed": "Last run: {{date}}. Error: {{error}}"
       },
       "placeholderSecret": "Unchanged (Hidden)",
+      "secretNotSet": "Not set",
+      "secretStored": "Stored (hidden) – leave empty to keep it",
       "pdfRendererSettings": {
         "type": "Type",
         "cloudflareAccountId": "Cloudflare Account ID",
@@ -3692,8 +3693,6 @@
         "defaultPrintMode": "Print (automated letters)",
         "defaultPrintSpectrum": "Colour (automated letters)"
       },
-      "secretNotSet": "Not set",
-      "secretStored": "Stored (hidden) – leave empty to keep it",
       "mailSettings": {
         "type": "Type",
         "fromAddress": "From Address",
@@ -4354,7 +4353,6 @@
         "unresponsive": "Unresponsive",
         "unknown": "Unknown",
         "active": "Active",
-        "pick": "Any status",
         "hint": "Several statuses mean any of them. “Unresponsive”: mails were delivered but there has been no login or click for a long time (setting “Email quality”). Reachable by letter: placeholder + dead.",
         "overview": "People in this audience by email status (regardless of the selection)",
         "refresh": "Refresh statuses",

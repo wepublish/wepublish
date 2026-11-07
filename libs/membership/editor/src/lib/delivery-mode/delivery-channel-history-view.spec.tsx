@@ -81,13 +81,6 @@ const variablesOf = () =>
     .filter(([name]) => name === 'DeliveryModeBulkChanges')
     .map(([, options]) => (options as { variables?: unknown })?.variables);
 
-// The pager names its buttons through i18n, which is the bare key here, so the
-// page is found by the number it shows.
-const pageButton = (page: number) =>
-  within(
-    screen.getByRole('navigation', { name: 'listView.pagination.label' })
-  ).getByText(String(page), { selector: 'button' });
-
 const renderView = () =>
   render(
     <ThemeProvider theme={createTheme({ cssVariables: true })}>
@@ -144,7 +137,11 @@ describe('DeliveryChannelHistoryView', () => {
 
     expect(variablesOf()[0]).toEqual({ skip: 0, take: 20, channel: undefined });
 
-    fireEvent.click(pageButton(2));
+    fireEvent.click(
+      screen.getByRole('button', {
+        name: 'listView.pagination.page:{"page":2}',
+      })
+    );
 
     expect(variablesOf().at(-1)).toEqual(
       expect.objectContaining({ skip: 20, take: 20 })
@@ -154,7 +151,11 @@ describe('DeliveryChannelHistoryView', () => {
   it('narrows to one channel, and starts the pages over', () => {
     totalCount = 45;
     renderView();
-    fireEvent.click(pageButton(2));
+    fireEvent.click(
+      screen.getByRole('button', {
+        name: 'listView.pagination.page:{"page":2}',
+      })
+    );
 
     fireEvent.click(
       screen.getByRole('button', { name: 'deliveryMode.channel.letter' })

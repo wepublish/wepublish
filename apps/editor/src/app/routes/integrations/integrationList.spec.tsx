@@ -25,14 +25,10 @@ vi.mock('react-i18next', () => ({
   }),
 }));
 
-const renderWith = (
-  features: string[],
-  permissions = [
-    CanGetMailProviderSettings.id,
-    CanGetLetterProviderSettings.id,
-    CanGetPdfRendererSettings.id,
-  ]
-) => {
+const renderList = ({
+  permissions = [CanGetAISettings.id],
+  features = [],
+}: { permissions?: string[]; features?: string[] } = {}) => {
   featuresQuery.mockReturnValue({ data: { features }, loading: false });
 
   return render(
@@ -41,6 +37,8 @@ const renderWith = (
         value={
           {
             session: {
+              email: 'karl@wepublish.ch',
+              sessionToken: 't',
               sessionRoles: [
                 { id: 'role', permissions: permissions.map(id => ({ id })) },
               ],
@@ -58,24 +56,15 @@ const renderWith = (
   );
 };
 
+const letterPermissions = [
+  CanGetMailProviderSettings.id,
+  CanGetLetterProviderSettings.id,
+  CanGetPdfRendererSettings.id,
+];
+
 describe('IntegrationList', () => {
-  it('hides the letter integrations while paper letters are off', () => {
-    renderWith([]);
-
-    expect(screen.getByText('integrations.mailProvider')).toBeTruthy();
-    expect(screen.queryByText('integrations.letterProvider')).toBeNull();
-    expect(screen.queryByText('integrations.pdfRenderer')).toBeNull();
-  });
-
-  it('shows them once the medium has the feature', () => {
-    renderWith(['paper-letters']);
-
-    expect(screen.getByText('integrations.letterProvider')).toBeTruthy();
-    expect(screen.getByText('integrations.pdfRenderer')).toBeTruthy();
-  });
-
   it('titles the page and each integration as headings', () => {
-    renderWith([], [CanGetAISettings.id]);
+    renderList();
 
     expect(
       screen.getByRole('heading', { level: 1, name: /integrations.title/ })
@@ -86,7 +75,7 @@ describe('IntegrationList', () => {
   });
 
   it('ties each edit link to the integration it opens', () => {
-    renderWith([], [CanGetAISettings.id]);
+    renderList();
 
     expect(
       screen.getByRole('link', { name: 'edit' })
@@ -94,8 +83,23 @@ describe('IntegrationList', () => {
   });
 
   it('names the supported providers', () => {
-    renderWith([], [CanGetAISettings.id]);
+    renderList();
 
     expect(screen.getByRole('img', { name: 'Vercel' })).toBeInTheDocument();
+  });
+
+  it('hides the letter integrations while paper letters are off', () => {
+    renderList({ permissions: letterPermissions });
+
+    expect(screen.getByText('integrations.mailProvider')).toBeTruthy();
+    expect(screen.queryByText('integrations.letterProvider')).toBeNull();
+    expect(screen.queryByText('integrations.pdfRenderer')).toBeNull();
+  });
+
+  it('shows them once the medium has the feature', () => {
+    renderList({ permissions: letterPermissions, features: ['paper-letters'] });
+
+    expect(screen.getByText('integrations.letterProvider')).toBeTruthy();
+    expect(screen.getByText('integrations.pdfRenderer')).toBeTruthy();
   });
 });
