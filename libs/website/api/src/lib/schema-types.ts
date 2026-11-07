@@ -4290,6 +4290,7 @@ export type MutationCreatePaymentMethodArgs = {
 export type MutationCreatePaymentProviderSettingArgs = {
   apiKey?: InputMaybe<Scalars['String']['input']>;
   bexio_accountId?: InputMaybe<Scalars['Float']['input']>;
+  bexio_contactSync?: InputMaybe<Scalars['Boolean']['input']>;
   bexio_countryId?: InputMaybe<Scalars['Float']['input']>;
   bexio_invoiceMailBodyNewMembership?: InputMaybe<Scalars['String']['input']>;
   bexio_invoiceMailBodyRenewalMembership?: InputMaybe<Scalars['String']['input']>;
@@ -5432,6 +5433,7 @@ export type MutationUpdatePaymentMethodArgs = {
 export type MutationUpdatePaymentProviderSettingArgs = {
   apiKey?: InputMaybe<Scalars['String']['input']>;
   bexio_accountId?: InputMaybe<Scalars['Float']['input']>;
+  bexio_contactSync?: InputMaybe<Scalars['Boolean']['input']>;
   bexio_countryId?: InputMaybe<Scalars['Float']['input']>;
   bexio_invoiceMailBodyNewMembership?: InputMaybe<Scalars['String']['input']>;
   bexio_invoiceMailBodyRenewalMembership?: InputMaybe<Scalars['String']['input']>;
@@ -8654,6 +8656,9 @@ export enum SettingName {
 export type SettingPaymentProvider = SettingProvider & {
   __typename: 'SettingPaymentProvider';
   bexio_accountId?: Maybe<Scalars['Float']['output']>;
+  bexio_contactSync?: Maybe<Scalars['Boolean']['output']>;
+  bexio_contactSyncAt?: Maybe<Scalars['DateTime']['output']>;
+  bexio_contactSyncError?: Maybe<Scalars['String']['output']>;
   bexio_countryId?: Maybe<Scalars['Float']['output']>;
   bexio_invoiceMailBodyNewMembership?: Maybe<Scalars['String']['output']>;
   bexio_invoiceMailBodyRenewalMembership?: Maybe<Scalars['String']['output']>;

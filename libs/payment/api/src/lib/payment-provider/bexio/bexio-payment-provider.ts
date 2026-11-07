@@ -3,10 +3,10 @@ import {
   InvoiceItem,
   MailChannel,
   MemberPlan,
+  PaymentProviderCustomer,
   PaymentState,
   Subscription,
   User,
-  UserAddress,
 } from '@prisma/client';
 import { addErrorContext, describeError, logger } from '@wepublish/utils/api';
 import Bexio, { ContactsStatic, InvoicesStatic } from 'bexio';
@@ -42,8 +42,26 @@ import {
   searchForContact,
 } from './bexio-utils';
 import fetch, { RequestInit } from 'node-fetch';
+import { bexioContactFields, ContactUser } from './bexio-contact-mapping';
+import { BexioCountries, BexioCountry } from './bexio-countries';
+
+const BEXIO_BASE_URL = 'https://api.bexio.com/2.0';
+const COUNTRIES_TTL_MS = 24 * 60 * 60 * 1000;
+
+export type SyncContactUser = ContactUser & {
+  paymentProviderCustomers: PaymentProviderCustomer[];
+};
+
+/** What the contact sync did for a reader. */
+export type SyncContactOutcome = 'edited' | 'created' | 'missing';
+
+const isNotFound = (error: unknown) =>
+  (error as { code?: number } | null)?.code === 404;
 
 export class BexioPaymentProvider extends BasePaymentProvider {
+  // bexio's country list changes rarely; one load serves a whole night.
+  private countryList?: { loadedAt: number; countries: BexioCountries };
+
   constructor(props: PaymentProviderProps) {
     super(props);
   }
@@ -323,6 +341,8 @@ export class BexioPaymentProvider extends BasePaymentProvider {
         (await searchForContact(bexio, user));
       step = 'saving the contact';
       const updatedContact = await this.createOrUpdateContact(contact, user);
+      // The invoice pushed the reader's data too; the nightly sync may skip them.
+      await this.markSynced(user.id);
       step = 'creating the invoice';
       const {
         invoice: newInvoice,
@@ -408,33 +428,143 @@ export class BexioPaymentProvider extends BasePaymentProvider {
 
   async createOrUpdateContact(
     contact: ContactsStatic.ContactSmall,
-    user: User & { address: UserAddress | null }
+    user: ContactUser
   ) {
-    const config = await this.getConfig();
     const bexio = await this.getBexioGateway();
-    const upsertContact: ContactsStatic.ContactOverwrite = {
-      nr: '',
-      name_1: user?.address?.company ? user?.address.company : user.name, // lastname or company name
-      name_2: user?.address?.company ? '' : (user.firstName ?? undefined), // Firstname or none
-      mail: user.email,
-      user_id: this.assertProperty('bexio_userId', config.bexio_userId),
-      contact_type_id: user?.address?.company ? 1 : 2, // 1: Company 2: Person
-      country_id: this.assertProperty(
-        'bexio_countryId',
-        config.bexio_countryId
-      ),
-      owner_id: this.assertProperty('bexio_userId', config.bexio_userId),
-      contact_group_ids: [],
-      postcode: user?.address?.zipCode ?? undefined,
-      city: user?.address?.city ?? undefined,
-      street_name: user?.address?.streetAddress ?? undefined,
-      house_number: user?.address?.streetAddressNumber ?? undefined,
-    };
+    const fields = await this.contactFields(user);
+
     if (!contact) {
-      return await bexio.contacts.create(upsertContact);
-    } else {
-      upsertContact.nr = contact.nr;
-      return await bexio.contacts.edit(contact.id, upsertContact);
+      return bexio.contacts.create(await this.newContact(fields));
+    }
+
+    return bexio.contacts.edit(contact.id, { nr: contact.nr, ...fields });
+  }
+
+  /**
+   * Push the reader's data to their bexio contact: edit the stored one, else
+   * the one found by email, else create one and remember it. A stored contact
+   * bexio no longer knows is a data problem to look at, not a reason to
+   * create a second one.
+   */
+  async syncContact(user: SyncContactUser): Promise<SyncContactOutcome> {
+    const bexio = await this.getBexioGateway();
+    const fields = await this.contactFields(user);
+    const storedId = user.paymentProviderCustomers.find(
+      customer => customer.paymentProviderID === this.id
+    )?.customerID;
+
+    if (storedId && /^\d+$/.test(storedId)) {
+      try {
+        await bexio.contacts.edit(Number(storedId), fields);
+      } catch (error) {
+        if (!isNotFound(error)) {
+          throw error;
+        }
+
+        logger('bexioPaymentProvider').warn(
+          'Bexio contact %s stored for user %s does not exist; not synced',
+          storedId,
+          user.id
+        );
+
+        return 'missing';
+      }
+
+      await this.markSynced(user.id);
+
+      return 'edited';
+    }
+
+    const found = await searchForContact(bexio, user);
+    const contact =
+      found ?
+        await bexio.contacts.edit(found.id, fields)
+      : await bexio.contacts.create(await this.newContact(fields));
+
+    await this.saveCustomer(user.id, String(contact.id));
+    await this.markSynced(user.id);
+
+    return found ? 'edited' : 'created';
+  }
+
+  /** bexio's countries by iso code, the configured one as fallback. */
+  async countries(): Promise<BexioCountries> {
+    const config = await this.getConfig();
+    const fallback = this.assertProperty(
+      'bexio_countryId',
+      config.bexio_countryId
+    );
+    const cached = this.countryList;
+
+    if (
+      cached &&
+      cached.countries.fallback === fallback &&
+      Date.now() - cached.loadedAt < COUNTRIES_TTL_MS
+    ) {
+      return cached.countries;
+    }
+
+    const countries = await BexioCountries.load(
+      () => this.fetchCountries(config.apiKey),
+      fallback
+    );
+    this.countryList = { loadedAt: Date.now(), countries };
+
+    return countries;
+  }
+
+  private async fetchCountries(apiKey: string | null): Promise<BexioCountry[]> {
+    const response = await fetch(`${BEXIO_BASE_URL}/country?limit=500`, {
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+      },
+      signal: AbortSignal.timeout(30_000) as unknown as RequestInit['signal'],
+    });
+
+    if (response.status !== 200) {
+      throw new ResponseNOK(response.status);
+    }
+
+    return (await response.json()) as BexioCountry[];
+  }
+
+  private async contactFields(user: ContactUser) {
+    return bexioContactFields(
+      user,
+      (await this.countries()).idFor(user.address?.country)
+    );
+  }
+
+  /** The fields only a new contact needs; bexio fills the rest. */
+  private async newContact(
+    fields: Partial<ContactsStatic.ContactOverwrite>
+  ): Promise<ContactsStatic.ContactCreate> {
+    const config = await this.getConfig();
+    const userId = this.assertProperty('bexio_userId', config.bexio_userId);
+
+    return {
+      nr: '',
+      ...fields,
+      user_id: userId,
+      owner_id: userId,
+      contact_group_ids: [],
+    } as ContactsStatic.ContactCreate;
+  }
+
+  /** Bookkeeping for the nightly sync; must never fail a push that worked. */
+  private async markSynced(userId: string) {
+    try {
+      await this.prisma.paymentProviderCustomer.updateMany({
+        where: { userId, paymentProviderID: this.id },
+        data: { syncedAt: new Date() },
+      });
+    } catch (error) {
+      logger('bexioPaymentProvider').warn(
+        'Could not record the contact sync of user %s: %s',
+        userId,
+        describeError(error)
+      );
     }
   }
 

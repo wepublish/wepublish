@@ -17,6 +17,22 @@
   create a second invoice. Keep `offSessionPayments` **off** for Bexio: with it
   on, the due date runs `createIntent` → a second Bexio invoice plus a
   RENEWAL_FAILED mail.
+  **Contact sync (opt-in):** `SettingPaymentProvider.bexio_contactSync` has
+  `BexioContactSyncService` (`libs/payment/api/.../bexio/`, a `runNight`
+  step before the Mailchimp sync) push reader data to bexio every night:
+  readers with a stored contact (`PaymentProviderCustomer.customerID`) whose
+  `User`/`UserAddress.modifiedAt` is newer than `PaymentProviderCustomer.syncedAt`,
+  and readers on a bexio payment method without a contact (found by email or
+  created). `bexioContactFields` is the one mapping (name/company, email,
+  street, number, address line 2, postcode, city, country) used by the sync
+  and by the invoice-time `createOrUpdateContact`; it is sent with bexio's
+  partial edit, so groups, phone and the rest of the contact are untouched.
+  `country_id` comes from `BexioCountries` (`GET /2.0/country`, cached a day,
+  `normalizeCountry` from `@wepublish/utils/api`), the configured one as
+  fallback. A stored id bexio answers 404 for is skipped, never recreated;
+  a 429 ends the night's run. The run's time and first error land in
+  `bexio_contactSyncAt` / `bexio_contactSyncError`, shown in the editor's
+  bexio form.
 
 - Simulated (`simulated` type) — no external service: `createIntent` sends the
   customer to a checkout page served by the API at
