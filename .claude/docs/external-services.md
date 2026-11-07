@@ -30,9 +30,19 @@
   `country_id` comes from `BexioCountries` (`GET /2.0/country`, cached a day,
   `normalizeCountry` from `@wepublish/utils/api`), the configured one as
   fallback. A stored id bexio answers 404 for is skipped, never recreated;
-  a 429 ends the night's run. The run's time and first error land in
-  `bexio_contactSyncAt` / `bexio_contactSyncError`, shown in the editor's
-  bexio form.
+  a 429 or 401 ends the night's run. The run's time and first error land in
+  `bexio_contactSyncAt` / `bexio_contactSyncError`, shown as a status alert
+  under the switch in the editor's bexio form; `syncAll` also returns the
+  counts for the night's job log (see below).
+
+  **Night job log:** every step of the night, the job's own
+  (`CORE_STEP_KEYS` in `periodic-job.service.ts`) and the `runNight` syncs
+  after it, writes a `PeriodicJobStep` row (status ok / warning / error /
+  skipped, counts, error) on the newest `PeriodicJob`. The editor lists them
+  under the job; a warning or error on the newest night raises the job item
+  in the dashboard's Mitteilungen. A new `runNight` step needs a key in
+  `periodicJobsLog.steps.*` (and its count names in `periodicJobsLog.counts.*`)
+  in the editor locales.
   **Test mailbox (test instances only):** a bexio company in its trial only
   emails its own sender address. `bexio_testMailbox` sends invoice mails to
   recipients on the mailbox's domain to the mailbox instead

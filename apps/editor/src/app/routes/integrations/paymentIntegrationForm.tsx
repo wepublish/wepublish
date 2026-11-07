@@ -21,6 +21,7 @@ import stripeLogo from './assets/stripe.svg';
 import { FieldDefinition } from './genericIntegrationForm';
 import { GenericIntegrationList } from './genericIntegrationList';
 import { secretPlaceholder } from './secretPlaceholder';
+import { bexioContactSyncField } from './bexioContactSyncField';
 
 // Mirrors the API's `isTestEnvironment`.
 const isTestEnvironment = (appEnvironment?: string) =>
@@ -97,28 +98,6 @@ export const bexioTestMailboxFields = (
       },
     ]
   : [];
-
-/** When the nightly contact sync last ran and whether it went through. */
-function contactSyncStatus(
-  setting: Pick<
-    SettingPaymentProvider,
-    'bexio_contactSyncAt' | 'bexio_contactSyncError'
-  >,
-  t: (key: string, options?: Record<string, unknown>) => string
-) {
-  if (!setting.bexio_contactSyncAt) {
-    return t('integrations.paymentSettings.bexioContactSyncNeverRan');
-  }
-
-  const date = new Date(setting.bexio_contactSyncAt).toLocaleString();
-
-  return setting.bexio_contactSyncError ?
-      t('integrations.paymentSettings.bexioContactSyncLastRunFailed', {
-        date,
-        error: setting.bexio_contactSyncError,
-      })
-    : t('integrations.paymentSettings.bexioContactSyncLastRun', { date });
-}
 
 export function PaymentIntegrationForm() {
   const { t } = useTranslation();
@@ -313,15 +292,7 @@ export function PaymentIntegrationForm() {
               ),
               type: 'checkbox',
             },
-            {
-              name: 'bexio_contactSync',
-              label: t('integrations.paymentSettings.bexioContactSync'),
-              info: [
-                t('integrations.paymentSettings.bexioContactSyncInfo'),
-                contactSyncStatus(setting, t),
-              ].join(' '),
-              type: 'checkbox',
-            },
+            bexioContactSyncField(setting, t),
             ...bexioTestMailboxFields(getSettings().appEnvironment, t)
           );
         }
