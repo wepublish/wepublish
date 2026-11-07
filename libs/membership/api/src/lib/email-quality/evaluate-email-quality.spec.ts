@@ -89,6 +89,23 @@ describe('evaluateEmailQuality', () => {
       ).toBe(EmailQualityLevel.active);
     });
 
+    it('is not reached by a newsletter opt-out', () => {
+      // A person leaving the newsletter still receives invoices there.
+      expect(T.optedOut).toBe('optedOut');
+      expect(evaluate({ events: [event(T.optedOut, 300)] })).toEqual({
+        level: EmailQualityLevel.unknown,
+        reason: 'noEvidence',
+        since: null,
+      });
+    });
+
+    it('is not revived by a newer newsletter opt-out', () => {
+      expect(
+        evaluate({ events: [event(T.hardBounce, 300), event(T.optedOut, 350)] })
+          .level
+      ).toBe(EmailQualityLevel.dead);
+    });
+
     it('stays dead when the only newer proof is for another address', () => {
       expect(
         evaluate({

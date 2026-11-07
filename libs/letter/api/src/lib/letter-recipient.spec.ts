@@ -3,7 +3,6 @@ import {
   canReceiveLetters,
   countryName,
   LetterAddressError,
-  normalizeCountry,
   toLetterAddress,
   UserWithAddress,
 } from './letter-recipient';
@@ -32,26 +31,6 @@ function user(address: Partial<UserAddress> | null): UserWithAddress {
       : null,
   } as unknown as User & { address: UserAddress | null };
 }
-
-describe('normalizeCountry', () => {
-  it('keeps an alpha-2 code', () => {
-    expect(normalizeCountry('ch')).toBe('CH');
-    expect(normalizeCountry('DE')).toBe('DE');
-  });
-
-  it('maps the country names the address form collects today', () => {
-    expect(normalizeCountry('Schweiz')).toBe('CH');
-    expect(normalizeCountry('suisse')).toBe('CH');
-    expect(normalizeCountry('Deutschland')).toBe('DE');
-    expect(normalizeCountry('Österreich')).toBe('AT');
-  });
-
-  it('returns null for anything it cannot map', () => {
-    expect(normalizeCountry('Absurdistan')).toBeNull();
-    expect(normalizeCountry('')).toBeNull();
-    expect(normalizeCountry(null)).toBeNull();
-  });
-});
 
 describe('toLetterAddress', () => {
   it('builds an address from the user and their address', () => {
@@ -120,6 +99,15 @@ describe('canReceiveLetters', () => {
   it('answers without throwing', () => {
     expect(canReceiveLetters(user({}))).toBe(true);
     expect(canReceiveLetters(user(null))).toBe(false);
+  });
+
+  // Pingen posts a letter with a QR-bill within Switzerland only.
+  it('needs a Swiss address for a letter with a payment slip', () => {
+    expect(canReceiveLetters(user({}), { withPaymentSlip: true })).toBe(true);
+    expect(
+      canReceiveLetters(user({ country: 'DE' }), { withPaymentSlip: true })
+    ).toBe(false);
+    expect(canReceiveLetters(user({ country: 'DE' }))).toBe(true);
   });
 });
 

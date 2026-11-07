@@ -22,13 +22,17 @@ import { FieldDefinition } from './genericIntegrationForm';
 import { GenericIntegrationList } from './genericIntegrationList';
 import { secretPlaceholder } from './secretPlaceholder';
 
-// Mirrors the API's `isSimulatedPaymentAllowed`, which also refuses to create
-// the simulated provider on production; this only keeps it out of the picker.
+// Mirrors the API's `isTestEnvironment`.
+const isTestEnvironment = (appEnvironment?: string) =>
+  !!appEnvironment && appEnvironment !== 'production';
+
+// The API also refuses to create the simulated provider on production; this
+// only keeps it out of the picker.
 export const creatablePaymentProviderTypes = (appEnvironment?: string) =>
   Object.values(PaymentProviderType).filter(
     type =>
       type !== PaymentProviderType.Simulated ||
-      (!!appEnvironment && appEnvironment !== 'production')
+      isTestEnvironment(appEnvironment)
   );
 
 const paymentSettingsSchema = z.object({
@@ -70,11 +74,51 @@ const paymentSettingsSchema = z.object({
     .nullish()
     .or(z.literal('')),
   bexio_markInvoiceAsOpen: z.boolean().nullish(),
+  bexio_contactSync: z.boolean().nullish(),
+  bexio_testMailbox: z.string().nullish().or(z.literal('')),
   bexio_invoiceTitleNewMembership: z.string().nullish().or(z.literal('')),
   bexio_invoiceTitleRenewalMembership: z.string().nullish().or(z.literal('')),
 });
 
 type IntegrationFormValues = z.infer<typeof paymentSettingsSchema>;
+
+// The API ignores and refuses the test mailbox on production.
+export const bexioTestMailboxFields = (
+  appEnvironment: string | undefined,
+  t: (key: string) => string
+): FieldDefinition<IntegrationFormValues>[] =>
+  isTestEnvironment(appEnvironment) ?
+    [
+      {
+        type: 'text',
+        name: 'bexio_testMailbox',
+        label: t('integrations.paymentSettings.bexioTestMailbox'),
+        info: t('integrations.paymentSettings.bexioTestMailboxInfo'),
+      },
+    ]
+  : [];
+
+/** When the nightly contact sync last ran and whether it went through. */
+function contactSyncStatus(
+  setting: Pick<
+    SettingPaymentProvider,
+    'bexio_contactSyncAt' | 'bexio_contactSyncError'
+  >,
+  t: (key: string, options?: Record<string, unknown>) => string
+) {
+  if (!setting.bexio_contactSyncAt) {
+    return t('integrations.paymentSettings.bexioContactSyncNeverRan');
+  }
+
+  const date = new Date(setting.bexio_contactSyncAt).toLocaleString();
+
+  return setting.bexio_contactSyncError ?
+      t('integrations.paymentSettings.bexioContactSyncLastRunFailed', {
+        date,
+        error: setting.bexio_contactSyncError,
+      })
+    : t('integrations.paymentSettings.bexioContactSyncLastRun', { date });
+}
 
 export function PaymentIntegrationForm() {
   const { t } = useTranslation();
@@ -268,7 +312,17 @@ export function PaymentIntegrationForm() {
                 'integrations.paymentSettings.bexioMarkInvoiceAsOpenInfo'
               ),
               type: 'checkbox',
-            }
+            },
+            {
+              name: 'bexio_contactSync',
+              label: t('integrations.paymentSettings.bexioContactSync'),
+              info: [
+                t('integrations.paymentSettings.bexioContactSyncInfo'),
+                contactSyncStatus(setting, t),
+              ].join(' '),
+              type: 'checkbox',
+            },
+            ...bexioTestMailboxFields(getSettings().appEnvironment, t)
           );
         }
 

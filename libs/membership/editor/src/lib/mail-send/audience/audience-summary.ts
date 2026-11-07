@@ -180,8 +180,7 @@ export function describeAudience(
   }
 
   const history = audience['mailHistory'] as
-    | { match?: string; conditions?: Condition[] }
-    | undefined;
+    { match?: string; conditions?: Condition[] } | undefined;
   const conditions = history?.conditions ?? [];
 
   for (const condition of conditions) {

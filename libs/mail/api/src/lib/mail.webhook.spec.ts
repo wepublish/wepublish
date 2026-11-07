@@ -55,6 +55,9 @@ describe('MailWebhookController', () => {
         findUnique: vi.fn(async () => mailLog),
         update: vi.fn(async () => ({})),
       },
+      settingMailProvider: {
+        update: vi.fn(async () => ({})),
+      },
     };
     const recorder = {
       recordMailSignals: vi.fn(async () => undefined),
@@ -163,13 +166,36 @@ describe('MailWebhookController', () => {
   });
 
   it('refuses a call that does not come from the provider', async () => {
-    const { provider, receive, res } = makeController([]);
+    const { prisma, provider, receive, res } = makeController([]);
     provider.webhookForSendMail.mockRejectedValueOnce(
       new MailWebhookSignatureError('Webhook signature failed')
     );
 
     await expect(receive()).rejects.toBeInstanceOf(UnauthorizedException);
     expect(res.status).not.toHaveBeenCalled();
+    expect(prisma.settingMailProvider.update).not.toHaveBeenCalled();
+  });
+
+  // So an admin can see that the provider reaches this installation at all.
+  it('notes when the provider last reached us', async () => {
+    const { prisma, receive } = makeController([]);
+
+    await receive();
+
+    expect(prisma.settingMailProvider.update).toHaveBeenCalledWith({
+      where: { id: 'mailchimp' },
+      data: { lastWebhookAt: expect.any(Date) },
+    });
+  });
+
+  it('keeps answering the provider when the note cannot be written', async () => {
+    const { prisma, receive, res } = makeController([]);
+    prisma.settingMailProvider.update.mockRejectedValueOnce(
+      new Error('db down')
+    );
+
+    await expect(receive()).resolves.toBeUndefined();
+    expect(res.status).toHaveBeenCalledWith(200);
   });
 
   // Providers retry on 5xx or, like Brevo, drop the event for good. Neither

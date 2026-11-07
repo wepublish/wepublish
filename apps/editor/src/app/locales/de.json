@@ -2601,12 +2601,14 @@
         "sessionTtlDays": "Wie lange eine Anmeldung gültig bleibt, bevor man sich neu anmelden muss. Gilt ab der nächsten Anmeldung; bestehende Sitzungen behalten ihre Laufzeit.",
         "emailQualityUnresponsiveAfterDays": "Eine E-Mail-Adresse gilt als «reagiert nicht», wenn so viele Tage lang weder ein Login noch ein Klick in einer Mail erfolgt ist, obwohl Mails zugestellt wurden. Wird nächtlich und über «Status aktualisieren» neu bewertet.",
         "emailQualityMinMailsForUnresponsive": "So viele Mails müssen an die Adresse zugestellt worden sein, bevor sie als «reagiert nicht» gelten kann.",
+        "emailQualityEvidenceWarnAfterDays": "Nach so vielen Tagen ohne Zustellmeldung vom E-Mail-Dienst (Webhook, Abgleich, Newsletter-Audience) zeigen das Kommunikations-Tool und der Zustellkanal einen Hinweis, dass der E-Mail-Status nur auf Logins beruht.",
         "showPendingWhenNotPublished": "Dadurch werden geplante Artikel und Seiten öffentlich sichtbar (und damit auch für Crawler), obwohl sie noch nie publiziert wurden."
       },
       "sessionTtlDays": "Gültigkeitsdauer der Anmeldung",
       "emailQuality": "E-Mail-Qualität",
       "emailQualityUnresponsiveAfterDays": "«Reagiert nicht» nach … Tagen",
       "emailQualityMinMailsForUnresponsive": "… zugestellten Mails",
+      "emailQualityEvidenceWarnAfterDays": "Hinweis ohne Zustellmeldung nach … Tagen",
       "activeSubscriptionsApiPublic": "API für aktive Abos öffentlich zugänglich machen",
       "expectedRevenueApiPublic": "API für erwartete Einnahmen öffentlich zugänglich machen",
       "newDeactivationsApiPublic": "API für neue Deaktivierungen öffentlich zugänglich machen",
@@ -2785,7 +2787,13 @@
         "generate": "Generieren",
         "generateToken": "Token generieren",
         "name": "Name",
-        "tokenWarning": "Token können später nicht mehr abgerufen werden. Speichere sie an einem sicheren Ort."
+        "tokenWarning": "Token können später nicht mehr abgerufen werden. Speichere sie an einem sicheren Ort.",
+        "roles": "Rollen",
+        "noRoles": "Keine Rollen – keine Berechtigungen",
+        "noRolesWarning": "Ohne Rolle darf das Token nichts. Wähle die Rollen, deren Berechtigungen Programme mit diesem Token erhalten sollen.",
+        "rolesInfo": "Eine Anfrage mit diesem Token erhält die Berechtigungen dieser Rollen. Änderungen gelten sofort.",
+        "editRoles": "Rollen bearbeiten",
+        "editRolesOf": "Rollen von {{name}}"
       }
     },
     "untitled": "Ohne Titel",
@@ -2943,7 +2951,7 @@
         "title": {
           "activated": "Abonnement deaktivieren"
         },
-        "willBeDeactivated": "Das Abonnement wird am {{date, ccc PP p}} deaktiviert"
+        "willBeDeactivated": "Das Abonnement wird am {{date, ccc PP p}} deaktiviert. Grund: {{reason}}"
       },
       "revertUpgrade": {
         "title": "Upgrade rückgängig",
@@ -3569,6 +3577,7 @@
         "bexioInvoiceMailBodyNewMembership": "Rechnungs-E-Mail-Inhalt (Neue Mitgliedschaft)",
         "bexioInvoiceMailBodyRenewalMembership": "Rechnungs-E-Mail-Inhalt (Mitgliedschafts-Erneuerung)",
         "bexioMarkInvoiceAsOpen": "Rechnung als offen markieren",
+        "bexioContactSync": "Kontakte nächtlich nach Bexio übertragen",
         "bexioInvoiceTitleNewMembership": "Rechnungstitel (Neue Mitgliedschaft)",
         "bexioInvoiceTitleRenewalMembership": "Rechnungstitel (Mitgliedschafts-Erneuerung)",
         "typeInfo": "Der Zahlungsdienst, mit dem diese Integration verbunden ist. Er wird beim Anlegen festgelegt und lässt sich nicht ändern.",
@@ -3589,7 +3598,13 @@
         "bexioInvoiceTitleInfo": "Der Titel, der auf der Rechnung steht. Für neue Abos und Verlängerungen kannst du verschiedene Titel verwenden.",
         "bexioInvoiceMailSubjectInfo": "Der Betreff der E-Mail, mit der Bexio die Rechnung verschickt. Platzhalter wie :user.firstName: oder :memberPlan.name: werden automatisch ersetzt.",
         "bexioInvoiceMailBodyInfo": "Der Text der E-Mail, mit der Bexio die Rechnung verschickt; das PDF wird angehängt. Platzhalter wie :user.firstName: oder :memberPlan.name: werden automatisch ersetzt. Bexio verlangt den Platzhalter [Network Link] im Text.",
-        "bexioMarkInvoiceAsOpenInfo": "Wenn aktiv, setzt Bexio die Rechnung nach dem Versand auf «offen», statt sie als Entwurf zu belassen."
+        "bexioMarkInvoiceAsOpenInfo": "Wenn aktiv, setzt Bexio die Rechnung nach dem Versand auf «offen», statt sie als Entwurf zu belassen.",
+        "bexioContactSyncInfo": "Wenn aktiv, überträgt We.Publish jede Nacht Name, Firma, E-Mail und Adresse geänderter Leser:innen in ihren Bexio-Kontakt und legt für Abos mit Bexio-Zahlung fehlende Kontakte an. Gruppen, Telefon und alles Weitere im Kontakt bleiben, wie sie in Bexio sind.",
+        "bexioTestMailbox": "Test-Postfach (nur Testinstanzen)",
+        "bexioTestMailboxInfo": "Bexio-Firmen in der Testphase senden Rechnungsmails nur an die eigene Absenderadresse. Rechnungsmails an eine Adresse auf der Domain dieses Postfachs gehen stattdessen an dieses Postfach, z. B. bexio@<id>.resend.app für Leser*innen nw-00001@<id>.resend.app. Auf Produktion nicht verfügbar.",
+        "bexioContactSyncNeverRan": "Noch nie gelaufen.",
+        "bexioContactSyncLastRun": "Letzter Lauf: {{date}}, ohne Fehler.",
+        "bexioContactSyncLastRunFailed": "Letzter Lauf: {{date}}. Fehler: {{error}}"
       },
       "placeholderSecret": "Unverändert (versteckt)",
       "secretNotSet": "Nicht gesetzt",
@@ -3632,17 +3647,26 @@
         "smtpUser": "SMTP-Benutzername",
         "smtpPassword": "SMTP-Passwort",
         "webhookEndpointSecret": "Webhook-Endpoint-Secret",
-        "typeInfo": "Der Dienst, der die E-Mails verschickt. MAILCHIMP steht für Mailchimp Transactional (Mandrill). SLACK und LOG stellen Leserinnen und Lesern nichts zu – sie sind nur zum Testen gedacht.",
+        "typeInfo": "Der Dienst, der die E-Mails verschickt. MAILCHIMP steht für Mailchimp Transactional (Mandrill), BREVO für Brevo (früher Sendinblue). SLACK und LOG stellen Leserinnen und Lesern nichts zu – sie sind nur zum Testen gedacht.",
         "fromAddressInfo": "Die Absenderadresse, die Leserinnen und Leser sehen, z. B. abo@example.ch. Ihre Domain muss beim E-Mail-Dienst verifiziert sein, sonst landen E-Mails womöglich im Spam.",
         "replyToAddressInfo": "Wohin Antworten gehen, wenn jemand auf eine deiner E-Mails antwortet. Bleibt das Feld leer, gehen Antworten an die Absenderadresse.",
-        "apiKeyInfo": "Der API-Schlüssel aus deinem Konto beim E-Mail-Dienst (Mailchimp Transactional/Mandrill oder Mailgun). Ohne ihn können keine E-Mails verschickt werden.",
-        "webhookEndpointSecretInfo": "Damit prüft We.Publish, dass Zustellmeldungen (z. B. Bounces) wirklich vom E-Mail-Dienst stammen. Kopiere den Webhook-Signaturschlüssel aus Mandrill bzw. Mailgun. Ohne ihn wird der Zustellstatus nicht aktualisiert.",
+        "apiKeyInfo": "Der API-Schlüssel aus deinem Konto beim E-Mail-Dienst (Mailchimp Transactional/Mandrill, Mailgun oder Brevo). Ohne ihn können keine E-Mails verschickt werden.",
+        "webhookEndpointSecretInfo": "Damit prüft We.Publish, dass Zustellmeldungen (z. B. Bounces) wirklich vom E-Mail-Dienst stammen. Kopiere den Webhook-Signaturschlüssel aus Mandrill bzw. Mailgun. Bei Brevo wählst du ein zufälliges Passwort und hängst es als ?key=… an die Webhook-URL an, die du in Brevo einträgst. Ohne ihn wird der Zustellstatus nicht aktualisiert.",
         "mailgunBaseDomainInfo": "Die Adresse der Mailgun-API ohne https://: api.mailgun.net bzw. api.eu.mailgun.net, wenn dein Konto in der EU liegt.",
         "mailgunMailDomainInfo": "Die Versand-Domain, die du in Mailgun eingerichtet hast, z. B. mg.example.ch.",
         "slackWebhookUrlInfo": "Die Adresse eines Slack-Incoming-Webhooks. Statt zugestellt zu werden, landet jede E-Mail in diesem Slack-Kanal – praktisch zum Testen.",
         "smtpHostInfo": "Die Adresse des Postausgangsservers, z. B. smtp.example.ch. Du erhältst sie von deinem E-Mail-Anbieter.",
         "smtpPortInfo": "Meist 587 oder 465 – siehe Angaben deines E-Mail-Anbieters.",
-        "smtpSecureInfo": "Für Port 465 einschalten. Bei Port 587 ausgeschaltet lassen – die Verbindung wird dann über STARTTLS verschlüsselt."
+        "smtpSecureInfo": "Für Port 465 einschalten. Bei Port 587 ausgeschaltet lassen – die Verbindung wird dann über STARTTLS verschlüsselt.",
+        "evidence": {
+          "title": "Zustellmeldungen",
+          "info": "Daran siehst du, ob der E-Mail-Dienst We.Publish erreicht. Bleibt beides leer, beruht der E-Mail-Status der User nur auf Logins und Newsletter-Klicks.",
+          "lastWebhookAt": "Letzte Meldung per Webhook",
+          "lastPollAt": "Letzter Abgleich",
+          "lastPollError": "Fehler beim letzten Abgleich",
+          "never": "noch nie",
+          "notReporting": "Dieser Dienst meldet keine Zustellstatus."
+        }
       },
       "trackingPixelSettings": {
         "type": "Typ",
@@ -3675,6 +3699,18 @@
       },
       "mailchimpSync": "Mailchimp-Sync",
       "mailchimpSyncSettings": {
+        "audienceWebhook": {
+          "title": "Meldungen aus der Audience",
+          "info": "Mailchimp meldet We.Publish sofort, wenn ein Kontakt bereinigt wurde (Bounces, Missbrauch) oder sich abgemeldet hat. Ohne Webhook kommt das erst mit dem nächtlichen Abgleich an. We.Publish registriert den Webhook selbst bei Mailchimp; dafür muss die API von Mailchimp aus erreichbar sein.",
+          "registeredAt": "Bei Mailchimp registriert am {{date}}",
+          "notRegistered": "Noch nicht bei Mailchimp registriert.",
+          "lastReceived": "Letzte Meldung",
+          "never": "noch keine",
+          "register": "Webhook bei Mailchimp registrieren",
+          "renew": "Registrierung erneuern",
+          "registered": "Der Webhook ist bei Mailchimp registriert.",
+          "failed": "Mailchimp hat die Registrierung abgelehnt: {{error}}"
+        },
         "enabled": "Aktiviert",
         "apiKey": "Mailchimp-API-Schlüssel",
         "listId": "Mailchimp Listen-/Zielgruppen-ID",
@@ -4015,7 +4051,8 @@
       "apps": "Apps",
       "noAppsFound": "Keine externen Apps konfiguriert.",
       "notFound": "Externe App nicht gefunden",
-      "appsInfo": "Verknüpfungen zu externen Tools, die auf dem Dashboard unter «We.Publish Apps» erscheinen. «Ziel» bestimmt, ob eine App in einem neuen Browser-Tab oder direkt im Editor geöffnet wird. Manche Websites lassen sich nicht im Editor anzeigen – öffne sie in einem neuen Tab."
+      "appsInfo": "Verknüpfungen zu externen Tools, die auf dem Dashboard unter «We.Publish Apps» erscheinen. «Ziel» bestimmt, ob eine App in einem neuen Browser-Tab oder direkt im Editor geöffnet wird. Manche Websites lassen sich nicht im Editor anzeigen – öffne sie in einem neuen Tab.",
+      "noToken": "Die App konnte nicht geöffnet werden: Es wurde kein Zugriffstoken ausgestellt."
     },
     "externalAppForm": {
       "apiKey": "API-Schlüssel",
@@ -4302,6 +4339,12 @@
         "refresh": "Status aktualisieren",
         "refreshing": "Status werden aktualisiert …",
         "refreshed": "{{updated}} Zustellstatus vom Provider geholt ({{checked}} geprüft), {{recomputed}} User neu bewertet."
+      },
+      "emailEvidence": {
+        "noProviderReports": "Der E-Mail-Dienst ({{provider}}) meldet keine Zustellstatus. Der E-Mail-Status beruht nur auf Logins, bestätigten Adressen und Newsletter-Klicks.",
+        "never": "Noch nie eine Zustellmeldung vom E-Mail-Dienst erhalten. Der E-Mail-Status beruht nur auf Logins. Webhook-Secret in den Integrationen und den nächtlichen Abgleich prüfen.",
+        "stale": "Seit {{days}} Tagen keine Zustellmeldung vom E-Mail-Dienst (zuletzt {{lastAt}}). Webhook und nächtlichen Abgleich prüfen.",
+        "pollError": "Der letzte Abgleich mit dem E-Mail-Dienst ist fehlgeschlagen: {{error}}"
       },
       "endedWindow": {
         "label": "Zeitraum der Abo-Deaktivierung",

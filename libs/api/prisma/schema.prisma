@@ -1357,6 +1357,9 @@ model PaymentProviderCustomer {
 
   paymentProviderID String
   customerID        String
+  // When the reader's data was last pushed to the provider's contact. Null:
+  // never pushed by the nightly contact sync.
+  syncedAt          DateTime? @db.Timestamptz(3)
 
   User   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String?
@@ -2054,6 +2057,7 @@ model PaywallBypass {
 enum MailProviderType {
   MAILGUN   @map("mailgun")
   MAILCHIMP @map("mailchimp")
+  BREVO     @map("brevo")
   SLACK     @map("slack")
   SMTP      @map("smtp")
   LOG       @map("log")
@@ -2080,6 +2084,12 @@ model SettingMailProvider {
   smtp_port             Int?
   smtp_secure           Boolean?
   smtp_user             String?
+
+  // When the provider last reached us and when we last asked it, so an admin
+  // can tell whether the email status rests on provider evidence at all.
+  lastWebhookAt DateTime? @db.Timestamptz(3)
+  lastPollAt    DateTime? @db.Timestamptz(3)
+  lastPollError String?
 
   @@map("settings.mailprovider")
 }
@@ -2367,6 +2377,12 @@ model SettingPaymentProvider {
   bexio_invoiceMailSubjectRenewalMembership String?
   bexio_invoiceMailBodyRenewalMembership    String?
   bexio_markInvoiceAsOpen                   Boolean?
+  bexio_testMailbox                         String?
+  // Nightly push of reader data (name, email, address) to bexio contacts;
+  // when it last ran and what went wrong, for the integration form.
+  bexio_contactSync                         Boolean?
+  bexio_contactSyncAt                       DateTime? @db.Timestamptz(3)
+  bexio_contactSyncError                    String?
 
   mollie_apiBaseUrl String?
   mollie_methods    MolliePaymentMethod[]
@@ -2477,6 +2493,15 @@ model SettingSyncProvider {
   mailchimp_interestGroupMappings   Json    @default("[]")
   mailchimp_defaultInterestGroupIds Json    @default("[]")
   mailchimp_extensions              Json    @default("{}")
+
+  // Audience webhook (cleaned, unsubscribe, upemail), registered at Mailchimp
+  // by the api itself. The secret is in the webhook URL, since Mailchimp
+  // signs nothing; encrypted like the api key.
+  mailchimp_webhookSecret       String?
+  mailchimp_webhookId           String?
+  mailchimp_webhookRegisteredAt DateTime? @db.Timestamptz(3)
+  // When the audience webhook last delivered a verified call.
+  lastWebhookAt DateTime? @db.Timestamptz(3)
 
   // Last sync execution info
   lastSyncAt    DateTime? @db.Timestamptz(3)
@@ -2739,12 +2764,16 @@ enum EmailQualityLevel {
 
 // verified / invalid are reserved for an address verification service; nothing
 // records verified yet.
+// unsubscribed: the mail provider refuses the address from now on (Mandrill's
+// rejects list, Mailgun's unsubscribes), so it is as dead as a bounce.
+// optedOut: the person left a newsletter audience; the inbox still works.
 enum EmailQualityEventType {
   hardBounce    @map("hardBounce")
   invalid       @map("invalid")
   blocked       @map("blocked")
   spamComplaint @map("spamComplaint")
   unsubscribed  @map("unsubscribed")
+  optedOut      @map("optedOut")
   clicked       @map("clicked")
   verified      @map("verified")
 }
