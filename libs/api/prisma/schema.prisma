@@ -1802,7 +1802,36 @@ model PeriodicJob {
   tries                Int       @default(0)
   error                String?
 
+  steps PeriodicJobStep[]
+
   @@map("periodic_jobs")
+}
+
+/// What one step of a night did: the job's own steps and the syncs after it.
+model PeriodicJobStep {
+  id        String   @id @default(dbgenerated("uuidv7()"))
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+
+  periodicJobId String
+  periodicJob   PeriodicJob @relation(fields: [periodicJobId], references: [id], onDelete: Cascade)
+
+  key        String
+  status     PeriodicJobStepStatus
+  /// Counts by name, e.g. {"readers": 1821, "failed": 7}; shown, never queried.
+  counts     Json?
+  error      String?
+  startedAt  DateTime              @db.Timestamptz(3)
+  finishedAt DateTime              @db.Timestamptz(3)
+
+  @@index([periodicJobId])
+  @@map("periodic_job_steps")
+}
+
+enum PeriodicJobStepStatus {
+  ok
+  warning
+  error
+  skipped
 }
 
 enum BlockType {

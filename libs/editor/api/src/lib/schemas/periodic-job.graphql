@@ -9,6 +9,17 @@ fragment FullPeriodicJob on PeriodicJob {
   successfullyFinished
   tries
   createdAt
+  steps {
+    key
+    status
+    counts {
+      name
+      value
+    }
+    error
+    startedAt
+    finishedAt
+  }
 }
 
 query PeriodicJobLogs($skip: Int, $take: Int) {

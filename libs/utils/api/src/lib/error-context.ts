@@ -13,6 +13,8 @@ const TEXT_KEYS = [
   'reason',
   'data',
   'body',
+  // A validation error's reasons, e.g. bexio's 422: a list, or a list per field.
+  'errors',
 ];
 const MAX_DESCRIPTION_LENGTH = 500;
 
@@ -45,16 +47,52 @@ const readText = (value: unknown, seen: Set<object>): string | undefined => {
 
   seen.add(value);
 
-  const parts =
-    Array.isArray(value) ?
-      value.map(item => readText(item, seen))
-    : TEXT_KEYS.map(key =>
-        readText((value as Record<string, unknown>)[key], seen)
-      );
+  if (Array.isArray(value)) {
+    return joinTexts(
+      value.map(item => readText(item, seen)),
+      ', '
+    );
+  }
 
+  const record = value as Record<string, unknown>;
+
+  return joinTexts(
+    TEXT_KEYS.map(key =>
+      key === 'errors' ?
+        readReasons(record[key], seen)
+      : readText(record[key], seen)
+    ),
+    ': '
+  );
+};
+
+/** Reasons as a list, or by field: `{mail: ['is invalid']}` → "mail is invalid". */
+const readReasons = (value: unknown, seen: Set<object>) => {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    return readText(value, seen);
+  }
+
+  return joinTexts(
+    Object.entries(value).map(([field, reasons]) => {
+      const text = readText(reasons, seen);
+
+      return text && `${field} ${text}`;
+    }),
+    ', '
+  );
+};
+
+const joinTexts = (parts: (string | undefined)[], separator: string) => {
   const texts = [...new Set(parts.filter((part): part is string => !!part))];
 
-  return texts.length ? texts.join(': ') : undefined;
+  // "…the following errors:" already leads into what comes next.
+  return texts.length ?
+      texts.reduce((joined, text) =>
+        joined.endsWith(':') ?
+          `${joined} ${text}`
+        : `${joined}${separator}${text}`
+      )
+    : undefined;
 };
 
 const describeObject = (value: object): string | undefined => {
