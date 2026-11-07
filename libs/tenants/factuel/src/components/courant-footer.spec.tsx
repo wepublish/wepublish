@@ -1,11 +1,11 @@
 import { screen } from '@testing-library/react';
 import { mockNavigations, renderWithProviders } from '@wepublish/mocks/website';
 
-import { FactuelFooter } from './factuel-footer';
+import { CourantFooter } from './courant-footer';
 
 const renderFooter = () =>
   renderWithProviders(
-    <FactuelFooter
+    <CourantFooter
       data={{ __typename: 'Query', navigations: mockNavigations() }}
       loading={false}
       slug="main"
@@ -15,20 +15,17 @@ const renderFooter = () =>
     />
   );
 
-describe('FactuelFooter', () => {
-  it('shows who publishes courant and how to reach them', () => {
+describe('CourantFooter', () => {
+  it('shows the Courant wordmark and tagline', () => {
     renderFooter();
 
-    expect(screen.getByText('courant.ch')).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: 'Courant' })).toBeInTheDocument();
     expect(
-      screen.getByText('Association Pour un nouveau journalisme genevois')
+      screen.getByText('Votre nouveau média genevois')
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole('link', { name: 'contact@courant.ch' })
-    ).toHaveAttribute('href', 'mailto:contact@courant.ch');
   });
 
-  it('keeps the category navigation next to the contact', () => {
+  it('keeps the category navigation', () => {
     renderFooter();
 
     expect(screen.getByRole('link', { name: 'Mobilität' })).toHaveAttribute(

@@ -6,7 +6,7 @@ import {
   ScriptOnce,
   Scripts,
 } from '@tanstack/react-router';
-import { factuelConfig } from '@wepublish/tenant/factuel';
+import { courantConfig, courantTokens } from '@wepublish/tenant/factuel';
 import { initWePublishTranslator } from '@wepublish/utils/website';
 import { googleFontsUrl } from '@wepublish/utils/website/google-fonts';
 import { getRenderEmotionCache } from '@wepublish/utils/website/tanstack';
@@ -24,10 +24,10 @@ import { zodI18nMap } from 'zod-i18n-map';
 import { App } from '../app';
 import { getPublicEnvFn } from '../integration/public-env';
 
-setDefaultOptions({ locale: factuelConfig.dateLocale });
+setDefaultOptions({ locale: courantConfig.dateLocale });
 initWePublishTranslator(
-  factuelConfig.translations.overrides?.[factuelConfig.translations.lng]
-).changeLanguage(factuelConfig.translations.lng);
+  courantConfig.translations.overrides?.[courantConfig.translations.lng]
+).changeLanguage(courantConfig.translations.lng);
 z.setErrorMap(zodI18nMap);
 
 const googleFontLinks = (settings: WebsiteSettingsFragment | undefined) => {
@@ -76,31 +76,25 @@ export const Route = createRootRouteWithContext<ApolloRouterContext>()({
     meta: [
       { charSet: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1.0' },
-      { name: 'msapplication-TileColor', content: '#ffffff' },
-      { name: 'theme-color', content: '#ffffff' },
+      { name: 'apple-mobile-web-app-title', content: 'Courant' },
+      { name: 'theme-color', content: courantTokens.colors.courant[500] },
     ],
     links: [
-      { rel: 'icon', href: '/favicon.ico' },
-      // Favicon definitions, generated with https://realfavicongenerator.net/
+      // Favicons and webmanifest
+      {
+        rel: 'icon',
+        type: 'image/png',
+        sizes: '96x96',
+        href: '/favicon-96x96.png',
+      },
+      { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+      { rel: 'shortcut icon', href: '/favicon.ico' },
       {
         rel: 'apple-touch-icon',
         sizes: '180x180',
         href: '/apple-touch-icon.png',
       },
-      {
-        rel: 'icon',
-        type: 'image/png',
-        sizes: '32x32',
-        href: '/favicon-32x32.png',
-      },
-      {
-        rel: 'icon',
-        type: 'image/png',
-        sizes: '16x16',
-        href: '/favicon-16x16.png',
-      },
       { rel: 'manifest', href: '/site.webmanifest' },
-      { rel: 'mask-icon', href: '/safari-pinned-tab.svg', color: '#000000' },
       // These lived in `pages/_document.tsx`.
       { rel: 'alternate', type: 'application/rss+xml', href: '/rss.xml' },
       { rel: 'alternate', type: 'application/atom+xml', href: '/atom.xml' },
