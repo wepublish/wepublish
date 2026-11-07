@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { createCheckedPermissionComponent } from '../atoms';
 import { formatArticleAuthors } from './articleAuthorList';
 import { ArticleMetadata } from './articleMetadataPanel';
-import { PublishDialogContent } from './publishDialogContent';
+import { formatTagNames, PublishDialogContent } from './publishDialogContent';
 
 export interface PublishArticlePanelProps {
   publishedAtDate?: Date;
@@ -75,7 +75,7 @@ function PublishArticlePanel({
         },
         {
           label: t('articleEditor.panels.tags'),
-          value: metadata.tags.join(', '),
+          value: formatTagNames(metadata.tags, metadata.defaultTags),
           missing: t('articleEditor.panels.enterTag'),
         },
         {

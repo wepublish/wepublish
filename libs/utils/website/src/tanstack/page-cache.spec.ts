@@ -331,4 +331,92 @@ describe('createStartPageCache', () => {
 
     expect(calls).toEqual(['/a/one', '/a/one']);
   });
+
+  describe('the edge window', () => {
+    const STATIC_ARTICLE =
+      'public, max-age=0, s-maxage=3600, stale-while-revalidate=604800, stale-if-error=86400';
+
+    it('caps what Cloudflare keeps at a minute, since only this cache hears about a publish', async () => {
+      const { fetch } = setup(() =>
+        html('<p>one</p>', { headers: { 'cache-control': STATIC_ARTICLE } })
+      );
+
+      const response = await fetch(document('https://site.test/a/one'));
+
+      expect(response.headers.get('cloudflare-cdn-cache-control')).toBe(
+        'public, s-maxage=60, stale-if-error=86400'
+      );
+      expect(response.headers.get('cache-control')).toBe(STATIC_ARTICLE);
+    });
+
+    it('caps a replayed copy the same way', async () => {
+      const { fetch, settled } = setup(() =>
+        html('<p>one</p>', { headers: { 'cache-control': STATIC_ARTICLE } })
+      );
+
+      await fetch(document('https://site.test/a/one'));
+      await settled();
+      const replayed = await fetch(document('https://site.test/a/one'));
+
+      expect(replayed.headers.get('x-page-cache')).toBe('HIT');
+      expect(replayed.headers.get('cloudflare-cdn-cache-control')).toBe(
+        'public, s-maxage=60, stale-if-error=86400'
+      );
+    });
+
+    it('keeps a stale copy out of the edge, so the re-render reaches the next visitor', async () => {
+      let body = 'old';
+      const clock = new FakeClock();
+      const { fetch, settled } = setup(
+        () =>
+          html(`<p>${body}</p>`, {
+            headers: { 'cache-control': STATIC_ARTICLE },
+          }),
+        clock
+      );
+
+      await fetch(document('https://site.test/a/one'));
+      await settled();
+      clock.advance(3_601_000);
+      body = 'new';
+
+      const stale = await fetch(document('https://site.test/a/one'));
+      await settled();
+      const fresh = await fetch(document('https://site.test/a/one'));
+
+      expect(stale.headers.get('x-page-cache')).toBe('STALE');
+      expect(stale.headers.get('cloudflare-cdn-cache-control')).toBe(
+        'no-store'
+      );
+      expect(stale.headers.get('cache-control')).toBe(STATIC_ARTICLE);
+      expect(await fresh.text()).toBe('<p>new</p>');
+      expect(fresh.headers.get('cloudflare-cdn-cache-control')).toBe(
+        'public, s-maxage=60, stale-if-error=86400'
+      );
+    });
+
+    it('keeps a shorter window than a minute as it is', async () => {
+      const { fetch } = setup(() =>
+        html('<p>live</p>', {
+          headers: { 'cache-control': 'public, max-age=0, s-maxage=10' },
+        })
+      );
+
+      const response = await fetch(document('https://site.test/a/live'));
+
+      expect(response.headers.get('cloudflare-cdn-cache-control')).toBe(
+        'public, s-maxage=10, stale-if-error=86400'
+      );
+    });
+
+    it('adds nothing to a response that must not be stored', async () => {
+      const { fetch } = setup(() =>
+        html('<p>private</p>', { headers: { 'cache-control': 'no-store' } })
+      );
+
+      const response = await fetch(document('https://site.test/profile'));
+
+      expect(response.headers.has('cloudflare-cdn-cache-control')).toBe(false);
+    });
+  });
 });
