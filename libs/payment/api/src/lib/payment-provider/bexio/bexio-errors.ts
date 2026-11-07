@@ -18,6 +18,21 @@ class SendingInvoiceError extends Error {
   }
 }
 
+class IssuingInvoiceError extends Error {
+  constructor(issuedInvoice: InvoicesStatic.InvoiceIssued) {
+    super(
+      `Issuing of the invoice failed with message: ${JSON.stringify(issuedInvoice)}`
+    );
+  }
+}
+
+/** The invoice exists in Bexio but could not be issued, rendered or sent. */
+class InvoiceDeliveryError extends Error {
+  constructor(message: string) {
+    super(message);
+  }
+}
+
 class UnknownIntentState extends Error {
   constructor(message = 'Unknown intent state') {
     super(message);
@@ -54,6 +69,8 @@ export {
   InvoiceNotFoundError,
   WebhookNotImplementedError,
   SendingInvoiceError,
+  IssuingInvoiceError,
+  InvoiceDeliveryError,
   UnknownIntentState,
   ResponseNOK,
   NoSubscriptionIdInInvoice,
