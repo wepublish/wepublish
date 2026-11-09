@@ -138,7 +138,11 @@ describe('AuthorCheckPicker', () => {
     renderPicker();
 
     open();
-    fireEvent.click(await screen.findByRole('button', { name: /page 2/i }));
+    fireEvent.click(
+      await screen.findByRole('button', {
+        name: 'listView.pagination.page:2',
+      })
+    );
 
     await waitFor(() =>
       expect(mockedUseQuery.mock.lastCall?.[1]?.variables).toMatchObject({
@@ -156,7 +160,11 @@ describe('AuthorCheckPicker', () => {
     renderPicker();
 
     open();
-    fireEvent.click(await screen.findByRole('button', { name: /page 2/i }));
+    fireEvent.click(
+      await screen.findByRole('button', {
+        name: 'listView.pagination.page:2',
+      })
+    );
     type('gra');
 
     await waitFor(() =>
@@ -195,6 +203,22 @@ describe('AuthorCheckPicker', () => {
     renderPicker({ list: [ada] });
 
     expect(screen.getByRole('combobox')).not.toHaveAttribute('placeholder');
+  });
+
+  it('keeps its name once somebody is picked', () => {
+    renderPicker({ list: [ada] });
+
+    expect(
+      screen.getByRole('combobox', { name: 'blocks.quote.author' })
+    ).toBeInTheDocument();
+  });
+
+  it('takes the label the caller gives it', () => {
+    renderPicker({ label: 'Social media authors' });
+
+    expect(
+      screen.getByRole('combobox', { name: 'Social media authors' })
+    ).toBeInTheDocument();
   });
 
   it('can be disabled', () => {

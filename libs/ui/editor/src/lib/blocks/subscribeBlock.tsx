@@ -967,6 +967,13 @@ export const SubscribeBlock = ({
           renderInput={params => (
             <TextField
               {...params}
+              slotProps={{
+                ...params.slotProps,
+                htmlInput: {
+                  ...params.slotProps.htmlInput,
+                  'aria-label': t('blocks.subscribe.selectMemberPlans'),
+                },
+              }}
               placeholder={t('blocks.subscribe.selectMemberPlansPlaceholder')}
               helperText={t(
                 'blocks.subscribe.selectMemberPlansSelectionHintAll'
@@ -1453,6 +1460,13 @@ export const SubscribeBlock = ({
           renderInput={params => (
             <TextField
               {...params}
+              slotProps={{
+                ...params.slotProps,
+                htmlInput: {
+                  ...params.slotProps.htmlInput,
+                  'aria-label': t('blocks.subscribe.selectFields'),
+                },
+              }}
               helperText={t('blocks.subscribe.selectFieldsSelectionHint')}
             />
           )}

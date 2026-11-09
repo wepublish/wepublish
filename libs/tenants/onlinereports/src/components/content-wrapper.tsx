@@ -69,11 +69,13 @@ export const OnlineReportsContentWrapperStyled = styled(ContentWrapperStyled)<{
         font-size: ${theme.typography.h2.fontSize};
 
         ${theme.breakpoints.up('md')} {
-          font-size: ${(
-            theme.typography.h2[theme.breakpoints.up('md')] as {
-              fontSize: string;
-            }
-          ).fontSize};
+          font-size: ${
+            (
+              theme.typography.h2[theme.breakpoints.up('md')] as {
+                fontSize: string;
+              }
+            ).fontSize
+          };
         }
       }
 

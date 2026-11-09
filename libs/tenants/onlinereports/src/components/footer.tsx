@@ -118,9 +118,11 @@ export const footerPaperCSS = (
   wepublishLogo: 'hidden' | 'light' | 'dark'
 ) => css`
   ${theme.breakpoints.up('md')} {
-    padding-bottom: ${iconItems?.links.length || wepublishLogo !== 'hidden' ?
-      '0'
-    : 'calc(var(--footer-paddingY) / 2)'};
+    padding-bottom: ${
+      iconItems?.links.length || wepublishLogo !== 'hidden' ?
+        '0'
+      : 'calc(var(--footer-paddingY) / 2)'
+    };
   }
 `;
 

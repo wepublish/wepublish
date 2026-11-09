@@ -55,9 +55,9 @@ function getStatusText(
   }
 }
 
-const Stack = styled.div<{ direction?: 'row' | 'column' }>`
+const Stack = styled.div`
   display: flex;
-  flex-direction: ${({ direction }) => direction ?? 'column'};
+  flex-direction: column;
   gap: 12px;
 `;
 
@@ -276,5 +276,5 @@ export function usePeriodicJobNotifications({
 export function PeriodicJobsLog(props: PeriodicJobsLogProps) {
   const items = usePeriodicJobNotifications(props);
 
-  return items.length ? <Stack direction="row">{items}</Stack> : null;
+  return items.length ? <Stack>{items}</Stack> : null;
 }

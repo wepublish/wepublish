@@ -53,4 +53,15 @@ describe('isKnownFeature', () => {
   it('checks the real registry by default', () => {
     expect(isKnownFeature('surely-not-a-feature')).toBe(false);
   });
+
+  it('knows the profile subscription history', () => {
+    expect(isKnownFeature('profile-subscription-history')).toBe(true);
+  });
+});
+
+describe('registered features', () => {
+  it('ships paper letters dark, with the per-user flow on top', () => {
+    expect(isKnownFeature('paper-letters')).toBe(true);
+    expect(isKnownFeature('paper-letter-flow')).toBe(true);
+  });
 });

@@ -20,7 +20,7 @@ import {
   Typography,
 } from '@mui/material';
 import { BlockStylesDocument, TeaserType } from '@wepublish/editor/api';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useId, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdClose,
@@ -584,6 +584,7 @@ export function TeaserOverviewPanel({
     return dupes;
   }, [workingBlocks]);
 
+  const contentId = useId();
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
   );
@@ -721,6 +722,7 @@ export function TeaserOverviewPanel({
             }
           }}
           aria-expanded={isOpen}
+          aria-controls={contentId}
         >
           <HeaderIcon>
             <MdGridView />
@@ -741,6 +743,7 @@ export function TeaserOverviewPanel({
         </Header>
 
         <Collapse
+          id={contentId}
           in={isOpen}
           onEnter={() => setIsCollapsing(true)}
           onEntered={() => setIsCollapsing(false)}
@@ -764,6 +767,7 @@ export function TeaserOverviewPanel({
                 }
                 size="small"
                 variant={activeFilters.has(type) ? 'filled' : 'outlined'}
+                aria-pressed={activeFilters.has(type)}
                 color={activeFilters.has(type) ? 'primary' : 'default'}
                 disabled={!!selected}
                 onClick={e => {

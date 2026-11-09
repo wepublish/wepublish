@@ -107,6 +107,10 @@ const Meta = styled('span')`
   color: ${({ theme }) => theme.vars.palette.text.secondary};
   white-space: nowrap;
   text-overflow: ellipsis;
+
+  @container (max-width: 520px) {
+    white-space: normal;
+  }
 `;
 
 const StatusAction = styled('div')`
@@ -128,8 +132,12 @@ const Actions = styled('div')`
   gap: 8px;
 
   @container (max-width: 760px) {
-    flex: 1 1 100%;
-    justify-content: space-between;
+    &[data-own-row] {
+      flex: 1 1 100%;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      min-width: 0;
+    }
   }
 `;
 
@@ -137,6 +145,11 @@ const Group = styled('div')`
   display: flex;
   align-items: center;
   gap: 4px;
+
+  @container (max-width: 760px) {
+    flex-wrap: wrap;
+    min-width: 0;
+  }
 
   &:empty {
     display: none;
@@ -153,6 +166,10 @@ const Divider = styled('span')`
   height: 24px;
   margin: 0 4px;
   background-color: ${({ theme }) => theme.vars.palette.divider};
+
+  @container (max-width: 760px) {
+    display: none;
+  }
 `;
 
 export interface EditorHeaderMenuAction {
@@ -259,7 +276,12 @@ export function EditorHeader({
             aria-labelledby={statusId}
           >
             <StatePill state={state}>
-              <span id={statusId}>{stateLabel}</span>
+              <span
+                id={statusId}
+                role="status"
+              >
+                {stateLabel}
+              </span>
             </StatePill>
 
             {meta && <Meta>{meta}</Meta>}
@@ -270,7 +292,11 @@ export function EditorHeader({
           {statusAction && <StatusAction>{statusAction}</StatusAction>}
         </Start>
 
-        <Actions>
+        <Actions
+          data-own-row={
+            secondaryActions || menuActions.length > 0 ? '' : undefined
+          }
+        >
           <Group>
             <EditorHeaderMenu actions={menuActions} />
             {secondaryActions}

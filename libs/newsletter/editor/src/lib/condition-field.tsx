@@ -180,10 +180,12 @@ function ConditionEditor({
   value,
   onChange,
   id,
+  label,
 }: {
   value: MergeCondition;
   onChange: (next: MergeCondition) => void;
   id: string;
+  label: string;
 }) {
   const { t } = useTranslation();
   const [catalogue, setCatalogue] = useState<MergeTagCatalogue | null>(null);
@@ -256,6 +258,7 @@ function ConditionEditor({
       <div className="condition-row">
         <select
           id={id}
+          aria-label={label}
           className="condition-tag"
           value={
             value.field === '' ? ''
@@ -292,6 +295,7 @@ function ConditionEditor({
 
         <select
           className="condition-operator"
+          aria-label={t('newsletter.condition.operator')}
           value={value.operator}
           disabled={value.field === ''}
           onChange={event =>
@@ -319,6 +323,7 @@ function ConditionEditor({
         {groupNames.length > 0 ?
           <select
             className="condition-value"
+            aria-label={t('newsletter.condition.value')}
             value={value.value}
             onChange={event =>
               onChange({ ...value, value: event.currentTarget.value })
@@ -337,6 +342,7 @@ function ConditionEditor({
         : <input
             type="text"
             className="condition-value"
+            aria-label={t('newsletter.condition.value')}
             value={value.value}
             disabled={value.field === ''}
             placeholder={t('newsletter.condition.value')}
@@ -396,6 +402,7 @@ export function conditionField(label: string): CustomField<MergeCondition> {
         value={value ?? NO_CONDITION}
         onChange={onChange}
         id={id}
+        label={label}
       />
     ),
   };

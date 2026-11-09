@@ -202,6 +202,56 @@ describe('FlexBlock', () => {
     });
   });
 
+  it('times a sub-block from its editor panel', () => {
+    const onChange = vi.fn();
+
+    render(
+      <MockedProvider>
+        <ThemeProvider theme={theme}>
+          <FlexBlock
+            type={EditorBlockType.FlexBlock}
+            value={
+              {
+                blocks: [
+                  {
+                    alignment: {
+                      __typename: 'FlexAlignment',
+                      i: 'tile-1',
+                      x: 0,
+                      y: 0,
+                      w: 6,
+                      h: 4,
+                    },
+                    block: {
+                      key: 'block-1',
+                      type: EditorBlockType.Title,
+                      value: { title: 'Hello', lead: '', preTitle: '' },
+                    },
+                  },
+                ],
+              } as unknown as FlexBlockValue
+            }
+            onChange={onChange}
+          />
+        </ThemeProvider>
+      </MockedProvider>
+    );
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'blocks.flexBlock.editNestedBlock' })
+    );
+    fireEvent.click(
+      within(
+        screen.getByRole('region', { name: 'blocks.title.label' })
+      ).getByRole('button', { name: 'blockList.timeBlock' })
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'weekday.Monday' }));
+
+    expect(onChange.mock.lastCall[0].blocks[0].block.value).toMatchObject({
+      timing: { weekdays: ['Monday'] },
+    });
+  });
+
   it('offers adding a block as a text button below the grid', () => {
     const { container } = renderBlock();
 

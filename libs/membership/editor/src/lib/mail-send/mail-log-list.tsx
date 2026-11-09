@@ -54,6 +54,7 @@ function MailLogList() {
 
       <Tabs
         value={tab}
+        aria-label={t('mailLog.title')}
         onChange={(_event, value) =>
           setParam('tab', value === TAB_JOBS ? TAB_JOBS : null)
         }
@@ -61,24 +62,34 @@ function MailLogList() {
       >
         <Tab
           value={TAB_MAILS}
+          id={`${TAB_MAILS}-tab`}
+          aria-controls={`${TAB_MAILS}-panel`}
           icon={<MdMail />}
           iconPosition="start"
           label={<>{t('mailLog.tabs.mails')}</>}
         />
         <Tab
           value={TAB_JOBS}
+          id={`${TAB_JOBS}-tab`}
+          aria-controls={`${TAB_JOBS}-panel`}
           icon={<MdSend />}
           iconPosition="start"
           label={<>{t('mailLog.tabs.jobs')}</>}
         />
       </Tabs>
 
-      {tab === TAB_JOBS ?
-        <MailSendJobList
-          selectedJobId={jobId}
-          onSelectJob={value => setParam('job', value)}
-        />
-      : <MailLogTable />}
+      <div
+        role="tabpanel"
+        id={`${tab}-panel`}
+        aria-labelledby={`${tab}-tab`}
+      >
+        {tab === TAB_JOBS ?
+          <MailSendJobList
+            selectedJobId={jobId}
+            onSelectJob={value => setParam('job', value)}
+          />
+        : <MailLogTable />}
+      </div>
     </div>
   );
 }

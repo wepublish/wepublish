@@ -1,10 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ImageUploadService, UploadImageInput } from '@wepublish/image/api';
 import { PrismaClient, User } from '@prisma/client';
-import {
-  SessionCacheInvalidator,
-  unselectPassword,
-} from '@wepublish/authentication/api';
+import { SessionCacheInvalidator } from '@wepublish/authentication/api';
 import { PublicContentCacheInvalidator } from '@wepublish/public-content-cache/api';
 
 @Injectable()
@@ -49,7 +46,7 @@ export class ProfileService {
       data: {
         userImageID: newImage?.id,
       },
-      select: unselectPassword,
+      include: { address: true, paymentProviderCustomers: true },
     });
     await this.sessionCache.invalidate();
 

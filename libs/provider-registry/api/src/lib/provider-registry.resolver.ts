@@ -11,8 +11,8 @@ export class ProviderRegistryResolver {
   @Mutation(returns => Boolean, {
     name: 'reloadProviders',
     description:
-      'Rebuilds the payment, tracking pixel, mail and challenge providers from ' +
-      'their settings, so integration changes take effect without restarting the API.',
+      'Rebuilds the payment, tracking pixel, mail, challenge, letter and pdf ' +
+      'renderer providers from their settings, so integration changes take effect without restarting the API.',
   })
   async reloadProviders(): Promise<boolean> {
     await this.registry.reload();

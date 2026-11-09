@@ -28,6 +28,7 @@ import {
   ChangeEvent,
   ComponentType,
   ReactNode,
+  useId,
   useMemo,
   useState,
 } from 'react';
@@ -200,6 +201,8 @@ export function SingleGenericIntegrationForm<
   });
 
   const logo = getLogo?.(setting);
+  const formId = useId();
+  const labelIdFor = (name: string) => `${formId}-${name}-label`;
 
   return (
     <form
@@ -245,7 +248,9 @@ export function SingleGenericIntegrationForm<
                   {field.type === 'checkbox' ?
                     ' '
                   : <>
-                      {field.label}
+                      <span id={labelIdFor(String(field.name))}>
+                        {field.label}
+                      </span>
                       {info && (
                         <>
                           {' '}
@@ -277,6 +282,11 @@ export function SingleGenericIntegrationForm<
                           disabled={field.disabled}
                           fullWidth
                           {...restField}
+                          slotProps={{
+                            select: {
+                              labelId: labelIdFor(String(field.name)),
+                            },
+                          }}
                         >
                           {(field.options || []).map(option => (
                             <MenuItem
@@ -307,7 +317,20 @@ export function SingleGenericIntegrationForm<
                           onChange={(_event, chosen) => onChange(chosen)}
                           disabled={field.disabled}
                           {...restField}
-                          renderInput={params => <MuiTextField {...params} />}
+                          renderInput={params => (
+                            <MuiTextField
+                              {...params}
+                              slotProps={{
+                                ...params.slotProps,
+                                htmlInput: {
+                                  ...params.slotProps.htmlInput,
+                                  'aria-labelledby': labelIdFor(
+                                    String(field.name)
+                                  ),
+                                },
+                              }}
+                            />
+                          )}
                         />
                       );
                     }
@@ -373,6 +396,11 @@ export function SingleGenericIntegrationForm<
                         autoComplete={field.autoComplete}
                         fullWidth
                         {...restField}
+                        slotProps={{
+                          htmlInput: {
+                            'aria-labelledby': labelIdFor(String(field.name)),
+                          },
+                        }}
                       />
                     );
                   }}

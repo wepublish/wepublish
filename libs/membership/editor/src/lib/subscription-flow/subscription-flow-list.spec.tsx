@@ -12,9 +12,16 @@ import {
   SubscriptionFlowsDocument,
   SystemMailsDocument,
 } from '@wepublish/editor/api';
-import { useParams } from 'react-router-dom';
+import { AuthContext, sessionWithPermissions } from '@wepublish/ui/editor';
+import { MemoryRouter, useParams } from 'react-router-dom';
 
 import { SubscriptionFlowList } from './subscription-flow-list';
+
+const letterFlow = vi.fn(() => false);
+
+vi.mock('../delivery-mode/use-paper-letter-flow', () => ({
+  usePaperLetterFlow: () => letterFlow(),
+}));
 
 const { mutationFor } = vi.hoisted(() => {
   const mutations = new Map<unknown, ReturnType<typeof vi.fn>>();
@@ -146,6 +153,33 @@ describe('SubscriptionFlowList', () => {
   beforeEach(() => {
     mockedUseQuery.mockReset();
     mockedUseParams.mockReset();
+  });
+
+  describe('with the paper letter flow', () => {
+    beforeEach(() => {
+      mockedUseParams.mockReturnValue({ id: 'default' });
+      mockQueries([defaultFlow]);
+    });
+
+    afterEach(() => letterFlow.mockReturnValue(false));
+
+    it('says what printing an event means and where the channels are managed', () => {
+      letterFlow.mockReturnValue(true);
+      render(<MemoryRouter>{page()}</MemoryRouter>);
+
+      expect(screen.getByText('deliveryChannel.flows.letterHint')).toBeTruthy();
+      expect(
+        screen
+          .getByRole('link', { name: 'deliveryChannel.flows.manage' })
+          .getAttribute('href')
+      ).toBe('/deliverychannel');
+    });
+
+    it('says nothing of letters where none can be sent', () => {
+      renderPage();
+
+      expect(screen.queryByText('deliveryChannel.flows.letterHint')).toBeNull();
+    });
   });
 
   describe('for the default flow', () => {
@@ -299,10 +333,124 @@ describe('SubscriptionFlowList', () => {
     });
   });
 
+  describe('accessibility', () => {
+    beforeEach(() => {
+      mockedUseParams.mockReturnValue({ id: 'default' });
+      mockQueries([defaultFlow]);
+    });
+
+    const renderAuthorised = () =>
+      render(
+        <AuthContext.Provider value={sessionWithPermissions}>
+          {page()}
+        </AuthContext.Provider>
+      );
+
+    it('titles the page as the only level-one heading', () => {
+      renderAuthorised();
+
+      expect(
+        screen.getAllByRole('heading', { level: 1 }).map(h => h.textContent)
+      ).toEqual(['automaticMails.title']);
+    });
+
+    it('nests the headings without skipping a level', () => {
+      renderAuthorised();
+
+      const levels = screen
+        .getAllByRole('heading')
+        .map(heading => Number(heading.tagName.slice(1)));
+
+      levels.forEach((level, index) => {
+        if (index > 0) {
+          expect(level - levels[index - 1]).toBeLessThanOrEqual(1);
+        }
+      });
+    });
+
+    it('keeps the help buttons out of the headings', () => {
+      renderAuthorised();
+
+      expect(
+        screen.getByRole('heading', { name: 'subscriptionFlow.timeline' })
+      ).toBeTruthy();
+      expect(
+        screen
+          .getByRole('button', { name: 'subscriptionFlow.timelineDescription' })
+          .closest('h1, h2, h3, h4, h5, h6')
+      ).toBeNull();
+    });
+
+    it('labels the day input and the confirm button of «change day»', async () => {
+      renderAuthorised();
+
+      fireEvent.click(
+        screen.getByRole('button', { name: 'subscriptionFlow.editDay' })
+      );
+
+      const dialog = await screen.findByRole('dialog');
+      expect(
+        within(dialog).getByRole('spinbutton', {
+          name: 'subscriptionFlow.editDay',
+        })
+      ).toBeTruthy();
+      expect(within(dialog).getByRole('button', { name: 'save' })).toBeTruthy();
+    });
+
+    it('labels the day input of «add day»', async () => {
+      renderAuthorised();
+
+      fireEvent.click(
+        screen.getByText('subscriptionFlow.addDay', { selector: 'button' })
+      );
+
+      const dialog = await screen.findByRole('dialog');
+      expect(
+        within(dialog).getByRole('spinbutton', {
+          name: 'subscriptionFlow.newDayTitle',
+        })
+      ).toBeTruthy();
+    });
+
+    it('names every mail template select after its event or day', () => {
+      renderAuthorised();
+
+      for (const name of [
+        'subscriptionFlow.subscribe',
+        'subscriptionFlow.deactivation_unpaid',
+        'systemMails.events.login_link',
+      ]) {
+        expect(screen.getByRole('combobox', { name })).toBeTruthy();
+      }
+    });
+
+    it('names the drag handle of a mail after the mail', () => {
+      renderAuthorised();
+
+      expect(
+        screen.getByRole('button', {
+          name: 'subscriptionFlow.moveMail(subscriptionFlow.deactivation_unpaid)',
+        })
+      ).toBeTruthy();
+    });
+  });
+
   describe('for a member plan', () => {
     beforeEach(() => {
       mockedUseParams.mockReturnValue({ id: 'plan' });
       mockQueries([defaultFlow, customFlow]);
+    });
+
+    it('names the button that deletes a flow', () => {
+      render(
+        <AuthContext.Provider value={sessionWithPermissions}>
+          {page()}
+        </AuthContext.Provider>
+      );
+
+      expect(
+        screen.getAllByRole('button', { name: 'delete' })
+      ).not.toHaveLength(0);
     });
 
     it('renders one block per flow and one to create a new flow', () => {

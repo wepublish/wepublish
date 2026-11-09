@@ -47,7 +47,6 @@ import {
   FormFields,
 } from '../drawer';
 import { enqueueSnackbar } from '../snackbar';
-import { toggleRequiredLabel } from '../toggleRequiredLabel';
 import { ImageSelectPanel } from './imageSelectPanel';
 
 export interface PaymentMethodEditPanelProps {
@@ -190,7 +189,10 @@ function PaymentMethodEditPanel({
 
   return (
     <>
-      <DrawerForm onSubmit={handleSubmit(handleSave)}>
+      <DrawerForm
+        noValidate
+        onSubmit={handleSubmit(handleSave)}
+      >
         <DrawerHeader>
           <DrawerTitle>
             {id ?
@@ -249,7 +251,8 @@ function PaymentMethodEditPanel({
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    label={toggleRequiredLabel(t('paymentMethodList.name'))}
+                    label={t('paymentMethodList.name')}
+                    required
                     disabled={isDisabled}
                     onChange={event => {
                       field.onChange(event);
@@ -311,9 +314,10 @@ function PaymentMethodEditPanel({
                   <TextField
                     {...field}
                     select
+                    required
                     label={
                       <>
-                        {toggleRequiredLabel(t('paymentMethodList.adapter'))}{' '}
+                        {t('paymentMethodList.adapter')}{' '}
                         <InfoTooltip
                           text={t('paymentMethodList.adapterInfo')}
                         />

@@ -55,6 +55,16 @@ export const getBrowserTracePropagationTargets = () => {
   return apiUrl ? [/^\//, apiUrl] : [/^\//];
 };
 
+export const getBrowserDenyUrls = () => [
+  /[/.]bildwurf\.ch\//i,
+  /\/scripts\/in_content\//i,
+];
+
+export const getBrowserIgnoreErrors = () => [
+  /\b(?:jQuery|fbq) is not defined\b/,
+  /Can't find variable: (?:jQuery|fbq)\b/,
+];
+
 export const setCommonTags = (
   Sentry: { setTag: (key: string, value: string | undefined) => void },
   component: string

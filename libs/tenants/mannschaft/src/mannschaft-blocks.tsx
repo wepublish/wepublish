@@ -22,7 +22,6 @@ export const createNewAdTeaser = (): FullBlockFragment =>
     __typename: 'TeaserGridBlock',
     type: BlockType.TeaserGrid,
     title: null,
-    disabled: false,
     blockStyle: null,
     numColumns: 1,
     teasers: [

@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import { enqueueSnackbar } from '@wepublish/ui/editor';
 import { DocumentNode } from 'graphql';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete } from 'react-icons/md';
 
@@ -109,6 +109,9 @@ export function AddIntegrationButton({
   const [open, setOpen] = useState(false);
   const [id, setId] = useState('');
   const [type, setType] = useState<string | null>(null);
+  const typeLabelId = useId();
+  const idLabelId = useId();
+  const idHelpId = useId();
   const [create, { loading }] = useMutation(mutation, {
     refetchQueries: [{ query: refetchQuery }],
   });
@@ -128,8 +131,7 @@ export function AddIntegrationButton({
       const { data } = await create({ variables: { id, type, name: id } });
 
       const created = Object.values(data ?? {})[0] as
-        | { createdAt?: string }
-        | undefined;
+        { createdAt?: string } | undefined;
       const restored =
         !!created?.createdAt &&
         Date.now() - new Date(created.createdAt).getTime() > 60_000;
@@ -169,7 +171,9 @@ export function AddIntegrationButton({
             sx={{ width: '100%' }}
           >
             <FormControl fullWidth>
-              <FormLabel>{t('integrations.addType')}</FormLabel>
+              <FormLabel id={typeLabelId}>
+                {t('integrations.addType')}
+              </FormLabel>
 
               <Autocomplete
                 options={types}
@@ -187,19 +191,38 @@ export function AddIntegrationButton({
                   }
                 }}
                 disableClearable
-                renderInput={params => <TextField {...params} />}
+                renderInput={params => (
+                  <TextField
+                    {...params}
+                    slotProps={{
+                      ...params.slotProps,
+                      htmlInput: {
+                        ...params.slotProps.htmlInput,
+                        'aria-labelledby': typeLabelId,
+                      },
+                    }}
+                  />
+                )}
               />
             </FormControl>
 
             <FormControl fullWidth>
-              <FormLabel>{t('integrations.addId')}</FormLabel>
+              <FormLabel id={idLabelId}>{t('integrations.addId')}</FormLabel>
 
               <TextField
                 value={id}
                 onChange={event => setId(event.target.value)}
+                slotProps={{
+                  htmlInput: {
+                    'aria-labelledby': idLabelId,
+                    'aria-describedby': idHelpId,
+                  },
+                }}
               />
 
-              <FormHelperText>{t('integrations.addIdHelp')}</FormHelperText>
+              <FormHelperText id={idHelpId}>
+                {t('integrations.addIdHelp')}
+              </FormHelperText>
             </FormControl>
 
             {existingIds.includes(id) && (

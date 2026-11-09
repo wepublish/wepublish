@@ -105,6 +105,19 @@ describe('PaymentMethodEditPanel', () => {
     );
   });
 
+  it('marks the name and adapter as required without native validation', async () => {
+    renderPanel();
+
+    const name = await screen.findByRole('textbox', { name: /name/i });
+
+    expect(name).toBeRequired();
+    expect(screen.getByRole('combobox', { name: /adapter/i })).toHaveAttribute(
+      'aria-required',
+      'true'
+    );
+    expect(name.closest('form')).toHaveAttribute('novalidate');
+  });
+
   it('refuses to save without a name', async () => {
     renderPanel();
 

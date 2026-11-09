@@ -1,3 +1,6 @@
+import { BexioConfig } from './bexio';
+import { ImapConfig, mailBackend } from './inbox';
+import { ResendConfig } from './resend-inbox';
 import { resolveTarget } from './targets';
 
 /**
@@ -18,6 +21,40 @@ export const env = {
   /** On outside production (which is never written to); `false` opts out. */
   allowMutation: process.env.E2E_ALLOW_MUTATION !== 'false',
   mailpitUrl: process.env.MAILPIT_URL?.replace(/\/+$/, '') || undefined,
+  /** A real mailbox the target's mail provider delivers to (Ethereal on review). */
+  imap:
+    process.env.E2E_IMAP_USER && process.env.E2E_IMAP_PASSWORD ?
+      ({
+        host: process.env.E2E_IMAP_HOST || 'imap.ethereal.email',
+        port: Number(process.env.E2E_IMAP_PORT || 993),
+        user: process.env.E2E_IMAP_USER,
+        password: process.env.E2E_IMAP_PASSWORD,
+      } satisfies ImapConfig)
+    : undefined,
+  /** Deletes older mails from the shared IMAP mailbox once per worker; off by default. */
+  imapPurgeOlderThanDays:
+    Number(process.env.E2E_IMAP_PURGE_OLDER_THAN_DAYS) || undefined,
+  /** Resend receiving domain: mail from outside servers (bexio's invoice mails). */
+  resend:
+    process.env.E2E_RESEND_API_KEY && process.env.E2E_RESEND_DOMAIN ?
+      {
+        apiKey: process.env.E2E_RESEND_API_KEY,
+        domain: process.env.E2E_RESEND_DOMAIN,
+      } satisfies ResendConfig & { domain: string }
+    : undefined,
+  /**
+   * @inbound-mail scenarios skip once this many mails arrived today: the
+   * free plan takes 100 a day, and bexio mails the seeded readers too.
+   */
+  resendDailyBudget: Number(process.env.E2E_RESEND_DAILY_BUDGET) || 90,
+  /** The bexio *test* company the target's bexio provider writes to. */
+  bexio:
+    process.env.E2E_BEXIO_API_TOKEN ?
+      ({
+        token: process.env.E2E_BEXIO_API_TOKEN,
+        testMailbox: process.env.E2E_BEXIO_TEST_MAILBOX || undefined,
+      } satisfies BexioConfig)
+    : undefined,
   /** A real Mailchimp test audience and one of its interests: there is no fake. */
   mailchimp:
     (
@@ -47,7 +84,17 @@ const requirements: Record<string, () => string | undefined> = {
     isProduction ? 'no simulated payments in production'
     : !env.apiUrl ? 'needs E2E_API_URL'
     : undefined,
-  '@mail': () => (!env.mailpitUrl ? 'needs MAILPIT_URL' : undefined),
+  '@mail': () =>
+    !mailBackend(env) ?
+      'needs MAILPIT_URL, or E2E_IMAP_USER and E2E_IMAP_PASSWORD'
+    : undefined,
+  '@inbound-mail': () =>
+    !env.resend ? 'needs E2E_RESEND_API_KEY and E2E_RESEND_DOMAIN' : undefined,
+  // Real invoices in a bexio company: only ever the test company.
+  '@bexio': () =>
+    isProduction ? 'never touches the production bexio company'
+    : !env.bexio ? 'needs E2E_BEXIO_API_TOKEN (the bexio test company)'
+    : undefined,
   // Points the tenant's one sync provider at the test audience.
   '@mailchimp': () =>
     isProduction ? "never reconfigures production's Mailchimp"

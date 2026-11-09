@@ -1,6 +1,7 @@
 import {
   Action,
   LookupActionInput,
+  TemplateAction,
 } from './subscription-event-dictionary.type';
 import { startOfDay, subDays } from 'date-fns';
 import {
@@ -153,6 +154,7 @@ export class SubscriptionEventDictionary {
           type: int.event,
           daysAwayFromEnding: int.daysAwayFromEnding,
           mailTemplateId: int.mailTemplate ? int.mailTemplate.id : null,
+          sendAsLetter: int.sendAsLetter,
         })),
       };
     });
@@ -217,6 +219,19 @@ export class SubscriptionEventDictionary {
     subsciption: Subscription,
     subscriptionEvent: SubscriptionEvent
   ): Promise<string | undefined> {
+    return (
+      await this.getSubscriptionTemplateAction(subsciption, subscriptionEvent)
+    )?.mailTemplateId;
+  }
+
+  /**
+   * The template a subscription's flow uses for an event, and whether users
+   * in letter mode get it printed. Undefined when the flow has no template.
+   */
+  public async getSubscriptionTemplateAction(
+    subsciption: Subscription,
+    subscriptionEvent: SubscriptionEvent
+  ): Promise<TemplateAction | undefined> {
     let flow = await this.prismaService.subscriptionFlow.findFirst({
       where: {
         default: false,
@@ -263,12 +278,15 @@ export class SubscriptionEventDictionary {
         },
       });
     }
-    if (flow && flow.intervals[0]) {
-      if (!flow.intervals[0].mailTemplate) {
-        return undefined;
-      }
-      return flow.intervals[0].mailTemplate.id;
+    const interval = flow?.intervals[0];
+
+    if (!interval?.mailTemplate) {
+      return undefined;
     }
-    return undefined;
+
+    return {
+      mailTemplateId: interval.mailTemplate.id,
+      sendAsLetter: interval.sendAsLetter,
+    };
   }
 }

@@ -13,7 +13,7 @@ import {
   MemberPlanSort,
   SortOrder,
 } from '@wepublish/editor/api';
-import { useCallback, useMemo, useState } from 'react';
+import { ReactNode, useCallback, useMemo, useState } from 'react';
 
 import { humanizeError } from '../../humanizeError';
 import { Pagination } from '../../listView/pagination';
@@ -34,6 +34,8 @@ interface SelectMemberPlanProps {
   defaultMemberPlan?: Pick<FullMemberPlanFragment, 'id' | 'name'> | null;
   selectedMemberPlan?: string | null;
   setSelectedMemberPlan(memberPlanId: string | null): void;
+  label?: ReactNode;
+  'aria-labelledby'?: string;
 }
 
 export function SelectMemberPlan({
@@ -43,6 +45,8 @@ export function SelectMemberPlan({
   defaultMemberPlan,
   selectedMemberPlan,
   setSelectedMemberPlan,
+  label,
+  'aria-labelledby': ariaLabelledby,
 }: SelectMemberPlanProps) {
   const [page, setPage] = useState(1);
 
@@ -127,6 +131,14 @@ export function SelectMemberPlan({
       renderInput={params => (
         <TextField
           {...params}
+          label={label}
+          slotProps={{
+            ...params.slotProps,
+            htmlInput: {
+              ...params.slotProps.htmlInput,
+              'aria-labelledby': ariaLabelledby,
+            },
+          }}
           name={name}
         />
       )}

@@ -16,7 +16,14 @@ import {
   FullCommentFragment,
 } from '@wepublish/editor/api';
 import { toPlaintext } from '@wepublish/richtext';
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useId,
+  useMemo,
+  useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdAttachFile,
@@ -40,7 +47,10 @@ export function CommentRevisionView({
   const { t } = useTranslation();
   if (!revision) {
     return (
-      <Typography variant="h6">
+      <Typography
+        variant="h6"
+        component="p"
+      >
         <MdAttachFile />
         <span style={{ marginLeft: '5px' }}>
           {t('commentPreview.noContent')}
@@ -50,7 +60,14 @@ export function CommentRevisionView({
   }
   return (
     <>
-      {revision.title && <Typography variant="h6">{revision.title}</Typography>}
+      {revision.title && (
+        <Typography
+          variant="h6"
+          component="h4"
+        >
+          {revision.title}
+        </Typography>
+      )}
 
       {revision.lead && <Typography>{revision.lead}</Typography>}
 
@@ -74,6 +91,7 @@ function CommentTags({
     <>
       <Typography
         variant="h6"
+        component="h4"
         style={{ marginBottom: '5px' }}
       >
         {t('tags.overview.title')}
@@ -101,6 +119,7 @@ function CommentSource({
   const label = (
     <Typography
       variant="h6"
+      component="h4"
       style={{ marginBottom: '5px' }}
     >
       {t('commentPreview.source')}
@@ -152,6 +171,8 @@ export function CommentPreview({
     [originComment, comment, expanded]
   );
   const [panelExpanded, setPanelExpanded] = useState<boolean>(!!expanded);
+  const panelId = useId();
+  const commentLabelId = useId();
 
   useEffect(() => {
     if (!expanded) {
@@ -204,7 +225,11 @@ export function CommentPreview({
         : {}
       }
     >
-      <AccordionSummary expandIcon={<MdExpandMore />}>
+      <AccordionSummary
+        id={`${panelId}-header`}
+        aria-controls={`${panelId}-content`}
+        expandIcon={<MdExpandMore />}
+      >
         <Stack
           direction="row"
           sx={{ justifyContent: 'space-between' }}
@@ -287,9 +312,12 @@ export function CommentPreview({
                 size={{ xs: 12 }}
                 style={{ marginTop: '20px' }}
               >
-                <FormLabel>{t('commentEditView.comment')}</FormLabel>
+                <FormLabel id={commentLabelId}>
+                  {t('commentEditView.comment')}
+                </FormLabel>
 
                 <RichTextBlock
+                  aria-labelledby={commentLabelId}
                   value={revision?.text}
                   onChange={text => {
                     if (setRevision) {

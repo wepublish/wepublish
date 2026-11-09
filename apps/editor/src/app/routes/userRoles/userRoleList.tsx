@@ -35,7 +35,6 @@ import {
   PermissionControl,
   TableWrapper,
   UserRoleEditPanel,
-  useSeededState,
   PageTitle,
 } from '@wepublish/ui/editor';
 import { useState } from 'react';
@@ -59,13 +58,9 @@ function UserRoleList() {
   const isCreateRoute = location.pathname.includes('create');
   const isEditRoute = location.pathname.includes('edit');
 
-  const [isEditModalOpen, setEditModalOpen] = useState(
-    isEditRoute || isCreateRoute
-  );
-
-  const [editID, setEditID] = useState<string | undefined>(
-    isEditRoute ? id : undefined
-  );
+  const isEditModalOpen = isEditRoute || isCreateRoute;
+  const editID = isEditRoute ? id : undefined;
+  const closeDrawer = () => navigate('/userroles');
 
   const [filter, setFilter] = useState('');
 
@@ -89,14 +84,6 @@ function UserRoleList() {
   const [deleteUserRole, { loading: isDeleting }] = useMutation(
     DeleteUserRoleDocument,
     {}
-  );
-
-  useSeededState(
-    isCreateRoute || isEditRoute ? location.pathname : undefined,
-    () => {
-      setEditID(isEditRoute ? id : undefined);
-      setEditModalOpen(true);
-    }
   );
 
   return (
@@ -208,21 +195,14 @@ function UserRoleList() {
           },
         }}
         open={isEditModalOpen}
-        onClose={() => {
-          setEditModalOpen(false);
-          navigate('/userroles');
-        }}
+        onClose={closeDrawer}
       >
         <UserRoleEditPanel
           id={editID!}
-          onClose={() => {
-            setEditModalOpen(false);
-            navigate('/userroles');
-          }}
+          onClose={closeDrawer}
           onSave={() => {
-            setEditModalOpen(false);
             refetch();
-            navigate('/userroles');
+            closeDrawer();
           }}
         />
       </Drawer>

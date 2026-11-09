@@ -33,8 +33,7 @@ const setup = ({
   flowTemplate = 'mt-subscribe' as string | null,
   accountTemplate = 'mt-account' as string | null,
   paymentMail = { mailTemplateId: 'mt-renewal' } as
-    | { mailTemplateId: string }
-    | { noMailReason: ActionMailNoMailReason },
+    { mailTemplateId: string } | { noMailReason: ActionMailNoMailReason },
 } = {}) => {
   const prisma = {
     subscription: { findUnique: vi.fn().mockResolvedValue(subscription) },

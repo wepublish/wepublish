@@ -21,6 +21,7 @@ import {
 import { InvoicePaidNotifier, PaymentsService } from '@wepublish/payment/api';
 import { PaymentMethodChangeService } from '../payment-method-change/payment-method-change.service';
 import { DistributedLocks, type LockResult } from '@wepublish/dragonfly/api';
+import type { Mock } from 'vitest';
 import {
   MailContext,
   MailProviderError,
@@ -831,6 +832,71 @@ describe('PeriodicJobService', () => {
       mailTemplateId: 'template',
     };
     await service['sendTemplateMail'](action, user, true, {}, new Date());
+  });
+
+  describe('letter mode', () => {
+    const user = { id: 'user-1', email: 'jane@example.com' } as User;
+    const action = (sendAsLetter: boolean): Action => ({
+      type: SubscriptionEvent.INVOICE_CREATION,
+      daysAwayFromEnding: 10,
+      mailTemplateId: 'template',
+      sendAsLetter,
+    });
+    let letterSender: {
+      isConfigured: Mock;
+      canReceiveLetters: Mock;
+      sendLetter: Mock;
+    };
+
+    beforeEach(() => {
+      letterSender = {
+        isConfigured: vi.fn(async () => true),
+        canReceiveLetters: vi.fn(() => true),
+        sendLetter: vi.fn(async () => 'log-1'),
+      };
+      (mockMailContext as any).letterSender = letterSender;
+      (mockPrisma as any).userDeliveryPreference = {
+        findUnique: vi.fn(async () => ({ channel: 'letter' })),
+      };
+      (mockPrisma as any).user = {
+        findUnique: vi.fn(async () => ({ ...user, address: { city: 'Bern' } })),
+      };
+    });
+
+    it('prints an event switched to letters for a user in letter mode', async () => {
+      await service['sendTemplateMail'](
+        action(true),
+        user,
+        false,
+        {},
+        new Date()
+      );
+
+      expect(letterSender.sendLetter).toHaveBeenCalledTimes(1);
+      expect(mockMailContext.sendComposedMail).not.toHaveBeenCalled();
+    });
+
+    it('mails an event that is not switched to letters', async () => {
+      await service['sendTemplateMail'](
+        action(false),
+        user,
+        false,
+        {},
+        new Date()
+      );
+
+      expect(letterSender.sendLetter).not.toHaveBeenCalled();
+      expect(mockMailContext.sendComposedMail).toHaveBeenCalledTimes(1);
+    });
+
+    // A print vendor outage must not abort invoicing for everyone else.
+    it('steps over a letter the vendor refused', async () => {
+      letterSender.sendLetter.mockRejectedValue(new Error('vendor down'));
+
+      await expect(
+        service['sendTemplateMail'](action(true), user, false, {}, new Date())
+      ).resolves.toBeUndefined();
+    });
   });
 
   it('Get outstanding runs on first run', async () => {

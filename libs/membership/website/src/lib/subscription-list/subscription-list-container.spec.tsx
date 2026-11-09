@@ -595,7 +595,9 @@ describe('SubscriptionListContainer', () => {
         ).not.toBeInTheDocument()
       );
       expect(stripe.confirmSetup).not.toHaveBeenCalled();
-      expect(screen.getByText(paymentMethodLine('Rechnung'))).toBeInTheDocument();
+      expect(
+        screen.getByText(paymentMethodLine('Rechnung'))
+      ).toBeInTheDocument();
     });
 
     it('asks the provider about a pending change when the reader comes back', async () => {
@@ -627,7 +629,9 @@ describe('SubscriptionListContainer', () => {
       expect(
         await findButton('subscription.paymentMethodChangeCancel')
       ).toBeInTheDocument();
-      expect(screen.getByText(paymentMethodLine('Rechnung'))).toBeInTheDocument();
+      expect(
+        screen.getByText(paymentMethodLine('Rechnung'))
+      ).toBeInTheDocument();
     });
 
     it('keeps the current payment method when the reader cancels the change', async () => {
@@ -664,7 +668,9 @@ describe('SubscriptionListContainer', () => {
           name: t('subscription.paymentMethodChangeCancel'),
         })
       ).not.toBeInTheDocument();
-      expect(screen.getByText(paymentMethodLine('Rechnung'))).toBeInTheDocument();
+      expect(
+        screen.getByText(paymentMethodLine('Rechnung'))
+      ).toBeInTheDocument();
     });
 
     it('explains that the open invoice of the subscription is paid with the new payment method', async () => {

@@ -1,4 +1,5 @@
-import { createHash, randomBytes } from 'node:crypto';
+import { hash, verify } from '@node-rs/argon2';
+import { randomBytes } from 'node:crypto';
 
 export const API_TOKEN_PREFIX = 'wep_';
 
@@ -9,8 +10,15 @@ export function generateApiToken(): string {
   return `${API_TOKEN_PREFIX}${randomBytes(SECRET_BYTES).toString('base64url')}`;
 }
 
-export function hashApiToken(token: string): string {
-  return createHash('sha256').update(token).digest('hex');
+export function hashApiToken(token: string): Promise<string> {
+  return hash(token);
+}
+
+export async function verifyApiToken(
+  tokenHash: string,
+  token: string
+): Promise<boolean> {
+  return verify(tokenHash, token).catch(() => false);
 }
 
 export function prefixOf(token: string): string {

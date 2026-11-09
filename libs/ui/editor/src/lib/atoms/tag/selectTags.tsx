@@ -17,7 +17,14 @@ import {
   TagSort,
   TagType,
 } from '@wepublish/editor/api';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { humanizeError } from '../../humanizeError';
@@ -41,6 +48,8 @@ interface SelectTagsProps {
   selectedTags?: string[] | null;
   setSelectedTags(tags: string[]): void;
   placeholder?: string;
+  label?: ReactNode;
+  'aria-labelledby'?: string;
 }
 
 type LabelledOption = { label: string; value: string };
@@ -54,6 +63,8 @@ export function SelectTags({
   selectedTags,
   setSelectedTags,
   placeholder,
+  label,
+  'aria-labelledby': ariaLabelledby,
 }: SelectTagsProps) {
   const { t } = useTranslation();
   const client = useApolloClient();
@@ -219,6 +230,14 @@ export function SelectTags({
       renderInput={params => (
         <TextField
           {...params}
+          label={label}
+          slotProps={{
+            ...params.slotProps,
+            htmlInput: {
+              ...params.slotProps.htmlInput,
+              'aria-labelledby': ariaLabelledby,
+            },
+          }}
           name={name}
           placeholder={placeholder}
         />

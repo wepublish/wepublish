@@ -1,5 +1,5 @@
 export * from './lib/public-content-namespaces';
-export { skipAnswerCache } from './lib/skip-answer-cache';
+export { limitAnswerCache, skipAnswerCache } from './lib/skip-answer-cache';
 export {
   CACHEABLE_QUERIES,
   SAME_FOR_EVERYONE_QUERIES,

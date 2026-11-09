@@ -237,7 +237,7 @@ export function ListViewFilters({
         <div>
           <WideInput
             value={filter.text || ''}
-            placeholder={t('subscriptionList.filter.searchPlaceholder')}
+            label={t('subscriptionList.filter.searchPlaceholder')}
             onChange={event => updateFilter({ text: event.target.value })}
           />
         </div>
@@ -277,7 +277,7 @@ export function ListViewFilters({
         <div>
           <TextField
             value={filter.title || ''}
-            placeholder={t('filterableList.filter.title')}
+            label={t('filterableList.filter.title')}
             onChange={event => updateFilter({ title: event.target.value })}
           />
         </div>
@@ -287,7 +287,7 @@ export function ListViewFilters({
         <div>
           <TextField
             value={filter.description || ''}
-            placeholder={t('filterableList.filter.description')}
+            label={t('filterableList.filter.description')}
             onChange={event =>
               updateFilter({ description: event.target.value })
             }
@@ -299,7 +299,7 @@ export function ListViewFilters({
         <div>
           <TextField
             value={filter.slug || ''}
-            placeholder={t('filterableList.filter.slug')}
+            label={t('filterableList.filter.slug')}
             onChange={event => updateFilter({ slug: event.target.value })}
           />
         </div>
@@ -309,7 +309,7 @@ export function ListViewFilters({
         <div>
           <TextField
             value={filter.preTitle || ''}
-            placeholder={t('filterableList.filter.preTitle')}
+            label={t('filterableList.filter.preTitle')}
             onChange={event => updateFilter({ preTitle: event.target.value })}
           />
         </div>
@@ -319,7 +319,7 @@ export function ListViewFilters({
         <div>
           <TextField
             value={filter.lead || ''}
-            placeholder={t('filterableList.filter.lead')}
+            label={t('filterableList.filter.lead')}
             onChange={event => updateFilter({ lead: event.target.value })}
           />
         </div>
@@ -329,7 +329,7 @@ export function ListViewFilters({
         <div>
           <TextField
             value={filter.fingerprint || ''}
-            placeholder={t('pollVoteList.fingerprint')}
+            label={t('pollVoteList.fingerprint')}
             onChange={event =>
               updateFilter({ fingerprint: event.target.value })
             }
@@ -341,7 +341,7 @@ export function ListViewFilters({
         <div>
           <TextField
             value={filter.name || ''}
-            placeholder={t('filterableList.filter.name')}
+            label={t('filterableList.filter.name')}
             onChange={event => updateFilter({ name: event.target.value })}
           />
         </div>
@@ -351,7 +351,7 @@ export function ListViewFilters({
         <div>
           <TextField
             value={filter.location || ''}
-            placeholder={t('filterableList.filter.location')}
+            label={t('filterableList.filter.location')}
             onChange={event => updateFilter({ location: event.target.value })}
           />
         </div>
@@ -377,7 +377,7 @@ export function ListViewFilters({
             selectedTags={filter.tags ?? null}
             tagType={tagType ?? TagType.Article}
             setSelectedTags={tags => updateFilter({ tags })}
-            placeholder={t('navbar.articleTags')}
+            label={t('navbar.articleTags')}
           />
         </div>
       )}

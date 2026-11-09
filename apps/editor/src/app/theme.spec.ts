@@ -1,3 +1,5 @@
+import { getContrastRatio } from '@mui/material/styles';
+
 import { createEditorTheme } from './theme';
 
 const theme = createEditorTheme();
@@ -17,8 +19,75 @@ describe('createEditorTheme', () => {
     expect(theme.colorSchemeSelector).toBe('data-mui-color-scheme');
   });
 
-  it('keeps the brand blue as primary colour', () => {
-    expect(theme.colorSchemes.light?.palette.primary.main).toBe('#3498ff');
+  it('keeps the brand blue as primary colour on the dark surfaces', () => {
+    expect(theme.colorSchemes.dark?.palette.primary.main).toBe('#3498ff');
+  });
+
+  describe.each(['light', 'dark'] as const)('%s scheme contrast', scheme => {
+    const palette = theme.colorSchemes[scheme]?.palette ?? theme.palette;
+
+    it.each(['primary', 'error'] as const)(
+      'puts readable text on filled %s surfaces',
+      colour => {
+        expect(
+          getContrastRatio(palette[colour].main, palette[colour].contrastText)
+        ).toBeGreaterThanOrEqual(4.5);
+        expect(
+          getContrastRatio(palette[colour].dark, palette[colour].contrastText)
+        ).toBeGreaterThanOrEqual(4.5);
+      }
+    );
+
+    it('keeps primary text readable on the page and on paper', () => {
+      expect(
+        getContrastRatio(palette.primary.main, palette.background.default)
+      ).toBeGreaterThanOrEqual(4.5);
+      expect(
+        getContrastRatio(palette.primary.main, palette.background.paper)
+      ).toBeGreaterThanOrEqual(4.5);
+    });
+  });
+
+  describe('keyboard focus', () => {
+    const focusStyle = (
+      component: 'MuiButtonBase' | 'MuiListItemButton' | 'MuiMenuItem',
+      slot = 'root'
+    ) => {
+      const override = (
+        theme.components?.[component]?.styleOverrides as
+          Record<string, unknown> | undefined
+      )?.[slot];
+      const style =
+        typeof override === 'function' ?
+          (override({ theme } as never) as Record<string, unknown>)
+        : (override as Record<string, unknown> | undefined);
+
+      return style?.['&.Mui-focusVisible'] as
+        Record<string, unknown> | undefined;
+    };
+
+    it('draws a solid ring around every focused button', () => {
+      expect(focusStyle('MuiButtonBase')).toMatchObject({
+        outline: `2px solid ${theme.vars?.palette.primary.main}`,
+        outlineOffset: 2,
+      });
+    });
+
+    it.each(['MuiListItemButton', 'MuiMenuItem'] as const)(
+      'keeps the ring of %s inside scrolling lists',
+      component => {
+        expect(focusStyle(component)).toMatchObject({ outlineOffset: -2 });
+      }
+    );
+  });
+
+  it('keeps focusable label content in the notch out of the tab order', () => {
+    const notched = theme.components?.MuiOutlinedInput?.styleOverrides
+      ?.notchedOutline as Record<string, unknown>;
+
+    expect(
+      notched['& legend :is(a, button, input, select, textarea, [tabindex])']
+    ).toEqual({ visibility: 'hidden' });
   });
 
   it('uses the dark surfaces for the dark scheme', () => {
@@ -49,13 +118,13 @@ describe('createEditorTheme', () => {
     expect(theme.components?.MuiSelect?.defaultProps?.size).toBe('small');
   });
 
-  it('renders a card title as a block element', () => {
+  it('renders a card title as a section heading', () => {
     expect(
       (
         theme.components?.MuiCardHeader?.defaultProps?.slotProps?.title as
           { component?: string } | undefined
       )?.component
-    ).toBe('div');
+    ).toBe('h2');
   });
 
   it('leaves MuiFormControl without a margin of its own', () => {

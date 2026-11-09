@@ -1,5 +1,10 @@
 import styled from '@emotion/styled';
-import { FormControlLabel, Switch, TextField } from '@mui/material';
+import {
+  FormControlLabel,
+  InputAdornment,
+  Switch,
+  TextField,
+} from '@mui/material';
 import { InfoTooltip } from '@wepublish/ui/editor';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -23,6 +28,12 @@ const Fields = styled.div`
   gap: ${({ theme }) => theme.spacing(2.5)};
   width: 100%;
   max-width: 640px;
+`;
+
+const SwitchRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing(0.5)};
 `;
 
 export const ConsentForm = ({ create }: ConsentFormProps) => {
@@ -53,15 +64,19 @@ export const ConsentForm = ({ create }: ConsentFormProps) => {
           <TextField
             {...field}
             value={field.value ?? ''}
-            label={
-              <>
-                {t('consents.slug')}{' '}
-                <InfoTooltip text={t('consents.slugInfo')} />
-              </>
-            }
+            label={t('consents.slug')}
             error={Boolean(error)}
             helperText={error?.message}
             fullWidth
+            slotProps={{
+              input: {
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <InfoTooltip text={t('consents.slugInfo')} />
+                  </InputAdornment>
+                ),
+              },
+            }}
           />
         )}
       />
@@ -70,22 +85,21 @@ export const ConsentForm = ({ create }: ConsentFormProps) => {
         control={control}
         name="defaultValue"
         render={({ field }) => (
-          <FormControlLabel
-            control={
-              <Switch
-                checked={Boolean(field.value)}
-                onChange={(_event, defaultValue) =>
-                  field.onChange(defaultValue)
-                }
-              />
-            }
-            label={
-              <>
-                {t('consents.checkedByDefault')}{' '}
-                <InfoTooltip text={t('consents.defaultValueInfo')} />
-              </>
-            }
-          />
+          <SwitchRow>
+            <FormControlLabel
+              sx={{ marginRight: 0 }}
+              control={
+                <Switch
+                  checked={Boolean(field.value)}
+                  onChange={(_event, defaultValue) =>
+                    field.onChange(defaultValue)
+                  }
+                />
+              }
+              label={t('consents.checkedByDefault')}
+            />
+            <InfoTooltip text={t('consents.defaultValueInfo')} />
+          </SwitchRow>
         )}
       />
     </Fields>

@@ -1,0 +1,23 @@
+import { createFileRoute } from '@tanstack/react-router';
+import { feedHandler } from '@wepublish/utils/website/tanstack';
+import { getSiteUrl } from '@wepublish/utils/website/tanstack/server';
+
+import { getFeed } from '../feed';
+
+/**
+ * `pages/api/rss-feed.ts`, moved to the conventional `/rss.xml`. The old path still 301s
+ * here so existing feed-reader subscriptions keep working.
+ *
+ * `[.]` in the filename escapes a literal dot — `.` is the path separator in
+ * TanStack route filenames.
+ *
+ * The `server` block has to be written out literally; see the note at the top
+ * of `libs/utils/website/src/tanstack/routes/server-routes.ts`.
+ */
+export const Route = createFileRoute('/rss.xml')({
+  server: {
+    handlers: {
+      GET: ({ request }) => feedHandler(request, getFeed, getSiteUrl, 'rss2'),
+    },
+  },
+});

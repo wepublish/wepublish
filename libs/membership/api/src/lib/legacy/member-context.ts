@@ -15,7 +15,6 @@ import {
   User,
 } from '@prisma/client';
 import { MailContext, mailLogType } from '@wepublish/mail/api';
-import { unselectPassword } from '@wepublish/authentication/api';
 import { InvoiceWithItems, PaymentProvider } from '@wepublish/payment/api';
 import {
   calculatePeriodAmount,
@@ -28,6 +27,7 @@ import {
   LookupActionInput,
 } from '../subscription-event-dictionary/subscription-event-dictionary.type';
 import { SubscriptionEventDictionary } from '../subscription-event-dictionary/subscription-event-dictionary';
+import { TemplateAction } from '../subscription-event-dictionary/subscription-event-dictionary.type';
 import { add, format } from 'date-fns';
 import {
   BadRequestException,
@@ -256,7 +256,8 @@ export class MemberContext implements MemberContextInterface {
       const startDate = new Date(
         (
           paidUntil &&
-          paidUntil.getTime() > new Date().getTime() - ONE_MONTH_IN_MILLISECONDS
+            paidUntil.getTime() >
+              new Date().getTime() - ONE_MONTH_IN_MILLISECONDS
         ) ?
           paidUntil.getTime() + ONE_DAY_IN_MILLISECONDS
         : new Date().getTime()
@@ -277,7 +278,7 @@ export class MemberContext implements MemberContextInterface {
         where: {
           id: subscription.userID,
         },
-        select: unselectPassword,
+        include: { address: true, paymentProviderCustomers: true },
       });
 
       if (!user) {
@@ -495,14 +496,14 @@ export class MemberContext implements MemberContextInterface {
         return false;
       }
 
-      const remoteTemplate = await this.getSubscriptionTemplateIdentifier(
+      const action = await this.getSubscriptionTemplateAction(
         subscription,
         SubscriptionEvent.RENEWAL_FAILED
       );
 
-      if (remoteTemplate) {
+      if (action) {
         await this.mailContext.sendMail({
-          mailTemplateId: remoteTemplate,
+          mailTemplateId: action.mailTemplateId,
           recipient: user,
           optionalData: {
             invoice,
@@ -510,6 +511,7 @@ export class MemberContext implements MemberContextInterface {
             errorCode: intent.errorCode,
           },
           mailType: mailLogType.UserFlow,
+          asLetter: action.sendAsLetter,
         });
       } else {
         logger('memberContext').info(
@@ -884,13 +886,13 @@ export class MemberContext implements MemberContextInterface {
     };
   }
 
-  async getSubscriptionTemplateIdentifier(
+  async getSubscriptionTemplateAction(
     subscription: Subscription,
     subscriptionEvent: SubscriptionEvent
-  ): Promise<string | undefined> {
+  ): Promise<TemplateAction | undefined> {
     return new SubscriptionEventDictionary(
       this.prisma
-    ).getSubsciptionTemplateIdentifier(subscription, subscriptionEvent);
+    ).getSubscriptionTemplateAction(subscription, subscriptionEvent);
   }
 
   async getActionsForSubscriptions(
@@ -1020,7 +1022,7 @@ export class MemberContext implements MemberContextInterface {
         where: {
           id: subscription.userID,
         },
-        select: unselectPassword,
+        include: { address: true, paymentProviderCustomers: true },
       });
 
       if (!user) {
@@ -1104,7 +1106,7 @@ export class MemberContext implements MemberContextInterface {
       where: {
         id: subscription.userID,
       },
-      select: unselectPassword,
+      include: { address: true, paymentProviderCustomers: true },
     });
 
     if (!user) {
@@ -1112,12 +1114,12 @@ export class MemberContext implements MemberContextInterface {
       return;
     }
 
-    const remoteTemplate = await this.getSubscriptionTemplateIdentifier(
+    const action = await this.getSubscriptionTemplateAction(
       subscription,
       subscriptionEvent
     );
 
-    if (!remoteTemplate) {
+    if (!action) {
       logger('MemberContext').warn(
         `RemoteTemplate <%s> for subscription <%s> not found!`,
         subscriptionEvent,
@@ -1128,13 +1130,14 @@ export class MemberContext implements MemberContextInterface {
     }
 
     await this.mailContext.sendMail({
-      mailTemplateId: remoteTemplate,
+      mailTemplateId: action.mailTemplateId,
       recipient: user,
       optionalData: {
         subscription,
         ...optionalData,
       },
       mailType: mailLogType.UserFlow,
+      asLetter: action.sendAsLetter,
     });
   }
 }

@@ -32,6 +32,11 @@ export * from './lib/mailchimp-newsletter/mailchimp-newsletter.module';
 export * from './lib/mailchimp-newsletter/mailchimp-newsletter.model';
 export * from './lib/mailchimp-newsletter/mailchimp-newsletter.service';
 
+export * from './lib/email-quality/email-quality.config';
+export * from './lib/email-quality/evaluate-email-quality';
+export * from './lib/email-quality/email-quality.module';
+export * from './lib/email-quality/email-quality.service';
+
 export * from './lib/goodie/goodie.model';
 export * from './lib/goodie/goodie.service';
 export * from './lib/goodie/goodie.dataloader';

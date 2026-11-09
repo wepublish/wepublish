@@ -42,11 +42,57 @@ describe('drawer chrome', () => {
     ).toBeInTheDocument();
   });
 
+  it('names the drawer dialog after its title', () => {
+    renderPanel();
+
+    expect(
+      screen.getByRole('dialog', { name: 'Edit author' })
+    ).toBeInTheDocument();
+  });
+
+  it('keeps a name the drawer was given explicitly', () => {
+    render(
+      <ThemeProvider theme={theme}>
+        <Drawer
+          open
+          anchor="right"
+          slotProps={{ paper: { 'aria-label': 'Version history' } }}
+        >
+          <DrawerTitle>Edit author</DrawerTitle>
+        </Drawer>
+      </ThemeProvider>
+    );
+
+    expect(
+      screen.getByRole('dialog', { name: 'Version history' })
+    ).toBeInTheDocument();
+  });
+
+  it('keeps an id the title was given', () => {
+    render(
+      <ThemeProvider theme={theme}>
+        <DrawerTitle id="own-id">Plain title</DrawerTitle>
+      </ThemeProvider>
+    );
+
+    expect(
+      screen.getByRole('heading', { name: 'Plain title' })
+    ).toHaveAttribute('id', 'own-id');
+  });
+
   it('renders actions and body content', () => {
     renderPanel();
 
     expect(screen.getByRole('button', { name: 'Close' })).toBeInTheDocument();
     expect(screen.getByText('Panel content')).toBeInTheDocument();
+  });
+
+  it('wraps the header so title and actions do not overflow at 320px', () => {
+    renderPanel();
+
+    expect(
+      screen.getByRole('heading', { name: 'Edit author' }).parentElement
+    ).toHaveStyle({ flexWrap: 'wrap' });
   });
 
   it('lets the body scroll while the header stays put', () => {

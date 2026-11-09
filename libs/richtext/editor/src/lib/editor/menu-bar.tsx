@@ -39,6 +39,10 @@ import { ColorFillSwatchIcon, ColorTextSwatchIcon } from './color-swatch-icons';
 import { LinkPopoverButton } from './link-popover';
 import { useWebsiteThemeColors } from './use-website-theme-colors';
 
+const pressedSx = {
+  '&[aria-pressed="true"]': { backgroundColor: 'action.selected' },
+};
+
 const selectMenuBarState = ({ editor }: EditorStateSnapshot) => {
   if (!editor || editor.isDestroyed) {
     return null;
@@ -115,7 +119,7 @@ export function MenuBar() {
   const updateColor = useDebounceCallback(
     useCallback(
       (color: string | null) => {
-        const chain = editor.chain().focus();
+        const chain = editor.chain();
 
         if (editor.state.selection.empty) {
           chain.extendMarkRange('textStyle');
@@ -138,7 +142,7 @@ export function MenuBar() {
   const updateBackgroundColor = useDebounceCallback(
     useCallback(
       (color: string | null) => {
-        const chain = editor.chain().focus();
+        const chain = editor.chain();
 
         if (editor.state.selection.empty) {
           chain.extendMarkRange('textStyle');
@@ -240,6 +244,7 @@ export function MenuBar() {
 
       <ToggleButtonGroup
         size="small"
+        aria-label={t('richtext.menuBar.formatting')}
         value={Object.entries({
           bold: editorState.isBold,
           italic: editorState.isItalic,
@@ -343,6 +348,7 @@ export function MenuBar() {
       <ToggleButtonGroup
         size="small"
         value={editorState.list}
+        aria-label={t('richtext.menuBar.lists')}
       >
         <ToggleButton
           value="bullet"
@@ -378,6 +384,7 @@ export function MenuBar() {
       <ToggleButtonGroup
         size="small"
         value={editorState.alignment}
+        aria-label={t('richtext.menuBar.alignment')}
         disabled={!editorState.canAlign}
       >
         <ToggleButton
@@ -431,6 +438,7 @@ export function MenuBar() {
         size="small"
         aria-label={t('richtext.menuBar.codeBlock')}
         aria-pressed={editorState.isCodeBlock}
+        sx={pressedSx}
         color={editorState.isCodeBlock ? 'primary' : undefined}
         onClick={() => editor.chain().focus().toggleCodeBlock().run()}
       >
@@ -441,6 +449,7 @@ export function MenuBar() {
         size="small"
         aria-label={t('richtext.menuBar.blockquote')}
         aria-pressed={editorState.isBlockquote}
+        sx={pressedSx}
         color={editorState.isBlockquote ? 'primary' : undefined}
         onClick={() => editor.chain().focus().toggleBlockquote().run()}
       >
@@ -457,6 +466,7 @@ export function MenuBar() {
         size="small"
         aria-label={t('richtext.menuBar.invisibleCharacters')}
         aria-pressed={editorState.invisibleCharactersVisible}
+        sx={pressedSx}
         color={editorState.invisibleCharactersVisible ? 'primary' : undefined}
         onClick={() => editor.commands.toggleInvisibleCharacters()}
       >

@@ -66,4 +66,19 @@ describe('UserConsentForm', () => {
     expect(screen.getByDisplayValue('Erika Muster')).toBeTruthy();
     expect(screen.getByDisplayValue('Newsletter')).toBeTruthy();
   });
+
+  it('labels the user and consent pickers', () => {
+    render(
+      <WithForm values={{ userId: '', consentId: '', value: false }}>
+        <UserConsentForm />
+      </WithForm>
+    );
+
+    expect(
+      screen.getByRole('combobox', { name: 'dashboard.user' })
+    ).toBeTruthy();
+    expect(
+      screen.getByRole('combobox', { name: 'consents.consent' })
+    ).toBeTruthy();
+  });
 });

@@ -31,6 +31,8 @@ import {
   getMimeTypeForExtension,
   DocumentCategory,
 } from './supported-documents-validator';
+import { getMimeTypeForAudioExtension } from './supported-audios-validator';
+import { getMimeTypeForVideoExtension } from './supported-videos-validator';
 
 export const UPLOAD_DISK = 'upload';
 
@@ -366,6 +368,155 @@ export class MediaService {
     await this.deleteKeys(this.transformations, `images/${imageId}`);
 
     return await this.uploads.delete(`images/${imageId}`);
+  }
+
+  public async saveVideo(
+    videoId: string,
+    video: Buffer,
+    mimeType: string,
+    originalFilename: string
+  ) {
+    const objectKey = `videos/${videoId}/${originalFilename}`;
+    await this.uploads.put(objectKey, video, {
+      contentType: mimeType,
+      contentLength: video.length,
+    });
+    return { size: video.length };
+  }
+
+  public async saveVideoPoster(videoId: string, poster: Buffer) {
+    await this.transformations.put(`videos/${videoId}/poster.jpg`, poster, {
+      contentType: 'image/jpeg',
+      contentLength: poster.length,
+    });
+  }
+
+  public async getVideoPosterUri(videoId: string): Promise<ImageURIObject> {
+    const uri = `videos/${videoId}/poster.jpg`;
+
+    return { uri, exists: await this.transformations.exists(uri) };
+  }
+
+  public async getVideoUri(videoId: string): Promise<ImageURIObject> {
+    const keys = await this.listKeys(this.uploads, `videos/${videoId}/`);
+    const objectUri = keys[0];
+    if (!objectUri) {
+      return { uri: `videos/${videoId}`, exists: false };
+    }
+
+    const [contentType, copiedContentType] = await Promise.all([
+      this.getVideoContentType(objectUri),
+      this.getStoredContentType(this.transformations, objectUri),
+    ]);
+    if (copiedContentType === contentType) {
+      return { uri: objectUri, exists: true };
+    }
+
+    try {
+      const video = await this.uploads.getBuffer(objectUri);
+
+      await this.transformations.put(objectUri, video, {
+        contentType,
+        contentLength: video.length,
+      });
+
+      return { uri: objectUri, exists: true };
+    } catch (e: any) {
+      if (e instanceof StorageFileNotFoundError) {
+        return { uri: objectUri, exists: false };
+      }
+      throw e;
+    }
+  }
+
+  private async getVideoContentType(objectUri: string): Promise<string> {
+    const uploadedContentType = await this.getStoredContentType(
+      this.uploads,
+      objectUri
+    );
+    if (
+      uploadedContentType &&
+      !GENERIC_CONTENT_TYPES.includes(uploadedContentType)
+    ) {
+      return uploadedContentType;
+    }
+    return (
+      getMimeTypeForVideoExtension(path.extname(objectUri)) ??
+      GENERIC_CONTENT_TYPE
+    );
+  }
+
+  public async deleteVideo(videoId: string) {
+    await this.deleteKeys(this.transformations, `videos/${videoId}/`);
+    await this.deleteKeys(this.uploads, `videos/${videoId}/`);
+  }
+
+  public async saveAudio(
+    audioId: string,
+    audio: Buffer,
+    mimeType: string,
+    originalFilename: string
+  ) {
+    const objectKey = `audios/${audioId}/${originalFilename}`;
+    await this.uploads.put(objectKey, audio, {
+      contentType: mimeType,
+      contentLength: audio.length,
+    });
+    return { size: audio.length };
+  }
+
+  public async getAudioUri(audioId: string): Promise<ImageURIObject> {
+    const keys = await this.listKeys(this.uploads, `audios/${audioId}/`);
+    const objectUri = keys[0];
+    if (!objectUri) {
+      return { uri: `audios/${audioId}`, exists: false };
+    }
+
+    const [contentType, copiedContentType] = await Promise.all([
+      this.getAudioContentType(objectUri),
+      this.getStoredContentType(this.transformations, objectUri),
+    ]);
+    if (copiedContentType === contentType) {
+      return { uri: objectUri, exists: true };
+    }
+
+    try {
+      const audio = await this.uploads.getBuffer(objectUri);
+
+      await this.transformations.put(objectUri, audio, {
+        contentType,
+        contentLength: audio.length,
+      });
+
+      return { uri: objectUri, exists: true };
+    } catch (e: any) {
+      if (e instanceof StorageFileNotFoundError) {
+        return { uri: objectUri, exists: false };
+      }
+      throw e;
+    }
+  }
+
+  private async getAudioContentType(objectUri: string): Promise<string> {
+    const uploadedContentType = await this.getStoredContentType(
+      this.uploads,
+      objectUri
+    );
+    if (
+      uploadedContentType &&
+      !GENERIC_CONTENT_TYPES.includes(uploadedContentType)
+    ) {
+      return uploadedContentType;
+    }
+    return (
+      getMimeTypeForAudioExtension(path.extname(objectUri)) ??
+      GENERIC_CONTENT_TYPE
+    );
+  }
+
+  public async deleteAudio(audioId: string) {
+    await this.deleteKeys(this.transformations, `audios/${audioId}/`);
+    await this.deleteKeys(this.uploads, `audios/${audioId}/`);
   }
 
   public async saveDocument(

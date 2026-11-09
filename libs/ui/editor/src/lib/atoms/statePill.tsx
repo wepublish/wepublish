@@ -29,13 +29,12 @@ const Pill = styled('span', {
   min-width: 0;
   max-width: 100%;
   padding: ${({ size }) => (size === 'small' ? '0 8px' : '2px 10px')};
-  border-radius: 999px;
+  border-radius: ${({ size }) => (size === 'small' ? '10px' : '12px')};
   background-color: ${({ background }) => background};
   color: ${({ color }) => color};
   font-size: ${({ size }) => (size === 'small' ? '11px' : '12px')};
   font-weight: 600;
   line-height: 20px;
-  white-space: nowrap;
 
   &::before {
     content: '';
@@ -47,8 +46,8 @@ const Pill = styled('span', {
   }
 
   > span {
-    overflow: hidden;
-    text-overflow: ellipsis;
+    min-width: 0;
+    overflow-wrap: anywhere;
   }
 `;
 

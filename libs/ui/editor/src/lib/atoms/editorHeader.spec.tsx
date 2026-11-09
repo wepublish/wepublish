@@ -27,6 +27,26 @@ describe('EditorHeader', () => {
     expect(within(status).getByText('Last saved 2 Sep')).toBeTruthy();
   });
 
+  it('announces when the save state changes', () => {
+    const { rerender } = renderWithTheme(
+      <EditorHeader
+        state={StateColor.published}
+        stateLabel="Saved"
+      />
+    );
+
+    rerender(
+      <ThemeProvider theme={theme}>
+        <EditorHeader
+          state={StateColor.draft}
+          stateLabel="Editing"
+        />
+      </ThemeProvider>
+    );
+
+    expect(screen.getByRole('status')).toHaveTextContent('Editing');
+  });
+
   it('keeps the primary actions after the secondary ones', () => {
     renderWithTheme(
       <EditorHeader
@@ -41,6 +61,34 @@ describe('EditorHeader', () => {
 
     expect(metadata.textContent).toBe('Metadata');
     expect(publish.textContent).toBe('Publish');
+  });
+
+  it('only gives the actions a row of their own on narrow headers when there are secondary actions', () => {
+    const { unmount } = renderWithTheme(
+      <EditorHeader
+        state={StateColor.draft}
+        stateLabel="Draft"
+        primaryActions={<button>Save</button>}
+      />
+    );
+
+    expect(
+      screen.getByRole('button', { name: 'Save' }).closest('[data-own-row]')
+    ).toBeNull();
+    unmount();
+
+    renderWithTheme(
+      <EditorHeader
+        state={StateColor.draft}
+        stateLabel="Draft"
+        secondaryActions={<button>Metadata</button>}
+        primaryActions={<button>Save</button>}
+      />
+    );
+
+    expect(
+      screen.getByRole('button', { name: 'Save' }).closest('[data-own-row]')
+    ).not.toBeNull();
   });
 
   it('keeps the status action beside the status, ahead of the buttons', () => {

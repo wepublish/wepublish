@@ -195,6 +195,11 @@ const ChartCard = styled.section`
   .recharts-wrapper:focus {
     outline: none;
   }
+
+  .recharts-surface:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.vars.palette.primary.main};
+    outline-offset: 2px;
+  }
 `;
 
 const CardHead = styled.header`
@@ -430,12 +435,14 @@ interface AudienceChartProps {
   audienceStats: AudienceStatsComputed[];
   clientFilter: AudienceClientFilter;
   loading?: boolean;
+  headingLevel?: 2 | 3;
 }
 
 export function AudienceChart({
   clientFilter,
   audienceStats,
   loading,
+  headingLevel = 2,
 }: AudienceChartProps) {
   const {
     t,
@@ -570,7 +577,7 @@ export function AudienceChart({
         <ChartCard>
           <CardHead>
             <div>
-              <CardTitle>
+              <CardTitle as={`h${headingLevel}`}>
                 {label('totalActiveSubscriptionCount')}{' '}
                 <InfoTooltip
                   text={t('audience.legend.info.totalActiveSubscriptionCount')}
@@ -601,6 +608,8 @@ export function AudienceChart({
             height={220}
           >
             <AreaChart
+              title={label('totalActiveSubscriptionCount')}
+              desc={t('audience.chart.keyboardHint')}
               data={audienceStats}
               margin={{ top: 8, right: 8, bottom: 0, left: 0 }}
             >
@@ -674,7 +683,7 @@ export function AudienceChart({
       {flows.length > 0 && (
         <ChartCard>
           <CardHead>
-            <CardTitle>
+            <CardTitle as={`h${headingLevel}`}>
               {t('audience.chart.flowsTitle')}{' '}
               <InfoTooltip text={t('audience.chart.flowsInfo')} />
             </CardTitle>
@@ -693,6 +702,8 @@ export function AudienceChart({
             height={320}
           >
             <BarChart
+              title={t('audience.chart.flowsTitle')}
+              desc={t('audience.chart.keyboardHint')}
               data={audienceStats}
               stackOffset="sign"
               barCategoryGap="22%"

@@ -57,7 +57,7 @@ export const AdTeaserBlockStyle = (props: BuilderTeaserListBlockProps) => {
     ? 0
     : second(props)
       ? 1
-      : 2
+      : 2;
 
   const teasers = compose(
     insert<FullTeaserFragment>(position, {

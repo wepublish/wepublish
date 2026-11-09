@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client/react';
 import { Autocomplete, TextField } from '@mui/material';
 import { PaywallListDocument } from '@wepublish/editor/api';
-import { useMemo } from 'react';
+import { ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { humanizeError } from '../../humanizeError';
@@ -14,6 +14,8 @@ interface SelectPaywallsProps {
   selectedPaywall?: string | null;
   setSelectedPaywall(paywalls: string | null): void;
   placeholder?: string;
+  label?: ReactNode;
+  'aria-labelledby'?: string;
 }
 
 /**
@@ -34,6 +36,8 @@ export function SelectPaywall({
   selectedPaywall,
   setSelectedPaywall,
   placeholder,
+  label,
+  'aria-labelledby': ariaLabelledby,
 }: SelectPaywallsProps) {
   const { t } = useTranslation();
 
@@ -66,6 +70,14 @@ export function SelectPaywall({
       renderInput={params => (
         <TextField
           {...params}
+          label={label}
+          slotProps={{
+            ...params.slotProps,
+            htmlInput: {
+              ...params.slotProps.htmlInput,
+              'aria-labelledby': ariaLabelledby,
+            },
+          }}
           name={name}
           placeholder={placeholder}
         />

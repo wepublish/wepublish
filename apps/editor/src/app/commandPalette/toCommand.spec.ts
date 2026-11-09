@@ -64,4 +64,20 @@ describe('toCommand', () => {
 
     expect(command.keywords).toEqual(['navbar.logout']);
   });
+
+  it('keeps the feature a command depends on, so the palette can hide it', () => {
+    const command = toCommand(
+      'navigate',
+      t,
+      i18n
+    )({
+      id: 'letterLayouts',
+      titleKey: 'navbar.letterLayouts',
+      icon: null,
+      feature: 'paper-letters',
+      perform: () => undefined,
+    });
+
+    expect(command.feature).toBe('paper-letters');
+  });
 });

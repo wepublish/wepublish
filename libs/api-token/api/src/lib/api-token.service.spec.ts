@@ -1,7 +1,12 @@
 import { ForbiddenException, UnauthorizedException } from '@nestjs/common';
 import { EXPIRED_API_TOKEN } from '@wepublish/authentication/api';
 
-import { API_TOKEN_PREFIX, hashApiToken } from './api-token.crypto';
+import {
+  API_TOKEN_PREFIX,
+  hashApiToken,
+  prefixOf,
+  verifyApiToken,
+} from './api-token.crypto';
 import { ApiTokenStatus } from './api-token.model';
 import { ApiTokenService } from './api-token.service';
 
@@ -16,9 +21,8 @@ const prismaMock = () => {
         store.push(row);
         return row;
       }),
-      findUnique: vi.fn(
-        async ({ where }: any) =>
-          store.find(r => r.tokenHash === where.tokenHash) ?? null
+      findMany: vi.fn(async ({ where }: any) =>
+        store.filter(r => r.prefix === where.prefix)
       ),
       update: vi.fn(async ({ where, data }: any) => {
         const row = store.find(r => r.id === where.id);
@@ -92,7 +96,8 @@ describe('createToken', () => {
     );
 
     expect(token).toMatch(new RegExp(`^${API_TOKEN_PREFIX}`));
-    expect(prisma.store[0].tokenHash).toBe(hashApiToken(token));
+    expect(await verifyApiToken(prisma.store[0].tokenHash, token)).toBe(true);
+    expect(prisma.store[0].tokenHash).not.toContain(token);
     expect(JSON.stringify(apiToken)).not.toContain(token);
   });
 
@@ -156,12 +161,45 @@ describe('resolveToken', () => {
     expect(await service(prisma).resolveToken('wep_nope')).toBeNull();
   });
 
+  it('rejects a token that only shares the visible prefix', async () => {
+    const prisma = prismaMock();
+    const { token } = await service(prisma).createToken(
+      { name: 'k', scopes: [], expiresAt: inDays(30) },
+      { userId: 'u1', permissions: [] }
+    );
+
+    expect(
+      await service(prisma).resolveToken(`${prefixOf(token)}forged`)
+    ).toBeNull();
+  });
+
+  it('picks the matching key when two keys share a prefix', async () => {
+    const prisma = prismaMock();
+    prisma.store.push(
+      {
+        ...valid,
+        id: 'other',
+        prefix: prefixOf('wep_x'),
+        tokenHash: await hashApiToken('wep_x_other'),
+      },
+      {
+        ...valid,
+        id: 'mine',
+        prefix: prefixOf('wep_x'),
+        tokenHash: await hashApiToken('wep_x'),
+      }
+    );
+
+    expect((await service(prisma).resolveToken('wep_x'))?.id).toBe('mine');
+  });
+
   it('rejects a revoked token', async () => {
     const prisma = prismaMock();
     prisma.store.push({
       ...valid,
       id: 'a',
-      tokenHash: hashApiToken('wep_x'),
+      prefix: prefixOf('wep_x'),
+      tokenHash: await hashApiToken('wep_x'),
       revokedAt: new Date(),
     });
 
@@ -173,7 +211,8 @@ describe('resolveToken', () => {
     prisma.store.push({
       ...valid,
       id: 'a',
-      tokenHash: hashApiToken('wep_x'),
+      prefix: prefixOf('wep_x'),
+      tokenHash: await hashApiToken('wep_x'),
       expiresAt: new Date(Date.now() - 1000),
     });
 
@@ -188,7 +227,8 @@ describe('resolveToken', () => {
     prisma.store.push({
       ...valid,
       id: 'a',
-      tokenHash: hashApiToken('wep_x'),
+      prefix: prefixOf('wep_x'),
+      tokenHash: await hashApiToken('wep_x'),
       expiresAt: new Date(Date.now() + 60_000),
     });
 
@@ -200,7 +240,8 @@ describe('resolveToken', () => {
     prisma.store.push({
       ...valid,
       id: 'a',
-      tokenHash: hashApiToken('wep_x'),
+      prefix: prefixOf('wep_x'),
+      tokenHash: await hashApiToken('wep_x'),
       lastUsedAt: new Date(),
     });
 
@@ -214,7 +255,8 @@ describe('resolveToken', () => {
     prisma.store.push({
       ...valid,
       id: 'a',
-      tokenHash: hashApiToken('wep_x'),
+      prefix: prefixOf('wep_x'),
+      tokenHash: await hashApiToken('wep_x'),
       lastUsedAt: new Date(Date.now() - 3600_000),
     });
 

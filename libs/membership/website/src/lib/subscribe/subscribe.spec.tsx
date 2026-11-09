@@ -6,6 +6,7 @@ import {
   mockChallenge,
   mockChallengeToken,
   mockCreateSubscriptionInfo,
+  mockGoodie,
   mockInvoice,
   mockMemberPlan,
   mockPaginated,
@@ -30,8 +31,12 @@ import {
   SubscriptionDeactivationReason,
   SubscriptionsQuery,
 } from '@wepublish/website/api';
+import {
+  BuilderSubscribeSummaryProps,
+  SubscribeArea,
+} from '@wepublish/website/builder';
 import { t } from 'i18next';
-import { ComponentProps } from 'react';
+import { ComponentProps, useState } from 'react';
 import { z } from 'zod';
 import { formatCurrency } from '../formatters/format-currency';
 import { Subscribe } from './subscribe';
@@ -188,10 +193,12 @@ const solvedChallenge = loaded({
   challenge,
 } satisfies ChallengeQuery) as Props['challenge'];
 
-const renderSubscribe = (
-  props: Partial<Props> = {},
-  { loggedIn = false }: { loggedIn?: boolean } = {}
-) => {
+type RenderOptions = {
+  loggedIn?: boolean;
+  builder?: Parameters<typeof renderWithProviders>[1]['builder'];
+};
+
+const subscribeProps = (loggedIn: boolean) => {
   const handlers = {
     onSubscribe: vi.fn(),
     onSubscribeWithRegister: vi.fn(),
@@ -199,38 +206,48 @@ const renderSubscribe = (
     fetchSubscribeInfo: vi.fn(),
   };
 
+  const props: Props = {
+    memberPlans: memberPlanList([
+      standardPlan,
+      euroPlan,
+      forcedRenewalPlan,
+      donationPlan,
+    ]),
+    challenge: loggedIn ? (idle as Props['challenge']) : solvedChallenge,
+    userSubscriptions:
+      loggedIn ?
+        userSubscriptions([subscription])
+      : (idle as Props['userSubscriptions']),
+    userInvoices:
+      loggedIn ? userInvoices([openInvoice]) : (idle as Props['userInvoices']),
+    subscribeInfo: subscribeInfo(mockCreateSubscriptionInfo()),
+    ...handlers,
+  };
+
+  return { handlers, props };
+};
+
+const renderSubscribe = (
+  props: Partial<Props> = {},
+  { loggedIn = false, builder }: RenderOptions = {}
+) => {
+  const { handlers, props: baseProps } = subscribeProps(loggedIn);
+
   renderWithProviders(
     <Subscribe
-      memberPlans={memberPlanList([
-        standardPlan,
-        euroPlan,
-        forcedRenewalPlan,
-        donationPlan,
-      ])}
-      challenge={loggedIn ? (idle as Props['challenge']) : solvedChallenge}
-      userSubscriptions={
-        loggedIn ?
-          userSubscriptions([subscription])
-        : (idle as Props['userSubscriptions'])
-      }
-      userInvoices={
-        loggedIn ? userInvoices([openInvoice]) : (idle as Props['userInvoices'])
-      }
-      subscribeInfo={subscribeInfo(mockCreateSubscriptionInfo())}
-      onSubscribe={handlers.onSubscribe}
-      onSubscribeWithRegister={handlers.onSubscribeWithRegister}
-      onResubscribe={handlers.onResubscribe}
-      fetchSubscribeInfo={handlers.fetchSubscribeInfo}
+      {...baseProps}
       {...props}
     />,
-    { user: loggedIn ? mockSensitiveDataUser() : null }
+    { user: loggedIn ? mockSensitiveDataUser() : null, builder }
   );
 
   return { ...handlers, user: userEvent.setup() };
 };
 
-const renderLoggedIn = (props: Partial<Props> = {}) =>
-  renderSubscribe(props, { loggedIn: true });
+const renderLoggedIn = (
+  props: Partial<Props> = {},
+  options: Omit<RenderOptions, 'loggedIn'> = {}
+) => renderSubscribe(props, { ...options, loggedIn: true });
 
 const price = (amount: number, currency = Currency.Chf) =>
   formatCurrency(amount, currency);
@@ -294,7 +311,8 @@ const confirm = async (
   await user.click(subscribeButton(amount));
 };
 
-const withoutMarkup = (text: string) => text.replace(/<[^>]+>/g, '');
+const withoutMarkup = (text: string) =>
+  new DOMParser().parseFromString(text, 'text/html').body.textContent ?? '';
 
 const expectedSubscribe = {
   memberPlanId: standardPlan.id,
@@ -307,6 +325,101 @@ const expectedSubscribe = {
 };
 
 describe('Subscribe', () => {
+  describe('areas and summary', () => {
+    it('leaves hidden areas out of the DOM, captcha included', () => {
+      renderSubscribe({ hiddenAreas: ['userForm', 'challenge', 'submit'] });
+
+      expect(
+        screen.queryByLabelText(t('user.form.email'))
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('group', { name: TEST_CAPTCHA_LABEL })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('button', { name: name => name.includes(price(7)) })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.getByLabelText(standardPlan.name, { exact: false })
+      ).toBeInTheDocument();
+    });
+
+    it('keeps the values of an area while it is hidden', async () => {
+      const { props } = subscribeProps(true);
+      const Harness = () => {
+        const [hiddenAreas, setHiddenAreas] = useState<SubscribeArea[]>([]);
+
+        return (
+          <>
+            <button onClick={() => setHiddenAreas(['discountCode'])}>
+              hide
+            </button>
+            <button onClick={() => setHiddenAreas([])}>show</button>
+            <Subscribe
+              {...props}
+              showDiscountCodes
+              hiddenAreas={hiddenAreas}
+            />
+          </>
+        );
+      };
+      renderWithProviders(<Harness />, { user: mockSensitiveDataUser() });
+      const user = userEvent.setup();
+
+      await user.type(field('subscribe.discountCode.label'), 'WELCOME');
+      await user.click(screen.getByRole('button', { name: 'hide' }));
+
+      expect(
+        screen.queryByLabelText(t('subscribe.discountCode.label'))
+      ).not.toBeInTheDocument();
+
+      await user.click(screen.getByRole('button', { name: 'show' }));
+
+      expect(field('subscribe.discountCode.label')).toHaveValue('WELCOME');
+    });
+
+    it('hands the chosen plan and period amount to the summary slot', async () => {
+      const SubscribeSummary = ({
+        memberPlan,
+        paymentPeriodicity,
+        periodAmount,
+        currency,
+        validateSelection,
+      }: BuilderSubscribeSummaryProps) => (
+        <div data-testid="summary">
+          <span>{`${memberPlan?.name} ${paymentPeriodicity} ${periodAmount} ${currency}`}</span>
+          <button onClick={() => validateSelection()}>validate</button>
+        </div>
+      );
+      const { user } = renderLoggedIn({}, { builder: { SubscribeSummary } });
+
+      expect(screen.getByTestId('summary')).toHaveTextContent(
+        `${standardPlan.name} ${PaymentPeriodicity.Monthly} 700 ${Currency.Chf}`
+      );
+
+      await user.selectOptions(
+        screen.getByLabelText(t('subscribe.periodicity')),
+        PaymentPeriodicity.Yearly
+      );
+
+      expect(screen.getByTestId('summary')).toHaveTextContent(
+        `${standardPlan.name} ${PaymentPeriodicity.Yearly} 8400 ${Currency.Chf}`
+      );
+    });
+
+    it('reports the validation errors of a failed submit', async () => {
+      const onInvalid = vi.fn();
+      const { user } = renderSubscribe({ onInvalid });
+
+      await submitWhenCaptchaSolved(user);
+
+      await waitFor(() =>
+        expect(onInvalid).toHaveBeenCalledWith(
+          expect.objectContaining({ email: expect.anything() })
+        )
+      );
+    });
+  });
+
   describe('logged out', () => {
     it('marks the required fields when submitted empty', async () => {
       const { user, onSubscribeWithRegister } = renderSubscribe();
@@ -653,6 +766,42 @@ describe('Subscribe', () => {
           autoRenew: true,
         })
       );
+    });
+
+    it('only offers the goodies of the chosen periodicity', async () => {
+      const booklet = mockGoodie({
+        name: 'NLA Booklet',
+        paymentPeriodicities: [PaymentPeriodicity.Biennial],
+      });
+      const mug = mockGoodie({ name: 'Coffee mug' });
+      const planWithGoodies = mockMemberPlan({
+        name: 'With goodies',
+        availablePaymentMethods: [allPeriodicities],
+        goodies: [booklet, mug],
+      });
+      const { user } = renderLoggedIn({
+        memberPlans: memberPlanList([planWithGoodies]),
+        showGoodies: true,
+      });
+
+      expect(
+        screen.getByRole('radio', { name: /Coffee mug/ })
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByRole('radio', { name: /NLA Booklet/ })
+      ).not.toBeInTheDocument();
+
+      await user.selectOptions(
+        screen.getByLabelText(t('subscribe.periodicity')),
+        PaymentPeriodicity.Biennial
+      );
+
+      expect(
+        screen.getByRole('radio', { name: /NLA Booklet/ })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('radio', { name: /Coffee mug/ })
+      ).toBeInTheDocument();
     });
 
     it('renews automatically by default when the plans arrive after the first render', async () => {

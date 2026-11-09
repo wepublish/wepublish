@@ -63,7 +63,7 @@ export function EmbedEditPanel({ value, onClose, onConfirm }: EmbedEditPanel) {
       <DrawerBody>
         <TextField
           rows={3}
-          placeholder={t('blocks.embeds.panels.embed')}
+          label={t('blocks.embeds.panels.embed')}
           value={input}
           onChange={event => setInput(event.target.value)}
           multiline

@@ -53,6 +53,10 @@ describe('UserSubscriptionService', () => {
     reactivateSubscription: Mock;
   };
 
+  let goodieServiceMock: {
+    getValidGoodie: Mock;
+  };
+
   beforeAll(() => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2025-01-01'));
@@ -115,6 +119,10 @@ describe('UserSubscriptionService', () => {
       reactivateSubscription: vi.fn(),
     };
 
+    goodieServiceMock = {
+      getValidGoodie: vi.fn(),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UserSubscriptionService,
@@ -130,10 +138,7 @@ describe('UserSubscriptionService', () => {
           useValue: { getMemberPlanBySlug: vi.fn() },
         },
         { provide: PaymentsService, useValue: paymentsMock },
-        {
-          provide: GoodieService,
-          useValue: { getValidGoodie: vi.fn() },
-        },
+        { provide: GoodieService, useValue: goodieServiceMock },
         { provide: PrismaClient, useValue: prismaMock },
         { provide: SubscriptionService, useValue: subscriptionServiceMock },
       ],
@@ -195,6 +200,23 @@ describe('UserSubscriptionService', () => {
             discount: undefined,
             discountCodeId: undefined,
           })
+        );
+      });
+
+      it('validates a chosen goodie against the member plan and the payment periodicity', async () => {
+        await service.createSubscription('userId', {
+          ...baseArgs,
+          paymentPeriodicity: PaymentPeriodicity.yearly,
+          goodieId: 'goodieId',
+        });
+
+        expect(goodieServiceMock.getValidGoodie).toHaveBeenCalledWith(
+          'goodieId',
+          'memberPlanId',
+          PaymentPeriodicity.yearly
+        );
+        expect(memberContextMock.createSubscription).toHaveBeenCalledWith(
+          expect.objectContaining({ goodieId: 'goodieId' })
         );
       });
 

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import { createCheckedPermissionComponent } from '../atoms';
 import { PageMetadata } from './pageMetadataPanel';
-import { PublishDialogContent } from './publishDialogContent';
+import { formatTagNames, PublishDialogContent } from './publishDialogContent';
 
 export interface PublishPagePanelProps {
   publishedAtDate?: Date;
@@ -58,7 +58,7 @@ function PublishPagePanel({
         },
         {
           label: t('pageEditor.panels.tags'),
-          value: metadata.tags.join(', '),
+          value: formatTagNames(metadata.tags, metadata.defaultTags),
         },
         {
           label: t('pageEditor.panels.image'),

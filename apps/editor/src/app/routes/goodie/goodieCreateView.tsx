@@ -30,7 +30,12 @@ const GoodieCreateView = () => {
 
   const form = useForm<GoodieFormValues>({
     resolver: zodResolver(goodieSchema),
-    defaultValues: { name: '', active: true, memberPlanIDs: [] },
+    defaultValues: {
+      name: '',
+      active: true,
+      memberPlanIDs: [],
+      paymentPeriodicities: [],
+    },
   });
 
   const [createGoodie, { loading }] = useMutation(CreateGoodieDocument, {

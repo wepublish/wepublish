@@ -71,6 +71,7 @@ export const mockGoodie = ({
   id: faker.string.nanoid(),
   name: faker.commerce.productName(),
   stock: 10,
+  paymentPeriodicities: [],
   description,
   image,
   ...definedOnly(overrides),

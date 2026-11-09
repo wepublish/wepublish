@@ -34,6 +34,7 @@ export function PollStateIndication({
       <Tooltip title={t('pollStateIndication.closed')}>
         <span
           role="img"
+          tabIndex={0}
           aria-label={t('pollStateIndication.closed')}
         >
           <ClosedIcon />
@@ -49,6 +50,7 @@ export function PollStateIndication({
       <Tooltip title={t('pollStateIndication.open')}>
         <span
           role="img"
+          tabIndex={0}
           aria-label={t('pollStateIndication.open')}
         >
           <OpensIcon />
@@ -64,6 +66,7 @@ export function PollStateIndication({
     >
       <span
         role="img"
+        tabIndex={0}
         aria-label={t('pollStateIndication.waiting', {
           date: new Date(pollOpensAt),
         })}

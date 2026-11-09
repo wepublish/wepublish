@@ -1,4 +1,4 @@
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { ApolloDriverConfig } from '@nestjs/apollo';
 import { Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER } from '@nestjs/core';
@@ -13,6 +13,7 @@ import { V0Module } from '@wepublish/ai/api';
 import { NovaMediaAdapter } from '@wepublish/api';
 import { ArticleModule, HotAndTrendingModule } from '@wepublish/article/api';
 import { AuthenticationModule } from '@wepublish/authentication/api';
+import { LettersModule } from '@wepublish/letter/api';
 import { AuthorModule } from '@wepublish/author/api';
 import { BannerApiModule } from '@wepublish/banner/api';
 import { BlockContentModule } from '@wepublish/block-content/api';
@@ -25,6 +26,8 @@ import { ApiTokenModule } from '@wepublish/api-token/api';
 import { NewsletterModule } from '@wepublish/newsletter/api';
 import { DocumentModule } from '@wepublish/document/api';
 import { DragonflyModule } from '@wepublish/dragonfly/api';
+import { VideoModule } from '@wepublish/video/api';
+import { AudioModule } from '@wepublish/audio/api';
 import { EventModule } from '@wepublish/event/api';
 import {
   AgendaBaselService,
@@ -38,7 +41,7 @@ import {
   GoogleAnalyticsService,
 } from '@wepublish/google-analytics/api';
 import { HealthModule } from '@wepublish/health';
-import { MediaAdapterModule } from '@wepublish/image/api';
+import { MediaAdapter, MediaAdapterModule } from '@wepublish/image/api';
 import {
   KvCacheModule,
   NamespacedCache,
@@ -91,7 +94,7 @@ import { TagModule } from '@wepublish/tag/api';
 import { TrackingPixelsModule } from '@wepublish/tracking-pixel/api';
 import { UserSubscriptionModule } from '@wepublish/user-subscription/api';
 import { UserModule } from '@wepublish/user/api';
-import { generateJWT } from '@wepublish/utils/api';
+import { generateJWT, NodeApolloDriver } from '@wepublish/utils/api';
 import { VersionInformationModule } from '@wepublish/versionInformation/api';
 import { WebsiteRevalidationModule } from '@wepublish/website-revalidation/api';
 import { readConfig } from '../readConfig';
@@ -107,7 +110,7 @@ import { API_SHARED_NAMESPACES } from './shared-namespaces';
   imports: [
     SentryModule.forRoot(),
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
-      driver: ApolloDriver,
+      driver: NodeApolloDriver,
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (config: ConfigService) => {
@@ -187,6 +190,22 @@ import { API_SHARED_NAMESPACES } from './shared-namespaces';
         };
       },
       inject: [ConfigService, PrismaClient, ProviderRegistryService],
+      global: true,
+    }),
+    LettersModule.registerAsync({
+      useFactory: async (
+        registry: ProviderRegistryService,
+        mediaAdapter: MediaAdapter
+      ) => {
+        await registry.ensureLoaded();
+
+        return {
+          letterProvider: registry.letterProvider,
+          pdfRenderer: registry.pdfRenderer,
+          documentUrl: (id: string) => mediaAdapter.getDocumentURL({ id }),
+        };
+      },
+      inject: [ProviderRegistryService, MediaAdapter],
       global: true,
     }),
     TrackingPixelsModule.registerAsync({
@@ -269,6 +288,8 @@ import { API_SHARED_NAMESPACES } from './shared-namespaces';
     ApiTokenModule,
     NewsletterModule,
     DocumentModule,
+    VideoModule,
+    AudioModule,
     StatsModule,
     SettingModule,
     ExternalAppsModule,

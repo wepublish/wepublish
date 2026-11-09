@@ -2,6 +2,8 @@ import * as Sentry from '@sentry/nextjs';
 
 import {
   getBaseConfig,
+  getBrowserDenyUrls,
+  getBrowserIgnoreErrors,
   getBrowserTracePropagationTargets,
   setCommonTags,
 } from '@wepublish/utils';
@@ -9,6 +11,8 @@ import {
 Sentry.init({
   ...getBaseConfig(),
   tracePropagationTargets: getBrowserTracePropagationTargets(),
+  denyUrls: getBrowserDenyUrls(),
+  ignoreErrors: getBrowserIgnoreErrors(),
   integrations: [
     Sentry.replayIntegration({
       maskAllText: false,

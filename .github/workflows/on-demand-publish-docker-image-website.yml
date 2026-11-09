@@ -81,6 +81,17 @@ jobs:
           done
           echo "Timed out waiting for version: ${SHA_HASH}"
           exit 1
+      - name: Pick the Docker target for this website
+        run: |
+          # Next and TanStack Start websites produce completely different build
+          # output, so they have separate stages in the Dockerfile. Detect by
+          # config file rather than keeping a list of tenants in sync.
+          if [ -f "apps/${{ inputs.website_project }}/vite.config.mts" ]; then
+            echo "WEBSITE_TARGET=website-tanstack" >> $GITHUB_ENV
+          else
+            echo "WEBSITE_TARGET=website" >> $GITHUB_ENV
+          fi
+
       - uses: docker/setup-buildx-action@v4
         with:
           cleanup: false
@@ -92,7 +103,7 @@ jobs:
         with:
           provenance: false
           context: .
-          target: website
+          target: ${{ env.WEBSITE_TARGET }}
           build-args: |
             BUILD_IMAGE=${{ env.BUILD_IMAGE_TAG }}
             ${{ steps.get-env.outputs.envvars }}
@@ -103,6 +114,7 @@ jobs:
             SENTRY_DSN=https://a015f6d558e9e245baa1d31fc8ee0571@o4507730765873152.ingest.de.sentry.io/4510947424075856
             APP_RELEASE_ID=${{ github.sha }}
             SSR_FETCH_TIMEOUT_MS=${{ secrets.SSR_FETCH_TIMEOUT_MS }}
+            PRERENDER=${{ inputs.prerender && '1' || '' }}
           push: true
           tags: |
             ${{ inputs.website_tags }}

@@ -283,8 +283,7 @@ export const CommentEditor = ({
   );
 
   type FormInput =
-    | z.infer<typeof loggedInSchema>
-    | z.infer<typeof anonymousSchema>;
+    z.infer<typeof loggedInSchema> | z.infer<typeof anonymousSchema>;
   const schema = hasUser ? loggedInSchema : anonymousSchema;
 
   const { handleSubmit, control, reset } = useForm<FormInput>({
@@ -521,7 +520,7 @@ export const CommentEditor = ({
                     onClick={registerRedirect}
                   >
                     <MdLogin
-                      aria-label="Register"
+                      aria-hidden
                       css={iconStyles}
                     />
 

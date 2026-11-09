@@ -3,7 +3,7 @@ import {
   createNamespacedCacheTesting,
   type NamespacedCacheTesting,
 } from '@wepublish/kv-ttl-cache/api/testing';
-import express from 'express';
+import type { NodeRequest } from '@nestjs/platform-node';
 import { StripePaymentProvider } from './stripe-payment-provider';
 
 const harnesses: NamespacedCacheTesting[] = [];
@@ -185,7 +185,7 @@ describe('StripePaymentProvider', () => {
         req: {
           headers: { 'stripe-signature': 'sig' },
           body: '{}',
-        } as unknown as express.Request,
+        } as unknown as NodeRequest,
       });
     };
 

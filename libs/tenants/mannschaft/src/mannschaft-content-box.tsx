@@ -21,9 +21,7 @@ import { allPass, anyPass } from 'ramda';
 
 export const MannschaftContentBox = (
   props:
-    | BuilderImageBlockProps
-    | BuilderRichTextBlockProps
-    | BuilderIFrameBlockProps
+    BuilderImageBlockProps | BuilderRichTextBlockProps | BuilderIFrameBlockProps
 ) => {
   const {
     blocks: { Image, RichText, IFrame },

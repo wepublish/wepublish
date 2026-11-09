@@ -29,7 +29,6 @@ import {
   PaymentMethodConfig,
 } from '@wepublish/payment/api';
 import { SubscriptionWithRelations } from '../legacy/member-context';
-import { unselectPassword } from '@wepublish/authentication/api';
 import { mapSubscriptionsAsCsv } from './subscription-as-csv';
 
 @Injectable()
@@ -178,7 +177,7 @@ export class SubscriptionService {
         periods: true,
         memberPlan: true,
         user: {
-          select: unselectPassword,
+          include: { address: true, paymentProviderCustomers: true },
         },
         paymentMethod: true,
         invoices: {

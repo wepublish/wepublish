@@ -17,6 +17,8 @@ query PaymentProviderSettings {
     bexio_userId
     createdAt
     id
+    isApiKeySet
+    isWebhookEndpointSecretSet
     lastLoadedAt
     modifiedAt
     mollie_apiBaseUrl
@@ -107,6 +109,8 @@ mutation UpdatePaymentProviderSetting(
     bexio_userId
     createdAt
     id
+    isApiKeySet
+    isWebhookEndpointSecretSet
     lastLoadedAt
     modifiedAt
     mollie_apiBaseUrl

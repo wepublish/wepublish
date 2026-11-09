@@ -1,5 +1,4 @@
 import { useWebsiteBuilder } from '@wepublish/website/builder';
-import Head from 'next/head';
 
 import {
   PreviewUnavailable,
@@ -19,13 +18,10 @@ export function ContentUnavailable() {
 
   return (
     <>
-      <Head>
-        <meta
-          key="robots"
-          name="robots"
-          content="noindex"
-        />
-      </Head>
+      <meta
+        name="robots"
+        content="noindex"
+      />
 
       {mounted && !mayPreview ?
         <PreviewUnavailableWrapper>

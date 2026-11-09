@@ -1,12 +1,14 @@
 import styled from '@emotion/styled';
+import { Typography } from '@mui/material';
 import { ReactNode } from 'react';
 
 export interface LoginTemplateProps {
   children?: ReactNode;
   backgroundChildren?: ReactNode;
+  title?: ReactNode;
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled.main`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -15,6 +17,7 @@ const Wrapper = styled.div`
   height: 100%;
   min-height: 100vh;
   padding: 24px 16px;
+  overflow-x: clip;
   background:
     radial-gradient(
       40rem 30rem at 12% 8%,
@@ -87,11 +90,23 @@ const Background = styled.div`
 export function LoginTemplate({
   backgroundChildren,
   children,
+  title,
 }: LoginTemplateProps) {
   return (
     <Wrapper>
       {backgroundChildren && <Background>{backgroundChildren}</Background>}
-      <Content>{children}</Content>
+      <Content>
+        {title && (
+          <Typography
+            variant="h5"
+            component="h1"
+            sx={{ mb: 3 }}
+          >
+            {title}
+          </Typography>
+        )}
+        {children}
+      </Content>
     </Wrapper>
   );
 }

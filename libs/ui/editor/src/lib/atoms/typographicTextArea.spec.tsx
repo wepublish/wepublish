@@ -48,6 +48,80 @@ describe('TypographicTextArea', () => {
     expect(screen.getByRole('textbox', { name: 'Title' })).toBeTruthy();
   });
 
+  it('grows to fit a value that arrives after mounting', () => {
+    const scrollHeight = vi
+      .spyOn(HTMLTextAreaElement.prototype, 'scrollHeight', 'get')
+      .mockReturnValue(40);
+
+    const { rerender } = render(
+      <ThemeProvider theme={theme}>
+        <TypographicTextArea
+          aria-label="Name"
+          value=""
+          onChange={() => undefined}
+        />
+      </ThemeProvider>
+    );
+
+    scrollHeight.mockReturnValue(120);
+    rerender(
+      <ThemeProvider theme={theme}>
+        <TypographicTextArea
+          aria-label="Name"
+          value="A template name long enough to wrap onto several lines"
+          onChange={() => undefined}
+        />
+      </ThemeProvider>
+    );
+
+    expect(screen.getByRole('textbox', { name: 'Name' }).style.height).toBe(
+      '122px'
+    );
+
+    scrollHeight.mockRestore();
+  });
+
+  it('keeps the placeholder as its accessible name once text is entered', () => {
+    render(
+      <ThemeProvider theme={theme}>
+        <TypographicTextArea
+          placeholder="Pre-title"
+          defaultValue="Breaking"
+        />
+      </ThemeProvider>
+    );
+
+    expect(screen.getByRole('textbox', { name: 'Pre-title' })).toBeTruthy();
+  });
+
+  it('prefers an explicit label over the placeholder', () => {
+    render(
+      <ThemeProvider theme={theme}>
+        <span id="caption-label">Caption</span>
+        <TypographicTextArea
+          placeholder="Write a caption"
+          aria-labelledby="caption-label"
+        />
+      </ThemeProvider>
+    );
+
+    const textarea = screen.getByRole('textbox', { name: 'Caption' });
+
+    expect(textarea.getAttribute('aria-label')).toBeNull();
+  });
+
+  it('shows a focus outline instead of only the caret', () => {
+    render(
+      <ThemeProvider theme={theme}>
+        <TypographicTextArea aria-label="Lead" />
+      </ThemeProvider>
+    );
+
+    expect(renderedCss()).toMatch(
+      /:focus-visible\{outline:2px solid var\(--mui-palette-primary-main\)/
+    );
+  });
+
   it('does not leak its styling props onto the textarea element', () => {
     render(
       <ThemeProvider theme={theme}>

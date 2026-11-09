@@ -77,6 +77,19 @@ export function e2eDatabaseUrl(env: NodeJS.ProcessEnv = process.env) {
   return url.toString();
 }
 
+/**
+ * The plan a reader buys from the paywall: one the tenant's subscribe page
+ * offers, with the `simulated` payment method off production. Tenants whose
+ * page lists only their own plans need an entry; the rest have the example
+ * seed's fixture plan.
+ */
+const subscribePlans: Record<string, string> = {
+  neuewege: 'nw-jahresabo',
+};
+
+export const subscribePlanOf = (app: string) =>
+  subscribePlans[app] ?? 'test-abo-chf';
+
 const trimSlash = (url?: string) => url?.replace(/\/+$/, '') || undefined;
 
 export function resolveTarget(env: NodeJS.ProcessEnv = process.env): Target {

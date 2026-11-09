@@ -172,9 +172,7 @@ type ProviderDelegate = {
 const ensureProvider = async (
   prisma: PrismaClient,
   delegate:
-    | 'settingPaymentProvider'
-    | 'settingTrackingPixel'
-    | 'settingSyncProvider',
+    'settingPaymentProvider' | 'settingTrackingPixel' | 'settingSyncProvider',
   id: string,
   type: PaymentProviderType | TrackingPixelProviderType | SyncProviderType
 ): Promise<void> => {

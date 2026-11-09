@@ -15,7 +15,15 @@ vi.mock('@wepublish/peering/api', () => ({
   createSafeHostUrl: (host: string, path: string) => `${host}/${path}`,
   remote: { Article: 'query Article { article { id } }' },
 }));
-vi.mock('./peer-article.model', () => ({}));
+// emitDecoratorMetadata turns every decorated parameter type into a runtime
+// reference, so the classes import-peer-article.service.ts imports have to
+// exist on the mock even though the tests never touch them.
+vi.mock('./peer-article.model', () => ({
+  ImportArticleOptions: class {},
+  PaginatedPeerArticles: class {},
+  PeerArticleFilter: class {},
+  PeerArticleListArgs: class {},
+}));
 vi.mock('graphql-request', () => ({
   GraphQLClient: class {
     async request() {

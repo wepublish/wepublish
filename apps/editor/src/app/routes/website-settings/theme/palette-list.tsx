@@ -17,7 +17,7 @@ export const PaletteList = ({ name }: PaletteListProps) => {
     setOpenPalette(oldType => (oldType === type ? undefined : type));
 
   return (
-    <List>
+    <List component="div">
       <PaletteListItem
         name={`${name}.primary`}
         keys={['main', 'dark', 'light', 'contrastText']}

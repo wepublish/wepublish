@@ -190,6 +190,54 @@ export const CanRevokeAllApiTokens: Permission = {
   deprecated: false,
 };
 
+export const CanCreateVideo: Permission = {
+  id: 'CAN_CREATE_VIDEO',
+  description: 'Allows to create videos',
+  deprecated: false,
+};
+
+export const CanGetVideo: Permission = {
+  id: 'CAN_GET_VIDEO',
+  description: 'Allows to get video',
+  deprecated: false,
+};
+
+export const CanGetVideos: Permission = {
+  id: 'CAN_GET_VIDEOS',
+  description: 'Allows to get all videos',
+  deprecated: false,
+};
+
+export const CanDeleteVideo: Permission = {
+  id: 'CAN_DELETE_VIDEO',
+  description: 'Allows to delete videos',
+  deprecated: false,
+};
+
+export const CanCreateAudio: Permission = {
+  id: 'CAN_CREATE_AUDIO',
+  description: 'Allows to create audios',
+  deprecated: false,
+};
+
+export const CanGetAudio: Permission = {
+  id: 'CAN_GET_AUDIO',
+  description: 'Allows to get audio',
+  deprecated: false,
+};
+
+export const CanGetAudios: Permission = {
+  id: 'CAN_GET_AUDIOS',
+  description: 'Allows to get all audios',
+  deprecated: false,
+};
+
+export const CanDeleteAudio: Permission = {
+  id: 'CAN_DELETE_AUDIO',
+  description: 'Allows to delete audios',
+  deprecated: false,
+};
+
 export const CanCreateArticle: Permission = {
   id: 'CAN_CREATE_ARTICLE',
   description: 'Allows to create articles',
@@ -872,6 +920,13 @@ export const CanGetMailLogs: Permission = {
   deprecated: false,
 };
 
+export const CanManageUserDeliveryMode: Permission = {
+  id: 'CAN_MANAGE_USER-DELIVERY-MODE',
+  description:
+    'Allows to switch users between mailed and printed subscription mails, singly or by audience, and to confirm suggestions.',
+  deprecated: false,
+};
+
 /**
  * System mails
  */
@@ -985,6 +1040,50 @@ export const CanDeleteNewsletterCampaign: Permission = {
 export const CanPublishNewsletterCampaign: Permission = {
   id: 'CAN_PUBLISH_NEWSLETTER_CAMPAIGN',
   description: 'Allows to push a newsletter campaign into a Mailchimp draft',
+  deprecated: false,
+};
+
+/**
+ * Article Templates
+ */
+
+export const CanCreateArticleTemplate: Permission = {
+  id: 'CAN_CREATE_ARTICLE_TEMPLATE',
+  description: 'Allows to create an article template',
+  deprecated: false,
+};
+
+export const CanUpdateArticleTemplate: Permission = {
+  id: 'CAN_UPDATE_ARTICLE_TEMPLATE',
+  description: 'Allows to update an article template',
+  deprecated: false,
+};
+
+export const CanDeleteArticleTemplate: Permission = {
+  id: 'CAN_DELETE_ARTICLE_TEMPLATE',
+  description: 'Allows to delete an article template',
+  deprecated: false,
+};
+
+/**
+ * Page Templates
+ */
+
+export const CanCreatePageTemplate: Permission = {
+  id: 'CAN_CREATE_PAGE_TEMPLATE',
+  description: 'Allows to create a page template',
+  deprecated: false,
+};
+
+export const CanUpdatePageTemplate: Permission = {
+  id: 'CAN_UPDATE_PAGE_TEMPLATE',
+  description: 'Allows to update a page template',
+  deprecated: false,
+};
+
+export const CanDeletePageTemplate: Permission = {
+  id: 'CAN_DELETE_PAGE_TEMPLATE',
+  description: 'Allows to delete a page template',
   deprecated: false,
 };
 
@@ -1173,6 +1272,60 @@ export const CanDeleteMailProviderSettings: Permission = {
 };
 
 /**
+ * Letter Provider Settings
+ */
+export const CanGetLetterProviderSettings: Permission = {
+  id: 'CAN_GET_LETTER_PROVIDER_SETTINGS',
+  description: 'Allows to get letter provider settings',
+  deprecated: false,
+};
+
+export const CanCreateLetterProviderSettings: Permission = {
+  id: 'CAN_CREATE_LETTER_PROVIDER_SETTINGS',
+  description: 'Allows to create letter provider settings',
+  deprecated: false,
+};
+
+export const CanUpdateLetterProviderSettings: Permission = {
+  id: 'CAN_UPDATE_LETTER_PROVIDER_SETTINGS',
+  description: 'Allows to update letter provider settings',
+  deprecated: false,
+};
+
+export const CanDeleteLetterProviderSettings: Permission = {
+  id: 'CAN_DELETE_LETTER_PROVIDER_SETTINGS',
+  description: 'Allows to delete letter provider settings',
+  deprecated: false,
+};
+
+/**
+ * PDF Renderer Settings
+ */
+export const CanGetPdfRendererSettings: Permission = {
+  id: 'CAN_GET_PDF_RENDERER_SETTINGS',
+  description: 'Allows to get pdf renderer settings',
+  deprecated: false,
+};
+
+export const CanCreatePdfRendererSettings: Permission = {
+  id: 'CAN_CREATE_PDF_RENDERER_SETTINGS',
+  description: 'Allows to create pdf renderer settings',
+  deprecated: false,
+};
+
+export const CanUpdatePdfRendererSettings: Permission = {
+  id: 'CAN_UPDATE_PDF_RENDERER_SETTINGS',
+  description: 'Allows to update pdf renderer settings',
+  deprecated: false,
+};
+
+export const CanDeletePdfRendererSettings: Permission = {
+  id: 'CAN_DELETE_PDF_RENDERER_SETTINGS',
+  description: 'Allows to delete pdf renderer settings',
+  deprecated: false,
+};
+
+/**
  * Analytics Provider Settings Permissions
  */
 export const CanGetAnalyticsProviderSettings: Permission = {
@@ -1283,6 +1436,14 @@ export const AllPermissions = [
   CanGetAllApiTokens,
   CanRevokeApiToken,
   CanRevokeAllApiTokens,
+  CanCreateVideo,
+  CanGetVideo,
+  CanGetVideos,
+  CanDeleteVideo,
+  CanCreateAudio,
+  CanGetAudio,
+  CanGetAudios,
+  CanDeleteAudio,
   CanCreateArticle,
   CanGetArticle,
   CanGetArticles,
@@ -1386,6 +1547,7 @@ export const AllPermissions = [
   CanSendTestMailTemplates,
   CanSendMailTemplates,
   CanGetMailLogs,
+  CanManageUserDeliveryMode,
   CanGetSystemMails,
   CanUpdateSystemMails,
   CanTestSystemMails,
@@ -1396,6 +1558,12 @@ export const AllPermissions = [
   CanCreateBlockTemplate,
   CanUpdateBlockTemplate,
   CanDeleteBlockTemplate,
+  CanCreateArticleTemplate,
+  CanUpdateArticleTemplate,
+  CanDeleteArticleTemplate,
+  CanCreatePageTemplate,
+  CanUpdatePageTemplate,
+  CanDeletePageTemplate,
   CanGetNewsletterCampaigns,
   CanCreateNewsletterCampaign,
   CanUpdateNewsletterCampaign,
@@ -1426,6 +1594,14 @@ export const AllPermissions = [
   CanCreateMailProviderSettings,
   CanUpdateMailProviderSettings,
   CanDeleteMailProviderSettings,
+  CanGetLetterProviderSettings,
+  CanCreateLetterProviderSettings,
+  CanUpdateLetterProviderSettings,
+  CanDeleteLetterProviderSettings,
+  CanGetPdfRendererSettings,
+  CanCreatePdfRendererSettings,
+  CanUpdatePdfRendererSettings,
+  CanDeletePdfRendererSettings,
   CanCreateExternalApp,
   CanUpdateExternalApp,
   CanDeleteExternalApp,
@@ -1470,6 +1646,14 @@ export const EditorPermissions = [
   CanCreateApiToken,
   CanGetApiTokens,
   CanRevokeApiToken,
+  CanCreateVideo,
+  CanGetVideo,
+  CanGetVideos,
+  CanDeleteVideo,
+  CanCreateAudio,
+  CanGetAudio,
+  CanGetAudios,
+  CanDeleteAudio,
   CanCreateArticle,
   CanGetArticle,
   CanGetArticles,
@@ -1507,11 +1691,18 @@ export const EditorPermissions = [
   CanGetSubscriptionFlows,
   CanGetMailTemplates,
   CanGetMailLogs,
+  CanManageUserDeliveryMode,
   CanGetPeriodicJobLog,
   CanCreateApprovedComment,
   CanCreateBlockTemplate,
   CanUpdateBlockTemplate,
   CanDeleteBlockTemplate,
+  CanCreateArticleTemplate,
+  CanUpdateArticleTemplate,
+  CanDeleteArticleTemplate,
+  CanCreatePageTemplate,
+  CanUpdatePageTemplate,
+  CanDeletePageTemplate,
   CanGetNewsletterCampaigns,
   CanCreateNewsletterCampaign,
   CanUpdateNewsletterCampaign,

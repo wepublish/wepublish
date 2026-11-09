@@ -214,6 +214,19 @@ describe('SubscribeBlock', () => {
     ]);
   });
 
+  it('names the member plan and input field pickers after their sections', () => {
+    render(<Harness value={initialValue()} />);
+
+    expect(
+      screen.getByRole('combobox', {
+        name: 'blocks.subscribe.selectMemberPlans',
+      })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('combobox', { name: 'blocks.subscribe.selectFields' })
+    ).toBeInTheDocument();
+  });
+
   it('labels the discount code checkbox', () => {
     render(<Harness value={initialValue()} />);
 

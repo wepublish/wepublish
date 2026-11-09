@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import type { Theme } from '@mui/material/styles';
 import { TeaserType } from '@wepublish/editor/api';
-import { useState } from 'react';
+import { KeyboardEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdArrowForward,
@@ -108,6 +108,11 @@ const Card = styled('div', {
   overflow: hidden;
   user-select: none;
   position: relative;
+
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.vars.palette.primary.main};
+    outline-offset: 1px;
+  }
 
   &:active {
     cursor: ${({ selectionActive, isEmpty }) =>
@@ -470,7 +475,14 @@ export function TeaserCard({
           isShifting={isShifting}
           groupColor={color}
           onClick={onClick}
+          onKeyDown={(event: KeyboardEvent<HTMLDivElement>) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault();
+              onClick();
+            }
+          }}
           role="button"
+          tabIndex={0}
           aria-pressed={isSelected}
         >
           {(isDropTarget || isShifting) && (
