@@ -11,6 +11,7 @@ import {
 } from '../support/factories';
 import { ImapInbox } from '../support/imap-inbox';
 import { Inbox, mailBackend } from '../support/inbox';
+import { MailchimpTestAudience } from '../support/mailchimp';
 import { MailpitInbox } from '../support/mailpit';
 import { ResendInbox } from '../support/resend-inbox';
 import { SimulatedCheckout } from '../support/simulated-payment';
@@ -42,6 +43,8 @@ type TestFixtures = {
   inboundInbox: ResendInbox;
   /** The bexio test company; needs @bexio. */
   bexio: BexioTestCompany;
+  /** The Mailchimp test audience; needs @mailchimp. Archives the scenario's readers from it afterwards. */
+  mailchimp: MailchimpTestAudience;
   checkout: SimulatedCheckout;
 };
 
@@ -95,12 +98,14 @@ export const test = base.extend<TestFixtures, WorkerFixtures>({
     { scope: 'worker' },
   ],
 
-  data: async ({ adminApi, ctx }, use, testInfo) => {
+  data: async ({ adminApi, ctx, $tags }, use, testInfo) => {
     const data = new TestData(
       adminApi,
       seededFaker(testInfo.titlePath.join(' › ')),
       () => nextRunId(testInfo.workerIndex),
-      ctx.entities
+      ctx.entities,
+      // readers of @mailchimp scenarios end up in the real audience
+      $tags.includes('@mailchimp') ? env.mailchimp?.emailDomain : undefined
     );
 
     await use(data);
@@ -162,6 +167,24 @@ export const test = base.extend<TestFixtures, WorkerFixtures>({
       await bexio.cancel(id).catch(error =>
         console.warn(`[e2e] could not cancel bexio invoice ${id}: ${(error as Error).message}`)
       );
+    }
+  },
+
+  mailchimp: async ({ request, ctx }, use) => {
+    if (!env.mailchimp) {
+      throw new Error('No Mailchimp test audience configured; tag the scenario with @mailchimp (see e2e/README.md).');
+    }
+
+    const audience = new MailchimpTestAudience(request, env.mailchimp);
+
+    await use(audience);
+
+    for (const entity of ctx.entities.values()) {
+      if (entity.kind === 'reader') {
+        await audience.archive(entity.email).catch(error =>
+          console.warn(`[e2e] could not archive ${entity.email} in Mailchimp: ${(error as Error).message}`)
+        );
+      }
     }
   },
 

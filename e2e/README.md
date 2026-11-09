@@ -73,7 +73,7 @@ development.
 | `E2E_IMAP_USER` + `E2E_IMAP_PASSWORD`                         | `@mail`                 | a real mailbox, Ethereal on review; Mailpit wins if both set |
 | `E2E_RESEND_API_KEY` + `E2E_RESEND_DOMAIN`                    | `@inbound-mail`         | mail from outside servers (bexio) on the Resend domain      |
 | `E2E_BEXIO_API_TOKEN` and not `production`                    | `@bexio`                | the bexio **test** company the target's provider writes to  |
-| `E2E_MAILCHIMP_API_KEY` + `_LIST_ID` + `_INTEREST_ID`        | `@mailchimp`            | a real test audience (no fake); never production            |
+| `E2E_MAILCHIMP_API_KEY` + `_LIST_ID` + `_INTEREST_ID`        | `@mailchimp`            | a real test audience (no fake); never production; optional `_EMAIL_DOMAIN` |
 
 Every scenario carries a domain tag (`@auth`, `@paywall`, …) and the
 capability tags it needs. The `capabilities` fixture compares them with the
@@ -112,11 +112,15 @@ skip reason in the report (`pnpm run e2e:report`).
   different origins — a provider bug, see `steps/fixtures.ts`.
 - **Mailchimp** has no fake: `@mailchimp` scenarios point the tenant's one
   Mailchimp sync provider at a real test audience (`E2E_MAILCHIMP_*`) and
-  restore its list, newsletters and `enabled` afterwards. The API key cannot be
-  read back, so the test key stays. Members the scenario adds to the audience
-  (often `pending`, with a confirmation mail) stay there; archive them in
-  Mailchimp. Scenarios that change the provider share it, so keep them in one
-  feature tagged `@mode:serial`.
+  restore its list, newsletters and `enabled` afterwards
+  (`data.offerMailchimpNewsletter`). The API key cannot be read back, so the
+  test key stays, and so does the test list where none was set before. The
+  `mailchimp` fixture (`support/mailchimp.ts`) archives the scenario's readers
+  from the audience afterwards. Their addresses use
+  `E2E_MAILCHIMP_EMAIL_DOMAIN` (default `example.test`), since Mailchimp
+  refuses addresses that look fake; new members are `pending` and get a
+  confirmation mail. Scenarios that change the provider share it, so keep them
+  in one feature tagged `@mode:serial`.
 - **Third parties** (`support/third-party.ts`): analytics, ads, Sentry and
   tracking pixels are blocked in every test; Cloudflare Turnstile is not.
 - **Captcha:** the seed creates the Turnstile provider without keys, so the
@@ -185,7 +189,8 @@ started (nor migrated) for a URL you override (`BASE_URL`, `E2E_EDITOR_URL`,
   `CAN_UPDATE_SYSTEM_MAILS`, `CAN_CREATE_ARTICLE`, `CAN_PUBLISH_ARTICLE`,
   `CAN_DELETE_ARTICLE`, `CAN_CREATE_PAYWALL`, `CAN_DELETE_PAYWALL`,
   `CAN_CREATE_PAGE`, `CAN_PUBLISH_PAGE`,
-  `CAN_UPDATE_CHALLENGE_PROVIDER_SETTINGS`.
+  `CAN_UPDATE_CHALLENGE_PROVIDER_SETTINGS`; for `@mailchimp` also
+  `CAN_GET_MAILCHIMP_SYNC_SETTINGS` and `CAN_UPDATE_MAILCHIMP_SYNC_SETTINGS`.
 - `@mail` journeys read the mailbox the review's mail provider sends to,
   over IMAP (`support/imap-inbox.ts`): `E2E_IMAP_USER` and
   `E2E_IMAP_PASSWORD` (secrets of the same names in CI), optional

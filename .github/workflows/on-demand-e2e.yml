@@ -73,6 +73,7 @@ jobs:
       E2E_MAILCHIMP_API_KEY: ${{ secrets.E2E_MAILCHIMP_API_KEY }}
       E2E_MAILCHIMP_LIST_ID: ${{ secrets.E2E_MAILCHIMP_LIST_ID }}
       E2E_MAILCHIMP_INTEREST_ID: ${{ secrets.E2E_MAILCHIMP_INTEREST_ID }}
+      E2E_MAILCHIMP_EMAIL_DOMAIN: ${{ secrets.E2E_MAILCHIMP_EMAIL_DOMAIN }}
       E2E_IMAP_USER: ${{ secrets.E2E_IMAP_USER }}
       E2E_IMAP_PASSWORD: ${{ secrets.E2E_IMAP_PASSWORD }}
       # @inbound-mail reads mail from outside servers (bexio) on Resend;

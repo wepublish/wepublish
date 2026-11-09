@@ -1,5 +1,6 @@
 import { BexioConfig } from './bexio';
 import { ImapConfig, mailBackend } from './inbox';
+import { MailchimpConfig } from './mailchimp';
 import { ResendConfig } from './resend-inbox';
 import { resolveTarget } from './targets';
 
@@ -66,7 +67,10 @@ export const env = {
         apiKey: process.env.E2E_MAILCHIMP_API_KEY,
         listId: process.env.E2E_MAILCHIMP_LIST_ID,
         interestId: process.env.E2E_MAILCHIMP_INTEREST_ID,
-      }
+        // Mailchimp refuses addresses that look fake, which may include
+        // e2e+…@example.test; a domain it accepts (no mailbox needed).
+        emailDomain: process.env.E2E_MAILCHIMP_EMAIL_DOMAIN || 'example.test',
+      } satisfies MailchimpConfig
     : undefined,
 };
 
