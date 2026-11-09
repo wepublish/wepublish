@@ -205,6 +205,20 @@ const themeOptions = (colors: CourantColorOverrides): ThemeOptions => {
           }),
         },
       },
+      MuiLink: {
+        styleOverrides: {
+          root: ({ theme }) => ({
+            color: 'inherit',
+            textDecorationColor: theme.palette.primary.main,
+            textDecorationThickness: '1px',
+            textDecorationSkipInk: 'auto',
+            textUnderlineOffset: '0.1em',
+            ':hover': {
+              textDecorationColor: courantTokens.colors.warmGray[400],
+            },
+          }),
+        },
+      },
       MuiInputAdornment: {
         styleOverrides: { positionStart: { flexShrink: 0 } },
       },
