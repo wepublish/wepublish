@@ -30,6 +30,11 @@ import {
   TextField,
 } from '@mui/material';
 
+/** A row as an edit passes it: the printed issues stay unless it sets them. */
+type PriceInput = Omit<PeriodicityPriceValue, 'periodicity' | 'printIssues'> & {
+  printIssues?: number | null;
+};
+
 const TAB_PERIODICITY_ORDER = [
   PaymentPeriodicity.Monthly,
   PaymentPeriodicity.Quarterly,
@@ -133,9 +138,7 @@ export function MemberPlanPricing({ loading }: MemberPlanPricingProps) {
       activeTab
     : enabledPeriodicities[0];
 
-  function setPeriodicityPrice(
-    price: Omit<PeriodicityPriceValue, 'periodicity'> | null
-  ) {
+  function setPeriodicityPrice(price: PriceInput | null) {
     const withoutPeriodicity = pricing.filter(
       p => p.periodicity !== periodicity
     );
@@ -208,7 +211,7 @@ export function MemberPlanPricing({ loading }: MemberPlanPricingProps) {
   const ToggleWrapper = showDeriveToggle ? ToggleCol : ToggleColReserved;
   const hasOverride = override?.amountMin != null;
   const fieldsEditable = isMonthlyTab || !showDeriveToggle || hasOverride;
-  const overrideBase: Omit<PeriodicityPriceValue, 'periodicity'> =
+  const overrideBase: PriceInput =
     hasOverride ? override : (
       {
         __typename: 'PeriodicityPrice',

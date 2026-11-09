@@ -20,6 +20,8 @@ import {
   PrintIssueDeliveryFieldsFragment,
   PrintIssueRunFieldsFragment,
   PrintIssueRunMode,
+  PrintIssuesDocument,
+  PrintIssueStatus,
   UpdatePrintIssueDocument,
 } from '@wepublish/editor/api';
 import { CanCreatePrintIssue, CanGetPrintIssues } from '@wepublish/permissions';
@@ -88,6 +90,22 @@ function PrintIssueListView() {
   const { data } = useQuery(PrintIssueByIdDocument, { variables: { id } });
   const issue = data?.printIssue;
   const { data: contextData } = useQuery(PrintExportContextDocument);
+  // issues shipped earlier whose draft is not delivered yet: their copies count
+  // for no quota, so copies still owed may come out too high
+  const { data: issuesData } = useQuery(PrintIssuesDocument);
+  const earlierDrafts =
+    issue ?
+      (issuesData?.printIssues ?? [])
+        .filter(
+          other =>
+            other.id !== issue.id &&
+            other.status !== PrintIssueStatus.Historic &&
+            other.issueDate < issue.issueDate &&
+            other.deliveries.some(delivery => !delivery.deliveredAt)
+        )
+        .sort((a, b) => a.issueDate.localeCompare(b.issueDate))
+        .map(other => other.label)
+    : [];
   const exportContext = contextData?.printExportContext;
 
   const state = issue ? issueState(issue) : null;
@@ -345,6 +363,7 @@ function PrintIssueListView() {
               exporting={exporting}
               conflict={flow.conflict}
               stale={stale}
+              earlierDrafts={earlierDrafts}
               onCompute={compute}
               onExport={doExport}
               onCancel={() => setFlow(null)}

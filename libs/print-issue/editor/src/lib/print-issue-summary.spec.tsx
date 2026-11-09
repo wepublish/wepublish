@@ -16,7 +16,7 @@ describe('PrintIssueSummary', () => {
     render(<PrintIssueSummary summary={summary() as never} />);
 
     expect(screen.getByRole('status')).toHaveTextContent(
-      'printIssues.summary.headline {"rows":100,"copies":102,"date":"15.01.2027"}'
+      'printIssues.summary.headline {"rows":"printIssues.count.addresses {\\"count\\":100}","copies":"printIssues.count.copies {\\"count\\":102}","date":"15.01.2027"}'
     );
     expect(screen.getByText('Jahresabo')).toBeInTheDocument();
     expect(screen.getByText('Institutionelles Abo')).toBeInTheDocument();

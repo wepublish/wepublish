@@ -50,6 +50,7 @@ export const materializePricing = (
         ...existing,
         periodicity,
         label: existing?.label ?? null,
+        printIssues: existing?.printIssues ?? null,
         amountMin: Math.round(equivalent.amountPerMonthMin * months),
         amountTarget:
           equivalent.amountPerMonthTarget != null ?

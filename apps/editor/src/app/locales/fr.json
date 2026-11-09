@@ -5089,7 +5089,8 @@
         "listsWithSupplements_other": "1 liste d’impression, {{count}} compléments",
         "delivered_one": "{{delivered}} sur 1 liste livrée à l’imprimerie",
         "delivered_other": "{{delivered}} sur {{count}} listes livrées à l’imprimerie",
-        "deliveredNone": "Aucune liste livrée à l’imprimerie pour l’instant"
+        "deliveredNone": "Aucune liste livrée à l’imprimerie pour l’instant",
+        "draftHint": "{{name}} est encore un brouillon et ne compte pour les quotas des lecteur·trice·s qu’une fois marquée comme livrée."
       },
       "closedLine": "{{date}} · {{name}}",
       "actions": {
@@ -5140,7 +5141,18 @@
       "recompute": "Recalculer",
       "computing": "Calcul en cours – bexio est lu aussi, cela prend un moment …",
       "computedLine": "Calculé le {{date}} à {{time}} par {{name}}",
-      "showList": "Voir la liste ({{count}} adresses)",
+      "count": {
+        "addresses_one": "{{count}} adresse",
+        "addresses_other": "{{count}} adresses",
+        "copies_one": "{{count}} exemplaire",
+        "copies_other": "{{count}} exemplaires",
+        "grace_one": "{{count}} exemplaire dû",
+        "grace_other": "{{count}} exemplaires dus",
+        "gifts_one": "{{count}} exemplaire offert",
+        "gifts_other": "{{count}} exemplaires offerts"
+      },
+      "showList_one": "Voir la liste ({{count}} adresse)",
+      "showList_other": "Voir la liste ({{count}} adresses)",
       "runListTitle": "Liste du numéro {{label}}",
       "export": "Exporter la liste d’impression",
       "exportSupplement": "Exporter le complément",
@@ -5150,9 +5162,9 @@
         "supplement": "Exporter le complément ?"
       },
       "exportQuestion": {
-        "export": "Enregistrer {{addresses}} adresses ({{copies}} exemplaires, dont {{grace}} exemplaires dus et {{gifts}} exemplaires offerts) comme liste d’impression du numéro {{label}}. Elle reste un brouillon jusqu’à ce qu’elle soit marquée comme livrée à l’imprimerie.",
-        "replace": "Met à jour la liste d’impression du {{date}} : ses adresses sont abandonnées, {{addresses}} adresses ({{copies}} exemplaires) prennent leur place. Elle reste un brouillon jusqu’à ce qu’elle soit marquée comme livrée.",
-        "supplement": "Enregistrer {{addresses}} adresses ({{copies}} exemplaires) comme complément {{batch}} du numéro {{label}} – uniquement des adresses absentes de toute liste d’impression précédente de ce numéro."
+        "export": "Enregistrer {{addresses}} ({{copies}}, dont {{grace}} et {{gifts}}) comme liste d’impression du numéro {{label}}. Elle reste un brouillon jusqu’à ce qu’elle soit marquée comme livrée à l’imprimerie.",
+        "replace": "Met à jour la liste d’impression du {{date}} : ses adresses sont abandonnées, {{addresses}} ({{copies}}) prennent leur place. Elle reste un brouillon jusqu’à ce qu’elle soit marquée comme livrée.",
+        "supplement": "Enregistrer {{addresses}} ({{copies}}) comme «complément {{batch}}» du numéro {{label}} – seules les adresses absentes de toute liste d’impression précédente de ce numéro sont exportées."
       },
       "exportConfirm": {
         "export": "Exporter",
@@ -5161,6 +5173,8 @@
       },
       "supplementEmpty": "Personne de nouveau – il n’y a rien à compléter.",
       "runConflict": "La liste a été recalculée entre-temps, date de plus de 24 heures ou ne correspond plus aux listes d’impression. Veuillez la recalculer et la vérifier.",
+      "earlierDrafts_one": "Le numéro {{labels}} a encore une liste d’impression en brouillon. Tant qu’elle n’est pas marquée comme livrée, ses exemplaires ne comptent pour aucun quota – les exemplaires dus peuvent être trop élevés ici.",
+      "earlierDrafts_other": "Les numéros {{labels}} ont encore des listes d’impression en brouillon. Tant qu’elles ne sont pas marquées comme livrées, leurs exemplaires ne comptent pour aucun quota – les exemplaires dus peuvent être trop élevés ici.",
       "steps": {
         "options": "Options",
         "check": "Vérifier",
@@ -5193,7 +5207,7 @@
         "deliver": "Marquer comme livrée",
         "deliverTooltip": "Marquer {{name}} comme livrée après remise à l’imprimerie. Des modifications de la liste complète restent possibles à tout moment sous forme de compléments.",
         "deliverTitle": "Marquer la liste d’impression comme livrée ?",
-        "deliverQuestion": "Marquer {{name}} du numéro {{label}} comme livré à l’imprimerie ? La liste est ensuite figée et ses exemplaires comptent dans les numéros payés par les lecteur·trice·s. Cette action est irréversible.",
+        "deliverQuestion": "Marquer {{name}} du numéro {{label}} comme «livraison à l’imprimerie effectuée» ? La liste est ensuite verrouillée, et ses exemplaires entrent dans le calcul des numéros restants auxquels les lecteur·trice·s ont droit. Cette étape est irréversible.",
         "deliverConfirm": "Marquer comme livrée",
         "delete": "Supprimer",
         "deleteTitle": "Supprimer la liste d’impression ?",
@@ -5204,8 +5218,8 @@
       },
       "summary": {
         "none": "–",
-        "headline": "{{rows}} adresses, {{copies}} exemplaires – au {{date}}",
-        "withGifts": "avec exemplaires offerts",
+        "headline": "{{rows}}, {{copies}} – au {{date}}",
+        "withGifts": "y compris les exemplaires offerts",
         "graceWarning": "Plus de 5 % des lignes sont des exemplaires encore dus – tous les numéros historiques sont-ils saisis et «numéros par an» est-il correct ?",
         "sources": "Sources",
         "wepublish": "we.publish",

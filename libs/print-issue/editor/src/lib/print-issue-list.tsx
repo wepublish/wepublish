@@ -112,6 +112,12 @@ function DeliveriesCell({ issue }: { issue: TinyPrintIssueFragment }) {
   // a Nachlieferung exists only once the Druckliste (batch 0) is delivered
   const supplements = count - 1;
   const delivered = deliveredOf(issue);
+  // only the newest list can be a draft; until delivered it counts for no quota
+  const draft = issue.deliveries.find(delivery => !delivery.deliveredAt);
+  const deliveredCaption =
+    delivered ?
+      t('printIssues.listCell.delivered', { delivered, count })
+    : t('printIssues.listCell.deliveredNone');
 
   return (
     <Stack
@@ -138,14 +144,17 @@ function DeliveriesCell({ issue }: { issue: TinyPrintIssueFragment }) {
       </IconButtonTooltip>
       <IconButtonTooltip
         caption={
-          delivered ?
-            t('printIssues.listCell.delivered', { delivered, count })
-          : t('printIssues.listCell.deliveredNone')
+          draft ?
+            `${deliveredCaption} ${t('printIssues.listCell.draftHint', {
+              name: deliveryName(t, draft),
+            })}`
+          : deliveredCaption
         }
       >
         <Chip
           size="small"
           variant="outlined"
+          color={draft ? 'warning' : 'default'}
           icon={<MdLocalShipping />}
           label={delivered}
           sx={PAIR_CHIP_SX}
@@ -446,6 +455,12 @@ function PrintIssueList() {
         </DialogContent>
         <DialogActions>
           <Button
+            variant="text"
+            onClick={() => setToClose(null)}
+          >
+            {t('cancel')}
+          </Button>
+          <Button
             variant="contained"
             onClick={() => {
               if (toClose) {
@@ -455,12 +470,6 @@ function PrintIssueList() {
             }}
           >
             {t('printIssues.closeConfirm')}
-          </Button>
-          <Button
-            variant="text"
-            onClick={() => setToClose(null)}
-          >
-            {t('cancel')}
           </Button>
         </DialogActions>
       </Dialog>
@@ -477,6 +486,12 @@ function PrintIssueList() {
         </DialogContent>
         <DialogActions>
           <Button
+            variant="text"
+            onClick={() => setToDelete(null)}
+          >
+            {t('cancel')}
+          </Button>
+          <Button
             variant="contained"
             color="error"
             onClick={() => {
@@ -487,12 +502,6 @@ function PrintIssueList() {
             }}
           >
             {t('printIssues.deleteConfirm')}
-          </Button>
-          <Button
-            variant="text"
-            onClick={() => setToDelete(null)}
-          >
-            {t('cancel')}
           </Button>
         </DialogActions>
       </Dialog>

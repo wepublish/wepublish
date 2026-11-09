@@ -24,12 +24,32 @@ import {
   PrintExportOptionsFields,
   type PrintExportOptionsValue,
 } from '@wepublish/ui/editor';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdOutput, MdPlayArrow, MdRefresh, MdRestartAlt } from 'react-icons/md';
 import { day, FlowKind, personName, time } from './common';
 import { RunRowsTable } from './print-issue-run';
 import { PrintIssueSummary } from './print-issue-summary';
+
+/** The element that scrolls the page around `element`: its nearest scrollable ancestor, else the document. */
+const scrollContainerOf = (element: HTMLElement): Element | null => {
+  for (
+    let parent = element.parentElement;
+    parent && parent !== document.body;
+    parent = parent.parentElement
+  ) {
+    const { overflowY } = getComputedStyle(parent);
+
+    if (
+      (overflowY === 'auto' || overflowY === 'scroll') &&
+      parent.scrollHeight > parent.clientHeight
+    ) {
+      return parent;
+    }
+  }
+
+  return document.scrollingElement;
+};
 
 /**
  * Optionen → Prüfen → Exportieren, below the Drucklisten. «Berechnen» saves
@@ -52,6 +72,7 @@ export function PrintIssueFlow({
   exporting,
   conflict,
   stale,
+  earlierDrafts,
   onCompute,
   onExport,
   onCancel,
@@ -72,6 +93,8 @@ export function PrintIssueFlow({
   conflict: boolean;
   /** the options changed since the list was computed */
   stale: boolean;
+  /** labels of earlier issues whose draft is not delivered yet */
+  earlierDrafts: string[];
   onCompute: () => void;
   onExport: (computedAt: string) => void;
   onCancel: () => void;
@@ -79,6 +102,20 @@ export function PrintIssueFlow({
   const { t } = useTranslation();
   const [confirming, setConfirming] = useState(false);
   const [showingList, setShowingList] = useState(false);
+  const checkCard = useRef<HTMLDivElement>(null);
+  const computedAt = run?.computedAt;
+
+  // a fresh list: scroll to the very end of the page, past the check card and
+  // the page's own padding, so the export button is in view
+  useEffect(() => {
+    if (computedAt && checkCard.current) {
+      const container = scrollContainerOf(checkCard.current);
+      container?.scrollTo?.({
+        top: container.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
+  }, [computedAt]);
   const editing = kind === 'editFirst' || kind === 'editSupplement';
   const supplement = mode === PrintIssueRunMode.Supplement;
   const summary = run?.summary;
@@ -181,7 +218,10 @@ export function PrintIssueFlow({
       </Card>
 
       {run && (
-        <Card variant="outlined">
+        <Card
+          ref={checkCard}
+          variant="outlined"
+        >
           <CardHeader title={t('printIssues.run.title')} />
           <CardContent>
             <Stack spacing={2}>
@@ -195,6 +235,16 @@ export function PrintIssueFlow({
 
               {conflict && (
                 <Alert severity="warning">{t('printIssues.runConflict')}</Alert>
+              )}
+
+              {/* a warning only: the export stays possible */}
+              {earlierDrafts.length > 0 && (
+                <Alert severity="warning">
+                  {t('printIssues.earlierDrafts', {
+                    count: earlierDrafts.length,
+                    labels: earlierDrafts.join(', '),
+                  })}
+                </Alert>
               )}
 
               {summary && <PrintIssueSummary summary={summary} />}
@@ -257,17 +307,32 @@ export function PrintIssueFlow({
       >
         <DialogTitle>{t(`printIssues.exportTitle.${mode}`)}</DialogTitle>
         <DialogContent>
+          {/* counts as plural-aware phrases: «1 Adresse», «2 Adressen» */}
           {t(`printIssues.exportQuestion.${mode}`, {
-            addresses: summary?.rows ?? 0,
-            copies: summary?.copies ?? 0,
-            grace: summary?.grace ?? 0,
-            gifts: summary?.gifts ?? 0,
+            addresses: t('printIssues.count.addresses', {
+              count: summary?.rows ?? 0,
+            }),
+            copies: t('printIssues.count.copies', {
+              count: summary?.copies ?? 0,
+            }),
+            grace: t('printIssues.count.grace', {
+              count: summary?.grace ?? 0,
+            }),
+            gifts: t('printIssues.count.gifts', {
+              count: summary?.gifts ?? 0,
+            }),
             label,
             batch: run?.batch ?? 0,
             date: replaces ? day(replaces.createdAt) : undefined,
           })}
         </DialogContent>
         <DialogActions>
+          <Button
+            variant="text"
+            onClick={() => setConfirming(false)}
+          >
+            {t('cancel')}
+          </Button>
           <Button
             variant="contained"
             onClick={() => {
@@ -278,12 +343,6 @@ export function PrintIssueFlow({
             }}
           >
             {t(`printIssues.exportConfirm.${mode}`)}
-          </Button>
-          <Button
-            variant="text"
-            onClick={() => setConfirming(false)}
-          >
-            {t('cancel')}
           </Button>
         </DialogActions>
       </Dialog>

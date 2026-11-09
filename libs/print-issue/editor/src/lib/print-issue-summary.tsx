@@ -146,8 +146,8 @@ export function PrintIssueSummary({
     <Stack spacing={2}>
       <Typography role="status">
         {t('printIssues.summary.headline', {
-          rows: summary.rows,
-          copies: summary.copies,
+          rows: t('printIssues.count.addresses', { count: summary.rows }),
+          copies: t('printIssues.count.copies', { count: summary.copies }),
           date: formatDay(summary.date),
         })}
         {summary.includeUpcoming && ` · ${t('printIssues.summary.withGifts')}`}

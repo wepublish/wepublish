@@ -5089,7 +5089,8 @@
         "listsWithSupplements_other": "1 Druckliste, {{count}} Nachlieferungen",
         "delivered_one": "{{delivered}} von 1 Liste an die Druckerei geliefert",
         "delivered_other": "{{delivered}} von {{count}} Listen an die Druckerei geliefert",
-        "deliveredNone": "Noch keine Liste an die Druckerei geliefert"
+        "deliveredNone": "Noch keine Liste an die Druckerei geliefert",
+        "draftHint": "{{name}} ist noch ein Entwurf und zählt erst für die Kontingente der Leser:innen, wenn sie als geliefert markiert ist."
       },
       "closedLine": "{{date}} · {{name}}",
       "actions": {
@@ -5140,7 +5141,18 @@
       "recompute": "Neu berechnen",
       "computing": "Wird berechnet – auch bexio wird gelesen, das dauert einen Moment …",
       "computedLine": "Berechnet am {{date}} um {{time}} von {{name}}",
-      "showList": "Liste ansehen ({{count}} Adressen)",
+      "count": {
+        "addresses_one": "{{count}} Adresse",
+        "addresses_other": "{{count}} Adressen",
+        "copies_one": "{{count}} Exemplar",
+        "copies_other": "{{count}} Exemplare",
+        "grace_one": "{{count}} Restexemplar",
+        "grace_other": "{{count}} Restexemplare",
+        "gifts_one": "{{count}} Vorab-Exemplar",
+        "gifts_other": "{{count}} Vorab-Exemplare"
+      },
+      "showList_one": "Liste ansehen ({{count}} Adresse)",
+      "showList_other": "Liste ansehen ({{count}} Adressen)",
       "runListTitle": "Liste der Ausgabe {{label}}",
       "export": "Druckliste exportieren",
       "exportSupplement": "Nachlieferung exportieren",
@@ -5150,9 +5162,9 @@
         "supplement": "Nachlieferung exportieren?"
       },
       "exportQuestion": {
-        "export": "{{addresses}} Adressen ({{copies}} Exemplare, davon {{grace}} Restexemplare und {{gifts}} Vorab-Exemplare) als Druckliste der Ausgabe {{label}} speichern. Sie bleibt ein Entwurf, bis sie als an die Druckerei geliefert markiert wird.",
-        "replace": "Aktualisiert die Druckliste vom {{date}}: ihre Adressen werden verworfen, {{addresses}} Adressen ({{copies}} Exemplare) treten an ihre Stelle. Sie bleibt ein Entwurf, bis sie als geliefert markiert wird.",
-        "supplement": "{{addresses}} Adressen ({{copies}} Exemplare) als Nachlieferung {{batch}} der Ausgabe {{label}} speichern – nur Adressen, die in keiner früheren Druckliste dieser Ausgabe stehen."
+        "export": "{{addresses}} ({{copies}}, davon {{grace}} und {{gifts}}) als Druckliste der Ausgabe {{label}} speichern. Sie bleibt ein Entwurf, bis sie als an die Druckerei geliefert markiert wird.",
+        "replace": "Aktualisiert die Druckliste vom {{date}}: ihre Adressen werden verworfen, {{addresses}} ({{copies}}) treten an ihre Stelle. Sie bleibt ein Entwurf, bis sie als geliefert markiert wird.",
+        "supplement": "{{addresses}} ({{copies}}) als «Nachlieferung {{batch}}» der Ausgabe {{label}} speichern – nur Adressen werden exportiert, die in keiner früheren Druckliste dieser Ausgabe stehen."
       },
       "exportConfirm": {
         "export": "Exportieren",
@@ -5161,6 +5173,8 @@
       },
       "supplementEmpty": "Niemand Neues – es gibt nichts nachzuliefern.",
       "runConflict": "Die Liste wurde inzwischen neu berechnet, ist älter als 24 Stunden oder passt nicht mehr zum Stand der Drucklisten. Bitte neu berechnen und prüfen.",
+      "earlierDrafts_one": "Ausgabe {{labels}} hat noch eine Druckliste im Entwurf. Solange sie nicht als geliefert markiert ist, zählen ihre Exemplare nicht für die Kontingente – Restexemplare können hier zu hoch ausfallen.",
+      "earlierDrafts_other": "Die Ausgaben {{labels}} haben noch Drucklisten im Entwurf. Solange sie nicht als geliefert markiert sind, zählen ihre Exemplare nicht für die Kontingente – Restexemplare können hier zu hoch ausfallen.",
       "steps": {
         "options": "Optionen",
         "check": "Prüfen",
@@ -5193,7 +5207,7 @@
         "deliver": "Als geliefert markieren",
         "deliverTooltip": "{{name}} nach Übergabe an die Druckerei als geliefert markieren. Änderungen an der Gesamtliste sind später in Form von Nachlieferungen jederzeit noch möglich.",
         "deliverTitle": "Druckliste als geliefert markieren?",
-        "deliverQuestion": "{{name}} der Ausgabe {{label}} als an die Druckerei geliefert markieren? Sie ist danach eingefroren, und ihre Exemplare zählen zu den bezahlten Ausgaben der Leser:innen. Das lässt sich nicht rückgängig machen.",
+        "deliverQuestion": "{{name}} der Ausgabe {{label}} als «an die Druckerei geliefert» markieren? Sie ist danach gesperrt, und ihre Exemplare fliessen in die Berechnung der verbleibenden Ausgaben ein, auf welche Leser:innen Anrecht haben. Dieser Schritt kann nicht rückgängig gemacht werden.",
         "deliverConfirm": "Als geliefert markieren",
         "delete": "Löschen",
         "deleteTitle": "Druckliste löschen?",
@@ -5204,8 +5218,8 @@
       },
       "summary": {
         "none": "–",
-        "headline": "{{rows}} Adressen, {{copies}} Exemplare – Stichtag {{date}}",
-        "withGifts": "mit Vorab-Exemplaren",
+        "headline": "{{rows}}, {{copies}} – Stichtag {{date}}",
+        "withGifts": "inkl. Vorab-Exemplaren",
         "graceWarning": "Mehr als 5 % Restexemplare – sind alle historischen Ausgaben erfasst und stimmt «Ausgaben pro Jahr»?",
         "sources": "Quellen",
         "wepublish": "we.publish",

@@ -93,6 +93,11 @@ const delivered = {
   deliveredAt: '2026-12-21T09:00:00.000Z',
   deliveredBy: user,
 };
+// confirmation dialogs: «Abbrechen» left, the confirming button right
+const dialogButtons = () =>
+  within(screen.getByRole('dialog'))
+    .getAllByRole('button')
+    .map(button => button.textContent);
 const toggle = (name: string) => screen.getByRole('switch', { name });
 const button = (name: string) => screen.getByRole('button', { name });
 const noButton = (name: string) =>
@@ -135,6 +140,18 @@ describe('PrintIssueListView', () => {
       expect(button('printIssues.deliveries.fullList')).toBeDisabled();
       expect(screen.queryByRole('switch')).not.toBeInTheDocument();
       noButton('printIssues.compute');
+    });
+
+    it('shows no hint for the complete list while there is nothing to download', async () => {
+      renderView();
+
+      const fullList = button('printIssues.deliveries.fullList');
+      expect(fullList).toBeDisabled();
+      fireEvent.mouseOver(fullList.parentElement!);
+      fireEvent.mouseOver(fullList);
+      await new Promise(resolve => setTimeout(resolve, 300));
+
+      expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
     });
 
     it("opens the options prefilled with the issue's and computes with them, saving nothing", async () => {
@@ -253,11 +270,20 @@ describe('PrintIssueListView', () => {
       );
 
       expect(mutations['ExportPrintIssueRun']).not.toHaveBeenCalled();
+      // counts come as plural-aware phrases: «1 Adresse», «2 Adressen»
       expect(
         screen.getByText(
-          /printIssues\.exportQuestion\.export .*"addresses":2,"copies":2/
+          content =>
+            content.startsWith('printIssues.exportQuestion.export') &&
+            content.includes('printIssues.count.addresses {\\"count\\":2}') &&
+            content.includes('printIssues.count.copies {\\"count\\":2}') &&
+            content.includes('printIssues.count.grace {\\"count\\":1}')
         )
       ).toBeInTheDocument();
+      expect(dialogButtons()).toEqual([
+        'cancel',
+        'printIssues.exportConfirm.export',
+      ]);
 
       fireEvent.click(button('printIssues.exportConfirm.export'));
 
@@ -274,6 +300,30 @@ describe('PrintIssueListView', () => {
       expect(screen.queryByRole('switch')).not.toBeInTheDocument();
       expect(button('printIssues.flow.create')).toBeInTheDocument();
       expect(downloadCsv).not.toHaveBeenCalled();
+    });
+
+    it('scrolls the page to its very end once the list is computed', async () => {
+      computes(storedRun());
+      const scrollTo = vi.fn();
+      Element.prototype.scrollTo = scrollTo as never;
+      renderView();
+
+      open('create');
+      // other components may scroll while rendering: only what computing does counts
+      scrollTo.mockClear();
+      fireEvent.click(button('printIssues.compute'));
+
+      await screen.findByRole('button', { name: 'printIssues.export' });
+      // nothing scrolls inside jsdom: the page itself is the scroll container
+      await waitFor(() =>
+        expect(scrollTo).toHaveBeenCalledWith(
+          expect.objectContaining({ behavior: 'smooth' })
+        )
+      );
+      expect(scrollTo.mock.contexts.at(-1)).toBe(document.scrollingElement);
+      expect(scrollTo.mock.calls.at(-1)?.[0]).toMatchObject({
+        top: document.scrollingElement?.scrollHeight,
+      });
     });
 
     it('holds the export while the options changed after computing', async () => {
@@ -429,6 +479,16 @@ describe('PrintIssueListView', () => {
       );
     });
 
+    it('explains the complete list in a tooltip once there is one', async () => {
+      renderView();
+
+      fireEvent.mouseOver(button('printIssues.deliveries.fullList'));
+
+      expect(await screen.findByRole('tooltip')).toHaveTextContent(
+        'printIssues.deliveries.fullListHint'
+      );
+    });
+
     it('opens the same edit from the row', () => {
       renderView();
 
@@ -444,6 +504,14 @@ describe('PrintIssueListView', () => {
 
       fireEvent.click(button('printIssues.deliveries.deliver'));
       expect(mutations['DeliverPrintIssueDelivery']).not.toHaveBeenCalled();
+      expect(dialogButtons()).toEqual([
+        'cancel',
+        'printIssues.deliveries.deliverConfirm',
+      ]);
+      // the editor's default for a confirming button: primary, not warning
+      expect(button('printIssues.deliveries.deliverConfirm')).toHaveClass(
+        'MuiButton-colorPrimary'
+      );
       expect(
         screen.getByText(
           /printIssues\.deliveries\.deliverQuestion .*"label":"1.27"/
@@ -463,6 +531,10 @@ describe('PrintIssueListView', () => {
       renderView();
 
       fireEvent.click(button('printIssues.deliveries.delete'));
+      expect(dialogButtons()).toEqual([
+        'cancel',
+        'printIssues.deliveries.deleteConfirm',
+      ]);
       fireEvent.click(button('printIssues.deliveries.deleteConfirm'));
 
       await waitFor(() =>
@@ -470,6 +542,82 @@ describe('PrintIssueListView', () => {
           expect.objectContaining({ variables: { id: 'del-0' } })
         )
       );
+    });
+  });
+
+  describe('earlier issues with a draft', () => {
+    beforeEach(() => {
+      withIssue();
+      computes(storedRun());
+      stable('PrintIssues', {
+        printIssues: [
+          issue({
+            id: 'earlier-draft',
+            label: '6.26',
+            issueDate: '2026-10-14',
+            deliveries: [delivery({ id: 'd-626' })],
+          }),
+          issue({
+            id: 'earlier-draft-2',
+            label: '5.26',
+            issueDate: '2026-08-23',
+            deliveries: [
+              delivery({ id: 'd-526', ...delivered }),
+              delivery({ id: 'd-526-1', batch: 1 }),
+            ],
+          }),
+          issue({
+            id: 'earlier-delivered',
+            label: '4.26',
+            issueDate: '2026-06-14',
+            deliveries: [delivery({ id: 'd-426', ...delivered })],
+          }),
+          issue({
+            id: 'later-draft',
+            label: '2.27',
+            issueDate: '2027-03-15',
+            deliveries: [delivery({ id: 'd-227' })],
+          }),
+          issue({ id: 'issue-1' }),
+        ],
+      });
+    });
+
+    it('names them in the check step, earliest first, and still lets the list be exported', async () => {
+      renderView();
+
+      open('create');
+      fireEvent.click(button('printIssues.compute'));
+
+      expect(
+        await screen.findByText(
+          'printIssues.earlierDrafts {"count":2,"labels":"5.26, 6.26"}'
+        )
+      ).toBeInTheDocument();
+      expect(button('printIssues.export')).toBeEnabled();
+    });
+
+    it('says nothing while every earlier list is delivered', async () => {
+      stable('PrintIssues', {
+        printIssues: [
+          issue({
+            id: 'earlier-delivered',
+            label: '4.26',
+            issueDate: '2026-06-14',
+            deliveries: [delivery({ id: 'd-426', ...delivered })],
+          }),
+          issue({ id: 'issue-1' }),
+        ],
+      });
+      renderView();
+
+      open('create');
+      fireEvent.click(button('printIssues.compute'));
+
+      await screen.findByRole('button', { name: 'printIssues.export' });
+      expect(
+        screen.queryByText(/printIssues\.earlierDrafts/)
+      ).not.toBeInTheDocument();
     });
   });
 
@@ -518,7 +666,13 @@ describe('PrintIssueListView', () => {
       );
       noButton('printIssues.export');
       expect(
-        screen.getByText(/printIssues\.exportQuestion\.supplement .*"batch":1/)
+        screen.getByText(
+          content =>
+            content.startsWith('printIssues.exportQuestion.supplement') &&
+            content.includes('"batch":1') &&
+            content.includes('printIssues.count.addresses {\\"count\\":1}') &&
+            content.includes('printIssues.count.copies {\\"count\\":1}')
+        )
       ).toBeInTheDocument();
 
       fireEvent.click(button('printIssues.exportConfirm.supplement'));

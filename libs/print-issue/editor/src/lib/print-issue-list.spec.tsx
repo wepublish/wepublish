@@ -126,6 +126,11 @@ const renderList = (path = '/print-issues') =>
     path
   );
 
+// confirmation dialogs: «Abbrechen» left, the confirming button right
+const dialogButtons = () =>
+  within(screen.getByRole('dialog'))
+    .getAllByRole('button')
+    .map(button => button.textContent);
 const buttons = (name: string) => screen.getAllByRole('button', { name });
 
 beforeEach(() => {
@@ -162,9 +167,17 @@ describe('PrintIssueList', () => {
     expect(screen.getAllByLabelText('printIssues.listCell.lists')).toHaveLength(
       2
     );
+    // a draft colours the «geliefert» chip and is named in its tooltip
+    const withDraft = screen.getByLabelText(
+      'printIssues.listCell.deliveredNone printIssues.listCell.draftHint {"name":"printIssues.deliveries.export"}'
+    );
+    expect(withDraft).toHaveTextContent('0');
+    expect(withDraft).toHaveClass('MuiChip-colorWarning');
     expect(
-      screen.getByLabelText('printIssues.listCell.deliveredNone')
-    ).toHaveTextContent('0');
+      screen.getByLabelText(
+        'printIssues.listCell.delivered {"delivered":2,"count":2}'
+      )
+    ).not.toHaveClass('MuiChip-colorWarning');
     expect(
       screen.queryByText(/printIssues\.deliveriesCell/)
     ).not.toBeInTheDocument();
@@ -218,6 +231,7 @@ describe('PrintIssueList', () => {
     expect(
       screen.getByText('printIssues.closeQuestion {"label":"3.27"}')
     ).toBeInTheDocument();
+    expect(dialogButtons()).toEqual(['cancel', 'printIssues.closeConfirm']);
 
     fireEvent.click(
       screen.getByRole('button', { name: 'printIssues.closeConfirm' })
@@ -303,6 +317,7 @@ describe('PrintIssueList', () => {
 
     fireEvent.click(remove[2]!);
     expect(mutations['DeletePrintIssue']).not.toHaveBeenCalled();
+    expect(dialogButtons()).toEqual(['cancel', 'printIssues.deleteConfirm']);
     fireEvent.click(
       screen.getByRole('button', { name: 'printIssues.deleteConfirm' })
     );

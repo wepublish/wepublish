@@ -5089,7 +5089,8 @@
         "listsWithSupplements_other": "1 print list, {{count}} supplements",
         "delivered_one": "{{delivered}} of 1 list delivered to the printshop",
         "delivered_other": "{{delivered}} of {{count}} lists delivered to the printshop",
-        "deliveredNone": "No list delivered to the printshop yet"
+        "deliveredNone": "No list delivered to the printshop yet",
+        "draftHint": "{{name}} is still a draft and counts toward the readers’ quotas only once it is marked as delivered."
       },
       "closedLine": "{{date}} · {{name}}",
       "actions": {
@@ -5140,7 +5141,18 @@
       "recompute": "Compute again",
       "computing": "Computing – bexio is read as well, this takes a moment …",
       "computedLine": "Computed on {{date}} at {{time}} by {{name}}",
-      "showList": "Show list ({{count}} addresses)",
+      "count": {
+        "addresses_one": "{{count}} address",
+        "addresses_other": "{{count}} addresses",
+        "copies_one": "{{count}} copy",
+        "copies_other": "{{count}} copies",
+        "grace_one": "{{count}} copy owed",
+        "grace_other": "{{count}} copies owed",
+        "gifts_one": "{{count}} gift copy",
+        "gifts_other": "{{count}} gift copies"
+      },
+      "showList_one": "Show list ({{count}} address)",
+      "showList_other": "Show list ({{count}} addresses)",
       "runListTitle": "List of issue {{label}}",
       "export": "Export print list",
       "exportSupplement": "Export supplement",
@@ -5150,9 +5162,9 @@
         "supplement": "Export supplement?"
       },
       "exportQuestion": {
-        "export": "Save {{addresses}} addresses ({{copies}} copies, of which {{grace}} copies owed and {{gifts}} gift copies) as the print list of issue {{label}}. It stays a draft until it is marked as delivered to the printshop.",
-        "replace": "Updates the print list of {{date}}: its addresses are discarded, {{addresses}} addresses ({{copies}} copies) take their place. It stays a draft until it is marked as delivered.",
-        "supplement": "Save {{addresses}} addresses ({{copies}} copies) as supplement {{batch}} of issue {{label}} – only addresses in no earlier print list of this issue."
+        "export": "Save {{addresses}} ({{copies}}, of which {{grace}} and {{gifts}}) as the print list of issue {{label}}. It stays a draft until it is marked as delivered to the printshop.",
+        "replace": "Updates the print list of {{date}}: its addresses are discarded, {{addresses}} ({{copies}}) take their place. It stays a draft until it is marked as delivered.",
+        "supplement": "Save {{addresses}} ({{copies}}) as «supplement {{batch}}» of issue {{label}} – only addresses in no earlier print list of this issue are exported."
       },
       "exportConfirm": {
         "export": "Export",
@@ -5161,6 +5173,8 @@
       },
       "supplementEmpty": "Nobody new – there is nothing to supplement.",
       "runConflict": "The list was computed again in the meantime, is older than 24 hours or no longer matches the print lists. Please compute and check it again.",
+      "earlierDrafts_one": "Issue {{labels}} still has a draft print list. Until it is marked as delivered, its copies count toward no quota – copies still owed may come out too high here.",
+      "earlierDrafts_other": "Issues {{labels}} still have draft print lists. Until they are marked as delivered, their copies count toward no quota – copies still owed may come out too high here.",
       "steps": {
         "options": "Options",
         "check": "Check",
@@ -5193,7 +5207,7 @@
         "deliver": "Mark as delivered",
         "deliverTooltip": "Mark {{name}} as delivered once it was handed to the printshop. Changes to the complete list remain possible at any time as supplements.",
         "deliverTitle": "Mark print list as delivered?",
-        "deliverQuestion": "Mark {{name}} of issue {{label}} as delivered to the printshop? It is frozen from then on and its copies count toward the issues the readers paid for. This cannot be undone.",
+        "deliverQuestion": "Mark {{name}} of issue {{label}} as «delivered to the printshop»? It is locked from then on, and its copies count toward the calculation of the remaining issues readers are entitled to. This step cannot be undone.",
         "deliverConfirm": "Mark as delivered",
         "delete": "Delete",
         "deleteTitle": "Delete print list?",
@@ -5204,8 +5218,8 @@
       },
       "summary": {
         "none": "–",
-        "headline": "{{rows}} addresses, {{copies}} copies – as of {{date}}",
-        "withGifts": "with gift copies",
+        "headline": "{{rows}}, {{copies}} – as of {{date}}",
+        "withGifts": "incl. gift copies",
         "graceWarning": "More than 5 % of the rows are copies still owed – are all historic issues recorded and is «issues per year» right?",
         "sources": "Sources",
         "wepublish": "we.publish",

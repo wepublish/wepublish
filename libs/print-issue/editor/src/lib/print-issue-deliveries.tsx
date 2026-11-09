@@ -64,6 +64,17 @@ export function PrintIssueDeliveries({
   const [toDeliver, setToDeliver] = useState<Delivery | null>(null);
   const [toDelete, setToDelete] = useState<Delivery | null>(null);
 
+  const fullListButton = (
+    <Button
+      variant="outlined"
+      startIcon={<MdDownload />}
+      disabled={issue.deliveries.length === 0}
+      onClick={() => onDownload(null)}
+    >
+      {t('printIssues.deliveries.fullList')}
+    </Button>
+  );
+
   return (
     <Stack spacing={2}>
       <DataTable
@@ -235,23 +246,16 @@ export function PrintIssueDeliveries({
         sx={{ alignItems: 'center', flexWrap: 'wrap' }}
       >
         {action}
-        {/* a disabled button has no events, the span around it keeps the tooltip working */}
-        <Tooltip
-          title={t('printIssues.deliveries.fullListHint')}
-          placement="right"
-          describeChild
-        >
-          <span>
-            <Button
-              variant="outlined"
-              startIcon={<MdDownload />}
-              disabled={issue.deliveries.length === 0}
-              onClick={() => onDownload(null)}
-            >
-              {t('printIssues.deliveries.fullList')}
-            </Button>
-          </span>
-        </Tooltip>
+        {/* the hint explains what is downloaded: only once there is something */}
+        {issue.deliveries.length > 0 ?
+          <Tooltip
+            title={t('printIssues.deliveries.fullListHint')}
+            placement="right"
+            describeChild
+          >
+            {fullListButton}
+          </Tooltip>
+        : fullListButton}
       </Stack>
 
       <Dialog
@@ -270,8 +274,13 @@ export function PrintIssueDeliveries({
         </DialogContent>
         <DialogActions>
           <Button
+            variant="text"
+            onClick={() => setToDeliver(null)}
+          >
+            {t('cancel')}
+          </Button>
+          <Button
             variant="contained"
-            color="warning"
             onClick={() => {
               if (toDeliver) {
                 onDeliver(toDeliver);
@@ -280,12 +289,6 @@ export function PrintIssueDeliveries({
             }}
           >
             {t('printIssues.deliveries.deliverConfirm')}
-          </Button>
-          <Button
-            variant="text"
-            onClick={() => setToDeliver(null)}
-          >
-            {t('cancel')}
           </Button>
         </DialogActions>
       </Dialog>
@@ -305,6 +308,12 @@ export function PrintIssueDeliveries({
         </DialogContent>
         <DialogActions>
           <Button
+            variant="text"
+            onClick={() => setToDelete(null)}
+          >
+            {t('cancel')}
+          </Button>
+          <Button
             variant="contained"
             color="error"
             onClick={() => {
@@ -315,12 +324,6 @@ export function PrintIssueDeliveries({
             }}
           >
             {t('printIssues.deliveries.deleteConfirm')}
-          </Button>
-          <Button
-            variant="text"
-            onClick={() => setToDelete(null)}
-          >
-            {t('cancel')}
           </Button>
         </DialogActions>
       </Dialog>
