@@ -7,6 +7,10 @@
     "related": "Cela pourrait également vous intéresser",
     "comments": "Commentaires"
   },
+  "navbar": {
+    "subscribe": "J'adhère",
+    "subscribeShort": "J'adhère"
+  },
   "subscribe": {
     "support": {
       "subscribeForPeriod": "Je soutiens Courant {monthlyAmount, select, 0 {gratuitement} other {à hauteur de {formattedAmount} {renewalPeriodL}}}",

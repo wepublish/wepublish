@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { AppBar, Box, css, Theme } from '@mui/material';
-import { MdWarning } from 'react-icons/md';
+import { MdPerson, MdWarning } from 'react-icons/md';
 import {
   ExtendedNavbarProps,
   NavbarActions,
@@ -54,7 +54,7 @@ const CourantNavbarInnerWrapper = styled(NavbarInnerWrapper)`
   width: 100%;
   max-width: ${pageMaxWidth}px;
   margin-inline: auto;
-  grid-template-columns: max-content 1fr max-content;
+  grid-template-columns: auto auto 1fr;
   column-gap: ${({ theme }) => theme.spacing(2)};
   padding-inline: ${({ theme }) => theme.spacing(pageInline.xs)};
 
@@ -91,7 +91,7 @@ const CourantIconButtonWrapper = styled(NavbarIconButtonWrapper)`
 `;
 
 const logoStyles = (theme: Theme) => css`
-  height: ${theme.spacing(5)};
+  height: ${theme.spacing(4.5)};
   width: auto;
   display: flex;
 
@@ -247,9 +247,22 @@ export const CourantNavbar = ({
               <Button
                 LinkComponent={Link}
                 size="medium"
+                aria-label={t('navbar.myAccount')}
                 {...profileBtn}
               >
-                {t('navbar.myAccount')}
+                <Box sx={{ display: { xs: 'none', sm: 'inline' } }}>
+                  {t('navbar.myAccount')}
+                </Box>
+                <Box
+                  component="span"
+                  sx={{
+                    display: { xs: 'inline-flex', sm: 'none' },
+                    lineHeight: 0,
+                  }}
+                  aria-hidden
+                >
+                  <MdPerson />
+                </Box>
               </Button>
             )}
           </NavbarActions>
