@@ -178,8 +178,8 @@ needs a reachable API at build time. Not a regression — the Next app used
 **ISR does not exist.** There is no `revalidate`, and `res.revalidate(path)` has
 no equivalent. Two things replace it:
 
-1. **The window** — a content loader sets its own `cache-control` from
-   `contentCacheControl`, which runs the same `revalidateFor()` the Next apps
+1. **The window** — a content loader sets its headers from
+   `contentCacheHeaders`, which runs the same `revalidateFor()` the Next apps
    used: an hour for a static page, a minute for one with a live block, an API
    error or missing content, and sooner when a block is scheduled to change.
 2. **Everything else** — a path-based request middleware in `src/start.ts`
@@ -189,14 +189,15 @@ no equivalent. Two things replace it:
    means one visitor's HTML is served to another.
 3. **The shared page cache** — `withPageCache` in `src/server.ts` runs the exact
    pod-local-LRU-in-front-of-Dragonfly the Next tenants use, invalidated by the
-   namespace versions the API writes. It reads `s-maxage` off the response, so
-   the window from step 1 is the one it stores against — this header is the ISR
-   window, not merely a hint to the CDN. No-ops without `REDIS_URL`.
-   Cloudflare honours that `s-maxage` too, and a publish never purges the
-   edge, so the wrapper also sends `Cloudflare-CDN-Cache-Control` capped at
-   60 s, and `no-store` on a stale copy so the background re-render reaches
-   the next visitor. Without it, an edited article stayed stale at the edge for
-   an hour (fazetten, 2026-11-06). Keep both if you touch the headers.
+   namespace versions the API writes. It stores against the internal
+   `x-page-cache-revalidate` header from step 1 (falling back to `s-maxage`)
+   and strips it before the response leaves. No-ops without `REDIS_URL`.
+
+**Every cacheable response sends exactly Next's
+`public, max-age=59, s-maxage=59, stale-if-error=86400`.** Never put the
+revalidate window into `s-maxage`: Cloudflare honours it, a publish never
+purges the edge, and an edited article stayed stale there for an hour
+(fazetten, gruppetto, 2026-11).
 
 ---
 
@@ -398,13 +399,12 @@ Write the file into `apps/<app>/public/` *before* `nx build`.
 (Next survives the same Dockerfile shape because it serves `public/` from disk
 at request time.)
 
-### 6.14 `stale-while-revalidate` on the browser-facing header
+### 6.14 Cache headers differ from the Next tenants
 
-`cache-control` is read by the browser too. `max-age=59,
-stale-while-revalidate=604800` lets a returning visitor's own cache serve
-week-old HTML — Next never did that. Keep the long SWR window on
-`s-maxage`/CDN headers and leave the browser policy at
-`public, max-age=59, stale-if-error=86400`.
+Compare with `curl -sI` against a Next tenant (tsri.ch) before changing any
+`cache-control`: they must match byte for byte (§5). `stale-while-revalidate`
+on `cache-control` also lets a returning visitor's own cache serve week-old
+HTML, which Next never did.
 
 ### 6.15 Build/runtime odds and ends
 

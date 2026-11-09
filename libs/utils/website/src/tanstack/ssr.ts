@@ -14,7 +14,7 @@ import {
 
 import { getApiUrl } from '../lib/api-url';
 import { ssrAuthLink } from '../lib/auth-link';
-import { contentCacheControl } from './content-cache-control';
+import { contentCacheHeaders } from './content-cache-control';
 import { createRouterApolloClient, SerializedApolloState } from './apollo';
 
 /**
@@ -232,7 +232,11 @@ export const runContentQueries = async (
   const result = await run(client);
   const { content, errors } = toContent(result);
 
-  setResponseHeader('cache-control', contentCacheControl(content, errors));
+  for (const [name, value] of Object.entries(
+    contentCacheHeaders(content, errors)
+  )) {
+    setResponseHeader(name, value);
+  }
 
   return extractCache(client);
 };
