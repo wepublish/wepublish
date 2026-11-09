@@ -16,3 +16,9 @@ libs/peering/api/src/lib/remote/schema.ts
 libs/peering/api/src/lib/remote/graphql.ts
 
 apps/**/*/next-env.d.ts
+
+# TanStack Router's generated route tree. The plugin rewrites it on every dev
+# start and build, unformatted; the pre-commit hook would reformat it right
+# back, so the file shows up modified after every single run. Its own header
+# says not to touch it ("exclude this file from your linter and/or formatter").
+apps/*/src/routeTree.gen.ts

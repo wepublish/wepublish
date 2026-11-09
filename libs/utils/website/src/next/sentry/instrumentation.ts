@@ -6,6 +6,8 @@ import {
   withoutKeySpans,
 } from '@wepublish/utils';
 
+import { withoutClientErrors } from '../../lib/sentry/request-error';
+
 export async function register() {
   if (process.env.NEXT_RUNTIME === 'nodejs') {
     const { forbidCachingErrors } =
@@ -29,4 +31,4 @@ export async function register() {
   }
 }
 
-export const onRequestError = Sentry.captureRequestError;
+export const onRequestError = withoutClientErrors(Sentry.captureRequestError);

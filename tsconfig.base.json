@@ -57,6 +57,8 @@
       "@wepublish/dragonfly/api/testing": [
         "libs/dragonfly/api/src/testing.ts"
       ],
+      "@wepublish/audio/api": ["libs/audio/api/src/index.ts"],
+      "@wepublish/video/api": ["libs/video/api/src/index.ts"],
       "@wepublish/editor/api": ["libs/editor/api/src/index.ts"],
       "@wepublish/errors": ["libs/errors/src/index.ts"],
       "@wepublish/errors/website": ["libs/errors/website/src/index.ts"],
@@ -81,6 +83,7 @@
       "@wepublish/kv-ttl-cache/api/testing": [
         "libs/kv-ttl-cache/api/src/testing.ts"
       ],
+      "@wepublish/letter/api": ["libs/letter/api/src/index.ts"],
       "@wepublish/login-code/api": ["libs/login-code/api/src/index.ts"],
       "@wepublish/mail/api": ["libs/mail/api/src/index.ts"],
       "@wepublish/media-transform-guard": [
@@ -137,6 +140,7 @@
       "@wepublish/stats/api": ["libs/stats/api/src/index.ts"],
       "@wepublish/system-info": ["libs/system-info/api/src/index.ts"],
       "@wepublish/tag/api": ["libs/tag/api/src/index.ts"],
+      "@wepublish/template/api": ["libs/template/api/src/index.ts"],
       "@wepublish/tag/website": ["libs/tag/website/src/index.ts"],
       "@wepublish/tenant/babanews": ["libs/tenants/babanews/src/index.ts"],
       "@wepublish/tenant/bajour": ["libs/tenants/bajour/src/index.ts"],
@@ -187,6 +191,21 @@
       ],
       "@wepublish/utils/website/next": [
         "libs/utils/website/src/next.ts"
+      ],
+      "@wepublish/utils/website/tanstack": [
+        "libs/utils/website/src/tanstack.ts"
+      ],
+      "@wepublish/utils/website/tanstack/page-cache": [
+        "libs/utils/website/src/tanstack/page-cache.ts"
+      ],
+      "@wepublish/utils/website/tanstack/server": [
+        "libs/utils/website/src/tanstack-server.ts"
+      ],
+      "@wepublish/utils/website/tanstack/sentry": [
+        "libs/utils/website/src/tanstack/sentry/instrumentation.ts"
+      ],
+      "@wepublish/utils/website/tanstack/sentry/client": [
+        "libs/utils/website/src/tanstack/sentry/register-client.ts"
       ],
       "@wepublish/utils/website/next/sentry": [
         "libs/utils/website/src/next/sentry/instrumentation.ts"

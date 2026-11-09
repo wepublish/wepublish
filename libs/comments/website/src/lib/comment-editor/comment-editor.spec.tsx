@@ -247,9 +247,7 @@ describe('CommentEditor', () => {
       renderEditor({ anonymousCanComment: false });
 
       await user.click(
-        screen.getByRole('button', {
-          name: new RegExp(t('commentEditor.registerNow')),
-        })
+        screen.getByRole('button', { name: t('commentEditor.registerNow') })
       );
 
       expect(document.cookie).toContain(

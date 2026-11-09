@@ -15,7 +15,6 @@ import { Validator } from '@wepublish/user';
 import {
   AuthenticationService,
   SessionCacheInvalidator,
-  unselectPassword,
 } from '@wepublish/authentication/api';
 import { PublicContentCacheInvalidator } from '@wepublish/public-content-cache/api';
 import {
@@ -36,6 +35,7 @@ import {
   MailchimpContactService,
   MailContext,
   mailLogType,
+  recordEmailQualitySafely,
 } from '@wepublish/mail/api';
 import * as crypto from 'crypto';
 import { HibpService } from './hibp.service';
@@ -68,6 +68,7 @@ export class UserService {
           equals: email,
         },
       },
+      omit: { password: false },
       include: {
         address: true,
         paymentProviderCustomers: true,
@@ -97,7 +98,7 @@ export class UserService {
         take: getMaxTake(take) + 1,
         orderBy,
         cursor: cursorId ? { id: cursorId } : undefined,
-        select: unselectPassword,
+        include: { address: true, paymentProviderCustomers: true },
       }),
     ]);
 
@@ -130,7 +131,7 @@ export class UserService {
       data: {
         password: await this.hashPassword(password),
       },
-      select: unselectPassword,
+      include: { address: true, paymentProviderCustomers: true },
     });
     await this.endSessions(userId, keepSessionId);
     await this.sessionCache.invalidate();
@@ -198,7 +199,7 @@ export class UserService {
           create: address ?? {},
         },
       },
-      select: unselectPassword,
+      include: { address: true, paymentProviderCustomers: true },
     });
 
     if (!skipMail) {
@@ -288,7 +289,7 @@ export class UserService {
           : undefined,
         properties: properties as any,
       },
-      select: unselectPassword,
+      include: { address: true, paymentProviderCustomers: true },
     });
     await this.sessionCache.invalidate();
 
@@ -305,6 +306,7 @@ export class UserService {
         previousUser.email,
         user.email
       );
+      await this.recomputeEmailQuality(user.id);
     }
 
     if (active === false) {
@@ -312,6 +314,14 @@ export class UserService {
     }
 
     return user;
+  }
+
+  // The email quality belongs to an address, so a change starts it over.
+  private recomputeEmailQuality(userId: string) {
+    return recordEmailQualitySafely(
+      this.mailContext.emailQualityRecorder,
+      recorder => recorder.recompute(userId).then(() => undefined)
+    );
   }
 
   async deleteUser(id: string) {
@@ -325,7 +335,7 @@ export class UserService {
       where: {
         id,
       },
-      select: unselectPassword,
+      include: { address: true, paymentProviderCustomers: true },
     });
     await this.sessionCache.invalidate();
 
@@ -369,7 +379,7 @@ export class UserService {
           password ?? crypto.randomBytes(48).toString('base64')
         ),
       },
-      select: unselectPassword,
+      include: { address: true, paymentProviderCustomers: true },
     });
     await this.endSessions(id);
     await this.sessionCache.invalidate();
@@ -425,7 +435,7 @@ export class UserService {
         pendingEmailAt: new Date(),
         pendingEmailTokenHash: this.hashEmailChangeToken(token),
       },
-      select: unselectPassword,
+      include: { address: true, paymentProviderCustomers: true },
     });
     await this.sessionCache.invalidate();
 
@@ -484,7 +494,6 @@ export class UserService {
   ) {
     const user = await this.prisma.user.findUnique({
       where: { pendingEmailTokenHash: this.hashEmailChangeToken(token) },
-      select: unselectPassword,
     });
 
     if (!user?.pendingEmail || !user.pendingEmailAt) {
@@ -521,7 +530,7 @@ export class UserService {
           pendingEmailAt: null,
           pendingEmailTokenHash: null,
         },
-        select: unselectPassword,
+        include: { address: true, paymentProviderCustomers: true },
       });
     } catch (error) {
       if (
@@ -552,6 +561,7 @@ export class UserService {
         updatedUser.email
       );
     }
+    await this.recomputeEmailQuality(updatedUser.id);
 
     return updatedUser;
   }

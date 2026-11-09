@@ -13,6 +13,7 @@ import { V0Module } from '@wepublish/ai/api';
 import { NovaMediaAdapter } from '@wepublish/api';
 import { ArticleModule, HotAndTrendingModule } from '@wepublish/article/api';
 import { AuthenticationModule } from '@wepublish/authentication/api';
+import { LettersModule } from '@wepublish/letter/api';
 import { AuthorModule } from '@wepublish/author/api';
 import { BannerApiModule } from '@wepublish/banner/api';
 import { BlockContentModule } from '@wepublish/block-content/api';
@@ -25,6 +26,8 @@ import { ApiTokenModule } from '@wepublish/api-token/api';
 import { NewsletterModule } from '@wepublish/newsletter/api';
 import { DocumentModule } from '@wepublish/document/api';
 import { DragonflyModule } from '@wepublish/dragonfly/api';
+import { VideoModule } from '@wepublish/video/api';
+import { AudioModule } from '@wepublish/audio/api';
 import { EventModule } from '@wepublish/event/api';
 import {
   AgendaBaselService,
@@ -38,7 +41,7 @@ import {
   GoogleAnalyticsService,
 } from '@wepublish/google-analytics/api';
 import { HealthModule } from '@wepublish/health';
-import { MediaAdapterModule } from '@wepublish/image/api';
+import { MediaAdapter, MediaAdapterModule } from '@wepublish/image/api';
 import {
   KvCacheModule,
   NamespacedCache,
@@ -205,6 +208,22 @@ import { API_SHARED_NAMESPACES } from './shared-namespaces';
       ],
       global: true,
     }),
+    LettersModule.registerAsync({
+      useFactory: async (
+        registry: ProviderRegistryService,
+        mediaAdapter: MediaAdapter
+      ) => {
+        await registry.ensureLoaded();
+
+        return {
+          letterProvider: registry.letterProvider,
+          pdfRenderer: registry.pdfRenderer,
+          documentUrl: (id: string) => mediaAdapter.getDocumentURL({ id }),
+        };
+      },
+      inject: [ProviderRegistryService, MediaAdapter],
+      global: true,
+    }),
     TrackingPixelsModule.registerAsync({
       useFactory: async (registry: ProviderRegistryService) => {
         await registry.ensureLoaded();
@@ -285,6 +304,8 @@ import { API_SHARED_NAMESPACES } from './shared-namespaces';
     ApiTokenModule,
     NewsletterModule,
     DocumentModule,
+    VideoModule,
+    AudioModule,
     StatsModule,
     SettingModule,
     ExternalAppsModule,

@@ -185,7 +185,7 @@ function ApiTokenList() {
                 <UserSearch
                   name="owner"
                   user={owner}
-                  placeholder={t('apiTokenList.overview.filterByOwner')}
+                  label={t('apiTokenList.overview.filterByOwner')}
                   onUpdateUser={user => {
                     setOwner(user ?? null);
                     setActivePage(1);

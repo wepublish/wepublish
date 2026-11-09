@@ -13,7 +13,6 @@ export * from './lib/authenticated.guard';
 export * from './lib/full-session.decorator';
 export * from './lib/full-session.guard';
 export * from './lib/session-restriction';
-export * from './lib/unselect-password';
 export * from './lib/scoped-jwt.decorator';
 export * from './lib/scoped-jwt.guard';
 export * from './lib/auth-token.decorator';

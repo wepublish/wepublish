@@ -1,8 +1,21 @@
 import { Logger } from '@nestjs/common';
-import { MailLogState, MailLogType, PrismaClient, User } from '@prisma/client';
+import {
+  EmailQualityEventSource,
+  MailChannel,
+  MailLogState,
+  MailLogType,
+  PrismaClient,
+  User,
+} from '@prisma/client';
 import { v7 as uuidv7 } from 'uuid';
 import { MailContext } from './mail-context';
-import { templateUsesJwt } from './mail-data';
+import { PurlOrigin, templateUsesJwt } from './mail-data';
+import { MailProviderRecipientError } from './mail-provider/mail-provider.interface';
+import {
+  qualityTypeForRejectReason,
+  recordEmailQualitySafely,
+} from './email-quality-recorder';
+import { LetterDeliveryError, LetterRecipient } from './letter-sender';
 
 export enum mailLogType {
   SubscriptionFlow,
@@ -37,7 +50,47 @@ export type MailControllerConfig = {
    * needs to reference the entry regardless of how the delivery turns out.
    */
   mailLogId?: string;
+  /**
+   * This event is switched to letters: a recipient in letter mode gets it
+   * printed instead of mailed. Only subscription-flow senders set it; a login
+   * link or a password reset is no use on paper.
+   */
+  asLetter?: boolean;
 };
+
+/**
+ * What a user row carries that no template may print. The password hash and
+ * the TOTP secret are not among them: Prisma leaves those out of every query
+ * (see `PrismaService`), so they never reach a template. These fields stay on
+ * the row because the API needs them for authorization.
+ */
+const SECRET_FIELDS = new Set(['roleIDs', 'totpEnabled', 'totpExempt']);
+
+/**
+ * A copy of template data without a user's authorization fields, wherever a
+ * user row ended up in it: the recipient, or a subscription's `user` relation
+ * the nightly job hands in with the invoice. Only plain objects and arrays are
+ * walked; dates, buffers and other instances are kept as they are.
+ */
+export function withoutSecrets<T>(value: T): T {
+  if (Array.isArray(value)) {
+    return value.map(withoutSecrets) as T;
+  }
+
+  if (
+    value !== null &&
+    typeof value === 'object' &&
+    Object.getPrototypeOf(value) === Object.prototype
+  ) {
+    return Object.fromEntries(
+      Object.entries(value)
+        .filter(([key]) => !SECRET_FIELDS.has(key))
+        .map(([key, nested]) => [key, withoutSecrets(nested)])
+    ) as T;
+  }
+
+  return value;
+}
 
 export class MailController {
   private logger = new Logger('MailController');
@@ -79,18 +132,22 @@ export class MailController {
    * Build the data for passing it to the mail templates
    * @returns a HashMap of configuration data
    */
-  private async buildData() {
+  private async buildData(purlOrigin: PurlOrigin = 'mail') {
     const template = await this.prismaService.mailTemplate.findUnique({
       where: { id: this.config.mailTemplateId },
       select: { subject: true, htmlContent: true, textContent: true },
     });
 
+    // Cloned, so the caller's objects are not touched and no template sees a
+    // user's authorization fields, nested ones included.
     return this.mailContext.buildMailData({
-      recipient: this.config.recipient,
-      optionalData: this.config.optionalData,
+      recipient: withoutSecrets(
+        JSON.parse(JSON.stringify(this.config.recipient))
+      ),
+      optionalData: withoutSecrets(this.config.optionalData),
       jwtOverride: this.config.jwtOverride,
       mode: 'send',
-      purlOrigin: 'mail',
+      purlOrigin,
       mintJwt: !template || templateUsesJwt(template),
     });
   }
@@ -129,6 +186,14 @@ export class MailController {
       return;
     }
 
+    const letterRecipient = await this.resolveLetterRecipient();
+
+    if (letterRecipient) {
+      await this.sendAsLetter(mailLogId, letterRecipient);
+
+      return;
+    }
+
     let subject: string | null = null;
     let providerMessageID: string | undefined;
     try {
@@ -150,6 +215,27 @@ export class MailController {
         (error as Error).message
       );
 
+      // Only a lasting refusal of this very address says something about it.
+      const type =
+        error instanceof MailProviderRecipientError ?
+          qualityTypeForRejectReason(error.reason)
+        : null;
+
+      if (type) {
+        const detail = (error as MailProviderRecipientError).reason;
+
+        await recordEmailQualitySafely(
+          this.mailContext.emailQualityRecorder,
+          recorder =>
+            recorder.recordMailSignals({
+              mailLogId,
+              userId: this.config.recipient.id,
+              signals: [{ type, email: this.config.recipient.email, detail }],
+              source: EmailQualityEventSource.send,
+            })
+        );
+      }
+
       throw error;
     }
 
@@ -160,6 +246,83 @@ export class MailController {
       null,
       providerMessageID
     );
+  }
+
+  /**
+   * The user with their address when this send goes to paper: the event is
+   * switched to letters, the user prefers them, and letters can be printed.
+   * Anything missing means the mail goes out as usual.
+   */
+  private async resolveLetterRecipient(): Promise<LetterRecipient | null> {
+    const sender = this.mailContext.letterSender;
+
+    if (!this.config.asLetter || !sender) {
+      return null;
+    }
+
+    const preference =
+      await this.prismaService.userDeliveryPreference.findUnique({
+        where: { userId: this.config.recipient.id },
+      });
+
+    if (preference?.channel !== MailChannel.letter) {
+      return null;
+    }
+
+    if (!(await sender.isConfigured())) {
+      this.logger.warn(
+        `No letter integration is configured; mailing <${this.config.recipient.email}> instead.`
+      );
+
+      return null;
+    }
+
+    // The callers hand in a bare user; the address lives in its own row.
+    const user = await this.prismaService.user.findUnique({
+      where: { id: this.config.recipient.id },
+      include: { address: true },
+    });
+
+    if (!user || !sender.canReceiveLetters(user)) {
+      this.logger.warn(
+        `<${this.config.recipient.email}> prefers letters but has no usable postal address; mailing instead.`
+      );
+
+      return null;
+    }
+
+    return user;
+  }
+
+  /**
+   * Print instead of mail. The letter side writes the log entry, submitted or
+   * rejected, under the same identifier a mail would get, so a retried run
+   * recognises it.
+   */
+  private async sendAsLetter(
+    mailLogId: string,
+    recipient: LetterRecipient
+  ): Promise<void> {
+    try {
+      await this.mailContext.letterSender!.sendLetter({
+        mailTemplateId: this.config.mailTemplateId,
+        recipient,
+        data: await this.buildData('letter'),
+        mailLogId,
+        mailSendJobId: this.config.mailSendJobId,
+        log: {
+          mailIdentifier: this.generateMailIdentifier(),
+          type: MAIL_LOG_TYPE_MAP[this.config.mailType],
+        },
+      });
+    } catch (error) {
+      throw new LetterDeliveryError(
+        `Letter <${mailLogId}> for <${this.config.recipient.email}> failed: ${
+          (error as Error).message
+        }`,
+        error
+      );
+    }
   }
 
   private async writeLog(
@@ -180,6 +343,7 @@ export class MailController {
           },
           state,
           sentDate: new Date(),
+          recipientEmail: this.config.recipient.email,
           mailProviderID: this.mailContext.mailProvider?.id || '',
           mailIdentifier: this.generateMailIdentifier(),
           type: MAIL_LOG_TYPE_MAP[this.config.mailType],

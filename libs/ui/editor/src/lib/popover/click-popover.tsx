@@ -9,7 +9,13 @@ import {
 } from 'react';
 
 export interface ClickPopoverProps {
-  trigger: ReactElement<{ onClick?: (event: MouseEvent) => void }>;
+  trigger: ReactElement<{
+    id?: string;
+    onClick?: (event: MouseEvent) => void;
+    'aria-haspopup'?: string;
+    'aria-expanded'?: string;
+    'aria-controls'?: string;
+  }>;
   children: ReactNode | ((close: () => void) => ReactNode);
   anchorOrigin?: PopoverOrigin;
   transformOrigin?: PopoverOrigin;
@@ -23,12 +29,18 @@ export function ClickPopover({
 }: ClickPopoverProps) {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const id = useId();
+  const generatedTriggerId = useId();
+  const triggerId = trigger.props.id ?? generatedTriggerId;
   const open = Boolean(anchorEl);
   const close = () => setAnchorEl(null);
 
   return (
     <>
       {cloneElement(trigger, {
+        id: triggerId,
+        'aria-haspopup': 'dialog',
+        'aria-expanded': open ? 'true' : 'false',
+        'aria-controls': open ? id : undefined,
         onClick: (event: MouseEvent) => {
           trigger.props.onClick?.(event);
           setAnchorEl(event.currentTarget as HTMLElement);
@@ -42,7 +54,13 @@ export function ClickPopover({
         onClose={close}
         anchorOrigin={anchorOrigin}
         transformOrigin={transformOrigin}
-        slotProps={{ paper: { sx: { p: 2, maxWidth: 420 } } }}
+        slotProps={{
+          paper: {
+            role: 'dialog',
+            'aria-labelledby': triggerId,
+            sx: { p: 2, maxWidth: 420 },
+          },
+        }}
       >
         {typeof children === 'function' ? children(close) : children}
       </Popover>

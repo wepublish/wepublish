@@ -4,6 +4,10 @@ import {
   type DistributedClaims,
 } from '@wepublish/dragonfly/api';
 import { PeriodicJobExecutor } from './periodic-job.executor';
+import { MailchimpSyncService } from '../mailchimp-sync/mailchimp-sync.service';
+import { MailLogSyncService } from '../mail-send/mail-log-sync.service';
+import { EmailQualityService } from '../email-quality/email-quality.service';
+import { DeliverySuggestionService } from '../delivery-mode/delivery-suggestion.service';
 
 describe('PeriodicJobExecutor', () => {
   afterEach(() => {
@@ -25,6 +29,27 @@ describe('PeriodicJobExecutor', () => {
         ran.push('mailchimp sync');
       }),
     };
+    const mailLogSync = {
+      syncOpenStates: vi.fn(async () => {
+        ran.push('mail log sync');
+      }),
+    };
+    const emailQuality = {
+      recomputeAll: vi.fn(async () => {
+        ran.push('email quality');
+      }),
+    };
+    const deliverySuggestions = {
+      recomputeAll: vi.fn(async () => {
+        ran.push('delivery suggestions');
+      }),
+    };
+    const services = new Map<unknown, unknown>([
+      [MailchimpSyncService, mailchimpSync],
+      [MailLogSyncService, mailLogSync],
+      [EmailQualityService, emailQuality],
+      [DeliverySuggestionService, deliverySuggestions],
+    ]);
     const claims = {
       claim: vi.fn(
         async (
@@ -36,19 +61,42 @@ describe('PeriodicJobExecutor', () => {
     } satisfies Pick<DistributedClaims, 'claim'>;
     const executor = new PeriodicJobExecutor(
       periodicJobs as any,
-      { resolve: vi.fn().mockResolvedValue(mailchimpSync) } as any,
+      {
+        resolve: vi.fn(async (token: unknown) => services.get(token)),
+      } as any,
       claims as unknown as DistributedClaims
     );
 
-    return { executor, ran, claims, periodicJobs };
+    return { executor, ran, claims, periodicJobs, mailLogSync };
   };
 
-  it('runs the periodic jobs and then the Mailchimp sync on the replica that claims the night', async () => {
+  it('runs the periodic jobs, the Mailchimp sync, the mail log sync and the email quality on the replica that claims the night', async () => {
     const { executor, ran } = setup('claimed');
 
     await executor.handleCron();
 
-    expect(ran).toEqual(['periodic jobs', 'mailchimp sync']);
+    expect(ran).toEqual([
+      'periodic jobs',
+      'mailchimp sync',
+      'mail log sync',
+      'email quality',
+      'delivery suggestions',
+    ]);
+  });
+
+  it('still re-evaluates the email quality when the mail log sync fails', async () => {
+    vi.spyOn(Logger.prototype, 'error').mockImplementation(() => undefined);
+    const { executor, ran, mailLogSync } = setup('claimed');
+    mailLogSync.syncOpenStates.mockRejectedValue(new Error('provider down'));
+
+    await executor.handleCron();
+
+    expect(ran).toEqual([
+      'periodic jobs',
+      'mailchimp sync',
+      'email quality',
+      'delivery suggestions',
+    ]);
   });
 
   it('leaves the night to the replica that claimed it', async () => {
@@ -82,11 +130,14 @@ describe('PeriodicJobExecutor', () => {
     expect(ran).toEqual([
       'periodic jobs guarded by the database',
       'mailchimp sync',
+      'mail log sync',
+      'email quality',
+      'delivery suggestions',
     ]);
     expect(failed).not.toHaveBeenCalled();
   });
 
-  it('still runs the Mailchimp sync when the database guarded run fails', async () => {
+  it('still runs the rest of the night when the database guarded run fails', async () => {
     vi.spyOn(Logger.prototype, 'error').mockImplementation(() => undefined);
     const { executor, ran, periodicJobs } = setup('not-configured');
     periodicJobs.concurrentExecute.mockRejectedValue(
@@ -95,7 +146,12 @@ describe('PeriodicJobExecutor', () => {
 
     await executor.handleCron();
 
-    expect(ran).toEqual(['mailchimp sync']);
+    expect(ran).toEqual([
+      'mailchimp sync',
+      'mail log sync',
+      'email quality',
+      'delivery suggestions',
+    ]);
   });
 
   it('claims the night for longer than a run takes, but frees it before the next night', async () => {

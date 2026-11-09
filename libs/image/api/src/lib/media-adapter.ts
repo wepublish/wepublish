@@ -10,6 +10,28 @@ export interface ArrayBufferUpload {
   arrayBuffer: ArrayBuffer;
 }
 
+export type UploadVideo = {
+  id: string;
+  filename: string;
+  fileSize: number;
+  mimeType: string;
+  extension: string;
+};
+
+export type VideoPoster = {
+  filename: string;
+  mimetype: string;
+  createReadStream: () => NodeJS.ReadableStream;
+};
+
+export type UploadAudio = {
+  id: string;
+  filename: string;
+  fileSize: number;
+  mimeType: string;
+  extension: string;
+};
+
 export type UploadDocument = {
   id: string;
   filename: string;
@@ -46,4 +68,29 @@ export abstract class MediaAdapter {
   }): Promise<string>;
 
   abstract getDocumentThumbnailURL(document: { id: string }): Promise<string>;
+
+  abstract uploadVideo(
+    fileUpload: Promise<FileUpload>,
+    poster?: Promise<FileUpload>
+  ): Promise<UploadVideo>;
+
+  abstract deleteVideo(id: string): Promise<boolean>;
+
+  abstract getVideoURL(video: {
+    id: string;
+    filename?: string | null;
+    extension?: string;
+  }): Promise<string>;
+
+  abstract getVideoPosterURL(video: { id: string }): Promise<string>;
+
+  abstract uploadAudio(fileUpload: Promise<FileUpload>): Promise<UploadAudio>;
+
+  abstract deleteAudio(id: string): Promise<boolean>;
+
+  abstract getAudioURL(audio: {
+    id: string;
+    filename?: string | null;
+    extension?: string;
+  }): Promise<string>;
 }

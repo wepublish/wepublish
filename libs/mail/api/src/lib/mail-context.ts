@@ -19,6 +19,8 @@ import {
   SAMPLE_PURL_DATA,
   sanitizeRecipient,
 } from './mail-data';
+import { EmailQualityRecorder } from './email-quality-recorder';
+import { LetterSender } from './letter-sender';
 
 export interface SendComposedMailProps {
   readonly mailTemplateId: string;
@@ -121,6 +123,9 @@ export interface MailContextProps {
   readonly kv: NamespacedCache;
   readonly jwtGenerator: (userId: string) => Promise<string>;
   readonly purlProvider?: PurlProvider;
+  readonly emailQualityRecorder?: EmailQualityRecorder;
+  /** Prints automated mails for users in letter mode; absent without letters. */
+  readonly letterSender?: LetterSender;
 }
 
 @Injectable()
@@ -132,6 +137,8 @@ export class MailContext implements MailContextInterface {
   kv: NamespacedCache;
   jwtGenerator: (userId: string) => Promise<string>;
   purlProvider?: PurlProvider;
+  emailQualityRecorder?: EmailQualityRecorder;
+  letterSender?: LetterSender;
 
   constructor(props: MailContextProps) {
     this.mailProvider = props.mailProvider;
@@ -139,6 +146,8 @@ export class MailContext implements MailContextInterface {
     this.kv = props.kv;
     this.jwtGenerator = props.jwtGenerator;
     this.purlProvider = props.purlProvider;
+    this.emailQualityRecorder = props.emailQualityRecorder;
+    this.letterSender = props.letterSender;
   }
 
   async buildMailData({
