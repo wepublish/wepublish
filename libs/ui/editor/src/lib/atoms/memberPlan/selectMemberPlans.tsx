@@ -13,7 +13,7 @@ import {
   MemberPlanSort,
   SortOrder,
 } from '@wepublish/editor/api';
-import { useCallback, useMemo, useState } from 'react';
+import { ReactNode, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { humanizeError } from '../../humanizeError';
@@ -35,6 +35,8 @@ interface SelectMemberPlansProps {
   defaultMemberPlans: Pick<FullMemberPlanFragment, 'id' | 'name'>[];
   selectedMemberPlans?: string[] | null;
   setSelectedMemberPlans(memberplans: string[]): void;
+  label?: ReactNode;
+  'aria-labelledby'?: string;
 }
 
 type LabelledOption = { label: string; value: string };
@@ -46,6 +48,8 @@ export function SelectMemberPlans({
   defaultMemberPlans,
   selectedMemberPlans,
   setSelectedMemberPlans,
+  label,
+  'aria-labelledby': ariaLabelledby,
 }: SelectMemberPlansProps) {
   const { t } = useTranslation();
   const [page, setPage] = useState(1);
@@ -155,6 +159,14 @@ export function SelectMemberPlans({
       renderInput={params => (
         <TextField
           {...params}
+          label={label}
+          slotProps={{
+            ...params.slotProps,
+            htmlInput: {
+              ...params.slotProps.htmlInput,
+              'aria-labelledby': ariaLabelledby,
+            },
+          }}
           name={name}
         />
       )}

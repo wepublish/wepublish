@@ -110,4 +110,68 @@ describe.each([
 
     expect(screen.getByTestId('social-previews')).toBeTruthy();
   });
+
+  test('names the tags picker after its label', () => {
+    renderPanel(panel(vi.fn(), vi.fn()));
+
+    expect(
+      screen.getByRole('combobox', {
+        name: /^(articleEditor|pageEditor)\.panels\.tags$/,
+      })
+    ).toBeTruthy();
+  });
+
+  test('labels the tab panel with the selected tab', () => {
+    renderPanel(panel(vi.fn(), vi.fn()));
+
+    const tabpanel = screen.getByRole('tabpanel', {
+      name: 'articleEditor.panels.general',
+    });
+
+    for (const tab of screen.getAllByRole('tab')) {
+      expect(tab.getAttribute('aria-controls')).toBe(tabpanel.id);
+    }
+
+    fireEvent.click(
+      screen.getByRole('tab', { name: 'articleEditor.panels.socialMedia' })
+    );
+
+    expect(
+      screen.getByRole('tabpanel', {
+        name: 'articleEditor.panels.socialMedia',
+      })
+    ).toBeTruthy();
+  });
+});
+
+describe('ArticleMetadataPanel tracking tab', () => {
+  const renderWithPixels = (trackingPixels: unknown[]) =>
+    renderPanel(
+      <ArticleMetadataPanel
+        articleID="article"
+        peerId={null}
+        value={{ ...articleMetadata, trackingPixels } as never}
+        infoData={{ charCount: 0 } as never}
+        onSave={vi.fn()}
+        onClose={vi.fn()}
+      />
+    );
+
+  test('names a tracking error in the tab, not only by colour', () => {
+    renderWithPixels([{ id: 'p1', uri: null, error: 'failed' }]);
+
+    expect(
+      screen.getByRole('tab', {
+        name: /^articleEditor\.panels\.tracking\s*, articleEditor\.panels\.hasErrors$/,
+      })
+    ).toBeTruthy();
+  });
+
+  test('keeps the plain name without errors', () => {
+    renderWithPixels([{ id: 'p1', uri: 'https://x.ch', error: null }]);
+
+    expect(
+      screen.getByRole('tab', { name: 'articleEditor.panels.tracking' })
+    ).toBeTruthy();
+  });
 });

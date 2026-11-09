@@ -92,6 +92,9 @@ one-sentence notes, no login/signup/profile URLs. Next tenants: `pages/api/llms.
 `src/routes/llms[.]txt.ts` with `createLlmsTxtFetchHandler` — port it when
 migrating a tenant. Documents: `libs/website/api/src/lib/schemas/llms.graphql`.
 
+The Next `onRequestError` drops Next's own 4xx `ApiError`s (malformed or
+oversized bodies) so they do not reach Sentry.
+
 ### Business Domain Libraries
 
 `membership`, `payment`, `user-subscription`, `member-plan`, `crowdfunding`, `mail`, `event`, `consent`

@@ -41,6 +41,8 @@ export function NetworkContentArticleItem({
         href={article.source_url}
         target="_blank"
         rel="noopener noreferrer"
+        tabIndex={-1}
+        aria-hidden
       >
         {article.source_imageUrl ?
           <ArticleImage
@@ -69,6 +71,7 @@ export function NetworkContentArticleItem({
         <PublisherName>{publisher}</PublisherName>
         {peerMatch ?
           <IconButtonTooltip
+            describeChild
             caption={t('networkContentDashboard.importFrom', {
               peer: peerMatch.peerName,
             })}
@@ -82,7 +85,10 @@ export function NetworkContentArticleItem({
               {t('peerArticles.import.import')}
             </Button>
           </IconButtonTooltip>
-        : <IconButtonTooltip caption={t('networkContentDashboard.noPeer')}>
+        : <IconButtonTooltip
+            describeChild
+            caption={t('networkContentDashboard.noPeer')}
+          >
             <Button
               variant="outlined"
               size="small"

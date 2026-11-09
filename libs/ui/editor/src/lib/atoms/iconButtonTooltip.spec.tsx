@@ -39,6 +39,24 @@ describe('IconButtonTooltip', () => {
     expect(button).not.toHaveAttribute('aria-describedby');
   });
 
+  it('keeps the visible text as the name of a labelled button it describes', async () => {
+    render(
+      <IconButtonTooltip
+        caption="No active peering"
+        describeChild
+      >
+        <button type="button">Connect</button>
+      </IconButtonTooltip>
+    );
+
+    const button = screen.getByRole('button', { name: 'Connect' });
+    fireEvent.mouseOver(button);
+    await screen.findByRole('tooltip');
+
+    expect(button).toHaveAccessibleName('Connect');
+    expect(button).toHaveAccessibleDescription('No active peering');
+  });
+
   it('shows the caption on hover', async () => {
     const { button } = renderTooltip();
 

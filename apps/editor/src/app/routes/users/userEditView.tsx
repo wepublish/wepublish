@@ -11,9 +11,7 @@ import {
   Checkbox,
   Divider,
   Drawer,
-  FormControl,
   FormControlLabel,
-  FormLabel,
   Grid,
   Switch,
   TextField,
@@ -34,6 +32,8 @@ import {
 } from '@wepublish/editor/api';
 import {
   SendMailToUserPanel,
+  UserDeliveryChannelControls,
+  UserDeliveryChannelNotes,
   UserMailLogPanel,
 } from '@wepublish/membership/editor';
 import {
@@ -58,13 +58,13 @@ import {
   ListValue,
   SingleViewTitle,
   skipMailFor,
-  toggleRequiredLabel,
   useActionMailQuestion,
   useAuthorisation,
+  useFeature,
   UserSubscriptionsList,
 } from '@wepublish/ui/editor';
 import { userCountryNames } from '@wepublish/user';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { MdLockReset } from 'react-icons/md';
@@ -149,6 +149,7 @@ const EMPTY_USER = {
 
 function UserEditView() {
   const { t } = useTranslation();
+  const userRolesLabelId = useId();
   const location = useLocation();
   const params = useParams();
   const navigate = useNavigate();
@@ -285,6 +286,8 @@ function UserEditView() {
     loadError !== undefined;
   const canResetPassword = useAuthorisation(CanResetUserPassword.id);
   const canResetTotp = useAuthorisation(CanResetUserTotp.id);
+  // The mail panel also lists printed letters once the medium has them.
+  const paperLetters = useFeature('paper-letters');
 
   const [resetUserTotp, { loading: isResettingTotp }] = useMutation(
     ResetUserTotpDocument
@@ -455,7 +458,10 @@ function UserEditView() {
 
   return (
     <>
-      <form onSubmit={handleSubmit(createOrUpdateUser)}>
+      <form
+        noValidate
+        onSubmit={handleSubmit(createOrUpdateUser)}
+      >
         <SingleViewTitle
           loading={false}
           title={titleView()}
@@ -516,9 +522,8 @@ function UserEditView() {
                         render={({ field, fieldState: { error } }) => (
                           <TextField
                             {...field}
-                            label={toggleRequiredLabel(
-                              t('userCreateOrEditView.name')
-                            )}
+                            label={t('userCreateOrEditView.name')}
+                            required
                             disabled={isDisabled}
                             error={Boolean(error)}
                             helperText={error?.message}
@@ -535,12 +540,24 @@ function UserEditView() {
                         render={({ field, fieldState: { error } }) => (
                           <TextField
                             {...field}
-                            label={toggleRequiredLabel(
-                              t('userCreateOrEditView.email')
-                            )}
+                            label={t('userCreateOrEditView.email')}
+                            required
                             disabled={isDisabled}
                             error={Boolean(error)}
-                            helperText={error?.message}
+                            helperText={
+                              error?.message ??
+                              // derived from bounces, logins and clicks; read-only
+                              (user?.emailQuality &&
+                                t('userCreateOrEditView.emailQuality', {
+                                  level: t(
+                                    `mailSend.emailSegments.${user.emailQuality.level}`
+                                  ),
+                                  reason: user.emailQuality.reason,
+                                  since: new Date(
+                                    user.emailQuality.since
+                                  ).toLocaleDateString(),
+                                }))
+                            }
                             fullWidth
                           />
                         )}
@@ -756,33 +773,28 @@ function UserEditView() {
                     </Grid>
 
                     <Grid size={{ xs: 12 }}>
-                      <FormControl fullWidth>
-                        <FormLabel>
-                          {t('userCreateOrEditView.country')}
-                        </FormLabel>
-
-                        <Controller
-                          control={control}
-                          name="address.country"
-                          render={({ field, fieldState: { error } }) => (
-                            <Autocomplete
-                              options={userCountryNames}
-                              value={field.value ?? null}
-                              disabled={isDisabled}
-                              onChange={(_event, country) =>
-                                field.onChange(country ?? '')
-                              }
-                              renderInput={params => (
-                                <TextField
-                                  {...params}
-                                  error={Boolean(error)}
-                                  helperText={error?.message}
-                                />
-                              )}
-                            />
-                          )}
-                        />
-                      </FormControl>
+                      <Controller
+                        control={control}
+                        name="address.country"
+                        render={({ field, fieldState: { error } }) => (
+                          <Autocomplete
+                            options={userCountryNames}
+                            value={field.value ?? null}
+                            disabled={isDisabled}
+                            onChange={(_event, country) =>
+                              field.onChange(country ?? '')
+                            }
+                            renderInput={params => (
+                              <TextField
+                                {...params}
+                                label={t('userCreateOrEditView.country')}
+                                error={Boolean(error)}
+                                helperText={error?.message}
+                              />
+                            )}
+                          />
+                        )}
+                      />
                     </Grid>
                   </Grid>
                 </CardContent>
@@ -931,7 +943,9 @@ function UserEditView() {
                 <CardHeader
                   title={
                     <>
-                      {t('userCreateOrEditView.userRoles')}{' '}
+                      <span id={userRolesLabelId}>
+                        {t('userCreateOrEditView.userRoles')}
+                      </span>{' '}
                       <InfoTooltip
                         text={t('userCreateOrEditView.userRolesInfo')}
                       />
@@ -966,7 +980,18 @@ function UserEditView() {
                                   )
                                 )
                               }
-                              renderInput={params => <TextField {...params} />}
+                              renderInput={params => (
+                                <TextField
+                                  {...params}
+                                  slotProps={{
+                                    ...params.slotProps,
+                                    htmlInput: {
+                                      ...params.slotProps.htmlInput,
+                                      'aria-labelledby': userRolesLabelId,
+                                    },
+                                  }}
+                                />
+                              )}
                             />
                           )}
                         />
@@ -1105,7 +1130,30 @@ function UserEditView() {
 
               {isEditRoute && userId && (
                 <Card>
-                  <CardHeader title={t('userMail.title')} />
+                  {/* With letters, the log below holds them too, and the
+                      person's delivery channel belongs beside the title. */}
+                  <CardHeader
+                    title={
+                      <Box
+                        component="span"
+                        sx={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          flexWrap: 'wrap',
+                          columnGap: 3,
+                          rowGap: 1,
+                        }}
+                      >
+                        {t(
+                          paperLetters ?
+                            'userMail.titleWithLetters'
+                          : 'userMail.title'
+                        )}
+                        <UserDeliveryChannelControls userId={userId} />
+                      </Box>
+                    }
+                  />
+                  <UserDeliveryChannelNotes userId={userId} />
 
                   <CardContent>
                     <SendMailToUserPanel userId={userId} />

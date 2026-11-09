@@ -36,6 +36,7 @@ const take = 10;
 
 export interface AuthorCheckPickerProps {
   list: FullAuthorFragment[];
+  label?: string;
   disabled?: boolean;
   onClose?(): void;
   onChange?(authors: FullAuthorFragment[]): void;
@@ -43,6 +44,7 @@ export interface AuthorCheckPickerProps {
 
 export function AuthorCheckPicker({
   list,
+  label,
   disabled,
   onChange,
 }: AuthorCheckPickerProps) {
@@ -220,9 +222,7 @@ export function AuthorCheckPicker({
       renderInput={params => (
         <TextField
           {...params}
-          placeholder={
-            selectedAuthors.length ? undefined : t('blocks.quote.author')
-          }
+          label={label ?? t('blocks.quote.author')}
         />
       )}
       fullWidth

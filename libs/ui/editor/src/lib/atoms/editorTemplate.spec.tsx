@@ -23,6 +23,44 @@ describe('EditorTemplate', () => {
     expect(renderedCss()).toContain('width:min(80%, calc(100% - 340px))');
   });
 
+  it('gives the page a heading named after the editor', () => {
+    render(
+      <ThemeProvider theme={theme}>
+        <EditorTemplate title="Edit article">
+          <input aria-label="Title" />
+        </EditorTemplate>
+      </ThemeProvider>
+    );
+
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'Edit article' })
+    ).toBeInTheDocument();
+  });
+
+  it('marks the editor as the main landmark', () => {
+    render(
+      <ThemeProvider theme={theme}>
+        <EditorTemplate title="Edit article">
+          <input aria-label="Title" />
+        </EditorTemplate>
+      </ThemeProvider>
+    );
+
+    expect(screen.getByRole('main')).toContainElement(
+      screen.getByRole('textbox', { name: 'Title' })
+    );
+  });
+
+  it('adds no heading when no title is given', () => {
+    render(
+      <ThemeProvider theme={theme}>
+        <EditorTemplate>content</EditorTemplate>
+      </ThemeProvider>
+    );
+
+    expect(screen.queryByRole('heading')).not.toBeInTheDocument();
+  });
+
   it('tells sticky content how tall the sticky navigation is', async () => {
     const observers: ResizeObserverCallback[] = [];
     vi.stubGlobal(

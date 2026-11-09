@@ -5,4 +5,7 @@ export const sitemapConfig: SitemapSiteConfig = {
   description: 'Courant est un média indépendant genevois.',
   lang: 'fr',
   pageUrls: ['/author', '/event', '/login', '/signup', '/mitmachen'],
+  // Not `/api/sitemap`: the TanStack app serves its sitemap from `/sitemap.xml`
+  // and its chunks from `/sitemap/<chunk>`. Only read in `index` mode.
+  sitemapPath: '/sitemap',
 };

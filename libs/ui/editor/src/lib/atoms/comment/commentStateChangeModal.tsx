@@ -220,7 +220,7 @@ export function CommentStateChangeModal({
       fullWidth
       open={open}
       maxWidth="sm"
-      onClose={() => onClose?.()}
+      onClose={() => !isSaving && onClose?.()}
       aria-labelledby="comment-state-change-title"
     >
       <DialogTitle id="comment-state-change-title">

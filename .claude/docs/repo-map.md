@@ -49,8 +49,8 @@ the schema and generated types flow downstream from it.
 | `editor` | The admin SPA (React Router v6) |
 | `media` | Media/image server |
 | `website-example` | Reference tenant site |
-| ~20 tenant sites | `bajour`, `tsri`, `hauptstadt`, `onlinereports`, `mannschaft`, `flimmer`, `cultur`, `zwoelf`, … — Next.js 16 (Pages Router) sites. Pages, `_app`, feeds and `public/` live here; the tenant's look lives in `libs/tenants/<tenant>` |
-| `gruppetto` | The one **TanStack Start** tenant (Vite + nitro, `src/routes/`). Both frameworks coexist; see [tanstack-start-migration.md](tanstack-start-migration.md). |
+| ~20 tenant sites | `bajour`, `tsri`, `hauptstadt`, `onlinereports`, `zwoelf`, … — Next.js 16 (Pages Router) sites. Pages, `_app`, feeds and `public/` live here; the tenant's look lives in `libs/tenants/<tenant>` |
+| TanStack Start tenants | `cultur`, `factuel`, `fazetten`, `flimmer`, `ganzgraz`, `gruppetto`, `mannschaft`, `munotgloeggli`, `wnti` — Vite + nitro, `src/routes/`; recognisable by `vite.config.mts`. Both frameworks coexist; see [tanstack-start-migration.md](tanstack-start-migration.md). |
 
 **Adding a feature for one tenant?** Build it in the relevant `libs/<domain>/website`
 and let the tenant override it through the Website Builder. Copying components
@@ -74,4 +74,4 @@ Do not import from another project's internals; import from its entry point.
 | Change public site rendering | `libs/<domain>/website` (+ a spec) |
 | Change admin UI | `libs/<domain>/editor` |
 | Tenant-specific look | `libs/tenants/<tenant>` theme / Builder override |
-| Payment/email/analytics integration | `libs/payment`, `libs/mail`, `libs/google-analytics` — see [external-services.md](external-services.md) |
+| Payment/email/letter/analytics integration | `libs/payment`, `libs/mail`, `libs/letter` (Pingen, pdf renderers, letter layouts), `libs/google-analytics` — see [external-services.md](external-services.md) |
