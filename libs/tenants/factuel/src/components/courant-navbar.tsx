@@ -262,7 +262,6 @@ export const CourantNavbar = ({
           isMenuOpen={isMenuOpen}
           closeMenu={toggleMenu}
           main={mainItems}
-          categories={categories}
           loginBtn={loginBtn}
           profileBtn={profileBtn}
           subscribeBtn={subscribeBtn}
