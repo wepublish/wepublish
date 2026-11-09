@@ -3,6 +3,8 @@ import { isArchived, isNachtleben } from './archiviert';
 
 export const sitemapConfig: SitemapSiteConfig = {
   title: 'Hauptstadt',
+  description:
+    'Die «Hauptstadt» ist eine Berner Online-Zeitung, die über lokale politische und kulturelle Themen berichtet.',
   mode: 'index',
   // archived articles (/archive/…) are disallowed in robots.txt and nachtleben
   // article urls permanently redirect to /ausgang-in-bern — neither belongs
