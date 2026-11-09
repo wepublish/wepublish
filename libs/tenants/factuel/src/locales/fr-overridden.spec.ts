@@ -62,3 +62,43 @@ describe('Courant fr overrides: subscribe.support', () => {
     ).toBe('Je fais un don de CHF 10.00 par mois');
   });
 });
+
+describe('Courant fr overrides: subscribe.button', () => {
+  const base = {
+    siteTitle: 'Courant',
+    monthlyAmount: 2000,
+    paymentPeriodL: '1 an',
+    renewalPeriodL: 'par an',
+  };
+
+  it('uses the membership wording for subscriptions', async () => {
+    const t = await createT();
+    const vars = {
+      ...base,
+      productType: 'Subscription',
+      formattedAmount: 'CHF 240.00',
+    };
+
+    expect(t('subscribe.button.subscribeForPeriod', vars)).toBe(
+      'J’adhère pour CHF 240.00 par an'
+    );
+    expect(t('subscribe.button.payForPeriod', vars)).toBe(
+      'J’adhère pour 1 an à CHF 240.00'
+    );
+    expect(t('subscribe.button.pay', vars)).toBe('J’adhère pour CHF 240.00');
+  });
+
+  it('keeps the donation wording for donations', async () => {
+    const t = await createT();
+    const vars = {
+      ...base,
+      productType: 'Donation',
+      formattedAmount: 'CHF 10.00',
+    };
+
+    expect(t('subscribe.button.subscribeForPeriod', vars)).toBe(
+      'Faire un don de CHF 10.00 par an'
+    );
+    expect(t('subscribe.button.pay', vars)).toBe('Faire un don de CHF 10.00');
+  });
+});

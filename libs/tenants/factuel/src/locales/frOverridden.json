@@ -12,6 +12,11 @@
       "subscribeForPeriod": "{productType, select, Donation {Je fais un don {monthlyAmount, select, 0 {gratuitement} other {de {formattedAmount} {renewalPeriodL}}}} other {J’adhère à Courant {monthlyAmount, select, 0 {gratuitement} other {pour {formattedAmount} {renewalPeriodL}}}}}",
       "payForPeriod": "{productType, select, Donation {Je fais un don {monthlyAmount, select, 0 {gratuitement} other {de {formattedAmount} {paymentPeriodL}}}} other {J’adhère à Courant {monthlyAmount, select, 0 {gratuitement} other {pour {formattedAmount} {paymentPeriodL}}}}}",
       "pay": "{productType, select, Donation {Je fais un don {monthlyAmount, select, 0 {gratuitement} other {de {formattedAmount}}}} other {J’adhère à Courant {monthlyAmount, select, 0 {gratuitement} other {pour {formattedAmount}}}}}"
+    },
+    "button": {
+      "subscribeForPeriod": "{productType, select, Donation {Faire un don {monthlyAmount, select, 0 {gratuitement} other {de {formattedAmount} {renewalPeriodL}}}} other {J’adhère {monthlyAmount, select, 0 {gratuitement} other {pour {formattedAmount} {renewalPeriodL}}}}}",
+      "payForPeriod": "{productType, select, Donation {Faire un don {monthlyAmount, select, 0 {gratuitement} other {de {formattedAmount} pour {paymentPeriodL}}}} other {J’adhère {monthlyAmount, select, 0 {gratuitement} other {pour {paymentPeriodL} à {formattedAmount}}}}}",
+      "pay": "{productType, select, Donation {Faire un don {monthlyAmount, select, 0 {gratuitement} other {de {formattedAmount}}}} other {J’adhère {monthlyAmount, select, 0 {gratuitement} other {pour {formattedAmount}}}}}"
     }
   }
 }
