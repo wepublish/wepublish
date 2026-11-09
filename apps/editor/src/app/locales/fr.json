@@ -5052,7 +5052,7 @@
       "saved": "Numéro enregistré",
       "duplicated": "Numéro dupliqué – veuillez adapter la date de parution.",
       "closed": "Numéro clôturé",
-      "reopened": "Numéro rouvert",
+      "reopened": "Numéro déverrouillé",
       "optionsSaved": "Options enregistrées",
       "exported": "Exemplaires exportés – la livraison reste un brouillon jusqu’à sa remise.",
       "exportedReplaced": "Export remplacé",
@@ -5085,17 +5085,18 @@
       "deliveriesCell": "{{count}} · {{delivered}} remise(s)",
       "closedLine": "{{date}} · {{name}}",
       "actions": {
-        "list": "Liste d’impression",
-        "duplicate": "Dupliquer",
-        "close": "Clôturer",
-        "reopen": "Rouvrir",
-        "delete": "Supprimer"
+        "list": "Configurer la liste d’impression",
+        "duplicate": "Dupliquer le numéro",
+        "close": "Clôturer le numéro",
+        "reopen": "Déverrouiller le numéro",
+        "historic": "Numéro historique, toujours clôturé",
+        "delete": "Supprimer le numéro"
       },
       "deleteTitle": "Supprimer le numéro",
       "deleteQuestion": "Supprimer le numéro {{label}} ? Les livraisons en brouillon sont supprimées avec lui.",
       "deleteConfirm": "Supprimer",
       "closeTitle": "Clôturer le numéro ?",
-      "closeQuestion": "Clôturer le numéro {{label}} ? Aucun autre complément n’est attendu. «Rouvrir» annule cela à tout moment.",
+      "closeQuestion": "Clôturer le numéro {{label}} ? Aucun autre complément n’est attendu. «Déverrouiller» annule cela à tout moment.",
       "closeConfirm": "Clôturer",
       "listView": {
         "title": "Liste d’impression du numéro {{label}}",
@@ -5103,7 +5104,7 @@
         "back": "Retour aux numéros"
       },
       "historicNoExport": "Un numéro historique vient de l’import et n’a pas de liste d’impression : il compte comme livré pour toute personne qui avait alors un abonnement payé. Numéro, date et note se corrigent dans la liste des numéros.",
-      "closedInfo": "Numéro clôturé – rouvrez-le d’abord pour exporter un complément.",
+      "closedInfo": "Numéro clôturé – déverrouillez-le d’abord pour exporter un complément.",
       "options": {
         "title": "Options",
         "intro": "Ce qui entre dans la liste. Les options sont enregistrées avec le numéro ; chaque livraison conserve les options avec lesquelles elle a été calculée.",

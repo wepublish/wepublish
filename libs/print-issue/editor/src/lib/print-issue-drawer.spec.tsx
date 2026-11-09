@@ -79,6 +79,41 @@ describe('PrintIssueDrawer', () => {
     await waitFor(() => expect(onClose).toHaveBeenCalled());
   });
 
+  it('prefills a new issue with the suggested number and year, like a duplicate', async () => {
+    renderWithRouter(
+      <PrintIssueDrawer
+        open
+        issue={null}
+        next={{ number: 4, year: 2027 }}
+        onClose={vi.fn()}
+      />
+    );
+
+    expect(screen.getByLabelText('printIssues.fields.number')).toHaveValue(4);
+    expect(screen.getByLabelText('printIssues.fields.year')).toHaveValue(2027);
+
+    fireEvent.change(screen.getByLabelText('printIssues.fields.issueDate'), {
+      target: { value: '2027-07-15' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'save' }));
+
+    await waitFor(() =>
+      expect(mutations['CreatePrintIssue']).toHaveBeenCalledWith(
+        expect.objectContaining({
+          variables: {
+            input: {
+              number: 4,
+              year: 2027,
+              issueDate: '2027-07-15',
+              note: null,
+              historic: false,
+            },
+          },
+        })
+      )
+    );
+  });
+
   it('edits an existing issue and saves only once something changed, keeping its options', async () => {
     const onClose = vi.fn();
     renderWithRouter(

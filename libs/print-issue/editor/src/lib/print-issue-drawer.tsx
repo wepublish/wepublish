@@ -22,10 +22,11 @@ import {
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdSave } from 'react-icons/md';
-import { MUTATION_OPTIONS_WITH_SUCCESS_MESSAGE } from './common';
+import { IssueNumber, MUTATION_OPTIONS_WITH_SUCCESS_MESSAGE } from './common';
 import { PrintIssueStatusChip } from './print-issue-status';
 
 const thisYear = () => new Date().getFullYear();
+const FIRST_ISSUE: IssueNumber = { number: 1, year: thisYear() };
 
 /**
  * The issue form over the list: number, year, ship day, note. The options
@@ -35,11 +36,14 @@ const thisYear = () => new Date().getFullYear();
 export function PrintIssueDrawer({
   open,
   issue,
+  next = FIRST_ISSUE,
   onClose,
 }: {
   open: boolean;
   /** none: a new issue */
   issue: TinyPrintIssueFragment | null | undefined;
+  /** what a new issue is called, see `nextIssue` */
+  next?: IssueNumber;
   onClose: () => void;
 }) {
   return (
@@ -51,10 +55,11 @@ export function PrintIssueDrawer({
         paper: { sx: { width: DRAWER_WIDTHS.sm, maxWidth: '100vw' } },
       }}
     >
-      {/* keyed so that another issue starts from its own values */}
+      {/* keyed so that another issue, or a suggestion that arrives with the list, starts from its own values */}
       <PrintIssueForm
-        key={issue?.id ?? 'new'}
+        key={issue?.id ?? `new-${next.number}-${next.year}`}
         issue={issue ?? null}
+        next={next}
         onClose={onClose}
       />
     </Drawer>
@@ -63,14 +68,16 @@ export function PrintIssueDrawer({
 
 function PrintIssueForm({
   issue,
+  next,
   onClose,
 }: {
   issue: TinyPrintIssueFragment | null;
+  next: IssueNumber;
   onClose: () => void;
 }) {
   const { t } = useTranslation();
-  const [number, setNumber] = useState(issue?.number ?? 1);
-  const [year, setYear] = useState(issue?.year ?? thisYear());
+  const [number, setNumber] = useState(issue?.number ?? next.number);
+  const [year, setYear] = useState(issue?.year ?? next.year);
   const [issueDate, setIssueDate] = useState(issue?.issueDate ?? '');
   const [note, setNote] = useState(issue?.note ?? '');
 

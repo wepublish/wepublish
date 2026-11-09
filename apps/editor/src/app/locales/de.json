@@ -5052,7 +5052,7 @@
       "saved": "Ausgabe gespeichert",
       "duplicated": "Ausgabe dupliziert – bitte das Erscheinungsdatum anpassen.",
       "closed": "Ausgabe abgeschlossen",
-      "reopened": "Ausgabe aufgeschlossen",
+      "reopened": "Ausgabe entsperrt",
       "optionsSaved": "Optionen gespeichert",
       "exported": "Exemplare exportiert – die Lieferung ist ein Entwurf, bis sie übergeben wird.",
       "exportedReplaced": "Export ersetzt",
@@ -5085,17 +5085,18 @@
       "deliveriesCell": "{{count}} · {{delivered}} übergeben",
       "closedLine": "{{date}} · {{name}}",
       "actions": {
-        "list": "Druckliste",
-        "duplicate": "Duplizieren",
-        "close": "Abschliessen",
-        "reopen": "Aufschliessen",
-        "delete": "Löschen"
+        "list": "Druckliste konfigurieren",
+        "duplicate": "Ausgabe duplizieren",
+        "close": "Ausgabe abschliessen",
+        "reopen": "Ausgabe entsperren",
+        "historic": "Historische Ausgabe, immer abgeschlossen",
+        "delete": "Ausgabe löschen"
       },
       "deleteTitle": "Ausgabe löschen",
       "deleteQuestion": "Ausgabe {{label}} löschen? Lieferungen im Entwurf werden mitgelöscht.",
       "deleteConfirm": "Löschen",
       "closeTitle": "Ausgabe abschliessen?",
-      "closeQuestion": "Ausgabe {{label}} abschliessen? Es werden keine weiteren Nachlieferungen erwartet. «Aufschliessen» macht das jederzeit rückgängig.",
+      "closeQuestion": "Ausgabe {{label}} abschliessen? Es werden keine weiteren Nachlieferungen erwartet. «Entsperren» macht das jederzeit rückgängig.",
       "closeConfirm": "Abschliessen",
       "listView": {
         "title": "Druckliste Ausgabe {{label}}",
@@ -5103,10 +5104,10 @@
         "back": "Zu den Ausgaben"
       },
       "historicNoExport": "Eine historische Ausgabe kommt aus dem Import und hat keine Druckliste: sie zählt als geliefert für alle, die damals ein bezahltes Abo hatten. Nummer, Datum und Notiz lassen sich in der Ausgabenliste korrigieren.",
-      "closedInfo": "Ausgabe abgeschlossen – zum Nachliefern zuerst aufschliessen.",
+      "closedInfo": "Ausgabe abgeschlossen – zum Nachliefern zuerst entsperren.",
       "options": {
-        "title": "Optionen",
-        "intro": "Was in die Liste kommt. Die Optionen werden mit der Ausgabe gespeichert; jede Lieferung behält die Optionen, mit denen sie berechnet wurde.",
+        "title": "Export-Optionen für Druckliste",
+        "intro": "Welche Abo-Typen diese Ausgabe erhalten werden sowie weitere Optionen für den Export. Solange ein Export nicht abgeschlossen ist, lassen sich die Optionen jederzeit ändern, aber die Liste muss danach neu berechnet werden.",
         "save": "Optionen speichern",
         "reset": "Zurücksetzen auf Standard",
         "unsaved": "Die Optionen sind noch nicht gespeichert. «Exemplare berechnen» speichert sie zuerst; exportieren lässt sich erst danach."
@@ -5237,11 +5238,11 @@
       "includeBexioHelp": "Institutionen, Geschenkabos, Buchhandel und Einzelhefte aus bexio – gelesen mit dem Schlüssel des bexio-Zahlungsanbieters unter Integrationen.",
       "bexioNotConfigured": "Unter Integrationen ist kein bexio-Zahlungsanbieter mit API-Schlüssel eingerichtet; bexio kann nicht gelesen werden.",
       "bexioShort": "bexio",
-      "includeOpen": "Offene Leser:innen einbeziehen",
-      "includeOpenHelp": "Abos, die sich verlängern, deren Rechnung aber noch nicht bezahlt ist («offen»), erhalten ein Exemplar. Ausgeschaltet zählen sie wie abgelaufene Abos: nur noch Restexemplare.",
+      "includeOpen": "Bestellte aber unbezahlte Exemplare exportieren",
+      "includeOpenHelp": "Abos, die sich verlängern, deren Rechnung aber noch nicht bezahlt ist, erhalten ein Exemplar. Ist diese Option deaktiviert, erhalten sie nur bereits bezahlte Exemplare.",
       "openShort": "offen",
-      "includeUpcoming": "Vorab-Exemplare",
-      "includeUpcomingHelp": "Abos, die erst nach dem Erscheinungsdatum beginnen, erhalten diese Ausgabe geschenkt. Sie zählt nicht zu den bezahlten Ausgaben.",
+      "includeUpcoming": "Vorab-Exemplare exportieren",
+      "includeUpcomingHelp": "Abos, die erst nach dem Erscheinungsdatum beginnen, erhalten diese Ausgabe vorab geschenkt. Sie zählt nicht zu den bezahlten Ausgaben.",
       "upcomingShort": "Vorab"
     },
     "autosave": {

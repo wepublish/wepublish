@@ -136,11 +136,15 @@ export function PrintIssueDeliveries({
             id: 'action',
             label: t('action'),
             width: 180,
-            align: 'center',
             fixed: true,
             exportValue: false,
+            // a left-aligned row keeps each action in its place however many a row has
             render: delivery => (
-              <>
+              <Stack
+                direction="row"
+                spacing={0.5}
+                sx={{ alignItems: 'center' }}
+              >
                 <Button
                   size="small"
                   startIcon={<MdDownload />}
@@ -184,7 +188,7 @@ export function PrintIssueDeliveries({
                     </PermissionControl>
                   </>
                 )}
-              </>
+              </Stack>
             ),
           },
         ]}

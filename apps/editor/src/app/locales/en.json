@@ -5052,7 +5052,7 @@
       "saved": "Issue saved",
       "duplicated": "Issue duplicated – please adjust the ship day.",
       "closed": "Issue closed",
-      "reopened": "Issue reopened",
+      "reopened": "Issue unlocked",
       "optionsSaved": "Options saved",
       "exported": "Copies exported – the delivery is a draft until it is handed over.",
       "exportedReplaced": "Export replaced",
@@ -5085,17 +5085,18 @@
       "deliveriesCell": "{{count}} · {{delivered}} handed over",
       "closedLine": "{{date}} · {{name}}",
       "actions": {
-        "list": "Print list",
-        "duplicate": "Duplicate",
-        "close": "Close",
-        "reopen": "Reopen",
-        "delete": "Delete"
+        "list": "Configure print list",
+        "duplicate": "Duplicate issue",
+        "close": "Close issue",
+        "reopen": "Unlock issue",
+        "historic": "Historic issue, always closed",
+        "delete": "Delete issue"
       },
       "deleteTitle": "Delete issue",
       "deleteQuestion": "Delete issue {{label}}? Draft deliveries are deleted with it.",
       "deleteConfirm": "Delete",
       "closeTitle": "Close issue?",
-      "closeQuestion": "Close issue {{label}}? No further supplements are expected. «Reopen» undoes this at any time.",
+      "closeQuestion": "Close issue {{label}}? No further supplements are expected. «Unlock» undoes this at any time.",
       "closeConfirm": "Close",
       "listView": {
         "title": "Print list for issue {{label}}",
@@ -5103,7 +5104,7 @@
         "back": "Back to the issues"
       },
       "historicNoExport": "A historic issue comes from the import and has no print list: it counts as delivered for everyone who had a paid subscription at the time. Number, date and note can be corrected in the issue list.",
-      "closedInfo": "Issue closed – reopen it first to export a supplement.",
+      "closedInfo": "Issue closed – unlock it first to export a supplement.",
       "options": {
         "title": "Options",
         "intro": "What goes into the list. The options are saved with the issue; every delivery keeps the options it was computed with.",

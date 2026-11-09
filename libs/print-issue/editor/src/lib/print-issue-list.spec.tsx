@@ -175,11 +175,14 @@ describe('PrintIssueList', () => {
   it('closes an issue only once every delivery is handed over, after a confirmation', async () => {
     renderList();
 
-    // closed: reopen instead; draft delivery, nothing exported, historic: not closable
+    // closed: reopen instead; historic: frozen for good; draft delivery, nothing exported: not closable
     const close = buttons('printIssues.actions.close');
-    expect(close).toHaveLength(4);
+    expect(close).toHaveLength(3);
     expect(close[0]).toBeEnabled();
     close.slice(1).forEach(button => expect(button).toBeDisabled());
+    expect(
+      screen.getByRole('button', { name: 'printIssues.actions.historic' })
+    ).toBeDisabled();
 
     fireEvent.click(close[0]!);
     expect(mutations['ClosePrintIssue']).not.toHaveBeenCalled();
@@ -234,8 +237,13 @@ describe('PrintIssueList', () => {
     );
   });
 
-  it('duplicates an issue as the next number', async () => {
+  it('duplicates an issue as the next number, never a historic one', async () => {
     renderList();
+
+    const duplicate = buttons('printIssues.actions.duplicate');
+    expect(duplicate).toHaveLength(5);
+    duplicate.slice(0, 4).forEach(button => expect(button).toBeEnabled());
+    expect(duplicate[4]).toBeDisabled();
 
     fireEvent.click(buttons('printIssues.actions.duplicate')[3]!);
 
@@ -246,12 +254,14 @@ describe('PrintIssueList', () => {
     );
   });
 
-  it('opens an empty form for a new issue, a filled one for an existing issue, none otherwise', () => {
+  it('opens a form for a new issue suggesting the next number of the latest year, a filled one for an existing issue, none otherwise', () => {
     const form = () =>
       within(screen.getByRole('region', { name: /printIssues\.drawer/ }));
 
+    // 2027 is the latest year and 3.27 its highest number: the next is 4.27
     const { unmount } = renderList('/print-issues/create');
-    expect(form().getByLabelText('printIssues.fields.number')).toHaveValue(1);
+    expect(form().getByLabelText('printIssues.fields.number')).toHaveValue(4);
+    expect(form().getByLabelText('printIssues.fields.year')).toHaveValue(2027);
     expect(form().getByLabelText('printIssues.fields.issueDate')).toHaveValue(
       ''
     );

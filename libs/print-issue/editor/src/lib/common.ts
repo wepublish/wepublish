@@ -47,6 +47,25 @@ export const personName = (
   person?: { firstName?: string | null; name: string } | null
 ) => [person?.firstName, person?.name].filter(Boolean).join(' ');
 
+export type IssueNumber = { number: number; year: number };
+
+/**
+ * What a new issue is called: the next number of the latest year, the way a
+ * duplicate is numbered. A medium without issues starts at 1 of this year.
+ */
+export const nextIssue = (issues: IssueNumber[]): IssueNumber => {
+  if (!issues.length) {
+    return { number: 1, year: new Date().getFullYear() };
+  }
+
+  const year = Math.max(...issues.map(issue => issue.year));
+  const number = Math.max(
+    ...issues.filter(issue => issue.year === year).map(issue => issue.number)
+  );
+
+  return { number: number + 1, year };
+};
+
 type DeliveryLike = { id: string; batch: number; deliveredAt?: string | null };
 type IssueLike = { status: PrintIssueStatus; deliveries: DeliveryLike[] };
 

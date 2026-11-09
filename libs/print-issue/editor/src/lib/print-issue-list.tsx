@@ -40,7 +40,6 @@ import {
   MdDelete,
   MdLock,
   MdLockOpen,
-  MdPrint,
 } from 'react-icons/md';
 import {
   Link as RouterLink,
@@ -54,6 +53,7 @@ import {
   day,
   formatDay,
   MUTATION_OPTIONS_WITH_SUCCESS_MESSAGE,
+  nextIssue,
   personName,
   PRINT_ISSUES_PATH,
   printIssueCreatePath,
@@ -63,6 +63,7 @@ import {
 } from './common';
 import { PrintIssueDrawer } from './print-issue-drawer';
 import { PrintIssueStatusChip } from './print-issue-status';
+import { PrintListIcon } from './print-list-icon';
 
 const copiesOf = (issue: TinyPrintIssueFragment) =>
   issue.deliveries.reduce((sum, delivery) => sum + delivery.copyCount, 0);
@@ -223,7 +224,7 @@ function PrintIssueList() {
                         size="small"
                         disabled
                       >
-                        <MdPrint />
+                        <PrintListIcon disabled />
                       </IconButton>
                     : <IconButton
                         component={RouterLink}
@@ -231,7 +232,7 @@ function PrintIssueList() {
                         aria-label={t('printIssues.actions.list')}
                         size="small"
                       >
-                        <MdPrint />
+                        <PrintListIcon />
                       </IconButton>
                     }
                   </IconButtonTooltip>
@@ -244,6 +245,7 @@ function PrintIssueList() {
                       <IconButton
                         aria-label={t('printIssues.actions.duplicate')}
                         size="small"
+                        disabled={historic}
                         onClick={() => duplicate(issue)}
                       >
                         <MdContentCopy />
@@ -253,7 +255,20 @@ function PrintIssueList() {
                   <PermissionControl
                     qualifyingPermissions={[CanFinalizePrintIssue.id]}
                   >
-                    {closed ?
+                    {/* the lock shows the state, the tooltip names the action; a historic issue is frozen for good */}
+                    {historic ?
+                      <IconButtonTooltip
+                        caption={t('printIssues.actions.historic')}
+                      >
+                        <IconButton
+                          aria-label={t('printIssues.actions.historic')}
+                          size="small"
+                          disabled
+                        >
+                          <MdLock />
+                        </IconButton>
+                      </IconButtonTooltip>
+                    : closed ?
                       <IconButtonTooltip
                         caption={t('printIssues.actions.reopen')}
                       >
@@ -264,7 +279,7 @@ function PrintIssueList() {
                             reopenIssue({ variables: { id: issue.id } })
                           }
                         >
-                          <MdLockOpen />
+                          <MdLock />
                         </IconButton>
                       </IconButtonTooltip>
                     : <IconButtonTooltip
@@ -273,10 +288,10 @@ function PrintIssueList() {
                         <IconButton
                           aria-label={t('printIssues.actions.close')}
                           size="small"
-                          disabled={historic || !allDelivered(issue.deliveries)}
+                          disabled={!allDelivered(issue.deliveries)}
                           onClick={() => setToClose(issue)}
                         >
-                          <MdLock />
+                          <MdLockOpen />
                         </IconButton>
                       </IconButtonTooltip>
                     }
@@ -308,6 +323,7 @@ function PrintIssueList() {
       <PrintIssueDrawer
         open={creating || !!editId}
         issue={creating ? null : editing}
+        next={nextIssue(issues)}
         onClose={closeDrawer}
       />
 
