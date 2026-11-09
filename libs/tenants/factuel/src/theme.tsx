@@ -1,4 +1,4 @@
-import { createTheme, ThemeOptions } from '@mui/material/styles';
+import { alpha, createTheme, ThemeOptions } from '@mui/material/styles';
 
 import { CourantColorOverrides, courantColors } from './brand-colors';
 import { courantTokens, CourantTypographyRole } from './brand-tokens';
@@ -221,6 +221,122 @@ const themeOptions = (colors: CourantColorOverrides): ThemeOptions => {
       },
       MuiInputAdornment: {
         styleOverrides: { positionStart: { flexShrink: 0 } },
+      },
+      MuiTextField: {
+        defaultProps: { variant: 'filled' },
+      },
+      MuiFilledInput: {
+        defaultProps: { disableUnderline: true },
+        styleOverrides: {
+          root: ({ theme }) => ({
+            backgroundColor: courantTokens.colors.warmGray[50],
+            border: `1px solid ${courantTokens.colors.warmGray[100]}`,
+            borderRadius: shape.borderRadius,
+            overflow: 'hidden',
+            transition: theme.transitions.create([
+              'background-color',
+              'border-color',
+              'box-shadow',
+            ]),
+            '&:hover': {
+              backgroundColor: courantTokens.colors.warmGray[50],
+              borderColor: courantTokens.colors.warmGray[200],
+            },
+            '&.Mui-focused': {
+              backgroundColor: courantTokens.colors.warmGray[50],
+              borderColor: courantTokens.colors.courant[500],
+              boxShadow: `0 0 0 2px ${alpha(courantTokens.colors.courant[500], 0.4)}`,
+            },
+            '&.Mui-error': {
+              borderColor: theme.palette.error.main,
+            },
+            '&.Mui-error.Mui-focused': {
+              boxShadow: `0 0 0 2px ${alpha(theme.palette.error.main, 0.3)}`,
+            },
+            '&.Mui-disabled': {
+              backgroundColor: courantTokens.colors.warmGray[50],
+              opacity: 0.6,
+            },
+          }),
+          input: {
+            fontSize: '1rem',
+          },
+        },
+      },
+      MuiInputLabel: {
+        styleOverrides: {
+          root: {
+            fontFamily: typography.roles.caption.fontFamily,
+            fontSize: '1rem',
+            lineHeight: 1,
+            letterSpacing: typography.roles.caption.letterSpacing,
+            fontWeight: typography.roles.caption.fontWeight,
+            color: courantTokens.colors.warmGray[700],
+            '&.Mui-focused': { color: courantTokens.colors.warmGray[700] },
+          },
+          filled: {
+            '&:not(.MuiInputLabel-shrink)': {
+              transform: 'translate(12px, 20px) scale(1)',
+            },
+          },
+        },
+      },
+      MuiFormHelperText: {
+        styleOverrides: {
+          root: {
+            fontFamily: typography.roles.caption.fontFamily,
+            fontSize: typography.sizes.caption,
+            letterSpacing: typography.roles.caption.letterSpacing,
+            lineHeight: typography.roles.caption.lineHeight,
+            marginLeft: 0,
+            marginRight: 0,
+          },
+        },
+      },
+      MuiMenu: {
+        styleOverrides: {
+          paper: {
+            backgroundColor: '#fff',
+            borderRadius: shape.borderRadius,
+          },
+        },
+      },
+      MuiMenuItem: {
+        styleOverrides: {
+          root: {
+            fontSize: '1rem',
+            fontWeight: 500,
+          },
+        },
+      },
+      MuiAutocomplete: {
+        styleOverrides: {
+          paper: {
+            backgroundColor: '#fff',
+            borderRadius: shape.borderRadius,
+          },
+          option: {
+            fontSize: '1rem',
+            fontWeight: 500,
+          },
+        },
+      },
+      MuiCssBaseline: {
+        styleOverrides: theme => ({
+          '.courant-profile-page': {
+            display: 'flex',
+            flexDirection: 'column',
+            gap: theme.spacing(16),
+          },
+          '.courant-profile-page :is(.MuiTypography-h4, .MuiTypography-h5)': {
+            ...heading,
+            fontSize: headings.page.h2,
+          },
+          '.courant-profile-page :has(> .MuiTypography-h4, > .MuiTypography-h5)':
+            {
+              rowGap: theme.spacing(5),
+            },
+        }),
       },
       MuiContainer: {
         styleOverrides: {

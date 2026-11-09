@@ -127,11 +127,11 @@ export const CourantNavPaper = ({
     secondaryLinks.push(
       <Link
         key="my-account"
+        href={profileBtn.href}
         color="inherit"
         underline="none"
         onClick={closeMenu}
         sx={secondaryLinkSx}
-        {...profileBtn}
       >
         {t('navbar.myAccount')}
       </Link>
@@ -158,11 +158,11 @@ export const CourantNavPaper = ({
     secondaryLinks.push(
       <Link
         key="login"
+        href={loginBtn.href}
         color="inherit"
         underline="none"
         onClick={closeMenu}
         sx={secondaryLinkSx}
-        {...loginBtn}
       >
         {t('navbar.login')}
       </Link>
