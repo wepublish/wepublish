@@ -81,6 +81,43 @@ describe('invoicesInWindow', () => {
 });
 
 describe('positions', () => {
+  it('turns position HTML into plain text: tags separate words, entities decoded, nothing tag-like left', async () => {
+    const fetchFn = vi.fn(async () =>
+      Response.json({
+        id: 8,
+        positions: [
+          { text: '<p>1×</p><p>Einzelheft<br>6.26</p>' },
+          { text: '2&nbsp;× Buchhandel 2026 &amp; Porto' },
+          // malformed markup a single pass would leave a tag behind in
+          { text: '<scr<script>ipt>alert(1)</script>Geschenkabo 2026' },
+          { text: '<p> </p>' },
+        ],
+      })
+    );
+
+    const texts = await client(fetchFn).positions(8);
+
+    expect(texts.slice(0, 2)).toEqual([
+      '1× Einzelheft 6.26',
+      '2 × Buchhandel 2026 & Porto',
+    ]);
+    expect(texts[2]).toMatch(/Geschenkabo 2026$/);
+    expect(texts).toHaveLength(3);
+    for (const text of texts) {
+      expect(text).not.toMatch(/[<>]/);
+    }
+  });
+
+  it('keeps an entity out of range as written instead of failing the read', async () => {
+    const fetchFn = vi.fn(async () =>
+      Response.json({ id: 9, positions: [{ text: 'Abo &#99999999; 2026' }] })
+    );
+
+    await expect(client(fetchFn).positions(9)).resolves.toEqual([
+      'Abo &#99999999; 2026',
+    ]);
+  });
+
   it('returns the plain text of every position', async () => {
     const fetchFn = vi.fn(async () =>
       Response.json({

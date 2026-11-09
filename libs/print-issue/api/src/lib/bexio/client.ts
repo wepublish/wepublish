@@ -25,7 +25,46 @@ type ClientOptions = {
 /** bexio's largest page */
 const PAGE = 2000;
 
-const stripTags = (text: string) => text.replace(/<[^>]+>/g, '').trim();
+const ENTITIES: Record<string, string> = {
+  nbsp: ' ',
+  amp: '&',
+  lt: '<',
+  gt: '>',
+  quot: '"',
+  apos: "'",
+};
+
+/** a numeric entity's character; the entity itself when it names none */
+const fromCode = (entity: string, code: number) =>
+  Number.isInteger(code) && code > 0 && code <= 0x10ffff ?
+    String.fromCodePoint(code)
+  : entity;
+
+const decodeEntities = (text: string) =>
+  text.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (entity, code: string) =>
+    code[0] !== '#' ? (ENTITIES[code.toLowerCase()] ?? entity)
+    : code[1] === 'x' || code[1] === 'X' ?
+      fromCode(entity, parseInt(code.slice(2), 16))
+    : fromCode(entity, Number(code.slice(1)))
+  );
+
+/**
+ * The plain text of a position's HTML, for the parser and the summary:
+ * entities decoded first (so an encoded tag is stripped too), tags removed
+ * until none is left and treated as word breaks, any stray `<`/`>` dropped,
+ * whitespace collapsed.
+ */
+const plainText = (html: string) => {
+  let text = decodeEntities(html);
+  let previous: string;
+
+  do {
+    previous = text;
+    text = text.replace(/<[^<>]*>/g, ' ');
+  } while (text !== previous);
+
+  return text.replace(/[<>]/g, '').replace(/\s+/g, ' ').trim();
+};
 
 export function createBexioClient({
   apiUrl,
@@ -158,7 +197,7 @@ export function createBexioClient({
       }>(`/2.0/kb_invoice/${invoiceId}`);
 
       return (invoice.positions ?? [])
-        .map(position => stripTags(position.text ?? ''))
+        .map(position => plainText(position.text ?? ''))
         .filter(Boolean);
     },
 
