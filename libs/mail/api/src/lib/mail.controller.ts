@@ -58,6 +58,40 @@ export type MailControllerConfig = {
   asLetter?: boolean;
 };
 
+/**
+ * What a user row carries that no template may print. The password hash and
+ * the TOTP secret are not among them: Prisma leaves those out of every query
+ * (see `PrismaService`), so they never reach a template. These fields stay on
+ * the row because the API needs them for authorization.
+ */
+const SECRET_FIELDS = new Set(['roleIDs', 'totpEnabled', 'totpExempt']);
+
+/**
+ * A copy of template data without a user's authorization fields, wherever a
+ * user row ended up in it: the recipient, or a subscription's `user` relation
+ * the nightly job hands in with the invoice. Only plain objects and arrays are
+ * walked; dates, buffers and other instances are kept as they are.
+ */
+export function withoutSecrets<T>(value: T): T {
+  if (Array.isArray(value)) {
+    return value.map(withoutSecrets) as T;
+  }
+
+  if (
+    value !== null &&
+    typeof value === 'object' &&
+    Object.getPrototypeOf(value) === Object.prototype
+  ) {
+    return Object.fromEntries(
+      Object.entries(value)
+        .filter(([key]) => !SECRET_FIELDS.has(key))
+        .map(([key, nested]) => [key, withoutSecrets(nested)])
+    ) as T;
+  }
+
+  return value;
+}
+
 export class MailController {
   private logger = new Logger('MailController');
 
@@ -105,8 +139,12 @@ export class MailController {
     });
 
     return this.mailContext.buildMailData({
-      recipient: this.config.recipient,
-      optionalData: this.config.optionalData,
+      // Cloned, so the caller's objects are not touched and no template sees a
+      // user's authorization fields, nested ones included.
+      recipient: withoutSecrets(
+        JSON.parse(JSON.stringify(this.config.recipient))
+      ),
+      optionalData: withoutSecrets(this.config.optionalData),
       jwtOverride: this.config.jwtOverride,
       mode: 'send',
       purlOrigin,

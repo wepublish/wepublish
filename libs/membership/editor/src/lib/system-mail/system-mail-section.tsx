@@ -162,7 +162,14 @@ function SystemMailSection() {
                   onChange={event =>
                     assignTemplate(systemMail.event, event.target.value || null)
                   }
-                  slotProps={{ select: { displayEmpty: true } }}
+                  slotProps={{
+                    select: {
+                      displayEmpty: true,
+                      SelectDisplayProps: {
+                        'aria-label': t(`systemMails.events.${eventKey}`),
+                      } as object,
+                    },
+                  }}
                   fullWidth
                 >
                   <MenuItem value="">

@@ -10,6 +10,7 @@ import {
   MemberPlanListDocument,
   MemberPlanListQueryVariables,
   NavigationListDocument,
+  PageDocument,
   PeerProfileDocument,
   SubscriptionsDocument,
   addClientCacheToProps,
@@ -129,7 +130,14 @@ export function SubscribePage(props: SubscribePageProps) {
   );
 }
 
-SubscribePage.getInitialProps = async (ctx: NextPageContext) => {
+/**
+ * `pageSlug` loads the page the subscribe form is placed on in the same client,
+ * so it is rendered on the server and handed to the browser with the rest.
+ */
+SubscribePage.getInitialProps = async (
+  ctx: NextPageContext,
+  { pageSlug }: { pageSlug?: string } = {}
+) => {
   if (typeof window !== 'undefined') {
     return {};
   }
@@ -165,6 +173,17 @@ SubscribePage.getInitialProps = async (ctx: NextPageContext) => {
       query: PeerProfileDocument,
     }),
   ];
+
+  if (pageSlug) {
+    dataPromises.push(
+      client.query({
+        query: PageDocument,
+        variables: {
+          slug: pageSlug,
+        },
+      })
+    );
+  }
 
   if (sessionProps.sessionToken) {
     dataPromises.push(

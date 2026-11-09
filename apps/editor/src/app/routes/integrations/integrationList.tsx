@@ -18,12 +18,13 @@ import {
   CanGetTrackingPixelSettings,
 } from '@wepublish/permissions';
 import type { FeatureKey } from '@wepublish/features';
-import type { ElementType } from 'react';
 import {
   FeatureControl,
   InfoTooltip,
+  PageTitle,
   PermissionControl,
 } from '@wepublish/ui/editor';
+import { type ElementType, useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdAnalytics,
@@ -65,7 +66,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const Title = styled.h3`
+const Title = styled(PageTitle)`
   grid-column: -1/1;
 `;
 
@@ -88,13 +89,16 @@ type Integration = {
   permission: string;
   path: string;
   icon: ElementType;
-  logos: string[];
+  logos: { src: string; name: string }[];
   /** Set for integrations that ship dark behind a feature. */
   feature?: FeatureKey;
 };
 
 export function IntegrationList() {
   const { t } = useTranslation();
+  const listId = useId();
+  const titleId = (path: string) =>
+    `${listId}${path.replace(/\//g, '-')}-title`;
 
   const integrations: Integration[] = [
     {
@@ -103,7 +107,7 @@ export function IntegrationList() {
       permission: CanGetAISettings.id,
       path: '/integrations/ai',
       icon: MdSmartToy,
-      logos: [vercelLogo],
+      logos: [{ src: vercelLogo, name: 'Vercel' }],
     },
     {
       title: t('integrations.challengeProvider'),
@@ -111,7 +115,10 @@ export function IntegrationList() {
       permission: CanGetChallengeProviderSettings.id,
       path: '/integrations/challenge',
       icon: MdSecurity,
-      logos: [cloudflareLogo, hcaptchaLogo],
+      logos: [
+        { src: cloudflareLogo, name: 'Cloudflare' },
+        { src: hcaptchaLogo, name: 'hCaptcha' },
+      ],
     },
     {
       title: t('integrations.paymentProvider'),
@@ -119,7 +126,12 @@ export function IntegrationList() {
       permission: CanGetPaymentProviderSettings.id,
       path: '/integrations/payment',
       icon: MdCreditCard,
-      logos: [payrexxLogo, stripeLogo, mollieLogo, bexioLogo],
+      logos: [
+        { src: payrexxLogo, name: 'Payrexx' },
+        { src: stripeLogo, name: 'Stripe' },
+        { src: mollieLogo, name: 'Mollie' },
+        { src: bexioLogo, name: 'bexio' },
+      ],
     },
     {
       title: t('integrations.trackingPixel'),
@@ -127,7 +139,7 @@ export function IntegrationList() {
       permission: CanGetTrackingPixelSettings.id,
       path: '/integrations/tracking-pixel',
       icon: MdAnalytics,
-      logos: [proLitterisLogo],
+      logos: [{ src: proLitterisLogo, name: 'ProLitteris' }],
     },
     {
       title: t('integrations.mailProvider'),
@@ -135,7 +147,11 @@ export function IntegrationList() {
       permission: CanGetMailProviderSettings.id,
       path: '/integrations/mail',
       icon: MdEmail,
-      logos: [mailgunLogo, mailChimpLogo, slackLogo],
+      logos: [
+        { src: mailgunLogo, name: 'Mailgun' },
+        { src: mailChimpLogo, name: 'Mailchimp' },
+        { src: slackLogo, name: 'Slack' },
+      ],
     },
     {
       title: t('integrations.letterProvider'),
@@ -143,7 +159,7 @@ export function IntegrationList() {
       feature: 'paper-letters',
       path: '/integrations/letter',
       icon: MdMarkunreadMailbox,
-      logos: [pingenLogo],
+      logos: [{ src: pingenLogo, name: 'Pingen' }],
     },
     {
       title: t('integrations.pdfRenderer'),
@@ -151,7 +167,7 @@ export function IntegrationList() {
       feature: 'paper-letters',
       path: '/integrations/pdf-renderer',
       icon: MdPictureAsPdf,
-      logos: [cloudflareLogo],
+      logos: [{ src: cloudflareLogo, name: 'Cloudflare' }],
     },
     {
       title: t('integrations.analytics'),
@@ -159,7 +175,7 @@ export function IntegrationList() {
       permission: CanGetAnalyticsProviderSettings.id,
       path: '/integrations/analytics',
       icon: MdAnalytics,
-      logos: [googleLogo],
+      logos: [{ src: googleLogo, name: 'Google' }],
     },
     {
       title: t('integrations.mailchimpSync'),
@@ -167,7 +183,7 @@ export function IntegrationList() {
       permission: CanGetMailchimpSyncSettings.id,
       path: '/integrations/mailchimp-sync',
       icon: MdSync,
-      logos: [mailChimpLogo],
+      logos: [{ src: mailChimpLogo, name: 'Mailchimp' }],
     },
   ];
 
@@ -190,20 +206,23 @@ export function IntegrationList() {
               <CardContent>
                 <Typography
                   variant="h6"
-                  component="div"
+                  component="h2"
                   sx={{
                     marginBottom: 2,
                   }}
                 >
-                  {integration.title} <InfoTooltip text={integration.info} />
+                  <span id={titleId(integration.path)}>
+                    {integration.title}
+                  </span>{' '}
+                  <InfoTooltip text={integration.info} />
                 </Typography>
 
                 <LogoList>
-                  {integration.logos.map((logo, index) => (
+                  {integration.logos.map(logo => (
                     <IntegrationLogo
-                      key={index}
-                      src={logo}
-                      alt=""
+                      key={logo.name}
+                      src={logo.src}
+                      alt={logo.name}
                     />
                   ))}
                 </LogoList>
@@ -214,6 +233,7 @@ export function IntegrationList() {
                   component={RouterLink}
                   to={integration.path}
                   size="small"
+                  aria-describedby={titleId(integration.path)}
                 >
                   {t('edit')}
                 </Button>

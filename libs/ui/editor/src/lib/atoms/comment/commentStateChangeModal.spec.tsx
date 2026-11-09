@@ -120,6 +120,16 @@ describe('CommentStateChangeModal', () => {
     expect(onClose).toHaveBeenCalled();
   });
 
+  it('does not close on escape while the change is saved', () => {
+    mockedUseMutation.mockReturnValue([mutate, { loading: true }]);
+    const onClose = vi.fn();
+    renderModal({ onClose });
+
+    fireEvent.keyDown(screen.getByRole('dialog'), { key: 'Escape' });
+
+    expect(onClose).not.toHaveBeenCalled();
+  });
+
   it('cannot request changes until a reason is picked', () => {
     renderModal({ newCommentState: CommentState.PendingUserChanges });
 

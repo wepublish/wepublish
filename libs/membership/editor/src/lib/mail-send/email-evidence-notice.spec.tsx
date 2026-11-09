@@ -115,7 +115,16 @@ describe('evidenceWarnings', () => {
 });
 
 describe('EmailEvidenceNotice', () => {
-  afterEach(cleanup);
+  // The notice measures the evidence against today, the fixtures against NOW.
+  beforeEach(() => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(NOW);
+  });
+
+  afterEach(() => {
+    cleanup();
+    vi.useRealTimers();
+  });
 
   const renderNotice = (data: unknown) => {
     useQuery.mockReturnValue({ data });

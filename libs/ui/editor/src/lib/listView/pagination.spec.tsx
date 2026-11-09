@@ -34,17 +34,42 @@ describe('Pagination', () => {
     renderPagination();
 
     expect(
-      screen.getByRole('button', { name: /go to page 10/i })
+      screen.getByRole('button', {
+        name: 'listView.pagination.page:{"page":10}',
+      })
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: /go to last page/i })
+      screen.getByRole('button', { name: 'listView.pagination.last' })
     ).toBeInTheDocument();
+  });
+
+  it('names its page controls in the user language', () => {
+    renderPagination({ page: 2 });
+
+    expect(
+      screen.getByRole('button', { name: 'listView.pagination.first' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'listView.pagination.previous' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'listView.pagination.next' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', {
+        name: 'listView.pagination.currentPage:{"page":2}',
+      })
+    ).toHaveAttribute('aria-current', 'page');
   });
 
   it('reports the page the user picked', () => {
     const { setPage } = renderPagination();
 
-    fireEvent.click(screen.getByRole('button', { name: /go to page 3/i }));
+    fireEvent.click(
+      screen.getByRole('button', {
+        name: 'listView.pagination.page:{"page":3}',
+      })
+    );
 
     expect(setPage).toHaveBeenCalledWith(3);
   });
@@ -65,6 +90,38 @@ describe('Pagination', () => {
     renderPagination();
 
     expect(screen.getByText(/95/)).toBeInTheDocument();
+  });
+
+  it('announces the total when a filter changes it', () => {
+    renderPagination();
+
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'listView.pagination.total'
+    );
+  });
+
+  it('names its navigation in the user language', () => {
+    renderPagination();
+
+    expect(
+      screen.getByRole('navigation', { name: 'listView.pagination.label' })
+    ).toBeInTheDocument();
+  });
+
+  it('takes a distinct name where a page has several', () => {
+    render(
+      <ThemeProvider theme={theme}>
+        <Pagination
+          label="Articles pages"
+          state={{ page: 1, limit: 10, setPage: vi.fn(), setLimit: vi.fn() }}
+          totalCount={95}
+        />
+      </ThemeProvider>
+    );
+
+    expect(
+      screen.getByRole('navigation', { name: 'Articles pages' })
+    ).toBeInTheDocument();
   });
 });
 

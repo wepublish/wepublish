@@ -220,6 +220,16 @@ describe('PeriodicJobsLog in archive mode', () => {
     expect(screen.getByText(/: OK$/)).toBeTruthy();
     expect(onVisibilityChange).toHaveBeenLastCalledWith(true);
   });
+
+  it('lists the runs one below the other', () => {
+    mockJobs([failedJob({ id: 'job-1' }), job({ id: 'job-2' })]);
+
+    const { container } = render(<PeriodicJobsLog />);
+
+    expect(
+      getComputedStyle(container.firstElementChild as Element).flexDirection
+    ).toBe('column');
+  });
 });
 
 describe('retrying a failed run', () => {

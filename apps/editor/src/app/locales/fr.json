@@ -96,6 +96,7 @@
       "validationFailedGeneric": "Impossible d’enregistrer. Corrigez les erreurs signalées.",
       "saveValidationFailed": "Échec de l’enregistrement",
       "publishValidationFailed": "Échec de la publication",
+      "title": "Modifier l’article",
       "overview": {
         "loadingTemplate": "Chargement du modèle…",
         "articlePending": "Article en attente",
@@ -230,6 +231,7 @@
         "paywall": "Paywall",
         "likeCount": "Likes",
         "tracking": "Suivi",
+        "hasErrors": "contient des erreurs",
         "likeCountInfo": "Nombre de « j’aime » que les lecteur·trice·s ont donnés à cet article sur le site. Vous pouvez corriger ce nombre ici si nécessaire.",
         "slugInfo": "La dernière partie de l’adresse web de l’article, p.ex. …/a/mon-article. Utilisez uniquement des minuscules, des chiffres et des tirets.",
         "hideAuthorsInfo": "Les auteur·trice·s ne sont pas affiché·e·s sur le site pour cet article. Ils et elles restent enregistré·e·s dans l’éditeur.",
@@ -241,7 +243,9 @@
         "teaserPropertiesInfo": "Paires clé-valeur supplémentaires que votre site peut utiliser pour des affichages particuliers. Nécessaire uniquement si les personnes qui développent votre site vous l’ont demandé. Les propriétés publiques sont visibles via l’API publique.",
         "enterSocialMediaImage": "Veuillez ajouter une image pour les réseaux sociaux",
         "chooseFile": "Choisir un fichier"
-      }
+      },
+      "unsavedChanges": "modifications non enregistrées",
+      "unpublishedChanges": "modifications pas encore publiées"
     },
     "articles": {
       "createModal": {
@@ -355,7 +359,8 @@
           "style": "Style",
           "role": "Rôle",
           "styleInfo": "Nom de style optionnel pour le bouton, p.ex. « outline ». N’a d’effet que si votre site le prend en charge.",
-          "roleInfo": "« Principal » met le bouton en avant. « Annuler » ferme la bannière au lieu d’ouvrir le lien. « Autre » affiche un bouton normal."
+          "roleInfo": "« Principal » met le bouton en avant. « Annuler » ferme la bannière au lieu d’ouvrir le lien. « Autre » affiche un bouton normal.",
+          "group": "Action {{number}}"
         },
         "content": "Contenu",
         "mustNotBeNegative": "La valeur ne doit pas être négative",
@@ -451,6 +456,7 @@
           "invalidURL": "URL ou code iframe non valide",
           "socialMediaList": "Message/vidéo Facebook, message Instagram, tweet Twitter, vidéo Vimeo, vidéo YouTube, vidéo TikTok, conversation Polis formatée par exemple comme :"
         },
+        "tweetBy": "Tweet de @{{user}}",
         "streamableVideo": "Vidéo Streamable"
       },
       "event": {
@@ -854,6 +860,7 @@
         "areYouSure": "Êtes-vous sûr·e ?",
         "areYouSureBody": "L’évaluation « {{ answer }} » sera supprimée définitivement et cette action est irréversible.",
         "areYouSureConfirmation": "Supprimer l’évaluation",
+        "type": "Type",
         "loading": "Chargement",
         "newAnswer": "Ajouter une évaluation",
         "placeholder": "Nom de l’évaluation",
@@ -931,6 +938,7 @@
       "dragToMove": "Glisser pour déplacer",
       "moveUp": "Monter",
       "moveDown": "Descendre",
+      "cardMoved": "{{card}} déplacé en position {{position}} sur {{total}}",
       "resetLayout": "Rétablir par défaut",
       "configureDone": "Terminé",
       "activity": "Dernière activité",
@@ -945,6 +953,8 @@
       "newUser": "Nouvel·le <0>utilisateur·trice</0> ajouté·e",
       "dashboard": "Tableau de bord",
       "notifications": "Notifications",
+      "moreNotifications_one": "+{{count}} autre notification",
+      "moreNotifications_other": "+{{count}} autres notifications",
       "showAllNotifications": "Tout afficher",
       "greeting": "Bonjour, {{name}} !",
       "noData": "Pas de données actuelles sur les abonnés",
@@ -966,6 +976,7 @@
       "now": "Maintenant",
       "today": "Aujourd’hui",
       "tomorrow": "Demain",
+      "clear": "Effacer la date",
       "yesterday": "Hier",
       "done": "OK"
     },
@@ -1036,6 +1047,7 @@
         "cancelled": "Annulé",
         "description": "Description",
         "endsAt": "Fin",
+        "endsBeforeStart": "La fin ne peut pas précéder le début",
         "externalSource": "Source externe (pour les événements importés)",
         "image": "Image",
         "location": "Lieu",
@@ -1132,7 +1144,126 @@
         "updatedAt": "{{updatedAt, ccc PP p}}",
         "upload": "Téléverser",
         "uploadDocument": "Téléverser un document",
-        "uploadFailed": "Le téléversement a échoué. Veuillez réessayer."
+        "uploadFailed": "Le téléversement a échoué. Veuillez réessayer.",
+        "openOriginal": "Ouvrir l'original",
+        "replaceFile": "Choisir un autre fichier"
+      }
+    },
+    "videos": {
+      "overview": {
+        "description": "Description",
+        "videoLibrary": "Bibliothèque de vidéos",
+        "copyLink": "Copier le lien",
+        "edit": "Modifier",
+        "fileSize": "Taille du fichier",
+        "filename": "Nom du fichier",
+        "noDescription": "Pas de description",
+        "openLink": "Ouvrir",
+        "preview": "Aperçu",
+        "storageFull": "Limite de stockage atteinte",
+        "storageUsage": "{{used}} / {{limit}} utilisés ({{count}} fichier(s))",
+        "storageWarning": "Stockage presque plein",
+        "title": "Titre",
+        "unlimited": "Illimité",
+        "untitled": "Sans titre",
+        "uploadVideo": "Téléverser une vidéo",
+        "storageUsageInfo": "Taille totale de toutes les vidéos téléversées. Une fois la limite atteinte, vous ne pourrez téléverser de nouvelles vidéos qu’après en avoir supprimé d’anciennes."
+      },
+      "panels": {
+        "cancel": "Annuler",
+        "close": "Fermer",
+        "confirm": "Confirmer",
+        "created": "Créé",
+        "createdAt": "{{createdAt, ccc PP p}}",
+        "deleteVideo": "Supprimer la vidéo ?",
+        "description": "Description",
+        "videoUpdated": "Vidéo mise à jour",
+        "dropVideo": "Déposez un fichier ici ou cliquez pour sélectionner",
+        "editVideo": "Modifier la vidéo",
+        "fileSize": "Taille du fichier",
+        "fileTooLarge": "Le fichier est trop volumineux. Taille maximale : {{maxSize}} Mo.",
+        "filename": "Nom du fichier",
+        "information": "Informations",
+        "maxFileSize": "Taille maximale du fichier : {{maxSize}} Mo",
+        "invalidVideo": "Type de fichier non pris en charge. Formats acceptés : MP4, WebM, OGG, MOV, M4V, MPEG",
+        "linkCopied": "Lien copié dans le presse-papiers",
+        "notFound": "Vidéo introuvable !",
+        "publicLink": "Lien public",
+        "title": "Titre",
+        "untitled": "Sans titre",
+        "updated": "Mis à jour",
+        "updatedAt": "{{updatedAt, ccc PP p}}",
+        "upload": "Téléverser",
+        "uploadVideo": "Téléverser une vidéo",
+        "uploadFailed": "Le téléversement a échoué. Veuillez réessayer.",
+        "attribution": "Attribution",
+        "source": "Source",
+        "link": "Lien",
+        "license": "Licence",
+        "urlPlaceholder": "https://",
+        "sourceLink": "Lien vers la source originale du fichier.",
+        "openOriginal": "Ouvrir l'original",
+        "bitrate": "Débit",
+        "dimensions": "Dimensions",
+        "dimensionsValue": "{{width}} × {{height}}",
+        "replaceFile": "Choisir un autre fichier"
+      }
+    },
+    "audio": {
+      "overview": {
+        "description": "Description",
+        "audioLibrary": "Bibliothèque audio",
+        "copyLink": "Copier le lien",
+        "edit": "Modifier",
+        "fileSize": "Taille du fichier",
+        "filename": "Nom du fichier",
+        "noDescription": "Pas de description",
+        "openLink": "Ouvrir",
+        "storageFull": "Limite de stockage atteinte",
+        "storageUsage": "{{used}} / {{limit}} utilisés ({{count}} fichier(s))",
+        "storageWarning": "Stockage presque plein",
+        "title": "Titre",
+        "unlimited": "Illimité",
+        "untitled": "Sans titre",
+        "uploadAudio": "Téléverser un fichier audio",
+        "storageUsageInfo": "Taille totale de tous les fichiers audio téléversés. Une fois la limite atteinte, vous ne pourrez téléverser de nouveaux fichiers qu’après en avoir supprimé d’anciens."
+      },
+      "panels": {
+        "cancel": "Annuler",
+        "close": "Fermer",
+        "confirm": "Confirmer",
+        "created": "Créé",
+        "createdAt": "{{createdAt, ccc PP p}}",
+        "deleteAudio": "Supprimer le fichier audio ?",
+        "description": "Description",
+        "audioUpdated": "Fichier audio mis à jour",
+        "dropAudio": "Déposez un fichier ici ou cliquez pour sélectionner",
+        "editAudio": "Modifier le fichier audio",
+        "fileSize": "Taille du fichier",
+        "fileTooLarge": "Le fichier est trop volumineux. Taille maximale : {{maxSize}} Mo.",
+        "filename": "Nom du fichier",
+        "information": "Informations",
+        "maxFileSize": "Taille maximale du fichier : {{maxSize}} Mo",
+        "invalidAudio": "Type de fichier non pris en charge. Formats acceptés : MP3, OGG, WAV, WebM, AAC, M4A, FLAC",
+        "linkCopied": "Lien copié dans le presse-papiers",
+        "notFound": "Fichier audio introuvable !",
+        "publicLink": "Lien public",
+        "title": "Titre",
+        "untitled": "Sans titre",
+        "updated": "Mis à jour",
+        "updatedAt": "{{updatedAt, ccc PP p}}",
+        "upload": "Téléverser",
+        "uploadAudio": "Téléverser un fichier audio",
+        "uploadFailed": "Le téléversement a échoué. Veuillez réessayer.",
+        "attribution": "Attribution",
+        "source": "Source",
+        "link": "Lien",
+        "license": "Licence",
+        "urlPlaceholder": "https://",
+        "sourceLink": "Lien vers la source originale du fichier.",
+        "openOriginal": "Ouvrir l'original",
+        "bitrate": "Débit",
+        "replaceFile": "Choisir un autre fichier"
       }
     },
     "images": {
@@ -1182,6 +1313,7 @@
         "uploadImage": "Téléverser une image",
         "urlPlaceholder": "https://www.lien.com",
         "focalPoint": "Point focal",
+        "focalPointPosition": "{{x}} % depuis la gauche, {{y}} % depuis le haut",
         "focalPointInfo": "Faites glisser le point sur la partie la plus importante de l’image. Lorsque l’image est recadrée, p.ex. dans les teasers, cette zone reste visible.",
         "descriptionInfo": "Décrivez ce que l’on voit sur l’image. Le texte sert de texte alternatif pour les personnes utilisant un lecteur d’écran et pour les moteurs de recherche.",
         "linkUrlInfo": "Adresse web qui s’ouvre lorsque les lecteur·trice·s cliquent sur l’image. Laissez vide si l’image ne doit pas être un lien.",
@@ -1284,7 +1416,8 @@
       "submit": "Envoyer le lien",
       "sent": "Si un compte existe avec cette adresse e-mail, un lien de réinitialisation a été envoyé. Veuillez vérifier votre boîte de réception.",
       "notConfigured": "La réinitialisation du mot de passe n’est pas configurée. Veuillez contacter votre administrateur.",
-      "backToLogin": "Retour à la connexion"
+      "backToLogin": "Retour à la connexion",
+      "title": "Réinitialiser le mot de passe"
     },
     "setNewPassword": {
       "description": "Entrez votre nouveau mot de passe.",
@@ -1336,6 +1469,7 @@
         "bodyModeHelp": "Visuel : modifiez le contenu comme dans un traitement de texte. HTML : modifiez directement le code source – pour utilisateur·trice·s avancé·e·s. Texte brut : la version texte pour les programmes de messagerie sans HTML ; elle est générée automatiquement.",
         "backgroundHelp": "Couleur de la surface autour du contenu de l’e-mail.",
         "contentWidthHelp": "Largeur maximale du contenu en pixels. 600 px est une valeur éprouvée qui s’affiche bien dans la plupart des programmes de messagerie. Sur les petits écrans, le contenu se rétrécit automatiquement.",
+        "bodyMode": "Mode d’édition",
         "letterLayout": "Papier à lettres",
         "letterLayoutDefault": "Par défaut ({{name}})",
         "letterLayoutNone": "Par défaut (aucun)",
@@ -1388,7 +1522,8 @@
         "appendJwtDone": "Jeton de connexion déjà présent — le destinataire est connecté au clic.",
         "frameTitle": "Éditeur du contenu de l’e-mail",
         "imageAltHelp": "Décrit l’image en quelques mots. Affiché si l’image ne se charge pas et lu par les lecteurs d’écran.",
-        "imageWidthHelp": "Laissez vide pour utiliser la taille d’origine. L’image n’est jamais plus large que l’e-mail."
+        "imageWidthHelp": "Laissez vide pour utiliser la taille d’origine. L’image n’est jamais plus large que l’e-mail.",
+        "toolbar": "Mise en forme"
       },
       "goToPlaceholders": "Espaces réservés disponibles",
       "htmlContent": "Contenu HTML",
@@ -1568,7 +1703,9 @@
         "optional_invoices_0_description": "Description de la dernière facture."
       },
       "statusHelp": "Une coche signifie qu’un e-mail automatique utilise ce modèle. « Inutilisé » signifie qu’aucun e-mail automatique ne l’utilise – vous pouvez tout de même l’envoyer manuellement via « Messages manuels ».",
-      "placeholdersInfo": "Les espaces réservés sont remplacés automatiquement à l’envoi par les données de chaque destinataire, p. ex. son prénom. Chaque e-mail devient ainsi personnel."
+      "placeholdersInfo": "Les espaces réservés sont remplacés automatiquement à l’envoi par les données de chaque destinataire, p. ex. son prénom. Chaque e-mail devient ainsi personnel.",
+      "searchPlaceholdersLabel": "Rechercher des espaces réservés",
+      "empty": "Aucun modèle d’e-mail pour le moment."
     },
     "mailTemplateSelect": {
       "sendAsLetter": "Aussi par lettre",
@@ -1771,8 +1908,7 @@
         "showHistory": "Afficher dans l’historique",
         "again": "Nouveau changement",
         "unreachableEmail": "{{count}} personnes avec une adresse e-mail injoignable (fictive ou morte) sont tout de même changées – les e-mails ne leur parviendront pas.",
-        "filterTitle": "Filtrer le groupe d’utilisateurs",
-        "segmentsLabel": "Filtrer le groupe d’utilisateurs par statut e-mail"
+        "filterTitle": "Filtrer le groupe d’utilisateurs"
       },
       "history": {
         "allChannels": "Tous"
@@ -1803,10 +1939,13 @@
       "events": "Événements",
       "eventTags": "Tags",
       "documentLibrary": "Documents",
+      "videoLibrary": "Videos",
       "imageLibrary": "Images",
       "importableEvents": "Événements importables",
       "media": "Fichiers",
       "menu": "Menu",
+      "mainNavigation": "Navigation principale",
+      "skipToContent": "Aller au contenu principal",
       "colorMode": {
         "title": "Apparence",
         "light": "Clair",
@@ -1852,7 +1991,8 @@
       },
       "letterLayouts": "Papier à lettres",
       "articleTemplates": "Modèles d'articles",
-      "language": "Langue"
+      "language": "Langue",
+      "audioLibrary": "Audio"
     },
     "pageTitles": {
       "login": "Connexion",
@@ -1915,6 +2055,12 @@
       "documents": "Documents",
       "documentUpload": "Téléverser des documents",
       "documentEdit": "Modifier le document",
+      "videos": "Vidéos",
+      "videoUpload": "Téléverser des vidéos",
+      "videoEdit": "Modifier la vidéo",
+      "audio": "Audio",
+      "audioUpload": "Téléverser de l’audio",
+      "audioEdit": "Modifier l’audio",
       "navigations": "Menus",
       "navigationCreate": "Nouveau menu",
       "navigationEdit": "Modifier le menu",
@@ -2009,6 +2155,7 @@
         "linkTypeArticle": "Article",
         "linkTypePage": "Page",
         "linkTypeExternal": "Lien externe",
+        "linkType": "Type de lien",
         "keyInfo": "Nom technique utilisé par votre site pour trouver cette navigation, p.ex. « main » ou « footer ». À modifier uniquement en accord avec les personnes qui développent votre site."
       }
     },
@@ -2031,6 +2178,7 @@
       "validationFailedGeneric": "Impossible d’enregistrer. Corrigez les erreurs signalées.",
       "saveValidationFailed": "Échec de l’enregistrement",
       "publishValidationFailed": "Échec de la publication",
+      "title": "Modifier la page",
       "overview": {
         "createComment": "Créer un commentaire",
         "duplicate": "Dupliquer",
@@ -2100,7 +2248,9 @@
         "hideFooterInfo": "Masque le pied de page du site sur cette page, p.ex. pour les landing pages.",
         "enterSocialMediaImage": "Veuillez ajouter une image pour les réseaux sociaux",
         "createTemplate": "Créer un modèle à partir de la page"
-      }
+      },
+      "unsavedChanges": "modifications non enregistrées",
+      "unpublishedChanges": "modifications pas encore publiées"
     },
     "pages": {
       "overview": {
@@ -2266,7 +2416,9 @@
       "insertYourNewAnswer": "Saisir une nouvelle réponse",
       "urlCopied": "Lien de vote copié dans le presse-papiers.",
       "urlCopyingFailed": "Le lien de vote n’a pas pu être copié.",
-      "votes": "votes"
+      "votes": "votes",
+      "answerLabel": "Réponse {{number}}",
+      "deleteAnswer": "Supprimer la réponse « {{answer}} »"
     },
     "pollEditView": {
       "addAndSaveNewAnswer": "Ajouter une réponse",
@@ -2294,7 +2446,9 @@
       "emptySource": "Veuillez saisir le nom de la source.",
       "newSourcePlaceholder": "Nom de la source du vote (p. ex. Facebook)",
       "sourceHeaderCell": "Source",
-      "noPollAvailable": "Aucun sondage disponible."
+      "noPollAvailable": "Aucun sondage disponible.",
+      "deleteSource": "Supprimer la source « {{source}} »",
+      "votesFor": "Votes pour « {{answer}} » de la source {{source}}"
     },
     "pollList": {
       "closedAt": "Fermé le",
@@ -2318,7 +2472,9 @@
       "fingerprint": "Empreinte numérique",
       "deleteItems": "Supprimer les éléments",
       "userIdInfo": "Renseigné uniquement si la personne était connectée lors du vote. Vide pour les votes anonymes.",
-      "fingerprintInfo": "Un code anonyme dérivé de la connexion internet et du navigateur de la personne qui vote. De nombreux votes avec la même empreinte proviennent probablement du même appareil ; vous pouvez les sélectionner et les supprimer."
+      "fingerprintInfo": "Un code anonyme dérivé de la connexion internet et du navigateur de la personne qui vote. De nombreux votes avec la même empreinte proviennent probablement du même appareil ; vous pouvez les sélectionner et les supprimer.",
+      "selectAll": "Sélectionner tous les votes",
+      "selectVote": "Sélectionner le vote du {{date}}"
     },
     "pollStateIndication": {
       "closed": "Sondage fermé",
@@ -2338,6 +2494,7 @@
         "heading": "Titre {{level}}",
         "label": "Mise en forme",
         "textStyle": "Style de texte",
+        "formatting": "Mise en forme du texte",
         "undo": "Annuler",
         "redo": "Rétablir",
         "bold": "Gras",
@@ -2348,12 +2505,15 @@
         "superscript": "Exposant",
         "textColor": "Couleur du texte",
         "backgroundColor": "Couleur de fond",
+        "lists": "Listes",
         "bulletList": "Liste à puces",
         "orderedList": "Liste numérotée",
+        "alignment": "Alignement",
         "alignLeft": "Aligner à gauche",
         "alignCenter": "Centrer",
         "alignRight": "Aligner à droite",
         "link": "Lien",
+        "editLink": "Modifier le lien",
         "table": "Insérer un tableau",
         "codeBlock": "Bloc de code",
         "blockquote": "Citation",
@@ -2385,8 +2545,12 @@
         "deleteRow": "Supprimer la ligne",
         "mergeCells": "Fusionner les cellules",
         "splitCell": "Scinder la cellule",
-        "headerCell": "Cellule d'en-tête"
+        "headerCell": "Cellule d'en-tête",
+        "columns": "Colonnes",
+        "rows": "Lignes",
+        "cells": "Cellules"
       },
+      "dragHandle": "Faire glisser pour déplacer",
       "colorPicker": {
         "clear": "Réinitialiser la couleur"
       },
@@ -2575,7 +2739,8 @@
           "description": "Part lorsqu’un abonnement est résilié – par la personne sur le site web ou par vous dans l’éditeur. La résiliation pour facture impayée est gérée par la chronologie.",
           "example": "« Dommage de vous voir partir – votre abonnement court jusqu’au 31 décembre. »"
         }
-      }
+      },
+      "moveMail": "Déplacer «{{title}}»"
     },
     "subscriptionList": {
       "filter": {
@@ -3153,6 +3318,7 @@
         "noActivityDay": "Aucun mouvement d’abonnement ce jour-là",
         "noActivityMonth": "Aucun mouvement d’abonnement ce mois-ci",
         "flowsTitle": "Entrées et sorties",
+        "keyboardHint": "Utilisez les flèches du clavier pour parcourir les dates. La vue tableau du tableau de bord Audience affiche les mêmes chiffres.",
         "net": "Solde",
         "since": "depuis le {{date}}",
         "flowsInfo": "Chaque barre montre combien d’abonnements ont été gagnés (au-dessus de la ligne) ou perdus (en dessous) par jour ou par mois. Survolez une barre pour voir le détail et le solde."
@@ -3162,9 +3328,9 @@
           "totalActiveSubscriptionCount": "Abonnements actifs et payés à la date de référence, ou qui seront payés et potentiellement encore actifs à l’avenir.",
           "overdueSubscriptionCount": "Abonnements renouvelés dont le paiement est dû. Ne sont pas inclus les abonnements achetés pour la première fois et qui n’ont pas été payés.",
           "renewedSubscriptionCount": "Abonnements renouvelés et payés pour une nouvelle période.",
-          "createdSubscriptionCount": "Abonnements entièrement nouveaux avec seulement une période payée jusqu’à présent.",
-          "deactivatedSubscriptionCount": "Abonnements désactivés/résiliés et non renouvelés.",
-          "replacedSubscriptionCount": "Abonnements remplacés par un autre (p. ex. abonnements d’essai).",
+          "createdSubscriptionCount": "Abonnements entièrement nouveaux avec seulement une période payée jusqu’à présent. Les abonnements qui en remplacent un autre (upgrades) ne sont pas inclus.",
+          "deactivatedSubscriptionCount": "Abonnements désactivés/résiliés et non renouvelés. Les abonnements remplacés par un upgrade ne sont pas inclus.",
+          "replacedSubscriptionCount": "Abonnements remplacés par un autre, p. ex. lors d’un upgrade. L’abonnement remplacé ne compte pas comme désactivé, le nouveau pas comme nouvel abonnement.",
           "predictedSubscriptionRenewalCount": "Nombre d’abonnements arrivant à expiration et prêts à être renouvelés.\n Abonnements pour la première fois, par rapport aux …\n Abonnements avec un historique de renouvellement (renouvellements subséquents)\n Les renouvellements sont affichés depuis le début de la période sélectionnée (ou la date actuelle, si la période commence dans le passé)\n Les renouvellements sont représentés par le nombre d’abonnements actuellement payés et actifs configurés pour se renouveler automatiquement.",
           "endingSubscriptionCount": "Abonnements qui expirent à la fin de leur période, excluant ceux configurés pour se renouveler automatiquement."
         },
@@ -3220,8 +3386,8 @@
       "showUsers": "Afficher les détails",
       "byDate": "Par",
       "totalNewSubscriptionsInfo": "Somme des abonnements remplacés, nouveaux et renouvelés. Seules les colonnes actives sont additionnées.",
-      "renewalRateInfo": "Part des abonnements qui ont été renouvelés à la fin de leur période. Les abonnements remplacés, renouvelés et désactivés sont pris en compte. Les abonnements renouvelés et non payés réduisent le taux de renouvellement jusqu’à ce qu’ils soient payés.",
-      "cancellationRateInfo": "Part des abonnements qui n’ont pas été renouvelés mais résiliés à la fin de leur période. Les abonnements remplacés, renouvelés et désactivés sont pris en compte. Les abonnements renouvelés et non payés augmentent le taux de résiliation jusqu’à ce qu’ils soient payés.",
+      "renewalRateInfo": "Part des abonnements qui ont été renouvelés à la fin de leur période, comptée le jour de la décision. Les abonnements renouvelés, remplacés et désactivés sont pris en compte ; un upgrade compte une fois comme renouvellement. Les abonnements renouvelés et non payés réduisent le taux de renouvellement jusqu’à ce qu’ils soient payés.",
+      "cancellationRateInfo": "Part des abonnements qui n’ont pas été renouvelés mais résiliés à la fin de leur période, comptée le jour de la décision. Les abonnements renouvelés, remplacés et désactivés sont pris en compte ; un upgrade compte une fois comme renouvellement. Les abonnements renouvelés et non payés augmentent le taux de résiliation jusqu’à ce qu’ils soient payés.",
       "predictedSubscriptionRenewalCountPerDay": {
         "highProbabilityInfo": "Abonnements payés avec renouvellement automatique, déjà renouvelés au moins une fois, qui arrivent de nouveau à renouvellement à la fin de leur période.",
         "lowProbabilityInfo": "Abonnements payés avec renouvellement automatique qui arrivent pour la première fois à renouvellement à la fin de leur première période."
@@ -3451,6 +3617,8 @@
         "bexioMarkInvoiceAsOpenInfo": "Si activé, Bexio passe la facture à « ouverte » après l’envoi, au lieu de la laisser en brouillon."
       },
       "placeholderSecret": "Inchangé (masqué)",
+      "secretNotSet": "Non défini",
+      "secretStored": "Enregistré (masqué) – laisser vide pour le conserver",
       "pdfRendererSettings": {
         "type": "Type",
         "cloudflareAccountId": "ID de compte Cloudflare",
@@ -3514,6 +3682,7 @@
         "analytics": "Analytique",
         "invalidFile": "Le fichier d’identifiants Google Analytics est invalide",
         "credentialsReadyToBeSaved": "Les identifiants sont prêts à être enregistrés !",
+        "credentialsStored": "Identifiants enregistrés – glissez-déposez un nouveau fichier ici pour les remplacer",
         "dropCredentialsFile": "Déposez le fichier d’identifiants ici !",
         "dragCredentialsFileHere": "Glissez-déposez le fichier d’identifiants Google Analytics ici",
         "articlePrefix": "Préfixe d’URL des articles We.Publish (généralement /a/)",
@@ -3775,8 +3944,7 @@
           "text": "Texte",
           "textPrimary": "La couleur du texte du site",
           "default": "Par défaut",
-          "paper": "Papier",
-          "pickColor": "Choisir la couleur"
+          "paper": "Papier"
         },
         "typography": {
           "fontFamily": "Famille de polices",
@@ -3786,6 +3954,7 @@
           "letterSpacing": "Espacement des lettres",
           "textTransform": "Transformation du texte",
           "textTransformDefault": "Par défaut",
+          "unitFor": "Unité pour {{label}}",
           "textTransformCapitalize": "Première lettre en majuscule",
           "textTransformUppercase": "Majuscules",
           "textTransformLowercase": "Minuscules",
@@ -4181,7 +4350,6 @@
         "unresponsive": "Sans réaction",
         "unknown": "Inconnu",
         "active": "Active",
-        "pick": "Tous les statuts",
         "hint": "Plusieurs statuts signifient « l’un ou l’autre ». « Sans réaction » : des e-mails ont été remis, mais aucune connexion ni aucun clic depuis longtemps (réglage « Qualité des e-mails »). À atteindre par courrier : substitution + injoignable.",
         "overview": "Personnes de cette audience par statut e-mail (indépendamment de la sélection)",
         "refresh": "Actualiser les statuts",
@@ -4800,6 +4968,7 @@
       "message": "Les modifications que vous avez apportées ne seront peut-être pas enregistrées."
     },
     "action": "Actions",
+    "moreInfo": "Plus d’informations",
     "trackingPixels": {
       "errorHeader": "Erreur",
       "noPixelInfoDescription": "C’est le cas, par exemple, si aucun suivi n’est configuré ou pour les anciens articles.",
@@ -4835,6 +5004,8 @@
       "deleteBlock": "Supprimer le bloc",
       "moveBlockUp": "Déplacer le bloc vers le haut",
       "moveBlockDown": "Déplacer le bloc vers le bas",
+      "movedTo": "Bloc déplacé en position {{position}} sur {{count}}",
+      "deleted": "Bloc supprimé",
       "styleHelp": "Modifie l’apparence de ce bloc sur le site. Laissez vide pour l’affichage par défaut. Les styles se gèrent sous « Styles de blocs »."
     },
     "blockTiming": {
@@ -4933,7 +5104,8 @@
       "description": "Enregistrer le brouillon toutes les 30 secondes pendant que vous travaillez"
     },
     "colorPicker": {
-      "pickColor": "Choisir la couleur"
+      "pickColor": "Choisir la couleur",
+      "pickColorFor": "Choisir la couleur : {{label}}"
     },
     "errorBoundary": {
       "title": "Un problème est survenu sur cette page",
@@ -4955,12 +5127,22 @@
         "cancel": "Annuler"
       },
       "table": {
-        "empty": "Rien à afficher"
+        "empty": "Rien à afficher",
+        "label": "Tableau",
+        "loading": "Chargement",
+        "resizeColumn": "Redimensionner la colonne {{column}}"
       },
       "pagination": {
         "total": "{{count}} entrées",
         "pageSize": "Entrées par page",
-        "perPage": "{{count}} / page"
+        "perPage": "{{count}} / page",
+        "label": "Pagination",
+        "page": "Aller à la page {{page}}",
+        "currentPage": "Page {{page}}",
+        "first": "Aller à la première page",
+        "last": "Aller à la dernière page",
+        "next": "Aller à la page suivante",
+        "previous": "Aller à la page précédente"
       }
     },
     "dateRange": {
@@ -4983,6 +5165,8 @@
       "title": "Palette de commandes",
       "placeholder": "Où voulez-vous aller ?",
       "empty": "Aucun résultat pour",
+      "resultCount_one": "{{count}} résultat",
+      "resultCount_other": "{{count}} résultats",
       "groups": {
         "favourite": "Favoris",
         "navigate": "Aller à",
@@ -5012,6 +5196,8 @@
         "eventTag": "Créer un tag d'événement",
         "image": "Téléverser une image",
         "document": "Téléverser un document",
+        "video": "Téléverser une vidéo",
+        "audio": "Téléverser un audio",
         "navigation": "Créer une navigation",
         "banner": "Créer une bannière",
         "author": "Créer un auteur",
@@ -5174,7 +5360,8 @@
         "nothingToCompare": "L’audience Mailchimp n’a ni champs de contact ni groupes d’intérêt propres — aucune condition n’est possible.",
         "pickGroup": "Choisir un groupe …",
         "stored": "Enregistré dans le document",
-        "value": "Valeur"
+        "value": "Valeur",
+        "operator": "Comparaison"
       },
       "editor": {
         "back": "Retour à l’aperçu général",
@@ -5228,7 +5415,8 @@
         "mergeTagTitle": "Insérer une balise de fusion Mailchimp",
         "noTag": "Aucune balise trouvée.",
         "remove": "Retirer",
-        "searchTag": "Rechercher une balise …"
+        "searchTag": "Rechercher une balise …",
+        "linkUrl": "URL du lien"
       },
       "report": {
         "clipped": "Gmail tronque ce numéro et cache la fin — mentions légales, lien de désinscription et adresse — derrière «Message tronqué».",

@@ -53,10 +53,27 @@ const ActionSelect = styled(TextField)`
   min-width: 220px;
 `;
 
-const Monospace = styled.span`
+const SessionFilterButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 4px;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  color: inherit;
   font-family: monospace;
   font-size: 0.85em;
   cursor: pointer;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.vars.palette.action.hover};
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.vars.palette.primary.main};
+    outline-offset: 2px;
+  }
 `;
 
 const Muted = styled.span`
@@ -178,7 +195,7 @@ function AuditLogList() {
         <FilterBar>
           <SearchInput
             value={search}
-            placeholder={t('auditLogList.filter.searchPlaceholder')}
+            label={t('auditLogList.filter.searchPlaceholder')}
             onChange={event => setSearch(event.target.value)}
             slotProps={{
               input: {
@@ -218,7 +235,7 @@ function AuditLogList() {
 
           <TextField
             value={filter.entity ?? ''}
-            placeholder={t('auditLogList.filter.entity')}
+            label={t('auditLogList.filter.entity')}
             onChange={event =>
               updateFilter({ entity: event.target.value || undefined })
             }
@@ -227,7 +244,7 @@ function AuditLogList() {
 
           <TextField
             value={filter.sessionId ?? ''}
-            placeholder={t('auditLogList.filter.session')}
+            label={t('auditLogList.filter.session')}
             onChange={event =>
               updateFilter({ sessionId: event.target.value || undefined })
             }
@@ -378,13 +395,14 @@ function AuditLogList() {
                 sessionId ?
                   <IconButtonTooltip
                     caption={t('auditLogList.overview.filterBySession')}
+                    describeChild
                   >
-                    <Monospace
+                    <SessionFilterButton
+                      type="button"
                       onClick={() => updateFilter({ sessionId })}
-                      role="button"
                     >
-                      {sessionId.slice(0, 8)}… <MdFilterAlt />
-                    </Monospace>
+                      {sessionId.slice(0, 8)}… <MdFilterAlt aria-hidden />
+                    </SessionFilterButton>
                   </IconButtonTooltip>
                 : <Muted>—</Muted>,
               exportValue: ({ sessionId }) => sessionId,

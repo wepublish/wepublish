@@ -13,7 +13,6 @@ import { UserAuthenticationService } from './user-authentication.service';
 import { JwtAuthenticationService } from './jwt-authentication.service';
 import {
   SessionCacheInvalidator,
-  unselectPassword,
   UserSession,
 } from '@wepublish/authentication/api';
 import { MailContext, mailLogType } from '@wepublish/mail/api';
@@ -546,7 +545,7 @@ export class SessionService {
 
     const user = await this.prisma.user.findUnique({
       where: { email },
-      select: unselectPassword,
+      include: { address: true, paymentProviderCustomers: true },
     });
 
     if (!user) {

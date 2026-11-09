@@ -27,7 +27,10 @@ const user = () =>
     email: 'jane@example.com',
     firstName: 'Jane',
     name: 'Doe',
-    password: 'secret',
+    // Prisma omits the password everywhere; these stay on the row.
+    roleIDs: ['admin'],
+    totpEnabled: true,
+    totpExempt: false,
   }) as any;
 
 const config = (
@@ -137,6 +140,18 @@ describe('MailController letter mode', () => {
     expect(mailContext.buildMailData).toHaveBeenCalledWith(
       expect.objectContaining({ purlOrigin: 'letter', mode: 'send' })
     );
+  });
+
+  it('leaves the authorization fields out of the letter data', async () => {
+    const { send, mailContext } = setup();
+
+    await send();
+
+    const [{ recipient }] = (mailContext.buildMailData as Mock).mock.calls[0];
+
+    expect(recipient.roleIDs).toBeUndefined();
+    expect(recipient.totpEnabled).toBeUndefined();
+    expect(recipient.totpExempt).toBeUndefined();
   });
 
   // A placeholder address is exactly who a letter is for: it must reach the

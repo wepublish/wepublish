@@ -4,12 +4,13 @@ import {
   mockChallengeToken,
   renderWithProviders,
   TEST_CAPTCHA_LABEL,
+  TestLocale,
 } from '@wepublish/mocks/website';
 import { CaptchaType } from '@wepublish/website/api';
 import { act, createRef } from 'react';
 import { BuilderChallengeRef, Challenge } from './challenge';
 
-const renderChallenge = (challenge = mockChallenge()) => {
+const renderChallenge = (challenge = mockChallenge(), locale?: TestLocale) => {
   const onChange = vi.fn();
   const challengeRef = createRef<BuilderChallengeRef>();
 
@@ -18,7 +19,8 @@ const renderChallenge = (challenge = mockChallenge()) => {
       challenge={challenge}
       challengeRef={challengeRef}
       onChange={onChange}
-    />
+    />,
+    { locale }
   );
 
   return { onChange, challengeRef };
@@ -63,4 +65,15 @@ describe('Challenge', () => {
       expect(onChange).toHaveBeenCalledWith(mockChallengeToken)
     );
   });
+
+  it.each([CaptchaType.CfTurnstile, CaptchaType.HCaptcha])(
+    'shows the %s widget in the site language',
+    async type => {
+      renderChallenge(mockChallenge({ type }), 'fr');
+
+      expect(
+        screen.getByRole('group', { name: TEST_CAPTCHA_LABEL })
+      ).toHaveAttribute('data-language', 'fr');
+    }
+  );
 });
