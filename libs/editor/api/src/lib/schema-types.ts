@@ -4394,6 +4394,7 @@ export type MutationCreateSyncProviderSettingArgs = {
   mailchimp_listId?: InputMaybe<Scalars['String']['input']>;
   mailchimp_mergeFieldMappings?: InputMaybe<Array<Scalars['JSONObject']['input']>>;
   name?: InputMaybe<Scalars['String']['input']>;
+  newsletters?: InputMaybe<Array<SettingSyncProviderNewsletterInput>>;
   type: SyncProviderType;
 };
 
