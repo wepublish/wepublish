@@ -128,6 +128,13 @@ export class MemberPlan extends HasImage {
   @Field(() => Int, { nullable: true })
   maxCount?: number;
 
+  @Field(() => Int, {
+    nullable: true,
+    description:
+      "Printed issues one paid period is worth (print export). Empty: the medium's issues per year, pro rata.",
+  })
+  printIssuesPerPeriod?: number | null;
+
   @Field()
   extendable!: boolean;
 
@@ -196,6 +203,7 @@ export class CreateMemberPlanInput extends PickType(
     'productType',
     'externalReward',
     'maxCount',
+    'printIssuesPerPeriod',
     'migrateToTargetPaymentMethodID',
     'successPageId',
     'failPageId',

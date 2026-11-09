@@ -22,6 +22,7 @@ fragment FullMemberPlan on MemberPlan {
   currency
   extendable
   maxCount
+  printIssuesPerPeriod
   migrateToTargetPaymentMethodID
 
 

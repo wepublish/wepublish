@@ -1922,6 +1922,7 @@
       }
     },
     "navbar": {
+      "printIssues": "Druckausgaben",
       "deliverySuggestions": "Zustellkanal",
       "articles": "Artikel",
       "authors": "Autor*innen",
@@ -1992,6 +1993,9 @@
       "audioLibrary": "Audio"
     },
     "pageTitles": {
+      "printIssues": "Druckausgaben",
+      "printIssueCreate": "Neue Druckausgabe",
+      "printIssueEdit": "Druckausgabe bearbeiten",
       "login": "Anmelden",
       "impersonate": "Als User anmelden",
       "resetPassword": "Passwort zurücksetzen",
@@ -2127,7 +2131,8 @@
       "settings": "Einstellungen",
       "websiteSettings": "Website-Einstellungen",
       "seo": "SEO-Checkliste",
-      "logout": "Logout"
+      "logout": "Logout",
+      "printIssueList": "Druckliste"
     },
     "navigation": {
       "overview": {
@@ -2565,6 +2570,8 @@
     "save": "Speichern",
     "saveAndClose": "Speichern & Schliessen",
     "settingList": {
+      "printIssuesPerYear": "Ausgaben pro Jahr (Druck)",
+      "issues": "Ausgaben",
       "allowGuestCommentRating": "Erlaube Gast-Bewertungen von Kommentaren",
       "comments": "Kommentare",
       "days": "Tage",
@@ -2621,6 +2628,7 @@
       "memberships": "Mitgliedschaften",
       "showPendingWhenNotPublished": "Geplanten Artikel oder geplante Seite auch anzeigen, wenn sie noch nicht publiziert wurde.",
       "info": {
+        "printIssuesPerYear": "Wie viele gedruckte Ausgaben ein Jahresabo wert ist. Leser:innen, deren bezahlte Periode endet, bleiben so lange in den Druckexporten, bis sie diese Zahl erhalten haben. 0 schaltet die Regel aus, bis der Import die früheren Ausgaben des Jahres erfasst hat.",
         "allowCommentEditing": "Leser*innen können den Text ihrer eigenen Kommentare nach dem Abschicken noch ändern.",
         "commentCharLimit": "Maximale Anzahl Zeichen, die ein Kommentar enthalten darf. Längere Kommentare können nicht abgeschickt werden.",
         "subscriptionExtendWindowDays": "Wie viele Tage vor Ablauf eines Abos Leser*innen im Profil «Jetzt verlängern» sehen. 30 = wie bisher; 365 = jederzeit, solange keine Rechnung offen ist.",
@@ -2633,8 +2641,10 @@
         "revenueApiPublic": "Macht die Einnahmen aus bezahlten Rechnungen eines gewählten Zeitraums ohne Login über die öffentliche API abrufbar, z.B. für Live-Zahlen auf deiner Website. Die Daten sind anonymisiert. Lass die Option aus, wenn du sie nicht brauchst.",
         "loginMinutes": "Wie lange per E-Mail verschickte Login-Links gültig bleiben, in Minuten (60 = 1 Stunde, 1440 = 1 Tag, 10080 = 1 Woche). Danach muss ein neuer Link angefordert werden.",
         "passwordToken": "Wie lange der E-Mail-Link zum Zurücksetzen des Passworts gültig bleibt, in Minuten (60 = 1 Stunde, 1440 = 1 Tag).",
-        "peerToken": "Wie lange beim Laden von Artikeln auf Partnermedien (Peers) gewartet wird, in Millisekunden (1000 = 1 Sekunde). Danach wird die Anfrage abgebrochen."
-      }
+        "peerToken": "Wie lange beim Laden von Artikeln auf Partnermedien (Peers) gewartet wird, in Millisekunden (1000 = 1 Sekunde). Danach wird die Anfrage abgebrochen.",
+        "printExportDefaults": "Womit eine neue Druckausgabe startet. Pro Ausgabe anpassbar; jede Lieferung behält die Optionen, mit denen sie berechnet wurde."
+      },
+      "printExportDefaults": "Druckliste: Standard-Optionen"
     },
     "automaticMails": {
       "title": "Automatische Mitteilungen",
@@ -3114,6 +3124,8 @@
     },
     "yes": "Ja",
     "memberplanForm": {
+      "printIssuesPerPeriod": "Gedruckte Ausgaben pro Periode",
+      "printIssuesPerPeriodHelpText": "Überschreibt für diesen Abo-Plan die Regel «Ausgaben pro Jahr», z. B. 3 für ein Probeabo. Leer: anteilig nach Periodendauer.",
       "trialSubscription": "Erweiterte Einstellungen",
       "configureTrialBtn": "Für Probeabos konfigurieren",
       "extendableToggle": "Verlängerbar",
@@ -5031,6 +5043,206 @@
       "deleteQuestion": "«{{name}}» löschen? Vorlagen, die darauf drucken, müssen zuerst ein anderes wählen.",
       "deleteConfirm": "Löschen",
       "noLayouts": "Noch kein Briefpapier. Erstelle eines, damit Briefe eine Kopf- und Fusszeile bekommen."
+    },
+    "printIssues": {
+      "title": "Druckausgaben",
+      "intro": "Jede gedruckte Ausgabe mit ihrer Druckliste: wer ein Exemplar erhält, entscheidet sich am Erscheinungsdatum – aus we.publish und bexio. Jede an die Druckerei übergebene Lieferung zählt zu den bezahlten Ausgaben der Leser:innen.",
+      "create": "Neue Ausgabe",
+      "noIssues": "Noch keine Ausgaben.",
+      "saved": "Ausgabe gespeichert",
+      "duplicated": "Ausgabe dupliziert – bitte das Erscheinungsdatum anpassen.",
+      "closed": "Ausgabe abgeschlossen",
+      "reopened": "Ausgabe aufgeschlossen",
+      "optionsSaved": "Optionen gespeichert",
+      "exported": "Exemplare exportiert – die Lieferung ist ein Entwurf, bis sie übergeben wird.",
+      "exportedReplaced": "Export ersetzt",
+      "exportedSupplement": "Nachlieferung exportiert",
+      "delivered": "Lieferung übergeben",
+      "deliveryDeleted": "Lieferung gelöscht",
+      "issueDateRequired": "Bitte gib das Erscheinungsdatum an.",
+      "drawer": {
+        "createTitle": "Neue Ausgabe",
+        "editTitle": "Ausgabe {{label}}"
+      },
+      "fields": {
+        "issue": "Ausgabe",
+        "number": "Nummer",
+        "year": "Jahr",
+        "issueDate": "Erscheinungsdatum",
+        "issueDateHelp": "Der Tag, an dem die Ausgabe zu den Leser:innen ausgeliefert wird. Die Druckliste prüft, wer an diesem Tag ein Exemplar erhält – nicht am Tag des Exports.",
+        "status": "Status",
+        "deliveries": "Lieferungen",
+        "copies": "Exemplare",
+        "closedAt": "Abgeschlossen",
+        "note": "Notiz"
+      },
+      "status": {
+        "open": "Offen",
+        "exported": "Exportiert",
+        "closed": "Abgeschlossen",
+        "historic": "Historisch"
+      },
+      "deliveriesCell": "{{count}} · {{delivered}} übergeben",
+      "closedLine": "{{date}} · {{name}}",
+      "actions": {
+        "list": "Druckliste",
+        "duplicate": "Duplizieren",
+        "close": "Abschliessen",
+        "reopen": "Aufschliessen",
+        "delete": "Löschen"
+      },
+      "deleteTitle": "Ausgabe löschen",
+      "deleteQuestion": "Ausgabe {{label}} löschen? Lieferungen im Entwurf werden mitgelöscht.",
+      "deleteConfirm": "Löschen",
+      "closeTitle": "Ausgabe abschliessen?",
+      "closeQuestion": "Ausgabe {{label}} abschliessen? Es werden keine weiteren Nachlieferungen erwartet. «Aufschliessen» macht das jederzeit rückgängig.",
+      "closeConfirm": "Abschliessen",
+      "listView": {
+        "title": "Druckliste Ausgabe {{label}}",
+        "shipDay": "Erscheinungsdatum {{date}}",
+        "back": "Zu den Ausgaben"
+      },
+      "historicNoExport": "Eine historische Ausgabe kommt aus dem Import und hat keine Druckliste: sie zählt als geliefert für alle, die damals ein bezahltes Abo hatten. Nummer, Datum und Notiz lassen sich in der Ausgabenliste korrigieren.",
+      "closedInfo": "Ausgabe abgeschlossen – zum Nachliefern zuerst aufschliessen.",
+      "options": {
+        "title": "Optionen",
+        "intro": "Was in die Liste kommt. Die Optionen werden mit der Ausgabe gespeichert; jede Lieferung behält die Optionen, mit denen sie berechnet wurde.",
+        "save": "Optionen speichern",
+        "reset": "Zurücksetzen auf Standard",
+        "unsaved": "Die Optionen sind noch nicht gespeichert. «Exemplare berechnen» speichert sie zuerst; exportieren lässt sich erst danach."
+      },
+      "run": {
+        "title": "Berechnen und exportieren",
+        "intro": "Die Liste wird per {{date}} berechnet und auf der Ausgabe gespeichert. Prüft sie – dann schreibt «exportieren» genau diese Liste als Lieferung mit eigener CSV-Datei."
+      },
+      "compute": "Exemplare berechnen",
+      "recompute": "Neu berechnen",
+      "computing": "Wird berechnet – auch bexio wird gelesen, das dauert einen Moment …",
+      "computedLine": "Berechnet am {{date}} um {{time}} von {{name}}",
+      "showList": "Liste ansehen ({{count}} Adressen)",
+      "runListTitle": "Liste der Ausgabe {{label}}",
+      "export": "Exemplare exportieren",
+      "exportSupplement": "Nachlieferung exportieren",
+      "exportTitle": {
+        "export": "Exemplare exportieren?",
+        "replace": "Export ersetzen?",
+        "supplement": "Nachlieferung exportieren?"
+      },
+      "exportQuestion": {
+        "export": "{{addresses}} Adressen ({{copies}} Exemplare, davon {{grace}} Restexemplare und {{gifts}} Vorab-Exemplare) als Export der Ausgabe {{label}} speichern. Die Lieferung bleibt ein Entwurf, bis sie an die Druckerei übergeben wird.",
+        "replace": "Ersetzt den Export vom {{date}}: dessen Adressen werden verworfen, {{addresses}} Adressen ({{copies}} Exemplare) treten an ihre Stelle. Die Lieferung bleibt ein Entwurf, bis sie übergeben wird.",
+        "supplement": "{{addresses}} Adressen ({{copies}} Exemplare) als Nachlieferung {{batch}} der Ausgabe {{label}} speichern – nur Adressen, die in keiner früheren Lieferung dieser Ausgabe stehen."
+      },
+      "exportConfirm": {
+        "export": "Exportieren",
+        "replace": "Export ersetzen",
+        "supplement": "Nachlieferung exportieren"
+      },
+      "supplementEmpty": "Niemand Neues – es gibt nichts nachzuliefern.",
+      "runConflict": "Die Liste wurde inzwischen neu berechnet, ist älter als 24 Stunden oder passt nicht mehr zum Stand der Lieferungen. Bitte neu berechnen und prüfen.",
+      "steps": {
+        "compute": "Berechnen",
+        "check": "Prüfen",
+        "export": "Exportieren"
+      },
+      "deliveries": {
+        "title": "Lieferungen",
+        "empty": "Noch keine Lieferung – berechne und exportiere die Exemplare.",
+        "export": "Export",
+        "supplement": "Nachlieferung {{batch}}",
+        "exportedAt": "Exportiert am · von",
+        "options": "Optionen",
+        "addresses": "Adressen",
+        "copies": "Exemplare",
+        "status": "Status",
+        "draft": "Entwurf",
+        "deliveredLine": "Übergeben am {{date}} · {{name}}",
+        "csv": "CSV",
+        "deliver": "Übergeben",
+        "deliverTooltip": "Sperren, nachdem die exportierten Daten an die Druckerei übergeben wurden. Korrekturen können danach noch als Nachlieferung exportiert werden.",
+        "deliverTitle": "Lieferung übergeben?",
+        "deliverQuestion": "{{name}} der Ausgabe {{label}} als an die Druckerei übergeben markieren? Die Lieferung ist danach gesperrt, und ihre Exemplare zählen zu den bezahlten Ausgaben der Leser:innen. Das lässt sich nicht rückgängig machen.",
+        "deliverConfirm": "Übergeben",
+        "delete": "Löschen",
+        "deleteTitle": "Lieferung löschen?",
+        "deleteQuestion": "{{name}} löschen? Die Adressen dieser Lieferung werden verworfen; die nächste Berechnung erstellt sie neu.",
+        "deleteConfirm": "Löschen",
+        "fullList": "Gesamtliste herunterladen (alle Lieferungen zusammengeführt)"
+      },
+      "summary": {
+        "none": "–",
+        "headline": "{{rows}} Adressen, {{copies}} Exemplare – Stichtag {{date}}",
+        "withGifts": "mit Vorab-Exemplaren",
+        "graceWarning": "Mehr als 5 % Restexemplare – sind alle historischen Ausgaben erfasst und stimmt «Ausgaben pro Jahr»?",
+        "sources": "Quellen",
+        "wepublish": "we.publish",
+        "totalSubscriptions": "Abos geprüft",
+        "byPlan": "Abo-Typen",
+        "byKind": "bexio-Arten",
+        "byCountry": "Länder",
+        "hints": {
+          "title": "Hinweise",
+          "unpaid": "offen",
+          "openWithoutInvoice": "offen ohne Rechnung",
+          "grace": "Restexemplar",
+          "gifts": "Vorab-Exemplar",
+          "kuendigungen": "Kündigung per",
+          "missingAddress": "Keine Adresse",
+          "placeholderEmail": "Platzhalter-E-Mail",
+          "duplicates": "Doppelt",
+          "alreadyExported": "Bereits in einer Lieferung"
+        },
+        "skipped": {
+          "title": "Übersprungen",
+          "donation": "Spenden",
+          "excludedPlan": "Nicht gewählter Abo-Plan",
+          "future": "Beginn nach Stichtag",
+          "unpaidDeactivation": "Unbezahlt deaktiviert",
+          "replaced": "Ersetzt",
+          "deactivated": "Deaktiviert",
+          "lapsed": "Abgelaufen",
+          "exhausted": "Kontingent erhalten"
+        },
+        "bexio": {
+          "title": "bexio",
+          "notConfigured": "bexio wird nicht gelesen: unter Integrationen ist kein bexio-Zahlungsanbieter mit API-Schlüssel eingerichtet. Institutionen, Geschenke, Buchhandel und Einzelhefte fehlen.",
+          "notIncluded": "bexio wurde für diese Liste nicht gelesen: die Option ist ausgeschaltet.",
+          "invoicesInWindow": "Rechnungen im Zeitfenster",
+          "canceled": "Storniert",
+          "otherPeriod": "Anderes Jahr / andere Ausgabe",
+          "einzelheftOhneAusgabe": "Einzelheft ohne Ausgabe",
+          "detailFetched": "Positionen gelesen",
+          "detailUnparsed": "Nicht erkannt",
+          "ungeprueft": "Ungeprüft",
+          "contactMissing": "Kontakt fehlt"
+        }
+      },
+      "rowsTable": {
+        "name": "Name / Firma",
+        "place": "Ort",
+        "copies": "Ex.",
+        "plan": "Abo-Typ",
+        "status": "Zahlungsstatus",
+        "hint": "Hinweis",
+        "empty": "Keine Adressen."
+      }
+    },
+    "printExportOptions": {
+      "memberPlans": "Abo-Pläne",
+      "memberPlansHelp": "Nur Abos dieser Pläne kommen in die Liste. Leer: alle Abo-Pläne.",
+      "allPlans": "alle Pläne",
+      "plansCount_one": "{{count}} Plan",
+      "plansCount_other": "{{count}} Pläne",
+      "includeBexio": "bexio einbeziehen",
+      "includeBexioHelp": "Institutionen, Geschenkabos, Buchhandel und Einzelhefte aus bexio – gelesen mit dem Schlüssel des bexio-Zahlungsanbieters unter Integrationen.",
+      "bexioNotConfigured": "Unter Integrationen ist kein bexio-Zahlungsanbieter mit API-Schlüssel eingerichtet; bexio kann nicht gelesen werden.",
+      "bexioShort": "bexio",
+      "includeOpen": "Offene Leser:innen einbeziehen",
+      "includeOpenHelp": "Abos, die sich verlängern, deren Rechnung aber noch nicht bezahlt ist («offen»), erhalten ein Exemplar. Ausgeschaltet zählen sie wie abgelaufene Abos: nur noch Restexemplare.",
+      "openShort": "offen",
+      "includeUpcoming": "Vorab-Exemplare",
+      "includeUpcomingHelp": "Abos, die erst nach dem Erscheinungsdatum beginnen, erhalten diese Ausgabe geschenkt. Sie zählt nicht zu den bezahlten Ausgaben.",
+      "upcomingShort": "Vorab"
     },
     "autosave": {
       "label": "Automatisch speichern",

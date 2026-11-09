@@ -20,6 +20,11 @@ import {
   useUnsavedChangesDialog,
   enqueueSnackbar,
   PageTitle,
+  FeatureControl,
+  PrintExportOptionsFields,
+  printExportOptionsOf,
+  describePrintExportOptions,
+  DEFAULT_PRINT_EXPORT_OPTIONS,
 } from '@wepublish/ui/editor';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -157,6 +162,14 @@ const SETTINGS = {
     label: 'settingList.paymentMethodChangeExpiryDays',
     value: 14,
   },
+  [SettingName.PrintIssuesPerYear]: {
+    label: 'settingList.printIssuesPerYear',
+    value: 0,
+  },
+  [SettingName.PrintExportDefaults]: {
+    label: 'settingList.printExportDefaults',
+    value: DEFAULT_PRINT_EXPORT_OPTIONS,
+  },
 } as Record<SettingName, { label: string; value: unknown }>;
 
 type SettingValues = Record<SettingName, unknown>;
@@ -175,6 +188,7 @@ const NUMBER_FALLBACK_RANGES: Partial<Record<SettingName, [number, number]>> = {
   [SettingName.CommentCharLimit]: [0, 10000],
   [SettingName.SubscriptionExtendWindowDays]: [0, 366],
   [SettingName.PaymentMethodChangeExpiryDays]: [1, 90],
+  [SettingName.PrintIssuesPerYear]: [0, 52],
 };
 
 type Restrictions = Partial<
@@ -297,7 +311,7 @@ function SettingList() {
   }, [fetchError, t, updateSettingError]);
 
   const valueText = useCallback(
-    (value: boolean | string): string => {
+    (value: unknown): string => {
       if (value === true) {
         return t('settingList.enabled');
       }
@@ -306,7 +320,12 @@ function SettingList() {
         return t('settingList.disabled');
       }
 
-      return value;
+      // the print export defaults are an object: name what they switch on
+      if (typeof value === 'object' && value !== null) {
+        return describePrintExportOptions(printExportOptionsOf(value), t);
+      }
+
+      return String(value ?? '');
     },
     [t]
   );
@@ -544,6 +563,42 @@ function SettingList() {
                           t('settingList.info.paymentMethodChangeExpiryDays'),
                           t('settingList.days')
                         )}
+
+                        <FeatureControl feature="print-export">
+                          {renderNumberInput(
+                            SettingName.PrintIssuesPerYear,
+                            t('settingList.info.printIssuesPerYear'),
+                            t('settingList.issues')
+                          )}
+
+                          {/* what a new print issue starts from; the form saves it like every setting */}
+                          <Controller
+                            control={control}
+                            name={SettingName.PrintExportDefaults}
+                            render={({ field }) => (
+                              <Stack
+                                spacing={1}
+                                sx={{ mt: 3 }}
+                              >
+                                <SettingRow>
+                                  <FormLabel>
+                                    {t('settingList.printExportDefaults')}
+                                  </FormLabel>
+                                  <InfoTooltip
+                                    text={t(
+                                      'settingList.info.printExportDefaults'
+                                    )}
+                                  />
+                                </SettingRow>
+                                <PrintExportOptionsFields
+                                  value={printExportOptionsOf(field.value)}
+                                  onChange={field.onChange}
+                                  disabled={isDisabled}
+                                />
+                              </Stack>
+                            )}
+                          />
+                        </FeatureControl>
                       </Stack>
                     </CardContent>
                   </Card>
@@ -708,8 +763,8 @@ function SettingList() {
                 label={t(SETTINGS[name].label)}
                 key={name}
               >
-                <s>{valueText(defaultValues?.[name] as boolean | string)}</s>{' '}
-                {valueText(values[name] as boolean | string)}
+                <s>{valueText(defaultValues?.[name])}</s>{' '}
+                {valueText(values[name])}
               </DescriptionListItemWrapper>
             ))}
           </DescriptionList>

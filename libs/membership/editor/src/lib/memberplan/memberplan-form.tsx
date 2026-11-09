@@ -32,6 +32,7 @@ import {
   FormSectionTitle,
   enqueueSnackbar,
   DRAWER_WIDTHS,
+  useFeature,
 } from '@wepublish/ui/editor';
 import { MdAutoFixHigh, MdCheck, MdExpandMore } from 'react-icons/md';
 import { MemberPlanPricing } from './memberplan-pricing';
@@ -106,6 +107,7 @@ export function MemberPlanForm({
   );
 
   const isTrialSubscription = !extendable && !!maxCount;
+  const hasPrintExport = useFeature('print-export');
   const trialAlertRef = useRef<HTMLDivElement>(null);
   const focusTrialAlert = useRef(false);
 
@@ -126,6 +128,7 @@ export function MemberPlanForm({
     shortDescription: `${fieldId}-short-description`,
     externalReward: `${fieldId}-external-reward`,
     maxCount: `${fieldId}-max-count`,
+    printIssuesPerPeriod: `${fieldId}-print-issues-per-period`,
     tags: `${fieldId}-tags`,
     migrate: `${fieldId}-migrate`,
     successPage: `${fieldId}-success-page`,
@@ -497,6 +500,43 @@ export function MemberPlanForm({
                   )}
                 />
               </div>
+
+              {hasPrintExport && (
+                <div>
+                  <FieldLabel
+                    id={ids.printIssuesPerPeriod}
+                    label={t('memberplanForm.printIssuesPerPeriod')}
+                    help={t('memberplanForm.printIssuesPerPeriodHelpText')}
+                  />
+                  <Controller
+                    control={control}
+                    name="printIssuesPerPeriod"
+                    render={({ field, fieldState: { error } }) => (
+                      <TextField
+                        {...field}
+                        value={field.value ?? ''}
+                        type={'number'}
+                        slotProps={{
+                          htmlInput: {
+                            min: 0,
+                            'aria-labelledby': ids.printIssuesPerPeriod,
+                          },
+                        }}
+                        onChange={event =>
+                          field.onChange(
+                            event.target.value === '' ?
+                              null
+                            : Number(event.target.value)
+                          )
+                        }
+                        error={Boolean(error)}
+                        helperText={error?.message}
+                        fullWidth
+                      />
+                    )}
+                  />
+                </div>
+              )}
 
               <div>
                 <FieldLabel

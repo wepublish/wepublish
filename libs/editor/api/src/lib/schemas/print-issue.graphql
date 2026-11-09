@@ -1,0 +1,261 @@
+fragment PrintIssueCounts on PrintIssueCount {
+  key
+  count
+}
+
+fragment PrintIssueOptionsFields on PrintIssueOptions {
+  memberPlanIds
+  includeBexio
+  includeOpen
+  includeUpcoming
+}
+
+fragment PrintIssueSummaryFields on PrintIssueSummary {
+  issue
+  date
+  includeUpcoming
+  rows
+  copies
+  bySource {
+    wepublish
+    bexio
+  }
+  byPlan {
+    ...PrintIssueCounts
+  }
+  byKind {
+    ...PrintIssueCounts
+  }
+  byCountry {
+    ...PrintIssueCounts
+  }
+  unpaid
+  openWithoutInvoice
+  grace
+  gifts
+  kuendigungen
+  missingAddress
+  placeholderEmail
+  duplicates
+  alreadyExported
+  totalSubscriptions
+  skipped {
+    donation
+    excludedPlan
+    future
+    unpaidDeactivation
+    replaced
+    deactivated
+    lapsed
+    exhausted
+  }
+  bexio {
+    configured
+    included
+    path
+    invoicesInWindow
+    canceled
+    otherPeriod
+    einzelheftOhneAusgabe
+    skippedImported
+    skippedProvider
+    detailFetched
+    detailUnparsed
+    ungeprueft
+    zeroCopies
+    contactMissing
+  }
+  warnings
+}
+
+fragment PrintIssueDeliveryFields on PrintIssueDelivery {
+  id
+  batch
+  createdAt
+  createdBy {
+    id
+    name
+    firstName
+  }
+  options {
+    ...PrintIssueOptionsFields
+  }
+  rowCount
+  copyCount
+  filename
+  deliveredAt
+  deliveredBy {
+    id
+    name
+    firstName
+  }
+}
+
+fragment TinyPrintIssue on PrintIssue {
+  id
+  number
+  year
+  label
+  issueDate
+  status
+  note
+  createdAt
+  modifiedAt
+  options {
+    ...PrintIssueOptionsFields
+  }
+  closedAt
+  closedBy {
+    id
+    name
+    firstName
+  }
+  deliveries {
+    ...PrintIssueDeliveryFields
+  }
+}
+
+fragment FullPrintIssue on PrintIssue {
+  ...TinyPrintIssue
+  deliveries {
+    ...PrintIssueDeliveryFields
+    summary {
+      ...PrintIssueSummaryFields
+    }
+  }
+}
+
+fragment PrintIssueRowFields on PrintIssueRow {
+  quelle
+  adressnummer
+  anrede
+  firma
+  vorname
+  name
+  zusatz
+  strasse
+  hausnummer
+  plz
+  ort
+  land
+  anzahl
+  aboTyp
+  zahlungsstatus
+  beginn
+  email
+  bemerkungen
+  hinweis
+}
+
+fragment PrintIssueRunFields on PrintIssueRun {
+  mode
+  deliveryId
+  batch
+  computedAt
+  computedBy {
+    id
+    name
+    firstName
+  }
+  filename
+  rows {
+    ...PrintIssueRowFields
+  }
+  summary {
+    ...PrintIssueSummaryFields
+  }
+}
+
+query PrintIssues {
+  printIssues {
+    ...TinyPrintIssue
+  }
+}
+
+query PrintIssueById($id: String!) {
+  printIssue(id: $id) {
+    ...FullPrintIssue
+  }
+}
+
+query PrintIssueRun($id: String!) {
+  printIssueRun(id: $id) {
+    ...PrintIssueRunFields
+  }
+}
+
+query PrintIssueCsv($id: String!, $deliveryId: String) {
+  printIssueCsv(id: $id, deliveryId: $deliveryId) {
+    filename
+    csv
+  }
+}
+
+query PrintExportContext {
+  printExportContext {
+    bexioConfigured
+    defaults {
+      ...PrintIssueOptionsFields
+    }
+  }
+}
+
+mutation CreatePrintIssue($input: PrintIssueInputModel!) {
+  createPrintIssue(input: $input) {
+    ...FullPrintIssue
+  }
+}
+
+mutation UpdatePrintIssue($id: String!, $input: PrintIssueInputModel!) {
+  updatePrintIssue(id: $id, input: $input) {
+    ...FullPrintIssue
+  }
+}
+
+mutation DuplicatePrintIssue($id: String!) {
+  duplicatePrintIssue(id: $id) {
+    ...TinyPrintIssue
+  }
+}
+
+mutation DeletePrintIssue($id: String!) {
+  deletePrintIssue(id: $id) {
+    id
+  }
+}
+
+mutation ComputePrintIssueRun($id: String!) {
+  computePrintIssueRun(id: $id) {
+    ...PrintIssueRunFields
+  }
+}
+
+mutation ExportPrintIssueRun($id: String!, $computedAt: DateTime!) {
+  exportPrintIssueRun(id: $id, computedAt: $computedAt) {
+    ...FullPrintIssue
+  }
+}
+
+mutation DeliverPrintIssueDelivery($id: String!) {
+  deliverPrintIssueDelivery(id: $id) {
+    ...FullPrintIssue
+  }
+}
+
+mutation DeletePrintIssueDelivery($id: String!) {
+  deletePrintIssueDelivery(id: $id) {
+    ...FullPrintIssue
+  }
+}
+
+mutation ClosePrintIssue($id: String!) {
+  closePrintIssue(id: $id) {
+    ...TinyPrintIssue
+  }
+}
+
+mutation ReopenPrintIssue($id: String!) {
+  reopenPrintIssue(id: $id) {
+    ...TinyPrintIssue
+  }
+}

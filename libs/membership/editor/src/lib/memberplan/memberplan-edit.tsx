@@ -155,6 +155,7 @@ function MemberPlanEdit() {
       extendable: memberPlan.extendable,
       externalReward: memberPlan.externalReward,
       maxCount: memberPlan.maxCount,
+      printIssuesPerPeriod: memberPlan.printIssuesPerPeriod,
       productType: memberPlan.productType,
       migrateToTargetPaymentMethodID: memberPlan.migrateToTargetPaymentMethodID,
       successPageId: memberPlan.successPageId,

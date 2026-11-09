@@ -37,6 +37,8 @@ export enum SettingName {
   EMAIL_QUALITY_MIN_MAILS_FOR_UNRESPONSIVE = 'emailQualityMinMailsForUnresponsive',
   SUBSCRIPTION_EXTEND_WINDOW_DAYS = 'subscriptionExtendWindowDays',
   PAYMENT_METHOD_CHANGE_EXPIRY_DAYS = 'paymentMethodChangeExpiryDays',
+  PRINT_ISSUES_PER_YEAR = 'printIssuesPerYear',
+  PRINT_EXPORT_DEFAULTS = 'printExportDefaults',
 }
 
 export type CreateSettingArgs<T> = Omit<Setting<T>, 'id'>;

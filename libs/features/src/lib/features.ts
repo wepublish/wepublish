@@ -50,6 +50,12 @@ export const FEATURES = [
     description: 'Media: video and audio libraries with uploads',
     stage: 'alpha',
   },
+  {
+    key: 'print-export',
+    description:
+      'Print issue export: the recipient list of a magazine issue from subscriptions and bexio as CSV, with issue tracking and a copies quota',
+    stage: 'alpha',
+  },
 ] as const satisfies readonly Feature[];
 
 export type FeatureKey = (typeof FEATURES)[number]['key'];

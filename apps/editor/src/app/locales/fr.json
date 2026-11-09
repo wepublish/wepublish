@@ -1922,6 +1922,7 @@
       }
     },
     "navbar": {
+      "printIssues": "Numéros imprimés",
       "deliverySuggestions": "Canal de distribution",
       "articles": "Articles",
       "authors": "Auteur·trice·s",
@@ -1992,6 +1993,9 @@
       "audioLibrary": "Audio"
     },
     "pageTitles": {
+      "printIssues": "Numéros imprimés",
+      "printIssueCreate": "Nouveau numéro imprimé",
+      "printIssueEdit": "Modifier le numéro imprimé",
       "login": "Connexion",
       "impersonate": "Se connecter en tant qu’utilisateur·trice",
       "resetPassword": "Réinitialiser le mot de passe",
@@ -2127,7 +2131,8 @@
       "settings": "Paramètres",
       "websiteSettings": "Paramètres du site",
       "seo": "Liste de contrôle SEO",
-      "logout": "Déconnexion"
+      "logout": "Déconnexion",
+      "printIssueList": "Liste d’impression"
     },
     "navigation": {
       "overview": {
@@ -2565,6 +2570,8 @@
     "save": "Enregistrer",
     "saveAndClose": "Enregistrer et fermer",
     "settingList": {
+      "printIssuesPerYear": "Numéros par an (imprimé)",
+      "issues": "numéros",
       "allowGuestCommentRating": "Autoriser les évaluations anonymes des commentaires",
       "comments": "Commentaires",
       "days": "jours",
@@ -2621,6 +2628,7 @@
       "newArticlePeering": "Les articles nouvellement créés seront partagés par peering par défaut",
       "showPendingWhenNotPublished": "Afficher un article ou une page en attente, même s’ils ne sont pas encore publiés.",
       "info": {
+        "printIssuesPerYear": "Combien de numéros imprimés vaut un abonnement annuel. Les lecteur·trice·s dont la période payée se termine restent dans les exports jusqu’à avoir reçu ce nombre. 0 désactive la règle jusqu’à ce que l’import ait saisi les numéros précédents de l’année.",
         "allowCommentEditing": "Les lecteur·trice·s peuvent encore modifier le texte de leurs propres commentaires après les avoir publiés.",
         "commentCharLimit": "Nombre maximal de caractères qu’un commentaire peut contenir. Les commentaires plus longs ne peuvent pas être envoyés.",
         "subscriptionExtendWindowDays": "Combien de jours avant l’échéance d’un abonnement les lecteur·trice·s voient «Renouveler maintenant» dans leur profil. 30 = comme avant ; 365 = à tout moment, tant qu’aucune facture n’est ouverte.",
@@ -2633,8 +2641,10 @@
         "revenueApiPublic": "Rend les revenus des factures payées d’une période choisie accessibles sans connexion via l’API publique, p.ex. pour afficher des chiffres en direct sur votre site. Les données sont anonymisées. Laissez cette option désactivée si vous n’en avez pas besoin.",
         "loginMinutes": "Durée de validité, en minutes, des liens de connexion envoyés par e-mail (60 = 1 heure, 1440 = 1 jour, 10080 = 1 semaine). Ensuite, un nouveau lien doit être demandé.",
         "passwordToken": "Durée de validité, en minutes, du lien envoyé par e-mail pour réinitialiser le mot de passe (60 = 1 heure, 1440 = 1 jour).",
-        "peerToken": "Durée d’attente des médias partenaires (peers) lors du chargement de leurs articles, en millisecondes (1000 = 1 seconde). Ensuite, la requête est annulée."
-      }
+        "peerToken": "Durée d’attente des médias partenaires (peers) lors du chargement de leurs articles, en millisecondes (1000 = 1 seconde). Ensuite, la requête est annulée.",
+        "printExportDefaults": "Ce avec quoi un nouveau numéro imprimé démarre. Ajustable par numéro ; chaque livraison conserve les options avec lesquelles elle a été calculée."
+      },
+      "printExportDefaults": "Liste d’impression : options par défaut"
     },
     "automaticMails": {
       "title": "Messages automatiques",
@@ -3114,6 +3124,8 @@
     },
     "yes": "Oui",
     "memberplanForm": {
+      "printIssuesPerPeriod": "Numéros imprimés par période",
+      "printIssuesPerPeriodHelpText": "Remplace «numéros par an» pour ce plan, p. ex. 3 pour un abonnement d’essai. Vide : au prorata de la durée.",
       "trialSubscription": "Paramètres avancés",
       "configureTrialBtn": "Configurer des abonnements d’essai",
       "extendableToggle": "Extensible",
@@ -5031,6 +5043,206 @@
       "deleteQuestion": "Supprimer « {{name}} » ? Les modèles qui l’utilisent doivent d’abord en choisir un autre.",
       "deleteConfirm": "Supprimer",
       "noLayouts": "Pas encore de papier à lettres. Créez-en un pour que les lettres aient un en-tête et un pied de page."
+    },
+    "printIssues": {
+      "title": "Numéros imprimés",
+      "intro": "Chaque numéro imprimé avec sa liste d’impression : qui reçoit un exemplaire se décide à la date de parution – depuis we.publish et bexio. Chaque livraison remise à l’imprimerie compte dans les numéros payés par les lecteur·trice·s.",
+      "create": "Nouveau numéro",
+      "noIssues": "Pas encore de numéro.",
+      "saved": "Numéro enregistré",
+      "duplicated": "Numéro dupliqué – veuillez adapter la date de parution.",
+      "closed": "Numéro clôturé",
+      "reopened": "Numéro rouvert",
+      "optionsSaved": "Options enregistrées",
+      "exported": "Exemplaires exportés – la livraison reste un brouillon jusqu’à sa remise.",
+      "exportedReplaced": "Export remplacé",
+      "exportedSupplement": "Complément exporté",
+      "delivered": "Livraison remise",
+      "deliveryDeleted": "Livraison supprimée",
+      "issueDateRequired": "Veuillez indiquer la date de parution.",
+      "drawer": {
+        "createTitle": "Nouveau numéro",
+        "editTitle": "Numéro {{label}}"
+      },
+      "fields": {
+        "issue": "Numéro",
+        "number": "Numéro",
+        "year": "Année",
+        "issueDate": "Date de parution",
+        "issueDateHelp": "Le jour où le numéro parvient aux lecteur·trice·s. La liste d’impression vérifie qui reçoit un exemplaire ce jour-là – pas le jour de l’export.",
+        "status": "Statut",
+        "deliveries": "Livraisons",
+        "copies": "Exemplaires",
+        "closedAt": "Clôturé",
+        "note": "Note"
+      },
+      "status": {
+        "open": "Ouvert",
+        "exported": "Exporté",
+        "closed": "Clôturé",
+        "historic": "Historique"
+      },
+      "deliveriesCell": "{{count}} · {{delivered}} remise(s)",
+      "closedLine": "{{date}} · {{name}}",
+      "actions": {
+        "list": "Liste d’impression",
+        "duplicate": "Dupliquer",
+        "close": "Clôturer",
+        "reopen": "Rouvrir",
+        "delete": "Supprimer"
+      },
+      "deleteTitle": "Supprimer le numéro",
+      "deleteQuestion": "Supprimer le numéro {{label}} ? Les livraisons en brouillon sont supprimées avec lui.",
+      "deleteConfirm": "Supprimer",
+      "closeTitle": "Clôturer le numéro ?",
+      "closeQuestion": "Clôturer le numéro {{label}} ? Aucun autre complément n’est attendu. «Rouvrir» annule cela à tout moment.",
+      "closeConfirm": "Clôturer",
+      "listView": {
+        "title": "Liste d’impression du numéro {{label}}",
+        "shipDay": "Date de parution {{date}}",
+        "back": "Retour aux numéros"
+      },
+      "historicNoExport": "Un numéro historique vient de l’import et n’a pas de liste d’impression : il compte comme livré pour toute personne qui avait alors un abonnement payé. Numéro, date et note se corrigent dans la liste des numéros.",
+      "closedInfo": "Numéro clôturé – rouvrez-le d’abord pour exporter un complément.",
+      "options": {
+        "title": "Options",
+        "intro": "Ce qui entre dans la liste. Les options sont enregistrées avec le numéro ; chaque livraison conserve les options avec lesquelles elle a été calculée.",
+        "save": "Enregistrer les options",
+        "reset": "Rétablir les valeurs par défaut",
+        "unsaved": "Les options ne sont pas encore enregistrées. «Calculer les exemplaires» les enregistre d’abord ; l’export n’est possible qu’ensuite."
+      },
+      "run": {
+        "title": "Calculer et exporter",
+        "intro": "La liste est calculée au {{date}} et enregistrée sur le numéro. Vérifiez-la – puis «exporter» écrit exactement cette liste comme livraison avec son propre fichier CSV."
+      },
+      "compute": "Calculer les exemplaires",
+      "recompute": "Recalculer",
+      "computing": "Calcul en cours – bexio est lu aussi, cela prend un moment …",
+      "computedLine": "Calculé le {{date}} à {{time}} par {{name}}",
+      "showList": "Voir la liste ({{count}} adresses)",
+      "runListTitle": "Liste du numéro {{label}}",
+      "export": "Exporter les exemplaires",
+      "exportSupplement": "Exporter le complément",
+      "exportTitle": {
+        "export": "Exporter les exemplaires ?",
+        "replace": "Remplacer l’export ?",
+        "supplement": "Exporter le complément ?"
+      },
+      "exportQuestion": {
+        "export": "Enregistrer {{addresses}} adresses ({{copies}} exemplaires, dont {{grace}} exemplaires dus et {{gifts}} exemplaires offerts) comme export du numéro {{label}}. La livraison reste un brouillon jusqu’à sa remise à l’imprimerie.",
+        "replace": "Remplace l’export du {{date}} : ses adresses sont abandonnées, {{addresses}} adresses ({{copies}} exemplaires) prennent leur place. La livraison reste un brouillon jusqu’à sa remise.",
+        "supplement": "Enregistrer {{addresses}} adresses ({{copies}} exemplaires) comme complément {{batch}} du numéro {{label}} – uniquement des adresses absentes de toute livraison précédente de ce numéro."
+      },
+      "exportConfirm": {
+        "export": "Exporter",
+        "replace": "Remplacer l’export",
+        "supplement": "Exporter le complément"
+      },
+      "supplementEmpty": "Personne de nouveau – il n’y a rien à compléter.",
+      "runConflict": "La liste a été recalculée entre-temps, date de plus de 24 heures ou ne correspond plus aux livraisons. Veuillez la recalculer et la vérifier.",
+      "steps": {
+        "compute": "Calculer",
+        "check": "Vérifier",
+        "export": "Exporter"
+      },
+      "deliveries": {
+        "title": "Livraisons",
+        "empty": "Pas encore de livraison – calculez et exportez les exemplaires.",
+        "export": "Export",
+        "supplement": "Complément {{batch}}",
+        "exportedAt": "Exporté le · par",
+        "options": "Options",
+        "addresses": "Adresses",
+        "copies": "Exemplaires",
+        "status": "Statut",
+        "draft": "Brouillon",
+        "deliveredLine": "Remis le {{date}} · {{name}}",
+        "csv": "CSV",
+        "deliver": "Remettre",
+        "deliverTooltip": "Verrouiller une fois les données exportées remises à l’imprimerie. Des corrections peuvent encore être exportées ensuite comme complément.",
+        "deliverTitle": "Remettre la livraison ?",
+        "deliverQuestion": "Marquer {{name}} du numéro {{label}} comme remis à l’imprimerie ? La livraison est ensuite verrouillée et ses exemplaires comptent dans les numéros payés par les lecteur·trice·s. Cette action est irréversible.",
+        "deliverConfirm": "Remettre",
+        "delete": "Supprimer",
+        "deleteTitle": "Supprimer la livraison ?",
+        "deleteQuestion": "Supprimer {{name}} ? Ses adresses sont abandonnées ; le prochain calcul les recrée.",
+        "deleteConfirm": "Supprimer",
+        "fullList": "Télécharger la liste complète (toutes les livraisons fusionnées)"
+      },
+      "summary": {
+        "none": "–",
+        "headline": "{{rows}} adresses, {{copies}} exemplaires – au {{date}}",
+        "withGifts": "avec exemplaires offerts",
+        "graceWarning": "Plus de 5 % des lignes sont des exemplaires encore dus – tous les numéros historiques sont-ils saisis et «numéros par an» est-il correct ?",
+        "sources": "Sources",
+        "wepublish": "we.publish",
+        "totalSubscriptions": "Abonnements vérifiés",
+        "byPlan": "Types d’abonnement",
+        "byKind": "Types bexio",
+        "byCountry": "Pays",
+        "hints": {
+          "title": "Remarques",
+          "unpaid": "ouvert",
+          "openWithoutInvoice": "ouvert sans facture",
+          "grace": "Exemplaire dû",
+          "gifts": "Exemplaire offert",
+          "kuendigungen": "Résiliation au",
+          "missingAddress": "Pas d’adresse",
+          "placeholderEmail": "E-mail provisoire",
+          "duplicates": "Doublon",
+          "alreadyExported": "Déjà dans une livraison"
+        },
+        "skipped": {
+          "title": "Ignorés",
+          "donation": "Dons",
+          "excludedPlan": "Plan non sélectionné",
+          "future": "Début après la date de parution",
+          "unpaidDeactivation": "Désactivé impayé",
+          "replaced": "Remplacé",
+          "deactivated": "Désactivé",
+          "lapsed": "Échu",
+          "exhausted": "Quota reçu"
+        },
+        "bexio": {
+          "title": "bexio",
+          "notConfigured": "bexio n’est pas lu : aucun prestataire de paiement bexio avec clé API n’est configuré sous Intégrations. Institutions, cadeaux, librairies et numéros à l’unité manquent.",
+          "notIncluded": "bexio n’a pas été lu pour cette liste : l’option est désactivée.",
+          "invoicesInWindow": "Factures dans la fenêtre",
+          "canceled": "Annulées",
+          "otherPeriod": "Autre année / autre numéro",
+          "einzelheftOhneAusgabe": "Numéro à l’unité sans numéro",
+          "detailFetched": "Positions lues",
+          "detailUnparsed": "Non reconnues",
+          "ungeprueft": "Non vérifiées",
+          "contactMissing": "Contact manquant"
+        }
+      },
+      "rowsTable": {
+        "name": "Nom / entreprise",
+        "place": "Lieu",
+        "copies": "Ex.",
+        "plan": "Type d’abonnement",
+        "status": "Statut de paiement",
+        "hint": "Remarque",
+        "empty": "Aucune adresse."
+      }
+    },
+    "printExportOptions": {
+      "memberPlans": "Plans d’abonnement",
+      "memberPlansHelp": "Seuls les abonnements de ces plans entrent dans la liste. Vide : tous les plans.",
+      "allPlans": "tous les plans",
+      "plansCount_one": "{{count}} plan",
+      "plansCount_other": "{{count}} plans",
+      "includeBexio": "Inclure bexio",
+      "includeBexioHelp": "Institutions, abonnements cadeaux, librairies et numéros à l’unité depuis bexio – lus avec la clé du prestataire de paiement bexio sous Intégrations.",
+      "bexioNotConfigured": "Aucun prestataire de paiement bexio avec clé API n’est configuré sous Intégrations ; bexio ne peut pas être lu.",
+      "bexioShort": "bexio",
+      "includeOpen": "Inclure les lecteur·trice·s en attente",
+      "includeOpenHelp": "Les abonnements qui se renouvellent mais dont la facture n’est pas encore payée («ouvert») reçoivent un exemplaire. Désactivé : ils comptent comme des abonnements échus, exemplaires dus seulement.",
+      "openShort": "ouvert",
+      "includeUpcoming": "Exemplaires offerts",
+      "includeUpcomingHelp": "Les abonnements qui commencent après la date de parution reçoivent ce numéro en cadeau. Il ne compte pas dans les numéros payés.",
+      "upcomingShort": "offert"
     },
     "autosave": {
       "label": "Enregistrement auto",

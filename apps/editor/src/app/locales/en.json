@@ -1923,6 +1923,7 @@
       }
     },
     "navbar": {
+      "printIssues": "Print issues",
       "deliverySuggestions": "Delivery channel",
       "articles": "Articles",
       "authors": "Authors",
@@ -1993,6 +1994,9 @@
       "audioLibrary": "Audio"
     },
     "pageTitles": {
+      "printIssues": "Print issues",
+      "printIssueCreate": "New print issue",
+      "printIssueEdit": "Edit print issue",
       "login": "Log in",
       "impersonate": "Log in as user",
       "resetPassword": "Reset password",
@@ -2128,7 +2132,8 @@
       "settings": "Settings",
       "websiteSettings": "Website settings",
       "seo": "SEO checklist",
-      "logout": "Logout"
+      "logout": "Logout",
+      "printIssueList": "Print list"
     },
     "navigation": {
       "overview": {
@@ -2566,6 +2571,8 @@
     "save": "Save",
     "saveAndClose": "Save & Close",
     "settingList": {
+      "printIssuesPerYear": "Issues per year (print)",
+      "issues": "issues",
       "activeSubscriptionsApiPublic": "Make the active subscriptions API accessible by the public",
       "allowCommentEditing": "Allow comment editing",
       "allowGuestCommentRating": "Allow guest ratings on comments",
@@ -2622,6 +2629,7 @@
       "emailQualityUnresponsiveAfterDays": "“Unresponsive” after … days",
       "emailQualityMinMailsForUnresponsive": "… delivered mails",
       "info": {
+        "printIssuesPerYear": "How many printed issues a yearly subscription is worth. Readers whose paid period ends stay in the print exports until they received that many. 0 switches the rule off until the import has brought in the earlier issues of the year.",
         "allowCommentEditing": "Readers can still change the text of their own comments after posting them.",
         "commentCharLimit": "Maximum number of characters a comment may contain. Longer comments cannot be submitted.",
         "subscriptionExtendWindowDays": "How many days before a subscription ends readers see \"Renew now\" in their profile. 30 = as before; 365 = any time, as long as no invoice is open.",
@@ -2634,8 +2642,10 @@
         "revenueApiPublic": "Makes the revenue from paid invoices of a chosen period available via the public API without login, e.g. for live figures on your website. The data is anonymised. Leave it off if you don't need it.",
         "loginMinutes": "How long login links sent by e-mail stay valid, in minutes (60 = 1 hour, 1440 = 1 day, 10080 = 1 week). After that, a new link must be requested.",
         "passwordToken": "How long the e-mail link for resetting a password stays valid, in minutes (60 = 1 hour, 1440 = 1 day).",
-        "peerToken": "How long to wait for partner media (peers) when loading their articles, in milliseconds (1000 = 1 second). After that, the request is cancelled."
-      }
+        "peerToken": "How long to wait for partner media (peers) when loading their articles, in milliseconds (1000 = 1 second). After that, the request is cancelled.",
+        "printExportDefaults": "What a new print issue starts from. Adjustable per issue; every delivery keeps the options it was computed with."
+      },
+      "printExportDefaults": "Print list: default options"
     },
     "automaticMails": {
       "title": "Automated messages",
@@ -3174,6 +3184,8 @@
     },
     "yes": "Yes",
     "memberplanForm": {
+      "printIssuesPerPeriod": "Printed issues per period",
+      "printIssuesPerPeriodHelpText": "Overrides «issues per year» for this plan, e.g. 3 for a trial. Empty: pro rata by period length.",
       "trialSubscription": "Advanced settings",
       "configureTrialBtn": "Configure for trial subscriptions",
       "extendableToggle": "Extendable",
@@ -5031,6 +5043,206 @@
       "deleteQuestion": "Delete “{{name}}”? Templates printing on it have to choose another first.",
       "deleteConfirm": "Delete",
       "noLayouts": "No stationery yet. Create one so letters get a header and footer."
+    },
+    "printIssues": {
+      "title": "Print issues",
+      "intro": "Each printed issue with its print list: who receives a copy is decided as of the ship day – from we.publish and bexio. Every delivery handed to the printshop counts toward the issues each reader paid for.",
+      "create": "New issue",
+      "noIssues": "No issues yet.",
+      "saved": "Issue saved",
+      "duplicated": "Issue duplicated – please adjust the ship day.",
+      "closed": "Issue closed",
+      "reopened": "Issue reopened",
+      "optionsSaved": "Options saved",
+      "exported": "Copies exported – the delivery is a draft until it is handed over.",
+      "exportedReplaced": "Export replaced",
+      "exportedSupplement": "Supplement exported",
+      "delivered": "Delivery handed over",
+      "deliveryDeleted": "Delivery deleted",
+      "issueDateRequired": "Please enter the ship day.",
+      "drawer": {
+        "createTitle": "New issue",
+        "editTitle": "Issue {{label}}"
+      },
+      "fields": {
+        "issue": "Issue",
+        "number": "Number",
+        "year": "Year",
+        "issueDate": "Ship day",
+        "issueDateHelp": "The day the issue reaches the readers. The print list checks who receives a copy on that day – not on the day of the export.",
+        "status": "Status",
+        "deliveries": "Deliveries",
+        "copies": "Copies",
+        "closedAt": "Closed",
+        "note": "Note"
+      },
+      "status": {
+        "open": "Open",
+        "exported": "Exported",
+        "closed": "Closed",
+        "historic": "Historic"
+      },
+      "deliveriesCell": "{{count}} · {{delivered}} handed over",
+      "closedLine": "{{date}} · {{name}}",
+      "actions": {
+        "list": "Print list",
+        "duplicate": "Duplicate",
+        "close": "Close",
+        "reopen": "Reopen",
+        "delete": "Delete"
+      },
+      "deleteTitle": "Delete issue",
+      "deleteQuestion": "Delete issue {{label}}? Draft deliveries are deleted with it.",
+      "deleteConfirm": "Delete",
+      "closeTitle": "Close issue?",
+      "closeQuestion": "Close issue {{label}}? No further supplements are expected. «Reopen» undoes this at any time.",
+      "closeConfirm": "Close",
+      "listView": {
+        "title": "Print list for issue {{label}}",
+        "shipDay": "Ship day {{date}}",
+        "back": "Back to the issues"
+      },
+      "historicNoExport": "A historic issue comes from the import and has no print list: it counts as delivered for everyone who had a paid subscription at the time. Number, date and note can be corrected in the issue list.",
+      "closedInfo": "Issue closed – reopen it first to export a supplement.",
+      "options": {
+        "title": "Options",
+        "intro": "What goes into the list. The options are saved with the issue; every delivery keeps the options it was computed with.",
+        "save": "Save options",
+        "reset": "Reset to defaults",
+        "unsaved": "The options are not saved yet. «Compute copies» saves them first; exporting is possible only after that."
+      },
+      "run": {
+        "title": "Compute and export",
+        "intro": "The list is computed as of {{date}} and stored on the issue. Check it – then «export» writes exactly this list as a delivery with its own CSV file."
+      },
+      "compute": "Compute copies",
+      "recompute": "Compute again",
+      "computing": "Computing – bexio is read as well, this takes a moment …",
+      "computedLine": "Computed on {{date}} at {{time}} by {{name}}",
+      "showList": "Show list ({{count}} addresses)",
+      "runListTitle": "List of issue {{label}}",
+      "export": "Export copies",
+      "exportSupplement": "Export supplement",
+      "exportTitle": {
+        "export": "Export copies?",
+        "replace": "Replace export?",
+        "supplement": "Export supplement?"
+      },
+      "exportQuestion": {
+        "export": "Save {{addresses}} addresses ({{copies}} copies, of which {{grace}} copies owed and {{gifts}} gift copies) as the export of issue {{label}}. The delivery stays a draft until it is handed to the printshop.",
+        "replace": "Replaces the export of {{date}}: its addresses are discarded, {{addresses}} addresses ({{copies}} copies) take their place. The delivery stays a draft until it is handed over.",
+        "supplement": "Save {{addresses}} addresses ({{copies}} copies) as supplement {{batch}} of issue {{label}} – only addresses in no earlier delivery of this issue."
+      },
+      "exportConfirm": {
+        "export": "Export",
+        "replace": "Replace export",
+        "supplement": "Export supplement"
+      },
+      "supplementEmpty": "Nobody new – there is nothing to supplement.",
+      "runConflict": "The list was computed again in the meantime, is older than 24 hours or no longer matches the deliveries. Please compute and check it again.",
+      "steps": {
+        "compute": "Compute",
+        "check": "Check",
+        "export": "Export"
+      },
+      "deliveries": {
+        "title": "Deliveries",
+        "empty": "No delivery yet – compute and export the copies.",
+        "export": "Export",
+        "supplement": "Supplement {{batch}}",
+        "exportedAt": "Exported on · by",
+        "options": "Options",
+        "addresses": "Addresses",
+        "copies": "Copies",
+        "status": "Status",
+        "draft": "Draft",
+        "deliveredLine": "Handed over on {{date}} · {{name}}",
+        "csv": "CSV",
+        "deliver": "Hand over",
+        "deliverTooltip": "Lock once the exported data has been handed to the printshop. Corrections can still be exported as a supplement afterwards.",
+        "deliverTitle": "Hand delivery over?",
+        "deliverQuestion": "Mark {{name}} of issue {{label}} as handed to the printshop? The delivery is locked from then on and its copies count toward the issues the readers paid for. This cannot be undone.",
+        "deliverConfirm": "Hand over",
+        "delete": "Delete",
+        "deleteTitle": "Delete delivery?",
+        "deleteQuestion": "Delete {{name}}? Its addresses are discarded; the next computation creates them anew.",
+        "deleteConfirm": "Delete",
+        "fullList": "Download the complete list (all deliveries merged)"
+      },
+      "summary": {
+        "none": "–",
+        "headline": "{{rows}} addresses, {{copies}} copies – as of {{date}}",
+        "withGifts": "with gift copies",
+        "graceWarning": "More than 5 % of the rows are copies still owed – are all historic issues recorded and is «issues per year» right?",
+        "sources": "Sources",
+        "wepublish": "we.publish",
+        "totalSubscriptions": "Subscriptions checked",
+        "byPlan": "Plans",
+        "byKind": "bexio kinds",
+        "byCountry": "Countries",
+        "hints": {
+          "title": "Notes",
+          "unpaid": "open",
+          "openWithoutInvoice": "open without invoice",
+          "grace": "Copy owed",
+          "gifts": "Gift copy",
+          "kuendigungen": "Cancelled as of",
+          "missingAddress": "No address",
+          "placeholderEmail": "Placeholder e-mail",
+          "duplicates": "Duplicate",
+          "alreadyExported": "Already in a delivery"
+        },
+        "skipped": {
+          "title": "Skipped",
+          "donation": "Donations",
+          "excludedPlan": "Plan not selected",
+          "future": "Starts after the ship day",
+          "unpaidDeactivation": "Deactivated unpaid",
+          "replaced": "Replaced",
+          "deactivated": "Deactivated",
+          "lapsed": "Lapsed",
+          "exhausted": "Quota received"
+        },
+        "bexio": {
+          "title": "bexio",
+          "notConfigured": "bexio is not read: no bexio payment provider with an API key is set up under Integrations. Institutions, gifts, bookshops and single issues are missing.",
+          "notIncluded": "bexio was not read for this list: the option is switched off.",
+          "invoicesInWindow": "Invoices in the window",
+          "canceled": "Cancelled",
+          "otherPeriod": "Other year / other issue",
+          "einzelheftOhneAusgabe": "Single issue without issue number",
+          "detailFetched": "Positions read",
+          "detailUnparsed": "Not recognised",
+          "ungeprueft": "Unchecked",
+          "contactMissing": "Contact missing"
+        }
+      },
+      "rowsTable": {
+        "name": "Name / company",
+        "place": "Place",
+        "copies": "Copies",
+        "plan": "Plan",
+        "status": "Payment status",
+        "hint": "Note",
+        "empty": "No addresses."
+      }
+    },
+    "printExportOptions": {
+      "memberPlans": "Plans",
+      "memberPlansHelp": "Only subscriptions of these plans go into the list. Empty: every plan.",
+      "allPlans": "all plans",
+      "plansCount_one": "{{count}} plan",
+      "plansCount_other": "{{count}} plans",
+      "includeBexio": "Include bexio",
+      "includeBexioHelp": "Institutions, gift subscriptions, bookshops and single issues from bexio – read with the key of the bexio payment provider under Integrations.",
+      "bexioNotConfigured": "No bexio payment provider with an API key is set up under Integrations; bexio cannot be read.",
+      "bexioShort": "bexio",
+      "includeOpen": "Include open readers",
+      "includeOpenHelp": "Renewing subscriptions whose invoice is not paid yet («open») receive a copy. Switched off, they count like lapsed subscriptions: copies owed only.",
+      "openShort": "open",
+      "includeUpcoming": "Gift copies",
+      "includeUpcomingHelp": "Subscriptions that start after the ship day receive this issue as a gift. It does not count toward the paid issues.",
+      "upcomingShort": "gift"
     },
     "autosave": {
       "label": "Autosave",
