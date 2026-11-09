@@ -160,6 +160,7 @@ export async function runExport(
     deactivated: 0,
     lapsed: 0,
     exhausted: 0,
+    noPrintIssues: 0,
   };
   const counters = {
     unpaid: 0,

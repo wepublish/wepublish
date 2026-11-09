@@ -7,7 +7,7 @@ const plan = {
   slug: 'nw-jahresabo',
   name: 'Jahresabo',
   productType: 'Subscription',
-  printIssuesPerPeriod: null,
+  printIssues: {},
 };
 const donation = {
   ...plan,

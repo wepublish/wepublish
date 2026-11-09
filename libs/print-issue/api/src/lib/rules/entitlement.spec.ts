@@ -257,7 +257,10 @@ describe('classifySubscription — the rules the Worker had', () => {
 });
 
 describe('classifySubscription — copies still owed (grace)', () => {
-  const trialPlan = { productType: 'Subscription', printIssuesPerPeriod: 3 };
+  const trialPlan = {
+    productType: 'Subscription',
+    printIssues: { quarterly: 3 },
+  };
   const trial = (deliveries: RuleSubscription['deliveries'] = []) =>
     subscription({
       memberPlan: trialPlan,
@@ -419,7 +422,7 @@ describe('classifySubscription — copies still owed (grace)', () => {
 
 describe('entitledIssues', () => {
   it('derives the copies of a period from the issues per year', () => {
-    const plan = { printIssuesPerPeriod: null };
+    const plan = { printIssues: {} };
     expect(
       entitledIssues(period({ paymentPeriodicity: 'monthly' }), plan, 6)
     ).toBe(1);
@@ -440,15 +443,25 @@ describe('entitledIssues', () => {
     ).toBeNull();
   });
 
-  it('lets the plan override the formula', () => {
-    expect(entitledIssues(period(), { printIssuesPerPeriod: 2 }, 6)).toBe(2);
+  it("takes the number the plan sets for the period's periodicity, the formula for the others", () => {
+    const plan = { printIssues: { yearly: 2, lifetime: 4 } };
+
+    expect(entitledIssues(period(), plan, 6)).toBe(2);
     expect(
-      entitledIssues(
-        period({ paymentPeriodicity: 'lifetime' }),
-        { printIssuesPerPeriod: 4 },
-        6
-      )
+      entitledIssues(period({ paymentPeriodicity: 'lifetime' }), plan, 6)
     ).toBe(4);
+    // nothing set for monthly: 6 issues a year, pro rata
+    expect(
+      entitledIssues(period({ paymentPeriodicity: 'monthly' }), plan, 6)
+    ).toBe(1);
+  });
+
+  it('accepts 0 as «no copies» for a periodicity', () => {
+    expect(entitledIssues(period(), { printIssues: { yearly: 0 } }, 6)).toBe(0);
+  });
+
+  it('works for a plan without any number', () => {
+    expect(entitledIssues(period(), {}, 6)).toBe(6);
   });
 });
 
@@ -545,6 +558,73 @@ describe('Vorab-Exemplar (includeUpcoming)', () => {
         { includeUpcoming: true }
       )
     ).toMatchObject({ include: true, reason: 'gift' });
+  });
+});
+
+describe('classifySubscription — a periodicity set to 0 gets nothing', () => {
+  const none = (printIssues: Record<string, number>) => ({
+    productType: 'Subscription',
+    printIssues,
+  });
+
+  it('skips a paid subscription whose periodicity is worth 0 issues', () => {
+    expect(
+      classifySubscription(
+        subscription({ memberPlan: none({ yearly: 0 }) }),
+        ISSUE,
+        QUOTA_6
+      )
+    ).toEqual({ include: false, reason: 'noPrintIssues' });
+  });
+
+  it("looks only at the periodicity of the subscription's period", () => {
+    expect(
+      classifySubscription(
+        subscription({ memberPlan: none({ monthly: 0, yearly: 6 }) }),
+        ISSUE,
+        QUOTA_6
+      )
+    ).toMatchObject({ include: true, reason: 'paid' });
+  });
+
+  it('skips a renewing «offen» subscription and owes it nothing after its period', () => {
+    const renewing = subscription({
+      memberPlan: none({ yearly: 0 }),
+      paidUntil: '2026-09-30T00:00:00.000Z',
+      periods: [
+        period({
+          startsAt: '2025-10-01T00:00:00.000Z',
+          endsAt: '2026-09-30T00:00:00.000Z',
+        }),
+      ],
+    });
+
+    expect(classifySubscription(renewing, ISSUE, QUOTA_6)).toEqual({
+      include: false,
+      reason: 'noPrintIssues',
+    });
+    expect(
+      classifySubscription({ ...renewing, autoRenew: false }, ISSUE, QUOTA_6)
+    ).toEqual({ include: false, reason: 'noPrintIssues' });
+  });
+
+  it('gives no gift copy to a subscription starting later with such a periodicity', () => {
+    const upcoming = subscription({
+      memberPlan: none({ yearly: 0 }),
+      startsAt: '2026-11-01T00:00:00.000Z',
+      paidUntil: '2027-10-31T00:00:00.000Z',
+      periods: [
+        period({
+          id: 'pu',
+          startsAt: '2026-11-01T00:00:00.000Z',
+          endsAt: '2027-10-31T00:00:00.000Z',
+        }),
+      ],
+    });
+
+    expect(
+      classifySubscription(upcoming, ISSUE, QUOTA_6, { includeUpcoming: true })
+    ).toEqual({ include: false, reason: 'noPrintIssues' });
   });
 });
 

@@ -7,6 +7,25 @@ export const USER_BATCH = 1000;
 const iso = (date: Date | null | undefined) =>
   date ? date.toISOString() : null;
 
+/** The plan with its printed issues per periodicity; unset periodicities are left out. */
+const memberPlanOf = ({
+  periodicityPricing,
+  ...plan
+}: {
+  id: string;
+  slug: string;
+  name: string;
+  productType: string;
+  periodicityPricing: { periodicity: string; printIssues: number | null }[];
+}) => ({
+  ...plan,
+  printIssues: Object.fromEntries(
+    periodicityPricing
+      .filter(price => price.printIssues != null)
+      .map(price => [price.periodicity, price.printIssues as number])
+  ),
+});
+
 /** Stored properties carry a `public` flag; the export reads all of them. */
 const propertiesOf = (raw: unknown): Property[] =>
   Array.isArray(raw) ?
@@ -42,7 +61,9 @@ export async function loadMembers(prisma: PrismaClient): Promise<Members> {
           slug: true,
           name: true,
           productType: true,
-          printIssuesPerPeriod: true,
+          periodicityPricing: {
+            select: { periodicity: true, printIssues: true },
+          },
         },
       },
       periods: {
@@ -80,7 +101,7 @@ export async function loadMembers(prisma: PrismaClient): Promise<Members> {
           reason: row.deactivation.reason,
         }
       : null,
-    memberPlan: row.memberPlan,
+    memberPlan: memberPlanOf(row.memberPlan),
     properties: propertiesOf(row.properties),
     periods: row.periods.map(period => ({
       id: period.id,

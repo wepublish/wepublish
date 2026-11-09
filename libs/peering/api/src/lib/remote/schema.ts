@@ -3302,8 +3302,6 @@ export type MemberPlan = HasImage & {
   modifiedAt: Scalars['DateTime']['output'];
   name: Scalars['String']['output'];
   periodicityPricing: Array<PeriodicityPrice>;
-  /** Printed issues one paid period is worth (print export). Empty: the medium's issues per year, pro rata. */
-  printIssuesPerPeriod?: Maybe<Scalars['Int']['output']>;
   productType: ProductType;
   shortDescription?: Maybe<Scalars['RichText']['output']>;
   slug: Scalars['String']['output'];
@@ -4201,7 +4199,6 @@ export type MutationCreateMemberPlanArgs = {
   migrateToTargetPaymentMethodID?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
   periodicityPricing?: InputMaybe<Array<PeriodicityPriceInput>>;
-  printIssuesPerPeriod?: InputMaybe<Scalars['Int']['input']>;
   productType: ProductType;
   shortDescription?: InputMaybe<Scalars['RichText']['input']>;
   slug: Scalars['String']['input'];
@@ -5376,7 +5373,6 @@ export type MutationUpdateMemberPlanArgs = {
   migrateToTargetPaymentMethodID?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   periodicityPricing?: InputMaybe<Array<PeriodicityPriceInput>>;
-  printIssuesPerPeriod?: InputMaybe<Scalars['Int']['input']>;
   productType?: InputMaybe<ProductType>;
   shortDescription?: InputMaybe<Scalars['RichText']['input']>;
   slug?: InputMaybe<Scalars['String']['input']>;
@@ -6708,6 +6704,8 @@ export type PeriodicityPrice = {
   amountTarget?: Maybe<Scalars['Int']['output']>;
   label?: Maybe<Scalars['String']['output']>;
   periodicity: PaymentPeriodicity;
+  /** Printed issues one paid period of this periodicity is worth (print export). Empty: the medium's issues per year, pro rata. */
+  printIssues?: Maybe<Scalars['Int']['output']>;
 };
 
 export type PeriodicityPriceInput = {
@@ -6716,6 +6714,8 @@ export type PeriodicityPriceInput = {
   amountTarget?: InputMaybe<Scalars['Int']['input']>;
   label?: InputMaybe<Scalars['String']['input']>;
   periodicity: PaymentPeriodicity;
+  /** Printed issues one paid period of this periodicity is worth (print export). Empty: the medium's issues per year, pro rata. */
+  printIssues?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type Permission = {
@@ -7046,6 +7046,8 @@ export type PrintIssueSkipped = {
   exhausted: Scalars['Int']['output'];
   future: Scalars['Int']['output'];
   lapsed: Scalars['Int']['output'];
+  /** Plan sets 0 printed issues for the subscription's periodicity. */
+  noPrintIssues: Scalars['Int']['output'];
   replaced: Scalars['Int']['output'];
   unpaidDeactivation: Scalars['Int']['output'];
 };

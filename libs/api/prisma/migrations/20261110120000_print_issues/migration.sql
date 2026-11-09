@@ -8,7 +8,7 @@ CREATE TYPE "PrintIssueRecipientSource" AS ENUM ('wepublish', 'bexio');
 CREATE TYPE "PrintIssueRecipientReason" AS ENUM ('paid', 'openInvoice', 'grace', 'gift', 'external');
 
 -- AlterTable
-ALTER TABLE "member.plans" ADD COLUMN     "printIssuesPerPeriod" INTEGER;
+ALTER TABLE "member.plans.periodicity-prices" ADD COLUMN     "printIssues" INTEGER;
 
 -- CreateTable
 CREATE TABLE "print.issues" (

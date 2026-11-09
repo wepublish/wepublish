@@ -43,6 +43,21 @@ vi.mock('react-i18next', () => ({
     t: (key: string, values?: Record<string, unknown>) =>
       values ? `${key} ${JSON.stringify(values)}` : key,
   }),
+  // stands in for the markup-aware rendering: names the key and the tags it allows
+  Trans: ({
+    i18nKey,
+    components,
+  }: {
+    i18nKey: string;
+    components?: Record<string, unknown>;
+  }) => (
+    <span
+      data-trans={i18nKey}
+      data-tags={Object.keys(components ?? {}).join(',')}
+    >
+      {i18nKey}
+    </span>
+  ),
 }));
 
 const handedOver = {
@@ -133,12 +148,26 @@ describe('PrintIssueList', () => {
     expect(screen.getAllByText('printIssues.status.exported')).toHaveLength(2);
     expect(screen.getByText('printIssues.status.open')).toBeInTheDocument();
     expect(screen.getByText('printIssues.status.historic')).toBeInTheDocument();
+    // the Drucklisten column: icon + number pairs, each explained by its tooltip
     expect(
-      screen.getByText('printIssues.deliveriesCell {"count":2,"delivered":2}')
-    ).toBeInTheDocument();
+      screen.getByLabelText(
+        'printIssues.listCell.listsWithSupplements {"count":1}'
+      )
+    ).toHaveTextContent('2');
     expect(
-      screen.getByText('printIssues.deliveriesCell {"count":1,"delivered":0}')
-    ).toBeInTheDocument();
+      screen.getByLabelText(
+        'printIssues.listCell.delivered {"delivered":2,"count":2}'
+      )
+    ).toHaveTextContent('2');
+    expect(screen.getAllByLabelText('printIssues.listCell.lists')).toHaveLength(
+      2
+    );
+    expect(
+      screen.getByLabelText('printIssues.listCell.deliveredNone')
+    ).toHaveTextContent('0');
+    expect(
+      screen.queryByText(/printIssues\.deliveriesCell/)
+    ).not.toBeInTheDocument();
     expect(screen.getByText('1200')).toBeInTheDocument();
     expect(screen.getByText('850')).toBeInTheDocument();
     expect(
@@ -199,6 +228,54 @@ describe('PrintIssueList', () => {
         expect.objectContaining({ variables: { id: 'issue-delivered' } })
       )
     );
+  });
+
+  it('explains on the lock and delete of every issue why they are in their state, disabled or not', async () => {
+    renderList();
+
+    // a disabled button gets no pointer events: the tooltip listens on its wrapper
+    const hover = (button: HTMLElement) =>
+      fireEvent.mouseOver(button.parentElement!);
+    const close = buttons('printIssues.actions.close');
+
+    hover(screen.getByRole('button', { name: 'printIssues.actions.reopen' }));
+    hover(close[0]!);
+    hover(close[1]!);
+    hover(close[2]!);
+    hover(screen.getByRole('button', { name: 'printIssues.actions.historic' }));
+
+    expect(
+      await screen.findByText('printIssues.lockReason.reopen')
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByText('printIssues.lockReason.close')
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByText(
+        'printIssues.lockReason.draft {"name":"printIssues.deliveries.export"}'
+      )
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByText('printIssues.lockReason.noLists')
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByText('printIssues.lockReason.historic')
+    ).toBeInTheDocument();
+
+    buttons('printIssues.actions.delete').forEach(hover);
+
+    expect(
+      await screen.findAllByText('printIssues.deleteReason.delivered')
+    ).toHaveLength(2);
+    expect(
+      await screen.findByText('printIssues.deleteReason.draft')
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByText('printIssues.deleteReason.empty')
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByText('printIssues.deleteReason.historic')
+    ).toBeInTheDocument();
   });
 
   it('reopens a closed issue right away', async () => {
@@ -272,6 +349,14 @@ describe('PrintIssueList', () => {
     expect(form().getByLabelText('printIssues.fields.issueDate')).toHaveValue(
       '2027-03-15'
     );
+  });
+
+  it('renders the intro below the heading with markup', () => {
+    const { container } = renderList();
+
+    expect(
+      container.querySelector('[data-trans="printIssues.intro"]')
+    ).toHaveAttribute('data-tags', 'strong,em,i,br');
   });
 
   it('shows no form on the plain list', () => {

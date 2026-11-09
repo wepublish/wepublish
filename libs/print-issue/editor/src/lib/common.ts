@@ -105,3 +105,33 @@ export const nextRunMode = (issue: IssueLike): PrintIssueRunMode => {
       PrintIssueRunMode.Supplement
     : PrintIssueRunMode.Replace;
 };
+
+export type FlowKind = 'create' | 'editFirst' | 'editSupplement' | 'supplement';
+
+/**
+ * What the button below the Drucklisten offers: the first Druckliste, editing
+ * the draft (the Druckliste itself or the last Nachlieferung), or the next
+ * Nachlieferung. Null when nothing can be added: closed or historic.
+ */
+export const flowKind = (issue: IssueLike): FlowKind | null => {
+  if (
+    issue.status === PrintIssueStatus.Closed ||
+    issue.status === PrintIssueStatus.Historic
+  ) {
+    return null;
+  }
+
+  const mode = nextRunMode(issue);
+
+  if (mode === PrintIssueRunMode.Export) {
+    return 'create';
+  }
+
+  if (mode === PrintIssueRunMode.Supplement) {
+    return 'supplement';
+  }
+
+  return newestDelivery(issue.deliveries)?.batch === 0 ?
+      'editFirst'
+    : 'editSupplement';
+};

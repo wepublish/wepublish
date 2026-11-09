@@ -80,16 +80,25 @@ const stable = (name: string, data: unknown) => {
 };
 const withIssue = (overrides: Record<string, unknown> = {}) =>
   stable('PrintIssueById', { printIssue: issue(overrides) });
-const withRun = (run: unknown) =>
-  stable('PrintIssueRun', { printIssueRun: run });
 const withContext = (overrides: Record<string, unknown> = {}) =>
   stable('PrintExportContext', { printExportContext: context(overrides) });
+/** computing answers with this run, as the API does */
+const computes = (run: unknown) => {
+  mutations['ComputePrintIssueRun'] = vi.fn(async () => ({
+    data: { computePrintIssueRun: run },
+  }));
+};
 
-const handedOver = {
+const delivered = {
   deliveredAt: '2026-12-21T09:00:00.000Z',
   deliveredBy: user,
 };
 const toggle = (name: string) => screen.getByRole('switch', { name });
+const button = (name: string) => screen.getByRole('button', { name });
+const noButton = (name: string) =>
+  expect(screen.queryByRole('button', { name })).not.toBeInTheDocument();
+const open = (kind: string) =>
+  fireEvent.click(button(`printIssues.flow.${kind}`));
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -99,7 +108,6 @@ beforeEach(() => {
     }
   }
   withContext();
-  withRun(null);
   csvQuery.mockImplementation(
     ({ variables }: { variables: { deliveryId?: string | null } }) => ({
       printIssueCsv: {
@@ -111,102 +119,51 @@ beforeEach(() => {
 });
 
 describe('PrintIssueListView', () => {
-  describe('an open issue without deliveries', () => {
+  describe('an open issue without Drucklisten', () => {
     beforeEach(() => withIssue());
 
-    it('offers the options and computing; nothing to export, hand over or download yet', () => {
+    it('shows the empty table and offers the first Druckliste; no options until then', () => {
       renderView();
 
       expect(
         screen.getByText('printIssues.listView.title {"label":"1.27"}')
       ).toBeInTheDocument();
-      expect(toggle('printExportOptions.includeBexio')).toBeChecked();
-      expect(toggle('printExportOptions.includeOpen')).toBeChecked();
-      expect(toggle('printExportOptions.includeUpcoming')).not.toBeChecked();
-      expect(
-        screen.getByRole('button', { name: 'printIssues.compute' })
-      ).toBeEnabled();
-      expect(
-        screen.getByRole('button', { name: 'printIssues.export' })
-      ).toBeDisabled();
       expect(
         screen.getByText('printIssues.deliveries.empty')
       ).toBeInTheDocument();
-      expect(
-        screen.getByRole('button', { name: 'printIssues.deliveries.fullList' })
-      ).toBeDisabled();
-      expect(screen.getByText('printIssues.steps.export')).toBeInTheDocument();
+      expect(button('printIssues.flow.create')).toBeEnabled();
+      expect(button('printIssues.deliveries.fullList')).toBeDisabled();
+      expect(screen.queryByRole('switch')).not.toBeInTheDocument();
+      noButton('printIssues.compute');
     });
 
-    it('disables bexio with a hint while no provider has a key', () => {
-      withContext({ bexioConfigured: false });
+    it("opens the options prefilled with the issue's and computes with them, saving nothing", async () => {
       renderView();
 
-      expect(toggle('printExportOptions.includeBexio')).toBeDisabled();
-      expect(
-        screen.getByText('printExportOptions.bexioNotConfigured')
-      ).toBeInTheDocument();
-    });
+      open('create');
 
-    it('saves changed options with the issue, and holds the export until they are saved', async () => {
-      renderView();
+      expect(screen.getByText('printIssues.steps.options')).toBeInTheDocument();
+      expect(toggle('printExportOptions.includeBexio')).toBeChecked();
+      expect(toggle('printExportOptions.includeOpen')).toBeChecked();
+      expect(toggle('printExportOptions.includeUpcoming')).not.toBeChecked();
+      noButton('printIssues.flow.create');
 
-      expect(
-        screen.getByRole('button', { name: 'printIssues.options.save' })
-      ).toBeDisabled();
-      fireEvent.click(toggle('printExportOptions.includeUpcoming'));
-
-      expect(
-        screen.getByText('printIssues.options.unsaved')
-      ).toBeInTheDocument();
-      fireEvent.click(
-        screen.getByRole('button', { name: 'printIssues.options.save' })
-      );
+      fireEvent.click(button('printIssues.compute'));
 
       await waitFor(() =>
-        expect(mutations['UpdatePrintIssue']).toHaveBeenCalledWith(
-          expect.objectContaining({
-            variables: {
-              id: 'issue-1',
-              input: {
-                number: 1,
-                year: 2027,
-                issueDate: '2027-01-15',
-                note: null,
-                historic: false,
-                options: options({ includeUpcoming: true }),
-              },
-            },
-          })
-        )
+        expect(mutations['ComputePrintIssueRun']).toHaveBeenCalledWith({
+          variables: { id: 'issue-1' },
+        })
       );
+      expect(mutations['UpdatePrintIssue']).not.toHaveBeenCalled();
     });
 
-    it("resets the options to the medium's defaults", () => {
-      withContext({
-        defaults: options({ includeBexio: false, memberPlanIds: ['plan-a'] }),
-      });
+    it('saves changed options on the issue before computing, so the list uses them', async () => {
       renderView();
 
-      fireEvent.click(
-        screen.getByRole('button', { name: 'printIssues.options.reset' })
-      );
-
-      expect(toggle('printExportOptions.includeBexio')).not.toBeChecked();
-      // the plan picker has no plans to name here, so it shows the picked id
-      expect(screen.getByText('plan-a')).toBeInTheDocument();
-      expect(
-        screen.getByRole('button', { name: 'printIssues.options.save' })
-      ).toBeEnabled();
-    });
-
-    it('saves unsaved options before computing, so the list uses them', async () => {
-      renderView();
-
+      open('create');
       fireEvent.click(toggle('printExportOptions.includeOpen'));
-      fireEvent.click(
-        screen.getByRole('button', { name: 'printIssues.compute' })
-      );
+      fireEvent.click(button('printIssues.compute'));
 
       await waitFor(() =>
         expect(mutations['ComputePrintIssueRun']).toHaveBeenCalledWith({
@@ -215,11 +172,17 @@ describe('PrintIssueListView', () => {
       );
       expect(mutations['UpdatePrintIssue']).toHaveBeenCalledWith(
         expect.objectContaining({
-          variables: expect.objectContaining({
-            input: expect.objectContaining({
+          variables: {
+            id: 'issue-1',
+            input: {
+              number: 1,
+              year: 2027,
+              issueDate: '2027-01-15',
+              note: null,
+              historic: false,
               options: options({ includeOpen: false }),
-            }),
-          }),
+            },
+          },
         })
       );
       expect(
@@ -229,34 +192,66 @@ describe('PrintIssueListView', () => {
       );
     });
 
-    it('shows the computed list with who computed it, and its addresses in an overlay', async () => {
-      withRun(storedRun());
+    it('disables bexio with a hint while no provider has a key', () => {
+      withContext({ bexioConfigured: false });
       renderView();
 
+      open('create');
+
+      expect(toggle('printExportOptions.includeBexio')).toBeDisabled();
       expect(
-        screen.getByText(/printIssues\.computedLine .*"name":"Maria Muster"/)
+        screen.getByText('printExportOptions.bexioNotConfigured')
+      ).toBeInTheDocument();
+    });
+
+    it("resets the options to the medium's defaults", () => {
+      withContext({
+        defaults: options({ includeBexio: false, memberPlanIds: ['plan-a'] }),
+      });
+      renderView();
+
+      open('create');
+      fireEvent.click(button('printIssues.options.reset'));
+
+      expect(toggle('printExportOptions.includeBexio')).not.toBeChecked();
+      // the plan picker has no plans to name here, so it shows the picked id
+      expect(screen.getByText('plan-a')).toBeInTheDocument();
+    });
+
+    it('shows the computed list with who computed it, and its addresses in an overlay', async () => {
+      computes(storedRun());
+      renderView();
+
+      open('create');
+      fireEvent.click(button('printIssues.compute'));
+
+      expect(
+        await screen.findByText(
+          /printIssues\.computedLine .*"name":"Maria Muster"/
+        )
       ).toBeInTheDocument();
       expect(
         screen.getByText(/printIssues\.summary\.headline/)
       ).toBeInTheDocument();
       expect(screen.queryByText('Alpha')).not.toBeInTheDocument();
 
-      fireEvent.click(
-        screen.getByRole('button', { name: 'printIssues.showList {"count":2}' })
-      );
+      fireEvent.click(button('printIssues.showList {"count":2}'));
 
       const overlay = await screen.findByRole('dialog');
       expect(overlay).toHaveTextContent('Alpha');
       expect(overlay).toHaveTextContent('Beta');
     });
 
-    it('exports exactly the checked list after a confirmation that names the export, and downloads nothing', async () => {
-      withRun(storedRun());
+    it('exports exactly the checked list after a confirmation, closes the flow and downloads nothing', async () => {
+      computes(storedRun());
       renderView();
 
+      open('create');
+      fireEvent.click(button('printIssues.compute'));
       fireEvent.click(
-        screen.getByRole('button', { name: 'printIssues.export' })
+        await screen.findByRole('button', { name: 'printIssues.export' })
       );
+
       expect(mutations['ExportPrintIssueRun']).not.toHaveBeenCalled();
       expect(
         screen.getByText(
@@ -264,20 +259,43 @@ describe('PrintIssueListView', () => {
         )
       ).toBeInTheDocument();
 
-      fireEvent.click(
-        screen.getByRole('button', { name: 'printIssues.exportConfirm.export' })
-      );
+      fireEvent.click(button('printIssues.exportConfirm.export'));
 
       await waitFor(() =>
         expect(mutations['ExportPrintIssueRun']).toHaveBeenCalledWith({
           variables: { id: 'issue-1', computedAt: '2026-12-20T09:00:00.000Z' },
         })
       );
+      await waitFor(() =>
+        expect(
+          screen.queryByText(/printIssues\.summary\.headline/)
+        ).not.toBeInTheDocument()
+      );
+      expect(screen.queryByRole('switch')).not.toBeInTheDocument();
+      expect(button('printIssues.flow.create')).toBeInTheDocument();
       expect(downloadCsv).not.toHaveBeenCalled();
     });
 
+    it('holds the export while the options changed after computing', async () => {
+      computes(storedRun());
+      renderView();
+
+      open('create');
+      fireEvent.click(button('printIssues.compute'));
+      expect(
+        await screen.findByRole('button', { name: 'printIssues.export' })
+      ).toBeEnabled();
+
+      fireEvent.click(toggle('printExportOptions.includeUpcoming'));
+
+      expect(
+        screen.getByText('printIssues.options.unsaved')
+      ).toBeInTheDocument();
+      expect(button('printIssues.export')).toBeDisabled();
+    });
+
     it('asks to compute again when the export is refused', async () => {
-      withRun(storedRun());
+      computes(storedRun());
       mutations['ExportPrintIssueRun'] = vi.fn(async () => {
         throw new Error(
           'The list was computed again in the meantime; check the new one.'
@@ -285,20 +303,37 @@ describe('PrintIssueListView', () => {
       });
       renderView();
 
+      open('create');
+      fireEvent.click(button('printIssues.compute'));
       fireEvent.click(
-        screen.getByRole('button', { name: 'printIssues.export' })
+        await screen.findByRole('button', { name: 'printIssues.export' })
       );
-      fireEvent.click(
-        screen.getByRole('button', { name: 'printIssues.exportConfirm.export' })
-      );
+      fireEvent.click(button('printIssues.exportConfirm.export'));
 
       expect(
         await screen.findByText('printIssues.runConflict')
       ).toBeInTheDocument();
+      // the closing dialog hides the page from the a11y tree until its transition ends
+      expect(
+        await screen.findByRole('button', { name: 'printIssues.compute' })
+      ).toBeEnabled();
+    });
+
+    it('cancels without saving or computing anything', () => {
+      renderView();
+
+      open('create');
+      fireEvent.click(toggle('printExportOptions.includeUpcoming'));
+      fireEvent.click(button('printIssues.flow.cancel'));
+
+      expect(screen.queryByRole('switch')).not.toBeInTheDocument();
+      expect(button('printIssues.flow.create')).toBeInTheDocument();
+      expect(mutations['UpdatePrintIssue']).not.toHaveBeenCalled();
+      expect(mutations['ComputePrintIssueRun']).not.toHaveBeenCalled();
     });
   });
 
-  describe('an issue with a draft delivery', () => {
+  describe('an issue with a draft Druckliste', () => {
     beforeEach(() =>
       withIssue({
         deliveries: [
@@ -312,7 +347,7 @@ describe('PrintIssueListView', () => {
       })
     );
 
-    it('lists the draft with its options, CSV, hand-over and delete, and the merged list', async () => {
+    it('lists the draft with its options, CSV, edit, delivered and delete, and the merged list', async () => {
       renderView();
 
       const row = screen.getByRole('row', {
@@ -326,6 +361,14 @@ describe('PrintIssueListView', () => {
       expect(row).toHaveTextContent('printExportOptions.openShort');
       expect(row).toHaveTextContent('100');
       expect(row).toHaveTextContent('102');
+      expect(
+        within(row).getByRole('button', { name: 'printIssues.deliveries.edit' })
+      ).toBeEnabled();
+      expect(
+        within(row).getByRole('button', {
+          name: 'printIssues.deliveries.deliver',
+        })
+      ).toBeEnabled();
 
       fireEvent.click(
         within(row).getByRole('button', { name: 'printIssues.deliveries.csv' })
@@ -334,32 +377,50 @@ describe('PrintIssueListView', () => {
         expect(downloadCsv).toHaveBeenCalledWith('csv-del-0', 'file-del-0.csv')
       );
 
-      fireEvent.click(
-        screen.getByRole('button', { name: 'printIssues.deliveries.fullList' })
-      );
+      fireEvent.click(button('printIssues.deliveries.fullList'));
       await waitFor(() =>
         expect(downloadCsv).toHaveBeenCalledWith('csv-all', 'file-all.csv')
       );
     });
 
-    it('replaces the draft when exporting again, and says so', async () => {
-      withRun(storedRun({ mode: 'replace', deliveryId: 'del-0' }));
+    it("offers to edit the Druckliste with the draft's options and replaces it on export", async () => {
+      computes(storedRun({ mode: 'replace', deliveryId: 'del-0' }));
       renderView();
 
+      open('editFirst');
+
+      expect(toggle('printExportOptions.includeBexio')).not.toBeChecked();
+      expect(screen.getByText('plan-a')).toBeInTheDocument();
+      noButton('printIssues.compute');
+
+      fireEvent.click(button('printIssues.recompute'));
+
+      await waitFor(() =>
+        expect(mutations['ComputePrintIssueRun']).toHaveBeenCalled()
+      );
+      // the draft's options become the issue's, so the list is computed from them
+      expect(mutations['UpdatePrintIssue']).toHaveBeenCalledWith(
+        expect.objectContaining({
+          variables: expect.objectContaining({
+            input: expect.objectContaining({
+              options: options({
+                memberPlanIds: ['plan-a', 'plan-b'],
+                includeBexio: false,
+              }),
+            }),
+          }),
+        })
+      );
+
       fireEvent.click(
-        screen.getByRole('button', { name: 'printIssues.export' })
+        await screen.findByRole('button', { name: 'printIssues.export' })
       );
       expect(
         screen.getByText(
           /printIssues\.exportQuestion\.replace .*"date":"20.12.2026"/
         )
       ).toBeInTheDocument();
-
-      fireEvent.click(
-        screen.getByRole('button', {
-          name: 'printIssues.exportConfirm.replace',
-        })
-      );
+      fireEvent.click(button('printIssues.exportConfirm.replace'));
 
       await waitFor(() =>
         expect(mutations['ExportPrintIssueRun']).toHaveBeenCalledWith({
@@ -368,12 +429,20 @@ describe('PrintIssueListView', () => {
       );
     });
 
-    it('hands the delivery over after a confirmation', async () => {
+    it('opens the same edit from the row', () => {
       renderView();
 
-      fireEvent.click(
-        screen.getByRole('button', { name: 'printIssues.deliveries.deliver' })
-      );
+      fireEvent.click(button('printIssues.deliveries.edit'));
+
+      expect(toggle('printExportOptions.includeBexio')).not.toBeChecked();
+      expect(button('printIssues.recompute')).toBeEnabled();
+      noButton('printIssues.flow.editFirst');
+    });
+
+    it('marks the draft as delivered after a confirmation', async () => {
+      renderView();
+
+      fireEvent.click(button('printIssues.deliveries.deliver'));
       expect(mutations['DeliverPrintIssueDelivery']).not.toHaveBeenCalled();
       expect(
         screen.getByText(
@@ -381,11 +450,7 @@ describe('PrintIssueListView', () => {
         )
       ).toBeInTheDocument();
 
-      fireEvent.click(
-        screen.getByRole('button', {
-          name: 'printIssues.deliveries.deliverConfirm',
-        })
-      );
+      fireEvent.click(button('printIssues.deliveries.deliverConfirm'));
 
       await waitFor(() =>
         expect(mutations['DeliverPrintIssueDelivery']).toHaveBeenCalledWith(
@@ -397,14 +462,8 @@ describe('PrintIssueListView', () => {
     it('deletes the draft after a confirmation', async () => {
       renderView();
 
-      fireEvent.click(
-        screen.getByRole('button', { name: 'printIssues.deliveries.delete' })
-      );
-      fireEvent.click(
-        screen.getByRole('button', {
-          name: 'printIssues.deliveries.deleteConfirm',
-        })
-      );
+      fireEvent.click(button('printIssues.deliveries.delete'));
+      fireEvent.click(button('printIssues.deliveries.deleteConfirm'));
 
       await waitFor(() =>
         expect(mutations['DeletePrintIssueDelivery']).toHaveBeenCalledWith(
@@ -414,10 +473,10 @@ describe('PrintIssueListView', () => {
     });
   });
 
-  describe('an issue whose deliveries are handed over', () => {
-    beforeEach(() => withIssue({ deliveries: [delivery(handedOver)] }));
+  describe('an issue whose Druckliste is delivered', () => {
+    beforeEach(() => withIssue({ deliveries: [delivery(delivered)] }));
 
-    it('shows the hand-over and offers neither hand-over nor delete for it', () => {
+    it('shows the delivery, offers neither edit, delivered nor delete for it, and a Nachlieferung', () => {
       renderView();
 
       expect(
@@ -425,16 +484,14 @@ describe('PrintIssueListView', () => {
           'printIssues.deliveries.deliveredLine {"date":"21.12.2026","name":"Maria Muster"}'
         )
       ).toBeInTheDocument();
-      expect(
-        screen.queryByRole('button', { name: 'printIssues.deliveries.deliver' })
-      ).not.toBeInTheDocument();
-      expect(
-        screen.queryByRole('button', { name: 'printIssues.deliveries.delete' })
-      ).not.toBeInTheDocument();
+      noButton('printIssues.deliveries.edit');
+      noButton('printIssues.deliveries.deliver');
+      noButton('printIssues.deliveries.delete');
+      expect(button('printIssues.flow.supplement')).toBeEnabled();
     });
 
     it('exports the next list as a Nachlieferung', async () => {
-      withRun(
+      computes(
         storedRun({
           mode: 'supplement',
           batch: 1,
@@ -451,21 +508,20 @@ describe('PrintIssueListView', () => {
       );
       renderView();
 
-      expect(
-        screen.queryByRole('button', { name: 'printIssues.export' })
-      ).not.toBeInTheDocument();
+      open('supplement');
+      fireEvent.click(button('printIssues.compute'));
+
       fireEvent.click(
-        screen.getByRole('button', { name: 'printIssues.exportSupplement' })
+        await screen.findByRole('button', {
+          name: 'printIssues.exportSupplement',
+        })
       );
+      noButton('printIssues.export');
       expect(
         screen.getByText(/printIssues\.exportQuestion\.supplement .*"batch":1/)
       ).toBeInTheDocument();
 
-      fireEvent.click(
-        screen.getByRole('button', {
-          name: 'printIssues.exportConfirm.supplement',
-        })
-      );
+      fireEvent.click(button('printIssues.exportConfirm.supplement'));
 
       await waitFor(() =>
         expect(mutations['ExportPrintIssueRun']).toHaveBeenCalledWith({
@@ -474,8 +530,8 @@ describe('PrintIssueListView', () => {
       );
     });
 
-    it('says when nobody new is entitled and offers nothing to export', () => {
-      withRun(
+    it('offers only to discard when nobody new is entitled', async () => {
+      computes(
         storedRun({
           mode: 'supplement',
           batch: 1,
@@ -485,12 +541,37 @@ describe('PrintIssueListView', () => {
       );
       renderView();
 
+      open('supplement');
+      fireEvent.click(button('printIssues.compute'));
+
       expect(
-        screen.getByText('printIssues.supplementEmpty')
+        await screen.findByText('printIssues.supplementEmpty')
       ).toBeInTheDocument();
+      noButton('printIssues.exportSupplement');
+      noButton('printIssues.compute');
+      expect(screen.queryByRole('switch')).not.toBeInTheDocument();
+
+      fireEvent.click(button('printIssues.flow.discard'));
+
       expect(
-        screen.queryByRole('button', { name: 'printIssues.exportSupplement' })
+        screen.queryByText('printIssues.supplementEmpty')
       ).not.toBeInTheDocument();
+      expect(button('printIssues.flow.supplement')).toBeInTheDocument();
+    });
+
+    it('offers to edit a draft Nachlieferung', () => {
+      withIssue({
+        deliveries: [
+          delivery(delivered),
+          delivery({ id: 'del-1', batch: 1, rowCount: 3, copyCount: 3 }),
+        ],
+      });
+      renderView();
+
+      expect(button('printIssues.flow.editSupplement')).toBeEnabled();
+      expect(
+        screen.getAllByRole('button', { name: 'printIssues.deliveries.edit' })
+      ).toHaveLength(1);
     });
   });
 
@@ -500,21 +581,19 @@ describe('PrintIssueListView', () => {
         status: 'closed',
         closedAt: '2027-02-01T10:00:00.000Z',
         closedBy: user,
-        deliveries: [delivery(handedOver)],
+        deliveries: [delivery(delivered)],
       })
     );
 
-    it('explains that reopening comes first, computes nothing and locks the options', () => {
+    it('explains that unlocking comes first and offers no Druckliste to add', () => {
       renderView();
 
       expect(screen.getByText('printIssues.closedInfo')).toBeInTheDocument();
       expect(
-        screen.queryByRole('button', { name: 'printIssues.compute' })
+        screen.queryByRole('button', { name: /^printIssues\.flow\./ })
       ).not.toBeInTheDocument();
-      expect(toggle('printExportOptions.includeOpen')).toBeDisabled();
-      expect(
-        screen.getByRole('button', { name: 'printIssues.deliveries.csv' })
-      ).toBeEnabled();
+      expect(screen.queryByRole('switch')).not.toBeInTheDocument();
+      expect(button('printIssues.deliveries.csv')).toBeEnabled();
     });
   });
 
@@ -529,14 +608,14 @@ describe('PrintIssueListView', () => {
       })
     );
 
-    it('has neither options nor a list to compute', () => {
+    it('has neither Drucklisten nor options', () => {
       renderView();
 
       expect(
         screen.getByText('printIssues.historicNoExport')
       ).toBeInTheDocument();
       expect(
-        screen.queryByRole('button', { name: 'printIssues.compute' })
+        screen.queryByRole('button', { name: /^printIssues\.flow\./ })
       ).not.toBeInTheDocument();
       expect(screen.queryByRole('switch')).not.toBeInTheDocument();
     });

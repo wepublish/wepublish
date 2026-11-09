@@ -1,4 +1,7 @@
-import type { RuleSubscription } from '../rules/entitlement';
+import type {
+  PrintIssuesByPeriodicity,
+  RuleSubscription,
+} from '../rules/entitlement';
 
 export type Property = { key: string; value: string };
 
@@ -7,7 +10,8 @@ export type MemberPlan = {
   slug: string;
   name: string;
   productType: string;
-  printIssuesPerPeriod: number | null;
+  /** set per periodicity on the plan's pricing; missing = pro rata */
+  printIssues: PrintIssuesByPeriodicity;
 };
 
 /** A subscription as the rules and the row mapping read it: dates as ISO strings. */

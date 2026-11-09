@@ -3482,11 +3482,6 @@ type MemberPlan implements HasImage {
   modifiedAt: DateTime!
   name: String!
   periodicityPricing: [PeriodicityPrice!]!
-
-  """
-  Printed issues one paid period is worth (print export). Empty: the medium's issues per year, pro rata.
-  """
-  printIssuesPerPeriod: Int
   productType: ProductType!
   shortDescription: RichText
   slug: String!
@@ -3709,32 +3704,7 @@ type Mutation {
   createMailTemplate(input: MailTemplateInput!): MailTemplateModel!
 
   """Creates a new memberplan."""
-  createMemberPlan(
-    active: Boolean!
-    availablePaymentMethods: [AvailablePaymentMethodInput!]!
-    confirmationPageId: String
-    currency: Currency!
-    defaultPaymentPeriodicity: PaymentPeriodicity
-    description: RichText
-    extendable: Boolean!
-    externalReward: String
-    failPageId: String
-    imageID: String
-    maxCount: Int
-    migrateToTargetPaymentMethodID: String
-    name: String!
-    periodicityPricing: [PeriodicityPriceInput!]
-
-    """
-    Printed issues one paid period is worth (print export). Empty: the medium's issues per year, pro rata.
-    """
-    printIssuesPerPeriod: Int
-    productType: ProductType!
-    shortDescription: RichText
-    slug: String!
-    successPageId: String
-    tags: [String!]
-  ): MemberPlan!
+  createMemberPlan(active: Boolean!, availablePaymentMethods: [AvailablePaymentMethodInput!]!, confirmationPageId: String, currency: Currency!, defaultPaymentPeriodicity: PaymentPeriodicity, description: RichText, extendable: Boolean!, externalReward: String, failPageId: String, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String!, periodicityPricing: [PeriodicityPriceInput!], productType: ProductType!, shortDescription: RichText, slug: String!, successPageId: String, tags: [String!]): MemberPlan!
 
   """Creates a new navigation."""
   createNavigation(key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
@@ -4380,33 +4350,7 @@ type Mutation {
   updateMailTemplate(id: String!, input: MailTemplateInput!): MailTemplateModel!
 
   """Updates an existing memberplan."""
-  updateMemberPlan(
-    active: Boolean
-    availablePaymentMethods: [AvailablePaymentMethodInput!]
-    confirmationPageId: String
-    currency: Currency
-    defaultPaymentPeriodicity: PaymentPeriodicity
-    description: RichText
-    extendable: Boolean
-    externalReward: String
-    failPageId: String
-    id: String!
-    imageID: String
-    maxCount: Int
-    migrateToTargetPaymentMethodID: String
-    name: String
-    periodicityPricing: [PeriodicityPriceInput!]
-
-    """
-    Printed issues one paid period is worth (print export). Empty: the medium's issues per year, pro rata.
-    """
-    printIssuesPerPeriod: Int
-    productType: ProductType
-    shortDescription: RichText
-    slug: String
-    successPageId: String
-    tags: [String!]
-  ): MemberPlan!
+  updateMemberPlan(active: Boolean, availablePaymentMethods: [AvailablePaymentMethodInput!], confirmationPageId: String, currency: Currency, defaultPaymentPeriodicity: PaymentPeriodicity, description: RichText, extendable: Boolean, externalReward: String, failPageId: String, id: String!, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String, periodicityPricing: [PeriodicityPriceInput!], productType: ProductType, shortDescription: RichText, slug: String, successPageId: String, tags: [String!]): MemberPlan!
 
   """Updates an existing navigation."""
   updateNavigation(id: String!, key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
@@ -5429,6 +5373,11 @@ type PeriodicityPrice {
   amountTarget: Int
   label: String
   periodicity: PaymentPeriodicity!
+
+  """
+  Printed issues one paid period of this periodicity is worth (print export). Empty: the medium's issues per year, pro rata.
+  """
+  printIssues: Int
 }
 
 input PeriodicityPriceInput {
@@ -5437,6 +5386,11 @@ input PeriodicityPriceInput {
   amountTarget: Int
   label: String
   periodicity: PaymentPeriodicity!
+
+  """
+  Printed issues one paid period of this periodicity is worth (print export). Empty: the medium's issues per year, pro rata.
+  """
+  printIssues: Int
 }
 
 type Permission {
@@ -5800,6 +5754,9 @@ type PrintIssueSkipped {
   exhausted: Int!
   future: Int!
   lapsed: Int!
+
+  """Plan sets 0 printed issues for the subscription's periodicity."""
+  noPrintIssues: Int!
   replaced: Int!
   unpaidDeactivation: Int!
 }

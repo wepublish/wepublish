@@ -98,6 +98,7 @@ export function PrintIssueSummary({
       'deactivated',
       'lapsed',
       'exhausted',
+      'noPrintIssues',
     ] as const
   )
     .map(reason => ({

@@ -1351,7 +1351,7 @@ error, as `libs/ui/editor/src/lib/panel/exportSubscriptions.tsx` and
 `useLazyQuery` must not call `onCompleted` either, or it hides the bug.
 
 Pinned by `libs/print-issue/editor/src/lib/print-issue-list-view.spec.tsx`
-(«lists the draft with its options, CSV, hand-over and delete, and the merged list»).
+(«lists the draft with its options, CSV, edit, delivered and delete, and the merged list»).
 
 ### ⚠️ `prisma migrate deploy` targets `DIRECT_DATABASE_URL` from `.env`, not the `DATABASE_URL` you pass
 

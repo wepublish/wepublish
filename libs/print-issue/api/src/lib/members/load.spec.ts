@@ -18,7 +18,11 @@ const plan = (overrides: Record<string, unknown> = {}) => ({
   slug: 'nw-jahresabo',
   name: 'Jahresabo',
   productType: 'Subscription',
-  printIssuesPerPeriod: null,
+  // a number for yearly periods only; monthly keeps the pro-rata rule
+  periodicityPricing: [
+    { periodicity: 'yearly', printIssues: 6 },
+    { periodicity: 'monthly', printIssues: null },
+  ],
   ...overrides,
 });
 
@@ -136,7 +140,13 @@ describe('loadMembers', () => {
         date: '2027-01-31T00:00:00.000Z',
         reason: 'userSelfDeactivated',
       },
-      memberPlan: plan(),
+      memberPlan: {
+        id: 'p1',
+        slug: 'nw-jahresabo',
+        name: 'Jahresabo',
+        productType: 'Subscription',
+        printIssues: { yearly: 6 },
+      },
       properties: [{ key: 'nw_adressnummer', value: '100' }],
       periods: [
         {
@@ -190,7 +200,9 @@ describe('loadMembers', () => {
               slug: true,
               name: true,
               productType: true,
-              printIssuesPerPeriod: true,
+              periodicityPricing: {
+                select: { periodicity: true, printIssues: true },
+              },
             },
           },
           periods: {

@@ -41,7 +41,7 @@ const lapsed = {
     slug: 'nw-jahresabo',
     name: 'Jahresabo',
     productType: 'Subscription',
-    printIssuesPerPeriod: null,
+    periodicityPricing: [],
   },
   periods: [
     {

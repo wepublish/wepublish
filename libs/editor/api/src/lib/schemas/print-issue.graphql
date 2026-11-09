@@ -48,6 +48,7 @@ fragment PrintIssueSummaryFields on PrintIssueSummary {
     deactivated
     lapsed
     exhausted
+    noPrintIssues
   }
   bexio {
     configured

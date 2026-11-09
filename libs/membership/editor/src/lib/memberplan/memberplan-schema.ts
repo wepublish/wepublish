@@ -99,7 +99,6 @@ export const createMemberPlanSchema = (t: TFunction) =>
       extendable: z.boolean(),
       externalReward: z.string().nullish(),
       maxCount: z.number().nullish(),
-      printIssuesPerPeriod: z.number().int().min(0).nullish(),
       productType: z.nativeEnum(ProductType),
       migrateToTargetPaymentMethodID: z.string().nullish(),
       successPageId: z.string().nullish(),
@@ -160,7 +159,9 @@ export const prunePricing = ({
       availablePaymentMethods.some(({ value }) =>
         value.paymentPeriodicities.includes(price.periodicity)
       ) &&
-      (price.label != null || price.amountMin != null)
+      (price.label != null ||
+        price.amountMin != null ||
+        price.printIssues != null)
   );
 
   const pricedMonthlyRow = periodicityPricing.find(
@@ -191,7 +192,6 @@ export const EMPTY_MEMBER_PLAN: MemberPlanFormValues = {
   extendable: true,
   externalReward: null,
   maxCount: null,
-  printIssuesPerPeriod: null,
   productType: ProductType.Subscription,
   migrateToTargetPaymentMethodID: null,
   successPageId: null,
@@ -206,6 +206,7 @@ export const EMPTY_MEMBER_PLAN: MemberPlanFormValues = {
       amountMin: 0,
       amountTarget: null,
       amountMax: null,
+      printIssues: null,
     },
   ],
   availablePaymentMethods: [],
@@ -226,7 +227,6 @@ export const toFormValues = (
   extendable: memberPlan.extendable,
   externalReward: memberPlan.externalReward,
   maxCount: memberPlan.maxCount,
-  printIssuesPerPeriod: memberPlan.printIssuesPerPeriod,
   productType: memberPlan.productType,
   migrateToTargetPaymentMethodID: memberPlan.migrateToTargetPaymentMethodID,
   successPageId: memberPlan.successPageId,

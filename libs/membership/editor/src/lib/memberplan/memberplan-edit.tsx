@@ -133,12 +133,20 @@ function MemberPlanEdit() {
       ),
       currency: memberPlan.currency,
       periodicityPricing: periodicityPricing.map(
-        ({ periodicity, label, amountMin, amountTarget, amountMax }) => ({
+        ({
           periodicity,
           label,
           amountMin,
           amountTarget,
           amountMax,
+          printIssues,
+        }) => ({
+          periodicity,
+          label,
+          amountMin,
+          amountTarget,
+          amountMax,
+          printIssues,
         })
       ),
       defaultPaymentPeriodicity:
@@ -155,7 +163,6 @@ function MemberPlanEdit() {
       extendable: memberPlan.extendable,
       externalReward: memberPlan.externalReward,
       maxCount: memberPlan.maxCount,
-      printIssuesPerPeriod: memberPlan.printIssuesPerPeriod,
       productType: memberPlan.productType,
       migrateToTargetPaymentMethodID: memberPlan.migrateToTargetPaymentMethodID,
       successPageId: memberPlan.successPageId,

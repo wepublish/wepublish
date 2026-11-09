@@ -563,8 +563,21 @@ function SettingList() {
                           t('settingList.info.paymentMethodChangeExpiryDays'),
                           t('settingList.days')
                         )}
+                      </Stack>
+                    </CardContent>
+                  </Card>
+                </Grid>
 
-                        <FeatureControl feature="print-export">
+                <FeatureControl feature="print-export">
+                  <Grid size={{ xs: 12 }}>
+                    <Card>
+                      <CardHeader title={t('settingList.printIssues')} />
+
+                      <CardContent>
+                        <Stack
+                          spacing={3}
+                          sx={{ width: '100%' }}
+                        >
                           {renderNumberInput(
                             SettingName.PrintIssuesPerYear,
                             t('settingList.info.printIssuesPerYear'),
@@ -576,10 +589,7 @@ function SettingList() {
                             control={control}
                             name={SettingName.PrintExportDefaults}
                             render={({ field }) => (
-                              <Stack
-                                spacing={1}
-                                sx={{ mt: 3 }}
-                              >
+                              <Stack spacing={1}>
                                 <SettingRow>
                                   <FormLabel>
                                     {t('settingList.printExportDefaults')}
@@ -598,11 +608,11 @@ function SettingList() {
                               </Stack>
                             )}
                           />
-                        </FeatureControl>
-                      </Stack>
-                    </CardContent>
-                  </Card>
-                </Grid>
+                        </Stack>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                </FeatureControl>
               </Grid>
             </Grid>
 

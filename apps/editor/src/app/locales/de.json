@@ -2570,6 +2570,7 @@
     "save": "Speichern",
     "saveAndClose": "Speichern & Schliessen",
     "settingList": {
+      "printIssues": "Druckausgaben",
       "printIssuesPerYear": "Ausgaben pro Jahr (Druck)",
       "issues": "Ausgaben",
       "allowGuestCommentRating": "Erlaube Gast-Bewertungen von Kommentaren",
@@ -3125,7 +3126,7 @@
     "yes": "Ja",
     "memberplanForm": {
       "printIssuesPerPeriod": "Gedruckte Ausgaben pro Periode",
-      "printIssuesPerPeriodHelpText": "Überschreibt für diesen Abo-Plan die Regel «Ausgaben pro Jahr», z. B. 3 für ein Probeabo. Leer: anteilig nach Periodendauer.",
+      "printIssuesPerPeriodHelpText": "Der Empfang wie vieler gedruckter Ausgaben mit dem «{{periodicity}}» bezahlten Abo garantiert ist. Leer: anteilig berechnet aus dem konfigurierten Wert unter <i>Einstellungen > Einstellungen > Druckausgaben > «Ausgaben pro Jahr (Druck)»</i>. 0: Abos mit diesem Zahlungsintervall erhalten keine gedruckten Ausgaben.",
       "trialSubscription": "Erweiterte Einstellungen",
       "configureTrialBtn": "Für Probeabos konfigurieren",
       "extendableToggle": "Verlängerbar",
@@ -5046,19 +5047,18 @@
     },
     "printIssues": {
       "title": "Druckausgaben",
-      "intro": "Jede gedruckte Ausgabe mit ihrer Druckliste: wer ein Exemplar erhält, entscheidet sich am Erscheinungsdatum – aus we.publish und bexio. Jede an die Druckerei übergebene Lieferung zählt zu den bezahlten Ausgaben der Leser:innen.",
+      "intro": "Die gedruckten Ausgaben mit den zugehörigen Empfänger:innen als Drucklisten aus allen Daten zusammengezogen und exportiert.<br /><br />Ein Exemplar kann in einigen Fällen auch noch jemand empfangen, mit einem am Erscheinungsdatum bereits inaktiven digitalen Abo, falls gleichzeitig die pro Abo-Dauer garantierte Anzahl gedruckter Ausgaben noch nicht vollständig erhalten wurde.<br/><br/>Die an die Druckerei übermittelten Drucklisten bilden die Basis sowohl für den Versand an die Leser:innen als auch für die Ermittlung, ob die garantierte Anzahl Ausgaben empfangen wurde.",
       "create": "Neue Ausgabe",
       "noIssues": "Noch keine Ausgaben.",
       "saved": "Ausgabe gespeichert",
       "duplicated": "Ausgabe dupliziert – bitte das Erscheinungsdatum anpassen.",
       "closed": "Ausgabe abgeschlossen",
       "reopened": "Ausgabe entsperrt",
-      "optionsSaved": "Optionen gespeichert",
-      "exported": "Exemplare exportiert – die Lieferung ist ein Entwurf, bis sie übergeben wird.",
-      "exportedReplaced": "Export ersetzt",
-      "exportedSupplement": "Nachlieferung exportiert",
-      "delivered": "Lieferung übergeben",
-      "deliveryDeleted": "Lieferung gelöscht",
+      "exported": "Druckliste erstellt – ein Entwurf, bis sie als geliefert markiert ist.",
+      "exportedReplaced": "Druckliste aktualisiert",
+      "exportedSupplement": "Nachlieferung erstellt – ein Entwurf, bis sie als geliefert markiert ist.",
+      "delivered": "Druckliste als geliefert markiert",
+      "deliveryDeleted": "Druckliste gelöscht",
       "issueDateRequired": "Bitte gib das Erscheinungsdatum an.",
       "drawer": {
         "createTitle": "Neue Ausgabe",
@@ -5071,7 +5071,7 @@
         "issueDate": "Erscheinungsdatum",
         "issueDateHelp": "Der Tag, an dem die Ausgabe zu den Leser:innen ausgeliefert wird. Die Druckliste prüft, wer an diesem Tag ein Exemplar erhält – nicht am Tag des Exports.",
         "status": "Status",
-        "deliveries": "Lieferungen",
+        "deliveries": "Drucklisten",
         "copies": "Exemplare",
         "closedAt": "Abgeschlossen",
         "note": "Notiz"
@@ -5082,93 +5082,125 @@
         "closed": "Abgeschlossen",
         "historic": "Historisch"
       },
-      "deliveriesCell": "{{count}} · {{delivered}} übergeben",
+      "deliveriesCell": "{{count}} · {{delivered}} geliefert",
+      "listCell": {
+        "lists": "1 Druckliste",
+        "listsWithSupplements_one": "1 Druckliste, 1 Nachlieferung",
+        "listsWithSupplements_other": "1 Druckliste, {{count}} Nachlieferungen",
+        "delivered_one": "{{delivered}} von 1 Liste an die Druckerei geliefert",
+        "delivered_other": "{{delivered}} von {{count}} Listen an die Druckerei geliefert",
+        "deliveredNone": "Noch keine Liste an die Druckerei geliefert"
+      },
       "closedLine": "{{date}} · {{name}}",
       "actions": {
-        "list": "Druckliste konfigurieren",
+        "list": "Drucklisten verwalten",
         "duplicate": "Ausgabe duplizieren",
         "close": "Ausgabe abschliessen",
         "reopen": "Ausgabe entsperren",
         "historic": "Historische Ausgabe, immer abgeschlossen",
         "delete": "Ausgabe löschen"
       },
+      "lockReason": {
+        "close": "Ausgabe abschliessen: alle Drucklisten sind an die Druckerei geliefert. Danach werden keine Nachlieferungen mehr erwartet; entsperren geht jederzeit.",
+        "draft": "Abschliessen noch nicht möglich: {{name}} ist ein Entwurf. Erst wenn alle Drucklisten als geliefert markiert sind, lässt sich die Ausgabe abschliessen.",
+        "noLists": "Abschliessen noch nicht möglich: die Ausgabe hat noch keine Druckliste.",
+        "reopen": "Ausgabe entsperren, um Nachlieferungen zu erstellen.",
+        "historic": "Historische Ausgabe, dauerhaft abgeschlossen. Die Ausgabe wurde ausserhalb des Systems erstellt und verfügt über keine Drucklisten."
+      },
+      "deleteReason": {
+        "delivered": "Löschen nicht möglich: mindestens eine Druckliste wurde bereits an die Druckerei geliefert und fliesst in die Berechnung der Anzahl gedruckter Ausgaben ein, auf die Leser:innen mit einem Abo Anrecht haben.",
+        "draft": "Ausgabe löschen – ihre Druckliste ist noch ein Entwurf und wird mitgelöscht.",
+        "empty": "Ausgabe löschen – sie hat noch keine Druckliste.",
+        "historic": "Historische Ausgabe löschen. Dadurch wird sie nicht mehr in der Berechnung der Anzahl gedruckter Ausgaben berücksichtigt, auf die Leser:innen mit einem Abo Anrecht haben."
+      },
       "deleteTitle": "Ausgabe löschen",
-      "deleteQuestion": "Ausgabe {{label}} löschen? Lieferungen im Entwurf werden mitgelöscht.",
+      "deleteQuestion": "Ausgabe {{label}} löschen? Drucklisten im Entwurf werden mitgelöscht.",
       "deleteConfirm": "Löschen",
       "closeTitle": "Ausgabe abschliessen?",
       "closeQuestion": "Ausgabe {{label}} abschliessen? Es werden keine weiteren Nachlieferungen erwartet. «Entsperren» macht das jederzeit rückgängig.",
       "closeConfirm": "Abschliessen",
       "listView": {
-        "title": "Druckliste Ausgabe {{label}}",
+        "title": "Drucklisten der Ausgabe {{label}}",
+        "section": "Drucklisten verwalten",
         "shipDay": "Erscheinungsdatum {{date}}",
-        "back": "Zu den Ausgaben"
+        "back": "Zu den Druckausgaben"
       },
       "historicNoExport": "Eine historische Ausgabe kommt aus dem Import und hat keine Druckliste: sie zählt als geliefert für alle, die damals ein bezahltes Abo hatten. Nummer, Datum und Notiz lassen sich in der Ausgabenliste korrigieren.",
-      "closedInfo": "Ausgabe abgeschlossen – zum Nachliefern zuerst entsperren.",
+      "closedInfo": "Ausgabe abgeschlossen – um eine Nachlieferung zu erstellen, Ausgabe zuerst entsperren.",
       "options": {
         "title": "Export-Optionen für Druckliste",
-        "intro": "Welche Abo-Typen diese Ausgabe erhalten werden sowie weitere Optionen für den Export. Solange ein Export nicht abgeschlossen ist, lassen sich die Optionen jederzeit ändern, aber die Liste muss danach neu berechnet werden.",
-        "save": "Optionen speichern",
+        "intro": "Welche Abo-Typen diese Druckliste erhalten sowie weitere Optionen für den Export. «Berechnen» speichert die Optionen auf der Ausgabe und berechnet die Liste per Erscheinungsdatum.",
         "reset": "Zurücksetzen auf Standard",
-        "unsaved": "Die Optionen sind noch nicht gespeichert. «Exemplare berechnen» speichert sie zuerst; exportieren lässt sich erst danach."
+        "unsaved": "Die Optionen wurden geändert – bitte neu berechnen, exportieren lässt sich erst danach."
       },
       "run": {
-        "title": "Berechnen und exportieren",
-        "intro": "Die Liste wird per {{date}} berechnet und auf der Ausgabe gespeichert. Prüft sie – dann schreibt «exportieren» genau diese Liste als Lieferung mit eigener CSV-Datei."
+        "title": "Prüfen und exportieren"
       },
-      "compute": "Exemplare berechnen",
+      "compute": "Berechnen",
       "recompute": "Neu berechnen",
       "computing": "Wird berechnet – auch bexio wird gelesen, das dauert einen Moment …",
       "computedLine": "Berechnet am {{date}} um {{time}} von {{name}}",
       "showList": "Liste ansehen ({{count}} Adressen)",
       "runListTitle": "Liste der Ausgabe {{label}}",
-      "export": "Exemplare exportieren",
+      "export": "Druckliste exportieren",
       "exportSupplement": "Nachlieferung exportieren",
       "exportTitle": {
-        "export": "Exemplare exportieren?",
-        "replace": "Export ersetzen?",
+        "export": "Druckliste exportieren?",
+        "replace": "Druckliste aktualisieren?",
         "supplement": "Nachlieferung exportieren?"
       },
       "exportQuestion": {
-        "export": "{{addresses}} Adressen ({{copies}} Exemplare, davon {{grace}} Restexemplare und {{gifts}} Vorab-Exemplare) als Export der Ausgabe {{label}} speichern. Die Lieferung bleibt ein Entwurf, bis sie an die Druckerei übergeben wird.",
-        "replace": "Ersetzt den Export vom {{date}}: dessen Adressen werden verworfen, {{addresses}} Adressen ({{copies}} Exemplare) treten an ihre Stelle. Die Lieferung bleibt ein Entwurf, bis sie übergeben wird.",
-        "supplement": "{{addresses}} Adressen ({{copies}} Exemplare) als Nachlieferung {{batch}} der Ausgabe {{label}} speichern – nur Adressen, die in keiner früheren Lieferung dieser Ausgabe stehen."
+        "export": "{{addresses}} Adressen ({{copies}} Exemplare, davon {{grace}} Restexemplare und {{gifts}} Vorab-Exemplare) als Druckliste der Ausgabe {{label}} speichern. Sie bleibt ein Entwurf, bis sie als an die Druckerei geliefert markiert wird.",
+        "replace": "Aktualisiert die Druckliste vom {{date}}: ihre Adressen werden verworfen, {{addresses}} Adressen ({{copies}} Exemplare) treten an ihre Stelle. Sie bleibt ein Entwurf, bis sie als geliefert markiert wird.",
+        "supplement": "{{addresses}} Adressen ({{copies}} Exemplare) als Nachlieferung {{batch}} der Ausgabe {{label}} speichern – nur Adressen, die in keiner früheren Druckliste dieser Ausgabe stehen."
       },
       "exportConfirm": {
         "export": "Exportieren",
-        "replace": "Export ersetzen",
+        "replace": "Druckliste aktualisieren",
         "supplement": "Nachlieferung exportieren"
       },
       "supplementEmpty": "Niemand Neues – es gibt nichts nachzuliefern.",
-      "runConflict": "Die Liste wurde inzwischen neu berechnet, ist älter als 24 Stunden oder passt nicht mehr zum Stand der Lieferungen. Bitte neu berechnen und prüfen.",
+      "runConflict": "Die Liste wurde inzwischen neu berechnet, ist älter als 24 Stunden oder passt nicht mehr zum Stand der Drucklisten. Bitte neu berechnen und prüfen.",
       "steps": {
-        "compute": "Berechnen",
+        "options": "Optionen",
         "check": "Prüfen",
         "export": "Exportieren"
       },
+      "flow": {
+        "create": "Neue Druckliste erstellen",
+        "editFirst": "Druckliste bearbeiten",
+        "editSupplement": "Letzte Nachlieferung bearbeiten",
+        "supplement": "Nachlieferung erstellen",
+        "cancel": "Abbrechen",
+        "discard": "Verwerfen"
+      },
       "deliveries": {
-        "title": "Lieferungen",
-        "empty": "Noch keine Lieferung – berechne und exportiere die Exemplare.",
-        "export": "Export",
+        "name": "Listenbezeichnung",
+        "empty": "Noch keine Druckliste.",
+        "export": "Druckliste",
         "supplement": "Nachlieferung {{batch}}",
-        "exportedAt": "Exportiert am · von",
-        "options": "Optionen",
+        "exportedAt": "Erstellt am · von",
+        "options": "Export-Optionen",
         "addresses": "Adressen",
         "copies": "Exemplare",
         "status": "Status",
         "draft": "Entwurf",
-        "deliveredLine": "Übergeben am {{date}} · {{name}}",
+        "deliveredLine": "Geliefert am {{date}} · {{name}}",
         "csv": "CSV",
-        "deliver": "Übergeben",
-        "deliverTooltip": "Sperren, nachdem die exportierten Daten an die Druckerei übergeben wurden. Korrekturen können danach noch als Nachlieferung exportiert werden.",
-        "deliverTitle": "Lieferung übergeben?",
-        "deliverQuestion": "{{name}} der Ausgabe {{label}} als an die Druckerei übergeben markieren? Die Lieferung ist danach gesperrt, und ihre Exemplare zählen zu den bezahlten Ausgaben der Leser:innen. Das lässt sich nicht rückgängig machen.",
-        "deliverConfirm": "Übergeben",
+        "csvTooltip": "{{name}} als CSV herunterladen",
+        "edit": "Bearbeiten",
+        "editTooltip": "{{name}} bearbeiten",
+        "deliver": "Als geliefert markieren",
+        "deliverTooltip": "{{name}} nach Übergabe an die Druckerei als geliefert markieren. Änderungen an der Gesamtliste sind später in Form von Nachlieferungen jederzeit noch möglich.",
+        "deliverTitle": "Druckliste als geliefert markieren?",
+        "deliverQuestion": "{{name}} der Ausgabe {{label}} als an die Druckerei geliefert markieren? Sie ist danach eingefroren, und ihre Exemplare zählen zu den bezahlten Ausgaben der Leser:innen. Das lässt sich nicht rückgängig machen.",
+        "deliverConfirm": "Als geliefert markieren",
         "delete": "Löschen",
-        "deleteTitle": "Lieferung löschen?",
-        "deleteQuestion": "{{name}} löschen? Die Adressen dieser Lieferung werden verworfen; die nächste Berechnung erstellt sie neu.",
+        "deleteTitle": "Druckliste löschen?",
+        "deleteQuestion": "{{name}} löschen? Die Adressen dieser Druckliste werden verworfen.",
         "deleteConfirm": "Löschen",
-        "fullList": "Gesamtliste herunterladen (alle Lieferungen zusammengeführt)"
+        "fullList": "Gesamtliste herunterladen",
+        "fullListHint": "Druckliste & alle Nachlieferungen zusammengeführt"
       },
       "summary": {
         "none": "–",
@@ -5191,7 +5223,7 @@
           "missingAddress": "Keine Adresse",
           "placeholderEmail": "Platzhalter-E-Mail",
           "duplicates": "Doppelt",
-          "alreadyExported": "Bereits in einer Lieferung"
+          "alreadyExported": "Bereits in einer Druckliste"
         },
         "skipped": {
           "title": "Übersprungen",
@@ -5202,7 +5234,8 @@
           "replaced": "Ersetzt",
           "deactivated": "Deaktiviert",
           "lapsed": "Abgelaufen",
-          "exhausted": "Kontingent erhalten"
+          "exhausted": "Kontingent erhalten",
+          "noPrintIssues": "Keine gedruckten Ausgaben (0 im Abo-Plan)"
         },
         "bexio": {
           "title": "bexio",
@@ -5238,7 +5271,7 @@
       "includeBexioHelp": "Institutionen, Geschenkabos, Buchhandel und Einzelhefte aus bexio – gelesen mit dem Schlüssel des bexio-Zahlungsanbieters unter Integrationen.",
       "bexioNotConfigured": "Unter Integrationen ist kein bexio-Zahlungsanbieter mit API-Schlüssel eingerichtet; bexio kann nicht gelesen werden.",
       "bexioShort": "bexio",
-      "includeOpen": "Bestellte aber unbezahlte Exemplare exportieren",
+      "includeOpen": "Bestellte, aber unbezahlte Exemplare exportieren",
       "includeOpenHelp": "Abos, die sich verlängern, deren Rechnung aber noch nicht bezahlt ist, erhalten ein Exemplar. Ist diese Option deaktiviert, erhalten sie nur bereits bezahlte Exemplare.",
       "openShort": "offen",
       "includeUpcoming": "Vorab-Exemplare exportieren",

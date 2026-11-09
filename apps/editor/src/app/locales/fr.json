@@ -2570,6 +2570,7 @@
     "save": "Enregistrer",
     "saveAndClose": "Enregistrer et fermer",
     "settingList": {
+      "printIssues": "Numéros imprimés",
       "printIssuesPerYear": "Numéros par an (imprimé)",
       "issues": "numéros",
       "allowGuestCommentRating": "Autoriser les évaluations anonymes des commentaires",
@@ -3125,7 +3126,7 @@
     "yes": "Oui",
     "memberplanForm": {
       "printIssuesPerPeriod": "Numéros imprimés par période",
-      "printIssuesPerPeriodHelpText": "Remplace «numéros par an» pour ce plan, p. ex. 3 pour un abonnement d’essai. Vide : au prorata de la durée.",
+      "printIssuesPerPeriodHelpText": "Combien de numéros imprimés un abonnement payé «{{periodicity}}» est garanti de recevoir. Vide : calculé au prorata de la valeur configurée sous <i>Paramètres > Paramètres > Numéros imprimés > «Numéros par an (imprimé)»</i>. 0 : les abonnements avec cet intervalle de paiement ne reçoivent aucun numéro imprimé.",
       "trialSubscription": "Paramètres avancés",
       "configureTrialBtn": "Configurer des abonnements d’essai",
       "extendableToggle": "Extensible",
@@ -5046,19 +5047,18 @@
     },
     "printIssues": {
       "title": "Numéros imprimés",
-      "intro": "Chaque numéro imprimé avec sa liste d’impression : qui reçoit un exemplaire se décide à la date de parution – depuis we.publish et bexio. Chaque livraison remise à l’imprimerie compte dans les numéros payés par les lecteur·trice·s.",
+      "intro": "Chaque numéro imprimé avec ses listes d’impression : qui reçoit un exemplaire se décide à la date de parution – depuis we.publish et bexio. Chaque liste d’impression livrée à l’imprimerie compte dans les numéros payés par les lecteur·trice·s.",
       "create": "Nouveau numéro",
       "noIssues": "Pas encore de numéro.",
       "saved": "Numéro enregistré",
       "duplicated": "Numéro dupliqué – veuillez adapter la date de parution.",
       "closed": "Numéro clôturé",
       "reopened": "Numéro déverrouillé",
-      "optionsSaved": "Options enregistrées",
-      "exported": "Exemplaires exportés – la livraison reste un brouillon jusqu’à sa remise.",
-      "exportedReplaced": "Export remplacé",
-      "exportedSupplement": "Complément exporté",
-      "delivered": "Livraison remise",
-      "deliveryDeleted": "Livraison supprimée",
+      "exported": "Liste d’impression créée – un brouillon jusqu’à ce qu’elle soit marquée comme livrée.",
+      "exportedReplaced": "Liste d’impression mise à jour",
+      "exportedSupplement": "Complément créé – un brouillon jusqu’à ce qu’il soit marqué comme livré.",
+      "delivered": "Liste d’impression marquée comme livrée",
+      "deliveryDeleted": "Liste d’impression supprimée",
       "issueDateRequired": "Veuillez indiquer la date de parution.",
       "drawer": {
         "createTitle": "Nouveau numéro",
@@ -5071,7 +5071,7 @@
         "issueDate": "Date de parution",
         "issueDateHelp": "Le jour où le numéro parvient aux lecteur·trice·s. La liste d’impression vérifie qui reçoit un exemplaire ce jour-là – pas le jour de l’export.",
         "status": "Statut",
-        "deliveries": "Livraisons",
+        "deliveries": "Listes d’impression",
         "copies": "Exemplaires",
         "closedAt": "Clôturé",
         "note": "Note"
@@ -5082,93 +5082,125 @@
         "closed": "Clôturé",
         "historic": "Historique"
       },
-      "deliveriesCell": "{{count}} · {{delivered}} remise(s)",
+      "deliveriesCell": "{{count}} · {{delivered}} livrée(s)",
+      "listCell": {
+        "lists": "1 liste d’impression",
+        "listsWithSupplements_one": "1 liste d’impression, 1 complément",
+        "listsWithSupplements_other": "1 liste d’impression, {{count}} compléments",
+        "delivered_one": "{{delivered}} sur 1 liste livrée à l’imprimerie",
+        "delivered_other": "{{delivered}} sur {{count}} listes livrées à l’imprimerie",
+        "deliveredNone": "Aucune liste livrée à l’imprimerie pour l’instant"
+      },
       "closedLine": "{{date}} · {{name}}",
       "actions": {
-        "list": "Configurer la liste d’impression",
+        "list": "Gérer les listes d’impression",
         "duplicate": "Dupliquer le numéro",
         "close": "Clôturer le numéro",
         "reopen": "Déverrouiller le numéro",
         "historic": "Numéro historique, toujours clôturé",
         "delete": "Supprimer le numéro"
       },
+      "lockReason": {
+        "close": "Clôturer le numéro : toutes les listes d’impression sont livrées à l’imprimerie. Aucun complément n’est plus attendu ensuite ; le déverrouillage reste possible à tout moment.",
+        "draft": "Clôture pas encore possible : {{name}} est un brouillon. Le numéro se clôture une fois toutes les listes d’impression marquées comme livrées.",
+        "noLists": "Clôture pas encore possible : le numéro n’a pas encore de liste d’impression.",
+        "reopen": "Déverrouiller le numéro pour créer des compléments.",
+        "historic": "Numéro historique, clôturé pour de bon. Le numéro a été créé en dehors du système et n’a pas de listes d’impression."
+      },
+      "deleteReason": {
+        "delivered": "Suppression impossible : au moins une liste d’impression a déjà été livrée à l’imprimerie et compte dans le nombre de numéros imprimés auxquels les lecteur·trice·s abonné·e·s ont droit.",
+        "draft": "Supprimer le numéro – sa liste d’impression est encore un brouillon et sera supprimée avec lui.",
+        "empty": "Supprimer le numéro – il n’a pas encore de liste d’impression.",
+        "historic": "Supprimer le numéro historique. Il ne compte alors plus dans le nombre de numéros imprimés auxquels les lecteur·trice·s abonné·e·s ont droit."
+      },
       "deleteTitle": "Supprimer le numéro",
-      "deleteQuestion": "Supprimer le numéro {{label}} ? Les livraisons en brouillon sont supprimées avec lui.",
+      "deleteQuestion": "Supprimer le numéro {{label}} ? Les listes d’impression en brouillon sont supprimées avec lui.",
       "deleteConfirm": "Supprimer",
       "closeTitle": "Clôturer le numéro ?",
       "closeQuestion": "Clôturer le numéro {{label}} ? Aucun autre complément n’est attendu. «Déverrouiller» annule cela à tout moment.",
       "closeConfirm": "Clôturer",
       "listView": {
-        "title": "Liste d’impression du numéro {{label}}",
+        "title": "Listes d’impression du numéro {{label}}",
+        "section": "Gérer les listes d’impression",
         "shipDay": "Date de parution {{date}}",
-        "back": "Retour aux numéros"
+        "back": "Retour aux numéros imprimés"
       },
       "historicNoExport": "Un numéro historique vient de l’import et n’a pas de liste d’impression : il compte comme livré pour toute personne qui avait alors un abonnement payé. Numéro, date et note se corrigent dans la liste des numéros.",
-      "closedInfo": "Numéro clôturé – déverrouillez-le d’abord pour exporter un complément.",
+      "closedInfo": "Numéro clôturé – pour créer un complément, déverrouillez d’abord le numéro.",
       "options": {
-        "title": "Options",
-        "intro": "Ce qui entre dans la liste. Les options sont enregistrées avec le numéro ; chaque livraison conserve les options avec lesquelles elle a été calculée.",
-        "save": "Enregistrer les options",
+        "title": "Options d’export de la liste d’impression",
+        "intro": "Quels types d’abonnement reçoivent cette liste d’impression, ainsi que d’autres options pour l’export. «Calculer» enregistre les options sur le numéro et calcule la liste à la date de parution.",
         "reset": "Rétablir les valeurs par défaut",
-        "unsaved": "Les options ne sont pas encore enregistrées. «Calculer les exemplaires» les enregistre d’abord ; l’export n’est possible qu’ensuite."
+        "unsaved": "Les options ont changé – recalculez avant d’exporter."
       },
       "run": {
-        "title": "Calculer et exporter",
-        "intro": "La liste est calculée au {{date}} et enregistrée sur le numéro. Vérifiez-la – puis «exporter» écrit exactement cette liste comme livraison avec son propre fichier CSV."
+        "title": "Vérifier et exporter"
       },
-      "compute": "Calculer les exemplaires",
+      "compute": "Calculer",
       "recompute": "Recalculer",
       "computing": "Calcul en cours – bexio est lu aussi, cela prend un moment …",
       "computedLine": "Calculé le {{date}} à {{time}} par {{name}}",
       "showList": "Voir la liste ({{count}} adresses)",
       "runListTitle": "Liste du numéro {{label}}",
-      "export": "Exporter les exemplaires",
+      "export": "Exporter la liste d’impression",
       "exportSupplement": "Exporter le complément",
       "exportTitle": {
-        "export": "Exporter les exemplaires ?",
-        "replace": "Remplacer l’export ?",
+        "export": "Exporter la liste d’impression ?",
+        "replace": "Mettre à jour la liste d’impression ?",
         "supplement": "Exporter le complément ?"
       },
       "exportQuestion": {
-        "export": "Enregistrer {{addresses}} adresses ({{copies}} exemplaires, dont {{grace}} exemplaires dus et {{gifts}} exemplaires offerts) comme export du numéro {{label}}. La livraison reste un brouillon jusqu’à sa remise à l’imprimerie.",
-        "replace": "Remplace l’export du {{date}} : ses adresses sont abandonnées, {{addresses}} adresses ({{copies}} exemplaires) prennent leur place. La livraison reste un brouillon jusqu’à sa remise.",
-        "supplement": "Enregistrer {{addresses}} adresses ({{copies}} exemplaires) comme complément {{batch}} du numéro {{label}} – uniquement des adresses absentes de toute livraison précédente de ce numéro."
+        "export": "Enregistrer {{addresses}} adresses ({{copies}} exemplaires, dont {{grace}} exemplaires dus et {{gifts}} exemplaires offerts) comme liste d’impression du numéro {{label}}. Elle reste un brouillon jusqu’à ce qu’elle soit marquée comme livrée à l’imprimerie.",
+        "replace": "Met à jour la liste d’impression du {{date}} : ses adresses sont abandonnées, {{addresses}} adresses ({{copies}} exemplaires) prennent leur place. Elle reste un brouillon jusqu’à ce qu’elle soit marquée comme livrée.",
+        "supplement": "Enregistrer {{addresses}} adresses ({{copies}} exemplaires) comme complément {{batch}} du numéro {{label}} – uniquement des adresses absentes de toute liste d’impression précédente de ce numéro."
       },
       "exportConfirm": {
         "export": "Exporter",
-        "replace": "Remplacer l’export",
+        "replace": "Mettre à jour la liste",
         "supplement": "Exporter le complément"
       },
       "supplementEmpty": "Personne de nouveau – il n’y a rien à compléter.",
-      "runConflict": "La liste a été recalculée entre-temps, date de plus de 24 heures ou ne correspond plus aux livraisons. Veuillez la recalculer et la vérifier.",
+      "runConflict": "La liste a été recalculée entre-temps, date de plus de 24 heures ou ne correspond plus aux listes d’impression. Veuillez la recalculer et la vérifier.",
       "steps": {
-        "compute": "Calculer",
+        "options": "Options",
         "check": "Vérifier",
         "export": "Exporter"
       },
+      "flow": {
+        "create": "Créer une liste d’impression",
+        "editFirst": "Modifier la liste d’impression",
+        "editSupplement": "Modifier le dernier complément",
+        "supplement": "Créer un complément",
+        "cancel": "Annuler",
+        "discard": "Abandonner"
+      },
       "deliveries": {
-        "title": "Livraisons",
-        "empty": "Pas encore de livraison – calculez et exportez les exemplaires.",
-        "export": "Export",
+        "name": "Nom de la liste",
+        "empty": "Pas encore de liste d’impression.",
+        "export": "Liste d’impression",
         "supplement": "Complément {{batch}}",
-        "exportedAt": "Exporté le · par",
-        "options": "Options",
+        "exportedAt": "Créée le · par",
+        "options": "Options d’export",
         "addresses": "Adresses",
         "copies": "Exemplaires",
         "status": "Statut",
         "draft": "Brouillon",
-        "deliveredLine": "Remis le {{date}} · {{name}}",
+        "deliveredLine": "Livrée le {{date}} · {{name}}",
         "csv": "CSV",
-        "deliver": "Remettre",
-        "deliverTooltip": "Verrouiller une fois les données exportées remises à l’imprimerie. Des corrections peuvent encore être exportées ensuite comme complément.",
-        "deliverTitle": "Remettre la livraison ?",
-        "deliverQuestion": "Marquer {{name}} du numéro {{label}} comme remis à l’imprimerie ? La livraison est ensuite verrouillée et ses exemplaires comptent dans les numéros payés par les lecteur·trice·s. Cette action est irréversible.",
-        "deliverConfirm": "Remettre",
+        "csvTooltip": "Télécharger {{name}} en CSV",
+        "edit": "Modifier",
+        "editTooltip": "Modifier {{name}}",
+        "deliver": "Marquer comme livrée",
+        "deliverTooltip": "Marquer {{name}} comme livrée après remise à l’imprimerie. Des modifications de la liste complète restent possibles à tout moment sous forme de compléments.",
+        "deliverTitle": "Marquer la liste d’impression comme livrée ?",
+        "deliverQuestion": "Marquer {{name}} du numéro {{label}} comme livré à l’imprimerie ? La liste est ensuite figée et ses exemplaires comptent dans les numéros payés par les lecteur·trice·s. Cette action est irréversible.",
+        "deliverConfirm": "Marquer comme livrée",
         "delete": "Supprimer",
-        "deleteTitle": "Supprimer la livraison ?",
-        "deleteQuestion": "Supprimer {{name}} ? Ses adresses sont abandonnées ; le prochain calcul les recrée.",
+        "deleteTitle": "Supprimer la liste d’impression ?",
+        "deleteQuestion": "Supprimer {{name}} ? Ses adresses sont abandonnées.",
         "deleteConfirm": "Supprimer",
-        "fullList": "Télécharger la liste complète (toutes les livraisons fusionnées)"
+        "fullList": "Télécharger la liste complète",
+        "fullListHint": "Liste d’impression & tous les compléments fusionnés"
       },
       "summary": {
         "none": "–",
@@ -5191,7 +5223,7 @@
           "missingAddress": "Pas d’adresse",
           "placeholderEmail": "E-mail provisoire",
           "duplicates": "Doublon",
-          "alreadyExported": "Déjà dans une livraison"
+          "alreadyExported": "Déjà dans une liste d’impression"
         },
         "skipped": {
           "title": "Ignorés",
@@ -5202,7 +5234,8 @@
           "replaced": "Remplacé",
           "deactivated": "Désactivé",
           "lapsed": "Échu",
-          "exhausted": "Quota reçu"
+          "exhausted": "Quota reçu",
+          "noPrintIssues": "Aucun numéro imprimé (0 dans le plan)"
         },
         "bexio": {
           "title": "bexio",
@@ -5238,10 +5271,10 @@
       "includeBexioHelp": "Institutions, abonnements cadeaux, librairies et numéros à l’unité depuis bexio – lus avec la clé du prestataire de paiement bexio sous Intégrations.",
       "bexioNotConfigured": "Aucun prestataire de paiement bexio avec clé API n’est configuré sous Intégrations ; bexio ne peut pas être lu.",
       "bexioShort": "bexio",
-      "includeOpen": "Inclure les lecteur·trice·s en attente",
-      "includeOpenHelp": "Les abonnements qui se renouvellent mais dont la facture n’est pas encore payée («ouvert») reçoivent un exemplaire. Désactivé : ils comptent comme des abonnements échus, exemplaires dus seulement.",
+      "includeOpen": "Exporter les exemplaires commandés mais impayés",
+      "includeOpenHelp": "Les abonnements qui se renouvellent mais dont la facture n’est pas encore payée reçoivent un exemplaire. Option désactivée, ils ne reçoivent que les exemplaires déjà payés.",
       "openShort": "ouvert",
-      "includeUpcoming": "Exemplaires offerts",
+      "includeUpcoming": "Exporter les exemplaires offerts",
       "includeUpcomingHelp": "Les abonnements qui commencent après la date de parution reçoivent ce numéro en cadeau. Il ne compte pas dans les numéros payés.",
       "upcomingShort": "offert"
     },

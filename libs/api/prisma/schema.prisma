@@ -840,6 +840,8 @@ model MemberPlanPeriodicityPrice {
   amountMin    Int?
   amountTarget Int?
   amountMax    Int?
+  /// Printed issues one paid period of this periodicity is worth (print export); null = the medium's «issues per year» pro rata.
+  printIssues  Int?
 
   memberPlan   MemberPlan @relation(fields: [memberPlanId], references: [id], onDelete: Cascade)
   memberPlanId String
@@ -881,8 +883,6 @@ model MemberPlan {
   maxCount                       Int?
   productType                    ProductType              @default(Subscription)
   externalReward                 String?
-  /// Printed issues one paid period is worth (print export); null = the medium's «issues per year» pro rata.
-  printIssuesPerPeriod           Int?
 
   imageID String?
   image   Image?  @relation(fields: [imageID], references: [id])

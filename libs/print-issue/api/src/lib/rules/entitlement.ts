@@ -29,7 +29,7 @@ export type RuleSubscription = {
   memberPlan: {
     id?: string;
     productType: string;
-    printIssuesPerPeriod?: number | null;
+    printIssues?: PrintIssuesByPeriodicity;
   };
   periods: RulePeriod[];
   /** invoices neither paid nor canceled */
@@ -62,7 +62,8 @@ export type ExclusionReason =
   | 'replaced'
   | 'deactivated'
   | 'lapsed'
-  | 'exhausted';
+  | 'exhausted'
+  | 'noPrintIssues';
 
 export type Included = {
   include: true;
@@ -138,14 +139,24 @@ export function chargedPeriod(
   );
 }
 
-/** How many issues one period is worth; null = unlimited (lifetime). */
+/** Printed issues a plan sets per periodicity; a periodicity left out follows the formula. */
+export type PrintIssuesByPeriodicity = Partial<Record<string, number>>;
+
+/**
+ * How many issues one period is worth; null = unlimited (lifetime). The
+ * plan's number for the period's periodicity wins, else the medium's issues
+ * per year pro rata. It counts only once the period is over: a paid period
+ * receives every issue shipped inside it.
+ */
 export function entitledIssues(
   period: RulePeriod,
-  plan: { printIssuesPerPeriod?: number | null },
+  plan: { printIssues?: PrintIssuesByPeriodicity },
   issuesPerYear: number
 ): number | null {
-  if (plan.printIssuesPerPeriod != null) {
-    return plan.printIssuesPerPeriod;
+  const set = plan.printIssues?.[period.paymentPeriodicity];
+
+  if (set != null) {
+    return set;
   }
 
   const months = MONTHS[period.paymentPeriodicity] ?? null;
@@ -197,6 +208,16 @@ export function classifySubscription(
     !options.memberPlanIds.includes(sub.memberPlan.id ?? '')
   ) {
     return excluded('excludedPlan');
+  }
+
+  // a periodicity the plan sets to 0 receives nothing: paid, open, gift or owed
+  const current = chargedPeriod(sub.periods, day) ?? latestEnding(sub.periods);
+
+  if (
+    current &&
+    sub.memberPlan.printIssues?.[current.paymentPeriodicity] === 0
+  ) {
+    return excluded('noPrintIssues');
   }
 
   const startsOn = zurichDate(sub.startsAt);

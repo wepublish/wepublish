@@ -7,9 +7,11 @@ import {
   DialogTitle,
   IconButton,
   Stack,
+  Tooltip,
 } from '@mui/material';
 import { PrintIssueDeliveryFieldsFragment } from '@wepublish/editor/api';
 import {
+  CanCreatePrintIssue,
   CanDeletePrintIssue,
   CanFinalizePrintIssue,
 } from '@wepublish/permissions';
@@ -20,9 +22,9 @@ import {
   PermissionControl,
   printExportOptionsOf,
 } from '@wepublish/ui/editor';
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdDelete, MdDownload, MdLock } from 'react-icons/md';
+import { MdDelete, MdDownload, MdEdit, MdLockOpen } from 'react-icons/md';
 import { day, personName } from './common';
 
 type Delivery = PrintIssueDeliveryFieldsFragment;
@@ -36,19 +38,25 @@ export const deliveryName = (
   : t('printIssues.deliveries.supplement', { batch: delivery.batch });
 
 /**
- * The lists of the issue: the export and its Nachlieferungen, each with its
- * own CSV. A draft can be handed over («übergeben»: locked for good, counts
- * for the quota) or deleted; the merged list is always offered.
+ * The Drucklisten of the issue: the Druckliste and its Nachlieferungen, each
+ * with its own CSV. A draft can be edited, marked as delivered to the
+ * printshop (frozen for good, counts for the quota) or deleted; the merged
+ * list is always offered.
  */
 export function PrintIssueDeliveries({
   issue,
+  action,
   onDownload,
+  onEdit,
   onDeliver,
   onDelete,
 }: {
   issue: { label: string; deliveries: Delivery[] };
+  /** what the issue offers next, shown below the table */
+  action?: ReactNode;
   /** null: every delivery merged */
   onDownload: (deliveryId: string | null) => void;
+  onEdit: (delivery: Delivery) => void;
   onDeliver: (delivery: Delivery) => void;
   onDelete: (delivery: Delivery) => void;
 }) {
@@ -65,7 +73,7 @@ export function PrintIssueDeliveries({
         columns={[
           {
             id: 'delivery',
-            label: t('printIssues.deliveries.title'),
+            label: t('printIssues.deliveries.name'),
             width: 150,
             alwaysVisible: true,
             render: delivery => deliveryName(t, delivery),
@@ -135,7 +143,7 @@ export function PrintIssueDeliveries({
           {
             id: 'action',
             label: t('action'),
-            width: 180,
+            width: 220,
             fixed: true,
             exportValue: false,
             // a left-aligned row keeps each action in its place however many a row has
@@ -145,28 +153,55 @@ export function PrintIssueDeliveries({
                 spacing={0.5}
                 sx={{ alignItems: 'center' }}
               >
-                <Button
-                  size="small"
-                  startIcon={<MdDownload />}
-                  onClick={() => onDownload(delivery.id)}
+                {/* describeChild keeps «CSV» as the button's name */}
+                <IconButtonTooltip
+                  caption={t('printIssues.deliveries.csvTooltip', {
+                    name: deliveryName(t, delivery),
+                  })}
+                  describeChild
                 >
-                  {t('printIssues.deliveries.csv')}
-                </Button>
+                  <Button
+                    size="small"
+                    startIcon={<MdDownload />}
+                    onClick={() => onDownload(delivery.id)}
+                  >
+                    {t('printIssues.deliveries.csv')}
+                  </Button>
+                </IconButtonTooltip>
                 {!delivery.deliveredAt && (
                   <>
+                    <PermissionControl
+                      qualifyingPermissions={[CanCreatePrintIssue.id]}
+                    >
+                      <IconButtonTooltip
+                        caption={t('printIssues.deliveries.editTooltip', {
+                          name: deliveryName(t, delivery),
+                        })}
+                      >
+                        <IconButton
+                          aria-label={t('printIssues.deliveries.edit')}
+                          size="small"
+                          onClick={() => onEdit(delivery)}
+                        >
+                          <MdEdit />
+                        </IconButton>
+                      </IconButtonTooltip>
+                    </PermissionControl>
                     <PermissionControl
                       qualifyingPermissions={[CanFinalizePrintIssue.id]}
                     >
                       <IconButtonTooltip
-                        caption={t('printIssues.deliveries.deliverTooltip')}
+                        caption={t('printIssues.deliveries.deliverTooltip', {
+                          name: deliveryName(t, delivery),
+                        })}
                       >
                         <IconButton
                           aria-label={t('printIssues.deliveries.deliver')}
                           size="small"
-                          color="warning"
                           onClick={() => setToDeliver(delivery)}
                         >
-                          <MdLock />
+                          {/* a draft is still open; delivered rows show their date instead */}
+                          <MdLockOpen />
                         </IconButton>
                       </IconButtonTooltip>
                     </PermissionControl>
@@ -194,15 +229,30 @@ export function PrintIssueDeliveries({
         ]}
       />
 
-      <Button
-        variant="outlined"
-        startIcon={<MdDownload />}
-        disabled={issue.deliveries.length === 0}
-        onClick={() => onDownload(null)}
-        sx={{ alignSelf: 'flex-start' }}
+      <Stack
+        direction="row"
+        spacing={1}
+        sx={{ alignItems: 'center', flexWrap: 'wrap' }}
       >
-        {t('printIssues.deliveries.fullList')}
-      </Button>
+        {action}
+        {/* a disabled button has no events, the span around it keeps the tooltip working */}
+        <Tooltip
+          title={t('printIssues.deliveries.fullListHint')}
+          placement="right"
+          describeChild
+        >
+          <span>
+            <Button
+              variant="outlined"
+              startIcon={<MdDownload />}
+              disabled={issue.deliveries.length === 0}
+              onClick={() => onDownload(null)}
+            >
+              {t('printIssues.deliveries.fullList')}
+            </Button>
+          </span>
+        </Tooltip>
+      </Stack>
 
       <Dialog
         fullWidth

@@ -123,6 +123,28 @@ describe('toPrintIssueModel', () => {
 });
 
 describe('toRunModel', () => {
+  it('counts a skip reason an older stored summary lacks as 0', () => {
+    const run: PrintIssueRunView = {
+      mode: 'export',
+      deliveryId: null,
+      batch: 0,
+      computedAt: new Date('2026-12-20T09:00:00.000Z'),
+      computedBy: null,
+      rows: [],
+      summary: {
+        ...summary,
+        skipped: { donation: 3, excludedPlan: 1 },
+      } as never,
+      filename: 'druckliste-1.27-2027-01-15.csv',
+    };
+
+    expect(toRunModel(run).summary.skipped).toMatchObject({
+      donation: 3,
+      excludedPlan: 1,
+      noPrintIssues: 0,
+    });
+  });
+
   it('keeps what exporting the run will do and maps the summary counts', () => {
     const run: PrintIssueRunView = {
       mode: 'replace',

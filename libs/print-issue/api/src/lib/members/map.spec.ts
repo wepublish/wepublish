@@ -35,7 +35,7 @@ const subscription = (overrides: Partial<Subscription> = {}): Subscription => ({
     slug: 'nw-jahresabo',
     name: 'Jahresabo',
     productType: 'Subscription',
-    printIssuesPerPeriod: null,
+    printIssues: {},
   },
   properties: [{ key: 'nw_adressnummer', value: '200' }],
   userId: 'user-1',

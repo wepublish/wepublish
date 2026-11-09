@@ -1,11 +1,13 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
   Button,
+  Chip,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   IconButton,
+  Stack,
   Typography,
 } from '@mui/material';
 import {
@@ -32,12 +34,14 @@ import {
   ListViewHeader,
   PermissionControl,
 } from '@wepublish/ui/editor';
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { ReactElement, useEffect, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import { BiSpreadsheet } from 'react-icons/bi';
 import {
   MdAdd,
   MdContentCopy,
   MdDelete,
+  MdLocalShipping,
   MdLock,
   MdLockOpen,
 } from 'react-icons/md';
@@ -53,6 +57,7 @@ import {
   day,
   formatDay,
   MUTATION_OPTIONS_WITH_SUCCESS_MESSAGE,
+  newestDelivery,
   nextIssue,
   personName,
   PRINT_ISSUES_PATH,
@@ -61,12 +66,94 @@ import {
   printIssueListPath,
   showErrors,
 } from './common';
+import { deliveryName } from './print-issue-deliveries';
 import { PrintIssueDrawer } from './print-issue-drawer';
 import { PrintIssueStatusChip } from './print-issue-status';
 import { PrintListIcon } from './print-list-icon';
 
 const copiesOf = (issue: TinyPrintIssueFragment) =>
   issue.deliveries.reduce((sum, delivery) => sum + delivery.copyCount, 0);
+
+/**
+ * A tooltip that also explains a disabled action: a disabled button gets no
+ * pointer events, so the tooltip listens on a wrapper around it. The button
+ * keeps its action name; the reason is its description.
+ */
+function ReasonTooltip({
+  reason,
+  children,
+}: {
+  reason: string;
+  children: ReactElement;
+}) {
+  return (
+    <IconButtonTooltip
+      caption={reason}
+      describeChild
+    >
+      {/* aligned like the unwrapped icon buttons beside it */}
+      <span style={{ display: 'inline-flex', verticalAlign: 'middle' }}>
+        {children}
+      </span>
+    </IconButtonTooltip>
+  );
+}
+
+const deliveredOf = (issue: TinyPrintIssueFragment) =>
+  issue.deliveries.filter(delivery => delivery.deliveredAt).length;
+
+// a smaller glyph with more room than the chip's default 18px at 4px
+const PAIR_CHIP_SX = { '& .MuiChip-icon': { fontSize: 15, ml: 0.75 } };
+
+/** The Drucklisten of an issue as outlined icon + number chips; the tooltips say what each number means. */
+function DeliveriesCell({ issue }: { issue: TinyPrintIssueFragment }) {
+  const { t } = useTranslation();
+  const count = issue.deliveries.length;
+  // a Nachlieferung exists only once the Druckliste (batch 0) is delivered
+  const supplements = count - 1;
+  const delivered = deliveredOf(issue);
+
+  return (
+    <Stack
+      direction="row"
+      spacing={1.5}
+      sx={{ alignItems: 'center' }}
+    >
+      <IconButtonTooltip
+        caption={
+          supplements > 0 ?
+            t('printIssues.listCell.listsWithSupplements', {
+              count: supplements,
+            })
+          : t('printIssues.listCell.lists')
+        }
+      >
+        <Chip
+          size="small"
+          variant="outlined"
+          icon={<BiSpreadsheet />}
+          label={count}
+          sx={PAIR_CHIP_SX}
+        />
+      </IconButtonTooltip>
+      <IconButtonTooltip
+        caption={
+          delivered ?
+            t('printIssues.listCell.delivered', { delivered, count })
+          : t('printIssues.listCell.deliveredNone')
+        }
+      >
+        <Chip
+          size="small"
+          variant="outlined"
+          icon={<MdLocalShipping />}
+          label={delivered}
+          sx={PAIR_CHIP_SX}
+        />
+      </IconButtonTooltip>
+    </Stack>
+  );
+}
 
 function PrintIssueList() {
   const { t } = useTranslation();
@@ -121,13 +208,25 @@ function PrintIssueList() {
     <>
       <ListViewContainer>
         <ListViewHeader>
-          <h2>{t('printIssues.title')}</h2>
-          <Typography
-            component="p"
-            sx={{ color: 'text.secondary', maxWidth: 720 }}
-          >
-            {t('printIssues.intro')}
-          </Typography>
+          {/* the intro goes below the heading, not beside it */}
+          <Stack spacing={0.5}>
+            <h2>{t('printIssues.title')}</h2>
+            <Typography
+              component="p"
+              sx={{ color: 'text.secondary', maxWidth: 720 }}
+            >
+              {/* the intro may use <strong>, <em>, <i> and <br/> */}
+              <Trans
+                i18nKey="printIssues.intro"
+                components={{
+                  strong: <strong />,
+                  em: <em />,
+                  i: <i />,
+                  br: <br />,
+                }}
+              />
+            </Typography>
+          </Stack>
         </ListViewHeader>
         <PermissionControl qualifyingPermissions={[CanCreatePrintIssue.id]}>
           <RouterLink to={printIssueCreatePath()}>
@@ -176,12 +275,12 @@ function PrintIssueList() {
             label: t('printIssues.fields.deliveries'),
             width: 170,
             render: issue =>
+              issue.deliveries.length ? <DeliveriesCell issue={issue} /> : '',
+            exportValue: issue =>
               issue.deliveries.length ?
                 t('printIssues.deliveriesCell', {
                   count: issue.deliveries.length,
-                  delivered: issue.deliveries.filter(
-                    delivery => delivery.deliveredAt
-                  ).length,
+                  delivered: deliveredOf(issue),
                 })
               : '',
           },
@@ -214,6 +313,22 @@ function PrintIssueList() {
             render: issue => {
               const historic = issue.status === PrintIssueStatus.Historic;
               const closed = issue.status === PrintIssueStatus.Closed;
+              const newest = newestDelivery(issue.deliveries);
+              const lockReason =
+                historic ? t('printIssues.lockReason.historic')
+                : closed ? t('printIssues.lockReason.reopen')
+                : !newest ? t('printIssues.lockReason.noLists')
+                : !newest.deliveredAt ?
+                  t('printIssues.lockReason.draft', {
+                    name: deliveryName(t, newest),
+                  })
+                : t('printIssues.lockReason.close');
+              const deleteReason =
+                anyDelivered(issue.deliveries) ?
+                  t('printIssues.deleteReason.delivered')
+                : historic ? t('printIssues.deleteReason.historic')
+                : issue.deliveries.length ? t('printIssues.deleteReason.draft')
+                : t('printIssues.deleteReason.empty');
 
               return (
                 <>
@@ -257,9 +372,7 @@ function PrintIssueList() {
                   >
                     {/* the lock shows the state, the tooltip names the action; a historic issue is frozen for good */}
                     {historic ?
-                      <IconButtonTooltip
-                        caption={t('printIssues.actions.historic')}
-                      >
+                      <ReasonTooltip reason={lockReason}>
                         <IconButton
                           aria-label={t('printIssues.actions.historic')}
                           size="small"
@@ -267,11 +380,9 @@ function PrintIssueList() {
                         >
                           <MdLock />
                         </IconButton>
-                      </IconButtonTooltip>
+                      </ReasonTooltip>
                     : closed ?
-                      <IconButtonTooltip
-                        caption={t('printIssues.actions.reopen')}
-                      >
+                      <ReasonTooltip reason={lockReason}>
                         <IconButton
                           aria-label={t('printIssues.actions.reopen')}
                           size="small"
@@ -281,10 +392,8 @@ function PrintIssueList() {
                         >
                           <MdLock />
                         </IconButton>
-                      </IconButtonTooltip>
-                    : <IconButtonTooltip
-                        caption={t('printIssues.actions.close')}
-                      >
+                      </ReasonTooltip>
+                    : <ReasonTooltip reason={lockReason}>
                         <IconButton
                           aria-label={t('printIssues.actions.close')}
                           size="small"
@@ -293,15 +402,13 @@ function PrintIssueList() {
                         >
                           <MdLockOpen />
                         </IconButton>
-                      </IconButtonTooltip>
+                      </ReasonTooltip>
                     }
                   </PermissionControl>
                   <PermissionControl
                     qualifyingPermissions={[CanDeletePrintIssue.id]}
                   >
-                    <IconButtonTooltip
-                      caption={t('printIssues.actions.delete')}
-                    >
+                    <ReasonTooltip reason={deleteReason}>
                       <IconButton
                         aria-label={t('printIssues.actions.delete')}
                         color="error"
@@ -311,7 +418,7 @@ function PrintIssueList() {
                       >
                         <MdDelete />
                       </IconButton>
-                    </IconButtonTooltip>
+                    </ReasonTooltip>
                   </PermissionControl>
                 </>
               );

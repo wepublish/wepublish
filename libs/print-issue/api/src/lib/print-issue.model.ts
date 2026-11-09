@@ -139,6 +139,12 @@ export class PrintIssueSkipped {
 
   @Field(() => Int)
   exhausted!: number;
+
+  @Field(() => Int, {
+    description:
+      "Plan sets 0 printed issues for the subscription's periodicity.",
+  })
+  noPrintIssues!: number;
 }
 
 @ObjectType()
@@ -489,8 +495,22 @@ const optionsOf = (raw: unknown): PrintExportOptions =>
     ...(typeof raw === 'object' && raw !== null ? raw : {}),
   }) as PrintExportOptions;
 
+// a summary stored before a skip reason existed lacks its counter
+const NO_SKIPS: PrintIssueSkipped = {
+  donation: 0,
+  excludedPlan: 0,
+  future: 0,
+  unpaidDeactivation: 0,
+  replaced: 0,
+  deactivated: 0,
+  lapsed: 0,
+  exhausted: 0,
+  noPrintIssues: 0,
+};
+
 export const toSummaryModel = (summary: Summary): PrintIssueSummary => ({
   ...summary,
+  skipped: { ...NO_SKIPS, ...summary.skipped },
   byPlan: counts(summary.byPlan),
   byKind: counts(summary.byKind),
   byCountry: counts(summary.byCountry),
