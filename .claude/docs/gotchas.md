@@ -1169,14 +1169,21 @@ may not import `scope:api-only` libs (`website-revalidation`,
 against Apollo and Prisma. The profiles behind
 [`LinkCache`](../../libs/media/api/src/lib/link-cache/link-cache.ts), each
 shared one kept locally for 2 s:
-- `media:links` (`val:media:links:<sha>`): objects that exist. Shared, 3 days,
-  across releases.
+- `media:links` (`val:media:links:<sha>`): objects that exist. Shared, across
+  releases. Documents, video and audio: 3 days, written by the controller.
+  Image variants: written by `MediaService` when it transforms, and live
+  exactly as long as the transformed object: 30 days from its
+  `lastModified` (`TRANSFORMED_IMAGE_TTL`, the transformation bucket's
+  lifecycle rule; change both together). A link that outlived its object
+  redirected to a deleted file and never triggered a new transform. An
+  object past 30 days the bucket has not deleted yet is transformed again.
 - `media:rejected-variants` (`val:<release>:media:rejected-variants:<sha>`):
   variants the guard rejects (400), 1 h, per release since a deploy can change
   the guard's limits. Only signed requests get that far.
 - `media:missing-links`: objects that don't exist. 4 h and **local only**.
 - `media:generations` (`val:media:generations:<sha>`): written only by the
-  authenticated image/document `DELETE`, 3 days. Every link key hashes
+  authenticated image/document `DELETE`, as long as the longest link (30
+  days); any shorter and a forgotten link comes back. Every link key hashes
   `[id, generation, variant]`, so a delete orphans all variants of that id on
   every replica within 2 s (each replica re-reads an id's generation at most
   every 2 s, remembered in the local `media:generation-checks`). Variants
