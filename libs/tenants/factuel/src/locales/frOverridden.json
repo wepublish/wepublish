@@ -9,9 +9,9 @@
   },
   "subscribe": {
     "support": {
-      "subscribeForPeriod": "Je soutiens Courant {monthlyAmount, select, 0 {gratuitement} other {à hauteur de {formattedAmount} {renewalPeriodL}}}",
-      "payForPeriod": "Je soutiens Courant {monthlyAmount, select, 0 {gratuitement} other {à hauteur de {formattedAmount} {paymentPeriodL}}}",
-      "pay": "Je soutiens Courant {monthlyAmount, select, 0 {gratuitement} other {à hauteur de {formattedAmount}}}"
+      "subscribeForPeriod": "{productType, select, Donation {Je fais un don {monthlyAmount, select, 0 {gratuitement} other {de {formattedAmount} {renewalPeriodL}}}} other {J’adhère à Courant {monthlyAmount, select, 0 {gratuitement} other {pour {formattedAmount} {renewalPeriodL}}}}}",
+      "payForPeriod": "{productType, select, Donation {Je fais un don {monthlyAmount, select, 0 {gratuitement} other {de {formattedAmount} {paymentPeriodL}}}} other {J’adhère à Courant {monthlyAmount, select, 0 {gratuitement} other {pour {formattedAmount} {paymentPeriodL}}}}}",
+      "pay": "{productType, select, Donation {Je fais un don {monthlyAmount, select, 0 {gratuitement} other {de {formattedAmount}}}} other {J’adhère à Courant {monthlyAmount, select, 0 {gratuitement} other {pour {formattedAmount}}}}}"
     }
   }
 }
