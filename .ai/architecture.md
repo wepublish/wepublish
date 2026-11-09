@@ -12,7 +12,7 @@ We.Publish is a headless CMS platform for publishers, built as an Nx monorepo. I
 │   ├── api-example/    # NestJS GraphQL API server (main backend)
 │   ├── editor/         # React CMS admin panel (Vite SPA, React Router)
 │   ├── media/          # NestJS media server (image transform + S3)
-│   ├── website-example/# Reference Next.js website frontend
+│   ├── website-example/# Reference website frontend (TanStack Start)
 │   └── <publisher>/    # Publisher-specific websites (bajour, tsri, mannschaft, etc.)
 ├── libs/               # Reusable libraries (~50 modules)
 │   ├── api/            # Core API library (Prisma schema, shared models)
@@ -31,7 +31,7 @@ We.Publish is a headless CMS platform for publishers, built as an Nx monorepo. I
 | `api-example` | NestJS (node:http adapter) + Apollo Server | 4000 | GraphQL API backend |
 | `editor` | Vite + React + React Router (client-rendered; Express host) | 3000 | Admin CMS interface |
 | `media` | NestJS (node:http adapter) | 4100 | Image upload, transformation, S3 storage |
-| `website-example` | Next.js | 4200 | Reference website frontend |
+| `website-example` | TanStack Start (Vite + nitro) | 4200 | Reference website frontend |
 
 **The editor is client-rendered — there is no SSR.** `nx build editor` produces
 two bundles: `browser` (the Vite client bundle) and `server`. The server is a
