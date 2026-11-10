@@ -1,7 +1,10 @@
 import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import { MailContext, mailLogType } from '@wepublish/mail/api';
 import { FeaturesService } from '@wepublish/features/api';
-import { LetterContext } from '@wepublish/letter/api';
+import {
+  DocumentAttachmentRenderer,
+  LetterContext,
+} from '@wepublish/letter/api';
 import {
   LetterAddressPosition,
   LetterDeliveryProduct,
@@ -12,7 +15,7 @@ import {
 } from '@prisma/client';
 import { MailSendJobService } from './mail-send-job.service';
 import { MailSendRecipientService } from './mail-send-recipient.service';
-import { MailRecipientBase } from './mail-send.model';
+import { MailAudienceInput, MailRecipientBase } from './mail-send.model';
 import type { Mock } from 'vitest';
 import { version } from 'uuid';
 
@@ -21,14 +24,16 @@ const makeService = (
   mailContext: any = { sendMail: vi.fn() },
   recipientService: any = {},
   letterContext: any = { sendLetter: vi.fn(), renderLetter: vi.fn() },
-  features: any = { isEnabled: vi.fn(async () => true) }
+  features: any = { isEnabled: vi.fn(async () => true) },
+  attachments: any = { placeholders: vi.fn(async () => []) }
 ) =>
   new MailSendJobService(
     prisma as PrismaClient,
     mailContext as unknown as MailContext,
     letterContext as unknown as LetterContext,
     recipientService as MailSendRecipientService,
-    features as FeaturesService
+    features as FeaturesService,
+    attachments as DocumentAttachmentRenderer
   );
 
 const template = (context: string | null) => ({
@@ -893,10 +898,210 @@ describe('MailSendJobService.previewForAudience as letter', () => {
 
     expect(renderLetter).toHaveBeenCalledWith(
       expect.objectContaining({
-        template: { htmlContent: '<p>Hallo</p>', letterAppendixId: 'qr-bill' },
+        template: {
+          htmlContent: '<p>Hallo</p>',
+          letterAppendixId: 'qr-bill',
+          attachmentIds: [],
+        },
         printMode: LetterPrintMode.duplex,
       })
     );
+  });
+
+  it("prints the template's attachments in the preview", async () => {
+    const prisma = {
+      mailTemplate: {
+        findUnique: vi.fn(async () => ({
+          ...template('custom'),
+          htmlContent: '<p>Hallo</p>',
+          attachments: [{ documentId: 'contract' }],
+        })),
+      },
+    };
+    const renderLetter = vi.fn(async () => Buffer.from('%PDF-1.4 letter'));
+    const service = makeService(
+      prisma,
+      {},
+      {
+        resolvePage: vi.fn(async () => [
+          {
+            user: {
+              id: 'u1',
+              firstName: 'Jane',
+              name: 'Doe',
+              address: {
+                streetAddress: 'Musterstrasse',
+                streetAddressNumber: '7',
+                zipCode: '8000',
+                city: 'Zürich',
+                country: 'CH',
+              },
+            },
+          },
+        ]),
+      },
+      { renderLetter, resolveLayout: vi.fn(async () => null) }
+    );
+
+    const preview = await service.previewForAudience({
+      mailTemplateId: 'tpl-1',
+      audience: { base: 'allUsers' } as any,
+      channel: MailChannel.letter,
+    });
+
+    // The letter prints them inside its pdf, not beside it.
+    expect(preview.attachments).toEqual([]);
+    expect(prisma.mailTemplate.findUnique).toHaveBeenCalledWith(
+      expect.objectContaining({
+        include: {
+          attachments: {
+            select: { documentId: true },
+            orderBy: { position: 'asc' },
+          },
+        },
+      })
+    );
+    expect(renderLetter).toHaveBeenCalledWith(
+      expect.objectContaining({
+        template: expect.objectContaining({ attachmentIds: ['contract'] }),
+      })
+    );
+  });
+});
+
+describe('MailSendJobService.previewForAudience by mail', () => {
+  const user = { id: 'u1', email: 'jane@example.com', firstName: 'Jane' };
+  const audience: MailAudienceInput = { base: MailRecipientBase.allUsers };
+
+  const prismaWith = (attachments: { documentId: string }[]) => ({
+    mailTemplate: {
+      findUnique: vi.fn(async () => ({
+        ...template('custom'),
+        subject: 'Ihr Vertrag',
+        htmlContent: '<p>Hallo {{user_firstName}}</p>',
+        textContent: null,
+        attachments,
+      })),
+    },
+  });
+
+  const preview = (
+    prisma: ReturnType<typeof prismaWith>,
+    attachments: { render: Mock }
+  ) =>
+    makeService(
+      prisma,
+      { jwtGenerator: vi.fn(async () => 'jwt-1') },
+      { resolvePage: vi.fn(async () => [{ user }]) },
+      undefined,
+      undefined,
+      { placeholders: vi.fn(), ...attachments }
+    ).previewForAudience({ mailTemplateId: 'tpl-1', audience });
+
+  it('renders the attachments for the recipient, as the mail carries them', async () => {
+    const render = vi.fn(async () => [
+      {
+        filename: 'Vertrag.pdf',
+        contentType: 'application/pdf',
+        content: Buffer.from('%PDF-contract'),
+      },
+      {
+        filename: 'AGB.pdf',
+        contentType: 'application/pdf',
+        content: Buffer.from('%PDF-terms'),
+      },
+    ]);
+
+    const result = await preview(
+      prismaWith([{ documentId: 'contract' }, { documentId: 'terms' }]),
+      { render }
+    );
+
+    expect(render).toHaveBeenCalledWith(
+      ['contract', 'terms'],
+      expect.objectContaining({ user, optional: {}, jwt: 'jwt-1' })
+    );
+    expect(result.html).toContain('Hallo Jane');
+    expect(result.attachments).toEqual([
+      {
+        filename: 'Vertrag.pdf',
+        pdf: Buffer.from('%PDF-contract').toString('base64'),
+      },
+      {
+        filename: 'AGB.pdf',
+        pdf: Buffer.from('%PDF-terms').toString('base64'),
+      },
+    ]);
+  });
+
+  it('renders nothing for a template without attachments', async () => {
+    const render = vi.fn(async () => []);
+
+    const result = await preview(prismaWith([]), { render });
+
+    expect(render).not.toHaveBeenCalled();
+    expect(result.attachments).toEqual([]);
+  });
+
+  // The send would fail for this recipient too, so the preview says why
+  // before anything goes out.
+  it('fails like the send when an attachment cannot be rendered', async () => {
+    const render = vi
+      .fn()
+      .mockRejectedValue(
+        new Error('Attachment "Vertrag" could not be rendered: timeout')
+      );
+
+    await expect(
+      preview(prismaWith([{ documentId: 'contract' }]), { render })
+    ).rejects.toThrow('Attachment "Vertrag" could not be rendered: timeout');
+  });
+});
+
+describe('MailSendJobService.missingPlaceholders', () => {
+  const prisma = {
+    mailTemplate: {
+      findUnique: vi.fn(async () => ({
+        ...template('custom'),
+        subject: 'Hallo {{user_firstName}}',
+        htmlContent: '<p>{{optional_does_not_exist}}</p>',
+        textContent: null,
+        attachments: [{ documentId: 'contract' }],
+      })),
+    },
+  };
+
+  it('warns about the placeholders of the attachments too', async () => {
+    const attachments = {
+      placeholders: vi.fn(async () => [
+        'user_firstName',
+        'optional_subscription_memberPlan_name',
+      ]),
+    };
+    const service = makeService(
+      prisma,
+      {},
+      {},
+      undefined,
+      undefined,
+      attachments
+    );
+
+    expect(await service.missingPlaceholders('tpl-1', false)).toEqual([
+      'optional_does_not_exist',
+      'optional_subscription_memberPlan_name',
+    ]);
+    expect(attachments.placeholders).toHaveBeenCalledWith(['contract']);
+  });
+
+  it('still warns about the template when an attachment cannot be read', async () => {
+    const service = makeService(prisma, {}, {}, undefined, undefined, {
+      placeholders: vi.fn().mockRejectedValue(new Error('media is down')),
+    });
+
+    expect(await service.missingPlaceholders('tpl-1', false)).toEqual([
+      'optional_does_not_exist',
+    ]);
   });
 });
 

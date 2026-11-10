@@ -67,6 +67,7 @@ import {
 } from './mail-job-common';
 import { MailPreview } from '../mail-template/mail-preview';
 import { LetterPreview } from '../mail-template/letter-preview';
+import { TemplateAttachmentsNote } from './template-attachments-note';
 import { usePaperLetterFlow } from '../delivery-mode/use-paper-letter-flow';
 import { AudienceFilter } from './audience/audience-filter';
 import { useAudienceState } from './audience/audience-state';
@@ -404,6 +405,13 @@ function MailSendPage() {
                       {t('mailSend.createTemplate')}
                     </Button>
                   </div>
+                  <TemplateAttachmentsNote
+                    attachmentIds={
+                      (templateData?.mailTemplates ?? []).find(
+                        template => template.id === templateId
+                      )?.attachmentIds ?? []
+                    }
+                  />
                 </CardContent>
               </Card>
 
@@ -848,11 +856,12 @@ function TemplatePreview({
               <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
                 <FormLabel
                   id={recipientLabelId}
-                  style={{ margin: 0 }}
+                  style={{ margin: 0, flexShrink: 0 }}
                 >
                   {t('mailSend.preview.recipient')}
                 </FormLabel>
                 <Autocomplete
+                  style={{ flexGrow: 1, minWidth: 0 }}
                   options={options}
                   getOptionLabel={option => option.label}
                   isOptionEqualToValue={(option, selected) =>
@@ -908,6 +917,7 @@ function TemplatePreview({
               <MailPreview
                 html={preview.html}
                 subject={preview.subject}
+                attachments={preview.attachments}
                 height="max(420px, calc(100vh - 250px))"
               />
             : null}

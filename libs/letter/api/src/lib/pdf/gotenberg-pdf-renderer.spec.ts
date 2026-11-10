@@ -186,4 +186,61 @@ describe('GotenbergPdfRenderer', () => {
       /did not return a pdf/
     );
   });
+
+  describe('convertDocument', () => {
+    const DOCX = new Uint8Array([0x50, 0x4b, 0x03, 0x04, 0x01]);
+
+    it('converts an office document through the LibreOffice route', async () => {
+      fetchMock.mockResolvedValue(response(PDF));
+
+      const pdf = await createRenderer().convertDocument(DOCX, 'document.docx');
+
+      expect(pdf).toEqual(PDF);
+
+      const [url, init] = fetchMock.mock.calls[0];
+      expect(url).toBe('http://gotenberg:3000/forms/libreoffice/convert');
+      expect(init.method).toBe('POST');
+
+      // Gotenberg picks the converter by the file's extension.
+      const file = (init.body as FormData).get('files') as File;
+      expect(file.name).toBe('document.docx');
+      expect(new Uint8Array(await file.arrayBuffer())).toEqual(DOCX);
+    });
+
+    it('authenticates and times out like a render', async () => {
+      fetchMock.mockResolvedValue(response(PDF));
+      const timeout = vi.spyOn(AbortSignal, 'timeout');
+
+      await createRenderer({
+        ...config,
+        gotenberg_username: 'user',
+        gotenberg_password: 'pass',
+        timeoutMs: 5000,
+      }).convertDocument(DOCX, 'document.docx');
+
+      const [, init] = fetchMock.mock.calls[0];
+      expect(init.headers.Authorization).toBe(
+        `Basic ${Buffer.from('user:pass').toString('base64')}`
+      );
+      expect(timeout).toHaveBeenCalledWith(5000);
+    });
+
+    it('does not convert without a url, and does not call out', async () => {
+      await expect(
+        createRenderer({ ...config, gotenberg_url: null }).convertDocument(
+          DOCX,
+          'document.docx'
+        )
+      ).rejects.toThrow(PdfRendererError);
+      expect(fetchMock).not.toHaveBeenCalled();
+    });
+
+    it('refuses a body that is not a pdf', async () => {
+      fetchMock.mockResolvedValue(response('{"error":"nope"}'));
+
+      await expect(
+        createRenderer().convertDocument(DOCX, 'document.docx')
+      ).rejects.toThrow(/did not return a pdf/);
+    });
+  });
 });

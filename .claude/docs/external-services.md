@@ -263,6 +263,25 @@ A document the sender hands in (`attachment`, e.g. the Bexio invoice with its
 per-invoice QR-bill) is appended the same way and takes the static appendix's
 place.
 
+### Template attachments (Word → pdf)
+
+`MailTemplateAttachment` rows (ordered by `position`) attach `.docx` documents
+to a template. Every send of it — `/mailsend`, test mails and the automated
+flows — fills each one in with the template's `{{placeholders}}`
+(`renderDocxTemplate`, `libs/template/api`: joins the runs Word splits a
+placeholder into, per paragraph, and xml-escapes values), converts it through
+Gotenberg's LibreOffice route (`PdfRenderer.convertDocument`; Cloudflare
+refuses) and attaches the pdf. A letter prints them after its pages and before
+the QR appendix (A4 only, each on its own sheet in duplex). The work is
+`DocumentAttachmentRenderer` (`libs/letter/api`), handed to `MailContext`
+through the `MAIL_ATTACHMENT_RENDERER` token the way `LETTER_SENDER` is. An
+attachment that cannot be rendered fails its mail with a `MailAttachmentError`
+(logged `rejected`); the nightly job skips that recipient like a
+`LetterDeliveryError` instead of stopping the run. Saving attachments needs
+`paper-letters`, and a document still attached cannot be deleted. Rendered
+files are cached by content hash, so a document without per-recipient
+placeholders is converted once per send job, not once per recipient.
+
 ### Letter layouts (Briefpapier)
 
 `LetterLayout` rows (`letter_layouts`, CRUD in `libs/letter/api/src/lib/letter-layout/`,

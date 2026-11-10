@@ -69,4 +69,10 @@ export class CloudflarePdfRenderer extends BasePdfRenderer {
       signal: AbortSignal.timeout(timeoutMs),
     });
   }
+
+  async convertDocument(_file: Uint8Array, _filename: string): Promise<Buffer> {
+    throw new PdfRendererError(
+      `Pdf renderer ${this.id} (Cloudflare) only prints html; converting Word documents needs a Gotenberg pdf renderer`
+    );
+  }
 }
