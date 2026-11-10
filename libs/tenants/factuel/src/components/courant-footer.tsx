@@ -89,11 +89,16 @@ const CourantFooterTagline = styled('p')`
 const CourantCategoriesGrid = styled('div')`
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: ${({ theme }) => theme.spacing(3)};
+  row-gap: ${({ theme }) => theme.spacing(8)};
+  column-gap: ${({ theme }) => theme.spacing(8)};
   min-width: 0;
 
   ${({ theme }) => theme.breakpoints.up('sm')} {
     grid-template-columns: repeat(auto-fill, minmax(0, 25ch));
+  }
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    column-gap: ${({ theme }) => theme.spacing(3)};
   }
 `;
 
