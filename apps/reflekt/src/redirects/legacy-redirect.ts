@@ -40,6 +40,7 @@ const articleSlugs = [
   'sewn-on-the-edge',
   'sewn-on-the-edge-bangla',
   'so-in-transparent-sind-die-immobilien-unternehmen',
+  'sumatra',
   'swisslife',
   'syngenta',
   'taliban',

@@ -12,6 +12,16 @@ describe('resolveLegacyRedirect', () => {
     });
   });
 
+  it('sends the sumatra research url to its article', () => {
+    expect(resolveLegacyRedirect('/sumatra')).toEqual({
+      destination: '/a/sumatra',
+      permanent: true,
+    });
+    expect(resolveLegacyRedirect('/recherchen/sumatra')?.destination).toBe(
+      '/a/sumatra'
+    );
+  });
+
   it('resolves an alias to the article it stands for', () => {
     expect(resolveLegacyRedirect('/asy')?.destination).toBe('/a/asylatlas');
     expect(resolveLegacyRedirect('/recherchen/asy')?.destination).toBe(
