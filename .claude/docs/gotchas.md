@@ -1142,6 +1142,27 @@ only there because undici's types and `@types/node`'s don't line up.
 Pinned by `storage-fetch.spec.ts`, which checks the cap and the timeouts through
 the real `fetch` against a local server. The wiring in `app.module.ts` is not tested.
 
+---
+
+### ⚠️ R2 deletes every transformed object after 30 days
+
+A lifecycle rule on each `*-transformed` bucket (`storage.tf` in
+application-configuration: 30 days in production, 7 in staging) deletes every
+object by upload age. This covers image variants, document/video/audio copies
+and thumbnails. The link cache (`LINK_TTL`, 3 days) and the CDN's cached 301
+(12 h + 1 day stale-while-revalidate) keep pointing at an object after
+`MediaService` checked it. So `MediaService` serves only objects that outlive
+both, and writes older ones again (`transformationRefreshAge`). Without that
+check, every variant 404s for up to ~4.5 days about 30 days after it was first
+rendered (reflekt, 2026-11). Since the R2 404 is final, it looked like an R2
+outage, but it wasn't one.
+
+**Load-bearing:** `S3_TRANSFORMATION_MAX_AGE_DAYS` (default 30) must equal the
+bucket's lifecycle age. Set it to `7` for staging media.
+`saveVideoPoster` stores posters _only_ in the transformed bucket, so they
+expire for good. Pinned by "MediaService transformation lifetime" in
+`media.service.spec.ts`.
+
 ### ⚠️ cache-manager 7: TTLs are milliseconds, `max` is ignored, tiers don't backfill
 
 `CacheModule.register({ttl, max})` without `stores` builds a plain Keyv `Map`.
