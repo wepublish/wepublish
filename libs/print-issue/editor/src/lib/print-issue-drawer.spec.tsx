@@ -95,7 +95,10 @@ describe('PrintIssueDrawer', () => {
           variables: {
             input: {
               number: 1,
+              numberTo: null,
               year: thisYear,
+              countsAs: 1,
+              title: null,
               issueDate: '2027-01-15',
               note: 'Januar',
               historic: false,
@@ -132,7 +135,10 @@ describe('PrintIssueDrawer', () => {
           variables: {
             input: {
               number: 4,
+              numberTo: null,
               year: 2027,
+              countsAs: 1,
+              title: null,
               issueDate: '2027-07-15',
               note: null,
               historic: false,
@@ -178,7 +184,10 @@ describe('PrintIssueDrawer', () => {
             id: 'issue-1',
             input: {
               number: 2,
+              numberTo: null,
               year: 2027,
+              countsAs: 1,
+              title: null,
               issueDate: '2027-01-15',
               note: 'alt',
               historic: false,
@@ -189,6 +198,102 @@ describe('PrintIssueDrawer', () => {
       )
     );
     await waitFor(() => expect(onClose).toHaveBeenCalled());
+  });
+
+  it('creates a double issue that counts as its numbers unless told otherwise, with a topic', async () => {
+    renderWithRouter(
+      <PrintIssueDrawer
+        open
+        issue={null}
+        next={{ number: 3, year: 2027 }}
+        onClose={vi.fn()}
+      />
+    );
+
+    // a single issue has nothing to count
+    expect(
+      screen.queryByLabelText('printIssues.fields.countsAs')
+    ).not.toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText('printIssues.fields.numberTo'), {
+      target: { value: '4' },
+    });
+    expect(screen.getByLabelText('printIssues.fields.countsAs')).toHaveValue(
+      '2'
+    );
+    fireEvent.change(screen.getByLabelText('printIssues.fields.countsAs'), {
+      target: { value: '1' },
+    });
+    fireEvent.change(screen.getByLabelText('printIssues.fields.title'), {
+      target: { value: 'Wem gehört die Stadt?' },
+    });
+    fireEvent.change(screen.getByLabelText('printIssues.fields.issueDate'), {
+      target: { value: '2027-05-15' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'save' }));
+
+    await waitFor(() =>
+      expect(mutations['CreatePrintIssue']).toHaveBeenCalledWith(
+        expect.objectContaining({
+          variables: {
+            input: expect.objectContaining({
+              number: 3,
+              numberTo: 4,
+              countsAs: 1,
+              title: 'Wem gehört die Stadt?',
+            }),
+          },
+        })
+      )
+    );
+  });
+
+  it('turns a double issue back into a single one when the last number is cleared', async () => {
+    renderWithRouter(
+      <PrintIssueDrawer
+        open
+        issue={
+          issue({
+            number: 3,
+            numberTo: 4,
+            countsAs: 2,
+            label: '3/4.27',
+            title: 'Stadt',
+          }) as never
+        }
+        onClose={vi.fn()}
+      />
+    );
+
+    expect(screen.getByLabelText('printIssues.fields.numberTo')).toHaveValue(4);
+    expect(screen.getByLabelText('printIssues.fields.title')).toHaveValue(
+      'Stadt'
+    );
+    expect(screen.getByRole('button', { name: 'save' })).toBeDisabled();
+
+    fireEvent.change(screen.getByLabelText('printIssues.fields.numberTo'), {
+      target: { value: '' },
+    });
+    expect(
+      screen.queryByLabelText('printIssues.fields.countsAs')
+    ).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'save' }));
+
+    await waitFor(() =>
+      expect(mutations['UpdatePrintIssue']).toHaveBeenCalledWith(
+        expect.objectContaining({
+          variables: {
+            id: 'issue-1',
+            input: expect.objectContaining({
+              number: 3,
+              numberTo: null,
+              countsAs: 1,
+              title: 'Stadt',
+            }),
+          },
+        })
+      )
+    );
   });
 
   it('lets an imported historic issue be corrected', async () => {

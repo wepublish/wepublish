@@ -218,6 +218,37 @@ describe('selectBexioOrders — single copies', () => {
   });
 });
 
+describe('selectBexioOrders — single copies of a double issue', () => {
+  it('takes orders naming the double issue or either of its numbers', async () => {
+    const { selected, stats } = await selectBexioOrders(
+      [
+        invoice(1, { title: 'Bestellung' }),
+        invoice(2, { title: 'Bestellung' }),
+        invoice(3, { title: 'Bestellung' }),
+        invoice(4, { title: 'Bestellung' }),
+      ],
+      {
+        ...BASE,
+        issue: '3/4.27',
+        links: links([]),
+        fetchPositions: positions({
+          1: [{ text: 'Einzelheft 3/4.27', quantity: 1 }],
+          2: [{ text: 'Einzelheft 3.27', quantity: 2 }],
+          3: [{ text: 'Einzelheft 4.27', quantity: 3 }],
+          4: [{ text: 'Einzelheft 5.27', quantity: 1 }],
+        }),
+      }
+    );
+
+    expect(selected.map(order => [order.recipientId, order.copies])).toEqual([
+      [101, 1],
+      [102, 2],
+      [103, 3],
+    ]);
+    expect(stats.otherPeriod).toBe(1);
+  });
+});
+
 describe('selectBexioOrders — one row per invoice and recipient', () => {
   it('adds up two single-copy lines of the same issue on one invoice', async () => {
     const { selected } = await selectBexioOrders(
@@ -258,7 +289,7 @@ describe('selectBexioOrders — copies still owed after a period', () => {
     historic: string[] = []
   ) => ({
     issuesPerYear: 6,
-    historicIssues: historic,
+    historicIssues: historic.map(issueDate => ({ issueDate })),
     delivered: new Map(Object.entries(delivered)),
   });
 
@@ -290,6 +321,36 @@ describe('selectBexioOrders — copies still owed after a period', () => {
 
     // 4 delivered + 2 historic = 6 of 6: nothing owed
     expect(selected).toEqual([]);
+  });
+
+  it('counts a historic double issue as two received copies', async () => {
+    const { selected } = await selectBexioOrders([ended()], {
+      ...BASE,
+      links: links([[101, [gift(201)]]]),
+      fetchPositions: positions({}),
+      topUp: {
+        ...topUp({ '1:201:2026-01-15': 4 }),
+        historicIssues: [{ issueDate: '2026-08-23', countsAs: 2 }],
+      },
+    });
+
+    // 4 delivered + a double issue = 6 of 6: nothing owed
+    expect(selected).toEqual([]);
+  });
+
+  it('sends a double issue to a recipient owed one copy and says what it counts as', async () => {
+    const { selected } = await selectBexioOrders([ended()], {
+      ...BASE,
+      issue: '1/2.27',
+      links: links([[101, [gift(201)]]]),
+      fetchPositions: positions({}),
+      topUp: { ...topUp({ '1:201:2026-01-15': 5 }), countsAs: 2 },
+    });
+
+    expect(selected).toHaveLength(1);
+    expect(selected[0]).toMatchObject({
+      owed: { delivered: 5, entitled: 6, countsAs: 2 },
+    });
   });
 
   it('owes nothing while the quota is off, and nothing for an older period', async () => {

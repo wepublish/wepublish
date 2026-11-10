@@ -116,6 +116,17 @@ describe('contactToRow', () => {
     expect(row.zahlungsstatus).toBe('Restexemplar 5/6');
   });
 
+  it('says which copies a double issue still owed covers', () => {
+    const row = contactToRow(
+      contact(),
+      selected({ owed: { delivered: 5, entitled: 6, countsAs: 2 } }),
+      lookups,
+      payer
+    );
+
+    expect(row.zahlungsstatus).toBe('Restexemplar 6–7/6');
+  });
+
   it('names the issue for single copies, with the order day as start', () => {
     const row = contactToRow(
       contact(),

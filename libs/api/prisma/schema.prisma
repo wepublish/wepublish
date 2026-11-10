@@ -2923,8 +2923,15 @@ model PrintIssue {
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   /// «1.27» = number 1 of 2027
-  number Int
-  year   Int
+  number   Int
+  /// the last number of a double issue: «3/4.26» = number 3, numberTo 4
+  numberTo Int?
+  year     Int
+  /// how many issues it counts as against a reader's period: the numbers it
+  /// covers, or fewer when the medium decides so for this issue
+  countsAs Int     @default(1)
+  /// the issue's topic, e.g. «Wem gehört die Stadt?»
+  title    String?
 
   /// Ship day (Zurich calendar day); entitlement is evaluated as of this day.
   issueDate DateTime @db.Date

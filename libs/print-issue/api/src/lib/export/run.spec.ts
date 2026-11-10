@@ -476,6 +476,14 @@ describe('runExport', () => {
       periodId: 'per-s4',
     });
 
+    // a double issue covers two of the copies still owed
+    const double = await runExport(
+      { ...INPUT, issue: '3/4.26', countsAs: 2, quota },
+      { members: source, bexio: null }
+    );
+    expect(double.rows[1]?.zahlungsstatus).toBe('Restexemplar 2–3/6');
+    expect(double.filename).toMatch(/^druckliste-3-4\.26-/);
+
     const on = await runExport(
       { ...INPUT, quota, includeUpcoming: true },
       { members: source, bexio: null }

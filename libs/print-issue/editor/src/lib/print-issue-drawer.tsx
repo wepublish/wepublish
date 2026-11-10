@@ -32,8 +32,13 @@ import { PrintIssueStatusChip } from './print-issue-status';
 const thisYear = () => new Date().getFullYear();
 const FIRST_ISSUE: IssueNumber = { number: 1, year: thisYear() };
 
+/** How many numbers «number to numberTo» covers: 2 for 3/4. */
+const numbersOf = (number: number, numberTo: number | null) =>
+  numberTo !== null && numberTo > number ? numberTo - number + 1 : 1;
+
 /**
- * The issue form over the list: number, year, ship day, note, image. The options
+ * The issue form over the list: number (to number, for a double issue, and what
+ * it counts as), year, ship day, topic, note, image. The options
  * live on the Druckliste; a new issue takes the medium's defaults, an edited
  * one keeps its own (the input leaves them out).
  */
@@ -81,6 +86,11 @@ function PrintIssueForm({
 }) {
   const { t } = useTranslation();
   const [number, setNumber] = useState(issue?.number ?? next.number);
+  const [numberTo, setNumberTo] = useState<number | null>(
+    issue?.numberTo ?? null
+  );
+  const [countsAs, setCountsAs] = useState(issue?.countsAs ?? 1);
+  const [title, setTitle] = useState(issue?.title ?? '');
   const [year, setYear] = useState(issue?.year ?? next.year);
   const [issueDate, setIssueDate] = useState(issue?.issueDate ?? '');
   const [note, setNote] = useState(issue?.note ?? '');
@@ -90,9 +100,22 @@ function PrintIssueForm({
   const [choosingImage, setChoosingImage] = useState(false);
   const [editingImage, setEditingImage] = useState(false);
 
+  const numbers = numbersOf(number, numberTo);
+  const numberToInvalid = numberTo !== null && numberTo <= number;
+
+  // a double issue counts as the numbers it covers until told otherwise
+  const changeNumbers = (from: number, to: number | null) => {
+    setNumber(from);
+    setNumberTo(to);
+    setCountsAs(numbersOf(from, to));
+  };
+
   const dirty =
     issue ?
       number !== issue.number ||
+      numberTo !== (issue.numberTo ?? null) ||
+      countsAs !== issue.countsAs ||
+      title !== (issue.title ?? '') ||
       year !== issue.year ||
       issueDate !== issue.issueDate ||
       note !== (issue.note ?? '') ||
@@ -116,7 +139,10 @@ function PrintIssueForm({
 
   const input = (): PrintIssueInputModel => ({
     number,
+    numberTo: numberTo !== null && numberTo > number ? numberTo : null,
     year,
+    countsAs: Math.min(countsAs, numbers),
+    title: title.trim() || null,
     issueDate,
     note: note || null,
     imageId: image?.id ?? null,
@@ -174,9 +200,31 @@ function PrintIssueForm({
           type="number"
           value={number}
           onChange={event =>
-            setNumber(Math.max(1, Number(event.target.value) || 1))
+            changeNumbers(
+              Math.max(1, Number(event.target.value) || 1),
+              numberTo
+            )
           }
           slotProps={{ htmlInput: { min: 1 } }}
+          sx={{ width: 120 }}
+        />
+        <TextField
+          label={t('printIssues.fields.numberTo')}
+          type="number"
+          value={numberTo ?? ''}
+          onChange={event =>
+            changeNumbers(
+              number,
+              event.target.value === '' ? null : Number(event.target.value)
+            )
+          }
+          error={numberToInvalid}
+          helperText={
+            numberToInvalid ?
+              t('printIssues.fields.numberToInvalid')
+            : undefined
+          }
+          slotProps={{ htmlInput: { min: number + 1 } }}
           sx={{ width: 120 }}
         />
         <TextField
@@ -188,6 +236,35 @@ function PrintIssueForm({
           sx={{ width: 120 }}
         />
       </Stack>
+
+      {numbers > 1 && (
+        <FormControl sx={{ width: 220 }}>
+          <FormLabel>
+            {t('printIssues.fields.countsAs')}{' '}
+            <InfoTooltip text={t('printIssues.fields.countsAsHelp')} />
+          </FormLabel>
+          <TextField
+            select
+            value={Math.min(countsAs, numbers)}
+            onChange={event => setCountsAs(Number(event.target.value))}
+            slotProps={{
+              select: { native: true },
+              htmlInput: { 'aria-label': t('printIssues.fields.countsAs') },
+            }}
+          >
+            {Array.from({ length: numbers }, (_, index) => numbers - index).map(
+              count => (
+                <option
+                  key={count}
+                  value={count}
+                >
+                  {t('printIssues.fields.countsAsOption', { count })}
+                </option>
+              )
+            )}
+          </TextField>
+        </FormControl>
+      )}
 
       <FormControl sx={{ width: 220 }}>
         <FormLabel>
@@ -204,6 +281,12 @@ function PrintIssueForm({
           }}
         />
       </FormControl>
+
+      <TextField
+        label={t('printIssues.fields.title')}
+        value={title}
+        onChange={event => setTitle(event.target.value)}
+      />
 
       <TextField
         label={t('printIssues.fields.note')}
@@ -277,7 +360,7 @@ function PrintIssueForm({
         <Button
           variant="contained"
           startIcon={<MdSave />}
-          disabled={creating || updating || !dirty}
+          disabled={creating || updating || !dirty || numberToInvalid}
           onClick={save}
         >
           {t('save')}

@@ -21,8 +21,10 @@ import {
 import { issueYear } from '../rules/issue';
 
 export type ExportInput = {
-  /** «6.26» */
+  /** «6.26»; a double issue «3/4.26» */
   issue: string;
+  /** how many issues it counts as against a reader's period: 2 for a double issue; default 1 */
+  countsAs?: number;
   /** the Zurich calendar day the entitlement is evaluated at */
   date: string;
   /** subscriptions starting after `date` get a copy as a gift */
@@ -149,6 +151,7 @@ type Pending = Omit<RecipientDraft, 'snapshot'> & { row: ExportRow };
 export async function runExport(
   {
     issue,
+    countsAs = 1,
     date,
     includeUpcoming = false,
     includeOpen = true,
@@ -183,7 +186,8 @@ export async function runExport(
         detailMax,
         topUp: {
           issuesPerYear: quota.issuesPerYear,
-          historicIssues: quota.historicIssues.map(entry => entry.issueDate),
+          historicIssues: quota.historicIssues,
+          countsAs,
           delivered: new Map(Object.entries(bexioDelivered)),
         },
         ...window,
@@ -212,7 +216,7 @@ export async function runExport(
   };
   const excludedSubscriptions = new Set(excludeSubscriptionIds);
   const excludedRecipients = new Set(excludeBexioRecipients);
-  const ruleIssue = { issueDate: date };
+  const ruleIssue = { issueDate: date, countsAs };
 
   const entries = resolveGifts(
     loaded.subscriptions
@@ -357,7 +361,8 @@ export async function runExport(
     rows,
     recipients,
     summary,
-    filename: `druckliste-${issue}-${date}.csv`,
+    // «3/4.26» → «3-4.26»: no slash in a file name
+    filename: `druckliste-${issue.replace('/', '-')}-${date}.csv`,
     csv: toCsv(rows),
   };
 }

@@ -7,7 +7,7 @@ import type { BexioKind } from './bexio/parse';
 import type { PrintExportOptions } from './options';
 import { dbDateToYmd } from './rules/dates';
 import type { QuotaConfig } from './rules/entitlement';
-import { issueLabel } from './rules/issue';
+import { issueLabel, type IssueNumbering } from './rules/issue';
 
 export const PRINT_ISSUES_PER_YEAR_SETTING = 'printIssuesPerYear';
 export const PRINT_BEXIO_KINDS_SETTING = 'printBexioKinds';
@@ -29,10 +29,10 @@ const isKind = (value: unknown): value is BexioKind => {
 export const bexioKindsOf = (value: unknown): BexioKind[] =>
   Array.isArray(value) ? value.filter(isKind) : [];
 
-export type ExportableIssue = {
+export type ExportableIssue = IssueNumbering & {
   id: string;
-  number: number;
-  year: number;
+  /** how many issues it counts as against a reader's period: 2 for a double issue */
+  countsAs: number;
   issueDate: Date;
 };
 
@@ -75,6 +75,7 @@ export class PrintIssueExportService {
     return runExport(
       {
         issue: issueLabel(issue),
+        countsAs: issue.countsAs,
         date: evaluateAt ?? shipDay,
         ...options,
         quota,
@@ -106,13 +107,15 @@ export class PrintIssueExportService {
         bexioInvoiceId: true,
         bexioContactId: true,
         bexioPeriodFrom: true,
+        issue: { select: { countsAs: true } },
       },
     });
     const delivered: Record<string, number> = {};
 
     for (const row of rows) {
       const key = `${row.bexioInvoiceId}:${row.bexioContactId}:${dbDateToYmd(row.bexioPeriodFrom!)}`;
-      delivered[key] = (delivered[key] ?? 0) + 1;
+      // a double issue counts as two copies of the period
+      delivered[key] = (delivered[key] ?? 0) + row.issue.countsAs;
     }
 
     return delivered;
@@ -135,7 +138,7 @@ export class PrintIssueExportService {
       }),
       this.prisma.printIssue.findMany({
         where: { status: PrintIssueStatus.historic },
-        select: { issueDate: true },
+        select: { issueDate: true, countsAs: true },
       }),
     ]);
     const issuesPerYear = Number(setting?.value ?? 0);
@@ -145,6 +148,7 @@ export class PrintIssueExportService {
         Number.isFinite(issuesPerYear) && issuesPerYear > 0 ? issuesPerYear : 0,
       historicIssues: historic.map(issue => ({
         issueDate: dbDateToYmd(issue.issueDate),
+        countsAs: issue.countsAs,
       })),
     };
   }

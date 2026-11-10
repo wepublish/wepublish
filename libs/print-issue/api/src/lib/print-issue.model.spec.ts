@@ -93,6 +93,20 @@ describe('toPrintIssueModel', () => {
     expect(model).not.toHaveProperty('pendingRun');
   });
 
+  it('labels a double issue with its first and last number and keeps what it counts as and its topic', () => {
+    const model = toPrintIssueModel(
+      issue({ number: 3, numberTo: 4, countsAs: 2, title: 'Stadt' })
+    );
+
+    expect(model).toMatchObject({
+      label: '3/4.27',
+      number: 3,
+      numberTo: 4,
+      countsAs: 2,
+      title: 'Stadt',
+    });
+  });
+
   it('fills what an older row lacks in its options with the defaults', () => {
     const model = toPrintIssueModel(
       issue({

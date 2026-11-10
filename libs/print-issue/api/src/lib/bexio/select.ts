@@ -7,6 +7,8 @@ import {
   parsePeriod,
   readIssueOrder,
 } from './parse';
+import type { RuleIssue } from '../rules/entitlement';
+import { sameIssue } from '../rules/issue';
 
 export type BexioInvoice = {
   id: number;
@@ -32,15 +34,17 @@ export type BexioOrder = {
   /** single copies: the issue ordered */
   issue: string | null;
   /** a copy still owed after the period ended: what it got, what it is worth */
-  owed?: { delivered: number; entitled: number };
+  owed?: { delivered: number; entitled: number; countsAs?: number };
 };
 
 /** What decides copies still owed after a bexio period ended. */
 export type BexioTopUp = {
   /** the medium's issues per year; 0 = no copies owed */
   issuesPerYear: number;
-  /** ship days of the issues before tracking: inside a period they count as received */
-  historicIssues: string[];
+  /** the issues before tracking: inside a period they count as received */
+  historicIssues: RuleIssue[];
+  /** what this issue counts as: 2 for a double issue; default 1 */
+  countsAs?: number;
   /** copies in delivered lists by `${invoiceId}:${recipientId}:${period.from}` */
   delivered: Map<string, number>;
 };
@@ -258,7 +262,7 @@ export async function selectBexioOrders(
 
       if (!order.issue) {
         stats.noValidPeriod++;
-      } else if (order.issue !== issue) {
+      } else if (!sameIssue(order.issue, issue)) {
         stats.otherPeriod++;
       } else if (!wanted(order.kind)) {
         stats.excludedKind++;
@@ -362,14 +366,16 @@ function owedCopies(
     recipientId,
     period,
   }: { invoice: BexioInvoice; recipientId: number; period: BexioPeriod },
-  { issuesPerYear, historicIssues, delivered }: BexioTopUp
+  { issuesPerYear, historicIssues, delivered, countsAs = 1 }: BexioTopUp
 ) {
   const days = (Date.parse(period.to) - Date.parse(period.from)) / DAY_MS + 1;
   const months = Math.round(days / (365.25 / 12));
   const entitled = Math.round((issuesPerYear * months) / 12);
   const tracked =
     delivered.get(`${invoice.id}:${recipientId}:${period.from}`) ?? 0;
-  const presumed = historicIssues.filter(day => inPeriod(day, period)).length;
+  const presumed = historicIssues
+    .filter(entry => inPeriod(entry.issueDate, period))
+    .reduce((sum, entry) => sum + (entry.countsAs ?? 1), 0);
 
-  return { delivered: tracked + presumed, entitled };
+  return { delivered: tracked + presumed, entitled, countsAs };
 }

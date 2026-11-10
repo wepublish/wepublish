@@ -13,6 +13,15 @@ describe('nextIssue', () => {
     ).toEqual({ number: 4, year: 2027 });
   });
 
+  it('continues after the last number of a double issue', () => {
+    expect(
+      nextIssue([
+        { number: 3, numberTo: 4, year: 2027 },
+        { number: 2, numberTo: null, year: 2027 },
+      ])
+    ).toEqual({ number: 5, year: 2027 });
+  });
+
   it('starts a medium without issues at 1 of the current year', () => {
     expect(nextIssue([])).toEqual({
       number: 1,

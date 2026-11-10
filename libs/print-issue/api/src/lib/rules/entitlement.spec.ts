@@ -349,6 +349,30 @@ describe('classifySubscription — copies still owed (grace)', () => {
     ).toEqual({ include: false, reason: 'exhausted' });
   });
 
+  it('sends a double issue to a reader owed one copy, and says it covers two', () => {
+    expect(
+      classifySubscription(
+        trial([{ periodId: 'pt' }]),
+        { ...issue227, countsAs: 2 },
+        quota
+      )
+    ).toMatchObject({
+      include: true,
+      reason: 'grace',
+      zahlungsstatus: 'Restexemplar 3–4/3',
+    });
+  });
+
+  it('counts a delivered double issue as two received copies', () => {
+    expect(
+      classifySubscription(
+        trial([{ periodId: 'pt', countsAs: 2 }]),
+        issue227,
+        quota
+      )
+    ).toEqual({ include: false, reason: 'exhausted' });
+  });
+
   it('still owes copies to a reader who cancelled at once but paid the period', () => {
     const cancelled = subscription({
       deactivation: {
@@ -482,6 +506,17 @@ describe('deliveredIssues', () => {
       { issueDate: '2027-01-01' },
     ];
     expect(deliveredIssues(sub, period(), historic)).toBe(4);
+  });
+
+  it('counts a double issue as the issues it counts as, tracked and historic', () => {
+    const sub = subscription({
+      deliveries: [{ periodId: 'p2026', countsAs: 2 }, { periodId: 'p2026' }],
+    });
+    const historic = [
+      { issueDate: '2026-03-01', countsAs: 2 },
+      { issueDate: '2026-05-01' },
+    ];
+    expect(deliveredIssues(sub, period(), historic)).toBe(6);
   });
 });
 
