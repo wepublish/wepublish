@@ -15,9 +15,34 @@ export type RulePeriod = {
 };
 
 /** A copy of a finalized issue this subscription received, and the period it was charged to. */
-export type RuleDelivery = { periodId: string | null };
+export type RuleDelivery = {
+  periodId: string | null;
+  /** how many issues the copy counts as: 2 for a double issue; default 1 */
+  countsAs?: number;
+};
 
-export type RuleIssue = { issueDate: string };
+export type RuleIssue = {
+  issueDate: string;
+  /** how many issues it counts as against a period: 2 for a double issue; default 1 */
+  countsAs?: number;
+};
+
+const weight = (entry: { countsAs?: number }) => entry.countsAs ?? 1;
+
+/**
+ * «Restexemplar 5/6»; a double issue owed after 5 of 6 covers two copies:
+ * «Restexemplar 6–7/6». It goes out whole, even to a reader owed one copy.
+ */
+export function restexemplar(
+  delivered: number,
+  entitled: number | null,
+  countsAs = 1
+): string {
+  const last = delivered + countsAs;
+  const copies = last > delivered + 1 ? `${delivered + 1}–${last}` : `${last}`;
+
+  return `Restexemplar ${copies}/${entitled ?? '∞'}`;
+}
 
 export type RuleSubscription = {
   id: string;
@@ -175,12 +200,12 @@ export function deliveredIssues(
 ): number {
   const from = zurichDate(period.startsAt);
   const to = zurichDate(period.endsAt);
-  const tracked = sub.deliveries.filter(
-    delivery => delivery.periodId === period.id
-  ).length;
-  const presumed = historicIssues.filter(
-    issue => from <= issue.issueDate && issue.issueDate <= to
-  ).length;
+  const tracked = sub.deliveries
+    .filter(delivery => delivery.periodId === period.id)
+    .reduce((sum, delivery) => sum + weight(delivery), 0);
+  const presumed = historicIssues
+    .filter(issue => from <= issue.issueDate && issue.issueDate <= to)
+    .reduce((sum, issue) => sum + weight(issue), 0);
 
   return tracked + presumed;
 }
@@ -297,7 +322,7 @@ export function classifySubscription(
       if (entitled === null || delivered < entitled) {
         return included(
           'grace',
-          `Restexemplar ${delivered + 1}/${entitled ?? '∞'}`,
+          restexemplar(delivered, entitled, weight(issue)),
           false,
           period.id
         );

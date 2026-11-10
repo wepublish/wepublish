@@ -1,5 +1,6 @@
 import { emptyRow, type ExportRow } from '../csv/row';
 import { formatDe } from '../rules/dates';
+import { restexemplar } from '../rules/entitlement';
 import type { BexioOrder } from './select';
 
 export type BexioContact = {
@@ -77,7 +78,7 @@ export function contactToRow(
     anzahl: copies,
     aboTyp: issue ? `${kind.label} ${issue}` : kind.label,
     zahlungsstatus:
-      owed ? `Restexemplar ${owed.delivered + 1}/${owed.entitled}` : '',
+      owed ? restexemplar(owed.delivered, owed.entitled, owed.countsAs) : '',
     beginn: formatDe(period?.from ?? invoice.is_valid_from.slice(0, 10)),
     email: text(contact.mail),
     hinweis: notes.join(' · '),

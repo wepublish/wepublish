@@ -85,6 +85,7 @@ const issues = [
     id: 'issue-delivered',
     label: '3.27',
     number: 3,
+    title: 'Wem gehört die Stadt?',
     imageId: 'img-1',
     image: image(),
     deliveries: [delivery({ ...handedOver, copyCount: 500 })],
@@ -388,6 +389,27 @@ describe('PrintIssueList', () => {
     );
     // decorative: the issue label next to it names the row
     expect(thumbnails[0]).toHaveAttribute('alt', '');
+  });
+
+  it('keeps the topic column hidden until it is switched on in the column menu', () => {
+    localStorage.clear();
+    renderList();
+
+    const headers = () =>
+      screen.getAllByRole('columnheader').map(header => header.textContent);
+    expect(headers()).not.toContain('printIssues.fields.title');
+
+    fireEvent.click(
+      screen.getByRole('button', { name: /columnConfigurator.title/ })
+    );
+    fireEvent.click(
+      screen.getByRole('menuitemcheckbox', { name: 'printIssues.fields.title' })
+    );
+    fireEvent.keyDown(screen.getByRole('menu'), { key: 'Escape' });
+
+    expect(headers()).toContain('printIssues.fields.title');
+    expect(screen.getByText('Wem gehört die Stadt?')).toBeVisible();
+    localStorage.clear();
   });
 
   it('shows no form on the plain list', () => {

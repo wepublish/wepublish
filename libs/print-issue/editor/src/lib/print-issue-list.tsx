@@ -288,6 +288,13 @@ function PrintIssueList() {
             exportValue: issue => issue.label,
           },
           {
+            id: 'title',
+            label: t('printIssues.fields.title'),
+            width: 260,
+            defaultHidden: true,
+            render: issue => issue.title ?? '',
+          },
+          {
             id: 'issueDate',
             label: t('printIssues.fields.issueDate'),
             width: 150,

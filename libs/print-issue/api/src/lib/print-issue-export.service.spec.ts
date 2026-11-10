@@ -14,7 +14,9 @@ vi.mock('./export/run', async importOriginal => {
 const issue = {
   id: 'issue-1',
   number: 1,
+  numberTo: null,
   year: 2027,
+  countsAs: 1,
   issueDate: new Date('2027-01-15T00:00:00.000Z'),
 };
 
@@ -92,8 +94,9 @@ describe('PrintIssueExportService', () => {
       },
       printIssue: {
         findMany: vi.fn(async () => [
-          { issueDate: new Date('2026-08-23T00:00:00.000Z') },
-          { issueDate: new Date('2026-04-10T00:00:00.000Z') },
+          // a double issue: counts as two
+          { issueDate: new Date('2026-08-23T00:00:00.000Z'), countsAs: 2 },
+          { issueDate: new Date('2026-04-10T00:00:00.000Z'), countsAs: 1 },
         ]),
       },
       subscription: { findMany: vi.fn(async () => [lapsed]) },
@@ -104,11 +107,13 @@ describe('PrintIssueExportService', () => {
             bexioInvoiceId: 1,
             bexioContactId: 11,
             bexioPeriodFrom: new Date('2026-01-01T00:00:00.000Z'),
+            issue: { countsAs: 2 },
           },
           {
             bexioInvoiceId: 1,
             bexioContactId: 11,
             bexioPeriodFrom: new Date('2026-01-01T00:00:00.000Z'),
+            issue: { countsAs: 1 },
           },
         ]),
       },
@@ -128,7 +133,7 @@ describe('PrintIssueExportService', () => {
     });
     expect(prisma.printIssue.findMany).toHaveBeenCalledWith({
       where: { status: 'historic' },
-      select: { issueDate: true },
+      select: { issueDate: true, countsAs: true },
     });
     expect(prisma.subscription.findMany).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -144,9 +149,9 @@ describe('PrintIssueExportService', () => {
       date: '2027-01-15',
       grace: 1,
     });
-    // both historic issues fall inside the paid period, so two copies are
-    // presumed delivered and the third of six is owed
-    expect(result.rows[0]!.zahlungsstatus).toBe('Restexemplar 3/6');
+    // both historic issues fall inside the paid period, one of them a double
+    // issue, so three copies are presumed delivered and the fourth of six is owed
+    expect(result.rows[0]!.zahlungsstatus).toBe('Restexemplar 4/6');
     expect(result.summary.bexio.configured).toBe(false);
   });
 
@@ -244,10 +249,12 @@ describe('PrintIssueExportService', () => {
         bexioInvoiceId: true,
         bexioContactId: true,
         bexioPeriodFrom: true,
+        issue: { select: { countsAs: true } },
       },
     });
+    // a double issue counts as two copies of the period
     expect(runExport).toHaveBeenCalledWith(
-      expect.objectContaining({ bexioDelivered: { '1:11:2026-01-01': 2 } }),
+      expect.objectContaining({ bexioDelivered: { '1:11:2026-01-01': 3 } }),
       expect.anything()
     );
   });
@@ -265,6 +272,7 @@ describe('PrintIssueExportService', () => {
     expect(runExport).toHaveBeenCalledWith(
       {
         issue: '1.27',
+        countsAs: 1,
         date: '2027-01-15',
         memberPlanIds: ['p1'],
         includeBexio: false,
@@ -273,8 +281,8 @@ describe('PrintIssueExportService', () => {
         quota: {
           issuesPerYear: 6,
           historicIssues: [
-            { issueDate: '2026-08-23' },
-            { issueDate: '2026-04-10' },
+            { issueDate: '2026-08-23', countsAs: 2 },
+            { issueDate: '2026-04-10', countsAs: 1 },
           ],
         },
         excludeSubscriptionIds: undefined,
@@ -282,9 +290,22 @@ describe('PrintIssueExportService', () => {
         // the medium's kinds and the ship day for bexio periods
         bexioKinds: KINDS,
         shipDay: '2027-01-15',
-        bexioDelivered: { '1:11:2026-01-01': 2 },
+        bexioDelivered: { '1:11:2026-01-01': 3 },
       },
       expect.objectContaining({ bexio: null })
     );
+  });
+
+  it('hands a double issue to the run as one issue with its label and what it counts as', async () => {
+    const result = await service.compute(
+      { ...issue, number: 3, numberTo: 4, countsAs: 2 },
+      { options }
+    );
+
+    expect(runExport).toHaveBeenCalledWith(
+      expect.objectContaining({ issue: '3/4.27', countsAs: 2 }),
+      expect.anything()
+    );
+    expect(result.filename).toBe('druckliste-3-4.27-2027-01-15.csv');
   });
 });

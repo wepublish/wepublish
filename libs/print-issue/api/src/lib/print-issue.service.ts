@@ -23,11 +23,17 @@ import {
 } from './options';
 import { PrintIssueExportService } from './print-issue-export.service';
 import { dbDateToYmd, isYmd, todayZurich, ymdToDbDate } from './rules/dates';
-import { issueLabel } from './rules/issue';
+import { issueFileLabel, issueLabel, issueNumbers } from './rules/issue';
 
 export type PrintIssueInput = {
   number: number;
+  /** the last number of a double issue («3/4.26»: 4); null or left out for a single one */
+  numberTo?: number | null;
   year: number;
+  /** what it counts as against a reader's period; left out: the numbers it covers */
+  countsAs?: number | null;
+  /** the issue's topic */
+  title?: string | null;
   /** YYYY-MM-DD */
   issueDate: string;
   note?: string | null;
@@ -124,8 +130,9 @@ export const RECIPIENT_CHUNK = 500;
 const MIN_YEAR = 2000;
 const MAX_YEAR = 2100;
 
-const fileBase = (issue: Pick<PrintIssue, 'number' | 'year' | 'issueDate'>) =>
-  `druckliste-${issueLabel(issue)}-${dbDateToYmd(issue.issueDate)}`;
+const fileBase = (
+  issue: Pick<PrintIssue, 'number' | 'numberTo' | 'year' | 'issueDate'>
+) => `druckliste-${issueFileLabel(issue)}-${dbDateToYmd(issue.issueDate)}`;
 
 const chunked = <T>(items: T[], size: number): T[][] => {
   const chunks: T[][] = [];
@@ -199,6 +206,8 @@ export class PrintIssueService {
     const data = this.data(input);
     const options = optionsFrom(input.options, await this.defaults());
 
+    await this.refuseOverlap(data);
+
     try {
       return await this.prisma.printIssue.create({
         data: { ...data, options },
@@ -217,9 +226,16 @@ export class PrintIssueService {
     const data = this.data(input);
     const current = optionsFrom(existing.options);
     const options = optionsFrom(input.options, current);
+    // the label and what the issue counts as go into the list as well
     const changed =
       data.issueDate.getTime() !== existing.issueDate.getTime() ||
+      data.number !== existing.number ||
+      data.numberTo !== existing.numberTo ||
+      data.year !== existing.year ||
+      data.countsAs !== existing.countsAs ||
       !sameOptions(options, current);
+
+    await this.refuseOverlap(data, id);
 
     try {
       return await this.prisma.printIssue.update({
@@ -260,19 +276,21 @@ export class PrintIssueService {
    */
   async duplicate(id: string): Promise<PrintIssueWithDeliveries> {
     const source = await this.findById(id);
-    const latest = await this.prisma.printIssue.findMany({
+    // a double issue ends with its last number: after 3/4 comes 5
+    const issues = await this.prisma.printIssue.findMany({
       where: { year: source.year },
-      orderBy: { number: 'desc' },
-      take: 1,
-      select: { number: true },
+      select: { number: true, numberTo: true },
     });
-    const number = Math.max(0, ...latest.map(issue => issue.number)) + 1;
+    const number =
+      Math.max(0, ...issues.map(issue => issue.numberTo ?? issue.number)) + 1;
 
     try {
       return await this.prisma.printIssue.create({
         data: {
           number,
+          numberTo: null,
           year: source.year,
+          countsAs: 1,
           issueDate: source.issueDate,
           status: PrintIssueStatus.open,
           note: null,
@@ -855,9 +873,32 @@ export class PrintIssueService {
       );
     }
 
+    const numberTo = input.numberTo ?? null;
+
+    if (
+      numberTo !== null &&
+      (!Number.isInteger(numberTo) || numberTo <= input.number)
+    ) {
+      throw new BadRequestException(
+        'The last number of a double issue must be greater than its first.'
+      );
+    }
+
+    const numbers = issueNumbers({ number: input.number, numberTo });
+    const countsAs = input.countsAs ?? numbers;
+
+    if (!Number.isInteger(countsAs) || countsAs < 1 || countsAs > numbers) {
+      throw new BadRequestException(
+        `The issue counts as 1 to ${numbers} issues.`
+      );
+    }
+
     return {
       number: input.number,
+      numberTo,
       year: input.year,
+      countsAs,
+      title: input.title?.trim() || null,
       issueDate: ymdToDbDate(input.issueDate),
       status:
         input.historic ? PrintIssueStatus.historic : PrintIssueStatus.open,
@@ -865,6 +906,33 @@ export class PrintIssueService {
       // only what the input names: saving the options must not drop the image
       ...(input.imageId !== undefined ? { imageId: input.imageId } : {}),
     };
+  }
+
+  /** No two issues of a year share a number: «4.27» and «3/4.27» cannot both exist. */
+  private async refuseOverlap(
+    issue: { number: number; numberTo: number | null; year: number },
+    exceptId?: string
+  ): Promise<void> {
+    const from = issue.number;
+    const to = issue.numberTo ?? issue.number;
+    const other = await this.prisma.printIssue.findFirst({
+      where: {
+        year: issue.year,
+        ...(exceptId ? { id: { not: exceptId } } : {}),
+        number: { lte: to },
+        OR: [
+          { numberTo: null, number: { gte: from } },
+          { numberTo: { gte: from } },
+        ],
+      },
+      select: { number: true, numberTo: true, year: true },
+    });
+
+    if (other) {
+      throw new ConflictException(
+        `${issueLabel(issue)} overlaps issue ${issueLabel(other)}.`
+      );
+    }
   }
 
   private conflictOf(

@@ -92,7 +92,10 @@ describe('loadMembers', () => {
               },
             ],
             invoices: [{ id: 'inv-2027' }],
-            printDeliveries: [{ periodId: 'per-2026' }, { periodId: null }],
+            printDeliveries: [
+              { periodId: 'per-2026', issue: { countsAs: 2 } },
+              { periodId: null, issue: { countsAs: 1 } },
+            ],
           }),
           row({
             id: 's2',
@@ -175,7 +178,10 @@ describe('loadMembers', () => {
         },
       ],
       openInvoiceIds: ['inv-2027'],
-      deliveries: [{ periodId: 'per-2026' }, { periodId: null }],
+      deliveries: [
+        { periodId: 'per-2026', countsAs: 2 },
+        { periodId: null, countsAs: 1 },
+      ],
     });
     expect(subscriptions[1]).toMatchObject({
       paidUntil: null,
@@ -221,7 +227,7 @@ describe('loadMembers', () => {
           },
           printDeliveries: {
             where: { delivery: { deliveredAt: { not: null } } },
-            select: { periodId: true },
+            select: { periodId: true, issue: { select: { countsAs: true } } },
           },
         }),
       })

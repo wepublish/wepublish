@@ -7005,6 +7005,8 @@ export type PrintIssue = HasImageLc & {
   __typename: 'PrintIssue';
   closedAt?: Maybe<Scalars['DateTime']['output']>;
   closedBy?: Maybe<PrintIssueUser>;
+  /** How many issues it counts as against a reader's period: the numbers it covers, or fewer. */
+  countsAs: Scalars['Int']['output'];
   createdAt: Scalars['DateTime']['output'];
   /** In batch order. */
   deliveries: Array<PrintIssueDelivery>;
@@ -7013,13 +7015,17 @@ export type PrintIssue = HasImageLc & {
   imageId?: Maybe<Scalars['String']['output']>;
   /** Ship day, YYYY-MM-DD. */
   issueDate: Scalars['String']['output'];
-  /** «1.27» */
+  /** «1.27»; a double issue «3/4.26» */
   label: Scalars['String']['output'];
   modifiedAt: Scalars['DateTime']['output'];
   note?: Maybe<Scalars['String']['output']>;
   number: Scalars['Int']['output'];
+  /** The last number of a double issue: «3/4.26» has 4. */
+  numberTo?: Maybe<Scalars['Int']['output']>;
   options: PrintIssueOptions;
   status: PrintIssueStatus;
+  /** The issue's topic. */
+  title?: Maybe<Scalars['String']['output']>;
   year: Scalars['Int']['output'];
 };
 
@@ -7083,6 +7089,8 @@ export type PrintIssueFileModel = {
 };
 
 export type PrintIssueInputModel = {
+  /** How many issues it counts as against a reader's period, 1 up to the numbers it covers. Left out: the numbers it covers. */
+  countsAs?: InputMaybe<Scalars['Int']['input']>;
   /** Shipped before the export tracked issues. */
   historic?: Scalars['Boolean']['input'];
   /** e.g. the cover. Left out: an edit keeps the image; null removes it. */
@@ -7091,8 +7099,12 @@ export type PrintIssueInputModel = {
   issueDate: Scalars['String']['input'];
   note?: InputMaybe<Scalars['String']['input']>;
   number: Scalars['Int']['input'];
+  /** The last number of a double issue («3/4.26»: 4); null for a single one. */
+  numberTo?: InputMaybe<Scalars['Int']['input']>;
   /** Left out: a new issue takes the medium's defaults, an edited one keeps its own. */
   options?: InputMaybe<PrintIssueOptionsInput>;
+  /** The issue's topic. */
+  title?: InputMaybe<Scalars['String']['input']>;
   year: Scalars['Int']['input'];
 };
 

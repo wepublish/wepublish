@@ -371,11 +371,26 @@ export class PrintIssueModel extends HasImageLc {
   @Field(() => Int)
   number!: number;
 
+  @Field(() => Int, {
+    nullable: true,
+    description: 'The last number of a double issue: «3/4.26» has 4.',
+  })
+  numberTo!: number | null;
+
   @Field(() => Int)
   year!: number;
 
-  @Field({ description: '«1.27»' })
+  @Field({ description: '«1.27»; a double issue «3/4.26»' })
   label!: string;
+
+  @Field(() => Int, {
+    description:
+      "How many issues it counts as against a reader's period: the numbers it covers, or fewer.",
+  })
+  countsAs!: number;
+
+  @Field(() => String, { nullable: true, description: "The issue's topic." })
+  title!: string | null;
 
   @Field({ description: 'Ship day, YYYY-MM-DD.' })
   issueDate!: string;
@@ -404,8 +419,25 @@ export class PrintIssueInputModel {
   @Field(() => Int)
   number!: number;
 
+  @Field(() => Int, {
+    nullable: true,
+    description:
+      'The last number of a double issue («3/4.26»: 4); null for a single one.',
+  })
+  numberTo?: number | null;
+
   @Field(() => Int)
   year!: number;
+
+  @Field(() => Int, {
+    nullable: true,
+    description:
+      "How many issues it counts as against a reader's period, 1 up to the numbers it covers. Left out: the numbers it covers.",
+  })
+  countsAs?: number | null;
+
+  @Field(() => String, { nullable: true, description: "The issue's topic." })
+  title?: string | null;
 
   @Field({ description: 'Ship day, YYYY-MM-DD.' })
   issueDate!: string;

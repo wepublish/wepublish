@@ -83,7 +83,8 @@ export async function loadMembers(prisma: PrismaClient): Promise<Members> {
       // only copies whose list was handed to the printshop count as received
       printDeliveries: {
         where: { delivery: { deliveredAt: { not: null } } },
-        select: { periodId: true },
+        // a double issue counts as two received copies
+        select: { periodId: true, issue: { select: { countsAs: true } } },
       },
     },
   });
@@ -115,6 +116,7 @@ export async function loadMembers(prisma: PrismaClient): Promise<Members> {
     openInvoiceIds: row.invoices.map(invoice => invoice.id),
     deliveries: row.printDeliveries.map(delivery => ({
       periodId: delivery.periodId,
+      countsAs: delivery.issue.countsAs,
     })),
   }));
 

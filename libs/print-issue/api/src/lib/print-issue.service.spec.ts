@@ -45,7 +45,10 @@ const issue = (overrides: Record<string, unknown> = {}) => ({
   createdAt: new Date('2026-12-01T00:00:00.000Z'),
   modifiedAt: new Date('2026-12-01T00:00:00.000Z'),
   number: 1,
+  numberTo: null,
   year: 2027,
+  countsAs: 1,
+  title: null,
   issueDate: new Date('2027-01-15T00:00:00.000Z'),
   status: 'open',
   note: null,
@@ -120,6 +123,8 @@ const makePrisma = () => {
     printIssue: {
       findMany: vi.fn(async () => [issue()]),
       findUnique: vi.fn(async () => issue()),
+      // an issue whose numbers overlap the input's
+      findFirst: vi.fn(async () => null),
       create: vi.fn(async ({ data }: any) => issue(data)),
       update: vi.fn(async ({ data }: any) => issue(data)),
       updateMany: vi.fn(async () => ({ count: 1 })),
@@ -206,7 +211,10 @@ describe('PrintIssueService', () => {
       expect(prisma.printIssue.create).toHaveBeenCalledWith({
         data: {
           number: 1,
+          numberTo: null,
           year: 2027,
+          countsAs: 1,
+          title: null,
           issueDate: new Date('2027-01-15T00:00:00.000Z'),
           status: 'open',
           note: 'Januar',
@@ -280,11 +288,88 @@ describe('PrintIssueService', () => {
         { issueDate: '2027-02-30' },
         { issueDate: '15.01.2027' },
         { options: options({ memberPlanIds: 'all' }) },
+        // a double issue ends after it starts
+        { number: 3, numberTo: 3 },
+        { number: 3, numberTo: 2 },
+        // it counts as 1 up to the numbers it covers
+        { number: 3, numberTo: 4, countsAs: 0 },
+        { number: 3, numberTo: 4, countsAs: 3 },
+        { countsAs: 2 },
+        { countsAs: 1.5 },
       ]) {
         await expect(service.create(input(bad))).rejects.toBeInstanceOf(
           BadRequestException
         );
       }
+    });
+
+    it('creates a double issue counting as the numbers it covers, with its topic', async () => {
+      const { service, prisma } = makeService();
+
+      await service.create(
+        input({ number: 3, numberTo: 4, title: '  Wem gehört die Stadt?  ' })
+      );
+
+      expect(prisma.printIssue.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            number: 3,
+            numberTo: 4,
+            countsAs: 2,
+            title: 'Wem gehört die Stadt?',
+          }),
+        })
+      );
+    });
+
+    it('lets a double issue count as one, and stores an empty topic as none', async () => {
+      const { service, prisma } = makeService();
+
+      await service.create(
+        input({ number: 3, numberTo: 4, countsAs: 1, title: '   ' })
+      );
+
+      expect(prisma.printIssue.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ countsAs: 1, title: null }),
+        })
+      );
+    });
+
+    it('refuses an issue whose numbers overlap another issue of the year', async () => {
+      const { service, prisma } = makeService();
+      prisma.printIssue.findFirst.mockResolvedValue(
+        issue({ id: 'issue-4', number: 4 }) as never
+      );
+
+      await expect(
+        service.create(input({ number: 3, numberTo: 4 }))
+      ).rejects.toThrow(new ConflictException('3/4.27 overlaps issue 4.27.'));
+      expect(prisma.printIssue.findFirst).toHaveBeenCalledWith({
+        where: {
+          year: 2027,
+          number: { lte: 4 },
+          OR: [
+            { numberTo: null, number: { gte: 3 } },
+            { numberTo: { gte: 3 } },
+          ],
+        },
+        select: { number: true, numberTo: true, year: true },
+      });
+      expect(prisma.printIssue.create).not.toHaveBeenCalled();
+    });
+
+    it('leaves the edited issue itself out of the overlap check', async () => {
+      const { service, prisma } = makeService();
+
+      await service.update('issue-1', input({ number: 1, numberTo: 2 }));
+
+      expect(prisma.printIssue.findFirst).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({ id: { not: 'issue-1' } }),
+        })
+      );
+      expect(prisma.printIssue.update).toHaveBeenCalled();
     });
 
     it('reports a second issue with the same number as a conflict', async () => {
@@ -378,7 +463,34 @@ describe('PrintIssueService', () => {
         })
       );
 
-      await service.update('issue-1', input({ note: 'only the note' }));
+      // the label and what the issue counts as go into the list
+      await service.update('issue-1', input({ number: 1, numberTo: 2 }));
+      expect(prisma.printIssue.update).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ pendingRun: Prisma.DbNull }),
+        })
+      );
+
+      prisma.printIssue.findUnique.mockResolvedValue(
+        issue({ numberTo: 2, countsAs: 2, pendingRunAt: computedAt }) as never
+      );
+      await service.update(
+        'issue-1',
+        input({ number: 1, numberTo: 2, countsAs: 1 })
+      );
+      expect(prisma.printIssue.update).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ pendingRun: Prisma.DbNull }),
+        })
+      );
+
+      prisma.printIssue.findUnique.mockResolvedValue(
+        issue({ pendingRunAt: computedAt }) as never
+      );
+      await service.update(
+        'issue-1',
+        input({ note: 'only the note', title: 'only the topic' })
+      );
       expect(
         prisma.printIssue.update.mock.calls.at(-1)![0].data
       ).not.toHaveProperty('pendingRun');
@@ -434,6 +546,33 @@ describe('PrintIssueService', () => {
         prisma.printIssue.create.mock.calls.at(-1)?.[0].data
       ).not.toHaveProperty('imageId');
       expect(copy).toBeDefined();
+    });
+
+    it('numbers a duplicate after the last number of a double issue, as a single issue without topic', async () => {
+      const { service, prisma } = makeService();
+      prisma.printIssue.findUnique.mockResolvedValue(
+        issue({
+          number: 3,
+          numberTo: 4,
+          countsAs: 2,
+          title: 'Wem gehört die Stadt?',
+        }) as never
+      );
+      prisma.printIssue.findMany.mockResolvedValue([
+        { number: 3, numberTo: 4 },
+        { number: 2, numberTo: null },
+      ] as never);
+
+      await service.duplicate('issue-1');
+
+      expect(prisma.printIssue.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          select: { number: true, numberTo: true },
+        })
+      );
+      const data = prisma.printIssue.create.mock.calls.at(-1)?.[0].data;
+      expect(data).toMatchObject({ number: 5, numberTo: null, countsAs: 1 });
+      expect(data).not.toHaveProperty('title');
     });
   });
 
@@ -987,6 +1126,18 @@ describe('PrintIssueService', () => {
         filename: 'druckliste-1.27-2027-01-15-gesamt.csv',
         csv: toCsv([row('One'), row('Two')]),
       });
+
+      // no slash in a file name: «3/4.27» → «3-4.27»
+      prisma.printIssue.findUnique.mockResolvedValue(
+        issue({
+          number: 3,
+          numberTo: 4,
+          deliveries: [delivery(), delivery({ id: 'del-1', batch: 1 })],
+        }) as never
+      );
+      expect((await service.csv('issue-1')).filename).toBe(
+        'druckliste-3-4.27-2027-01-15-gesamt.csv'
+      );
 
       await service.csv('issue-1', 'del-1');
       expect(prisma.printIssueRecipient.findMany).toHaveBeenLastCalledWith(

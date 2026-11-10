@@ -5716,6 +5716,11 @@ One printed issue of the magazine. Its lists are evaluated as of the ship day.
 type PrintIssue implements HasImageLc {
   closedAt: DateTime
   closedBy: PrintIssueUser
+
+  """
+  How many issues it counts as against a reader's period: the numbers it covers, or fewer.
+  """
+  countsAs: Int!
   createdAt: DateTime!
 
   """In batch order."""
@@ -5727,13 +5732,19 @@ type PrintIssue implements HasImageLc {
   """Ship day, YYYY-MM-DD."""
   issueDate: String!
 
-  """«1.27»"""
+  """«1.27»; a double issue «3/4.26»"""
   label: String!
   modifiedAt: DateTime!
   note: String
   number: Int!
+
+  """The last number of a double issue: «3/4.26» has 4."""
+  numberTo: Int
   options: PrintIssueOptions!
   status: PrintIssueStatus!
+
+  """The issue's topic."""
+  title: String
   year: Int!
 }
 
@@ -5804,6 +5815,11 @@ type PrintIssueFileModel {
 }
 
 input PrintIssueInputModel {
+  """
+  How many issues it counts as against a reader's period, 1 up to the numbers it covers. Left out: the numbers it covers.
+  """
+  countsAs: Int
+
   """Shipped before the export tracked issues."""
   historic: Boolean! = false
 
@@ -5816,9 +5832,17 @@ input PrintIssueInputModel {
   number: Int!
 
   """
+  The last number of a double issue («3/4.26»: 4); null for a single one.
+  """
+  numberTo: Int
+
+  """
   Left out: a new issue takes the medium's defaults, an edited one keeps its own.
   """
   options: PrintIssueOptionsInput
+
+  """The issue's topic."""
+  title: String
   year: Int!
 }
 

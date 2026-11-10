@@ -98,8 +98,11 @@ fragment PrintIssueDeliveryFields on PrintIssueDelivery {
 fragment TinyPrintIssue on PrintIssue {
   id
   number
+  numberTo
   year
   label
+  countsAs
+  title
   issueDate
   status
   note

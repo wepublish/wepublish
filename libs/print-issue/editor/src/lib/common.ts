@@ -51,16 +51,21 @@ export type IssueNumber = { number: number; year: number };
 
 /**
  * What a new issue is called: the next number of the latest year, the way a
- * duplicate is numbered. A medium without issues starts at 1 of this year.
+ * duplicate is numbered; after the double issue 3/4 comes 5. A medium without
+ * issues starts at 1 of this year.
  */
-export const nextIssue = (issues: IssueNumber[]): IssueNumber => {
+export const nextIssue = (
+  issues: (IssueNumber & { numberTo?: number | null })[]
+): IssueNumber => {
   if (!issues.length) {
     return { number: 1, year: new Date().getFullYear() };
   }
 
   const year = Math.max(...issues.map(issue => issue.year));
   const number = Math.max(
-    ...issues.filter(issue => issue.year === year).map(issue => issue.number)
+    ...issues
+      .filter(issue => issue.year === year)
+      .map(issue => issue.numberTo ?? issue.number)
   );
 
   return { number: number + 1, year };
