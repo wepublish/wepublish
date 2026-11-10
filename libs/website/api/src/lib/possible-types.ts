@@ -155,7 +155,8 @@ const result: PossibleTypesResultData = {
       "QuoteBlock"
     ],
     "HasImageLc": [
-      "PaymentMethod"
+      "PaymentMethod",
+      "PrintIssue"
     ],
     "HasMemberPlan": [
       "PublicSubscription"

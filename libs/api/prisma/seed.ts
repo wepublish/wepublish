@@ -243,6 +243,32 @@ const seedSettings = (prisma: PrismaClient) =>
     }),
     prisma.setting.upsert({
       where: {
+        name: SettingName.PRINT_ISSUES_PER_YEAR,
+      },
+      update: {},
+      create: {
+        name: SettingName.PRINT_ISSUES_PER_YEAR,
+        value: 0,
+        settingRestriction: { minValue: 0, maxValue: 52 },
+      },
+    }),
+    prisma.setting.upsert({
+      where: {
+        name: SettingName.PRINT_EXPORT_DEFAULTS,
+      },
+      update: {},
+      create: {
+        name: SettingName.PRINT_EXPORT_DEFAULTS,
+        value: {
+          memberPlanIds: null,
+          includeBexio: true,
+          includeOpen: true,
+          includeUpcoming: false,
+        },
+      },
+    }),
+    prisma.setting.upsert({
+      where: {
         name: SettingName.EMAIL_QUALITY_MIN_MAILS_FOR_UNRESPONSIVE,
       },
       update: {},

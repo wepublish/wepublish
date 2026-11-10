@@ -97,7 +97,7 @@ oversized bodies) so they do not reach Sentry.
 
 ### Business Domain Libraries
 
-`membership`, `payment`, `user-subscription`, `member-plan`, `crowdfunding`, `mail`, `event`, `consent`
+`membership`, `payment`, `user-subscription`, `member-plan`, `crowdfunding`, `mail`, `event`, `consent`, `print-issue`
 
 ### Infrastructure Libraries
 

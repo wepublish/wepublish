@@ -100,6 +100,8 @@
       "@wepublish/features": ["libs/features/src/index.ts"],
       "@wepublish/features/api": ["libs/features/api/src/index.ts"],
       "@wepublish/newsletter/api": ["libs/newsletter/api/src/index.ts"],
+      "@wepublish/print-issue/api": ["libs/print-issue/api/src/index.ts"],
+      "@wepublish/print-issue/editor": ["libs/print-issue/editor/src/index.ts"],
       "@wepublish/newsletter/editor": ["libs/newsletter/editor/src/index.ts"],
       "@wepublish/newsletter/email": ["libs/newsletter/email/src/index.ts"],
       "@wepublish/newsletter/email/render": [
