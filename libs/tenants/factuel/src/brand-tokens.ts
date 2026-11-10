@@ -201,7 +201,7 @@ export const courantTokens = {
   layout: {
     pageMaxWidth: 1200,
     // Gutters use use spacing unit and are shared by Containers, navbar and footer.
-    pageInline: { xs: 2, sm: 3, md: 4, lg: 5 },
+    pageInline: { xs: 4, sm: 4, md: 6, lg: 6 },
     pageGap: { xs: 12, md: 16, lg: 20, xl: 20 },
     articleGap: 3,
     columnGap: { xs: 3, lg: 3, xl: 4 },
