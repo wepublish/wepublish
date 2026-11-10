@@ -102,3 +102,14 @@ describe('Courant fr overrides: subscribe.button', () => {
     expect(t('subscribe.button.pay', vars)).toBe('Faire un don de CHF 10.00');
   });
 });
+
+describe('Courant fr overrides: signup', () => {
+  it('has french copy for the signup page', async () => {
+    const t = await createT();
+
+    expect(t('signup.title')).toBe('Inscrivez-vous dès aujourd’hui');
+    expect(t('signup.hasAccount')).toBe(
+      '(Si vous avez déjà un compte, <Link>cliquez ici.</Link>)'
+    );
+  });
+});
