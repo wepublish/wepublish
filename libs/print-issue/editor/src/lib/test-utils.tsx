@@ -109,7 +109,17 @@ export const issue = (overrides: Record<string, unknown> = {}) => ({
   options: options(),
   closedAt: null,
   closedBy: null,
+  imageId: null,
+  image: null,
   deliveries: [] as unknown[],
+  ...overrides,
+});
+
+export const image = (overrides: Record<string, unknown> = {}) => ({
+  id: 'img-1',
+  title: 'Cover 1.27',
+  squareURL: 'https://images.test/img-1/square.jpg',
+  largeURL: 'https://images.test/img-1/large.jpg',
   ...overrides,
 });
 

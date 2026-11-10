@@ -288,6 +288,7 @@ model Image {
   peerProfileLogo       PeerProfile[] @relation("logo")
   peerProfileSquareLogo PeerProfile[] @relation("squareLogo")
   goodies               Goodie[]
+  printIssues           PrintIssue[]
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -2930,6 +2931,10 @@ model PrintIssue {
 
   status PrintIssueStatus @default(open)
   note   String?
+
+  /// e.g. the cover; cleared when the image is deleted
+  imageId String?
+  image   Image?  @relation(fields: [imageId], references: [id], onDelete: SetNull)
 
   /// What a list is computed from: { memberPlanIds: string[] | null,
   /// includeBexio, includeOpen, includeUpcoming }. Starts from the medium's

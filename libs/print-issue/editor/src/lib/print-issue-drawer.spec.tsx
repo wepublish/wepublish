@@ -2,7 +2,7 @@ import '@testing-library/jest-dom/vitest';
 
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { PrintIssueDrawer } from './print-issue-drawer';
-import { issue, operationName, renderWithRouter } from './test-utils';
+import { image, issue, operationName, renderWithRouter } from './test-utils';
 
 const mutations: Record<string, ReturnType<typeof vi.fn>> = {};
 
@@ -19,6 +19,34 @@ vi.mock('@apollo/client/react', async importOriginal => ({
 vi.mock('@wepublish/ui/editor', async importOriginal => ({
   ...((await importOriginal()) as object),
   InfoTooltip: () => null,
+  // the picker as buttons: choosing an image, removing it
+  ChooseEditImage: ({
+    image,
+    onSelect,
+    removeImage,
+  }: {
+    image?: { id: string } | null;
+    onSelect?: (image: unknown) => void;
+    removeImage?: () => void;
+  }) => (
+    <div>
+      <span>{image ? `image ${image.id}` : 'no image'}</span>
+      <button
+        type="button"
+        onClick={() => onSelect?.({ id: 'img-1', title: 'Cover' })}
+      >
+        pick image
+      </button>
+      <button
+        type="button"
+        onClick={() => removeImage?.()}
+      >
+        remove image
+      </button>
+    </div>
+  ),
+  ImageSelectPanel: () => null,
+  ImageEditPanel: () => null,
 }));
 
 vi.mock('react-i18next', () => ({
@@ -71,6 +99,7 @@ describe('PrintIssueDrawer', () => {
               issueDate: '2027-01-15',
               note: 'Januar',
               historic: false,
+              imageId: null,
             },
           },
         })
@@ -107,6 +136,7 @@ describe('PrintIssueDrawer', () => {
               issueDate: '2027-07-15',
               note: null,
               historic: false,
+              imageId: null,
             },
           },
         })
@@ -152,6 +182,7 @@ describe('PrintIssueDrawer', () => {
               issueDate: '2027-01-15',
               note: 'alt',
               historic: false,
+              imageId: null,
             },
           },
         })
@@ -191,6 +222,63 @@ describe('PrintIssueDrawer', () => {
               issueDate: '2026-10-15',
             }),
           }),
+        })
+      )
+    );
+  });
+
+  it('stores the image chosen for a new issue', async () => {
+    renderWithRouter(
+      <PrintIssueDrawer
+        open
+        issue={null}
+        onClose={vi.fn()}
+      />
+    );
+
+    expect(screen.getByText('no image')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'pick image' }));
+    expect(screen.getByText('image img-1')).toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText('printIssues.fields.issueDate'), {
+      target: { value: '2027-01-15' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'save' }));
+
+    await waitFor(() =>
+      expect(mutations['CreatePrintIssue']).toHaveBeenCalledWith(
+        expect.objectContaining({
+          variables: {
+            input: expect.objectContaining({ imageId: 'img-1' }),
+          },
+        })
+      )
+    );
+  });
+
+  it('keeps or removes the image of an existing issue, and counts a change as an edit', async () => {
+    renderWithRouter(
+      <PrintIssueDrawer
+        open
+        issue={issue({ imageId: 'img-1', image: image() }) as never}
+        onClose={vi.fn()}
+      />
+    );
+
+    expect(screen.getByText('image img-1')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'save' })).toBeDisabled();
+
+    fireEvent.click(screen.getByRole('button', { name: 'remove image' }));
+    expect(screen.getByRole('button', { name: 'save' })).toBeEnabled();
+    fireEvent.click(screen.getByRole('button', { name: 'save' }));
+
+    await waitFor(() =>
+      expect(mutations['UpdatePrintIssue']).toHaveBeenCalledWith(
+        expect.objectContaining({
+          variables: {
+            id: 'issue-1',
+            input: expect.objectContaining({ imageId: null }),
+          },
         })
       )
     );

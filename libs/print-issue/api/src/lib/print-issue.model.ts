@@ -6,6 +6,7 @@ import {
   registerEnumType,
 } from '@nestjs/graphql';
 import { PrintIssueStatus } from '@prisma/client';
+import { HasImageLc } from '@wepublish/image/api';
 import type { ExportRow } from './csv/row';
 import type { Summary } from './export/run';
 import { DEFAULT_OPTIONS, type PrintExportOptions } from './options';
@@ -325,8 +326,9 @@ export class PrintIssueDeliveryModel {
 @ObjectType('PrintIssue', {
   description:
     'One printed issue of the magazine. Its lists are evaluated as of the ship day.',
+  implements: () => [HasImageLc],
 })
-export class PrintIssueModel {
+export class PrintIssueModel extends HasImageLc {
   @Field()
   id!: string;
 
@@ -393,6 +395,13 @@ export class PrintIssueInputModel {
     description: 'Shipped before the export tracked issues.',
   })
   historic!: boolean;
+
+  @Field(() => String, {
+    nullable: true,
+    description:
+      'e.g. the cover. Left out: an edit keeps the image; null removes it.',
+  })
+  imageId?: string | null;
 }
 
 @ObjectType({

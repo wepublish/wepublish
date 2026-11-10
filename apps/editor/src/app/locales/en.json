@@ -5074,7 +5074,8 @@
         "deliveries": "Print lists",
         "copies": "Copies",
         "closedAt": "Closed",
-        "note": "Note"
+        "note": "Note",
+        "image": "Image"
       },
       "status": {
         "open": "Open",

@@ -111,6 +111,10 @@ fragment TinyPrintIssue on PrintIssue {
     name
     firstName
   }
+  imageId
+  image {
+    ...FullImage
+  }
   deliveries {
     ...PrintIssueDeliveryFields
   }

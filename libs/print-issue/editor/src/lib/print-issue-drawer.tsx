@@ -10,13 +10,17 @@ import {
 } from '@mui/material';
 import {
   CreatePrintIssueDocument,
+  FullImageFragment,
   PrintIssueInputModel,
   TinyPrintIssueFragment,
   UpdatePrintIssueDocument,
 } from '@wepublish/editor/api';
 import {
+  ChooseEditImage,
   DRAWER_WIDTHS,
   enqueueSnackbar,
+  ImageEditPanel,
+  ImageSelectPanel,
   InfoTooltip,
 } from '@wepublish/ui/editor';
 import { useState } from 'react';
@@ -29,7 +33,7 @@ const thisYear = () => new Date().getFullYear();
 const FIRST_ISSUE: IssueNumber = { number: 1, year: thisYear() };
 
 /**
- * The issue form over the list: number, year, ship day, note. The options
+ * The issue form over the list: number, year, ship day, note, image. The options
  * live on the Druckliste; a new issue takes the medium's defaults, an edited
  * one keeps its own (the input leaves them out).
  */
@@ -80,13 +84,19 @@ function PrintIssueForm({
   const [year, setYear] = useState(issue?.year ?? next.year);
   const [issueDate, setIssueDate] = useState(issue?.issueDate ?? '');
   const [note, setNote] = useState(issue?.note ?? '');
+  const [image, setImage] = useState<FullImageFragment | null>(
+    issue?.image ?? null
+  );
+  const [choosingImage, setChoosingImage] = useState(false);
+  const [editingImage, setEditingImage] = useState(false);
 
   const dirty =
     issue ?
       number !== issue.number ||
       year !== issue.year ||
       issueDate !== issue.issueDate ||
-      note !== (issue.note ?? '')
+      note !== (issue.note ?? '') ||
+      (image?.id ?? null) !== (issue.imageId ?? null)
     : !!issueDate;
 
   const [createIssue, { loading: creating }] = useMutation(
@@ -109,6 +119,7 @@ function PrintIssueForm({
     year,
     issueDate,
     note: note || null,
+    imageId: image?.id ?? null,
     // historic issues come from the importer; an edit keeps the stored status
     historic: false,
   });
@@ -201,6 +212,63 @@ function PrintIssueForm({
         minRows={2}
         onChange={event => setNote(event.target.value)}
       />
+
+      <FormControl>
+        <FormLabel id="print-issue-image-label">
+          {t('printIssues.fields.image')}
+        </FormLabel>
+        <ChooseEditImage
+          aria-labelledby="print-issue-image-label"
+          image={image}
+          disabled={creating || updating}
+          maxHeight={240}
+          onSelect={selected => setImage(selected)}
+          openChooseModalOpen={() => setChoosingImage(true)}
+          openEditModalOpen={() => setEditingImage(true)}
+          removeImage={() => setImage(null)}
+        />
+      </FormControl>
+
+      <Drawer
+        anchor="right"
+        open={choosingImage}
+        onClose={() => setChoosingImage(false)}
+        slotProps={{
+          paper: { sx: { width: DRAWER_WIDTHS.sm, maxWidth: '100vw' } },
+        }}
+      >
+        <ImageSelectPanel
+          onClose={() => setChoosingImage(false)}
+          onSelect={(selected: FullImageFragment) => {
+            setChoosingImage(false);
+            setImage(selected);
+          }}
+        />
+      </Drawer>
+
+      {image && (
+        <Drawer
+          anchor="right"
+          open={editingImage}
+          onClose={() => setEditingImage(false)}
+          slotProps={{
+            paper: {
+              sx: {
+                display: 'flex',
+                flexDirection: 'column',
+                width: DRAWER_WIDTHS.sm,
+                maxWidth: '100vw',
+              },
+            },
+          }}
+        >
+          <ImageEditPanel
+            id={image.id}
+            onClose={() => setEditingImage(false)}
+            onSave={() => setEditingImage(false)}
+          />
+        </Drawer>
+      )}
 
       <Stack
         direction="row"

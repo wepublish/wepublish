@@ -5074,7 +5074,8 @@
         "deliveries": "Drucklisten",
         "copies": "Exemplare",
         "closedAt": "Abgeschlossen",
-        "note": "Notiz"
+        "note": "Notiz",
+        "image": "Bild"
       },
       "status": {
         "open": "Offen",

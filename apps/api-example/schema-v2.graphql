@@ -5564,7 +5564,7 @@ type PrintExportContext {
 """
 One printed issue of the magazine. Its lists are evaluated as of the ship day.
 """
-type PrintIssue {
+type PrintIssue implements HasImageLc {
   closedAt: DateTime
   closedBy: PrintIssueUser
   createdAt: DateTime!
@@ -5572,6 +5572,8 @@ type PrintIssue {
   """In batch order."""
   deliveries: [PrintIssueDelivery!]!
   id: String!
+  image: Image
+  imageId: String
 
   """Ship day, YYYY-MM-DD."""
   issueDate: String!
@@ -5645,6 +5647,9 @@ type PrintIssueFileModel {
 input PrintIssueInputModel {
   """Shipped before the export tracked issues."""
   historic: Boolean! = false
+
+  """e.g. the cover. Left out: an edit keeps the image; null removes it."""
+  imageId: String
 
   """Ship day, YYYY-MM-DD."""
   issueDate: String!

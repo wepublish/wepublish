@@ -257,6 +257,27 @@ function PrintIssueList() {
         emptyMessage={t('printIssues.noIssues')}
         columns={[
           {
+            id: 'image',
+            label: t('printIssues.fields.image'),
+            width: 64,
+            exportValue: false,
+            // decorative: the issue label next to it names the row
+            render: issue =>
+              issue.image?.squareURL ?
+                <img
+                  src={issue.image.squareURL}
+                  alt=""
+                  width={40}
+                  height={40}
+                  style={{
+                    display: 'block',
+                    objectFit: 'cover',
+                    borderRadius: 4,
+                  }}
+                />
+              : null,
+          },
+          {
             id: 'issue',
             label: t('printIssues.fields.issue'),
             width: 110,

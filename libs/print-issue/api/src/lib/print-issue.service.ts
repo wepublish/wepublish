@@ -37,6 +37,8 @@ export type PrintIssueInput = {
   }> | null;
   /** shipped before the export tracked issues */
   historic: boolean;
+  /** left out: an edit keeps the image; null removes it */
+  imageId?: string | null;
 };
 
 export type PrintIssueUserRef = {
@@ -845,6 +847,8 @@ export class PrintIssueService {
       status:
         input.historic ? PrintIssueStatus.historic : PrintIssueStatus.open,
       note: input.note ?? null,
+      // only what the input names: saving the options must not drop the image
+      ...(input.imageId !== undefined ? { imageId: input.imageId } : {}),
     };
   }
 

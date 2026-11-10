@@ -237,6 +237,18 @@ describe('PrintIssueService', () => {
       );
     });
 
+    it('stores the image of a new issue', async () => {
+      const { service, prisma } = makeService();
+
+      await service.create(input({ imageId: 'img-1' }));
+
+      expect(prisma.printIssue.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ imageId: 'img-1' }),
+        })
+      );
+    });
+
     it('creates an issue shipped before tracking as historic', async () => {
       const { service, prisma } = makeService();
 
@@ -296,6 +308,30 @@ describe('PrintIssueService', () => {
         data: expect.objectContaining({ note: 'x', status: 'open' }),
         include: INCLUDE,
       });
+    });
+
+    it('changes or removes the image only when the input names it', async () => {
+      const { service, prisma } = makeService();
+
+      await service.update('issue-1', input({ imageId: 'img-2' }));
+      expect(prisma.printIssue.update).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ imageId: 'img-2' }),
+        })
+      );
+
+      await service.update('issue-1', input({ imageId: null }));
+      expect(prisma.printIssue.update).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ imageId: null }),
+        })
+      );
+
+      // e.g. saving the options on the Druckliste view: the image stays
+      await service.update('issue-1', input());
+      expect(
+        prisma.printIssue.update.mock.calls.at(-1)?.[0].data
+      ).not.toHaveProperty('imageId');
     });
 
     it('keeps an imported historic issue historic when it is corrected', async () => {
@@ -369,6 +405,7 @@ describe('PrintIssueService', () => {
         issue({
           number: 3,
           year: 2027,
+          imageId: 'img-1',
           options: options({ includeUpcoming: true }),
         }) as never
       );
@@ -389,6 +426,10 @@ describe('PrintIssueService', () => {
           }),
         })
       );
+      // each issue has its own cover: the copy starts without one
+      expect(
+        prisma.printIssue.create.mock.calls.at(-1)?.[0].data
+      ).not.toHaveProperty('imageId');
       expect(copy).toBeDefined();
     });
   });

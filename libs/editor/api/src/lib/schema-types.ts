@@ -6882,7 +6882,7 @@ export type PrintExportContext = {
 };
 
 /** One printed issue of the magazine. Its lists are evaluated as of the ship day. */
-export type PrintIssue = {
+export type PrintIssue = HasImageLc & {
   __typename: 'PrintIssue';
   closedAt?: Maybe<Scalars['DateTime']['output']>;
   closedBy?: Maybe<PrintIssueUser>;
@@ -6890,6 +6890,8 @@ export type PrintIssue = {
   /** In batch order. */
   deliveries: Array<PrintIssueDelivery>;
   id: Scalars['String']['output'];
+  image?: Maybe<Image>;
+  imageId?: Maybe<Scalars['String']['output']>;
   /** Ship day, YYYY-MM-DD. */
   issueDate: Scalars['String']['output'];
   /** «1.27» */
@@ -6958,6 +6960,8 @@ export type PrintIssueFileModel = {
 export type PrintIssueInputModel = {
   /** Shipped before the export tracked issues. */
   historic?: Scalars['Boolean']['input'];
+  /** e.g. the cover. Left out: an edit keeps the image; null removes it. */
+  imageId?: InputMaybe<Scalars['String']['input']>;
   /** Ship day, YYYY-MM-DD. */
   issueDate: Scalars['String']['input'];
   note?: InputMaybe<Scalars['String']['input']>;

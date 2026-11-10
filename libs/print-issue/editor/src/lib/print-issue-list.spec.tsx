@@ -4,6 +4,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { Route, Routes } from 'react-router-dom';
 import { PrintIssueList } from './print-issue-list';
 import {
+  image,
   delivery,
   issue,
   operationName,
@@ -84,6 +85,8 @@ const issues = [
     id: 'issue-delivered',
     label: '3.27',
     number: 3,
+    imageId: 'img-1',
+    image: image(),
     deliveries: [delivery({ ...handedOver, copyCount: 500 })],
   }),
   issue({
@@ -372,6 +375,19 @@ describe('PrintIssueList', () => {
     expect(
       container.querySelector('[data-trans="printIssues.intro"]')
     ).toHaveAttribute('data-tags', 'strong,em,i,br');
+  });
+
+  it('shows the image of an issue as a thumbnail, nothing for one without', () => {
+    const { container } = renderList();
+
+    const thumbnails = container.querySelectorAll('img');
+    expect(thumbnails).toHaveLength(1);
+    expect(thumbnails[0]).toHaveAttribute(
+      'src',
+      'https://images.test/img-1/square.jpg'
+    );
+    // decorative: the issue label next to it names the row
+    expect(thumbnails[0]).toHaveAttribute('alt', '');
   });
 
   it('shows no form on the plain list', () => {

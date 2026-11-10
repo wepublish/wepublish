@@ -26,6 +26,7 @@ CREATE TABLE "print.issues" (
     "pendingRun" JSONB,
     "pendingRunAt" TIMESTAMPTZ(3),
     "pendingRunByUserId" TEXT,
+    "imageId" TEXT,
 
     CONSTRAINT "print.issues_pkey" PRIMARY KEY ("id")
 );
@@ -101,6 +102,9 @@ ALTER TABLE "print.issues" ADD CONSTRAINT "print.issues_closedByUserId_fkey" FOR
 
 -- AddForeignKey
 ALTER TABLE "print.issues" ADD CONSTRAINT "print.issues_pendingRunByUserId_fkey" FOREIGN KEY ("pendingRunByUserId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "print.issues" ADD CONSTRAINT "print.issues_imageId_fkey" FOREIGN KEY ("imageId") REFERENCES "images"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "print.issue_deliveries" ADD CONSTRAINT "print.issue_deliveries_issueId_fkey" FOREIGN KEY ("issueId") REFERENCES "print.issues"("id") ON DELETE CASCADE ON UPDATE CASCADE;
