@@ -129,10 +129,12 @@ export function PrintIssueSummary({
     [
       ['invoicesInWindow', bexio.invoicesInWindow],
       ['canceled', bexio.canceled],
+      ['skippedOpen', bexio.skippedOpen],
       ['otherPeriod', bexio.otherPeriod],
-      ['einzelheftOhneAusgabe', bexio.einzelheftOhneAusgabe],
+      ['noValidPeriod', bexio.noValidPeriod],
+      ['excludedKind', bexio.excludedKind],
+      ['quantityMismatch', bexio.quantityMismatch],
       ['detailFetched', bexio.detailFetched],
-      ['detailUnparsed', bexio.detailUnparsed],
       ['ungeprueft', bexio.ungeprueft],
       ['contactMissing', bexio.contactMissing],
     ] as const

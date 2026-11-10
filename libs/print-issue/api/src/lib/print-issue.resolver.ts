@@ -57,12 +57,21 @@ export class PrintIssueResolver {
       "What the options can do here, and the medium's defaults for a new issue.",
   })
   async printExportContext() {
-    const [bexioConfigured, defaults] = await Promise.all([
+    const [bexioConfigured, defaults, kinds] = await Promise.all([
       this.bexioSource.configured(),
       this.issues.defaults(),
+      this.issues.bexioKinds(),
     ]);
 
-    return { bexioConfigured, defaults };
+    return {
+      bexioConfigured,
+      defaults,
+      bexioKinds: kinds.map(({ id, label, refersTo }) => ({
+        id,
+        label,
+        refersTo,
+      })),
+    };
   }
 
   @Permissions(CanGetPrintIssues, CanGetSubscriptions, CanGetUsers)

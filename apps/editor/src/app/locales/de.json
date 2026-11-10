@@ -2643,9 +2643,11 @@
         "loginMinutes": "Wie lange per E-Mail verschickte Login-Links gültig bleiben, in Minuten (60 = 1 Stunde, 1440 = 1 Tag, 10080 = 1 Woche). Danach muss ein neuer Link angefordert werden.",
         "passwordToken": "Wie lange der E-Mail-Link zum Zurücksetzen des Passworts gültig bleibt, in Minuten (60 = 1 Stunde, 1440 = 1 Tag).",
         "peerToken": "Wie lange beim Laden von Artikeln auf Partnermedien (Peers) gewartet wird, in Millisekunden (1000 = 1 Sekunde). Danach wird die Anfrage abgebrochen.",
-        "printExportDefaults": "Womit eine neue Druckausgabe startet. Pro Ausgabe anpassbar; jede Lieferung behält die Optionen, mit denen sie berechnet wurde."
+        "printExportDefaults": "Womit eine neue Druckausgabe startet. Pro Ausgabe anpassbar; jede Lieferung behält die Optionen, mit denen sie berechnet wurde.",
+        "printBexioKinds": "Woran die Druckliste Bestellungen in bexio erkennt. «Zeitraum»: das Stichwort steht in der Beschreibung der Kontaktverknüpfung (z. B. «NW Geschenkabo»), der Zeitraum im Titel der Rechnung (Jahr «2027» oder «15.03.2026–14.03.2027»); jede verknüpfte Person erhält ein Exemplar. «Ausgabe»: das Stichwort steht am Anfang einer Rechnungsposition, gefolgt von der Ausgabe (z. B. «Einzelheft 6.26»); die Menge der Position zählt."
       },
-      "printExportDefaults": "Druckliste: Standard-Optionen"
+      "printExportDefaults": "Druckliste: Standard-Optionen",
+      "printBexioKinds": "bexio-Arten"
     },
     "automaticMails": {
       "title": "Automatische Mitteilungen",
@@ -5259,11 +5261,13 @@
           "invoicesInWindow": "Rechnungen im Zeitfenster",
           "canceled": "Storniert",
           "otherPeriod": "Anderes Jahr / andere Ausgabe",
-          "einzelheftOhneAusgabe": "Einzelheft ohne Ausgabe",
           "detailFetched": "Positionen gelesen",
-          "detailUnparsed": "Nicht erkannt",
           "ungeprueft": "Ungeprüft",
-          "contactMissing": "Kontakt fehlt"
+          "contactMissing": "Kontakt fehlt",
+          "skippedOpen": "Unbezahlt, ausgelassen",
+          "noValidPeriod": "Ohne gültige Angabe",
+          "excludedKind": "Nicht gewählte Art",
+          "quantityMismatch": "Menge ≠ Verknüpfungen"
         }
       },
       "rowsTable": {
@@ -5285,13 +5289,28 @@
       "includeBexio": "bexio einbeziehen",
       "includeBexioHelp": "Institutionen, Geschenkabos, Buchhandel und Einzelhefte aus bexio – gelesen mit dem Schlüssel des bexio-Zahlungsanbieters unter Integrationen.",
       "bexioNotConfigured": "Unter Integrationen ist kein bexio-Zahlungsanbieter mit API-Schlüssel eingerichtet; bexio kann nicht gelesen werden.",
+      "bexioKinds": "bexio-Arten",
+      "bexioNoKinds": "Keine bexio-Arten konfiguriert – unter Einstellungen › Druckausgaben anlegen. Bis dahin wird aus bexio nichts gelistet.",
       "bexioShort": "bexio",
+      "bexioKindsCount_one": "bexio: {{count}} Art",
+      "bexioKindsCount_other": "bexio: {{count}} Arten",
       "includeOpen": "Bestellte, aber unbezahlte Exemplare exportieren",
       "includeOpenHelp": "Abos, die sich verlängern, deren Rechnung aber noch nicht bezahlt ist, erhalten ein Exemplar. Ist diese Option deaktiviert, erhalten sie nur bereits bezahlte Exemplare.",
       "openShort": "offen",
       "includeUpcoming": "Vorab-Exemplare exportieren",
       "includeUpcomingHelp": "Abos, die erst nach dem Erscheinungsdatum beginnen, erhalten diese Ausgabe vorab geschenkt. Sie zählt nicht zu den bezahlten Ausgaben.",
       "upcomingShort": "Vorab"
+    },
+    "printBexioKinds": {
+      "kind": "bexio-Art {{label}}",
+      "label": "Bezeichnung",
+      "word": "Stichwort in bexio",
+      "refersTo": "Bezieht sich auf",
+      "refersToPeriod": "Zeitraum",
+      "refersToIssue": "Ausgabe",
+      "add": "bexio-Art hinzufügen",
+      "delete": "bexio-Art {{label}} löschen",
+      "empty": "Noch keine bexio-Arten. Ohne bexio-Art wird aus bexio nichts gelistet."
     },
     "autosave": {
       "label": "Automatisch speichern",

@@ -209,6 +209,29 @@ describe('PrintIssueListView', () => {
       );
     });
 
+    it("offers the medium's bexio kinds and computes with the chosen ones", async () => {
+      renderView();
+
+      open('create');
+      expect(
+        screen.getByRole('checkbox', { name: 'Geschenkabo' })
+      ).toBeChecked();
+      fireEvent.click(screen.getByRole('checkbox', { name: 'Einzelheft' }));
+      fireEvent.click(button('printIssues.compute'));
+
+      await waitFor(() =>
+        expect(mutations['UpdatePrintIssue']).toHaveBeenCalledWith(
+          expect.objectContaining({
+            variables: expect.objectContaining({
+              input: expect.objectContaining({
+                options: options({ bexioKindIds: ['gift'] }),
+              }),
+            }),
+          })
+        )
+      );
+    });
+
     it('disables bexio with a hint while no provider has a key', () => {
       withContext({ bexioConfigured: false });
       renderView();

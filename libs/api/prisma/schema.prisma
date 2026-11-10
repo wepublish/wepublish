@@ -3023,13 +3023,17 @@ model PrintIssueRecipient {
   periodId       String?
 
   bexioInvoiceId Int?
+  /// the recipient: a contact linked to the payer, or the orderer of single copies
   bexioContactId Int?
+  /// the bexio period the copy belongs to (subscriptions over a period), for copies still owed later
+  bexioPeriodFrom DateTime? @db.Date
+  bexioPeriodTo   DateTime? @db.Date
 
   snapshot Json
 
   @@unique([issueId, batch, position])
   @@unique([issueId, subscriptionId])
-  @@unique([issueId, bexioInvoiceId])
+  @@unique([issueId, bexioInvoiceId, bexioContactId])
   @@index([deliveryId])
   @@index([subscriptionId])
   @@index([periodId])

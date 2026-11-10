@@ -8,12 +8,22 @@ export type BexioClient = {
     from: string,
     to: string
   ): Promise<{ invoices: BexioInvoice[]; path: 'search' | 'list' }>;
-  /** the plain texts of one invoice's positions */
-  positions(invoiceId: number): Promise<string[]>;
+  /** the plain text and the quantity column of one invoice's positions */
+  positions(invoiceId: number): Promise<BexioPosition[]>;
+  /** every contact link («Kontaktverknüpfung»), indexed by both of its contacts */
+  contactLinks(): Promise<Map<number, BexioLink[]>>;
   contacts(): Promise<Map<number, BexioContact>>;
   countries(): Promise<Map<number, string>>;
   salutations(): Promise<Map<number, string>>;
 };
+
+export type BexioPosition = {
+  text: string;
+  /** the quantity column; null for a text position or an unreadable value */
+  quantity: number | null;
+};
+
+export type BexioLink = { contactId: number; description: string };
 
 type ClientOptions = {
   apiUrl: string;
@@ -193,12 +203,47 @@ export function createBexioClient({
 
     async positions(invoiceId) {
       const invoice = await expectBody<{
-        positions?: { text?: string | null }[];
+        positions?: { text?: string | null; amount?: string | null }[];
       }>(`/2.0/kb_invoice/${invoiceId}`);
 
       return (invoice.positions ?? [])
-        .map(position => plainText(position.text ?? ''))
-        .filter(Boolean);
+        .map(position => {
+          const quantity = Number(position.amount);
+
+          return {
+            text: plainText(position.text ?? ''),
+            quantity:
+              position.amount != null && Number.isFinite(quantity) ?
+                quantity
+              : null,
+          };
+        })
+        .filter(position => position.text);
+    },
+
+    async contactLinks() {
+      const links = await paged(offset =>
+        expectBody<
+          {
+            contact_id: number;
+            contact_sub_id: number;
+            description?: string | null;
+          }[]
+        >(`/2.0/contact_relation?limit=${PAGE}&offset=${offset}`)
+      );
+      const byContact = new Map<number, BexioLink[]>();
+      const add = (contact: number, link: BexioLink) =>
+        byContact.set(contact, [...(byContact.get(contact) ?? []), link]);
+
+      // a link has no direction that matters here: payer and recipient may be either side
+      for (const link of links) {
+        const description = plainText(link.description ?? '');
+
+        add(link.contact_id, { contactId: link.contact_sub_id, description });
+        add(link.contact_sub_id, { contactId: link.contact_id, description });
+      }
+
+      return byContact;
     },
 
     async contacts() {

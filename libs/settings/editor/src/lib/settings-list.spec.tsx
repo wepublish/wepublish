@@ -220,6 +220,17 @@ describe('SettingList', () => {
 
     expect(card('settingList.printIssues')).toBe(perYear);
     expect(card('settingList.subscriptionPlans')).not.toBe(perYear);
+
+    // the bexio kinds are edited in the same card; without any, the defaults say so
+    expect(card('settingList.printBexioKinds')).toBe(perYear);
+    expect(
+      screen
+        .getByRole('button', { name: 'printBexioKinds.add' })
+        .closest('.MuiCard-root')
+    ).toBe(perYear);
+    expect(
+      screen.getByText('printExportOptions.bexioNoKinds')
+    ).toBeInTheDocument();
   });
 
   test('offers the settings as checkboxes, not switches', async () => {

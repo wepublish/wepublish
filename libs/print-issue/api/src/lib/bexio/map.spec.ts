@@ -1,5 +1,5 @@
 import { contactToRow, type BexioContact } from './map';
-import type { SelectedInvoice } from './select';
+import type { BexioOrder } from './select';
 
 const contact = (overrides: Partial<BexioContact> = {}): BexioContact => ({
   id: 10,
@@ -19,19 +19,30 @@ const contact = (overrides: Partial<BexioContact> = {}): BexioContact => ({
   ...overrides,
 });
 
-const selected = (
-  overrides: Partial<SelectedInvoice['parsed']> = {}
-): SelectedInvoice => ({
+const selected = (overrides: Partial<BexioOrder> = {}): BexioOrder => ({
   invoice: {
     id: 1,
-    title: 'Geschenkabo 2026',
-    api_reference: 'nw-rg:4711',
-    contact_id: 10,
-    kb_item_status_id: 7,
-    is_valid_from: '2025-11-03',
+    title: 'Jahresabos 15.03.2026–14.03.2027',
+    api_reference: null,
+    contact_id: 50,
+    kb_item_status_id: 9,
+    is_valid_from: '2026-03-01',
   },
-  parsed: { copies: 1, kind: 'Geschenkabo', year: 2026, ...overrides },
+  payerId: 50,
+  recipientId: 10,
+  kind: {
+    id: 'gift',
+    label: 'Geschenkabo',
+    word: 'NW Geschenkabo',
+    refersTo: 'period',
+  },
+  copies: 1,
+  period: { from: '2026-03-15', to: '2027-03-14' },
+  issue: null,
+  ...overrides,
 });
+
+const payer = contact({ id: 50, name_1: 'Schenker', name_2: 'Sara' });
 
 const lookups = {
   countries: new Map([[1, 'Schweiz']]),
@@ -39,8 +50,8 @@ const lookups = {
 };
 
 describe('contactToRow', () => {
-  it('maps a person paying a gift subscription', () => {
-    expect(contactToRow(contact(), selected(), lookups)).toEqual({
+  it('maps the recipient of a gift, with its period and who pays', () => {
+    expect(contactToRow(contact(), selected(), lookups, payer)).toEqual({
       quelle: 'bexio',
       adressnummer: '100',
       anrede: 'Herr',
@@ -56,10 +67,10 @@ describe('contactToRow', () => {
       anzahl: 1,
       aboTyp: 'Geschenkabo',
       zahlungsstatus: '',
-      beginn: '03.11.2025',
+      beginn: '15.03.2026',
       email: 'max@example.com',
       bemerkungen: '',
-      hinweis: 'Empfänger unbekannt – Zahleradresse',
+      hinweis: 'Zeitraum 15.03.2026–14.03.2027 · bezahlt von Sara Schenker',
     });
   });
 
@@ -71,7 +82,15 @@ describe('contactToRow', () => {
         name_2: null,
         salutation_id: null,
       }),
-      selected({ copies: 3, kind: 'Institutionelles Abo' }),
+      selected({
+        payerId: 10,
+        kind: {
+          id: 'broker',
+          label: 'Broker-Abo',
+          word: 'NW Abo Endkund:in',
+          refersTo: 'period',
+        },
+      }),
       { countries: lookups.countries, salutations: new Map() }
     );
 
@@ -80,26 +99,45 @@ describe('contactToRow', () => {
       firma: 'Stadtbibliothek',
       vorname: '',
       name: '',
-      anzahl: 3,
-      aboTyp: 'Institutionelles Abo',
-      hinweis: '',
+      anzahl: 1,
+      aboTyp: 'Broker-Abo',
+      hinweis: 'Zeitraum 15.03.2026–14.03.2027',
     });
   });
 
-  it('names the issue for single-issue orders', () => {
+  it('marks a copy still owed after the period ended', () => {
+    const row = contactToRow(
+      contact(),
+      selected({ owed: { delivered: 4, entitled: 6 } }),
+      lookups,
+      payer
+    );
+
+    expect(row.zahlungsstatus).toBe('Restexemplar 5/6');
+  });
+
+  it('names the issue for single copies, with the order day as start', () => {
     const row = contactToRow(
       contact(),
       selected({
+        recipientId: 50,
         copies: 12,
-        kind: 'Einzelheft',
+        kind: {
+          id: 'single',
+          label: 'Einzelheft',
+          word: 'Einzelheft',
+          refersTo: 'issue',
+        },
         issue: '6.26',
-        year: undefined,
+        period: null,
       }),
       lookups
     );
 
     expect(row.aboTyp).toBe('Einzelheft 6.26');
     expect(row.anzahl).toBe(12);
+    expect(row.beginn).toBe('01.03.2026');
+    expect(row.hinweis).toBe('');
   });
 
   it('falls back to the first line of the combined address and to an empty country', () => {

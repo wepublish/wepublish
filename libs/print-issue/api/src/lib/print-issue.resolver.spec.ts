@@ -42,6 +42,14 @@ const makeResolver = () => {
     duplicate: vi.fn(async () => issue),
     csv: vi.fn(async () => ({ filename: 'x.csv', csv: '' })),
     defaults: vi.fn(async () => defaults),
+    bexioKinds: vi.fn(async () => [
+      {
+        id: 'gift',
+        label: 'Geschenkabo',
+        word: 'NW Geschenkabo',
+        refersTo: 'period',
+      },
+    ]),
   };
   const bexioSource = { configured: vi.fn(async () => true) };
   const resolver = new PrintIssueResolver(
@@ -124,6 +132,8 @@ describe('PrintIssueResolver', () => {
     expect(await resolver.printExportContext()).toEqual({
       bexioConfigured: false,
       defaults,
+      // the medium's kinds, for the checkboxes of the options
+      bexioKinds: [{ id: 'gift', label: 'Geschenkabo', refersTo: 'period' }],
     });
   });
 });

@@ -66,6 +66,7 @@ export function PrintIssueFlow({
   onOptionsChange,
   defaults,
   bexioConfigured,
+  bexioKinds,
   run,
   replaces,
   computing,
@@ -85,6 +86,8 @@ export function PrintIssueFlow({
   /** the medium's defaults, once loaded */
   defaults: PrintExportOptionsValue | null;
   bexioConfigured: boolean;
+  /** the medium's bexio kinds, offered under the bexio switch */
+  bexioKinds: { id: string; label: string }[];
   run: PrintIssueRunFieldsFragment | null;
   /** the draft a `replace` run writes anew */
   replaces: { createdAt: string } | null;
@@ -173,6 +176,7 @@ export function PrintIssueFlow({
               onChange={onOptionsChange}
               disabled={computing || exporting}
               bexioConfigured={bexioConfigured}
+              bexioKinds={bexioKinds}
             />
             {run && stale && (
               <Alert severity="info">{t('printIssues.options.unsaved')}</Alert>

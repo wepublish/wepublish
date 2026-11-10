@@ -2643,9 +2643,11 @@
         "loginMinutes": "Durée de validité, en minutes, des liens de connexion envoyés par e-mail (60 = 1 heure, 1440 = 1 jour, 10080 = 1 semaine). Ensuite, un nouveau lien doit être demandé.",
         "passwordToken": "Durée de validité, en minutes, du lien envoyé par e-mail pour réinitialiser le mot de passe (60 = 1 heure, 1440 = 1 jour).",
         "peerToken": "Durée d’attente des médias partenaires (peers) lors du chargement de leurs articles, en millisecondes (1000 = 1 seconde). Ensuite, la requête est annulée.",
-        "printExportDefaults": "Ce avec quoi un nouveau numéro imprimé démarre. Ajustable par numéro ; chaque livraison conserve les options avec lesquelles elle a été calculée."
+        "printExportDefaults": "Ce avec quoi un nouveau numéro imprimé démarre. Ajustable par numéro ; chaque livraison conserve les options avec lesquelles elle a été calculée.",
+        "printBexioKinds": "Comment la liste d’impression reconnaît les commandes dans bexio. «Période» : le mot-clé commence la description du lien de contact (p. ex. «NW Geschenkabo»), la période figure dans le titre de la facture (année «2027» ou «15.03.2026–14.03.2027») ; chaque personne liée reçoit un exemplaire. «Numéro» : le mot-clé commence une position de facture, suivi du numéro (p. ex. «Einzelheft 6.26») ; la quantité de la position compte."
       },
-      "printExportDefaults": "Liste d’impression : options par défaut"
+      "printExportDefaults": "Liste d’impression : options par défaut",
+      "printBexioKinds": "Types bexio"
     },
     "automaticMails": {
       "title": "Messages automatiques",
@@ -5259,11 +5261,13 @@
           "invoicesInWindow": "Factures dans la fenêtre",
           "canceled": "Annulées",
           "otherPeriod": "Autre année / autre numéro",
-          "einzelheftOhneAusgabe": "Numéro à l’unité sans numéro",
           "detailFetched": "Positions lues",
-          "detailUnparsed": "Non reconnues",
           "ungeprueft": "Non vérifiées",
-          "contactMissing": "Contact manquant"
+          "contactMissing": "Contact manquant",
+          "skippedOpen": "Impayées, ignorées",
+          "noValidPeriod": "Sans indication valable",
+          "excludedKind": "Type non choisi",
+          "quantityMismatch": "Quantité ≠ liens"
         }
       },
       "rowsTable": {
@@ -5285,13 +5289,28 @@
       "includeBexio": "Inclure bexio",
       "includeBexioHelp": "Institutions, abonnements cadeaux, librairies et numéros à l’unité depuis bexio – lus avec la clé du prestataire de paiement bexio sous Intégrations.",
       "bexioNotConfigured": "Aucun prestataire de paiement bexio avec clé API n’est configuré sous Intégrations ; bexio ne peut pas être lu.",
+      "bexioKinds": "Types bexio",
+      "bexioNoKinds": "Aucun type bexio configuré – à créer sous Paramètres › Numéros imprimés. D’ici là, rien n’est listé depuis bexio.",
       "bexioShort": "bexio",
+      "bexioKindsCount_one": "bexio : {{count}} type",
+      "bexioKindsCount_other": "bexio : {{count}} types",
       "includeOpen": "Exporter les exemplaires commandés mais impayés",
       "includeOpenHelp": "Les abonnements qui se renouvellent mais dont la facture n’est pas encore payée reçoivent un exemplaire. Option désactivée, ils ne reçoivent que les exemplaires déjà payés.",
       "openShort": "ouvert",
       "includeUpcoming": "Exporter les exemplaires offerts",
       "includeUpcomingHelp": "Les abonnements qui commencent après la date de parution reçoivent ce numéro en cadeau. Il ne compte pas dans les numéros payés.",
       "upcomingShort": "offert"
+    },
+    "printBexioKinds": {
+      "kind": "Type bexio {{label}}",
+      "label": "Libellé",
+      "word": "Mot-clé dans bexio",
+      "refersTo": "Se rapporte à",
+      "refersToPeriod": "Période",
+      "refersToIssue": "Numéro",
+      "add": "Ajouter un type bexio",
+      "delete": "Supprimer le type bexio {{label}}",
+      "empty": "Pas encore de types bexio. Sans type bexio, rien n’est listé depuis bexio."
     },
     "autosave": {
       "label": "Enregistrement auto",

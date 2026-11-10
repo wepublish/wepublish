@@ -60,12 +60,22 @@ const lapsed = {
   printDeliveries: [],
 };
 
+const KINDS = [
+  {
+    id: 'gift',
+    label: 'Geschenkabo',
+    word: 'NW Geschenkabo',
+    refersTo: 'period',
+  },
+];
+
 describe('PrintIssueExportService', () => {
   let prisma: {
     setting: { findUnique: Mock };
     printIssue: { findMany: Mock };
     subscription: { findMany: Mock };
     user: { findMany: Mock };
+    printIssueRecipient: { findMany: Mock };
   };
   let bexioSource: { client: Mock };
   let service: PrintIssueExportService;
@@ -73,7 +83,13 @@ describe('PrintIssueExportService', () => {
   beforeEach(() => {
     vi.mocked(runExport).mockClear();
     prisma = {
-      setting: { findUnique: vi.fn(async () => ({ value: 6 })) },
+      setting: {
+        findUnique: vi.fn(async ({ where }: { where: { name: string } }) =>
+          where.name === 'printIssuesPerYear' ? { value: 6 }
+          : where.name === 'printBexioKinds' ? { value: KINDS }
+          : null
+        ),
+      },
       printIssue: {
         findMany: vi.fn(async () => [
           { issueDate: new Date('2026-08-23T00:00:00.000Z') },
@@ -82,6 +98,20 @@ describe('PrintIssueExportService', () => {
       },
       subscription: { findMany: vi.fn(async () => [lapsed]) },
       user: { findMany: vi.fn(async () => []) },
+      printIssueRecipient: {
+        findMany: vi.fn(async () => [
+          {
+            bexioInvoiceId: 1,
+            bexioContactId: 11,
+            bexioPeriodFrom: new Date('2026-01-01T00:00:00.000Z'),
+          },
+          {
+            bexioInvoiceId: 1,
+            bexioContactId: 11,
+            bexioPeriodFrom: new Date('2026-01-01T00:00:00.000Z'),
+          },
+        ]),
+      },
     };
     bexioSource = { client: vi.fn(async () => null) };
     service = new PrintIssueExportService(
@@ -125,7 +155,7 @@ describe('PrintIssueExportService', () => {
       options,
       evaluateAt: '2027-02-01',
       excludeSubscriptionIds: ['s1'],
-      excludeBexioInvoiceIds: [7],
+      excludeBexioRecipients: ['7:70'],
     });
 
     expect(result.summary).toMatchObject({
@@ -153,6 +183,7 @@ describe('PrintIssueExportService', () => {
         path: 'search' as const,
       })),
       positions: vi.fn(async () => []),
+      contactLinks: vi.fn(async () => new Map()),
       contacts: vi.fn(async () => new Map()),
       countries: vi.fn(async () => new Map()),
       salutations: vi.fn(async () => new Map()),
@@ -186,6 +217,41 @@ describe('PrintIssueExportService', () => {
     });
   });
 
+  it('hands no bexio kinds to the run while the setting holds none or nonsense', async () => {
+    prisma.setting.findUnique.mockImplementation(
+      async ({ where }: { where: { name: string } }) =>
+        where.name === 'printBexioKinds' ? { value: [{ id: 1 }, 'x'] } : null
+    );
+
+    await service.compute(issue, { options });
+
+    expect(runExport).toHaveBeenCalledWith(
+      expect.objectContaining({ bexioKinds: [] }),
+      expect.anything()
+    );
+  });
+
+  it('hands the copies bexio periods got in delivered lists to the run', async () => {
+    await service.compute(issue, { options });
+
+    expect(prisma.printIssueRecipient.findMany).toHaveBeenCalledWith({
+      where: {
+        source: 'bexio',
+        bexioPeriodFrom: { not: null },
+        delivery: { deliveredAt: { not: null } },
+      },
+      select: {
+        bexioInvoiceId: true,
+        bexioContactId: true,
+        bexioPeriodFrom: true,
+      },
+    });
+    expect(runExport).toHaveBeenCalledWith(
+      expect.objectContaining({ bexioDelivered: { '1:11:2026-01-01': 2 } }),
+      expect.anything()
+    );
+  });
+
   it('hands every option to the run next to the quota', async () => {
     await service.compute(issue, {
       options: {
@@ -212,7 +278,11 @@ describe('PrintIssueExportService', () => {
           ],
         },
         excludeSubscriptionIds: undefined,
-        excludeBexioInvoiceIds: undefined,
+        excludeBexioRecipients: undefined,
+        // the medium's kinds and the ship day for bexio periods
+        bexioKinds: KINDS,
+        shipDay: '2027-01-15',
+        bexioDelivered: { '1:11:2026-01-01': 2 },
       },
       expect.objectContaining({ bexio: null })
     );

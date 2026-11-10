@@ -7,6 +7,7 @@ import type {
 const options = {
   memberPlanIds: null,
   includeBexio: true,
+  bexioKindIds: null,
   includeOpen: true,
   includeUpcoming: false,
 };
@@ -123,6 +124,36 @@ describe('toPrintIssueModel', () => {
 });
 
 describe('toRunModel', () => {
+  it('counts a bexio figure an older stored summary lacks as 0', () => {
+    const run: PrintIssueRunView = {
+      mode: 'export',
+      deliveryId: null,
+      batch: 0,
+      computedAt: new Date('2026-12-20T09:00:00.000Z'),
+      computedBy: null,
+      rows: [],
+      summary: {
+        ...summary,
+        bexio: {
+          configured: true,
+          included: true,
+          canceled: 2,
+          einzelheftOhneAusgabe: 4,
+        },
+      } as never,
+      filename: 'druckliste-1.27-2027-01-15.csv',
+    };
+
+    expect(toRunModel(run).summary.bexio).toMatchObject({
+      canceled: 2,
+      excludedKind: 0,
+      skippedOpen: 0,
+      quantityMismatch: 0,
+      // what used to be «Einzelheft ohne Ausgabe» is a selector without a valid issue
+      noValidPeriod: 4,
+    });
+  });
+
   it('counts a skip reason an older stored summary lacks as 0', () => {
     const run: PrintIssueRunView = {
       mode: 'export',

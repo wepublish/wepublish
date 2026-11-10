@@ -10,6 +10,8 @@ export type PrintExportOptions = {
   memberPlanIds: string[] | null;
   /** read bexio (institutions, gifts, bookshops, single issues) when a provider is configured */
   includeBexio: boolean;
+  /** only these of the medium's bexio kinds (setting `printBexioKinds`); null = every one */
+  bexioKindIds: string[] | null;
   /** renewing readers whose invoice is not paid yet stay in («offen») */
   includeOpen: boolean;
   /** subscriptions starting after the ship day get a copy as a gift («Vorab-Exemplar») */
@@ -19,6 +21,7 @@ export type PrintExportOptions = {
 export const DEFAULT_OPTIONS: PrintExportOptions = {
   memberPlanIds: null,
   includeBexio: true,
+  bexioKindIds: null,
   includeOpen: true,
   includeUpcoming: false,
 };
@@ -69,9 +72,23 @@ export function optionsFrom(
     })
   ) as Record<(typeof FLAGS)[number], boolean>;
 
+  // stored before the kinds existed: every kind, as the options read then
+  const rawKinds = pick('bexioKindIds') ?? null;
+  const kinds: string[] | null | undefined =
+    rawKinds === null ? null
+    : isStringArray(rawKinds) ? rawKinds
+    : undefined;
+
+  if (kinds === undefined) {
+    throw new BadRequestException(
+      'bexioKindIds must be a list of bexio kind ids, or null for every kind.'
+    );
+  }
+
   return {
     memberPlanIds: memberPlanIds?.length ? [...new Set(memberPlanIds)] : null,
     ...flags,
+    bexioKindIds: kinds?.length ? [...new Set(kinds)] : null,
   };
 }
 
@@ -80,6 +97,9 @@ export const sameOptions = (
   b: PrintExportOptions
 ): boolean =>
   FLAGS.every(key => a[key] === b[key]) &&
-  (a.memberPlanIds === null) === (b.memberPlanIds === null) &&
-  [...(a.memberPlanIds ?? [])].sort().join('\n') ===
-    [...(b.memberPlanIds ?? [])].sort().join('\n');
+  sameList(a.memberPlanIds, b.memberPlanIds) &&
+  sameList(a.bexioKindIds, b.bexioKindIds);
+
+const sameList = (a: string[] | null, b: string[] | null) =>
+  (a === null) === (b === null) &&
+  [...(a ?? [])].sort().join('\n') === [...(b ?? [])].sort().join('\n');

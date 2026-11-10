@@ -1,122 +1,417 @@
-import { selectBexioInvoices, type BexioInvoice } from './select';
+import type { BexioLink, BexioPosition } from './client';
+import type { BexioKind } from './parse';
+import { type BexioInvoice, selectBexioOrders } from './select';
 
-const invoice = (overrides: Partial<BexioInvoice> = {}): BexioInvoice => ({
-  id: 1,
-  title: 'Geschenkabo 2026',
-  api_reference: 'nw-rg:4711',
-  contact_id: 10,
-  kb_item_status_id: 7,
-  is_valid_from: '2025-11-03',
+const KINDS: BexioKind[] = [
+  {
+    id: 'gift',
+    label: 'Geschenkabo',
+    word: 'NW Geschenkabo',
+    refersTo: 'period',
+  },
+  {
+    id: 'broker',
+    label: 'Broker-Abo',
+    word: 'NW Abo Endkund:in',
+    refersTo: 'period',
+  },
+  { id: 'single', label: 'Einzelheft', word: 'Einzelheft', refersTo: 'issue' },
+];
+
+const PAID = 9;
+const OPEN = 8;
+const CANCELED = 19;
+
+const invoice = (
+  id: number,
+  overrides: Partial<BexioInvoice> = {}
+): BexioInvoice => ({
+  id,
+  title: 'Jahresabos 2027',
+  api_reference: null,
+  contact_id: 100 + id,
+  kb_item_status_id: PAID,
+  is_valid_from: '2026-11-01',
+  document_nr: `RE-${id}`,
   ...overrides,
 });
 
-const noDetail = vi.fn(async () => [] as string[]);
+const links = (entries: [number, BexioLink[]][]) => new Map(entries);
+const gift = (contactId: number): BexioLink => ({
+  contactId,
+  description: 'NW Geschenkabo',
+});
+const broker = (contactId: number): BexioLink => ({
+  contactId,
+  description: 'NW Abo Endkund:in, Abo 117049',
+});
 
-describe('selectBexioInvoices', () => {
-  beforeEach(() => noDetail.mockClear());
+const positions =
+  (byInvoice: Record<number, BexioPosition[]>) => async (id: number) =>
+    byInvoice[id] ?? [];
 
-  it('selects yearly subscriptions of the issue year and single issues of the issue', async () => {
-    const { selected, stats } = await selectBexioInvoices(
-      [
-        invoice({ id: 1, title: 'Geschenkabo 2026' }),
-        invoice({ id: 2, title: '3× Institutionelles Abo 2026 (Rg 1)' }),
-        invoice({ id: 3, title: 'Buchhandel 2025' }),
-        invoice({ id: 4, title: '12× Einzelheft 6.26', api_reference: null }),
-        invoice({ id: 5, title: 'Einzelheft 5.26', api_reference: null }),
-        invoice({ id: 6, title: 'Einzelheft 2026' }),
-      ],
-      { year: 2026, issue: '6.26', fetchPositions: noDetail }
-    );
+// issue 1.27, shipped 15.01.2027
+const BASE = {
+  issue: '1.27',
+  shipDay: '2027-01-15',
+  kinds: KINDS,
+  includeOpen: true,
+  kindIds: null,
+};
 
-    expect(selected.map(s => [s.invoice.id, s.parsed.copies])).toEqual([
-      [1, 1],
-      [2, 3],
-      [4, 12],
-    ]);
-    expect(stats).toMatchObject({
-      invoicesInWindow: 6,
-      otherPeriod: 2,
-      einzelheftOhneAusgabe: 1,
-    });
-    expect(noDetail).not.toHaveBeenCalled();
-  });
-
-  it('drops cancelled invoices and counts them', async () => {
-    const { selected, stats } = await selectBexioInvoices(
-      [invoice({ kb_item_status_id: 19 })],
-      { year: 2026, issue: '6.26', fetchPositions: noDetail }
-    );
-
-    expect(selected).toEqual([]);
-    expect(stats.canceled).toBe(1);
-  });
-
-  it('skips imported memberships and provider invoices without fetching details', async () => {
-    const { selected, stats } = await selectBexioInvoices(
-      [
-        invoice({
-          id: 1,
-          title: 'Jahresabo 2026 (Rg 1)',
-          api_reference: 'nw-rg:1',
+describe('selectBexioOrders — subscriptions over a period', () => {
+  it('gives every linked recipient one copy while the ship day lies in the period', async () => {
+    const { selected, stats, warnings } = await selectBexioOrders(
+      [invoice(1)],
+      {
+        ...BASE,
+        links: links([[101, [gift(201), gift(202), broker(203)]]]),
+        fetchPositions: positions({
+          1: [{ text: 'Jahresabo', quantity: 3 }],
         }),
-        invoice({
-          id: 2,
-          title: 'Rechnung',
-          api_reference: '7d3c2b1a-0000-4000-8000-000000000000',
-        }),
-      ],
-      { year: 2026, issue: '6.26', fetchPositions: noDetail }
-    );
-
-    expect(selected).toEqual([]);
-    expect(stats).toMatchObject({ skippedImported: 1, skippedProvider: 1 });
-    expect(noDetail).not.toHaveBeenCalled();
-  });
-
-  it('reads the positions of invoices staff created by hand', async () => {
-    const fetchPositions = vi.fn(async (id: number) =>
-      id === 1 ? ['Porto', '2× Institutionelles Abo 2026'] : ['Beratung']
-    );
-
-    const { selected, stats } = await selectBexioInvoices(
-      [
-        invoice({ id: 1, title: 'Rechnung Bibliothek', api_reference: null }),
-        invoice({ id: 2, title: 'Rechnung', api_reference: '' }),
-      ],
-      { year: 2026, issue: '6.26', fetchPositions }
+      }
     );
 
     expect(
-      selected.map(s => [s.invoice.id, s.parsed.kind, s.parsed.copies])
-    ).toEqual([[1, 'Institutionelles Abo', 2]]);
-    expect(stats).toMatchObject({ detailFetched: 2, detailUnparsed: 1 });
-  });
-
-  it('stops fetching details at the cap and counts the rest as unchecked', async () => {
-    const fetchPositions = vi.fn(async () => ['Geschenkabo 2026']);
-    const invoices = [1, 2, 3].map(id =>
-      invoice({ id, title: 'Rechnung', api_reference: null })
-    );
-
-    const { selected, stats } = await selectBexioInvoices(invoices, {
-      year: 2026,
-      issue: '6.26',
-      fetchPositions,
-      detailMax: 2,
+      selected.map(s => [s.recipientId, s.payerId, s.kind.id, s.copies])
+    ).toEqual([
+      [201, 101, 'gift', 1],
+      [202, 101, 'gift', 1],
+      [203, 101, 'broker', 1],
+    ]);
+    expect(selected[0]!.period).toEqual({
+      from: '2027-01-01',
+      to: '2027-12-31',
     });
-
-    expect(fetchPositions).toHaveBeenCalledTimes(2);
-    expect(selected).toHaveLength(2);
-    expect(stats.ungeprueft).toBe(1);
+    expect(stats.quantityMismatch).toBe(0);
+    expect(warnings).toEqual([]);
   });
 
-  it('does not select zero copies', async () => {
-    const { selected, stats } = await selectBexioInvoices(
-      [invoice({ title: '0× Geschenkabo 2026' })],
-      { year: 2026, issue: '6.26', fetchPositions: noDetail }
+  it('reads a date range in the title, both ends included', async () => {
+    const select = (title: string) =>
+      selectBexioOrders([invoice(1, { title })], {
+        ...BASE,
+        links: links([[101, [gift(201)]]]),
+        fetchPositions: positions({ 1: [{ text: 'Jahresabo', quantity: 1 }] }),
+      });
+
+    expect(
+      (await select('Jahresabos 15.01.2026–15.01.2027')).selected
+    ).toHaveLength(1);
+    const ended = await select('Jahresabos 15.03.2026–14.01.2027');
+    expect(ended.selected).toHaveLength(0);
+    expect(ended.stats.otherPeriod).toBe(1);
+    const later = await select('Jahresabos 16.01.2027–15.01.2028');
+    expect(later.selected).toHaveLength(0);
+    expect(later.stats.otherPeriod).toBe(1);
+  });
+
+  it('counts linked recipients of an invoice without a valid period, and gives them nothing', async () => {
+    const { selected, stats } = await selectBexioOrders(
+      [invoice(1, { title: 'Jahresabos 26' })],
+      {
+        ...BASE,
+        links: links([[101, [gift(201)]]]),
+        fetchPositions: positions({}),
+      }
     );
 
     expect(selected).toEqual([]);
-    expect(stats.zeroCopies).toBe(1);
+    expect(stats.noValidPeriod).toBe(1);
+  });
+
+  it('ignores links whose description names no configured kind', async () => {
+    const { selected } = await selectBexioOrders([invoice(1)], {
+      ...BASE,
+      links: links([
+        [101, [{ contactId: 205, description: 'Ehepartner' }, gift(201)]],
+      ]),
+      fetchPositions: positions({ 1: [{ text: 'Jahresabo', quantity: 1 }] }),
+    });
+
+    expect(selected.map(s => s.recipientId)).toEqual([201]);
+  });
+
+  it('warns when the billed quantity differs from the linked recipients', async () => {
+    const { selected, stats, warnings } = await selectBexioOrders(
+      [invoice(1)],
+      {
+        ...BASE,
+        links: links([[101, [gift(201), gift(202)]]]),
+        fetchPositions: positions({ 1: [{ text: 'Jahresabo', quantity: 3 }] }),
+      }
+    );
+
+    expect(selected).toHaveLength(2);
+    expect(stats.quantityMismatch).toBe(1);
+    expect(warnings).toEqual([
+      'bexio-Rechnung RE-1: 3 verrechnet, 2 verknüpft',
+    ]);
+  });
+});
+
+describe('selectBexioOrders — single copies', () => {
+  it('sends the quantity of a single-copy line for this issue to the orderer', async () => {
+    const { selected } = await selectBexioOrders(
+      [invoice(1, { title: 'Bestellung' })],
+      {
+        ...BASE,
+        links: links([]),
+        fetchPositions: positions({
+          1: [
+            { text: 'Einzelheft 1.27', quantity: 3 },
+            { text: 'Porto', quantity: 1 },
+          ],
+        }),
+      }
+    );
+
+    expect(selected).toHaveLength(1);
+    expect(selected[0]).toMatchObject({
+      recipientId: 101,
+      payerId: 101,
+      copies: 3,
+      issue: '1.27',
+      period: null,
+      kind: { id: 'single' },
+    });
+  });
+
+  it('counts single-copy lines of other issues and without a valid issue', async () => {
+    const { selected, stats } = await selectBexioOrders(
+      [invoice(1, { title: 'Bestellung' })],
+      {
+        ...BASE,
+        links: links([]),
+        fetchPositions: positions({
+          1: [
+            { text: 'Einzelheft 6.26', quantity: 1 },
+            { text: 'Einzelheft 26', quantity: 1 },
+            { text: '1.27', quantity: 1 },
+          ],
+        }),
+      }
+    );
+
+    expect(selected).toEqual([]);
+    expect(stats.otherPeriod).toBe(1);
+    expect(stats.noValidPeriod).toBe(1);
+  });
+
+  it('falls back to the copies prefix, then to one copy, without a quantity', async () => {
+    const { selected } = await selectBexioOrders(
+      [invoice(1, { title: 'Bestellung' })],
+      {
+        ...BASE,
+        links: links([]),
+        fetchPositions: positions({
+          1: [
+            { text: '2× Einzelheft 1.27', quantity: null },
+            { text: 'Einzelheft 1.27', quantity: null },
+          ],
+        }),
+      }
+    );
+
+    // «2×» without a quantity is 2, a bare line 1; same invoice and issue: one row
+    expect(selected.map(s => s.copies)).toEqual([3]);
+  });
+});
+
+describe('selectBexioOrders — one row per invoice and recipient', () => {
+  it('adds up two single-copy lines of the same issue on one invoice', async () => {
+    const { selected } = await selectBexioOrders(
+      [invoice(1, { title: 'Bestellung' })],
+      {
+        ...BASE,
+        links: links([]),
+        fetchPositions: positions({
+          1: [
+            { text: 'Einzelheft 1.27', quantity: 2 },
+            { text: 'Einzelheft 1.27', quantity: 3 },
+          ],
+        }),
+      }
+    );
+
+    expect(selected.map(s => [s.recipientId, s.copies])).toEqual([[101, 5]]);
+  });
+
+  it('gives a recipient linked twice to the same payer one copy per link', async () => {
+    const { selected } = await selectBexioOrders([invoice(1)], {
+      ...BASE,
+      links: links([[101, [gift(201), broker(201)]]]),
+      fetchPositions: positions({ 1: [{ text: 'Jahresabo', quantity: 2 }] }),
+    });
+
+    expect(selected.map(s => [s.recipientId, s.copies])).toEqual([[201, 2]]);
+  });
+});
+
+describe('selectBexioOrders — copies still owed after a period', () => {
+  // a 12-month gift that ended before 1.27 shipped (15.01.2027): with 6
+  // issues a year it is worth 6
+  const ended = (overrides: Partial<BexioInvoice> = {}) =>
+    invoice(1, { title: 'Jahresabos 15.01.2026–14.01.2027', ...overrides });
+  const topUp = (
+    delivered: Record<string, number>,
+    historic: string[] = []
+  ) => ({
+    issuesPerYear: 6,
+    historicIssues: historic,
+    delivered: new Map(Object.entries(delivered)),
+  });
+
+  it('owes the recipient copies until the period’s share of the issues per year is reached', async () => {
+    const { selected, stats } = await selectBexioOrders([ended()], {
+      ...BASE,
+      links: links([[101, [gift(201)]]]),
+      fetchPositions: positions({}),
+      topUp: topUp({ '1:201:2026-01-15': 4 }),
+    });
+
+    expect(selected).toHaveLength(1);
+    expect(selected[0]).toMatchObject({
+      recipientId: 201,
+      copies: 1,
+      period: { from: '2026-01-15', to: '2027-01-14' },
+      owed: { delivered: 4, entitled: 6 },
+    });
+    expect(stats.otherPeriod).toBe(0);
+  });
+
+  it('counts historic issues inside the period as received', async () => {
+    const { selected } = await selectBexioOrders([ended()], {
+      ...BASE,
+      links: links([[101, [gift(201)]]]),
+      fetchPositions: positions({}),
+      topUp: topUp({ '1:201:2026-01-15': 4 }, ['2026-08-23', '2026-10-14']),
+    });
+
+    // 4 delivered + 2 historic = 6 of 6: nothing owed
+    expect(selected).toEqual([]);
+  });
+
+  it('owes nothing while the quota is off, and nothing for an older period', async () => {
+    const off = await selectBexioOrders([ended()], {
+      ...BASE,
+      links: links([[101, [gift(201)]]]),
+      fetchPositions: positions({}),
+      topUp: { ...topUp({}), issuesPerYear: 0 },
+    });
+    expect(off.selected).toEqual([]);
+
+    const older = await selectBexioOrders(
+      [
+        ended(),
+        invoice(2, {
+          title: 'Jahresabos 15.01.2025–14.01.2026',
+          contact_id: 101,
+        }),
+      ],
+      {
+        ...BASE,
+        links: links([[101, [gift(201)]]]),
+        fetchPositions: positions({}),
+        topUp: topUp({}),
+      }
+    );
+    // only the latest ended period of a recipient is topped up
+    expect(older.selected.map(s => s.invoice.id)).toEqual([1]);
+  });
+
+  it('owes nothing to a recipient who gets this issue through a running period', async () => {
+    const { selected } = await selectBexioOrders(
+      [ended(), invoice(2, { contact_id: 101 })],
+      {
+        ...BASE,
+        links: links([[101, [gift(201)]]]),
+        fetchPositions: positions({ 2: [{ text: 'Jahresabo', quantity: 1 }] }),
+        topUp: topUp({}),
+      }
+    );
+
+    expect(selected.map(s => [s.invoice.id, s.owed ?? null])).toEqual([
+      [2, null],
+    ]);
+  });
+});
+
+describe('selectBexioOrders — what is left out', () => {
+  it('skips cancelled invoices and the payment provider’s own invoices', async () => {
+    const fetchPositions = vi.fn(positions({}));
+    const { selected, stats } = await selectBexioOrders(
+      [
+        invoice(1, { kb_item_status_id: CANCELED }),
+        invoice(2, { api_reference: '01a1c465-d90a-73ed-8090-20395309f8a8' }),
+      ],
+      {
+        ...BASE,
+        links: links([
+          [101, [gift(201)]],
+          [102, [gift(202)]],
+        ]),
+        fetchPositions,
+      }
+    );
+
+    expect(selected).toEqual([]);
+    expect(stats).toMatchObject({ canceled: 1, skippedProvider: 1 });
+    expect(fetchPositions).not.toHaveBeenCalled();
+  });
+
+  it('counts open invoices only while «offen» is on', async () => {
+    const run = (includeOpen: boolean) =>
+      selectBexioOrders([invoice(1, { kb_item_status_id: OPEN })], {
+        ...BASE,
+        includeOpen,
+        links: links([[101, [gift(201)]]]),
+        fetchPositions: positions({ 1: [{ text: 'Jahresabo', quantity: 1 }] }),
+      });
+
+    expect((await run(true)).selected).toHaveLength(1);
+    const off = await run(false);
+    expect(off.selected).toEqual([]);
+    expect(off.stats.skippedOpen).toBe(1);
+  });
+
+  it('reads only the kinds the options name and counts the others', async () => {
+    const { selected, stats } = await selectBexioOrders([invoice(1)], {
+      ...BASE,
+      kindIds: ['broker'],
+      links: links([[101, [gift(201), broker(203)]]]),
+      fetchPositions: positions({ 1: [{ text: 'Jahresabo', quantity: 2 }] }),
+    });
+
+    expect(selected.map(s => s.recipientId)).toEqual([203]);
+    expect(stats.excludedKind).toBe(1);
+  });
+
+  it('selects nothing while no kind is configured', async () => {
+    const { selected } = await selectBexioOrders([invoice(1)], {
+      ...BASE,
+      kinds: [],
+      links: links([[101, [gift(201)]]]),
+      fetchPositions: positions({
+        1: [{ text: 'Einzelheft 1.27', quantity: 1 }],
+      }),
+    });
+
+    expect(selected).toEqual([]);
+  });
+
+  it('reads positions only up to the cap and counts the rest as unchecked', async () => {
+    const fetchPositions = vi.fn(positions({}));
+    const { stats } = await selectBexioOrders(
+      [
+        invoice(1, { title: 'Bestellung' }),
+        invoice(2, { title: 'Bestellung' }),
+        invoice(3, { title: 'Bestellung' }),
+      ],
+      { ...BASE, links: links([]), fetchPositions, detailMax: 2 }
+    );
+
+    expect(fetchPositions).toHaveBeenCalledTimes(2);
+    expect(stats).toMatchObject({ detailFetched: 2, ungeprueft: 1 });
   });
 });
