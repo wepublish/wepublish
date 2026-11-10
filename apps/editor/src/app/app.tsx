@@ -28,6 +28,9 @@ import { ImportableEventListView } from '@wepublish/event/import/editor';
 import {
   MailLogList,
   MailSendPage,
+  DeliveryChannelPage,
+  LetterLayoutEdit,
+  LetterLayoutList,
   MailTemplateEdit,
   MailTemplateList,
   MemberPlanEdit,
@@ -179,6 +182,14 @@ const Logout = () => {
     />
   );
 };
+
+// Stationery only exists for letters, which ship dark.
+const PaperLetterLayoutList =
+  createCheckedFeatureComponent('paper-letters')(LetterLayoutList);
+const PaperLetterLayoutEdit =
+  createCheckedFeatureComponent('paper-letters')(LetterLayoutEdit);
+const PaperLetterDeliveryChannel =
+  createCheckedFeatureComponent('paper-letter-flow')(DeliveryChannelPage);
 
 function AppRoutes() {
   return (
@@ -1085,6 +1096,30 @@ function AppRoutes() {
             </Base>
           }
         />
+        <Route
+          path="letterlayouts"
+          element={
+            <Base>
+              <PaperLetterLayoutList />
+            </Base>
+          }
+        />
+        <Route
+          path="letterlayouts/create"
+          element={
+            <Base>
+              <PaperLetterLayoutEdit />
+            </Base>
+          }
+        />
+        <Route
+          path="letterlayouts/edit/:id"
+          element={
+            <Base>
+              <PaperLetterLayoutEdit />
+            </Base>
+          }
+        />
         {/* System mails are now part of the automatic mails view */}
         <Route
           path="systemmails"
@@ -1101,6 +1136,32 @@ function AppRoutes() {
             <Base>
               <MailSendPage />
             </Base>
+          }
+        />
+        <Route
+          path="deliverychannel"
+          element={
+            <Base>
+              <PaperLetterDeliveryChannel />
+            </Base>
+          }
+        />
+        <Route
+          path="deliverychannel/:view"
+          element={
+            <Base>
+              <PaperLetterDeliveryChannel />
+            </Base>
+          }
+        />
+        {/* The suggestions are one view of the delivery channel area now */}
+        <Route
+          path="deliverysuggestions"
+          element={
+            <Navigate
+              to="/deliverychannel/suggestions"
+              replace
+            />
           }
         />
         <Route

@@ -32,6 +32,8 @@ import {
 } from '@wepublish/editor/api';
 import {
   SendMailToUserPanel,
+  UserDeliveryChannelControls,
+  UserDeliveryChannelNotes,
   UserMailLogPanel,
 } from '@wepublish/membership/editor';
 import {
@@ -58,6 +60,7 @@ import {
   skipMailFor,
   useActionMailQuestion,
   useAuthorisation,
+  useFeature,
   UserSubscriptionsList,
 } from '@wepublish/ui/editor';
 import { userCountryNames } from '@wepublish/user';
@@ -207,7 +210,13 @@ function UserEditView() {
       streetAddress2Number: z.string().nullish(),
       zipCode: z.string().nullish(),
       city: z.string().nullish(),
-      country: z.enum(userCountryNames as [string, ...string[]]).nullish(),
+      // the address is optional, so is its country: '' is the empty default
+      country: z
+        .union([
+          z.literal(''),
+          z.enum(userCountryNames as [string, ...string[]]),
+        ])
+        .nullish(),
     }),
     image: z.custom<FullImageFragment>().optional(),
     properties: z.array(z.custom<ListValue<UserProperty>>()),
@@ -283,6 +292,8 @@ function UserEditView() {
     loadError !== undefined;
   const canResetPassword = useAuthorisation(CanResetUserPassword.id);
   const canResetTotp = useAuthorisation(CanResetUserTotp.id);
+  // The mail panel also lists printed letters once the medium has them.
+  const paperLetters = useFeature('paper-letters');
 
   const [resetUserTotp, { loading: isResettingTotp }] = useMutation(
     ResetUserTotpDocument
@@ -539,7 +550,20 @@ function UserEditView() {
                             required
                             disabled={isDisabled}
                             error={Boolean(error)}
-                            helperText={error?.message}
+                            helperText={
+                              error?.message ??
+                              // derived from bounces, logins and clicks; read-only
+                              (user?.emailQuality &&
+                                t('userCreateOrEditView.emailQuality', {
+                                  level: t(
+                                    `mailSend.emailSegments.${user.emailQuality.level}`
+                                  ),
+                                  reason: user.emailQuality.reason,
+                                  since: new Date(
+                                    user.emailQuality.since
+                                  ).toLocaleDateString(),
+                                }))
+                            }
                             fullWidth
                           />
                         )}
@@ -769,6 +793,7 @@ function UserEditView() {
                             renderInput={params => (
                               <TextField
                                 {...params}
+                                inputRef={field.ref}
                                 label={t('userCreateOrEditView.country')}
                                 error={Boolean(error)}
                                 helperText={error?.message}
@@ -1112,7 +1137,30 @@ function UserEditView() {
 
               {isEditRoute && userId && (
                 <Card>
-                  <CardHeader title={t('userMail.title')} />
+                  {/* With letters, the log below holds them too, and the
+                      person's delivery channel belongs beside the title. */}
+                  <CardHeader
+                    title={
+                      <Box
+                        component="span"
+                        sx={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          flexWrap: 'wrap',
+                          columnGap: 3,
+                          rowGap: 1,
+                        }}
+                      >
+                        {t(
+                          paperLetters ?
+                            'userMail.titleWithLetters'
+                          : 'userMail.title'
+                        )}
+                        <UserDeliveryChannelControls userId={userId} />
+                      </Box>
+                    }
+                  />
+                  <UserDeliveryChannelNotes userId={userId} />
 
                   <CardContent>
                     <SendMailToUserPanel userId={userId} />

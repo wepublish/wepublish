@@ -1312,7 +1312,7 @@ exports[`SettingList > renders successfully 1`] = `
                     <span
                       class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title emotion-19"
                     >
-                      settingList.peering
+                      settingList.emailQuality
                     </span>
                   </div>
                 </div>
@@ -1331,7 +1331,7 @@ exports[`SettingList > renders successfully 1`] = `
                         for="_r_q_"
                         id="_r_q_-label"
                       >
-                        settingList.peerToken
+                        settingList.emailQualityUnresponsiveAfterDays
                       </label>
                       <div
                         class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-52"
@@ -1340,6 +1340,165 @@ exports[`SettingList > renders successfully 1`] = `
                           aria-invalid="false"
                           class="MuiInputBase-input MuiOutlinedInput-input emotion-53"
                           id="_r_q_"
+                          name="EMAIL_QUALITY_UNRESPONSIVE_AFTER_DAYS"
+                          type="number"
+                          value="180"
+                        />
+                        <div
+                          class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-54"
+                        >
+                          settingList.days
+                          <button
+                            aria-label="settingList.warnings.emailQualityUnresponsiveAfterDays"
+                            class="emotion-30 emotion-31"
+                            data-mui-internal-clone-element="true"
+                            type="button"
+                          >
+                            <svg
+                              fill="currentColor"
+                              height="16"
+                              stroke="currentColor"
+                              stroke-width="0"
+                              viewBox="0 0 24 24"
+                              width="16"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M0 0h24v24H0z"
+                                fill="none"
+                              />
+                              <path
+                                d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                        <fieldset
+                          aria-hidden="true"
+                          class="MuiOutlinedInput-notchedOutline emotion-57"
+                        >
+                          <legend
+                            class="emotion-58"
+                          >
+                            <span>
+                              settingList.emailQualityUnresponsiveAfterDays
+                            </span>
+                          </legend>
+                        </fieldset>
+                      </div>
+                    </div>
+                    <div
+                      class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-50"
+                    >
+                      <label
+                        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-51"
+                        data-shrink="true"
+                        for="_r_s_"
+                        id="_r_s_-label"
+                      >
+                        settingList.emailQualityMinMailsForUnresponsive
+                      </label>
+                      <div
+                        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-52"
+                      >
+                        <input
+                          aria-invalid="false"
+                          class="MuiInputBase-input MuiOutlinedInput-input emotion-53"
+                          id="_r_s_"
+                          name="EMAIL_QUALITY_MIN_MAILS_FOR_UNRESPONSIVE"
+                          type="number"
+                          value="1"
+                        />
+                        <div
+                          class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-54"
+                        >
+                          <button
+                            aria-label="settingList.warnings.emailQualityMinMailsForUnresponsive"
+                            class="emotion-30 emotion-31"
+                            data-mui-internal-clone-element="true"
+                            type="button"
+                          >
+                            <svg
+                              fill="currentColor"
+                              height="16"
+                              stroke="currentColor"
+                              stroke-width="0"
+                              viewBox="0 0 24 24"
+                              width="16"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M0 0h24v24H0z"
+                                fill="none"
+                              />
+                              <path
+                                d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                        <fieldset
+                          aria-hidden="true"
+                          class="MuiOutlinedInput-notchedOutline emotion-57"
+                        >
+                          <legend
+                            class="emotion-58"
+                          >
+                            <span>
+                              settingList.emailQualityMinMailsForUnresponsive
+                            </span>
+                          </legend>
+                        </fieldset>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-15"
+            >
+              <div
+                class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root emotion-16"
+                style="--Paper-shadow: var(--mui-shadows-1);"
+              >
+                <div
+                  class="MuiCardHeader-root emotion-17"
+                >
+                  <div
+                    class="MuiCardHeader-content emotion-18"
+                  >
+                    <span
+                      class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title emotion-19"
+                    >
+                      settingList.peering
+                    </span>
+                  </div>
+                </div>
+                <div
+                  class="MuiCardContent-root emotion-20"
+                >
+                  <div
+                    class="MuiStack-root emotion-21"
+                  >
+                    <div
+                      class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-50"
+                    >
+                      <label
+                        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-51"
+                        data-shrink="true"
+                        for="_r_u_"
+                        id="_r_u_-label"
+                      >
+                        settingList.peerToken
+                      </label>
+                      <div
+                        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-52"
+                      >
+                        <input
+                          aria-invalid="false"
+                          class="MuiInputBase-input MuiOutlinedInput-input emotion-53"
+                          id="_r_u_"
                           name="PEERING_TIMEOUT_MS"
                           type="number"
                           value="100"
@@ -1477,13 +1636,13 @@ exports[`SettingList > renders successfully 1`] = `
                       </button>
                     </div>
                     <div
-                      class="MuiFormControl-root MuiFormControl-fullWidth emotion-239"
+                      class="MuiFormControl-root MuiFormControl-fullWidth emotion-264"
                     >
                       <div
                         class="emotion-23 emotion-24"
                       >
                         <label
-                          class="MuiFormLabel-root MuiFormLabel-colorPrimary emotion-242"
+                          class="MuiFormLabel-root MuiFormLabel-colorPrimary emotion-267"
                           id="setting-new-article-paywall-label"
                         >
                           settingList.newArticlePaywall
@@ -1514,7 +1673,7 @@ exports[`SettingList > renders successfully 1`] = `
                         </button>
                       </div>
                       <div
-                        class="MuiAutocomplete-root MuiAutocomplete-fullWidth MuiAutocomplete-hasPopupIcon emotion-245"
+                        class="MuiAutocomplete-root MuiAutocomplete-fullWidth MuiAutocomplete-hasPopupIcon emotion-270"
                       >
                         <div
                           class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-50"
@@ -1530,18 +1689,18 @@ exports[`SettingList > renders successfully 1`] = `
                               autocapitalize="none"
                               autocomplete="off"
                               class="MuiInputBase-input MuiOutlinedInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-53"
-                              id="_r_u_"
+                              id="_r_12_"
                               role="combobox"
                               spellcheck="false"
                               type="text"
                               value=""
                             />
                             <div
-                              class="MuiAutocomplete-endAdornment emotion-249"
+                              class="MuiAutocomplete-endAdornment emotion-274"
                             >
                               <button
                                 aria-label="Open"
-                                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium MuiAutocomplete-popupIndicator emotion-250"
+                                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium MuiAutocomplete-popupIndicator emotion-275"
                                 tabindex="-1"
                                 title="Open"
                                 type="button"
@@ -1564,7 +1723,7 @@ exports[`SettingList > renders successfully 1`] = `
                               class="MuiOutlinedInput-notchedOutline emotion-57"
                             >
                               <legend
-                                class="emotion-253"
+                                class="emotion-278"
                               >
                                 <span
                                   aria-hidden="true"

@@ -43,6 +43,7 @@ import type {
   PageCacheValue,
 } from '../lib/page-cache/page-cache';
 import { createSharedStore } from '../lib/page-cache/shared-store';
+import { PAGE_CACHE_REVALIDATE } from './content-cache-control';
 
 /** `page-cache.js` marks a stale entry by dating it to the epoch plus 1ms. */
 const STALE = 1;
@@ -164,13 +165,27 @@ const revalidateSeconds = (response: Response) => {
     return undefined;
   }
 
-  const sMaxAge = S_MAXAGE.exec(cacheControl);
+  const window =
+    response.headers.get(PAGE_CACHE_REVALIDATE) ??
+    S_MAXAGE.exec(cacheControl)?.[1];
 
-  return sMaxAge ? Number(sMaxAge[1]) : undefined;
+  return window ? Number(window) : undefined;
 };
 
 const storedHeaders = (response: Response) =>
   [...response.headers].filter(([name]) => !TRANSFER_HEADERS.has(name));
+
+/** The window is for this cache only; nothing outside the server sees it. */
+const withoutWindow = (response: Response) => {
+  if (!response.headers.has(PAGE_CACHE_REVALIDATE)) {
+    return response;
+  }
+
+  const stripped = new Response(response.body, response);
+  stripped.headers.delete(PAGE_CACHE_REVALIDATE);
+
+  return stripped;
+};
 
 const toResponse = (value: PageCacheValue, stale: boolean) =>
   new Response(value.html ?? '', {
@@ -282,7 +297,7 @@ export const createStartPageCache = (
 
   return fetch => async (request, opts) => {
     if (!isDocumentRequest(request)) {
-      return fetch(request, opts);
+      return withoutWindow(await fetch(request, opts));
     }
 
     const url = new URL(request.url);
@@ -296,7 +311,7 @@ export const createStartPageCache = (
     });
 
     if (!entry?.value) {
-      return renderAndServe(fetch, request, opts, key);
+      return withoutWindow(await renderAndServe(fetch, request, opts, key));
     }
 
     const stale = entry.lastModified === STALE;
@@ -305,7 +320,7 @@ export const createStartPageCache = (
       renderInBackground(fetch, request, opts, key);
     }
 
-    return toResponse(entry.value, stale);
+    return withoutWindow(toResponse(entry.value, stale));
   };
 };
 
