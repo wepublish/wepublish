@@ -46,7 +46,7 @@ const EditorialRichTextBlock = styled(RichTextBlock)`
 
   & strong,
   & b {
-    font-weight: 600;
+    font-weight: 700;
   }
 
   & h1,

@@ -75,11 +75,11 @@ describe('CourantRichTextBlock inside Courant blocks', () => {
     expect(style.fontWeight).toBe('400');
   });
 
-  it('renders bold text in the editorial semibold weight on Article blocks', () => {
+  it('renders bold text in the editorial bold weight on Article blocks', () => {
     renderWithProviders(<BlocksWithBold type="Article" />, {
       tenant: courantConfig,
     });
     const style = getComputedStyle(screen.getByText('bold word'));
-    expect(style.fontWeight).toBe('600');
+    expect(style.fontWeight).toBe('700');
   });
 });
