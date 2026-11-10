@@ -225,6 +225,7 @@ of the six below.
 | `styled(PageContainer)` wrapper | the home page loses its column span | shell parity |
 | `fullWidth={false}` read as "wrapper present" | the home page goes full-bleed | shell parity |
 | `new URL(f, import.meta.url)` for fonts | `file:///…/.output/server/_ssr/fonts/…`, no webfont | §6.17 |
+| `articleBySlugRoute()` with no props | related articles and comments under every reflekt article (its Next page rendered `ArticleContainer` alone) | nothing — rule 5 |
 
 Two rules follow:
 
@@ -244,6 +245,17 @@ Two rules follow:
    shared `SearchPage` navigates to `'/search'`, typed against the app's
    generated route tree, so a tenant without the route fails `typecheck`
    inside the library (reflekt never had one in Next; it has one now).
+5. **A factory's defaults are the generic page, not the tenant's.**
+   `ArticlePage` renders related articles and comments unless the route passes
+   `relatedTitle: null` / `commentsTitle: null`. Before accepting a factory's
+   defaults, diff the deleted `pages/*.tsx` against the factory's component;
+   `apps/reflekt/src/article-routes.spec.ts` pins reflekt's opt-out.
+
+To see what the Next app actually rendered once it is gone: `git archive
+<migration-commit>^ | tar -x -C <tmp>`, symlink the repo's `node_modules` in,
+and run `node_modules/.bin/next dev apps/<tenant> --webpack -p 4300` with
+`API_URL` set to the tenant's production API. `--webpack` is required —
+Turbopack refuses a `node_modules` symlink outside its root.
 
 `gruppetto` composes `WebsiteProvider` + `WebsiteBuilderProvider` by hand
 instead of `TenantProviders`, so the shell-parity markers for the providers do
