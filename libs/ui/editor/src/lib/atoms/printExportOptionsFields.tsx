@@ -1,4 +1,11 @@
-import { FormControlLabel, FormHelperText, Stack, Switch } from '@mui/material';
+import {
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
+  FormHelperText,
+  Stack,
+  Switch,
+} from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
 import { InfoTooltip } from './infoTooltip';
@@ -9,13 +16,19 @@ export type PrintExportOptionsValue = {
   /** only these member plans; null = every subscription plan */
   memberPlanIds: string[] | null;
   includeBexio: boolean;
+  /** only these of the medium's bexio kinds; null = every one */
+  bexioKindIds: string[] | null;
   includeOpen: boolean;
   includeUpcoming: boolean;
 };
 
+/** One of the medium's bexio kinds, as the options offer it. */
+export type PrintBexioKindOption = { id: string; label: string };
+
 export const DEFAULT_PRINT_EXPORT_OPTIONS: PrintExportOptionsValue = {
   memberPlanIds: null,
   includeBexio: true,
+  bexioKindIds: null,
   includeOpen: true,
   includeUpcoming: false,
 };
@@ -37,8 +50,12 @@ export const samePrintExportOptions = (
   b: PrintExportOptionsValue
 ): boolean =>
   FLAGS.every(key => a[key] === b[key]) &&
-  [...(a.memberPlanIds ?? [])].sort().join('\n') ===
-    [...(b.memberPlanIds ?? [])].sort().join('\n');
+  sameList(a.memberPlanIds, b.memberPlanIds) &&
+  sameList(a.bexioKindIds, b.bexioKindIds);
+
+const sameList = (a: string[] | null, b: string[] | null) =>
+  (a === null) === (b === null) &&
+  [...(a ?? [])].sort().join('\n') === [...(b ?? [])].sort().join('\n');
 
 /** «alle Pläne · bexio · offen · Vorab» */
 export function describePrintExportOptions(
@@ -49,7 +66,12 @@ export function describePrintExportOptions(
     value.memberPlanIds?.length ?
       t('printExportOptions.plansCount', { count: value.memberPlanIds.length })
     : t('printExportOptions.allPlans'),
-    value.includeBexio && t('printExportOptions.bexioShort'),
+    value.includeBexio &&
+      (value.bexioKindIds?.length ?
+        t('printExportOptions.bexioKindsCount', {
+          count: value.bexioKindIds.length,
+        })
+      : t('printExportOptions.bexioShort')),
     value.includeOpen && t('printExportOptions.openShort'),
     value.includeUpcoming && t('printExportOptions.upcomingShort'),
   ]
@@ -67,12 +89,15 @@ export function PrintExportOptionsFields({
   onChange,
   disabled = false,
   bexioConfigured = true,
+  bexioKinds = [],
 }: {
   value: PrintExportOptionsValue;
   onChange: (value: PrintExportOptionsValue) => void;
   disabled?: boolean;
   /** a bexio payment provider with an API key exists; without it the switch has no effect */
   bexioConfigured?: boolean;
+  /** the medium's bexio kinds (Einstellungen › Druckausgaben) */
+  bexioKinds?: PrintBexioKindOption[];
 }) {
   const { t } = useTranslation();
   const set = (patch: Partial<PrintExportOptionsValue>) =>
@@ -124,6 +149,55 @@ export function PrintExportOptionsFields({
         !bexioConfigured,
         bexioConfigured ? undefined : t('printExportOptions.bexioNotConfigured')
       )}
+      {value.includeBexio &&
+        bexioConfigured &&
+        (bexioKinds.length ?
+          <FormGroup
+            aria-label={t('printExportOptions.bexioKinds')}
+            sx={{ pl: 6, mt: -1 }}
+          >
+            {bexioKinds.map(kind => {
+              const chosen = value.bexioKindIds;
+              const checked = !chosen || chosen.includes(kind.id);
+
+              return (
+                <FormControlLabel
+                  key={kind.id}
+                  label={kind.label}
+                  control={
+                    <Checkbox
+                      size="small"
+                      checked={checked}
+                      disabled={disabled}
+                      onChange={(_event, on) => {
+                        const ids = (chosen ?? bexioKinds.map(k => k.id))
+                          .filter(id => id !== kind.id)
+                          .concat(on ? [kind.id] : []);
+                        const known = ids.filter(id =>
+                          bexioKinds.some(k => k.id === id)
+                        );
+
+                        // none left: bexio off; all of them: every kind, also those added later
+                        set(
+                          known.length === 0 ?
+                            { includeBexio: false, bexioKindIds: null }
+                          : {
+                              bexioKindIds:
+                                known.length === bexioKinds.length ?
+                                  null
+                                : known,
+                            }
+                        );
+                      }}
+                    />
+                  }
+                />
+              );
+            })}
+          </FormGroup>
+        : <FormHelperText sx={{ pl: 6, mt: -1 }}>
+            {t('printExportOptions.bexioNoKinds')}
+          </FormHelperText>)}
       {flag('includeOpen')}
       {flag('includeUpcoming')}
     </Stack>

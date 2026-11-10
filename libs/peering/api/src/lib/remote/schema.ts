@@ -6979,11 +6979,23 @@ export enum PollVoteSort {
   CreatedAt = 'CreatedAt'
 }
 
+/** One of the medium's bexio kinds (setting printBexioKinds). */
+export type PrintBexioKind = {
+  __typename?: 'PrintBexioKind';
+  id: Scalars['String']['output'];
+  /** What the lists call it. */
+  label: Scalars['String']['output'];
+  /** «period»: a year or a date range follows the word; «issue»: an issue. */
+  refersTo: Scalars['String']['output'];
+};
+
 /** What the options can do on this medium. */
 export type PrintExportContext = {
   __typename?: 'PrintExportContext';
   /** A bexio payment provider with an API key exists; without it the bexio option has no effect. */
   bexioConfigured: Scalars['Boolean']['output'];
+  /** The medium's bexio kinds (setting printBexioKinds); none until configured. */
+  bexioKinds: Array<PrintBexioKind>;
   /** The medium's defaults for a new issue (setting printExportDefaults). */
   defaults: PrintIssueOptions;
 };
@@ -7018,14 +7030,20 @@ export type PrintIssueBexioStats = {
   configured: Scalars['Boolean']['output'];
   contactMissing: Scalars['Int']['output'];
   detailFetched: Scalars['Int']['output'];
-  detailUnparsed: Scalars['Int']['output'];
-  einzelheftOhneAusgabe: Scalars['Int']['output'];
+  /** Found, but of a kind the options leave out. */
+  excludedKind: Scalars['Int']['output'];
   /** The options asked for bexio and it was read. */
   included: Scalars['Boolean']['output'];
   invoicesInWindow: Scalars['Int']['output'];
+  /** A kind's word without a valid year, date range or issue. */
+  noValidPeriod: Scalars['Int']['output'];
   otherPeriod: Scalars['Int']['output'];
   path?: Maybe<Scalars['String']['output']>;
+  /** Invoices whose billed quantity differs from the linked recipients. */
+  quantityMismatch: Scalars['Int']['output'];
   skippedImported: Scalars['Int']['output'];
+  /** Unpaid invoices left out because the options leave «offen» out. */
+  skippedOpen: Scalars['Int']['output'];
   skippedProvider: Scalars['Int']['output'];
   ungeprueft: Scalars['Int']['output'];
   zeroCopies: Scalars['Int']['output'];
@@ -7081,6 +7099,8 @@ export type PrintIssueInputModel = {
 /** What a list is computed from. */
 export type PrintIssueOptions = {
   __typename?: 'PrintIssueOptions';
+  /** Only these of the medium's bexio kinds (ids from the export context); null = every one. */
+  bexioKindIds?: Maybe<Array<Scalars['String']['output']>>;
   /** Read bexio (institutions, gifts, bookshops, single issues) when a provider is configured. */
   includeBexio: Scalars['Boolean']['output'];
   /** Renewing readers whose invoice is not paid yet stay in («offen»). */
@@ -7093,6 +7113,8 @@ export type PrintIssueOptions = {
 
 /** Options to set; what is left out keeps its value (the defaults for a new issue). */
 export type PrintIssueOptionsInput = {
+  /** Left out keeps the current kinds; null or empty = every kind. */
+  bexioKindIds?: InputMaybe<Array<Scalars['String']['input']>>;
   includeBexio?: InputMaybe<Scalars['Boolean']['input']>;
   includeOpen?: InputMaybe<Scalars['Boolean']['input']>;
   includeUpcoming?: InputMaybe<Scalars['Boolean']['input']>;
@@ -9037,6 +9059,7 @@ export enum SettingName {
   NewArticlePeering = 'NEW_ARTICLE_PEERING',
   PaymentMethodChangeExpiryDays = 'PAYMENT_METHOD_CHANGE_EXPIRY_DAYS',
   PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
+  PrintBexioKinds = 'PRINT_BEXIO_KINDS',
   PrintExportDefaults = 'PRINT_EXPORT_DEFAULTS',
   PrintIssuesPerYear = 'PRINT_ISSUES_PER_YEAR',
   ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',

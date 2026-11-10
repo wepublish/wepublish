@@ -176,6 +176,11 @@ export class PrintIssueService {
   }
 
   /** The medium's defaults for a new issue (setting `printExportDefaults`). */
+  /** The medium's bexio kinds (setting printBexioKinds). */
+  bexioKinds() {
+    return this.exporter.bexioKinds();
+  }
+
   async defaults(): Promise<PrintExportOptions> {
     const setting = await this.prisma.setting.findUnique({
       where: { name: PRINT_EXPORT_DEFAULTS_SETTING },
@@ -569,7 +574,11 @@ export class PrintIssueService {
         deliveryId ?
           { issueId: issue.id, deliveryId: { not: deliveryId } }
         : { issueId: issue.id },
-      select: { subscriptionId: true, bexioInvoiceId: true },
+      select: {
+        subscriptionId: true,
+        bexioInvoiceId: true,
+        bexioContactId: true,
+      },
     });
     const shipDay = dbDateToYmd(issue.issueDate);
     const today = todayZurich();
@@ -581,9 +590,9 @@ export class PrintIssueService {
       excludeSubscriptionIds: recorded
         .map(row => row.subscriptionId)
         .filter((value): value is string => value !== null),
-      excludeBexioInvoiceIds: recorded
-        .map(row => row.bexioInvoiceId)
-        .filter((value): value is number => value !== null),
+      excludeBexioRecipients: recorded
+        .filter(row => row.bexioInvoiceId !== null)
+        .map(row => `${row.bexioInvoiceId}:${row.bexioContactId}`),
     });
     const marker = `Nachlieferung ${batch}`;
 
@@ -783,6 +792,12 @@ export class PrintIssueService {
       batch,
       position,
       ...recipient,
+      bexioPeriodFrom:
+        recipient.bexioPeriodFrom ?
+          ymdToDbDate(recipient.bexioPeriodFrom)
+        : null,
+      bexioPeriodTo:
+        recipient.bexioPeriodTo ? ymdToDbDate(recipient.bexioPeriodTo) : null,
       snapshot: recipient.snapshot as unknown as Prisma.InputJsonValue,
     }));
 

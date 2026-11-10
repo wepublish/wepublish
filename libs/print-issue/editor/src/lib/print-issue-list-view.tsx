@@ -357,6 +357,7 @@ function PrintIssueListView() {
                 : null
               }
               bexioConfigured={exportContext?.bexioConfigured ?? true}
+              bexioKinds={exportContext?.bexioKinds ?? []}
               run={flow.run}
               replaces={replaces}
               computing={computing}

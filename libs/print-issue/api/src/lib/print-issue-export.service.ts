@@ -3,12 +3,31 @@ import { PrintIssueStatus, PrismaClient } from '@prisma/client';
 import { BexioPrintSourceService } from './bexio/bexio-print-source.service';
 import { runExport, type ExportResult } from './export/run';
 import { loadMembers } from './members/load';
+import type { BexioKind } from './bexio/parse';
 import type { PrintExportOptions } from './options';
 import { dbDateToYmd } from './rules/dates';
 import type { QuotaConfig } from './rules/entitlement';
 import { issueLabel } from './rules/issue';
 
 export const PRINT_ISSUES_PER_YEAR_SETTING = 'printIssuesPerYear';
+export const PRINT_BEXIO_KINDS_SETTING = 'printBexioKinds';
+
+const isKind = (value: unknown): value is BexioKind => {
+  const kind = value as Partial<BexioKind> | null;
+
+  return (
+    typeof kind === 'object' &&
+    kind !== null &&
+    typeof kind.id === 'string' &&
+    typeof kind.label === 'string' &&
+    typeof kind.word === 'string' &&
+    (kind.refersTo === 'period' || kind.refersTo === 'issue')
+  );
+};
+
+/** The kinds as stored; whatever is not a complete kind is left out. */
+export const bexioKindsOf = (value: unknown): BexioKind[] =>
+  Array.isArray(value) ? value.filter(isKind) : [];
 
 export type ExportableIssue = {
   id: string;
@@ -24,7 +43,8 @@ export type ComputeInput = {
   evaluateAt?: string;
   /** what other deliveries of the same issue already exported */
   excludeSubscriptionIds?: string[];
-  excludeBexioInvoiceIds?: number[];
+  /** `${invoiceId}:${recipientContactId}` */
+  excludeBexioRecipients?: string[];
 };
 
 /** Runs the export of one issue against the live data. */
@@ -41,28 +61,70 @@ export class PrintIssueExportService {
       options,
       evaluateAt,
       excludeSubscriptionIds,
-      excludeBexioInvoiceIds,
+      excludeBexioRecipients,
     }: ComputeInput
   ): Promise<ExportResult> {
-    const [quota, bexio] = await Promise.all([
+    const [quota, bexio, bexioKinds, bexioDelivered] = await Promise.all([
       this.quota(),
       this.bexioSource.client(),
+      this.bexioKinds(),
+      this.bexioDelivered(),
     ]);
+    const shipDay = dbDateToYmd(issue.issueDate);
 
     return runExport(
       {
         issue: issueLabel(issue),
-        date: evaluateAt ?? dbDateToYmd(issue.issueDate),
+        date: evaluateAt ?? shipDay,
         ...options,
         quota,
         excludeSubscriptionIds,
-        excludeBexioInvoiceIds,
+        excludeBexioRecipients,
+        bexioKinds,
+        shipDay,
+        bexioDelivered,
       },
       {
         members: () => loadMembers(this.prisma),
         bexio,
       }
     );
+  }
+
+  /**
+   * Copies bexio periods got in delivered lists, by invoice, recipient and
+   * period start: what copies still owed after a period are counted against.
+   */
+  private async bexioDelivered(): Promise<Record<string, number>> {
+    const rows = await this.prisma.printIssueRecipient.findMany({
+      where: {
+        source: 'bexio',
+        bexioPeriodFrom: { not: null },
+        delivery: { deliveredAt: { not: null } },
+      },
+      select: {
+        bexioInvoiceId: true,
+        bexioContactId: true,
+        bexioPeriodFrom: true,
+      },
+    });
+    const delivered: Record<string, number> = {};
+
+    for (const row of rows) {
+      const key = `${row.bexioInvoiceId}:${row.bexioContactId}:${dbDateToYmd(row.bexioPeriodFrom!)}`;
+      delivered[key] = (delivered[key] ?? 0) + 1;
+    }
+
+    return delivered;
+  }
+
+  /** The medium's bexio kinds (Einstellungen › Druckausgaben); none until configured. */
+  async bexioKinds(): Promise<BexioKind[]> {
+    const setting = await this.prisma.setting.findUnique({
+      where: { name: PRINT_BEXIO_KINDS_SETTING },
+    });
+
+    return bexioKindsOf(setting?.value);
   }
 
   /** The medium's issues per year (0 = owed copies off) and the issues shipped before tracking. */

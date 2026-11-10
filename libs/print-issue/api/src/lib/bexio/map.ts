@@ -1,6 +1,6 @@
 import { emptyRow, type ExportRow } from '../csv/row';
 import { formatDe } from '../rules/dates';
-import type { SelectedInvoice } from './select';
+import type { BexioOrder } from './select';
 
 export type BexioContact = {
   id: number;
@@ -28,13 +28,29 @@ export type Lookups = {
 const COMPANY = 1;
 const text = (value: string | null | undefined) => value ?? '';
 
+const personName = (contact: BexioContact) =>
+  contact.contact_type_id === COMPANY ?
+    contact.name_1
+  : [contact.name_2, contact.name_1].filter(Boolean).join(' ');
+
+/**
+ * The CSV row of one recipient: the address of `contact`, the kind's label
+ * (with the issue for single copies), the period and, when someone else pays,
+ * who that is.
+ */
 export function contactToRow(
   contact: BexioContact,
-  { invoice, parsed }: SelectedInvoice,
-  lookups: Lookups
+  order: BexioOrder,
+  lookups: Lookups,
+  payer?: BexioContact
 ): ExportRow {
   const company = contact.contact_type_id === COMPANY;
   const street = text(contact.street_name);
+  const { invoice, kind, copies, period, issue, owed } = order;
+  const notes = [
+    period && `Zeitraum ${formatDe(period.from)}–${formatDe(period.to)}`,
+    payer && payer.id !== contact.id && `bezahlt von ${personName(payer)}`,
+  ].filter(Boolean);
 
   return {
     ...emptyRow(),
@@ -58,17 +74,12 @@ export function contactToRow(
       contact.country_id != null ?
         (lookups.countries.get(contact.country_id) ?? '')
       : '',
-    anzahl: parsed.copies,
-    aboTyp:
-      parsed.kind === 'Einzelheft' && parsed.issue ?
-        `Einzelheft ${parsed.issue}`
-      : parsed.kind,
-    beginn: formatDe(invoice.is_valid_from.slice(0, 10)),
+    anzahl: copies,
+    aboTyp: issue ? `${kind.label} ${issue}` : kind.label,
+    zahlungsstatus:
+      owed ? `Restexemplar ${owed.delivered + 1}/${owed.entitled}` : '',
+    beginn: formatDe(period?.from ?? invoice.is_valid_from.slice(0, 10)),
     email: text(contact.mail),
-    // the recipient of a gift is in no system; the payer gets the copies
-    hinweis:
-      parsed.kind === 'Geschenkabo' ?
-        'Empfänger unbekannt – Zahleradresse'
-      : '',
+    hinweis: notes.join(' · '),
   };
 }

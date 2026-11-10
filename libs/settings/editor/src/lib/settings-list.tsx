@@ -25,6 +25,8 @@ import {
   printExportOptionsOf,
   describePrintExportOptions,
   DEFAULT_PRINT_EXPORT_OPTIONS,
+  PrintBexioKindsFields,
+  printBexioKindsOf,
 } from '@wepublish/ui/editor';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -174,6 +176,10 @@ const SETTINGS = {
     label: 'settingList.printExportDefaults',
     value: DEFAULT_PRINT_EXPORT_OPTIONS,
   },
+  [SettingName.PrintBexioKinds]: {
+    label: 'settingList.printBexioKinds',
+    value: [],
+  },
 } as Record<SettingName, { label: string; value: unknown }>;
 
 type SettingValues = Record<SettingName, unknown>;
@@ -322,6 +328,15 @@ function SettingList() {
 
       if (value === false) {
         return t('settingList.disabled');
+      }
+
+      // the bexio kinds are a list: name them
+      if (Array.isArray(value)) {
+        return (
+          printBexioKindsOf(value)
+            .map(kind => kind.label || kind.word)
+            .join(', ') || t('printBexioKinds.empty')
+        );
       }
 
       // the print export defaults are an object: name what they switch on
@@ -588,6 +603,29 @@ function SettingList() {
                             t('settingList.issues')
                           )}
 
+                          {/* how lists recognise orders in bexio; the defaults below offer these kinds */}
+                          <Controller
+                            control={control}
+                            name={SettingName.PrintBexioKinds}
+                            render={({ field }) => (
+                              <Stack spacing={1}>
+                                <SettingRow>
+                                  <FormLabel>
+                                    {t('settingList.printBexioKinds')}
+                                  </FormLabel>
+                                  <InfoTooltip
+                                    text={t('settingList.info.printBexioKinds')}
+                                  />
+                                </SettingRow>
+                                <PrintBexioKindsFields
+                                  value={printBexioKindsOf(field.value)}
+                                  onChange={field.onChange}
+                                  disabled={isDisabled}
+                                />
+                              </Stack>
+                            )}
+                          />
+
                           {/* what a new print issue starts from; the form saves it like every setting */}
                           <Controller
                             control={control}
@@ -608,6 +646,9 @@ function SettingList() {
                                   value={printExportOptionsOf(field.value)}
                                   onChange={field.onChange}
                                   disabled={isDisabled}
+                                  bexioKinds={printBexioKindsOf(
+                                    values[SettingName.PrintBexioKinds]
+                                  )}
                                 />
                               </Stack>
                             )}

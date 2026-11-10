@@ -25,6 +25,7 @@ export const user = { id: 'u1', name: 'Muster', firstName: 'Maria' };
 export const options = (overrides: Record<string, unknown> = {}) => ({
   memberPlanIds: null,
   includeBexio: true,
+  bexioKindIds: null,
   includeOpen: true,
   includeUpcoming: false,
   ...overrides,
@@ -68,11 +69,13 @@ export const summary = (overrides: Record<string, unknown> = {}) => ({
     invoicesInWindow: 50,
     canceled: 1,
     otherPeriod: 39,
-    einzelheftOhneAusgabe: 0,
+    noValidPeriod: 0,
+    skippedOpen: 0,
+    excludedKind: 0,
+    quantityMismatch: 0,
     skippedImported: 0,
     skippedProvider: 0,
     detailFetched: 0,
-    detailUnparsed: 0,
     ungeprueft: 0,
     zeroCopies: 0,
     contactMissing: 0,
@@ -126,6 +129,10 @@ export const image = (overrides: Record<string, unknown> = {}) => ({
 export const context = (overrides: Record<string, unknown> = {}) => ({
   bexioConfigured: true,
   defaults: options(),
+  bexioKinds: [
+    { id: 'gift', label: 'Geschenkabo', refersTo: 'period' },
+    { id: 'single', label: 'Einzelheft', refersTo: 'issue' },
+  ],
   ...overrides,
 });
 

@@ -1,6 +1,11 @@
 import type { BexioClient } from '../bexio/client';
 import { contactToRow } from '../bexio/map';
-import { selectBexioInvoices, type SelectStats } from '../bexio/select';
+import type { BexioKind } from '../bexio/parse';
+import {
+  type BexioTopUp,
+  selectBexioOrders,
+  type SelectStats,
+} from '../bexio/select';
 import { emptyRow, type ExportRow } from '../csv/row';
 import { toCsv } from '../csv/writer';
 import { subscriptionToRow } from '../members/map';
@@ -28,10 +33,19 @@ export type ExportInput = {
   memberPlanIds?: string[] | null;
   /** read bexio when a provider is configured; default true */
   includeBexio?: boolean;
+  /** the bexio kinds the medium configured (setting `printBexioKinds`) */
+  bexioKinds?: BexioKind[];
+  /** only these configured kinds; null = every one */
+  bexioKindIds?: string[] | null;
+  /** the issue's ship day: bexio periods are matched against it, also when `date` is later */
+  shipDay?: string;
   quota?: QuotaConfig;
   /** what earlier batches of the same issue already exported */
   excludeSubscriptionIds?: string[];
-  excludeBexioInvoiceIds?: number[];
+  /** `${invoiceId}:${recipientContactId}` of bexio rows already exported */
+  excludeBexioRecipients?: string[];
+  /** copies of delivered lists by `${invoiceId}:${recipientId}:${period.from}`, for bexio copies still owed */
+  bexioDelivered?: Record<string, number>;
 };
 
 export type Sources = { members: MemberSource; bexio: BexioClient | null };
@@ -49,7 +63,11 @@ export type RecipientDraft = {
   subscriptionId: string | null;
   periodId: string | null;
   bexioInvoiceId: number | null;
+  /** the recipient's bexio contact */
   bexioContactId: number | null;
+  /** the bexio period the copy belongs to, for copies still owed later */
+  bexioPeriodFrom: string | null;
+  bexioPeriodTo: string | null;
   snapshot: ExportRow;
 };
 
@@ -95,6 +113,9 @@ export type ExportResult = {
   csv: string;
 };
 
+export const NO_KINDS_WARNING =
+  'bexio: keine bexio-Arten konfiguriert (Einstellungen › Druckausgaben) – aus bexio wird nichts gelistet';
+
 export const NO_BEXIO_WARNING =
   'bexio: kein Zahlungsanbieter mit API-Schlüssel konfiguriert – keine Institutionen, Geschenke, Buchhandel und Einzelhefte';
 
@@ -111,12 +132,14 @@ const count = (values: string[]): Record<string, number> => {
 const emptyStats = (): SelectStats => ({
   invoicesInWindow: 0,
   canceled: 0,
-  otherPeriod: 0,
-  einzelheftOhneAusgabe: 0,
-  skippedImported: 0,
   skippedProvider: 0,
+  skippedImported: 0,
+  skippedOpen: 0,
+  otherPeriod: 0,
+  noValidPeriod: 0,
+  excludedKind: 0,
+  quantityMismatch: 0,
   detailFetched: 0,
-  detailUnparsed: 0,
   ungeprueft: 0,
   zeroCopies: 0,
 });
@@ -131,9 +154,13 @@ export async function runExport(
     includeOpen = true,
     memberPlanIds = null,
     includeBexio = true,
+    bexioKinds = [],
+    bexioKindIds = null,
+    shipDay,
     quota = { issuesPerYear: 0, historicIssues: [] },
     excludeSubscriptionIds = [],
-    excludeBexioInvoiceIds = [],
+    excludeBexioRecipients = [],
+    bexioDelivered = {},
   }: ExportInput,
   { members, bexio }: Sources,
   { detailMax = 300 }: RunOptions = {}
@@ -147,7 +174,20 @@ export async function runExport(
   const [loaded, external] = await Promise.all([
     members(),
     bexio && includeBexio ?
-      loadBexio(bexio, { year, issue, detailMax, ...window })
+      loadBexio(bexio, {
+        issue,
+        shipDay: shipDay ?? date,
+        kinds: bexioKinds,
+        kindIds: bexioKindIds,
+        includeOpen,
+        detailMax,
+        topUp: {
+          issuesPerYear: quota.issuesPerYear,
+          historicIssues: quota.historicIssues.map(entry => entry.issueDate),
+          delivered: new Map(Object.entries(bexioDelivered)),
+        },
+        ...window,
+      })
     : Promise.resolve(noBexio(bexio !== null)),
   ]);
 
@@ -171,7 +211,7 @@ export async function runExport(
     alreadyExported: 0,
   };
   const excludedSubscriptions = new Set(excludeSubscriptionIds);
-  const excludedInvoices = new Set(excludeBexioInvoiceIds);
+  const excludedRecipients = new Set(excludeBexioRecipients);
   const ruleIssue = { issueDate: date };
 
   const entries = resolveGifts(
@@ -232,6 +272,8 @@ export async function runExport(
       periodId: verdict.periodId,
       bexioInvoiceId: null,
       bexioContactId: null,
+      bexioPeriodFrom: null,
+      bexioPeriodTo: null,
       row: subscriptionToRow(
         subscription,
         loaded.users.get(subscription.userId),
@@ -242,21 +284,31 @@ export async function runExport(
 
   const memberCount = pending.length;
 
+  const listedKinds: string[] = [];
+
   for (const entry of external.entries) {
-    if (excludedInvoices.has(entry.invoiceId)) {
+    if (excludedRecipients.has(`${entry.invoiceId}:${entry.contactId}`)) {
       counters.alreadyExported++;
       continue;
     }
 
+    listedKinds.push(entry.kindLabel);
+
+    if (entry.owed) {
+      counters.grace++;
+    }
+
     pending.push({
       source: 'bexio',
-      reason: 'external',
+      reason: entry.owed ? 'grace' : 'external',
       copies: entry.row.anzahl,
       userId: null,
       subscriptionId: null,
       periodId: null,
       bexioInvoiceId: entry.invoiceId,
       bexioContactId: entry.contactId,
+      bexioPeriodFrom: entry.period?.from ?? null,
+      bexioPeriodTo: entry.period?.to ?? null,
       row: entry.row,
     });
   }
@@ -286,9 +338,7 @@ export async function runExport(
     copies: rows.reduce((sum, row) => sum + row.anzahl, 0),
     bySource: { wepublish: memberRows.length, bexio: bexioRows.length },
     byPlan: count(memberRows.map(row => row.aboTyp)),
-    byKind: count(
-      bexioRows.map(row => row.aboTyp.replace(/^Einzelheft .*/, 'Einzelheft'))
-    ),
+    byKind: count(listedKinds),
     byCountry: count(rows.map(row => row.land || '(leer)')),
     ...counters,
     missingAddress: rows.filter(row => row.hinweis.includes('Keine Adresse'))
@@ -312,7 +362,16 @@ export async function runExport(
   };
 }
 
-type ExternalEntry = { row: ExportRow; invoiceId: number; contactId: number };
+type ExternalEntry = {
+  row: ExportRow;
+  invoiceId: number;
+  /** the recipient */
+  contactId: number;
+  kindLabel: string;
+  period: { from: string; to: string } | null;
+  /** a copy still owed after the period ended */
+  owed: boolean;
+};
 
 type External = {
   entries: ExternalEntry[];
@@ -336,45 +395,69 @@ const noBexio = (configured: boolean): External => ({
 async function loadBexio(
   bexio: BexioClient,
   {
-    year,
     issue,
+    shipDay,
+    kinds,
+    kindIds,
+    includeOpen,
     detailMax,
+    topUp,
     from,
     to,
   }: {
-    year: number;
     issue: string;
+    shipDay: string;
+    kinds: BexioKind[];
+    kindIds: string[] | null;
+    includeOpen: boolean;
     detailMax: number;
+    topUp: BexioTopUp;
     from: string;
     to: string;
   }
 ): Promise<External> {
-  const [{ invoices, path }, contacts, countries, salutations] =
+  // links are only needed for subscriptions over a period
+  const needsLinks = kinds.some(kind => kind.refersTo === 'period');
+  const [{ invoices, path }, contacts, countries, salutations, links] =
     await Promise.all([
       bexio.invoicesInWindow(from, to),
       bexio.contacts(),
       bexio.countries(),
       bexio.salutations(),
+      needsLinks ? bexio.contactLinks() : Promise.resolve(new Map()),
     ]);
-  const { selected, stats } = await selectBexioInvoices(invoices, {
-    year,
+  const { selected, stats, warnings } = await selectBexioOrders(invoices, {
     issue,
+    shipDay,
+    kinds,
+    links,
+    includeOpen,
+    kindIds,
     fetchPositions: id => bexio.positions(id),
+    topUp,
     detailMax,
   });
 
   let contactMissing = 0;
-  const entries = selected.map((entry): ExternalEntry => {
-    const contact = contacts.get(entry.invoice.contact_id);
+  const entries = selected.map((order): ExternalEntry => {
+    const contact = contacts.get(order.recipientId);
     const ids = {
-      invoiceId: entry.invoice.id,
-      contactId: entry.invoice.contact_id,
+      invoiceId: order.invoice.id,
+      contactId: order.recipientId,
+      kindLabel: order.kind.label,
+      period: order.period,
+      owed: !!order.owed,
     };
 
     if (contact) {
       return {
         ...ids,
-        row: contactToRow(contact, entry, { countries, salutations }),
+        row: contactToRow(
+          contact,
+          order,
+          { countries, salutations },
+          contacts.get(order.payerId)
+        ),
       };
     }
 
@@ -385,9 +468,10 @@ async function loadBexio(
       row: {
         ...emptyRow(),
         quelle: 'bexio',
-        anzahl: entry.parsed.copies,
-        aboTyp: entry.parsed.kind,
-        hinweis: `bexio-Kontakt ${entry.invoice.contact_id} fehlt`,
+        anzahl: order.copies,
+        aboTyp:
+          order.issue ? `${order.kind.label} ${order.issue}` : order.kind.label,
+        hinweis: `bexio-Kontakt ${order.recipientId} fehlt`,
       },
     };
   });
@@ -395,11 +479,14 @@ async function loadBexio(
   return {
     entries,
     stats: { ...stats, configured: true, included: true, path, contactMissing },
-    warnings:
-      path === 'list' ?
+    warnings: [
+      ...(kinds.length ? [] : [NO_KINDS_WARNING]),
+      ...(path === 'list' ?
         [
           'bexio: Suche nach Rechnungsdatum nicht möglich, alle Rechnungen gelesen',
         ]
-      : [],
+      : []),
+      ...warnings,
+    ],
   };
 }

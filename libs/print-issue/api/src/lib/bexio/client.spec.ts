@@ -95,7 +95,7 @@ describe('positions', () => {
       })
     );
 
-    const texts = await client(fetchFn).positions(8);
+    const texts = (await client(fetchFn).positions(8)).map(p => p.text);
 
     expect(texts.slice(0, 2)).toEqual([
       '1× Einzelheft 6.26',
@@ -114,31 +114,70 @@ describe('positions', () => {
     );
 
     await expect(client(fetchFn).positions(9)).resolves.toEqual([
-      'Abo &#99999999; 2026',
+      { text: 'Abo &#99999999; 2026', quantity: null },
     ]);
   });
 
-  it('returns the plain text of every position', async () => {
+  it('returns the plain text and the quantity of every position', async () => {
     const fetchFn = vi.fn(async () =>
       Response.json({
         id: 7,
         positions: [
           {
-            type: 'KbPositionCustom',
-            text: '<p>2× Institutionelles Abo 2026</p>',
+            type: 'KbPositionArticle',
+            text: '<p>Einzelausgabe 6.26</p>',
+            amount: '3.000000',
           },
           { type: 'KbPositionText', text: 'Porto' },
+          { type: 'KbPositionCustom', text: 'Jahresabo', amount: 'x' },
         ],
       })
     );
 
     await expect(client(fetchFn).positions(7)).resolves.toEqual([
-      '2× Institutionelles Abo 2026',
-      'Porto',
+      { text: 'Einzelausgabe 6.26', quantity: 3 },
+      { text: 'Porto', quantity: null },
+      { text: 'Jahresabo', quantity: null },
     ]);
     expect((fetchFn.mock.calls[0] as unknown as Call)[0]).toBe(
       'https://api.bexio.test/2.0/kb_invoice/7'
     );
+  });
+});
+
+describe('contactLinks', () => {
+  it('reads every contact link page by page, in both directions', async () => {
+    const links = [
+      {
+        id: 1,
+        contact_id: 10,
+        contact_sub_id: 20,
+        description: 'NW Geschenkabo',
+      },
+      {
+        id: 2,
+        contact_id: 30,
+        contact_sub_id: 10,
+        description: 'NW Abo Endkund:in, Abo 117049',
+      },
+      { id: 3, contact_id: 10, contact_sub_id: 21, description: null },
+    ];
+    const fetchFn = vi.fn(async () => Response.json(links));
+
+    const byContact = await client(fetchFn).contactLinks();
+
+    expect((fetchFn.mock.calls[0] as unknown as Call)[0]).toBe(
+      'https://api.bexio.test/2.0/contact_relation?limit=2000&offset=0'
+    );
+    // contact 10 is linked to 20 and 21 as the main contact, and to 30 as the sub
+    expect(byContact.get(10)).toEqual([
+      { contactId: 20, description: 'NW Geschenkabo' },
+      { contactId: 30, description: 'NW Abo Endkund:in, Abo 117049' },
+      { contactId: 21, description: '' },
+    ]);
+    expect(byContact.get(20)).toEqual([
+      { contactId: 10, description: 'NW Geschenkabo' },
+    ]);
   });
 });
 

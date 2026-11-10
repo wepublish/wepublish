@@ -54,6 +54,38 @@ describe('PrintIssueSummary', () => {
     ).toBeInTheDocument();
   });
 
+  it('lists what bexio left out and why', () => {
+    render(
+      <PrintIssueSummary
+        summary={
+          summary({
+            bexio: {
+              ...summary().bexio,
+              noValidPeriod: 2,
+              skippedOpen: 3,
+              excludedKind: 4,
+              quantityMismatch: 1,
+            },
+          }) as never
+        }
+      />
+    );
+
+    for (const [key, count] of [
+      ['noValidPeriod', 2],
+      ['skippedOpen', 3],
+      ['excludedKind', 4],
+      ['quantityMismatch', 1],
+    ] as const) {
+      expect(
+        screen.getByText(`printIssues.summary.bexio.${key}`).parentElement
+      ).toHaveTextContent(String(count));
+    }
+    expect(
+      screen.queryByText('printIssues.summary.bexio.einzelheftOhneAusgabe')
+    ).not.toBeInTheDocument();
+  });
+
   it('says when bexio is configured but was switched off for this list', () => {
     render(
       <PrintIssueSummary

@@ -64,6 +64,13 @@ export class PrintIssueOptions {
   })
   includeBexio!: boolean;
 
+  @Field(() => [String], {
+    nullable: true,
+    description:
+      "Only these of the medium's bexio kinds (ids from the export context); null = every one.",
+  })
+  bexioKindIds!: string[] | null;
+
   @Field({
     description:
       'Renewing readers whose invoice is not paid yet stay in («offen»).',
@@ -87,6 +94,13 @@ export class PrintIssueOptionsInput {
 
   @Field(() => Boolean, { nullable: true })
   includeBexio?: boolean | null;
+
+  @Field(() => [String], {
+    nullable: true,
+    description:
+      'Left out keeps the current kinds; null or empty = every kind.',
+  })
+  bexioKindIds?: string[] | null;
 
   @Field(() => Boolean, { nullable: true })
   includeOpen?: boolean | null;
@@ -169,9 +183,6 @@ export class PrintIssueBexioStats {
   otherPeriod!: number;
 
   @Field(() => Int)
-  einzelheftOhneAusgabe!: number;
-
-  @Field(() => Int)
   skippedImported!: number;
 
   @Field(() => Int)
@@ -181,9 +192,6 @@ export class PrintIssueBexioStats {
   detailFetched!: number;
 
   @Field(() => Int)
-  detailUnparsed!: number;
-
-  @Field(() => Int)
   ungeprueft!: number;
 
   @Field(() => Int)
@@ -191,6 +199,28 @@ export class PrintIssueBexioStats {
 
   @Field(() => Int)
   contactMissing!: number;
+
+  @Field(() => Int, {
+    description: 'Found, but of a kind the options leave out.',
+  })
+  excludedKind!: number;
+
+  @Field(() => Int, {
+    description:
+      'Unpaid invoices left out because the options leave «offen» out.',
+  })
+  skippedOpen!: number;
+
+  @Field(() => Int, {
+    description: "A kind's word without a valid year, date range or issue.",
+  })
+  noValidPeriod!: number;
+
+  @Field(() => Int, {
+    description:
+      'Invoices whose billed quantity differs from the linked recipients.',
+  })
+  quantityMismatch!: number;
 }
 
 @ObjectType({ description: 'What one run of the export found.' })
@@ -477,6 +507,23 @@ export class PrintIssueFileModel {
   csv!: string;
 }
 
+@ObjectType({
+  description: "One of the medium's bexio kinds (setting printBexioKinds).",
+})
+export class PrintBexioKind {
+  @Field()
+  id!: string;
+
+  @Field({ description: 'What the lists call it.' })
+  label!: string;
+
+  @Field({
+    description:
+      '«period»: a year or a date range follows the word; «issue»: an issue.',
+  })
+  refersTo!: string;
+}
+
 @ObjectType({ description: 'What the options can do on this medium.' })
 export class PrintExportContext {
   @Field({
@@ -490,6 +537,12 @@ export class PrintExportContext {
       "The medium's defaults for a new issue (setting printExportDefaults).",
   })
   defaults!: PrintIssueOptions;
+
+  @Field(() => [PrintBexioKind], {
+    description:
+      "The medium's bexio kinds (setting printBexioKinds); none until configured.",
+  })
+  bexioKinds!: PrintBexioKind[];
 }
 
 const counts = (
@@ -520,6 +573,17 @@ const NO_SKIPS: PrintIssueSkipped = {
 export const toSummaryModel = (summary: Summary): PrintIssueSummary => ({
   ...summary,
   skipped: { ...NO_SKIPS, ...summary.skipped },
+  // likewise a bexio figure added later; «Einzelheft ohne Ausgabe» became
+  // «Ohne gültige Angabe»
+  bexio: {
+    excludedKind: 0,
+    skippedOpen: 0,
+    quantityMismatch: 0,
+    noValidPeriod:
+      (summary.bexio as { einzelheftOhneAusgabe?: number } | undefined)
+        ?.einzelheftOhneAusgabe ?? 0,
+    ...summary.bexio,
+  },
   byPlan: counts(summary.byPlan),
   byKind: counts(summary.byKind),
   byCountry: counts(summary.byCountry),

@@ -16,6 +16,7 @@ const computedAt = new Date('2026-12-20T09:00:00.000Z');
 const options = (overrides: Record<string, unknown> = {}) => ({
   memberPlanIds: null,
   includeBexio: true,
+  bexioKindIds: null,
   includeOpen: true,
   includeUpcoming: false,
   ...overrides,
@@ -90,6 +91,8 @@ const exportResult = (names: string[] = ['Alpha', 'Beta']): ExportResult => {
       periodId: `p${i}`,
       bexioInvoiceId: null,
       bexioContactId: null,
+      bexioPeriodFrom: null,
+      bexioPeriodTo: null,
       snapshot,
     })),
     summary: { rows: rows.length, copies: rows.length, warnings: [] } as never,
@@ -482,8 +485,8 @@ describe('PrintIssueService', () => {
         }) as never
       );
       prisma.printIssueRecipient.findMany.mockResolvedValue([
-        { subscriptionId: 's0', bexioInvoiceId: null },
-        { subscriptionId: null, bexioInvoiceId: 42 },
+        { subscriptionId: 's0', bexioInvoiceId: null, bexioContactId: null },
+        { subscriptionId: null, bexioInvoiceId: 42, bexioContactId: 7 },
       ] as never);
       exporter.compute.mockResolvedValue(exportResult(['Late']));
 
@@ -491,14 +494,19 @@ describe('PrintIssueService', () => {
 
       expect(prisma.printIssueRecipient.findMany).toHaveBeenCalledWith({
         where: { issueId: 'issue-1' },
-        select: { subscriptionId: true, bexioInvoiceId: true },
+        select: {
+          subscriptionId: true,
+          bexioInvoiceId: true,
+          bexioContactId: true,
+        },
       });
       expect(exporter.compute).toHaveBeenCalledWith(expect.anything(), {
         options: options(),
         // the ship day lies ahead of today, so it still decides
         evaluateAt: '2027-01-15',
         excludeSubscriptionIds: ['s0'],
-        excludeBexioInvoiceIds: [42],
+        // per invoice and recipient: another recipient of invoice 42 is still due
+        excludeBexioRecipients: ['42:7'],
       });
       expect(run).toMatchObject({
         mode: 'supplement',
@@ -617,6 +625,8 @@ describe('PrintIssueService', () => {
         periodId: 'p0',
         bexioInvoiceId: null,
         bexioContactId: null,
+        bexioPeriodFrom: null,
+        bexioPeriodTo: null,
         snapshot: row('R0'),
       });
       expect(prisma.printIssue.updateMany).toHaveBeenCalledWith({
@@ -626,6 +636,42 @@ describe('PrintIssueService', () => {
           pendingRunAt: null,
           pendingRunByUserId: null,
         },
+      });
+    });
+
+    it('stores the bexio period of a row as calendar days', async () => {
+      const { service, prisma } = makeService();
+      const result = exportResult(['Bib']);
+      withRun(
+        prisma,
+        storedRun({
+          ...result,
+          recipients: [
+            {
+              ...result.recipients[0]!,
+              source: 'bexio',
+              reason: 'external',
+              userId: null,
+              subscriptionId: null,
+              periodId: null,
+              bexioInvoiceId: 1,
+              bexioContactId: 11,
+              bexioPeriodFrom: '2026-03-15',
+              bexioPeriodTo: '2027-03-14',
+            },
+          ],
+        })
+      );
+
+      await service.exportRun('issue-1', 'editor-1', computedAt);
+
+      const chunks = prisma.printIssueRecipient.createMany.mock
+        .calls as unknown as [{ data: Record<string, unknown>[] }][];
+      expect(chunks[0]![0].data[0]).toMatchObject({
+        bexioInvoiceId: 1,
+        bexioContactId: 11,
+        bexioPeriodFrom: new Date('2026-03-15T00:00:00.000Z'),
+        bexioPeriodTo: new Date('2027-03-14T00:00:00.000Z'),
       });
     });
 

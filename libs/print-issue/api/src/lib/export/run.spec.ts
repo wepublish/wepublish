@@ -106,25 +106,34 @@ const bexio: BexioClient = {
   invoicesInWindow: vi.fn(async () => ({
     path: 'search' as const,
     invoices: [
+      // the broker's order for 2026: its linked recipient gets the copies
       {
         id: 1,
-        title: '3× Institutionelles Abo 2026',
-        api_reference: 'nw-rg:1',
+        title: 'Jahresabos 2026',
+        api_reference: null,
         contact_id: 10,
-        kb_item_status_id: 7,
+        kb_item_status_id: 9,
         is_valid_from: '2025-11-03',
       },
+      // last year's order: another period
       {
         id: 2,
-        title: 'Geschenkabo 2025',
-        api_reference: 'nw-rg:2',
+        title: 'Jahresabos 2025',
+        api_reference: null,
         contact_id: 10,
-        kb_item_status_id: 7,
+        kb_item_status_id: 9,
         is_valid_from: '2025-01-03',
       },
     ],
   })),
-  positions: vi.fn(async () => []),
+  positions: vi.fn(async () => [{ text: 'Jahresabo', quantity: 1 }]),
+  contactLinks: vi.fn(
+    async () =>
+      new Map([
+        [10, [{ contactId: 11, description: 'NW Abo Endkund:in, Abo 117049' }]],
+        [11, [{ contactId: 10, description: 'NW Abo Endkund:in, Abo 117049' }]],
+      ])
+  ),
   contacts: vi.fn(
     async () =>
       new Map([
@@ -132,6 +141,25 @@ const bexio: BexioClient = {
           10,
           {
             id: 10,
+            contact_type_id: 1,
+            salutation_id: null,
+            name_1: 'Lehmanns Media',
+            name_2: null,
+            street_name: 'Helmholtzstrasse',
+            house_number: '2',
+            address_addition: null,
+            address: null,
+            postcode: '10587',
+            city: 'Berlin',
+            country_id: 1,
+            mail: null,
+            remarks: null,
+          },
+        ],
+        [
+          11,
+          {
+            id: 11,
             contact_type_id: 1,
             salutation_id: null,
             name_1: 'Stadtbibliothek',
@@ -153,7 +181,22 @@ const bexio: BexioClient = {
   salutations: vi.fn(async () => new Map()),
 };
 
-const INPUT = { issue: '6.26', date: '2026-10-13' };
+const KINDS = [
+  {
+    id: 'broker',
+    label: 'Broker-Abo',
+    word: 'NW Abo Endkund:in',
+    refersTo: 'period' as const,
+  },
+  {
+    id: 'single',
+    label: 'Einzelheft',
+    word: 'Einzelheft',
+    refersTo: 'issue' as const,
+  },
+];
+
+const INPUT = { issue: '6.26', date: '2026-10-13', bexioKinds: KINDS };
 
 describe('runExport', () => {
   it('joins both sources into rows, recipient drafts, a summary and a file name', async () => {
@@ -171,7 +214,13 @@ describe('runExport', () => {
     ).toEqual([
       ['wepublish', 'Alpha', 1, 'bezahlt bis 31.12.2026', ''],
       ['wepublish', 'Beta', 1, 'offen', 'Platzhalter-E-Mail; Keine Adresse'],
-      ['bexio', 'Stadtbibliothek', 3, '', ''],
+      [
+        'bexio',
+        'Stadtbibliothek',
+        1,
+        '',
+        'Zeitraum 01.01.2026–31.12.2026 · bezahlt von Lehmanns Media',
+      ],
     ]);
     expect(result.recipients).toEqual([
       {
@@ -183,6 +232,8 @@ describe('runExport', () => {
         periodId: 'per-2026',
         bexioInvoiceId: null,
         bexioContactId: null,
+        bexioPeriodFrom: null,
+        bexioPeriodTo: null,
         snapshot: result.rows[0],
       },
       {
@@ -194,17 +245,21 @@ describe('runExport', () => {
         periodId: null,
         bexioInvoiceId: null,
         bexioContactId: null,
+        bexioPeriodFrom: null,
+        bexioPeriodTo: null,
         snapshot: result.rows[1],
       },
       {
         source: 'bexio',
         reason: 'external',
-        copies: 3,
+        copies: 1,
         userId: null,
         subscriptionId: null,
         periodId: null,
         bexioInvoiceId: 1,
-        bexioContactId: 10,
+        bexioContactId: 11,
+        bexioPeriodFrom: '2026-01-01',
+        bexioPeriodTo: '2026-12-31',
         snapshot: result.rows[2],
       },
     ]);
@@ -213,10 +268,10 @@ describe('runExport', () => {
       date: '2026-10-13',
       includeUpcoming: false,
       rows: 3,
-      copies: 5,
+      copies: 3,
       bySource: { wepublish: 2, bexio: 1 },
       byPlan: { Jahresabo: 2 },
-      byKind: { 'Institutionelles Abo': 1 },
+      byKind: { 'Broker-Abo': 1 },
       unpaid: 1,
       openWithoutInvoice: 1,
       grace: 0,
@@ -282,6 +337,66 @@ describe('runExport', () => {
       included: false,
     });
     expect(result.summary.warnings).toEqual([]);
+  });
+
+  it('reads only the bexio kinds the options name and counts the others', async () => {
+    const result = await runExport(
+      { ...INPUT, bexioKindIds: ['single'] },
+      { members, bexio }
+    );
+
+    // the broker order is a kind left out; last year's is another period
+    expect(result.rows.map(r => r.quelle)).toEqual(['wepublish', 'wepublish']);
+    expect(result.summary.byKind).toEqual({});
+    expect(result.summary.bexio).toMatchObject({
+      included: true,
+      excludedKind: 1,
+      otherPeriod: 1,
+    });
+  });
+
+  it('matches bexio periods against the ship day, also when a Nachlieferung evaluates later', async () => {
+    const result = await runExport(
+      { ...INPUT, date: '2027-02-01', shipDay: '2026-10-13' },
+      { members, bexio }
+    );
+
+    expect(result.rows.filter(r => r.quelle === 'bexio')).toHaveLength(1);
+  });
+
+  it('gives a recipient of an ended bexio period the copies still owed', async () => {
+    const result = await runExport(
+      {
+        ...INPUT,
+        issue: '1.27',
+        date: '2027-01-15',
+        quota: { issuesPerYear: 6, historicIssues: [] },
+        bexioDelivered: { '1:11:2026-01-01': 5 },
+      },
+      { members: membersOf([]), bexio }
+    );
+
+    expect(result.rows.map(r => [r.firma, r.zahlungsstatus])).toEqual([
+      ['Stadtbibliothek', 'Restexemplar 6/6'],
+    ]);
+    expect(result.recipients[0]).toMatchObject({
+      source: 'bexio',
+      reason: 'grace',
+      bexioPeriodFrom: '2026-01-01',
+    });
+    expect(result.summary.grace).toBe(1);
+  });
+
+  it('lists nothing from bexio and says why while no kind is configured', async () => {
+    const result = await runExport(
+      { ...INPUT, bexioKinds: [] },
+      { members, bexio }
+    );
+
+    expect(result.rows.filter(r => r.quelle === 'bexio')).toEqual([]);
+    expect(result.summary.warnings).toContain(
+      'bexio: keine bexio-Arten konfiguriert (Einstellungen › Druckausgaben) – aus bexio wird nichts gelistet'
+    );
   });
 
   it('applies the plan allowlist', async () => {
@@ -385,7 +500,11 @@ describe('runExport', () => {
 
   it('leaves out what an earlier batch of the issue already exported', async () => {
     const result = await runExport(
-      { ...INPUT, excludeSubscriptionIds: ['s1'], excludeBexioInvoiceIds: [1] },
+      {
+        ...INPUT,
+        excludeSubscriptionIds: ['s1'],
+        excludeBexioRecipients: ['1:11'],
+      },
       { members, bexio }
     );
 

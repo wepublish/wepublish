@@ -6,6 +6,7 @@ fragment PrintIssueCounts on PrintIssueCount {
 fragment PrintIssueOptionsFields on PrintIssueOptions {
   memberPlanIds
   includeBexio
+  bexioKindIds
   includeOpen
   includeUpcoming
 }
@@ -57,11 +58,13 @@ fragment PrintIssueSummaryFields on PrintIssueSummary {
     invoicesInWindow
     canceled
     otherPeriod
-    einzelheftOhneAusgabe
+    noValidPeriod
     skippedImported
     skippedProvider
+    skippedOpen
+    excludedKind
+    quantityMismatch
     detailFetched
-    detailUnparsed
     ungeprueft
     zeroCopies
     contactMissing
@@ -201,6 +204,11 @@ query PrintExportContext {
     bexioConfigured
     defaults {
       ...PrintIssueOptionsFields
+    }
+    bexioKinds {
+      id
+      label
+      refersTo
     }
   }
 }
