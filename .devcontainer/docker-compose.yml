@@ -10,7 +10,16 @@ services:
       - ../..:/workspaces:cached
 
     # Overrides default command so things don't shut down after the process ends.
-    command: sleep infinity
+    # socat makes MinIO answer on 127.0.0.1:9000 inside this container as well:
+    # S3_PUBLIC_HOST in .env points there (the host browser reaches it through
+    # storage's published port) and the media server checks that URL itself
+    # before redirecting to it.
+    command:
+      [
+        'sh',
+        '-c',
+        'socat TCP-LISTEN:9000,bind=127.0.0.1,fork,reuseaddr TCP:storage:9000 & exec sleep infinity',
+      ]
 
     networks:
       - default
@@ -53,6 +62,23 @@ services:
       - default
     volumes:
       - storage_data:/data
+
+  # Makes wepublish-transformed publicly readable, as ../docker-compose.yml
+  # does: the media server redirects browsers to it. Exits once done; it fails
+  # and is restarted until storage accepts connections.
+  storage-init:
+    image: minio/minio:latest
+    depends_on:
+      - storage
+    entrypoint: ['/bin/sh']
+    command:
+      [
+        '-ec',
+        'mc alias set local http://storage:9000 root password; mc anonymous set download local/wepublish-transformed',
+      ]
+    restart: on-failure
+    networks:
+      - default
 
   dragonfly:
     image: docker.dragonflydb.io/dragonflydb/dragonfly:v2.0.0

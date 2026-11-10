@@ -33,6 +33,12 @@
   // Mailpit web UI (read caught dev mails).
   "forwardPorts": [8025],
 
+  // socat listens on 9000 in the app container (see docker-compose.yml); the
+  // host already reaches MinIO there through storage's published port.
+  "portsAttributes": {
+    "9000": { "onAutoForward": "ignore" }
+  },
+
   // Configure tool-specific properties.
   "customizations": {
     "vscode": {

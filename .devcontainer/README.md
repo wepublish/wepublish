@@ -16,7 +16,7 @@ The container automatically runs the following services:
 
 * PostgreSQL database, accessible over port 5432
 * PGAdmin, accessible on http://localhost:8000
-* MinIO, accessible on http://localhost:9001
+* MinIO, console on http://localhost:9001; the S3 API is on http://127.0.0.1:9000 both on the host and inside the container (forwarded to `storage:9000` by socat), and `wepublish-transformed` is publicly readable
 * Mailpit (caught mails), accessible on http://localhost:8025
 * Gotenberg (letter pdf renderer), reachable from the container as http://gotenberg:3000
 * Dragonfly, accessible from the container on `redis://dragonfly:6379` (admin `default`/`dragonfly`)
