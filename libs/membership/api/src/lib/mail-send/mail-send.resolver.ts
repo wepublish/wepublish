@@ -158,6 +158,7 @@ export class MailSendResolver {
       html: result.html,
       text: result.text,
       pdf: result.pdf,
+      attachments: result.attachments,
       recipient:
         result.recipient ?
           {
@@ -172,8 +173,7 @@ export class MailSendResolver {
             memberPlanName:
               (
                 result.recipient.subscription?.memberPlan as
-                  | { name?: string }
-                  | undefined
+                  { name?: string } | undefined
               )?.name ?? null,
             hasAddress: canReceiveLetters(result.recipient.user),
             emailSegment: emailSegmentOf(result.recipient.user, patterns),

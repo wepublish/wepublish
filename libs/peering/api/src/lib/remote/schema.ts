@@ -2662,6 +2662,14 @@ export enum MailSendJobState {
   Running = 'running'
 }
 
+export type MailSendPreviewAttachment = {
+  __typename?: 'MailSendPreviewAttachment';
+  /** The name the pdf is attached under. */
+  filename: Scalars['String']['output'];
+  /** The document filled in for the recipient, as pdf, base64 encoded, exactly as the mail carries it. */
+  pdf: Scalars['String']['output'];
+};
+
 export type MailSendPreviewInput = {
   audience: MailAudienceInput;
   /** Defaults to mail. A letter preview renders the pdf. */
@@ -2674,6 +2682,8 @@ export type MailSendPreviewInput = {
 
 export type MailSendPreviewModel = {
   __typename?: 'MailSendPreviewModel';
+  /** Mail previews only: the template's attachments, in their order. A letter preview prints them inside its pdf. */
+  attachments: Array<MailSendPreviewAttachment>;
   /** Empty for a letter preview. */
   html: Scalars['String']['output'];
   /** Letter previews only: the rendered pdf, base64 encoded, exactly as it would be printed. */
@@ -2732,6 +2742,8 @@ export enum MailTemplateContext {
 }
 
 export type MailTemplateInput = {
+  /** Word documents (.docx) filled in with the same placeholders, converted to pdf and attached to every mail sent from this template, in this order. A printed letter carries them after its pages. Left out, the attachments stay as they are. */
+  attachmentIds?: InputMaybe<Array<Scalars['String']['input']>>;
   context?: InputMaybe<MailTemplateContext>;
   description?: InputMaybe<Scalars['String']['input']>;
   htmlContent: Scalars['String']['input'];
@@ -2751,6 +2763,8 @@ export type MailTemplateLetterPreviewModel = {
 
 export type MailTemplateModel = {
   __typename?: 'MailTemplateModel';
+  /** Word documents (.docx) filled in with the same placeholders, converted to pdf and attached to every mail sent from this template, in this order. A printed letter carries them after its pages. */
+  attachmentIds: Array<Scalars['String']['output']>;
   context?: Maybe<MailTemplateContext>;
   description?: Maybe<Scalars['String']['output']>;
   htmlContent: Scalars['String']['output'];
@@ -2766,6 +2780,8 @@ export type MailTemplateModel = {
 };
 
 export type MailTemplatePreviewInput = {
+  /** Attachments chosen on the draft, possibly not saved yet. */
+  attachmentIds?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Mail type / context id, e.g. "renewal". */
   contextId: Scalars['String']['input'];
   htmlContent: Scalars['String']['input'];
@@ -8328,6 +8344,8 @@ export type RichTextBlockInput = {
 };
 
 export type SendTestMailTemplateInput = {
+  /** Attachments chosen on the draft, possibly not saved yet. */
+  attachmentIds?: InputMaybe<Array<Scalars['String']['input']>>;
   contextId: Scalars['String']['input'];
   htmlContent: Scalars['String']['input'];
   subject: Scalars['String']['input'];

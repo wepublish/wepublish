@@ -17,9 +17,16 @@ import {
   PrismaClient,
 } from '@prisma/client';
 import { v7 as uuidv7 } from 'uuid';
-import { composeMail, MailContext, mailLogType } from '@wepublish/mail/api';
+import {
+  attachmentIdsOf,
+  composeMail,
+  MAIL_TEMPLATE_ATTACHMENT_IDS,
+  MailContext,
+  mailLogType,
+} from '@wepublish/mail/api';
 import {
   canReceiveLetters,
+  DocumentAttachmentRenderer,
   LetterContext,
   printSettings,
   toLetterAddress,
@@ -85,7 +92,8 @@ export class MailSendJobService {
     private mailContext: MailContext,
     private letterContext: LetterContext,
     private recipientService: MailSendRecipientService,
-    private features: FeaturesService
+    private features: FeaturesService,
+    private attachments: DocumentAttachmentRenderer
   ) {}
 
   /**
@@ -731,6 +739,8 @@ export class MailSendJobService {
     html: string;
     text?: string;
     pdf?: string;
+    /** Mail only; a letter prints them inside its pdf. */
+    attachments: { filename: string; pdf: string }[];
     recipient: MailRecipient | null;
   }> {
     await this.assertChannelAllowed(input.channel);
@@ -743,7 +753,7 @@ export class MailSendJobService {
     );
 
     if (!recipient) {
-      return { subject: '', html: '', recipient: null };
+      return { subject: '', html: '', attachments: [], recipient: null };
     }
 
     const optionalData = await this.buildOptionalData(template, recipient);
@@ -760,6 +770,7 @@ export class MailSendJobService {
         template: {
           htmlContent: template.htmlContent,
           letterAppendixId: template.letterAppendixId,
+          attachmentIds: attachmentIdsOf(template),
         },
         layout: await this.letterContext.resolveLayout(template.letterLayoutId),
         addressPosition: print.addressPosition,
@@ -772,29 +783,41 @@ export class MailSendJobService {
         subject: template.subject,
         html: '',
         pdf: pdf.toString('base64'),
+        attachments: [],
         recipient,
       };
     }
 
-    const jwt = await this.mailContext.jwtGenerator(recipient.user.id);
+    const data = {
+      user: recipient.user,
+      optional: optionalData,
+      jwt: await this.mailContext.jwtGenerator(recipient.user.id),
+      currentDate: new Date(),
+    };
     const composed = composeMail(
       {
         subject: template.subject,
         htmlContent: template.htmlContent,
         textContent: template.textContent,
       },
-      {
-        user: recipient.user,
-        optional: optionalData,
-        jwt,
-        currentDate: new Date(),
-      }
+      data
     );
+    // Not caught: a document that cannot be rendered fails the send for this
+    // recipient too, so the preview says why before anything goes out.
+    const attachmentIds = attachmentIdsOf(template);
+    const attachments =
+      attachmentIds.length ?
+        await this.attachments.render(attachmentIds, data)
+      : [];
 
     return {
       subject: composed.subject,
       html: composed.messageHtml,
       text: composed.message,
+      attachments: attachments.map(({ filename, content }) => ({
+        filename,
+        pdf: content.toString('base64'),
+      })),
       recipient,
     };
   }
@@ -877,7 +900,35 @@ export class MailSendJobService {
   ): Promise<string[]> {
     const template = await this.loadTemplate(templateId);
 
-    return findMissingPlaceholders(template, withSubscriptionData);
+    return findMissingPlaceholders(
+      template,
+      withSubscriptionData,
+      await this.attachmentPlaceholders(attachmentIdsOf(template))
+    );
+  }
+
+  /**
+   * Only a warning: an attachment that cannot be read now fails the send
+   * itself, with its own message, so the check of the template goes on.
+   */
+  private async attachmentPlaceholders(
+    documentIds: string[]
+  ): Promise<string[]> {
+    if (!documentIds.length) {
+      return [];
+    }
+
+    try {
+      return await this.attachments.placeholders(documentIds);
+    } catch (error) {
+      this.logger.warn(
+        `Could not read the placeholders of attachments ${documentIds.join(
+          ', '
+        )}: ${(error as Error).message}`
+      );
+
+      return [];
+    }
   }
 
   private audienceFor(audience: MailAudienceInput): MailSendAudience {
@@ -890,9 +941,12 @@ export class MailSendJobService {
     return (template.context ?? 'custom') as MailTemplateContextId;
   }
 
-  private async loadTemplate(id: string): Promise<MailTemplate> {
+  private async loadTemplate(
+    id: string
+  ): Promise<MailTemplate & { attachments?: { documentId: string }[] }> {
     const template = await this.prisma.mailTemplate.findUnique({
       where: { id },
+      include: MAIL_TEMPLATE_ATTACHMENT_IDS,
     });
 
     if (!template) {

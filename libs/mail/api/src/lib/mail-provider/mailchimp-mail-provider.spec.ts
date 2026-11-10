@@ -79,6 +79,55 @@ describe('MailchimpMailProvider', () => {
     expect(sentBody.message.metadata).toEqual({ mail_log_id: 'log-1' });
   });
 
+  it('sends attachments base64 encoded, as Mandrill takes them', async () => {
+    let sentBody: any;
+
+    nock(MANDRILL)
+      .post('/api/1.0/messages/send', body => {
+        sentBody = body;
+
+        return true;
+      })
+      .reply(200, [{ email: sendProps.recipient, status: 'sent', _id: 'x' }]);
+
+    await (
+      await makeProvider()
+    ).sendMail({
+      ...sendProps,
+      attachments: [
+        {
+          filename: 'Vertrag.pdf',
+          contentType: 'application/pdf',
+          content: Buffer.from('%PDF-1.7'),
+        },
+      ],
+    });
+
+    expect(sentBody.message.attachments).toEqual([
+      {
+        type: 'application/pdf',
+        name: 'Vertrag.pdf',
+        content: Buffer.from('%PDF-1.7').toString('base64'),
+      },
+    ]);
+  });
+
+  it('sends no attachments field for a mail without any', async () => {
+    let sentBody: any;
+
+    nock(MANDRILL)
+      .post('/api/1.0/messages/send', body => {
+        sentBody = body;
+
+        return true;
+      })
+      .reply(200, [{ email: sendProps.recipient, status: 'sent', _id: 'x' }]);
+
+    await (await makeProvider()).sendMail(sendProps);
+
+    expect(sentBody.message).not.toHaveProperty('attachments');
+  });
+
   it('accepts a message the provider queued', async () => {
     nock(MANDRILL)
       .post('/api/1.0/messages/send')

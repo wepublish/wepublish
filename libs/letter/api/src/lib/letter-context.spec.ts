@@ -17,6 +17,7 @@ import {
 } from './letter-provider/letter-provider.interface';
 import { UserWithAddress } from './letter-recipient';
 import { PdfRenderer } from './pdf/pdf-renderer';
+import { MailAttachmentRenderer } from '@wepublish/mail/api';
 import type { Mock } from 'vitest';
 
 const recipient: LetterAddress = {
@@ -70,7 +71,8 @@ function createContext(
     providerLetterID: 'pingen-1',
     state: LetterState.submitted,
   }),
-  template: Record<string, unknown> = {}
+  template: Record<string, unknown> = {},
+  attachmentRenderer?: MailAttachmentRenderer
 ) {
   const rendered: string[] = [];
 
@@ -81,6 +83,7 @@ function createContext(
 
       return makePdf(1);
     },
+    convertDocument: async () => makePdf(1),
   };
 
   const create = vi.fn();
@@ -118,6 +121,7 @@ function createContext(
     prisma,
     pdfRenderer,
     documentUrl,
+    attachmentRenderer,
   });
 
   return {
@@ -556,5 +560,192 @@ describe('LetterContext.isConfigured', () => {
     context.pdfRenderer.isConfigured = async () => false;
 
     expect(await context.isConfigured()).toBe(false);
+  });
+});
+
+describe('LetterContext attachments', () => {
+  const fetchMock = vi.fn();
+
+  beforeEach(async () => {
+    const appendix = await makePdf(1);
+
+    fetchMock.mockReset();
+    fetchMock.mockImplementation(async () => new Response(appendix));
+    vi.stubGlobal('fetch', fetchMock);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  const attachmentRenderer = (
+    pages: Record<string, number> = { contract: 2, terms: 1 },
+    size: [number, number] = PageSizes.A4
+  ) => ({
+    render: vi.fn(async (ids: string[]) =>
+      Promise.all(
+        ids.map(async id => {
+          const doc = await PDFDocument.create();
+
+          for (let i = 0; i < pages[id]; i++) {
+            doc.addPage(size);
+          }
+
+          return {
+            filename: `${id}.pdf`,
+            contentType: 'application/pdf',
+            content: Buffer.from(await doc.save()),
+          };
+        })
+      )
+    ),
+  });
+
+  const render = (
+    context: LetterContext,
+    props: {
+      attachmentIds?: string[];
+      letterAppendixId?: string | null;
+      country?: string;
+      printMode?: LetterPrintMode;
+    }
+  ) =>
+    context.renderLetter({
+      template: {
+        htmlContent: '<p>Hallo</p>',
+        attachmentIds: props.attachmentIds,
+        letterAppendixId: props.letterAppendixId,
+      },
+      addressPosition: LetterAddressPosition.left,
+      data: { user },
+      recipient: { ...recipient, country: props.country ?? 'CH' },
+      printMode: props.printMode,
+    });
+
+  it('prints the attachments after the letter, filled in with its data', async () => {
+    const renderer = attachmentRenderer();
+    const { context } = createContext(undefined, {}, renderer);
+
+    const pdf = await render(context, { attachmentIds: ['contract', 'terms'] });
+
+    expect(await pageCount(pdf)).toBe(4);
+    expect(renderer.render).toHaveBeenCalledWith(['contract', 'terms'], {
+      user,
+    });
+  });
+
+  it('starts every attachment on a sheet of its own for duplex printing', async () => {
+    const { context } = createContext(undefined, {}, attachmentRenderer());
+
+    const pdf = await render(context, {
+      attachmentIds: ['contract', 'terms'],
+      printMode: LetterPrintMode.duplex,
+    });
+
+    // letter, blank back, contract (two pages), terms
+    expect(await pageCount(pdf)).toBe(5);
+  });
+
+  it('prints the attachments abroad too, where the QR-bill is left out', async () => {
+    const { context } = createContext(undefined, {}, attachmentRenderer());
+
+    const pdf = await render(context, {
+      attachmentIds: ['terms'],
+      letterAppendixId: 'qr-bill',
+      country: 'DE',
+    });
+
+    expect(await pageCount(pdf)).toBe(2);
+  });
+
+  it('keeps the QR-bill last', async () => {
+    const { context } = createContext(undefined, {}, attachmentRenderer());
+
+    const pdf = await render(context, {
+      attachmentIds: ['contract'],
+      letterAppendixId: 'qr-bill',
+      printMode: LetterPrintMode.duplex,
+    });
+
+    // letter, blank, contract (two pages), QR-bill. With the bill before the
+    // contract it would be six: letter, blank, bill, blank, contract.
+    expect(await pageCount(pdf)).toBe(5);
+  });
+
+  it('refuses an attachment that is not A4, naming it', async () => {
+    const { context } = createContext(
+      undefined,
+      {},
+      attachmentRenderer({ terms: 1 }, PageSizes.Letter)
+    );
+
+    await expect(render(context, { attachmentIds: ['terms'] })).rejects.toThrow(
+      /terms\.pdf must be A4/
+    );
+  });
+
+  it('refuses attachments it has no renderer for', async () => {
+    const { context } = createContext();
+
+    await expect(render(context, { attachmentIds: ['terms'] })).rejects.toThrow(
+      /attachment/i
+    );
+  });
+
+  it('prints the attachments of the template it sends', async () => {
+    const sendLetter = vi.fn().mockResolvedValue({
+      providerLetterID: 'pingen-1',
+      state: LetterState.submitted,
+    });
+    const { context, prisma } = createContext(
+      sendLetter,
+      { attachments: [{ documentId: 'contract' }] },
+      attachmentRenderer()
+    );
+
+    await context.sendLetter({
+      mailTemplateId: 'template-1',
+      recipient: user,
+      data: { user },
+      print,
+    });
+
+    expect(prisma.mailTemplate.findUnique).toHaveBeenCalledWith(
+      expect.objectContaining({
+        include: {
+          attachments: {
+            select: { documentId: true },
+            orderBy: { position: 'asc' },
+          },
+        },
+      })
+    );
+    expect(await pageCount(sendLetter.mock.calls[0][0].file)).toBe(3);
+  });
+
+  it('posts nothing when an attachment cannot be rendered, and logs why', async () => {
+    const sendLetter = vi.fn();
+    const { context, create } = createContext(
+      sendLetter,
+      { attachments: [{ documentId: 'contract' }] },
+      { render: vi.fn().mockRejectedValue(new Error('Gotenberg is down')) }
+    );
+
+    await expect(
+      context.sendLetter({
+        mailTemplateId: 'template-1',
+        recipient: user,
+        data: { user },
+        print,
+      })
+    ).rejects.toThrow('Gotenberg is down');
+
+    expect(sendLetter).not.toHaveBeenCalled();
+    expect(create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        state: MailLogState.rejected,
+        error: 'Gotenberg is down',
+      }),
+    });
   });
 });

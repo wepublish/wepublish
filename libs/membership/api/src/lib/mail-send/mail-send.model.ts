@@ -670,6 +670,18 @@ export class MailSendPreviewInput {
 }
 
 @ObjectType()
+export class MailSendPreviewAttachment {
+  @Field({ description: 'The name the pdf is attached under.' })
+  filename!: string;
+
+  @Field({
+    description:
+      'The document filled in for the recipient, as pdf, base64 encoded, exactly as the mail carries it.',
+  })
+  pdf!: string;
+}
+
+@ObjectType()
 export class MailSendPreviewModel {
   @Field()
   subject!: string;
@@ -686,6 +698,12 @@ export class MailSendPreviewModel {
       'Letter previews only: the rendered pdf, base64 encoded, exactly as it would be printed.',
   })
   pdf?: string | null;
+
+  @Field(() => [MailSendPreviewAttachment], {
+    description:
+      "Mail previews only: the template's attachments, in their order. A letter preview prints them inside its pdf.",
+  })
+  attachments!: MailSendPreviewAttachment[];
 
   @Field(() => MailSendRecipientModel, {
     nullable: true,

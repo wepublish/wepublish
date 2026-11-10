@@ -170,6 +170,13 @@ export class MailgunMailProvider extends BaseMailProvider {
       form.append('html', props.messageHtml);
     }
 
+    for (const attachment of props.attachments ?? []) {
+      form.append('attachment', attachment.content, {
+        filename: attachment.filename,
+        contentType: attachment.contentType,
+      });
+    }
+
     const auth = Buffer.from(`api:${config?.apiKey}`).toString('base64');
     form.append('v:mail_log_id', props.mailLogID);
     return new Promise((resolve, reject) => {

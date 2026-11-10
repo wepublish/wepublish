@@ -22,6 +22,7 @@ import {
 } from '@prisma/client';
 import {
   LetterDeliveryError,
+  MailAttachmentError,
   MailContext,
   MailController,
   MailProviderRecipientError,
@@ -952,11 +953,13 @@ export class PeriodicJobService {
         asLetter: action.sendAsLetter,
       }).sendMail();
     } catch (error) {
-      // A refused address or a print vendor outage concerns this recipient
-      // only; the run goes on with the others.
+      // A refused address, a print vendor outage or attachments that cannot
+      // be rendered concern this recipient only; the run goes on with the
+      // others. The mail log keeps the reason.
       if (
         !(error instanceof MailProviderRecipientError) &&
-        !(error instanceof LetterDeliveryError)
+        !(error instanceof LetterDeliveryError) &&
+        !(error instanceof MailAttachmentError)
       ) {
         throw error;
       }

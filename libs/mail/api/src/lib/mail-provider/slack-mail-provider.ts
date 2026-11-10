@@ -30,6 +30,12 @@ export class SlackMailProvider extends BaseMailProvider {
             type: 'mrkdwn',
             text: `*From*: ${props.replyToAddress}\n*To*: ${props.recipient}\n*Subject*: ${
               props.subject
+            }${
+              props.attachments?.length ?
+                `\n*Attachments*: ${props.attachments
+                  .map(attachment => attachment.filename)
+                  .join(', ')}`
+              : ''
             }\n\`\`\`${props.messageHtml ?? props.message ?? ''}\`\`\``,
           },
         },

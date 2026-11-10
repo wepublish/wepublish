@@ -326,6 +326,7 @@
     "exifr": "^7.1.3",
     "express": "catalog:",
     "feed": "^4.2.2",
+    "fflate": "catalog:",
     "form-data": "catalog:",
     "google-auth-library": "^6.1.6",
     "graphql": "catalog:",

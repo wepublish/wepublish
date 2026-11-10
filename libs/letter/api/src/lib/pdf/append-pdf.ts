@@ -14,13 +14,15 @@ export type AppendPdfOptions = {
    * on pre-perforated paper and only accepts them on the front of a sheet.
    */
   padToOddPage: boolean;
+  /** What the appendix is called in an error, e.g. its file name. */
+  name?: string;
 };
 
 /** Append the pages of a static pdf (e.g. a QR-bill) after a rendered letter. */
 export async function appendPdf(
   main: Buffer,
   appendix: Buffer,
-  { padToOddPage }: AppendPdfOptions
+  { padToOddPage, name = 'Letter appendix' }: AppendPdfOptions
 ): Promise<Buffer> {
   const [doc, extra] = await Promise.all([
     PDFDocument.load(main),
@@ -34,7 +36,7 @@ export async function appendPdf(
 
   if (notA4) {
     throw new Error(
-      `Letter appendix must be A4 (${A4[0]}×${A4[1]} pt), got ${notA4.getWidth()}×${notA4.getHeight()} pt`
+      `${name} must be A4 (${A4[0]}×${A4[1]} pt), got ${notA4.getWidth()}×${notA4.getHeight()} pt`
     );
   }
 

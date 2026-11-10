@@ -369,6 +369,9 @@ catalogs:
     express:
       specifier: ^5.3.0
       version: 5.3.0
+    fflate:
+      specifier: ^0.8.3
+      version: 0.8.3
     form-data:
       specifier: ^3.0.5
       version: 3.0.5
@@ -833,6 +836,9 @@ importers:
       feed:
         specifier: ^4.2.2
         version: 4.2.2
+      fflate:
+        specifier: 'catalog:'
+        version: 0.8.3
       form-data:
         specifier: 'catalog:'
         version: 3.0.5
@@ -1669,6 +1675,9 @@ importers:
       date-fns-tz:
         specifier: 'catalog:'
         version: 3.2.0(date-fns@4.4.0)
+      fflate:
+        specifier: 'catalog:'
+        version: 0.8.3
       form-data:
         specifier: 'catalog:'
         version: 3.0.5

@@ -14,13 +14,14 @@ const { answer } = vi.hoisted(() => ({
   answer: {
     error: null as Error | null,
     response: { statusCode: 200, statusMessage: 'OK' },
+    appended: [] as unknown[][],
   },
 }));
 
 vi.mock('form-data', () => ({
   default: class {
-    append() {
-      return undefined;
+    append(...field: unknown[]) {
+      answer.appended.push(field);
     }
 
     submit(
@@ -74,6 +75,7 @@ describe('MailgunMailProvider', () => {
   afterEach(() => {
     answer.error = null;
     answer.response = { statusCode: 200, statusMessage: 'OK' };
+    answer.appended = [];
   });
 
   it('sends a mail Mailgun accepted', async () => {
@@ -92,6 +94,31 @@ describe('MailgunMailProvider', () => {
     expect(error.message).toBe(
       'Mailgun refused the mail to user@example.com: 401 UNAUTHORIZED'
     );
+  });
+
+  it('sends each attachment as a file part', async () => {
+    const content = Buffer.from('%PDF-1.7');
+
+    await (
+      await makeProvider()
+    ).sendMail({
+      ...sendProps,
+      attachments: [
+        { filename: 'Vertrag.pdf', contentType: 'application/pdf', content },
+      ],
+    });
+
+    expect(answer.appended).toContainEqual([
+      'attachment',
+      content,
+      { filename: 'Vertrag.pdf', contentType: 'application/pdf' },
+    ]);
+  });
+
+  it('sends no file part for a mail without attachments', async () => {
+    await (await makeProvider()).sendMail(sendProps);
+
+    expect(answer.appended.map(([name]) => name)).not.toContain('attachment');
   });
 
   it('passes on why it could not reach Mailgun', async () => {

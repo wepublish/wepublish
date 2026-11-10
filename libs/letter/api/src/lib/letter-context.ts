@@ -14,7 +14,12 @@ import {
   LetterAddress,
   LetterState,
 } from './letter-provider/letter-provider.interface';
-import { LetterSender } from '@wepublish/mail/api';
+import {
+  attachmentIdsOf,
+  LetterSender,
+  MAIL_TEMPLATE_ATTACHMENT_IDS,
+  MailAttachmentRenderer,
+} from '@wepublish/mail/api';
 import {
   canReceiveLetters,
   toLetterAddress,
@@ -35,6 +40,8 @@ export interface LetterContextProps {
   pdfRenderer: PdfRenderer;
   /** Where an uploaded document can be downloaded, for letter appendices. */
   documentUrl?: (documentId: string) => Promise<string>;
+  /** Renders the Word documents attached to a template. */
+  attachmentRenderer?: MailAttachmentRenderer;
 }
 
 /**
@@ -100,6 +107,7 @@ export class LetterContext implements LetterSender {
   prisma: PrismaClient;
   pdfRenderer: PdfRenderer;
   private readonly documentUrl?: LetterContextProps['documentUrl'];
+  private readonly attachmentRenderer?: MailAttachmentRenderer;
   // Uploaded documents never change under their id, so one download serves
   // every letter of a send job.
   private readonly appendices = new Map<string, Promise<Buffer>>();
@@ -109,6 +117,7 @@ export class LetterContext implements LetterSender {
     this.prisma = props.prisma;
     this.pdfRenderer = props.pdfRenderer;
     this.documentUrl = props.documentUrl;
+    this.attachmentRenderer = props.attachmentRenderer;
   }
 
   /**
@@ -118,9 +127,9 @@ export class LetterContext implements LetterSender {
    * safe to ask without one.
    */
   async isConfigured(): Promise<boolean> {
-    if (
-      !('sendLetter' in this.letterProvider && 'render' in this.pdfRenderer)
-    ) {
+    if (!(
+      'sendLetter' in this.letterProvider && 'render' in this.pdfRenderer
+    )) {
       return false;
     }
 
@@ -141,7 +150,7 @@ export class LetterContext implements LetterSender {
     layout,
     printMode,
   }: RenderLetterProps): Promise<Buffer> {
-    const letter = await this.pdfRenderer.render(
+    let letter = await this.pdfRenderer.render(
       composeLetter({
         template,
         data,
@@ -150,6 +159,18 @@ export class LetterContext implements LetterSender {
         layout,
       })
     );
+
+    for (const attachment of await this.renderAttachments(
+      template.attachmentIds ?? [],
+      data
+    )) {
+      // Duplex: each document starts on a sheet of its own, not on the back
+      // of the one before.
+      letter = await appendPdf(letter, attachment.content, {
+        padToOddPage: printMode === LetterPrintMode.duplex,
+        name: attachment.filename,
+      });
+    }
 
     if (!template.letterAppendixId) {
       return letter;
@@ -170,6 +191,23 @@ export class LetterContext implements LetterSender {
         padToOddPage: printMode === LetterPrintMode.duplex,
       }
     );
+  }
+
+  private async renderAttachments(
+    documentIds: string[],
+    data: Record<string, unknown>
+  ) {
+    if (!documentIds.length) {
+      return [];
+    }
+
+    if (!this.attachmentRenderer) {
+      throw new Error(
+        'This template has attachments, but nothing is set up to render them.'
+      );
+    }
+
+    return this.attachmentRenderer.render(documentIds, data);
   }
 
   private loadAppendix(documentId: string): Promise<Buffer> {
@@ -264,6 +302,7 @@ export class LetterContext implements LetterSender {
 
     const template = await this.prisma.mailTemplate.findUnique({
       where: { id: props.mailTemplateId },
+      include: MAIL_TEMPLATE_ATTACHMENT_IDS,
     });
 
     if (!template) {
@@ -275,6 +314,7 @@ export class LetterContext implements LetterSender {
         template: {
           htmlContent: template.htmlContent,
           letterAppendixId: template.letterAppendixId,
+          attachmentIds: attachmentIdsOf(template),
         },
         addressPosition: print.addressPosition,
         data: props.data,

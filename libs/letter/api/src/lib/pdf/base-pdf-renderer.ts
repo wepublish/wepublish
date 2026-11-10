@@ -29,6 +29,7 @@ export abstract class BasePdfRenderer implements PdfRenderer {
 
   abstract isConfigured(): Promise<boolean>;
   abstract render(html: string): Promise<Buffer>;
+  abstract convertDocument(file: Uint8Array, filename: string): Promise<Buffer>;
 
   /**
    * Posts to the renderer and returns the pdf, turning every way that can go

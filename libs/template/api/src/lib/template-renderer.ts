@@ -74,6 +74,23 @@ export function flattenMailData<T>(ob: T): Record<string, any> {
 
 const PLACEHOLDER_REGEX = /{{\s*([\w.]+)\s*}}/g;
 
+export interface PlaceholderMatch {
+  /** Where the whole `{{ key }}` starts in the content. */
+  index: number;
+  /** Length of the whole `{{ key }}`, braces and spaces included. */
+  length: number;
+  key: string;
+}
+
+/** Every `{{ key }}` in a piece of content, in order. */
+export function findPlaceholders(content: string): PlaceholderMatch[] {
+  return [...content.matchAll(PLACEHOLDER_REGEX)].map(match => ({
+    index: match.index,
+    length: match[0].length,
+    key: match[1],
+  }));
+}
+
 /**
  * Collect the distinct `{{ key }}` placeholder names used in a piece of content.
  * Used to warn when a template references data that won't be available for a
@@ -86,12 +103,7 @@ export function extractPlaceholders(
     return [];
   }
 
-  const keys = new Set<string>();
-  for (const match of content.matchAll(PLACEHOLDER_REGEX)) {
-    keys.add(match[1]);
-  }
-
-  return [...keys];
+  return [...new Set(findPlaceholders(content).map(({ key }) => key))];
 }
 
 /**
@@ -122,10 +134,34 @@ export function convertMandrillPlaceholders(
 }
 
 /**
+ * The text a placeholder key stands for in the flattened data. Unknown keys
+ * resolve to an empty string. Lookups are case-insensitive so uppercase tags
+ * from imported Mandrill templates (e.g. `{{USER_FIRSTNAME}}`) still resolve to
+ * camelCase keys. Shared by every format a template can come in, so a key
+ * resolves the same in a mail, a letter and an attached Word document.
+ */
+export function placeholderResolver(
+  data: Record<string, any>
+): (key: string) => string {
+  const lowerLookup: Record<string, any> = {};
+  for (const dataKey of Object.keys(data)) {
+    lowerLookup[dataKey.toLowerCase()] = data[dataKey];
+  }
+
+  return key => {
+    const value = key in data ? data[key] : lowerLookup[key.toLowerCase()];
+
+    if (value === undefined || value === null) {
+      return '';
+    }
+
+    return String(value);
+  };
+}
+
+/**
  * Replace every `{{ key }}` placeholder in the template with its value from the
- * flattened data. Unknown placeholders are replaced with an empty string.
- * Lookups are case-insensitive so uppercase tags from imported Mandrill
- * templates (e.g. `{{USER_FIRSTNAME}}`) still resolve to camelCase keys.
+ * flattened data, as {@link placeholderResolver} looks it up.
  */
 export function renderTemplate(
   template: string | null | undefined,
@@ -135,20 +171,11 @@ export function renderTemplate(
     return '';
   }
 
-  const lowerLookup: Record<string, any> = {};
-  for (const dataKey of Object.keys(data)) {
-    lowerLookup[dataKey.toLowerCase()] = data[dataKey];
-  }
+  const resolve = placeholderResolver(data);
 
-  return template.replace(PLACEHOLDER_REGEX, (_match, key: string) => {
-    const value = key in data ? data[key] : lowerLookup[key.toLowerCase()];
-
-    if (value === undefined || value === null) {
-      return '';
-    }
-
-    return String(value);
-  });
+  return template.replace(PLACEHOLDER_REGEX, (_match, key: string) =>
+    resolve(key)
+  );
 }
 
 /**

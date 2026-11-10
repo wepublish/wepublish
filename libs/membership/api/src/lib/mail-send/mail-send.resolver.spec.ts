@@ -115,6 +115,30 @@ describe('MailSendResolver', () => {
     });
   });
 
+  it('mailSendPreview hands over the attachments the mail carries', async () => {
+    const attachments = [{ filename: 'Vertrag.pdf', pdf: 'JVBERi0=' }];
+    const jobService = {
+      previewForAudience: vi.fn(async () => ({
+        subject: 'Ihr Vertrag',
+        html: '<p>Hallo</p>',
+        attachments,
+        recipient: null,
+      })),
+    };
+    const recipientService = { placeholderPatterns: vi.fn(async () => []) };
+
+    const preview = await makeResolver(
+      {},
+      jobService,
+      recipientService
+    ).mailSendPreview({
+      mailTemplateId: 'tpl-1',
+      audience: { base: MailRecipientBase.allUsers },
+    });
+
+    expect(preview.attachments).toEqual(attachments);
+  });
+
   it('mailSendRecipients lists through the preview order', async () => {
     // The preview puts the people a letter would skip first; the plain page
     // is the send order and must stay untouched.

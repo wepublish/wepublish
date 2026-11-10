@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { MediaAdapter } from '@wepublish/image/api';
 import { PrismaClient } from '@prisma/client';
 import { UploadDocumentInput } from './document.model';
@@ -62,6 +66,22 @@ export class DocumentUploadService {
   }
 
   async deleteDocument(documentId: string) {
+    // Checked before the file goes: the database would refuse the row only
+    // after the media server had already dropped the file.
+    const attachments = await this.prisma.mailTemplateAttachment.findMany({
+      where: { documentId },
+      select: { mailTemplate: { select: { name: true } } },
+      orderBy: { mailTemplate: { name: 'asc' } },
+    });
+
+    if (attachments.length) {
+      throw new BadRequestException(
+        `This document is attached to the mail templates ${attachments
+          .map(({ mailTemplate }) => mailTemplate.name)
+          .join(', ')}. Remove it there before deleting it.`
+      );
+    }
+
     await this.mediaAdapter.deleteDocument(documentId);
     await this.prisma.document.delete({ where: { id: documentId } });
 

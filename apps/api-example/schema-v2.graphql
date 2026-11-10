@@ -2801,6 +2801,16 @@ enum MailSendJobState {
   running
 }
 
+type MailSendPreviewAttachment {
+  """The name the pdf is attached under."""
+  filename: String!
+
+  """
+  The document filled in for the recipient, as pdf, base64 encoded, exactly as the mail carries it.
+  """
+  pdf: String!
+}
+
 input MailSendPreviewInput {
   audience: MailAudienceInput!
 
@@ -2816,6 +2826,11 @@ input MailSendPreviewInput {
 }
 
 type MailSendPreviewModel {
+  """
+  Mail previews only: the template's attachments, in their order. A letter preview prints them inside its pdf.
+  """
+  attachments: [MailSendPreviewAttachment!]!
+
   """Empty for a letter preview."""
   html: String!
 
@@ -2897,6 +2912,10 @@ enum MailTemplateContext {
 }
 
 input MailTemplateInput {
+  """
+  Word documents (.docx) filled in with the same placeholders, converted to pdf and attached to every mail sent from this template, in this order. A printed letter carries them after its pages. Left out, the attachments stay as they are.
+  """
+  attachmentIds: [String!]
   context: MailTemplateContext
   description: String
   htmlContent: String!
@@ -2915,6 +2934,10 @@ type MailTemplateLetterPreviewModel {
 }
 
 type MailTemplateModel {
+  """
+  Word documents (.docx) filled in with the same placeholders, converted to pdf and attached to every mail sent from this template, in this order. A printed letter carries them after its pages.
+  """
+  attachmentIds: [String!]!
   context: MailTemplateContext
   description: String
   htmlContent: String!
@@ -2934,6 +2957,9 @@ type MailTemplateModel {
 }
 
 input MailTemplatePreviewInput {
+  """Attachments chosen on the draft, possibly not saved yet."""
+  attachmentIds: [String!]
+
   """Mail type / context id, e.g. "renewal"."""
   contextId: String!
   htmlContent: String!
@@ -6371,6 +6397,8 @@ input RichTextBlockInput {
 }
 
 input SendTestMailTemplateInput {
+  """Attachments chosen on the draft, possibly not saved yet."""
+  attachmentIds: [String!]
   contextId: String!
   htmlContent: String!
   subject: String!
