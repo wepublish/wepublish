@@ -1,5 +1,23 @@
 // Centralized brand tokens for Courant's tenant theme
 // Please refer to brand guidelines for more details on colors, typography, and layout.
+
+// Shared heading faces — referenced from both `roles.heading` and `headings.<context>.face`
+// so every heading in the theme traces back to one of these.
+const pageHeadingFace = {
+  fontFamily: 'var(--courant-display)',
+  fontWeight: 500,
+  lineHeight: 1,
+  letterSpacing: '-0.0075em',
+} as const;
+
+// Non-editorial rich text overrides h3-h6 with a sans/bold face.
+const richtextHeadingFace = {
+  fontFamily: 'var(--courant-sans)',
+  fontWeight: 700,
+  lineHeight: 1.2,
+  letterSpacing: '0',
+} as const;
+
 export const courantTokens = {
   colors: {
     // Primary Courant yellow; 500 is the main shade.
@@ -66,12 +84,7 @@ export const courantTokens = {
     htmlFontSize: 16,
     weights: { light: 400, regular: 400, medium: 400, bold: 700 },
     roles: {
-      heading: {
-        fontFamily: 'var(--courant-display)',
-        fontWeight: 500,
-        lineHeight: 1,
-        letterSpacing: '-0.0075em',
-      },
+      heading: pageHeadingFace,
       body: {
         fontFamily: 'var(--courant-sans)',
         fontWeight: 400,
@@ -80,7 +93,7 @@ export const courantTokens = {
       },
       editorial: {
         fontFamily: 'var(--courant-editorial)',
-        fontWeight: 300,
+        fontWeight: 400,
         lineHeight: 1.2,
         letterSpacing: 'normal',
       },
@@ -106,28 +119,57 @@ export const courantTokens = {
     headings: {
       // Page context — teaser titles, section headings, non-article H tags.
       page: {
-        h1: '3.815rem',
-        h2: '3.05rem',
-        h3: '2.45rem',
-        h4: '1.95rem',
-        h5: '1.5625rem',
-        h6: '1.25rem',
+        face: pageHeadingFace,
+        h1: '3.75rem',
+        h2: '2.75rem',
+        h3: '2.1875rem',
+        h4: '1.75rem',
+        h5: '1.4rem',
+        h6: '1.125rem',
       },
-      // Article context — H tags inside the article body (inside RichTextBlock).
+      // Article context — H tags inside the article body (inside EditorialRichTextBlock).
+      // Same face as page; sizes diverge; spacing applied inside the editorial wrapper.
       article: {
-        h1: '3.815rem',
-        h2: '2.45rem',
+        face: pageHeadingFace,
+        h1: '3.75rem',
+        h2: '2.75rem',
         h3: '1.25rem',
-        h4: '1.25rem',
-        h5: '1.25rem',
-        h6: '1.25rem',
+        h4: '1.125rem',
+        h5: '1.125rem',
+        h6: '1.125rem',
+        spacing: {
+          h1: { top: '1.5em', bottom: '0.5em' },
+          h2: { top: '1.5em', bottom: '0.5em' },
+          h3: { top: '1.5em', bottom: '0.65em' },
+          h4: { top: '1.5em', bottom: '0.65em' },
+          h5: { top: '1.5em', bottom: '0.65em' },
+          h6: { top: '1.5em', bottom: '0.65em' },
+        },
+      },
+      // Non-editorial rich text context — overrides h3-h6 with a sans/bold face.
+      // Spacing applied inside RichTextBlockWrapper that is not editorial.
+      richtext: {
+        face: richtextHeadingFace,
+        h3: '1.25rem',
+        h4: '1.125rem',
+        h5: '1.125rem',
+        h6: '1.125rem',
+        spacing: {
+          h1: { top: '1.5em', bottom: '0.5em' },
+          h2: { top: '1.5em', bottom: '0.5em' },
+          h3: { top: '1.5em', bottom: '0.65em' },
+          h4: { top: '1.5em', bottom: '0.65em' },
+          h5: { top: '1.5em', bottom: '0.65em' },
+          h6: { top: '1.5em', bottom: '0.65em' },
+        },
       },
     },
     sizes: {
       subtitle1: '1.25rem',
       subtitle2: '0.875rem',
-      body1: '1.25rem',
+      body1: '1.125rem',
       body2: '0.875rem',
+      editorialBody: '1.25rem',
       button: '1rem',
       caption: '0.85rem',
       overline: '0.75rem',
