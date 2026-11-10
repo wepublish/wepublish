@@ -114,7 +114,7 @@ export type ExportResult = {
 };
 
 export const NO_KINDS_WARNING =
-  'bexio: keine bexio-Arten konfiguriert (Einstellungen › Druckausgaben) – aus bexio wird nichts gelistet';
+  'bexio: keine bexio-Bezugsarten konfiguriert (Einstellungen › Druckausgaben) – aus bexio wird nichts gelistet';
 
 export const NO_BEXIO_WARNING =
   'bexio: kein Zahlungsanbieter mit API-Schlüssel konfiguriert – keine Institutionen, Geschenke, Buchhandel und Einzelhefte';

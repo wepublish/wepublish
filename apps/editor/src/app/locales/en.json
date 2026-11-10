@@ -2648,7 +2648,7 @@
         "printBexioKinds": "How the print list recognises orders in bexio. «Period»: the keyword starts the description of the contact link (e.g. «NW Geschenkabo»), the period is in the invoice title (year «2027» or «15.03.2026–14.03.2027»); every linked person receives one copy. «Issue»: the keyword starts an invoice position, followed by the issue (e.g. «Einzelheft 6.26»); the position's quantity counts."
       },
       "printExportDefaults": "Print list: default options",
-      "printBexioKinds": "bexio kinds"
+      "printBexioKinds": "bexio delivery types"
     },
     "automaticMails": {
       "title": "Automated messages",
@@ -5228,7 +5228,7 @@
         "wepublish": "we.publish",
         "totalSubscriptions": "Subscriptions checked",
         "byPlan": "Plans",
-        "byKind": "bexio kinds",
+        "byKind": "bexio delivery types",
         "byCountry": "Countries",
         "hints": {
           "title": "Notes",
@@ -5266,7 +5266,7 @@
           "contactMissing": "Contact missing",
           "skippedOpen": "Unpaid, left out",
           "noValidPeriod": "Without a valid period or issue",
-          "excludedKind": "Kind not selected",
+          "excludedKind": "Delivery type not selected",
           "quantityMismatch": "Quantity ≠ links"
         }
       },
@@ -5289,11 +5289,11 @@
       "includeBexio": "Include bexio",
       "includeBexioHelp": "Institutions, gift subscriptions, bookshops and single issues from bexio – read with the key of the bexio payment provider under Integrations.",
       "bexioNotConfigured": "No bexio payment provider with an API key is set up under Integrations; bexio cannot be read.",
-      "bexioKinds": "bexio kinds",
-      "bexioNoKinds": "No bexio kinds configured – add them under Settings › Print issues. Until then nothing is listed from bexio.",
+      "bexioKinds": "bexio delivery types",
+      "bexioNoKinds": "No bexio delivery types configured – add them under Settings › Print issues. Until then nothing is listed from bexio.",
       "bexioShort": "bexio",
-      "bexioKindsCount_one": "bexio: {{count}} kind",
-      "bexioKindsCount_other": "bexio: {{count}} kinds",
+      "bexioKindsCount_one": "bexio: {{count}} delivery type",
+      "bexioKindsCount_other": "bexio: {{count}} delivery types",
       "includeOpen": "Export ordered but unpaid copies",
       "includeOpenHelp": "Renewing subscriptions whose invoice is not paid yet receive a copy. With this option off, they receive only copies already paid for.",
       "openShort": "open",
@@ -5302,15 +5302,15 @@
       "upcomingShort": "gift"
     },
     "printBexioKinds": {
-      "kind": "bexio kind {{label}}",
+      "kind": "bexio delivery type {{label}}",
       "label": "Label",
       "word": "Keyword in bexio",
       "refersTo": "Refers to",
       "refersToPeriod": "Period",
       "refersToIssue": "Issue",
-      "add": "Add bexio kind",
-      "delete": "Delete bexio kind {{label}}",
-      "empty": "No bexio kinds yet. Without a bexio kind nothing is listed from bexio."
+      "add": "Add bexio delivery type",
+      "delete": "Delete bexio delivery type {{label}}",
+      "empty": "No bexio delivery types yet. Without a bexio delivery type nothing is listed from bexio."
     },
     "autosave": {
       "label": "Autosave",

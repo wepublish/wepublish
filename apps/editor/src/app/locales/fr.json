@@ -2647,7 +2647,7 @@
         "printBexioKinds": "Comment la liste d’impression reconnaît les commandes dans bexio. «Période» : le mot-clé commence la description du lien de contact (p. ex. «NW Geschenkabo»), la période figure dans le titre de la facture (année «2027» ou «15.03.2026–14.03.2027») ; chaque personne liée reçoit un exemplaire. «Numéro» : le mot-clé commence une position de facture, suivi du numéro (p. ex. «Einzelheft 6.26») ; la quantité de la position compte."
       },
       "printExportDefaults": "Liste d’impression : options par défaut",
-      "printBexioKinds": "Types bexio"
+      "printBexioKinds": "Types de réception bexio"
     },
     "automaticMails": {
       "title": "Messages automatiques",
@@ -5228,7 +5228,7 @@
         "wepublish": "we.publish",
         "totalSubscriptions": "Abonnements vérifiés",
         "byPlan": "Types d’abonnement",
-        "byKind": "Types bexio",
+        "byKind": "Types de réception bexio",
         "byCountry": "Pays",
         "hints": {
           "title": "Remarques",
@@ -5266,7 +5266,7 @@
           "contactMissing": "Contact manquant",
           "skippedOpen": "Impayées, ignorées",
           "noValidPeriod": "Sans indication valable",
-          "excludedKind": "Type non choisi",
+          "excludedKind": "Type de réception non choisi",
           "quantityMismatch": "Quantité ≠ liens"
         }
       },
@@ -5289,11 +5289,11 @@
       "includeBexio": "Inclure bexio",
       "includeBexioHelp": "Institutions, abonnements cadeaux, librairies et numéros à l’unité depuis bexio – lus avec la clé du prestataire de paiement bexio sous Intégrations.",
       "bexioNotConfigured": "Aucun prestataire de paiement bexio avec clé API n’est configuré sous Intégrations ; bexio ne peut pas être lu.",
-      "bexioKinds": "Types bexio",
-      "bexioNoKinds": "Aucun type bexio configuré – à créer sous Paramètres › Numéros imprimés. D’ici là, rien n’est listé depuis bexio.",
+      "bexioKinds": "Types de réception bexio",
+      "bexioNoKinds": "Aucun type de réception bexio configuré – à créer sous Paramètres › Numéros imprimés. D’ici là, rien n’est listé depuis bexio.",
       "bexioShort": "bexio",
-      "bexioKindsCount_one": "bexio : {{count}} type",
-      "bexioKindsCount_other": "bexio : {{count}} types",
+      "bexioKindsCount_one": "bexio : {{count}} type de réception",
+      "bexioKindsCount_other": "bexio : {{count}} types de réception",
       "includeOpen": "Exporter les exemplaires commandés mais impayés",
       "includeOpenHelp": "Les abonnements qui se renouvellent mais dont la facture n’est pas encore payée reçoivent un exemplaire. Option désactivée, ils ne reçoivent que les exemplaires déjà payés.",
       "openShort": "ouvert",
@@ -5302,15 +5302,15 @@
       "upcomingShort": "offert"
     },
     "printBexioKinds": {
-      "kind": "Type bexio {{label}}",
+      "kind": "Type de réception bexio {{label}}",
       "label": "Libellé",
       "word": "Mot-clé dans bexio",
       "refersTo": "Se rapporte à",
       "refersToPeriod": "Période",
       "refersToIssue": "Numéro",
-      "add": "Ajouter un type bexio",
-      "delete": "Supprimer le type bexio {{label}}",
-      "empty": "Pas encore de types bexio. Sans type bexio, rien n’est listé depuis bexio."
+      "add": "Ajouter un type de réception bexio",
+      "delete": "Supprimer le type de réception bexio {{label}}",
+      "empty": "Pas encore de types de réception bexio. Sans type de réception bexio, rien n’est listé depuis bexio."
     },
     "autosave": {
       "label": "Enregistrement auto",
