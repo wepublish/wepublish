@@ -10,17 +10,21 @@
  *
  * Built by a function rather than exported as a constant because the article
  * picker's tag dropdown is populated from the articles themselves, which are not
- * known until they have been fetched — and because every label is translated.
+ * known until they have been fetched — because every label is translated — and
+ * because what the editor offers depends on the issue's kit: its blocks, its
+ * Einzug options, its theme on the canvas.
  */
-import type { Config, Field } from '@puckeditor/core';
+import type { ComponentConfig, Config, Field } from '@puckeditor/core';
 import {
   DEFAULT_FOOTER_LEGAL,
-  DEFAULT_GUTTER,
-  EMAIL_CSS,
+  emailCss,
+  Gutter,
+  KitId,
   NewsletterBlock,
+  NewsletterKit,
+  NewsletterKitProvider,
   renderBlock,
   teaserFromArticle,
-  theme,
 } from '@wepublish/newsletter/email';
 import type { TFunction } from 'i18next';
 import type { ReactElement, ReactNode } from 'react';
@@ -76,7 +80,13 @@ function resolve(block: NewsletterBlock): NewsletterBlock {
   }
 }
 
-function draw(t: TFunction, type: string, props: Props): ReactElement {
+function draw(
+  kit: NewsletterKit,
+  t: TFunction,
+  type: string,
+  props: Props
+): ReactElement {
+  const { theme } = kit;
   const block = toBlock(type, props);
 
   if (!block) {
@@ -108,8 +118,47 @@ function draw(t: TFunction, type: string, props: Props): ReactElement {
     );
   }
 
-  return <>{renderBlock(drawable, 0)}</>;
+  return (
+    <NewsletterKitProvider kit={kit}>
+      {renderBlock(drawable, 0)}
+    </NewsletterKitProvider>
+  );
 }
+
+/** What a block says when it is dragged in, per kit. */
+interface BlockDefaults {
+  heading: string;
+  rubric: string;
+  panelTitle: string;
+  button: { label: string; href: string };
+  metaLeft: string;
+  footerTitle: string;
+}
+
+const KIT_DEFAULTS: Record<KitId, BlockDefaults> = {
+  eenews: {
+    heading: 'Titel der Ausgabe',
+    rubric: 'Solar',
+    panelTitle: 'Gewusst?',
+    button: { label: 'Jetzt unterstützen', href: 'https://www.ee-news.ch/' },
+    metaLeft: 'Newsletter',
+    footerTitle: 'ee-news.ch',
+  },
+  bajour: {
+    heading: 'Titel',
+    rubric: '',
+    panelTitle: '',
+    button: { label: 'Jetzt Member werden', href: 'https://bajour.ch/' },
+    metaLeft: 'Basel Briefing',
+    footerTitle: 'Basel Briefing - der tägliche Newsletter mit ❤️ von Bajour.',
+  },
+};
+
+/** An Einzug as the kit's theme measures it — what its radio label names. */
+const gutterSize = (kit: NewsletterKit, gutter: Gutter) =>
+  gutter === 'none' ? kit.theme.space.noGutter
+  : gutter === 'intro' ? kit.theme.space.introGutter
+  : kit.theme.space.gutter;
 
 /**
  * One row of the article picker: date, source and title on the first line, the
@@ -153,7 +202,14 @@ function ArticleRow({ article }: { article: ArticleChoice }) {
   );
 }
 
-export function createConfig(articles: ArticleChoice[], t: TFunction): Config {
+export function createConfig(
+  kit: NewsletterKit,
+  articles: ArticleChoice[],
+  t: TFunction
+): Config {
+  const { theme } = kit;
+  const defaults = KIT_DEFAULTS[kit.id];
+  const defaultGutter = kit.defaultGutter;
   const prose = proseField(t('newsletter.blocks.text.body'));
 
   /** The footer's own two prose fields; both offer the merge-tag picker. */
@@ -166,31 +222,18 @@ export function createConfig(articles: ArticleChoice[], t: TFunction): Config {
    *
    * The labels name the pixels because that is what an editor comparing a draft
    * against a sent issue is actually looking for; the values are what the document
-   * stores. `theme.space` is where the three measurements are defined.
+   * stores. The kit decides which of them it offers, and its theme's `space` is
+   * where the measurements are defined.
    */
   const gutterField: Field = {
     type: 'radio',
     label: t('newsletter.blocks.gutter.label'),
-    options: [
-      {
-        label: t('newsletter.blocks.gutter.none', {
-          size: theme.space.noGutter,
-        }),
-        value: 'none',
-      },
-      {
-        label: t('newsletter.blocks.gutter.article', {
-          size: theme.space.gutter,
-        }),
-        value: 'article',
-      },
-      {
-        label: t('newsletter.blocks.gutter.intro', {
-          size: theme.space.introGutter,
-        }),
-        value: 'intro',
-      },
-    ],
+    options: kit.gutters.map(gutter => ({
+      label: t(`newsletter.blocks.gutter.${gutter}`, {
+        size: gutterSize(kit, gutter),
+      }),
+      value: gutter,
+    })),
   };
 
   /**
@@ -209,7 +252,7 @@ export function createConfig(articles: ArticleChoice[], t: TFunction): Config {
    */
   const conditionSetting = conditionField(t('newsletter.blocks.condition'));
 
-  return {
+  const config: Config = {
     root: {
       // No fields: the preview text is edited in the «Einstellungen» tab, with
       // the title, rather than in a panel that only appears with nothing selected.
@@ -223,7 +266,7 @@ export function createConfig(articles: ArticleChoice[], t: TFunction): Config {
       // what would give the canvas two closing blocks.
       render: ({ children }: RootRenderProps) => (
         <>
-          <style dangerouslySetInnerHTML={{ __html: EMAIL_CSS }} />
+          <style dangerouslySetInnerHTML={{ __html: emailCss(theme) }} />
           <div
             style={{
               width: theme.contentWidth,
@@ -343,10 +386,10 @@ export function createConfig(articles: ArticleChoice[], t: TFunction): Config {
         },
         defaultProps: {
           variant: 'short',
-          gutter: DEFAULT_GUTTER.teaser,
+          gutter: defaultGutter.teaser,
           condition: NO_CONDITION,
         },
-        render: props => draw(t, 'teaser', props as Props),
+        render: props => draw(kit, t, 'teaser', props as Props),
       },
 
       rubric: {
@@ -357,11 +400,11 @@ export function createConfig(articles: ArticleChoice[], t: TFunction): Config {
           condition: conditionSetting,
         },
         defaultProps: {
-          name: 'Solar',
-          gutter: DEFAULT_GUTTER.rubric,
+          name: defaults.rubric,
+          gutter: defaultGutter.rubric,
           condition: NO_CONDITION,
         },
-        render: props => draw(t, 'rubric', props as Props),
+        render: props => draw(kit, t, 'rubric', props as Props),
       },
 
       heading: {
@@ -372,11 +415,11 @@ export function createConfig(articles: ArticleChoice[], t: TFunction): Config {
           condition: conditionSetting,
         },
         defaultProps: {
-          text: 'Titel der Ausgabe',
-          gutter: DEFAULT_GUTTER.heading,
+          text: defaults.heading,
+          gutter: defaultGutter.heading,
           condition: NO_CONDITION,
         },
-        render: props => draw(t, 'heading', props as Props),
+        render: props => draw(kit, t, 'heading', props as Props),
       },
 
       text: {
@@ -388,10 +431,10 @@ export function createConfig(articles: ArticleChoice[], t: TFunction): Config {
         },
         defaultProps: {
           body: '',
-          gutter: DEFAULT_GUTTER.text,
+          gutter: defaultGutter.text,
           condition: NO_CONDITION,
         },
-        render: props => draw(t, 'text', props as Props),
+        render: props => draw(kit, t, 'text', props as Props),
       },
 
       image: {
@@ -414,10 +457,10 @@ export function createConfig(articles: ArticleChoice[], t: TFunction): Config {
           alt: '',
           href: '',
           caption: '',
-          gutter: DEFAULT_GUTTER.image,
+          gutter: defaultGutter.image,
           condition: NO_CONDITION,
         },
-        render: props => draw(t, 'image', props as Props),
+        render: props => draw(kit, t, 'image', props as Props),
       },
 
       panel: {
@@ -438,15 +481,15 @@ export function createConfig(articles: ArticleChoice[], t: TFunction): Config {
           condition: conditionSetting,
         },
         defaultProps: {
-          title: 'Gewusst?',
+          title: defaults.panelTitle,
           body: '',
           imageId: '',
           linkLabel: '',
           linkHref: '',
-          gutter: DEFAULT_GUTTER.panel,
+          gutter: defaultGutter.panel,
           condition: NO_CONDITION,
         },
-        render: props => draw(t, 'panel', props as Props),
+        render: props => draw(kit, t, 'panel', props as Props),
       },
 
       button: {
@@ -458,12 +501,12 @@ export function createConfig(articles: ArticleChoice[], t: TFunction): Config {
           condition: conditionSetting,
         },
         defaultProps: {
-          label: 'Jetzt unterstützen',
-          href: 'https://www.ee-news.ch/',
-          gutter: DEFAULT_GUTTER.button,
+          label: defaults.button.label,
+          href: defaults.button.href,
+          gutter: defaultGutter.button,
           condition: NO_CONDITION,
         },
-        render: props => draw(t, 'button', props as Props),
+        render: props => draw(kit, t, 'button', props as Props),
       },
 
       meta: {
@@ -475,22 +518,22 @@ export function createConfig(articles: ArticleChoice[], t: TFunction): Config {
           condition: conditionSetting,
         },
         defaultProps: {
-          left: 'Newsletter',
+          left: defaults.metaLeft,
           right: '',
-          gutter: DEFAULT_GUTTER.meta,
+          gutter: defaultGutter.meta,
           condition: NO_CONDITION,
         },
-        render: props => draw(t, 'meta', props as Props),
+        render: props => draw(kit, t, 'meta', props as Props),
       },
 
       divider: {
         label: t('newsletter.blocks.divider.label'),
         fields: { gutter: gutterField, condition: conditionSetting },
         defaultProps: {
-          gutter: DEFAULT_GUTTER.divider,
+          gutter: defaultGutter.divider,
           condition: NO_CONDITION,
         },
-        render: props => draw(t, 'divider', props as Props),
+        render: props => draw(kit, t, 'divider', props as Props),
       },
 
       /**
@@ -520,13 +563,41 @@ export function createConfig(articles: ArticleChoice[], t: TFunction): Config {
           gutter: gutterField,
         },
         defaultProps: {
-          title: 'ee-news.ch',
+          title: defaults.footerTitle,
           lines: '',
           legal: DEFAULT_FOOTER_LEGAL.join('\n'),
-          gutter: DEFAULT_GUTTER.footer,
+          gutter: defaultGutter.footer,
         },
-        render: props => draw(t, 'footer', props as Props),
+        render: props => draw(kit, t, 'footer', props as Props),
       },
     },
   };
+
+  return forKit(config, kit);
+}
+
+/**
+ * Narrows the full block set to the kit's: the components it offers, and the
+ * drawer's categories without the ones it has nothing left in.
+ */
+function forKit(config: Config, kit: NewsletterKit): Config {
+  const offered = (type: string) =>
+    (kit.blocks as readonly string[]).includes(type);
+
+  const components = Object.fromEntries(
+    Object.entries(config.components).filter(([type]) => offered(type))
+  ) as Record<string, ComponentConfig>;
+
+  const categories = Object.fromEntries(
+    Object.entries(config.categories ?? {})
+      .map(([name, category]) => [
+        name,
+        { ...category, components: category.components?.filter(offered) },
+      ])
+      .filter(([, category]) =>
+        Boolean((category as { components?: string[] }).components?.length)
+      )
+  );
+
+  return { ...config, components, categories };
 }

@@ -22,7 +22,13 @@ import {
   PublishNewsletterCampaignMutation,
   UpdateNewsletterCampaignDocument,
 } from '@wepublish/editor/api';
-import { articleIdsIn, NewsletterDocument } from '@wepublish/newsletter/email';
+import {
+  articleIdsIn,
+  getKit,
+  LEGACY_KIT_ID,
+  NewsletterDocument,
+  NewsletterKit,
+} from '@wepublish/newsletter/email';
 import {
   createCheckedPermissionComponent,
   PermissionControl,
@@ -32,7 +38,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
 import { ArticleChoice, loadArticles, loadArticlesByIds } from './articles';
 import { createConfig } from './config';
-import { fromPuckData, toPuckData } from './convert';
+import { fromPuckData, kitIdOf, toPuckData } from './convert';
 import { EditorStyles } from './editor-styles';
 import { Actions, EditorHeader } from './header';
 import { rememberImages } from './images';
@@ -54,6 +60,8 @@ function NewsletterCampaignEditor() {
   const [title, setTitle] = useState('');
   const [data, setData] = useState<Data | null>(null);
   const [articles, setArticles] = useState<ArticleChoice[]>([]);
+  // Replaced by the issue's own once it has loaded; nothing is drawn before.
+  const [kit, setKit] = useState<NewsletterKit>(getKit(LEGACY_KIT_ID));
   const [status, setStatus] = useState(t('newsletter.editor.loading'));
   const [failed, setFailed] = useState(false);
   const [draft, setDraft] = useState<DraftCampaign | null>(null);
@@ -77,7 +85,10 @@ function NewsletterCampaignEditor() {
 
   // Rebuilt from the cached article list when the language changes, without
   // touching the campaign document — `t` must not trigger the load effect below.
-  const config = useMemo(() => createConfig(articles, t), [articles, t]);
+  const config = useMemo(
+    () => createConfig(kit, articles, t),
+    [kit, articles, t]
+  );
 
   const [updateCampaign] = useMutation(UpdateNewsletterCampaignDocument);
   const [publishCampaign] = useMutation(PublishNewsletterCampaignDocument);
@@ -142,6 +153,7 @@ function NewsletterCampaignEditor() {
         await loadArticlesByIds(articleIdsIn(document)).catch(() => undefined);
 
         setArticles(loadedArticles);
+        setKit(getKit(kitIdOf(document.kit)));
         setCampaign(loaded);
         setTitle(loaded.title);
 

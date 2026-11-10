@@ -1,14 +1,25 @@
+import type { ReactNode } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { renderBlock } from './blocks';
 import { newIssueDocument } from './new-issue';
 import type { NewsletterDocument } from './document';
 import { renderParagraphs } from './inline';
+import { eenewsKit, eenewsTheme } from './kits/eenews';
+import { NewsletterKitProvider } from './kit';
 import { conditionTags, missingRequiredFooterTags } from './merge-tags';
 import { renderNewsletter } from './render';
 import { documentText, htmlBytes, newsletterReport } from './report';
 
 const draw = (paragraphs: string[]) =>
-  renderToStaticMarkup(<>{renderParagraphs(paragraphs, {})}</>);
+  renderToStaticMarkup(
+    <>{renderParagraphs(paragraphs, {}, { theme: eenewsTheme })}</>
+  );
+
+/** A single block, as the canvas draws it: inside its kit. */
+const drawBlock = (block: ReactNode) =>
+  renderToStaticMarkup(
+    <NewsletterKitProvider kit={eenewsKit}>{block}</NewsletterKitProvider>
+  );
 
 describe('inline markup', () => {
   it('leaves two adjacent merge tags alone instead of reading a bold run between them', () => {
@@ -71,7 +82,7 @@ describe('conditionTags', () => {
   });
 
   it('wraps the whole block in the tags', () => {
-    const html = renderToStaticMarkup(
+    const html = drawBlock(
       renderBlock(
         {
           type: 'divider',
@@ -89,14 +100,12 @@ describe('conditionTags', () => {
 describe('image block', () => {
   it('draws nothing until an image is picked', () => {
     expect(
-      renderToStaticMarkup(
-        <>{renderBlock({ type: 'image', imageId: 'logo', alt: 'Logo' }, 0)}</>
-      )
+      drawBlock(renderBlock({ type: 'image', imageId: 'logo', alt: 'Logo' }, 0))
     ).toBe('');
   });
 
   it('sizes the image by attribute for Outlook', () => {
-    const html = renderToStaticMarkup(
+    const html = drawBlock(
       renderBlock(
         {
           type: 'image',
@@ -113,6 +122,7 @@ describe('image block', () => {
 });
 
 const EVERY_BLOCK: NewsletterDocument = {
+  kit: 'eenews',
   preheader: 'Vorschau',
   blocks: [
     { type: 'image', alt: 'Logo', href: 'https://example.com', gutter: 'none' },
@@ -129,6 +139,98 @@ const EVERY_BLOCK: NewsletterDocument = {
   ],
 };
 
+/**
+ * Every block in every state it can render in, resolved the way the server
+ * resolves it: both teaser variants with their article, a panel with and
+ * without its image, a linked and captioned image, every Einzug and a condition.
+ */
+const EENEWS_ISSUE: NewsletterDocument = {
+  kit: 'eenews',
+  preheader: 'Vorschau',
+  blocks: [
+    {
+      type: 'image',
+      src: 'https://media.example.com/logo',
+      alt: 'Logo',
+      href: 'https://example.com',
+      gutter: 'none',
+    },
+    { type: 'meta', left: 'Newsletter', right: '13.8.2026' },
+    { type: 'heading', text: 'Titel der Ausgabe' },
+    {
+      type: 'text',
+      gutter: 'intro',
+      paragraphs: [
+        '**Fett** und [Link](https://example.com)',
+        '- eins',
+        '- zwei',
+      ],
+    },
+    {
+      type: 'button',
+      label: 'Jetzt unterstützen',
+      href: 'https://example.com',
+    },
+    {
+      type: 'panel',
+      title: 'Gewusst?',
+      paragraphs: ['Text'],
+      link: { label: 'Mehr', href: 'https://example.com' },
+    },
+    {
+      type: 'panel',
+      title: 'Mit Bild',
+      paragraphs: ['Text'],
+      imageUrl: 'https://media.example.com/cover',
+    },
+    { type: 'rubric', name: 'Solar' },
+    {
+      type: 'teaser',
+      variant: 'big',
+      articleId: 'article-1',
+      teaser: {
+        kicker: 'Institut',
+        title: 'Grosser Teaser',
+        lead: 'Lead',
+        url: 'https://example.com/a/1',
+        imageUrl: 'https://media.example.com/a1',
+      },
+    },
+    { type: 'divider', gutter: 'none' },
+    {
+      type: 'teaser',
+      variant: 'short',
+      articleId: 'article-2',
+      teaser: {
+        title: 'Kurzer Teaser',
+        lead: 'Lead',
+        url: 'https://example.com/a/2',
+      },
+      condition: { field: 'FNAME', operator: 'is', value: 'Bob' },
+    },
+    { type: 'teaser', variant: 'short', articleId: 'gone' },
+    {
+      type: 'image',
+      src: 'https://media.example.com/photo',
+      alt: 'Foto',
+      caption: 'Bildlegende',
+    },
+    {
+      type: 'footer',
+      title: 'ee-news.ch',
+      lines: ['Redaktion [Kontakt](https://example.com)'],
+    },
+  ],
+};
+
+describe('eenews layout', () => {
+  it('renders every block exactly as before medium kits existed', async () => {
+    await expect(await renderNewsletter(EENEWS_ISSUE)).toMatchFileSnapshot(
+      './__snapshots__/eenews-issue.html'
+    );
+  });
+});
+
 describe('renderNewsletter', () => {
   it('never pretty-prints end tags', async () => {
     expect(await renderNewsletter(EVERY_BLOCK)).not.toMatch(/<\/\w+\n/);
@@ -137,7 +239,7 @@ describe('renderNewsletter', () => {
   it('gives a new issue the footer tags Mailchimp requires', async () => {
     expect(
       missingRequiredFooterTags(
-        await renderNewsletter(newIssueDocument('Ausgabe 1'))
+        await renderNewsletter(newIssueDocument('Ausgabe 1', 'eenews'))
       )
     ).toEqual([]);
   });
@@ -150,6 +252,7 @@ describe('renderNewsletter', () => {
 
   it('carries nothing only a browser could use: image preloads, React stream markers', async () => {
     const html = await renderNewsletter({
+      kit: 'eenews',
       preheader: '',
       blocks: [
         {
@@ -185,6 +288,7 @@ describe('report', () => {
 
   it('collects every string of the document', () => {
     const document: NewsletterDocument = {
+      kit: 'eenews',
       preheader: 'Vorschau',
       blocks: [
         { type: 'footer', title: 'ee', lines: [], legal: ['*|UNSUB|*'] },

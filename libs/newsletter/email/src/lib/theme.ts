@@ -1,65 +1,132 @@
 /**
- * Design tokens for the generated newsletter.
+ * The shape of a newsletter's design tokens.
  *
- * Every value here was read off the sent issue "Die Unterschätzten –
- * ee-news.ch Newsletter 13.8.26" (Mailchimp campaign 6e2162b16f), not invented.
- * That issue is the layout this renderer reproduces.
+ * Each medium's kit (`kits/`) fills one in, read off a sent issue of its own
+ * rather than invented. A theme is the only place a colour, font or measurement
+ * may be written down: a value inlined in a block is a value nobody will find
+ * again when the design changes — which is the whole reason the design moved out
+ * of Mailchimp.
  *
- * This is the only place a colour, font or measurement may be written down.
- * A value inlined in a block is a value nobody will find again when the design
- * changes — which is the whole reason the design moved out of Mailchimp.
+ * The top-level groups are shared by every block; the per-block groups at the
+ * bottom (`heading` … `footer`) are where two media differ by more than a
+ * colour — a centred button, a heavier rule, a legal notice on its own grey.
+ * A token one kit has no use for (eenews's single font, bajour's big-teaser
+ * frame) still gets a value, so no block has to ask which kit it is in.
  */
-export const theme = {
+export interface NewsletterTheme {
   font: {
-    /** The template's house font; the fallback is what most clients actually use. */
-    body: '"DM Sans", Helvetica, Arial, sans-serif',
-  },
+    /** Body text, headings and the footer masthead. */
+    body: string;
+    /** Small print: captions, buttons, the date line, the legal notice. */
+    ui: string;
+  };
   color: {
-    /** Warm cream behind the 660px column. */
-    page: '#f8f5ee',
-    body: '#ffffff',
-    text: '#000000',
-    /** Brand blue — kickers, teaser headlines, the ee-news wordmark. */
-    brand: '#195a7d',
-    /** Pale blue — rubric bars and the frame around big-teaser images. */
-    tint: '#f0faff',
-    /** Pale green — the "Gewusst?" style highlight panel. */
-    highlight: '#f8fff5',
-    /** Body links: near-black and underlined, per `.mceText a`. */
-    link: '#252525',
-    rule: '#d0d0d0',
-  },
+    /** Behind the column. */
+    page: string;
+    /** The column itself. */
+    body: string;
+    text: string;
+    /** The accent: kickers, teaser headlines. */
+    brand: string;
+    /** Rubric bars and the frame around big-teaser images. */
+    tint: string;
+    /** Behind the highlight panel. */
+    highlight: string;
+    /** Links in prose. */
+    link: string;
+    rule: string;
+  };
   size: {
-    /** `.mceText p` — 15px/1.5 is the body setting for the whole issue. */
-    body: '15px',
-    /** `.mceText h4` — rubric bars and big-teaser headlines. */
-    heading: '20px',
-  },
+    body: string;
+    /** Rubric bars, teaser headlines, panel titles. */
+    heading: string;
+  };
   lineHeight: {
-    body: '1.5',
-    heading: '1.25',
-  },
+    body: string;
+    heading: string;
+  };
   space: {
-    /** Standard block inset. Text blocks in the issue use 24px sides. */
-    gutter: '24px',
-    /** The intro region sits further in than the article region does. */
-    introGutter: '48px',
-    /** No inset at all — the block runs edge to edge, as the masthead does. */
-    noGutter: '0px',
-    tight: '3px',
-    block: '12px',
-    section: '24px',
-  },
+    /** The `article` Einzug: the standard block inset. */
+    gutter: string;
+    /** The `intro` Einzug. */
+    introGutter: string;
+    /** The `none` Einzug — edge to edge. */
+    noGutter: string;
+    tight: string;
+    /** Above and below every block. */
+    block: string;
+    /** Between two paragraphs, and above a list. */
+    paragraph: string;
+    section: string;
+  };
   bigTeaser: {
-    /** 33.33% of 660 − 20px inset − 2×10px frame = 180px. */
-    imageWidth: 180,
-    frameWidth: 10,
-    /** The template's 12-column grid, split 4/8. */
-    imageColumnPercent: '33.333333%',
-    textColumnPercent: '66.666667%',
-  },
-  /** `.mceWidthContainer` — the issue is 660px wide, not the usual 600. */
-  contentWidth: 660,
-  /** The template stacks columns below this, and so do we. */
-  mobileBreakpoint: 480,
-} as const;
+    imageWidth: number;
+    frameWidth: number;
+    imageColumnPercent: string;
+    textColumnPercent: string;
+  };
+  /** The column width, in pixels. */
+  contentWidth: number;
+  /** Columns stack below this width. */
+  mobileBreakpoint: number;
+
+  /** The `heading` block. */
+  heading: { fontSize: string; color: string };
+  /** The line under an image block. */
+  caption: {
+    fontFamily: string;
+    fontSize: string;
+    lineHeight: string;
+    color: string;
+    fontStyle?: 'italic';
+    textAlign?: 'center';
+  };
+  button: {
+    background: string;
+    color: string;
+    fontFamily: string;
+    fontSize: string;
+    padding: string;
+    radius: string;
+    /** Absent: the button sits at the left edge of the column. */
+    align?: 'center';
+  };
+  divider: {
+    width: string;
+    color: string;
+    /** Above and below the line. */
+    space: string;
+  };
+  /** The date line at the top of an issue. */
+  meta: {
+    fontFamily: string;
+    fontSize: string;
+    color: string;
+    background?: string;
+  };
+  /** The pinned closing block. */
+  footer: {
+    background: string;
+    titleSize: string;
+    titleColor: string;
+    /** A background behind the title's text alone, as a highlighter would. */
+    titleHighlight?: string;
+    /** Prose lines under the title. */
+    color: string;
+    textSize: string;
+    linkColor: string;
+    /** Absent: title and lines start at the left edge of the column. */
+    align?: 'center';
+    legal: {
+      fontFamily: string;
+      fontSize: string;
+      color: string;
+      linkColor: string;
+      /**
+       * Set: the legal notice gets a band of its own in this colour under the
+       * closing block. Absent: it sits inside the closing block.
+       */
+      background?: string;
+    };
+  };
+}

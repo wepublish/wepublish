@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import {
@@ -11,6 +12,10 @@ import {
 } from '@prisma/client';
 import {
   describeRequiredTag,
+  isKitId,
+  KIT_IDS,
+  KitId,
+  LEGACY_KIT_ID,
   missingRequiredFooterTags,
   NewsletterDocument,
   newIssueDocument,
@@ -18,7 +23,7 @@ import {
 } from '@wepublish/newsletter/email';
 import { NewsletterMailchimpService } from './newsletter-mailchimp.service';
 import { NewsletterRenderService } from './newsletter-render.service';
-import { DocumentError, parseDocument } from './parse';
+import { DocumentError, parseDocument, storedKit } from './parse';
 
 /**
  * Publishing refused because the issue itself is not publishable — as opposed
@@ -51,6 +56,30 @@ const toCampaign = (
 
 const asJson = (document: NewsletterDocument) =>
   document as unknown as Prisma.InputJsonValue;
+
+/**
+ * The kit this medium writes new issues in: `NEWSLETTER_KIT`, or eenews where
+ * it is not set — eenews had the editor to itself before there were kits.
+ *
+ * Read when an issue is created rather than at boot, so a typo stops nothing
+ * but the creation, with a message that names the variable. An existing issue
+ * keeps the kit it was written in whatever this says (see `update`).
+ */
+function mediumKit(): KitId {
+  const configured = process.env['NEWSLETTER_KIT']?.trim();
+
+  if (!configured) {
+    return LEGACY_KIT_ID;
+  }
+
+  if (!isKitId(configured)) {
+    throw new InternalServerErrorException(
+      `NEWSLETTER_KIT "${configured}" ist unbekannt — möglich sind ${KIT_IDS.join(', ')}.`
+    );
+  }
+
+  return configured;
+}
 
 @Injectable()
 export class NewsletterCampaignService {
@@ -99,7 +128,7 @@ export class NewsletterCampaignService {
    * A new issue starts from `newIssueDocument` — its title, a placeholder text
    * and the pinned closing block; an editor who wants last week's masthead and
    * rubrics duplicates last week's issue. The document goes through
-   * `parseDocument` like any other input.
+   * `parseDocument` like any other input, in the medium's kit.
    */
   async create(title: string, document?: unknown) {
     const trimmed = title.trim();
@@ -108,30 +137,40 @@ export class NewsletterCampaignService {
       throw new DocumentError('Bitte einen Titel für die Ausgabe angeben.');
     }
 
+    const kit = mediumKit();
+
+    return this.insert(
+      trimmed,
+      parseDocument(document ?? newIssueDocument(trimmed, kit), kit)
+    );
+  }
+
+  private async insert(title: string, document: NewsletterDocument) {
     const row = await this.prisma.newsletterCampaign.create({
-      data: {
-        title: trimmed,
-        document: asJson(parseDocument(document ?? newIssueDocument(trimmed))),
-      },
+      data: { title, document: asJson(document) },
     });
 
     return toCampaign(row);
   }
 
   /**
-   * A copy of the issue's document under a new title. The Mailchimp draft stays
-   * with the original: sharing it would let the copy overwrite a draft that may
-   * already be scheduled.
+   * A copy of the issue's document under a new title, in the kit the original
+   * was written in. The Mailchimp draft stays with the original: sharing it
+   * would let the copy overwrite a draft that may already be scheduled.
    */
   async duplicate(id: string) {
     const original = await this.row(id);
 
-    return this.create(`${original.title} (Kopie)`, original.document);
+    return this.insert(
+      `${original.title} (Kopie)`,
+      parseDocument(original.document)
+    );
   }
 
+  /** The issue stays in the kit it was written in; see `parseDocument`. */
   async update(id: string, title: string | undefined, document: unknown) {
-    const parsed = parseDocument(document);
     const existing = await this.row(id);
+    const parsed = parseDocument(document, storedKit(existing.document));
 
     const [row, editUrl] = await Promise.all([
       this.prisma.newsletterCampaign.update({

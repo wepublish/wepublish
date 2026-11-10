@@ -151,6 +151,7 @@ describe('NewsletterCampaignService', () => {
     expect(created()).toEqual({
       title: 'Ausgabe 2',
       document: {
+        kit: 'eenews',
         preheader: '',
         blocks: [
           expect.objectContaining({ type: 'heading', text: 'Ausgabe 2' }),
@@ -212,6 +213,73 @@ describe('NewsletterCampaignService', () => {
     expect(prisma.newsletterCampaign.update).toHaveBeenCalledWith({
       where: { id: 'campaign-1' },
       data: { title: 'Ausgabe 1', document: expect.anything() },
+    });
+  });
+
+  describe('kits', () => {
+    afterEach(() => {
+      vi.unstubAllEnvs();
+    });
+
+    it('starts a new issue in the kit the medium is set up with', async () => {
+      vi.stubEnv('NEWSLETTER_KIT', 'bajour');
+
+      await service.create('Ausgabe 2');
+
+      expect(created().document.kit).toBe('bajour');
+    });
+
+    it('starts a new issue in eenews where the medium names no kit', async () => {
+      vi.stubEnv('NEWSLETTER_KIT', '');
+
+      await service.create('Ausgabe 2');
+
+      expect(created().document.kit).toBe('eenews');
+    });
+
+    it('refuses to start an issue in a kit it does not know', async () => {
+      vi.stubEnv('NEWSLETTER_KIT', 'tsri');
+
+      await expect(service.create('Ausgabe 2')).rejects.toThrow(
+        'NEWSLETTER_KIT'
+      );
+      expect(prisma.newsletterCampaign.create).not.toHaveBeenCalled();
+    });
+
+    it('puts a document handed in from outside into the medium’s kit', async () => {
+      vi.stubEnv('NEWSLETTER_KIT', 'bajour');
+
+      await service.create('Ausgabe 2', document);
+
+      expect(created().document.kit).toBe('bajour');
+    });
+
+    it('keeps the kit of the issue it duplicates', async () => {
+      vi.stubEnv('NEWSLETTER_KIT', 'bajour');
+
+      await service.duplicate('campaign-1');
+
+      expect(created().document.kit).toBe('eenews');
+    });
+
+    it('keeps the stored kit through an edit, whatever the medium is set up with', async () => {
+      vi.stubEnv('NEWSLETTER_KIT', 'eenews');
+      prisma.newsletterCampaign.findUnique.mockResolvedValue({
+        ...row,
+        document: { ...document, kit: 'bajour' },
+      });
+
+      await service.update('campaign-1', undefined, document);
+
+      expect(
+        prisma.newsletterCampaign.update.mock.calls[0][0].data.document.kit
+      ).toBe('bajour');
+      await expect(
+        service.update('campaign-1', undefined, {
+          preheader: '',
+          blocks: [{ type: 'rubric', name: 'Solar' }],
+        })
+      ).rejects.toThrow('gibt es in der Vorlage «bajour» nicht');
     });
   });
 

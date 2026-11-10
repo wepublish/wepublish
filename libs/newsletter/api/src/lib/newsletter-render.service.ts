@@ -6,11 +6,11 @@ import { URLAdapter } from '@wepublish/nest-modules';
 import {
   ArticleSource,
   articleIdsIn,
+  getKit,
   imagesIn,
   NewsletterDocument,
   resolveImages,
   resolveTeasers,
-  theme,
 } from '@wepublish/newsletter/email';
 import { renderNewsletter } from '@wepublish/newsletter/email/render';
 
@@ -51,9 +51,10 @@ export class NewsletterRenderService {
 
   /**
    * The published revision only, as on the website: a teaser for a draft would
-   * link readers to a page that does not exist yet.
+   * link readers to a page that does not exist yet. `imageWidth` is how wide
+   * the document's kit draws a teaser image.
    */
-  private async loadArticles(ids: string[]) {
+  private async loadArticles(ids: string[], imageWidth: number) {
     const found = new Map<string, ArticleSource>();
 
     if (!ids.length) {
@@ -88,7 +89,7 @@ export class NewsletterRenderService {
         url: await this.urls.getArticleUrl(article),
         imageUrl:
           revision.image ?
-            await this.imageURL(revision.image, theme.bigTeaser.imageWidth)
+            await this.imageURL(revision.image, imageWidth)
           : null,
       });
     }
@@ -126,7 +127,10 @@ export class NewsletterRenderService {
    */
   async resolve(document: NewsletterDocument) {
     const [articles, images] = await Promise.all([
-      this.loadArticles(articleIdsIn(document)),
+      this.loadArticles(
+        articleIdsIn(document),
+        getKit(document.kit).theme.bigTeaser.imageWidth
+      ),
       this.loadImages(document),
     ]);
     const resolved = resolveTeasers(document, articles);

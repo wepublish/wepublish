@@ -132,3 +132,4 @@ Key variables for local development (set via `.env` or docker-compose):
 | `S3_ACCESS_KEY` / `S3_SECRET_KEY` | from `.env` | MinIO credentials |
 | `REDIS_URL` | `redis://wepublish-local:…@localhost:6379/0` | Dragonfly for shared caches and coordination (`@wepublish/dragonfly/api`, api), the page cache (websites) and the link cache (media); unset = all caching per replica |
 | `REDIS_KEY_PREFIX` | `wepublish-local` | Required with `REDIS_URL`; every key must start with it |
+| `NEWSLETTER_KIT` | `eenews` | The newsletter kit (`libs/newsletter/email/src/lib/kits/`: `eenews`, `bajour`) a new issue is written in; existing issues keep theirs |

@@ -8,6 +8,7 @@
  */
 import type { NewsletterBlock } from './blocks';
 import type { NewsletterDocument } from './document';
+import type { KitId } from './kit';
 
 /** The closing block with nothing filled in but the legal notice's default. */
 export const BLANK_FOOTER: NewsletterBlock = {
@@ -19,7 +20,11 @@ export const BLANK_FOOTER: NewsletterBlock = {
 const PLACEHOLDER =
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
 
-export const newIssueDocument = (title: string): NewsletterDocument => ({
+export const newIssueDocument = (
+  title: string,
+  kit: KitId
+): NewsletterDocument => ({
+  kit,
   preheader: '',
   blocks: [
     { type: 'heading', text: title },

@@ -5,6 +5,7 @@ import {
 import { DocumentError, parseDocument } from './parse';
 
 const EVERY_BLOCK: NewsletterDocument = {
+  kit: 'eenews',
   preheader: 'Vorschau',
   blocks: [
     { type: 'image', alt: 'Logo', href: 'https://example.com', gutter: 'none' },
@@ -32,8 +33,8 @@ describe('parseDocument', () => {
   });
 
   it('accepts the document a new issue starts from', () => {
-    expect(parseDocument(newIssueDocument('Ausgabe 1'))).toEqual(
-      newIssueDocument('Ausgabe 1')
+    expect(parseDocument(newIssueDocument('Ausgabe 1', 'eenews'))).toEqual(
+      newIssueDocument('Ausgabe 1', 'eenews')
     );
   });
 
@@ -153,5 +154,54 @@ describe('parseDocument', () => {
     expect(() => parseDocument(withBlocks(footer, footer))).toThrow(
       'darf höchstens eine Fusszeile enthalten'
     );
+  });
+});
+
+describe('kits', () => {
+  it('reads a document stored before kits existed as an eenews issue', () => {
+    expect(parseDocument(withBlocks({ type: 'divider' })).kit).toBe('eenews');
+  });
+
+  it('keeps the kit a stored document names', () => {
+    expect(
+      parseDocument({ kit: 'bajour', ...withBlocks({ type: 'divider' }) }).kit
+    ).toBe('bajour');
+  });
+
+  it('puts a document that names no kit into the one it is asked for', () => {
+    expect(parseDocument(withBlocks({ type: 'divider' }), 'bajour').kit).toBe(
+      'bajour'
+    );
+  });
+
+  it('refuses a document that claims another kit than its issue is in', () => {
+    expect(() =>
+      parseDocument({ kit: 'eenews', ...withBlocks() }, 'bajour')
+    ).toThrow('lässt sich nicht wechseln');
+  });
+
+  it('refuses a kit it does not know', () => {
+    expect(() => parseDocument({ kit: 'tsri', ...withBlocks() })).toThrow(
+      'ist unbekannt ("tsri")'
+    );
+  });
+
+  it('refuses a block the kit does not offer', () => {
+    expect(() =>
+      parseDocument(withBlocks({ type: 'rubric', name: 'Solar' }), 'bajour')
+    ).toThrow('gibt es in der Vorlage «bajour» nicht');
+  });
+
+  it('refuses an Einzug the kit does not offer', () => {
+    expect(() =>
+      parseDocument(withBlocks({ type: 'divider', gutter: 'intro' }), 'bajour')
+    ).toThrow('muss "article" oder "none" sein');
+  });
+
+  it('still offers eenews all three Einzüge', () => {
+    expect(
+      parseDocument(withBlocks({ type: 'divider', gutter: 'intro' }), 'eenews')
+        .blocks[0]
+    ).toMatchObject({ gutter: 'intro' });
   });
 });

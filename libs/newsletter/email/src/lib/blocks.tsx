@@ -14,7 +14,9 @@
  *   - a `Link` style must set the colour and the underline, since the component's
  *     defaults are a blue of its own and no underline at all.
  *
- * The layout reproduces campaign 6e2162b16f; see `theme.ts` for where each
+ * Every block is shared between the media; what it looks like comes from the
+ * theme of the kit it is drawn in (`useNewsletterTheme`), and which blocks an
+ * issue may hold from the kit's `blocks`. See `kits/` for where each
  * measurement comes from.
  */
 import {
@@ -31,7 +33,8 @@ import type { CSSProperties, ReactNode } from 'react';
 import type { MergeCondition } from './merge-tags';
 import { conditionTags } from './merge-tags';
 import { linkStyle, renderLines, renderParagraphs } from './inline';
-import { theme } from './theme';
+import { useNewsletterKit, useNewsletterTheme } from './kit';
+import type { NewsletterTheme } from './theme';
 
 /**
  * How far a block sits in from the column edge — the editor's "Einzug".
@@ -103,27 +106,6 @@ export type NewsletterBlock = {
   | ({ type: 'footer' } & FooterContent)
 );
 
-/**
- * What a block's `Einzug` falls back to when the document does not name one.
- *
- * The masthead region — the label row and the issue title — sits further in
- * than the article region, which is what the reproduced issue does; every other
- * block starts at the article gutter. Documents written before the field
- * existed therefore render exactly as they did.
- */
-export const DEFAULT_GUTTER: Record<NewsletterBlock['type'], Gutter> = {
-  rubric: 'article',
-  teaser: 'article',
-  heading: 'intro',
-  text: 'article',
-  image: 'article',
-  button: 'article',
-  panel: 'article',
-  meta: 'intro',
-  divider: 'article',
-  footer: 'intro',
-};
-
 export interface Teaser {
   /** The source line above the headline, e.g. an institute or a company. */
   kicker?: string;
@@ -139,8 +121,8 @@ export interface Teaser {
   imageUrl?: string;
 }
 
-/** The chosen gutter as `theme` records it — a CSS length. */
-function gutterWidth(gutter: Gutter): string {
+/** The chosen gutter as the theme records it — a CSS length. */
+function gutterWidth(gutter: Gutter, theme: NewsletterTheme): string {
   if (gutter === 'intro') {
     return theme.space.introGutter;
   }
@@ -161,8 +143,8 @@ function mobilePad(gutter: Gutter): string | undefined {
 }
 
 /** Shared by every block: the side inset the editor picked. */
-function blockPadding(gutter: Gutter): CSSProperties {
-  const side = gutterWidth(gutter);
+function blockPadding(gutter: Gutter, theme: NewsletterTheme): CSSProperties {
+  const side = gutterWidth(gutter, theme);
 
   return { paddingLeft: side, paddingRight: side };
 }
@@ -174,34 +156,36 @@ function blockPadding(gutter: Gutter): CSSProperties {
  * from its `width` attribute and ignores `max-width`, so an attribute wider than
  * the cell makes Outlook widen the whole column and break the layout.
  */
-function columnWidth(gutter: Gutter): number {
-  return theme.contentWidth - 2 * Number.parseInt(gutterWidth(gutter), 10);
+export function columnWidth(gutter: Gutter, theme: NewsletterTheme): number {
+  return (
+    theme.contentWidth - 2 * Number.parseInt(gutterWidth(gutter, theme), 10)
+  );
 }
 
 /** Both margins, because `Text` fills in 16px for either one left undefined. */
-const paragraphStyle: CSSProperties = {
+const paragraphStyle = (theme: NewsletterTheme): CSSProperties => ({
   marginTop: 0,
   marginBottom: 0,
   fontFamily: theme.font.body,
   fontSize: theme.size.body,
   lineHeight: theme.lineHeight.body,
   color: theme.color.text,
-};
+});
 
-const headingStyle: CSSProperties = {
+const headingStyle = (theme: NewsletterTheme): CSSProperties => ({
   margin: 0,
   fontFamily: theme.font.body,
   fontSize: theme.size.heading,
   lineHeight: theme.lineHeight.heading,
   fontWeight: 700,
   color: theme.color.brand,
-};
+});
 
 /** A link that carries the template's bold, underlined call-to-action look. */
-const actionStyle: CSSProperties = {
+const actionStyle = (theme: NewsletterTheme): CSSProperties => ({
   ...linkStyle(theme.color.link),
   fontWeight: 700,
-};
+});
 
 /**
  * A full-width block container: one `Row` holding one padded `Column`.
@@ -227,6 +211,8 @@ function Block({
   style?: CSSProperties;
   gutter?: Gutter;
 }) {
+  const theme = useNewsletterTheme();
+
   return (
     <Row
       style={{
@@ -260,11 +246,13 @@ function PaddedBlock({
   background?: string;
   style?: CSSProperties;
 }) {
+  const theme = useNewsletterTheme();
+
   return (
     <Block
       gutter={gutter}
       background={background}
-      style={{ ...blockPadding(gutter), ...style }}
+      style={{ ...blockPadding(gutter, theme), ...style }}
     >
       {children}
     </Block>
@@ -279,18 +267,24 @@ function Paragraph({
   children: ReactNode;
   style?: CSSProperties;
 }) {
+  const theme = useNewsletterTheme();
+
   return (
-    <EmailText style={{ ...paragraphStyle, ...style }}>{children}</EmailText>
+    <EmailText style={{ ...paragraphStyle(theme), ...style }}>
+      {children}
+    </EmailText>
   );
 }
 
 /** `Lesen >>`, bold and underlined — the template's own call to action. */
 function ReadMore({ href }: { href: string }) {
+  const theme = useNewsletterTheme();
+
   return (
     <Paragraph style={{ marginTop: theme.space.block }}>
       <Link
         href={href}
-        style={actionStyle}
+        style={actionStyle(theme)}
       >
         {'Lesen >>'}
       </Link>
@@ -299,6 +293,8 @@ function ReadMore({ href }: { href: string }) {
 }
 
 function Kicker({ text }: { text: string }) {
+  const theme = useNewsletterTheme();
+
   return (
     <Paragraph style={{ fontWeight: 700, color: theme.color.brand }}>
       {text}
@@ -307,10 +303,12 @@ function Kicker({ text }: { text: string }) {
 }
 
 function TeaserHeadline({ teaser }: { teaser: Teaser }) {
+  const theme = useNewsletterTheme();
+
   return (
     <EmailHeading
       as="h4"
-      style={{ ...headingStyle, margin: `${theme.space.tight} 0 0 0` }}
+      style={{ ...headingStyle(theme), margin: `${theme.space.tight} 0 0 0` }}
     >
       <Link
         href={teaser.url}
@@ -323,6 +321,8 @@ function TeaserHeadline({ teaser }: { teaser: Teaser }) {
 }
 
 function TeaserBody({ teaser }: { teaser: Teaser }) {
+  const theme = useNewsletterTheme();
+
   return (
     <>
       {teaser.kicker ?
@@ -354,6 +354,8 @@ function TwoColumn({
   gutter: Gutter;
   children: ReactNode;
 }) {
+  const theme = useNewsletterTheme();
+
   return (
     <Row>
       {/* The left inset stays at the template's 20px whatever the block's
@@ -372,7 +374,7 @@ function TwoColumn({
         className={mobilePad(gutter) ? 'nl-col nl-pad' : 'nl-col'}
         width={theme.bigTeaser.textColumnPercent}
         valign="top"
-        style={blockPadding(gutter)}
+        style={blockPadding(gutter, theme)}
       >
         {children}
       </Column>
@@ -382,6 +384,8 @@ function TwoColumn({
 
 /** The image in a `TwoColumn` left cell. `framed` adds the teaser's tint border. */
 function ColumnImage({ src, framed }: { src: string; framed?: boolean }) {
+  const theme = useNewsletterTheme();
+
   return (
     <Img
       src={src}
@@ -406,6 +410,8 @@ function ColumnImage({ src, framed }: { src: string; framed?: boolean }) {
 }
 
 function BigTeaser({ teaser, gutter }: { teaser: Teaser; gutter: Gutter }) {
+  const theme = useNewsletterTheme();
+
   // Without an image there is nothing left to distinguish the two variants, so
   // the short one *is* the fallback rather than a second copy of its markup.
   if (!teaser.imageUrl) {
@@ -470,6 +476,8 @@ function MissingTeaser({
 
 /** The rubric bar: an h4 on the pale-blue tint, 6px above and 12px below. */
 function RubricHeading({ name, gutter }: { name: string; gutter: Gutter }) {
+  const theme = useNewsletterTheme();
+
   return (
     <PaddedBlock
       gutter={gutter}
@@ -478,7 +486,7 @@ function RubricHeading({ name, gutter }: { name: string; gutter: Gutter }) {
     >
       <EmailHeading
         as="h4"
-        style={{ ...headingStyle, color: theme.color.text }}
+        style={{ ...headingStyle(theme), color: theme.color.text }}
       >
         {name}
       </EmailHeading>
@@ -487,17 +495,19 @@ function RubricHeading({ name, gutter }: { name: string; gutter: Gutter }) {
 }
 
 function Divider({ gutter }: { gutter: Gutter }) {
+  const { divider } = useNewsletterTheme();
+
   return (
     <PaddedBlock
       gutter={gutter}
-      style={{ paddingTop: 0, paddingBottom: 0 }}
+      style={{ paddingTop: divider.space, paddingBottom: divider.space }}
     >
       {/* A bordered cell, not the library's `Hr` — Outlook renders `<hr>` at its
           own width and colour and ignores most styling on it. */}
       <Row>
         <Column
           style={{
-            borderTop: `1px solid ${theme.color.rule}`,
+            borderTop: `${divider.width} solid ${divider.color}`,
             fontSize: '1px',
             lineHeight: '1px',
           }}
@@ -518,21 +528,27 @@ function Button({
   href: string;
   gutter: Gutter;
 }) {
+  const { button } = useNewsletterTheme();
+
   return (
-    <PaddedBlock gutter={gutter}>
+    <PaddedBlock
+      gutter={gutter}
+      // The button is an inline-block `<a>`, so the cell's alignment places it.
+      style={button.align ? { textAlign: button.align } : undefined}
+    >
       {/* The library's `Button` is an `<a>` carrying the mso-font-width padding
           hack, which is the one construction that pads a link in Outlook without
           a wrapper table. Padding must be part of `style` for it to compute. */}
       <EmailButton
         href={href}
         style={{
-          backgroundColor: theme.color.brand,
-          borderRadius: '4px',
-          padding: '16px 28px',
-          fontFamily: theme.font.body,
-          fontSize: '16px',
+          backgroundColor: button.background,
+          borderRadius: button.radius,
+          padding: button.padding,
+          fontFamily: button.fontFamily,
+          fontSize: button.fontSize,
           fontWeight: 700,
-          color: theme.color.body,
+          color: button.color,
         }}
       >
         {label}
@@ -555,20 +571,21 @@ function Panel({
   imageUrl?: string;
   gutter: Gutter;
 }) {
+  const theme = useNewsletterTheme();
   const body = (
     <>
       <EmailHeading
         as="h4"
-        style={{ ...headingStyle, margin: `0 0 ${theme.space.block} 0` }}
+        style={{ ...headingStyle(theme), margin: `0 0 ${theme.space.block} 0` }}
       >
         {title}
       </EmailHeading>
-      {renderParagraphs(paragraphs, paragraphStyle)}
+      {renderParagraphs(paragraphs, paragraphStyle(theme), { theme })}
       {link ?
         <Paragraph style={{ marginTop: theme.space.block }}>
           <Link
             href={link.href}
-            style={actionStyle}
+            style={actionStyle(theme)}
           >
             {link.label}
           </Link>
@@ -621,9 +638,11 @@ function TextBlock({
   paragraphs: string[];
   gutter: Gutter;
 }) {
+  const theme = useNewsletterTheme();
+
   return (
     <PaddedBlock gutter={gutter}>
-      {renderParagraphs(paragraphs, paragraphStyle)}
+      {renderParagraphs(paragraphs, paragraphStyle(theme), { theme })}
     </PaddedBlock>
   );
 }
@@ -638,11 +657,17 @@ function MetaRow({
   right: string;
   gutter: Gutter;
 }) {
-  const cell: CSSProperties = { fontSize: '13px', color: theme.color.brand };
+  const { meta } = useNewsletterTheme();
+  const cell: CSSProperties = {
+    fontFamily: meta.fontFamily,
+    fontSize: meta.fontSize,
+    color: meta.color,
+  };
 
   return (
     <PaddedBlock
       gutter={gutter}
+      background={meta.background}
       style={{ paddingTop: '5px', paddingBottom: '5px' }}
     >
       <Row>
@@ -666,11 +691,17 @@ function MetaRow({
 }
 
 function Heading({ text, gutter }: { text: string; gutter: Gutter }) {
+  const theme = useNewsletterTheme();
+
   return (
     <PaddedBlock gutter={gutter}>
       <EmailHeading
         as="h2"
-        style={{ ...headingStyle, fontSize: '36px' }}
+        style={{
+          ...headingStyle(theme),
+          fontSize: theme.heading.fontSize,
+          color: theme.heading.color,
+        }}
       >
         {text}
       </EmailHeading>
@@ -691,9 +722,11 @@ function ImageBlock({
   caption?: string;
   gutter: Gutter;
 }) {
+  const theme = useNewsletterTheme();
+  const { caption: captionStyle } = theme;
   // An image spans the column its Einzug leaves, so the only size decision an
   // editor makes is the gutter — the same one every other block makes.
-  const natural = columnWidth(gutter);
+  const natural = columnWidth(gutter, theme);
   const image = (
     <Img
       src={src}
@@ -726,8 +759,12 @@ function ImageBlock({
         <Paragraph
           style={{
             marginTop: theme.space.tight,
-            fontSize: '13px',
-            color: theme.color.brand,
+            fontFamily: captionStyle.fontFamily,
+            fontSize: captionStyle.fontSize,
+            lineHeight: captionStyle.lineHeight,
+            color: captionStyle.color,
+            fontStyle: captionStyle.fontStyle,
+            textAlign: captionStyle.textAlign,
           }}
         >
           {caption}
@@ -793,51 +830,91 @@ export function NewsletterFooter({
   footer?: FooterContent;
   gutter?: Gutter;
 }) {
+  const theme = useNewsletterTheme();
+  const { footer: look } = theme;
   const text: CSSProperties = {
-    ...paragraphStyle,
-    fontSize: '14px',
-    color: theme.color.page,
+    ...paragraphStyle(theme),
+    fontSize: look.textSize,
+    color: look.color,
+    textAlign: look.align,
   };
   const legal: CSSProperties = {
-    ...text,
-    fontSize: '11px',
+    ...paragraphStyle(theme),
+    fontFamily: look.legal.fontFamily,
+    fontSize: look.legal.fontSize,
+    color: look.legal.color,
     textAlign: 'center',
   };
-
-  return (
-    <PaddedBlock
-      gutter={gutter}
-      background={theme.color.brand}
+  const vertical: CSSProperties = {
+    paddingTop: theme.space.section,
+    paddingBottom: theme.space.section,
+  };
+  // A band of its own puts the notice at the top of it; inside the closing
+  // block it keeps a section's distance from the lines above.
+  const notice = (
+    <Paragraph
       style={{
-        paddingTop: theme.space.section,
-        paddingBottom: theme.space.section,
+        ...legal,
+        marginTop: look.legal.background ? 0 : theme.space.section,
       }}
     >
-      {footer ?
-        <>
-          <EmailHeading
-            as="h2"
-            style={{
-              ...headingStyle,
-              margin: `0 0 ${theme.space.block} 0`,
-              fontSize: '32px',
-              color: theme.color.page,
-            }}
-          >
-            {footer.title}
-          </EmailHeading>
-          {renderParagraphs(footer.lines, text, {
-            linkColor: theme.color.page,
-          })}
-        </>
-      : null}
+      {renderLines(footer?.legal ?? DEFAULT_FOOTER_LEGAL, {
+        theme,
+        linkColor: look.legal.linkColor,
+      })}
+    </Paragraph>
+  );
 
-      <Paragraph style={{ ...legal, marginTop: theme.space.section }}>
-        {renderLines(footer?.legal ?? DEFAULT_FOOTER_LEGAL, {
-          linkColor: theme.color.page,
-        })}
-      </Paragraph>
-    </PaddedBlock>
+  return (
+    <>
+      <PaddedBlock
+        gutter={gutter}
+        background={look.background}
+        style={vertical}
+      >
+        {footer ?
+          <>
+            <EmailHeading
+              as="h2"
+              style={{
+                ...headingStyle(theme),
+                margin: `0 0 ${theme.space.block} 0`,
+                fontSize: look.titleSize,
+                color: look.titleColor,
+                textAlign: look.align,
+              }}
+            >
+              {look.titleHighlight ?
+                <span
+                  style={{
+                    backgroundColor: look.titleHighlight,
+                    color: look.titleColor,
+                  }}
+                >
+                  {footer.title}
+                </span>
+              : footer.title}
+            </EmailHeading>
+            {renderParagraphs(footer.lines, text, {
+              theme,
+              linkColor: look.linkColor,
+            })}
+          </>
+        : null}
+
+        {look.legal.background ? null : notice}
+      </PaddedBlock>
+
+      {look.legal.background ?
+        <PaddedBlock
+          gutter={gutter}
+          background={look.legal.background}
+          style={vertical}
+        >
+          {notice}
+        </PaddedBlock>
+      : null}
+    </>
   );
 }
 
@@ -855,9 +932,26 @@ export function NewsletterFooter({
  * `MERGE_TAG_SOURCE` does not match `*|IF:GROUPING=Cacti|*` — the `=` and the
  * lower-case letters are outside its character class. These tags are text nodes
  * rather than part of a paragraph for exactly that reason.
+ *
+ * Must be drawn inside a `NewsletterKitProvider`: the kit decides the Einzug a
+ * block gets when it names none, and the theme every block is drawn in.
  */
 export function renderBlock(block: NewsletterBlock, key: number) {
-  const body = renderBlockBody(block, key);
+  return (
+    <KitBlock
+      key={key}
+      block={block}
+    />
+  );
+}
+
+/** A component rather than a function so it can read the kit from context. */
+function KitBlock({ block }: { block: NewsletterBlock }) {
+  const kit = useNewsletterKit();
+  const body = renderBlockBody(
+    block,
+    block.gutter ?? kit.defaultGutter[block.type]
+  );
   const condition = conditionTags(block.condition);
 
   if (!condition) {
@@ -865,7 +959,7 @@ export function renderBlock(block: NewsletterBlock, key: number) {
   }
 
   return (
-    <Fragment key={key}>
+    <Fragment>
       {condition.open}
       {body}
       {condition.close}
@@ -873,14 +967,11 @@ export function renderBlock(block: NewsletterBlock, key: number) {
   );
 }
 
-function renderBlockBody(block: NewsletterBlock, key: number) {
-  const gutter = block.gutter ?? DEFAULT_GUTTER[block.type];
-
+function renderBlockBody(block: NewsletterBlock, gutter: Gutter) {
   switch (block.type) {
     case 'rubric':
       return (
         <RubricHeading
-          key={key}
           name={block.name}
           gutter={gutter}
         />
@@ -894,7 +985,6 @@ function renderBlockBody(block: NewsletterBlock, key: number) {
       if (!teaser?.title.trim()) {
         return (
           <MissingTeaser
-            key={key}
             articleId={block.articleId}
             gutter={gutter}
           />
@@ -903,12 +993,10 @@ function renderBlockBody(block: NewsletterBlock, key: number) {
 
       return block.variant === 'big' ?
           <BigTeaser
-            key={key}
             teaser={teaser}
             gutter={gutter}
           />
         : <ShortTeaser
-            key={key}
             teaser={teaser}
             gutter={gutter}
           />;
@@ -916,7 +1004,6 @@ function renderBlockBody(block: NewsletterBlock, key: number) {
     case 'heading':
       return (
         <Heading
-          key={key}
           text={block.text}
           gutter={gutter}
         />
@@ -924,7 +1011,6 @@ function renderBlockBody(block: NewsletterBlock, key: number) {
     case 'text':
       return (
         <TextBlock
-          key={key}
           paragraphs={block.paragraphs}
           gutter={gutter}
         />
@@ -934,7 +1020,6 @@ function renderBlockBody(block: NewsletterBlock, key: number) {
     case 'image':
       return block.src ?
           <ImageBlock
-            key={key}
             src={block.src}
             alt={block.alt}
             href={block.href}
@@ -945,7 +1030,6 @@ function renderBlockBody(block: NewsletterBlock, key: number) {
     case 'button':
       return (
         <Button
-          key={key}
           label={block.label}
           href={block.href}
           gutter={gutter}
@@ -954,7 +1038,6 @@ function renderBlockBody(block: NewsletterBlock, key: number) {
     case 'panel':
       return (
         <Panel
-          key={key}
           title={block.title}
           paragraphs={block.paragraphs}
           link={block.link}
@@ -965,23 +1048,16 @@ function renderBlockBody(block: NewsletterBlock, key: number) {
     case 'meta':
       return (
         <MetaRow
-          key={key}
           left={block.left}
           right={block.right}
           gutter={gutter}
         />
       );
     case 'divider':
-      return (
-        <Divider
-          key={key}
-          gutter={gutter}
-        />
-      );
+      return <Divider gutter={gutter} />;
     case 'footer':
       return (
         <NewsletterFooter
-          key={key}
           footer={block}
           gutter={gutter}
         />

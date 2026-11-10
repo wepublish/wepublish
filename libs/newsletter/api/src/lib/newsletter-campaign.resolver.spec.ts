@@ -16,6 +16,7 @@ import { NewsletterCampaignService } from './newsletter-campaign.service';
 import { NewsletterMailchimpService } from './newsletter-mailchimp.service';
 
 const document: NewsletterDocument = {
+  kit: 'eenews',
   preheader: '',
   blocks: [
     { type: 'image', imageId: 'logo', alt: 'Logo' },

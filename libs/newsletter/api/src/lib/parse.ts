@@ -14,17 +14,25 @@
  * - **Conditions.** A block's dynamic-content condition is not text in the mail
  *   but a merge *tag* around it, so a stray delimiter in what it names ends that
  *   tag early and leaves the rest as visible gibberish — see `asCondition`.
+ * - **The kit.** A document is checked against its medium's kit: a block or an
+ *   Einzug the kit does not offer is refused, and an edit cannot move an issue
+ *   into another kit — see `asKit`.
  */
 import { BadRequestException } from '@nestjs/common';
 import type {
   Gutter,
+  KitId,
   MergeCondition,
   NewsletterBlock,
   NewsletterDocument,
+  NewsletterKit,
 } from '@wepublish/newsletter/email';
 import {
+  getKit,
   INLINE_LINK,
   INTEREST_NAME,
+  isKitId,
+  LEGACY_KIT_ID,
   MERGE_TAG_HREF,
   MERGE_TAG_NAME,
 } from '@wepublish/newsletter/email';
@@ -125,19 +133,73 @@ function asImageId(value: unknown, path: string): string | undefined {
   return isBlank(value) ? undefined : asString(value, path, { max: 100 });
 }
 
-/** Absent means "whatever this block's default is"; `renderBlock` resolves it. */
-function asGutter(value: unknown, path: string): Gutter | undefined {
-  const gutter = asOptionalString(value, path);
+/** Every Einzug there is, in the order an error message lists them. */
+const GUTTERS: Gutter[] = ['article', 'intro', 'none'];
 
-  if (gutter === 'article' || gutter === 'intro' || gutter === 'none') {
-    return gutter;
-  }
+/** `"a", "b" oder "c"` */
+const alternatives = (values: string[]) =>
+  values
+    .map(value => `"${value}"`)
+    .join(', ')
+    .replace(/, ([^,]*)$/, ' oder $1');
+
+/**
+ * Absent means "whatever this block's default is"; `renderBlock` resolves it.
+ * Present, it has to be one the kit offers: the editor shows no other, so one
+ * that arrives anyway was not chosen by an editor.
+ */
+function asGutter(
+  value: unknown,
+  path: string,
+  kit: NewsletterKit
+): Gutter | undefined {
+  const gutter = asOptionalString(value, path);
 
   if (gutter === undefined) {
     return undefined;
   }
 
-  return fail(path, 'muss "article", "intro" oder "none" sein');
+  const offered = GUTTERS.filter(option => kit.gutters.includes(option));
+
+  if ((offered as string[]).includes(gutter)) {
+    return gutter as Gutter;
+  }
+
+  return fail(path, `muss ${alternatives(offered)} sein`);
+}
+
+/**
+ * The kit a document is written in.
+ *
+ * `expected` is the kit the API has decided on — the medium's for a new issue,
+ * the stored one for an edit. A document may leave the kit out and is then put
+ * into that one; one that names another is refused, because the kit decides
+ * which blocks the issue may hold and an edit that switched it would leave
+ * blocks behind that the new kit cannot draw.
+ *
+ * Without `expected` the document is one read back from the database, and the
+ * kit it names is the one it was written in. A document stored before kits
+ * existed names none and is an eenews issue (`LEGACY_KIT_ID`).
+ */
+function asKit(value: unknown, expected: KitId | undefined): NewsletterKit {
+  if (isBlank(value)) {
+    return getKit(expected ?? LEGACY_KIT_ID);
+  }
+
+  const id = asString(value, 'Dokument.kit', { max: 50 });
+
+  if (!isKitId(id)) {
+    return fail('Dokument.kit', `ist unbekannt ("${id}")`);
+  }
+
+  if (expected && id !== expected) {
+    fail(
+      'Dokument.kit',
+      `muss "${expected}" sein — die Vorlage einer Ausgabe lässt sich nicht wechseln`
+    );
+  }
+
+  return getKit(id);
 }
 
 /**
@@ -225,10 +287,23 @@ function asCondition(value: unknown, path: string): MergeCondition | undefined {
  * Every block carries the same `Einzug` and the same conditional setting, so both
  * are validated here rather than in each of the nine branches below.
  */
-function parseBlock(value: unknown, path: string): NewsletterBlock {
+function parseBlock(
+  value: unknown,
+  path: string,
+  kit: NewsletterKit
+): NewsletterBlock {
   const raw = asRecord(value, path);
   const block = parseBlockBody(raw, path);
   const condition = asCondition(raw.condition, `${path}.condition`);
+
+  // After the body, so a type nobody knows is reported as unknown rather than
+  // as missing from this kit.
+  if (!kit.blocks.includes(block.type)) {
+    fail(
+      `${path}.type`,
+      `"${block.type}" gibt es in der Vorlage «${kit.id}» nicht`
+    );
+  }
 
   // The closing block is the one block that may not be conditional, and the
   // reason is the publish check: the `*|UNSUB|*` and the address stay in the
@@ -245,7 +320,7 @@ function parseBlock(value: unknown, path: string): NewsletterBlock {
 
   return {
     ...block,
-    gutter: asGutter(raw.gutter, `${path}.gutter`),
+    gutter: asGutter(raw.gutter, `${path}.gutter`, kit),
     condition,
   };
 }
@@ -354,8 +429,17 @@ function parseBlockBody(
 /** The editor is not allowed to save an issue larger than this many blocks. */
 const MAX_BLOCKS = 500;
 
-export function parseDocument(value: unknown): NewsletterDocument {
+/** The kit a document read back from the database is written in. */
+export const storedKit = (value: unknown): KitId =>
+  asKit(asRecord(value, 'Dokument').kit, undefined).id;
+
+/**
+ * `kit` is the kit the API has decided the document is in; leave it out only
+ * for a document read back from the database — see `asKit`.
+ */
+export function parseDocument(value: unknown, kit?: KitId): NewsletterDocument {
   const raw = asRecord(value, 'Dokument');
+  const resolvedKit = asKit(raw.kit, kit);
   const blocks = raw.blocks;
 
   if (!Array.isArray(blocks)) {
@@ -367,7 +451,7 @@ export function parseDocument(value: unknown): NewsletterDocument {
   }
 
   const parsed = blocks.map((block, index) =>
-    parseBlock(block, `Block ${index + 1}`)
+    parseBlock(block, `Block ${index + 1}`, resolvedKit)
   );
 
   // The editor pins the footer block — no drag, duplicate, delete or insert —
@@ -378,6 +462,7 @@ export function parseDocument(value: unknown): NewsletterDocument {
   }
 
   return {
+    kit: resolvedKit.id,
     preheader: asString(raw.preheader ?? '', 'Dokument.preheader', {
       max: 300,
     }),

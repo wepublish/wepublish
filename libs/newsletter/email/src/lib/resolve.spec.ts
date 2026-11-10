@@ -6,7 +6,7 @@ import {
   resolveTeasers,
   teaserFromArticle,
 } from './resolve';
-import { theme } from './theme';
+import { eenewsTheme as theme } from './kits/eenews';
 
 const article = {
   id: 'article-1',
@@ -18,6 +18,7 @@ const article = {
 };
 
 const document: NewsletterDocument = {
+  kit: 'eenews',
   preheader: '',
   blocks: [
     { type: 'teaser', variant: 'big', articleId: 'article-1' },

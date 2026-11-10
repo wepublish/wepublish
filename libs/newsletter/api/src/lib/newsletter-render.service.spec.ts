@@ -23,6 +23,7 @@ const publishedArticle = {
 };
 
 const document: NewsletterDocument = {
+  kit: 'eenews',
   preheader: '',
   blocks: [
     { type: 'teaser', variant: 'big', articleId: 'article-1' },
@@ -126,7 +127,7 @@ describe('NewsletterRenderService', () => {
   });
 
   it('does not query anything for an empty issue', async () => {
-    await service.resolve({ preheader: '', blocks: [] });
+    await service.resolve({ kit: 'eenews', preheader: '', blocks: [] });
 
     expect(prisma.article.findMany).not.toHaveBeenCalled();
     expect(prisma.image.findMany).not.toHaveBeenCalled();

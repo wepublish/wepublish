@@ -15,7 +15,7 @@
 import { Link, Text } from '@react-email/components';
 import type { CSSProperties, ReactNode } from 'react';
 import { MERGE_TAG_SOURCE } from './merge-tags';
-import { theme } from './theme';
+import type { NewsletterTheme } from './theme';
 
 /** Shared with `parse.ts`, which validates the URLs these links carry. */
 export const INLINE_LINK = /\[([^\]]+)\]\(([^)\s]+)\)/g;
@@ -45,8 +45,12 @@ export const inlineMarkup = () =>
     'g'
   );
 
-/** The footer inverts the palette, so the link colour cannot be a constant. */
+/**
+ * The theme sets the spacing and the link colour; the footer can draw on a
+ * different background, so it names a link colour of its own.
+ */
 export interface ProseOptions {
+  theme: NewsletterTheme;
   linkColor?: string;
 }
 
@@ -72,9 +76,9 @@ export function linkStyle(color: string, underline = true): CSSProperties {
 function inline(
   text: string,
   keyPrefix: string,
-  options: ProseOptions = {}
+  options: ProseOptions
 ): ReactNode[] {
-  const style = linkStyle(options.linkColor ?? theme.color.link);
+  const style = linkStyle(options.linkColor ?? options.theme.color.link);
 
   const nodes: ReactNode[] = [];
   const pattern = inlineMarkup();
@@ -125,13 +129,13 @@ function inline(
  * Prose whose lines are separated by a break rather than by paragraph spacing.
  *
  * The footer's legal notice is three lines of one paragraph, not three
- * paragraphs: `renderParagraphs` would put `theme.space.block` between them and
+ * paragraphs: `renderParagraphs` would put `theme.space.paragraph` between them and
  * the closing block would grow by two lines of air. Returns the children of a
  * single paragraph, so the caller decides which style it carries.
  */
 export function renderLines(
   lines: string[],
-  options: ProseOptions = {}
+  options: ProseOptions
 ): ReactNode[] {
   return lines.flatMap((line, index) => [
     ...(index === 0 ? [] : [<br key={`br-${index}`} />]),
@@ -149,8 +153,9 @@ export function renderLines(
 export function renderParagraphs(
   paragraphs: string[],
   style: CSSProperties,
-  options: ProseOptions = {}
+  options: ProseOptions
 ): ReactNode[] {
+  const { space } = options.theme;
   const out: ReactNode[] = [];
   let bullets: string[] = [];
 
@@ -172,7 +177,7 @@ export function renderParagraphs(
         key={`ul-${out.length}`}
         style={{
           ...prose,
-          margin: `${theme.space.block} 0 0 0`,
+          margin: `${space.paragraph} 0 0 0`,
           paddingLeft: '20px',
         }}
       >
@@ -205,7 +210,7 @@ export function renderParagraphs(
         key={`p-${index}`}
         style={{
           ...style,
-          marginTop: out.length === 0 ? 0 : theme.space.block,
+          marginTop: out.length === 0 ? 0 : space.paragraph,
           marginBottom: 0,
         }}
       >

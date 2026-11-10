@@ -15,16 +15,26 @@
 import { Body, Container, Head, Html, Preview } from '@react-email/components';
 import type { NewsletterBlock } from './blocks';
 import { renderBlock } from './blocks';
-import { EMAIL_CSS } from './css';
-import { theme } from './theme';
+import { emailCss } from './css';
+import type { KitId } from './kit';
+import { getKit, NewsletterKitProvider } from './kit';
 
 export interface NewsletterDocument {
+  /**
+   * The medium's kit the issue is written in: which blocks it may hold and the
+   * theme they are drawn in. Chosen by the API when the issue is created and
+   * never changed afterwards — see `kit.tsx`.
+   */
+  kit: KitId;
   /** The inbox preview line. Not rendered visibly. */
   preheader: string;
   blocks: NewsletterBlock[];
 }
 
 export function Newsletter({ document }: { document: NewsletterDocument }) {
+  const kit = getKit(document.kit);
+  const { theme } = kit;
+
   return (
     <Html
       lang="de"
@@ -38,7 +48,7 @@ export function Newsletter({ document }: { document: NewsletterDocument }) {
         {/* `Head` already emits the charset and `x-apple-disable-message-reformatting`
             (which stops iOS Mail bumping small text up to its own minimum size), so
             neither is repeated here. */}
-        <style dangerouslySetInnerHTML={{ __html: EMAIL_CSS }} />
+        <style dangerouslySetInnerHTML={{ __html: emailCss(theme) }} />
       </Head>
       <Body
         style={{ margin: 0, padding: 0, backgroundColor: theme.color.page }}
@@ -62,7 +72,9 @@ export function Newsletter({ document }: { document: NewsletterDocument }) {
             backgroundColor: theme.color.body,
           }}
         >
-          {document.blocks.map((block, index) => renderBlock(block, index))}
+          <NewsletterKitProvider kit={kit}>
+            {document.blocks.map((block, index) => renderBlock(block, index))}
+          </NewsletterKitProvider>
         </Container>
       </Body>
     </Html>

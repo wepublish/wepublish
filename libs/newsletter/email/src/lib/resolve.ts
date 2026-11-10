@@ -14,8 +14,9 @@
  * in the media library, and `resolveImages` fills in its URL.
  */
 import type { NewsletterBlock, Teaser } from './blocks';
-import { theme } from './theme';
 import type { NewsletterDocument } from './document';
+import { getKit } from './kit';
+import type { NewsletterTheme } from './theme';
 
 /** The article fields a teaser shows. Structurally matched by `Article`. */
 export interface ArticleSource {
@@ -82,11 +83,11 @@ export function articleIdsIn(document: NewsletterDocument): string[] {
 }
 
 /**
- * The width a block draws its image at. A big teaser and a panel put it in a
- * column of `theme.bigTeaser.imageWidth`, an image block spans at most the whole
- * content column.
+ * The width a block draws its image at, in the document's own theme. A big
+ * teaser and a panel put it in a column of `theme.bigTeaser.imageWidth`, an
+ * image block spans at most the whole content column.
  */
-function renderedWidth(block: NewsletterBlock): number {
+function renderedWidth(block: NewsletterBlock, theme: NewsletterTheme): number {
   return block.type === 'image' ?
       theme.contentWidth
     : theme.bigTeaser.imageWidth;
@@ -110,13 +111,17 @@ export interface DocumentImage {
  * than the place it renders biggest.
  */
 export function imagesIn(document: NewsletterDocument): DocumentImage[] {
+  const { theme } = getKit(document.kit);
   const widest = new Map<string, number>();
 
   for (const block of document.blocks) {
     const id = imageIdOf(block);
 
     if (id) {
-      widest.set(id, Math.max(widest.get(id) ?? 0, renderedWidth(block)));
+      widest.set(
+        id,
+        Math.max(widest.get(id) ?? 0, renderedWidth(block, theme))
+      );
     }
   }
 

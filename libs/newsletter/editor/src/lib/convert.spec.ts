@@ -3,6 +3,7 @@ import { rememberArticles } from './articles';
 import { fromPuckData, toBlock, toPuckData } from './convert';
 
 const document: NewsletterDocument = {
+  kit: 'eenews',
   preheader: 'Vorschau',
   blocks: [
     {
@@ -76,7 +77,11 @@ describe('convert', () => {
   });
 
   it('gives an issue without a footer the blank one', () => {
-    const { content } = toPuckData({ preheader: '', blocks: [] });
+    const { content } = toPuckData({
+      kit: 'eenews',
+      preheader: '',
+      blocks: [],
+    });
 
     expect(content.map(item => item.type)).toEqual(['footer']);
     expect(content[0].props).toMatchObject({ title: '', lines: '' });
@@ -94,5 +99,24 @@ describe('convert', () => {
       imageId: undefined,
       alt: 'Logo',
     });
+  });
+
+  it('carries the kit through Puck', () => {
+    expect(fromPuckData(toPuckData({ ...document, kit: 'bajour' })).kit).toBe(
+      'bajour'
+    );
+  });
+
+  it('opens a block with no stored Einzug on its kit’s default', () => {
+    const heading = { type: 'heading' as const, text: 'Titel' };
+
+    expect(
+      toPuckData({ kit: 'eenews', preheader: '', blocks: [heading] }).content[0]
+        .props
+    ).toMatchObject({ gutter: 'intro' });
+    expect(
+      toPuckData({ kit: 'bajour', preheader: '', blocks: [heading] }).content[0]
+        .props
+    ).toMatchObject({ gutter: 'article' });
   });
 });

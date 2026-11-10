@@ -5,9 +5,9 @@
  * genuinely accurate preview, without the browser bundle having to import
  * `document.tsx` — the canvas draws blocks, not a whole `<html>` document.
  */
-import { theme } from './theme';
+import type { NewsletterTheme } from './theme';
 
-export const EMAIL_CSS = `
+export const emailCss = (theme: NewsletterTheme) => `
   /* Word measures line height in points unless told otherwise. */
   p, a, li, td, blockquote { mso-line-height-rule: exactly; }
   table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }

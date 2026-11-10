@@ -14,14 +14,18 @@
 import type { Data } from '@puckeditor/core';
 import type {
   Gutter,
+  KitId,
   MergeCondition,
   NewsletterBlock,
   NewsletterDocument,
+  NewsletterKit,
 } from '@wepublish/newsletter/email';
 import {
   BLANK_FOOTER,
   DEFAULT_FOOTER_LEGAL,
-  DEFAULT_GUTTER,
+  getKit,
+  isKitId,
+  LEGACY_KIT_ID,
 } from '@wepublish/newsletter/email';
 import { lookupArticle } from './articles';
 import { NO_CONDITION } from './condition-field';
@@ -50,6 +54,13 @@ export type Props = Record<string, unknown>;
 
 const str = (value: unknown): string =>
   typeof value === 'string' ? value : '';
+
+/**
+ * The kit a document says it is in. The API writes one into every document it
+ * hands out; one without is an issue from before kits, which was eenews.
+ */
+export const kitIdOf = (value: unknown): KitId =>
+  isKitId(value) ? value : LEGACY_KIT_ID;
 
 /** Anything else becomes `undefined`, so `renderBlock` applies the block default. */
 const toGutter = (value: unknown): Gutter | undefined =>
@@ -181,7 +192,7 @@ function toBlockBody(type: string, props: Props): NewsletterBlock | undefined {
 
 /**
  * The radio needs a value to show, so a block with no stored `Einzug` gets the
- * one `renderBlock` would have used.
+ * one `renderBlock` would have used — its kit's default.
  *
  * The condition row is likewise always given an object, because its three
  * controls read from one: `NO_CONDITION` is the empty one, and a block that
@@ -189,10 +200,14 @@ function toBlockBody(type: string, props: Props): NewsletterBlock | undefined {
  * the one block with no condition field, and a prop with no field to render it
  * would ride along through every save.
  */
-function toProps(block: NewsletterBlock, index: number): Props {
+function toProps(
+  block: NewsletterBlock,
+  index: number,
+  kit: NewsletterKit
+): Props {
   return {
     ...toFieldProps(block, index),
-    gutter: block.gutter ?? DEFAULT_GUTTER[block.type],
+    gutter: block.gutter ?? kit.defaultGutter[block.type],
     ...(block.type === 'footer' ?
       {}
     : { condition: block.condition ?? NO_CONDITION }),
@@ -272,12 +287,19 @@ function withFooterBlock(document: NewsletterDocument): NewsletterBlock[] {
     : [...document.blocks, BLANK_FOOTER];
 }
 
+/**
+ * The kit rides along in the root props, beside the preview text and like it
+ * without a field of its own, so `fromPuckData` hands back the document in the
+ * kit it came in. The API decides the kit regardless — see `parseDocument`.
+ */
 export function toPuckData(document: NewsletterDocument): Data {
+  const kit = getKit(kitIdOf(document.kit));
+
   return {
-    root: { props: { preheader: document.preheader } },
+    root: { props: { kit: kit.id, preheader: document.preheader } },
     content: withFooterBlock(document).map((block, index) => ({
       type: block.type,
-      props: toProps(block, index),
+      props: toProps(block, index, kit),
     })),
   } as Data;
 }
@@ -286,6 +308,7 @@ export function fromPuckData(data: Data): NewsletterDocument {
   const root = (data.root?.props ?? {}) as Props;
 
   return {
+    kit: kitIdOf(root.kit),
     preheader: str(root.preheader),
     blocks: data.content
       .map(item => toBlock(item.type as string, item.props as Props))
