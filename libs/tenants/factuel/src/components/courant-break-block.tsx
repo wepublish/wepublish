@@ -7,9 +7,44 @@ import {
   hasBlockStyle,
   RichTextBlockWrapper,
 } from '@wepublish/block-content/website';
+import { FullImageFragment } from '@wepublish/website/api';
 import { BuilderBreakBlockProps } from '@wepublish/website/builder';
 
 import { courantTokens } from '../brand-tokens';
+import teamPlaceholder from '../team-placeholder.png';
+
+const url = teamPlaceholder as unknown as string;
+
+const teamPlaceholderImage: FullImageFragment = {
+  __typename: 'Image',
+  id: 'team-placeholder',
+  width: 600,
+  height: 600,
+  focalPointX: 0.5,
+  focalPointY: 0.5,
+  title: null,
+  description: null,
+  source: null,
+  link: null,
+  license: null,
+  url,
+  xxxl: url,
+  xxl: url,
+  xl: url,
+  l: url,
+  m: url,
+  s: url,
+  xs: url,
+  xxs: url,
+  xxxlSquare: url,
+  xxlSquare: url,
+  xlSquare: url,
+  lSquare: url,
+  mSquare: url,
+  sSquare: url,
+  xsSquare: url,
+  xxsSquare: url,
+};
 
 export const TeamMemberBreakBlock = styled(BreakBlock)`
   ${({ theme }) => theme.breakpoints.up('md')} {
@@ -59,7 +94,13 @@ export const TeamMemberBreakBlock = styled(BreakBlock)`
 
 export const CourantBreakBlock = (props: BuilderBreakBlockProps) => {
   if (hasBlockStyle('TeamMember')(props)) {
-    return <TeamMemberBreakBlock {...props} />;
+    const image = props.image ?? teamPlaceholderImage;
+    return (
+      <TeamMemberBreakBlock
+        {...props}
+        image={image}
+      />
+    );
   }
 
   return <BreakBlock {...props} />;
