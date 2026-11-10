@@ -395,7 +395,7 @@ describe('runExport', () => {
 
     expect(result.rows.filter(r => r.quelle === 'bexio')).toEqual([]);
     expect(result.summary.warnings).toContain(
-      'bexio: keine bexio-Arten konfiguriert (Einstellungen › Druckausgaben) – aus bexio wird nichts gelistet'
+      'bexio: keine bexio-Bezugsarten konfiguriert (Einstellungen › Druckausgaben) – aus bexio wird nichts gelistet'
     );
   });
 
