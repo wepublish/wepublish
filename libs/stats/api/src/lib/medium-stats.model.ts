@@ -102,9 +102,15 @@ export class MediumMigrationSummary {
 export class MediumChangelogStats {
   @Field(() => Int, {
     description:
-      'Action-required entries that nobody has confirmed yet. Informative entries are excluded.',
+      'Entries asking for an action (severity RECOMMENDED or REQUIRED) that nobody has confirmed yet. Informative entries are excluded.',
   })
   openActions!: number;
+
+  @Field(() => Int, {
+    description:
+      'The part of openActions with severity REQUIRED: steps that have to happen as soon as possible.',
+  })
+  openRequiredActions!: number;
 
   @Field(() => Date, {
     nullable: true,

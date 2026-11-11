@@ -1,7 +1,6 @@
 ---
 title: Redesigned content blocks, teaser editing and publish dialog
 lead: Most content blocks in the article and page editor have a cleaner, more consistent look, and the teaser and publish panels have been reworked to be clearer and easier to use.
-actionRequired: false
 ---
 
 - **Blocks:** Poll, crowdfunding, comment, event, embed, HTML, quote, gallery, newsletter form and subscribe blocks have a tidier layout. Blocks such as poll, crowdfunding, comments, events, embeds and HTML now appear as their own card with a clear edit button.

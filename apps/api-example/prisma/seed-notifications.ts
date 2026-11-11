@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from '@prisma/client';
+import { ChangelogSeverity, Prisma, PrismaClient } from '@prisma/client';
 
 const daysAgo = (days: number, hours = 12) => {
   const date = new Date();
@@ -76,7 +76,7 @@ type DemoChangelogEntry = {
   title: string;
   lead: string;
   description?: string;
-  actionRequired?: boolean;
+  severity?: ChangelogSeverity;
   confirmed?: boolean;
 };
 
@@ -90,7 +90,7 @@ const demoChangelogEntries: DemoChangelogEntry[] = [
     slug: 'new_paywall_designs',
     title: 'Three new paywall designs',
     lead: 'Pick between the classic, compact and full-page paywall in the paywall settings.',
-    actionRequired: true,
+    severity: ChangelogSeverity.RECOMMENDED,
     description:
       'Head to **Paywalls** and choose one of the new designs. Until you pick one, your readers keep seeing the classic design.\n\n- Classic: as before\n- Compact: slim banner at the end of the article\n- Full page: covers the article after the lead',
   },
@@ -108,7 +108,7 @@ const demoChangelogEntries: DemoChangelogEntry[] = [
     slug: 'newsletter_double_optin',
     title: 'Double opt-in for newsletters',
     lead: 'New newsletter subscribers now confirm their e-mail address before they are added.',
-    actionRequired: true,
+    severity: ChangelogSeverity.RECOMMENDED,
     confirmed: true,
     description:
       'Check the confirmation mail template under **Mail templates** and adjust the wording to your publication.',
@@ -137,7 +137,7 @@ const demoChangelogEntries: DemoChangelogEntry[] = [
     slug: 'tag_merging',
     title: 'Merge duplicate tags',
     lead: 'Duplicate tags can be merged without losing the articles attached to them.',
-    actionRequired: true,
+    severity: ChangelogSeverity.RECOMMENDED,
     confirmed: true,
     description:
       'Review your tag list under **Tags** and merge obvious duplicates. Nothing breaks if you skip this, but search and tag pages work better without duplicates.',
@@ -191,7 +191,7 @@ const demoChangelogEntries: DemoChangelogEntry[] = [
     slug: 'two_factor_login',
     title: 'Two-factor login for your team',
     lead: 'Protect editor accounts with time-based one-time passwords (TOTP).',
-    actionRequired: true,
+    severity: ChangelogSeverity.REQUIRED,
     description:
       'Ask every team member to enable two-factor authentication in their account settings. You can make it mandatory under **Settings → Security**.',
   },
@@ -216,7 +216,7 @@ export async function seedChangelogEntries(prisma: PrismaClient) {
       title: entry.title,
       lead: entry.lead,
       description: entry.description ?? null,
-      actionRequired: entry.actionRequired ?? false,
+      severity: entry.severity ?? ChangelogSeverity.INFO,
     };
 
     await prisma.changelogEntry.upsert({

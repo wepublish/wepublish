@@ -1,7 +1,6 @@
 ---
 title: Goodies pro Zahlungsintervall
 lead: Ein Goodie kann neu auf bestimmte Zahlungsintervalle beschränkt werden, zum Beispiel ein Booklet, das es nur zum 2-Jahres-Abo gibt.
-actionRequired: false
 ---
 
 Im Goodie-Formular wählst du die Zahlungsintervalle, bei denen das Goodie angeboten wird. Lässt du das Feld leer, wird das Goodie wie bisher bei jedem Intervall seiner Abo-Pläne angeboten.

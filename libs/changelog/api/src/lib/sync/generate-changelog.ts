@@ -1,6 +1,11 @@
+import { ChangelogSeverity } from '@prisma/client';
 import { mkdirSync, writeFileSync } from 'fs';
 import path from 'path';
 import { buildChangelogFolderName } from './create-changelog';
+import {
+  CHANGELOG_SEVERITY_VALUES,
+  changelogSeverityValue,
+} from './parse-changelog-markdown';
 import {
   CHANGELOG_FILE_NAME,
   ChangelogEntryData,
@@ -18,7 +23,7 @@ export type GeneratedChangelogContent = {
 
 export type GeneratedChangelog = {
   slug: string;
-  actionRequired: boolean;
+  severity: ChangelogSeverity;
   entries: Record<string, GeneratedChangelogContent>;
 };
 
@@ -41,7 +46,7 @@ export function buildGenerationPrompt(
     '',
     '{',
     '  "slug": "short_snake_case_name",',
-    '  "actionRequired": false,',
+    '  "severity": "info",',
     '  "entries": {',
     '    "en": { "title": "...", "lead": "...", "description": "... or null" },',
     '    "de": { "title": "...", "lead": "...", "description": "... or null" },',
@@ -54,9 +59,14 @@ export function buildGenerationPrompt(
     '  about what changes for the user.',
     '- description is optional markdown (paragraphs, lists, links — no images);',
     '  use null when the lead says it all.',
-    '- Set actionRequired to true ONLY when every instance has to complete a',
-    '  manual step (e.g. add a new block to their navigation), and then the',
-    '  description must say exactly what to do.',
+    '- severity is one of:',
+    '  - "info": nothing to do, the change just happens (the usual case).',
+    '  - "recommended": every instance should complete a manual step, but',
+    '    nothing breaks while it waits (e.g. add a new block to the navigation).',
+    '  - "required": every instance has to complete a manual step as soon as',
+    '    possible, because something stops working or degrades until it does.',
+    '  For "recommended" and "required" the description must say exactly what',
+    '  to do.',
     '- German uses the formal "Sie".',
     '- If the changes are not noticeable for editor users at all, reply with',
     '  {"skip": true, "reason": "..."} instead.',
@@ -154,23 +164,34 @@ export function parseGenerationResult(
     );
   }
 
+  const severity =
+    result.severity === undefined ?
+      ChangelogSeverity.INFO
+    : CHANGELOG_SEVERITY_VALUES[String(result.severity)];
+
+  if (!severity) {
+    throw new Error(
+      `Claude reply has an invalid severity "${String(result.severity)}" (allowed: ${Object.keys(CHANGELOG_SEVERITY_VALUES).join(', ')})`
+    );
+  }
+
   return {
     slug: result.slug.trim(),
-    actionRequired: result.actionRequired === true,
+    severity,
     entries: validated,
   };
 }
 
 export function composeChangelogMarkdown(
   content: GeneratedChangelogContent,
-  actionRequired?: boolean
+  severity?: ChangelogSeverity
 ): string {
   const frontmatter = [
     '---',
     `title: ${content.title}`,
     `lead: ${content.lead}`,
-    ...(actionRequired !== undefined ?
-      [`actionRequired: ${actionRequired}`]
+    ...(severity !== undefined ?
+      [`severity: ${changelogSeverityValue(severity)}`]
     : []),
     '---',
   ];
@@ -208,7 +229,7 @@ export async function writeGeneratedChangelog(
       filePath,
       composeChangelogMarkdown(
         content,
-        locale === GENERATION_BASE_LOCALE ? generated.actionRequired : undefined
+        locale === GENERATION_BASE_LOCALE ? generated.severity : undefined
       )
     );
     files.push(filePath);

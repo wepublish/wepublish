@@ -1,7 +1,6 @@
 ---
 title: Latest activity is back, and you can arrange your dashboard
 lead: The dashboard shows the latest activity again, including new comments. You can now choose which cards you see and in which order.
-actionRequired: false
 ---
 
 **Latest activity**

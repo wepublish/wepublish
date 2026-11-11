@@ -2630,17 +2630,26 @@ model SeoChecklistItem {
   @@map("seo.checklist_items")
 }
 
+/// How urgently a changelog entry asks the instance to act: INFO needs nothing,
+/// RECOMMENDED asks for a step that does not break anything when it waits,
+/// REQUIRED asks for a step that has to happen as soon as possible.
+enum ChangelogSeverity {
+  INFO
+  RECOMMENDED
+  REQUIRED
+}
+
 model ChangelogEntry {
   id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
-  name           String   @unique
-  releasedAt     DateTime @db.Timestamptz(3)
-  title          String
-  lead           String
-  description    String?
-  actionRequired Boolean  @default(false)
+  name        String            @unique
+  releasedAt  DateTime          @db.Timestamptz(3)
+  title       String
+  lead        String
+  description String?
+  severity    ChangelogSeverity @default(INFO)
 
   confirmedAt       DateTime? @db.Timestamptz(3)
   confirmedByUserId String?

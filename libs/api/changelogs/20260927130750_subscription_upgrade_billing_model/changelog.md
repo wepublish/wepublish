@@ -1,7 +1,6 @@
 ---
 title: Choose how subscription upgrades are billed
 lead: A new "Subscription Plans" card in the settings lets you decide whether an upgrade charges the full price difference between the old and the new plan, or only credits the unused part of the current period.
-actionRequired: false
 ---
 
 You can find the new option under **Settings → Subscription Plans**:

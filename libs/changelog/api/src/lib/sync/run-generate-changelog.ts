@@ -203,7 +203,7 @@ export async function runGenerateChangelog() {
   const { files, entry } = await writeGeneratedChangelog(directory, generated);
 
   console.log('');
-  console.log(`Created (actionRequired: ${entry.actionRequired}):`);
+  console.log(`Created (severity: ${entry.severity.toLowerCase()}):`);
 
   for (const file of files) {
     console.log(`- ${path.relative(process.cwd(), file)}`);

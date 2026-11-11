@@ -1,7 +1,6 @@
 ---
 title: Subscriptions at a glance in the user view
 lead: A user's subscriptions are now a table with their real status and the invoices of every period. The invoice history lists the newest invoice first, by billing date.
-actionRequired: false
 ---
 
 **Subscriptions in the user view** (Audience → Users → a user)

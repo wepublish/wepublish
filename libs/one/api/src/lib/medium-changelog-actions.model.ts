@@ -1,4 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
+import { ChangelogSeverity } from '@wepublish/changelog/api';
 
 /**
  * One changelog entry and, where it asked the medium to do something, who
@@ -16,9 +17,15 @@ export class MediumChangelogAction {
   @Field()
   title!: string;
 
+  @Field(() => ChangelogSeverity, {
+    description:
+      'INFO for a purely informative entry; RECOMMENDED and REQUIRED ask for an action, REQUIRED as soon as possible.',
+  })
+  severity!: ChangelogSeverity;
+
   @Field({
     description:
-      'False for a purely informative entry, which is never counted as open or overdue.',
+      'False for a purely informative entry (severity INFO), which is never counted as open or overdue.',
   })
   actionRequired!: boolean;
 

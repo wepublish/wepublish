@@ -1,7 +1,6 @@
 ---
 title: Compose newsletters in the editor
 lead: Under Communication → Newsletter you can now assemble a newsletter from article teasers, text, images from the media library and info boxes, and push it into a Mailchimp draft with one click.
-actionRequired: false
 ---
 
 What you can do:

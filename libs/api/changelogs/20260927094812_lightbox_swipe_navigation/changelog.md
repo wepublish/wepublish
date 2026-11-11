@@ -1,7 +1,6 @@
 ---
 title: Smoother image lightbox with swipe navigation
 lead: Image galleries using the lightbox style now support swiping between images on touch devices, and browsing through pictures feels smoother overall.
-actionRequired: false
 ---
 
 The lightbox for image galleries has been improved:

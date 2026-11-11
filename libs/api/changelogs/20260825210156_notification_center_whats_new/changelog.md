@@ -1,7 +1,6 @@
 ---
 title: New notification center with a "What's new" changelog
 lead: The dashboard now gathers everything worth knowing in one Notifications section: messages from the We.Publish team, product news and technical alerts. A new Notifications page in the sidebar keeps the full history.
-actionRequired: false
 ---
 
 Every We.Publish update now comes with a short changelog entry that explains in plain language what changes for you — in German, English and French.

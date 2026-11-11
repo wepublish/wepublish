@@ -1,7 +1,6 @@
 ---
 title: Renew early and change the payment method in the profile
 lead: You decide how long before the end readers can renew their subscription, and readers can now switch their subscription's payment method in their profile at any time, for example from invoice to card.
-actionRequired: false
 ---
 
 **Renewal window**: under **Settings**, "Renewal window (days before the end)" sets how many days before a subscription ends readers see "Renew now" in their profile. 30 keeps the previous behaviour; 366 allows renewing at any time, as long as no invoice is open. The renewal dialog shows which payment method is charged.

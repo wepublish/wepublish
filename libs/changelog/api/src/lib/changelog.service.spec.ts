@@ -1,6 +1,6 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaClient } from '@prisma/client';
+import { ChangelogSeverity, PrismaClient } from '@prisma/client';
 import { ChangelogService } from './changelog.service';
 
 const mockEntry = {
@@ -12,7 +12,7 @@ const mockEntry = {
   title: 'A title',
   lead: 'A lead',
   description: 'A description',
-  actionRequired: true,
+  severity: ChangelogSeverity.REQUIRED,
   confirmedAt: null,
   confirmedByUserId: null,
 };
@@ -111,8 +111,37 @@ describe('ChangelogService', () => {
       expect(mockPrisma.changelogEntry.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
           where: {
-            actionRequired: true,
+            severity: { not: ChangelogSeverity.INFO },
             confirmedAt: null,
+          },
+        })
+      );
+
+      await service.getChangelogEntries({
+        filter: { actionRequired: false },
+      });
+
+      expect(mockPrisma.changelogEntry.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { severity: ChangelogSeverity.INFO },
+        })
+      );
+
+      await service.getChangelogEntries({
+        filter: {
+          severities: [
+            ChangelogSeverity.RECOMMENDED,
+            ChangelogSeverity.REQUIRED,
+          ],
+        },
+      });
+
+      expect(mockPrisma.changelogEntry.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: {
+            severity: {
+              in: [ChangelogSeverity.RECOMMENDED, ChangelogSeverity.REQUIRED],
+            },
           },
         })
       );
@@ -200,6 +229,20 @@ describe('ChangelogService', () => {
       expect(result.confirmedByUserId).toBe('user-1');
     });
 
+    it('confirms an entry whose action is only recommended', async () => {
+      mockPrisma.changelogEntry.findUnique.mockResolvedValue({
+        ...mockEntry,
+        severity: ChangelogSeverity.RECOMMENDED,
+      });
+      mockPrisma.changelogEntry.update.mockImplementation(({ data }) =>
+        Promise.resolve({ ...mockEntry, ...data })
+      );
+
+      await service.confirmChangelogEntry('entry-1', 'user-1');
+
+      expect(mockPrisma.changelogEntry.update).toHaveBeenCalled();
+    });
+
     it('throws when the entry does not exist', async () => {
       mockPrisma.changelogEntry.findUnique.mockResolvedValue(null);
 
@@ -211,7 +254,7 @@ describe('ChangelogService', () => {
     it('throws when the entry does not require an action', async () => {
       mockPrisma.changelogEntry.findUnique.mockResolvedValue({
         ...mockEntry,
-        actionRequired: false,
+        severity: ChangelogSeverity.INFO,
       });
 
       await expect(

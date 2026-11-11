@@ -1,7 +1,10 @@
 import { useQuery } from '@apollo/client/react';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { render, screen } from '@testing-library/react';
-import type { ChangelogEntryFragment } from '@wepublish/editor/api';
+import {
+  type ChangelogEntryFragment,
+  ChangelogSeverity,
+} from '@wepublish/editor/api';
 import { ReactNode } from 'react';
 import type { Mock } from 'vitest';
 
@@ -36,7 +39,7 @@ const entry = (
   title: 'An entry',
   lead: 'A lead',
   description: null,
-  actionRequired: false,
+  severity: ChangelogSeverity.Info,
   confirmedAt: null,
   confirmedByUserId: null,
   ...overrides,
@@ -136,11 +139,15 @@ describe('ChangelogDashboard', () => {
 
   it('excludes unconfirmed action-required entries when asked to', () => {
     mockQuery([
-      entry({ id: 'entry-1', title: 'Pending', actionRequired: true }),
+      entry({
+        id: 'entry-1',
+        title: 'Pending',
+        severity: ChangelogSeverity.Required,
+      }),
       entry({
         id: 'entry-2',
         title: 'Done',
-        actionRequired: true,
+        severity: ChangelogSeverity.Recommended,
         confirmedAt: '2026-08-26T12:00:00.000Z',
       }),
     ]);
@@ -160,7 +167,11 @@ describe('ChangelogDashboard', () => {
 
   it('reports nothing visible when only excluded entries remain', () => {
     mockQuery([
-      entry({ id: 'entry-1', title: 'Pending', actionRequired: true }),
+      entry({
+        id: 'entry-1',
+        title: 'Pending',
+        severity: ChangelogSeverity.Required,
+      }),
     ]);
     const onVisibilityChange = vi.fn();
 
@@ -179,7 +190,9 @@ describe('ChangelogDashboard', () => {
 
 describe('ChangelogActionRequired', () => {
   it('renders unconfirmed entries and reports them as visible', () => {
-    mockQuery([entry({ title: 'Do this', actionRequired: true })]);
+    mockQuery([
+      entry({ title: 'Do this', severity: ChangelogSeverity.Required }),
+    ]);
     const onVisibilityChange = vi.fn();
 
     renderWithTheme(
@@ -191,6 +204,43 @@ describe('ChangelogActionRequired', () => {
       screen.getByRole('button', { name: 'notifications.markAsDone' })
     ).toBeTruthy();
     expect(onVisibilityChange).toHaveBeenLastCalledWith(true);
+  });
+
+  it('asks only for open entries that ask for an action', () => {
+    mockQuery([]);
+
+    renderWithTheme(<ChangelogActionRequired />);
+
+    expect(mockedUseQuery).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        variables: expect.objectContaining({
+          filter: {
+            severities: [
+              ChangelogSeverity.Recommended,
+              ChangelogSeverity.Required,
+            ],
+            confirmed: false,
+          },
+        }),
+      })
+    );
+  });
+
+  it('labels required and recommended entries differently', () => {
+    mockQuery([
+      entry({ id: 'a', title: 'Urgent', severity: ChangelogSeverity.Required }),
+      entry({
+        id: 'b',
+        title: 'Later',
+        severity: ChangelogSeverity.Recommended,
+      }),
+    ]);
+
+    renderWithTheme(<ChangelogActionRequired />);
+
+    expect(screen.getByText('changelog.severity.required')).toBeTruthy();
+    expect(screen.getByText('changelog.severity.recommended')).toBeTruthy();
   });
 
   it('renders nothing and reports nothing visible without entries', () => {

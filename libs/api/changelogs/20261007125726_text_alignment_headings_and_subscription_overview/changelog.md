@@ -1,7 +1,6 @@
 ---
 title: Text alignment, heading links and a clearer subscription overview
 lead: Text alignment you set in the editor now also appears on the website, headings can be linked to directly, and cancelled subscriptions stay in the active list until they actually end.
-actionRequired: false
 ---
 
 **On the website**

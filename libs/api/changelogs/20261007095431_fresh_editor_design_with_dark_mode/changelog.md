@@ -1,7 +1,6 @@
 ---
 title: Fresh editor design with dark mode
 lead: The editor has a cleaner, more modern look, switches to dark mode automatically when your device does, and now also works on phones and tablets.
-actionRequired: false
 ---
 
 **What you'll notice**

@@ -1,7 +1,6 @@
 ---
 title: Composer des newsletters dans l’éditeur
 lead: Sous Communication → Newsletter, vous composez une newsletter à partir de teasers d’articles, de texte, d’images de la médiathèque et d’encadrés, puis la transférez en un clic dans un brouillon Mailchimp.
-actionRequired: false
 ---
 
 Ce que vous pouvez faire :

@@ -1,7 +1,6 @@
 ---
 title: Find pages by slug in the page overview
 lead: The page overview now shows the slug of each page and lets you filter by it. Via the column settings you can decide which columns are displayed.
-actionRequired: false
 ---
 
 - A new **Slug** column shows the URL segment of each page. It is visible by default.

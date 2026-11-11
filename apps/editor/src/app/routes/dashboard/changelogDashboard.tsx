@@ -3,7 +3,6 @@ import styled from '@emotion/styled';
 import {
   Alert,
   Button,
-  Chip,
   CircularProgress,
   Dialog,
   DialogActions,
@@ -13,6 +12,7 @@ import {
 import {
   ChangelogEntriesDocument,
   ChangelogEntryFragment,
+  ChangelogSeverity,
   ConfirmChangelogEntryDocument,
 } from '@wepublish/editor/api';
 import { CanUpdateSettings } from '@wepublish/permissions';
@@ -21,12 +21,17 @@ import {
   enqueueSnackbar,
   humanizeError,
   NotificationItem,
-  NotificationSeverity,
   useHasPermission,
 } from '@wepublish/ui/editor';
 import { ReactElement, ReactNode, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ReactMarkdown, { defaultUrlTransform } from 'react-markdown';
+
+import {
+  ChangelogSeverityChip,
+  changelogNotificationSeverity,
+  isOpenChangelogAction,
+} from './changelogSeverity';
 
 const MarkdownContainer = styled.div`
   img {
@@ -107,36 +112,6 @@ function ChangelogMarkdown({ children }: { children: string }) {
   );
 }
 
-const getEntrySeverity = (
-  entry: ChangelogEntryFragment
-): NotificationSeverity => {
-  if (!entry.actionRequired) {
-    return 'info';
-  }
-
-  return entry.confirmedAt ? 'success' : 'warning';
-};
-
-function ChangelogEntryTag({ entry }: { entry: ChangelogEntryFragment }) {
-  const { t } = useTranslation();
-
-  if (!entry.actionRequired) {
-    return null;
-  }
-
-  return entry.confirmedAt ?
-      <Chip
-        color="success"
-        size="small"
-        label={t('changelog.done')}
-      />
-    : <Chip
-        color="warning"
-        size="small"
-        label={t('changelog.actionRequired')}
-      />;
-}
-
 interface ChangelogEntryModalProps {
   entry: ChangelogEntryFragment;
   onClose(): void;
@@ -184,17 +159,14 @@ function ChangelogEntryModal({
           {t('close')}
         </Button>
 
-        {mayConfirm &&
-          entry.actionRequired &&
-          !entry.confirmedAt &&
-          onMarkAsDone && (
-            <Button
-              variant="contained"
-              onClick={onMarkAsDone}
-            >
-              {t('notifications.markAsDone')}
-            </Button>
-          )}
+        {mayConfirm && isOpenChangelogAction(entry) && onMarkAsDone && (
+          <Button
+            variant="contained"
+            onClick={onMarkAsDone}
+          >
+            {t('notifications.markAsDone')}
+          </Button>
+        )}
       </DialogActions>
     </Dialog>
   );
@@ -269,7 +241,10 @@ export function useChangelogActionNotifications({
     fetchPolicy: 'cache-and-network',
     variables: {
       take: 100,
-      filter: { actionRequired: true, confirmed: false },
+      filter: {
+        severities: [ChangelogSeverity.Recommended, ChangelogSeverity.Required],
+        confirmed: false,
+      },
       locale: i18n.language,
     },
   });
@@ -309,9 +284,9 @@ export function useChangelogActionNotifications({
     items: entries.map(entry => (
       <NotificationItem
         key={entry.id}
-        severity="warning"
+        severity={changelogNotificationSeverity(entry)}
         title={entry.title}
-        tags={<ChangelogEntryTag entry={entry} />}
+        tags={<ChangelogSeverityChip entry={entry} />}
         sourceTag={sourceTag}
         actions={
           <>
@@ -415,9 +390,7 @@ export function useChangelogNewsNotifications({
   const nodes = data?.changelogEntries.nodes ?? [];
   const entries = nodes
     .filter(
-      entry =>
-        !hideUnconfirmedActionRequired ||
-        !(entry.actionRequired && !entry.confirmedAt)
+      entry => !hideUnconfirmedActionRequired || !isOpenChangelogAction(entry)
     )
     .filter(entry => !readEntryIds?.has(entry.id))
     .slice(0, limit);
@@ -471,13 +444,13 @@ export function useChangelogNewsNotifications({
     items: entries.map(entry => (
       <NotificationItem
         key={entry.id}
-        severity={getEntrySeverity(entry)}
+        severity={changelogNotificationSeverity(entry)}
         title={entry.title}
-        tags={<ChangelogEntryTag entry={entry} />}
+        tags={<ChangelogSeverityChip entry={entry} />}
         sourceTag={sourceTag}
         onClick={() => setDetailsEntry(entry)}
         actions={
-          onMarkRead && (!entry.actionRequired || !!entry.confirmedAt) ?
+          onMarkRead && !isOpenChangelogAction(entry) ?
             <Button
               variant="outlined"
               size="small"

@@ -1,7 +1,6 @@
 ---
 title: A more accessible editor
 lead: The editor now works much better with a keyboard and with screen readers, and error messages are easier to notice and fix.
-actionRequired: false
 ---
 
 We reviewed the whole editor against the WCAG 2.2 AA accessibility guidelines. Among the improvements:

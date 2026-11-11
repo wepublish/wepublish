@@ -1,7 +1,6 @@
 ---
 title: Your website now has an llms.txt for AI assistants
 lead: Every website now serves a short summary at /llms.txt that helps AI assistants such as ChatGPT or Claude understand your site and find your most important content.
-actionRequired: false
 ---
 
 `/llms.txt` is a plain-text table of contents written for AI assistants, similar to how the sitemap serves search engines. It is generated automatically and always up to date:

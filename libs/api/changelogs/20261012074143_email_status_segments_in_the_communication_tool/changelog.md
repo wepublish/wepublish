@@ -1,7 +1,6 @@
 ---
 title: Email status in the communication tool
 lead: The recipient filter now knows whether an address still works. Pick "Placeholder" and "Dead" to reach everyone by letter, "Unknown" to try them by mail, and see what a send achieved in the job's result.
-actionRequired: false
 ---
 
 Every person now carries an **email status**, derived automatically from what the mail provider reports and from the person's own activity:

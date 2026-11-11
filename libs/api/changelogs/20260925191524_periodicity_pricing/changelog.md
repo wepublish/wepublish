@@ -1,7 +1,6 @@
 ---
 title: Exact prices per payment interval
 lead: Member plans now have their own minimum, target and maximum price for every payment interval, so yearly or quarterly prices no longer have to be derived from the monthly amount. In the subscribe block you also decide how the intervals are presented to your readers.
-actionRequired: false
 ---
 
 **In the member plan**

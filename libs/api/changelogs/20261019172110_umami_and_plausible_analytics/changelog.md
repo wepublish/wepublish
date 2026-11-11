@@ -1,7 +1,6 @@
 ---
 title: Umami tracking and more providers for Hot & Trending
 lead: You can now track your website with Umami, and Hot & Trending can get its page views from Plausible or Umami as well as Google Analytics.
-actionRequired: false
 ---
 
 **Website tracking with Umami**

@@ -1,7 +1,6 @@
 ---
 title: New audit log — who changed what, and when
 lead: A new Audit log page under Settings records every editorial change made in the editor, together with the person who made it and the login session it happened in. It is available to administrators.
-actionRequired: false
 ---
 
 Whenever someone creates, changes or deletes something in the editor — an article, a page, a user, a member plan — the audit log keeps a record of it. This makes it possible to answer questions like "who published this yesterday evening?" long after the fact.

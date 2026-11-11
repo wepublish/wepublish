@@ -1,7 +1,6 @@
 ---
 title: Manage integrations in the editor
 lead: Payment, mail, captcha and tracking pixel providers are now set up entirely under Settings → Integrations, and a change takes effect the moment you save it — no deployment, no waiting.
-actionRequired: false
 ---
 
 Until now, which providers existed was fixed in a configuration file that only your hosting partner could change. That list has moved into the editor.

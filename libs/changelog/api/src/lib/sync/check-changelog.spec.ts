@@ -1,3 +1,4 @@
+import { ChangelogSeverity } from '@prisma/client';
 import { TODO_MARKER } from './create-changelog';
 import {
   addedChangelogFolders,
@@ -13,7 +14,7 @@ const entry = (
   title: 'New landing page block',
   lead: 'Editors can now add a gallery block.',
   description: null,
-  actionRequired: false,
+  severity: ChangelogSeverity.INFO,
   translations: [
     { locale: 'de', title: 'Titel', lead: 'Lead', description: null },
     { locale: 'fr', title: 'Titre', lead: 'Lead', description: null },

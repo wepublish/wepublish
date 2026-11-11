@@ -5,7 +5,7 @@ fragment ChangelogEntry on ChangelogEntry {
   title
   lead
   description
-  actionRequired
+  severity
   confirmedAt
   confirmedByUserId
 }

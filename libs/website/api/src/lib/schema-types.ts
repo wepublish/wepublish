@@ -846,6 +846,10 @@ export enum ChallengeProviderType {
 
 export type ChangelogEntry = {
   __typename: 'ChangelogEntry';
+  /**
+   * True for every severity that asks for an action (RECOMMENDED and REQUIRED).
+   * @deprecated Use severity.
+   */
   actionRequired: Scalars['Boolean']['output'];
   confirmedAt?: Maybe<Scalars['DateTime']['output']>;
   confirmedByUserId?: Maybe<Scalars['String']['output']>;
@@ -856,13 +860,26 @@ export type ChangelogEntry = {
   modifiedAt: Scalars['DateTime']['output'];
   name: Scalars['String']['output'];
   releasedAt: Scalars['DateTime']['output'];
+  severity: ChangelogSeverity;
   title: Scalars['String']['output'];
 };
 
 export type ChangelogEntryFilter = {
+  /** True for entries that ask for an action (RECOMMENDED or REQUIRED), false for INFO entries. */
   actionRequired?: InputMaybe<Scalars['Boolean']['input']>;
   confirmed?: InputMaybe<Scalars['Boolean']['input']>;
+  severities?: InputMaybe<Array<ChangelogSeverity>>;
 };
+
+/** How urgently a changelog entry asks the instance to act. */
+export enum ChangelogSeverity {
+  /** Nothing to do, the entry only informs. */
+  Info = 'INFO',
+  /** A manual step is asked for, but nothing breaks while it waits. */
+  Recommended = 'RECOMMENDED',
+  /** A manual step has to happen as soon as possible, something stops working or degrades until it does. */
+  Required = 'REQUIRED'
+}
 
 export type Chat = {
   __typename: 'Chat';
@@ -3121,7 +3138,7 @@ export type MediumAuditStats = {
 
 export type MediumChangelogAction = {
   __typename: 'MediumChangelogAction';
-  /** False for a purely informative entry, which is never counted as open or overdue. */
+  /** False for a purely informative entry (severity INFO), which is never counted as open or overdue. */
   actionRequired: Scalars['Boolean']['output'];
   /** Null while the action is still open. */
   confirmedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -3130,6 +3147,8 @@ export type MediumChangelogAction = {
   id: Scalars['String']['output'];
   name: Scalars['String']['output'];
   releasedAt: Scalars['DateTime']['output'];
+  /** INFO for a purely informative entry; RECOMMENDED and REQUIRED ask for an action, REQUIRED as soon as possible. */
+  severity: ChangelogSeverity;
   title: Scalars['String']['output'];
 };
 
@@ -3137,8 +3156,10 @@ export type MediumChangelogStats = {
   __typename: 'MediumChangelogStats';
   /** Release date of the longest-open action-required entry, or null when none is open. */
   oldestOpenActionAt?: Maybe<Scalars['DateTime']['output']>;
-  /** Action-required entries that nobody has confirmed yet. Informative entries are excluded. */
+  /** Entries asking for an action (severity RECOMMENDED or REQUIRED) that nobody has confirmed yet. Informative entries are excluded. */
   openActions: Scalars['Int']['output'];
+  /** The part of openActions with severity REQUIRED: steps that have to happen as soon as possible. */
+  openRequiredActions: Scalars['Int']['output'];
 };
 
 export type MediumCommunityStats = {

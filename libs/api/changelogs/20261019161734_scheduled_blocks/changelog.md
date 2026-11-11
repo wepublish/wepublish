@@ -1,7 +1,6 @@
 ---
 title: Schedule when blocks appear
 lead: You can now set when a block shows on the website: on certain dates, on certain days of the week, or during a time of day. Outside its schedule the block is hidden automatically.
-actionRequired: false
 ---
 
 Click the clock icon on any block to open its schedule. You can combine:

@@ -1,7 +1,6 @@
 ---
 title: Download lists as CSV or Excel
 lead: Most lists in the editor now have a Download button that saves all matching entries as a CSV or Excel file.
-actionRequired: false
 ---
 
 The download respects your current setup:

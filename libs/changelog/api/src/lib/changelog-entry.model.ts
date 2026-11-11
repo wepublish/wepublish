@@ -1,5 +1,31 @@
-import { ArgsType, Field, InputType, Int, ObjectType } from '@nestjs/graphql';
+import {
+  ArgsType,
+  Field,
+  InputType,
+  Int,
+  ObjectType,
+  registerEnumType,
+} from '@nestjs/graphql';
+import { ChangelogSeverity } from '@prisma/client';
 import { PaginatedType } from '@wepublish/utils/api';
+
+export { ChangelogSeverity };
+
+registerEnumType(ChangelogSeverity, {
+  name: 'ChangelogSeverity',
+  description: 'How urgently a changelog entry asks the instance to act.',
+  valuesMap: {
+    INFO: { description: 'Nothing to do, the entry only informs.' },
+    RECOMMENDED: {
+      description:
+        'A manual step is asked for, but nothing breaks while it waits.',
+    },
+    REQUIRED: {
+      description:
+        'A manual step has to happen as soon as possible, something stops working or degrades until it does.',
+    },
+  },
+});
 
 @ObjectType()
 export class ChangelogEntry {
@@ -27,7 +53,14 @@ export class ChangelogEntry {
   @Field(() => String, { nullable: true })
   description?: string | null;
 
-  @Field()
+  @Field(() => ChangelogSeverity)
+  severity!: ChangelogSeverity;
+
+  @Field({
+    description:
+      'True for every severity that asks for an action (RECOMMENDED and REQUIRED).',
+    deprecationReason: 'Use severity.',
+  })
   actionRequired!: boolean;
 
   @Field(() => Date, { nullable: true })
@@ -39,8 +72,15 @@ export class ChangelogEntry {
 
 @InputType()
 export class ChangelogEntryFilter {
-  @Field({ nullable: true })
+  @Field({
+    nullable: true,
+    description:
+      'True for entries that ask for an action (RECOMMENDED or REQUIRED), false for INFO entries.',
+  })
   actionRequired?: boolean;
+
+  @Field(() => [ChangelogSeverity], { nullable: true })
+  severities?: ChangelogSeverity[];
 
   @Field({ nullable: true })
   confirmed?: boolean;

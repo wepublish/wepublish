@@ -1,5 +1,7 @@
+import { ChangelogSeverity } from '@prisma/client';
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import path from 'path';
+import { changelogSeverityValue } from './parse-changelog-markdown';
 import {
   CHANGELOG_FILE_NAME,
   CHANGELOG_FOLDER_PATTERN,
@@ -56,10 +58,10 @@ export function buildChangelogFolderName(title: string, now: Date): string {
 
 export const TODO_MARKER = 'TODO';
 
-const changelogTemplate = (title: string, actionRequired: boolean) => `---
+const changelogTemplate = (title: string, severity: ChangelogSeverity) => `---
 title: ${title}
 lead: ${TODO_MARKER} – Describe in one or two plain-language sentences what changes for the user.
-actionRequired: ${actionRequired}
+severity: ${changelogSeverityValue(severity)}
 ---
 
 ${TODO_MARKER} – Optional longer description in markdown (paragraphs, links, lists,
@@ -71,7 +73,7 @@ users.
 export type CreateChangelogOptions = {
   directory: string;
   title: string;
-  actionRequired?: boolean;
+  severity?: ChangelogSeverity;
   now?: Date;
 };
 
@@ -85,7 +87,7 @@ export type CreatedChangelog = {
 export async function createChangelogFile({
   directory,
   title,
-  actionRequired = false,
+  severity = ChangelogSeverity.INFO,
   now = new Date(),
 }: CreateChangelogOptions): Promise<CreatedChangelog> {
   const cleanTitle = title.replace(/\s+/g, ' ').trim();
@@ -104,7 +106,7 @@ export async function createChangelogFile({
   mkdirSync(folderPath, { recursive: true });
 
   const filePath = path.join(folderPath, CHANGELOG_FILE_NAME);
-  writeFileSync(filePath, changelogTemplate(cleanTitle, actionRequired));
+  writeFileSync(filePath, changelogTemplate(cleanTitle, severity));
 
   // Round-trip through the exact parser the database sync uses, so a generated
   // entry is guaranteed to be insertable once its placeholders are filled in.

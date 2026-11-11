@@ -1,7 +1,6 @@
 ---
 title: API keys
 lead: You can now create API keys so a script or another system can call the API without signing in as a person. A key only carries the permissions you give it, and every key expires on a date you choose.
-actionRequired: false
 ---
 
 **Settings → API Keys**

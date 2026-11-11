@@ -1,7 +1,6 @@
 ---
 title: Faster websites, changes live within seconds
 lead: Your website now shares its pages and data across all of its servers. Pages load faster, and what you publish or change shows up on the website within seconds.
-actionRequired: false
 ---
 
 **What you will notice**

@@ -1,7 +1,6 @@
 ---
 title: Newsletter im Editor zusammenstellen
 lead: Unter Kommunikation → Newsletter stellen Sie einen Newsletter aus Artikel-Teasern, Text, Bildern aus der Medienbibliothek und Info-Boxen zusammen und übertragen ihn mit einem Klick in einen Mailchimp-Entwurf.
-actionRequired: false
 ---
 
 Was Sie tun können:

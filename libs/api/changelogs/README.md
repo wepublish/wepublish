@@ -26,8 +26,9 @@ an entry is inserted as soon as its folder reaches the deployed code, and never 
 
    ```bash
    pnpm run changelog:create "New landing page block"
-   # needs a manual step in every instance?
-   pnpm run changelog:create "New landing page block" --action-required
+   # needs a manual step in every instance? (see "Severity" below)
+   pnpm run changelog:create "New landing page block" --recommended
+   pnpm run changelog:create "New landing page block" --required
    ```
 
    This creates a correctly named folder `<YYYYMMDDHHMMSS>_<snake_case_name>`
@@ -42,7 +43,7 @@ an entry is inserted as soon as its folder reaches the deployed code, and never 
    ---
    title: Short, human-friendly title
    lead: One or two plain-language sentences about what changed for the user.
-   actionRequired: false
+   severity: info
    ---
 
    Optional longer description in markdown: paragraphs, [links](https://wepublish.ch),
@@ -51,7 +52,9 @@ an entry is inserted as soon as its folder reaches the deployed code, and never 
    ```
 
 3. Frontmatter rules: `title` and `lead` are required single-line values;
-   `actionRequired` is optional and defaults to `false`. No other keys are allowed.
+   `severity` is optional and defaults to `info`. No other keys are allowed
+   (the legacy `actionRequired: true|false` is still accepted for older
+   branches and means `required` / `info`; don't set both).
 4. Images: put them in the entry's folder. During sync they are inlined into the
    stored description as data URIs, so keep them small (screenshots, not photos).
    Supported: png, jpg, jpeg, gif, webp, svg.
@@ -66,15 +69,24 @@ the default content when no translation exists. Rules:
 
 - Only `de`, `en` and `fr` are allowed as locale suffixes — anything else fails
   the sync (and CI).
-- `actionRequired` belongs in the base `changelog.md` only; it is ignored in
+- `severity` belongs in the base `changelog.md` only; it is ignored in
   translation files.
 
-## `actionRequired: true`
+## Severity
 
-Use this when the change needs a manual step in every instance (e.g. "add the new
-block to your navigation"). Such entries are shown prominently on the editor
-dashboard until a logged-in user confirms that the action has been completed;
-the confirmation (who + when) is stored per instance.
+| `severity`    | Editor label         | Use it when                                                                                                                    |
+| ------------- | -------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `info`        | Info                 | Nothing to do: the change just happens. The usual case.                                                                        |
+| `recommended` | Action recommended   | Every instance should do a manual step, but nothing breaks while it waits (e.g. "add the new block to your navigation").       |
+| `required`    | Action required      | Every instance has to do a manual step as soon as possible: something stops working or degrades until it does (e.g. a secret). |
+
+`recommended` and `required` entries ask for an action: they are shown
+prominently in the editor until a user with the permission to update settings
+confirms that the action has been completed; the confirmation (who + when) is
+stored per instance. `required` entries are shown more prominently than
+`recommended` ones. We.Publish One reads the severity and the confirmations
+through `mediumChangelogActions` and `mediumStats.operations.changelog`
+(`openActions`, `openRequiredActions`).
 
 Write for end users (editors, not developers): say what changed and what to do,
 not how it was implemented.

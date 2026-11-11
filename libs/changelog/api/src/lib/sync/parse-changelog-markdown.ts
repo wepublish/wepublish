@@ -1,14 +1,33 @@
+import { ChangelogSeverity } from '@prisma/client';
 import { readFileSync, statSync } from 'fs';
 import path from 'path';
 
 export type ParsedChangelogMarkdown = {
   title: string;
   lead: string;
-  actionRequired: boolean;
+  severity: ChangelogSeverity;
   description: string | null;
 };
 
-const KNOWN_FRONTMATTER_KEYS = ['title', 'lead', 'actionRequired'];
+/**
+ * How the severities are spelled in the frontmatter. `info` needs nothing,
+ * `recommended` asks for a step that can wait without breaking anything,
+ * `required` asks for a step that has to happen as soon as possible.
+ */
+export const CHANGELOG_SEVERITY_VALUES: Record<string, ChangelogSeverity> = {
+  info: ChangelogSeverity.INFO,
+  recommended: ChangelogSeverity.RECOMMENDED,
+  required: ChangelogSeverity.REQUIRED,
+};
+
+export const changelogSeverityValue = (severity: ChangelogSeverity): string =>
+  Object.entries(CHANGELOG_SEVERITY_VALUES).find(
+    ([, value]) => value === severity
+  )?.[0] ?? 'info';
+
+// `actionRequired` predates the severities. Branches that were written before
+// them still carry it, so it keeps working: true means required, false info.
+const KNOWN_FRONTMATTER_KEYS = ['title', 'lead', 'severity', 'actionRequired'];
 
 const FRONTMATTER_DELIMITER = /^---\s*$/;
 
@@ -84,17 +103,7 @@ export function parseChangelogMarkdown(
     throw new Error('Changelog frontmatter is missing a non-empty "lead"');
   }
 
-  let actionRequired = false;
-
-  if ('actionRequired' in frontmatter) {
-    if (!['true', 'false'].includes(frontmatter['actionRequired'])) {
-      throw new Error(
-        `Changelog frontmatter key "actionRequired" has to be "true" or "false", got "${frontmatter['actionRequired']}"`
-      );
-    }
-
-    actionRequired = frontmatter['actionRequired'] === 'true';
-  }
+  const severity = parseSeverity(frontmatter);
 
   const description = lines
     .slice(closingIndex + 1)
@@ -104,9 +113,43 @@ export function parseChangelogMarkdown(
   return {
     title,
     lead,
-    actionRequired,
+    severity,
     description: description || null,
   };
+}
+
+function parseSeverity(frontmatter: Record<string, string>): ChangelogSeverity {
+  if ('severity' in frontmatter && 'actionRequired' in frontmatter) {
+    throw new Error(
+      'Changelog frontmatter has to set either "severity" or the legacy "actionRequired", not both'
+    );
+  }
+
+  if ('severity' in frontmatter) {
+    const severity = CHANGELOG_SEVERITY_VALUES[frontmatter['severity']];
+
+    if (!severity) {
+      throw new Error(
+        `Changelog frontmatter key "severity" has to be one of ${Object.keys(CHANGELOG_SEVERITY_VALUES).join(', ')}, got "${frontmatter['severity']}"`
+      );
+    }
+
+    return severity;
+  }
+
+  if ('actionRequired' in frontmatter) {
+    if (!['true', 'false'].includes(frontmatter['actionRequired'])) {
+      throw new Error(
+        `Changelog frontmatter key "actionRequired" has to be "true" or "false", got "${frontmatter['actionRequired']}"`
+      );
+    }
+
+    return frontmatter['actionRequired'] === 'true' ?
+        ChangelogSeverity.REQUIRED
+      : ChangelogSeverity.INFO;
+  }
+
+  return ChangelogSeverity.INFO;
 }
 
 const IMAGE_MIME_TYPES: Record<string, string> = {

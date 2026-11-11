@@ -1,7 +1,6 @@
 ---
 title: Goodies par périodicité de paiement
 lead: Un goodie peut désormais être limité à certaines périodicités de paiement, par exemple un livret offert uniquement avec un abonnement de 2 ans.
-actionRequired: false
 ---
 
 Dans le formulaire du goodie, vous choisissez les périodicités de paiement avec lesquelles le goodie est proposé. Laissez le champ vide pour continuer à le proposer avec chaque périodicité de ses plans d’abonnement.

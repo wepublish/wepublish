@@ -1,7 +1,7 @@
 ---
 title: Delivery status from Mandrill and Mailgun is now properly checked
 lead: Status updates from your mail provider (delivered, bounced, rejected) are only accepted when they carry the correct webhook signature. Please check once that the webhook secret in the editor matches the one at your provider.
-actionRequired: true
+severity: required
 ---
 
 Until now, status updates sent by Mandrill or Mailgun were accepted even when their signature did not match. From now on, updates with a wrong signature are refused.

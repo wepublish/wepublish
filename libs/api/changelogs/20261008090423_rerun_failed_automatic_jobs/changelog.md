@@ -1,7 +1,6 @@
 ---
 title: Rerun failed jobs, clearer error messages
 lead: When the nightly jobs for subscriptions fail, an admin can now start them again from the dashboard, and they catch up every missed night up to today. Error messages now say which provider failed and where.
-actionRequired: false
 ---
 
 **Rerun failed jobs**

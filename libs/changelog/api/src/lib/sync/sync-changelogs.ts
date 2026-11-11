@@ -1,3 +1,4 @@
+import { ChangelogSeverity } from '@prisma/client';
 import { promises as fs } from 'fs';
 import path from 'path';
 import {
@@ -29,7 +30,7 @@ export type ChangelogEntryData = {
   title: string;
   lead: string;
   description: string | null;
-  actionRequired: boolean;
+  severity: ChangelogSeverity;
   translations: ChangelogTranslationData[];
 };
 
@@ -45,7 +46,7 @@ type ExistingChangelogEntrySelect = {
   title: true;
   lead: true;
   description: true;
-  actionRequired: true;
+  severity: true;
   translations: {
     select: {
       locale: true;
@@ -150,7 +151,7 @@ async function readChangelogFile(folderPath: string, fileName: string) {
 }
 
 // The base changelog.md is the fallback content; changelog.<locale>.md files
-// translate title, lead and description. actionRequired always comes from the
+// translate title, lead and description. The severity always comes from the
 // base file.
 async function readChangelogTranslations(
   folderPath: string
@@ -213,7 +214,7 @@ export async function readChangelogEntry(
     title: base.title,
     lead: base.lead,
     description: base.description,
-    actionRequired: base.actionRequired,
+    severity: base.severity,
     translations,
   };
 }
@@ -237,7 +238,7 @@ const hasContentChanged = (
   existing.title !== entry.title ||
   existing.lead !== entry.lead ||
   existing.description !== entry.description ||
-  existing.actionRequired !== entry.actionRequired ||
+  existing.severity !== entry.severity ||
   serializeTranslations(existing.translations) !==
     serializeTranslations(entry.translations);
 
@@ -269,7 +270,7 @@ export async function syncChangelogs(
       title: true,
       lead: true,
       description: true,
-      actionRequired: true,
+      severity: true,
       translations: {
         select: {
           locale: true,
@@ -309,7 +310,7 @@ export async function syncChangelogs(
             title: entry.title,
             lead: entry.lead,
             description: entry.description,
-            actionRequired: entry.actionRequired,
+            severity: entry.severity,
             translations: {
               deleteMany: {},
               createMany: { data: translations },

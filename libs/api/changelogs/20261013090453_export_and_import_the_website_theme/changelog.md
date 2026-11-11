@@ -1,7 +1,6 @@
 ---
 title: Export and import the website theme
 lead: The theme of your website (colours and typography) can now be exported to a file and imported again, for example to copy it to another website or to keep a backup.
-actionRequired: false
 ---
 
 **Website Settings → Theme**

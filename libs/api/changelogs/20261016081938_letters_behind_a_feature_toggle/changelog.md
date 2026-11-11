@@ -1,7 +1,7 @@
 ---
 title: Letters behind a feature toggle
 lead: Everything about printed letters – the letter and PDF integrations, stationery, the letter preview and the letter channel of the communication tool – now only appears once the "paper-letters" feature is switched on for your medium.
-actionRequired: true
+severity: required
 ---
 
 **What changes**

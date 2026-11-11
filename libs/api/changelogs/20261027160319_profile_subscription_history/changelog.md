@@ -1,7 +1,6 @@
 ---
 title: Clearer subscription overview for readers in their profile
 lead: Readers can see all their subscriptions together with their latest invoices in one table, and they can manage each subscription on its own page.
-actionRequired: false
 ---
 
 This feature is in an early test phase and is only visible once We.Publish switches it on for your medium. Contact us if you would like to try it.

@@ -1,4 +1,5 @@
 import { existsSync, mkdtempSync, readFileSync, rmSync } from 'fs';
+import { ChangelogSeverity } from '@prisma/client';
 import os from 'os';
 import path from 'path';
 import {
@@ -72,22 +73,23 @@ describe('createChangelogFile', () => {
     expect(entry).toMatchObject({
       name: folderName,
       title: 'New landing page block',
-      actionRequired: false,
+      severity: ChangelogSeverity.INFO,
       releasedAt: new Date(Date.UTC(2026, 7, 25, 9, 5, 3)),
     });
     expect(entry.lead).toContain('TODO');
     expect(entry.description).toContain('TODO');
   });
 
-  it('sets actionRequired in the template', async () => {
-    const { entry } = await createChangelogFile({
+  it('writes the severity into the template', async () => {
+    const { entry, filePath } = await createChangelogFile({
       directory,
       title: 'Manual step needed',
-      actionRequired: true,
+      severity: ChangelogSeverity.RECOMMENDED,
       now: new Date(Date.UTC(2026, 7, 25, 9, 5, 3)),
     });
 
-    expect(entry.actionRequired).toBe(true);
+    expect(entry.severity).toBe(ChangelogSeverity.RECOMMENDED);
+    expect(readFileSync(filePath, 'utf8')).toContain('severity: recommended');
   });
 
   it('normalizes whitespace in the title', async () => {

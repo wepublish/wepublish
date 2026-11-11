@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { ChangelogSeverity, PrismaClient } from '@prisma/client';
 import { DashboardInvoiceService } from '@wepublish/membership/api';
 import {
   DEFAULT_WINDOW_DAYS,
@@ -463,22 +463,29 @@ describe('MediumStatsService changelog actions', () => {
 
     expect(await operations(prisma)).toEqual({
       openActions: 0,
+      openRequiredActions: 0,
       oldestOpenActionAt: null,
     });
   });
 
-  it('counts only unconfirmed action-required entries', async () => {
+  it('counts only unconfirmed entries that ask for an action', async () => {
     const prisma = makePrisma();
-    prisma.changelogEntry.count.mockResolvedValue(3);
+    prisma.changelogEntry.count.mockImplementation(({ where }) =>
+      Promise.resolve(where.severity === ChangelogSeverity.REQUIRED ? 1 : 3)
+    );
     prisma.changelogEntry.findFirst.mockResolvedValue({ releasedAt: released });
 
     expect(await operations(prisma)).toEqual({
       openActions: 3,
+      openRequiredActions: 1,
       oldestOpenActionAt: released,
     });
 
     expect(prisma.changelogEntry.count).toHaveBeenCalledWith({
-      where: { actionRequired: true, confirmedAt: null },
+      where: { severity: { not: ChangelogSeverity.INFO }, confirmedAt: null },
+    });
+    expect(prisma.changelogEntry.count).toHaveBeenCalledWith({
+      where: { severity: ChangelogSeverity.REQUIRED, confirmedAt: null },
     });
   });
 
@@ -490,7 +497,7 @@ describe('MediumStatsService changelog actions', () => {
     await operations(prisma);
 
     expect(prisma.changelogEntry.findFirst).toHaveBeenCalledWith({
-      where: { actionRequired: true, confirmedAt: null },
+      where: { severity: { not: ChangelogSeverity.INFO }, confirmedAt: null },
       orderBy: { releasedAt: 'asc' },
       select: { releasedAt: true },
     });
@@ -502,6 +509,7 @@ describe('MediumStatsService changelog actions', () => {
 
     expect(await operations(prisma)).toEqual({
       openActions: 0,
+      openRequiredActions: 0,
       oldestOpenActionAt: null,
     });
   });
@@ -518,7 +526,7 @@ describe('MediumStatsService.listChangelogActions', () => {
         id: 'i1',
         name: '20260916080000_news',
         title: 'Just news',
-        actionRequired: false,
+        severity: ChangelogSeverity.INFO,
         releasedAt: released,
         confirmedAt: null,
         confirmedBy: null,
@@ -531,6 +539,7 @@ describe('MediumStatsService.listChangelogActions', () => {
       expect.not.objectContaining({ where: expect.anything() })
     );
     expect(entry.actionRequired).toBe(false);
+    expect(entry.severity).toBe(ChangelogSeverity.INFO);
   });
 
   it('maps the confirming user to a name and an email', async () => {
@@ -540,7 +549,7 @@ describe('MediumStatsService.listChangelogActions', () => {
         id: 'e1',
         name: '20260916080000_entry',
         title: 'Do the thing',
-        actionRequired: true,
+        severity: ChangelogSeverity.RECOMMENDED,
         releasedAt: released,
         confirmedAt: confirmed,
         confirmedBy: {
@@ -557,6 +566,7 @@ describe('MediumStatsService.listChangelogActions', () => {
       id: 'e1',
       name: '20260916080000_entry',
       title: 'Do the thing',
+      severity: ChangelogSeverity.RECOMMENDED,
       actionRequired: true,
       releasedAt: released,
       confirmedAt: confirmed,
@@ -572,7 +582,7 @@ describe('MediumStatsService.listChangelogActions', () => {
         id: 'e2',
         name: '20260916080000_open',
         title: 'Still open',
-        actionRequired: true,
+        severity: ChangelogSeverity.REQUIRED,
         releasedAt: released,
         confirmedAt: null,
         confirmedBy: null,
@@ -593,7 +603,7 @@ describe('MediumStatsService.listChangelogActions', () => {
         id: 'e3',
         name: '20260916080000_entry',
         title: 'Do the thing',
-        actionRequired: true,
+        severity: ChangelogSeverity.REQUIRED,
         releasedAt: released,
         confirmedAt: confirmed,
         confirmedBy: { name: 'Muster', firstName: null, email: 'm@example.ch' },

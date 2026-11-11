@@ -1,7 +1,6 @@
 ---
 title: Block templates: reuse groups of blocks across articles and pages
 lead: You can now save a set of content blocks as a reusable block template and insert it into any article or page with the new "Block Template" block.
-actionRequired: false
 ---
 
 Manage your templates under **Content Blocks → Block Templates**. You can create, rename, edit and delete them there, using the same block editor as for articles and pages.

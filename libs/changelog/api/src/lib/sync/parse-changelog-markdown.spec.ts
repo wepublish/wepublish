@@ -1,3 +1,4 @@
+import { ChangelogSeverity } from '@prisma/client';
 import { mkdtempSync, rmSync, writeFileSync, mkdirSync } from 'fs';
 import os from 'os';
 import path from 'path';
@@ -13,7 +14,7 @@ describe('parseChangelogMarkdown', () => {
         '---',
         'title: New landing page block',
         'lead: You can now add a landing page block.',
-        'actionRequired: true',
+        'severity: required',
         '---',
         '',
         'Some **longer** description with a [link](https://wepublish.ch).',
@@ -23,13 +24,13 @@ describe('parseChangelogMarkdown', () => {
     expect(result).toEqual({
       title: 'New landing page block',
       lead: 'You can now add a landing page block.',
-      actionRequired: true,
+      severity: ChangelogSeverity.REQUIRED,
       description:
         'Some **longer** description with a [link](https://wepublish.ch).',
     });
   });
 
-  it('defaults actionRequired to false and description to null', () => {
+  it('defaults severity to info and description to null', () => {
     const result = parseChangelogMarkdown(
       ['---', 'title: A title', 'lead: A lead', '---', ''].join('\n')
     );
@@ -37,9 +38,60 @@ describe('parseChangelogMarkdown', () => {
     expect(result).toEqual({
       title: 'A title',
       lead: 'A lead',
-      actionRequired: false,
+      severity: ChangelogSeverity.INFO,
       description: null,
     });
+  });
+
+  it.each([
+    ['info', ChangelogSeverity.INFO],
+    ['recommended', ChangelogSeverity.RECOMMENDED],
+    ['required', ChangelogSeverity.REQUIRED],
+  ])('parses severity "%s"', (value, expected) => {
+    const result = parseChangelogMarkdown(
+      ['---', 'title: A', 'lead: B', `severity: ${value}`, '---'].join('\n')
+    );
+
+    expect(result.severity).toBe(expected);
+  });
+
+  it('throws on an unknown severity', () => {
+    expect(() =>
+      parseChangelogMarkdown(
+        ['---', 'title: A', 'lead: B', 'severity: urgent', '---'].join('\n')
+      )
+    ).toThrow(/has to be one of info, recommended, required/);
+  });
+
+  it.each([
+    ['true', ChangelogSeverity.REQUIRED],
+    ['false', ChangelogSeverity.INFO],
+  ])(
+    'still accepts the legacy "actionRequired: %s" for branches written before severities',
+    (value, expected) => {
+      const result = parseChangelogMarkdown(
+        ['---', 'title: A', 'lead: B', `actionRequired: ${value}`, '---'].join(
+          '\n'
+        )
+      );
+
+      expect(result.severity).toBe(expected);
+    }
+  );
+
+  it('throws when severity and the legacy actionRequired are both set', () => {
+    expect(() =>
+      parseChangelogMarkdown(
+        [
+          '---',
+          'title: A',
+          'lead: B',
+          'severity: info',
+          'actionRequired: true',
+          '---',
+        ].join('\n')
+      )
+    ).toThrow(/either "severity" or the legacy "actionRequired"/);
   });
 
   it('strips surrounding quotes from values', () => {

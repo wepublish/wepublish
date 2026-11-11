@@ -1,7 +1,6 @@
 ---
 title: Overview lists remember your settings
 lead: Filters, sorting and the number of entries per page now stay in place when you reload the editor or return to a list. In the article overview you can also choose which columns are shown.
-actionRequired: false
 ---
 
 **Saved list settings**

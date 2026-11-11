@@ -1,7 +1,6 @@
 ---
 title: A rebuilt editor interface
 lead: The editor has been rebuilt on a single design system. It looks tidier and works the same, with a dark mode, list tables you can arrange yourself, and clearer article and page metadata.
-actionRequired: false
 ---
 
 **Everywhere**

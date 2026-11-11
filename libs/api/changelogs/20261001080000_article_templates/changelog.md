@@ -1,7 +1,6 @@
 ---
 title: Article templates: start new articles from a template
 lead: You can now save the content and metadata of an article as an article template and start new articles from it.
-actionRequired: false
 ---
 
 Manage your templates under **Articles → Article Templates**. An article template contains blocks, as in the article editor, and metadata such as titles, tags, authors, the paywall and the social media settings.

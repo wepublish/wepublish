@@ -18,6 +18,7 @@ const changelogEntriesQuery = `
         title
         lead
         description
+        severity
         actionRequired
         confirmedAt
         confirmedByUserId
@@ -50,7 +51,7 @@ const mockEntry = {
   title: 'A title',
   lead: 'A lead',
   description: 'A description',
-  actionRequired: true,
+  severity: 'RECOMMENDED',
   confirmedAt: null,
   confirmedByUserId: null,
 };
@@ -122,7 +123,7 @@ describe('ChangelogResolver', () => {
         query: changelogEntriesQuery,
         variables: {
           take: 5,
-          filter: { actionRequired: true, confirmed: false },
+          filter: { severities: ['RECOMMENDED'], confirmed: false },
         },
       })
       .expect(200);
@@ -137,6 +138,7 @@ describe('ChangelogResolver', () => {
           title: 'A title',
           lead: 'A lead',
           description: 'A description',
+          severity: 'RECOMMENDED',
           actionRequired: true,
           confirmedAt: null,
           confirmedByUserId: null,
@@ -153,7 +155,7 @@ describe('ChangelogResolver', () => {
         take: 5,
         skip: 0,
         filter: expect.objectContaining({
-          actionRequired: true,
+          severities: ['RECOMMENDED'],
           confirmed: false,
         }),
       })

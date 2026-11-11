@@ -1,7 +1,6 @@
 ---
 title: Redesigned peering overview
 lead: The peering page now lists your partner media in a clear table showing each peer's status, API URL and website at a glance.
-actionRequired: false
 ---
 
 - A **Status** column shows whether each peer is *Active* or *Disabled*.

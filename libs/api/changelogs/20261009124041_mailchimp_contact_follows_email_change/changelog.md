@@ -1,7 +1,6 @@
 ---
 title: The Mailchimp contact now follows a member's new email address
 lead: When a member's email address changes to one Mailchimp already knows, their Mailchimp contact now moves to the new address. Before, the member dropped out of the Mailchimp sync.
-actionRequired: false
 ---
 
 **Changing a member's email address**

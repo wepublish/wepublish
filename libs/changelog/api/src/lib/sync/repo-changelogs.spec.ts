@@ -30,7 +30,7 @@ describe('repository changelogs', () => {
         name: folderName,
         title: expect.any(String),
         lead: expect.any(String),
-        actionRequired: expect.any(Boolean),
+        severity: expect.stringMatching(/^(INFO|RECOMMENDED|REQUIRED)$/),
         releasedAt: expect.any(Date),
       });
     }

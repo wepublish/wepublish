@@ -7,7 +7,7 @@ import {
 } from './migrations';
 import { Injectable } from '@nestjs/common';
 import { logger } from '@wepublish/utils/api';
-import { PrismaClient } from '@prisma/client';
+import { ChangelogSeverity, PrismaClient } from '@prisma/client';
 import { DashboardInvoiceService } from '@wepublish/membership/api';
 import {
   MEDIUM_STATS_SCHEMA_VERSION,
@@ -36,6 +36,7 @@ export interface ChangelogAction {
   id: string;
   name: string;
   title: string;
+  severity: ChangelogSeverity;
   actionRequired: boolean;
   releasedAt: Date;
   confirmedAt: Date | null;
@@ -316,7 +317,7 @@ export class MediumStatsService {
           id: true,
           name: true,
           title: true,
-          actionRequired: true,
+          severity: true,
           releasedAt: true,
           confirmedAt: true,
           confirmedBy: { select: { name: true, firstName: true, email: true } },
@@ -325,6 +326,7 @@ export class MediumStatsService {
 
       return rows.map(({ confirmedBy, ...entry }) => ({
         ...entry,
+        actionRequired: entry.severity !== ChangelogSeverity.INFO,
         confirmedByName:
           confirmedBy ?
             [confirmedBy.firstName, confirmedBy.name].filter(Boolean).join(' ')
@@ -341,11 +343,17 @@ export class MediumStatsService {
   }
 
   private async changelogActions(): Promise<MediumChangelogStats> {
-    const where = { actionRequired: true, confirmedAt: null };
+    const where = {
+      severity: { not: ChangelogSeverity.INFO },
+      confirmedAt: null,
+    };
 
     try {
-      const [openActions, oldest] = await Promise.all([
+      const [openActions, openRequiredActions, oldest] = await Promise.all([
         this.prisma.changelogEntry.count({ where }),
+        this.prisma.changelogEntry.count({
+          where: { severity: ChangelogSeverity.REQUIRED, confirmedAt: null },
+        }),
         this.prisma.changelogEntry.findFirst({
           where,
           orderBy: { releasedAt: 'asc' },
@@ -355,6 +363,7 @@ export class MediumStatsService {
 
       return {
         openActions,
+        openRequiredActions,
         oldestOpenActionAt: oldest?.releasedAt ?? null,
       };
     } catch (error) {
@@ -364,7 +373,11 @@ export class MediumStatsService {
         `Could not read changelog entries: ${(error as Error).message}`
       );
 
-      return { openActions: 0, oldestOpenActionAt: null };
+      return {
+        openActions: 0,
+        openRequiredActions: 0,
+        oldestOpenActionAt: null,
+      };
     }
   }
 

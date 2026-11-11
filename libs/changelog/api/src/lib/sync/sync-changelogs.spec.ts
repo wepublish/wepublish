@@ -1,7 +1,7 @@
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'fs';
 import os from 'os';
 import path from 'path';
-import { Locale } from '@prisma/client';
+import { ChangelogSeverity, Locale } from '@prisma/client';
 import {
   CHANGELOG_LOCALES,
   parseChangelogFolderTimestamp,
@@ -24,12 +24,15 @@ const writeEntry = (
   writeFileSync(path.join(directory, folderName, 'changelog.md'), markdown);
 };
 
-const validMarkdown = (title: string, actionRequired = false) =>
+const validMarkdown = (
+  title: string,
+  severity: 'info' | 'recommended' | 'required' = 'info'
+) =>
   [
     '---',
     `title: ${title}`,
     'lead: A lead',
-    `actionRequired: ${actionRequired}`,
+    `severity: ${severity}`,
     '---',
     '',
     'A description',
@@ -85,7 +88,7 @@ describe('syncChangelogs', () => {
     writeEntry(
       directory,
       '20260202120000_second',
-      validMarkdown('Second', true)
+      validMarkdown('Second', 'required')
     );
 
     const client = createMockClient();
@@ -104,7 +107,7 @@ describe('syncChangelogs', () => {
         title: 'First',
         lead: 'A lead',
         description: 'A description',
-        actionRequired: false,
+        severity: ChangelogSeverity.INFO,
         translations: {
           createMany: { data: [] },
         },
@@ -113,7 +116,7 @@ describe('syncChangelogs', () => {
     expect(client.changelogEntry.create).toHaveBeenCalledWith({
       data: expect.objectContaining({
         name: '20260202120000_second',
-        actionRequired: true,
+        severity: ChangelogSeverity.REQUIRED,
       }),
     });
   });
@@ -141,7 +144,7 @@ describe('syncChangelogs', () => {
         title: 'First',
         lead: 'A lead',
         description: 'A description',
-        actionRequired: false,
+        severity: ChangelogSeverity.INFO,
         translations: [],
       },
     ]);
@@ -153,11 +156,40 @@ describe('syncChangelogs', () => {
     expect(client.changelogEntry.update).not.toHaveBeenCalled();
   });
 
+  it('updates an entry whose severity changed', async () => {
+    writeEntry(
+      directory,
+      '20260101120000_first',
+      validMarkdown('First', 'recommended')
+    );
+
+    const client = createMockClient();
+    client.changelogEntry.findMany.mockResolvedValue([
+      {
+        id: 'entry-1',
+        name: '20260101120000_first',
+        releasedAt: new Date(Date.UTC(2026, 0, 1, 12, 0, 0)),
+        title: 'First',
+        lead: 'A lead',
+        description: 'A description',
+        severity: ChangelogSeverity.REQUIRED,
+        translations: [],
+      },
+    ]);
+
+    const result = await syncChangelogs(client, directory);
+
+    expect(result.updated).toEqual(['20260101120000_first']);
+    expect(client.changelogEntry.update.mock.calls[0][0].data).toMatchObject({
+      severity: ChangelogSeverity.RECOMMENDED,
+    });
+  });
+
   it('updates changed content without touching the confirmation', async () => {
     writeEntry(
       directory,
       '20260101120000_first',
-      validMarkdown('Fixed title', true)
+      validMarkdown('Fixed title', 'required')
     );
 
     const client = createMockClient();
@@ -169,7 +201,7 @@ describe('syncChangelogs', () => {
         title: 'Old title',
         lead: 'A lead',
         description: 'A description',
-        actionRequired: true,
+        severity: ChangelogSeverity.REQUIRED,
         translations: [],
       },
     ]);
@@ -185,7 +217,7 @@ describe('syncChangelogs', () => {
       title: 'Fixed title',
       lead: 'A lead',
       description: 'A description',
-      actionRequired: true,
+      severity: ChangelogSeverity.REQUIRED,
       translations: {
         deleteMany: {},
         createMany: { data: [] },
@@ -308,7 +340,7 @@ describe('syncChangelogs translations', () => {
         title: 'First',
         lead: 'A lead',
         description: 'A description',
-        actionRequired: false,
+        severity: ChangelogSeverity.INFO,
         translations: [
           {
             locale: 'de',
@@ -360,7 +392,7 @@ describe('syncChangelogs translations', () => {
         title: 'First',
         lead: 'A lead',
         description: 'A description',
-        actionRequired: false,
+        severity: ChangelogSeverity.INFO,
         translations: [
           {
             locale: 'de',

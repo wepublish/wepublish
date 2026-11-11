@@ -1,7 +1,6 @@
 ---
 title: More invoice details in the subscription view
 lead: The invoice table of a subscription now shows when each invoice was paid. More details, such as the payment method and payment status, can be switched on in the column menu.
-actionRequired: false
 ---
 
 - **Paid on:** The invoice table in a subscription shows the date each invoice was paid. Unpaid invoices show a dash.

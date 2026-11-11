@@ -6,6 +6,7 @@ import {
 import {
   ChangelogEntry,
   ChangelogEntryTranslation,
+  ChangelogSeverity,
   Locale,
   Prisma,
   PrismaClient,
@@ -80,7 +81,7 @@ export class ChangelogService {
       throw new NotFoundException(`Changelog entry with id ${id} not found`);
     }
 
-    if (!entry.actionRequired) {
+    if (entry.severity === ChangelogSeverity.INFO) {
       throw new BadRequestException(
         `Changelog entry with id ${id} does not require a confirmation`
       );
@@ -138,8 +139,14 @@ function createChangelogEntryFilter(
 ): Prisma.ChangelogEntryWhereInput {
   return {
     ...(filter?.actionRequired != null ?
-      { actionRequired: filter.actionRequired }
+      {
+        severity:
+          filter.actionRequired ?
+            { not: ChangelogSeverity.INFO }
+          : ChangelogSeverity.INFO,
+      }
     : {}),
+    ...(filter?.severities ? { severity: { in: filter.severities } } : {}),
     ...(filter?.confirmed != null ?
       { confirmedAt: filter.confirmed ? { not: null } : null }
     : {}),

@@ -1,7 +1,6 @@
 ---
 title: Text styles that adapt to screen size
 lead: In the website theme you can now give each text style its own font size, line height and letter spacing for larger screens, and check the result in a live preview.
-actionRequired: false
 ---
 
 - **Screen sizes:** Each text style starts with a *Baseline* for small screens. Add screen sizes (sm, md, lg, xl) to change the font size, line height or letter spacing from a certain screen width upwards. Anything you leave switched off is taken from the next smaller screen size.

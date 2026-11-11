@@ -1,7 +1,6 @@
 ---
 title: Reactivate deactivated subscriptions
 lead: A deactivated subscription is no longer a dead end: you can switch it back on directly in the editor. You can also undo a plan upgrade as long as it has not been paid.
-actionRequired: false
 ---
 
 **Reactivating a subscription**

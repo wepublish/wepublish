@@ -849,7 +849,10 @@ enum ChallengeProviderType {
 }
 
 type ChangelogEntry {
-  actionRequired: Boolean!
+  """
+  True for every severity that asks for an action (RECOMMENDED and REQUIRED).
+  """
+  actionRequired: Boolean! @deprecated(reason: "Use severity.")
   confirmedAt: DateTime
   confirmedByUserId: String
   createdAt: DateTime!
@@ -859,12 +862,31 @@ type ChangelogEntry {
   modifiedAt: DateTime!
   name: String!
   releasedAt: DateTime!
+  severity: ChangelogSeverity!
   title: String!
 }
 
 input ChangelogEntryFilter {
+  """
+  True for entries that ask for an action (RECOMMENDED or REQUIRED), false for INFO entries.
+  """
   actionRequired: Boolean
   confirmed: Boolean
+  severities: [ChangelogSeverity!]
+}
+
+"""How urgently a changelog entry asks the instance to act."""
+enum ChangelogSeverity {
+  """Nothing to do, the entry only informs."""
+  INFO
+
+  """A manual step is asked for, but nothing breaks while it waits."""
+  RECOMMENDED
+
+  """
+  A manual step has to happen as soon as possible, something stops working or degrades until it does.
+  """
+  REQUIRED
 }
 
 type Chat {
@@ -3303,7 +3325,7 @@ type MediumAuditStats {
 
 type MediumChangelogAction {
   """
-  False for a purely informative entry, which is never counted as open or overdue.
+  False for a purely informative entry (severity INFO), which is never counted as open or overdue.
   """
   actionRequired: Boolean!
 
@@ -3314,6 +3336,11 @@ type MediumChangelogAction {
   id: String!
   name: String!
   releasedAt: DateTime!
+
+  """
+  INFO for a purely informative entry; RECOMMENDED and REQUIRED ask for an action, REQUIRED as soon as possible.
+  """
+  severity: ChangelogSeverity!
   title: String!
 }
 
@@ -3324,9 +3351,14 @@ type MediumChangelogStats {
   oldestOpenActionAt: DateTime
 
   """
-  Action-required entries that nobody has confirmed yet. Informative entries are excluded.
+  Entries asking for an action (severity RECOMMENDED or REQUIRED) that nobody has confirmed yet. Informative entries are excluded.
   """
   openActions: Int!
+
+  """
+  The part of openActions with severity REQUIRED: steps that have to happen as soon as possible.
+  """
+  openRequiredActions: Int!
 }
 
 type MediumCommunityStats {

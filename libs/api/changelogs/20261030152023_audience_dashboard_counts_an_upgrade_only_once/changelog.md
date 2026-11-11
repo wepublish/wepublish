@@ -1,7 +1,6 @@
 ---
 title: Audience dashboard counts an upgrade only once
 lead: When a reader switches to another plan, the audience dashboard now shows this only under "Replaced subscriptions", no longer also as a new and a deactivated subscription. In "Subscriptions to be renewed" and the renewal rate, the switch counts once, as a renewal.
-actionRequired: false
 ---
 
 A plan switch (upgrade) closes the reader's old subscription and creates a new one. The audience dashboard treats this as one event:

@@ -1,7 +1,6 @@
 ---
 title: Try out the whole payment flow without real money
 lead: A new "Simulated" payment provider lets you walk through subscriptions and checkout on a test site. On the checkout page you decide yourself whether the payment succeeds, is declined or is cancelled.
-actionRequired: false
 ---
 
 Set it up under **Settings → Integrations** like any other payment provider, then offer it as a payment method on the membership plans you want to try out.

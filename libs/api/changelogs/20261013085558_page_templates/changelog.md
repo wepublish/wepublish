@@ -1,7 +1,6 @@
 ---
 title: Page templates: start new pages from a template
 lead: You can now save the content and metadata of a page as a page template and start new pages from it.
-actionRequired: false
 ---
 
 Manage your templates under **Pages → Page Templates**. A page template contains blocks, as in the page editor, and metadata such as the title, description, tags and the social media settings.

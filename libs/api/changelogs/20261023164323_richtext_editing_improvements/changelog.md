@@ -1,7 +1,6 @@
 ---
 title: Smoother text editing: link shortcut, sticky toolbar and cleaner pasting
 lead: The text editor now lets you add links with Cmd/Ctrl+K, keeps its toolbar in view while you scroll, and no longer carries over stray black or white text colours when you paste.
-actionRequired: false
 ---
 
 - **Add links faster:** Press **Cmd+K** (Mac) or **Ctrl+K** (Windows) in a text block to open the link menu. With text selected, the link is added to the selection; without a selection, the menu opens right at your cursor. Outside the text editor, the shortcut still opens the command palette.

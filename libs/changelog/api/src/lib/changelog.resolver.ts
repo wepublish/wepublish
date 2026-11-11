@@ -1,4 +1,12 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
+import { ChangelogSeverity } from '@prisma/client';
 import {
   Authenticated,
   CurrentUser,
@@ -25,6 +33,11 @@ export class ChangelogResolver {
   })
   changelogEntries(@Args() args: ChangelogEntryListArgs) {
     return this.changelogService.getChangelogEntries(args);
+  }
+
+  @ResolveField(() => Boolean)
+  actionRequired(@Parent() entry: Pick<ChangelogEntry, 'severity'>) {
+    return entry.severity !== ChangelogSeverity.INFO;
   }
 
   // Signing an entry off speaks for the whole instance — the notice then

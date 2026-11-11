@@ -1,7 +1,6 @@
 ---
 title: The editor now asks before an action emails a member
 lead: Four actions in the editor can send an email to a member. Before each of them, the editor now asks whether that email goes out — or tells you that none will, and why.
-actionRequired: false
 ---
 
 **Where the dialog appears:**

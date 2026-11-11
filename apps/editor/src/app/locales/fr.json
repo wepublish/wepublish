@@ -758,7 +758,11 @@
     "cancel": "Annuler",
     "changelog": {
       "whatsNew": "Quoi de neuf",
-      "actionRequired": "Action requise",
+      "severity": {
+        "info": "Info",
+        "recommended": "Action recommandée",
+        "required": "Action requise"
+      },
       "done": "Effectué",
       "details": "Détails",
       "releasedAt": "Publié le {{date, PP}}",

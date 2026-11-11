@@ -1,16 +1,31 @@
+import { ChangelogSeverity } from '@prisma/client';
 import path from 'path';
 import { createChangelogFile } from './create-changelog';
 
 const USAGE =
-  'Usage: npm run changelog:create -- "Title of the change" [--action-required]';
+  'Usage: npm run changelog:create -- "Title of the change" [--recommended | --required]';
+
+// `--action-required` predates the severities and stays an alias of
+// `--required`.
+const SEVERITY_FLAGS: Record<string, ChangelogSeverity> = {
+  '--recommended': ChangelogSeverity.RECOMMENDED,
+  '--required': ChangelogSeverity.REQUIRED,
+  '--action-required': ChangelogSeverity.REQUIRED,
+};
 
 export async function runCreateChangelog() {
   const args = process.argv.slice(2);
   const flags = args.filter(arg => arg.startsWith('--'));
-  const unknownFlags = flags.filter(flag => flag !== '--action-required');
+  const unknownFlags = flags.filter(flag => !(flag in SEVERITY_FLAGS));
 
   if (unknownFlags.length > 0) {
     throw new Error(`Unknown option(s): ${unknownFlags.join(', ')}\n${USAGE}`);
+  }
+
+  const severities = new Set(flags.map(flag => SEVERITY_FLAGS[flag]));
+
+  if (severities.size > 1) {
+    throw new Error(`Pass only one severity option.\n${USAGE}`);
   }
 
   const title = args
@@ -29,7 +44,7 @@ export async function runCreateChangelog() {
   const { filePath, entry } = await createChangelogFile({
     directory,
     title,
-    actionRequired: flags.includes('--action-required'),
+    severity: [...severities][0] ?? ChangelogSeverity.INFO,
   });
 
   console.log(`Created ${path.relative(process.cwd(), filePath)}`);
@@ -42,9 +57,9 @@ export async function runCreateChangelog() {
     '- Put images next to the changelog.md and reference them relatively'
   );
 
-  if (entry.actionRequired) {
+  if (entry.severity !== ChangelogSeverity.INFO) {
     console.log(
-      '- actionRequired is set: describe exactly what the user has to do manually'
+      `- severity is ${entry.severity.toLowerCase()}: describe exactly what the user has to do manually`
     );
   }
 

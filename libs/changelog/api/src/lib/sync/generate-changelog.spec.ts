@@ -1,3 +1,4 @@
+import { ChangelogSeverity } from '@prisma/client';
 import { mkdtempSync, rmSync } from 'fs';
 import os from 'os';
 import path from 'path';
@@ -10,7 +11,7 @@ import { parseChangelogMarkdown } from './parse-changelog-markdown';
 
 const validReply = {
   slug: 'new_paywall',
-  actionRequired: true,
+  severity: 'recommended',
   entries: {
     en: {
       title: 'New paywall',
@@ -36,8 +37,23 @@ describe('parseGenerationResult', () => {
 
     expect(result).toMatchObject({
       slug: 'new_paywall',
-      actionRequired: true,
+      severity: ChangelogSeverity.RECOMMENDED,
     });
+  });
+
+  it('defaults a reply without severity to info', () => {
+    const reply: Partial<typeof validReply> = { ...validReply };
+    delete reply.severity;
+
+    expect(parseGenerationResult(JSON.stringify(reply))).toMatchObject({
+      severity: ChangelogSeverity.INFO,
+    });
+  });
+
+  it('rejects an unknown severity', () => {
+    expect(() =>
+      parseGenerationResult(JSON.stringify({ ...validReply, severity: 'high' }))
+    ).toThrow(/severity/);
   });
 
   it('parses a reply wrapped in a code fence', () => {
@@ -127,18 +143,18 @@ describe('composeChangelogMarkdown', () => {
         lead: 'A new paywall is available.',
         description: 'Pick it under **Paywalls**.',
       },
-      true
+      ChangelogSeverity.REQUIRED
     );
 
     expect(parseChangelogMarkdown(markdown)).toEqual({
       title: 'New paywall',
       lead: 'A new paywall is available.',
-      actionRequired: true,
+      severity: ChangelogSeverity.REQUIRED,
       description: 'Pick it under **Paywalls**.',
     });
   });
 
-  it('omits actionRequired and description when not provided', () => {
+  it('omits severity and description when not provided', () => {
     const markdown = composeChangelogMarkdown({
       title: 'A title',
       lead: 'A lead',
@@ -148,7 +164,7 @@ describe('composeChangelogMarkdown', () => {
     expect(parseChangelogMarkdown(markdown)).toEqual({
       title: 'A title',
       lead: 'A lead',
-      actionRequired: false,
+      severity: ChangelogSeverity.INFO,
       description: null,
     });
   });
@@ -168,7 +184,7 @@ describe('writeGeneratedChangelog', () => {
   it('writes base and translation files that the sync accepts', async () => {
     const { folderName, files, entry } = await writeGeneratedChangelog(
       directory,
-      validReply,
+      { ...validReply, severity: ChangelogSeverity.RECOMMENDED },
       new Date(Date.UTC(2026, 7, 25, 9, 0, 0))
     );
 
@@ -180,7 +196,7 @@ describe('writeGeneratedChangelog', () => {
     ]);
     expect(entry).toMatchObject({
       title: 'New paywall',
-      actionRequired: true,
+      severity: ChangelogSeverity.RECOMMENDED,
       translations: [
         expect.objectContaining({ locale: 'de', title: 'Neue Paywall' }),
         expect.objectContaining({ locale: 'fr', title: 'Nouveau paywall' }),
