@@ -577,8 +577,12 @@ describe('PrintIssueService', () => {
   });
 
   describe('compute: the mode follows the state', () => {
-    it('computes the export of an issue without deliveries and stores the run', async () => {
+    it('computes the export of an issue without deliveries, stores the run and names who computed it', async () => {
       const { service, prisma, exporter } = makeService();
+      const editor = { id: 'editor-1', name: 'Muster', firstName: 'Maria' };
+      prisma.printIssue.update.mockResolvedValueOnce(
+        issue({ pendingRunBy: editor }) as never
+      );
 
       const run = await service.computeRun('issue-1', 'editor-1');
 
@@ -592,9 +596,17 @@ describe('PrintIssueService', () => {
           pendingRunAt: NOW,
           pendingRunByUserId: 'editor-1',
         },
-        select: { id: true },
+        select: {
+          id: true,
+          pendingRunBy: { select: { id: true, name: true, firstName: true } },
+        },
       });
-      expect(run).toMatchObject({ mode: 'export', batch: 0, computedAt: NOW });
+      expect(run).toMatchObject({
+        mode: 'export',
+        batch: 0,
+        computedAt: NOW,
+        computedBy: editor,
+      });
     });
 
     it('re-runs the newest delivery while it is not handed over', async () => {

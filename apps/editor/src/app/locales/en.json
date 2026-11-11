@@ -5267,6 +5267,8 @@
           "notIncluded": "bexio was not read for this list: the option is switched off.",
           "invoicesInWindow": "Invoices in the window",
           "canceled": "Cancelled",
+          "skippedProvider": "Created by the payment provider",
+          "skippedImported": "Imported legacy invoices",
           "otherPeriod": "Other year / other issue",
           "detailFetched": "Positions read",
           "ungeprueft": "Unchecked",

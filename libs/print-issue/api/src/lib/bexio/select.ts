@@ -7,7 +7,8 @@ import {
   parsePeriod,
   readIssueOrder,
 } from './parse';
-import type { RuleIssue } from '../rules/entitlement';
+import { addMonths } from '../rules/dates';
+import { owedWindowMonths, type RuleIssue } from '../rules/entitlement';
 import { sameIssue } from '../rules/issue';
 
 export type BexioInvoice = {
@@ -138,8 +139,13 @@ export async function selectBexioOrders(
   const earliest = new Date(Date.parse(shipDay) - YEAR_MS)
     .toISOString()
     .slice(0, 10);
+  // copies still owed follow for the time of two issues after a period ends
+  const owedFrom =
+    topUp?.issuesPerYear ?
+      addMonths(shipDay, -owedWindowMonths(topUp.issuesPerYear))
+    : shipDay;
 
-  /** periods that ended before the ship day: their recipients may still be owed copies */
+  /** periods that ended shortly before the ship day: their recipients may still be owed copies */
   const ended: {
     invoice: BexioInvoice;
     recipientId: number;
@@ -182,7 +188,11 @@ export async function selectBexioOrders(
       }
 
       if (!inPeriod(shipDay, period)) {
-        if (topUp?.issuesPerYear && period.to < shipDay) {
+        if (
+          topUp?.issuesPerYear &&
+          period.to < shipDay &&
+          period.to >= owedFrom
+        ) {
           for (const { link, match } of recipients) {
             ended.push({
               invoice,

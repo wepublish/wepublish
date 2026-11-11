@@ -1,4 +1,5 @@
 import {
+  addMonths,
   dbDateToYmd,
   formatDe,
   isYmd,
@@ -40,6 +41,15 @@ describe('isYmd', () => {
     expect(isYmd('2026-02-30')).toBe(false);
     expect(isYmd('13.10.2026')).toBe(false);
     expect(isYmd('')).toBe(false);
+  });
+});
+
+describe('addMonths', () => {
+  it('moves a calendar day by whole months, clamped to the month’s last day', () => {
+    expect(addMonths('2026-09-30', 4)).toBe('2027-01-30');
+    expect(addMonths('2026-12-31', 4)).toBe('2027-04-30');
+    expect(addMonths('2027-01-15', -4)).toBe('2026-09-15');
+    expect(addMonths('2026-03-31', -1)).toBe('2026-02-28');
   });
 });
 

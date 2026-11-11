@@ -2,6 +2,7 @@ import {
   classifySubscription,
   deliveredIssues,
   entitledIssues,
+  owedWindowMonths,
   resolveGifts,
   type QuotaConfig,
   type RulePeriod,
@@ -256,6 +257,15 @@ describe('classifySubscription — the rules the Worker had', () => {
   });
 });
 
+describe('owedWindowMonths', () => {
+  it('is the time of two issues, at least a month', () => {
+    expect(owedWindowMonths(6)).toBe(4);
+    expect(owedWindowMonths(4)).toBe(6);
+    expect(owedWindowMonths(12)).toBe(2);
+    expect(owedWindowMonths(52)).toBe(1);
+  });
+});
+
 describe('classifySubscription — copies still owed (grace)', () => {
   const trialPlan = {
     productType: 'Subscription',
@@ -330,6 +340,61 @@ describe('classifySubscription — copies still owed (grace)', () => {
         historicIssues: HISTORIC_2026.slice(0, 5),
       })
     ).toMatchObject({ reason: 'grace', zahlungsstatus: 'Restexemplar 6/6' });
+  });
+
+  it('stops owing copies once the time of two issues after the period has passed', () => {
+    // a reader who stopped in 2019: nothing is recorded for that period, and
+    // nothing is owed any more – the subscription is simply over
+    const gone = subscription({
+      startsAt: '2015-01-01T00:00:00.000Z',
+      paidUntil: '2019-12-31T00:00:00.000Z',
+      autoRenew: false,
+      deactivation: {
+        date: '2019-12-31T00:00:00.000Z',
+        reason: 'userSelfDeactivated',
+      },
+      periods: [
+        period({
+          id: 'p2019',
+          startsAt: '2019-01-01T00:00:00.000Z',
+          endsAt: '2019-12-31T00:00:00.000Z',
+          invoiceId: 'i2019',
+        }),
+      ],
+    });
+    expect(classifySubscription(gone, issue127, quota)).toEqual({
+      include: false,
+      reason: 'deactivated',
+    });
+
+    // six issues a year: the right ends four months after the period
+    const lapsed = (endsAt: string) =>
+      subscription({
+        paidUntil: endsAt,
+        autoRenew: false,
+        periods: [period({ endsAt })],
+      });
+    expect(
+      classifySubscription(
+        lapsed('2026-07-31T00:00:00.000Z'),
+        issue127,
+        QUOTA_6
+      )
+    ).toEqual({ include: false, reason: 'lapsed' });
+    expect(
+      classifySubscription(
+        lapsed('2026-09-30T00:00:00.000Z'),
+        issue127,
+        QUOTA_6
+      )
+    ).toMatchObject({ reason: 'grace', zahlungsstatus: 'Restexemplar 1/6' });
+    // four issues a year: six months
+    expect(
+      classifySubscription(lapsed('2026-07-31T00:00:00.000Z'), issue127, {
+        ...QUOTA_6,
+        issuesPerYear: 4,
+      })
+    ).toMatchObject({ reason: 'grace', zahlungsstatus: 'Restexemplar 1/4' });
   });
 
   it('adds tracked rows of the period to the historic ones', () => {

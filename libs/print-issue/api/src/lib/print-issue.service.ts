@@ -326,17 +326,17 @@ export class PrintIssueService {
     };
     const computedAt = new Date();
 
-    await this.prisma.printIssue.update({
+    const stored = await this.prisma.printIssue.update({
       where: { id },
       data: {
         pendingRun: run as unknown as Prisma.InputJsonValue,
         pendingRunAt: computedAt,
         pendingRunByUserId: userId,
       },
-      select: { id: true },
+      select: { id: true, pendingRunBy: USER_SELECT },
     });
 
-    return this.view(run, computedAt, null);
+    return this.view(run, computedAt, stored.pendingRunBy);
   }
 
   /** The stored run for the check step; null when none is waiting. */

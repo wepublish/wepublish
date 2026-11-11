@@ -1,4 +1,4 @@
-import { formatDe, zurichDate } from './dates';
+import { addMonths, formatDe, zurichDate } from './dates';
 
 export type Periodicity =
   'monthly' | 'quarterly' | 'biannual' | 'yearly' | 'biennial' | 'lifetime';
@@ -189,6 +189,24 @@ export function entitledIssues(
   return months === null ? null : Math.round((issuesPerYear * months) / 12);
 }
 
+/** Copies still owed follow for the time of this many issues after the period ends. */
+export const OWED_ISSUES = 2;
+
+/**
+ * How long after a period ends its copies still owed are sent: the time of
+ * two issues, at least a month — four months at six issues a year. Later the
+ * subscription is simply over, whatever the period got; that also keeps
+ * readers who stopped before the export tracked anything out of the list.
+ */
+export function owedWindowMonths(issuesPerYear: number): number {
+  return Math.max(1, Math.round((12 * OWED_ISSUES) / issuesPerYear));
+}
+
+/** The last day a copy of the period is still owed on. */
+export function owedUntil(period: RulePeriod, issuesPerYear: number): string {
+  return addMonths(zurichDate(period.endsAt), owedWindowMonths(issuesPerYear));
+}
+
 /**
  * Issues the period already got: the tracked copies charged to it, plus every
  * historic issue shipped inside it (the baseline from before tracking).
@@ -319,7 +337,11 @@ export function classifySubscription(
       );
       const delivered = deliveredIssues(sub, period, quota.historicIssues);
 
-      if (entitled === null || delivered < entitled) {
+      if (entitled !== null && delivered >= entitled) {
+        return excluded('exhausted');
+      }
+
+      if (day <= owedUntil(period, quota.issuesPerYear)) {
         return included(
           'grace',
           restexemplar(delivered, entitled, weight(issue)),
@@ -327,8 +349,7 @@ export function classifySubscription(
           period.id
         );
       }
-
-      return excluded('exhausted');
+      // the time of two issues has passed: the subscription is simply over
     }
   }
 
