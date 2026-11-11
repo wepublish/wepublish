@@ -20,6 +20,7 @@ import logo from './assets/logo.svg';
 import logoBlue from './assets/logo_blue.svg';
 import { staticImageSrc } from './assets/static-image';
 import { TsriBreakBlockType } from './components/break-blocks/tsri-base-break-block';
+import { TsriMailchimpFormBlockType } from './components/newsletter/tsri-mailchimp-form-block';
 import { TsriLayoutType } from './components/teaser-layouts/tsri-layout';
 import { tsriTenant } from './tsri-tenant';
 
@@ -169,5 +170,48 @@ describe('tsri tenant', () => {
       .closest('label');
 
     expect(getComputedStyle(card as HTMLElement).borderRadius).toBe('12px');
+  });
+
+  it('gives the minimal newsletter block a white e-mail pill and a black full width button', () => {
+    renderTenantPage([
+      mockMailchimpFormBlock({
+        blockStyle: TsriMailchimpFormBlockType.Minimal,
+        buttonColor: '#ffd60a',
+        submitButtonLabel: 'Kostenlos abonnieren!',
+      }),
+    ]);
+
+    const button = getComputedStyle(
+      screen.getByRole('button', { name: 'Kostenlos abonnieren!' })
+    );
+    const field = getComputedStyle(
+      screen
+        .getByRole('textbox', { name: 'Email' })
+        .closest('.MuiInputBase-root') as HTMLElement
+    );
+
+    expect(button.backgroundColor).toBe(theme.palette.common.black);
+    expect(button.color).toBe(theme.palette.common.white);
+    expect(button.width).toBe('100%');
+    expect(button.borderRadius).toBe('999px');
+    expect(field.backgroundColor).toBe(theme.palette.common.white);
+    expect(field.borderRadius).toBe('999px');
+  });
+
+  it('keeps the regular newsletter block on the tsri blue button', () => {
+    renderTenantPage([
+      mockMailchimpFormBlock({ submitButtonLabel: 'Abonnieren' }),
+    ]);
+
+    expect(
+      getComputedStyle(screen.getByRole('button', { name: 'Abonnieren' }))
+        .borderRadius
+    ).not.toBe('999px');
+  });
+
+  it('lists the minimal newsletter style among its block styles', () => {
+    expect(tsriTenant.blockStyles).toContain(
+      TsriMailchimpFormBlockType.Minimal
+    );
   });
 });

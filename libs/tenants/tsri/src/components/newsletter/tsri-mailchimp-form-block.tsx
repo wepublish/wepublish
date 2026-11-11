@@ -7,6 +7,10 @@ import {
 } from '@wepublish/block-content/website';
 import { BuilderMailchimpFormBlockProps } from '@wepublish/website/builder';
 
+export enum TsriMailchimpFormBlockType {
+  Minimal = 'NewsletterMinimal',
+}
+
 const radius = '0.75rem';
 
 const StyledMailchimpFormBlock = styled(MailchimpFormBlock)`
@@ -53,17 +57,79 @@ const StyledMailchimpFormBlock = styled(MailchimpFormBlock)`
   }
 `;
 
+const pill = '999px';
+
+/**
+ * Sidebar variant (Figma, TSRI-222): only a white e-mail pill and a black,
+ * full width "subscribe" pill, sitting on whatever background the sidebar has.
+ * The field label stays the accessible name and visually acts as placeholder.
+ */
+const MinimalMailchimpFormBlock = styled(StyledMailchimpFormBlock)`
+  form {
+    gap: ${({ theme }) => theme.spacing(1)};
+  }
+
+  .MuiInputBase-root {
+    background-color: ${({ theme }) => theme.palette.common.white};
+    border-radius: ${pill};
+  }
+
+  .MuiInputBase-input {
+    padding: ${({ theme }) => theme.spacing(0.75, 2.5)};
+    font-size: 16px;
+  }
+
+  .MuiOutlinedInput-notchedOutline {
+    border: 0;
+  }
+
+  .MuiInputLabel-root:not(.MuiInputLabel-shrink) {
+    transform: translate(${({ theme }) => theme.spacing(2.5)}, 6px);
+    font-size: 16px;
+  }
+
+  .MuiInputLabel-shrink {
+    clip-path: inset(50%);
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .MuiFormHelperText-root {
+    margin-left: ${({ theme }) => theme.spacing(2.5)};
+  }
+
+  .MuiButton-root {
+    border-radius: ${pill};
+    padding: ${({ theme }) => theme.spacing(0.75, 2.5)};
+  }
+
+  .MuiButton-contained {
+    width: 100%;
+    justify-content: flex-start;
+    background-color: ${({ theme }) => theme.palette.common.black};
+    color: ${({ theme }) => theme.palette.common.white};
+  }
+`;
+
 /**
  * The block's button colours are an editor setting, applied inline, which
  * would beat the tsri button (and its yellow hover). Tsüri's newsletter CTA
- * is always the tsri blue one, so the editor colours are dropped here.
+ * always follows the tsri styles, so the editor colours are dropped here.
  */
 export const TsriMailchimpFormBlock = (
   props: BuilderMailchimpFormBlockProps
-) => (
-  <StyledMailchimpFormBlock
-    {...props}
-    buttonColor={null}
-    buttonFontColor={null}
-  />
-);
+) => {
+  const Component =
+    props.blockStyle === TsriMailchimpFormBlockType.Minimal ?
+      MinimalMailchimpFormBlock
+    : StyledMailchimpFormBlock;
+
+  return (
+    <Component
+      {...props}
+      buttonColor={null}
+      buttonFontColor={null}
+    />
+  );
+};
