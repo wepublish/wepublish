@@ -1005,6 +1005,151 @@
       "network": "Pas de connexion au serveur. Vérifiez votre connexion Internet et réessayez.",
       "unexpected": "Une erreur est survenue. Réessayez – si le problème persiste, contactez le support."
     },
+    "form": {
+      "loading": "Chargement …",
+      "loadError": {
+        "title": "Les données n’ont pas pu être chargées",
+        "retry": "Réessayer"
+      },
+      "errorSummary": {
+        "title": "Veuillez corriger ces informations avant d’enregistrer"
+      },
+      "field": {
+        "moreInfo": "Plus d’informations"
+      },
+      "select": {
+        "empty": "Aucune sélection"
+      },
+      "password": {
+        "show": "Afficher le mot de passe",
+        "hide": "Masquer le mot de passe"
+      },
+      "array": {
+        "add": "Ajouter une entrée",
+        "remove": "Supprimer l’entrée {{position}}",
+        "reorder": "Réorganiser",
+        "dragHandle": "Glisser pour réordonner l’entrée {{position}}",
+        "roleDescription": "entrée triable",
+        "dragInstructions": "Pour saisir une entrée, appuyez sur Espace ou Entrée. Déplacez-la avec les flèches, puis appuyez à nouveau sur Espace ou Entrée pour la déposer, ou sur Échap pour annuler.",
+        "dragStart": "Entrée {{position}} saisie.",
+        "dragOver": "L’entrée {{position}} est au-dessus de la position {{target}}.",
+        "dragEnd": "Entrée {{position}} déposée à la position {{target}}.",
+        "dragCancel": "Déplacement annulé. L’entrée {{position}} est revenue à sa place.",
+        "empty": "Aucune entrée pour l’instant",
+        "actions": "Actions"
+      },
+      "union": {
+        "type": "Type"
+      },
+      "autocomplete": {
+        "noOptions": "Aucune option",
+        "clear": "Effacer",
+        "open": "Ouvrir la liste",
+        "close": "Fermer la liste",
+        "loading": "Chargement …"
+      },
+      "date": {
+        "today": "Aujourd’hui",
+        "tomorrow": "Demain",
+        "now": "Maintenant"
+      },
+      "color": {
+        "pick": "Choisir la couleur",
+        "invalid": "Veuillez entrer une couleur hexadécimale, par exemple #1a2b3c"
+      },
+      "secret": {
+        "show": "Afficher la valeur",
+        "hide": "Masquer la valeur"
+      },
+      "view": {
+        "readOnly": "Lecture seule",
+        "discard": "Annuler les modifications",
+        "discardChanges": {
+          "title": "Abandonner les modifications non enregistrées ?",
+          "body": "Vos modifications ne sont pas enregistrées et seront perdues.",
+          "keep": "Continuer l’édition",
+          "discard": "Abandonner"
+        },
+        "sectionErrors_one": "{{count}} erreur",
+        "sectionErrors_other": "{{count}} erreurs"
+      },
+      "value": {
+        "on": "Activé",
+        "off": "Désactivé",
+        "empty": "(vide)",
+        "changed": "modifié"
+      },
+      "units": {
+        "seconds": "secondes",
+        "seconds_one": "seconde",
+        "minutes": "minutes",
+        "minutes_one": "minute",
+        "days": "jours",
+        "days_one": "jour",
+        "milliseconds": "millisecondes",
+        "milliseconds_one": "milliseconde"
+      },
+      "errors": {
+        "required": "Ce champ est requis",
+        "invalid": "Cette valeur n’est pas valide",
+        "invalid_value": "Veuillez choisir l’une des options proposées",
+        "not_multiple_of": "Veuillez entrer un multiple de {{divisor}}",
+        "unexpected": "Le formulaire n’a pas pu être vérifié. Veuillez réessayer.",
+        "server": "L’enregistrement a échoué. Veuillez réessayer.",
+        "invalid_type": {
+          "string": "Veuillez entrer un texte",
+          "number": "Veuillez entrer un nombre",
+          "int": "Veuillez entrer un nombre entier",
+          "boolean": "Veuillez choisir oui ou non",
+          "date": "Veuillez entrer une date valide",
+          "array": "Veuillez entrer une liste de valeurs",
+          "object": "Ces informations sont incomplètes"
+        },
+        "invalid_format": {
+          "default": "Le format n’est pas valide",
+          "email": "Veuillez entrer une adresse e-mail valide",
+          "url": "Veuillez entrer une URL valide",
+          "regex": "Le format n’est pas valide",
+          "uuid": "Veuillez entrer un UUID valide"
+        },
+        "too_small": {
+          "string": {
+            "min": "Veuillez entrer au moins {{minimum}} caractères",
+            "exact": "Veuillez entrer exactement {{minimum}} caractères"
+          },
+          "array": {
+            "min": "Veuillez ajouter au moins {{minimum}} entrées",
+            "exact": "Veuillez ajouter exactement {{minimum}} entrées"
+          },
+          "number": {
+            "inclusive": "Veuillez entrer {{minimum}} ou plus",
+            "exclusive": "Veuillez entrer une valeur supérieure à {{minimum}}"
+          },
+          "date": {
+            "inclusive": "Veuillez choisir le {{minimum, P}} ou une date ultérieure",
+            "exclusive": "Veuillez choisir une date postérieure au {{minimum, P}}"
+          }
+        },
+        "too_big": {
+          "string": {
+            "max": "Veuillez entrer au maximum {{maximum}} caractères",
+            "exact": "Veuillez entrer exactement {{maximum}} caractères"
+          },
+          "array": {
+            "max": "Veuillez ajouter au maximum {{maximum}} entrées",
+            "exact": "Veuillez ajouter exactement {{maximum}} entrées"
+          },
+          "number": {
+            "inclusive": "Veuillez entrer {{maximum}} ou moins",
+            "exclusive": "Veuillez entrer une valeur inférieure à {{maximum}}"
+          },
+          "date": {
+            "inclusive": "Veuillez choisir le {{maximum, P}} ou une date antérieure",
+            "exclusive": "Veuillez choisir une date antérieure au {{maximum, P}}"
+          }
+        }
+      }
+    },
     "errorMessages": {
       "invalidEmailErrorMessage": "Veuillez entrer une adresse e-mail valide",
       "invalidRange": "La valeur doit être comprise entre {{min}} et {{max}}.",
@@ -3648,7 +3793,20 @@
         "articlePrefixInfo": "La partie de l’adresse qui précède le slug d’un article sur votre site. Seules les pages vues dont l’adresse commence ainsi comptent comme lectures d’articles.",
         "propertyInfo": "L’ID numérique de votre propriété Google Analytics 4 (pas l’ID de mesure G-…). Vous le trouvez dans Google Analytics sous « Administration » → « Détails de la propriété ».",
         "credentialsInfo": "Le fichier de clé JSON d’un compte de service Google Cloud ayant accès en lecture à votre propriété Analytics. Glissez le fichier dans la zone ci-dessous ; il n’est enregistré qu’au moment de sauvegarder.",
-        "readFileError": "Le fichier n’a pas pu être lu."
+        "readFileError": "Le fichier n’a pas pu être lu.",
+        "hotAndTrending": "Utiliser pour Hot & Trending",
+        "hotAndTrendingInfo": "Hot & Trending lit les pages vues de ce fournisseur. Un seul fournisseur peut être utilisé à la fois ; choisir celui-ci le désactive pour les autres.",
+        "apiKey": "Clé API",
+        "plausibleApiKeyInfo": "Une clé Stats API issue des paramètres de votre compte Plausible (« API Keys »). Sur Plausible Cloud, la Stats API nécessite un abonnement Business.",
+        "umamiApiKeyInfo": "Une clé API d’Umami Cloud (« Settings » → « API keys ») ou, pour un Umami auto-hébergé, le jeton d’un utilisateur ayant accès au site.",
+        "plausibleSiteId": "Domaine du site",
+        "plausibleSiteIdInfo": "Le domaine du site tel que vous l’avez ajouté à Plausible, p. ex. example.com.",
+        "umamiWebsiteId": "ID du site",
+        "umamiWebsiteIdInfo": "L’ID du site dans Umami. Vous le trouvez sous « Settings » → « Websites » → « Edit ».",
+        "plausibleUrl": "URL de Plausible",
+        "plausibleUrlInfo": "Uniquement pour un Plausible auto-hébergé, p. ex. https://plausible.example.com. Laissez vide pour utiliser plausible.io.",
+        "umamiUrl": "URL de l’API Umami",
+        "umamiUrlInfo": "Uniquement pour un Umami auto-hébergé, p. ex. https://umami.example.com/api. Laissez vide pour utiliser Umami Cloud."
       },
       "mailchimpSync": "Mailchimp Sync",
       "mailchimpSyncSettings": {
@@ -3757,7 +3915,7 @@
       "paymentProviderInfo": "Services qui traitent les paiements des abonnements, p. ex. Payrexx, Stripe, Mollie ou les factures via Bexio.",
       "trackingPixelInfo": "Ajoute le pixel de comptage de ProLitteris à vos articles afin que les lectures soient prises en compte pour vos droits d’auteur.",
       "mailProviderInfo": "Le service par lequel We.Publish envoie les e-mails, p. ex. les liens de connexion, les rappels de paiement ou les confirmations d’abonnement.",
-      "analyticsInfo": "Lit les pages vues dans Google Analytics afin de déterminer quels articles sont actuellement les plus lus (Hot & Trending).",
+      "analyticsInfo": "Lit les pages vues dans Google Analytics, Plausible ou Umami afin de déterminer quels articles sont actuellement les plus lus (Hot & Trending).",
       "mailchimpSyncInfo": "Transfère chaque nuit tous les comptes utilisateur actifs et leurs données d’abonnement vers une audience Mailchimp, afin de cibler vos newsletters selon l’abonnement.",
       "lastLoadedInfo": "Moment où We.Publish a chargé cette configuration pour la dernière fois, p. ex. pour traiter un paiement. Vous voyez ainsi si l’intégration est utilisée.",
       "setUp": "Configurer",
@@ -3813,16 +3971,13 @@
           "pro": "<url>Piwik PRO</url> est une plateforme d’analyse respectueuse de la vie privée et une alternative à Google Analytics.",
           "proLocator": "Tu le trouves dans le Menu > Administration > Site > ID de ton panneau d’administration",
           "proInvalid": "Doit être un ID Piwik valide (p. ex. xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)"
-        }
-      },
-      "mail": {
-        "title": "E-mail",
-        "mailchimp": {
-          "title": "Mailchimp",
-          "enable": "Activer Mailchimp",
-          "mailchimp": "<url>Mailchimp</url> est une plateforme de marketing par e-mail qui te permet de gérer des newsletters et des listes d’abonnés. Cela permet au site web d’accéder à tes newsletters et de les afficher.",
-          "apiKeyLocator": "Tu le trouves dans la <url>section des clés API</url> de ton compte Mailchimp. Assure-toi que c’est une clé Mailchimp et non Mandrill.",
-          "apiKeyInvalid": "Doit être une clé API Mailchimp valide (p. ex. XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX-us1)"
+        },
+        "umami": {
+          "title": "Umami",
+          "enable": "Activer Umami",
+          "um": "<url>Umami</url> est une alternative open source et respectueuse de la vie privée à Google Analytics.",
+          "umLocator": "Vous le trouverez dans les <url>paramètres du site</url> de votre tableau de bord Umami",
+          "umInvalid": "Doit être un ID de site valide (p. ex. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)"
         }
       },
       "ads": {

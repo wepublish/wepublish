@@ -53,7 +53,7 @@ interface SingleViewTitleProps {
   saveBtnTitle: string;
   saveAndCloseBtnTitle: string;
   closePath: string;
-  setCloseFn(close: boolean): void;
+  setCloseFn?(close: boolean): void;
 }
 
 export function SingleViewTitle({
@@ -105,6 +105,8 @@ export function SingleViewTitle({
           loading={loading}
           disabled={disabled}
           type="submit"
+          name="intent"
+          value="save"
           data-testid="saveButton"
         >
           {saveBtnTitle}
@@ -115,8 +117,10 @@ export function SingleViewTitle({
           loading={loading}
           disabled={disabled}
           type="submit"
+          name="intent"
+          value="close"
           data-testid="saveAndCloseButton"
-          onClick={() => setCloseFn(true)}
+          onClick={() => setCloseFn?.(true)}
         >
           {saveAndCloseBtnTitle}
         </Button>

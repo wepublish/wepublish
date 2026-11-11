@@ -1,5 +1,8 @@
 // @vitest-environment node
+import { captureServerError } from '../sentry/instrumentation';
 import { feedHandler, healthHandler } from './server-routes';
+
+vi.mock('../sentry/instrumentation', () => ({ captureServerError: vi.fn() }));
 
 /**
  * Byte-for-byte the policy the Next feed endpoints served, kept here so the
@@ -34,6 +37,25 @@ describe('server routes', () => {
       );
     }
   );
+
+  it('answers 502 without caching and reports to Sentry when the API rejects the feed query', async () => {
+    const error = new Error(
+      'Response not successful: Received status code 400'
+    );
+
+    const response = await feedHandler(
+      new Request('https://site.test/rss.xml'),
+      async () => {
+        throw error;
+      },
+      () => 'https://site.test',
+      'rss2'
+    );
+
+    expect(response.status).toBe(502);
+    expect(response.headers.get('cache-control')).toBe('no-store');
+    expect(captureServerError).toHaveBeenCalledWith(error);
+  });
 
   it('never lets the probe endpoint be cached', () => {
     expect(healthHandler().headers.get('cache-control')).toBe('no-store');
