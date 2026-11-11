@@ -1,10 +1,9 @@
 /**
  * How many articles a reader read, and when. The same shape is kept in Dragonfly
  * for logged-in readers and in a signed token for anonymous ones, so it stays
- * small: one entry per article, the minute of the first read and whether a
- * newsletter referral opened it (those do not count towards the meter).
+ * small: one entry per article and the minute of the first read.
  */
-export type MeterRead = [articleId: string, minute: number, referral?: 1];
+export type MeterRead = [articleId: string, minute: number];
 
 export type Meter = { reads: MeterRead[] };
 
@@ -33,8 +32,8 @@ export const hasRead = (
 ) => readsInWindow(meter, windowDays, now).some(([id]) => id === articleId);
 
 /**
- * The reads that count towards a rule's stages: within its window, not opened
- * by a newsletter referral, and not the article being looked at.
+ * The reads that count towards a rule's stages: within its window and not the
+ * article being looked at.
  */
 export const countedReads = (
   meter: Meter,
@@ -42,19 +41,14 @@ export const countedReads = (
   now: Date,
   exceptArticleId?: string
 ) =>
-  readsInWindow(meter, windowDays, now).filter(
-    ([id, , referral]) => !referral && id !== exceptArticleId
-  ).length;
-
-export const referralReads = (meter: Meter, windowDays: number, now: Date) =>
-  readsInWindow(meter, windowDays, now).filter(([, , referral]) => referral)
+  readsInWindow(meter, windowDays, now).filter(([id]) => id !== exceptArticleId)
     .length;
 
 export function recordRead(
   meter: Meter,
   articleId: string,
   now: Date,
-  { maxWindowDays, referral }: { maxWindowDays: number; referral?: boolean }
+  { maxWindowDays }: { maxWindowDays: number }
 ): Meter {
   const reads = readsInWindow(meter, maxWindowDays, now);
 
@@ -62,10 +56,11 @@ export function recordRead(
     return { reads };
   }
 
-  const read: MeterRead =
-    referral ? [articleId, toMinute(now), 1] : [articleId, toMinute(now)];
-
-  return { reads: [...reads, read].slice(-MAX_METER_READS) };
+  return {
+    reads: [...reads, [articleId, toMinute(now)] as MeterRead].slice(
+      -MAX_METER_READS
+    ),
+  };
 }
 
 export function mergeMeters(a: Meter, b: Meter): Meter {
@@ -88,7 +83,7 @@ export function mergeMeters(a: Meter, b: Meter): Meter {
 
 const isMeterRead = (value: unknown): value is MeterRead =>
   Array.isArray(value) &&
-  (value.length === 2 || (value.length === 3 && value[2] === 1)) &&
+  value.length === 2 &&
   typeof value[0] === 'string' &&
   Number.isInteger(value[1]);
 

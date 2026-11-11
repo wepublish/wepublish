@@ -5,9 +5,8 @@ import {
   EngagementRequirement,
   EngagementRule,
   EngagementStage,
-  NewsletterReferralMode,
 } from '@prisma/client';
-import { Meter, countedReads, hasRead, referralReads } from './meter';
+import { Meter, countedReads, hasRead } from './meter';
 import {
   ReaderContext,
   matchesAudience,
@@ -19,9 +18,6 @@ import {
  * reader reached and whether a metered rule restricts an article. Paywalls are
  * decided in `article-api` (`evaluateArticleAccess`), which calls in here.
  */
-
-/** A url param of a newsletter link: `utm_medium=email`. */
-export type ReferralParam = { key: string; value: string };
 
 export type EvaluatedStage = Pick<
   EngagementStage,
@@ -43,10 +39,7 @@ export type EvaluatedRule<Stage extends EvaluatedStage = EvaluatedStage> = Pick<
   | 'showOnArticles'
   | 'includePeeredArticles'
   | 'meterWindowDays'
-  | 'newsletterReferral'
-  | 'newsletterReferralLimit'
 > & {
-  newsletterParams: ReferralParam[] | null;
   showOnPageIds: string[];
   /** The plans of the `MEMBER_PLANS` audience. */
   audienceMemberPlanIds?: string[];
@@ -79,8 +72,6 @@ export type MeteredAccess =
       granted: true;
       /** Whether the read goes on the meter: a metered rule targets it. */
       record: boolean;
-      /** Whether a newsletter referral opened it. */
-      referral: boolean;
     }
   | MeteredRestriction;
 
@@ -144,6 +135,14 @@ export function matchingRules<Rule extends EvaluatedRule<EvaluatedStage>>(
       return false;
     }
 
+    // Readers who gave their email are not asked for it again.
+    if (
+      rule.goal === EngagementGoal.NEWSLETTER &&
+      reader.newsletter === 'subscribed'
+    ) {
+      return false;
+    }
+
     const requirement = hardStageOf(rule)?.requirement;
 
     return !(requirement && meetsRequirement(requirement, reader));
@@ -193,29 +192,6 @@ const byPromptOrder = (
   createdAtOf(b.rule) - createdAtOf(a.rule) ||
   a.rule.id.localeCompare(b.rule.id);
 
-const referralMatches = (
-  rule: EvaluatedRule,
-  referral: ReferralParam[] | undefined
-) =>
-  rule.newsletterReferral !== NewsletterReferralMode.NONE &&
-  !!referral?.length &&
-  (rule.newsletterParams ?? []).some(param =>
-    referral.some(
-      given =>
-        given.key === param.key && (!param.value || given.value === param.value)
-    )
-  );
-
-const referralOpens = (
-  rule: EvaluatedRule,
-  meter: Meter,
-  referral: ReferralParam[] | undefined,
-  now: Date
-) =>
-  referralMatches(rule, referral) &&
-  (rule.newsletterReferral === NewsletterReferralMode.UNLIMITED ||
-    referralReads(meter, windowOf(rule), now) < rule.newsletterReferralLimit);
-
 const restrictedBy = (
   rule: EvaluatedRule,
   stage: EvaluatedStage
@@ -232,20 +208,18 @@ const restrictedBy = (
  *
  * Without a meter (ISR, RSS, API consumers: anyone `viewArticle` did not place
  * on the meter) every matching hard stage restricts. With one, an article is
- * granted when it was already read in the window, when a newsletter referral
- * opens it, or while the counted reads are below the hard stage.
+ * granted when it was already read in the window or while the counted reads
+ * are below the hard stage.
  */
 export function meteredAccess({
   rules,
   meter,
   articleId,
-  referral,
   now,
 }: {
   rules: EvaluatedRule[];
   meter?: Meter;
   articleId: string;
-  referral?: ReferralParam[];
   now: Date;
 }): MeteredAccess {
   const metered = rules
@@ -268,26 +242,12 @@ export function meteredAccess({
       continue;
     }
 
-    if (referralOpens(rule, meter, referral, now)) {
-      continue;
-    }
-
     if (countedReads(meter, window, now, articleId) >= stage.afterArticles) {
       return restrictedBy(rule, stage);
     }
   }
 
-  return {
-    granted: true,
-    record: metered.length > 0,
-    referral:
-      !!meter &&
-      metered.some(
-        ({ rule }) =>
-          !hasRead(meter, articleId, windowOf(rule), now) &&
-          referralOpens(rule, meter, referral, now)
-      ),
-  };
+  return { granted: true, record: metered.length > 0 };
 }
 
 /**

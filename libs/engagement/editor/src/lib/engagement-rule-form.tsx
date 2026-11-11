@@ -34,7 +34,6 @@ import {
   EngagementRequirement,
   EngagementRulesDocument,
   MemberPlanListDocument,
-  NewsletterReferralMode,
   PageListDocument,
 } from '@wepublish/editor/api';
 import {
@@ -948,7 +947,6 @@ const flattenErrors = (
 const PROBLEM_FIELD_LABELS: Record<string, string> = {
   name: 'engagement.form.name',
   meterWindowDays: 'engagement.form.meterWindowDays',
-  newsletterReferralLimit: 'engagement.form.newsletterReferralLimit',
   audienceMemberPlanIds: 'engagement.form.audienceMemberPlans',
 };
 
@@ -997,136 +995,16 @@ const RuleProblems = ({ announcement }: { announcement: boolean }) => {
   );
 };
 
-const ReferralFields = () => {
-  const { t } = useTranslation();
-  const { control } = useFormContext<EngagementRuleValues>();
-  const mode = useWatch({ control, name: 'newsletterReferral' });
-  const {
-    fields: params,
-    append,
-    remove,
-  } = useFieldArray({ control, name: 'newsletterParams' });
-
-  return (
-    <>
-      <Controller
-        control={control}
-        name="newsletterReferral"
-        render={({ field }) => (
-          <FormControl>
-            <FormLabel>
-              {label(
-                t('engagement.form.newsletterReferral'),
-                t('engagement.form.newsletterReferralInfo')
-              )}
-            </FormLabel>
-            <RadioGroup
-              {...field}
-              onChange={(_event, value) => field.onChange(value)}
-            >
-              {Object.values(NewsletterReferralMode).map(value => (
-                <FormControlLabel
-                  key={value}
-                  value={value}
-                  control={<Radio />}
-                  label={t(`engagement.referral.${value}`)}
-                />
-              ))}
-            </RadioGroup>
-          </FormControl>
-        )}
-      />
-
-      {mode === NewsletterReferralMode.Limited && (
-        <NumberField
-          name="newsletterReferralLimit"
-          label={t('engagement.form.newsletterReferralLimit')}
-        />
-      )}
-
-      {mode !== NewsletterReferralMode.None && (
-        <FormControl fullWidth>
-          <FormLabel>
-            {label(
-              t('engagement.form.newsletterParams'),
-              t('engagement.form.newsletterParamsInfo')
-            )}
-          </FormLabel>
-
-          <Stack spacing={1}>
-            {params.map((param, index) => (
-              <Stack
-                key={param.id}
-                direction="row"
-                spacing={1}
-              >
-                <Controller
-                  control={control}
-                  name={`newsletterParams.${index}.key`}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      size="small"
-                      placeholder={t('engagement.form.paramKey')}
-                      fullWidth
-                    />
-                  )}
-                />
-                <Controller
-                  control={control}
-                  name={`newsletterParams.${index}.value`}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      size="small"
-                      placeholder={t('engagement.form.paramValue')}
-                      fullWidth
-                    />
-                  )}
-                />
-                <IconButton
-                  aria-label={t('delete')}
-                  onClick={() => remove(index)}
-                >
-                  <MdDelete />
-                </IconButton>
-              </Stack>
-            ))}
-
-            <Box>
-              <Button
-                variant="outlined"
-                size="small"
-                startIcon={<MdAdd />}
-                onClick={() => append({ key: '', value: '' })}
-              >
-                {t('engagement.form.addParam')}
-              </Button>
-            </Box>
-          </Stack>
-        </FormControl>
-      )}
-    </>
-  );
-};
-
 export const EngagementRuleForm = ({ ruleId }: { ruleId?: string }) => {
   const { t } = useTranslation();
   const [settingsRef, settingsSticky] =
     useStickyWhenFits<HTMLDivElement>(STICKY_OFFSET);
   const { control, setValue, getValues, formState } =
     useFormContext<EngagementRuleValues>();
-  const [goal, stages, audience, includePeeredArticles, newsletterReferral] =
-    useWatch({
-      control,
-      name: [
-        'goal',
-        'stages',
-        'audience',
-        'includePeeredArticles',
-        'newsletterReferral',
-      ],
-    });
+  const [goal, stages, audience, includePeeredArticles] = useWatch({
+    control,
+    name: ['goal', 'stages', 'audience', 'includePeeredArticles'],
+  });
   const announcement = isAnnouncement({ goal });
   const {
     fields: stageFields,
@@ -1157,7 +1035,7 @@ export const EngagementRuleForm = ({ ruleId }: { ruleId?: string }) => {
     setValue('goal', next, { shouldDirty: true });
 
     if (next === EngagementGoal.Announcement) {
-      // One message from the first article on, without meter or referrals.
+      // One message from the first article on, without a meter.
       const [first] = current.stages;
 
       setValue(
@@ -1179,9 +1057,6 @@ export const EngagementRuleForm = ({ ruleId }: { ruleId?: string }) => {
         { shouldDirty: true }
       );
       setValue('meterWindowDays', null, { shouldDirty: true });
-      setValue('newsletterReferral', NewsletterReferralMode.None, {
-        shouldDirty: true,
-      });
     } else if (current.meterWindowDays == null) {
       setValue('meterWindowDays', 30, { shouldDirty: true });
     }
@@ -1350,14 +1225,8 @@ export const EngagementRuleForm = ({ ruleId }: { ruleId?: string }) => {
                 )}
 
                 <MoreOptions
-                  inUse={
-                    includePeeredArticles ||
-                    newsletterReferral !== NewsletterReferralMode.None
-                  }
-                  hasErrors={Boolean(
-                    formState.errors.newsletterReferralLimit ??
-                    formState.errors.newsletterParams
-                  )}
+                  inUse={includePeeredArticles}
+                  hasErrors={false}
                 >
                   <SwitchControl
                     name="includePeeredArticles"
@@ -1366,8 +1235,6 @@ export const EngagementRuleForm = ({ ruleId }: { ruleId?: string }) => {
                       t('engagement.form.includePeeredArticlesInfo')
                     )}
                   />
-
-                  {!announcement && <ReferralFields />}
                 </MoreOptions>
               </FormFields>
             </CardContent>

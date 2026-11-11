@@ -4849,7 +4849,8 @@
       "requirement": {
         "REGISTRATION": "Registrierung",
         "MEMBERSHIP": "Mitgliedschaft",
-        "PAID_MEMBERSHIP": "Bezahlte Mitgliedschaft"
+        "PAID_MEMBERSHIP": "Bezahlte Mitgliedschaft",
+        "NEWSLETTER": "Newsletter-Anmeldung (nur E-Mail)"
       },
       "actionType": {
         "URL": "Link",
@@ -4863,11 +4864,6 @@
         "CANCEL": "Schliessen",
         "OTHER": "Weitere"
       },
-      "referral": {
-        "NONE": "Newsletter-Links zählen wie andere Besuche",
-        "UNLIMITED": "Newsletter-Links öffnen den verlinkten Artikel immer",
-        "LIMITED": "Newsletter-Links öffnen eine begrenzte Anzahl Artikel"
-      },
       "summary": {
         "announcement": "Ab dem ersten Besuch: {{placement}}",
         "placement": {
@@ -4879,7 +4875,8 @@
         "requirement": {
           "REGISTRATION": "Registrierung",
           "MEMBERSHIP": "Mitgliedschaft",
-          "PAID_MEMBERSHIP": "Bezahlte Mitgliedschaft"
+          "PAID_MEMBERSHIP": "Bezahlte Mitgliedschaft",
+          "NEWSLETTER": "Newsletter-Anmeldung"
         },
         "closable": "{{placement}}, schliessbar",
         "article": "Beim {{number}}. Artikel",
@@ -4892,7 +4889,7 @@
         "goal": "Ziel",
         "name": "Name",
         "active": "Aktiv",
-        "newsletterNote": "Newsletter-Abos lassen sich noch nicht überprüfen. Eine einschränkende Stufe einer Newsletter-Regel verlangt deshalb eine Registrierung oder Mitgliedschaft und muss zusätzlich eine Newsletter-Anmeldung anbieten.",
+        "newsletterNote": "Eine Newsletter-Sperre fragt nur nach der E-Mail-Adresse: Leserinnen und Leser geben sie direkt im Hinweis ein und werden über die Mailchimp-Integration angemeldet (sie bestätigen per Mail). Danach lassen Newsletter-Regeln sie in Ruhe.",
         "audience": "Zielgruppe",
         "trigger": "Wo und wann",
         "showOnArticles": "Auf Artikeln anzeigen",
@@ -4901,14 +4898,6 @@
         "showOnPages": "Auf Seiten anzeigen",
         "meterWindowDays": "Artikel der letzten … Tage zählen",
         "meterWindowDaysInfo": "Früher gelesene Artikel zählen nicht mehr. Jeder Artikel zählt einmal.",
-        "newsletterReferral": "Newsletter-Links",
-        "newsletterReferralInfo": "Wer über einen Newsletter-Link kommt, darf diesen Artikel über die Zählung hinaus lesen. Gilt nie für Paywalls.",
-        "newsletterReferralLimit": "Artikel pro Zeitraum",
-        "newsletterParams": "URL-Parameter von Newsletter-Links",
-        "newsletterParamsInfo": "Ein Besuch kommt vom Newsletter, wenn die URL einen dieser Parameter hat. Lass den Wert leer, um jeden Wert zu akzeptieren.",
-        "paramKey": "Parameter, z. B. utm_medium",
-        "paramValue": "Wert, z. B. email",
-        "addParam": "Parameter hinzufügen",
         "problems": "Die Regel kann so nicht gespeichert werden:",
         "moreOptions": "Weitere Optionen",
         "presentation": "Darstellung und Aktionen",
@@ -4964,7 +4953,6 @@
         "announcementFromStart": "Eine Ankündigung erscheint ab dem ersten Artikel",
         "announcementSoft": "Eine Ankündigung kann den Artikel nicht einschränken",
         "announcementNoMeter": "Eine Ankündigung zählt keine Artikel",
-        "announcementNoReferral": "Eine Ankündigung hat keine Newsletter-Einstellungen",
         "newsletterActionRequired": "Biete auch eine Newsletter-Anmeldung an"
       },
       "copyName": "{{name}} (Kopie)",

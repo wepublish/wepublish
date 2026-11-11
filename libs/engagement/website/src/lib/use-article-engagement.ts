@@ -12,7 +12,7 @@ import {
 } from '@wepublish/website/api';
 import { useEffect, useState } from 'react';
 import { readMeterToken, storeMeterToken } from './engagement-storage';
-import { referralFromUrl } from './referral';
+import { useNewsletterToken } from './newsletter-signup';
 
 /**
  * Tells the server that the reader opens an article (`viewArticle`): it meters
@@ -21,7 +21,7 @@ import { referralFromUrl } from './referral';
  * blocks of `ArticleDocument`.
  *
  * Runs in an effect, never while prefetching, and again once the reader logs
- * in or their subscriptions change.
+ * in, their subscriptions change or they sign up at a newsletter wall.
  */
 export function useArticleEngagement(article?: { id: string } | null) {
   const articleId = article?.id;
@@ -33,6 +33,7 @@ export function useArticleEngagement(article?: { id: string } | null) {
     prompts: FullEngagementPromptFragment[];
   }>();
   const access = useArticleAccess(articleId);
+  const newsletterToken = useNewsletterToken();
 
   useEffect(() => {
     if (!articleId) {
@@ -46,8 +47,8 @@ export function useArticleEngagement(article?: { id: string } | null) {
         input: {
           articleId,
           meterToken: readMeterToken(),
-          referral: referralFromUrl(window.location.href),
           paywallBypassToken: getPaywallBypassToken(),
+          newsletterToken,
         },
       },
     })
@@ -72,7 +73,13 @@ export function useArticleEngagement(article?: { id: string } | null) {
     return () => {
       current = false;
     };
-  }, [articleId, user?.id, subscriptions?.length, viewArticle]);
+  }, [
+    articleId,
+    user?.id,
+    subscriptions?.length,
+    newsletterToken,
+    viewArticle,
+  ]);
 
   return {
     access,

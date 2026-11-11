@@ -5,7 +5,6 @@ import {
   EngagementEnforcement,
   EngagementGoal,
   EngagementPlacement,
-  NewsletterReferralMode,
 } from '@prisma/client';
 import {
   EngagementRuleWithStages,
@@ -85,9 +84,6 @@ const announcement = (
   showOnPageIds: ['page-1'],
   includePeeredArticles: true,
   meterWindowDays: null,
-  newsletterReferral: NewsletterReferralMode.NONE,
-  newsletterReferralLimit: 0,
-  newsletterParams: [],
   stages: [stage()],
   ...overrides,
 });

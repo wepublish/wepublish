@@ -1,4 +1,8 @@
-import { screen, waitFor } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
+import {
+  NEWSLETTER_COOKIE_KEY,
+  storeNewsletterToken,
+} from '@wepublish/engagement/website';
 import {
   mockAnnouncementPrompt,
   mockEngagementPrompt,
@@ -46,6 +50,7 @@ describe('BannerContainer', () => {
 
   afterEach(() => {
     document.cookie = `${BYPASS_COOKIE_KEY}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+    document.cookie = `${NEWSLETTER_COOKIE_KEY}=; path=/; max-age=0`;
   });
 
   it('shows the banner prompt of an article', async () => {
@@ -76,6 +81,19 @@ describe('BannerContainer', () => {
     await waitFor(() =>
       expect(requested).toContainEqual(
         expect.objectContaining({ paywallBypassToken: 'token' })
+      )
+    );
+  });
+
+  it('asks again, with the token, once the reader signed up for the newsletter', async () => {
+    renderContainer({ mocks: [engagementPrompts([])] });
+
+    await waitFor(() => expect(requested.length).toBeGreaterThan(0));
+    act(() => storeNewsletterToken('signed.token'));
+
+    await waitFor(() =>
+      expect(requested).toContainEqual(
+        expect.objectContaining({ newsletterToken: 'signed.token' })
       )
     );
   });

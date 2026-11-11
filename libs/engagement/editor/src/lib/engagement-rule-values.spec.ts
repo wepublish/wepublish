@@ -7,7 +7,6 @@ import {
   EngagementPlacement,
   EngagementRequirement,
   FullEngagementRuleFragment,
-  NewsletterReferralMode,
 } from '@wepublish/editor/api';
 import { TFunction } from 'i18next';
 import {
@@ -42,11 +41,6 @@ const rule: FullEngagementRuleFragment = {
   showOnPageIds: ['page-1'],
   includePeeredArticles: false,
   meterWindowDays: 30,
-  newsletterReferral: NewsletterReferralMode.Limited,
-  newsletterReferralLimit: 1,
-  newsletterParams: [
-    { __typename: 'NewsletterParam', key: 'utm_medium', value: 'email' },
-  ],
   stages: [
     {
       __typename: 'EngagementStage',
@@ -99,9 +93,6 @@ describe('engagement rule values', () => {
       showOnPageIds: ['page-1'],
       includePeeredArticles: false,
       meterWindowDays: 30,
-      newsletterReferral: NewsletterReferralMode.Limited,
-      newsletterReferralLimit: 1,
-      newsletterParams: [{ key: 'utm_medium', value: 'email' }],
       stages: [
         {
           afterArticles: 2,
@@ -171,19 +162,6 @@ describe('engagement rule values', () => {
     ).toEqual([]);
   });
 
-  it('leaves out newsletter params without a name', () => {
-    expect(
-      toEngagementRuleInput(
-        metered({
-          newsletterParams: [
-            { key: ' ', value: 'x' },
-            { key: 'mc_cid', value: '' },
-          ],
-        })
-      ).newsletterParams
-    ).toEqual([{ key: 'mc_cid', value: '' }]);
-  });
-
   it('finds what the server would refuse, with its codes', () => {
     expect(
       engagementRuleProblems(
@@ -234,6 +212,23 @@ describe('engagement rule values', () => {
       ['stages.1.afterArticles', 'engagement.validation.ascending'],
       ['stages.1.actions.0.url', 'engagement.validation.required'],
     ]);
+  });
+
+  it('needs no newsletter action on a newsletter wall, which is the signup', () => {
+    expect(
+      engagementRuleProblems(
+        metered({
+          goal: EngagementGoal.Newsletter,
+          stages: [
+            stageDefaults({ afterArticles: 2 }),
+            hardStage({
+              afterArticles: 4,
+              requirement: EngagementRequirement.Newsletter,
+            }),
+          ],
+        })
+      )
+    ).toEqual([]);
   });
 
   it('accepts a consistent rule', () => {

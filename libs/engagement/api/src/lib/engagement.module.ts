@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { ImageModule } from '@wepublish/image/api';
 import { PrismaModule } from '@wepublish/nest-modules';
+import { NewsletterModule } from '@wepublish/newsletter/api';
 import { PublicContentInvalidatorModule } from '@wepublish/public-content-cache/api';
 import { EngagementPromptsResolver } from './engagement-prompts.resolver';
 import { EngagementRuleResolver } from './engagement-rule.resolver';
@@ -17,10 +18,17 @@ import {
   NewsletterVerifier,
   UnavailableNewsletterVerifier,
 } from './newsletter-verifier';
+import { NewsletterSignupResolver } from './newsletter-signup.resolver';
+import { NewsletterSignupService } from './newsletter-signup.service';
 import { ReaderContextService } from './reader-context.service';
 
 @Module({
-  imports: [PrismaModule, PublicContentInvalidatorModule, ImageModule],
+  imports: [
+    PrismaModule,
+    PublicContentInvalidatorModule,
+    ImageModule,
+    NewsletterModule,
+  ],
   providers: [
     EngagementRuleService,
     EngagementRuleResolver,
@@ -28,9 +36,16 @@ import { ReaderContextService } from './reader-context.service';
     EngagementPromptsResolver,
     ReaderContextService,
     MeterService,
+    NewsletterSignupService,
+    NewsletterSignupResolver,
     { provide: NewsletterVerifier, useClass: UnavailableNewsletterVerifier },
   ],
-  exports: [EngagementRuleService, ReaderContextService, MeterService],
+  exports: [
+    EngagementRuleService,
+    ReaderContextService,
+    MeterService,
+    NewsletterSignupService,
+  ],
 })
 export class EngagementModule {}
 

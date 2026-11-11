@@ -47,12 +47,6 @@ fragment FullEngagementRule on EngagementRule {
   showOnPageIds
   includePeeredArticles
   meterWindowDays
-  newsletterReferral
-  newsletterReferralLimit
-  newsletterParams {
-    key
-    value
-  }
   stages {
     ...FullEngagementStage
   }

@@ -14,7 +14,7 @@ import {
   contentCacheNamespace,
 } from '@wepublish/public-content-cache/api';
 import type { RichtextJSONDocument } from '@wepublish/richtext';
-import { EvaluatedRule, ReferralParam } from './evaluate';
+import { EvaluatedRule } from './evaluate';
 import {
   CreateEngagementRuleInput,
   EngagementStageInput,
@@ -31,13 +31,8 @@ export type EngagementStageWithActions = Omit<
 };
 
 /** A rule as resolvers and the evaluation see it. */
-export type EngagementRuleWithStages = Omit<
-  PEngagementRule,
-  'newsletterParams'
-> &
-  EvaluatedRule<EngagementStageWithActions> & {
-    newsletterParams: ReferralParam[];
-  };
+export type EngagementRuleWithStages = PEngagementRule &
+  EvaluatedRule<EngagementStageWithActions>;
 
 const include = {
   showOnPages: { select: { id: true } },
@@ -50,26 +45,15 @@ const include = {
 
 type StoredRule = Prisma.EngagementRuleGetPayload<{ include: typeof include }>;
 
-const isReferralParam = (value: unknown): value is ReferralParam =>
-  !!value &&
-  typeof value === 'object' &&
-  typeof (value as ReferralParam).key === 'string' &&
-  typeof (value as ReferralParam).value === 'string';
-
 const toRule = ({
   showOnPages,
   audienceMemberPlans,
-  newsletterParams,
   stages,
   ...rule
 }: StoredRule): EngagementRuleWithStages => ({
   ...rule,
   showOnPageIds: showOnPages.map(({ id }) => id),
   audienceMemberPlanIds: audienceMemberPlans.map(({ id }) => id),
-  newsletterParams:
-    Array.isArray(newsletterParams) ?
-      newsletterParams.filter(isReferralParam)
-    : [],
   stages: stages.map(stage => ({
     ...stage,
     description: stage.description as RichtextJSONDocument | null,
@@ -144,7 +128,6 @@ export class EngagementRuleService {
     stages,
     showOnPageIds,
     audienceMemberPlanIds = [],
-    newsletterParams,
     ...rule
   }: CreateEngagementRuleInput) {
     this.validate({ ...rule, audienceMemberPlanIds, stages });
@@ -152,10 +135,6 @@ export class EngagementRuleService {
     const created = await this.prisma.engagementRule.create({
       data: {
         ...rule,
-        newsletterParams: newsletterParams.map(({ key, value }) => ({
-          key,
-          value,
-        })),
         showOnPages: { connect: showOnPageIds.map(id => ({ id })) },
         audienceMemberPlans: {
           connect: audienceMemberPlanIds.map(id => ({ id })),
@@ -175,7 +154,6 @@ export class EngagementRuleService {
     stages,
     showOnPageIds,
     audienceMemberPlanIds = [],
-    newsletterParams,
     ...rule
   }: UpdateEngagementRuleInput) {
     this.validate({ ...rule, audienceMemberPlanIds, stages });
@@ -188,10 +166,6 @@ export class EngagementRuleService {
         data: {
           ...rule,
           version: { increment: 1 },
-          newsletterParams: newsletterParams.map(({ key, value }) => ({
-            key,
-            value,
-          })),
           showOnPages: { set: showOnPageIds.map(pageId => ({ id: pageId })) },
           audienceMemberPlans: {
             set: audienceMemberPlanIds.map(planId => ({ id: planId })),

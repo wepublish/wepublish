@@ -19,13 +19,14 @@ import {
   EngagementEnforcement,
   EngagementGoal,
   EngagementPlacement,
+  EngagementRequirement,
   EngagementRulesDocument,
   FullEngagementRuleFragment,
-  NewsletterReferralMode,
 } from '@wepublish/editor/api';
 import { EngagementRuleForm } from './engagement-rule-form';
 import {
   EngagementRuleValues,
+  actionDefaults,
   SHOW_FIRST_PRIORITY,
   createEngagementRuleSchema,
 } from './engagement-rule-values';
@@ -49,9 +50,6 @@ const competing: FullEngagementRuleFragment = {
   showOnPageIds: [],
   includePeeredArticles: false,
   meterWindowDays: null,
-  newsletterReferral: NewsletterReferralMode.None,
-  newsletterReferralLimit: 0,
-  newsletterParams: [],
   stages: [
     {
       __typename: 'EngagementStage',
@@ -154,16 +152,14 @@ describe('EngagementRuleForm', () => {
     expect(screen.queryByText('engagement.form.hard')).toBeNull();
   });
 
-  it('asks a metered rule for the window, the stages and the referrals', () => {
+  it('asks a metered rule for the window and the stages', () => {
     renderForm(ENGAGEMENT_PRESETS.growNewsletter());
 
     expect(screen.getAllByTestId(/^stage-/)).toHaveLength(2);
     expect(
       screen.getAllByLabelText(/engagement.form.meterWindowDays/).length
     ).toBeGreaterThan(0);
-    expect(
-      screen.getByText('engagement.form.newsletterReferral')
-    ).toBeInTheDocument();
+    expect(screen.queryByText(/newsletterReferral/)).toBeNull();
     expect(screen.getByText('engagement.form.addStage')).toBeInTheDocument();
   });
 
@@ -179,7 +175,7 @@ describe('EngagementRuleForm', () => {
     expect(last).toHaveTextContent('engagement.form.previewBlocks');
   });
 
-  it('explains that newsletter subscriptions can not be verified', () => {
+  it('explains what a newsletter wall asks of readers', () => {
     renderForm(ENGAGEMENT_PRESETS.growNewsletter());
 
     expect(screen.getByTestId('newsletter-note')).toHaveTextContent(
@@ -201,7 +197,6 @@ describe('EngagementRuleForm', () => {
     expect(values()).toMatchObject({
       goal: 'ANNOUNCEMENT',
       meterWindowDays: null,
-      newsletterReferral: 'NONE',
       stages: [{ afterArticles: 0, enforcement: 'SOFT', requirement: null }],
     });
     expect(screen.getAllByTestId(/^stage-/)).toHaveLength(1);
@@ -319,15 +314,12 @@ describe('EngagementRuleForm', () => {
     );
   });
 
-  it('keeps newsletter links and peered articles behind more options', () => {
+  it('keeps peered articles behind more options', () => {
     renderForm(ENGAGEMENT_PRESETS.promoteMemberships());
 
     const settings = screen.getByTestId('rule-settings');
 
     expect(settings).toHaveTextContent('engagement.form.meterWindowDays');
-    expect(settings).not.toHaveTextContent(
-      'engagement.form.newsletterReferral'
-    );
     expect(settings).not.toHaveTextContent(
       'engagement.form.includePeeredArticles'
     );
@@ -338,7 +330,6 @@ describe('EngagementRuleForm', () => {
       })
     );
 
-    expect(settings).toHaveTextContent('engagement.form.newsletterReferral');
     expect(settings).toHaveTextContent('engagement.form.includePeeredArticles');
   });
 
@@ -372,12 +363,34 @@ describe('EngagementRuleForm', () => {
     expect(container.querySelectorAll('[hidden]')).toHaveLength(0);
   });
 
+  it('asks for the email alone at the end of the newsletter preset', () => {
+    const [, wall] = ENGAGEMENT_PRESETS.growNewsletter().stages;
+
+    expect(wall.requirement).toBe(EngagementRequirement.Newsletter);
+    expect(wall.actions).toEqual([]);
+  });
+
   it('lays out each action as its own group', () => {
-    renderForm(ENGAGEMENT_PRESETS.growNewsletter());
+    const preset = ENGAGEMENT_PRESETS.promoteMemberships();
 
-    const [, last] = screen.getAllByTestId(/^stage-/);
+    renderForm({
+      ...preset,
+      stages: [
+        {
+          ...preset.stages[0],
+          actions: [
+            actionDefaults({ type: EngagementActionType.Membership }),
+            actionDefaults({ type: EngagementActionType.Register }),
+            actionDefaults({ type: EngagementActionType.Login }),
+          ],
+        },
+        ...preset.stages.slice(1),
+      ],
+    });
 
-    expect(last.querySelectorAll('[data-testid="action"]')).toHaveLength(3);
+    const [first] = screen.getAllByTestId(/^stage-/);
+
+    expect(first.querySelectorAll('[data-testid="action"]')).toHaveLength(3);
   });
 
   it('keeps the rule settings in one column, independent of the stages', () => {

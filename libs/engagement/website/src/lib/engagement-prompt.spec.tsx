@@ -1,17 +1,26 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {
   mockEngagementAction,
   mockEngagementPrompt,
   mockHardEngagementPrompt,
   mockImage,
+  mockOperation,
+  mockUser,
   renderWithProviders,
 } from '@wepublish/mocks/website';
 import {
   EngagementActionType,
   EngagementPlacement,
+  EngagementRequirement,
+  SignUpForNewsletterDocument,
 } from '@wepublish/website/api';
 import { t } from 'i18next';
 import { EngagementPrompt } from './engagement-prompt';
+import {
+  NEWSLETTER_COOKIE_KEY,
+  readNewsletterToken,
+} from './newsletter-signup';
 
 const inline = () =>
   mockEngagementPrompt({
@@ -136,5 +145,84 @@ describe('EngagementPrompt', () => {
     expect(linkOf('Or get our newsletter')).toBe(
       'https://example.com/newsletter'
     );
+  });
+
+  describe('newsletter wall', () => {
+    const wall = () =>
+      mockHardEngagementPrompt({
+        title: 'Get our newsletter to keep reading',
+        requirement: EngagementRequirement.Newsletter,
+        actions: [],
+      });
+
+    const signedUp = mockOperation(SignUpForNewsletterDocument, {
+      variables: { email: 'reader@example.com' },
+      data: {
+        __typename: 'Mutation',
+        signUpForNewsletter: {
+          __typename: 'NewsletterSignup',
+          newsletterToken: 'signed.token',
+        },
+      },
+    });
+
+    const emailInput = () =>
+      screen.getByRole('textbox', {
+        name: t('engagement.newsletterWall.email'),
+      });
+
+    beforeEach(() => {
+      document.cookie = `${NEWSLETTER_COOKIE_KEY}=; max-age=0; path=/`;
+    });
+
+    it('asks for the email alone and remembers the signup in a cookie', async () => {
+      const user = userEvent.setup();
+
+      renderWithProviders(<EngagementPrompt prompt={wall()} />, {
+        mocks: [signedUp],
+      });
+
+      await user.type(emailInput(), 'reader@example.com');
+      await user.click(
+        screen.getByRole('button', {
+          name: t('engagement.newsletterWall.submit'),
+        })
+      );
+
+      await waitFor(() => expect(readNewsletterToken()).toBe('signed.token'));
+    });
+
+    it('fills in the email of a logged-in reader', () => {
+      renderWithProviders(<EngagementPrompt prompt={wall()} />, {
+        user: mockUser({ email: 'member@example.com' }) as never,
+      });
+
+      expect(emailInput()).toHaveValue('member@example.com');
+    });
+
+    it('says when the signup failed and lets the reader try again', async () => {
+      const user = userEvent.setup();
+
+      renderWithProviders(<EngagementPrompt prompt={wall()} />, {
+        mocks: [
+          mockOperation(SignUpForNewsletterDocument, {
+            variables: { email: 'reader@example' },
+            errors: [{ message: 'Invalid email address.' }],
+          }),
+        ],
+      });
+
+      await user.type(emailInput(), 'reader@example');
+      await user.click(
+        screen.getByRole('button', {
+          name: t('engagement.newsletterWall.submit'),
+        })
+      );
+
+      expect(await screen.findByRole('alert')).toHaveTextContent(
+        t('engagement.newsletterWall.error')
+      );
+      expect(readNewsletterToken()).toBeUndefined();
+    });
   });
 });

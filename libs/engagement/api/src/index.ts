@@ -6,6 +6,8 @@ export * from './lib/evaluate';
 export * from './lib/meter';
 export * from './lib/meter-token';
 export * from './lib/meter.service';
+export * from './lib/newsletter-signup.service';
+export * from './lib/newsletter-token';
 export * from './lib/newsletter-verifier';
 export * from './lib/reader-context';
 export * from './lib/reader-context.service';

@@ -6,7 +6,6 @@ import {
   EngagementGoal,
   EngagementPlacement,
   EngagementRequirement,
-  NewsletterReferralMode,
 } from '@prisma/client';
 import {
   EngagementRuleWithStages,
@@ -81,9 +80,6 @@ const meteredRule = (
   showOnPageIds: [],
   includePeeredArticles: false,
   meterWindowDays: 30,
-  newsletterReferral: NewsletterReferralMode.NONE,
-  newsletterReferralLimit: 0,
-  newsletterParams: [{ key: 'utm_medium', value: 'email' }],
   stages: [
     stage('soft', { afterArticles: 2 }),
     stage('hard', {
@@ -129,7 +125,11 @@ describe('viewArticle', () => {
           !!token && bypassTokens.includes(token),
       } as never,
       { getActiveRules: async () => rules } as never,
-      meters
+      meters,
+      {
+        statusOf: (token?: string) =>
+          token === 'signed-up' ? 'subscribed' : undefined,
+      } as never
     );
 
   /** One request: viewArticle, then the blocks of the article it answered. */
@@ -137,8 +137,8 @@ describe('viewArticle', () => {
     articleId: string,
     input: Partial<{
       meterToken: string | null;
-      referral: { key: string; value: string }[];
       paywallBypassToken: string;
+      newsletterToken: string;
     }> = {}
   ) => {
     const req: ArticleRequest = { headers: {} };
@@ -261,14 +261,13 @@ describe('viewArticle', () => {
     expect(setNs).toHaveBeenCalledTimes(4);
   });
 
-  it('opens one linked article with a limited newsletter referral', async () => {
+  it('lets a reader past a newsletter wall once they signed up', async () => {
     rules = [
-      meteredRule(EngagementRequirement.REGISTRATION, {
-        newsletterReferral: NewsletterReferralMode.LIMITED,
-        newsletterReferralLimit: 1,
+      meteredRule(EngagementRequirement.NEWSLETTER, {
+        goal: EngagementGoal.MEMBERSHIP,
       }),
     ];
-    const full = signMeter(
+    const meterToken = signMeter(
       {
         reads: ['a1', 'a2', 'a3', 'a4'].map(id => [
           id,
@@ -277,16 +276,19 @@ describe('viewArticle', () => {
       },
       secret
     );
-    const referral = [{ key: 'utm_medium', value: 'email' }];
 
-    const first = await visit('n1', { meterToken: full, referral });
-    const second = await visit('n2', {
-      meterToken: first.meterToken,
-      referral,
+    const walled = await visit('a5', { meterToken });
+    const signedUp = await visit('a5', {
+      meterToken,
+      newsletterToken: 'signed-up',
     });
+    const madeUp = await visit('a5', { meterToken, newsletterToken: 'guess' });
 
-    expect(first.blocks).toHaveLength(3);
-    expect(second.blocks).toHaveLength(1);
+    expect(walled.access.requirement).toBe(EngagementRequirement.NEWSLETTER);
+    expect(walled.blocks).toHaveLength(1);
+    expect(signedUp.access.granted).toBe(true);
+    expect(signedUp.blocks).toHaveLength(3);
+    expect(madeUp.blocks).toHaveLength(1);
   });
 
   describe('enforced paywall', () => {

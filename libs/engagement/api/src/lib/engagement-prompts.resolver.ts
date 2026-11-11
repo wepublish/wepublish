@@ -18,6 +18,7 @@ import {
   resolvePrompts,
 } from './evaluate';
 import { toEngagementPrompt } from './engagement-prompt';
+import { NewsletterSignupService } from './newsletter-signup.service';
 import { ReaderContextService, ReaderRequest } from './reader-context.service';
 
 @Resolver(() => EngagementPrompt)
@@ -25,7 +26,8 @@ export class EngagementPromptsResolver {
   constructor(
     private rules: EngagementRuleService,
     private readers: ReaderContextService,
-    private prisma: PrismaClient
+    private prisma: PrismaClient,
+    private signups: NewsletterSignupService
   ) {}
 
   @Public()
@@ -34,7 +36,12 @@ export class EngagementPromptsResolver {
   })
   async engagementPrompts(
     @Args()
-    { documentType, documentId, paywallBypassToken }: EngagementPromptsArgs,
+    {
+      documentType,
+      documentId,
+      paywallBypassToken,
+      newsletterToken,
+    }: EngagementPromptsArgs,
     @CurrentUser() session: AuthSession | undefined,
     @Context('req') req: ReaderRequest
   ) {
@@ -50,7 +57,16 @@ export class EngagementPromptsResolver {
     }
 
     return resolvePrompts({
-      rules: matchingRules(rules, { ...reader, paywallBypassed }, target),
+      rules: matchingRules(
+        rules,
+        {
+          ...reader,
+          paywallBypassed,
+          newsletter:
+            this.signups.statusOf(newsletterToken) ?? reader.newsletter,
+        },
+        target
+      ),
       now: new Date(),
     }).map(toEngagementPrompt);
   }

@@ -4849,7 +4849,8 @@
       "requirement": {
         "REGISTRATION": "Registration",
         "MEMBERSHIP": "Membership",
-        "PAID_MEMBERSHIP": "Paid membership"
+        "PAID_MEMBERSHIP": "Paid membership",
+        "NEWSLETTER": "Newsletter signup (email only)"
       },
       "actionType": {
         "URL": "Link",
@@ -4863,11 +4864,6 @@
         "CANCEL": "Close",
         "OTHER": "Other"
       },
-      "referral": {
-        "NONE": "Newsletter links count like other visits",
-        "UNLIMITED": "Newsletter links always open the linked article",
-        "LIMITED": "Newsletter links open a limited number of articles"
-      },
       "summary": {
         "announcement": "From the first visit: {{placement}}",
         "placement": {
@@ -4879,7 +4875,8 @@
         "requirement": {
           "REGISTRATION": "Registration",
           "MEMBERSHIP": "Membership",
-          "PAID_MEMBERSHIP": "Paid membership"
+          "PAID_MEMBERSHIP": "Paid membership",
+          "NEWSLETTER": "Newsletter signup"
         },
         "closable": "{{placement}}, can be closed",
         "article": "Article {{number}}",
@@ -4892,7 +4889,7 @@
         "goal": "Goal",
         "name": "Name",
         "active": "Active",
-        "newsletterNote": "Newsletter subscriptions can not be verified yet. A hard stage of a newsletter rule therefore asks for a registration or membership, and must also offer a newsletter signup.",
+        "newsletterNote": "A newsletter wall only asks for an email address: readers enter it right in the prompt and are signed up with the Mailchimp integration (they confirm by mail). After that, newsletter rules leave them alone.",
         "audience": "Audience",
         "trigger": "Where and when",
         "showOnArticles": "Show on articles",
@@ -4901,14 +4898,6 @@
         "showOnPages": "Show on pages",
         "meterWindowDays": "Count articles of the last … days",
         "meterWindowDaysInfo": "Articles read longer ago no longer count. Each article counts once.",
-        "newsletterReferral": "Newsletter links",
-        "newsletterReferralInfo": "Readers who come from a newsletter link may read that article past the meter. Never applies to paywalls.",
-        "newsletterReferralLimit": "Articles per window",
-        "newsletterParams": "Url params of newsletter links",
-        "newsletterParamsInfo": "A visit counts as coming from the newsletter when the url has one of these params. Leave the value empty to accept any value.",
-        "paramKey": "Param, e.g. utm_medium",
-        "paramValue": "Value, e.g. email",
-        "addParam": "Add param",
         "problems": "The rule can not be saved like this:",
         "moreOptions": "More options",
         "presentation": "Presentation and actions",
@@ -4964,7 +4953,6 @@
         "announcementFromStart": "An announcement shows from the first article",
         "announcementSoft": "An announcement can not restrict the article",
         "announcementNoMeter": "An announcement does not count articles",
-        "announcementNoReferral": "An announcement has no newsletter settings",
         "newsletterActionRequired": "Offer a newsletter signup too"
       },
       "copyName": "{{name}} (copy)",

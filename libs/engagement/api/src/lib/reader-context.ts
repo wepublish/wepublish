@@ -5,9 +5,10 @@ import { hasPermission, permissionsOf } from '@wepublish/permissions/api';
 import { isActiveSubscription } from '@wepublish/utils/api';
 
 /**
- * Newsletter subscriptions can not be verified yet (the Mailchimp sync adds
- * every active user as subscribed), so this is always `unknown`. A
- * `NewsletterVerifier` can change that later.
+ * `subscribed` once the reader gave their email at a newsletter wall (a signed
+ * newsletter token). Otherwise `unknown`: subscriptions can not be verified
+ * yet (the Mailchimp sync adds every active user as subscribed). A
+ * `NewsletterVerifier` can change that for logged-in readers.
  */
 export type NewsletterStatus = 'unknown' | 'subscribed' | 'not-subscribed';
 
@@ -132,5 +133,7 @@ export function meetsRequirement(
       return reader.activeMemberPlanIds.length > 0;
     case EngagementRequirement.PAID_MEMBERSHIP:
       return reader.paying;
+    case EngagementRequirement.NEWSLETTER:
+      return reader.newsletter === 'subscribed';
   }
 }

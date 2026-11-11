@@ -217,6 +217,7 @@ describe('meetsRequirement', () => {
     [EngagementRequirement.REGISTRATION, [false, true, true, true]],
     [EngagementRequirement.MEMBERSHIP, [false, false, true, true]],
     [EngagementRequirement.PAID_MEMBERSHIP, [false, false, false, true]],
+    [EngagementRequirement.NEWSLETTER, [false, false, false, false]],
   ])(
     '%s is met by [anonymous, registered, free member, paying member] = %j',
     (requirement, expected) => {
@@ -227,4 +228,13 @@ describe('meetsRequirement', () => {
       ).toEqual(expected);
     }
   );
+
+  it('is met for the newsletter by an email, not by an account', () => {
+    expect(
+      meetsRequirement(EngagementRequirement.NEWSLETTER, {
+        ...anonymous,
+        newsletter: 'subscribed',
+      })
+    ).toBe(true);
+  });
 });

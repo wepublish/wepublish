@@ -1080,9 +1080,6 @@ input CreateEngagementRuleInput {
   includePeeredArticles: Boolean! = false
   meterWindowDays: Int
   name: String!
-  newsletterParams: [NewsletterParamInput!]! = []
-  newsletterReferral: NewsletterReferralMode! = NONE
-  newsletterReferralLimit: Int! = 0
   priority: Int! = 0
   showOnArticles: Boolean! = true
   showOnPageIds: [String!]! = []
@@ -1463,6 +1460,7 @@ type EngagementPrompt {
 """What a reader needs to get past a hard stage."""
 enum EngagementRequirement {
   MEMBERSHIP
+  NEWSLETTER
   PAID_MEMBERSHIP
   REGISTRATION
 }
@@ -1480,9 +1478,6 @@ type EngagementRule {
   meterWindowDays: Int
   modifiedAt: DateTime!
   name: String!
-  newsletterParams: [NewsletterParam!]!
-  newsletterReferral: NewsletterReferralMode!
-  newsletterReferralLimit: Int!
 
   """Higher priorities fill the website's slots first."""
   priority: Int!
@@ -3866,6 +3861,11 @@ type Mutation {
   setPaymentProviderCustomers(customers: [PaymentProviderCustomerInput!]!, paymentProviderId: String!): Int!
 
   """
+  Signs an email up for the newsletter, pending its confirmation by mail. Newsletter walls only ask for this.
+  """
+  signUpForNewsletter(email: String!): NewsletterSignup!
+
+  """
   Ask the mail provider for the current delivery state of mails that are still open. Complements the provider webhook, which is not reachable in local development.
   """
   syncMailLogStates(limit: Int): MailLogSyncModel!
@@ -4155,35 +4155,23 @@ type NewsletterMergeTag {
   tag: String!
 }
 
-type NewsletterParam {
-  key: String!
-  value: String!
-}
-
-input NewsletterParamInput {
-  key: String!
-  value: String! = ""
-}
-
 type NewsletterPublishResult {
   campaign: MailchimpDraft!
   created: Boolean!
   report: NewsletterReport!
 }
 
-"""
-Whether readers coming from a newsletter link may read the linked article past the meter.
-"""
-enum NewsletterReferralMode {
-  LIMITED
-  NONE
-  UNLIMITED
-}
-
 type NewsletterReport {
   bytes: Int!
   missingArticles: [String!]!
   missingFooter: [String!]!
+}
+
+type NewsletterSignup {
+  """
+  Keep it (the website uses a cookie) and send it with viewArticle and engagementPrompts: it gets the reader past newsletter walls and keeps newsletter prompts away.
+  """
+  newsletterToken: String!
 }
 
 type NotificationConfirmation {
@@ -5423,6 +5411,11 @@ type Query {
   engagementPrompts(
     documentId: String!
     documentType: EngagementDocumentType!
+
+    """
+    The newsletterToken of signUpForNewsletter, checked on the server: newsletter prompts leave readers who signed up alone.
+    """
+    newsletterToken: String
 
     """
     A paywall bypass token, checked on the server, for rules shown to readers with a bypass.
@@ -7016,9 +7009,6 @@ input UpdateEngagementRuleInput {
   includePeeredArticles: Boolean! = false
   meterWindowDays: Int
   name: String!
-  newsletterParams: [NewsletterParamInput!]! = []
-  newsletterReferral: NewsletterReferralMode! = NONE
-  newsletterReferralLimit: Int! = 0
   priority: Int! = 0
   showOnArticles: Boolean! = true
   showOnPageIds: [String!]! = []
@@ -7163,12 +7153,10 @@ input ViewArticleInput {
 
   """The meterToken the last viewArticle answered, for anonymous readers."""
   meterToken: String
-  paywallBypassToken: String
 
-  """
-  The url params of the current page, for newsletter referrals. Only open the article they link to.
-  """
-  referral: [NewsletterParamInput!]
+  """The newsletterToken of signUpForNewsletter, for newsletter walls."""
+  newsletterToken: String
+  paywallBypassToken: String
 }
 
 type VimeoVideoBlock implements BaseBlock {

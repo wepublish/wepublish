@@ -42,8 +42,8 @@ export const isRestricted = (
  *
  * 1. Privileged readers (editors, previews, peers) read everything.
  * 2. An enforced, active paywall decides alone: a membership of one of its
- *    plans (any plan with `anyMemberPlan`) or a valid bypass token. Meters and
- *    newsletter referrals never open it.
+ *    plans (any plan with `anyMemberPlan`) or a valid bypass token. A meter never
+ *    opens it.
  * 3. A paywall that is not enforced grants: the website keeps hiding the
  *    content with CSS, as before.
  * 4. Otherwise the metered engagement rules decide.

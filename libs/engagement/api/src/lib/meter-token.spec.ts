@@ -5,7 +5,7 @@ const secret = deriveMeterSecret('a jwt private key');
 const meter: Meter = {
   reads: [
     ['article-1', 100],
-    ['article-2', 200, 1],
+    ['article-2', 200],
   ],
 };
 

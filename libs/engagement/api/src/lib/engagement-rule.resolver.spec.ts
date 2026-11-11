@@ -9,7 +9,6 @@ import {
   EngagementEnforcement,
   EngagementGoal,
   EngagementPlacement,
-  NewsletterReferralMode,
 } from '@prisma/client';
 import { ImageDataloaderService } from '@wepublish/image/api';
 import { PermissionsGuard } from '@wepublish/permissions/api';
@@ -32,9 +31,6 @@ const rule = {
   showOnPageIds: [],
   includePeeredArticles: false,
   meterWindowDays: null,
-  newsletterReferral: NewsletterReferralMode.NONE,
-  newsletterReferralLimit: 0,
-  newsletterParams: [],
   stages: [
     {
       id: 'stage-1',

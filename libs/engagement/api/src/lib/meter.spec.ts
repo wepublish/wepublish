@@ -6,7 +6,6 @@ import {
   isMeter,
   mergeMeters,
   recordRead,
-  referralReads,
   toMinute,
 } from './meter';
 
@@ -58,27 +57,17 @@ describe('meter', () => {
     expect(meter.reads).toEqual([['a', toMinute(now)]]);
   });
 
-  it('leaves out the current article and referral reads when counting', () => {
+  it('leaves out the current article when counting', () => {
     const meter = {
       reads: [
         ['a', minutesAgo(5)],
-        ['b', minutesAgo(4), 1],
+        ['b', minutesAgo(4)],
         ['c', minutesAgo(3)],
-      ] as Array<[string, number] | [string, number, 1]>,
+      ] as Array<[string, number]>,
     };
 
-    expect(countedReads(meter, 30, now)).toBe(2);
-    expect(countedReads(meter, 30, now, 'c')).toBe(1);
-    expect(referralReads(meter, 30, now)).toBe(1);
-  });
-
-  it('marks referral reads', () => {
-    const meter = recordRead(emptyMeter(), 'a', now, {
-      maxWindowDays: 30,
-      referral: true,
-    });
-
-    expect(meter.reads).toEqual([['a', toMinute(now), 1]]);
+    expect(countedReads(meter, 30, now)).toBe(3);
+    expect(countedReads(meter, 30, now, 'c')).toBe(2);
   });
 
   it('prunes reads older than the largest window', () => {
@@ -121,14 +110,14 @@ describe('meter', () => {
         {
           reads: [
             ['a', 5],
-            ['c', 20, 1],
+            ['c', 20],
           ],
         }
       )
     ).toEqual({
       reads: [
         ['a', 5],
-        ['c', 20, 1],
+        ['c', 20],
         ['b', 30],
       ],
     });
@@ -137,7 +126,7 @@ describe('meter', () => {
   it.each([
     [{ reads: [] }, true],
     [{ reads: [['a', 1]] }, true],
-    [{ reads: [['a', 1, 1]] }, true],
+    [{ reads: [['a', 1, 1]] }, false],
     [{ reads: [['a', '1']] }, false],
     [{ reads: [[1, 1]] }, false],
     [{ reads: 'a' }, false],

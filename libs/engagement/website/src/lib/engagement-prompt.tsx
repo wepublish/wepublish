@@ -1,4 +1,6 @@
+import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
+import { Alert, TextField } from '@mui/material';
 import {
   useSetIntendedRoute,
   useUser,
@@ -6,16 +8,20 @@ import {
 import {
   EngagementActionRole,
   EngagementActionType,
+  EngagementEnforcement,
   EngagementPlacement,
+  EngagementRequirement,
   FullEngagementActionFragment,
+  SignUpForNewsletterDocument,
 } from '@wepublish/website/api';
 import {
   BuilderEngagementPromptProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { actionHref, actionLabel, returnsToArticle } from './engagement-action';
+import { storeNewsletterToken } from './newsletter-signup';
 
 export const EngagementPromptWrapper = styled('section')`
   display: grid !important; // also after the hidden blocks of a paywall
@@ -41,6 +47,78 @@ export const EngagementPromptActions = styled('div')`
     grid-auto-columns: max-content;
   }
 `;
+
+export const NewsletterWallForm = styled('form')`
+  display: grid;
+  gap: ${({ theme }) => theme.spacing(2)};
+
+  ${({ theme }) => theme.breakpoints.up('sm')} {
+    grid-template-columns: 1fr max-content;
+    align-items: start;
+  }
+`;
+
+/**
+ * A newsletter wall only asks for the email. Once the API signed it up, the
+ * token goes into a cookie, which views the article again: past the wall.
+ */
+const NewsletterWall = () => {
+  const { t } = useTranslation();
+  const { user } = useUser();
+  const {
+    elements: { Button },
+  } = useWebsiteBuilder();
+  // The account's email until the reader types their own.
+  const [typed, setEmail] = useState<string>();
+  const email = typed ?? user?.email ?? '';
+  const [signUp, { loading, error }] = useMutation(SignUpForNewsletterDocument);
+
+  const submit = async (event: FormEvent) => {
+    event.preventDefault();
+
+    try {
+      const { data } = await signUp({ variables: { email } });
+
+      if (data) {
+        storeNewsletterToken(data.signUpForNewsletter.newsletterToken);
+      }
+    } catch {
+      // Shown below, the reader can try again.
+    }
+  };
+
+  return (
+    <NewsletterWallForm onSubmit={submit}>
+      <TextField
+        type="email"
+        name="email"
+        autoComplete="email"
+        label={t('engagement.newsletterWall.email')}
+        value={email}
+        onChange={event => setEmail(event.target.value)}
+        fullWidth
+      />
+
+      <Button
+        type="submit"
+        variant="contained"
+        color="secondary"
+        disabled={loading || !email.trim()}
+      >
+        {t('engagement.newsletterWall.submit')}
+      </Button>
+
+      {error && (
+        <Alert
+          severity="error"
+          sx={{ gridColumn: '1 / -1' }}
+        >
+          {t('engagement.newsletterWall.error')}
+        </Alert>
+      )}
+    </NewsletterWallForm>
+  );
+};
 
 export const EngagementPrompt = ({
   className,
@@ -144,6 +222,11 @@ export const EngagementPrompt = ({
       data-enforcement={stage.enforcement}
     >
       {content(true)}
+
+      {stage.enforcement === EngagementEnforcement.Hard &&
+        stage.requirement === EngagementRequirement.Newsletter && (
+          <NewsletterWall />
+        )}
 
       <EngagementPromptActions>
         {actions.map(action => (

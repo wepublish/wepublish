@@ -5,7 +5,6 @@ import {
   EngagementGoal,
   EngagementPlacement,
   EngagementRequirement,
-  NewsletterReferralMode,
 } from '@prisma/client';
 
 export type EngagementStageDraft = {
@@ -22,8 +21,6 @@ export type EngagementRuleDraft = {
   audience?: EngagementAudience;
   audienceMemberPlanIds?: string[];
   meterWindowDays?: number | null;
-  newsletterReferral: NewsletterReferralMode;
-  newsletterReferralLimit: number;
   stages: EngagementStageDraft[];
 };
 
@@ -89,8 +86,10 @@ export function validateEngagementRule(
         problem(`${path}.previewBlocks`, 'min');
       }
 
+      // A newsletter wall is the signup itself.
       if (
         rule.goal === EngagementGoal.NEWSLETTER &&
+        stage.requirement !== EngagementRequirement.NEWSLETTER &&
         !stage.actions.some(
           action => action.type === EngagementActionType.NEWSLETTER
         )
@@ -118,21 +117,10 @@ export function validateEngagementRule(
     if (rule.meterWindowDays != null) {
       problem('meterWindowDays', 'announcementNoMeter');
     }
-
-    if (rule.newsletterReferral !== NewsletterReferralMode.NONE) {
-      problem('newsletterReferral', 'announcementNoReferral');
-    }
   } else if (rule.meterWindowDays == null) {
     problem('meterWindowDays', 'required');
   } else if (rule.meterWindowDays < 1) {
     problem('meterWindowDays', 'min');
-  }
-
-  if (
-    rule.newsletterReferral === NewsletterReferralMode.LIMITED &&
-    rule.newsletterReferralLimit < 1
-  ) {
-    problem('newsletterReferralLimit', 'min');
   }
 
   const memberPlans = rule.audienceMemberPlanIds ?? [];
