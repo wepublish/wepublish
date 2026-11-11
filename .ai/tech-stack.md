@@ -3,8 +3,8 @@
 Nx monorepo: NestJS/GraphQL API, a React admin editor, and ~20 tenant
 websites, sharing code through `libs/`. Tenant sites are Next.js 16 (Pages Router)
 or TanStack Start — an app with a `vite.config.mts` is a TanStack one (cultur,
-factuel, fazetten, flimmer, ganzgraz, gruppetto, mannschaft, munotgloeggli,
-wnti). Read [tanstack-start-migration.md](.claude/docs/tanstack-start-migration.md)
+factuel, fazetten, flimmer, ganzgraz, glocal, gruppetto, mannschaft,
+munotgloeggli, wnti). Read [tanstack-start-migration.md](.claude/docs/tanstack-start-migration.md)
 before working on one or migrating another tenant (it is not `@`-included). **Different parts of this repo use
 different test runners and different verification commands** — read
 [repo-map.md](.claude/docs/repo-map.md) to work out which stack you are in

@@ -50,7 +50,7 @@ the schema and generated types flow downstream from it.
 | `media` | Media/image server |
 | `website-example` | Reference tenant site |
 | ~20 tenant sites | `bajour`, `tsri`, `hauptstadt`, `onlinereports`, `zwoelf`, … — Next.js 16 (Pages Router) sites. Pages, `_app`, feeds and `public/` live here; the tenant's look lives in `libs/tenants/<tenant>` |
-| TanStack Start tenants | `cultur`, `factuel`, `fazetten`, `flimmer`, `ganzgraz`, `gruppetto`, `mannschaft`, `munotgloeggli`, `wnti` — Vite + nitro, `src/routes/`; recognisable by `vite.config.mts`. Both frameworks coexist; see [tanstack-start-migration.md](tanstack-start-migration.md). |
+| TanStack Start tenants | `cultur`, `factuel`, `fazetten`, `flimmer`, `ganzgraz`, `glocal`, `gruppetto`, `mannschaft`, `munotgloeggli`, `wnti` — Vite + nitro, `src/routes/`; recognisable by `vite.config.mts`. Both frameworks coexist; see [tanstack-start-migration.md](tanstack-start-migration.md). |
 
 **Adding a feature for one tenant?** Build it in the relevant `libs/<domain>/website`
 and let the tenant override it through the Website Builder. Copying components

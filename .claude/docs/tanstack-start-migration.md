@@ -231,9 +231,11 @@ Two rules follow:
 1. **Read the prop, not the identifier.** Checking that `ContentWidthProvider`
    appears in the Next page says nothing: `fullWidth` and `fullWidth={false}`
    are opposite instructions and both match a grep for the component name.
-2. **Only `ganzgraz` and `munotgloeggli` take `settingsTheme`.** Their
-   `createTheme` merges it; every other tenant's is `createTheme: () => theme`
-   and ignores the argument on purpose. Do not wire the prop into a tenant
+2. **Only `ganzgraz`, `munotgloeggli` and `glocal` take `settingsTheme`.**
+   Their `createTheme` merges it; every other tenant's is
+   `createTheme: () => theme` and ignores the argument on purpose. `glocal` has
+   no tenant lib — its config is `apps/glocal/src/tenant-config.ts`, the
+   pattern for a fresh `website-example` clone. Do not wire the prop into a tenant
    whose config does not read it — that is a behaviour change dressed as a fix.
 
 `gruppetto` composes `WebsiteProvider` + `WebsiteBuilderProvider` by hand
