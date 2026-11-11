@@ -180,4 +180,26 @@ describe('GenericIntegrationList', () => {
     expect(screen.getByRole('img', { name: 'Mailgun' })).toBeInTheDocument();
     expect(screen.getByText('SMTP server')).toBeInTheDocument();
   });
+
+  it('does not offer a choice when there is only one provider', () => {
+    mockedUseQuery.mockReturnValue({
+      data: { mailProviderSettings: [] },
+      loading: false,
+    });
+
+    render(
+      <GenericIntegrationList
+        query={MailProviderSettingsDocument}
+        mutation={UpdateMailProviderSettingDocument}
+        dataKey="mailProviderSettings"
+        schema={z.object({})}
+        fields={[]}
+        providers={[{ type: 'V0', label: 'v0 by Vercel' }]}
+      />
+    );
+
+    expect(
+      screen.getByText('integrations.empty.descriptionSingle')
+    ).toBeTruthy();
+  });
 });

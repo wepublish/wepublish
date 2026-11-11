@@ -3749,7 +3749,12 @@
         "bexioContactSyncInfo": "Wenn aktiv, überträgt We.Publish jede Nacht Name, Firma, E-Mail und Adresse geänderter Leser:innen in ihren Bexio-Kontakt und legt für Abos mit Bexio-Zahlung fehlende Kontakte an. Gruppen, Telefon und alles Weitere im Kontakt bleiben, wie sie in Bexio sind.",
         "bexioContactSyncNeverRan": "Noch nie gelaufen.",
         "bexioContactSyncLastRun": "Letzter Lauf: {{date}}, ohne Fehler.",
-        "bexioContactSyncLastRunFailed": "Letzter Lauf: {{date}}. Fehler: {{error}}"
+        "bexioContactSyncLastRunFailed": "Letzter Lauf: {{date}}. Fehler: {{error}}",
+        "webhookSecretInfo": {
+          "stripe": "Das Signing Secret (whsec_…) des Webhook-Endpoints, den du in Stripe anlegst. Ohne es werden Zahlungen in We.Publish nicht bestätigt.",
+          "payrexx": "Ein langes, zufälliges Passwort, das du dir ausdenkst. Hänge es in Payrexx als ?key=… an die Webhook-URL. Ohne es werden Zahlungen in We.Publish nicht bestätigt.",
+          "mollie": "Ein langes, zufälliges Passwort, das du dir ausdenkst. We.Publish hängt es an die Adresse, die Mollie aufruft; in Mollie musst du nichts eintragen."
+        }
       },
       "placeholderSecret": "Unverändert (versteckt)",
       "secretNotSet": "Nicht gesetzt",
@@ -3801,11 +3806,10 @@
         "smtpUser": "SMTP-Benutzername",
         "smtpPassword": "SMTP-Passwort",
         "webhookEndpointSecret": "Webhook-Signaturschlüssel",
-        "typeInfo": "Der Dienst, der die E-Mails verschickt. MAILCHIMP steht für Mailchimp Transactional (Mandrill), BREVO für Brevo (früher Sendinblue). SLACK und LOG stellen Leserinnen und Lesern nichts zu – sie sind nur zum Testen gedacht.",
+        "typeInfo": "Der Dienst, der die E-Mails verschickt. Slack und «Nur protokollieren» stellen Leser:innen nichts zu – sie sind nur zum Testen gedacht. Ein Wechsel des Typs löscht die gespeicherten Schlüssel.",
         "fromAddressInfo": "Die Absenderadresse, die Leserinnen und Leser sehen, z. B. abo@example.ch. Ihre Domain muss beim E-Mail-Dienst verifiziert sein, sonst landen E-Mails womöglich im Spam.",
         "replyToAddressInfo": "Wohin Antworten gehen, wenn jemand auf eine deiner E-Mails antwortet. Bleibt das Feld leer, gehen Antworten an die Absenderadresse.",
         "apiKeyInfo": "Der API-Schlüssel aus deinem Konto beim E-Mail-Dienst (Mailchimp Transactional/Mandrill, Mailgun oder Brevo). Ohne ihn können keine E-Mails verschickt werden.",
-        "webhookEndpointSecretInfo": "Damit prüft We.Publish, dass Zustellmeldungen (z. B. Bounces) wirklich vom E-Mail-Dienst stammen. Kopiere den Webhook-Signaturschlüssel aus Mandrill bzw. Mailgun. Bei Brevo wählst du ein zufälliges Passwort und hängst es als ?key=… an die Webhook-URL an, die du in Brevo einträgst. Ohne ihn wird der Zustellstatus nicht aktualisiert.",
         "mailgunBaseDomainInfo": "Die Adresse der Mailgun-API ohne https://: api.mailgun.net bzw. api.eu.mailgun.net, wenn dein Konto in der EU liegt.",
         "mailgunMailDomainInfo": "Die Versand-Domain, die du in Mailgun eingerichtet hast, z. B. mg.example.ch.",
         "slackWebhookUrlInfo": "Die Adresse eines Slack-Incoming-Webhooks. Statt zugestellt zu werden, landet jede E-Mail in diesem Slack-Kanal – praktisch zum Testen.",
@@ -3820,6 +3824,11 @@
           "lastPollError": "Fehler beim letzten Abgleich",
           "never": "noch nie",
           "notReporting": "Dieser Dienst meldet keine Zustellstatus."
+        },
+        "webhookSecretInfo": {
+          "mandrill": "Der Key des Webhooks, den du in Mailchimp Transactional unter «Settings» → «Webhooks» anlegst. Ohne ihn werden Bounces und Spam-Meldungen nicht erfasst.",
+          "mailgun": "Der «HTTP webhook signing key» von der Seite «API Security» in Mailgun. Ohne ihn werden Bounces und Spam-Meldungen nicht erfasst.",
+          "brevo": "Ein langes, zufälliges Passwort, das du dir ausdenkst. Brevo signiert nichts, darum hängst du es als ?key=… an die Webhook-URL, die du in Brevo einträgst. Ohne es werden Bounces und Spam-Meldungen nicht erfasst."
         }
       },
       "trackingPixelSettings": {
@@ -4176,7 +4185,8 @@
       },
       "empty": {
         "title": "Noch nicht eingerichtet",
-        "description": "Wähle einen dieser Provider, um loszulegen. Sobald er hinzugefügt ist, zeigt dir eine Schritt-für-Schritt-Anleitung, wo du jeden Schlüssel findest und was du beim Provider eintragen musst."
+        "description": "Wähle einen dieser Provider, um loszulegen. Sobald er hinzugefügt ist, zeigt dir eine Schritt-für-Schritt-Anleitung, wo du jeden Schlüssel findest und was du beim Provider eintragen musst.",
+        "descriptionSingle": "Richte die Integration ein, um loszulegen. Eine Schritt-für-Schritt-Anleitung zeigt dir dann, wo du jeden Schlüssel findest und was du beim Provider eintragen musst."
       }
     },
     "websiteSettings": {

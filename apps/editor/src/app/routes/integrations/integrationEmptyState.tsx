@@ -55,7 +55,9 @@ export function IntegrationEmptyState({
         </Typography>
 
         <Typography sx={{ color: 'text.secondary', maxWidth: '60ch' }}>
-          {t('integrations.empty.description')}
+          {providers.length > 1 ?
+            t('integrations.empty.description')
+          : t('integrations.empty.descriptionSingle')}
         </Typography>
 
         {providers.length > 0 && (

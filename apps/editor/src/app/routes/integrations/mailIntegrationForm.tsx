@@ -7,6 +7,7 @@ import {
 } from '@wepublish/editor/api';
 import { Box, Typography } from '@mui/material';
 import { InfoTooltip } from '@wepublish/ui/editor';
+import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
@@ -98,6 +99,145 @@ function MailEvidenceStatus({ setting }: { setting: SettingMailProvider }) {
   );
 }
 
+export function mailFields(
+  setting: SettingMailProvider,
+  t: TFunction,
+  typeOptions: { label: string; value: string }[]
+): FieldDefinition<IntegrationFormValues>[] {
+  const commonFields: FieldDefinition<IntegrationFormValues>[] = [
+    {
+      name: 'type',
+      label: t('integrations.mailSettings.type'),
+      info: t('integrations.mailSettings.typeInfo'),
+      type: 'select',
+      options: typeOptions,
+      section: t('integrations.sections.provider'),
+    },
+    {
+      type: 'text',
+      name: 'name',
+      label: t('name'),
+      info: t('integrations.nameInfo'),
+      section: t('integrations.sections.provider'),
+    },
+    {
+      type: 'text',
+      name: 'fromAddress',
+      section: t('integrations.sections.sender'),
+      label: t('integrations.mailSettings.fromAddress'),
+      info: t('integrations.mailSettings.fromAddressInfo'),
+    },
+    {
+      type: 'text',
+      name: 'replyToAddress',
+      label: t('integrations.mailSettings.replyToAddress'),
+      info: t('integrations.mailSettings.replyToAddressInfo'),
+      section: t('integrations.sections.sender'),
+    },
+  ];
+  const connection = t('integrations.sections.connection');
+
+  const webhookSecretInfo: Partial<Record<MailProviderType, string>> = {
+    [MailProviderType.Mailchimp]: t(
+      'integrations.mailSettings.webhookSecretInfo.mandrill'
+    ),
+    [MailProviderType.Mailgun]: t(
+      'integrations.mailSettings.webhookSecretInfo.mailgun'
+    ),
+    [MailProviderType.Brevo]: t(
+      'integrations.mailSettings.webhookSecretInfo.brevo'
+    ),
+  };
+
+  if (setting.type && webhookSecretInfo[setting.type]) {
+    commonFields.push({
+      section: connection,
+      name: 'apiKey',
+      label: t('integrations.mailSettings.apiKey'),
+      info: t('integrations.mailSettings.apiKeyInfo'),
+      type: 'password',
+      autoComplete: 'one-time-code',
+      placeholder: secretPlaceholder(setting.isApiKeySet, t),
+    });
+    commonFields.push({
+      section: connection,
+      name: 'webhookEndpointSecret',
+      label: t('integrations.mailSettings.webhookEndpointSecret'),
+      info: webhookSecretInfo[setting.type],
+      type: 'password',
+      autoComplete: 'one-time-code',
+      placeholder: secretPlaceholder(setting.isWebhookEndpointSecretSet, t),
+    });
+  }
+
+  if (setting.type === MailProviderType.Mailgun) {
+    commonFields.push({
+      section: connection,
+      type: 'text',
+      name: 'mailgun_baseDomain',
+      label: t('integrations.mailSettings.mailgunBaseDomain'),
+      info: t('integrations.mailSettings.mailgunBaseDomainInfo'),
+    });
+    commonFields.push({
+      section: connection,
+      type: 'text',
+      name: 'mailgun_mailDomain',
+      label: t('integrations.mailSettings.mailgunMailDomain'),
+      info: t('integrations.mailSettings.mailgunMailDomainInfo'),
+    });
+  }
+
+  if (setting.type === MailProviderType.Slack) {
+    commonFields.push({
+      section: connection,
+      type: 'text',
+      name: 'slack_webhookURL',
+      label: t('integrations.mailSettings.slackWebhookUrl'),
+      info: t('integrations.mailSettings.slackWebhookUrlInfo'),
+    });
+  }
+
+  if (setting.type === MailProviderType.Smtp) {
+    commonFields.push({
+      section: connection,
+      type: 'text',
+      name: 'smtp_host',
+      label: t('integrations.mailSettings.smtpHost'),
+      info: t('integrations.mailSettings.smtpHostInfo'),
+    });
+    commonFields.push({
+      section: connection,
+      type: 'number',
+      name: 'smtp_port',
+      label: t('integrations.mailSettings.smtpPort'),
+      info: t('integrations.mailSettings.smtpPortInfo'),
+    });
+    commonFields.push({
+      section: connection,
+      type: 'checkbox',
+      name: 'smtp_secure',
+      label: t('integrations.mailSettings.smtpSecure'),
+      info: t('integrations.mailSettings.smtpSecureInfo'),
+    });
+    commonFields.push({
+      section: connection,
+      type: 'text',
+      name: 'smtp_user',
+      label: t('integrations.mailSettings.smtpUser'),
+    });
+    commonFields.push({
+      section: connection,
+      name: 'apiKey',
+      label: t('integrations.mailSettings.smtpPassword'),
+      type: 'password',
+      autoComplete: 'one-time-code',
+      placeholder: secretPlaceholder(setting.isApiKeySet, t),
+    });
+  }
+
+  return commonFields;
+}
+
 export function MailIntegrationForm() {
   const { t } = useTranslation();
   const providers = mailProviderOptions(t);
@@ -119,152 +259,7 @@ export function MailIntegrationForm() {
       }}
       schema={mailSettingsSchema}
       renderStatus={setting => <MailEvidenceStatus setting={setting} />}
-      fields={setting => {
-        const commonFields: FieldDefinition<IntegrationFormValues>[] = [
-          {
-            name: 'type',
-            label: t('integrations.mailSettings.type'),
-            info: t('integrations.mailSettings.typeInfo'),
-            type: 'select',
-            options: typeOptions,
-            section: t('integrations.sections.provider'),
-          },
-          {
-            type: 'text',
-            name: 'name',
-            label: t('name'),
-            info: t('integrations.nameInfo'),
-            section: t('integrations.sections.provider'),
-          },
-          {
-            type: 'text',
-            name: 'fromAddress',
-            section: t('integrations.sections.sender'),
-            label: t('integrations.mailSettings.fromAddress'),
-            info: t('integrations.mailSettings.fromAddressInfo'),
-          },
-          {
-            type: 'text',
-            name: 'replyToAddress',
-            label: t('integrations.mailSettings.replyToAddress'),
-            info: t('integrations.mailSettings.replyToAddressInfo'),
-            section: t('integrations.sections.sender'),
-          },
-        ];
-        const connection = t('integrations.sections.connection');
-
-        if (setting.type === MailProviderType.Mailchimp) {
-          commonFields.push({
-            section: connection,
-            name: 'apiKey',
-            label: t('integrations.mailSettings.apiKey'),
-            info: t('integrations.mailSettings.apiKeyInfo'),
-            type: 'password',
-            autoComplete: 'one-time-code',
-            placeholder: secretPlaceholder(setting.isApiKeySet, t),
-          });
-          commonFields.push({
-            section: connection,
-            name: 'webhookEndpointSecret',
-            label: t('integrations.mailSettings.webhookEndpointSecret'),
-            info: t('integrations.mailSettings.webhookEndpointSecretInfo'),
-            type: 'password',
-            autoComplete: 'one-time-code',
-            placeholder: secretPlaceholder(
-              setting.isWebhookEndpointSecretSet,
-              t
-            ),
-          });
-        }
-
-        if (setting.type === MailProviderType.Mailgun) {
-          commonFields.push({
-            section: connection,
-            name: 'apiKey',
-            label: t('integrations.mailSettings.apiKey'),
-            info: t('integrations.mailSettings.apiKeyInfo'),
-            type: 'password',
-            autoComplete: 'one-time-code',
-            placeholder: secretPlaceholder(setting.isApiKeySet, t),
-          });
-          commonFields.push({
-            section: connection,
-            name: 'webhookEndpointSecret',
-            label: t('integrations.mailSettings.webhookEndpointSecret'),
-            info: t('integrations.mailSettings.webhookEndpointSecretInfo'),
-            type: 'password',
-            autoComplete: 'one-time-code',
-            placeholder: secretPlaceholder(
-              setting.isWebhookEndpointSecretSet,
-              t
-            ),
-          });
-          commonFields.push({
-            section: connection,
-            type: 'text',
-            name: 'mailgun_baseDomain',
-            label: t('integrations.mailSettings.mailgunBaseDomain'),
-            info: t('integrations.mailSettings.mailgunBaseDomainInfo'),
-          });
-          commonFields.push({
-            section: connection,
-            type: 'text',
-            name: 'mailgun_mailDomain',
-            label: t('integrations.mailSettings.mailgunMailDomain'),
-            info: t('integrations.mailSettings.mailgunMailDomainInfo'),
-          });
-        }
-
-        if (setting.type === MailProviderType.Slack) {
-          commonFields.push({
-            section: connection,
-            type: 'text',
-            name: 'slack_webhookURL',
-            label: t('integrations.mailSettings.slackWebhookUrl'),
-            info: t('integrations.mailSettings.slackWebhookUrlInfo'),
-          });
-        }
-
-        if (setting.type === MailProviderType.Smtp) {
-          commonFields.push({
-            section: connection,
-            type: 'text',
-            name: 'smtp_host',
-            label: t('integrations.mailSettings.smtpHost'),
-            info: t('integrations.mailSettings.smtpHostInfo'),
-          });
-          commonFields.push({
-            section: connection,
-            type: 'number',
-            name: 'smtp_port',
-            label: t('integrations.mailSettings.smtpPort'),
-            info: t('integrations.mailSettings.smtpPortInfo'),
-          });
-          commonFields.push({
-            section: connection,
-            type: 'checkbox',
-            name: 'smtp_secure',
-            label: t('integrations.mailSettings.smtpSecure'),
-            info: t('integrations.mailSettings.smtpSecureInfo'),
-          });
-          commonFields.push({
-            section: connection,
-            type: 'text',
-            name: 'smtp_user',
-            label: t('integrations.mailSettings.smtpUser'),
-          });
-          commonFields.push({
-            section: connection,
-            name: 'apiKey',
-            label: t('integrations.mailSettings.smtpPassword'),
-            type: 'password',
-            autoComplete: 'one-time-code',
-            placeholder: secretPlaceholder(setting.isApiKeySet, t),
-          });
-        }
-
-        return commonFields;
-      }}
+      fields={setting => mailFields(setting, t, typeOptions)}
     />
   );
 }

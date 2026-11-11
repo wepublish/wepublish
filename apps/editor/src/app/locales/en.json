@@ -3810,7 +3810,12 @@
         "bexioContactSyncInfo": "When enabled, We.Publish pushes the name, company, email and address of changed readers to their Bexio contact every night and creates missing contacts for subscriptions paid through Bexio. Groups, phone and everything else on the contact stay as they are in Bexio.",
         "bexioContactSyncNeverRan": "Has not run yet.",
         "bexioContactSyncLastRun": "Last run: {{date}}, without errors.",
-        "bexioContactSyncLastRunFailed": "Last run: {{date}}. Error: {{error}}"
+        "bexioContactSyncLastRunFailed": "Last run: {{date}}. Error: {{error}}",
+        "webhookSecretInfo": {
+          "stripe": "The signing secret (whsec_…) of the webhook endpoint you add in Stripe. Without it, payments are not confirmed in We.Publish.",
+          "payrexx": "A long random password you make up. Add it to the webhook URL in Payrexx as ?key=…. Without it, payments are not confirmed in We.Publish.",
+          "mollie": "A long random password you make up. We.Publish adds it to the address Mollie calls; nothing needs to be entered in Mollie."
+        }
       },
       "placeholderSecret": "Unchanged (Hidden)",
       "secretNotSet": "Not set",
@@ -3862,11 +3867,10 @@
         "smtpUser": "SMTP Username",
         "smtpPassword": "SMTP Password",
         "webhookEndpointSecret": "Webhook signing key",
-        "typeInfo": "The service that sends the emails. MAILCHIMP stands for Mailchimp Transactional (Mandrill), BREVO for Brevo (formerly Sendinblue). SLACK and LOG don't deliver anything to readers – they are only meant for testing.",
+        "typeInfo": "The service that sends the emails. Slack and «Log only» deliver nothing to readers – they are only meant for testing. Changing the type deletes the stored keys.",
         "fromAddressInfo": "The sender address readers see, e.g. abo@example.ch. Its domain must be verified with the mail service, otherwise emails may end up in spam.",
         "replyToAddressInfo": "Where replies go when someone answers one of your emails. If empty, replies go to the sender address.",
         "apiKeyInfo": "The API key from your account with the mail service (Mailchimp Transactional/Mandrill, Mailgun or Brevo). Without it, no emails can be sent.",
-        "webhookEndpointSecretInfo": "Lets We.Publish check that delivery reports (e.g. bounces) really come from the mail service. Copy the webhook signing key from Mandrill or Mailgun. For Brevo, choose a random password and append it as ?key=… to the webhook URL you enter in Brevo. Without it, the delivery status is not updated.",
         "mailgunBaseDomainInfo": "The address of the Mailgun API without https://: api.mailgun.net, or api.eu.mailgun.net if your account is hosted in the EU.",
         "mailgunMailDomainInfo": "The sending domain you set up in Mailgun, e.g. mg.example.ch.",
         "slackWebhookUrlInfo": "The address of a Slack incoming webhook. Instead of being delivered, every email is posted to that Slack channel – useful for testing.",
@@ -3881,6 +3885,11 @@
           "lastPollError": "Error on the last poll",
           "never": "never",
           "notReporting": "This service reports no delivery states."
+        },
+        "webhookSecretInfo": {
+          "mandrill": "The key of the webhook you add in Mailchimp Transactional under «Settings» → «Webhooks». Without it, bounces and spam reports are not recorded.",
+          "mailgun": "The «HTTP webhook signing key» from Mailgun’s «API Security» page. Without it, bounces and spam reports are not recorded.",
+          "brevo": "A long random password you make up. Brevo signs nothing, so append it as ?key=… to the webhook URL you enter in Brevo. Without it, bounces and spam reports are not recorded."
         }
       },
       "trackingPixelSettings": {
@@ -4236,7 +4245,8 @@
       },
       "empty": {
         "title": "Not set up yet",
-        "description": "Choose one of these providers to get started. Once it is added, a step-by-step guide shows where to find each key and what to register at the provider."
+        "description": "Choose one of these providers to get started. Once it is added, a step-by-step guide shows where to find each key and what to register at the provider.",
+        "descriptionSingle": "Set it up to get started. A step-by-step guide then shows where to find each key and what to register at the provider."
       }
     },
     "websiteSettings": {

@@ -96,6 +96,25 @@ function contactSyncStatus(
     : t('integrations.paymentSettings.bexioContactSyncLastRun', { date });
 }
 
+/** What the webhook secret is for the provider at hand: copied from Stripe, made up for the others. */
+export function paymentWebhookSecretInfo(
+  type: PaymentProviderType | undefined | null,
+  t: (key: string) => string
+) {
+  switch (type) {
+    case PaymentProviderType.Stripe:
+    case PaymentProviderType.StripeCheckout:
+      return t('integrations.paymentSettings.webhookSecretInfo.stripe');
+    case PaymentProviderType.Payrexx:
+    case PaymentProviderType.PayrexxSubscription:
+      return t('integrations.paymentSettings.webhookSecretInfo.payrexx');
+    case PaymentProviderType.Mollie:
+      return t('integrations.paymentSettings.webhookSecretInfo.mollie');
+    default:
+      return t('integrations.paymentSettings.webhookEndpointSecretInfo');
+  }
+}
+
 type PaymentSection =
   'connection' | 'checkout' | 'bexioRecords' | 'invoiceTexts' | 'contacts';
 
@@ -215,7 +234,7 @@ export function PaymentIntegrationForm() {
           {
             name: 'webhookEndpointSecret',
             label: t('integrations.paymentSettings.webhookEndpointSecret'),
-            info: t('integrations.paymentSettings.webhookEndpointSecretInfo'),
+            info: paymentWebhookSecretInfo(setting.type, t),
             type: 'password',
             autoComplete: 'one-time-code',
             placeholder: secretPlaceholder(

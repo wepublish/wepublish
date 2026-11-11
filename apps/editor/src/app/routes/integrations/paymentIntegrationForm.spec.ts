@@ -2,6 +2,7 @@ import { PaymentProviderType } from '@wepublish/editor/api';
 
 import {
   creatablePaymentProviderTypes,
+  paymentWebhookSecretInfo,
   withPaymentSections,
 } from './paymentIntegrationForm';
 
@@ -50,5 +51,19 @@ describe('withPaymentSections', () => {
       ['bexio_invoiceTitleNewMembership', 'integrations.sections.invoiceTexts'],
       ['bexio_contactSync', 'integrations.sections.contacts'],
     ]);
+  });
+});
+
+describe('paymentWebhookSecretInfo', () => {
+  it('explains the secret of the provider at hand', () => {
+    expect(
+      paymentWebhookSecretInfo(PaymentProviderType.StripeCheckout, key => key)
+    ).toBe('integrations.paymentSettings.webhookSecretInfo.stripe');
+    expect(
+      paymentWebhookSecretInfo(PaymentProviderType.Payrexx, key => key)
+    ).toBe('integrations.paymentSettings.webhookSecretInfo.payrexx');
+    expect(
+      paymentWebhookSecretInfo(PaymentProviderType.Mollie, key => key)
+    ).toBe('integrations.paymentSettings.webhookSecretInfo.mollie');
   });
 });
