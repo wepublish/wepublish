@@ -550,6 +550,27 @@ export function MailchimpFormBlock({
     SyncProviderSettingsDocument
   );
 
+  // The newsletters of the "Newsletters" page, as options of a new interest
+  // selection, when the block uses the provider's list.
+  const newsletterDefaults = useMemo((): MailchimpFormInterestOptionValue[] => {
+    const provider = syncData?.syncProviderSettings.find(
+      ({ id }) => id === value.syncProviderId
+    );
+
+    if (!value.listId || provider?.mailchimp_listId !== value.listId) {
+      return [];
+    }
+
+    return (provider.newsletters ?? []).map(
+      ({ interestId, name, description, image }) => ({
+        id: interestId,
+        name,
+        description,
+        image,
+      })
+    );
+  }, [syncData?.syncProviderSettings, value.syncProviderId, value.listId]);
+
   const providerOptions = useMemo(
     () =>
       (syncData?.syncProviderSettings ?? []).map(provider => ({
@@ -981,7 +1002,13 @@ export function MailchimpFormBlock({
                             value={input.inputType ?? 'text'}
                             onChange={event => {
                               const inputType = event.target.value;
-                              updateInput({ inputType });
+                              updateInput({
+                                inputType,
+                                ...(inputType === 'groups' &&
+                                  !input.options.length && {
+                                    options: newsletterDefaults,
+                                  }),
+                              });
                             }}
                             helperText={
                               isGroups ?

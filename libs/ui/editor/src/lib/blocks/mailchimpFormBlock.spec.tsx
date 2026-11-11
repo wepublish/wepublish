@@ -107,7 +107,11 @@ const mocks: MockedResponse[] = [
 const defaultValue = BlockMap[EditorBlockType.MailchimpForm]
   .defaultValue as MailchimpFormBlockValue;
 
-const renderBlock = (value: Partial<MailchimpFormBlockValue> = {}) => {
+const renderBlock = (
+  value: Partial<MailchimpFormBlockValue> = {},
+  // matched before the defaults
+  extraMocks: MockedResponse[] = []
+) => {
   const runAllRef = {
     current: (): AggregatedValidation => ({ ok: true, failures: [] }),
   };
@@ -139,7 +143,7 @@ const renderBlock = (value: Partial<MailchimpFormBlockValue> = {}) => {
 
   render(
     <ThemeProvider theme={theme}>
-      <MockedProvider mocks={mocks}>
+      <MockedProvider mocks={[...extraMocks, ...mocks]}>
         <EditorValidationProvider runAllRef={runAllRef}>
           <Harness />
         </EditorValidationProvider>
@@ -235,7 +239,123 @@ const moveUp = (header: HTMLElement) =>
 const moveDown = (header: HTMLElement) =>
   within(header).getByLabelText('blocks.mailchimpForm.moveDown');
 
+// The newsletters of the "Newsletters" page, on the provider of the block.
+const providerWithNewsletters = (listId: string): MockedResponse => ({
+  request: { query: SyncProviderSettingsDocument, variables: anyVariables },
+  ...reusable,
+  result: {
+    data: {
+      syncProviderSettings: [
+        {
+          __typename: 'SettingSyncProvider',
+          id: 'provider',
+          mailchimp_isApiKeySet: true,
+          createdAt: '2026-01-01T00:00:00.000Z',
+          modifiedAt: '2026-01-01T00:00:00.000Z',
+          lastLoadedAt: '2026-01-01T00:00:00.000Z',
+          type: 'MAILCHIMP',
+          name: 'Mailchimp',
+          enabled: true,
+          mailchimp_listId: listId,
+          mailchimp_mergeFieldMappings: [],
+          mailchimp_interestGroupMappings: [],
+          mailchimp_defaultInterestGroupIds: [],
+          mailchimp_extensions: {},
+          lastSyncAt: null,
+          lastSyncError: null,
+          newslettersInProfile: true,
+          newsletters: [
+            {
+              __typename: 'SettingSyncProviderNewsletter',
+              id: 'n1',
+              interestId: 'interest-daily',
+              name: 'Morgen-Briefing',
+              description: 'Jeden Morgen',
+              image: null,
+            },
+            {
+              __typename: 'SettingSyncProviderNewsletter',
+              id: 'n2',
+              interestId: 'interest-weekly',
+              name: 'Wochenrückblick',
+              description: null,
+              image: null,
+            },
+          ],
+        },
+      ],
+    },
+  },
+});
+
+const switchFirstInputTo = async (type: string) => {
+  await waitForQueries();
+  fireEvent.mouseDown(
+    screen.getByRole('combobox', { name: 'blocks.mailchimpForm.inputType' })
+  );
+  fireEvent.click(
+    screen.getByRole('option', {
+      name: `blocks.mailchimpForm.inputTypes.${type}`,
+    })
+  );
+};
+
 describe('MailchimpFormBlock', () => {
+  describe('the newsletters as defaults', () => {
+    const textOnly = (listId: string) => ({
+      listId,
+      steps: [step([textInput('Vorname')])],
+    });
+
+    it('should prefill an interest selection with the newsletters of its list', async () => {
+      const latest = renderBlock(textOnly('list-daily'), [
+        providerWithNewsletters('list-daily'),
+      ]);
+
+      await switchFirstInputTo('groups');
+
+      expect(getOptions(latest.value)).toEqual([
+        {
+          id: 'interest-daily',
+          name: 'Morgen-Briefing',
+          description: 'Jeden Morgen',
+          image: null,
+        },
+        {
+          id: 'interest-weekly',
+          name: 'Wochenrückblick',
+          description: null,
+          image: null,
+        },
+      ]);
+    });
+
+    it('should not prefill it for another list', async () => {
+      const latest = renderBlock(textOnly('list-weekly'), [
+        providerWithNewsletters('list-daily'),
+      ]);
+
+      await switchFirstInputTo('groups');
+
+      expect(getOptions(latest.value)).toEqual([]);
+    });
+
+    it('should keep options an input already has', async () => {
+      const kept = { ...emptyOption, id: 'interest-weekly', name: 'Kultur' };
+      const latest = renderBlock(
+        {
+          listId: 'list-daily',
+          steps: [step([{ ...textInput('Vorname'), options: [kept] }])],
+        },
+        [providerWithNewsletters('list-daily')]
+      );
+
+      await switchFirstInputTo('groups');
+
+      expect(getOptions(latest.value)).toEqual([kept]);
+    });
+  });
+
   it('should default to the list layout for new inputs', () => {
     expect(defaultValue).not.toHaveProperty('multipleLists');
     expect(defaultValue).not.toHaveProperty('lists');
