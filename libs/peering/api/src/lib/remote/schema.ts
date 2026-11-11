@@ -3465,7 +3465,7 @@ export type Mutation = {
   sendWebsiteLogin: Scalars['String']['output'];
   /** Stores which customer of a payment provider each user is (for bexio the contact id), replacing the user's previous one of that provider; up to 500 users per call. Users that do not exist are skipped. Returns how many users were updated. */
   setPaymentProviderCustomers: Scalars['Int']['output'];
-  /** Signs an email up for the newsletter, pending its confirmation by mail. Newsletter walls only ask for this. */
+  /** Signs an email up for the newsletter, pending its confirmation by mail. Newsletter walls only ask for this. Readers who are not logged in solve the challenge first, so no script sends confirmation mails to other people's addresses. */
   signUpForNewsletter: NewsletterSignup;
   /** Ask the mail provider for the current delivery state of mails that are still open. Complements the provider webhook, which is not reachable in local development. */
   syncMailLogStates: MailLogSyncModel;
@@ -4679,6 +4679,7 @@ export type MutationSetPaymentProviderCustomersArgs = {
 
 
 export type MutationSignUpForNewsletterArgs = {
+  challengeAnswer?: InputMaybe<ChallengeInput>;
   email: Scalars['String']['input'];
 };
 

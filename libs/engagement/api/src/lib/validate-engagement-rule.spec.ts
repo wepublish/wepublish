@@ -186,15 +186,13 @@ describe('validateEngagementRule', () => {
     ]);
   });
 
-  it('keeps the newsletter path open on a hard newsletter stage', () => {
+  it('only lets a newsletter rule end in a newsletter wall', () => {
     const newsletterAction = {
       type: EngagementActionType.NEWSLETTER,
       url: 'https://example.com/newsletter',
     };
 
-    expect(codes(metered({ goal: EngagementGoal.NEWSLETTER }))).toContain(
-      'stages.1.actions: newsletterActionRequired'
-    );
+    // Subscribing by the link gets no one past a registration wall.
     expect(
       codes(
         metered({
@@ -202,10 +200,7 @@ describe('validateEngagementRule', () => {
           stages: [soft(2), hard(4, { actions: [newsletterAction] })],
         })
       )
-    ).toEqual([]);
-  });
-
-  it('needs no newsletter action on a newsletter wall, which is the signup', () => {
+    ).toEqual(['stages.1.requirement: newsletterWallRequired']);
     expect(
       codes(
         metered({

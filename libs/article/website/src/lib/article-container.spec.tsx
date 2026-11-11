@@ -12,7 +12,6 @@ import {
   mockChallengeQuery,
   mockOperation,
   mockPaywall,
-  mockPrimaryBannerQuery,
   mockSettingListQuery,
   mockTitleBlock,
   renderWithProviders,
@@ -37,11 +36,7 @@ const article = mockArticle({
   }),
 });
 
-const providerMocks = () => [
-  mockPrimaryBannerQuery(),
-  mockSettingListQuery(),
-  mockChallengeQuery(),
-];
+const providerMocks = () => [mockSettingListQuery(), mockChallengeQuery()];
 
 const articleQuery = (
   variables: ArticleQueryVariables,

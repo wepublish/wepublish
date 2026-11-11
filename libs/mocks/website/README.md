@@ -210,7 +210,7 @@ Render the container, mock its query with exact variables, `await
 screen.findBy...` the content, then interact and assert on the next mock's
 effect. Containers that include `PollBlockProvider` / `SubscribeBlockProvider`
 (articles, pages) also need `mockSettingListQuery()` and, when logged out,
-`mockChallengeQuery()`; `BannerContainer` needs `mockPrimaryBannerQuery()`.
+`mockChallengeQuery()`; `BannerContainer` needs `mockEngagementPromptsQuery()`.
 The failure message tells you which operation is missing.
 
 ## Block contexts

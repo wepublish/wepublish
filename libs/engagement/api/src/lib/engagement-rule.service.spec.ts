@@ -95,7 +95,7 @@ const metered: CreateEngagementRuleInput = {
       afterArticles: 4,
       placement: EngagementPlacement.CUTOFF,
       enforcement: EngagementEnforcement.HARD,
-      requirement: EngagementRequirement.REGISTRATION,
+      requirement: EngagementRequirement.NEWSLETTER,
       previewBlocks: 3,
       dismissible: true,
       hideForMinutes: 1440,

@@ -1,11 +1,14 @@
-import { useMutation } from '@apollo/client/react';
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import { Alert, TextField } from '@mui/material';
+import { Alert, Box, TextField } from '@mui/material';
 import {
+  BuilderChallengeRef,
+  Challenge,
   useSetIntendedRoute,
   useUser,
 } from '@wepublish/authentication/website';
 import {
+  ChallengeDocument,
   EngagementActionRole,
   EngagementActionType,
   EngagementEnforcement,
@@ -18,7 +21,7 @@ import {
   BuilderEngagementPromptProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { actionHref, actionLabel, returnsToArticle } from './engagement-action';
 import { storeNewsletterToken } from './newsletter-signup';
@@ -60,7 +63,11 @@ export const NewsletterWallForm = styled('form')`
 
 const NewsletterWall = () => {
   const { t } = useTranslation();
-  const { user } = useUser();
+  const { user, hasUser } = useUser();
+  const challenge = useQuery(ChallengeDocument, { skip: hasUser });
+  const challengeRef = useRef<BuilderChallengeRef>(null);
+  const [solution, setSolution] = useState('');
+  const challengeID = challenge.data?.challenge.challengeID;
   const {
     elements: { Button },
   } = useWebsiteBuilder();
@@ -68,18 +75,34 @@ const NewsletterWall = () => {
   const [typed, setEmail] = useState<string>();
   const email = typed ?? user?.email ?? '';
   const [signUp, { loading, error }] = useMutation(SignUpForNewsletterDocument);
+  // Signed up: the article is viewed again, no second signup meanwhile.
+  const [signedUp, setSignedUp] = useState(false);
 
   const submit = async (event: FormEvent) => {
     event.preventDefault();
 
     try {
-      const { data } = await signUp({ variables: { email } });
+      const { data } = await signUp({
+        variables: {
+          email,
+          ...(!hasUser && {
+            challengeAnswer: {
+              challengeID: challengeID ?? '',
+              challengeSolution: solution,
+            },
+          }),
+        },
+      });
 
       if (data) {
+        setSignedUp(true);
         storeNewsletterToken(data.signUpForNewsletter.newsletterToken);
       }
     } catch {
-      // Shown below, the reader can try again.
+      // Shown below, the reader can try again with a fresh challenge.
+      setSolution('');
+      challengeRef.current?.reset();
+      challenge.refetch().catch(() => undefined);
     }
   };
 
@@ -99,12 +122,26 @@ const NewsletterWall = () => {
         type="submit"
         variant="contained"
         color="secondary"
-        disabled={loading || !email.trim()}
+        disabled={
+          loading || signedUp || !email.trim() || (!hasUser && !solution)
+        }
       >
         {t('engagement.newsletterWall.submit')}
       </Button>
 
-      {error && (
+      {challenge.data?.challenge && (
+        <Box sx={{ gridColumn: '1 / -1' }}>
+          <Challenge
+            challengeRef={challengeRef}
+            challenge={challenge.data.challenge}
+            value={solution}
+            onChange={setSolution as never}
+            label={t('engagement.newsletterWall.captcha')}
+          />
+        </Box>
+      )}
+
+      {(error ?? challenge.error) && (
         <Alert
           severity="error"
           sx={{ gridColumn: '1 / -1' }}
@@ -166,7 +203,10 @@ export const EngagementPrompt = ({
     onDismiss?.();
   };
 
-  const content = (withTitle: boolean) => (
+  // A modal names itself by the title (or else the call to action), so that
+  // is left out of its body.
+  const modalTitle = stage.title ?? stage.cta ?? '';
+  const content = (inModal: boolean) => (
     <>
       {stage.image?.url && (
         <EngagementPromptImage
@@ -174,11 +214,13 @@ export const EngagementPrompt = ({
           alt={stage.image.description ?? ''}
         />
       )}
-      {withTitle && stage.title && <H4 component="p">{stage.title}</H4>}
+      {!inModal && stage.title && <H4 component="p">{stage.title}</H4>}
       {stage.description && <RichText richText={stage.description} />}
       {stage.text && <Paragraph>{stage.text}</Paragraph>}
       {stage.html && <div dangerouslySetInnerHTML={{ __html: stage.html }} />}
-      {stage.cta && <Paragraph gutterBottom={false}>{stage.cta}</Paragraph>}
+      {stage.cta && !(inModal && modalTitle === stage.cta) && (
+        <Paragraph gutterBottom={false}>{stage.cta}</Paragraph>
+      )}
     </>
   );
 
@@ -187,7 +229,7 @@ export const EngagementPrompt = ({
       <Modal
         className={className}
         open={!delayed && !closed}
-        title={stage.title ?? ''}
+        title={modalTitle}
         submitText={primary ? actionLabel(primary, t) : t('engagement.dismiss')}
         cancelText={t('engagement.dismiss')}
         onCancel={dismiss}
@@ -200,7 +242,7 @@ export const EngagementPrompt = ({
           window.location.assign(actionHref(primary));
         }}
       >
-        {content(false)}
+        {content(true)}
       </Modal>
     );
   }
@@ -215,7 +257,7 @@ export const EngagementPrompt = ({
       data-placement={stage.placement}
       data-enforcement={stage.enforcement}
     >
-      {content(true)}
+      {content(false)}
 
       {stage.enforcement === EngagementEnforcement.Hard &&
         stage.requirement === EngagementRequirement.Newsletter && (

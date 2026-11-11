@@ -4953,7 +4953,8 @@
         "announcementFromStart": "Une annonce apparaît dès le premier article",
         "announcementSoft": "Une annonce ne peut pas restreindre l’article",
         "announcementNoMeter": "Une annonce ne compte pas les articles",
-        "newsletterActionRequired": "Propose aussi l’inscription à la newsletter"
+        "newsletterWallRequired": "Une règle newsletter demande l’inscription à la newsletter",
+        "wholeNumber": "Saisis un nombre entier"
       },
       "copyName": "{{name}} (copie)",
       "view": {

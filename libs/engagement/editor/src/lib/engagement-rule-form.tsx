@@ -65,6 +65,7 @@ import {
   actionNeedsUrl,
   hardStage,
   isAnnouncement,
+  isHard,
   outOfOrderAfter,
   stageDefaults,
 } from './engagement-rule-values';
@@ -136,6 +137,7 @@ type NumberFieldProps = {
   label: ReactNode;
   nullable?: boolean;
   disabled?: boolean;
+  min?: number;
   liveError?: string;
 };
 
@@ -144,6 +146,7 @@ const NumberField = ({
   label: fieldLabel,
   nullable,
   disabled,
+  min = 0,
   liveError,
 }: NumberFieldProps) => {
   const { control } = useFormContext<EngagementRuleValues>();
@@ -168,7 +171,7 @@ const NumberField = ({
           }
           label={fieldLabel}
           type="number"
-          slotProps={{ htmlInput: { min: 0 } }}
+          slotProps={{ htmlInput: { min } }}
           disabled={disabled}
           error={Boolean(error ?? liveError)}
           helperText={error?.message ?? liveError}
@@ -487,7 +490,8 @@ const StageFields = ({
   const hard = stage?.enforcement === EngagementEnforcement.Hard;
   const placements = Object.values(EngagementPlacement).filter(
     placement =>
-      placement !== EngagementPlacement.Cutoff || (!announcement && isLast)
+      placement !== EngagementPlacement.Cutoff ||
+      (!announcement && (isLast || stage?.placement === placement))
   );
 
   const setHard = (makeHard: boolean) => {
@@ -498,12 +502,12 @@ const StageFields = ({
       makeHard ?
         hardStage({
           ...current,
-          placement: EngagementPlacement.Cutoff,
-          enforcement: EngagementEnforcement.Hard,
           requirement:
-            current.requirement ?? EngagementRequirement.Registration,
+            current.requirement ??
+            (getValues('goal') === EngagementGoal.Newsletter ?
+              EngagementRequirement.Newsletter
+            : EngagementRequirement.Registration),
           previewBlocks: current.previewBlocks ?? 3,
-          dismissible: false,
         })
       : stageDefaults({
           ...current,
@@ -574,6 +578,16 @@ const StageFields = ({
                 render={({ field, fieldState: { error } }) => (
                   <TextField
                     {...field}
+                    onChange={event => {
+                      field.onChange(event);
+
+                      if (
+                        hard &&
+                        event.target.value !== EngagementPlacement.Cutoff
+                      ) {
+                        setHard(false);
+                      }
+                    }}
                     select
                     label={label(
                       t('engagement.form.placement'),
@@ -597,8 +611,9 @@ const StageFields = ({
             </FieldRow>
 
             {!announcement &&
-              isLast &&
-              stage?.placement === EngagementPlacement.Cutoff && (
+              (hard ||
+                (isLast &&
+                  stage?.placement === EngagementPlacement.Cutoff)) && (
                 <FormControlLabel
                   control={
                     <Switch
@@ -988,7 +1003,7 @@ export const EngagementRuleForm = ({ ruleId }: { ruleId?: string }) => {
   const announcement = isAnnouncement({ goal });
   const {
     fields: stageFields,
-    append: addStage,
+    insert: insertStage,
     remove: removeStage,
   } = useFieldArray({ control, name: 'stages' });
   const { data: pageData } = useQuery(PageListDocument, {
@@ -1196,6 +1211,7 @@ export const EngagementRuleForm = ({ ruleId }: { ruleId?: string }) => {
                 {!announcement && (
                   <NumberField
                     name="meterWindowDays"
+                    min={1}
                     label={label(
                       t('engagement.form.meterWindowDays'),
                       t('engagement.form.meterWindowDaysInfo')
@@ -1256,11 +1272,25 @@ export const EngagementRuleForm = ({ ruleId }: { ruleId?: string }) => {
                 variant="outlined"
                 startIcon={<MdAdd />}
                 onClick={() => {
-                  const last = stages?.at(-1);
+                  // A stage that restricts the article stays the last one.
+                  const current = stages ?? [];
+                  const last = current.at(-1);
+                  const at =
+                    last && isHard(last) ? current.length - 1 : current.length;
+                  const before = current[at - 1];
+                  const after = current[at];
+                  const afterArticles =
+                    !before ? 0
+                    : after ?
+                      Math.floor(
+                        (before.afterArticles + after.afterArticles) / 2
+                      )
+                    : before.afterArticles + 2;
 
-                  addStage(
+                  insertStage(
+                    at,
                     stageDefaults({
-                      afterArticles: last ? last.afterArticles + 2 : 0,
+                      afterArticles,
                       actions: [
                         actionDefaults({
                           type:

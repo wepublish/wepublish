@@ -1,6 +1,10 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
+  TEST_CAPTCHA_LABEL,
+  mockChallenge,
+  mockChallengeQuery,
+  mockChallengeToken,
   mockEngagementAction,
   mockEngagementPrompt,
   mockHardEngagementPrompt,
@@ -53,6 +57,21 @@ describe('EngagementPrompt', () => {
     await waitFor(() =>
       expect(screen.queryByText('Enjoying our journalism?')).toBeNull()
     );
+  });
+
+  it('names a modal without a title by its call to action', () => {
+    renderWithProviders(
+      <EngagementPrompt
+        prompt={mockEngagementPrompt({
+          stage: { title: null, cta: 'Every Friday in your inbox.' },
+        })}
+      />
+    );
+
+    expect(
+      screen.getByRole('dialog', { name: 'Every Friday in your inbox.' })
+    ).toBeInTheDocument();
+    expect(screen.getAllByText('Every Friday in your inbox.')).toHaveLength(1);
   });
 
   it('lets the reader dismiss an inline prompt, which reports the click on an action', () => {
@@ -155,8 +174,13 @@ describe('EngagementPrompt', () => {
         actions: [],
       });
 
+    const solved = {
+      challengeID: mockChallenge().challengeID,
+      challengeSolution: mockChallengeToken,
+    };
+
     const signedUp = mockOperation(SignUpForNewsletterDocument, {
-      variables: { email: 'reader@example.com' },
+      variables: { email: 'reader@example.com', challengeAnswer: solved },
       data: {
         __typename: 'Mutation',
         signUpForNewsletter: {
@@ -179,10 +203,11 @@ describe('EngagementPrompt', () => {
       const user = userEvent.setup();
 
       renderWithProviders(<EngagementPrompt prompt={wall()} />, {
-        mocks: [signedUp],
+        mocks: [mockChallengeQuery(), signedUp],
       });
 
       await user.type(emailInput(), 'reader@example.com');
+      await screen.findByRole('group', { name: TEST_CAPTCHA_LABEL });
       await user.click(
         screen.getByRole('button', {
           name: t('engagement.newsletterWall.submit'),
@@ -190,14 +215,44 @@ describe('EngagementPrompt', () => {
       );
 
       await waitFor(() => expect(readNewsletterToken()).toBe('signed.token'));
+      expect(
+        screen.getByRole('button', {
+          name: t('engagement.newsletterWall.submit'),
+        })
+      ).toBeDisabled();
     });
 
-    it('fills in the email of a logged-in reader', () => {
+    it('fills in the email of a logged-in reader, who solves no challenge', async () => {
+      const user = userEvent.setup();
+
       renderWithProviders(<EngagementPrompt prompt={wall()} />, {
         user: mockUser({ email: 'member@example.com' }) as never,
+        mocks: [
+          mockOperation(SignUpForNewsletterDocument, {
+            variables: { email: 'member@example.com' },
+            data: {
+              __typename: 'Mutation',
+              signUpForNewsletter: {
+                __typename: 'NewsletterSignup',
+                newsletterToken: 'member.token',
+              },
+            },
+          }),
+        ],
       });
 
       expect(emailInput()).toHaveValue('member@example.com');
+      expect(
+        screen.queryByRole('group', { name: TEST_CAPTCHA_LABEL })
+      ).toBeNull();
+
+      await user.click(
+        screen.getByRole('button', {
+          name: t('engagement.newsletterWall.submit'),
+        })
+      );
+
+      await waitFor(() => expect(readNewsletterToken()).toBe('member.token'));
     });
 
     it('says when the signup failed and lets the reader try again', async () => {
@@ -205,14 +260,16 @@ describe('EngagementPrompt', () => {
 
       renderWithProviders(<EngagementPrompt prompt={wall()} />, {
         mocks: [
+          mockChallengeQuery(),
           mockOperation(SignUpForNewsletterDocument, {
-            variables: { email: 'reader@example' },
+            variables: { email: 'reader@example', challengeAnswer: solved },
             errors: [{ message: 'Invalid email address.' }],
           }),
         ],
       });
 
       await user.type(emailInput(), 'reader@example');
+      await screen.findByRole('group', { name: TEST_CAPTCHA_LABEL });
       await user.click(
         screen.getByRole('button', {
           name: t('engagement.newsletterWall.submit'),

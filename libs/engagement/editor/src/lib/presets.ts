@@ -1,5 +1,4 @@
 import {
-  EngagementActionRole,
   EngagementActionType,
   EngagementAudience,
   EngagementGoal,

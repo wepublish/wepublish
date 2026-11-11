@@ -4953,7 +4953,8 @@
         "announcementFromStart": "Eine Ankündigung erscheint ab dem ersten Artikel",
         "announcementSoft": "Eine Ankündigung kann den Artikel nicht einschränken",
         "announcementNoMeter": "Eine Ankündigung zählt keine Artikel",
-        "newsletterActionRequired": "Biete auch eine Newsletter-Anmeldung an"
+        "newsletterWallRequired": "Eine Newsletter-Regel verlangt die Newsletter-Anmeldung",
+        "wholeNumber": "Gib eine ganze Zahl ein"
       },
       "copyName": "{{name}} (Kopie)",
       "view": {

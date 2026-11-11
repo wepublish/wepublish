@@ -41,7 +41,17 @@ export class NewsletterSignupService {
 
     // Without an integration there is nowhere to sign up, which is the
     // medium's to fix: the reader still gets past the wall.
-    if (!(await this.mailchimp.subscribe(address))) {
+    let subscribed: boolean;
+
+    try {
+      subscribed = await this.mailchimp.subscribe(address);
+    } catch (error) {
+      // Mailchimp's answer names the audience: it stays in the log.
+      this.logger.warn(`Mailchimp refused a newsletter signup: ${error}`);
+      throw new BadRequestException('The newsletter signup failed.');
+    }
+
+    if (!subscribed) {
       this.logger.warn(
         'A reader signed up at a newsletter wall, but no Mailchimp integration is set up.'
       );

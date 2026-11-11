@@ -174,12 +174,28 @@ describe('engagement rule values', () => {
       )
     ).toEqual([
       { path: 'stages.0.enforcement', code: 'hardNotLast' },
-      { path: 'stages.0.actions', code: 'newsletterActionRequired' },
+      { path: 'stages.0.requirement', code: 'newsletterWallRequired' },
       {
         path: 'stages.1.afterArticles',
         code: 'ascending',
         params: { step: 1, count: 4 },
       },
+    ]);
+  });
+
+  it('asks for whole numbers in its own words', () => {
+    const result = createEngagementRuleSchema(t).safeParse(
+      metered({
+        meterWindowDays: 1.5,
+        stages: [stageDefaults({ afterArticles: 0, delaySeconds: -1 })],
+      })
+    );
+
+    expect(
+      result.error?.issues.map(({ path, message }) => [path.join('.'), message])
+    ).toEqual([
+      ['meterWindowDays', 'engagement.validation.wholeNumber'],
+      ['stages.0.delaySeconds', 'engagement.validation.min'],
     ]);
   });
 
@@ -210,6 +226,7 @@ describe('engagement rule values', () => {
       result.error?.issues.map(({ path, message }) => [path.join('.'), message])
     ).toEqual([
       ['stages.1.afterArticles', 'engagement.validation.ascending'],
+      ['stages.1.requirement', 'engagement.validation.newsletterWallRequired'],
       ['stages.1.actions.0.url', 'engagement.validation.required'],
     ]);
   });

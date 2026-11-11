@@ -175,6 +175,42 @@ describe('EngagementRuleForm', () => {
     expect(last).toHaveTextContent('engagement.form.previewBlocks');
   });
 
+  it('adds a stage before the stage that restricts the article, which stays last', () => {
+    renderForm(ENGAGEMENT_PRESETS.growNewsletter());
+
+    fireEvent.click(screen.getByText('engagement.form.addStage'));
+
+    const stages = values().stages;
+
+    expect(stages).toHaveLength(3);
+    expect(stages.map(({ enforcement }) => enforcement)).toEqual([
+      EngagementEnforcement.Soft,
+      EngagementEnforcement.Soft,
+      EngagementEnforcement.Hard,
+    ]);
+    expect(stages[1].afterArticles).toBeGreaterThan(stages[0].afterArticles);
+  });
+
+  it('makes a restricting stage soft once it no longer cuts the article', async () => {
+    renderForm(ENGAGEMENT_PRESETS.growNewsletter());
+    const [, last] = screen.getAllByTestId(/^stage-/);
+
+    fireEvent.mouseDown(
+      within(last).getByRole('combobox', { name: /engagement.form.placement/ })
+    );
+    fireEvent.click(
+      await screen.findByRole('option', {
+        name: `engagement.placement.${EngagementPlacement.Inline}`,
+      })
+    );
+
+    expect(values().stages[1]).toMatchObject({
+      placement: EngagementPlacement.Inline,
+      enforcement: EngagementEnforcement.Soft,
+      requirement: null,
+    });
+  });
+
   it('explains what a newsletter wall asks of readers', () => {
     renderForm(ENGAGEMENT_PRESETS.growNewsletter());
 

@@ -4,8 +4,17 @@ import {
   ENGAGEMENT_DISMISSALS_KEY,
   LEGACY_BANNER_CLOSED_KEY,
 } from './engagement-storage';
-import { useEngagementDismissals } from './engagement-slots';
+import {
+  useEngagementDismissals,
+  useImpressionWhenShown,
+} from './engagement-slots';
+import { trackImpressionOnce } from './engagement-tracking';
 import { dismissalKey } from './resolve-engagement';
+
+vi.mock('./engagement-tracking', async importOriginal => ({
+  ...(await importOriginal<typeof import('./engagement-tracking')>()),
+  trackImpressionOnce: vi.fn(),
+}));
 
 const prompt = mockEngagementPrompt();
 
@@ -55,5 +64,40 @@ describe('useEngagementDismissals', () => {
     rerender();
 
     expect(result.current.dismissals).toBe(first);
+  });
+});
+
+describe('useImpressionWhenShown', () => {
+  beforeEach(() => {
+    vi.mocked(trackImpressionOnce).mockClear();
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  const delayed = mockEngagementPrompt({
+    stage: { delaySeconds: 30 },
+  });
+
+  it('counts a prompt once its delay is over and it shows', () => {
+    renderHook(() => useImpressionWhenShown(delayed));
+
+    act(() => vi.advanceTimersByTime(29_000));
+    expect(trackImpressionOnce).not.toHaveBeenCalled();
+
+    act(() => vi.advanceTimersByTime(1_000));
+    expect(trackImpressionOnce).toHaveBeenCalledWith(delayed);
+  });
+
+  it('counts nothing when the reader leaves before it shows', () => {
+    const { unmount } = renderHook(() => useImpressionWhenShown(delayed));
+
+    act(() => vi.advanceTimersByTime(10_000));
+    unmount();
+    act(() => vi.advanceTimersByTime(30_000));
+
+    expect(trackImpressionOnce).not.toHaveBeenCalled();
   });
 });

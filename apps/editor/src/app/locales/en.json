@@ -4953,7 +4953,8 @@
         "announcementFromStart": "An announcement shows from the first article",
         "announcementSoft": "An announcement can not restrict the article",
         "announcementNoMeter": "An announcement does not count articles",
-        "newsletterActionRequired": "Offer a newsletter signup too"
+        "newsletterWallRequired": "A newsletter rule asks for the newsletter signup",
+        "wholeNumber": "Enter a whole number"
       },
       "copyName": "{{name}} (copy)",
       "view": {

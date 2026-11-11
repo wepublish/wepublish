@@ -45,12 +45,17 @@ describe('NewsletterSignupService', () => {
     );
   });
 
-  it('lets no one past the wall when Mailchimp refused the address', async () => {
-    subscribe.mockRejectedValue(new Error('looks fake'));
-
-    await expect(service.signUp('reader@example.com')).rejects.toThrow(
-      'looks fake'
+  it('lets no one past the wall when Mailchimp refused the address, without telling why', async () => {
+    subscribe.mockRejectedValue(
+      new Error(
+        'Mailchimp PUT /lists/audience-1/members/abc failed: looks fake'
+      )
     );
+
+    const signUp = service.signUp('reader@example.com');
+
+    await expect(signUp).rejects.toBeInstanceOf(BadRequestException);
+    await expect(signUp).rejects.not.toThrow(/audience-1|looks fake/);
   });
 
   it('only knows readers by a token it signed', () => {

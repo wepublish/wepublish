@@ -97,8 +97,8 @@ query EngagementPrompts(
 
 # Newsletter walls: the token gets the reader past them and is sent with
 # viewArticle and EngagementPrompts.
-mutation SignUpForNewsletter($email: String!) {
-  signUpForNewsletter(email: $email) {
+mutation SignUpForNewsletter($email: String!, $challengeAnswer: ChallengeInput) {
+  signUpForNewsletter(email: $email, challengeAnswer: $challengeAnswer) {
     newsletterToken
   }
 }
