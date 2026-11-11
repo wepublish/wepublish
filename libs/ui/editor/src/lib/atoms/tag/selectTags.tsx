@@ -2,6 +2,7 @@ import { useApolloClient, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   Autocomplete,
+  AutocompleteRenderInputParams,
   Divider as MuiDivider,
   Paper,
   PaperProps,
@@ -17,7 +18,14 @@ import {
   TagSort,
   TagType,
 } from '@wepublish/editor/api';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { humanizeError } from '../../humanizeError';
@@ -35,12 +43,17 @@ const StyledPagination = styled(Pagination)`
 interface SelectTagsProps {
   className?: string;
   disabled?: boolean;
+  readOnly?: boolean;
+  id?: string;
   name?: string;
   tagType: TagType;
   defaultTags: Pick<FullTagFragment, 'id' | 'tag'>[];
   selectedTags?: string[] | null;
   setSelectedTags(tags: string[]): void;
   placeholder?: string;
+  label?: ReactNode;
+  'aria-labelledby'?: string;
+  renderInput?: (params: AutocompleteRenderInputParams) => ReactNode;
 }
 
 type LabelledOption = { label: string; value: string };
@@ -48,12 +61,17 @@ type LabelledOption = { label: string; value: string };
 export function SelectTags({
   className,
   disabled,
+  readOnly,
+  id,
   name,
   defaultTags,
   tagType,
   selectedTags,
   setSelectedTags,
   placeholder,
+  label,
+  'aria-labelledby': ariaLabelledby,
+  renderInput,
 }: SelectTagsProps) {
   const { t } = useTranslation();
   const client = useApolloClient();
@@ -83,8 +101,6 @@ export function SelectTags({
 
     idsToResolve.forEach(id => resolvedTagIdsRef.current.add(id));
 
-    let cancelled = false;
-
     Promise.all(
       idsToResolve.map(id =>
         client
@@ -97,10 +113,6 @@ export function SelectTags({
           .catch(() => null)
       )
     ).then(tags => {
-      if (cancelled) {
-        return;
-      }
-
       const resolved = tags
         .filter((tag): tag is NonNullable<typeof tag> => !!tag)
         .map(tag => ({
@@ -119,10 +131,6 @@ export function SelectTags({
         return additions.length ? [...previous, ...additions] : previous;
       });
     });
-
-    return () => {
-      cancelled = true;
-    };
   }, [selectedTags, cacheData, client, t]);
 
   /**
@@ -199,7 +207,9 @@ export function SelectTags({
   return (
     <Autocomplete
       multiple
+      id={id}
       disabled={disabled}
+      readOnly={readOnly}
       className={className}
       options={[
         ...availableTags.map(option => option.value),
@@ -216,13 +226,24 @@ export function SelectTags({
       value={selectedTags ?? []}
       onChange={(_event, picked) => setSelectedTags(picked)}
       slots={{ paper: PaperWithPager }}
-      renderInput={params => (
-        <TextField
-          {...params}
-          name={name}
-          placeholder={placeholder}
-        />
-      )}
+      renderInput={
+        renderInput ??
+        (params => (
+          <TextField
+            {...params}
+            label={label}
+            slotProps={{
+              ...params.slotProps,
+              htmlInput: {
+                ...params.slotProps.htmlInput,
+                'aria-labelledby': ariaLabelledby,
+              },
+            }}
+            name={name}
+            placeholder={placeholder}
+          />
+        ))
+      }
       fullWidth
     />
   );

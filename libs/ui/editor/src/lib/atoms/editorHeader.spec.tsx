@@ -27,6 +27,26 @@ describe('EditorHeader', () => {
     expect(within(status).getByText('Last saved 2 Sep')).toBeTruthy();
   });
 
+  it('announces when the save state changes', () => {
+    const { rerender } = renderWithTheme(
+      <EditorHeader
+        state={StateColor.published}
+        stateLabel="Saved"
+      />
+    );
+
+    rerender(
+      <ThemeProvider theme={theme}>
+        <EditorHeader
+          state={StateColor.draft}
+          stateLabel="Editing"
+        />
+      </ThemeProvider>
+    );
+
+    expect(screen.getByRole('status')).toHaveTextContent('Editing');
+  });
+
   it('keeps the primary actions after the secondary ones', () => {
     renderWithTheme(
       <EditorHeader

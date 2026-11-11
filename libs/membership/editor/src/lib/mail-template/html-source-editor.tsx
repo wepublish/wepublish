@@ -15,9 +15,11 @@ import { EditorView } from '@codemirror/view';
 // CodeMirror 6 manages caret + syntax highlighting in a single layer, so there
 // is no overlay that can drift out of sync with the text (the cause of earlier
 // cursor-alignment bugs).
-const Wrapper = styled(Box)`
+const Wrapper = styled(Box, {
+  shouldForwardProp: prop => prop !== 'minHeight',
+})<{ minHeight: number }>`
   height: 100%;
-  min-height: 400px;
+  min-height: ${({ minHeight }) => minHeight}px;
   border: 1px solid ${({ theme }) => theme.vars.palette.divider};
   border-radius: ${({ theme }) => `calc(${theme.shape.borderRadius}px * 0.75)`};
   overflow: hidden;
@@ -46,6 +48,11 @@ const Wrapper = styled(Box)`
 export interface HtmlSourceEditorProps {
   value: string;
   onChange: (value: string) => void;
+  /**
+   * In px. Keep it at most the height of the box the editor sits in: lines
+   * below that box would be out of sight and out of scroll reach.
+   */
+  minHeight?: number;
 }
 
 export interface HtmlSourceEditorHandle {
@@ -57,7 +64,7 @@ export interface HtmlSourceEditorHandle {
 const HtmlSourceEditorComponent = forwardRef<
   HtmlSourceEditorHandle,
   HtmlSourceEditorProps
->(function HtmlSourceEditor({ value, onChange }, ref) {
+>(function HtmlSourceEditor({ value, onChange, minHeight = 400 }, ref) {
   const editorRef = useRef<ReactCodeMirrorRef>(null);
 
   const extensions = useMemo(() => [html(), EditorView.lineWrapping], []);
@@ -98,7 +105,7 @@ const HtmlSourceEditorComponent = forwardRef<
   );
 
   return (
-    <Wrapper>
+    <Wrapper minHeight={minHeight}>
       <CodeMirror
         ref={editorRef}
         value={value}

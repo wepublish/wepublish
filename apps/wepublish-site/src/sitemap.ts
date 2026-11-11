@@ -7,6 +7,8 @@ const staticPaths = ['/author', '/event', '/login', '/signup', '/mitmachen'];
 
 export const sitemapConfig: SitemapSiteConfig = {
   title: 'We.Publish',
+  description:
+    'We.Publish ist eine Open-Source-Plattform, auf der unabhängige Medien publizieren und Inhalte austauschen.',
   homepageSlug: localizeSlug('', 'de'),
   pageUrls: locales.flatMap(locale =>
     staticPaths.map(path => `/${locale}${path}`)

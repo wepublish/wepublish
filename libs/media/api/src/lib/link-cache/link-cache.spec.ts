@@ -7,10 +7,10 @@ import {
 import { KvCacheModule } from '@wepublish/kv-ttl-cache/api';
 import {
   GENERATION_CHECK_MS,
-  LINK_TTL,
   LinkCache,
   MISSING_LINK_TTL,
   REJECTED_VARIANT_TTL,
+  TRANSFORMED_IMAGE_TTL,
 } from './link-cache';
 import { MediaLinkCacheModule } from './media-link-cache.module';
 
@@ -262,7 +262,7 @@ describe('LinkCache', () => {
         ([command, key]) =>
           command === 'SET' && key.startsWith('val:media:generations:')
       );
-      expect(write?.slice(3)).toEqual(['PX', String(LINK_TTL)]);
+      expect(write?.slice(3)).toEqual(['PX', String(TRANSFORMED_IMAGE_TTL)]);
     });
 
     it('asks Dragonfly for the generation of an image at most once per 2 s', async () => {

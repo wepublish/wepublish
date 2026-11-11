@@ -37,15 +37,32 @@ const readJson = (path: string) =>
 /** Next.js apps that are not tenant websites and are never E2E targets. */
 const notTenants = ['wepublish-site'];
 
-/** Tenant websites: every app served by `@nx/next:server`. */
+/**
+ * TanStack Start tenants carry a `vite.config.mts` — the same test the
+ * deploy workflow uses to pick their Docker target.
+ */
+const isTanstack = (app: string) =>
+  existsSync(join(appsDir, app, 'vite.config.mts'));
+
+const serveTarget = (app: string) =>
+  readJson(join(appsDir, app, 'project.json'))?.targets?.serve;
+
+/** Tenant websites: every app served by `@nx/next:server`, plus the TanStack Start ones. */
 export function websiteApps() {
   return readdirSync(appsDir).filter(
     app =>
       !notTenants.includes(app) &&
-      readJson(join(appsDir, app, 'project.json'))?.targets?.serve
-        ?.executor === '@nx/next:server'
+      (serveTarget(app)?.executor === '@nx/next:server' || isTanstack(app))
   );
 }
+
+/** Next sets `options.port`, a TanStack app passes `--port` to `vite dev`. */
+const servePort = (app: string): number => {
+  const options = serveTarget(app)?.options;
+  const fromCommand = /--port[= ](\d+)/.exec(options?.command ?? '')?.[1];
+
+  return options?.port ?? (fromCommand ? Number(fromCommand) : 4200);
+};
 
 /**
  * The local stack E2E starts for itself: its own ports, database and cache, so
@@ -76,6 +93,19 @@ export function e2eDatabaseUrl(env: NodeJS.ProcessEnv = process.env) {
 
   return url.toString();
 }
+
+/**
+ * The plan a reader buys from the paywall: one the tenant's subscribe page
+ * offers, with the `simulated` payment method off production. Tenants whose
+ * page lists only their own plans need an entry; the rest have the example
+ * seed's fixture plan.
+ */
+const subscribePlans: Record<string, string> = {
+  neuewege: 'nw-jahresabo',
+};
+
+export const subscribePlanOf = (app: string) =>
+  subscribePlans[app] ?? 'test-abo-chf';
 
 const trimSlash = (url?: string) => url?.replace(/\/+$/, '') || undefined;
 
@@ -120,9 +150,7 @@ function conventionUrls(
   switch (environment) {
     case 'local': {
       // The tenant's serve port from its project.json (4200 if none), shifted.
-      const port =
-        (readJson(join(appsDir, app, 'project.json'))?.targets?.serve?.options
-          ?.port ?? 4200) + localStack.websitePortOffset;
+      const port = servePort(app) + localStack.websitePortOffset;
 
       return {
         websiteUrl: `http://localhost:${port}`,
@@ -214,6 +242,57 @@ function nextProdServer(target: Target, apiEnv: Record<string, string>): WebServ
   };
 }
 
+function tanstackDevServer(
+  target: Target,
+  apiEnv: Record<string, string>
+): WebServer {
+  return {
+    name: target.app,
+    command: `cd apps/${target.app} && pnpm exec vite dev --port ${portOf(target.websiteUrl)}`,
+    url: target.websiteUrl,
+    timeout: 180_000,
+    env: apiEnv,
+  };
+}
+
+function tanstackProdServer(
+  target: Target,
+  apiEnv: Record<string, string>
+): WebServer {
+  const server = `dist/apps/${target.app}/.output/server`;
+
+  return {
+    name: target.app,
+    command: [
+      `pnpm nx build ${target.app} --skip-nx-cache`,
+      `node --import ${server}/instrument.server.mjs ${server}/index.mjs`,
+    ].join(' && '),
+    url: target.websiteUrl,
+    timeout: 600_000,
+    env: {
+      ...apiEnv,
+      PORT: portOf(target.websiteUrl),
+      HOST: 'localhost',
+    },
+  };
+}
+
+function websiteServer(
+  target: Target,
+  apiEnv: Record<string, string>,
+  env: NodeJS.ProcessEnv
+): WebServer {
+  if (isTanstack(target.app)) {
+    return nextDev(env) ?
+        tanstackDevServer(target, apiEnv)
+      : tanstackProdServer(target, apiEnv);
+  }
+
+  return nextDev(env) ?
+      nextDevServer(target, apiEnv)
+    : nextProdServer(target, apiEnv);
+}
+
 /**
  * Local dev servers the run needs, for Playwright's `webServer`: reused when
  * already up, otherwise started and stopped after the run. Only for
@@ -239,9 +318,7 @@ export function localDevServers(
 
   // The editor needs the website too: its scenarios check what readers see.
   if ((selected('website') || selected('editor')) && !env.BASE_URL) {
-    servers.push(
-      nextDev(env) ? nextDevServer(target, apiEnv) : nextProdServer(target, apiEnv)
-    );
+    servers.push(websiteServer(target, apiEnv, env));
   }
 
   if (selected('editor') && !env.E2E_EDITOR_URL && target.editorUrl) {

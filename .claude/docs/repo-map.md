@@ -34,6 +34,7 @@ the schema and generated types flow downstream from it.
 | `libs/website` | The **Website Builder** — `builder/` provides `useWebsiteBuilder()`, the provider that lets each tenant override any component. Also `api/` (generated website GraphQL) and `admin/`. |
 | `libs/editor` | Editor shell + `editor/api` (generated editor GraphQL) |
 | `libs/ui` | Shared presentational primitives |
+| `libs/form` | Schema-driven editor forms: `form/core` (framework-free engine on react-hook-form + `zod/v4`) and `form/editor` (`editorForm`, MUI fields, pickers). New and migrated editor forms use it: [README](../../libs/form/README.md) |
 | `libs/utils` | Shared helpers, split `utils/api` and `utils/website` |
 | `libs/testing` | API test helpers — see [testing.md](testing.md) |
 | `libs/mocks/website` | `@wepublish/mocks/website`: seeded fake API data, Apollo mocks and `renderWithProviders` for website specs. Hidden from Nx: [README](../../libs/mocks/website/README.md) |
@@ -49,7 +50,8 @@ the schema and generated types flow downstream from it.
 | `editor` | The admin SPA (React Router v6) |
 | `media` | Media/image server |
 | `website-example` | Reference tenant site |
-| ~20 tenant sites | `bajour`, `tsri`, `hauptstadt`, `onlinereports`, `mannschaft`, `flimmer`, `cultur`, `zwoelf`, … — Next.js 16 (Pages Router) sites. Pages, `_app`, feeds and `public/` live here; the tenant's look lives in `libs/tenants/<tenant>` |
+| ~20 tenant sites | `bajour`, `tsri`, `hauptstadt`, `onlinereports`, `zwoelf`, … — Next.js 16 (Pages Router) sites. Pages, `_app`, feeds and `public/` live here; the tenant's look lives in `libs/tenants/<tenant>` |
+| TanStack Start tenants | `cultur`, `factuel`, `fazetten`, `flimmer`, `ganzgraz`, `gruppetto`, `mannschaft`, `munotgloeggli`, `website-example`, `wnti` — Vite + nitro, `src/routes/`; recognisable by `vite.config.mts`. Both frameworks coexist; see [tanstack-start-migration.md](tanstack-start-migration.md). |
 
 **Adding a feature for one tenant?** Build it in the relevant `libs/<domain>/website`
 and let the tenant override it through the Website Builder. Copying components
@@ -73,4 +75,4 @@ Do not import from another project's internals; import from its entry point.
 | Change public site rendering | `libs/<domain>/website` (+ a spec) |
 | Change admin UI | `libs/<domain>/editor` |
 | Tenant-specific look | `libs/tenants/<tenant>` theme / Builder override |
-| Payment/email/analytics integration | `libs/payment`, `libs/mail`, `libs/google-analytics` — see [external-services.md](external-services.md) |
+| Payment/email/letter/analytics integration | `libs/payment`, `libs/mail`, `libs/letter` (Pingen, pdf renderers, letter layouts), `libs/google-analytics` — see [external-services.md](external-services.md) |

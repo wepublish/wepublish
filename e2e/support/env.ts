@@ -1,4 +1,6 @@
+import { BexioConfig } from './bexio';
 import { ImapConfig, mailBackend } from './inbox';
+import { ResendConfig } from './resend-inbox';
 import { resolveTarget } from './targets';
 
 /**
@@ -32,6 +34,27 @@ export const env = {
   /** Deletes older mails from the shared IMAP mailbox once per worker; off by default. */
   imapPurgeOlderThanDays:
     Number(process.env.E2E_IMAP_PURGE_OLDER_THAN_DAYS) || undefined,
+  /** Resend receiving domain: mail from outside servers (bexio's invoice mails). */
+  resend:
+    process.env.E2E_RESEND_API_KEY && process.env.E2E_RESEND_DOMAIN ?
+      {
+        apiKey: process.env.E2E_RESEND_API_KEY,
+        domain: process.env.E2E_RESEND_DOMAIN,
+      } satisfies ResendConfig & { domain: string }
+    : undefined,
+  /**
+   * @inbound-mail scenarios skip once this many mails arrived today: the
+   * free plan takes 100 a day, and bexio mails the seeded readers too.
+   */
+  resendDailyBudget: Number(process.env.E2E_RESEND_DAILY_BUDGET) || 90,
+  /** The bexio *test* company the target's bexio provider writes to. */
+  bexio:
+    process.env.E2E_BEXIO_API_TOKEN ?
+      ({
+        token: process.env.E2E_BEXIO_API_TOKEN,
+        testMailbox: process.env.E2E_BEXIO_TEST_MAILBOX || undefined,
+      } satisfies BexioConfig)
+    : undefined,
   /** A real Mailchimp test audience and one of its interests: there is no fake. */
   mailchimp:
     (
@@ -64,6 +87,13 @@ const requirements: Record<string, () => string | undefined> = {
   '@mail': () =>
     !mailBackend(env) ?
       'needs MAILPIT_URL, or E2E_IMAP_USER and E2E_IMAP_PASSWORD'
+    : undefined,
+  '@inbound-mail': () =>
+    !env.resend ? 'needs E2E_RESEND_API_KEY and E2E_RESEND_DOMAIN' : undefined,
+  // Real invoices in a bexio company: only ever the test company.
+  '@bexio': () =>
+    isProduction ? 'never touches the production bexio company'
+    : !env.bexio ? 'needs E2E_BEXIO_API_TOKEN (the bexio test company)'
     : undefined,
   // Points the tenant's one sync provider at the test audience.
   '@mailchimp': () =>

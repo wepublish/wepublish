@@ -2,6 +2,7 @@ import { MockedProvider as MockedProviderBase } from '@apollo/client/testing/rea
 import '@testing-library/jest-dom/vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import {
+  FeaturesDocument,
   PaywallListDocument,
   SettingName,
   SettingsListDocument,
@@ -12,10 +13,11 @@ import {
   actWait,
   AuthContext,
   closeSnackbar,
+  FeaturesProvider,
   sessionWithPermissions,
 } from '@wepublish/ui/editor';
 import * as v2Client from '@wepublish/editor/api';
-import { BrowserRouter } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import { SettingList } from './settings-list';
 import { createTheme, ThemeProvider } from '@mui/material';
 
@@ -100,9 +102,11 @@ describe('SettingList', () => {
             mocks={[settingsListMock, updateSettingMock, paywallListMock]}
             addTypename={false}
           >
-            <BrowserRouter>
-              <SettingList />
-            </BrowserRouter>
+            <RouterProvider
+              router={createMemoryRouter([
+                { path: '*', element: <SettingList /> },
+              ])}
+            />
           </MockedProvider>
         </AuthContext.Provider>
       </ThemeProvider>
@@ -141,9 +145,11 @@ describe('SettingList', () => {
             mocks={[settingsListMock, updateSettingMock, paywallListMock]}
             addTypename={false}
           >
-            <BrowserRouter>
-              <SettingList />
-            </BrowserRouter>
+            <RouterProvider
+              router={createMemoryRouter([
+                { path: '*', element: <SettingList /> },
+              ])}
+            />
           </MockedProvider>
         </AuthContext.Provider>
       </ThemeProvider>
@@ -165,6 +171,68 @@ describe('SettingList', () => {
     expect(baseElement.querySelectorAll('.MuiFormGroup-root').length).toBe(2);
   });
 
+  test('gives the print settings their own section while the print export is on', async () => {
+    const featuresMock = {
+      request: { query: FeaturesDocument },
+      result: () => ({ data: { features: ['print-export'] } }),
+    };
+
+    render(
+      <ThemeProvider theme={theme}>
+        <AuthContext.Provider value={sessionWithPermissions}>
+          <MockedProvider
+            mocks={[
+              settingsListMock,
+              updateSettingMock,
+              paywallListMock,
+              featuresMock,
+            ]}
+            addTypename={false}
+          >
+            <FeaturesProvider>
+              <RouterProvider
+                router={createMemoryRouter([
+                  { path: '*', element: <SettingList /> },
+                ])}
+              />
+            </FeaturesProvider>
+          </MockedProvider>
+        </AuthContext.Provider>
+      </ThemeProvider>
+    );
+
+    const card = (label: string) =>
+      screen.getByText(label).closest('.MuiCard-root');
+
+    await waitFor(() =>
+      expect(
+        screen.getByText('settingList.printExportDefaults')
+      ).toBeInTheDocument()
+    );
+
+    expect(card('settingList.printIssues')).toBe(
+      card('settingList.printExportDefaults')
+    );
+    // the number field shows its label twice (label and outline legend)
+    const perYear = screen
+      .getByLabelText('settingList.printIssuesPerYear')
+      .closest('.MuiCard-root');
+
+    expect(card('settingList.printIssues')).toBe(perYear);
+    expect(card('settingList.subscriptionPlans')).not.toBe(perYear);
+
+    // the bexio kinds are edited in the same card; without any, the defaults say so
+    expect(card('settingList.printBexioKinds')).toBe(perYear);
+    expect(
+      screen
+        .getByRole('button', { name: 'printBexioKinds.add' })
+        .closest('.MuiCard-root')
+    ).toBe(perYear);
+    expect(
+      screen.getByText('printExportOptions.bexioNoKinds')
+    ).toBeInTheDocument();
+  });
+
   test('offers the settings as checkboxes, not switches', async () => {
     const { baseElement } = render(
       <ThemeProvider theme={theme}>
@@ -173,9 +241,11 @@ describe('SettingList', () => {
             mocks={[settingsListMock, updateSettingMock, paywallListMock]}
             addTypename={false}
           >
-            <BrowserRouter>
-              <SettingList />
-            </BrowserRouter>
+            <RouterProvider
+              router={createMemoryRouter([
+                { path: '*', element: <SettingList /> },
+              ])}
+            />
           </MockedProvider>
         </AuthContext.Provider>
       </ThemeProvider>
@@ -201,9 +271,11 @@ describe('SettingList', () => {
             mocks={[settingsListMock, updateSettingMock, paywallListMock]}
             addTypename={false}
           >
-            <BrowserRouter>
-              <SettingList />
-            </BrowserRouter>
+            <RouterProvider
+              router={createMemoryRouter([
+                { path: '*', element: <SettingList /> },
+              ])}
+            />
           </MockedProvider>
         </AuthContext.Provider>
       </ThemeProvider>
@@ -213,9 +285,10 @@ describe('SettingList', () => {
       expect(screen.getByText('settingList.ms')).toBeInTheDocument()
     );
     expect(screen.getAllByText('settingList.minutes')).toHaveLength(2);
-    // session lifetime, the subscription renewal window and the expiry of a
-    // pending payment method change
-    expect(screen.getAllByText('settingList.days')).toHaveLength(3);
+    // session lifetime, the email-quality window, the evidence warning, the
+    // subscription renewal window and the expiry of a pending payment method
+    // change
+    expect(screen.getAllByText('settingList.days')).toHaveLength(5);
   });
 
   test('spaces every card in the second column alike', async () => {
@@ -226,9 +299,11 @@ describe('SettingList', () => {
             mocks={[settingsListMock, updateSettingMock, paywallListMock]}
             addTypename={false}
           >
-            <BrowserRouter>
-              <SettingList />
-            </BrowserRouter>
+            <RouterProvider
+              router={createMemoryRouter([
+                { path: '*', element: <SettingList /> },
+              ])}
+            />
           </MockedProvider>
         </AuthContext.Provider>
       </ThemeProvider>
@@ -246,6 +321,45 @@ describe('SettingList', () => {
     );
   });
 
+  test('names each control by its label alone, with the help beside it', async () => {
+    render(
+      <ThemeProvider theme={theme}>
+        <AuthContext.Provider value={sessionWithPermissions}>
+          <MockedProvider
+            mocks={[settingsListMock, updateSettingMock, paywallListMock]}
+            addTypename={false}
+          >
+            <RouterProvider
+              router={createMemoryRouter([
+                { path: '*', element: <SettingList /> },
+              ])}
+            />
+          </MockedProvider>
+        </AuthContext.Provider>
+      </ThemeProvider>
+    );
+
+    await waitFor(() =>
+      expect(
+        screen.getByRole('checkbox', { name: 'settingList.guestCommenting' })
+      ).toBeInTheDocument()
+    );
+
+    expect(
+      screen.getByRole('spinbutton', { name: 'settingList.peerToken' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('combobox', { name: 'settingList.newArticlePaywall' })
+    ).toBeInTheDocument();
+    expect(
+      screen
+        .getByRole('button', {
+          name: 'settingList.warnings.guestCommenting',
+        })
+        .closest('label')
+    ).toBeNull();
+  });
+
   test('renders the setting list view with settings', async () => {
     render(
       <ThemeProvider theme={theme}>
@@ -254,9 +368,11 @@ describe('SettingList', () => {
             mocks={[settingsListMock, updateSettingMock, paywallListMock]}
             addTypename={false}
           >
-            <BrowserRouter>
-              <SettingList />
-            </BrowserRouter>
+            <RouterProvider
+              router={createMemoryRouter([
+                { path: '*', element: <SettingList /> },
+              ])}
+            />
           </MockedProvider>
         </AuthContext.Provider>
       </ThemeProvider>

@@ -1,7 +1,11 @@
 import { useQuery } from '@apollo/client/react';
-import { Autocomplete, TextField } from '@mui/material';
+import {
+  Autocomplete,
+  AutocompleteRenderInputParams,
+  TextField,
+} from '@mui/material';
 import { PaywallListDocument } from '@wepublish/editor/api';
-import { useMemo } from 'react';
+import { ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { humanizeError } from '../../humanizeError';
@@ -10,10 +14,15 @@ import { enqueueSnackbar } from '../../snackbar';
 interface SelectPaywallsProps {
   className?: string;
   disabled?: boolean;
+  readOnly?: boolean;
+  id?: string;
   name?: string;
   selectedPaywall?: string | null;
   setSelectedPaywall(paywalls: string | null): void;
   placeholder?: string;
+  label?: ReactNode;
+  'aria-labelledby'?: string;
+  renderInput?: (params: AutocompleteRenderInputParams) => ReactNode;
 }
 
 /**
@@ -30,10 +39,15 @@ const showErrors = (error: Error): void => {
 export function SelectPaywall({
   className,
   disabled,
+  readOnly,
+  id,
   name,
   selectedPaywall,
   setSelectedPaywall,
   placeholder,
+  label,
+  'aria-labelledby': ariaLabelledby,
+  renderInput,
 }: SelectPaywallsProps) {
   const { t } = useTranslation();
 
@@ -55,7 +69,9 @@ export function SelectPaywall({
 
   return (
     <Autocomplete
+      id={id}
       disabled={disabled}
+      readOnly={readOnly}
       className={className}
       options={availablePaywalls.map(paywall => paywall.value)}
       getOptionLabel={id =>
@@ -63,13 +79,24 @@ export function SelectPaywall({
       }
       value={selectedPaywall ?? null}
       onChange={(_event, value) => setSelectedPaywall(value)}
-      renderInput={params => (
-        <TextField
-          {...params}
-          name={name}
-          placeholder={placeholder}
-        />
-      )}
+      renderInput={
+        renderInput ??
+        (params => (
+          <TextField
+            {...params}
+            label={label}
+            slotProps={{
+              ...params.slotProps,
+              htmlInput: {
+                ...params.slotProps.htmlInput,
+                'aria-labelledby': ariaLabelledby,
+              },
+            }}
+            name={name}
+            placeholder={placeholder}
+          />
+        ))
+      }
       fullWidth
     />
   );

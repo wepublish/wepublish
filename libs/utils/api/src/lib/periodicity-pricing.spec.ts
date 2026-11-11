@@ -107,6 +107,31 @@ describe('periodicityPricingSchema', () => {
     expect(result.success).toBe(true);
   });
 
+  it('accepts printed issues per periodicity, also on an entry without amounts', () => {
+    const result = periodicityPricingSchema.safeParse([
+      {
+        periodicity: PaymentPeriodicity.yearly,
+        amountMin: 45000,
+        printIssues: 6,
+      },
+      { periodicity: PaymentPeriodicity.quarterly, printIssues: 0 },
+      { periodicity: PaymentPeriodicity.monthly, printIssues: null },
+    ]);
+
+    expect(result.success).toBe(true);
+    expect(result.data?.[0]?.printIssues).toBe(6);
+  });
+
+  it('rejects fractional and negative printed issues', () => {
+    for (const printIssues of [-1, 1.5]) {
+      expect(
+        periodicityPricingSchema.safeParse([
+          { periodicity: PaymentPeriodicity.yearly, amountMin: 1, printIssues },
+        ]).success
+      ).toBe(false);
+    }
+  });
+
   it('rejects amountTarget/amountMax without amountMin', () => {
     const result = periodicityPricingSchema.safeParse([
       { periodicity: PaymentPeriodicity.yearly, amountTarget: 50000 },

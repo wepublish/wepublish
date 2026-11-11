@@ -32,6 +32,8 @@ export const SubscribeBlock = ({
   goodieMinValueAppliesToUpgrade,
   hideRepeatGoodieOnUpgrade,
   periodicityDisplay,
+  hiddenAreas,
+  onInvalid,
 }: BuilderSubscribeBlockProps) => {
   const {
     register: [register],
@@ -132,6 +134,8 @@ export const SubscribeBlock = ({
           showDiscountCodes={showDiscountCodes}
           goodieMinValue={goodieMinValue}
           periodicityDisplay={periodicityDisplay}
+          hiddenAreas={hiddenAreas}
+          onInvalid={onInvalid}
           defaults={{
             email: mail as string | undefined,
             firstName: firstName as string | undefined,

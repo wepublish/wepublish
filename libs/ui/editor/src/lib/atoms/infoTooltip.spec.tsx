@@ -34,6 +34,24 @@ describe('InfoTooltip', () => {
 
     expect(screen.getByRole('button', { name: 'What is this?' })).toBeTruthy();
   });
+
+  it('keeps its short name and offers the explanation as its description', async () => {
+    render(
+      <ThemeProvider theme={theme}>
+        <InfoTooltip
+          label="What is this?"
+          text="A longer explanation."
+        />
+      </ThemeProvider>
+    );
+
+    fireEvent.mouseOver(screen.getByRole('button', { name: 'What is this?' }));
+    await screen.findByRole('tooltip');
+
+    expect(
+      screen.getByRole('button', { name: 'What is this?' })
+    ).toHaveAccessibleDescription('A longer explanation.');
+  });
 });
 
 describe('InfoTrigger', () => {

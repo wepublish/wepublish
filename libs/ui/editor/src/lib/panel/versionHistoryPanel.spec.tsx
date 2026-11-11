@@ -115,7 +115,7 @@ describe('VersionHistory', () => {
     // draft is current -> shown as current version, the other two are restorable
     expect(screen.getByText('versionHistory.currentVersion')).toBeTruthy();
     expect(
-      screen.getAllByRole('button', { name: 'versionHistory.restore' })
+      screen.getAllByRole('button', { name: /^versionHistory\.restore\b/ })
     ).toHaveLength(2);
   });
 
@@ -124,7 +124,7 @@ describe('VersionHistory', () => {
 
     // first restorable revision is the published one ('pub-1')
     fireEvent.click(
-      screen.getAllByRole('button', { name: 'versionHistory.restore' })[0]
+      screen.getAllByRole('button', { name: /^versionHistory\.restore\b/ })[0]
     );
 
     const dialog = screen.getByRole('dialog');
@@ -142,7 +142,7 @@ describe('VersionHistory', () => {
     const { onRestore } = renderPanel();
 
     fireEvent.click(
-      screen.getAllByRole('button', { name: 'versionHistory.restore' })[0]
+      screen.getAllByRole('button', { name: /^versionHistory\.restore\b/ })[0]
     );
     fireEvent.click(screen.getByText('versionHistory.confirm.cancel'));
 
@@ -153,7 +153,7 @@ describe('VersionHistory', () => {
     renderPanel({ restoringId: 'pub-1' });
 
     screen
-      .getAllByRole('button', { name: 'versionHistory.restore' })
+      .getAllByRole('button', { name: /^versionHistory\.restore\b/ })
       .forEach(button => expect(button).toBeDisabled());
   });
 
@@ -167,7 +167,7 @@ describe('VersionHistory', () => {
     renderPanel({ canRestore: false });
 
     expect(
-      screen.queryByRole('button', { name: 'versionHistory.restore' })
+      screen.queryByRole('button', { name: /^versionHistory\.restore\b/ })
     ).toBeNull();
   });
 
@@ -175,7 +175,7 @@ describe('VersionHistory', () => {
     renderPanel();
 
     expect(
-      screen.queryByRole('button', { name: 'versionHistory.preview' })
+      screen.queryByRole('button', { name: /^versionHistory\.preview\b/ })
     ).toBeNull();
   });
 
@@ -184,7 +184,7 @@ describe('VersionHistory', () => {
     renderPanel({ onPreview });
 
     const previewButtons = screen.getAllByRole('button', {
-      name: 'versionHistory.preview',
+      name: /^versionHistory\.preview\b/,
     });
     expect(previewButtons).toHaveLength(2);
 
@@ -202,11 +202,26 @@ describe('VersionHistory', () => {
       .closest('[data-state]')!.parentElement!;
 
     expect(
-      within(header).getByRole('button', { name: 'versionHistory.preview' })
+      within(header).getByRole('button', { name: /^versionHistory\.preview\b/ })
     ).toHaveClass('MuiIconButton-root');
     expect(
-      within(header).getByRole('button', { name: 'versionHistory.restore' })
+      within(header).getByRole('button', { name: /^versionHistory\.restore\b/ })
     ).toHaveClass('MuiIconButton-root');
+  });
+
+  it('names each revision action after the time of its revision', () => {
+    renderPanel({ onPreview: vi.fn() });
+
+    expect(
+      screen.getByRole('button', {
+        name: /^versionHistory\.preview 20 May 2026, \d\d:\d\d$/,
+      })
+    ).toBeTruthy();
+    expect(
+      screen.getByRole('button', {
+        name: /^versionHistory\.restore 01 May 2026, \d\d:\d\d$/,
+      })
+    ).toBeTruthy();
   });
 
   it('shows the author who made each change', () => {

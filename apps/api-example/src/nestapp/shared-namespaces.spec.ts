@@ -38,6 +38,8 @@ describe('API_SHARED_NAMESPACES', () => {
       'peering:remote-profiles',
       'crowdfunding',
       'ga4',
+      'plausible',
+      'umami',
       'tracking-pixels',
     ]);
   });

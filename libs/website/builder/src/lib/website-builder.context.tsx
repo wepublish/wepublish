@@ -97,6 +97,7 @@ import {
   BuilderPaymentMethodPickerProps,
   BuilderPeriodicityPickerProps,
   BuilderSubscribeProps,
+  BuilderSubscribeSummaryProps,
   BuilderSubscriptionListItemProps,
   BuilderSubscriptionListProps,
   BuilderTransactionFeeProps,
@@ -194,6 +195,7 @@ export type WebsiteBuilderProps = {
   PeriodicityPicker: ComponentType<BuilderPeriodicityPickerProps>;
   TransactionFee: ComponentType<BuilderTransactionFeeProps>;
   Subscribe: ComponentType<BuilderSubscribeProps>;
+  SubscribeSummary: ComponentType<BuilderSubscribeSummaryProps>;
   Upgrade: ComponentType<BuilderUpgradeProps>;
   ContentWrapper: ComponentType<BuilderContentWrapperProps>;
   Paywall: ComponentType<BuilderPaywallProps>;
@@ -299,6 +301,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   InvoiceList: NoComponent,
   InvoiceListItem: NoComponent,
   Subscribe: NoComponent,
+  SubscribeSummary: NoComponent,
   Upgrade: NoComponent,
   TransactionFee: NoComponent,
   GoodiePicker: NoComponent,

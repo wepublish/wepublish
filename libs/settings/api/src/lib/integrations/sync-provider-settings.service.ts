@@ -17,6 +17,7 @@ import { PrimeDataLoader } from '@wepublish/utils/api';
 import { SyncProviderSettingsDataloaderService } from './sync-provider-settings-dataloader.service';
 import { NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from './secrets-crypto';
+import { encryptSecrets } from './encrypt-secrets';
 
 @Injectable()
 export class SyncProviderSettingsService {
@@ -28,19 +29,76 @@ export class SyncProviderSettingsService {
   ) {}
 
   private encryptSecretsIfPresent<
-    T extends { mailchimp_apiKey?: string | null },
+    T extends {
+      mailchimp_apiKey?: string | null;
+      mailchimp_webhookSecret?: string | null;
+    },
   >(data: T): T {
-    let result = { ...data };
-    if (
-      typeof data.mailchimp_apiKey === 'string' &&
-      data.mailchimp_apiKey.length > 0
-    ) {
-      result = {
-        ...result,
-        mailchimp_apiKey: this.crypto.encrypt(data.mailchimp_apiKey),
-      };
+    return encryptSecrets(
+      data,
+      ['mailchimp_apiKey', 'mailchimp_webhookSecret'],
+      value => this.crypto.encrypt(value)
+    );
+  }
+
+  /** One config with its secrets readable, enabled or not; for the webhook and its registration. */
+  async getSyncConfig(id: string): Promise<
+    SettingSyncProvider & {
+      decryptedApiKey: string | null;
+      decryptedWebhookSecret: string | null;
     }
-    return result;
+  > {
+    const setting = await this.prisma.settingSyncProvider.findUnique({
+      where: { id },
+    });
+
+    if (!setting) {
+      throw new NotFoundException(
+        `Sync Provider Setting with id ${id} not found`
+      );
+    }
+
+    return {
+      ...setting,
+      decryptedApiKey:
+        setting.mailchimp_apiKey ?
+          this.crypto.decrypt(setting.mailchimp_apiKey)
+        : null,
+      decryptedWebhookSecret:
+        setting.mailchimp_webhookSecret ?
+          this.crypto.decrypt(setting.mailchimp_webhookSecret)
+        : null,
+    };
+  }
+
+  /** What the api registered at Mailchimp; the secret only when it was just made. */
+  async setMailchimpWebhook(
+    id: string,
+    {
+      secret,
+      webhookId,
+      registeredAt,
+    }: { secret?: string; webhookId: string; registeredAt: Date }
+  ): Promise<void> {
+    await this.prisma.settingSyncProvider.update({
+      where: { id },
+      data: {
+        ...(secret ?
+          this.encryptSecretsIfPresent({ mailchimp_webhookSecret: secret })
+        : {}),
+        mailchimp_webhookId: webhookId,
+        mailchimp_webhookRegisteredAt: registeredAt,
+      },
+    });
+    await this.resets.reset('settings:syncprovider');
+  }
+
+  /** The audience webhook delivered a verified call. */
+  async noteSyncWebhook(id: string): Promise<void> {
+    await this.prisma.settingSyncProvider.update({
+      where: { id },
+      data: { lastWebhookAt: new Date() },
+    });
   }
 
   @PrimeDataLoader(SyncProviderSettingsDataloaderService, 'id')

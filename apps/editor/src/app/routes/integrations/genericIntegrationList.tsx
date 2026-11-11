@@ -30,9 +30,9 @@ interface GenericIntegrationListProps<
   TSetting extends SettingProvider & { type?: string },
   TFormValues extends FieldValues,
 > extends Omit<
-    GenericIntegrationFormProps<TSetting, TFormValues>,
-    'setting' | 'renderActions'
-  > {
+  GenericIntegrationFormProps<TSetting, TFormValues>,
+  'setting' | 'renderActions'
+> {
   query: DocumentNode;
   dataKey: string;
 
@@ -183,6 +183,7 @@ export function GenericIntegrationList<
           onChange={event => setSearchValue(event.target.value)}
           placeholder={t('search')}
           slotProps={{
+            htmlInput: { 'aria-label': t('search') },
             input: {
               startAdornment: (
                 <InputAdornment position="start">
@@ -197,7 +198,8 @@ export function GenericIntegrationList<
       <GenericIntegrationGrid>
         {sortedSettings?.map(setting => (
           <SingleGenericIntegrationForm
-            key={setting.id}
+            // Remount when the setting changed, as the form only reads it once
+            key={`${setting.id}:${setting.modifiedAt ?? ''}`}
             setting={setting}
             renderActions={
               registry ?

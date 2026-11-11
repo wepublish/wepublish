@@ -68,7 +68,14 @@ it headroom (`used_memory` well below `maxmemory`). The local
 `docker-compose.yml` still starts it with `--cache_mode=true`.
 With Dragonfly configured but unreachable the nightly job does not run (without
 `REDIS_URL` the database keeps it to one replica), and the UptimeRobot check
-(`/health`, `monitoring.tf`) turns red; pod probes ignore it.
+(`/health`, `monitoring.tf`) turns red; pod probes ignore it. The night
+(`PeriodicJobExecutor.runNight`) runs, each step failing on its own: periodic
+jobs → Mailchimp sync (contacts out; audience status and campaign clicks back
+in as email quality evidence) → mail log sync (poll fallback for missed
+webhooks; notes `lastPollAt`/`lastPollError` on the mail provider row) →
+email quality recompute (`EmailQualityService.recomputeAll`, the only thing
+that turns an address `unresponsive` by time passing; settings
+`emailQualityUnresponsiveAfterDays` / `emailQualityMinMailsForUnresponsive`).
 Cross-replica locks (`lock:*`: jobs, the running periodic job, migrator ticks,
 tracking pixels, used TOTP codes) and counters (`count:*`: TOTP failures) live there as well.
 Websites share their rendered ISR pages there too (Next `cacheHandler`, nothing
