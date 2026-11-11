@@ -3,6 +3,7 @@ export * from './lib/subscription-list/subscription-list-item';
 export * from './lib/subscription-list/subscription-actions';
 export * from './lib/subscription-list/subscription-reward';
 export * from './lib/subscription-list/subscription-list-container';
+export * from './lib/subscription-list/switch-periodicity';
 
 export * from './lib/invoice-list/invoice-list';
 export * from './lib/invoice-list/invoice-list-item';

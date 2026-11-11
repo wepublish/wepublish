@@ -109,6 +109,7 @@ const handlers = {
   onExtend: noop,
   onChangePaymentMethod: noop,
   onCancelPaymentMethodChange: noop,
+  onSwitchPeriodicity: noop,
 };
 
 const mocks = [

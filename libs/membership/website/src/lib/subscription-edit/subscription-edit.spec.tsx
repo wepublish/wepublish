@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { screen, within } from '@testing-library/react';
 import {
   mockSubscriptionPaymentMethodChange,
@@ -286,6 +287,37 @@ describe('SubscriptionEdit', () => {
     expect(
       within(renewal).queryByRole('button', { name: 'Abo kündigen' })
     ).not.toBeInTheDocument();
+  });
+
+  describe('switching to yearly payments', () => {
+    const monthly = {
+      paymentPeriodicity: PaymentPeriodicity.Monthly,
+      switchablePeriodicities: [PaymentPeriodicity.Yearly],
+    };
+
+    afterEach(() => window.history.replaceState(null, '', '/'));
+
+    it('is offered with the renewal', async () => {
+      await renderStory(Default, monthly);
+
+      expect(
+        within(section('Verlängerung & Kündigung')).getByRole('button', {
+          name: t('subscription.switchToYearly'),
+        })
+      ).toBeInTheDocument();
+    });
+
+    it('opens right away from a link with ?switchTo=yearly', async () => {
+      window.history.replaceState(null, '', '/?switchTo=yearly');
+
+      await renderStory(Default, monthly);
+
+      expect(
+        within(await screen.findByRole('dialog')).getByText(
+          t('subscription.switchToYearlyTitle')
+        )
+      ).toBeInTheDocument();
+    });
   });
 
   it('lists all invoices under their own column labels', async () => {

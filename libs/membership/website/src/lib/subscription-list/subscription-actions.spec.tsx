@@ -1,4 +1,4 @@
-import { screen, within } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   mockAvailablePaymentMethod,
@@ -439,6 +439,72 @@ describe('SubscriptionActions', () => {
       );
 
       expect(switchPeriodicity).toHaveBeenCalledWith(PaymentPeriodicity.Yearly);
+    });
+
+    it('opens straight away when a link asks for it', async () => {
+      renderActions({
+        ...monthly,
+        switchPeriodicity,
+        autoOpenSwitchToYearly: true,
+      });
+
+      expect(
+        within(await screen.findByRole('dialog')).getByText(
+          t('subscription.switchToYearlyTitle')
+        )
+      ).toBeInTheDocument();
+    });
+
+    it('reports a dialog the link opened as handled once closed', async () => {
+      const handled = vi.fn();
+      renderActions({
+        ...monthly,
+        switchPeriodicity,
+        autoOpenSwitchToYearly: true,
+        onAutoOpenSwitchToYearlyHandled: handled,
+      });
+
+      await userEvent.click(
+        within(await screen.findByRole('dialog')).getByRole('button', {
+          name: t('user.cancel'),
+        })
+      );
+
+      expect(handled).toHaveBeenCalledTimes(1);
+      await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+    });
+
+    it('says the subscription is already paid yearly when a link asks to switch', async () => {
+      renderActions({
+        ...monthly,
+        paymentPeriodicity: PaymentPeriodicity.Yearly,
+        switchablePeriodicities: [PaymentPeriodicity.Monthly],
+        switchPeriodicity,
+        autoOpenSwitchToYearly: true,
+      });
+
+      expect(
+        await screen.findByText(
+          t('subscription.switchToYearlyUnavailable', { yearly: true })
+        )
+      ).toBeInTheDocument();
+      expect(screen.queryByRole('dialog')).toBeNull();
+    });
+
+    it('says it can not be switched now when a link asks for it', async () => {
+      renderActions({
+        ...monthly,
+        deactivation: mockSubscriptionDeactivation(),
+        switchPeriodicity,
+        autoOpenSwitchToYearly: true,
+      });
+
+      expect(
+        await screen.findByText(
+          t('subscription.switchToYearlyUnavailable', { yearly: false })
+        )
+      ).toBeInTheDocument();
+      expect(screen.queryByRole('dialog')).toBeNull();
     });
 
     it('tells the reader when the yearly minimum raises the amount', async () => {
