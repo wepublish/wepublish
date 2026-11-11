@@ -48,6 +48,8 @@ function mapPayrexxAuthorizationStatus(
 }
 
 export class PayrexxPaymentProvider extends BasePaymentProvider {
+  override readonly supportsStandaloneInvoices = true;
+
   payrexxFactory = PayrexxFactory;
 
   constructor(props: PaymentProviderProps) {
@@ -250,6 +252,8 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
     paymentID,
     successURL,
     failureURL,
+    saveCustomer,
+    customerID,
   }: CreatePaymentIntentProps) {
     const amount = invoice.items.reduce(
       (accumulator, { amount, quantity }) => accumulator + amount * quantity,
@@ -260,7 +264,7 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
       preAuthorization?: boolean;
       chargeOnAuthorization?: boolean;
     } = {};
-    if (await this.isOffSession()) {
+    if ((saveCustomer || !!customerID) && (await this.isOffSession())) {
       tokenization = {
         preAuthorization: true,
         chargeOnAuthorization: true,

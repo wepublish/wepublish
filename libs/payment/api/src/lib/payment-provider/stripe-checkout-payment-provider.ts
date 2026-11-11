@@ -34,6 +34,8 @@ function mapStripeCheckoutEventToPaymentStatus(
 }
 
 export class StripeCheckoutPaymentProvider extends BasePaymentProvider {
+  override readonly supportsStandaloneInvoices = true;
+
   constructor(props: PaymentProviderProps) {
     super(props);
   }

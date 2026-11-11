@@ -133,6 +133,8 @@ const submit = (value: string, label: string) =>
  * the provider never runs on production (`isSimulatedPaymentAllowed`).
  */
 export class SimulatedPaymentProvider extends BasePaymentProvider {
+  override readonly supportsStandaloneInvoices = true;
+
   constructor(props: PaymentProviderProps) {
     super(props);
   }

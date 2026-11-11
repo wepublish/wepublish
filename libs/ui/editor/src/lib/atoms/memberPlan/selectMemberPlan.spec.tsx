@@ -156,3 +156,25 @@ describe.each([
     );
   });
 });
+
+describe('SelectMemberPlan field props', () => {
+  it('names the combobox after its label and shows the helper text', () => {
+    renderPicker(
+      <SelectMemberPlan
+        label="Subscription plan"
+        helperText="Please enter a subscription plan"
+        error
+        defaultMemberPlan={{ id: 'plan-1', name: 'Plan 1' }}
+        selectedMemberPlan="plan-1"
+        setSelectedMemberPlan={vi.fn()}
+      />
+    );
+
+    expect(
+      screen.getByRole('combobox', { name: 'Subscription plan' })
+    ).toHaveValue('Plan 1');
+    expect(
+      screen.getByText('Please enter a subscription plan')
+    ).toBeInTheDocument();
+  });
+});

@@ -107,6 +107,10 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
       intentState.paymentData ? intentState.paymentData : '{}'
     );
     const rawSubscription = apiData.subscription;
+
+    if (!rawSubscription) {
+      return super.updatePaymentWithIntentState({ intentState });
+    }
     const subscriptionId = rawSubscription.id;
 
     if (intentState.state === PaymentState.paid) {

@@ -12,6 +12,7 @@ import {
 import { Currency } from '@prisma/client';
 import { DateFilter, PaginatedType, SortOrder } from '@wepublish/utils/api';
 import { User } from '@wepublish/user/api';
+import { SellableKind } from '@wepublish/payment/api';
 import { HasOptionalSubscription } from '../subscription/has-subscription/has-subscription.model';
 
 export enum InvoiceSort {
@@ -70,6 +71,12 @@ export class Invoice extends HasOptionalSubscription {
   createdAt!: Date;
   @Field(() => Date)
   modifiedAt!: Date;
+
+  @Field({ nullable: true })
+  userID?: string;
+
+  @Field(() => SellableKind, { nullable: true })
+  sellableKind?: SellableKind;
 
   @Field({ nullable: true })
   manuallySetAsPaidByUserId?: string;

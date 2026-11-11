@@ -50,6 +50,11 @@ export const FEATURES = [
     description: 'Media: video and audio libraries with uploads',
     stage: 'alpha',
   },
+  {
+    key: 'gift-codes',
+    description: 'Sell gift codes for member plans',
+    stage: 'alpha',
+  },
 ] as const satisfies readonly Feature[];
 
 export type FeatureKey = (typeof FEATURES)[number]['key'];

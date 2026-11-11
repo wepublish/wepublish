@@ -97,6 +97,10 @@ import { ExternalApps } from './routes/externalApps/externalAppsEdit';
 import { GoodieCreateView } from './routes/goodie/goodieCreateView';
 import { GoodieEditView } from './routes/goodie/goodieEditView';
 import { GoodieList } from './routes/goodie/goodieList';
+import { GiftCodeList as GiftCodeListRoute } from './routes/giftCode/giftCodeList';
+import { GiftCodeOfferCreateView as GiftCodeOfferCreateRoute } from './routes/giftCode/giftCodeOfferCreateView';
+import { GiftCodeOfferEditView as GiftCodeOfferEditRoute } from './routes/giftCode/giftCodeOfferEditView';
+import { GiftCodeOfferList as GiftCodeOfferListRoute } from './routes/giftCode/giftCodeOfferList';
 import { ImageList } from './routes/images/imageList';
 import { IntegrationEditView } from './routes/integrations/integrationEditView';
 import { IntegrationList } from './routes/integrations/integrationList';
@@ -153,6 +157,11 @@ const withMediaUploadsFeature = createCheckedFeatureComponent(
 );
 const VideoList = withMediaUploadsFeature(UncheckedVideoList);
 const AudioList = withMediaUploadsFeature(UncheckedAudioList);
+const withGiftCodesFeature = createCheckedFeatureComponent('gift-codes');
+const GiftCodeOfferList = withGiftCodesFeature(GiftCodeOfferListRoute);
+const GiftCodeOfferCreateView = withGiftCodesFeature(GiftCodeOfferCreateRoute);
+const GiftCodeOfferEditView = withGiftCodesFeature(GiftCodeOfferEditRoute);
+const GiftCodeList = withGiftCodesFeature(GiftCodeListRoute);
 
 const LogoutMutation = gql`
   mutation Logout {
@@ -1011,6 +1020,38 @@ function AppRoutes() {
           element={
             <Base>
               <GoodieCreateView />
+            </Base>
+          }
+        />
+        <Route
+          path="gift-codes/offers"
+          element={
+            <Base>
+              <GiftCodeOfferList />
+            </Base>
+          }
+        />
+        <Route
+          path="gift-codes/offers/create"
+          element={
+            <Base>
+              <GiftCodeOfferCreateView />
+            </Base>
+          }
+        />
+        <Route
+          path="gift-codes/offers/edit/:id"
+          element={
+            <Base>
+              <GiftCodeOfferEditView />
+            </Base>
+          }
+        />
+        <Route
+          path="gift-codes"
+          element={
+            <Base>
+              <GiftCodeList />
             </Base>
           }
         />
