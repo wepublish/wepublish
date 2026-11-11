@@ -19,6 +19,7 @@ import {
   GenericIntegrationFormProps,
   SingleGenericIntegrationForm,
 } from './genericIntegrationForm';
+import { IntegrationEmptyState } from './integrationEmptyState';
 import {
   AddIntegrationButton,
   CreateFixedIntegrationButton,
@@ -137,39 +138,38 @@ export function GenericIntegrationList<
 
   if (!settings?.length) {
     return (
-      <>
-        <Alert severity="warning">
-          {setup ?
-            t('integrations.setUpHint')
-          : t('integrations.noSettingsFound')}
-        </Alert>
-
-        {(addButton || fixedProvider || setup) && (
-          <Toolbar>
-            {addButton}
-
-            {setup && (
-              <AddIntegrationButton
-                types={setup.types}
-                mutation={setup.createMutation}
-                refetchQuery={query}
-                existingIds={[]}
-                label={t('integrations.setUp')}
-              />
-            )}
-
-            {fixedProvider && (
-              <CreateFixedIntegrationButton
-                id={fixedProvider.id}
-                type={fixedProvider.type}
-                name={fixedProvider.name}
-                mutation={fixedProvider.createMutation}
-                refetchQuery={query}
-              />
-            )}
-          </Toolbar>
+      <IntegrationEmptyState providers={formProps.providers}>
+        {registry && (
+          <AddIntegrationButton
+            types={registry.types}
+            mutation={registry.createMutation}
+            refetchQuery={query}
+            existingIds={[]}
+            label={t('integrations.setUp')}
+          />
         )}
-      </>
+
+        {setup && (
+          <AddIntegrationButton
+            types={setup.types}
+            mutation={setup.createMutation}
+            refetchQuery={query}
+            existingIds={[]}
+            label={t('integrations.setUp')}
+          />
+        )}
+
+        {fixedProvider && (
+          <CreateFixedIntegrationButton
+            id={fixedProvider.id}
+            type={fixedProvider.type}
+            name={fixedProvider.name}
+            mutation={fixedProvider.createMutation}
+            refetchQuery={query}
+            label={t('integrations.setUp')}
+          />
+        )}
+      </IntegrationEmptyState>
     );
   }
 

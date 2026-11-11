@@ -3678,7 +3678,6 @@
       "notFound": "Intégration non trouvée",
       "updateSuccess": "Paramètres mis à jour avec succès",
       "updateError": "Échec de la mise à jour des paramètres",
-      "noSettingsFound": "Aucun paramètre trouvé",
       "lastLoaded": "Dernier chargement",
       "aiSettings": {
         "apiKey": "Clé API",
@@ -3702,10 +3701,9 @@
         "offSessionPayments": "Paiements hors session",
         "pm": "Méthodes de paiement",
         "psp": "Prestataires de services de paiement",
-        "type": "Type",
         "vatRate": "Taux de TVA",
         "declineRenewals": "Refuser les renouvellements (simuler des paiements récurrents échoués)",
-        "webhookEndpointSecret": "Secret du point de terminaison du webhook",
+        "webhookEndpointSecret": "Secret du webhook",
         "bexioUserId": "ID utilisateur Bexio",
         "bexioCountryId": "ID pays Bexio",
         "bexioUnitId": "ID unité Bexio",
@@ -3721,7 +3719,6 @@
         "bexioContactSync": "Synchroniser les contacts vers Bexio chaque nuit",
         "bexioInvoiceTitleNewMembership": "Titre de la facture (Nouvelle adhésion)",
         "bexioInvoiceTitleRenewalMembership": "Titre de la facture (Renouvellement d’adhésion)",
-        "typeInfo": "Le service de paiement auquel cette intégration est reliée. Il est défini lors de la création et ne peut pas être modifié.",
         "offSessionPaymentsInfo": "Si activé, We.Publish débite automatiquement les renouvellements d’abonnement sur le moyen de paiement enregistré, sans nouveau paiement. N’activez cette option que si le prestataire prend en charge les paiements récurrents.",
         "apiKeyInfo": "La clé API secrète de votre compte auprès du prestataire de paiement, p. ex. dans le tableau de bord Stripe sous « Développeurs » → « Clés API ». Par sécurité, une clé enregistrée n’est plus affichée.",
         "webhookEndpointSecretInfo": "Confirme que les notifications de paiement (webhooks) proviennent bien du prestataire. Pour Stripe, copiez le Signing Secret (whsec_…) de votre endpoint webhook. Pour Payrexx et Mollie, choisissez un mot de passe aléatoire ; pour Payrexx, ajoutez-le aussi à l’URL du webhook sous la forme ?key=….",
@@ -3751,18 +3748,21 @@
       "pdfRendererSettings": {
         "type": "Type",
         "cloudflareAccountId": "ID de compte Cloudflare",
-        "cloudflareApiToken": "Jeton d'API Cloudflare",
+        "cloudflareApiToken": "Jeton d’API Cloudflare",
         "gotenbergUrl": "URL de Gotenberg",
         "gotenbergUsername": "Nom d'utilisateur Gotenberg",
         "gotenbergPassword": "Mot de passe Gotenberg",
-        "timeoutMs": "Délai d'attente (ms)"
+        "timeoutMs": "Délai d'attente (ms)",
+        "cloudflareAccountIdInfo": "Affiché sur la page d’aperçu de votre compte Cloudflare, dans la colonne de droite.",
+        "cloudflareApiTokenInfo": "Un jeton d’API avec l’autorisation « Account » → « Browser Rendering » → « Edit ».",
+        "gotenbergUrlInfo": "L’adresse de votre propre serveur Gotenberg, telle que l’API We.Publish l’atteint.",
+        "timeoutMsInfo": "Combien de temps attendre un PDF avant d’abandonner, en millisecondes. Laissez vide pour 60 secondes."
       },
       "mailSettings": {
         "type": "Type",
         "fromAddress": "Adresse de l’expéditeur",
         "replyToAddress": "Adresse de réponse",
         "apiKey": "Clé API",
-        "mailchimpBaseUrl": "URL de base",
         "mailgunBaseDomain": "Domaine de base",
         "mailgunMailDomain": "Domaine de messagerie",
         "slackWebhookUrl": "URL du webhook",
@@ -3771,7 +3771,7 @@
         "smtpSecure": "Utiliser TLS (SSL)",
         "smtpUser": "Nom d’utilisateur SMTP",
         "smtpPassword": "Mot de passe SMTP",
-        "webhookEndpointSecret": "Secret du point de terminaison du webhook",
+        "webhookEndpointSecret": "Clé de signature du webhook",
         "typeInfo": "Le service qui envoie les e-mails. MAILCHIMP correspond à Mailchimp Transactional (Mandrill), BREVO à Brevo (anciennement Sendinblue). SLACK et LOG ne distribuent rien aux lecteur·trice·s – ils servent uniquement aux tests.",
         "fromAddressInfo": "L’adresse d’expéditeur visible par les lecteur·trice·s, p. ex. abo@example.ch. Son domaine doit être vérifié auprès du service d’e-mail, sinon les e-mails risquent d’arriver dans les spams.",
         "replyToAddressInfo": "L’adresse à laquelle arrivent les réponses à vos e-mails. Si le champ est vide, les réponses vont à l’adresse d’expéditeur.",
@@ -3849,7 +3849,7 @@
           "registered": "Le webhook est enregistré auprès de Mailchimp.",
           "failed": "Mailchimp a refusé l’enregistrement : {{error}}"
         },
-        "enabled": "Activé",
+        "enabled": "Synchroniser chaque nuit",
         "apiKey": "Clé API Mailchimp",
         "listId": "ID de liste/audience Mailchimp",
         "mergeFieldMappings": "Correspondances des champs de fusion",
@@ -3933,7 +3933,14 @@
         "enabledInfo": "Si activé, We.Publish transfère chaque nuit tous les comptes utilisateur actifs et leurs données d’abonnement vers l’audience Mailchimp. « Synchroniser maintenant » ne fonctionne que si cette option est activée.",
         "apiKeyInfo": "La clé API de votre compte Mailchimp (« Profil » → « Extras » → « Clés API »), se terminant par -us1, -us2, etc. Enregistrez-la d’abord pour que les audiences, champs de fusion et groupes ci-dessous puissent être chargés.",
         "listIdInfo": "L’audience Mailchimp vers laquelle les comptes utilisateur sont transférés. Une fois la clé API enregistrée, vous pouvez la choisir dans la liste ; sinon, saisissez son ID figurant dans les paramètres de l’audience dans Mailchimp.",
-        "dryRunInfo": "Montre quels contacts seraient modifiés dans Mailchimp, sans rien y changer. La limite d’essai vérifie un échantillon aléatoire de ce nombre de comptes ; laissez vide pour tout vérifier."
+        "dryRunInfo": "Montre quels contacts seraient modifiés dans Mailchimp, sans rien y changer. La limite d’essai vérifie un échantillon aléatoire de ce nombre de comptes ; laissez vide pour tout vérifier.",
+        "stages": {
+          "connect": "1. Connecter",
+          "map": "2. Associer les données",
+          "sync": "3. Synchroniser & surveiller",
+          "advanced": "Avancé",
+          "connectFirst": "Enregistrez d’abord la clé API et choisissez une audience. Vous pourrez ensuite associer les données et lancer la synchronisation."
+        }
       },
       "typeChangeTitle": "Changer vraiment le type ?",
       "typeChangeWarning": "Changer le type supprime toute la configuration de cette intégration, y compris les identifiants enregistrés. Cette action est irréversible.",
@@ -3958,7 +3965,6 @@
       "mailchimpSyncInfo": "Copie chaque nuit vos lecteur·trice·s et leurs abonnements dans une audience Mailchimp, afin de cibler vos newsletters selon l’abonnement. L’éditeur de newsletter et le bloc d’inscription Mailchimp utilisent aussi ce compte.",
       "lastLoadedInfo": "Moment où We.Publish a chargé cette configuration pour la dernière fois, p. ex. pour traiter un paiement. Vous voyez ainsi si l’intégration est utilisée.",
       "setUp": "Configurer",
-      "setUpHint": "Pas encore configurée. Configurez cette intégration pour que l’éditeur et votre site puissent l’utiliser.",
       "letterProvider": "Envoi de lettres",
       "letterSettings": {
         "type": "Type",
@@ -3972,7 +3978,13 @@
         "defaultAddressPosition": "Fenêtre d’adresse (lettres automatiques)",
         "defaultDeliveryProduct": "Distribution (lettres automatiques)",
         "defaultPrintMode": "Impression (lettres automatiques)",
-        "defaultPrintSpectrum": "Couleur (lettres automatiques)"
+        "defaultPrintSpectrum": "Couleur (lettres automatiques)",
+        "environmentInfo": "Utilisez « staging » pendant les tests : Pingen n’imprime et ne facture alors rien. Passez à « production » quand tout fonctionne.",
+        "clientIdInfo": "ID client et secret de l’accès API que vous créez dans l’application Pingen. Le secret n’est affiché qu’une fois, à sa création.",
+        "organisationIdInfo": "L’ID de votre organisation chez Pingen. Les lettres sont envoyées et facturées par son intermédiaire.",
+        "webhookSigningKeyInfo": "Permet à We.Publish de vérifier que les avis de distribution viennent bien de Pingen. Pingen l’affiche lorsque vous ajoutez le webhook.",
+        "autoSendInfo": "Si activé, les lettres que We.Publish crée lui-même (p. ex. pour les lecteur·trice·s qui reçoivent leur courrier par la poste) sont envoyées immédiatement au lieu d’attendre votre validation.",
+        "placeholderEmailContainsInfo": "Les lecteur·trice·s dont l’adresse e-mail contient ce texte n’ont pas de vraie adresse – p. ex. des comptes créés pour des abonné·e·s papier. Ils reçoivent des lettres au lieu d’e-mails."
       },
       "letterProviderInfo": "Imprime et envoie par la poste des lettres aux lecteur·trice·s, comme des factures et des rappels, via Pingen.",
       "pdfRendererInfo": "Transforme les lettres et les factures en fichiers PDF avant qu’elles soient imprimées ou envoyées. L’envoi de lettres en a besoin.",
@@ -4028,6 +4040,135 @@
         "mailToMailchimpSync": "Vous cherchez votre audience de newsletter Mailchimp ? C’est « Audience Mailchimp ».",
         "mailchimpSyncToMail": "Mailchimp doit envoyer les liens de connexion et d’autres e-mails individuels ? C’est Mailchimp Transactional sous « E-mails transactionnels ».",
         "letterToPdfRenderer": "Les lettres sont d’abord transformées en PDF – configurez aussi la « Génération de PDF »."
+      },
+      "nameInfo": "Visible uniquement ici dans l’éditeur, pour distinguer plusieurs fournisseurs.",
+      "sections": {
+        "provider": "Fournisseur",
+        "sender": "Expéditeur",
+        "connection": "Connexion",
+        "checkout": "Paiement",
+        "bexioRecords": "Enregistrements bexio",
+        "invoiceTexts": "Textes des factures",
+        "contacts": "Contacts",
+        "automatedLetters": "Lettres automatiques"
+      },
+      "guide": {
+        "title": "Comment configurer {{provider}}",
+        "open": "Ouvrir {{host}}",
+        "webhookUrl": "URL du webhook",
+        "copyUrl": "Copier l’URL",
+        "copied": "URL copiée",
+        "copyFailed": "L’URL n’a pas pu être copiée. Sélectionnez-la et copiez-la à la main."
+      },
+      "guides": {
+        "testingOnly": "À utiliser uniquement pour les tests – les lecteur·trice·s ne reçoivent rien.",
+        "mailgun": {
+          "domain": "Dans Mailgun, ajoutez votre domaine d’envoi (p. ex. mg.example.ch) et vérifiez-le avec les enregistrements DNS indiqués. Saisissez-le ci-dessous comme « Domaine de messagerie » ; comme « Domaine de base », api.eu.mailgun.net si votre compte est dans l’UE, sinon api.mailgun.net.",
+          "apiKey": "Sous « API Security », créez une clé API et collez-la dans « Clé API ».",
+          "signingKey": "Sur la même page, copiez la « HTTP webhook signing key » dans « Clé de signature du webhook ».",
+          "webhook": "Sous « Webhooks », ajoutez cette URL pour les événements « delivered », « permanent failure », « temporary failure », « complained » et « unsubscribed », afin que We.Publish soit informé des rebonds :"
+        },
+        "mandrill": {
+          "account": "Connectez-vous à Mailchimp Transactional (anciennement Mandrill). C’est une option payante de votre compte Mailchimp avec ses propres clés – la clé de votre compte de newsletter Mailchimp ne fonctionne pas ici.",
+          "domain": "Sous « Settings » → « Domains », ajoutez votre domaine d’expéditeur et vérifiez-le (DKIM et SPF).",
+          "apiKey": "Sous « Settings » → « SMTP & API Info », créez une nouvelle clé API et collez-la dans « Clé API ».",
+          "webhook": "Sous « Settings » → « Webhooks », ajoutez un webhook avec cette URL pour les envois, rebonds, rejets, spams et désinscriptions. Copiez sa clé dans « Clé de signature du webhook » :"
+        },
+        "brevo": {
+          "sender": "Dans Brevo, ajoutez et authentifiez votre domaine d’expéditeur sous « Senders, domains & dedicated IPs ».",
+          "apiKey": "Sous « SMTP & API » → « API keys », créez une clé API et collez-la dans « Clé API ».",
+          "webhook": "Inventez un long mot de passe aléatoire et saisissez-le comme « Clé de signature du webhook ». Ajoutez ensuite dans Brevo un webhook transactionnel avec cette URL, en remplaçant … par ce mot de passe :"
+        },
+        "smtp": {
+          "server": "Votre fournisseur de messagerie vous indique le serveur sortant (hôte SMTP), le port et l’identifiant. Saisissez-les ci-dessous.",
+          "port": "Port 465 : activez « Utiliser TLS (SSL) ». Port 587 : laissez désactivé – la connexion est alors chiffrée par STARTTLS.",
+          "sender": "Utilisez une adresse d’expéditeur autorisée par le serveur, sinon les e-mails finissent en spam ou sont refusés."
+        },
+        "slack": {
+          "webhook": "Créez un incoming webhook pour un canal Slack et collez son URL dans « URL du webhook ». Chaque e-mail est publié dans ce canal au lieu d’être distribué."
+        },
+        "log": {
+          "info": "Les e-mails sont seulement écrits dans le journal de l’API et jamais distribués. À utiliser uniquement pour le développement."
+        },
+        "stripe": {
+          "apiKey": "Dans le tableau de bord Stripe, copiez la clé secrète (sk_live_…) et collez-la dans « Clé API ». Sur les systèmes de test, utilisez la clé de test (sk_test_…).",
+          "webhook": "Sous « Developers » → « Webhooks », ajoutez un endpoint avec cette URL pour les événements payment_intent.* et setup_intent.* :",
+          "webhookCheckout": "Sous « Developers » → « Webhooks », ajoutez un endpoint avec cette URL pour les événements checkout.session.* :",
+          "signingSecret": "Copiez le signing secret de l’endpoint (whsec_…) dans « Secret du webhook ».",
+          "methods": "Choisissez ci-dessous les moyens de paiement activés dans votre compte Stripe."
+        },
+        "payrexx": {
+          "instance": "Saisissez le nom de votre instance – la partie avant .payrexx.com dans votre adresse Payrexx.",
+          "apiKey": "Dans votre instance Payrexx, copiez le secret API depuis les paramètres API et collez-le dans « Clé API ».",
+          "webhook": "Inventez un long mot de passe aléatoire et saisissez-le comme « Secret du webhook ». Ajoutez ensuite dans Payrexx un webhook avec cette URL (type de contenu JSON), en remplaçant … par ce mot de passe :",
+          "methods": "Choisissez ci-dessous les prestataires de paiement et moyens de paiement actifs dans votre compte Payrexx."
+        },
+        "mollie": {
+          "apiKey": "Dans le tableau de bord Mollie, copiez la clé API live (live_…) et collez-la dans « Clé API ».",
+          "apiUrl": "Saisissez comme « URL de l’API » l’adresse publique de votre API We.Publish – ici {{apiURL}}. Mollie y envoie les mises à jour de paiement ; aucun webhook n’est à configurer dans Mollie.",
+          "secret": "Inventez un long mot de passe aléatoire et saisissez-le comme « Secret du webhook ». We.Publish l’ajoute à l’adresse que Mollie appelle.",
+          "methods": "Choisissez ci-dessous les moyens de paiement activés dans votre compte Mollie."
+        },
+        "bexio": {
+          "token": "Créez un personal access token dans le portail développeur de bexio et collez-le dans « Clé API ».",
+          "ids": "Saisissez les ID des enregistrements bexio utilisés pour comptabiliser les factures : utilisateur·trice, pays, unité, taux de TVA et compte de produits. La personne qui gère votre comptabilité dans bexio peut les retrouver.",
+          "texts": "Définissez ensuite le modèle de facture, le titre et les textes de l’e-mail – séparément pour les nouveaux abonnements et les renouvellements."
+        },
+        "noCharge": {
+          "info": "Rien à configurer : les abonnements avec ce moyen de paiement sont gratuits."
+        },
+        "turnstile": {
+          "widget": "Dans le tableau de bord Cloudflare, ouvrez « Turnstile », ajoutez un widget et saisissez le domaine de votre site.",
+          "keys": "Copiez la site key et la secret key du widget dans les champs ci-dessous."
+        },
+        "hcaptcha": {
+          "site": "Dans le tableau de bord hCaptcha, ajoutez votre site sous « Sites » et copiez sa site key dans « Clé du site (Site Key) ».",
+          "secret": "Copiez le secret de votre compte (sous « Settings ») dans « Secret »."
+        },
+        "v0": {
+          "apiKey": "Dans les paramètres de votre compte v0, créez une clé sous « API Keys » et collez-la dans « Clé API ».",
+          "prompt": "Facultatif : ajoutez un prompt système avec vos couleurs, polices ou règles de style."
+        },
+        "google": {
+          "api": "Dans Google Cloud, activez l’« API Google Analytics Data » pour un projet.",
+          "serviceAccount": "Créez un compte de service dans ce projet, puis sous « Clés » → « Ajouter une clé », créez une clé JSON et téléchargez-la.",
+          "access": "Dans Google Analytics, ouvrez « Administration » → « Gestion des accès à la propriété » et ajoutez l’adresse e-mail du compte de service comme « Lecteur ».",
+          "property": "Saisissez l’ID de la propriété (Administration → Détails de la propriété) et glissez le fichier JSON téléchargé dans la zone ci-dessous."
+        },
+        "plausible": {
+          "apiKey": "Dans les paramètres de votre compte Plausible, créez une clé Stats API sous « API Keys » et collez-la dans « Clé API ».",
+          "site": "Saisissez le domaine exactement comme le site est nommé dans Plausible."
+        },
+        "umami": {
+          "apiKey": "Dans Umami Cloud, créez une clé API sous « Settings » → « API keys ». Pour un Umami auto-hébergé, utilisez le jeton d’un·e utilisateur·trice ayant accès au site et saisissez l’« URL de l’API Umami ».",
+          "website": "Copiez l’ID du site depuis « Settings » → « Websites » → « Edit »."
+        },
+        "prolitteris": {
+          "member": "Saisissez votre numéro de membre ProLitteris en tant qu’éditeur.",
+          "mode": "Activez « Utiliser la clé interne de l’éditeur » et saisissez le domaine de comptage attribué par ProLitteris, ou saisissez votre identifiant ProLitteris pour que We.Publish récupère les pixels."
+        },
+        "pingen": {
+          "client": "Dans l’application Pingen, créez un accès API (ID client et secret) pour votre organisation et collez les deux ci-dessous.",
+          "organisation": "Saisissez l’ID de l’organisation par laquelle les lettres doivent être envoyées.",
+          "webhook": "Ajoutez dans Pingen un webhook avec cette URL pour que We.Publish sache quand une lettre a été envoyée ou a échoué, et copiez sa clé de signature dans « Clé de signature du webhook » :",
+          "staging": "Testez d’abord avec l’environnement « staging », puis passez à « production »."
+        },
+        "cloudflarePdf": {
+          "account": "Copiez l’ID de votre compte depuis le tableau de bord Cloudflare dans « ID de compte Cloudflare ».",
+          "token": "Créez un jeton d’API avec l’autorisation « Account » → « Browser Rendering » → « Edit » et collez-le dans « Jeton d’API Cloudflare »."
+        },
+        "gotenberg": {
+          "url": "Exploitez votre propre serveur Gotenberg et saisissez son adresse ; ajoutez un nom d’utilisateur et un mot de passe s’il est protégé."
+        },
+        "mailchimpSync": {
+          "apiKey": "Dans Mailchimp, ouvrez « Profil » → « Extras » → « Clés API » et créez une clé. Elle se termine par -us1, -us2, etc. C’est votre clé Mailchimp Marketing, pas celle de Mailchimp Transactional.",
+          "save": "Collez-la dans « Clé API Mailchimp » et enregistrez. We.Publish charge alors vos audiences.",
+          "audience": "Choisissez l’audience dans laquelle vos lecteur·trice·s doivent être copié·e·s, enregistrez à nouveau, puis associez les données."
+        }
+      },
+      "empty": {
+        "title": "Pas encore configurée",
+        "description": "Choisissez l’un de ces fournisseurs pour commencer. Une fois ajouté, un guide pas à pas indique où trouver chaque clé et ce qu’il faut enregistrer chez le fournisseur."
       }
     },
     "websiteSettings": {

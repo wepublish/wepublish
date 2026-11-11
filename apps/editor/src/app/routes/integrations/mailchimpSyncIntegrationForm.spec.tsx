@@ -84,20 +84,118 @@ describe('MailchimpSyncIntegrationForm', () => {
     ).toBeInTheDocument();
     expect(
       screen.getByRole('combobox', {
+        hidden: true,
         name: 'integrations.mailchimpSyncSettings.defaultInterestGroups',
       })
     ).toBeInTheDocument();
     expect(
       screen.getByRole('heading', {
+        hidden: true,
         level: 2,
         name: 'integrations.mailchimpSyncSettings.mergeFieldMappings',
       })
     ).toBeInTheDocument();
     expect(
       screen.getByRole('heading', {
+        hidden: true,
         level: 3,
         name: 'integrations.mailchimpSyncSettings.extensions',
       })
     ).toBeInTheDocument();
+  });
+});
+
+const renderWith = (setting: Record<string, unknown>) => {
+  (useQuery as unknown as Mock).mockReturnValue({
+    data: {
+      syncProviderSettings: [
+        {
+          id: 'mailchimp-sync',
+          type: SyncProviderType.Mailchimp,
+          name: 'Mailchimp',
+          enabled: false,
+          mailchimp_listId: '',
+          ...setting,
+        },
+      ],
+    },
+    loading: false,
+  });
+
+  return render(
+    <ThemeProvider theme={createTheme({ cssVariables: true })}>
+      <MailchimpSyncIntegrationForm />
+    </ThemeProvider>
+  );
+};
+
+const tab = (name: string) =>
+  screen.getByRole('tab', {
+    name: new RegExp(`integrations.mailchimpSyncSettings.stages.${name}`),
+  });
+
+describe('MailchimpSyncIntegrationForm stages', () => {
+  it('starts with connecting and keeps the later stages closed until then', () => {
+    renderWith({});
+
+    expect(tab('connect')).toHaveAttribute('aria-selected', 'true');
+    expect(tab('map')).toBeDisabled();
+    expect(tab('sync')).toBeDisabled();
+    expect(tab('advanced')).toBeDisabled();
+    expect(
+      screen.getByText('integrations.mailchimpSyncSettings.stages.connectFirst')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /integrations.guide.title/ })
+    ).toHaveAttribute('aria-expanded', 'true');
+  });
+
+  it('continues with mapping once the key and the audience are saved', () => {
+    renderWith({ mailchimp_isApiKeySet: true, mailchimp_listId: 'abc' });
+
+    expect(tab('map')).toHaveAttribute('aria-selected', 'true');
+    expect(
+      screen.getByRole('heading', {
+        level: 2,
+        name: 'integrations.mailchimpSyncSettings.mergeFieldMappings',
+      })
+    ).toBeVisible();
+  });
+
+  it('runs and monitors the sync on its own stage', () => {
+    renderWith({ mailchimp_isApiKeySet: true, mailchimp_listId: 'abc' });
+
+    expect(
+      screen.queryByRole('button', {
+        name: 'integrations.mailchimpSyncSettings.triggerSync',
+      })
+    ).toBeNull();
+
+    fireEvent.click(tab('sync'));
+
+    expect(
+      screen.getByRole('button', {
+        name: 'integrations.mailchimpSyncSettings.triggerSync',
+      })
+    ).toBeInTheDocument();
+    expect(
+      screen
+        .getByRole('checkbox', {
+          name: /integrations.mailchimpSyncSettings.enabled/,
+        })
+        .closest('[hidden]')
+    ).toBeNull();
+  });
+
+  it('opens on the sync stage once data is mapped', () => {
+    renderWith({
+      mailchimp_isApiKeySet: true,
+      mailchimp_listId: 'abc',
+      mailchimp_mergeFieldMappings: [
+        { tag: 'FNAME', expression: 'user.firstName' },
+      ],
+    });
+
+    expect(tab('sync')).toHaveAttribute('aria-selected', 'true');
   });
 });

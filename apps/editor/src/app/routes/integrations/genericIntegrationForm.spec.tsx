@@ -118,3 +118,70 @@ describe('SingleGenericIntegrationForm labels', () => {
     expect(screen.getByRole('combobox', { name: 'Scopes' })).toBeTruthy();
   });
 });
+
+describe('SingleGenericIntegrationForm guidance', () => {
+  const renderStripe = (setting: Record<string, unknown>) =>
+    render(
+      <ThemeProvider theme={createTheme({ cssVariables: true })}>
+        <SingleGenericIntegrationForm
+          integrationKey="payment"
+          providers={[{ type: 'STRIPE', label: 'Stripe (embedded)' }]}
+          setting={{ id: 'stripe', type: 'STRIPE', ...setting } as never}
+          schema={z.object({ apiKey: z.string().nullish() })}
+          mutation={UpdateMailProviderSettingDocument}
+          fields={[
+            {
+              type: 'password',
+              name: 'apiKey',
+              label: 'API key',
+              info: 'Starts with sk_live_',
+              section: 'Connection',
+            },
+          ]}
+        />
+      </ThemeProvider>
+    );
+
+  it('shows the help of a field below it instead of in a tooltip', () => {
+    renderStripe({});
+
+    expect(screen.getByLabelText('API key')).toHaveAccessibleDescription(
+      'Starts with sk_live_'
+    );
+    expect(screen.getByText('Starts with sk_live_')).toBeVisible();
+  });
+
+  it('heads groups of fields with their section', () => {
+    renderStripe({});
+
+    expect(
+      screen.getByRole('heading', { name: 'Connection' })
+    ).toBeInTheDocument();
+  });
+
+  it('names the provider by what it is, not by its enum', () => {
+    renderStripe({});
+
+    expect(
+      screen.getByRole('heading', { name: 'Stripe (embedded)' })
+    ).toBeInTheDocument();
+  });
+
+  it('opens the setup guide while credentials are missing', () => {
+    renderStripe({ isApiKeySet: false });
+
+    expect(
+      screen.getByRole('button', { name: /integrations.guide.title/ })
+    ).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.getByText('integrations.status.incomplete')).toBeTruthy();
+  });
+
+  it('keeps the guide out of the way once the provider is ready', () => {
+    renderStripe({ isApiKeySet: true });
+
+    expect(
+      screen.getByRole('button', { name: /integrations.guide.title/ })
+    ).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.getByText('integrations.status.ready')).toBeTruthy();
+  });
+});

@@ -94,6 +94,25 @@ describe('isProviderComplete', () => {
         isApiKeySet: true,
         payrexx_instancename: 'medium',
       },
+      false,
+    ],
+    [
+      'payment',
+      {
+        type: PaymentProviderType.Payrexx,
+        isApiKeySet: true,
+        payrexx_instancename: 'medium',
+        payrexx_vatrate: '8.1',
+      },
+      true,
+    ],
+    [
+      'payment',
+      {
+        type: PaymentProviderType.PayrexxSubscription,
+        isApiKeySet: true,
+        payrexx_instancename: 'medium',
+      },
       true,
     ],
     ['payment', { type: PaymentProviderType.Simulated }, true],

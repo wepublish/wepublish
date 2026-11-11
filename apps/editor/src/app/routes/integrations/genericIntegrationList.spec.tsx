@@ -148,4 +148,36 @@ describe('GenericIntegrationList', () => {
 
     expect(screen.getByRole('textbox', { name: 'search' })).toBeTruthy();
   });
+
+  it('welcomes a first setup with the providers to choose from', () => {
+    mockedUseQuery.mockReturnValue({
+      data: { mailProviderSettings: [] },
+      loading: false,
+    });
+
+    render(
+      <GenericIntegrationList
+        query={MailProviderSettingsDocument}
+        mutation={UpdateMailProviderSettingDocument}
+        dataKey="mailProviderSettings"
+        schema={z.object({})}
+        fields={[]}
+        providers={[
+          { type: 'MAILGUN', label: 'Mailgun', logo: 'mailgun.svg' },
+          { type: 'SMTP', label: 'SMTP server' },
+        ]}
+        setup={{
+          createMutation: CreateMailProviderSettingDocument,
+          types: [{ label: 'SMTP server', value: 'SMTP' }],
+        }}
+      />
+    );
+
+    expect(
+      screen.getByRole('heading', { name: 'integrations.empty.title' })
+    ).toBeInTheDocument();
+    expect(screen.getByText('integrations.empty.description')).toBeTruthy();
+    expect(screen.getByRole('img', { name: 'Mailgun' })).toBeInTheDocument();
+    expect(screen.getByText('SMTP server')).toBeInTheDocument();
+  });
 });

@@ -16,6 +16,7 @@ import { z } from 'zod';
 
 import { FieldDefinition } from './genericIntegrationForm';
 import { GenericIntegrationList } from './genericIntegrationList';
+import { providersOf, typeOptionsOf } from './integrationCatalog';
 
 const letterSettingsSchema = z.object({
   name: z.string().nullish().or(z.literal('')),
@@ -51,16 +52,15 @@ export function LetterIntegrationForm() {
 
   return (
     <GenericIntegrationList<SettingLetterProvider, IntegrationFormValues>
+      integrationKey="letter"
+      providers={providersOf('letter', t)}
       query={LetterProviderSettingsDocument}
       mutation={UpdateLetterProviderSettingDocument}
       dataKey="letterProviderSettings"
       registry={{
         createMutation: CreateLetterProviderSettingDocument,
         deleteMutation: DeleteLetterProviderSettingDocument,
-        types: Object.values(LetterProviderType).map(value => ({
-          label: value,
-          value,
-        })),
+        types: typeOptionsOf(providersOf('letter', t)),
       }}
       schema={letterSettingsSchema}
       fields={setting => {
@@ -69,15 +69,15 @@ export function LetterIntegrationForm() {
             name: 'type',
             label: t('integrations.letterSettings.type'),
             type: 'select',
-            options: Object.values(LetterProviderType).map(v => ({
-              label: v,
-              value: v,
-            })),
+            options: typeOptionsOf(providersOf('letter', t)),
+            section: t('integrations.sections.provider'),
           },
           {
             type: 'text',
             name: 'name',
             label: t('name'),
+            info: t('integrations.nameInfo'),
+            section: t('integrations.sections.provider'),
           },
         ];
 
@@ -85,6 +85,8 @@ export function LetterIntegrationForm() {
           commonFields.push({
             name: 'environment',
             label: t('integrations.letterSettings.environment'),
+            info: t('integrations.letterSettings.environmentInfo'),
+            section: t('integrations.sections.connection'),
             type: 'select',
             options: Object.values(LetterProviderEnvironment).map(v => ({
               label: v,
@@ -95,10 +97,13 @@ export function LetterIntegrationForm() {
             type: 'text',
             name: 'clientId',
             label: t('integrations.letterSettings.clientId'),
+            info: t('integrations.letterSettings.clientIdInfo'),
+            section: t('integrations.sections.connection'),
           });
           commonFields.push({
             name: 'clientSecret',
             label: t('integrations.letterSettings.clientSecret'),
+            section: t('integrations.sections.connection'),
             type: 'password',
             placeholder: t('integrations.placeholderSecret'),
             autoComplete: 'one-time-code',
@@ -107,10 +112,14 @@ export function LetterIntegrationForm() {
             type: 'text',
             name: 'organisationId',
             label: t('integrations.letterSettings.organisationId'),
+            info: t('integrations.letterSettings.organisationIdInfo'),
+            section: t('integrations.sections.connection'),
           });
           commonFields.push({
             name: 'webhookSigningKey',
             label: t('integrations.letterSettings.webhookSigningKey'),
+            info: t('integrations.letterSettings.webhookSigningKeyInfo'),
+            section: t('integrations.sections.connection'),
             type: 'password',
             placeholder: t('integrations.placeholderSecret'),
             autoComplete: 'one-time-code',
@@ -121,12 +130,16 @@ export function LetterIntegrationForm() {
           type: 'checkbox',
           name: 'autoSend',
           label: t('integrations.letterSettings.autoSend'),
+          info: t('integrations.letterSettings.autoSendInfo'),
+          section: t('integrations.sections.automatedLetters'),
         });
 
         commonFields.push({
           type: 'text',
           name: 'placeholderEmailContains',
           label: t('integrations.letterSettings.placeholderEmailContains'),
+          info: t('integrations.letterSettings.placeholderEmailContainsInfo'),
+          section: t('integrations.sections.automatedLetters'),
           placeholder: '@placeholder.example.com',
         });
 
@@ -136,6 +149,7 @@ export function LetterIntegrationForm() {
           commonFields.push({
             name,
             label: t(`integrations.letterSettings.${name}`),
+            section: t('integrations.sections.automatedLetters'),
             type: 'select',
             options: Object.values(values).map(value => ({
               label: t(`mailSend.print.${option}.${value}`),

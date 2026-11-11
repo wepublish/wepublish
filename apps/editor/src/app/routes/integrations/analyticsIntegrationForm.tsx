@@ -14,11 +14,9 @@ import { useDropzone } from 'react-dropzone';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
-import googleLogo from './assets/google.svg';
-import plausibleLogo from './assets/plausible.svg';
-import umamiLogo from './assets/umami.svg';
 import { CustomField, FieldDefinition } from './genericIntegrationForm';
 import { GenericIntegrationList } from './genericIntegrationList';
+import { providersOf } from './integrationCatalog';
 import { secretPlaceholder } from './secretPlaceholder';
 
 const credentialsSchema = z.object({
@@ -183,6 +181,8 @@ export function AnalyticsIntegrationForm() {
 
   return (
     <GenericIntegrationList<SettingAnalyticsProvider, IntegrationFormValues>
+      integrationKey="analytics"
+      providers={providersOf('analytics', t)}
       query={SettingsIntegrationsAnalyticsDocument}
       mutation={UpdateAnalyticsProviderSettingDocument}
       refetchQueries={[SettingsIntegrationsAnalyticsDocument]}
@@ -193,16 +193,6 @@ export function AnalyticsIntegrationForm() {
         type: AnalyticsProviderType.Google,
         name: 'Google Analytics',
         createMutation: CreateAnalyticsProviderSettingDocument,
-      }}
-      getLogo={setting => {
-        switch (setting.type) {
-          case AnalyticsProviderType.Plausible:
-            return plausibleLogo;
-          case AnalyticsProviderType.Umami:
-            return umamiLogo;
-          default:
-            return googleLogo;
-        }
       }}
       fields={setting => {
         const fields: FieldDefinition<IntegrationFormValues>[] = [

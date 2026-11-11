@@ -14,11 +14,8 @@ import {
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
-import bexioLogo from './assets/bexio.webp';
-import mollieLogo from './assets/mollie.webp';
-import payrexxLogo from './assets/payrexx.webp';
-import stripeLogo from './assets/stripe.svg';
 import { FieldDefinition } from './genericIntegrationForm';
+import { paymentProviderOptions, typeOptionsOf } from './integrationCatalog';
 import { GenericIntegrationList } from './genericIntegrationList';
 import { secretPlaceholder } from './secretPlaceholder';
 
@@ -99,6 +96,75 @@ function contactSyncStatus(
     : t('integrations.paymentSettings.bexioContactSyncLastRun', { date });
 }
 
+type PaymentSection =
+  'connection' | 'checkout' | 'bexioRecords' | 'invoiceTexts' | 'contacts';
+
+const paymentSectionOf = (name: string): PaymentSection => {
+  if (
+    [
+      'offSessionPayments',
+      'stripe_methods',
+      'mollie_methods',
+      'payrexx_psp',
+      'payrexx_pm',
+      'payrexx_vatrate',
+      'simulated_declineRenewals',
+    ].includes(name)
+  ) {
+    return 'checkout';
+  }
+
+  if (
+    [
+      'bexio_userId',
+      'bexio_countryId',
+      'bexio_unitId',
+      'bexio_taxId',
+      'bexio_accountId',
+    ].includes(name)
+  ) {
+    return 'bexioRecords';
+  }
+
+  if (name === 'bexio_contactSync') {
+    return 'contacts';
+  }
+
+  if (name.startsWith('bexio_')) {
+    return 'invoiceTexts';
+  }
+
+  return 'connection';
+};
+
+const paymentSectionOrder: PaymentSection[] = [
+  'connection',
+  'checkout',
+  'bexioRecords',
+  'invoiceTexts',
+  'contacts',
+];
+
+/** Groups the fields by the step of the setup they belong to. */
+export function withPaymentSections(
+  fields: FieldDefinition<IntegrationFormValues>[],
+  t: (key: string) => string
+): FieldDefinition<IntegrationFormValues>[] {
+  const titles: Record<PaymentSection, string> = {
+    connection: t('integrations.sections.connection'),
+    checkout: t('integrations.sections.checkout'),
+    bexioRecords: t('integrations.sections.bexioRecords'),
+    invoiceTexts: t('integrations.sections.invoiceTexts'),
+    contacts: t('integrations.sections.contacts'),
+  };
+
+  return paymentSectionOrder.flatMap(section =>
+    fields
+      .filter(field => paymentSectionOf(String(field.name)) === section)
+      .map(field => ({ ...field, section: titles[section] }))
+  );
+}
+
 export function PaymentIntegrationForm() {
   const { t } = useTranslation();
 
@@ -111,31 +177,18 @@ export function PaymentIntegrationForm() {
       mutation={UpdatePaymentProviderSettingDocument}
       dataKey="paymentProviderSettings"
       schema={paymentSettingsSchema}
+      integrationKey="payment"
+      providers={paymentProviderOptions(t)}
       registry={{
         createMutation: CreatePaymentProviderSettingDocument,
         deleteMutation: DeletePaymentProviderSettingDocument,
-        types: creatablePaymentProviderTypes(getSettings().appEnvironment).map(
-          value => ({
-            label: value,
-            value,
-          })
+        types: typeOptionsOf(
+          paymentProviderOptions(t).filter(({ type }) =>
+            creatablePaymentProviderTypes(
+              getSettings().appEnvironment
+            ).includes(type as PaymentProviderType)
+          )
         ),
-      }}
-      getLogo={setting => {
-        switch (setting.type) {
-          case PaymentProviderType.Bexio:
-            return bexioLogo;
-          case PaymentProviderType.Mollie:
-            return mollieLogo;
-          case PaymentProviderType.Payrexx:
-          case PaymentProviderType.PayrexxSubscription:
-            return payrexxLogo;
-          case PaymentProviderType.Stripe:
-          case PaymentProviderType.StripeCheckout:
-            return stripeLogo;
-          default:
-            return undefined;
-        }
       }}
       fields={setting => {
         let fields: FieldDefinition<IntegrationFormValues>[] = [
@@ -143,13 +196,7 @@ export function PaymentIntegrationForm() {
             type: 'text',
             name: 'name',
             label: t('name'),
-          },
-          {
-            type: 'text',
-            name: 'type',
-            label: t('integrations.paymentSettings.type'),
-            info: t('integrations.paymentSettings.typeInfo'),
-            disabled: true,
+            info: t('integrations.nameInfo'),
           },
           {
             name: 'offSessionPayments',
@@ -397,7 +444,7 @@ export function PaymentIntegrationForm() {
           });
         }
 
-        return fields;
+        return withPaymentSections(fields, t);
       }}
     />
   );

@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Autocomplete,
+  Box,
   Button,
   Card,
   CardActions,
@@ -15,18 +16,20 @@ import {
   DialogTitle,
   FormControl,
   FormControlLabel,
+  FormHelperText,
   FormLabel,
   MenuItem,
   Stack,
   TextField as MuiTextField,
   Typography,
 } from '@mui/material';
-import { SettingProvider } from '@wepublish/editor/api';
-import { enqueueSnackbar, InfoTooltip, Textarea } from '@wepublish/ui/editor';
+import { getSettings, SettingProvider } from '@wepublish/editor/api';
+import { enqueueSnackbar, Textarea } from '@wepublish/ui/editor';
 import { DocumentNode } from 'graphql';
 import {
   ChangeEvent,
   ComponentType,
+  Fragment,
   ReactNode,
   useId,
   useMemo,
@@ -36,11 +39,37 @@ import { Controller, FieldValues, Path, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
+import {
+  ProviderOption,
+  providerLabel,
+  providerLogo,
+} from './integrationCatalog';
+import {
+  IntegrationKey,
+  isProviderComplete,
+  ProviderSetting,
+} from './integrationStatus';
+import { IntegrationStatusChip } from './integrationStatusChip';
+import { providerGuide } from './providerGuides';
+import { SetupGuide } from './setupGuide';
+
 const HeaderWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: start;
+  gap: 16px;
+  margin-bottom: 16px;
+`;
+
+const HeaderTitle = styled.div`
+  display: grid;
+  gap: 4px;
+  justify-items: start;
+`;
+
+const FieldList = styled.div`
+  display: grid;
+  gap: 20px;
 `;
 
 const HeaderLogo = styled.img`
@@ -114,6 +143,8 @@ export type FieldDefinition<TFormValues> = Fields & {
   placeholder?: string;
   disabled?: boolean;
   autoComplete?: string;
+  /** Heads this field and the ones after it, until the next section. */
+  section?: string;
 };
 
 export interface GenericIntegrationFormProps<
@@ -130,6 +161,11 @@ export interface GenericIntegrationFormProps<
   /** Queries to refetch after saving, e.g. when saving changes other settings */
   refetchQueries?: DocumentNode[];
 
+  /** Turns on the setup guide and the readiness check for this integration. */
+  integrationKey?: IntegrationKey;
+  /** Friendly names and logos of the provider types. */
+  providers?: ProviderOption[];
+
   renderActions?: (setting: TSetting) => ReactNode;
   /** Read-only state of the integration, shown between the title and the fields. */
   renderStatus?: (setting: TSetting) => ReactNode;
@@ -145,6 +181,8 @@ export function SingleGenericIntegrationForm<
   fields,
   getLogo,
   refetchQueries,
+  integrationKey,
+  providers = [],
   renderActions,
   renderStatus,
 }: GenericIntegrationFormProps<TSetting, TFormValues>) {
@@ -208,9 +246,23 @@ export function SingleGenericIntegrationForm<
     await save(formData);
   });
 
-  const logo = getLogo?.(setting);
+  const logo = getLogo?.(setting) ?? providerLogo(providers, setting.type);
+  const typeLabel = providerLabel(providers, setting.type);
+  const title = setting.name || typeLabel;
+  const complete =
+    !integrationKey ||
+    isProviderComplete(integrationKey, setting as unknown as ProviderSetting);
+  const guide =
+    integrationKey &&
+    providerGuide(
+      integrationKey,
+      setting as unknown as ProviderSetting,
+      t,
+      getSettings().apiURL
+    );
   const formId = useId();
   const labelIdFor = (name: string) => `${formId}-${name}-label`;
+  const helpIdFor = (name: string) => `${formId}-${name}-help`;
 
   return (
     <form
@@ -230,14 +282,38 @@ export function SingleGenericIntegrationForm<
           }}
         >
           <CardContent>
-            <Typography
-              variant="h5"
-              component={HeaderWrapper}
-              sx={{
-                marginBottom: 2,
-              }}
-            >
-              {setting.name || setting.type}
+            <HeaderWrapper>
+              <HeaderTitle>
+                <Typography
+                  variant="h5"
+                  component="h2"
+                >
+                  {title}
+                </Typography>
+
+                {title !== typeLabel && (
+                  <Typography
+                    variant="body2"
+                    sx={{ color: 'text.secondary' }}
+                  >
+                    {typeLabel}
+                  </Typography>
+                )}
+
+                {integrationKey && (
+                  <IntegrationStatusChip
+                    status={
+                      complete ?
+                        { state: 'ready', providers: [title] }
+                      : {
+                          state: 'incomplete',
+                          providers: [title],
+                          incomplete: [title],
+                        }
+                    }
+                  />
+                )}
+              </HeaderTitle>
 
               {logo && (
                 <HeaderLogo
@@ -245,189 +321,210 @@ export function SingleGenericIntegrationForm<
                   alt=""
                 />
               )}
-            </Typography>
+            </HeaderWrapper>
+
+            {guide && (
+              <Box sx={{ marginBottom: 3 }}>
+                <SetupGuide
+                  provider={typeLabel}
+                  steps={guide}
+                  defaultExpanded={!complete}
+                />
+              </Box>
+            )}
 
             {renderStatus?.(setting)}
 
-            {resolvedFields.map(({ info, ...field }) => (
-              <FormControl
-                key={String(field.name)}
-                fullWidth
-              >
-                <FormLabel>
-                  {field.type === 'checkbox' ?
-                    ' '
-                  : <>
-                      <span id={labelIdFor(String(field.name))}>
+            <FieldList>
+              {resolvedFields.map(({ info, section, ...field }, index) => (
+                <Fragment key={String(field.name)}>
+                  {section &&
+                    resolvedFields[index - 1]?.section !== section && (
+                      <Typography
+                        variant="subtitle1"
+                        component="h3"
+                        sx={{ fontWeight: 600, marginTop: index ? 1 : 0 }}
+                      >
+                        {section}
+                      </Typography>
+                    )}
+                  <FormControl fullWidth>
+                    {field.type !== 'checkbox' && (
+                      <FormLabel id={labelIdFor(String(field.name))}>
                         {field.label}
-                      </span>
-                      {info && (
-                        <>
-                          {' '}
-                          <InfoTooltip text={info} />
-                        </>
-                      )}
-                    </>
-                  }
-                </FormLabel>
+                      </FormLabel>
+                    )}
 
-                <Controller
-                  name={field.name}
-                  control={control}
-                  defaultValue={
-                    (setting as Record<typeof field.name, unknown>)[
-                      field.name
-                    ] as any
-                  }
-                  render={({
-                    field: { value, onChange, ...restField },
-                    fieldState,
-                  }) => {
-                    if (field.type === 'select') {
-                      return (
-                        <MuiTextField
-                          select
-                          value={value ?? ''}
-                          onChange={onChange}
-                          disabled={field.disabled}
-                          fullWidth
-                          {...restField}
-                          slotProps={{
-                            select: {
-                              labelId: labelIdFor(String(field.name)),
-                            },
-                          }}
-                        >
-                          {(field.options || []).map(option => (
-                            <MenuItem
-                              key={option.value}
-                              value={option.value}
-                            >
-                              {option.label}
-                            </MenuItem>
-                          ))}
-                        </MuiTextField>
-                      );
-                    }
+                    <Controller
+                      name={field.name}
+                      control={control}
+                      defaultValue={
+                        (setting as Record<typeof field.name, unknown>)[
+                          field.name
+                        ] as any
+                      }
+                      render={({
+                        field: { value, onChange, ...restField },
+                        fieldState,
+                      }) => {
+                        const describedBy =
+                          info ? helpIdFor(String(field.name)) : undefined;
 
-                    if (field.type === 'checkPicker') {
-                      return (
-                        <Autocomplete
-                          multiple
-                          disableCloseOnSelect
-                          options={(field.options || []).map(
-                            option => option.value
-                          )}
-                          getOptionLabel={value =>
-                            (field.options || []).find(
-                              option => option.value === value
-                            )?.label ?? String(value)
-                          }
-                          value={value || []}
-                          onChange={(_event, chosen) => onChange(chosen)}
-                          disabled={field.disabled}
-                          {...restField}
-                          renderInput={params => (
+                        if (field.type === 'select') {
+                          return (
                             <MuiTextField
-                              {...params}
+                              select
+                              value={value ?? ''}
+                              onChange={onChange}
+                              disabled={field.disabled}
+                              fullWidth
+                              {...restField}
                               slotProps={{
-                                ...params.slotProps,
-                                htmlInput: {
-                                  ...params.slotProps.htmlInput,
-                                  'aria-labelledby': labelIdFor(
-                                    String(field.name)
-                                  ),
+                                select: {
+                                  labelId: labelIdFor(String(field.name)),
+                                  SelectDisplayProps: {
+                                    'aria-describedby': describedBy,
+                                  },
                                 },
                               }}
-                            />
-                          )}
-                        />
-                      );
-                    }
+                            >
+                              {(field.options || []).map(option => (
+                                <MenuItem
+                                  key={option.value}
+                                  value={option.value}
+                                >
+                                  {option.label}
+                                </MenuItem>
+                              ))}
+                            </MuiTextField>
+                          );
+                        }
 
-                    if (field.type === 'checkbox') {
-                      return (
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              checked={!!value}
-                              onChange={(_event, c) => onChange(c)}
+                        if (field.type === 'checkPicker') {
+                          return (
+                            <Autocomplete
+                              multiple
+                              disableCloseOnSelect
+                              options={(field.options || []).map(
+                                option => option.value
+                              )}
+                              getOptionLabel={value =>
+                                (field.options || []).find(
+                                  option => option.value === value
+                                )?.label ?? String(value)
+                              }
+                              value={value || []}
+                              onChange={(_event, chosen) => onChange(chosen)}
+                              disabled={field.disabled}
+                              {...restField}
+                              renderInput={params => (
+                                <MuiTextField
+                                  {...params}
+                                  slotProps={{
+                                    ...params.slotProps,
+                                    htmlInput: {
+                                      ...params.slotProps.htmlInput,
+                                      'aria-labelledby': labelIdFor(
+                                        String(field.name)
+                                      ),
+                                      'aria-describedby': describedBy,
+                                    },
+                                  }}
+                                />
+                              )}
+                            />
+                          );
+                        }
+
+                        if (field.type === 'checkbox') {
+                          return (
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  checked={!!value}
+                                  onChange={(_event, c) => onChange(c)}
+                                  disabled={field.disabled}
+                                  {...restField}
+                                  slotProps={{
+                                    input: { 'aria-describedby': describedBy },
+                                  }}
+                                />
+                              }
+                              label={field.label}
+                            />
+                          );
+                        }
+
+                        if (field.type === 'custom') {
+                          return (
+                            <field.render
+                              value={value}
+                              onChange={val => onChange(val)}
                               disabled={field.disabled}
                               {...restField}
                             />
-                          }
-                          label={
-                            <>
-                              {field.label}
-                              {info && (
-                                <>
-                                  {' '}
-                                  <InfoTooltip text={info} />
-                                </>
-                              )}
-                            </>
-                          }
-                        />
-                      );
-                    }
-
-                    if (field.type === 'custom') {
-                      return (
-                        <field.render
-                          value={value}
-                          onChange={val => onChange(val)}
-                          disabled={field.disabled}
-                          {...restField}
-                        />
-                      );
-                    }
-
-                    const Field =
-                      field.type === 'textarea' ? Textarea : MuiTextField;
-
-                    return (
-                      <Field
-                        value={value}
-                        onChange={
-                          field.type === 'number' ?
-                            (event: ChangeEvent<HTMLInputElement>) =>
-                              onChange(
-                                event.target.value === '' ?
-                                  null
-                                : Number(event.target.value)
-                              )
-                          : onChange
+                          );
                         }
-                        error={!!fieldState.error}
-                        helperText={fieldState.error?.message}
-                        type={field.type}
-                        placeholder={field.placeholder}
-                        disabled={field.disabled}
-                        autoComplete={field.autoComplete}
-                        fullWidth
-                        {...restField}
-                        slotProps={{
-                          htmlInput: {
-                            'aria-labelledby': labelIdFor(String(field.name)),
-                          },
-                        }}
-                      />
-                    );
-                  }}
-                />
-              </FormControl>
-            ))}
+
+                        const Field =
+                          field.type === 'textarea' ? Textarea : MuiTextField;
+
+                        return (
+                          <Field
+                            value={value}
+                            onChange={
+                              field.type === 'number' ?
+                                (event: ChangeEvent<HTMLInputElement>) =>
+                                  onChange(
+                                    event.target.value === '' ?
+                                      null
+                                    : Number(event.target.value)
+                                  )
+                              : onChange
+                            }
+                            error={!!fieldState.error}
+                            helperText={fieldState.error?.message}
+                            type={field.type}
+                            placeholder={field.placeholder}
+                            disabled={field.disabled}
+                            autoComplete={field.autoComplete}
+                            fullWidth
+                            {...restField}
+                            slotProps={{
+                              htmlInput: {
+                                'aria-labelledby': labelIdFor(
+                                  String(field.name)
+                                ),
+                                'aria-describedby': describedBy,
+                              },
+                            }}
+                          />
+                        );
+                      }}
+                    />
+
+                    {info && (
+                      <FormHelperText
+                        id={helpIdFor(String(field.name))}
+                        sx={{ marginX: 0, whiteSpace: 'pre-line' }}
+                      >
+                        {info}
+                      </FormHelperText>
+                    )}
+                  </FormControl>
+                </Fragment>
+              ))}
+            </FieldList>
 
             {setting.lastLoadedAt && (
               <Typography
-                align="right"
-                color="gray"
+                variant="caption"
+                component="p"
+                title={t('integrations.lastLoadedInfo')}
+                sx={{ color: 'text.secondary', marginTop: 3 }}
               >
-                <small>
-                  {t('integrations.lastLoaded')}:{' '}
-                  {formatLastLoaded(setting.lastLoadedAt)}{' '}
-                  <InfoTooltip text={t('integrations.lastLoadedInfo')} />
-                </small>
+                {t('integrations.lastLoaded')}:{' '}
+                {formatLastLoaded(setting.lastLoadedAt)}
               </Typography>
             )}
           </CardContent>

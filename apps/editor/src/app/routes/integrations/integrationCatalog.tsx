@@ -381,3 +381,13 @@ export const integrationByPath = (
   catalog: IntegrationDefinition[],
   type: string | undefined
 ) => catalog.find(integration => integration.key === type);
+
+/** The provider types an integration offers, for its type pickers. */
+export const providersOf = (key: IntegrationKey, t: TFunction) =>
+  key === 'payment' ?
+    paymentProviderOptions(t)
+  : (integrationCatalog(t).find(integration => integration.key === key)
+      ?.providers ?? []);
+
+export const typeOptionsOf = (providers: ProviderOption[]) =>
+  providers.map(({ type, label }) => ({ label, value: type }));

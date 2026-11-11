@@ -64,7 +64,12 @@ const isPaymentProviderComplete = (setting: ProviderSetting) => {
     setting.type === PaymentProviderType.Payrexx ||
     setting.type === PaymentProviderType.PayrexxSubscription
   ) {
-    return !!setting['isApiKeySet'] && filled(setting['payrexx_instancename']);
+    return (
+      !!setting['isApiKeySet'] &&
+      filled(setting['payrexx_instancename']) &&
+      (setting.type === PaymentProviderType.PayrexxSubscription ||
+        filled(setting['payrexx_vatrate']))
+    );
   }
 
   return !!setting['isApiKeySet'];

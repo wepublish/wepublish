@@ -8,8 +8,8 @@ import {
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
-import vercelLogo from './assets/vercel.svg';
 import { GenericIntegrationList } from './genericIntegrationList';
+import { providersOf } from './integrationCatalog';
 import { secretPlaceholder } from './secretPlaceholder';
 
 const aiSettingsSchema = z.object({
@@ -24,6 +24,8 @@ export function AIIntegrationForm() {
 
   return (
     <GenericIntegrationList<SettingAiProvider, IntegrationFormValues>
+      integrationKey="ai"
+      providers={providersOf('ai', t)}
       query={SettingsIntegrationsAiDocument}
       mutation={UpdateSettingsIntegrationsAiDocument}
       dataKey="aiSettings"
@@ -34,7 +36,6 @@ export function AIIntegrationForm() {
         name: 'V0',
         createMutation: CreateAiSettingDocument,
       }}
-      getLogo={() => vercelLogo}
       fields={setting => [
         {
           name: 'apiKey',
