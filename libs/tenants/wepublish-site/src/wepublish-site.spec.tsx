@@ -1,3 +1,4 @@
+import { CSSProperties } from 'react';
 import { screen } from '@testing-library/react';
 import {
   mockArticle,
@@ -76,10 +77,122 @@ describe('We.Publish website tenant', () => {
   beforeAll(() => applyTenantTranslations(wepublishSiteTenant));
   afterAll(() => resetTranslations());
 
-  it('sets the page in the Inter font', () => {
+  it('sets the page in the Archivo font', () => {
     renderTenantPage([]);
 
-    expect(getComputedStyle(document.body).fontFamily).toContain('Inter');
+    expect(getComputedStyle(document.body).fontFamily).toContain('Archivo');
+  });
+
+  // Text styles of the Figma design (file "Website", frame "Fonts"), all sizes
+  // scaled down by 20/22 so that Text is 1.25rem on desktop. The design only has
+  // desktop sizes (lg and up); md is a step between them and the mobile sizes (xs).
+  const H1 = {
+    font: 'Bricolage Grotesque',
+    weight: 800,
+    lineHeight: 1.2,
+    xs: 33,
+    md: 46,
+    lg: 60,
+  };
+  const H2 = {
+    font: 'Bricolage Grotesque',
+    weight: 800,
+    lineHeight: 1.3,
+    xs: 25,
+    md: 34,
+    lg: 42,
+  };
+  const H3 = {
+    font: 'Bricolage Grotesque',
+    weight: 600,
+    lineHeight: 1.3,
+    xs: 22,
+    md: 26,
+    lg: 29,
+  };
+  const H4 = {
+    font: 'Bricolage Grotesque',
+    weight: 600,
+    lineHeight: 1.3,
+    xs: 18,
+    md: 20,
+    lg: 22,
+  };
+  const Paragraph = {
+    font: 'Archivo',
+    weight: 400,
+    lineHeight: 1.5,
+    xs: 18,
+    md: 22,
+    lg: 27,
+  };
+  const Text = {
+    font: 'Archivo',
+    weight: 400,
+    lineHeight: 1.5,
+    xs: 16,
+    md: 18,
+    lg: 20,
+  };
+  const Mono = {
+    font: 'Space Mono',
+    weight: 400,
+    lineHeight: 1.5,
+    xs: 15,
+    md: 16,
+    lg: 16,
+  };
+
+  const rem = (px: number) => `${px / 16}rem`;
+
+  it.each([
+    ['h1', H1],
+    ['h2', H2],
+    ['h3', H3],
+    ['h4', H4],
+    ['subtitle1', Paragraph],
+    ['subtitle2', Paragraph],
+    ['body1', Text],
+    ['body2', Text],
+    ['blockTitlePreTitle', Text],
+    ['blockBreakTitle', H2],
+    ['blockBreakBody', Paragraph],
+    ['blockQuote', H3],
+    ['categoryLinkTitle', Mono],
+    ['categoryAddressText', Text],
+    ['teaserMeta', Mono],
+  ] as const)('sets %s like the design', (variant, design) => {
+    const { breakpoints, typography } = wepublishSiteTenant.createTheme();
+    const md = `@media (min-width:${breakpoints.values.md}px)`;
+    const lg = `@media (min-width:${breakpoints.values.lg}px)`;
+    const style = typography[variant] as CSSProperties & {
+      [md]?: CSSProperties;
+      [lg]?: CSSProperties;
+    };
+
+    expect({
+      fontFamily: style.fontFamily,
+      fontWeight: style.fontWeight,
+      lineHeight: style.lineHeight,
+      letterSpacing: style.letterSpacing,
+      xs: style.fontSize,
+      md: style[md]?.fontSize,
+      lg: style[lg]?.fontSize,
+    }).toEqual({
+      fontFamily: expect.stringContaining(design.font),
+      fontWeight: design.weight,
+      lineHeight: design.lineHeight,
+      letterSpacing: 0,
+      xs: rem(design.xs),
+      md: rem(design.md),
+      lg: rem(design.lg),
+    });
+  });
+
+  it('no longer uses Inter anywhere in the typography', () => {
+    const { typography } = wepublishSiteTenant.createTheme();
+
+    expect(JSON.stringify(typography)).not.toContain('Inter');
   });
 
   it('shows the we.publish logo in the navbar and the light logo in the footer', () => {
