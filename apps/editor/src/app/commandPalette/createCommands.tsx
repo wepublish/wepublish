@@ -91,7 +91,7 @@ export const CREATE_COMMANDS: CommandDefinition[] = [
     titleKey: 'commandPalette.create.paywall',
     icon: <MdPayment />,
     permissions: [CanCreatePaywall.id],
-    perform: ({ navigate }) => navigate('/articles/paywalls/create'),
+    perform: ({ navigate }) => navigate('/audience-engagement/paywalls/create'),
   },
   {
     id: 'createPage',
@@ -223,7 +223,7 @@ export const CREATE_COMMANDS: CommandDefinition[] = [
     icon: <MdLock />,
     permissions: [CanCreatePaywall.id],
     perform: ({ navigate }) =>
-      navigate('/articles/paywalls/create?enforced=true'),
+      navigate('/audience-engagement/paywalls/create?enforced=true'),
   },
   {
     id: 'createAuthor',

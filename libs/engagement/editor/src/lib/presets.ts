@@ -81,4 +81,5 @@ export const ENGAGEMENT_PRESETS: Record<
     }),
 };
 
-export const RESTRICT_PREMIUM_PATH = '/articles/paywalls/create?enforced=true';
+export const RESTRICT_PREMIUM_PATH =
+  '/audience-engagement/paywalls/create?enforced=true';

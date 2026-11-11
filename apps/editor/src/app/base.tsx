@@ -743,7 +743,7 @@ export function Base({ children }: BaseProps) {
                     ]}
                   >
                     <SidebarNavItem
-                      href="/articles/paywalls"
+                      href="/audience-engagement/paywalls"
                       icon={<MdPayment />}
                     >
                       {t('paywall.navbar')}

@@ -102,9 +102,10 @@ article (`Article.paywallId`), check specific member plans and bypass tokens,
 and the website and peering still read `Article.paywall`. Who gets every block
 is decided once in `evaluateArticleAccess` (`libs/article/api`): privileged
 readers, then an active *enforced* paywall alone, then the metered rules
-(paywalled articles are left out of them). The editor's Audience Engagement
-list links the paywalls, whose forms still live in `apps/editor` under
-`/articles/paywalls`.
+(paywalled articles are left out of them). In the editor, paywalls live under
+Audience Engagement (`/audience-engagement/paywalls`, forms still in
+`apps/editor/src/app/routes/paywall`); the Articles menu only links there, and
+old `/articles/paywalls` links redirect.
 
 **llms.txt:** every website serves `/llms.txt` from the same `src/sitemap.ts`
 config, so its `filterArticle` and url hooks apply. It follows
