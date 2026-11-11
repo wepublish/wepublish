@@ -3,7 +3,6 @@ import { mergeDeepRight } from 'ramda';
 
 import { flattenBlockTemplates } from './flatten-block-templates';
 import { mergeBlockSelections } from './merge-block-selections';
-import { omitSensitiveData } from './omit-sensitive-data';
 import possibleTypes from './possible-types';
 
 /**
@@ -21,8 +20,8 @@ const makeCache = () =>
   new InMemoryCache({
     possibleTypes: possibleTypes.possibleTypes,
     typePolicies: mergeDeepRight(
-      mergeDeepRight(flattenBlockTemplates, mergeBlockSelections),
-      omitSensitiveData
+      flattenBlockTemplates,
+      mergeBlockSelections
     ) as never,
   });
 

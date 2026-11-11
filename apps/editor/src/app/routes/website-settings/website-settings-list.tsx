@@ -27,7 +27,6 @@ import {
   MdCheck,
   MdClose,
   MdColorLens,
-  MdMail,
   MdOutlineFontDownload,
   MdWarning,
 } from 'react-icons/md';
@@ -100,13 +99,9 @@ export const WebsiteSettingsList = () => {
       { id: 'googleTagManager', text: 'Google Tag Manager' },
       { id: 'plausible', text: 'Plausible Analytics' },
       { id: 'piwik', text: 'Piwik PRO' },
+      { id: 'umami', text: 'Umami' },
     ] as Array<{
       id: Exclude<keyof FullWebsiteSettingsFragment['analytics'], '__typename'>;
-      text: string;
-    }>;
-
-    const mailIntegrations = [{ id: 'mailchimp', text: 'Mailchimp' }] as Array<{
-      id: Exclude<keyof FullWebsiteSettingsFragment['mail'], '__typename'>;
       text: string;
     }>;
 
@@ -138,26 +133,6 @@ export const WebsiteSettingsList = () => {
         disabledIntegrations: analyticsIntegrations.filter(
           integration =>
             !data.websiteSettings.analytics[integration.id]?.enabled
-        ),
-        colors: [],
-      },
-      {
-        title: t('websiteSettings.mail.title'),
-        permission: CanGetAISettings.id,
-        path: '/settings/website/mail',
-        icon: <MdMail size={24} />,
-        enabledIntegrations: mailIntegrations.filter(
-          integration =>
-            data.websiteSettings.mail[integration.id]?.enabled &&
-            data.websiteSettings.mail[integration.id]?.key
-        ),
-        faulyIntegrations: mailIntegrations.filter(
-          integration =>
-            data.websiteSettings.mail[integration.id]?.enabled &&
-            !data.websiteSettings.mail[integration.id]?.key
-        ),
-        disabledIntegrations: mailIntegrations.filter(
-          integration => !data.websiteSettings.mail[integration.id]?.enabled
         ),
         colors: [],
       },
