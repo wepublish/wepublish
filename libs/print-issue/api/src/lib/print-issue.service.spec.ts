@@ -987,7 +987,111 @@ describe('PrintIssueService', () => {
     });
   });
 
-  describe('deliveries: hand over, delete', () => {
+  describe('deliveries: hand over, take back, delete', () => {
+    it('takes back the newest delivery of the newest issue with lists: a draft again, the run computed on it dropped', async () => {
+      const { service, prisma } = makeService();
+      const handedOver = delivery({
+        deliveredAt: NOW,
+        deliveredByUserId: 'editor-1',
+      });
+      prisma.printIssueDelivery.findUnique.mockResolvedValue(
+        handedOver as never
+      );
+      prisma.printIssue.findUnique.mockResolvedValue(
+        issue({ deliveries: [handedOver] }) as never
+      );
+
+      await service.undeliver('del-0');
+
+      // no issue shipping later has a list built on this one
+      expect(prisma.printIssue.findFirst).toHaveBeenCalledWith({
+        where: {
+          OR: [
+            { issueDate: { gt: new Date('2027-01-15T00:00:00.000Z') } },
+            {
+              issueDate: new Date('2027-01-15T00:00:00.000Z'),
+              number: { gt: 1 },
+            },
+          ],
+          deliveries: { some: {} },
+        },
+        orderBy: [{ issueDate: 'asc' }, { number: 'asc' }],
+        select: { number: true, numberTo: true, year: true },
+      });
+      expect(prisma.printIssueDelivery.updateMany).toHaveBeenCalledWith({
+        where: { id: 'del-0', deliveredAt: { not: null } },
+        data: { deliveredAt: null, deliveredByUserId: null },
+      });
+      expect(prisma.printIssue.update).toHaveBeenCalledWith({
+        where: { id: 'issue-1' },
+        data: {
+          pendingRun: Prisma.DbNull,
+          pendingRunAt: null,
+          pendingRunByUserId: null,
+        },
+        select: { id: true },
+      });
+
+      prisma.printIssueDelivery.updateMany.mockResolvedValue({ count: 0 });
+      await expect(service.undeliver('del-0')).rejects.toBeInstanceOf(
+        ConflictException
+      );
+    });
+
+    it('takes back neither a draft, nor a list of a closed issue, nor one followed by a Nachlieferung, nor one a later issue built on', async () => {
+      const { service, prisma } = makeService();
+      const handedOver = delivery({
+        deliveredAt: NOW,
+        deliveredByUserId: 'editor-1',
+      });
+      const refused = async () => {
+        await expect(service.undeliver('del-0')).rejects.toBeInstanceOf(
+          BadRequestException
+        );
+        expect(prisma.printIssueDelivery.updateMany).not.toHaveBeenCalled();
+      };
+
+      // a draft: nothing to take back
+      prisma.printIssueDelivery.findUnique.mockResolvedValue(
+        delivery() as never
+      );
+      prisma.printIssue.findUnique.mockResolvedValue(
+        issue({ deliveries: [delivery()] }) as never
+      );
+      await refused();
+
+      // closed: unlock first
+      prisma.printIssueDelivery.findUnique.mockResolvedValue(
+        handedOver as never
+      );
+      prisma.printIssue.findUnique.mockResolvedValue(
+        issue({ status: 'closed', deliveries: [handedOver] }) as never
+      );
+      await refused();
+
+      // a Nachlieferung follows: it comes first
+      prisma.printIssue.findUnique.mockResolvedValue(
+        issue({
+          deliveries: [handedOver, delivery({ id: 'del-1', batch: 1 })],
+        }) as never
+      );
+      await refused();
+
+      // 2.27 has a list computed while this one counted
+      prisma.printIssue.findUnique.mockResolvedValue(
+        issue({ deliveries: [handedOver] }) as never
+      );
+      prisma.printIssue.findFirst.mockResolvedValue(
+        issue({
+          id: 'issue-2',
+          number: 2,
+          issueDate: new Date('2027-03-15T00:00:00.000Z'),
+        }) as never
+      );
+      await expect(service.undeliver('del-0')).rejects.toThrow('2.27');
+      expect(prisma.printIssueDelivery.updateMany).not.toHaveBeenCalled();
+    });
+
     it('marks a delivery as handed over, once and for all', async () => {
       const { service, prisma } = makeService();
       prisma.printIssueDelivery.findUnique.mockResolvedValue(

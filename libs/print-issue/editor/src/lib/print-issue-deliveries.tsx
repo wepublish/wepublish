@@ -24,8 +24,15 @@ import {
 } from '@wepublish/ui/editor';
 import { ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdDelete, MdDownload, MdEdit, MdLockOpen } from 'react-icons/md';
-import { day, personName } from './common';
+import {
+  MdDelete,
+  MdDownload,
+  MdEdit,
+  MdLockOpen,
+  MdUndo,
+} from 'react-icons/md';
+import { day, newestDelivery, personName } from './common';
+import { ReasonTooltip } from './reason-tooltip';
 
 type Delivery = PrintIssueDeliveryFieldsFragment;
 
@@ -40,29 +47,38 @@ export const deliveryName = (
 /**
  * The Drucklisten of the issue: the Druckliste and its Nachlieferungen, each
  * with its own CSV. A draft can be edited, marked as delivered to the
- * printshop (frozen for good, counts for the quota) or deleted; the merged
- * list is always offered.
+ * printshop (frozen, counts for the quota) or deleted; the newest delivered
+ * list can be taken back while nothing was built on it; the merged list is
+ * always offered.
  */
 export function PrintIssueDeliveries({
   issue,
   action,
+  undeliverReason = null,
   onDownload,
   onEdit,
   onDeliver,
+  onUndeliver,
   onDelete,
 }: {
   issue: { label: string; deliveries: Delivery[] };
   /** what the issue offers next, shown below the table */
   action?: ReactNode;
+  /** why the newest delivered list cannot be taken back right now */
+  undeliverReason?: string | null;
   /** null: every delivery merged */
   onDownload: (deliveryId: string | null) => void;
   onEdit: (delivery: Delivery) => void;
   onDeliver: (delivery: Delivery) => void;
+  onUndeliver: (delivery: Delivery) => void;
   onDelete: (delivery: Delivery) => void;
 }) {
   const { t } = useTranslation();
   const [toDeliver, setToDeliver] = useState<Delivery | null>(null);
+  const [toUndeliver, setToUndeliver] = useState<Delivery | null>(null);
   const [toDelete, setToDelete] = useState<Delivery | null>(null);
+  // only the newest list can be taken back: a Nachlieferung builds on the lists before it
+  const newest = newestDelivery(issue.deliveries);
 
   const fullListButton = (
     <Button
@@ -234,6 +250,36 @@ export function PrintIssueDeliveries({
                     </PermissionControl>
                   </>
                 )}
+                {delivery.deliveredAt && delivery.id === newest?.id && (
+                  <PermissionControl
+                    qualifyingPermissions={[CanFinalizePrintIssue.id]}
+                  >
+                    {undeliverReason ?
+                      <ReasonTooltip reason={undeliverReason}>
+                        <IconButton
+                          aria-label={t('printIssues.deliveries.undeliver')}
+                          size="small"
+                          disabled
+                        >
+                          <MdUndo />
+                        </IconButton>
+                      </ReasonTooltip>
+                    : <IconButtonTooltip
+                        caption={t('printIssues.deliveries.undeliverTooltip', {
+                          name: deliveryName(t, delivery),
+                        })}
+                      >
+                        <IconButton
+                          aria-label={t('printIssues.deliveries.undeliver')}
+                          size="small"
+                          onClick={() => setToUndeliver(delivery)}
+                        >
+                          <MdUndo />
+                        </IconButton>
+                      </IconButtonTooltip>
+                    }
+                  </PermissionControl>
+                )}
               </Stack>
             ),
           },
@@ -289,6 +335,41 @@ export function PrintIssueDeliveries({
             }}
           >
             {t('printIssues.deliveries.deliverConfirm')}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        fullWidth
+        open={!!toUndeliver}
+        onClose={() => setToUndeliver(null)}
+        maxWidth="sm"
+      >
+        <DialogTitle>{t('printIssues.deliveries.undeliverTitle')}</DialogTitle>
+        <DialogContent>
+          {toUndeliver &&
+            t('printIssues.deliveries.undeliverQuestion', {
+              name: deliveryName(t, toUndeliver),
+              label: issue.label,
+            })}
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="text"
+            onClick={() => setToUndeliver(null)}
+          >
+            {t('cancel')}
+          </Button>
+          <Button
+            variant="contained"
+            onClick={() => {
+              if (toUndeliver) {
+                onUndeliver(toUndeliver);
+              }
+              setToUndeliver(null);
+            }}
+          >
+            {t('printIssues.deliveries.undeliverConfirm')}
           </Button>
         </DialogActions>
       </Dialog>

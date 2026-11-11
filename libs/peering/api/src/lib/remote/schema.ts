@@ -3581,7 +3581,7 @@ export type Mutation = {
   deleteUserRole: UserRole;
   /** Deletes an existing video. */
   deleteVideo: Scalars['String']['output'];
-  /** «Übergeben»: the file went to the printshop. The delivery is immutable from then on and its copies count for the readers' quota. Irreversible. */
+  /** «Übergeben»: the file went to the printshop. The delivery is immutable from then on and its copies count for the readers' quota. Reversible with undeliverPrintIssueDelivery while no later list was built on it. */
   deliverPrintIssueDelivery: PrintIssue;
   /** Discards the current draft and reverts to the latest published revision. */
   discardArticleDraft: Article;
@@ -3703,6 +3703,8 @@ export type Mutation = {
   /** Triggers a mailchimp sync in the background. */
   triggerMailchimpSync: Scalars['Boolean']['output'];
   unarchiveNewsletterCampaign: NewsletterCampaign;
+  /** «Lieferung zurücknehmen»: the delivery is a draft again and its copies count for no quota until it is handed over anew. Only the newest list of the newest issue with lists, on an open issue. */
+  undeliverPrintIssueDelivery: PrintIssue;
   /** Unpublishes all revisions of an article. */
   unpublishArticle: Article;
   /** Unpublishes all revisions of an page. */
@@ -5071,6 +5073,11 @@ export type MutationTriggerMailchimpSyncArgs = {
 
 
 export type MutationUnarchiveNewsletterCampaignArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationUndeliverPrintIssueDeliveryArgs = {
   id: Scalars['String']['input'];
 };
 

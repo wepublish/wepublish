@@ -658,7 +658,74 @@ describe('PrintIssueListView', () => {
       noButton('printIssues.deliveries.edit');
       noButton('printIssues.deliveries.deliver');
       noButton('printIssues.deliveries.delete');
+      expect(button('printIssues.deliveries.undeliver')).toBeEnabled();
       expect(button('printIssues.flow.supplement')).toBeEnabled();
+    });
+
+    it('takes the delivery back after a confirmation: the list is a draft again', async () => {
+      renderView();
+
+      fireEvent.click(button('printIssues.deliveries.undeliver'));
+      expect(mutations['UndeliverPrintIssueDelivery']).not.toHaveBeenCalled();
+      expect(dialogButtons()).toEqual([
+        'cancel',
+        'printIssues.deliveries.undeliverConfirm',
+      ]);
+      expect(
+        screen.getByText(
+          /printIssues\.deliveries\.undeliverQuestion .*"label":"1.27"/
+        )
+      ).toBeInTheDocument();
+
+      fireEvent.click(button('printIssues.deliveries.undeliverConfirm'));
+
+      await waitFor(() =>
+        expect(mutations['UndeliverPrintIssueDelivery']).toHaveBeenCalledWith(
+          expect.objectContaining({ variables: { id: 'del-0' } })
+        )
+      );
+    });
+
+    it('offers to take back only the newest list, and not while a later issue has a list', async () => {
+      const deliveries = [
+        delivery(delivered),
+        delivery({ id: 'del-1', batch: 1, ...delivered }),
+      ];
+      withIssue({ deliveries });
+      stable('PrintIssues', {
+        printIssues: [
+          issue({
+            id: 'later',
+            label: '2.27',
+            number: 2,
+            issueDate: '2027-03-15',
+            deliveries: [delivery({ id: 'd-227' })],
+          }),
+          issue({ id: 'issue-1', deliveries }),
+        ],
+      });
+      renderView();
+
+      const undeliver = screen.getAllByRole('button', {
+        name: 'printIssues.deliveries.undeliver',
+      });
+      expect(undeliver).toHaveLength(1);
+      expect(
+        within(
+          screen.getByRole('row', {
+            name: /^printIssues\.deliveries\.supplement\b/,
+          })
+        ).getByRole('button', { name: 'printIssues.deliveries.undeliver' })
+      ).toBeDisabled();
+
+      // a disabled button gets no pointer events: the tooltip listens on its wrapper
+      fireEvent.mouseOver(undeliver[0]!.parentElement!);
+
+      expect(
+        await screen.findByText(
+          'printIssues.deliveries.undeliverLater {"label":"2.27"}'
+        )
+      ).toBeInTheDocument();
     });
 
     it('exports the next list as a Nachlieferung', async () => {
@@ -771,6 +838,19 @@ describe('PrintIssueListView', () => {
       ).not.toBeInTheDocument();
       expect(screen.queryByRole('switch')).not.toBeInTheDocument();
       expect(button('printIssues.deliveries.csv')).toBeEnabled();
+    });
+
+    it('takes back the delivery only once the issue is unlocked', async () => {
+      renderView();
+
+      const undeliver = button('printIssues.deliveries.undeliver');
+      expect(undeliver).toBeDisabled();
+
+      fireEvent.mouseOver(undeliver.parentElement!);
+
+      expect(
+        await screen.findByText('printIssues.deliveries.undeliverClosed')
+      ).toBeInTheDocument();
     });
   });
 

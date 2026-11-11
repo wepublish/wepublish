@@ -3973,7 +3973,7 @@ type Mutation {
   deleteVideo(id: String!): String!
 
   """
-  «Übergeben»: the file went to the printshop. The delivery is immutable from then on and its copies count for the readers' quota. Irreversible.
+  «Übergeben»: the file went to the printshop. The delivery is immutable from then on and its copies count for the readers' quota. Reversible with undeliverPrintIssueDelivery while no later list was built on it.
   """
   deliverPrintIssueDelivery(id: String!): PrintIssue!
 
@@ -4226,6 +4226,11 @@ type Mutation {
   """Triggers a mailchimp sync in the background."""
   triggerMailchimpSync(id: String!): Boolean!
   unarchiveNewsletterCampaign(id: String!): NewsletterCampaign!
+
+  """
+  «Lieferung zurücknehmen»: the delivery is a draft again and its copies count for no quota until it is handed over anew. Only the newest list of the newest issue with lists, on an open issue.
+  """
+  undeliverPrintIssueDelivery(id: String!): PrintIssue!
 
   """Unpublishes all revisions of an article."""
   unpublishArticle(id: String!): Article!

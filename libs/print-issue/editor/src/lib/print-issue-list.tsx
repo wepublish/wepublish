@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  Box,
   Button,
   Chip,
   Dialog,
@@ -32,9 +33,11 @@ import {
   Link,
   ListViewContainer,
   ListViewHeader,
+  Pagination,
   PermissionControl,
+  useListViewState,
 } from '@wepublish/ui/editor';
-import { ReactElement, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { BiSpreadsheet } from 'react-icons/bi';
 import {
@@ -70,34 +73,10 @@ import { deliveryName } from './print-issue-deliveries';
 import { PrintIssueDrawer } from './print-issue-drawer';
 import { PrintIssueStatusChip } from './print-issue-status';
 import { PrintListIcon } from './print-list-icon';
+import { ReasonTooltip } from './reason-tooltip';
 
 const copiesOf = (issue: TinyPrintIssueFragment) =>
   issue.deliveries.reduce((sum, delivery) => sum + delivery.copyCount, 0);
-
-/**
- * A tooltip that also explains a disabled action: a disabled button gets no
- * pointer events, so the tooltip listens on a wrapper around it. The button
- * keeps its action name; the reason is its description.
- */
-function ReasonTooltip({
-  reason,
-  children,
-}: {
-  reason: string;
-  children: ReactElement;
-}) {
-  return (
-    <IconButtonTooltip
-      caption={reason}
-      describeChild
-    >
-      {/* aligned like the unwrapped icon buttons beside it */}
-      <span style={{ display: 'inline-flex', verticalAlign: 'middle' }}>
-        {children}
-      </span>
-    </IconButtonTooltip>
-  );
-}
 
 const deliveredOf = (issue: TinyPrintIssueFragment) =>
   issue.deliveries.filter(delivery => delivery.deliveredAt).length;
@@ -175,6 +154,17 @@ function PrintIssueList() {
   const { data, error, loading } = useQuery(PrintIssuesDocument);
   const issues = data?.printIssues ?? [];
 
+  // The API lists every issue at once (the form needs them all for the next
+  // number); the table shows a page of them instead of scrolling.
+  const [page, setPage] = useState(1);
+  const { limit, setLimit } = useListViewState('print-issues');
+  const pageCount = Math.max(1, Math.ceil(issues.length / limit));
+  const currentPage = Math.min(page, pageCount);
+  const pageOfIssues = issues.slice(
+    (currentPage - 1) * limit,
+    currentPage * limit
+  );
+
   useEffect(() => {
     if (error) {
       showErrors(error);
@@ -249,220 +239,237 @@ function PrintIssueList() {
         </PermissionControl>
       </ListViewContainer>
 
-      <DataTable
-        storageKey="print-issues"
-        data={issues}
-        loading={loading}
-        getRowId={issue => issue.id}
-        emptyMessage={t('printIssues.noIssues')}
-        columns={[
-          {
-            id: 'image',
-            label: t('printIssues.fields.image'),
-            width: 64,
-            exportValue: false,
-            // decorative: the issue label next to it names the row
-            render: issue =>
-              issue.image?.squareURL ?
-                <img
-                  src={issue.image.squareURL}
-                  alt=""
-                  width={40}
-                  height={40}
-                  style={{
-                    display: 'block',
-                    objectFit: 'cover',
-                    borderRadius: 4,
-                  }}
-                />
-              : null,
-          },
-          {
-            id: 'issue',
-            label: t('printIssues.fields.issue'),
-            width: 110,
-            alwaysVisible: true,
-            render: issue => (
-              <Link to={printIssueEditPath(issue.id)}>{issue.label}</Link>
-            ),
-            exportValue: issue => issue.label,
-          },
-          {
-            id: 'title',
-            label: t('printIssues.fields.title'),
-            width: 260,
-            defaultHidden: true,
-            render: issue => issue.title ?? '',
-          },
-          {
-            id: 'issueDate',
-            label: t('printIssues.fields.issueDate'),
-            width: 150,
-            render: issue => formatDay(issue.issueDate),
-          },
-          {
-            id: 'status',
-            label: t('printIssues.fields.status'),
-            width: 150,
-            render: issue => <PrintIssueStatusChip issue={issue} />,
-            exportValue: issue => t(`printIssues.status.${issue.status}`),
-          },
-          {
-            id: 'deliveries',
-            label: t('printIssues.fields.deliveries'),
-            width: 170,
-            render: issue =>
-              issue.deliveries.length ? <DeliveriesCell issue={issue} /> : '',
-            exportValue: issue =>
-              issue.deliveries.length ?
-                t('printIssues.deliveriesCell', {
-                  count: issue.deliveries.length,
-                  delivered: deliveredOf(issue),
-                })
-              : '',
-          },
-          {
-            id: 'copies',
-            label: t('printIssues.fields.copies'),
-            width: 110,
-            align: 'right',
-            render: issue => (issue.deliveries.length ? copiesOf(issue) : ''),
-          },
-          {
-            id: 'closedAt',
-            label: t('printIssues.fields.closedAt'),
-            width: 220,
-            render: issue =>
-              issue.closedAt ?
-                t('printIssues.closedLine', {
-                  date: day(issue.closedAt),
-                  name: personName(issue.closedBy),
-                })
-              : '',
-          },
-          {
-            id: 'action',
-            label: t('action'),
-            width: 190,
-            align: 'center',
-            fixed: true,
-            exportValue: false,
-            render: issue => {
-              const historic = issue.status === PrintIssueStatus.Historic;
-              const closed = issue.status === PrintIssueStatus.Closed;
-              const newest = newestDelivery(issue.deliveries);
-              const lockReason =
-                historic ? t('printIssues.lockReason.historic')
-                : closed ? t('printIssues.lockReason.reopen')
-                : !newest ? t('printIssues.lockReason.noLists')
-                : !newest.deliveredAt ?
-                  t('printIssues.lockReason.draft', {
-                    name: deliveryName(t, newest),
+      {/* a block, not a flex item: the table keeps its height and never scrolls vertically */}
+      <Box>
+        <DataTable
+          storageKey="print-issues"
+          data={pageOfIssues}
+          loading={loading}
+          getRowId={issue => issue.id}
+          emptyMessage={t('printIssues.noIssues')}
+          columns={[
+            {
+              id: 'image',
+              label: t('printIssues.fields.image'),
+              width: 64,
+              exportValue: false,
+              // decorative: the issue label next to it names the row
+              render: issue =>
+                issue.image?.squareURL ?
+                  <img
+                    src={issue.image.squareURL}
+                    alt=""
+                    width={40}
+                    height={40}
+                    style={{
+                      display: 'block',
+                      objectFit: 'cover',
+                      borderRadius: 4,
+                    }}
+                  />
+                : null,
+            },
+            {
+              id: 'issue',
+              label: t('printIssues.fields.issue'),
+              width: 110,
+              alwaysVisible: true,
+              render: issue => (
+                <Link to={printIssueEditPath(issue.id)}>{issue.label}</Link>
+              ),
+              exportValue: issue => issue.label,
+            },
+            {
+              id: 'title',
+              label: t('printIssues.fields.title'),
+              width: 260,
+              defaultHidden: true,
+              render: issue => issue.title ?? '',
+            },
+            {
+              id: 'issueDate',
+              label: t('printIssues.fields.issueDate'),
+              width: 150,
+              render: issue => formatDay(issue.issueDate),
+            },
+            {
+              id: 'status',
+              label: t('printIssues.fields.status'),
+              width: 150,
+              render: issue => <PrintIssueStatusChip issue={issue} />,
+              exportValue: issue => t(`printIssues.status.${issue.status}`),
+            },
+            {
+              id: 'deliveries',
+              label: t('printIssues.fields.deliveries'),
+              width: 170,
+              render: issue =>
+                issue.deliveries.length ? <DeliveriesCell issue={issue} /> : '',
+              exportValue: issue =>
+                issue.deliveries.length ?
+                  t('printIssues.deliveriesCell', {
+                    count: issue.deliveries.length,
+                    delivered: deliveredOf(issue),
                   })
-                : t('printIssues.lockReason.close');
-              const deleteReason =
-                anyDelivered(issue.deliveries) ?
-                  t('printIssues.deleteReason.delivered')
-                : historic ? t('printIssues.deleteReason.historic')
-                : issue.deliveries.length ? t('printIssues.deleteReason.draft')
-                : t('printIssues.deleteReason.empty');
+                : '',
+            },
+            {
+              id: 'copies',
+              label: t('printIssues.fields.copies'),
+              width: 110,
+              align: 'right',
+              render: issue => (issue.deliveries.length ? copiesOf(issue) : ''),
+            },
+            {
+              id: 'closedAt',
+              label: t('printIssues.fields.closedAt'),
+              width: 220,
+              render: issue =>
+                issue.closedAt ?
+                  t('printIssues.closedLine', {
+                    date: day(issue.closedAt),
+                    name: personName(issue.closedBy),
+                  })
+                : '',
+            },
+            {
+              id: 'action',
+              label: t('action'),
+              width: 190,
+              align: 'center',
+              fixed: true,
+              exportValue: false,
+              render: issue => {
+                const historic = issue.status === PrintIssueStatus.Historic;
+                const closed = issue.status === PrintIssueStatus.Closed;
+                const newest = newestDelivery(issue.deliveries);
+                const lockReason =
+                  historic ? t('printIssues.lockReason.historic')
+                  : closed ? t('printIssues.lockReason.reopen')
+                  : !newest ? t('printIssues.lockReason.noLists')
+                  : !newest.deliveredAt ?
+                    t('printIssues.lockReason.draft', {
+                      name: deliveryName(t, newest),
+                    })
+                  : t('printIssues.lockReason.close');
+                const deleteReason =
+                  anyDelivered(issue.deliveries) ?
+                    t('printIssues.deleteReason.delivered')
+                  : historic ? t('printIssues.deleteReason.historic')
+                  : issue.deliveries.length ?
+                    t('printIssues.deleteReason.draft')
+                  : t('printIssues.deleteReason.empty');
 
-              return (
-                <>
-                  <IconButtonTooltip caption={t('printIssues.actions.list')}>
-                    {historic ?
-                      <IconButton
-                        aria-label={t('printIssues.actions.list')}
-                        size="small"
-                        disabled
-                      >
-                        <PrintListIcon disabled />
-                      </IconButton>
-                    : <IconButton
-                        component={RouterLink}
-                        to={printIssueListPath(issue.id)}
-                        aria-label={t('printIssues.actions.list')}
-                        size="small"
-                      >
-                        <PrintListIcon />
-                      </IconButton>
-                    }
-                  </IconButtonTooltip>
-                  <PermissionControl
-                    qualifyingPermissions={[CanCreatePrintIssue.id]}
-                  >
-                    <IconButtonTooltip
-                      caption={t('printIssues.actions.duplicate')}
-                    >
-                      <IconButton
-                        aria-label={t('printIssues.actions.duplicate')}
-                        size="small"
-                        disabled={historic}
-                        onClick={() => duplicate(issue)}
-                      >
-                        <MdContentCopy />
-                      </IconButton>
-                    </IconButtonTooltip>
-                  </PermissionControl>
-                  <PermissionControl
-                    qualifyingPermissions={[CanFinalizePrintIssue.id]}
-                  >
-                    {/* the lock shows the state, the tooltip names the action; a historic issue is frozen for good */}
-                    {historic ?
-                      <ReasonTooltip reason={lockReason}>
+                return (
+                  <>
+                    <IconButtonTooltip caption={t('printIssues.actions.list')}>
+                      {historic ?
                         <IconButton
-                          aria-label={t('printIssues.actions.historic')}
+                          aria-label={t('printIssues.actions.list')}
                           size="small"
                           disabled
                         >
-                          <MdLock />
+                          <PrintListIcon disabled />
                         </IconButton>
-                      </ReasonTooltip>
-                    : closed ?
-                      <ReasonTooltip reason={lockReason}>
-                        <IconButton
-                          aria-label={t('printIssues.actions.reopen')}
+                      : <IconButton
+                          component={RouterLink}
+                          to={printIssueListPath(issue.id)}
+                          aria-label={t('printIssues.actions.list')}
                           size="small"
-                          onClick={() =>
-                            reopenIssue({ variables: { id: issue.id } })
-                          }
                         >
-                          <MdLock />
+                          <PrintListIcon />
                         </IconButton>
-                      </ReasonTooltip>
-                    : <ReasonTooltip reason={lockReason}>
-                        <IconButton
-                          aria-label={t('printIssues.actions.close')}
-                          size="small"
-                          disabled={!allDelivered(issue.deliveries)}
-                          onClick={() => setToClose(issue)}
-                        >
-                          <MdLockOpen />
-                        </IconButton>
-                      </ReasonTooltip>
-                    }
-                  </PermissionControl>
-                  <PermissionControl
-                    qualifyingPermissions={[CanDeletePrintIssue.id]}
-                  >
-                    <ReasonTooltip reason={deleteReason}>
-                      <IconButton
-                        aria-label={t('printIssues.actions.delete')}
-                        color="error"
-                        size="small"
-                        disabled={anyDelivered(issue.deliveries)}
-                        onClick={() => setToDelete(issue)}
+                      }
+                    </IconButtonTooltip>
+                    <PermissionControl
+                      qualifyingPermissions={[CanCreatePrintIssue.id]}
+                    >
+                      <IconButtonTooltip
+                        caption={t('printIssues.actions.duplicate')}
                       >
-                        <MdDelete />
-                      </IconButton>
-                    </ReasonTooltip>
-                  </PermissionControl>
-                </>
-              );
+                        <IconButton
+                          aria-label={t('printIssues.actions.duplicate')}
+                          size="small"
+                          disabled={historic}
+                          onClick={() => duplicate(issue)}
+                        >
+                          <MdContentCopy />
+                        </IconButton>
+                      </IconButtonTooltip>
+                    </PermissionControl>
+                    <PermissionControl
+                      qualifyingPermissions={[CanFinalizePrintIssue.id]}
+                    >
+                      {/* the lock shows the state, the tooltip names the action; a historic issue is frozen for good */}
+                      {historic ?
+                        <ReasonTooltip reason={lockReason}>
+                          <IconButton
+                            aria-label={t('printIssues.actions.historic')}
+                            size="small"
+                            disabled
+                          >
+                            <MdLock />
+                          </IconButton>
+                        </ReasonTooltip>
+                      : closed ?
+                        <ReasonTooltip reason={lockReason}>
+                          <IconButton
+                            aria-label={t('printIssues.actions.reopen')}
+                            size="small"
+                            onClick={() =>
+                              reopenIssue({ variables: { id: issue.id } })
+                            }
+                          >
+                            <MdLock />
+                          </IconButton>
+                        </ReasonTooltip>
+                      : <ReasonTooltip reason={lockReason}>
+                          <IconButton
+                            aria-label={t('printIssues.actions.close')}
+                            size="small"
+                            disabled={!allDelivered(issue.deliveries)}
+                            onClick={() => setToClose(issue)}
+                          >
+                            <MdLockOpen />
+                          </IconButton>
+                        </ReasonTooltip>
+                      }
+                    </PermissionControl>
+                    <PermissionControl
+                      qualifyingPermissions={[CanDeletePrintIssue.id]}
+                    >
+                      <ReasonTooltip reason={deleteReason}>
+                        <IconButton
+                          aria-label={t('printIssues.actions.delete')}
+                          color="error"
+                          size="small"
+                          disabled={anyDelivered(issue.deliveries)}
+                          onClick={() => setToDelete(issue)}
+                        >
+                          <MdDelete />
+                        </IconButton>
+                      </ReasonTooltip>
+                    </PermissionControl>
+                  </>
+                );
+              },
             },
-          },
-        ]}
-      />
+          ]}
+        />
+
+        <Pagination
+          state={{
+            page: currentPage,
+            limit,
+            setPage,
+            setLimit: next => {
+              setLimit(next);
+              setPage(1);
+            },
+          }}
+          totalCount={issues.length}
+        />
+      </Box>
 
       <PrintIssueDrawer
         open={creating || !!editId}

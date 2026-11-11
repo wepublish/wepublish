@@ -5061,6 +5061,7 @@
       "exportedSupplement": "Complément créé – un brouillon jusqu’à ce qu’il soit marqué comme livré.",
       "delivered": "Liste d’impression marquée comme livrée",
       "deliveryDeleted": "Liste d’impression supprimée",
+      "deliveryTakenBack": "Livraison annulée – la liste d’impression est de nouveau un brouillon",
       "issueDateRequired": "Veuillez indiquer la date de parution.",
       "drawer": {
         "createTitle": "Nouveau numéro",
@@ -5119,7 +5120,7 @@
         "historic": "Numéro historique, clôturé pour de bon. Le numéro a été créé en dehors du système et n’a pas de listes d’impression."
       },
       "deleteReason": {
-        "delivered": "Suppression impossible : au moins une liste d’impression a déjà été livrée à l’imprimerie et compte dans le nombre de numéros imprimés auxquels les lecteur·trice·s abonné·e·s ont droit.",
+        "delivered": "Suppression impossible : au moins une liste d’impression a déjà été livrée à l’imprimerie et compte dans le nombre de numéros imprimés auxquels les lecteur·trice·s abonné·e·s ont droit. Annulez d’abord la livraison dans les listes d’impression du numéro – possible tant qu’aucun numéro ultérieur n’a de liste d’impression.",
         "draft": "Supprimer le numéro – sa liste d’impression est encore un brouillon et sera supprimée avec lui.",
         "empty": "Supprimer le numéro – il n’a pas encore de liste d’impression.",
         "historic": "Supprimer le numéro historique. Il ne compte alors plus dans le nombre de numéros imprimés auxquels les lecteur·trice·s abonné·e·s ont droit."
@@ -5217,8 +5218,15 @@
         "deliver": "Marquer comme livrée",
         "deliverTooltip": "Marquer {{name}} comme livrée après remise à l’imprimerie. Des modifications de la liste complète restent possibles à tout moment sous forme de compléments.",
         "deliverTitle": "Marquer la liste d’impression comme livrée ?",
-        "deliverQuestion": "Marquer {{name}} du numéro {{label}} comme «livraison à l’imprimerie effectuée» ? La liste est ensuite verrouillée, et ses exemplaires entrent dans le calcul des numéros restants auxquels les lecteur·trice·s ont droit. Cette étape est irréversible.",
+        "deliverQuestion": "Marquer {{name}} du numéro {{label}} comme «livraison à l’imprimerie effectuée» ? La liste est ensuite verrouillée, et ses exemplaires entrent dans le calcul des numéros restants auxquels les lecteur·trice·s ont droit. Tant qu’aucun numéro ultérieur n’a de liste d’impression, la livraison peut être annulée.",
         "deliverConfirm": "Marquer comme livrée",
+        "undeliver": "Annuler la livraison",
+        "undeliverTooltip": "Remettre {{name}} à l’état de brouillon – pour la corriger, la livrer à nouveau ou la supprimer.",
+        "undeliverTitle": "Annuler la livraison ?",
+        "undeliverQuestion": "Remettre {{name}} du numéro {{label}} à l’état de brouillon ? Ses exemplaires ne comptent alors plus dans les numéros auxquels les lecteur·trice·s ont droit, jusqu’à ce qu’elle soit à nouveau marquée comme livrée. La date et le nom de la livraison sont perdus.",
+        "undeliverConfirm": "Annuler la livraison",
+        "undeliverClosed": "Le numéro est clôturé – déverrouillez-le d’abord.",
+        "undeliverLater": "Impossible : le numéro {{label}} a déjà une liste d’impression calculée avec cette livraison. Supprimez-la ou annulez-la d’abord.",
         "delete": "Supprimer",
         "deleteTitle": "Supprimer la liste d’impression ?",
         "deleteQuestion": "Supprimer {{name}} ? Ses adresses sont abandonnées.",

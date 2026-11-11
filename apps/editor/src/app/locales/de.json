@@ -5061,6 +5061,7 @@
       "exportedSupplement": "Nachlieferung erstellt – ein Entwurf, bis sie als geliefert markiert ist.",
       "delivered": "Druckliste als geliefert markiert",
       "deliveryDeleted": "Druckliste gelöscht",
+      "deliveryTakenBack": "Lieferung zurückgenommen – die Druckliste ist wieder ein Entwurf",
       "issueDateRequired": "Bitte gib das Erscheinungsdatum an.",
       "drawer": {
         "createTitle": "Neue Ausgabe",
@@ -5119,7 +5120,7 @@
         "historic": "Historische Ausgabe, dauerhaft abgeschlossen. Die Ausgabe wurde ausserhalb des Systems erstellt und verfügt über keine Drucklisten."
       },
       "deleteReason": {
-        "delivered": "Löschen nicht möglich: mindestens eine Druckliste wurde bereits an die Druckerei geliefert und fliesst in die Berechnung der Anzahl gedruckter Ausgaben ein, auf die Leser:innen mit einem Abo Anrecht haben.",
+        "delivered": "Löschen nicht möglich: mindestens eine Druckliste wurde bereits an die Druckerei geliefert und fliesst in die Berechnung der Anzahl gedruckter Ausgaben ein, auf die Leser:innen mit einem Abo Anrecht haben. Nimm in den Drucklisten der Ausgabe zuerst die Lieferung zurück – möglich, solange keine spätere Ausgabe eine Druckliste hat.",
         "draft": "Ausgabe löschen – ihre Druckliste ist noch ein Entwurf und wird mitgelöscht.",
         "empty": "Ausgabe löschen – sie hat noch keine Druckliste.",
         "historic": "Historische Ausgabe löschen. Dadurch wird sie nicht mehr in der Berechnung der Anzahl gedruckter Ausgaben berücksichtigt, auf die Leser:innen mit einem Abo Anrecht haben."
@@ -5217,8 +5218,15 @@
         "deliver": "Als geliefert markieren",
         "deliverTooltip": "{{name}} nach Übergabe an die Druckerei als geliefert markieren. Änderungen an der Gesamtliste sind später in Form von Nachlieferungen jederzeit noch möglich.",
         "deliverTitle": "Druckliste als geliefert markieren?",
-        "deliverQuestion": "{{name}} der Ausgabe {{label}} als «an die Druckerei geliefert» markieren? Sie ist danach gesperrt, und ihre Exemplare fliessen in die Berechnung der verbleibenden Ausgaben ein, auf welche Leser:innen Anrecht haben. Dieser Schritt kann nicht rückgängig gemacht werden.",
+        "deliverQuestion": "{{name}} der Ausgabe {{label}} als «an die Druckerei geliefert» markieren? Sie ist danach gesperrt, und ihre Exemplare fliessen in die Berechnung der verbleibenden Ausgaben ein, auf welche Leser:innen Anrecht haben. Solange keine spätere Ausgabe eine Druckliste hat, lässt sich die Lieferung zurücknehmen.",
         "deliverConfirm": "Als geliefert markieren",
+        "undeliver": "Lieferung zurücknehmen",
+        "undeliverTooltip": "{{name}} wieder zum Entwurf machen – zum Korrigieren, erneut Liefern oder Löschen.",
+        "undeliverTitle": "Lieferung zurücknehmen?",
+        "undeliverQuestion": "{{name}} der Ausgabe {{label}} wieder zum Entwurf machen? Ihre Exemplare zählen dann nicht mehr zu den Ausgaben, auf die Leser:innen Anrecht haben, bis sie erneut als geliefert markiert wird. Datum und Name der Lieferung gehen verloren.",
+        "undeliverConfirm": "Zurücknehmen",
+        "undeliverClosed": "Die Ausgabe ist abgeschlossen – zuerst entsperren.",
+        "undeliverLater": "Nicht möglich: Ausgabe {{label}} hat bereits eine Druckliste, die mit dieser Lieferung berechnet wurde. Dort zuerst löschen oder zurücknehmen.",
         "delete": "Löschen",
         "deleteTitle": "Druckliste löschen?",
         "deleteQuestion": "{{name}} löschen? Die Adressen dieser Druckliste werden verworfen.",
