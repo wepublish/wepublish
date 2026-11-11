@@ -893,6 +893,12 @@ compiler before ("Compilation Skipped: Use of incompatible library"); removing
 `watch` lets it compile them, which can surface fresh `set-state-in-effect`
 errors in code that was never checked.
 
+Two siblings, linted in `libs/form/*`: spreading RHF's form object
+(`{ ...form, extra }` is memoised on `form`, whose `formState` RHF swaps every
+render, so `isLoading` stays `true`) and reading `useFormContext().formState`
+(frozen at its first value) — use the `useSchemaForm` handle and
+`useFormState`/`useFormStatus` ([libs/form/README.md](../../libs/form/README.md#react-compiler-rules)).
+
 ---
 
 ### ⚠️ The compiler turns a hoisted inner function into a `const`
@@ -1169,14 +1175,21 @@ may not import `scope:api-only` libs (`website-revalidation`,
 against Apollo and Prisma. The profiles behind
 [`LinkCache`](../../libs/media/api/src/lib/link-cache/link-cache.ts), each
 shared one kept locally for 2 s:
-- `media:links` (`val:media:links:<sha>`): objects that exist. Shared, 3 days,
-  across releases.
+- `media:links` (`val:media:links:<sha>`): objects that exist. Shared, across
+  releases. Documents, video and audio: 3 days, written by the controller.
+  Image variants: written by `MediaService` when it transforms, and live
+  exactly as long as the transformed object: 30 days from its
+  `lastModified` (`TRANSFORMED_IMAGE_TTL`, the transformation bucket's
+  lifecycle rule; change both together). A link that outlived its object
+  redirected to a deleted file and never triggered a new transform. An
+  object past 30 days the bucket has not deleted yet is transformed again.
 - `media:rejected-variants` (`val:<release>:media:rejected-variants:<sha>`):
   variants the guard rejects (400), 1 h, per release since a deploy can change
   the guard's limits. Only signed requests get that far.
 - `media:missing-links`: objects that don't exist. 4 h and **local only**.
 - `media:generations` (`val:media:generations:<sha>`): written only by the
-  authenticated image/document `DELETE`, 3 days. Every link key hashes
+  authenticated image/document `DELETE`, as long as the longest link (30
+  days); any shorter and a forgotten link comes back. Every link key hashes
   `[id, generation, variant]`, so a delete orphans all variants of that id on
   every replica within 2 s (each replica re-reads an id's generation at most
   every 2 s, remembered in the local `media:generation-checks`). Variants
@@ -1191,6 +1204,12 @@ misses included, is kept for at most 30 s, so the media server goes back to R2
 more often for the length of the outage.
 A Dragonfly misconfiguration crash-loops the media pod, as it does the API's,
 so the media image ships `/wepublish/ca.crt` for `NODE_EXTRA_CA_CERTS`.
+
+---
+
+### ⚠️ Prisma 7 with the pg adapter names the unique index, not the fields
+
+The API sends ``Unique constraint failed on the constraint: `consents_slug_key` ``, which `humanizeError`'s `fields: (…)` regex misses; match it with `uniqueConstraint(...)` from `@wepublish/form/editor` (pinned by `libs/form/editor/src/lib/view/unique-constraint.spec.ts`).
 
 ---
 

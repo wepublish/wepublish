@@ -1,0 +1,44 @@
+# What /llms.txt lists: the sitemap fields plus the title and summary that
+# make up each markdown link.
+
+fragment LlmsArticle on Article {
+  ...SitemapArticle
+
+  latest {
+    lead
+    seoDescription
+  }
+}
+
+fragment LlmsPage on Page {
+  ...SitemapPage
+
+  latest {
+    title
+    description
+    seoTitle
+    seoDescription
+  }
+}
+
+query LlmsContent($articleCount: Int!, $pageCount: Int!) {
+  articles(
+    take: $articleCount
+    sort: PublishedAt
+    order: Descending
+  ) {
+    nodes {
+      ...LlmsArticle
+    }
+  }
+
+  pages(take: $pageCount, sort: PublishedAt, order: Descending) {
+    nodes {
+      ...LlmsPage
+    }
+  }
+
+  navigations {
+    ...FullNavigation
+  }
+}

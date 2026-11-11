@@ -1,17 +1,27 @@
 import { CombinedGraphQLErrors } from '@apollo/client';
 
-import { contentCacheControl } from './content-cache-control';
+import {
+  contentCacheHeaders,
+  PAGE_CACHE_REVALIDATE,
+} from './content-cache-control';
 
-const sMaxAge = (header: string) => Number(/s-maxage=(\d+)/.exec(header)?.[1]);
+const revalidate = (content: unknown, errors?: unknown) =>
+  Number(contentCacheHeaders(content, errors)[PAGE_CACHE_REVALIDATE]);
 
 const article = {
   __typename: 'Article',
   latest: { blocks: [{ __typename: 'TitleBlock' }] },
 };
 
-describe('contentCacheControl', () => {
+describe('contentCacheHeaders', () => {
+  it('sends exactly what next.config.js sends for a Next page', () => {
+    expect(contentCacheHeaders(article)['cache-control']).toBe(
+      'public, max-age=59, s-maxage=59, stale-if-error=86400'
+    );
+  });
+
   it('caches a static page for an hour, like `revalidate: 3600` did', () => {
-    expect(sMaxAge(contentCacheControl(article))).toBe(3600);
+    expect(revalidate(article)).toBe(3600);
   });
 
   it('drops to a minute for a page with a live block', () => {
@@ -20,12 +30,12 @@ describe('contentCacheControl', () => {
       latest: { blocks: [{ __typename: 'PollBlock' }] },
     };
 
-    expect(sMaxAge(contentCacheControl(withPoll))).toBe(60);
+    expect(revalidate(withPoll)).toBe(60);
   });
 
   it('drops to a minute when the content is missing', () => {
-    expect(sMaxAge(contentCacheControl(undefined))).toBe(60);
-    expect(sMaxAge(contentCacheControl(null))).toBe(60);
+    expect(revalidate(undefined)).toBe(60);
+    expect(revalidate(null)).toBe(60);
   });
 
   it('drops to a minute when the api reported errors alongside content', () => {
@@ -34,7 +44,7 @@ describe('contentCacheControl', () => {
       errors: [{ message: 'nope' }],
     });
 
-    expect(sMaxAge(contentCacheControl(article, errors))).toBe(60);
+    expect(revalidate(article, errors)).toBe(60);
   });
 
   it('shortens to the next scheduled block change', () => {
@@ -43,7 +53,7 @@ describe('contentCacheControl', () => {
       blocksChangeAt: new Date(Date.now() + 10_000).toISOString(),
     };
 
-    expect(sMaxAge(contentCacheControl(changesSoon))).toBeLessThanOrEqual(10);
+    expect(revalidate(changesSoon)).toBeLessThanOrEqual(10);
   });
 
   /**
@@ -58,15 +68,6 @@ describe('contentCacheControl', () => {
       ],
     });
 
-    expect(sMaxAge(contentCacheControl(undefined, serverError))).toBe(60);
-  });
-
-  it('keeps the directives the page cache and the CDN rely on', () => {
-    const header = contentCacheControl(article);
-
-    expect(header).toContain('public');
-    expect(header).toContain('max-age=0');
-    expect(header).toContain('stale-while-revalidate=604800');
-    expect(header).toContain('stale-if-error=86400');
+    expect(revalidate(undefined, serverError)).toBe(60);
   });
 });

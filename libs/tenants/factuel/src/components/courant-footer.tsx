@@ -12,6 +12,7 @@ import { forceHideBanner } from '@wepublish/banner/website';
 import { useIntersectionObserver } from 'usehooks-ts';
 
 import { courantTokens } from '../brand-tokens';
+import { AminimaLogo } from './aminima-logo';
 import { CourantLogo } from './courant-logo';
 
 const { footer, pageMaxWidth, pageInline } = courantTokens.layout;
@@ -153,9 +154,9 @@ const CourantFooterIcons = styled('div')`
   margin-inline: auto;
   display: flex;
   flex-flow: row wrap;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
-  gap: ${({ theme }) => theme.spacing(3)};
+  gap: ${({ theme }) => theme.spacing(12)};
   ${({ theme }) => theme.breakpoints.up('sm')} {
     justify-content: flex-end;
   }
@@ -241,6 +242,15 @@ export const CourantFooter = ({
                 />
               </Link>
             ))}
+
+            <Link
+              href="https://aminima.ch?ref=courant"
+              target="_blank"
+              rel="noopener"
+              color="inherit"
+            >
+              <AminimaLogo height={38} />
+            </Link>
 
             {wepublishLogo === 'light' && (
               <Link href="https://wepublish.ch/de/das-projekt/#cms">

@@ -73,7 +73,9 @@ export type AllowedSettingVals = {
 };
 
 export enum AnalyticsProviderType {
-  Google = 'GOOGLE'
+  Google = 'GOOGLE',
+  Plausible = 'PLAUSIBLE',
+  Umami = 'UMAMI'
 }
 
 export type ApiToken = {
@@ -3974,12 +3976,14 @@ export type MutationCreateAiSettingArgs = {
 
 
 export type MutationCreateAnalyticsProviderSettingArgs = {
+  apiKey?: InputMaybe<Scalars['String']['input']>;
   articlePrefix?: InputMaybe<Scalars['String']['input']>;
   credentials?: InputMaybe<SettingAnalyticsCredentialsInput>;
   id: Scalars['String']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
   property?: InputMaybe<Scalars['String']['input']>;
   type: AnalyticsProviderType;
+  url?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -5082,11 +5086,14 @@ export type MutationUpdateAiSettingArgs = {
 
 
 export type MutationUpdateAnalyticsProviderSettingArgs = {
+  apiKey?: InputMaybe<Scalars['String']['input']>;
   articlePrefix?: InputMaybe<Scalars['String']['input']>;
   credentials?: InputMaybe<SettingAnalyticsCredentialsInput>;
+  hotAndTrending?: InputMaybe<Scalars['Boolean']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   property?: InputMaybe<Scalars['String']['input']>;
+  url?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -5676,7 +5683,6 @@ export type MutationUpdateWebsiteSettingsArgs = {
   ads?: InputMaybe<WebsiteAdsInput>;
   analytics?: InputMaybe<WebsiteAnalyticsInput>;
   fonts?: InputMaybe<Array<WebsiteRemoteFontInput>>;
-  mail?: InputMaybe<WebsiteMailInput>;
   theme?: InputMaybe<Scalars['JSONObject']['input']>;
 };
 
@@ -8523,6 +8529,8 @@ export type SettingAnalyticsProvider = SettingProvider & {
   __typename: 'SettingAnalyticsProvider';
   articlePrefix?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
+  /** Whether this provider powers the Hot & Trending query. */
+  hotAndTrending: Scalars['Boolean']['output'];
   id: Scalars['String']['output'];
   /** Whether service account credentials are stored. They are never returned. */
   isCredentialsSet: Scalars['Boolean']['output'];
@@ -8531,6 +8539,8 @@ export type SettingAnalyticsProvider = SettingProvider & {
   name?: Maybe<Scalars['String']['output']>;
   property?: Maybe<Scalars['String']['output']>;
   type: AnalyticsProviderType;
+  /** Base url of the API, used for self hosted instances. */
+  url?: Maybe<Scalars['String']['output']>;
 };
 
 export type SettingAnalyticsProviderFilter = {
@@ -9738,6 +9748,7 @@ export type WebsiteAnalytics = {
   googleTagManager: KeyEnabled;
   piwik: KeyEnabled;
   plausible: KeyEnabled;
+  umami: KeyEnabled;
 };
 
 export type WebsiteAnalyticsInput = {
@@ -9745,15 +9756,7 @@ export type WebsiteAnalyticsInput = {
   googleTagManager: KeyEnabledInput;
   piwik: KeyEnabledInput;
   plausible: KeyEnabledInput;
-};
-
-export type WebsiteMail = {
-  __typename: 'WebsiteMail';
-  mailchimp?: Maybe<KeyEnabled>;
-};
-
-export type WebsiteMailInput = {
-  mailchimp: KeyEnabledInput;
+  umami: KeyEnabledInput;
 };
 
 export type WebsiteRemoteFont = {
@@ -9774,7 +9777,6 @@ export type WebsiteSettings = {
   ads: WebsiteAds;
   analytics: WebsiteAnalytics;
   fonts: Array<WebsiteRemoteFont>;
-  mail: WebsiteMail;
   theme: Scalars['JSONObject']['output'];
 };
 

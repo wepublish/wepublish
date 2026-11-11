@@ -174,10 +174,6 @@ export class MailchimpCampaignClicksService {
   private async clickersOf(campaign: CampaignReport): Promise<Set<string>> {
     const client = mailchimp as unknown as {
       reports: {
-        getCampaignClickDetails: (
-          campaignId: string,
-          options: Record<string, unknown>
-        ) => Promise<{ urls_clicked?: ClickedUrl[] }>;
         getSubscribersInfo: (
           campaignId: string,
           linkId: string,
@@ -185,12 +181,9 @@ export class MailchimpCampaignClicksService {
         ) => Promise<{ members?: Clicker[] }>;
       };
     };
-    const details = await client.reports.getCampaignClickDetails(campaign.id, {
-      count: PAGE,
-    });
     const clickers = new Set<string>();
 
-    for (const url of details.urls_clicked ?? []) {
+    for (const url of await this.clickedUrls(campaign.id)) {
       for (let offset = 0; ; offset += PAGE) {
         const page = await client.reports.getSubscribersInfo(
           campaign.id,
@@ -214,6 +207,33 @@ export class MailchimpCampaignClicksService {
     }
 
     return clickers;
+  }
+
+  /** Every link of the campaign that was clicked, across every page. */
+  private async clickedUrls(campaignId: string): Promise<ClickedUrl[]> {
+    const urls: ClickedUrl[] = [];
+
+    for (let offset = 0; ; offset += PAGE) {
+      const response = (await (
+        mailchimp as unknown as {
+          reports: {
+            getCampaignClickDetails: (
+              campaignId: string,
+              options: Record<string, unknown>
+            ) => Promise<{ urls_clicked?: ClickedUrl[] }>;
+          };
+        }
+      ).reports.getCampaignClickDetails(campaignId, {
+        count: PAGE,
+        offset,
+      })) as { urls_clicked?: ClickedUrl[] };
+      const page = response.urls_clicked ?? [];
+      urls.push(...page);
+
+      if (page.length < PAGE) {
+        return urls;
+      }
+    }
   }
 
   /**
