@@ -80,7 +80,7 @@ describe('findConflicts', () => {
     ).toEqual([]);
     expect(
       findConflicts(askToRegister, [
-        forRegistered(EngagementAudience.NonPaying),
+        forRegistered(EngagementAudience.NonMembers),
       ])
     ).toHaveLength(1);
   });

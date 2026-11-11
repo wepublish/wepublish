@@ -1779,7 +1779,6 @@ enum EngagementAudience {
   REGISTERED
   NON_MEMBERS
   MEMBERS
-  NON_PAYING
   PAYING_MEMBERS
   PAYWALL_BYPASSED
   /// Readers with an active subscription to one of `audienceMemberPlans`.

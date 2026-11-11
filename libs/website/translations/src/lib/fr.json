@@ -22,7 +22,8 @@
       "email": "Adresse e-mail",
       "captcha": "Captcha",
       "submit": "Continuer à lire",
-      "error": "Ça n’a pas marché. Vérifie ton adresse e-mail et réessaie."
+      "error": "Ça n’a pas marché. Vérifie ton adresse e-mail et réessaie.",
+      "done": "Merci ! Confirme ton inscription dans l’e-mail que nous venons de t’envoyer."
     }
   },
   "banner": {

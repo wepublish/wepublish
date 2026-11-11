@@ -4763,7 +4763,6 @@
     "engagement": {
       "list": {
         "title": "Audience Engagement",
-        "description": "Wer welchen Hinweis wann sieht und ob er den Rest eines Artikels zurückhält.",
         "create": "Neue Regel",
         "empty": "Noch keine Engagement-Regeln.",
         "active": "Aktiv",
@@ -4792,8 +4791,7 @@
         "confirm": "Löschen"
       },
       "create": {
-        "title": "Neue Engagement-Regel",
-        "pickPreset": "Was möchtest du erreichen? Du kannst danach alles anpassen."
+        "title": "Neue Engagement-Regel"
       },
       "edit": {
         "title": "Engagement-Regel bearbeiten"
@@ -4831,8 +4829,6 @@
         "NON_MEMBERSInfo": "Anonyme und eingeloggte Leser*innen ohne aktive Mitgliedschaft.",
         "MEMBERS": "Mitglieder",
         "MEMBERSInfo": "Leser*innen mit aktiver Mitgliedschaft, gratis oder bezahlt.",
-        "NON_PAYING": "Nicht zahlende Leser*innen",
-        "NON_PAYINGInfo": "Alle ohne bezahlte Mitgliedschaft, Gratis-Mitglieder eingeschlossen.",
         "PAYING_MEMBERS": "Zahlende Mitglieder",
         "PAYING_MEMBERSInfo": "Leser*innen mit aktiver, kostenpflichtiger Mitgliedschaft.",
         "PAYWALL_BYPASSED": "Leser*innen mit Paywall-Freischaltlink",
@@ -4940,7 +4936,8 @@
         "addAction": "Aktion hinzufügen",
         "audienceMemberPlans": "Abo-Pläne",
         "showFirst": "Diese Regel zuerst zeigen",
-        "showFirstInfo": "Eine Person sieht höchstens ein Banner, ein Pop-up und eine Box im Artikel gleichzeitig. Ohne diese Einstellung wird die spezifischere Regel zuerst gezeigt (engeres Publikum, nur gewählte Seiten), danach die neuste."
+        "showFirstInfo": "Eine Person sieht höchstens ein Banner, ein Pop-up und eine Box im Artikel gleichzeitig. Ohne diese Einstellung wird die spezifischere Regel zuerst gezeigt (engeres Publikum, nur gewählte Seiten), danach die neuste.",
+        "newsletterUrlInfo": "Leer lassen, um die E-Mail-Adresse direkt im Hinweis abzufragen"
       },
       "validation": {
         "required": "Pflichtfeld",

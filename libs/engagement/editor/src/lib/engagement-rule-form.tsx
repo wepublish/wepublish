@@ -62,7 +62,7 @@ import {
   actionDefaults,
   engagementRuleToValues,
   showsFirst,
-  actionNeedsUrl,
+  actionTakesUrl,
   hardStage,
   isAnnouncement,
   isHard,
@@ -254,6 +254,10 @@ const ActionList = ({ stageIndex }: { stageIndex: number }) => {
     name: `stages.${stageIndex}.actions`,
   });
   const actions = useWatch({ control, name: `stages.${stageIndex}.actions` });
+  const placement = useWatch({
+    control,
+    name: `stages.${stageIndex}.placement`,
+  });
   const actionsError =
     formState.errors.stages?.[stageIndex]?.actions?.root?.message ??
     formState.errors.stages?.[stageIndex]?.actions?.message;
@@ -341,9 +345,7 @@ const ActionList = ({ stageIndex }: { stageIndex: number }) => {
                 )}
               />
 
-              {actionNeedsUrl(
-                actions?.[actionIndex]?.type ?? EngagementActionType.Url
-              ) && (
+              {actionTakesUrl(actions?.[actionIndex] ?? actionDefaults()) && (
                 <Controller
                   control={control}
                   name={`stages.${stageIndex}.actions.${actionIndex}.url`}
@@ -353,7 +355,16 @@ const ActionList = ({ stageIndex }: { stageIndex: number }) => {
                       size="small"
                       label={t('engagement.form.actionUrl')}
                       error={Boolean(error)}
-                      helperText={error?.message}
+                      helperText={
+                        error?.message ??
+                        ((
+                          actions?.[actionIndex]?.type ===
+                            EngagementActionType.Newsletter &&
+                          placement !== EngagementPlacement.Banner
+                        ) ?
+                          t('engagement.form.newsletterUrlInfo')
+                        : undefined)
+                      }
                       fullWidth
                     />
                   )}

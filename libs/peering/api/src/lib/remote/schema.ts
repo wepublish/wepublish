@@ -1391,7 +1391,6 @@ export enum EngagementAudience {
   Members = 'MEMBERS',
   MemberPlans = 'MEMBER_PLANS',
   NonMembers = 'NON_MEMBERS',
-  NonPaying = 'NON_PAYING',
   PayingMembers = 'PAYING_MEMBERS',
   PaywallBypassed = 'PAYWALL_BYPASSED',
   Registered = 'REGISTERED'

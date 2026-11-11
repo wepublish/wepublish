@@ -4763,7 +4763,6 @@
     "engagement": {
       "list": {
         "title": "Audience Engagement",
-        "description": "Qui voit quelle invitation, quand, et si elle retient la suite d’un article.",
         "create": "Nouvelle règle",
         "empty": "Pas encore de règles d’engagement.",
         "active": "Active",
@@ -4792,8 +4791,7 @@
         "confirm": "Supprimer"
       },
       "create": {
-        "title": "Nouvelle règle d’engagement",
-        "pickPreset": "Que veux-tu atteindre ? Tu peux tout modifier ensuite."
+        "title": "Nouvelle règle d’engagement"
       },
       "edit": {
         "title": "Modifier la règle d’engagement"
@@ -4831,8 +4829,6 @@
         "NON_MEMBERSInfo": "Les lecteur·rice·s anonymes et connecté·e·s sans abonnement actif.",
         "MEMBERS": "Membres",
         "MEMBERSInfo": "Les lecteur·rice·s avec un abonnement actif, gratuit ou payant.",
-        "NON_PAYING": "Lecteur·rice·s qui ne paient pas",
-        "NON_PAYINGInfo": "Tou·te·s sans abonnement payant, membres gratuits inclus.",
         "PAYING_MEMBERS": "Membres payant·e·s",
         "PAYING_MEMBERSInfo": "Les lecteur·rice·s avec un abonnement actif payant.",
         "PAYWALL_BYPASSED": "Lecteur·rice·s avec un lien de déblocage",
@@ -4940,7 +4936,8 @@
         "addAction": "Ajouter une action",
         "audienceMemberPlans": "Plans d’abonnement",
         "showFirst": "Afficher cette règle en premier",
-        "showFirstInfo": "Une personne voit au plus une bannière, un pop-up et un encadré dans l’article à la fois. Sans ce réglage, la règle la plus précise s’affiche en premier (public plus restreint, pages choisies uniquement), puis la plus récente."
+        "showFirstInfo": "Une personne voit au plus une bannière, un pop-up et un encadré dans l’article à la fois. Sans ce réglage, la règle la plus précise s’affiche en premier (public plus restreint, pages choisies uniquement), puis la plus récente.",
+        "newsletterUrlInfo": "Laisse vide pour demander l’adresse e-mail directement dans le message"
       },
       "validation": {
         "required": "Obligatoire",

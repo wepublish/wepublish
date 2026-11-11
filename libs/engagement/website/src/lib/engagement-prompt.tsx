@@ -61,7 +61,20 @@ export const NewsletterWallForm = styled('form')`
   }
 `;
 
-const NewsletterWall = () => {
+/**
+ * A newsletter signup right in the prompt: a newsletter wall, or a newsletter
+ * action without a url. It only asks for the email (and readers who are not
+ * logged in to solve the challenge). Once the API signed it up, the token goes
+ * into a cookie, which views the article again: past a wall, and newsletter
+ * prompts no longer show.
+ */
+const NewsletterSignupForm = ({
+  submitLabel,
+  onSignedUp,
+}: {
+  submitLabel: string;
+  onSignedUp?: () => void;
+}) => {
   const { t } = useTranslation();
   const { user, hasUser } = useUser();
   const challenge = useQuery(ChallengeDocument, { skip: hasUser });
@@ -96,6 +109,7 @@ const NewsletterWall = () => {
 
       if (data) {
         setSignedUp(true);
+        onSignedUp?.();
         storeNewsletterToken(data.signUpForNewsletter.newsletterToken);
       }
     } catch {
@@ -105,6 +119,12 @@ const NewsletterWall = () => {
       challenge.refetch().catch(() => undefined);
     }
   };
+
+  if (signedUp) {
+    return (
+      <Alert severity="success">{t('engagement.newsletterWall.done')}</Alert>
+    );
+  }
 
   return (
     <NewsletterWallForm onSubmit={submit}>
@@ -122,11 +142,9 @@ const NewsletterWall = () => {
         type="submit"
         variant="contained"
         color="secondary"
-        disabled={
-          loading || signedUp || !email.trim() || (!hasUser && !solution)
-        }
+        disabled={loading || !email.trim() || (!hasUser && !solution)}
       >
-        {t('engagement.newsletterWall.submit')}
+        {submitLabel}
       </Button>
 
       {challenge.data?.challenge && (
@@ -183,12 +201,22 @@ export const EngagementPrompt = ({
     return () => clearTimeout(timer);
   }, [stage.delaySeconds]);
 
-  const actions = stage.actions.filter(
+  const visible = stage.actions.filter(
     action => !(hasUser && action.type === EngagementActionType.Login)
   );
+  // A newsletter action without a url asks for the email right here.
+  const signupAction = visible.find(
+    action => action.type === EngagementActionType.Newsletter && !action.url
+  );
+  const isWall =
+    stage.enforcement === EngagementEnforcement.Hard &&
+    stage.requirement === EngagementRequirement.Newsletter;
+  const actions = visible.filter(action => action !== signupAction);
+  const links = actions.filter(
+    ({ role }) => role !== EngagementActionRole.Cancel
+  );
   const primary =
-    actions.find(({ role }) => role === EngagementActionRole.Primary) ??
-    actions[0];
+    links.find(({ role }) => role === EngagementActionRole.Primary) ?? links[0];
 
   const follow = (action: FullEngagementActionFragment) => {
     onAction?.(action);
@@ -220,6 +248,16 @@ export const EngagementPrompt = ({
       {stage.html && <div dangerouslySetInnerHTML={{ __html: stage.html }} />}
       {stage.cta && !(inModal && modalTitle === stage.cta) && (
         <Paragraph gutterBottom={false}>{stage.cta}</Paragraph>
+      )}
+      {(isWall || signupAction) && (
+        <NewsletterSignupForm
+          submitLabel={
+            signupAction ?
+              actionLabel(signupAction, t)
+            : t('engagement.newsletterWall.submit')
+          }
+          onSignedUp={signupAction && (() => onAction?.(signupAction))}
+        />
       )}
     </>
   );
@@ -259,25 +297,33 @@ export const EngagementPrompt = ({
     >
       {content(false)}
 
-      {stage.enforcement === EngagementEnforcement.Hard &&
-        stage.requirement === EngagementRequirement.Newsletter && (
-          <NewsletterWall />
-        )}
-
       <EngagementPromptActions>
-        {actions.map(action => (
-          <Button
-            key={action.id}
-            variant={action === primary ? 'contained' : 'outlined'}
-            color="secondary"
-            data-role={action.role}
-            LinkComponent={Link}
-            href={actionHref(action)}
-            onClick={() => follow(action)}
-          >
-            {actionLabel(action, t)}
-          </Button>
-        ))}
+        {actions.map(action =>
+          action.role === EngagementActionRole.Cancel ?
+            <Button
+              key={action.id}
+              variant="text"
+              color="secondary"
+              data-role={action.role}
+              onClick={() => {
+                onAction?.(action);
+                dismiss();
+              }}
+            >
+              {actionLabel(action, t)}
+            </Button>
+          : <Button
+              key={action.id}
+              variant={action === primary ? 'contained' : 'outlined'}
+              color="secondary"
+              data-role={action.role}
+              LinkComponent={Link}
+              href={actionHref(action)}
+              onClick={() => follow(action)}
+            >
+              {actionLabel(action, t)}
+            </Button>
+        )}
 
         {onDismiss && stage.placement !== EngagementPlacement.Cutoff && (
           <Button

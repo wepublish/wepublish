@@ -1,4 +1,5 @@
 import {
+  EngagementActionRole,
   EngagementActionType,
   EngagementAudience,
   EngagementEnforcement,
@@ -13,7 +14,11 @@ export type EngagementStageDraft = {
   enforcement: EngagementEnforcement;
   requirement?: EngagementRequirement | null;
   previewBlocks?: number | null;
-  actions: Array<{ type: EngagementActionType; url?: string | null }>;
+  actions: Array<{
+    type: EngagementActionType;
+    url?: string | null;
+    role?: EngagementActionRole;
+  }>;
 };
 
 export type EngagementRuleDraft = {
@@ -30,10 +35,19 @@ export type EngagementRuleDraft = {
  */
 export type EngagementRuleProblem = { path: string; code: string };
 
-const ACTIONS_WITH_URL: EngagementActionType[] = [
-  EngagementActionType.URL,
-  EngagementActionType.NEWSLETTER,
-];
+/**
+ * Where an action needs a url: a link leads there, a cancel button closes the
+ * prompt, and a newsletter action without one asks for the email right in the
+ * prompt, which a banner has no room for.
+ */
+export const actionNeedsUrl = (
+  { type, role }: EngagementStageDraft['actions'][number],
+  placement: EngagementPlacement
+) =>
+  role !== EngagementActionRole.CANCEL &&
+  (type === EngagementActionType.URL ||
+    (type === EngagementActionType.NEWSLETTER &&
+      placement === EngagementPlacement.BANNER));
 
 export function validateEngagementRule(
   rule: EngagementRuleDraft
@@ -105,7 +119,7 @@ export function validateEngagementRule(
     }
 
     stage.actions.forEach((action, actionIndex) => {
-      if (ACTIONS_WITH_URL.includes(action.type) && !action.url?.trim()) {
+      if (actionNeedsUrl(action, stage.placement) && !action.url?.trim()) {
         problem(`${path}.actions.${actionIndex}.url`, 'required');
       }
     });
