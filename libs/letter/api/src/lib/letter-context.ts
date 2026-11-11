@@ -118,9 +118,9 @@ export class LetterContext implements LetterSender {
    * safe to ask without one.
    */
   async isConfigured(): Promise<boolean> {
-    if (
-      !('sendLetter' in this.letterProvider && 'render' in this.pdfRenderer)
-    ) {
+    if (!(
+      'sendLetter' in this.letterProvider && 'render' in this.pdfRenderer
+    )) {
       return false;
     }
 

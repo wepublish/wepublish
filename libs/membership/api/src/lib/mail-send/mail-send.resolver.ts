@@ -172,8 +172,7 @@ export class MailSendResolver {
             memberPlanName:
               (
                 result.recipient.subscription?.memberPlan as
-                  | { name?: string }
-                  | undefined
+                  { name?: string } | undefined
               )?.name ?? null,
             hasAddress: canReceiveLetters(result.recipient.user),
             emailSegment: emailSegmentOf(result.recipient.user, patterns),

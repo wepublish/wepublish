@@ -44,6 +44,9 @@ const nextConfig = {
       },
     ];
   },
+  async rewrites() {
+    return [{ source: '/llms.txt', destination: '/api/llms' }];
+  },
   headers: async () =>
     process.env.NODE_ENV === 'production' ?
       [

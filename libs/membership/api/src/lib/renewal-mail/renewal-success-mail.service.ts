@@ -11,8 +11,7 @@ import { SubscriptionEventDictionary } from '../subscription-event-dictionary/su
 import { TemplateAction } from '../subscription-event-dictionary/subscription-event-dictionary.type';
 
 export type PaymentMail =
-  | TemplateAction
-  | { noMailReason: ActionMailNoMailReason };
+  TemplateAction | { noMailReason: ActionMailNoMailReason };
 
 type TemplateLookupSubscription = {
   id: string;
