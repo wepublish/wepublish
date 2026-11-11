@@ -182,7 +182,6 @@ export class PrintIssueService {
     return issue;
   }
 
-  /** The medium's defaults for a new issue (setting `printExportDefaults`). */
   /** The medium's bexio kinds (setting printBexioKinds). */
   bexioKinds() {
     return this.exporter.bexioKinds();
