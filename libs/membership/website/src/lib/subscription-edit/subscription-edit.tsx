@@ -36,6 +36,7 @@ import {
 import { SubscriptionReward } from '../subscription-list/subscription-reward';
 import { SectionBox, SectionBoxContent } from '../section-box/section-box';
 import { canUpgrade } from './can-upgrade';
+import { useSwitchToYearlyRequest } from '../subscription-list/switch-periodicity';
 
 const PAYMENT_ACTIONS: readonly SubscriptionAction[] = [
   'pendingChange',
@@ -190,6 +191,8 @@ function SubscriptionEditDetails({
   const memberPlans = useQuery(MemberPlanListDocument, {
     variables: { take: 50, filter: { active: true } },
   });
+  // e.g. a mail to readers paying monthly links here with ?switchTo=yearly
+  const switchToYearlyRequest = useSwitchToYearlyRequest();
   const upgradeable = canUpgrade(
     subscription,
     memberPlans.data?.memberPlans.nodes ?? []
@@ -357,6 +360,8 @@ function SubscriptionEditDetails({
           {...actionProps}
           variant="table"
           actions={RENEWAL_ACTIONS}
+          autoOpenSwitchToYearly={switchToYearlyRequest.requested}
+          onAutoOpenSwitchToYearlyHandled={switchToYearlyRequest.clear}
         />
       </Section>
 

@@ -193,6 +193,13 @@ export type SubscriptionActionsProps = PropsWithChildren<
     variant?: 'card' | 'table';
     /** Which actions to offer; all of them by default. */
     actions?: readonly SubscriptionAction[];
+    /**
+     * A link asked to switch to yearly payments (`?switchTo=yearly`): opens
+     * the dialog right away, or says why it can't be done.
+     */
+    autoOpenSwitchToYearly?: boolean;
+    /** Called once the reader closed what the link opened. */
+    onAutoOpenSwitchToYearlyHandled?: () => void;
     /** How to name a payment method; its name from the editor by default. */
     paymentMethodLabel?: (paymentMethod: FullPaymentMethodFragment) => string;
   }
@@ -260,6 +267,8 @@ export function SubscriptionActions({
   monthlyAmount,
   switchablePeriodicities,
   switchPeriodicity,
+  autoOpenSwitchToYearly = false,
+  onAutoOpenSwitchToYearlyHandled,
   children,
   variant = 'card',
   actions = ALL_ACTIONS,
@@ -306,6 +315,20 @@ export function SubscriptionActions({
         PaymentPeriodicity.Yearly
       )
     : monthlyAmount;
+
+  // what a link asked for shows until the reader closes the dialog once
+  const [autoOpenHandled, setAutoOpenHandled] = useState(false);
+  const linkAsksToSwitch = autoOpenSwitchToYearly && !autoOpenHandled;
+  const switchToYearlyOpen =
+    confirmSwitchToYearly || (linkAsksToSwitch && canSwitchToYearly);
+  const closeSwitchToYearly = () => {
+    setConfirmSwitchToYearly(false);
+
+    if (linkAsksToSwitch) {
+      setAutoOpenHandled(true);
+      onAutoOpenSwitchToYearlyHandled?.();
+    }
+  };
 
   const {
     changeablePaymentMethods,
@@ -405,6 +428,14 @@ export function SubscriptionActions({
       {children}
 
       {error && <Alert severity="error">{error.message}</Alert>}
+
+      {show('switchToYearly') && linkAsksToSwitch && !canSwitchToYearly && (
+        <Alert severity="info">
+          {t('subscription.switchToYearlyUnavailable', {
+            yearly: paymentPeriodicity === PaymentPeriodicity.Yearly,
+          })}
+        </Alert>
+      )}
 
       {show('revertUpgrade') && canRevertUpgrade && revertUpgrade && (
         <SubscriptionListItemActions>
@@ -641,10 +672,10 @@ export function SubscriptionActions({
       </Modal>
 
       <Modal
-        open={confirmSwitchToYearly}
-        onCancel={() => setConfirmSwitchToYearly(false)}
+        open={switchToYearlyOpen}
+        onCancel={closeSwitchToYearly}
         onSubmit={async () => {
-          setConfirmSwitchToYearly(false);
+          closeSwitchToYearly();
 
           if (switchPeriodicity) {
             await callAction(switchPeriodicity)(PaymentPeriodicity.Yearly);

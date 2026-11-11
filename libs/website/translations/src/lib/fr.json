@@ -161,6 +161,7 @@
     "switchToYearlyRaised": "Le paiement annuel a un montant minimum plus élevé, ton montant augmente donc légèrement.",
     "switchToYearlyBenefit": "Un seul paiement au lieu de plusieurs – et tu soutiens le journalisme indépendant pendant toute une année. Cela nous permet de mieux planifier.",
     "switchToYearlySubmit": "Changer",
+    "switchToYearlyUnavailable": "{yearly, select, true {Ton abonnement est déjà payé annuellement.} other {Ton abonnement ne peut pas être passé au paiement annuel pour le moment.}}",
     "reactivateConfirmation": "{type, select, Donation {Le don se poursuit normalement.} other {La résiliation est annulée et l’abonnement se poursuit normalement. Si la période est déjà écoulée, tu recevras une nouvelle facture.}}",
     "afterFirstPaymentPeriod": {
       "monthly": "le premier mois",
