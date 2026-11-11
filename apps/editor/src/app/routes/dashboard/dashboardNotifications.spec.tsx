@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { ChangelogSeverity } from '@wepublish/editor/api';
 import { NotificationItem, NotificationSeverity } from '@wepublish/ui/editor';
 import { MemoryRouter } from 'react-router-dom';
 
@@ -14,7 +15,17 @@ const { sources } = vi.hoisted(() => ({
     actionRequired: [] as unknown[],
     jobs: [] as unknown[],
     news: [] as unknown[],
+    whatsNew: [] as unknown[],
     mayReadJobLogs: true,
+  },
+}));
+
+const { draft, calls } = vi.hoisted(() => ({
+  draft: { current: 1 },
+  calls: {
+    action: [] as Record<string, unknown>[],
+    news: [] as Record<string, unknown>[],
+    whatsNew: [] as Record<string, unknown>[],
   },
 }));
 
@@ -43,14 +54,28 @@ vi.mock('../../oneMessages/oneMessages', () => ({
 }));
 
 vi.mock('./changelogDashboard', () => ({
-  useChangelogActionNotifications: () => ({
-    items: sources.actionRequired,
-    overlay: null,
-  }),
-  useChangelogNewsNotifications: () => ({
-    items: sources.news,
-    overlay: null,
-  }),
+  useChangelogActionNotifications: (props: Record<string, unknown>) => {
+    calls.action.push(props);
+
+    return { items: sources.actionRequired, overlay: null };
+  },
+  useChangelogNewsNotifications: (props: Record<string, unknown>) => {
+    calls.news.push(props);
+
+    return { items: sources.news, overlay: null };
+  },
+}));
+
+vi.mock('./changelogDrafts/changelogDraft', () => ({
+  useChangelogDraft: () => [draft.current, vi.fn()],
+}));
+
+vi.mock('./changelogDrafts/whatsNew', () => ({
+  useWhatsNewDashboardItems: (props: Record<string, unknown>) => {
+    calls.whatsNew.push(props);
+
+    return { items: sources.whatsNew, overlay: null };
+  },
 }));
 
 vi.mock('./oneChannelAlert', () => ({
@@ -92,7 +117,12 @@ beforeEach(() => {
   sources.actionRequired = [];
   sources.jobs = [];
   sources.news = [];
+  sources.whatsNew = [];
   sources.mayReadJobLogs = true;
+  draft.current = 1;
+  calls.action = [];
+  calls.news = [];
+  calls.whatsNew = [];
 });
 
 it('hides the panel while no source has anything to show', () => {
@@ -215,4 +245,46 @@ it('shows the body of the most severe item only', () => {
 
   expect(screen.getByText('job body')).toBeTruthy();
   expect(screen.queryByText('team body')).toBeNull();
+});
+
+describe('changelog drafts', () => {
+  it('draft 1 renders both changelog sources as compact rows', () => {
+    draft.current = 1;
+
+    renderPanel();
+
+    expect(calls.action.at(-1)).toMatchObject({
+      variant: 'compact',
+      skip: false,
+    });
+    expect(calls.news.at(-1)).toMatchObject({
+      variant: 'compact',
+      skip: false,
+    });
+    expect(calls.whatsNew.at(-1)).toMatchObject({ skip: true });
+  });
+
+  it('draft 2 keeps only recommended actions in the panel', () => {
+    draft.current = 2;
+
+    renderPanel();
+
+    expect(calls.action.at(-1)).toMatchObject({
+      severities: [ChangelogSeverity.Recommended],
+      skip: false,
+    });
+    expect(calls.news.at(-1)).toMatchObject({ skip: true });
+  });
+
+  it('draft 3 replaces the changelog items with the "What\'s new" summary', () => {
+    draft.current = 3;
+    sources.whatsNew = [item('open-steps', 'warning')];
+
+    renderPanel();
+
+    expect(calls.action.at(-1)).toMatchObject({ skip: true });
+    expect(calls.news.at(-1)).toMatchObject({ skip: true });
+    expect(calls.whatsNew.at(-1)).toMatchObject({ skip: false });
+    expect(renderedOrder().map(text => text.trim())).toEqual(['open-steps']);
+  });
 });

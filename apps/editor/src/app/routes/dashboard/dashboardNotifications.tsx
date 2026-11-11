@@ -2,6 +2,7 @@ import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { Button, Card, CardContent, CardHeader } from '@mui/material';
 import {
+  ChangelogSeverity,
   MarkNotificationReadDocument,
   NotificationReadsDocument,
   NotificationSource,
@@ -19,6 +20,8 @@ import {
   useChangelogActionNotifications,
   useChangelogNewsNotifications,
 } from './changelogDashboard';
+import { useChangelogDraft } from './changelogDrafts/changelogDraft';
+import { useWhatsNewDashboardItems } from './changelogDrafts/whatsNew';
 import { selectDashboardNotifications } from './dashboardNotificationSelection';
 import { useOneChannelNotifications } from './oneChannelAlert';
 
@@ -106,9 +109,19 @@ export function DashboardNotifications() {
     onMarkRead: markRead(NotificationSource.OneMessage),
   });
 
+  // DRAFT SWITCH: 1 shows every changelog item as a compact row, 2 keeps only
+  // recommended actions here (info lives behind the bell, required actions in
+  // bars on top), 3 leaves a single summary line pointing at "What's new".
+  const [draft] = useChangelogDraft();
+
   const actionRequired = useChangelogActionNotifications({
     sourceTag: t('notifications.sourceChangelog'),
+    variant: draft === 1 ? 'compact' : 'default',
+    severities: draft === 2 ? [ChangelogSeverity.Recommended] : undefined,
+    skip: draft === 3,
   });
+
+  const whatsNew = useWhatsNewDashboardItems({ skip: draft !== 3 });
 
   const jobs = usePeriodicJobNotifications({
     onlyProblems: true,
@@ -123,6 +136,8 @@ export function DashboardNotifications() {
     sourceTag: t('notifications.sourceChangelog'),
     readEntryIds: readItemIds.get(NotificationSource.Changelog) ?? EMPTY_SET,
     onMarkRead: markRead(NotificationSource.Changelog),
+    variant: draft === 1 ? 'compact' : 'default',
+    skip: draft !== 1,
   });
 
   const { visible, hiddenCount } = useMemo(
@@ -132,11 +147,23 @@ export function DashboardNotifications() {
         { category: 'team', items: team as Item[] },
         {
           category: 'changelog',
-          items: [...actionRequired.items, ...news.items] as Item[],
+          items: [
+            ...actionRequired.items,
+            ...news.items,
+            ...whatsNew.items,
+          ] as Item[],
         },
         { category: 'jobs', items: (mayReadJobLogs ? jobs : []) as Item[] },
       ]),
-    [connector, team, actionRequired.items, jobs, mayReadJobLogs, news.items]
+    [
+      connector,
+      team,
+      actionRequired.items,
+      jobs,
+      mayReadJobLogs,
+      news.items,
+      whatsNew.items,
+    ]
   );
 
   return (
@@ -181,6 +208,7 @@ export function DashboardNotifications() {
 
         {actionRequired.overlay}
         {news.overlay}
+        {whatsNew.overlay}
       </CardContent>
     </Card>
   );

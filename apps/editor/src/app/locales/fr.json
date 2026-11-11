@@ -768,7 +768,28 @@
       "releasedAt": "Publié le {{date, PP}}",
       "completedAt": "Effectué le {{date, PP}}",
       "noEntries": "Aucune entrée de changelog pour l’instant.",
-      "allCaughtUp": "Aucune entrée de changelog non lue."
+      "allCaughtUp": "Aucune entrée de changelog non lue.",
+      "readMore": "Lire la suite",
+      "draft": "Brouillon du changelog",
+      "bell": {
+        "title": "Quoi de neuf",
+        "unread_one": "Quoi de neuf, {{count}} non lu",
+        "unread_other": "Quoi de neuf, {{count}} non lus",
+        "markAllRead": "Tout marquer comme lu",
+        "showAll": "Tout afficher"
+      },
+      "panel": {
+        "title": "Quoi de neuf",
+        "todo": "À faire",
+        "new": "Nouveau",
+        "fullChangelog": "Changelog complet",
+        "openSteps_one": "{{count}} étape ouverte du changelog",
+        "openSteps_other": "{{count}} étapes ouvertes du changelog",
+        "show": "Afficher",
+        "snooze": "Me le rappeler demain",
+        "moreRequired_one": "et {{count}} autre étape urgente",
+        "moreRequired_other": "et {{count}} autres étapes urgentes"
+      }
     },
     "chooseEditImage": {
       "chooseImage": "Choisir une image",

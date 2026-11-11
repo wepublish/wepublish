@@ -768,7 +768,28 @@
       "releasedAt": "Veröffentlicht am {{date, PP}}",
       "completedAt": "Erledigt am {{date, PP}}",
       "noEntries": "Noch keine Changelog-Einträge.",
-      "allCaughtUp": "Keine ungelesenen Changelog-Einträge."
+      "allCaughtUp": "Keine ungelesenen Changelog-Einträge.",
+      "readMore": "Mehr lesen",
+      "draft": "Changelog-Entwurf",
+      "bell": {
+        "title": "Was ist neu",
+        "unread_one": "Was ist neu, {{count}} ungelesen",
+        "unread_other": "Was ist neu, {{count}} ungelesen",
+        "markAllRead": "Alle als gelesen markieren",
+        "showAll": "Alle anzeigen"
+      },
+      "panel": {
+        "title": "Was ist neu",
+        "todo": "Zu erledigen",
+        "new": "Neu",
+        "fullChangelog": "Ganzer Changelog",
+        "openSteps_one": "{{count}} offener Schritt aus dem Changelog",
+        "openSteps_other": "{{count}} offene Schritte aus dem Changelog",
+        "show": "Anzeigen",
+        "snooze": "Morgen erinnern",
+        "moreRequired_one": "und {{count}} weiterer dringender Schritt",
+        "moreRequired_other": "und {{count}} weitere dringende Schritte"
+      }
     },
     "chooseEditImage": {
       "chooseImage": "Bild wählen",

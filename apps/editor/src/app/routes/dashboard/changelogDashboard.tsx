@@ -27,6 +27,7 @@ import { ReactElement, ReactNode, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ReactMarkdown, { defaultUrlTransform } from 'react-markdown';
 
+import { ChangelogCompactRow } from './changelogDrafts/changelogCompactRow';
 import {
   ChangelogSeverityChip,
   changelogNotificationSeverity,
@@ -86,12 +87,12 @@ const LoadMoreWrapper = styled.div`
 `;
 
 /** Signing an entry off hides it for the whole instance, so it is admin-only. */
-const CONFIRM_PERMISSION = [CanUpdateSettings.id];
+export const CONFIRM_PERMISSION = [CanUpdateSettings.id];
 
 const markdownUrlTransform = (url: string) =>
   url.startsWith('data:image/') ? url : defaultUrlTransform(url);
 
-function ChangelogMarkdown({ children }: { children: string }) {
+export function ChangelogMarkdown({ children }: { children: string }) {
   return (
     <MarkdownContainer>
       <ReactMarkdown
@@ -112,13 +113,13 @@ function ChangelogMarkdown({ children }: { children: string }) {
   );
 }
 
-interface ChangelogEntryModalProps {
+export interface ChangelogEntryModalProps {
   entry: ChangelogEntryFragment;
   onClose(): void;
   onMarkAsDone?(): void;
 }
 
-function ChangelogEntryModal({
+export function ChangelogEntryModal({
   entry,
   onClose,
   onMarkAsDone,
@@ -133,7 +134,9 @@ function ChangelogEntryModal({
       onClose={onClose}
       maxWidth="md"
     >
-      <DialogTitle>{entry.title}</DialogTitle>
+      <DialogTitle>
+        {entry.title} <ChangelogSeverityChip entry={entry} />
+      </DialogTitle>
 
       <DialogContent>
         <Lead>{entry.lead}</Lead>
@@ -177,7 +180,10 @@ interface ConfirmChangelogModalProps {
   onClose(): void;
 }
 
-function ConfirmChangelogModal({ entry, onClose }: ConfirmChangelogModalProps) {
+export function ConfirmChangelogModal({
+  entry,
+  onClose,
+}: ConfirmChangelogModalProps) {
   const { t, i18n } = useTranslation();
   const [confirmChangelogEntry, { loading }] = useMutation(
     ConfirmChangelogEntryDocument,
@@ -210,52 +216,18 @@ function ConfirmChangelogModal({ entry, onClose }: ConfirmChangelogModalProps) {
   );
 }
 
-export interface ChangelogActionRequiredProps {
-  sourceTag?: string;
-  /** Reports whether at least one unconfirmed entry is currently rendered */
-  onVisibilityChange?: (visible: boolean) => void;
-}
-
-export interface NotificationSourceResult {
-  items: ReactElement[];
-  /** Modals belonging to these items, rendered outside the sorted list. */
-  overlay?: ReactNode;
-}
-
 /**
- * The open action-required entries as items, so a panel mixing several sources
- * can sort everything by severity instead of stacking source after source.
+ * The details and the "mark as done" dialogs for any list of entries: open
+ * one with `showDetails` / `confirm` and render `overlay` somewhere outside
+ * the list.
  */
-export function useChangelogActionNotifications({
-  sourceTag,
-  onVisibilityChange,
-}: ChangelogActionRequiredProps): NotificationSourceResult {
-  const { t, i18n } = useTranslation();
-  const mayConfirm = useHasPermission(CONFIRM_PERMISSION);
+export function useChangelogDialogs({
+  onDetailsOpen,
+}: { onDetailsOpen?: (entry: ChangelogEntryFragment) => void } = {}) {
   const [detailsEntry, setDetailsEntry] =
     useState<ChangelogEntryFragment | null>(null);
   const [confirmEntry, setConfirmEntry] =
     useState<ChangelogEntryFragment | null>(null);
-
-  const { data } = useQuery(ChangelogEntriesDocument, {
-    fetchPolicy: 'cache-and-network',
-    variables: {
-      take: 100,
-      filter: {
-        severities: [ChangelogSeverity.Recommended, ChangelogSeverity.Required],
-        confirmed: false,
-      },
-      locale: i18n.language,
-    },
-  });
-
-  const entries = data?.changelogEntries.nodes ?? [];
-
-  const hasEntries = entries.length > 0;
-
-  useEffect(() => {
-    onVisibilityChange?.(hasEntries);
-  }, [onVisibilityChange, hasEntries]);
 
   const overlay = (
     <>
@@ -281,40 +253,116 @@ export function useChangelogActionNotifications({
 
   return {
     overlay,
-    items: entries.map(entry => (
-      <NotificationItem
-        key={entry.id}
-        severity={changelogNotificationSeverity(entry)}
-        title={entry.title}
-        tags={<ChangelogSeverityChip entry={entry} />}
-        sourceTag={sourceTag}
-        actions={
-          <>
-            {mayConfirm && (
-              <Button
-                variant="outlined"
-                size="small"
-                onClick={() => setConfirmEntry(entry)}
-              >
-                {t('notifications.markAsDone')}
-              </Button>
-            )}
+    showDetails: (entry: ChangelogEntryFragment) => {
+      setDetailsEntry(entry);
+      onDetailsOpen?.(entry);
+    },
+    confirm: setConfirmEntry,
+  };
+}
 
-            {entry.description && (
-              <Button
-                variant="contained"
-                size="small"
-                onClick={() => setDetailsEntry(entry)}
-              >
-                {t('changelog.details')}
-              </Button>
-            )}
-          </>
-        }
-      >
-        <EntryLead>{entry.lead}</EntryLead>
-      </NotificationItem>
-    )),
+export type ChangelogItemVariant = 'default' | 'compact';
+
+export interface ChangelogActionRequiredProps {
+  sourceTag?: string;
+  /** Reports whether at least one unconfirmed entry is currently rendered */
+  onVisibilityChange?: (visible: boolean) => void;
+  /** Which action levels to show; both by default */
+  severities?: ChangelogSeverity[];
+  /** `compact` renders dense rows instead of alert boxes (draft 1) */
+  variant?: ChangelogItemVariant;
+  /** Fetches and renders nothing */
+  skip?: boolean;
+}
+
+export interface NotificationSourceResult {
+  items: ReactElement[];
+  /** Modals belonging to these items, rendered outside the sorted list. */
+  overlay?: ReactNode;
+}
+
+export const ACTION_SEVERITIES = [
+  ChangelogSeverity.Recommended,
+  ChangelogSeverity.Required,
+];
+
+/**
+ * The open action entries as items, so a panel mixing several sources can
+ * sort everything by severity instead of stacking source after source.
+ */
+export function useChangelogActionNotifications({
+  sourceTag,
+  onVisibilityChange,
+  severities = ACTION_SEVERITIES,
+  variant = 'default',
+  skip = false,
+}: ChangelogActionRequiredProps): NotificationSourceResult {
+  const { t, i18n } = useTranslation();
+  const mayConfirm = useHasPermission(CONFIRM_PERMISSION);
+  const { overlay, showDetails, confirm } = useChangelogDialogs();
+
+  const { data } = useQuery(ChangelogEntriesDocument, {
+    fetchPolicy: 'cache-and-network',
+    skip,
+    variables: {
+      take: 100,
+      filter: { severities, confirmed: false },
+      locale: i18n.language,
+    },
+  });
+
+  const entries = skip ? [] : (data?.changelogEntries.nodes ?? []);
+
+  const hasEntries = entries.length > 0;
+
+  useEffect(() => {
+    onVisibilityChange?.(hasEntries);
+  }, [onVisibilityChange, hasEntries]);
+
+  return {
+    overlay,
+    items: entries.map(entry =>
+      variant === 'compact' ?
+        <ChangelogCompactRow
+          key={entry.id}
+          severity={changelogNotificationSeverity(entry)}
+          entry={entry}
+          onOpen={() => showDetails(entry)}
+          onConfirm={mayConfirm ? () => confirm(entry) : undefined}
+        />
+      : <NotificationItem
+          key={entry.id}
+          severity={changelogNotificationSeverity(entry)}
+          title={entry.title}
+          tags={<ChangelogSeverityChip entry={entry} />}
+          sourceTag={sourceTag}
+          actions={
+            <>
+              {mayConfirm && (
+                <Button
+                  variant="outlined"
+                  size="small"
+                  onClick={() => confirm(entry)}
+                >
+                  {t('notifications.markAsDone')}
+                </Button>
+              )}
+
+              {entry.description && (
+                <Button
+                  variant="contained"
+                  size="small"
+                  onClick={() => showDetails(entry)}
+                >
+                  {t('changelog.details')}
+                </Button>
+              )}
+            </>
+          }
+        >
+          <EntryLead>{entry.lead}</EntryLead>
+        </NotificationItem>
+    ),
   };
 }
 
@@ -346,6 +394,10 @@ export interface ChangelogDashboardProps {
   hideEmptyState?: boolean;
   /** Reports whether at least one entry is currently rendered */
   onVisibilityChange?: (visible: boolean) => void;
+  /** `compact` renders dense rows instead of alert boxes (draft 1) */
+  variant?: ChangelogItemVariant;
+  /** Fetches and renders nothing */
+  skip?: boolean;
 }
 
 /**
@@ -361,6 +413,8 @@ export function useChangelogNewsNotifications({
   readEntryIds,
   onMarkRead,
   onVisibilityChange,
+  variant = 'default',
+  skip = false,
 }: ChangelogDashboardProps): NotificationSourceResult & {
   loading: boolean;
   error?: Error;
@@ -371,13 +425,11 @@ export function useChangelogNewsNotifications({
 } {
   const { t, i18n } = useTranslation();
   const [limit, setLimit] = useState(take);
-  const [detailsEntry, setDetailsEntry] =
-    useState<ChangelogEntryFragment | null>(null);
-  const [confirmEntry, setConfirmEntry] =
-    useState<ChangelogEntryFragment | null>(null);
+  const { overlay, showDetails } = useChangelogDialogs();
 
   const { data, loading, error } = useQuery(ChangelogEntriesDocument, {
     fetchPolicy: 'cache-and-network',
+    skip,
     variables: {
       take:
         limit +
@@ -387,7 +439,7 @@ export function useChangelogNewsNotifications({
     },
   });
 
-  const nodes = data?.changelogEntries.nodes ?? [];
+  const nodes = skip ? [] : (data?.changelogEntries.nodes ?? []);
   const entries = nodes
     .filter(
       entry => !hideUnconfirmedActionRequired || !isOpenChangelogAction(entry)
@@ -399,28 +451,6 @@ export function useChangelogNewsNotifications({
   useEffect(() => {
     onVisibilityChange?.(hasEntries);
   }, [onVisibilityChange, hasEntries]);
-
-  const overlay = (
-    <>
-      {detailsEntry && (
-        <ChangelogEntryModal
-          entry={detailsEntry}
-          onClose={() => setDetailsEntry(null)}
-          onMarkAsDone={() => {
-            setConfirmEntry(detailsEntry);
-            setDetailsEntry(null);
-          }}
-        />
-      )}
-
-      {confirmEntry && (
-        <ConfirmChangelogModal
-          entry={confirmEntry}
-          onClose={() => setConfirmEntry(null)}
-        />
-      )}
-    </>
-  );
 
   const footer =
     paginated && data?.changelogEntries.pageInfo.hasNextPage ?
@@ -441,33 +471,41 @@ export function useChangelogNewsNotifications({
     loading,
     error,
     totalFetched: nodes.length,
-    items: entries.map(entry => (
-      <NotificationItem
-        key={entry.id}
-        severity={changelogNotificationSeverity(entry)}
-        title={entry.title}
-        tags={<ChangelogSeverityChip entry={entry} />}
-        sourceTag={sourceTag}
-        onClick={() => setDetailsEntry(entry)}
-        actions={
-          onMarkRead && !isOpenChangelogAction(entry) ?
-            <Button
-              variant="outlined"
-              size="small"
-              onClick={() => onMarkRead(entry.id)}
-            >
-              {t('notifications.markAsRead')}
-            </Button>
-          : undefined
-        }
-      >
-        <EntryLead>{entry.lead}</EntryLead>
+    items: entries.map(entry =>
+      variant === 'compact' ?
+        <ChangelogCompactRow
+          key={entry.id}
+          severity={changelogNotificationSeverity(entry)}
+          entry={entry}
+          onOpen={() => showDetails(entry)}
+          onMarkRead={onMarkRead ? () => onMarkRead(entry.id) : undefined}
+        />
+      : <NotificationItem
+          key={entry.id}
+          severity={changelogNotificationSeverity(entry)}
+          title={entry.title}
+          tags={<ChangelogSeverityChip entry={entry} />}
+          sourceTag={sourceTag}
+          onClick={() => showDetails(entry)}
+          actions={
+            onMarkRead && !isOpenChangelogAction(entry) ?
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() => onMarkRead(entry.id)}
+              >
+                {t('notifications.markAsRead')}
+              </Button>
+            : undefined
+          }
+        >
+          <EntryLead>{entry.lead}</EntryLead>
 
-        <EntryDate>
-          {t('changelog.releasedAt', { date: new Date(entry.releasedAt) })}
-        </EntryDate>
-      </NotificationItem>
-    )),
+          <EntryDate>
+            {t('changelog.releasedAt', { date: new Date(entry.releasedAt) })}
+          </EntryDate>
+        </NotificationItem>
+    ),
   };
 }
 
