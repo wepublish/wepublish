@@ -1,3 +1,5 @@
+import { captureServerError } from '../sentry/instrumentation';
+
 /**
  * Shared handlers for the `pages/api/*` endpoints every tenant duplicated.
  *
@@ -88,9 +90,20 @@ export const feedHandler = async (
   getSiteUrl: () => string,
   format: FeedFormat
 ) => {
-  const feed = await getFeed(request.url, getSiteUrl());
+  let body: string;
 
-  return new Response(feed[format](), {
+  try {
+    body = (await getFeed(request.url, getSiteUrl()))[format]();
+  } catch (error) {
+    captureServerError(error);
+
+    return new Response(null, {
+      status: 502,
+      headers: { 'cache-control': 'no-store' },
+    });
+  }
+
+  return new Response(body, {
     headers: {
       'content-type': FEED_CONTENT_TYPE[format],
       'cache-control': FEED_CACHE_CONTROL,

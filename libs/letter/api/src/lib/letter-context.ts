@@ -250,11 +250,6 @@ export class LetterContext implements LetterSender {
     );
   }
 
-  /**
-   * Render one letter, hand it to the print vendor and record the outcome in
-   * the mail log. Throws if either step fails; the log entry is written either
-   * way, so a failed letter leaves a trace like a failed mail does.
-   */
   /** Whether the user's postal address is complete enough to be posted to. */
   canReceiveLetters(
     user: UserWithAddress,
@@ -280,6 +275,11 @@ export class LetterContext implements LetterSender {
     });
   }
 
+  /**
+   * Render one letter, hand it to the print vendor and record the outcome in
+   * the mail log. Throws if either step fails; the log entry is written either
+   * way, so a failed letter leaves a trace like a failed mail does.
+   */
   async sendLetter(props: SendTemplateLetterProps): Promise<string> {
     const mailLogId = props.mailLogId ?? randomUUID();
     const address = toLetterAddress(props.recipient);

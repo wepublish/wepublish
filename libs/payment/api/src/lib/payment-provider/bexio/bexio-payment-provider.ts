@@ -56,8 +56,20 @@ export type SyncContactUser = ContactUser & {
 /** What the contact sync did for a reader. */
 export type SyncContactOutcome = 'edited' | 'created' | 'missing';
 
-const isNotFound = (error: unknown) =>
-  (error as { code?: number } | null)?.code === 404;
+// A bexio error is a 404 whether the SDK rejects with `{code}`, the provider
+// throws `ResponseNOK {status}`, or a wrapper puts either under `cause`.
+const isNotFound = (error: unknown): boolean => {
+  const { code, status, cause } =
+    (error as { code?: unknown; status?: unknown; cause?: unknown } | null) ??
+    {};
+  const own = [code, status].find(value => typeof value === 'number');
+
+  if (own === 404) {
+    return true;
+  }
+
+  return cause ? isNotFound(cause) : false;
+};
 
 export class BexioPaymentProvider extends BasePaymentProvider {
   // bexio's country list changes rarely; one load serves a whole night.

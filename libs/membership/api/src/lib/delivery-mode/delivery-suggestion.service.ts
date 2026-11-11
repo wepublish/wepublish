@@ -126,7 +126,7 @@ export class DeliverySuggestionService {
       ],
     };
 
-    for (let cursor: string | undefined; ; ) {
+    for (let cursor: string | undefined; ;) {
       const page = await this.prisma.user.findMany({
         where: toLetterWhere,
         include: { address: true, emailQuality: { select: { level: true } } },
@@ -169,7 +169,7 @@ export class DeliverySuggestionService {
       },
     };
 
-    for (let cursor: string | undefined; ; ) {
+    for (let cursor: string | undefined; ;) {
       const page = await this.prisma.userDeliveryPreference.findMany({
         where: toMailWhere,
         select: { userId: true },
