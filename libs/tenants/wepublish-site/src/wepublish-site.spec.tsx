@@ -7,6 +7,8 @@ import {
   mockArticleTeaser,
   mockAuthor,
   mockBreakBlock,
+  mockCustomTeaser,
+  mockImage,
   mockNavigations,
   mockTeaserSlotsBlock,
   applyTenantTranslations,
@@ -16,6 +18,7 @@ import {
 import { FullBlockFragment } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 
+import heroIllustration from './assets/hero-illustration.webp';
 import { staticImageSrc } from './assets/static-image';
 import logo from './assets/wepublish-logo.svg';
 import logoAlt from './assets/wepublish-logo-alt.svg';
@@ -224,6 +227,95 @@ describe('We.Publish website tenant', () => {
     expect(backgroundsOf(screen.getByText('Newsletter'))).not.toContain(
       primaryColor
     );
+  });
+
+  describe('hero', () => {
+    const heroBlock = (image: ReturnType<typeof mockImage> | null = null) =>
+      mockBreakBlock({
+        blockStyle: WepBlockStyles.Hero,
+        text: 'Das Ökosystem unabhängiger Medien.',
+        hideButton: false,
+        linkText: 'Demo buchen',
+        linkURL: '/demo',
+        image,
+      });
+
+    const heroIllustrationImage = () =>
+      document.querySelector(`img[src="${staticImageSrc(heroIllustration)}"]`);
+
+    it('shows the hero text as the page heading on the primary colour', () => {
+      renderTenantPage([heroBlock()]);
+
+      const heading = screen.getByRole('heading', {
+        level: 1,
+        name: 'Das Ökosystem unabhängiger Medien.',
+      });
+
+      expect(heading).toHaveClass('MuiTypography-h1');
+      expect(backgroundsOf(heading)).toContain(primaryColor);
+    });
+
+    it('links the hero button to the url from the editor', () => {
+      renderTenantPage([heroBlock()]);
+
+      expect(screen.getByRole('link', { name: 'Demo buchen' })).toHaveAttribute(
+        'href',
+        '/demo'
+      );
+    });
+
+    it('shows the we.publish illustration when the editor sets no image', () => {
+      renderTenantPage([heroBlock()]);
+
+      expect(heroIllustrationImage()).toBeInTheDocument();
+    });
+
+    it('shows the image from the editor instead of the illustration', () => {
+      renderTenantPage([heroBlock(mockImage({ title: 'Redaktionsbild' }))]);
+
+      expect(heroIllustrationImage()).not.toBeInTheDocument();
+      expect(
+        screen.getByRole('img', { name: 'Redaktionsbild' })
+      ).toBeInTheDocument();
+    });
+
+    it('lists the hero links with their title and a button to their page', () => {
+      renderTenantPage([
+        mockTeaserSlotsBlock({
+          blockStyle: WepBlockStyles.HeroLinks,
+          title: null,
+          teasers: [
+            mockCustomTeaser({
+              title: 'Gründen & Transformieren',
+              preTitle: 'We.Start',
+              lead: null,
+              contentUrl: '/we-start',
+            }),
+            mockCustomTeaser({
+              title: 'Digitale Infrastruktur',
+              preTitle: 'We.Develop',
+              lead: null,
+              contentUrl: '/we-develop',
+            }),
+          ],
+        }),
+      ]);
+
+      expect(
+        screen.getByRole('heading', { name: 'Gründen & Transformieren' })
+      ).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: 'We.Start' })).toHaveAttribute(
+        'href',
+        '/we-start'
+      );
+      expect(screen.getByRole('link', { name: 'We.Develop' })).toHaveAttribute(
+        'href',
+        '/we-develop'
+      );
+      expect(
+        backgroundsOf(screen.getByText('Digitale Infrastruktur'))
+      ).toContain(primaryColor);
+    });
   });
 
   it.each([

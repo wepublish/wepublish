@@ -16,6 +16,7 @@ import {
   AttentionCatcher,
   isAttentionCatcher,
 } from './break-blocks/attention-catcher';
+import { Hero, isHero } from './hero/hero';
 import { MainSpacer } from './wep-main-spacer';
 
 export const WepBlockRenderer = (props: BuilderBlockRendererProps) => {
@@ -26,6 +27,7 @@ export const WepBlockRenderer = (props: BuilderBlockRendererProps) => {
   const extraBlockMap = useMemo(
     () =>
       cond([
+        [isHero, (block: BuilderBreakBlockProps) => <Hero {...block} />],
         [
           isAttentionCatcher,
           (block: BuilderBreakBlockProps) => <AttentionCatcher {...block} />,

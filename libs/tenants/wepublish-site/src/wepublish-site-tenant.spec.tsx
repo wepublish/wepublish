@@ -103,12 +103,10 @@ describe('wepublishSiteTenant', () => {
     );
   });
 
-  it('paints the home page gradient only on the home page', () => {
-    const home = renderGlobalStyles('/');
-    expect(globalCss()).toContain('linear-gradient');
-    home.unmount();
+  // The orange of the home page comes from the hero blocks, not the body.
+  it.each(['/', '/a/some-article'])('paints no page gradient on %s', path => {
+    renderGlobalStyles(path);
 
-    renderGlobalStyles('/a/some-article');
     expect(globalCss()).not.toContain('linear-gradient');
     expect(globalCss()).toContain('--breakpoint-width');
   });

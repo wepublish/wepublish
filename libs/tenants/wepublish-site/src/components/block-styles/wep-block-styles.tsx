@@ -4,4 +4,6 @@ export enum WepBlockStyles {
   TeaserServices = 'TeaserServices',
   LogoWall = 'LogoWall',
   AttentionCatcher = 'AttentionCatcher',
+  Hero = 'Hero',
+  HeroLinks = 'HeroLinks',
 }

@@ -2,6 +2,7 @@ import { TeaserSlotsBlock } from '@wepublish/block-content/website';
 import { BuilderTeaserSlotsBlockProps } from '@wepublish/website/builder';
 import { cond, T } from 'ramda';
 
+import { HeroLinks, isHeroLinks } from '../hero/hero-links';
 import {
   isTeaserSlotsExpertise,
   TeaserSlotsExpertise,
@@ -17,6 +18,10 @@ import {
 } from './teaser-slots-services';
 
 export const WepBaseTeaserSlots = cond([
+  [
+    isHeroLinks,
+    (props: BuilderTeaserSlotsBlockProps) => <HeroLinks {...props} />,
+  ],
   [
     isTeaserSlotsExpertise,
     (props: BuilderTeaserSlotsBlockProps) => (
