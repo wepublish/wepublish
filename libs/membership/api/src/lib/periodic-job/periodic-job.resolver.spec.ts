@@ -27,6 +27,7 @@ import type { PeriodicJob as StoredPeriodicJob } from '@prisma/client';
       provide: PeriodicJobService,
       useValue: {
         getJobLog: vi.fn(),
+        getSteps: vi.fn(),
         retryAndCatchUp: vi.fn(),
         isRunning: vi.fn(),
       },
@@ -43,6 +44,25 @@ const periodicJobsQuery = `
             executionTime
             finishedWithError
             successfullyFinished
+        }
+    }
+`;
+
+const stepsQuery = `
+    query PeriodicJobLogs {
+        periodicJobLog {
+            id
+            steps {
+                key
+                status
+                counts {
+                    name
+                    value
+                }
+                error
+                startedAt
+                finishedAt
+            }
         }
     }
 `;
@@ -184,5 +204,66 @@ describe('ConsentResolver', () => {
           'A periodic job is already running.'
         );
       });
+  });
+
+  describe('what a night did', () => {
+    const step = {
+      id: 'step-1',
+      createdAt: new Date('2026-11-07T04:00:00Z'),
+      periodicJobId: '1234',
+      key: 'bexioContactSync',
+      status: 'warning' as const,
+      counts: { readers: 1821, pushed: 1814, failed: 7 },
+      error: '422 mail is invalid',
+      startedAt: new Date('2026-11-07T04:00:00Z'),
+      finishedAt: new Date('2026-11-07T04:02:00Z'),
+    };
+
+    it('lists the steps with their counts', async () => {
+      vi.spyOn(service, 'getJobLog').mockResolvedValue([
+        { ...storedJob(), steps: [step] },
+      ] as any);
+
+      await request(app.getHttpServer())
+        .post('')
+        .send({ query: stepsQuery })
+        .expect(res => {
+          expect(res.body.data.periodicJobLog[0].steps).toEqual([
+            {
+              key: 'bexioContactSync',
+              status: 'warning',
+              counts: [
+                { name: 'readers', value: 1821 },
+                { name: 'pushed', value: 1814 },
+                { name: 'failed', value: 7 },
+              ],
+              error: '422 mail is invalid',
+              startedAt: '2026-11-07T04:00:00.000Z',
+              finishedAt: '2026-11-07T04:02:00.000Z',
+            },
+          ]);
+        })
+        .expect(200);
+    });
+
+    it('loads the steps of a job that came without them', async () => {
+      vi.spyOn(service, 'getJobLog').mockResolvedValue([storedJob()]);
+      const getSteps = vi
+        .spyOn(service, 'getSteps')
+        .mockResolvedValue([
+          { ...step, status: 'ok', counts: null, error: null },
+        ]);
+
+      await request(app.getHttpServer())
+        .post('')
+        .send({ query: stepsQuery })
+        .expect(res => {
+          expect(res.body.data.periodicJobLog[0].steps).toEqual([
+            expect.objectContaining({ status: 'ok', counts: [], error: null }),
+          ]);
+          expect(getSteps).toHaveBeenCalledWith('1234');
+        })
+        .expect(200);
+    });
   });
 });

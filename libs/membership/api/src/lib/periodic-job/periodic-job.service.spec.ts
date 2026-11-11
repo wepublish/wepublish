@@ -108,6 +108,10 @@ const createMockPrisma = () => ({
     create: vi.fn(),
     deleteMany: vi.fn(),
   },
+  periodicJobStep: {
+    create: vi.fn().mockResolvedValue({}),
+    deleteMany: vi.fn().mockResolvedValue({ count: 0 }),
+  },
   periodicJob: {
     findFirst: vi.fn().mockResolvedValue(null),
     findMany: vi.fn().mockResolvedValue([]),
@@ -1822,6 +1826,98 @@ describe('PeriodicJobService', () => {
       `Invoice ${invoice.id} has no subscription assigned!`
     );
   });
+  describe('the job log of a run', () => {
+    const recordedSteps = () =>
+      mockPrisma.periodicJobStep.create.mock.calls.map(
+        ([{ data }]: [{ data: Record<string, unknown> }]) => data
+      );
+
+    it('records each step of the run on the job', async () => {
+      await service.execute(new Date('2026-11-07T03:00:00Z'));
+
+      expect(recordedSteps().map(step => [step.key, step.status])).toEqual([
+        ['customMails', 'ok'],
+        ['invoiceStates', 'ok'],
+        ['invoiceCreation', 'ok'],
+        ['invoiceLetters', 'ok'],
+        ['paymentMethodChanges', 'ok'],
+        ['charging', 'ok'],
+        ['deactivationUnpaid', 'ok'],
+        ['deactivationNotRenewed', 'ok'],
+      ]);
+      expect(recordedSteps()[0]).toEqual(
+        expect.objectContaining({
+          periodicJobId: 'job-1',
+          startedAt: expect.any(Date),
+          finishedAt: expect.any(Date),
+        })
+      );
+    });
+
+    it('records the step that failed, with why, and none after it', async () => {
+      mockSubscriptionController.findAllOpenInvoices.mockResolvedValue([
+        { id: 'inv-1', subscription: { id: 'sub-1' } },
+      ]);
+      mockSubscriptionController.checkInvoiceState.mockRejectedValue({
+        code: 401,
+        message: { message: 'Unauthorized' },
+      });
+
+      await expect(service.execute()).rejects.toThrow();
+
+      expect(recordedSteps().map(step => [step.key, step.status])).toEqual([
+        ['customMails', 'ok'],
+        ['invoiceStates', 'error'],
+      ]);
+      expect(recordedSteps()[1].error).toContain(
+        'Checking the state of invoice inv-1 failed: 401 Unauthorized'
+      );
+    });
+
+    it('records a step of the night on the newest job', async () => {
+      mockPrisma.periodicJob.findFirst.mockResolvedValue({ id: 'job-9' });
+      const startedAt = new Date('2026-11-07T04:00:00Z');
+      const finishedAt = new Date('2026-11-07T04:02:00Z');
+
+      await service.recordNightStep({
+        key: 'bexioContactSync',
+        status: 'warning',
+        counts: { readers: 1821, pushed: 1814, failed: 7 },
+        error: '422 mail is invalid',
+        startedAt,
+        finishedAt,
+      });
+
+      expect(mockPrisma.periodicJob.findFirst).toHaveBeenCalledWith(
+        expect.objectContaining({ orderBy: { date: 'desc' } })
+      );
+      expect(recordedSteps()).toEqual([
+        {
+          periodicJobId: 'job-9',
+          key: 'bexioContactSync',
+          status: 'warning',
+          counts: { readers: 1821, pushed: 1814, failed: 7 },
+          error: '422 mail is invalid',
+          startedAt,
+          finishedAt,
+        },
+      ]);
+    });
+
+    it('drops a step of the night when no job has ever run', async () => {
+      mockPrisma.periodicJob.findFirst.mockResolvedValue(null);
+
+      await service.recordNightStep({
+        key: 'emailQuality',
+        status: 'ok',
+        startedAt: new Date(),
+        finishedAt: new Date(),
+      });
+
+      expect(mockPrisma.periodicJobStep.create).not.toHaveBeenCalled();
+    });
+  });
+
   describe('a run that fails', () => {
     const unauthorized = { code: 401, message: { message: 'Unauthorized' } };
     const user = { id: 'user-1', email: 'dev-mail@test.wepublish.com' };
@@ -2069,6 +2165,20 @@ describe('PeriodicJobService', () => {
       });
 
       otherPod = startPod();
+    });
+
+    it("drops the failed try's steps before the retry records its own", async () => {
+      failedNight(daysAgo(1));
+
+      await service.retryAndCatchUp();
+      await lockReleased();
+
+      expect(mockPrisma.periodicJobStep.deleteMany).toHaveBeenCalledWith({
+        where: {
+          periodicJobId: 'job-1',
+          key: { in: expect.arrayContaining(['customMails', 'charging']) },
+        },
+      });
     });
 
     it('retries the failed night and then runs every night up to today', async () => {
