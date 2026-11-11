@@ -11,7 +11,6 @@ const reader = (overrides: Partial<ReaderContext> = {}): ReaderContext => ({
   privileged: false,
   loggedIn: false,
   activeMemberPlanIds: [],
-  paying: false,
   newsletter: 'unknown',
   ...overrides,
 });
@@ -23,7 +22,6 @@ const memberOf = (...activeMemberPlanIds: string[]) =>
     loggedIn: true,
     userId: 'u',
     activeMemberPlanIds,
-    paying: true,
   });
 
 const paywall = (overrides: Partial<AccessPaywall> = {}): AccessPaywall => ({

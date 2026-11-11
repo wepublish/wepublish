@@ -1636,7 +1636,6 @@ enum EngagementAudience {
   MEMBERS
   MEMBER_PLANS
   NON_MEMBERS
-  PAYING_MEMBERS
   PAYWALL_BYPASSED
   REGISTERED
 }
@@ -1684,7 +1683,6 @@ type EngagementPrompt {
 enum EngagementRequirement {
   MEMBERSHIP
   NEWSLETTER
-  PAID_MEMBERSHIP
   REGISTRATION
 }
 

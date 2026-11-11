@@ -5938,8 +5938,6 @@
         "NON_MEMBERSInfo": "Anonymous readers and logged-in readers without an active membership.",
         "MEMBERS": "Members",
         "MEMBERSInfo": "Readers with an active membership, free or paid.",
-        "PAYING_MEMBERS": "Paying members",
-        "PAYING_MEMBERSInfo": "Readers with an active membership that costs something.",
         "PAYWALL_BYPASSED": "Readers with a paywall bypass link",
         "PAYWALL_BYPASSEDInfo": "Readers who opened a bypass link of an active paywall.",
         "MEMBER_PLANS": "Readers with a specific subscription",
@@ -5954,7 +5952,6 @@
       "requirement": {
         "REGISTRATION": "Registration",
         "MEMBERSHIP": "Membership",
-        "PAID_MEMBERSHIP": "Paid membership",
         "NEWSLETTER": "Newsletter signup (email only)"
       },
       "actionType": {
@@ -5980,7 +5977,6 @@
         "requirement": {
           "REGISTRATION": "Registration",
           "MEMBERSHIP": "Membership",
-          "PAID_MEMBERSHIP": "Paid membership",
           "NEWSLETTER": "Newsletter signup"
         },
         "closable": "{{placement}}, can be closed",

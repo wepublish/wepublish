@@ -166,7 +166,6 @@ export const AUDIENCE_SPECIFICITY: Record<EngagementAudience, number> = {
   REGISTERED: 1,
   ANONYMOUS: 2,
   MEMBERS: 2,
-  PAYING_MEMBERS: 3,
   PAYWALL_BYPASSED: 3,
   MEMBER_PLANS: 4,
 };

@@ -25,7 +25,6 @@ const LOGIN_STATUS: Record<EngagementAudience, LoginStatus> = {
   REGISTERED: LoginStatus.LOGGED_IN,
   NON_MEMBERS: LoginStatus.UNSUBSCRIBED,
   MEMBERS: LoginStatus.SUBSCRIBED,
-  PAYING_MEMBERS: LoginStatus.SUBSCRIBED,
   PAYWALL_BYPASSED: LoginStatus.PAYWALL_BYPASSED,
   // Older websites can not tell plans apart.
   MEMBER_PLANS: LoginStatus.SUBSCRIBED,
@@ -84,7 +83,6 @@ export function primaryBannerOf(
     privileged: false,
     loggedIn: args.loggedIn,
     activeMemberPlanIds: args.hasSubscription ? ['subscription'] : [],
-    paying: args.hasSubscription,
     newsletter: 'unknown',
     paywallBypassed: args.hasPaywallBypass,
   };

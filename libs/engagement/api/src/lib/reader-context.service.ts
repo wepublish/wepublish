@@ -59,7 +59,6 @@ export class ReaderContextService {
         where: { userID: session.user.id },
         select: {
           memberPlanID: true,
-          monthlyAmount: true,
           startsAt: true,
           paidUntil: true,
           paymentMethod: { select: { gracePeriod: true } },
@@ -74,7 +73,6 @@ export class ReaderContextService {
       newsletter,
       subscriptions: subscriptions.map(subscription => ({
         memberPlanId: subscription.memberPlanID,
-        monthlyAmount: subscription.monthlyAmount,
         startsAt: subscription.startsAt,
         paidUntil: subscription.paidUntil,
         gracePeriod: subscription.paymentMethod.gracePeriod,

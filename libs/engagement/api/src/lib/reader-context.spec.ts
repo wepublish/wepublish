@@ -28,7 +28,6 @@ const subscription = (
   overrides: Partial<ReaderSubscription> = {}
 ): ReaderSubscription => ({
   memberPlanId: 'plan-1',
-  monthlyAmount: 1000,
   startsAt: new Date('2026-01-01'),
   paidUntil: new Date('2027-01-01'),
   gracePeriod: 0,
@@ -48,12 +47,11 @@ describe('readerContextFrom', () => {
       privileged: false,
       loggedIn: false,
       activeMemberPlanIds: [],
-      paying: false,
       newsletter: 'unknown',
     });
   });
 
-  it('tells paying members from free ones', () => {
+  it('knows the plans of active subscriptions, each once', () => {
     expect(
       readerContextFrom({
         session: userSession(),
@@ -64,16 +62,15 @@ describe('readerContextFrom', () => {
       loggedIn: true,
       userId: 'user-1',
       activeMemberPlanIds: ['plan-1'],
-      paying: true,
       privileged: false,
     });
 
     expect(
       readerContextFrom({
         session: userSession(),
-        subscriptions: [subscription({ monthlyAmount: 0 })],
+        subscriptions: [subscription(), subscription()],
       })
-    ).toMatchObject({ activeMemberPlanIds: ['plan-1'], paying: false });
+    ).toMatchObject({ activeMemberPlanIds: ['plan-1'] });
   });
 
   it('ignores subscriptions that ran out', () => {
@@ -82,7 +79,7 @@ describe('readerContextFrom', () => {
         session: userSession(),
         subscriptions: [subscription({ paidUntil: new Date('2026-10-01') })],
       })
-    ).toMatchObject({ activeMemberPlanIds: [], paying: false });
+    ).toMatchObject({ activeMemberPlanIds: [] });
   });
 
   it('lets editors read everything', () => {
@@ -144,7 +141,6 @@ const reader = (overrides: Partial<ReaderContext> = {}): ReaderContext => ({
   privileged: false,
   loggedIn: false,
   activeMemberPlanIds: [],
-  paying: false,
   newsletter: 'unknown',
   ...overrides,
 });
@@ -162,7 +158,6 @@ const payingMember = reader({
   loggedIn: true,
   userId: 'u',
   activeMemberPlanIds: ['paid'],
-  paying: true,
 });
 
 describe('matchesAudience', () => {
@@ -172,7 +167,6 @@ describe('matchesAudience', () => {
     [EngagementAudience.REGISTERED, [false, true, true, true]],
     [EngagementAudience.NON_MEMBERS, [true, true, false, false]],
     [EngagementAudience.MEMBERS, [false, false, true, true]],
-    [EngagementAudience.PAYING_MEMBERS, [false, false, false, true]],
     [EngagementAudience.PAYWALL_BYPASSED, [false, false, false, false]],
     // Without plans to match.
     [EngagementAudience.MEMBER_PLANS, [false, false, false, false]],
@@ -215,7 +209,6 @@ describe('meetsRequirement', () => {
   it.each([
     [EngagementRequirement.REGISTRATION, [false, true, true, true]],
     [EngagementRequirement.MEMBERSHIP, [false, false, true, true]],
-    [EngagementRequirement.PAID_MEMBERSHIP, [false, false, false, true]],
     [EngagementRequirement.NEWSLETTER, [false, false, false, false]],
   ])(
     '%s is met by [anonymous, registered, free member, paying member] = %j',

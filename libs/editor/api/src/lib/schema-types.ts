@@ -1589,7 +1589,6 @@ export enum EngagementAudience {
   Members = 'MEMBERS',
   MemberPlans = 'MEMBER_PLANS',
   NonMembers = 'NON_MEMBERS',
-  PayingMembers = 'PAYING_MEMBERS',
   PaywallBypassed = 'PAYWALL_BYPASSED',
   Registered = 'REGISTERED'
 }
@@ -1632,7 +1631,6 @@ export type EngagementPrompt = {
 export enum EngagementRequirement {
   Membership = 'MEMBERSHIP',
   Newsletter = 'NEWSLETTER',
-  PaidMembership = 'PAID_MEMBERSHIP',
   Registration = 'REGISTRATION'
 }
 

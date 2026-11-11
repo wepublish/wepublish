@@ -5938,8 +5938,6 @@
         "NON_MEMBERSInfo": "Anonyme und eingeloggte Leser*innen ohne aktive Mitgliedschaft.",
         "MEMBERS": "Mitglieder",
         "MEMBERSInfo": "Leser*innen mit aktiver Mitgliedschaft, gratis oder bezahlt.",
-        "PAYING_MEMBERS": "Zahlende Mitglieder",
-        "PAYING_MEMBERSInfo": "Leser*innen mit aktiver, kostenpflichtiger Mitgliedschaft.",
         "PAYWALL_BYPASSED": "Leser*innen mit Paywall-Freischaltlink",
         "PAYWALL_BYPASSEDInfo": "Leser*innen, die einen Freischaltlink einer aktiven Paywall geöffnet haben.",
         "MEMBER_PLANS": "Leser:innen mit einem bestimmten Abo",
@@ -5954,7 +5952,6 @@
       "requirement": {
         "REGISTRATION": "Registrierung",
         "MEMBERSHIP": "Mitgliedschaft",
-        "PAID_MEMBERSHIP": "Bezahlte Mitgliedschaft",
         "NEWSLETTER": "Newsletter-Anmeldung (nur E-Mail)"
       },
       "actionType": {
@@ -5980,7 +5977,6 @@
         "requirement": {
           "REGISTRATION": "Registrierung",
           "MEMBERSHIP": "Mitgliedschaft",
-          "PAID_MEMBERSHIP": "Bezahlte Mitgliedschaft",
           "NEWSLETTER": "Newsletter-Anmeldung"
         },
         "closable": "{{placement}}, schliessbar",

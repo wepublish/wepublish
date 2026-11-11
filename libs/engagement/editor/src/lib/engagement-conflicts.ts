@@ -62,34 +62,21 @@ export const AUDIENCE_SPECIFICITY: Record<EngagementAudience, number> = {
   [EngagementAudience.Registered]: 1,
   [EngagementAudience.Anonymous]: 2,
   [EngagementAudience.Members]: 2,
-  [EngagementAudience.PayingMembers]: 3,
   [EngagementAudience.PaywallBypassed]: 3,
   [EngagementAudience.MemberPlans]: 4,
 };
 
-type Reader = 'anonymous' | 'registered' | 'freeMember' | 'payingMember';
+type Reader = 'anonymous' | 'registered' | 'member';
 
-// Who an audience can be. A paywall bypass link can be opened by anyone, and a
-// member of chosen plans can pay or not.
+// Who an audience can be. A paywall bypass link can be opened by anyone.
 const READERS: Record<EngagementAudience, Reader[]> = {
-  [EngagementAudience.All]: [
-    'anonymous',
-    'registered',
-    'freeMember',
-    'payingMember',
-  ],
+  [EngagementAudience.All]: ['anonymous', 'registered', 'member'],
   [EngagementAudience.Anonymous]: ['anonymous'],
-  [EngagementAudience.Registered]: ['registered', 'freeMember', 'payingMember'],
+  [EngagementAudience.Registered]: ['registered', 'member'],
   [EngagementAudience.NonMembers]: ['anonymous', 'registered'],
-  [EngagementAudience.Members]: ['freeMember', 'payingMember'],
-  [EngagementAudience.PayingMembers]: ['payingMember'],
-  [EngagementAudience.PaywallBypassed]: [
-    'anonymous',
-    'registered',
-    'freeMember',
-    'payingMember',
-  ],
-  [EngagementAudience.MemberPlans]: ['freeMember', 'payingMember'],
+  [EngagementAudience.Members]: ['member'],
+  [EngagementAudience.PaywallBypassed]: ['anonymous', 'registered', 'member'],
+  [EngagementAudience.MemberPlans]: ['member'],
 };
 
 const slotOf = (
@@ -154,13 +141,8 @@ const sharedSlots = (a: ConflictRule, b: ConflictRule): EngagementSlot[] => {
 
 // Who already meets a requirement: they never see the rule at all.
 const MEETS: Record<EngagementRequirement, Reader[]> = {
-  [EngagementRequirement.Registration]: [
-    'registered',
-    'freeMember',
-    'payingMember',
-  ],
-  [EngagementRequirement.Membership]: ['freeMember', 'payingMember'],
-  [EngagementRequirement.PaidMembership]: ['payingMember'],
+  [EngagementRequirement.Registration]: ['registered', 'member'],
+  [EngagementRequirement.Membership]: ['member'],
   // Newsletter signups cut across all readers.
   [EngagementRequirement.Newsletter]: [],
 };
