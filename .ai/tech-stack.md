@@ -17,7 +17,8 @@ before you start.
    test exists. Details and per-stack patterns:
    [testing.md](.claude/docs/testing.md).
 2. **Verify before claiming done.** Run `pnpm nx affected -t lint test --uncommitted`
-   (plus `tsc --noEmit` if you touched `apps/`) and read the output. Never say
+   (plus `tsc --noEmit` if you touched `apps/`; `pnpm nx run editor:typecheck`
+   for the editor or an editor lib) and read the output. Never say
    "done", "fixed", or "tests pass" without having run the command in this
    session: [verification.md](.claude/docs/verification.md).
 3. **Never commit.** The user commits. See

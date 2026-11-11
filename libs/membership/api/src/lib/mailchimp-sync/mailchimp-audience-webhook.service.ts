@@ -87,7 +87,12 @@ export class MailchimpAudienceWebhookService {
     const lists = mailchimp.lists as unknown as ListsApi;
 
     try {
-      let webhookId = await this.renew(lists, listId, config.mailchimp_webhookId, body);
+      let webhookId = await this.renew(
+        lists,
+        listId,
+        config.mailchimp_webhookId,
+        body
+      );
 
       if (!webhookId) {
         const known = (await lists.getListWebhooks(listId)).webhooks ?? [];

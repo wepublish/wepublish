@@ -69,20 +69,34 @@ describe('MailLogSyncService', () => {
 
     it('clears an earlier error once a poll succeeds', async () => {
       const { service, noteProvider } = makeService(
-        [{ id: 'log1', state: MailLogState.submitted, mailProviderMessageID: 'm1' }],
+        [
+          {
+            id: 'log1',
+            state: MailLogState.submitted,
+            mailProviderMessageID: 'm1',
+          },
+        ],
         vi.fn(async () => [])
       );
 
       await service.syncOpenStates();
 
       expect(noteProvider).toHaveBeenCalledWith(
-        expect.objectContaining({ data: expect.objectContaining({ lastPollError: null }) })
+        expect.objectContaining({
+          data: expect.objectContaining({ lastPollError: null }),
+        })
       );
     });
 
     it('keeps what the provider answered when the poll fails, and still fails', async () => {
       const { service, noteProvider } = makeService(
-        [{ id: 'log1', state: MailLogState.submitted, mailProviderMessageID: 'm1' }],
+        [
+          {
+            id: 'log1',
+            state: MailLogState.submitted,
+            mailProviderMessageID: 'm1',
+          },
+        ],
         vi.fn(async () => {
           throw new Error('rate limited');
         })

@@ -243,6 +243,64 @@ const seedSettings = (prisma: PrismaClient) =>
     }),
     prisma.setting.upsert({
       where: {
+        name: SettingName.PRINT_ISSUES_PER_YEAR,
+      },
+      update: {},
+      create: {
+        name: SettingName.PRINT_ISSUES_PER_YEAR,
+        value: 0,
+        settingRestriction: { minValue: 0, maxValue: 52 },
+      },
+    }),
+    prisma.setting.upsert({
+      where: {
+        name: SettingName.PRINT_EXPORT_DEFAULTS,
+      },
+      update: {},
+      create: {
+        name: SettingName.PRINT_EXPORT_DEFAULTS,
+        value: {
+          memberPlanIds: null,
+          includeBexio: true,
+          bexioKindIds: null,
+          includeOpen: true,
+          includeUpcoming: false,
+        },
+      },
+    }),
+    // Neue Wege's bexio kinds (guide «Auftrag für Broker und Schenker:innen»,
+    // Nov 2026); every other medium starts without any
+    prisma.setting.upsert({
+      where: {
+        name: SettingName.PRINT_BEXIO_KINDS,
+      },
+      update: {},
+      create: {
+        name: SettingName.PRINT_BEXIO_KINDS,
+        value: [
+          {
+            id: 'nw-geschenkabo',
+            label: 'Geschenkabo',
+            word: 'NW Geschenkabo',
+            refersTo: 'period',
+          },
+          {
+            id: 'nw-broker',
+            label: 'Broker-Abo',
+            word: 'NW Abo Endkund:in',
+            refersTo: 'period',
+          },
+          {
+            id: 'nw-einzelheft',
+            label: 'Einzelheft',
+            word: 'Einzelheft',
+            refersTo: 'issue',
+          },
+        ],
+      },
+    }),
+    prisma.setting.upsert({
+      where: {
         name: SettingName.EMAIL_QUALITY_MIN_MAILS_FOR_UNRESPONSIVE,
       },
       update: {},

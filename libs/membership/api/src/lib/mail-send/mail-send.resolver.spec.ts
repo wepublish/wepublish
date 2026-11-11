@@ -36,9 +36,16 @@ const makeResolver = (
 describe('MailSendResolver', () => {
   it('emailEvidence hands out the evidence summary', async () => {
     const summary = { providerType: null, sources: [] };
-    const resolver = makeResolver({}, {}, {}, {}, {}, {
-      summary: vi.fn(async () => summary),
-    });
+    const resolver = makeResolver(
+      {},
+      {},
+      {},
+      {},
+      {},
+      {
+        summary: vi.fn(async () => summary),
+      }
+    );
 
     await expect(resolver.emailEvidence()).resolves.toBe(summary);
   });
@@ -323,7 +330,9 @@ describe('MailSendResolver', () => {
         { syncOpenStates: async () => ({ checked: 0, updated: 0 }) },
         emailQualityService,
         {},
-        { syncSuppressions: vi.fn().mockRejectedValue(new Error('Invalid_Key')) }
+        {
+          syncSuppressions: vi.fn().mockRejectedValue(new Error('Invalid_Key')),
+        }
       ).refreshEmailQuality()
     ).resolves.toEqual({ checked: 0, updated: 0, recomputed: 1 });
     expect(emailQualityService.recomputeAll).toHaveBeenCalled();

@@ -2,6 +2,7 @@ import { MockedProvider as MockedProviderBase } from '@apollo/client/testing/rea
 import '@testing-library/jest-dom/vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import {
+  FeaturesDocument,
   PaywallListDocument,
   SettingName,
   SettingsListDocument,
@@ -12,6 +13,7 @@ import {
   actWait,
   AuthContext,
   closeSnackbar,
+  FeaturesProvider,
   sessionWithPermissions,
 } from '@wepublish/ui/editor';
 import * as v2Client from '@wepublish/editor/api';
@@ -167,6 +169,68 @@ describe('SettingList', () => {
       group('settingList.allowCommentEditing')
     );
     expect(baseElement.querySelectorAll('.MuiFormGroup-root').length).toBe(2);
+  });
+
+  test('gives the print settings their own section while the print export is on', async () => {
+    const featuresMock = {
+      request: { query: FeaturesDocument },
+      result: () => ({ data: { features: ['print-export'] } }),
+    };
+
+    render(
+      <ThemeProvider theme={theme}>
+        <AuthContext.Provider value={sessionWithPermissions}>
+          <MockedProvider
+            mocks={[
+              settingsListMock,
+              updateSettingMock,
+              paywallListMock,
+              featuresMock,
+            ]}
+            addTypename={false}
+          >
+            <FeaturesProvider>
+              <RouterProvider
+                router={createMemoryRouter([
+                  { path: '*', element: <SettingList /> },
+                ])}
+              />
+            </FeaturesProvider>
+          </MockedProvider>
+        </AuthContext.Provider>
+      </ThemeProvider>
+    );
+
+    const card = (label: string) =>
+      screen.getByText(label).closest('.MuiCard-root');
+
+    await waitFor(() =>
+      expect(
+        screen.getByText('settingList.printExportDefaults')
+      ).toBeInTheDocument()
+    );
+
+    expect(card('settingList.printIssues')).toBe(
+      card('settingList.printExportDefaults')
+    );
+    // the number field shows its label twice (label and outline legend)
+    const perYear = screen
+      .getByLabelText('settingList.printIssuesPerYear')
+      .closest('.MuiCard-root');
+
+    expect(card('settingList.printIssues')).toBe(perYear);
+    expect(card('settingList.subscriptionPlans')).not.toBe(perYear);
+
+    // the bexio kinds are edited in the same card; without any, the defaults say so
+    expect(card('settingList.printBexioKinds')).toBe(perYear);
+    expect(
+      screen
+        .getByRole('button', { name: 'printBexioKinds.add' })
+        .closest('.MuiCard-root')
+    ).toBe(perYear);
+    expect(
+      screen.getByText('printExportOptions.bexioNoKinds')
+    ).toBeInTheDocument();
   });
 
   test('offers the settings as checkboxes, not switches', async () => {

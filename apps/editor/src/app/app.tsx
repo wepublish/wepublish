@@ -148,6 +148,16 @@ const NewsletterCampaignPreview = withNewsletterFeature(
   lazy(() => newsletter().then(m => ({ default: m.NewsletterCampaignPreview })))
 );
 
+// The print export ships dark too; its chunk is only fetched where it is on.
+const printIssue = () => import('@wepublish/print-issue/editor');
+const withPrintExport = createCheckedFeatureComponent('print-export');
+const PrintIssueList = withPrintExport(
+  lazy(() => printIssue().then(m => ({ default: m.PrintIssueList })))
+);
+const PrintIssueListView = withPrintExport(
+  lazy(() => printIssue().then(m => ({ default: m.PrintIssueListView })))
+);
+
 const withMediaUploadsFeature = createCheckedFeatureComponent(
   'video-audio-uploads'
 );
@@ -767,6 +777,39 @@ function AppRoutes() {
           element={
             <Base>
               <EditBannerForm />
+            </Base>
+          }
+        />
+        {/* Print issues: the issue form is a drawer over the list */}
+        <Route
+          path="print-issues"
+          element={
+            <Base>
+              <PrintIssueList />
+            </Base>
+          }
+        />
+        <Route
+          path="print-issues/create"
+          element={
+            <Base>
+              <PrintIssueList />
+            </Base>
+          }
+        />
+        <Route
+          path="print-issues/edit/:id"
+          element={
+            <Base>
+              <PrintIssueList />
+            </Base>
+          }
+        />
+        <Route
+          path="print-issues/:id/list"
+          element={
+            <Base>
+              <PrintIssueListView />
             </Base>
           }
         />

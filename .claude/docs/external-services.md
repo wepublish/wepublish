@@ -33,6 +33,11 @@
   a 429 ends the night's run. The run's time and first error land in
   `bexio_contactSyncAt` / `bexio_contactSyncError`, shown in the editor's
   bexio form.
+  - The print export (`libs/print-issue/api`, feature `print-export`, editor
+    «Druckausgaben» in the left nav after «Banner») reads `kb_invoice` and `contact` **read-only** with
+    this provider's API key (`BexioPrintSourceService`; the key needs
+    `kb_invoice_show` and `contact_show`). Without a bexio provider that has a
+    key, a run lists we.publish members only and says so in its summary.
 
 - Simulated (`simulated` type) — no external service: `createIntent` sends the
   customer to a checkout page served by the API at
