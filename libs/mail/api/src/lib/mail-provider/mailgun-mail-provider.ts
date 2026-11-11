@@ -65,7 +65,9 @@ type MailgunSuppression = {
   created_at?: string | Date;
 };
 
-const suppressionDate = (value: string | Date | undefined): Date | undefined => {
+const suppressionDate = (
+  value: string | Date | undefined
+): Date | undefined => {
   if (!value) {
     return undefined;
   }
@@ -101,9 +103,12 @@ function mapSuppressionToQualitySignal(
       [EmailQualityEventType.hardBounce, entry.error || null, 'bounce']
     : list === 'complaints' ?
       [EmailQualityEventType.spamComplaint, null, 'complaint']
-    : domainWide ?
-      [EmailQualityEventType.unsubscribed, null, 'unsubscribe']
-    : [EmailQualityEventType.optedOut, `mailgun:${tags.join(',')}`, 'unsubscribe'];
+    : domainWide ? [EmailQualityEventType.unsubscribed, null, 'unsubscribe']
+    : [
+        EmailQualityEventType.optedOut,
+        `mailgun:${tags.join(',')}`,
+        'unsubscribe',
+      ];
 
   return {
     type,

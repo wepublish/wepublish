@@ -22,6 +22,7 @@ import {
   PrintIssueRunMode,
   PrintIssuesDocument,
   PrintIssueStatus,
+  UndeliverPrintIssueDeliveryDocument,
   UpdatePrintIssueDocument,
 } from '@wepublish/editor/api';
 import { CanCreatePrintIssue, CanGetPrintIssues } from '@wepublish/permissions';
@@ -113,6 +114,29 @@ function PrintIssueListView() {
   const closed = state === 'closed';
   const kind = issue ? flowKind(issue) : null;
 
+  // a later issue with a list computed while this issue's delivery counted:
+  // taking the delivery back would change what those readers are owed
+  const [later] =
+    issue ?
+      (issuesData?.printIssues ?? [])
+        .filter(
+          other =>
+            other.id !== issue.id &&
+            other.deliveries.length > 0 &&
+            (other.issueDate > issue.issueDate ||
+              (other.issueDate === issue.issueDate &&
+                other.number > issue.number))
+        )
+        .sort(
+          (a, b) =>
+            a.issueDate.localeCompare(b.issueDate) || a.number - b.number
+        )
+    : [];
+  const undeliverReason =
+    closed ? t('printIssues.deliveries.undeliverClosed')
+    : later ? t('printIssues.deliveries.undeliverLater', { label: later.label })
+    : null;
+
   const mode =
     flow?.run?.mode ?? (issue ? nextRunMode(issue) : PrintIssueRunMode.Export);
   const replaces =
@@ -141,6 +165,12 @@ function PrintIssueListView() {
   const refetchIssue = { refetchQueries: ['PrintIssueById', 'PrintIssues'] };
   const [deliverDelivery] = useMutation(DeliverPrintIssueDeliveryDocument, {
     ...MUTATION_OPTIONS_WITH_SUCCESS_MESSAGE(t('printIssues.delivered')),
+    ...refetchIssue,
+  });
+  const [undeliverDelivery] = useMutation(UndeliverPrintIssueDeliveryDocument, {
+    ...MUTATION_OPTIONS_WITH_SUCCESS_MESSAGE(
+      t('printIssues.deliveryTakenBack')
+    ),
     ...refetchIssue,
   });
   const [deleteDelivery] = useMutation(DeletePrintIssueDeliveryDocument, {
@@ -321,6 +351,7 @@ function PrintIssueListView() {
               <PrintIssueDeliveries
                 issue={issue}
                 action={flowButton}
+                undeliverReason={undeliverReason}
                 onDownload={download}
                 onEdit={delivery =>
                   openFlow(
@@ -331,6 +362,10 @@ function PrintIssueListView() {
                 onDeliver={delivery => {
                   setFlow(null);
                   deliverDelivery({ variables: { id: delivery.id } });
+                }}
+                onUndeliver={delivery => {
+                  setFlow(null);
+                  undeliverDelivery({ variables: { id: delivery.id } });
                 }}
                 onDelete={delivery => {
                   setFlow(null);

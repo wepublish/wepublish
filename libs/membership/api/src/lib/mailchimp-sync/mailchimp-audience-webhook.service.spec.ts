@@ -65,7 +65,9 @@ describe('MailchimpAudienceWebhookService', () => {
     const [listId, body] = lists.createListWebhook.mock.calls[0];
     expect(listId).toBe(LIST_ID);
     expect(body.url).toMatch(
-      new RegExp(`^${HOST}/audience-webhooks/mailchimp/${CONFIG_ID}\\?key=[A-Za-z0-9_-]{20,}$`)
+      new RegExp(
+        `^${HOST}/audience-webhooks/mailchimp/${CONFIG_ID}\\?key=[A-Za-z0-9_-]{20,}$`
+      )
     );
     expect(body.events).toEqual({
       subscribe: false,
@@ -90,7 +92,10 @@ describe('MailchimpAudienceWebhookService', () => {
 
   it('keeps the secret once there is one and updates the webhook it registered before', async () => {
     const { service, settings } = makeService({
-      config: { decryptedWebhookSecret: 'old-secret', mailchimp_webhookId: 'wh-1' },
+      config: {
+        decryptedWebhookSecret: 'old-secret',
+        mailchimp_webhookId: 'wh-1',
+      },
     });
 
     const result = await service.register(CONFIG_ID);
@@ -98,7 +103,9 @@ describe('MailchimpAudienceWebhookService', () => {
     expect(lists.updateListWebhook).toHaveBeenCalledWith(
       LIST_ID,
       'wh-1',
-      expect.objectContaining({ url: expect.stringContaining('?key=old-secret') })
+      expect.objectContaining({
+        url: expect.stringContaining('?key=old-secret'),
+      })
     );
     expect(lists.createListWebhook).not.toHaveBeenCalled();
     expect(settings.setMailchimpWebhook).toHaveBeenCalledWith(CONFIG_ID, {
@@ -111,7 +118,10 @@ describe('MailchimpAudienceWebhookService', () => {
 
   it('registers afresh when Mailchimp no longer knows the webhook', async () => {
     const { service } = makeService({
-      config: { decryptedWebhookSecret: 'old-secret', mailchimp_webhookId: 'wh-gone' },
+      config: {
+        decryptedWebhookSecret: 'old-secret',
+        mailchimp_webhookId: 'wh-gone',
+      },
     });
     lists.updateListWebhook.mockRejectedValueOnce({ status: 404 });
     lists.createListWebhook.mockResolvedValue({ id: 'wh-2' });
@@ -160,10 +170,16 @@ describe('MailchimpAudienceWebhookService', () => {
     lists.createListWebhook.mockRejectedValue({
       status: 400,
       response: {
-        body: { status: 400, title: 'Invalid Resource', detail: 'url unreachable' },
+        body: {
+          status: 400,
+          title: 'Invalid Resource',
+          detail: 'url unreachable',
+        },
       },
     });
 
-    await expect(service.register(CONFIG_ID)).rejects.toThrow('url unreachable');
+    await expect(service.register(CONFIG_ID)).rejects.toThrow(
+      'url unreachable'
+    );
   });
 });

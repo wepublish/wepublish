@@ -72,7 +72,8 @@ describe('SuppressionSyncService', () => {
         signal('dead@example.com'),
         signal('dead@example.com', {
           type: EmailQualityEventType.spamComplaint,
-          providerEventId: 'mailchimp-reject:dead@example.com:2026-10-21 10:00:00',
+          providerEventId:
+            'mailchimp-reject:dead@example.com:2026-10-21 10:00:00',
         }),
         signal('gone@example.com'),
       ],

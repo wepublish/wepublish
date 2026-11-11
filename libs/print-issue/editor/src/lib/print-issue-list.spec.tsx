@@ -422,4 +422,60 @@ describe('PrintIssueList', () => {
       screen.getByRole('link', { name: 'printIssues.create' })
     ).toHaveAttribute('href', '/print-issues/create');
   });
+
+  it('shows ten issues per page and the rest on the next page, the new issue still following all of them', () => {
+    localStorage.clear();
+    // twelve issues of 2020, newest first as the API lists them
+    issuesQuery.mockReturnValue({
+      data: {
+        printIssues: Array.from({ length: 12 }, (_, index) =>
+          issue({
+            id: `issue-${12 - index}`,
+            label: `${12 - index}.20`,
+            number: 12 - index,
+            year: 2020,
+            issueDate: `2020-${String(12 - index).padStart(2, '0')}-15`,
+          })
+        ),
+      },
+      loading: false,
+      refetch: vi.fn(),
+    });
+    const { unmount } = renderList();
+
+    // the header row and ten issues; the table itself is not a scroll area
+    expect(screen.getAllByRole('row')).toHaveLength(11);
+    expect(screen.getByRole('link', { name: '12.20' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: '3.20' })).toBeInTheDocument();
+    expect(
+      screen.queryByRole('link', { name: '2.20' })
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByText('listView.pagination.total {"count":12}')
+    ).toBeInTheDocument();
+    expect(screen.getByLabelText('listView.pagination.pageSize')).toHaveValue(
+      '10'
+    );
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'listView.pagination.next' })
+    );
+
+    expect(screen.getAllByRole('row')).toHaveLength(3);
+    expect(screen.getByRole('link', { name: '2.20' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: '1.20' })).toBeInTheDocument();
+    expect(
+      screen.queryByRole('link', { name: '12.20' })
+    ).not.toBeInTheDocument();
+    unmount();
+
+    // the new issue follows the latest of all issues, not only the page shown
+    renderList('/print-issues/create');
+    expect(
+      within(
+        screen.getByRole('region', { name: /printIssues\.drawer/ })
+      ).getByLabelText('printIssues.fields.number')
+    ).toHaveValue(13);
+    localStorage.clear();
+  });
 });

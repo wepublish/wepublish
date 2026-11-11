@@ -164,13 +164,22 @@ export class PrintIssueResolver {
   @Permissions(CanFinalizePrintIssue)
   @Mutation(() => PrintIssueModel, {
     description:
-      "«Übergeben»: the file went to the printshop. The delivery is immutable from then on and its copies count for the readers' quota. Irreversible.",
+      "«Übergeben»: the file went to the printshop. The delivery is immutable from then on and its copies count for the readers' quota. Reversible with undeliverPrintIssueDelivery while no later list was built on it.",
   })
   async deliverPrintIssueDelivery(
     @Args('id') id: string,
     @CurrentUser() session: UserSession
   ) {
     return toPrintIssueModel(await this.issues.deliver(id, session.user.id));
+  }
+
+  @Permissions(CanFinalizePrintIssue)
+  @Mutation(() => PrintIssueModel, {
+    description:
+      '«Lieferung zurücknehmen»: the delivery is a draft again and its copies count for no quota until it is handed over anew. Only the newest list of the newest issue with lists, on an open issue.',
+  })
+  async undeliverPrintIssueDelivery(@Args('id') id: string) {
+    return toPrintIssueModel(await this.issues.undeliver(id));
   }
 
   @Permissions(CanDeletePrintIssue)

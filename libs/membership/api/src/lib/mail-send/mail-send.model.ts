@@ -475,7 +475,9 @@ export class EmailEvidenceSourceModel {
   @Field(() => EmailQualityEventSource)
   source!: EmailQualityEventSource;
 
-  @Field(() => Int, { description: 'Events of this source in the last 30 days.' })
+  @Field(() => Int, {
+    description: 'Events of this source in the last 30 days.',
+  })
   count!: number;
 
   @Field(() => GraphQLISODateTime, {
@@ -504,7 +506,8 @@ export class EmailEvidenceModel {
 
   @Field(() => GraphQLISODateTime, {
     nullable: true,
-    description: 'When the provider last called the webhook with a verified request.',
+    description:
+      'When the provider last called the webhook with a verified request.',
   })
   lastWebhookAt!: Date | null;
 

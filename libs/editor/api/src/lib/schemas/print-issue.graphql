@@ -258,6 +258,12 @@ mutation DeliverPrintIssueDelivery($id: String!) {
   }
 }
 
+mutation UndeliverPrintIssueDelivery($id: String!) {
+  undeliverPrintIssueDelivery(id: $id) {
+    ...FullPrintIssue
+  }
+}
+
 mutation DeletePrintIssueDelivery($id: String!) {
   deletePrintIssueDelivery(id: $id) {
     ...FullPrintIssue

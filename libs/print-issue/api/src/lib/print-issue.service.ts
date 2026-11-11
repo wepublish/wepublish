@@ -182,7 +182,6 @@ export class PrintIssueService {
     return issue;
   }
 
-  /** The medium's defaults for a new issue (setting `printExportDefaults`). */
   /** The medium's bexio kinds (setting printBexioKinds). */
   bexioKinds() {
     return this.exporter.bexioKinds();
@@ -414,7 +413,7 @@ export class PrintIssueService {
     return this.findById(id);
   }
 
-  /** «übergeben»: the file went to the printshop. Never undone. */
+  /** «übergeben»: the file went to the printshop. Reversible with `undeliver` while nothing was built on it. */
   async deliver(
     deliveryId: string,
     userId: string
@@ -432,6 +431,71 @@ export class PrintIssueService {
     }
 
     // a list computed to replace this delivery is moot now
+    await this.clearRun(delivery.issueId);
+
+    return this.findById(delivery.issueId);
+  }
+
+  /**
+   * «Lieferung zurücknehmen»: the delivery is a draft again and its copies
+   * count for no quota until it is handed over anew. Only for the newest list
+   * of the newest issue with lists: a later list was computed while this one
+   * counted, so taking it back would change what those readers are owed.
+   */
+  async undeliver(deliveryId: string): Promise<PrintIssueWithDeliveries> {
+    const delivery = await this.delivery(deliveryId);
+    const issue = await this.findById(delivery.issueId);
+
+    if (!delivery.deliveredAt) {
+      throw new BadRequestException(
+        'This delivery is a draft; there is nothing to take back.'
+      );
+    }
+
+    if (issue.status !== PrintIssueStatus.open) {
+      throw new BadRequestException(
+        issue.status === PrintIssueStatus.closed ?
+          'The issue is closed; unlock it first.'
+        : 'A historic issue has no delivery to take back.'
+      );
+    }
+
+    if (issue.deliveries.some(other => other.batch > delivery.batch)) {
+      throw new BadRequestException(
+        'A Nachlieferung follows this delivery; take back or delete that one first.'
+      );
+    }
+
+    const later = await this.prisma.printIssue.findFirst({
+      where: {
+        OR: [
+          { issueDate: { gt: issue.issueDate } },
+          { issueDate: issue.issueDate, number: { gt: issue.number } },
+        ],
+        deliveries: { some: {} },
+      },
+      orderBy: [{ issueDate: 'asc' }, { number: 'asc' }],
+      select: { number: true, numberTo: true, year: true },
+    });
+
+    if (later) {
+      throw new BadRequestException(
+        `Issue ${issueLabel(later)} has a list computed while this delivery counted; take back or delete that list first.`
+      );
+    }
+
+    const { count } = await this.prisma.printIssueDelivery.updateMany({
+      where: { id: deliveryId, deliveredAt: { not: null } },
+      data: { deliveredAt: null, deliveredByUserId: null },
+    });
+
+    if (count !== 1) {
+      throw new ConflictException(
+        'This delivery was taken back in the meantime.'
+      );
+    }
+
+    // a Nachlieferung computed on top of this delivery is moot now
     await this.clearRun(delivery.issueId);
 
     return this.findById(delivery.issueId);

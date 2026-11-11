@@ -101,8 +101,16 @@ describe('MailchimpAudienceEvidenceService', () => {
 
     const result = await service.record(LIST_ID, [
       member(),
-      member({ id: 'dead', email_address: 'dead@example.com', status: 'cleaned' }),
-      member({ id: 'gone', email_address: 'gone@example.com', status: 'unsubscribed' }),
+      member({
+        id: 'dead',
+        email_address: 'dead@example.com',
+        status: 'cleaned',
+      }),
+      member({
+        id: 'gone',
+        email_address: 'gone@example.com',
+        status: 'unsubscribed',
+      }),
     ]);
 
     expect(result).toEqual({ recorded: 2 });

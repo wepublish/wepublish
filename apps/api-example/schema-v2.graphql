@@ -57,6 +57,8 @@ type AllowedSettingVals {
 
 enum AnalyticsProviderType {
   GOOGLE
+  PLAUSIBLE
+  UMAMI
 }
 
 type ApiToken {
@@ -3667,7 +3669,21 @@ type Mutation {
   createAISetting(apiKey: String, id: String!, name: String, systemPrompt: String, type: AIProviderType!, webhookEndpointSecret: String): SettingAIProvider!
 
   """Creates a new analytics provider setting."""
-  createAnalyticsProviderSetting(articlePrefix: String, credentials: SettingAnalyticsCredentialsInput, id: String!, name: String, property: String, type: AnalyticsProviderType!): SettingAnalyticsProvider!
+  createAnalyticsProviderSetting(
+    """Api key of Plausible or Umami."""
+    apiKey: String
+    articlePrefix: String
+
+    """Service account credentials of Google Analytics."""
+    credentials: SettingAnalyticsCredentialsInput
+    id: String!
+    name: String
+    property: String
+    type: AnalyticsProviderType!
+
+    """Base url of the API, used for self hosted instances."""
+    url: String
+  ): SettingAnalyticsProvider!
 
   """
   Runs the invoice creation and charging steps of the daily periodic job on demand, without affecting the job run log. Requires an editor session and is additionally password protected.
@@ -4063,7 +4079,7 @@ type Mutation {
   deleteVideo(id: String!): String!
 
   """
-  «Übergeben»: the file went to the printshop. The delivery is immutable from then on and its copies count for the readers' quota. Irreversible.
+  «Übergeben»: the file went to the printshop. The delivery is immutable from then on and its copies count for the readers' quota. Reversible with undeliverPrintIssueDelivery while no later list was built on it.
   """
   deliverPrintIssueDelivery(id: String!): PrintIssue!
 
@@ -4337,6 +4353,11 @@ type Mutation {
   triggerMailchimpSync(id: String!): Boolean!
   unarchiveNewsletterCampaign(id: String!): NewsletterCampaign!
 
+  """
+  «Lieferung zurücknehmen»: the delivery is a draft again and its copies count for no quota until it is handed over anew. Only the newest list of the newest issue with lists, on an open issue.
+  """
+  undeliverPrintIssueDelivery(id: String!): PrintIssue!
+
   """Unpublishes all revisions of an article."""
   unpublishArticle(id: String!): Article!
 
@@ -4347,7 +4368,23 @@ type Mutation {
   updateAISetting(apiKey: String, id: String, name: String, systemPrompt: String, webhookEndpointSecret: String): SettingAIProvider!
 
   """Updates an existing analytics provider setting."""
-  updateAnalyticsProviderSetting(articlePrefix: String, credentials: SettingAnalyticsCredentialsInput, id: String, name: String, property: String): SettingAnalyticsProvider!
+  updateAnalyticsProviderSetting(
+    """Api key of Plausible or Umami."""
+    apiKey: String
+    articlePrefix: String
+
+    """Service account credentials of Google Analytics."""
+    credentials: SettingAnalyticsCredentialsInput
+
+    """Uses this provider for Hot & Trending instead of the current one."""
+    hotAndTrending: Boolean
+    id: String
+    name: String
+    property: String
+
+    """Base url of the API, used for self hosted instances."""
+    url: String
+  ): SettingAnalyticsProvider!
 
   """Updates an article."""
   updateArticle(authors: [ArticleRevisionAuthorInput!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
@@ -4584,7 +4621,7 @@ type Mutation {
   updateVideo(description: String, id: String!, license: String, link: String, source: String, title: String): Video!
 
   """Updates the website settings."""
-  updateWebsiteSettings(ads: WebsiteAdsInput, analytics: WebsiteAnalyticsInput, fonts: [WebsiteRemoteFontInput!], mail: WebsiteMailInput, theme: JSONObject): WebsiteSettings!
+  updateWebsiteSettings(ads: WebsiteAdsInput, analytics: WebsiteAnalyticsInput, fonts: [WebsiteRemoteFontInput!], theme: JSONObject): WebsiteSettings!
 
   """"""
   upgradeUserSubscription(discountCode: String, failureURL: String, goodieId: String, memberPlanId: String!, monthlyAmount: Float!, paymentMethodId: String!, subscriptionId: String!, successURL: String): Payment!
@@ -7059,6 +7096,9 @@ input SettingAnalyticsCredentialsInput {
 type SettingAnalyticsProvider implements SettingProvider {
   articlePrefix: String
   createdAt: DateTime!
+
+  """Whether this provider powers the Hot & Trending query."""
+  hotAndTrending: Boolean!
   id: String!
 
   """
@@ -7070,6 +7110,9 @@ type SettingAnalyticsProvider implements SettingProvider {
   name: String
   property: String
   type: AnalyticsProviderType!
+
+  """Base url of the API, used for self hosted instances."""
+  url: String
 }
 
 input SettingAnalyticsProviderFilter {
@@ -8361,6 +8404,7 @@ type WebsiteAnalytics {
   googleTagManager: KeyEnabled!
   piwik: KeyEnabled!
   plausible: KeyEnabled!
+  umami: KeyEnabled!
 }
 
 input WebsiteAnalyticsInput {
@@ -8368,14 +8412,7 @@ input WebsiteAnalyticsInput {
   googleTagManager: KeyEnabledInput!
   piwik: KeyEnabledInput!
   plausible: KeyEnabledInput!
-}
-
-type WebsiteMail {
-  mailchimp: KeyEnabled
-}
-
-input WebsiteMailInput {
-  mailchimp: KeyEnabledInput!
+  umami: KeyEnabledInput!
 }
 
 type WebsiteRemoteFont {
@@ -8394,7 +8431,6 @@ type WebsiteSettings {
   ads: WebsiteAds!
   analytics: WebsiteAnalytics!
   fonts: [WebsiteRemoteFont!]!
-  mail: WebsiteMail!
   theme: JSONObject!
 }
 

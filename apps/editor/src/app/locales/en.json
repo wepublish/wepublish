@@ -1005,6 +1005,151 @@
       "network": "No connection to the server. Please check your internet connection and try again.",
       "unexpected": "Something went wrong. Please try again – if the problem persists, contact support."
     },
+    "form": {
+      "loading": "Loading …",
+      "loadError": {
+        "title": "The data could not be loaded",
+        "retry": "Try again"
+      },
+      "errorSummary": {
+        "title": "Please fix these entries before saving"
+      },
+      "field": {
+        "moreInfo": "More information"
+      },
+      "select": {
+        "empty": "None"
+      },
+      "password": {
+        "show": "Show password",
+        "hide": "Hide password"
+      },
+      "array": {
+        "add": "Add entry",
+        "remove": "Remove entry {{position}}",
+        "reorder": "Reorder",
+        "dragHandle": "Drag to reorder entry {{position}}",
+        "roleDescription": "sortable entry",
+        "dragInstructions": "To pick up an entry, press Space or Enter. Move it with the arrow keys, then press Space or Enter again to drop it, or Escape to cancel.",
+        "dragStart": "Picked up entry {{position}}.",
+        "dragOver": "Entry {{position}} is over position {{target}}.",
+        "dragEnd": "Entry {{position}} dropped at position {{target}}.",
+        "dragCancel": "Moving cancelled. Entry {{position}} is back in its place.",
+        "empty": "No entries yet",
+        "actions": "Actions"
+      },
+      "union": {
+        "type": "Type"
+      },
+      "autocomplete": {
+        "noOptions": "No options",
+        "clear": "Clear",
+        "open": "Open list",
+        "close": "Close list",
+        "loading": "Loading …"
+      },
+      "date": {
+        "today": "Today",
+        "tomorrow": "Tomorrow",
+        "now": "Now"
+      },
+      "color": {
+        "pick": "Pick color",
+        "invalid": "Please enter a hex color such as #1a2b3c"
+      },
+      "secret": {
+        "show": "Show value",
+        "hide": "Hide value"
+      },
+      "view": {
+        "readOnly": "Read only",
+        "discard": "Discard changes",
+        "discardChanges": {
+          "title": "Discard unsaved changes?",
+          "body": "Your changes have not been saved and will be lost.",
+          "keep": "Keep editing",
+          "discard": "Discard"
+        },
+        "sectionErrors_one": "{{count}} error",
+        "sectionErrors_other": "{{count}} errors"
+      },
+      "value": {
+        "on": "On",
+        "off": "Off",
+        "empty": "(empty)",
+        "changed": "changed"
+      },
+      "units": {
+        "seconds": "seconds",
+        "seconds_one": "second",
+        "minutes": "minutes",
+        "minutes_one": "minute",
+        "days": "days",
+        "days_one": "day",
+        "milliseconds": "milliseconds",
+        "milliseconds_one": "millisecond"
+      },
+      "errors": {
+        "required": "This field is required",
+        "invalid": "This value is not valid",
+        "invalid_value": "Please choose one of the available options",
+        "not_multiple_of": "Please enter a multiple of {{divisor}}",
+        "unexpected": "The form could not be checked. Please try again.",
+        "server": "Saving failed. Please try again.",
+        "invalid_type": {
+          "string": "Please enter a text",
+          "number": "Please enter a number",
+          "int": "Please enter a whole number",
+          "boolean": "Please choose yes or no",
+          "date": "Please enter a valid date",
+          "array": "Please enter a list of values",
+          "object": "These details are incomplete"
+        },
+        "invalid_format": {
+          "default": "The format is not valid",
+          "email": "Please enter a valid email address",
+          "url": "Please enter a valid URL",
+          "regex": "The format is not valid",
+          "uuid": "Please enter a valid UUID"
+        },
+        "too_small": {
+          "string": {
+            "min": "Please enter at least {{minimum}} characters",
+            "exact": "Please enter exactly {{minimum}} characters"
+          },
+          "array": {
+            "min": "Please add at least {{minimum}} entries",
+            "exact": "Please add exactly {{minimum}} entries"
+          },
+          "number": {
+            "inclusive": "Please enter {{minimum}} or more",
+            "exclusive": "Please enter more than {{minimum}}"
+          },
+          "date": {
+            "inclusive": "Please choose {{minimum, P}} or later",
+            "exclusive": "Please choose a date after {{minimum, P}}"
+          }
+        },
+        "too_big": {
+          "string": {
+            "max": "Please enter at most {{maximum}} characters",
+            "exact": "Please enter exactly {{maximum}} characters"
+          },
+          "array": {
+            "max": "Please add at most {{maximum}} entries",
+            "exact": "Please add exactly {{maximum}} entries"
+          },
+          "number": {
+            "inclusive": "Please enter {{maximum}} or less",
+            "exclusive": "Please enter less than {{maximum}}"
+          },
+          "date": {
+            "inclusive": "Please choose {{maximum, P}} or earlier",
+            "exclusive": "Please choose a date before {{maximum, P}}"
+          }
+        }
+      }
+    },
     "errorMessages": {
       "invalidEmailErrorMessage": "Please enter a valid email address",
       "invalidRange": "Value out of range. Please input a number between {{min}} and {{max}}.",
@@ -3771,7 +3916,20 @@
         "articlePrefixInfo": "The part of the address that comes before an article's slug on your website. Only page views of addresses starting with it count as article reads.",
         "propertyInfo": "The numeric ID of your Google Analytics 4 property (not the G-… measurement ID). You find it in Google Analytics under «Admin» → «Property details».",
         "credentialsInfo": "The JSON key file of a Google Cloud service account with read access to your Analytics property. Drag the file into the box below; it is only stored when you save.",
-        "readFileError": "The file could not be read."
+        "readFileError": "The file could not be read.",
+        "hotAndTrending": "Use for Hot & Trending",
+        "hotAndTrendingInfo": "Hot & Trending reads its page views from this provider. Only one provider can be used at a time, choosing this one turns it off for the others.",
+        "apiKey": "API key",
+        "plausibleApiKeyInfo": "A Stats API key from your Plausible account settings («API Keys»). On Plausible Cloud the Stats API needs a Business plan.",
+        "umamiApiKeyInfo": "An API key from Umami Cloud («Settings» → «API keys»), or the token of a user with access to the website for a self-hosted Umami.",
+        "plausibleSiteId": "Site domain",
+        "plausibleSiteIdInfo": "The domain of the site as you added it to Plausible, e.g. example.com.",
+        "umamiWebsiteId": "Website ID",
+        "umamiWebsiteIdInfo": "The ID of the website in Umami. You find it under «Settings» → «Websites» → «Edit».",
+        "plausibleUrl": "Plausible URL",
+        "plausibleUrlInfo": "Only needed for a self-hosted Plausible, e.g. https://plausible.example.com. Leave it empty to use plausible.io.",
+        "umamiUrl": "Umami API URL",
+        "umamiUrlInfo": "Only needed for a self-hosted Umami, e.g. https://umami.example.com/api. Leave it empty to use Umami Cloud."
       },
       "mailchimpSync": "Mailchimp Sync",
       "mailchimpSyncSettings": {
@@ -3891,7 +4049,7 @@
       "paymentProviderInfo": "Services that process the payments for subscriptions, e.g. Payrexx, Stripe, Mollie or invoices via Bexio.",
       "trackingPixelInfo": "Adds the ProLitteris counting pixel to your articles so that their reads count towards your copyright royalties.",
       "mailProviderInfo": "The service We.Publish uses to send emails, such as login links, payment reminders or subscription confirmations.",
-      "analyticsInfo": "Reads the page views from Google Analytics to find out which articles are currently read the most (Hot & Trending).",
+      "analyticsInfo": "Reads the page views from Google Analytics, Plausible or Umami to find out which articles are currently read the most (Hot & Trending).",
       "mailchimpSyncInfo": "Transfers all active user accounts and their subscription data to a Mailchimp audience every night, so you can target newsletters by subscription.",
       "lastLoadedInfo": "When We.Publish last loaded this configuration, e.g. to process a payment. This shows you whether the integration is in use.",
       "setUp": "Set up",
@@ -3932,16 +4090,13 @@
           "pro": "<url>Piwik PRO</url> is a privacy-focused analytics platform and an alternative to Google Analytics.",
           "proLocator": "You can find it in the Menu > Administration > Site > ID of your administration panel",
           "proInvalid": "Must be a valid Piwik ID (e.g., xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)"
-        }
-      },
-      "mail": {
-        "title": "Mail",
-        "mailchimp": {
-          "title": "Mailchimp",
-          "enable": "Enable Mailchimp",
-          "mailchimp": "<url>Mailchimp</url> is an email marketing platform that lets you manage newsletters and subscriber lists. This gives the website access to your newsletters and lets it display them.",
-          "apiKeyLocator": "You can find it in the <url>API keys section</url> of your Mailchimp account. Make sure that it is a Mailchimp key and not a Mandrill key.",
-          "apiKeyInvalid": "Must be a valid Mailchimp API-Key (e.g., XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX-us1)"
+        },
+        "umami": {
+          "title": "Umami",
+          "enable": "Enable Umami",
+          "um": "<url>Umami</url> is a privacy-focused, open source alternative to Google Analytics.",
+          "umLocator": "You can find it in the <url>website settings</url> of your Umami dashboard",
+          "umInvalid": "Must be a valid website ID (e.g., xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)"
         }
       },
       "ads": {
@@ -5104,6 +5259,7 @@
       "exportedSupplement": "Supplement created – a draft until it is marked as delivered.",
       "delivered": "Print list marked as delivered",
       "deliveryDeleted": "Print list deleted",
+      "deliveryTakenBack": "Delivery taken back – the print list is a draft again",
       "issueDateRequired": "Please enter the ship day.",
       "drawer": {
         "createTitle": "New issue",
@@ -5162,7 +5318,7 @@
         "historic": "Historic issue, closed for good. The issue was created outside the system and has no print lists."
       },
       "deleteReason": {
-        "delivered": "Cannot delete: at least one print list was already delivered to the printshop and counts toward the number of printed issues readers with a subscription are entitled to.",
+        "delivered": "Cannot delete: at least one print list was already delivered to the printshop and counts toward the number of printed issues readers with a subscription are entitled to. Take back the delivery first in the issue's print lists – possible as long as no later issue has a print list.",
         "draft": "Delete the issue – its print list is still a draft and is deleted with it.",
         "empty": "Delete the issue – it has no print list yet.",
         "historic": "Delete the historic issue. It then no longer counts toward the number of printed issues readers with a subscription are entitled to."
@@ -5260,8 +5416,15 @@
         "deliver": "Mark as delivered",
         "deliverTooltip": "Mark {{name}} as delivered once it was handed to the printshop. Changes to the complete list remain possible at any time as supplements.",
         "deliverTitle": "Mark print list as delivered?",
-        "deliverQuestion": "Mark {{name}} of issue {{label}} as «delivered to the printshop»? It is locked from then on, and its copies count toward the calculation of the remaining issues readers are entitled to. This step cannot be undone.",
+        "deliverQuestion": "Mark {{name}} of issue {{label}} as «delivered to the printshop»? It is locked from then on, and its copies count toward the calculation of the remaining issues readers are entitled to. As long as no later issue has a print list, the delivery can be taken back.",
         "deliverConfirm": "Mark as delivered",
+        "undeliver": "Take back the delivery",
+        "undeliverTooltip": "Make {{name}} a draft again – to correct it, deliver it anew or delete it.",
+        "undeliverTitle": "Take back the delivery?",
+        "undeliverQuestion": "Make {{name}} of issue {{label}} a draft again? Its copies then no longer count toward the issues readers are entitled to until it is marked as delivered again. Date and name of the delivery are lost.",
+        "undeliverConfirm": "Take back",
+        "undeliverClosed": "The issue is closed – unlock it first.",
+        "undeliverLater": "Not possible: issue {{label}} already has a print list computed with this delivery. Delete or take back that one first.",
         "delete": "Delete",
         "deleteTitle": "Delete print list?",
         "deleteQuestion": "Delete {{name}}? Its addresses are discarded.",

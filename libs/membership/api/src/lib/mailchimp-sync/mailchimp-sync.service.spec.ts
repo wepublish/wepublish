@@ -175,7 +175,10 @@ describe('MailchimpSyncService', () => {
           provide: ClickTrackingExtension,
           useValue: { execute: vi.fn() },
         },
-        { provide: MailchimpAudienceEvidenceService, useValue: audienceEvidence },
+        {
+          provide: MailchimpAudienceEvidenceService,
+          useValue: audienceEvidence,
+        },
         { provide: MailchimpCampaignClicksService, useValue: campaignClicks },
       ],
     }).compile();

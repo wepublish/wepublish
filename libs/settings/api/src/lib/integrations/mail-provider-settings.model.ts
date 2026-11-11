@@ -63,7 +63,8 @@ export class SettingMailProvider extends SettingProvider {
 
   @Field(() => Date, {
     nullable: true,
-    description: 'When the provider last called the webhook with a verified request.',
+    description:
+      'When the provider last called the webhook with a verified request.',
   })
   lastWebhookAt?: Date | null;
 
