@@ -82,10 +82,7 @@ export function NotificationsPage() {
         aria-labelledby={tabId(activeTab)}
       >
         {activeTab === NotificationsTab.WhatsNew && (
-          <ChangelogDashboard
-            take={10}
-            paginated
-          />
+          <ChangelogDashboard take={10} />
         )}
 
         {activeTab === NotificationsTab.TeamMessages && (

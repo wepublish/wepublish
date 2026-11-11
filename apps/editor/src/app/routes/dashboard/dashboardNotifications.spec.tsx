@@ -1,5 +1,4 @@
 import { render, screen } from '@testing-library/react';
-import { ChangelogSeverity } from '@wepublish/editor/api';
 import { NotificationItem, NotificationSeverity } from '@wepublish/ui/editor';
 import { MemoryRouter } from 'react-router-dom';
 
@@ -12,20 +11,9 @@ const { sources } = vi.hoisted(() => ({
   sources: {
     connector: [] as unknown[],
     team: [] as unknown[],
-    actionRequired: [] as unknown[],
+    changelog: [] as unknown[],
     jobs: [] as unknown[],
-    news: [] as unknown[],
-    whatsNew: [] as unknown[],
     mayReadJobLogs: true,
-  },
-}));
-
-const { draft, calls } = vi.hoisted(() => ({
-  draft: { current: 1 },
-  calls: {
-    action: [] as Record<string, unknown>[],
-    news: [] as Record<string, unknown>[],
-    whatsNew: [] as Record<string, unknown>[],
   },
 }));
 
@@ -53,29 +41,8 @@ vi.mock('../../oneMessages/oneMessages', () => ({
   useOneMessageNotifications: () => sources.team,
 }));
 
-vi.mock('./changelogDashboard', () => ({
-  useChangelogActionNotifications: (props: Record<string, unknown>) => {
-    calls.action.push(props);
-
-    return { items: sources.actionRequired, overlay: null };
-  },
-  useChangelogNewsNotifications: (props: Record<string, unknown>) => {
-    calls.news.push(props);
-
-    return { items: sources.news, overlay: null };
-  },
-}));
-
-vi.mock('./changelogDrafts/changelogDraft', () => ({
-  useChangelogDraft: () => [draft.current, vi.fn()],
-}));
-
-vi.mock('./changelogDrafts/whatsNew', () => ({
-  useWhatsNewDashboardItems: (props: Record<string, unknown>) => {
-    calls.whatsNew.push(props);
-
-    return { items: sources.whatsNew, overlay: null };
-  },
+vi.mock('../../whatsNew/whatsNew', () => ({
+  useWhatsNewDashboardItems: () => ({ items: sources.changelog }),
 }));
 
 vi.mock('./oneChannelAlert', () => ({
@@ -114,15 +81,9 @@ const renderedOrder = () =>
 beforeEach(() => {
   sources.connector = [];
   sources.team = [];
-  sources.actionRequired = [];
+  sources.changelog = [];
   sources.jobs = [];
-  sources.news = [];
-  sources.whatsNew = [];
   sources.mayReadJobLogs = true;
-  draft.current = 1;
-  calls.action = [];
-  calls.news = [];
-  calls.whatsNew = [];
 });
 
 it('hides the panel while no source has anything to show', () => {
@@ -131,13 +92,7 @@ it('hides the panel while no source has anything to show', () => {
   expect(panel.hasAttribute('hidden')).toBe(true);
 });
 
-it.each([
-  ['connector'],
-  ['team'],
-  ['actionRequired'],
-  ['jobs'],
-  ['news'],
-] as const)(
+it.each([['connector'], ['team'], ['changelog'], ['jobs']] as const)(
   'shows the panel with its header as soon as the %s source has something',
   source => {
     sources[source] = [item(`${source}-1`, 'info')];
@@ -153,8 +108,8 @@ it.each([
 );
 
 it('orders notifications by severity across all sources', () => {
-  sources.news = [item('news-info', 'info')];
-  sources.actionRequired = [item('action-warning', 'warning')];
+  sources.connector = [item('connector-info', 'info')];
+  sources.changelog = [item('changelog-warning', 'warning')];
   sources.jobs = [item('job-error', 'error')];
   sources.team = [item('team-success', 'success')];
 
@@ -162,14 +117,14 @@ it('orders notifications by severity across all sources', () => {
 
   expect(renderedOrder().map(text => text.trim())).toEqual([
     'job-error',
-    'action-warning',
-    'news-info',
+    'changelog-warning',
+    'connector-info',
     'team-success',
   ]);
 });
 
 it('puts a failing job above a changelog task, whatever the source order', () => {
-  sources.actionRequired = [item('changelog-task', 'warning')];
+  sources.changelog = [item('changelog-task', 'warning')];
   sources.jobs = [item('failing-job', 'error')];
 
   renderPanel();
@@ -194,7 +149,7 @@ it('caps the panel and still shows every category that has something', () => {
     item(`job-${index}`, 'error')
   );
   sources.team = [item('team-info', 'info')];
-  sources.news = [item('news-info', 'info')];
+  sources.changelog = [item('changelog-info', 'info')];
 
   renderPanel();
 
@@ -202,7 +157,7 @@ it('caps the panel and still shows every category that has something', () => {
     'job-0',
     'job-1',
     'team-info',
-    'news-info',
+    'changelog-info',
   ]);
   expect(
     screen
@@ -245,46 +200,4 @@ it('shows the body of the most severe item only', () => {
 
   expect(screen.getByText('job body')).toBeTruthy();
   expect(screen.queryByText('team body')).toBeNull();
-});
-
-describe('changelog drafts', () => {
-  it('draft 1 renders both changelog sources as compact rows', () => {
-    draft.current = 1;
-
-    renderPanel();
-
-    expect(calls.action.at(-1)).toMatchObject({
-      variant: 'compact',
-      skip: false,
-    });
-    expect(calls.news.at(-1)).toMatchObject({
-      variant: 'compact',
-      skip: false,
-    });
-    expect(calls.whatsNew.at(-1)).toMatchObject({ skip: true });
-  });
-
-  it('draft 2 keeps only recommended actions in the panel', () => {
-    draft.current = 2;
-
-    renderPanel();
-
-    expect(calls.action.at(-1)).toMatchObject({
-      severities: [ChangelogSeverity.Recommended],
-      skip: false,
-    });
-    expect(calls.news.at(-1)).toMatchObject({ skip: true });
-  });
-
-  it('draft 3 replaces the changelog items with the "What\'s new" summary', () => {
-    draft.current = 3;
-    sources.whatsNew = [item('open-steps', 'warning')];
-
-    renderPanel();
-
-    expect(calls.action.at(-1)).toMatchObject({ skip: true });
-    expect(calls.news.at(-1)).toMatchObject({ skip: true });
-    expect(calls.whatsNew.at(-1)).toMatchObject({ skip: false });
-    expect(renderedOrder().map(text => text.trim())).toEqual(['open-steps']);
-  });
 });

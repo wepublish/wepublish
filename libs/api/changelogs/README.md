@@ -80,11 +80,15 @@ the default content when no translation exists. Rules:
 | `recommended` | Action recommended   | Every instance should do a manual step, but nothing breaks while it waits (e.g. "add the new block to your navigation").       |
 | `required`    | Action required      | Every instance has to do a manual step as soon as possible: something stops working or degrades until it does (e.g. a secret). |
 
-`recommended` and `required` entries ask for an action: they are shown
-prominently in the editor until a user with the permission to update settings
-confirms that the action has been completed; the confirmation (who + when) is
-stored per instance. `required` entries are shown more prominently than
-`recommended` ones. We.Publish One reads the severity and the confirmations
+In the editor every entry lives in the **What's new** panel (sparkle icon at
+the bottom of the sidebar; a dot on it marks entries the user hasn't seen yet)
+and in the full list on the notifications page. `recommended` and `required`
+entries ask for an action: users with the permission to update settings see
+them in the panel's "To do" section and as one summary line on the dashboard,
+until one of them confirms that the action has been completed; the
+confirmation (who + when) is stored per instance. Open `required` entries also
+show a slim banner above every page except the content editors, which can be
+snoozed for a day. We.Publish One reads the severity and the confirmations
 through `mediumChangelogActions` and `mediumStats.operations.changelog`
 (`openActions`, `openRequiredActions`).
 

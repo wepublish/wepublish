@@ -225,14 +225,14 @@ import {
 import { useLocation } from 'react-router-dom';
 
 import { ColorModePreference, useColorMode } from './colorMode';
-import {
-  ChangelogDraftProvider,
-  ChangelogDraftSidebarButton,
-  ChangelogDraftTopBar,
-} from './routes/dashboard/changelogDrafts/changelogDraftChrome';
 import { useMobileNavigation } from './mobileNavigation';
 import { useSidebarMenu } from './sidebarMenu';
 import { Logo } from './ui/logo';
+import {
+  WhatsNewButton,
+  WhatsNewProvider,
+  WhatsNewRequiredBanner,
+} from './whatsNew/whatsNew';
 
 export interface BaseProps {
   children?: ReactNode;
@@ -553,7 +553,7 @@ export function Base({ children }: BaseProps) {
   }, [i18n, uiLanguage]);
 
   return (
-    <ChangelogDraftProvider>
+    <WhatsNewProvider>
       <Wrapper>
         <SkipLink
           href="#main-content"
@@ -1635,7 +1635,7 @@ export function Base({ children }: BaseProps) {
             </Sidenav>
 
             <Footer>
-              <ChangelogDraftSidebarButton ButtonComponent={IconButton} />
+              <WhatsNewButton ButtonComponent={IconButton} />
 
               <ClickMenu
                 anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
@@ -1731,11 +1731,11 @@ export function Base({ children }: BaseProps) {
             tabIndex={-1}
             inert={sidebarIsModal}
           >
-            <ChangelogDraftTopBar />
+            <WhatsNewRequiredBanner />
             {children}
           </ChildrenContainer>
         </Layout>
       </Wrapper>
-    </ChangelogDraftProvider>
+    </WhatsNewProvider>
   );
 }

@@ -25,6 +25,23 @@ vi.mock('@wepublish/ui/editor', async importOriginal => ({
   Version: () => null,
 }));
 
+// The changelog panel talks to the api; here it only has to be mounted.
+vi.mock('./whatsNew/whatsNew', () => ({
+  WhatsNewProvider: ({ children }: { children: ReactNode }) => children,
+  WhatsNewButton: () => (
+    <button
+      type="button"
+      aria-label="whats-new"
+    />
+  ),
+  WhatsNewRequiredBanner: () => (
+    <div
+      role="status"
+      aria-label="required-banner"
+    />
+  ),
+}));
+
 const theme = createEditorTheme();
 
 const ARTICLES = 'Articles';
@@ -70,6 +87,17 @@ describe('Base', () => {
 
   afterEach(() => {
     vi.unstubAllGlobals();
+  });
+
+  describe("what's new", () => {
+    it('puts the entry point in the sidebar and the banner above the page', () => {
+      inBase();
+
+      expect(screen.getByRole('button', { name: 'whats-new' })).toBeTruthy();
+      expect(
+        within(main()).getByRole('status', { name: 'required-banner' })
+      ).toBeTruthy();
+    });
   });
 
   describe('landmarks', () => {

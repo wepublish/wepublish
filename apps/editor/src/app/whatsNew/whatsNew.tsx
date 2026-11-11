@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client/react';
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   Accordion,
@@ -14,6 +14,9 @@ import {
   ChangelogEntriesDocument,
   ChangelogEntryFragment,
   ChangelogSeverity,
+  MarkNotificationsReadDocument,
+  NotificationReadsDocument,
+  NotificationSource,
 } from '@wepublish/editor/api';
 import { NotificationItem, useHasPermission } from '@wepublish/ui/editor';
 import {
@@ -40,16 +43,17 @@ import {
   ChangelogMarkdown,
   CONFIRM_PERMISSION,
   useChangelogDialogs,
-} from '../changelogDashboard';
-import { ChangelogSeverityChip } from '../changelogSeverity';
+} from '../routes/dashboard/changelogDashboard';
+import { ChangelogSeverityChip } from '../routes/dashboard/changelogSeverity';
 import { isContentEditorRoute } from './contentEditorRoute';
 
 /**
- * DRAFT 3 — "What's new".
+ * "What's new" — where the changelog lives in the editor.
  *
  * Most people never need the changelog, so it gets no room of its own: one
  * icon at the bottom of the sidebar opens a side panel, and a small dot on it
- * says that something new arrived since the panel was last opened. In the
+ * says that something new arrived that this user hasn't seen yet (opening the
+ * panel marks the shown entries read for them, on every device). In the
  * panel, entries are a quiet list of headings grouped by month that expand in
  * place — no modal on top of a modal.
  *
@@ -59,7 +63,6 @@ import { isContentEditorRoute } from './contentEditorRoute';
  * every page except the content editors, which can be snoozed for a day.
  */
 
-export const CHANGELOG_SEEN_STORAGE_KEY = 'wepublish/changelogSeenAt';
 const SNOOZE_STORAGE_PREFIX = 'wepublish/changelogSnoozedUntil/';
 const SNOOZE_MS = 24 * 60 * 60 * 1000;
 const RECENT_ENTRIES = 30;
@@ -76,16 +79,19 @@ const writeStorage = (key: string, value: string) => {
   try {
     localStorage.setItem(key, value);
   } catch {
-    // storage blocked: the state just doesn't survive a reload
+    // storage blocked: the snooze just doesn't survive a reload
   }
 };
 
 type WhatsNewContextValue = {
   open: () => void;
+  /** Whether a recent entry waits that this user hasn't seen yet */
+  hasUnseen: boolean;
 };
 
 const WhatsNewContext = createContext<WhatsNewContextValue>({
   open: () => undefined,
+  hasUnseen: false,
 });
 
 export const useWhatsNew = () => useContext(WhatsNewContext);
@@ -210,12 +216,12 @@ function groupByMonth(entries: ChangelogEntryFragment[], locale: string) {
 
 function WhatsNewPanel({
   open,
-  seenAt,
+  newIds,
   onClose,
 }: {
   open: boolean;
-  /** Entries released after this are marked as new. */
-  seenAt: string | null;
+  /** Entries that were unseen when the panel opened get a dot. */
+  newIds: ReadonlySet<string>;
   onClose(): void;
 }) {
   const { t, i18n } = useTranslation();
@@ -328,7 +334,7 @@ function WhatsNewPanel({
                   <AccordionSummary expandIcon={<MdExpandMore />}>
                     <EntrySummary>
                       <EntryTitle>
-                        {(!seenAt || entry.releasedAt > seenAt) && (
+                        {newIds.has(entry.id) && (
                           <NewDot
                             title={t('changelog.panel.new')}
                             aria-label={t('changelog.panel.new')}
@@ -371,24 +377,45 @@ function WhatsNewPanel({
   );
 }
 
-/** Remembers when the panel was last opened and hosts the panel itself. */
+/** Hosts the panel and knows which entries this user hasn't seen yet. */
 export function WhatsNewProvider({ children }: { children: ReactNode }) {
   const [isOpen, setOpen] = useState(false);
-  // What was seen *before* this opening, so the dots stay while reading.
-  const [seenAtWhileOpen, setSeenAtWhileOpen] = useState<string | null>(null);
-  const latest = useRecentEntries()[0]?.releasedAt;
+  // What was unseen *when the panel opened*, so the dots stay while reading.
+  const [newIds, setNewIds] = useState<ReadonlySet<string>>(new Set());
+  const recent = useRecentEntries();
+
+  const { data } = useQuery(NotificationReadsDocument, {
+    fetchPolicy: 'cache-and-network',
+  });
+  const [markNotificationsRead] = useMutation(MarkNotificationsReadDocument, {
+    refetchQueries: ['NotificationReads'],
+  });
+
+  const unseenIds = useMemo(() => {
+    const read = new Set(
+      (data?.notificationReads ?? [])
+        .filter(({ source }) => source === NotificationSource.Changelog)
+        .map(({ itemId }) => itemId)
+    );
+
+    return recent.map(({ id }) => id).filter(id => !read.has(id));
+  }, [data?.notificationReads, recent]);
 
   const open = useCallback(() => {
-    setSeenAtWhileOpen(readStorage(CHANGELOG_SEEN_STORAGE_KEY));
-
-    if (latest) {
-      writeStorage(CHANGELOG_SEEN_STORAGE_KEY, latest);
-    }
-
+    setNewIds(new Set(unseenIds));
     setOpen(true);
-  }, [latest]);
 
-  const value = useMemo(() => ({ open }), [open]);
+    if (unseenIds.length) {
+      markNotificationsRead({
+        variables: { source: NotificationSource.Changelog, itemIds: unseenIds },
+      });
+    }
+  }, [markNotificationsRead, unseenIds]);
+
+  const value = useMemo(
+    () => ({ open, hasUnseen: !isOpen && unseenIds.length > 0 }),
+    [open, isOpen, unseenIds.length]
+  );
 
   return (
     <WhatsNewContext.Provider value={value}>
@@ -396,7 +423,7 @@ export function WhatsNewProvider({ children }: { children: ReactNode }) {
 
       <WhatsNewPanel
         open={isOpen}
-        seenAt={seenAtWhileOpen}
+        newIds={newIds}
         onClose={() => setOpen(false)}
       />
     </WhatsNewContext.Provider>
@@ -427,21 +454,13 @@ export function WhatsNewButton({
   ButtonComponent?: ComponentType<ComponentProps<typeof IconButton>>;
 } = {}) {
   const { t } = useTranslation();
-  const { open } = useWhatsNew();
-  const latest = useRecentEntries()[0]?.releasedAt;
-  // Re-read on every render, so opening the panel clears the dot.
-  const [, rerender] = useState(0);
-  const seenAt = readStorage(CHANGELOG_SEEN_STORAGE_KEY);
-  const hasUnseen = !!latest && (!seenAt || latest > seenAt);
+  const { open, hasUnseen } = useWhatsNew();
 
   return (
     <Tooltip title={t('changelog.panel.title')}>
       <ButtonComponent
         aria-label={t('changelog.panel.title')}
-        onClick={() => {
-          open();
-          rerender(count => count + 1);
-        }}
+        onClick={open}
       >
         <IconWithDot>
           <MdAutoAwesome />
@@ -453,13 +472,13 @@ export function WhatsNewButton({
 }
 
 /** One summary line for the dashboard notifications card, admins only. */
-export function useWhatsNewDashboardItems({ skip }: { skip: boolean }) {
+export function useWhatsNewDashboardItems() {
   const { t } = useTranslation();
   const { open } = useWhatsNew();
-  const actions = useOpenActions(skip);
+  const actions = useOpenActions();
 
   if (!actions.length) {
-    return { items: [], overlay: null };
+    return { items: [] };
   }
 
   const required = actions.some(
@@ -467,7 +486,6 @@ export function useWhatsNewDashboardItems({ skip }: { skip: boolean }) {
   );
 
   return {
-    overlay: null,
     items: [
       <NotificationItem
         key="whats-new-open-actions"

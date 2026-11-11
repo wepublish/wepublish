@@ -768,16 +768,6 @@
       "releasedAt": "Released on {{date, PP}}",
       "completedAt": "Completed on {{date, PP}}",
       "noEntries": "No changelog entries yet.",
-      "allCaughtUp": "No unread changelog entries.",
-      "readMore": "Read more",
-      "draft": "Changelog draft",
-      "bell": {
-        "title": "What's new",
-        "unread_one": "What's new, {{count}} unread",
-        "unread_other": "What's new, {{count}} unread",
-        "markAllRead": "Mark all as read",
-        "showAll": "Show all"
-      },
       "panel": {
         "title": "What's new",
         "todo": "To do",

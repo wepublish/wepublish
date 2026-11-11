@@ -2,7 +2,6 @@ import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { Button, Card, CardContent, CardHeader } from '@mui/material';
 import {
-  ChangelogSeverity,
   MarkNotificationReadDocument,
   NotificationReadsDocument,
   NotificationSource,
@@ -16,12 +15,7 @@ import { MdChevronRight } from 'react-icons/md';
 import { Link as RouterLink } from 'react-router-dom';
 
 import { useOneMessageNotifications } from '../../oneMessages/oneMessages';
-import {
-  useChangelogActionNotifications,
-  useChangelogNewsNotifications,
-} from './changelogDashboard';
-import { useChangelogDraft } from './changelogDrafts/changelogDraft';
-import { useWhatsNewDashboardItems } from './changelogDrafts/whatsNew';
+import { useWhatsNewDashboardItems } from '../../whatsNew/whatsNew';
 import { selectDashboardNotifications } from './dashboardNotificationSelection';
 import { useOneChannelNotifications } from './oneChannelAlert';
 
@@ -109,35 +103,14 @@ export function DashboardNotifications() {
     onMarkRead: markRead(NotificationSource.OneMessage),
   });
 
-  // DRAFT SWITCH: 1 shows every changelog item as a compact row, 2 keeps only
-  // recommended actions here (info lives behind the bell, required actions in
-  // bars on top), 3 leaves a single summary line pointing at "What's new".
-  const [draft] = useChangelogDraft();
-
-  const actionRequired = useChangelogActionNotifications({
-    sourceTag: t('notifications.sourceChangelog'),
-    variant: draft === 1 ? 'compact' : 'default',
-    severities: draft === 2 ? [ChangelogSeverity.Recommended] : undefined,
-    skip: draft === 3,
-  });
-
-  const whatsNew = useWhatsNewDashboardItems({ skip: draft !== 3 });
+  // The changelog lives in the "What's new" panel; the dashboard only gets one
+  // line, and only for people who can complete open changelog actions.
+  const whatsNew = useWhatsNewDashboardItems();
 
   const jobs = usePeriodicJobNotifications({
     onlyProblems: true,
     skip: !mayReadJobLogs,
     sourceTag: t('notifications.sourceJobLogs'),
-  });
-
-  const news = useChangelogNewsNotifications({
-    take: 3,
-    hideUnconfirmedActionRequired: true,
-    hideEmptyState: true,
-    sourceTag: t('notifications.sourceChangelog'),
-    readEntryIds: readItemIds.get(NotificationSource.Changelog) ?? EMPTY_SET,
-    onMarkRead: markRead(NotificationSource.Changelog),
-    variant: draft === 1 ? 'compact' : 'default',
-    skip: draft !== 1,
   });
 
   const { visible, hiddenCount } = useMemo(
@@ -147,23 +120,11 @@ export function DashboardNotifications() {
         { category: 'team', items: team as Item[] },
         {
           category: 'changelog',
-          items: [
-            ...actionRequired.items,
-            ...news.items,
-            ...whatsNew.items,
-          ] as Item[],
+          items: whatsNew.items as Item[],
         },
         { category: 'jobs', items: (mayReadJobLogs ? jobs : []) as Item[] },
       ]),
-    [
-      connector,
-      team,
-      actionRequired.items,
-      jobs,
-      mayReadJobLogs,
-      news.items,
-      whatsNew.items,
-    ]
+    [connector, team, jobs, mayReadJobLogs, whatsNew.items]
   );
 
   return (
@@ -205,10 +166,6 @@ export function DashboardNotifications() {
             </Button>
           </MoreHint>
         )}
-
-        {actionRequired.overlay}
-        {news.overlay}
-        {whatsNew.overlay}
       </CardContent>
     </Card>
   );

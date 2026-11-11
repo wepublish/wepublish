@@ -768,16 +768,6 @@
       "releasedAt": "Publié le {{date, PP}}",
       "completedAt": "Effectué le {{date, PP}}",
       "noEntries": "Aucune entrée de changelog pour l’instant.",
-      "allCaughtUp": "Aucune entrée de changelog non lue.",
-      "readMore": "Lire la suite",
-      "draft": "Brouillon du changelog",
-      "bell": {
-        "title": "Quoi de neuf",
-        "unread_one": "Quoi de neuf, {{count}} non lu",
-        "unread_other": "Quoi de neuf, {{count}} non lus",
-        "markAllRead": "Tout marquer comme lu",
-        "showAll": "Tout afficher"
-      },
       "panel": {
         "title": "Quoi de neuf",
         "todo": "À faire",

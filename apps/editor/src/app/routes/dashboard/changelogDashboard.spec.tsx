@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client/react';
 import { createTheme, ThemeProvider } from '@mui/material';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import {
   type ChangelogEntryFragment,
   ChangelogSeverity,
@@ -8,10 +8,7 @@ import {
 import { ReactNode } from 'react';
 import type { Mock } from 'vitest';
 
-import {
-  ChangelogActionRequired,
-  ChangelogDashboard,
-} from './changelogDashboard';
+import { ChangelogDashboard } from './changelogDashboard';
 
 // The components call Apollo's hooks with generated documents, so the mock
 // sits at the Apollo boundary.
@@ -75,51 +72,32 @@ beforeEach(() => {
 });
 
 describe('ChangelogDashboard', () => {
-  it('shows a loader and reports nothing visible while loading', () => {
+  it('shows a loader while loading', () => {
     mockQuery(undefined, true);
-    const onVisibilityChange = vi.fn();
 
-    const { container } = renderWithTheme(
-      <ChangelogDashboard onVisibilityChange={onVisibilityChange} />
-    );
+    renderWithTheme(<ChangelogDashboard />);
 
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
-    expect(onVisibilityChange).toHaveBeenLastCalledWith(false);
   });
 
-  it('renders entries and reports them as visible', () => {
+  it('lists every entry, actions and info alike', () => {
     mockQuery([
       entry({ id: 'entry-1', title: 'First' }),
-      entry({ id: 'entry-2', title: 'Second' }),
+      entry({
+        id: 'entry-2',
+        title: 'Urgent',
+        severity: ChangelogSeverity.Required,
+      }),
     ]);
-    const onVisibilityChange = vi.fn();
 
-    renderWithTheme(
-      <ChangelogDashboard onVisibilityChange={onVisibilityChange} />
-    );
+    renderWithTheme(<ChangelogDashboard />);
 
     expect(screen.getByText('First')).toBeTruthy();
-    expect(screen.getByText('Second')).toBeTruthy();
-    expect(onVisibilityChange).toHaveBeenLastCalledWith(true);
+    expect(screen.getByText('Urgent')).toBeTruthy();
+    expect(screen.getByText('changelog.severity.required')).toBeTruthy();
   });
 
-  it('shows the placeholder and reports nothing visible when every entry was read', () => {
-    mockQuery([entry({ id: 'entry-1', title: 'Read' })]);
-    const onVisibilityChange = vi.fn();
-
-    renderWithTheme(
-      <ChangelogDashboard
-        readEntryIds={new Set(['entry-1'])}
-        onVisibilityChange={onVisibilityChange}
-      />
-    );
-
-    expect(screen.queryByText('Read')).toBeNull();
-    expect(screen.getByText('changelog.allCaughtUp')).toBeTruthy();
-    expect(onVisibilityChange).toHaveBeenLastCalledWith(false);
-  });
-
-  it('shows the no-entries placeholder when the database has no entries', () => {
+  it('shows the no-entries placeholder when there are no entries', () => {
     mockQuery([]);
 
     renderWithTheme(<ChangelogDashboard />);
@@ -127,131 +105,14 @@ describe('ChangelogDashboard', () => {
     expect(screen.getByText('changelog.noEntries')).toBeTruthy();
   });
 
-  it('renders nothing instead of the placeholder when hideEmptyState is set', () => {
-    mockQuery([]);
+  it('opens the details of an entry', () => {
+    mockQuery([entry({ title: 'First', description: 'All the details' })]);
 
-    const { container } = renderWithTheme(
-      <ChangelogDashboard hideEmptyState />
-    );
+    renderWithTheme(<ChangelogDashboard />);
 
-    expect(container.firstChild).toBeNull();
-  });
+    fireEvent.click(screen.getByRole('button', { name: 'First' }));
 
-  it('excludes unconfirmed action-required entries when asked to', () => {
-    mockQuery([
-      entry({
-        id: 'entry-1',
-        title: 'Pending',
-        severity: ChangelogSeverity.Required,
-      }),
-      entry({
-        id: 'entry-2',
-        title: 'Done',
-        severity: ChangelogSeverity.Recommended,
-        confirmedAt: '2026-08-26T12:00:00.000Z',
-      }),
-    ]);
-    const onVisibilityChange = vi.fn();
-
-    renderWithTheme(
-      <ChangelogDashboard
-        hideUnconfirmedActionRequired
-        onVisibilityChange={onVisibilityChange}
-      />
-    );
-
-    expect(screen.queryByText('Pending')).toBeNull();
-    expect(screen.getByText('Done')).toBeTruthy();
-    expect(onVisibilityChange).toHaveBeenLastCalledWith(true);
-  });
-
-  it('reports nothing visible when only excluded entries remain', () => {
-    mockQuery([
-      entry({
-        id: 'entry-1',
-        title: 'Pending',
-        severity: ChangelogSeverity.Required,
-      }),
-    ]);
-    const onVisibilityChange = vi.fn();
-
-    const { container } = renderWithTheme(
-      <ChangelogDashboard
-        hideUnconfirmedActionRequired
-        hideEmptyState
-        onVisibilityChange={onVisibilityChange}
-      />
-    );
-
-    expect(container.firstChild).toBeNull();
-    expect(onVisibilityChange).toHaveBeenLastCalledWith(false);
-  });
-});
-
-describe('ChangelogActionRequired', () => {
-  it('renders unconfirmed entries and reports them as visible', () => {
-    mockQuery([
-      entry({ title: 'Do this', severity: ChangelogSeverity.Required }),
-    ]);
-    const onVisibilityChange = vi.fn();
-
-    renderWithTheme(
-      <ChangelogActionRequired onVisibilityChange={onVisibilityChange} />
-    );
-
-    expect(screen.getByText('Do this')).toBeTruthy();
-    expect(
-      screen.getByRole('button', { name: 'notifications.markAsDone' })
-    ).toBeTruthy();
-    expect(onVisibilityChange).toHaveBeenLastCalledWith(true);
-  });
-
-  it('asks only for open entries that ask for an action', () => {
-    mockQuery([]);
-
-    renderWithTheme(<ChangelogActionRequired />);
-
-    expect(mockedUseQuery).toHaveBeenCalledWith(
-      expect.anything(),
-      expect.objectContaining({
-        variables: expect.objectContaining({
-          filter: {
-            severities: [
-              ChangelogSeverity.Recommended,
-              ChangelogSeverity.Required,
-            ],
-            confirmed: false,
-          },
-        }),
-      })
-    );
-  });
-
-  it('labels required and recommended entries differently', () => {
-    mockQuery([
-      entry({ id: 'a', title: 'Urgent', severity: ChangelogSeverity.Required }),
-      entry({
-        id: 'b',
-        title: 'Later',
-        severity: ChangelogSeverity.Recommended,
-      }),
-    ]);
-
-    renderWithTheme(<ChangelogActionRequired />);
-
-    expect(screen.getByText('changelog.severity.required')).toBeTruthy();
-    expect(screen.getByText('changelog.severity.recommended')).toBeTruthy();
-  });
-
-  it('renders nothing and reports nothing visible without entries', () => {
-    mockQuery([]);
-    const onVisibilityChange = vi.fn();
-
-    const { container } = renderWithTheme(
-      <ChangelogActionRequired onVisibilityChange={onVisibilityChange} />
-    );
-
-    expect(container.firstChild).toBeNull();
-    expect(onVisibilityChange).toHaveBeenLastCalledWith(false);
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    expect(screen.getByText('All the details')).toBeInTheDocument();
   });
 });

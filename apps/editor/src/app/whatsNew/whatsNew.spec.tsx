@@ -4,13 +4,13 @@ import { fireEvent, render, renderHook, screen } from '@testing-library/react';
 import {
   type ChangelogEntryFragment,
   ChangelogSeverity,
+  NotificationSource,
 } from '@wepublish/editor/api';
 import { ReactNode } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import type { Mock } from 'vitest';
 
 import {
-  CHANGELOG_SEEN_STORAGE_KEY,
   useWhatsNewDashboardItems,
   WhatsNewButton,
   WhatsNewProvider,
@@ -20,8 +20,10 @@ import {
 vi.mock('@apollo/client/react', async importOriginal => ({
   ...(await importOriginal<typeof import('@apollo/client/react')>()),
   useQuery: vi.fn(),
-  useMutation: () => [vi.fn(), { loading: false }],
+  useMutation: () => [markRead, { loading: false }],
 }));
+
+const markRead = vi.hoisted(() => vi.fn());
 
 const permission = vi.hoisted(() => ({ mayConfirm: true }));
 
@@ -56,13 +58,15 @@ const entry = (
   ...overrides,
 });
 
-/** Answers the open-actions query and the recent-entries query separately. */
+/** Answers the reads, the open-actions and the recent-entries queries. */
 const mockEntries = ({
   actions = [],
   recent = [],
+  readIds = [],
 }: {
   actions?: ChangelogEntryFragment[];
   recent?: ChangelogEntryFragment[];
+  readIds?: string[];
 }) => {
   mockedUseQuery.mockImplementation(
     (
@@ -73,7 +77,20 @@ const mockEntries = ({
         return { data: undefined, loading: false };
       }
 
-      const nodes = options?.variables?.filter ? actions : recent;
+      if (!options?.variables) {
+        return {
+          data: {
+            notificationReads: readIds.map(itemId => ({
+              id: `read-${itemId}`,
+              createdAt: '2026-11-02T00:00:00.000Z',
+              source: NotificationSource.Changelog,
+              itemId,
+            })),
+          },
+        };
+      }
+
+      const nodes = options.variables.filter ? actions : recent;
 
       return {
         data: {
@@ -101,6 +118,7 @@ const wrapper = ({ children }: { children: ReactNode }) => (
 
 beforeEach(() => {
   mockedUseQuery.mockReset();
+  markRead.mockReset();
   localStorage.clear();
   permission.mayConfirm = true;
 });
@@ -114,10 +132,9 @@ describe('useWhatsNewDashboardItems', () => {
       ],
     });
 
-    const { result } = renderHook(
-      () => useWhatsNewDashboardItems({ skip: false }),
-      { wrapper }
-    );
+    const { result } = renderHook(() => useWhatsNewDashboardItems(), {
+      wrapper,
+    });
 
     expect(result.current.items).toHaveLength(1);
     expect(result.current.items[0].props.severity).toBe('error');
@@ -129,23 +146,9 @@ describe('useWhatsNewDashboardItems', () => {
       actions: [entry({ severity: ChangelogSeverity.Required })],
     });
 
-    const { result } = renderHook(
-      () => useWhatsNewDashboardItems({ skip: false }),
-      { wrapper }
-    );
-
-    expect(result.current.items).toHaveLength(0);
-  });
-
-  it('shows nothing while skipped', () => {
-    mockEntries({
-      actions: [entry({ severity: ChangelogSeverity.Required })],
+    const { result } = renderHook(() => useWhatsNewDashboardItems(), {
+      wrapper,
     });
-
-    const { result } = renderHook(
-      () => useWhatsNewDashboardItems({ skip: true }),
-      { wrapper }
-    );
 
     expect(result.current.items).toHaveLength(0);
   });
@@ -153,12 +156,12 @@ describe('useWhatsNewDashboardItems', () => {
 
 describe('WhatsNewButton', () => {
   it('marks unseen entries with a dot until the panel was opened', () => {
-    localStorage.setItem(
-      CHANGELOG_SEEN_STORAGE_KEY,
-      '2026-10-01T00:00:00.000Z'
-    );
     mockEntries({
-      recent: [entry({ title: 'Brand new', lead: 'What changed' })],
+      recent: [
+        entry({ id: 'new', title: 'Brand new', lead: 'What changed' }),
+        entry({ id: 'old', title: 'Old news' }),
+      ],
+      readIds: ['old'],
     });
 
     render(<WhatsNewButton />, { wrapper });
@@ -169,26 +172,29 @@ describe('WhatsNewButton', () => {
       screen.getByRole('button', { name: 'changelog.panel.title' })
     );
 
+    expect(markRead).toHaveBeenCalledWith({
+      variables: { source: NotificationSource.Changelog, itemIds: ['new'] },
+    });
     expect(screen.queryByTestId('whats-new-dot')).toBeNull();
-    expect(localStorage.getItem(CHANGELOG_SEEN_STORAGE_KEY)).toBe(
-      '2026-11-01T12:00:00.000Z'
-    );
+    expect(screen.getAllByLabelText('changelog.panel.new')).toHaveLength(1);
 
     fireEvent.click(screen.getByRole('button', { name: /Brand new/ }));
 
     expect(screen.getByText('What changed')).toBeInTheDocument();
   });
 
-  it('shows no dot when everything was seen', () => {
-    localStorage.setItem(
-      CHANGELOG_SEEN_STORAGE_KEY,
-      '2026-11-05T00:00:00.000Z'
-    );
-    mockEntries({ recent: [entry()] });
+  it('shows no dot and marks nothing when everything was seen', () => {
+    mockEntries({ recent: [entry()], readIds: ['entry-1'] });
 
     render(<WhatsNewButton />, { wrapper });
 
     expect(screen.queryByTestId('whats-new-dot')).toBeNull();
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'changelog.panel.title' })
+    );
+
+    expect(markRead).not.toHaveBeenCalled();
   });
 });
 

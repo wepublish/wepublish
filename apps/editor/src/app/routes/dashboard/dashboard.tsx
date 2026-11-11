@@ -10,10 +10,6 @@ import { Link as RouterLink } from 'react-router-dom';
 import { AudienceDashboard } from '../audience/audience-dashboard';
 import { ScrollContainer } from '../networkContent/networkContent.styles';
 import NetworkContentDashboard from '../networkContent/networkContentDashboard';
-import {
-  ChangelogDraftSwitch,
-  ChangelogDraftToolbarButton,
-} from './changelogDrafts/changelogDraftChrome';
 import { DashboardConfig } from './dashboardConfig';
 import {
   DashboardCardId,
@@ -26,8 +22,6 @@ import { useDashboardLayout } from './useDashboardLayout';
 
 const DashboardToolbar = styled.div`
   display: flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing(1)};
   justify-content: flex-end;
   margin-bottom: ${({ theme }) => theme.spacing(1.5)};
 `;
@@ -204,9 +198,6 @@ export function Dashboard() {
       <PageTitle sx={visuallyHidden}>{t('navbar.dashboard')}</PageTitle>
 
       <DashboardToolbar>
-        <ChangelogDraftSwitch />
-        <ChangelogDraftToolbarButton />
-
         <Button
           variant="text"
           startIcon={<MdTune />}
