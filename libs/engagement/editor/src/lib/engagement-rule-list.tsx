@@ -262,7 +262,7 @@ function EngagementRuleList() {
           {t('engagement.list.paywallsDescription')}{' '}
           <Link
             component={RouterLink}
-            to="/articles/paywalls"
+            to={`${ENGAGEMENT_PATH}/paywalls`}
           >
             {t('engagement.list.managePaywalls')}
           </Link>
@@ -277,7 +277,7 @@ function EngagementRuleList() {
           >
             <Link
               component={RouterLink}
-              to={`/articles/paywalls/edit/${paywall.id}`}
+              to={`${ENGAGEMENT_PATH}/paywalls/edit/${paywall.id}`}
             >
               {paywall.name || t('comments.edit.unnamedPaywall')}
             </Link>

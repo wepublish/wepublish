@@ -58,7 +58,7 @@ describe('editor command registry', () => {
         '/audience-engagement/create?preset=growNewsletter',
         '/audience-engagement/create?preset=promoteMemberships',
         '/audience-engagement/create?preset=displayAnnouncement',
-        '/articles/paywalls/create?enforced=true',
+        '/audience-engagement/paywalls/create?enforced=true',
       ])
     );
   });

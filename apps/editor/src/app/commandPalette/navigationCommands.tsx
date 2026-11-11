@@ -296,7 +296,7 @@ export const NAVIGATION_COMMANDS: CommandDefinition[] = [
     sectionKey: 'navbar.articles',
     icon: <MdPayment />,
     permissions: [CanCreatePaywall.id, CanUpdatePaywall.id],
-    perform: ({ navigate }) => navigate('/articles/paywalls'),
+    perform: ({ navigate }) => navigate('/audience-engagement/paywalls'),
   },
   {
     favourite: true,

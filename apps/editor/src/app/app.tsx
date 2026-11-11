@@ -57,6 +57,7 @@ import {
 } from 'react-router-dom';
 
 import { Base } from './base';
+import { RedirectMoved } from './redirect-moved';
 import { EditorCommandPaletteSurface } from './commandPalette/editorCommandPalette';
 import { EditorGlobalStyles } from './editorGlobalStyles';
 import { Login } from './login';
@@ -360,7 +361,7 @@ function AppRoutes() {
           }
         />
         <Route
-          path="articles/paywalls"
+          path="audience-engagement/paywalls"
           element={
             <Base>
               <PaywallList />
@@ -368,7 +369,7 @@ function AppRoutes() {
           }
         />
         <Route
-          path="articles/paywalls/edit/:id"
+          path="audience-engagement/paywalls/edit/:id"
           element={
             <Base>
               <PaywallEditView />
@@ -376,7 +377,7 @@ function AppRoutes() {
           }
         />
         <Route
-          path="articles/paywalls/create"
+          path="audience-engagement/paywalls/create"
           element={
             <Base>
               <PaywallCreateView />
@@ -405,6 +406,16 @@ function AppRoutes() {
             <Base>
               <EditEngagementRule />
             </Base>
+          }
+        />
+        {/* Paywalls moved to Audience Engagement */}
+        <Route
+          path="articles/paywalls/*"
+          element={
+            <RedirectMoved
+              from="/articles/paywalls"
+              to="/audience-engagement/paywalls"
+            />
           }
         />
         <Route
