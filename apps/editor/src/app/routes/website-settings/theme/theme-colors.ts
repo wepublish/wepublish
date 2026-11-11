@@ -50,8 +50,7 @@ export const useWebsiteThemeColors = (): string[] | undefined => {
 
   return useMemo(() => {
     const theme = data?.websiteSettings.theme as
-      | { palette?: ThemePalette }
-      | undefined;
+      { palette?: ThemePalette } | undefined;
     const colors = websiteThemeColors(theme?.palette ?? {});
 
     return colors.length ? colors : undefined;

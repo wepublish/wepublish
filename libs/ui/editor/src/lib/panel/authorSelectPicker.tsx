@@ -155,7 +155,7 @@ export function AuthorSelectPicker({
         <TextField
           {...params}
           name={name}
-          placeholder={t('articleEditor.panels.selectAuthor')}
+          label={t('articleEditor.panels.selectAuthor')}
         />
       )}
     />

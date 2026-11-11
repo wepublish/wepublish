@@ -29,7 +29,6 @@ import { Controller, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 import { CanGetSettings, CanUpdateSettings } from '@wepublish/permissions';
 import {
-  Box,
   Button,
   Card,
   CardContent,
@@ -59,16 +58,11 @@ const DescriptionListItemWrapper = styled(DescriptionListItem)`
   min-width: 100px;
 `;
 
-type SettingLabelProps = {
-  label: string;
-  info: string;
-};
-
-const SettingLabel = ({ label, info }: SettingLabelProps) => (
-  <>
-    {label} <InfoTooltip text={info} />
-  </>
-);
+const SettingRow = styled('div')`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing(0.5)};
+`;
 
 const SETTINGS = {
   [SettingName.AllowGuestCommenting]: {
@@ -86,6 +80,14 @@ const SETTINGS = {
   [SettingName.SessionTtlDays]: {
     label: 'settingList.sessionTtlDays',
     value: 7,
+  },
+  [SettingName.EmailQualityUnresponsiveAfterDays]: {
+    label: 'settingList.emailQualityUnresponsiveAfterDays',
+    value: 180,
+  },
+  [SettingName.EmailQualityMinMailsForUnresponsive]: {
+    label: 'settingList.emailQualityMinMailsForUnresponsive',
+    value: 1,
   },
   [SettingName.SendLoginJwtExpiresMin]: {
     label: 'settingList.loginMinutes',
@@ -165,6 +167,8 @@ const EMPTY_SETTINGS = Object.fromEntries(
 
 const NUMBER_FALLBACK_RANGES: Partial<Record<SettingName, [number, number]>> = {
   [SettingName.SessionTtlDays]: [1, 365],
+  [SettingName.EmailQualityUnresponsiveAfterDays]: [1, 3650],
+  [SettingName.EmailQualityMinMailsForUnresponsive]: [1, 100],
   [SettingName.SendLoginJwtExpiresMin]: [1, 10080],
   [SettingName.ResetPasswordJwtExpiresMin]: [10, 10080],
   [SettingName.PeeringTimeoutMs]: [1000, 10000],
@@ -308,12 +312,13 @@ function SettingList() {
   );
 
   const renderToggle = (name: SettingName, info: string) => (
-    <Box>
+    <SettingRow>
       <Controller
         control={control}
         name={name}
         render={({ field }) => (
           <FormControlLabel
+            sx={{ marginRight: 0 }}
             control={
               <Checkbox
                 {...field}
@@ -321,16 +326,12 @@ function SettingList() {
                 checked={field.value as boolean}
               />
             }
-            label={
-              <SettingLabel
-                label={t(SETTINGS[name].label)}
-                info={info}
-              />
-            }
+            label={t(SETTINGS[name].label)}
           />
         )}
       />
-    </Box>
+      <InfoTooltip text={info} />
+    </SettingRow>
   );
 
   const renderNumberInput = (
@@ -345,12 +346,7 @@ function SettingList() {
         <TextField
           {...field}
           value={field.value as number}
-          label={
-            <SettingLabel
-              label={t(SETTINGS[name].label)}
-              info={info}
-            />
-          }
+          label={t(SETTINGS[name].label)}
           type="number"
           disabled={isDisabled}
           onChange={event => field.onChange(+event.target.value)}
@@ -359,10 +355,12 @@ function SettingList() {
           fullWidth
           slotProps={{
             input: {
-              endAdornment:
-                unit ?
-                  <InputAdornment position="end">{unit}</InputAdornment>
-                : undefined,
+              endAdornment: (
+                <InputAdornment position="end">
+                  {unit}
+                  <InfoTooltip text={info} />
+                </InputAdornment>
+              ),
             },
           }}
         />
@@ -417,7 +415,7 @@ function SettingList() {
             container
             spacing={2}
           >
-            <Grid size={{ xs: 6 }}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <Grid
                 container
                 spacing={2}
@@ -553,7 +551,7 @@ function SettingList() {
               </Grid>
             </Grid>
 
-            <Grid size={{ xs: 6 }}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <Grid
                 container
                 spacing={2}
@@ -583,6 +581,35 @@ function SettingList() {
                           SettingName.ResetPasswordJwtExpiresMin,
                           t('settingList.info.passwordToken'),
                           t('settingList.minutes')
+                        )}
+                      </Stack>
+                    </CardContent>
+                  </Card>
+                </Grid>
+
+                {/* email quality: when a mailed address counts as unresponsive */}
+                <Grid size={{ xs: 12 }}>
+                  <Card>
+                    <CardHeader title={t('settingList.emailQuality')} />
+
+                    <CardContent>
+                      <Stack
+                        spacing={3}
+                        sx={{ width: '100%' }}
+                      >
+                        {renderNumberInput(
+                          SettingName.EmailQualityUnresponsiveAfterDays,
+                          t(
+                            'settingList.warnings.emailQualityUnresponsiveAfterDays'
+                          ),
+                          t('settingList.days')
+                        )}
+
+                        {renderNumberInput(
+                          SettingName.EmailQualityMinMailsForUnresponsive,
+                          t(
+                            'settingList.warnings.emailQualityMinMailsForUnresponsive'
+                          )
                         )}
                       </Stack>
                     </CardContent>
@@ -624,20 +651,21 @@ function SettingList() {
                         )}
 
                         <FormControl fullWidth>
-                          <FormLabel>
-                            <SettingLabel
-                              label={t(
-                                SETTINGS[SettingName.NewArticlePaywall].label
-                              )}
-                              info={t('settingList.warnings.newArticlePaywall')}
+                          <SettingRow>
+                            <FormLabel id="setting-new-article-paywall-label">
+                              {t(SETTINGS[SettingName.NewArticlePaywall].label)}
+                            </FormLabel>
+                            <InfoTooltip
+                              text={t('settingList.warnings.newArticlePaywall')}
                             />
-                          </FormLabel>
+                          </SettingRow>
 
                           <Controller
                             control={control}
                             name={SettingName.NewArticlePaywall}
                             render={({ field }) => (
                               <SelectPaywall
+                                aria-labelledby="setting-new-article-paywall-label"
                                 disabled={isDisabled}
                                 selectedPaywall={field.value as string | null}
                                 setSelectedPaywall={field.onChange}

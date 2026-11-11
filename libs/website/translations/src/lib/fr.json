@@ -51,9 +51,9 @@
       "button": "Passer à {memberPlan} pour {formattedAmount}"
     },
     "support": {
-      "subscribeForPeriod": "Je soutiens {siteTitle} {monthlyAmount, select, 0 {gratuitement} other {avec {formattedAmount} {renewalPeriodL}}}",
-      "payForPeriod": "Je soutiens {siteTitle} {monthlyAmount, select, 0 {gratuitement} other {pendant {paymentPeriodL} avec {formattedAmount}}}",
-      "pay": "Je soutiens {siteTitle} {monthlyAmount, select, 0 {gratuitement} other {avec {formattedAmount}}}"
+      "subscribeForPeriod": "Je soutiens {siteTitle} {monthlyAmount, select, 0 {gratuitement} other {à hauteur de {formattedAmount} {renewalPeriodL}}}",
+      "payForPeriod": "Je soutiens {siteTitle} {monthlyAmount, select, 0 {gratuitement} other {pendant {paymentPeriodL} à hauteur de {formattedAmount}}}",
+      "pay": "Je soutiens {siteTitle} {monthlyAmount, select, 0 {gratuitement} other {à hauteur de {formattedAmount}}}"
     },
     "button": {
       "subscribeForPeriod": "{productType, select, Donation {Faire un don {monthlyAmount, select, 0 {gratuitement} other {de {formattedAmount} {renewalPeriodL}}}} other {S'abonner {monthlyAmount, select, 0 {gratuitement} other {pour {formattedAmount} {renewalPeriodL}}}}}",

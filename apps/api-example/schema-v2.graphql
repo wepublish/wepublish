@@ -1288,6 +1288,120 @@ type DeletePollVotesResult {
   count: Int!
 }
 
+type DeliveryChannelCount {
+  channel: MailChannel!
+
+  """People on this channel; mail also counts everyone without a decision."""
+  userCount: Int!
+}
+
+"""One person and how their messages reach them."""
+type DeliveryChannelUserModel {
+  """
+  Whether the postal address is complete enough for letters; letters cannot be chosen otherwise.
+  """
+  canReceiveLetters: Boolean!
+  changedAt: DateTime
+  changedBy: MailLogRecipient
+
+  """How automated subscription mails reach this user."""
+  channel: MailChannel!
+
+  """
+  How the email address fares: a placeholder or dead address is not reached by email, though email may still be chosen.
+  """
+  emailSegment: MailEmailSegment!
+  origin: DeliveryPreferenceOrigin
+  reason: String
+  user: MailLogRecipient!
+}
+
+type DeliveryModeAudiencePreview {
+  """How the people split by email segment."""
+  segments: [MailSegmentCount!]!
+
+  """People in the audience."""
+  userCount: Int!
+
+  """
+  People without a usable postal address; they are skipped when moving to letters.
+  """
+  withoutAddressCount: Int!
+}
+
+"""
+One bulk switch of an audience, kept for the record with the filter that chose them.
+"""
+type DeliveryModeBulkChangeModel {
+  """The MailAudienceInput that was applied."""
+  audience: JSONObject!
+  changed: Int!
+  changedBy: MailLogRecipient
+  channel: MailChannel!
+  createdAt: DateTime!
+  id: String!
+  skippedWithoutAddress: Int!
+
+  """People the filter matched."""
+  userCount: Int!
+}
+
+type DeliveryModeBulkResult {
+  changed: Int!
+  skippedWithoutAddress: Int!
+}
+
+"""
+manual: set by an admin, final until an admin changes it. suggestion: set by confirming a suggestion, may be suggested back.
+"""
+enum DeliveryPreferenceOrigin {
+  manual
+  suggestion
+}
+
+type DeliverySuggestionConfirmAllResult {
+  confirmed: Int!
+
+  """Suggestions that no longer applied."""
+  skipped: Int!
+}
+
+type DeliverySuggestionCounts {
+  toLetter: Int!
+  toMail: Int!
+}
+
+type DeliverySuggestionEmailQuality {
+  level: EmailQualityLevel!
+  reason: String!
+  since: DateTime!
+}
+
+"""toLetter: move to printed letters. toMail: move back to mail."""
+enum DeliverySuggestionKind {
+  toLetter
+  toMail
+}
+
+type DeliverySuggestionModel {
+  """Suggested since."""
+  createdAt: DateTime!
+  emailQuality: DeliverySuggestionEmailQuality
+  id: String!
+  kind: DeliverySuggestionKind!
+
+  """Why, e.g. emailQuality:dead or placeholderEmail."""
+  reason: String!
+  user: MailLogRecipient!
+}
+
+type DeliverySuggestionRecomputeResult {
+  """Suggestions that no longer apply."""
+  removed: Int!
+  toLetter: Int!
+  toMail: Int!
+}
+
 type DiscountCode implements HasMemberPlanLc {
   code: String!
   createdAt: DateTime!
@@ -1370,6 +1484,29 @@ enum EditorBlockType {
   TeaserList
   TeaserSlots
   Title
+}
+
+"""
+active: logged in or clicked recently. unknown: nothing decided. unresponsive: mails delivered, no reaction for a long time. dead: bounced, invalid, complained or unsubscribed.
+"""
+enum EmailQualityLevel {
+  active
+  dead
+  unknown
+  unresponsive
+}
+
+type EmailQualityRefreshModel {
+  """
+  Mails that were still in an open state and could be looked up at the provider.
+  """
+  checked: Int!
+
+  """People whose email level was re-evaluated."""
+  recomputed: Int!
+
+  """Mails whose state the provider reported differently."""
+  updated: Int!
 }
 
 type Event {
@@ -2201,6 +2338,88 @@ input KeyEnabledInput {
   key: String
 }
 
+"""Where the address window sits on the printed sheet."""
+enum LetterAddressPosition {
+  left
+  right
+}
+
+enum LetterDeliveryProduct {
+  bulk
+  cheap
+  fast
+  premium
+  registered
+}
+
+input LetterLayoutInput {
+  footerHeightMm: Int!
+  footerHtml: String!
+  headerHeightMm: Int!
+  headerHtml: String!
+  isDefault: Boolean!
+  name: String!
+}
+
+"""
+Stationery for printed letters: a header and a footer repeated on every page of the pdf.
+"""
+type LetterLayoutModel {
+  createdAt: DateTime!
+
+  """Height of the footer band in millimetres from the bottom edge."""
+  footerHeightMm: Int!
+  footerHtml: String!
+
+  """Height of the header band in millimetres from the top edge."""
+  headerHeightMm: Int!
+  headerHtml: String!
+  id: String!
+
+  """Templates without stationery of their own print on this one."""
+  isDefault: Boolean!
+  modifiedAt: DateTime!
+  name: String!
+}
+
+input LetterLayoutPreviewInput {
+  footerHeightMm: Int!
+  footerHtml: String!
+  headerHeightMm: Int!
+  headerHtml: String!
+}
+
+type LetterLayoutPreviewModel {
+  """A sample letter on this stationery, as base64 pdf."""
+  pdf: String!
+}
+
+input LetterPrintInput {
+  addressPosition: LetterAddressPosition
+  deliveryProduct: LetterDeliveryProduct
+  printMode: LetterPrintMode
+  printSpectrum: LetterPrintSpectrum
+}
+
+enum LetterPrintMode {
+  duplex
+  simplex
+}
+
+enum LetterPrintSpectrum {
+  color
+  grayscale
+}
+
+enum LetterProviderEnvironment {
+  production
+  staging
+}
+
+enum LetterProviderType {
+  pingen
+}
+
 type ListicleBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
@@ -2255,6 +2474,14 @@ input MailAudienceInput {
   autoRenew: Boolean
   base: MailRecipientBase!
 
+  """Restrict to placeholder or real email addresses. Defaults to all."""
+  emailFilter: MailEmailFilter
+
+  """
+  Restrict to people in any of these email segments. Empty or absent means everyone.
+  """
+  emailSegments: [MailEmailSegment!]
+
   """
   Win-back audience only: start of an explicit period the subscription ended in.
   """
@@ -2295,6 +2522,11 @@ input MailAudienceInput {
   """
   isPaid: Boolean
 
+  """
+  Applies to every base: which mails the person did or did not receive. An empty list means no restriction.
+  """
+  mailHistory: MailHistoryFilterInput
+
   """Restrict to subscriptions of these member plans."""
   memberPlanIDs: [String!]
   paymentMethodID: String
@@ -2312,7 +2544,70 @@ input MailAudienceInput {
   subscriptionState: MailSubscriptionState
 }
 
+"""Whether a send goes out as an email or as a printed letter."""
+enum MailChannel {
+  letter
+  mail
+}
+
+enum MailEmailFilter {
+  all
+  placeholder
+  real
+}
+
+"""
+placeholder: generated address, reachable by letter only. dead: bounced, invalid, complained or unsubscribed. unresponsive: mails delivered, no login or click for a long time. unknown: nothing decided yet. active: logged in or clicked recently.
+"""
+enum MailEmailSegment {
+  active
+  dead
+  placeholder
+  unknown
+  unresponsive
+}
+
+input MailHistoryCondition {
+  """Only mails sent on this channel. Absent means either."""
+  channel: MailChannel
+
+  """Sent on or after."""
+  from: DateTime
+
+  """The mail template that was, or was not, sent."""
+  mailTemplateId: String!
+
+  """
+  true: keeps people who did NOT receive such a mail, including people with no mail at all.
+  """
+  negate: Boolean
+
+  """
+  Only mails that ended in one of these states. Empty or absent means any.
+  """
+  states: [MailLogState!]
+
+  """Sent on or before."""
+  to: DateTime
+}
+
+input MailHistoryFilterInput {
+  conditions: [MailHistoryCondition!]!
+
+  """Defaults to all."""
+  match: MailHistoryMatch
+}
+
+"""
+all: every condition must hold (AND). any: one condition suffices (OR).
+"""
+enum MailHistoryMatch {
+  all
+  any
+}
+
 input MailLogFilter {
+  channel: MailChannel
   mailSendJobId: String
   mailTemplateId: String
   recipientId: String
@@ -2321,6 +2616,9 @@ input MailLogFilter {
 }
 
 type MailLogModel {
+  """Letters only: the address the letter was sent to."""
+  address: String
+  channel: MailChannel!
   createdAt: DateTime!
 
   """Why a rejected mail could not be delivered."""
@@ -2329,6 +2627,9 @@ type MailLogModel {
   mailProviderID: String!
   mailSendJobId: String
   mailTemplate: MailLogTemplate!
+
+  """Letters only: id the print vendor assigned to the letter."""
+  providerLetterID: String
   recipient: MailLogRecipient!
   sentDate: DateTime!
   state: MailLogState!
@@ -2346,10 +2647,13 @@ type MailLogRecipient {
 enum MailLogState {
   accepted
   bounced
+  canceled
   deferred
   delivered
+  dispatched
   rejected
   submitted
+  undeliverable
 }
 
 type MailLogSyncModel {
@@ -2395,6 +2699,11 @@ enum MailRecipientBase {
   noActiveSubscription
 }
 
+type MailSegmentCount {
+  segment: MailEmailSegment!
+  userCount: Int!
+}
+
 enum MailSendAudience {
   allUsers
   filteredSubscriptions
@@ -2403,11 +2712,18 @@ enum MailSendAudience {
 
 input MailSendJobInput {
   audience: MailAudienceInput!
+
+  """Defaults to mail."""
+  channel: MailChannel
   mailTemplateId: String!
+
+  """Letter sends only. Ignored for mail."""
+  print: LetterPrintInput
 }
 
 type MailSendJobModel {
   audience: MailSendAudience!
+  channel: MailChannel!
   createdAt: DateTime!
   createdByUserId: String!
   error: String
@@ -2421,6 +2737,11 @@ type MailSendJobModel {
   mailTemplateId: String!
   modifiedAt: DateTime!
 
+  """
+  What became of the mails after sending. Bounces arrive over hours or days; refresh to pull late ones.
+  """
+  outcome: MailSendJobOutcome!
+
   """How often the job was picked up again after an interruption."""
   resumeCount: Int!
 
@@ -2432,6 +2753,22 @@ type MailSendJobModel {
   startedAt: DateTime
   status: MailSendJobState!
   totalCount: Int!
+}
+
+type MailSendJobOutcome {
+  """Mails that bounced or were rejected by the provider."""
+  bounced: Int!
+
+  """Mails somebody clicked a link in."""
+  clicked: Int!
+
+  """
+  Recipients whose address counts as dead by now, from this or a later mail.
+  """
+  dead: Int!
+
+  """Mails the provider reported as delivered."""
+  delivered: Int!
 }
 
 type MailSendJobRecipientModel {
@@ -2466,7 +2803,11 @@ enum MailSendJobState {
 
 input MailSendPreviewInput {
   audience: MailAudienceInput!
+
+  """Defaults to mail. A letter preview renders the pdf."""
+  channel: MailChannel
   mailTemplateId: String!
+  print: LetterPrintInput
 
   """
   Row id of the recipient to render for. Defaults to the first of the audience.
@@ -2475,7 +2816,13 @@ input MailSendPreviewInput {
 }
 
 type MailSendPreviewModel {
+  """Empty for a letter preview."""
   html: String!
+
+  """
+  Letter previews only: the rendered pdf, base64 encoded, exactly as it would be printed.
+  """
+  pdf: String
 
   """The recipient this preview was rendered for."""
   recipient: MailSendRecipientModel
@@ -2485,7 +2832,15 @@ type MailSendPreviewModel {
 
 type MailSendRecipientModel {
   email: String!
+
+  """Which email segment the recipient falls into."""
+  emailSegment: MailEmailSegment!
   firstName: String
+
+  """
+  Whether the user has a postal address a letter can be sent to. A letter send skips recipients without one.
+  """
+  hasAddress: Boolean!
 
   """
   Row identity. A user appears once per matching subscription, so this combines both.
@@ -2503,13 +2858,25 @@ type MailSendRecipientPreview {
   """
   allowsSubscriptionTemplates: Boolean!
 
-  """Number of mails that would be sent."""
+  """
+  Number of messages that would be sent over the given channel. A letter send reaches every person once, so it equals `userCount`.
+  """
   count: Int!
+
+  """
+  How the people of this audience split into email segments, ignoring the segments picked, so the split stays visible while choosing.
+  """
+  segments: [MailSegmentCount!]!
 
   """
   Number of distinct people reached. Lower than `count` when someone has several matching subscriptions.
   """
   userCount: Int!
+
+  """
+  How many of the recipients have no usable postal address and would be skipped by a letter send.
+  """
+  withoutAddressCount: Int!
 }
 
 enum MailSubscriptionState {
@@ -2533,9 +2900,18 @@ input MailTemplateInput {
   context: MailTemplateContext
   description: String
   htmlContent: String!
+
+  """Uploaded pdf printed after the letter pages, e.g. a QR-bill."""
+  letterAppendixId: String
+  letterLayoutId: String
   name: String!
   subject: String!
   textContent: String
+}
+
+type MailTemplateLetterPreviewModel {
+  """The rendered letter as a base64 encoded pdf."""
+  pdf: String!
 }
 
 type MailTemplateModel {
@@ -2543,6 +2919,14 @@ type MailTemplateModel {
   description: String
   htmlContent: String!
   id: String!
+
+  """Uploaded pdf printed after the letter pages, e.g. a QR-bill."""
+  letterAppendixId: String
+
+  """
+  Stationery a letter printed from this template is set on; null means the default.
+  """
+  letterLayoutId: String
   name: String!
   status: String!
   subject: String!
@@ -2553,6 +2937,12 @@ input MailTemplatePreviewInput {
   """Mail type / context id, e.g. "renewal"."""
   contextId: String!
   htmlContent: String!
+
+  """Uploaded pdf printed after the letter pages, e.g. a QR-bill."""
+  letterAppendixId: String
+
+  """Stationery to show a letter preview on; null for the default."""
+  letterLayoutId: String
   subject: String!
 
   """Subscription to take sample data from."""
@@ -3166,10 +3556,16 @@ type Mutation {
   """
   checkSubscriptionPaymentMethodChange(id: String!): SubscriptionPaymentMethodChange!
 
+  """Apply every open suggestion of a direction"""
+  confirmAllDeliverySuggestions(kind: DeliverySuggestionKind!): DeliverySuggestionConfirmAllResult!
+
   """
   Confirms that the manual action required by a changelog entry has been completed. Requires the permission to update settings.
   """
   confirmChangelogEntry(id: String!, locale: String): ChangelogEntry!
+
+  """Apply one suggestion; refused when it no longer holds"""
+  confirmDeliverySuggestion(id: String!): Boolean!
 
   """Confirms a pending email change for the logged-in user."""
   confirmEmailChange(newEmail: String!): SensitiveDataUser!
@@ -3263,6 +3659,31 @@ type Mutation {
   """Returns a JWT that is valid for 1min for the current logged in user."""
   createJWTForWebsiteLogin: SessionWithToken!
 
+  """Create a letter layout."""
+  createLetterLayout(input: LetterLayoutInput!): LetterLayoutModel!
+
+  """Creates a new letter provider setting."""
+  createLetterProviderSetting(
+    autoSend: Boolean
+    clientId: String
+    clientSecret: String
+    defaultAddressPosition: LetterAddressPosition
+    defaultDeliveryProduct: LetterDeliveryProduct
+    defaultPrintMode: LetterPrintMode
+    defaultPrintSpectrum: LetterPrintSpectrum
+    environment: LetterProviderEnvironment
+    id: String!
+    name: String
+    organisationId: String
+
+    """
+    Email addresses containing this are placeholders, not real inboxes (e.g. @placeholder.example.com).
+    """
+    placeholderEmailContains: String
+    type: LetterProviderType!
+    webhookSigningKey: String
+  ): SettingLetterProvider!
+
   """Sets up the mail provider. Only possible while none is configured."""
   createMailProviderSetting(apiKey: String, fromAddress: String, id: String!, mailchimp_baseURL: String, mailgun_baseDomain: String, mailgun_mailDomain: String, name: String, replyToAddress: String, slack_webhookURL: String, smtp_host: String, smtp_port: Int, smtp_secure: Boolean, smtp_user: String, type: MailProviderType!, webhookEndpointSecret: String): SettingMailProvider!
 
@@ -3301,6 +3722,9 @@ type Mutation {
 
   """Creates a paywall."""
   createPaywall(active: Boolean!, alternativeSubscribeUrl: String, anyMemberPlan: Boolean!, bypassTokens: [String!]!, circumventDescription: RichText, description: RichText, fadeout: Boolean!, hideContentAfter: Int!, memberPlanIds: [String!]!, name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
+
+  """Creates a new pdf renderer setting."""
+  createPdfRendererSetting(cloudflare_accountId: String, cloudflare_apiToken: String, gotenberg_password: String, gotenberg_url: String, gotenberg_username: String, id: String!, name: String, timeoutMs: Int, type: PdfRendererType!): SettingPdfRenderer!
 
   """Creates a new peer."""
   createPeer(hostURL: String!, information: RichText, isDisabled: Boolean, name: String!, slug: String!, token: String!): Peer!
@@ -3342,7 +3766,7 @@ type Mutation {
   createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
 
   """Create a subscription interval"""
-  createSubscriptionInterval(daysAwayFromEnding: Int, event: SubscriptionEvent!, mailTemplateId: String, subscriptionFlowId: String!): [SubscriptionFlowModel!]!
+  createSubscriptionInterval(daysAwayFromEnding: Int, event: SubscriptionEvent!, mailTemplateId: String, sendAsLetter: Boolean, subscriptionFlowId: String!): [SubscriptionFlowModel!]!
 
   """Sets up the sync provider. Only possible while none is configured."""
   createSyncProviderSetting(enabled: Boolean, id: String!, mailchimp_apiKey: String, mailchimp_defaultInterestGroupIds: [String!], mailchimp_extensions: JSONObject, mailchimp_interestGroupMappings: [JSONObject!], mailchimp_listId: String, mailchimp_mergeFieldMappings: [JSONObject!], name: String, type: SyncProviderType!): SettingSyncProvider!
@@ -3401,6 +3825,7 @@ type Mutation {
 
   """Deletes an existing article template."""
   deleteArticleTemplate(id: String!): ArticleTemplate!
+
   """Deletes an existing audio."""
   deleteAudio(id: String!): String!
 
@@ -3442,6 +3867,14 @@ type Mutation {
   """Deletes an existing invoice."""
   deleteInvoice(id: String!): Invoice!
 
+  """
+  Delete a letter layout. Refused while a mail template still prints on it.
+  """
+  deleteLetterLayout(id: String!): LetterLayoutModel!
+
+  """Deletes an existing letter provider setting."""
+  deleteLetterProviderSetting(id: String!): SettingLetterProvider!
+
   """Delete an existing mail template"""
   deleteMailTemplate(id: String!): Boolean
 
@@ -3468,6 +3901,9 @@ type Mutation {
 
   """Deletes a paywall."""
   deletePaywall(id: String!): Paywall!
+
+  """Deletes an existing pdf renderer setting."""
+  deletePdfRendererSetting(id: String!): SettingPdfRenderer!
 
   """Deletes an existing peer."""
   deletePeer(id: String!): String!
@@ -3592,6 +4028,11 @@ type Mutation {
     userID: String!
   ): PublicSubscription!
 
+  """
+  Decline one suggestion: the user stays on their channel as a manual decision, never suggested again
+  """
+  keepDeliverySuggestion(id: String!): Boolean!
+
   """Likes an article."""
   likeArticle(id: String!): Article!
 
@@ -3623,6 +4064,14 @@ type Mutation {
   """
   reactivateUserSubscription(id: String!): PublicSubscription!
 
+  """Rebuild the suggestions now instead of waiting for the night"""
+  recomputeDeliverySuggestions: DeliverySuggestionRecomputeResult!
+
+  """
+  Pull late delivery states from the mail provider, then re-evaluate everyone's email quality. The nightly job does the same; this is for looking at a campaign's result now.
+  """
+  refreshEmailQuality: EmailQualityRefreshModel!
+
   """
   This mutation registers a new member by providing name, email, and other required information.
   """
@@ -3632,7 +4081,7 @@ type Mutation {
   rejectComment(id: String!, rejectionReason: CommentRejectionReason!): Comment!
 
   """
-  Rebuilds the payment, tracking pixel, mail and challenge providers from their settings, so integration changes take effect without restarting the API.
+  Rebuilds the payment, tracking pixel, mail, challenge, letter and pdf renderer providers from their settings, so integration changes take effect without restarting the API.
   """
   reloadProviders: Boolean!
 
@@ -3717,9 +4166,17 @@ type Mutation {
   sendWebsiteLogin(email: String!): String!
 
   """
+  Switch everyone in an audience; letters skip people without a usable address
+  """
+  setDeliveryModeForAudience(audience: MailAudienceInput!, channel: MailChannel!): DeliveryModeBulkResult!
+
+  """
   Stores which customer of a payment provider each user is (for bexio the contact id), replacing the user's previous one of that provider; up to 500 users per call. Users that do not exist are skipped. Returns how many users were updated.
   """
   setPaymentProviderCustomers(customers: [PaymentProviderCustomerInput!]!, paymentProviderId: String!): Int!
+
+  """Switch a user between mailed and printed subscription mails"""
+  setUserDeliveryMode(channel: MailChannel!, reason: String, userId: String!): UserDeliveryPreferenceModel!
 
   """
   Ask the mail provider for the current delivery state of mails that are still open. Complements the provider webhook, which is not reachable in local development.
@@ -3750,6 +4207,7 @@ type Mutation {
 
   """Updates an existing article template."""
   updateArticleTemplate(blocks: [BlockContentInput!]!, id: String!, metadata: ArticleTemplateMetadataInput!, name: String!): ArticleTemplate!
+
   """Updates an existing audio."""
   updateAudio(description: String, id: String!, license: String, link: String, source: String, title: String): Audio!
 
@@ -3823,6 +4281,31 @@ type Mutation {
   """Updates an existing invoice."""
   updateInvoice(currency: Currency, description: String, dueAt: DateTime, id: String!, items: [InvoiceItemInput!], mail: String, manuallySetAsPaidByUserId: String, scheduledDeactivationAt: DateTime, subscriptionID: String): Invoice!
 
+  """Update a letter layout."""
+  updateLetterLayout(id: String!, input: LetterLayoutInput!): LetterLayoutModel!
+
+  """Updates an existing letter provider setting."""
+  updateLetterProviderSetting(
+    autoSend: Boolean
+    clientId: String
+    clientSecret: String
+    defaultAddressPosition: LetterAddressPosition
+    defaultDeliveryProduct: LetterDeliveryProduct
+    defaultPrintMode: LetterPrintMode
+    defaultPrintSpectrum: LetterPrintSpectrum
+    environment: LetterProviderEnvironment
+    id: String
+    name: String
+    organisationId: String
+
+    """
+    Email addresses containing this are placeholders, not real inboxes (e.g. @placeholder.example.com).
+    """
+    placeholderEmailContains: String
+    type: LetterProviderType
+    webhookSigningKey: String
+  ): SettingLetterProvider!
+
   """Updates an existing mail provider setting."""
   updateMailProviderSetting(apiKey: String, fromAddress: String, id: String, mailchimp_baseURL: String, mailgun_baseDomain: String, mailgun_mailDomain: String, name: String, replyToAddress: String, slack_webhookURL: String, smtp_host: String, smtp_port: Int, smtp_secure: Boolean, smtp_user: String, type: MailProviderType, webhookEndpointSecret: String): SettingMailProvider!
 
@@ -3856,6 +4339,9 @@ type Mutation {
   """Updates a paywall."""
   updatePaywall(active: Boolean, alternativeSubscribeUrl: String, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, fadeout: Boolean, hideContentAfter: Int, id: String!, memberPlanIds: [String!], name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
 
+  """Updates an existing pdf renderer setting."""
+  updatePdfRendererSetting(cloudflare_accountId: String, cloudflare_apiToken: String, gotenberg_password: String, gotenberg_url: String, gotenberg_username: String, id: String, name: String, timeoutMs: Int, type: PdfRendererType): SettingPdfRenderer!
+
   """Updates an existing peer."""
   updatePeer(hostURL: String, id: String!, information: RichText, isDisabled: Boolean, name: String, slug: String, token: String): Peer!
 
@@ -3883,7 +4369,7 @@ type Mutation {
   updateSubscriptionFlow(autoRenewal: [Boolean!], id: String!, paymentMethodIds: [String!], periodicities: [PaymentPeriodicity!]): [SubscriptionFlowModel!]!
 
   """Update an existing subscription interval"""
-  updateSubscriptionInterval(daysAwayFromEnding: Int, id: String!, mailTemplateId: String): [SubscriptionFlowModel!]!
+  updateSubscriptionInterval(daysAwayFromEnding: Int, id: String!, mailTemplateId: String, sendAsLetter: Boolean): [SubscriptionFlowModel!]!
 
   """Updates an existing sync provider setting."""
   updateSyncProviderSetting(enabled: Boolean, id: String!, mailchimp_apiKey: String, mailchimp_defaultInterestGroupIds: [String!], mailchimp_extensions: JSONObject, mailchimp_interestGroupMappings: [JSONObject!], mailchimp_listId: String, mailchimp_mergeFieldMappings: [JSONObject!], name: String): SettingSyncProvider!
@@ -4340,6 +4826,21 @@ type PaginatedComments {
   totalCount: Int!
 }
 
+type PaginatedDeliveryChannelUsers {
+  nodes: [DeliveryChannelUserModel!]!
+  totalCount: Int!
+}
+
+type PaginatedDeliveryModeBulkChanges {
+  nodes: [DeliveryModeBulkChangeModel!]!
+  totalCount: Int!
+}
+
+type PaginatedDeliverySuggestions {
+  nodes: [DeliverySuggestionModel!]!
+  totalCount: Int!
+}
+
 type PaginatedDiscountCodes {
   nodes: [DiscountCode!]!
   pageInfo: PageInfo!
@@ -4698,6 +5199,11 @@ type PaywallBypass {
   modifiedAt: DateTime!
   paywallId: String!
   token: String!
+}
+
+enum PdfRendererType {
+  cloudflare
+  gotenberg
 }
 
 type Peer {
@@ -5268,6 +5774,21 @@ type Query {
   "\n      Returns daily stats in a given timeframe.\n    "
   dailySubscriptionStats(end: DateTime, memberPlanIds: [String!], start: DateTime!): [DailySubscriptionStats!]!
 
+  """How many people each channel reaches, the default channel first"""
+  deliveryChannelCounts: [DeliveryChannelCount!]!
+
+  """What switching an audience's delivery mode would touch"""
+  deliveryModeAudiencePreview(audience: MailAudienceInput!, channel: MailChannel!): DeliveryModeAudiencePreview!
+
+  """Recent bulk switches of an audience's delivery mode, newest first"""
+  deliveryModeBulkChanges(channel: MailChannel, skip: Int, take: Int): PaginatedDeliveryModeBulkChanges!
+
+  """How many suggestions are open, per direction"""
+  deliverySuggestionCounts: DeliverySuggestionCounts!
+
+  """Open suggestions to move users to letters or back to mail"""
+  deliverySuggestions(kind: DeliverySuggestionKind!, skip: Int, take: Int): PaginatedDeliverySuggestions!
+
   """Returns an discountCode by id or discountCode."""
   discountCode(id: String!): DiscountCode!
 
@@ -5383,6 +5904,26 @@ type Query {
   """Returns a paginated list of invoices based on the filters given."""
   invoices(cursorId: String, filter: InvoiceFilter, order: SortOrder = Ascending, skip: Int = 0, sort: InvoiceSort = ModifiedAt, take: Int = 10): InvoiceConnection!
 
+  """
+  Whether a letter integration is configured, so letters can be previewed and sent
+  """
+  letterChannelAvailable: Boolean!
+
+  """A single letter layout."""
+  letterLayout(id: String!): LetterLayoutModel!
+
+  """A sample letter printed on the given, possibly unsaved, stationery."""
+  letterLayoutPreview(input: LetterLayoutPreviewInput!): LetterLayoutPreviewModel!
+
+  """All letter layouts, the default first."""
+  letterLayouts: [LetterLayoutModel!]!
+
+  """Returns a single letter provider setting by id."""
+  letterProviderSetting(id: String!): SettingLetterProvider!
+
+  """Returns all letter provider settings."""
+  letterProviderSettings(filter: SettingLetterProviderFilter): [SettingLetterProvider!]!
+
   """Paginated list of sent mails"""
   mailLogs(filter: MailLogFilter, skip: Int, take: Int): PaginatedMailLog!
 
@@ -5407,13 +5948,16 @@ type Query {
   mailSendPreview(input: MailSendPreviewInput!): MailSendPreviewModel!
 
   """Preview how many recipients an audience resolves to"""
-  mailSendRecipientPreview(audience: MailAudienceInput!): MailSendRecipientPreview!
+  mailSendRecipientPreview(audience: MailAudienceInput!, channel: MailChannel): MailSendRecipientPreview!
 
   """The concrete recipients an audience resolves to"""
-  mailSendRecipients(audience: MailAudienceInput!, skip: Int, take: Int): PaginatedMailSendRecipient!
+  mailSendRecipients(audience: MailAudienceInput!, channel: MailChannel, skip: Int, take: Int): PaginatedMailSendRecipient!
 
   """Return a single mail template, including its html and text body."""
   mailTemplate(id: String!): MailTemplateModel
+
+  """Render a draft mail template as the letter a send would print"""
+  mailTemplateLetterPreview(input: MailTemplatePreviewInput!): MailTemplateLetterPreviewModel!
 
   """
   Placeholders a template uses that would render empty for the given send (empty = none missing)
@@ -5537,6 +6081,12 @@ type Query {
 
   """Returns a list of paywalls based on the filters given."""
   paywalls: [Paywall!]!
+
+  """Returns a single pdf renderer setting by id."""
+  pdfRendererSetting(id: String!): SettingPdfRenderer!
+
+  """Returns all pdf renderer settings."""
+  pdfRendererSettings(filter: SettingPdfRendererFilter): [SettingPdfRenderer!]!
 
   """
   This query takes either the ID or the slug and returns the peer profile.
@@ -5672,6 +6222,12 @@ type Query {
   "\n      Returns a list of userConsents. Possible to filter.\n    "
   userConsents(name: String, slug: String, value: Boolean): [UserConsent!]!
 
+  """How a user's automated subscription mails are delivered"""
+  userDeliveryPreference(userId: String!): UserDeliveryPreferenceModel!
+
+  """The open suggestion for one user, if any"""
+  userDeliverySuggestion(userId: String!): DeliverySuggestionModel
+
   """Get all invoices for the authenticated user"""
   userInvoices: [Invoice!]!
   userPollVote(pollId: String!): String
@@ -5705,6 +6261,9 @@ type Query {
     """Number of items to fetch"""
     take: Int! = 10
   ): PaginatedSensitiveDataUsers!
+
+  """The people on one channel, by name, with how they got there"""
+  usersByDeliveryChannel(channel: MailChannel!, search: String, skip: Int, take: Int): PaginatedDeliveryChannelUsers!
   versionInformation: VersionInformation!
 
   """Returns a video by id."""
@@ -5825,6 +6384,11 @@ type SensitiveDataUser implements BaseUser {
   birthday: DateTime
   createdAt: DateTime!
   email: String!
+
+  """
+  How usable the address is, derived from bounces, logins and clicks. Null until evaluated, which counts as unknown.
+  """
+  emailQuality: UserEmailQualityModel
   emailVerifiedAt: DateTime
   firstName: String
   flair: String
@@ -5993,6 +6557,34 @@ input SettingFilter {
   name: String
 }
 
+type SettingLetterProvider implements SettingProvider {
+  autoSend: Boolean!
+  clientId: String
+  createdAt: DateTime!
+  defaultAddressPosition: LetterAddressPosition
+  defaultDeliveryProduct: LetterDeliveryProduct
+  defaultPrintMode: LetterPrintMode
+  defaultPrintSpectrum: LetterPrintSpectrum
+  environment: LetterProviderEnvironment!
+  id: String!
+  lastLoadedAt: DateTime!
+  modifiedAt: DateTime!
+  name: String
+  organisationId: String
+
+  """
+  Email addresses containing this are placeholders, not real inboxes (e.g. @placeholder.example.com).
+  """
+  placeholderEmailContains: String
+  type: LetterProviderType!
+}
+
+input SettingLetterProviderFilter {
+  id: String
+  name: String
+  type: LetterProviderType
+}
+
 type SettingMailProvider implements SettingProvider {
   createdAt: DateTime!
   fromAddress: String
@@ -6032,6 +6624,8 @@ enum SettingName {
   ALLOW_GUEST_COMMENT_RATING
   ALLOW_GUEST_POLL_VOTING
   COMMENT_CHAR_LIMIT
+  EMAIL_QUALITY_MIN_MAILS_FOR_UNRESPONSIVE
+  EMAIL_QUALITY_UNRESPONSIVE_AFTER_DAYS
   MAIL_PROVIDER_NAME
   MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC
   MAKE_EXPECTED_REVENUE_API_PUBLIC
@@ -6096,6 +6690,25 @@ input SettingPaymentProviderFilter {
   id: String
   name: String
   type: PaymentProviderType
+}
+
+type SettingPdfRenderer implements SettingProvider {
+  cloudflare_accountId: String
+  createdAt: DateTime!
+  gotenberg_url: String
+  gotenberg_username: String
+  id: String!
+  lastLoadedAt: DateTime!
+  modifiedAt: DateTime!
+  name: String
+  timeoutMs: Int
+  type: PdfRendererType!
+}
+
+input SettingPdfRendererFilter {
+  id: String
+  name: String
+  type: PdfRendererType
 }
 
 interface SettingProvider {
@@ -6458,6 +7071,9 @@ type SubscriptionInterval {
   event: SubscriptionEvent!
   id: String!
   mailTemplate: MailTemplateRef
+
+  """Users in letter mode get this event printed instead of mailed."""
+  sendAsLetter: Boolean!
 }
 
 """
@@ -6995,6 +7611,35 @@ type UserCreatedAction implements BaseAction & HasUserLc {
   date: DateTime!
   user: User!
   userId: String!
+}
+
+type UserDeliveryPreferenceModel {
+  """
+  Whether the postal address is complete enough for letters; letters cannot be chosen otherwise.
+  """
+  canReceiveLetters: Boolean!
+  changedAt: DateTime
+  changedBy: MailLogRecipient
+
+  """How automated subscription mails reach this user."""
+  channel: MailChannel!
+
+  """
+  How the email address fares: a placeholder or dead address is not reached by email, though email may still be chosen.
+  """
+  emailSegment: MailEmailSegment!
+  origin: DeliveryPreferenceOrigin
+  reason: String
+}
+
+type UserEmailQualityModel {
+  level: EmailQualityLevel!
+
+  """The deciding evidence, e.g. hardBounce or login."""
+  reason: String!
+
+  """When the level was first reached."""
+  since: DateTime!
 }
 
 enum UserEvent {

@@ -81,6 +81,17 @@ hooks) live in `apps/<app>/src/sitemap.ts`. Fetch with the lean `Sitemap*`
 documents (`libs/website/api/src/lib/schemas/sitemap.graphql`), never
 `ArticleList`, and leave peered articles out. `generateSitemap` is deprecated.
 
+**llms.txt:** every website serves `/llms.txt` from the same `src/sitemap.ts`
+config, so its `filterArticle` and url hooks apply. It follows
+llmtxt.info/best-practices: one H1, a factual `description` blockquote (an
+encyclopedia opener, not a slogan), a "Last updated" line, one H2 per CMS
+navigation (published pages only when there is none), the 10 latest articles,
+one-sentence notes, no login/signup/profile URLs. Next tenants: `pages/api/llms.ts` with
+`createLlmsTxtHandler`, reached through the `/llms.txt` rewrite in the shared
+`libs/utils/website/src/next/next.config.js`. TanStack tenants:
+`src/routes/llms[.]txt.ts` with `createLlmsTxtFetchHandler` — port it when
+migrating a tenant. Documents: `libs/website/api/src/lib/schemas/llms.graphql`.
+
 The Next `onRequestError` drops Next's own 4xx `ApiError`s (malformed or
 oversized bodies) so they do not reach Sentry.
 

@@ -204,8 +204,6 @@ export class AppController {
         );
       }
       return;
-    } else {
-      await this.linkCache.set(imageId, variant, { uri, exists: true });
     }
 
     this.setProductionCacheHeaders(res);

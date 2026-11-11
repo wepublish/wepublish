@@ -105,6 +105,16 @@ export const Wrapper = styled(ContentWrapper)<{ fadeout?: boolean }>`
   …/>} label={…} />` — no separate «on/off» text. Radii come from the theme:
   `theme.shape.borderRadius` (8px) for cards and panels, `calc(… * 0.75)` for
   controls and inner boxes; in `sx` that is `borderRadius: 1` and `0.75`.
+- **Accessibility plumbing (WCAG 2.2 AA):** fields get a visible `label`, never
+  a placeholder alone, and an `aria-label` must contain the visible text (2.5.3).
+  `DrawerTitle` names its enclosing `role="dialog"` itself — use it rather than
+  a bare `Typography` in drawers. Tabs with a content area use `useTabPanel`
+  (`libs/ui/editor/src/lib/panel/useTabPanel.ts`) for `id`/`aria-controls`/
+  `role="tabpanel"`. Snackbars render inside a `role="status"` stack; error and
+  warning entries are `role="alert"`. Editor blocks that validate pass a focus ref as the third
+  argument of `useRegisterValidator` so a failed save can focus them. Every
+  page renders exactly one `h1` (`EditorTemplate`/`LoginTemplate` take a
+  `title` for that).
 - **Document editors use `EditorHeader`** (`@wepublish/ui/editor`) inside
   `EditorTemplate`: status chip + last-saved on the left, `EditorHeaderButton`s
   on the right (secondary subtle, Save/Publish primary). Labels collapse to

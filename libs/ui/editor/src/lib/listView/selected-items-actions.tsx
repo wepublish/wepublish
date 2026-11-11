@@ -26,6 +26,10 @@ const SelectedItemsActionsStyled = styled.div`
   }
 `;
 
+const SelectedCount = styled.div`
+  visibility: visible;
+`;
+
 export function SelectedItemsActions({
   selectedItems,
   children,
@@ -36,11 +40,16 @@ export function SelectedItemsActions({
     <SelectedItemsActionsStyled
       className={hasSelectedItems ? 'has-selected-items' : ''}
     >
-      <div>
-        {t('selectableItemsActions.selectedItems', {
-          numberOfItems: selectedItems.length,
-        })}
-      </div>
+      <SelectedCount
+        role="status"
+        aria-atomic
+      >
+        {hasSelectedItems ?
+          t('selectableItemsActions.selectedItems', {
+            numberOfItems: selectedItems.length,
+          })
+        : ''}
+      </SelectedCount>
       {children}
     </SelectedItemsActionsStyled>
   );
