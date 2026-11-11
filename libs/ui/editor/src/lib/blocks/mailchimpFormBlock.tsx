@@ -314,6 +314,7 @@ function MailchimpFormInterestOptionItem({
   onRemove,
 }: MailchimpFormInterestOptionItemProps) {
   const { t } = useTranslation();
+  const imageLabelId = useId();
   const [isChooseModalOpen, setChooseModalOpen] = useState(false);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
 
@@ -337,8 +338,11 @@ function MailchimpFormInterestOptionItem({
 
       <OptionRow>
         <Stack>
-          <FormLabel>{t('blocks.mailchimpForm.interestOptionImage')}</FormLabel>
+          <FormLabel id={imageLabelId}>
+            {t('blocks.mailchimpForm.interestOptionImage')}
+          </FormLabel>
           <ChooseEditImage
+            aria-labelledby={imageLabelId}
             onSelect={image => {
               setChooseModalOpen(false);
               onChange({ image });
@@ -517,6 +521,7 @@ export function MailchimpFormBlock({
     onChange(current => ({ ...current, ...patch }));
 
   const validatorId = useId();
+  const optionsLayoutLabelId = useId();
   const [saveAttempted, setSaveAttempted] = useState(false);
   const formErrors = getFormErrors(value);
   const errorCount = value.disabled ? 0 : countErrors(value);
@@ -1147,11 +1152,14 @@ export function MailchimpFormBlock({
 
                         {isGroups && (
                           <FormControl disabled={disabled}>
-                            <FormLabel>
+                            <FormLabel
+                              id={`${optionsLayoutLabelId}-${stepIndex}-${inputIndex}`}
+                            >
                               {t('blocks.mailchimpForm.optionsLayout')}
                             </FormLabel>
                             <RadioGroup
                               row
+                              aria-labelledby={`${optionsLayoutLabelId}-${stepIndex}-${inputIndex}`}
                               value={
                                 input.optionsLayout ??
                                 MailchimpFormOptionsLayout.List

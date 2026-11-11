@@ -1,0 +1,115 @@
+fragment FullVideo on Video {
+  id
+
+  createdAt
+  modifiedAt
+
+  title
+  filename
+  extension
+  fileSize
+  mimeType
+
+  description
+
+  source
+  link
+  license
+
+  width
+  height
+  duration
+  posterUrl
+
+  url
+}
+
+query VideoStorageUsage {
+  videoStorageUsage {
+    usedBytes
+    limitBytes
+    videoCount
+  }
+}
+
+query VideoList($filter: String, $cursorId: String, $take: Int, $skip: Int) {
+  videos(
+    filter: { title: $filter }
+    cursorId: $cursorId
+    take: $take
+    skip: $skip
+  ) {
+    nodes {
+      ...FullVideo
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+query Video($id: String!) {
+  video(id: $id) {
+    ...FullVideo
+  }
+}
+
+mutation UploadVideo(
+  $title: String
+  $description: String
+  $file: Upload!
+  $filename: String
+  $source: String
+  $link: String
+  $license: String
+  $width: Int
+  $height: Int
+  $duration: Float
+  $poster: Upload
+) {
+  uploadVideo(
+    title: $title
+    description: $description
+    file: $file
+    filename: $filename
+    source: $source
+    link: $link
+    license: $license
+    width: $width
+    height: $height
+    duration: $duration
+    poster: $poster
+  ) {
+    ...FullVideo
+  }
+}
+
+mutation UpdateVideo(
+  $id: String!
+  $title: String
+  $description: String
+  $source: String
+  $link: String
+  $license: String
+) {
+  updateVideo(
+    id: $id
+    title: $title
+    description: $description
+    source: $source
+    link: $link
+    license: $license
+  ) {
+    ...FullVideo
+  }
+}
+
+mutation DeleteVideo($id: String!) {
+  deleteVideo(id: $id)
+}

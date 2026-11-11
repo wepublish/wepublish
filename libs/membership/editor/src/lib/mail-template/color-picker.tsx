@@ -1,13 +1,8 @@
 import { useQuery } from '@apollo/client/react';
-import styled from '@emotion/styled';
-import { Box, ClickAwayListener, Popper, Tooltip } from '@mui/material';
+import { Box, Popover, Tooltip } from '@mui/material';
 import { Sketch } from '@uiw/react-color';
 import { WebsiteSettingsDocument } from '@wepublish/editor/api';
-import { useMemo, useRef, useState } from 'react';
-
-const ElevatedPopper = styled(Popper)`
-  z-index: 1400;
-`;
+import { useId, useMemo, useRef, useState } from 'react';
 
 /**
  * The colours configured under Settings › Website › Theme, flattened into a
@@ -19,8 +14,7 @@ export const useThemePresetColors = (): string[] => {
 
   return useMemo(() => {
     const theme = data?.websiteSettings?.theme as
-      | Record<string, unknown>
-      | undefined;
+      Record<string, unknown> | undefined;
     const palette = theme?.['palette'] as Record<string, unknown> | undefined;
 
     if (!palette) {
@@ -74,6 +68,7 @@ export function MailColorPicker({
   const anchorRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
   const presetColors = useThemePresetColors();
+  const dialogId = useId();
 
   const swatch = (
     <Box
@@ -81,7 +76,9 @@ export function MailColorPicker({
       role="button"
       tabIndex={0}
       aria-label={title ?? label}
+      aria-haspopup="dialog"
       aria-expanded={open}
+      aria-controls={open ? dialogId : undefined}
       onMouseDown={event => {
         // Keep the caret in the editor: opening the picker must not steal it.
         event.preventDefault();
@@ -113,27 +110,27 @@ export function MailColorPicker({
         <Tooltip title={title}>{swatch}</Tooltip>
       : swatch}
 
-      <ElevatedPopper
+      <Popover
+        id={dialogId}
         open={open}
         anchorEl={() => anchorRef.current!}
-        placement="bottom-start"
-        onKeyDown={event => {
-          if (event.key === 'Escape') {
-            setOpen(false);
-          }
+        onClose={() => setOpen(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+        slotProps={{
+          paper: {
+            role: 'dialog',
+            'aria-label': title ?? label,
+          },
         }}
       >
-        <ClickAwayListener onClickAway={() => setOpen(false)}>
-          <Box>
-            <Sketch
-              color={value}
-              disableAlpha
-              presetColors={presetColors.length ? presetColors : undefined}
-              onChange={color => onChange(color.hex)}
-            />
-          </Box>
-        </ClickAwayListener>
-      </ElevatedPopper>
+        <Sketch
+          color={value}
+          disableAlpha
+          presetColors={presetColors.length ? presetColors : undefined}
+          onChange={color => onChange(color.hex)}
+        />
+      </Popover>
     </>
   );
 }

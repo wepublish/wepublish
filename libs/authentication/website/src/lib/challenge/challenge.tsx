@@ -6,6 +6,7 @@ import { forwardRef, Ref, useImperativeHandle, useRef } from 'react';
 import { TextFieldProps } from '@wepublish/ui';
 import { Turnstile, TurnstileInstance } from '@marsidev/react-turnstile';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
+import { useTranslation } from 'react-i18next';
 
 export type BuilderChallengeRef = { reset: () => void };
 export type BuilderChallengeProps = {
@@ -18,6 +19,7 @@ export const CfTurnstileChallenge = forwardRef<
   HTMLInputElement,
   BuilderChallengeProps
 >(({ challenge, challengeRef, ...inputProps }: BuilderChallengeProps, ref) => {
+  const { i18n } = useTranslation();
   const turnstileRef = useRef<TurnstileInstance | null>(null);
 
   useImperativeHandle(challengeRef, () => {
@@ -33,7 +35,7 @@ export const CfTurnstileChallenge = forwardRef<
       options={{
         refreshExpired: 'auto',
         theme: 'light',
-        language: 'de',
+        language: i18n.language,
       }}
       onSuccess={token => inputProps.onChange?.(token)}
       onExpire={() => turnstileRef.current?.reset()}
@@ -45,9 +47,12 @@ export const HCaptchaChallenge = forwardRef<
   HTMLInputElement,
   BuilderChallengeProps
 >(({ challenge, ...inputProps }: BuilderChallengeProps, ref) => {
+  const { i18n } = useTranslation();
+
   return (
     <HCaptcha
       sitekey={challenge.challengeID ?? ''}
+      languageOverride={i18n.language}
       onVerify={token => inputProps.onChange?.(token)}
     />
   );

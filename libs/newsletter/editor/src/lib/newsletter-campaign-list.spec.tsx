@@ -7,6 +7,7 @@ import {
   NewsletterCampaignsDocument,
   UnarchiveNewsletterCampaignDocument,
 } from '@wepublish/editor/api';
+import { AuthContext, sessionWithPermissions } from '@wepublish/ui/editor';
 import { MemoryRouter } from 'react-router-dom';
 import { NewsletterCampaignList } from './newsletter-campaign-list';
 
@@ -110,5 +111,23 @@ describe('NewsletterCampaignList', () => {
     await vi.waitFor(() =>
       expect(screen.queryByText('newsletter.list.archived')).toBeNull()
     );
+  });
+
+  it('names the title field of a new issue', () => {
+    render(
+      <ThemeProvider theme={createTheme({ cssVariables: true })}>
+        <AuthContext.Provider value={sessionWithPermissions}>
+          <MockedProvider mocks={[list(false, [])]}>
+            <MemoryRouter>
+              <NewsletterCampaignList />
+            </MemoryRouter>
+          </MockedProvider>
+        </AuthContext.Provider>
+      </ThemeProvider>
+    );
+
+    expect(
+      screen.getByRole('textbox', { name: 'newsletter.list.titlePlaceholder' })
+    ).toBeTruthy();
   });
 });

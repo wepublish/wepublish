@@ -191,6 +191,25 @@ describe('ListViewFilters sizing', () => {
   });
 });
 
+describe('ListViewFilters labels', () => {
+  it.each([
+    ['text', 'subscriptionList.filter.searchPlaceholder'],
+    ['title', 'filterableList.filter.title'],
+    ['description', 'filterableList.filter.description'],
+    ['slug', 'filterableList.filter.slug'],
+    ['preTitle', 'filterableList.filter.preTitle'],
+    ['lead', 'filterableList.filter.lead'],
+    ['fingerprint', 'pollVoteList.fingerprint'],
+    ['name', 'filterableList.filter.name'],
+    ['location', 'filterableList.filter.location'],
+  ] as const)('gives the %s field a visible label', (field, label) => {
+    const { container } = renderFilters({ fields: [field] });
+
+    expect(screen.getByRole('textbox', { name: label })).toBeInTheDocument();
+    expect(container.querySelector('label')).toHaveTextContent(label);
+  });
+});
+
 describe('ListViewFilters reset', () => {
   it('leaves the reset to the toolbar', () => {
     renderFilters({ filter: { title: 'Hello' }, fields: ['title'] });
@@ -198,5 +217,20 @@ describe('ListViewFilters reset', () => {
     expect(
       screen.queryByRole('button', { name: /filterableList.filter.reset/ })
     ).not.toBeInTheDocument();
+  });
+});
+
+describe('ListViewFilters tags', () => {
+  it('names the tags filter with a label that stays visible', () => {
+    renderFilters({ fields: ['tags'] });
+
+    const combobox = screen.getByRole('combobox', {
+      name: 'navbar.articleTags',
+    });
+
+    expect(combobox).not.toHaveAttribute('placeholder');
+    expect(
+      screen.getByText('navbar.articleTags', { selector: 'label' })
+    ).toBeInTheDocument();
   });
 });

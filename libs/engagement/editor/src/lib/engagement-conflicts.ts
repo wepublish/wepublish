@@ -27,7 +27,10 @@ export type ConflictRule = Pick<
   id?: string;
   createdAt?: string;
   stages: Array<
-    Pick<EngagementStageValues, 'placement' | 'enforcement' | 'afterArticles'>
+    Pick<
+      EngagementStageValues,
+      'placement' | 'enforcement' | 'afterArticles' | 'requirement'
+    >
   >;
 };
 

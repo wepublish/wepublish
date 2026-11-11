@@ -62,6 +62,7 @@ export function NetworkMediaList({
       <CardHeader>
         <Typography
           variant="h3"
+          component="h2"
           id="network-media-title"
         >
           {t('networkContentPage.mediaTitle')}
@@ -118,6 +119,7 @@ export function NetworkMediaList({
                   {t('networkContentPage.connected')}
                 </ConnectedBadge>
               : <IconButtonTooltip
+                  describeChild
                   caption={t('networkContentDashboard.noPeer')}
                 >
                   <Button
@@ -144,6 +146,7 @@ export function NetworkMediaList({
               setLimit: () => undefined /* page size was fixed here */,
             }}
             totalCount={totalCount}
+            label={t('networkContentPage.mediaTitle')}
           />
         </CardFooter>
       )}

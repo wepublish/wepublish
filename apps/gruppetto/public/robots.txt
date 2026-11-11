@@ -3,4 +3,4 @@ User-agent: *
 Allow: /
 
 
-Sitemap: https://gruppetto-magazin.ch/api/sitemap
+Sitemap: https://gruppetto-magazin.ch/sitemap.xml

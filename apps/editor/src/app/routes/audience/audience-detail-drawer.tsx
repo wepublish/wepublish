@@ -140,7 +140,7 @@ export function AudienceDetailDrawer({
           container
           spacing={2}
         >
-          <Grid size={{ xs: 2 }}>
+          <Grid size={{ xs: 12, md: 3, lg: 2 }}>
             <List
               component="nav"
               subheader={
@@ -153,6 +153,7 @@ export function AudienceDetailDrawer({
                 <ListItemButton
                   key={index}
                   selected={availableStat === selectedStat}
+                  aria-pressed={availableStat === selectedStat}
                   onClick={() => setSelectedStat(availableStat)}
                 >
                   <ListItemIcon sx={{ minWidth: 32 }}>
@@ -168,7 +169,7 @@ export function AudienceDetailDrawer({
               ))}
             </List>
           </Grid>
-          <Grid size={{ xs: 10 }}>
+          <Grid size={{ xs: 12, md: 9, lg: 10 }}>
             <DataTable
               data={audienceStats?.[selectedStat] || []}
               columns={[

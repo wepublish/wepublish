@@ -1,19 +1,21 @@
 import styled from '@emotion/styled';
 import { PaymentPeriodicity } from '@wepublish/editor/api';
-import { useMemo, useState } from 'react';
+import { useId, useMemo, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import {
   enabledPeriodicitiesOf,
   materializePricing,
   MemberPlanFormValues,
   PeriodicityPriceValue,
 } from './memberplan-schema';
+import { FieldLabel } from '../field-label';
 import { MdPriceCheck } from 'react-icons/md';
 import {
   CurrencyInput,
   InfoTooltip,
   PAYMENT_PERIODICITY_MONTHS,
+  useFeature,
 } from '@wepublish/ui/editor';
 import {
   Card,
@@ -21,13 +23,17 @@ import {
   CardHeader,
   FormControlLabel,
   FormHelperText,
-  FormLabel,
   Grid,
   Switch,
   Tab,
   Tabs,
   TextField,
 } from '@mui/material';
+
+/** A row as an edit passes it: the printed issues stay unless it sets them. */
+type PriceInput = Omit<PeriodicityPriceValue, 'periodicity' | 'printIssues'> & {
+  printIssues?: number | null;
+};
 
 const TAB_PERIODICITY_ORDER = [
   PaymentPeriodicity.Monthly,
@@ -98,7 +104,19 @@ export function MemberPlanPricing({ loading }: MemberPlanPricingProps) {
     name: 'availablePaymentMethods',
   });
   const storedPricing = useWatch({ control, name: 'periodicityPricing' });
+  const hasPrintExport = useFeature('print-export');
   const [activeTab, setActiveTab] = useState<PaymentPeriodicity | null>(null);
+  const fieldId = useId();
+  const ids = {
+    min: `${fieldId}-min`,
+    target: `${fieldId}-target`,
+    max: `${fieldId}-max`,
+    label: `${fieldId}-label`,
+    printIssues: `${fieldId}-print-issues`,
+    panel: `${fieldId}-panel`,
+    tab: (tabPeriodicity: PaymentPeriodicity) =>
+      `${fieldId}-tab-${tabPeriodicity}`,
+  };
 
   const enabledPeriodicities = useMemo(
     () =>
@@ -120,25 +138,37 @@ export function MemberPlanPricing({ loading }: MemberPlanPricingProps) {
       activeTab
     : enabledPeriodicities[0];
 
-  function setPeriodicityPrice(
-    price: Omit<PeriodicityPriceValue, 'periodicity'> | null
-  ) {
+  function setPeriodicityPrice(price: PriceInput | null) {
     const withoutPeriodicity = pricing.filter(
       p => p.periodicity !== periodicity
     );
+    // the printed issues belong to the row, not to its prices: an edit of the
+    // prices or the label keeps them unless it sets them itself
+    const printIssues =
+      price && 'printIssues' in price ?
+        (price.printIssues ?? null)
+      : (pricing.find(p => p.periodicity === periodicity)?.printIssues ?? null);
+    const row = {
+      __typename: 'PeriodicityPrice' as const,
+      label: null,
+      amountMin: null,
+      amountTarget: null,
+      amountMax: null,
+      ...price,
+      periodicity,
+      printIssues,
+    };
 
     const isEmpty =
-      !price ||
-      (price.label == null &&
-        price.amountMin == null &&
-        price.amountTarget == null &&
-        price.amountMax == null);
+      row.label == null &&
+      row.amountMin == null &&
+      row.amountTarget == null &&
+      row.amountMax == null &&
+      row.printIssues == null;
 
     setValue(
       'periodicityPricing',
-      !isEmpty ?
-        [...withoutPeriodicity, { periodicity, ...price }]
-      : withoutPeriodicity,
+      !isEmpty ? [...withoutPeriodicity, row] : withoutPeriodicity,
       { shouldValidate: true }
     );
   }
@@ -147,7 +177,10 @@ export function MemberPlanPricing({ loading }: MemberPlanPricingProps) {
     return (
       <PanelWidth100>
         <CardContent>
-          <CardHeader title={t('memberplanForm.periodicityPricing')} />
+          <CardHeader
+            title={t('memberplanForm.periodicityPricing')}
+            slotProps={{ title: { component: 'h2' } }}
+          />
 
           <CardContent>
             <FormHelperText>
@@ -178,7 +211,7 @@ export function MemberPlanPricing({ loading }: MemberPlanPricingProps) {
   const ToggleWrapper = showDeriveToggle ? ToggleCol : ToggleColReserved;
   const hasOverride = override?.amountMin != null;
   const fieldsEditable = isMonthlyTab || !showDeriveToggle || hasOverride;
-  const overrideBase: Omit<PeriodicityPriceValue, 'periodicity'> =
+  const overrideBase: PriceInput =
     hasOverride ? override : (
       {
         __typename: 'PeriodicityPrice',
@@ -221,7 +254,10 @@ export function MemberPlanPricing({ loading }: MemberPlanPricingProps) {
   return (
     <PanelWidth100>
       <CardContent>
-        <CardHeader title={t('memberplanForm.periodicityPricing')} />
+        <CardHeader
+          title={t('memberplanForm.periodicityPricing')}
+          slotProps={{ title: { component: 'h2' } }}
+        />
 
         <CardContent>
           <FormHelperText>
@@ -240,6 +276,7 @@ export function MemberPlanPricing({ loading }: MemberPlanPricingProps) {
 
           <Tabs
             value={periodicity}
+            aria-label={t('memberplanForm.periodicityPricing')}
             onChange={(_event, eventKey) =>
               setActiveTab(eventKey as PaymentPeriodicity)
             }
@@ -248,6 +285,8 @@ export function MemberPlanPricing({ loading }: MemberPlanPricingProps) {
               <Tab
                 key={tabPeriodicity}
                 value={tabPeriodicity}
+                id={ids.tab(tabPeriodicity)}
+                aria-controls={ids.panel}
                 icon={
                   (
                     monthlyEnabled &&
@@ -270,13 +309,17 @@ export function MemberPlanPricing({ loading }: MemberPlanPricingProps) {
             ))}
           </Tabs>
 
-          <TabContent>
+          <TabContent
+            role="tabpanel"
+            id={ids.panel}
+            aria-labelledby={ids.tab(periodicity)}
+          >
             {monthlyEnabled && (
               <Grid
                 container
                 spacing={2}
               >
-                <Grid size={{ xs: 9 }}>
+                <Grid size={{ xs: 12, sm: 9 }}>
                   {delta != null && delta !== 0 && referenceDerived != null && (
                     <FormHelperText>
                       {t('memberplanForm.periodicityPricingDelta', {
@@ -286,8 +329,16 @@ export function MemberPlanPricing({ loading }: MemberPlanPricingProps) {
                   )}
                 </Grid>
 
-                <ToggleWrapper size={{ xs: 3 }}>
+                <ToggleWrapper
+                  size={{ xs: 12, sm: 3 }}
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end',
+                  }}
+                >
                   <FormControlLabel
+                    sx={{ marginRight: 0 }}
                     control={
                       <Switch
                         checked={hasOverride}
@@ -313,16 +364,10 @@ export function MemberPlanPricing({ loading }: MemberPlanPricingProps) {
                         }
                       />
                     }
-                    label={
-                      <>
-                        {t('memberplanForm.periodicityPricingCustom')}{' '}
-                        <InfoTooltip
-                          text={t(
-                            'memberplanForm.periodicityPricingCustomHelp'
-                          )}
-                        />
-                      </>
-                    }
+                    label={t('memberplanForm.periodicityPricingCustom')}
+                  />
+                  <InfoTooltip
+                    text={t('memberplanForm.periodicityPricingCustomHelp')}
                   />
                 </ToggleWrapper>
               </Grid>
@@ -332,18 +377,18 @@ export function MemberPlanPricing({ loading }: MemberPlanPricingProps) {
               container
               spacing={2}
             >
-              <Grid size={{ xs: 4 }}>
-                <FormLabel>
-                  {t(
+              <Grid size={{ xs: 12, sm: 4 }}>
+                <FieldLabel
+                  id={ids.min}
+                  label={t(
                     isMonthlyTab ?
                       'memberPlanEdit.amountPerMonthMin'
                     : 'memberplanForm.periodicityPricingMin'
-                  )}{' '}
-                  <InfoTooltip
-                    text={t('memberplanForm.periodicityPricingMinHelpText')}
-                  />
-                </FormLabel>
+                  )}
+                  help={t('memberplanForm.periodicityPricingMinHelpText')}
+                />
                 <CurrencyInput
+                  aria-labelledby={ids.min}
                   name={`periodicityPricing.${periodicity}.amountMin`}
                   currency={currency}
                   centAmount={shownMin}
@@ -357,18 +402,18 @@ export function MemberPlanPricing({ loading }: MemberPlanPricingProps) {
                 />
               </Grid>
 
-              <Grid size={{ xs: 4 }}>
-                <FormLabel>
-                  {t(
+              <Grid size={{ xs: 12, sm: 4 }}>
+                <FieldLabel
+                  id={ids.target}
+                  label={t(
                     isMonthlyTab ?
                       'memberplanForm.amountPerMonthTarget'
                     : 'memberplanForm.periodicityPricingTarget'
-                  )}{' '}
-                  <InfoTooltip
-                    text={t('memberplanForm.periodicityPricingTargetHelpText')}
-                  />
-                </FormLabel>
+                  )}
+                  help={t('memberplanForm.periodicityPricingTargetHelpText')}
+                />
                 <CurrencyInput
+                  aria-labelledby={ids.target}
                   name={`periodicityPricing.${periodicity}.amountTarget`}
                   currency={currency}
                   centAmount={shownTarget}
@@ -388,18 +433,18 @@ export function MemberPlanPricing({ loading }: MemberPlanPricingProps) {
                 )}
               </Grid>
 
-              <Grid size={{ xs: 4 }}>
-                <FormLabel>
-                  {t(
+              <Grid size={{ xs: 12, sm: 4 }}>
+                <FieldLabel
+                  id={ids.max}
+                  label={t(
                     isMonthlyTab ?
                       'memberPlanEdit.amountPerMonthMax'
                     : 'memberplanForm.periodicityPricingMax'
-                  )}{' '}
-                  <InfoTooltip
-                    text={t('memberplanForm.periodicityPricingMaxHelpText')}
-                  />
-                </FormLabel>
+                  )}
+                  help={t('memberplanForm.periodicityPricingMaxHelpText')}
+                />
                 <CurrencyInput
+                  aria-labelledby={ids.max}
                   name={`periodicityPricing.${periodicity}.amountMax`}
                   currency={currency}
                   centAmount={shownMax}
@@ -421,25 +466,96 @@ export function MemberPlanPricing({ loading }: MemberPlanPricingProps) {
             </Grid>
 
             <RowPaddingTop>
-              <Grid size={{ xs: 6 }}>
-                <FormLabel>
-                  {t('memberplanForm.periodicityPricingLabel')}
-                </FormLabel>
+              <Grid size={{ xs: 12, sm: 6 }}>
+                {/* the help may use <strong>, <em>, <i> and <br/> */}
+                <FieldLabel
+                  id={ids.label}
+                  label={t('memberplanForm.periodicityPricingLabel')}
+                  helpLabel={t('memberplanForm.periodicityPricingLabel')}
+                  help={
+                    <Trans
+                      i18nKey="memberplanForm.periodicityPricingLabelHelpText"
+                      components={{
+                        strong: <strong />,
+                        em: <em />,
+                        i: <i />,
+                        br: <br />,
+                      }}
+                    />
+                  }
+                />
                 <TextField
                   value={override?.label ?? ''}
                   disabled={loading}
-                  slotProps={{ htmlInput: { maxLength: 60 } }}
+                  slotProps={{
+                    htmlInput: {
+                      maxLength: 60,
+                      'aria-labelledby': ids.label,
+                    },
+                  }}
                   onChange={event =>
                     setPeriodicityLabel(
                       event.target.value?.trim() ? event.target.value : null
                     )
                   }
                 />
-                <FormHelperText>
-                  {t('memberplanForm.periodicityPricingLabelHelpText')}
-                </FormHelperText>
               </Grid>
             </RowPaddingTop>
+
+            {/* printed issues one paid period of this periodicity is worth; only with the print export */}
+            {hasPrintExport && (
+              <RowPaddingTop>
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  {/* the help may use <strong>, <em>, <i> and <br/> */}
+                  <FieldLabel
+                    id={ids.printIssues}
+                    label={t('memberplanForm.printIssuesPerPeriod')}
+                    helpLabel={t('memberplanForm.printIssuesPerPeriod')}
+                    help={
+                      <Trans
+                        i18nKey="memberplanForm.printIssuesPerPeriodHelpText"
+                        values={{
+                          periodicity: t(
+                            `memberPlanList.paymentPeriodicity.${periodicity}`
+                          ),
+                        }}
+                        components={{
+                          strong: <strong />,
+                          em: <em />,
+                          i: <i />,
+                          br: <br />,
+                        }}
+                      />
+                    }
+                  />
+                  <TextField
+                    type="number"
+                    value={override?.printIssues ?? ''}
+                    disabled={loading}
+                    slotProps={{
+                      htmlInput: {
+                        min: 0,
+                        step: 1,
+                        'aria-labelledby': ids.printIssues,
+                      },
+                    }}
+                    onChange={event =>
+                      setPeriodicityPrice({
+                        __typename: 'PeriodicityPrice',
+                        label: override?.label ?? null,
+                        amountMin: override?.amountMin ?? null,
+                        amountTarget: override?.amountTarget ?? null,
+                        amountMax: override?.amountMax ?? null,
+                        printIssues:
+                          event.target.value === '' ?
+                            null
+                          : Math.max(0, Math.floor(Number(event.target.value))),
+                      })
+                    }
+                  />
+                </Grid>
+              </RowPaddingTop>
+            )}
           </TabContent>
         </CardContent>
       </CardContent>

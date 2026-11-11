@@ -82,6 +82,26 @@ describe('TeaserSelectPanel', () => {
     ).toBeInTheDocument();
   });
 
+  it('labels the tab panel with the selected teaser type', () => {
+    renderPanel();
+
+    const tabpanel = screen.getByRole('tabpanel', {
+      name: /resources.teaserType.article/,
+    });
+
+    for (const tab of screen.getAllByRole('tab')) {
+      expect(tab).toHaveAttribute('aria-controls', tabpanel.id);
+    }
+
+    fireEvent.click(
+      screen.getByRole('tab', { name: /resources.teaserType.event/ })
+    );
+
+    expect(
+      screen.getByRole('tabpanel', { name: /resources.teaserType.event/ })
+    ).toBeInTheDocument();
+  });
+
   it('keeps the upcoming filter reachable when no events match', () => {
     renderPanel();
 

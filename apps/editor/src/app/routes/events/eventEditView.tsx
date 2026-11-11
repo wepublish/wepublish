@@ -15,7 +15,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { EventForm, EventFormValues, eventSchema } from './eventForm';
+import { createEventSchema, EventForm, EventFormValues } from './eventForm';
 
 const onErrorToast = (error: Error) => {
   enqueueSnackbar(humanizeError(error), {
@@ -51,7 +51,7 @@ export const EventEditView = () => {
   const [shouldClose, setShouldClose] = useState(false);
 
   const form = useForm<EventFormValues>({
-    resolver: zodResolver(eventSchema),
+    resolver: zodResolver(createEventSchema(t)),
     defaultValues: async () => {
       const { data } = await client.query({
         query: EventDocument,

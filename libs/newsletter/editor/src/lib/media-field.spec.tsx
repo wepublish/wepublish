@@ -46,4 +46,12 @@ describe('mediaField', () => {
     );
     await vi.waitFor(() => expect(screen.queryByText('pick')).toBeNull());
   });
+
+  it('names the picker after the field', () => {
+    const onChange = vi.fn();
+
+    render(<>{mediaField('Bild').render({ value: '', onChange } as never)}</>);
+
+    expect(screen.getByRole('group', { name: 'Bild' })).toBeTruthy();
+  });
 });

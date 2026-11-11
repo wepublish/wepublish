@@ -2,8 +2,10 @@ import {
   Alert,
   AlertColor,
   AlertTitle,
+  Box,
   Button,
   IconButton,
+  Portal,
   Snackbar,
   SnackbarOrigin,
   Stack,
@@ -35,6 +37,10 @@ type SnackbarEntry = Required<Pick<EnqueueSnackbarOptions, 'variant'>> & {
 };
 
 const DEFAULT_AUTO_HIDE_DURATION = 5000;
+const DEFAULT_PROBLEM_AUTO_HIDE_DURATION = 10000;
+
+const isProblem = (variant: SnackbarVariant) =>
+  variant === 'error' || variant === 'warning';
 
 let entries: SnackbarEntry[] = [];
 let nextKey = 0;
@@ -56,15 +62,21 @@ export const enqueueSnackbar = (
 ) => {
   const key = options.key ?? `snackbar-${nextKey++}`;
 
+  const variant = options.variant ?? 'info';
+  const defaultDuration =
+    isProblem(variant) ?
+      DEFAULT_PROBLEM_AUTO_HIDE_DURATION
+    : DEFAULT_AUTO_HIDE_DURATION;
+
   const entry: SnackbarEntry = {
     key,
     message,
     title: options.title,
     action: options.action,
-    variant: options.variant ?? 'info',
+    variant,
     autoHideDuration:
       options.autoHideDuration === undefined ?
-        DEFAULT_AUTO_HIDE_DURATION
+        defaultDuration
       : options.autoHideDuration,
   };
 
@@ -79,14 +91,37 @@ export const closeSnackbar = (key?: string) => {
   emit();
 };
 
+const keepAnnouncedBehindModals = (region: HTMLDivElement | null) => {
+  if (!region) {
+    return;
+  }
+
+  const reveal = () => {
+    if (region.getAttribute('aria-hidden') === 'true') {
+      region.removeAttribute('aria-hidden');
+    }
+  };
+
+  const observer = new MutationObserver(reveal);
+  observer.observe(region, {
+    attributes: true,
+    attributeFilter: ['aria-hidden'],
+  });
+  reveal();
+
+  return () => observer.disconnect();
+};
+
 export type SnackbarHostProps = {
   maxSnack?: number;
   anchorOrigin?: SnackbarOrigin;
+  label?: string;
 };
 
 export function SnackbarHost({
   maxSnack = 3,
   anchorOrigin = { vertical: 'bottom', horizontal: 'right' },
+  label,
 }: SnackbarHostProps) {
   const all = useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
   const visible = all.slice(-maxSnack);
@@ -94,88 +129,100 @@ export function SnackbarHost({
   const { vertical, horizontal } = anchorOrigin;
 
   return (
-    <Stack
-      sx={theme => ({
-        position: 'fixed',
-        zIndex: theme.zIndex.snackbar,
-        gap: 1,
-        [vertical]: 24,
-        ...(horizontal === 'center' ?
-          { left: '50%', transform: 'translateX(-50%)' }
-        : { [horizontal]: 24 }),
-        alignItems:
-          horizontal === 'left' ? 'flex-start'
-          : horizontal === 'right' ? 'flex-end'
-          : 'center',
-        maxWidth: 'calc(100% - 48px)',
-        flexDirection: vertical === 'top' ? 'column-reverse' : 'column',
-      })}
-    >
-      {visible.map(entry => (
-        <Snackbar
-          key={entry.key}
-          open
-          autoHideDuration={entry.autoHideDuration}
-          onClose={(_event, reason) =>
-            reason === 'clickaway' ? undefined : closeSnackbar(entry.key)
-          }
-          sx={{ position: 'static', transform: 'none' }}
+    <Portal>
+      <Box
+        ref={keepAnnouncedBehindModals}
+        component={label ? 'section' : 'div'}
+        aria-label={label}
+        sx={theme => ({
+          position: 'fixed',
+          zIndex: theme.zIndex.snackbar,
+          [vertical]: 24,
+          ...(horizontal === 'center' ?
+            { left: '50%', transform: 'translateX(-50%)' }
+          : { [horizontal]: 24 }),
+          maxWidth: 'calc(100% - 48px)',
+        })}
+      >
+        <Stack
+          role="status"
+          sx={{
+            gap: 1,
+            alignItems:
+              horizontal === 'left' ? 'flex-start'
+              : horizontal === 'right' ? 'flex-end'
+              : 'center',
+            flexDirection: vertical === 'top' ? 'column-reverse' : 'column',
+          }}
         >
-          <Alert
-            severity={entry.variant}
-            variant="filled"
-            onClose={() => closeSnackbar(entry.key)}
-            action={
-              entry.action ?
-                <Stack
-                  direction="row"
-                  sx={{ alignItems: 'center', gap: 0.5 }}
-                >
-                  <Button
-                    color="inherit"
-                    size="small"
-                    onClick={() => {
-                      entry.action?.onClick();
-                      closeSnackbar(entry.key);
-                    }}
-                  >
-                    {entry.action.label}
-                  </Button>
+          {visible.map(entry => (
+            <Snackbar
+              key={entry.key}
+              open
+              autoHideDuration={entry.autoHideDuration}
+              onClose={(_event, reason) =>
+                reason === 'clickaway' ? undefined : closeSnackbar(entry.key)
+              }
+              sx={{ position: 'static', transform: 'none' }}
+            >
+              <Alert
+                role={isProblem(entry.variant) ? 'alert' : 'none'}
+                severity={entry.variant}
+                variant="filled"
+                onClose={() => closeSnackbar(entry.key)}
+                action={
+                  entry.action ?
+                    <Stack
+                      direction="row"
+                      sx={{ alignItems: 'center', gap: 0.5 }}
+                    >
+                      <Button
+                        color="inherit"
+                        size="small"
+                        onClick={() => {
+                          entry.action?.onClick();
+                          closeSnackbar(entry.key);
+                        }}
+                      >
+                        {entry.action.label}
+                      </Button>
 
-                  <IconButton
-                    color="inherit"
-                    size="small"
-                    aria-label="Close"
-                    onClick={() => closeSnackbar(entry.key)}
-                  >
-                    <MdClose />
-                  </IconButton>
-                </Stack>
-              : undefined
-            }
-            sx={{
-              width: '100%',
-              alignItems: 'center',
-              '& .MuiAlert-icon, & .MuiAlert-action': {
-                alignItems: 'center',
-                paddingBlock: 0,
-                marginRight: 0,
-              },
-              '& .MuiAlert-icon': { marginRight: 1.5 },
-              '& .MuiAlert-action': { marginLeft: 'auto', paddingLeft: 2 },
-              ...(entry.message ? null : (
-                { '& .MuiAlertTitle-root': { marginBottom: 0 } }
-              )),
-            }}
-          >
-            {entry.title ?
-              <AlertTitle>{entry.title}</AlertTitle>
-            : null}
+                      <IconButton
+                        color="inherit"
+                        size="small"
+                        aria-label="Close"
+                        onClick={() => closeSnackbar(entry.key)}
+                      >
+                        <MdClose />
+                      </IconButton>
+                    </Stack>
+                  : undefined
+                }
+                sx={{
+                  width: '100%',
+                  alignItems: 'center',
+                  '& .MuiAlert-icon, & .MuiAlert-action': {
+                    alignItems: 'center',
+                    paddingBlock: 0,
+                    marginRight: 0,
+                  },
+                  '& .MuiAlert-icon': { marginRight: 1.5 },
+                  '& .MuiAlert-action': { marginLeft: 'auto', paddingLeft: 2 },
+                  ...(entry.message ? null : (
+                    { '& .MuiAlertTitle-root': { marginBottom: 0 } }
+                  )),
+                }}
+              >
+                {entry.title ?
+                  <AlertTitle>{entry.title}</AlertTitle>
+                : null}
 
-            {entry.message}
-          </Alert>
-        </Snackbar>
-      ))}
-    </Stack>
+                {entry.message}
+              </Alert>
+            </Snackbar>
+          ))}
+        </Stack>
+      </Box>
+    </Portal>
   );
 }

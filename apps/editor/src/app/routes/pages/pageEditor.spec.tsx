@@ -121,7 +121,7 @@ vi.mock('@wepublish/ui/editor', async importOriginal => ({
       component,
   PermissionControl: ({ children }: { children?: unknown }) => children,
   useAuthorisation: () => true,
-  useUnsavedChangesDialog: () => () => true,
+  useUnsavedChangesDialog: () => undefined,
   BlockList: ({ value }: { value: unknown[] }) => {
     captured.blocks = value;
     return null;

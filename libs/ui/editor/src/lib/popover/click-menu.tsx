@@ -10,6 +10,7 @@ import {
 
 export interface ClickMenuProps {
   trigger: ReactElement<{
+    id?: string;
     onClick?: (event: MouseEvent) => void;
     'aria-haspopup'?: string;
     'aria-expanded'?: string;
@@ -30,12 +31,15 @@ export function ClickMenu({
 }: ClickMenuProps) {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const id = useId();
+  const generatedTriggerId = useId();
+  const triggerId = trigger.props.id ?? generatedTriggerId;
   const open = Boolean(anchorEl);
   const close = () => setAnchorEl(null);
 
   return (
     <>
       {cloneElement(trigger, {
+        id: triggerId,
         'aria-haspopup': 'menu',
         'aria-expanded': open ? 'true' : 'false',
         'aria-controls': open ? id : undefined,
@@ -52,7 +56,13 @@ export function ClickMenu({
         onClose={close}
         anchorOrigin={anchorOrigin}
         transformOrigin={transformOrigin}
-        slotProps={slotProps}
+        slotProps={{
+          ...slotProps,
+          list:
+            typeof slotProps?.list === 'function' ?
+              slotProps.list
+            : { 'aria-labelledby': triggerId, ...slotProps?.list },
+        }}
       >
         {typeof children === 'function' ? children(close) : children}
       </Menu>

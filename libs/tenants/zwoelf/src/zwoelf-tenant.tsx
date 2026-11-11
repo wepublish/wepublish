@@ -5,6 +5,11 @@ import { de } from 'date-fns/locale';
 
 import { ZwoelfBaseTeaser } from './components/zwoelf-base-teaser';
 import { ZwoelfFocusTeaser } from './components/zwoelf-focus-teaser';
+import { ZwoelfGoodiePicker } from './components/zwoelf-goodie-picker';
+import { ZwoelfMemberPlanPicker } from './components/zwoelf-memberplan-picker';
+import { ZwoelfPeriodicityPicker } from './components/zwoelf-periodicity-picker';
+import { ZwoelfSubscribeBlock } from './components/zwoelf-subscribe-block';
+import { ZwoelfSubscribeSummary } from './components/zwoelf-subscribe-summary';
 import deOverriden from './locales/deOverriden.json';
 import theme from './theme';
 
@@ -19,8 +24,12 @@ export const zwoelfTenant: WebsiteTenantConfig = {
   createTheme: () => theme,
   builder: {
     elements: { Link: NextWepublishLink },
-    blocks: { BaseTeaser: ZwoelfBaseTeaser },
+    blocks: { BaseTeaser: ZwoelfBaseTeaser, Subscribe: ZwoelfSubscribeBlock },
     blockStyles: { FocusTeaser: ZwoelfFocusTeaser },
+    MemberPlanPicker: ZwoelfMemberPlanPicker,
+    PeriodicityPicker: ZwoelfPeriodicityPicker,
+    GoodiePicker: ZwoelfGoodiePicker,
+    SubscribeSummary: ZwoelfSubscribeSummary,
     date: { format: dateFormatter },
     meta: { siteTitle: 'Zwölf' },
   },

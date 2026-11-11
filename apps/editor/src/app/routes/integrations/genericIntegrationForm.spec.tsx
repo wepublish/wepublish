@@ -1,3 +1,4 @@
+import { createTheme, ThemeProvider } from '@mui/material';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { UpdateMailProviderSettingDocument } from '@wepublish/editor/api';
 import { z } from 'zod';
@@ -54,5 +55,66 @@ describe('SingleGenericIntegrationForm number fields', () => {
     expect(updateSettings).toHaveBeenCalledWith({
       variables: { id: 'smtp', smtp_port: null },
     });
+  });
+});
+
+describe('SingleGenericIntegrationForm labels', () => {
+  it('names every control after its visible label, without the info text', () => {
+    render(
+      <ThemeProvider theme={createTheme({ cssVariables: true })}>
+        <SingleGenericIntegrationForm
+          setting={
+            {
+              id: 'smtp',
+              type: 'SMTP',
+              name: 'Mail',
+              apiKey: '',
+              notes: '',
+              scopes: [],
+            } as never
+          }
+          schema={z.object({
+            type: z.string(),
+            name: z.string(),
+            apiKey: z.string(),
+            notes: z.string(),
+            scopes: z.array(z.string()),
+          })}
+          mutation={UpdateMailProviderSettingDocument}
+          fields={[
+            {
+              type: 'select',
+              name: 'type',
+              label: 'Type',
+              info: 'Which provider',
+              options: [{ label: 'SMTP', value: 'SMTP' }],
+            },
+            {
+              type: 'text',
+              name: 'name',
+              label: 'Name',
+              info: 'Shown in lists',
+            },
+            { type: 'password', name: 'apiKey', label: 'API key' },
+            { type: 'textarea', name: 'notes', label: 'Notes' },
+            {
+              type: 'checkPicker',
+              name: 'scopes',
+              label: 'Scopes',
+              options: [{ label: 'Read', value: 'read' }],
+            },
+          ]}
+        />
+      </ThemeProvider>
+    );
+
+    expect(screen.getByRole('combobox', { name: /^Type/ })).toBeTruthy();
+    expect(screen.getByRole('textbox', { name: 'Name' })).toBeTruthy();
+    expect(screen.getByLabelText('API key')).toHaveAttribute(
+      'type',
+      'password'
+    );
+    expect(screen.getByRole('textbox', { name: 'Notes' })).toBeTruthy();
+    expect(screen.getByRole('combobox', { name: 'Scopes' })).toBeTruthy();
   });
 });

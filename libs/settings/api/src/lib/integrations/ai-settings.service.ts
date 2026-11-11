@@ -9,6 +9,7 @@ import { PrimeDataLoader } from '@wepublish/utils/api';
 import { AISettingsDataloaderService } from './ai-settings-dataloader.service';
 import { NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from './secrets-crypto';
+import { encryptSecrets } from './encrypt-secrets';
 
 @Injectable()
 export class AISettingsService {
@@ -22,13 +23,9 @@ export class AISettingsService {
   private encryptSecretsIfPresent<T extends { apiKey?: string | null }>(
     data: T
   ): T {
-    if (typeof data.apiKey === 'string' && data.apiKey.length > 0) {
-      return {
-        ...data,
-        apiKey: this.crypto.encrypt(data.apiKey),
-      };
-    }
-    return data;
+    return encryptSecrets(data, ['apiKey'], value =>
+      this.crypto.encrypt(value)
+    );
   }
 
   @PrimeDataLoader(AISettingsDataloaderService, 'id')

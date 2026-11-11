@@ -1,8 +1,8 @@
 import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import { Button, Stack, TextField } from '@mui/material';
+import { Alert, Button, Stack, TextField } from '@mui/material';
 import { ResetPasswordWithTokenDocument } from '@wepublish/editor/api';
-import { enqueueSnackbar, LoginTemplate } from '@wepublish/ui/editor';
+import { LoginTemplate } from '@wepublish/ui/editor';
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
@@ -41,7 +41,11 @@ export function SetNewPassword() {
   const [password, setPassword] = useState('');
   const [passwordRepeat, setPasswordRepeat] = useState('');
   const [success, setSuccess] = useState(false);
+  const [mismatch, setMismatch] = useState(false);
+  const [error, setError] = useState('');
   const passwordInputRef = useRef<HTMLInputElement>(null);
+  const passwordRepeatInputRef = useRef<HTMLInputElement>(null);
+  const goToLoginRef = useRef<HTMLAnchorElement>(null);
   const { t } = useTranslation();
 
   const [resetPassword, { loading }] = useMutation(
@@ -52,6 +56,12 @@ export function SetNewPassword() {
     passwordInputRef.current?.focus();
   }, []);
 
+  useEffect(() => {
+    if (success) {
+      goToLoginRef.current?.focus();
+    }
+  }, [success]);
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
 
@@ -59,19 +69,16 @@ export function SetNewPassword() {
       return;
     }
 
+    setError('');
+
     if (password !== passwordRepeat) {
-      enqueueSnackbar(t('setNewPassword.mismatch'), {
-        variant: 'error',
-        autoHideDuration: 8000,
-      });
+      setMismatch(true);
+      passwordRepeatInputRef.current?.focus();
       return;
     }
 
     if (!token) {
-      enqueueSnackbar(t('setNewPassword.invalidLink'), {
-        variant: 'error',
-        autoHideDuration: 8000,
-      });
+      setError(t('setNewPassword.invalidLink'));
       return;
     }
 
@@ -79,28 +86,34 @@ export function SetNewPassword() {
       await resetPassword({ variables: { token, password } });
       setSuccess(true);
     } catch (error: any) {
-      enqueueSnackbar(error?.message || t('setNewPassword.error'), {
-        variant: 'error',
-        autoHideDuration: 8000,
-      });
+      setError(error?.message || t('setNewPassword.error'));
     }
   }
 
   return (
-    <LoginTemplate backgroundChildren={<Background />}>
+    <LoginTemplate
+      title={t('setNewPassword.submit')}
+      backgroundChildren={<Background />}
+    >
       <Form>
         <Stack
           direction="column"
           spacing={3}
         >
-          {success ?
-            <>
-              <Description>{t('setNewPassword.success')}</Description>
-              <BackLink href="/login">{t('setNewPassword.goToLogin')}</BackLink>
-            </>
-          : <>
-              <Description>{t('setNewPassword.description')}</Description>
+          <Description role="status">
+            {success ?
+              t('setNewPassword.success')
+            : t('setNewPassword.description')}
+          </Description>
 
+          {success ?
+            <BackLink
+              ref={goToLoginRef}
+              href="/login"
+            >
+              {t('setNewPassword.goToLogin')}
+            </BackLink>
+          : <>
               <TextField
                 label={<>{t('setNewPassword.password')}</>}
                 inputRef={passwordInputRef}
@@ -108,19 +121,30 @@ export function SetNewPassword() {
                 type="password"
                 value={password}
                 autoComplete="new-password"
-                onChange={event => setPassword(event.target.value)}
+                onChange={event => {
+                  setPassword(event.target.value);
+                  setMismatch(false);
+                }}
                 fullWidth
               />
 
               <TextField
                 label={<>{t('setNewPassword.passwordRepeat')}</>}
+                inputRef={passwordRepeatInputRef}
                 name="passwordRepeat"
                 type="password"
                 value={passwordRepeat}
                 autoComplete="new-password"
-                onChange={event => setPasswordRepeat(event.target.value)}
+                error={mismatch}
+                helperText={mismatch ? t('setNewPassword.mismatch') : undefined}
+                onChange={event => {
+                  setPasswordRepeat(event.target.value);
+                  setMismatch(false);
+                }}
                 fullWidth
               />
+
+              {error && <Alert severity="error">{error}</Alert>}
 
               <Button
                 variant="contained"

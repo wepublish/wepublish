@@ -288,3 +288,21 @@ describe('composeMail', () => {
     expect(result.message).toBeUndefined();
   });
 });
+
+describe('composeMail', () => {
+  // Stationery belongs to the letter path only; a mail must never carry it.
+  it('adds no letter stationery to a mail', () => {
+    const composed = composeMail(
+      {
+        subject: 'Hallo',
+        htmlContent: '<p>Hallo {{user_firstName}}</p>',
+        textContent: 'Hallo',
+      },
+      { user: { firstName: 'Jane' } }
+    );
+
+    expect(composed.messageHtml).toBe('<p>Hallo Jane</p>');
+    expect(composed.messageHtml).not.toContain('letter-header');
+    expect(composed.messageHtml).not.toContain('letter-footer');
+  });
+});

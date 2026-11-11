@@ -28,6 +28,11 @@ fragment FullUser on SensitiveDataUser {
   }
   email
   emailVerifiedAt
+  emailQuality {
+    level
+    reason
+    since
+  }
   note
   totpEnabled
   totpExempt

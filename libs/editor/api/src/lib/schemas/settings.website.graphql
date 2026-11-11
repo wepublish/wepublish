@@ -19,10 +19,8 @@ fragment FullWebsiteSettings on WebsiteSettings {
       enabled
       key
     }
-  }
 
-  mail {
-    mailchimp {
+    umami {
       enabled
       key
     }
@@ -51,14 +49,12 @@ query WebsiteSettings {
 
 mutation UpdateWebsiteSettings(
   $analytics: WebsiteAnalyticsInput
-  $mail: WebsiteMailInput
   $ads: WebsiteAdsInput
   $theme: JSONObject
   $fonts: [WebsiteRemoteFontInput!]
 ) {
   updateWebsiteSettings(
     analytics: $analytics
-    mail: $mail
     ads: $ads
     theme: $theme
     fonts: $fonts

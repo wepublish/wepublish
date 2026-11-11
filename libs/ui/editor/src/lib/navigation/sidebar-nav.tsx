@@ -13,6 +13,7 @@ import {
   ReactElement,
   ReactNode,
   useContext,
+  useId,
   useMemo,
 } from 'react';
 import { MdChevronRight } from 'react-icons/md';
@@ -119,12 +120,14 @@ export function SidebarNavMenu({
   const { pathname } = useLocation();
   const containsCurrent = containsHref(children, pathname);
   const isOpen = open || (openIfCurrent && containsCurrent);
+  const submenuId = useId();
 
   return (
     <>
       <ListItemButton
         onClick={() => onToggle(Boolean(isOpen))}
         aria-expanded={isOpen ? 'true' : 'false'}
+        aria-controls={isOpen ? submenuId : undefined}
         data-contains-current={containsCurrent ? 'true' : 'false'}
         sx={{ px: 1.5, py: 1, mb: '2px' }}
       >
@@ -157,6 +160,7 @@ export function SidebarNavMenu({
         unmountOnExit
       >
         <List
+          id={submenuId}
           component="div"
           data-submenu="true"
           sx={{

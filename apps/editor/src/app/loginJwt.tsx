@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import { Button, Stack, TextField, Typography } from '@mui/material';
+import { Alert, Button, Stack, TextField, Typography } from '@mui/material';
 import {
   CreateSessionWithJwtDocument,
   EnableTotpDocument,
@@ -89,6 +89,8 @@ export function LoginJwt() {
   const [totpUri, setTotpUri] = useState('');
   const [totpSecret, setTotpSecret] = useState('');
   const [totpToken, setTotpToken] = useState('');
+  const [error, setError] = useState('');
+  const [setupError, setSetupError] = useState('');
   const totpInputRef = useRef<HTMLInputElement>(null);
 
   const forceTotpSetup = useCallback(
@@ -103,10 +105,7 @@ export function LoginJwt() {
           setTotpSecret(setupResponse.data.generateTotpSetup.secret);
         }
       } catch {
-        enqueueSnackbar(t('login.totp.setupError'), {
-          variant: 'error',
-          autoHideDuration: 8000,
-        });
+        setSetupError(t('login.totp.setupError'));
       }
     },
     [generateTotpSetup, t]
@@ -148,6 +147,7 @@ export function LoginJwt() {
 
   async function handleTotpSetup(e: FormEvent) {
     e.preventDefault();
+    setError('');
 
     try {
       const response = await enableTotp({ variables: { totpToken } });
@@ -177,21 +177,27 @@ export function LoginJwt() {
     } catch (error: unknown) {
       const message =
         error instanceof Error ? error.message : t('login.totp.invalidCode');
-      enqueueSnackbar(message, { variant: 'error', autoHideDuration: 8000 });
+      setError(message);
       setTotpToken('');
     }
   }
 
   if (step === 'loading') {
     return (
-      <LoginTemplate backgroundChildren={<Background />}>
+      <LoginTemplate
+        title={t('login.login')}
+        backgroundChildren={<Background />}
+      >
         <Typography>{t('login.jwt')}</Typography>
       </LoginTemplate>
     );
   }
 
   return (
-    <LoginTemplate backgroundChildren={<Background />}>
+    <LoginTemplate
+      title={t('login.login')}
+      backgroundChildren={<Background />}
+    >
       <Form>
         <Stack
           direction="column"
@@ -229,15 +235,24 @@ export function LoginJwt() {
             </>
           )}
 
+          {setupError && <Alert severity="error">{setupError}</Alert>}
+
           <TextField
             label={<>{t('login.totp.code')}</>}
             inputRef={totpInputRef}
             name="totpCode"
             value={totpToken}
             autoComplete="one-time-code"
-            onChange={event => setTotpToken(event.target.value)}
+            error={Boolean(error)}
+            onChange={event => {
+              setTotpToken(event.target.value);
+              setError('');
+            }}
             fullWidth
           />
+
+          {error && <Alert severity="error">{error}</Alert>}
+
           <Button
             variant="contained"
             type="submit"

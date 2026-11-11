@@ -8,7 +8,7 @@ import {
   TeaserSlotsAutofillConfigInput,
   TeaserType,
 } from '@wepublish/editor/api';
-import { useMemo, useState } from 'react';
+import { useId, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { SelectTags } from '../../atoms/tag/selectTags';
@@ -46,6 +46,8 @@ export function TeaserSlotsAutofillConfigPanel({
   const [teaserType, setTeaserType] = useState(config.teaserType);
   const { t } = useTranslation();
   const teaserTypeText = useTeaserTypeText();
+  const teaserTypeLabelId = useId();
+  const filterLabelId = useId();
 
   const handleChange = (
     partialConfig: Partial<TeaserSlotsAutofillConfigInput>
@@ -84,10 +86,13 @@ export function TeaserSlotsAutofillConfigPanel({
   return (
     <ConfigContainer>
       <FormGroup>
-        <FormLabel>{t('blocks.teaserSlots.autofillType')}</FormLabel>
+        <FormLabel id={teaserTypeLabelId}>
+          {t('blocks.teaserSlots.autofillType')}
+        </FormLabel>
         <TextField
           select
           name="teaserType"
+          slotProps={{ select: { labelId: teaserTypeLabelId } }}
           value={teaserType}
           onChange={event =>
             handleTeaserTypeChange(event.target.value as TeaserType)
@@ -107,9 +112,12 @@ export function TeaserSlotsAutofillConfigPanel({
 
       {tagType && (
         <FormGroup>
-          <FormLabel>{t('blocks.teaserSlots.filter')}</FormLabel>
+          <FormLabel id={filterLabelId}>
+            {t('blocks.teaserSlots.filter')}
+          </FormLabel>
 
           <SelectTags
+            aria-labelledby={filterLabelId}
             defaultTags={[]}
             name="tags"
             tagType={tagType}

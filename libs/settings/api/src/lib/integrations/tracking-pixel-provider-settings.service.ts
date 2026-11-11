@@ -11,6 +11,7 @@ import { NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from './secrets-crypto';
 import { ProviderSettingsChanged } from './provider-settings-changed';
 import * as Sentry from '@sentry/nestjs';
+import { encryptSecrets } from './encrypt-secrets';
 
 @Injectable()
 export class TrackingPixelProviderSettingsService {
@@ -27,16 +28,9 @@ export class TrackingPixelProviderSettingsService {
   private encryptSecretsIfPresent<
     T extends { prolitteris_password?: string | null },
   >(data: T): T {
-    if (
-      typeof data.prolitteris_password === 'string' &&
-      data.prolitteris_password.length > 0
-    ) {
-      return {
-        ...data,
-        prolitteris_password: this.crypto.encrypt(data.prolitteris_password),
-      };
-    }
-    return data;
+    return encryptSecrets(data, ['prolitteris_password'], value =>
+      this.crypto.encrypt(value)
+    );
   }
 
   @PrimeDataLoader(TrackingPixelSettingsProviderDataloaderService, 'id')

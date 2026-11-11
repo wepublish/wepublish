@@ -87,6 +87,14 @@ describe('ClickMenu', () => {
     expect(trigger).toHaveAttribute('aria-expanded', 'true');
   });
 
+  it('names the open menu after its trigger', () => {
+    renderMenu();
+
+    openMenu();
+
+    expect(screen.getByRole('menu', { name: 'Options' })).toBeInTheDocument();
+  });
+
   it('still runs the trigger’s own click handler', () => {
     const onClick = vi.fn();
     render(

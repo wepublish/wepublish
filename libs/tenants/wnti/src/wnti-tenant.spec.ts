@@ -10,7 +10,7 @@ import { TsriTeaser } from './components/tsri-teaser';
 import { WntiPaymentAmountPicker } from './components/wnti-payment-amount-picker';
 import { WntiTitleBlock } from './components/wnti-title-block';
 import deOverriden from './locales/deOverriden.json';
-import theme from './theme';
+import theme, { WntiGlobalStyles } from './theme';
 import { wntiTenant } from './wnti-tenant';
 
 describe('wntiTenant', () => {
@@ -52,6 +52,10 @@ describe('wntiTenant', () => {
 
   it('lists the block styles it styles itself', () => {
     expect(wntiTenant.blockStyles).toEqual(['ContextBox']);
+  });
+
+  it('declares the font faces the theme refers to', () => {
+    expect(wntiTenant.GlobalStyles).toBe(WntiGlobalStyles);
   });
 
   it('does not inject next specific builder props', () => {

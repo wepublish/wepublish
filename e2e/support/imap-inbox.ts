@@ -37,8 +37,8 @@ let purged: Promise<void> | undefined;
 /**
  * Reads mails from an IMAP mailbox. On review the API sends through the
  * Ethereal SMTP account, which keeps every relayed mail, whatever the
- * recipient, in that account's INBOX; bexio's own invoice mails to an
- * @ethereal.email reader arrive there too.
+ * recipient, in that account's INBOX. Ethereal takes no mail from outside
+ * servers; that goes to the Resend inbox (`resend-inbox.ts`).
  */
 export class ImapInbox implements Inbox {
   private client?: ImapFlow;

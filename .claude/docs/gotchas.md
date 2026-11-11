@@ -35,6 +35,16 @@ Pinned by `article-access.spec.ts` and `view-article.resolver.spec.ts`.
 
 ---
 
+### ⚠️ `tsc -p apps/editor` checks nothing and exits 0
+
+`apps/editor`, `apps/media` and `apps/api-example` have a solution-style
+`tsconfig.json` (`"files": []`, only `references`), so `pnpm tsc -p apps/editor
+--noEmit` compiles zero files and reports success. CI's `website-typecheck.yml`
+runs `tsc --noEmit -p apps/editor/tsconfig.app.json` inside the editor build and
+fails (2026-11-09: a `printIssues` field missing from three `libs/membership/editor`
+call sites, green locally on Vitest and on the useless `tsc`). Run
+`pnpm nx run editor:typecheck` after touching the editor or any `libs/*/editor`.
+
 ### ⚠️ Prisma helpers are deliberately absent from the `@wepublish/testing` barrel
 
 [libs/testing/src/index.ts](../../libs/testing/src/index.ts) exports `act-wait`,
@@ -516,6 +526,31 @@ type-checks or tests this; only booting the image shows it.
 
 ---
 
+### ⚠️ The API binary's `Intl` has no locale data: never take names from it
+
+The API's Node comes from `@yao-pkg/pkg`, built with reduced ICU. Its
+`Intl.DisplayNames` knows no region names and hands the code back:
+`new Intl.DisplayNames(['de'], { type: 'region' }).of('CH')` is `'CH'` in the
+binary (and `'ZZ'` for the unknown region), `'Schweiz'` in plain Node —
+locally, in tests and in CI. Verified 2026-10-13 with a pkg-built
+`node22` binary: ICU 78.2, resolved locale `en-US`.
+
+It shipped «CH» into the address window of Neue Wege's letters, which Pingen
+reads, although every test and the local preview showed «Schweiz».
+
+Take country names from `i18n-iso-countries` (its `langs/` are a pkg asset in
+`docker/api_build_package.json`), as `countryName` in
+[`letter-recipient.ts`](../../libs/letter/api/src/lib/letter-recipient.ts)
+does. The same applies to locale-dependent `Intl` output in general (month
+names, `toLocaleDateString('de-CH')` and friends): assume English or raw values
+in the binary.
+
+Pinned by `libs/letter/api/src/lib/letter-recipient.spec.ts` («does not depend
+on the region names of the running Node»), which loads the module with an
+`Intl` that echoes codes.
+
+---
+
 ### ⚠️ Root `sideEffects` must list the API's Sentry instrumentation
 
 The root `package.json` marks every repo file side-effect free, so webpack
@@ -688,6 +723,63 @@ check-then-write at boot (`findUnique` then `create`) and even Prisma's
 Pinned by `google-analytics-db-config.spec.ts` and the "several replicas" cases
 in `reconcile-provider-registry.spec.ts`, whose fakes race like Prisma does.
 
+### ⚠️ The mail webhook answers 200 to a payload it cannot process — only a bad signature is a 401
+
+[mail.webhook.ts](../../libs/mail/api/src/lib/mail.webhook.ts) catches every
+error after `webhookForSendMail` and still returns 200; a
+`MailWebhookSignatureError` becomes 401. Returning 500 looks more honest but
+is wrong for every provider we have or plan: Mandrill and Mailgun retry on 5xx
+and fail the same way again, and Brevo retries only 429/timeouts and **drops
+the event for good** on any other answer (verified in Brevo's retry docs,
+2026-10-11), so a 500 would lose a bounce forever. Evidence stays in our log,
+and the nightly `MailLogSyncService` poll reconciles what a webhook missed.
+
+**Load-bearing:** the `catch` that logs and falls through to
+`res.status(200)`, and the `instanceof MailWebhookSignatureError` → 401 branch.
+Providers must throw `MailWebhookSignatureError`, not a plain `Error`, for a
+failed signature.
+
+Pinned by `libs/mail/api/src/lib/mail.webhook.spec.ts` ("refuses a call that
+does not come from the provider", "answers 200 to a payload it cannot handle").
+
+---
+
+### ⚠️ The letter sheet keeps `@page { margin: 0 }`; stationery space comes from the table spacers
+
+`composeLetter` (`libs/letter/api/src/lib/letter-renderer.ts`) positions the
+Pingen address window absolutely at 60mm from the sheet top and puts the
+header/footer bands in `position: fixed` boxes. Space for the bands on every
+page is reserved by the `thead`/`tfoot` spacer rows of the `.flow` table, which
+Chromium repeats per page, and page 1's body offset is reduced by the header
+spacer so the text still starts at 90mm.
+
+Reserving the bands with `@page` margins instead moves the address window by
+the top margin and Pingen rejects the letter; a fixed box offset into the
+margin area is clipped by Chromium. The band cap of 40mm (`LAYOUT_BAND_MAX_MM`)
+keeps a header out of the franking zone, whose bottom edge is at 87.5mm.
+
+**Load-bearing:** `margin: 0` in the `@page` rule, the thead/tfoot spacer rows,
+and `CONTENT_TOP_MM - headerSpace` for the body padding.
+
+Pinned by `libs/letter/api/src/lib/letter-renderer.spec.ts`.
+
+### ⚠️ `prisma migrate dev` refuses to run against a database other branches migrated
+
+The local Postgres is shared by every worktree. Once a migration from another
+branch has been applied to it, `prisma migrate dev` in a worktree that lacks
+that folder reports it as missing and wants to reset the database, which drops
+every table (`migrate status` still says "up to date", it does not flag extra
+migrations).
+
+Write the migration by hand instead: `npx prisma migrate diff
+--from-config-datasource --to-schema libs/api/prisma/schema.prisma --script`
+prints the SQL (strip the parts that belong to the other branches), put it in a
+`YYYYMMDDHHMMSS_name/migration.sql` folder, then `npx prisma migrate deploy`
+applies only the pending folders and does not care about extra ones
+(verified 2026-10-15 with `20261015100000_letter_layout`).
+
+Nothing guards this — a reset here is silent until the data is gone.
+
 ---
 
 ### ⚠️ A `MailchimpSyncError` row takes its user out of every Mailchimp sync
@@ -836,6 +928,12 @@ compiler before ("Compilation Skipped: Use of incompatible library"); removing
 `watch` lets it compile them, which can surface fresh `set-state-in-effect`
 errors in code that was never checked.
 
+Two siblings, linted in `libs/form/*`: spreading RHF's form object
+(`{ ...form, extra }` is memoised on `form`, whose `formState` RHF swaps every
+render, so `isLoading` stays `true`) and reading `useFormContext().formState`
+(frozen at its first value) — use the `useSchemaForm` handle and
+`useFormState`/`useFormStatus` ([libs/form/README.md](../../libs/form/README.md#react-compiler-rules)).
+
 ---
 
 ### ⚠️ The compiler turns a hoisted inner function into a `const`
@@ -870,6 +968,9 @@ a case in `use-seeded-state.spec.tsx`.
 
 The same render guards the cure: a view with async `defaultValues` should
 return nothing until `formState.isLoading` clears.
+
+Don't reach for the hook in new code at all — see code-style.md. It is kept
+for the views that still use it.
 
 ---
 
@@ -1109,14 +1210,21 @@ may not import `scope:api-only` libs (`website-revalidation`,
 against Apollo and Prisma. The profiles behind
 [`LinkCache`](../../libs/media/api/src/lib/link-cache/link-cache.ts), each
 shared one kept locally for 2 s:
-- `media:links` (`val:media:links:<sha>`): objects that exist. Shared, 3 days,
-  across releases.
+- `media:links` (`val:media:links:<sha>`): objects that exist. Shared, across
+  releases. Documents, video and audio: 3 days, written by the controller.
+  Image variants: written by `MediaService` when it transforms, and live
+  exactly as long as the transformed object: 30 days from its
+  `lastModified` (`TRANSFORMED_IMAGE_TTL`, the transformation bucket's
+  lifecycle rule; change both together). A link that outlived its object
+  redirected to a deleted file and never triggered a new transform. An
+  object past 30 days the bucket has not deleted yet is transformed again.
 - `media:rejected-variants` (`val:<release>:media:rejected-variants:<sha>`):
   variants the guard rejects (400), 1 h, per release since a deploy can change
   the guard's limits. Only signed requests get that far.
 - `media:missing-links`: objects that don't exist. 4 h and **local only**.
 - `media:generations` (`val:media:generations:<sha>`): written only by the
-  authenticated image/document `DELETE`, 3 days. Every link key hashes
+  authenticated image/document `DELETE`, as long as the longest link (30
+  days); any shorter and a forgotten link comes back. Every link key hashes
   `[id, generation, variant]`, so a delete orphans all variants of that id on
   every replica within 2 s (each replica re-reads an id's generation at most
   every 2 s, remembered in the local `media:generation-checks`). Variants
@@ -1131,6 +1239,12 @@ misses included, is kept for at most 30 s, so the media server goes back to R2
 more often for the length of the outage.
 A Dragonfly misconfiguration crash-loops the media pod, as it does the API's,
 so the media image ships `/wepublish/ca.crt` for `NODE_EXTRA_CA_CERTS`.
+
+---
+
+### ⚠️ Prisma 7 with the pg adapter names the unique index, not the fields
+
+The API sends ``Unique constraint failed on the constraint: `consents_slug_key` ``, which `humanizeError`'s `fields: (…)` regex misses; match it with `uniqueConstraint(...)` from `@wepublish/form/editor` (pinned by `libs/form/editor/src/lib/view/unique-constraint.spec.ts`).
 
 ---
 
@@ -1156,6 +1270,194 @@ gives `.tsx` to ts-loader with `importHelpers`, not swc) must stay in
 `apps/api-example/package.json` — see [infrastructure.md](infrastructure.md).
 
 ---
+
+### ⚠️ A long editor page must opt out of shrinking, or its tables and cards scroll inside themselves
+
+The editor shell (`apps/editor/src/app/base.tsx`) is `100vh` with the content
+frame as a flex column that scrolls (`flex: 1 1 auto; overflow-y: auto`). A
+page that returns a fragment hands every top-level block to that column as a
+flex item. A block with its own overflow, which MUI's `TableContainer`
+(`overflow-x: auto`) and `Card` (`overflow: hidden`) both set, gets
+`min-height: 0` and shrinks: the table grows a vertical scrollbar and the card
+clips its content, while the page itself does not scroll.
+
+Seen on the delivery suggestions page on 2026-10-19: the audience filter card
+was cut off and the suggestions table scrolled on its own.
+
+Wrapping the page in `<div style={{ flexShrink: 0 }}>` keeps it one
+non-shrinking block, so the frame scrolls it as a whole. `mail-send-page.tsx`,
+`mail-template-edit.tsx` and `mail-log-list.tsx` do this already; list pages
+built on `TableWrapper` + `fillHeight` want the opposite and must not.
+
+**Load-bearing:** the wrapper div in `delivery-channel-page.tsx` (its views
+render inside it and must not add one of their own) and the three pages above.
+
+Nothing guards this — a regression here is silent until someone resizes the
+window.
+### ⚠️ An inline script in a route's `head()` re-runs on every navigation
+
+`head()` can return `scripts`, and `RouterManagedScriptTag` takes `children`,
+so an inline snippet type-checks and server-renders correctly. It is still the
+wrong home for anything that must run once.
+
+`HeadContent` is a `"use client"` component that renders those tags from
+reactive router state, on the server *and* the client. Measured on the built
+server: a counter in the root route's `head().scripts` read 1 after hydration,
+then 2 and 3 after two client-side navigations, with the `<script>` tags
+piling up in `<head>`. Being identical across routes does not help — the tag
+is re-rendered per match.
+
+So analytics initialisers (`gtag('config')`, the GTM IIFE, the Plausible
+shim) stay in the `Analytics` component. They are not idempotent, and moving
+them would double-fire them on every navigation.
+
+For a one-shot bootstrap — `window.PUBLIC_ENV`, `window.WEBSITE_SETTINGS` —
+use `ScriptOnce` from `@tanstack/react-router`. It renders server-side only,
+carries the CSP nonce from `router.options.ssr.nonce`, and appends
+`document.currentScript.remove()` so nothing survives in the hydrated DOM.
+
+---
+
+### ⚠️ A TanStack build that works locally can still ship a broken `.output`
+
+[`apps/gruppetto/vite.config.mts`](../../apps/gruppetto/vite.config.mts) aliases
+two specifiers to their ESM equivalents in `resolve.alias`. They look
+redundant — nothing in the app imports React from a CJS module, and the build
+is green without them.
+
+Vite externalises `react` for the SSR environment. Rolldown then inlines any
+CJS dependency it cannot externalise safely and emits a literal
+`__require("react")` inside it, which nitro's second pass cannot rewrite. The
+call resolves against `node_modules` on disk, and `.output` ships without one,
+so every SSR render dies with `Cannot find module 'react'` — while `nx build`
+exits 0. The offenders here are `react-transition-group/cjs` (reached through
+MUI) and `use-sync-external-store/shim` (reached through `swr` and
+`@tanstack/react-store`). Upstream closed this as working-as-intended:
+[rolldown#10643](https://github.com/rolldown/rolldown/issues/10643).
+
+Whether it happens depends on whether the package is reachable from the **root**
+`node_modules`. A workspace carrying hoisted leftovers from the npm era
+resolves them to their ESM builds and never reproduces it; CI's clean
+`pnpm install --frozen-lockfile` does. To reproduce a CI build locally,
+`git archive` the branch into a temp directory and install there — do not trust
+your own `node_modules`.
+
+Do **not** "fix" it by adding `react` to the nitro `traceDeps`. The require then
+resolves to a second React copy, hooks fail against the bundled copy's
+dispatcher, and SSR degrades to an empty shell while still returning 200.
+`ssr.noExternal: ['react']` removes the require too, but hands react-dom/server
+its own copy and every render dies on a null hook dispatcher — hence the
+aliases.
+
+[`docker/check-nitro-output.js`](../../docker/check-nitro-output.js) runs in the
+`build-website-tanstack` stage and fails the image build on any specifier —
+`require()`, dynamic `import()` or static `import ... from` — that is neither
+bundled, traced, nor a node builtin. The same bug hid
+`@sentry/server-runtime-injection`, which `@sentry/node` imports and nitro did
+not trace, and later `@sentry/tanstackstart-react`, which the `--import`
+preload resolves at runtime from a build of its own.
+
+### ⚠️ A migrated tenant can pass every gate and still render the wrong page
+
+mannschaft.com, cültür.ch and ganzgraz.at each shipped a regression that
+survived `nx build`, `lint`, `typecheck`, the specs,
+[`docker/check-nitro-output.js`](../../docker/check-nitro-output.js) and
+[`tools/tanstack-route-parity.mjs`](../../tools/tanstack-route-parity.mjs).
+Verified live on 2026-11-04: munotgloeggli.ch and ganzgraz.at served MUI's
+default pink `#e91e63` ten and twelve times in their rendered `<style>`, with
+their configured primary (`#dc0d15`, `#4E2996`) present only inside the
+`WEBSITE_SETTINGS` JSON; mannschaft.com logged `Not allowed to load local
+resource: file:///wepublish/.output/server/_ssr/fonts/Plain-Light.otf`.
+
+The route check asks whether every URL still answers. None of these changed a
+status code. What was lost each time was something the Next `pages/_app.tsx`
+or `pages/index.tsx` did that the shared route factories do not:
+`settingsTheme` on `TenantProviders`, `thirdParty: {stripe}`, a
+`DailyBriefingContext.Provider` that only the home page mounted, a
+`styled(PageContainer)` wrapper, and a `fullWidth={false}` that a grep for the
+component name read as "present, so copy the usual one".
+
+**Load-bearing:** [`tools/tanstack-shell-parity.mjs`](../../tools/tanstack-shell-parity.mjs)
+diffs those two file pairs per tenant and fails on anything the Next side
+mentions and the TanStack side does not. Run it for every migration; it would
+have caught five of the six. The sixth is the font URL — emotion emits
+`@font-face` during SSR, where `import.meta.url` is a path on disk, so fonts
+must be static asset imports and the proof is
+`grep -r "file://" dist/apps/<tenant>/.output/server` finding nothing.
+
+Only `ganzgraz` and `munotgloeggli` take `settingsTheme`; every other tenant's
+`createTheme: () => theme` ignores it deliberately, so wiring the prop
+elsewhere is a behaviour change, not a fix.
+
+---
+
+### ⚠️ Cancelling an unsent renewal invoice does not make the nightly job create it again
+
+`PeriodicJobService.createRemoteInvoice`
+(`libs/membership/api/src/lib/periodic-job/periodic-job.service.ts`)
+hard-deletes the we.publish invoice — payment, `subscriptionPeriod`,
+`invoiceItem`, invoice, in that order — when the payment provider could not
+create its side of it.
+
+`getActiveSubscriptionsWithoutInvoice` (`subscription.service.ts`) requires not
+only no open invoice but `periods: { none: { startsAt: { gt: runDate } } }`.
+The invoice's period starts in the future (the invoice is created up to 90 days
+ahead), so `canceledAt` alone keeps the subscription excluded until `paidUntil`,
+and `getNextPeriod` then continues after the orphaned period: a whole
+periodicity of coverage is skipped.
+
+**Load-bearing:** all four deletes. `SubscriptionPeriod.invoiceID` has no
+cascade and `InvoiceItem.invoiceId` is `SetNull`, so each must go explicitly,
+as `upgrade-subscription.service.ts` does.
+
+Pinned by `periodic-job.service.spec.ts` («removes the invoice when the
+provider could not create it»).
+
+---
+
+### ⚠️ Apollo Client 4's `useLazyQuery` ignores `onCompleted` / `onError` without a type error
+
+The editor runs `@apollo/client` 4. Its lazy queries no longer call
+`onCompleted` or `onError`, yet passing them still typechecks. A download
+written as `useLazyQuery(Doc, { onCompleted: data => download(data) })` runs
+the query and then does nothing (2026-11-08: the print-issue «CSV
+herunterladen» buttons; the API answered correctly the whole time).
+
+Await the trigger instead: it resolves with `{ data }` and rejects on an
+error, as `libs/ui/editor/src/lib/panel/exportSubscriptions.tsx` and
+`libs/print-issue/editor/src/lib/print-issue-list-view.tsx` do. A spec that mocks
+`useLazyQuery` must not call `onCompleted` either, or it hides the bug.
+
+Pinned by `libs/print-issue/editor/src/lib/print-issue-list-view.spec.tsx`
+(«lists the draft with its options, CSV, edit, delivered and delete, and the merged list»).
+
+### ⚠️ `prisma migrate deploy` targets `DIRECT_DATABASE_URL` from `.env`, not the `DATABASE_URL` you pass
+
+[prisma.config.ts](../../prisma.config.ts) loads `.env` and takes
+`process.env['DIRECT_DATABASE_URL'] || process.env['DATABASE_URL']` as the
+datasource («DIRECT_DATABASE_URL bypasses PgBouncer»). So
+`DATABASE_URL=postgresql://…/throwaway pnpm prisma migrate deploy` still
+migrates whatever `.env`'s `DIRECT_DATABASE_URL` points at.
+
+Verified 2026-11-08 in a worktree: the command printed «All migrations have
+been successfully applied» while the throwaway database stayed empty, and 12
+migrations (11 from master plus the branch's own) had landed in the shared
+`wepublish` database of another checkout's Docker stack. The API booted
+against the throwaway database then died with `relation
+"public.settings.analyticsProvider" does not exist`.
+
+Override **both** variables for any Prisma CLI call that must hit another
+database: `DATABASE_URL=… DIRECT_DATABASE_URL=… pnpm prisma migrate deploy`.
+The running API reads only `DATABASE_URL`
+(`libs/nest-modules/src/lib/database/prisma.service.ts`), which is why the
+boot and the migration disagreed.
+
+**Load-bearing:** the `DIRECT_DATABASE_URL` preference in `prisma.config.ts`
+is what production relies on for advisory locks through PgBouncer; do not
+"fix" it by dropping the fallback order.
+
+Nothing guards this — a regression here is silent: the CLI reports success
+against the wrong database.
 
 ## Adding an entry
 

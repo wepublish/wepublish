@@ -1,7 +1,11 @@
 # We.Publish
 
-Nx monorepo: NestJS/GraphQL API, a React admin editor, and ~20 Next.js tenant
-websites, sharing code through `libs/`. **Different parts of this repo use
+Nx monorepo: NestJS/GraphQL API, a React admin editor, and ~20 tenant
+websites, sharing code through `libs/`. Tenant sites are Next.js 16 (Pages Router)
+or TanStack Start — an app with a `vite.config.mts` is a TanStack one (cultur,
+factuel, fazetten, flimmer, ganzgraz, gruppetto, mannschaft, munotgloeggli,
+website-example, wnti). Read [tanstack-start-migration.md](.claude/docs/tanstack-start-migration.md)
+before working on one or migrating another tenant (it is not `@`-included). **Different parts of this repo use
 different test runners and different verification commands** — read
 [repo-map.md](.claude/docs/repo-map.md) to work out which stack you are in
 before you start.
@@ -13,7 +17,8 @@ before you start.
    test exists. Details and per-stack patterns:
    [testing.md](.claude/docs/testing.md).
 2. **Verify before claiming done.** Run `pnpm nx affected -t lint test --uncommitted`
-   (plus `tsc --noEmit` if you touched `apps/`) and read the output. Never say
+   (plus `tsc --noEmit` if you touched `apps/`; `pnpm nx run editor:typecheck`
+   for the editor or an editor lib) and read the output. Never say
    "done", "fixed", or "tests pass" without having run the command in this
    session: [verification.md](.claude/docs/verification.md).
 3. **Never commit.** The user commits. See

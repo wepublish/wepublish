@@ -2,6 +2,7 @@ import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   Autocomplete,
+  AutocompleteRenderInputParams,
   Divider as MuiDivider,
   Paper,
   PaperProps,
@@ -13,7 +14,7 @@ import {
   MemberPlanSort,
   SortOrder,
 } from '@wepublish/editor/api';
-import { useCallback, useMemo, useState } from 'react';
+import { ReactNode, useCallback, useMemo, useState } from 'react';
 
 import { humanizeError } from '../../humanizeError';
 import { Pagination } from '../../listView/pagination';
@@ -30,21 +31,34 @@ const StyledPagination = styled(Pagination)`
 interface SelectMemberPlanProps {
   className?: string;
   disabled?: boolean;
+  readOnly?: boolean;
+  id?: string;
   name?: string;
   defaultMemberPlan?: Pick<FullMemberPlanFragment, 'id' | 'name'> | null;
   selectedMemberPlan?: string | null;
   setSelectedMemberPlan(memberPlanId: string | null): void;
+  label?: ReactNode;
+  'aria-labelledby'?: string;
+  renderInput?: (params: AutocompleteRenderInputParams) => ReactNode;
 }
+
+const take = 50;
 
 export function SelectMemberPlan({
   className,
   disabled,
+  readOnly,
+  id,
   name,
   defaultMemberPlan,
   selectedMemberPlan,
   setSelectedMemberPlan,
+  label,
+  'aria-labelledby': ariaLabelledby,
+  renderInput,
 }: SelectMemberPlanProps) {
   const [page, setPage] = useState(1);
+  const [search, setSearch] = useState('');
 
   const showErrors = (error: Error): void => {
     enqueueSnackbar(humanizeError(error), {
@@ -53,13 +67,16 @@ export function SelectMemberPlan({
     });
   };
 
-  const { data: memberplansData, refetch } = useQuery(MemberPlanListDocument, {
+  const { data, previousData } = useQuery(MemberPlanListDocument, {
     variables: {
+      filter: search ? { name: search } : undefined,
       sort: MemberPlanSort.CreatedAt,
       order: SortOrder.Ascending,
-      take: 50,
+      take,
+      skip: (page - 1) * take,
     },
   });
+  const memberplansData = data ?? previousData;
 
   const availableMemberPlans = useMemo(() => {
     const nodes = memberplansData?.memberPlans?.nodes ?? [];
@@ -92,7 +109,7 @@ export function SelectMemberPlan({
           <StyledPagination
             state={{
               page,
-              limit: 50,
+              limit: take,
               setPage,
               setLimit: () => undefined /* page size is fixed here */,
             }}
@@ -106,30 +123,39 @@ export function SelectMemberPlan({
 
   return (
     <Autocomplete
+      id={id}
       disabled={disabled}
+      readOnly={readOnly}
       className={className}
       options={availableMemberPlans.map(plan => plan.value)}
       getOptionLabel={id =>
         availableMemberPlans.find(plan => plan.value === id)?.label ?? id
       }
       filterOptions={options => options}
-      onInputChange={(_event, word) =>
-        refetch({
-          filter: word ? { name: word } : undefined,
-          sort: MemberPlanSort.CreatedAt,
-          order: SortOrder.Ascending,
-          take: 50,
-        })
-      }
+      onInputChange={(_event, word) => {
+        setPage(1);
+        setSearch(word);
+      }}
       value={selectedMemberPlan ?? null}
       onChange={(_event, value) => setSelectedMemberPlan(value)}
       slots={{ paper: PaperWithPager }}
-      renderInput={params => (
-        <TextField
-          {...params}
-          name={name}
-        />
-      )}
+      renderInput={
+        renderInput ??
+        (params => (
+          <TextField
+            {...params}
+            label={label}
+            slotProps={{
+              ...params.slotProps,
+              htmlInput: {
+                ...params.slotProps.htmlInput,
+                'aria-labelledby': ariaLabelledby,
+              },
+            }}
+            name={name}
+          />
+        ))
+      }
       fullWidth
     />
   );

@@ -21,6 +21,10 @@ Each project has a `vitest.config.ts` that delegates to the root
 | `libs/*/editor`, `libs/utils`, `apps/<tenant>` | `environment: 'happy-dom'` (default), `react: true` |
 | `libs/*/website`, `libs/ui`, `libs/website`, `libs/tenants/*` | the same, plus `website: true` |
 
+`apps/editor`, `libs/form/*` and editor libs migrated to the form library
+also pass `reactCompiler: true`, so their specs run compiled like the editor
+build ([libs/form/README.md](../../libs/form/README.md#testing)).
+
 NestJS projects **must** pass `nest: true`. It switches the transform to swc
 (es2021 + `decoratorMetadata`) and loads `vitest.setup-nest.ts`. Without it,
 esbuild drops `design:paramtypes`, so Nest constructor injection (e.g.
@@ -196,12 +200,16 @@ config spec, an `index.spec.ts` that catches circular imports, and a
 
 ### Editor libs (Vitest + Apollo mocks)
 
-The editor is a React Router SPA talking to Apollo. Wrap in `BrowserRouter` and
-`MockedProvider`, and stub `getApiClientV2` when the component uses the v2 client:
+The editor is a React Router SPA talking to Apollo, on a data router
+(`createBrowserRouter`) so `useBlocker` works — `useUnsavedChangesDialog` throws
+under a plain `BrowserRouter`. Render with
+`<RouterProvider router={createMemoryRouter([{ path: '*', element: <X /> }])} />`
+and `MockedProvider`, and stub `getApiClientV2` when the component uses the v2
+client:
 
 ```tsx
 import { MockedProvider, MockLink } from '@apollo/client/testing';
-import { BrowserRouter } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import * as v2Client from '@wepublish/editor/api';
 
 vi.spyOn(v2Client, 'getApiClientV2').mockReturnValue(
@@ -220,7 +228,7 @@ logic belongs in a lib and is tested there. What the app itself needs is a
 36 snapshot directories exist, mostly for website components. Update them with:
 
 ```bash
-pnpm nx test <project> --configuration=update    # single project
+pnpm nx test <project> -- -u                    # single project (--configuration=update does not exist)
 pnpm run test-u                                  # entire workspace
 ```
 

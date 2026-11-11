@@ -4,6 +4,9 @@ fragment FullMailLog on MailLogModel {
   sentDate
   state
   type
+  channel
+  providerLetterID
+  address
   subject
   error
   mailProviderID

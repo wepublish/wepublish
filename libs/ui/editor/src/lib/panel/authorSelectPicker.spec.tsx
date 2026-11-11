@@ -66,6 +66,16 @@ beforeEach(() => {
 });
 
 describe('AuthorSelectPicker', () => {
+  it('labels its field', () => {
+    renderPicker();
+
+    expect(
+      screen.getByRole('combobox', {
+        name: 'articleEditor.panels.selectAuthor',
+      })
+    ).toBeInTheDocument();
+  });
+
   it('shows the name of the author that was picked', async () => {
     renderPicker();
 

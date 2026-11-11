@@ -15,6 +15,7 @@ import { NodeAdapter } from '@nestjs/platform-node';
 import { NodeApolloDriver } from '@wepublish/utils/api';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { APP_GUARD } from '@nestjs/core';
+import { FeaturesService } from '@wepublish/features/api';
 import { PermissionsGuard } from '@wepublish/permissions/api';
 import request from 'supertest';
 import {
@@ -82,6 +83,20 @@ const prismaServiceMock = {
   },
 };
 
+const letterPreviewQuery = `
+  query MailTemplateLetterPreview($input: MailTemplatePreviewInput!) {
+    mailTemplateLetterPreview(input: $input) {
+      pdf
+    }
+  }
+`;
+
+const letterChannelAvailableQuery = `
+  query LetterChannelAvailable {
+    letterChannelAvailable
+  }
+`;
+
 const mailProviderServiceMock = {
   getName: vi.fn(async () => 'MockProvider'),
 };
@@ -91,10 +106,17 @@ const mailContextMock = {
   getUsedTemplateIdentifiers: vi.fn((): string[] => [mockTemplate2.id]),
 };
 
+// Paper letters ship dark; the guard asks this before every letter operation.
+const featuresMock = {
+  isEnabled: vi.fn(async () => true),
+};
+
 const mailTemplateServiceMock = {
   deleteMailTemplate: vi.fn(async () => undefined),
   preview: vi.fn(async () => ({ subject: 's', html: 'h', text: undefined })),
   sendTest: vi.fn(async () => undefined),
+  previewLetter: vi.fn(async () => ({ pdf: 'cGRm' })),
+  isLetterChannelAvailable: vi.fn(async () => true),
 };
 
 @Module({
@@ -114,6 +136,7 @@ const mailTemplateServiceMock = {
     MailTemplatesResolver,
     UsedMailTemplateDataloader,
     { provide: MailTemplateService, useValue: mailTemplateServiceMock },
+    { provide: FeaturesService, useValue: featuresMock },
     {
       provide: APP_GUARD,
       useClass: PermissionsGuard,
@@ -142,6 +165,7 @@ describe('MailTemplatesResolver', () => {
         { provide: PrismaClient, useValue: prismaServiceMock },
         { provide: MailContext, useValue: mailContextMock },
         { provide: MailTemplateService, useValue: mailTemplateServiceMock },
+        { provide: FeaturesService, useValue: featuresMock },
       ],
     }).compile();
 
@@ -246,9 +270,69 @@ describe('MailTemplatesResolver', () => {
     expect(mailContextMock.getUsedTemplateIdentifiers).toHaveBeenCalledTimes(1);
   });
 
+  it('renders a draft as a letter via the service', async () => {
+    const result = await resolver.mailTemplateLetterPreview(
+      { user: { id: 'editor-1' } } as any,
+      {
+        contextId: 'renewal',
+        subscriptionId: 'sub-1',
+        subject: 'ignored',
+        htmlContent: '<p>Hi</p>',
+      }
+    );
+
+    expect(mailTemplateServiceMock.previewLetter).toHaveBeenCalledWith({
+      contextId: 'renewal',
+      subscriptionId: 'sub-1',
+      currentUserId: 'editor-1',
+      html: '<p>Hi</p>',
+    });
+    expect(result).toEqual({ pdf: 'cGRm' });
+  });
+
+  it('reports whether the letter channel is available', async () => {
+    expect(await resolver.letterChannelAvailable()).toBe(true);
+    expect(mailTemplateServiceMock.isLetterChannelAvailable).toHaveBeenCalled();
+  });
+
   /**
    * Test if endpoints are not exposed to public
    */
+  it('letterChannelAvailable is not public', () => {
+    return request(app.getHttpServer())
+      .post('')
+      .send({ query: letterChannelAvailableQuery })
+      .expect(200)
+      .expect(({ body }) => {
+        expect(
+          !!body.errors.find(
+            (error: any) => error.message === 'Forbidden resource'
+          )
+        ).toEqual(true);
+        expect(body.data).toBeNull();
+      });
+  });
+
+  it('mailTemplateLetterPreview is not public', () => {
+    return request(app.getHttpServer())
+      .post('')
+      .send({
+        query: letterPreviewQuery,
+        variables: {
+          input: { contextId: 'custom', subject: 's', htmlContent: 'h' },
+        },
+      })
+      .expect(200)
+      .expect(({ body }) => {
+        expect(
+          !!body.errors.find(
+            (error: any) => error.message === 'Forbidden resource'
+          )
+        ).toEqual(true);
+        expect(body.data).toBeNull();
+      });
+  });
+
   it('mailTemplates is not public', () => {
     return request(app.getHttpServer())
       .post('')

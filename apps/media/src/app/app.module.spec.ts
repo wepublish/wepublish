@@ -4,7 +4,8 @@ import { Test } from '@nestjs/testing';
 import type { NodeRequest, NodeResponse } from '@nestjs/platform-node';
 import { DragonflyConnection } from '@wepublish/dragonfly/api';
 import { FakeDragonfly } from '@wepublish/dragonfly/api/testing';
-import { MediaService } from '@wepublish/media/api';
+import { LinkCache, MediaService } from '@wepublish/media/api';
+import { getTransformationKey } from '@wepublish/media-transform-guard';
 import { AppController } from './app.controller';
 import { AppModule } from './app.module';
 import { NodeAdapter } from '@nestjs/platform-node';
@@ -17,6 +18,7 @@ const ENV = {
   S3_PUBLIC_HOST: 'https://media.example',
   API_URL: 'https://api.example',
   APP_RELEASE_ID: '2026.10.1',
+  MEDIA_FALLBACK_URL: 'https://fallback.example',
 };
 
 const createResponse = () => {
@@ -49,12 +51,15 @@ describe('AppModule', () => {
     vi.unstubAllGlobals();
   });
 
+  let media: Pick<MediaService, 'getImageUri' | 'hasImage'>;
+
   const start = async (dragonfly: FakeDragonfly) => {
-    const media = {
+    media = {
       getImageUri: vi
         .fn()
         .mockResolvedValue({ uri: 'images/image-1/{}', exists: true }),
-    } satisfies Pick<MediaService, 'getImageUri'>;
+      hasImage: vi.fn().mockResolvedValue(true),
+    } satisfies Pick<MediaService, 'getImageUri' | 'hasImage'>;
     const module = await Test.createTestingModule({ imports: [AppModule] })
       .overrideProvider(DragonflyConnection)
       .useValue(dragonfly)
@@ -71,6 +76,10 @@ describe('AppModule', () => {
   it('serves a link through the shared link cache', async () => {
     const dragonfly = new FakeDragonfly();
     const started = await start(dragonfly);
+    await started.get(LinkCache).set('image-1', getTransformationKey({}), {
+      uri: 'images/image-1/{}',
+      exists: true,
+    });
 
     await started
       .get(AppController)
@@ -81,6 +90,7 @@ describe('AppModule', () => {
         {}
       );
 
+    expect(media.getImageUri).not.toHaveBeenCalled();
     expect(dragonfly.commands).toContainEqual([
       'SET',
       expect.stringMatching(/^val:media:links:[0-9a-f]{64}$/),

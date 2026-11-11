@@ -511,4 +511,102 @@ describe('SubscriptionEventDictionary', () => {
       'Subscription Flow with no memberplan found that is not default! This is a data integrity error!'
     );
   });
+
+  describe('letter switch', () => {
+    const defaultFlow = {
+      id: 'default-flow',
+      default: true,
+      memberPlanId: null,
+      periodicities: [PaymentPeriodicity.monthly],
+      autoRenewal: [true, false],
+      createdAt: new Date(),
+      modifiedAt: new Date(),
+      intervals: [
+        {
+          id: 'default-interval-1',
+          event: SubscriptionEvent.SUBSCRIBE,
+          daysAwayFromEnding: null,
+          mailTemplate: { id: 'default-SUBSCRIBE' },
+          sendAsLetter: true,
+        },
+        {
+          id: 'default-interval-2',
+          event: SubscriptionEvent.INVOICE_CREATION,
+          daysAwayFromEnding: -14,
+          mailTemplate: { id: 'default-INVOICE_CREATION' },
+          sendAsLetter: false,
+        },
+      ],
+      paymentMethods: [{ id: 'payrexx', name: 'Payrexx' }],
+    };
+
+    const subscription = {
+      memberPlanID: 'plan-1',
+      paymentMethodID: 'payrexx',
+      paymentPeriodicity: PaymentPeriodicity.monthly,
+      autoRenew: true,
+    } as any;
+
+    it('carries the letter switch of each interval', async () => {
+      prismaMock.subscriptionFlow.findMany!.mockResolvedValue([defaultFlow]);
+
+      const actions = await new SubscriptionEventDictionary(
+        prismaMock as any
+      ).getActionsForSubscriptions({
+        memberplanId: 'plan-1',
+        periodicity: PaymentPeriodicity.monthly,
+        paymentMethodId: 'payrexx',
+        autorenwal: true,
+        events: [
+          SubscriptionEvent.SUBSCRIBE,
+          SubscriptionEvent.INVOICE_CREATION,
+        ],
+      });
+
+      expect(
+        actions.find(a => a.type === SubscriptionEvent.SUBSCRIBE)?.sendAsLetter
+      ).toBe(true);
+      expect(
+        actions.find(a => a.type === SubscriptionEvent.INVOICE_CREATION)
+          ?.sendAsLetter
+      ).toBe(false);
+    });
+
+    it('tells which template an event uses and whether it prints', async () => {
+      prismaMock.subscriptionFlow
+        .findFirst!.mockResolvedValueOnce(null)
+        .mockResolvedValueOnce({
+          ...defaultFlow,
+          intervals: [defaultFlow.intervals[0]],
+        });
+
+      await expect(
+        new SubscriptionEventDictionary(
+          prismaMock as any
+        ).getSubscriptionTemplateAction(
+          subscription,
+          SubscriptionEvent.SUBSCRIBE
+        )
+      ).resolves.toEqual({
+        mailTemplateId: 'default-SUBSCRIBE',
+        sendAsLetter: true,
+      });
+    });
+
+    it('has no action for an event without a template', async () => {
+      prismaMock.subscriptionFlow.findFirst!.mockResolvedValue({
+        ...defaultFlow,
+        intervals: [{ ...defaultFlow.intervals[0], mailTemplate: null }],
+      });
+
+      await expect(
+        new SubscriptionEventDictionary(
+          prismaMock as any
+        ).getSubscriptionTemplateAction(
+          subscription,
+          SubscriptionEvent.SUBSCRIBE
+        )
+      ).resolves.toBeUndefined();
+    });
+  });
 });

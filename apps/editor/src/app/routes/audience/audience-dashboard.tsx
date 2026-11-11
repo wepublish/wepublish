@@ -122,6 +122,7 @@ function AudienceDashboard({
             audienceStats={audienceStats}
             clientFilter={audienceClientFilter}
             loading={loading}
+            headingLevel={hideHeader ? 3 : 2}
           />
         </AudienceChartWrapper>
       )}

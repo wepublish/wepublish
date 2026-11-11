@@ -2,40 +2,16 @@ import { CSSObject } from '@emotion/react';
 import { createTheme, Theme, ThemeOptions } from '@mui/material';
 import { css, GlobalStyles } from '@mui/material';
 import { responsiveProperty, theme as WePTheme } from '@wepublish/ui';
-import localFont from 'next/font/local';
 import { mergeDeepRight, reduce } from 'ramda';
 import { PartialDeep } from 'type-fest';
 
-export const gtSuperText = localFont({
-  src: [
-    {
-      path: './fonts/gt-super-text/GT-Super-Text-Book.woff2',
-      weight: '400',
-      style: 'normal',
-    },
-    {
-      path: './fonts/gt-super-text/GT-Super-Text-Book-Italic.woff2',
-      weight: '400',
-      style: 'italic',
-    },
-    //
-    {
-      path: './fonts/gt-super-text/GT-Super-Text-Bold.woff2',
-      weight: '600',
-      style: 'normal',
-    },
-  ],
-});
+import fFFAcidGroteskRegular from './fonts/fff-acid-grotesk/FFF-AcidGrotesk-Regular.woff2';
+import gTSuperTextBold from './fonts/gt-super-text/GT-Super-Text-Bold.woff2';
+import gTSuperTextBookItalic from './fonts/gt-super-text/GT-Super-Text-Book-Italic.woff2';
+import gTSuperTextBook from './fonts/gt-super-text/GT-Super-Text-Book.woff2';
 
-export const fffAcidGrotesk = localFont({
-  src: [
-    {
-      path: './fonts/fff-acid-grotesk/FFF-AcidGrotesk-Regular.woff2',
-      weight: '400',
-      style: 'normal',
-    },
-  ],
-});
+export const gtSuperText = { family: 'GT Super Text' };
+export const fffAcidGrotesk = { family: 'FFF Acid Grotesk' };
 
 const {
   palette: { augmentColor },
@@ -74,7 +50,7 @@ const fontSmall = mergeDeepAll([
 ]);
 
 const titleBlock = {
-  fontFamily: [fffAcidGrotesk.style.fontFamily, 'sans-serif'].join(','),
+  fontFamily: [fffAcidGrotesk.family, 'sans-serif'].join(','),
   fontWeight: 400,
   ...mergeDeepAll([
     responsiveProperty({
@@ -108,7 +84,7 @@ const titleBlock = {
 };
 
 const lead = {
-  fontFamily: [gtSuperText.style.fontFamily, 'sans-serif'].join(','),
+  fontFamily: [gtSuperText.family, 'sans-serif'].join(','),
   ...mergeDeepAll([
     responsiveProperty({
       cssProperty: 'fontSize',
@@ -132,7 +108,7 @@ const lead = {
 };
 
 const paragraph = {
-  fontFamily: [gtSuperText.style.fontFamily, 'sans-serif'].join(','),
+  fontFamily: [gtSuperText.family, 'sans-serif'].join(','),
   letterSpacing: 0.1,
   ...mergeDeepAll([
     responsiveProperty({
@@ -161,30 +137,30 @@ const theme = createTheme(WePTheme, {
     h1: titleBlock,
     h2: titleBlock,
     h3: {
-      fontFamily: [fffAcidGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [fffAcidGrotesk.family, 'sans-serif'].join(','),
     },
     h4: {
-      fontFamily: [gtSuperText.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [gtSuperText.family, 'sans-serif'].join(','),
     },
     h5: {
       ...paragraph,
       fontWeight: 600,
     },
     h6: {
-      fontFamily: [gtSuperText.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [gtSuperText.family, 'sans-serif'].join(','),
     },
     body1: paragraph,
     body2: {
-      fontFamily: [gtSuperText.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [gtSuperText.family, 'sans-serif'].join(','),
     },
     button: {
       ...fontSmall,
-      fontFamily: [fffAcidGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [fffAcidGrotesk.family, 'sans-serif'].join(','),
       fontWeight: 400,
       letterSpacing: 0.8,
     },
     caption: {
-      fontFamily: [fffAcidGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [fffAcidGrotesk.family, 'sans-serif'].join(','),
       ...mergeDeepAll([
         responsiveProperty({
           cssProperty: 'fontSize',
@@ -205,18 +181,18 @@ const theme = createTheme(WePTheme, {
       ]),
     },
     overline: {
-      fontFamily: [gtSuperText.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [gtSuperText.family, 'sans-serif'].join(','),
     },
     subtitle1: lead,
     subtitle2: {
-      fontFamily: [gtSuperText.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [gtSuperText.family, 'sans-serif'].join(','),
     },
     articleAuthors: {
       ...fontSmall,
-      fontFamily: [fffAcidGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [fffAcidGrotesk.family, 'sans-serif'].join(','),
     },
     blockTitlePreTitle: {
-      fontFamily: [fffAcidGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [fffAcidGrotesk.family, 'sans-serif'].join(','),
       ...mergeDeepAll([
         responsiveProperty({
           cssProperty: 'fontSize',
@@ -237,7 +213,7 @@ const theme = createTheme(WePTheme, {
       ]),
     },
     teaserPretitle: {
-      fontFamily: [fffAcidGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [fffAcidGrotesk.family, 'sans-serif'].join(','),
       ...mergeDeepAll([
         responsiveProperty({
           cssProperty: 'fontSize',
@@ -258,7 +234,7 @@ const theme = createTheme(WePTheme, {
       ]),
     },
     teaserTitle: {
-      fontFamily: [fffAcidGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [fffAcidGrotesk.family, 'sans-serif'].join(','),
       ...mergeDeepAll([
         responsiveProperty({
           cssProperty: 'fontSize',
@@ -279,7 +255,7 @@ const theme = createTheme(WePTheme, {
       ]),
     },
     teaserLead: {
-      fontFamily: [gtSuperText.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [gtSuperText.family, 'sans-serif'].join(','),
       ...mergeDeepAll([
         responsiveProperty({
           cssProperty: 'fontSize',
@@ -300,7 +276,7 @@ const theme = createTheme(WePTheme, {
       ]),
     },
     teaserMeta: {
-      fontFamily: [fffAcidGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [fffAcidGrotesk.family, 'sans-serif'].join(','),
       ...mergeDeepAll([
         responsiveProperty({
           cssProperty: 'fontSize',
@@ -321,7 +297,7 @@ const theme = createTheme(WePTheme, {
       ]),
     },
     allVariants: {
-      fontFamily: [fffAcidGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [fffAcidGrotesk.family, 'sans-serif'].join(','),
     },
   },
   palette: {
@@ -354,7 +330,7 @@ const theme = createTheme(WePTheme, {
           alignItems: 'center',
         },
         message: {
-          fontFamily: [fffAcidGrotesk.style.fontFamily, 'sans-serif'].join(','),
+          fontFamily: [fffAcidGrotesk.family, 'sans-serif'].join(','),
           ...mergeDeepAll([
             responsiveProperty({
               cssProperty: 'fontSize',
@@ -408,10 +384,10 @@ const theme = createTheme(WePTheme, {
 export const ContentTheme = createTheme(theme, {
   typography: {
     body: {
-      fontFamily: [gtSuperText.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [gtSuperText.family, 'sans-serif'].join(','),
     },
     h3: {
-      fontFamily: [gtSuperText.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [gtSuperText.family, 'sans-serif'].join(','),
     },
   },
 } as PartialDeep<Theme> | ThemeOptions);
@@ -419,7 +395,7 @@ export const ContentTheme = createTheme(theme, {
 export const AlternatingTeaserTheme = createTheme(theme, {
   typography: {
     teaserTitle: {
-      fontFamily: [fffAcidGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [fffAcidGrotesk.family, 'sans-serif'].join(','),
       ...mergeDeepAll([
         responsiveProperty({
           cssProperty: 'fontSize',
@@ -445,7 +421,7 @@ export const AlternatingTeaserTheme = createTheme(theme, {
 export const TeaserSlotsTheme = createTheme(theme, {
   typography: {
     teaserSlotsTitle: {
-      fontFamily: [fffAcidGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [fffAcidGrotesk.family, 'sans-serif'].join(','),
       ...mergeDeepAll([
         responsiveProperty({
           cssProperty: 'fontSize',
@@ -486,6 +462,38 @@ export { theme as default };
 export const FazettenGlobalStyles = () => (
   <GlobalStyles
     styles={theme => css`
+      @font-face {
+        font-family: ${gtSuperText.family};
+        src: url(${gTSuperTextBook}) format('woff2');
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: ${gtSuperText.family};
+        src: url(${gTSuperTextBookItalic}) format('woff2');
+        font-weight: 400;
+        font-style: italic;
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: ${gtSuperText.family};
+        src: url(${gTSuperTextBold}) format('woff2');
+        font-weight: 600;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: ${fffAcidGrotesk.family};
+        src: url(${fFFAcidGroteskRegular}) format('woff2');
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+      }
+
       h1,
       h2,
       h3,

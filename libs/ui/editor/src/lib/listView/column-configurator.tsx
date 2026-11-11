@@ -66,10 +66,21 @@ type ColumnRowProps = {
   column: ColumnConfiguratorColumn;
   checked: boolean;
   sortable: boolean;
+  previousId?: string;
+  nextId?: string;
   onToggle: (id: string) => void;
+  onMove?: (id: string, before: string) => void;
 };
 
-const ColumnRow = ({ column, checked, sortable, onToggle }: ColumnRowProps) => {
+const ColumnRow = ({
+  column,
+  checked,
+  sortable,
+  previousId,
+  nextId,
+  onToggle,
+  onMove,
+}: ColumnRowProps) => {
   const canHide = column.canHide ?? true;
   const { t } = useTranslation();
   const {
@@ -88,7 +99,33 @@ const ColumnRow = ({ column, checked, sortable, onToggle }: ColumnRowProps) => {
       role="menuitemcheckbox"
       aria-checked={checked}
       aria-disabled={!canHide}
+      aria-keyshortcuts={sortable ? 'Alt+ArrowUp Alt+ArrowDown' : undefined}
       onClick={() => canHide && onToggle(column.id)}
+      onKeyDown={event => {
+        if (!sortable || !event.altKey) {
+          return;
+        }
+
+        const target =
+          event.key === 'ArrowUp' ? previousId
+          : event.key === 'ArrowDown' ? nextId
+          : undefined;
+
+        if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown') {
+          return;
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        if (!target) {
+          return;
+        }
+
+        const item = event.currentTarget;
+        onMove?.(column.id, target);
+        requestAnimationFrame(() => item.focus());
+      }}
       style={{
         transform: CSS.Transform.toString(transform),
         transition,
@@ -105,6 +142,10 @@ const ColumnRow = ({ column, checked, sortable, onToggle }: ColumnRowProps) => {
           onClick={event => event.stopPropagation()}
           {...attributes}
           {...listeners}
+          tabIndex={-1}
+          aria-hidden
+          aria-describedby={undefined}
+          aria-roledescription={undefined}
         >
           <MdDragIndicator />
         </DragHandle>
@@ -189,13 +230,16 @@ export const ColumnConfigurator = ({
               items={columns.map(column => column.id)}
               strategy={verticalListSortingStrategy}
             >
-              {columns.map(column => (
+              {columns.map((column, index) => (
                 <ColumnRow
                   key={column.id}
                   column={column}
                   checked={isVisible(column.id)}
                   sortable={!!onMove}
+                  previousId={columns[index - 1]?.id}
+                  nextId={columns[index + 1]?.id}
                   onToggle={onToggle}
+                  onMove={onMove}
                 />
               ))}
             </SortableContext>

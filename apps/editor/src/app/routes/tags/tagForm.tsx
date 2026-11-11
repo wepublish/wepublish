@@ -14,6 +14,7 @@ import {
   RichTextBlock,
   RichTextBlockValue,
 } from '@wepublish/ui/editor';
+import { useId } from 'react';
 import { Control, Controller, FieldValues, Path } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -45,6 +46,7 @@ export const TagForm = <Values extends TagFormValues & FieldValues>({
 }: TagFormProps<Values>) => {
   const { t } = useTranslation();
   const themeColors = useWebsiteThemeColors();
+  const descriptionLabelId = useId();
 
   return (
     <TagFormWrapper>
@@ -74,19 +76,14 @@ export const TagForm = <Values extends TagFormValues & FieldValues>({
               control={control}
               name={'color' as Path<Values>}
               render={({ field }) => (
-                <div>
-                  <FormLabel>
-                    {t('tags.overview.color')}{' '}
-                    <InfoTooltip text={t('tags.overview.colorInfo')} />
-                  </FormLabel>
-
-                  <ColorPicker
-                    {...field}
-                    value={field.value ?? ''}
-                    disabled={disabled}
-                    presetColors={themeColors}
-                  />
-                </div>
+                <ColorPicker
+                  {...field}
+                  label={t('tags.overview.color')}
+                  helperText={t('tags.overview.colorInfo')}
+                  value={field.value ?? ''}
+                  disabled={disabled}
+                  presetColors={themeColors}
+                />
               )}
             />
 
@@ -96,11 +93,14 @@ export const TagForm = <Values extends TagFormValues & FieldValues>({
               render={({ field }) => (
                 <div>
                   <FormLabel>
-                    {t('tags.overview.description')}{' '}
+                    <span id={descriptionLabelId}>
+                      {t('tags.overview.description')}
+                    </span>{' '}
                     <InfoTooltip text={t('tags.overview.descriptionInfo')} />
                   </FormLabel>
 
                   <RichTextBlock
+                    aria-labelledby={descriptionLabelId}
                     value={field.value}
                     onChange={field.onChange}
                   />

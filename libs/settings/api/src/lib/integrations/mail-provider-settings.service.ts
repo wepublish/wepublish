@@ -15,6 +15,7 @@ import { NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from './secrets-crypto';
 import { ProviderSettingsChanged } from './provider-settings-changed';
 import { clearProviderConfig } from './clear-provider-config';
+import { encryptSecrets } from './encrypt-secrets';
 
 @Injectable()
 export class MailProviderSettingsService {
@@ -29,20 +30,9 @@ export class MailProviderSettingsService {
   private encryptSecretsIfPresent<
     T extends { apiKey?: string | null; webhookEndpointSecret?: string | null },
   >(data: T): T {
-    let result = { ...data };
-    if (typeof data.apiKey === 'string' && data.apiKey.length > 0) {
-      result = { ...result, apiKey: this.crypto.encrypt(data.apiKey) };
-    }
-    if (
-      typeof data.webhookEndpointSecret === 'string' &&
-      data.webhookEndpointSecret.length > 0
-    ) {
-      result = {
-        ...result,
-        webhookEndpointSecret: this.crypto.encrypt(data.webhookEndpointSecret),
-      };
-    }
-    return result;
+    return encryptSecrets(data, ['apiKey', 'webhookEndpointSecret'], value =>
+      this.crypto.encrypt(value)
+    );
   }
 
   @PrimeDataLoader(MailProviderSettingsDataloaderService, 'id')

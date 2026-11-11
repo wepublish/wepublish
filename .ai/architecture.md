@@ -12,7 +12,7 @@ We.Publish is a headless CMS platform for publishers, built as an Nx monorepo. I
 │   ├── api-example/    # NestJS GraphQL API server (main backend)
 │   ├── editor/         # React CMS admin panel (Vite SPA, React Router)
 │   ├── media/          # NestJS media server (image transform + S3)
-│   ├── website-example/# Reference Next.js website frontend
+│   ├── website-example/# Reference website frontend (TanStack Start)
 │   └── <publisher>/    # Publisher-specific websites (bajour, tsri, mannschaft, etc.)
 ├── libs/               # Reusable libraries (~50 modules)
 │   ├── api/            # Core API library (Prisma schema, shared models)
@@ -31,7 +31,7 @@ We.Publish is a headless CMS platform for publishers, built as an Nx monorepo. I
 | `api-example` | NestJS (node:http adapter) + Apollo Server | 4000 | GraphQL API backend |
 | `editor` | Vite + React + React Router (client-rendered; Express host) | 3000 | Admin CMS interface |
 | `media` | NestJS (node:http adapter) | 4100 | Image upload, transformation, S3 storage |
-| `website-example` | Next.js | 4200 | Reference website frontend |
+| `website-example` | TanStack Start (Vite + nitro) | 4200 | Reference website frontend |
 
 **The editor is client-rendered — there is no SSR.** `nx build editor` produces
 two bundles: `browser` (the Vite client bundle) and `server`. The server is a
@@ -73,7 +73,9 @@ libs/<domain>/
 **Sitemaps:** every website serves `/api/sitemap` (plus `/api/sitemap/[chunk]`:
 `news`, `pages`, `articles-YYYY` per past year, `articles-YYYY-MM` per month
 of the current year in `index` mode) through
-`createSitemapHandlers` from `@wepublish/feed/website`. Per-media settings
+`createSitemapHandlers` from `@wepublish/feed/website` — TanStack tenants serve
+`/sitemap.xml` + `/sitemap/<chunk>` through its Fetch API twin
+`createSitemapFetchHandlers`, with `/api/sitemap` 301ing there. Per-media settings
 (`mode: 'single' | 'index'`, `pageUrls`, `homepageSlug`, `filterArticle`, url
 hooks) live in `apps/<app>/src/sitemap.ts`. Fetch with the lean `Sitemap*`
 documents (`libs/website/api/src/lib/schemas/sitemap.graphql`), never
@@ -104,9 +106,29 @@ readers, then an active *enforced* paywall alone, then the metered rules
 list links the paywalls, whose forms still live in `apps/editor` under
 `/articles/paywalls`.
 
+**llms.txt:** every website serves `/llms.txt` from the same `src/sitemap.ts`
+config, so its `filterArticle` and url hooks apply. It follows
+llmtxt.info/best-practices: one H1, a factual `description` blockquote (an
+encyclopedia opener, not a slogan), a "Last updated" line, one H2 per CMS
+navigation (published pages only when there is none), the 10 latest articles,
+one-sentence notes, no login/signup/profile URLs. Next tenants: `pages/api/llms.ts` with
+`createLlmsTxtHandler`, reached through the `/llms.txt` rewrite in the shared
+`libs/utils/website/src/next/next.config.js`. TanStack tenants:
+`src/routes/llms[.]txt.ts` with `createLlmsTxtFetchHandler` — port it when
+migrating a tenant. Documents: `libs/website/api/src/lib/schemas/llms.graphql`.
+
+The Next `onRequestError` drops Next's own 4xx `ApiError`s (malformed or
+oversized bodies) so they do not reach Sentry.
+
+**Feeds:** Next tenants export `createFeedHandler(getFeed, format)` from
+`@wepublish/feed/website` in `pages/api/{rss,atom,json}-feed.ts` (with
+`api: { bodyParser: false }` in `config`); TanStack tenants use `feedHandler`
+from `@wepublish/utils/website/tanstack`. Both answer a failed feed query with
+an uncached 502 and report the error to Sentry instead of throwing.
+
 ### Business Domain Libraries
 
-`membership`, `payment`, `user-subscription`, `member-plan`, `crowdfunding`, `mail`, `event`, `consent`
+`membership`, `payment`, `user-subscription`, `member-plan`, `crowdfunding`, `mail`, `event`, `consent`, `print-issue`
 
 ### Infrastructure Libraries
 
@@ -145,7 +167,7 @@ Frontend (Apollo Client)
 - Decorators: `@Public()` (no auth), `@CurrentUser()` (inject session), `@Permissions(...)` (RBAC check)
 - Permission constants: `CanCreateArticle`, `CanDeleteArticle`, `CanPublishArticle`, `CanGetArticle`, etc.
 - `@PreviewMode()` for draft content access
-- API keys (`libs/api-token`, editor «API Keys»): `Authorization: Bearer wep_…`, stored hashed, scopes are permission IDs, they expire (≤ 3 years) and the API announces the expiry in the `wepublish-api-key-expiration` response header. Never send them with the peering user agent: that path only reads peering tokens and refuses the key.
+- API keys (`libs/api-token`, editor «API Keys»): `Authorization: Bearer wep_…`, stored as a salted argon2id hash and found by their visible `prefix` (never look one up by hash), scopes are permission IDs, they expire (≤ 3 years) and the API announces the expiry in the `wepublish-api-key-expiration` response header. Never send them with the peering user agent: that path only reads peering tokens and refuses the key.
 - External apps (`libs/external-apps`) that read the API bring their own API key with the minimal scopes, kept in the app. `ExternalApps.apiTokenId` records which key, so the Apps dashboard and the app's edit page warn 30 days before it expires and once it is expired or revoked. The key is linkable and its metadata visible only to editors who see it in the API keys list.
 - Per-medium feature toggles (`libs/features`, state from We.Publish One): `@Feature('key')` in the API, `useFeature` / `FeatureControl` in the editor — see [conventions.md](conventions.md#feature-toggles-per-medium)
 

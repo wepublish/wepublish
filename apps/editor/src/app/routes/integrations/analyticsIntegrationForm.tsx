@@ -15,8 +15,11 @@ import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
 import googleLogo from './assets/google.svg';
-import { CustomField } from './genericIntegrationForm';
+import plausibleLogo from './assets/plausible.svg';
+import umamiLogo from './assets/umami.svg';
+import { CustomField, FieldDefinition } from './genericIntegrationForm';
 import { GenericIntegrationList } from './genericIntegrationList';
+import { secretPlaceholder } from './secretPlaceholder';
 
 const credentialsSchema = z.object({
   type: z.string(),
@@ -31,6 +34,9 @@ const analyticsSettingsSchema = z.object({
   property: z.string().nullish().or(z.literal('')),
   articlePrefix: z.string().nullish().or(z.literal('')),
   credentials: credentialsSchema.nullish(),
+  apiKey: z.string().nullish().or(z.literal('')),
+  url: z.string().url().nullish().or(z.literal('')),
+  hotAndTrending: z.boolean().nullish(),
 });
 
 type IntegrationFormValues = z.infer<typeof analyticsSettingsSchema>;
@@ -86,10 +92,26 @@ const CustomDropzoneWrapper = styled.div<{ dragging: boolean; valid: boolean }>`
     `}
 `;
 
+/** Credentials never come back from the API; `stored` says whether some are. */
+export const credentialsDropzoneText = (
+  {
+    dragging,
+    newFile,
+    stored,
+  }: { dragging: boolean; newFile: boolean; stored: boolean },
+  t: (key: string) => string
+) =>
+  dragging ? t('integrations.analyticsSettings.dropCredentialsFile')
+  : newFile ? t('integrations.analyticsSettings.credentialsReadyToBeSaved')
+  : stored ? t('integrations.analyticsSettings.credentialsStored')
+  : t('integrations.analyticsSettings.dragCredentialsFileHere');
+
 const CustomDropzone = forwardRef<
   HTMLInputElement,
-  ComponentProps<CustomField<IntegrationFormValues['credentials']>['render']>
->(({ onChange, disabled, value }, ref) => {
+  ComponentProps<
+    CustomField<IntegrationFormValues['credentials']>['render']
+  > & { stored?: boolean }
+>(({ onChange, disabled, value, stored = false }, ref) => {
   const { t } = useTranslation();
 
   const onDrop = useCallback(
@@ -137,14 +159,24 @@ const CustomDropzone = forwardRef<
     >
       <input {...getInputProps()} />
 
-      {isDragActive ?
-        t('integrations.analyticsSettings.dropCredentialsFile')
-      : value ?
-        t('integrations.analyticsSettings.credentialsReadyToBeSaved')
-      : t('integrations.analyticsSettings.dragCredentialsFileHere')}
+      {credentialsDropzoneText(
+        { dragging: isDragActive, newFile: !!value, stored },
+        t
+      )}
     </CustomDropzoneWrapper>
   );
 });
+
+const StoredCredentialsDropzone = forwardRef<
+  HTMLInputElement,
+  ComponentProps<CustomField<IntegrationFormValues['credentials']>['render']>
+>((props, ref) => (
+  <CustomDropzone
+    {...props}
+    ref={ref}
+    stored
+  />
+));
 
 export function AnalyticsIntegrationForm() {
   const { t } = useTranslation();
@@ -153,6 +185,7 @@ export function AnalyticsIntegrationForm() {
     <GenericIntegrationList<SettingAnalyticsProvider, IntegrationFormValues>
       query={SettingsIntegrationsAnalyticsDocument}
       mutation={UpdateAnalyticsProviderSettingDocument}
+      refetchQueries={[SettingsIntegrationsAnalyticsDocument]}
       dataKey="analyticsProviderSettings"
       schema={analyticsSettingsSchema}
       fixedProvider={{
@@ -161,30 +194,115 @@ export function AnalyticsIntegrationForm() {
         name: 'Google Analytics',
         createMutation: CreateAnalyticsProviderSettingDocument,
       }}
-      getLogo={() => googleLogo}
-      fields={[
-        {
-          name: 'articlePrefix',
-          label: t('integrations.analyticsSettings.articlePrefix'),
-          info: t('integrations.analyticsSettings.articlePrefixInfo'),
-          type: 'text',
-          autoComplete: 'one-time-code',
-        },
-        {
-          name: 'property',
-          label: t('integrations.analyticsSettings.property'),
-          info: t('integrations.analyticsSettings.propertyInfo'),
-          type: 'text',
-          autoComplete: 'one-time-code',
-        },
-        {
-          name: 'credentials',
-          label: t('integrations.analyticsSettings.credentials'),
-          info: t('integrations.analyticsSettings.credentialsInfo'),
-          type: 'custom',
-          render: CustomDropzone,
-        },
-      ]}
+      getLogo={setting => {
+        switch (setting.type) {
+          case AnalyticsProviderType.Plausible:
+            return plausibleLogo;
+          case AnalyticsProviderType.Umami:
+            return umamiLogo;
+          default:
+            return googleLogo;
+        }
+      }}
+      fields={setting => {
+        const fields: FieldDefinition<IntegrationFormValues>[] = [
+          {
+            name: 'hotAndTrending',
+            label: t('integrations.analyticsSettings.hotAndTrending'),
+            info: t('integrations.analyticsSettings.hotAndTrendingInfo'),
+            type: 'checkbox',
+          },
+          {
+            name: 'articlePrefix',
+            label: t('integrations.analyticsSettings.articlePrefix'),
+            info: t('integrations.analyticsSettings.articlePrefixInfo'),
+            type: 'text',
+            autoComplete: 'one-time-code',
+          },
+        ];
+
+        switch (setting.type) {
+          case AnalyticsProviderType.Plausible:
+            return [
+              ...fields,
+              {
+                name: 'property',
+                label: t('integrations.analyticsSettings.plausibleSiteId'),
+                info: t('integrations.analyticsSettings.plausibleSiteIdInfo'),
+                placeholder: 'example.com',
+                type: 'text',
+                autoComplete: 'one-time-code',
+              },
+              {
+                name: 'apiKey',
+                label: t('integrations.analyticsSettings.apiKey'),
+                info: t('integrations.analyticsSettings.plausibleApiKeyInfo'),
+                type: 'password',
+                autoComplete: 'one-time-code',
+                placeholder: secretPlaceholder(setting.isCredentialsSet, t),
+              },
+              {
+                name: 'url',
+                label: t('integrations.analyticsSettings.plausibleUrl'),
+                info: t('integrations.analyticsSettings.plausibleUrlInfo'),
+                placeholder: 'https://plausible.io',
+                type: 'text',
+                autoComplete: 'one-time-code',
+              },
+            ];
+
+          case AnalyticsProviderType.Umami:
+            return [
+              ...fields,
+              {
+                name: 'property',
+                label: t('integrations.analyticsSettings.umamiWebsiteId'),
+                info: t('integrations.analyticsSettings.umamiWebsiteIdInfo'),
+                placeholder: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
+                type: 'text',
+                autoComplete: 'one-time-code',
+              },
+              {
+                name: 'apiKey',
+                label: t('integrations.analyticsSettings.apiKey'),
+                info: t('integrations.analyticsSettings.umamiApiKeyInfo'),
+                type: 'password',
+                autoComplete: 'one-time-code',
+                placeholder: secretPlaceholder(setting.isCredentialsSet, t),
+              },
+              {
+                name: 'url',
+                label: t('integrations.analyticsSettings.umamiUrl'),
+                info: t('integrations.analyticsSettings.umamiUrlInfo'),
+                placeholder: 'https://api.umami.is/v1',
+                type: 'text',
+                autoComplete: 'one-time-code',
+              },
+            ];
+
+          default:
+            return [
+              ...fields,
+              {
+                name: 'property',
+                label: t('integrations.analyticsSettings.property'),
+                info: t('integrations.analyticsSettings.propertyInfo'),
+                type: 'text',
+                autoComplete: 'one-time-code',
+              },
+              {
+                name: 'credentials',
+                label: t('integrations.analyticsSettings.credentials'),
+                info: t('integrations.analyticsSettings.credentialsInfo'),
+                type: 'custom',
+                render:
+                  setting.isCredentialsSet ?
+                    StoredCredentialsDropzone
+                  : CustomDropzone,
+              },
+            ];
+        }
+      }}
     />
   );
 }

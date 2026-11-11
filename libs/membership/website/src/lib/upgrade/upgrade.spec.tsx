@@ -2,6 +2,7 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   mockAvailablePaymentMethod,
+  mockGoodie,
   mockMemberPlan,
   mockPaginated,
   mockPeriodicityPrice,
@@ -222,6 +223,31 @@ describe('Upgrade', () => {
         discountCode: '',
       })
     );
+  });
+
+  it('only offers the goodies of the periodicity the subscription keeps', () => {
+    const booklet = mockGoodie({
+      name: 'NLA Booklet',
+      paymentPeriodicities: [PaymentPeriodicity.Biennial],
+    });
+    const mug = mockGoodie({
+      name: 'Coffee mug',
+      paymentPeriodicities: [PaymentPeriodicity.Yearly],
+    });
+    renderUpgrade({
+      memberPlans: memberPlanList([
+        currentPlan,
+        { ...plusPlan, goodies: [booklet, mug] },
+      ]),
+      showGoodies: true,
+    });
+
+    expect(
+      screen.getByRole('radio', { name: /Coffee mug/ })
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole('radio', { name: /NLA Booklet/ })
+    ).not.toBeInTheDocument();
   });
 
   it('adds the transaction fee when the reader opts in', async () => {

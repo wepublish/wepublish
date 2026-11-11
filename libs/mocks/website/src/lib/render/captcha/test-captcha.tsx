@@ -5,6 +5,7 @@ type TestCaptchaProps = {
   siteKey?: string;
   onSolve?: (token: string) => void;
   attempt?: number;
+  language?: string;
 };
 
 export const TEST_CAPTCHA_LABEL = 'Captcha';
@@ -13,6 +14,7 @@ export const TestCaptcha = ({
   siteKey,
   onSolve,
   attempt = 0,
+  language,
 }: TestCaptchaProps) => {
   const solve = useEffectEvent(() => onSolve?.(mockChallengeToken));
 
@@ -28,6 +30,7 @@ export const TestCaptcha = ({
       aria-label={TEST_CAPTCHA_LABEL}
       data-sitekey={siteKey}
       data-attempt={attempt}
+      data-language={language}
     />
   );
 };

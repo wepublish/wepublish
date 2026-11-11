@@ -145,6 +145,36 @@ describe('RenderRichtext', () => {
     expect(link).toHaveAttribute('rel', 'noopener noreferrer');
     expect(link).toHaveAttribute('id', 'quelle');
     expect(link).toHaveClass('source-link');
+    expect(link).not.toHaveClass('MuiButton-root');
+  });
+
+  it.each([
+    ['buttonLinkMain', 'MuiButton-colorPrimary'],
+    ['buttonLinkSecondary', 'MuiButton-colorSecondary'],
+  ])('renders a %s link mark as a button', (variant, colorClass) => {
+    renderRichtext(
+      doc(
+        paragraph(
+          marked('Jetzt abonnieren', {
+            type: 'link',
+            attrs: {
+              href: 'https://example.com/abo',
+              target: '_blank',
+              rel: 'noopener noreferrer',
+              id: 'abo',
+              variant,
+            },
+          })
+        )
+      )
+    );
+
+    const link = screen.getByRole('link', { name: 'Jetzt abonnieren' });
+    expect(link).toHaveAttribute('href', 'https://example.com/abo');
+    expect(link).toHaveAttribute('target', '_blank');
+    expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+    expect(link).toHaveAttribute('id', 'abo');
+    expect(link).toHaveClass('MuiButton-contained', colorClass);
   });
 
   it('applies the text style mark as inline style', () => {

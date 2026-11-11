@@ -27,6 +27,20 @@ export const reactCompilerRules = level => ({
   'react-hooks/incompatible-library': level === 'off' ? 'off' : 'warn',
 });
 
+export const restrictedImportPaths = [
+  {
+    name: '@mui/material',
+    importNames: ['styled'],
+    message: "Please import 'styled' from '@emotion/styled' instead.",
+  },
+  {
+    name: '@wepublish/user/api',
+    importNames: ['SensitiveDataUser'],
+    message:
+      "Please only import 'SensitiveDataUser' when the sensitive data absolutely is required. Otherwise use `User` instead.",
+  },
+];
+
 export default [
   ...nx.configs['flat/base'],
   {
@@ -79,19 +93,7 @@ export default [
       'no-restricted-imports': [
         'error',
         {
-          paths: [
-            {
-              name: '@mui/material',
-              importNames: ['styled'],
-              message: "Please import 'styled' from '@emotion/styled' instead.",
-            },
-            {
-              name: '@wepublish/user/api',
-              importNames: ['SensitiveDataUser'],
-              message:
-                "Please only import 'SensitiveDataUser' when the sensitive data absolutely is required. Otherwise use `User` instead.",
-            },
-          ],
+          paths: restrictedImportPaths,
         },
       ],
     },

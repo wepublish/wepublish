@@ -13,6 +13,7 @@ import {
   MediaLinkCacheModule,
   MediaService,
 } from '@wepublish/media/api';
+import { getTransformationKey } from '@wepublish/media-transform-guard';
 import { AppController } from './app.controller';
 
 const FALLBACK_URL = 'https://fallback.example';
@@ -69,7 +70,7 @@ const createController = async (
 const request = (url: string) => ({ url }) as unknown as NodeRequest;
 
 describe('AppController images', () => {
-  it('does not write the shared cache again when a link is found', async () => {
+  it('leaves caching the link of a transformed image to the media service', async () => {
     const dragonfly = new FakeDragonfly();
     const media = {
       getImageUri: vi
@@ -82,16 +83,14 @@ describe('AppController images', () => {
     );
     const controller = await createController(media, undefined, dragonfly);
 
-    for (let i = 0; i < 3; i++) {
-      await controller.transformImage(
-        createResponse() as unknown as NodeResponse,
-        request('/v1/image-1'),
-        'image-1',
-        {}
-      );
-    }
+    await controller.transformImage(
+      createResponse() as unknown as NodeResponse,
+      request('/v1/image-1'),
+      'image-1',
+      {}
+    );
 
-    expect(valueWrites(dragonfly)).toHaveLength(1);
+    expect(valueWrites(dragonfly)).toHaveLength(0);
     vi.unstubAllGlobals();
   });
 
@@ -127,13 +126,21 @@ describe('AppController images', () => {
       'fetch',
       vi.fn().mockResolvedValue(new Response(null, { status: 200 }))
     );
+    const linkCache = await createLinkCache(new FakeDragonfly());
     const media = {
-      getImageUri: vi
-        .fn()
-        .mockResolvedValue({ uri: 'images/image-3/{}', exists: true }),
+      getImageUri: vi.fn(async (imageId: string) => {
+        const link = { uri: `images/${imageId}/{}`, exists: true };
+        await linkCache.set(imageId, getTransformationKey({}), link);
+
+        return link;
+      }),
       deleteImage: vi.fn(),
     };
-    const controller = await createController(media);
+    const controller = new AppController(
+      media as unknown as MediaService,
+      linkCache,
+      { get: () => undefined } as unknown as ConfigService
+    );
     const transform = () =>
       controller.transformImage(
         createResponse() as unknown as NodeResponse,

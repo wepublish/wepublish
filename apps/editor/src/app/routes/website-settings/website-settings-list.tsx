@@ -19,7 +19,7 @@ import {
   PageTitle,
   PermissionControl,
 } from '@wepublish/ui/editor';
-import { useMemo } from 'react';
+import { useId, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdAdsClick,
@@ -27,7 +27,6 @@ import {
   MdCheck,
   MdClose,
   MdColorLens,
-  MdMail,
   MdOutlineFontDownload,
   MdWarning,
 } from 'react-icons/md';
@@ -55,7 +54,7 @@ const Title = styled(PageTitle)`
   grid-column: -1/1;
 `;
 
-const CardTitle = styled.div`
+const CardTitle = styled.h2`
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: max-content;
@@ -84,6 +83,9 @@ const CardColors = styled.div`
 export const WebsiteSettingsList = () => {
   const { t } = useTranslation();
   const theme = useTheme();
+  const listId = useId();
+  const titleId = (path: string) =>
+    `${listId}${path.replace(/\//g, '-')}-title`;
 
   const { data, loading } = useQuery(WebsiteSettingsDocument);
 
@@ -97,13 +99,9 @@ export const WebsiteSettingsList = () => {
       { id: 'googleTagManager', text: 'Google Tag Manager' },
       { id: 'plausible', text: 'Plausible Analytics' },
       { id: 'piwik', text: 'Piwik PRO' },
+      { id: 'umami', text: 'Umami' },
     ] as Array<{
       id: Exclude<keyof FullWebsiteSettingsFragment['analytics'], '__typename'>;
-      text: string;
-    }>;
-
-    const mailIntegrations = [{ id: 'mailchimp', text: 'Mailchimp' }] as Array<{
-      id: Exclude<keyof FullWebsiteSettingsFragment['mail'], '__typename'>;
       text: string;
     }>;
 
@@ -135,26 +133,6 @@ export const WebsiteSettingsList = () => {
         disabledIntegrations: analyticsIntegrations.filter(
           integration =>
             !data.websiteSettings.analytics[integration.id]?.enabled
-        ),
-        colors: [],
-      },
-      {
-        title: t('websiteSettings.mail.title'),
-        permission: CanGetAISettings.id,
-        path: '/settings/website/mail',
-        icon: <MdMail size={24} />,
-        enabledIntegrations: mailIntegrations.filter(
-          integration =>
-            data.websiteSettings.mail[integration.id]?.enabled &&
-            data.websiteSettings.mail[integration.id]?.key
-        ),
-        faulyIntegrations: mailIntegrations.filter(
-          integration =>
-            data.websiteSettings.mail[integration.id]?.enabled &&
-            !data.websiteSettings.mail[integration.id]?.key
-        ),
-        disabledIntegrations: mailIntegrations.filter(
-          integration => !data.websiteSettings.mail[integration.id]?.enabled
         ),
         colors: [],
       },
@@ -236,7 +214,7 @@ export const WebsiteSettingsList = () => {
                 }}
               >
                 {category.icon}
-                {category.title}
+                <span id={titleId(category.path)}>{category.title}</span>
               </Typography>
 
               {category.faulyIntegrations.map((integration, index) => (
@@ -336,6 +314,7 @@ export const WebsiteSettingsList = () => {
                 component={RouterLink}
                 to={category.path}
                 size="small"
+                aria-describedby={titleId(category.path)}
               >
                 {t('edit')}
               </Button>

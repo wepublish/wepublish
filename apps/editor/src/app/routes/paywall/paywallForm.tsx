@@ -30,7 +30,7 @@ import {
   SelectMemberPlans,
 } from '@wepublish/ui/editor';
 import QRCodeStyling from 'qr-code-styling';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import {
   Controller,
   useFieldArray,
@@ -73,15 +73,20 @@ type PaywallFormProps = {
 
 const PaywallFormWrapper = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr);
   align-items: start;
   gap: 16px;
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
 `;
 
 const PaywallFormSection = styled.div`
   display: grid;
   align-items: start;
   gap: 16px;
+  min-width: 0;
 `;
 
 const QRCodeContainer = styled.div`
@@ -130,6 +135,7 @@ export const PaywallForm = ({ create }: PaywallFormProps) => {
   const [selectedToken, setSelectedToken] = useState('');
   const qrContainerRef = useRef<HTMLDivElement>(null);
   const qrCodeRef = useRef<QRCodeStyling | null>(null);
+  const labelId = useId();
 
   const addBypass = () => {
     if (newBypassToken?.trim()) {
@@ -205,13 +211,16 @@ export const PaywallForm = ({ create }: PaywallFormProps) => {
               />
 
               <FormControl fullWidth>
-                <FormLabel>{t('paywall.form.description')}</FormLabel>
+                <FormLabel id={`${labelId}-description`}>
+                  {t('paywall.form.description')}
+                </FormLabel>
 
                 <Controller
                   control={control}
                   name="description"
                   render={({ field }) => (
                     <RichTextBlock
+                      aria-labelledby={`${labelId}-description`}
                       value={field.value}
                       onChange={field.onChange}
                     />
@@ -220,13 +229,16 @@ export const PaywallForm = ({ create }: PaywallFormProps) => {
               </FormControl>
 
               <FormControl fullWidth>
-                <FormLabel>{t('paywall.form.circumventDescription')}</FormLabel>
+                <FormLabel id={`${labelId}-circumventDescription`}>
+                  {t('paywall.form.circumventDescription')}
+                </FormLabel>
 
                 <Controller
                   control={control}
                   name="circumventDescription"
                   render={({ field }) => (
                     <RichTextBlock
+                      aria-labelledby={`${labelId}-circumventDescription`}
                       value={field.value}
                       onChange={field.onChange}
                     />
@@ -237,8 +249,12 @@ export const PaywallForm = ({ create }: PaywallFormProps) => {
           </CardContent>
         </Card>
 
-        <Accordion>
-          <AccordionSummary expandIcon={<MdExpandMore />}>
+        <Accordion slotProps={{ heading: { component: 'h2' } }}>
+          <AccordionSummary
+            id={`${labelId}-upgrade-header`}
+            aria-controls={`${labelId}-upgrade-content`}
+            expandIcon={<MdExpandMore />}
+          >
             {t('paywall.form.upgrade')}
           </AccordionSummary>
 
@@ -248,13 +264,16 @@ export const PaywallForm = ({ create }: PaywallFormProps) => {
               sx={{ width: '100%' }}
             >
               <FormControl fullWidth>
-                <FormLabel>{t('paywall.form.description')}</FormLabel>
+                <FormLabel id={`${labelId}-upgradeDescription`}>
+                  {t('paywall.form.description')}
+                </FormLabel>
 
                 <Controller
                   control={control}
                   name="upgradeDescription"
                   render={({ field }) => (
                     <RichTextBlock
+                      aria-labelledby={`${labelId}-upgradeDescription`}
                       value={field.value}
                       onChange={field.onChange}
                     />
@@ -263,13 +282,16 @@ export const PaywallForm = ({ create }: PaywallFormProps) => {
               </FormControl>
 
               <FormControl fullWidth>
-                <FormLabel>{t('paywall.form.circumventDescription')}</FormLabel>
+                <FormLabel id={`${labelId}-upgradeCircumventDescription`}>
+                  {t('paywall.form.circumventDescription')}
+                </FormLabel>
 
                 <Controller
                   control={control}
                   name="upgradeCircumventDescription"
                   render={({ field }) => (
                     <RichTextBlock
+                      aria-labelledby={`${labelId}-upgradeCircumventDescription`}
                       value={field.value}
                       onChange={field.onChange}
                     />
@@ -360,13 +382,16 @@ export const PaywallForm = ({ create }: PaywallFormProps) => {
               </Box>
 
               <FormControl fullWidth>
-                <FormLabel>{t('paywall.form.memberPlans')}</FormLabel>
+                <FormLabel id={`${labelId}-memberPlans`}>
+                  {t('paywall.form.memberPlans')}
+                </FormLabel>
 
                 <Controller
                   control={control}
                   name="memberPlanIds"
                   render={({ field }) => (
                     <SelectMemberPlans
+                      aria-labelledby={`${labelId}-memberPlans`}
                       disabled={Boolean(anyMemberPlan)}
                       defaultMemberPlans={memberPlans ?? []}
                       selectedMemberPlans={field.value ?? []}
@@ -421,6 +446,11 @@ export const PaywallForm = ({ create }: PaywallFormProps) => {
                         <TextField
                           {...field}
                           placeholder={t('paywall.form.bypassToken')}
+                          slotProps={{
+                            htmlInput: {
+                              'aria-label': `${t('paywall.form.bypassToken')} ${index + 1}`,
+                            },
+                          }}
                           error={Boolean(error)}
                           helperText={error?.message}
                         />
@@ -432,7 +462,7 @@ export const PaywallForm = ({ create }: PaywallFormProps) => {
                       <IconButton
                         size="small"
                         color="primary"
-                        aria-label={t('paywall.form.showQrCode')}
+                        aria-label={`${t('paywall.form.showQrCode')} ${index + 1}`}
                         onClick={() =>
                           showQRCode(bypassValues?.[index]?.token ?? '')
                         }
@@ -447,7 +477,7 @@ export const PaywallForm = ({ create }: PaywallFormProps) => {
                       <IconButton
                         size="small"
                         color="error"
-                        aria-label={t('delete')}
+                        aria-label={`${t('delete')} ${t('paywall.form.bypassToken')} ${index + 1}`}
                         onClick={() => remove(index)}
                       >
                         <MdDelete />
@@ -466,7 +496,7 @@ export const PaywallForm = ({ create }: PaywallFormProps) => {
                   <TextField
                     value={newBypassToken}
                     onChange={event => setNewBypassToken(event.target.value)}
-                    placeholder={t('paywall.form.newBypassToken')}
+                    label={t('paywall.form.newBypassToken')}
                     onKeyDown={event => {
                       if (event.key === 'Enter') {
                         addBypass();
@@ -490,8 +520,12 @@ export const PaywallForm = ({ create }: PaywallFormProps) => {
           </CardContent>
         </Card>
 
-        <Accordion>
-          <AccordionSummary expandIcon={<MdExpandMore />}>
+        <Accordion slotProps={{ heading: { component: 'h2' } }}>
+          <AccordionSummary
+            id={`${labelId}-display-header`}
+            aria-controls={`${labelId}-display-content`}
+            expandIcon={<MdExpandMore />}
+          >
             {t('paywall.form.display')}
           </AccordionSummary>
 
@@ -554,7 +588,9 @@ export const PaywallForm = ({ create }: PaywallFormProps) => {
 
         <DialogContent style={{ textAlign: 'center' }}>
           <BaseUrlGroup>
-            <FormLabel>{t('paywall.form.baseUrl')}</FormLabel>
+            <FormLabel htmlFor="qrBaseUrl">
+              {t('paywall.form.baseUrl')}
+            </FormLabel>
             <TextField
               id="qrBaseUrl"
               value={qrBaseUrl}

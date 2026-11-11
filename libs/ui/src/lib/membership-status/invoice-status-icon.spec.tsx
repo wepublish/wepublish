@@ -1,5 +1,5 @@
 import { createTheme, Theme, ThemeProvider } from '@mui/material';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
 import { InvoiceState } from './invoice-state';
 import { InvoiceStatusIcon } from './invoice-status-icon';
@@ -26,6 +26,26 @@ const pillOf = (theme: Theme, status: InvoiceState) => {
 
   return pill;
 };
+
+describe('InvoiceStatusIcon for keyboard and screen reader users', () => {
+  it.each([editorTheme, websiteTheme])(
+    'exposes its status as a named image a keyboard can reach',
+    theme => {
+      render(
+        <ThemeProvider theme={theme}>
+          <InvoiceStatusIcon
+            status="canceled"
+            title="Canceled at 7.10.2026"
+          />
+        </ThemeProvider>
+      );
+
+      expect(
+        screen.getByRole('img', { name: 'Canceled at 7.10.2026' })
+      ).toHaveAttribute('tabindex', '0');
+    }
+  );
+});
 
 describe('InvoiceStatusIcon', () => {
   it.each([

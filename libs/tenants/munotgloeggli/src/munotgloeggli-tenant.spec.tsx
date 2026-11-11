@@ -18,6 +18,7 @@ import { MunotgloeggliBaseTeaser } from './components/website-builder-overwrites
 import websiteSettings from './fixtures/website-settings.json';
 import deOverriden from './locales/deOverriden.json';
 import { munotgloeggliTenant } from './munotgloeggli-tenant';
+import { MunotgloeggliGlobalStyles, sabon, ttNorms } from './theme';
 
 describe('munotgloeggliTenant', () => {
   it('identifies the tenant', () => {
@@ -31,8 +32,10 @@ describe('munotgloeggliTenant', () => {
     const theme = munotgloeggliTenant.createTheme();
 
     expect(theme.palette.primary.main).toBe(minimalTheme.palette.primary.main);
-    expect(theme.typography.h1.fontFamily).toBe('local,sans-serif');
-    expect(theme.typography.body1.fontFamily).toBe('local,sans-serif');
+    expect(theme.typography.h1.fontFamily).toBe(`${sabon.family},sans-serif`);
+    expect(theme.typography.body1.fontFamily).toBe(
+      `${ttNorms.family},sans-serif`
+    );
   });
 
   it('lets the website settings theme win over the font theme', () => {
@@ -45,7 +48,7 @@ describe('munotgloeggliTenant', () => {
 
     expect(theme.palette.primary.main).toBe('#123456');
     expect(theme.typography.h1.fontFamily).toBe('Settings Font');
-    expect(theme.typography.h2.fontFamily).toBe('local,sans-serif');
+    expect(theme.typography.h2.fontFamily).toBe(`${sabon.family},sans-serif`);
   });
 
   it('carries the german translation overrides and date locale', () => {
@@ -62,6 +65,10 @@ describe('munotgloeggliTenant', () => {
       BaseTeaser: MunotgloeggliBaseTeaser,
       Crowdfunding: MunotgloeggliCrowdfundingBlock,
     });
+  });
+
+  it('declares the font faces the theme refers to', () => {
+    expect(munotgloeggliTenant.GlobalStyles).toBe(MunotgloeggliGlobalStyles);
   });
 
   it('does not inject next specific builder props', () => {

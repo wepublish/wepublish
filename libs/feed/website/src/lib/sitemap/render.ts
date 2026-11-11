@@ -22,9 +22,11 @@ import { buildSitemapIndex, buildUrlset, SitemapUrl } from './xml';
 
 export type SitemapSiteConfig = {
   title: string;
+  description?: string;
   lang?: string;
   mode?: 'single' | 'index';
   pageUrls?: string[];
+  sitemapPath?: string;
   homepageSlug?: string;
   newsMaxAgeDays?: number;
   maxArticles?: number;
@@ -52,6 +54,7 @@ const DEFAULTS = {
   lang: 'de',
   mode: 'single',
   pageUrls: [] as string[],
+  sitemapPath: SITEMAP_PATH,
   homepageSlug: '',
   newsMaxAgeDays: 2,
   maxArticles: 1000,
@@ -139,10 +142,10 @@ const fetchPages = ({ client }: SitemapContext) =>
     return data?.pages;
   }, MAX_URLS);
 
-type Resolved = Required<
-  Omit<SitemapSiteConfig, 'filterArticle' | 'articleUrl' | 'pageUrl'>
-> &
-  Pick<SitemapSiteConfig, 'filterArticle' | 'articleUrl' | 'pageUrl'>;
+type Optional = 'description' | 'filterArticle' | 'articleUrl' | 'pageUrl';
+
+type Resolved = Required<Omit<SitemapSiteConfig, Optional>> &
+  Pick<SitemapSiteConfig, Optional>;
 
 const newsCutoff = (config: Resolved, now: Date) =>
   new Date(now.getTime() - config.newsMaxAgeDays * 24 * 60 * 60 * 1000);
@@ -200,13 +203,11 @@ const pageUrls = async (
       changefreq: 'daily',
       priority: 1,
     },
-    ...config.pageUrls.map(
-      (path): SitemapUrl => ({
-        loc: `${siteUrl}${path}`,
-        changefreq: 'weekly',
-        priority: 0.8,
-      })
-    ),
+    ...config.pageUrls.map((path): SitemapUrl => ({
+      loc: `${siteUrl}${path}`,
+      changefreq: 'weekly',
+      priority: 0.8,
+    })),
     ...pages
       .filter(({ slug }) => slug !== config.homepageSlug)
       .map(page => ({
@@ -276,12 +277,14 @@ const periodsWithArticles = async (context: SitemapContext) => {
   return periods;
 };
 
-const renderIndex = async (context: SitemapContext) => {
+const renderIndex = async (config: Resolved, context: SitemapContext) => {
   const periods = await periodsWithArticles(context);
   const chunks = ['news', 'pages', ...periods.reverse().map(articleChunk)];
 
   return buildSitemapIndex(
-    chunks.map(chunk => ({ loc: `${context.siteUrl}${SITEMAP_PATH}/${chunk}` }))
+    chunks.map(chunk => ({
+      loc: `${context.siteUrl}${config.sitemapPath}/${chunk}`,
+    }))
   );
 };
 
@@ -294,7 +297,7 @@ export const renderSitemap = (
   const resolved = resolve(config);
 
   return resolved.mode === 'index' ?
-      renderIndex(context)
+      renderIndex(resolved, context)
     : renderSingle(resolved, context);
 };
 

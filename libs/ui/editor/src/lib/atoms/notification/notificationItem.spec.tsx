@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 
 import {
   NotificationItem,
@@ -37,6 +37,52 @@ describe('NotificationItem', () => {
     expect(screen.getByText('Job failed')).toBeTruthy();
     expect(screen.getByText('Job-Logs')).toBeTruthy();
     expect(screen.getByText('Something broke')).toBeTruthy();
+  });
+
+  it('drops the body when compact, but keeps title, source tag and actions', () => {
+    render(
+      <NotificationItem
+        compact
+        severity="error"
+        title="Job failed"
+        sourceTag="Job-Logs"
+        actions={<button>Retry</button>}
+      >
+        Something broke
+      </NotificationItem>
+    );
+
+    expect(screen.getByText('Job failed')).toBeTruthy();
+    expect(screen.getByText('Job-Logs')).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Retry' })).toBeTruthy();
+    expect(screen.queryByText('Something broke')).toBeNull();
+  });
+
+  it('opens a clickable item from a button named by its title', () => {
+    const onClick = vi.fn();
+
+    render(
+      <NotificationItem
+        severity="info"
+        title="New release"
+        onClick={onClick}
+      />
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'New release' }));
+
+    expect(onClick).toHaveBeenCalledTimes(1);
+  });
+
+  it('renders the title as plain text when the item is not clickable', () => {
+    render(
+      <NotificationItem
+        severity="info"
+        title="New release"
+      />
+    );
+
+    expect(screen.queryByRole('button')).toBeNull();
   });
 
   it('carries an order so a stack of items sorts itself by severity', () => {

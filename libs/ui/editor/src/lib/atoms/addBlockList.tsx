@@ -31,12 +31,31 @@ export const BlockList = styled('ul')`
 
 export const BlockListItem = styled('li')`
   margin: 0;
+  padding: 0;
+`;
+
+const BlockListButton = styled('button')`
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  width: 100%;
+  margin: 0;
   padding: 0.25rem 0.5rem;
+  border: 0;
   border-radius: ${({ theme }) => `calc(${theme.shape.borderRadius}px * 0.75)`};
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
 
   &:hover {
-    cursor: pointer;
     background-color: ${({ theme }) => theme.vars.palette.background.default};
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.vars.palette.primary.main};
+    outline-offset: -2px;
   }
 `;
 
@@ -48,13 +67,15 @@ export function AddBlockList({
   return (
     <BlockList>
       {listItems.map((item, index) => (
-        <BlockListItem
-          key={index}
-          onClick={() => {
-            onListItemClick(item);
-          }}
-        >
-          {item.icon} {t(item.label)}
+        <BlockListItem key={index}>
+          <BlockListButton
+            type="button"
+            onClick={() => {
+              onListItemClick(item);
+            }}
+          >
+            {item.icon} {t(item.label)}
+          </BlockListButton>
         </BlockListItem>
       ))}
     </BlockList>

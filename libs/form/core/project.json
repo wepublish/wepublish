@@ -1,0 +1,30 @@
+{
+  "name": "form-core",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/form/core/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/form/core",
+        "tsConfig": "libs/form/core/tsconfig.lib.json",
+        "main": "libs/form/core/src/index.ts",
+        "rootDir": "."
+      }
+    },
+    "test": {
+      "options": {
+        "config": "../../../{projectRoot}/vitest.config.ts"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit -p libs/form/core/tsconfig.spec.json"
+      }
+    }
+  }
+}

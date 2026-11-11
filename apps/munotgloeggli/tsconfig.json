@@ -2,7 +2,10 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "moduleResolution": "bundler",
-    "jsx": "preserve",
+    "module": "esnext",
+    "target": "es2022",
+    "lib": ["dom", "dom.iterable", "es2023"],
+    "jsx": "react-jsx",
     "jsxImportSource": "@emotion/react",
     "allowJs": true,
     "esModuleInterop": true,
@@ -13,19 +16,10 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "incremental": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
-    "types": ["vitest/globals", "node"],
+    "skipLibCheck": true,
+    "types": ["vite/client", "vitest/globals", "node"],
     "ignoreDeprecations": "6.0"
   },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "next-env.d.ts"],
-  "exclude": [
-    "node_modules",
-    "vitest.config.ts",
-    "src/**/*.spec.ts",
-    "src/**/*.test.ts"
-  ]
+  "include": ["**/*.ts", "**/*.tsx", "index.d.ts"],
+  "exclude": ["node_modules", "dist", ".output", ".nitro", ".tanstack"]
 }

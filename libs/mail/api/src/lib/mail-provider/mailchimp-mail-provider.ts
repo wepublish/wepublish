@@ -3,7 +3,7 @@ import crypto from 'crypto';
 import mailchimp from '@mailchimp/mailchimp_transactional';
 import { AxiosError } from 'axios';
 
-import { MailLogState } from '@prisma/client';
+import { EmailQualityEventType, MailLogState } from '@prisma/client';
 import {
   MailLogStatus,
   MailProviderError,
@@ -11,13 +11,27 @@ import {
   MailProviderRecipientError,
   MailProviderTemplate,
   MailProviderTemplateContent,
+  MailQualitySignal,
+  MailWebhookSignatureError,
   SendMailProps,
   SendMailResult,
   WebhookForSendMailProps,
 } from './mail-provider.interface';
 import { BaseMailProvider, MailProviderProps } from './base-mail-provider';
+import { qualityTypeForRejectReason } from '../email-quality-recorder';
 
 type MessageMetadata = NonNullable<mailchimp.MessagesMessage['metadata']>;
+
+/** Mandrill's timestamps come as `YYYY-MM-DD HH:MM:SS` in UTC, without a zone. */
+const mandrillDate = (value: string | null | undefined): Date | undefined => {
+  if (!value) {
+    return undefined;
+  }
+
+  const date = new Date(`${value.replace(' ', 'T')}Z`);
+
+  return Number.isNaN(date.getTime()) ? undefined : date;
+};
 
 /** The typings demand a `website` key that Mandrill neither needs nor reads. */
 const mailLogMetadata = (mailLogID: string): MessageMetadata =>
@@ -105,6 +119,68 @@ function mapMandrillEventToMailLogState(event: string): MailLogState | null {
   }
 }
 
+/**
+ * What a webhook event says about the recipient's address, besides the
+ * delivery state. Soft bounces are temporary and opens prove nothing.
+ */
+function mapMandrillEventToQualityType(
+  event: string
+): EmailQualityEventType | null {
+  switch (event) {
+    case 'hard_bounce':
+      return EmailQualityEventType.hardBounce;
+    case 'reject':
+      return EmailQualityEventType.blocked;
+    case 'spam':
+      return EmailQualityEventType.spamComplaint;
+    case 'unsub':
+      return EmailQualityEventType.unsubscribed;
+    case 'click':
+      return EmailQualityEventType.clicked;
+    default:
+      return null;
+  }
+}
+
+type MandrillMessageInfo = {
+  email?: string;
+  state?: string;
+  bounce_description?: string;
+  diag?: string;
+};
+
+/**
+ * What a polled message tells about the recipient's address. Polled opens and
+ * clicks carry no time, so a click cannot be told from a link scanner and
+ * neither is reported.
+ */
+function mapMandrillInfoToQualitySignals(
+  info: MandrillMessageInfo
+): MailQualitySignal[] {
+  const signal = (
+    type: EmailQualityEventType,
+    detail?: string | null
+  ): MailQualitySignal[] => [
+    { type, email: info.email, detail: detail ?? null },
+  ];
+
+  switch (info.state) {
+    case 'bounced':
+      return signal(
+        EmailQualityEventType.hardBounce,
+        info.bounce_description || info.diag
+      );
+    case 'invalid':
+      return signal(EmailQualityEventType.invalid);
+    case 'spam':
+      return signal(EmailQualityEventType.spamComplaint);
+    case 'unsub':
+      return signal(EmailQualityEventType.unsubscribed);
+    default:
+      return [];
+  }
+}
+
 export class MailchimpMailProvider extends BaseMailProvider {
   constructor(props: MailProviderProps) {
     super(props);
@@ -156,7 +232,7 @@ export class MailchimpMailProvider extends BaseMailProvider {
         params: req.body,
       }))
     ) {
-      throw new Error('Webhook signature failed');
+      throw new MailWebhookSignatureError('Webhook signature failed');
     }
 
     const mandrillEvents = JSON.parse(req.body.mandrill_events);
@@ -164,15 +240,39 @@ export class MailchimpMailProvider extends BaseMailProvider {
 
     for (const mandrillEvent of mandrillEvents) {
       const state = mapMandrillEventToMailLogState(mandrillEvent.event);
+      const qualityType = mapMandrillEventToQualityType(mandrillEvent.event);
       const mailLogID = mandrillEvent?.msg?.metadata?.mail_log_id;
 
-      if (state !== null && mailLogID !== undefined) {
-        mailLogStatuses.push({
-          state,
-          mailLogID,
-          mailData: JSON.stringify(mandrillEvent),
-        });
+      if ((state === null && qualityType === null) || mailLogID === undefined) {
+        continue;
       }
+
+      mailLogStatuses.push({
+        state,
+        mailLogID,
+        mailData: JSON.stringify(mandrillEvent),
+        qualitySignals:
+          qualityType ?
+            [
+              {
+                type: qualityType,
+                email: mandrillEvent.msg?.email,
+                detail:
+                  mandrillEvent.msg?.bounce_description ||
+                  mandrillEvent.msg?.diag ||
+                  null,
+                occurredAt:
+                  typeof mandrillEvent.ts === 'number' ?
+                    new Date(mandrillEvent.ts * 1000)
+                  : undefined,
+                providerEventId:
+                  mandrillEvent.msg?._id ?
+                    `mailchimp:${mandrillEvent.msg._id}:${mandrillEvent.event}`
+                  : undefined,
+              },
+            ]
+          : [],
+      });
     }
 
     return mailLogStatuses;
@@ -239,10 +339,53 @@ export class MailchimpMailProvider extends BaseMailProvider {
         providerMessageID,
         state,
         mailData: JSON.stringify(response),
+        qualitySignals: mapMandrillInfoToQualitySignals(
+          response as MandrillMessageInfo
+        ),
       });
     }
 
     return states;
+  }
+
+  /**
+   * Mandrill's rejection denylist: every address that hard-bounced, complained,
+   * unsubscribed or was blocked by hand, for any mail sent through the account.
+   * Expired entries still say what happened at `created_at`. Soft bounces and
+   * account-level reasons say nothing about the address and are skipped. The
+   * endpoint answers up to 1000 entries.
+   */
+  override async listSuppressions(): Promise<MailQualitySignal[]> {
+    const mailchimpClient = await this.getMailchimpClient();
+    const response = await mailchimpClient.rejects.list({
+      include_expired: true,
+    });
+
+    if (this.responseIsError(response)) {
+      throw new MailProviderError(
+        (response.response?.data as Error | undefined)?.message ??
+          'Failed to list the rejection denylist'
+      );
+    }
+
+    return response.flatMap(entry => {
+      const type = qualityTypeForRejectReason(entry.reason);
+      const email = entry.email?.trim().toLowerCase();
+
+      if (!type || !email) {
+        return [];
+      }
+
+      return [
+        {
+          type,
+          email,
+          detail: entry.detail || null,
+          occurredAt: mandrillDate(entry.created_at),
+          providerEventId: `mailchimp-reject:${email}:${entry.created_at}`,
+        },
+      ];
+    });
   }
 
   /**
@@ -277,7 +420,12 @@ export class MailchimpMailProvider extends BaseMailProvider {
         RECIPIENT_REJECT_REASONS.has(rejected.reject_reason));
 
     throw blameRecipient ?
-        new MailProviderRecipientError(message)
+        new MailProviderRecipientError(
+          message,
+          rejected.status === 'invalid' ?
+            'invalid'
+          : (rejected.reject_reason ?? undefined)
+        )
       : new MailProviderError(message);
   }
 

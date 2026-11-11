@@ -25,6 +25,13 @@ export type Action = {
   type: SubscriptionEvent;
   daysAwayFromEnding: number | null;
   mailTemplateId: string | null;
+  /** Users in letter mode get this event printed instead of mailed. */
+  sendAsLetter: boolean;
+};
+
+/** The template an event of a subscription uses, and whether it prints. */
+export type TemplateAction = Pick<Action, 'sendAsLetter'> & {
+  mailTemplateId: string;
 };
 
 export type LookupActionInput = {

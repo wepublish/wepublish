@@ -115,7 +115,12 @@ function NewsletterCampaignList() {
                 value={title}
                 onChange={event => setTitle(event.target.value)}
                 placeholder={t('newsletter.list.titlePlaceholder')}
-                sx={{ width: 320 }}
+                slotProps={{
+                  htmlInput: {
+                    'aria-label': t('newsletter.list.titlePlaceholder'),
+                  },
+                }}
+                sx={{ width: 320, maxWidth: '100%' }}
               />
               <Button
                 type="submit"

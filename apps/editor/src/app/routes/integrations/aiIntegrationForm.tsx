@@ -10,6 +10,7 @@ import { z } from 'zod';
 
 import vercelLogo from './assets/vercel.svg';
 import { GenericIntegrationList } from './genericIntegrationList';
+import { secretPlaceholder } from './secretPlaceholder';
 
 const aiSettingsSchema = z.object({
   apiKey: z.string().nullish().or(z.literal('')),
@@ -34,13 +35,14 @@ export function AIIntegrationForm() {
         createMutation: CreateAiSettingDocument,
       }}
       getLogo={() => vercelLogo}
-      fields={[
+      fields={setting => [
         {
           name: 'apiKey',
           label: t('integrations.aiSettings.apiKey'),
           info: t('integrations.aiSettings.apiKeyInfo'),
           type: 'password',
           autoComplete: 'one-time-code',
+          placeholder: secretPlaceholder(setting.isApiKeySet, t),
         },
         {
           name: 'systemPrompt',

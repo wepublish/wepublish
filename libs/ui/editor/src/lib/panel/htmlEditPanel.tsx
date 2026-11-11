@@ -10,7 +10,7 @@ import {
   TextField,
 } from '@mui/material';
 import { getApiClientV2, PromptHtmlDocument } from '@wepublish/editor/api';
-import { useCallback, useState } from 'react';
+import { useCallback, useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAutoFixHigh } from 'react-icons/md';
 
@@ -62,6 +62,7 @@ export function HtmlEditPanel({
   const { t } = useTranslation();
 
   const [prompt, setPrompt] = useState('');
+  const promptId = useId();
   const [promptHTML, { loading: thinking, error, data: v0Data }] = useLazyQuery(
     PromptHtmlDocument,
     {
@@ -115,9 +116,12 @@ export function HtmlEditPanel({
       <StyledDrawer>
         <StyledForm onSubmit={() => onGenerateHTML(prompt)}>
           <div>
-            <FormLabel>{t('blocks.html.generate')}</FormLabel>
+            <FormLabel htmlFor={promptId}>
+              {t('blocks.html.generate')}
+            </FormLabel>
 
             <TextField
+              id={promptId}
               value={prompt}
               onChange={event => setPrompt(event.target.value)}
               fullWidth
@@ -153,6 +157,7 @@ export function HtmlEditPanel({
 
         <TextField
           rows={3}
+          label={t('blocks.html.label')}
           placeholder={t('blocks.html.placeholder')}
           value={htmlBlock.html}
           onChange={event =>

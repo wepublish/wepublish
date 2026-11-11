@@ -18,6 +18,7 @@ export * from './next/get-session-token-props';
 export * from './next/next-wepublish-link';
 export * from './next/handle-jwt-login';
 export * from './next/routed-admin-bar';
+export * from './next/third-party-scripts';
 export * from './next/with-builder-router';
 
 export * from './next/pages/404-page';

@@ -3,11 +3,11 @@ Feature: Membership
   Readers buy a subscription to unlock paywalled articles.
 
   Scenario Outline: A reader buys a subscription to read an article behind an <kind> paywall
-    Given an article "Paid story" behind an <kind> paywall for the plan "test-abo-chf"
+    Given an article "Paid story" behind an <kind> paywall for the tenant's subscribe plan
     And a signed-in reader "Noah"
     When "Noah" opens the article "Paid story"
     Then the paywall hides the rest of the article
-    When "Noah" subscribes to the plan "test-abo-chf" from the paywall
+    When "Noah" subscribes to the tenant's subscribe plan from the paywall
     And "Noah" pays on the simulated checkout
     And "Noah" opens the article "Paid story"
     Then "Noah" can read the article "Paid story" in full

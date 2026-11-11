@@ -112,9 +112,11 @@ Reference: `SUBSCRIPTION_EXTEND_WINDOW_DAYS`. Adding one touches four places:
    `SettingsService.settingByName` with a code default for a missing row.
 2. A migration that inserts the default with `ON CONFLICT ("name") DO NOTHING`,
    plus the same upsert in `libs/api/prisma/seed.ts`.
-3. Editor: `SETTINGS` (and `NUMBER_FALLBACK_RANGES`) plus a `renderToggle` /
-   `renderNumberInput` in `libs/settings/editor/src/lib/settings-list.tsx`;
-   labels in all three `apps/editor/src/app/locales/*.json`; snapshot update.
+3. Editor: the key with its bounds, `label` and `description` in
+   `libs/settings/editor/src/lib/settings.schema.ts`, placed in a section of
+   `settings.view.ts` (numbers get a `form.units.*` `unit` there); labels in
+   all three `apps/editor/src/app/locales/*.json`; the `storedSettings`
+   fixture in `settings-page.spec.tsx` (typecheck asks for it).
 4. A changelog entry (`libs/api/changelogs/README.md`).
 
 ### Models

@@ -1,4 +1,12 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
+import type { SettingTrackingPixel as SettingRow } from '@prisma/client';
 import {
   CanCreateTrackingPixelSettings,
   CanDeleteTrackingPixelSettings,
@@ -15,7 +23,7 @@ import {
 import { TrackingPixelProviderSettingsService } from './tracking-pixel-provider-settings.service';
 import { TrackingPixelSettingsProviderDataloaderService } from './tracking-pixel-settings-provider-dataloader.service';
 
-@Resolver()
+@Resolver(() => SettingTrackingPixelProvider)
 export class TrackingPixelProviderSettingsResolver {
   constructor(
     private trackingPixelSettingsService: TrackingPixelProviderSettingsService,
@@ -71,5 +79,13 @@ export class TrackingPixelProviderSettingsResolver {
   })
   deleteTrackingPixelSetting(@Args('id') id: string) {
     return this.trackingPixelSettingsService.deleteTrackingPixelSetting(id);
+  }
+
+  @ResolveField(() => Boolean, {
+    description:
+      'Whether a ProLitteris password is stored. It is never returned itself.',
+  })
+  prolitteris_isPasswordSet(@Parent() setting: SettingRow) {
+    return !!setting.prolitteris_password;
   }
 }

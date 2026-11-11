@@ -3,6 +3,7 @@ import { Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER } from '@nestjs/core';
 import { GqlModuleOptions, GraphQLModule } from '@nestjs/graphql';
+import { ResilienceModule } from '@nestjs/resilience';
 import { ScheduleModule } from '@nestjs/schedule';
 
 import { PrismaClient } from '@prisma/client';
@@ -11,8 +12,13 @@ import { ActionModule } from '@wepublish/action/api';
 import { AuditLogModule } from '@wepublish/audit-log/api';
 import { V0Module } from '@wepublish/ai/api';
 import { NovaMediaAdapter } from '@wepublish/api';
-import { ArticleModule, HotAndTrendingModule } from '@wepublish/article/api';
+import {
+  AnalyticsProviderHotAndTrendingDataSource,
+  ArticleModule,
+  HotAndTrendingModule,
+} from '@wepublish/article/api';
 import { AuthenticationModule } from '@wepublish/authentication/api';
+import { LettersModule } from '@wepublish/letter/api';
 import { AuthorModule } from '@wepublish/author/api';
 import { BannerApiModule } from '@wepublish/banner/api';
 import { BlockContentModule } from '@wepublish/block-content/api';
@@ -25,6 +31,8 @@ import { ApiTokenModule } from '@wepublish/api-token/api';
 import { NewsletterModule } from '@wepublish/newsletter/api';
 import { DocumentModule } from '@wepublish/document/api';
 import { DragonflyModule } from '@wepublish/dragonfly/api';
+import { VideoModule } from '@wepublish/video/api';
+import { AudioModule } from '@wepublish/audio/api';
 import { EventModule } from '@wepublish/event/api';
 import {
   AgendaBaselService,
@@ -37,8 +45,14 @@ import {
   GoogleAnalyticsModule,
   GoogleAnalyticsService,
 } from '@wepublish/google-analytics/api';
+import {
+  PlausibleDbConfig,
+  PlausibleModule,
+  PlausibleService,
+} from '@wepublish/plausible/api';
+import { UmamiDbConfig, UmamiModule, UmamiService } from '@wepublish/umami/api';
 import { HealthModule } from '@wepublish/health';
-import { MediaAdapterModule } from '@wepublish/image/api';
+import { MediaAdapter, MediaAdapterModule } from '@wepublish/image/api';
 import {
   KvCacheModule,
   NamespacedCache,
@@ -84,6 +98,7 @@ import { GraphQLRichText, SlateToPmMigrator } from '@wepublish/richtext/api';
 import { SessionModule } from '@wepublish/session/api';
 import { OneModule } from '@wepublish/one/api';
 import { FeaturesModule } from '@wepublish/features/api';
+import { PrintIssueModule } from '@wepublish/print-issue/api';
 import {
   SeoChecklistModule,
   SettingModule,
@@ -194,6 +209,22 @@ import { API_SHARED_NAMESPACES } from './shared-namespaces';
       inject: [ConfigService, PrismaClient, ProviderRegistryService],
       global: true,
     }),
+    LettersModule.registerAsync({
+      useFactory: async (
+        registry: ProviderRegistryService,
+        mediaAdapter: MediaAdapter
+      ) => {
+        await registry.ensureLoaded();
+
+        return {
+          letterProvider: registry.letterProvider,
+          pdfRenderer: registry.pdfRenderer,
+          documentUrl: (id: string) => mediaAdapter.getDocumentURL({ id }),
+        };
+      },
+      inject: [ProviderRegistryService, MediaAdapter],
+      global: true,
+    }),
     TrackingPixelsModule.registerAsync({
       useFactory: async (registry: ProviderRegistryService) => {
         await registry.ensureLoaded();
@@ -259,6 +290,7 @@ import { API_SHARED_NAMESPACES } from './shared-namespaces';
     }),
 
     FeaturesModule,
+    PrintIssueModule,
     OneModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -274,6 +306,8 @@ import { API_SHARED_NAMESPACES } from './shared-namespaces';
     ApiTokenModule,
     NewsletterModule,
     DocumentModule,
+    VideoModule,
+    AudioModule,
     StatsModule,
     SettingModule,
     ExternalAppsModule,
@@ -317,6 +351,7 @@ import { API_SHARED_NAMESPACES } from './shared-namespaces';
       inject: [AgendaBaselService, KulturZueriService],
     }),
     ScheduleModule.forRoot(),
+    ResilienceModule.forRoot(),
     ConfigModule.forRoot(),
     HealthModule,
     SystemInfoModule,
@@ -335,9 +370,45 @@ import { API_SHARED_NAMESPACES } from './shared-namespaces';
             return dbConfig;
           },
         }),
+        PlausibleModule.registerAsync({
+          imports: [PrismaModule],
+          inject: [PrismaClient, NamespacedCache],
+          useFactory: async (prisma: PrismaClient, kv: NamespacedCache) => {
+            const dbConfig = new PlausibleDbConfig(prisma, kv, 'plausible');
+            await dbConfig.initDatabaseConfiguration();
+            return dbConfig;
+          },
+        }),
+        UmamiModule.registerAsync({
+          imports: [PrismaModule],
+          inject: [PrismaClient, NamespacedCache],
+          useFactory: async (prisma: PrismaClient, kv: NamespacedCache) => {
+            const dbConfig = new UmamiDbConfig(prisma, kv, 'umami');
+            await dbConfig.initDatabaseConfiguration();
+            return dbConfig;
+          },
+        }),
+        PrismaModule,
       ],
-      useFactory: (datasource: GoogleAnalyticsService) => datasource,
-      inject: [GoogleAnalyticsService],
+      useFactory: (
+        prisma: PrismaClient,
+        kv: NamespacedCache,
+        googleAnalytics: GoogleAnalyticsService,
+        plausible: PlausibleService,
+        umami: UmamiService
+      ) =>
+        new AnalyticsProviderHotAndTrendingDataSource(prisma, kv, {
+          GOOGLE: googleAnalytics,
+          PLAUSIBLE: plausible,
+          UMAMI: umami,
+        }),
+      inject: [
+        PrismaClient,
+        NamespacedCache,
+        GoogleAnalyticsService,
+        PlausibleService,
+        UmamiService,
+      ],
     }),
     BannerApiModule,
     VersionInformationModule,

@@ -3,6 +3,7 @@ import { useCurrentEditor } from '@tiptap/react';
 import { MdDragIndicator } from 'react-icons/md';
 import styled from '@emotion/styled';
 import { useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const DragHandleIndicator = styled('button')`
   color: ${({ theme }) => theme.vars.palette.text.disabled};
@@ -27,6 +28,7 @@ const DragHandleAnim = styled(TipTapDragHandle)`
 `;
 
 export function DragHandle() {
+  const { t } = useTranslation();
   const editor = useCurrentEditor().editor!;
   const pos = useRef<number | null>(null);
 
@@ -37,6 +39,9 @@ export function DragHandle() {
       onNodeChange={e => (pos.current = e.pos)}
     >
       <DragHandleIndicator
+        type="button"
+        tabIndex={-1}
+        aria-label={t('richtext.dragHandle')}
         onMouseDown={() => {
           if (pos.current != null) {
             editor.commands.setNodeSelection(pos.current);

@@ -92,6 +92,14 @@ export function ExternalVoteTable({
       render: externalVoteSource => (
         <TextField
           type="number"
+          slotProps={{
+            htmlInput: {
+              'aria-label': t('pollExternalVotes.votesFor', {
+                answer: answer.answer,
+                source: externalVoteSource.source,
+              }),
+            },
+          }}
           value={
             externalVoteSource.voteAmounts?.find(
               (externalVote: PollExternalVote) =>
@@ -131,7 +139,9 @@ export function ExternalVoteTable({
               <IconButton
                 size="small"
                 color="error"
-                aria-label={t('delete')}
+                aria-label={t('pollExternalVotes.deleteSource', {
+                  source: voteSource.source,
+                })}
                 onClick={() => onClickDeleteBtn(voteSource)}
               >
                 <MdDelete />
@@ -214,6 +224,11 @@ export function AddSource({ poll, setLoading, onPollChange }: AddSourceProps) {
           fullWidth
           name="addNewSource"
           placeholder={t('pollExternalVotes.newSourcePlaceholder')}
+          slotProps={{
+            htmlInput: {
+              'aria-label': t('pollExternalVotes.newSourcePlaceholder'),
+            },
+          }}
           value={newSource || ''}
           onChange={event => setNewSource(event.target.value)}
         />

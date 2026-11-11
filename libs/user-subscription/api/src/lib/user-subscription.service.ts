@@ -32,7 +32,6 @@ import {
   getPeriodPriceRange,
   logger,
 } from '@wepublish/utils/api';
-import { unselectPassword } from '@wepublish/authentication/api';
 import {
   calculateAmountForPeriodicity,
   GoodieService,
@@ -106,7 +105,11 @@ export class UserSubscriptionService {
     } = args;
 
     if (goodieId) {
-      await this.goodieService.getValidGoodie(goodieId, memberPlan.id);
+      await this.goodieService.getValidGoodie(
+        goodieId,
+        memberPlan.id,
+        paymentPeriodicity
+      );
     }
 
     // Check if subscription which should be deactivated exists
@@ -194,7 +197,11 @@ export class UserSubscriptionService {
       } = args;
 
       if (goodieId) {
-        await this.goodieService.getValidGoodie(goodieId, memberPlan.id);
+        await this.goodieService.getValidGoodie(
+          goodieId,
+          memberPlan.id,
+          paymentPeriodicity
+        );
       }
 
       const properties = await this.memberContext.processSubscriptionProperties(
@@ -322,7 +329,7 @@ export class UserSubscriptionService {
 
       const fullUser = await this.prisma.user.findUnique({
         where: { id: subscription.userID },
-        select: unselectPassword,
+        include: { address: true, paymentProviderCustomers: true },
       });
 
       if (!fullUser) {

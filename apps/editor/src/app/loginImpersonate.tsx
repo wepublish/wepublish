@@ -75,8 +75,18 @@ export function LoginImpersonate() {
   }, [jwt, authenticateWithJWT, authDispatch, navigate, t]);
 
   return (
-    <LoginTemplate backgroundChildren={<Background />}>
-      <Typography>{error ?? t('login.impersonate.pending')}</Typography>
+    <LoginTemplate
+      title={t('login.login')}
+      backgroundChildren={<Background />}
+    >
+      {error ?
+        <Typography
+          key="error"
+          role="alert"
+        >
+          {error}
+        </Typography>
+      : <Typography key="pending">{t('login.impersonate.pending')}</Typography>}
     </LoginTemplate>
   );
 }

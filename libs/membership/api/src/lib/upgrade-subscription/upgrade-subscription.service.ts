@@ -254,7 +254,11 @@ export class UpgradeSubscriptionService {
     }
 
     if (goodieId) {
-      await this.goodieService.getValidGoodie(goodieId, memberPlanId);
+      await this.goodieService.getValidGoodie(
+        goodieId,
+        memberPlanId,
+        oldSubscription.paymentPeriodicity
+      );
     }
 
     const { invoice } = await this.memberContext.createSubscription({

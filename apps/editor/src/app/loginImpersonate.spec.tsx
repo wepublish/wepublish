@@ -1,4 +1,4 @@
-import { render, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { ReactNode } from 'react';
 import type { Mock } from 'vitest';
 
@@ -32,8 +32,17 @@ vi.mock('@apollo/client/react', async importOriginal => ({
 vi.mock('@wepublish/ui/editor', () => ({
   AuthDispatchActionType: { Login: 'login' },
   AuthDispatchContext: { Provider: ({ children }: never) => children },
-  LoginTemplate: ({ children }: { children: ReactNode }) => (
-    <div>{children}</div>
+  LoginTemplate: ({
+    children,
+    title,
+  }: {
+    children: ReactNode;
+    title?: ReactNode;
+  }) => (
+    <main>
+      {title && <h1>{title}</h1>}
+      {children}
+    </main>
   ),
 }));
 
@@ -106,6 +115,26 @@ describe('LoginImpersonate', () => {
     await waitFor(() => expect(authenticate).toHaveBeenCalled());
     expect(localStorage.getItem('sessionToken')).toBeNull();
     expect(authDispatch).not.toHaveBeenCalled();
+  });
+
+  it('has a page heading while signing in', () => {
+    (authenticate as Mock).mockReturnValue(new Promise(() => undefined));
+
+    render(<LoginImpersonate />);
+
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'login.login' })
+    ).toBeInTheDocument();
+  });
+
+  it('announces that the grant could not be used', async () => {
+    (authenticate as Mock).mockRejectedValue(new Error('invalid credentials'));
+
+    render(<LoginImpersonate />);
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'login.impersonate.failed'
+    );
   });
 
   it('does not store a session when the grant is already spent', async () => {

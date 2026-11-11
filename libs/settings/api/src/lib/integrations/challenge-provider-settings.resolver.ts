@@ -1,4 +1,12 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
+import type { SettingChallengeProvider as SettingRow } from '@prisma/client';
 import {
   CanCreateChallengeProviderSettings,
   CanGetChallengeProviderSettings,
@@ -14,7 +22,7 @@ import {
 import { ChallengeProviderSettingsService } from './challenge-provider-settings.service';
 import { ChallengeProviderSettingsDataloaderService } from './challenge-provider-settings-dataloader.service';
 
-@Resolver()
+@Resolver(() => SettingChallengeProvider)
 export class ChallengeProviderSettingsResolver {
   constructor(
     private challengeProviderSettingsService: ChallengeProviderSettingsService,
@@ -79,4 +87,11 @@ export class ChallengeProviderSettingsResolver {
     return this.challengeProviderSettingsService.deleteChallengeProviderSetting(id);
   }
     **/
+
+  @ResolveField(() => Boolean, {
+    description: 'Whether a secret is stored. It is never returned itself.',
+  })
+  isSecretSet(@Parent() setting: SettingRow) {
+    return !!setting.secret;
+  }
 }
