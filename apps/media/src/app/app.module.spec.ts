@@ -4,7 +4,8 @@ import { Test } from '@nestjs/testing';
 import type { NodeRequest, NodeResponse } from '@nestjs/platform-node';
 import { DragonflyConnection } from '@wepublish/dragonfly/api';
 import { FakeDragonfly } from '@wepublish/dragonfly/api/testing';
-import { MediaService } from '@wepublish/media/api';
+import { LinkCache, MediaService } from '@wepublish/media/api';
+import { getTransformationKey } from '@wepublish/media-transform-guard';
 import { AppController } from './app.controller';
 import { AppModule } from './app.module';
 import { NodeAdapter } from '@nestjs/platform-node';
@@ -50,8 +51,10 @@ describe('AppModule', () => {
     vi.unstubAllGlobals();
   });
 
+  let media: Pick<MediaService, 'getImageUri' | 'hasImage'>;
+
   const start = async (dragonfly: FakeDragonfly) => {
-    const media = {
+    media = {
       getImageUri: vi
         .fn()
         .mockResolvedValue({ uri: 'images/image-1/{}', exists: true }),
@@ -73,6 +76,10 @@ describe('AppModule', () => {
   it('serves a link through the shared link cache', async () => {
     const dragonfly = new FakeDragonfly();
     const started = await start(dragonfly);
+    await started.get(LinkCache).set('image-1', getTransformationKey({}), {
+      uri: 'images/image-1/{}',
+      exists: true,
+    });
 
     await started
       .get(AppController)
@@ -83,6 +90,7 @@ describe('AppModule', () => {
         {}
       );
 
+    expect(media.getImageUri).not.toHaveBeenCalled();
     expect(dragonfly.commands).toContainEqual([
       'SET',
       expect.stringMatching(/^val:media:links:[0-9a-f]{64}$/),

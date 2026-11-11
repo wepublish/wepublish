@@ -121,6 +121,24 @@ describe('PublishPagePanel', () => {
       screen.getByRole('button', { name: 'publishDialog.schedule' })
     ).toBeEnabled();
   });
+
+  it('names the tags instead of listing their ids', () => {
+    wrap(
+      <PublishPagePanel
+        metadata={{
+          ...pageMetadata,
+          tags: ['tag-1'],
+          defaultTags: [{ id: 'tag-1', tag: 'Kultur' }],
+        }}
+        onClose={vi.fn()}
+        onConfirm={vi.fn()}
+      />
+    );
+
+    expect(
+      within(rowOf('pageEditor.panels.tags')).getByText('Kultur')
+    ).toBeInTheDocument();
+  });
 });
 
 describe('PublishArticlePanel', () => {
@@ -164,5 +182,19 @@ describe('PublishArticlePanel', () => {
     expect(
       screen.queryByText('articleEditor.panels.hideAuthors')
     ).not.toBeInTheDocument();
+  });
+
+  it('names the tags, keeping the id of one not loaded yet', () => {
+    renderPanel({
+      ...articleMetadata,
+      tags: ['tag-1', 'tag-new'],
+      defaultTags: [{ id: 'tag-1', tag: 'Wirtschaft' }],
+    });
+
+    expect(
+      within(rowOf('articleEditor.panels.tags')).getByText(
+        'Wirtschaft, tag-new'
+      )
+    ).toBeInTheDocument();
   });
 });

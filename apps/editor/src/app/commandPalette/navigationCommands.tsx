@@ -61,6 +61,8 @@ import {
   CanGetArticle,
   CanGetArticles,
   CanGetAudienceStats,
+  CanCreatePrintIssue,
+  CanGetPrintIssues,
   CanGetAuditLogs,
   CanGetAuthor,
   CanGetAuthors,
@@ -173,6 +175,7 @@ import {
   MdKey,
   MdLocationPin,
   MdMail,
+  MdMarkunreadMailbox,
   MdMoney,
   MdMultilineChart,
   MdNewspaper,
@@ -198,6 +201,7 @@ import {
   MdTravelExplore,
   MdVpnKey,
   MdVideoLibrary,
+  MdPrint,
 } from 'react-icons/md';
 
 import type { CommandDefinition } from './commandDefinition';
@@ -508,6 +512,22 @@ export const NAVIGATION_COMMANDS: CommandDefinition[] = [
     perform: ({ navigate }) => navigate('/banners'),
   },
   {
+    id: 'printIssues',
+    titleKey: 'navbar.printIssues',
+    icon: <MdPrint />,
+    permissions: [CanGetPrintIssues.id],
+    feature: 'print-export',
+    perform: ({ navigate }) => navigate('/print-issues'),
+  },
+  {
+    id: 'printIssueCreate',
+    titleKey: 'printIssues.create',
+    icon: <MdPrint />,
+    permissions: [CanCreatePrintIssue.id],
+    feature: 'print-export',
+    perform: ({ navigate }) => navigate('/print-issues/create'),
+  },
+  {
     id: 'authors',
     titleKey: 'navbar.authors',
     icon: <MdGroup />,
@@ -607,12 +627,30 @@ export const NAVIGATION_COMMANDS: CommandDefinition[] = [
     perform: ({ navigate }) => navigate('/communicationflows/edit/default'),
   },
   {
+    id: 'deliverySuggestions',
+    titleKey: 'navbar.deliverySuggestions',
+    sectionKey: 'navbar.communication',
+    icon: <MdMarkunreadMailbox />,
+    permissions: [CanGetUsers.id],
+    feature: 'paper-letter-flow',
+    perform: ({ navigate }) => navigate('/deliverychannel'),
+  },
+  {
     id: 'mailTemplates',
     titleKey: 'navbar.mailTemplates',
     sectionKey: 'navbar.communication',
     icon: <MdMail />,
     permissions: [CanGetMailTemplates.id, CanUpdateMailTemplates.id],
     perform: ({ navigate }) => navigate('/mailtemplates'),
+  },
+  {
+    id: 'letterLayouts',
+    titleKey: 'navbar.letterLayouts',
+    sectionKey: 'navbar.communication',
+    icon: <MdDescription />,
+    permissions: [CanGetMailTemplates.id, CanUpdateMailTemplates.id],
+    feature: 'paper-letters',
+    perform: ({ navigate }) => navigate('/letterlayouts'),
   },
   {
     id: 'newsletter',
@@ -843,14 +881,6 @@ export const NAVIGATION_COMMANDS: CommandDefinition[] = [
     icon: <MdAnalytics />,
     permissions: [CanGetWebsiteSettings.id, CanUpdateWebsiteSettings.id],
     perform: ({ navigate }) => navigate('/settings/website/analytics'),
-  },
-  {
-    id: 'websiteMail',
-    titleKey: 'websiteSettings.mail.title',
-    sectionKey: 'websiteSettings.navbar',
-    icon: <MdMail />,
-    permissions: [CanGetWebsiteSettings.id, CanUpdateWebsiteSettings.id],
-    perform: ({ navigate }) => navigate('/settings/website/mail'),
   },
   {
     id: 'websiteAds',

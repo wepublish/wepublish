@@ -331,4 +331,62 @@ describe('createStartPageCache', () => {
 
     expect(calls).toEqual(['/a/one', '/a/one']);
   });
+
+  describe('the revalidation window', () => {
+    const NEXT_HEADER = 'public, max-age=59, s-maxage=59, stale-if-error=86400';
+    const STATIC_ARTICLE = {
+      'cache-control': NEXT_HEADER,
+      'x-page-cache-revalidate': '3600',
+    };
+
+    it('stores against the content window, not the s-maxage the edge sees', async () => {
+      const clock = new FakeClock();
+      const { fetch, settled } = setup(
+        () =>
+          html('<p>live</p>', {
+            headers: {
+              'cache-control': NEXT_HEADER,
+              'x-page-cache-revalidate': '10',
+            },
+          }),
+        clock
+      );
+
+      await fetch(document('https://site.test/a/live'));
+      await settled();
+      clock.advance(11_000);
+      const second = await fetch(document('https://site.test/a/live'));
+
+      expect(second.headers.get('x-page-cache')).toBe('STALE');
+    });
+
+    it('sends the Next header and nothing else, fresh or replayed', async () => {
+      const { fetch, settled } = setup(() =>
+        html('<p>one</p>', { headers: STATIC_ARTICLE })
+      );
+
+      const fresh = await fetch(document('https://site.test/a/one'));
+      await settled();
+      const replayed = await fetch(document('https://site.test/a/one'));
+
+      for (const response of [fresh, replayed]) {
+        expect(response.headers.get('cache-control')).toBe(NEXT_HEADER);
+        expect(response.headers.has('x-page-cache-revalidate')).toBe(false);
+        expect(response.headers.has('cloudflare-cdn-cache-control')).toBe(
+          false
+        );
+      }
+    });
+
+    it('strips the window from requests the cache does not handle', async () => {
+      const { fetch } = setup(() =>
+        html('<p>one</p>', { headers: STATIC_ARTICLE })
+      );
+
+      const response = await fetch(new Request('https://site.test/a/one'));
+
+      expect(response.headers.get('cache-control')).toBe(NEXT_HEADER);
+      expect(response.headers.has('x-page-cache-revalidate')).toBe(false);
+    });
+  });
 });

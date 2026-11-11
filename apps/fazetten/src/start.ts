@@ -15,10 +15,9 @@ import {
  * TanStack Start has **no incremental static regeneration**. The Next app
  * leaned on it heavily (`getStaticProps` + `revalidate: 60` +
  * `fallback: 'blocking'` on every content route). The faithful equivalent is
- * render-on-demand behind a CDN that honours `stale-while-revalidate`: the
- * first request after the window expires is answered from the edge with the
- * stale copy while the origin re-renders. Same user-visible behaviour, same
- * origin load profile, different machinery.
+ * `withPageCache` in `src/server.ts`: the first request after the window
+ * expires is answered with the stale copy while the origin re-renders. Same
+ * user-visible behaviour, same origin load profile, different machinery.
  *
  * Next applied cache headers *by path* in `next.config.js#headers()`, so a
  * path-based request middleware reproduces that part in one place. If you add
@@ -27,18 +26,14 @@ import {
  * is served to the next.
  *
  * The per-page `revalidate` is reproduced, but not here: a path rule cannot
- * see block types, so the content loaders set their own `cache-control` from
- * `revalidateFor()` (see `contentCacheControl`) and the check below leaves it
- * alone. What is left in this table is everything that has no content to
+ * see block types, so the content loaders set their own headers from
+ * `revalidateFor()` (see `contentCacheHeaders`) and the check below leaves
+ * them alone. What is left in this table is everything that has no content to
  * judge — `no-store` routes, assets, and the default for anything new.
  */
 
-// Split deliberately. `stale-while-revalidate` belongs to the CDN: on the
-// browser-facing `cache-control` it would let a returning visitor's own cache
-// serve week-old HTML, which Next never did.
-const BROWSER = 'public, max-age=59, stale-if-error=86400';
-const CDN = 's-maxage=60, stale-while-revalidate=604800, stale-if-error=86400';
-const ISR_60 = `${BROWSER}, ${CDN}`;
+// Byte for byte what `next.config.js` sends for every path.
+const ISR_60 = 'public, max-age=59, s-maxage=59, stale-if-error=86400';
 
 const NO_STORE = 'no-store';
 

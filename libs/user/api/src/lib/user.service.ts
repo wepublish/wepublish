@@ -32,6 +32,7 @@ import {
   MailchimpContactService,
   MailContext,
   mailLogType,
+  recordEmailQualitySafely,
 } from '@wepublish/mail/api';
 import * as crypto from 'crypto';
 import { HibpService } from './hibp.service';
@@ -272,9 +273,18 @@ export class UserService {
         previousUser.email,
         user.email
       );
+      await this.recomputeEmailQuality(user.id);
     }
 
     return user;
+  }
+
+  // The email quality belongs to an address, so a change starts it over.
+  private recomputeEmailQuality(userId: string) {
+    return recordEmailQualitySafely(
+      this.mailContext.emailQualityRecorder,
+      recorder => recorder.recompute(userId).then(() => undefined)
+    );
   }
 
   async deleteUser(id: string) {
@@ -434,6 +444,7 @@ export class UserService {
       user.email,
       updatedUser.email
     );
+    await this.recomputeEmailQuality(updatedUser.id);
 
     return updatedUser;
   }

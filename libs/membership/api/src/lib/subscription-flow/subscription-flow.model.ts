@@ -42,6 +42,12 @@ export class SubscriptionInterval {
 
   @Field(() => SubscriptionEvent)
   event!: SubscriptionEvent;
+
+  @Field({
+    description:
+      'Users in letter mode get this event printed instead of mailed.',
+  })
+  sendAsLetter!: boolean;
 }
 
 @ObjectType()
@@ -84,6 +90,9 @@ export class SubscriptionIntervalCreateInput {
 
   @Field(() => SubscriptionEvent)
   event!: SubscriptionEvent;
+
+  @Field({ nullable: true })
+  sendAsLetter?: boolean;
 }
 
 @ArgsType()
@@ -91,6 +100,7 @@ export class SubscriptionIntervalUpdateInput extends PartialType(
   PickType(SubscriptionIntervalCreateInput, [
     'daysAwayFromEnding',
     'mailTemplateId',
+    'sendAsLetter',
   ] as const),
   ArgsType
 ) {

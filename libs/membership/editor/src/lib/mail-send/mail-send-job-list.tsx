@@ -20,6 +20,7 @@ import {
 } from '@mui/material';
 import {
   FullMailSendJobFragment,
+  MailChannel,
   MailLogState,
   MailSendJobDocument,
   MailSendJobRecipientState,
@@ -53,6 +54,7 @@ import {
   openCount,
   ResumeJobButton,
 } from './mail-job-common';
+import { EmailQualityRefreshButton } from './email-quality-refresh-button';
 
 const PAGE_SIZE = 20;
 const RECIPIENT_PAGE_SIZE = 50;
@@ -90,6 +92,7 @@ const TONE = {
   pending: 'text.secondary',
   failed: 'error.main',
   sending: 'warning.main',
+  info: 'primary.main',
 } as const;
 
 /**
@@ -383,6 +386,57 @@ function JobSummary({
           </Typography>
         </Stat>
       </Stack>
+      {/* What the campaign achieved, as far as the provider has told us. */}
+      {job.channel === MailChannel.Mail && (
+        <>
+          <Stack
+            direction="row"
+            spacing={1.5}
+            sx={{ alignItems: 'center', flexWrap: 'wrap' }}
+            style={{ marginTop: 16 }}
+          >
+            <Typography variant="body2">
+              <strong>{t('mailJobs.outcome.title')}</strong>{' '}
+              <InfoTooltip text={t('mailJobs.outcome.hint')} />
+            </Typography>
+            <EmailQualityRefreshButton
+              size="small"
+              onDone={onChanged}
+            />
+          </Stack>
+          <Stack
+            direction="row"
+            spacing={1.5}
+            sx={{ flexWrap: 'wrap' }}
+            style={{ marginTop: 8 }}
+          >
+            <Stat tone={TONE.sent}>
+              <StatValue>{job.outcome.delivered}</StatValue>
+              <Typography variant="caption">
+                {t('mailJobs.outcome.delivered')}
+              </Typography>
+            </Stat>
+            <Stat tone={TONE.info}>
+              <StatValue>{job.outcome.clicked}</StatValue>
+              <Typography variant="caption">
+                {t('mailJobs.outcome.clicked')}
+              </Typography>
+            </Stat>
+            <Stat tone={TONE.failed}>
+              <StatValue>{job.outcome.bounced}</StatValue>
+              <Typography variant="caption">
+                {t('mailJobs.outcome.bounced')}
+              </Typography>
+            </Stat>
+            <Stat tone={TONE.failed}>
+              <StatValue>{job.outcome.dead}</StatValue>
+              <Typography variant="caption">
+                {t('mailJobs.outcome.dead')}
+              </Typography>
+            </Stat>
+          </Stack>
+        </>
+      )}
       {job.error && (
         <Alert
           severity={pending > 0 ? 'warning' : 'error'}

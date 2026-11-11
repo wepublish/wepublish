@@ -34,8 +34,32 @@ export const FEATURES = [
     stage: 'alpha',
   },
   {
+    key: 'paper-letters',
+    description:
+      'Printed letters: letter provider and pdf renderer integrations, letter layouts, the letter channel in the communication tool',
+    stage: 'beta',
+  },
+  {
+    key: 'paper-letter-flow',
+    description:
+      'Per-user delivery mode: automated subscription mails printed as letters, with suggestions from the email quality',
+    stage: 'alpha',
+  },
+  {
+    key: 'editor-renewal-provider-invoice',
+    description:
+      'Editor renew and reactivate: the invoice is created at the payment provider and the invoice-creation mail or letter is sent, as the nightly job does',
+    stage: 'alpha',
+  },
+  {
     key: 'video-audio-uploads',
     description: 'Media: video and audio libraries with uploads',
+    stage: 'alpha',
+  },
+  {
+    key: 'print-export',
+    description:
+      'Print issue export: the recipient list of a magazine issue from subscriptions and bexio as CSV, with issue tracking and a copies quota',
     stage: 'alpha',
   },
 ] as const satisfies readonly Feature[];

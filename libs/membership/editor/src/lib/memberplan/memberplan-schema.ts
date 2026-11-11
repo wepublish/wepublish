@@ -50,6 +50,7 @@ export const materializePricing = (
         ...existing,
         periodicity,
         label: existing?.label ?? null,
+        printIssues: existing?.printIssues ?? null,
         amountMin: Math.round(equivalent.amountPerMonthMin * months),
         amountTarget:
           equivalent.amountPerMonthTarget != null ?
@@ -159,7 +160,9 @@ export const prunePricing = ({
       availablePaymentMethods.some(({ value }) =>
         value.paymentPeriodicities.includes(price.periodicity)
       ) &&
-      (price.label != null || price.amountMin != null)
+      (price.label != null ||
+        price.amountMin != null ||
+        price.printIssues != null)
   );
 
   const pricedMonthlyRow = periodicityPricing.find(
@@ -204,6 +207,7 @@ export const EMPTY_MEMBER_PLAN: MemberPlanFormValues = {
       amountMin: 0,
       amountTarget: null,
       amountMax: null,
+      printIssues: null,
     },
   ],
   availablePaymentMethods: [],

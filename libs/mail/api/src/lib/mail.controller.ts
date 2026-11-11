@@ -1,7 +1,24 @@
 import { Logger } from '@nestjs/common';
-import { MailLogState, MailLogType, PrismaClient, User } from '@prisma/client';
+import {
+  EmailQualityEventSource,
+  MailLogState,
+  MailLogType,
+  PrismaClient,
+  User,
+} from '@prisma/client';
 import { v7 as uuidv7 } from 'uuid';
 import { MailContext } from './mail-context';
+import { MailProviderRecipientError } from './mail-provider/mail-provider.interface';
+import {
+  qualityTypeForRejectReason,
+  recordEmailQualitySafely,
+} from './email-quality-recorder';
+import {
+  LetterAttachment,
+  LetterDeliveryError,
+  LetterRecipient,
+} from './letter-sender';
+import { resolveLetterRecipient } from './resolve-letter-recipient';
 
 export enum mailLogType {
   SubscriptionFlow,
@@ -35,6 +52,23 @@ export type MailControllerConfig = {
    * needs to reference the entry regardless of how the delivery turns out.
    */
   mailLogId?: string;
+  /**
+   * This event is switched to letters: a recipient in letter mode gets it
+   * printed instead of mailed. Only subscription-flow senders set it; a login
+   * link or a password reset is no use on paper.
+   */
+  asLetter?: boolean;
+  /**
+   * The recipient the caller already resolved to paper (`null`: to mail),
+   * when it had to decide before the send — the nightly job does, before it
+   * asks the payment provider for the invoice. Skips the lookup here.
+   */
+  letterRecipient?: LetterRecipient | null;
+  /**
+   * A pdf printed after the template, e.g. the provider's invoice with its
+   * payment slip. Nothing for a mail: the provider emails that itself.
+   */
+  letterAttachment?: LetterAttachment;
 };
 
 /**
@@ -145,6 +179,14 @@ export class MailController {
 
     const mailLogId = this.config.mailLogId ?? uuidv7();
 
+    const letterRecipient = await this.resolveLetterRecipient();
+
+    if (letterRecipient) {
+      await this.sendAsLetter(mailLogId, letterRecipient);
+
+      return;
+    }
+
     let subject: string | null = null;
     let providerMessageID: string | undefined;
     try {
@@ -166,6 +208,27 @@ export class MailController {
         (error as Error).message
       );
 
+      // Only a lasting refusal of this very address says something about it.
+      const type =
+        error instanceof MailProviderRecipientError ?
+          qualityTypeForRejectReason(error.reason)
+        : null;
+
+      if (type) {
+        const detail = (error as MailProviderRecipientError).reason;
+
+        await recordEmailQualitySafely(
+          this.mailContext.emailQualityRecorder,
+          recorder =>
+            recorder.recordMailSignals({
+              mailLogId,
+              userId: this.config.recipient.id,
+              signals: [{ type, email: this.config.recipient.email, detail }],
+              source: EmailQualityEventSource.send,
+            })
+        );
+      }
+
       throw error;
     }
 
@@ -176,6 +239,58 @@ export class MailController {
       null,
       providerMessageID
     );
+  }
+
+  /**
+   * The user with their address when this send goes to paper, as the caller
+   * decided or as `resolveLetterRecipient` decides now.
+   */
+  private resolveLetterRecipient(): Promise<LetterRecipient | null> {
+    if (this.config.letterRecipient !== undefined) {
+      return Promise.resolve(this.config.letterRecipient);
+    }
+
+    return resolveLetterRecipient({
+      prisma: this.prismaService,
+      letterSender: this.mailContext.letterSender,
+      recipient: this.config.recipient,
+      asLetter: this.config.asLetter,
+      logger: this.logger,
+    });
+  }
+
+  /**
+   * Print instead of mail. The letter side writes the log entry, submitted or
+   * rejected, under the same identifier a mail would get, so a retried run
+   * recognises it.
+   */
+  private async sendAsLetter(
+    mailLogId: string,
+    recipient: LetterRecipient
+  ): Promise<void> {
+    try {
+      await this.mailContext.letterSender!.sendLetter({
+        mailTemplateId: this.config.mailTemplateId,
+        recipient,
+        data: await this.buildData(),
+        mailLogId,
+        mailSendJobId: this.config.mailSendJobId,
+        log: {
+          mailIdentifier: this.generateMailIdentifier(),
+          type: MAIL_LOG_TYPE_MAP[this.config.mailType],
+        },
+        ...(this.config.letterAttachment && {
+          attachment: this.config.letterAttachment,
+        }),
+      });
+    } catch (error) {
+      throw new LetterDeliveryError(
+        `Letter <${mailLogId}> for <${this.config.recipient.email}> failed: ${
+          (error as Error).message
+        }`,
+        error
+      );
+    }
   }
 
   private async writeLog(
@@ -196,6 +311,7 @@ export class MailController {
           },
           state,
           sentDate: new Date(),
+          recipientEmail: this.config.recipient.email,
           mailProviderID: this.mailContext.mailProvider?.id || '',
           mailIdentifier: this.generateMailIdentifier(),
           type: MAIL_LOG_TYPE_MAP[this.config.mailType],

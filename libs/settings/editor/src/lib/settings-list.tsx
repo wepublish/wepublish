@@ -20,6 +20,13 @@ import {
   useUnsavedChangesDialog,
   enqueueSnackbar,
   PageTitle,
+  FeatureControl,
+  PrintExportOptionsFields,
+  printExportOptionsOf,
+  describePrintExportOptions,
+  DEFAULT_PRINT_EXPORT_OPTIONS,
+  PrintBexioKindsFields,
+  printBexioKindsOf,
 } from '@wepublish/ui/editor';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -80,6 +87,18 @@ const SETTINGS = {
   [SettingName.SessionTtlDays]: {
     label: 'settingList.sessionTtlDays',
     value: 7,
+  },
+  [SettingName.EmailQualityUnresponsiveAfterDays]: {
+    label: 'settingList.emailQualityUnresponsiveAfterDays',
+    value: 180,
+  },
+  [SettingName.EmailQualityMinMailsForUnresponsive]: {
+    label: 'settingList.emailQualityMinMailsForUnresponsive',
+    value: 1,
+  },
+  [SettingName.EmailQualityEvidenceWarnAfterDays]: {
+    label: 'settingList.emailQualityEvidenceWarnAfterDays',
+    value: 14,
   },
   [SettingName.SendLoginJwtExpiresMin]: {
     label: 'settingList.loginMinutes',
@@ -149,6 +168,18 @@ const SETTINGS = {
     label: 'settingList.paymentMethodChangeExpiryDays',
     value: 14,
   },
+  [SettingName.PrintIssuesPerYear]: {
+    label: 'settingList.printIssuesPerYear',
+    value: 0,
+  },
+  [SettingName.PrintExportDefaults]: {
+    label: 'settingList.printExportDefaults',
+    value: DEFAULT_PRINT_EXPORT_OPTIONS,
+  },
+  [SettingName.PrintBexioKinds]: {
+    label: 'settingList.printBexioKinds',
+    value: [],
+  },
 } as Record<SettingName, { label: string; value: unknown }>;
 
 type SettingValues = Record<SettingName, unknown>;
@@ -159,12 +190,15 @@ const EMPTY_SETTINGS = Object.fromEntries(
 
 const NUMBER_FALLBACK_RANGES: Partial<Record<SettingName, [number, number]>> = {
   [SettingName.SessionTtlDays]: [1, 365],
+  [SettingName.EmailQualityUnresponsiveAfterDays]: [1, 3650],
+  [SettingName.EmailQualityMinMailsForUnresponsive]: [1, 100],
   [SettingName.SendLoginJwtExpiresMin]: [1, 10080],
   [SettingName.ResetPasswordJwtExpiresMin]: [10, 10080],
   [SettingName.PeeringTimeoutMs]: [1000, 10000],
   [SettingName.CommentCharLimit]: [0, 10000],
   [SettingName.SubscriptionExtendWindowDays]: [0, 366],
   [SettingName.PaymentMethodChangeExpiryDays]: [1, 90],
+  [SettingName.PrintIssuesPerYear]: [0, 52],
 };
 
 type Restrictions = Partial<
@@ -287,7 +321,7 @@ function SettingList() {
   }, [fetchError, t, updateSettingError]);
 
   const valueText = useCallback(
-    (value: boolean | string): string => {
+    (value: unknown): string => {
       if (value === true) {
         return t('settingList.enabled');
       }
@@ -296,7 +330,21 @@ function SettingList() {
         return t('settingList.disabled');
       }
 
-      return value;
+      // the bexio kinds are a list: name them
+      if (Array.isArray(value)) {
+        return (
+          printBexioKindsOf(value)
+            .map(kind => kind.label || kind.word)
+            .join(', ') || t('printBexioKinds.empty')
+        );
+      }
+
+      // the print export defaults are an object: name what they switch on
+      if (typeof value === 'object' && value !== null) {
+        return describePrintExportOptions(printExportOptionsOf(value), t);
+      }
+
+      return String(value ?? '');
     },
     [t]
   );
@@ -538,6 +586,78 @@ function SettingList() {
                     </CardContent>
                   </Card>
                 </Grid>
+
+                <FeatureControl feature="print-export">
+                  <Grid size={{ xs: 12 }}>
+                    <Card>
+                      <CardHeader title={t('settingList.printIssues')} />
+
+                      <CardContent>
+                        <Stack
+                          spacing={3}
+                          sx={{ width: '100%' }}
+                        >
+                          {renderNumberInput(
+                            SettingName.PrintIssuesPerYear,
+                            t('settingList.info.printIssuesPerYear'),
+                            t('settingList.issues')
+                          )}
+
+                          {/* how lists recognise orders in bexio; the defaults below offer these kinds */}
+                          <Controller
+                            control={control}
+                            name={SettingName.PrintBexioKinds}
+                            render={({ field }) => (
+                              <Stack spacing={1}>
+                                <SettingRow>
+                                  <FormLabel>
+                                    {t('settingList.printBexioKinds')}
+                                  </FormLabel>
+                                  <InfoTooltip
+                                    text={t('settingList.info.printBexioKinds')}
+                                  />
+                                </SettingRow>
+                                <PrintBexioKindsFields
+                                  value={printBexioKindsOf(field.value)}
+                                  onChange={field.onChange}
+                                  disabled={isDisabled}
+                                />
+                              </Stack>
+                            )}
+                          />
+
+                          {/* what a new print issue starts from; the form saves it like every setting */}
+                          <Controller
+                            control={control}
+                            name={SettingName.PrintExportDefaults}
+                            render={({ field }) => (
+                              <Stack spacing={1}>
+                                <SettingRow>
+                                  <FormLabel>
+                                    {t('settingList.printExportDefaults')}
+                                  </FormLabel>
+                                  <InfoTooltip
+                                    text={t(
+                                      'settingList.info.printExportDefaults'
+                                    )}
+                                  />
+                                </SettingRow>
+                                <PrintExportOptionsFields
+                                  value={printExportOptionsOf(field.value)}
+                                  onChange={field.onChange}
+                                  disabled={isDisabled}
+                                  bexioKinds={printBexioKindsOf(
+                                    values[SettingName.PrintBexioKinds]
+                                  )}
+                                />
+                              </Stack>
+                            )}
+                          />
+                        </Stack>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                </FeatureControl>
               </Grid>
             </Grid>
 
@@ -571,6 +691,43 @@ function SettingList() {
                           SettingName.ResetPasswordJwtExpiresMin,
                           t('settingList.info.passwordToken'),
                           t('settingList.minutes')
+                        )}
+                      </Stack>
+                    </CardContent>
+                  </Card>
+                </Grid>
+
+                {/* email quality: when a mailed address counts as unresponsive */}
+                <Grid size={{ xs: 12 }}>
+                  <Card>
+                    <CardHeader title={t('settingList.emailQuality')} />
+
+                    <CardContent>
+                      <Stack
+                        spacing={3}
+                        sx={{ width: '100%' }}
+                      >
+                        {renderNumberInput(
+                          SettingName.EmailQualityUnresponsiveAfterDays,
+                          t(
+                            'settingList.warnings.emailQualityUnresponsiveAfterDays'
+                          ),
+                          t('settingList.days')
+                        )}
+
+                        {renderNumberInput(
+                          SettingName.EmailQualityMinMailsForUnresponsive,
+                          t(
+                            'settingList.warnings.emailQualityMinMailsForUnresponsive'
+                          )
+                        )}
+
+                        {renderNumberInput(
+                          SettingName.EmailQualityEvidenceWarnAfterDays,
+                          t(
+                            'settingList.warnings.emailQualityEvidenceWarnAfterDays'
+                          ),
+                          t('settingList.days')
                         )}
                       </Stack>
                     </CardContent>
@@ -669,8 +826,8 @@ function SettingList() {
                 label={t(SETTINGS[name].label)}
                 key={name}
               >
-                <s>{valueText(defaultValues?.[name] as boolean | string)}</s>{' '}
-                {valueText(values[name] as boolean | string)}
+                <s>{valueText(defaultValues?.[name])}</s>{' '}
+                {valueText(values[name])}
               </DescriptionListItemWrapper>
             ))}
           </DescriptionList>

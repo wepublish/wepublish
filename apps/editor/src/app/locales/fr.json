@@ -14,10 +14,6 @@
       "theMember": "ce membre"
     },
     "lastSavedAt": "Dernier enregistrement {{date, ccc PP pp}}",
-    "autosave": {
-      "label": "Enregistrement auto",
-      "description": "Enregistrer le brouillon toutes les 30 secondes pendant que vous travaillez"
-    },
     "preview": {
       "backToEditor": "Éditeur",
       "mobile": "Mobile",
@@ -156,7 +152,6 @@
         "displayOptionsHint": "Laissez un champ vide pour utiliser le texte original.",
         "dontChangeSlug": "Veuillez ne pas changer le slug une fois l’article publié.",
         "draft": "Brouillon",
-        "chooseFile": "Choisir un fichier",
         "dropImage": "Glisser l’image ici",
         "editTeaser": "Modifier le teaser",
         "enterAuthors": "Veuillez ajouter un·e auteur·trice",
@@ -246,7 +241,8 @@
         "hiddenInfo": "Les articles masqués n’apparaissent pas dans les listes automatiques d’articles du site (p.ex. derniers articles ou pages de tags), mais restent accessibles via leur lien direct.",
         "contentUrlInfo": "L’adresse web vers laquelle les lecteur·trice·s sont dirigé·e·s en cliquant sur le teaser.",
         "teaserPropertiesInfo": "Paires clé-valeur supplémentaires que votre site peut utiliser pour des affichages particuliers. Nécessaire uniquement si les personnes qui développent votre site vous l’ont demandé. Les propriétés publiques sont visibles via l’API publique.",
-        "enterSocialMediaImage": "Veuillez ajouter une image pour les réseaux sociaux"
+        "enterSocialMediaImage": "Veuillez ajouter une image pour les réseaux sociaux",
+        "chooseFile": "Choisir un fichier"
       },
       "unsavedChanges": "modifications non enregistrées",
       "unpublishedChanges": "modifications pas encore publiées"
@@ -259,7 +255,6 @@
         "noResults": "Aucun modèle trouvé"
       },
       "overview": {
-        "slug": "Slug",
         "articles": "Articles",
         "authors": "Auteur·trice·s",
         "draft": "Brouillon",
@@ -272,7 +267,8 @@
         "states": "Statut",
         "title": "Titre",
         "untitled": "Sans titre",
-        "updated": "Modifié le"
+        "updated": "Modifié le",
+        "slug": "Slug"
       },
       "panels": {
         "cancel": "Annuler",
@@ -585,12 +581,12 @@
       "imageGallery": {
         "label": "Galerie",
         "overview": {
-          "removeImage": "Supprimer l'image",
           "caption": "Légende",
           "new": "(Nouveau)",
           "previousImage": "Image précédente",
           "nextImage": "Image suivante",
-          "addImage": "Ajouter une image"
+          "addImage": "Ajouter une image",
+          "removeImage": "Supprimer l'image"
         },
         "panels": {
           "caption": "Légende",
@@ -886,8 +882,6 @@
     },
     "confirm": "Confirmer",
     "consents": {
-      "deleteTitle": "Supprimer le consentement ?",
-      "deleteBody": "Voulez-vous supprimer définitivement «{{name}}» ? Les choix des utilisateurs disparaissent avec.",
       "create": "Créer un nouveau consentement",
       "defaultValue": "Valeur par défaut",
       "defaultValueTitle": "Valeur par défaut (cochée par défaut)",
@@ -902,7 +896,9 @@
       "rejected": "Refusé",
       "slugInfo": "Identifiant technique utilisé par votre site ou vos applications pour trouver ce consentement, p.ex. « newsletter ». Utilisez uniquement des minuscules, des chiffres et des tirets.",
       "defaultValueInfo": "Indique si le consentement est présélectionné pour les utilisateur·trice·s qui n’ont pas encore décidé, p.ex. comme case déjà cochée dans un formulaire.",
-      "checkedByDefault": "Cochée par défaut"
+      "checkedByDefault": "Cochée par défaut",
+      "deleteTitle": "Supprimer le consentement ?",
+      "deleteBody": "Voulez-vous supprimer définitivement «{{name}}» ? Les choix des utilisateurs disparaissent avec."
     },
     "create": "Créer",
     "createAndClose": "Créer & fermer",
@@ -974,15 +970,15 @@
       "networkContentInfo": "Les derniers articles d’autres médias du réseau We.Publish. Vous pouvez les reprendre dans votre éditeur (importer) et les publier sur votre site."
     },
     "dateTimePicker": {
-      "yesterday": "Hier",
-      "done": "OK",
       "hour": "{{hour}}:00",
       "nextMonday": "Lundi prochain",
       "nextSaturday": "Samedi prochain",
       "now": "Maintenant",
       "today": "Aujourd’hui",
       "tomorrow": "Demain",
-      "clear": "Effacer la date"
+      "clear": "Effacer la date",
+      "yesterday": "Hier",
+      "done": "OK"
     },
     "deactivated": "Désactivé",
     "delete": "Supprimer",
@@ -1009,19 +1005,162 @@
       "network": "Pas de connexion au serveur. Vérifiez votre connexion Internet et réessayez.",
       "unexpected": "Une erreur est survenue. Réessayez – si le problème persiste, contactez le support."
     },
+    "form": {
+      "loading": "Chargement …",
+      "loadError": {
+        "title": "Les données n’ont pas pu être chargées",
+        "retry": "Réessayer"
+      },
+      "errorSummary": {
+        "title": "Veuillez corriger ces informations avant d’enregistrer"
+      },
+      "field": {
+        "moreInfo": "Plus d’informations"
+      },
+      "select": {
+        "empty": "Aucune sélection"
+      },
+      "password": {
+        "show": "Afficher le mot de passe",
+        "hide": "Masquer le mot de passe"
+      },
+      "array": {
+        "add": "Ajouter une entrée",
+        "remove": "Supprimer l’entrée {{position}}",
+        "reorder": "Réorganiser",
+        "dragHandle": "Glisser pour réordonner l’entrée {{position}}",
+        "roleDescription": "entrée triable",
+        "dragInstructions": "Pour saisir une entrée, appuyez sur Espace ou Entrée. Déplacez-la avec les flèches, puis appuyez à nouveau sur Espace ou Entrée pour la déposer, ou sur Échap pour annuler.",
+        "dragStart": "Entrée {{position}} saisie.",
+        "dragOver": "L’entrée {{position}} est au-dessus de la position {{target}}.",
+        "dragEnd": "Entrée {{position}} déposée à la position {{target}}.",
+        "dragCancel": "Déplacement annulé. L’entrée {{position}} est revenue à sa place.",
+        "empty": "Aucune entrée pour l’instant",
+        "actions": "Actions"
+      },
+      "union": {
+        "type": "Type"
+      },
+      "autocomplete": {
+        "noOptions": "Aucune option",
+        "clear": "Effacer",
+        "open": "Ouvrir la liste",
+        "close": "Fermer la liste",
+        "loading": "Chargement …"
+      },
+      "date": {
+        "today": "Aujourd’hui",
+        "tomorrow": "Demain",
+        "now": "Maintenant"
+      },
+      "color": {
+        "pick": "Choisir la couleur",
+        "invalid": "Veuillez entrer une couleur hexadécimale, par exemple #1a2b3c"
+      },
+      "secret": {
+        "show": "Afficher la valeur",
+        "hide": "Masquer la valeur"
+      },
+      "view": {
+        "readOnly": "Lecture seule",
+        "discard": "Annuler les modifications",
+        "discardChanges": {
+          "title": "Abandonner les modifications non enregistrées ?",
+          "body": "Vos modifications ne sont pas enregistrées et seront perdues.",
+          "keep": "Continuer l’édition",
+          "discard": "Abandonner"
+        },
+        "sectionErrors_one": "{{count}} erreur",
+        "sectionErrors_other": "{{count}} erreurs"
+      },
+      "value": {
+        "on": "Activé",
+        "off": "Désactivé",
+        "empty": "(vide)",
+        "changed": "modifié"
+      },
+      "units": {
+        "seconds": "secondes",
+        "seconds_one": "seconde",
+        "minutes": "minutes",
+        "minutes_one": "minute",
+        "days": "jours",
+        "days_one": "jour",
+        "milliseconds": "millisecondes",
+        "milliseconds_one": "milliseconde"
+      },
+      "errors": {
+        "required": "Ce champ est requis",
+        "invalid": "Cette valeur n’est pas valide",
+        "invalid_value": "Veuillez choisir l’une des options proposées",
+        "not_multiple_of": "Veuillez entrer un multiple de {{divisor}}",
+        "unexpected": "Le formulaire n’a pas pu être vérifié. Veuillez réessayer.",
+        "server": "L’enregistrement a échoué. Veuillez réessayer.",
+        "invalid_type": {
+          "string": "Veuillez entrer un texte",
+          "number": "Veuillez entrer un nombre",
+          "int": "Veuillez entrer un nombre entier",
+          "boolean": "Veuillez choisir oui ou non",
+          "date": "Veuillez entrer une date valide",
+          "array": "Veuillez entrer une liste de valeurs",
+          "object": "Ces informations sont incomplètes"
+        },
+        "invalid_format": {
+          "default": "Le format n’est pas valide",
+          "email": "Veuillez entrer une adresse e-mail valide",
+          "url": "Veuillez entrer une URL valide",
+          "regex": "Le format n’est pas valide",
+          "uuid": "Veuillez entrer un UUID valide"
+        },
+        "too_small": {
+          "string": {
+            "min": "Veuillez entrer au moins {{minimum}} caractères",
+            "exact": "Veuillez entrer exactement {{minimum}} caractères"
+          },
+          "array": {
+            "min": "Veuillez ajouter au moins {{minimum}} entrées",
+            "exact": "Veuillez ajouter exactement {{minimum}} entrées"
+          },
+          "number": {
+            "inclusive": "Veuillez entrer {{minimum}} ou plus",
+            "exclusive": "Veuillez entrer une valeur supérieure à {{minimum}}"
+          },
+          "date": {
+            "inclusive": "Veuillez choisir le {{minimum, P}} ou une date ultérieure",
+            "exclusive": "Veuillez choisir une date postérieure au {{minimum, P}}"
+          }
+        },
+        "too_big": {
+          "string": {
+            "max": "Veuillez entrer au maximum {{maximum}} caractères",
+            "exact": "Veuillez entrer exactement {{maximum}} caractères"
+          },
+          "array": {
+            "max": "Veuillez ajouter au maximum {{maximum}} entrées",
+            "exact": "Veuillez ajouter exactement {{maximum}} entrées"
+          },
+          "number": {
+            "inclusive": "Veuillez entrer {{maximum}} ou moins",
+            "exclusive": "Veuillez entrer une valeur inférieure à {{maximum}}"
+          },
+          "date": {
+            "inclusive": "Veuillez choisir le {{maximum, P}} ou une date antérieure",
+            "exclusive": "Veuillez choisir une date antérieure au {{maximum, P}}"
+          }
+        }
+      }
+    },
     "errorMessages": {
       "invalidEmailErrorMessage": "Veuillez entrer une adresse e-mail valide",
       "invalidRange": "La valeur doit être comprise entre {{min}} et {{max}}.",
       "invalidUrlErrorMessage": "Veuillez entrer une adresse URL valide",
       "minimalAmountPerMonth": "Le montant minimum / mois est de {{amount}} {{currency}}.",
-      "amountTooLowErrorMessage": "Le montant est inférieur au minimum de ce plan d'abonnement",
       "noAmountErrorMessage": "Le montant par défaut sera fixé à 5.00 si le champ est laissé vide",
       "noCallToActionImageErrorMessage": "Veuillez entrer une image pour l’appel à l’action",
       "noEmailErrorMessage": "Veuillez entrer une adresse e-mail",
       "noImageErrorMessage": "Veuillez ajouter une image",
       "noMemberPlanErrorMessage": "Veuillez sélectionner un plan d’abonnement",
       "noNameErrorMessage": "Veuillez entrer un nom",
-      "noQuestionErrorMessage": "Veuillez saisir une question",
       "noPasswordErrorMessage": "Veuillez entrer un mot de passe",
       "noPaymentMethodErrorMessage": "Veuillez sélectionner une méthode de paiement",
       "noPaymentPeriodicityErrorMessage": "Veuillez sélectionner une périodicité de paiement",
@@ -1033,6 +1172,8 @@
       "passwordCompromisedErrorMessage": "Ce mot de passe est apparu dans une fuite de données. Veuillez choisir un autre mot de passe.",
       "required": "Ce champ est requis",
       "invalidCountry": "Veuillez sélectionner un pays valide",
+      "amountTooLowErrorMessage": "Le montant est inférieur au minimum de ce plan d'abonnement",
+      "noQuestionErrorMessage": "Veuillez saisir une question",
       "invalidForm": "Veuillez vérifier les champs signalés"
     },
     "event": {
@@ -1082,7 +1223,6 @@
     },
     "filterableList": {
       "filter": {
-        "label": "Filtres",
         "dates": "Dates",
         "description": "Filtrer par description",
         "isDraft": "Brouillon",
@@ -1099,6 +1239,7 @@
         "title": "Filtrer par titre",
         "includeHiddenArticles": "Inclure les articles masqués",
         "includeHiddenPages": "Inclure les pages masquées",
+        "label": "Filtres",
         "states": "États"
       }
     },
@@ -1304,7 +1445,6 @@
         "link": "Lien",
         "linkUrl": "Lien de destination",
         "notFound": "Image introuvable !",
-        "openOriginal": "Ouvrir l'original",
         "resizedImage": "La taille de l’image est automatiquement réduite à environ {{sizeMB}} Mo lors du téléversement.",
         "source": "Source",
         "sourceLink": "Lien vers la source originale de l’image.",
@@ -1321,7 +1461,8 @@
         "focalPointPosition": "{{x}} % depuis la gauche, {{y}} % depuis le haut",
         "focalPointInfo": "Faites glisser le point sur la partie la plus importante de l’image. Lorsque l’image est recadrée, p.ex. dans les teasers, cette zone reste visible.",
         "descriptionInfo": "Décrivez ce que l’on voit sur l’image. Le texte sert de texte alternatif pour les personnes utilisant un lecteur d’écran et pour les moteurs de recherche.",
-        "linkUrlInfo": "Adresse web qui s’ouvre lorsque les lecteur·trice·s cliquent sur l’image. Laissez vide si l’image ne doit pas être un lien."
+        "linkUrlInfo": "Adresse web qui s’ouvre lorsque les lecteur·trice·s cliquent sur l’image. Laissez vide si l’image ne doit pas être un lien.",
+        "openOriginal": "Ouvrir l'original"
       }
     },
     "importableEvent": {
@@ -1435,7 +1576,7 @@
       "goToLogin": "Aller à la connexion"
     },
     "mailTemplates": {
-      "availableTemplates": "Modèles d’e-mail disponibles",
+      "availableTemplates": "Modèles de message",
       "cancel": "Annuler",
       "content": "Contenu",
       "create": "Créer un modèle",
@@ -1455,6 +1596,11 @@
         "testRecipientPlaceholder": "Votre e-mail de compte",
         "preview": "Aperçu",
         "sendTest": "Envoyer un test",
+        "previewLetter": "Aperçu en lettre",
+        "letterAppendix": "Bulletin QR (PDF)",
+        "letterAppendixNone": "Aucun",
+        "letterAppendixHelp": "PDF des «Documents» imprimé après les pages de la lettre, p. ex. un bulletin QR (A4, bulletin au bord inférieur). Uniquement pour les adresses en Suisse ; en impression recto verso, une page blanche est ajoutée si nécessaire pour que le bulletin soit sur un recto.",
+        "letterPreviewTitle": "Aperçu de la lettre",
         "selectMailType": "Veuillez d’abord choisir une utilisation.",
         "selectMailTypePlaceholder": "Choisir une utilisation …",
         "testRecipientHint": "Les e-mails de test sont toujours envoyés à votre propre compte.",
@@ -1468,7 +1614,11 @@
         "bodyModeHelp": "Visuel : modifiez le contenu comme dans un traitement de texte. HTML : modifiez directement le code source – pour utilisateur·trice·s avancé·e·s. Texte brut : la version texte pour les programmes de messagerie sans HTML ; elle est générée automatiquement.",
         "backgroundHelp": "Couleur de la surface autour du contenu de l’e-mail.",
         "contentWidthHelp": "Largeur maximale du contenu en pixels. 600 px est une valeur éprouvée qui s’affiche bien dans la plupart des programmes de messagerie. Sur les petits écrans, le contenu se rétrécit automatiquement.",
-        "bodyMode": "Mode d’édition"
+        "bodyMode": "Mode d’édition",
+        "letterLayout": "Papier à lettres",
+        "letterLayoutDefault": "Par défaut ({{name}})",
+        "letterLayoutNone": "Par défaut (aucun)",
+        "letterLayoutHelp": "En-tête et pied de page lorsque ce modèle est imprimé en lettre. Sans effet pour les e-mails."
       },
       "editor": {
         "undo": "Annuler",
@@ -1645,7 +1795,7 @@
         "subscription": "Autour de l’abonnement lui-même : nouvellement souscrit, confirmé ou désactivé. En plus : les données de l’abonnement comme le montant et la durée.",
         "renewal": "Renouvellement automatique — réussi ou échoué. En plus : le nom du plan et du moyen de paiement ainsi que les données de facturation.",
         "invoiceCreation": "Dès qu’une nouvelle facture a été créée. En plus : la facture et l’abonnement correspondant.",
-        "custom": "Un e-mail libre aux abonné·e·s, p. ex. une newsletter via « Envoyer un e-mail ». En plus : l’abonnement et les dernières factures.",
+        "custom": "Un e-mail libre aux abonné·e·s, p. ex. une newsletter via « Messages manuels ». En plus : l’abonnement et les dernières factures.",
         "customNoSubscription": "Un e-mail libre aux personnes sans abonnement, p. ex. une invitation ou une relance. Seuls les champs du destinataire sont disponibles — les champs d’abonnement restent vides."
       },
       "placeholderDescriptions": {
@@ -1694,12 +1844,14 @@
         "optional_invoices_0_id": "ID de la dernière facture (tableau, index 0).",
         "optional_invoices_0_description": "Description de la dernière facture."
       },
-      "statusHelp": "Une coche signifie qu’un e-mail automatique utilise ce modèle. « Inutilisé » signifie qu’aucun e-mail automatique ne l’utilise – vous pouvez tout de même l’envoyer manuellement via « Envoyer un e-mail ».",
+      "statusHelp": "Une coche signifie qu’un e-mail automatique utilise ce modèle. « Inutilisé » signifie qu’aucun e-mail automatique ne l’utilise – vous pouvez tout de même l’envoyer manuellement via « Messages manuels ».",
       "placeholdersInfo": "Les espaces réservés sont remplacés automatiquement à l’envoi par les données de chaque destinataire, p. ex. son prénom. Chaque e-mail devient ainsi personnel.",
       "searchPlaceholdersLabel": "Rechercher des espaces réservés",
       "empty": "Aucun modèle d’e-mail pour le moment."
     },
     "mailTemplateSelect": {
+      "sendAsLetter": "Aussi par lettre",
+      "sendAsLetterHint": "Les personnes au canal lettre reçoivent ce message imprimé au lieu de l’e-mail.",
       "noMailSentSelectNow": "Ne pas envoyer d’e-mail"
     },
     "memberPlanEdit": {
@@ -1762,7 +1914,161 @@
       "editFlowShort": "Flux de communication",
       "paymentProviderStatusInfo": "✅ signifie que tous les moyens de paiement de ce plan sont reliés à un prestataire de paiement. ❌ signifie qu’au moins un moyen de paiement n’a pas de prestataire et que les lecteur·rice·s ne peuvent donc pas payer avec."
     },
+    "deliveryMode": {
+      "panelTitle": "Canal de distribution",
+      "channel": {
+        "mail": "E-mail",
+        "letter": "Lettre"
+      },
+      "origin": {
+        "manual": "À la main",
+        "suggestion": "Suite à une suggestion"
+      },
+      "reason": {
+        "emailQuality_dead": "Adresse e-mail injoignable",
+        "placeholderEmail": "Adresse fictive",
+        "bulk": "Par groupe d’utilisateurs",
+        "emailQuality_active": "Adresse e-mail à nouveau active",
+        "kept": "Conservé"
+      },
+      "noAddress": "Sans adresse postale complète – lettre impossible.",
+      "switchToLetter": "Passer à la lettre",
+      "switchToMail": "Passer à l’e-mail",
+      "suggestionsTitle": "Canal de distribution des messages automatiques",
+      "suggestionsIntro": "Le canal de distribution détermine si une personne reçoit ses messages automatiques par e-mail ou par lettre. Le changement se fait à la main, sur la base d’une suggestion ou via des filtres de groupe d’utilisateurs. Les suggestions sont calculées chaque jour à partir des retours automatiques sur la délivrabilité des e-mails, mais ne prennent effet qu’après confirmation manuelle.",
+      "kind": {
+        "toLetter": "Passer à la lettre ({{count}})",
+        "toMail": "Passer à l’e-mail ({{count}})"
+      },
+      "recompute": "Recalculer les suggestions",
+      "recomputed": "Recalculé : {{toLetter}} vers la lettre, {{toMail}} vers l’e-mail, {{removed}} réglées.",
+      "confirm": "Appliquer",
+      "confirmAll": "Appliquer les {{count}}",
+      "confirmAllTitle": "Appliquer toutes les suggestions",
+      "confirmAllText": {
+        "toLetter": "{{count}} personnes recevront désormais leurs messages automatiques par lettre.",
+        "toMail": "{{count}} personnes recevront à nouveau leurs messages automatiques par e-mail."
+      },
+      "confirmAllYes": "Oui, tout appliquer",
+      "confirmedAll": "{{confirmed}} appliquées, {{skipped}} ne s’appliquaient plus.",
+      "table": {
+        "user": "Personne",
+        "emailQuality": "Statut e-mail",
+        "reason": "Raison",
+        "since": "Suggéré depuis"
+      },
+      "audience": {
+        "open": "Changer le canal de distribution du public cible",
+        "title": "Changer le canal de distribution du public cible",
+        "intro": "Toutes les personnes du public cible choisi recevront désormais leurs messages automatiques ainsi :",
+        "previewLetter": "{{userCount}} personnes ; {{withoutAddressCount}} d’entre elles sans adresse postale complète restent à l’e-mail.",
+        "previewMail": "{{userCount}} personnes.",
+        "apply": "Changer",
+        "done": {
+          "letter": "{{changed}} passées à la lettre, {{skippedWithoutAddress}} sans adresse postale complète restent à l’e-mail.",
+          "mail": "{{changed}} passées à l’e-mail."
+        }
+      },
+      "bulk": {
+        "title": "Changer un public cible",
+        "intro": "Délimiter le public cible comme pour les messages manuels et changer le canal de distribution de toutes ces personnes.",
+        "people": "{{count}} personnes dans ce public",
+        "history": {
+          "title": "Changements par groupe d’utilisateurs",
+          "empty": "Aucun changement par groupe d’utilisateurs pour l’instant.",
+          "when": "Quand",
+          "who": "Par",
+          "channel": "Canal de distribution",
+          "people": "Personnes",
+          "changed": "Changées",
+          "skipped": "Ignorées",
+          "filter": "Groupe d’utilisateurs",
+          "unknownUser": "Inconnu"
+        }
+      }
+    },
+    "deliveryChannel": {
+      "tabs": {
+        "suggestions": "Changements proposés ({{count}})",
+        "assign": "Changer un groupe d’utilisateurs",
+        "history": "Historique des changements par groupe",
+        "overview": "Vue d’ensemble"
+      },
+      "overview": {
+        "people": "{{count}} personnes",
+        "showPeople": "Afficher les personnes",
+        "openSuggestions": "{{count}} ouvertes",
+        "review": "Examiner les suggestions",
+        "peopleOn": "Personnes au canal {{channel}}",
+        "search": "Rechercher un nom ou une adresse e-mail",
+        "lastChange": "Dernier changement",
+        "noDecision": "Aucun (par défaut)",
+        "empty": "Personne sur ce canal.",
+        "suggestionsHeading": "Changements proposés",
+        "activeFor": "Activé pour {{count}} types de messages automatiques",
+        "channelHeadingDefault": "Canal de distribution (par défaut)",
+        "channelHeadingAlternative": "Canal de distribution (alternatif)"
+      },
+      "suggestions": {
+        "cardTitle": "{{move}} · {{count}} suggestions",
+        "empty": "Aucune suggestion ouverte pour un passage à {{channel}}.",
+        "keep": "Conserver",
+        "keepTitle": "Conserver le canal de distribution ?",
+        "keepText": "{{name}} reste sur {{channel}}. Cela vaut comme décision manuelle : le calcul nocturne ne proposera plus cette personne, dans aucune direction.",
+        "keepYes": "Oui, conserver",
+        "readOnly": "Seules les personnes autorisées à gérer les canaux de distribution peuvent appliquer ou conserver les suggestions.",
+        "emailStatus": {
+          "dead": "Injoignable depuis le {{date}}",
+          "active": "Active depuis le {{date}}",
+          "unresponsive": "Sans réaction depuis le {{date}}",
+          "unknown": "Inconnu depuis le {{date}}"
+        },
+        "recomputedDaily": "(recalculées automatiquement chaque jour)"
+      },
+      "assign": {
+        "steps": {
+          "audience": {
+            "title": "Groupe d’utilisateurs",
+            "description": "Qui est concerné"
+          },
+          "channel": {
+            "title": "Canal de distribution",
+            "description": "Vers lequel"
+          },
+          "review": {
+            "title": "Vérifier et changer",
+            "description": "Dernier coup d’œil"
+          }
+        },
+        "people": "{{count}} personnes",
+        "noAddress": "{{count}} personnes sans adresse postale complète ne peuvent pas passer à la lettre et restent à l’e-mail.",
+        "summary": {
+          "letter": "{{changed}} passeront à la lettre, {{skipped}} sans adresse postale complète restent à l’e-mail.",
+          "mail": "{{changed}} passeront à l’e-mail."
+        },
+        "confirmTitle": "Faire passer le groupe d’utilisateurs à {{channel}} ?",
+        "showHistory": "Afficher dans l’historique",
+        "again": "Nouveau changement",
+        "unreachableEmail": "{{count}} personnes avec une adresse e-mail injoignable (fictive ou morte) sont tout de même changées – les e-mails ne leur parviendront pas.",
+        "filterTitle": "Filtrer le groupe d’utilisateurs"
+      },
+      "history": {
+        "allChannels": "Tous"
+      },
+      "user": {
+        "switched": "Canal de distribution passé à {{channel}}.",
+        "suggestion": "Suggestion : {{move}}",
+        "channelLabel": "Canal de distribution des messages automatiques :",
+        "emailUnreachable": "Adresse e-mail injoignable ({{segment}}) – les e-mails ne parviendront pas à cette personne."
+      },
+      "flows": {
+        "letterHint": "Les messages marqués « Aussi par lettre » parviennent imprimés aux personnes au canal lettre ; les autres reçoivent un e-mail.",
+        "manage": "Gérer les canaux de distribution"
+      }
+    },
     "navbar": {
+      "printIssues": "Numéros imprimés",
+      "deliverySuggestions": "Canal de distribution",
       "articles": "Articles",
       "authors": "Auteur·trice·s",
       "commentRating": "Système d’évaluation",
@@ -1790,7 +2096,7 @@
         "system": "Comme le système"
       },
       "logout": "Déconnexion",
-      "mailTemplates": "Modèles d’e-mail",
+      "mailTemplates": "Modèles de message",
       "memberPlans": "Plans d’abonnement",
       "navigations": "Menus",
       "pages": "Pages",
@@ -1803,7 +2109,7 @@
       "settings": "Paramètres",
       "subscriptionPlans": "Plans d’abonnement",
       "subscriptions": "Abonnements",
-      "subscriptionSettings": "E-mails automatiques",
+      "subscriptionSettings": "Messages automatiques",
       "tokens": "Tokens",
       "apiTokens": "Clés API",
       "userConsents": "Consentements des utilisateur·trice·s",
@@ -1814,8 +2120,8 @@
       "audienceDashboard": "Tableau de bord",
       "integrations": "Intégrations",
       "apps": "Applications",
-      "mailSend": "Envoyer un e-mail",
-      "mailLog": "E-mails envoyés",
+      "mailSend": "Messages manuels",
+      "mailLog": "Messages envoyés",
       "communication": "Communication",
       "auditLog": "Journal d’audit",
       "banners": "Bannières",
@@ -1826,11 +2132,15 @@
         "polls": "Sondages",
         "topMenu": "Blocs de contenu"
       },
+      "letterLayouts": "Papier à lettres",
       "articleTemplates": "Modèles d'articles",
       "language": "Langue",
       "audioLibrary": "Audio"
     },
     "pageTitles": {
+      "printIssues": "Numéros imprimés",
+      "printIssueCreate": "Nouveau numéro imprimé",
+      "printIssueEdit": "Modifier le numéro imprimé",
       "login": "Connexion",
       "impersonate": "Se connecter en tant qu’utilisateur·trice",
       "resetPassword": "Réinitialiser le mot de passe",
@@ -1945,8 +2255,12 @@
       "mailTemplates": "Modèles d’e-mail",
       "mailTemplateCreate": "Nouveau modèle d’e-mail",
       "mailTemplateEdit": "Modifier le modèle d’e-mail",
+      "letterLayouts": "Papier à lettres",
+      "letterLayoutCreate": "Nouveau papier à lettres",
+      "letterLayoutEdit": "Modifier le papier à lettres",
       "systemMails": "E-mails de compte et de connexion",
       "mailSend": "Envoyer un e-mail",
+      "deliveryChannel": "Canal de distribution",
       "mailLog": "E-mails envoyés",
       "networkContent": "Réseau We.Publish",
       "peers": "Peers",
@@ -1962,7 +2276,8 @@
       "settings": "Paramètres",
       "websiteSettings": "Paramètres du site",
       "seo": "Liste de contrôle SEO",
-      "logout": "Déconnexion"
+      "logout": "Déconnexion",
+      "printIssueList": "Liste d’impression"
     },
     "navigation": {
       "overview": {
@@ -2400,6 +2715,9 @@
     "save": "Enregistrer",
     "saveAndClose": "Enregistrer et fermer",
     "settingList": {
+      "printIssues": "Numéros imprimés",
+      "printIssuesPerYear": "Numéros par an (imprimé)",
+      "issues": "numéros",
       "allowGuestCommentRating": "Autoriser les évaluations anonymes des commentaires",
       "comments": "Commentaires",
       "days": "jours",
@@ -2430,11 +2748,18 @@
         "invoiceReminders": "Nombre de rappels de paiement par facture (un rappel par jour).",
         "subscriptionUpgradeModel": "Lorsque cette option est activée, une mise à niveau facture toujours la différence entre le prix du nouveau plan et celui du plan actuel, quel que soit le temps restant dans la période en cours. Lorsqu’elle est désactivée, seul le solde restant (au prorata) non utilisé de la période en cours est crédité.",
         "sessionTtlDays": "Combien de temps une connexion reste valable avant de devoir se reconnecter. S’applique dès la prochaine connexion ; les sessions ouvertes gardent leur durée.",
+        "emailQualityUnresponsiveAfterDays": "Une adresse e-mail est considérée « sans réaction » lorsque ce nombre de jours s’est écoulé sans connexion ni clic dans un e-mail, alors que des e-mails ont été remis. Réévalué chaque nuit et via « Actualiser les statuts ».",
+        "emailQualityMinMailsForUnresponsive": "Ce nombre d’e-mails doit avoir été remis à l’adresse avant qu’elle puisse être considérée « sans réaction ».",
+        "emailQualityEvidenceWarnAfterDays": "Après ce nombre de jours sans rapport de distribution du service d’e-mail (webhook, interrogation, audience newsletter), l’outil de communication et la page du canal de distribution signalent que le statut e-mail ne repose que sur les connexions.",
         "newArticlePaywall": "N’affectera pas les articles déjà créés",
         "newArticlePeering": "N’affectera pas les articles déjà créés",
         "showPendingWhenNotPublished": "Cela exposera publiquement les articles et pages en attente (et donc aussi les robots d’indexation), même s’ils n’ont encore jamais été publiés."
       },
       "sessionTtlDays": "Durée de validité de la connexion",
+      "emailQuality": "Qualité des e-mails",
+      "emailQualityUnresponsiveAfterDays": "« Sans réaction » après … jours",
+      "emailQualityMinMailsForUnresponsive": "… e-mails remis",
+      "emailQualityEvidenceWarnAfterDays": "Avertir sans rapport de distribution après … jours",
       "activeSubscriptionsApiPublic": "Rendre l’API des abonnements actifs accessible au public",
       "expectedRevenueApiPublic": "Rendre l’API des revenus attendus accessible au public",
       "newDeactivationsApiPublic": "Rendre l’API des nouvelles désactivations accessible au public",
@@ -2451,6 +2776,7 @@
       "newArticlePeering": "Les articles nouvellement créés seront partagés par peering par défaut",
       "showPendingWhenNotPublished": "Afficher un article ou une page en attente, même s’ils ne sont pas encore publiés.",
       "info": {
+        "printIssuesPerYear": "Combien de numéros imprimés vaut un abonnement annuel. Les lecteur·trice·s dont la période payée se termine restent dans les exports jusqu’à avoir reçu ce nombre. 0 désactive la règle jusqu’à ce que l’import ait saisi les numéros précédents de l’année.",
         "allowCommentEditing": "Les lecteur·trice·s peuvent encore modifier le texte de leurs propres commentaires après les avoir publiés.",
         "commentCharLimit": "Nombre maximal de caractères qu’un commentaire peut contenir. Les commentaires plus longs ne peuvent pas être envoyés.",
         "subscriptionExtendWindowDays": "Combien de jours avant l’échéance d’un abonnement les lecteur·trice·s voient «Renouveler maintenant» dans leur profil. 30 = comme avant ; 365 = à tout moment, tant qu’aucune facture n’est ouverte.",
@@ -2463,11 +2789,15 @@
         "revenueApiPublic": "Rend les revenus des factures payées d’une période choisie accessibles sans connexion via l’API publique, p.ex. pour afficher des chiffres en direct sur votre site. Les données sont anonymisées. Laissez cette option désactivée si vous n’en avez pas besoin.",
         "loginMinutes": "Durée de validité, en minutes, des liens de connexion envoyés par e-mail (60 = 1 heure, 1440 = 1 jour, 10080 = 1 semaine). Ensuite, un nouveau lien doit être demandé.",
         "passwordToken": "Durée de validité, en minutes, du lien envoyé par e-mail pour réinitialiser le mot de passe (60 = 1 heure, 1440 = 1 jour).",
-        "peerToken": "Durée d’attente des médias partenaires (peers) lors du chargement de leurs articles, en millisecondes (1000 = 1 seconde). Ensuite, la requête est annulée."
-      }
+        "peerToken": "Durée d’attente des médias partenaires (peers) lors du chargement de leurs articles, en millisecondes (1000 = 1 seconde). Ensuite, la requête est annulée.",
+        "printExportDefaults": "Ce avec quoi un nouveau numéro imprimé démarre. Ajustable par numéro ; chaque livraison conserve les options avec lesquelles elle a été calculée.",
+        "printBexioKinds": "Comment la liste d’impression reconnaît les commandes dans bexio. «Période» : le mot-clé commence la description du lien de contact (p. ex. «NW Geschenkabo»), la période figure dans le titre de la facture (année «2027» ou «15.03.2026–14.03.2027») ; chaque personne liée reçoit un exemplaire. «Numéro» : le mot-clé commence une position de facture, suivi du numéro (p. ex. «Einzelheft 6.26») ; la quantité de la position compte."
+      },
+      "printExportDefaults": "Liste d’impression : options par défaut",
+      "printBexioKinds": "Types de réception bexio"
     },
     "automaticMails": {
-      "title": "E-mails automatiques",
+      "title": "Messages automatiques",
       "intro": "Définissez ici quel modèle d’e-mail est envoyé automatiquement pour quel événement. Choisissez un modèle par événement – ou laissez « Ne pas envoyer d’e-mail » si rien ne doit partir. L’icône ⓘ explique chaque événement.",
       "example": "Exemple : {{example}}"
     },
@@ -2512,7 +2842,7 @@
       "addMail": "Ajouter un e-mail",
       "deleteMail": "Retirer l’e-mail",
       "defaultFlow": "Flux par défaut",
-      "defaultFlowDescription": "S’applique à tous les abonnements auxquels aucun autre flux ne correspond. Les modifications s’appliquent aussi sous « E-mails automatiques ».",
+      "defaultFlowDescription": "S’applique à tous les abonnements auxquels aucun autre flux ne correspond. Les modifications s’appliquent aussi sous « Messages automatiques ».",
       "flowNumber": "Flux {{number}}",
       "newFlow": "Nouveau flux",
       "newDayTitle": "Nouveau jour dans la chronologie",
@@ -2620,8 +2950,6 @@
     },
     "untitled": "Sans titre",
     "userConsents": {
-      "deleteTitle": "Supprimer le consentement de l’utilisateur ?",
-      "deleteBody": "Voulez-vous supprimer définitivement le consentement «{{name}}» de {{user}} ?",
       "consentName": "Nom du consentement",
       "consentSlug": "Slug du consentement",
       "create": "Créer un nouveau consentement de l’utilisateur",
@@ -2630,10 +2958,11 @@
       "titleEdit": "Modifier le consentement de l’utilisateur",
       "user": "Utilisateur·trice",
       "value": "Valeur",
-      "uniqueConstraint": "Un consentement d’utilisateur avec le slug « {{slug}} » existe déjà. Veuillez choisir un autre slug."
+      "uniqueConstraint": "Un consentement d’utilisateur avec le slug « {{slug}} » existe déjà. Veuillez choisir un autre slug.",
+      "deleteTitle": "Supprimer le consentement de l’utilisateur ?",
+      "deleteBody": "Voulez-vous supprimer définitivement le consentement «{{name}}» de {{user}} ?"
     },
     "userCreateOrEditView": {
-      "addressTitle": "Adresse",
       "active": "Actif",
       "cancel": "Annuler",
       "city": "Ville",
@@ -2641,6 +2970,7 @@
       "confirm": "Confirmer",
       "country": "Pays",
       "createNewUser": "Créer un·e nouvel·le utilisateur·trice",
+      "emailQuality": "Statut e-mail : {{level}} – {{reason}}, depuis {{since}}",
       "deleteUser": "Supprimer l’utilisateur·trice ?",
       "email": "E-mail",
       "errorCreatingUser": "L’utilisateur·trice n’a pas pu être créé·e. Erreur inattendue : {{error}}",
@@ -2682,7 +3012,8 @@
       "activeInfo": "Les utilisateur·trice·s inactif·ve·s ne peuvent plus se connecter, ni sur le site web ni dans l’éditeur.",
       "flairInfo": "Brève description de la fonction, p. ex. « Rédactrice en chef ». Elle s’affiche à côté du nom dans les commentaires sur le site web.",
       "propertiesInfo": "Données supplémentaires sous forme de clé et de valeur, p. ex. issues d’importations. Les propriétés publiques peuvent aussi être lues par le site web, les privées uniquement dans l’éditeur.",
-      "userRolesInfo": "Les rôles définissent les autorisations de cette personne, p. ex. ce qu’elle peut voir et faire dans l’éditeur."
+      "userRolesInfo": "Les rôles définissent les autorisations de cette personne, p. ex. ce qu’elle peut voir et faire dans l’éditeur.",
+      "addressTitle": "Adresse"
     },
     "userList": {
       "overview": {
@@ -2943,6 +3274,8 @@
     },
     "yes": "Oui",
     "memberplanForm": {
+      "printIssuesPerPeriod": "Numéros imprimés par période",
+      "printIssuesPerPeriodHelpText": "Combien de numéros imprimés un abonnement payé «{{periodicity}}» est garanti de recevoir. Vide : calculé au prorata de la valeur configurée sous <i>Paramètres > Paramètres > Numéros imprimés > «Numéros par an (imprimé)»</i>. 0 : les abonnements avec cet intervalle de paiement ne reçoivent aucun numéro imprimé.",
       "trialSubscription": "Paramètres avancés",
       "configureTrialBtn": "Configurer des abonnements d’essai",
       "extendableToggle": "Extensible",
@@ -2989,15 +3322,15 @@
       "periodicityPricingCustomHelp": "Désactivé : les prix sont calculés à partir du prix mensuel. Activé : vous définissez vos propres prix pour cet intervalle de paiement, p. ex. pour un rabais annuel."
     },
     "subscriptionEditView": {
-      "detailsTitle": "Offre et paiement",
-      "renewalTitle": "Durée et renouvellement",
       "trialSubscriptionConfigured": "Cet abonnement est configuré comme un abonnement d’essai.",
       "nonExtendableNotCompatibleWithAutoRenew": "Un abonnement à renouvellement automatique doit pouvoir être prolongé. Modifiez l’un de ces paramètres.",
       "configureAsTrialSubscription": "Configurer comme abonnement d’essai",
       "subscriptionTrialNotPossible": "L’abonnement ne peut pas être configuré comme abonnement d’essai. Pour ce faire, modifiez les paramètres du plan d’abonnement.",
       "extendableWasChanged": "L’option « Extensible » a été adaptée en fonction du plan d’abonnement.",
       "extendModalTitle": "Renouveler l’abonnement plus tôt ?",
-      "extendModalBody": "L’abonnement sera prolongé de manière anticipée pour la prochaine période possible. Une facture sera établie."
+      "extendModalBody": "L’abonnement sera prolongé de manière anticipée pour la prochaine période possible. Une facture sera établie.",
+      "detailsTitle": "Offre et paiement",
+      "renewalTitle": "Durée et renouvellement"
     },
     "subscriptionListFilter": {
       "extendable": "Extensible"
@@ -3077,12 +3410,6 @@
       }
     },
     "audienceFilter": {
-      "resolution": "Résolution",
-      "range": "Période",
-      "rangeCustom": "Personnalisé",
-      "view": "Affichage",
-      "dateRange": "Du – au",
-      "subscriptionPlans": "Plans d'abonnement",
       "copyPermalink": "Copier le permalien",
       "permalinkCopied": "Permalien avec une période fixe copié dans le presse-papiers",
       "permalinkCopyFailed": "Impossible de copier le permalien",
@@ -3105,6 +3432,12 @@
       "rangeNextMonth": "Mois prochain",
       "rangeNextQuarter": "Trimestre prochain",
       "rangeNextYear": "Année prochaine",
+      "resolution": "Résolution",
+      "range": "Période",
+      "rangeCustom": "Personnalisé",
+      "view": "Affichage",
+      "dateRange": "Du – au",
+      "subscriptionPlans": "Plans d'abonnement",
       "rangeFrom": "Du",
       "rangeTo": "Au"
     },
@@ -3342,6 +3675,7 @@
       "paymentProvider": "Fournisseur de paiement",
       "trackingPixel": "Pixel de suivi",
       "mailProvider": "Fournisseur de messagerie",
+      "pdfRenderer": "Moteur de rendu PDF",
       "back": "Retour aux intégrations",
       "unknown": "Intégration inconnue",
       "notFound": "Intégration non trouvée",
@@ -3388,6 +3722,7 @@
         "bexioInvoiceMailBodyNewMembership": "Corps de l’e-mail de facture (Nouvelle adhésion)",
         "bexioInvoiceMailBodyRenewalMembership": "Corps de l’e-mail de facture (Renouvellement d’adhésion)",
         "bexioMarkInvoiceAsOpen": "Marquer la facture comme ouverte",
+        "bexioContactSync": "Synchroniser les contacts vers Bexio chaque nuit",
         "bexioInvoiceTitleNewMembership": "Titre de la facture (Nouvelle adhésion)",
         "bexioInvoiceTitleRenewalMembership": "Titre de la facture (Renouvellement d’adhésion)",
         "typeInfo": "Le service de paiement auquel cette intégration est reliée. Il est défini lors de la création et ne peut pas être modifié.",
@@ -3408,11 +3743,24 @@
         "bexioInvoiceTitleInfo": "Le titre imprimé sur la facture. Vous pouvez utiliser des titres différents pour les nouveaux abonnements et les renouvellements.",
         "bexioInvoiceMailSubjectInfo": "L’objet de l’e-mail avec lequel Bexio envoie la facture. Les espaces réservés comme :user.firstName: ou :memberPlan.name: sont remplacés automatiquement.",
         "bexioInvoiceMailBodyInfo": "Le texte de l’e-mail avec lequel Bexio envoie la facture ; le PDF est joint. Les espaces réservés comme :user.firstName: ou :memberPlan.name: sont remplacés automatiquement. Bexio exige l’espace réservé [Network Link] dans le texte.",
-        "bexioMarkInvoiceAsOpenInfo": "Si activé, Bexio passe la facture à « ouverte » après l’envoi, au lieu de la laisser en brouillon."
+        "bexioMarkInvoiceAsOpenInfo": "Si activé, Bexio passe la facture à « ouverte » après l’envoi, au lieu de la laisser en brouillon.",
+        "bexioContactSyncInfo": "Si activé, We.Publish transmet chaque nuit le nom, l’entreprise, l’e-mail et l’adresse des lecteurs modifiés à leur contact Bexio et crée les contacts manquants pour les abonnements payés via Bexio. Les groupes, le téléphone et tout le reste du contact restent tels qu’ils sont dans Bexio.",
+        "bexioContactSyncNeverRan": "N’a pas encore tourné.",
+        "bexioContactSyncLastRun": "Dernière exécution : {{date}}, sans erreur.",
+        "bexioContactSyncLastRunFailed": "Dernière exécution : {{date}}. Erreur : {{error}}"
       },
       "placeholderSecret": "Inchangé (masqué)",
       "secretNotSet": "Non défini",
       "secretStored": "Enregistré (masqué) – laisser vide pour le conserver",
+      "pdfRendererSettings": {
+        "type": "Type",
+        "cloudflareAccountId": "ID de compte Cloudflare",
+        "cloudflareApiToken": "Jeton d'API Cloudflare",
+        "gotenbergUrl": "URL de Gotenberg",
+        "gotenbergUsername": "Nom d'utilisateur Gotenberg",
+        "gotenbergPassword": "Mot de passe Gotenberg",
+        "timeoutMs": "Délai d'attente (ms)"
+      },
       "mailSettings": {
         "type": "Type",
         "fromAddress": "Adresse de l’expéditeur",
@@ -3428,17 +3776,26 @@
         "smtpUser": "Nom d’utilisateur SMTP",
         "smtpPassword": "Mot de passe SMTP",
         "webhookEndpointSecret": "Secret du point de terminaison du webhook",
-        "typeInfo": "Le service qui envoie les e-mails. MAILCHIMP correspond à Mailchimp Transactional (Mandrill). SLACK et LOG ne distribuent rien aux lecteur·trice·s – ils servent uniquement aux tests.",
+        "typeInfo": "Le service qui envoie les e-mails. MAILCHIMP correspond à Mailchimp Transactional (Mandrill), BREVO à Brevo (anciennement Sendinblue). SLACK et LOG ne distribuent rien aux lecteur·trice·s – ils servent uniquement aux tests.",
         "fromAddressInfo": "L’adresse d’expéditeur visible par les lecteur·trice·s, p. ex. abo@example.ch. Son domaine doit être vérifié auprès du service d’e-mail, sinon les e-mails risquent d’arriver dans les spams.",
         "replyToAddressInfo": "L’adresse à laquelle arrivent les réponses à vos e-mails. Si le champ est vide, les réponses vont à l’adresse d’expéditeur.",
-        "apiKeyInfo": "La clé API de votre compte auprès du service d’e-mail (Mailchimp Transactional/Mandrill ou Mailgun). Sans elle, aucun e-mail ne peut être envoyé.",
-        "webhookEndpointSecretInfo": "Permet à We.Publish de vérifier que les rapports de distribution (p. ex. rebonds) proviennent bien du service d’e-mail. Copiez la clé de signature du webhook depuis Mandrill ou Mailgun. Sans elle, le statut de distribution n’est pas mis à jour.",
+        "apiKeyInfo": "La clé API de votre compte auprès du service d’e-mail (Mailchimp Transactional/Mandrill, Mailgun ou Brevo). Sans elle, aucun e-mail ne peut être envoyé.",
+        "webhookEndpointSecretInfo": "Permet à We.Publish de vérifier que les rapports de distribution (p. ex. rebonds) proviennent bien du service d’e-mail. Copiez la clé de signature du webhook depuis Mandrill ou Mailgun. Pour Brevo, choisissez un mot de passe aléatoire et ajoutez-le sous la forme ?key=… à l’URL du webhook que vous saisissez dans Brevo. Sans elle, le statut de distribution n’est pas mis à jour.",
         "mailgunBaseDomainInfo": "L’adresse de l’API Mailgun sans https:// : api.mailgun.net, ou api.eu.mailgun.net si votre compte est hébergé dans l’UE.",
         "mailgunMailDomainInfo": "Le domaine d’envoi que vous avez configuré dans Mailgun, p. ex. mg.example.ch.",
         "slackWebhookUrlInfo": "L’adresse d’un webhook entrant Slack. Au lieu d’être distribué, chaque e-mail est publié dans ce canal Slack – pratique pour les tests.",
         "smtpHostInfo": "L’adresse du serveur d’envoi, p. ex. smtp.example.ch. Votre fournisseur de messagerie vous l’indique.",
         "smtpPortInfo": "Généralement 587 ou 465 – voir les indications de votre fournisseur de messagerie.",
-        "smtpSecureInfo": "À activer pour le port 465. Pour le port 587, laissez désactivé – la connexion est alors chiffrée via STARTTLS."
+        "smtpSecureInfo": "À activer pour le port 465. Pour le port 587, laissez désactivé – la connexion est alors chiffrée via STARTTLS.",
+        "evidence": {
+          "title": "Rapports de distribution",
+          "info": "Indique si le service d’e-mail atteint We.Publish. Si les deux restent vides, le statut e-mail des utilisateur·trice·s ne repose que sur les connexions et les clics dans la newsletter.",
+          "lastWebhookAt": "Dernier rapport par webhook",
+          "lastPollAt": "Dernière interrogation",
+          "lastPollError": "Erreur lors de la dernière interrogation",
+          "never": "jamais",
+          "notReporting": "Ce service ne signale aucun statut de distribution."
+        }
       },
       "trackingPixelSettings": {
         "type": "Type",
@@ -3467,10 +3824,35 @@
         "articlePrefixInfo": "La partie de l’adresse qui précède le slug d’un article sur votre site. Seules les pages vues dont l’adresse commence ainsi comptent comme lectures d’articles.",
         "propertyInfo": "L’ID numérique de votre propriété Google Analytics 4 (pas l’ID de mesure G-…). Vous le trouvez dans Google Analytics sous « Administration » → « Détails de la propriété ».",
         "credentialsInfo": "Le fichier de clé JSON d’un compte de service Google Cloud ayant accès en lecture à votre propriété Analytics. Glissez le fichier dans la zone ci-dessous ; il n’est enregistré qu’au moment de sauvegarder.",
-        "readFileError": "Le fichier n’a pas pu être lu."
+        "readFileError": "Le fichier n’a pas pu être lu.",
+        "hotAndTrending": "Utiliser pour Hot & Trending",
+        "hotAndTrendingInfo": "Hot & Trending lit les pages vues de ce fournisseur. Un seul fournisseur peut être utilisé à la fois ; choisir celui-ci le désactive pour les autres.",
+        "apiKey": "Clé API",
+        "plausibleApiKeyInfo": "Une clé Stats API issue des paramètres de votre compte Plausible (« API Keys »). Sur Plausible Cloud, la Stats API nécessite un abonnement Business.",
+        "umamiApiKeyInfo": "Une clé API d’Umami Cloud (« Settings » → « API keys ») ou, pour un Umami auto-hébergé, le jeton d’un utilisateur ayant accès au site.",
+        "plausibleSiteId": "Domaine du site",
+        "plausibleSiteIdInfo": "Le domaine du site tel que vous l’avez ajouté à Plausible, p. ex. example.com.",
+        "umamiWebsiteId": "ID du site",
+        "umamiWebsiteIdInfo": "L’ID du site dans Umami. Vous le trouvez sous « Settings » → « Websites » → « Edit ».",
+        "plausibleUrl": "URL de Plausible",
+        "plausibleUrlInfo": "Uniquement pour un Plausible auto-hébergé, p. ex. https://plausible.example.com. Laissez vide pour utiliser plausible.io.",
+        "umamiUrl": "URL de l’API Umami",
+        "umamiUrlInfo": "Uniquement pour un Umami auto-hébergé, p. ex. https://umami.example.com/api. Laissez vide pour utiliser Umami Cloud."
       },
       "mailchimpSync": "Mailchimp Sync",
       "mailchimpSyncSettings": {
+        "audienceWebhook": {
+          "title": "Rapports de l’audience",
+          "info": "Mailchimp informe We.Publish immédiatement lorsqu’un contact a été nettoyé (rebonds, abus) ou s’est désabonné. Sans webhook, cela n’arrive qu’avec la synchronisation nocturne. We.Publish enregistre lui-même le webhook auprès de Mailchimp ; l’API doit pour cela être accessible depuis Mailchimp.",
+          "registeredAt": "Enregistré auprès de Mailchimp le {{date}}",
+          "notRegistered": "Pas encore enregistré auprès de Mailchimp.",
+          "lastReceived": "Dernier rapport",
+          "never": "aucun pour l’instant",
+          "register": "Enregistrer le webhook auprès de Mailchimp",
+          "renew": "Renouveler l’enregistrement",
+          "registered": "Le webhook est enregistré auprès de Mailchimp.",
+          "failed": "Mailchimp a refusé l’enregistrement : {{error}}"
+        },
         "enabled": "Activé",
         "apiKey": "Clé API Mailchimp",
         "listId": "ID de liste/audience Mailchimp",
@@ -3576,11 +3958,26 @@
       "paymentProviderInfo": "Services qui traitent les paiements des abonnements, p. ex. Payrexx, Stripe, Mollie ou les factures via Bexio.",
       "trackingPixelInfo": "Ajoute le pixel de comptage de ProLitteris à vos articles afin que les lectures soient prises en compte pour vos droits d’auteur.",
       "mailProviderInfo": "Le service par lequel We.Publish envoie les e-mails, p. ex. les liens de connexion, les rappels de paiement ou les confirmations d’abonnement.",
-      "analyticsInfo": "Lit les pages vues dans Google Analytics afin de déterminer quels articles sont actuellement les plus lus (Hot & Trending).",
+      "analyticsInfo": "Lit les pages vues dans Google Analytics, Plausible ou Umami afin de déterminer quels articles sont actuellement les plus lus (Hot & Trending).",
       "mailchimpSyncInfo": "Transfère chaque nuit tous les comptes utilisateur actifs et leurs données d’abonnement vers une audience Mailchimp, afin de cibler vos newsletters selon l’abonnement.",
       "lastLoadedInfo": "Moment où We.Publish a chargé cette configuration pour la dernière fois, p. ex. pour traiter un paiement. Vous voyez ainsi si l’intégration est utilisée.",
       "setUp": "Configurer",
-      "setUpHint": "Pas encore configurée. Configurez cette intégration pour que l’éditeur et votre site puissent l’utiliser."
+      "setUpHint": "Pas encore configurée. Configurez cette intégration pour que l’éditeur et votre site puissent l’utiliser.",
+      "letterProvider": "Prestataire de courrier",
+      "letterSettings": {
+        "type": "Type",
+        "environment": "Environnement",
+        "clientId": "ID client",
+        "clientSecret": "Secret client",
+        "organisationId": "ID d’organisation",
+        "webhookSigningKey": "Clé de signature du webhook",
+        "autoSend": "Envoyer les lettres automatiquement",
+        "placeholderEmailContains": "L’e-mail de substitution contient",
+        "defaultAddressPosition": "Fenêtre d’adresse (lettres automatiques)",
+        "defaultDeliveryProduct": "Distribution (lettres automatiques)",
+        "defaultPrintMode": "Impression (lettres automatiques)",
+        "defaultPrintSpectrum": "Couleur (lettres automatiques)"
+      }
     },
     "websiteSettings": {
       "backToOverview": "Retour à la vue d’ensemble",
@@ -3617,16 +4014,13 @@
           "pro": "<url>Piwik PRO</url> est une plateforme d’analyse respectueuse de la vie privée et une alternative à Google Analytics.",
           "proLocator": "Tu le trouves dans le Menu > Administration > Site > ID de ton panneau d’administration",
           "proInvalid": "Doit être un ID Piwik valide (p. ex. xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)"
-        }
-      },
-      "mail": {
-        "title": "E-mail",
-        "mailchimp": {
-          "title": "Mailchimp",
-          "enable": "Activer Mailchimp",
-          "mailchimp": "<url>Mailchimp</url> est une plateforme de marketing par e-mail qui te permet de gérer des newsletters et des listes d’abonnés. Cela permet au site web d’accéder à tes newsletters et de les afficher.",
-          "apiKeyLocator": "Tu le trouves dans la <url>section des clés API</url> de ton compte Mailchimp. Assure-toi que c’est une clé Mailchimp et non Mandrill.",
-          "apiKeyInvalid": "Doit être une clé API Mailchimp valide (p. ex. XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX-us1)"
+        },
+        "umami": {
+          "title": "Umami",
+          "enable": "Activer Umami",
+          "um": "<url>Umami</url> est une alternative open source et respectueuse de la vie privée à Google Analytics.",
+          "umLocator": "Vous le trouverez dans les <url>paramètres du site</url> de votre tableau de bord Umami",
+          "umInvalid": "Doit être un ID de site valide (p. ex. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)"
         }
       },
       "ads": {
@@ -3941,8 +4335,8 @@
       "blockNumber": "Bloc {{number}}"
     },
     "columnConfigurator": {
-      "dragToReorder": "Glisser pour réordonner",
       "title": "Colonnes",
+      "dragToReorder": "Glisser pour réordonner",
       "reset": "Réinitialiser les colonnes"
     },
     "systemMails": {
@@ -3990,14 +4384,14 @@
       "steps": {
         "audience": {
           "title": "Choisir les destinataires",
-          "description": "Audience et filtres"
+          "description": "Public cible et filtres"
         },
         "content": {
-          "title": "Contenu de l’e-mail",
-          "description": "Modèle et aperçu"
+          "title": "Contenu et canal de distribution",
+          "description": "Modèle, e-mail ou lettre"
         },
         "send": {
-          "title": "Envoyer l’e-mail",
+          "title": "Envoyer",
           "description": "Vérifier et envoyer"
         }
       },
@@ -4007,22 +4401,28 @@
       "summary": {
         "title": "Résumé"
       },
-      "title": "Envoyer un e-mail",
-      "template": "Modèle d’e-mail",
+      "title": "Messages manuels",
+      "template": "Modèle d’envoi",
       "selectTemplate": "Choisir un modèle",
       "audience": {
         "title": "Destinataires"
       },
       "base": {
-        "label": "Audience",
+        "label": "Public cible",
         "allUsers": "Tous les utilisateurs",
         "hasSubscription": "Abonnés (avec abonnement)",
         "noActiveSubscription": "Sans abonnement actif",
         "endedSubscription": "Reconquête — abonnement désactivé récemment",
         "allUsersHint": "Toutes les personnes inscrites, avec ou sans abonnement.",
-        "hasSubscriptionHint": "Personnes avec un abonnement. Les champs d’abonnement sont disponibles.",
-        "noActiveSubscriptionHint": "Personnes sans abonnement actif. Les champs d’abonnement restent vides.",
-        "endedSubscriptionHint": "Personnes dont l’abonnement a été désactivé récemment et qui n’ont pas repris d’abonnement depuis. L’abonnement désactivé est joint à l’e-mail, ses champs sont donc disponibles."
+        "hasSubscriptionHint": "Personnes avec un abonnement.",
+        "noActiveSubscriptionHint": "Personnes sans abonnement actif.",
+        "endedSubscriptionHint": "Personnes dont l’abonnement a été désactivé récemment et qui ne se sont pas réabonnées depuis.",
+        "placeholderNote": {
+          "allUsers": "Les champs d’abonnement restent vides.",
+          "hasSubscription": "Les champs d’abonnement sont disponibles.",
+          "noActiveSubscription": "Les champs d’abonnement restent vides.",
+          "endedSubscription": "L’abonnement désactivé est joint : ses champs sont disponibles."
+        }
       },
       "memberPlans": "Plans d’abonnement",
       "memberPlansAll": "Tous les plans d’abonnement",
@@ -4040,9 +4440,8 @@
       "yes": "Oui",
       "no": "Non",
       "counting": "Comptage des destinataires …",
-      "recipientsCount": "{{count}} destinataires",
       "send": "Envoyer",
-      "templateNeedsSubscription": "Ce modèle nécessite une audience basée sur les abonnements afin de remplir ses champs d’abonnement.",
+      "templateNeedsSubscription": "Ce modèle nécessite un public cible basé sur les abonnements afin de remplir ses champs d’abonnement.",
       "confirmTitle": "Envoyer un e-mail",
       "confirmText": "Envoyer cet e-mail à {{count}} destinataires ?",
       "confirm": "Envoyer",
@@ -4073,10 +4472,33 @@
         "loading": "Chargement des destinataires …",
         "email": "E-mail",
         "name": "Nom",
-        "memberPlan": "Plan d’abonnement"
+        "memberPlan": "Plan d’abonnement",
+        "address": "Adresse",
+        "withAddress": "Adresse disponible",
+        "withoutAddress": "Pas d’adresse valide – ne sera pas envoyé",
+        "emailSegment": "Statut e-mail"
       },
       "endedWithinDays": "Désactivé au cours des … derniers jours",
       "endedWithinDaysHint": "Uniquement les abonnements désactivés dans cette période.",
+      "emailSegments": {
+        "label": "Statut e-mail",
+        "placeholder": "Adresse de substitution",
+        "dead": "Injoignable (rebond, invalide, plainte, désabonnée)",
+        "unresponsive": "Sans réaction",
+        "unknown": "Inconnu",
+        "active": "Active",
+        "hint": "Plusieurs statuts signifient « l’un ou l’autre ». « Sans réaction » : des e-mails ont été remis, mais aucune connexion ni aucun clic depuis longtemps (réglage « Qualité des e-mails »). À atteindre par courrier : substitution + injoignable.",
+        "overview": "Personnes de cette audience par statut e-mail (indépendamment de la sélection)",
+        "refresh": "Actualiser les statuts",
+        "refreshing": "Actualisation des statuts …",
+        "refreshed": "{{updated}} statuts de remise récupérés chez le fournisseur ({{checked}} vérifiés), {{recomputed}} personnes réévaluées."
+      },
+      "emailEvidence": {
+        "noProviderReports": "Le service d’e-mail ({{provider}}) ne signale aucun statut de distribution. Le statut e-mail ne repose que sur les connexions, les adresses confirmées et les clics dans la newsletter.",
+        "never": "Aucun rapport de distribution n’est jamais arrivé du service d’e-mail. Le statut e-mail ne repose que sur les connexions. Vérifiez le secret du webhook dans les intégrations et l’interrogation nocturne.",
+        "stale": "Aucun rapport de distribution du service d’e-mail depuis {{days}} jours (dernier : {{lastAt}}). Vérifiez le webhook et l’interrogation nocturne.",
+        "pollError": "La dernière interrogation du service d’e-mail a échoué : {{error}}"
+      },
       "endedWindow": {
         "label": "Période de désactivation de l’abonnement",
         "relative": "Derniers … jours",
@@ -4093,7 +4515,8 @@
         "firstRecipient": "Premier·ère destinataire",
         "hint": "À quoi ressemble l’e-mail pour cette personne — avec ses données réelles.",
         "loading": "Chargement de l’aperçu …",
-        "noRecipients": "Aucun destinataire — ajustez d’abord le public."
+        "noRecipients": "Aucun destinataire — ajustez d’abord le public cible.",
+        "letterTitle": "Aperçu de la lettre"
       },
       "recipientsCountPerPerson": "{{count}} e-mails à {{people}} personnes",
       "endsAtHint": "Date de résiliation, sinon la date jusqu’à laquelle l’abonnement est payé.",
@@ -4107,11 +4530,89 @@
       "endsAt": "Fin de l’abonnement",
       "from": "À partir du",
       "to": "Jusqu’au",
+      "lettersCount": "{{count}} lettres à {{people}} personnes",
+      "confirmTextLetter": "Envoyer cette lettre à {{count}} destinataires ?",
       "stateHelp": "Actif : confirmé, non désactivé et payé. En attente : souscrit mais pas encore confirmé, p. ex. parce que le premier paiement manque encore. Désactivé : l’abonnement est terminé ou sa fin est déjà enregistrée.",
-      "autoRenewHelp": "Oui : l’abonnement se renouvelle automatiquement à la fin de la période et est à nouveau facturé. Non : il expire, sauf si la personne le renouvelle elle-même."
+      "autoRenewHelp": "Oui : l’abonnement se renouvelle automatiquement à la fin de la période et est à nouveau facturé. Non : il expire, sauf si la personne le renouvelle elle-même.",
+      "channel": {
+        "label": "Canal de distribution",
+        "mail": "E-mail",
+        "letter": "Lettre",
+        "withoutAddress": "{{count}} des destinataires n’ont pas d’adresse postale utilisable et seront ignoré·e·s."
+      },
+      "print": {
+        "addressPosition": {
+          "label": "Fenêtre d’adresse",
+          "left": "Gauche",
+          "right": "Droite"
+        },
+        "deliveryProduct": {
+          "label": "Distribution",
+          "cheap": "Économique (Courrier B)",
+          "fast": "Rapide (Courrier A)",
+          "premium": "Premium",
+          "registered": "Recommandé",
+          "bulk": "Envoi en nombre"
+        },
+        "printMode": {
+          "label": "Impression",
+          "simplex": "Recto",
+          "duplex": "Recto verso"
+        },
+        "printSpectrum": {
+          "label": "Couleur",
+          "grayscale": "Niveaux de gris",
+          "color": "En couleur"
+        }
+      },
+      "mailHistory": {
+        "label": "Messages reçus",
+        "hint": "Seules les personnes ayant (ou n’ayant pas) reçu un modèle donné – au besoin via un seul canal.",
+        "add": "Ajouter une condition",
+        "remove": "Supprimer la condition",
+        "received": "a reçu",
+        "notReceived": "n’a pas reçu",
+        "template": "Choisir un modèle …",
+        "state": "Statut",
+        "anyState": "Indifférent",
+        "channel": "Canal de distribution",
+        "anyChannel": "Indifférent",
+        "sentBetween": "Envoyé entre",
+        "match": {
+          "all": "Toutes les conditions doivent être remplies",
+          "any": "Une condition suffit"
+        },
+        "states": {
+          "submitted": "Transmis",
+          "accepted": "Accepté",
+          "delivered": "Distribué",
+          "deferred": "Différé",
+          "bounced": "Rebond",
+          "rejected": "Refusé",
+          "dispatched": "Posté",
+          "undeliverable": "Non distribuable",
+          "canceled": "Annulé"
+        }
+      },
+      "audienceSummary": {
+        "base": "Base",
+        "memberPlans": "Formules",
+        "state": "Statut de l’abonnement",
+        "segments": "Statut e-mail",
+        "mailHistory": "Messages",
+        "received": "reçu",
+        "notReceived": "non reçu",
+        "between": "{{from}} – {{to}}",
+        "from": "dès le {{from}}",
+        "to": "jusqu’au {{to}}",
+        "matchAny": "une condition suffit",
+        "matchAll": "toutes les conditions",
+        "more": "{{count}} autres filtres"
+      },
+      "deliveryChannelHandOff": "Changer durablement le canal de distribution de ce groupe d’utilisateurs …"
     },
     "mailLog": {
-      "title": "E-mails envoyés",
+      "title": "Messages envoyés",
       "empty": "Aucun e-mail trouvé.",
       "sentDate": "Date",
       "template": "Modèle",
@@ -4129,7 +4630,8 @@
         "title": "Filtres",
         "reset": "Réinitialiser les filtres",
         "typeHint": "Ce qui a déclenché l’envoi.",
-        "jobHelp": "Un envoi regroupe tous les e-mails envoyés en un clic via « Envoyer un e-mail ». Sélectionnez-en un pour ne voir que ses e-mails."
+        "jobHelp": "Un envoi regroupe tous les e-mails envoyés en un clic via « Messages manuels ». Sélectionnez-en un pour ne voir que ses e-mails.",
+        "channel": "Envoi"
       },
       "types": {
         "subscriptionFlow": "Mailing d’abonnement",
@@ -4139,10 +4641,10 @@
       },
       "error": "Erreur",
       "typeDescriptions": {
-        "manual": "Envoyé à la main via « Envoyer un e-mail » ou « Envoyer un test ». Exemple : newsletter à tou·te·s les abonné·e·s.",
-        "subscriptionFlow": "Programmé depuis « E-mails automatiques », calculé à partir de la date d’abonnement. Exemples : rappel 14 jours avant la fin, relance après une facture impayée.",
+        "manual": "Envoyé à la main via « Messages manuels » ou « Envoyer un test ». Exemple : newsletter à tou·te·s les abonné·e·s.",
+        "subscriptionFlow": "Programmé depuis « Messages automatiques », calculé à partir de la date d’abonnement. Exemples : rappel 14 jours avant la fin, relance après une facture impayée.",
         "userFlow": "Déclenché immédiatement par une action ou un événement précis. Exemples : lien de connexion demandé, adresse e-mail modifiée, échec du paiement de renouvellement.",
-        "systemMail": "E-mails de compte, configurés sous « E-mails automatiques », section « Compte et connexion ». Exemples : e-mail de bienvenue après l’inscription, réinitialisation du mot de passe."
+        "systemMail": "E-mails de compte, configurés sous « Messages automatiques », section « Compte et connexion ». Exemples : e-mail de bienvenue après l’inscription, réinitialisation du mot de passe."
       },
       "errorHelp": {
         "causeTitle": "Que s’est-il passé ?",
@@ -4181,8 +4683,8 @@
           "fix": "Configurez un fournisseur sous Paramètres › Intégrations › Fournisseur de messagerie (SMTP, Mailgun, Mailchimp ou Slack)."
         },
         "templateMissing": {
-          "cause": "Le modèle d’e-mail utilisé n’existe plus.",
-          "fix": "Choisissez un modèle existant sous « Modèles d’e-mail » ou recréez-le, puis relancez l’envoi."
+          "cause": "Le modèle d’envoi utilisé n’existe plus.",
+          "fix": "Choisissez un modèle existant sous « Modèles de message » ou recréez-le, puis relancez l’envoi."
         },
         "generic": {
           "cause": "Le serveur a refusé l’envoi avec le message ci-dessous.",
@@ -4232,22 +4734,43 @@
           "name": "rejected — Rejeté",
           "meaning": "L’e-mail n’a jamais été envoyé. Soit We.Publish n’a pas pu le remettre (configuration du fournisseur absente ou erronée), soit le fournisseur l’a refusé d’emblée : domaine d’envoi non vérifié (« unsigned »), adresse sur la liste de suppression du fournisseur après un hard bounce ou une plainte pour spam, destinataire désabonné, ou limite d’envoi du compte atteinte.",
           "next": "La colonne « Erreur » indique la raison – survolez-la pour la cause et la solution. Corrigez la cause et renvoyez : rien n’est réessayé automatiquement."
+        },
+        "dispatched": {
+          "name": "Expédiée",
+          "meaning": "Le prestataire d’impression a imprimé la lettre et l’a remise à la Poste.",
+          "next": "Rien à faire. Le statut passe à « distribuée » dès que la Poste signale la distribution."
+        },
+        "undeliverable": {
+          "name": "Non distribuable",
+          "meaning": "La Poste n’a pas pu distribuer la lettre et l’a retournée.",
+          "next": "Vérifiez l’adresse du ou de la destinataire et renvoyez la lettre."
+        },
+        "canceled": {
+          "name": "Annulée",
+          "meaning": "La lettre a été retirée avant d’être imprimée.",
+          "next": "Rien à faire. Rien n’a été imprimé ni facturé."
         }
+      },
+      "channel": "Envoi",
+      "channels": {
+        "mail": "E-mail",
+        "letter": "Lettre"
       }
     },
     "userMail": {
-      "title": "E-mails",
       "sendTitle": "Envoyer un e-mail",
-      "logTitle": "E-mails envoyés",
+      "logTitle": "Messages envoyés",
       "customOnlyHint": "Seuls les modèles personnalisés peuvent être envoyés à un utilisateur.",
       "selectTemplate": "Choisir un modèle",
       "send": "Envoyer",
-      "sent": "E-mail envoyé"
+      "sent": "E-mail envoyé",
+      "title": "E-mails",
+      "titleWithLetters": "Messages"
     },
     "mailJobs": {
       "created": "Démarré",
       "template": "Modèle",
-      "audience": "Destinataires",
+      "audience": "Public cible",
       "state": "Statut",
       "progress": "Progression",
       "details": "Détails",
@@ -4283,6 +4806,14 @@
         "failed": "En échec",
         "sending": "En cours de remise",
         "interrupted": "Interrompus"
+      },
+      "outcome": {
+        "title": "Résultat",
+        "hint": "Les statuts de remise et les clics viennent du fournisseur d’e-mails – les rebonds souvent des heures ou des jours plus tard. « Injoignable » compte les destinataires dont l’adresse est désormais considérée comme injoignable. « Actualiser les statuts » récupère ce que le fournisseur n’a pas encore signalé.",
+        "delivered": "Remis",
+        "bounced": "Rebonds / refusés",
+        "dead": "Injoignable",
+        "clicked": "Cliqués"
       },
       "recipientState": {
         "pending": "En attente",
@@ -4671,16 +5202,329 @@
     "placeholderInput": {
       "add": "Ajouter"
     },
-    "colorPicker": {
-      "pickColor": "Choisir la couleur",
-      "pickColorFor": "Choisir la couleur : {{label}}"
-    },
     "flexTile": {
       "moreActions": "Plus d’actions"
     },
     "listInput": {
       "dragToReorder": "Glisser pour modifier l’ordre",
       "add": "Ajouter une entrée"
+    },
+    "letterLayouts": {
+      "title": "Papier à lettres",
+      "intro": "En-tête et pied de page des lettres imprimées. Les modèles de message utilisent le papier par défaut, sauf s’ils en choisissent un autre.",
+      "create": "Créer un papier à lettres",
+      "createHeader": "Créer un papier à lettres",
+      "editHeader": "Modifier le papier à lettres",
+      "name": "Nom",
+      "nameRequired": "Veuillez saisir un nom.",
+      "isDefault": "Papier par défaut",
+      "isDefaultHelp": "Les modèles sans papier propre sont imprimés sur le papier par défaut. Il ne peut y en avoir qu’un.",
+      "default": "Par défaut",
+      "header": "En-tête",
+      "footer": "Pied de page",
+      "headerHeight": "Hauteur de l’en-tête (mm)",
+      "footerHeight": "Hauteur du pied de page (mm)",
+      "headerHeightHint": "Au maximum 40 mm, pour que l’en-tête n’empiète pas sur la zone d’affranchissement. Il se répète sur chaque page ; 0 mm le supprime.",
+      "footerHeightHint": "Au maximum 40 mm. Le texte de la lettre garde cet espace par rapport au bord inférieur. Le pied de page se répète sur chaque page ; 0 mm le supprime.",
+      "htmlHint": "HTML avec des variables comme {{user_firstName}}. Indiquez les tailles en mm et donnez aux images une largeur et une hauteur fixes.",
+      "insertImage": "Insérer une image",
+      "preview": "Aperçu",
+      "previewTitle": "Lettre type sur ce papier",
+      "saved": "Papier à lettres enregistré",
+      "deleteTitle": "Supprimer le papier à lettres",
+      "deleteQuestion": "Supprimer « {{name}} » ? Les modèles qui l’utilisent doivent d’abord en choisir un autre.",
+      "deleteConfirm": "Supprimer",
+      "noLayouts": "Pas encore de papier à lettres. Créez-en un pour que les lettres aient un en-tête et un pied de page."
+    },
+    "printIssues": {
+      "title": "Numéros imprimés",
+      "intro": "Chaque numéro imprimé avec ses listes d’impression : qui reçoit un exemplaire se décide à la date de parution – depuis we.publish et bexio. Chaque liste d’impression livrée à l’imprimerie compte dans les numéros payés par les lecteur·trice·s.",
+      "create": "Nouveau numéro",
+      "noIssues": "Pas encore de numéro.",
+      "saved": "Numéro enregistré",
+      "duplicated": "Numéro dupliqué – veuillez adapter la date de parution.",
+      "closed": "Numéro clôturé",
+      "reopened": "Numéro déverrouillé",
+      "exported": "Liste d’impression créée – un brouillon jusqu’à ce qu’elle soit marquée comme livrée.",
+      "exportedReplaced": "Liste d’impression mise à jour",
+      "exportedSupplement": "Complément créé – un brouillon jusqu’à ce qu’il soit marqué comme livré.",
+      "delivered": "Liste d’impression marquée comme livrée",
+      "deliveryDeleted": "Liste d’impression supprimée",
+      "deliveryTakenBack": "Livraison annulée – la liste d’impression est de nouveau un brouillon",
+      "issueDateRequired": "Veuillez indiquer la date de parution.",
+      "drawer": {
+        "createTitle": "Nouveau numéro",
+        "editTitle": "Numéro {{label}}"
+      },
+      "fields": {
+        "issue": "Numéro",
+        "number": "Numéro",
+        "numberTo": "au numéro",
+        "numberToInvalid": "Supérieur au numéro",
+        "year": "Année",
+        "countsAs": "Compte pour",
+        "countsAsOption_one": "1 numéro",
+        "countsAsOption_other": "{{count}} numéros",
+        "countsAsHelp": "Combien de numéros le numéro double compte dans le nombre de numéros imprimés garanti par un abonnement. Les lecteur·trice·s à qui il ne reste qu’un exemplaire le reçoivent quand même.",
+        "issueDate": "Date de parution",
+        "issueDateHelp": "Le jour où le numéro parvient aux lecteur·trice·s. La liste d’impression vérifie qui reçoit un exemplaire ce jour-là – pas le jour de l’export.",
+        "status": "Statut",
+        "deliveries": "Listes d’impression",
+        "copies": "Exemplaires",
+        "closedAt": "Clôturé",
+        "title": "Thème",
+        "note": "Note",
+        "image": "Image"
+      },
+      "status": {
+        "open": "Ouvert",
+        "exported": "Exporté",
+        "closed": "Clôturé",
+        "historic": "Historique"
+      },
+      "deliveriesCell": "{{count}} · {{delivered}} livrée(s)",
+      "listCell": {
+        "lists": "1 liste d’impression",
+        "listsWithSupplements_one": "1 liste d’impression, 1 complément",
+        "listsWithSupplements_other": "1 liste d’impression, {{count}} compléments",
+        "delivered_one": "{{delivered}} sur 1 liste livrée à l’imprimerie",
+        "delivered_other": "{{delivered}} sur {{count}} listes livrées à l’imprimerie",
+        "deliveredNone": "Aucune liste livrée à l’imprimerie pour l’instant",
+        "draftHint": "{{name}} est encore un brouillon et ne compte pour les quotas des lecteur·trice·s qu’une fois marquée comme livrée."
+      },
+      "closedLine": "{{date}} · {{name}}",
+      "actions": {
+        "list": "Gérer les listes d’impression",
+        "duplicate": "Dupliquer le numéro",
+        "close": "Clôturer le numéro",
+        "reopen": "Déverrouiller le numéro",
+        "historic": "Numéro historique, toujours clôturé",
+        "delete": "Supprimer le numéro"
+      },
+      "lockReason": {
+        "close": "Clôturer le numéro : toutes les listes d’impression sont livrées à l’imprimerie. Aucun complément n’est plus attendu ensuite ; le déverrouillage reste possible à tout moment.",
+        "draft": "Clôture pas encore possible : {{name}} est un brouillon. Le numéro se clôture une fois toutes les listes d’impression marquées comme livrées.",
+        "noLists": "Clôture pas encore possible : le numéro n’a pas encore de liste d’impression.",
+        "reopen": "Déverrouiller le numéro pour créer des compléments.",
+        "historic": "Numéro historique, clôturé pour de bon. Le numéro a été créé en dehors du système et n’a pas de listes d’impression."
+      },
+      "deleteReason": {
+        "delivered": "Suppression impossible : au moins une liste d’impression a déjà été livrée à l’imprimerie et compte dans le nombre de numéros imprimés auxquels les lecteur·trice·s abonné·e·s ont droit. Annulez d’abord la livraison dans les listes d’impression du numéro – possible tant qu’aucun numéro ultérieur n’a de liste d’impression.",
+        "draft": "Supprimer le numéro – sa liste d’impression est encore un brouillon et sera supprimée avec lui.",
+        "empty": "Supprimer le numéro – il n’a pas encore de liste d’impression.",
+        "historic": "Supprimer le numéro historique. Il ne compte alors plus dans le nombre de numéros imprimés auxquels les lecteur·trice·s abonné·e·s ont droit."
+      },
+      "deleteTitle": "Supprimer le numéro",
+      "deleteQuestion": "Supprimer le numéro {{label}} ? Les listes d’impression en brouillon sont supprimées avec lui.",
+      "deleteConfirm": "Supprimer",
+      "closeTitle": "Clôturer le numéro ?",
+      "closeQuestion": "Clôturer le numéro {{label}} ? Aucun autre complément n’est attendu. «Déverrouiller» annule cela à tout moment.",
+      "closeConfirm": "Clôturer",
+      "listView": {
+        "title": "Listes d’impression du numéro {{label}}",
+        "section": "Gérer les listes d’impression",
+        "shipDay": "Date de parution {{date}}",
+        "back": "Retour aux numéros imprimés"
+      },
+      "historicNoExport": "Un numéro historique vient de l’import et n’a pas de liste d’impression : il compte comme livré pour toute personne qui avait alors un abonnement payé. Numéro, date et note se corrigent dans la liste des numéros.",
+      "closedInfo": "Numéro clôturé – pour créer un complément, déverrouillez d’abord le numéro.",
+      "options": {
+        "title": "Options d’export de la liste d’impression",
+        "intro": "Quels types d’abonnement reçoivent cette liste d’impression, ainsi que d’autres options pour l’export. «Calculer» enregistre les options sur le numéro et calcule la liste à la date de parution.",
+        "reset": "Rétablir les valeurs par défaut",
+        "unsaved": "Les options ont changé – recalculez avant d’exporter."
+      },
+      "run": {
+        "title": "Vérifier et exporter"
+      },
+      "compute": "Calculer",
+      "recompute": "Recalculer",
+      "computing": "Calcul en cours – bexio est lu aussi, cela prend un moment …",
+      "computedLine": "Calculé le {{date}} à {{time}} par {{name}}",
+      "count": {
+        "addresses_one": "{{count}} adresse",
+        "addresses_other": "{{count}} adresses",
+        "copies_one": "{{count}} exemplaire",
+        "copies_other": "{{count}} exemplaires",
+        "grace_one": "{{count}} exemplaire dû",
+        "grace_other": "{{count}} exemplaires dus",
+        "gifts_one": "{{count}} exemplaire offert",
+        "gifts_other": "{{count}} exemplaires offerts"
+      },
+      "showList_one": "Voir la liste ({{count}} adresse)",
+      "showList_other": "Voir la liste ({{count}} adresses)",
+      "runListTitle": "Liste du numéro {{label}}",
+      "export": "Exporter la liste d’impression",
+      "exportSupplement": "Exporter le complément",
+      "exportTitle": {
+        "export": "Exporter la liste d’impression ?",
+        "replace": "Mettre à jour la liste d’impression ?",
+        "supplement": "Exporter le complément ?"
+      },
+      "exportQuestion": {
+        "export": "Enregistrer {{addresses}} ({{copies}}, dont {{grace}} et {{gifts}}) comme liste d’impression du numéro {{label}}. Elle reste un brouillon jusqu’à ce qu’elle soit marquée comme livrée à l’imprimerie.",
+        "replace": "Met à jour la liste d’impression du {{date}} : ses adresses sont abandonnées, {{addresses}} ({{copies}}) prennent leur place. Elle reste un brouillon jusqu’à ce qu’elle soit marquée comme livrée.",
+        "supplement": "Enregistrer {{addresses}} ({{copies}}) comme «complément {{batch}}» du numéro {{label}} – seules les adresses absentes de toute liste d’impression précédente de ce numéro sont exportées."
+      },
+      "exportConfirm": {
+        "export": "Exporter",
+        "replace": "Mettre à jour la liste",
+        "supplement": "Exporter le complément"
+      },
+      "supplementEmpty": "Personne de nouveau – il n’y a rien à compléter.",
+      "runConflict": "La liste a été recalculée entre-temps, date de plus de 24 heures ou ne correspond plus aux listes d’impression. Veuillez la recalculer et la vérifier.",
+      "earlierDrafts_one": "Le numéro {{labels}} a encore une liste d’impression en brouillon. Tant qu’elle n’est pas marquée comme livrée, ses exemplaires ne comptent pour aucun quota – les exemplaires dus peuvent être trop élevés ici.",
+      "earlierDrafts_other": "Les numéros {{labels}} ont encore des listes d’impression en brouillon. Tant qu’elles ne sont pas marquées comme livrées, leurs exemplaires ne comptent pour aucun quota – les exemplaires dus peuvent être trop élevés ici.",
+      "steps": {
+        "options": "Options",
+        "check": "Vérifier",
+        "export": "Exporter"
+      },
+      "flow": {
+        "create": "Créer une liste d’impression",
+        "editFirst": "Modifier la liste d’impression",
+        "editSupplement": "Modifier le dernier complément",
+        "supplement": "Créer un complément",
+        "cancel": "Annuler",
+        "discard": "Abandonner"
+      },
+      "deliveries": {
+        "name": "Nom de la liste",
+        "empty": "Pas encore de liste d’impression.",
+        "export": "Liste d’impression",
+        "supplement": "Complément {{batch}}",
+        "exportedAt": "Créée le · par",
+        "options": "Options d’export",
+        "addresses": "Adresses",
+        "copies": "Exemplaires",
+        "status": "Statut",
+        "draft": "Brouillon",
+        "deliveredLine": "Livrée le {{date}} · {{name}}",
+        "csv": "CSV",
+        "csvTooltip": "Télécharger {{name}} en CSV",
+        "edit": "Modifier",
+        "editTooltip": "Modifier {{name}}",
+        "deliver": "Marquer comme livrée",
+        "deliverTooltip": "Marquer {{name}} comme livrée après remise à l’imprimerie. Des modifications de la liste complète restent possibles à tout moment sous forme de compléments.",
+        "deliverTitle": "Marquer la liste d’impression comme livrée ?",
+        "deliverQuestion": "Marquer {{name}} du numéro {{label}} comme «livraison à l’imprimerie effectuée» ? La liste est ensuite verrouillée, et ses exemplaires entrent dans le calcul des numéros restants auxquels les lecteur·trice·s ont droit. Tant qu’aucun numéro ultérieur n’a de liste d’impression, la livraison peut être annulée.",
+        "deliverConfirm": "Marquer comme livrée",
+        "undeliver": "Annuler la livraison",
+        "undeliverTooltip": "Remettre {{name}} à l’état de brouillon – pour la corriger, la livrer à nouveau ou la supprimer.",
+        "undeliverTitle": "Annuler la livraison ?",
+        "undeliverQuestion": "Remettre {{name}} du numéro {{label}} à l’état de brouillon ? Ses exemplaires ne comptent alors plus dans les numéros auxquels les lecteur·trice·s ont droit, jusqu’à ce qu’elle soit à nouveau marquée comme livrée. La date et le nom de la livraison sont perdus.",
+        "undeliverConfirm": "Annuler la livraison",
+        "undeliverClosed": "Le numéro est clôturé – déverrouillez-le d’abord.",
+        "undeliverLater": "Impossible : le numéro {{label}} a déjà une liste d’impression calculée avec cette livraison. Supprimez-la ou annulez-la d’abord.",
+        "delete": "Supprimer",
+        "deleteTitle": "Supprimer la liste d’impression ?",
+        "deleteQuestion": "Supprimer {{name}} ? Ses adresses sont abandonnées.",
+        "deleteConfirm": "Supprimer",
+        "fullList": "Télécharger la liste complète",
+        "fullListHint": "Liste d’impression & tous les compléments fusionnés"
+      },
+      "summary": {
+        "none": "–",
+        "headline": "{{rows}}, {{copies}} – au {{date}}",
+        "withGifts": "y compris les exemplaires offerts",
+        "graceWarning": "Plus de 5 % des lignes sont des exemplaires encore dus – tous les numéros historiques sont-ils saisis et «numéros par an» est-il correct ?",
+        "sources": "Sources",
+        "wepublish": "we.publish",
+        "totalSubscriptions": "Abonnements vérifiés",
+        "byPlan": "Types d’abonnement",
+        "byKind": "Types de réception bexio",
+        "byCountry": "Pays",
+        "hints": {
+          "title": "Remarques",
+          "unpaid": "ouvert",
+          "openWithoutInvoice": "ouvert sans facture",
+          "grace": "Exemplaire dû",
+          "gifts": "Exemplaire offert",
+          "kuendigungen": "Résiliation au",
+          "missingAddress": "Pas d’adresse",
+          "placeholderEmail": "E-mail provisoire",
+          "duplicates": "Doublon",
+          "alreadyExported": "Déjà dans une liste d’impression"
+        },
+        "skipped": {
+          "title": "Ignorés",
+          "donation": "Dons",
+          "excludedPlan": "Plan non sélectionné",
+          "future": "Début après la date de parution",
+          "unpaidDeactivation": "Désactivé impayé",
+          "replaced": "Remplacé",
+          "deactivated": "Désactivé",
+          "lapsed": "Échu",
+          "exhausted": "Quota reçu",
+          "noPrintIssues": "Aucun numéro imprimé (0 dans le plan)"
+        },
+        "bexio": {
+          "title": "bexio",
+          "notConfigured": "bexio n’est pas lu : aucun prestataire de paiement bexio avec clé API n’est configuré sous Intégrations. Institutions, cadeaux, librairies et numéros à l’unité manquent.",
+          "notIncluded": "bexio n’a pas été lu pour cette liste : l’option est désactivée.",
+          "invoicesInWindow": "Factures dans la fenêtre",
+          "canceled": "Annulées",
+          "skippedProvider": "Créées par le prestataire de paiement",
+          "skippedImported": "Anciennes factures importées",
+          "otherPeriod": "Autre année / autre numéro",
+          "detailFetched": "Positions lues",
+          "ungeprueft": "Non vérifiées",
+          "contactMissing": "Contact manquant",
+          "skippedOpen": "Impayées, ignorées",
+          "noValidPeriod": "Sans indication valable",
+          "excludedKind": "Type de réception non choisi",
+          "quantityMismatch": "Quantité ≠ liens"
+        }
+      },
+      "rowsTable": {
+        "name": "Nom / entreprise",
+        "place": "Lieu",
+        "copies": "Ex.",
+        "plan": "Type d’abonnement",
+        "status": "Statut de paiement",
+        "hint": "Remarque",
+        "empty": "Aucune adresse."
+      }
+    },
+    "printExportOptions": {
+      "memberPlans": "Plans d’abonnement",
+      "memberPlansHelp": "Seuls les abonnements de ces plans entrent dans la liste. Vide : tous les plans.",
+      "allPlans": "tous les plans",
+      "plansCount_one": "{{count}} plan",
+      "plansCount_other": "{{count}} plans",
+      "includeBexio": "Inclure bexio",
+      "includeBexioHelp": "Institutions, abonnements cadeaux, librairies et numéros à l’unité depuis bexio – lus avec la clé du prestataire de paiement bexio sous Intégrations.",
+      "bexioNotConfigured": "Aucun prestataire de paiement bexio avec clé API n’est configuré sous Intégrations ; bexio ne peut pas être lu.",
+      "bexioKinds": "Types de réception bexio",
+      "bexioNoKinds": "Aucun type de réception bexio configuré – à créer sous Paramètres › Numéros imprimés. D’ici là, rien n’est listé depuis bexio.",
+      "bexioShort": "bexio",
+      "bexioKindsCount_one": "bexio : {{count}} type de réception",
+      "bexioKindsCount_other": "bexio : {{count}} types de réception",
+      "includeOpen": "Exporter les exemplaires commandés mais impayés",
+      "includeOpenHelp": "Les abonnements qui se renouvellent mais dont la facture n’est pas encore payée reçoivent un exemplaire. Option désactivée, ils ne reçoivent que les exemplaires déjà payés.",
+      "openShort": "ouvert",
+      "includeUpcoming": "Exporter les exemplaires offerts",
+      "includeUpcomingHelp": "Les abonnements qui commencent après la date de parution reçoivent ce numéro en cadeau. Il ne compte pas dans les numéros payés.",
+      "upcomingShort": "offert"
+    },
+    "printBexioKinds": {
+      "kind": "Type de réception bexio {{label}}",
+      "label": "Libellé",
+      "word": "Mot-clé dans bexio",
+      "refersTo": "Se rapporte à",
+      "refersToPeriod": "Période",
+      "refersToIssue": "Numéro",
+      "add": "Ajouter un type de réception bexio",
+      "delete": "Supprimer le type de réception bexio {{label}}",
+      "empty": "Pas encore de types de réception bexio. Sans type de réception bexio, rien n’est listé depuis bexio."
+    },
+    "autosave": {
+      "label": "Enregistrement auto",
+      "description": "Enregistrer le brouillon toutes les 30 secondes pendant que vous travaillez"
+    },
+    "colorPicker": {
+      "pickColor": "Choisir la couleur",
+      "pickColorFor": "Choisir la couleur : {{label}}"
     },
     "errorBoundary": {
       "title": "Un problème est survenu sur cette page",
@@ -4782,6 +5626,7 @@
         "consent": "Créer un consentement",
         "userConsent": "Créer un consentement utilisateur",
         "mailTemplate": "Créer un modèle d'e-mail",
+        "letterLayout": "Créer un papier à lettres",
         "memberPlan": "Créer un plan d'abonnement",
         "paymentMethod": "Créer un moyen de paiement",
         "discountCode": "Créer un code de réduction",

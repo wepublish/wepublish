@@ -300,6 +300,9 @@ catalogs:
     '@nestjs/platform-node':
       specifier: ^12.3.2
       version: 12.3.2
+    '@nestjs/resilience':
+      specifier: ^0.0.3
+      version: 0.0.3
     '@nestjs/schedule':
       specifier: ^12.0.2
       version: 12.0.2
@@ -432,9 +435,15 @@ catalogs:
     passport-http-bearer:
       specifier: ^1.0.1
       version: 1.0.1
+    pdf-lib:
+      specifier: ^1.17.1
+      version: 1.17.1
     pg:
       specifier: ^8.23.1
       version: 8.23.1
+    pingen2-sdk-js:
+      specifier: ^0.3.0
+      version: 0.3.0
     pino:
       specifier: ^6.14.0
       version: 6.14.0
@@ -608,6 +617,9 @@ importers:
       '@nestjs/platform-node':
         specifier: 'catalog:'
         version: 12.3.2(@nestjs/common@12.2.0(class-transformer@0.5.1)(reflect-metadata@0.1.14)(rxjs@7.8.2)(supports-color@8.1.1))(@nestjs/core@12.2.0)(supports-color@8.1.1)
+      '@nestjs/resilience':
+        specifier: 'catalog:'
+        version: 0.0.3(@nestjs/common@12.2.0(class-transformer@0.5.1)(reflect-metadata@0.1.14)(rxjs@7.8.2)(supports-color@8.1.1))(@nestjs/core@12.2.0)(graphql@16.14.2)(reflect-metadata@0.1.14)(rxjs@7.8.2)
       '@nestjs/schedule':
         specifier: 'catalog:'
         version: 12.0.2(@nestjs/common@12.2.0(class-transformer@0.5.1)(reflect-metadata@0.1.14)(rxjs@7.8.2)(supports-color@8.1.1))(@nestjs/core@12.2.0)
@@ -932,9 +944,15 @@ importers:
       passport-http-bearer:
         specifier: 'catalog:'
         version: 1.0.1
+      pdf-lib:
+        specifier: 'catalog:'
+        version: 1.17.1
       pg:
         specifier: 'catalog:'
         version: 8.23.1
+      pingen2-sdk-js:
+        specifier: 'catalog:'
+        version: 0.3.0
       pino:
         specifier: 'catalog:'
         version: 6.14.0
@@ -1597,6 +1615,9 @@ importers:
       '@nestjs/platform-node':
         specifier: 'catalog:'
         version: 12.3.2(@nestjs/common@12.2.0(class-transformer@0.5.1)(reflect-metadata@0.1.14)(rxjs@7.8.2)(supports-color@8.1.1))(@nestjs/core@12.2.0)(supports-color@8.1.1)
+      '@nestjs/resilience':
+        specifier: 'catalog:'
+        version: 0.0.3(@nestjs/common@12.2.0(class-transformer@0.5.1)(reflect-metadata@0.1.14)(rxjs@7.8.2)(supports-color@8.1.1))(@nestjs/core@12.2.0)(graphql@16.14.2)(reflect-metadata@0.1.14)(rxjs@7.8.2)
       '@nestjs/schedule':
         specifier: 'catalog:'
         version: 12.0.2(@nestjs/common@12.2.0(class-transformer@0.5.1)(reflect-metadata@0.1.14)(rxjs@7.8.2)(supports-color@8.1.1))(@nestjs/core@12.2.0)
@@ -1717,6 +1738,12 @@ importers:
       passport-http-bearer:
         specifier: 'catalog:'
         version: 1.0.1
+      pdf-lib:
+        specifier: 'catalog:'
+        version: 1.17.1
+      pingen2-sdk-js:
+        specifier: 'catalog:'
+        version: 0.3.0
       pino:
         specifier: 'catalog:'
         version: 6.14.0
@@ -5229,6 +5256,25 @@ packages:
       '@nestjs/common': ^12.0.0
       '@nestjs/core': ^12.0.0
 
+  '@nestjs/resilience@0.0.3':
+    resolution: {integrity: sha512-bko0FbzpRKr9pjTzh4nAggfYLLW2Eql4YFxrPS+8/3y3vS90DZE91UIGL4pioRbyQgOjHJso0YRLFpNcezBWaw==}
+    engines: {node: '>=20.19.0'}
+    peerDependencies:
+      '@nestjs/common': ^12.0.0
+      '@nestjs/core': ^12.0.0
+      '@nestjs/microservices': ^12.0.0
+      '@nestjs/websockets': ^12.0.0
+      graphql: ^16.0.0 || ^17.0.0
+      reflect-metadata: ^0.1.13 || ^0.2.0
+      rxjs: ^7.1.0
+    peerDependenciesMeta:
+      '@nestjs/microservices':
+        optional: true
+      '@nestjs/websockets':
+        optional: true
+      graphql:
+        optional: true
+
   '@nestjs/schedule@12.0.2':
     resolution: {integrity: sha512-5iAvJEtk0njbfTrG4JQr+SXw8ZrqgDM1wJH9nUs6tVLCX5pWGd1LJ0a8b089UT1FDeDWaThRRfSLixFz9zztcA==}
     engines: {node: '>=20.19.0'}
@@ -6341,6 +6387,12 @@ packages:
   '@parcel/watcher@2.6.0':
     resolution: {integrity: sha512-7FNeNl8NCE7aINx7WXiKQrPYZWC/hvrTsmk6zmxbI7LTXE7hVek/n8AfVgpe2y82zl3w0HvCHN0bVKMBoJcC0w==}
     engines: {node: '>= 10.0.0'}
+
+  '@pdf-lib/standard-fonts@1.0.0':
+    resolution: {integrity: sha512-hU30BK9IUN/su0Mn9VdlVKsWBS6GyhVfqjwl1FjZN4TxP6cCw0jP2w7V3Hf5uX7M0AZJ16vey9yE0ny7Sa59ZA==}
+
+  '@pdf-lib/upng@1.0.1':
+    resolution: {integrity: sha512-dQK2FUMQtowVP00mtIksrlZhdFXQZPC+taih1q4CvPZ5vqdxR/LKBaFg0oAfzd1GlHZXXSPdQfzQnt+ViGvEIQ==}
 
   '@peculiar/asn1-cms@2.8.0':
     resolution: {integrity: sha512-NgekZOrSJFSBFLFoLfwePguAWAx7z1+f2TEsWFUMyiqqfntZ4+S/S5hzqME3q4pCA0iOsFKdwiQ35dwY24eVqA==}
@@ -8307,6 +8359,7 @@ packages:
 
   '@tiptap/y-tiptap@3.0.10':
     resolution: {integrity: sha512-vJtwYVoBBk+e8KyUVoH9WSsfUfKTXf1Uh+tk2UNTlD8wim9j7XVTuc7sakWUYuznB7DkXThT9w5uQTGH2SN0Kg==}
+    deprecated: Persistent position migrations can cause excessive collaborative document growth. Upgrade all collaborating clients to 3.1.0 or later.
     peerDependencies:
       prosemirror-model: ^1.7.1
       prosemirror-state: ^1.2.3
@@ -14743,6 +14796,9 @@ packages:
     resolution: {integrity: sha512-Q3CG/cYvCO1ye4QKkuH7EXxs3VC/rI1/trd+qX2+PolbaKG0H+bgcZzrTt96mMyRtejk+JMCiLUn3y29W8qmFQ==}
     engines: {node: '>= 0.10'}
 
+  pdf-lib@1.17.1:
+    resolution: {integrity: sha512-V/mpyJAoTsN4cnP31vc0wfNA1+p20evqqnap0KLoRUN0Yk/p3wN52DOEsL4oBFcLdb76hlpKPtzJIgo67j/XLw==}
+
   peberminta@0.10.0:
     resolution: {integrity: sha512-80B2AsU+I4Qdb0ZAPSfe9UwvGzwkM37IKIFEvdS3D/3Ndgv2bsuJ0bfG1+iEYO+l7Gfd4EUJmuRyq7efLgRMzQ==}
 
@@ -14822,6 +14878,10 @@ packages:
   pify@3.0.0:
     resolution: {integrity: sha512-C3FsVNH1udSEX48gGX1xfvwTWfsYWj5U+8/uK15BGzIGrKoUpghX8hWZwa/OFnakBiiVNmBvemTJR5mcy7iPcg==}
     engines: {node: '>=4'}
+
+  pingen2-sdk-js@0.3.0:
+    resolution: {integrity: sha512-KOx8O5SRH7naXXxWqynYfuavMAbyYpMgUnpVry34Ai/34W+qSAYnI3kzV4G930jYwk/CBcA2JHu0TeXqHQaQ/g==}
+    engines: {node: '>=18.0.0'}
 
   pino-abstract-transport@3.0.0:
     resolution: {integrity: sha512-wlfUczU+n7Hy/Ha5j9a/gZNy7We5+cXp8YL+X+PG8S0KXxw7n/JXA3c46Y0zQznIJ83URJiwy7Lh56WLokNuxg==}
@@ -22003,6 +22063,15 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@nestjs/resilience@0.0.3(@nestjs/common@12.2.0(class-transformer@0.5.1)(reflect-metadata@0.1.14)(rxjs@7.8.2)(supports-color@8.1.1))(@nestjs/core@12.2.0)(graphql@16.14.2)(reflect-metadata@0.1.14)(rxjs@7.8.2)':
+    dependencies:
+      '@nestjs/common': 12.2.0(class-transformer@0.5.1)(reflect-metadata@0.1.14)(rxjs@7.8.2)(supports-color@8.1.1)
+      '@nestjs/core': 12.2.0(@nestjs/common@12.2.0(class-transformer@0.5.1)(reflect-metadata@0.1.14)(rxjs@7.8.2)(supports-color@8.1.1))(@nestjs/platform-express@12.2.0)(reflect-metadata@0.1.14)(rxjs@7.8.2)
+      reflect-metadata: 0.1.14
+      rxjs: 7.8.2
+    optionalDependencies:
+      graphql: 16.14.2
+
   '@nestjs/schedule@12.0.2(@nestjs/common@12.2.0(class-transformer@0.5.1)(reflect-metadata@0.1.14)(rxjs@7.8.2)(supports-color@8.1.1))(@nestjs/core@12.2.0)':
     dependencies:
       '@nestjs/common': 12.2.0(class-transformer@0.5.1)(reflect-metadata@0.1.14)(rxjs@7.8.2)(supports-color@8.1.1)
@@ -23104,6 +23173,14 @@ snapshots:
       '@parcel/watcher-linux-x64-musl': 2.6.0
       '@parcel/watcher-win32-arm64': 2.6.0
       '@parcel/watcher-win32-x64': 2.6.0
+
+  '@pdf-lib/standard-fonts@1.0.0':
+    dependencies:
+      pako: 1.0.11
+
+  '@pdf-lib/upng@1.0.1':
+    dependencies:
+      pako: 1.0.11
 
   '@peculiar/asn1-cms@2.8.0':
     dependencies:
@@ -32988,6 +33065,13 @@ snapshots:
       sha.js: 2.4.12
       to-buffer: 1.2.1
 
+  pdf-lib@1.17.1:
+    dependencies:
+      '@pdf-lib/standard-fonts': 1.0.0
+      '@pdf-lib/upng': 1.0.1
+      pako: 1.0.11
+      tslib: 1.14.1
+
   peberminta@0.10.0: {}
 
   peberminta@0.9.0: {}
@@ -33048,6 +33132,8 @@ snapshots:
   pify@2.3.0: {}
 
   pify@3.0.0: {}
+
+  pingen2-sdk-js@0.3.0: {}
 
   pino-abstract-transport@3.0.0:
     dependencies:

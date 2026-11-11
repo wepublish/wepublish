@@ -76,6 +76,13 @@ export class PeriodicityPrice {
 
   @Field(() => Int, { nullable: true })
   amountMax?: number;
+
+  @Field(() => Int, {
+    nullable: true,
+    description:
+      "Printed issues one paid period of this periodicity is worth (print export). Empty: the medium's issues per year, pro rata.",
+  })
+  printIssues?: number | null;
 }
 
 @InputType()

@@ -1,6 +1,7 @@
 import { createTheme, ThemeProvider } from '@mui/material';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import {
+  AccountCreationMailDocument,
   UserDocument,
   UserSubscriptionListDocument,
 } from '@wepublish/editor/api';
@@ -9,11 +10,13 @@ import type { Mock } from 'vitest';
 
 import { UserEditView } from './userEditView';
 
+const query = vi.hoisted(() => vi.fn(async () => ({ data: {} })));
+
 vi.mock('@apollo/client/react', async importOriginal => ({
   ...(await importOriginal<typeof import('@apollo/client/react')>()),
   useQuery: vi.fn(),
   useLazyQuery: () => [vi.fn(), { loading: false }],
-  useApolloClient: () => ({ query: vi.fn(async () => ({ data: {} })) }),
+  useApolloClient: () => ({ query }),
   useMutation: () => [vi.fn(async () => ({ data: {} })), { loading: false }],
 }));
 
@@ -24,12 +27,17 @@ vi.mock('react-i18next', () => ({
   }),
 }));
 
+const features = vi.fn(() => new Set<string>());
+
 vi.mock('@wepublish/ui/editor', async importOriginal => ({
   ...(await importOriginal<typeof import('@wepublish/ui/editor')>()),
   createCheckedPermissionComponent: () => (component: unknown) => component,
   PermissionControl: ({ children }: { children: React.ReactNode }) => children,
   useAuthorisation: () => true,
+  useFeature: (feature: string) => features().has(feature),
 }));
+
+afterEach(() => features.mockReturnValue(new Set()));
 
 const { useQuery } = await import('@apollo/client/react');
 const mockedUseQuery = useQuery as unknown as Mock;
@@ -105,7 +113,10 @@ const renderAt = (path: string) =>
   );
 
 beforeEach(() => mockedUseQuery.mockReset());
-afterEach(() => vi.restoreAllMocks());
+afterEach(() => {
+  vi.restoreAllMocks();
+  query.mockClear();
+});
 
 describe('UserEditView', () => {
   it('keeps the empty first name field controlled while typing', async () => {
@@ -261,5 +272,40 @@ describe('UserEditView', () => {
     );
     expect(screen.queryByText('userMail.logTitle')).not.toBeInTheDocument();
     expect(screen.queryByText('userMail.sendTitle')).not.toBeInTheDocument();
+  });
+
+  it('names the panel after everything it shows once letters exist', async () => {
+    features.mockReturnValue(new Set(['paper-letters']));
+    mockQueries([[UserDocument, { user }]]);
+    renderAt('/users/edit/user-1');
+
+    expect(
+      await screen.findByText('userMail.titleWithLetters')
+    ).toBeInTheDocument();
+    expect(screen.queryByText('userMail.title')).not.toBeInTheDocument();
+  });
+
+  it('creates a user without a country', async () => {
+    mockQueries();
+    const { container } = renderAt('/users/create');
+
+    const type = (name: string, value: string) =>
+      fireEvent.change(
+        container.querySelector(`input[name="${name}"]`) as HTMLInputElement,
+        { target: { value } }
+      );
+
+    await screen.findByText('userCreateOrEditView.userDataTitle');
+    type('name', 'Muster');
+    type('email', 'max@test.ch');
+    type('password', 'a-long-enough-password');
+    fireEvent.click(screen.getByRole('button', { name: 'save' }));
+
+    // past validation, creating starts by looking up the account mail
+    await waitFor(() =>
+      expect(query).toHaveBeenCalledWith(
+        expect.objectContaining({ query: AccountCreationMailDocument })
+      )
+    );
   });
 });

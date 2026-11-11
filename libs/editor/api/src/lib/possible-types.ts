@@ -155,7 +155,8 @@ const result: PossibleTypesResultData = {
       "QuoteBlock"
     ],
     "HasImageLc": [
-      "PaymentMethod"
+      "PaymentMethod",
+      "PrintIssue"
     ],
     "HasMemberPlan": [
       "PublicSubscription"
@@ -227,8 +228,10 @@ const result: PossibleTypesResultData = {
       "SettingAIProvider",
       "SettingAnalyticsProvider",
       "SettingChallengeProvider",
+      "SettingLetterProvider",
       "SettingMailProvider",
       "SettingPaymentProvider",
+      "SettingPdfRenderer",
       "SettingSyncProvider",
       "SettingTrackingPixelProvider"
     ],

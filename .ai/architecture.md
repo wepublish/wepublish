@@ -12,7 +12,7 @@ We.Publish is a headless CMS platform for publishers, built as an Nx monorepo. I
 │   ├── api-example/    # NestJS GraphQL API server (main backend)
 │   ├── editor/         # React CMS admin panel (Vite SPA, React Router)
 │   ├── media/          # NestJS media server (image transform + S3)
-│   ├── website-example/# Reference Next.js website frontend
+│   ├── website-example/# Reference website frontend (TanStack Start)
 │   └── <publisher>/    # Publisher-specific websites (bajour, tsri, mannschaft, etc.)
 ├── libs/               # Reusable libraries (~50 modules)
 │   ├── api/            # Core API library (Prisma schema, shared models)
@@ -31,7 +31,7 @@ We.Publish is a headless CMS platform for publishers, built as an Nx monorepo. I
 | `api-example` | NestJS (node:http adapter) + Apollo Server | 4000 | GraphQL API backend |
 | `editor` | Vite + React + React Router (client-rendered; Express host) | 3000 | Admin CMS interface |
 | `media` | NestJS (node:http adapter) | 4100 | Image upload, transformation, S3 storage |
-| `website-example` | Next.js | 4200 | Reference website frontend |
+| `website-example` | TanStack Start (Vite + nitro) | 4200 | Reference website frontend |
 
 **The editor is client-rendered — there is no SSR.** `nx build editor` produces
 two bundles: `browser` (the Vite client bundle) and `server`. The server is a
@@ -81,12 +81,29 @@ hooks) live in `apps/<app>/src/sitemap.ts`. Fetch with the lean `Sitemap*`
 documents (`libs/website/api/src/lib/schemas/sitemap.graphql`), never
 `ArticleList`, and leave peered articles out. `generateSitemap` is deprecated.
 
+**llms.txt:** every website serves `/llms.txt` from the same `src/sitemap.ts`
+config, so its `filterArticle` and url hooks apply. It follows
+llmtxt.info/best-practices: one H1, a factual `description` blockquote (an
+encyclopedia opener, not a slogan), a "Last updated" line, one H2 per CMS
+navigation (published pages only when there is none), the 10 latest articles,
+one-sentence notes, no login/signup/profile URLs. Next tenants: `pages/api/llms.ts` with
+`createLlmsTxtHandler`, reached through the `/llms.txt` rewrite in the shared
+`libs/utils/website/src/next/next.config.js`. TanStack tenants:
+`src/routes/llms[.]txt.ts` with `createLlmsTxtFetchHandler` — port it when
+migrating a tenant. Documents: `libs/website/api/src/lib/schemas/llms.graphql`.
+
 The Next `onRequestError` drops Next's own 4xx `ApiError`s (malformed or
 oversized bodies) so they do not reach Sentry.
 
+**Feeds:** Next tenants export `createFeedHandler(getFeed, format)` from
+`@wepublish/feed/website` in `pages/api/{rss,atom,json}-feed.ts` (with
+`api: { bodyParser: false }` in `config`); TanStack tenants use `feedHandler`
+from `@wepublish/utils/website/tanstack`. Both answer a failed feed query with
+an uncached 502 and report the error to Sentry instead of throwing.
+
 ### Business Domain Libraries
 
-`membership`, `payment`, `user-subscription`, `member-plan`, `crowdfunding`, `mail`, `event`, `consent`
+`membership`, `payment`, `user-subscription`, `member-plan`, `crowdfunding`, `mail`, `event`, `consent`, `print-issue`
 
 ### Infrastructure Libraries
 

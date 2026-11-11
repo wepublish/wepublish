@@ -13,6 +13,8 @@ interface FieldLabelProps {
   id: string;
   label: ReactNode;
   help?: ReactNode;
+  /** names the (i) button when `help` is markup rather than a string */
+  helpLabel?: string;
   htmlFor?: string;
   required?: boolean;
 }
@@ -21,6 +23,7 @@ export function FieldLabel({
   id,
   label,
   help,
+  helpLabel,
   htmlFor,
   required,
 }: FieldLabelProps) {
@@ -34,7 +37,12 @@ export function FieldLabel({
         {label}
       </FormLabel>
 
-      {help && <InfoTooltip text={help} />}
+      {help && (
+        <InfoTooltip
+          text={help}
+          label={helpLabel}
+        />
+      )}
     </LabelRow>
   );
 }

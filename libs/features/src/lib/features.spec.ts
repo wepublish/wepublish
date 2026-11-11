@@ -58,3 +58,10 @@ describe('isKnownFeature', () => {
     expect(isKnownFeature('profile-subscription-history')).toBe(true);
   });
 });
+
+describe('registered features', () => {
+  it('ships paper letters dark, with the per-user flow on top', () => {
+    expect(isKnownFeature('paper-letters')).toBe(true);
+    expect(isKnownFeature('paper-letter-flow')).toBe(true);
+  });
+});

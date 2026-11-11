@@ -920,6 +920,13 @@ export const CanGetMailLogs: Permission = {
   deprecated: false,
 };
 
+export const CanManageUserDeliveryMode: Permission = {
+  id: 'CAN_MANAGE_USER-DELIVERY-MODE',
+  description:
+    'Allows to switch users between mailed and printed subscription mails, singly or by audience, and to confirm suggestions.',
+  deprecated: false,
+};
+
 /**
  * System mails
  */
@@ -1265,6 +1272,60 @@ export const CanDeleteMailProviderSettings: Permission = {
 };
 
 /**
+ * Letter Provider Settings
+ */
+export const CanGetLetterProviderSettings: Permission = {
+  id: 'CAN_GET_LETTER_PROVIDER_SETTINGS',
+  description: 'Allows to get letter provider settings',
+  deprecated: false,
+};
+
+export const CanCreateLetterProviderSettings: Permission = {
+  id: 'CAN_CREATE_LETTER_PROVIDER_SETTINGS',
+  description: 'Allows to create letter provider settings',
+  deprecated: false,
+};
+
+export const CanUpdateLetterProviderSettings: Permission = {
+  id: 'CAN_UPDATE_LETTER_PROVIDER_SETTINGS',
+  description: 'Allows to update letter provider settings',
+  deprecated: false,
+};
+
+export const CanDeleteLetterProviderSettings: Permission = {
+  id: 'CAN_DELETE_LETTER_PROVIDER_SETTINGS',
+  description: 'Allows to delete letter provider settings',
+  deprecated: false,
+};
+
+/**
+ * PDF Renderer Settings
+ */
+export const CanGetPdfRendererSettings: Permission = {
+  id: 'CAN_GET_PDF_RENDERER_SETTINGS',
+  description: 'Allows to get pdf renderer settings',
+  deprecated: false,
+};
+
+export const CanCreatePdfRendererSettings: Permission = {
+  id: 'CAN_CREATE_PDF_RENDERER_SETTINGS',
+  description: 'Allows to create pdf renderer settings',
+  deprecated: false,
+};
+
+export const CanUpdatePdfRendererSettings: Permission = {
+  id: 'CAN_UPDATE_PDF_RENDERER_SETTINGS',
+  description: 'Allows to update pdf renderer settings',
+  deprecated: false,
+};
+
+export const CanDeletePdfRendererSettings: Permission = {
+  id: 'CAN_DELETE_PDF_RENDERER_SETTINGS',
+  description: 'Allows to delete pdf renderer settings',
+  deprecated: false,
+};
+
+/**
  * Analytics Provider Settings Permissions
  */
 export const CanGetAnalyticsProviderSettings: Permission = {
@@ -1324,6 +1385,35 @@ export const CanDeleteMailchimpSyncSettings: Permission = {
 export const CanRunMailchimpSync: Permission = {
   id: 'CAN_RUN_MAILCHIMP_SYNC',
   description: 'Allows to manually trigger a mailchimp sync',
+  deprecated: false,
+};
+
+/**
+ * Print issues (print export)
+ */
+
+export const CanGetPrintIssues: Permission = {
+  id: 'CAN_GET_PRINT_ISSUES',
+  description: 'Allows to see print issues and their export summaries',
+  deprecated: false,
+};
+
+export const CanCreatePrintIssue: Permission = {
+  id: 'CAN_CREATE_PRINT_ISSUE',
+  description: 'Allows to create and edit print issues',
+  deprecated: false,
+};
+
+export const CanDeletePrintIssue: Permission = {
+  id: 'CAN_DELETE_PRINT_ISSUE',
+  description: 'Allows to delete print issues that were not exported yet',
+  deprecated: false,
+};
+
+export const CanFinalizePrintIssue: Permission = {
+  id: 'CAN_FINALIZE_PRINT_ISSUE',
+  description:
+    'Allows to finalize the export of a print issue and to add a Nachlieferung',
   deprecated: false,
 };
 
@@ -1486,6 +1576,7 @@ export const AllPermissions = [
   CanSendTestMailTemplates,
   CanSendMailTemplates,
   CanGetMailLogs,
+  CanManageUserDeliveryMode,
   CanGetSystemMails,
   CanUpdateSystemMails,
   CanTestSystemMails,
@@ -1532,6 +1623,14 @@ export const AllPermissions = [
   CanCreateMailProviderSettings,
   CanUpdateMailProviderSettings,
   CanDeleteMailProviderSettings,
+  CanGetLetterProviderSettings,
+  CanCreateLetterProviderSettings,
+  CanUpdateLetterProviderSettings,
+  CanDeleteLetterProviderSettings,
+  CanGetPdfRendererSettings,
+  CanCreatePdfRendererSettings,
+  CanUpdatePdfRendererSettings,
+  CanDeletePdfRendererSettings,
   CanCreateExternalApp,
   CanUpdateExternalApp,
   CanDeleteExternalApp,
@@ -1544,6 +1643,10 @@ export const AllPermissions = [
   CanUpdateMailchimpSyncSettings,
   CanDeleteMailchimpSyncSettings,
   CanRunMailchimpSync,
+  CanGetPrintIssues,
+  CanCreatePrintIssue,
+  CanDeletePrintIssue,
+  CanFinalizePrintIssue,
   CanGetWebsiteSettings,
   CanUpdateWebsiteSettings,
   CanGetAuditLogs,
@@ -1621,6 +1724,7 @@ export const EditorPermissions = [
   CanGetSubscriptionFlows,
   CanGetMailTemplates,
   CanGetMailLogs,
+  CanManageUserDeliveryMode,
   CanGetPeriodicJobLog,
   CanCreateApprovedComment,
   CanCreateBlockTemplate,
