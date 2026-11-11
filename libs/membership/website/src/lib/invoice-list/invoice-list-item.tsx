@@ -81,21 +81,24 @@ export function InvoiceListItem({
         {!paidAt && !canceledAt && (
           <H6>
             {t('invoice.unpaid')}{' '}
-            {subscription && <>für {subscription.memberPlan.name}</>}
+            {subscription &&
+              t('invoice.forPlan', { plan: subscription.memberPlan.name })}
           </H6>
         )}
 
         {paidAt && (
           <H6>
             {t('invoice.paid')}{' '}
-            {subscription && <>für {subscription.memberPlan.name}</>}
+            {subscription &&
+              t('invoice.forPlan', { plan: subscription.memberPlan.name })}
           </H6>
         )}
 
         {canceledAt && (
           <H6>
             {t('invoice.canceled')}{' '}
-            {subscription && <>für {subscription.memberPlan.name}</>}
+            {subscription &&
+              t('invoice.forPlan', { plan: subscription.memberPlan.name })}
           </H6>
         )}
 

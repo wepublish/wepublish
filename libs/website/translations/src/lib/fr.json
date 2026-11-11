@@ -73,6 +73,10 @@
       "none": "Aucun cadeau",
       "soldOut": "Ce cadeau est malheureusement épuisé. Veuillez en choisir un autre."
     },
+    "errors": {
+      "amountBelowMin": "Le montant est inférieur au montant minimum.",
+      "memberPlanUnavailableForPeriodicity": "Ce plan d’abonnement n’est pas disponible pour cet intervalle de paiement."
+    },
     "warning": {
       "confirmationTitle": "Êtes-vous sûr ?",
       "openInvoices": "Vous avez déjà un abonnement avec des factures impayées. Vous pouvez consulter vos factures impayées dans votre <Link href=\"/profile\">profil</Link>.",
@@ -196,6 +200,7 @@
     "unpaid": "Facture impayée",
     "paid": "Facture payée",
     "canceled": "Facture annulée",
+    "forPlan": "pour {plan}",
     "number": "N° de facture",
     "completedAt": "Terminé le",
     "dueAt": "Échéance le",
@@ -267,6 +272,7 @@
       "suggested": "Suggéré",
       "occupation": "Fonction / Profession",
       "passwordsDoNotMatch": "Les mots de passe ne correspondent pas.",
+      "emailsDoNotMatch": "Les adresses e-mail ne correspondent pas.",
       "errors": {
         "minLength": "{minimum, plural, one {Ne doit pas être vide} other {Min. # caractères}}",
         "chooseOption": "Veuillez choisir une option"
