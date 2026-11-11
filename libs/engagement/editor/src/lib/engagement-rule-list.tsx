@@ -99,7 +99,6 @@ function EngagementRuleList() {
       <ListViewContainer>
         <ListViewHeader>
           <PageTitle>{t('engagement.list.title')}</PageTitle>
-          {/*<p>{t('engagement.list.description')}</p>*/}
         </ListViewHeader>
 
         <ListViewActions>

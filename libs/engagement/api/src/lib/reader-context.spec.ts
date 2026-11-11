@@ -172,7 +172,6 @@ describe('matchesAudience', () => {
     [EngagementAudience.REGISTERED, [false, true, true, true]],
     [EngagementAudience.NON_MEMBERS, [true, true, false, false]],
     [EngagementAudience.MEMBERS, [false, false, true, true]],
-    [EngagementAudience.NON_PAYING, [true, true, true, false]],
     [EngagementAudience.PAYING_MEMBERS, [false, false, false, true]],
     [EngagementAudience.PAYWALL_BYPASSED, [false, false, false, false]],
     // Without plans to match.

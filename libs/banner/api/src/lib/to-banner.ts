@@ -24,7 +24,6 @@ const LOGIN_STATUS: Record<EngagementAudience, LoginStatus> = {
   ANONYMOUS: LoginStatus.LOGGED_OUT,
   REGISTERED: LoginStatus.LOGGED_IN,
   NON_MEMBERS: LoginStatus.UNSUBSCRIBED,
-  NON_PAYING: LoginStatus.UNSUBSCRIBED,
   MEMBERS: LoginStatus.SUBSCRIBED,
   PAYING_MEMBERS: LoginStatus.SUBSCRIBED,
   PAYWALL_BYPASSED: LoginStatus.PAYWALL_BYPASSED,

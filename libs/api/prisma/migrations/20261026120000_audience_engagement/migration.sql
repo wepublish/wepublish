@@ -333,23 +333,15 @@ DROP TYPE IF EXISTS "ContentGateAudience";
 DROP TYPE "LoginStatus";
 
 -- Banners become announcements: one soft stage from the first article on.
--- The priority keeps master's primaryBanner pick: it preferred the audience
--- that fits the reader best (bypassed, then logged out or subscribed, then
--- unsubscribed, then logged in, then all).
+-- No priority: any priority reads as "show this first" in the editor, and the
+-- prompt order already puts the narrower audience first, as master's
+-- primaryBanner did (bypassed, then logged out or subscribed, then the rest).
 INSERT INTO "engagement_rules" (
-    "id", "createdAt", "modifiedAt", "name", "goal", "active", "priority",
+    "id", "createdAt", "modifiedAt", "name", "goal", "active",
     "audience", "showOnArticles", "includePeeredArticles"
 )
 SELECT
     "id", "createdAt", "modifiedAt", COALESCE(NULLIF("title", ''), 'Banner'), 'ANNOUNCEMENT', "active",
-    CASE "loginStatus"
-        WHEN 'paywall_bypassed' THEN 4
-        WHEN 'logged_out' THEN 3
-        WHEN 'subscribed' THEN 3
-        WHEN 'unsubscribed' THEN 2
-        WHEN 'logged_in' THEN 1
-        ELSE 0
-    END,
     CASE "loginStatus"
         WHEN 'paywall_bypassed' THEN 'PAYWALL_BYPASSED'
         WHEN 'logged_out' THEN 'ANONYMOUS'

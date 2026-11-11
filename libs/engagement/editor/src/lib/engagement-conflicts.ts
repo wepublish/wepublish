@@ -55,7 +55,6 @@ export type EngagementConflict<Rule extends ConflictRule = ConflictRule> = {
 /** Mirrors `AUDIENCE_SPECIFICITY` in `engagement-api`'s `evaluate.ts`. */
 export const AUDIENCE_SPECIFICITY: Record<EngagementAudience, number> = {
   [EngagementAudience.All]: 0,
-  [EngagementAudience.NonPaying]: 1,
   [EngagementAudience.NonMembers]: 1,
   [EngagementAudience.Registered]: 1,
   [EngagementAudience.Anonymous]: 2,
@@ -80,7 +79,6 @@ const READERS: Record<EngagementAudience, Reader[]> = {
   [EngagementAudience.Registered]: ['registered', 'freeMember', 'payingMember'],
   [EngagementAudience.NonMembers]: ['anonymous', 'registered'],
   [EngagementAudience.Members]: ['freeMember', 'payingMember'],
-  [EngagementAudience.NonPaying]: ['anonymous', 'registered', 'freeMember'],
   [EngagementAudience.PayingMembers]: ['payingMember'],
   [EngagementAudience.PaywallBypassed]: [
     'anonymous',

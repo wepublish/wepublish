@@ -162,7 +162,6 @@ export const currentStage = <Stage extends EvaluatedStage>(
  */
 export const AUDIENCE_SPECIFICITY: Record<EngagementAudience, number> = {
   ALL: 0,
-  NON_PAYING: 1,
   NON_MEMBERS: 1,
   REGISTERED: 1,
   ANONYMOUS: 2,

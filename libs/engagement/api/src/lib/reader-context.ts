@@ -111,8 +111,6 @@ export function matchesAudience(
       return !member;
     case EngagementAudience.MEMBERS:
       return member;
-    case EngagementAudience.NON_PAYING:
-      return !reader.paying;
     case EngagementAudience.PAYING_MEMBERS:
       return reader.paying;
     case EngagementAudience.PAYWALL_BYPASSED:

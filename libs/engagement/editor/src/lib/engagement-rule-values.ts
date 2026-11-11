@@ -118,13 +118,26 @@ export const showsFirst = (priority: number) => priority > 0;
 export const isAnnouncement = (rule: Pick<EngagementRuleValues, 'goal'>) =>
   rule.goal === EngagementGoal.Announcement;
 
-const ACTIONS_WITH_URL = [
-  EngagementActionType.Url,
-  EngagementActionType.Newsletter,
-];
+/** Links and newsletter actions can lead to a url, cancel buttons close. */
+export const actionTakesUrl = ({
+  type,
+  role,
+}: Pick<EngagementActionValues, 'type' | 'role'>) =>
+  role !== EngagementActionRole.Cancel &&
+  (type === EngagementActionType.Url ||
+    type === EngagementActionType.Newsletter);
 
-export const actionNeedsUrl = (type: EngagementActionType) =>
-  ACTIONS_WITH_URL.includes(type);
+/**
+ * Mirrors `validate-engagement-rule.ts`: a newsletter action without a url
+ * asks for the email right in the prompt, which a banner has no room for.
+ */
+export const actionNeedsUrl = (
+  action: Pick<EngagementActionValues, 'type' | 'role'>,
+  placement: EngagementPlacement
+) =>
+  actionTakesUrl(action) &&
+  (action.type === EngagementActionType.Url ||
+    placement === EngagementPlacement.Banner);
 
 /**
  * The stage before one that does not show later than it, e.g. step 2 after 1
@@ -228,7 +241,7 @@ export function engagementRuleProblems(
     }
 
     stage.actions.forEach((action, actionIndex) => {
-      if (actionNeedsUrl(action.type) && !action.url.trim()) {
+      if (actionNeedsUrl(action, stage.placement) && !action.url.trim()) {
         problem(`${path}.actions.${actionIndex}.url`, 'required');
       }
     });

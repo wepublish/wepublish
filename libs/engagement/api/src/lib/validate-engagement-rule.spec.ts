@@ -1,4 +1,5 @@
 import {
+  EngagementActionRole,
   EngagementActionType,
   EngagementAudience,
   EngagementEnforcement,
@@ -165,7 +166,7 @@ describe('validateEngagementRule', () => {
     ]);
   });
 
-  it('needs a url on url and newsletter actions', () => {
+  it('needs a url where an action leads away', () => {
     expect(
       codes(
         metered({
@@ -173,6 +174,13 @@ describe('validateEngagementRule', () => {
             soft(2, {
               actions: [
                 { type: EngagementActionType.URL, url: '' },
+                // Closes the prompt.
+                {
+                  type: EngagementActionType.URL,
+                  url: '',
+                  role: EngagementActionRole.CANCEL,
+                },
+                // Asks for the email right in the prompt.
                 { type: EngagementActionType.NEWSLETTER, url: ' ' },
                 { type: EngagementActionType.LOGIN, url: '' },
               ],
@@ -180,10 +188,22 @@ describe('validateEngagementRule', () => {
           ],
         })
       )
-    ).toEqual([
-      'stages.0.actions.0.url: required',
-      'stages.0.actions.1.url: required',
-    ]);
+    ).toEqual(['stages.0.actions.0.url: required']);
+  });
+
+  it('needs a newsletter url in a banner, which has no room for the email', () => {
+    expect(
+      codes(
+        announcement({
+          stages: [
+            soft(0, {
+              placement: EngagementPlacement.BANNER,
+              actions: [{ type: EngagementActionType.NEWSLETTER, url: '' }],
+            }),
+          ],
+        })
+      )
+    ).toEqual(['stages.0.actions.0.url: required']);
   });
 
   it('only lets a newsletter rule end in a newsletter wall', () => {

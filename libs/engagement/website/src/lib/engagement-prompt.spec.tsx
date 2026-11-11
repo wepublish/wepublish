@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   TEST_CAPTCHA_LABEL,
@@ -14,6 +14,7 @@ import {
   renderWithProviders,
 } from '@wepublish/mocks/website';
 import {
+  EngagementActionRole,
   EngagementActionType,
   EngagementPlacement,
   EngagementRequirement,
@@ -94,6 +95,119 @@ describe('EngagementPrompt', () => {
     fireEvent.click(screen.getByText(t('engagement.dismiss')));
     expect(onDismiss).toHaveBeenCalled();
     expect(screen.queryByText('Subscribe to our newsletter')).toBeNull();
+  });
+
+  it('closes the prompt with a cancel action instead of following it', () => {
+    const onDismiss = vi.fn();
+
+    renderWithProviders(
+      <EngagementPrompt
+        prompt={mockEngagementPrompt({
+          stage: {
+            placement: EngagementPlacement.Inline,
+            actions: [
+              mockEngagementAction({
+                label: 'Not now',
+                url: '',
+                role: EngagementActionRole.Cancel,
+              }),
+            ],
+          },
+        })}
+        onDismiss={onDismiss}
+      />
+    );
+
+    expect(screen.getByText('Not now').closest('a')).toBeNull();
+    fireEvent.click(screen.getByText('Not now'));
+
+    expect(onDismiss).toHaveBeenCalled();
+    expect(screen.queryByText('Not now')).toBeNull();
+  });
+
+  describe('newsletter action without a url', () => {
+    const signUp = (email: string) =>
+      mockOperation(SignUpForNewsletterDocument, {
+        variables: {
+          email,
+          challengeAnswer: {
+            challengeID: mockChallenge().challengeID,
+            challengeSolution: mockChallengeToken,
+          },
+        },
+        data: {
+          __typename: 'Mutation',
+          signUpForNewsletter: {
+            __typename: 'NewsletterSignup',
+            newsletterToken: 'signed.token',
+          },
+        },
+      });
+
+    const inPlace = (placement: EngagementPlacement) =>
+      mockEngagementPrompt({
+        stage: {
+          placement,
+          actions: [
+            mockEngagementAction({
+              type: EngagementActionType.Newsletter,
+              label: 'Get the newsletter',
+              url: '',
+            }),
+          ],
+        },
+      });
+
+    beforeEach(() => {
+      document.cookie = `${NEWSLETTER_COOKIE_KEY}=; max-age=0; path=/`;
+    });
+
+    it('asks for the email right in a box in the article, then thanks', async () => {
+      const user = userEvent.setup();
+      const onAction = vi.fn();
+
+      renderWithProviders(
+        <EngagementPrompt
+          prompt={inPlace(EngagementPlacement.Inline)}
+          onAction={onAction}
+        />,
+        { mocks: [mockChallengeQuery(), signUp('reader@example.com')] }
+      );
+
+      expect(
+        screen.queryByRole('link', { name: 'Get the newsletter' })
+      ).toBeNull();
+
+      await user.type(
+        screen.getByRole('textbox', {
+          name: t('engagement.newsletterWall.email'),
+        }),
+        'reader@example.com'
+      );
+      await screen.findByRole('group', { name: TEST_CAPTCHA_LABEL });
+      await user.click(
+        screen.getByRole('button', { name: 'Get the newsletter' })
+      );
+
+      expect(
+        await screen.findByText(t('engagement.newsletterWall.done'))
+      ).toBeInTheDocument();
+      expect(readNewsletterToken()).toBe('signed.token');
+      expect(onAction).toHaveBeenCalled();
+    });
+
+    it('asks for the email in a pop-up too', () => {
+      renderWithProviders(
+        <EngagementPrompt prompt={inPlace(EngagementPlacement.Modal)} />,
+        { mocks: [mockChallengeQuery()] }
+      );
+
+      expect(
+        within(screen.getByRole('dialog')).getByRole('textbox', {
+          name: t('engagement.newsletterWall.email'),
+        })
+      ).toBeInTheDocument();
+    });
   });
 
   it('adds its own html to pop-ups and boxes in the article', () => {
@@ -215,11 +329,15 @@ describe('EngagementPrompt', () => {
       );
 
       await waitFor(() => expect(readNewsletterToken()).toBe('signed.token'));
+      // No second signup while the article is viewed again.
       expect(
-        screen.getByRole('button', {
+        screen.getByText(t('engagement.newsletterWall.done'))
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByRole('button', {
           name: t('engagement.newsletterWall.submit'),
         })
-      ).toBeDisabled();
+      ).toBeNull();
     });
 
     it('fills in the email of a logged-in reader, who solves no challenge', async () => {

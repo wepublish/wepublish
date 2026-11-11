@@ -11,6 +11,7 @@ import {
 import { TFunction } from 'i18next';
 import {
   EngagementRuleValues,
+  actionDefaults,
   copyEngagementRule,
   createEngagementRuleSchema,
   engagementRuleProblems,
@@ -227,7 +228,6 @@ describe('engagement rule values', () => {
     ).toEqual([
       ['stages.1.afterArticles', 'engagement.validation.ascending'],
       ['stages.1.requirement', 'engagement.validation.newsletterWallRequired'],
-      ['stages.1.actions.0.url', 'engagement.validation.required'],
     ]);
   });
 
@@ -246,6 +246,37 @@ describe('engagement rule values', () => {
         })
       )
     ).toEqual([]);
+  });
+
+  it('needs a url where an action leads away, like the server', () => {
+    const actionProblems = (
+      placement: EngagementPlacement,
+      actions: Parameters<typeof actionDefaults>[0][]
+    ) =>
+      engagementRuleProblems(
+        metered({
+          stages: [
+            stageDefaults({
+              afterArticles: 0,
+              placement,
+              actions: actions.map(actionDefaults),
+            }),
+          ],
+        })
+      ).filter(({ path }) => path.includes('.actions.'));
+
+    expect(
+      actionProblems(EngagementPlacement.Modal, [
+        { type: EngagementActionType.Url },
+        { type: EngagementActionType.Url, role: EngagementActionRole.Cancel },
+        { type: EngagementActionType.Newsletter },
+      ])
+    ).toEqual([{ path: 'stages.0.actions.0.url', code: 'required' }]);
+    expect(
+      actionProblems(EngagementPlacement.Banner, [
+        { type: EngagementActionType.Newsletter },
+      ])
+    ).toEqual([{ path: 'stages.0.actions.0.url', code: 'required' }]);
   });
 
   it('accepts a consistent rule', () => {
