@@ -5,6 +5,8 @@ import { MailSendJobService } from './mail-send-job.service';
 import { MailSendRecipientService } from './mail-send-recipient.service';
 import { MailLogSyncService } from './mail-log-sync.service';
 import { EmailQualityService } from '../email-quality/email-quality.service';
+import { EmailEvidenceService } from './email-evidence.service';
+import { SuppressionSyncService } from './suppression-sync.service';
 import { MailEmailSegment, MailRecipientBase } from './mail-send.model';
 import type { Mock } from 'vitest';
 
@@ -15,17 +17,32 @@ const makeResolver = (
   jobService: any = {},
   recipientService: any = {},
   mailLogSyncService: any = {},
-  emailQualityService: any = {}
+  emailQualityService: any = {},
+  emailEvidenceService: any = {},
+  suppressionSyncService: any = {
+    syncSuppressions: async () => ({ listed: 0, recorded: 0 }),
+  }
 ) =>
   new MailSendResolver(
     prisma as PrismaClient,
     jobService as MailSendJobService,
     recipientService as MailSendRecipientService,
     mailLogSyncService as MailLogSyncService,
-    emailQualityService as EmailQualityService
+    emailQualityService as EmailQualityService,
+    emailEvidenceService as EmailEvidenceService,
+    suppressionSyncService as SuppressionSyncService
   );
 
 describe('MailSendResolver', () => {
+  it('emailEvidence hands out the evidence summary', async () => {
+    const summary = { providerType: null, sources: [] };
+    const resolver = makeResolver({}, {}, {}, {}, {}, {
+      summary: vi.fn(async () => summary),
+    });
+
+    await expect(resolver.emailEvidence()).resolves.toBe(summary);
+  });
+
   // The GraphQL types for these relations are trimmed (`MailLogTemplate` exposes
   // only id+name, `MailLogRecipient` only id/email/name/firstName), so
   // `include: true` fetched whole rows — every template body, and the user's
@@ -270,6 +287,13 @@ describe('MailSendResolver', () => {
         return { recomputed: 7 };
       }),
     };
+    const suppressionSyncService = {
+      syncSuppressions: vi.fn(async () => {
+        order.push('suppressions');
+
+        return { listed: 0, recorded: 0 };
+      }),
+    };
 
     await expect(
       makeResolver(
@@ -277,11 +301,32 @@ describe('MailSendResolver', () => {
         {},
         {},
         mailLogSyncService,
-        emailQualityService
+        emailQualityService,
+        {},
+        suppressionSyncService
       ).refreshEmailQuality()
     ).resolves.toEqual({ checked: 5, updated: 2, recomputed: 7 });
 
-    expect(order).toEqual(['sync', 'recompute']);
+    expect(order).toEqual(['sync', 'suppressions', 'recompute']);
+  });
+
+  it('refreshEmailQuality still re-evaluates when the suppression lists cannot be read', async () => {
+    const emailQualityService = {
+      recomputeAll: vi.fn(async () => ({ recomputed: 1 })),
+    };
+
+    await expect(
+      makeResolver(
+        {},
+        {},
+        {},
+        { syncOpenStates: async () => ({ checked: 0, updated: 0 }) },
+        emailQualityService,
+        {},
+        { syncSuppressions: vi.fn().mockRejectedValue(new Error('Invalid_Key')) }
+      ).refreshEmailQuality()
+    ).resolves.toEqual({ checked: 0, updated: 0, recomputed: 1 });
+    expect(emailQualityService.recomputeAll).toHaveBeenCalled();
   });
 
   describe('mailSendJobs', () => {
