@@ -62,7 +62,15 @@ describe('composeLetter', () => {
   });
 
   it('keeps the body out of the franking zone', () => {
-    expect(composeLetter(base)).toContain('padding-top: 70mm');
+    expect(composeLetter(base)).toContain('padding-top: 90mm');
+  });
+
+  it('reserves no space for stationery without a layout', () => {
+    const html = composeLetter(base);
+
+    expect(html).not.toContain('letter-header');
+    expect(html).not.toContain('letter-footer');
+    expect(html).toContain('height: 0mm');
   });
 
   it('prints the recipient into the address window', () => {
@@ -77,6 +85,75 @@ describe('composeLetter', () => {
 
     expect(html).not.toContain('<script>');
     expect(html).toContain('&lt;script&gt;');
+  });
+});
+
+describe('composeLetter with a layout', () => {
+  const layout = {
+    headerHtml: '<div class="logo">Zwölf</div>',
+    footerHtml: '<div>Konto {{user_firstName}}</div>',
+    headerHeightMm: 30,
+    footerHeightMm: 20,
+  };
+  const base = {
+    template: { htmlContent: '<p>Hallo</p>' },
+    data: { user: { firstName: 'Jane' } },
+    recipient,
+    addressPosition: 'left' as const,
+    layout,
+  };
+
+  it('prints the header and footer on every page as fixed bands', () => {
+    const html = composeLetter(base);
+
+    expect(html).toContain('<div class="logo">Zwölf</div>');
+    expect(html).toMatch(/\.letter-header \{[^}]*position: fixed/);
+    expect(html).toMatch(/\.letter-header \{[^}]*height: 30mm/);
+    expect(html).toMatch(/\.letter-footer \{[^}]*position: fixed/);
+    expect(html).toMatch(/\.letter-footer \{[^}]*height: 20mm/);
+  });
+
+  it('keeps the flowing text out of both bands on every page', () => {
+    const html = composeLetter(base);
+
+    // thead and tfoot repeat per page, so their spacers do the reserving.
+    expect(html).toMatch(/<thead>[\s\S]*height: 35mm[\s\S]*<\/thead>/);
+    expect(html).toMatch(/<tfoot>[\s\S]*height: 25mm[\s\S]*<\/tfoot>/);
+  });
+
+  it('leaves the address window and the first body line where pingen expects them', () => {
+    const html = composeLetter(base);
+
+    expect(html).toContain('top: 60mm');
+    // 90mm from the sheet top, minus the 35mm the header spacer already takes.
+    expect(html).toContain('padding-top: 55mm');
+  });
+
+  it('renders placeholders in the stationery with the same data as the body', () => {
+    expect(composeLetter(base)).toContain('<div>Konto Jane</div>');
+  });
+
+  it('takes over only the body of a header pasted as a whole document', () => {
+    const html = composeLetter({
+      ...base,
+      layout: {
+        ...layout,
+        headerHtml: '<!DOCTYPE html><html><body><b>Kopf</b></body></html>',
+      },
+    });
+
+    expect(html).toContain('<b>Kopf</b>');
+    expect(html.match(/<!doctype html>/gi)).toHaveLength(1);
+  });
+
+  it('caps a band at the height that keeps clear of the franking zone', () => {
+    const html = composeLetter({
+      ...base,
+      layout: { ...layout, headerHeightMm: 80, footerHeightMm: 80 },
+    });
+
+    expect(html).toMatch(/\.letter-header \{[^}]*height: 40mm/);
+    expect(html).toMatch(/\.letter-footer \{[^}]*height: 40mm/);
   });
 });
 

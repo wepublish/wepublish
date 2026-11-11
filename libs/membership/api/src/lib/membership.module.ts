@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { SubscriptionFlowModule } from './subscription-flow/subscription-flow.module';
 import { MailTemplateModule } from './mail-template/mail-template.module';
+import { DeliveryModeModule } from './delivery-mode/delivery-mode.module';
 import { MailSendModule } from './mail-send/mail-send.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { SystemMailModule } from './system-mail/system-mail.module';
@@ -16,6 +17,7 @@ import { PaymentMethodChangeModule } from './payment-method-change/payment-metho
     SubscriptionFlowModule,
     MailTemplateModule,
     MailSendModule,
+    DeliveryModeModule,
     DashboardModule,
     SystemMailModule,
     PeriodicJobModule,

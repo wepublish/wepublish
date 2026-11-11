@@ -7,6 +7,7 @@ import { PeriodicJobExecutor } from './periodic-job.executor';
 import { MailchimpSyncService } from '../mailchimp-sync/mailchimp-sync.service';
 import { MailLogSyncService } from '../mail-send/mail-log-sync.service';
 import { EmailQualityService } from '../email-quality/email-quality.service';
+import { DeliverySuggestionService } from '../delivery-mode/delivery-suggestion.service';
 
 describe('PeriodicJobExecutor', () => {
   afterEach(() => {
@@ -38,10 +39,16 @@ describe('PeriodicJobExecutor', () => {
         ran.push('email quality');
       }),
     };
+    const deliverySuggestions = {
+      recomputeAll: vi.fn(async () => {
+        ran.push('delivery suggestions');
+      }),
+    };
     const services = new Map<unknown, unknown>([
       [MailchimpSyncService, mailchimpSync],
       [MailLogSyncService, mailLogSync],
       [EmailQualityService, emailQuality],
+      [DeliverySuggestionService, deliverySuggestions],
     ]);
     const claims = {
       claim: vi.fn(
@@ -73,6 +80,7 @@ describe('PeriodicJobExecutor', () => {
       'mailchimp sync',
       'mail log sync',
       'email quality',
+      'delivery suggestions',
     ]);
   });
 
@@ -83,7 +91,12 @@ describe('PeriodicJobExecutor', () => {
 
     await executor.handleCron();
 
-    expect(ran).toEqual(['periodic jobs', 'mailchimp sync', 'email quality']);
+    expect(ran).toEqual([
+      'periodic jobs',
+      'mailchimp sync',
+      'email quality',
+      'delivery suggestions',
+    ]);
   });
 
   it('leaves the night to the replica that claimed it', async () => {
@@ -119,6 +132,7 @@ describe('PeriodicJobExecutor', () => {
       'mailchimp sync',
       'mail log sync',
       'email quality',
+      'delivery suggestions',
     ]);
     expect(failed).not.toHaveBeenCalled();
   });
@@ -132,7 +146,12 @@ describe('PeriodicJobExecutor', () => {
 
     await executor.handleCron();
 
-    expect(ran).toEqual(['mailchimp sync', 'mail log sync', 'email quality']);
+    expect(ran).toEqual([
+      'mailchimp sync',
+      'mail log sync',
+      'email quality',
+      'delivery suggestions',
+    ]);
   });
 
   it('claims the night for longer than a run takes, but frees it before the next night', async () => {

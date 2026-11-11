@@ -361,6 +361,7 @@
     "nodemailer": "catalog:",
     "otpauth": "catalog:",
     "passport-http-bearer": "catalog:",
+    "pdf-lib": "catalog:",
     "pg": "catalog:",
     "pingen2-sdk-js": "catalog:",
     "pino": "catalog:",

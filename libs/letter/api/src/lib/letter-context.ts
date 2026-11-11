@@ -1,9 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import {
   LetterAddressPosition,
-  LetterDeliveryProduct,
   LetterPrintMode,
-  LetterPrintSpectrum,
   MailChannel,
   MailLogState,
   MailLogType,
@@ -16,39 +14,63 @@ import {
   LetterAddress,
   LetterState,
 } from './letter-provider/letter-provider.interface';
-import { toLetterAddress, UserWithAddress } from './letter-recipient';
-import { composeLetter, LetterTemplateContent } from './letter-renderer';
+import { LetterSender } from '@wepublish/mail/api';
+import {
+  canReceiveLetters,
+  toLetterAddress,
+  UserWithAddress,
+} from './letter-recipient';
+import { LetterPrintSettings, printSettings } from './letter-print-defaults';
+import {
+  composeLetter,
+  LetterLayoutContent,
+  LetterTemplateContent,
+} from './letter-renderer';
+import { appendPdf } from './pdf/append-pdf';
 import { PdfRenderer } from './pdf/pdf-renderer';
 
 export interface LetterContextProps {
   letterProvider: BaseLetterProvider;
   prisma: PrismaClient;
   pdfRenderer: PdfRenderer;
+  /** Where an uploaded document can be downloaded, for letter appendices. */
+  documentUrl?: (documentId: string) => Promise<string>;
 }
 
-/** How a letter is printed and posted. Chosen per send, not per template. */
-export interface LetterPrintSettings {
-  addressPosition: LetterAddressPosition;
-  deliveryProduct: LetterDeliveryProduct;
-  printMode: LetterPrintMode;
-  printSpectrum: LetterPrintSpectrum;
-}
+/**
+ * Pingen prints Swiss QR-bills on perforated paper but only posts letters
+ * carrying one within Switzerland, so the appendix is left out elsewhere.
+ */
+const APPENDIX_COUNTRY = 'CH';
+
+export type { LetterPrintSettings } from './letter-print-defaults';
 
 export interface RenderLetterProps {
   template: LetterTemplateContent;
   addressPosition: LetterAddressPosition;
   data: Record<string, any>;
   recipient: LetterAddress;
+  /** Stationery to print on; none prints the bare sheet. */
+  layout?: LetterLayoutContent | null;
+  /** Duplex printing needs the appendix to start on an odd page. */
+  printMode?: LetterPrintMode;
 }
 
 export interface SendTemplateLetterProps {
   mailTemplateId: string;
   recipient: UserWithAddress;
   data: Record<string, any>;
-  print: LetterPrintSettings;
+  /** Omitted by automated sends, which print with the provider's defaults. */
+  print?: LetterPrintSettings;
   /** Id the log entry has to be written under, so the caller can reference it. */
   mailLogId?: string;
   mailSendJobId?: string | null;
+  /**
+   * Bookkeeping an automated send hands in: the identifier a retried run
+   * recognises the letter by, and which flow it came from. A manual send is
+   * logged under its own id.
+   */
+  log?: { mailIdentifier?: string; type?: MailLogType };
 }
 
 /** The letter states that map onto a mail log state one-to-one. */
@@ -71,17 +93,22 @@ export function toProviderState(state: LetterState): MailLogState {
  * same templates, same log, different medium.
  */
 @Injectable()
-export class LetterContext {
+export class LetterContext implements LetterSender {
   private readonly logger = new Logger('LetterContext');
 
   letterProvider: BaseLetterProvider;
   prisma: PrismaClient;
   pdfRenderer: PdfRenderer;
+  private readonly documentUrl?: LetterContextProps['documentUrl'];
+  // Uploaded documents never change under their id, so one download serves
+  // every letter of a send job.
+  private readonly appendices = new Map<string, Promise<Buffer>>();
 
   constructor(props: LetterContextProps) {
     this.letterProvider = props.letterProvider;
     this.prisma = props.prisma;
     this.pdfRenderer = props.pdfRenderer;
+    this.documentUrl = props.documentUrl;
   }
 
   /**
@@ -111,14 +138,95 @@ export class LetterContext {
     addressPosition,
     data,
     recipient,
+    layout,
+    printMode,
   }: RenderLetterProps): Promise<Buffer> {
-    return this.pdfRenderer.render(
+    const letter = await this.pdfRenderer.render(
       composeLetter({
         template,
         data,
         recipient,
         addressPosition,
+        layout,
       })
+    );
+
+    if (!template.letterAppendixId) {
+      return letter;
+    }
+
+    if (recipient.country !== APPENDIX_COUNTRY) {
+      this.logger.warn(
+        `Letter appendix <${template.letterAppendixId}> left out for a recipient in ${recipient.country}`
+      );
+
+      return letter;
+    }
+
+    return appendPdf(
+      letter,
+      await this.loadAppendix(template.letterAppendixId),
+      {
+        padToOddPage: printMode === LetterPrintMode.duplex,
+      }
+    );
+  }
+
+  private loadAppendix(documentId: string): Promise<Buffer> {
+    let appendix = this.appendices.get(documentId);
+
+    if (!appendix) {
+      appendix = this.downloadAppendix(documentId);
+      // A failed download is retried by the next letter, not cached.
+      appendix.catch(() => this.appendices.delete(documentId));
+      this.appendices.set(documentId, appendix);
+    }
+
+    return appendix;
+  }
+
+  private async downloadAppendix(documentId: string): Promise<Buffer> {
+    if (!this.documentUrl) {
+      throw new Error('Letter appendices need a document storage');
+    }
+
+    const url = await this.documentUrl(documentId);
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error(
+        `Letter appendix <${documentId}> could not be downloaded: ${response.status}`
+      );
+    }
+
+    const file = Buffer.from(await response.arrayBuffer());
+
+    if (file.subarray(0, 5).toString() !== '%PDF-') {
+      throw new Error(`Letter appendix <${documentId}> is not a pdf`);
+    }
+
+    return file;
+  }
+
+  /**
+   * The stationery a template is printed on: its own if it names one, else
+   * the default, else none. Both lookups go to the database on every letter;
+   * a send job prints a few hundred at most, so that is cheaper than a cache
+   * that has to be told about every edit.
+   */
+  async resolveLayout(
+    letterLayoutId?: string | null
+  ): Promise<LetterLayoutContent | null> {
+    const own =
+      letterLayoutId ?
+        await this.prisma.letterLayout.findUnique({
+          where: { id: letterLayoutId },
+        })
+      : null;
+
+    return (
+      own ??
+      (await this.prisma.letterLayout.findFirst({ where: { isDefault: true } }))
     );
   }
 
@@ -127,9 +235,32 @@ export class LetterContext {
    * the mail log. Throws if either step fails; the log entry is written either
    * way, so a failed letter leaves a trace like a failed mail does.
    */
+  /** Whether the user's postal address is complete enough to be posted to. */
+  canReceiveLetters(user: UserWithAddress): boolean {
+    return canReceiveLetters(user);
+  }
+
+  /**
+   * Print options for a send nobody chose them for: the provider's defaults,
+   * where set, over the built-in ones.
+   */
+  async resolvePrintDefaults(): Promise<LetterPrintSettings> {
+    const settings = await this.prisma.settingLetterProvider.findUnique({
+      where: { id: this.letterProvider.id },
+    });
+
+    return printSettings({
+      addressPosition: settings?.defaultAddressPosition,
+      deliveryProduct: settings?.defaultDeliveryProduct,
+      printMode: settings?.defaultPrintMode,
+      printSpectrum: settings?.defaultPrintSpectrum,
+    });
+  }
+
   async sendLetter(props: SendTemplateLetterProps): Promise<string> {
     const mailLogId = props.mailLogId ?? randomUUID();
     const address = toLetterAddress(props.recipient);
+    const print = props.print ?? (await this.resolvePrintDefaults());
 
     const template = await this.prisma.mailTemplate.findUnique({
       where: { id: props.mailTemplateId },
@@ -141,17 +272,22 @@ export class LetterContext {
 
     try {
       const file = await this.renderLetter({
-        template: { htmlContent: template.htmlContent },
-        addressPosition: props.print.addressPosition,
+        template: {
+          htmlContent: template.htmlContent,
+          letterAppendixId: template.letterAppendixId,
+        },
+        addressPosition: print.addressPosition,
         data: props.data,
         recipient: address,
+        layout: await this.resolveLayout(template.letterLayoutId),
+        printMode: print.printMode,
       });
 
       const result = await this.letterProvider.sendLetter({
         letterLogID: mailLogId,
         file,
         recipient: address,
-        ...props.print,
+        ...print,
       });
 
       await this.writeLog(mailLogId, props, template.subject, address, {
@@ -194,11 +330,11 @@ export class LetterContext {
             { mailSendJob: { connect: { id: props.mailSendJobId } } }
           : {}),
           state: outcome.state,
-          type: MailLogType.manual,
+          type: props.log?.type ?? MailLogType.manual,
           sentDate: new Date(),
           subject,
           mailProviderID: this.letterProvider.id,
-          mailIdentifier: mailLogId,
+          mailIdentifier: props.log?.mailIdentifier ?? mailLogId,
           providerLetterID: outcome.providerLetterID ?? null,
           mailData: outcome.letterData ?? null,
           error: outcome.error ?? null,

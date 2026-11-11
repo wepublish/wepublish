@@ -1,4 +1,6 @@
 import { User, UserAddress } from '@prisma/client';
+import countries from 'i18n-iso-countries';
+import germanCountries from 'i18n-iso-countries/langs/de.json';
 import { LetterAddress } from './letter-provider/letter-provider.interface';
 
 export class LetterAddressError extends Error {}
@@ -49,25 +51,19 @@ export function normalizeCountry(country: string | null): string | null {
   return COUNTRY_CODES[value.toLowerCase()] ?? null;
 }
 
-const COUNTRY_NAMES = new Intl.DisplayNames(['de'], { type: 'region' });
-
-// A code `Intl` does not know comes back as the name of the unknown region,
-// which must not end up on an envelope.
-const UNKNOWN_REGION = COUNTRY_NAMES.of('ZZ');
+// The names come from a table, not from `Intl`: the api runs as a pkg-built
+// binary whose Node carries only reduced ICU data, and its
+// `Intl.DisplayNames` echoes the code back («CH» on the envelope).
+countries.registerLocale(germanCountries);
 
 /**
  * Pingen reads the last address line and rejects a letter whose country it
  * cannot recognise, and it does not accept the iso code we hand its api. So the
- * code is spelled out for the sheet, and `Intl` is what knows the spelling.
+ * code is spelled out for the sheet; a code the table does not know is kept as
+ * given rather than dropped.
  */
 export function countryName(country: string): string {
-  try {
-    const name = COUNTRY_NAMES.of(country);
-
-    return !name || name === UNKNOWN_REGION ? country : name;
-  } catch {
-    return country;
-  }
+  return countries.getName(country.toUpperCase(), 'de') ?? country;
 }
 
 function truncate(value: string, limit: number): string {

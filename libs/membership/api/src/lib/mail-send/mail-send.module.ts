@@ -19,5 +19,6 @@ import { MailSendJobOutcomeService } from './mail-send-job-outcome.service';
     MailSendJobExecutor,
     MailLogSyncService,
   ],
+  exports: [MailSendRecipientService],
 })
 export class MailSendModule {}

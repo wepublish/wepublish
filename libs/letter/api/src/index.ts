@@ -6,7 +6,9 @@ export * from './lib/letter-provider/create-letter-provider';
 
 export * from './lib/letter-recipient';
 export * from './lib/letter-renderer';
+export * from './lib/letter-print-defaults';
 export * from './lib/letter-context';
+export * from './lib/gated-letter-sender';
 export * from './lib/letter.webhook';
 export * from './lib/letters-module-options';
 export * from './lib/letters.module';
@@ -15,3 +17,7 @@ export * from './lib/pdf/base-pdf-renderer';
 export * from './lib/pdf/cloudflare-pdf-renderer';
 export * from './lib/pdf/gotenberg-pdf-renderer';
 export * from './lib/pdf/create-pdf-renderer';
+export * from './lib/letter-sample-data';
+export * from './lib/letter-layout/letter-layout.model';
+export * from './lib/letter-layout/letter-layout.service';
+export * from './lib/letter-layout/letter-layout.resolver';

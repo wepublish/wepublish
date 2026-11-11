@@ -16,6 +16,16 @@ import { MdCheckCircle, MdError, MdRemove, MdWarning } from 'react-icons/md';
 
 import { DateTimePicker } from '../atoms';
 
+/**
+ * The metadata keeps selected tags as ids; the names come with the tags the
+ * content was loaded with. A tag picked since then is still only an id until
+ * the next save, so it shows as one rather than not at all.
+ */
+export const formatTagNames = (
+  ids: string[],
+  known: Array<{ id: string; tag?: string | null }>
+) => ids.map(id => known.find(tag => tag.id === id)?.tag || id).join(', ');
+
 export type PublishCheck = {
   label: string;
   value?: ReactNode;

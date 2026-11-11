@@ -1,74 +1,382 @@
-import type { Mock } from 'vitest';
-import { useQuery } from '@apollo/client/react';
 import { createTheme, ThemeProvider } from '@mui/material';
-import { fireEvent, render, screen, within } from '@testing-library/react';
 import {
-  MailSendRecipientPreviewDocument,
-  MailTemplateDocument,
-} from '@wepublish/editor/api';
-import { AuthContext, sessionWithPermissions } from '@wepublish/ui/editor';
-import { MemoryRouter } from 'react-router-dom';
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  within,
+} from '@testing-library/react';
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 
 import { MailSendPage } from './mail-send-page';
 
+/**
+ * Pins how the page behaves before the audience filter is pulled out into
+ * components of its own: the same clicks must produce the same queries after.
+ */
+const queries = vi.fn();
+const mutate = vi.fn(async () => ({ data: {} }));
+
+const operationName = (document: unknown) =>
+  (document as { definitions?: { name?: { value?: string } }[] })
+    ?.definitions?.[0]?.name?.value;
+
 vi.mock('@apollo/client/react', async importOriginal => ({
   ...(await importOriginal<typeof import('@apollo/client/react')>()),
-  useQuery: vi.fn(),
-  useMutation: vi.fn(() => [vi.fn(), { loading: false }]),
+  useQuery: (document: unknown, options?: unknown) =>
+    queries(operationName(document), options),
+  useMutation: (document: unknown) => [
+    (options?: unknown) => mutate(operationName(document), options),
+    { loading: false },
+  ],
+}));
+
+vi.mock('@wepublish/ui/editor', async importOriginal => ({
+  ...(await importOriginal<typeof import('@wepublish/ui/editor')>()),
+  createCheckedPermissionComponent:
+    () =>
+    <T,>(component: T) =>
+      component,
+  useAuthorisation: () => true,
+  // The real one is a MUI date picker pair; a button that picks a fixed range
+  // is enough to see what the page makes of a chosen range.
+  DateRangeFilter: ({
+    label,
+    onChange,
+  }: {
+    label: string;
+    onChange: (range: { from: Date | null; to: Date | null }) => void;
+  }) => (
+    <button
+      onClick={() =>
+        onChange({
+          from: new Date('2026-01-01T10:00:00.000Z'),
+          to: new Date('2026-01-31T10:00:00.000Z'),
+        })
+      }
+    >
+      {label}
+    </button>
+  ),
+}));
+
+vi.mock('../mail-template/use-letter-channel', () => ({
+  useLetterChannel: () => ({ paperLetters: true, letterAvailable: true }),
+}));
+
+vi.mock('../delivery-mode/use-paper-letter-flow', () => ({
+  usePaperLetterFlow: () => true,
+}));
+
+vi.mock('./email-quality-refresh-button', () => ({
+  EmailQualityRefreshButton: () => null,
 }));
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
-    t: (key: string) => key,
-    i18n: { language: 'en' },
+    t: (key: string, options?: Record<string, unknown>) =>
+      options ? `${key}:${JSON.stringify(options)}` : key,
   }),
 }));
 
-const results = new Map<unknown, unknown>([
-  [
-    MailSendRecipientPreviewDocument,
-    { mailSendRecipientPreview: { count: 11, userCount: 11, recipients: [] } },
+const preview = {
+  count: 12,
+  userCount: 10,
+  withoutAddressCount: 2,
+  allowsSubscriptionTemplates: false,
+  segments: [
+    { segment: 'placeholder', userCount: 3 },
+    { segment: 'active', userCount: 7 },
   ],
-  [
-    MailTemplateDocument,
-    { mailTemplates: [{ id: 'template-1', name: 'Newsletter' }] },
-  ],
-]);
+};
+
+const answer = (name: string) => {
+  switch (name) {
+    case 'MailTemplate':
+      return {
+        data: {
+          mailTemplates: [
+            { id: 'tpl-1', name: 'Rechnung', context: 'custom' },
+            { id: 'tpl-2', name: 'Erinnerung', context: 'custom' },
+          ],
+        },
+        refetch: vi.fn(async () => undefined),
+      };
+    case 'MemberPlanList':
+      return {
+        data: { memberPlans: { nodes: [{ id: 'plan-1', name: 'Jahresabo' }] } },
+      };
+    case 'PaymentMethodList':
+      return { data: { paymentMethods: [{ id: 'pm-1', name: 'Rechnung' }] } };
+    case 'MailSendRecipientPreview':
+      return {
+        data: { mailSendRecipientPreview: preview },
+        loading: false,
+        refetch: vi.fn(async () => undefined),
+      };
+    case 'MailTemplateMissingPlaceholders':
+      return {
+        data: { mailTemplateMissingPlaceholders: [] },
+        refetch: vi.fn(async () => undefined),
+      };
+    case 'MailSendRecipients':
+      return {
+        data: { mailSendRecipients: { nodes: [], totalCount: 0 } },
+        loading: false,
+      };
+    default:
+      return { data: undefined, loading: false, refetch: vi.fn() };
+  }
+};
+
+const lastPreviewAudience = () =>
+  queries.mock.calls
+    .filter(([name]) => name === 'MailSendRecipientPreview')
+    .at(-1)?.[1].variables;
+
+/** Stands in for the wizard: shows which audience the send page handed over. */
+function AssignProbe() {
+  const { state } = useLocation();
+
+  return <div>handed-over:{state?.audience?.base}</div>;
+}
 
 const renderPage = () =>
   render(
-    <MemoryRouter>
-      <ThemeProvider theme={createTheme({ cssVariables: true })}>
-        <AuthContext.Provider value={sessionWithPermissions}>
-          <MailSendPage />
-        </AuthContext.Provider>
-      </ThemeProvider>
-    </MemoryRouter>
+    <ThemeProvider theme={createTheme({ cssVariables: true })}>
+      <MemoryRouter>
+        <Routes>
+          <Route
+            path="/"
+            element={<MailSendPage />}
+          />
+          <Route
+            path="/deliverychannel/assign"
+            element={<AssignProbe />}
+          />
+        </Routes>
+      </MemoryRouter>
+    </ThemeProvider>
   );
 
+const pickTemplate = () => {
+  fireEvent.mouseDown(screen.getAllByRole('combobox')[0]);
+  fireEvent.click(screen.getByRole('option', { name: 'Rechnung' }));
+};
+
 const goToAudience = () => {
-  fireEvent.mouseDown(
-    screen.getByRole('combobox', { name: /^mailSend\.template/ })
-  );
+  pickTemplate();
+  fireEvent.click(screen.getByRole('button', { name: /mailSend\.next/ }));
+};
+
+// The radio's name is its label followed by its hint.
+const pickBase = (base: string) =>
   fireEvent.click(
-    within(screen.getByRole('listbox')).getByRole('option', {
-      name: 'Newsletter',
+    screen.getByRole('radio', {
+      name: new RegExp(`^mailSend\\.base\\.${base} `),
     })
   );
 
-  const next = screen.getByRole('button', { name: 'mailSend.next' });
-  next.focus();
-  fireEvent.click(next);
-};
-
-describe('MailSendPage', () => {
+describe('MailSendPage (characterisation)', () => {
   beforeEach(() => {
-    (useQuery as unknown as Mock).mockImplementation((document: unknown) => ({
-      data: results.get(document),
-      loading: false,
-      refetch: vi.fn(),
-    }));
+    vi.clearAllMocks();
+    queries.mockImplementation((name: string) => answer(name));
   });
+
+  afterEach(cleanup);
+
+  it('previews everyone by mail until the author narrows it down', () => {
+    renderPage();
+
+    expect(lastPreviewAudience()).toEqual({
+      audience: { base: 'allUsers', emailSegments: undefined },
+      channel: 'mail',
+    });
+  });
+
+  it('shows the subscription filters for the subscribers base and feeds them into the audience', () => {
+    renderPage();
+    goToAudience();
+
+    expect(screen.queryByText('mailSend.autoRenew')).toBeNull();
+
+    pickBase('hasSubscription');
+
+    expect(screen.getByText('mailSend.autoRenew')).toBeTruthy();
+    expect(lastPreviewAudience().audience).toEqual({
+      base: 'hasSubscription',
+      emailSegments: undefined,
+      memberPlanIDs: undefined,
+      subscriptionState: undefined,
+      autoRenew: undefined,
+      paymentMethodID: undefined,
+      paymentPeriodicity: undefined,
+      startsAtFrom: undefined,
+      startsAtTo: undefined,
+      endsAtFrom: undefined,
+      endsAtTo: undefined,
+      isPaid: undefined,
+      isCanceled: undefined,
+      hasReplacedSubscription: undefined,
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: 'mailSend.startsAt' }));
+
+    const endOfDay = new Date('2026-01-31T10:00:00.000Z');
+    endOfDay.setHours(23, 59, 59, 999);
+
+    expect(lastPreviewAudience().audience).toEqual(
+      expect.objectContaining({
+        startsAtFrom: '2026-01-01T10:00:00.000Z',
+        startsAtTo: endOfDay.toISOString(),
+      })
+    );
+  });
+
+  it('looks 90 days back for the win-back base by default', () => {
+    renderPage();
+    goToAudience();
+    pickBase('endedSubscription');
+
+    expect(lastPreviewAudience().audience).toEqual({
+      base: 'endedSubscription',
+      emailSegments: undefined,
+      endedWithinDays: 90,
+      endedFrom: undefined,
+      endedTo: undefined,
+      memberPlanIDs: undefined,
+    });
+  });
+
+  it('picks an email status in one place, the filter, with its count', () => {
+    renderPage();
+    goToAudience();
+
+    const [toggle, ...others] = screen.getAllByRole('button', {
+      name: 'mailSend.emailSegments.placeholder: 3',
+    });
+
+    expect(others).toEqual([]);
+    expect(screen.queryByText('mailSend.emailSegments.overview')).toBeNull();
+
+    fireEvent.click(toggle);
+    expect(lastPreviewAudience().audience.emailSegments).toEqual([
+      'placeholder',
+    ]);
+    expect(toggle.getAttribute('aria-pressed')).toBe('true');
+
+    fireEvent.click(toggle);
+    expect(lastPreviewAudience().audience.emailSegments).toBeUndefined();
+  });
+
+  it('repeats the email-status counts read-only before sending', () => {
+    renderPage();
+    goToAudience();
+    fireEvent.click(screen.getByRole('button', { name: /mailSend\.next/ }));
+
+    expect(screen.getByText('mailSend.emailSegments.overview')).toBeTruthy();
+    expect(
+      screen.getByText('mailSend.emailSegments.placeholder: 3')
+    ).toBeTruthy();
+    expect(
+      screen.queryByRole('button', { name: /mailSend\.emailSegments/ })
+    ).toBeNull();
+  });
+
+  it('lists the recipients fifty at a time once asked', () => {
+    renderPage();
+    goToAudience();
+
+    const recipientsQuery = () =>
+      queries.mock.calls
+        .filter(([name]) => name === 'MailSendRecipients')
+        .at(-1)?.[1];
+
+    expect(recipientsQuery().skip).toBe(true);
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'mailSend.showRecipients' })
+    );
+
+    expect(recipientsQuery()).toEqual(
+      expect.objectContaining({
+        skip: false,
+        variables: expect.objectContaining({ skip: 0, take: 50 }),
+      })
+    );
+  });
+
+  it('hands the audience over to the delivery channel wizard instead of switching here', () => {
+    renderPage();
+    goToAudience();
+    pickBase('hasSubscription');
+    fireEvent.click(screen.getByRole('button', { name: /mailSend\.next/ }));
+
+    expect(
+      screen.queryByRole('button', { name: 'deliveryMode.audience.open' })
+    ).toBeNull();
+    const handOff = screen.getByRole('link', {
+      name: 'mailSend.deliveryChannelHandOff',
+    });
+    expect(handOff.getAttribute('href')).toBe('/deliverychannel/assign');
+
+    fireEvent.click(handOff);
+
+    expect(screen.getByText('handed-over:hasSubscription')).toBeTruthy();
+  });
+
+  it('says which placeholders the chosen audience can fill, below the picker', () => {
+    renderPage();
+    goToAudience();
+
+    expect(
+      screen.getByText('mailSend.base.placeholderNote.allUsers')
+    ).toBeTruthy();
+    pickBase('endedSubscription');
+    expect(
+      screen.getByText('mailSend.base.placeholderNote.endedSubscription')
+    ).toBeTruthy();
+  });
+
+  it('sends from the last step after asking, cancel on the left', () => {
+    renderPage();
+    goToAudience();
+    fireEvent.click(screen.getByRole('button', { name: /mailSend\.next/ }));
+
+    const send = screen.getByRole('button', { name: /mailSend\.send$/ });
+    expect(send.hasAttribute('disabled')).toBe(false);
+
+    fireEvent.click(send);
+    const dialog = screen.getByRole('dialog');
+    expect(
+      within(dialog)
+        .getAllByRole('button')
+        .map(button => button.textContent)
+    ).toEqual(['mailSend.cancel', 'mailSend.confirm']);
+    fireEvent.click(
+      within(dialog).getByRole('button', { name: 'mailSend.confirm' })
+    );
+
+    expect(mutate).toHaveBeenCalledWith('CreateMailSendJob', {
+      variables: {
+        input: {
+          mailTemplateId: 'tpl-1',
+          audience: { base: 'allUsers', emailSegments: undefined },
+          channel: 'mail',
+          print: undefined,
+        },
+      },
+    });
+  });
+});
+
+describe('MailSendPage (accessibility)', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    queries.mockImplementation((name: string) => answer(name));
+  });
+
+  afterEach(cleanup);
 
   it('names the audience choice', () => {
     renderPage();
@@ -86,8 +394,8 @@ describe('MailSendPage', () => {
     expect(
       screen
         .getAllByRole('status')
-        .some(
-          status => status.textContent === 'mailSend.recipientsCountPerPerson'
+        .some(status =>
+          status.textContent?.startsWith('mailSend.recipientsCount')
         )
     ).toBe(true);
   });
@@ -116,5 +424,28 @@ describe('MailSendPage', () => {
         name: 'mailSend.audience.title',
       })
     ).toHaveFocus();
+  });
+
+  it('labels each audience filter', () => {
+    renderPage();
+    goToAudience();
+    pickBase('hasSubscription');
+
+    expect(
+      screen.getByRole('group', { name: 'mailSend.emailSegments.label' })
+    ).toBeTruthy();
+
+    for (const name of [
+      'mailSend.memberPlans',
+      'mailSend.state.label',
+      'mailSend.autoRenew',
+      'mailSend.paymentMethod',
+      'mailSend.periodicity',
+      'mailSend.isPaid',
+      'mailSend.isCanceled',
+      'mailSend.hasReplacedSubscription',
+    ]) {
+      expect(screen.getByRole('combobox', { name })).toBeTruthy();
+    }
   });
 });

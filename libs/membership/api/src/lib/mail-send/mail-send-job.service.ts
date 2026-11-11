@@ -1,4 +1,10 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
+import { FeaturesService } from '@wepublish/features/api';
 import {
   MailChannel,
   MailSendAudience,
@@ -15,7 +21,7 @@ import { composeMail, MailContext, mailLogType } from '@wepublish/mail/api';
 import {
   canReceiveLetters,
   LetterContext,
-  LetterPrintSettings,
+  printSettings,
   toLetterAddress,
 } from '@wepublish/letter/api';
 import {
@@ -61,23 +67,6 @@ const INTERRUPTED_ERROR = 'Job was interrupted and will be continued.';
 const ABANDONED_ERROR =
   'Job was interrupted repeatedly and stopped. Continue it manually to send the remaining mails.';
 
-/** What a letter send falls back to when the editor picks no print options. */
-const DEFAULT_PRINT: LetterPrintSettings = {
-  addressPosition: 'left',
-  deliveryProduct: 'cheap',
-  printMode: 'simplex',
-  printSpectrum: 'grayscale',
-};
-
-function printSettings(print?: LetterPrintInput | null): LetterPrintSettings {
-  return {
-    addressPosition: print?.addressPosition ?? DEFAULT_PRINT.addressPosition,
-    deliveryProduct: print?.deliveryProduct ?? DEFAULT_PRINT.deliveryProduct,
-    printMode: print?.printMode ?? DEFAULT_PRINT.printMode,
-    printSpectrum: print?.printSpectrum ?? DEFAULT_PRINT.printSpectrum,
-  };
-}
-
 export interface MailSendJobCounts {
   total: number;
   sent: number;
@@ -95,8 +84,22 @@ export class MailSendJobService {
     private prisma: PrismaClient,
     private mailContext: MailContext,
     private letterContext: LetterContext,
-    private recipientService: MailSendRecipientService
+    private recipientService: MailSendRecipientService,
+    private features: FeaturesService
   ) {}
+
+  /**
+   * Letters ship dark. The channel is an argument, so `@Feature` on the
+   * resolver cannot see it; refuse here instead, for sends and previews alike.
+   */
+  private async assertChannelAllowed(channel?: MailChannel | null) {
+    if (
+      channel === MailChannel.letter &&
+      !(await this.features.isEnabled('paper-letters'))
+    ) {
+      throw new ForbiddenException('Letters are not enabled for this medium.');
+    }
+  }
 
   /**
    * Manually send a template to a single user. Runs inline (one mail), but is
@@ -160,6 +163,8 @@ export class MailSendJobService {
     },
     currentUserId: string
   ): Promise<MailSendJob> {
+    await this.assertChannelAllowed(input.channel);
+
     const template = await this.loadTemplate(input.mailTemplateId);
 
     const totalCount = await this.recipientService.count(
@@ -728,6 +733,8 @@ export class MailSendJobService {
     pdf?: string;
     recipient: MailRecipient | null;
   }> {
+    await this.assertChannelAllowed(input.channel);
+
     const template = await this.loadTemplate(input.mailTemplateId);
     const recipient = await this.findPreviewRecipient(
       input.audience,
@@ -748,9 +755,15 @@ export class MailSendJobService {
         );
       }
 
+      const print = printSettings(input.print);
       const pdf = await this.letterContext.renderLetter({
-        template: { htmlContent: template.htmlContent },
-        addressPosition: printSettings(input.print).addressPosition,
+        template: {
+          htmlContent: template.htmlContent,
+          letterAppendixId: template.letterAppendixId,
+        },
+        layout: await this.letterContext.resolveLayout(template.letterLayoutId),
+        addressPosition: print.addressPosition,
+        printMode: print.printMode,
         data: { user: recipient.user, optional: optionalData },
         recipient: toLetterAddress(recipient.user),
       });

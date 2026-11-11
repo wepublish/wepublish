@@ -1,6 +1,10 @@
 import {
   CreateLetterProviderSettingDocument,
   DeleteLetterProviderSettingDocument,
+  LetterAddressPosition,
+  LetterDeliveryProduct,
+  LetterPrintMode,
+  LetterPrintSpectrum,
   LetterProviderEnvironment,
   LetterProviderSettingsDocument,
   LetterProviderType,
@@ -25,7 +29,20 @@ const letterSettingsSchema = z.object({
 
   autoSend: z.boolean().nullish(),
   placeholderEmailContains: z.string().nullish().or(z.literal('')),
+
+  defaultAddressPosition: z.nativeEnum(LetterAddressPosition).nullish(),
+  defaultDeliveryProduct: z.nativeEnum(LetterDeliveryProduct).nullish(),
+  defaultPrintMode: z.nativeEnum(LetterPrintMode).nullish(),
+  defaultPrintSpectrum: z.nativeEnum(LetterPrintSpectrum).nullish(),
 });
+
+/** The print options of the communication tool, reused as defaults. */
+const PRINT_DEFAULTS = [
+  ['defaultAddressPosition', 'addressPosition', LetterAddressPosition],
+  ['defaultDeliveryProduct', 'deliveryProduct', LetterDeliveryProduct],
+  ['defaultPrintMode', 'printMode', LetterPrintMode],
+  ['defaultPrintSpectrum', 'printSpectrum', LetterPrintSpectrum],
+] as const;
 
 type IntegrationFormValues = z.infer<typeof letterSettingsSchema>;
 
@@ -112,6 +129,20 @@ export function LetterIntegrationForm() {
           label: t('integrations.letterSettings.placeholderEmailContains'),
           placeholder: '@placeholder.example.com',
         });
+
+        // Automated letters (subscription mails for users in letter mode) have
+        // nobody choosing print options; these stand in.
+        for (const [name, option, values] of PRINT_DEFAULTS) {
+          commonFields.push({
+            name,
+            label: t(`integrations.letterSettings.${name}`),
+            type: 'select',
+            options: Object.values(values).map(value => ({
+              label: t(`mailSend.print.${option}.${value}`),
+              value,
+            })),
+          });
+        }
 
         return commonFields;
       }}

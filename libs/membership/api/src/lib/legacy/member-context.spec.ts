@@ -45,9 +45,10 @@ const setup = () => {
   vi.spyOn(context, 'renewSubscriptionForUser').mockResolvedValue(
     invoice as never
   );
-  vi.spyOn(context, 'getSubscriptionTemplateIdentifier').mockResolvedValue(
-    'template-1'
-  );
+  vi.spyOn(context, 'getSubscriptionTemplateAction').mockResolvedValue({
+    mailTemplateId: 'template-1',
+    sendAsLetter: true,
+  });
 
   return { context, mailContext };
 };
@@ -71,6 +72,16 @@ describe('MemberContext.createSubscription', () => {
 
     expect(mailContext.sendMail).toHaveBeenCalledWith(
       expect.objectContaining({ mailTemplateId: 'template-1' })
+    );
+  });
+
+  it('hands the letter switch of the event to the mail', async () => {
+    const { context, mailContext } = setup();
+
+    await context.createSubscription(createInput);
+
+    expect(mailContext.sendMail).toHaveBeenCalledWith(
+      expect.objectContaining({ asLetter: true })
     );
   });
 
