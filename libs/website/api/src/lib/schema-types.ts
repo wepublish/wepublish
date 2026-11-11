@@ -4395,6 +4395,7 @@ export type MutationCreateSyncProviderSettingArgs = {
   mailchimp_mergeFieldMappings?: InputMaybe<Array<Scalars['JSONObject']['input']>>;
   name?: InputMaybe<Scalars['String']['input']>;
   newsletters?: InputMaybe<Array<SettingSyncProviderNewsletterInput>>;
+  newslettersInProfile?: InputMaybe<Scalars['Boolean']['input']>;
   type: SyncProviderType;
 };
 
@@ -5536,6 +5537,7 @@ export type MutationUpdateSyncProviderSettingArgs = {
   mailchimp_mergeFieldMappings?: InputMaybe<Array<Scalars['JSONObject']['input']>>;
   name?: InputMaybe<Scalars['String']['input']>;
   newsletters?: InputMaybe<Array<SettingSyncProviderNewsletterInput>>;
+  newslettersInProfile?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -8698,6 +8700,8 @@ export type SettingSyncProvider = SettingProvider & {
   modifiedAt: Scalars['DateTime']['output'];
   name?: Maybe<Scalars['String']['output']>;
   newsletters: Array<SettingSyncProviderNewsletter>;
+  /** Whether logged-in readers see the newsletters in their profile and can subscribe to them there. */
+  newslettersInProfile?: Maybe<Scalars['Boolean']['output']>;
   type: SyncProviderType;
 };
 

@@ -2486,6 +2486,8 @@ model SettingSyncProvider {
 
   mailchimpSyncErrors MailchimpSyncError[]
   newsletters         SettingSyncProviderNewsletter[]
+  // Whether logged-in readers see and toggle the newsletters in their profile.
+  newslettersInProfile Boolean @default(false)
 
   @@map("settings.syncprovider")
 }

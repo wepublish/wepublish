@@ -137,7 +137,9 @@ export class MailchimpNewsletterService {
 
     return configs.filter(
       config =>
-        config.type === SyncProviderType.MAILCHIMP && config.mailchimp_listId
+        config.type === SyncProviderType.MAILCHIMP &&
+        config.mailchimp_listId &&
+        config.newslettersInProfile
     );
   }
 

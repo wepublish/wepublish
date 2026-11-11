@@ -39,6 +39,7 @@ describe('MailchimpNewsletterService', () => {
     type: 'MAILCHIMP',
     enabled: true,
     mailchimp_listId: 'list-1',
+    newslettersInProfile: true,
     decryptedApiKey: 'secret-us21',
   };
 
@@ -83,6 +84,15 @@ describe('MailchimpNewsletterService', () => {
   });
 
   describe('getUserNewsletters', () => {
+    test('offers nothing while the newsletters are not shown in the profile', async () => {
+      settings.getEnabledSyncConfigs.mockResolvedValue([
+        { ...provider, newslettersInProfile: false },
+      ]);
+
+      expect(await service.getUserNewsletters(email)).toEqual([]);
+      expect(getListMember).not.toHaveBeenCalled();
+    });
+
     test('marks every newsletter as not subscribed for a non member', async () => {
       getListMember.mockRejectedValue(notFound());
 
@@ -268,6 +278,21 @@ describe('MailchimpNewsletterService', () => {
           newsletters: [{ interestId: 'other', subscribed: true }],
         })
       ).rejects.toThrow('other');
+
+      expect(setListMember).not.toHaveBeenCalled();
+    });
+
+    test('rejects changes while the newsletters are not shown in the profile', async () => {
+      settings.getEnabledSyncConfigs.mockResolvedValue([
+        { ...provider, newslettersInProfile: false },
+      ]);
+
+      await expect(
+        service.updateUserNewsletters(email, {
+          syncProviderId: 'mailchimp-sync',
+          newsletters: [{ interestId: 'daily', subscribed: true }],
+        })
+      ).rejects.toThrow('mailchimp-sync');
 
       expect(setListMember).not.toHaveBeenCalled();
     });

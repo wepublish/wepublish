@@ -3769,7 +3769,24 @@ type Mutation {
   createSubscriptionInterval(daysAwayFromEnding: Int, event: SubscriptionEvent!, mailTemplateId: String, sendAsLetter: Boolean, subscriptionFlowId: String!): [SubscriptionFlowModel!]!
 
   """Sets up the sync provider. Only possible while none is configured."""
-  createSyncProviderSetting(enabled: Boolean, id: String!, mailchimp_apiKey: String, mailchimp_defaultInterestGroupIds: [String!], mailchimp_extensions: JSONObject, mailchimp_interestGroupMappings: [JSONObject!], mailchimp_listId: String, mailchimp_mergeFieldMappings: [JSONObject!], name: String, newsletters: [SettingSyncProviderNewsletterInput!], type: SyncProviderType!): SettingSyncProvider!
+  createSyncProviderSetting(
+    enabled: Boolean
+    id: String!
+    mailchimp_apiKey: String
+    mailchimp_defaultInterestGroupIds: [String!]
+    mailchimp_extensions: JSONObject
+    mailchimp_interestGroupMappings: [JSONObject!]
+    mailchimp_listId: String
+    mailchimp_mergeFieldMappings: [JSONObject!]
+    name: String
+    newsletters: [SettingSyncProviderNewsletterInput!]
+
+    """
+    Whether logged-in readers see the newsletters in their profile and can subscribe to them there.
+    """
+    newslettersInProfile: Boolean
+    type: SyncProviderType!
+  ): SettingSyncProvider!
 
   """Creates a new tag."""
   createTag(color: Color, description: RichText, main: Boolean! = false, tag: String, type: TagType!): Tag!
@@ -4372,7 +4389,23 @@ type Mutation {
   updateSubscriptionInterval(daysAwayFromEnding: Int, id: String!, mailTemplateId: String, sendAsLetter: Boolean): [SubscriptionFlowModel!]!
 
   """Updates an existing sync provider setting."""
-  updateSyncProviderSetting(enabled: Boolean, id: String!, mailchimp_apiKey: String, mailchimp_defaultInterestGroupIds: [String!], mailchimp_extensions: JSONObject, mailchimp_interestGroupMappings: [JSONObject!], mailchimp_listId: String, mailchimp_mergeFieldMappings: [JSONObject!], name: String, newsletters: [SettingSyncProviderNewsletterInput!]): SettingSyncProvider!
+  updateSyncProviderSetting(
+    enabled: Boolean
+    id: String!
+    mailchimp_apiKey: String
+    mailchimp_defaultInterestGroupIds: [String!]
+    mailchimp_extensions: JSONObject
+    mailchimp_interestGroupMappings: [JSONObject!]
+    mailchimp_listId: String
+    mailchimp_mergeFieldMappings: [JSONObject!]
+    name: String
+    newsletters: [SettingSyncProviderNewsletterInput!]
+
+    """
+    Whether logged-in readers see the newsletters in their profile and can subscribe to them there.
+    """
+    newslettersInProfile: Boolean
+  ): SettingSyncProvider!
 
   """Updates an existing mail flow"""
   updateSystemMail(
@@ -6752,6 +6785,11 @@ type SettingSyncProvider implements SettingProvider {
   modifiedAt: DateTime!
   name: String
   newsletters: [SettingSyncProviderNewsletter!]!
+
+  """
+  Whether logged-in readers see the newsletters in their profile and can subscribe to them there.
+  """
+  newslettersInProfile: Boolean
   type: SyncProviderType!
 }
 

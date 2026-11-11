@@ -57,6 +57,13 @@ export class SettingSyncProvider extends SettingProvider {
   @Field(() => GraphQLJSONObject, { nullable: true })
   mailchimp_extensions?: Record<string, any>;
 
+  @Field({
+    nullable: true,
+    description:
+      'Whether logged-in readers see the newsletters in their profile and can subscribe to them there.',
+  })
+  newslettersInProfile?: boolean;
+
   @Field({ nullable: true })
   lastSyncAt?: Date;
 
