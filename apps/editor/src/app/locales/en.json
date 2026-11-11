@@ -3735,17 +3735,15 @@
     },
     "search": "Search",
     "integrations": {
-      "whatAreIntegrations": "What are integrations?",
-      "infoText": "Integrations are third-party interfaces built into We.Publish. These are used, for example, to send emails or process payments securely.",
       "title": "Integrations",
-      "ai": "AI",
-      "challengeProvider": "Challenge Provider",
-      "paymentProvider": "Payment Provider",
-      "trackingPixel": "Tracking Pixel",
-      "analytics": "Hot & Trending Provider",
-      "mailProvider": "Mail Provider",
-      "letterProvider": "Letter Provider",
-      "pdfRenderer": "PDF Renderer",
+      "ai": "AI for HTML blocks",
+      "challengeProvider": "Spam protection",
+      "paymentProvider": "Payments",
+      "trackingPixel": "ProLitteris royalties",
+      "analytics": "Hot & Trending",
+      "mailProvider": "Transactional email",
+      "letterProvider": "Letter delivery",
+      "pdfRenderer": "PDF generation",
       "back": "Back to Integrations",
       "unknown": "Unknown Integration",
       "notFound": "Integration not found",
@@ -3923,7 +3921,7 @@
         "umamiUrl": "Umami API URL",
         "umamiUrlInfo": "Only needed for a self-hosted Umami, e.g. https://umami.example.com/api. Leave it empty to use Umami Cloud."
       },
-      "mailchimpSync": "Mailchimp Sync",
+      "mailchimpSync": "Mailchimp audience",
       "mailchimpSyncSettings": {
         "audienceWebhook": {
           "title": "Reports from the audience",
@@ -4040,12 +4038,67 @@
       "challengeProviderInfo": "Protects forms on your website, such as registration or comments, against spam bots with an unobtrusive check (Cloudflare Turnstile or hCaptcha).",
       "paymentProviderInfo": "Services that process the payments for subscriptions, e.g. Payrexx, Stripe, Mollie or invoices via Bexio.",
       "trackingPixelInfo": "Adds the ProLitteris counting pixel to your articles so that their reads count towards your copyright royalties.",
-      "mailProviderInfo": "The service We.Publish uses to send emails, such as login links, payment reminders or subscription confirmations.",
+      "mailProviderInfo": "Sends the emails We.Publish writes to one reader at a time: login links, subscription confirmations, payment reminders and invoices.",
       "analyticsInfo": "Reads the page views from Google Analytics, Plausible or Umami to find out which articles are currently read the most (Hot & Trending).",
-      "mailchimpSyncInfo": "Transfers all active user accounts and their subscription data to a Mailchimp audience every night, so you can target newsletters by subscription.",
+      "mailchimpSyncInfo": "Copies your readers and their subscriptions into a Mailchimp audience every night, so you can target newsletters by subscription. The newsletter editor and the Mailchimp signup block use this account too.",
       "lastLoadedInfo": "When We.Publish last loaded this configuration, e.g. to process a payment. This shows you whether the integration is in use.",
       "setUp": "Set up",
-      "setUpHint": "Not set up yet. Set up this integration so the editor and your website can use it."
+      "setUpHint": "Not set up yet. Set up this integration so the editor and your website can use it.",
+      "letterProviderInfo": "Prints and posts letters to readers, such as invoices and reminders, through Pingen.",
+      "pdfRendererInfo": "Turns letters and invoices into PDF files before they are printed or sent. Letter delivery needs it.",
+      "overview": {
+        "intro": "Connect the services We.Publish works with. Each one is set up once by an administrator; until then, the feature that relies on it does not work.",
+        "setUp": "Set up",
+        "manage": "Manage"
+      },
+      "status": {
+        "notSetUp": "Not set up",
+        "ready": "Ready",
+        "incomplete": "Needs attention",
+        "paused": "Paused"
+      },
+      "groups": {
+        "email": {
+          "title": "Email",
+          "description": "How emails reach your readers.",
+          "mailchimpNote": "Mailchimp shows up twice because it is two products with separate API keys. Mailchimp Transactional (formerly Mandrill) sends single emails such as login links – set it up under «Transactional email». Mailchimp Marketing holds your newsletter audience – set it up under «Mailchimp audience»."
+        },
+        "payments": {
+          "title": "Payments",
+          "description": "Taking payments for subscriptions and sending invoices."
+        },
+        "website": {
+          "title": "Website & editor",
+          "description": "Protection for your website’s forms and tools for the editor."
+        },
+        "reach": {
+          "title": "Reach & royalties",
+          "description": "Which articles are read the most, and getting paid for the reads."
+        },
+        "print": {
+          "title": "Letters & print",
+          "description": "Letters sent by post to your readers."
+        }
+      },
+      "providers": {
+        "mailchimpTransactional": "Mailchimp Transactional (Mandrill)",
+        "mailchimpMarketing": "Mailchimp Marketing",
+        "smtp": "SMTP server",
+        "slack": "Slack (testing only)",
+        "log": "Log only (testing only)",
+        "payrexx": "Payrexx (single payments)",
+        "payrexxSubscription": "Payrexx Subscriptions",
+        "stripe": "Stripe (embedded payment form)",
+        "stripeCheckout": "Stripe Checkout (redirect to Stripe)",
+        "bexio": "bexio (invoices)",
+        "noCharge": "No charge (free subscriptions)",
+        "simulated": "Simulated (testing only)"
+      },
+      "related": {
+        "mailToMailchimpSync": "Looking for your Mailchimp newsletter audience? That is «Mailchimp audience».",
+        "mailchimpSyncToMail": "Want Mailchimp to send login links and other single emails? That is Mailchimp Transactional under «Transactional email».",
+        "letterToPdfRenderer": "Letters are turned into PDFs first – set up «PDF generation» as well."
+      }
     },
     "websiteSettings": {
       "backToOverview": "Back to overview",

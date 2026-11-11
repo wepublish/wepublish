@@ -3667,15 +3667,13 @@
     },
     "search": "Rechercher",
     "integrations": {
-      "whatAreIntegrations": "Que sont les intégrations ?",
-      "infoText": "Les intégrations sont des interfaces tierces intégrées à We.Publish. Elles sont utilisées, par exemple, pour envoyer des e-mails ou traiter des paiements en toute sécurité.",
       "title": "Intégrations",
-      "ai": "IA",
-      "challengeProvider": "Fournisseur de challenge",
-      "paymentProvider": "Fournisseur de paiement",
-      "trackingPixel": "Pixel de suivi",
-      "mailProvider": "Fournisseur de messagerie",
-      "pdfRenderer": "Moteur de rendu PDF",
+      "ai": "IA pour les blocs HTML",
+      "challengeProvider": "Protection anti-spam",
+      "paymentProvider": "Paiements",
+      "trackingPixel": "Redevances ProLitteris",
+      "mailProvider": "E-mails transactionnels",
+      "pdfRenderer": "Génération de PDF",
       "back": "Retour aux intégrations",
       "unknown": "Intégration inconnue",
       "notFound": "Intégration non trouvée",
@@ -3839,7 +3837,7 @@
         "umamiUrl": "URL de l’API Umami",
         "umamiUrlInfo": "Uniquement pour un Umami auto-hébergé, p. ex. https://umami.example.com/api. Laissez vide pour utiliser Umami Cloud."
       },
-      "mailchimpSync": "Mailchimp Sync",
+      "mailchimpSync": "Audience Mailchimp",
       "mailchimpSyncSettings": {
         "audienceWebhook": {
           "title": "Rapports de l’audience",
@@ -3952,18 +3950,18 @@
       "addId": "Identifiant",
       "addIdHelp": "L’identifiant unique sous lequel l’intégration est appelée. Il figure aussi dans les URL de webhook et ne peut plus être modifié ensuite.",
       "addIdTaken": "Cet identifiant est déjà utilisé.",
-      "analytics": "Fournisseur Hot & Trending",
+      "analytics": "Hot & Trending",
       "aiInfo": "Connecte v0 de Vercel, un service d’IA qui rédige le code HTML des blocs HTML à partir d’une courte description.",
       "challengeProviderInfo": "Protège les formulaires de votre site, comme l’inscription ou les commentaires, contre les robots de spam grâce à une vérification discrète (Cloudflare Turnstile ou hCaptcha).",
       "paymentProviderInfo": "Services qui traitent les paiements des abonnements, p. ex. Payrexx, Stripe, Mollie ou les factures via Bexio.",
       "trackingPixelInfo": "Ajoute le pixel de comptage de ProLitteris à vos articles afin que les lectures soient prises en compte pour vos droits d’auteur.",
-      "mailProviderInfo": "Le service par lequel We.Publish envoie les e-mails, p. ex. les liens de connexion, les rappels de paiement ou les confirmations d’abonnement.",
+      "mailProviderInfo": "Envoie les e-mails que We.Publish écrit à un·e lecteur·trice à la fois : liens de connexion, confirmations d’abonnement, rappels de paiement et factures.",
       "analyticsInfo": "Lit les pages vues dans Google Analytics, Plausible ou Umami afin de déterminer quels articles sont actuellement les plus lus (Hot & Trending).",
-      "mailchimpSyncInfo": "Transfère chaque nuit tous les comptes utilisateur actifs et leurs données d’abonnement vers une audience Mailchimp, afin de cibler vos newsletters selon l’abonnement.",
+      "mailchimpSyncInfo": "Copie chaque nuit vos lecteur·trice·s et leurs abonnements dans une audience Mailchimp, afin de cibler vos newsletters selon l’abonnement. L’éditeur de newsletter et le bloc d’inscription Mailchimp utilisent aussi ce compte.",
       "lastLoadedInfo": "Moment où We.Publish a chargé cette configuration pour la dernière fois, p. ex. pour traiter un paiement. Vous voyez ainsi si l’intégration est utilisée.",
       "setUp": "Configurer",
       "setUpHint": "Pas encore configurée. Configurez cette intégration pour que l’éditeur et votre site puissent l’utiliser.",
-      "letterProvider": "Prestataire de courrier",
+      "letterProvider": "Envoi de lettres",
       "letterSettings": {
         "type": "Type",
         "environment": "Environnement",
@@ -3977,6 +3975,61 @@
         "defaultDeliveryProduct": "Distribution (lettres automatiques)",
         "defaultPrintMode": "Impression (lettres automatiques)",
         "defaultPrintSpectrum": "Couleur (lettres automatiques)"
+      },
+      "letterProviderInfo": "Imprime et envoie par la poste des lettres aux lecteur·trice·s, comme des factures et des rappels, via Pingen.",
+      "pdfRendererInfo": "Transforme les lettres et les factures en fichiers PDF avant qu’elles soient imprimées ou envoyées. L’envoi de lettres en a besoin.",
+      "overview": {
+        "intro": "Connectez les services avec lesquels We.Publish travaille. Chacun est configuré une fois par un·e administrateur·trice ; d’ici là, la fonction qui en dépend ne marche pas.",
+        "setUp": "Configurer",
+        "manage": "Gérer"
+      },
+      "status": {
+        "notSetUp": "Non configurée",
+        "ready": "Prête",
+        "incomplete": "Incomplète",
+        "paused": "En pause"
+      },
+      "groups": {
+        "email": {
+          "title": "E-mail",
+          "description": "Comment les e-mails parviennent à vos lecteur·trice·s.",
+          "mailchimpNote": "Mailchimp apparaît deux fois, car il s’agit de deux produits avec des clés API distinctes. Mailchimp Transactional (anciennement Mandrill) envoie des e-mails individuels comme les liens de connexion – configurez-le sous « E-mails transactionnels ». Mailchimp Marketing contient votre audience de newsletter – configurez-le sous « Audience Mailchimp »."
+        },
+        "payments": {
+          "title": "Paiements",
+          "description": "Encaisser les abonnements et envoyer des factures."
+        },
+        "website": {
+          "title": "Site web & éditeur",
+          "description": "Protection des formulaires de votre site et outils pour l’éditeur."
+        },
+        "reach": {
+          "title": "Audience & redevances",
+          "description": "Quels articles sont les plus lus, et être rémunéré pour les lectures."
+        },
+        "print": {
+          "title": "Lettres & impression",
+          "description": "Lettres envoyées par la poste à vos lecteur·trice·s."
+        }
+      },
+      "providers": {
+        "mailchimpTransactional": "Mailchimp Transactional (Mandrill)",
+        "mailchimpMarketing": "Mailchimp Marketing",
+        "smtp": "Serveur SMTP",
+        "slack": "Slack (tests uniquement)",
+        "log": "Journal uniquement (tests uniquement)",
+        "payrexx": "Payrexx (paiements uniques)",
+        "payrexxSubscription": "Payrexx Subscriptions",
+        "stripe": "Stripe (formulaire de paiement intégré)",
+        "stripeCheckout": "Stripe Checkout (redirection vers Stripe)",
+        "bexio": "bexio (factures)",
+        "noCharge": "Gratuit (abonnements gratuits)",
+        "simulated": "Simulé (tests uniquement)"
+      },
+      "related": {
+        "mailToMailchimpSync": "Vous cherchez votre audience de newsletter Mailchimp ? C’est « Audience Mailchimp ».",
+        "mailchimpSyncToMail": "Mailchimp doit envoyer les liens de connexion et d’autres e-mails individuels ? C’est Mailchimp Transactional sous « E-mails transactionnels ».",
+        "letterToPdfRenderer": "Les lettres sont d’abord transformées en PDF – configurez aussi la « Génération de PDF »."
       }
     },
     "websiteSettings": {
