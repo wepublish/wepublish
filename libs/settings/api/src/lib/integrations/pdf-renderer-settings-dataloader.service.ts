@@ -6,9 +6,7 @@ import DataLoader from 'dataloader';
 @Injectable({
   scope: Scope.REQUEST,
 })
-export class PdfRendererSettingsDataloaderService
-  implements Primeable<SettingPdfRenderer>
-{
+export class PdfRendererSettingsDataloaderService implements Primeable<SettingPdfRenderer> {
   private dataloader = new DataLoader<string, SettingPdfRenderer | null>(
     async (ids: readonly string[]) =>
       createOptionalsArray(

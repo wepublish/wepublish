@@ -1,35 +1,43 @@
 import { LIVE_REVALIDATE_SECONDS, revalidateFor } from '../lib/revalidate-for';
 
 /**
- * The `cache-control` a content response carries, derived per page the way
+ * What `next.config.js#headers()` sends for every Next page, byte for byte.
+ * Browsers and Cloudflare see exactly this on a TanStack tenant too.
+ */
+export const CONTENT_CACHE_CONTROL =
+  'public, max-age=59, s-maxage=59, stale-if-error=86400';
+
+/**
+ * The page cache's own revalidation window, in seconds. Internal: `withPageCache`
+ * reads it and strips it before the response leaves the server.
+ */
+export const PAGE_CACHE_REVALIDATE = 'x-page-cache-revalidate';
+
+/**
+ * The headers a content response carries, derived per page the way
  * `getStaticProps` derived `revalidate`.
  *
- * TanStack Start has no ISR, so `withPageCache` plays that role: it reads
- * `s-maxage` off the response and stores the page against it, then serves the
- * stale copy while re-rendering in the background. That makes this header the
- * actual revalidation window, not just a hint to the CDN — which is why a flat
- * value is expensive. `src/start.ts` applies one by path for anything that does
- * not set its own, and a path pattern cannot tell a static article from one
- * carrying a poll, so it has to assume the shortest.
+ * Next kept those two apart: `revalidate` drove ISR, while `next.config.js`
+ * sent a flat 59 s `cache-control` to the browser and the CDN regardless. The
+ * same split here: `withPageCache` stores against `PAGE_CACHE_REVALIDATE`,
+ * and everything outside the server only ever sees `CONTENT_CACHE_CONTROL`.
+ * Putting the window into `s-maxage` instead let Cloudflare keep a static
+ * article for an hour, where a publish never reaches it.
  *
- * `revalidateFor` can tell, because it sees the content: an hour for a static
- * page, a minute when a live block, an API error or missing content means the
- * page may change under us, and sooner still when a block is scheduled to
- * appear or disappear.
+ * `revalidateFor` sees the content: an hour for a static page, a minute when
+ * a live block, an API error or missing content means the page may change
+ * under us, and sooner still when a block is scheduled to appear or
+ * disappear.
  *
  * It throws on a server error with no content — that is how it failed a Next
  * build rather than caching an error page. Here the loader is already
  * rendering, so the throw is caught and the shortest window used instead; the
  * page is still answered, just barely cached.
- *
- * `stale-while-revalidate` stays out of the browser-facing `max-age`: it
- * belongs to the shared caches, and on a reader's own cache it would let a
- * week-old document through, which Next never did.
  */
-export const contentCacheControl = (
+export const contentCacheHeaders = (
   content: unknown,
   errors?: unknown
-): string => {
+): Record<string, string> => {
   let seconds: number;
 
   try {
@@ -38,5 +46,8 @@ export const contentCacheControl = (
     seconds = LIVE_REVALIDATE_SECONDS;
   }
 
-  return `public, max-age=0, s-maxage=${seconds}, stale-while-revalidate=604800, stale-if-error=86400`;
+  return {
+    'cache-control': CONTENT_CACHE_CONTROL,
+    [PAGE_CACHE_REVALIDATE]: String(seconds),
+  };
 };
