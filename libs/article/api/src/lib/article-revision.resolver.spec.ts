@@ -156,7 +156,6 @@ const reader = (overrides: Partial<ReaderContext> = {}): ReaderContext => ({
   privileged: false,
   loggedIn: false,
   activeMemberPlanIds: [],
-  paying: false,
   newsletter: 'unknown',
   ...overrides,
 });

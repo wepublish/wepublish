@@ -25,7 +25,6 @@ export type ReaderContext = {
   loggedIn: boolean;
   userId?: string;
   activeMemberPlanIds: string[];
-  paying: boolean;
   newsletter: NewsletterStatus;
   /** A paywall bypass token the server checked. */
   paywallBypassed?: boolean;
@@ -33,7 +32,6 @@ export type ReaderContext = {
 
 export type ReaderSubscription = {
   memberPlanId: string;
-  monthlyAmount: number;
   startsAt: Date;
   paidUntil: Date | null;
   gracePeriod: number;
@@ -55,7 +53,6 @@ export function readerContextFrom({
     privileged: false,
     loggedIn: false,
     activeMemberPlanIds: [],
-    paying: false,
     newsletter: 'unknown',
   };
 
@@ -87,7 +84,6 @@ export function readerContextFrom({
     loggedIn: true,
     userId: session.user.id,
     activeMemberPlanIds: [...new Set(active.map(s => s.memberPlanId))],
-    paying: active.some(s => s.monthlyAmount > 0),
     newsletter,
   };
 }
@@ -110,8 +106,6 @@ export function matchesAudience(
       return !member;
     case EngagementAudience.MEMBERS:
       return member;
-    case EngagementAudience.PAYING_MEMBERS:
-      return reader.paying;
     case EngagementAudience.PAYWALL_BYPASSED:
       return !!reader.paywallBypassed;
     case EngagementAudience.MEMBER_PLANS:
@@ -128,8 +122,6 @@ export function meetsRequirement(
       return reader.loggedIn;
     case EngagementRequirement.MEMBERSHIP:
       return reader.activeMemberPlanIds.length > 0;
-    case EngagementRequirement.PAID_MEMBERSHIP:
-      return reader.paying;
     case EngagementRequirement.NEWSLETTER:
       return reader.newsletter === 'subscribed';
   }

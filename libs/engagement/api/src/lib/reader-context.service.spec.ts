@@ -33,7 +33,6 @@ describe('ReaderContextService', () => {
         findMany: vi.fn().mockResolvedValue([
           {
             memberPlanID: 'plan-1',
-            monthlyAmount: 0,
             startsAt: new Date('2026-01-01'),
             paidUntil: new Date('2027-01-01'),
             paymentMethod: { gracePeriod: 0 },
@@ -53,7 +52,6 @@ describe('ReaderContextService', () => {
       kind: 'user',
       userId: 'user-1',
       activeMemberPlanIds: ['plan-1'],
-      paying: false,
       newsletter: 'unknown',
     });
     expect(prisma.subscription.findMany).toHaveBeenCalledWith(

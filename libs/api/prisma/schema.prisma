@@ -1928,7 +1928,6 @@ enum EngagementAudience {
   REGISTERED
   NON_MEMBERS
   MEMBERS
-  PAYING_MEMBERS
   PAYWALL_BYPASSED
   /// Readers with an active subscription to one of `audienceMemberPlans`.
   MEMBER_PLANS
@@ -1949,7 +1948,6 @@ enum EngagementEnforcement {
 enum EngagementRequirement {
   REGISTRATION
   MEMBERSHIP
-  PAID_MEMBERSHIP
   /// An email address for the newsletter, no account.
   NEWSLETTER
 }
