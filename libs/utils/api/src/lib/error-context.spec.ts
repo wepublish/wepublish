@@ -35,6 +35,33 @@ describe('describeError', () => {
     );
   });
 
+  it('keeps the reasons of a validation error, not just its heading', () => {
+    expect(
+      describeError({
+        code: 422,
+        message: {
+          error_code: 422,
+          message: 'The form could not be saved due to the following errors:',
+          errors: ['Mail is not a valid email address'],
+        },
+      })
+    ).toBe(
+      '422 The form could not be saved due to the following errors: Mail is not a valid email address'
+    );
+  });
+
+  it('names the field of each reason a validation error lists by field', () => {
+    expect(
+      describeError({
+        code: 422,
+        message: {
+          message: 'Validation failed',
+          errors: { mail: ['is invalid'], name_1: 'is too long' },
+        },
+      })
+    ).toBe('422 Validation failed: mail is invalid, name_1 is too long');
+  });
+
   it('reads a raw HTTP response', () => {
     expect(
       describeError({

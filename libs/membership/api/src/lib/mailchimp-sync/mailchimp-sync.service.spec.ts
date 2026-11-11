@@ -175,7 +175,10 @@ describe('MailchimpSyncService', () => {
           provide: ClickTrackingExtension,
           useValue: { execute: vi.fn() },
         },
-        { provide: MailchimpAudienceEvidenceService, useValue: audienceEvidence },
+        {
+          provide: MailchimpAudienceEvidenceService,
+          useValue: audienceEvidence,
+        },
         { provide: MailchimpCampaignClicksService, useValue: campaignClicks },
       ],
     }).compile();
@@ -202,6 +205,28 @@ describe('MailchimpSyncService', () => {
       syncConfig.id,
       '401 Your API key may be invalid, or you have attempted to access the wrong datacenter.'
     );
+  });
+
+  it('reports to the job log how many audiences synced and why one failed', async () => {
+    vi.spyOn(
+      service as unknown as { executeSyncForConfig: () => Promise<void> },
+      'executeSyncForConfig'
+    ).mockRejectedValue({ status: 401, detail: 'API key invalid' });
+
+    expect(await service.executeAllSync()).toEqual({
+      synced: 0,
+      failed: 1,
+      firstError: '401 API key invalid',
+    });
+  });
+
+  it('reports a sync without failures', async () => {
+    vi.spyOn(
+      service as unknown as { executeSyncForConfig: () => Promise<void> },
+      'executeSyncForConfig'
+    ).mockResolvedValue(undefined);
+
+    expect(await service.executeAllSync()).toEqual({ synced: 1, failed: 0 });
   });
 
   describe('newly created CMS user', () => {

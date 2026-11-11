@@ -5419,8 +5419,34 @@ type PeriodicJob {
   id: String!
   modifiedAt: DateTime!
   running: Boolean!
+  steps: [PeriodicJobStep!]!
   successfullyFinished: DateTime
   tries: Float!
+}
+
+"""
+What one step of a night did: the job's own steps and the syncs after it.
+"""
+type PeriodicJobStep {
+  counts: [PeriodicJobStepCount!]!
+  error: String
+  finishedAt: DateTime!
+  key: String!
+  startedAt: DateTime!
+  status: PeriodicJobStepStatus!
+}
+
+"""One number a step of the night reports."""
+type PeriodicJobStepCount {
+  name: String!
+  value: Int!
+}
+
+enum PeriodicJobStepStatus {
+  error
+  ok
+  skipped
+  warning
 }
 
 type PeriodicityPrice {
