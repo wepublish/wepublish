@@ -745,6 +745,12 @@ applies only the pending folders and does not care about extra ones
 
 Nothing guards this — a reset here is silent until the data is gone.
 
+To use a private database instead, overriding `DATABASE_URL` is not enough:
+`prisma.config.ts` prefers `DIRECT_DATABASE_URL`, which `.env` sets, so
+`migrate deploy` silently hits the shared one (happened 2026-11-11). Export
+both, and check the `Datasource "db": … at "host:port"` line of
+`prisma migrate status` before deploying.
+
 ---
 
 ### ⚠️ A `MailchimpSyncError` row takes its user out of every Mailchimp sync
