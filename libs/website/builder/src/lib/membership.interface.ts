@@ -39,6 +39,11 @@ export type BuilderSubscriptionListItemProps = FullSubscriptionFragment & {
   extend?: () => Promise<void>;
   /** Moves the subscription to another payment method of its member plan. */
   changePaymentMethod?: (paymentMethodId: string) => Promise<void>;
+  /**
+   * Bills the subscription with another periodicity (one of its
+   * `switchablePeriodicities`) from the next renewal on.
+   */
+  switchPeriodicity?: (paymentPeriodicity: PaymentPeriodicity) => Promise<void>;
   cancelPaymentMethodChange?: (changeId: string) => Promise<void>;
   /**
    * Total in cents of the subscription's open invoice, which is paid with the
@@ -66,6 +71,10 @@ export type BuilderSubscriptionListProps = Pick<
     paymentMethodId: string
   ) => Promise<void>;
   onCancelPaymentMethodChange?: (changeId: string) => Promise<void>;
+  onSwitchPeriodicity?: (
+    subscriptionId: string,
+    paymentPeriodicity: PaymentPeriodicity
+  ) => Promise<void>;
 };
 
 export type BuilderInvoiceListItemProps = FullInvoiceFragment & {

@@ -29,6 +29,7 @@ import {
   ProductType,
   ReactivateSubscriptionDocument,
   RevertSubscriptionUpgradeDocument,
+  SwitchSubscriptionPeriodicityDocument,
   SubscriptionDeactivationReason,
   SubscriptionsDocument,
 } from '@wepublish/website/api';
@@ -273,6 +274,70 @@ describe('SubscriptionListContainer', () => {
     expect(
       await screen.findByRole('heading', { name: 'Monatsabo' })
     ).toBeInTheDocument();
+    expect(
+      await screen.findByText(t('invoice.noOpenInvoices'))
+    ).toBeInTheDocument();
+  });
+
+  it('switches to yearly payments and reloads the invoices', async () => {
+    const user = userEvent.setup();
+    const monthly = {
+      ...subscription,
+      paymentPeriodicity: PaymentPeriodicity.Monthly,
+      canExtend: false,
+      switchablePeriodicities: [PaymentPeriodicity.Yearly],
+    };
+    const yearly = {
+      ...monthly,
+      paymentPeriodicity: PaymentPeriodicity.Yearly,
+      switchablePeriodicities: [PaymentPeriodicity.Monthly],
+    };
+    // carries the subscription, which the cache shares with the list
+    const monthlyInvoice = mockInvoice({
+      id: 'open-invoice',
+      paidAt: null,
+      subscription: monthly,
+    });
+
+    renderWithProviders(
+      <>
+        <SubscriptionListContainer />
+        <InvoiceListContainer />
+      </>,
+      {
+        mocks: [
+          subscriptionsQuery([monthly]),
+          invoicesQuery([monthlyInvoice]),
+          checkInvoiceStatus(monthlyInvoice),
+          mockOperation(SwitchSubscriptionPeriodicityDocument, {
+            variables: {
+              subscriptionId: 'subscription',
+              paymentPeriodicity: PaymentPeriodicity.Yearly,
+            },
+            data: {
+              __typename: 'Mutation',
+              switchUserSubscriptionPeriodicity: yearly,
+            },
+          }),
+          invoicesQuery([]),
+        ],
+      }
+    );
+
+    await user.click(await findButton('subscription.switchToYearly'));
+    await user.click(await findButton('subscription.switchToYearlySubmit'));
+
+    expect(
+      await screen.findByText(
+        t('subscription.autoRenew', {
+          periodicityTimeline: t('subscription.paymentTimeline.yearly'),
+        }),
+        { exact: false }
+      )
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: t('subscription.switchToYearly') })
+    ).toBeNull();
     expect(
       await screen.findByText(t('invoice.noOpenInvoices'))
     ).toBeInTheDocument();

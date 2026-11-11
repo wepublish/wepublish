@@ -1274,6 +1274,8 @@ model Subscription {
 
   paymentMethodChanges SubscriptionPaymentMethodChange[]
 
+  periodicityChanges SubscriptionPeriodicityChange[]
+
   printDeliveries PrintIssueRecipient[]
 
   @@index([userID])
@@ -1336,6 +1338,26 @@ model SubscriptionPaymentMethodChange {
   @@index([intentID])
   @@index([paymentID])
   @@map("subscriptions.payment-method-changes")
+}
+
+/// A reader (or admin) changed how often a subscription is billed. The new
+/// periodicity applies from the next renewal, the running period is untouched.
+model SubscriptionPeriodicityChange {
+  id        String   @id @default(dbgenerated("uuidv7()"))
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+
+  subscriptionID String
+  subscription   Subscription @relation(fields: [subscriptionID], references: [id], onDelete: Cascade)
+
+  fromPeriodicity PaymentPeriodicity
+  toPeriodicity   PaymentPeriodicity
+  /// in cents, may be fractional (see Subscription.monthlyAmount)
+  fromMonthlyAmount Float
+  toMonthlyAmount   Float
+
+  @@index([subscriptionID])
+  @@index([createdAt])
+  @@map("subscriptions.periodicity-changes")
 }
 
 model UserAddress {

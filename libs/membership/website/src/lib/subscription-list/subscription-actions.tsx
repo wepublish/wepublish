@@ -3,6 +3,7 @@ import { Tooltip } from '@mui/material';
 import {
   FullPaymentMethodFragment,
   FullSubscriptionFragment,
+  PaymentPeriodicity,
 } from '@wepublish/website/api';
 import {
   BuilderSubscriptionListItemProps,
@@ -14,6 +15,8 @@ import { PropsWithChildren, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { MdInfoOutline } from 'react-icons/md';
 import { formatCurrency } from '../formatters/format-currency';
+import { calculatePeriodAmount } from '../formatters/format-payment-period';
+import { switchedMonthlyAmount } from './switch-periodicity';
 import { PaymentMethodChoice } from './payment-method-choice';
 
 export const SubscriptionListItemActions = styled('div')`
@@ -178,6 +181,9 @@ export type SubscriptionActionsProps = PropsWithChildren<
     | 'changePaymentMethod'
     | 'cancelPaymentMethodChange'
     | 'openInvoiceTotal'
+    | 'monthlyAmount'
+    | 'switchablePeriodicities'
+    | 'switchPeriodicity'
   > & {
     /**
      * `table`: cancelling and the payment method as buttons, not text links,
@@ -199,7 +205,8 @@ export type SubscriptionAction =
   | 'cancel'
   | 'reactivate'
   | 'revertUpgrade'
-  | 'extend';
+  | 'extend'
+  | 'switchToYearly';
 
 const ALL_ACTIONS: readonly SubscriptionAction[] = [
   'pendingChange',
@@ -209,6 +216,7 @@ const ALL_ACTIONS: readonly SubscriptionAction[] = [
   'reactivate',
   'revertUpgrade',
   'extend',
+  'switchToYearly',
 ];
 
 /**
@@ -225,7 +233,8 @@ export const IMMEDIATE_ACTIONS: readonly SubscriptionAction[] = [
 /**
  * What a reader can do with one subscription: the pending payment method
  * change, cancel, reactivate, revert an upgrade, renew or change the payment
- * method, extend early, and the confirmation dialogs for each. Shared by the
+ * method, extend early, switch to yearly payments, and the confirmation
+ * dialogs for each. Shared by the
  * subscription card and the subscription history table; `children` is shown
  * between the pending change and the actions.
  */
@@ -248,6 +257,9 @@ export function SubscriptionActions({
   changePaymentMethod,
   cancelPaymentMethodChange,
   openInvoiceTotal,
+  monthlyAmount,
+  switchablePeriodicities,
+  switchPeriodicity,
   children,
   variant = 'card',
   actions = ALL_ACTIONS,
@@ -280,6 +292,20 @@ export function SubscriptionActions({
     useState(false);
   const [confirmRenewPaymentMethod, setConfirmRenewPaymentMethod] =
     useState(false);
+  const [confirmSwitchToYearly, setConfirmSwitchToYearly] = useState(false);
+
+  // billed yearly from the next renewal on, see PeriodicitySwitchService
+  const canSwitchToYearly =
+    !!switchPeriodicity &&
+    !deactivation &&
+    !!switchablePeriodicities?.includes(PaymentPeriodicity.Yearly);
+  const yearlyMonthlyAmount =
+    canSwitchToYearly ?
+      switchedMonthlyAmount(
+        { memberPlan, monthlyAmount },
+        PaymentPeriodicity.Yearly
+      )
+    : monthlyAmount;
 
   const {
     changeablePaymentMethods,
@@ -454,6 +480,16 @@ export function SubscriptionActions({
               {t('subscription.extendNow')}
             </Button>
           )}
+
+          {show('switchToYearly') && canSwitchToYearly && (
+            <Button
+              onClick={() => setConfirmSwitchToYearly(true)}
+              disabled={loading}
+              variant={variant === 'table' ? 'outlined' : 'text'}
+            >
+              {t('subscription.switchToYearly')}
+            </Button>
+          )}
         </SubscriptionListItemActions>
       )}
 
@@ -601,6 +637,51 @@ export function SubscriptionActions({
 
         <Paragraph gutterBottom={false}>
           {paymentMethodChangeExplanation}
+        </Paragraph>
+      </Modal>
+
+      <Modal
+        open={confirmSwitchToYearly}
+        onCancel={() => setConfirmSwitchToYearly(false)}
+        onSubmit={async () => {
+          setConfirmSwitchToYearly(false);
+
+          if (switchPeriodicity) {
+            await callAction(switchPeriodicity)(PaymentPeriodicity.Yearly);
+          }
+        }}
+        submitText={t('subscription.switchToYearlySubmit')}
+        cancelText={t('user.cancel')}
+        title={t('subscription.switchToYearlyTitle')}
+      >
+        <Paragraph>
+          {t('subscription.switchToYearlyConfirmation', {
+            date: paidUntil ? date.format(new Date(paidUntil), false) : '',
+            yearlyAmount: formatCurrency(
+              calculatePeriodAmount(
+                yearlyMonthlyAmount,
+                PaymentPeriodicity.Yearly
+              ) / 100,
+              currency,
+              locale
+            ),
+            currentAmount: formatCurrency(
+              calculatePeriodAmount(monthlyAmount, paymentPeriodicity) / 100,
+              currency,
+              locale
+            ),
+            periodicityTimeline: t(
+              `subscription.paymentTimeline.${paymentPeriodicity}`
+            ),
+          })}
+        </Paragraph>
+
+        {yearlyMonthlyAmount > monthlyAmount && (
+          <Paragraph>{t('subscription.switchToYearlyRaised')}</Paragraph>
+        )}
+
+        <Paragraph gutterBottom={false}>
+          {t('subscription.switchToYearlyBenefit')}
         </Paragraph>
       </Modal>
 

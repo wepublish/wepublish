@@ -77,6 +77,8 @@ export function SubscriptionListItem({
   changePaymentMethod,
   cancelPaymentMethodChange,
   openInvoiceTotal,
+  switchablePeriodicities,
+  switchPeriodicity,
   className,
 }: BuilderSubscriptionListItemProps) {
   const { image, name, currency, productType } = memberPlan;
@@ -244,6 +246,9 @@ export function SubscriptionListItem({
           changePaymentMethod={changePaymentMethod}
           cancelPaymentMethodChange={cancelPaymentMethodChange}
           openInvoiceTotal={openInvoiceTotal}
+          monthlyAmount={monthlyAmount}
+          switchablePeriodicities={switchablePeriodicities}
+          switchPeriodicity={switchPeriodicity}
         >
           <SubscriptionReward externalReward={externalReward} />
         </SubscriptionActions>

@@ -3746,6 +3746,8 @@ export type Mutation = {
   setPaymentProviderCustomers: Scalars['Int']['output'];
   /** Switch a user between mailed and printed subscription mails */
   setUserDeliveryMode: UserDeliveryPreferenceModel;
+  /** Changes how often one of the authenticated user's own subscriptions is billed, e.g. from monthly to yearly. The running period is kept, the new periodicity is billed from the next renewal on. */
+  switchUserSubscriptionPeriodicity: PublicSubscription;
   /** Ask the mail provider for the current delivery state of mails that are still open. Complements the provider webhook, which is not reachable in local development. */
   syncMailLogStates: MailLogSyncModel;
   /** Sends a test email for the given event */
@@ -5112,6 +5114,12 @@ export type MutationSetUserDeliveryModeArgs = {
   channel: MailChannel;
   reason?: InputMaybe<Scalars['String']['input']>;
   userId: Scalars['String']['input'];
+};
+
+
+export type MutationSwitchUserSubscriptionPeriodicityArgs = {
+  paymentPeriodicity: PaymentPeriodicity;
+  subscriptionId: Scalars['String']['input'];
 };
 
 
@@ -7261,6 +7269,8 @@ export type PublicSubscription = HasMemberPlan & HasPaymentMethod & HasUser & {
   periods: Array<SubscriptionPeriod>;
   properties: Array<Property>;
   startsAt: Scalars['DateTime']['output'];
+  /** The periodicities the subscription can be switched to with switchUserSubscriptionPeriodicity. Empty when it can't be switched (cancelled, unpaid, managed by the payment provider, …). */
+  switchablePeriodicities: Array<PaymentPeriodicity>;
   url: Scalars['String']['output'];
   user: User;
   userID: Scalars['String']['output'];

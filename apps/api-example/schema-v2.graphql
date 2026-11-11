@@ -4298,6 +4298,11 @@ type Mutation {
   setUserDeliveryMode(channel: MailChannel!, reason: String, userId: String!): UserDeliveryPreferenceModel!
 
   """
+  Changes how often one of the authenticated user's own subscriptions is billed, e.g. from monthly to yearly. The running period is kept, the new periodicity is billed from the next renewal on.
+  """
+  switchUserSubscriptionPeriodicity(paymentPeriodicity: PaymentPeriodicity!, subscriptionId: String!): PublicSubscription!
+
+  """
   Ask the mail provider for the current delivery state of mails that are still open. Complements the provider webhook, which is not reachable in local development.
   """
   syncMailLogStates(limit: Int): MailLogSyncModel!
@@ -6043,6 +6048,11 @@ type PublicSubscription implements HasMemberPlan & HasPaymentMethod & HasUser {
   periods: [SubscriptionPeriod!]!
   properties: [Property!]!
   startsAt: DateTime!
+
+  """
+  The periodicities the subscription can be switched to with switchUserSubscriptionPeriodicity. Empty when it can't be switched (cancelled, unpaid, managed by the payment provider, …).
+  """
+  switchablePeriodicities: [PaymentPeriodicity!]!
   url: String!
   user: User!
   userID: String!

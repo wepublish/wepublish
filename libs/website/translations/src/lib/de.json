@@ -155,6 +155,12 @@
     "revertUpgrade": "Upgrade rückgängig machen",
     "revertUpgradeTitle": "Upgrade wirklich rückgängig machen?",
     "revertUpgradeConfirmation": "{type, select, Donation {Die neue Spende wird samt offener Rechnung entfernt und die bisherige Spende läuft normal weiter.} other {Das neue Abo wird samt offener Rechnung entfernt und dein bisheriges Abo läuft normal weiter.}}",
+    "switchToYearly": "Auf jährliche Zahlung umstellen",
+    "switchToYearlyTitle": "Künftig einmal im Jahr zahlen?",
+    "switchToYearlyConfirmation": "Ab {date} zahlst du {yearlyAmount} einmal im Jahr statt {currentAmount} {periodicityTimeline}. Bis dahin bleibt alles, wie es ist.",
+    "switchToYearlyRaised": "Für die jährliche Zahlung gilt ein höherer Mindestbetrag, darum steigt dein Betrag leicht.",
+    "switchToYearlyBenefit": "Eine Zahlung statt vieler – und du unterstützt unabhängigen Journalismus gleich ein ganzes Jahr. Das gibt uns Planungssicherheit.",
+    "switchToYearlySubmit": "Umstellen",
     "reactivateConfirmation": "{type, select, Donation {Die Spende läuft wieder normal weiter.} other {Die Kündigung wird aufgehoben und das Abo läuft wieder normal weiter. Ist die Laufzeit bereits abgelaufen, erhältst du eine neue Rechnung.}}",
     "afterFirstPaymentPeriod": {
       "monthly": "dem ersten Monat",

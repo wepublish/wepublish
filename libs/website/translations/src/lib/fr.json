@@ -155,6 +155,12 @@
     "revertUpgrade": "Annuler le changement",
     "revertUpgradeTitle": "Vraiment annuler le changement ?",
     "revertUpgradeConfirmation": "{type, select, Donation {Le nouveau don et sa facture ouverte sont supprimés, le don précédent se poursuit normalement.} other {Le nouvel abonnement et sa facture ouverte sont supprimés, ton abonnement précédent se poursuit normalement.}}",
+    "switchToYearly": "Passer au paiement annuel",
+    "switchToYearlyTitle": "Payer désormais une fois par an ?",
+    "switchToYearlyConfirmation": "À partir du {date}, tu paies {yearlyAmount} une fois par an au lieu de {currentAmount} {periodicityTimeline}. D'ici là, rien ne change.",
+    "switchToYearlyRaised": "Le paiement annuel a un montant minimum plus élevé, ton montant augmente donc légèrement.",
+    "switchToYearlyBenefit": "Un seul paiement au lieu de plusieurs – et tu soutiens le journalisme indépendant pendant toute une année. Cela nous permet de mieux planifier.",
+    "switchToYearlySubmit": "Changer",
     "reactivateConfirmation": "{type, select, Donation {Le don se poursuit normalement.} other {La résiliation est annulée et l’abonnement se poursuit normalement. Si la période est déjà écoulée, tu recevras une nouvelle facture.}}",
     "afterFirstPaymentPeriod": {
       "monthly": "le premier mois",
