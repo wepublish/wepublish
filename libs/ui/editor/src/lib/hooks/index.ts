@@ -1,5 +1,6 @@
 export * from './unsavedChangesDialog';
 export * from './use-loader';
+export * from './use-measured-height';
 export * from './use-seeded-state';
 export * from './useActionMailQuestion';
 export * from './useDocumentUrl';

@@ -3,6 +3,7 @@ import { Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER } from '@nestjs/core';
 import { GqlModuleOptions, GraphQLModule } from '@nestjs/graphql';
+import { ResilienceModule } from '@nestjs/resilience';
 import { ScheduleModule } from '@nestjs/schedule';
 
 import { PrismaClient } from '@prisma/client';
@@ -11,7 +12,11 @@ import { ActionModule } from '@wepublish/action/api';
 import { AuditLogModule } from '@wepublish/audit-log/api';
 import { V0Module } from '@wepublish/ai/api';
 import { NovaMediaAdapter } from '@wepublish/api';
-import { ArticleModule, HotAndTrendingModule } from '@wepublish/article/api';
+import {
+  AnalyticsProviderHotAndTrendingDataSource,
+  ArticleModule,
+  HotAndTrendingModule,
+} from '@wepublish/article/api';
 import { AuthenticationModule } from '@wepublish/authentication/api';
 import { LettersModule } from '@wepublish/letter/api';
 import { AuthorModule } from '@wepublish/author/api';
@@ -40,6 +45,12 @@ import {
   GoogleAnalyticsModule,
   GoogleAnalyticsService,
 } from '@wepublish/google-analytics/api';
+import {
+  PlausibleDbConfig,
+  PlausibleModule,
+  PlausibleService,
+} from '@wepublish/plausible/api';
+import { UmamiDbConfig, UmamiModule, UmamiService } from '@wepublish/umami/api';
 import { HealthModule } from '@wepublish/health';
 import { MediaAdapter, MediaAdapterModule } from '@wepublish/image/api';
 import {
@@ -333,6 +344,7 @@ import { API_SHARED_NAMESPACES } from './shared-namespaces';
       inject: [AgendaBaselService, KulturZueriService],
     }),
     ScheduleModule.forRoot(),
+    ResilienceModule.forRoot(),
     ConfigModule.forRoot(),
     HealthModule,
     SystemInfoModule,
@@ -351,9 +363,45 @@ import { API_SHARED_NAMESPACES } from './shared-namespaces';
             return dbConfig;
           },
         }),
+        PlausibleModule.registerAsync({
+          imports: [PrismaModule],
+          inject: [PrismaClient, NamespacedCache],
+          useFactory: async (prisma: PrismaClient, kv: NamespacedCache) => {
+            const dbConfig = new PlausibleDbConfig(prisma, kv, 'plausible');
+            await dbConfig.initDatabaseConfiguration();
+            return dbConfig;
+          },
+        }),
+        UmamiModule.registerAsync({
+          imports: [PrismaModule],
+          inject: [PrismaClient, NamespacedCache],
+          useFactory: async (prisma: PrismaClient, kv: NamespacedCache) => {
+            const dbConfig = new UmamiDbConfig(prisma, kv, 'umami');
+            await dbConfig.initDatabaseConfiguration();
+            return dbConfig;
+          },
+        }),
+        PrismaModule,
       ],
-      useFactory: (datasource: GoogleAnalyticsService) => datasource,
-      inject: [GoogleAnalyticsService],
+      useFactory: (
+        prisma: PrismaClient,
+        kv: NamespacedCache,
+        googleAnalytics: GoogleAnalyticsService,
+        plausible: PlausibleService,
+        umami: UmamiService
+      ) =>
+        new AnalyticsProviderHotAndTrendingDataSource(prisma, kv, {
+          GOOGLE: googleAnalytics,
+          PLAUSIBLE: plausible,
+          UMAMI: umami,
+        }),
+      inject: [
+        PrismaClient,
+        NamespacedCache,
+        GoogleAnalyticsService,
+        PlausibleService,
+        UmamiService,
+      ],
     }),
     BannerApiModule,
     VersionInformationModule,
