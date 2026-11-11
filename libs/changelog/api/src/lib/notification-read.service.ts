@@ -1,10 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import {
   NotificationSource as PrismaNotificationSource,
   PrismaClient,
 } from '@prisma/client';
 import { validateNotificationItemId } from './notification-item-id';
 import { NotificationSource } from './notification-read.model';
+
+const MAX_BULK_READS = 100;
 
 @Injectable()
 export class NotificationReadService {
@@ -40,6 +42,42 @@ export class NotificationReadService {
         source: source as PrismaNotificationSource,
         itemId: trimmedItemId,
       },
+    });
+  }
+
+  /** Marks several items of one source read at once; already read ones stay. */
+  async markNotificationsRead(
+    userId: string,
+    source: NotificationSource,
+    itemIds: string[]
+  ) {
+    if (itemIds.length > MAX_BULK_READS) {
+      throw new BadRequestException(
+        `At most ${MAX_BULK_READS} notifications can be marked read at once`
+      );
+    }
+
+    const uniqueItemIds = [
+      ...new Set(itemIds.map(itemId => validateNotificationItemId(itemId))),
+    ];
+
+    if (!uniqueItemIds.length) {
+      return [];
+    }
+
+    const prismaSource = source as PrismaNotificationSource;
+
+    await this.prisma.notificationRead.createMany({
+      data: uniqueItemIds.map(itemId => ({
+        userId,
+        source: prismaSource,
+        itemId,
+      })),
+      skipDuplicates: true,
+    });
+
+    return this.prisma.notificationRead.findMany({
+      where: { userId, source: prismaSource, itemId: { in: uniqueItemIds } },
     });
   }
 }

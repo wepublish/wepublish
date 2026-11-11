@@ -42,4 +42,23 @@ export class NotificationReadResolver {
       itemId
     );
   }
+
+  @Authenticated()
+  @Mutation(returns => [NotificationRead], {
+    name: 'markNotificationsRead',
+    description:
+      'Marks up to 100 notifications of one source as read for the current user. Requires authentication.',
+  })
+  markNotificationsRead(
+    @Args('source', { type: () => NotificationSource })
+    source: NotificationSource,
+    @Args('itemIds', { type: () => [String] }) itemIds: string[],
+    @CurrentUser() session: UserSession
+  ) {
+    return this.notificationReadService.markNotificationsRead(
+      session.user.id,
+      source,
+      itemIds
+    );
+  }
 }

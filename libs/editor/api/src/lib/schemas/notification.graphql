@@ -17,6 +17,15 @@ mutation MarkNotificationRead($source: NotificationSource!, $itemId: String!) {
   }
 }
 
+mutation MarkNotificationsRead(
+  $source: NotificationSource!
+  $itemIds: [String!]!
+) {
+  markNotificationsRead(source: $source, itemIds: $itemIds) {
+    ...NotificationRead
+  }
+}
+
 fragment NotificationConfirmation on NotificationConfirmation {
   id
   createdAt

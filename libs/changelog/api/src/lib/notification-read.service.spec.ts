@@ -11,6 +11,7 @@ describe('NotificationReadService', () => {
     notificationRead: {
       findMany: vi.fn(),
       upsert: vi.fn(),
+      createMany: vi.fn(),
     },
   };
 
@@ -85,5 +86,63 @@ describe('NotificationReadService', () => {
     ).rejects.toThrow(BadRequestException);
 
     expect(mockPrisma.notificationRead.upsert).not.toHaveBeenCalled();
+  });
+
+  describe('markNotificationsRead', () => {
+    it('marks several items read at once, skipping ones already read', async () => {
+      mockPrisma.notificationRead.createMany.mockResolvedValue({ count: 2 });
+      mockPrisma.notificationRead.findMany.mockResolvedValue([]);
+
+      await service.markNotificationsRead(
+        'user-1',
+        NotificationSource.CHANGELOG,
+        [' entry-1 ', 'entry-2', 'entry-1']
+      );
+
+      expect(mockPrisma.notificationRead.createMany).toHaveBeenCalledWith({
+        data: [
+          { userId: 'user-1', source: 'CHANGELOG', itemId: 'entry-1' },
+          { userId: 'user-1', source: 'CHANGELOG', itemId: 'entry-2' },
+        ],
+        skipDuplicates: true,
+      });
+      expect(mockPrisma.notificationRead.findMany).toHaveBeenCalledWith({
+        where: {
+          userId: 'user-1',
+          source: 'CHANGELOG',
+          itemId: { in: ['entry-1', 'entry-2'] },
+        },
+      });
+    });
+
+    it('does nothing for an empty list', async () => {
+      expect(
+        await service.markNotificationsRead(
+          'user-1',
+          NotificationSource.CHANGELOG,
+          []
+        )
+      ).toEqual([]);
+      expect(mockPrisma.notificationRead.createMany).not.toHaveBeenCalled();
+    });
+
+    it('rejects invalid ids and more than 100 at once', async () => {
+      await expect(
+        service.markNotificationsRead('user-1', NotificationSource.CHANGELOG, [
+          'ok',
+          ' ',
+        ])
+      ).rejects.toThrow(BadRequestException);
+
+      await expect(
+        service.markNotificationsRead(
+          'user-1',
+          NotificationSource.CHANGELOG,
+          Array.from({ length: 101 }, (_, index) => `entry-${index}`)
+        )
+      ).rejects.toThrow(BadRequestException);
+
+      expect(mockPrisma.notificationRead.createMany).not.toHaveBeenCalled();
+    });
   });
 });

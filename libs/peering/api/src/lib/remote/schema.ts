@@ -3635,6 +3635,8 @@ export type Mutation = {
   markInvoiceAsPaid: Invoice;
   /** Marks a notification as read for the current user. Requires authentication. */
   markNotificationRead: NotificationRead;
+  /** Marks up to 100 notifications of one source as read for the current user. Requires authentication. */
+  markNotificationsRead: Array<NotificationRead>;
   /** Publishes an article at the given time. */
   publishArticle: Article;
   publishNewsletterCampaign: NewsletterPublishResult;
@@ -4842,6 +4844,12 @@ export type MutationMarkInvoiceAsPaidArgs = {
 
 export type MutationMarkNotificationReadArgs = {
   itemId: Scalars['String']['input'];
+  source: NotificationSource;
+};
+
+
+export type MutationMarkNotificationsReadArgs = {
+  itemIds: Array<Scalars['String']['input']>;
   source: NotificationSource;
 };
 

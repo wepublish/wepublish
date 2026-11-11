@@ -29,6 +29,15 @@ const markNotificationReadMutation = `
   }
 `;
 
+const markNotificationsReadMutation = `
+  mutation markNotificationsRead($source: NotificationSource!, $itemIds: [String!]!) {
+    markNotificationsRead(source: $source, itemIds: $itemIds) {
+      id
+      itemId
+    }
+  }
+`;
+
 const mockRead = {
   id: 'read-1',
   createdAt: new Date('2026-08-25T12:00:00Z'),
@@ -48,6 +57,7 @@ describe('NotificationReadResolver', () => {
   const notificationReadService = {
     getNotificationReads: vi.fn(),
     markNotificationRead: vi.fn(),
+    markNotificationsRead: vi.fn(),
   };
 
   beforeAll(async () => {
@@ -126,6 +136,28 @@ describe('NotificationReadResolver', () => {
       'user-1',
       'ONE_MESSAGE',
       '42'
+    );
+  });
+
+  test('markNotificationsRead mutation passes the current user and all ids', async () => {
+    notificationReadService.markNotificationsRead.mockResolvedValue([mockRead]);
+
+    const response = await request(app.getHttpServer())
+      .post('')
+      .send({
+        query: markNotificationsReadMutation,
+        variables: { source: 'CHANGELOG', itemIds: ['entry-1', 'entry-2'] },
+      })
+      .expect(200);
+
+    expect(response.body.errors).toBeUndefined();
+    expect(response.body.data.markNotificationsRead).toEqual([
+      { id: 'read-1', itemId: 'entry-1' },
+    ]);
+    expect(notificationReadService.markNotificationsRead).toHaveBeenCalledWith(
+      'user-1',
+      'CHANGELOG',
+      ['entry-1', 'entry-2']
     );
   });
 
