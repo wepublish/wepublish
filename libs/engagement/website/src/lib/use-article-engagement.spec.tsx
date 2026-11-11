@@ -19,6 +19,8 @@ import {
   possibleTypes,
 } from '@wepublish/website/api';
 import { PropsWithChildren } from 'react';
+import { hydrateRoot } from 'react-dom/client';
+import { renderToString } from 'react-dom/server';
 import { ENGAGEMENT_METER_KEY } from './engagement-storage';
 import {
   NEWSLETTER_COOKIE_KEY,
@@ -95,6 +97,7 @@ describe('useArticleEngagement', () => {
         {
           request: { query: SubscriptionsDocument },
           maxUsageCount: Number.POSITIVE_INFINITY,
+          delay: 10,
           result: { data: { userSubscriptions: [] } },
         },
       ]),
@@ -151,6 +154,40 @@ describe('useArticleEngagement', () => {
     rerender();
 
     await waitFor(() => expect(views).toHaveLength(2));
+  });
+
+  it('views a logged-in reader once, after their subscriptions loaded', async () => {
+    user = { id: 'user-1' };
+
+    renderHook(() => useArticleEngagement(article), { wrapper });
+
+    await waitFor(() => expect(views).toHaveLength(1));
+    await act(() => new Promise(resolve => setTimeout(resolve, 20)));
+
+    expect(views).toHaveLength(1);
+  });
+
+  it('views a hydrated article once, with the newsletter token of the cookie', async () => {
+    storeNewsletterToken('signed.token');
+    const Probe = () => {
+      useArticleEngagement(article);
+
+      return null;
+    };
+    const container = document.createElement('div');
+    container.innerHTML = renderToString(wrapper({ children: <Probe /> }));
+
+    const root = await act(() =>
+      hydrateRoot(container, wrapper({ children: <Probe /> }))
+    );
+
+    await waitFor(() => expect(views).toHaveLength(1));
+    await act(() => new Promise(resolve => setTimeout(resolve, 20)));
+
+    expect(views.map(({ input }) => input.newsletterToken)).toEqual([
+      'signed.token',
+    ]);
+    act(() => root.unmount());
   });
 
   it('replaces the cut blocks of the cached article', async () => {

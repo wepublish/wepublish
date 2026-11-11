@@ -20,6 +20,7 @@
     "dismiss": "Weiterlesen",
     "newsletterWall": {
       "email": "E-Mail-Adresse",
+      "captcha": "Captcha",
       "submit": "Weiterlesen",
       "error": "Das hat nicht geklappt. Prüfe deine E-Mail-Adresse und versuche es nochmals."
     }

@@ -53,7 +53,8 @@ export function recordRead(
   const reads = readsInWindow(meter, maxWindowDays, now);
 
   if (reads.some(([id]) => id === articleId)) {
-    return { reads };
+    // Unchanged unless old reads left the window.
+    return reads.length === meter.reads.length ? meter : { reads };
   }
 
   return {

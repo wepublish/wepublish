@@ -1,4 +1,8 @@
-import { EngagementAudience, EngagementPlacement } from '@wepublish/editor/api';
+import {
+  EngagementAudience,
+  EngagementPlacement,
+  EngagementRequirement,
+} from '@wepublish/editor/api';
 import { TFunction } from 'i18next';
 import {
   EngagementRuleValues,
@@ -147,19 +151,39 @@ const sharedSlots = (a: ConflictRule, b: ConflictRule): EngagementSlot[] => {
   return [...slots];
 };
 
+// Who already meets a requirement: they never see the rule at all.
+const MEETS: Record<EngagementRequirement, Reader[]> = {
+  [EngagementRequirement.Registration]: [
+    'registered',
+    'freeMember',
+    'payingMember',
+  ],
+  [EngagementRequirement.Membership]: ['freeMember', 'payingMember'],
+  [EngagementRequirement.PaidMembership]: ['payingMember'],
+  // Newsletter signups cut across all readers.
+  [EngagementRequirement.Newsletter]: [],
+};
+
+/** Mirrors `matchingRules` in `engagement-api`'s `evaluate.ts`. */
+const readersOf = (rule: ConflictRule) => {
+  const requirement = rule.stages.find(isHard)?.requirement;
+  const meet = requirement ? MEETS[requirement] : [];
+
+  return READERS[rule.audience].filter(reader => !meet.includes(reader));
+};
+
 const audiencesOverlap = (a: ConflictRule, b: ConflictRule) => {
   if (
     a.audience === EngagementAudience.MemberPlans &&
-    b.audience === EngagementAudience.MemberPlans
+    b.audience === EngagementAudience.MemberPlans &&
+    !a.audienceMemberPlanIds.some(id => b.audienceMemberPlanIds.includes(id))
   ) {
-    return a.audienceMemberPlanIds.some(id =>
-      b.audienceMemberPlanIds.includes(id)
-    );
+    return false;
   }
 
-  return READERS[a.audience].some(reader =>
-    READERS[b.audience].includes(reader)
-  );
+  const readersOfB = readersOf(b);
+
+  return readersOf(a).some(reader => readersOfB.includes(reader));
 };
 
 const targetsOverlap = (a: ConflictRule, b: ConflictRule) =>

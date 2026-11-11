@@ -18,12 +18,6 @@ export function getPaywallBypassToken(): string | undefined {
   return typeof token === 'string' && token ? token : undefined;
 }
 
-export function hasPaywallBypass(): boolean {
-  const token = getCookie(BYPASS_COOKIE_KEY);
-
-  return !!token;
-}
-
 export function hasValidPaywallBypass(validTokens: string[]): boolean {
   const token = getCookie(BYPASS_COOKIE_KEY);
 

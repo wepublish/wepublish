@@ -86,15 +86,13 @@ export function validateEngagementRule(
         problem(`${path}.previewBlocks`, 'min');
       }
 
-      // A newsletter wall is the signup itself.
+      // Only signing up gets a reader past a newsletter rule's wall.
       if (
         rule.goal === EngagementGoal.NEWSLETTER &&
-        stage.requirement !== EngagementRequirement.NEWSLETTER &&
-        !stage.actions.some(
-          action => action.type === EngagementActionType.NEWSLETTER
-        )
+        stage.requirement &&
+        stage.requirement !== EngagementRequirement.NEWSLETTER
       ) {
-        problem(`${path}.actions`, 'newsletterActionRequired');
+        problem(`${path}.requirement`, 'newsletterWallRequired');
       }
     } else {
       if (stage.requirement) {

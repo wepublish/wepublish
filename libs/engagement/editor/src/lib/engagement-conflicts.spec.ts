@@ -2,6 +2,7 @@ import {
   EngagementAudience,
   EngagementGoal,
   EngagementPlacement,
+  EngagementRequirement,
 } from '@wepublish/editor/api';
 import { findConflicts, ConflictRule } from './engagement-conflicts';
 import { hardStage, stageDefaults } from './engagement-rule-values';
@@ -56,6 +57,33 @@ describe('findConflicts', () => {
     const members = banner({ id: 'new', audience: EngagementAudience.Members });
 
     expect(findConflicts(members, [anonymous])).toEqual([]);
+  });
+
+  it('leaves out readers who already meet what a rule restricts for', () => {
+    // Logged-in readers never see a rule that asks them to register.
+    const askToRegister = banner({
+      id: 'new',
+      stages: [
+        stageDefaults({ placement: EngagementPlacement.Banner }),
+        hardStage({
+          afterArticles: 3,
+          requirement: EngagementRequirement.Registration,
+        }),
+      ],
+    });
+    const forRegistered = (audience: EngagementAudience) =>
+      banner({ audience });
+
+    expect(
+      findConflicts(askToRegister, [
+        forRegistered(EngagementAudience.Registered),
+      ])
+    ).toEqual([]);
+    expect(
+      findConflicts(askToRegister, [
+        forRegistered(EngagementAudience.NonPaying),
+      ])
+    ).toHaveLength(1);
   });
 
   it('names the narrower of the two audiences', () => {

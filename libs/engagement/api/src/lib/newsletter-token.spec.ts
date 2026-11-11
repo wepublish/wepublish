@@ -36,6 +36,19 @@ describe('newsletter token', () => {
     );
   });
 
+  it('refuses a signup older than a year, the life of its cookie', () => {
+    const now = new Date('2027-11-12T12:00:00Z');
+    const token = signNewsletterToken(
+      { email: 'reader@example.com', signedUpAt },
+      secret
+    );
+
+    expect(verifyNewsletterToken(token, secret, now)).toBe(undefined);
+    expect(
+      verifyNewsletterToken(token, secret, new Date('2027-11-10T12:00:00Z'))
+    ).toBeDefined();
+  });
+
   it('refuses a meter token, signed with the other key', () => {
     expect(
       verifyNewsletterToken(signMeter({ reads: [] }, meterSecret), secret)

@@ -1,5 +1,6 @@
 import {
   MAX_METER_READS,
+  MeterRead,
   countedReads,
   emptyMeter,
   hasRead,
@@ -30,6 +31,12 @@ describe('meter', () => {
     });
 
     expect(meter.reads).toEqual([['a', minutesAgo(60)]]);
+  });
+
+  it('answers the same meter for an article read again, so nothing is written', () => {
+    const meter = { reads: [['a', minutesAgo(60)]] as MeterRead[] };
+
+    expect(recordRead(meter, 'a', now, { maxWindowDays: 30 })).toBe(meter);
   });
 
   it('only counts reads within the window', () => {

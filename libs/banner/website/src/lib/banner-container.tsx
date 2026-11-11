@@ -5,6 +5,7 @@ import {
   EngagementPromptSlot,
   resolveEngagement,
   useEngagementDismissals,
+  useHydrated,
   useNewsletterToken,
 } from '@wepublish/engagement/website';
 import { getPaywallBypassToken } from '@wepublish/paywall/website';
@@ -14,7 +15,7 @@ import {
   EngagementPromptsDocument,
 } from '@wepublish/website/api';
 import { BuilderContainerProps } from '@wepublish/website/builder';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 
 export type BannerContainerProps = {
   documentType: BannerDocumentType;
@@ -33,16 +34,16 @@ export function BannerContainer({
   className,
 }: BannerContainerProps) {
   const { user } = useUser();
-  const [paywallBypassToken, setPaywallBypassToken] = useState<string>();
   const { dismissals, legacyBannerClosedAt, now, dismiss } =
     useEngagementDismissals();
 
   const newsletterToken = useNewsletterToken();
-
-  useEffect(() => setPaywallBypassToken(getPaywallBypassToken()), []);
+  // The cookies are read once hydrated, so the first request carries them.
+  const hydrated = useHydrated();
+  const paywallBypassToken = hydrated ? getPaywallBypassToken() : undefined;
 
   const { data, refetch } = useQuery(EngagementPromptsDocument, {
-    skip: !documentId,
+    skip: !documentId || !hydrated,
     variables: {
       documentId: documentId ?? '',
       documentType:
@@ -54,11 +55,21 @@ export function BannerContainer({
     },
   });
 
+  // The server reads the reader from the session: ask again when it changes.
+  const userId = user?.id;
+  const askedFor = useRef(userId);
+
   useEffect(() => {
-    if (documentId) {
+    if (askedFor.current === userId) {
+      return;
+    }
+
+    askedFor.current = userId;
+
+    if (documentId && hydrated) {
       refetch().catch(() => undefined);
     }
-  }, [user?.id, documentId, refetch]);
+  }, [userId, documentId, hydrated, refetch]);
 
   const { banner, modal } = useMemo(
     () =>

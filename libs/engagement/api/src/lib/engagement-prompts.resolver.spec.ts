@@ -1,3 +1,4 @@
+import { ChallengeService } from '@wepublish/challenge/api';
 import type { Mock } from 'vitest';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { INestApplication } from '@nestjs/common';
@@ -137,6 +138,15 @@ describe('EngagementPromptsResolver', () => {
         {
           provide: NewsletterVerifier,
           useClass: UnavailableNewsletterVerifier,
+        },
+        {
+          provide: ChallengeService,
+          useValue: {
+            validateChallenge: async ({ solution }: { solution: string }) => ({
+              valid: solution === 'solved',
+              message: 'Wrong challenge solution.',
+            }),
+          },
         },
         { provide: PrismaClient, useValue: prisma },
         {
@@ -310,9 +320,9 @@ describe('EngagementPromptsResolver', () => {
     ).toHaveLength(2);
   });
 
-  it('signs readers up for the newsletter with their email alone', async () => {
+  it('signs readers up for the newsletter with their email and the challenge', async () => {
     const { body } = await send(
-      `mutation { signUpForNewsletter(email: "reader@example.com") { newsletterToken } }`
+      `mutation { signUpForNewsletter(email: "reader@example.com", challengeAnswer: { challengeID: "id", challengeSolution: "solved" }) { newsletterToken } }`
     );
 
     expect(body).toEqual({

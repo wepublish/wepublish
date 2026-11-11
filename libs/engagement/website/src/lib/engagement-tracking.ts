@@ -54,7 +54,7 @@ const trackedImpressions = new Set<string>();
 
 export const resetTrackedImpressions = () => trackedImpressions.clear();
 
-/** Once per prompt and page view, however often it renders. */
+/** Once per prompt and path while the page is open, however often it renders. */
 export function trackImpressionOnce(prompt: FullEngagementPromptFragment) {
   if (typeof window === 'undefined') {
     return;

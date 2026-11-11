@@ -85,6 +85,19 @@ describe('BannerContainer', () => {
     );
   });
 
+  it('asks once, with the bypass token from the start', async () => {
+    document.cookie = `${BYPASS_COOKIE_KEY}=token; path=/`;
+
+    renderContainer({ mocks: [engagementPrompts([])] });
+
+    await waitFor(() => expect(requested).toHaveLength(1));
+    await act(() => new Promise(resolve => setTimeout(resolve, 20)));
+
+    expect(requested).toEqual([
+      expect.objectContaining({ paywallBypassToken: 'token' }),
+    ]);
+  });
+
   it('asks again, with the token, once the reader signed up for the newsletter', async () => {
     renderContainer({ mocks: [engagementPrompts([])] });
 

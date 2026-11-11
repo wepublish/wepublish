@@ -13,6 +13,7 @@ import {
 import { useEffect, useState } from 'react';
 import { readMeterToken, storeMeterToken } from './engagement-storage';
 import { useNewsletterToken } from './newsletter-signup';
+import { useHydrated } from './use-hydrated';
 
 /**
  * Tells the server that the reader opens an article (`viewArticle`): it meters
@@ -34,9 +35,12 @@ export function useArticleEngagement(article?: { id: string } | null) {
   }>();
   const access = useArticleAccess(articleId);
   const newsletterToken = useNewsletterToken();
+  const hydrated = useHydrated();
+  // A logged-in reader is viewed once their subscriptions are known.
+  const ready = hydrated && !(user && subscriptions === null);
 
   useEffect(() => {
-    if (!articleId) {
+    if (!articleId || !ready) {
       return;
     }
 
@@ -75,6 +79,7 @@ export function useArticleEngagement(article?: { id: string } | null) {
     };
   }, [
     articleId,
+    ready,
     user?.id,
     subscriptions?.length,
     newsletterToken,

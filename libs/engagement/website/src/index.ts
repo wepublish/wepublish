@@ -7,3 +7,4 @@ export * from './lib/newsletter-signup';
 export * from './lib/prompt-to-banner';
 export * from './lib/resolve-engagement';
 export * from './lib/use-article-engagement';
+export * from './lib/use-hydrated';

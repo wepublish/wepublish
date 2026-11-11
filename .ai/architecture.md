@@ -89,10 +89,12 @@ override), then the more specific rule (narrower audience, pages only), then
 the newest; the website shows at most one per slot (banner, modal, in-article)
 in `resolve-engagement.ts`. The editor mirrors this order to show conflicts
 (`engagement-conflicts.ts`) — change both together. A `NEWSLETTER`
-requirement is a newsletter wall: `signUpForNewsletter` signs the email up with
-the Mailchimp integration and answers a signed `newsletterToken`, which the
-website keeps in the `wep_newsletter` cookie and sends with `viewArticle` and
-`engagementPrompts`; it passes the wall and silences newsletter-goal rules.
+requirement is a newsletter wall (the only one a newsletter-goal rule may end
+in): `signUpForNewsletter` (with a challenge for anonymous readers) signs the
+email up with the Mailchimp integration and answers a signed `newsletterToken`
+(valid a year), which the website keeps in the `wep_newsletter` cookie and sends
+with `viewArticle` and `engagementPrompts`; it passes the wall and silences
+newsletter-goal rules.
 **Paywalls stay their own model** (`libs/paywall`): they are attached per
 article (`Article.paywallId`), check specific member plans and bypass tokens,
 and the website and peering still read `Article.paywall`. Who gets every block

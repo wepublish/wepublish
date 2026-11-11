@@ -209,15 +209,13 @@ export function engagementRuleProblems(
         problem(`${path}.previewBlocks`, 'min');
       }
 
-      // A newsletter wall is the signup itself.
+      // Only signing up gets a reader past a newsletter rule's wall.
       if (
         rule.goal === EngagementGoal.Newsletter &&
-        stage.requirement !== EngagementRequirement.Newsletter &&
-        !stage.actions.some(
-          action => action.type === EngagementActionType.Newsletter
-        )
+        stage.requirement &&
+        stage.requirement !== EngagementRequirement.Newsletter
       ) {
-        problem(`${path}.actions`, 'newsletterActionRequired');
+        problem(`${path}.requirement`, 'newsletterWallRequired');
       }
     } else {
       if (stage.requirement) {
@@ -264,25 +262,30 @@ const actionSchema = z.object({
   role: z.nativeEnum(EngagementActionRole),
 });
 
-const stageSchema = z.object({
-  afterArticles: z.number().int(),
-  placement: z.nativeEnum(EngagementPlacement),
-  enforcement: z.nativeEnum(EngagementEnforcement),
-  requirement: z.nativeEnum(EngagementRequirement).nullable(),
-  previewBlocks: z.number().int().nullable(),
-  dismissible: z.boolean(),
-  hideForMinutes: z.number().int().min(0),
-  delaySeconds: z.number().int().min(0),
-  title: z.string().nullable(),
-  text: z.string().nullable(),
-  cta: z.string().nullable(),
-  description: z.custom<RichTextBlockValue['richText']>().nullable(),
-  html: z.string().nullable(),
-  embedUrl: z.string().nullable(),
-  imageId: z.string().nullable(),
-  image: z.custom<FullImageFragment>().nullable(),
-  actions: z.array(actionSchema),
-});
+// Number inputs only hold numbers: what is left to say is in our words.
+const wholeNumber = (t: TFunction) =>
+  z.number().int(t('engagement.validation.wholeNumber'));
+
+const stageSchema = (t: TFunction) =>
+  z.object({
+    afterArticles: wholeNumber(t),
+    placement: z.nativeEnum(EngagementPlacement),
+    enforcement: z.nativeEnum(EngagementEnforcement),
+    requirement: z.nativeEnum(EngagementRequirement).nullable(),
+    previewBlocks: wholeNumber(t).nullable(),
+    dismissible: z.boolean(),
+    hideForMinutes: wholeNumber(t).min(0, t('engagement.validation.min')),
+    delaySeconds: wholeNumber(t).min(0, t('engagement.validation.min')),
+    title: z.string().nullable(),
+    text: z.string().nullable(),
+    cta: z.string().nullable(),
+    description: z.custom<RichTextBlockValue['richText']>().nullable(),
+    html: z.string().nullable(),
+    embedUrl: z.string().nullable(),
+    imageId: z.string().nullable(),
+    image: z.custom<FullImageFragment>().nullable(),
+    actions: z.array(actionSchema),
+  });
 
 export const createEngagementRuleSchema = (
   t: TFunction
@@ -298,8 +301,8 @@ export const createEngagementRuleSchema = (
       showOnArticles: z.boolean(),
       showOnPageIds: z.array(z.string()),
       includePeeredArticles: z.boolean(),
-      meterWindowDays: z.number().int().nullable(),
-      stages: z.array(stageSchema),
+      meterWindowDays: wholeNumber(t).nullable(),
+      stages: z.array(stageSchema(t)),
     })
     .superRefine((rule, context) => {
       for (const { path, code, params } of engagementRuleProblems(rule)) {

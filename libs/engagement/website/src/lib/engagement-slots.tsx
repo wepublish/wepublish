@@ -76,6 +76,21 @@ export function useEngagementDismissals() {
   return { dismissals, legacyBannerClosedAt, now, dismiss };
 }
 
+/**
+ * Counts the impression once the prompt shows: after its delay, and not at
+ * all when the reader leaves before.
+ */
+export function useImpressionWhenShown(prompt: FullEngagementPromptFragment) {
+  useEffect(() => {
+    const timer = setTimeout(
+      () => trackImpressionOnce(prompt),
+      prompt.stage.delaySeconds * 1000
+    );
+
+    return () => clearTimeout(timer);
+  }, [prompt]);
+}
+
 export type EngagementPromptSlotProps = {
   prompt: FullEngagementPromptFragment;
   onDismiss: (prompt: FullEngagementPromptFragment) => void;
@@ -88,7 +103,7 @@ export function EngagementPromptSlot({
   onDismiss,
   className,
 }: EngagementPromptSlotProps) {
-  useEffect(() => trackImpressionOnce(prompt), [prompt]);
+  useImpressionWhenShown(prompt);
 
   return (
     <EngagementPrompt
@@ -138,7 +153,7 @@ export function EngagementBannerSlot({
     [prompt, t]
   );
 
-  useEffect(() => trackImpressionOnce(prompt), [prompt]);
+  useImpressionWhenShown(prompt);
 
   return (
     <BannerTracking

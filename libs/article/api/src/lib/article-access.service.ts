@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Scope, NotFoundException } from '@nestjs/common';
 import { Article } from '@prisma/client';
 import { AuthSession } from '@wepublish/authentication/api';
 import {
@@ -40,10 +40,10 @@ const grant = (req: ArticleRequest, articleId: string) => {
 };
 
 /**
- * Decides whether a reader gets every block of an article. Request scoped
- * (through the dataloaders), so each article is decided once per request.
+ * Decides whether a reader gets every block of an article, once per article
+ * and request. The decisions belong to one reader: request scoped, explicitly.
  */
-@Injectable()
+@Injectable({ scope: Scope.REQUEST })
 export class ArticleAccessService {
   private decisions = new Map<string, Promise<ArticleAccessResult>>();
 

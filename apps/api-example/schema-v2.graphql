@@ -3861,9 +3861,9 @@ type Mutation {
   setPaymentProviderCustomers(customers: [PaymentProviderCustomerInput!]!, paymentProviderId: String!): Int!
 
   """
-  Signs an email up for the newsletter, pending its confirmation by mail. Newsletter walls only ask for this.
+  Signs an email up for the newsletter, pending its confirmation by mail. Newsletter walls only ask for this. Readers who are not logged in solve the challenge first, so no script sends confirmation mails to other people's addresses.
   """
-  signUpForNewsletter(email: String!): NewsletterSignup!
+  signUpForNewsletter(challengeAnswer: ChallengeInput, email: String!): NewsletterSignup!
 
   """
   Ask the mail provider for the current delivery state of mails that are still open. Complements the provider webhook, which is not reachable in local development.
