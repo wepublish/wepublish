@@ -396,6 +396,36 @@ describe('selectBexioOrders — copies still owed after a period', () => {
       [2, null],
     ]);
   });
+
+  it('owes nothing for a period that ended more than two issues before the ship day', async () => {
+    const { selected, stats } = await selectBexioOrders(
+      [
+        invoice(1, { title: 'Jahresabos 2024' }),
+        invoice(2, {
+          title: 'Jahresabos 01.08.2025–31.07.2026',
+          contact_id: 102,
+        }),
+        invoice(3, {
+          title: 'Jahresabos 15.10.2025–14.10.2026',
+          contact_id: 103,
+        }),
+      ],
+      {
+        ...BASE,
+        links: links([
+          [101, [gift(201)]],
+          [102, [gift(202)]],
+          [103, [gift(203)]],
+        ]),
+        fetchPositions: positions({}),
+        topUp: topUp({}),
+      }
+    );
+
+    // six issues a year: the right to an owed copy ends four months after the period
+    expect(selected.map(s => s.recipientId)).toEqual([203]);
+    expect(stats.otherPeriod).toBe(2);
+  });
 });
 
 describe('selectBexioOrders — what is left out', () => {

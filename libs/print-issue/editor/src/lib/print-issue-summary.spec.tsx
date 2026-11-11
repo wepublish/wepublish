@@ -65,6 +65,9 @@ describe('PrintIssueSummary', () => {
               skippedOpen: 3,
               excludedKind: 4,
               quantityMismatch: 1,
+              // the two biggest buckets on a medium billing through bexio
+              skippedProvider: 5000,
+              skippedImported: 400,
             },
           }) as never
         }
@@ -76,6 +79,8 @@ describe('PrintIssueSummary', () => {
       ['skippedOpen', 3],
       ['excludedKind', 4],
       ['quantityMismatch', 1],
+      ['skippedProvider', 5000],
+      ['skippedImported', 400],
     ] as const) {
       expect(
         screen.getByText(`printIssues.summary.bexio.${key}`).parentElement

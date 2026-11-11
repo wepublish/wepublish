@@ -35,6 +35,20 @@ export function isYmd(value: string): boolean {
   return !Number.isNaN(date.getTime()) && date.toISOString().startsWith(value);
 }
 
+/** The calendar day `months` later (or earlier), clamped to the last day of the month: 31.12. + 4 → 30.04. */
+export function addMonths(ymd: string, months: number): string {
+  const [year, month, day] = ymd.split('-').map(Number) as [
+    number,
+    number,
+    number,
+  ];
+  const lastDay = new Date(Date.UTC(year, month + months, 0)).getUTCDate();
+
+  return new Date(Date.UTC(year, month - 1 + months, Math.min(day, lastDay)))
+    .toISOString()
+    .slice(0, 10);
+}
+
 /** A calendar day as the UTC midnight a `@db.Date` column expects. */
 export function ymdToDbDate(ymd: string): Date {
   return new Date(`${ymd}T00:00:00.000Z`);

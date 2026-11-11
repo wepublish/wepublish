@@ -129,6 +129,9 @@ export function PrintIssueSummary({
     [
       ['invoicesInWindow', bexio.invoicesInWindow],
       ['canceled', bexio.canceled],
+      // on a medium billing through bexio these two hold most invoices
+      ['skippedProvider', bexio.skippedProvider],
+      ['skippedImported', bexio.skippedImported],
       ['skippedOpen', bexio.skippedOpen],
       ['otherPeriod', bexio.otherPeriod],
       ['noValidPeriod', bexio.noValidPeriod],
