@@ -312,6 +312,17 @@ const seedSettings = (prisma: PrismaClient) =>
     }),
     prisma.setting.upsert({
       where: {
+        name: SettingName.EMAIL_QUALITY_EVIDENCE_WARN_AFTER_DAYS,
+      },
+      update: {},
+      create: {
+        name: SettingName.EMAIL_QUALITY_EVIDENCE_WARN_AFTER_DAYS,
+        value: 14,
+        settingRestriction: { minValue: 1, maxValue: 365 },
+      },
+    }),
+    prisma.setting.upsert({
+      where: {
         name: SettingName.PAYMENT_METHOD_CHANGE_EXPIRY_DAYS,
       },
       update: {},
@@ -347,6 +358,7 @@ const seedSettings = (prisma: PrismaClient) =>
           'v1.joXbh+gkDHyDSWR8.xx9rJ27ZN9VWALNkm3ET0w==.Hl8G9f69NSAH5A==',
         property: '1',
         articlePrefix: '/a/',
+        hotAndTrending: true,
       },
     }),
 

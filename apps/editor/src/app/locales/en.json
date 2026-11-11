@@ -1005,6 +1005,151 @@
       "network": "No connection to the server. Please check your internet connection and try again.",
       "unexpected": "Something went wrong. Please try again – if the problem persists, contact support."
     },
+    "form": {
+      "loading": "Loading …",
+      "loadError": {
+        "title": "The data could not be loaded",
+        "retry": "Try again"
+      },
+      "errorSummary": {
+        "title": "Please fix these entries before saving"
+      },
+      "field": {
+        "moreInfo": "More information"
+      },
+      "select": {
+        "empty": "None"
+      },
+      "password": {
+        "show": "Show password",
+        "hide": "Hide password"
+      },
+      "array": {
+        "add": "Add entry",
+        "remove": "Remove entry {{position}}",
+        "reorder": "Reorder",
+        "dragHandle": "Drag to reorder entry {{position}}",
+        "roleDescription": "sortable entry",
+        "dragInstructions": "To pick up an entry, press Space or Enter. Move it with the arrow keys, then press Space or Enter again to drop it, or Escape to cancel.",
+        "dragStart": "Picked up entry {{position}}.",
+        "dragOver": "Entry {{position}} is over position {{target}}.",
+        "dragEnd": "Entry {{position}} dropped at position {{target}}.",
+        "dragCancel": "Moving cancelled. Entry {{position}} is back in its place.",
+        "empty": "No entries yet",
+        "actions": "Actions"
+      },
+      "union": {
+        "type": "Type"
+      },
+      "autocomplete": {
+        "noOptions": "No options",
+        "clear": "Clear",
+        "open": "Open list",
+        "close": "Close list",
+        "loading": "Loading …"
+      },
+      "date": {
+        "today": "Today",
+        "tomorrow": "Tomorrow",
+        "now": "Now"
+      },
+      "color": {
+        "pick": "Pick color",
+        "invalid": "Please enter a hex color such as #1a2b3c"
+      },
+      "secret": {
+        "show": "Show value",
+        "hide": "Hide value"
+      },
+      "view": {
+        "readOnly": "Read only",
+        "discard": "Discard changes",
+        "discardChanges": {
+          "title": "Discard unsaved changes?",
+          "body": "Your changes have not been saved and will be lost.",
+          "keep": "Keep editing",
+          "discard": "Discard"
+        },
+        "sectionErrors_one": "{{count}} error",
+        "sectionErrors_other": "{{count}} errors"
+      },
+      "value": {
+        "on": "On",
+        "off": "Off",
+        "empty": "(empty)",
+        "changed": "changed"
+      },
+      "units": {
+        "seconds": "seconds",
+        "seconds_one": "second",
+        "minutes": "minutes",
+        "minutes_one": "minute",
+        "days": "days",
+        "days_one": "day",
+        "milliseconds": "milliseconds",
+        "milliseconds_one": "millisecond"
+      },
+      "errors": {
+        "required": "This field is required",
+        "invalid": "This value is not valid",
+        "invalid_value": "Please choose one of the available options",
+        "not_multiple_of": "Please enter a multiple of {{divisor}}",
+        "unexpected": "The form could not be checked. Please try again.",
+        "server": "Saving failed. Please try again.",
+        "invalid_type": {
+          "string": "Please enter a text",
+          "number": "Please enter a number",
+          "int": "Please enter a whole number",
+          "boolean": "Please choose yes or no",
+          "date": "Please enter a valid date",
+          "array": "Please enter a list of values",
+          "object": "These details are incomplete"
+        },
+        "invalid_format": {
+          "default": "The format is not valid",
+          "email": "Please enter a valid email address",
+          "url": "Please enter a valid URL",
+          "regex": "The format is not valid",
+          "uuid": "Please enter a valid UUID"
+        },
+        "too_small": {
+          "string": {
+            "min": "Please enter at least {{minimum}} characters",
+            "exact": "Please enter exactly {{minimum}} characters"
+          },
+          "array": {
+            "min": "Please add at least {{minimum}} entries",
+            "exact": "Please add exactly {{minimum}} entries"
+          },
+          "number": {
+            "inclusive": "Please enter {{minimum}} or more",
+            "exclusive": "Please enter more than {{minimum}}"
+          },
+          "date": {
+            "inclusive": "Please choose {{minimum, P}} or later",
+            "exclusive": "Please choose a date after {{minimum, P}}"
+          }
+        },
+        "too_big": {
+          "string": {
+            "max": "Please enter at most {{maximum}} characters",
+            "exact": "Please enter exactly {{maximum}} characters"
+          },
+          "array": {
+            "max": "Please add at most {{maximum}} entries",
+            "exact": "Please add exactly {{maximum}} entries"
+          },
+          "number": {
+            "inclusive": "Please enter {{maximum}} or less",
+            "exclusive": "Please enter less than {{maximum}}"
+          },
+          "date": {
+            "inclusive": "Please choose {{maximum, P}} or earlier",
+            "exclusive": "Please choose a date before {{maximum, P}}"
+          }
+        }
+      }
+    },
     "errorMessages": {
       "invalidEmailErrorMessage": "Please enter a valid email address",
       "invalidRange": "Value out of range. Please input a number between {{min}} and {{max}}.",
@@ -2623,12 +2768,14 @@
         "subscriptionUpgradeModel": "When enabled, an upgrade always charges the difference between the new and current plan price, regardless of how much time is left in the current period. When disabled, only the unused (pro-rated) remainder of the current period is credited.",
         "sessionTtlDays": "How long a login stays valid before signing in again is required. Applies from the next login; sessions already open keep their lifetime.",
         "emailQualityUnresponsiveAfterDays": "An email address counts as “unresponsive” when this many days passed without a login or a click in a mail, although mails were delivered. Re-evaluated nightly and via “Refresh statuses”.",
-        "emailQualityMinMailsForUnresponsive": "This many mails must have been delivered to the address before it can count as “unresponsive”."
+        "emailQualityMinMailsForUnresponsive": "This many mails must have been delivered to the address before it can count as “unresponsive”.",
+        "emailQualityEvidenceWarnAfterDays": "After this many days without a delivery report from the mail service (webhook, poll, newsletter audience), the communication tool and the delivery channel page warn that the email status rests on logins alone."
       },
       "sessionTtlDays": "Session lifetime",
       "emailQuality": "Email quality",
       "emailQualityUnresponsiveAfterDays": "“Unresponsive” after … days",
       "emailQualityMinMailsForUnresponsive": "… delivered mails",
+      "emailQualityEvidenceWarnAfterDays": "Warn without delivery reports after … days",
       "info": {
         "printIssuesPerYear": "How many printed issues a yearly subscription is worth. Readers whose paid period ends stay in the print exports until they received that many. 0 switches the rule off until the import has brought in the earlier issues of the year.",
         "allowCommentEditing": "Readers can still change the text of their own comments after posting them.",
@@ -3645,6 +3792,7 @@
         "bexioInvoiceMailBodyNewMembership": "Invoice Mail Body (New Membership)",
         "bexioInvoiceMailBodyRenewalMembership": "Invoice Mail Body (Renewal Membership)",
         "bexioMarkInvoiceAsOpen": "Mark Invoice as Open",
+        "bexioContactSync": "Sync contacts to Bexio nightly",
         "bexioInvoiceTitleNewMembership": "Invoice Title (New Membership)",
         "bexioInvoiceTitleRenewalMembership": "Invoice Title (Renewal Membership)",
         "typeInfo": "The payment service this integration is connected to. It is set when the integration is created and cannot be changed.",
@@ -3665,7 +3813,11 @@
         "bexioInvoiceTitleInfo": "The title printed on the invoice. You can use different titles for new subscriptions and renewals.",
         "bexioInvoiceMailSubjectInfo": "The subject of the email Bexio sends with the invoice. Placeholders such as :user.firstName: or :memberPlan.name: are replaced automatically.",
         "bexioInvoiceMailBodyInfo": "The text of the email Bexio sends with the invoice; the PDF is attached. Placeholders such as :user.firstName: or :memberPlan.name: are replaced automatically. Bexio requires the placeholder [Network Link] in the text.",
-        "bexioMarkInvoiceAsOpenInfo": "When enabled, Bexio sets the invoice to «open» after sending it, instead of leaving it as a draft."
+        "bexioMarkInvoiceAsOpenInfo": "When enabled, Bexio sets the invoice to «open» after sending it, instead of leaving it as a draft.",
+        "bexioContactSyncInfo": "When enabled, We.Publish pushes the name, company, email and address of changed readers to their Bexio contact every night and creates missing contacts for subscriptions paid through Bexio. Groups, phone and everything else on the contact stay as they are in Bexio.",
+        "bexioContactSyncNeverRan": "Has not run yet.",
+        "bexioContactSyncLastRun": "Last run: {{date}}, without errors.",
+        "bexioContactSyncLastRunFailed": "Last run: {{date}}. Error: {{error}}"
       },
       "placeholderSecret": "Unchanged (Hidden)",
       "secretNotSet": "Not set",
@@ -3708,17 +3860,26 @@
         "smtpUser": "SMTP Username",
         "smtpPassword": "SMTP Password",
         "webhookEndpointSecret": "Webhook Endpoint Secret",
-        "typeInfo": "The service that sends the emails. MAILCHIMP stands for Mailchimp Transactional (Mandrill). SLACK and LOG don't deliver anything to readers – they are only meant for testing.",
+        "typeInfo": "The service that sends the emails. MAILCHIMP stands for Mailchimp Transactional (Mandrill), BREVO for Brevo (formerly Sendinblue). SLACK and LOG don't deliver anything to readers – they are only meant for testing.",
         "fromAddressInfo": "The sender address readers see, e.g. abo@example.ch. Its domain must be verified with the mail service, otherwise emails may end up in spam.",
         "replyToAddressInfo": "Where replies go when someone answers one of your emails. If empty, replies go to the sender address.",
-        "apiKeyInfo": "The API key from your account with the mail service (Mailchimp Transactional/Mandrill or Mailgun). Without it, no emails can be sent.",
-        "webhookEndpointSecretInfo": "Lets We.Publish check that delivery reports (e.g. bounces) really come from the mail service. Copy the webhook signing key from Mandrill or Mailgun. Without it, the delivery status is not updated.",
+        "apiKeyInfo": "The API key from your account with the mail service (Mailchimp Transactional/Mandrill, Mailgun or Brevo). Without it, no emails can be sent.",
+        "webhookEndpointSecretInfo": "Lets We.Publish check that delivery reports (e.g. bounces) really come from the mail service. Copy the webhook signing key from Mandrill or Mailgun. For Brevo, choose a random password and append it as ?key=… to the webhook URL you enter in Brevo. Without it, the delivery status is not updated.",
         "mailgunBaseDomainInfo": "The address of the Mailgun API without https://: api.mailgun.net, or api.eu.mailgun.net if your account is hosted in the EU.",
         "mailgunMailDomainInfo": "The sending domain you set up in Mailgun, e.g. mg.example.ch.",
         "slackWebhookUrlInfo": "The address of a Slack incoming webhook. Instead of being delivered, every email is posted to that Slack channel – useful for testing.",
         "smtpHostInfo": "The address of the outgoing mail server, e.g. smtp.example.ch. Your email provider tells you which one to use.",
         "smtpPortInfo": "Usually 587 or 465 – see your email provider's instructions.",
-        "smtpSecureInfo": "Enable it for port 465. For port 587, leave it off – the connection is then encrypted via STARTTLS."
+        "smtpSecureInfo": "Enable it for port 465. For port 587, leave it off – the connection is then encrypted via STARTTLS.",
+        "evidence": {
+          "title": "Delivery reports",
+          "info": "Shows whether the mail service reaches We.Publish. If both stay empty, the email status of your users rests on logins and newsletter clicks alone.",
+          "lastWebhookAt": "Last report by webhook",
+          "lastPollAt": "Last poll",
+          "lastPollError": "Error on the last poll",
+          "never": "never",
+          "notReporting": "This service reports no delivery states."
+        }
       },
       "trackingPixelSettings": {
         "type": "Type",
@@ -3747,10 +3908,35 @@
         "articlePrefixInfo": "The part of the address that comes before an article's slug on your website. Only page views of addresses starting with it count as article reads.",
         "propertyInfo": "The numeric ID of your Google Analytics 4 property (not the G-… measurement ID). You find it in Google Analytics under «Admin» → «Property details».",
         "credentialsInfo": "The JSON key file of a Google Cloud service account with read access to your Analytics property. Drag the file into the box below; it is only stored when you save.",
-        "readFileError": "The file could not be read."
+        "readFileError": "The file could not be read.",
+        "hotAndTrending": "Use for Hot & Trending",
+        "hotAndTrendingInfo": "Hot & Trending reads its page views from this provider. Only one provider can be used at a time, choosing this one turns it off for the others.",
+        "apiKey": "API key",
+        "plausibleApiKeyInfo": "A Stats API key from your Plausible account settings («API Keys»). On Plausible Cloud the Stats API needs a Business plan.",
+        "umamiApiKeyInfo": "An API key from Umami Cloud («Settings» → «API keys»), or the token of a user with access to the website for a self-hosted Umami.",
+        "plausibleSiteId": "Site domain",
+        "plausibleSiteIdInfo": "The domain of the site as you added it to Plausible, e.g. example.com.",
+        "umamiWebsiteId": "Website ID",
+        "umamiWebsiteIdInfo": "The ID of the website in Umami. You find it under «Settings» → «Websites» → «Edit».",
+        "plausibleUrl": "Plausible URL",
+        "plausibleUrlInfo": "Only needed for a self-hosted Plausible, e.g. https://plausible.example.com. Leave it empty to use plausible.io.",
+        "umamiUrl": "Umami API URL",
+        "umamiUrlInfo": "Only needed for a self-hosted Umami, e.g. https://umami.example.com/api. Leave it empty to use Umami Cloud."
       },
       "mailchimpSync": "Mailchimp Sync",
       "mailchimpSyncSettings": {
+        "audienceWebhook": {
+          "title": "Reports from the audience",
+          "info": "Mailchimp tells We.Publish right away when a contact was cleaned (bounces, abuse) or unsubscribed. Without the webhook this arrives with the nightly sync only. We.Publish registers the webhook at Mailchimp itself; the API has to be reachable from Mailchimp for that.",
+          "registeredAt": "Registered at Mailchimp on {{date}}",
+          "notRegistered": "Not registered at Mailchimp yet.",
+          "lastReceived": "Last report",
+          "never": "none yet",
+          "register": "Register webhook at Mailchimp",
+          "renew": "Renew registration",
+          "registered": "The webhook is registered at Mailchimp.",
+          "failed": "Mailchimp refused the registration: {{error}}"
+        },
         "enabled": "Enabled",
         "apiKey": "Mailchimp API Key",
         "listId": "Mailchimp List/Audience ID",
@@ -3855,7 +4041,7 @@
       "paymentProviderInfo": "Services that process the payments for subscriptions, e.g. Payrexx, Stripe, Mollie or invoices via Bexio.",
       "trackingPixelInfo": "Adds the ProLitteris counting pixel to your articles so that their reads count towards your copyright royalties.",
       "mailProviderInfo": "The service We.Publish uses to send emails, such as login links, payment reminders or subscription confirmations.",
-      "analyticsInfo": "Reads the page views from Google Analytics to find out which articles are currently read the most (Hot & Trending).",
+      "analyticsInfo": "Reads the page views from Google Analytics, Plausible or Umami to find out which articles are currently read the most (Hot & Trending).",
       "mailchimpSyncInfo": "Transfers all active user accounts and their subscription data to a Mailchimp audience every night, so you can target newsletters by subscription.",
       "lastLoadedInfo": "When We.Publish last loaded this configuration, e.g. to process a payment. This shows you whether the integration is in use.",
       "setUp": "Set up",
@@ -3896,16 +4082,13 @@
           "pro": "<url>Piwik PRO</url> is a privacy-focused analytics platform and an alternative to Google Analytics.",
           "proLocator": "You can find it in the Menu > Administration > Site > ID of your administration panel",
           "proInvalid": "Must be a valid Piwik ID (e.g., xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)"
-        }
-      },
-      "mail": {
-        "title": "Mail",
-        "mailchimp": {
-          "title": "Mailchimp",
-          "enable": "Enable Mailchimp",
-          "mailchimp": "<url>Mailchimp</url> is an email marketing platform that lets you manage newsletters and subscriber lists. This gives the website access to your newsletters and lets it display them.",
-          "apiKeyLocator": "You can find it in the <url>API keys section</url> of your Mailchimp account. Make sure that it is a Mailchimp key and not a Mandrill key.",
-          "apiKeyInvalid": "Must be a valid Mailchimp API-Key (e.g., XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX-us1)"
+        },
+        "umami": {
+          "title": "Umami",
+          "enable": "Enable Umami",
+          "um": "<url>Umami</url> is a privacy-focused, open source alternative to Google Analytics.",
+          "umLocator": "You can find it in the <url>website settings</url> of your Umami dashboard",
+          "umInvalid": "Must be a valid website ID (e.g., xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)"
         }
       },
       "ads": {
@@ -4336,6 +4519,12 @@
         "refresh": "Refresh statuses",
         "refreshing": "Refreshing statuses …",
         "refreshed": "{{updated}} delivery states fetched from the provider ({{checked}} checked), {{recomputed}} people re-evaluated."
+      },
+      "emailEvidence": {
+        "noProviderReports": "The mail service ({{provider}}) reports no delivery states. The email status rests on logins, confirmed addresses and newsletter clicks alone.",
+        "never": "No delivery report has ever arrived from the mail service. The email status rests on logins alone. Check the webhook secret in the integrations and the nightly poll.",
+        "stale": "No delivery report from the mail service for {{days}} days (last one {{lastAt}}). Check the webhook and the nightly poll.",
+        "pollError": "The last poll of the mail service failed: {{error}}"
       },
       "endedWindow": {
         "label": "When the subscription was deactivated",

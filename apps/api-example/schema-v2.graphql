@@ -57,6 +57,8 @@ type AllowedSettingVals {
 
 enum AnalyticsProviderType {
   GOOGLE
+  PLAUSIBLE
+  UMAMI
 }
 
 type ApiToken {
@@ -1487,6 +1489,57 @@ enum EditorBlockType {
 }
 
 """
+Where the email status comes from: whether the mail provider reports anything, when it last did, and how much evidence arrived lately.
+"""
+type EmailEvidenceModel {
+  """When the provider was last asked for delivery states."""
+  lastPollAt: DateTime
+
+  """What went wrong on the last poll; null when it succeeded."""
+  lastPollError: String
+
+  """
+  Newest evidence from any provider source. Null means the status rests on logins and confirmations alone.
+  """
+  lastProviderEvidenceAt: DateTime
+
+  """When the provider last called the webhook with a verified request."""
+  lastWebhookAt: DateTime
+  providerName: String
+
+  """
+  Whether the configured provider reports delivery outcomes at all. SMTP never does.
+  """
+  providerReportsDelivery: Boolean!
+  providerType: MailProviderType
+  sources: [EmailEvidenceSourceModel!]!
+
+  """
+  Days without provider evidence after which the editor warns (setting emailQualityEvidenceWarnAfterDays).
+  """
+  warnAfterDays: Int!
+}
+
+type EmailEvidenceSourceModel {
+  """Events of this source in the last 30 days."""
+  count: Int!
+
+  """When the newest event of this source arrived, ever."""
+  lastAt: DateTime
+  source: EmailQualityEventSource!
+}
+
+"""
+send: the provider refused the address when a mail was sent. webhook: the provider reported it. poll: asked of the provider or read from a newsletter audience. verification: an address verification service.
+"""
+enum EmailQualityEventSource {
+  poll
+  send
+  verification
+  webhook
+}
+
+"""
 active: logged in or clicked recently. unknown: nothing decided. unresponsive: mails delivered, no reaction for a long time. dead: bounced, invalid, complained or unsubscribed.
 """
 enum EmailQualityLevel {
@@ -2684,6 +2737,7 @@ type MailProviderModel {
 }
 
 enum MailProviderType {
+  BREVO
   LOG
   MAILCHIMP
   MAILGUN
@@ -2964,6 +3018,15 @@ type MailTemplateRef {
 type MailTemplateSubscriptionOption {
   id: String!
   label: String!
+}
+
+"""
+The audience webhook the api registered at Mailchimp; the URL carries the secret.
+"""
+type MailchimpAudienceWebhook {
+  registeredAt: DateTime!
+  url: String!
+  webhookId: String!
 }
 
 input MailchimpContactInput {
@@ -3589,7 +3652,21 @@ type Mutation {
   createAISetting(apiKey: String, id: String!, name: String, systemPrompt: String, type: AIProviderType!, webhookEndpointSecret: String): SettingAIProvider!
 
   """Creates a new analytics provider setting."""
-  createAnalyticsProviderSetting(articlePrefix: String, credentials: SettingAnalyticsCredentialsInput, id: String!, name: String, property: String, type: AnalyticsProviderType!): SettingAnalyticsProvider!
+  createAnalyticsProviderSetting(
+    """Api key of Plausible or Umami."""
+    apiKey: String
+    articlePrefix: String
+
+    """Service account credentials of Google Analytics."""
+    credentials: SettingAnalyticsCredentialsInput
+    id: String!
+    name: String
+    property: String
+    type: AnalyticsProviderType!
+
+    """Base url of the API, used for self hosted instances."""
+    url: String
+  ): SettingAnalyticsProvider!
 
   """
   Creates an api token and returns its secret. The secret is shown once and cannot be retrieved again.
@@ -3728,7 +3805,7 @@ type Mutation {
   createPaymentMethod(active: Boolean!, description: String!, gracePeriod: Int!, imageId: String, name: String!, paymentProviderID: String!, slug: Slug!): PaymentMethod!
 
   """Creates a new payment provider setting."""
-  createPaymentProviderSetting(apiKey: String, bexio_accountId: Float, bexio_countryId: Float, bexio_invoiceMailBodyNewMembership: String, bexio_invoiceMailBodyRenewalMembership: String, bexio_invoiceMailSubjectNewMembership: String, bexio_invoiceMailSubjectRenewalMembership: String, bexio_invoiceTemplateNewMembership: String, bexio_invoiceTemplateRenewalMembership: String, bexio_invoiceTitleNewMembership: String, bexio_invoiceTitleRenewalMembership: String, bexio_markInvoiceAsOpen: Boolean, bexio_taxId: Float, bexio_unitId: Float, bexio_userId: Float, id: String!, mollie_apiBaseUrl: String, mollie_methods: [PaymentMethodMollie!], name: String, offSessionPayments: Boolean, payrexx_instancename: String, payrexx_pm: [PayrexxPM!], payrexx_psp: [PayrexxPSP!], payrexx_vatrate: String, simulated_declineRenewals: Boolean, stripe_methods: [StripePaymentMethod!], type: PaymentProviderType!, webhookEndpointSecret: String): SettingPaymentProvider!
+  createPaymentProviderSetting(apiKey: String, bexio_accountId: Float, bexio_contactSync: Boolean, bexio_countryId: Float, bexio_invoiceMailBodyNewMembership: String, bexio_invoiceMailBodyRenewalMembership: String, bexio_invoiceMailSubjectNewMembership: String, bexio_invoiceMailSubjectRenewalMembership: String, bexio_invoiceTemplateNewMembership: String, bexio_invoiceTemplateRenewalMembership: String, bexio_invoiceTitleNewMembership: String, bexio_invoiceTitleRenewalMembership: String, bexio_markInvoiceAsOpen: Boolean, bexio_taxId: Float, bexio_unitId: Float, bexio_userId: Float, id: String!, mollie_apiBaseUrl: String, mollie_methods: [PaymentMethodMollie!], name: String, offSessionPayments: Boolean, payrexx_instancename: String, payrexx_pm: [PayrexxPM!], payrexx_psp: [PayrexxPSP!], payrexx_vatrate: String, simulated_declineRenewals: Boolean, stripe_methods: [StripePaymentMethod!], type: PaymentProviderType!, webhookEndpointSecret: String): SettingPaymentProvider!
 
   """Creates a paywall."""
   createPaywall(active: Boolean!, alternativeSubscribeUrl: String, anyMemberPlan: Boolean!, bypassTokens: [String!]!, circumventDescription: RichText, description: RichText, fadeout: Boolean!, hideContentAfter: Int!, memberPlanIds: [String!]!, name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
@@ -4107,6 +4184,11 @@ type Mutation {
   refreshEmailQuality: EmailQualityRefreshModel!
 
   """
+  Registers (or renews) the audience webhook at Mailchimp, so cleaned and unsubscribed members reach the email quality as they happen.
+  """
+  registerMailchimpAudienceWebhook(id: String!): MailchimpAudienceWebhook!
+
+  """
   This mutation registers a new member by providing name, email, and other required information.
   """
   registerMember(address: UserAddressInput, birthday: DateTime, challengeAnswer: ChallengeInput!, email: String!, firstName: String, flair: String, name: String!, password: String): Registration!
@@ -4242,7 +4324,23 @@ type Mutation {
   updateAISetting(apiKey: String, id: String, name: String, systemPrompt: String, webhookEndpointSecret: String): SettingAIProvider!
 
   """Updates an existing analytics provider setting."""
-  updateAnalyticsProviderSetting(articlePrefix: String, credentials: SettingAnalyticsCredentialsInput, id: String, name: String, property: String): SettingAnalyticsProvider!
+  updateAnalyticsProviderSetting(
+    """Api key of Plausible or Umami."""
+    apiKey: String
+    articlePrefix: String
+
+    """Service account credentials of Google Analytics."""
+    credentials: SettingAnalyticsCredentialsInput
+
+    """Uses this provider for Hot & Trending instead of the current one."""
+    hotAndTrending: Boolean
+    id: String
+    name: String
+    property: String
+
+    """Base url of the API, used for self hosted instances."""
+    url: String
+  ): SettingAnalyticsProvider!
 
   """Updates an article."""
   updateArticle(authors: [ArticleRevisionAuthorInput!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
@@ -4376,7 +4474,7 @@ type Mutation {
   updatePaymentMethod(active: Boolean, description: String, gracePeriod: Int, id: String!, imageId: String, name: String, paymentProviderID: String, slug: Slug): PaymentMethod!
 
   """Updates an existing payment provider setting."""
-  updatePaymentProviderSetting(apiKey: String, bexio_accountId: Float, bexio_countryId: Float, bexio_invoiceMailBodyNewMembership: String, bexio_invoiceMailBodyRenewalMembership: String, bexio_invoiceMailSubjectNewMembership: String, bexio_invoiceMailSubjectRenewalMembership: String, bexio_invoiceTemplateNewMembership: String, bexio_invoiceTemplateRenewalMembership: String, bexio_invoiceTitleNewMembership: String, bexio_invoiceTitleRenewalMembership: String, bexio_markInvoiceAsOpen: Boolean, bexio_taxId: Float, bexio_unitId: Float, bexio_userId: Float, id: String, mollie_apiBaseUrl: String, mollie_methods: [PaymentMethodMollie!], name: String, offSessionPayments: Boolean, payrexx_instancename: String, payrexx_pm: [PayrexxPM!], payrexx_psp: [PayrexxPSP!], payrexx_vatrate: String, simulated_declineRenewals: Boolean, stripe_methods: [StripePaymentMethod!], webhookEndpointSecret: String): SettingPaymentProvider!
+  updatePaymentProviderSetting(apiKey: String, bexio_accountId: Float, bexio_contactSync: Boolean, bexio_countryId: Float, bexio_invoiceMailBodyNewMembership: String, bexio_invoiceMailBodyRenewalMembership: String, bexio_invoiceMailSubjectNewMembership: String, bexio_invoiceMailSubjectRenewalMembership: String, bexio_invoiceTemplateNewMembership: String, bexio_invoiceTemplateRenewalMembership: String, bexio_invoiceTitleNewMembership: String, bexio_invoiceTitleRenewalMembership: String, bexio_markInvoiceAsOpen: Boolean, bexio_taxId: Float, bexio_unitId: Float, bexio_userId: Float, id: String, mollie_apiBaseUrl: String, mollie_methods: [PaymentMethodMollie!], name: String, offSessionPayments: Boolean, payrexx_instancename: String, payrexx_pm: [PayrexxPM!], payrexx_psp: [PayrexxPSP!], payrexx_vatrate: String, simulated_declineRenewals: Boolean, stripe_methods: [StripePaymentMethod!], webhookEndpointSecret: String): SettingPaymentProvider!
 
   """Updates a paywall."""
   updatePaywall(active: Boolean, alternativeSubscribeUrl: String, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, fadeout: Boolean, hideContentAfter: Int, id: String!, memberPlanIds: [String!], name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
@@ -4456,7 +4554,7 @@ type Mutation {
   updateVideo(description: String, id: String!, license: String, link: String, source: String, title: String): Video!
 
   """Updates the website settings."""
-  updateWebsiteSettings(ads: WebsiteAdsInput, analytics: WebsiteAnalyticsInput, fonts: [WebsiteRemoteFontInput!], mail: WebsiteMailInput, theme: JSONObject): WebsiteSettings!
+  updateWebsiteSettings(ads: WebsiteAdsInput, analytics: WebsiteAnalyticsInput, fonts: [WebsiteRemoteFontInput!], theme: JSONObject): WebsiteSettings!
 
   """"""
   upgradeUserSubscription(discountCode: String, failureURL: String, goodieId: String, memberPlanId: String!, monthlyAmount: Float!, paymentMethodId: String!, subscriptionId: String!, successURL: String): Payment!
@@ -6213,6 +6311,11 @@ type Query {
   """Returns a paginated list of documents based on the filters given."""
   documents(cursorId: String, filter: DocumentFilter, order: SortOrder = Descending, skip: Int = 0, sort: DocumentSort = ModifiedAt, take: Int = 10): PaginatedDocuments!
 
+  """
+  Where the email status comes from: whether and when the mail provider reported anything. The editor warns when no provider evidence arrived for a while.
+  """
+  emailEvidence: EmailEvidenceModel!
+
   """Returns an event by id."""
   event(id: String!): Event!
 
@@ -6926,6 +7029,9 @@ input SettingAnalyticsCredentialsInput {
 type SettingAnalyticsProvider implements SettingProvider {
   articlePrefix: String
   createdAt: DateTime!
+
+  """Whether this provider powers the Hot & Trending query."""
+  hotAndTrending: Boolean!
   id: String!
 
   """
@@ -6937,6 +7043,9 @@ type SettingAnalyticsProvider implements SettingProvider {
   name: String
   property: String
   type: AnalyticsProviderType!
+
+  """Base url of the API, used for self hosted instances."""
+  url: String
 }
 
 input SettingAnalyticsProviderFilter {
@@ -7008,6 +7117,15 @@ type SettingMailProvider implements SettingProvider {
   """
   isWebhookEndpointSecretSet: Boolean!
   lastLoadedAt: DateTime!
+
+  """When the provider was last asked for delivery states."""
+  lastPollAt: DateTime
+
+  """What went wrong on the last poll; null when it succeeded."""
+  lastPollError: String
+
+  """When the provider last called the webhook with a verified request."""
+  lastWebhookAt: DateTime
   mailchimp_baseURL: String
   mailgun_baseDomain: String
   mailgun_mailDomain: String
@@ -7034,6 +7152,7 @@ enum SettingName {
   ALLOW_GUEST_COMMENT_RATING
   ALLOW_GUEST_POLL_VOTING
   COMMENT_CHAR_LIMIT
+  EMAIL_QUALITY_EVIDENCE_WARN_AFTER_DAYS
   EMAIL_QUALITY_MIN_MAILS_FOR_UNRESPONSIVE
   EMAIL_QUALITY_UNRESPONSIVE_AFTER_DAYS
   MAIL_PROVIDER_NAME
@@ -7060,6 +7179,9 @@ enum SettingName {
 
 type SettingPaymentProvider implements SettingProvider {
   bexio_accountId: Float
+  bexio_contactSync: Boolean
+  bexio_contactSyncAt: DateTime
+  bexio_contactSyncError: String
   bexio_countryId: Float
   bexio_invoiceMailBodyNewMembership: String
   bexio_invoiceMailBodyRenewalMembership: String
@@ -7146,6 +7268,9 @@ type SettingSyncProvider implements SettingProvider {
   lastLoadedAt: DateTime!
   lastSyncAt: DateTime
   lastSyncError: String
+
+  """When the audience webhook last delivered a verified call."""
+  lastWebhookAt: DateTime
   mailchimp_defaultInterestGroupIds: [String!]
   mailchimp_extensions: JSONObject
   mailchimp_interestGroupMappings: [JSONObject!]
@@ -7154,6 +7279,10 @@ type SettingSyncProvider implements SettingProvider {
   mailchimp_isApiKeySet: Boolean!
   mailchimp_listId: String
   mailchimp_mergeFieldMappings: [JSONObject!]
+
+  """Id of the audience webhook the api registered at Mailchimp."""
+  mailchimp_webhookId: String
+  mailchimp_webhookRegisteredAt: DateTime
   modifiedAt: DateTime!
   name: String
   type: SyncProviderType!
@@ -8201,6 +8330,7 @@ type WebsiteAnalytics {
   googleTagManager: KeyEnabled!
   piwik: KeyEnabled!
   plausible: KeyEnabled!
+  umami: KeyEnabled!
 }
 
 input WebsiteAnalyticsInput {
@@ -8208,14 +8338,7 @@ input WebsiteAnalyticsInput {
   googleTagManager: KeyEnabledInput!
   piwik: KeyEnabledInput!
   plausible: KeyEnabledInput!
-}
-
-type WebsiteMail {
-  mailchimp: KeyEnabled
-}
-
-input WebsiteMailInput {
-  mailchimp: KeyEnabledInput!
+  umami: KeyEnabledInput!
 }
 
 type WebsiteRemoteFont {
@@ -8234,7 +8357,6 @@ type WebsiteSettings {
   ads: WebsiteAds!
   analytics: WebsiteAnalytics!
   fonts: [WebsiteRemoteFont!]!
-  mail: WebsiteMail!
   theme: JSONObject!
 }
 

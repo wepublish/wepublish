@@ -1,0 +1,33 @@
+{
+  "name": "form-editor",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/form/editor/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/form/editor",
+        "tsConfig": "libs/form/editor/tsconfig.lib.json",
+        "main": "libs/form/editor/src/index.ts",
+        "rootDir": "."
+      }
+    },
+    "test": {
+      "options": {
+        "config": "../../../{projectRoot}/vitest.config.ts"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit -p libs/form/editor/tsconfig.spec.json --incremental --tsBuildInfoFile tmp/tsc-cache/form-editor-spec.tsbuildinfo",
+        "env": {
+          "NODE_OPTIONS": "--max-old-space-size=8192"
+        }
+      }
+    }
+  }
+}

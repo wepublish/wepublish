@@ -903,6 +903,12 @@ compiler before ("Compilation Skipped: Use of incompatible library"); removing
 `watch` lets it compile them, which can surface fresh `set-state-in-effect`
 errors in code that was never checked.
 
+Two siblings, linted in `libs/form/*`: spreading RHF's form object
+(`{ ...form, extra }` is memoised on `form`, whose `formState` RHF swaps every
+render, so `isLoading` stays `true`) and reading `useFormContext().formState`
+(frozen at its first value) — use the `useSchemaForm` handle and
+`useFormState`/`useFormStatus` ([libs/form/README.md](../../libs/form/README.md#react-compiler-rules)).
+
 ---
 
 ### ⚠️ The compiler turns a hoisted inner function into a `const`
@@ -1211,6 +1217,12 @@ so the media image ships `/wepublish/ca.crt` for `NODE_EXTRA_CA_CERTS`.
 
 ---
 
+### ⚠️ Prisma 7 with the pg adapter names the unique index, not the fields
+
+The API sends ``Unique constraint failed on the constraint: `consents_slug_key` ``, which `humanizeError`'s `fields: (…)` regex misses; match it with `uniqueConstraint(...)` from `@wepublish/form/editor` (pinned by `libs/form/editor/src/lib/view/unique-constraint.spec.ts`).
+
+---
+
 ### ⚠️ The newsletter renderer is shared, and several things keep it working
 
 `libs/newsletter/email` draws the Puck canvas *and* the mail. Load-bearing:
@@ -1351,6 +1363,30 @@ must be static asset imports and the proof is
 Only `ganzgraz` and `munotgloeggli` take `settingsTheme`; every other tenant's
 `createTheme: () => theme` ignores it deliberately, so wiring the prop
 elsewhere is a behaviour change, not a fix.
+
+---
+
+### ⚠️ Cancelling an unsent renewal invoice does not make the nightly job create it again
+
+`PeriodicJobService.createRemoteInvoice`
+(`libs/membership/api/src/lib/periodic-job/periodic-job.service.ts`)
+hard-deletes the we.publish invoice — payment, `subscriptionPeriod`,
+`invoiceItem`, invoice, in that order — when the payment provider could not
+create its side of it.
+
+`getActiveSubscriptionsWithoutInvoice` (`subscription.service.ts`) requires not
+only no open invoice but `periods: { none: { startsAt: { gt: runDate } } }`.
+The invoice's period starts in the future (the invoice is created up to 90 days
+ahead), so `canceledAt` alone keeps the subscription excluded until `paidUntil`,
+and `getNextPeriod` then continues after the orphaned period: a whole
+periodicity of coverage is skipped.
+
+**Load-bearing:** all four deletes. `SubscriptionPeriod.invoiceID` has no
+cascade and `InvoiceItem.invoiceId` is `SetNull`, so each must go explicitly,
+as `upgrade-subscription.service.ts` does.
+
+Pinned by `periodic-job.service.spec.ts` («removes the invoice when the
+provider could not create it»).
 
 ---
 

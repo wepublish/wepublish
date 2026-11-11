@@ -5,6 +5,7 @@ import Mailgun from 'mailgun.js';
 import {
   MailLogStatus,
   MailProviderError,
+  MailProviderMessageState,
   MailProviderTemplate,
   MailProviderTemplateContent,
   MailQualitySignal,
@@ -34,6 +35,90 @@ function mapMailgunEventToMailLogState(event: string): MailLogState | null {
     default:
       return null;
   }
+}
+
+/**
+ * The polled events carry the severity, so a temporary failure Mailgun will
+ * retry does not count as a bounce there.
+ */
+function mapPolledEventToMailLogState(
+  data: MailgunEventData
+): MailLogState | null {
+  if (data.event === 'failed' && data.severity === 'temporary') {
+    return MailLogState.deferred;
+  }
+
+  return mapMailgunEventToMailLogState(data.event ?? '');
+}
+
+/** The one page size Mailgun's list endpoints accept at most. */
+const SUPPRESSION_PAGE = 1000;
+
+/** How many events to read per message; a mail rarely has more than a handful. */
+const EVENTS_PER_MESSAGE = 300;
+
+type MailgunSuppression = {
+  address?: string;
+  code?: number | string;
+  error?: string;
+  tags?: unknown;
+  created_at?: string | Date;
+};
+
+const suppressionDate = (
+  value: string | Date | undefined
+): Date | undefined => {
+  if (!value) {
+    return undefined;
+  }
+
+  const date = value instanceof Date ? value : new Date(value);
+
+  return Number.isNaN(date.getTime()) ? undefined : date;
+};
+
+/**
+ * What an entry of one of Mailgun's suppression lists says about the address.
+ * A domain-wide unsubscribe (tag `*`) makes Mailgun refuse every mail, so it
+ * is as dead as a bounce; an unsubscribe from a tag is the person's choice.
+ */
+function mapSuppressionToQualitySignal(
+  list: 'bounces' | 'complaints' | 'unsubscribes',
+  entry: MailgunSuppression
+): MailQualitySignal | null {
+  const email = entry.address?.trim().toLowerCase();
+
+  if (!email) {
+    return null;
+  }
+
+  const occurredAt = suppressionDate(entry.created_at);
+  const tags =
+    Array.isArray(entry.tags) ?
+      entry.tags.filter((tag): tag is string => typeof tag === 'string')
+    : [];
+  const domainWide = !tags.length || tags.includes('*');
+  const [type, detail, kind]: [EmailQualityEventType, string | null, string] =
+    list === 'bounces' ?
+      [EmailQualityEventType.hardBounce, entry.error || null, 'bounce']
+    : list === 'complaints' ?
+      [EmailQualityEventType.spamComplaint, null, 'complaint']
+    : domainWide ? [EmailQualityEventType.unsubscribed, null, 'unsubscribe']
+    : [
+        EmailQualityEventType.optedOut,
+        `mailgun:${tags.join(',')}`,
+        'unsubscribe',
+      ];
+
+  return {
+    type,
+    email,
+    detail,
+    occurredAt,
+    providerEventId: `mailgun-${kind}:${email}:${
+      occurredAt?.toISOString() ?? ''
+    }`,
+  };
 }
 
 type MailgunEventData = {
@@ -155,8 +240,8 @@ export class MailgunMailProvider extends BaseMailProvider {
   }
 
   /**
-   * Delivery states arrive through Mailgun's webhook, so no message id is kept
-   * for polling — `getMessageStates` stays unimplemented for this provider.
+   * Mailgun answers an accepted mail with its Message-Id, kept so the delivery
+   * state can be polled from the events API when the webhook never arrives.
    */
   async sendMail(props: SendMailProps): Promise<SendMailResult> {
     const config = await this.getConfig();
@@ -199,10 +284,108 @@ export class MailgunMailProvider extends BaseMailProvider {
             );
           }
 
-          return resolve({});
+          // The events API knows the id without the angle brackets the
+          // answer wraps it in.
+          let body = '';
+          res.setEncoding('utf8');
+          res.on('data', (chunk: string) => {
+            body += chunk;
+          });
+          res.on('end', () => {
+            try {
+              const id = (JSON.parse(body) as { id?: unknown }).id;
+
+              resolve(
+                typeof id === 'string' && id ?
+                  { providerMessageID: id.replace(/^<|>$/g, '') }
+                : {}
+              );
+            } catch {
+              resolve({});
+            }
+          });
         }
       );
     });
+  }
+
+  /**
+   * One events lookup per message. The newest event with a state wins; every
+   * event may still say something about the address (a complaint after a
+   * delivery). Messages Mailgun has no events for any more are skipped.
+   */
+  override async getMessageStates(
+    providerMessageIDs: string[]
+  ): Promise<MailProviderMessageState[]> {
+    const { client, mailDomain } = await this.getMailgunClient();
+    const states: MailProviderMessageState[] = [];
+
+    for (const providerMessageID of providerMessageIDs) {
+      const result = await client.events
+        .get(mailDomain, {
+          'message-id': providerMessageID,
+          limit: EVENTS_PER_MESSAGE,
+        })
+        .catch(() => null);
+      const events = ((result?.items ?? []) as MailgunEventData[])
+        .slice()
+        .sort((a, b) => (a.timestamp ?? 0) - (b.timestamp ?? 0));
+      const newest = events
+        .map(data => ({ data, state: mapPolledEventToMailLogState(data) }))
+        .filter(({ state }) => state !== null)
+        .pop();
+
+      if (!newest) {
+        continue;
+      }
+
+      states.push({
+        providerMessageID,
+        state: newest.state as MailLogState,
+        mailData: JSON.stringify(newest.data),
+        qualitySignals: events.flatMap(data => {
+          const signal = mapMailgunEventToQualitySignal(data);
+
+          return signal ? [signal] : [];
+        }),
+      });
+    }
+
+    return states;
+  }
+
+  /** Bounces, complaints and unsubscribes of the sending domain, paged through. */
+  override async listSuppressions(): Promise<MailQualitySignal[]> {
+    const { client, mailDomain } = await this.getMailgunClient();
+    const signals: MailQualitySignal[] = [];
+
+    for (const list of ['bounces', 'complaints', 'unsubscribes'] as const) {
+      let page: string | undefined;
+
+      for (;;) {
+        const result = await client.suppressions.list(mailDomain, list, {
+          limit: SUPPRESSION_PAGE,
+          ...(page ? { page } : {}),
+        });
+        const items = (result.items ?? []) as MailgunSuppression[];
+
+        for (const entry of items) {
+          const signal = mapSuppressionToQualitySignal(list, entry);
+
+          if (signal) {
+            signals.push(signal);
+          }
+        }
+
+        const next = result.pages?.next?.page as string | undefined;
+        if (!items.length || !next || next === page) {
+          break;
+        }
+        page = next;
+      }
+    }
+
+    return signals;
   }
 
   async getTemplateContent(

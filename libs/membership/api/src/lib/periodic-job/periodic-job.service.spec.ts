@@ -6,7 +6,10 @@ import {
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   Currency,
+  MailChannel,
+  MailLogState,
   PaymentPeriodicity,
+  PaymentState,
   SubscriptionEvent,
   User,
 } from '@prisma/client';
@@ -18,6 +21,7 @@ import {
   isPeriodicJobRunning,
   PeriodicJobService,
 } from './periodic-job.service';
+import { InvoiceDeliveryService } from './invoice-delivery.service';
 import { InvoicePaidNotifier, PaymentsService } from '@wepublish/payment/api';
 import { PaymentMethodChangeService } from '../payment-method-change/payment-method-change.service';
 import { DistributedLocks, type LockResult } from '@wepublish/dragonfly/api';
@@ -262,6 +266,7 @@ describe('PeriodicJobService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         PeriodicJobService,
+        InvoiceDeliveryService,
         { provide: PrismaClient, useValue: mockPrisma },
         { provide: SubscriptionService, useValue: mockSubscriptionController },
         { provide: MailContext, useValue: mockMailContext },
@@ -896,6 +901,373 @@ describe('PeriodicJobService', () => {
       await expect(
         service['sendTemplateMail'](action(true), user, false, {}, new Date())
       ).resolves.toBeUndefined();
+    });
+  });
+
+  describe('the invoice at the payment provider', () => {
+    const runDate = startOfDay(new Date('2026-11-02T03:00:00'));
+    const user = { id: 'user-1', email: 'jane@example.com' } as User;
+    const subscription: any = {
+      id: 'sub-1',
+      memberPlanID: 'mp-1',
+      paymentMethodID: 'pm-1',
+      autoRenew: true,
+      paymentPeriodicity: PaymentPeriodicity.yearly,
+      // the default flow invoices 14 days ahead
+      paidUntil: add(runDate, { days: 14 }),
+      periods: [],
+      user,
+      memberPlan: { name: 'Plan' },
+    };
+    const createdInvoice = { id: 'inv-1', items: [] };
+    const intent = {
+      intentID: '42',
+      intentSecret: '',
+      intentData: '{"id":42}',
+      state: PaymentState.submitted,
+    };
+    const document = {
+      content: Buffer.from('pdf'),
+      name: 'RE-1.pdf',
+      mime: 'application/pdf',
+    };
+    let provider: { createRemoteInvoice: Mock; renderRemoteInvoice: Mock };
+    let letterSender: {
+      isConfigured: Mock;
+      canReceiveLetters: Mock;
+      sendLetter: Mock;
+    };
+
+    const flowWithLetterInvoices = () =>
+      mockPrisma.subscriptionFlow.findMany.mockResolvedValue([
+        {
+          id: 'default-flow',
+          default: true,
+          memberPlanId: null,
+          autoRenewal: [],
+          periodicities: [],
+          paymentMethods: [],
+          intervals: [
+            {
+              id: 'interval-invoice-creation',
+              event: SubscriptionEvent.INVOICE_CREATION,
+              daysAwayFromEnding: -14,
+              mailTemplate: { id: 'mt-4' },
+              sendAsLetter: true,
+            },
+            {
+              id: 'interval-deactivation-unpaid',
+              event: SubscriptionEvent.DEACTIVATION_UNPAID,
+              daysAwayFromEnding: 5,
+              mailTemplate: { id: 'mt-5' },
+            },
+          ],
+        },
+      ]);
+
+    const createInvoice = () =>
+      service['createInvoice']({ date: runDate, isRetry: false }, subscription);
+
+    beforeEach(() => {
+      provider = {
+        createRemoteInvoice: vi.fn(async () => ({ intent })),
+        renderRemoteInvoice: vi.fn(async () => undefined),
+      };
+      mockPaymentsService.findPaymentProviderByPaymentMethodeId.mockResolvedValue(
+        provider
+      );
+      (mockPaymentsService as any).findByInvoiceId = vi.fn(async () => []);
+      mockSubscriptionController.createInvoice.mockResolvedValue(
+        createdInvoice
+      );
+      (mockPrisma as any).payment = {
+        create: vi.fn(async ({ data }) => ({ id: 'pay-1', ...data })),
+        update: vi.fn(),
+        delete: vi.fn(),
+        deleteMany: vi.fn(),
+      };
+      (mockPrisma as any).subscriptionPeriod = { deleteMany: vi.fn() };
+      (mockPrisma as any).invoiceItem = { deleteMany: vi.fn() };
+      (mockPrisma as any).invoice.delete = vi.fn();
+      letterSender = {
+        isConfigured: vi.fn(async () => true),
+        canReceiveLetters: vi.fn(() => true),
+        sendLetter: vi.fn(async () => 'log-1'),
+      };
+      (mockMailContext as any).letterSender = letterSender;
+      (mockPrisma as any).userDeliveryPreference = {
+        findUnique: vi.fn(async () => ({ channel: MailChannel.letter })),
+        findMany: vi.fn(async () => [{ userId: 'user-1' }]),
+      };
+      (mockPrisma as any).user = {
+        findUnique: vi.fn(async () => ({
+          ...user,
+          address: { city: 'Bern', country: 'CH' },
+        })),
+      };
+      flowWithLetterInvoices();
+    });
+
+    it('has the provider render the invoice for a reader in letter mode and prints it after the letter', async () => {
+      provider.createRemoteInvoice.mockResolvedValue({ intent, document });
+
+      await expect(createInvoice()).resolves.toBe(true);
+
+      expect(letterSender.canReceiveLetters).toHaveBeenCalledWith(
+        expect.objectContaining({ id: 'user-1' }),
+        { withPaymentSlip: true }
+      );
+      expect(provider.createRemoteInvoice).toHaveBeenCalledWith(
+        expect.objectContaining({
+          channel: MailChannel.letter,
+          invoice: expect.objectContaining({ id: 'inv-1' }),
+        })
+      );
+      expect(letterSender.sendLetter).toHaveBeenCalledWith(
+        expect.objectContaining({
+          recipient: expect.objectContaining({ id: 'user-1' }),
+          attachment: { content: Buffer.from('pdf'), name: 'RE-1.pdf' },
+        })
+      );
+      expect(mockMailContext.sendComposedMail).not.toHaveBeenCalled();
+    });
+
+    it('has the provider email the invoice for a reader on mail', async () => {
+      mockPrisma.userDeliveryPreference.findUnique.mockResolvedValue(null);
+
+      await createInvoice();
+
+      expect(provider.createRemoteInvoice).toHaveBeenCalledWith(
+        expect.objectContaining({ channel: MailChannel.mail })
+      );
+      expect(letterSender.sendLetter).not.toHaveBeenCalled();
+      expect(mockMailContext.sendComposedMail).toHaveBeenCalledTimes(1);
+    });
+
+    it('keeps the provider invoice as a payment, so the nightly poll sees it being paid', async () => {
+      await createInvoice();
+
+      expect(mockPrisma.payment.create).toHaveBeenCalledWith({
+        data: {
+          invoiceID: 'inv-1',
+          paymentMethodID: 'pm-1',
+          state: PaymentState.created,
+        },
+      });
+      // created before the provider is asked, so an id that could not be
+      // stored afterwards still leaves a trace
+      expect(
+        mockPrisma.payment.create.mock.invocationCallOrder[0]
+      ).toBeLessThan(provider.createRemoteInvoice.mock.invocationCallOrder[0]);
+      expect(mockPrisma.payment.update).toHaveBeenCalledWith({
+        where: { id: 'pay-1' },
+        data: expect.objectContaining({
+          state: PaymentState.submitted,
+          intentID: '42',
+          intentData: '{"id":42}',
+        }),
+      });
+    });
+
+    // Cancelling would leave the invoice's future period behind, which keeps
+    // the next run from invoicing the subscription again.
+    it('removes the invoice when the provider could not create it, so the next run tries again', async () => {
+      provider.createRemoteInvoice.mockRejectedValue(new Error('bexio down'));
+
+      await expect(createInvoice()).resolves.toBe(false);
+
+      expect(mockPrisma.payment.deleteMany).toHaveBeenCalledWith({
+        where: { invoiceID: 'inv-1' },
+      });
+      expect(mockPrisma.subscriptionPeriod.deleteMany).toHaveBeenCalledWith({
+        where: { invoiceID: 'inv-1' },
+      });
+      expect(mockPrisma.invoiceItem.deleteMany).toHaveBeenCalledWith({
+        where: { invoiceId: 'inv-1' },
+      });
+      expect(mockPrisma.invoice.delete).toHaveBeenCalledWith({
+        where: { id: 'inv-1' },
+      });
+      expect(letterSender.sendLetter).not.toHaveBeenCalled();
+      expect(mockMailContext.sendComposedMail).not.toHaveBeenCalled();
+    });
+
+    it('still sends the mail when the provider created the invoice but could not deliver it', async () => {
+      mockPrisma.userDeliveryPreference.findUnique.mockResolvedValue(null);
+      provider.createRemoteInvoice.mockResolvedValue({
+        intent,
+        deliveryError: 'smtp down',
+      });
+
+      await expect(createInvoice()).resolves.toBe(true);
+
+      expect(mockPrisma.payment.update).toHaveBeenCalled();
+      expect(mockPrisma.invoice.delete).not.toHaveBeenCalled();
+      expect(mockMailContext.sendComposedMail).toHaveBeenCalledTimes(1);
+    });
+
+    // A cover letter without the invoice is of no use; the night sweep posts
+    // the letter once the pdf can be fetched.
+    it('holds the letter back when the provider could not render the invoice', async () => {
+      provider.createRemoteInvoice.mockResolvedValue({
+        intent,
+        deliveryError: 'pdf failed',
+      });
+
+      await expect(createInvoice()).resolves.toBe(true);
+
+      expect(mockPrisma.payment.update).toHaveBeenCalled();
+      expect(mockPrisma.invoice.delete).not.toHaveBeenCalled();
+      expect(letterSender.sendLetter).not.toHaveBeenCalled();
+      expect(mockMailContext.sendComposedMail).not.toHaveBeenCalled();
+    });
+
+    it('leaves no payment behind for a provider without invoices of its own', async () => {
+      provider.createRemoteInvoice.mockResolvedValue(undefined);
+
+      await createInvoice();
+
+      expect(mockPrisma.payment.delete).toHaveBeenCalledWith({
+        where: { id: 'pay-1' },
+      });
+      expect(letterSender.sendLetter).toHaveBeenCalledTimes(1);
+    });
+
+    it('sends without a payment when no provider handles the payment method', async () => {
+      mockPaymentsService.findPaymentProviderByPaymentMethodeId.mockResolvedValue(
+        null
+      );
+
+      await createInvoice();
+
+      expect(mockPrisma.payment.create).not.toHaveBeenCalled();
+      expect(letterSender.sendLetter).toHaveBeenCalledTimes(1);
+    });
+
+    describe('posting the invoice letters still missing', () => {
+      const openInvoice: any = {
+        id: 'inv-1',
+        createdAt: new Date('2026-11-01T03:00:00'),
+        subscription: {
+          ...subscription,
+          paymentMethod: { id: 'pm-1' },
+        },
+      };
+
+      beforeEach(() => {
+        mockSubscriptionController.findAllOpenInvoices.mockResolvedValue([
+          openInvoice,
+        ]);
+        mockPrisma.mailLog.findMany.mockResolvedValue([
+          { state: MailLogState.rejected },
+        ]);
+        (mockPaymentsService as any).findByInvoiceId.mockResolvedValue([
+          { id: 'pay-1', intentID: '42', paymentMethodID: 'pm-1' },
+        ]);
+        provider.renderRemoteInvoice.mockResolvedValue(document);
+      });
+
+      it('prints the invoice again when the vendor refused the letter', async () => {
+        await service.postMissingInvoiceLetters(runDate);
+
+        expect(mockPrisma.mailLog.findMany).toHaveBeenCalledWith(
+          expect.objectContaining({
+            where: expect.objectContaining({
+              recipientID: 'user-1',
+              mailTemplateId: 'mt-4',
+              channel: MailChannel.letter,
+              sentDate: { gte: openInvoice.createdAt },
+            }),
+          })
+        );
+        expect(provider.renderRemoteInvoice).toHaveBeenCalledWith({
+          payment: expect.objectContaining({ intentID: '42' }),
+        });
+        expect(letterSender.sendLetter).toHaveBeenCalledWith(
+          expect.objectContaining({
+            attachment: { content: Buffer.from('pdf'), name: 'RE-1.pdf' },
+          })
+        );
+        expect(provider.createRemoteInvoice).not.toHaveBeenCalled();
+      });
+
+      it('leaves a letter alone that got through', async () => {
+        mockPrisma.mailLog.findMany.mockResolvedValue([
+          { state: MailLogState.rejected },
+          { state: MailLogState.submitted },
+        ]);
+
+        await service.postMissingInvoiceLetters(runDate);
+
+        expect(letterSender.sendLetter).not.toHaveBeenCalled();
+      });
+
+      // The invoice went out by email while the reader was still on mail, or
+      // its pdf could not be fetched that night.
+      it('posts the invoice to a reader who gets letters but was never sent one', async () => {
+        mockPrisma.mailLog.findMany.mockResolvedValue([]);
+
+        await service.postMissingInvoiceLetters(runDate);
+
+        expect(letterSender.sendLetter).toHaveBeenCalledWith(
+          expect.objectContaining({
+            attachment: { content: Buffer.from('pdf'), name: 'RE-1.pdf' },
+          })
+        );
+      });
+
+      it('leaves an invoice alone that was never posted and has nothing to print', async () => {
+        mockPrisma.mailLog.findMany.mockResolvedValue([]);
+        (mockPaymentsService as any).findByInvoiceId.mockResolvedValue([]);
+
+        await service.postMissingInvoiceLetters(runDate);
+
+        expect(letterSender.sendLetter).not.toHaveBeenCalled();
+      });
+
+      it('gives up after three refusals', async () => {
+        mockPrisma.mailLog.findMany.mockResolvedValue([
+          { state: MailLogState.rejected },
+          { state: MailLogState.rejected },
+          { state: MailLogState.rejected },
+        ]);
+
+        await service.postMissingInvoiceLetters(runDate);
+
+        expect(letterSender.sendLetter).not.toHaveBeenCalled();
+      });
+
+      it('looks at no invoices while nobody gets letters', async () => {
+        mockPrisma.userDeliveryPreference.findMany.mockResolvedValue([]);
+
+        await service.postMissingInvoiceLetters(runDate);
+
+        expect(
+          mockSubscriptionController.findAllOpenInvoices
+        ).not.toHaveBeenCalled();
+      });
+
+      // A provider outage must neither take the run down nor burn an attempt
+      // on a letter without the invoice.
+      it('waits for another night when the provider cannot render the invoice', async () => {
+        provider.renderRemoteInvoice.mockRejectedValue(new Error('bexio down'));
+
+        await expect(
+          service.postMissingInvoiceLetters(runDate)
+        ).resolves.toBeUndefined();
+
+        expect(letterSender.sendLetter).not.toHaveBeenCalled();
+      });
+
+      it('runs after the invoices of a night are created', async () => {
+        const post = vi
+          .spyOn(service, 'postMissingInvoiceLetters')
+          .mockResolvedValue(undefined);
+
+        await service.execute();
+
+        expect(post).toHaveBeenCalledWith(expect.any(Date));
+      });
     });
   });
 
