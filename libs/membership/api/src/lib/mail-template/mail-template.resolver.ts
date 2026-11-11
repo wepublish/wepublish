@@ -12,12 +12,14 @@ import {
   CanCreateMailTemplates,
   CanDeleteMailTemplates,
   CanGetMailTemplates,
+  CanSendMailTemplates,
   CanSendTestMailTemplates,
   CanUpdateMailTemplates,
 } from '@wepublish/permissions';
 import {
   MailProviderModel,
   MailTemplateInput,
+  MailTemplateLetterPreviewModel,
   MailTemplateModel,
   MailTemplatePreviewInput,
   MailTemplatePreviewModel,
@@ -26,6 +28,7 @@ import {
 } from './mail-template.model';
 import { PrismaClient } from '@prisma/client';
 import { CurrentUser, UserSession } from '@wepublish/authentication/api';
+import { Feature } from '@wepublish/features/api';
 import { Permissions } from '@wepublish/permissions/api';
 import { MailTemplateService } from './mail-template.service';
 import { UsedMailTemplateDataloader } from './used-mail-template.dataloader';
@@ -119,6 +122,36 @@ export class MailTemplatesResolver {
     });
 
     return { subject: result.subject, html: result.html, text: result.text };
+  }
+
+  // Asked by both the template editor and the send page, so either permission
+  // is enough.
+  @Feature('paper-letters')
+  @Permissions(CanGetMailTemplates, CanSendMailTemplates)
+  @Query(() => Boolean, {
+    description: `Whether a letter integration is configured, so letters can be previewed and sent`,
+  })
+  letterChannelAvailable(): Promise<boolean> {
+    return this.mailTemplateService.isLetterChannelAvailable();
+  }
+
+  @Feature('paper-letters')
+  @Permissions(CanGetMailTemplates)
+  @Query(() => MailTemplateLetterPreviewModel, {
+    description: `Render a draft mail template as the letter a send would print`,
+  })
+  async mailTemplateLetterPreview(
+    @CurrentUser() user: UserSession,
+    @Args('input') input: MailTemplatePreviewInput
+  ): Promise<MailTemplateLetterPreviewModel> {
+    return this.mailTemplateService.previewLetter({
+      contextId: input.contextId as MailTemplateContextId,
+      subscriptionId: input.subscriptionId,
+      currentUserId: user.user.id,
+      html: input.htmlContent,
+      letterLayoutId: input.letterLayoutId,
+      letterAppendixId: input.letterAppendixId,
+    });
   }
 
   @Permissions(CanCreateMailTemplates)

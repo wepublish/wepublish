@@ -8,6 +8,7 @@ import {
 } from '@wepublish/authentication/website';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { deleteCookie, getCookie } from 'cookies-next';
+import { Trans, useTranslation } from 'react-i18next';
 
 import { defaultHead } from '../integration/default-head';
 
@@ -28,6 +29,7 @@ export const Route = createFileRoute('/signup')({
 function SignUp() {
   const { hasUser } = useUser();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const {
     elements: { H3, Link },
   } = useWebsiteBuilder();
@@ -41,13 +43,15 @@ function SignUp() {
 
   return (
     <SignupWrapper>
-      <H3 component="h1">Registriere dich noch heute</H3>
+      <H3 component="h1">{t('signup.title')}</H3>
       <Typography
         variant="body1"
         sx={{ marginBottom: '16px' }}
       >
-        (Falls du schon einen Account hast,{' '}
-        <Link href={'/login'}>klicke hier.</Link>)
+        <Trans
+          i18nKey="signup.hasAccount"
+          components={{ Link: <Link href={'/login'} /> }}
+        />
       </Typography>
       <RegistrationFormContainer />
     </SignupWrapper>

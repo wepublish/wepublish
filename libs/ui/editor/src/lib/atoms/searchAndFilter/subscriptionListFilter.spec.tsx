@@ -41,6 +41,14 @@ describe('SubscriptionListFilter', () => {
     ).not.toBeInTheDocument();
   });
 
+  it('labels the owner search instead of relying on its placeholder', () => {
+    renderFilter();
+
+    expect(
+      screen.getByRole('combobox', { name: 'userSubscriptionEdit.selectUser' })
+    ).toBeInTheDocument();
+  });
+
   it('keeps its fields mounted across a reset', () => {
     const { rerender } = renderFilter({ filter: { autoRenew: true } });
 

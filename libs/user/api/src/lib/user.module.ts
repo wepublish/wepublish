@@ -30,6 +30,7 @@ import { UserResolver } from './user.resolver';
 import { HibpService } from './hibp.service';
 import { UserSubscriptionCountDataloader } from './user-subscription-count.dataloader';
 import { UserSubscriptionOverviewDataloader } from './user-subscription-overview.dataloader';
+import { UserEmailQualityDataloader } from './user-email-quality.dataloader';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { UserSubscriptionOverviewDataloader } from './user-subscription-overview
     HasOptionalSensitiveDataUserLcResolver,
     UserSubscriptionCountDataloader,
     UserSubscriptionOverviewDataloader,
+    UserEmailQualityDataloader,
     UserService,
     SensitiveDataUserResolver,
     BaseUserResolver,

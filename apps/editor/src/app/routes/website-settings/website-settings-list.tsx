@@ -19,7 +19,7 @@ import {
   PageTitle,
   PermissionControl,
 } from '@wepublish/ui/editor';
-import { useMemo } from 'react';
+import { useId, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdAdsClick,
@@ -54,7 +54,7 @@ const Title = styled(PageTitle)`
   grid-column: -1/1;
 `;
 
-const CardTitle = styled.div`
+const CardTitle = styled.h2`
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: max-content;
@@ -83,6 +83,9 @@ const CardColors = styled.div`
 export const WebsiteSettingsList = () => {
   const { t } = useTranslation();
   const theme = useTheme();
+  const listId = useId();
+  const titleId = (path: string) =>
+    `${listId}${path.replace(/\//g, '-')}-title`;
 
   const { data, loading } = useQuery(WebsiteSettingsDocument);
 
@@ -211,7 +214,7 @@ export const WebsiteSettingsList = () => {
                 }}
               >
                 {category.icon}
-                {category.title}
+                <span id={titleId(category.path)}>{category.title}</span>
               </Typography>
 
               {category.faulyIntegrations.map((integration, index) => (
@@ -311,6 +314,7 @@ export const WebsiteSettingsList = () => {
                 component={RouterLink}
                 to={category.path}
                 size="small"
+                aria-describedby={titleId(category.path)}
               >
                 {t('edit')}
               </Button>

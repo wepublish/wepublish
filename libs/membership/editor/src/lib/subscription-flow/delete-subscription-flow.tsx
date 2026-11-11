@@ -24,6 +24,7 @@ export function DeleteSubscriptionFlow({
           <IconButton
             size="small"
             color="error"
+            aria-label={t('delete')}
             disabled={subscriptionFlow.default}
           >
             <MdDelete />

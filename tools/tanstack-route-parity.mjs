@@ -60,6 +60,7 @@ const ROUTES = [
   ['/rss.xml', 200, 'application/xml', ISR],
   ['/atom.xml', 200, 'application/xml', ISR],
   ['/feed.json', 200, 'application/feed+json', ISR],
+  ['/llms.txt', 200, 'text/markdown', ISR],
   ['/api/sitemap', 301, null, null],
   ['/api/rss-feed', 301, null, null],
   ['/api/atom-feed', 301, null, null],

@@ -1,4 +1,4 @@
-import { factuelConfig } from '@wepublish/tenant/factuel';
+import { courantConfig } from '@wepublish/tenant/factuel';
 
 /**
  * The `<title>` for routes that have no SEO component to set one.
@@ -11,5 +11,5 @@ import { factuelConfig } from '@wepublish/tenant/factuel';
  * one. Hence per route, only where nothing else will.
  */
 export const defaultHead = () => ({
-  meta: [{ title: factuelConfig.builder.meta?.siteTitle }],
+  meta: [{ title: courantConfig.builder.meta?.siteTitle }],
 });

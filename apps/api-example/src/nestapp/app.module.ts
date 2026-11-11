@@ -18,6 +18,7 @@ import {
   HotAndTrendingModule,
 } from '@wepublish/article/api';
 import { AuthenticationModule } from '@wepublish/authentication/api';
+import { LettersModule } from '@wepublish/letter/api';
 import { AuthorModule } from '@wepublish/author/api';
 import { BannerApiModule } from '@wepublish/banner/api';
 import { BlockContentModule } from '@wepublish/block-content/api';
@@ -51,7 +52,7 @@ import {
 } from '@wepublish/plausible/api';
 import { UmamiDbConfig, UmamiModule, UmamiService } from '@wepublish/umami/api';
 import { HealthModule } from '@wepublish/health';
-import { MediaAdapterModule } from '@wepublish/image/api';
+import { MediaAdapter, MediaAdapterModule } from '@wepublish/image/api';
 import {
   KvCacheModule,
   NamespacedCache,
@@ -200,6 +201,22 @@ import { API_SHARED_NAMESPACES } from './shared-namespaces';
         };
       },
       inject: [ConfigService, PrismaClient, ProviderRegistryService],
+      global: true,
+    }),
+    LettersModule.registerAsync({
+      useFactory: async (
+        registry: ProviderRegistryService,
+        mediaAdapter: MediaAdapter
+      ) => {
+        await registry.ensureLoaded();
+
+        return {
+          letterProvider: registry.letterProvider,
+          pdfRenderer: registry.pdfRenderer,
+          documentUrl: (id: string) => mediaAdapter.getDocumentURL({ id }),
+        };
+      },
+      inject: [ProviderRegistryService, MediaAdapter],
       global: true,
     }),
     TrackingPixelsModule.registerAsync({
