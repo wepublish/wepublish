@@ -11,8 +11,11 @@ vi.mock('@mailchimp/mailchimp_marketing', () => ({
   default: {
     setConfig: vi.fn(),
     lists: {
+      getAllLists: vi.fn(),
       getListMembersInfo: vi.fn(),
       getListMergeFields: vi.fn(),
+      getListInterestCategories: vi.fn(),
+      listInterestCategoryInterests: vi.fn(),
       setListMember: vi.fn(),
     },
     batches: {
@@ -24,8 +27,11 @@ vi.mock('@mailchimp/mailchimp_marketing', () => ({
 
 const mailchimpStub = mailchimp as unknown as {
   lists: {
+    getAllLists: Mock;
     getListMembersInfo: Mock;
     getListMergeFields: Mock;
+    getListInterestCategories: Mock;
+    listInterestCategoryInterests: Mock;
     setListMember: Mock;
   };
   batches: {
@@ -80,6 +86,21 @@ const syncConfig = {
   mailchimp_extensions: {},
 };
 
+const givenAboAInterestGroupMapping = (flags: {
+  autoAdd?: boolean;
+  autoRemove?: boolean;
+}) => {
+  syncProviderSettingsServiceMock.getEnabledSyncConfigs.mockResolvedValue([
+    {
+      ...syncConfig,
+      mailchimp_interestGroupMappings: [
+        { groupId: ABO_A_GROUP_ID, expression: 'slug:equals:abo-a', ...flags },
+        { groupId: ABO_B_GROUP_ID, expression: 'slug:equals:abo-b' },
+      ],
+    },
+  ]);
+};
+
 const mockUser = {
   id: 'user-1',
   email: 'New.User@example.com',
@@ -126,6 +147,7 @@ const prismaMock = {
 
 const syncProviderSettingsServiceMock = {
   getEnabledSyncConfigs: vi.fn(),
+  getSyncConfig: vi.fn(),
   updateSyncResult: vi.fn(),
 };
 
@@ -192,6 +214,53 @@ describe('MailchimpSyncService', () => {
     );
   });
 
+  describe('Mailchimp lookups for a sync provider that is not enabled yet', () => {
+    beforeEach(() => {
+      syncProviderSettingsServiceMock.getEnabledSyncConfigs.mockResolvedValue(
+        []
+      );
+      syncProviderSettingsServiceMock.getSyncConfig.mockResolvedValue({
+        ...syncConfig,
+        enabled: false,
+      });
+    });
+
+    it('lists the audiences', async () => {
+      mailchimpStub.lists.getAllLists.mockResolvedValue({
+        lists: [
+          { id: 'list-1', name: 'Newsletter', stats: { member_count: 1200 } },
+        ],
+      });
+
+      await expect(service.getMailchimpLists(CONFIG_ID)).resolves.toEqual([
+        { id: 'list-1', name: 'Newsletter', memberCount: 1200 },
+      ]);
+    });
+
+    it('lists the merge fields of an audience', async () => {
+      mailchimpStub.lists.getListMergeFields.mockResolvedValue({
+        merge_fields: [{ tag: 'FNAME', name: 'First name', type: 'text' }],
+      });
+
+      await expect(
+        service.getMailchimpMergeFields(CONFIG_ID, 'list-1')
+      ).resolves.toEqual([{ tag: 'FNAME', name: 'First name', type: 'text' }]);
+    });
+
+    it('lists the interest groups of an audience', async () => {
+      mailchimpStub.lists.getListInterestCategories.mockResolvedValue({
+        categories: [{ id: 'cat-1', title: 'Topics' }],
+      });
+      mailchimpStub.lists.listInterestCategoryInterests.mockResolvedValue({
+        interests: [{ id: 'grp-1', name: 'Politics' }],
+      });
+
+      await expect(
+        service.getMailchimpInterestCategories(CONFIG_ID, 'list-1')
+      ).resolves.toEqual([{ id: 'grp-1', name: 'Topics: Politics' }]);
+    });
+  });
+
   describe('newly created CMS user', () => {
     it('syncs a user missing on Mailchimp as a new contact', async () => {
       prismaMock.subscription.findMany.mockResolvedValue([buildSubscription()]);
@@ -211,6 +280,17 @@ describe('MailchimpSyncService', () => {
       expect(change.mergeFields['FNAME']).toBe('Jane');
       expect(change.interests[NEWSLETTER_GROUP_ID]).toBe(true);
       expect(change.interests[ABO_A_GROUP_ID]).toBe(true);
+    });
+
+    it('leaves the interest group of a new subscription unset when automatic adding is disabled', async () => {
+      givenAboAInterestGroupMapping({ autoAdd: false });
+      prismaMock.subscription.findMany.mockResolvedValue([buildSubscription()]);
+
+      const result = await dryRun();
+
+      const change = result!.changes[0];
+      expect(change.interests[ABO_A_GROUP_ID]).toBe(false);
+      expect(change.interests[NEWSLETTER_GROUP_ID]).toBe(true);
     });
 
     it('syncs a user without any subscription and leaves ACTIVE_ABO unset', async () => {
@@ -367,6 +447,38 @@ describe('MailchimpSyncService', () => {
       expect(change.mergeFields['ACTIVE_ABO']).toBe('-1');
       expect(change.interests[ABO_A_GROUP_ID]).toBe(false);
       expect(change.interests[NEWSLETTER_GROUP_ID]).toBe(true);
+    });
+
+    it('keeps the subscription interest group set when automatic removal is disabled', async () => {
+      givenAboAInterestGroupMapping({ autoRemove: false });
+      givenMailchimpContact({
+        merge_fields: { ACTIVE_ABO: '1', ABO_A: '1' },
+        interests: {
+          [NEWSLETTER_GROUP_ID]: true,
+          [ABO_A_GROUP_ID]: true,
+        },
+      });
+
+      const result = await dryRun();
+
+      const change = result!.changes[0];
+      expect(change.mergeFields['ACTIVE_ABO']).toBe('-1');
+      expect(change.interests[ABO_A_GROUP_ID]).toBe(true);
+    });
+
+    it('still removes the subscription interest group when only automatic adding is disabled', async () => {
+      givenAboAInterestGroupMapping({ autoAdd: false });
+      givenMailchimpContact({
+        merge_fields: { ACTIVE_ABO: '1', ABO_A: '1' },
+        interests: {
+          [NEWSLETTER_GROUP_ID]: true,
+          [ABO_A_GROUP_ID]: true,
+        },
+      });
+
+      const result = await dryRun();
+
+      expect(result!.changes[0].interests[ABO_A_GROUP_ID]).toBe(false);
     });
 
     it('still syncs ACTIVE_ABO as -1 when the contact does not exist on Mailchimp yet', async () => {
