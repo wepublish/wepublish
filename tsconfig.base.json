@@ -70,6 +70,11 @@
       "@wepublish/event/website": ["libs/event/website/src/index.ts"],
       "@wepublish/external-apps/api": ["libs/external-apps/api/src/index.ts"],
       "@wepublish/feed/website": ["libs/feed/website/src/index.ts"],
+      "@wepublish/form/core": ["libs/form/core/src/index.ts"],
+      "@wepublish/form/editor": ["libs/form/editor/src/index.ts"],
+      "@wepublish/form/editor/testing": [
+        "libs/form/editor/src/testing/index.tsx"
+      ],
       "@wepublish/google-analytics/api": [
         "libs/google-analytics/api/src/index.ts"
       ],
@@ -121,6 +126,7 @@
       "@wepublish/permissions": ["libs/permissions/src/index.ts"],
       "@wepublish/permissions/api": ["libs/permissions/api/src/index.ts"],
       "@wepublish/phrase/api": ["libs/phrase/api/src/index.ts"],
+      "@wepublish/plausible/api": ["libs/plausible/api/src/index.ts"],
       "@wepublish/poll/api": ["libs/poll/api/src/index.ts"],
       "@wepublish/property/api": ["libs/property/api/src/index.ts"],
       "@wepublish/public-content-cache/api": [
@@ -164,6 +170,7 @@
       "@wepublish/tracking-pixel/api": ["libs/tracking-pixel/api/src/index.ts"],
       "@wepublish/ui": ["libs/ui/src/index.ts"],
       "@wepublish/ui/editor": ["libs/ui/editor/src/index.ts"],
+      "@wepublish/umami/api": ["libs/umami/api/src/index.ts"],
       "@wepublish/user": ["libs/user/src/index.ts"],
       "@wepublish/user-subscription/api": [
         "libs/user-subscription/api/src/index.ts"
