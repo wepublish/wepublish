@@ -109,6 +109,16 @@ mutations only succeed while none exists (the editor then shows «Einrichten»),
 and there is no delete mutation, so a medium never ends up without one. Change
 type or credentials on the existing row instead.
 
+In the editor (`apps/editor/src/app/routes/integrations/`), a new integration
+or provider type goes into `integrationCatalog.tsx` (group, title, permission,
+friendly provider name, logo), `integrationStatus.ts` (what counts as
+complete) and `providerGuides.ts` (setup steps). The guides print the webhook
+URL a provider must call, built from `apiURL` and the
+`{payment,mail,letter}-webhooks/:id` controller prefixes — rename a prefix and
+update `webhookUrl` too. The Mail Provider integration is titled «Transactional
+email» and the sync provider «Mailchimp audience», because both use Mailchimp
+(Transactional vs. Marketing keys).
+
 ### Email quality evidence (what providers tell us about addresses)
 
 Everything lands in `email_quality_events` through `EMAIL_QUALITY_RECORDER`
