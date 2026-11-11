@@ -45,7 +45,6 @@ export class NotificationReadService {
     });
   }
 
-  /** Marks several items of one source read at once; already read ones stay. */
   async markNotificationsRead(
     userId: string,
     source: NotificationSource,

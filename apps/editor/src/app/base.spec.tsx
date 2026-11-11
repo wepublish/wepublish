@@ -25,10 +25,9 @@ vi.mock('@wepublish/ui/editor', async importOriginal => ({
   Version: () => null,
 }));
 
-// The changelog panel talks to the api; here it only has to be mounted.
 vi.mock('./whatsNew/whatsNew', () => ({
   WhatsNewProvider: ({ children }: { children: ReactNode }) => children,
-  WhatsNewButton: () => (
+  WhatsNewNavItem: () => (
     <button
       type="button"
       aria-label="whats-new"

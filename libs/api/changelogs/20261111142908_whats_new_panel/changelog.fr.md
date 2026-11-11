@@ -1,6 +1,6 @@
 ---
 title: « Quoi de neuf » a son propre panneau
-lead: Le changelog n'encombre plus ton tableau de bord. Ouvre-le avec l'icône étincelle en bas de la barre latérale ; un point t'indique quand il y a du nouveau.
+lead: Le changelog n'encombre plus ton tableau de bord. Ouvre-le avec « Quoi de neuf » en bas de la barre latérale ; l'étiquette « Nouveau » t'indique quand il y a du nouveau.
 ---
 
 - Les nouveautés s'affichent sous forme de courte liste de titres, groupés par mois. Clique sur une entrée pour en lire les détails directement.

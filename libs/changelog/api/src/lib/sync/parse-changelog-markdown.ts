@@ -9,11 +9,6 @@ export type ParsedChangelogMarkdown = {
   description: string | null;
 };
 
-/**
- * How the severities are spelled in the frontmatter. `info` needs nothing,
- * `recommended` asks for a step that can wait without breaking anything,
- * `required` asks for a step that has to happen as soon as possible.
- */
 export const CHANGELOG_SEVERITY_VALUES: Record<string, ChangelogSeverity> = {
   info: ChangelogSeverity.INFO,
   recommended: ChangelogSeverity.RECOMMENDED,

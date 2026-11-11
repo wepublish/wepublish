@@ -80,8 +80,8 @@ the default content when no translation exists. Rules:
 | `recommended` | Action recommended   | Every instance should do a manual step, but nothing breaks while it waits (e.g. "add the new block to your navigation").       |
 | `required`    | Action required      | Every instance has to do a manual step as soon as possible: something stops working or degrades until it does (e.g. a secret). |
 
-In the editor every entry lives in the **What's new** panel (sparkle icon at
-the bottom of the sidebar; a dot on it marks entries the user hasn't seen yet)
+In the editor every entry lives in the **What's new** panel ("What's new" at
+the bottom of the sidebar; a "New" pill marks entries the user hasn't seen yet)
 and in the full list on the notifications page. `recommended` and `required`
 entries ask for an action: users with the permission to update settings see
 them in the panel's "To do" section and as one summary line on the dashboard,

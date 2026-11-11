@@ -8,11 +8,9 @@ import { useTranslation } from 'react-i18next';
 
 type SeverityOf = Pick<ChangelogEntryFragment, 'severity' | 'confirmedAt'>;
 
-/** Recommended and required entries ask the instance to do something. */
 export const isChangelogAction = ({ severity }: Pick<SeverityOf, 'severity'>) =>
   severity !== ChangelogSeverity.Info;
 
-/** An action nobody has signed off yet. */
 export const isOpenChangelogAction = (entry: SeverityOf) =>
   isChangelogAction(entry) && !entry.confirmedAt;
 
@@ -41,7 +39,6 @@ export function ChangelogSeverityChip({
   showInfo = false,
 }: {
   entry: SeverityOf;
-  /** Info entries carry no chip by default: they are the quiet majority. */
   showInfo?: boolean;
 }) {
   const { t } = useTranslation();

@@ -215,11 +215,6 @@ export function ConfirmChangelogModal({
   );
 }
 
-/**
- * The details and the "mark as done" dialogs for any list of entries: open
- * one with `showDetails` / `confirm` and render `overlay` somewhere outside
- * the list.
- */
 export function useChangelogDialogs({
   onDetailsOpen,
 }: { onDetailsOpen?: (entry: ChangelogEntryFragment) => void } = {}) {
@@ -269,10 +264,6 @@ export interface ChangelogDashboardProps {
   take?: number;
 }
 
-/**
- * The full changelog, newest first, paginated — the archive behind the
- * "What's new" panel, shown on the notifications page.
- */
 export function ChangelogDashboard({ take = 10 }: ChangelogDashboardProps) {
   const { t, i18n } = useTranslation();
   const [limit, setLimit] = useState(take);

@@ -229,7 +229,7 @@ import { useMobileNavigation } from './mobileNavigation';
 import { useSidebarMenu } from './sidebarMenu';
 import { Logo } from './ui/logo';
 import {
-  WhatsNewButton,
+  WhatsNewNavItem,
   WhatsNewProvider,
   WhatsNewRequiredBanner,
 } from './whatsNew/whatsNew';
@@ -422,6 +422,11 @@ const Sidenav = styled(List)<{ component?: ElementType }>`
   .MuiListItemButton-root[data-contains-current='true'] {
     font-weight: 600;
   }
+`;
+
+const WhatsNewEntry = styled('div')`
+  padding: 4px 12px;
+  border-top: 1px solid var(--wep-shell-border);
 `;
 
 const Footer = styled('div')`
@@ -1634,9 +1639,11 @@ export function Base({ children }: BaseProps) {
               </SidebarNav>
             </Sidenav>
 
-            <Footer>
-              <WhatsNewButton ButtonComponent={IconButton} />
+            <WhatsNewEntry>
+              <WhatsNewNavItem />
+            </WhatsNewEntry>
 
+            <Footer>
               <ClickMenu
                 anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
                 transformOrigin={{ vertical: 'bottom', horizontal: 'left' }}

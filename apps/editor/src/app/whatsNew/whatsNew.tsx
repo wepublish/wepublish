@@ -5,9 +5,12 @@ import {
   AccordionDetails,
   AccordionSummary,
   Button,
+  Chip,
   Drawer,
   IconButton,
-  Tooltip,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
   Typography,
 } from '@mui/material';
 import {
@@ -20,8 +23,6 @@ import {
 } from '@wepublish/editor/api';
 import { NotificationItem, useHasPermission } from '@wepublish/ui/editor';
 import {
-  ComponentProps,
-  ComponentType,
   createContext,
   ReactNode,
   useCallback,
@@ -47,22 +48,6 @@ import {
 import { ChangelogSeverityChip } from '../routes/dashboard/changelogSeverity';
 import { isContentEditorRoute } from './contentEditorRoute';
 
-/**
- * "What's new" — where the changelog lives in the editor.
- *
- * Most people never need the changelog, so it gets no room of its own: one
- * icon at the bottom of the sidebar opens a side panel, and a small dot on it
- * says that something new arrived that this user hasn't seen yet (opening the
- * panel marks the shown entries read for them, on every device). In the
- * panel, entries are a quiet list of headings grouped by month that expand in
- * place — no modal on top of a modal.
- *
- * Actions only reach the people who can complete them (the ones allowed to
- * sign them off): one summary line on the dashboard, a "To do" section at
- * the top of the panel, and — only for required actions — a slim banner above
- * every page except the content editors, which can be snoozed for a day.
- */
-
 const SNOOZE_STORAGE_PREFIX = 'wepublish/changelogSnoozedUntil/';
 const SNOOZE_MS = 24 * 60 * 60 * 1000;
 const RECENT_ENTRIES = 30;
@@ -85,7 +70,6 @@ const writeStorage = (key: string, value: string) => {
 
 type WhatsNewContextValue = {
   open: () => void;
-  /** Whether a recent entry waits that this user hasn't seen yet */
   hasUnseen: boolean;
 };
 
@@ -108,7 +92,6 @@ function useRecentEntries(skip = false) {
   return skip ? [] : (data?.changelogEntries.nodes ?? []);
 }
 
-/** Open actions, but only for the people who may sign them off. */
 function useOpenActions(skip = false) {
   const { i18n } = useTranslation();
   const mayConfirm = useHasPermission(CONFIRM_PERMISSION);
@@ -127,7 +110,6 @@ function useOpenActions(skip = false) {
     return [];
   }
 
-  // Required first: those are the ones that hurt while they wait.
   return [...(data?.changelogEntries.nodes ?? [])].sort(
     (a, b) =>
       Number(b.severity === ChangelogSeverity.Required) -
@@ -220,7 +202,6 @@ function WhatsNewPanel({
   onClose,
 }: {
   open: boolean;
-  /** Entries that were unseen when the panel opened get a dot. */
   newIds: ReadonlySet<string>;
   onClose(): void;
 }) {
@@ -377,7 +358,6 @@ function WhatsNewPanel({
   );
 }
 
-/** Hosts the panel and knows which entries this user hasn't seen yet. */
 export function WhatsNewProvider({ children }: { children: ReactNode }) {
   const [isOpen, setOpen] = useState(false);
   // What was unseen *when the panel opened*, so the dots stay while reading.
@@ -430,48 +410,37 @@ export function WhatsNewProvider({ children }: { children: ReactNode }) {
   );
 }
 
-const IconWithDot = styled.span`
-  position: relative;
-  display: inline-flex;
-`;
-
-const UnseenDot = styled.span`
-  position: absolute;
-  top: -2px;
-  right: -3px;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: ${({ theme }) => theme.vars.palette.primary.main};
-  box-shadow: 0 0 0 2px ${({ theme }) => theme.vars.palette.background.paper};
-`;
-
-/** The sidebar entry point, with a dot while something unseen waits. */
-export function WhatsNewButton({
-  ButtonComponent = IconButton,
-}: {
-  /** Lets the sidebar pass its own styled icon button. */
-  ButtonComponent?: ComponentType<ComponentProps<typeof IconButton>>;
-} = {}) {
+export function WhatsNewNavItem() {
   const { t } = useTranslation();
   const { open, hasUnseen } = useWhatsNew();
 
   return (
-    <Tooltip title={t('changelog.panel.title')}>
-      <ButtonComponent
-        aria-label={t('changelog.panel.title')}
-        onClick={open}
-      >
-        <IconWithDot>
-          <MdAutoAwesome />
-          {hasUnseen && <UnseenDot data-testid="whats-new-dot" />}
-        </IconWithDot>
-      </ButtonComponent>
-    </Tooltip>
+    <ListItemButton
+      onClick={open}
+      sx={{ px: 1.5, py: 1 }}
+    >
+      <ListItemIcon sx={{ minWidth: 28 }}>
+        <MdAutoAwesome />
+      </ListItemIcon>
+
+      <ListItemText
+        primary={t('changelog.panel.title')}
+        sx={{ my: 0 }}
+        slotProps={{ primary: { variant: 'body2' } }}
+      />
+
+      {hasUnseen && (
+        <Chip
+          size="small"
+          color="primary"
+          label={t('changelog.panel.new')}
+          sx={{ height: 20, fontSize: '0.6875rem' }}
+        />
+      )}
+    </ListItemButton>
   );
 }
 
-/** One summary line for the dashboard notifications card, admins only. */
 export function useWhatsNewDashboardItems() {
   const { t } = useTranslation();
   const { open } = useWhatsNew();
@@ -538,7 +507,6 @@ const BannerText = styled.span`
 const isSnoozed = (id: string) =>
   Number(readStorage(SNOOZE_STORAGE_PREFIX + id) ?? 0) > Date.now();
 
-/** Open required actions above every page, for admins, snoozable per day. */
 export function WhatsNewRequiredBanner() {
   const { t } = useTranslation();
   const { open } = useWhatsNew();

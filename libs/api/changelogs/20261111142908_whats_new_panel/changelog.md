@@ -1,6 +1,6 @@
 ---
 title: "What's new" moves into its own panel
-lead: The changelog no longer fills your dashboard. Open it with the sparkle icon at the bottom of the sidebar; a dot tells you when something new arrived.
+lead: The changelog no longer fills your dashboard. Open it with "What's new" at the bottom of the sidebar; a "New" label tells you when something new arrived.
 severity: info
 ---
 

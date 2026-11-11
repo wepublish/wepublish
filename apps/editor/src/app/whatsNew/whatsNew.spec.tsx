@@ -12,7 +12,7 @@ import type { Mock } from 'vitest';
 
 import {
   useWhatsNewDashboardItems,
-  WhatsNewButton,
+  WhatsNewNavItem,
   WhatsNewProvider,
   WhatsNewRequiredBanner,
 } from './whatsNew';
@@ -58,7 +58,6 @@ const entry = (
   ...overrides,
 });
 
-/** Answers the reads, the open-actions and the recent-entries queries. */
 const mockEntries = ({
   actions = [],
   recent = [],
@@ -154,8 +153,8 @@ describe('useWhatsNewDashboardItems', () => {
   });
 });
 
-describe('WhatsNewButton', () => {
-  it('marks unseen entries with a dot until the panel was opened', () => {
+describe('WhatsNewNavItem', () => {
+  it('marks unseen entries as new until the panel was opened', () => {
     mockEntries({
       recent: [
         entry({ id: 'new', title: 'Brand new', lead: 'What changed' }),
@@ -164,18 +163,18 @@ describe('WhatsNewButton', () => {
       readIds: ['old'],
     });
 
-    render(<WhatsNewButton />, { wrapper });
+    render(<WhatsNewNavItem />, { wrapper });
 
-    expect(screen.getByTestId('whats-new-dot')).toBeInTheDocument();
+    expect(screen.getByText('changelog.panel.new')).toBeInTheDocument();
 
     fireEvent.click(
-      screen.getByRole('button', { name: 'changelog.panel.title' })
+      screen.getByRole('button', { name: /changelog.panel.title/ })
     );
 
     expect(markRead).toHaveBeenCalledWith({
       variables: { source: NotificationSource.Changelog, itemIds: ['new'] },
     });
-    expect(screen.queryByTestId('whats-new-dot')).toBeNull();
+    expect(screen.queryByText('changelog.panel.new')).toBeNull();
     expect(screen.getAllByLabelText('changelog.panel.new')).toHaveLength(1);
 
     fireEvent.click(screen.getByRole('button', { name: /Brand new/ }));
@@ -183,15 +182,15 @@ describe('WhatsNewButton', () => {
     expect(screen.getByText('What changed')).toBeInTheDocument();
   });
 
-  it('shows no dot and marks nothing when everything was seen', () => {
+  it('shows no "new" and marks nothing when everything was seen', () => {
     mockEntries({ recent: [entry()], readIds: ['entry-1'] });
 
-    render(<WhatsNewButton />, { wrapper });
+    render(<WhatsNewNavItem />, { wrapper });
 
-    expect(screen.queryByTestId('whats-new-dot')).toBeNull();
+    expect(screen.queryByText('changelog.panel.new')).toBeNull();
 
     fireEvent.click(
-      screen.getByRole('button', { name: 'changelog.panel.title' })
+      screen.getByRole('button', { name: /changelog.panel.title/ })
     );
 
     expect(markRead).not.toHaveBeenCalled();

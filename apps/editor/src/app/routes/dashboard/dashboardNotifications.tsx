@@ -103,8 +103,6 @@ export function DashboardNotifications() {
     onMarkRead: markRead(NotificationSource.OneMessage),
   });
 
-  // The changelog lives in the "What's new" panel; the dashboard only gets one
-  // line, and only for people who can complete open changelog actions.
   const whatsNew = useWhatsNewDashboardItems();
 
   const jobs = usePeriodicJobNotifications({

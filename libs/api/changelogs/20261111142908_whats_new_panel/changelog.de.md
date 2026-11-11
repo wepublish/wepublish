@@ -1,6 +1,6 @@
 ---
 title: «Was ist neu» hat ein eigenes Panel
-lead: Der Changelog füllt dein Dashboard nicht mehr. Du öffnest ihn mit dem Funkel-Symbol unten in der Seitenleiste; ein Punkt zeigt dir, wenn etwas Neues da ist.
+lead: Der Changelog füllt dein Dashboard nicht mehr. Du öffnest ihn mit «Was ist neu» unten in der Seitenleiste; die Markierung «Neu» zeigt dir, wenn etwas Neues da ist.
 ---
 
 - Neuigkeiten erscheinen als kurze Liste von Titeln, nach Monat gruppiert. Klick auf einen Eintrag, um die Details direkt dort zu lesen.
