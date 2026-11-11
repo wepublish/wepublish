@@ -93,7 +93,7 @@ The migration container (and `pnpm run migrate` locally) runs three steps in ord
    `libs/api/changelogs/README.md`; sync code lives in
    `libs/changelog/api/src/lib/sync/`). Every PR that changes something an editor
    user can notice should add a changelog entry folder there — scaffold it with
-   `pnpm run changelog:create "Title" [--action-required]`, or let Claude Code
+   `pnpm run changelog:create "Title" [--recommended | --required]`, or let Claude Code
    draft it (en/de/fr) from the branch diff with `pnpm run changelog:generate`
    (uses the developer's local Claude Code login, no API key). Entries support
    translations via `changelog.<locale>.md` files (de/en/fr).
