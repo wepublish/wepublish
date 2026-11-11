@@ -1,5 +1,6 @@
 import type { Mock } from 'vitest';
 import { Test } from '@nestjs/testing';
+import { createHash } from 'crypto';
 import { SyncProviderSettingsService } from '@wepublish/settings/api';
 import { NewsletterMailchimpService } from './newsletter-mailchimp.service';
 
@@ -214,6 +215,43 @@ describe('NewsletterMailchimpService', () => {
       fields: [],
       interests: [],
       error: expect.stringContaining('System-Merge-Tags'),
+    });
+  });
+
+  describe('subscribe', () => {
+    it('adds the email to the audience, pending its confirmation', async () => {
+      const hash = createHash('md5').update('reader@example.com').digest('hex');
+      const calls = fakeMailchimp({
+        [`PUT /lists/list-1/members/${hash}`]: { id: hash, status: 'pending' },
+      });
+
+      expect(await service.subscribe(' Reader@Example.com ')).toBe(true);
+      expect(calls).toEqual([
+        {
+          method: 'PUT',
+          path: `/lists/list-1/members/${hash}`,
+          body: {
+            email_address: 'reader@example.com',
+            status_if_new: 'pending',
+          },
+        },
+      ]);
+    });
+
+    it('subscribes no one when no integration is set up', async () => {
+      configs.mockResolvedValue([]);
+      const calls = fakeMailchimp({});
+
+      expect(await service.subscribe('reader@example.com')).toBe(false);
+      expect(calls).toEqual([]);
+    });
+
+    it('passes on what Mailchimp refused', async () => {
+      fakeMailchimp({});
+
+      await expect(service.subscribe('reader@example.com')).rejects.toThrow(
+        'Resource Not Found'
+      );
     });
   });
 });

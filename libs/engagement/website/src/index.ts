@@ -3,7 +3,7 @@ export * from './lib/engagement-prompt';
 export * from './lib/engagement-slots';
 export * from './lib/engagement-storage';
 export * from './lib/engagement-tracking';
+export * from './lib/newsletter-signup';
 export * from './lib/prompt-to-banner';
-export * from './lib/referral';
 export * from './lib/resolve-engagement';
 export * from './lib/use-article-engagement';

@@ -4,7 +4,6 @@ import {
   EngagementGoal,
   EngagementPlacement,
   EngagementRequirement,
-  NewsletterReferralMode,
 } from '@prisma/client';
 import {
   EngagementTarget,
@@ -57,9 +56,6 @@ const rule = (overrides: Partial<EvaluatedRule> = {}): EvaluatedRule => ({
   showOnPageIds: [],
   includePeeredArticles: false,
   meterWindowDays: 30,
-  newsletterReferral: NewsletterReferralMode.NONE,
-  newsletterReferralLimit: 0,
-  newsletterParams: [{ key: 'utm_medium', value: 'email' }],
   stages: [stage('soft', 2), hardStage('hard', 4)],
   ...overrides,
 });
@@ -134,6 +130,37 @@ describe('matchingRules', () => {
         )
         .map(([name]) => name)
     ).toEqual(expected);
+  });
+
+  it('leaves out newsletter rules once the reader gave their email', () => {
+    const subscribed = reader({ newsletter: 'subscribed' });
+    const growNewsletter = rule({
+      id: 'newsletter',
+      goal: EngagementGoal.NEWSLETTER,
+      stages: [stage('soft', 1)],
+    });
+
+    expect(ids(matchingRules([growNewsletter], anonymous, article()))).toEqual([
+      'newsletter',
+    ]);
+    expect(ids(matchingRules([growNewsletter], subscribed, article()))).toEqual(
+      []
+    );
+  });
+
+  it('lets readers past a newsletter wall with their email alone', () => {
+    const wall = rule({
+      id: 'wall',
+      goal: EngagementGoal.MEMBERSHIP,
+      stages: [hardStage('hard', 3, EngagementRequirement.NEWSLETTER)],
+    });
+
+    expect(ids(matchingRules([wall], registered, article()))).toEqual(['wall']);
+    expect(
+      ids(
+        matchingRules([wall], reader({ newsletter: 'subscribed' }), article())
+      )
+    ).toEqual([]);
   });
 
   it('matches subscribers of the chosen plans', () => {
@@ -261,11 +288,11 @@ describe('meteredAccess', () => {
         articleId: 'a',
         now,
       })
-    ).toEqual({ granted: true, record: true, referral: false });
+    ).toEqual({ granted: true, record: true });
 
     expect(
       meteredAccess({ rules: [announcement()], articleId: 'a', now })
-    ).toEqual({ granted: true, record: false, referral: false });
+    ).toEqual({ granted: true, record: false });
   });
 
   describe('Scenario A: soft, then hard, at the configured thresholds', () => {
@@ -357,110 +384,6 @@ describe('meteredAccess', () => {
       meteredAccess({ rules: [rule()], meter: old, articleId: 'a5', now })
         .granted
     ).toBe(true);
-  });
-
-  describe('Scenario D: newsletter referrals', () => {
-    const fromNewsletter = [{ key: 'utm_medium', value: 'email' }];
-    const full = meterOf('a1', 'a2', 'a3', 'a4');
-
-    it('never opens an article without a referral setting', () => {
-      expect(
-        meteredAccess({
-          rules: [rule()],
-          meter: full,
-          articleId: 'a5',
-          referral: fromNewsletter,
-          now,
-        }).granted
-      ).toBe(false);
-    });
-
-    it('always opens the linked article with unlimited referrals', () => {
-      expect(
-        meteredAccess({
-          rules: [
-            rule({ newsletterReferral: NewsletterReferralMode.UNLIMITED }),
-          ],
-          meter: full,
-          articleId: 'a5',
-          referral: fromNewsletter,
-          now,
-        })
-      ).toEqual({ granted: true, record: true, referral: true });
-    });
-
-    it('opens as many linked articles as the limit allows', () => {
-      const limited = rule({
-        newsletterReferral: NewsletterReferralMode.LIMITED,
-        newsletterReferralLimit: 1,
-      });
-      const first = meteredAccess({
-        rules: [limited],
-        meter: full,
-        articleId: 'a5',
-        referral: fromNewsletter,
-        now,
-      });
-
-      expect(first).toEqual({ granted: true, record: true, referral: true });
-
-      const afterFirst = recordRead(full, 'a5', now, {
-        maxWindowDays: 30,
-        referral: true,
-      });
-
-      expect(
-        meteredAccess({
-          rules: [limited],
-          meter: afterFirst,
-          articleId: 'a6',
-          referral: fromNewsletter,
-          now,
-        }).granted
-      ).toBe(false);
-    });
-
-    it('does not count referral reads towards the meter', () => {
-      const meter = recordRead(meterOf('a1', 'a2', 'a3'), 'n1', now, {
-        maxWindowDays: 30,
-        referral: true,
-      });
-
-      expect(
-        meteredAccess({ rules: [rule()], meter, articleId: 'a4', now }).granted
-      ).toBe(true);
-    });
-
-    it('ignores params the rule does not list', () => {
-      expect(
-        meteredAccess({
-          rules: [
-            rule({ newsletterReferral: NewsletterReferralMode.UNLIMITED }),
-          ],
-          meter: full,
-          articleId: 'a5',
-          referral: [{ key: 'utm_medium', value: 'social' }],
-          now,
-        }).granted
-      ).toBe(false);
-    });
-
-    it('accepts any value for a param listed without one', () => {
-      expect(
-        meteredAccess({
-          rules: [
-            rule({
-              newsletterReferral: NewsletterReferralMode.UNLIMITED,
-              newsletterParams: [{ key: 'mc_cid', value: '' }],
-            }),
-          ],
-          meter: full,
-          articleId: 'a5',
-          referral: [{ key: 'mc_cid', value: 'abc' }],
-          now,
-        }).granted
-      ).toBe(true);
-    });
   });
 
   it('restricts by the first rule that restricts, in prompt order', () => {

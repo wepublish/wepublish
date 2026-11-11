@@ -13,7 +13,6 @@ import {
   EngagementRuleDocument,
   EngagementRulesDocument,
   FullEngagementRuleFragment,
-  NewsletterReferralMode,
 } from '@wepublish/editor/api';
 import { AuthContext } from '@wepublish/ui/editor';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
@@ -35,9 +34,6 @@ const rule: FullEngagementRuleFragment = {
   showOnPageIds: [],
   includePeeredArticles: false,
   meterWindowDays: null,
-  newsletterReferral: NewsletterReferralMode.None,
-  newsletterReferralLimit: 0,
-  newsletterParams: [],
   stages: [
     {
       __typename: 'EngagementStage',

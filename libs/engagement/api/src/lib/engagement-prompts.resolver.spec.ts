@@ -11,7 +11,6 @@ import {
   EngagementGoal,
   EngagementPlacement,
   EngagementRequirement,
-  NewsletterReferralMode,
   PrismaClient,
 } from '@prisma/client';
 import { ImageDataloaderService } from '@wepublish/image/api';
@@ -23,6 +22,8 @@ import {
   EngagementStageWithActions,
 } from './engagement-rule.service';
 import { EngagementStageResolver } from './engagement-stage.resolver';
+import { NewsletterSignupResolver } from './newsletter-signup.resolver';
+import { NewsletterSignupService } from './newsletter-signup.service';
 import { ReaderContextService } from './reader-context.service';
 import {
   NewsletterVerifier,
@@ -73,9 +74,6 @@ const rule = (
   showOnPageIds: ['page-1'],
   includePeeredArticles: false,
   meterWindowDays: null,
-  newsletterReferral: NewsletterReferralMode.NONE,
-  newsletterReferralLimit: 0,
-  newsletterParams: [],
   stages: [stage(`${id}-stage`)],
   ...overrides,
 });
@@ -126,7 +124,16 @@ describe('EngagementPromptsResolver', () => {
       providers: [
         EngagementPromptsResolver,
         EngagementStageResolver,
+        NewsletterSignupResolver,
         ReaderContextService,
+        {
+          provide: NewsletterSignupService,
+          useValue: {
+            statusOf: (token?: string) =>
+              token === 'signed-up' ? 'subscribed' : undefined,
+            signUp: async (email: string) => `token-for-${email}`,
+          },
+        },
         {
           provide: NewsletterVerifier,
           useClass: UnavailableNewsletterVerifier,
@@ -278,6 +285,43 @@ describe('EngagementPromptsResolver', () => {
         ).body
       )
     ).toEqual(['bypassed-stage']);
+  });
+
+  it('stops asking readers for their email once they signed up', async () => {
+    rules = [
+      rule('newsletter', { goal: EngagementGoal.NEWSLETTER }),
+      rule('announcement'),
+    ];
+    const page = 'documentType: PAGE, documentId: "page-1"';
+
+    expect(titles((await send(promptsQuery(page))).body)?.sort()).toEqual([
+      'announcement-stage',
+      'newsletter-stage',
+    ]);
+    expect(
+      titles(
+        (await send(promptsQuery(`${page}, newsletterToken: "signed-up"`))).body
+      )
+    ).toEqual(['announcement-stage']);
+    expect(
+      titles(
+        (await send(promptsQuery(`${page}, newsletterToken: "guess"`))).body
+      )
+    ).toHaveLength(2);
+  });
+
+  it('signs readers up for the newsletter with their email alone', async () => {
+    const { body } = await send(
+      `mutation { signUpForNewsletter(email: "reader@example.com") { newsletterToken } }`
+    );
+
+    expect(body).toEqual({
+      data: {
+        signUpForNewsletter: {
+          newsletterToken: 'token-for-reader@example.com',
+        },
+      },
+    });
   });
 
   it('shows soft stages on articles, never a cutoff', async () => {

@@ -4849,7 +4849,8 @@
       "requirement": {
         "REGISTRATION": "Inscription",
         "MEMBERSHIP": "Abonnement",
-        "PAID_MEMBERSHIP": "Abonnement payant"
+        "PAID_MEMBERSHIP": "Abonnement payant",
+        "NEWSLETTER": "Inscription à la newsletter (e-mail seulement)"
       },
       "actionType": {
         "URL": "Lien",
@@ -4863,11 +4864,6 @@
         "CANCEL": "Fermer",
         "OTHER": "Autre"
       },
-      "referral": {
-        "NONE": "Les liens de newsletter comptent comme les autres visites",
-        "UNLIMITED": "Les liens de newsletter ouvrent toujours l’article lié",
-        "LIMITED": "Les liens de newsletter ouvrent un nombre limité d’articles"
-      },
       "summary": {
         "announcement": "Dès la première visite : {{placement}}",
         "placement": {
@@ -4879,7 +4875,8 @@
         "requirement": {
           "REGISTRATION": "Inscription",
           "MEMBERSHIP": "Adhésion",
-          "PAID_MEMBERSHIP": "Adhésion payante"
+          "PAID_MEMBERSHIP": "Adhésion payante",
+          "NEWSLETTER": "Inscription à la newsletter"
         },
         "closable": "{{placement}}, refermable",
         "article": "Article {{number}}",
@@ -4892,7 +4889,7 @@
         "goal": "Objectif",
         "name": "Nom",
         "active": "Active",
-        "newsletterNote": "Les abonnements à la newsletter ne peuvent pas encore être vérifiés. Une étape restrictive d’une règle newsletter exige donc une inscription ou un abonnement et doit aussi proposer l’inscription à la newsletter.",
+        "newsletterNote": "Un mur newsletter ne demande qu’une adresse e-mail : les lecteurs la saisissent directement dans le message et sont inscrits via l’intégration Mailchimp (ils confirment par e-mail). Ensuite, les règles newsletter les laissent tranquilles.",
         "audience": "Public",
         "trigger": "Où et quand",
         "showOnArticles": "Afficher sur les articles",
@@ -4901,14 +4898,6 @@
         "showOnPages": "Afficher sur les pages",
         "meterWindowDays": "Compter les articles des … derniers jours",
         "meterWindowDaysInfo": "Les articles lus avant ne comptent plus. Chaque article compte une fois.",
-        "newsletterReferral": "Liens de newsletter",
-        "newsletterReferralInfo": "Qui arrive par un lien de newsletter peut lire cet article au-delà du comptage. Jamais pour les paywalls.",
-        "newsletterReferralLimit": "Articles par période",
-        "newsletterParams": "Paramètres d’URL des liens de newsletter",
-        "newsletterParamsInfo": "Une visite vient de la newsletter si l’URL contient un de ces paramètres. Laisse la valeur vide pour accepter toute valeur.",
-        "paramKey": "Paramètre, p. ex. utm_medium",
-        "paramValue": "Valeur, p. ex. email",
-        "addParam": "Ajouter un paramètre",
         "problems": "La règle ne peut pas être enregistrée ainsi :",
         "moreOptions": "Plus d’options",
         "presentation": "Présentation et actions",
@@ -4964,7 +4953,6 @@
         "announcementFromStart": "Une annonce apparaît dès le premier article",
         "announcementSoft": "Une annonce ne peut pas restreindre l’article",
         "announcementNoMeter": "Une annonce ne compte pas les articles",
-        "announcementNoReferral": "Une annonce n’a pas de réglages de newsletter",
         "newsletterActionRequired": "Propose aussi l’inscription à la newsletter"
       },
       "copyName": "{{name}} (copie)",

@@ -12,8 +12,17 @@ import {
 } from '@wepublish/website/api';
 import { useEffect, useState } from 'react';
 import { readMeterToken, storeMeterToken } from './engagement-storage';
-import { referralFromUrl } from './referral';
+import { useNewsletterToken } from './newsletter-signup';
 
+/**
+ * Tells the server that the reader opens an article (`viewArticle`): it meters
+ * them, decides their access and answers the prompts. When access is granted,
+ * the article it answers carries every block, which Apollo writes over the cut
+ * blocks of `ArticleDocument`.
+ *
+ * Runs in an effect, never while prefetching, and again once the reader logs
+ * in, their subscriptions change or they sign up at a newsletter wall.
+ */
 export function useArticleEngagement(article?: { id: string } | null) {
   const articleId = article?.id;
   const { user } = useUser();
@@ -24,6 +33,7 @@ export function useArticleEngagement(article?: { id: string } | null) {
     prompts: FullEngagementPromptFragment[];
   }>();
   const access = useArticleAccess(articleId);
+  const newsletterToken = useNewsletterToken();
 
   useEffect(() => {
     if (!articleId) {
@@ -37,8 +47,8 @@ export function useArticleEngagement(article?: { id: string } | null) {
         input: {
           articleId,
           meterToken: readMeterToken(),
-          referral: referralFromUrl(window.location.href),
           paywallBypassToken: getPaywallBypassToken(),
+          newsletterToken,
         },
       },
     })
@@ -63,7 +73,13 @@ export function useArticleEngagement(article?: { id: string } | null) {
     return () => {
       current = false;
     };
-  }, [articleId, user?.id, subscriptions?.length, viewArticle]);
+  }, [
+    articleId,
+    user?.id,
+    subscriptions?.length,
+    newsletterToken,
+    viewArticle,
+  ]);
 
   return {
     access,

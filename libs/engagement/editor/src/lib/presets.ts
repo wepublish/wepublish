@@ -5,7 +5,6 @@ import {
   EngagementGoal,
   EngagementPlacement,
   EngagementRequirement,
-  NewsletterReferralMode,
 } from '@wepublish/editor/api';
 import {
   EngagementRuleValues,
@@ -31,9 +30,6 @@ const rule = (values: Partial<EngagementRuleValues>): EngagementRuleValues => ({
   showOnPageIds: [],
   includePeeredArticles: false,
   meterWindowDays: null,
-  newsletterReferral: NewsletterReferralMode.None,
-  newsletterReferralLimit: 0,
-  newsletterParams: [],
   stages: [],
   ...values,
 });
@@ -52,29 +48,17 @@ export const ENGAGEMENT_PRESETS: Record<
       goal: EngagementGoal.Newsletter,
       audience: EngagementAudience.Anonymous,
       meterWindowDays: 30,
-      newsletterReferral: NewsletterReferralMode.Limited,
-      newsletterReferralLimit: 3,
-      newsletterParams: [{ key: 'utm_medium', value: 'email' }],
       stages: [
         stageDefaults({
           afterArticles: 2,
           placement: EngagementPlacement.Modal,
           actions: [actionDefaults({ type: EngagementActionType.Newsletter })],
         }),
+        // The website asks for the email right in the cutoff.
         hardStage({
           afterArticles: 4,
-          requirement: EngagementRequirement.Registration,
-          actions: [
-            actionDefaults({ type: EngagementActionType.Newsletter }),
-            actionDefaults({
-              type: EngagementActionType.Register,
-              role: EngagementActionRole.Other,
-            }),
-            actionDefaults({
-              type: EngagementActionType.Login,
-              role: EngagementActionRole.Other,
-            }),
-          ],
+          requirement: EngagementRequirement.Newsletter,
+          actions: [],
         }),
       ],
     }),

@@ -17,7 +17,12 @@
       "NEWSLETTER": "Newsletter abonnieren",
       "URL": "Mehr erfahren"
     },
-    "dismiss": "Weiterlesen"
+    "dismiss": "Weiterlesen",
+    "newsletterWall": {
+      "email": "E-Mail-Adresse",
+      "submit": "Weiterlesen",
+      "error": "Das hat nicht geklappt. Prüfe deine E-Mail-Adresse und versuche es nochmals."
+    }
   },
   "banner": {
     "close": "Banner schliessen"

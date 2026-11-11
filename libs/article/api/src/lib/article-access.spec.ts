@@ -37,11 +37,7 @@ const paywall = (overrides: Partial<AccessPaywall> = {}): AccessPaywall => ({
   ...overrides,
 });
 
-const meteredGranted: MeteredAccess = {
-  granted: true,
-  record: true,
-  referral: false,
-};
+const meteredGranted: MeteredAccess = { granted: true, record: true };
 
 const meteredRestricted: MeteredAccess = {
   granted: false,
@@ -67,16 +63,6 @@ describe('evaluateArticleAccess', () => {
           reader: anonymous,
           paywall: paywall(),
           metered: meteredGranted,
-        })
-      ).toEqual(paywallRestriction);
-    });
-
-    it('ignores newsletter referrals', () => {
-      expect(
-        evaluateArticleAccess({
-          reader: anonymous,
-          paywall: paywall(),
-          metered: { granted: true, record: true, referral: true },
         })
       ).toEqual(paywallRestriction);
     });

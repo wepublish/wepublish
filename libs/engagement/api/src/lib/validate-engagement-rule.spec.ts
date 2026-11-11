@@ -5,7 +5,6 @@ import {
   EngagementGoal,
   EngagementPlacement,
   EngagementRequirement,
-  NewsletterReferralMode,
 } from '@prisma/client';
 import {
   EngagementRuleDraft,
@@ -44,8 +43,6 @@ const metered = (
 ): EngagementRuleDraft => ({
   goal: EngagementGoal.MEMBERSHIP,
   meterWindowDays: 30,
-  newsletterReferral: NewsletterReferralMode.NONE,
-  newsletterReferralLimit: 0,
   stages: [soft(2), hard(4)],
   ...overrides,
 });
@@ -55,8 +52,6 @@ const announcement = (
 ): EngagementRuleDraft => ({
   goal: EngagementGoal.ANNOUNCEMENT,
   meterWindowDays: null,
-  newsletterReferral: NewsletterReferralMode.NONE,
-  newsletterReferralLimit: 0,
   stages: [soft(0, { placement: EngagementPlacement.BANNER })],
   ...overrides,
 });
@@ -155,17 +150,9 @@ describe('validateEngagementRule', () => {
     );
   });
 
-  it('keeps meters and referrals off announcements', () => {
-    expect(
-      codes(
-        announcement({
-          meterWindowDays: 30,
-          newsletterReferral: NewsletterReferralMode.UNLIMITED,
-        })
-      )
-    ).toEqual([
+  it('keeps meters off announcements', () => {
+    expect(codes(announcement({ meterWindowDays: 30 }))).toEqual([
       'meterWindowDays: announcementNoMeter',
-      'newsletterReferral: announcementNoReferral',
     ]);
   });
 
@@ -176,17 +163,6 @@ describe('validateEngagementRule', () => {
     expect(codes(metered({ meterWindowDays: 0 }))).toEqual([
       'meterWindowDays: min',
     ]);
-  });
-
-  it('needs a limit of at least one for limited referrals', () => {
-    expect(
-      codes(
-        metered({
-          newsletterReferral: NewsletterReferralMode.LIMITED,
-          newsletterReferralLimit: 0,
-        })
-      )
-    ).toEqual(['newsletterReferralLimit: min']);
   });
 
   it('needs a url on url and newsletter actions', () => {
@@ -224,6 +200,20 @@ describe('validateEngagementRule', () => {
         metered({
           goal: EngagementGoal.NEWSLETTER,
           stages: [soft(2), hard(4, { actions: [newsletterAction] })],
+        })
+      )
+    ).toEqual([]);
+  });
+
+  it('needs no newsletter action on a newsletter wall, which is the signup', () => {
+    expect(
+      codes(
+        metered({
+          goal: EngagementGoal.NEWSLETTER,
+          stages: [
+            soft(2),
+            hard(4, { requirement: EngagementRequirement.NEWSLETTER }),
+          ],
         })
       )
     ).toEqual([]);

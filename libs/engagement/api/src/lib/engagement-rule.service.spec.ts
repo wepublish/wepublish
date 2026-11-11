@@ -9,7 +9,6 @@ import {
   EngagementGoal,
   EngagementPlacement,
   EngagementRequirement,
-  NewsletterReferralMode,
   PrismaClient,
 } from '@prisma/client';
 import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
@@ -58,9 +57,6 @@ const storedRule = {
   showOnArticles: true,
   includePeeredArticles: false,
   meterWindowDays: null,
-  newsletterReferral: NewsletterReferralMode.NONE,
-  newsletterReferralLimit: 0,
-  newsletterParams: [{ key: 'utm_medium', value: 'email' }],
   showOnPages: [{ id: 'page-1' }],
   audienceMemberPlans: [{ id: 'plan-1' }],
   stages: [stage],
@@ -76,9 +72,6 @@ const metered: CreateEngagementRuleInput = {
   showOnPageIds: ['page-1'],
   includePeeredArticles: false,
   meterWindowDays: 30,
-  newsletterReferral: NewsletterReferralMode.NONE,
-  newsletterReferralLimit: 0,
-  newsletterParams: [],
   stages: [
     {
       afterArticles: 2,
@@ -182,7 +175,6 @@ describe('EngagementRuleService', () => {
         id: 'rule-1',
         showOnPageIds: ['page-1'],
         audienceMemberPlanIds: ['plan-1'],
-        newsletterParams: [{ key: 'utm_medium', value: 'email' }],
         stages: [expect.objectContaining({ id: 'stage-1', actions: [] })],
       }),
     ]);

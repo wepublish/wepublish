@@ -1065,9 +1065,6 @@ export type CreateEngagementRuleInput = {
   includePeeredArticles?: Scalars['Boolean']['input'];
   meterWindowDays?: InputMaybe<Scalars['Int']['input']>;
   name: Scalars['String']['input'];
-  newsletterParams?: Array<NewsletterParamInput>;
-  newsletterReferral?: NewsletterReferralMode;
-  newsletterReferralLimit?: Scalars['Int']['input'];
   priority?: Scalars['Int']['input'];
   showOnArticles?: Scalars['Boolean']['input'];
   showOnPageIds?: Array<Scalars['String']['input']>;
@@ -1437,6 +1434,7 @@ export type EngagementPrompt = {
 /** What a reader needs to get past a hard stage. */
 export enum EngagementRequirement {
   Membership = 'MEMBERSHIP',
+  Newsletter = 'NEWSLETTER',
   PaidMembership = 'PAID_MEMBERSHIP',
   Registration = 'REGISTRATION'
 }
@@ -1454,9 +1452,6 @@ export type EngagementRule = {
   meterWindowDays?: Maybe<Scalars['Int']['output']>;
   modifiedAt: Scalars['DateTime']['output'];
   name: Scalars['String']['output'];
-  newsletterParams: Array<NewsletterParam>;
-  newsletterReferral: NewsletterReferralMode;
-  newsletterReferralLimit: Scalars['Int']['output'];
   /** Higher priorities fill the website's slots first. */
   priority: Scalars['Int']['output'];
   showOnArticles: Scalars['Boolean']['output'];
@@ -3470,6 +3465,8 @@ export type Mutation = {
   sendWebsiteLogin: Scalars['String']['output'];
   /** Stores which customer of a payment provider each user is (for bexio the contact id), replacing the user's previous one of that provider; up to 500 users per call. Users that do not exist are skipped. Returns how many users were updated. */
   setPaymentProviderCustomers: Scalars['Int']['output'];
+  /** Signs an email up for the newsletter, pending its confirmation by mail. Newsletter walls only ask for this. */
+  signUpForNewsletter: NewsletterSignup;
   /** Ask the mail provider for the current delivery state of mails that are still open. Complements the provider webhook, which is not reachable in local development. */
   syncMailLogStates: MailLogSyncModel;
   /** Sends a test email for the given event */
@@ -4681,6 +4678,11 @@ export type MutationSetPaymentProviderCustomersArgs = {
 };
 
 
+export type MutationSignUpForNewsletterArgs = {
+  email: Scalars['String']['input'];
+};
+
+
 export type MutationSyncMailLogStatesArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
 };
@@ -5385,17 +5387,6 @@ export type NewsletterMergeTag = {
   tag: Scalars['String']['output'];
 };
 
-export type NewsletterParam = {
-  __typename: 'NewsletterParam';
-  key: Scalars['String']['output'];
-  value: Scalars['String']['output'];
-};
-
-export type NewsletterParamInput = {
-  key: Scalars['String']['input'];
-  value?: Scalars['String']['input'];
-};
-
 export type NewsletterPublishResult = {
   __typename: 'NewsletterPublishResult';
   campaign: MailchimpDraft;
@@ -5403,18 +5394,17 @@ export type NewsletterPublishResult = {
   report: NewsletterReport;
 };
 
-/** Whether readers coming from a newsletter link may read the linked article past the meter. */
-export enum NewsletterReferralMode {
-  Limited = 'LIMITED',
-  None = 'NONE',
-  Unlimited = 'UNLIMITED'
-}
-
 export type NewsletterReport = {
   __typename: 'NewsletterReport';
   bytes: Scalars['Int']['output'];
   missingArticles: Array<Scalars['String']['output']>;
   missingFooter: Array<Scalars['String']['output']>;
+};
+
+export type NewsletterSignup = {
+  __typename: 'NewsletterSignup';
+  /** Keep it (the website uses a cookie) and send it with viewArticle and engagementPrompts: it gets the reader past newsletter walls and keeps newsletter prompts away. */
+  newsletterToken: Scalars['String']['output'];
 };
 
 export type NotificationConfirmation = {
@@ -7080,6 +7070,7 @@ export type QueryDocumentsArgs = {
 export type QueryEngagementPromptsArgs = {
   documentId: Scalars['String']['input'];
   documentType: EngagementDocumentType;
+  newsletterToken?: InputMaybe<Scalars['String']['input']>;
   paywallBypassToken?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -8808,9 +8799,6 @@ export type UpdateEngagementRuleInput = {
   includePeeredArticles?: Scalars['Boolean']['input'];
   meterWindowDays?: InputMaybe<Scalars['Int']['input']>;
   name: Scalars['String']['input'];
-  newsletterParams?: Array<NewsletterParamInput>;
-  newsletterReferral?: NewsletterReferralMode;
-  newsletterReferralLimit?: Scalars['Int']['input'];
   priority?: Scalars['Int']['input'];
   showOnArticles?: Scalars['Boolean']['input'];
   showOnPageIds?: Array<Scalars['String']['input']>;
@@ -8956,9 +8944,9 @@ export type ViewArticleInput = {
   articleId: Scalars['String']['input'];
   /** The meterToken the last viewArticle answered, for anonymous readers. */
   meterToken?: InputMaybe<Scalars['String']['input']>;
+  /** The newsletterToken of signUpForNewsletter, for newsletter walls. */
+  newsletterToken?: InputMaybe<Scalars['String']['input']>;
   paywallBypassToken?: InputMaybe<Scalars['String']['input']>;
-  /** The url params of the current page, for newsletter referrals. Only open the article they link to. */
-  referral?: InputMaybe<Array<NewsletterParamInput>>;
 };
 
 export type VimeoVideoBlock = BaseBlock & {

@@ -1802,6 +1802,8 @@ enum EngagementRequirement {
   REGISTRATION
   MEMBERSHIP
   PAID_MEMBERSHIP
+  /// An email address for the newsletter, no account.
+  NEWSLETTER
 }
 
 enum EngagementActionType {
@@ -1810,12 +1812,6 @@ enum EngagementActionType {
   LOGIN
   REGISTER
   MEMBERSHIP
-}
-
-enum NewsletterReferralMode {
-  NONE
-  UNLIMITED
-  LIMITED
 }
 
 enum EngagementActionRole {
@@ -1845,11 +1841,7 @@ model EngagementRule {
   showOnPages           Page[]
   includePeeredArticles Boolean            @default(false)
 
-  meterWindowDays         Int?
-  newsletterReferral      NewsletterReferralMode @default(NONE)
-  newsletterReferralLimit Int                    @default(0)
-  /// [{key, value}] url params that mark a visit from a newsletter.
-  newsletterParams        Json?
+  meterWindowDays       Int?
 
   stages EngagementStage[]
 

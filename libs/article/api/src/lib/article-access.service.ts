@@ -4,9 +4,9 @@ import { AuthSession } from '@wepublish/authentication/api';
 import {
   EngagementRuleService,
   MeterService,
+  NewsletterSignupService,
   ReaderContextService,
   ReaderRequest,
-  ReferralParam,
   articleTarget,
   matchingRules,
   maxMeterWindowDays,
@@ -46,7 +46,8 @@ export class ArticleAccessService {
     private paywallService: PaywallService,
     private readers: ReaderContextService,
     private rules: EngagementRuleService,
-    private meters: MeterService
+    private meters: MeterService,
+    private signups: NewsletterSignupService
   ) {}
 
   accessFor(
@@ -75,15 +76,15 @@ export class ArticleAccessService {
     session,
     articleId,
     meterToken,
-    referral,
     paywallBypassToken,
+    newsletterToken,
   }: {
     req: ArticleRequest;
     session: AuthSession | null | undefined;
     articleId: string;
     meterToken?: string | null;
-    referral?: ReferralParam[];
     paywallBypassToken?: string | null;
+    newsletterToken?: string | null;
   }) {
     const article = await this.articles.load(articleId);
 
@@ -94,12 +95,17 @@ export class ArticleAccessService {
     }
 
     const now = new Date();
-    const [reader, paywall, rules, paywallBypassed] = await Promise.all([
+    const [requestReader, paywall, rules, paywallBypassed] = await Promise.all([
       this.readers.forRequest(req, session),
       this.paywallOf(article, paywallBypassToken),
       this.rules.getActiveRules(),
       this.readers.isPaywallBypassToken(paywallBypassToken),
     ]);
+    const reader = {
+      ...requestReader,
+      newsletter:
+        this.signups.statusOf(newsletterToken) ?? requestReader.newsletter,
+    };
     const matching = matchingRules(
       rules,
       { ...reader, paywallBypassed },
@@ -110,7 +116,6 @@ export class ArticleAccessService {
       rules: matching,
       meter,
       articleId,
-      referral,
       now,
     });
     const access = evaluateArticleAccess({
@@ -122,10 +127,7 @@ export class ArticleAccessService {
     const maxWindowDays = maxMeterWindowDays(rules);
     const read =
       access.granted && metered.granted && metered.record ?
-        recordRead(meter, articleId, now, {
-          maxWindowDays,
-          referral: metered.referral,
-        })
+        recordRead(meter, articleId, now, { maxWindowDays })
       : meter;
 
     if (access.granted) {

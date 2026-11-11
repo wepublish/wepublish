@@ -83,12 +83,22 @@ query EngagementPrompts(
   $documentType: EngagementDocumentType!
   $documentId: String!
   $paywallBypassToken: String
+  $newsletterToken: String
 ) {
   engagementPrompts(
     documentType: $documentType
     documentId: $documentId
     paywallBypassToken: $paywallBypassToken
+    newsletterToken: $newsletterToken
   ) {
     ...FullEngagementPrompt
+  }
+}
+
+# Newsletter walls: the token gets the reader past them and is sent with
+# viewArticle and EngagementPrompts.
+mutation SignUpForNewsletter($email: String!) {
+  signUpForNewsletter(email: $email) {
+    newsletterToken
   }
 }

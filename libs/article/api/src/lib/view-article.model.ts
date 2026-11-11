@@ -6,10 +6,7 @@ import {
   registerEnumType,
 } from '@nestjs/graphql';
 import { EngagementRequirement } from '@prisma/client';
-import {
-  EngagementPrompt,
-  NewsletterParamInput,
-} from '@wepublish/engagement/api';
+import { EngagementPrompt } from '@wepublish/engagement/api';
 import { ArticleAccessSource } from './article-access';
 import { Article } from './article.model';
 
@@ -53,14 +50,14 @@ export class ViewArticleInput {
   })
   meterToken?: string;
 
-  @Field(() => [NewsletterParamInput], {
-    nullable: true,
-    description: `The url params of the current page, for newsletter referrals. Only open the article they link to.`,
-  })
-  referral?: NewsletterParamInput[];
-
   @Field({ nullable: true })
   paywallBypassToken?: string;
+
+  @Field({
+    nullable: true,
+    description: `The newsletterToken of signUpForNewsletter, for newsletter walls.`,
+  })
+  newsletterToken?: string;
 }
 
 @ObjectType()

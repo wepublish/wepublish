@@ -13,6 +13,7 @@ import {
   findReusableDraft,
   MailchimpError,
   setCampaignHtml,
+  subscribeMember,
   updateDraftCampaign,
 } from './mailchimp';
 
@@ -113,6 +114,26 @@ export class NewsletterMailchimpService {
     await setCampaignHtml(apiKey, campaign.id, html);
 
     return { campaign, created: !existing };
+  }
+
+  /**
+   * Signs an address up for the newsletter (newsletter walls). `false` when
+   * no Mailchimp integration is set up, so there is nowhere to sign it up.
+   */
+  async subscribe(email: string): Promise<boolean> {
+    const config = await this.config();
+
+    if (!config) {
+      return false;
+    }
+
+    await subscribeMember(
+      config.apiKey,
+      config.audienceId,
+      email.trim().toLowerCase()
+    );
+
+    return true;
   }
 
   /**

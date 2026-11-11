@@ -15,7 +15,6 @@ import {
   EngagementGoal,
   EngagementPlacement,
   EngagementRequirement,
-  NewsletterReferralMode,
 } from '@prisma/client';
 import { Image } from '@wepublish/image/api';
 import type { RichtextJSONDocument } from '@wepublish/richtext';
@@ -45,11 +44,6 @@ registerEnumType(EngagementRequirement, {
 
 registerEnumType(EngagementActionType, { name: 'EngagementActionType' });
 
-registerEnumType(NewsletterReferralMode, {
-  name: 'NewsletterReferralMode',
-  description: `Whether readers coming from a newsletter link may read the linked article past the meter.`,
-});
-
 registerEnumType(EngagementActionRole, { name: 'EngagementActionRole' });
 
 export enum EngagementDocumentType {
@@ -58,24 +52,6 @@ export enum EngagementDocumentType {
 }
 
 registerEnumType(EngagementDocumentType, { name: 'EngagementDocumentType' });
-
-@ObjectType()
-export class NewsletterParam {
-  @Field()
-  key!: string;
-
-  @Field()
-  value!: string;
-}
-
-@InputType()
-export class NewsletterParamInput {
-  @Field()
-  key!: string;
-
-  @Field({ defaultValue: '' })
-  value!: string;
-}
 
 @ObjectType()
 export class EngagementAction {
@@ -246,15 +222,6 @@ export class EngagementRule {
   @Field(() => Int, { nullable: true })
   meterWindowDays?: number | null;
 
-  @Field(() => NewsletterReferralMode)
-  newsletterReferral!: NewsletterReferralMode;
-
-  @Field(() => Int)
-  newsletterReferralLimit!: number;
-
-  @Field(() => [NewsletterParam])
-  newsletterParams!: NewsletterParam[];
-
   @Field(() => [EngagementStage])
   stages!: EngagementStage[];
 }
@@ -293,17 +260,6 @@ export class CreateEngagementRuleInput {
 
   @Field(() => Int, { nullable: true })
   meterWindowDays?: number | null;
-
-  @Field(() => NewsletterReferralMode, {
-    defaultValue: NewsletterReferralMode.NONE,
-  })
-  newsletterReferral!: NewsletterReferralMode;
-
-  @Field(() => Int, { defaultValue: 0 })
-  newsletterReferralLimit!: number;
-
-  @Field(() => [NewsletterParamInput], { defaultValue: [] })
-  newsletterParams!: NewsletterParamInput[];
 
   @Field(() => [EngagementStageInput])
   stages!: EngagementStageInput[];
@@ -345,4 +301,10 @@ export class EngagementPromptsArgs {
     description: `A paywall bypass token, checked on the server, for rules shown to readers with a bypass.`,
   })
   paywallBypassToken?: string;
+
+  @Field({
+    nullable: true,
+    description: `The newsletterToken of signUpForNewsletter, checked on the server: newsletter prompts leave readers who signed up alone.`,
+  })
+  newsletterToken?: string;
 }

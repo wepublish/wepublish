@@ -21,7 +21,6 @@ import {
   EngagementGoal,
   EngagementPlacement,
   EngagementRequirement,
-  NewsletterReferralMode,
 } from '@prisma/client';
 import {
   EngagementRuleWithStages,
@@ -178,9 +177,6 @@ const hardMeter = (
   showOnPageIds: [],
   includePeeredArticles: false,
   meterWindowDays: 30,
-  newsletterReferral: NewsletterReferralMode.NONE,
-  newsletterReferralLimit: 0,
-  newsletterParams: [],
   stages: [
     {
       id: 'hard',

@@ -20,6 +20,10 @@ import {
 } from '@wepublish/website/api';
 import { PropsWithChildren } from 'react';
 import { ENGAGEMENT_METER_KEY } from './engagement-storage';
+import {
+  NEWSLETTER_COOKIE_KEY,
+  storeNewsletterToken,
+} from './newsletter-signup';
 import { useArticleEngagement } from './use-article-engagement';
 
 const preview = mockRichTextBlock();
@@ -80,6 +84,7 @@ describe('useArticleEngagement', () => {
     views = [];
     user = null;
     localStorage.clear();
+    document.cookie = `${NEWSLETTER_COOKIE_KEY}=; max-age=0; path=/`;
     clearArticleAccess();
     client = new ApolloClient({
       cache: new InMemoryCache({
@@ -115,8 +120,8 @@ describe('useArticleEngagement', () => {
         input: {
           articleId: article.id,
           meterToken: 'token-0',
-          referral: [],
           paywallBypassToken: undefined,
+          newsletterToken: undefined,
         },
       },
     ]);
@@ -124,17 +129,15 @@ describe('useArticleEngagement', () => {
     expect(result.current.prompts).toEqual([prompt]);
   });
 
-  it('sends the params of the current url as referral', async () => {
-    window.history.pushState({}, '', '/a/article?utm_medium=email');
-
+  it('views the article again once the reader signed up for the newsletter', async () => {
     renderHook(() => useArticleEngagement(article), { wrapper });
 
     await waitFor(() => expect(views).toHaveLength(1));
-    expect(views[0].input.referral).toEqual([
-      { key: 'utm_medium', value: 'email' },
-    ]);
 
-    window.history.pushState({}, '', '/');
+    act(() => storeNewsletterToken('signed.token'));
+
+    await waitFor(() => expect(views).toHaveLength(2));
+    expect(views[1].input.newsletterToken).toBe('signed.token');
   });
 
   it('views the article again once the reader logged in', async () => {

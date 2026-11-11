@@ -12,7 +12,6 @@ import {
   EngagementPlacement,
   EngagementRulesDocument,
   FullEngagementRuleFragment,
-  NewsletterReferralMode,
   PaywallListDocument,
   UpdateEngagementRuleDocument,
 } from '@wepublish/editor/api';
@@ -36,9 +35,6 @@ const rule: FullEngagementRuleFragment = {
   showOnPageIds: [],
   includePeeredArticles: false,
   meterWindowDays: null,
-  newsletterReferral: NewsletterReferralMode.None,
-  newsletterReferralLimit: 0,
-  newsletterParams: [],
   stages: [
     {
       __typename: 'EngagementStage',

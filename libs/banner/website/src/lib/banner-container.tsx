@@ -5,6 +5,7 @@ import {
   EngagementPromptSlot,
   resolveEngagement,
   useEngagementDismissals,
+  useNewsletterToken,
 } from '@wepublish/engagement/website';
 import { getPaywallBypassToken } from '@wepublish/paywall/website';
 import {
@@ -36,6 +37,8 @@ export function BannerContainer({
   const { dismissals, legacyBannerClosedAt, now, dismiss } =
     useEngagementDismissals();
 
+  const newsletterToken = useNewsletterToken();
+
   useEffect(() => setPaywallBypassToken(getPaywallBypassToken()), []);
 
   const { data, refetch } = useQuery(EngagementPromptsDocument, {
@@ -47,6 +50,7 @@ export function BannerContainer({
           EngagementDocumentType.Article
         : EngagementDocumentType.Page,
       paywallBypassToken,
+      newsletterToken,
     },
   });
 

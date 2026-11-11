@@ -9,7 +9,6 @@ import {
   EngagementRequirement,
   FullEngagementRuleFragment,
   FullImageFragment,
-  NewsletterReferralMode,
 } from '@wepublish/editor/api';
 import { RichTextBlockValue } from '@wepublish/ui/editor';
 import { TFunction } from 'i18next';
@@ -55,9 +54,6 @@ export type EngagementRuleValues = {
   showOnPageIds: string[];
   includePeeredArticles: boolean;
   meterWindowDays: number | null;
-  newsletterReferral: NewsletterReferralMode;
-  newsletterReferralLimit: number;
-  newsletterParams: Array<{ key: string; value: string }>;
   stages: EngagementStageValues[];
 };
 
@@ -214,6 +210,7 @@ export function engagementRuleProblems(
 
       if (
         rule.goal === EngagementGoal.Newsletter &&
+        stage.requirement !== EngagementRequirement.Newsletter &&
         !stage.actions.some(
           action => action.type === EngagementActionType.Newsletter
         )
@@ -241,21 +238,10 @@ export function engagementRuleProblems(
     if (rule.meterWindowDays != null) {
       problem('meterWindowDays', 'announcementNoMeter');
     }
-
-    if (rule.newsletterReferral !== NewsletterReferralMode.None) {
-      problem('newsletterReferral', 'announcementNoReferral');
-    }
   } else if (rule.meterWindowDays == null) {
     problem('meterWindowDays', 'required');
   } else if (rule.meterWindowDays < 1) {
     problem('meterWindowDays', 'min');
-  }
-
-  if (
-    rule.newsletterReferral === NewsletterReferralMode.Limited &&
-    rule.newsletterReferralLimit < 1
-  ) {
-    problem('newsletterReferralLimit', 'min');
   }
 
   if (
@@ -311,11 +297,6 @@ export const createEngagementRuleSchema = (
       showOnPageIds: z.array(z.string()),
       includePeeredArticles: z.boolean(),
       meterWindowDays: z.number().int().nullable(),
-      newsletterReferral: z.nativeEnum(NewsletterReferralMode),
-      newsletterReferralLimit: z.number().int(),
-      newsletterParams: z.array(
-        z.object({ key: z.string(), value: z.string() })
-      ),
       stages: z.array(stageSchema),
     })
     .superRefine((rule, context) => {
@@ -332,7 +313,6 @@ export const createEngagementRuleSchema = (
 
 export const toEngagementRuleInput = ({
   stages,
-  newsletterParams,
   audienceMemberPlanIds,
   ...rule
 }: EngagementRuleValues): CreateEngagementRuleInput => ({
@@ -341,7 +321,6 @@ export const toEngagementRuleInput = ({
     rule.audience === EngagementAudience.MemberPlans ?
       audienceMemberPlanIds
     : [],
-  newsletterParams: newsletterParams.filter(({ key }) => key.trim()),
   stages: stages.map(({ image: _image, actions, ...stage }) => ({
     ...stage,
     actions: actions.map(action => ({ ...action })),
@@ -359,9 +338,6 @@ export const engagementRuleToValues = ({
   showOnPageIds,
   includePeeredArticles,
   meterWindowDays,
-  newsletterReferral,
-  newsletterReferralLimit,
-  newsletterParams,
   stages,
 }: FullEngagementRuleFragment): EngagementRuleValues => ({
   name,
@@ -374,9 +350,6 @@ export const engagementRuleToValues = ({
   showOnPageIds,
   includePeeredArticles,
   meterWindowDays,
-  newsletterReferral,
-  newsletterReferralLimit,
-  newsletterParams: newsletterParams.map(({ key, value }) => ({ key, value })),
   stages: stages.map(({ id: _id, __typename, actions, image, ...stage }) => ({
     ...stage,
     image: image ?? null,
