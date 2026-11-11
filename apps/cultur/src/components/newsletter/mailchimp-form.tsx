@@ -1,5 +1,5 @@
 import { Box, Button, TextField } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 type MailchimpSubscribeFormProps = {
   signupUrl: string;
@@ -9,6 +9,14 @@ type MailchimpSubscribeFormProps = {
   source?: string;
 };
 
+/**
+ * The defaults come from the query string. They seed the fields once; the
+ * caller keys this component on them, so a different link remounts the form
+ * with the new values rather than overwriting what someone has typed. The
+ * effect that used to copy props into state on every change is what the React
+ * Compiler rejects (`react-hooks/set-state-in-effect`), and the key is the
+ * documented way to express the same intent.
+ */
 export default function MailchimpSubscribeForm(
   props: MailchimpSubscribeFormProps
 ) {
@@ -17,12 +25,6 @@ export default function MailchimpSubscribeForm(
   const [email, setEmail] = useState(defaultEmail || '');
   const [firstName, setFirstName] = useState(defaultFirstName || '');
   const [lastName, setLastName] = useState(defaultLastName || '');
-
-  useEffect(() => {
-    setEmail(defaultEmail || '');
-    setFirstName(defaultFirstName || '');
-    setLastName(defaultLastName || '');
-  }, [defaultEmail, defaultFirstName, defaultLastName]);
 
   return (
     <form

@@ -211,17 +211,17 @@ export function useWorkingBlocks(
 ): WorkingOps {
   const currentBlocksRef = useRef(blocks);
   const lastSyncedBlocksRef = useRef(blocks);
-  currentBlocksRef.current = blocks;
-
-  const historyRef = useRef<WorkingBlock[][]>([]);
-  const historyIndexRef = useRef(-1);
   const [historyPos, setHistoryPos] = useState({ index: 0, total: 1 });
 
-  const [workingBlocks, setWorkingBlocks] = useState<WorkingBlock[]>(() => {
-    const initial = initWorkingBlocks(blocks, t, blockStyleNames);
-    historyRef.current = [initial];
-    historyIndexRef.current = 0;
-    return initial;
+  const [workingBlocks, setWorkingBlocks] = useState<WorkingBlock[]>(() =>
+    initWorkingBlocks(blocks, t, blockStyleNames)
+  );
+
+  const historyRef = useRef<WorkingBlock[][]>([workingBlocks]);
+  const historyIndexRef = useRef(0);
+
+  useEffect(() => {
+    currentBlocksRef.current = blocks;
   });
 
   useEffect(() => {

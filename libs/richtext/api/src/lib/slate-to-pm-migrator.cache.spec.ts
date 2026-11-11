@@ -1,3 +1,5 @@
+import { type DistributedClaims } from '@wepublish/dragonfly/api';
+import { type NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { SlateToPmMigrator } from './slate-to-pm-migrator';
 
 type Reset = [string, ...unknown[]];
@@ -33,10 +35,12 @@ const setup = ({
     $executeRawUnsafe: vi.fn().mockResolvedValue(1),
   };
   const scheduler = { deleteCronJob: vi.fn() };
-  const kv = {
-    claim: vi.fn().mockResolvedValue(true),
-    resetNamespace: vi.fn().mockResolvedValue(undefined),
-  };
+  const claims = {
+    claim: vi.fn().mockResolvedValue('claimed'),
+  } satisfies Pick<DistributedClaims, 'claim'>;
+  const namespaceResets = {
+    reset: vi.fn().mockResolvedValue(undefined),
+  } satisfies Pick<NamespaceResets, 'reset'>;
   const publicContentCache = {
     invalidate: vi.fn().mockResolvedValue(undefined),
     invalidateComments: vi.fn().mockResolvedValue(undefined),
@@ -45,23 +49,27 @@ const setup = ({
   const migrator = new SlateToPmMigrator(
     prisma as any,
     scheduler as any,
-    kv as any,
+    claims as unknown as DistributedClaims,
+    namespaceResets as unknown as NamespaceResets,
     publicContentCache as any
   );
 
   const resets = (): Reset[] => [
-    ...publicContentCache.invalidate.mock.calls.map(
-      (args): Reset => ['invalidate', ...args]
-    ),
-    ...publicContentCache.invalidateComments.mock.calls.map(
-      (args): Reset => ['invalidateComments', ...args]
-    ),
+    ...publicContentCache.invalidate.mock.calls.map((args): Reset => [
+      'invalidate',
+      ...args,
+    ]),
+    ...publicContentCache.invalidateComments.mock.calls.map((args): Reset => [
+      'invalidateComments',
+      ...args,
+    ]),
     ...publicContentCache.invalidateArticleLayout.mock.calls.map(
       (args): Reset => ['invalidateArticleLayout', ...args]
     ),
-    ...kv.resetNamespace.mock.calls.map(
-      (args): Reset => ['resetNamespace', ...args]
-    ),
+    ...namespaceResets.reset.mock.calls.map((args): Reset => [
+      'reset',
+      ...args,
+    ]),
   ];
 
   return { migrator, prisma, resets };
@@ -77,15 +85,15 @@ const MIGRATIONS: Array<[keyof SlateToPmMigrator, Reset[]]> = [
   ['migrateAuthors', [['invalidate', 'authors']]],
   ['migrateComments', [['invalidateComments', true]]],
   ['migrateEvents', [['invalidate']]],
-  ['migratePeerProfiles', [['resetNamespace', 'peer-profile']]],
-  ['migratePeers', [['resetNamespace', 'peering:remote-profiles']]],
+  ['migratePeerProfiles', [['reset', 'peer-profile']]],
+  ['migratePeers', [['reset', 'peering:remote-profiles']]],
   ['migratePolls', [['invalidate', 'polls']]],
   ['migrateTags', [['invalidate', 'articles']]],
   [
     'migrateMemberPlans',
     [
       ['invalidate', 'paywalls'],
-      ['resetNamespace', 'member-plans'],
+      ['reset', 'member-plans'],
     ],
   ],
   ['migratePaywalls', [['invalidate', 'paywalls']]],
@@ -190,15 +198,15 @@ describe('SlateToPmMigrator caches', () => {
         ['invalidate', 'authors'],
         ['invalidate', 'paywalls'],
         ['invalidate', 'paywalls'],
-        ['resetNamespace', 'member-plans'],
+        ['reset', 'member-plans'],
       ]);
     });
 
     it.each<[string, Reset[]]>([
       ['comments.revisions', [['invalidateComments', true]]],
       ['events', [['invalidate']]],
-      ['peerProfiles', [['resetNamespace', 'peer-profile']]],
-      ['peers', [['resetNamespace', 'peering:remote-profiles']]],
+      ['peerProfiles', [['reset', 'peer-profile']]],
+      ['peers', [['reset', 'peering:remote-profiles']]],
       ['polls', [['invalidate', 'polls']]],
       ['tags', [['invalidate', 'articles']]],
     ])(
@@ -219,6 +227,7 @@ describe('SlateToPmMigrator caches', () => {
             id: 'row-1',
             src: slate,
             tgt: new SlateToPmMigrator(
+              undefined as any,
               undefined as any,
               undefined as any,
               undefined as any,

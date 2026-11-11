@@ -1,11 +1,15 @@
 import { Prisma } from '@prisma/client';
+import { prismaDecimalCodec } from './kv-ttl-cache-prisma-decimal';
 import {
   deserializeCacheValue,
   serializeCacheValue,
 } from './kv-ttl-cache-serializer';
 
 const roundTrip = <T>(value: T) =>
-  deserializeCacheValue<T>(serializeCacheValue(value));
+  deserializeCacheValue<T>(
+    serializeCacheValue(value, prismaDecimalCodec),
+    prismaDecimalCodec
+  );
 
 describe('kv-ttl-cache serializer', () => {
   it('keeps nested dates as Date instances', () => {

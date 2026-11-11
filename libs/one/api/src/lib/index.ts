@@ -12,6 +12,7 @@ export * from './one-channel-status.resolver';
 export * from './medium-changelog-actions.model';
 export * from './medium-migrations.model';
 export * from './medium-stats.resolver';
+export * from './medium-features.resolver';
 export * from './medium-audit-log.model';
 export * from './medium-audit-log.service';
 export * from './medium-audit-log.resolver';

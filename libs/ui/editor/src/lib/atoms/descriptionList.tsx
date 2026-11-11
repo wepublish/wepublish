@@ -1,39 +1,42 @@
 import styled from '@emotion/styled';
-import { ReactNode } from 'react';
+import { PropsWithChildren, ReactNode } from 'react';
 
-export interface DescriptionListProps {
-  label?: ReactNode;
-  children?: ReactNode;
-}
+export const DescriptionList = styled.dl`
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: ${({ theme }) => theme.spacing(0.5, 2)};
+  align-items: baseline;
+  margin: ${({ theme }) => theme.spacing(0, 0, 2)};
+  font-size: ${({ theme }) => theme.typography.caption.fontSize};
 
-const List = styled.dl`
-  font-size: 12px;
-  margin: 0 auto;
-`;
-
-const ListItem = styled.div`
-  display: flex;
-  margin-bottom: 10px;
+  @container (max-width: 320px) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0 0;
+  }
 `;
 
 const Label = styled.dt`
-  color: gray;
-  flex-grow: 1;
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
 `;
 
-const ChildrenWrapper = styled.dd`
-  margin-left: 20px;
+const Value = styled.dd`
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: break-word;
 `;
 
-export function DescriptionList({ children }: DescriptionListProps) {
-  return <List>{children}</List>;
+export interface DescriptionListItemProps {
+  label?: ReactNode;
 }
 
-export function DescriptionListItem({ label, children }: DescriptionListProps) {
+export function DescriptionListItem({
+  label,
+  children,
+}: PropsWithChildren<DescriptionListItemProps>) {
   return (
-    <ListItem>
+    <>
       <Label>{label}</Label>
-      <ChildrenWrapper>{children}</ChildrenWrapper>
-    </ListItem>
+      <Value>{children}</Value>
+    </>
   );
 }

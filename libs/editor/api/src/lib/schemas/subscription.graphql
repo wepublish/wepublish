@@ -29,10 +29,22 @@ fragment FullSubscription on PublicSubscription {
     ...Deactivation
   }
   extendable
+  canRevertUpgrade
   currency
   goodie {
     id
     name
+  }
+  pendingPaymentMethodChange {
+    id
+    kind
+    state
+    createdAt
+    expiresAt
+    paymentMethod {
+      id
+      name
+    }
   }
 }
 
@@ -45,6 +57,11 @@ fragment TinySubscription on PublicSubscription {
   id
   createdAt
   modifiedAt
+
+  monthlyAmount
+  paymentPeriodicity
+  currency
+  paidUntil
 
   user {
     id
@@ -223,6 +240,18 @@ mutation CancelSubscription(
     reason: $reason
     skipMail: $skipMail
   ) {
+    ...FullSubscription
+  }
+}
+
+mutation RevertSubscriptionUpgrade($id: String!) {
+  revertSubscriptionUpgrade(id: $id) {
+    ...FullSubscription
+  }
+}
+
+mutation ReactivateSubscription($id: String!) {
+  reactivateSubscription(id: $id) {
     ...FullSubscription
   }
 }

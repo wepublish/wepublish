@@ -4,9 +4,11 @@ import fetch from 'node-fetch';
 import type { FileUpload } from 'graphql-upload';
 import {
   ArrayBufferUpload,
-  ImageTransformation,
   MediaAdapter,
+  ServerImageTransformation,
   UploadDocument,
+  UploadAudio,
+  UploadVideo,
   UploadImage,
 } from '@wepublish/image/api';
 import {
@@ -16,7 +18,7 @@ import {
 } from '@wepublish/media-transform-guard';
 import { validateImageDimension } from '@wepublish/media-transform-guard';
 import { SignJWT, importPKCS8, type KeyLike } from 'jose';
-import { v4 as uuidv4 } from 'uuid';
+import { v7 as uuidv7 } from 'uuid';
 import { Image } from '@prisma/client';
 
 export class MediaServerError extends Error {
@@ -92,7 +94,7 @@ export class NovaMediaAdapter implements MediaAdapter {
     // Related issue: https://github.com/form-data/form-data/issues/394
     form.hasKnownLength = () => false;
 
-    const imageId = uuidv4();
+    const imageId = uuidv7();
     const token = await this.generateAuthToken(imageId, 'upload');
     const uploadUrl = new URL(this.internalURL.toString());
     uploadUrl.searchParams.set('imageId', imageId);
@@ -188,7 +190,7 @@ export class NovaMediaAdapter implements MediaAdapter {
 
   async getImageURL(
     image: Image,
-    transformations?: ImageTransformation
+    transformations?: ServerImageTransformation
   ): Promise<string> {
     const queryParameters = [] as string[];
 
@@ -249,6 +251,10 @@ export class NovaMediaAdapter implements MediaAdapter {
     }
     **/
 
+    if (transformations?.format) {
+      queryParameters.push(`format=${transformations.format}`);
+    }
+
     // Max quality is 80 so 1 => 80
     queryParameters.push(`quality=${Math.ceil(this.config.quality * 80)}`);
 
@@ -286,7 +292,7 @@ export class NovaMediaAdapter implements MediaAdapter {
   async _uploadDocument(form: FormData): Promise<UploadDocument> {
     form.hasKnownLength = () => false;
 
-    const documentId = uuidv4();
+    const documentId = uuidv7();
     const token = await this.generateAuthToken(documentId, 'upload');
     const uploadUrl = new URL(`${this.internalURL}/document`);
     uploadUrl.searchParams.set('documentId', documentId);
@@ -344,6 +350,165 @@ export class NovaMediaAdapter implements MediaAdapter {
 
   async getDocumentThumbnailURL(document: { id: string }): Promise<string> {
     return `${this.url}/document/${document.id}/thumbnail`;
+  }
+
+  async uploadVideo(
+    fileUpload: Promise<FileUpload>,
+    posterUpload?: Promise<FileUpload>
+  ): Promise<UploadVideo> {
+    const form = new FormData();
+
+    const {
+      filename: inputFilename,
+      mimetype,
+      createReadStream,
+    }: FileUpload = await fileUpload;
+    form.append('file', createReadStream(), {
+      filename: inputFilename,
+      contentType: mimetype,
+    });
+
+    if (posterUpload) {
+      const poster: FileUpload = await posterUpload;
+      form.append('poster', poster.createReadStream(), {
+        filename: poster.filename,
+        contentType: poster.mimetype,
+      });
+    }
+
+    return this._uploadVideo(form);
+  }
+
+  async _uploadVideo(form: FormData): Promise<UploadVideo> {
+    form.hasKnownLength = () => false;
+
+    const videoId = uuidv7();
+    const token = await this.generateAuthToken(videoId, 'upload');
+    const uploadUrl = new URL(`${this.internalURL}/video`);
+    uploadUrl.searchParams.set('videoId', videoId);
+
+    const response = await fetch(uploadUrl, {
+      method: 'POST',
+      headers: { authorization: `Bearer ${token}` },
+      body: form,
+      signal: AbortSignal.timeout(50000) as any,
+    });
+
+    if (response.status >= 400) {
+      throw new MediaServerError(
+        mediaServerErrorMessage(response, await parseErrorBody(response))
+      );
+    }
+
+    const json = await response.json();
+
+    const { id, filename, fileSize, mimeType, extension } = json;
+
+    return { id, filename, fileSize, mimeType, extension };
+  }
+
+  async getVideoPosterURL(video: { id: string }): Promise<string> {
+    return `${this.url}/video/${video.id}/poster`;
+  }
+
+  async deleteVideo(id: string): Promise<boolean> {
+    const token = await this.generateAuthToken(id, 'delete');
+
+    const response = await fetch(`${this.internalURL}/video/${id}`, {
+      method: 'DELETE',
+      headers: { authorization: `Bearer ${token}` },
+    });
+
+    if (response.status >= 400) {
+      throw new MediaServerError(
+        mediaServerErrorMessage(response, await parseErrorBody(response))
+      );
+    }
+
+    return true;
+  }
+
+  async getVideoURL(video: {
+    id: string;
+    filename?: string | null;
+    extension?: string;
+  }): Promise<string> {
+    const name = video.filename ? encodeURIComponent(video.filename) : '';
+    return name ?
+        `${this.url}/video/${video.id}/${name}`
+      : `${this.url}/video/${video.id}`;
+  }
+
+  async uploadAudio(fileUpload: Promise<FileUpload>): Promise<UploadAudio> {
+    const form = new FormData();
+
+    const {
+      filename: inputFilename,
+      mimetype,
+      createReadStream,
+    }: FileUpload = await fileUpload;
+    form.append('file', createReadStream(), {
+      filename: inputFilename,
+      contentType: mimetype,
+    });
+
+    return this._uploadAudio(form);
+  }
+
+  async _uploadAudio(form: FormData): Promise<UploadAudio> {
+    form.hasKnownLength = () => false;
+
+    const audioId = uuidv7();
+    const token = await this.generateAuthToken(audioId, 'upload');
+    const uploadUrl = new URL(`${this.internalURL}/audio`);
+    uploadUrl.searchParams.set('audioId', audioId);
+
+    const response = await fetch(uploadUrl, {
+      method: 'POST',
+      headers: { authorization: `Bearer ${token}` },
+      body: form,
+      signal: AbortSignal.timeout(50000) as any,
+    });
+
+    if (response.status >= 400) {
+      throw new MediaServerError(
+        mediaServerErrorMessage(response, await parseErrorBody(response))
+      );
+    }
+
+    const json = await response.json();
+
+    const { id, filename, fileSize, mimeType, extension } = json;
+
+    return { id, filename, fileSize, mimeType, extension };
+  }
+
+  async deleteAudio(id: string): Promise<boolean> {
+    const token = await this.generateAuthToken(id, 'delete');
+
+    const response = await fetch(`${this.internalURL}/audio/${id}`, {
+      method: 'DELETE',
+      headers: { authorization: `Bearer ${token}` },
+    });
+
+    if (response.status >= 400) {
+      throw new MediaServerError(
+        mediaServerErrorMessage(response, await parseErrorBody(response))
+      );
+    }
+
+    return true;
+  }
+
+  async getAudioURL(audio: {
+    id: string;
+    filename?: string | null;
+    extension?: string;
+  }): Promise<string> {
+    const name = audio.filename ? encodeURIComponent(audio.filename) : '';
+    return name ?
+        `${this.url}/audio/${audio.id}/${name}`
+      : `${this.url}/audio/${audio.id}`;
   }
 
   /**

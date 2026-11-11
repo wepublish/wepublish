@@ -1,17 +1,15 @@
 import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
+import { Alert, Button, Stack, TextField } from '@mui/material';
 import { ResetPasswordWithTokenDocument } from '@wepublish/editor/api';
 import { LoginTemplate } from '@wepublish/ui/editor';
-import React, { FormEvent, useEffect, useRef, useState } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
-import { Button, Form as RForm, Message, toaster } from 'rsuite';
 
 import { Background } from './ui/loginBackground';
 
-const { Group, Label, Control } = RForm;
-
-const Form = styled(RForm)`
+const Form = styled.form`
   display: flex;
   flex-direction: column;
   margin: 0;
@@ -21,7 +19,7 @@ const Description = styled.p`
   text-align: center;
   margin-bottom: 16px;
   font-size: 14px;
-  color: var(--rs-text-secondary);
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
 `;
 
 const BackLink = styled.a`
@@ -29,7 +27,7 @@ const BackLink = styled.a`
   text-align: center;
   margin-top: 12px;
   font-size: 13px;
-  color: var(--rs-text-link);
+  color: ${({ theme }) => theme.vars.palette.primary.main};
   cursor: pointer;
   text-decoration: none;
   &:hover {
@@ -43,7 +41,11 @@ export function SetNewPassword() {
   const [password, setPassword] = useState('');
   const [passwordRepeat, setPasswordRepeat] = useState('');
   const [success, setSuccess] = useState(false);
+  const [mismatch, setMismatch] = useState(false);
+  const [error, setError] = useState('');
   const passwordInputRef = useRef<HTMLInputElement>(null);
+  const passwordRepeatInputRef = useRef<HTMLInputElement>(null);
+  const goToLoginRef = useRef<HTMLAnchorElement>(null);
   const { t } = useTranslation();
 
   const [resetPassword, { loading }] = useMutation(
@@ -54,36 +56,29 @@ export function SetNewPassword() {
     passwordInputRef.current?.focus();
   }, []);
 
+  useEffect(() => {
+    if (success) {
+      goToLoginRef.current?.focus();
+    }
+  }, [success]);
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
 
-    if (!password || !passwordRepeat) return;
+    if (!password || !passwordRepeat) {
+      return;
+    }
+
+    setError('');
 
     if (password !== passwordRepeat) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={8000}
-        >
-          {t('setNewPassword.mismatch')}
-        </Message>
-      );
+      setMismatch(true);
+      passwordRepeatInputRef.current?.focus();
       return;
     }
 
     if (!token) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={8000}
-        >
-          {t('setNewPassword.invalidLink')}
-        </Message>
-      );
+      setError(t('setNewPassword.invalidLink'));
       return;
     }
 
@@ -91,57 +86,68 @@ export function SetNewPassword() {
       await resetPassword({ variables: { token, password } });
       setSuccess(true);
     } catch (error: any) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={8000}
-        >
-          {error?.message || t('setNewPassword.error')}
-        </Message>
-      );
+      setError(error?.message || t('setNewPassword.error'));
     }
   }
 
   return (
-    <LoginTemplate backgroundChildren={<Background />}>
+    <LoginTemplate
+      title={t('setNewPassword.submit')}
+      backgroundChildren={<Background />}
+    >
       <Form>
-        <RForm.Stack fluid>
+        <Stack
+          direction="column"
+          spacing={3}
+        >
+          <Description role="status">
+            {success ?
+              t('setNewPassword.success')
+            : t('setNewPassword.description')}
+          </Description>
+
           {success ?
-            <>
-              <Description>{t('setNewPassword.success')}</Description>
-              <BackLink href="/login">{t('setNewPassword.goToLogin')}</BackLink>
-            </>
+            <BackLink
+              ref={goToLoginRef}
+              href="/login"
+            >
+              {t('setNewPassword.goToLogin')}
+            </BackLink>
           : <>
-              <Description>{t('setNewPassword.description')}</Description>
+              <TextField
+                label={<>{t('setNewPassword.password')}</>}
+                inputRef={passwordInputRef}
+                name="password"
+                type="password"
+                value={password}
+                autoComplete="new-password"
+                onChange={event => {
+                  setPassword(event.target.value);
+                  setMismatch(false);
+                }}
+                fullWidth
+              />
 
-              <Group controlId="newPassword">
-                <Label>{t('setNewPassword.password')}</Label>
-                <Control
-                  inputRef={passwordInputRef}
-                  name="password"
-                  type="password"
-                  value={password}
-                  autoComplete="new-password"
-                  onChange={(value: string) => setPassword(value)}
-                />
-              </Group>
+              <TextField
+                label={<>{t('setNewPassword.passwordRepeat')}</>}
+                inputRef={passwordRepeatInputRef}
+                name="passwordRepeat"
+                type="password"
+                value={passwordRepeat}
+                autoComplete="new-password"
+                error={mismatch}
+                helperText={mismatch ? t('setNewPassword.mismatch') : undefined}
+                onChange={event => {
+                  setPasswordRepeat(event.target.value);
+                  setMismatch(false);
+                }}
+                fullWidth
+              />
 
-              <Group controlId="newPasswordRepeat">
-                <Label>{t('setNewPassword.passwordRepeat')}</Label>
-
-                <Control
-                  name="passwordRepeat"
-                  type="password"
-                  value={passwordRepeat}
-                  autoComplete="new-password"
-                  onChange={(value: string) => setPasswordRepeat(value)}
-                />
-              </Group>
+              {error && <Alert severity="error">{error}</Alert>}
 
               <Button
-                appearance="primary"
+                variant="contained"
                 type="submit"
                 disabled={loading || !password || !passwordRepeat}
                 onClick={handleSubmit}
@@ -154,7 +160,7 @@ export function SetNewPassword() {
               </BackLink>
             </>
           }
-        </RForm.Stack>
+        </Stack>
       </Form>
     </LoginTemplate>
   );

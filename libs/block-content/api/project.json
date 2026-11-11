@@ -21,7 +21,7 @@
     },
     "test": {
       "executor": "@nx/vitest:test",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}/report"],
       "options": {
         "configFile": "{projectRoot}/vitest.config.ts",
         "watch": false

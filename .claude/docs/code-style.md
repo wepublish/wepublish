@@ -56,42 +56,115 @@ export const Wrapper = styled(ContentWrapper)<{ fadeout?: boolean }>`
 - Comments inside a template literal are one of the few legitimate uses of
   comments in this codebase — a `nth-child` selector rule usually needs one.
 - **Editor UI: no hard-coded colours.** The editor has a dark mode (follows the
-  OS, overridable in the sidebar; `apps/editor/src/app/colorMode.tsx`). rsuite's
-  `CustomProvider theme` swaps every `--rs-*` variable, MUI gets
-  `createEditorTheme(mode)`. Use `var(--rs-bg-card)`, `--rs-bg-well`,
-  `--rs-bg-overlay`, `--rs-text-primary`/`-secondary`, `--rs-border-primary`,
-  `--rs-state-*` in Emotion, palette paths in MUI `sx`. Editor-specific tokens
-  (`--wep-shell-*`, `--wep-state-*`, …) live in
-  `apps/editor/src/app/editorGlobalStyles.tsx`. `--rs-gray-*` and `--rs-primary-50`
-  stay light in dark mode — don't use them for surfaces. Keep the MUI palette as
-  real hex (code runs `lighten()`/alpha math on it). Fixed colours are only for
-  user data (picked colours, defaults), email content and QR codes.
-- **Editor layout is responsive.** Below 900 px the sidebar becomes a drawer;
-  at ≤ 640 px rsuite `Col`s stack (global rule in `editorGlobalStyles.tsx`).
-  The shared `Table` from `@wepublish/ui/editor` scales `width` columns to the
-  available width (`listView/fit-column-widths.ts`) and releases `fixed`
+  OS, overridable in the sidebar; `apps/editor/src/app/colorMode.tsx`) and
+  `createEditorTheme()` is the single source of colour. It builds **both**
+  schemes into one theme with `cssVariables`, so switching mode sets
+  `data-mui-color-scheme` on the root rather than handing React a new theme.
+  That has one consequence everywhere:
+  - In Emotion read `${({ theme }) => theme.vars.palette.text.secondary}` —
+    **`theme.vars.palette`, never `theme.palette`**, which holds the light
+    scheme's literals and would never change.
+  - In `sx` use palette paths (`color: 'text.secondary'`); in a map of state to
+    colour store the *path* and resolve it with `paletteColor(theme, path)`.
+  - There is no `theme.palette.mode` to branch on. Write the light rule and
+    override it under `[data-mui-color-scheme='dark'] &`, or `theme.applyStyles
+    ('dark', {…})` where an object is wanted (see `MuiAlert` in `theme.ts`).
+  - `theme.palette` is still the place to read a real hex when code runs
+    `lighten()`/alpha math; prefer the `…Channel` vars
+    (`rgba(${theme.vars.palette.success.mainChannel} / 0.5)`) when the result
+    has to follow the scheme.
+  Editor-specific tokens (`--wep-shell-*`, `--wep-state-*`, …) live in
+  `apps/editor/src/app/editorGlobalStyles.tsx`, keyed off the same attribute.
+  Fixed colours are only for user data (picked colours, defaults), email
+  content and QR codes.
+  Two traps: `theme.shape.borderRadius` is a number typed `number | string`, so
+  raw CSS needs `${…}px` and fractional radii need `calc()`; and a palette path
+  is **not** resolved inside `styleOverrides`, which take the callback form.
+- **Editor layout is responsive.** Below 900 px the sidebar becomes a drawer.
+  The shared `DataTable` from `@wepublish/ui/editor` scales `width` columns to
+  the available width (`listView/fit-column-widths.ts`) and releases `fixed`
   columns under 600 px — so don't hand-tune column widths to a screen size.
-  List pages use that `Table`, not rsuite's, or columns don't fill the width.
-- **Drawers scroll only `Drawer.Body`.** `editorGlobalStyles.tsx` turns every
-  ancestor of `Drawer.Header` + `Drawer.Body` into a flex column (also through
-  `<Form>` and its `.rs-form-stack`). Don't give the body a fixed height or set
-  `overflow` on `.rs-drawer-dialog` — rsuite's `calc(100% - 76px)` broke with
-  our 77 px header and `overflow: scroll` drew empty scrollbars.
-- **Icon-only actions are `<IconButton circle size="sm" …>`** — delete adds
-  `appearance="ghost" color="red"`. A global rule renders them borderless with a
-  coloured icon; add `data-on-media` when the button sits on an image so it
+  List pages use that table, not a hand-rolled one, or columns don't fill the
+  width. Data lists (users, comments, invoices, audit log… — not config or
+  content lists like tags, blocks or navigations) pass `exportRows` (CSV/Excel
+  download, via `useTableExportQuery` for paginated queries, plus
+  `exportTotalCount` so the user is asked page-or-all and warned above 1000);
+  columns that render JSX need an `exportValue`, a JSX `label` needs a
+  `columnLabel`, and secrets get `exportValue: false`.
+- **Drawers scroll only `DrawerBody`.** `DrawerHeader`/`DrawerBody` are the
+  shared styled elements from `@wepublish/ui/editor`; the body is the flex
+  child that scrolls. Don't give it a fixed height — a hard-coded
+  `calc(100% - header)` breaks the moment the header wraps.
+- **Icon-only actions are `<IconButton size="small" …>`** — delete adds
+  `color="error"`. Add `data-on-media` when the button sits on an image so it
   keeps a solid background.
 - **Help and labels:** icon-only buttons get `IconButtonTooltip` + `aria-label`;
   non-obvious fields get `<InfoTooltip text={t('…')} />` after the label (never
   filled `MdInfo`). List action columns use `t('action')`, centred, `fixed="right"`.
-  Toggles carry their label on the right via `<Toggle label={…} />` — no
-  `checkedChildren`, no separate «on/off» text. Radii: `var(--rs-radius-md)` for
-  controls and inner boxes, `var(--rs-radius-lg)` for cards and panels.
+  Switches carry their label on the right via `<FormControlLabel control={<Switch
+  …/>} label={…} />` — no separate «on/off» text. Radii come from the theme:
+  `theme.shape.borderRadius` (8px) for cards and panels, `calc(… * 0.75)` for
+  controls and inner boxes; in `sx` that is `borderRadius: 1` and `0.75`.
+- **Accessibility plumbing (WCAG 2.2 AA):** fields get a visible `label`, never
+  a placeholder alone, and an `aria-label` must contain the visible text (2.5.3).
+  `DrawerTitle` names its enclosing `role="dialog"` itself — use it rather than
+  a bare `Typography` in drawers. Tabs with a content area use `useTabPanel`
+  (`libs/ui/editor/src/lib/panel/useTabPanel.ts`) for `id`/`aria-controls`/
+  `role="tabpanel"`. Snackbars render inside a `role="status"` stack; error and
+  warning entries are `role="alert"`. Editor blocks that validate pass a focus ref as the third
+  argument of `useRegisterValidator` so a failed save can focus them. Every
+  page renders exactly one `h1` (`EditorTemplate`/`LoginTemplate` take a
+  `title` for that).
 - **Document editors use `EditorHeader`** (`@wepublish/ui/editor`) inside
   `EditorTemplate`: status chip + last-saved on the left, `EditorHeaderButton`s
   on the right (secondary subtle, Save/Publish primary). Labels collapse to
   icons by container width (`collapse="md" | "sm" | false`). The bar bleeds to
   the content card's edges through `--wep-page-padding-*` set in `base.tsx`.
+  The bar is sticky; `EditorTemplate` publishes its measured height as
+  `--wep-sticky-top`, so anything else sticky (the richtext toolbar) uses
+  `top: var(--wep-sticky-top, 0px)` instead of hardcoding it.
+- **Editor forms are form views** (`formView`, `useCreateForm`/`useEditForm`/`useSingletonForm`, `FormPage`/`FormDrawer`; [README](../../libs/form/README.md#form-views)): never hand-roll cards, headings or column grids in a form; form pages publish `--wep-sticky-top`.
+- **An edit panel's form *is* the record.** It fetches what it edits through
+  an async `defaultValues` callback (`useApolloClient().query`), rather than a
+  `useQuery` whose result is copied into a parallel set of `useState`s. One
+  place holds the answer, so nothing has to be kept in step, and the save
+  handler receives values the schema has already accepted. New and migrated
+  forms are built with `@wepublish/form/editor`
+  ([libs/form/README.md](../../libs/form/README.md)): a module-level `zod/v4`
+  schema in `<name>.schema.ts` whose `.meta()`/`error` values are i18n keys,
+  `Field`s, and `<FormErrorSummary/>` + `<LoadState/>` in the layout (worked
+  examples: `libs/consent/editor`, `libs/banner/editor`). Forms not yet
+  migrated keep the old pattern until they are: `Controller`s, a schema
+  factory taking `t` (`createMemberPlanSchema(t)`), a derived field written
+  with `setValue`, and nothing rendered until `formState.isLoading` clears
+  (before that every list-valued field is `undefined` and throws); the worked
+  example is `paymentMethodEditPanel.tsx`. Two traps either way: the Save
+  button is `type="submit"` *only* — an `onClick` that calls the save as well
+  bypasses validation entirely; and a panel with `useAuthorisation` needs an
+  `AuthContext` in its tests or every control renders disabled. Read fields
+  with `useWatch({control, name})`, never a bare `watch('x')` — the compiler
+  memoises that call and the value never changes again (gotchas.md). Errors
+  belong next to the field as `helperText`, not in a toast. A
+  single column of fields gets no cards: `FormFields` + `FormSectionTitle`
+  from `@wepublish/ui/editor` are the layout, and a card is for a genuinely
+  multi-column view. A form view keeps the default layout (titled sections
+  divided by rules, optional aside); `layout: 'cards'` is only for a page of
+  many small, independent groups such as the settings page. `FormSectionTitle` heads a *group*; a heading over one
+  control is that control's `FormLabel`. Never wrap `RichTextBlock` in a card or a bordered box —
+  the editor draws its own outlined surface, so a wrapper is a second border.
+- **`useSeededState` is for the code that already has it, never for new code.**
+  It copies an external value into local state and re-copies when the value
+  changes — a mirror, and mirrors drift. Where the source is a query feeding a
+  form, `useForm`'s `values` (with `resetOptions: {keepDirtyValues: true}`)
+  does the same job and keeps what the user has typed, which the seed throws
+  away on every refetch; `videoEditPanel.tsx` is the worked example. Where the
+  source is the route, derive straight from it — `videoList.tsx` opens its
+  drawers on `location.pathname` and closes them by navigating, so there is no
+  second copy to fall out of step.
+- **A dialog's confirming action goes last**, so it lands bottom-right with
+  the dismissive one to its left — Material's order, and what the rest of the
+  editor's 57 dialogs now do. It is `variant="contained"` (a destructive one
+  also `color="error"`); the dismissive action is `variant="text"`.
 - **Editor errors shown to users go through `humanizeError(error)`** from
   `@wepublish/ui/editor`, never raw `error.message` — it turns Prisma, network
   and permission failures into `errors.*` translations. Error toasts use
@@ -108,9 +181,10 @@ export const Wrapper = styled(ContentWrapper)<{ fadeout?: boolean }>`
 - Website components are built through the **Website Builder** — get shared
   components from `useWebsiteBuilder()` rather than importing them directly, so
   tenants can override them.
-- Every new website component needs a Storybook story; stories are how these
-  components are tested. See [testing.md](testing.md).
-- Forms use React Hook Form with Zod resolvers. Icons come from React Icons.
+- Every new website component needs a spec; see [testing.md](testing.md).
+- Forms use React Hook Form with Zod — editor forms through
+  `@wepublish/form/editor` (its own resolver), older ones with `zodResolver`.
+  Icons come from React Icons.
   User-facing strings go through react-i18next — never hardcode copy; see
   [Translations](#translations).
 
@@ -118,9 +192,23 @@ export const Wrapper = styled(ContentWrapper)<{ fadeout?: boolean }>`
 
 Editor copy lives in `apps/editor/src/app/locales/{en,de,fr}.json`; add every
 key to all three. `locales.spec.ts` fails when a literal `t('…')` key is
-missing or the three catalogs drift apart. Zod messages live at module level,
-so use `lazyMessage('key')` from `apps/editor/src/app/utility.ts` instead of
-`t()`.
+missing or the three catalogs drift apart. It also checks `formErrorKeys` and,
+in files importing `@wepublish/form/*` or `*.schema.ts` files importing
+`zod/v4`, every `label|addLabel|description|helperText|placeholder|error` key,
+the key passed to `setFieldError` and every `optionLabelPrefix` family, so
+write those as string literals. A form component prop that takes text, like
+`ArrayField`'s `addLabel`, accepts a key or a ReactNode the way `label` does;
+a new one joins that list in `locales.spec.ts`. Inside `libs/form/*/src` every `'form.…'`
+literal counts as a key. Classic-zod schemas of forms not yet migrated that
+live at module level use `lazyMessage('key')` from
+`apps/editor/src/app/utility.ts` instead of `t()`.
+
+Website copy lives in `libs/website/translations/src/lib/{de,fr}.json`, and
+`catalogs.spec.ts` fails when the two drift apart. A tenant overrides single
+keys in `libs/tenants/<tenant>/src/locales/*.json` through its config's
+`translations.overrides`; the app passes them to `initWePublishTranslator`, and
+specs load them with `applyTenantTranslations(tenant)`. Override a key there rather than editing the shared catalog for one
+site.
 
 - **German:** Swiss Standard German (no `ß`), lowercase `du`. `E-Mail`, never
   `Mail` — compounds too (`E-Mail-Vorlage`, `Test-E-Mail`, `E-Mail-Server`).

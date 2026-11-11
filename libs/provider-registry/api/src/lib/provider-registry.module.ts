@@ -6,7 +6,6 @@ import {
   Module,
   ModuleMetadata,
 } from '@nestjs/common';
-import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
 import { PROVIDER_SETTINGS_CHANGED } from '@wepublish/settings/api';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { ProviderRegistryResolver } from './provider-registry.resolver';
@@ -26,7 +25,7 @@ export type ProviderRegistryModuleAsyncOptions = {
 
 @Global()
 @Module({
-  imports: [PrismaModule, KvTtlCacheModule, HttpModule],
+  imports: [PrismaModule, HttpModule],
   providers: [
     ProviderRegistryService,
     ProviderRegistryResolver,
@@ -44,12 +43,7 @@ export class ProviderRegistryModule {
     return {
       module: ProviderRegistryModule,
       global: true,
-      imports: [
-        PrismaModule,
-        KvTtlCacheModule,
-        HttpModule,
-        ...(options.imports ?? []),
-      ],
+      imports: [PrismaModule, HttpModule, ...(options.imports ?? [])],
       providers: [
         {
           provide: PROVIDER_REGISTRY_BOOTSTRAP,

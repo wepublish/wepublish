@@ -3,8 +3,11 @@ import { importJWK, type KeyLike, type JWK } from 'jose';
 
 export const JWKS_CLIENT_OPTIONS = Symbol('JWKS_CLIENT_OPTIONS');
 
+const DEFAULT_FETCH_TIMEOUT = 5_000;
+
 export type JwksClientConfig = {
   apiUrl: string;
+  fetchTimeout?: number;
 };
 
 @Injectable()
@@ -30,7 +33,7 @@ export class JwksClientService {
       this.fetchPromise = this.fetchAndCacheKey();
     }
 
-    return this.fetchPromise;
+    return this.publicKey ?? this.fetchPromise;
   }
 
   private async fetchAndCacheKey(): Promise<KeyLike> {
@@ -38,7 +41,11 @@ export class JwksClientService {
       const jwksUrl = `${this.config.apiUrl}/.well-known/jwks.json`;
       this.logger.log(`Fetching JWKS from ${jwksUrl}`);
 
-      const response = await fetch(jwksUrl);
+      const response = await fetch(jwksUrl, {
+        signal: AbortSignal.timeout(
+          this.config.fetchTimeout ?? DEFAULT_FETCH_TIMEOUT
+        ),
+      });
 
       if (!response.ok) {
         throw new Error(

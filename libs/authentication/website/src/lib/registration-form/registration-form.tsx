@@ -8,7 +8,7 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { PropsWithChildren, useEffect, useMemo, useRef } from 'react';
-import { Controller, DeepPartial, useForm } from 'react-hook-form';
+import { Control, Controller, DeepPartial, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { ApiAlert } from '@wepublish/errors/website';
 import { userCountryNames } from '@wepublish/user';
@@ -32,9 +32,16 @@ export const RegistrationFormButton = styled(Button)`
  * but this turns it into a z.ZodIntersection which does not allow to omit or pick. We need this
  * functionality to allow not showing certain fields.
  */
-export function zodAlwaysRefine<T extends z.ZodTypeAny>(zodType: T) {
+/**
+ * `params` for checking the wrapped schema, e.g. a form's own error map: the
+ * wrapper's are not passed on, and its messages would already be set.
+ */
+export function zodAlwaysRefine<T extends z.ZodTypeAny>(
+  zodType: T,
+  params?: Partial<z.ParseParams>
+) {
   return z.any().superRefine(async (value, ctx) => {
-    const res = await zodType.safeParseAsync(value);
+    const res = await zodType.safeParseAsync(value, params);
 
     if (res.success === false)
       for (const issue of res.error.issues) {
@@ -162,7 +169,7 @@ export function RegistrationForm<
       onSubmit={onSubmit}
     >
       <UserForm
-        control={control}
+        control={control as Control<any>}
         fields={fields}
       />
 

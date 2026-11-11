@@ -5,6 +5,8 @@ import {
   OnApplicationBootstrap,
 } from '@nestjs/common';
 import { Interval } from '@nestjs/schedule';
+import type { Feature } from '@wepublish/features';
+import { FEATURE_REGISTRY, FeaturesService } from '@wepublish/features/api';
 import { promises as fs } from 'fs';
 import { OneChannelStateService } from './one-channel-state.service';
 import { OneClientService } from './one-client.service';
@@ -23,6 +25,9 @@ export const BOOTSTRAP_DELAY_MS = 10 * 1000;
 
 export const VERSION_PATTERN = /^[A-Za-z0-9._-]{1,64}$/;
 
+const isFeatureMap = (value: unknown): value is Record<string, boolean> =>
+  typeof value === 'object' && value !== null && !Array.isArray(value);
+
 export function sanitiseVersion(raw: string): string {
   const trimmed = raw.trim();
 
@@ -36,7 +41,9 @@ export class OneHeartbeatService implements OnApplicationBootstrap {
   constructor(
     private client: OneClientService,
     private state: OneChannelStateService,
-    @Inject(ONE_URL_TOKEN) private oneURL: string
+    @Inject(ONE_URL_TOKEN) private oneURL: string,
+    private features: FeaturesService,
+    @Inject(FEATURE_REGISTRY) private registry: readonly Feature[]
   ) {}
 
   onApplicationBootstrap(): void {
@@ -55,18 +62,54 @@ export class OneHeartbeatService implements OnApplicationBootstrap {
 
     const version = await this.readVersion();
 
+    let answer: unknown;
+
     try {
-      await this.client.post('/channel/heartbeat', 'write:medium-heartbeat', {
-        version,
-        gitSha: version.slice(0, 7),
-        nodeEnv: process.env['NODE_ENV'] ?? 'development',
-      });
+      answer = await this.client.post(
+        '/channel/heartbeat',
+        'write:medium-heartbeat',
+        {
+          version,
+          gitSha: version.slice(0, 7),
+          nodeEnv: process.env['NODE_ENV'] ?? 'development',
+          // One offers exactly these to be switched for this medium
+          features: this.registry.map(({ key, description, stage }) => ({
+            key,
+            description,
+            stage,
+          })),
+        }
+      );
 
       await this.state.recordSuccess(new Date());
     } catch (error) {
       const message = (error as Error).message;
       this.state.recordFailure(new Date(), message);
       this.logger.error(`Heartbeat to ${this.oneURL} failed: ${message}`);
+
+      return;
+    }
+
+    await this.applyFeatures(answer);
+  }
+
+  /**
+   * An older One answers without features; the stored state then stays as it
+   * is, so One being down or old never switches anything off.
+   */
+  private async applyFeatures(answer: unknown): Promise<void> {
+    const features = (answer as { features?: unknown } | undefined)?.features;
+
+    if (!isFeatureMap(features)) {
+      return;
+    }
+
+    try {
+      await this.features.apply(features);
+    } catch (error) {
+      this.logger.error(
+        `Storing the features from ${this.oneURL} failed: ${(error as Error).message}`
+      );
     }
   }
 

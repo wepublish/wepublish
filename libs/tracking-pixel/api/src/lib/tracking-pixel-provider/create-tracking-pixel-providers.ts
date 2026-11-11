@@ -1,12 +1,12 @@
 import { HttpService } from '@nestjs/axios';
 import { PrismaClient, TrackingPixelProviderType } from '@prisma/client';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import { ProlitterisTrackingPixelProvider } from './prolitteris/prolitteris-tracking-pixel-provider';
 import { TrackingPixelProvider } from './tracking-pixel-provider';
 
 export type TrackingPixelProviderDeps = {
   prisma: PrismaClient;
-  kv: KvTtlCacheService;
+  kv: NamespacedCache;
   httpClient: HttpService;
 };
 

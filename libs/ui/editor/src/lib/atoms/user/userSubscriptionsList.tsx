@@ -1,246 +1,168 @@
 import styled from '@emotion/styled';
 import {
+  Button,
+  Chip,
+  IconButton,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Tooltip,
+} from '@mui/material';
+import {
   FullSubscriptionFragment,
   PaymentPeriodicity,
   SubscriptionDeactivationReason,
   UserSubscriptionFragment,
 } from '@wepublish/editor/api';
-import { TFunction } from 'i18next';
+import {
+  CanCreateSubscription,
+  CanDeleteSubscription,
+  CanGetSubscription,
+  CanGetSubscriptions,
+} from '@wepublish/permissions';
+import {
+  compareSubscriptions,
+  getSubscriptionState,
+  InvoiceStatusIcon,
+  SUBSCRIPTION_STATE_CHIP,
+  SubscriptionState,
+} from '@wepublish/ui';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdAdd,
-  MdCreditCard,
+  MdContentCopy,
   MdDisabledByDefault,
   MdEdit,
-  MdEvent,
-  MdEventAvailable,
-  MdMoneyOff,
+  MdKeyboardArrowDown,
+  MdKeyboardArrowRight,
   MdOutlineCheckBox,
   MdOutlineCheckBoxOutlineBlank,
-  MdOutlineKeyboardArrowRight,
   MdRefresh,
-  MdTimelapse,
+  MdSubdirectoryArrowRight,
 } from 'react-icons/md';
-import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Button, IconButton } from 'rsuite';
+import { Link as RouterLink } from 'react-router-dom';
 
-// import {NewSubscriptionButton} from '../../routes/subscriptionList'
+import { enqueueSnackbar } from '../../snackbar/snackbar';
 import {
   createCheckedPermissionComponent,
   useAuthorisation,
 } from '../permissionControl';
+import { SingleLineTooltip } from '../singleLineTooltip';
 
 const NewSubscriptionButtonWrapper = styled.div`
-  margin-bottom: 4px;
+  margin-top: ${({ theme }) => theme.spacing(2.5)};
 `;
 
-const KeyboardArrow = styled(MdOutlineKeyboardArrowRight)`
-  margin: 0px 5px;
-  vertical-align: middle;
-`;
-
-const Scroller = styled.div`
-  position: relative;
-  overflow-y: auto;
-  margin-inline: -4px;
-  padding-inline: 4px;
-`;
-
-const SubscriptionItem = styled.section`
-  container: subscription / inline-size;
-  padding: 20px 0;
-
-  & + & {
-    border-top: 1px solid var(--rs-border-primary);
-  }
-`;
-
-const SubscriptionHeader = styled.header`
-  display: flex;
-  flex-wrap: wrap;
+const PeriodRange = styled('span')`
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 8px 16px;
-  margin-bottom: 14px;
-`;
-
-const SubscriptionTitle = styled.h3`
-  flex: 1 1 220px;
-  min-width: 0;
-  margin: 0;
-  font-size: 1.0625rem;
-  line-height: 1.5rem;
-  font-weight: 400;
-  overflow-wrap: anywhere;
-
-  strong {
-    font-weight: 650;
-  }
-`;
-
-const SubscriptionBody = styled.div`
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 12px;
-
-  @container subscription (max-width: 440px) {
-    grid-template-columns: minmax(0, 1fr);
-  }
-`;
-
-const Card = styled.div`
-  padding: 16px;
-  border: 1px solid var(--rs-border-primary);
-  border-radius: var(--rs-radius-lg);
-  background-color: var(--rs-bg-card);
-  font-size: 0.875rem;
-  line-height: 1.5;
-  overflow-wrap: anywhere;
-`;
-
-const CardHeader = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 10px;
-`;
-
-const CardTitle = styled.h4`
-  margin: 0;
-  font-size: 0.9375rem;
-  line-height: 1.375rem;
-  font-weight: 650;
-`;
-
-const DetailList = styled.ul`
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: grid;
-  gap: 4px;
-
-  li {
-    display: flex;
-    gap: 8px;
-  }
+  gap: ${({ theme }) => theme.spacing(0.75)};
+  padding-left: ${({ theme }) => theme.spacing(2.25)};
 
   svg {
-    flex: 0 0 auto;
-    margin-top: 3px;
-    color: var(--rs-text-secondary);
+    color: ${({ theme }) => theme.vars.palette.text.secondary};
+    font-size: 16px;
   }
 `;
 
-const Periods = styled.div`
-  position: relative;
-  min-height: 240px;
-
-  @container subscription (max-width: 440px) {
-    min-height: 0;
-  }
-`;
-
-const PeriodsScroll = styled.div`
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  overflow-y: auto;
-  padding-right: 4px;
-
-  @container subscription (max-width: 440px) {
-    position: static;
-    max-height: 360px;
-  }
-`;
-
-const PeriodLines = styled.div`
-  display: grid;
-  gap: 2px;
-`;
-
-const Badge = styled.span<{ tone: 'success' | 'error' }>`
-  display: inline-block;
-  flex: 0 0 auto;
-  padding: 1px 8px;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  line-height: 1.25rem;
+const AmountCell = styled('span')`
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  font-variant-numeric: tabular-nums;
   white-space: nowrap;
-  vertical-align: middle;
-  color: ${({ tone }) =>
-    tone === 'success' ?
-      'var(--wep-state-published-text, var(--rs-state-success))'
-    : 'var(--rs-state-error)'};
-  background-color: ${({ tone }) =>
-    `rgb(from var(--rs-state-${tone}) r g b / 15%)`};
 `;
 
-const MAX_VISIBLE_SUBSCRIPTIONS = 2;
-const SCROLL_PEEK = 40;
+const AMOUNT_UNIT_WIDTH = '68px';
+const AMOUNT_UNIT_GAP = '5px';
 
-const formatDate = (date: string) =>
-  new Intl.DateTimeFormat('de-CH').format(new Date(date));
+const AmountUnit = styled('span')`
+  display: inline-block;
+  min-width: ${AMOUNT_UNIT_WIDTH};
+  margin-left: ${AMOUNT_UNIT_GAP};
+  text-align: left;
+`;
 
-const formatPeriodMonth = (date: string) => {
-  const value = new Date(date);
+const AmountHeader = styled('span')`
+  display: inline-block;
+  padding-right: calc(${AMOUNT_UNIT_WIDTH} + ${AMOUNT_UNIT_GAP});
+`;
 
-  return `${String(value.getMonth() + 1).padStart(2, '0')}.${value.getFullYear()}`;
+const IconText = styled('span')`
+  display: inline-flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing(0.625)};
+
+  svg {
+    color: ${({ theme }) => theme.vars.palette.text.secondary};
+  }
+`;
+
+const ConfirmedIcon = styled('span')<{ isConfirmed: boolean }>`
+  display: inline-flex;
+  align-items: center;
+  font-size: 18px;
+  color: ${({ theme, isConfirmed }) =>
+    isConfirmed ?
+      theme.vars.palette.success.main
+    : theme.vars.palette.text.secondary};
+`;
+
+const IdButton = styled('button')`
+  display: inline-flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing(0.5)};
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+`;
+
+const SubscriptionRow = styled(TableRow)<{ expandable: boolean }>`
+  cursor: ${({ expandable }) => (expandable ? 'pointer' : 'default')};
+`;
+
+const PeriodTableRow = styled(TableRow)`
+  &:hover {
+    background-color: transparent;
+  }
+`;
+
+const SubscriptionName = styled('span')`
+  font-weight: 600;
+`;
+
+const formatDate = (date: string | Date) =>
+  new Date(date).toLocaleDateString('de-CH', {
+    timeZone: 'europe/zurich',
+  });
+
+type SubscriptionStatus = {
+  label: string;
+  state: SubscriptionState;
 };
 
-const sortPeriodsByNewest = (periods: UserSubscriptionFragment['periods']) =>
-  [...periods].sort(
-    (a, b) => new Date(b.startsAt).getTime() - new Date(a.startsAt).getTime()
-  );
-
-export type SubscriptionStatus = 'active' | 'expired';
-
-export const getSubscriptionStatus = (
-  subscription: Pick<UserSubscriptionFragment, 'deactivation'>,
+export function getSubscriptionStatus(
+  subscription: UserSubscriptionFragment,
   now = new Date()
-): SubscriptionStatus =>
-  (
-    subscription.deactivation &&
-    new Date(subscription.deactivation.date).getTime() <= now.getTime()
-  ) ?
-    'expired'
-  : 'active';
+): SubscriptionStatus {
+  const state = getSubscriptionState(subscription, now);
 
-function useScrollAfter(count: number, visible: number) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [maxHeight, setMaxHeight] = useState<number>();
-
-  useEffect(() => {
-    const scroller = ref.current;
-
-    if (!scroller || count <= visible) {
-      setMaxHeight(undefined);
-      return;
-    }
-
-    const measure = () => {
-      const boundary = scroller.children[visible] as HTMLElement | undefined;
-      setMaxHeight(boundary ? boundary.offsetTop + SCROLL_PEEK : undefined);
-    };
-
-    measure();
-
-    if (typeof ResizeObserver === 'undefined') {
-      return;
-    }
-
-    const observer = new ResizeObserver(measure);
-    Array.from(scroller.children).forEach(child => observer.observe(child));
-
-    return () => observer.disconnect();
-  }, [count, visible]);
-
-  return { ref, maxHeight };
+  return { label: `userSubscriptionList.table.${state}`, state };
 }
+
+type SubscriptionPeriod = UserSubscriptionFragment['periods'][0];
+
+type Row = {
+  subscription: UserSubscriptionFragment;
+  periods: SubscriptionPeriod[];
+};
 
 interface UserSubscriptionsProps {
   subscriptions?: UserSubscriptionFragment[] | null;
@@ -249,27 +171,25 @@ interface UserSubscriptionsProps {
 
 export const NewSubscriptionButton = ({
   isLoading,
-  t,
   userId,
-  label,
 }: {
   isLoading?: boolean;
-  t: TFunction<'translation'>;
   userId?: string;
-  label?: string;
 }) => {
-  const canCreate = useAuthorisation('CAN_CREATE_SUBSCRIPTION');
+  const { t } = useTranslation();
+  const canCreate = useAuthorisation(CanCreateSubscription.id);
   const urlToRedirect = `/subscriptions/create${userId ? `${`?userId=${userId}`}` : ''}`;
+
   return (
-    <Link to={urlToRedirect}>
-      <IconButton
-        appearance="primary"
-        disabled={isLoading || !canCreate}
-      >
-        <MdAdd />
-        {label ?? t('subscriptionList.overview.newSubscription')}
-      </IconButton>
-    </Link>
+    <Button
+      component={RouterLink}
+      to={urlToRedirect}
+      variant="text"
+      startIcon={<MdAdd />}
+      disabled={isLoading || !canCreate}
+    >
+      {t('subscriptionList.overview.newSubscription')}
+    </Button>
   );
 };
 
@@ -279,46 +199,23 @@ function UserSubscriptionsList({
 }: UserSubscriptionsProps) {
   const { t } = useTranslation();
 
-  /**
-   * UI helpers
-   */
-  function autoRenewalView(subscription: FullSubscriptionFragment) {
-    if (subscription.autoRenew && !subscription.deactivation) {
-      return (
-        <>
-          <MdRefresh />
-          {t('userSubscriptionList.subscriptionIsAutoRenewed')}
-          .&nbsp;
-          {getDeactivationString(subscription)}
-        </>
-      );
+  function paymentPeriodicity(subscription: FullSubscriptionFragment) {
+    switch (subscription.paymentPeriodicity) {
+      case PaymentPeriodicity.Monthly:
+        return t('memberPlanList.paymentPeriodicity.monthly');
+      case PaymentPeriodicity.Quarterly:
+        return t('memberPlanList.paymentPeriodicity.quarterly');
+      case PaymentPeriodicity.Biannual:
+        return t('memberPlanList.paymentPeriodicity.biannual');
+      case PaymentPeriodicity.Yearly:
+        return t('memberPlanList.paymentPeriodicity.yearly');
+      case PaymentPeriodicity.Biennial:
+        return t('memberPlanList.paymentPeriodicity.biennial');
+      case PaymentPeriodicity.Lifetime:
+        return t('memberPlanList.paymentPeriodicity.lifetime');
+      default:
+        return t('subscriptionList.panels.unknown');
     }
-    // subscription is not auto renewed
-    return (
-      <>
-        <MdDisabledByDefault />
-        {t('userSubscriptionList.noAutoRenew')}
-        .&nbsp;
-        {getDeactivationString(subscription)}
-      </>
-    );
-  }
-
-  function getDeactivationString(subscription: FullSubscriptionFragment) {
-    const deactivation = subscription.deactivation;
-    if (deactivation) {
-      return (
-        <>
-          {t('userSubscriptionList.deactivationString', {
-            date: new Intl.DateTimeFormat('de-CH').format(
-              new Date(deactivation.date)
-            ),
-            reason: getDeactivationReasonHumanReadable(deactivation.reason),
-          })}
-        </>
-      );
-    }
-    return t('userSubscriptionList.noDeactivation');
   }
 
   function getDeactivationReasonHumanReadable(
@@ -342,224 +239,288 @@ function UserSubscriptionsList({
     }
   }
 
-  function paidUntilView(subscription: FullSubscriptionFragment) {
-    if (subscription.paidUntil) {
-      return t('userSubscriptionList.paidUntil', {
-        date: new Intl.DateTimeFormat('de-CH').format(
-          new Date(subscription.paidUntil)
+  function deactivationTitle(
+    deactivation: NonNullable<UserSubscriptionFragment['deactivation']>
+  ) {
+    return t('userSubscriptionList.deactivationString', {
+      date: new Intl.DateTimeFormat('de-CH').format(
+        new Date(deactivation.date)
+      ),
+      reason: getDeactivationReasonHumanReadable(deactivation.reason),
+    });
+  }
+
+  const rows = useMemo<Row[]>(() => {
+    const now = new Date();
+
+    return [...(subscriptions ?? [])]
+      .sort((a, b) => compareSubscriptions(a, b, now))
+      .map(subscription => ({
+        subscription,
+        periods: [...subscription.periods].sort(
+          (a, b) =>
+            new Date(b.startsAt).getTime() - new Date(a.startsAt).getTime()
         ),
-      });
-    }
-    return t('userSubscriptionList.invoiceUnpaid');
-  }
+      }));
+  }, [subscriptions]);
 
-  function paymentPeriodicity(subscription: FullSubscriptionFragment) {
-    switch (subscription.paymentPeriodicity) {
-      case PaymentPeriodicity.Monthly:
-        return t('memberPlanList.paymentPeriodicity.monthly');
-      case PaymentPeriodicity.Quarterly:
-        return t('memberPlanList.paymentPeriodicity.quarterly');
-      case PaymentPeriodicity.Biannual:
-        return t('memberPlanList.paymentPeriodicity.biannual');
-      case PaymentPeriodicity.Yearly:
-        return t('memberPlanList.paymentPeriodicity.yearly');
-      case PaymentPeriodicity.Biennial:
-        return t('memberPlanList.paymentPeriodicity.biennial');
-      case PaymentPeriodicity.Lifetime:
-        return t('memberPlanList.paymentPeriodicity.lifetime');
-      default:
-        return t('subscriptionList.panels.unknown');
-    }
-  }
+  const [expanded, setExpanded] = useState<string[]>([]);
 
-  function getInvoiceView(period: UserSubscriptionFragment['periods'][0]) {
-    return (
-      <div>
-        {t('userSubscriptionList.invoiceNr', { invoiceId: period.invoiceID })}{' '}
-        <Badge tone={period.isPaid ? 'success' : 'error'}>
-          {period.isPaid ?
-            t('userSubscriptionList.invoicePaid')
-          : t('userSubscriptionList.invoiceUnpaid')}
-        </Badge>
-      </div>
+  const toggleExpanded = (id: string) =>
+    setExpanded(keys =>
+      keys.includes(id) ? keys.filter(key => key !== id) : [...keys, id]
     );
-  }
 
-  const sortedSubscriptions = [...(subscriptions ?? [])].sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-  );
-
-  const scroller = useScrollAfter(
-    sortedSubscriptions.length,
-    MAX_VISIBLE_SUBSCRIPTIONS
-  );
+  const copyInvoiceId = (invoiceID: string) => {
+    navigator.clipboard.writeText(invoiceID);
+    enqueueSnackbar(t('invoice.table.idCopied'), {
+      variant: 'success',
+      autoHideDuration: 2000,
+    });
+  };
 
   return (
     <>
-      <NewSubscriptionButtonWrapper>
-        {NewSubscriptionButton({
-          t,
-          userId,
-          label: t('userSubscriptionList.addSubscription'),
-        })}
-      </NewSubscriptionButtonWrapper>
-
-      <Scroller
-        ref={scroller.ref}
-        data-testid="subscription-scroller"
-        data-scrollable={sortedSubscriptions.length > MAX_VISIBLE_SUBSCRIPTIONS}
-        style={{ maxHeight: scroller.maxHeight }}
+      <TableContainer
+        sx={{ overflowX: 'auto' }}
+        role="region"
+        tabIndex={0}
+        aria-label={t('userList.overview.subscriptions')}
       >
-        {sortedSubscriptions.map(subscription => {
-          const status = getSubscriptionStatus(subscription);
+        <Table size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell>
+                {`${t('userSubscriptionList.table.subscription')} / ${t(
+                  'userSubscriptionList.periodRange'
+                )}`}
+              </TableCell>
+              <TableCell>{t('invoice.table.action')}</TableCell>
+              <TableCell>{t('invoice.table.status')}</TableCell>
+              <TableCell>{t('userSubscriptionList.table.created')}</TableCell>
+              <TableCell>{t('userSubscriptionList.table.start')}</TableCell>
+              <TableCell>
+                {t('userSubscriptionList.table.periodicity')}
+              </TableCell>
+              <TableCell align="right">
+                <AmountHeader>{t('invoice.total')}</AmountHeader>
+              </TableCell>
+              <TableCell>{t('userSubscriptionList.table.paidUntil')}</TableCell>
+              <TableCell>{t('userSubscriptionList.table.renewal')}</TableCell>
+              <TableCell>{t('userSubscriptionList.table.confirmed')}</TableCell>
+              <TableCell>{t('invoice.invoiceNo')}</TableCell>
+            </TableRow>
+          </TableHead>
 
-          return (
-            <SubscriptionItem key={subscription.id}>
-              <SubscriptionHeader>
-                {/* member plan name */}
-                <SubscriptionTitle>
-                  <strong data-testid="subscription-plan">
-                    {subscription.memberPlan.name}
-                  </strong>{' '}
-                  {t('userSubscriptionList.subscriptionNumber', {
-                    subscriptionId: subscription.id,
-                  })}
-                </SubscriptionTitle>
-                {/* edit subscription */}
-                <Link
-                  to={`/subscriptions/edit/${subscription.id}?userId=${userId}`}
+          <TableBody>
+            {!rows.length && (
+              <TableRow>
+                <TableCell colSpan={11}>
+                  {t('userList.overview.noSubscriptions')}
+                </TableCell>
+              </TableRow>
+            )}
+
+            {rows.map(({ subscription, periods }) => {
+              const status = getSubscriptionStatus(subscription);
+              const isExpandable = periods.length > 0;
+              const isExpanded = expanded.includes(subscription.id);
+
+              const statusChip = (
+                <Chip
+                  size="small"
+                  label={t(status.label)}
+                  color={SUBSCRIPTION_STATE_CHIP[status.state].color}
+                  variant={SUBSCRIPTION_STATE_CHIP[status.state].variant}
+                />
+              );
+
+              return [
+                <SubscriptionRow
+                  key={subscription.id}
+                  hover
+                  expandable={isExpandable}
+                  onClick={event => {
+                    if ((event.target as HTMLElement).closest('a, button')) {
+                      return;
+                    }
+
+                    if (isExpandable) {
+                      toggleExpanded(subscription.id);
+                    }
+                  }}
                 >
-                  <Button
-                    appearance="ghost"
-                    size="sm"
-                    startIcon={<MdEdit />}
-                  >
-                    {t('userSubscriptionList.editSubscription')}
-                  </Button>
-                </Link>
-              </SubscriptionHeader>
+                  <TableCell>
+                    {isExpandable && (
+                      <IconButton
+                        size="small"
+                        aria-label={t('userSubscriptionList.periodRange')}
+                        aria-expanded={isExpanded}
+                        onClick={() => toggleExpanded(subscription.id)}
+                      >
+                        {isExpanded ?
+                          <MdKeyboardArrowDown />
+                        : <MdKeyboardArrowRight />}
+                      </IconButton>
+                    )}
 
-              <SubscriptionBody>
-                {/* subscription details */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>
-                      {t('userSubscriptionList.aboDetails')}
-                    </CardTitle>
-                    <Badge tone={status === 'active' ? 'success' : 'error'}>
-                      {t(`userSubscriptionList.status.${status}`)}
-                    </Badge>
-                  </CardHeader>
-                  <DetailList>
-                    {/* created at */}
-                    <li>
-                      <MdEvent />
-                      {t('userSubscriptionList.subscriptionCreatedAt', {
-                        date: formatDate(subscription.createdAt),
-                      })}
-                    </li>
-                    {/* starts at */}
-                    <li>
-                      <MdEventAvailable />
-                      {t('userSubscriptionList.subscriptionStartsAt', {
-                        date: formatDate(subscription.startsAt),
-                      })}
-                    </li>
-                    {/* payment periodicity */}
-                    <li>
-                      <MdTimelapse />
-                      {t('userSubscriptionList.paymentPeriodicity', {
-                        paymentPeriodicity: paymentPeriodicity(subscription),
-                      })}
-                    </li>
-                    {/* monthly amount */}
-                    <li>
-                      <MdCreditCard />
-                      {t('userSubscriptionList.monthlyAmount', {
-                        monthlyAmount: (
-                          subscription.monthlyAmount / 100
-                        ).toFixed(2),
-                        currency: subscription.currency,
-                      })}
-                    </li>
-                    {/* paid until */}
-                    <li>
-                      <MdMoneyOff />
-                      {paidUntilView(subscription)}
-                    </li>
-                    {/* confirmed */}
-                    <li>
-                      {subscription.confirmed ?
+                    <SubscriptionName>
+                      {subscription.memberPlan.name}
+                    </SubscriptionName>
+                  </TableCell>
+
+                  <TableCell>
+                    <Tooltip title={t('userSubscriptionList.editSubscription')}>
+                      <IconButton
+                        component={RouterLink}
+                        to={`/subscriptions/edit/${subscription.id}?userId=${userId}`}
+                        size="small"
+                        aria-label={t('userSubscriptionList.editSubscription')}
+                      >
+                        <MdEdit size={16} />
+                      </IconButton>
+                    </Tooltip>
+                  </TableCell>
+
+                  <TableCell>
+                    {subscription.deactivation ?
+                      <Tooltip
+                        title={deactivationTitle(subscription.deactivation)}
+                      >
+                        {statusChip}
+                      </Tooltip>
+                    : statusChip}
+                  </TableCell>
+
+                  <TableCell>{formatDate(subscription.createdAt)}</TableCell>
+                  <TableCell>{formatDate(subscription.startsAt)}</TableCell>
+                  <TableCell>{paymentPeriodicity(subscription)}</TableCell>
+
+                  <TableCell align="right">
+                    <AmountCell>
+                      {(subscription.monthlyAmount / 100).toFixed(2)}
+                      <AmountUnit>
+                        {`${subscription.currency}${t(
+                          'userSubscriptionList.table.perMonthSuffix'
+                        )}`}
+                      </AmountUnit>
+                    </AmountCell>
+                  </TableCell>
+
+                  <TableCell>
+                    {subscription.paidUntil ?
+                      formatDate(subscription.paidUntil)
+                    : t('userSubscriptionList.invoiceUnpaid')}
+                  </TableCell>
+
+                  <TableCell>
+                    <IconText>
+                      {subscription.autoRenew && !subscription.deactivation ?
                         <>
-                          <MdOutlineCheckBox />
-                          {t('userSubscriptionList.confirmed')}
+                          <MdRefresh />
+                          {t('userSubscriptionList.table.renewsAutomatically')}
                         </>
                       : <>
-                          <MdOutlineCheckBoxOutlineBlank />
-                          {t('userSubscriptionList.unconfirmed')}
+                          <MdDisabledByDefault />
+                          {t('userSubscriptionList.table.expires')}
                         </>
                       }
-                    </li>
-                    {/* auto renewal */}
-                    <li>
-                      <span>{autoRenewalView(subscription)}</span>
-                    </li>
-                  </DetailList>
-                </Card>
+                    </IconText>
+                  </TableCell>
 
-                {/* periods with invoices */}
-                <Periods>
-                  <PeriodsScroll>
-                    {sortPeriodsByNewest(subscription.periods).map(period => (
-                      <Card key={period.id}>
-                        <CardTitle data-testid="period-title">
-                          {t('userSubscriptionList.periodTitle', {
-                            date: formatPeriodMonth(period.startsAt),
-                          })}
-                        </CardTitle>
-                        <PeriodLines>
-                          {/* period created at */}
-                          <div>
-                            {t('userSubscriptionList.periodCreatedAt', {
-                              date: formatDate(period.createdAt),
-                            })}
-                          </div>
-                          {/* period from to dates */}
-                          <div>
-                            {t('userSubscriptionList.periodStartsAt', {
-                              date: formatDate(period.startsAt),
-                            })}
-                            <KeyboardArrow />
-                            {t('userSubscriptionList.periodEndsAt', {
-                              date: formatDate(period.endsAt),
-                            })}
-                          </div>
-                          {/* amount */}
-                          <div>
-                            {t('userSubscriptionList.periodAmount', {
-                              amount: (period.amount / 100).toFixed(2),
-                              currency: subscription.currency,
-                            })}
-                          </div>
-                          {/* related invoice */}
-                          {getInvoiceView(period)}
-                        </PeriodLines>
-                      </Card>
-                    ))}
-                  </PeriodsScroll>
-                </Periods>
-              </SubscriptionBody>
-            </SubscriptionItem>
-          );
-        })}
-      </Scroller>
+                  <TableCell>
+                    <ConfirmedIcon
+                      isConfirmed={subscription.confirmed}
+                      aria-label={
+                        subscription.confirmed ?
+                          t('userSubscriptionList.confirmed')
+                        : t('userSubscriptionList.unconfirmed')
+                      }
+                    >
+                      {subscription.confirmed ?
+                        <MdOutlineCheckBox />
+                      : <MdOutlineCheckBoxOutlineBlank />}
+                    </ConfirmedIcon>
+                  </TableCell>
+
+                  <TableCell />
+                </SubscriptionRow>,
+
+                ...(isExpanded ?
+                  periods.map(period => {
+                    const invoiceStatus =
+                      period.isPaid ?
+                        {
+                          status: 'paid' as const,
+                          title: t('userSubscriptionList.invoicePaid'),
+                        }
+                      : {
+                          status: 'unpaid' as const,
+                          title: t('userSubscriptionList.invoiceUnpaid'),
+                        };
+
+                    return (
+                      <PeriodTableRow key={period.id}>
+                        <TableCell colSpan={2}>
+                          <PeriodRange>
+                            <MdSubdirectoryArrowRight />
+                            {`${formatDate(period.startsAt)} – ${formatDate(
+                              period.endsAt
+                            )}`}
+                          </PeriodRange>
+                        </TableCell>
+
+                        <TableCell>
+                          <InvoiceStatusIcon
+                            status={invoiceStatus.status}
+                            title={invoiceStatus.title}
+                          />
+                        </TableCell>
+
+                        <TableCell colSpan={3} />
+
+                        <TableCell align="right">
+                          <AmountCell>
+                            {(period.amount / 100).toFixed(2)}
+                            <AmountUnit>{subscription.currency}</AmountUnit>
+                          </AmountCell>
+                        </TableCell>
+
+                        <TableCell colSpan={3} />
+
+                        <TableCell>
+                          <SingleLineTooltip title={period.invoiceID}>
+                            <IdButton
+                              type="button"
+                              onClick={() => copyInvoiceId(period.invoiceID)}
+                            >
+                              {period.invoiceID.slice(0, 4)}…
+                              <MdContentCopy />
+                            </IdButton>
+                          </SingleLineTooltip>
+                        </TableCell>
+                      </PeriodTableRow>
+                    );
+                  })
+                : []),
+              ];
+            })}
+          </TableBody>
+        </Table>
+      </TableContainer>
+
+      <NewSubscriptionButtonWrapper>
+        <NewSubscriptionButton userId={userId} />
+      </NewSubscriptionButtonWrapper>
     </>
   );
 }
+
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_SUBSCRIPTION',
-  'CAN_GET_SUBSCRIPTIONS',
-  'CAN_DELETE_SUBSCRIPTION',
-  'CAN_CREATE_SUBSCRIPTION',
+  CanGetSubscription.id,
+  CanGetSubscriptions.id,
+  CanDeleteSubscription.id,
+  CanCreateSubscription.id,
 ])(UserSubscriptionsList);
+
 export { CheckedPermissionComponent as UserSubscriptionsList };

@@ -1,47 +1,48 @@
 {
   "name": "fazetten",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/fazetten",
+  "sourceRoot": "apps/fazetten/src",
   "projectType": "application",
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@nx/next:build",
+      "executor": "nx:run-commands",
+      "cache": true,
       "dependsOn": [],
-      "outputs": ["{options.outputPath}"],
-      "defaultConfiguration": "production",
+      "inputs": ["production", "^production"],
+      "outputs": [
+        "{workspaceRoot}/dist/apps/{projectName}",
+        "{projectRoot}/src/routeTree.gen.ts"
+      ],
       "options": {
-        "outputPath": "dist/apps/fazetten"
-      },
-      "configurations": {
-        "development": {
-          "outputPath": "apps/fazetten"
-        },
-        "production": {}
+        "command": "NODE_OPTIONS=--max-old-space-size=8192 vite build && NODE_OPTIONS=--max-old-space-size=8192 vite build --config vite.instrument.config.mts",
+        "cwd": "{projectRoot}"
       }
     },
     "serve": {
-      "executor": "@nx/next:server",
-      "defaultConfiguration": "development",
+      "executor": "nx:run-commands",
+      "continuous": true,
       "options": {
-        "buildTarget": "fazetten:build",
-        "dev": true
-      },
-      "configurations": {
-        "development": {
-          "buildTarget": "fazetten:build:development",
-          "dev": true
-        },
-        "production": {
-          "buildTarget": "fazetten:build:production",
-          "dev": false
-        }
+        "command": "vite dev --port 4202",
+        "cwd": "{projectRoot}"
       }
     },
-    "export": {
-      "executor": "@nx/next:export",
+    "preview": {
+      "executor": "nx:run-commands",
+      "continuous": true,
+      "dependsOn": ["build"],
       "options": {
-        "buildTarget": "fazetten:build:production"
+        "command": "node --import ../../dist/apps/fazetten/.output/server/instrument.server.mjs ../../dist/apps/fazetten/.output/server/index.mjs",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "inputs": ["production", "^production"],
+      "options": {
+        "command": "tsc -p tsconfig.json --noEmit",
+        "cwd": "{projectRoot}"
       }
     },
     "test": {

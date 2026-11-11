@@ -1,22 +1,24 @@
+import { Tooltip } from '@mui/material';
 import { ReactElement } from 'react';
-import { Tooltip, Whisper } from 'rsuite';
 
 interface IconButtonTooltipProps {
   children: ReactElement;
   caption: string;
+  describeChild?: boolean;
 }
 
 export function IconButtonTooltip({
   children,
   caption,
+  describeChild,
 }: IconButtonTooltipProps) {
   return (
-    <Whisper
+    <Tooltip
+      title={caption}
       placement="top"
-      trigger={['hover', 'focus']}
-      speaker={<Tooltip>{caption}</Tooltip>}
+      describeChild={describeChild}
     >
       {children}
-    </Whisper>
+    </Tooltip>
   );
 }

@@ -1,76 +1,107 @@
 import styled from '@emotion/styled';
 import {
-  MutationCreateConsentArgs,
-  MutationUpdateConsentArgs,
-} from '@wepublish/editor/api';
+  FormControlLabel,
+  InputAdornment,
+  Switch,
+  TextField,
+} from '@mui/material';
 import { InfoTooltip } from '@wepublish/ui/editor';
+import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Form, Panel, Toggle } from 'rsuite';
+import { z } from 'zod';
 
-const FormCard = styled(Panel)`
-  width: 100%;
-  max-width: 640px;
-  overflow: initial;
-`;
+export const consentSchema = z.object({
+  id: z.string().optional(),
+  name: z.string().min(1),
+  slug: z.string().min(1),
+  defaultValue: z.boolean(),
+});
 
-const Fields = styled.div`
-  display: grid;
-  gap: 20px;
-
-  .rs-form-group {
-    margin-bottom: 0;
-  }
-`;
-
-type ConsentFormData = MutationCreateConsentArgs | MutationUpdateConsentArgs;
+export type ConsentFormValues = z.infer<typeof consentSchema>;
 
 type ConsentFormProps = {
   create?: boolean;
-  consent: ConsentFormData;
-  onChange: (changes: Partial<ConsentFormData>) => void;
 };
 
-export const ConsentForm = ({
-  consent,
-  onChange,
-  create,
-}: ConsentFormProps) => {
+const Fields = styled.div`
+  display: grid;
+  gap: ${({ theme }) => theme.spacing(2.5)};
+  width: 100%;
+  max-width: 640px;
+`;
+
+const SwitchRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing(0.5)};
+`;
+
+export const ConsentForm = ({ create }: ConsentFormProps) => {
   const { t } = useTranslation();
+  const { control } = useFormContext<ConsentFormValues>();
 
   return (
-    <FormCard bordered>
-      <Fields>
-        <Form.Group controlId="name">
-          <Form.Label>{t('consents.name')}</Form.Label>
-          <Form.Control
-            name="name"
-            value={consent.name ?? ''}
-            onChange={(name: string) => onChange({ name })}
+    <Fields>
+      <Controller
+        control={control}
+        name="name"
+        render={({ field, fieldState: { error } }) => (
+          <TextField
+            {...field}
+            value={field.value ?? ''}
+            label={t('consents.name')}
+            error={Boolean(error)}
+            helperText={error?.message}
+            fullWidth
           />
-        </Form.Group>
+        )}
+      />
 
-        <Form.Group controlId="slug">
-          <Form.Label>
-            {t('consents.slug')} <InfoTooltip text={t('consents.slugInfo')} />
-          </Form.Label>
-          <Form.Control
-            name="slug"
-            value={consent.slug ?? ''}
-            onChange={(slug: string) => onChange({ slug })}
+      <Controller
+        control={control}
+        name="slug"
+        render={({ field, fieldState: { error } }) => (
+          <TextField
+            {...field}
+            value={field.value ?? ''}
+            label={t('consents.slug')}
+            error={Boolean(error)}
+            helperText={error?.message}
+            fullWidth
+            slotProps={{
+              input: {
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <InfoTooltip text={t('consents.slugInfo')} />
+                  </InputAdornment>
+                ),
+              },
+            }}
           />
-        </Form.Group>
+        )}
+      />
 
-        <Toggle
-          checked={!!consent.defaultValue}
-          label={
-            <>
-              {t('consents.checkedByDefault')}{' '}
-              <InfoTooltip text={t('consents.defaultValueInfo')} />
-            </>
-          }
-          onChange={defaultValue => onChange({ defaultValue })}
-        />
-      </Fields>
-    </FormCard>
+      <Controller
+        control={control}
+        name="defaultValue"
+        render={({ field }) => (
+          <SwitchRow>
+            <FormControlLabel
+              sx={{ marginRight: 0 }}
+              control={
+                <Switch
+                  checked={Boolean(field.value)}
+                  onChange={(_event, defaultValue) =>
+                    field.onChange(defaultValue)
+                  }
+                />
+              }
+              label={t('consents.checkedByDefault')}
+            />
+            <InfoTooltip text={t('consents.defaultValueInfo')} />
+          </SwitchRow>
+        )}
+      />
+    </Fields>
   );
 };

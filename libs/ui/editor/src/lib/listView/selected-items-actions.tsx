@@ -14,14 +14,20 @@ const SelectedItemsActionsStyled = styled.div`
   align-content: center;
   gap: 20px;
   padding: 8px 16px;
-  border-radius: var(--rs-radius-md);
-  background: rgb(from var(--rs-state-warning) r g b / 20%);
+  border-radius: ${({ theme }) => `calc(${theme.shape.borderRadius}px * 0.75)`};
+  background: rgb(
+    from ${({ theme }) => theme.vars.palette.warning.main} r g b / 20%
+  );
   visibility: hidden;
   margin-bottom: -20px;
 
   &.has-selected-items {
     visibility: visible;
   }
+`;
+
+const SelectedCount = styled.div`
+  visibility: visible;
 `;
 
 export function SelectedItemsActions({
@@ -34,11 +40,16 @@ export function SelectedItemsActions({
     <SelectedItemsActionsStyled
       className={hasSelectedItems ? 'has-selected-items' : ''}
     >
-      <div>
-        {t('selectableItemsActions.selectedItems', {
-          numberOfItems: selectedItems.length,
-        })}
-      </div>
+      <SelectedCount
+        role="status"
+        aria-atomic
+      >
+        {hasSelectedItems ?
+          t('selectableItemsActions.selectedItems', {
+            numberOfItems: selectedItems.length,
+          })
+        : ''}
+      </SelectedCount>
       {children}
     </SelectedItemsActionsStyled>
   );

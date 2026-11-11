@@ -1,10 +1,12 @@
-import { Test } from '@nestjs/testing';
+import { Test, type TestingModule } from '@nestjs/testing';
 import { CommentItemType, CommentState } from '@prisma/client';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCacheTestingModule } from '@wepublish/kv-ttl-cache/api/testing';
 import {
-  KvTtlCacheModule,
-  KvTtlCacheService,
+  PUBLIC_CONTENT_SHARED_NAMESPACES,
   PublicContentCacheInvalidator,
-} from '@wepublish/kv-ttl-cache/api';
+  PublicContentInvalidatorModule,
+} from '@wepublish/public-content-cache/api';
 import { CanGetComments } from '@wepublish/permissions';
 import { SortOrder } from '@wepublish/utils/api';
 import { CommentSort, CommentsForItemArgs } from './comment.model';
@@ -155,7 +157,9 @@ const args = (
 const ids = (comments: DecoratedComment[]) => comments.map(({ id }) => id);
 
 describe('commentsForItem cache', () => {
-  let kv: KvTtlCacheService;
+  let module: TestingModule;
+  let kv: NamespacedCache;
+  let invalidator: PublicContentCacheInvalidator;
   let data: Fixture;
   let prisma: ReturnType<typeof createPrisma>;
 
@@ -164,7 +168,7 @@ describe('commentsForItem cache', () => {
       prisma as any,
       { settingByName: vi.fn().mockResolvedValue({ value: true }) } as any,
       {} as any,
-      new PublicContentCacheInvalidator(kv),
+      invalidator,
       kv
     );
 
@@ -175,13 +179,22 @@ describe('commentsForItem cache', () => {
     ).length;
 
   beforeEach(async () => {
-    const module = await Test.createTestingModule({
-      imports: [KvTtlCacheModule],
+    module = await Test.createTestingModule({
+      imports: [
+        NamespacedCacheTestingModule.forRoot({
+          sharedNamespaces: PUBLIC_CONTENT_SHARED_NAMESPACES,
+        }),
+        PublicContentInvalidatorModule,
+      ],
     }).compile();
-    kv = module.get(KvTtlCacheService);
+    await module.init();
+    kv = module.get(NamespacedCache);
+    invalidator = module.get(PublicContentCacheInvalidator);
     data = fixture();
     prisma = createPrisma(data);
   });
+
+  afterEach(() => module.close());
 
   it('loads the approved comments of an article once for every reader', async () => {
     await service().getPublicCommentsForItem(args());
@@ -306,7 +319,7 @@ describe('commentsForItem cache', () => {
   ])('loads them again after %s', async (_, change) => {
     await service().getPublicCommentsForItem(args());
     await new Promise(resolve => setTimeout(resolve, 2));
-    await change(new PublicContentCacheInvalidator(kv));
+    await change(invalidator);
     await service().getPublicCommentsForItem(args());
 
     expect(approvedQueries()).toBe(2);

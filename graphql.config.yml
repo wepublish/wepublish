@@ -8,8 +8,3 @@ projects:
       - 'apps/api-example/schema-v2.graphql'
     documents:
       - 'libs/website/api/**/*.graphql'
-  testing:
-    schema:
-      - 'apps/api-example/schema-v2.graphql'
-    documents:
-      - 'libs/testing/src/graphql/public/**/*.graphql'

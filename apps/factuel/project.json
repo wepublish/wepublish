@@ -1,47 +1,48 @@
 {
   "name": "factuel",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/factuel",
+  "sourceRoot": "apps/factuel/src",
   "projectType": "application",
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@nx/next:build",
+      "executor": "nx:run-commands",
+      "cache": true,
       "dependsOn": [],
-      "outputs": ["{options.outputPath}"],
-      "defaultConfiguration": "production",
+      "inputs": ["production", "^production"],
+      "outputs": [
+        "{workspaceRoot}/dist/apps/{projectName}",
+        "{projectRoot}/src/routeTree.gen.ts"
+      ],
       "options": {
-        "outputPath": "dist/apps/factuel"
-      },
-      "configurations": {
-        "development": {
-          "outputPath": "apps/factuel"
-        },
-        "production": {}
+        "command": "NODE_OPTIONS=--max-old-space-size=8192 vite build && NODE_OPTIONS=--max-old-space-size=8192 vite build --config vite.instrument.config.mts",
+        "cwd": "{projectRoot}"
       }
     },
     "serve": {
-      "executor": "@nx/next:server",
-      "defaultConfiguration": "development",
+      "executor": "nx:run-commands",
+      "continuous": true,
       "options": {
-        "buildTarget": "factuel:build",
-        "dev": true
-      },
-      "configurations": {
-        "development": {
-          "buildTarget": "factuel:build:development",
-          "dev": true
-        },
-        "production": {
-          "buildTarget": "factuel:build:production",
-          "dev": false
-        }
+        "command": "vite dev --port 4200",
+        "cwd": "{projectRoot}"
       }
     },
-    "export": {
-      "executor": "@nx/next:export",
+    "preview": {
+      "executor": "nx:run-commands",
+      "continuous": true,
+      "dependsOn": ["build"],
       "options": {
-        "buildTarget": "factuel:build:production"
+        "command": "node --import ../../dist/apps/factuel/.output/server/instrument.server.mjs ../../dist/apps/factuel/.output/server/index.mjs",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "inputs": ["production", "^production"],
+      "options": {
+        "command": "tsc -p tsconfig.json --noEmit",
+        "cwd": "{projectRoot}"
       }
     },
     "test": {

@@ -1,29 +1,9 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { createSitemapHandlers } from '@wepublish/feed/website';
 
-import { getSitemap } from '../../src/sitemap';
+import { sitemapConfig } from '../../src/sitemap';
 
 export const config = {
   regions: ['all'],
 };
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  res
-    .status(200)
-    .setHeader('Content-Type', 'application/xml')
-    .setHeader(
-      'Cache-Control',
-      's-maxage=599, stale-while-revalidate=599, max-age=599, stale-if-error=86400, public'
-    )
-    .setHeader(
-      'CDN-Cache-Control',
-      's-maxage=599, stale-while-revalidate=599, max-age=599, stale-if-error=86400, public'
-    )
-    .setHeader(
-      'Vercel-CDN-Cache-Control',
-      's-maxage=599, stale-while-revalidate=599, max-age=599, stale-if-error=86400, public'
-    )
-    .send(await getSitemap(req));
-}
+export default createSitemapHandlers(sitemapConfig).sitemap;

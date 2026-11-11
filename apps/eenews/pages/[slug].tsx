@@ -1,6 +1,11 @@
 import { CombinedGraphQLErrors } from '@apollo/client';
 import { PageContainer } from '@wepublish/page/website';
-import { getApiUrl, revalidateFor } from '@wepublish/utils/website';
+import { EenewsPageShell } from '@wepublish/tenant/eenews';
+import {
+  getApiUrl,
+  getPageShell,
+  revalidateFor,
+} from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
   getApiClient,
@@ -12,8 +17,6 @@ import {
 import { GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import { ComponentProps } from 'react';
-
-import { EenewsPageShell } from '../src/components/eenews-page-shell';
 
 export default function PageBySlugOrId() {
   const {
@@ -67,7 +70,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     };
   }
 
-  const props = addClientCacheToProps(client, {});
+  const props = addClientCacheToProps(client, {
+    shell: getPageShell(page.data?.page),
+  });
 
   return {
     props,

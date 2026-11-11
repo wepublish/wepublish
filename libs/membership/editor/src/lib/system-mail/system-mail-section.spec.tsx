@@ -25,7 +25,7 @@ vi.mock('react-i18next', () => ({
 
 const renderPage = () =>
   render(
-    <ThemeProvider theme={createTheme()}>
+    <ThemeProvider theme={createTheme({ cssVariables: true })}>
       <SystemMailSection />
     </ThemeProvider>
   );

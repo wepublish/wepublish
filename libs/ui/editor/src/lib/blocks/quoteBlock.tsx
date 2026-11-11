@@ -1,39 +1,41 @@
 import styled from '@emotion/styled';
+import { Drawer } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Drawer } from 'rsuite';
 
 import { ChooseEditImage } from '../atoms';
 import { BlockProps } from '../atoms/blockList';
 import { TypographicTextArea } from '../atoms/typographicTextArea';
+import { DRAWER_WIDTHS } from '../drawer';
 import { ImageEditPanel, ImageSelectPanel } from '../panel';
 import { QuoteBlockValue } from './types';
 
-const ChooseImageWrapper = styled.div`
-  flex: 1 0 25%;
-  align-self: flex-start;
-  margin-bottom: 10px;
+const Wrapper = styled('div')`
+  container-type: inline-size;
 `;
 
-const Dash = styled.div`
-  margin-right: 5px;
+const ContentLayout = styled('div')`
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 5fr);
+  gap: ${({ theme }) => theme.spacing(2)};
+  align-items: start;
+
+  @container (max-width: 600px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
 `;
 
-const QuoteTextWrapper = styled.div`
+const QuoteText = styled('div')`
+  display: grid;
+  gap: ${({ theme }) => theme.spacing(1)};
+  min-width: 0;
+`;
+
+const Author = styled('div')`
   display: flex;
-  flex-direction: row;
-  align-items: center;
-`;
-
-const ContentWrapper = styled.div`
-  display: flex;
-  flex-flow: row wrap;
-  padding: 2rem 0;
-  gap: 24px;
-`;
-
-const InputWrapper = styled.div`
-  flex: 1 0 70%;
+  gap: ${({ theme }) => theme.spacing(1)};
+  align-items: baseline;
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
 `;
 
 export type QuoteBlockProps = BlockProps<QuoteBlockValue>;
@@ -51,44 +53,67 @@ export function QuoteBlock({
   const { t } = useTranslation();
 
   useEffect(() => {
-    if (autofocus) focusRef.current?.focus();
+    if (autofocus) {
+      focusRef.current?.focus();
+    }
   }, []);
 
   return (
-    <ContentWrapper>
-      <ChooseImageWrapper>
+    <Wrapper>
+      <ContentLayout>
         <ChooseEditImage
-          header={''}
+          onSelect={image => {
+            setChooseModalOpen(false);
+            onChange(value => ({ ...value, image, imageID: image.id }));
+          }}
           image={image}
-          disabled={false}
+          disabled={!!disabled}
+          maxHeight={200}
           openChooseModalOpen={() => setChooseModalOpen(true)}
           openEditModalOpen={() => setEditModalOpen(true)}
-          removeImage={() => onChange?.({ ...value, image: null })}
+          removeImage={() => onChange(value => ({ ...value, image: null }))}
         />
-      </ChooseImageWrapper>
-      <InputWrapper>
-        <TypographicTextArea
-          ref={focusRef}
-          variant="h1"
-          placeholder={t('blocks.quote.quote')}
-          value={quote}
-          disabled={disabled}
-          onChange={e => onChange({ ...value, quote: e.target.value })}
-        />
-        <QuoteTextWrapper>
-          <Dash>—</Dash>
+
+        <QuoteText>
           <TypographicTextArea
-            variant="body1"
-            placeholder={t('blocks.quote.author')}
-            value={author}
+            ref={focusRef}
+            variant="h2"
+            placeholder={t('blocks.quote.quote')}
+            value={quote}
             disabled={disabled}
-            onChange={e => onChange({ ...value, author: e.target.value })}
+            onChange={e => {
+              const quote = e.target.value;
+              onChange(value => ({ ...value, quote }));
+            }}
           />
-        </QuoteTextWrapper>
-      </InputWrapper>
+
+          <Author>
+            <span aria-hidden>—</span>
+            <TypographicTextArea
+              variant="body1"
+              placeholder={t('blocks.quote.author')}
+              value={author}
+              disabled={disabled}
+              onChange={e => {
+                const author = e.target.value;
+                onChange(value => ({ ...value, author }));
+              }}
+            />
+          </Author>
+        </QuoteText>
+      </ContentLayout>
+
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isChooseModalOpen}
-        size="sm"
         onClose={() => setChooseModalOpen(false)}
       >
         <ImageSelectPanel
@@ -101,8 +126,18 @@ export function QuoteBlock({
       </Drawer>
       {image && (
         <Drawer
+          anchor="right"
+          slotProps={{
+            paper: {
+              sx: {
+                display: 'flex',
+                flexDirection: 'column',
+                width: DRAWER_WIDTHS.sm,
+                maxWidth: '100vw',
+              },
+            },
+          }}
           open={isEditModalOpen}
-          size="sm"
           onClose={() => setEditModalOpen(false)}
         >
           <ImageEditPanel
@@ -112,6 +147,6 @@ export function QuoteBlock({
           />
         </Drawer>
       )}
-    </ContentWrapper>
+    </Wrapper>
   );
 }

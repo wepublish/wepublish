@@ -3,6 +3,13 @@
 exports[`CommentDataloaderService > load > should load many 1`] = `
 [
   {
+    "include": {
+      "revisions": {
+        "orderBy": {
+          "createdAt": "asc",
+        },
+      },
+    },
     "where": {
       "id": {
         "in": [
@@ -18,6 +25,13 @@ exports[`CommentDataloaderService > load > should load many 1`] = `
 exports[`CommentDataloaderService > load > should load one 1`] = `
 [
   {
+    "include": {
+      "revisions": {
+        "orderBy": {
+          "createdAt": "asc",
+        },
+      },
+    },
     "where": {
       "id": {
         "in": [

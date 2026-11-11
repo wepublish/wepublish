@@ -1,57 +1,11 @@
-import { getApiUrl } from '@wepublish/utils/website';
-import {
-  ArticleListDocument,
-  ArticleListQueryVariables,
-  ArticleSort,
-  getApiClient,
-  PageListDocument,
-  PageListQueryVariables,
-  PageSort,
-  SortOrder,
-} from '@wepublish/website/api';
-import { generateSitemap } from '@wepublish/website/server';
-import { NextApiRequest } from 'next';
-import process from 'node:process';
+import { SitemapSiteConfig } from '@wepublish/feed/website';
 
-export const getSitemap = async (req: NextApiRequest): Promise<string> => {
-  const siteUrl = process.env.WEBSITE_URL || '';
-
-  const generate = generateSitemap({
-    siteUrl,
-    title: 'Flimmer',
-  });
-  const client = getApiClient(getApiUrl(), [], {
-    typePolicies: {},
-  });
-
-  const [{ data: articleData }, { data: pageData }] = await Promise.all([
-    client.query({
-      query: ArticleListDocument,
-      variables: {
-        take: 50,
-        sort: ArticleSort.PublishedAt,
-        order: SortOrder.Descending,
-      } as ArticleListQueryVariables,
-    }),
-    client.query({
-      query: PageListDocument,
-      variables: {
-        take: 100,
-        sort: PageSort.PublishedAt,
-        order: SortOrder.Descending,
-      } as PageListQueryVariables,
-    }),
-  ]);
-
-  return generate(
-    articleData?.articles.nodes ?? [],
-    pageData?.pages.nodes ?? [],
-    [
-      `${siteUrl}/author`,
-      `${siteUrl}/event`,
-      `${siteUrl}/login`,
-      `${siteUrl}/signup`,
-      `${siteUrl}/mitmachen`,
-    ]
-  );
+export const sitemapConfig: SitemapSiteConfig = {
+  title: 'Flimmer',
+  description:
+    'FLIMMER.MEDIA ist ein Schweizer Onlinemedium mit Fokus auf demokratiefeindliche Bewegungen.',
+  pageUrls: ['/author', '/login', '/signup', '/abo'],
+  // Not `/api/sitemap`: this tenant serves its sitemap from `/sitemap.xml`
+  // and its chunks from `/sitemap/<chunk>`. Only read in `index` mode.
+  sitemapPath: '/sitemap',
 };

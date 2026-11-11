@@ -1,19 +1,14 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
+import { IconButton as MuiIconButton, Tooltip } from '@mui/material';
 import { PeerProfileDocument } from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
 import { MdContentCopy } from 'react-icons/md';
-import {
-  IconButton as RIconButton,
-  Message,
-  toaster,
-  Tooltip,
-  Whisper,
-} from 'rsuite';
 
 import { useDocumentUrl } from '../../hooks/useDocumentUrl';
+import { enqueueSnackbar } from '../../snackbar';
 
-const IconButton = styled(RIconButton)`
+const IconButton = styled(MuiIconButton)`
   &&:not([data-with-text]) {
     width: 28px;
     height: 28px;
@@ -60,34 +55,22 @@ export function CopyPollAnswerVoteUrlButton({
     try {
       await navigator.clipboard.writeText(voteUrl);
 
-      toaster.push(
-        <Message
-          type="success"
-          showIcon
-          closable
-          duration={3000}
-        >
-          {t('pollAnswer.urlCopied')}
-        </Message>
-      );
+      enqueueSnackbar(t('pollAnswer.urlCopied'), {
+        variant: 'success',
+        autoHideDuration: 3000,
+      });
     } catch (e) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={8000}
-        >
-          {t('pollAnswer.urlCopyingFailed')}
-        </Message>
-      );
+      enqueueSnackbar(t('pollAnswer.urlCopyingFailed'), {
+        variant: 'error',
+        autoHideDuration: 8000,
+      });
     }
   }
 
   return (
-    <Whisper
-      speaker={
-        <Tooltip>
+    <Tooltip
+      title={
+        <>
           {t('pollAnswer.copyVoteUrl')}
 
           {voteUrl && (
@@ -96,18 +79,17 @@ export function CopyPollAnswerVoteUrlButton({
               {voteUrl}
             </>
           )}
-        </Tooltip>
+        </>
       }
     >
       <IconButton
         aria-label={t('pollAnswer.copyVoteUrl')}
-        icon={<MdContentCopy />}
-        circle
-        size="xs"
-        appearance="ghost"
+        size="small"
         disabled={!voteUrl}
         onClick={copyVoteUrlIntoClipboard}
-      />
-    </Whisper>
+      >
+        <MdContentCopy />
+      </IconButton>
+    </Tooltip>
   );
 }

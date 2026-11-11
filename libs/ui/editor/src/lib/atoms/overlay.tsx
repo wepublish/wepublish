@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
-import { forwardRef, ReactNode } from 'react';
+import { ComponentPropsWithRef, forwardRef, ReactNode } from 'react';
 
 import { BlurStrength } from './helpers';
 
-export interface OverlayProps extends React.ComponentPropsWithRef<'div'> {
+export interface OverlayProps extends ComponentPropsWithRef<'div'> {
   children?: ReactNode;
 }
 

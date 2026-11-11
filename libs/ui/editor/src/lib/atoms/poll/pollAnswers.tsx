@@ -1,39 +1,38 @@
 import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormHelperText,
+  IconButton as MuiIconButton,
+  InputAdornment,
+  TextField,
+} from '@mui/material';
+import {
   CreatePollAnswerDocument,
   DeletePollAnswerDocument,
   FullPollFragment,
 } from '@wepublish/editor/api';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete } from 'react-icons/md';
-import {
-  Badge as RBadge,
-  Button,
-  Form,
-  IconButton as RIconButton,
-  Message,
-  Modal,
-  toaster,
-} from 'rsuite';
+
 import { humanizeError } from '../../humanizeError';
+import { enqueueSnackbar } from '../../snackbar';
 import { IconButtonTooltip } from '../iconButtonTooltip';
 
 type PollAnswerFragment = FullPollFragment['answers'][number];
 type PollExternalVoteFragment =
   FullPollFragment['externalVoteSources'][number]['voteAmounts'][number];
 
-const IconButton = styled(RIconButton)`
+const IconButton = styled(MuiIconButton)`
   &&:not([data-with-text]) {
     width: 36px;
     height: 36px;
   }
-`;
-
-const Badge = styled(RBadge)`
-  width: 100%;
-  display: grid;
 `;
 
 const Grid = styled.div`
@@ -41,10 +40,10 @@ const Grid = styled.div`
   display: grid;
   grid-template-columns: 1fr max-content;
   gap: 12px;
-  margin-bottom: 8px;
+  margin-bottom: 16px;
 `;
 
-const Hint = styled(Form.HelpText)`
+const Hint = styled(FormHelperText)`
   && {
     display: block;
     margin-top: 12px;
@@ -121,6 +120,21 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
     PollAnswerFragment | undefined
   >(undefined);
   const [newAnswer, setNewAnswer] = useState<string>('');
+  const [answerMissing, setAnswerMissing] = useState(false);
+  const answerInputs = useRef(new Map<string, HTMLInputElement | null>());
+  const newAnswerInput = useRef<HTMLInputElement>(null);
+  const focusAfterDelete = useRef<string | null>(null);
+
+  useEffect(() => {
+    const pending = focusAfterDelete.current;
+
+    if (pending === null) {
+      return;
+    }
+
+    focusAfterDelete.current = null;
+    (answerInputs.current.get(pending) ?? newAnswerInput.current)?.focus();
+  }, [poll?.answers]);
 
   const [createAnswerMutation, { loading }] = useMutation(
     CreatePollAnswerDocument,
@@ -129,16 +143,10 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
   const [deleteAnswerMutation] = useMutation(DeletePollAnswerDocument);
 
   const onErrorToast = (error: Error) => {
-    toaster.push(
-      <Message
-        type="error"
-        showIcon
-        closable
-        duration={8000}
-      >
-        {humanizeError(error)}
-      </Message>
-    );
+    enqueueSnackbar(humanizeError(error), {
+      variant: 'error',
+      autoHideDuration: 8000,
+    });
   };
 
   /**
@@ -150,16 +158,8 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
     }
 
     if (!newAnswer) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={8000}
-        >
-          {t('pollAnswer.answerMissing')}
-        </Message>
-      );
+      setAnswerMissing(true);
+      newAnswerInput.current?.focus();
       return;
     }
 
@@ -214,6 +214,11 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
       return;
     }
 
+    const neighbour =
+      updatedPoll.answers[deleteIndex + 1] ??
+      updatedPoll.answers[deleteIndex - 1];
+
+    focusAfterDelete.current = neighbour?.id ?? '';
     updatedPoll.answers.splice(deleteIndex, 1);
 
     // delete external vote sources
@@ -251,36 +256,52 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
 
   return (
     <>
-      {poll?.answers?.map(answer => (
+      {poll?.answers?.map((answer, index) => (
         <Grid key={answer.id}>
-          <Badge
-            content={`${getTotalVotesByAnswerId(poll, answer.id)} ${t('pollAnswer.votes')}`}
-          >
-            <Form.Control
-              name={`answer-${answer.id}`}
-              value={answer.answer}
-              onChange={(value: string) => {
-                updateAnswer({
-                  ...answer,
-                  answer: value,
-                });
-              }}
-            />
-          </Badge>
+          <TextField
+            name={`answer-${answer.id}`}
+            inputRef={(element: HTMLInputElement | null) => {
+              answerInputs.current.set(answer.id, element);
+            }}
+            value={answer.answer}
+            onChange={event => {
+              updateAnswer({
+                ...answer,
+                answer: event.target.value,
+              });
+            }}
+            slotProps={{
+              htmlInput: {
+                'aria-label': t('pollAnswer.answerLabel', {
+                  number: index + 1,
+                }),
+              },
+              input: {
+                endAdornment: (
+                  <InputAdornment position="end">
+                    {`${getTotalVotesByAnswerId(poll, answer.id)} ${t(
+                      'pollAnswer.votes'
+                    )}`}
+                  </InputAdornment>
+                ),
+              },
+            }}
+          />
 
           <IconButtonTooltip caption={t('delete')}>
             <IconButton
-              aria-label={t('delete')}
-              icon={<MdDelete />}
-              circle
-              size="sm"
-              appearance="ghost"
-              color="red"
+              aria-label={t('pollAnswer.deleteAnswer', {
+                answer: answer.answer,
+              })}
+              size="small"
+              color="error"
               onClick={() => {
                 setAnswerToDelete(answer);
                 setModalOpen(true);
               }}
-            />
+            >
+              <MdDelete />
+            </IconButton>
           </IconButtonTooltip>
         </Grid>
       ))}
@@ -288,54 +309,63 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
       <Hint>{t('pollAnswer.copyVoteUrlHint')}</Hint>
 
       <Grid css={{ marginTop: 24, marginBottom: 0 }}>
-        <Form.Control
+        <TextField
           name="createNewFormAnswer"
+          inputRef={newAnswerInput}
           placeholder={t('pollAnswer.insertYourNewAnswer')}
           value={newAnswer}
-          onChange={(value: string) => {
-            setNewAnswer(value);
+          error={answerMissing}
+          helperText={answerMissing ? t('pollAnswer.answerMissing') : undefined}
+          slotProps={{
+            htmlInput: { 'aria-label': t('pollAnswer.insertYourNewAnswer') },
+          }}
+          onChange={event => {
+            setNewAnswer(event.target.value);
+            setAnswerMissing(false);
           }}
         />
 
-        <RIconButton
-          icon={<MdAdd />}
+        <Button
+          variant="contained"
+          startIcon={<MdAdd />}
           loading={loading}
-          appearance="primary"
           onClick={createAnswer}
         >
           {t('pollEditView.addAndSaveNewAnswer')}
-        </RIconButton>
+        </Button>
       </Grid>
 
-      <Modal
+      <Dialog
+        fullWidth
         open={modalOpen}
-        size="xs"
+        maxWidth="xs"
         onClose={() => {
           setModalOpen(false);
         }}
       >
-        <Modal.Title>{t('pollAnswer.deleteModalTitle')}</Modal.Title>
+        <DialogTitle>{t('pollAnswer.deleteModalTitle')}</DialogTitle>
 
-        <Modal.Body>
+        <DialogContent>
           {t('pollAnswer.deleteModalBody', { answer: answerToDelete?.answer })}
-        </Modal.Body>
+        </DialogContent>
 
-        <Modal.Footer>
+        <DialogActions>
           <Button
-            appearance="primary"
-            onClick={() => deleteAnswer()}
-          >
-            {t('pollAnswer.deleteBtn')}
-          </Button>
-
-          <Button
-            appearance="subtle"
+            variant="text"
             onClick={() => setModalOpen(false)}
           >
             {t('cancel')}
           </Button>
-        </Modal.Footer>
-      </Modal>
+
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => deleteAnswer()}
+          >
+            {t('delete')}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

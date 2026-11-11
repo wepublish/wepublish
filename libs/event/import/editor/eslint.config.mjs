@@ -12,7 +12,9 @@ export default [
   {
     files: ['**/*.ts', '**/*.tsx'],
     // Override or add rules here
-    rules: {},
+    rules: {
+      curly: ['error', 'all'],
+    },
   },
   {
     files: ['**/*.js', '**/*.jsx'],

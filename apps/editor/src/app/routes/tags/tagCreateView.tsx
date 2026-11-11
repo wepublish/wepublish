@@ -1,33 +1,26 @@
 import { useMutation } from '@apollo/client/react';
-import {
-  CreateTagDocument,
-  MutationCreateTagArgs,
-  TagType,
-} from '@wepublish/editor/api';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { CreateTagDocument, TagType } from '@wepublish/editor/api';
 import { CanCreateTag } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
+  enqueueSnackbar,
   humanizeError,
   SingleViewTitle,
 } from '@wepublish/ui/editor';
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Form, Message, Schema, toaster } from 'rsuite';
+import { z } from 'zod';
 
 import { TagForm } from './tagForm';
 
 const onErrorToast = (error: Error) => {
-  toaster.push(
-    <Message
-      type="error"
-      showIcon
-      closable
-      duration={8000}
-    >
-      {humanizeError(error)}
-    </Message>
-  );
+  enqueueSnackbar(humanizeError(error), {
+    variant: 'error',
+    autoHideDuration: 8000,
+  });
 };
 
 export type TagCreateViewProps = {
@@ -36,52 +29,41 @@ export type TagCreateViewProps = {
 
 const TagCreateView = ({ type }: TagCreateViewProps) => {
   const { t } = useTranslation();
-  const [tag, setTag] = useState<MutationCreateTagArgs>({
-    type,
-    description: undefined,
-    main: false,
-    tag: '',
-  });
   const navigate = useNavigate();
   const [shouldClose, setShouldClose] = useState(false);
   const closePath = './..';
 
-  const [createTag, { loading: createLoading }] = useMutation(
-    CreateTagDocument,
-    {
-      onError: onErrorToast,
-      onCompleted: data => {
-        if (data.createTag) {
-          if (shouldClose) {
-            navigate(`./..`);
-          } else {
-            navigate(`./../edit/${data.createTag.id}`);
-          }
-        }
-      },
-    }
-  );
-
-  const loading = createLoading;
-  const onSubmit = () => createTag({ variables: tag });
-
-  const { StringType, BooleanType } = Schema.Types;
-  const validationModel = Schema.Model({
-    tag: StringType().isRequired(),
-    main: BooleanType().isRequired(),
+  const schema = z.object({
+    tag: z.string().min(1, t('errorMessages.required')),
+    color: z.string().nullish(),
+    description: z.any().nullish(),
+    main: z.boolean(),
   });
 
-  if (!tag) {
-    return;
-  }
+  const { control, handleSubmit } = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    defaultValues: { tag: '', description: undefined, main: false },
+  });
+
+  const [createTag, { loading }] = useMutation(CreateTagDocument, {
+    onError: onErrorToast,
+    onCompleted: data => {
+      if (data.createTag) {
+        if (shouldClose) {
+          navigate(`./..`);
+        } else {
+          navigate(`./../edit/${data.createTag.id}`);
+        }
+      }
+    },
+  });
+
+  const onSubmit = handleSubmit(values =>
+    createTag({ variables: { ...values, type } })
+  );
 
   return (
-    <Form
-      formValue={tag || {}}
-      model={validationModel}
-      disabled={loading}
-      onSubmit={validationPassed => validationPassed && onSubmit()}
-    >
+    <form onSubmit={onSubmit}>
       <SingleViewTitle
         loading={loading}
         title={t('tags.overview.createTag')}
@@ -93,12 +75,10 @@ const TagCreateView = ({ type }: TagCreateViewProps) => {
       />
 
       <TagForm
-        tag={tag}
-        onChange={changes =>
-          setTag(oldTag => ({ ...oldTag, ...(changes as any) }))
-        }
+        control={control}
+        disabled={loading}
       />
-    </Form>
+    </form>
   );
 };
 

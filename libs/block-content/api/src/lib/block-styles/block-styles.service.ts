@@ -5,7 +5,7 @@ import {
   UpdateBlockStyleInput,
 } from './block-styles.model';
 import { PrimeDataLoader } from '@wepublish/utils/api';
-import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
+import { PublicContentCacheInvalidator } from '@wepublish/public-content-cache/api';
 import { BlockStylesDataloaderService } from './block-styles-dataloader.service';
 
 @Injectable()

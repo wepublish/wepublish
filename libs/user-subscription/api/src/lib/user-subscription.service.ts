@@ -32,12 +32,12 @@ import {
   getPeriodPriceRange,
   logger,
 } from '@wepublish/utils/api';
-import { unselectPassword } from '@wepublish/authentication/api';
 import {
   calculateAmountForPeriodicity,
   GoodieService,
   MemberContextService,
   DiscountCodeService,
+  SubscriptionService,
 } from '@wepublish/membership/api';
 
 export type SubscriptionWithRelations = Subscription & {
@@ -54,7 +54,8 @@ export class UserSubscriptionService {
     private memberPlanDataloader: MemberPlanDataloader,
     private memberContext: MemberContextService,
     private discountCodeservice: DiscountCodeService,
-    private goodieService: GoodieService
+    private goodieService: GoodieService,
+    private subscriptionService: SubscriptionService
   ) {}
 
   public async getUserSubscriptions(userId: string) {
@@ -104,7 +105,11 @@ export class UserSubscriptionService {
     } = args;
 
     if (goodieId) {
-      await this.goodieService.getValidGoodie(goodieId, memberPlan.id);
+      await this.goodieService.getValidGoodie(
+        goodieId,
+        memberPlan.id,
+        paymentPeriodicity
+      );
     }
 
     // Check if subscription which should be deactivated exists
@@ -192,7 +197,11 @@ export class UserSubscriptionService {
       } = args;
 
       if (goodieId) {
-        await this.goodieService.getValidGoodie(goodieId, memberPlan.id);
+        await this.goodieService.getValidGoodie(
+          goodieId,
+          memberPlan.id,
+          paymentPeriodicity
+        );
       }
 
       const properties = await this.memberContext.processSubscriptionProperties(
@@ -320,7 +329,7 @@ export class UserSubscriptionService {
 
       const fullUser = await this.prisma.user.findUnique({
         where: { id: subscription.userID },
-        select: unselectPassword,
+        include: { address: true, paymentProviderCustomers: true },
       });
 
       if (!fullUser) {
@@ -388,15 +397,6 @@ export class UserSubscriptionService {
       | 'userID'
     >
   ) {
-    const subscription = await this.prisma.subscription.findUnique({
-      where: { id },
-      include: {
-        deactivation: true,
-      },
-    });
-
-    if (!subscription) throw new NotFoundException('subscription', id);
-
     const {
       memberPlanID,
       paymentPeriodicity,
@@ -405,6 +405,17 @@ export class UserSubscriptionService {
       paymentMethodID,
       userID,
     } = input;
+
+    // scoped to the requesting user, otherwise anybody could change a foreign
+    // subscription by its id
+    const subscription = await this.prisma.subscription.findUnique({
+      where: { id, userID: userID as string },
+      include: {
+        deactivation: true,
+      },
+    });
+
+    if (!subscription) throw new NotFoundException('subscription', id);
 
     const memberPlan = await this.memberPlanDataloader.load(
       memberPlanID as string
@@ -453,7 +464,7 @@ export class UserSubscriptionService {
       );
     }
 
-    this.memberContext.validateSubscriptionPaymentConfiguration(
+    await this.memberContext.validateSubscriptionPaymentConfiguration(
       memberPlan,
       autoRenew as boolean,
       paymentPeriodicity as PaymentPeriodicity,
@@ -544,6 +555,28 @@ export class UserSubscriptionService {
     }
 
     return updatedSubscription;
+  }
+
+  async reactivateUserSubscription(userId: string, subscriptionId: string) {
+    const subscription = await this.prisma.subscription.findUnique({
+      where: {
+        id: subscriptionId,
+        userID: userId,
+      },
+      include: {
+        deactivation: true,
+      },
+    });
+
+    if (!subscription) {
+      throw new BadRequestException(`Subscription not found ${subscriptionId}`);
+    }
+
+    if (!subscription.deactivation) {
+      throw new BadRequestException('Subscription is not canceled');
+    }
+
+    return this.subscriptionService.reactivateSubscription(subscriptionId);
   }
 
   private async validateSubscriptionInput({

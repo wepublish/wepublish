@@ -1,0 +1,29 @@
+[
+  {
+    "from": "Button",
+    "probe": ["appearance", "variant"],
+    "drop": ["appearance", "active", "ripple"],
+    "rename": { "block": "fullWidth" },
+    "values": {
+      "size": { "xs": "small", "sm": "small", "md": "medium", "lg": "large" },
+      "color": {
+        "red": "error",
+        "green": "success",
+        "blue": "primary",
+        "yellow": "warning",
+        "orange": "warning",
+        "cyan": "info",
+        "violet": "secondary"
+      }
+    },
+    "add": [
+      { "when": { "appearance": "primary" }, "attrs": "variant=\"contained\"" },
+      { "when": { "appearance": "ghost" }, "attrs": "variant=\"outlined\"" },
+      { "when": { "appearance": "subtle" }, "attrs": "variant=\"text\"" },
+      { "when": { "appearance": "link" }, "attrs": "variant=\"text\"" },
+      { "when": { "appearance": "default" }, "attrs": "variant=\"outlined\"" }
+    ],
+    "skipDefault": ["variant"],
+    "defaults": "variant=\"outlined\""
+  }
+]

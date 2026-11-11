@@ -1,14 +1,22 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  MenuItem,
+  Stack,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  TextField,
   Typography,
 } from '@mui/material';
 import {
+  MailChannel,
   MailLogState,
   MailLogType,
   MailLogsDocument,
@@ -17,24 +25,16 @@ import {
   SyncMailLogStatesDocument,
 } from '@wepublish/editor/api';
 import styled from '@emotion/styled';
-import { InfoTooltip } from '@wepublish/ui/editor';
-import { ReactNode, useEffect, useState } from 'react';
+import { InfoTooltip, enqueueSnackbar, Pagination } from '@wepublish/ui/editor';
+import { ReactNode, useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdFilterList, MdSync } from 'react-icons/md';
 import { useSearchParams } from 'react-router-dom';
-import {
-  Button,
-  Message,
-  Pagination,
-  Panel,
-  SelectPicker,
-  Stack,
-  toaster,
-} from 'rsuite';
-import { DEFAULT_MUTATION_OPTIONS, showErrors, useShowErrors } from '../common';
+import { DEFAULT_MUTATION_OPTIONS } from '../common';
 import {
   formatDateTime,
   MailErrorCell,
+  MailLogChannelCell,
   mailLogTypeLabel,
   MailLogStateLegend,
   MailLogStateTag,
@@ -66,32 +66,39 @@ function FilterField({
   label: string;
   info?: string;
   hint?: string;
-  children: ReactNode;
+  children: (ids: { labelId: string; hintId?: string }) => ReactNode;
 }) {
+  const id = useId();
+  const labelId = `${id}-label`;
+  const hintId = hint ? `${id}-hint` : undefined;
+
   return (
     <div>
-      <Typography
-        variant="caption"
-        style={{ marginBottom: 4, fontWeight: 600 }}
-        sx={{
-          display: 'block',
-        }}
+      <Stack
+        direction="row"
+        spacing={0.5}
+        sx={{ alignItems: 'center', marginBottom: 0.5 }}
       >
-        {label}
-        {info && (
-          <>
-            {' '}
-            <InfoTooltip text={info} />
-          </>
-        )}
-      </Typography>
-      {children}
+        <Typography
+          id={labelId}
+          variant="caption"
+          style={{ fontWeight: 600 }}
+          sx={{
+            display: 'block',
+          }}
+        >
+          {label}
+        </Typography>
+        {info && <InfoTooltip text={info} />}
+      </Stack>
+      {children({ labelId, hintId })}
       {hint && (
         <Typography
+          id={hintId}
           variant="caption"
           style={{
             marginTop: 4,
-            color: 'var(--rs-text-secondary)',
+            color: 'text.secondary',
             lineHeight: 1.35,
           }}
           sx={{
@@ -122,32 +129,26 @@ export function MailLogTable() {
     : null
   );
   const [type, setType] = useState<MailLogType | null>(null);
+  const [channel, setChannel] = useState<MailChannel | null>(null);
 
-  const { data: templateData, error: templateError } =
-    useQuery(MailTemplateDocument);
+  const { data: templateData } = useQuery(MailTemplateDocument);
 
-  useEffect(() => {
-    if (templateError) {
-      showErrors(templateError);
-    }
-  }, [templateError]);
-  const { data: jobData, error: jobError } = useQuery(MailSendJobsDocument, {
+  const { data: jobData } = useQuery(MailSendJobsDocument, {
     variables: { take: JOB_OPTIONS_LIMIT },
   });
-  useShowErrors(jobError);
-  const { data, error: logsError } = useQuery(MailLogsDocument, {
+  const { data } = useQuery(MailLogsDocument, {
     variables: {
       filter: {
         mailTemplateId: templateId ?? undefined,
         state: state ?? undefined,
         type: type ?? undefined,
+        channel: channel ?? undefined,
         mailSendJobId: jobId ?? undefined,
       },
       skip: (page - 1) * PAGE_SIZE,
       take: PAGE_SIZE,
     },
   });
-  useShowErrors(logsError);
 
   const [syncStates, { loading: syncing }] = useMutation(
     SyncMailLogStatesDocument,
@@ -167,13 +168,12 @@ export function MailLogTable() {
       return;
     }
 
-    toaster.push(
-      <Message type={sync.updated ? 'success' : 'info'}>
-        {t('mailLog.sync.done', {
-          checked: sync.checked,
-          updated: sync.updated,
-        })}
-      </Message>
+    enqueueSnackbar(
+      t('mailLog.sync.done', {
+        checked: sync.checked,
+        updated: sync.updated,
+      }),
+      { variant: sync.updated ? 'success' : 'info' }
     );
   };
 
@@ -184,6 +184,11 @@ export function MailLogTable() {
     label: value,
     value,
   }));
+  const channelOptions = Object.values(MailChannel).map(value => ({
+    label: t(`mailLog.channels.${value}`),
+    value,
+  }));
+
   const typeOptions = Object.values(MailLogType).map(value => ({
     label: mailLogTypeLabel(value, t),
     description: t(`mailLog.typeDescriptions.${value}`),
@@ -219,126 +224,220 @@ export function MailLogTable() {
     setSearchParams(next);
   };
 
-  const hasFilters = !!(jobId || templateId || state || type);
+  const hasFilters = !!(jobId || templateId || state || type || channel);
 
   const resetFilters = () => {
     setPage(1);
     setTemplateId(null);
     setState(null);
     setType(null);
+    setChannel(null);
     setSearchParams({});
   };
 
   return (
     <>
-      <Panel
-        bordered
+      <Card
+        variant="outlined"
         style={{ marginTop: 16, marginBottom: 16 }}
-        header={
-          <Stack
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Stack
-              spacing={8}
-              alignItems="center"
-            >
-              <MdFilterList />
-              <span>{t('mailLog.filter.title')}</span>
-            </Stack>
-            <Stack
-              spacing={8}
-              alignItems="center"
-            >
-              {hasFilters && (
-                <Button
-                  size="xs"
-                  appearance="link"
-                  onClick={resetFilters}
-                >
-                  {t('mailLog.filter.reset')}
-                </Button>
-              )}
-              <Button
-                size="xs"
-                appearance="ghost"
-                loading={syncing}
-                onClick={runSync}
-              >
-                <MdSync /> {t('mailLog.sync.action')}
-              </Button>
-              <InfoTooltip text={t('mailLog.sync.hint')} />
-            </Stack>
-          </Stack>
-        }
       >
-        <FilterGrid>
-          <FilterField
-            label={t('mailLog.filter.job')}
-            info={t('mailLog.filter.jobHelp')}
-          >
-            <SelectPicker
-              block
-              data={jobOptions}
-              value={jobId}
-              onChange={selectJob}
-              placeholder={t('mailLog.filter.jobAll')}
-            />
-          </FilterField>
-          <FilterField label={t('mailLog.filter.template')}>
-            <SelectPicker
-              block
-              data={templateOptions}
-              value={templateId}
-              onChange={resetPageThen(setTemplateId)}
-              placeholder={t('mailLog.filter.all')}
-            />
-          </FilterField>
-          <FilterField label={t('mailLog.filter.state')}>
-            <SelectPicker
-              block
-              searchable={false}
-              data={stateOptions}
-              value={state}
-              onChange={resetPageThen(setState)}
-              placeholder={t('mailLog.filter.all')}
-            />
-          </FilterField>
-          <FilterField
-            label={t('mailLog.filter.type')}
-            hint={t('mailLog.filter.typeHint')}
-          >
-            <SelectPicker
-              block
-              searchable={false}
-              data={typeOptions}
-              value={type}
-              onChange={resetPageThen(setType)}
-              placeholder={t('mailLog.filter.all')}
-              // Manual vs. the three automatic origins is not self-evident
-              // from the label alone, so spell each one out in the menu.
-              renderOption={(label, item) => (
-                <div style={{ paddingBlock: 2 }}>
-                  <div>{label}</div>
-                  <Typography
-                    variant="caption"
-                    style={{
-                      color: 'var(--rs-text-secondary)',
-                      whiteSpace: 'normal',
-                      lineHeight: 1.35,
-                    }}
-                    sx={{
-                      display: 'block',
-                    }}
+        <CardHeader
+          title={
+            <Stack
+              direction="row"
+              sx={{ alignItems: 'center', justifyContent: 'space-between' }}
+            >
+              <Stack
+                direction="row"
+                sx={{ alignItems: 'center' }}
+                spacing={1}
+              >
+                <MdFilterList />
+                <span>{t('mailLog.filter.title')}</span>
+              </Stack>
+              <Stack
+                direction="row"
+                sx={{ alignItems: 'center' }}
+                spacing={1}
+              >
+                {hasFilters && (
+                  <Button
+                    variant="text"
+                    size="small"
+                    onClick={resetFilters}
                   >
-                    {(item as MailTypeOption).description}
-                  </Typography>
-                </div>
+                    {t('mailLog.filter.reset')}
+                  </Button>
+                )}
+                <Button
+                  variant="outlined"
+                  size="small"
+                  loading={syncing}
+                  onClick={runSync}
+                >
+                  <MdSync /> {t('mailLog.sync.action')}
+                </Button>
+                <InfoTooltip text={t('mailLog.sync.hint')} />
+              </Stack>
+            </Stack>
+          }
+        />
+
+        <CardContent>
+          <FilterGrid>
+            <FilterField
+              label={t('mailLog.filter.job')}
+              info={t('mailLog.filter.jobHelp')}
+            >
+              {({ labelId }) => (
+                <TextField
+                  select
+                  value={jobId ?? ''}
+                  onChange={event => selectJob(event.target.value || null)}
+                  slotProps={{ select: { displayEmpty: true, labelId } }}
+                  fullWidth
+                >
+                  <MenuItem value="">{t('mailLog.filter.jobAll')}</MenuItem>
+
+                  {jobOptions.map(option => (
+                    <MenuItem
+                      key={option.value}
+                      value={option.value}
+                    >
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
               )}
-            />
-          </FilterField>
-        </FilterGrid>
-      </Panel>
+            </FilterField>
+            <FilterField label={t('mailLog.filter.template')}>
+              {({ labelId }) => (
+                <TextField
+                  select
+                  value={templateId ?? ''}
+                  onChange={event =>
+                    resetPageThen(setTemplateId)(event.target.value || null)
+                  }
+                  slotProps={{ select: { displayEmpty: true, labelId } }}
+                  fullWidth
+                >
+                  <MenuItem value="">{t('mailLog.filter.all')}</MenuItem>
+
+                  {templateOptions.map(option => (
+                    <MenuItem
+                      key={option.value}
+                      value={option.value}
+                    >
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            </FilterField>
+            <FilterField label={t('mailLog.filter.state')}>
+              {({ labelId }) => (
+                <TextField
+                  select
+                  value={state ?? ''}
+                  onChange={event =>
+                    resetPageThen(setState)(
+                      (event.target.value as MailLogState) || null
+                    )
+                  }
+                  slotProps={{ select: { displayEmpty: true, labelId } }}
+                  fullWidth
+                >
+                  <MenuItem value="">{t('mailLog.filter.all')}</MenuItem>
+
+                  {stateOptions.map(option => (
+                    <MenuItem
+                      key={option.value}
+                      value={option.value}
+                    >
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            </FilterField>
+            <FilterField label={t('mailLog.filter.channel')}>
+              {({ labelId }) => (
+                <TextField
+                  select
+                  value={channel ?? ''}
+                  onChange={event =>
+                    resetPageThen(setChannel)(
+                      (event.target.value as MailChannel) || null
+                    )
+                  }
+                  slotProps={{ select: { displayEmpty: true, labelId } }}
+                  fullWidth
+                >
+                  <MenuItem value="">{t('mailLog.filter.all')}</MenuItem>
+
+                  {channelOptions.map(option => (
+                    <MenuItem
+                      key={option.value}
+                      value={option.value}
+                    >
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            </FilterField>
+            <FilterField
+              label={t('mailLog.filter.type')}
+              hint={t('mailLog.filter.typeHint')}
+            >
+              {({ labelId, hintId }) => (
+                <TextField
+                  select
+                  value={type ?? ''}
+                  onChange={event =>
+                    resetPageThen(setType)(
+                      (event.target.value as MailLogType) || null
+                    )
+                  }
+                  slotProps={{
+                    select: {
+                      displayEmpty: true,
+                      labelId,
+                      SelectDisplayProps: {
+                        'aria-describedby': hintId,
+                      } as object,
+                    },
+                  }}
+                  fullWidth
+                >
+                  <MenuItem value="">{t('mailLog.filter.all')}</MenuItem>
+
+                  {typeOptions.map(option => (
+                    <MenuItem
+                      key={option.value}
+                      value={option.value}
+                      sx={{ display: 'block', paddingBlock: 0.5 }}
+                    >
+                      <div>{option.label}</div>
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        sx={{
+                          display: 'block',
+                          whiteSpace: 'normal',
+                          lineHeight: 1.35,
+                        }}
+                      >
+                        {(option as MailTypeOption).description}
+                      </Typography>
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            </FilterField>
+          </FilterGrid>
+        </CardContent>
+      </Card>
       <TableContainer>
         <Table size="small">
           <TableHead>
@@ -356,12 +455,16 @@ export function MailLogTable() {
                 <strong>{t('mailLog.subject')}</strong>
               </TableCell>
               <TableCell>
+                <strong>{t('mailLog.channel')}</strong>
+              </TableCell>
+              <TableCell>
                 <strong>{t('mailLog.type')}</strong>
               </TableCell>
               <TableCell>
                 <Stack
-                  spacing={4}
-                  alignItems="center"
+                  direction="row"
+                  sx={{ alignItems: 'center' }}
+                  spacing={0.5}
                 >
                   <strong>{t('mailLog.state')}</strong>
                   <MailLogStateLegend />
@@ -373,12 +476,24 @@ export function MailLogTable() {
             </TableRow>
           </TableHead>
           <TableBody>
+            {data && !logs.length && (
+              <TableRow>
+                <TableCell colSpan={7}>{t('mailLog.empty')}</TableCell>
+              </TableRow>
+            )}
+
             {logs.map(log => (
               <TableRow key={log.id}>
                 <TableCell>{formatDateTime(log.sentDate)}</TableCell>
                 <TableCell>{log.recipient.email}</TableCell>
                 <TableCell>{log.mailTemplate.name}</TableCell>
                 <TableCell>{log.subject ?? '—'}</TableCell>
+                <TableCell>
+                  <MailLogChannelCell
+                    channel={log.channel}
+                    address={log.address}
+                  />
+                </TableCell>
                 <TableCell>{mailLogTypeLabel(log.type, t)}</TableCell>
                 <TableCell>
                   <MailLogStateTag state={log.state} />
@@ -392,15 +507,13 @@ export function MailLogTable() {
         </Table>
       </TableContainer>
       <Pagination
-        style={{ marginTop: 16 }}
-        prev
-        next
-        maxButtons={7}
-        size="sm"
-        total={totalCount}
-        limit={PAGE_SIZE}
-        activePage={page}
-        onChangePage={setPage}
+        state={{
+          page,
+          limit: PAGE_SIZE,
+          setPage,
+          setLimit: () => undefined /* page size was fixed here */,
+        }}
+        totalCount={totalCount}
       />
     </>
   );

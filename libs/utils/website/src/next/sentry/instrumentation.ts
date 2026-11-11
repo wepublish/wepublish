@@ -1,0 +1,34 @@
+import * as Sentry from '@sentry/nextjs';
+
+import {
+  getServerConfig,
+  setCommonTags,
+  withoutKeySpans,
+} from '@wepublish/utils';
+
+import { withoutClientErrors } from '../../lib/sentry/request-error';
+
+export async function register() {
+  if (process.env.NEXT_RUNTIME === 'nodejs') {
+    const { forbidCachingErrors } =
+      await import('../../lib/sentry/error-no-store');
+    forbidCachingErrors();
+
+    const { nodeProfilingIntegration } = await import('@sentry/profiling-node');
+
+    Sentry.init({
+      ...getServerConfig(),
+      integrations: defaults => [
+        ...withoutKeySpans(defaults),
+        nodeProfilingIntegration(),
+      ],
+      profileLifecycle: 'trace',
+      profileSessionSampleRate:
+        process.env.APP_ENVIRONMENT === 'production' ? 0.1 : 1.0,
+    });
+
+    setCommonTags(Sentry, 'nextjs-server');
+  }
+}
+
+export const onRequestError = withoutClientErrors(Sentry.captureRequestError);

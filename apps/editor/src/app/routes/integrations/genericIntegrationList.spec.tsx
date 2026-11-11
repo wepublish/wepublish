@@ -1,11 +1,11 @@
-import type { Mock } from 'vitest';
 import { useQuery } from '@apollo/client/react';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import {
   CreateMailProviderSettingDocument,
   MailProviderSettingsDocument,
   UpdateMailProviderSettingDocument,
 } from '@wepublish/editor/api';
+import type { Mock } from 'vitest';
 import { z } from 'zod';
 
 import { GenericIntegrationList } from './genericIntegrationList';
@@ -67,5 +67,85 @@ describe('GenericIntegrationList', () => {
     expect(
       screen.queryByRole('button', { name: 'integrations.setUp' })
     ).toBeNull();
+  });
+  it('shows a setting that was changed by saving another one', () => {
+    const setting = (hotAndTrending: boolean, modifiedAt: string) => ({
+      data: {
+        analyticsProviderSettings: [
+          {
+            id: 'google-analytics',
+            type: 'GOOGLE',
+            name: 'Google Analytics',
+            hotAndTrending,
+            modifiedAt,
+          },
+        ],
+      },
+      loading: false,
+    });
+    const list = () => (
+      <GenericIntegrationList
+        query={MailProviderSettingsDocument}
+        mutation={UpdateMailProviderSettingDocument}
+        dataKey="analyticsProviderSettings"
+        schema={z.object({ hotAndTrending: z.boolean().nullish() })}
+        fields={[
+          {
+            name: 'hotAndTrending',
+            label: 'integrations.analyticsSettings.hotAndTrending',
+            type: 'checkbox',
+          },
+        ]}
+      />
+    );
+
+    mockedUseQuery.mockReturnValue(setting(true, '2026-01-01T00:00:00.000Z'));
+    const { rerender } = render(list());
+    expect((screen.getByRole('checkbox') as HTMLInputElement).checked).toBe(
+      true
+    );
+
+    mockedUseQuery.mockReturnValue(setting(false, '2026-01-02T00:00:00.000Z'));
+    rerender(list());
+
+    expect((screen.getByRole('checkbox') as HTMLInputElement).checked).toBe(
+      false
+    );
+  });
+
+  it('labels the fields of the set-up dialog', () => {
+    mockedUseQuery.mockReturnValue({
+      data: { mailProviderSettings: [] },
+      loading: false,
+    });
+
+    renderList();
+    fireEvent.click(screen.getByRole('button', { name: 'integrations.setUp' }));
+
+    const dialog = screen.getByRole('dialog');
+
+    expect(
+      within(dialog).getByRole('combobox', { name: 'integrations.addType' })
+    ).toBeTruthy();
+    expect(
+      within(dialog).getByRole('textbox', { name: 'integrations.addId' })
+    ).toHaveAccessibleDescription('integrations.addIdHelp');
+  });
+
+  it('labels the search once there are several integrations', () => {
+    mockedUseQuery.mockReturnValue({
+      data: {
+        mailProviderSettings: ['a', 'b', 'c', 'd'].map(id => ({
+          id,
+          type: 'SMTP',
+          name: id,
+        })),
+      },
+      loading: false,
+    });
+
+    renderList();
+
+    expect(screen.getByRole('textbox', { name: 'search' })).toBeTruthy();
   });
 });

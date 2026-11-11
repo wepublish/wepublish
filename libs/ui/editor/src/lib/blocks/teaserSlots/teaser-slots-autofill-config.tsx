@@ -2,14 +2,14 @@
 
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import { Box, FormLabel, MenuItem, TextField } from '@mui/material';
 import {
   TagType,
   TeaserSlotsAutofillConfigInput,
   TeaserType,
 } from '@wepublish/editor/api';
-import { useMemo, useState } from 'react';
+import { useId, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Form, SelectPicker } from 'rsuite';
 
 import { SelectTags } from '../../atoms/tag/selectTags';
 import { useTeaserTypeText } from '../../panel/teaserListConfigPanel';
@@ -19,19 +19,19 @@ interface TeaserSlotsConfigPanelProps {
   onChange: (config: TeaserSlotsAutofillConfigInput) => void;
 }
 
-const ConfigContainer = styled(Form)`
+const ConfigContainer = styled('form')`
   display: flex;
   flex-direction: column;
   gap: 16px;
 `;
 
-const FormGroup = styled(Form.Group)`
+const FormGroup = styled(Box)`
   margin-bottom: 12px;
 `;
 
 const HelpText = styled('div')`
   font-size: 12px;
-  color: var(--rs-text-secondary);
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
   margin-top: 4px;
 `;
 
@@ -46,6 +46,8 @@ export function TeaserSlotsAutofillConfigPanel({
   const [teaserType, setTeaserType] = useState(config.teaserType);
   const { t } = useTranslation();
   const teaserTypeText = useTeaserTypeText();
+  const teaserTypeLabelId = useId();
+  const filterLabelId = useId();
 
   const handleChange = (
     partialConfig: Partial<TeaserSlotsAutofillConfigInput>
@@ -82,40 +84,40 @@ export function TeaserSlotsAutofillConfigPanel({
   const sortOptions = [{ label: 'Published date', value: 'PublishedAt' }];
 
   return (
-    <ConfigContainer fluid>
+    <ConfigContainer>
       <FormGroup>
-        <Form.Label>{t('blocks.teaserSlots.autofillType')}</Form.Label>
-        <SelectPicker
+        <FormLabel id={teaserTypeLabelId}>
+          {t('blocks.teaserSlots.autofillType')}
+        </FormLabel>
+        <TextField
+          select
           name="teaserType"
-          cleanable={false}
+          slotProps={{ select: { labelId: teaserTypeLabelId } }}
           value={teaserType}
-          onChange={value => handleTeaserTypeChange(value!)}
-          data={[
-            {
-              label: teaserTypeText(TeaserType.Article),
-              value: TeaserType.Article,
-            },
-            {
-              label: teaserTypeText(TeaserType.Event),
-              value: TeaserType.Event,
-            },
-            /*
-            not supported yet
-            {
-              label: teaserTypeText(TeaserType.Page),
-              value: TeaserType.Page,
-            },
-            */
-          ]}
+          onChange={event =>
+            handleTeaserTypeChange(event.target.value as TeaserType)
+          }
+          fullWidth
           css={inputStyles}
-        />
+        >
+          <MenuItem value={TeaserType.Article}>
+            {teaserTypeText(TeaserType.Article)}
+          </MenuItem>
+
+          <MenuItem value={TeaserType.Event}>
+            {teaserTypeText(TeaserType.Event)}
+          </MenuItem>
+        </TextField>
       </FormGroup>
 
       {tagType && (
         <FormGroup>
-          <Form.Label>{t('blocks.teaserSlots.filter')}</Form.Label>
+          <FormLabel id={filterLabelId}>
+            {t('blocks.teaserSlots.filter')}
+          </FormLabel>
 
           <SelectTags
+            aria-labelledby={filterLabelId}
             defaultTags={[]}
             name="tags"
             tagType={tagType}

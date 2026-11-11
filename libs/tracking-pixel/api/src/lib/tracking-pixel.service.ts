@@ -1,15 +1,16 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
+import { DistributedClaims } from '@wepublish/dragonfly/api';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import {
-  KvTtlCacheService,
   PublicContentCacheInvalidator,
   contentCacheNamespace,
-} from '@wepublish/kv-ttl-cache/api';
+} from '@wepublish/public-content-cache/api';
 import { TrackingPixelProvider } from './tracking-pixel-provider/tracking-pixel-provider';
+import { TRACKING_PIXEL_CACHE_NAMESPACE } from './tracking-pixel-cache';
 
 export const TRACKING_PIXEL_MODULE_OPTIONS = 'TRACKING_PIXEL_MODULE_OPTIONS';
 
-const CHECKED_NAMESPACE = 'tracking-pixels';
 const CHECKED_TTL_SECONDS = 24 * 60 * 60;
 const RETRY_FAILED_SECONDS = 15 * 60;
 const ADDING_CLAIM_MS = 60_000;
@@ -29,7 +30,8 @@ export class TrackingPixelService {
     private prisma: PrismaClient,
     @Inject(TRACKING_PIXEL_MODULE_OPTIONS)
     private config: TrackingPixelModuleOptions,
-    private kv: KvTtlCacheService,
+    private kv: NamespacedCache,
+    private claims: DistributedClaims,
     private publicContentCache: PublicContentCacheInvalidator
   ) {}
 
@@ -103,13 +105,17 @@ export class TrackingPixelService {
       .sort()
       .join(',')}:${articleId}`;
 
-    if (await this.kv.getNs<boolean>(CHECKED_NAMESPACE, checkedKey)) {
+    if (
+      await this.kv.getNs<boolean>(TRACKING_PIXEL_CACHE_NAMESPACE, checkedKey)
+    ) {
       return;
     }
 
     if (
-      (await this.kv.claim(`tracking-pixels:${articleId}`, ADDING_CLAIM_MS)) ===
-      false
+      (await this.claims.claim(
+        `tracking-pixels:${articleId}`,
+        ADDING_CLAIM_MS
+      )) === 'taken'
     ) {
       await this.waitForOtherReplica(checkedKey);
 
@@ -127,7 +133,7 @@ export class TrackingPixelService {
       );
     } finally {
       await this.kv.setNs(
-        CHECKED_NAMESPACE,
+        TRACKING_PIXEL_CACHE_NAMESPACE,
         checkedKey,
         true,
         failed ? RETRY_FAILED_SECONDS : CHECKED_TTL_SECONDS
@@ -249,7 +255,9 @@ export class TrackingPixelService {
     ) {
       await new Promise(resolve => setTimeout(resolve, OTHER_REPLICA_POLL_MS));
 
-      if (await this.kv.getNs<boolean>(CHECKED_NAMESPACE, checkedKey)) {
+      if (
+        await this.kv.getNs<boolean>(TRACKING_PIXEL_CACHE_NAMESPACE, checkedKey)
+      ) {
         return;
       }
     }

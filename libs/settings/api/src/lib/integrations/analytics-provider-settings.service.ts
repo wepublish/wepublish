@@ -8,7 +8,7 @@ import {
 } from './analytics-provider-settings.model';
 import { PrimeDataLoader } from '@wepublish/utils/api';
 import { AnalyticsProviderSettingsDataloaderService } from './analytics-provider-settings-dataloader.service';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from './secrets-crypto';
 
 @Injectable()
@@ -16,13 +16,23 @@ export class AnalyticsProviderSettingsService {
   private readonly crypto = new SecretCrypto();
   constructor(
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService
+    private resets: NamespaceResets
   ) {}
 
   private encryptSecretsIfPresent<
-    T extends { credentials?: SettingAnalyticsCredentialsInput | null },
-  >(data: T): Omit<T, 'credentials'> & { credentials?: string | null } {
-    const { credentials, ...rest } = data;
+    T extends {
+      credentials?: SettingAnalyticsCredentialsInput | null;
+      apiKey?: string | null;
+    },
+  >(
+    data: T
+  ): Omit<T, 'credentials' | 'apiKey'> & { credentials?: string | null } {
+    const { credentials, apiKey, ...rest } = data;
+
+    // Plausible and Umami store their api key where Google stores its credentials
+    if (apiKey) {
+      return { ...rest, credentials: this.crypto.encrypt(apiKey) };
+    }
 
     if (credentials === undefined) {
       return rest;
@@ -79,7 +89,7 @@ export class AnalyticsProviderSettingsService {
       update: {},
     });
 
-    await this.kv.resetNamespace('settings:analyticsprovider');
+    await this.resets.reset('settings:analyticsprovider');
 
     return returnValue;
   }
@@ -106,11 +116,20 @@ export class AnalyticsProviderSettingsService {
       Object.entries(updateData).filter(([_, value]) => value !== undefined)
     );
 
-    const returnValue = await this.prisma.settingAnalyticsProvider.update({
-      where: { id },
-      data: filteredUpdateData,
+    const returnValue = await this.prisma.$transaction(async transaction => {
+      if (updateData.hotAndTrending) {
+        await transaction.settingAnalyticsProvider.updateMany({
+          where: { id: { not: id }, hotAndTrending: true },
+          data: { hotAndTrending: false },
+        });
+      }
+
+      return transaction.settingAnalyticsProvider.update({
+        where: { id },
+        data: filteredUpdateData,
+      });
     });
-    await this.kv.resetNamespace('settings:analyticsprovider');
+    await this.resets.reset('settings:analyticsprovider');
     return returnValue;
   }
 
@@ -132,7 +151,7 @@ export class AnalyticsProviderSettingsService {
     const returnValue = await this.prisma.settingAnalyticsProvider.delete({
       where: { id },
     });
-    await this.kv.resetNamespace('settings:analyticsprovider');
+    await this.resets.reset('settings:analyticsprovider');
     return returnValue;
   }
 }

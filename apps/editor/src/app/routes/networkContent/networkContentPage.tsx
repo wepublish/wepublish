@@ -1,10 +1,15 @@
 import { useMutation } from '@apollo/client/react';
+import { CircularProgress, Typography } from '@mui/material';
 import { ImportPeerArticleDocument } from '@wepublish/editor/api';
-import { ListViewContainer, ListViewHeader } from '@wepublish/ui/editor';
+import {
+  ListViewContainer,
+  ListViewHeader,
+  Pagination,
+  PageTitle,
+} from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Loader, Pagination } from 'rsuite';
 
 import {
   ARTICLES_PER_PAGE,
@@ -92,7 +97,9 @@ export function NetworkContentPage() {
   );
 
   const handleConfirmImport = () => {
-    if (!articleToImport) return;
+    if (!articleToImport) {
+      return;
+    }
 
     importPeerArticle({
       variables: {
@@ -137,16 +144,20 @@ export function NetworkContentPage() {
     <>
       <ListViewContainer>
         <ListViewHeader>
-          <h2>{t('networkContentPage.title')}</h2>
+          <PageTitle>{t('networkContentPage.title')}</PageTitle>
         </ListViewHeader>
       </ListViewContainer>
 
       <PageGrid>
         <Card aria-labelledby="network-articles-title">
           <CardHeader>
-            <h3 id="network-articles-title">
+            <Typography
+              variant="h3"
+              component="h2"
+              id="network-articles-title"
+            >
               {t('networkContentPage.articlesTitle')}
-            </h3>
+            </Typography>
             {!loading && !error && <CardCount>{articleTotalCount}</CardCount>}
           </CardHeader>
 
@@ -156,23 +167,27 @@ export function NetworkContentPage() {
             onFiltersChange={handleFiltersChange}
           />
 
-          {loading && (
-            <CenteredContainer>
-              <Loader />
-            </CenteredContainer>
-          )}
+          <div role="status">
+            {loading && (
+              <CenteredContainer>
+                <CircularProgress aria-label={t('loading')} />
+              </CenteredContainer>
+            )}
 
-          {!loading && error && (
-            <CenteredContainer>
-              <ErrorText>{t('networkContentDashboard.errorLoading')}</ErrorText>
-            </CenteredContainer>
-          )}
+            {!loading && error && (
+              <CenteredContainer>
+                <ErrorText>
+                  {t('networkContentDashboard.errorLoading')}
+                </ErrorText>
+              </CenteredContainer>
+            )}
 
-          {!loading && !error && articles.length === 0 && (
-            <CenteredContainer>
-              {t('networkContentDashboard.noArticles')}
-            </CenteredContainer>
-          )}
+            {!loading && !error && articles.length === 0 && (
+              <CenteredContainer>
+                {t('networkContentDashboard.noArticles')}
+              </CenteredContainer>
+            )}
+          </div>
 
           {!loading && !error && articles.length > 0 && (
             <FeedList>
@@ -195,14 +210,14 @@ export function NetworkContentPage() {
           {!loading && !error && articleTotalPages > 1 && (
             <CardFooter>
               <Pagination
-                prev
-                next
-                size="sm"
-                maxButtons={5}
-                total={articleTotalCount}
-                limit={ARTICLES_PER_PAGE}
-                activePage={articlePage + 1}
-                onChangePage={nextPage => setArticlePage(nextPage - 1)}
+                state={{
+                  page: articlePage + 1,
+                  limit: ARTICLES_PER_PAGE,
+                  setPage: nextPage => setArticlePage(nextPage - 1),
+                  setLimit: () => undefined /* page size was fixed here */,
+                }}
+                totalCount={articleTotalCount}
+                label={t('networkContentPage.articlesTitle')}
               />
             </CardFooter>
           )}

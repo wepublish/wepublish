@@ -99,6 +99,7 @@ Follow these steps to set up your local development environment.
 Ensure you have the following installed:
 
 - [Node.js](https://nodejs.org/en/download/) (v22.20.0 or higher)
+- [pnpm](https://pnpm.io/) — `corepack enable pnpm` picks up the version pinned in `package.json`
 - [Docker](https://www.docker.com/products/docker-desktop) & Docker Compose
 - [Git](https://git-scm.com/)
 
@@ -114,14 +115,14 @@ Ensure you have the following installed:
 2.  **Install dependencies**
 
     ```bash
-    npm install
+    pnpm install
     ```
 
 3.  **Start the development environment**
     This command starts the database and storage services via Docker, runs migrations, and launches the API, Editor, and Website in watch mode.
 
     ```bash
-    npm run dev
+    pnpm run dev
     ```
 
     > **Note**
@@ -157,13 +158,13 @@ This project is organized as an Nx monorepo:
 To run the test suite across the entire workspace:
 
 ```bash
-npm run test
+pnpm run test
 ```
 
 Or run tests for a specific project:
 
 ```bash
-npx nx test api-example
+pnpm nx test api-example
 ```
 
 ## Documentation

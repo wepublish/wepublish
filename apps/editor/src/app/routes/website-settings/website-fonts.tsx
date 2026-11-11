@@ -15,13 +15,18 @@ import {
   WebsiteRemoteFontInput,
   WebsiteSettingsDocument,
 } from '@wepublish/editor/api';
-import { humanizeError, IconButtonTooltip } from '@wepublish/ui/editor';
+import {
+  enqueueSnackbar,
+  humanizeError,
+  IconButtonTooltip,
+  Link,
+} from '@wepublish/ui/editor';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
-import { MdAdd, MdArrowBack, MdDelete } from 'react-icons/md';
-import { Link } from 'react-router-dom';
-import { Message, toaster } from 'rsuite';
+import { MdAdd, MdDelete } from 'react-icons/md';
 import { z } from 'zod';
+
+import { WebsiteSettingsHeader } from './website-settings-header';
 
 import { FontPicker } from './theme/font-picker';
 import { WebsiteAnalyticsWrapper } from './website-analytics';
@@ -59,28 +64,16 @@ export const WebsiteFonts = () => {
     UpdateWebsiteSettingsDocument,
     {
       onCompleted: () => {
-        toaster.push(
-          <Message
-            type="success"
-            showIcon
-            closable
-          >
-            {t('websiteSettings.saveSuccess')}
-          </Message>,
-          { duration: 3000 }
-        );
+        enqueueSnackbar(t('websiteSettings.saveSuccess'), {
+          variant: 'success',
+          autoHideDuration: 3000,
+        });
       },
       onError: error => {
-        toaster.push(
-          <Message
-            type="error"
-            showIcon
-            closable
-          >
-            {humanizeError(error)}
-          </Message>,
-          { duration: 3000 }
-        );
+        enqueueSnackbar(humanizeError(error), {
+          variant: 'error',
+          autoHideDuration: 3000,
+        });
       },
     }
   );
@@ -123,16 +116,16 @@ export const WebsiteFonts = () => {
 
   return (
     <WebsiteAnalyticsWrapper onSubmit={onSubmit}>
-      <Link to="/settings/website">
+      <WebsiteSettingsHeader title={t('websiteSettings.fonts.title')}>
         <Button
-          size="small"
-          variant="text"
-          startIcon={<MdArrowBack />}
+          type="submit"
+          variant="contained"
+          color="primary"
+          loading={saving}
         >
-          {t('websiteSettings.backToOverview')}
+          {t('save')}
         </Button>
-      </Link>
-      <h3>{t('websiteSettings.fonts.title')}</h3>
+      </WebsiteSettingsHeader>
       <Typography
         variant="body2"
         color={'gray'}
@@ -200,24 +193,6 @@ export const WebsiteFonts = () => {
           onClick={() => append({ name: '', weight: [], style: [] })}
         >
           {t('websiteSettings.fonts.addFont')}
-        </Button>
-      </Box>
-      <Box>
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          disabled={saving}
-        >
-          {saving && (
-            <CircularProgress
-              size={14}
-              color="inherit"
-              sx={{ mr: 1 }}
-            />
-          )}
-
-          {t('save')}
         </Button>
       </Box>
     </WebsiteAnalyticsWrapper>

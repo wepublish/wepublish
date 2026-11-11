@@ -1,32 +1,25 @@
 import { useMutation } from '@apollo/client/react';
-import {
-  CreatePaywallDocument,
-  MutationCreatePaywallArgs,
-} from '@wepublish/editor/api';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { CreatePaywallDocument } from '@wepublish/editor/api';
 import { CanCreatePaywall } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
+  enqueueSnackbar,
   humanizeError,
   SingleViewTitle,
 } from '@wepublish/ui/editor';
 import { useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Form, Message, Schema, toaster } from 'rsuite';
 
-import { PaywallForm } from './paywallForm';
+import { PaywallForm, PaywallFormValues, paywallSchema } from './paywallForm';
 
 const onErrorToast = (error: Error) => {
-  toaster.push(
-    <Message
-      type="error"
-      showIcon
-      closable
-      duration={8000}
-    >
-      {humanizeError(error)}
-    </Message>
-  );
+  enqueueSnackbar(humanizeError(error), {
+    variant: 'error',
+    autoHideDuration: 8000,
+  });
 };
 
 const PaywallCreateView = () => {
@@ -35,18 +28,18 @@ const PaywallCreateView = () => {
   const navigate = useNavigate();
   const closePath = './../..';
 
-  const [paywall, setPaywall] = useState<
-    MutationCreatePaywallArgs & {
-      bypasses?: Array<{ id?: string; token: string }>;
-    }
-  >(() => ({
-    active: true,
-    anyMemberPlan: false,
-    bypassTokens: [],
-    memberPlanIds: [],
-    fadeout: true,
-    hideContentAfter: 3,
-  }));
+  const form = useForm<PaywallFormValues>({
+    resolver: zodResolver(paywallSchema),
+    defaultValues: {
+      name: '',
+      active: true,
+      anyMemberPlan: false,
+      memberPlanIds: [],
+      bypasses: [],
+      fadeout: true,
+      hideContentAfter: 3,
+    },
+  });
 
   const [createPaywall, { loading: updateLoading }] = useMutation(
     CreatePaywallDocument,
@@ -64,47 +57,32 @@ const PaywallCreateView = () => {
     }
   );
 
-  const loading = updateLoading;
-  const onSubmit = () => createPaywall({ variables: paywall });
-
-  const { StringType, BooleanType, ArrayType } = Schema.Types;
-  const validationModel = Schema.Model({
-    name: StringType().isRequired(),
-    active: BooleanType().isRequired(),
-    anyMemberPlan: BooleanType().isRequired(),
-    memberPlanIds: ArrayType().of(StringType()),
-    alternativeSubscribeUrl: StringType().isURL(),
-  });
-
-  if (!paywall) {
-    return;
-  }
-
   return (
-    <Form
-      fluid
-      formValue={paywall || {}}
-      model={validationModel}
-      disabled={loading}
-      onSubmit={validationPassed => validationPassed && onSubmit()}
-    >
-      <SingleViewTitle
-        loading={loading}
-        title={t('paywall.form.createTitle')}
-        loadingTitle={t('loading')}
-        saveBtnTitle={t('save')}
-        saveAndCloseBtnTitle={t('saveAndClose')}
-        closePath={closePath}
-        setCloseFn={setShouldClose}
-      />
+    <FormProvider {...form}>
+      <form
+        onSubmit={form.handleSubmit(
+          ({ memberPlans, bypasses, id, ...paywall }) =>
+            createPaywall({
+              variables: {
+                ...paywall,
+                bypassTokens: bypasses.map(bypass => bypass.token),
+              },
+            })
+        )}
+      >
+        <SingleViewTitle
+          loading={updateLoading}
+          title={t('paywall.form.createTitle')}
+          loadingTitle={t('loading')}
+          saveBtnTitle={t('save')}
+          saveAndCloseBtnTitle={t('saveAndClose')}
+          closePath={closePath}
+          setCloseFn={setShouldClose}
+        />
 
-      <PaywallForm
-        paywall={paywall}
-        onChange={changes =>
-          setPaywall(oldPaywall => ({ ...oldPaywall, ...(changes as any) }))
-        }
-      />
-    </Form>
+        <PaywallForm create />
+      </form>
+    </FormProvider>
   );
 };
 

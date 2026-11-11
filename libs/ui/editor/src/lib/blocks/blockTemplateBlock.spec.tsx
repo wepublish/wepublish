@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom/vitest';
 
 import { MockedProvider } from '@apollo/client/testing/react';
+import { createTheme, ThemeProvider } from '@mui/material';
 import { fireEvent, render, screen } from '@testing-library/react';
 import {
   BlockStylesDocument,
@@ -13,6 +14,8 @@ import { BlockList, BlockProps } from '../atoms/blockList';
 import { BlockMap } from './blockMap';
 import { BlockTemplateBlock } from './blockTemplateBlock';
 import { BlockTemplateBlockValue, BlockValue } from './types';
+
+const theme = createTheme({ cssVariables: true });
 
 const blockTemplateListQueryMock = vi.fn();
 const blockTemplateQueryMock = vi.fn();
@@ -111,12 +114,14 @@ const renderBlock = ({
   const onReplace = vi.fn();
 
   const result = render(
-    <BlockTemplateBlock
-      value={value}
-      onChange={onChange}
-      onReplace={onReplace}
-      {...props}
-    />
+    <ThemeProvider theme={theme}>
+      <BlockTemplateBlock
+        value={value}
+        onChange={onChange}
+        onReplace={onReplace}
+        {...props}
+      />
+    </ThemeProvider>
   );
 
   return { ...result, onChange, onReplace };
@@ -202,11 +207,23 @@ describe('BlockTemplateBlock', () => {
       expect(blocks.map(({ value }) => value.disabled)).toEqual([false, true]);
     });
 
+    it('should only show the select label once while nothing is selected', () => {
+      renderBlock({ value: { template: null } });
+
+      expect(screen.getByRole('combobox')).not.toHaveTextContent(
+        'blocks.blockTemplate.select'
+      );
+    });
+
     it('should not preview anything when no template is selected', () => {
       renderBlock({ value: { template: null } });
 
       expect(screen.queryByDisplayValue('First Title')).not.toBeInTheDocument();
-      expect(useContentButton()).toBeDisabled();
+      expect(
+        screen.queryByRole('button', {
+          name: 'blocks.blockTemplate.useContent',
+        })
+      ).not.toBeInTheDocument();
     });
 
     it('should preview the up-to-date template when it has been modified elsewhere', () => {
@@ -243,6 +260,40 @@ describe('BlockTemplateBlock', () => {
       });
 
       expect(screen.getByDisplayValue('First Title')).toBeInTheDocument();
+    });
+  });
+
+  describe('layout', () => {
+    it('should only offer the template actions once a template is picked', () => {
+      renderBlock({ value: { template: null } });
+
+      expect(
+        screen.queryByRole('link', {
+          name: 'blocks.blockTemplate.editTemplate',
+        })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('button', {
+          name: 'blocks.blockTemplate.useContent',
+        })
+      ).not.toBeInTheDocument();
+    });
+
+    it('should show the template actions as text buttons', () => {
+      renderBlock();
+
+      expect(
+        screen.getByRole('link', { name: 'blocks.blockTemplate.editTemplate' })
+      ).toHaveClass('MuiButton-text');
+      expect(useContentButton()).toHaveClass('MuiButton-text');
+    });
+
+    it('should explain that the block stays linked to the template', () => {
+      renderBlock();
+
+      expect(
+        screen.getByText('blocks.blockTemplate.linkedInfo')
+      ).toBeInTheDocument();
     });
   });
 
@@ -319,7 +370,11 @@ describe('BlockTemplateBlock', () => {
 
   describe('inside a block list', () => {
     it('should disappear and leave its content behind once it is used', () => {
-      render(<BlockListHarness initialValue={[templateBlockValue()]} />);
+      render(
+        <ThemeProvider theme={theme}>
+          <BlockListHarness initialValue={[templateBlockValue()]} />
+        </ThemeProvider>
+      );
 
       expect(useContentButton()).toBeEnabled();
       expect(screen.getByDisplayValue('First Title')).toBeDisabled();
@@ -338,13 +393,15 @@ describe('BlockTemplateBlock', () => {
 
     it('should keep the surrounding blocks untouched', () => {
       render(
-        <BlockListHarness
-          initialValue={[
-            titleBlockValue('before', 'Before'),
-            templateBlockValue(),
-            titleBlockValue('after', 'After'),
-          ]}
-        />
+        <ThemeProvider theme={theme}>
+          <BlockListHarness
+            initialValue={[
+              titleBlockValue('before', 'Before'),
+              templateBlockValue(),
+              titleBlockValue('after', 'After'),
+            ]}
+          />
+        </ThemeProvider>
       );
 
       useContent();

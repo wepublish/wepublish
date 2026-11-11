@@ -1,26 +1,34 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import { Tooltip } from '@mui/material';
+import { Tooltip, useTheme } from '@mui/material';
 import {
   OneChannelConnectionState,
   OneChannelStatusDocument,
   VersionInformationDocument,
 } from '@wepublish/editor/api';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-const StyledVersion = styled.div`
-  /* Sits below the footer's icon buttons; the dot lines up with the column
-     their icons occupy, so the row reads as part of the same rail. */
+import { paletteColor } from '../paletteColor';
+
+const StyledVersion = styled.button`
   padding: 4px 8px 10px 16px;
   display: flex;
   align-items: center;
   gap: 10px;
   width: 100%;
   box-sizing: border-box;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  text-align: left;
   cursor: default;
-  /* Sits outside the Sidenav/Navbar elements that paint the rail, so it carries
-     their background itself — otherwise the grey stops above this row. */
-  background-color: var(--rs-navbar-default-bg, #f7f7fa);
+  background-color: ${({ theme }) => theme.vars.palette.background.default};
+
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.vars.palette.primary.main};
+    outline-offset: -2px;
+  }
 `;
 
 const StatusDot = styled.span<{ dotColor: string }>`
@@ -47,13 +55,21 @@ const ConnectorLabel = styled.div`
 const UNKNOWN_VERSION = '<!- VERSION UNKNOWN -!>';
 
 const DOT_COLORS: Record<OneChannelConnectionState, string> = {
-  [OneChannelConnectionState.Connected]: 'var(--rs-state-success)',
-  [OneChannelConnectionState.Failing]: 'var(--rs-state-warning)',
-  [OneChannelConnectionState.NotConfigured]: 'var(--rs-state-error)',
+  [OneChannelConnectionState.Connected]: 'success.main',
+  [OneChannelConnectionState.Failing]: 'warning.main',
+  [OneChannelConnectionState.NotConfigured]: 'error.main',
 };
+
+const STATE_LABELS = {
+  [OneChannelConnectionState.Connected]: 'oneChannel.connected',
+  [OneChannelConnectionState.Failing]: 'oneChannel.failing',
+  [OneChannelConnectionState.NotConfigured]: 'oneChannel.notConfigured',
+} as const satisfies Record<OneChannelConnectionState, string>;
 
 export function Version() {
   const { t } = useTranslation();
+  const theme = useTheme();
+  const [detailsOpen, setDetailsOpen] = useState(false);
   const { data: versionData } = useQuery(VersionInformationDocument);
   const { data: channelData } = useQuery(OneChannelStatusDocument);
 
@@ -126,19 +142,27 @@ export function Version() {
   };
 
   const tooltip = buildTooltip();
+  const state = status?.state ?? OneChannelConnectionState.NotConfigured;
 
   return (
-    <Tooltip title={<span style={{ whiteSpace: 'pre-line' }}>{tooltip}</span>}>
-      <StyledVersion aria-label={tooltip}>
+    <Tooltip
+      describeChild
+      open={detailsOpen}
+      onOpen={() => setDetailsOpen(true)}
+      onClose={() => setDetailsOpen(false)}
+      title={<span style={{ whiteSpace: 'pre-line' }}>{tooltip}</span>}
+    >
+      <StyledVersion
+        type="button"
+        onClick={() => setDetailsOpen(open => !open)}
+      >
         <StatusDot
-          dotColor={
-            status ?
-              DOT_COLORS[status.state]
-            : DOT_COLORS[OneChannelConnectionState.NotConfigured]
-          }
-          role="img"
+          dotColor={paletteColor(theme, DOT_COLORS[state])}
+          aria-hidden
         />
-        <ConnectorLabel>{t('oneChannel.label')}</ConnectorLabel>
+        <ConnectorLabel>
+          {status ? t(STATE_LABELS[state]) : t('oneChannel.label')}
+        </ConnectorLabel>
       </StyledVersion>
     </Tooltip>
   );

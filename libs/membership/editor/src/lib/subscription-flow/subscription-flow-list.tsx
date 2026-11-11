@@ -1,5 +1,10 @@
 import { useMutation, useQuery } from '@apollo/client/react';
-import { Typography } from '@mui/material';
+import {
+  Box,
+  CircularProgress,
+  Link as MuiLink,
+  Typography,
+} from '@mui/material';
 import {
   CreateSubscriptionFlowDocument,
   CreateSubscriptionIntervalDocument,
@@ -20,8 +25,9 @@ import {
 import {
   createCheckedPermissionComponent,
   PermissionControl,
+  useSeededState,
 } from '@wepublish/ui/editor';
-import { createContext, JSX, useEffect, useMemo, useRef } from 'react';
+import { createContext, JSX, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdAddCircleOutline,
@@ -29,15 +35,21 @@ import {
   MdCelebration,
   MdTune,
 } from 'react-icons/md';
-import { useParams } from 'react-router-dom';
-import { Loader } from 'rsuite';
-import { DEFAULT_MUTATION_OPTIONS, showErrors, useShowErrors } from '../common';
+import { Link, useParams } from 'react-router-dom';
+import { DEFAULT_MUTATION_OPTIONS } from '../common';
+import { usePaperLetterFlow } from '../delivery-mode/use-paper-letter-flow';
 import { MailBlock, MailBlocks } from '../mail-settings-layout';
 import { SystemMailSection } from '../system-mail/system-mail-section';
 import { FlowFilters } from './filter/flow-filters';
 import { FlowBlock } from './flow-block';
 import { SubscriptionClientContext } from './graphql-client-context';
 import styled from '@emotion/styled';
+import {
+  CanCreateSubscriptionFlow,
+  CanDeleteSubscriptionFlow,
+  CanGetSubscriptionFlows,
+  CanUpdateSubscriptionFlow,
+} from '@wepublish/permissions';
 
 export const MailTemplatesContext = createContext<TinyMailTemplateFragment[]>(
   []
@@ -122,41 +134,23 @@ function SubscriptionFlowBlocks({
   memberPlan,
 }: SubscriptionFlowBlocksProps) {
   const { t } = useTranslation();
+  const paperLetterFlow = usePaperLetterFlow();
   const countedMemberPlanId = defaultFlowOnly ? undefined : memberPlanId;
 
   const {
     data: subscriptionFlows,
     loading: loadingSubscriptionFlows,
     refetch: refetchSubscriptionFlows,
-    error: subscriptionFlowsError,
   } = useQuery(SubscriptionFlowsDocument, {
     variables: {
       defaultFlowOnly,
       memberPlanId: countedMemberPlanId,
     },
   });
-  useShowErrors(subscriptionFlowsError);
 
-  const {
-    data: mailTemplates,
-    loading: loadingMailTemplates,
-    error: mailTemplatesError,
-  } = useQuery(MailTemplateDocument);
-  const { data: paymentMethods, error: paymentMethodsError } = useQuery(
-    ListPaymentMethodsDocument
-  );
-
-  useEffect(() => {
-    if (mailTemplatesError) {
-      showErrors(mailTemplatesError);
-    }
-  }, [mailTemplatesError]);
-
-  useEffect(() => {
-    if (paymentMethodsError) {
-      showErrors(paymentMethodsError);
-    }
-  }, [paymentMethodsError]);
+  const { data: mailTemplates, loading: loadingMailTemplates } =
+    useQuery(MailTemplateDocument);
+  const { data: paymentMethods } = useQuery(ListPaymentMethodsDocument);
 
   // Mutation methods are later passed to the SubscriptionClientContext, so they can reuse the same client everywhere. This makes the GraphQL cache work across all requests.
   const mutationOptions = {
@@ -208,18 +202,41 @@ function SubscriptionFlowBlocks({
     });
   }, [t]);
 
-  const knownFlowIds = useRef<Set<string>>(undefined);
-
-  if (loading || !subscriptionFlows) {
-    return <Loader center />;
-  }
-
-  knownFlowIds.current ??= new Set(
-    subscriptionFlows.subscriptionFlows.map(flow => flow.id)
+  const flowNumbers = useMemo(
+    () =>
+      new Map(
+        (subscriptionFlows?.subscriptionFlows ?? [])
+          .filter(flow => !flow.default)
+          .map((flow, index) => [flow.id, index + 1])
+      ),
+    [subscriptionFlows]
   );
 
+  const [knownFlowIds, setKnownFlowIds] = useState<Set<string>>();
+
+  useSeededState(
+    subscriptionFlows?.subscriptionFlows,
+    flows => setKnownFlowIds(new Set(flows.map(flow => flow.id))),
+    subscriptionFlows ? 'loaded' : undefined
+  );
+
+  if (loading || !subscriptionFlows) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          gap: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
+
   const isNewFlow = (flow: SubscriptionFlowFragment) =>
-    !knownFlowIds.current?.has(flow.id);
+    Boolean(knownFlowIds) && !knownFlowIds?.has(flow.id);
 
   const filterSummary = (flow: SubscriptionFlowFragment) =>
     [
@@ -236,8 +253,6 @@ function SubscriptionFlowBlocks({
       .filter(Boolean)
       .join(' · ');
 
-  let flowNumber = 0;
-
   return (
     <MailTemplatesContext.Provider value={mailTemplates?.mailTemplates || []}>
       <SubscriptionClientContext.Provider
@@ -250,6 +265,25 @@ function SubscriptionFlowBlocks({
           deleteSubscriptionFlow,
         }}
       >
+        {/* Which messages print at all is decided here, per event; who gets
+            them printed is decided in the delivery channel area. */}
+        {paperLetterFlow && (
+          // One quiet line across the whole grid, not a block of its own.
+          <Typography
+            variant="caption"
+            sx={{ gridColumn: '1 / -1', color: 'text.secondary' }}
+          >
+            {t('deliveryChannel.flows.letterHint')}{' '}
+            <MuiLink
+              component={Link}
+              to="/deliverychannel"
+              variant="caption"
+            >
+              {t('deliveryChannel.flows.manage')}
+            </MuiLink>
+          </Typography>
+        )}
+
         {subscriptionFlows.subscriptionFlows.map(subscriptionFlow => {
           if (defaultFlowOnly) {
             return (
@@ -284,14 +318,14 @@ function SubscriptionFlowBlocks({
             );
           }
 
-          flowNumber += 1;
-
           return (
             <FlowBlock
               key={subscriptionFlow.id}
               subscriptionFlow={subscriptionFlow}
               userActionEvents={userActionEvents}
-              title={t('subscriptionFlow.flowNumber', { number: flowNumber })}
+              title={t('subscriptionFlow.flowNumber', {
+                number: flowNumbers.get(subscriptionFlow.id),
+              })}
               icon={<MdAltRoute size={20} />}
               summary={filterSummary(subscriptionFlow)}
               collapsible
@@ -314,7 +348,7 @@ function SubscriptionFlowBlocks({
         {!defaultFlowOnly && memberPlan && (
           <PermissionControl
             showRejectionMessage={false}
-            qualifyingPermissions={['CAN_CREATE_SUBSCRIPTION_FLOW']}
+            qualifyingPermissions={[CanCreateSubscriptionFlow.id]}
           >
             <MailBlock
               title={t('subscriptionFlow.newFlow')}
@@ -336,10 +370,10 @@ function SubscriptionFlowBlocks({
 }
 
 const CheckedSubscriptionFlowBlocks = createCheckedPermissionComponent([
-  'CAN_GET_SUBSCRIPTION_FLOWS',
-  'CAN_UPDATE_SUBSCRIPTION_FLOW',
-  'CAN_CREATE_SUBSCRIPTION_FLOW',
-  'CAN_DELETE_SUBSCRIPTION_FLOW',
+  CanGetSubscriptionFlows.id,
+  CanUpdateSubscriptionFlow.id,
+  CanCreateSubscriptionFlow.id,
+  CanDeleteSubscriptionFlow.id,
 ])(SubscriptionFlowBlocks);
 
 /**
@@ -366,13 +400,16 @@ function SubscriptionFlowList() {
   return (
     <>
       <PageIntro>
-        <h2>
-          <MdTune />
+        <Typography
+          variant="h2"
+          component="h1"
+        >
+          <MdTune aria-hidden />
 
           {defaultFlowOnly ?
             t('automaticMails.title')
           : `«${memberPlan?.name || ''}»`}
-        </h2>
+        </Typography>
 
         <Typography
           variant="body1"

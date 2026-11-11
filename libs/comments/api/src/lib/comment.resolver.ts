@@ -43,7 +43,11 @@ import {
   CanTakeActionOnComment,
   CanUpdateComments,
 } from '@wepublish/permissions';
-import { hasPermission, Permissions } from '@wepublish/permissions/api';
+import {
+  hasPermission,
+  Permissions,
+  permissionsOf,
+} from '@wepublish/permissions/api';
 import { CommentRejectionReason, CommentState } from '@prisma/client';
 import { GraphQLRichText } from '@wepublish/richtext/api';
 
@@ -85,7 +89,7 @@ export class CommentResolver {
     @Args() input: CommentsForItemArgs,
     @CurrentUser() session: UserSession | null
   ) {
-    if (hasPermission(CanGetComments, session?.roles ?? [])) {
+    if (hasPermission(CanGetComments, permissionsOf(session))) {
       return this.commentService.getCommentsForItem(input);
     }
 
@@ -127,7 +131,7 @@ export class CommentResolver {
   ) {
     if (
       input.publish &&
-      !hasPermission(CanTakeActionOnComment, session?.roles ?? [])
+      !hasPermission(CanTakeActionOnComment, permissionsOf(session))
     ) {
       throw new ForbiddenException(
         'You are not allowed to publish comments without approval'
@@ -219,7 +223,7 @@ export class CommentResolver {
   ) {
     const revisions = comment.revisions ?? [];
 
-    if (hasPermission(CanGetComments, session?.roles ?? [])) {
+    if (hasPermission(CanGetComments, permissionsOf(session))) {
       return revisions;
     }
 
@@ -268,7 +272,7 @@ export class CommentResolver {
     @Parent() comment: DecoratedComment,
     @CurrentUser() session?: UserSession
   ) {
-    if (!hasPermission(CanGetComments, session?.roles ?? [])) {
+    if (!hasPermission(CanGetComments, permissionsOf(session))) {
       return [];
     }
 

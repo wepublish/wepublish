@@ -1,9 +1,12 @@
-import { Prisma } from '@prisma/client';
-
 const DATE_TAG = '$kvDate';
 const DECIMAL_TAG = '$kvDecimal';
 const ESCAPE_TAG = '$kvEscaped';
 const TAGS = [DATE_TAG, DECIMAL_TAG, ESCAPE_TAG];
+
+export type DecimalCodec = {
+  isDecimal(value: unknown): value is { toString(): string };
+  fromString(value: string): unknown;
+};
 
 type TaggedDate = { [DATE_TAG]: string | null };
 type TaggedDecimal = { [DECIMAL_TAG]: string };
@@ -18,12 +21,15 @@ const isTagged = <T extends string>(
   Object.keys(value).length === 1 &&
   tag in value;
 
-const looksTagged = (value: unknown) =>
+const looksTagged = (value: unknown, decimal?: DecimalCodec) =>
   !(value instanceof Date) &&
-  !Prisma.Decimal.isDecimal(value) &&
+  !decimal?.isDecimal(value) &&
   TAGS.some(tag => isTagged(value, tag));
 
-export function serializeCacheValue(value: unknown): string {
+export function serializeCacheValue(
+  value: unknown,
+  decimal?: DecimalCodec
+): string {
   const escaped = new WeakSet<object>();
 
   return JSON.stringify(
@@ -42,13 +48,13 @@ export function serializeCacheValue(value: unknown): string {
         } satisfies TaggedDate;
       }
 
-      if (Prisma.Decimal.isDecimal(original)) {
+      if (decimal?.isDecimal(original)) {
         return {
           [DECIMAL_TAG]: original.toString(),
         } satisfies TaggedDecimal;
       }
 
-      if (looksTagged(jsonValue)) {
+      if (looksTagged(jsonValue, decimal)) {
         const items = [jsonValue];
         escaped.add(items);
 
@@ -60,14 +66,14 @@ export function serializeCacheValue(value: unknown): string {
   );
 }
 
-const reviveProperties = (value: object) =>
+const reviveProperties = (value: object, decimal?: DecimalCodec) =>
   Object.fromEntries(
-    Object.entries(value).map(([key, item]) => [key, revive(item)])
+    Object.entries(value).map(([key, item]) => [key, revive(item, decimal)])
   );
 
-const revive = (value: unknown): unknown => {
+const revive = (value: unknown, decimal?: DecimalCodec): unknown => {
   if (Array.isArray(value)) {
-    return value.map(revive);
+    return value.map(item => revive(item, decimal));
   }
 
   if (typeof value !== 'object' || value === null) {
@@ -77,39 +83,44 @@ const revive = (value: unknown): unknown => {
   if (isTagged(value, ESCAPE_TAG)) {
     const [original] = value[ESCAPE_TAG] as [object];
 
-    return reviveProperties(original);
+    return reviveProperties(original, decimal);
   }
 
   if (isTagged(value, DATE_TAG)) {
     return new Date((value as TaggedDate)[DATE_TAG] ?? Number.NaN);
   }
 
-  if (isTagged(value, DECIMAL_TAG)) {
-    return new Prisma.Decimal((value as TaggedDecimal)[DECIMAL_TAG]);
+  if (decimal && isTagged(value, DECIMAL_TAG)) {
+    return decimal.fromString((value as TaggedDecimal)[DECIMAL_TAG]);
   }
 
-  return reviveProperties(value);
+  return reviveProperties(value, decimal);
 };
 
-export function deserializeCacheValue<T>(text: string): T {
-  return revive(JSON.parse(text)) as T;
+export function deserializeCacheValue<T>(
+  text: string,
+  decimal?: DecimalCodec
+): T {
+  return revive(JSON.parse(text), decimal) as T;
 }
 
 export function serializeCacheValueIfPossible(
-  value: unknown
+  value: unknown,
+  decimal?: DecimalCodec
 ): string | undefined {
   try {
-    return serializeCacheValue(value);
+    return serializeCacheValue(value, decimal);
   } catch {
     return undefined;
   }
 }
 
 export function deserializeCacheValueIfPossible<T>(
-  text: string
+  text: string,
+  decimal?: DecimalCodec
 ): T | undefined {
   try {
-    return deserializeCacheValue<T>(text);
+    return deserializeCacheValue<T>(text, decimal);
   } catch {
     return undefined;
   }

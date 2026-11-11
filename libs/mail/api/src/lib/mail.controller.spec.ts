@@ -5,14 +5,16 @@ import { matches } from 'lodash';
 import bodyParser from 'body-parser';
 import { MailContext } from './mail-context';
 import { MailController, mailLogType } from './mail.controller';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
-import { createKvMock } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCacheTestingModule } from '@wepublish/kv-ttl-cache/api/testing';
 import { MailchimpMailProvider } from './mail-provider/mailchimp-mail-provider';
 import { MailgunMailProvider } from './mail-provider/mailgun-mail-provider';
 import type { Mock } from 'vitest';
-const kvMock = createKvMock();
+import { version } from 'uuid';
 
 describe('MailController', () => {
+  let module: TestingModule;
+  let kv: NamespacedCache;
   let mailContext: MailContext;
   let prismaMock: {
     mailLog: { [method in keyof PrismaClient['mailLog']]?: Mock };
@@ -90,23 +92,20 @@ describe('MailController', () => {
       },
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
+      imports: [NamespacedCacheTestingModule.forRoot()],
       providers: [
         {
           provide: PrismaClient,
           useValue: prismaMock,
         },
         {
-          provide: KvTtlCacheService,
-          useValue: kvMock,
-        },
-        {
           provide: MailContext,
-          useFactory: async (prisma: PrismaClient, kv: KvTtlCacheService) => {
+          useFactory: async (prisma: PrismaClient, kv: NamespacedCache) => {
             await kv.setNs(
               'settings:mailprovider',
               'mailchimp',
-              JSON.stringify({
+              {
                 id: 'mailchimp',
                 type: 'mailchimp',
                 name: 'Mailchimp',
@@ -115,7 +114,8 @@ describe('MailController', () => {
                 webhookEndpointSecret: 'secret',
                 apiKey: 'key',
                 mailchimp_baseURL: '',
-              })
+              },
+              60
             );
 
             return new MailContext({
@@ -132,16 +132,18 @@ describe('MailController', () => {
               jwtGenerator: async () => 'test-jwt-token',
             });
           },
-          inject: [PrismaClient, KvTtlCacheService],
+          inject: [PrismaClient, NamespacedCache],
         },
       ],
     }).compile();
     mailContext = module.get<MailContext>(MailContext);
+    kv = module.get(NamespacedCache);
   });
 
   afterEach(async () => {
     await nock.cleanAll();
     await nock.enableNetConnect();
+    await module.close();
   });
 
   it('is defined', () => {
@@ -236,6 +238,9 @@ describe('MailController', () => {
       mailType: mailLogType.SubscriptionFlow,
     }).sendMail();
     expect(mandrillNockScope.isDone()).toBeTruthy();
+    expect(
+      version((prismaMock.mailLog.create as Mock).mock.calls[0][0].data.id)
+    ).toBe(7);
 
     let mailLog = mockMailLog1;
     expect(mailLog).not.toBeUndefined();
@@ -250,10 +255,10 @@ describe('MailController', () => {
         'Content-Type': 'application/json',
       });
 
-    await kvMock.setNs(
+    await kv.setNs(
       'settings:mailprovider',
       'mailgun',
-      JSON.stringify({
+      {
         id: 'mailgun',
         type: 'mailgun',
         name: 'Mailgun',
@@ -263,14 +268,15 @@ describe('MailController', () => {
         apiKey: 'key',
         mailgun_mailDomain: 'test.wepublish.com',
         mailgun_baseDomain: 'api.eu.mailgun.net',
-      })
+      },
+      60
     );
 
     mailContext.mailProvider = new MailgunMailProvider({
       id: 'mailgun',
       incomingRequestHandler: bodyParser.json(),
       prisma: prismaMock as any,
-      kv: kvMock,
+      kv,
     });
 
     const periodicJobRunDate = new Date();

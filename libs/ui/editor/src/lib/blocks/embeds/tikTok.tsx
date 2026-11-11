@@ -1,3 +1,4 @@
+import { Typography } from '@mui/material';
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
 
@@ -16,7 +17,7 @@ const BoldParagraph = styled.p`
 const TikTokEmbed = styled.div`
   justify-content: center;
   padding: 20px;
-  background-color: var(--rs-bg-well);
+  background-color: ${({ theme }) => theme.vars.palette.background.default};
 `;
 
 export interface TikTokVideoEmbedProps {
@@ -55,7 +56,7 @@ export function TikTokVideoEmbed({ userID, videoID }: TikTokVideoEmbedProps) {
       >
         <Image src={tikTokData?.thumbnail_url} />
       </a>
-      <p>{tikTokData?.title}</p>
+      <Typography>{tikTokData?.title}</Typography>
     </TikTokEmbed>
   );
 }

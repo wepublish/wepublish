@@ -1,17 +1,21 @@
 import type { Mock } from 'vitest';
-import { Test } from '@nestjs/testing';
+import { Test, type TestingModule } from '@nestjs/testing';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCacheTestingModule } from '@wepublish/kv-ttl-cache/api/testing';
 import {
-  KvTtlCacheModule,
-  KvTtlCacheService,
+  PUBLIC_CONTENT_SHARED_NAMESPACES,
   PublicContentCacheInvalidator,
-} from '@wepublish/kv-ttl-cache/api';
+  PublicContentInvalidatorModule,
+} from '@wepublish/public-content-cache/api';
 import { AuthorDataloaderService } from './author-dataloader.service';
 import { ArticleAuthorDataloader } from './article-author.dataloader';
 import { ArticleSocialMediaAuthorDataloader } from './article-social-media-author.dataloader';
 import { AuthorLinkDataloader } from './author-links.dataloader';
 
 describe('author content cache', () => {
-  let kv: KvTtlCacheService;
+  let module: TestingModule;
+  let kv: NamespacedCache;
+  let invalidator: PublicContentCacheInvalidator;
   const author = { id: 'author-1', name: 'Anna' };
   const prisma = {
     author: { findMany: vi.fn() },
@@ -21,10 +25,16 @@ describe('author content cache', () => {
   };
 
   beforeEach(async () => {
-    const module = await Test.createTestingModule({
-      imports: [KvTtlCacheModule],
+    module = await Test.createTestingModule({
+      imports: [
+        NamespacedCacheTestingModule.forRoot({
+          sharedNamespaces: PUBLIC_CONTENT_SHARED_NAMESPACES,
+        }),
+        PublicContentInvalidatorModule,
+      ],
     }).compile();
-    kv = module.get(KvTtlCacheService);
+    kv = module.get(NamespacedCache);
+    invalidator = module.get(PublicContentCacheInvalidator);
     prisma.author.findMany.mockReset().mockResolvedValue([author]);
     prisma.articleRevisionAuthor.findMany
       .mockReset()
@@ -36,6 +46,8 @@ describe('author content cache', () => {
       .mockReset()
       .mockResolvedValue([{ authorId: 'author-1', url: 'https://x.ch' }]);
   });
+
+  afterEach(() => module.close());
 
   it.each<
     [string, () => { load: (id: string) => Promise<unknown> }, Mock, string]
@@ -77,7 +89,7 @@ describe('author content cache', () => {
 
   it('loads authors again once they changed', async () => {
     await new AuthorDataloaderService(prisma as any, kv).load('author-1');
-    await new PublicContentCacheInvalidator(kv).invalidateDraft('authors');
+    await invalidator.invalidateDraft('authors');
     await new AuthorDataloaderService(prisma as any, kv).load('author-1');
 
     expect(prisma.author.findMany).toHaveBeenCalledTimes(2);

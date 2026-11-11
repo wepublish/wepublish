@@ -1,0 +1,195 @@
+# Lean documents for the sitemap: only what a <url> entry needs, so listing
+# thousands of articles stays cheap (no authors, images, paywall or likes).
+
+fragment SitemapArticle on Article {
+  id
+  slug
+  url
+  peerId
+  publishedAt
+  tags {
+    id
+    tag
+  }
+  latest {
+    publishedAt
+    title
+    seoTitle
+    socialMediaTitle
+  }
+}
+
+fragment SitemapPage on Page {
+  id
+  slug
+  url
+  publishedAt
+  latest {
+    publishedAt
+  }
+}
+
+query SitemapArticles(
+  $filter: ArticleFilter
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: ArticleSort
+) {
+  articles(
+    filter: $filter
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...SitemapArticle
+    }
+
+    pageInfo {
+      hasNextPage
+    }
+  }
+}
+
+query SitemapPages(
+  $filter: PageFilter
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: PageSort
+) {
+  pages(
+    filter: $filter
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...SitemapPage
+    }
+
+    pageInfo {
+      hasNextPage
+    }
+  }
+}
+
+# What the homepage teases, down to the dates the homepage <lastmod> is taken
+# from. Fragments can't recurse, so flex and template blocks are expanded two
+# levels deep, which covers what the editor can build.
+
+fragment SitemapTeaser on Teaser {
+  __typename
+
+  ... on ArticleTeaser {
+    article {
+      id
+      latest {
+        publishedAt
+      }
+    }
+  }
+
+  ... on PageTeaser {
+    page {
+      id
+      latest {
+        publishedAt
+      }
+    }
+  }
+
+  ... on EventTeaser {
+    event {
+      id
+      modifiedAt
+    }
+  }
+}
+
+fragment SitemapTeaserBlock on BlockContent {
+  __typename
+
+  ... on TeaserGridBlock {
+    teasers {
+      ...SitemapTeaser
+    }
+  }
+
+  ... on TeaserGridFlexBlock {
+    flexTeasers {
+      teaser {
+        ...SitemapTeaser
+      }
+    }
+  }
+
+  ... on TeaserListBlock {
+    teasers {
+      ...SitemapTeaser
+    }
+  }
+
+  ... on TeaserSlotsBlock {
+    teasers {
+      ...SitemapTeaser
+    }
+  }
+}
+
+fragment SitemapNestedBlock on BlockContent {
+  ...SitemapTeaserBlock
+
+  ... on FlexBlock {
+    blocks {
+      block {
+        ...SitemapTeaserBlock
+      }
+    }
+  }
+
+  ... on BlockTemplateBlock {
+    template {
+      modifiedAt
+      blocks {
+        ...SitemapTeaserBlock
+      }
+    }
+  }
+}
+
+fragment SitemapBlock on BlockContent {
+  ...SitemapTeaserBlock
+
+  ... on FlexBlock {
+    blocks {
+      block {
+        ...SitemapNestedBlock
+      }
+    }
+  }
+
+  ... on BlockTemplateBlock {
+    template {
+      modifiedAt
+      blocks {
+        ...SitemapNestedBlock
+      }
+    }
+  }
+}
+
+query SitemapHomepage($slug: String!) {
+  page(slug: $slug) {
+    id
+    latest {
+      publishedAt
+      blocks {
+        ...SitemapBlock
+      }
+    }
+  }
+}

@@ -48,12 +48,12 @@
     },
     "versionHistory": {
       "title": "Version history",
+      "today": "Today",
+      "yesterday": "Yesterday",
       "subtitle": "{{count}} versions",
       "close": "Close",
       "empty": "No versions yet.",
       "untitled": "Untitled",
-      "created": "Created {{date}}",
-      "published": "published {{date}}",
       "currentVersion": "Current version",
       "restore": "Restore",
       "restored": "Version restored as a new draft",
@@ -77,6 +77,11 @@
         "confirm": "Restore as draft"
       }
     },
+    "copyLink": {
+      "button": "Copy link",
+      "copied": "Link copied to clipboard",
+      "failed": "Link could not be copied"
+    },
     "discardDraft": {
       "button": "Discard draft",
       "success": "Draft discarded — reverted to the published version",
@@ -91,7 +96,9 @@
       "validationFailedGeneric": "Cannot save. Please fix the highlighted errors.",
       "saveValidationFailed": "Saving failed",
       "publishValidationFailed": "Publishing failed",
+      "title": "Edit Article",
       "overview": {
+        "loadingTemplate": "Loading template…",
         "articlePending": "Article Pending",
         "articlePublished": "Article Published",
         "back": "Back",
@@ -117,6 +124,7 @@
         "warningLabel": "Warning"
       },
       "panels": {
+        "createTemplate": "Create template from article",
         "firstPublishedAtDate": "First published on {{firstPublishedAtDate, dd.MM.yyyy HH:mm}}",
         "notPublishedYet": "Article not yet published",
         "addSlug": "Please add a slug",
@@ -141,6 +149,7 @@
         "createdAt": "{{createdAt, ccc PP p}}",
         "dateExplanationPopOver": "This can be used to reference articles that will be published at a later time. It is helpful, for example, when scheduling social media posts in advance for the next morning.",
         "displayOptions": "Display Options",
+        "displayOptionsHint": "Leave a field empty to use the original text.",
         "dontChangeSlug": "Please don't change the slug once the article is published.",
         "draft": "Draft",
         "dropImage": "Drop Image Here",
@@ -162,6 +171,7 @@
         "lead": "Lead",
         "loading": "Loading...",
         "loadMore": "Load More",
+        "search": "Search by title",
         "noDataToDisplay": "No data to display",
         "metadata": "Metadata",
         "modifiedAt": "{{modifiedAt, ccc PP pp}}",
@@ -178,6 +188,7 @@
         "properties": "Properties",
         "propertiesInfo": "Properties can be set per article. Public properties are accessible through the public API.",
         "public": "Public",
+        "private": "Private",
         "publishArticle": "Publish Article",
         "publishAt": "Available online from",
         "publishAtDateCheckbox": "Set a different date for online availability",
@@ -219,6 +230,7 @@
         "text": "Text",
         "default": "Default",
         "tracking": "Tracking",
+        "hasErrors": "has errors",
         "paywall": "Paywall",
         "likeCountInfo": "Number of likes readers have given this article on the website. You can correct the number here if needed.",
         "slugInfo": "The last part of the article's web address, e.g. …/a/my-article. Use lowercase letters, numbers and hyphens only.",
@@ -229,10 +241,19 @@
         "hiddenInfo": "Hidden articles do not appear in automatic article lists on the website (e.g. latest articles or tag pages), but remain reachable via their direct link.",
         "contentUrlInfo": "The web address readers are taken to when they click on the teaser.",
         "teaserPropertiesInfo": "Additional key-value pairs your website can use for special display options. Only needed if the people who develop your website asked you to set them. Public properties are visible via the public API.",
-        "enterSocialMediaImage": "Please add an image for social media"
-      }
+        "enterSocialMediaImage": "Please add an image for social media",
+        "chooseFile": "Choose file"
+      },
+      "unsavedChanges": "unsaved changes",
+      "unpublishedChanges": "changes not yet published"
     },
     "articles": {
+      "createModal": {
+        "title": "New Article",
+        "blank": "Blank article",
+        "search": "Search templates",
+        "noResults": "No templates found"
+      },
       "overview": {
         "articles": "Articles",
         "authors": "Authors",
@@ -246,7 +267,8 @@
         "states": "States",
         "title": "Title",
         "untitled": "Untitled",
-        "updated": "Modified"
+        "updated": "Modified",
+        "slug": "Slug"
       },
       "panels": {
         "cancel": "Cancel",
@@ -337,7 +359,8 @@
           "style": "Style",
           "role": "Role",
           "styleInfo": "Optional style name for the button, e.g. «outline». Only has an effect if your website supports it.",
-          "roleInfo": "«Primary» highlights the button. «Cancel» closes the banner instead of opening the link. «Other» shows a normal button."
+          "roleInfo": "«Primary» highlights the button. «Cancel» closes the banner instead of opening the link. «Other» shows a normal button.",
+          "group": "Action {{number}}"
         },
         "content": "Content",
         "mustNotBeNegative": "Value must not be negative",
@@ -368,6 +391,7 @@
     "blocks": {
       "blockTemplate": {
         "editTemplate": "Edit template",
+        "linkedInfo": "Changes to the template show up here automatically.",
         "label": "Block Template",
         "select": "Select a block template",
         "useContent": "Use content",
@@ -377,12 +401,12 @@
       },
       "crowdfunding": {
         "crowdfundingName": "Crowdfunding {{name}}",
-        "edit": "Edit",
+        "edit": "Edit crowdfunding block",
         "label": "Crowdfunding",
         "title": "Select Crowdfunding",
         "name": "Name",
         "select": "Select",
-        "open": "open"
+        "open": "Open"
       },
       "comment": {
         "cherryPick": "Select specific comments",
@@ -432,6 +456,7 @@
           "invalidURL": "Invalid URL or iframe code",
           "socialMediaList": "Facebook Post/Video, Instagram Post, Twitter Tweet, Vimeo Video, YouTube Video, TikTok Video, Polis Conversation formatted like:"
         },
+        "tweetBy": "Tweet by @{{user}}",
         "streamableVideo": "Streamable video"
       },
       "event": {
@@ -500,7 +525,8 @@
         "showGoodies": "Show goodie selection",
         "showDiscountCodes": "Show discount code input",
         "goodieMinValue": {
-          "label": "Require minimum payment amount to be eligible for a goodie:"
+          "label": "Minimum amount for a goodie",
+          "hint": "Readers who pay less do not get to choose a goodie. Leave empty for no minimum."
         },
         "goodieMinValueAppliesToUpgrade": "Apply this minimum to upgrades too",
         "hideRepeatGoodieOnUpgrade": "Hide on upgrade when a goodie was already received",
@@ -538,6 +564,8 @@
         },
         "planAmountsTitle": "Minimum / target / maximum amount",
         "defaultPlanTitle": "Selected by default — this subscription plan is preselected after the page loads.",
+        "amountLayout": "Amount entry",
+        "planAmountTarget": "target {{amount}}",
         "defaultPlanLabel": "Default",
         "dragToReorder": "Drag to change the order",
         "renderStylesHelp": "Drag the plans into the order in which they appear on the website. For each plan, choose how readers enter the amount and which plan is preselected."
@@ -557,7 +585,8 @@
           "new": "(New)",
           "previousImage": "Previous image",
           "nextImage": "Next image",
-          "addImage": "Add image"
+          "addImage": "Add image",
+          "removeImage": "Remove image"
         },
         "panels": {
           "caption": "Caption",
@@ -575,6 +604,7 @@
         "label": "Listicle"
       },
       "poll": {
+        "open": "Open",
         "edit": "Edit poll block",
         "label": "Poll",
         "select": "Select",
@@ -633,7 +663,8 @@
         "syncProviderPlaceholder": "Select account",
         "list": "List",
         "listPlaceholder": "Select list",
-        "interests": "Preset interests. These are automatically added for every subscriber",
+        "interests": "Preset interests",
+        "interestsHelp": "These are automatically added for every subscriber.",
         "interestsPlaceholder": "Select interests",
         "autoFocus": "Autofocus",
         "doubleOptIn": "Double opt-in",
@@ -715,6 +746,13 @@
         "doubleOptInHelp": "New subscribers first receive a confirmation email from Mailchimp and are only added to the list once they click the link in it.",
         "advancedStepHelp": "Shows conditions for when this step is skipped or shown, e.g. if certain information is already available.",
         "advancedInputHelp": "Shows more settings for this field, e.g. a description below the field or a default value."
+      },
+      "groups": {
+        "text": "Text",
+        "media": "Media",
+        "teasers": "Teasers",
+        "interaction": "Interaction",
+        "layout": "Layout"
       }
     },
     "cancel": "Cancel",
@@ -786,11 +824,14 @@
         "text": "Text",
         "updated": "Modified",
         "userName": "Username",
-        "pendingUserChangesInfo": "You asked the author to revise the comment. Once they have edited it, it is pending approval again."
+        "pendingUserChangesInfo": "You asked the author to revise the comment. Once they have edited it, it is pending approval again.",
+        "states": "States"
       },
       "panels": {
         "approve": "Approve",
         "approveComment": "Approve Comment",
+        "inReplyTo": "In reply to {{name}}",
+        "earlierRevisions": "Earlier versions ({{count}})",
         "cancel": "Cancel",
         "createdAt": "Created At",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
@@ -819,6 +860,7 @@
         "areYouSure": "Are you sure?",
         "areYouSureBody": "The rating \"{{ answer }}\" will be deleted permanently and cannot be undone.",
         "areYouSureConfirmation": "Delete rating",
+        "type": "Type",
         "loading": "Loading",
         "newAnswer": "Add rating",
         "placeholder": "Name of rating",
@@ -854,7 +896,9 @@
       "rejected": "Rejected",
       "slugInfo": "Technical identifier your website or apps use to find this consent, e.g. «newsletter». Use lowercase letters, numbers and hyphens only.",
       "defaultValueInfo": "Whether the consent is pre-selected for users who have not decided yet, e.g. as a pre-ticked checkbox in a form.",
-      "checkedByDefault": "Checked by default"
+      "checkedByDefault": "Checked by default",
+      "deleteTitle": "Delete consent?",
+      "deleteBody": "Do you want to delete «{{name}}» permanently? The choices users made for it go with it."
     },
     "create": "Create",
     "createAndClose": "Create & Close",
@@ -869,8 +913,48 @@
       "chf": "chf"
     },
     "dashboard": {
+      "activityFilter": "Filter activity",
+      "activityFilterAll": "Show all",
+      "activityTypes": {
+        "ArticleCreated": "Articles",
+        "PageCreated": "Pages",
+        "CommentCreated": "Comments",
+        "SubscriptionCreated": "Subscriptions",
+        "UserCreated": "Users",
+        "AuthorCreated": "Authors",
+        "PollStarted": "Polls",
+        "EventCreated": "Events"
+      },
+      "fullWidth": "Full width",
+      "newerActivity": "Newer activity",
+      "olderActivity": "Older activity",
+      "activityUnavailable": "The latest activity cannot be shown for your role.",
+      "noActivity": "No activity yet.",
+      "configure": "Customize dashboard",
+      "configureTitle": "Customize dashboard",
+      "configureFixedInfo": "These cards always stay at the top.",
+      "configureInfo": "Choose which cards you want to see and drag them into your preferred order. The setting applies to this browser.",
+      "fixedCard": "Pinned",
+      "dragToMove": "Drag to move",
+      "moveUp": "Move up",
+      "moveDown": "Move down",
+      "cardMoved": "{{card}} moved to position {{position}} of {{total}}",
+      "resetLayout": "Restore default",
+      "configureDone": "Done",
+      "activity": "Latest Activity",
+      "activityInfo": "The latest articles, pages, comments, subscriptions, users, authors, polls and events, each linking to its edit page.",
+      "newArticle": "New <0>article</0> added",
+      "newAuthor": "New <0>author</0> added",
+      "newComment": "New <0>comment</0> added",
+      "newEvent": "New <0>event</0> added",
+      "newPage": "New <0>page</0> added",
+      "newPoll": "New <0>poll</0> opened",
+      "newSubscription": "New <0>subscription</0> created",
+      "newUser": "New <0>user</0> added",
       "dashboard": "Dashboard",
       "notifications": "Notifications",
+      "moreNotifications_one": "+{{count}} more notification",
+      "moreNotifications_other": "+{{count}} more notifications",
       "showAllNotifications": "Show all",
       "greeting": "Hello, {{name}}!",
       "noData": "No current subscriber data",
@@ -891,23 +975,28 @@
       "nextSaturday": "Next Saturday",
       "now": "Now",
       "today": "Today",
-      "tomorrow": "Tomorrow"
+      "tomorrow": "Tomorrow",
+      "clear": "Clear date",
+      "yesterday": "Yesterday",
+      "done": "OK"
     },
+    "deactivated": "Deactivated",
     "delete": "Delete",
     "deleteBlockTemplateModal": {
       "body": "Do you really want to delete the block template \"{{name}}\"?",
-      "deleteBtn": "Yes, delete",
       "title": "Delete Block Template?"
     },
     "deletePollModal": {
       "body": "Do you really want to delete the poll \"{{pollQuestion}}\"?",
-      "deleteBtn": "Yes, delete",
       "title": "Delete Poll?"
     },
     "draggableSubscriptionInterval": {
       "ignoreDeactivatedSubscriptions": "No emails will be sent to deactivated subscriptions!"
     },
     "edit": "Edit",
+    "editorHeader": {
+      "moreActions": "More actions"
+    },
     "errors": {
       "uniqueEmail": "This email address is already in use.",
       "uniqueField": "This value is already taken ({{field}}).",
@@ -915,6 +1004,151 @@
       "forbidden": "You don't have permission for this action.",
       "network": "No connection to the server. Please check your internet connection and try again.",
       "unexpected": "Something went wrong. Please try again – if the problem persists, contact support."
+    },
+    "form": {
+      "loading": "Loading …",
+      "loadError": {
+        "title": "The data could not be loaded",
+        "retry": "Try again"
+      },
+      "errorSummary": {
+        "title": "Please fix these entries before saving"
+      },
+      "field": {
+        "moreInfo": "More information"
+      },
+      "select": {
+        "empty": "None"
+      },
+      "password": {
+        "show": "Show password",
+        "hide": "Hide password"
+      },
+      "array": {
+        "add": "Add entry",
+        "remove": "Remove entry {{position}}",
+        "reorder": "Reorder",
+        "dragHandle": "Drag to reorder entry {{position}}",
+        "roleDescription": "sortable entry",
+        "dragInstructions": "To pick up an entry, press Space or Enter. Move it with the arrow keys, then press Space or Enter again to drop it, or Escape to cancel.",
+        "dragStart": "Picked up entry {{position}}.",
+        "dragOver": "Entry {{position}} is over position {{target}}.",
+        "dragEnd": "Entry {{position}} dropped at position {{target}}.",
+        "dragCancel": "Moving cancelled. Entry {{position}} is back in its place.",
+        "empty": "No entries yet",
+        "actions": "Actions"
+      },
+      "union": {
+        "type": "Type"
+      },
+      "autocomplete": {
+        "noOptions": "No options",
+        "clear": "Clear",
+        "open": "Open list",
+        "close": "Close list",
+        "loading": "Loading …"
+      },
+      "date": {
+        "today": "Today",
+        "tomorrow": "Tomorrow",
+        "now": "Now"
+      },
+      "color": {
+        "pick": "Pick color",
+        "invalid": "Please enter a hex color such as #1a2b3c"
+      },
+      "secret": {
+        "show": "Show value",
+        "hide": "Hide value"
+      },
+      "view": {
+        "readOnly": "Read only",
+        "discard": "Discard changes",
+        "discardChanges": {
+          "title": "Discard unsaved changes?",
+          "body": "Your changes have not been saved and will be lost.",
+          "keep": "Keep editing",
+          "discard": "Discard"
+        },
+        "sectionErrors_one": "{{count}} error",
+        "sectionErrors_other": "{{count}} errors"
+      },
+      "value": {
+        "on": "On",
+        "off": "Off",
+        "empty": "(empty)",
+        "changed": "changed"
+      },
+      "units": {
+        "seconds": "seconds",
+        "seconds_one": "second",
+        "minutes": "minutes",
+        "minutes_one": "minute",
+        "days": "days",
+        "days_one": "day",
+        "milliseconds": "milliseconds",
+        "milliseconds_one": "millisecond"
+      },
+      "errors": {
+        "required": "This field is required",
+        "invalid": "This value is not valid",
+        "invalid_value": "Please choose one of the available options",
+        "not_multiple_of": "Please enter a multiple of {{divisor}}",
+        "unexpected": "The form could not be checked. Please try again.",
+        "server": "Saving failed. Please try again.",
+        "invalid_type": {
+          "string": "Please enter a text",
+          "number": "Please enter a number",
+          "int": "Please enter a whole number",
+          "boolean": "Please choose yes or no",
+          "date": "Please enter a valid date",
+          "array": "Please enter a list of values",
+          "object": "These details are incomplete"
+        },
+        "invalid_format": {
+          "default": "The format is not valid",
+          "email": "Please enter a valid email address",
+          "url": "Please enter a valid URL",
+          "regex": "The format is not valid",
+          "uuid": "Please enter a valid UUID"
+        },
+        "too_small": {
+          "string": {
+            "min": "Please enter at least {{minimum}} characters",
+            "exact": "Please enter exactly {{minimum}} characters"
+          },
+          "array": {
+            "min": "Please add at least {{minimum}} entries",
+            "exact": "Please add exactly {{minimum}} entries"
+          },
+          "number": {
+            "inclusive": "Please enter {{minimum}} or more",
+            "exclusive": "Please enter more than {{minimum}}"
+          },
+          "date": {
+            "inclusive": "Please choose {{minimum, P}} or later",
+            "exclusive": "Please choose a date after {{minimum, P}}"
+          }
+        },
+        "too_big": {
+          "string": {
+            "max": "Please enter at most {{maximum}} characters",
+            "exact": "Please enter exactly {{maximum}} characters"
+          },
+          "array": {
+            "max": "Please add at most {{maximum}} entries",
+            "exact": "Please add exactly {{maximum}} entries"
+          },
+          "number": {
+            "inclusive": "Please enter {{maximum}} or less",
+            "exclusive": "Please enter less than {{maximum}}"
+          },
+          "date": {
+            "inclusive": "Please choose {{maximum, P}} or earlier",
+            "exclusive": "Please choose a date before {{maximum, P}}"
+          }
+        }
+      }
     },
     "errorMessages": {
       "invalidEmailErrorMessage": "Please enter a valid email address",
@@ -937,7 +1171,10 @@
       "passwordTooShortErrorMessage": "Password must be at least 12 characters long",
       "passwordCompromisedErrorMessage": "This password has appeared in a data breach. Please choose a different password.",
       "required": "This field is required",
-      "invalidCountry": "Please select a valid country"
+      "invalidCountry": "Please select a valid country",
+      "amountTooLowErrorMessage": "The amount is below the minimum of this subscription plan",
+      "noQuestionErrorMessage": "Please enter a question",
+      "invalidForm": "Please check the highlighted fields"
     },
     "event": {
       "create": {
@@ -955,6 +1192,7 @@
         "cancelled": "Canceled",
         "description": "Description",
         "endsAt": "Ends at",
+        "endsBeforeStart": "The end must not be before the start",
         "externalSource": "External source (for imported events)",
         "image": "Image",
         "location": "Location",
@@ -1000,7 +1238,9 @@
         "slug": "Filter by slug",
         "title": "Filter by title",
         "includeHiddenArticles": "Include hidden",
-        "includeHiddenPages": "Include hidden"
+        "includeHiddenPages": "Include hidden",
+        "label": "Filters",
+        "states": "States"
       }
     },
     "documents": {
@@ -1049,7 +1289,126 @@
         "updatedAt": "{{updatedAt, ccc PP p}}",
         "upload": "Upload",
         "uploadDocument": "Upload Document",
-        "uploadFailed": "Upload failed. Please try again."
+        "uploadFailed": "Upload failed. Please try again.",
+        "openOriginal": "Open original",
+        "replaceFile": "Choose a different file"
+      }
+    },
+    "videos": {
+      "overview": {
+        "description": "Description",
+        "videoLibrary": "Video Library",
+        "copyLink": "Copy Link",
+        "edit": "Edit",
+        "fileSize": "File Size",
+        "filename": "Filename",
+        "noDescription": "No Description",
+        "openLink": "Open",
+        "preview": "Preview",
+        "storageFull": "Storage limit reached",
+        "storageUsage": "{{used}} / {{limit}} used ({{count}} files)",
+        "storageWarning": "Storage almost full",
+        "title": "Title",
+        "unlimited": "Unlimited",
+        "untitled": "Untitled",
+        "uploadVideo": "Upload Video",
+        "storageUsageInfo": "Total size of all uploaded videos. Once the limit is reached, you can only upload new videos after deleting old ones."
+      },
+      "panels": {
+        "cancel": "Cancel",
+        "close": "Close",
+        "confirm": "Confirm",
+        "created": "Created",
+        "createdAt": "{{createdAt, ccc PP p}}",
+        "deleteVideo": "Delete video?",
+        "description": "Description",
+        "videoUpdated": "Video Updated",
+        "dropVideo": "Drop file here or click to select",
+        "editVideo": "Edit Video",
+        "fileSize": "File size",
+        "fileTooLarge": "File is too large. Maximum size is {{maxSize}} MB.",
+        "filename": "Filename",
+        "information": "Information",
+        "maxFileSize": "Maximum file size: {{maxSize}} MB",
+        "invalidVideo": "Unsupported file type. Supported: MP4, WebM, OGG, MOV, M4V, MPEG",
+        "linkCopied": "Link copied to clipboard",
+        "notFound": "Video not found!",
+        "publicLink": "Public Link",
+        "title": "Title",
+        "untitled": "Untitled",
+        "updated": "Updated",
+        "updatedAt": "{{updatedAt, ccc PP p}}",
+        "upload": "Upload",
+        "uploadVideo": "Upload Video",
+        "uploadFailed": "Upload failed. Please try again.",
+        "attribution": "Attribution",
+        "source": "Source",
+        "link": "Link",
+        "license": "License",
+        "urlPlaceholder": "https://",
+        "sourceLink": "Link to the original source of the file.",
+        "openOriginal": "Open original",
+        "bitrate": "Bitrate",
+        "dimensions": "Dimensions",
+        "dimensionsValue": "{{width}} × {{height}}",
+        "replaceFile": "Choose a different file"
+      }
+    },
+    "audio": {
+      "overview": {
+        "description": "Description",
+        "audioLibrary": "Audio Library",
+        "copyLink": "Copy Link",
+        "edit": "Edit",
+        "fileSize": "File Size",
+        "filename": "Filename",
+        "noDescription": "No Description",
+        "openLink": "Open",
+        "storageFull": "Storage limit reached",
+        "storageUsage": "{{used}} / {{limit}} used ({{count}} files)",
+        "storageWarning": "Storage almost full",
+        "title": "Title",
+        "unlimited": "Unlimited",
+        "untitled": "Untitled",
+        "uploadAudio": "Upload Audio",
+        "storageUsageInfo": "Total size of all uploaded audio files. Once the limit is reached, you can only upload new audio after deleting old files."
+      },
+      "panels": {
+        "cancel": "Cancel",
+        "close": "Close",
+        "confirm": "Confirm",
+        "created": "Created",
+        "createdAt": "{{createdAt, ccc PP p}}",
+        "deleteAudio": "Delete audio file?",
+        "description": "Description",
+        "audioUpdated": "Audio Updated",
+        "dropAudio": "Drop file here or click to select",
+        "editAudio": "Edit Audio",
+        "fileSize": "File size",
+        "fileTooLarge": "File is too large. Maximum size is {{maxSize}} MB.",
+        "filename": "Filename",
+        "information": "Information",
+        "maxFileSize": "Maximum file size: {{maxSize}} MB",
+        "invalidAudio": "Unsupported file type. Supported: MP3, OGG, WAV, WebM, AAC, M4A, FLAC",
+        "linkCopied": "Link copied to clipboard",
+        "notFound": "Audio file not found!",
+        "publicLink": "Public Link",
+        "title": "Title",
+        "untitled": "Untitled",
+        "updated": "Updated",
+        "updatedAt": "{{updatedAt, ccc PP p}}",
+        "upload": "Upload",
+        "uploadAudio": "Upload Audio",
+        "uploadFailed": "Upload failed. Please try again.",
+        "attribution": "Attribution",
+        "source": "Source",
+        "link": "Link",
+        "license": "License",
+        "urlPlaceholder": "https://",
+        "sourceLink": "Link to the original source of the file.",
+        "openOriginal": "Open original",
+        "bitrate": "Bitrate",
+        "replaceFile": "Choose a different file"
       }
     },
     "images": {
@@ -1099,9 +1458,11 @@
         "uploadImage": "Upload Image",
         "urlPlaceholder": "https://www.link.com",
         "focalPoint": "Focal point",
+        "focalPointPosition": "{{x}} % from the left, {{y}} % from the top",
         "focalPointInfo": "Drag the point onto the most important part of the image. When the image is cropped, e.g. in teasers, this area stays visible.",
         "descriptionInfo": "Describe what can be seen in the image. The text is used as alternative text for people using screen readers and for search engines.",
-        "linkUrlInfo": "Web address that opens when readers click on the image. Leave empty if the image should not be a link."
+        "linkUrlInfo": "Web address that opens when readers click on the image. Leave empty if the image should not be a link.",
+        "openOriginal": "Open original"
       }
     },
     "importableEvent": {
@@ -1125,11 +1486,32 @@
       "unpaid": "unpaid",
       "userNotLoaded": "Unexpected error: Your user data could not be loaded.",
       "table": {
+        "action": "Action",
         "date": "Date",
         "description": "Description",
         "goodie": "Goodie",
         "status": "Status",
-        "idCopied": "Invoice ID copied"
+        "idCopied": "Invoice ID copied",
+        "paidAt": "Paid on",
+        "paidVia": "Paid via",
+        "paymentState": "Payment status",
+        "manuallyPaidBy": "Marked paid by",
+        "canceledAt": "Canceled on",
+        "scheduledDeactivationAt": "Deactivation if unpaid",
+        "createdAt": "Created on",
+        "modifiedAt": "Last modified",
+        "mail": "Invoice email",
+        "positions": "Items"
+      },
+      "paymentState": {
+        "created": "Created",
+        "submitted": "Submitted",
+        "requiresUserAction": "Action required",
+        "processing": "Processing",
+        "paid": "Paid",
+        "canceled": "Canceled",
+        "declined": "Declined",
+        "chargeback": "Chargeback"
       }
     },
     "linkPageBreakEditPanel": {
@@ -1185,7 +1567,8 @@
       "submit": "Send reset link",
       "sent": "If an account exists with this email, a password reset link has been sent. Please check your inbox.",
       "notConfigured": "Password reset is not configured. Please contact your administrator.",
-      "backToLogin": "Back to login"
+      "backToLogin": "Back to login",
+      "title": "Reset password"
     },
     "setNewPassword": {
       "description": "Enter your new password.",
@@ -1200,7 +1583,7 @@
     },
     "name": "Name",
     "mailTemplates": {
-      "availableTemplates": "Available templates",
+      "availableTemplates": "Message templates",
       "cancel": "Cancel",
       "content": "Content",
       "create": "Create template",
@@ -1220,6 +1603,11 @@
         "testRecipientPlaceholder": "Your account email",
         "preview": "Preview",
         "sendTest": "Send test",
+        "previewLetter": "Preview as letter",
+        "letterAppendix": "QR-bill (PDF)",
+        "letterAppendixNone": "None",
+        "letterAppendixHelp": "PDF from \"Documents\" printed after the letter pages, e.g. a QR-bill (A4, slip at the bottom edge). Only for addresses in Switzerland; with duplex printing a blank page is added when needed so the slip lands on a front page.",
+        "letterPreviewTitle": "Letter preview",
         "selectMailType": "Please choose a purpose first.",
         "selectMailTypePlaceholder": "Choose a purpose …",
         "testRecipientHint": "Test mails are always sent to your own account.",
@@ -1232,7 +1620,12 @@
         "sampleSubscriptionHelp": "Pick an existing subscription to fill the preview and the test mail with its real data. Without a choice, made-up sample data is used. The test mail still only goes to you.",
         "bodyModeHelp": "Visual: edit the content like in a word processor. HTML: edit the source code directly — for advanced users. Plain text: the text-only version for email programs without HTML; it is generated automatically.",
         "backgroundHelp": "Color of the area around the email's content.",
-        "contentWidthHelp": "Maximum width of the content in pixels. 600 px is a proven value that looks good in most email programs. On narrow screens the content shrinks automatically."
+        "contentWidthHelp": "Maximum width of the content in pixels. 600 px is a proven value that looks good in most email programs. On narrow screens the content shrinks automatically.",
+        "bodyMode": "Editor mode",
+        "letterLayout": "Stationery",
+        "letterLayoutDefault": "Default ({{name}})",
+        "letterLayoutNone": "Default (none yet)",
+        "letterLayoutHelp": "Header and footer when this template is printed as a letter. Ignored for emails."
       },
       "editor": {
         "undo": "Undo",
@@ -1281,7 +1674,8 @@
         "appendJwtDone": "Login token already included — the recipient is logged in on click.",
         "frameTitle": "Mail content editor",
         "imageAltHelp": "Describes the image in a few words. Shown when the image does not load and read aloud by screen readers.",
-        "imageWidthHelp": "Leave empty to use the original size. The image is never wider than the email."
+        "imageWidthHelp": "Leave empty to use the original size. The image is never wider than the email.",
+        "toolbar": "Formatting"
       },
       "goToPlaceholders": "Available placeholders",
       "htmlContent": "HTML content",
@@ -1408,7 +1802,7 @@
         "subscription": "Covers the subscription itself: newly started, confirmed or deactivated. Additionally available: subscription data such as amount and term.",
         "renewal": "Automatic renewal — successful or failed. Additionally available: plan and payment method names plus the invoice data.",
         "invoiceCreation": "As soon as a new invoice has been created. Additionally available: the invoice and its subscription.",
-        "custom": "A mail you send freely to subscribers, e.g. a newsletter via “Send email”. Additionally available: the subscription and the latest invoices.",
+        "custom": "A mail you send freely to subscribers, e.g. a newsletter via “Manual messages”. Additionally available: the subscription and the latest invoices.",
         "customNoSubscription": "A mail you send freely to people without a subscription, e.g. an invitation or win-back. Only the recipient fields are available — subscription placeholders stay empty."
       },
       "placeholderDescriptions": {
@@ -1457,10 +1851,14 @@
         "optional_invoices_0_id": "ID of the latest invoice (array, index 0).",
         "optional_invoices_0_description": "Description of the latest invoice."
       },
-      "statusHelp": "A check mark means an automatic email uses this template. «Unused» means no automatic email uses it — you can still send it by hand via «Send email».",
-      "placeholdersInfo": "Placeholders are replaced automatically with each recipient's data when the email is sent, e.g. their first name. This makes every email personal."
+      "statusHelp": "A check mark means an automatic email uses this template. «Unused» means no automatic email uses it — you can still send it by hand via «Manual messages».",
+      "placeholdersInfo": "Placeholders are replaced automatically with each recipient's data when the email is sent, e.g. their first name. This makes every email personal.",
+      "searchPlaceholdersLabel": "Search placeholders",
+      "empty": "No mail templates yet."
     },
     "mailTemplateSelect": {
+      "sendAsLetter": "Also by letter",
+      "sendAsLetterHint": "People on the letter channel get this message printed instead of emailed.",
       "noMailSentSelectNow": "Do not send an email"
     },
     "memberPlanEdit": {
@@ -1523,7 +1921,160 @@
       "title": "Subscription Plans",
       "paymentProviderStatusInfo": "✅ means every payment method of this plan is connected to a payment provider. ❌ means at least one payment method has no provider, so readers cannot pay with it."
     },
+    "deliveryMode": {
+      "panelTitle": "Delivery channel",
+      "channel": {
+        "mail": "Email",
+        "letter": "Letter"
+      },
+      "origin": {
+        "manual": "By hand",
+        "suggestion": "From a suggestion"
+      },
+      "reason": {
+        "emailQuality_dead": "Email address unreachable",
+        "placeholderEmail": "Placeholder address",
+        "bulk": "By user group",
+        "emailQuality_active": "Email address active again",
+        "kept": "Kept"
+      },
+      "noAddress": "No complete postal address – letter not possible.",
+      "switchToLetter": "Switch to letter",
+      "switchToMail": "Switch to email",
+      "suggestionsTitle": "Delivery channel for automated messages",
+      "suggestionsIntro": "The delivery channel decides whether a user gets their automated messages by email or by letter. Switching happens by hand, based on a suggestion, or through user group filters. Suggestions are computed daily from automatic feedback on email deliverability, but only take effect after manual confirmation.",
+      "kind": {
+        "toLetter": "Switch to letter ({{count}})",
+        "toMail": "Switch to email ({{count}})"
+      },
+      "recompute": "Recompute suggestions",
+      "recomputed": "Recomputed: {{toLetter}} to letter, {{toMail}} to email, {{removed}} settled.",
+      "confirm": "Apply",
+      "confirmAll": "Apply all {{count}}",
+      "confirmAllTitle": "Apply all suggestions",
+      "confirmAllText": {
+        "toLetter": "{{count}} people will get their automated messages by letter from now on.",
+        "toMail": "{{count}} people will get their automated messages by email again."
+      },
+      "confirmAllYes": "Yes, apply all",
+      "confirmedAll": "{{confirmed}} applied, {{skipped}} no longer applied.",
+      "table": {
+        "user": "Person",
+        "emailQuality": "Email status",
+        "reason": "Reason",
+        "since": "Suggested since"
+      },
+      "audience": {
+        "open": "Switch the audience’s delivery channel",
+        "title": "Switch the audience’s delivery channel",
+        "intro": "Everyone in the chosen audience will get their automated messages this way from now on:",
+        "previewLetter": "{{userCount}} people; {{withoutAddressCount}} of them without a complete postal address stay on email.",
+        "previewMail": "{{userCount}} people.",
+        "apply": "Switch",
+        "done": {
+          "letter": "{{changed}} switched to letter, {{skippedWithoutAddress}} without a complete postal address stay on email.",
+          "mail": "{{changed}} switched to email."
+        }
+      },
+      "bulk": {
+        "title": "Switch an audience",
+        "intro": "Narrow the audience like for manual messages and switch the delivery channel for everyone in it.",
+        "people": "{{count}} people in this audience",
+        "history": {
+          "title": "Switches by user group",
+          "empty": "No switch by user group yet.",
+          "when": "When",
+          "who": "By",
+          "channel": "Delivery channel",
+          "people": "People",
+          "changed": "Switched",
+          "skipped": "Skipped",
+          "filter": "User group",
+          "unknownUser": "Unknown"
+        }
+      }
+    },
+    "deliveryChannel": {
+      "tabs": {
+        "suggestions": "Suggested changes ({{count}})",
+        "assign": "Switch a user group",
+        "history": "History of user group switches",
+        "overview": "Overview"
+      },
+      "overview": {
+        "people": "{{count}} people",
+        "showPeople": "Show people",
+        "openSuggestions": "{{count}} open",
+        "review": "Review suggestions",
+        "peopleOn": "People on {{channel}}",
+        "search": "Search name or email address",
+        "lastChange": "Last change",
+        "noDecision": "None (default)",
+        "empty": "Nobody on this channel.",
+        "suggestionsHeading": "Suggested changes",
+        "activeFor": "Active for {{count}} automated message types",
+        "channelHeadingDefault": "Delivery channel (default)",
+        "channelHeadingAlternative": "Delivery channel (alternative)"
+      },
+      "suggestions": {
+        "cardTitle": "{{move}} · {{count}} suggestions",
+        "empty": "No open suggestions for a switch to {{channel}}.",
+        "keep": "Keep",
+        "keepTitle": "Keep the delivery channel?",
+        "keepText": "{{name}} stays on {{channel}}. This counts as a decision by hand: the nightly run never suggests this person again, in either direction.",
+        "keepYes": "Yes, keep",
+        "readOnly": "Only people who may manage delivery channels can apply or keep suggestions.",
+        "emailStatus": {
+          "dead": "Unreachable since {{date}}",
+          "active": "Active since {{date}}",
+          "unresponsive": "Unresponsive since {{date}}",
+          "unknown": "Unknown since {{date}}"
+        },
+        "recomputedDaily": "(recomputed automatically every day)"
+      },
+      "assign": {
+        "steps": {
+          "audience": {
+            "title": "User group",
+            "description": "Who is switched"
+          },
+          "channel": {
+            "title": "Delivery channel",
+            "description": "To which"
+          },
+          "review": {
+            "title": "Review & switch",
+            "description": "Last look"
+          }
+        },
+        "people": "{{count}} people",
+        "noAddress": "{{count}} people without a complete postal address cannot be switched to letter and stay on email.",
+        "summary": {
+          "letter": "{{changed}} will be switched to letter, {{skipped}} without a complete postal address stay on email.",
+          "mail": "{{changed}} will be switched to email."
+        },
+        "confirmTitle": "Switch the user group to {{channel}}?",
+        "showHistory": "Show in history",
+        "again": "New switch",
+        "unreachableEmail": "{{count}} people with an unreachable email address (placeholder or dead) are switched anyway – email will not reach them.",
+        "filterTitle": "Filter the user group"
+      },
+      "history": {
+        "allChannels": "All"
+      },
+      "user": {
+        "switched": "Delivery channel switched to {{channel}}.",
+        "suggestion": "Suggestion: {{move}}",
+        "channelLabel": "Delivery channel for automated messages:",
+        "emailUnreachable": "Email address unreachable ({{segment}}) – email will not reach this person."
+      },
+      "flows": {
+        "letterHint": "Messages marked «Also by letter» reach people on the letter channel in print; everyone else gets email.",
+        "manage": "Manage delivery channels"
+      }
+    },
     "navbar": {
+      "deliverySuggestions": "Delivery channel",
       "articles": "Articles",
       "authors": "Authors",
       "banners": "Banners",
@@ -1534,6 +2085,7 @@
         "crowdfundings": "Crowdfundings",
         "blockTemplates": "Block Templates"
       },
+      "articleTemplates": "Article Templates",
       "commentRating": "Rating System",
       "comments": "Comments",
       "commentTags": "Tags",
@@ -1545,10 +2097,13 @@
       "events": "Events",
       "eventTags": "Tags",
       "documentLibrary": "Documents",
+      "videoLibrary": "Videos",
       "imageLibrary": "Images",
       "importableEvents": "Importable Events",
       "media": "Files",
       "menu": "Menu",
+      "mainNavigation": "Main navigation",
+      "skipToContent": "Skip to main content",
       "colorMode": {
         "title": "Appearance",
         "light": "Light",
@@ -1556,10 +2111,11 @@
         "system": "Match system"
       },
       "logout": "Logout",
-      "mailTemplates": "Email Templates",
+      "mailTemplates": "Message templates",
       "memberPlans": "Subscription Plans",
       "navigations": "Navigations",
       "pages": "Pages",
+      "pageTemplates": "Page Templates",
       "paymentMethods": "Payment Methods",
       "peerArticles": "Peerable Articles",
       "networkContent": "We.Publish Network",
@@ -1568,8 +2124,9 @@
       "settings": "Settings",
       "subscriptionPlans": "Subscription Plans",
       "subscriptions": "Subscriptions",
-      "subscriptionSettings": "Automatic emails",
+      "subscriptionSettings": "Automated messages",
       "tokens": "Tokens",
+      "apiTokens": "API Keys",
       "userConsents": "User Consents",
       "userRoles": "User Roles",
       "users": "Users",
@@ -1578,10 +2135,151 @@
       "audienceDashboard": "Dashboard",
       "integrations": "Integrations",
       "apps": "Apps",
-      "mailSend": "Send email",
-      "mailLog": "Sent emails",
+      "mailSend": "Manual messages",
+      "mailLog": "Sent messages",
       "communication": "Communication",
-      "auditLog": "Audit log"
+      "auditLog": "Audit log",
+      "letterLayouts": "Stationery",
+      "language": "Language",
+      "audioLibrary": "Audio"
+    },
+    "pageTitles": {
+      "login": "Log in",
+      "impersonate": "Log in as user",
+      "resetPassword": "Reset password",
+      "setPassword": "Set new password",
+      "dashboard": "Dashboard",
+      "notifications": "Notifications",
+      "auditLog": "Audit log",
+      "apps": "Apps",
+      "externalApp": "App",
+      "articles": "Articles",
+      "articleCreate": "New article",
+      "articleEdit": "Edit article",
+      "peerArticles": "Peerable articles",
+      "articleTags": "Article tags",
+      "articleTagCreate": "New article tag",
+      "articleTagEdit": "Edit article tag",
+      "paywalls": "Paywalls",
+      "paywallCreate": "New paywall",
+      "paywallEdit": "Edit paywall",
+      "pages": "Pages",
+      "pageCreate": "New page",
+      "pageEdit": "Edit page",
+      "pageTags": "Page tags",
+      "pageTagCreate": "New page tag",
+      "pageTagEdit": "Edit page tag",
+      "blockStyles": "Block styling",
+      "blockTemplates": "Block templates",
+      "blockTemplateCreate": "New block template",
+      "blockTemplateEdit": "Edit block template",
+      "articleTemplates": "Article templates",
+      "articleTemplateCreate": "New article template",
+      "articleTemplateEdit": "Edit article template",
+      "pageTemplates": "Page templates",
+      "pageTemplateCreate": "New page template",
+      "pageTemplateEdit": "Edit page template",
+      "crowdfundings": "Crowdfundings",
+      "crowdfundingCreate": "New crowdfunding",
+      "crowdfundingEdit": "Edit crowdfunding",
+      "polls": "Polls",
+      "pollEdit": "Edit poll",
+      "pollVotes": "Poll votes",
+      "comments": "Comments",
+      "commentEdit": "Edit comment",
+      "commentTags": "Comment tags",
+      "commentTagCreate": "New comment tag",
+      "commentTagEdit": "Edit comment tag",
+      "commentRating": "Rating system",
+      "events": "Events",
+      "eventCreate": "New event",
+      "eventEdit": "Edit event",
+      "eventTags": "Event tags",
+      "eventTagCreate": "New event tag",
+      "eventTagEdit": "Edit event tag",
+      "importableEvents": "Importable events",
+      "images": "Images",
+      "imageUpload": "Upload images",
+      "imageEdit": "Edit image",
+      "documents": "Documents",
+      "documentUpload": "Upload documents",
+      "documentEdit": "Edit document",
+      "videos": "Videos",
+      "videoUpload": "Upload videos",
+      "videoEdit": "Edit video",
+      "audio": "Audio",
+      "audioUpload": "Upload audio",
+      "audioEdit": "Edit audio",
+      "navigations": "Navigations",
+      "navigationCreate": "New navigation",
+      "navigationEdit": "Edit navigation",
+      "newsletter": "Newsletter",
+      "newsletterEdit": "Edit newsletter",
+      "newsletterPreview": "Newsletter preview",
+      "banners": "Banners",
+      "bannerCreate": "New banner",
+      "bannerEdit": "Edit banner",
+      "authors": "Authors",
+      "authorCreate": "New author",
+      "authorEdit": "Edit author",
+      "authorTags": "Author tags",
+      "authorTagCreate": "New author tag",
+      "authorTagEdit": "Edit author tag",
+      "users": "Users",
+      "userCreate": "New user",
+      "userEdit": "Edit user",
+      "userRoles": "User roles",
+      "userRoleCreate": "New user role",
+      "userRoleEdit": "Edit user role",
+      "audience": "Audience",
+      "subscriptions": "Subscriptions",
+      "subscriptionCreate": "New subscription",
+      "subscriptionEdit": "Edit subscription",
+      "memberPlans": "Subscription plans",
+      "memberPlanCreate": "New subscription plan",
+      "memberPlanEdit": "Edit subscription plan",
+      "paymentMethods": "Payment methods",
+      "paymentMethodCreate": "New payment method",
+      "paymentMethodEdit": "Edit payment method",
+      "discountCodes": "Discount codes",
+      "discountCodeCreate": "New discount code",
+      "discountCodeEdit": "Edit discount code",
+      "discountCodeUsage": "Discount code usage",
+      "goodies": "Goodies",
+      "goodieCreate": "New goodie",
+      "goodieEdit": "Edit goodie",
+      "consents": "Consents",
+      "consentCreate": "New consent",
+      "consentEdit": "Edit consent",
+      "userConsents": "User consents",
+      "userConsentCreate": "New user consent",
+      "userConsentEdit": "Edit user consent",
+      "automaticEmails": "Automatic emails",
+      "mailTemplates": "Email templates",
+      "mailTemplateCreate": "New email template",
+      "mailTemplateEdit": "Edit email template",
+      "letterLayouts": "Stationery",
+      "letterLayoutCreate": "New stationery",
+      "letterLayoutEdit": "Edit stationery",
+      "systemMails": "Account & login emails",
+      "mailSend": "Send email",
+      "deliveryChannel": "Delivery channel",
+      "mailLog": "Sent emails",
+      "networkContent": "We.Publish Network",
+      "peers": "Peers",
+      "peerCreate": "New peer",
+      "peerEdit": "Edit peer",
+      "peerProfile": "Peering profile",
+      "apiTokens": "API keys",
+      "apiTokenGenerate": "New API key",
+      "tokens": "Tokens",
+      "tokenGenerate": "New token",
+      "integrations": "Integrations",
+      "integrationEdit": "Edit integration",
+      "settings": "Settings",
+      "websiteSettings": "Website settings",
+      "seo": "SEO checklist",
+      "logout": "Logout"
     },
     "navigation": {
       "overview": {
@@ -1606,6 +2304,7 @@
         "linkTypeArticle": "Article",
         "linkTypePage": "Page",
         "linkTypeExternal": "External link",
+        "linkType": "Link type",
         "keyInfo": "Technical name your website uses to find this navigation, e.g. «main» or «footer». Only change it together with the people who develop your website."
       }
     },
@@ -1628,6 +2327,7 @@
       "validationFailedGeneric": "Cannot save. Please fix the highlighted errors.",
       "saveValidationFailed": "Saving failed",
       "publishValidationFailed": "Publishing failed",
+      "title": "Edit Page",
       "overview": {
         "createComment": "Create Comment",
         "duplicate": "Duplicate",
@@ -1646,7 +2346,8 @@
         "publishedAt": "{{publicationDate, ccc PP p}}",
         "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}",
         "unpublish": "Unpublish",
-        "unpublished": "Unpublished"
+        "unpublished": "Unpublished",
+        "loadingTemplate": "Loading template…"
       },
       "panels": {
         "chooseBlock": "Choose Block",
@@ -1690,8 +2391,15 @@
         "value": "Value",
         "slugInfo": "The last part of the page's web address, e.g. «about-us». Use lowercase letters, numbers and hyphens only. Changing it later breaks existing links.",
         "hiddenInfo": "Hidden pages do not appear in automatic lists on the website, but remain reachable via their direct link.",
-        "enterSocialMediaImage": "Please add an image for social media"
-      }
+        "hideHeader": "Hide header",
+        "hideHeaderInfo": "Hides the website's header on this page, e.g. for landing pages.",
+        "hideFooter": "Hide footer",
+        "hideFooterInfo": "Hides the website's footer on this page, e.g. for landing pages.",
+        "enterSocialMediaImage": "Please add an image for social media",
+        "createTemplate": "Create template from page"
+      },
+      "unsavedChanges": "unsaved changes",
+      "unpublishedChanges": "changes not yet published"
     },
     "pages": {
       "overview": {
@@ -1723,6 +2431,12 @@
         "untitled": "Untitled",
         "updatedAt": "Updated At",
         "updatedAtDate": "{{updatedAtDate, ccc PP pp}}"
+      },
+      "createModal": {
+        "title": "New Page",
+        "blank": "Blank page",
+        "search": "Search templates",
+        "noResults": "No templates found"
       }
     },
     "paymentMethodList": {
@@ -1768,6 +2482,12 @@
     },
     "peerList": {
       "overview": {
+        "status": "Status",
+        "active": "Active",
+        "disabled": "Disabled",
+        "name": "Name",
+        "hostURL": "API URL",
+        "website": "Website",
         "disable": "Disable",
         "editProfile": "Edit profile",
         "enable": "Enable",
@@ -1840,13 +2560,14 @@
       "answerMissing": "Please enter your answer.",
       "copyVoteUrl": "Copy voting link",
       "copyVoteUrlHint": "The voting links can now be copied directly in the poll block of the article or page the poll is used in.",
-      "deleteBtn": "Delete",
       "deleteModalBody": "Do you want to delete the answer \"{{answer}}\" permanently? You'll lose the poll results.",
       "deleteModalTitle": "Delete?",
       "insertYourNewAnswer": "Enter a new answer",
       "urlCopied": "Voting link copied to the clipboard.",
       "urlCopyingFailed": "Voting link could not be copied.",
-      "votes": "votes"
+      "votes": "votes",
+      "answerLabel": "Answer {{number}}",
+      "deleteAnswer": "Delete answer \"{{answer}}\""
     },
     "pollEditView": {
       "addAndSaveNewAnswer": "Add Answer",
@@ -1874,7 +2595,9 @@
       "emptySource": "Please enter the source name.",
       "newSourcePlaceholder": "Enter a new external vote source (e.g. Facebook)",
       "sourceHeaderCell": "Source",
-      "noPollAvailable": "No poll available."
+      "noPollAvailable": "No poll available.",
+      "deleteSource": "Delete source \"{{source}}\"",
+      "votesFor": "Votes for \"{{answer}}\" from {{source}}"
     },
     "pollList": {
       "closedAt": "Closed at",
@@ -1898,7 +2621,9 @@
       "fingerprint": "Fingerprint",
       "deleteItems": "Delete items",
       "userIdInfo": "Only filled in if the person was logged in when voting. Empty for anonymous votes.",
-      "fingerprintInfo": "An anonymous code derived from the voter's internet connection and browser. Many votes with the same fingerprint probably come from the same device; you can select and delete them."
+      "fingerprintInfo": "An anonymous code derived from the voter's internet connection and browser. Many votes with the same fingerprint probably come from the same device; you can select and delete them.",
+      "selectAll": "Select all votes",
+      "selectVote": "Select vote from {{date}}"
     },
     "pollStateIndication": {
       "closed": "Poll closed",
@@ -1915,7 +2640,33 @@
     "richtext": {
       "menuBar": {
         "paragraph": "Paragraph",
-        "heading": "Heading {{level}}"
+        "heading": "Heading {{level}}",
+        "label": "Formatting",
+        "textStyle": "Text style",
+        "formatting": "Text formatting",
+        "undo": "Undo",
+        "redo": "Redo",
+        "bold": "Bold",
+        "italic": "Italic",
+        "underline": "Underline",
+        "strike": "Strikethrough",
+        "subscript": "Subscript",
+        "superscript": "Superscript",
+        "textColor": "Text color",
+        "backgroundColor": "Background color",
+        "lists": "Lists",
+        "bulletList": "Bulleted list",
+        "orderedList": "Numbered list",
+        "alignment": "Alignment",
+        "alignLeft": "Align left",
+        "alignCenter": "Align center",
+        "alignRight": "Align right",
+        "link": "Link",
+        "editLink": "Edit link",
+        "table": "Insert table",
+        "codeBlock": "Code block",
+        "blockquote": "Quote",
+        "invisibleCharacters": "Show invisible characters"
       },
       "link": {
         "title": "Link text with",
@@ -1933,6 +2684,22 @@
         "variantButtonMain": "Button (main)",
         "variantButtonSecondary": "Button (secondary)"
       },
+      "table": {
+        "label": "Table",
+        "addColumnBefore": "Insert column left",
+        "addColumnAfter": "Insert column right",
+        "deleteColumn": "Delete column",
+        "addRowBefore": "Insert row above",
+        "addRowAfter": "Insert row below",
+        "deleteRow": "Delete row",
+        "mergeCells": "Merge cells",
+        "splitCell": "Split cell",
+        "headerCell": "Header cell",
+        "columns": "Columns",
+        "rows": "Rows",
+        "cells": "Cells"
+      },
+      "dragHandle": "Drag to move",
       "colorPicker": {
         "clear": "Clear color"
       },
@@ -1985,6 +2752,8 @@
       "newArticlePaywall": "Freshly created articles will require a subscription by default",
       "subscriptionPlans": "Subscription Plans",
       "subscriptionUpgradeModel": "On upgrade, bill the full price difference (instead of the pro-rated remaining credit)",
+      "subscriptionExtendWindowDays": "Renewal window (days before the end)",
+      "paymentMethodChangeExpiryDays": "Payment method change waiting time (days)",
       "warnings": {
         "askOperators": "Warning: changing one or more of the settings may break the page or have other unpredictable consequences. If you are unsure, please try talking to the operators first. If you are sure, feel free to continue.",
         "guestCommenting": "Allow guest visitors (not logged in) to write and publish comments on articles.",
@@ -1995,12 +2764,19 @@
         "newArticlePeering": "Will not affect already created articles",
         "newArticlePaywall": "Will not affect already created articles",
         "subscriptionUpgradeModel": "When enabled, an upgrade always charges the difference between the new and current plan price, regardless of how much time is left in the current period. When disabled, only the unused (pro-rated) remainder of the current period is credited.",
-        "sessionTtlDays": "How long a login stays valid before signing in again is required. Applies from the next login; sessions already open keep their lifetime."
+        "sessionTtlDays": "How long a login stays valid before signing in again is required. Applies from the next login; sessions already open keep their lifetime.",
+        "emailQualityUnresponsiveAfterDays": "An email address counts as “unresponsive” when this many days passed without a login or a click in a mail, although mails were delivered. Re-evaluated nightly and via “Refresh statuses”.",
+        "emailQualityMinMailsForUnresponsive": "This many mails must have been delivered to the address before it can count as “unresponsive”."
       },
       "sessionTtlDays": "Session lifetime",
+      "emailQuality": "Email quality",
+      "emailQualityUnresponsiveAfterDays": "“Unresponsive” after … days",
+      "emailQualityMinMailsForUnresponsive": "… delivered mails",
       "info": {
         "allowCommentEditing": "Readers can still change the text of their own comments after posting them.",
         "commentCharLimit": "Maximum number of characters a comment may contain. Longer comments cannot be submitted.",
+        "subscriptionExtendWindowDays": "How many days before a subscription ends readers see \"Renew now\" in their profile. 30 = as before; 365 = any time, as long as no invoice is open.",
+        "paymentMethodChangeExpiryDays": "How many days a started payment method change waits for the open invoice to be paid or for the payment provider to confirm it. After that it expires and the subscription keeps its current payment method.",
         "newSubscriptionsApiPublic": "Makes the new subscriptions of a chosen period available via the public API without login, e.g. for live figures on your website. The data is anonymised. Leave it off if you don't need it.",
         "activeSubscriptionsApiPublic": "Makes all currently active subscriptions available via the public API without login, e.g. for live figures on your website. The data is anonymised. Leave it off if you don't need it.",
         "renewingSubscriptionsApiPublic": "Makes the subscriptions that renew in a chosen period available via the public API without login, e.g. for live figures on your website. The data is anonymised. Leave it off if you don't need it.",
@@ -2013,7 +2789,7 @@
       }
     },
     "automaticMails": {
-      "title": "Automatic emails",
+      "title": "Automated messages",
       "intro": "Here you decide which email template goes out automatically for which event. Pick a template per event – or leave it on “Do not send an email” if nothing should go out. The ⓘ icon explains every event.",
       "example": "Example: {{example}}"
     },
@@ -2058,7 +2834,7 @@
       "addMail": "Add email",
       "deleteMail": "Remove email",
       "defaultFlow": "Default flow",
-      "defaultFlowDescription": "Applies to every subscription no other flow matches. Changes here also apply under «Automatic emails».",
+      "defaultFlowDescription": "Applies to every subscription no other flow matches. Changes here also apply under «Automated messages».",
       "flowNumber": "Flow {{number}}",
       "newFlow": "New flow",
       "newDayTitle": "New day in the timeline",
@@ -2092,7 +2868,8 @@
           "description": "Goes out when a subscription is canceled – either by the person on the website or by you in the editor. Cancellation because of an unpaid invoice is handled by the timeline.",
           "example": "“Sorry to see you go – your subscription runs until 31 December.”"
         }
-      }
+      },
+      "moveMail": "Move «{{title}}»"
     },
     "subscriptionList": {
       "filter": {
@@ -2115,6 +2892,7 @@
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Name",
         "newSubscription": "New Subscription",
+        "reactivate": "Reactivate",
         "subscription": "Subscription"
       },
       "panels": {
@@ -2219,7 +2997,9 @@
       "titleEdit": "Edit User Consent",
       "user": "User",
       "value": "Value",
-      "uniqueConstraint": "A user consent with slug '{{slug}}' already exists. Please choose a different slug."
+      "uniqueConstraint": "A user consent with slug '{{slug}}' already exists. Please choose a different slug.",
+      "deleteTitle": "Delete user consent?",
+      "deleteBody": "Do you want to delete the consent «{{name}}» of {{user}} permanently?"
     },
     "userCreateOrEditView": {
       "active": "Active",
@@ -2229,6 +3009,7 @@
       "confirm": "Confirm",
       "country": "Country",
       "createNewUser": "Create new user",
+      "emailQuality": "Email status: {{level}} – {{reason}}, since {{since}}",
       "deleteUser": "Delete User?",
       "email": "Email",
       "errorCreatingUser": "User could not be created. Unexpected error: {{error}}",
@@ -2270,7 +3051,8 @@
       "activeInfo": "Inactive users can no longer log in, neither on the website nor in the editor.",
       "flairInfo": "Short description of the person's role, e.g. \"Editor-in-chief\". It is shown next to their name in comments on the website.",
       "propertiesInfo": "Additional data as key and value, e.g. from imports. Public properties can also be read by the website, private ones only in the editor.",
-      "userRolesInfo": "Roles define the permissions of this person, e.g. what they may see and do in the editor."
+      "userRolesInfo": "Roles define the permissions of this person, e.g. what they may see and do in the editor.",
+      "addressTitle": "Address"
     },
     "userList": {
       "overview": {
@@ -2326,6 +3108,14 @@
       }
     },
     "userSubscriptionEdit": {
+      "paymentMethodChange": {
+        "pending": "The reader is switching to {{paymentMethod}}: {{waitingFor}}. Until then the current payment method stays. The change expires on {{expiresAt, PP}}.",
+        "waitingFor": {
+          "invoicePayment": "waiting for the open invoice to be paid",
+          "authorization": "waiting for the payment provider to confirm it",
+          "immediate": "applied straight away"
+        }
+      },
       "autoRenew": "Auto Renew",
       "autoRenewDescription": "Renew the subscription automatically",
       "createTitle": "Create Subscription",
@@ -2334,8 +3124,8 @@
           "activated": "Deactivate"
         },
         "date": "Deactivation Date",
-        "help": "Deactivated subscriptions can still be used until the paid-until date, but they will not be renewed automatically, even if auto renew is enabled. Once deactivated, the subscription cannot be reactivated.",
-        "isDeactivated": "The subscription has been deactivated since {{date, ccc PP p}} and can no longer be edited. Reason: {{reason}}. If needed, a new subscription can be created.",
+        "help": "Deactivated subscriptions can still be used until the paid-until date, but they will not be renewed automatically, even if auto renew is enabled. A deactivation can be removed again in the editor.",
+        "isDeactivated": "The subscription has been deactivated since {{date, ccc PP p}} and can no longer be edited. Reason: {{reason}}. It can be reactivated, or a new subscription can be created.",
         "modalMessage": {
           "activated": "Do you want to deactivate the subscription of \"{{userName}}\" with the email address \"{{userEmail}}\"?"
         },
@@ -2354,6 +3144,22 @@
         },
         "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}"
       },
+      "revertUpgrade": {
+        "title": "Undo upgrade",
+        "modalTitle": "Undo the upgrade?",
+        "modalMessage": "The new subscription and its invoices are deleted and the replaced subscription continues as before. This only works as long as the new subscription has not been paid.",
+        "confirm": "Undo upgrade"
+      },
+      "reactivation": {
+        "deactivatedSince": "Deactivated since {{date, ccc PP p}} · Reason: {{reason}}",
+        "deactivatedOn": "Deactivation on {{date, ccc PP p}} · Reason: {{reason}}",
+        "date": "{{date, ccc PP p}}",
+        "hint": "Reactivating removes this deactivation. If the subscription has already run out, a new invoice is created.",
+        "title": "Reactivate subscription",
+        "modalTitle": "Reactivate subscription?",
+        "modalMessage": "Do you want to remove the deactivation of the subscription of \"{{userName}}\"? The subscription will continue as before.",
+        "confirm": "Reactivate"
+      },
       "editTitle": "Edit Subscription",
       "memberPlanMonthlyAmount": "Minimum Monthly Amount ({{currency}})",
       "monthlyAmount": "Monthly amount",
@@ -2370,6 +3176,24 @@
       "paidUntilInfo": "Set automatically as soon as an invoice is paid. The subscription is paid up to this date."
     },
     "userSubscriptionList": {
+      "periodRange": "Period",
+      "table": {
+        "active": "Active",
+        "confirmed": "Confirmed",
+        "created": "Created",
+        "deactivated": "Deactivated",
+        "expired": "Expired",
+        "expires": "Expires",
+        "paidUntil": "Paid until",
+        "perMonthSuffix": "/mo.",
+        "periodicity": "Payment interval",
+        "planned": "Planned",
+        "renewal": "Renewal",
+        "renewsAutomatically": "Automatic",
+        "start": "Start",
+        "subscription": "Subscription",
+        "unpaid": "Unpaid"
+      },
       "addSubscription": "Add subscription",
       "subscriptionNumber": "No. {{subscriptionId}}",
       "periodTitle": "Period {{date}}",
@@ -2416,7 +3240,64 @@
       "areYouSureBody": "The style \"{{ blockStyle }}\" will be deleted permanently and cannot be undone.",
       "areYouSureConfirmation": "Delete style",
       "info": "A style lets you show a block differently on your website, e.g. a teaser grid as a slider. Select the block types each style is available for; how it looks is defined by your website's design.",
-      "blockTypesPlaceholder": "Available for block types"
+      "blockTypesPlaceholder": "Available for block types",
+      "noStyle": "No style"
+    },
+    "articleTemplates": {
+      "list": {
+        "action": "Action",
+        "copy": "Copy",
+        "title": "Article Templates",
+        "newTemplate": "New Article Template",
+        "name": "Name",
+        "noName": "No name",
+        "info": "Article templates define the content and metadata a new article starts with. Changing a template does not affect articles that have already been created from it."
+      },
+      "edit": {
+        "loadingTemplate": "Loading template…",
+        "loadingArticle": "Loading article…",
+        "copyName": "{{name}} (Copy)",
+        "name": "Name",
+        "backToList": "Back to list",
+        "metadata": "Metadata",
+        "saved": "Saved",
+        "created": "Created",
+        "new": "New",
+        "editing": "Editing",
+        "empty": "This template has no blocks yet. Add the first one with +."
+      },
+      "delete": {
+        "title": "Delete article template?",
+        "body": "Do you really want to delete the article template \"{{name}}\"? Articles created from it are not affected."
+      }
+    },
+    "pageTemplates": {
+      "list": {
+        "action": "Action",
+        "copy": "Copy",
+        "title": "Page Templates",
+        "newTemplate": "New Page Template",
+        "name": "Name",
+        "noName": "No name",
+        "info": "Page templates define the content and metadata a new page starts with. Changing a template does not affect pages that have already been created from it."
+      },
+      "edit": {
+        "loadingTemplate": "Loading template…",
+        "loadingPage": "Loading page…",
+        "copyName": "{{name}} (Copy)",
+        "name": "Name",
+        "backToList": "Back to list",
+        "metadata": "Metadata",
+        "saved": "Saved",
+        "created": "Created",
+        "new": "New",
+        "editing": "Editing",
+        "empty": "This template has no blocks yet. Add the first one with +."
+      },
+      "delete": {
+        "title": "Delete page template?",
+        "body": "Do you really want to delete the page template \"{{name}}\"? Pages created from it are not affected."
+      }
     },
     "blockTemplates": {
       "list": {
@@ -2438,7 +3319,8 @@
         "editing": "Editing",
         "saveConfirmMessage": "Saving updates this template's content right away in every article and page that uses it, including published ones.",
         "saveConfirmTitle": "Save template?",
-        "created": "Created"
+        "created": "Created",
+        "empty": "This template has no blocks yet. Add the first one with +."
       }
     },
     "yes": "Yes",
@@ -2489,14 +3371,15 @@
       "periodicityPricingCustomHelp": "Off: the prices are derived from the monthly price. On: you set your own prices for this payment interval, e.g. for a yearly discount."
     },
     "subscriptionEditView": {
-      "additionalSettingsTitle": "Advanced settings",
       "trialSubscriptionConfigured": "This subscription is configured as a trial subscription.",
       "nonExtendableNotCompatibleWithAutoRenew": "An automatically renewing subscription must be renewable. Change one of these parameters.",
       "configureAsTrialSubscription": "Configure as a trial subscription",
       "subscriptionTrialNotPossible": "The subscription cannot be configured as a trial subscription. To do so, change the settings of the subscription plan.",
       "extendableWasChanged": "The “Extendable” option has been adjusted according to the subscription plan.",
       "extendModalTitle": "Extend your subscription early?",
-      "extendModalBody": "The subscription will be extended early for the next possible period. An invoice will be issued."
+      "extendModalBody": "The subscription will be extended early for the next possible period. An invoice will be issued.",
+      "detailsTitle": "Plan and payment",
+      "renewalTitle": "Term and renewal"
     },
     "subscriptionListFilter": {
       "extendable": "Extendable"
@@ -2605,13 +3488,22 @@
       "rangeNextWeek": "Next Week",
       "rangeNextMonth": "Next Month",
       "rangeNextQuarter": "Next Quarter",
-      "rangeNextYear": "Next Year"
+      "rangeNextYear": "Next Year",
+      "resolution": "Resolution",
+      "range": "Range",
+      "rangeCustom": "Custom",
+      "view": "View",
+      "dateRange": "From – to",
+      "subscriptionPlans": "Subscription plans",
+      "rangeFrom": "From",
+      "rangeTo": "To"
     },
     "audience": {
       "chart": {
         "noActivityDay": "No subscription activity on this day",
         "noActivityMonth": "No subscription activity in this month",
         "flowsTitle": "Gains and losses",
+        "keyboardHint": "Use the arrow keys to step through the dates. The table view of the audience dashboard lists the same figures.",
         "net": "Net",
         "since": "since {{date}}",
         "flowsInfo": "Each bar shows how many subscriptions were added (above the line) or lost (below the line) per day or month. Hover over a bar to see the details and the net change."
@@ -2621,9 +3513,9 @@
           "totalActiveSubscriptionCount": "Subscriptions that were active and paid on the reporting date, or that will be paid and potentially still be active in the future.",
           "overdueSubscriptionCount": "Renewed subscriptions for which payment is due and outstanding. Subscriptions created for the first time that have not been paid for are not included.",
           "renewedSubscriptionCount": "Subscriptions that have been renewed and paid for another period.",
-          "createdSubscriptionCount": "Completely new and paid subscriptions with only one period so far.",
-          "deactivatedSubscriptionCount": "Subscriptions that have been deactivated/canceled and not renewed.",
-          "replacedSubscriptionCount": "Subscriptions that have been replaced by another (e.g. trial subscriptions).",
+          "createdSubscriptionCount": "Completely new and paid subscriptions with only one period so far. Subscriptions that replace another one (upgrades) are not included.",
+          "deactivatedSubscriptionCount": "Subscriptions that have been deactivated/canceled and not renewed. Subscriptions replaced by an upgrade are not included.",
+          "replacedSubscriptionCount": "Subscriptions that have been replaced by another, e.g. through an upgrade. The replaced subscription does not count as deactivated, the new one not as new.",
           "predictedSubscriptionRenewalCount": "Number of subscriptions that are ready to be renewed at the end of their term.\n First-time subscriptions vs. \n Subscriptions with a history of renewal (subsequent renewals)\n Renewals are shown from the start of the selected period (or the current date, if the period starts in the past) \n Renewals are represented by the number of currently paid and active subscriptions set to auto-renew.",
           "endingSubscriptionCount": "Subscriptions that will expire at the end of their term, excluding those set to auto-renew."
         },
@@ -2679,8 +3571,8 @@
       "showUsers": "Show details",
       "byDate": "By",
       "totalNewSubscriptionsInfo": "Sum of replaced, new, and renewed subscriptions. Only the active columns are summed.",
-      "renewalRateInfo": "Share of subscriptions that were renewed at the end of their term. Replaced, renewed, and deactivated subscriptions are included. Renewed unpaid subscriptions reduce the renewal rate until they are paid.",
-      "cancellationRateInfo": "Share of subscriptions that were not renewed but canceled at the end of their term. Replaced, renewed, and deactivated subscriptions are included. Renewed unpaid subscriptions increase the cancellation rate until they are paid.",
+      "renewalRateInfo": "Share of subscriptions that were renewed at the end of their term, counted on the day of the decision. Renewed, replaced, and deactivated subscriptions are included; an upgrade counts once as a renewal. Renewed unpaid subscriptions reduce the renewal rate until they are paid.",
+      "cancellationRateInfo": "Share of subscriptions that were not renewed but canceled at the end of their term, counted on the day of the decision. Renewed, replaced, and deactivated subscriptions are included; an upgrade counts once as a renewal. Renewed unpaid subscriptions increase the cancellation rate until they are paid.",
       "predictedSubscriptionRenewalCountPerDay": {
         "highProbabilityInfo": "Paid subscriptions with automatic renewal that have already been renewed at least once and are due for renewal again at the end of their term.",
         "lowProbabilityInfo": "Paid subscriptions with automatic renewal that are due for renewal for the first time at the end of their first term."
@@ -2797,7 +3689,9 @@
         "memberPlans": "Subscription plans",
         "activeInfo": "Only active goodies are offered to readers when they take out a subscription.",
         "stockInfo": "Total number of pieces you can give away. Once all of them are taken, the goodie is no longer offered. Leave empty for an unlimited number.",
-        "memberPlansInfo": "The goodie is only offered with these subscription plans."
+        "memberPlansInfo": "The goodie is only offered with these subscription plans.",
+        "paymentPeriodicities": "Payment periodicities",
+        "paymentPeriodicitiesInfo": "The goodie is only offered with these payment periodicities, e.g. only with a 2-year subscription. Leave empty to offer it with every periodicity of the subscription plan."
       },
       "overview": {
         "title": "Goodies",
@@ -2839,6 +3733,8 @@
       "trackingPixel": "Tracking Pixel",
       "analytics": "Hot & Trending Provider",
       "mailProvider": "Mail Provider",
+      "letterProvider": "Letter Provider",
+      "pdfRenderer": "PDF Renderer",
       "back": "Back to Integrations",
       "unknown": "Unknown Integration",
       "notFound": "Integration not found",
@@ -2908,6 +3804,31 @@
         "bexioMarkInvoiceAsOpenInfo": "When enabled, Bexio sets the invoice to «open» after sending it, instead of leaving it as a draft."
       },
       "placeholderSecret": "Unchanged (Hidden)",
+      "secretNotSet": "Not set",
+      "secretStored": "Stored (hidden) – leave empty to keep it",
+      "pdfRendererSettings": {
+        "type": "Type",
+        "cloudflareAccountId": "Cloudflare Account ID",
+        "cloudflareApiToken": "Cloudflare API Token",
+        "gotenbergUrl": "Gotenberg URL",
+        "gotenbergUsername": "Gotenberg Username",
+        "gotenbergPassword": "Gotenberg Password",
+        "timeoutMs": "Timeout (ms)"
+      },
+      "letterSettings": {
+        "type": "Type",
+        "environment": "Environment",
+        "clientId": "Client ID",
+        "clientSecret": "Client Secret",
+        "organisationId": "Organisation ID",
+        "webhookSigningKey": "Webhook Signing Key",
+        "autoSend": "Send letters automatically",
+        "placeholderEmailContains": "Placeholder email contains",
+        "defaultAddressPosition": "Address window (automated letters)",
+        "defaultDeliveryProduct": "Delivery (automated letters)",
+        "defaultPrintMode": "Print (automated letters)",
+        "defaultPrintSpectrum": "Colour (automated letters)"
+      },
       "mailSettings": {
         "type": "Type",
         "fromAddress": "From Address",
@@ -2953,6 +3874,7 @@
         "analytics": "Analytics",
         "invalidFile": "Google Analytics credentials file is invalid",
         "credentialsReadyToBeSaved": "Credentials are ready to be saved!",
+        "credentialsStored": "Credentials stored – drag and drop a new file here to replace them",
         "dropCredentialsFile": "Drop the credential file here!",
         "dragCredentialsFileHere": "Drag and drop the Google Analytics credential file here",
         "articlePrefix": "We.Publish article URL prefix (usually /a/)",
@@ -2961,7 +3883,20 @@
         "articlePrefixInfo": "The part of the address that comes before an article's slug on your website. Only page views of addresses starting with it count as article reads.",
         "propertyInfo": "The numeric ID of your Google Analytics 4 property (not the G-… measurement ID). You find it in Google Analytics under «Admin» → «Property details».",
         "credentialsInfo": "The JSON key file of a Google Cloud service account with read access to your Analytics property. Drag the file into the box below; it is only stored when you save.",
-        "readFileError": "The file could not be read."
+        "readFileError": "The file could not be read.",
+        "hotAndTrending": "Use for Hot & Trending",
+        "hotAndTrendingInfo": "Hot & Trending reads its page views from this provider. Only one provider can be used at a time, choosing this one turns it off for the others.",
+        "apiKey": "API key",
+        "plausibleApiKeyInfo": "A Stats API key from your Plausible account settings («API Keys»). On Plausible Cloud the Stats API needs a Business plan.",
+        "umamiApiKeyInfo": "An API key from Umami Cloud («Settings» → «API keys»), or the token of a user with access to the website for a self-hosted Umami.",
+        "plausibleSiteId": "Site domain",
+        "plausibleSiteIdInfo": "The domain of the site as you added it to Plausible, e.g. example.com.",
+        "umamiWebsiteId": "Website ID",
+        "umamiWebsiteIdInfo": "The ID of the website in Umami. You find it under «Settings» → «Websites» → «Edit».",
+        "plausibleUrl": "Plausible URL",
+        "plausibleUrlInfo": "Only needed for a self-hosted Plausible, e.g. https://plausible.example.com. Leave it empty to use plausible.io.",
+        "umamiUrl": "Umami API URL",
+        "umamiUrlInfo": "Only needed for a self-hosted Umami, e.g. https://umami.example.com/api. Leave it empty to use Umami Cloud."
       },
       "mailchimpSync": "Mailchimp Sync",
       "mailchimpSyncSettings": {
@@ -3069,7 +4004,7 @@
       "paymentProviderInfo": "Services that process the payments for subscriptions, e.g. Payrexx, Stripe, Mollie or invoices via Bexio.",
       "trackingPixelInfo": "Adds the ProLitteris counting pixel to your articles so that their reads count towards your copyright royalties.",
       "mailProviderInfo": "The service We.Publish uses to send emails, such as login links, payment reminders or subscription confirmations.",
-      "analyticsInfo": "Reads the page views from Google Analytics to find out which articles are currently read the most (Hot & Trending).",
+      "analyticsInfo": "Reads the page views from Google Analytics, Plausible or Umami to find out which articles are currently read the most (Hot & Trending).",
       "mailchimpSyncInfo": "Transfers all active user accounts and their subscription data to a Mailchimp audience every night, so you can target newsletters by subscription.",
       "lastLoadedInfo": "When We.Publish last loaded this configuration, e.g. to process a payment. This shows you whether the integration is in use.",
       "setUp": "Set up",
@@ -3110,16 +4045,13 @@
           "pro": "<url>Piwik PRO</url> is a privacy-focused analytics platform and an alternative to Google Analytics.",
           "proLocator": "You can find it in the Menu > Administration > Site > ID of your administration panel",
           "proInvalid": "Must be a valid Piwik ID (e.g., xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)"
-        }
-      },
-      "mail": {
-        "title": "Mail",
-        "mailchimp": {
-          "title": "Mailchimp",
-          "enable": "Enable Mailchimp",
-          "mailchimp": "<url>Mailchimp</url> is an email marketing platform that lets you manage newsletters and subscriber lists. This gives the website access to your newsletters and lets it display them.",
-          "apiKeyLocator": "You can find it in the <url>API keys section</url> of your Mailchimp account. Make sure that it is a Mailchimp key and not a Mandrill key.",
-          "apiKeyInvalid": "Must be a valid Mailchimp API-Key (e.g., XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX-us1)"
+        },
+        "umami": {
+          "title": "Umami",
+          "enable": "Enable Umami",
+          "um": "<url>Umami</url> is a privacy-focused, open source alternative to Google Analytics.",
+          "umLocator": "You can find it in the <url>website settings</url> of your Umami dashboard",
+          "umInvalid": "Must be a valid website ID (e.g., xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)"
         }
       },
       "ads": {
@@ -3134,6 +4066,10 @@
       },
       "theme": {
         "title": "Theme",
+        "exportTheme": "Export theme",
+        "importTheme": "Import theme",
+        "importSuccess": "Theme imported. Click «Save» to persist.",
+        "importError": "The theme file could not be read.",
         "palette": {
           "primary": "Primary",
           "primaryMain": "Main color of the website. Used for links, navigation, buttons, etc.",
@@ -3182,8 +4118,7 @@
           "text": "Text",
           "textPrimary": "The text color of the website",
           "default": "Default",
-          "paper": "Paper",
-          "pickColor": "Pick color"
+          "paper": "Paper"
         },
         "typography": {
           "fontFamily": "Font Family",
@@ -3193,6 +4128,7 @@
           "letterSpacing": "Letter Spacing",
           "textTransform": "Text Transform",
           "textTransformDefault": "Default",
+          "unitFor": "Unit for {{label}}",
           "textTransformCapitalize": "Capitalize",
           "textTransformUppercase": "Uppercase",
           "textTransformLowercase": "Lowercase",
@@ -3228,12 +4164,52 @@
           "fontWeightBold": "Bold",
           "fontWeightExtraBold": "Extra Bold",
           "fontWeightBlack": "Black",
-          "fontFamilyInfo": "Choose from the fonts added under «Fonts». «Default» uses the website's standard font.",
+          "fontFamilyInfo": "Choose from the fonts added under «Fonts». «Default» uses the font from «Base for all styles».",
+          "baseFontFamilyInfo": "Choose from the fonts added under «Fonts». «Default» uses the browser's standard font.",
           "fontSizeInfo": "The size of the text. rem refers to the website's base size (1rem is usually 16px), px is a fixed pixel size.",
           "lineHeightInfo": "The space between the lines of a paragraph. 1.5em means one and a half times the font size.",
           "letterSpacingInfo": "The space between the individual letters. 0 is the font's normal spacing; small values such as 0.02em are usually enough.",
           "textTransformInfo": "Changes the letter case automatically – e.g. «Uppercase» shows the whole text in capital letters, no matter how it was typed.",
-          "overrideInfo": "Turn it on to set a value just for this text style. When it is off, the general value at the top of this tab applies."
+          "overrideInfo": "Turn it on to set a value just for this text style. When it is off, the value from «Base for all styles» applies, or the built-in default if that is not set either.",
+          "screenSizes": "Screen sizes",
+          "baseline": "Baseline",
+          "belowWidth": "Below {{width}}px",
+          "fromWidth": "{{width}}px and up",
+          "addScreenSize": "Add screen size",
+          "screenSizeRemoved": "{{name}} removed",
+          "removeScreenSizeHint": "Press Delete to remove this screen size",
+          "undo": "Undo",
+          "screenSizeInfo": "These values apply to screens {{width}}px wide and larger. Anything switched off is taken from the next smaller screen size.",
+          "inheritedFromBaseline": "Inherited: {{value}} from «Baseline»",
+          "inheritedFromWidth": "Inherited: {{value}} from «{{name}}» ({{width}}px and up)",
+          "inheritedFromGeneral": "Inherited: {{value}} from «Base for all styles»",
+          "inheritedNone": "Nothing to inherit – the built-in default applies",
+          "inheritedFromTheme": "Inherited: {{value}}, the built-in default of this style",
+          "inheritedFromBrowser": "Inherited: {{value}}, the browser's standard value",
+          "replacesFromBaseline": "Replaces {{value}} from «Baseline»",
+          "replacesFromWidth": "Replaces {{value}} from «{{name}}» ({{width}}px and up)",
+          "replacesFromGeneral": "Replaces {{value}} from «Base for all styles»",
+          "replacesFromTheme": "Replaces {{value}}, the built-in default of this style",
+          "replacesFromBrowser": "Replaces {{value}}, the browser's standard value",
+          "replacesNone": "Replaces the built-in default",
+          "fieldAtWidth": "{{label}} at {{name}} ({{width}}px and up)",
+          "unitOf": "Unit of {{label}}",
+          "hasErrors": "(has errors)",
+          "notSet": "Default",
+          "base": "Base for all styles",
+          "baseInfo": "Every style below inherits these values unless it sets its own.",
+          "screenSizeOverrides": "Custom values for screen sizes: {{names}}",
+          "screenSizeName": "{{name}} ({{width}}px and up)",
+          "preview": "Preview",
+          "previewScreenSize": "Screen size of the preview",
+          "groups": {
+            "headings": "Headings",
+            "text": "Text",
+            "teasers": "Teasers",
+            "article": "Article",
+            "banner": "Banner",
+            "blocks": "Blocks"
+          }
         },
         "tabs": "Theme tabs",
         "paletteTab": "Palette",
@@ -3252,12 +4228,22 @@
       "saveSuccess": "Successfully saved the website settings"
     },
     "externalApps": {
+      "apiKey": {
+        "expiresSoon": "The API key “{{name}}” expires on {{expiresAt, PP}}. Create a new one, store it in the app and link it here.",
+        "expired": "The API key “{{name}}” expired on {{expiresAt, PP}} – the app can no longer read any data.",
+        "revoked": "The API key “{{name}}” has been revoked – the app can no longer read any data."
+      },
       "apps": "Apps",
       "noAppsFound": "No external apps configured.",
       "notFound": "External app not found",
       "appsInfo": "Shortcuts to external tools that appear on the dashboard under «We.Publish Apps». «Target» decides whether an app opens in a new browser tab or inside the editor. Some websites can't be shown inside the editor – open those in a new tab."
     },
     "externalAppForm": {
+      "apiKey": "API key",
+      "apiKeyOption": "{{name}} ({{prefix}}…)",
+      "noApiKey": "No API key",
+      "apiKeyHelp": "The API key the app reads the We.Publish API with. The editor then shows when it expires or has been revoked. The key itself is stored in the app.",
+      "apiKeyDetails": "{{prefix}}… · {{scopes}} permissions · expires on {{expiresAt, PP}}",
       "create": "Create",
       "update": "Update",
       "delete": "Delete",
@@ -3380,7 +4366,9 @@
       "blockNumber": "Block {{number}}"
     },
     "columnConfigurator": {
-      "title": "Show/hide columns"
+      "title": "Columns",
+      "dragToReorder": "Drag to reorder",
+      "reset": "Reset columns"
     },
     "mailSend": {
       "steps": {
@@ -3389,11 +4377,11 @@
           "description": "Audience and filters"
         },
         "content": {
-          "title": "Mail content",
-          "description": "Template and preview"
+          "title": "Content & delivery channel",
+          "description": "Template, email or letter"
         },
         "send": {
-          "title": "Send email",
+          "title": "Send",
           "description": "Review and send"
         }
       },
@@ -3403,8 +4391,8 @@
       "summary": {
         "title": "Summary"
       },
-      "title": "Send email",
-      "template": "Mail template",
+      "title": "Manual messages",
+      "template": "Mailing template",
       "selectTemplate": "Select template",
       "audience": {
         "title": "Audience"
@@ -3416,9 +4404,15 @@
         "noActiveSubscription": "Without active subscription",
         "endedSubscription": "Win-back — subscription deactivated recently",
         "allUsersHint": "Everyone registered, with or without a subscription.",
-        "hasSubscriptionHint": "People with a subscription. Subscription placeholders are available.",
-        "noActiveSubscriptionHint": "People without an active subscription. Subscription placeholders stay empty.",
-        "endedSubscriptionHint": "People whose subscription was deactivated recently and who have not subscribed again since. The deactivated subscription is attached to the email, so its placeholders are available."
+        "hasSubscriptionHint": "People with a subscription.",
+        "noActiveSubscriptionHint": "People without an active subscription.",
+        "endedSubscriptionHint": "People whose subscription was deactivated recently and who have not subscribed again since.",
+        "placeholderNote": {
+          "allUsers": "Subscription placeholders stay empty.",
+          "hasSubscription": "Subscription placeholders are available.",
+          "noActiveSubscription": "Subscription placeholders stay empty.",
+          "endedSubscription": "The deactivated subscription is attached, so its placeholders are available."
+        }
       },
       "memberPlans": "Subscription plans",
       "memberPlansAll": "All subscription plans",
@@ -3436,7 +4430,6 @@
       "yes": "Yes",
       "no": "No",
       "counting": "Counting recipients …",
-      "recipientsCount": "{{count}} recipients",
       "send": "Send",
       "templateNeedsSubscription": "This template needs a subscription-based audience so its subscription placeholders can be filled.",
       "confirmTitle": "Send email",
@@ -3469,17 +4462,36 @@
         "loading": "Loading recipients …",
         "email": "Email",
         "name": "Name",
-        "memberPlan": "Subscription plan"
+        "memberPlan": "Subscription plan",
+        "address": "Address",
+        "withAddress": "Address present",
+        "withoutAddress": "No valid address – will be skipped",
+        "emailSegment": "Email status"
       },
       "endedWithinDays": "Deactivated within the last … days",
       "endedWithinDaysHint": "Only subscriptions deactivated in this window.",
+      "emailSegments": {
+        "label": "Email status",
+        "placeholder": "Placeholder address",
+        "dead": "Dead (bounce, invalid, complaint, unsubscribed)",
+        "unresponsive": "Unresponsive",
+        "unknown": "Unknown",
+        "active": "Active",
+        "hint": "Several statuses mean any of them. “Unresponsive”: mails were delivered but there has been no login or click for a long time (setting “Email quality”). Reachable by letter: placeholder + dead.",
+        "overview": "People in this audience by email status (regardless of the selection)",
+        "refresh": "Refresh statuses",
+        "refreshing": "Refreshing statuses …",
+        "refreshed": "{{updated}} delivery states fetched from the provider ({{checked}} checked), {{recomputed}} people re-evaluated."
+      },
       "endedWindow": {
         "label": "When the subscription was deactivated",
         "relative": "Last … days",
         "period": "Fixed period",
         "days": "days",
         "periodPlaceholder": "Pick from – to",
-        "periodHint": "Only subscriptions deactivated between these two dates."
+        "periodHint": "Only subscriptions deactivated between these two dates.",
+        "periodFrom": "From",
+        "periodTo": "To"
       },
       "preview": {
         "title": "Preview",
@@ -3487,7 +4499,8 @@
         "firstRecipient": "First recipient",
         "hint": "How the mail looks for this person — with their real data.",
         "loading": "Loading preview …",
-        "noRecipients": "No recipients — adjust the audience first."
+        "noRecipients": "No recipients — adjust the audience first.",
+        "letterTitle": "Letter preview"
       },
       "recipientsCountPerPerson": "{{count}} mails to {{people}} people",
       "endsAtHint": "Cancellation date, otherwise the paid-until date.",
@@ -3501,11 +4514,89 @@
       "endsAt": "Subscription end",
       "from": "From",
       "to": "Until",
+      "lettersCount": "{{count}} letters to {{people}} people",
+      "confirmTextLetter": "Send this letter to {{count}} recipients?",
+      "channel": {
+        "label": "Delivery channel",
+        "mail": "Email",
+        "letter": "Letter",
+        "withoutAddress": "{{count}} of the recipients have no usable postal address and will be skipped."
+      },
+      "print": {
+        "addressPosition": {
+          "label": "Address window",
+          "left": "Left",
+          "right": "Right"
+        },
+        "deliveryProduct": {
+          "label": "Delivery",
+          "cheap": "Cheap (B-Post)",
+          "fast": "Fast (A-Post)",
+          "premium": "Premium",
+          "registered": "Registered",
+          "bulk": "Bulk"
+        },
+        "printMode": {
+          "label": "Print",
+          "simplex": "Single sided",
+          "duplex": "Double sided"
+        },
+        "printSpectrum": {
+          "label": "Colour",
+          "grayscale": "Grayscale",
+          "color": "Colour"
+        }
+      },
       "stateHelp": "Active: confirmed, not deactivated and paid. Pending: taken out but not confirmed yet, e.g. because the first payment is still missing. Deactivated: the subscription has ended or its end is already scheduled.",
-      "autoRenewHelp": "Yes: the subscription renews itself at the end of the period and is charged again. No: it runs out unless the person renews it themselves."
+      "autoRenewHelp": "Yes: the subscription renews itself at the end of the period and is charged again. No: it runs out unless the person renews it themselves.",
+      "mailHistory": {
+        "label": "Messages received",
+        "hint": "Only people who did (or did not) get a given template — on one channel only, if you like.",
+        "add": "Add condition",
+        "remove": "Remove condition",
+        "received": "was sent",
+        "notReceived": "was not sent",
+        "template": "Choose template …",
+        "state": "Status",
+        "anyState": "Any",
+        "channel": "Delivery channel",
+        "anyChannel": "Any",
+        "sentBetween": "Sent between",
+        "match": {
+          "all": "All conditions must hold",
+          "any": "One condition is enough"
+        },
+        "states": {
+          "submitted": "Submitted",
+          "accepted": "Accepted",
+          "delivered": "Delivered",
+          "deferred": "Deferred",
+          "bounced": "Bounced",
+          "rejected": "Rejected",
+          "dispatched": "Dispatched",
+          "undeliverable": "Undeliverable",
+          "canceled": "Canceled"
+        }
+      },
+      "audienceSummary": {
+        "base": "Base",
+        "memberPlans": "Member plans",
+        "state": "Subscription status",
+        "segments": "Email status",
+        "mailHistory": "Messages",
+        "received": "received",
+        "notReceived": "not received",
+        "between": "{{from}} – {{to}}",
+        "from": "from {{from}}",
+        "to": "until {{to}}",
+        "matchAny": "one condition is enough",
+        "matchAll": "all conditions",
+        "more": "{{count}} more filters"
+      },
+      "deliveryChannelHandOff": "Switch this user group’s delivery channel for good …"
     },
     "mailLog": {
-      "title": "Sent emails",
+      "title": "Sent messages",
       "empty": "No emails found.",
       "sentDate": "Date",
       "template": "Template",
@@ -3523,7 +4614,8 @@
         "title": "Filter",
         "reset": "Reset filters",
         "typeHint": "What triggered this send.",
-        "jobHelp": "A send job groups all emails sent with one click via «Send email». Pick one to see only its emails."
+        "channel": "Delivery",
+        "jobHelp": "A send job groups all emails sent with one click via «Manual messages». Pick one to see only its emails."
       },
       "types": {
         "subscriptionFlow": "Subscription mailing",
@@ -3533,10 +4625,10 @@
       },
       "error": "Error",
       "typeDescriptions": {
-        "manual": "Sent by hand via “Send email” or “Send test”. Example: a newsletter to all subscribers.",
-        "subscriptionFlow": "Time-based, from “Automatic emails”, scheduled off the subscription date. Examples: reminder 14 days before it ends, dunning after an unpaid invoice.",
+        "manual": "Sent by hand via “Manual messages” or “Send test”. Example: a newsletter to all subscribers.",
+        "subscriptionFlow": "Time-based, from “Automated messages”, scheduled off the subscription date. Examples: reminder 14 days before it ends, dunning after an unpaid invoice.",
         "userFlow": "Triggered immediately by a concrete action or event. Examples: login link requested, email address changed, renewal payment failed.",
-        "systemMail": "Account mails, configured under “Automatic emails” in the “Account & login” section. Examples: welcome mail after registration, password reset."
+        "systemMail": "Account mails, configured under “Automated messages” in the “Account & login” section. Examples: welcome mail after registration, password reset."
       },
       "errorHelp": {
         "causeTitle": "What happened?",
@@ -3575,8 +4667,8 @@
           "fix": "Set up a provider under Settings › Integrations › Mail (SMTP, Mailgun, Mailchimp or Slack)."
         },
         "templateMissing": {
-          "cause": "The mail template used here no longer exists.",
-          "fix": "Pick an existing template under “Mail templates” or create it again, then start the send once more."
+          "cause": "The mailing template used here no longer exists.",
+          "fix": "Pick an existing template under “Message templates” or create it again, then start the send once more."
         },
         "generic": {
           "cause": "The mail server rejected the send with the message below.",
@@ -3626,16 +4718,38 @@
           "name": "rejected",
           "meaning": "The mail was never sent. Either We.Publish could not hand it over (missing or wrong provider configuration), or the provider refused it up front: unverified sending domain (“unsigned”), address on the provider's suppression list after an earlier hard bounce or spam complaint, unsubscribed recipient, or the account's sending limit was reached.",
           "next": "The “Error” column names the reason — hover it for cause and remedy. Fix the cause and send again: nothing is retried automatically."
+        },
+        "dispatched": {
+          "name": "Dispatched",
+          "meaning": "The print vendor has printed the letter and handed it to the post.",
+          "next": "Nothing to do. The state changes to delivered once the post reports the delivery."
+        },
+        "undeliverable": {
+          "name": "Undeliverable",
+          "meaning": "The post could not deliver the letter and returned it.",
+          "next": "Check the address on the recipient and send the letter again."
+        },
+        "canceled": {
+          "name": "Canceled",
+          "meaning": "The letter was withdrawn before it was printed.",
+          "next": "Nothing to do. Nothing was printed and nothing was charged."
         }
+      },
+      "channel": "Delivery",
+      "channels": {
+        "mail": "Email",
+        "letter": "Letter"
       }
     },
     "userMail": {
       "sendTitle": "Send email",
-      "logTitle": "Sent emails",
+      "logTitle": "Sent messages",
       "customOnlyHint": "Only custom templates can be sent to a single user.",
       "selectTemplate": "Select template",
       "send": "Send",
-      "sent": "Email sent"
+      "sent": "Email sent",
+      "title": "Emails",
+      "titleWithLetters": "Messages"
     },
     "mailJobs": {
       "created": "Started",
@@ -3677,6 +4791,14 @@
         "sending": "Delivering",
         "interrupted": "Interrupted"
       },
+      "outcome": {
+        "title": "Result",
+        "hint": "Delivery states and clicks come from the mail provider – bounces often hours or days later. “Address dead” counts the recipients whose address is considered dead by now. “Refresh statuses” pulls what the provider has not reported yet.",
+        "delivered": "Delivered",
+        "bounced": "Bounced / rejected",
+        "dead": "Address dead",
+        "clicked": "Clicked"
+      },
       "recipientState": {
         "pending": "Pending",
         "sending": "Delivering",
@@ -3692,6 +4814,231 @@
         "attempts": "Attempts",
         "empty": "No entries for this filter.",
         "attemptsHelp": "How often sending this email was attempted. More than 1 means it was tried again after an error or an interruption."
+      }
+    },
+    "publishDialog": {
+      "checklist": "Before you publish",
+      "options": "Options",
+      "publish": "Publish",
+      "schedule": "Schedule"
+    },
+    "seoChecklist": {
+      "navbar": "SEO",
+      "title": "SEO checklist",
+      "description": "Practical steps to make your content easy to find and good-looking when shared. Items marked with a status are checked automatically against your live website.",
+      "websiteUrl": "Website",
+      "refresh": "Check again",
+      "copyUrl": "Copy URL",
+      "detail": "Details",
+      "progress": "{{done}} of {{total}} done",
+      "completedBy": "Checked by {{name}} on {{date}}",
+      "completedAt": "Checked on {{date}}",
+      "guide": {
+        "show": "How to write it",
+        "good": "Good example",
+        "bad": "Weak example"
+      },
+      "status": {
+        "Ok": "OK",
+        "Warning": "Warning",
+        "Error": "Error",
+        "Info": "Info"
+      },
+      "checkStatus": {
+        "Ok": "Verified",
+        "Warning": "Needs attention",
+        "Error": "Not working",
+        "Info": "Not available"
+      },
+      "sections": {
+        "searchConsole": {
+          "title": "Google Search Console",
+          "description": "Google's free tool to see how your website performs in search."
+        },
+        "sitemapsFeeds": {
+          "title": "Sitemaps and feeds",
+          "description": "How search engines and aggregators discover your articles."
+        },
+        "content": {
+          "title": "Content",
+          "description": "Habits that make articles easier to find and understand."
+        },
+        "presentation": {
+          "title": "Presentation and sharing",
+          "description": "How your content looks in search results, on social media and in messengers."
+        }
+      },
+      "items": {
+        "gsc-verify": {
+          "title": "Verify your website in Google Search Console",
+          "description": "Add your domain as a \"Domain\" property and verify it with a DNS record. This gives you access to indexing and performance data for all subdomains.",
+          "action": "Open Search Console"
+        },
+        "gsc-sitemap": {
+          "title": "Submit the sitemap",
+          "description": "Under \"Sitemaps\", submit the sitemap URL below once. Google then checks it regularly for new articles.",
+          "action": "Open Search Console"
+        },
+        "gsc-pages": {
+          "title": "Check the indexing report regularly",
+          "description": "The \"Pages\" report shows which pages are not indexed and why. Look at it monthly and fix recurring problems.",
+          "action": "Open Search Console"
+        },
+        "gsc-performance": {
+          "title": "Learn from search queries",
+          "description": "The \"Performance\" report shows the queries that bring readers to you. Use it to find topics and wording your readers search for.",
+          "action": "Open Search Console"
+        },
+        "gsc-inspect": {
+          "title": "Request indexing for important articles",
+          "description": "Use \"URL inspection\" to check an important article and request indexing after publishing or larger updates.",
+          "action": "Open Search Console"
+        },
+        "sitemap": {
+          "title": "Sitemap",
+          "description": "The sitemap is generated automatically and lists your latest articles and pages for search engines.",
+          "detail": "Number of URLs"
+        },
+        "news-sitemap": {
+          "title": "Google News entries",
+          "description": "Articles in the sitemap carry Google News metadata, which helps them appear in Google News and \"Top stories\"."
+        },
+        "feeds": {
+          "title": "RSS, Atom and JSON feeds",
+          "description": "Feeds let news aggregators, feed readers and newsletter tools pick up your articles. Share the RSS URL with aggregators you want to appear in."
+        },
+        "seo-titles": {
+          "title": "Write specific SEO titles",
+          "description": "Put the main topic first and stay below about 60 characters. Describe what the article is about instead of teasing.",
+          "guide": {
+            "tips": {
+              "topicFirst": "Start with the main topic, the words readers would type into Google, e.g. a place, person or event.",
+              "length": "Aim for 50–60 characters. Google cuts off longer titles, and the publication name takes up part of the space.",
+              "specific": "Be concrete: who, what, where. \"Bern city council\" works better than \"Politics\".",
+              "noClickbait": "Say what the article is about instead of teasing. Readers who feel tricked leave quickly, and Google notices.",
+              "unique": "Give every article its own title. Follow-up stories need a title that shows what is new.",
+              "siteName": "Do not add the publication name, it is appended automatically."
+            },
+            "good": "Bern city council approves 20 km of new bike lanes",
+            "bad": "You won't believe what the city council just decided"
+          }
+        },
+        "meta-descriptions": {
+          "title": "Write meta descriptions",
+          "description": "Summarize the article in one or two sentences (about 150 characters). Without one, the lead or first paragraph is used.",
+          "guide": {
+            "tips": {
+              "summarize": "Summarize the key fact of the article in one or two full sentences.",
+              "length": "Aim for 120–158 characters. Longer descriptions are cut off in Google.",
+              "addToTitle": "Add information the title does not have instead of repeating it.",
+              "details": "Use concrete details such as numbers, places and dates, and write in active voice.",
+              "forPeople": "Write for people, not search engines: no keyword lists or repeated phrases.",
+              "fallback": "Google sometimes shows its own excerpt, but a good description makes it much more likely yours is used."
+            },
+            "good": "The city council's new plan adds 20 km of bike lanes by 2027 and costs 12 million francs. Opponents are considering a referendum.",
+            "bad": "Read all about the cycling plan here. Cycling, bike lanes, Bern, city council, news."
+          }
+        },
+        "structure": {
+          "title": "Structure longer texts",
+          "description": "Use a clear lead, subheadings and short paragraphs. This helps readers and search engines understand the content."
+        },
+        "internal-links": {
+          "title": "Link related articles",
+          "description": "Link to earlier coverage and background articles. Internal links help readers go deeper and search engines find older content."
+        },
+        "stable-slugs": {
+          "title": "Keep slugs short and stable",
+          "description": "Use a short slug with the main topic and do not change it after publishing, as existing links and rankings would be lost."
+        },
+        "author-pages": {
+          "title": "Maintain author pages",
+          "description": "Author pages with name, image and a short bio show who is behind your journalism and build trust.",
+          "action": "Edit authors"
+        },
+        "share-images": {
+          "title": "Set a share image for every article",
+          "description": "Choose a meaningful image in landscape format (at least 1200 px wide). It is shown on social media, messengers and in Google Discover."
+        },
+        "image-descriptions": {
+          "title": "Describe your images",
+          "description": "The image description is used as alternative text. Describe what is visible; this helps accessibility and image search.",
+          "action": "Open image library"
+        },
+        "social-texts": {
+          "title": "Use social media texts",
+          "description": "A separate social media title and description can be more conversational than the SEO texts, without becoming clickbait."
+        },
+        "preview-before-publishing": {
+          "title": "Check the previews before publishing",
+          "description": "The \"SEO\" tab in the article settings shows how the article looks in Google, on social media and in messengers."
+        },
+        "publication-profile": {
+          "title": "Publication name and logo",
+          "description": "The name and logo of your publication are maintained in the peering profile and used in previews and structured data.",
+          "detail": "Missing",
+          "action": "Edit profile"
+        }
+      }
+    },
+    "seoTab": {
+      "title": "SEO"
+    },
+    "seoDocumentChecklist": {
+      "title": "Checklist for this content",
+      "reasons": {
+        "seo-titles": {
+          "missing": "No SEO title set. The title is used instead.",
+          "tooLong": "The SEO title is longer than {{limit}} characters and may be cut off in Google."
+        },
+        "meta-descriptions": {
+          "missing": "No meta description set. The lead or first paragraph is used instead.",
+          "tooLong": "The meta description is longer than {{limit}} characters and may be cut off in Google."
+        },
+        "structure": {
+          "missing": "This longer text has no subheadings.",
+          "short": "Short text, subheadings are optional."
+        },
+        "internal-links": {
+          "missing": "The text contains no links.",
+          "unknown": "The content could not be checked."
+        },
+        "stable-slugs": {
+          "missing": "No slug set.",
+          "tooLong": "The slug is longer than {{limit}} characters."
+        },
+        "share-images": {
+          "missing": "No share image set and the content contains no image.",
+          "tooSmall": "The share image is narrower than {{limit}} px."
+        },
+        "image-descriptions": {
+          "missing": "{{count}} image(s) without a description.",
+          "none": "The content contains no images."
+        }
+      }
+    },
+    "seoPreviews": {
+      "info": "Approximate previews based on the current settings. The platforms decide the final look and may shorten texts or crop images.",
+      "pageIgnoresSeoFields": "The website currently does not use the SEO title and SEO description of pages. The previews show what is actually used.",
+      "google": "Google search",
+      "googleTitleTooLong": "Longer than {{limit}} characters, Google will likely shorten it",
+      "facebook": "Facebook",
+      "linkedIn": "LinkedIn",
+      "whatsApp": "WhatsApp",
+      "discord": "Discord",
+      "xLarge": "X (Twitter) – large image card",
+      "xLargeUsed": "used by the website",
+      "xSummary": "X (Twitter) – summary card",
+      "xSummaryUnused": "for comparison, not used by the website"
+    },
+    "seoAnalysis": {
+      "title": "SEO analysis",
+      "description": "Key figures of the content that matter for search engines.",
+      "stats": {
+        "wordCount": "Words",
+        "headingCount": "Subheadings",
+        "linkCount": "Links",
+        "imagesWithoutDescription": "Images without description"
       }
     },
     "auditLogList": {
@@ -3724,7 +5071,10 @@
         "dateRange": "Date range",
         "failuresOnly": "Failures only",
         "impersonatedOnly": "Impersonation only",
-        "impersonatedOnlyInfo": "Only show changes that someone made while logged in as another person."
+        "impersonatedOnlyInfo": "Only show changes that someone made while logged in as another person.",
+        "anyAction": "Any action",
+        "dateFrom": "From",
+        "dateTo": "To"
       },
       "action": {
         "create": "Created",
@@ -3739,22 +5089,453 @@
       "message": "Changes you made may not be saved."
     },
     "action": "Actions",
-    "deactivated": "Deactivated",
+    "moreInfo": "More information",
     "blockList": {
       "addBlock": "Add block",
       "hideBlock": "Hide block on the website",
       "showBlock": "Show block on the website again",
+      "timeBlock": "Schedule when this block shows",
       "deleteBlock": "Delete block",
       "moveBlockUp": "Move block up",
       "moveBlockDown": "Move block down",
+      "movedTo": "Block moved to position {{position}} of {{count}}",
+      "deleted": "Block deleted",
       "styleHelp": "Changes how this block looks on the website. Leave it empty to use the default look. Styles are managed under «Block Styling»."
+    },
+    "blockTiming": {
+      "title": "Schedule this block",
+      "offAir": "Hidden on the website right now, because it is outside its schedule.",
+      "dateRange": "Dates",
+      "dateRangeEmpty": "Any date",
+      "dateRangeHelp": "The block shows from the start of the first day to the end of the last.",
+      "weekdays": "Days",
+      "weekdaysHelp": "Pick none to show the block every day.",
+      "timeOfDay": "Time of day",
+      "timeOfDayFrom": "From",
+      "timeOfDayTo": "until",
+      "timeOfDayHelp": "Times are in the site's time zone. An end before the start runs past midnight, e.g. 22:00 until 02:00.",
+      "sameTimes": "Start and end are the same, so the block never shows. Change one of them or pick «All day».",
+      "clearTimeOfDay": "All day",
+      "clear": "Remove schedule",
+      "done": "Done",
+      "summary": {
+        "always": "Always shows. Add dates, days or a time of day to limit when.",
+        "never": "Never shows, because its start and end time are the same.",
+        "shows": "Shows {{conditions}}.",
+        "between": "from {{from}} to {{to}}",
+        "since": "from {{from}}",
+        "until": "until {{to}}",
+        "days": "on {{days}}",
+        "hours": "between {{from}} and {{to}}"
+      }
+    },
+    "weekday": {
+      "Monday": "Monday",
+      "Tuesday": "Tuesday",
+      "Wednesday": "Wednesday",
+      "Thursday": "Thursday",
+      "Friday": "Friday",
+      "Saturday": "Saturday",
+      "Sunday": "Sunday"
+    },
+    "weekdayRecurring": {
+      "Monday": "Mondays",
+      "Tuesday": "Tuesdays",
+      "Wednesday": "Wednesdays",
+      "Thursday": "Thursdays",
+      "Friday": "Fridays",
+      "Saturday": "Saturdays",
+      "Sunday": "Sundays"
+    },
+    "weekdayShort": {
+      "Monday": "Mon",
+      "Tuesday": "Tue",
+      "Wednesday": "Wed",
+      "Thursday": "Thu",
+      "Friday": "Fri",
+      "Saturday": "Sat",
+      "Sunday": "Sun"
     },
     "placeholderInput": {
       "add": "Add"
     },
+    "flexTile": {
+      "moreActions": "More actions"
+    },
     "listInput": {
       "dragToReorder": "Drag to change the order",
       "add": "Add entry"
+    },
+    "letterLayouts": {
+      "title": "Stationery",
+      "intro": "Header and footer for printed letters. Message templates print on the default stationery unless they choose their own.",
+      "create": "Create stationery",
+      "createHeader": "Create stationery",
+      "editHeader": "Edit stationery",
+      "name": "Name",
+      "nameRequired": "Please enter a name.",
+      "isDefault": "Default stationery",
+      "isDefaultHelp": "Templates without stationery of their own print on the default. There can only be one.",
+      "default": "Default",
+      "header": "Header",
+      "footer": "Footer",
+      "headerHeight": "Header height (mm)",
+      "footerHeight": "Footer height (mm)",
+      "headerHeightHint": "At most 40 mm, so the header stays clear of the franking zone. It repeats on every page; 0 mm leaves it out.",
+      "footerHeightHint": "At most 40 mm. The letter text keeps this much space from the bottom edge. The footer repeats on every page; 0 mm leaves it out.",
+      "htmlHint": "HTML with placeholders such as {{user_firstName}}. Use mm for sizes and give images a fixed width and height.",
+      "insertImage": "Insert image",
+      "preview": "Preview",
+      "previewTitle": "Sample letter on this stationery",
+      "saved": "Stationery saved",
+      "deleteTitle": "Delete stationery",
+      "deleteQuestion": "Delete “{{name}}”? Templates printing on it have to choose another first.",
+      "deleteConfirm": "Delete",
+      "noLayouts": "No stationery yet. Create one so letters get a header and footer."
+    },
+    "autosave": {
+      "label": "Autosave",
+      "description": "Save the draft every 30 seconds while you work"
+    },
+    "colorPicker": {
+      "pickColor": "Pick color",
+      "pickColorFor": "Pick color: {{label}}"
+    },
+    "errorBoundary": {
+      "title": "Something went wrong on this page",
+      "retry": "Try again",
+      "reload": "Reload the editor"
+    },
+    "listView": {
+      "export": {
+        "download": "Download",
+        "csv": "CSV (.csv)",
+        "xlsx": "Excel (.xlsx)",
+        "scope": {
+          "title": "What should be downloaded?",
+          "page": "Only this page ({{count}} entries)",
+          "all": "All {{count}} entries"
+        },
+        "largeWarning": "Loading {{count}} entries can take a while and makes a large file.",
+        "confirm": "Download",
+        "cancel": "Cancel"
+      },
+      "table": {
+        "empty": "Nothing to show",
+        "label": "Table",
+        "loading": "Loading",
+        "resizeColumn": "Resize column {{column}}"
+      },
+      "pagination": {
+        "total": "{{count}} entries",
+        "pageSize": "Entries per page",
+        "perPage": "{{count}} / page",
+        "label": "Pagination",
+        "page": "Go to page {{page}}",
+        "currentPage": "Page {{page}}",
+        "first": "Go to first page",
+        "last": "Go to last page",
+        "next": "Go to next page",
+        "previous": "Go to previous page"
+      }
+    },
+    "dateRange": {
+      "from": "from",
+      "to": "to"
+    },
+    "metadataSections": {
+      "byline": "Byline",
+      "headline": "Headline",
+      "publication": "Publication",
+      "seo": "Search engine",
+      "stats": "Stats"
+    },
+    "metadataHints": {
+      "socialMediaDescriptionFallback": "Falls back to the SEO description",
+      "socialMediaImageFallback": "Falls back to the article image when empty.",
+      "socialMediaTitleFallback": "Falls back to the SEO title"
+    },
+    "commandPalette": {
+      "title": "Command palette",
+      "placeholder": "Where do you want to go?",
+      "empty": "Nothing matches",
+      "resultCount_one": "{{count}} result",
+      "resultCount_other": "{{count}} results",
+      "groups": {
+        "favourite": "Favourites",
+        "navigate": "Go to",
+        "create": "Create",
+        "account": "Account"
+      },
+      "hints": {
+        "move": "to navigate",
+        "select": "to open",
+        "close": "to close"
+      },
+      "pages": {
+        "peerProfile": "Own peer profile"
+      },
+      "create": {
+        "article": "Create article",
+        "articleTemplate": "Create article template",
+        "articleTag": "Create article tag",
+        "paywall": "Create paywall",
+        "page": "Create page",
+        "pageTemplate": "Create page template",
+        "pageTag": "Create page tag",
+        "crowdfunding": "Create crowdfunding",
+        "blockTemplate": "Create block template",
+        "commentTag": "Create comment tag",
+        "event": "Create event",
+        "eventTag": "Create event tag",
+        "image": "Upload image",
+        "document": "Upload document",
+        "video": "Upload video",
+        "audio": "Upload audio",
+        "navigation": "Create navigation",
+        "banner": "Create banner",
+        "author": "Create author",
+        "authorTag": "Create author tag",
+        "user": "Create user",
+        "subscription": "Create subscription",
+        "consent": "Create consent",
+        "userConsent": "Create user consent",
+        "mailTemplate": "Create email template",
+        "letterLayout": "Create stationery",
+        "memberPlan": "Create subscription plan",
+        "paymentMethod": "Create payment method",
+        "discountCode": "Create discount code",
+        "goodie": "Create goodie",
+        "peer": "Create peer",
+        "userRole": "Create user role",
+        "token": "Generate token",
+        "apiToken": "Generate API key"
+      },
+      "trigger": "Search or jump to…",
+      "keys": {
+        "escape": "esc"
+      }
+    },
+    "apiTokenList": {
+      "overview": {
+        "apiTokens": "API Keys",
+        "apiTokensInfo": "API keys let a script or another system call the API without signing in as a person. A key only carries the permissions you give it.",
+        "generateToken": "Create API key",
+        "name": "Name",
+        "prefix": "Key",
+        "scopes": "Permissions",
+        "scopeCount_one": "{{count}} permission",
+        "scopeCount_other": "{{count}} permissions",
+        "lastUsed": "Last used",
+        "never": "Never used",
+        "status": "Status",
+        "active": "Active",
+        "revoked": "Revoked",
+        "revoke": "Revoke",
+        "lastUsedDate": "{{lastUsedDate, ccc PP p}}",
+        "expires": "Expires",
+        "expired": "Expired",
+        "expiresInDays_one": "Expires in {{count}} day",
+        "expiresInDays_other": "Expires in {{count}} days",
+        "expiresDate": "{{expiresDate, ccc PP p}}",
+        "owner": "Owner",
+        "ownerUnknown": "Deleted user",
+        "filterByOwner": "Filter by owner",
+        "anyStatus": "Any status"
+      },
+      "panels": {
+        "generateToken": "Create API key",
+        "generate": "Create",
+        "close": "Close",
+        "name": "Name",
+        "scopes": "Permissions",
+        "scopesHelp": "You can only grant permissions you hold yourself.",
+        "creationSuccess": "Your API key has been created.",
+        "copy": "Copy key",
+        "copied": "Key copied",
+        "tokenWarning": "Copy this key now. It is shown once and cannot be retrieved again — if you lose it, create a new one.",
+        "revokeToken": "Revoke API key",
+        "revokeTokenText": "Really revoke «{{name}}»? Anything using this key stops working immediately.",
+        "cancel": "Cancel",
+        "confirm": "Revoke",
+        "noScopes": "Pick at least one permission.",
+        "expiresAt": "Expires",
+        "expiresAtHelp": "At most three years from today.",
+        "expiresInThePast": "That date has already passed.",
+        "in30Days": "30 days",
+        "in90Days": "90 days",
+        "inAYear": "A year",
+        "in3Years": "3 years",
+        "expiresRequired": "Pick a date. A key has to expire.",
+        "expiresTooLate": "A key cannot last longer than three years.",
+        "longLivedWarning": "A key that lives longer than a year is not recommended. The longer it exists, the longer a leaked key keeps working."
+      }
+    },
+    "newsletter": {
+      "blocks": {
+        "button": {
+          "href": "Target",
+          "label": "Button",
+          "text": "Label"
+        },
+        "condition": "Dynamic content (optional)",
+        "divider": {
+          "label": "Divider"
+        },
+        "footer": {
+          "label": "Footer",
+          "legal": "Legal (unsubscribe link & address)",
+          "lines": "Imprint: text",
+          "title": "Imprint: title"
+        },
+        "gutter": {
+          "article": "Article ({{size}})",
+          "intro": "Intro ({{size}})",
+          "label": "Indent",
+          "none": "None ({{size}})"
+        },
+        "heading": {
+          "label": "Title",
+          "text": "Title"
+        },
+        "image": {
+          "alt": "Alt text",
+          "caption": "Caption (optional)",
+          "href": "Links to (optional)",
+          "image": "Image",
+          "label": "Image"
+        },
+        "meta": {
+          "label": "Header row (label / date)",
+          "left": "Left",
+          "right": "Right"
+        },
+        "panel": {
+          "image": "Image on the left (optional)",
+          "label": "Info box",
+          "linkHref": "Link target (optional)",
+          "linkLabel": "Link text (optional)",
+          "title": "Title"
+        },
+        "preheader": "Preview text (shown next to the subject)",
+        "rubric": {
+          "label": "Section bar",
+          "name": "Section"
+        },
+        "teaser": {
+          "allTags": "All tags",
+          "article": "Article",
+          "big": "Large (with image)",
+          "count": "{{count}} of {{total}} articles",
+          "label": "Article teaser",
+          "pick": "Choose article …",
+          "short": "Short",
+          "tag": "Tag",
+          "variant": "Layout"
+        },
+        "text": {
+          "body": "Text",
+          "label": "Text block"
+        }
+      },
+      "categories": {
+        "articles": "Articles",
+        "content": "Content",
+        "footer": "Footer",
+        "header": "Header"
+      },
+      "condition": {
+        "always": "Always show (no condition)",
+        "evaluatedAtSend": "Mailchimp only evaluates the condition when sending. The block stays visible in the editor, the preview and the Mailchimp draft.",
+        "interests": "Interest groups",
+        "is": "is",
+        "noValue": "Without a value there is no condition — the block goes to every recipient.",
+        "not": "is not",
+        "nothingToCompare": "The Mailchimp audience has no contact fields and no interest groups of its own — there is nothing a condition could refer to.",
+        "pickGroup": "Choose group …",
+        "stored": "Stored in the document",
+        "value": "Value",
+        "operator": "Comparison"
+      },
+      "editor": {
+        "back": "Back to overview",
+        "createdAt": "Campaign created at {{time}}.",
+        "loading": "Loading …",
+        "notPushed": "Not pushed to Mailchimp",
+        "notSaved": "Not saved",
+        "openInMailchimp": "Open in Mailchimp",
+        "pickImage": "Choose an image from the media library ({{alt}})",
+        "preview": "Preview",
+        "publishing": "Pushing to Mailchimp …",
+        "pushed": "Pushed to Mailchimp",
+        "save": "Save",
+        "savedAt": "Saved at {{time}}.",
+        "savedNotSynced": "Saved, but not pushed to Mailchimp: {{reason}}",
+        "saving": "Saving …",
+        "unknownBlock": "Unknown block: {{type}}",
+        "updatedAt": "Campaign updated at {{time}}."
+      },
+      "list": {
+        "actions": "Actions",
+        "archive": "Archive",
+        "unarchive": "Restore",
+        "showArchived": "Show archived",
+        "archived": "Archived",
+        "blocks": "Blocks",
+        "createNew": "New issue",
+        "duplicate": "Duplicate",
+        "mailchimp": "Mailchimp",
+        "modified": "Last modified",
+        "name": "Title",
+        "openDraft": "Mailchimp draft",
+        "title": "Newsletters",
+        "titlePlaceholder": "Issue title, e.g. Newsletter 21.8.26"
+      },
+      "mergeTags": {
+        "fields": "Contact fields",
+        "system": "System tags"
+      },
+      "navbar": "Newsletter",
+      "prose": {
+        "apply": "Apply",
+        "bold": "B",
+        "boldTitle": "Bold (Ctrl/Cmd+B)",
+        "hint": "Enter starts a new paragraph. Merge tags are only replaced by Mailchimp — the editor and the preview show the tag itself.",
+        "link": "Link",
+        "list": "List",
+        "listTitle": "Bulleted list",
+        "loadingTags": "Loading merge tags …",
+        "mergeTag": "Merge tag",
+        "mergeTagTitle": "Insert Mailchimp merge tag",
+        "noTag": "No merge tag found.",
+        "remove": "Remove",
+        "searchTag": "Search merge tags …",
+        "linkUrl": "Link URL"
+      },
+      "report": {
+        "clipped": "Gmail clips this issue and hides its end — imprint, unsubscribe link and address — behind «Message clipped».",
+        "heading": "Checks",
+        "measuring": "Measuring size …",
+        "missingArticles_one": "{{count}} article can no longer be loaded ({{ids}}). Mailchimp transfer is refused until the teaser is replaced or removed.",
+        "missingArticles_other": "{{count}} articles can no longer be loaded ({{ids}}). Mailchimp transfer is refused until the teasers are replaced or removed.",
+        "missingFooter": "The footer is missing {{missing}}. Mailchimp refuses to send a campaign without it.",
+        "nearLimit": "Close to the limit. Sending adds size: Mailchimp fills in every merge tag and replaces every link with a longer tracking URL.",
+        "ok": "all good",
+        "problems_one": "{{count}} problem",
+        "problems_other": "{{count}} problems",
+        "room": "{{size}} left before Gmail clips.",
+        "size": "{{size}} of {{limit}} ({{percent}} %)",
+        "sizeFailed": "The size could not be measured: {{error}}",
+        "stale": "last saved version",
+        "unsaved": "Changes since the last save are not included — saving measures again.",
+        "warnings_one": "{{count}} note",
+        "warnings_other": "{{count}} notes"
+      },
+      "settings": {
+        "heading": "Settings",
+        "title": "Title",
+        "titleHint": "Also the subject line of the Mailchimp draft. Takes effect on save."
+      }
     }
   }
 }

@@ -24,7 +24,11 @@ import {
 import { UserService } from './user.service';
 import { Image, ImageDataloaderService } from '@wepublish/image/api';
 import { UserDataloaderService } from './user-dataloader.service';
-import { hasPermission, Permissions } from '@wepublish/permissions/api';
+import {
+  hasPermission,
+  Permissions,
+  permissionsOf,
+} from '@wepublish/permissions/api';
 import { NotFoundException } from '@nestjs/common';
 import {
   Authenticated,
@@ -127,7 +131,7 @@ export class UserResolver {
     @Parent() user: PUser,
     @CurrentUser() session: UserSession | undefined
   ) {
-    if (!hasPermission(CanGetUser, session?.roles ?? [])) {
+    if (!hasPermission(CanGetUser, permissionsOf(session))) {
       return null;
     }
 

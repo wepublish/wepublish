@@ -6,17 +6,20 @@ import { createPortal } from 'react-dom';
 import { FieldError } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import { fontFamilyName } from './font-family-name';
+
 type AvailableFontsPickerProps = {
   name: string;
   value: string;
   onBlur: () => void;
   onChange: (value: string | '') => void;
   error?: FieldError;
+  labelId?: string;
 };
 
 export const AvailableFontsPicker = memo(
   forwardRef<HTMLDivElement, AvailableFontsPickerProps>(
-    ({ name, value, onChange, onBlur, error }, ref) => {
+    ({ name, value, onChange, onBlur, error, labelId }, ref) => {
       const { t } = useTranslation();
       const { data } = useQuery(WebsiteSettingsDocument);
       const fonts = data?.websiteSettings.fonts ?? [];
@@ -29,7 +32,7 @@ export const AvailableFontsPicker = memo(
         }
       };
 
-      const cleanValue = value ? value.split(',')[0].replace(/"/g, '') : value;
+      const cleanValue = fontFamilyName(value);
 
       return (
         <>
@@ -46,8 +49,8 @@ export const AvailableFontsPicker = memo(
           <Select
             ref={ref}
             name={name}
+            labelId={labelId}
             value={cleanValue}
-            size="small"
             displayEmpty
             onChange={handleChange}
             onBlur={onBlur}

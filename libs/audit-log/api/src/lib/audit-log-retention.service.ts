@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { logger } from '@wepublish/utils/api';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { DistributedClaims } from '@wepublish/dragonfly/api';
 import { AuditLogService } from './audit-log.service';
 
 export const DEFAULT_RETENTION_DAYS = 365;
@@ -18,7 +18,7 @@ export class AuditLogRetentionService {
   constructor(
     private auditLogService: AuditLogService,
     private config: ConfigService,
-    private kv: KvTtlCacheService
+    private claims: DistributedClaims
   ) {}
 
   get retentionDays() {
@@ -35,19 +35,23 @@ export class AuditLogRetentionService {
 
   @Cron(CronExpression.EVERY_DAY_AT_3AM, { name: 'auditLogRetention' })
   async pruneNightly() {
-    const claimed = await this.kv.claim('audit-log-retention', NIGHT_CLAIM_MS, {
-      retryForMs: CLAIM_RETRY_FOR_MS,
-    });
+    const claimed = await this.claims.claim(
+      'audit-log-retention',
+      NIGHT_CLAIM_MS,
+      { retryForMs: CLAIM_RETRY_FOR_MS }
+    );
 
-    if (claimed === undefined) {
+    if (claimed === 'taken') {
+      return 0;
+    }
+
+    if (claimed !== 'claimed') {
       logger('audit-log').info(
         'Audit log retention runs on every replica: without Dragonfly (REDIS_URL unset or Dragonfly unreachable) nothing keeps it to one, and deleting old entries twice is harmless'
       );
-
-      return this.pruneExpiredEntries();
     }
 
-    return claimed ? this.pruneExpiredEntries() : 0;
+    return this.pruneExpiredEntries();
   }
 
   async pruneExpiredEntries() {

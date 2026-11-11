@@ -1,51 +1,76 @@
 import { useQuery } from '@apollo/client/react';
+import {
+  Autocomplete,
+  AutocompleteRenderInputParams,
+  Box,
+  TextField,
+} from '@mui/material';
 import { FullUserFragment, UserListDocument } from '@wepublish/editor/api';
-import { useEffect, useMemo, useState } from 'react';
-import { Form, Message, SelectPicker, toaster } from 'rsuite';
-import { humanizeError } from '../../humanizeError';
+import { ReactNode, useMemo, useState } from 'react';
 
-export interface UserSearchProps {
-  user?: FullUserFragment | null;
+export type UserSearchValue = Pick<FullUserFragment, 'id' | 'name'> &
+  Partial<Pick<FullUserFragment, 'firstName' | 'email' | 'address'>>;
+
+export interface UserSearchProps<T extends UserSearchValue = FullUserFragment> {
+  user?: T | null;
   placeholder?: string;
-  resetFilterKey?: string;
   name: string;
-  onUpdateUser(user: FullUserFragment | undefined | null): void;
+  disableClearable?: boolean;
+  disabled?: boolean;
+  readOnly?: boolean;
+  id?: string;
+  onUpdateUser(user: T | FullUserFragment | undefined | null): void;
+  label?: ReactNode;
+  'aria-labelledby'?: string;
+  renderInput?: (params: AutocompleteRenderInputParams) => ReactNode;
 }
 
-/**
- * UI helper to provide a meaningful user labeling.
- * @param user
- */
-function getUserLabel(user: FullUserFragment | null | undefined): string {
-  if (!user) return '';
+function getUserLabel(user: UserSearchValue | null | undefined): string {
+  if (!user) {
+    return '';
+  }
   let userLabel = '';
-  if (user.firstName) userLabel += `${user.firstName} `;
-  if (user.name) userLabel += `${user.name} `;
-  if (user.email) userLabel += `| ${user.email} `;
-  if (user.address?.streetAddress)
+  if (user.firstName) {
+    userLabel += `${user.firstName} `;
+  }
+  if (user.name) {
+    userLabel += `${user.name} `;
+  }
+  if (user.email) {
+    userLabel += `| ${user.email} `;
+  }
+  if (user.address?.streetAddress) {
     userLabel += `| ${user.address.streetAddress} ${user.address.streetAddressNumber ?? ''}`;
-  if (user.address?.zipCode) userLabel += `| ${user.address.zipCode} `;
-  if (user.address?.city) userLabel += `| ${user.address.city} `;
+  }
+  if (user.address?.zipCode) {
+    userLabel += `| ${user.address.zipCode} `;
+  }
+  if (user.address?.city) {
+    userLabel += `| ${user.address.city} `;
+  }
   return userLabel;
 }
 
-export function UserSearch({
+export function UserSearch<T extends UserSearchValue = FullUserFragment>({
   user,
   placeholder,
   name,
-  resetFilterKey,
+  disableClearable,
+  disabled,
+  readOnly,
+  id,
   onUpdateUser,
-}: UserSearchProps) {
+  label,
+  'aria-labelledby': ariaLabelledby,
+  renderInput,
+}: UserSearchProps<T>) {
   const [userSearch, setUserSearch] = useState<string>('');
-  const [users, setUsers] = useState<(FullUserFragment | undefined | null)[]>(
-    []
-  );
+  const [open, setOpen] = useState(false);
 
   const {
     data: userData,
     loading,
     error,
-    refetch,
   } = useQuery(UserListDocument, {
     variables: {
       take: 100,
@@ -53,37 +78,18 @@ export function UserSearch({
         text: userSearch,
       },
     },
+    skip: !open,
   });
 
-  useEffect(() => {
-    if (userData?.users) {
-      const userList = [
-        ...userData.users.nodes.filter(usr => usr.id !== user?.id),
-      ];
+  const users = useMemo(() => {
+    const found: (T | FullUserFragment)[] = (
+      userData?.users?.nodes ?? []
+    ).filter(usr => usr.id !== user?.id);
 
-      if (user) {
-        userList.push(user);
-      }
+    return user ? [...found, user] : found;
+  }, [userData?.users?.nodes, user]);
 
-      setUsers(userList);
-    }
-  }, [userData?.users, user]);
-
-  useEffect(() => {
-    if (error) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-        >
-          {humanizeError(error)}
-        </Message>
-      );
-    }
-  }, [error]);
-
-  function setUser(userId: string) {
+  function setUser(userId: string | null) {
     const user = users.find(findUser => findUser?.id === userId);
     onUpdateUser(user);
   }
@@ -92,46 +98,59 @@ export function UserSearch({
     return users.map(usr => ({ value: usr?.id, label: getUserLabel(usr) }));
   }, [users]);
 
-  // if one wants to reset a filter, it's not working when setting the value property
-  if (resetFilterKey) {
-    return (
-      <Form.Group>
-        <Form.Control
-          key={resetFilterKey}
-          placeholder={placeholder}
-          name={name}
-          disabled={loading || !!error}
-          data={formData}
-          cleanable
-          block
-          accepter={SelectPicker}
-          onChange={(userId: any) => setUser(userId)}
-          onSearch={(searchString: any) => {
-            setUserSearch(searchString);
-            refetch();
-          }}
-        />
-      </Form.Group>
-    );
-  }
+  const selected = useMemo(
+    () => (user ? { value: user.id, label: getUserLabel(user) } : null),
+    [user]
+  );
 
   return (
-    <Form.Group>
-      <Form.Control
-        placeholder={placeholder}
-        disabled={loading || !!error}
-        data={formData}
-        cleanable
-        block
-        name={name}
-        onChange={(userId: any) => setUser(userId)}
-        onSearch={(searchString: any) => {
-          setUserSearch(searchString);
-          refetch();
+    <Box sx={renderInput ? undefined : { marginBottom: 3 }}>
+      <Autocomplete
+        id={id}
+        readOnly={readOnly}
+        disableClearable={disableClearable}
+        options={formData}
+        filterOptions={options => options}
+        open={open}
+        onOpen={() => setOpen(true)}
+        onClose={() => {
+          setOpen(false);
+          setUserSearch('');
         }}
-        value={user?.id}
-        accepter={SelectPicker}
+        loading={loading}
+        onInputChange={(_event, value, reason) => {
+          if (reason === 'input') {
+            setUserSearch(value);
+          }
+        }}
+        getOptionLabel={option => option.label}
+        isOptionEqualToValue={(option, selected) =>
+          option.value === selected.value
+        }
+        value={selected}
+        onChange={(_event, option) => {
+          const userId = option?.value ?? null;
+          setUser(userId);
+        }}
+        disabled={disabled || !!error}
+        renderInput={
+          renderInput ??
+          (params => (
+            <TextField
+              {...params}
+              label={label}
+              slotProps={{
+                ...params.slotProps,
+                htmlInput: {
+                  ...params.slotProps.htmlInput,
+                  'aria-labelledby': ariaLabelledby,
+                },
+              }}
+              placeholder={placeholder}
+            />
+          ))
+        }
       />
-    </Form.Group>
+    </Box>
   );
 }

@@ -8,7 +8,7 @@ import { ChallengeProvider } from '../challenge-provider.interface';
 import FormData from 'form-data';
 import fetch, { RequestInit } from 'node-fetch';
 import { PrismaClient, SettingChallengeProvider } from '@prisma/client';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from '@wepublish/settings/api';
 
 class HCaptchaConfig {
@@ -17,7 +17,7 @@ class HCaptchaConfig {
 
   constructor(
     private readonly prisma: PrismaClient,
-    private readonly kv: KvTtlCacheService,
+    private readonly kv: NamespacedCache,
     private readonly id: string
   ) {}
 
@@ -71,7 +71,7 @@ export class HCaptchaProvider extends ChallengeProvider {
   constructor(
     private readonly id: string,
     private readonly prisma: PrismaClient,
-    private readonly kv: KvTtlCacheService
+    private readonly kv: NamespacedCache
   ) {
     super();
   }

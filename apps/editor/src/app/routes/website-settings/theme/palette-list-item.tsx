@@ -10,11 +10,11 @@ import {
   TypeBackground,
   TypeText,
 } from '@mui/material';
-import { Controller, useFormContext } from 'react-hook-form';
+import { ColorPicker } from '@wepublish/ui/editor';
+import { useId } from 'react';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { MdExpandLess, MdExpandMore } from 'react-icons/md';
-
-import { ColorPicker } from './color-picker';
 
 const ThemeColorReel = styled.div`
   display: flex;
@@ -28,7 +28,7 @@ export const ThemeColorItem = styled.div<{ colorstr?: string | null }>(
   width: 25px;
   height: 25px;
   background-color: ${colorstr ?? '#000'};
-  border: 1px solid ${theme.palette.divider};
+  border: 1px solid ${theme.vars.palette.divider};
   border-radius: 4px;
 `
 );
@@ -59,11 +59,17 @@ export const PaletteListItem = <
   onOpen,
 }: PaletteListItemProps<Keys>) => {
   const { t } = useTranslation();
-  const { control, watch } = useFormContext();
+  const { control } = useFormContext();
+  const value = useWatch({ control, name });
+  const collapseId = useId();
 
   return (
     <>
-      <ListItemButton onClick={onOpen}>
+      <ListItemButton
+        onClick={onOpen}
+        aria-expanded={isOpen}
+        aria-controls={collapseId}
+      >
         <ListItemText primary={t(`websiteSettings.theme.${name}`)} />
 
         <ThemeColorReel>
@@ -71,10 +77,10 @@ export const PaletteListItem = <
             keys.map(key => (
               <ThemeColorItem
                 key={key}
-                colorstr={watch(`${name}.${key}`)}
+                colorstr={value?.[key]}
               />
             ))
-          : <ThemeColorItem colorstr={watch(`${name}`)} />}
+          : <ThemeColorItem colorstr={value} />}
         </ThemeColorReel>
 
         {isOpen ?
@@ -83,6 +89,7 @@ export const PaletteListItem = <
       </ListItemButton>
 
       <Collapse
+        id={collapseId}
         timeout="auto"
         in={isOpen}
         mountOnEnter

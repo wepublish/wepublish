@@ -1,97 +1,69 @@
-import { useQuery } from '@apollo/client/react';
-import { PageListDocument, PageSort, SortOrder } from '@wepublish/editor/api';
-import { useEffect, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Message, SelectPicker, toaster } from 'rsuite';
-import { humanizeError } from '../../humanizeError';
+import {
+  Autocomplete,
+  AutocompleteRenderInputParams,
+  TextField,
+} from '@mui/material';
+import { ReactNode } from 'react';
+
+import { usePageOptions } from './usePageOptions';
 
 interface SelectPageProps {
   className?: string;
   disabled?: boolean;
+  readOnly?: boolean;
+  id?: string;
   name?: string;
   selectedPage?: string | null;
   setSelectedPage(page: string | null): void;
+  label?: ReactNode;
+  'aria-labelledby'?: string;
+  renderInput?: (params: AutocompleteRenderInputParams) => ReactNode;
 }
 
 export function SelectPage({
   className,
   disabled,
+  readOnly,
+  id,
   name,
   selectedPage,
   setSelectedPage,
+  label,
+  'aria-labelledby': ariaLabelledby,
+  renderInput,
 }: SelectPageProps) {
-  const { t } = useTranslation();
-
-  /**
-   * Error handling
-   * @param error
-   */
-  const showErrors = (error: Error): void => {
-    toaster.push(
-      <Message
-        type="error"
-        showIcon
-        closable
-        duration={8000}
-      >
-        {humanizeError(error)}
-      </Message>
-    );
-  };
-
-  /**
-   * Loading page
-   */
-
-  const {
-    data: pageData,
-    error: pageListError,
-    refetch,
-  } = useQuery(PageListDocument, {
-    variables: {
-      sort: PageSort.PublishedAt,
-      order: SortOrder.Ascending,
-      take: 200,
-    },
-    fetchPolicy: 'no-cache',
-  });
-
-  useEffect(() => {
-    if (pageListError) {
-      showErrors(pageListError);
-    }
-  }, [pageListError]);
-
-  /**
-   * Prepare available page
-   */
-  const availablePages = useMemo(() => {
-    if (!pageData?.pages?.nodes) {
-      return [];
-    }
-
-    return pageData.pages.nodes.map(page => ({
-      label: page.latest.title || <i>{t('pages.overview.untitled')}</i>,
-      value: page.id,
-    }));
-  }, [pageData]);
+  const { pageIds, labelFor, search } = usePageOptions();
 
   return (
-    <SelectPicker
-      block
+    <Autocomplete
+      id={id}
       disabled={disabled}
+      readOnly={readOnly}
       className={className}
-      name={name}
-      value={selectedPage}
-      data={availablePages}
-      onSearch={word => {
-        refetch({
-          filter: {
-            title: word,
-          },
-        });
-      }}
-      onChange={(value, item) => setSelectedPage(value)}
+      options={pageIds}
+      getOptionLabel={labelFor}
+      filterOptions={options => options}
+      onInputChange={(_event, title) => search(title)}
+      value={selectedPage ?? null}
+      onChange={(_event, value) => setSelectedPage(value)}
+      renderInput={
+        renderInput ??
+        (params => (
+          <TextField
+            {...params}
+            label={label}
+            slotProps={{
+              ...params.slotProps,
+              htmlInput: {
+                ...params.slotProps.htmlInput,
+                'aria-labelledby': ariaLabelledby,
+              },
+            }}
+            name={name}
+          />
+        ))
+      }
+      fullWidth
     />
   );
 }

@@ -1,22 +1,23 @@
+import { Drawer, FormLabel, Grid, TextField } from '@mui/material';
 import { FullCommentFragment, FullImageFragment } from '@wepublish/editor/api';
-import React, { useState } from 'react';
+import { Dispatch, SetStateAction, useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Col, Drawer, Form, Row } from 'rsuite';
 
+import { DRAWER_WIDTHS } from '../../drawer';
 import { ImageSelectPanel } from '../../panel/imageSelectPanel';
 import { ChooseEditImage } from '../chooseEditImage';
 import { UserSearch } from '../searchAndFilter/userSearch';
 
 interface CommentUserProps {
   comment?: FullCommentFragment;
-  setComment: React.Dispatch<
-    React.SetStateAction<FullCommentFragment | undefined>
-  >;
+  setComment: Dispatch<SetStateAction<FullCommentFragment | undefined>>;
 }
 
 export function CommentUser({ comment, setComment }: CommentUserProps) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
+  const userLabelId = useId();
+  const imageLabelId = useId();
 
   function setUser(user: FullCommentFragment['user']) {
     setComment(oldComment =>
@@ -45,44 +46,65 @@ export function CommentUser({ comment, setComment }: CommentUserProps) {
 
   return (
     <>
-      <Row>
-        <Col xs={24}>
-          <Form.Label>{t('commentUser.selectExistingUser')}</Form.Label>
+      <Grid
+        container
+        spacing={2}
+      >
+        <Grid size={{ xs: 12 }}>
+          <FormLabel id={userLabelId}>
+            {t('commentUser.selectExistingUser')}
+          </FormLabel>
 
           <UserSearch
+            aria-labelledby={userLabelId}
             key={`user-${comment?.user}`}
             name="selectFromExistingUser"
             placeholder={t('commentUser.selectExistingUser')}
-            // @ts-expect-error test
             onUpdateUser={setUser}
-            // @ts-expect-error test
             user={comment?.user}
           />
-        </Col>
+        </Grid>
 
-        <Col xs={24}>
-          <Form.Label>{t('commentUser.guestUser')}</Form.Label>
-          <Form.Control
+        <Grid size={{ xs: 12 }}>
+          <TextField
             name="guestUser"
+            label={t('commentUser.guestUser')}
             placeholder={t('commentUser.guestUser')}
-            onChange={setGuestUser}
+            onChange={event => setGuestUser(event.target.value)}
             value={comment?.guestUsername || ''}
+            fullWidth
           />
-        </Col>
+        </Grid>
 
-        <Col xs={18}>
+        <Grid size={{ xs: 9 }}>
+          <FormLabel id={imageLabelId}>
+            {t('commentUser.selectImage')}
+          </FormLabel>
+
           <ChooseEditImage
+            aria-labelledby={imageLabelId}
+            onSelect={(image: FullImageFragment) => {
+              setImage(image);
+              setOpen(false);
+            }}
             image={comment?.guestUserImage}
             disabled={false}
             openChooseModalOpen={() => setOpen(true)}
             removeImage={() => setImage(undefined)}
-            header={t('commentUser.selectImage')}
-            minHeight={150}
           />
-        </Col>
-      </Row>
+        </Grid>
+      </Grid>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={open}
         onClose={() => {
           setOpen(false);

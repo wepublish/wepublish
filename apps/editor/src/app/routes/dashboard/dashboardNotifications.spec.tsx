@@ -71,7 +71,7 @@ const renderPanel = () => {
     </MemoryRouter>
   );
 
-  const panel = container.querySelector('.rs-panel');
+  const panel = container.querySelector('.MuiCard-root');
 
   if (!panel) {
     throw new Error('panel not rendered');
@@ -82,7 +82,7 @@ const renderPanel = () => {
 
 /** The titles of the rendered notifications, in the order they appear. */
 const renderedOrder = () =>
-  Array.from(document.querySelectorAll('.rs-message')).map(
+  Array.from(document.querySelectorAll('[role="alert"]')).map(
     node => node.textContent ?? ''
   );
 
@@ -157,4 +157,62 @@ it('keeps the order sources were asked in when severities match', () => {
     'connector-error',
     'job-error',
   ]);
+});
+
+it('caps the panel and still shows every category that has something', () => {
+  sources.jobs = Array.from({ length: 8 }, (_, index) =>
+    item(`job-${index}`, 'error')
+  );
+  sources.team = [item('team-info', 'info')];
+  sources.news = [item('news-info', 'info')];
+
+  renderPanel();
+
+  expect(renderedOrder().map(text => text.trim())).toEqual([
+    'job-0',
+    'job-1',
+    'team-info',
+    'news-info',
+  ]);
+  expect(
+    screen
+      .getByRole('link', { name: 'dashboard.moreNotifications' })
+      .getAttribute('href')
+  ).toBe('/notifications');
+});
+
+it('shows no hint while nothing is hidden', () => {
+  sources.jobs = [item('job', 'error')];
+
+  renderPanel();
+
+  expect(
+    screen.queryByRole('link', { name: 'dashboard.moreNotifications' })
+  ).toBeNull();
+});
+
+it('shows the body of the most severe item only', () => {
+  sources.jobs = [
+    <NotificationItem
+      key="job"
+      severity="error"
+      title="job"
+    >
+      {'job body'}
+    </NotificationItem>,
+  ];
+  sources.team = [
+    <NotificationItem
+      key="team"
+      severity="info"
+      title="team"
+    >
+      {'team body'}
+    </NotificationItem>,
+  ];
+
+  renderPanel();
+
+  expect(screen.getByText('job body')).toBeTruthy();
+  expect(screen.queryByText('team body')).toBeNull();
 });

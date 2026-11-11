@@ -32,7 +32,7 @@ const NavigationBarWrapper = styled.div`
     gap: 8px;
     padding: 8px 12px;
     overflow: visible;
-    border-bottom: 1px solid var(--rs-border-primary);
+    border-bottom: 1px solid ${({ theme }) => theme.vars.palette.divider};
 
     > * {
       flex: 0 1 auto;
@@ -55,7 +55,7 @@ const NavigationBarWrapper = styled.div`
       text-align: center;
     }
   }
-  background-color: var(--wep-content-bg, var(--rs-bg-card));
+  background-color: ${({ theme }) => theme.vars.palette.background.paper};
 `;
 
 export interface NavigationBarProps {

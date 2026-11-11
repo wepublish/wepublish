@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaClient, SettingMailProvider } from '@prisma/client';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { ProviderSettingsChanged } from './provider-settings-changed';
 import { MailProviderSettingsDataloaderService } from './mail-provider-settings-dataloader.service';
@@ -27,7 +27,12 @@ describe('MailProviderSettingsService', () => {
       imports: [PrismaModule],
       providers: [
         MailProviderSettingsService,
-        { provide: KvTtlCacheService, useValue: { resetNamespace: vi.fn() } },
+        {
+          provide: NamespaceResets,
+          useValue: {
+            reset: vi.fn(),
+          } satisfies Pick<NamespaceResets, 'reset'>,
+        },
         { provide: ProviderSettingsChanged, useValue: { notify: vi.fn() } },
         {
           provide: MailProviderSettingsDataloaderService,
@@ -89,6 +94,24 @@ describe('MailProviderSettingsService', () => {
       type: 'MAILGUN',
       name: 'Renamed',
     });
+  });
+
+  test('keeps the stored secrets when the form sends them empty', async () => {
+    vi.spyOn(prisma.settingMailProvider, 'findUnique').mockResolvedValue(
+      existing
+    );
+    const update = vi
+      .spyOn(prisma.settingMailProvider, 'update')
+      .mockResolvedValue(existing);
+
+    await service.updateMailProviderSetting({
+      id: 'mail',
+      name: 'Renamed',
+      apiKey: '',
+      webhookEndpointSecret: '',
+    } as never);
+
+    expect(update.mock.calls[0][0].data).toEqual({ name: 'Renamed' });
   });
 
   test('refuses to delete the only mail provider', async () => {

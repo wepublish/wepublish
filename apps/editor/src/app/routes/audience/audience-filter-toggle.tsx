@@ -1,28 +1,44 @@
 import styled from '@emotion/styled';
-import { Dispatch, SetStateAction } from 'react';
+import { FormControlLabel, Switch } from '@mui/material';
 import { InfoTooltip } from '@wepublish/ui/editor';
+import { Dispatch, SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Toggle } from 'rsuite';
 
 import { useAudienceChartColors } from './audience-chart';
 import { AudienceClientFilter } from './audience-filter-params';
 
-const ToggleRow = styled.div`
-  padding: 6px 0;
+const Row = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing(1)};
+  min-height: 40px;
 `;
 
-const ToggleLabel = styled.span`
+const Label = styled(FormControlLabel)`
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+`;
+
+const Name = styled.span`
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: ${({ theme }) => theme.spacing(1)};
+  min-width: 0;
 `;
 
 const Swatch = styled.span<{ color?: string }>`
   flex: 0 0 auto;
-  width: 10px;
-  height: 10px;
-  border-radius: 3px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
   background-color: ${({ color }) => color};
+`;
+
+const RowEnd = styled.span`
+  flex: 0 0 auto;
+  display: inline-flex;
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
 `;
 
 interface AudienceFilterToggleProps {
@@ -45,26 +61,34 @@ export function AudienceFilterToggle({
     : chartColors[filterKey][0];
 
   return (
-    <ToggleRow>
-      <Toggle
-        checked={clientFilter[filterKey as keyof AudienceClientFilter]}
+    <Row>
+      <Label
+        control={
+          <Switch
+            size="small"
+            checked={clientFilter[filterKey]}
+            onChange={(_event, checked: boolean) =>
+              setClientFilter({
+                ...clientFilter,
+                [filterKey]: checked,
+              })
+            }
+          />
+        }
         label={
-          <ToggleLabel>
+          <Name>
             <Swatch color={chartColor} />
             {t(`audience.legend.${filterKey}`)}
-            <InfoTooltip
-              text={t(`audience.legend.info.${filterKey}`)}
-              placement="rightStart"
-            />
-          </ToggleLabel>
-        }
-        onChange={(checked: boolean) =>
-          setClientFilter({
-            ...clientFilter,
-            [filterKey]: checked,
-          })
+          </Name>
         }
       />
-    </ToggleRow>
+
+      <RowEnd data-row-end>
+        <InfoTooltip
+          text={t(`audience.legend.info.${filterKey}`)}
+          placement="left-start"
+        />
+      </RowEnd>
+    </Row>
   );
 }

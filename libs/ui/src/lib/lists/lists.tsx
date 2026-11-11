@@ -1,8 +1,8 @@
 import { Typography } from '@mui/material';
-import { ForwardedRef, forwardRef, HTMLAttributes } from 'react';
+import { ElementType, ForwardedRef, HTMLAttributes, forwardRef } from 'react';
 
 export type UnorderedListProps = HTMLAttributes<HTMLUListElement> & {
-  component?: React.ElementType;
+  component?: ElementType;
   gutterBottom?: boolean;
 };
 
@@ -26,7 +26,7 @@ export const UnorderedList = forwardRef(
 );
 
 export type OrderedListProps = HTMLAttributes<HTMLOListElement> & {
-  component?: React.ElementType;
+  component?: ElementType;
   gutterBottom?: boolean;
 };
 
@@ -50,7 +50,7 @@ export const OrderedList = forwardRef(
 );
 
 export type ListItemProps = HTMLAttributes<HTMLLIElement> & {
-  component?: React.ElementType;
+  component?: ElementType;
   gutterBottom?: boolean;
 };
 

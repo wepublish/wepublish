@@ -2,9 +2,12 @@ import {
   createContext,
   MutableRefObject,
   ReactNode,
+  RefObject,
   useCallback,
   useContext,
   useEffect,
+  useImperativeHandle,
+  useMemo,
   useRef,
 } from 'react';
 
@@ -15,17 +18,52 @@ export type ValidatorResult = {
 
 export type Validator = () => ValidatorResult;
 
+export type ValidationFailure = {
+  id: string;
+  summary?: string;
+  focus?: () => void;
+};
+
 export type AggregatedValidation = {
   ok: boolean;
-  failures: { id: string; summary?: string }[];
+  failures: ValidationFailure[];
+};
+
+type RegisteredValidator = {
+  validate: Validator;
+  focus?: () => void;
 };
 
 type RegistryContextValue = {
-  register: (id: string, validator: Validator) => void;
+  register: (id: string, validator: RegisteredValidator) => void;
   unregister: (id: string) => void;
 };
 
 const RegistryContext = createContext<RegistryContextValue | null>(null);
+
+const FOCUSABLE =
+  'input:not([disabled]):not([type="hidden"]), textarea:not([disabled]), select:not([disabled]), button:not([disabled]), a[href], [contenteditable="true"], [tabindex]:not([tabindex="-1"])';
+
+const focusInto = (target: HTMLElement | null) => {
+  if (!target) {
+    return;
+  }
+
+  if (target.matches(FOCUSABLE) || target.hasAttribute('tabindex')) {
+    target.focus();
+    return;
+  }
+
+  const inner = target.querySelector<HTMLElement>(FOCUSABLE);
+
+  if (inner) {
+    inner.focus();
+    return;
+  }
+
+  target.setAttribute('tabindex', '-1');
+  target.focus();
+};
 
 export type EditorValidationProviderProps = {
   runAllRef: MutableRefObject<() => AggregatedValidation>;
@@ -36,9 +74,9 @@ export function EditorValidationProvider({
   runAllRef,
   children,
 }: EditorValidationProviderProps) {
-  const validators = useRef(new Map<string, Validator>());
+  const validators = useRef(new Map<string, RegisteredValidator>());
 
-  const register = useCallback((id: string, validator: Validator) => {
+  const register = useCallback((id: string, validator: RegisteredValidator) => {
     validators.current.set(id, validator);
   }, []);
 
@@ -46,16 +84,27 @@ export function EditorValidationProvider({
     validators.current.delete(id);
   }, []);
 
-  runAllRef.current = () => {
-    const failures: { id: string; summary?: string }[] = [];
-    for (const [id, validator] of validators.current) {
-      const result = validator();
-      if (!result.ok) failures.push({ id, summary: result.summary });
-    }
-    return { ok: failures.length === 0, failures };
-  };
+  useImperativeHandle(
+    runAllRef,
+    () => () => {
+      const failures: ValidationFailure[] = [];
 
-  const value = useRef<RegistryContextValue>({ register, unregister }).current;
+      for (const [id, { validate, focus }] of validators.current) {
+        const result = validate();
+        if (!result.ok) {
+          failures.push({ id, summary: result.summary, focus });
+        }
+      }
+
+      return { ok: failures.length === 0, failures };
+    },
+    []
+  );
+
+  const value = useMemo<RegistryContextValue>(
+    () => ({ register, unregister }),
+    [register, unregister]
+  );
 
   return (
     <RegistryContext.Provider value={value}>
@@ -64,14 +113,32 @@ export function EditorValidationProvider({
   );
 }
 
-export function useRegisterValidator(id: string, validator: Validator) {
+export function useRegisterValidator(
+  id: string,
+  validator: Validator,
+  focusTarget?: RefObject<HTMLElement | null>
+) {
   const ctx = useContext(RegistryContext);
   const validatorRef = useRef(validator);
-  validatorRef.current = validator;
+  const hasFocusTarget = Boolean(focusTarget);
+  const focusTargetRef = useRef(focusTarget);
 
   useEffect(() => {
-    if (!ctx) return;
-    ctx.register(id, () => validatorRef.current());
+    validatorRef.current = validator;
+    focusTargetRef.current = focusTarget;
+  });
+
+  useEffect(() => {
+    if (!ctx) {
+      return;
+    }
+    ctx.register(id, {
+      validate: () => validatorRef.current(),
+      focus:
+        hasFocusTarget ?
+          () => focusInto(focusTargetRef.current?.current ?? null)
+        : undefined,
+    });
     return () => ctx.unregister(id);
-  }, [id, ctx]);
+  }, [id, ctx, hasFocusTarget]);
 }

@@ -1,12 +1,19 @@
+import { createTheme, ThemeProvider } from '@mui/material';
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import { InfoTooltip, InfoTrigger } from './infoTooltip';
 
-describe('InfoTooltip', () => {
-  it('explains itself when it gets focus', async () => {
-    render(<InfoTooltip text="Applies to new articles only." />);
+const theme = createTheme({ cssVariables: true });
 
-    fireEvent.focus(
+describe('InfoTooltip', () => {
+  it('explains itself when it is pointed at', async () => {
+    render(
+      <ThemeProvider theme={theme}>
+        <InfoTooltip text="Applies to new articles only." />
+      </ThemeProvider>
+    );
+
+    fireEvent.mouseOver(
       screen.getByRole('button', { name: 'Applies to new articles only.' })
     );
 
@@ -17,13 +24,33 @@ describe('InfoTooltip', () => {
 
   it('can be named separately from a longer explanation', () => {
     render(
-      <InfoTooltip
-        label="What is this?"
-        text={<p>A longer explanation.</p>}
-      />
+      <ThemeProvider theme={theme}>
+        <InfoTooltip
+          label="What is this?"
+          text={<p>A longer explanation.</p>}
+        />
+      </ThemeProvider>
     );
 
     expect(screen.getByRole('button', { name: 'What is this?' })).toBeTruthy();
+  });
+
+  it('keeps its short name and offers the explanation as its description', async () => {
+    render(
+      <ThemeProvider theme={theme}>
+        <InfoTooltip
+          label="What is this?"
+          text="A longer explanation."
+        />
+      </ThemeProvider>
+    );
+
+    fireEvent.mouseOver(screen.getByRole('button', { name: 'What is this?' }));
+    await screen.findByRole('tooltip');
+
+    expect(
+      screen.getByRole('button', { name: 'What is this?' })
+    ).toHaveAccessibleDescription('A longer explanation.');
   });
 });
 
@@ -32,9 +59,11 @@ describe('InfoTrigger', () => {
     const onSubmit = vi.fn(event => event.preventDefault());
 
     render(
-      <form onSubmit={onSubmit}>
-        <InfoTrigger aria-label="Info" />
-      </form>
+      <ThemeProvider theme={theme}>
+        <form onSubmit={onSubmit}>
+          <InfoTrigger aria-label="Info" />
+        </form>
+      </ThemeProvider>
     );
 
     fireEvent.click(screen.getByRole('button', { name: 'Info' }));

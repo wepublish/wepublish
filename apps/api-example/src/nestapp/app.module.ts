@@ -1,17 +1,24 @@
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { ApolloDriverConfig } from '@nestjs/apollo';
 import { Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER } from '@nestjs/core';
 import { GqlModuleOptions, GraphQLModule } from '@nestjs/graphql';
+import { ResilienceModule } from '@nestjs/resilience';
 import { ScheduleModule } from '@nestjs/schedule';
 
 import { PrismaClient } from '@prisma/client';
 import { SentryGlobalFilter, SentryModule } from '@sentry/nestjs/setup';
+import { ActionModule } from '@wepublish/action/api';
 import { AuditLogModule } from '@wepublish/audit-log/api';
 import { V0Module } from '@wepublish/ai/api';
 import { NovaMediaAdapter } from '@wepublish/api';
-import { ArticleModule, HotAndTrendingModule } from '@wepublish/article/api';
+import {
+  AnalyticsProviderHotAndTrendingDataSource,
+  ArticleModule,
+  HotAndTrendingModule,
+} from '@wepublish/article/api';
 import { AuthenticationModule } from '@wepublish/authentication/api';
+import { LettersModule } from '@wepublish/letter/api';
 import { AuthorModule } from '@wepublish/author/api';
 import { BannerApiModule } from '@wepublish/banner/api';
 import { BlockContentModule } from '@wepublish/block-content/api';
@@ -20,7 +27,12 @@ import { ChangelogModule } from '@wepublish/changelog/api';
 import { CommentModule } from '@wepublish/comments/api';
 import { ConsentModule } from '@wepublish/consent/api';
 import { CrowdfundingModule } from '@wepublish/crowdfunding/api';
+import { ApiTokenModule } from '@wepublish/api-token/api';
+import { NewsletterModule } from '@wepublish/newsletter/api';
 import { DocumentModule } from '@wepublish/document/api';
+import { DragonflyModule } from '@wepublish/dragonfly/api';
+import { VideoModule } from '@wepublish/video/api';
+import { AudioModule } from '@wepublish/audio/api';
 import { EventModule } from '@wepublish/event/api';
 import {
   AgendaBaselService,
@@ -33,13 +45,20 @@ import {
   GoogleAnalyticsModule,
   GoogleAnalyticsService,
 } from '@wepublish/google-analytics/api';
-import { HealthModule } from '@wepublish/health';
-import { MediaAdapterModule } from '@wepublish/image/api';
 import {
-  GraphqlResponseCacheModule,
-  KvTtlCacheModule,
-  KvTtlCacheService,
+  PlausibleDbConfig,
+  PlausibleModule,
+  PlausibleService,
+} from '@wepublish/plausible/api';
+import { UmamiDbConfig, UmamiModule, UmamiService } from '@wepublish/umami/api';
+import { HealthModule } from '@wepublish/health';
+import { MediaAdapter, MediaAdapterModule } from '@wepublish/image/api';
+import {
+  KvCacheModule,
+  NamespacedCache,
+  NamespacedCacheModule,
 } from '@wepublish/kv-ttl-cache/api';
+import { prismaDecimalCodec } from '@wepublish/kv-ttl-cache/api/prisma';
 import { MailsModule } from '@wepublish/mail/api';
 import { MemberPlanModule } from '@wepublish/member-plan/api';
 import {
@@ -69,10 +88,13 @@ import { ImportPeerArticleModule } from '@wepublish/peering/api/import';
 import { PermissionModule } from '@wepublish/permissions/api';
 import { PhraseModule } from '@wepublish/phrase/api';
 import { PollModule } from '@wepublish/poll/api';
+import { PublicContentCacheModule } from '@wepublish/public-content-cache/api';
 import { GraphQLRichText, SlateToPmMigrator } from '@wepublish/richtext/api';
 import { SessionModule } from '@wepublish/session/api';
 import { OneModule } from '@wepublish/one/api';
+import { FeaturesModule } from '@wepublish/features/api';
 import {
+  SeoChecklistModule,
   SettingModule,
   SettingName,
   WebsiteSettingsModule,
@@ -83,21 +105,23 @@ import { TagModule } from '@wepublish/tag/api';
 import { TrackingPixelsModule } from '@wepublish/tracking-pixel/api';
 import { UserSubscriptionModule } from '@wepublish/user-subscription/api';
 import { UserModule } from '@wepublish/user/api';
-import { generateJWT } from '@wepublish/utils/api';
+import { generateJWT, NodeApolloDriver } from '@wepublish/utils/api';
 import { VersionInformationModule } from '@wepublish/versionInformation/api';
+import { WebsiteRevalidationModule } from '@wepublish/website-revalidation/api';
 import { readConfig } from '../readConfig';
 import {
   ProviderRegistryModule,
   ProviderRegistryService,
 } from '@wepublish/provider-registry/api';
 import { reconcileProviderRegistry } from './reconcile-provider-registry';
+import { API_SHARED_NAMESPACES } from './shared-namespaces';
 
 @Global()
 @Module({
   imports: [
     SentryModule.forRoot(),
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
-      driver: ApolloDriver,
+      driver: NodeApolloDriver,
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (config: ConfigService) => {
@@ -125,10 +149,13 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
         } as ApolloDriverConfig & GqlModuleOptions;
       },
     }),
-    KvTtlCacheModule,
-    GraphqlResponseCacheModule,
+    DragonflyModule.forRoot(),
+    KvCacheModule.forRoot({ codec: prismaDecimalCodec }),
+    NamespacedCacheModule.forRoot({ sharedNamespaces: API_SHARED_NAMESPACES }),
+    WebsiteRevalidationModule,
+    PublicContentCacheModule,
     V0Module.registerAsync({
-      imports: [PrismaModule, KvTtlCacheModule],
+      imports: [PrismaModule],
     }),
     AuthorModule,
     PrismaModule,
@@ -139,7 +166,7 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
         reconcileProviderRegistry(prisma, config.get('CONFIG_FILE_PATH')),
     }),
     MailsModule.registerAsync({
-      imports: [ConfigModule, PrismaModule, KvTtlCacheModule],
+      imports: [ConfigModule, PrismaModule],
       useFactory: async (
         config: ConfigService,
         prisma: PrismaClient,
@@ -174,6 +201,22 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
         };
       },
       inject: [ConfigService, PrismaClient, ProviderRegistryService],
+      global: true,
+    }),
+    LettersModule.registerAsync({
+      useFactory: async (
+        registry: ProviderRegistryService,
+        mediaAdapter: MediaAdapter
+      ) => {
+        await registry.ensureLoaded();
+
+        return {
+          letterProvider: registry.letterProvider,
+          pdfRenderer: registry.pdfRenderer,
+          documentUrl: (id: string) => mediaAdapter.getDocumentURL({ id }),
+        };
+      },
+      inject: [ProviderRegistryService, MediaAdapter],
       global: true,
     }),
     TrackingPixelsModule.registerAsync({
@@ -240,6 +283,7 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
       },
     }),
 
+    FeaturesModule,
     OneModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -252,7 +296,11 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
     AuditLogModule,
     ChangelogModule,
     ConsentModule,
+    ApiTokenModule,
+    NewsletterModule,
     DocumentModule,
+    VideoModule,
+    AudioModule,
     StatsModule,
     SettingModule,
     ExternalAppsModule,
@@ -273,6 +321,7 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
     BlockContentModule,
     PollModule,
     PhraseModule,
+    ActionModule,
     UserModule,
     UserSubscriptionModule,
     ChallengeModule.registerAsync({
@@ -295,15 +344,16 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
       inject: [AgendaBaselService, KulturZueriService],
     }),
     ScheduleModule.forRoot(),
+    ResilienceModule.forRoot(),
     ConfigModule.forRoot(),
     HealthModule,
     SystemInfoModule,
     HotAndTrendingModule.registerAsync({
       imports: [
         GoogleAnalyticsModule.registerAsync({
-          imports: [PrismaModule, KvTtlCacheModule],
-          inject: [PrismaClient, KvTtlCacheService],
-          useFactory: async (prisma: PrismaClient, kv: KvTtlCacheService) => {
+          imports: [PrismaModule],
+          inject: [PrismaClient, NamespacedCache],
+          useFactory: async (prisma: PrismaClient, kv: NamespacedCache) => {
             const dbConfig = new GoogleAnalyticsDbConfig(
               prisma,
               kv,
@@ -313,9 +363,45 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
             return dbConfig;
           },
         }),
+        PlausibleModule.registerAsync({
+          imports: [PrismaModule],
+          inject: [PrismaClient, NamespacedCache],
+          useFactory: async (prisma: PrismaClient, kv: NamespacedCache) => {
+            const dbConfig = new PlausibleDbConfig(prisma, kv, 'plausible');
+            await dbConfig.initDatabaseConfiguration();
+            return dbConfig;
+          },
+        }),
+        UmamiModule.registerAsync({
+          imports: [PrismaModule],
+          inject: [PrismaClient, NamespacedCache],
+          useFactory: async (prisma: PrismaClient, kv: NamespacedCache) => {
+            const dbConfig = new UmamiDbConfig(prisma, kv, 'umami');
+            await dbConfig.initDatabaseConfiguration();
+            return dbConfig;
+          },
+        }),
+        PrismaModule,
       ],
-      useFactory: (datasource: GoogleAnalyticsService) => datasource,
-      inject: [GoogleAnalyticsService],
+      useFactory: (
+        prisma: PrismaClient,
+        kv: NamespacedCache,
+        googleAnalytics: GoogleAnalyticsService,
+        plausible: PlausibleService,
+        umami: UmamiService
+      ) =>
+        new AnalyticsProviderHotAndTrendingDataSource(prisma, kv, {
+          GOOGLE: googleAnalytics,
+          PLAUSIBLE: plausible,
+          UMAMI: umami,
+        }),
+      inject: [
+        PrismaClient,
+        NamespacedCache,
+        GoogleAnalyticsService,
+        PlausibleService,
+        UmamiService,
+      ],
     }),
     BannerApiModule,
     VersionInformationModule,
@@ -367,6 +453,7 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
     }),
     PaywallModule,
     WebsiteSettingsModule,
+    SeoChecklistModule,
   ],
   exports: ['SYSTEM_INFO_KEY'],
   providers: [

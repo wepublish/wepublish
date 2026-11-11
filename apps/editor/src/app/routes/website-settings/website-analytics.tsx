@@ -2,7 +2,6 @@ import { useLazyQuery, useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
-  Box,
   Button,
   Checkbox,
   CircularProgress,
@@ -16,13 +15,12 @@ import {
   UpdateWebsiteSettingsDocument,
   WebsiteSettingsDocument,
 } from '@wepublish/editor/api';
-import { humanizeError } from '@wepublish/ui/editor';
-import { Controller, useForm } from 'react-hook-form';
+import { enqueueSnackbar, humanizeError } from '@wepublish/ui/editor';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
-import { MdArrowBack } from 'react-icons/md';
-import { Link } from 'react-router-dom';
-import { Message, toaster } from 'rsuite';
 import { z } from 'zod';
+
+import { WebsiteSettingsHeader } from './website-settings-header';
 
 import { lazyMessage } from '../../utility';
 
@@ -66,6 +64,16 @@ const analyticsSchema = z.object({
       .or(z.literal(''))
       .nullish(),
   }),
+  umami: z.object({
+    enabled: z.boolean(),
+    key: z
+      .string({
+        errorMap: lazyMessage('websiteSettings.analytics.umami.umInvalid'),
+      })
+      .uuid()
+      .or(z.literal(''))
+      .nullish(),
+  }),
 });
 
 export const WebsiteAnalyticsWrapper = styled.form`
@@ -85,35 +93,22 @@ export const WebsiteAnalytics = () => {
     UpdateWebsiteSettingsDocument,
     {
       onCompleted: () => {
-        toaster.push(
-          <Message
-            type="success"
-            showIcon
-            closable
-            duration={3000}
-          >
-            {t('websiteSettings.saveSuccess')}
-          </Message>
-        );
+        enqueueSnackbar(t('websiteSettings.saveSuccess'), {
+          variant: 'success',
+          autoHideDuration: 3000,
+        });
       },
       onError: error => {
-        toaster.push(
-          <Message
-            type="error"
-            showIcon
-            closable
-            duration={8000}
-          >
-            {humanizeError(error)}
-          </Message>
-        );
+        enqueueSnackbar(humanizeError(error), {
+          variant: 'error',
+          autoHideDuration: 8000,
+        });
       },
     }
   );
   const {
     control,
     handleSubmit,
-    watch,
     formState: { isLoading },
   } = useForm<z.infer<typeof analyticsSchema>>({
     resolver: zodResolver(analyticsSchema),
@@ -127,6 +122,18 @@ export const WebsiteAnalytics = () => {
       );
     },
   });
+
+  const googleAnalyticsEnabled = useWatch({
+    control,
+    name: 'googleAnalytics.enabled',
+  });
+  const googleTagManagerEnabled = useWatch({
+    control,
+    name: 'googleTagManager.enabled',
+  });
+  const plausibleEnabled = useWatch({ control, name: 'plausible.enabled' });
+  const piwikEnabled = useWatch({ control, name: 'piwik.enabled' });
+  const umamiEnabled = useWatch({ control, name: 'umami.enabled' });
 
   const onSubmit = handleSubmit(data => {
     updateWebsiteSettings({
@@ -148,16 +155,19 @@ export const WebsiteAnalytics = () => {
 
   return (
     <WebsiteAnalyticsWrapper onSubmit={onSubmit}>
-      <Link to={'/settings/website'}>
+      <WebsiteSettingsHeader title={t('websiteSettings.analytics.title')}>
         <Button
-          size="small"
-          variant="text"
-          startIcon={<MdArrowBack />}
+          type="submit"
+          variant="contained"
+          color="primary"
+          loading={saving}
         >
-          {t('websiteSettings.backToOverview')}
+          {t('save')}
         </Button>
-      </Link>
-      <h3>{t('websiteSettings.analytics.google.title')}</h3>
+      </WebsiteSettingsHeader>
+      <Typography variant="h3">
+        {t('websiteSettings.analytics.google.title')}
+      </Typography>
       <Controller
         name="googleAnalytics.enabled"
         control={control}
@@ -198,7 +208,7 @@ export const WebsiteAnalytics = () => {
         name="googleAnalytics.key"
         control={control}
         render={({ field, fieldState: { error } }) =>
-          watch('googleAnalytics.enabled') ?
+          googleAnalyticsEnabled ?
             <TextField
               {...field}
               label="Google Analytics ID"
@@ -282,7 +292,7 @@ export const WebsiteAnalytics = () => {
         name="googleTagManager.key"
         control={control}
         render={({ field, fieldState: { error } }) =>
-          watch('googleTagManager.enabled') ?
+          googleTagManagerEnabled ?
             <TextField
               {...field}
               label="Google Tag Manager ID"
@@ -327,7 +337,9 @@ export const WebsiteAnalytics = () => {
           : <></>
         }
       />
-      <h3>{t('websiteSettings.analytics.plausible.title')}</h3>
+      <Typography variant="h3">
+        {t('websiteSettings.analytics.plausible.title')}
+      </Typography>
       <Controller
         name="plausible.enabled"
         control={control}
@@ -367,7 +379,7 @@ export const WebsiteAnalytics = () => {
         name="plausible.key"
         control={control}
         render={({ field, fieldState: { error } }) =>
-          watch('plausible.enabled') ?
+          plausibleEnabled ?
             <TextField
               {...field}
               label="Plausible ID"
@@ -412,7 +424,9 @@ export const WebsiteAnalytics = () => {
           : <></>
         }
       />
-      <h3>{t('websiteSettings.analytics.piwik.title')}</h3>
+      <Typography variant="h3">
+        {t('websiteSettings.analytics.piwik.title')}
+      </Typography>
       <Controller
         name="piwik.enabled"
         control={control}
@@ -452,7 +466,7 @@ export const WebsiteAnalytics = () => {
         name="piwik.key"
         control={control}
         render={({ field, fieldState: { error } }) =>
-          watch('piwik.enabled') ?
+          piwikEnabled ?
             <TextField
               {...field}
               label="piwik ID"
@@ -486,24 +500,93 @@ export const WebsiteAnalytics = () => {
           : <></>
         }
       />
-      <Box>
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          disabled={saving}
-        >
-          {saving && (
-            <CircularProgress
-              size={14}
-              color="inherit"
-              sx={{ mr: 1 }}
+      <Typography variant="h3">
+        {t('websiteSettings.analytics.umami.title')}
+      </Typography>
+      <Controller
+        name="umami.enabled"
+        control={control}
+        render={({ field }) => (
+          <div>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  {...field}
+                  checked={!!field.value}
+                />
+              }
+              label={t('websiteSettings.analytics.umami.enable')}
             />
-          )}
 
-          {t('save')}
-        </Button>
-      </Box>
+            <Typography
+              variant="body2"
+              component={Explainer}
+            >
+              <Trans
+                i18nKey="websiteSettings.analytics.umami.um"
+                components={{
+                  url: (
+                    <MuiLink
+                      href="https://umami.is"
+                      target="_blank"
+                      rel="noreferrer"
+                    />
+                  ),
+                }}
+              />
+            </Typography>
+          </div>
+        )}
+      />
+      <Controller
+        name="umami.key"
+        control={control}
+        render={({ field, fieldState: { error } }) =>
+          umamiEnabled ?
+            <TextField
+              {...field}
+              label="Umami Website ID"
+              placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+              error={!!error}
+              helperText={
+                error?.message || (
+                  <Trans
+                    i18nKey="websiteSettings.analytics.umami.umLocator"
+                    components={{
+                      url: (
+                        <MuiLink
+                          href="https://umami.is/docs/collect-data"
+                          target="_blank"
+                          rel="noreferrer"
+                        />
+                      ),
+                    }}
+                  />
+                )
+              }
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          fontFamily: 'monospace',
+                          fontWeight: 600,
+                          color: 'text.secondary',
+                          fontSize: '0.8rem',
+                        }}
+                      >
+                        ID
+                      </Typography>
+                    </InputAdornment>
+                  ),
+                },
+              }}
+            />
+          : <></>
+        }
+      />
     </WebsiteAnalyticsWrapper>
   );
 };

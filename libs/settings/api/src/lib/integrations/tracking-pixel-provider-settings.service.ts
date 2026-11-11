@@ -7,10 +7,11 @@ import {
 } from './tracking-pixel-provider-settings.model';
 import { PrimeDataLoader } from '@wepublish/utils/api';
 import { TrackingPixelSettingsProviderDataloaderService } from './tracking-pixel-settings-provider-dataloader.service';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from './secrets-crypto';
 import { ProviderSettingsChanged } from './provider-settings-changed';
 import * as Sentry from '@sentry/nestjs';
+import { encryptSecrets } from './encrypt-secrets';
 
 @Injectable()
 export class TrackingPixelProviderSettingsService {
@@ -20,23 +21,16 @@ export class TrackingPixelProviderSettingsService {
   );
   constructor(
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService,
+    private resets: NamespaceResets,
     private providerSettingsChanged: ProviderSettingsChanged
   ) {}
 
   private encryptSecretsIfPresent<
     T extends { prolitteris_password?: string | null },
   >(data: T): T {
-    if (
-      typeof data.prolitteris_password === 'string' &&
-      data.prolitteris_password.length > 0
-    ) {
-      return {
-        ...data,
-        prolitteris_password: this.crypto.encrypt(data.prolitteris_password),
-      };
-    }
-    return data;
+    return encryptSecrets(data, ['prolitteris_password'], value =>
+      this.crypto.encrypt(value)
+    );
   }
 
   @PrimeDataLoader(TrackingPixelSettingsProviderDataloaderService, 'id')
@@ -78,7 +72,7 @@ export class TrackingPixelProviderSettingsService {
       create: output,
       update: { deletedAt: null },
     });
-    await this.kv.resetNamespace('settings:tracking-pixel');
+    await this.resets.reset('settings:tracking-pixel');
     await this.providerSettingsChanged.notify('Tracking pixel provider');
     return returnValue;
   }
@@ -108,7 +102,7 @@ export class TrackingPixelProviderSettingsService {
       where: { id },
       data: filteredUpdateData,
     });
-    await this.kv.resetNamespace('settings:tracking-pixel');
+    await this.resets.reset('settings:tracking-pixel');
     await this.providerSettingsChanged.notify('Tracking pixel provider');
     return returnValue;
   }
@@ -140,7 +134,7 @@ export class TrackingPixelProviderSettingsService {
       where: { id },
       data: { deletedAt: new Date() },
     });
-    await this.kv.resetNamespace('settings:tracking-pixel');
+    await this.resets.reset('settings:tracking-pixel');
     await this.providerSettingsChanged.notify('Tracking pixel provider');
     return returnValue;
   }

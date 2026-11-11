@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { FileUpload } from 'graphql-upload';
-import { ImageTransformation } from './image-transformation.model';
+import { ServerImageTransformation } from './image-transformation.model';
 import { UploadImage } from './image-upload.service';
 import { Image } from '@prisma/client';
 
@@ -9,6 +9,28 @@ export interface ArrayBufferUpload {
   mimetype: string;
   arrayBuffer: ArrayBuffer;
 }
+
+export type UploadVideo = {
+  id: string;
+  filename: string;
+  fileSize: number;
+  mimeType: string;
+  extension: string;
+};
+
+export type VideoPoster = {
+  filename: string;
+  mimetype: string;
+  createReadStream: () => NodeJS.ReadableStream;
+};
+
+export type UploadAudio = {
+  id: string;
+  filename: string;
+  fileSize: number;
+  mimeType: string;
+  extension: string;
+};
 
 export type UploadDocument = {
   id: string;
@@ -30,7 +52,7 @@ export abstract class MediaAdapter {
 
   abstract getImageURL(
     image: Image,
-    transformation?: ImageTransformation | undefined
+    transformation?: ServerImageTransformation | undefined
   ): Promise<string>;
 
   abstract uploadDocument(
@@ -46,4 +68,29 @@ export abstract class MediaAdapter {
   }): Promise<string>;
 
   abstract getDocumentThumbnailURL(document: { id: string }): Promise<string>;
+
+  abstract uploadVideo(
+    fileUpload: Promise<FileUpload>,
+    poster?: Promise<FileUpload>
+  ): Promise<UploadVideo>;
+
+  abstract deleteVideo(id: string): Promise<boolean>;
+
+  abstract getVideoURL(video: {
+    id: string;
+    filename?: string | null;
+    extension?: string;
+  }): Promise<string>;
+
+  abstract getVideoPosterURL(video: { id: string }): Promise<string>;
+
+  abstract uploadAudio(fileUpload: Promise<FileUpload>): Promise<UploadAudio>;
+
+  abstract deleteAudio(id: string): Promise<boolean>;
+
+  abstract getAudioURL(audio: {
+    id: string;
+    filename?: string | null;
+    extension?: string;
+  }): Promise<string>;
 }

@@ -3,6 +3,7 @@ import { User, UserRole } from '@prisma/client';
 export enum AuthSessionType {
   User = 'user',
   Token = 'token',
+  ApiToken = 'apiToken',
 }
 
 export type TokenSession = {
@@ -24,4 +25,14 @@ export type UserSession = {
   impersonatedBy?: string | null;
 };
 
-export type AuthSession = TokenSession | UserSession;
+export type ApiTokenSession = {
+  type: AuthSessionType.ApiToken;
+  id: string;
+  name: string;
+  token: string;
+  permissions: string[];
+};
+
+export const EXPIRED_API_TOKEN = 'expired-api-token';
+
+export type AuthSession = TokenSession | UserSession | ApiTokenSession;

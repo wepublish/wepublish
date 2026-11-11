@@ -1,6 +1,6 @@
-import type { Mock } from 'vitest';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { getSettings } from '@wepublish/editor/api';
+import type { Mock } from 'vitest';
 
 import { fetchOneMessages, useOneMessages } from './oneMessages.hooks';
 import type { OneMessage } from './oneMessages.types';

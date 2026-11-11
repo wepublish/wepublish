@@ -1,0 +1,24 @@
+{
+  "name": "dragonfly-api",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/dragonfly/api/src",
+  "projectType": "library",
+  "tags": ["scope:runtime-shared"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/dragonfly/api",
+        "tsConfig": "libs/dragonfly/api/tsconfig.lib.json",
+        "main": "libs/dragonfly/api/src/index.ts",
+        "rootDir": "."
+      }
+    },
+    "test": {
+      "options": {
+        "config": "../../../{projectRoot}/vitest.config.ts"
+      }
+    }
+  }
+}

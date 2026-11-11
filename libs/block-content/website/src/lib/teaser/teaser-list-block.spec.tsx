@@ -1,13 +1,59 @@
-import { render } from '@testing-library/react';
-import * as stories from './teaser-list-block.stories';
-import { composeStories } from '@storybook/react';
+import { screen } from '@testing-library/react';
+import {
+  mockArticleTeaser,
+  mockEventTeaser,
+  mockPageTeaser,
+  mockTeaserListBlock,
+  renderWithProviders,
+} from '@wepublish/mocks/website';
+import { TeaserListBlock } from './teaser-list-block';
 
-const storiesCmp = composeStories(stories);
+describe('TeaserListBlock', () => {
+  it('renders every teaser in order', () => {
+    renderWithProviders(
+      <TeaserListBlock
+        {...mockTeaserListBlock({
+          teasers: [
+            mockArticleTeaser({ title: 'Article' }),
+            mockPageTeaser({ title: 'Page' }),
+            mockEventTeaser({ title: 'Event' }),
+          ],
+        })}
+      />
+    );
 
-describe('Teaser List Block', () => {
-  Object.entries(storiesCmp).forEach(([story, Component]) => {
-    it(`should render ${story}`, () => {
-      render(<Component />);
-    });
+    expect(screen.getAllByRole('article')).toHaveLength(3);
+    expect(
+      screen
+        .getAllByRole('heading', { level: 1 })
+        .map(heading => heading.textContent)
+    ).toEqual(['Article', 'Page', 'Event']);
+  });
+
+  it('shows the block title above the teasers', () => {
+    renderWithProviders(
+      <TeaserListBlock {...mockTeaserListBlock({ title: 'Foobar Title' })} />
+    );
+
+    expect(screen.getAllByRole('heading', { level: 1 })[0]).toHaveTextContent(
+      'Foobar Title'
+    );
+  });
+
+  it('shows no block title when there is none', () => {
+    renderWithProviders(
+      <TeaserListBlock
+        {...mockTeaserListBlock({
+          title: null,
+          teasers: [mockArticleTeaser({ title: 'Article' })],
+        })}
+      />
+    );
+
+    expect(
+      screen
+        .getAllByRole('heading', { level: 1 })
+        .map(heading => heading.textContent)
+    ).toEqual(['Article']);
   });
 });

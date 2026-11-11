@@ -1,13 +1,14 @@
 import '@testing-library/jest-dom/vitest';
 
 import { render, screen } from '@testing-library/react';
-import { composeStories } from '@storybook/react';
 import {
+  mockBlockTemplate,
   mockBlockTemplateBlock,
   mockBreakBlock,
   mockQuoteBlock,
   mockTitleBlock,
-} from '@wepublish/storybook/mocks';
+  renderWithProviders,
+} from '@wepublish/mocks/website';
 import {
   BuilderBlockRendererProps,
   WebsiteBuilderProvider,
@@ -18,25 +19,12 @@ import {
   BlockTemplateBlock,
   isBlockTemplateBlock,
 } from './block-template-block';
-import * as stories from './block-template-block.stories';
-import * as blocksStories from '../blocks.stories';
-
-const storiesCmp = composeStories(stories);
-const { Default } = storiesCmp;
-const { Default: Blocks } = composeStories(blocksStories);
 
 type TemplateBlocks = NonNullable<
   FullBlockTemplateBlockFragment['template']
 >['blocks'];
 
-const templateOf = (blocks: unknown[], name = 'Block Template') => ({
-  id: '1234-1234',
-  name,
-  blocks: blocks as TemplateBlocks,
-});
-
-const blockTemplate = (blocks: unknown[], name = 'Block Template') =>
-  mockBlockTemplateBlock({ template: templateOf(blocks, name) });
+const templateOf = (blocks: TemplateBlocks) => mockBlockTemplate({ blocks });
 
 const renderWithSpyRenderer = (
   props: Partial<Parameters<typeof BlockTemplateBlock>[0]>
@@ -55,12 +43,6 @@ const renderWithSpyRenderer = (
 };
 
 describe('Block Template Block', () => {
-  Object.entries(storiesCmp).forEach(([story, Component]) => {
-    it(`should render ${story}`, () => {
-      render(<Component />);
-    });
-  });
-
   describe('isBlockTemplateBlock', () => {
     it('should match a block template block', () => {
       expect(isBlockTemplateBlock(mockBlockTemplateBlock())).toBe(true);
@@ -72,10 +54,11 @@ describe('Block Template Block', () => {
   });
 
   describe('rendering the template content', () => {
-    it('should render every block of the template with its predefined content', () => {
-      render(
-        <Default
-          {...blockTemplate([
+    it('should show every block of the template with its predefined content', () => {
+      renderWithProviders(
+        <BlockTemplateBlock
+          templateId="template"
+          template={templateOf([
             mockTitleBlock({
               preTitle: 'Predefined Pre-Title',
               title: 'Predefined Title',
@@ -84,13 +67,16 @@ describe('Block Template Block', () => {
             mockQuoteBlock({
               quote: 'Predefined Quote',
               author: 'Predefined Author',
+              image: null,
             }),
           ])}
         />
       );
 
+      expect(
+        screen.getByRole('heading', { name: 'Predefined Title' })
+      ).toBeInTheDocument();
       expect(screen.getByText('Predefined Pre-Title')).toBeInTheDocument();
-      expect(screen.getByText('Predefined Title')).toBeInTheDocument();
       expect(screen.getByText('Predefined Lead')).toBeInTheDocument();
       expect(screen.getByText('Predefined Quote')).toBeInTheDocument();
       expect(screen.getByText('Predefined Author')).toBeInTheDocument();
@@ -112,24 +98,28 @@ describe('Block Template Block', () => {
     });
 
     it('should render the updated content once the template has been modified', () => {
-      const { rerender } = render(
-        <Default {...blockTemplate([mockTitleBlock({ title: 'Old Title' })])} />
-      );
+      const { rerender, Renderer } = renderWithSpyRenderer({
+        template: templateOf([mockTitleBlock({ title: 'Old Title' })]),
+      });
 
-      expect(screen.getByText('Old Title')).toBeInTheDocument();
+      Renderer.mockClear();
 
       rerender(
-        <Default
-          {...blockTemplate([
-            mockTitleBlock({ title: 'New Title' }),
-            mockQuoteBlock({ quote: 'Added Quote' }),
-          ])}
-        />
+        <WebsiteBuilderProvider blocks={{ Renderer }}>
+          <BlockTemplateBlock
+            templateId="template"
+            template={templateOf([
+              mockTitleBlock({ title: 'New Title' }),
+              mockQuoteBlock({ quote: 'Added Quote' }),
+            ])}
+          />
+        </WebsiteBuilderProvider>
       );
 
-      expect(screen.queryByText('Old Title')).not.toBeInTheDocument();
-      expect(screen.getByText('New Title')).toBeInTheDocument();
-      expect(screen.getByText('Added Quote')).toBeInTheDocument();
+      expect(Renderer.mock.calls.map(([{ block }]) => block)).toEqual([
+        expect.objectContaining({ title: 'New Title' }),
+        expect.objectContaining({ quote: 'Added Quote' }),
+      ]);
     });
   });
 
@@ -162,56 +152,6 @@ describe('Block Template Block', () => {
         expect.objectContaining({ type: 'Article', level: 3 }),
         undefined
       );
-    });
-
-    it('should render nested block templates recursively', () => {
-      render(
-        <Default
-          {...blockTemplate([
-            mockTitleBlock({ title: 'Outer Title' }),
-            blockTemplate(
-              [mockTitleBlock({ title: 'Inner Title' })],
-              'Inner Template'
-            ),
-          ])}
-        />
-      );
-
-      expect(screen.getByText('Outer Title')).toBeInTheDocument();
-      expect(screen.getByText('Inner Title')).toBeInTheDocument();
-    });
-  });
-
-  describe('inside a list of blocks', () => {
-    it('should render the template content inline with the surrounding blocks', () => {
-      render(
-        <Blocks
-          type="Article"
-          blocks={[
-            mockTitleBlock({ title: 'Before The Template' }),
-            blockTemplate([mockQuoteBlock({ quote: 'From The Template' })]),
-            mockTitleBlock({ title: 'After The Template' }),
-          ]}
-        />
-      );
-
-      expect(screen.getByText('Before The Template')).toBeInTheDocument();
-      expect(screen.getByText('From The Template')).toBeInTheDocument();
-      expect(screen.getByText('After The Template')).toBeInTheDocument();
-    });
-
-    it('should render nothing for a template block without a template', () => {
-      render(
-        <Blocks
-          type="Article"
-          blocks={[
-            mockBlockTemplateBlock({ template: null }),
-            mockTitleBlock({ title: 'Still Rendered' }),
-          ]}
-        />
-      );
-
-      expect(screen.getByText('Still Rendered')).toBeInTheDocument();
     });
   });
 

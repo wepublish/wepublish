@@ -13,7 +13,7 @@ import {
   ListicleItemInput,
 } from '@wepublish/block-content/api';
 import { ImageFetcherService, MediaAdapter } from '@wepublish/image/api';
-import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
+import { PublicContentCacheInvalidator } from '@wepublish/public-content-cache/api';
 import { createSafeHostUrl, remote } from '@wepublish/peering/api';
 import { DateFilter, PrimeDataLoader } from '@wepublish/utils/api';
 import { GraphQLClient } from 'graphql-request';

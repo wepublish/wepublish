@@ -39,7 +39,9 @@ export function TotpQrCode({ uri }: { uri: string }) {
 
   useEffect(() => {
     const node = ref.current;
-    if (!node) return;
+    if (!node) {
+      return;
+    }
     node.innerHTML = '';
     qr.append(node);
   }, [qr]);

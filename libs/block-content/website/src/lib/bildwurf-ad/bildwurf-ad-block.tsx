@@ -66,7 +66,7 @@ export function BildwurfAdBlock({
           // Bildwurf will dynamically change the DOM which can break the application on navigation
           __html: `
             <div id="bildwurf-injection-wrapper">
-              <ins className="aso-zone" data-zone="${zoneID}"></ins>
+              <ins class="aso-zone" data-zone="${zoneID}"></ins>
             </div>
           `,
         }}

@@ -44,6 +44,7 @@ export function TitleBlock({
         disabled={disabled}
         onChange={e => onChange({ ...value, title: e.target.value })}
       />
+
       <TypographicTextArea
         variant="body1"
         align="center"

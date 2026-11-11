@@ -7,22 +7,25 @@ import {
 import mailchimp from '@mailchimp/mailchimp_marketing';
 import { createHash } from 'crypto';
 import { SyncProviderSettingsService } from '@wepublish/settings/api';
+import { describeError } from '@wepublish/utils/api';
+import { describeMailchimpError } from './mailchimp-error';
 
 type SyncConfig = SettingSyncProvider & { decryptedApiKey: string | null };
+
+interface MailchimpContact {
+  status: string;
+  contact_id: string;
+}
+
+// Mailchimp rejects example.com and the like as invalid email addresses.
+const MOVED_CONTACT_DOMAIN = 'wepublish.ch';
 
 function getStatusCode(error: any): number | null {
   return error?.response?.body?.status ?? error?.status ?? null;
 }
 
-function getErrorMessage(error: any): string {
-  const detail = error?.response?.body?.detail;
-  const title = error?.response?.body?.title;
-
-  if (title && detail) {
-    return `${title}: ${detail}`;
-  }
-
-  return detail ?? error?.message ?? String(error);
+function getSubscriberHash(email: string): string {
+  return createHash('md5').update(email).digest('hex');
 }
 
 @Injectable()
@@ -52,7 +55,7 @@ export class MailchimpContactService {
       configs = await this.syncProviderSettingsService.getEnabledSyncConfigs();
     } catch (error) {
       this.logger.error(
-        `Could not load sync provider settings: ${getErrorMessage(error)}`
+        `Could not load sync provider settings: ${describeError(error)}`
       );
 
       return;
@@ -87,16 +90,37 @@ export class MailchimpContactService {
     try {
       this.configureMailchimpClient(config);
 
+      await this.renameContact(listId, userId, previousEmail, nextEmail);
+    } catch (error) {
+      const message = describeMailchimpError(error);
+
+      this.logger.error(
+        `Could not update Mailchimp contact of user ${userId} from '${previousEmail}' to '${nextEmail}': ${message}`
+      );
+
+      await this.recordSyncError(
+        config.id,
+        userId,
+        nextEmail,
+        message,
+        getStatusCode(error)
+      );
+    }
+  }
+
+  private async renameContact(
+    listId: string,
+    userId: string,
+    previousEmail: string,
+    nextEmail: string
+  ): Promise<void> {
+    try {
       await mailchimp.lists.updateListMember(
         listId,
-        createHash('md5').update(previousEmail).digest('hex'),
+        getSubscriberHash(previousEmail),
         {
           email_address: nextEmail,
         }
-      );
-
-      this.logger.log(
-        `Updated Mailchimp contact of user ${userId} from '${previousEmail}' to '${nextEmail}'`
       );
     } catch (error) {
       const statusCode = getStatusCode(error);
@@ -109,19 +133,132 @@ export class MailchimpContactService {
         return;
       }
 
-      const message = getErrorMessage(error);
+      // Mailchimp refuses to rename a contact to an email that already has one
+      if (
+        statusCode === 400 &&
+        (await this.moveToExistingContact(
+          listId,
+          userId,
+          previousEmail,
+          nextEmail
+        ))
+      ) {
+        return;
+      }
 
-      this.logger.error(
-        `Could not update Mailchimp contact of user ${userId} from '${previousEmail}' to '${nextEmail}': ${message}`
-      );
+      throw error;
+    }
 
-      await this.recordSyncError(
-        config.id,
-        userId,
-        nextEmail,
-        message,
-        statusCode
+    this.logger.log(
+      `Updated Mailchimp contact of user ${userId} from '${previousEmail}' to '${nextEmail}'`
+    );
+  }
+
+  /**
+   * The user already has a contact for the new email, e.g. from signing up to
+   * the newsletter with it. That contact is renamed to a placeholder and
+   * archived, so the previous contact keeps its history and takes the email.
+   *
+   * Mailchimp refuses a rename onto an email that an archived or even a
+   * permanently deleted contact still has (verified 2026-10-09), so the email
+   * has to be freed by renaming that contact first.
+   *
+   * Returns false when there is no such contact, or when it is not subscribed
+   * and someone has to decide which one to keep.
+   */
+  private async moveToExistingContact(
+    listId: string,
+    userId: string,
+    previousEmail: string,
+    nextEmail: string
+  ): Promise<boolean> {
+    const existing = await this.findContact(listId, nextEmail);
+
+    if (!existing) {
+      return false;
+    }
+
+    const previous = await this.findContact(listId, previousEmail);
+
+    // Nothing gets sent to the previous contact, so there is nothing to move.
+    if (previous?.status !== 'subscribed') {
+      return true;
+    }
+
+    if (existing.status !== 'subscribed') {
+      return false;
+    }
+
+    const placeholder = `moved-${existing.contact_id}@${MOVED_CONTACT_DOMAIN}`;
+
+    await mailchimp.lists.updateListMember(
+      listId,
+      getSubscriberHash(nextEmail),
+      { email_address: placeholder }
+    );
+
+    try {
+      // Archives the contact, it can still be restored in Mailchimp.
+      await mailchimp.lists.deleteListMember(
+        listId,
+        getSubscriberHash(placeholder)
       );
+      await mailchimp.lists.updateListMember(
+        listId,
+        getSubscriberHash(previousEmail),
+        { email_address: nextEmail }
+      );
+    } catch (error) {
+      await this.restoreContact(listId, placeholder, nextEmail);
+
+      throw error;
+    }
+
+    this.logger.log(
+      `Moved Mailchimp contact of user ${userId} from '${previousEmail}' to '${nextEmail}', archived the existing contact as '${placeholder}'`
+    );
+
+    return true;
+  }
+
+  private async restoreContact(
+    listId: string,
+    placeholder: string,
+    email: string
+  ): Promise<void> {
+    try {
+      await mailchimp.lists.updateListMember(
+        listId,
+        getSubscriberHash(placeholder),
+        { status: 'subscribed' }
+      );
+      await mailchimp.lists.updateListMember(
+        listId,
+        getSubscriberHash(placeholder),
+        { email_address: email }
+      );
+    } catch (error) {
+      throw new Error(
+        `Could not give the contact of '${email}' its email back, it is still '${placeholder}': ${describeMailchimpError(error)}`
+      );
+    }
+  }
+
+  private async findContact(
+    listId: string,
+    email: string
+  ): Promise<MailchimpContact | null> {
+    try {
+      return (await mailchimp.lists.getListMember(
+        listId,
+        getSubscriberHash(email)
+      )) as MailchimpContact;
+    } catch (error) {
+      if (getStatusCode(error) === 404) {
+        return null;
+      }
+
+      throw error;
     }
   }
 
@@ -142,7 +279,7 @@ export class MailchimpContactService {
       });
     } catch (error) {
       this.logger.error(
-        `Could not record Mailchimp sync error for user ${userId}: ${getErrorMessage(
+        `Could not record Mailchimp sync error for user ${userId}: ${describeError(
           error
         )}`
       );

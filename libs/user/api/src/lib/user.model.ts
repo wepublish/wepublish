@@ -10,6 +10,7 @@ import {
   PickType,
   registerEnumType,
 } from '@nestjs/graphql';
+import { EmailQualityLevel } from '@prisma/client';
 import { Image } from '@wepublish/image/api';
 import { Property, PropertyInput } from '@wepublish/property/api';
 import { PaginatedType, SortOrder } from '@wepublish/utils/api';
@@ -110,6 +111,13 @@ export class SensitiveDataUser extends BaseUser {
   @Field(() => Date, { nullable: true })
   lastLogin?: Date;
 
+  @Field(() => UserEmailQualityModel, {
+    nullable: true,
+    description:
+      'How usable the address is, derived from bounces, logins and clicks. Null until evaluated, which counts as unknown.',
+  })
+  emailQuality?: UserEmailQualityModel | null;
+
   @Field(() => UserAddress, { nullable: true })
   address?: UserAddress | null;
 
@@ -135,6 +143,24 @@ export class SensitiveDataUser extends BaseUser {
 
   @Field(() => [UserRole])
   roles!: UserRole[];
+}
+
+registerEnumType(EmailQualityLevel, {
+  name: 'EmailQualityLevel',
+  description:
+    'active: logged in or clicked recently. unknown: nothing decided. unresponsive: mails delivered, no reaction for a long time. dead: bounced, invalid, complained or unsubscribed.',
+});
+
+@ObjectType()
+export class UserEmailQualityModel {
+  @Field(() => EmailQualityLevel)
+  level!: EmailQualityLevel;
+
+  @Field({ description: 'The deciding evidence, e.g. hardBounce or login.' })
+  reason!: string;
+
+  @Field(() => Date, { description: 'When the level was first reached.' })
+  since!: Date;
 }
 
 export enum UserSubscriptionStatus {
@@ -298,6 +324,10 @@ export class RegisterUserInput extends OmitType(
 
 @ArgsType()
 export class UpdateCurrentUserInput extends PartialType(
-  OmitType(RegisterUserInput, ['email'] as const, ArgsType),
+  OmitType(
+    RegisterUserInput,
+    ['email', 'password', 'challengeAnswer'] as const,
+    ArgsType
+  ),
   ArgsType
 ) {}

@@ -1,7 +1,7 @@
 import type { Mock } from 'vitest';
 import { Test } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
-import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCacheTestingModule } from '@wepublish/kv-ttl-cache/api/testing';
 import { WebsiteSettingsService } from './website-settings.service';
 
 describe('WebsiteSettingsService', () => {
@@ -25,7 +25,7 @@ describe('WebsiteSettingsService', () => {
     };
 
     const module = await Test.createTestingModule({
-      imports: [KvTtlCacheModule],
+      imports: [NamespacedCacheTestingModule.forRoot()],
       providers: [
         WebsiteSettingsService,
         { provide: PrismaClient, useValue: prisma },
@@ -49,5 +49,27 @@ describe('WebsiteSettingsService', () => {
     await service.getSettings();
 
     expect(prisma.websiteSettings.findFirst).toHaveBeenCalledTimes(2);
+  });
+
+  it('stores the Umami website id', async () => {
+    const off = { enabled: false, key: '' };
+
+    await service.updateSettings({
+      analytics: {
+        googleAnalytics: off,
+        googleTagManager: off,
+        plausible: off,
+        piwik: off,
+        umami: {
+          enabled: true,
+          key: '4f4c5ea1-0000-4000-8000-000000000000',
+        },
+      },
+    });
+
+    expect(prisma.websiteSettings.update.mock.calls[0][0].data).toMatchObject({
+      analyticsUmamiEnabled: true,
+      analyticsUmamiId: '4f4c5ea1-0000-4000-8000-000000000000',
+    });
   });
 });

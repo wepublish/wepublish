@@ -2,13 +2,15 @@ import {
   createCheckedPermissionComponent,
   ListViewContainer,
   ListViewHeader,
+  PageTitle,
 } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
 import { MdMail, MdSend } from 'react-icons/md';
 import { useSearchParams } from 'react-router-dom';
-import { Nav } from 'rsuite';
 import { MailLogTable } from './mail-log-table';
+import { Tab, Tabs } from '@mui/material';
 import { MailSendJobList } from './mail-send-job-list';
+import { CanGetMailLogs } from '@wepublish/permissions';
 
 const TAB_MAILS = 'mails';
 const TAB_JOBS = 'jobs';
@@ -46,43 +48,53 @@ function MailLogList() {
     <div style={{ flexShrink: 0 }}>
       <ListViewContainer>
         <ListViewHeader>
-          <h2>{t('mailLog.title')}</h2>
+          <PageTitle>{t('mailLog.title')}</PageTitle>
         </ListViewHeader>
       </ListViewContainer>
 
-      <Nav
-        appearance="subtle"
-        activeKey={tab}
-        onSelect={value =>
+      <Tabs
+        value={tab}
+        aria-label={t('mailLog.title')}
+        onChange={(_event, value) =>
           setParam('tab', value === TAB_JOBS ? TAB_JOBS : null)
         }
         style={{ marginTop: 16, marginBottom: 16 }}
       >
-        <Nav.Item
-          eventKey={TAB_MAILS}
+        <Tab
+          value={TAB_MAILS}
+          id={`${TAB_MAILS}-tab`}
+          aria-controls={`${TAB_MAILS}-panel`}
           icon={<MdMail />}
-        >
-          {t('mailLog.tabs.mails')}
-        </Nav.Item>
-        <Nav.Item
-          eventKey={TAB_JOBS}
-          icon={<MdSend />}
-        >
-          {t('mailLog.tabs.jobs')}
-        </Nav.Item>
-      </Nav>
-
-      {tab === TAB_JOBS ?
-        <MailSendJobList
-          selectedJobId={jobId}
-          onSelectJob={value => setParam('job', value)}
+          iconPosition="start"
+          label={<>{t('mailLog.tabs.mails')}</>}
         />
-      : <MailLogTable />}
+        <Tab
+          value={TAB_JOBS}
+          id={`${TAB_JOBS}-tab`}
+          aria-controls={`${TAB_JOBS}-panel`}
+          icon={<MdSend />}
+          iconPosition="start"
+          label={<>{t('mailLog.tabs.jobs')}</>}
+        />
+      </Tabs>
+
+      <div
+        role="tabpanel"
+        id={`${tab}-panel`}
+        aria-labelledby={`${tab}-tab`}
+      >
+        {tab === TAB_JOBS ?
+          <MailSendJobList
+            selectedJobId={jobId}
+            onSelectJob={value => setParam('job', value)}
+          />
+        : <MailLogTable />}
+      </div>
     </div>
   );
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_MAIL-LOGS',
+  CanGetMailLogs.id,
 ])(MailLogList);
 export { CheckedPermissionComponent as MailLogList };

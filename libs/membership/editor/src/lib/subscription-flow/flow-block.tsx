@@ -13,8 +13,10 @@ import { UserActionEvent } from './subscription-flow-list';
 import { Timeline } from './timeline/timeline';
 
 const AffectedCount = styled('span')<{ empty: boolean }>`
-  --affected-color: ${({ empty }) =>
-    empty ? 'var(--rs-state-error)' : 'var(--rs-state-success)'};
+  --affected-color: ${({ empty, theme }) =>
+    empty ?
+      `${theme.vars.palette.error.main}`
+    : `${theme.vars.palette.success.main}`};
   display: inline-flex;
   align-items: center;
   padding: 2px 10px;

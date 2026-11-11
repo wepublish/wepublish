@@ -1,0 +1,25 @@
+{
+  "name": "website-revalidation-api",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/website-revalidation/api/src",
+  "projectType": "library",
+  "tags": ["scope:api-only"],
+  "implicitDependencies": ["utils-website"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/website-revalidation/api",
+        "tsConfig": "libs/website-revalidation/api/tsconfig.lib.json",
+        "main": "libs/website-revalidation/api/src/index.ts",
+        "rootDir": "."
+      }
+    },
+    "test": {
+      "options": {
+        "config": "../../../{projectRoot}/vitest.config.ts"
+      }
+    }
+  }
+}

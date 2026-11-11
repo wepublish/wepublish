@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
+import { Tooltip, TooltipProps } from '@mui/material';
 import { ComponentPropsWithoutRef, forwardRef, ReactNode } from 'react';
 import { MdInfoOutline } from 'react-icons/md';
-import { Tooltip, Whisper, WhisperProps } from 'rsuite';
 
 const TriggerButton = styled('button')`
   position: relative;
@@ -15,18 +15,33 @@ const TriggerButton = styled('button')`
   border: 0;
   border-radius: 50%;
   background: none;
-  color: var(--rs-text-secondary);
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
   line-height: 0;
   vertical-align: middle;
   cursor: help;
 
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 24px;
+    height: 24px;
+    transform: translate(-50%, -50%);
+  }
+
+  .MuiInputLabel-shrink &::before {
+    width: 34px;
+    height: 34px;
+  }
+
   &:hover,
   &:focus-visible {
-    color: var(--rs-text-heading);
+    color: ${({ theme }) => theme.vars.palette.text.primary};
   }
 
   &:focus-visible {
-    outline: 2px solid var(--rs-primary-500);
+    outline: 2px solid ${({ theme }) => theme.vars.palette.primary.main};
     outline-offset: 1px;
   }
 `;
@@ -53,27 +68,23 @@ const TooltipText = styled('span')`
 export interface InfoTooltipProps {
   text: ReactNode;
   label?: string;
-  placement?: WhisperProps['placement'];
+  placement?: TooltipProps['placement'];
 }
 
 export function InfoTooltip({
   text,
   label,
-  placement = 'top',
+  placement = 'bottom',
 }: InfoTooltipProps) {
   return (
-    <Whisper
-      trigger={['hover', 'focus']}
+    <Tooltip
       placement={placement}
-      speaker={
-        <Tooltip>
-          <TooltipText>{text}</TooltipText>
-        </Tooltip>
-      }
+      title={<TooltipText>{text}</TooltipText>}
+      describeChild={Boolean(label)}
     >
       <InfoTrigger
         aria-label={label ?? (typeof text === 'string' ? text : undefined)}
       />
-    </Whisper>
+    </Tooltip>
   );
 }

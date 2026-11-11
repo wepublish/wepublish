@@ -7,9 +7,9 @@
  *
  * Usage (from the repo root):
  *
- *   npx tsx tools/migrate-article-authors/main.ts analyze  [--out plan.json]
- *   npx tsx tools/migrate-article-authors/main.ts apply    --plan plan.json [--dry-run] [--limit N] [--only <articleId|slug>]
- *   npx tsx tools/migrate-article-authors/main.ts cleanup  --plan plan.json [--dry-run]
+ *   pnpm tsx tools/migrate-article-authors/main.ts analyze  [--out plan.json]
+ *   pnpm tsx tools/migrate-article-authors/main.ts apply    --plan plan.json [--dry-run] [--limit N] [--only <articleId|slug>]
+ *   pnpm tsx tools/migrate-article-authors/main.ts cleanup  --plan plan.json [--dry-run]
  *
  * Environment:
  *   WEPUBLISH_API_URL   default: https://api-hauptstadt.wepublish.cloud/v1
@@ -2072,7 +2072,7 @@ async function main() {
     log(`Plan (JSON) written to ${out}`);
     log(`Report (HTML) written to ${htmlOut}`);
     log(
-      `Review them, then run: npx tsx ${path.relative(process.cwd(), __filename)} apply --plan ${out} --dry-run`
+      `Review them, then run: pnpm tsx ${path.relative(process.cwd(), __filename)} apply --plan ${out} --dry-run`
     );
     return;
   }

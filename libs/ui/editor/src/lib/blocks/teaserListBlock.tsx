@@ -1,12 +1,12 @@
 import styled from '@emotion/styled';
+import { Drawer, Typography } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdEdit } from 'react-icons/md';
-import { Drawer, IconButton as RSIconButton, Panel } from 'rsuite';
 
 import { TypographicTextArea } from '../atoms';
 import { BlockProps } from '../atoms/blockList';
-import { PlaceholderInput } from '../atoms/placeholderInput';
+import { BlockPreviewCard } from '../atoms/blockPreviewCard';
+import { DRAWER_WIDTHS } from '../drawer';
 import {
   TeaserListConfigPanel,
   useTeaserTypeText,
@@ -19,46 +19,25 @@ const TeaserListBlockWrapper = styled.div`
   gap: 8px;
 `;
 
-const TeaserGrid = styled.div`
+const TeaserGrid = styled('div')`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  margin-top: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
+  gap: ${({ theme }) => theme.spacing(1.5)};
 `;
 
 const TeaserWrapper = styled('article')`
   position: relative;
-  min-height: 250px;
+  min-height: 220px;
   overflow: hidden;
-  border-radius: var(--rs-radius-md);
-  background-color: var(--rs-bg-well);
-`;
-
-const PreviewPanel = styled(Panel)`
-  overflow: hidden;
-  background-color: var(--rs-bg-well);
-  display: grid;
-  position: relative;
-`;
-
-const Count = styled.p`
-  text-align: center;
-`;
-
-const IconButton = styled(RSIconButton)`
-  position: absolute;
-  right: 0;
-`;
-
-const InfoList = styled.ul`
-  list-style: none;
-  padding: 12px;
+  border-radius: ${({ theme }) => theme.shape.borderRadius}px;
+  background-color: ${({ theme }) => theme.vars.palette.background.paper};
 `;
 
 export const TeaserListBlock = ({
   value,
   onChange,
   autofocus,
+  disabled,
 }: BlockProps<TeaserListBlockValue>) => {
   const focusRef = useRef<HTMLTextAreaElement>(null);
   const { filter, teasers, skip, sort, take, teaserType } = value;
@@ -86,55 +65,53 @@ export const TeaserListBlock = ({
         onChange={e => onChange({ ...value, title: e.target.value })}
       />
 
-      <PreviewPanel
-        bodyFill
-        bordered
-      >
-        <PlaceholderInput onAddClick={() => setIsDialogOpen(true)}>
-          <IconButton
-            size={'lg'}
-            icon={<MdEdit />}
-            onClick={() => setIsDialogOpen(true)}
-          >
-            {t('blocks.teaserList.edit')}
-          </IconButton>
-
-          <InfoList>
-            <li>
-              {t('blocks.teaserList.teaserType', {
-                teaserType: teaserTypeText(teaserType),
-              })}
-            </li>
-            <li>{t('blocks.teaserList.take', { take })}</li>
-            <li>{t('blocks.teaserList.skip', { skip })}</li>
-            {!!sort && <li>{t('blocks.teaserList.sort', { sort })}</li>}
-            {!!filter.tags?.length && (
-              <li>
-                {t('blocks.teaserList.tags', { tags: filter.tags.join(', ') })}
-              </li>
-            )}
-          </InfoList>
-        </PlaceholderInput>
-      </PreviewPanel>
-
-      <Count>
-        {t('blocks.teaserList.teasers', {
-          count: teasers.length ? teasers.length : 0,
+      <BlockPreviewCard
+        isEmpty={false}
+        inset
+        emptyLabel={t('blocks.teaserList.edit')}
+        editLabel={t('blocks.teaserList.edit')}
+        onEdit={() => setIsDialogOpen(true)}
+        title={t('blocks.teaserList.teaserType', {
+          teaserType: teaserTypeText(teaserType),
         })}
-      </Count>
-
-      {!!teasersToDisplay.length && (
-        <TeaserGrid>
-          {teasersToDisplay.map(([, teaser], index) => (
-            <TeaserWrapper key={index}>
-              <ContentForTeaser teaser={teaser} />
-            </TeaserWrapper>
-          ))}
-        </TeaserGrid>
-      )}
+        subtitle={[
+          t('blocks.teaserList.take', { take }),
+          t('blocks.teaserList.skip', { skip }),
+          sort && t('blocks.teaserList.sort', { sort }),
+          !!filter.tags?.length &&
+            t('blocks.teaserList.tags', { tags: filter.tags.join(', ') }),
+        ]
+          .filter(Boolean)
+          .join(' · ')}
+        disabled={disabled}
+      >
+        {teasersToDisplay.length ?
+          <TeaserGrid>
+            {teasersToDisplay.map(([, teaser], index) => (
+              <TeaserWrapper key={index}>
+                <ContentForTeaser teaser={teaser} />
+              </TeaserWrapper>
+            ))}
+          </TeaserGrid>
+        : <Typography
+            variant="body2"
+            color="text.secondary"
+          >
+            {t('blocks.teaserList.teasers', { count: 0 })}
+          </Typography>
+        }
+      </BlockPreviewCard>
 
       <Drawer
-        size="lg"
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
       >

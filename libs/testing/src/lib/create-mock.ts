@@ -1,10 +1,11 @@
 import 'reflect-metadata';
+import type { Mock } from 'vitest';
 
 type Constructor<T = any> = new (...args: any[]) => T;
 
 export type DeepMocked<T> = Partial<{
   [K in keyof T]: T[K] extends (...args: any[]) => any ?
-    Mock<ReturnType<T[K]>, Parameters<T[K]>>
+    Mock<(...args: Parameters<T[K]>) => ReturnType<T[K]>>
   : T[K] extends object ? DeepMocked<T[K]>
   : T[K];
 }>;
@@ -12,8 +13,8 @@ export type DeepMocked<T> = Partial<{
 export type Mocked<T> = {
   [K in keyof T]: T[K] extends (...args: any[]) => any ?
     T[K] extends (...args: any[]) => Promise<infer R> ?
-      Mock<Promise<Partial<R>>, Parameters<T[K]>>
-    : Mock<Partial<ReturnType<T[K]>>, Parameters<T[K]>>
+      Mock<(...args: Parameters<T[K]>) => Promise<Partial<R>>>
+    : Mock<(...args: Parameters<T[K]>) => Partial<ReturnType<T[K]>>>
   : T[K];
 };
 

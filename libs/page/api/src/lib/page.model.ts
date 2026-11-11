@@ -3,8 +3,10 @@ import {
   Field,
   InputType,
   Int,
+  IntersectionType,
   ObjectType,
   OmitType,
+  PickType,
   registerEnumType,
 } from '@nestjs/graphql';
 import { Image } from '@wepublish/image/api';
@@ -106,6 +108,12 @@ export class Page {
   @Field()
   hidden!: boolean;
 
+  @Field()
+  hideHeader!: boolean;
+
+  @Field()
+  hideFooter!: boolean;
+
   @Field({ nullable: true })
   publishedAt?: Date;
 
@@ -190,6 +198,12 @@ export class CreatePageInput extends OmitType(
   @Field()
   hidden!: boolean;
 
+  @Field({ defaultValue: false })
+  hideHeader?: boolean;
+
+  @Field({ defaultValue: false })
+  hideFooter?: boolean;
+
   @Field(() => [BlockContentInput])
   blocks!: BlockContentInput[];
 
@@ -199,6 +213,39 @@ export class CreatePageInput extends OmitType(
   @Field(() => [PropertyInput])
   properties!: PropertyInput[];
 }
+
+@InputType()
+export class PageTemplateMetadataInput extends OmitType(
+  CreatePageInput,
+  ['blocks', 'slug'] as const,
+  InputType
+) {}
+
+@ObjectType()
+export class PageTemplateMetadata extends IntersectionType(
+  PickType(
+    PageRevision,
+    [
+      'title',
+      'description',
+      'seoTitle',
+      'seoDescription',
+      'imageID',
+      'image',
+      'properties',
+      'socialMediaTitle',
+      'socialMediaDescription',
+      'socialMediaImageID',
+      'socialMediaImage',
+    ] as const,
+    ObjectType
+  ),
+  PickType(
+    Page,
+    ['hidden', 'hideHeader', 'hideFooter', 'tags'] as const,
+    ObjectType
+  )
+) {}
 
 @ArgsType()
 export class UpdatePageInput extends CreatePageInput {

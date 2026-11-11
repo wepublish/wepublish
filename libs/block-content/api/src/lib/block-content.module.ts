@@ -15,7 +15,8 @@ import {
   TeaserListBlockResolver,
 } from './teaser/teaser-list.resolver';
 import { BaseBlockResolver } from './base-block.resolver';
-import { SlotTeasersLoader } from './teaser/slot-teasers-loader';
+import { BlockTimingResolver } from './timing/block-timing.resolver';
+import { BlockTreeLoader } from './block-tree/block-tree-loader';
 import { TagModule } from '@wepublish/tag/api';
 import { SubscribeBlockResolver } from './subscribe/subscribe-block.resolver';
 import { MemberPlanModule } from '@wepublish/member-plan/api';
@@ -40,15 +41,16 @@ import { MailchimpSubscribeService } from './mailchimp-form/mailchimp-subscribe.
   ],
   providers: [
     BaseBlockResolver,
+    BlockTimingResolver,
     EventBlockResolver,
     CommentBlockResolver,
     TeaserListBlockResolver,
     TeaserListBlockFilterResolver,
-    SlotTeasersLoader,
+    BlockTreeLoader,
     SubscribeBlockResolver,
     MailchimpSubscribeResolver,
     MailchimpSubscribeService,
   ],
-  exports: [SlotTeasersLoader],
+  exports: [BlockTreeLoader],
 })
 export class BlockContentModule {}

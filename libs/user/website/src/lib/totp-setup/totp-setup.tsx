@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
-import { useState } from 'react';
+import { ChangeEvent, ElementType, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TotpQrCode } from './totp-qr-code';
 
@@ -36,6 +36,8 @@ const AppLinksText = styled('p')`
 
 export type TotpSetupProps = {
   className?: string;
+  /** The title's heading element; `h5` by default. */
+  titleComponent?: ElementType;
   totpEnabled: boolean;
   onSetup: () => Promise<{ uri: string; secret: string } | null>;
   onEnable: (totpToken: string) => Promise<boolean>;
@@ -46,6 +48,7 @@ export function TotpSetup({
   totpEnabled,
   onSetup,
   onEnable,
+  titleComponent,
 }: TotpSetupProps) {
   const {
     elements: { TextField, Alert, Button, H5 },
@@ -97,7 +100,7 @@ export function TotpSetup({
   if (totpEnabled || success) {
     return (
       <Wrapper className={className}>
-        <H5>{t('user.totp.title')}</H5>
+        <H5 component={titleComponent}>{t('user.totp.title')}</H5>
         <Alert severity="success">{t('user.totp.enabled')}</Alert>
       </Wrapper>
     );
@@ -106,7 +109,7 @@ export function TotpSetup({
   if (showSetup) {
     return (
       <Wrapper className={className}>
-        <H5>{t('user.totp.title')}</H5>
+        <H5 component={titleComponent}>{t('user.totp.title')}</H5>
         <Alert severity="info">{t('user.totp.setupDescription')}</Alert>
 
         <AppLinksText>
@@ -141,7 +144,7 @@ export function TotpSetup({
 
         <TextField
           value={totpToken}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
             setTotpToken(e.target.value)
           }
           autoComplete="one-time-code"
@@ -164,7 +167,7 @@ export function TotpSetup({
 
   return (
     <Wrapper className={className}>
-      <H5>{t('user.totp.title')}</H5>
+      <H5 component={titleComponent}>{t('user.totp.title')}</H5>
       <Alert severity="info">{t('user.totp.optionalDescription')}</Alert>
 
       {error && <Alert severity="error">{error}</Alert>}

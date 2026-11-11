@@ -1,12 +1,14 @@
 import styled from '@emotion/styled';
-import React, { ReactNode } from 'react';
+import { Typography } from '@mui/material';
+import { ReactNode } from 'react';
 
 export interface LoginTemplateProps {
-  readonly children?: ReactNode;
-  readonly backgroundChildren?: ReactNode;
+  children?: ReactNode;
+  backgroundChildren?: ReactNode;
+  title?: ReactNode;
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled.main`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -15,6 +17,7 @@ const Wrapper = styled.div`
   height: 100%;
   min-height: 100vh;
   padding: 24px 16px;
+  overflow-x: clip;
   background:
     radial-gradient(
       40rem 30rem at 12% 8%,
@@ -31,7 +34,7 @@ const Wrapper = styled.div`
       rgb(4 196 217 / 14%),
       transparent 70%
     ),
-    var(--rs-body);
+    ${({ theme }) => theme.vars.palette.background.default};
 
   .rs-theme-dark & {
     background:
@@ -50,7 +53,7 @@ const Wrapper = styled.div`
         rgb(4 196 217 / 10%),
         transparent 70%
       ),
-      var(--rs-body);
+      ${({ theme }) => theme.vars.palette.background.default};
   }
 `;
 
@@ -63,9 +66,10 @@ const Content = styled.div`
   width: 100%;
   max-width: 560px;
   padding: 40px;
-  background-color: var(--rs-bg-card);
-  border: 1px solid var(--wep-shell-border, var(--rs-border-primary));
-  border-radius: var(--rs-radius-lg);
+  background-color: ${({ theme }) => theme.vars.palette.background.paper};
+  border: 1px solid
+    var(--wep-shell-border, ${({ theme }) => theme.vars.palette.divider});
+  border-radius: ${({ theme }) => theme.shape.borderRadius + 'px'};
   box-shadow: var(--wep-elevated-shadow, 0 2px 4px 0 rgba(0, 0, 0, 0.2));
 
   .rs-btn[type='submit'] {
@@ -86,11 +90,23 @@ const Background = styled.div`
 export function LoginTemplate({
   backgroundChildren,
   children,
+  title,
 }: LoginTemplateProps) {
   return (
     <Wrapper>
       {backgroundChildren && <Background>{backgroundChildren}</Background>}
-      <Content>{children}</Content>
+      <Content>
+        {title && (
+          <Typography
+            variant="h5"
+            component="h1"
+            sx={{ mb: 3 }}
+          >
+            {title}
+          </Typography>
+        )}
+        {children}
+      </Content>
     </Wrapper>
   );
 }

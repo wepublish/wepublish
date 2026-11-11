@@ -1,13 +1,14 @@
 import '@testing-library/jest-dom/vitest';
 
 import { MockedProvider } from '@apollo/client/testing/react';
+import { createTheme, ThemeProvider } from '@mui/material';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
-
 import { BlockStylesDocument } from '@wepublish/editor/api';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 import { BlockTemplateEditView } from './blockTemplateEditView';
 
+const theme = createTheme({ cssVariables: true });
 const blockTemplateQueryMock = vi.fn();
 const blockTemplateListQueryMock = vi.fn();
 const updateBlockTemplate = vi.fn();
@@ -50,7 +51,7 @@ vi.mock('@wepublish/ui/editor', async importOriginal => ({
       component,
   PermissionControl: ({ children }: { children?: unknown }) => children,
   useAuthorisation: () => true,
-  useUnsavedChangesDialog: () => () => true,
+  useUnsavedChangesDialog: () => undefined,
 }));
 
 vi.mock('react-i18next', () => ({
@@ -100,16 +101,20 @@ const mockQuery = (template = blockTemplate()) => {
 };
 
 const view = () => (
-  <MockedProvider mocks={blockStylesMock}>
-    <MemoryRouter initialEntries={['/block-content/templates/edit/template-1']}>
-      <Routes>
-        <Route
-          path="/block-content/templates/edit/:id"
-          element={<BlockTemplateEditView />}
-        />
-      </Routes>
-    </MemoryRouter>
-  </MockedProvider>
+  <ThemeProvider theme={theme}>
+    <MockedProvider mocks={blockStylesMock}>
+      <MemoryRouter
+        initialEntries={['/block-content/templates/edit/template-1']}
+      >
+        <Routes>
+          <Route
+            path="/block-content/templates/edit/:id"
+            element={<BlockTemplateEditView />}
+          />
+        </Routes>
+      </MemoryRouter>
+    </MockedProvider>
+  </ThemeProvider>
 );
 
 const renderView = () => render(view());
@@ -153,6 +158,20 @@ describe('BlockTemplateEditView', () => {
     expect(screen.queryByDisplayValue('Saved Title')).not.toBeInTheDocument();
   });
 
+  it('announces unsaved changes in the save button name', () => {
+    renderView();
+
+    expect(screen.getByRole('button', { name: 'save' })).toBeInTheDocument();
+
+    fireEvent.change(nameInput(), { target: { value: 'Renamed Template' } });
+
+    expect(
+      screen.getByRole('button', {
+        name: 'save, articleEditor.unsavedChanges',
+      })
+    ).toBeInTheDocument();
+  });
+
   it('should take over the block template again once it has been saved', async () => {
     renderView();
 
@@ -170,6 +189,17 @@ describe('BlockTemplateEditView', () => {
 
     expect(
       await screen.findByDisplayValue('Header Template')
+    ).toBeInTheDocument();
+  });
+
+  it('has a page heading', () => {
+    renderView();
+
+    expect(
+      screen.getByRole('heading', {
+        level: 1,
+        name: 'blockTemplates.edit.title',
+      })
     ).toBeInTheDocument();
   });
 });

@@ -87,7 +87,11 @@ export const MemberPlanOfferPicker = forwardRef<
   },
   ref
 ) {
-  const { MemberPlanItem } = useWebsiteBuilder();
+  const {
+    MemberPlanItem,
+    elements: { Image },
+    blocks: { RichText },
+  } = useWebsiteBuilder();
   const offers = useMemo(() => getMemberPlanOffers(memberPlans), [memberPlans]);
 
   const selectedKey =
@@ -95,6 +99,7 @@ export const MemberPlanOfferPicker = forwardRef<
       `${value.memberPlanId}:${value.paymentPeriodicity}`
     : '';
   const selectedOffer = offers.find(offer => offer.key === selectedKey);
+  const selectedMemberPlan = selectedOffer?.memberPlan;
 
   useEffect(() => {
     if (offers.length && !selectedOffer) {
@@ -154,6 +159,7 @@ export const MemberPlanOfferPicker = forwardRef<
                 }
                 paymentPeriodicity={offer.paymentPeriodicity}
                 showPeriodicity={offer.showPeriodicity}
+                isOffer
                 amountLayout={
                   findMemberPlanRenderSetting(
                     memberPlanRenderSettings,
@@ -174,6 +180,12 @@ export const MemberPlanOfferPicker = forwardRef<
           />
         ))}
       </MemberPlanOfferPickerRadios>
+
+      {selectedMemberPlan?.image && <Image image={selectedMemberPlan.image} />}
+
+      {!!selectedMemberPlan?.description?.content?.length && (
+        <RichText richText={selectedMemberPlan.description} />
+      )}
     </MemberPlanOfferPickerWrapper>
   );
 });

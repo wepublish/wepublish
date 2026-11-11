@@ -1,5 +1,5 @@
 libs/testing
-libs/storybook
+libs/mocks/website
 apps/api-example/schema-v2.graphql
 libs/**/*/seed.ts
 // Block content requires pages & articles which require block-content

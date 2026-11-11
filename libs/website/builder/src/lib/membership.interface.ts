@@ -24,7 +24,7 @@ import {
 } from '@wepublish/website/api';
 import { BuilderRegistrationFormProps } from './authentication.interface';
 import { BuilderUserFormFields } from './user.interface';
-import { FieldError } from 'react-hook-form';
+import { FieldError, FieldErrors } from 'react-hook-form';
 
 export type BuilderMemberPlanRenderSetting =
   FullSubscribeBlockFragment['memberPlanRenderSettings'][number];
@@ -33,9 +33,18 @@ export type BuilderMemberPlanLayout = BuilderMemberPlanRenderSetting['layout'];
 
 export type BuilderSubscriptionListItemProps = FullSubscriptionFragment & {
   className?: string;
-  canExtend: boolean;
   cancel?: () => Promise<void>;
+  reactivate?: () => Promise<void>;
+  revertUpgrade?: () => Promise<void>;
   extend?: () => Promise<void>;
+  /** Moves the subscription to another payment method of its member plan. */
+  changePaymentMethod?: (paymentMethodId: string) => Promise<void>;
+  cancelPaymentMethodChange?: (changeId: string) => Promise<void>;
+  /**
+   * Total in cents of the subscription's open invoice, which is paid with the
+   * new payment method when changing it.
+   */
+  openInvoiceTotal?: number;
 };
 
 export type BuilderSubscriptionListProps = Pick<
@@ -49,7 +58,14 @@ export type BuilderSubscriptionListProps = Pick<
   >;
   subscribeUrl: string;
   onCancel?: (subscriptionId: string) => Promise<void>;
+  onReactivate?: (subscriptionId: string) => Promise<void>;
+  onRevertUpgrade?: (subscriptionId: string) => Promise<void>;
   onExtend?: (subscriptionId: string) => Promise<void>;
+  onChangePaymentMethod?: (
+    subscriptionId: string,
+    paymentMethodId: string
+  ) => Promise<void>;
+  onCancelPaymentMethodChange?: (changeId: string) => Promise<void>;
 };
 
 export type BuilderInvoiceListItemProps = FullInvoiceFragment & {
@@ -111,6 +127,9 @@ export type BuilderMemberPlanItemProps = Pick<
     slug: string;
     paymentPeriodicity?: PaymentPeriodicity;
     showPeriodicity?: boolean;
+    // the card stands for one offer of a plan and periodicity, so its price
+    // is the one for that whole period
+    isOffer?: boolean;
     amountLayout?: BuilderMemberPlanLayout;
     amount?: number;
     onAmountChange?: (monthlyAmount: number) => void;
@@ -189,6 +208,42 @@ export type BuilderPaymentAmountPickerProps = {
   paymentPeriodicity?: PaymentPeriodicity;
 };
 
+/**
+ * The sections of the subscribe form, in render order. Each one renders as a
+ * `[data-area]` element and can be left out through `hiddenAreas`.
+ */
+export const SUBSCRIBE_AREAS = [
+  'returning',
+  'notices',
+  'periodicity',
+  'memberPlans',
+  'monthlyAmount',
+  'summary',
+  'userForm',
+  'paymentPeriodicity',
+  'goodie',
+  'discountCode',
+  'challenge',
+  'transactionFee',
+  'submit',
+] as const;
+
+export type SubscribeArea = (typeof SUBSCRIBE_AREAS)[number];
+
+export type BuilderSubscribeSummaryProps = {
+  memberPlan?: FullMemberPlanFragment | null;
+  paymentPeriodicity: PaymentPeriodicity;
+  /** The chosen amount per month in cents, without transaction fee. */
+  monthlyAmount: number;
+  /** The chosen amount per payment period in cents, without transaction fee. */
+  periodAmount: number;
+  currency: Currency;
+  selectedPlanUnavailable: boolean;
+  /** Validates plan, periodicity and amount; resolves to whether they are valid. */
+  validateSelection: () => Promise<boolean>;
+  className?: string;
+};
+
 export type BuilderSubscribeProps<
   T extends Exclude<BuilderUserFormFields, 'flair'> = Exclude<
     BuilderUserFormFields,
@@ -264,6 +319,10 @@ export type BuilderSubscribeProps<
     goodies: FullGoodieFragment[],
     context: { monthlyAmount: number }
   ) => FullGoodieFragment[];
+  /** Sections that are not rendered at all; their form values are kept. */
+  hiddenAreas?: readonly SubscribeArea[];
+  /** Called when a submit fails validation, e.g. because of a hidden section. */
+  onInvalid?: (errors: FieldErrors) => void;
 } & Pick<BuilderRegistrationFormProps<T>, 'schema' | 'fields'>;
 
 export type BuilderUpgradeProps = {

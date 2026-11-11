@@ -1,6 +1,6 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
-import { hasPermission } from './has-permission';
+import { hasPermission, permissionsOf } from './has-permission';
 import { CanPreview } from '@wepublish/permissions';
 
 export const PreviewMode = createParamDecorator(
@@ -8,7 +8,7 @@ export const PreviewMode = createParamDecorator(
     const ctx = GqlExecutionContext.create(context);
     const user = ctx.getContext().req.user;
 
-    const canPreview = hasPermission(CanPreview, user?.roles ?? []);
+    const canPreview = hasPermission(CanPreview, permissionsOf(user));
 
     return canPreview && !!ctx.getContext().req.headers.preview;
   }

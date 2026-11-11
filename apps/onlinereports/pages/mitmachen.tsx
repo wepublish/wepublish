@@ -10,17 +10,10 @@ import {
   TransactionFeeIcon,
 } from '@wepublish/membership/website';
 import { PageContainer } from '@wepublish/page/website';
-import {
-  getApiUrl,
-  getSessionTokenProps,
-  ssrAuthLink,
-  SubscribePage,
-} from '@wepublish/utils/website';
-import { getApiClient, PageDocument } from '@wepublish/website/api';
+import { useAdsContext } from '@wepublish/tenant/onlinereports';
+import { SubscribePage } from '@wepublish/utils/website/next';
 import { NextPageContext } from 'next';
 import { useEffect } from 'react';
-
-import { useAdsContext } from '../src/context/ads-context';
 
 const MitmachenPage = styled(PageContainer)`
   ${RichTextBlockWrapper} {
@@ -85,25 +78,5 @@ export default function Mitmachen() {
   return <MitmachenPage slug={'mitmachen'} />;
 }
 
-Mitmachen.getInitialProps = async (ctx: NextPageContext) => {
-  if (typeof window !== 'undefined') {
-    return {};
-  }
-
-  const client = getApiClient(getApiUrl(), [
-    ssrAuthLink(
-      async () => (await getSessionTokenProps(ctx)).sessionToken?.token
-    ),
-  ]);
-
-  await Promise.all([
-    client.query({
-      query: PageDocument,
-      variables: {
-        slug: 'mitmachen',
-      },
-    }),
-  ]);
-
-  return SubscribePage.getInitialProps(ctx);
-};
+Mitmachen.getInitialProps = (ctx: NextPageContext) =>
+  SubscribePage.getInitialProps(ctx, { pageSlug: 'mitmachen' });

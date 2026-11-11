@@ -1,13 +1,26 @@
 import styled from '@emotion/styled';
-import React, { useRef, useState } from 'react';
+import {
+  ChangeEvent,
+  DragEvent,
+  ReactElement,
+  ReactNode,
+  useRef,
+  useState,
+} from 'react';
 
 const Input = styled.input`
   position: absolute;
   top: 0;
   left: 0;
-  width: 0;
-  height: 0;
-  opacity: 0;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 `;
 
 const FileDropInputWrapper = styled.div<{
@@ -24,27 +37,51 @@ const FileDropInputWrapper = styled.div<{
   padding-bottom: 20px;
   padding-left: 20px;
   padding-right: 20px;
-  border-radius: var(--rs-radius-md);
+  border-radius: ${({ theme }) => theme.shape.borderRadius + 'px'};
   border-style: dashed;
-  border-width: 3px;
+  border-width: 1px;
   position: relative;
-  font-size: 16px;
+  font-size: ${({ theme }) => theme.typography.body2.fontSize};
   text-align: center;
-  border-color: ${({ dragging }) =>
-    dragging ? 'var(--rs-primary-500)' : 'var(--rs-text-link-active)'};
-  color: ${({ dragging }) =>
-    dragging ? 'var(--rs-primary-500)' : 'var(--rs-text-link-active)'};
-  fill: ${({ dragging }) =>
-    dragging ? 'var(--rs-primary-500)' : 'var(--rs-text-link-active)'};
+  transition: ${({ theme }) =>
+    theme.transitions.create(['border-color', 'background-color', 'color'])};
+  border-color: ${({ dragging, theme }) =>
+    dragging ?
+      theme.vars.palette.primary.main
+    : theme.vars.palette.action.disabled};
+  background-color: ${({ dragging, theme }) =>
+    dragging ?
+      `rgba(${theme.vars.palette.primary.mainChannel} / 0.08)`
+    : theme.vars.palette.background.default};
+  color: ${({ dragging, theme }) =>
+    dragging ?
+      theme.vars.palette.primary.main
+    : theme.vars.palette.text.secondary};
+  fill: currentColor;
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+
+  &:hover {
+    border-color: ${({ theme }) => theme.vars.palette.text.primary};
+    color: ${({ theme }) => theme.vars.palette.text.primary};
+  }
+
+  &:has(input:focus-visible) {
+    outline: 2px solid ${({ theme }) => theme.vars.palette.primary.main};
+    outline-offset: 2px;
+    border-color: ${({ theme }) => theme.vars.palette.primary.main};
+    color: ${({ theme }) => theme.vars.palette.text.primary};
+  }
 `;
 
 export interface FileDropInputProps {
   disabled?: boolean;
   accept?: string;
 
-  icon?: React.ReactElement;
+  icon?: ReactElement;
   text?: string;
+  label?: string;
+  children?: ReactNode;
+  'aria-describedby'?: string;
 
   onDrop: (fileList: File[]) => void;
 }
@@ -55,25 +92,28 @@ export function FileDropInput({
   onDrop,
   icon,
   text,
+  label,
+  children,
+  'aria-describedby': ariaDescribedby,
 }: FileDropInputProps) {
   const [dragging, setDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  function handleDragIn(e: React.DragEvent<HTMLDivElement>) {
+  function handleDragIn(e: DragEvent<HTMLDivElement>) {
     e.preventDefault();
     e.stopPropagation();
 
     setDragging(true);
   }
 
-  function handleDragOut(e: React.DragEvent<HTMLDivElement>) {
+  function handleDragOut(e: DragEvent<HTMLDivElement>) {
     e.preventDefault();
     e.stopPropagation();
 
     setDragging(false);
   }
 
-  function handleDrop(e: React.DragEvent<HTMLDivElement>) {
+  function handleDrop(e: DragEvent<HTMLDivElement>) {
     e.preventDefault();
     e.stopPropagation();
 
@@ -85,7 +125,9 @@ export function FileDropInput({
     }
   }
 
-  function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+  const inputName = label ?? (children ? undefined : text);
+
+  function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
     if (e.target.files) {
       onDrop(Array.from(e.target.files));
     }
@@ -100,8 +142,12 @@ export function FileDropInput({
       onDragLeave={!disabled ? handleDragOut : undefined}
       onClick={() => inputRef.current!.click()}
     >
-      {icon && icon}
-      <div>{text}</div>
+      {children ?? (
+        <>
+          {icon && icon}
+          <div>{text}</div>
+        </>
+      )}
       <Input
         ref={inputRef}
         type="file"
@@ -109,6 +155,11 @@ export function FileDropInput({
         accept={accept}
         onChange={handleInputChange}
         disabled={disabled}
+        aria-label={inputName}
+        aria-describedby={ariaDescribedby}
+        tabIndex={inputName ? undefined : -1}
+        aria-hidden={inputName ? undefined : true}
+        onClick={event => event.stopPropagation()}
       />
     </FileDropInputWrapper>
   );

@@ -11,6 +11,7 @@ import {
   MailchimpFormBlockValue,
   MailchimpFormFieldConfigValue,
   mapBlockValueToBlockInput,
+  nameForPickedInterest,
 } from './types';
 
 const image = { id: 'image-1' } as FullImageFragment;
@@ -239,5 +240,49 @@ describe('Mailchimp form block mapping', () => {
         ],
       });
     });
+  });
+});
+
+describe('nameForPickedInterest', () => {
+  const labels: Record<string, string> = {
+    'interest-daily': 'Daily Briefing',
+    'interest-weekly': 'Weekly Culture',
+  };
+  const labelOf = (id: string | null) => (id ? labels[id] : undefined);
+
+  it('takes the name of the picked interest when the option has none', () => {
+    expect(
+      nameForPickedInterest({ id: '', name: '' }, 'interest-weekly', labelOf)
+    ).toBe('Weekly Culture');
+  });
+
+  it('keeps a custom name when picking an interest', () => {
+    expect(
+      nameForPickedInterest(
+        { id: '', name: 'My newsletter' },
+        'interest-daily',
+        labelOf
+      )
+    ).toBe('My newsletter');
+  });
+
+  it('updates a prefilled name when picking a different interest', () => {
+    expect(
+      nameForPickedInterest(
+        { id: 'interest-daily', name: 'Daily Briefing' },
+        'interest-weekly',
+        labelOf
+      )
+    ).toBe('Weekly Culture');
+  });
+
+  it('keeps a custom name when picking a different interest', () => {
+    expect(
+      nameForPickedInterest(
+        { id: 'interest-daily', name: 'My newsletter' },
+        'interest-weekly',
+        labelOf
+      )
+    ).toBe('My newsletter');
   });
 });

@@ -4,7 +4,6 @@ import {
   SubscriptionEvent,
   SubscriptionFlowFragment,
 } from '@wepublish/editor/api';
-import { SelectPicker } from 'rsuite';
 import { SubscriptionClientContext } from './graphql-client-context';
 import {
   DecoratedSubscriptionInterval,
@@ -14,8 +13,17 @@ import {
 } from './subscription-flow-list';
 import { useTranslation } from 'react-i18next';
 import { MdUnsubscribe } from 'react-icons/md';
-import { useAuthorisation } from '@wepublish/ui/editor';
+import { InfoTooltip, useAuthorisation } from '@wepublish/ui/editor';
+import {
+  FormControlLabel,
+  MenuItem,
+  Stack,
+  Switch,
+  TextField,
+} from '@mui/material';
 import { formatTemplateLabel } from '../mail-template/mail-placeholders';
+import { usePaperLetterFlow } from '../delivery-mode/use-paper-letter-flow';
+import { CanUpdateSubscriptionFlow } from '@wepublish/permissions';
 
 interface MailTemplateSelectProps {
   mailTemplates: TinyMailTemplateFragment[];
@@ -25,6 +33,7 @@ interface MailTemplateSelectProps {
   newDaysAwayFromEnding?: number;
   subscriptionFlow: SubscriptionFlowFragment;
   event: SubscriptionEvent;
+  label?: string;
 }
 
 export function MailTemplateSelect({
@@ -33,13 +42,15 @@ export function MailTemplateSelect({
   newDaysAwayFromEnding,
   subscriptionFlow,
   event,
+  label,
 }: MailTemplateSelectProps) {
   const { t } = useTranslation();
   const canUpdateSubscriptionFlow = useAuthorisation(
-    'CAN_UPDATE_SUBSCRIPTION_FLOW'
+    CanUpdateSubscriptionFlow.id
   );
 
   const client = useContext(SubscriptionClientContext);
+  const paperLetterFlow = usePaperLetterFlow();
 
   const createOrUpdateInterval = (value: string) => {
     if (subscriptionInterval) {
@@ -76,30 +87,81 @@ export function MailTemplateSelect({
     });
   };
 
+  // Only the switch is sent: days and template stay as they are.
+  const setSendAsLetter = (sendAsLetter: boolean) =>
+    subscriptionInterval &&
+    client.updateSubscriptionInterval({
+      variables: { id: subscriptionInterval.object.id, sendAsLetter },
+    });
+
   return (
-    <SelectPicker
-      block
-      data={mailTemplates.map(mailTemplate => ({
-        label: formatTemplateLabel(
-          mailTemplate.name,
-          mailTemplate.context,
-          (k, f) => t(k, f)
-        ),
-        value: mailTemplate.id,
-      }))}
-      disabled={!canUpdateSubscriptionFlow}
-      defaultValue={subscriptionInterval?.object.mailTemplate?.id}
-      onSelect={createOrUpdateInterval}
-      onClean={deleteInterval}
-      placeholder={
-        <>
+    <Stack
+      direction="row"
+      spacing={1}
+      sx={{ alignItems: 'center' }}
+    >
+      <TextField
+        select
+        disabled={!canUpdateSubscriptionFlow}
+        value={subscriptionInterval?.object.mailTemplate?.id ?? ''}
+        onChange={event => {
+          if (event.target.value) {
+            createOrUpdateInterval(event.target.value);
+          } else {
+            deleteInterval();
+          }
+        }}
+        slotProps={{
+          select: {
+            displayEmpty: true,
+            SelectDisplayProps: { 'aria-label': label } as object,
+          },
+        }}
+        fullWidth
+      >
+        <MenuItem value="">
           <MdUnsubscribe
             size={16}
             style={{ marginRight: '5px' }}
           />
           {t('mailTemplateSelect.noMailSentSelectNow')}
-        </>
-      }
-    />
+        </MenuItem>
+
+        {mailTemplates.map(mailTemplate => (
+          <MenuItem
+            key={mailTemplate.id}
+            value={mailTemplate.id}
+          >
+            {formatTemplateLabel(
+              mailTemplate.name,
+              mailTemplate.context,
+              (k, f) => t(k, f)
+            )}
+          </MenuItem>
+        ))}
+      </TextField>
+      {paperLetterFlow && subscriptionInterval && (
+        <Stack
+          direction="row"
+          sx={{ alignItems: 'center', whiteSpace: 'nowrap' }}
+        >
+          <FormControlLabel
+            control={
+              <Switch
+                size="small"
+                checked={subscriptionInterval.object.sendAsLetter}
+                disabled={!canUpdateSubscriptionFlow}
+                onChange={(_event, checked) => setSendAsLetter(checked)}
+              />
+            }
+            label={t('mailTemplateSelect.sendAsLetter')}
+            // The label's own negative margin would eat the row's gap now that
+            // it no longer sits directly in the row.
+            sx={{ marginLeft: 0, marginRight: 0 }}
+          />
+          <InfoTooltip text={t('mailTemplateSelect.sendAsLetterHint')} />
+        </Stack>
+      )}
+    </Stack>
   );
 }

@@ -6,7 +6,17 @@ import {
   ChallengeProvider,
   loadChallengeProvider,
 } from '@wepublish/challenge/api';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import {
+  NamespacedCache,
+  NamespaceResets,
+  NamespaceVersions,
+} from '@wepublish/kv-ttl-cache/api';
+import {
+  BaseLetterProvider,
+  BasePdfRenderer,
+  loadLetterProvider,
+  loadPdfRenderer,
+} from '@wepublish/letter/api';
 import { BaseMailProvider, loadMailProvider } from '@wepublish/mail/api';
 import { PaymentProvider, loadPaymentProviders } from '@wepublish/payment/api';
 import {
@@ -26,13 +36,13 @@ const PROVIDER_SETTINGS_NAMESPACES = [
   'settings:tracking-pixel',
   'settings:mailprovider',
   'settings:challenge',
+  'settings:letterprovider',
+  'settings:pdfrenderer',
 ];
 const RELOAD_CHECK_MS = 5000;
 
 @Injectable()
-export class ProviderRegistryService
-  implements ProviderSettingsChangedListener
-{
+export class ProviderRegistryService implements ProviderSettingsChangedListener {
   private readonly logger = new Logger(ProviderRegistryService.name);
 
   readonly paymentProviders: PaymentProvider[] = [];
@@ -40,6 +50,8 @@ export class ProviderRegistryService
 
   private currentMailProvider: BaseMailProvider | null = null;
   private currentChallengeProvider: ChallengeProvider | null = null;
+  private currentLetterProvider: BaseLetterProvider | null = null;
+  private currentPdfRenderer: BasePdfRenderer | null = null;
 
   readonly mailProvider = createSwappableProvider<BaseMailProvider>(
     'mail provider',
@@ -51,6 +63,16 @@ export class ProviderRegistryService
     () => this.currentChallengeProvider
   );
 
+  readonly letterProvider = createSwappableProvider<BaseLetterProvider>(
+    'letter provider',
+    () => this.currentLetterProvider
+  );
+
+  readonly pdfRenderer = createSwappableProvider<BasePdfRenderer>(
+    'pdf renderer',
+    () => this.currentPdfRenderer
+  );
+
   private loaded: Promise<void> | null = null;
   private loadedVersions?: string;
   private reloading = false;
@@ -59,7 +81,9 @@ export class ProviderRegistryService
 
   constructor(
     private readonly prisma: PrismaClient,
-    private readonly kv: KvTtlCacheService,
+    private readonly kv: NamespacedCache,
+    private readonly resets: NamespaceResets,
+    private readonly versions: NamespaceVersions,
     private readonly httpClient: HttpService,
     @Optional()
     @Inject(PROVIDER_REGISTRY_BOOTSTRAP)
@@ -138,29 +162,40 @@ export class ProviderRegistryService
 
   private async loadProviders(): Promise<void> {
     const versions = await this.providerSettingsVersions();
-    const deps = { prisma: this.prisma, kv: this.kv };
+    const deps = { prisma: this.prisma, kv: this.kv, resets: this.resets };
 
-    const [payment, trackingPixel, mail, challenge] = await Promise.all([
-      loadPaymentProviders(deps).then(providers =>
-        providers.map(provider =>
-          withProviderErrorContext('Payment provider', provider)
-        )
-      ),
-      loadTrackingPixelProviders({ ...deps, httpClient: this.httpClient }).then(
-        providers =>
+    const [payment, trackingPixel, mail, challenge, letter, pdfRenderer] =
+      await Promise.all([
+        loadPaymentProviders(deps).then(providers =>
+          providers.map(provider =>
+            withProviderErrorContext('Payment provider', provider)
+          )
+        ),
+        loadTrackingPixelProviders({
+          ...deps,
+          httpClient: this.httpClient,
+        }).then(providers =>
           providers.map(provider =>
             withProviderErrorContext('Tracking pixel provider', provider)
           )
-      ),
-      loadMailProvider(deps).then(
-        provider =>
-          provider && withProviderErrorContext('Mail provider', provider)
-      ),
-      loadChallengeProvider(deps).then(
-        provider =>
-          provider && withProviderErrorContext('Challenge provider', provider)
-      ),
-    ]);
+        ),
+        loadMailProvider(deps).then(
+          provider =>
+            provider && withProviderErrorContext('Mail provider', provider)
+        ),
+        loadChallengeProvider(deps).then(
+          provider =>
+            provider && withProviderErrorContext('Challenge provider', provider)
+        ),
+        loadLetterProvider(deps).then(
+          provider =>
+            provider && withProviderErrorContext('Letter provider', provider)
+        ),
+        loadPdfRenderer(deps).then(
+          renderer =>
+            renderer && withProviderErrorContext('Pdf renderer', renderer)
+        ),
+      ]);
 
     this.paymentProviders.splice(0, this.paymentProviders.length, ...payment);
     this.trackingPixelProviders.splice(
@@ -171,6 +206,8 @@ export class ProviderRegistryService
 
     this.currentMailProvider = mail;
     this.currentChallengeProvider = challenge;
+    this.currentLetterProvider = letter;
+    this.currentPdfRenderer = pdfRenderer;
     this.loadedVersions = versions;
 
     const describe = (provider: object | null) =>
@@ -182,13 +219,15 @@ export class ProviderRegistryService
     this.logger.log(
       `Loaded providers — payment: ${ids(payment)} | tracking pixel: ${ids(trackingPixel)} | ` +
         `mail: ${mail ? `${mail.id} (${describe(mail)})` : 'none'} | ` +
-        `challenge: ${describe(challenge)}`
+        `challenge: ${describe(challenge)} | ` +
+        `letter: ${letter ? `${letter.id} (${describe(letter)})` : 'none'} | ` +
+        `pdf renderer: ${pdfRenderer ? `${pdfRenderer.id} (${describe(pdfRenderer)})` : 'none'}`
     );
   }
 
   private async providerSettingsVersions(): Promise<string> {
     return JSON.stringify(
-      await this.kv.getNamespaceVersions(PROVIDER_SETTINGS_NAMESPACES)
+      await this.versions.currentMany(PROVIDER_SETTINGS_NAMESPACES)
     );
   }
 }

@@ -1,3 +1,4 @@
+import { BuilderSubscribeProps } from './membership.interface';
 import {
   FullImageGalleryBlockFragment,
   FullBreakBlockFragment,
@@ -64,7 +65,10 @@ type WithBlockProps<T> = Omit<T, 'type' | OptionalBlockKeys<T>> &
   Partial<Pick<T, OptionalBlockKeys<T>>> &
   BlockProps;
 
-export type BuilderFlexBlockProps = WithBlockProps<FullFlexBlockFragment>;
+export type BuilderFlexBlockProps = WithBlockProps<FullFlexBlockFragment> & {
+  type?: BuilderBlockRendererProps['type'];
+  level?: number;
+};
 export type BuilderBlockTemplateBlockProps =
   WithBlockProps<FullBlockTemplateBlockFragment>;
 export type BuilderTitleBlockProps = WithBlockProps<FullTitleBlockFragment>;
@@ -109,7 +113,8 @@ export type BuilderListicleBlockProps =
   WithBlockProps<FullListicleBlockFragment>;
 export type BuilderCommentBlockProps = WithBlockProps<FullCommentBlockFragment>;
 export type BuilderSubscribeBlockProps =
-  WithBlockProps<FullSubscribeBlockFragment>;
+  WithBlockProps<FullSubscribeBlockFragment> &
+    Pick<BuilderSubscribeProps, 'hiddenAreas' | 'onInvalid'>;
 export type BuilderTeaserGridFlexBlockProps =
   WithBlockProps<FullTeaserGridFlexBlockFragment>;
 export type BuilderTeaserGridBlockProps =

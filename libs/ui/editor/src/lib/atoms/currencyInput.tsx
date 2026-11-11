@@ -1,5 +1,7 @@
-import { useEffect, useState } from 'react';
-import { Form, InputGroup } from 'rsuite';
+import { InputAdornment, TextField } from '@mui/material';
+import { ReactNode, useState } from 'react';
+
+import { useSeededState } from '../hooks/use-seeded-state';
 
 export interface CurrencyInputProps {
   currency: string;
@@ -7,6 +9,8 @@ export interface CurrencyInputProps {
   onChange(centAmount: number | null): void;
   disabled?: boolean;
   name: string;
+  label?: ReactNode;
+  'aria-labelledby'?: string;
 }
 
 const toDisplayValue = (value: number | null) =>
@@ -17,15 +21,12 @@ export function CurrencyInput({
   centAmount,
   disabled,
   name,
+  label,
   onChange,
+  'aria-labelledby': ariaLabelledBy,
 }: CurrencyInputProps) {
-  const [amount, setAmount] = useState<number | string | any>(() =>
-    toDisplayValue(centAmount)
-  );
-
-  useEffect(() => {
-    setAmount(toDisplayValue(centAmount));
-  }, [centAmount]);
+  const [amount, setAmount] = useState(() => toDisplayValue(centAmount));
+  useSeededState(centAmount, cents => setAmount(toDisplayValue(cents)));
 
   const toFloat = (text: string) =>
     text
@@ -34,26 +35,22 @@ export function CurrencyInput({
       .replace(/^\./, '');
 
   return (
-    <div>
-      <InputGroup inside>
-        <Form.Control
-          value={amount as string}
-          name={name}
-          disabled={disabled}
-          onChange={(amount: string) => {
-            amount = toFloat(amount);
-            setAmount(amount);
-          }}
-          onBlur={() => {
-            if (amount) {
-              onChange(parseFloat(amount as string) * 100);
-            } else {
-              onChange(null);
-            }
-          }}
-        />
-        <InputGroup.Addon>{currency}</InputGroup.Addon>
-      </InputGroup>
-    </div>
+    <TextField
+      value={amount}
+      name={name}
+      label={label}
+      disabled={disabled}
+      onChange={event => setAmount(toFloat(event.target.value))}
+      onBlur={() => onChange(amount ? parseFloat(amount) * 100 : null)}
+      slotProps={{
+        input: {
+          endAdornment: (
+            <InputAdornment position="end">{currency}</InputAdornment>
+          ),
+        },
+        htmlInput: { 'aria-labelledby': ariaLabelledBy },
+      }}
+      fullWidth
+    />
   );
 }

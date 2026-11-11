@@ -19,7 +19,7 @@ import {
   BuilderMailchimpFormBlockProps,
   Image,
 } from '@wepublish/website/builder';
-import { useEffect, useMemo, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export const isMailchimpFormBlock = (
@@ -343,7 +343,7 @@ export const MailchimpFormBlock = ({
     );
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (!syncProviderId || !listId) {

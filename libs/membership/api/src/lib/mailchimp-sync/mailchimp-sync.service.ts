@@ -10,6 +10,7 @@ import {
   ClickTrackingExtensionConfig,
 } from './extensions/click-tracking.extension';
 import { describeError } from '@wepublish/utils/api';
+import { describeMailchimpError } from '@wepublish/mail/api';
 
 interface SubscriptionLite {
   id: string;
@@ -516,7 +517,7 @@ export class MailchimpSyncService {
           }
         } catch (error: any) {
           // Batch API itself failed — fall back to recording errors for all contacts in batch
-          const errorMessage = describeError(error);
+          const errorMessage = describeMailchimpError(error);
           this.logger.error(`Batch API failed: ${errorMessage}`);
 
           for (const update of batch) {
@@ -763,11 +764,8 @@ export class MailchimpSyncService {
         interests: data.interests,
       });
     } catch (error: any) {
-      const detail =
-        error?.response?.body?.detail ?? error?.message ?? String(error);
-      const title = error?.response?.body?.title ?? 'Mailchimp API error';
       throw new Error(
-        `Error updating contact '${data.email}': ${title} - ${detail}`
+        `Error updating contact '${data.email}': ${describeMailchimpError(error)}`
       );
     }
   }

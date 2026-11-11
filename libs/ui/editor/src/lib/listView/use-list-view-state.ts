@@ -1,5 +1,5 @@
 import { useLocalStorage } from '@wepublish/ui';
-import { useCallback, useRef } from 'react';
+import { useCallback, useState } from 'react';
 
 export type ListSortOrder = 'asc' | 'desc';
 
@@ -26,18 +26,12 @@ export const useListViewState = <TFilter = Record<string, unknown>>(
   listKey: string,
   options: UseListViewStateOptions<TFilter> = {}
 ) => {
-  const defaultRef = useRef<PersistedListViewState<TFilter>>(null);
-
-  if (!defaultRef.current) {
-    defaultRef.current = {
-      filter: options.defaultFilter ?? ({} as TFilter),
-      sortField: options.defaultSortField ?? 'modifiedAt',
-      sortOrder: options.defaultSortOrder ?? 'desc',
-      limit: options.defaultLimit ?? 10,
-    };
-  }
-
-  const defaultValue = defaultRef.current;
+  const [defaultValue] = useState<PersistedListViewState<TFilter>>(() => ({
+    filter: options.defaultFilter ?? ({} as TFilter),
+    sortField: options.defaultSortField ?? 'modifiedAt',
+    sortOrder: options.defaultSortOrder ?? 'desc',
+    limit: options.defaultLimit ?? 10,
+  }));
 
   const serialize = (value: PersistedListViewState<TFilter>) =>
     JSON.stringify(value);

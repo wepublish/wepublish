@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "skills": {
+    "material-3": {
+      "source": "hamen/material-3-skill",
+      "sourceType": "github",
+      "skillPath": "skills/material-3/SKILL.md",
+      "computedHash": "72d56347fae33c9b1763e16d0bffb781da382aa3be316b9252dcd35fd050c6bc"
+    },
+    "material-ui-theming": {
+      "source": "mui/material-ui",
+      "sourceType": "github",
+      "skillPath": "skills/material-ui-theming/SKILL.md",
+      "computedHash": "06f09d0152bf43a8f64d170a67418e7f33ac265bc995e2fed47adb5bcc979a54"
+    },
+    "tanstack-ai": {
+      "source": "TanStack/ai",
+      "sourceType": "github",
+      "skillPath": "skills/tanstack-ai/SKILL.md",
+      "computedHash": "ba667851520553a6f4dfd401c4520d55e64c843baf8b084d353741d5b8c9b398"
+    },
+    "tanstack-ai-migration": {
+      "source": "TanStack/ai",
+      "sourceType": "github",
+      "skillPath": "skills/tanstack-ai-migration/SKILL.md",
+      "computedHash": "651629b7af7b013606dbe7765afff3af30b9b7c69377db98d887539659428ef7"
+    }
+  }
+}

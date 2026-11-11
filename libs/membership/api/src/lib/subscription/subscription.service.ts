@@ -29,7 +29,6 @@ import {
   PaymentMethodConfig,
 } from '@wepublish/payment/api';
 import { SubscriptionWithRelations } from '../legacy/member-context';
-import { unselectPassword } from '@wepublish/authentication/api';
 import { mapSubscriptionsAsCsv } from './subscription-as-csv';
 
 @Injectable()
@@ -178,7 +177,7 @@ export class SubscriptionService {
         periods: true,
         memberPlan: true,
         user: {
-          select: unselectPassword,
+          include: { address: true, paymentProviderCustomers: true },
         },
         paymentMethod: true,
         invoices: {
@@ -242,6 +241,47 @@ export class SubscriptionService {
       deactivationReason: reason,
       skipMail,
     });
+  }
+
+  @PrimeDataLoader(SubscriptionDataloader)
+  async reactivateSubscription(id: string) {
+    const subscription = await this.prisma.subscription.findUnique({
+      where: { id },
+      include: {
+        deactivation: true,
+        periods: true,
+      },
+    });
+
+    if (!subscription) {
+      throw new NotFoundException(`Subscription with id ${id} was not found.`);
+    }
+
+    if (!subscription.deactivation) {
+      throw new BadRequestException('Subscription is not deactivated');
+    }
+
+    await this.prisma.subscriptionDeactivation.delete({
+      where: { subscriptionID: id },
+    });
+
+    const reactivatedSubscription = {
+      ...subscription,
+      deactivation: null,
+    };
+
+    // Deactivating cancels the open invoices, so a subscription whose period
+    // has run out needs a new invoice to be payable again.
+    const isPaid =
+      subscription.paidUntil && subscription.paidUntil > new Date();
+
+    if (!isPaid) {
+      await this.memberContext.renewSubscriptionForUser({
+        subscription: reactivatedSubscription as SubscriptionWithRelations,
+      });
+    }
+
+    return reactivatedSubscription;
   }
 
   async deleteSubscription(id: string) {

@@ -1,26 +1,28 @@
-import styled from '@emotion/styled';
+import { Alert } from '@mui/material';
 import { ReactNode } from 'react';
+
+export enum InfoColor {
+  warning = 'warning',
+  error = 'error',
+  white = 'info',
+}
 
 export interface InfoMessageProps {
   messageType: InfoColor;
   message: ReactNode;
 }
 
-export enum InfoColor {
-  warning = 'rgb(from var(--rs-state-warning) r g b / 10%)',
-  error = 'rgb(from var(--rs-state-error) r g b / 10%)',
-  white = 'var(--rs-bg-card)',
-}
-
-const Message = styled.div<{ backgroundColor: InfoColor }>`
-  border-radius: var(--rs-radius-md);
-  padding: 0px 8px;
-  background-color: ${({ backgroundColor }) => backgroundColor};
-`;
-
 export function InfoMessage({
   messageType = InfoColor.white,
   message,
 }: InfoMessageProps) {
-  return <Message backgroundColor={messageType}>{message}</Message>;
+  return (
+    <Alert
+      severity={messageType}
+      variant="outlined"
+      sx={{ py: 0, px: 1 }}
+    >
+      {message}
+    </Alert>
+  );
 }

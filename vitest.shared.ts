@@ -68,6 +68,16 @@ const graphqlSingleInstance = [
 const manualNodeModuleMocks = [
   { find: /^react-player$/, replacement: join(workspaceRoot, '__mocks__/react-player.tsx') },
   { find: /^react-tweet$/, replacement: join(workspaceRoot, '__mocks__/react-tweet.tsx') },
+  { find: /^next\/font\/google$/, replacement: join(workspaceRoot, '__mocks__/next-font-google.ts') },
+  { find: /^next\/font\/local$/, replacement: join(workspaceRoot, '__mocks__/next-font-local.ts') },
+];
+
+const mocksWebsiteRoot = join(workspaceRoot, 'libs/mocks/website/src');
+
+const websiteTestAliases = [
+  { find: /^next\/router$/, replacement: join(mocksWebsiteRoot, 'lib/render/next-router.tsx') },
+  { find: /^@marsidev\/react-turnstile$/, replacement: join(mocksWebsiteRoot, 'lib/render/captcha/turnstile.tsx') },
+  { find: /^@hcaptcha\/react-hcaptcha$/, replacement: join(mocksWebsiteRoot, 'lib/render/captcha/hcaptcha.tsx') },
 ];
 
 // `libs/block-content/api` requires `../block-content.model` lazily on purpose:
@@ -101,7 +111,7 @@ const blockContentLazyRequire = () => {
   };
 };
 
-const emotionImportMap = {
+export const emotionImportMap = {
   '@mui/material': {
     styled: {
       canonicalImport: ['@emotion/styled', 'default'],
@@ -130,6 +140,8 @@ export type VitestProjectOptions = {
    * (`design:paramtypes`) is emitted for the DI container. Implies `react: false`.
    */
   nest?: boolean;
+  website?: boolean;
+  reactCompiler?: boolean;
   /** Additional setup files, relative to the project root. */
   setupFiles?: string[];
   /** Additional test file globs to exclude, relative to the project root. */
@@ -144,6 +156,8 @@ export const createVitestConfig = ({
   environment = 'happy-dom',
   react: withReact = true,
   nest = false,
+  website = false,
+  reactCompiler = false,
   setupFiles = [],
   exclude = [],
   overrides,
@@ -182,7 +196,12 @@ export const createVitestConfig = ({
           react({
             jsxImportSource: '@emotion/react',
             babel: {
-              plugins: [['@emotion/babel-plugin', { importMap: emotionImportMap }]],
+              plugins: [
+                ...(reactCompiler ?
+                  [['babel-plugin-react-compiler', { target: '19' }]]
+                : []),
+                ['@emotion/babel-plugin', { importMap: emotionImportMap }],
+              ],
             },
           }),
         ]
@@ -191,6 +210,7 @@ export const createVitestConfig = ({
       alias: [
         ...graphqlSingleInstance,
         ...manualNodeModuleMocks,
+        ...(website ? websiteTestAliases : []),
         ...tsconfigPathAliases(),
       ],
     },
@@ -216,15 +236,27 @@ export const createVitestConfig = ({
       ],
       setupFiles: [
         join(workspaceRoot, 'vitest.setup-tests.ts'),
+        ...(environment === 'happy-dom' ?
+          [join(workspaceRoot, 'vitest.setup-dom.ts')]
+        : []),
         ...(nest ? [join(workspaceRoot, 'vitest.setup-nest.ts')] : []),
+        ...(website ? [join(mocksWebsiteRoot, 'setup.ts')] : []),
         ...setupFiles.map((file) => join(dir, file)),
       ],
       snapshotSerializers: [join(workspaceRoot, 'vitest.emotion-serializer.ts')],
       reporters: process.env['CI'] ? ['default', 'github-actions'] : ['default'],
       coverage: {
         provider: 'v8',
-        reporter: ['html', 'text', 'lcov'],
-        reportsDirectory: join(workspaceRoot, 'coverage', relative(workspaceRoot, dir)),
+        reporter: ['html', 'text', ['lcov', { projectRoot: workspaceRoot }]],
+        // A leaf folder per project: Vitest empties `reportsDirectory` when a run
+        // starts, so `coverage/libs/richtext` would wipe the files of the
+        // `libs/richtext/api` run going on in parallel inside it.
+        reportsDirectory: join(
+          workspaceRoot,
+          'coverage',
+          relative(workspaceRoot, dir),
+          'report'
+        ),
         include: ['src/**/*.{js,jsx,ts,tsx}'],
         exclude: ['**/*.stories.{js,jsx,ts,tsx}'],
       },

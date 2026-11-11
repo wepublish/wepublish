@@ -1,7 +1,0 @@
-query Challenge {
-    challenge {
-        challenge
-        challengeID
-        validUntil
-    }
-}

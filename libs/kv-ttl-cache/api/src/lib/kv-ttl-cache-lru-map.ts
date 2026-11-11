@@ -1,4 +1,4 @@
-const sizeOf = (key: unknown, value: unknown) =>
+const defaultSizeOf = (key: unknown, value: unknown) =>
   String(key).length + (typeof value === 'string' ? value.length : 0);
 
 export class LruMap<K, V> extends Map<K, V> {
@@ -6,7 +6,8 @@ export class LruMap<K, V> extends Map<K, V> {
 
   constructor(
     readonly maxSize: number,
-    readonly maxBytes = Number.POSITIVE_INFINITY
+    readonly maxBytes = Number.POSITIVE_INFINITY,
+    private readonly sizeOf: (key: K, value: V) => number = defaultSizeOf
   ) {
     super();
   }
@@ -26,7 +27,7 @@ export class LruMap<K, V> extends Map<K, V> {
   override set(key: K, value: V): this {
     this.delete(key);
 
-    const size = sizeOf(key, value);
+    const size = this.sizeOf(key, value);
 
     if (size > this.maxBytes) {
       return this;
@@ -47,7 +48,7 @@ export class LruMap<K, V> extends Map<K, V> {
       return false;
     }
 
-    this.bytes -= sizeOf(key, super.get(key));
+    this.bytes -= this.sizeOf(key, super.get(key) as V);
 
     return super.delete(key);
   }

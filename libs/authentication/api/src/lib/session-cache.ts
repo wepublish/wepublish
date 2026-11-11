@@ -1,8 +1,5 @@
 import { Injectable, Module } from '@nestjs/common';
-import {
-  KvTtlCacheModule,
-  KvTtlCacheService,
-} from '@wepublish/kv-ttl-cache/api';
+import { NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { createHash } from 'crypto';
 
 export const SESSION_CACHE_NAMESPACE = 'auth:sessions';
@@ -13,15 +10,14 @@ export const sessionCacheKey = (kind: 'user' | 'peer', token: string) =>
 
 @Injectable()
 export class SessionCacheInvalidator {
-  constructor(private kv: KvTtlCacheService) {}
+  constructor(private resets: NamespaceResets) {}
 
   invalidate() {
-    return this.kv.resetNamespace(SESSION_CACHE_NAMESPACE);
+    return this.resets.reset(SESSION_CACHE_NAMESPACE);
   }
 }
 
 @Module({
-  imports: [KvTtlCacheModule],
   providers: [SessionCacheInvalidator],
   exports: [SessionCacheInvalidator],
 })

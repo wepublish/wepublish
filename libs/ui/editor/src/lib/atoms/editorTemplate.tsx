@@ -1,14 +1,19 @@
 import styled from '@emotion/styled';
-import { ReactNode } from 'react';
+import { Box } from '@mui/material';
+import { visuallyHidden } from '@mui/utils';
+import { CSSProperties, ReactNode, useEffect, useRef, useState } from 'react';
 
 const Children = styled('div', {
   shouldForwardProp: propName => propName !== 'maxWidth',
 })<{ maxWidth: string }>`
   display: flex;
-  width: 80%;
+  // Leaves room on each side for the block list's absolutely positioned
+  // move buttons and style select (150px select + margins).
+  width: min(80%, calc(100% - 340px));
   max-width: ${({ maxWidth }) => maxWidth};
 
-  @media (max-width: 899px) {
+  // The block list stacks those columns below lg, so use the full width.
+  ${({ theme }) => theme.breakpoints.down('lg')} {
     width: 100%;
   }
 `;
@@ -37,7 +42,7 @@ const NavigationChildren = styled.div`
     calc(-1 * var(--wep-page-padding-x, 0px)) 0;
 `;
 
-const EditorTemplateWrapper = styled.div`
+const EditorTemplateWrapper = styled.main`
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -48,16 +53,50 @@ export interface EditorTemplateProps {
   navigationChildren?: ReactNode;
   children?: ReactNode;
   maxWidth?: string;
+  title?: string;
 }
 
 export function EditorTemplate({
   children,
   navigationChildren,
   maxWidth = '1220px',
+  title,
 }: EditorTemplateProps) {
+  const navigationRef = useRef<HTMLDivElement>(null);
+  const [navigationHeight, setNavigationHeight] = useState(0);
+
+  useEffect(() => {
+    const navigation = navigationRef.current;
+
+    if (!navigation || typeof ResizeObserver === 'undefined') {
+      return;
+    }
+
+    const observer = new ResizeObserver(([entry]) => {
+      setNavigationHeight(
+        entry.borderBoxSize?.[0]?.blockSize ?? entry.contentRect.height
+      );
+    });
+    observer.observe(navigation);
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <EditorTemplateWrapper>
-      <NavigationChildren>{navigationChildren}</NavigationChildren>
+    <EditorTemplateWrapper
+      style={{ '--wep-sticky-top': `${navigationHeight}px` } as CSSProperties}
+    >
+      {title && (
+        <Box
+          component="h1"
+          sx={visuallyHidden}
+        >
+          {title}
+        </Box>
+      )}
+      <NavigationChildren ref={navigationRef}>
+        {navigationChildren}
+      </NavigationChildren>
       <ChildrenWrapper>
         <Children maxWidth={maxWidth}>{children}</Children>
       </ChildrenWrapper>

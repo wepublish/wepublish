@@ -1,25 +1,29 @@
-import { Button } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import {
   CanGetAISettings,
   CanGetAnalyticsProviderSettings,
   CanGetChallengeProviderSettings,
+  CanGetLetterProviderSettings,
   CanGetMailchimpSyncSettings,
   CanGetMailProviderSettings,
   CanGetPaymentProviderSettings,
+  CanGetPdfRendererSettings,
   CanGetTrackingPixelSettings,
   Permission,
 } from '@wepublish/permissions';
 import { InfoTooltip, PermissionControl } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
 import { MdArrowBack } from 'react-icons/md';
-import { Link, useParams } from 'react-router-dom';
+import { Link as RouterLink, useParams } from 'react-router-dom';
 
 import { AIIntegrationForm } from './aiIntegrationForm';
 import { AnalyticsIntegrationForm } from './analyticsIntegrationForm';
 import { ChallengeIntegrationForm } from './challengeIntegrationForm';
+import { LetterIntegrationForm } from './letterIntegrationForm';
 import { MailchimpSyncIntegrationForm } from './mailchimpSyncIntegrationForm';
 import { MailIntegrationForm } from './mailIntegrationForm';
 import { PaymentIntegrationForm } from './paymentIntegrationForm';
+import { PdfRendererIntegrationForm } from './pdfRendererIntegrationForm';
 import { TrackingPixelIntegrationForm } from './trackingPixelIntegrationForm';
 
 const useIntegrationTitle = (type: string | undefined) => {
@@ -38,6 +42,10 @@ const useIntegrationTitle = (type: string | undefined) => {
       return t('integrations.analytics');
     case 'mail':
       return t('integrations.mailProvider');
+    case 'letter':
+      return t('integrations.letterProvider');
+    case 'pdf-renderer':
+      return t('integrations.pdfRenderer');
     case 'mailchimp-sync':
       return t('integrations.mailchimpSync');
     default:
@@ -82,6 +90,10 @@ const getPermission = (type: string | undefined): Permission | undefined => {
       return CanGetAnalyticsProviderSettings;
     case 'mail':
       return CanGetMailProviderSettings;
+    case 'letter':
+      return CanGetLetterProviderSettings;
+    case 'pdf-renderer':
+      return CanGetPdfRendererSettings;
     case 'mailchimp-sync':
       return CanGetMailchimpSyncSettings;
     default:
@@ -107,6 +119,10 @@ export function IntegrationEditView() {
         return <PaymentIntegrationForm />;
       case 'mail':
         return <MailIntegrationForm />;
+      case 'letter':
+        return <LetterIntegrationForm />;
+      case 'pdf-renderer':
+        return <PdfRendererIntegrationForm />;
       case 'tracking-pixel':
         return <TrackingPixelIntegrationForm />;
       case 'analytics':
@@ -114,7 +130,11 @@ export function IntegrationEditView() {
       case 'mailchimp-sync':
         return <MailchimpSyncIntegrationForm />;
       default:
-        return <p>{t('integrations.configure', { integration: title })}</p>;
+        return (
+          <Typography>
+            {t('integrations.configure', { integration: title })}
+          </Typography>
+        );
     }
   })();
 
@@ -123,17 +143,17 @@ export function IntegrationEditView() {
       qualifyingPermissions={permission ? [permission.id] : []}
     >
       <div>
-        <Link to={'/integrations'}>
-          <Button
-            size="small"
-            variant="text"
-            startIcon={<MdArrowBack />}
-          >
-            {t('integrations.back')}
-          </Button>
-        </Link>
+        <Button
+          component={RouterLink}
+          to={'/integrations'}
+          size="small"
+          variant="text"
+          startIcon={<MdArrowBack />}
+        >
+          {t('integrations.back')}
+        </Button>
 
-        <h1>
+        <Typography variant="h1">
           {title}
           {info && (
             <>
@@ -141,7 +161,7 @@ export function IntegrationEditView() {
               <InfoTooltip text={info} />
             </>
           )}
-        </h1>
+        </Typography>
 
         <div style={{ marginTop: 20 }}>{renderConfiguration}</div>
       </div>

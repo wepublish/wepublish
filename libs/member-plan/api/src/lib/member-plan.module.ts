@@ -1,7 +1,4 @@
-import {
-  GraphqlResponseCacheModule,
-  KvTtlCacheModule,
-} from '@wepublish/kv-ttl-cache/api';
+import { PublicContentInvalidatorModule } from '@wepublish/public-content-cache/api';
 import { forwardRef, Module } from '@nestjs/common';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { MemberPlanService } from './member-plan.service';
@@ -22,8 +19,7 @@ import {
     PrismaModule,
     PaymentMethodModule,
     forwardRef(() => PageModule),
-    KvTtlCacheModule,
-    GraphqlResponseCacheModule,
+    PublicContentInvalidatorModule,
   ],
   providers: [
     MemberPlanService,

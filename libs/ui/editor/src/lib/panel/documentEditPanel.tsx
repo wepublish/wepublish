@@ -1,5 +1,6 @@
-import { useMutation, useQuery } from '@apollo/client/react';
-import styled from '@emotion/styled';
+import { useApolloClient, useMutation } from '@apollo/client/react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Button, IconButton, TextField } from '@mui/material';
 import {
   DocumentDocument,
   DocumentListDocument,
@@ -7,20 +8,18 @@ import {
   UpdateDocumentDocument,
   UploadDocumentDocument,
 } from '@wepublish/editor/api';
+import {
+  CanCreateDocument,
+  CanDeleteDocument,
+  CanGetDocument,
+  CanGetDocuments,
+} from '@wepublish/permissions';
 import prettyBytes from 'pretty-bytes';
 import { useEffect, useState } from 'react';
+import { Controller, useForm, useWatch } from 'react-hook-form';
+import { z } from 'zod';
 import { useTranslation } from 'react-i18next';
 import { MdContentCopy } from 'react-icons/md';
-import {
-  Button,
-  Drawer,
-  Form as RForm,
-  IconButton,
-  Message,
-  Notification,
-  Panel as RPanel,
-  toaster,
-} from 'rsuite';
 
 import { DescriptionList, DescriptionListItem } from '../atoms/descriptionList';
 import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
@@ -29,19 +28,70 @@ import {
   PermissionControl,
   useAuthorisation,
 } from '../atoms/permissionControl';
+import {
+  DrawerActions,
+  DrawerBody,
+  DrawerForm,
+  DrawerHeader,
+  DrawerTitle,
+  FormFields,
+  FormSectionTitle,
+} from '../drawer';
+import { enqueueSnackbar } from '../snackbar';
 import { getOperationNameFromDocument } from '../utility';
 
-const { Label, Control, Group } = RForm;
+const schema = z.object({
+  title: z.string(),
+  description: z.string(),
+  filename: z.string(),
+  extension: z.string(),
+  fileSize: z.number(),
+  url: z.string().optional(),
+  thumbnailURL: z.string().optional(),
+  createdAt: z.string().optional(),
+  updatedAt: z.string().optional(),
+});
 
-const Form = styled(RForm)`
-  height: 100%;
-`;
+type DocumentDetails = z.infer<typeof schema>;
+
+const EMPTY_DOCUMENT: DocumentDetails = {
+  title: '',
+  description: '',
+  filename: '',
+  extension: '',
+  fileSize: 0,
+};
+
+const fromFile = (file: File): DocumentDetails => {
+  const dot = file.name.lastIndexOf('.');
+
+  return {
+    filename: dot > 0 ? file.name.slice(0, dot) : file.name,
+    extension: dot > 0 ? file.name.slice(dot) : '',
+    fileSize: file.size,
+    title: '',
+    description: '',
+  };
+};
+
+const fromDocument = (document: FullDocumentFragment): DocumentDetails => ({
+  filename: document.filename || '',
+  extension: document.extension,
+  fileSize: document.fileSize,
+  title: document.title ?? '',
+  description: document.description ?? '',
+  url: document.url,
+  thumbnailURL: document.thumbnailURL ?? undefined,
+  createdAt: document.createdAt,
+  updatedAt: document.modifiedAt,
+});
 
 export interface DocumentEditPanelProps {
-  readonly id?: string;
-  readonly file?: File;
+  id?: string;
+  file?: File;
 
   onClose?(): void;
+  onReplace?(): void;
   onSave?(document: FullDocumentFragment): void;
 }
 
@@ -49,25 +99,12 @@ function DocumentEditPanel({
   id,
   file,
   onClose,
+  onReplace,
   onSave,
 }: DocumentEditPanelProps) {
-  const [filename, setFilename] = useState('');
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-
-  const [fileSize, setFileSize] = useState(0);
-  const [extension, setExtension] = useState('');
-
-  const [documentURL, setDocumentURL] = useState<string>();
-  const [thumbnailURL, setThumbnailURL] = useState<string>();
-
-  const [createdAt, setCreatedAt] = useState<string>();
-  const [updatedAt, setUpdatedAt] = useState<string>();
-
-  const { data, error: loadingError } = useQuery(DocumentDocument, {
-    variables: { id: id! },
-    skip: id === undefined,
-  });
+  const { t } = useTranslation();
+  const client = useApolloClient();
+  const [loadError, setLoadError] = useState<Error>();
 
   const [updateDocument, { loading: isUpdating, error: savingError }] =
     useMutation(UpdateDocumentDocument);
@@ -77,77 +114,66 @@ function DocumentEditPanel({
       refetchQueries: [getOperationNameFromDocument(DocumentListDocument)],
     });
 
-  const [isLoading, setLoading] = useState(true);
-  const isAuthorized = useAuthorisation('CAN_CREATE_DOCUMENT');
+  const {
+    control,
+    handleSubmit,
+    formState: { isLoading },
+  } = useForm({
+    resolver: zodResolver(schema),
+    defaultValues: async () => {
+      if (file) {
+        return fromFile(file);
+      }
+
+      if (!id) {
+        return EMPTY_DOCUMENT;
+      }
+
+      try {
+        const { data } = await client.query({
+          query: DocumentDocument,
+          variables: { id },
+        });
+
+        if (!data?.document) {
+          enqueueSnackbar(t('documents.panels.notFound'), {
+            variant: 'error',
+            autoHideDuration: null,
+          });
+
+          return EMPTY_DOCUMENT;
+        }
+
+        return fromDocument(data.document);
+      } catch (error) {
+        setLoadError(error as Error);
+
+        return EMPTY_DOCUMENT;
+      }
+    },
+  });
+
+  const details = useWatch({ control });
+
+  const isAuthorized = useAuthorisation(CanCreateDocument.id);
   const isDisabled = isLoading || isUpdating || isUploading || !isAuthorized;
   const isUpload = file !== undefined;
-  const { t } = useTranslation();
-
-  useEffect(() => {
-    if (file) {
-      const [name, ...extensions] = file.name.split('.');
-      const ext = `.${extensions.join('.')}`;
-
-      setCreatedAt(undefined);
-      setUpdatedAt(undefined);
-      setDocumentURL(undefined);
-      setThumbnailURL(undefined);
-      setFilename(name);
-      setFileSize(file.size);
-      setExtension(ext);
-      setLoading(false);
-    } else if (data) {
-      const { document } = data;
-
-      if (document) {
-        setCreatedAt(document.createdAt);
-        setUpdatedAt(document.modifiedAt);
-        setFilename(document.filename || '');
-        setFileSize(document.fileSize);
-        setExtension(document.extension);
-        setTitle(document.title ?? '');
-        setDescription(document.description ?? '');
-        setDocumentURL(document.url);
-        setThumbnailURL(document.thumbnailURL ?? undefined);
-        setLoading(false);
-      } else {
-        toaster.push(
-          <Message
-            type="error"
-            showIcon
-            closable
-            duration={0}
-          >
-            {t('documents.panels.notFound')}
-          </Message>
-        );
-      }
-    }
-  }, [file, data]);
 
   useEffect(() => {
     const error =
-      loadingError?.message ?? savingError?.message ?? uploadError?.message;
-    if (error)
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={0}
-        >
-          {error}
-        </Message>
-      );
-  }, [loadingError, savingError, uploadError]);
+      loadError?.message ?? savingError?.message ?? uploadError?.message;
+    if (error) {
+      enqueueSnackbar(error, { variant: 'error', autoHideDuration: null });
+    }
+  }, [loadError, savingError, uploadError]);
 
-  async function handleSave() {
+  async function handleSave({ title, description }: z.infer<typeof schema>) {
     try {
       if (isUpload) {
         const { data } = await uploadDocument({
           variables: {
             file: file!,
-            filename: filename || undefined,
+            filename: details.filename || undefined,
             title: title || undefined,
             description: description || undefined,
           },
@@ -165,48 +191,36 @@ function DocumentEditPanel({
           },
         });
 
-        toaster.push(
-          <Message
-            type="success"
-            showIcon
-            closable
-            duration={2000}
-          >
-            {t('documents.panels.documentUpdated')}
-          </Message>
-        );
+        enqueueSnackbar(t('documents.panels.documentUpdated'), {
+          variant: 'success',
+          autoHideDuration: 2000,
+        });
 
         if (data?.updateDocument) {
           onSave?.(data.updateDocument);
         }
       }
     } catch (err) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={0}
-        >
-          {t('documents.panels.uploadFailed')}
-        </Message>
-      );
+      enqueueSnackbar(t('documents.panels.uploadFailed'), {
+        variant: 'error',
+        autoHideDuration: null,
+      });
     }
   }
 
   return (
-    <Form onSubmit={validationPassed => validationPassed && handleSave()}>
-      <Drawer.Header>
-        <Drawer.Title>
+    <DrawerForm onSubmit={handleSubmit(handleSave)}>
+      <DrawerHeader>
+        <DrawerTitle>
           {isUpload ?
             t('documents.panels.uploadDocument')
           : t('documents.panels.editDocument')}
-        </Drawer.Title>
+        </DrawerTitle>
 
-        <Drawer.Actions>
-          <PermissionControl qualifyingPermissions={['CAN_CREATE_DOCUMENT']}>
+        <DrawerActions>
+          <PermissionControl qualifyingPermissions={[CanCreateDocument.id]}>
             <Button
-              appearance={'primary'}
+              variant="contained"
               disabled={isDisabled}
               type="submit"
             >
@@ -214,133 +228,147 @@ function DocumentEditPanel({
             </Button>
           </PermissionControl>
 
+          {isUpload && onReplace && (
+            <Button
+              variant="text"
+              onClick={() => onReplace()}
+            >
+              {t('documents.panels.replaceFile')}
+            </Button>
+          )}
+
           <Button
-            appearance={'subtle'}
+            variant="text"
             onClick={() => onClose?.()}
           >
             {isUpload ?
               t('documents.panels.cancel')
             : t('documents.panels.close')}
           </Button>
-        </Drawer.Actions>
-      </Drawer.Header>
+        </DrawerActions>
+      </DrawerHeader>
 
-      <Drawer.Body>
+      <DrawerBody>
         {!isLoading && (
-          <>
-            {thumbnailURL && (
-              <RPanel>
-                <img
-                  src={thumbnailURL}
-                  alt={title || filename}
-                  style={{
-                    maxWidth: '100%',
-                    maxHeight: 300,
-                    display: 'block',
-                    margin: '0 auto',
-                  }}
-                />
-              </RPanel>
+          <FormFields>
+            {details.thumbnailURL && (
+              <img
+                src={details.thumbnailURL}
+                alt={details.title || details.filename}
+                style={{
+                  maxWidth: '100%',
+                  maxHeight: 300,
+                  display: 'block',
+                  margin: '0 auto',
+                }}
+              />
             )}
 
-            <RPanel header={t('documents.panels.description')}>
-              <DescriptionList>
-                <DescriptionListItem label={t('documents.panels.filename')}>
-                  {filename || t('documents.panels.untitled')}
-                  {extension}
+            <FormSectionTitle>
+              {t('documents.panels.description')}
+            </FormSectionTitle>
+
+            <DescriptionList>
+              <DescriptionListItem label={t('documents.panels.filename')}>
+                {details.filename || t('documents.panels.untitled')}
+                {details.extension}
+              </DescriptionListItem>
+
+              {details.createdAt && (
+                <DescriptionListItem label={t('documents.panels.created')}>
+                  {t('documents.panels.createdAt', {
+                    createdAt: new Date(details.createdAt),
+                  })}
                 </DescriptionListItem>
+              )}
 
-                {createdAt && (
-                  <DescriptionListItem label={t('documents.panels.created')}>
-                    {t('documents.panels.createdAt', {
-                      createdAt: new Date(createdAt),
-                    })}
-                  </DescriptionListItem>
-                )}
-
-                {updatedAt && (
-                  <DescriptionListItem label={t('documents.panels.updated')}>
-                    {t('documents.panels.updatedAt', {
-                      updatedAt: new Date(updatedAt),
-                    })}
-                  </DescriptionListItem>
-                )}
-
-                <DescriptionListItem label={t('documents.panels.fileSize')}>
-                  {prettyBytes(fileSize)}
+              {details.updatedAt && (
+                <DescriptionListItem label={t('documents.panels.updated')}>
+                  {t('documents.panels.updatedAt', {
+                    updatedAt: new Date(details.updatedAt),
+                  })}
                 </DescriptionListItem>
+              )}
 
-                {documentURL && (
-                  <DescriptionListItem label={t('documents.panels.publicLink')}>
-                    <a
-                      href={documentURL}
-                      target="_blank"
-                      rel="noreferrer"
+              <DescriptionListItem label={t('documents.panels.fileSize')}>
+                {prettyBytes(details.fileSize ?? 0)}
+              </DescriptionListItem>
+
+              {!isUpload && details.url && (
+                <DescriptionListItem label={t('documents.panels.publicLink')}>
+                  <a
+                    href={details.url}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {t('documents.panels.openOriginal')}
+                  </a>
+
+                  <IconButtonTooltip caption={t('documents.overview.copyLink')}>
+                    <IconButton
+                      aria-label={t('documents.overview.copyLink')}
+                      size="small"
+                      style={{ marginLeft: 8 }}
+                      onClick={() => {
+                        navigator.clipboard.writeText(details.url!);
+                        enqueueSnackbar('', {
+                          variant: 'success',
+                          title: t('documents.panels.linkCopied'),
+                          autoHideDuration: 2000,
+                        });
+                      }}
                     >
-                      {documentURL}
-                    </a>
+                      <MdContentCopy />
+                    </IconButton>
+                  </IconButtonTooltip>
+                </DescriptionListItem>
+              )}
+            </DescriptionList>
 
-                    <IconButtonTooltip
-                      caption={t('documents.overview.copyLink')}
-                    >
-                      <IconButton
-                        aria-label={t('documents.overview.copyLink')}
-                        icon={<MdContentCopy />}
-                        size="xs"
-                        appearance="subtle"
-                        style={{ marginLeft: 8 }}
-                        onClick={() => {
-                          navigator.clipboard.writeText(documentURL);
-                          toaster.push(
-                            <Notification
-                              type="success"
-                              header={t('documents.panels.linkCopied')}
-                              duration={2000}
-                            />,
-                            { placement: 'topEnd' }
-                          );
-                        }}
-                      />
-                    </IconButtonTooltip>
-                  </DescriptionListItem>
-                )}
-              </DescriptionList>
-            </RPanel>
+            <FormSectionTitle>
+              {t('documents.panels.information')}
+            </FormSectionTitle>
 
-            <RPanel header={t('documents.panels.information')}>
-              <RForm.Stack fluid>
-                <Group controlId="documentTitle">
-                  <Label>{t('documents.panels.title')}</Label>
-                  <Control
-                    name="title"
-                    value={title}
-                    disabled={isDisabled}
-                    onChange={(value: string) => setTitle(value)}
-                  />
-                </Group>
+            <Controller
+              control={control}
+              name="title"
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  label={t('documents.panels.title')}
+                  disabled={isDisabled}
+                  error={Boolean(error)}
+                  helperText={error?.message}
+                  fullWidth
+                />
+              )}
+            />
 
-                <Group controlId="documentDescription">
-                  <Label>{t('documents.panels.description')}</Label>
-                  <Control
-                    name="description"
-                    value={description}
-                    disabled={isDisabled}
-                    onChange={(value: string) => setDescription(value)}
-                  />
-                </Group>
-              </RForm.Stack>
-            </RPanel>
-          </>
+            <Controller
+              control={control}
+              name="description"
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  label={t('documents.panels.description')}
+                  disabled={isDisabled}
+                  error={Boolean(error)}
+                  helperText={error?.message}
+                  fullWidth
+                />
+              )}
+            />
+          </FormFields>
         )}
-      </Drawer.Body>
-    </Form>
+      </DrawerBody>
+    </DrawerForm>
   );
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_DOCUMENT',
-  'CAN_GET_DOCUMENTS',
-  'CAN_DELETE_DOCUMENT',
-  'CAN_CREATE_DOCUMENT',
+  CanGetDocument.id,
+  CanGetDocuments.id,
+  CanDeleteDocument.id,
+  CanCreateDocument.id,
 ])(DocumentEditPanel);
 export { CheckedPermissionComponent as DocumentEditPanel };

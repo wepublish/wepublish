@@ -1,5 +1,6 @@
 import { useLazyQuery, useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
+import { Alert, Button, Stack, TextField } from '@mui/material';
 import {
   CheckLoginOtpDocument,
   CreateSessionDocument,
@@ -8,12 +9,14 @@ import {
   GenerateTotpSetupDocument,
   LocalStorageKey,
 } from '@wepublish/editor/api';
+import { CanLoginEditor } from '@wepublish/permissions';
 import {
   AuthDispatchActionType,
   AuthDispatchContext,
+  enqueueSnackbar,
   LoginTemplate,
 } from '@wepublish/ui/editor';
-import React, {
+import {
   FormEvent,
   useCallback,
   useContext,
@@ -24,7 +27,6 @@ import React, {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Button, Form as RForm, Message, toaster } from 'rsuite';
 
 import { SupportLoginButton } from './supportLoginButton';
 import { Background } from './ui/loginBackground';
@@ -35,9 +37,7 @@ function useQuery() {
   return useMemo(() => new URLSearchParams(search), [search]);
 }
 
-const { Group, Label, Control } = RForm;
-
-const Form = styled(RForm)`
+const Form = styled.form`
   display: flex;
   flex-direction: column;
   margin: 0;
@@ -48,7 +48,7 @@ const SecretCode = styled.code`
   text-align: center;
   font-size: 14px;
   padding: 8px;
-  background: var(--rs-bg-well);
+  background: ${({ theme }) => theme.vars.palette.background.default};
   border-radius: 4px;
   margin-bottom: 16px;
   word-break: break-all;
@@ -58,17 +58,17 @@ const TotpDescription = styled.p`
   text-align: center;
   margin-bottom: 16px;
   font-size: 14px;
-  color: var(--rs-text-secondary);
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
 `;
 
 const AppLinks = styled.p`
   text-align: center;
   margin-bottom: 16px;
   font-size: 13px;
-  color: var(--rs-text-secondary);
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
 
   a {
-    color: var(--rs-text-link);
+    color: ${({ theme }) => theme.vars.palette.primary.main};
     text-decoration: none;
     &:hover {
       text-decoration: underline;
@@ -78,7 +78,7 @@ const AppLinks = styled.p`
 
 const ForgotPasswordLink = styled.a`
   display: block;
-  color: var(--rs-text-link);
+  color: ${({ theme }) => theme.vars.palette.primary.main};
   font-size: 13px;
   cursor: pointer;
   margin-top: 8px;
@@ -100,9 +100,11 @@ export function Login() {
   const [password, setPassword] = useState('');
   const [totpToken, setTotpToken] = useState('');
   const [loginStep, setLoginStep] = useState<LoginStep>('login');
-  const [otpRequired, setOtpRequired] = useState(false);
+  const [otpChecked, setOtpChecked] = useState(false);
   const [totpUri, setTotpUri] = useState('');
   const [totpSecret, setTotpSecret] = useState('');
+  const [error, setError] = useState('');
+  const [setupError, setSetupError] = useState('');
 
   const emailInputRef = useRef<HTMLInputElement>(null);
   const totpInputRef = useRef<HTMLInputElement>(null);
@@ -136,17 +138,8 @@ export function Login() {
         ];
       }, [] as string[]);
 
-      if (!permissions.includes('CAN_LOGIN_EDITOR')) {
-        toaster.push(
-          <Message
-            type="error"
-            showIcon
-            closable
-            duration={0}
-          >
-            {t('login.unauthorized')}
-          </Message>
-        );
+      if (!permissions.includes(CanLoginEditor.id)) {
+        setError(t('login.unauthorized'));
         return;
       }
 
@@ -171,16 +164,17 @@ export function Login() {
     [authDispatch, navigate, next, t]
   );
 
+  const otpRequired = isValidEmail(email) && otpChecked;
+
   // Dynamically check OTP requirement when email changes
   useEffect(() => {
     if (!isValidEmail(email)) {
-      setOtpRequired(false);
       return;
     }
 
     const timeout = setTimeout(async () => {
       const result = await checkLoginOtp({ variables: { email } });
-      setOtpRequired(result.data?.checkLoginOtp ?? false);
+      setOtpChecked(result.data?.checkLoginOtp ?? false);
     }, 300);
 
     return () => clearTimeout(timeout);
@@ -197,6 +191,7 @@ export function Login() {
 
   async function handleLogin(e: FormEvent) {
     e.preventDefault();
+    setError('');
 
     try {
       const response = await authenticate({
@@ -207,7 +202,9 @@ export function Login() {
         },
       });
 
-      if (!response.data?.createSession) return;
+      if (!response.data?.createSession) {
+        return;
+      }
 
       const { token, totpEnabled, user } = response.data.createSession;
 
@@ -217,16 +214,7 @@ export function Login() {
         forceTotpSetup(token);
       }
     } catch (error: any) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={8000}
-        >
-          {error?.message || t('login.unauthorized')}
-        </Message>
-      );
+      setError(error?.message || t('login.unauthorized'));
       setTotpToken('');
     }
   }
@@ -241,22 +229,14 @@ export function Login() {
         setTotpUri(setupResponse.data.generateTotpSetup.uri);
         setTotpSecret(setupResponse.data.generateTotpSetup.secret);
       }
-    } catch (error) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={8000}
-        >
-          {t('login.totp.setupError')}
-        </Message>
-      );
+    } catch {
+      setSetupError(t('login.totp.setupError'));
     }
   }
 
   async function handleTotpSetup(e: FormEvent) {
     e.preventDefault();
+    setError('');
 
     try {
       const response = await enableTotp({
@@ -264,16 +244,10 @@ export function Login() {
       });
 
       if (response.data?.enableTotp) {
-        toaster.push(
-          <Message
-            type="success"
-            showIcon
-            closable
-            duration={3000}
-          >
-            {t('login.totp.setupSuccess')}
-          </Message>
-        );
+        enqueueSnackbar(t('login.totp.setupSuccess'), {
+          variant: 'success',
+          autoHideDuration: 3000,
+        });
 
         authDispatch({
           type: AuthDispatchActionType.Login,
@@ -291,16 +265,7 @@ export function Login() {
         navigate('/', { replace: true });
       }
     } catch (error: any) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={8000}
-        >
-          {error?.message || t('login.totp.invalidCode')}
-        </Message>
-      );
+      setError(error?.message || t('login.totp.invalidCode'));
       setTotpToken('');
     }
   }
@@ -308,9 +273,15 @@ export function Login() {
   // --- TOTP Setup Screen ---
   if (loginStep === 'totp-setup') {
     return (
-      <LoginTemplate backgroundChildren={<Background />}>
+      <LoginTemplate
+        title={t('login.login')}
+        backgroundChildren={<Background />}
+      >
         <Form>
-          <RForm.Stack fluid>
+          <Stack
+            direction="column"
+            spacing={3}
+          >
             <TotpDescription>
               {t('login.totp.setupDescription')}
             </TotpDescription>
@@ -345,26 +316,33 @@ export function Login() {
               </>
             )}
 
-            <Group controlId="totpCode">
-              <Label>{t('login.totp.code')}</Label>
-              <Control
-                inputRef={totpInputRef}
-                name="totpCode"
-                value={totpToken}
-                autoComplete="one-time-code"
-                onChange={(value: string) => setTotpToken(value)}
-              />
-            </Group>
+            {setupError && <Alert severity="error">{setupError}</Alert>}
+
+            <TextField
+              label={<>{t('login.totp.code')}</>}
+              inputRef={totpInputRef}
+              name="totpCode"
+              value={totpToken}
+              autoComplete="one-time-code"
+              error={Boolean(error)}
+              onChange={event => {
+                setTotpToken(event.target.value);
+                setError('');
+              }}
+              fullWidth
+            />
+
+            {error && <Alert severity="error">{error}</Alert>}
 
             <Button
-              appearance="primary"
+              variant="contained"
               type="submit"
               disabled={loadingEnable || loadingSetup || !totpToken}
               onClick={handleTotpSetup}
             >
               {t('login.totp.activate')}
             </Button>
-          </RForm.Stack>
+          </Stack>
         </Form>
       </LoginTemplate>
     );
@@ -372,44 +350,62 @@ export function Login() {
 
   // --- Login Screen ---
   return (
-    <LoginTemplate backgroundChildren={<Background />}>
+    <LoginTemplate
+      title={t('login.login')}
+      backgroundChildren={<Background />}
+    >
       <Form>
-        <RForm.Stack fluid>
-          <Group controlId="loginEmail">
-            <Label>{t('login.email')}</Label>
-            <Control
-              inputRef={emailInputRef}
-              name="username"
-              className="username"
-              value={email}
-              autoComplete="username"
-              onChange={(email: string) => setEmail(email)}
-            />
-          </Group>
-          <Group controlId="loginPassword">
-            <Label>{t('login.password')}</Label>
-            <Control
-              name="password"
-              className="password"
-              type="password"
-              value={password}
-              autoComplete="current-password"
-              onChange={(password: string) => setPassword(password)}
-            />
-          </Group>
+        <Stack
+          direction="column"
+          spacing={3}
+        >
+          <TextField
+            label={<>{t('login.email')}</>}
+            inputRef={emailInputRef}
+            name="username"
+            value={email}
+            autoComplete="username"
+            error={Boolean(error)}
+            onChange={event => {
+              setEmail(event.target.value);
+              setError('');
+            }}
+            fullWidth
+          />
+
+          <TextField
+            label={<>{t('login.password')}</>}
+            name="password"
+            type="password"
+            value={password}
+            autoComplete="current-password"
+            error={Boolean(error)}
+            onChange={event => {
+              setPassword(event.target.value);
+              setError('');
+            }}
+            fullWidth
+          />
+
           {otpRequired && (
-            <Group controlId="loginTotp">
-              <Label>{t('login.totp.code')}</Label>
-              <Control
-                name="totpCode"
-                value={totpToken}
-                autoComplete="one-time-code"
-                onChange={(value: string) => setTotpToken(value)}
-              />
-            </Group>
+            <TextField
+              label={<>{t('login.totp.code')}</>}
+              name="totpCode"
+              value={totpToken}
+              autoComplete="one-time-code"
+              error={Boolean(error)}
+              onChange={event => {
+                setTotpToken(event.target.value);
+                setError('');
+              }}
+              fullWidth
+            />
           )}
+
+          {error && <Alert severity="error">{error}</Alert>}
+
           <Button
-            appearance="primary"
+            variant="contained"
             type="submit"
             disabled={loading}
             onClick={handleLogin}
@@ -421,7 +417,7 @@ export function Login() {
           >
             {t('login.forgotPassword')}
           </ForgotPasswordLink>
-        </RForm.Stack>
+        </Stack>
       </Form>
       <SupportLoginButton />
     </LoginTemplate>

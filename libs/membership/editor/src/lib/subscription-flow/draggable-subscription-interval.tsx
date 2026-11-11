@@ -7,14 +7,14 @@ import {
 } from '@wepublish/editor/api';
 import { useContext, useMemo } from 'react';
 import { MdDelete, MdDragIndicator } from 'react-icons/md';
-import { IconButton } from 'rsuite';
 import { SubscriptionClientContext } from './graphql-client-context';
 import { MailTemplateSelect } from './mail-template-select';
 import { DecoratedSubscriptionInterval } from './subscription-flow-list';
 
-import { Tooltip } from '@mui/material';
+import { Tooltip, IconButton } from '@mui/material';
 import { PermissionControl, useAuthorisation } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
+import { CanUpdateSubscriptionFlow } from '@wepublish/permissions';
 
 const DraggableContainer = styled.div<{ accent?: string }>`
   container-type: inline-size;
@@ -22,14 +22,14 @@ const DraggableContainer = styled.div<{ accent?: string }>`
   min-width: 0;
   max-width: 640px;
 
-  ${({ accent }) =>
+  ${({ accent, theme }) =>
     accent &&
     `
       --interval-accent: ${accent};
       overflow: hidden;
-      border: 1px solid var(--rs-border-primary);
-      border-radius: var(--rs-radius-md);
-      background: var(--rs-bg-card);
+      border: 1px solid ${theme.vars.palette.divider};
+      border-radius: calc(${theme.shape.borderRadius}px * 0.75);
+      background: ${theme.vars.palette.background.paper};
       box-shadow: inset 3px 0 0 var(--interval-accent);
     `}
 `;
@@ -58,7 +58,7 @@ const EventTag = styled.div`
   gap: 6px;
   padding: 6px 10px 6px 8px;
   background: rgb(from var(--interval-accent) r g b / 12%);
-  color: var(--rs-text-primary);
+  color: ${({ theme }) => theme.vars.palette.text.primary};
   font-size: 13px;
   font-weight: 600;
   line-height: 1.3;
@@ -73,13 +73,23 @@ const EventTag = styled.div`
 const DragHandle = styled.span`
   display: inline-flex;
   flex-shrink: 0;
-  margin-left: -2px;
-  color: var(--rs-text-secondary);
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  min-height: 24px;
+  margin-left: -4px;
+  border-radius: 4px;
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
   cursor: grab;
   touch-action: none;
 
   &:active {
     cursor: grabbing;
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.vars.palette.primary.main};
+    outline-offset: 1px;
   }
 `;
 
@@ -108,7 +118,7 @@ export function DraggableSubscriptionInterval({
 }: DraggableSubscriptionIntervalProps) {
   const { t } = useTranslation();
   const canUpdateSubscriptionFlow = useAuthorisation(
-    'CAN_UPDATE_SUBSCRIPTION_FLOW'
+    CanUpdateSubscriptionFlow.id
   );
   const client = useContext(SubscriptionClientContext);
 
@@ -149,8 +159,14 @@ export function DraggableSubscriptionInterval({
                   ref={setNodeRef}
                   {...listeners}
                   {...attributes}
+                  aria-label={t('subscriptionFlow.moveMail', {
+                    title: subscriptionInterval.title,
+                  })}
                 >
-                  <MdDragIndicator size={18} />
+                  <MdDragIndicator
+                    size={18}
+                    aria-hidden
+                  />
                 </DragHandle>
               )}
               {subscriptionInterval.icon}
@@ -160,6 +176,15 @@ export function DraggableSubscriptionInterval({
 
           <SelectWrapper padded={!!subscriptionInterval && !isCustom}>
             <MailTemplateSelect
+              label={
+                subscriptionInterval && !isCustom ?
+                  subscriptionInterval.title
+                : t('subscriptionFlow.dayWithNumber', {
+                    day:
+                      subscriptionInterval?.object.daysAwayFromEnding ??
+                      newDaysAwayFromEnding,
+                  })
+              }
               mailTemplates={mailTemplates}
               subscriptionInterval={subscriptionInterval}
               subscriptionFlow={subscriptionFlow}
@@ -170,14 +195,11 @@ export function DraggableSubscriptionInterval({
 
           {(subscriptionInterval ? isCustom : !!onRemove) && (
             <PermissionControl
-              qualifyingPermissions={['CAN_UPDATE_SUBSCRIPTION_FLOW']}
+              qualifyingPermissions={[CanUpdateSubscriptionFlow.id]}
             >
               <IconButton
-                icon={<MdDelete />}
-                size="sm"
-                circle
-                appearance="ghost"
-                color="red"
+                size="small"
+                color="error"
                 aria-label={t('subscriptionFlow.deleteMail')}
                 onClick={() =>
                   subscriptionInterval ?
@@ -186,7 +208,9 @@ export function DraggableSubscriptionInterval({
                     })
                   : onRemove?.()
                 }
-              />
+              >
+                <MdDelete />
+              </IconButton>
             </PermissionControl>
           )}
         </Entry>

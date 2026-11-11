@@ -1,1 +1,1 @@
-import '@wepublish/utils/sentry/client';
+import '@wepublish/utils/website/next/sentry/client';

@@ -4,8 +4,11 @@ import {
   SessionCacheInvalidator,
   UserSession,
 } from '@wepublish/authentication/api';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
-import { createCache } from 'cache-manager';
+import {
+  DistributedClaims,
+  DistributedCounters,
+} from '@wepublish/dragonfly/api';
+import { FakeDragonfly } from '@wepublish/dragonfly/api/testing';
 import * as OTPAuth from 'otpauth';
 import { TotpService } from './totp.service';
 import { SessionService } from './session.service';
@@ -42,12 +45,16 @@ describe('session cache after authentication changes', () => {
     };
   });
 
-  const totp = () =>
-    new TotpService(
+  const totp = () => {
+    const dragonfly = new FakeDragonfly();
+
+    return new TotpService(
       prisma as unknown as PrismaClient,
       sessionCache as unknown as SessionCacheInvalidator,
-      new KvTtlCacheService(createCache())
+      new DistributedClaims(dragonfly),
+      new DistributedCounters(dragonfly)
     );
+  };
 
   const sessions = () =>
     new SessionService(

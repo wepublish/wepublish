@@ -72,7 +72,7 @@ export function PeerInformation({
     return;
   }
 
-  const linkURL = profile.callToActionURL ?? profile.websiteURL;
+  const linkURL = profile.callToActionURL || profile.websiteURL;
   const linkText = toPlaintext(profile.callToActionText?.content ?? []);
 
   return (
@@ -90,16 +90,18 @@ export function PeerInformation({
           css={richTextStyles(theme)}
         />
 
-        <PeerProfileCTA
-          color="primary"
-          variant="contained"
-          size="medium"
-          LinkComponent={Link}
-          href={linkURL ?? ''}
-          target={'_blank'}
-        >
-          {linkText}
-        </PeerProfileCTA>
+        {linkText && (
+          <PeerProfileCTA
+            color="primary"
+            variant="contained"
+            size="medium"
+            LinkComponent={Link}
+            href={linkURL ?? ''}
+            target={'_blank'}
+          >
+            {linkText}
+          </PeerProfileCTA>
+        )}
       </PeerProfileWrapper>
 
       {originUrl && (

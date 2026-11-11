@@ -29,6 +29,11 @@ export * from './lib/invoice/has-invoice/has-invoice.model';
 export * from './lib/mailchimp-sync/mailchimp-sync.module';
 export * from './lib/mailchimp-sync/mailchimp-sync.service';
 
+export * from './lib/email-quality/email-quality.config';
+export * from './lib/email-quality/evaluate-email-quality';
+export * from './lib/email-quality/email-quality.module';
+export * from './lib/email-quality/email-quality.service';
+
 export * from './lib/goodie/goodie.model';
 export * from './lib/goodie/goodie.service';
 export * from './lib/goodie/goodie.dataloader';
@@ -40,3 +45,8 @@ export * from './lib/discountCode/discountCode.module';
 export * from './lib/discountCode/discountCode.service';
 
 export * from './lib/renewal-mail/renewal-mail.module';
+
+export * from './lib/payment-method-change/payment-method-change.model';
+export * from './lib/payment-method-change/payment-method-change.module';
+export * from './lib/payment-method-change/payment-method-change.service';
+export * from './lib/payment-method-change/pending-payment-method-change.dataloader';

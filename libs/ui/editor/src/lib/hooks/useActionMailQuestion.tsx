@@ -1,7 +1,13 @@
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
 import { ActionMailNoMailReason, UserEvent } from '@wepublish/editor/api';
 import { ReactNode, useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Modal } from 'rsuite';
 
 /**
  * - `send`: run the action and send the mail
@@ -91,32 +97,37 @@ export function useActionMailQuestion(): {
       );
 
   const actionMailDialog = (
-    <Modal
+    <Dialog
+      fullWidth
       open={!!question}
-      size="xs"
-      backdrop="static"
+      maxWidth="xs"
       onClose={() => decide('cancel')}
-      onEntered={() => defaultRef.current?.focus()}
+      slotProps={{
+        transition: { onEntered: () => defaultRef.current?.focus() },
+      }}
     >
-      <Modal.Header>
-        <Modal.Title>
-          {sendsMail ? t('actionMail.title') : t('actionMail.noMailTitle')}
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body>{message}</Modal.Body>
-      <Modal.Footer>
+      <DialogTitle>
+        {sendsMail ? t('actionMail.title') : t('actionMail.noMailTitle')}
+      </DialogTitle>
+      <DialogContent>{message}</DialogContent>
+      <DialogActions>
         {sendsMail && (
-          <Button onClick={() => decide('send')}>{t('send')}</Button>
+          <Button
+            variant="outlined"
+            onClick={() => decide('send')}
+          >
+            {t('send')}
+          </Button>
         )}
         <Button
+          variant="contained"
           ref={defaultRef}
-          appearance="primary"
           onClick={() => decide(defaultDecision)}
         >
           {sendsMail ? t('actionMail.skip') : t('ok')}
         </Button>
-      </Modal.Footer>
-    </Modal>
+      </DialogActions>
+    </Dialog>
   );
 
   return { askMail, actionMailDialog };

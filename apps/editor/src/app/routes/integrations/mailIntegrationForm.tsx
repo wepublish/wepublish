@@ -13,6 +13,7 @@ import mailgunLogo from './assets/mailgun.svg';
 import slackLogo from './assets/slack.webp';
 import { FieldDefinition } from './genericIntegrationForm';
 import { GenericIntegrationList } from './genericIntegrationList';
+import { secretPlaceholder } from './secretPlaceholder';
 
 const mailSettingsSchema = z.object({
   name: z.string().nullish().or(z.literal('')),
@@ -105,6 +106,7 @@ export function MailIntegrationForm() {
             info: t('integrations.mailSettings.apiKeyInfo'),
             type: 'password',
             autoComplete: 'one-time-code',
+            placeholder: secretPlaceholder(setting.isApiKeySet, t),
           });
           commonFields.push({
             name: 'webhookEndpointSecret',
@@ -112,6 +114,10 @@ export function MailIntegrationForm() {
             info: t('integrations.mailSettings.webhookEndpointSecretInfo'),
             type: 'password',
             autoComplete: 'one-time-code',
+            placeholder: secretPlaceholder(
+              setting.isWebhookEndpointSecretSet,
+              t
+            ),
           });
           commonFields.push({
             type: 'text',
@@ -127,6 +133,7 @@ export function MailIntegrationForm() {
             info: t('integrations.mailSettings.apiKeyInfo'),
             type: 'password',
             autoComplete: 'one-time-code',
+            placeholder: secretPlaceholder(setting.isApiKeySet, t),
           });
           commonFields.push({
             name: 'webhookEndpointSecret',
@@ -134,6 +141,10 @@ export function MailIntegrationForm() {
             info: t('integrations.mailSettings.webhookEndpointSecretInfo'),
             type: 'password',
             autoComplete: 'one-time-code',
+            placeholder: secretPlaceholder(
+              setting.isWebhookEndpointSecretSet,
+              t
+            ),
           });
           commonFields.push({
             type: 'text',
@@ -187,6 +198,7 @@ export function MailIntegrationForm() {
             label: t('integrations.mailSettings.smtpPassword'),
             type: 'password',
             autoComplete: 'one-time-code',
+            placeholder: secretPlaceholder(setting.isApiKeySet, t),
           });
         }
 

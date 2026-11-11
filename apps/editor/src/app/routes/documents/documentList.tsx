@@ -1,6 +1,17 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Drawer,
+  InputAdornment,
+  TextField,
+  Typography,
+} from '@mui/material';
+import {
   DeleteDocumentDocument,
   DocumentListDocument,
   DocumentListQuery,
@@ -8,23 +19,30 @@ import {
   FullDocumentFragment,
 } from '@wepublish/editor/api';
 import {
+  CanCreateDocument,
+  CanDeleteDocument,
+  CanGetDocument,
+  CanGetDocuments,
+} from '@wepublish/permissions';
+import {
   createCheckedPermissionComponent,
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
+  DataTable,
   DocumentEditPanel,
   DocumentUploadAndEditPanel,
+  DRAWER_WIDTHS,
+  enqueueSnackbar,
   IconButton,
   IconButtonTooltip,
   InfoTooltip,
+  Link,
   ListViewActions,
   ListViewContainer,
-  ListViewFilterArea,
   ListViewHeader,
-  PaddedCell,
+  Pagination,
   PermissionControl,
-  Table,
   TableWrapper,
   useListViewState,
+  PageTitle,
 } from '@wepublish/ui/editor';
 import prettyBytes from 'pretty-bytes';
 import { useEffect, useState } from 'react';
@@ -37,29 +55,19 @@ import {
   MdOutlineUploadFile,
   MdSearch,
 } from 'react-icons/md';
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import {
-  Button,
-  Drawer,
-  IconButton as RIconButton,
-  Input,
-  InputGroup,
-  Modal,
-  Notification,
-  Pagination,
-  Table as RTable,
-  toaster,
-} from 'rsuite';
-import { RowDataType } from 'rsuite-table';
-
-const { Column, HeaderCell, Cell: RCell } = RTable;
+  Link as RouterLink,
+  useLocation,
+  useNavigate,
+  useParams,
+} from 'react-router-dom';
 
 const Thumbnail = styled.img`
   height: 70px;
   width: auto;
   display: block;
   margin: 0 auto;
-  border-radius: var(--rs-radius-md);
+  border-radius: ${({ theme }) => `calc(${theme.shape.borderRadius}px * 0.75)`};
 `;
 
 function DocumentList() {
@@ -70,8 +78,6 @@ function DocumentList() {
 
   const isUploadRoute = location.pathname.includes('upload');
   const isEditRoute = location.pathname.includes('edit');
-
-  const [documents, setDocuments] = useState<FullDocumentFragment[]>([]);
 
   const { filter, setFilter, limit, setLimit } = useListViewState<string>(
     'documents',
@@ -84,12 +90,10 @@ function DocumentList() {
 
   const [activePage, setActivePage] = useState(1);
 
-  const [isUploadModalOpen, setUploadModalOpen] = useState(isUploadRoute);
-  const [isEditModalOpen, setEditModalOpen] = useState(isEditRoute);
-
-  const [editID, setEditID] = useState<string | undefined>(
-    isEditRoute ? id : undefined
-  );
+  const isUploadModalOpen = isUploadRoute;
+  const isEditModalOpen = isEditRoute;
+  const editID = isEditRoute ? id : undefined;
+  const closeDrawer = () => navigate('/documents');
 
   const listVariables = {
     filter: filter || undefined,
@@ -104,6 +108,8 @@ function DocumentList() {
   } = useQuery(DocumentListDocument, {
     variables: listVariables,
   });
+
+  const documents = data?.documents.nodes ?? [];
 
   const [deleteDocument, { loading: isDeleting }] = useMutation(
     DeleteDocumentDocument,
@@ -125,83 +131,48 @@ function DocumentList() {
   const isOverLimit = hasLimit && usageRatio >= 1;
   const isNearLimit = hasLimit && usageRatio >= 0.95 && !isOverLimit;
   const storageColor =
-    isOverLimit ? 'var(--rs-state-error)'
-    : isNearLimit ? 'var(--rs-state-warning)'
-    : 'var(--rs-text-secondary)';
+    isOverLimit ? 'error.main'
+    : isNearLimit ? 'warning.main'
+    : 'text.secondary';
 
   const { t } = useTranslation();
-
-  useEffect(() => {
-    if (data?.documents?.nodes) {
-      setDocuments(data.documents.nodes);
-    }
-  }, [data?.documents]);
 
   useEffect(() => {
     refetch(listVariables);
   }, [filter, activePage, limit]);
 
-  useEffect(() => {
-    if (isUploadRoute) {
-      setUploadModalOpen(true);
-    }
-
-    if (isEditRoute) {
-      setEditModalOpen(true);
-      setEditID(id);
-    }
-  }, [location]);
-
   return (
     <>
       <ListViewContainer>
         <ListViewHeader>
-          <h2>{t('documents.overview.documentLibrary')}</h2>
+          <PageTitle>{t('documents.overview.documentLibrary')}</PageTitle>
         </ListViewHeader>
-        <PermissionControl qualifyingPermissions={['CAN_CREATE_DOCUMENT']}>
+        <PermissionControl qualifyingPermissions={[CanCreateDocument.id]}>
           <ListViewActions>
             {isOverLimit ?
-              <RIconButton
-                appearance="primary"
+              <Button
+                variant="contained"
+                startIcon={<MdOutlineUploadFile />}
                 disabled
-                icon={<MdOutlineUploadFile />}
               >
                 {t('documents.overview.storageFull')}
-              </RIconButton>
-            : <Link
+              </Button>
+            : <Button
+                component={RouterLink}
                 to="/documents/upload"
                 state={{ modalLocation: location }}
+                variant="contained"
+                startIcon={<MdOutlineUploadFile />}
               >
-                <RIconButton
-                  appearance="primary"
-                  disabled={isLoading}
-                  icon={<MdOutlineUploadFile />}
-                >
-                  {t('documents.overview.uploadDocument')}
-                </RIconButton>
-              </Link>
+                {t('documents.overview.uploadDocument')}
+              </Button>
             }
           </ListViewActions>
         </PermissionControl>
-
-        <ListViewFilterArea>
-          <InputGroup>
-            <Input
-              value={filter}
-              onChange={value => {
-                setFilter(value);
-                setActivePage(1);
-              }}
-            />
-            <InputGroup.Addon>
-              <MdSearch />
-            </InputGroup.Addon>
-          </InputGroup>
-        </ListViewFilterArea>
       </ListViewContainer>
 
       {storage && (
-        <p
+        <Typography
           style={{
             margin: '12px 0',
             color: storageColor,
@@ -225,245 +196,265 @@ function DocumentList() {
               <InfoTooltip text={t('documents.overview.storageUsageInfo')} />
             </>
           )}
-        </p>
+        </Typography>
       )}
 
       <TableWrapper>
-        <Table
-          fillHeight
+        <DataTable
+          filters={
+            <TextField
+              label={t('search')}
+              value={filter}
+              onChange={event => {
+                setFilter(event.target.value);
+                setActivePage(1);
+              }}
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <MdSearch />
+                    </InputAdornment>
+                  ),
+                },
+              }}
+            />
+          }
+          filterCount={filter ? 1 : 0}
+          onResetFilters={() => {
+            setFilter('');
+            setActivePage(1);
+          }}
+          storageKey="documents"
           data={documents}
-          rowHeight={100}
           loading={isLoading}
-          wordWrap
-        >
-          <Column
-            width={120}
-            align="center"
-            resizable
-          >
-            <HeaderCell>{t('documents.overview.preview')}</HeaderCell>
-            <RCell>
-              {(rowData: RowDataType<FullDocumentFragment>) => (
-                <Link to={`/documents/edit/${rowData.id}`}>
+          columns={[
+            {
+              id: 'preview',
+              label: t('documents.overview.preview'),
+              width: 120,
+              align: 'center',
+              render: rowData => (
+                <Link
+                  to={`/documents/edit/${rowData.id}`}
+                  aria-label={rowData.title || t('documents.overview.untitled')}
+                >
                   {rowData.thumbnailURL ?
-                    <Thumbnail src={rowData.thumbnailURL} />
-                  : <MdOutlineUploadFile size={40} />}
+                    <Thumbnail
+                      src={rowData.thumbnailURL}
+                      alt=""
+                    />
+                  : <MdOutlineUploadFile
+                      size={40}
+                      aria-hidden
+                    />
+                  }
                 </Link>
-              )}
-            </RCell>
-          </Column>
-
-          <Column
-            width={200}
-            align="left"
-            resizable
-          >
-            <HeaderCell>{t('documents.overview.title')}</HeaderCell>
-            <RCell>
-              {(rowData: RowDataType<FullDocumentFragment>) => (
+              ),
+            },
+            {
+              id: 'title',
+              alwaysVisible: true,
+              label: t('documents.overview.title'),
+              width: 200,
+              align: 'left',
+              render: rowData => (
                 <Link to={`/documents/edit/${rowData.id}`}>
                   {rowData.title || t('documents.overview.untitled')}
                 </Link>
-              )}
-            </RCell>
-          </Column>
-
-          <Column
-            width={200}
-            align="left"
-            resizable
-          >
-            <HeaderCell>{t('documents.overview.filename')}</HeaderCell>
-            <RCell>
-              {(rowData: RowDataType<FullDocumentFragment>) => (
-                <p>{rowData.filename || ''}</p>
-              )}
-            </RCell>
-          </Column>
-
-          <Column
-            width={280}
-            align="left"
-            resizable
-          >
-            <HeaderCell>{t('documents.overview.description')}</HeaderCell>
-            <RCell className={'displayThreeLinesOnly'}>
-              {(rowData: RowDataType<FullDocumentFragment>) => (
-                <p className={'displayThreeLinesOnly'}>
+              ),
+            },
+            {
+              id: 'filename',
+              label: t('documents.overview.filename'),
+              width: 200,
+              align: 'left',
+              render: rowData => (
+                <Typography>
+                  {rowData.filename ?
+                    `${rowData.filename}${rowData.extension ?? ''}`
+                  : ''}
+                </Typography>
+              ),
+            },
+            {
+              id: 'description',
+              label: t('documents.overview.description'),
+              width: 280,
+              align: 'left',
+              render: rowData => (
+                <Typography className={'displayThreeLinesOnly'}>
                   {rowData.description || t('documents.overview.noDescription')}
-                </p>
-              )}
-            </RCell>
-          </Column>
-
-          <Column
-            width={100}
-            align="left"
-            resizable
-          >
-            <HeaderCell>{t('documents.overview.fileSize')}</HeaderCell>
-            <RCell>
-              {(rowData: RowDataType<FullDocumentFragment>) => (
-                <p>{prettyBytes(rowData.fileSize as number)}</p>
-              )}
-            </RCell>
-          </Column>
-
-          <Column
-            width={220}
-            align="center"
-            fixed="right"
-          >
-            <HeaderCell align="center">{t('action')}</HeaderCell>
-            <PaddedCell>
-              {(rowData: RowDataType<FullDocumentFragment>) => (
+                </Typography>
+              ),
+            },
+            {
+              id: 'filesize',
+              label: t('documents.overview.fileSize'),
+              width: 100,
+              align: 'left',
+              render: rowData => (
+                <Typography>
+                  {prettyBytes(rowData.fileSize as number)}
+                </Typography>
+              ),
+            },
+            {
+              id: 'action',
+              label: t('action'),
+              width: 220,
+              align: 'center',
+              fixed: true,
+              render: rowData => (
                 <>
                   <IconButtonTooltip caption={t('documents.overview.copyLink')}>
                     <IconButton
                       aria-label={t('documents.overview.copyLink')}
-                      icon={<MdContentCopy />}
-                      circle
-                      size="sm"
+                      size="small"
                       onClick={() => {
                         navigator.clipboard.writeText(rowData.url as string);
-                        toaster.push(
-                          <Notification
-                            type="success"
-                            header={t('documents.panels.linkCopied')}
-                            duration={2000}
-                          />,
-                          { placement: 'topEnd' }
-                        );
+                        enqueueSnackbar('', {
+                          variant: 'success',
+                          title: t('documents.panels.linkCopied'),
+                          autoHideDuration: 2000,
+                        });
                       }}
-                    />
+                    >
+                      <MdContentCopy />
+                    </IconButton>
                   </IconButtonTooltip>
                   <IconButtonTooltip caption={t('documents.overview.openLink')}>
-                    <a
+                    <IconButton
+                      component="a"
                       href={rowData.url as string}
                       target="_blank"
                       rel="noreferrer"
+                      aria-label={t('documents.overview.openLink')}
+                      size="small"
                     >
-                      <IconButton
-                        aria-label={t('documents.overview.openLink')}
-                        icon={<MdOpenInNew />}
-                        circle
-                        size="sm"
-                      />
-                    </a>
+                      <MdOpenInNew />
+                    </IconButton>
                   </IconButtonTooltip>
                   <PermissionControl
-                    qualifyingPermissions={['CAN_CREATE_DOCUMENT']}
+                    qualifyingPermissions={[CanCreateDocument.id]}
                   >
                     <IconButtonTooltip caption={t('documents.overview.edit')}>
-                      <Link to={`/documents/edit/${rowData.id}`}>
-                        <IconButton
-                          aria-label={t('documents.overview.edit')}
-                          icon={<MdEdit />}
-                          circle
-                          size="sm"
-                        />
-                      </Link>
+                      <IconButton
+                        component={RouterLink}
+                        to={`/documents/edit/${rowData.id}`}
+                        aria-label={t('documents.overview.edit')}
+                        size="small"
+                      >
+                        <MdEdit />
+                      </IconButton>
                     </IconButtonTooltip>
                   </PermissionControl>
                   <PermissionControl
-                    qualifyingPermissions={['CAN_DELETE_DOCUMENT']}
+                    qualifyingPermissions={[CanDeleteDocument.id]}
                   >
                     <IconButtonTooltip caption={t('delete')}>
                       <IconButton
                         aria-label={t('delete')}
-                        icon={<MdDelete />}
-                        circle
-                        size="sm"
-                        appearance="ghost"
-                        color="red"
+                        size="small"
+                        color="error"
                         onClick={event => {
                           event.preventDefault();
                           setCurrentDocument(rowData as FullDocumentFragment);
                           setConfirmationDialogOpen(true);
                         }}
-                      />
+                      >
+                        <MdDelete />
+                      </IconButton>
                     </IconButtonTooltip>
                   </PermissionControl>
                 </>
-              )}
-            </PaddedCell>
-          </Column>
-        </Table>
+              ),
+            },
+          ]}
+        />
 
         <Pagination
-          limit={limit}
-          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-          maxButtons={DEFAULT_MAX_TABLE_PAGES}
-          first
-          last
-          prev
-          next
-          ellipsis
-          boundaryLinks
-          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-          total={data?.documents.totalCount ?? 0}
-          activePage={activePage}
-          onChangePage={page => setActivePage(page)}
-          onChangeLimit={limit => {
-            setLimit(limit);
-            setActivePage(1);
+          state={{
+            page: activePage,
+            limit,
+            setPage: setActivePage,
+            setLimit: limit => {
+              setLimit(limit);
+              setActivePage(1);
+            },
           }}
+          totalCount={data?.documents.totalCount ?? 0}
         />
       </TableWrapper>
 
       <Drawer
-        open={isUploadModalOpen}
-        size="sm"
-        onClose={() => {
-          setUploadModalOpen(false);
-          navigate('/documents');
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
         }}
+        open={isUploadModalOpen}
+        onClose={closeDrawer}
       >
         <DocumentUploadAndEditPanel
-          onClose={() => {
-            setUploadModalOpen(false);
-            navigate('/documents');
-          }}
+          onClose={closeDrawer}
           onUpload={() => {
-            setUploadModalOpen(false);
             refetchStorage();
-            navigate('/documents');
+            closeDrawer();
           }}
         />
       </Drawer>
+
       <Drawer
-        open={isEditModalOpen}
-        size="sm"
-        onClose={() => {
-          setEditModalOpen(false);
-          navigate('/documents');
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
         }}
+        open={isEditModalOpen}
+        onClose={closeDrawer}
       >
         <DocumentEditPanel
           id={editID!}
-          onClose={() => {
-            setEditModalOpen(false);
-            navigate('/documents');
-          }}
+          onClose={closeDrawer}
         />
       </Drawer>
-      <Modal
+
+      <Dialog
         open={isConfirmationDialogOpen}
         onClose={() => setConfirmationDialogOpen(false)}
       >
-        <Modal.Title>{t('documents.panels.deleteDocument')}</Modal.Title>
+        <DialogTitle>{t('documents.panels.deleteDocument')}</DialogTitle>
 
-        <Modal.Body>
-          <p>
+        <DialogContent>
+          <Typography>
             {`${currentDocument?.filename || t('documents.panels.untitled')}${currentDocument?.extension}` ||
               '-'}
-          </p>
-          <p>{currentDocument?.title || t('documents.panels.untitled')}</p>
-          <p>{currentDocument?.description || '-'}</p>
-        </Modal.Body>
+          </Typography>
+          <Typography>
+            {currentDocument?.title || t('documents.panels.untitled')}
+          </Typography>
+          <Typography>{currentDocument?.description || '-'}</Typography>
+        </DialogContent>
 
-        <Modal.Footer>
+        <DialogActions>
           <Button
+            variant="text"
+            onClick={() => setConfirmationDialogOpen(false)}
+          >
+            {t('documents.panels.cancel')}
+          </Button>
+
+          <Button
+            variant="contained"
             disabled={isDeleting}
             onClick={async () => {
               if (!currentDocument) {
@@ -478,7 +469,9 @@ function DocumentList() {
                     variables: listVariables,
                   });
 
-                  if (!query) return;
+                  if (!query) {
+                    return;
+                  }
 
                   cache.writeQuery<DocumentListQuery>({
                     query: DocumentListDocument,
@@ -498,26 +491,20 @@ function DocumentList() {
               setConfirmationDialogOpen(false);
               refetchStorage();
             }}
-            color="red"
+            color="error"
           >
             {t('documents.panels.confirm')}
           </Button>
-          <Button
-            onClick={() => setConfirmationDialogOpen(false)}
-            appearance="subtle"
-          >
-            {t('documents.panels.cancel')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_DOCUMENTS',
-  'CAN_GET_DOCUMENT',
-  'CAN_DELETE_DOCUMENT',
-  'CAN_CREATE_DOCUMENT',
+  CanGetDocuments.id,
+  CanGetDocument.id,
+  CanDeleteDocument.id,
+  CanCreateDocument.id,
 ])(DocumentList);
 export { CheckedPermissionComponent as DocumentList };

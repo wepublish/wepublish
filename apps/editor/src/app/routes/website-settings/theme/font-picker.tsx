@@ -6,6 +6,7 @@ import {
 } from '@wepublish/editor/api';
 import {
   forwardRef,
+  HTMLAttributes,
   memo,
   ReactNode,
   useCallback,
@@ -81,7 +82,7 @@ function getSupportedStyles(font: FontOption): FontStyle[] {
 const loadedFonts = new Set<string>();
 
 type FontListItemProps = {
-  optionProps: React.HTMLAttributes<HTMLLIElement>;
+  optionProps: HTMLAttributes<HTMLLIElement>;
   optionKey: string;
   option: FontOption;
   onVisible: (family: string) => void;
@@ -201,7 +202,6 @@ export const FontPicker = memo(
               <TextField
                 {...params}
                 name={name}
-                size="small"
                 ref={ref}
                 placeholder={t('websiteSettings.fonts.searchPlaceholder')}
                 error={!!error}

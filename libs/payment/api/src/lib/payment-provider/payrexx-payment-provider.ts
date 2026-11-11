@@ -1,6 +1,11 @@
 import {
+  AuthorizationIntent,
+  AuthorizationOutcome,
+  AuthorizationState,
   BasePaymentProvider,
+  CheckAuthorizationProps,
   CheckIntentProps,
+  CreateAuthorizationIntentProps,
   CreatePaymentIntentProps,
   Intent,
   IntentState,
@@ -17,6 +22,31 @@ import {
   mapPayrexxPaymentMethods,
   mapPayrexxPSPs,
 } from '../payment.methode.mapper';
+
+/**
+ * Prefix of the referenceId of a payment method authorization, so the shared
+ * webhook can tell it apart from a payment.
+ */
+export const PAYREXX_AUTHORIZATION_PREFIX = 'pmc_';
+
+/** Amount of the tokenization in cents; it is never charged. */
+const AUTHORIZATION_AMOUNT = 1;
+
+function mapPayrexxAuthorizationStatus(
+  status: GatewayStatus | TransactionStatus
+): AuthorizationOutcome {
+  switch (status) {
+    case 'authorized':
+    case 'reserved':
+    case 'confirmed':
+      return 'authorized';
+    case 'waiting':
+      return 'processing';
+    default:
+      return 'failed';
+  }
+}
+
 export class PayrexxPaymentProvider extends BasePaymentProvider {
   payrexxFactory = PayrexxFactory;
 
@@ -89,6 +119,13 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
       return {
         status: 200,
         message: 'Skipping transaction related to subscription',
+      };
+    }
+
+    if (transaction.referenceId?.startsWith(PAYREXX_AUTHORIZATION_PREFIX)) {
+      return {
+        status: 200,
+        authorizationStates: [this.authorizationState(transaction)],
       };
     }
 
@@ -357,6 +394,103 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
       default:
         return null;
     }
+  }
+
+  override supportsAuthorization(): boolean {
+    return true;
+  }
+
+  /**
+   * A tokenization that is not charged on authorization: the authorized
+   * transaction is the token renewals are charged with. Nothing is released
+   * afterwards, as cancelling the transaction would invalidate the token.
+   */
+  override async createAuthorizationIntent({
+    changeID,
+    currency,
+    email,
+    successURL,
+    failureURL,
+  }: CreateAuthorizationIntentProps): Promise<AuthorizationIntent> {
+    const payrexx = await this.getPayrexxGateway();
+    const config = await this.getConfig();
+
+    const gateway = await payrexx.gatewayClient.createGateway({
+      psp: mapPayrexxPSPs(config.payrexx_psp),
+      pm: mapPayrexxPaymentMethods(config.payrexx_pm),
+      referenceId: `${PAYREXX_AUTHORIZATION_PREFIX}${changeID}`,
+      amount: AUTHORIZATION_AMOUNT,
+      fields: {
+        email: {
+          value: email,
+        },
+      },
+      successRedirectUrl: successURL as string,
+      failedRedirectUrl: failureURL as string,
+      cancelRedirectUrl: failureURL as string,
+      vatRate: this.assertProperty(
+        'payrexx_vatrate',
+        config.payrexx_vatrate
+      ).toNumber(),
+      currency,
+      preAuthorization: true,
+      chargeOnAuthorization: false,
+    });
+
+    logger('payrexxPaymentProvider').info(
+      'Created Payrexx authorization with ID: %s for paymentProvider %s',
+      gateway.id,
+      this.id
+    );
+
+    return {
+      intentID: gateway.id.toString(),
+      intentSecret: gateway.link,
+      intentData: JSON.stringify(gateway),
+      state: 'processing',
+      amount: AUTHORIZATION_AMOUNT,
+    };
+  }
+
+  override async checkAuthorizationStatus({
+    intentID,
+    changeID,
+  }: CheckAuthorizationProps): Promise<AuthorizationState | null> {
+    const payrexx = await this.getPayrexxGateway();
+    const gateway = await payrexx.gatewayClient.getGateway(intentID);
+
+    if (!gateway) {
+      return null;
+    }
+
+    const transaction = gateway.invoices?.[0]?.transactions?.[0];
+
+    if (!transaction) {
+      return {
+        changeID,
+        state: mapPayrexxAuthorizationStatus(gateway.status),
+        customerID: undefined,
+        intentData: JSON.stringify(gateway),
+      };
+    }
+
+    return this.authorizationState(transaction);
+  }
+
+  private authorizationState(transaction: Transaction): AuthorizationState {
+    const state = mapPayrexxAuthorizationStatus(transaction.status);
+
+    return {
+      changeID: transaction.referenceId.slice(
+        PAYREXX_AUTHORIZATION_PREFIX.length
+      ),
+      state,
+      customerID:
+        state === 'authorized' ?
+          String(transaction.preAuthorizationId ?? transaction.id)
+        : undefined,
+      intentData: JSON.stringify(transaction),
+    };
   }
 
   private createErroredPreAuthorizedTransaction(): Transaction {

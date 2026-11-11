@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { AuthSessionType, AuthSession } from './auth-session';
-import { unselectPassword } from './unselect-password';
 import { addPredefinedPermissions } from '@wepublish/permissions/api';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import {
   SESSION_CACHE_NAMESPACE,
   SESSION_CACHE_TTL_SECONDS,
@@ -22,7 +21,7 @@ const withoutToken = <T extends { token: string }>(
 export class AuthenticationService {
   constructor(
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService
+    private kv: NamespacedCache
   ) {}
 
   public async getUserSession(token: string): Promise<AuthSession | null> {
@@ -54,7 +53,7 @@ export class AuthenticationService {
       },
       include: {
         user: {
-          select: unselectPassword,
+          include: { address: true, paymentProviderCustomers: true },
         },
       },
     });

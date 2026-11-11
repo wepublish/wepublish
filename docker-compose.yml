@@ -33,6 +33,7 @@ services:
       MAIL_SMTP_HOST: mailpit
       MAIL_SMTP_PORT: '1025'
       MAIL_SMTP_FROM: no-reply@wepublish.local
+      GOTENBERG_URL: http://gotenberg:3000
       REDIS_URL: ''
     env_file: .env
     volumes:
@@ -41,6 +42,7 @@ services:
       - database
       - migration
       - mailpit
+      - gotenberg
     networks:
       - app-tier
   dragonfly:
@@ -66,6 +68,13 @@ services:
       - '127.0.0.1:8025:8025'
     networks:
       - app-tier
+  gotenberg:
+    image: gotenberg/gotenberg:8
+    ports:
+      # Pdf renderer for letters; the api reaches it as http://gotenberg:3000.
+      - '127.0.0.1:3030:3000'
+    networks:
+      - app-tier
   editor:
     image: wepublishch/editor:master
     platform: linux/amd64
@@ -78,11 +87,11 @@ services:
     depends_on:
       - api
   database:
-    image: postgres:17
+    image: postgres:18
     ports:
       - '5432:5432'
     volumes:
-      - database:/var/lib/postgresql/data
+      - database:/var/lib/postgresql
     environment:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=wepublish

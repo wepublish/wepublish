@@ -3,7 +3,7 @@ import { Test } from '@nestjs/testing';
 import { PrismaClient, User } from '@prisma/client';
 import { SessionCacheInvalidator } from '@wepublish/authentication/api';
 import { ImageUploadService } from '@wepublish/image/api';
-import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
+import { PublicContentCacheInvalidator } from '@wepublish/public-content-cache/api';
 import { UserRoleService } from './user-role.service';
 import { UserRoleDataloader } from './user-role.dataloader';
 import { ProfileService } from './profile.service';

@@ -1,9 +1,17 @@
 import { PaymentProviderType, PrismaClient } from '@prisma/client';
-import { createKvMock } from '@wepublish/kv-ttl-cache/api';
+import {
+  createNamespacedCacheTesting,
+  type NamespacedCacheTesting,
+} from '@wepublish/kv-ttl-cache/api/testing';
 import { loadPaymentProviders } from './create-payment-providers';
 
 describe('loadPaymentProviders', () => {
   const env = process.env;
+  let testing: NamespacedCacheTesting;
+
+  beforeEach(async () => {
+    testing = await createNamespacedCacheTesting();
+  });
 
   const load = () =>
     loadPaymentProviders({
@@ -15,11 +23,13 @@ describe('loadPaymentProviders', () => {
           ]),
         },
       } as unknown as PrismaClient,
-      kv: createKvMock(),
+      kv: testing.cache,
+      resets: testing.resets,
     });
 
-  afterEach(() => {
+  afterEach(async () => {
     process.env = env;
+    await testing.close();
   });
 
   it('loads the simulated provider outside of production', async () => {

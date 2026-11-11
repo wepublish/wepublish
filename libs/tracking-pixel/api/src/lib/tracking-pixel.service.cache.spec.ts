@@ -1,6 +1,14 @@
 import { Logger } from '@nestjs/common';
-import { createCache } from 'cache-manager';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import {
+  DistributedClaims,
+  MemoryDragonflyConnection,
+} from '@wepublish/dragonfly/api';
+import { type NamespacedCache } from '@wepublish/kv-ttl-cache/api';
+import {
+  type NamespacedCacheTesting,
+  createNamespacedCacheTesting,
+} from '@wepublish/kv-ttl-cache/api/testing';
+import { TRACKING_PIXEL_SHARED_NAMESPACES } from './tracking-pixel-cache';
 import { TrackingPixelService } from './tracking-pixel.service';
 
 const provider = (id: string, createPixelUri = vi.fn()) => ({
@@ -14,7 +22,9 @@ const provider = (id: string, createPixelUri = vi.fn()) => ({
 });
 
 describe('TrackingPixelService cache', () => {
-  let kv: KvTtlCacheService;
+  let testing: NamespacedCacheTesting;
+  let kv: NamespacedCache;
+  let claims: DistributedClaims;
   let prisma: {
     articleTrackingPixels: {
       findMany: ReturnType<typeof vi.fn>;
@@ -34,11 +44,17 @@ describe('TrackingPixelService cache', () => {
       prisma as any,
       { trackingPixelProviders: providers } as any,
       kv,
+      claims,
       publicContentCache as any
     );
 
-  beforeEach(() => {
-    kv = new KvTtlCacheService(createCache());
+  beforeEach(async () => {
+    testing = await createNamespacedCacheTesting({
+      connection: new MemoryDragonflyConnection(),
+      sharedNamespaces: ['tracking-pixels'],
+    });
+    kv = testing.cache;
+    claims = testing.module.get(DistributedClaims);
     prisma = {
       articleTrackingPixels: {
         findMany: vi.fn().mockResolvedValue([
@@ -64,9 +80,10 @@ describe('TrackingPixelService cache', () => {
     };
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     vi.useRealTimers();
     vi.restoreAllMocks();
+    await testing.close();
   });
 
   it('checks the pixels of an article only once', async () => {
@@ -160,7 +177,7 @@ describe('TrackingPixelService cache', () => {
 
   it('leaves a missing pixel to the replica that is already requesting it', async () => {
     vi.useFakeTimers({ toFake: ['setTimeout', 'Date'] });
-    const claim = vi.spyOn(kv, 'claim').mockResolvedValue(false);
+    const claim = vi.spyOn(claims, 'claim').mockResolvedValue('taken');
     const pixels = provider('prolitteris-1');
     prisma.articleTrackingPixels.findMany.mockResolvedValue([]);
 
@@ -178,9 +195,23 @@ describe('TrackingPixelService cache', () => {
     expect(prisma.articleTrackingPixels.create).not.toHaveBeenCalled();
   });
 
+  it.each(['not-configured', 'unavailable'] as const)(
+    'adds the pixels itself when the claim answers %s',
+    async result => {
+      vi.spyOn(claims, 'claim').mockResolvedValue(result);
+      const pixels = provider('prolitteris-1');
+      prisma.articleTrackingPixels.findMany.mockResolvedValue([]);
+
+      await service([pixels]).addMissingArticleTrackingPixels('article-1');
+
+      expect(pixels.createPixelUri).toHaveBeenCalledTimes(1);
+      expect(prisma.articleTrackingPixels.create).toHaveBeenCalledTimes(1);
+    }
+  );
+
   it('answers once the replica holding the claim has added the pixels, so a cached answer includes them', async () => {
     vi.useFakeTimers({ toFake: ['setTimeout', 'Date'] });
-    vi.spyOn(kv, 'claim').mockResolvedValue(false);
+    vi.spyOn(claims, 'claim').mockResolvedValue('taken');
     prisma.articleTrackingPixels.findMany.mockResolvedValue([]);
     let answered = false;
 
@@ -292,9 +323,9 @@ describe('TrackingPixelService cache', () => {
       'does not keep the next request waiting for the replica that failed when %s',
       async (_reason, fail) => {
         vi.useFakeTimers({ toFake: ['setTimeout', 'Date'] });
-        vi.spyOn(kv, 'claim')
-          .mockResolvedValueOnce(true)
-          .mockResolvedValue(false);
+        vi.spyOn(claims, 'claim')
+          .mockResolvedValueOnce('claimed')
+          .mockResolvedValue('taken');
         fail();
 
         await service([broken])
@@ -406,5 +437,9 @@ describe('TrackingPixelService cache', () => {
     await service([]).addMissingArticleTrackingPixels('article-1');
 
     expect(prisma.articleTrackingPixels.findMany).not.toHaveBeenCalled();
+  });
+
+  it('shares which articles were checked with the other replicas', () => {
+    expect(TRACKING_PIXEL_SHARED_NAMESPACES).toEqual(['tracking-pixels']);
   });
 });

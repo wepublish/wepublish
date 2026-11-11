@@ -1,9 +1,10 @@
+import { Drawer } from '@mui/material';
 import { TeaserType } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Drawer } from 'rsuite';
 
 import { Teaser, TeaserLink } from '../blocks/types';
+import { DRAWER_WIDTHS } from '../drawer';
 import { TeaserEditPanel } from './teaserEditPanel';
 import { TeaserSelectPanel } from './teaserSelectPanel';
 
@@ -31,8 +32,16 @@ export function TeaserSelectAndEditPanel({
         }
       />
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isEditOpen}
-        size="sm"
         onClose={() => setEditOpen(false)}
       >
         <TeaserEditPanel

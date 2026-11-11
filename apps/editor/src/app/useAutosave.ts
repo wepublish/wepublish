@@ -24,8 +24,11 @@ export function useAutosave({
 
   const onAutosaveRef = useRef(onAutosave);
   const hasChangedRef = useRef(hasChanged);
-  onAutosaveRef.current = onAutosave;
-  hasChangedRef.current = hasChanged;
+
+  useEffect(() => {
+    onAutosaveRef.current = onAutosave;
+    hasChangedRef.current = hasChanged;
+  });
 
   const markSaved = useCallback(() => setLastSavedAt(Date.now()), []);
 

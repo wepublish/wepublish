@@ -65,7 +65,6 @@ export const CommandList = forwardRef<
             key={index}
             onClick={() => selectItem(index)}
             selected={index === selectedIndex}
-            disableRipple
           >
             {item.title}
           </MenuItem>

@@ -1,3 +1,5 @@
+const { pagePath } = require('./page-path');
+
 const tracePageCacheGet = (startSpan, key, ctx, lookup) => {
   if (!startSpan || ctx?.kind !== 'PAGES') {
     return lookup();
@@ -8,7 +10,7 @@ const tracePageCacheGet = (startSpan, key, ctx, lookup) => {
       name: 'website:pages',
       op: 'cache.get',
       onlyIfParent: true,
-      attributes: { 'cache.key': [key] },
+      attributes: { 'cache.key': [pagePath(key)] },
     },
     async span => {
       const entry = await lookup();

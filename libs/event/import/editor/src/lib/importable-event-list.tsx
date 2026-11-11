@@ -1,39 +1,43 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
-  FullEventFragment,
   ImportEventDocument,
   ImportedEventFilter,
   ImportedEventListDocument,
   ImportedEventsIdsDocument,
   createWithV2ApiClient,
 } from '@wepublish/editor/api';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Message, Pagination, Table as RTable, toaster } from 'rsuite';
-import { RowDataType } from 'rsuite-table';
 
-import styled from '@emotion/styled';
 import {
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
   ListFilters,
   ListViewContainer,
   ListViewHeader,
-  Table,
   TableWrapper,
+  clearFilters,
+  countActiveFilters,
   createCheckedPermissionComponent,
+  enqueueSnackbar,
+  Pagination,
+  DataTable,
+  PageTitle,
 } from '@wepublish/ui/editor';
 import { format as formatDate } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
+import { Button } from '@mui/material';
+import {
+  CanCreateEvent,
+  CanDeleteEvent,
+  CanGetEvent,
+  CanUpdateEvent,
+} from '@wepublish/permissions';
 
-const { Column, HeaderCell, Cell: RCell } = RTable;
-
-const Cell = styled(RCell)`
-  .rs-table-cell-content {
-    display: flex;
-    align-items: center;
-  }
-`;
+const IMPORTABLE_EVENT_FILTER_FIELDS = [
+  'dates',
+  'providers',
+  'name',
+  'location',
+] as const;
 
 export function EventStartsAtView({ startsAt }: { startsAt: string }) {
   const startsAtDate = new Date(startsAt);
@@ -71,16 +75,10 @@ export function EventEndsAtView({
 
 const onErrorToast = (error: Error) => {
   if (error?.message) {
-    toaster.push(
-      <Message
-        type="error"
-        showIcon
-        closable
-        duration={3000}
-      >
-        {error?.message}
-      </Message>
-    );
+    enqueueSnackbar(error?.message, {
+      variant: 'error',
+      autoHideDuration: 3000,
+    });
   }
 };
 
@@ -102,34 +100,18 @@ export default function ImportableEventListView() {
     setPage(1); // reset page to first
   };
 
-  const {
-    data,
-    loading: queryLoading,
-    error,
-  } = useQuery(ImportedEventListDocument, {
+  const { data, loading: queryLoading } = useQuery(ImportedEventListDocument, {
     variables: importedEventListVariables,
   });
-
-  useEffect(() => {
-    if (error) {
-      onErrorToast(error);
-    }
-  }, [error]);
 
   const [createEvent, { loading: mutationLoading }] = useMutation(
     ImportEventDocument,
     {
       onCompleted: data => {
-        toaster.push(
-          <Message
-            type="success"
-            showIcon
-            closable
-            duration={3000}
-          >
-            {t('toast.createdSuccess')}
-          </Message>
-        );
+        enqueueSnackbar(t('toast.createdSuccess'), {
+          variant: 'success',
+          autoHideDuration: 3000,
+        });
         navigate(`/events/edit/${data.importEvent}`);
       },
       onError: onErrorToast,
@@ -149,111 +131,90 @@ export default function ImportableEventListView() {
     <>
       <ListViewContainer>
         <ListViewHeader>
-          <h2>{t('importableEvent.title')}</h2>
+          <PageTitle>{t('importableEvent.title')}</PageTitle>
         </ListViewHeader>
-        <ListFilters
-          fields={['dates', 'providers', 'name', 'location']}
-          filter={filter}
-          isLoading={isLoading}
-          onSetFilter={filter => updateFilter(filter)}
-        />
       </ListViewContainer>
 
       <TableWrapper>
-        <Table
-          fillHeight
-          rowHeight={60}
-          loading={isLoading}
+        <DataTable
+          filters={
+            <ListFilters
+              fields={IMPORTABLE_EVENT_FILTER_FIELDS}
+              filter={filter}
+              isLoading={isLoading}
+              onSetFilter={filter => updateFilter(filter)}
+            />
+          }
+          filterCount={countActiveFilters(
+            IMPORTABLE_EVENT_FILTER_FIELDS,
+            filter
+          )}
+          onResetFilters={() =>
+            updateFilter(clearFilters(IMPORTABLE_EVENT_FILTER_FIELDS, filter))
+          }
+          storageKey="importable-events"
           data={data?.importedEvents.nodes || []}
-        >
-          <Column
-            width={200}
-            resizable
-          >
-            <HeaderCell>{t('event.list.name')}</HeaderCell>
-            <Cell>
-              {(rowData: RowDataType<FullEventFragment>) => rowData.name}
-            </Cell>
-          </Column>
-
-          <Column
-            width={220}
-            resizable
-          >
-            <HeaderCell>{t('event.list.startsAtHeader')}</HeaderCell>
-            <Cell>
-              {(rowData: RowDataType<FullEventFragment>) => (
+          loading={isLoading}
+          columns={[
+            {
+              id: 'name',
+              alwaysVisible: true,
+              label: t('event.list.name'),
+              width: 200,
+              render: rowData => rowData.name,
+            },
+            {
+              id: 'startsatheader',
+              label: t('event.list.startsAtHeader'),
+              width: 220,
+              render: rowData => (
                 <EventStartsAtView startsAt={rowData.startsAt} />
-              )}
-            </Cell>
-          </Column>
-
-          <Column
-            width={220}
-            resizable
-          >
-            <HeaderCell>{t('event.list.endsAtHeader')}</HeaderCell>
-            <Cell>
-              {(rowData: RowDataType<FullEventFragment>) => (
-                <EventEndsAtView endsAt={rowData.endsAt} />
-              )}
-            </Cell>
-          </Column>
-
-          <Column
-            width={150}
-            resizable
-          >
-            <HeaderCell>{t('event.list.source')}</HeaderCell>
-            <Cell>
-              {(rowData: RowDataType<FullEventFragment>) =>
-                rowData.externalSourceName
-              }
-            </Cell>
-          </Column>
-
-          <Column
-            width={150}
-            resizable
-          >
-            <HeaderCell>{t('event.list.source')}</HeaderCell>
-            <Cell>
-              {(rowData: RowDataType<FullEventFragment>) =>
+              ),
+            },
+            {
+              id: 'endsatheader',
+              label: t('event.list.endsAtHeader'),
+              width: 220,
+              render: rowData => <EventEndsAtView endsAt={rowData.endsAt} />,
+            },
+            {
+              id: 'source',
+              label: t('event.list.source'),
+              width: 150,
+              render: rowData => rowData.externalSourceName,
+            },
+            {
+              id: 'action',
+              label: t('action'),
+              width: 150,
+              render: rowData =>
                 alreadyImported && alreadyImported.includes(rowData.id) ?
                   <Button
-                    appearance="ghost"
+                    variant="outlined"
                     disabled
                   >
                     {t('importableEvent.imported')}
                   </Button>
                 : <Button
+                    variant="contained"
                     onClick={() =>
-                      importEvent(rowData.id, rowData.externalSourceName)
+                      importEvent(rowData.id, rowData.externalSourceName ?? '')
                     }
-                    appearance="primary"
                   >
                     {t('importableEvent.import')}
-                  </Button>
-              }
-            </Cell>
-          </Column>
-        </Table>
+                  </Button>,
+            },
+          ]}
+        />
 
         <Pagination
-          limit={limit}
-          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-          maxButtons={DEFAULT_MAX_TABLE_PAGES}
-          first
-          last
-          prev
-          next
-          ellipsis
-          boundaryLinks
-          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-          total={data?.importedEvents?.totalCount ?? 0}
-          activePage={page}
-          onChangePage={page => setPage(page)}
-          onChangeLimit={limit => setLimit(limit)}
+          state={{
+            page,
+            limit,
+            setPage,
+            setLimit,
+          }}
+          totalCount={data?.importedEvents?.totalCount ?? 0}
         />
       </TableWrapper>
     </>
@@ -262,10 +223,10 @@ export default function ImportableEventListView() {
 
 const CheckedPermissionComponent = createWithV2ApiClient(
   createCheckedPermissionComponent([
-    'CAN_GET_EVENT',
-    'CAN_CREATE_EVENT',
-    'CAN_UPDATE_EVENT',
-    'CAN_DELETE_EVENT',
+    CanGetEvent.id,
+    CanCreateEvent.id,
+    CanUpdateEvent.id,
+    CanDeleteEvent.id,
   ])(ImportableEventListView)
 );
 

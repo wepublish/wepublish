@@ -1,15 +1,13 @@
 import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
+import { HauptstadtContentFullWidth } from '@wepublish/tenant/hauptstadt';
+import { getApiUrl, ssrAuthLink } from '@wepublish/utils/website';
 import {
-  getApiUrl,
   getSessionTokenProps,
   ProfilePage,
-  ssrAuthLink,
-} from '@wepublish/utils/website';
+} from '@wepublish/utils/website/next';
 import { getApiClient, PageDocument } from '@wepublish/website/api';
 import { NextPageContext } from 'next';
-
-import { HauptstadtContentFullWidth } from '../../src/components/hauptstadt-content-wrapper';
 
 export default function Profile() {
   return (

@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { alpha, lighten } from '@mui/material';
+import { lighten } from '@mui/material';
 import {
   AnalyticsProviderType,
   CreateAnalyticsProviderSettingDocument,
@@ -8,16 +8,18 @@ import {
   SettingsIntegrationsAnalyticsDocument,
   UpdateAnalyticsProviderSettingDocument,
 } from '@wepublish/editor/api';
-import { humanizeError } from '@wepublish/ui/editor';
+import { enqueueSnackbar, humanizeError } from '@wepublish/ui/editor';
 import { ComponentProps, forwardRef, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useTranslation } from 'react-i18next';
-import { Message, toaster } from 'rsuite';
 import { z } from 'zod';
 
 import googleLogo from './assets/google.svg';
-import { CustomField } from './genericIntegrationForm';
+import plausibleLogo from './assets/plausible.svg';
+import umamiLogo from './assets/umami.svg';
+import { CustomField, FieldDefinition } from './genericIntegrationForm';
 import { GenericIntegrationList } from './genericIntegrationList';
+import { secretPlaceholder } from './secretPlaceholder';
 
 const credentialsSchema = z.object({
   type: z.string(),
@@ -32,68 +34,84 @@ const analyticsSettingsSchema = z.object({
   property: z.string().nullish().or(z.literal('')),
   articlePrefix: z.string().nullish().or(z.literal('')),
   credentials: credentialsSchema.nullish(),
+  apiKey: z.string().nullish().or(z.literal('')),
+  url: z.string().url().nullish().or(z.literal('')),
+  hotAndTrending: z.boolean().nullish(),
 });
 
 type IntegrationFormValues = z.infer<typeof analyticsSettingsSchema>;
 
 const showErrors = (error: Error): void => {
-  toaster.push(
-    <Message
-      type="error"
-      showIcon
-      closable
-      duration={8000}
-    >
-      {humanizeError(error)}
-    </Message>
-  );
+  enqueueSnackbar(humanizeError(error), {
+    variant: 'error',
+    autoHideDuration: 8000,
+  });
 };
 
 const CustomDropzoneWrapper = styled.div<{ dragging: boolean; valid: boolean }>`
   aspect-ratio: 16/9;
-  border: 2px dashed
-    ${({ theme }) =>
-      theme.palette.mode === 'dark' ?
-        theme.palette.grey['700']
-      : theme.palette.grey['300']};
-  background-color: ${({ theme }) =>
-    theme.palette.mode === 'dark' ?
-      theme.palette.grey['900']
-    : theme.palette.grey['100']};
+  border: 2px dashed ${({ theme }) => theme.vars.palette.grey['300']};
+  background-color: ${({ theme }) => theme.vars.palette.grey['100']};
+
+  [data-mui-color-scheme='dark'] & {
+    border-color: ${({ theme }) => theme.vars.palette.grey['700']};
+    background-color: ${({ theme }) => theme.vars.palette.grey['900']};
+  }
+
   display: grid;
   align-items: center;
   justify-content: center;
   text-align: center;
-  border-radius: var(--rs-radius-md);
+  border-radius: ${({ theme }) => `calc(${theme.shape.borderRadius}px * 0.75)`};
   cursor: pointer;
 
   ${({ valid, theme }) =>
     valid &&
     css`
-      border-color: ${theme.palette.mode === 'dark' ?
-        alpha(theme.palette.success.main, 0.5)
-      : lighten(theme.palette.success.light, 0.5)};
-      background-color: ${theme.palette.mode === 'dark' ?
-        alpha(theme.palette.success.main, 0.12)
-      : lighten(theme.palette.success.light, 0.9)};
+      border-color: ${lighten(theme.palette.success.light, 0.5)};
+      background-color: ${lighten(theme.palette.success.light, 0.9)};
+
+      [data-mui-color-scheme='dark'] & {
+        border-color: rgba(${theme.vars.palette.success.mainChannel} / 0.5);
+        background-color: rgba(
+          ${theme.vars.palette.success.mainChannel} / 0.12
+        );
+      }
     `}
 
   ${({ dragging, theme }) =>
     dragging &&
     css`
-      border-color: ${theme.palette.mode === 'dark' ?
-        theme.palette.grey['600']
-      : theme.palette.grey['200']};
-      background-color: ${theme.palette.mode === 'dark' ?
-        theme.palette.grey['800']
-      : theme.palette.grey['50']};
+      border-color: ${theme.vars.palette.grey['200']};
+      background-color: ${theme.vars.palette.grey['50']};
+
+      [data-mui-color-scheme='dark'] & {
+        border-color: ${theme.vars.palette.grey['600']};
+        background-color: ${theme.vars.palette.grey['800']};
+      }
     `}
 `;
 
+/** Credentials never come back from the API; `stored` says whether some are. */
+export const credentialsDropzoneText = (
+  {
+    dragging,
+    newFile,
+    stored,
+  }: { dragging: boolean; newFile: boolean; stored: boolean },
+  t: (key: string) => string
+) =>
+  dragging ? t('integrations.analyticsSettings.dropCredentialsFile')
+  : newFile ? t('integrations.analyticsSettings.credentialsReadyToBeSaved')
+  : stored ? t('integrations.analyticsSettings.credentialsStored')
+  : t('integrations.analyticsSettings.dragCredentialsFileHere');
+
 const CustomDropzone = forwardRef<
   HTMLInputElement,
-  ComponentProps<CustomField<IntegrationFormValues['credentials']>['render']>
->(({ onChange, disabled, value }, ref) => {
+  ComponentProps<
+    CustomField<IntegrationFormValues['credentials']>['render']
+  > & { stored?: boolean }
+>(({ onChange, disabled, value, stored = false }, ref) => {
   const { t } = useTranslation();
 
   const onDrop = useCallback(
@@ -141,14 +159,24 @@ const CustomDropzone = forwardRef<
     >
       <input {...getInputProps()} />
 
-      {isDragActive ?
-        t('integrations.analyticsSettings.dropCredentialsFile')
-      : value ?
-        t('integrations.analyticsSettings.credentialsReadyToBeSaved')
-      : t('integrations.analyticsSettings.dragCredentialsFileHere')}
+      {credentialsDropzoneText(
+        { dragging: isDragActive, newFile: !!value, stored },
+        t
+      )}
     </CustomDropzoneWrapper>
   );
 });
+
+const StoredCredentialsDropzone = forwardRef<
+  HTMLInputElement,
+  ComponentProps<CustomField<IntegrationFormValues['credentials']>['render']>
+>((props, ref) => (
+  <CustomDropzone
+    {...props}
+    ref={ref}
+    stored
+  />
+));
 
 export function AnalyticsIntegrationForm() {
   const { t } = useTranslation();
@@ -157,6 +185,7 @@ export function AnalyticsIntegrationForm() {
     <GenericIntegrationList<SettingAnalyticsProvider, IntegrationFormValues>
       query={SettingsIntegrationsAnalyticsDocument}
       mutation={UpdateAnalyticsProviderSettingDocument}
+      refetchQueries={[SettingsIntegrationsAnalyticsDocument]}
       dataKey="analyticsProviderSettings"
       schema={analyticsSettingsSchema}
       fixedProvider={{
@@ -165,30 +194,115 @@ export function AnalyticsIntegrationForm() {
         name: 'Google Analytics',
         createMutation: CreateAnalyticsProviderSettingDocument,
       }}
-      getLogo={() => googleLogo}
-      fields={[
-        {
-          name: 'articlePrefix',
-          label: t('integrations.analyticsSettings.articlePrefix'),
-          info: t('integrations.analyticsSettings.articlePrefixInfo'),
-          type: 'text',
-          autoComplete: 'one-time-code',
-        },
-        {
-          name: 'property',
-          label: t('integrations.analyticsSettings.property'),
-          info: t('integrations.analyticsSettings.propertyInfo'),
-          type: 'text',
-          autoComplete: 'one-time-code',
-        },
-        {
-          name: 'credentials',
-          label: t('integrations.analyticsSettings.credentials'),
-          info: t('integrations.analyticsSettings.credentialsInfo'),
-          type: 'custom',
-          render: CustomDropzone,
-        },
-      ]}
+      getLogo={setting => {
+        switch (setting.type) {
+          case AnalyticsProviderType.Plausible:
+            return plausibleLogo;
+          case AnalyticsProviderType.Umami:
+            return umamiLogo;
+          default:
+            return googleLogo;
+        }
+      }}
+      fields={setting => {
+        const fields: FieldDefinition<IntegrationFormValues>[] = [
+          {
+            name: 'hotAndTrending',
+            label: t('integrations.analyticsSettings.hotAndTrending'),
+            info: t('integrations.analyticsSettings.hotAndTrendingInfo'),
+            type: 'checkbox',
+          },
+          {
+            name: 'articlePrefix',
+            label: t('integrations.analyticsSettings.articlePrefix'),
+            info: t('integrations.analyticsSettings.articlePrefixInfo'),
+            type: 'text',
+            autoComplete: 'one-time-code',
+          },
+        ];
+
+        switch (setting.type) {
+          case AnalyticsProviderType.Plausible:
+            return [
+              ...fields,
+              {
+                name: 'property',
+                label: t('integrations.analyticsSettings.plausibleSiteId'),
+                info: t('integrations.analyticsSettings.plausibleSiteIdInfo'),
+                placeholder: 'example.com',
+                type: 'text',
+                autoComplete: 'one-time-code',
+              },
+              {
+                name: 'apiKey',
+                label: t('integrations.analyticsSettings.apiKey'),
+                info: t('integrations.analyticsSettings.plausibleApiKeyInfo'),
+                type: 'password',
+                autoComplete: 'one-time-code',
+                placeholder: secretPlaceholder(setting.isCredentialsSet, t),
+              },
+              {
+                name: 'url',
+                label: t('integrations.analyticsSettings.plausibleUrl'),
+                info: t('integrations.analyticsSettings.plausibleUrlInfo'),
+                placeholder: 'https://plausible.io',
+                type: 'text',
+                autoComplete: 'one-time-code',
+              },
+            ];
+
+          case AnalyticsProviderType.Umami:
+            return [
+              ...fields,
+              {
+                name: 'property',
+                label: t('integrations.analyticsSettings.umamiWebsiteId'),
+                info: t('integrations.analyticsSettings.umamiWebsiteIdInfo'),
+                placeholder: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
+                type: 'text',
+                autoComplete: 'one-time-code',
+              },
+              {
+                name: 'apiKey',
+                label: t('integrations.analyticsSettings.apiKey'),
+                info: t('integrations.analyticsSettings.umamiApiKeyInfo'),
+                type: 'password',
+                autoComplete: 'one-time-code',
+                placeholder: secretPlaceholder(setting.isCredentialsSet, t),
+              },
+              {
+                name: 'url',
+                label: t('integrations.analyticsSettings.umamiUrl'),
+                info: t('integrations.analyticsSettings.umamiUrlInfo'),
+                placeholder: 'https://api.umami.is/v1',
+                type: 'text',
+                autoComplete: 'one-time-code',
+              },
+            ];
+
+          default:
+            return [
+              ...fields,
+              {
+                name: 'property',
+                label: t('integrations.analyticsSettings.property'),
+                info: t('integrations.analyticsSettings.propertyInfo'),
+                type: 'text',
+                autoComplete: 'one-time-code',
+              },
+              {
+                name: 'credentials',
+                label: t('integrations.analyticsSettings.credentials'),
+                info: t('integrations.analyticsSettings.credentialsInfo'),
+                type: 'custom',
+                render:
+                  setting.isCredentialsSet ?
+                    StoredCredentialsDropzone
+                  : CustomDropzone,
+              },
+            ];
+        }
+      }}
     />
   );
 }

@@ -16,8 +16,8 @@ const eventIcons: Record<string, JSX.Element> = {
 };
 
 const eventColors: Record<string, IntervalColoring> = {
-  [SubscriptionEvent.InvoiceCreation]: { accent: 'var(--rs-green-500)' },
-  [SubscriptionEvent.DeactivationUnpaid]: { accent: 'var(--rs-orange-500)' },
+  [SubscriptionEvent.InvoiceCreation]: { accent: 'success.main' },
+  [SubscriptionEvent.DeactivationUnpaid]: { accent: 'warning.main' },
 };
 
 export function decorateInterval<T extends SubscriptionIntervalFragment>(

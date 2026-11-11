@@ -91,5 +91,17 @@ describe('CommentDataloaderService', () => {
       expect(prismaMock.comment.findMany).toHaveBeenCalled();
       expect(prismaMock.comment.findMany.mock.calls[0]).toMatchSnapshot();
     });
+
+    it('loads the revisions, oldest first, so the text of a comment resolves', async () => {
+      prismaMock.comment.findMany.mockResolvedValue([]);
+
+      await service.load('123');
+
+      expect(prismaMock.comment.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          include: { revisions: { orderBy: { createdAt: 'asc' } } },
+        })
+      );
+    });
   });
 });

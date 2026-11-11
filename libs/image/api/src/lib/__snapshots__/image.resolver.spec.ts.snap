@@ -1,12 +1,12 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`ImageService image 1`] = `
+exports[`ImageService > image 1`] = `
 [
   "1234",
 ]
 `;
 
-exports[`ImageService image 2`] = `
+exports[`ImageService > image 2`] = `
 {
   "filename": "123.webp",
   "id": "123",

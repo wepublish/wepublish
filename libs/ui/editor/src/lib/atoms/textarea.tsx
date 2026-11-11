@@ -1,13 +1,13 @@
-import { ComponentProps, forwardRef } from 'react';
-import { Input } from 'rsuite';
+import { TextField, TextFieldProps } from '@mui/material';
+import { forwardRef } from 'react';
 
-export const Textarea = forwardRef<
-  HTMLTextAreaElement,
-  ComponentProps<typeof Input>
->((props, ref) => (
-  <Input
-    {...props}
-    as="textarea"
-    ref={ref}
-  />
-));
+export const Textarea = forwardRef<HTMLTextAreaElement, TextFieldProps>(
+  (props, ref) => (
+    <TextField
+      {...props}
+      inputRef={ref}
+      multiline
+      fullWidth
+    />
+  )
+);

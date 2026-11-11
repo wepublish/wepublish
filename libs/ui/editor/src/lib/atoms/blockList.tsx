@@ -1,19 +1,35 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  Box,
+  Card,
+  CardContent,
+  IconButton,
+  MenuItem,
+  TextField,
+} from '@mui/material';
+import { visuallyHidden } from '@mui/utils';
+import {
   BlockStylesDocument,
+  BlockTimingInput,
   EditorBlockType,
   FullBlockStyleFragment,
 } from '@wepublish/editor/api';
 import nanoid from 'nanoid';
-import React, {
+import {
+  Dispatch,
   Fragment,
   JSX,
   memo,
   ReactElement,
   ReactNode,
+  SetStateAction,
   useCallback,
+  useEffect,
+  useId,
+  useLayoutEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -24,7 +40,6 @@ import {
   MdVisibility,
   MdVisibilityOff,
 } from 'react-icons/md';
-import { IconButton, Panel as RPanel, SelectPicker } from 'rsuite';
 
 import {
   isFunctionalUpdate,
@@ -32,7 +47,9 @@ import {
   UnionToIntersection,
   ValueConstructor,
 } from '../utility';
-import { AddBlockInput, MenuItem } from './addBlockInput';
+import { AddBlockInput, AddBlockMenuItem } from './addBlockInput';
+import { BlockTimingButton } from './blockTiming';
+import { BlockGroup } from './blockGroups';
 import { IconButtonTooltip } from './iconButtonTooltip';
 import { InfoTooltip } from './infoTooltip';
 
@@ -44,7 +61,7 @@ export const BlockStyleIconWrapper = styled.div`
   position: absolute;
   left: 100%;
 
-  @media (max-width: 899px) {
+  ${({ theme }) => theme.breakpoints.down('lg')} {
     position: static;
     flex-direction: row;
     align-items: center;
@@ -59,7 +76,7 @@ const Icon = styled.div`
   gap: 8px;
 `;
 
-const BlockStyleSelect = styled(SelectPicker)`
+const BlockStyleSelect = styled(TextField)`
   width: 150px;
 `;
 
@@ -67,15 +84,20 @@ const ChildrenWrapper = styled.div`
   padding: 20px;
 `;
 
-const Panel = styled(RPanel)`
+const Panel = styled(Card)`
   width: 100%;
+`;
+
+const BareBlock = styled.div`
+  flex: 1 1 auto;
+  min-width: 0;
 `;
 
 export const PanelWrapper = styled.div<{ disabled?: boolean }>`
   display: flex;
   width: 100%;
 
-  @media (max-width: 899px) {
+  ${({ theme }) => theme.breakpoints.down('lg')} {
     flex-direction: column;
   }
 
@@ -84,15 +106,19 @@ export const PanelWrapper = styled.div<{ disabled?: boolean }>`
 
 export const DownwardButtonWrapper = styled.div`
   margin-bottom: 10px;
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
 `;
 
 export const UpwardButtonWrapper = styled.div`
   margin-top: 10px;
   margin-bottom: 5px;
-`;
 
-export const FlexGrow = styled.div`
-  flex-grow: 1;
+  &:first-of-type {
+    margin-top: 0;
+  }
 `;
 
 export const LeftButtonsWrapper = styled.div`
@@ -102,7 +128,7 @@ export const LeftButtonsWrapper = styled.div`
   position: absolute;
   right: 100%;
 
-  @media (max-width: 899px) {
+  ${({ theme }) => theme.breakpoints.down('lg')} {
     position: static;
     flex-direction: row;
     align-items: center;
@@ -121,7 +147,7 @@ export const ListItem = styled.div`
   width: 100%;
   position: relative;
 
-  @media (max-width: 899px) {
+  ${({ theme }) => theme.breakpoints.down('lg')} {
     flex-direction: column;
   }
 `;
@@ -140,7 +166,7 @@ const AddBlockInputWrapper = styled.div`
 export interface BlockProps<V = any> {
   itemId?: string | null;
   value: V;
-  onChange: React.Dispatch<React.SetStateAction<V>>;
+  onChange: Dispatch<SetStateAction<V>>;
   autofocus?: boolean;
   disabled?: boolean;
   onReplace?: (blocks: BlockListValue[]) => void;
@@ -151,8 +177,10 @@ export type BlockConstructorFn<V = any> = (props: BlockProps<V>) => JSX.Element;
 export interface BlockCaseProps<V = any> {
   label: string;
   icon: ReactElement;
+  group: BlockGroup;
   defaultValue: ValueConstructor<V>;
   field: BlockConstructorFn<V>;
+  bare?: boolean;
 }
 
 export interface BlockListValue<T extends string = string, V = any> {
@@ -172,13 +200,14 @@ export interface BlockListItemProps<T extends string = string, V = any> {
   itemId: string | null | undefined;
   index: number;
   value: BlockListValue<T, V>;
-  icon: React.ReactElement;
+  icon: ReactElement;
+  bare?: boolean;
   autofocus: boolean;
   disabled?: boolean;
 
   onChange: (
     index: number,
-    value: React.SetStateAction<BlockListValue<T, V>>
+    value: SetStateAction<BlockListValue<T, V>>
   ) => void;
   onReplace?: (index: number, blocks: BlockListValue[]) => void;
   onDelete: (index: number) => void;
@@ -192,6 +221,7 @@ export const BlockListItem = memo(function BlockListItem({
   index,
   value,
   icon,
+  bare,
   autofocus,
   disabled,
   children,
@@ -202,7 +232,7 @@ export const BlockListItem = memo(function BlockListItem({
   onMoveDown,
 }: BlockListItemProps) {
   const handleValueChange = useCallback(
-    (fieldValue: React.SetStateAction<any>) => {
+    (fieldValue: SetStateAction<any>) => {
       onChange(index, value => {
         return {
           ...value,
@@ -228,9 +258,11 @@ export const BlockListItem = memo(function BlockListItem({
     <ListItemWrapper
       value={value}
       icon={icon}
+      bare={bare}
       disabled={disabled}
       onDelete={() => onDelete(index)}
       onDisable={disabled => handleValueChange({ ...value.value, disabled })}
+      onTiming={timing => handleValueChange({ ...value.value, timing })}
       onMoveUp={onMoveUp ? () => onMoveUp(index) : undefined}
       onMoveDown={onMoveDown ? () => onMoveDown(index) : undefined}
       onStyleChange={(blockStyleName, blockStyle) =>
@@ -251,7 +283,7 @@ export const BlockListItem = memo(function BlockListItem({
 
 interface AddBlockButtonProps {
   index: number;
-  menuItems: MenuItem[];
+  menuItems: AddBlockMenuItem[];
   onAdd: (index: number, type: string) => void;
   subtle?: boolean;
   disabled?: boolean;
@@ -265,12 +297,12 @@ const AddBlockButton = memo(function AddBlockButton({
   disabled,
 }: AddBlockButtonProps) {
   const handleMenuItemClick = useCallback(
-    ({ id }: MenuItem) => onAdd(index, id),
+    ({ id }: AddBlockMenuItem) => onAdd(index, id),
     [onAdd, index]
   );
 
   return (
-    <AddBlockInputWrapper>
+    <AddBlockInputWrapper data-add-block={index}>
       <AddBlockInput
         menuItems={menuItems}
         onMenuItemClick={handleMenuItemClick}
@@ -281,8 +313,9 @@ const AddBlockButton = memo(function AddBlockButton({
   );
 });
 
-export interface BlockListProps<V extends BlockListValue>
-  extends BlockProps<V[]> {
+export interface BlockListProps<V extends BlockListValue> extends BlockProps<
+  V[]
+> {
   blockMap: BlockMapForValue<V>;
 }
 
@@ -293,11 +326,70 @@ export function BlockList<V extends BlockListValue>({
   disabled,
   onChange,
 }: BlockListProps<V>) {
+  const { t } = useTranslation();
   const [focusIndex, setFocusIndex] = useState<number | null>(null);
+  const [announcement, setAnnouncement] = useState({ text: '', n: 0 });
+  const announce = useCallback(
+    (text: string) => setAnnouncement(({ n }) => ({ text, n: n + 1 })),
+    []
+  );
+  const valuesRef = useRef(values);
+
+  useLayoutEffect(() => {
+    valuesRef.current = values;
+  }, [values]);
+  const listRef = useRef<HTMLDivElement>(null);
+  const pendingFocus = useRef<
+    | { kind: 'move'; key: string; action: 'up' | 'down' }
+    | { kind: 'delete'; index: number }
+    | null
+  >(null);
   const blockMap = blocMap as BlockMapType;
 
+  useEffect(() => {
+    const pending = pendingFocus.current;
+    const list = listRef.current;
+
+    if (!pending || !list) {
+      return;
+    }
+
+    pendingFocus.current = null;
+
+    const blocks = [...list.querySelectorAll<HTMLElement>('[data-block-key]')];
+    const enabled = (element: HTMLElement | null | undefined) =>
+      element && !(element as HTMLButtonElement).disabled ? element : null;
+
+    if (pending.kind === 'move') {
+      const block = blocks.find(
+        element => element.dataset.blockKey === pending.key
+      );
+      const other = pending.action === 'up' ? 'down' : 'up';
+      const target =
+        enabled(
+          block?.querySelector<HTMLElement>(
+            `[data-block-action="${pending.action}"]`
+          )
+        ) ??
+        enabled(
+          block?.querySelector<HTMLElement>(`[data-block-action="${other}"]`)
+        );
+
+      target?.focus();
+      return;
+    }
+
+    const block = blocks[pending.index] ?? blocks[pending.index - 1];
+    const target =
+      enabled(
+        block?.querySelector<HTMLElement>('[data-block-action="delete"]')
+      ) ?? list.querySelector<HTMLElement>('[data-add-block] button');
+
+    target?.focus();
+  }, [values]);
+
   const handleItemChange = useCallback(
-    (index: number, itemValue: React.SetStateAction<BlockListValue>) => {
+    (index: number, itemValue: SetStateAction<BlockListValue>) => {
       onChange((value: any) => {
         return Object.assign([], value, {
           [index]:
@@ -342,15 +434,35 @@ export function BlockList<V extends BlockListValue>({
 
   const handleRemove = useCallback(
     (itemIndex: number) => {
+      pendingFocus.current = { kind: 'delete', index: itemIndex };
+      setFocusIndex(null);
+      announce(t('blockList.deleted'));
       onChange((value: any) =>
         value.filter((value: any, index: any) => index !== itemIndex)
       );
     },
-    [onChange]
+    [announce, onChange, t]
   );
 
   const handleMoveIndex = useCallback(
     (from: number, to: number) => {
+      const key = valuesRef.current[from]?.key;
+
+      if (key) {
+        pendingFocus.current = {
+          kind: 'move',
+          key,
+          action: to < from ? 'up' : 'down',
+        };
+      }
+
+      setFocusIndex(null);
+      announce(
+        t('blockList.movedTo', {
+          position: to + 1,
+          count: valuesRef.current.length,
+        })
+      );
       onChange((values: any) => {
         const valuesCopy = values.slice();
         const [value] = valuesCopy.splice(from, 1);
@@ -360,7 +472,7 @@ export function BlockList<V extends BlockListValue>({
         return valuesCopy;
       });
     },
-    [onChange]
+    [announce, onChange, t]
   );
 
   const handleMoveUp = useCallback(
@@ -379,10 +491,11 @@ export function BlockList<V extends BlockListValue>({
 
   const menuItems = useMemo(
     () =>
-      Object.entries(blockMap).map(([type, { icon, label }]) => ({
+      Object.entries(blockMap).map(([type, { icon, label, group }]) => ({
         id: type,
         icon,
         label,
+        group,
       })),
     [blockMap]
   );
@@ -411,6 +524,7 @@ export function BlockList<V extends BlockListValue>({
           itemId={itemId}
           value={value}
           icon={blockDef.icon}
+          bare={blockDef.bare}
           onDelete={handleRemove}
           onChange={handleItemChange}
           onReplace={handleReplace}
@@ -427,9 +541,17 @@ export function BlockList<V extends BlockListValue>({
   }
 
   return (
-    <AddButton>
+    <AddButton ref={listRef}>
       {addButtonForIndex(0)}
       {values.map((value: any, index: any) => listItemForIndex(value, index))}
+      <Box
+        component="span"
+        role="status"
+        aria-atomic
+        sx={visuallyHidden}
+      >
+        <span key={announcement.n}>{announcement.text}</span>
+      </Box>
     </AddButton>
   );
 }
@@ -437,11 +559,13 @@ export function BlockList<V extends BlockListValue>({
 interface ListItemWrapperProps {
   value: BlockListItemProps['value'];
   children?: ReactNode;
-  icon?: React.ReactElement;
+  icon?: ReactElement;
+  bare?: boolean;
   disabled?: boolean;
 
   onDelete?: () => void;
   onDisable?: (disable: boolean) => void;
+  onTiming?: (timing: BlockTimingInput | null) => void;
   onMoveUp?: () => void;
   onMoveDown?: () => void;
   onStyleChange?: (
@@ -454,8 +578,10 @@ function ListItemWrapper({
   value,
   children,
   icon,
+  bare,
   disabled,
   onDisable,
+  onTiming,
   onDelete,
   onMoveUp,
   onMoveDown,
@@ -472,89 +598,127 @@ function ListItemWrapper({
     [data?.blockStyles, value.type]
   );
 
+  const styleLabelId = useId();
   const blockStyleId = value.value.blockStyle;
   const visibilityLabel = t(
     value.value.disabled ? 'blockList.showBlock' : 'blockList.hideBlock'
   );
 
   return (
-    <ListItem>
+    <ListItem data-block-key={value.key}>
       <LeftButtonsWrapper>
-        <IconButtonTooltip caption={visibilityLabel}>
-          <IconButton
-            appearance={'subtle'}
-            aria-label={visibilityLabel}
-            icon={value.value.disabled ? <MdVisibilityOff /> : <MdVisibility />}
-            onClick={() => onDisable?.(!value.value.disabled)}
+        <UpwardButtonWrapper>
+          <IconButtonTooltip caption={visibilityLabel}>
+            <IconButton
+              size="small"
+              aria-label={visibilityLabel}
+              data-block-action="visibility"
+              disabled={disabled}
+              onClick={() => onDisable?.(!value.value.disabled)}
+            >
+              {value.value.disabled ?
+                <MdVisibilityOff />
+              : <MdVisibility />}
+            </IconButton>
+          </IconButtonTooltip>
+        </UpwardButtonWrapper>
+
+        <DownwardButtonWrapper>
+          <BlockTimingButton
+            timing={value.value.timing}
+            shouldDisplay={value.value.shouldDisplay}
+            disabled={disabled}
+            onChange={timing => onTiming?.(timing)}
           />
-        </IconButtonTooltip>
+        </DownwardButtonWrapper>
 
-        <FlexGrow />
-
-        <IconButtonTooltip caption={t('blockList.deleteBlock')}>
-          <IconButton
-            appearance={'ghost'}
-            color={'red'}
-            aria-label={t('blockList.deleteBlock')}
-            icon={<MdDelete />}
-            onClick={onDelete}
-            disabled={onDelete == null || disabled}
-          />
-        </IconButtonTooltip>
-
-        <FlexGrow />
+        <DownwardButtonWrapper>
+          <IconButtonTooltip caption={t('blockList.deleteBlock')}>
+            <IconButton
+              size="small"
+              color="error"
+              aria-label={t('blockList.deleteBlock')}
+              data-block-action="delete"
+              onClick={onDelete}
+              disabled={onDelete == null || disabled}
+            >
+              <MdDelete />
+            </IconButton>
+          </IconButtonTooltip>
+        </DownwardButtonWrapper>
 
         <UpwardButtonWrapper>
           <IconButtonTooltip caption={t('blockList.moveBlockUp')}>
             <IconButton
+              color="inherit"
+              size="small"
               aria-label={t('blockList.moveBlockUp')}
-              icon={<MdArrowUpward />}
+              data-block-action="up"
               onClick={onMoveUp}
               disabled={onMoveUp == null || disabled}
-            />
+            >
+              <MdArrowUpward />
+            </IconButton>
           </IconButtonTooltip>
         </UpwardButtonWrapper>
 
         <DownwardButtonWrapper>
           <IconButtonTooltip caption={t('blockList.moveBlockDown')}>
             <IconButton
+              color="inherit"
+              size="small"
               aria-label={t('blockList.moveBlockDown')}
-              icon={<MdArrowDownward />}
+              data-block-action="down"
               onClick={onMoveDown}
               disabled={onMoveDown == null || disabled}
-            />
+            >
+              <MdArrowDownward />
+            </IconButton>
           </IconButtonTooltip>
         </DownwardButtonWrapper>
-
-        <FlexGrow />
       </LeftButtonsWrapper>
 
       <PanelWrapper disabled={value.value.disabled}>
-        <Panel bordered>
-          <ChildrenWrapper>{children}</ChildrenWrapper>
-        </Panel>
+        {bare ?
+          <BareBlock>{children}</BareBlock>
+        : <Panel variant="outlined">
+            <CardContent>
+              <ChildrenWrapper>{children}</ChildrenWrapper>
+            </CardContent>
+          </Panel>
+        }
       </PanelWrapper>
 
       <BlockStyleIconWrapper>
         <Icon>
-          {icon} {t('blockStyles.style')}
+          {icon} <span id={styleLabelId}>{t('blockStyles.style')}</span>
           <InfoTooltip text={t('blockList.styleHelp')} />
         </Icon>
 
         <BlockStyleSelect
-          cleanable
-          value={blockStyleId}
-          data={stylesForBlock.map(style => ({
-            value: style.id,
-            label: style.name,
-          }))}
-          onChange={blockStyle => {
+          select
+          value={blockStyleId ?? ''}
+          disabled={disabled}
+          slotProps={{ select: { displayEmpty: true, labelId: styleLabelId } }}
+          onChange={event => {
+            const blockStyle = event.target.value || undefined;
             onStyleChange?.(
-              stylesForBlock.find(b => b.id === blockStyle)?.name,
-              blockStyle as string | undefined
+              stylesForBlock.find(style => style.id === blockStyle)?.name,
+              blockStyle
             );
           }}
-        />
+        >
+          <MenuItem value="">{t('blockStyles.noStyle')}</MenuItem>
+
+          {stylesForBlock.map(style => (
+            <MenuItem
+              key={style.id}
+              value={style.id}
+            >
+              {style.name}
+            </MenuItem>
+          ))}
+        </BlockStyleSelect>
       </BlockStyleIconWrapper>
     </ListItem>
   );

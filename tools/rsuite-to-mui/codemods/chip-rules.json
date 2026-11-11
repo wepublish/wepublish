@@ -1,0 +1,24 @@
+[
+  {
+    "from": "Tag",
+    "to": "Chip",
+    "values": {
+      "size": { "xs": "small", "sm": "small", "md": "medium", "lg": "medium" },
+      "color": {
+        "red": "error",
+        "green": "success",
+        "blue": "primary",
+        "yellow": "warning",
+        "orange": "warning",
+        "cyan": "info",
+        "violet": "secondary"
+      }
+    },
+    "drop": ["closable", "onClose"]
+  },
+  {
+    "from": "Avatar",
+    "drop": ["circle"],
+    "values": { "size": { "xs": null, "sm": null, "md": null, "lg": null, "xl": null } }
+  }
+]

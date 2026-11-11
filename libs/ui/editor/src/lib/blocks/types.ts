@@ -1,6 +1,7 @@
 import {
   ArticleWithoutBlocksFragment,
   BlockContentInput,
+  BlockTimingInput,
   BlockWithAlignment,
   CommentBlockCommentFragment,
   EditorBlockType,
@@ -9,18 +10,18 @@ import {
   FullEventFragment,
   FullImageFragment,
   FullPollFragment,
-  SubscribeBlock,
   FullTagFragment,
   FullTeaserFragment,
   MailchimpFormOptionsLayout,
   NestedBlockTemplateBlockFragment,
   PageWithoutBlocksFragment,
+  SubscribeBlock,
   SubscribeBlockField,
   SubscribePeriodicityDisplay,
   TeaserInput,
   TeaserListBlockSort,
-  TeaserSlotType,
   TeaserSlotsAutofillConfigInput,
+  TeaserSlotType,
   TeaserType,
 } from '@wepublish/editor/api';
 import type { RichtextJSONDocument } from '@wepublish/richtext';
@@ -63,6 +64,8 @@ type FullTeaserFragmentWithTypename =
 export interface BaseBlockValue {
   blockStyle?: string | null;
   disabled?: boolean | null;
+  timing?: BlockTimingInput | null;
+  shouldDisplay?: boolean | null;
 }
 
 export interface RichTextBlockValue extends BaseBlockValue {
@@ -122,6 +125,20 @@ export interface MailchimpFormInterestOptionValue {
   description?: string | null;
   image?: FullImageFragment | null;
 }
+
+/**
+ * The name an interest option gets when another interest is picked: an empty
+ * name or the label of the previous interest follows the pick, a name the
+ * editor typed stays.
+ */
+export const nameForPickedInterest = (
+  option: Pick<MailchimpFormInterestOptionValue, 'id' | 'name'>,
+  pickedId: string | null,
+  labelOf: (id: string | null) => string | undefined
+) =>
+  !option.name || option.name === labelOf(option.id) ?
+    (labelOf(pickedId) ?? '')
+  : option.name;
 
 export interface MailchimpFormFieldConfigValue {
   inputType?: string | null;
@@ -328,6 +345,7 @@ export enum MetaDataType {
   Properties = 'properties',
   Comments = 'Comments',
   Tracking = 'Tracking',
+  Seo = 'seo',
 }
 
 export interface ArticleTeaserLink {
@@ -353,10 +371,7 @@ export interface CustomTeaserLink extends BaseTeaser {
 }
 
 export type TeaserLink =
-  | ArticleTeaserLink
-  | PageTeaserLink
-  | CustomTeaserLink
-  | EventTeaserLink;
+  ArticleTeaserLink | PageTeaserLink | CustomTeaserLink | EventTeaserLink;
 
 export interface BaseTeaser {
   image?: FullImageFragment | null;
@@ -550,6 +565,18 @@ export type BlockValue =
 export function mapBlockValueToBlockInput(
   block: BlockValue
 ): BlockContentInput {
+  const input = mapBlockValueToContentInput(block);
+  const [kind, value] = Object.entries(input)[0] as [
+    keyof BlockContentInput,
+    object,
+  ];
+
+  return {
+    [kind]: { ...value, timing: block.value.timing ?? null },
+  } as BlockContentInput;
+}
+
+function mapBlockValueToContentInput(block: BlockValue): BlockContentInput {
   switch (block.type) {
     case EditorBlockType.Comment:
       return {
@@ -1051,6 +1078,25 @@ export function mapTeaserToTeaserInput(
 export function blockForQueryBlock(
   block: FullBlockFragment | null
 ): BlockValue {
+  const mapped = mapQueryBlockToBlockValue(block);
+  const base = block as {
+    timing?: BlockTimingInput | null;
+    shouldDisplay?: boolean | null;
+  } | null;
+
+  return {
+    ...mapped,
+    value: {
+      ...mapped.value,
+      timing: base?.timing ?? null,
+      shouldDisplay: base?.shouldDisplay ?? true,
+    },
+  } as BlockValue;
+}
+
+function mapQueryBlockToBlockValue(
+  block: FullBlockFragment | null
+): BlockValue {
   const key: string = nanoid();
 
   switch (block?.__typename) {
@@ -1391,9 +1437,7 @@ export function blockForQueryBlock(
           teaserType: block.teaserType ?? TeaserType.Article,
           teasers: block.teasers.map((rawTeaser, index) => {
             const teaser = rawTeaser as
-              | FullTeaserFragmentWithTypename
-              | null
-              | undefined;
+              FullTeaserFragmentWithTypename | null | undefined;
 
             return [
               `${index}`,

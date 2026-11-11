@@ -1,10 +1,23 @@
 import { useMutation } from '@apollo/client/react';
-import { Button } from '@mui/material';
+import {
+  Alert,
+  Autocomplete,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControl,
+  FormHelperText,
+  FormLabel,
+  Stack,
+  TextField,
+} from '@mui/material';
+import { enqueueSnackbar } from '@wepublish/ui/editor';
 import { DocumentNode } from 'graphql';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete } from 'react-icons/md';
-import { Form, Input, Message, Modal, SelectPicker, toaster } from 'rsuite';
 
 export type ProviderTypeOption = {
   label: string;
@@ -31,8 +44,9 @@ export function DeleteIntegrationButton({
       await remove({ variables: { id } });
       setOpen(false);
     } catch (error) {
-      toaster.push(<Message type="error">{(error as Error).message}</Message>, {
-        duration: 8000,
+      enqueueSnackbar((error as Error).message, {
+        variant: 'error',
+        autoHideDuration: 8000,
       });
     }
   };
@@ -48,17 +62,15 @@ export function DeleteIntegrationButton({
         {t('integrations.deleteConfirm')}
       </Button>
 
-      <Modal
+      <Dialog
         open={open}
         onClose={() => setOpen(false)}
       >
-        <Modal.Header>
-          <Modal.Title>{t('integrations.deleteTitle')}</Modal.Title>
-        </Modal.Header>
+        <DialogTitle>{t('integrations.deleteTitle')}</DialogTitle>
 
-        <Modal.Body>{t('integrations.deleteWarning')}</Modal.Body>
+        <DialogContent>{t('integrations.deleteWarning')}</DialogContent>
 
-        <Modal.Footer>
+        <DialogActions>
           <Button
             variant="text"
             onClick={() => setOpen(false)}
@@ -74,8 +86,8 @@ export function DeleteIntegrationButton({
           >
             {t('integrations.deleteConfirm')}
           </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
@@ -97,6 +109,9 @@ export function AddIntegrationButton({
   const [open, setOpen] = useState(false);
   const [id, setId] = useState('');
   const [type, setType] = useState<string | null>(null);
+  const typeLabelId = useId();
+  const idLabelId = useId();
+  const idHelpId = useId();
   const [create, { loading }] = useMutation(mutation, {
     refetchQueries: [{ query: refetchQuery }],
   });
@@ -116,23 +131,20 @@ export function AddIntegrationButton({
       const { data } = await create({ variables: { id, type, name: id } });
 
       const created = Object.values(data ?? {})[0] as
-        | { createdAt?: string }
-        | undefined;
+        { createdAt?: string } | undefined;
       const restored =
         !!created?.createdAt &&
         Date.now() - new Date(created.createdAt).getTime() > 60_000;
 
       if (restored) {
-        toaster.push(
-          <Message type="info">{t('integrations.restored')}</Message>,
-          { duration: 8000 }
-        );
+        enqueueSnackbar(t('integrations.restored'), { autoHideDuration: 8000 });
       }
 
       close();
     } catch (error) {
-      toaster.push(<Message type="error">{(error as Error).message}</Message>, {
-        duration: 8000,
+      enqueueSnackbar((error as Error).message, {
+        variant: 'error',
+        autoHideDuration: 8000,
       });
     }
   };
@@ -147,52 +159,79 @@ export function AddIntegrationButton({
         {label ?? t('integrations.add')}
       </Button>
 
-      <Modal
+      <Dialog
         open={open}
         onClose={close}
       >
-        <Modal.Header>
-          <Modal.Title>{label ?? t('integrations.add')}</Modal.Title>
-        </Modal.Header>
+        <DialogTitle>{label ?? t('integrations.add')}</DialogTitle>
 
-        <Modal.Body>
-          <Form fluid>
-            <Form.Group>
-              <Form.ControlLabel>{t('integrations.addType')}</Form.ControlLabel>
+        <DialogContent>
+          <Stack
+            spacing={3}
+            sx={{ width: '100%' }}
+          >
+            <FormControl fullWidth>
+              <FormLabel id={typeLabelId}>
+                {t('integrations.addType')}
+              </FormLabel>
 
-              <SelectPicker
-                block
-                cleanable={false}
-                data={types}
-                value={type}
-                onChange={value => {
+              <Autocomplete
+                options={types}
+                getOptionLabel={option => option.label}
+                isOptionEqualToValue={(option, selected) =>
+                  option.value === selected.value
+                }
+                value={types.find(option => option.value === type) ?? undefined}
+                onChange={(_event, option) => {
+                  const value = option.value;
                   setType(value);
 
                   if (!id && value) {
                     setId(value);
                   }
                 }}
+                disableClearable
+                renderInput={params => (
+                  <TextField
+                    {...params}
+                    slotProps={{
+                      ...params.slotProps,
+                      htmlInput: {
+                        ...params.slotProps.htmlInput,
+                        'aria-labelledby': typeLabelId,
+                      },
+                    }}
+                  />
+                )}
               />
-            </Form.Group>
+            </FormControl>
 
-            <Form.Group>
-              <Form.ControlLabel>{t('integrations.addId')}</Form.ControlLabel>
+            <FormControl fullWidth>
+              <FormLabel id={idLabelId}>{t('integrations.addId')}</FormLabel>
 
-              <Input
+              <TextField
                 value={id}
-                onChange={setId}
+                onChange={event => setId(event.target.value)}
+                slotProps={{
+                  htmlInput: {
+                    'aria-labelledby': idLabelId,
+                    'aria-describedby': idHelpId,
+                  },
+                }}
               />
 
-              <Form.HelpText>{t('integrations.addIdHelp')}</Form.HelpText>
-            </Form.Group>
+              <FormHelperText id={idHelpId}>
+                {t('integrations.addIdHelp')}
+              </FormHelperText>
+            </FormControl>
 
             {existingIds.includes(id) && (
-              <Message type="warning">{t('integrations.addIdTaken')}</Message>
+              <Alert severity="warning">{t('integrations.addIdTaken')}</Alert>
             )}
-          </Form>
-        </Modal.Body>
+          </Stack>
+        </DialogContent>
 
-        <Modal.Footer>
+        <DialogActions>
           <Button
             variant="text"
             onClick={close}
@@ -207,8 +246,8 @@ export function AddIntegrationButton({
           >
             {label ?? t('integrations.add')}
           </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
@@ -237,8 +276,9 @@ export function CreateFixedIntegrationButton({
     try {
       await create({ variables: { id, type, name } });
     } catch (error) {
-      toaster.push(<Message type="error">{(error as Error).message}</Message>, {
-        duration: 8000,
+      enqueueSnackbar((error as Error).message, {
+        variant: 'error',
+        autoHideDuration: 8000,
       });
     }
   };

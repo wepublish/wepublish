@@ -14,7 +14,7 @@
   // "forwardPorts": [3000, 9001, 8000],
 
   // Use 'postCreateCommand' to run commands after the container is created.
-  "postCreateCommand": "npm install",
+  "postCreateCommand": "pnpm install",
 
   "containerEnv": {
     "TZ": "Europe/Zurich",
@@ -26,6 +26,7 @@
     "MAIL_SMTP_HOST": "mailpit",
     "MAIL_SMTP_PORT": "1025",
     "MAIL_SMTP_FROM": "no-reply@wepublish.local",
+    "GOTENBERG_URL": "http://gotenberg:3000",
     "REDIS_URL": "redis://wepublish-local:wepublish-local@dragonfly:6379/0"
   },
 

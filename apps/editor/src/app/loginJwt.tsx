@@ -1,5 +1,6 @@
 import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
+import { Alert, Button, Stack, TextField, Typography } from '@mui/material';
 import {
   CreateSessionWithJwtDocument,
   EnableTotpDocument,
@@ -9,9 +10,10 @@ import {
 import {
   AuthDispatchActionType,
   AuthDispatchContext,
+  enqueueSnackbar,
   LoginTemplate,
 } from '@wepublish/ui/editor';
-import React, {
+import {
   FormEvent,
   useCallback,
   useContext,
@@ -21,14 +23,11 @@ import React, {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Button, Form as RForm, Message, toaster } from 'rsuite';
 
 import { Background } from './ui/loginBackground';
 import { TotpQrCode } from './ui/totpQrCode';
 
-const { Group, Label, Control } = RForm;
-
-const Form = styled(RForm)`
+const Form = styled.form`
   display: flex;
   flex-direction: column;
   margin: 0;
@@ -39,7 +38,7 @@ const SecretCode = styled.code`
   text-align: center;
   font-size: 14px;
   padding: 8px;
-  background: var(--rs-bg-well);
+  background: ${({ theme }) => theme.vars.palette.background.default};
   border-radius: 4px;
   margin-bottom: 16px;
   word-break: break-all;
@@ -49,17 +48,17 @@ const TotpDescription = styled.p`
   text-align: center;
   margin-bottom: 16px;
   font-size: 14px;
-  color: var(--rs-text-secondary);
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
 `;
 
 const AppLinks = styled.p`
   text-align: center;
   margin-bottom: 16px;
   font-size: 13px;
-  color: var(--rs-text-secondary);
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
 
   a {
-    color: var(--rs-text-link);
+    color: ${({ theme }) => theme.vars.palette.primary.main};
     text-decoration: none;
     &:hover {
       text-decoration: underline;
@@ -90,6 +89,8 @@ export function LoginJwt() {
   const [totpUri, setTotpUri] = useState('');
   const [totpSecret, setTotpSecret] = useState('');
   const [totpToken, setTotpToken] = useState('');
+  const [error, setError] = useState('');
+  const [setupError, setSetupError] = useState('');
   const totpInputRef = useRef<HTMLInputElement>(null);
 
   const forceTotpSetup = useCallback(
@@ -104,16 +105,7 @@ export function LoginJwt() {
           setTotpSecret(setupResponse.data.generateTotpSetup.secret);
         }
       } catch {
-        toaster.push(
-          <Message
-            type="error"
-            showIcon
-            closable
-            duration={8000}
-          >
-            {t('login.totp.setupError')}
-          </Message>
-        );
+        setSetupError(t('login.totp.setupError'));
       }
     },
     [generateTotpSetup, t]
@@ -155,21 +147,16 @@ export function LoginJwt() {
 
   async function handleTotpSetup(e: FormEvent) {
     e.preventDefault();
+    setError('');
 
     try {
       const response = await enableTotp({ variables: { totpToken } });
 
       if (response.data?.enableTotp) {
-        toaster.push(
-          <Message
-            type="success"
-            showIcon
-            closable
-            duration={3000}
-          >
-            {t('login.totp.setupSuccess')}
-          </Message>
-        );
+        enqueueSnackbar(t('login.totp.setupSuccess'), {
+          variant: 'success',
+          autoHideDuration: 3000,
+        });
 
         const sessionToken = localStorage.getItem(LocalStorageKey.SessionToken);
         if (!sessionToken) {
@@ -190,32 +177,32 @@ export function LoginJwt() {
     } catch (error: unknown) {
       const message =
         error instanceof Error ? error.message : t('login.totp.invalidCode');
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={8000}
-        >
-          {message}
-        </Message>
-      );
+      setError(message);
       setTotpToken('');
     }
   }
 
   if (step === 'loading') {
     return (
-      <LoginTemplate backgroundChildren={<Background />}>
-        <p>{t('login.jwt')}</p>
+      <LoginTemplate
+        title={t('login.login')}
+        backgroundChildren={<Background />}
+      >
+        <Typography>{t('login.jwt')}</Typography>
       </LoginTemplate>
     );
   }
 
   return (
-    <LoginTemplate backgroundChildren={<Background />}>
+    <LoginTemplate
+      title={t('login.login')}
+      backgroundChildren={<Background />}
+    >
       <Form>
-        <RForm.Stack fluid>
+        <Stack
+          direction="column"
+          spacing={3}
+        >
           <TotpDescription>{t('login.totp.setupDescription')}</TotpDescription>
 
           <AppLinks>
@@ -248,25 +235,33 @@ export function LoginJwt() {
             </>
           )}
 
-          <Group controlId="totpCode">
-            <Label>{t('login.totp.code')}</Label>
-            <Control
-              inputRef={totpInputRef}
-              name="totpCode"
-              value={totpToken}
-              autoComplete="one-time-code"
-              onChange={(value: string) => setTotpToken(value)}
-            />
-          </Group>
+          {setupError && <Alert severity="error">{setupError}</Alert>}
+
+          <TextField
+            label={<>{t('login.totp.code')}</>}
+            inputRef={totpInputRef}
+            name="totpCode"
+            value={totpToken}
+            autoComplete="one-time-code"
+            error={Boolean(error)}
+            onChange={event => {
+              setTotpToken(event.target.value);
+              setError('');
+            }}
+            fullWidth
+          />
+
+          {error && <Alert severity="error">{error}</Alert>}
+
           <Button
-            appearance="primary"
+            variant="contained"
             type="submit"
             disabled={loadingEnable || loadingSetup || !totpToken}
             onClick={handleTotpSetup}
           >
             {t('login.totp.activate')}
           </Button>
-        </RForm.Stack>
+        </Stack>
       </Form>
     </LoginTemplate>
   );

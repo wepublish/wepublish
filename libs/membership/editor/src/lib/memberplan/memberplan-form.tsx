@@ -1,30 +1,21 @@
-import React, { Dispatch, SetStateAction, useMemo, useState } from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import {
   Currency,
-  FullMemberPlanFragment,
   FullPaymentMethodFragment,
   FullImageFragment,
-  PaymentPeriodicity,
   ProductType,
   FullAvailablePaymentMethodFragment,
 } from '@wepublish/editor/api';
-import {
-  Button,
-  CheckPicker,
-  Col,
-  Divider,
-  Drawer,
-  Form as RForm,
-  Form,
-  Input,
-  Message,
-  Panel,
-  Row,
-  SelectPicker,
-  TagPicker,
-  toaster,
-  Toggle,
-} from 'rsuite';
+import { MemberPlanFormValues } from './memberplan-schema';
 import { useTranslation } from 'react-i18next';
 import { slugify } from '@wepublish/utils';
 import {
@@ -34,73 +25,74 @@ import {
   ImageSelectPanel,
   InfoTooltip,
   ListInput,
-  ListValue,
   RichTextBlock,
   RichTextBlockValue,
   SelectPage,
+  FormFields,
+  FormSectionTitle,
+  enqueueSnackbar,
+  DRAWER_WIDTHS,
 } from '@wepublish/ui/editor';
-import { MdAutoFixHigh, MdCheck } from 'react-icons/md';
+import { MdAutoFixHigh, MdCheck, MdExpandMore } from 'react-icons/md';
 import { MemberPlanPricing } from './memberplan-pricing';
-import { Alert } from '@mui/material';
+import { FieldLabel } from '../field-label';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Alert,
+  Autocomplete,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Drawer,
+  FormControlLabel,
+  FormHelperText,
+  FormLabel,
+  Grid,
+  MenuItem,
+  Switch,
+  TextField,
+} from '@mui/material';
 import styled from '@emotion/styled';
 
-const { Label, Text, Control } = RForm;
-
-const ColTextAlignEnd = styled(Col)`
-  text-align: end;
-`;
-
-const PanelWidth100 = styled(Panel)`
+const PanelWidth100 = styled(Card)`
   width: 100%;
 `;
 
-const RowPaddingTop = styled(Row)`
-  padding-top: 12px;
-`;
-
-const DividerTextAlignLeft = styled(Divider)`
-  &&& {
-    margin-left: -5px;
-    margin-right: -5px;
-  }
-
-  &&&::before {
-    content: none;
-  }
-
-  &&& > .rs-divider-inner-text {
-    padding-left: 0;
-  }
+const InlineRow = styled('div')`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing(0.5)};
 `;
 
 interface MemberPlanFormProps {
   memberPlanId?: string;
-  memberPlan?: FullMemberPlanFragment | null;
-  availablePaymentMethods: ListValue<FullAvailablePaymentMethodFragment>[];
   paymentMethods: FullPaymentMethodFragment[];
   loading: boolean;
-  setMemberPlan: Dispatch<
-    SetStateAction<FullMemberPlanFragment | null | undefined>
-  >;
-  setAvailablePaymentMethods: Dispatch<
-    SetStateAction<ListValue<FullAvailablePaymentMethodFragment>[]>
-  >;
 }
 
 export function MemberPlanForm({
   memberPlanId,
-  memberPlan,
-  availablePaymentMethods,
   paymentMethods,
   loading,
-  setMemberPlan,
-  setAvailablePaymentMethods,
 }: MemberPlanFormProps) {
   const { t } = useTranslation();
   const [isChooseModalOpen, setChooseModalOpen] = useState(false);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const { control, watch, setValue } = useFormContext<MemberPlanFormValues>();
 
-  const productType = memberPlan?.productType ?? ProductType.Subscription;
+  const availablePaymentMethods = useWatch({
+    control,
+    name: 'availablePaymentMethods',
+  });
+  const image = useWatch({ control, name: 'image' });
+  const extendable = useWatch({ control, name: 'extendable' });
+  const maxCount = useWatch({ control, name: 'maxCount' });
+
+  const productType =
+    useWatch({ control, name: 'productType' }) ?? ProductType.Subscription;
   const isDonationProduct = productType === ProductType.Donation;
   const maxCountLabel = t(
     isDonationProduct ?
@@ -113,10 +105,36 @@ export function MemberPlanForm({
     : 'memberplanForm.maxCountHelpText'
   );
 
-  const isTrialSubscription = useMemo(
-    () => !memberPlan?.extendable && !!memberPlan?.maxCount,
-    [memberPlan]
-  );
+  const isTrialSubscription = !extendable && !!maxCount;
+  const trialAlertRef = useRef<HTMLDivElement>(null);
+  const focusTrialAlert = useRef(false);
+
+  useEffect(() => {
+    if (isTrialSubscription && focusTrialAlert.current) {
+      focusTrialAlert.current = false;
+      trialAlertRef.current?.focus();
+    }
+  }, [isTrialSubscription]);
+
+  const fieldId = useId();
+  const ids = {
+    productType: `${fieldId}-product-type`,
+    activeHelp: `${fieldId}-active-help`,
+    name: `${fieldId}-name`,
+    slug: `${fieldId}-slug`,
+    description: `${fieldId}-description`,
+    shortDescription: `${fieldId}-short-description`,
+    externalReward: `${fieldId}-external-reward`,
+    maxCount: `${fieldId}-max-count`,
+    tags: `${fieldId}-tags`,
+    migrate: `${fieldId}-migrate`,
+    successPage: `${fieldId}-success-page`,
+    failPage: `${fieldId}-fail-page`,
+    confirmationPage: `${fieldId}-confirmation-page`,
+    currency: `${fieldId}-currency`,
+    defaultPeriodicity: `${fieldId}-default-periodicity`,
+    paymentMethods: `${fieldId}-payment-methods`,
+  };
 
   const enabledPeriodicities = useMemo(() => {
     const enabled = new Set(
@@ -128,59 +146,38 @@ export function MemberPlanForm({
     );
   }, [availablePaymentMethods]);
 
-  function setExtendable(
-    extendable: boolean,
-    updatedMemberPlan: FullMemberPlanFragment | undefined | null = memberPlan
-  ): void {
+  function setExtendable(extendable: boolean, trialMaxCount?: number): void {
     // a subscription plan must be extendable if at least one payment methods requires auto renew
     const forcedAutoRenewPaymentMethods = !!availablePaymentMethods?.find(
       apm => apm.value.forceAutoRenewal
     );
 
     if (forcedAutoRenewPaymentMethods) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-        >
-          {t('memberplanForm.trialSubscriptionNotPossible')}
-        </Message>,
-        { duration: 6000 }
-      );
+      enqueueSnackbar(t('memberplanForm.trialSubscriptionNotPossible'), {
+        variant: 'error',
+        autoHideDuration: 6000,
+      });
 
       return;
     }
 
-    if (!updatedMemberPlan) {
-      return;
+    if (trialMaxCount != null) {
+      setValue('maxCount', trialMaxCount);
     }
 
-    // update extendable prop of the member plan
-    setMemberPlan({
-      ...updatedMemberPlan,
-      extendable,
-    });
+    setValue('extendable', extendable);
   }
 
   function setForceAutoRenewal(
     forceAutoRenewal: boolean,
-    onChange: React.Dispatch<
-      React.SetStateAction<FullAvailablePaymentMethodFragment>
-    >,
+    onChange: Dispatch<SetStateAction<FullAvailablePaymentMethodFragment>>,
     availablePaymentMethod: FullAvailablePaymentMethodFragment
   ): void {
     // if subscription plan ist not extendable, a subscription can not be forced to be auto-renew.
-    if (!memberPlan?.extendable && forceAutoRenewal) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-        >
-          {t('memberplanForm.forceAutoRenewNotPossible')}
-        </Message>
-      );
+    if (!extendable && forceAutoRenewal) {
+      enqueueSnackbar(t('memberplanForm.forceAutoRenewNotPossible'), {
+        variant: 'error',
+      });
 
       return;
     }
@@ -188,589 +185,746 @@ export function MemberPlanForm({
     onChange({ ...availablePaymentMethod, forceAutoRenewal });
   }
 
-  function updateName(name: string | undefined) {
-    setMemberPlan(memberPlan => {
-      if (!memberPlan) {
-        return;
-      }
-
-      name = name || '';
-      let slug = memberPlan.slug;
-
-      // only update slug, if we create a new member plan
-      if (!memberPlanId) {
-        slug = slugify(name);
-      }
-
-      return { ...memberPlan, name, slug };
-    });
-  }
-
   return (
-    <Row>
-      <Col xs={12}>
-        <PanelWidth100 bordered>
-          <Row>
-            {/* product type */}
-            <Col xs={24}>
-              <Form.Label>{t('memberplanForm.productType')}</Form.Label>
-              <SelectPicker
-                cleanable={false}
-                searchable={false}
-                block
-                value={memberPlan?.productType ?? ProductType.Subscription}
-                data={[
-                  {
-                    value: ProductType.Subscription,
-                    label: t('memberplanForm.productTypeSubscription'),
-                  },
-                  {
-                    value: ProductType.Donation,
-                    label: t('memberplanForm.productTypeDonation'),
-                  },
-                ]}
-                disabled={loading}
-                onChange={(productType: ProductType | null) => {
-                  if (!memberPlan) {
-                    return;
-                  }
-
-                  setMemberPlan({
-                    ...memberPlan,
-                    productType: productType ?? ProductType.Subscription,
-                  });
-                }}
-              />
-              <Text>{t('memberplanForm.productTypeHelpText')}</Text>
-            </Col>
-
-            {/* image */}
-            <Col xs={12}>
-              <ChooseEditImage
-                image={memberPlan?.image}
-                disabled={loading}
-                openChooseModalOpen={() => setChooseModalOpen(true)}
-                openEditModalOpen={() => setEditModalOpen(true)}
-                removeImage={() => {
-                  if (!memberPlan) {
-                    return;
-                  }
-                  setMemberPlan({ ...memberPlan, image: null });
-                }}
-              />
-            </Col>
-
-            {/* active / inactive */}
-            <ColTextAlignEnd xs={12}>
-              <Toggle
-                checked={!!memberPlan?.active}
-                disabled={loading}
-                label={t('memberPlanEdit.active')}
-                onChange={active => {
-                  if (!memberPlan) {
-                    return;
-                  }
-                  setMemberPlan({ ...memberPlan, active });
-                }}
-              />
-              <Text>{t('memberPlanEdit.activeDescription')}</Text>
-            </ColTextAlignEnd>
-
-            <Col xs={24}>
-              <Row>
-                {/* name */}
-                <Col xs={12}>
-                  <Form.Label>{t('memberPlanEdit.name')}</Form.Label>
-                  <Form.Control
-                    name="name"
-                    value={memberPlan?.name || ''}
-                    onChange={(newName: string | undefined) =>
-                      updateName(newName)
-                    }
-                  />
-                </Col>
-
-                {/* slug */}
-                <Col xs={12}>
-                  <Form.Label>
-                    {t('memberPlanEdit.slug')}{' '}
-                    <InfoTooltip text={t('memberPlanEdit.slugHelp')} />
-                  </Form.Label>
-                  <Form.Control
-                    name="slug"
-                    value={memberPlan?.slug || ''}
-                    onChange={(newSlug: string | undefined) => {
-                      if (!memberPlan) {
-                        return;
+    <Grid
+      container
+      spacing={2}
+    >
+      <Grid size={{ xs: 12, md: 6 }}>
+        <PanelWidth100>
+          <CardContent>
+            <Grid
+              container
+              spacing={2}
+            >
+              <Grid size={{ xs: 12 }}>
+                <FieldLabel
+                  id={ids.productType}
+                  label={t('memberplanForm.productType')}
+                />
+                <Controller
+                  control={control}
+                  name="productType"
+                  render={({ field, fieldState: { error } }) => (
+                    <TextField
+                      {...field}
+                      select
+                      disabled={loading}
+                      error={Boolean(error)}
+                      helperText={
+                        error?.message ??
+                        t('memberplanForm.productTypeHelpText')
                       }
-                      setMemberPlan({
-                        ...memberPlan,
-                        slug: slugify(newSlug || ''),
-                      });
-                    }}
-                  />
-                </Col>
-              </Row>
-            </Col>
+                      slotProps={{ select: { labelId: ids.productType } }}
+                      fullWidth
+                    >
+                      <MenuItem
+                        key={ProductType.Subscription}
+                        value={ProductType.Subscription}
+                      >
+                        {t('memberplanForm.productTypeSubscription')}
+                      </MenuItem>
 
-            {/* description */}
-            <Col xs={24}>
-              <Form.Label>
-                {t('memberPlanEdit.description')}{' '}
-                <InfoTooltip text={t('memberPlanEdit.descriptionHelp')} />
-              </Form.Label>
+                      <MenuItem
+                        key={ProductType.Donation}
+                        value={ProductType.Donation}
+                      >
+                        {t('memberplanForm.productTypeDonation')}
+                      </MenuItem>
+                    </TextField>
+                  )}
+                />
+              </Grid>
 
-              <RichTextBlock
-                value={memberPlan?.description}
-                disabled={loading}
-                onChange={newDescription => {
-                  if (memberPlan) {
-                    setMemberPlan({
-                      ...memberPlan,
-                      description:
-                        (newDescription as RichTextBlockValue['richText']) ??
-                        null,
-                    });
-                  }
-                }}
-              />
-            </Col>
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <ChooseEditImage
+                  onSelect={(image: FullImageFragment) => {
+                    setChooseModalOpen(false);
+                    setValue('image', image);
+                  }}
+                  image={image}
+                  disabled={loading}
+                  openChooseModalOpen={() => setChooseModalOpen(true)}
+                  openEditModalOpen={() => setEditModalOpen(true)}
+                  removeImage={() => setValue('image', null)}
+                />
+              </Grid>
 
-            {/* short description */}
-            <Col xs={24}>
-              <Form.Label>
-                {t('memberPlanEdit.shortDescription')}{' '}
-                <InfoTooltip text={t('memberPlanEdit.shortDescriptionHelp')} />
-              </Form.Label>
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <Controller
+                  control={control}
+                  name="active"
+                  render={({ field }) => (
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          {...field}
+                          checked={field.value}
+                          disabled={loading}
+                          slotProps={{
+                            input: { 'aria-describedby': ids.activeHelp },
+                          }}
+                        />
+                      }
+                      label={t('memberPlanEdit.active')}
+                    />
+                  )}
+                />
+                <FormHelperText id={ids.activeHelp}>
+                  {t('memberPlanEdit.activeDescription')}
+                </FormHelperText>
+              </Grid>
 
-              <RichTextBlock
-                value={memberPlan?.shortDescription}
-                disabled={loading}
-                onChange={newShortDescription => {
-                  if (memberPlan) {
-                    setMemberPlan({
-                      ...memberPlan,
-                      shortDescription:
-                        (newShortDescription as RichTextBlockValue['richText']) ??
-                        null,
-                    });
-                  }
-                }}
-              />
-            </Col>
-
-            <Col xs={24}>
-              <Form.Label>{t('memberPlanEdit.externalReward')}</Form.Label>
-
-              <Form.Control
-                name="externalReward"
-                value={memberPlan?.externalReward || ''}
-                onChange={(newexternalReward: string | undefined) => {
-                  if (!memberPlan) {
-                    return;
-                  }
-
-                  setMemberPlan({
-                    ...memberPlan,
-                    externalReward: newexternalReward ?? null,
-                  });
-                }}
-              />
-            </Col>
-          </Row>
-        </PanelWidth100>
-      </Col>
-
-      <Col xs={12}>
-        <Panel
-          header={t('memberplanForm.trialSubscription')}
-          bordered
-        >
-          {/* tags */}
-          <Row>
-            <Col xs={24}>
-              <Form.Label>{t('memberPlanEdit.tags')}</Form.Label>
-              <TagPicker
-                disabled={loading}
-                block
-                virtualized
-                value={memberPlan?.tags ?? []}
-                creatable
-                data={
-                  memberPlan?.tags ?
-                    memberPlan.tags.map(tag => ({ label: tag, value: tag }))
-                  : []
-                }
-                onChange={tagsValue => {
-                  if (!memberPlan) {
-                    return;
-                  }
-                  setMemberPlan({ ...memberPlan, tags: tagsValue });
-                }}
-              />
-            </Col>
-          </Row>
-
-          {/* automatically configure trial subscription */}
-          <RowPaddingTop>
-            <Col xs={24}>
-              {isTrialSubscription ?
-                <Alert
-                  icon={<MdCheck />}
-                  severity="success"
+              <Grid size={{ xs: 12 }}>
+                <Grid
+                  container
+                  spacing={2}
                 >
-                  {t('memberplanForm.trialMemberplanAlert')}
-                </Alert>
-              : <>
-                  <Button
-                    startIcon={<MdAutoFixHigh />}
-                    onClick={() =>
-                      setExtendable(
-                        false,
-                        memberPlan ? { ...memberPlan, maxCount: 1 } : undefined
-                      )
-                    }
-                    disabled={isTrialSubscription}
-                    color={'green'}
+                  <Grid size={{ xs: 12, sm: 6 }}>
+                    <FieldLabel
+                      id={ids.name}
+                      label={t('memberPlanEdit.name')}
+                    />
+                    <Controller
+                      control={control}
+                      name="name"
+                      render={({ field, fieldState: { error } }) => (
+                        <TextField
+                          {...field}
+                          onChange={event => {
+                            field.onChange(event);
+
+                            if (!memberPlanId) {
+                              setValue('slug', slugify(event.target.value));
+                            }
+                          }}
+                          error={Boolean(error)}
+                          helperText={error?.message}
+                          slotProps={{
+                            htmlInput: { 'aria-labelledby': ids.name },
+                          }}
+                          fullWidth
+                        />
+                      )}
+                    />
+                  </Grid>
+
+                  <Grid size={{ xs: 12, sm: 6 }}>
+                    <FieldLabel
+                      id={ids.slug}
+                      label={t('memberPlanEdit.slug')}
+                      help={t('memberPlanEdit.slugHelp')}
+                    />
+                    <Controller
+                      control={control}
+                      name="slug"
+                      render={({ field, fieldState: { error } }) => (
+                        <TextField
+                          {...field}
+                          onChange={event =>
+                            field.onChange(slugify(event.target.value || ''))
+                          }
+                          error={Boolean(error)}
+                          helperText={error?.message}
+                          slotProps={{
+                            htmlInput: { 'aria-labelledby': ids.slug },
+                          }}
+                          fullWidth
+                        />
+                      )}
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+
+              <Grid size={{ xs: 12 }}>
+                <FieldLabel
+                  id={ids.description}
+                  label={t('memberPlanEdit.description')}
+                  help={t('memberPlanEdit.descriptionHelp')}
+                />
+
+                <Controller
+                  control={control}
+                  name="description"
+                  render={({ field }) => (
+                    <RichTextBlock
+                      aria-labelledby={ids.description}
+                      value={field.value}
+                      disabled={loading}
+                      onChange={value =>
+                        field.onChange(
+                          (value as RichTextBlockValue['richText']) ?? null
+                        )
+                      }
+                    />
+                  )}
+                />
+              </Grid>
+
+              <Grid size={{ xs: 12 }}>
+                <FieldLabel
+                  id={ids.shortDescription}
+                  label={t('memberPlanEdit.shortDescription')}
+                  help={t('memberPlanEdit.shortDescriptionHelp')}
+                />
+
+                <Controller
+                  control={control}
+                  name="shortDescription"
+                  render={({ field }) => (
+                    <RichTextBlock
+                      aria-labelledby={ids.shortDescription}
+                      value={field.value}
+                      disabled={loading}
+                      onChange={value =>
+                        field.onChange(
+                          (value as RichTextBlockValue['richText']) ?? null
+                        )
+                      }
+                    />
+                  )}
+                />
+              </Grid>
+
+              <Grid size={{ xs: 12 }}>
+                <FieldLabel
+                  id={ids.externalReward}
+                  label={t('memberPlanEdit.externalReward')}
+                />
+
+                <Controller
+                  control={control}
+                  name="externalReward"
+                  render={({ field, fieldState: { error } }) => (
+                    <TextField
+                      {...field}
+                      value={field.value ?? ''}
+                      error={Boolean(error)}
+                      helperText={error?.message}
+                      slotProps={{
+                        htmlInput: { 'aria-labelledby': ids.externalReward },
+                      }}
+                      fullWidth
+                    />
+                  )}
+                />
+              </Grid>
+            </Grid>
+          </CardContent>
+        </PanelWidth100>
+      </Grid>
+
+      <Grid size={{ xs: 12, md: 6 }}>
+        <Card>
+          <CardHeader
+            title={t('memberplanForm.trialSubscription')}
+            slotProps={{ title: { component: 'h2' } }}
+          />
+
+          <CardContent>
+            <FormFields>
+              <div>
+                {isTrialSubscription ?
+                  <Alert
+                    ref={trialAlertRef}
+                    tabIndex={-1}
+                    icon={<MdCheck />}
+                    severity="success"
                   >
-                    {t('memberplanForm.configureTrialBtn')}
-                  </Button>{' '}
-                  <InfoTooltip text={t('memberplanForm.configureTrialHelp')} />
-                </>
-              }
-            </Col>
-          </RowPaddingTop>
-          <RowPaddingTop>
-            {/* extendable */}
-            <Col xs={12}>
-              <Toggle
-                checked={memberPlan?.extendable}
-                onChange={extendable => setExtendable(extendable)}
-                label={
-                  <>
-                    {t('memberplanForm.extendableToggle')}{' '}
+                    {t('memberplanForm.trialMemberplanAlert')}
+                  </Alert>
+                : <>
+                    <Button
+                      variant="outlined"
+                      startIcon={<MdAutoFixHigh />}
+                      onClick={() => {
+                        focusTrialAlert.current = true;
+                        setExtendable(false, 1);
+                      }}
+                      disabled={isTrialSubscription}
+                      color="success"
+                    >
+                      {t('memberplanForm.configureTrialBtn')}
+                    </Button>{' '}
                     <InfoTooltip
-                      text={t('memberplanForm.extendableHelpText')}
+                      text={t('memberplanForm.configureTrialHelp')}
                     />
                   </>
                 }
-              />
-            </Col>
-            {/* max count */}
-            <Col xs={12}>
-              <Label>
-                {maxCountLabel} <InfoTooltip text={maxCountHelpText} />
-              </Label>
-              <Input
-                placeholder={maxCountLabel}
-                type={'number'}
-                min={0}
-                value={memberPlan?.maxCount || undefined}
-                onChange={maxCount => {
-                  if (!memberPlan) {
-                    return;
-                  }
-                  setMemberPlan({
-                    ...memberPlan,
-                    maxCount: Number(maxCount) || null,
-                  });
-                }}
-              />
-            </Col>
-          </RowPaddingTop>
-          <RowPaddingTop>
-            <Col xs={12}>
-              <Label>
-                {t('memberplanForm.migratePMTitle')}{' '}
-                <InfoTooltip text={t('memberplanForm.migratePMHelptext')} />
-              </Label>
-              <Control
-                name="migrateToTargetPaymentMethodID"
-                block
-                virtualized
-                disabled={loading}
-                data={paymentMethods.map(pm => ({
-                  value: pm.id,
-                  label: pm.name,
-                }))}
-                value={memberPlan?.migrateToTargetPaymentMethodID}
-                accepter={SelectPicker}
-                placement="auto"
-                onChange={migrateToTargetPaymentMethodID =>
-                  setMemberPlan({
-                    ...(memberPlan as FullMemberPlanFragment),
-                    migrateToTargetPaymentMethodID:
-                      migrateToTargetPaymentMethodID || null,
-                  })
-                }
-              />
-            </Col>
-          </RowPaddingTop>
+              </div>
 
-          {/* redirections */}
-          <DividerTextAlignLeft>
-            {t('memberplanForm.redirectionsTitle')}
-          </DividerTextAlignLeft>
-          <Row>
-            <Form.Label>{t('memberPlanEdit.successPage')}</Form.Label>
-            <SelectPage
-              setSelectedPage={successPageId => {
-                if (!memberPlan) {
-                  return;
-                }
-
-                setMemberPlan({ ...memberPlan, successPageId });
-              }}
-              selectedPage={memberPlan?.successPageId}
-              name="successPageId"
-            />
-          </Row>
-
-          <RowPaddingTop>
-            <Form.Label>{t('memberPlanEdit.failPage')}</Form.Label>
-            <SelectPage
-              setSelectedPage={failPageId => {
-                if (!memberPlan) {
-                  return;
-                }
-
-                setMemberPlan({ ...memberPlan, failPageId });
-              }}
-              selectedPage={memberPlan?.failPageId}
-              name="failPageId"
-            />
-          </RowPaddingTop>
-
-          <RowPaddingTop>
-            <Form.Label>
-              {t('memberplanForm.confirmationPage')}{' '}
-              <InfoTooltip
-                text={t('memberplanForm.confirmationPageHelptext')}
-              />
-            </Form.Label>
-            <SelectPage
-              setSelectedPage={confirmationPageId => {
-                if (!memberPlan) {
-                  return;
-                }
-
-                setMemberPlan({ ...memberPlan, confirmationPageId });
-              }}
-              selectedPage={memberPlan?.confirmationPageId}
-              name="failPageId"
-            />
-          </RowPaddingTop>
-        </Panel>
-      </Col>
-
-      {/* payment method settings */}
-      <Col xs={24}>
-        <PanelWidth100
-          header={t('memberPlanEdit.paymentConfigs')}
-          bordered
-        >
-          <Row>
-            {/* currency */}
-            <Col xs={12}>
-              <Form.Label>{t('memberPlanEdit.currency')}</Form.Label>
-              <SelectPicker
-                name="currency"
-                cleanable={false}
-                block
-                value={memberPlan?.currency ?? null}
-                data={[
-                  { value: Currency.Chf, label: Currency.Chf },
-                  { value: Currency.Eur, label: Currency.Eur },
-                ]}
-                disabled={loading}
-                onChange={(currency: Currency | null) => {
-                  if (!memberPlan || !currency) {
-                    return;
-                  }
-
-                  setMemberPlan({ ...memberPlan, currency });
-                }}
-              />
-
-              {/* default payment periodicity */}
-              <RowPaddingTop>
-                <Col xs={24}>
-                  <Form.Label>
-                    {t('memberplanForm.defaultPaymentPeriodicity')}
-                  </Form.Label>
-                  <SelectPicker
-                    cleanable
-                    searchable={false}
-                    block
-                    placement="auto"
-                    value={memberPlan?.defaultPaymentPeriodicity ?? null}
-                    data={enabledPeriodicities.map(periodicity => ({
-                      value: periodicity,
-                      label: t(
-                        `memberPlanList.paymentPeriodicity.${periodicity}`
-                      ),
-                    }))}
-                    disabled={loading}
-                    onChange={(
-                      defaultPaymentPeriodicity: PaymentPeriodicity | null
-                    ) => {
-                      if (!memberPlan) {
-                        return;
+              <InlineRow>
+                <FormControlLabel
+                  sx={{ marginRight: 0 }}
+                  control={
+                    <Switch
+                      checked={extendable}
+                      onChange={(_event, extendable) =>
+                        setExtendable(extendable)
                       }
+                    />
+                  }
+                  label={t('memberplanForm.extendableToggle')}
+                />
+                <InfoTooltip text={t('memberplanForm.extendableHelpText')} />
+              </InlineRow>
 
-                      setMemberPlan({
-                        ...memberPlan,
-                        defaultPaymentPeriodicity,
-                      });
-                    }}
-                  />
-                  <Text>
-                    {t('memberplanForm.defaultPaymentPeriodicityHelpText')}
-                  </Text>
-                </Col>
-              </RowPaddingTop>
-            </Col>
+              <div>
+                <FieldLabel
+                  id={ids.maxCount}
+                  label={maxCountLabel}
+                  help={maxCountHelpText}
+                />
+                <Controller
+                  control={control}
+                  name="maxCount"
+                  render={({ field, fieldState: { error } }) => (
+                    <TextField
+                      {...field}
+                      value={field.value ?? ''}
+                      type={'number'}
+                      slotProps={{
+                        htmlInput: { min: 0, 'aria-labelledby': ids.maxCount },
+                      }}
+                      onChange={event =>
+                        field.onChange(Number(event.target.value) || null)
+                      }
+                      error={Boolean(error)}
+                      helperText={error?.message}
+                      fullWidth
+                    />
+                  )}
+                />
+              </div>
 
-            <Col xs={12}>
-              <ListInput
-                value={availablePaymentMethods}
-                disabled={loading}
-                onChange={app => setAvailablePaymentMethods(app)}
-                defaultValue={{
-                  __typename: 'AvailablePaymentMethod',
-                  forceAutoRenewal: false,
-                  paymentPeriodicities: [],
-                  paymentMethods: [],
-                }}
-              >
-                {({ value, onChange }) => (
-                  <Panel
-                    collapsible
-                    bordered
-                    header={t('memberPlanEdit.editPaymentSetting')}
-                    style={{ width: '100%' }}
-                  >
-                    <Row>
-                      {/* force auto-renew */}
-                      <Col xs={24}>
-                        <Toggle
-                          checked={value.forceAutoRenewal}
+              <div>
+                <FieldLabel
+                  id={ids.tags}
+                  label={t('memberPlanEdit.tags')}
+                />
+                <Controller
+                  control={control}
+                  name="tags"
+                  render={({ field }) => (
+                    <Autocomplete
+                      multiple
+                      freeSolo
+                      disabled={loading}
+                      options={field.value}
+                      value={field.value}
+                      onChange={(_event, tags) => field.onChange(tags)}
+                      renderInput={params => (
+                        <TextField
+                          {...params}
+                          slotProps={{
+                            ...params.slotProps,
+                            htmlInput: {
+                              ...params.slotProps.htmlInput,
+                              'aria-labelledby': ids.tags,
+                            },
+                          }}
+                        />
+                      )}
+                    />
+                  )}
+                />
+              </div>
+
+              <div>
+                <FieldLabel
+                  id={ids.migrate}
+                  label={t('memberplanForm.migratePMTitle')}
+                  help={t('memberplanForm.migratePMHelptext')}
+                />
+                <Controller
+                  control={control}
+                  name="migrateToTargetPaymentMethodID"
+                  render={({ field, fieldState: { error } }) => (
+                    <TextField
+                      {...field}
+                      select
+                      value={field.value ?? ''}
+                      disabled={loading}
+                      onChange={event =>
+                        field.onChange(event.target.value || null)
+                      }
+                      error={Boolean(error)}
+                      helperText={error?.message}
+                      slotProps={{ select: { labelId: ids.migrate } }}
+                      fullWidth
+                    >
+                      {paymentMethods.map(pm => (
+                        <MenuItem
+                          key={pm.id}
+                          value={pm.id}
+                        >
+                          {pm.name}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  )}
+                />
+              </div>
+
+              <FormSectionTitle>
+                {t('memberplanForm.redirectionsTitle')}
+              </FormSectionTitle>
+
+              <div>
+                <FieldLabel
+                  id={ids.successPage}
+                  label={t('memberPlanEdit.successPage')}
+                />
+                <Controller
+                  control={control}
+                  name="successPageId"
+                  render={({ field }) => (
+                    <SelectPage
+                      aria-labelledby={ids.successPage}
+                      setSelectedPage={field.onChange}
+                      selectedPage={field.value}
+                      name={field.name}
+                    />
+                  )}
+                />
+              </div>
+
+              <div>
+                <FieldLabel
+                  id={ids.failPage}
+                  label={t('memberPlanEdit.failPage')}
+                />
+                <Controller
+                  control={control}
+                  name="failPageId"
+                  render={({ field }) => (
+                    <SelectPage
+                      aria-labelledby={ids.failPage}
+                      setSelectedPage={field.onChange}
+                      selectedPage={field.value}
+                      name={field.name}
+                    />
+                  )}
+                />
+              </div>
+
+              <div>
+                <FieldLabel
+                  id={ids.confirmationPage}
+                  label={t('memberplanForm.confirmationPage')}
+                  help={t('memberplanForm.confirmationPageHelptext')}
+                />
+                <Controller
+                  control={control}
+                  name="confirmationPageId"
+                  render={({ field }) => (
+                    <SelectPage
+                      aria-labelledby={ids.confirmationPage}
+                      setSelectedPage={field.onChange}
+                      selectedPage={field.value}
+                      name={field.name}
+                    />
+                  )}
+                />
+              </div>
+            </FormFields>
+          </CardContent>
+        </Card>
+      </Grid>
+
+      <Grid size={{ xs: 12 }}>
+        <PanelWidth100>
+          <CardHeader
+            title={t('memberPlanEdit.paymentConfigs')}
+            slotProps={{ title: { component: 'h2' } }}
+          />
+
+          <CardContent>
+            <Grid
+              container
+              spacing={2}
+            >
+              <Grid size={{ xs: 12, md: 6 }}>
+                <FormFields>
+                  <div>
+                    <FieldLabel
+                      id={ids.currency}
+                      label={t('memberPlanEdit.currency')}
+                    />
+                    <Controller
+                      control={control}
+                      name="currency"
+                      render={({ field, fieldState: { error } }) => (
+                        <TextField
+                          {...field}
+                          select
                           disabled={loading}
-                          label={
-                            <>
-                              {t('memberPlanEdit.forceAutoRenewal')}{' '}
-                              <InfoTooltip
-                                text={t('memberPlanEdit.forceAutoRenewalHelp')}
-                              />
-                            </>
-                          }
-                          onChange={forceAutoRenewal =>
-                            setForceAutoRenewal(
-                              forceAutoRenewal,
-                              onChange,
-                              value
+                          error={Boolean(error)}
+                          helperText={error?.message}
+                          slotProps={{ select: { labelId: ids.currency } }}
+                          fullWidth
+                        >
+                          <MenuItem
+                            key={Currency.Chf}
+                            value={Currency.Chf}
+                          >
+                            {Currency.Chf}
+                          </MenuItem>
+
+                          <MenuItem
+                            key={Currency.Eur}
+                            value={Currency.Eur}
+                          >
+                            {Currency.Eur}
+                          </MenuItem>
+                        </TextField>
+                      )}
+                    />
+                  </div>
+
+                  <div>
+                    <FieldLabel
+                      id={ids.defaultPeriodicity}
+                      label={t('memberplanForm.defaultPaymentPeriodicity')}
+                    />
+                    <Controller
+                      control={control}
+                      name="defaultPaymentPeriodicity"
+                      render={({ field, fieldState: { error } }) => (
+                        <TextField
+                          {...field}
+                          select
+                          value={field.value ?? ''}
+                          disabled={loading}
+                          error={Boolean(error)}
+                          helperText={
+                            error?.message ??
+                            t(
+                              'memberplanForm.defaultPaymentPeriodicityHelpText'
                             )
                           }
-                        />
-                      </Col>
-
-                      {/* payment periodicity */}
-                      <Col xs={24}>
-                        <Form.Label>
-                          {t('memberPlanList.paymentPeriodicities')}
-                        </Form.Label>
-                        <CheckPicker
-                          virtualized
-                          value={value.paymentPeriodicities}
-                          data={ALL_PAYMENT_PERIODICITIES.map(pp => ({
-                            value: pp,
-                            label: t(`memberPlanList.paymentPeriodicity.${pp}`),
-                          }))}
-                          onChange={paymentPeriodicities =>
-                            onChange({ ...value, paymentPeriodicities })
-                          }
-                          block
-                          placement="auto"
-                          cleanable
-                        />
-                      </Col>
-
-                      {/* payment method selection */}
-                      <Col xs={24}>
-                        <Form.Label>
-                          {t('memberPlanList.paymentMethods')}
-                        </Form.Label>
-                        <CheckPicker
-                          virtualized
-                          value={value.paymentMethods.map(pm => pm.id)}
-                          data={paymentMethods.map(pm => ({
-                            value: pm.id,
-                            label: pm.name,
-                          }))}
-                          onChange={paymentMethodIDs => {
-                            onChange({
-                              ...value,
-                              paymentMethods: paymentMethodIDs
-                                .map(pmID =>
-                                  paymentMethods.find(pm => pm.id === pmID)
-                                )
-                                .filter(pm => pm !== undefined),
-                            });
+                          slotProps={{
+                            select: { labelId: ids.defaultPeriodicity },
                           }}
-                          block
-                          placement="auto"
-                        />
-                      </Col>
-                    </Row>
-                  </Panel>
-                )}
-              </ListInput>
-            </Col>
-          </Row>
+                          fullWidth
+                        >
+                          {enabledPeriodicities.map(periodicity => (
+                            <MenuItem
+                              key={periodicity}
+                              value={periodicity}
+                            >
+                              {t(
+                                `memberPlanList.paymentPeriodicity.${periodicity}`
+                              )}
+                            </MenuItem>
+                          ))}
+                        </TextField>
+                      )}
+                    />
+                  </div>
+                </FormFields>
+              </Grid>
+
+              <Grid size={{ xs: 12, md: 6 }}>
+                <FieldLabel
+                  id={ids.paymentMethods}
+                  label={t('memberPlanList.paymentMethods')}
+                />
+                <Controller
+                  control={control}
+                  name="availablePaymentMethods"
+                  render={({ field }) => (
+                    <ListInput
+                      value={field.value}
+                      disabled={loading}
+                      onChange={field.onChange}
+                      defaultValue={{
+                        __typename: 'AvailablePaymentMethod',
+                        forceAutoRenewal: false,
+                        paymentPeriodicities: [],
+                        paymentMethods: [],
+                      }}
+                    >
+                      {({ value, onChange }) => (
+                        <Accordion style={{ width: '100%' }}>
+                          <AccordionSummary expandIcon={<MdExpandMore />}>
+                            {t('memberPlanEdit.editPaymentSetting')}
+                          </AccordionSummary>
+
+                          <AccordionDetails>
+                            <Grid
+                              container
+                              spacing={2}
+                            >
+                              <InlineRow>
+                                <FormControlLabel
+                                  sx={{ marginRight: 0 }}
+                                  control={
+                                    <Switch
+                                      checked={value.forceAutoRenewal}
+                                      disabled={loading}
+                                      onChange={(_event, forceAutoRenewal) =>
+                                        setForceAutoRenewal(
+                                          forceAutoRenewal,
+                                          onChange,
+                                          value
+                                        )
+                                      }
+                                    />
+                                  }
+                                  label={t('memberPlanEdit.forceAutoRenewal')}
+                                />
+                                <InfoTooltip
+                                  text={t(
+                                    'memberPlanEdit.forceAutoRenewalHelp'
+                                  )}
+                                />
+                              </InlineRow>
+
+                              <Grid size={{ xs: 12 }}>
+                                <FormLabel>
+                                  {t('memberPlanList.paymentPeriodicities')}
+                                </FormLabel>
+                                <Autocomplete
+                                  multiple
+                                  disableCloseOnSelect
+                                  options={ALL_PAYMENT_PERIODICITIES}
+                                  getOptionLabel={periodicity =>
+                                    t(
+                                      `memberPlanList.paymentPeriodicity.${periodicity}`
+                                    )
+                                  }
+                                  value={value.paymentPeriodicities}
+                                  onChange={(_event, paymentPeriodicities) =>
+                                    onChange({
+                                      ...value,
+                                      paymentPeriodicities,
+                                    })
+                                  }
+                                  renderInput={params => (
+                                    <TextField
+                                      {...params}
+                                      slotProps={{
+                                        ...params.slotProps,
+                                        htmlInput: {
+                                          ...params.slotProps.htmlInput,
+                                          'aria-label': t(
+                                            'memberPlanList.paymentPeriodicities'
+                                          ),
+                                        },
+                                      }}
+                                    />
+                                  )}
+                                />
+                              </Grid>
+
+                              <Grid size={{ xs: 12 }}>
+                                <FormLabel>
+                                  {t('memberPlanList.paymentMethods')}
+                                </FormLabel>
+                                <Autocomplete
+                                  multiple
+                                  disableCloseOnSelect
+                                  options={paymentMethods.map(pm => pm.id)}
+                                  getOptionLabel={option =>
+                                    paymentMethods
+                                      .filter(pm => pm.id === option)
+                                      .map(pm => pm.name)[0] ?? option
+                                  }
+                                  value={value.paymentMethods.map(pm => pm.id)}
+                                  onChange={(_event, paymentMethodIDs) => {
+                                    onChange({
+                                      ...value,
+                                      paymentMethods: paymentMethodIDs
+                                        .map(pmID =>
+                                          paymentMethods.find(
+                                            pm => pm.id === pmID
+                                          )
+                                        )
+                                        .filter(pm => pm !== undefined),
+                                    });
+                                  }}
+                                  renderInput={params => (
+                                    <TextField
+                                      {...params}
+                                      slotProps={{
+                                        ...params.slotProps,
+                                        htmlInput: {
+                                          ...params.slotProps.htmlInput,
+                                          'aria-label': t(
+                                            'memberPlanList.paymentMethods'
+                                          ),
+                                        },
+                                      }}
+                                    />
+                                  )}
+                                />
+                              </Grid>
+                            </Grid>
+                          </AccordionDetails>
+                        </Accordion>
+                      )}
+                    </ListInput>
+                  )}
+                />
+              </Grid>
+            </Grid>
+          </CardContent>
         </PanelWidth100>
-      </Col>
+      </Grid>
 
       {/* pricing */}
-      <Col xs={24}>
-        <MemberPlanPricing
-          memberPlan={memberPlan}
-          availablePaymentMethods={availablePaymentMethods}
-          loading={loading}
-          setMemberPlan={setMemberPlan}
-        />
-      </Col>
+      <Grid size={{ xs: 12 }}>
+        <MemberPlanPricing loading={loading} />
+      </Grid>
 
       {/* image upload and selection */}
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isChooseModalOpen}
-        size="sm"
         onClose={() => setChooseModalOpen(false)}
       >
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
           onSelect={(image: FullImageFragment) => {
             setChooseModalOpen(false);
-            if (!memberPlan) {
-              return;
-            }
-            setMemberPlan({ ...memberPlan, image });
+            setValue('image', image);
           }}
         />
       </Drawer>
 
-      {memberPlan?.image && (
+      {image && (
         <Drawer
+          anchor="right"
+          slotProps={{
+            paper: {
+              sx: {
+                display: 'flex',
+                flexDirection: 'column',
+                width: DRAWER_WIDTHS.sm,
+                maxWidth: '100vw',
+              },
+            },
+          }}
           open={isEditModalOpen}
-          size="sm"
           onClose={() => setEditModalOpen(false)}
         >
           <ImageEditPanel
-            id={memberPlan.image!.id}
+            id={image.id}
             onClose={() => setEditModalOpen(false)}
             onSave={() => setEditModalOpen(false)}
           />
         </Drawer>
       )}
-    </Row>
+    </Grid>
   );
 }

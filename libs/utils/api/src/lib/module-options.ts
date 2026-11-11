@@ -1,12 +1,19 @@
-import { ModuleMetadata, Provider, Type } from '@nestjs/common';
+import {
+  FactoryProvider,
+  ModuleMetadata,
+  Provider,
+  Type,
+} from '@nestjs/common';
 
-export interface ModuleAsyncOptions<OptionsType>
-  extends Pick<ModuleMetadata, 'imports'> {
+export interface ModuleAsyncOptions<OptionsType> extends Pick<
+  ModuleMetadata,
+  'imports'
+> {
   global?: boolean;
   useExisting?: Type<OptionsType>;
   useClass?: Type<OptionsType>;
   useFactory?: (...args: any[]) => Promise<OptionsType> | OptionsType;
-  inject?: Type[];
+  inject?: FactoryProvider['inject'];
 }
 
 export const createAsyncOptionsProvider = <OptionsType>(

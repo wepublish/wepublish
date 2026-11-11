@@ -1,6 +1,13 @@
 import styled from '@emotion/styled';
 import { InfoTooltip as SharedInfoTooltip } from '@wepublish/ui/editor';
-import { PropsWithChildren, ReactNode, useId, useState } from 'react';
+import {
+  createContext,
+  PropsWithChildren,
+  ReactNode,
+  useContext,
+  useId,
+  useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdExpandMore } from 'react-icons/md';
 
@@ -19,9 +26,9 @@ export const MailBlocks = styled('div')<{ split?: boolean }>`
 const Block = styled('section')`
   container-type: inline-size;
   min-width: 0;
-  border: 1px solid var(--rs-border-primary);
-  border-radius: var(--rs-radius-lg);
-  background-color: var(--rs-bg-card);
+  border: 1px solid ${({ theme }) => theme.vars.palette.divider};
+  border-radius: ${({ theme }) => theme.shape.borderRadius + 'px'};
+  background-color: ${({ theme }) => theme.vars.palette.background.paper};
 `;
 
 const BlockHeader = styled('header', {
@@ -34,15 +41,17 @@ const BlockHeader = styled('header', {
   justify-content: space-between;
   gap: 8px 16px;
   padding: 16px 20px;
-  border-bottom: ${({ collapsed }) =>
-    collapsed ? 'none' : '1px solid var(--rs-border-primary)'};
-  border-radius: ${({ collapsed }) =>
+  border-bottom: ${({ collapsed, theme }) =>
+    collapsed ? 'none' : `1px solid ${theme.vars.palette.divider}`};
+  border-radius: ${({ collapsed, theme }) =>
     collapsed ?
-      'var(--rs-radius-lg)'
-    : 'var(--rs-radius-lg) var(--rs-radius-lg) 0 0'};
+      `${theme.shape.borderRadius}`
+    : `${theme.shape.borderRadius} ${theme.shape.borderRadius} 0 0`};
 
   &:has(> div > h3 > button:hover) {
-    background-color: rgb(from var(--rs-text-primary) r g b / 3%);
+    background-color: rgb(
+      from ${({ theme }) => theme.vars.palette.text.primary} r g b / 3%
+    );
   }
 `;
 
@@ -56,7 +65,7 @@ const Summary = styled('span')`
   padding-left: 28px;
   overflow: hidden;
   font-size: 13px;
-  color: var(--rs-text-secondary);
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
   white-space: nowrap;
   text-overflow: ellipsis;
 `;
@@ -86,13 +95,13 @@ const ToggleButton = styled('button')`
   }
 
   &:focus-visible::after {
-    outline: 2px solid var(--rs-primary-500);
+    outline: 2px solid ${({ theme }) => theme.vars.palette.primary.main};
     outline-offset: -2px;
   }
 
   > svg {
     flex-shrink: 0;
-    color: var(--rs-text-secondary);
+    color: ${({ theme }) => theme.vars.palette.text.secondary};
   }
 `;
 
@@ -103,7 +112,14 @@ const Chevron = styled(MdExpandMore, {
   transition: transform 150ms ease;
 `;
 
-const BlockTitle = styled('h3')`
+const TitleLine = styled('div')`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+`;
+
+const BlockTitle = styled('h2')`
   display: flex;
   align-items: center;
   gap: 8px;
@@ -111,11 +127,11 @@ const BlockTitle = styled('h3')`
   font-size: 16px;
   font-weight: 600;
   line-height: 1.4;
-  color: var(--rs-text-heading);
+  color: ${({ theme }) => theme.vars.palette.text.primary};
 
   > svg {
     flex-shrink: 0;
-    color: var(--rs-text-secondary);
+    color: ${({ theme }) => theme.vars.palette.text.secondary};
   }
 `;
 
@@ -130,7 +146,7 @@ const HeaderActions = styled('div')`
 
 const Subsection = styled('div')`
   & + & {
-    border-top: 1px solid var(--rs-border-primary);
+    border-top: 1px solid ${({ theme }) => theme.vars.palette.divider};
   }
 `;
 
@@ -143,7 +159,7 @@ const SubsectionHeader = styled('div')`
   padding: 16px 20px 4px;
 `;
 
-const SubsectionTitle = styled('h4')`
+const SubsectionTitle = styled('h3')`
   display: flex;
   align-items: center;
   gap: 6px;
@@ -153,7 +169,7 @@ const SubsectionTitle = styled('h4')`
   line-height: 1.4;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--rs-text-secondary);
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
 `;
 
 export const EventList = styled('ul')`
@@ -168,7 +184,7 @@ const Row = styled('li')`
   padding: 14px 20px;
 
   & + & {
-    border-top: 1px solid var(--rs-border-primary);
+    border-top: 1px solid ${({ theme }) => theme.vars.palette.divider};
   }
 
   @container (min-width: 620px) {
@@ -183,7 +199,7 @@ const RowLabel = styled('div')`
   min-width: 0;
 `;
 
-const RowTitle = styled('h5')`
+const RowTitle = styled('h3')`
   display: flex;
   align-items: center;
   gap: 4px;
@@ -191,13 +207,15 @@ const RowTitle = styled('h5')`
   font-size: 14px;
   font-weight: 600;
   line-height: 1.4;
-  color: var(--rs-text-primary);
+  color: ${({ theme }) => theme.vars.palette.text.primary};
 `;
+
+const RowHeadingLevel = createContext<'h3' | 'h4'>('h3');
 
 const RowHint = styled('span')`
   font-size: 13px;
   line-height: 1.4;
-  color: var(--rs-text-secondary);
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
 `;
 
 const RowControl = styled('div')`
@@ -282,26 +300,28 @@ export function MailBlock({
     <Block aria-labelledby={headingId}>
       <BlockHeader collapsed={!expanded}>
         <HeaderMain>
-          <BlockTitle>
-            {collapsible ?
-              <ToggleButton
-                type="button"
-                aria-expanded={expanded}
-                aria-controls={contentId}
-                onClick={() => setExpanded(current => !current)}
-              >
-                <Chevron
-                  size={20}
-                  expanded={expanded}
-                />
-                {icon}
-                <span id={headingId}>{title}</span>
-              </ToggleButton>
-            : <>
-                {icon}
-                <span id={headingId}>{title}</span>
-              </>
-            }
+          <TitleLine>
+            <BlockTitle>
+              {collapsible ?
+                <ToggleButton
+                  type="button"
+                  aria-expanded={expanded}
+                  aria-controls={contentId}
+                  onClick={() => setExpanded(current => !current)}
+                >
+                  <Chevron
+                    size={20}
+                    expanded={expanded}
+                  />
+                  {icon}
+                  <span id={headingId}>{title}</span>
+                </ToggleButton>
+              : <>
+                  {icon}
+                  <span id={headingId}>{title}</span>
+                </>
+              }
+            </BlockTitle>
 
             {description && (
               <InfoTooltip
@@ -309,7 +329,7 @@ export function MailBlock({
                 example={example}
               />
             )}
-          </BlockTitle>
+          </TitleLine>
 
           {summary && <Summary>{summary}</Summary>}
         </HeaderMain>
@@ -334,9 +354,11 @@ export function MailSubsection({
     <Subsection>
       {title && (
         <SubsectionHeader>
-          <SubsectionTitle>
-            {icon}
-            {title}
+          <TitleLine>
+            <SubsectionTitle>
+              {icon}
+              {title}
+            </SubsectionTitle>
 
             {description && (
               <InfoTooltip
@@ -344,13 +366,15 @@ export function MailSubsection({
                 example={example}
               />
             )}
-          </SubsectionTitle>
+          </TitleLine>
 
           {actions && <HeaderActions>{actions}</HeaderActions>}
         </SubsectionHeader>
       )}
 
-      {children}
+      <RowHeadingLevel.Provider value={title ? 'h4' : 'h3'}>
+        {children}
+      </RowHeadingLevel.Provider>
     </Subsection>
   );
 }
@@ -369,11 +393,13 @@ export function EventRow({
   example,
   children,
 }: PropsWithChildren<EventRowProps>) {
+  const headingLevel = useContext(RowHeadingLevel);
+
   return (
     <Row>
       <RowLabel>
-        <RowTitle>
-          {title}
+        <TitleLine>
+          <RowTitle as={headingLevel}>{title}</RowTitle>
 
           {description && (
             <InfoTooltip
@@ -381,7 +407,7 @@ export function EventRow({
               example={example}
             />
           )}
-        </RowTitle>
+        </TitleLine>
 
         {hint && <RowHint>{hint}</RowHint>}
       </RowLabel>

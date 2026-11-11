@@ -70,7 +70,7 @@ export const GoodiePicker = forwardRef<
           key={goodie.id}
           value={goodie.id}
           control={<Radio />}
-          disabled={goodie.stock === 0}
+          disabled={disabled || goodie.stock === 0}
           label={
             <GoodieOptionContent>
               {goodie.image && <GoodieOptionImage image={goodie.image} />}

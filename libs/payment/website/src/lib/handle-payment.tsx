@@ -16,7 +16,7 @@ import { useCallback, useState } from 'react';
 import { RedirectPages } from './payment-form';
 
 // relative urls are not allowed by some payment providers
-const relativeToAbsolute = (url: string) => {
+export const relativeToAbsolute = (url: string) => {
   if (url.startsWith('http')) {
     return url;
   }

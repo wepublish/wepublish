@@ -7,22 +7,26 @@ import { getApiClientV2, getSettings } from '@wepublish/editor/api';
 import {
   AuthProvider,
   FacebookProvider,
+  FeaturesProvider,
   InstagramProvider,
   TwitterProvider,
 } from '@wepublish/ui/editor';
-import { useMemo } from 'react';
+import { Locale } from 'date-fns';
+import { de, enGB, fr } from 'date-fns/locale';
+import { registerLocale, setDefaultLocale } from 'react-datepicker';
 import { createRoot } from 'react-dom/client';
+import { useTranslation } from 'react-i18next';
 import { IconContext } from 'react-icons';
 
 import { App } from './app/app';
+import { EditorCommandPaletteProvider } from './app/commandPalette/editorCommandPalette';
+import { initI18N } from './app/i18n';
 import {
   scrubBreadcrumb,
   scrubEvent,
   scrubRecordingEvent,
 } from './app/sentryScrub';
 import { captureSupportLoginResult } from './app/supportLogin';
-import { ColorModeProvider, useColorMode } from './app/colorMode';
-import { initI18N } from './app/i18n';
 import { createEditorTheme } from './app/theme';
 import { ElementID } from './shared/elementID';
 
@@ -60,12 +64,26 @@ if (sentryDSN) {
   Sentry.setTag('component', 'editor');
 }
 
+const DATE_LOCALES: Record<string, Locale> = { de, en: enGB, fr };
+
+Object.entries(DATE_LOCALES).forEach(([language, locale]) =>
+  registerLocale(language, locale)
+);
+
+const editorTheme = createEditorTheme();
+
 function ThemedApp() {
-  const { mode } = useColorMode();
-  const theme = useMemo(() => createEditorTheme(mode), [mode]);
+  const { i18n } = useTranslation();
+
+  setDefaultLocale(DATE_LOCALES[i18n.language] ? i18n.language : 'en');
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider
+      theme={editorTheme}
+      defaultMode="system"
+      noSsr
+      disableTransitionOnChange
+    >
       <CssBaseline enableColorScheme />
       <App />
     </ThemeProvider>
@@ -84,17 +102,19 @@ const onDOMContentLoaded = async () => {
   root.render(
     <ApolloProvider client={client}>
       <AuthProvider>
-        <IconContext.Provider value={{ className: 'rs-icon' }}>
-          <FacebookProvider sdkLanguage={'en_US'}>
-            <InstagramProvider>
-              <TwitterProvider>
-                <ColorModeProvider>
-                  <ThemedApp />
-                </ColorModeProvider>
-              </TwitterProvider>
-            </InstagramProvider>
-          </FacebookProvider>
-        </IconContext.Provider>
+        <FeaturesProvider>
+          <EditorCommandPaletteProvider>
+            <IconContext.Provider value={{ className: 'rs-icon' }}>
+              <FacebookProvider sdkLanguage={'en_US'}>
+                <InstagramProvider>
+                  <TwitterProvider>
+                    <ThemedApp />
+                  </TwitterProvider>
+                </InstagramProvider>
+              </FacebookProvider>
+            </IconContext.Provider>
+          </EditorCommandPaletteProvider>
+        </FeaturesProvider>
       </AuthProvider>
     </ApolloProvider>
   );

@@ -4,34 +4,28 @@ import {
   MailTemplateMissingPlaceholdersDocument,
   SendMailTemplateToUserDocument,
 } from '@wepublish/editor/api';
-import { humanizeError, PermissionControl } from '@wepublish/ui/editor';
-import { useEffect, useState } from 'react';
+import {
+  humanizeError,
+  enqueueSnackbar,
+  createCheckedPermissionComponent,
+} from '@wepublish/ui/editor';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdSend } from 'react-icons/md';
-import { Button, Message, SelectPicker, Stack, toaster } from 'rsuite';
-import { showErrors, useShowErrors } from '../common';
+import { Alert, Button, MenuItem, Stack, TextField } from '@mui/material';
+import { CanSendMailTemplates } from '@wepublish/permissions';
 
 interface SendMailToUserPanelProps {
   userId: string;
 }
 
-/**
- * Lets an editor manually send any mail template to a single user. A single
- * user carries no subscription data, so the panel warns when the chosen
- * template uses placeholders that would render empty — but never blocks.
- */
-export function SendMailToUserPanel({ userId }: SendMailToUserPanelProps) {
+function SendMailToUserPanel({ userId }: SendMailToUserPanelProps) {
   const { t } = useTranslation();
   const [templateId, setTemplateId] = useState<string | null>(null);
 
-  const { data, error: templateError } = useQuery(MailTemplateDocument);
+  const { data } = useQuery(MailTemplateDocument);
 
-  useEffect(() => {
-    if (templateError) {
-      showErrors(templateError);
-    }
-  }, [templateError]);
-  const { data: missingData, error: missingError } = useQuery(
+  const { data: missingData } = useQuery(
     MailTemplateMissingPlaceholdersDocument,
     {
       skip: !templateId,
@@ -41,30 +35,15 @@ export function SendMailToUserPanel({ userId }: SendMailToUserPanelProps) {
       },
     }
   );
-  useShowErrors(missingError);
 
   const [sendMail, { loading }] = useMutation(SendMailTemplateToUserDocument, {
     onError: error =>
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-        >
-          {humanizeError(error)}
-        </Message>
-      ),
+      enqueueSnackbar(humanizeError(error), { variant: 'error' }),
     onCompleted: () =>
-      toaster.push(
-        <Message
-          type="success"
-          showIcon
-          closable
-          duration={3000}
-        >
-          {t('userMail.sent')}
-        </Message>
-      ),
+      enqueueSnackbar(t('userMail.sent'), {
+        variant: 'success',
+        autoHideDuration: 3000,
+      }),
     refetchQueries: ['MailLogs'],
   });
 
@@ -79,42 +58,58 @@ export function SendMailToUserPanel({ userId }: SendMailToUserPanelProps) {
 
   return (
     <Stack
+      sx={{ alignItems: 'stretch' }}
       direction="column"
-      spacing={12}
-      alignItems="stretch"
+      spacing={1.5}
     >
-      <SelectPicker
-        block
-        data={(data?.mailTemplates ?? []).map(template => ({
-          label: template.name,
-          value: template.id,
-        }))}
-        value={templateId}
-        onChange={setTemplateId}
-        placeholder={t('userMail.selectTemplate')}
-      />
-
       {templateId && missing.length > 0 && (
-        <Message type="warning">
+        <Alert severity="warning">
           {t('mailSend.missingPlaceholders', {
             placeholders: missing.join(', '),
           })}
-        </Message>
+        </Alert>
       )}
 
-      <PermissionControl
-        showRejectionMessage={false}
-        qualifyingPermissions={['CAN_SEND_MAIL-TEMPLATES']}
+      <Stack
+        sx={{ alignItems: 'center' }}
+        direction="row"
+        spacing={1.5}
       >
+        <TextField
+          select
+          label={t('userMail.selectTemplate')}
+          value={templateId ?? ''}
+          onChange={event => setTemplateId(event.target.value || null)}
+          fullWidth
+        >
+          {(data?.mailTemplates ?? []).map(template => (
+            <MenuItem
+              key={template.id}
+              value={template.id}
+            >
+              {template.name}
+            </MenuItem>
+          ))}
+        </TextField>
+
         <Button
-          appearance="primary"
+          sx={{ flexShrink: 0 }}
+          startIcon={<MdSend />}
+          variant="text"
           disabled={!templateId}
           loading={loading}
           onClick={onSend}
         >
-          <MdSend /> {t('userMail.send')}
+          {t('userMail.send')}
         </Button>
-      </PermissionControl>
+      </Stack>
     </Stack>
   );
 }
+
+const CheckedPermissionComponent = createCheckedPermissionComponent(
+  [CanSendMailTemplates.id],
+  false
+)(SendMailToUserPanel);
+
+export { CheckedPermissionComponent as SendMailToUserPanel };

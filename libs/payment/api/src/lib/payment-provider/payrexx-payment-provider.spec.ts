@@ -2,23 +2,30 @@ import { Gateway, GatewayClient } from '../payrexx/gateway-client';
 import { TransactionClient, Transaction } from '../payrexx/transaction-client';
 import { PayrexxPaymentProvider } from './payrexx-payment-provider';
 import { IntentState, InvoiceWithItems } from './payment-provider';
-import express from 'express';
-import { createKvMock } from '@wepublish/kv-ttl-cache/api';
+import type { NodeRequest } from '@nestjs/platform-node';
+import { prismaDecimalCodec } from '@wepublish/kv-ttl-cache/api/prisma';
+import {
+  createNamespacedCacheTesting,
+  type NamespacedCacheTesting,
+} from '@wepublish/kv-ttl-cache/api/testing';
 import { PartialDeep } from 'type-fest';
 import { Currency, Prisma, PrismaClient } from '@prisma/client';
 import { PayrexxFactoryProps } from '../payrexx/payrexx-factory';
 
 function mockInstance<Type = unknown>(implementation?: PartialDeep<Type>) {
   // vi.fn with a `function` implementation so it can be called with `new`
-  return new (vi.fn(function () {
-    return implementation;
-  }) as unknown as new () => Type)();
+  return new (
+    vi.fn(function () {
+      return implementation;
+    }) as unknown as new () => Type
+  )();
 }
 
 describe('PayrexxPaymentProvider', () => {
   let payrexx: PayrexxPaymentProvider;
   let gatewayClient: GatewayClient;
   let transactionClient: TransactionClient;
+  let testing: NamespacedCacheTesting;
 
   beforeEach(async () => {
     gatewayClient = mockInstance<GatewayClient>({
@@ -43,36 +50,46 @@ describe('PayrexxPaymentProvider', () => {
     }
 
     const mockPrisma = mockInstance<PrismaClient>();
-    const kvMock = createKvMock();
-
-    await kvMock.setNs('settings:paymentprovider', 'payrexx', {
-      id: 'payrexx',
-      type: 'payrexx',
-      name: 'Payrexx',
-      offSessionPayments: true,
-      apiKey: 'key',
-      webhookEndpointSecret: 'secret',
-      payrexx_instancename: 'instancename',
-      payrexx_psp: ['PAYPAL', 'TWINT', 'STRIPE'],
-      payrexx_pm: ['PAYPAL', 'TWINT', 'APPLE_PAY'],
-      payrexx_vatrate: new Prisma.Decimal('7.7'),
+    testing = await createNamespacedCacheTesting({
+      codec: prismaDecimalCodec,
     });
+
+    await testing.cache.setNs(
+      'settings:paymentprovider',
+      'payrexx',
+      {
+        id: 'payrexx',
+        type: 'payrexx',
+        name: 'Payrexx',
+        offSessionPayments: true,
+        apiKey: 'key',
+        webhookEndpointSecret: 'secret',
+        payrexx_instancename: 'instancename',
+        payrexx_psp: ['PAYPAL', 'TWINT', 'STRIPE'],
+        payrexx_pm: ['PAYPAL', 'TWINT', 'APPLE_PAY'],
+        payrexx_vatrate: new Prisma.Decimal('7.7'),
+      },
+      60
+    );
 
     payrexx = new PayrexxPaymentProvider({
       id: 'payrexx',
       prisma: mockPrisma,
-      kv: kvMock,
+      kv: testing.cache,
+      resets: testing.resets,
     });
 
     payrexx.overridePayrexxFactory(PayrexxFactoryMock as any);
   });
+
+  afterEach(() => testing.close());
 
   describe('webhookForPaymentIntent', () => {
     it('should reject unauthorized', async () => {
       const response = await payrexx.webhookForPaymentIntent({
         req: {
           body: {},
-        } as unknown as express.Request,
+        } as unknown as NodeRequest,
       });
       expect(response.status).toEqual(403);
     });
@@ -85,7 +102,7 @@ describe('PayrexxPaymentProvider', () => {
             'content-type': 'text/plain',
           },
           body: {},
-        } as unknown as express.Request,
+        } as unknown as NodeRequest,
       });
       expect(response.status).toEqual(415);
       expect(response.message).toEqual(
@@ -101,7 +118,7 @@ describe('PayrexxPaymentProvider', () => {
             'content-type': 'application/json',
           },
           body: 'invalid-string-body',
-        } as unknown as express.Request,
+        } as unknown as NodeRequest,
       });
 
       expect(response.status).toEqual(415);
@@ -118,7 +135,7 @@ describe('PayrexxPaymentProvider', () => {
             'content-type': 'application/json',
           },
           body: {},
-        } as unknown as express.Request,
+        } as unknown as NodeRequest,
       });
       expect(response.status).toEqual(200);
       expect(response.message).toContain('Skipping non-transaction webhook');
@@ -141,7 +158,7 @@ describe('PayrexxPaymentProvider', () => {
           },
           query: { apiKey: 'secret' },
           body: { transaction },
-        } as unknown as express.Request,
+        } as unknown as NodeRequest,
       });
       expect(response.status).toEqual(200);
       expect(response.message).toContain(
@@ -166,7 +183,7 @@ describe('PayrexxPaymentProvider', () => {
           },
           query: { apiKey: 'secret' },
           body: { transaction },
-        } as unknown as express.Request,
+        } as unknown as NodeRequest,
       });
       expect(response.status).toEqual(200);
       expect(response.paymentStates).toEqual([
@@ -194,7 +211,7 @@ describe('PayrexxPaymentProvider', () => {
           },
           query: { apiKey: 'secret' },
           body: { transaction },
-        } as unknown as express.Request,
+        } as unknown as NodeRequest,
       });
       expect(response.status).toEqual(200);
       expect(response.paymentStates).toEqual([]);
@@ -216,7 +233,7 @@ describe('PayrexxPaymentProvider', () => {
           },
           query: { apiKey: 'secret' },
           body: { transaction },
-        } as unknown as express.Request,
+        } as unknown as NodeRequest,
       });
       expect(response.status).toEqual(200);
       expect(response.paymentStates).toEqual([

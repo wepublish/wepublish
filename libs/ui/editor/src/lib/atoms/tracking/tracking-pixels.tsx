@@ -1,13 +1,20 @@
 import styled from '@emotion/styled';
+import {
+  Alert,
+  AlertTitle,
+  Card,
+  CardContent,
+  CardHeader,
+  Typography,
+} from '@mui/material';
 import { FullTrackingPixelFragment } from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
-import { Message, Panel } from 'rsuite';
 
 export interface TrackingPixelsProps {
   trackingPixels: (FullTrackingPixelFragment | null)[] | undefined;
 }
 
-const MessageWithMarginBottom = styled(Message)`
+const MessageWithMarginBottom = styled(Alert)`
   margin-bottom: 20px;
 `;
 
@@ -18,13 +25,11 @@ export default function TrackingPixels({
 
   if (!trackingPixels?.length) {
     return (
-      <Message
-        type="info"
-        showIcon
-        header={<strong>{t('trackingPixels.noPixelInfoHeader')}</strong>}
-      >
+      <Alert severity="info">
+        <AlertTitle>{t('trackingPixels.noPixelInfoHeader')}</AlertTitle>
+
         {t('trackingPixels.noPixelInfoDescription')}
-      </Message>
+      </Alert>
     );
   }
 
@@ -33,37 +38,43 @@ export default function TrackingPixels({
       {trackingPixels.map((trackingPixel, trackingPixelIndex) => {
         if (trackingPixel) {
           return (
-            <Panel
+            <Card
+              variant="outlined"
               key={`tracking-pixel-${trackingPixelIndex}`}
-              header={
-                <h6>
-                  {trackingPixel.trackingPixelMethod.trackingPixelProviderType}
-                </h6>
-              }
-              bordered
             >
-              {!!trackingPixel.error && (
-                <MessageWithMarginBottom
-                  type="error"
-                  showIcon
-                  header={<strong>{t('trackingPixels.errorHeader')}</strong>}
-                >
-                  {trackingPixel.error}
-                </MessageWithMarginBottom>
-              )}
-              <p>
-                {t('trackingPixels.providerId')}{' '}
-                {trackingPixel.trackingPixelMethod.trackingPixelProviderID}
-              </p>
+              <CardHeader
+                title={
+                  <Typography variant="h6">
+                    {
+                      trackingPixel.trackingPixelMethod
+                        .trackingPixelProviderType
+                    }
+                  </Typography>
+                }
+              />
 
-              <p>
-                {t('trackingPixels.trackingId')} {trackingPixel.pixelUid}
-              </p>
+              <CardContent>
+                {!!trackingPixel.error && (
+                  <MessageWithMarginBottom severity="error">
+                    <AlertTitle>{t('trackingPixels.errorHeader')}</AlertTitle>
 
-              <p>
-                {t('trackingPixels.trackingURI')} {trackingPixel.uri}
-              </p>
-            </Panel>
+                    {trackingPixel.error}
+                  </MessageWithMarginBottom>
+                )}
+                <Typography>
+                  {t('trackingPixels.providerId')}{' '}
+                  {trackingPixel.trackingPixelMethod.trackingPixelProviderID}
+                </Typography>
+
+                <Typography>
+                  {t('trackingPixels.trackingId')} {trackingPixel.pixelUid}
+                </Typography>
+
+                <Typography>
+                  {t('trackingPixels.trackingURI')} {trackingPixel.uri}
+                </Typography>
+              </CardContent>
+            </Card>
           );
         }
       })}

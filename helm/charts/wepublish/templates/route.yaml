@@ -150,43 +150,4 @@ spec:
   {{- end }}
   wildcardPolicy: None
 {{- end }}
-{{- if .Values.storybook.enabled }}
----
-# Storybook Route
-{{- $storybookUrl := urlParse .Values.storybook.url }}
-apiVersion: route.openshift.io/v1
-kind: Route
-metadata:
-  name: {{ $fullName }}-storybook
-  labels:
-    app.kubernetes.io/name: {{ include "helm.name" . }}
-    helm.sh/chart: {{ include "helm.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/component: storybook
-    {{- with .Values.labels }}
-      {{- toYaml . | nindent 4 }}
-    {{- end }}
-  {{- with .Values.routing.route.annotations }}
-  annotations:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
-spec:
-  host: {{ $storybookUrl.host }}
-  {{- if $storybookUrl.path }}
-  path: {{ $storybookUrl.path }}
-  {{- end }}
-  to:
-    kind: Service
-    name: {{ $fullName }}-storybook
-    weight: 100
-  port:
-    targetPort: http
-  {{- if .Values.routing.route.tls.enabled }}
-  tls:
-    termination: {{ .Values.routing.route.tls.termination }}
-    insecureEdgeTerminationPolicy: {{ .Values.routing.route.tls.insecureEdgeTerminationPolicy }}
-  {{- end }}
-  wildcardPolicy: None
-{{- end }}
 {{- end }}

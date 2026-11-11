@@ -2,12 +2,11 @@ import styled from '@emotion/styled';
 import { SubscriptionDeactivationReason } from '@wepublish/website/api';
 import {
   BuilderSubscriptionListItemProps,
-  useAsyncAction,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { useState } from 'react';
 import {
   MdAttachMoney,
+  MdCreditCard,
   MdAutorenew,
   MdCalendarMonth,
   MdCancel,
@@ -17,8 +16,9 @@ import {
 } from 'react-icons/md';
 import { formatCurrency } from '../formatters/format-currency';
 import { calculatePeriodAmount } from '../formatters/format-payment-period';
-import { Modal } from '@wepublish/website/builder';
 import { Trans, useTranslation } from 'react-i18next';
+import { SubscriptionActions } from './subscription-actions';
+import { SubscriptionReward } from './subscription-reward';
 
 export const SubscriptionListItemWrapper = styled('div')`
   display: grid;
@@ -54,30 +54,6 @@ export const SubscriptionListItemPaymentPeriodicity = styled(
   SubscriptionListItemMetaItem
 )``;
 
-export const SubscriptionListItemActions = styled('div')`
-  display: grid;
-  gap: ${({ theme }) => theme.spacing(2)};
-
-  @container (min-width: 35ch) {
-    display: flex;
-    justify-content: space-between;
-  }
-`;
-
-const isURL = (string: string) => {
-  try {
-    new URL(string);
-
-    return true;
-  } catch (err) {
-    return false;
-  }
-
-  return false;
-};
-
-export const SubscriptionListItemReward = styled('div')``;
-
 export function SubscriptionListItem({
   autoRenew,
   startsAt,
@@ -85,25 +61,31 @@ export function SubscriptionListItem({
   paymentPeriodicity,
   monthlyAmount,
   deactivation,
-  memberPlan: { image, name, currency, productType },
+  memberPlan,
+  paymentMethod,
+  pendingPaymentMethodChange,
+  canRenewPaymentMethod,
   extendable,
   url,
   cancel,
+  reactivate,
+  revertUpgrade,
+  canRevertUpgrade,
   canExtend,
   externalReward,
   extend,
+  changePaymentMethod,
+  cancelPaymentMethodChange,
+  openInvoiceTotal,
   className,
 }: BuilderSubscriptionListItemProps) {
+  const { image, name, currency, productType } = memberPlan;
   const {
     meta: { locale },
-    elements: { Image, H6, Button, Link, Alert, H5, Paragraph },
+    elements: { Image, H6, Link },
     date,
   } = useWebsiteBuilder();
   const { t } = useTranslation();
-
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error>();
-  const callAction = useAsyncAction(setLoading, setError);
 
   const periodicityTimeline = t(
     `subscription.paymentTimeline.${paymentPeriodicity || 'yearly'}`
@@ -111,9 +93,6 @@ export function SubscriptionListItem({
   const subscriptionDuration = t(
     `subscription.paymentPeriod.${paymentPeriodicity || 'yearly'}`
   );
-
-  const [confirmCancel, setConfirmCancel] = useState(false);
-  const [confirmExtend, setConfirmExtend] = useState<boolean>(false);
 
   return (
     <SubscriptionListItemWrapper className={className}>
@@ -231,112 +210,44 @@ export function SubscriptionListItem({
             })}
           </SubscriptionListItemMetaItem>
 
+          {paymentMethod?.name && (
+            <SubscriptionListItemMetaItem>
+              <MdCreditCard />
+              {t('subscription.paymentMethod', {
+                paymentMethod: paymentMethod.name,
+              })}
+            </SubscriptionListItemMetaItem>
+          )}
+
           <SubscriptionListItemMetaItem>
             <MdHistory />{' '}
             <Link href={url}>{t('subscription.detailsAndPayments')}</Link>
           </SubscriptionListItemMetaItem>
         </SubscriptionListItemMeta>
 
-        {externalReward && (
-          <SubscriptionListItemReward>
-            <Alert severity="info">
-              {isURL(externalReward) ?
-                <Link
-                  href={externalReward}
-                  target="_blank"
-                >
-                  {t('subscription.externalReward', {
-                    isLink: true,
-                    externalReward,
-                  })}
-                </Link>
-              : t('subscription.externalReward', {
-                  isLink: false,
-                  externalReward,
-                })
-              }
-            </Alert>
-          </SubscriptionListItemReward>
-        )}
-
-        {error && <Alert severity="error">{error.message}</Alert>}
-
-        {!deactivation && (
-          <SubscriptionListItemActions>
-            {(extendable || !paidUntil) && (
-              <Button
-                onClick={() => setConfirmCancel(true)}
-                disabled={loading}
-                variant="text"
-                color="secondary"
-              >
-                {t('subscription.cancel', {
-                  type: productType,
-                })}
-              </Button>
-            )}
-
-            {canExtend && (
-              <Button
-                onClick={() => setConfirmExtend(true)}
-                disabled={loading}
-              >
-                {t('subscription.extendNow')}
-              </Button>
-            )}
-          </SubscriptionListItemActions>
-        )}
+        <SubscriptionActions
+          autoRenew={autoRenew}
+          paidUntil={paidUntil}
+          paymentPeriodicity={paymentPeriodicity}
+          deactivation={deactivation}
+          memberPlan={memberPlan}
+          paymentMethod={paymentMethod}
+          pendingPaymentMethodChange={pendingPaymentMethodChange}
+          canRenewPaymentMethod={canRenewPaymentMethod}
+          extendable={extendable}
+          cancel={cancel}
+          reactivate={reactivate}
+          revertUpgrade={revertUpgrade}
+          canRevertUpgrade={canRevertUpgrade}
+          canExtend={canExtend}
+          extend={extend}
+          changePaymentMethod={changePaymentMethod}
+          cancelPaymentMethodChange={cancelPaymentMethodChange}
+          openInvoiceTotal={openInvoiceTotal}
+        >
+          <SubscriptionReward externalReward={externalReward} />
+        </SubscriptionActions>
       </SubscriptionListItemContent>
-
-      <Modal
-        open={!!confirmCancel}
-        onSubmit={async () => {
-          setConfirmCancel(false);
-          await callAction(cancel)();
-        }}
-        onCancel={() => setConfirmCancel(false)}
-        submitText={t('subscription.cancel', {
-          type: productType,
-        })}
-        cancelText={t('user.cancel')}
-      >
-        <H5 component="h1">
-          {t('subscription.cancelProduct', {
-            productName: productType,
-          })}
-        </H5>
-
-        <Paragraph gutterBottom={false}>
-          {t('subscription.cancelConfirmation', {
-            type: productType,
-          })}
-        </Paragraph>
-      </Modal>
-
-      <Modal
-        open={confirmExtend}
-        onCancel={() => setConfirmExtend(false)}
-        onSubmit={async () => {
-          setConfirmExtend(false);
-          await callAction(extend)();
-        }}
-        submitText={t('subscription.extendBy', {
-          subscriptionDuration,
-        })}
-        cancelText={t('user.cancel')}
-      >
-        <H5 component="h1">
-          {t('subscription.extendEarly', {
-            type: productType,
-          })}
-        </H5>
-
-        <Paragraph gutterBottom={false}>
-          {t('subscription.extendEarlyConfirmation', {
-            subscriptionDuration,
-          })}
-        </Paragraph>
-      </Modal>
     </SubscriptionListItemWrapper>
   );
 }

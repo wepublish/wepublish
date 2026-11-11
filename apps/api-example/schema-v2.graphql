@@ -6,6 +6,8 @@ enum AIProviderType {
   V0
 }
 
+union Action = ArticleCreatedAction | AuthorCreatedAction | CommentCreatedAction | EventCreatedAction | PageCreatedAction | PollStartedAction | SubscriptionCreatedAction | UserCreatedAction
+
 """
 The mail an admin action in the editor would send to the user, or why it sends none, so the editor can ask the admin before running the action.
 """
@@ -37,6 +39,17 @@ enum ActionMailNoMailReason {
   notApplicable
 }
 
+enum ActionType {
+  ArticleCreated
+  AuthorCreated
+  CommentCreated
+  EventCreated
+  PageCreated
+  PollStarted
+  SubscriptionCreated
+  UserCreated
+}
+
 type AllowedSettingVals {
   boolChoice: Boolean
   stringChoice: [String!]
@@ -44,6 +57,43 @@ type AllowedSettingVals {
 
 enum AnalyticsProviderType {
   GOOGLE
+  PLAUSIBLE
+  UMAMI
+}
+
+type ApiToken {
+  createdAt: DateTime!
+
+  """The user who created this token. Null once that user is deleted."""
+  createdBy: User
+  createdById: String
+
+  """When the token stops working."""
+  expiresAt: DateTime!
+  id: String!
+  lastUsedAt: DateTime
+  modifiedAt: DateTime!
+  name: String!
+
+  """The non-secret start of the token"""
+  prefix: String!
+  revokedAt: DateTime
+
+  """The permissions this token carries."""
+  scopes: [String!]!
+}
+
+enum ApiTokenSort {
+  CreatedAt
+  LastUsedAt
+  Name
+}
+
+"""A revoked token counts as revoked even once it has also expired."""
+enum ApiTokenStatus {
+  Active
+  Expired
+  Revoked
 }
 
 type Article implements HasOptionalPaywall & HasOptionalPeerLc {
@@ -69,6 +119,13 @@ type Article implements HasOptionalPaywall & HasOptionalPeerLc {
   tags: [Tag!]!
   trackingPixels: [TrackingPixel!]!
   url: String!
+}
+
+type ArticleCreatedAction implements BaseAction & HasArticleLc {
+  actionType: ActionType!
+  article: Article!
+  articleId: String!
+  date: DateTime!
 }
 
 input ArticleFilter {
@@ -107,7 +164,17 @@ type ArticleNavigationLink implements BaseNavigationLink & HasArticle {
 type ArticleRevision implements HasBlockContent & HasOptionalUserLc {
   archivedAt: DateTime
   authors: [ArticleRevisionAuthor!]!
-  blocks: [BlockContent!]!
+  blocks(
+    """
+    Omits blocks that should be hidden. Only users who can read articles may pass `false`, everyone else gets the displayed blocks.
+    """
+    onlyDisplayed: Boolean! = true
+  ): [BlockContent!]!
+
+  """
+  When the set of displayed blocks changes next, so caches can expire in time. Null while no block is timed.
+  """
+  blocksChangeAt: DateTime
   breaking: Boolean!
   canonicalUrl: String
   createdAt: DateTime!
@@ -168,6 +235,108 @@ input ArticleTeaserInput {
   lead: String
   preTitle: String
   title: String
+}
+
+type ArticleTemplate {
+  """The content (name and blocks) of the article template."""
+  blockTemplate: BlockTemplate!
+  blockTemplateId: String!
+  createdAt: DateTime!
+  id: String!
+  metadata: ArticleTemplateMetadata!
+  modifiedAt: DateTime!
+}
+
+input ArticleTemplateFilter {
+  name: String
+}
+
+type ArticleTemplateMetadata {
+  authors: [ArticleRevisionAuthor!]!
+  breaking: Boolean!
+  canonicalUrl: String
+  disableComments: Boolean!
+  hidden: Boolean!
+  hideAuthor: Boolean!
+  image: Image
+  imageID: String
+  lead: String
+  paywallId: String
+  preTitle: String
+  properties: [Property!]!
+  seoDescription: String
+  seoTitle: String
+  shared: Boolean!
+  socialMediaAuthors: [Author!]!
+  socialMediaDescription: String
+  socialMediaImage: Image
+  socialMediaImageID: String
+  socialMediaTitle: String
+  tags: [Tag!]!
+  title: String
+}
+
+input ArticleTemplateMetadataInput {
+  authors: [ArticleRevisionAuthorInput!]!
+  breaking: Boolean!
+  canonicalUrl: String
+  disableComments: Boolean!
+  hidden: Boolean!
+  hideAuthor: Boolean!
+  imageID: String
+  lead: String
+  paywallId: String
+  preTitle: String
+  properties: [PropertyInput!]!
+  seoDescription: String
+  seoTitle: String
+  shared: Boolean!
+  socialMediaAuthorIds: [String!]!
+  socialMediaDescription: String
+  socialMediaImageID: String
+  socialMediaTitle: String
+  tagIds: [String!]!
+  title: String
+}
+
+enum ArticleTemplateSort {
+  CreatedAt
+  ModifiedAt
+  Name
+}
+
+type Audio {
+  createdAt: DateTime!
+  description: String
+
+  """Length in seconds, as the browser reported it on upload."""
+  duration: Float
+  extension: String!
+  fileSize: Int!
+  filename: String
+  id: String!
+  license: String
+  link: String
+  mimeType: String!
+  modifiedAt: DateTime!
+  source: String
+  title: String
+  url: String!
+}
+
+input AudioFilter {
+  title: String
+}
+
+enum AudioSort {
+  CreatedAt
+  ModifiedAt
+}
+
+type AudioStorageUsage {
+  audioCount: Int!
+  limitBytes: Float!
+  usedBytes: Float!
 }
 
 type AuditLog {
@@ -245,6 +414,13 @@ type Author implements HasImage & HasOptionalPeerLc {
   url: String!
 }
 
+type AuthorCreatedAction implements BaseAction & HasAuthor {
+  actionType: ActionType!
+  author: Author!
+  authorId: String!
+  date: DateTime!
+}
+
 input AuthorFilter {
   hideOnTeam: Boolean
   name: String
@@ -319,10 +495,23 @@ enum BannerDocumentType {
   PAGE
 }
 
+interface BaseAction {
+  actionType: ActionType!
+  date: DateTime!
+}
+
 interface BaseBlock {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -375,6 +564,14 @@ type BildwurfAdBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
   zoneID: String
 }
@@ -383,6 +580,11 @@ input BildwurfAdBlockInput {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   zoneID: String
 }
 
@@ -432,7 +634,12 @@ type BlockStyle {
 }
 
 type BlockTemplate implements HasBlockContent {
-  blocks: [BlockContent!]!
+  blocks(
+    """
+    Omits blocks that are hidden or outside their timing. Pass `false` to edit the template, which only users who can edit block templates, articles or pages may do.
+    """
+    onlyDisplayed: Boolean! = true
+  ): [BlockContent!]!
   createdAt: DateTime!
   id: String!
   modifiedAt: DateTime!
@@ -443,8 +650,16 @@ type BlockTemplateBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
   template: BlockTemplate
   templateId: String!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -453,6 +668,11 @@ input BlockTemplateBlockInput {
   blockStyleName: String
   disabled: Boolean
   templateId: String!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 input BlockTemplateFilter {
@@ -463,6 +683,54 @@ enum BlockTemplateSort {
   CreatedAt
   ModifiedAt
   Name
+}
+
+type BlockTimeOfDay {
+  """Start of the daily window, as `HH:mm` in the site timezone."""
+  from: String!
+
+  """
+  End of the daily window, as `HH:mm` in the site timezone. An end before the start wraps over midnight.
+  """
+  to: String!
+}
+
+input BlockTimeOfDayInput {
+  """Start of the daily window, as `HH:mm` in the site timezone."""
+  from: String!
+
+  """
+  End of the daily window, as `HH:mm` in the site timezone. An end before the start wraps over midnight.
+  """
+  to: String!
+}
+
+type BlockTiming {
+  """The block is hidden before this moment."""
+  from: DateTime
+
+  """The block is only displayed during this daily window."""
+  timeOfDay: BlockTimeOfDay
+
+  """The block is hidden from this moment on."""
+  to: DateTime
+
+  """The block is only displayed on these weekdays. Empty means every day."""
+  weekdays: [Weekday!]
+}
+
+input BlockTimingInput {
+  """The block is hidden before this moment."""
+  from: DateTime
+
+  """The block is only displayed during this daily window."""
+  timeOfDay: BlockTimeOfDayInput
+
+  """The block is hidden from this moment on."""
+  to: DateTime
+
+  """The block is only displayed on these weekdays. Empty means every day."""
+  weekdays: [Weekday!]
 }
 
 enum BlockType {
@@ -521,7 +789,15 @@ type BreakBlock implements BaseBlock & HasImage {
   linkText: String
   linkURL: String
   richText: RichText
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
   text: String
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -536,6 +812,11 @@ input BreakBlockInput {
   linkURL: String
   richText: RichText
   text: String
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 type CalculatedRating {
@@ -637,6 +918,14 @@ type CommentBlock implements BaseBlock {
   comments: [Comment!]!
   disabled: Boolean
   filter: CommentBlockFilter!
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -657,6 +946,18 @@ input CommentBlockInput {
   blockStyleName: String
   disabled: Boolean
   filter: CommentBlockFilterInput!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
+}
+
+type CommentCreatedAction implements BaseAction & HasComment {
+  actionType: ActionType!
+  comment: Comment!
+  commentId: String!
+  date: DateTime!
 }
 
 input CommentFilter {
@@ -788,6 +1089,8 @@ input CreateCrowdfundingMemberPlan {
 }
 
 input CreateExternalAppInput {
+  """An API key you may see that has neither expired nor been revoked."""
+  apiTokenId: String
   description: String
   icon: String
   name: String!
@@ -798,6 +1101,16 @@ input CreateExternalAppInput {
 type CreateSubscriptionInfo {
   discountCodeValid: Boolean
   discountPercent: Float
+}
+
+"""
+A newly created token. The secret is returned exactly once and cannot be retrieved again.
+"""
+type CreatedApiToken {
+  apiToken: ApiToken!
+
+  """The secret."""
+  token: String!
 }
 
 type Crowdfunding {
@@ -822,6 +1135,14 @@ type CrowdfundingBlock implements BaseBlock & HasOptionalCrowdfunding {
   crowdfunding: Crowdfunding
   crowdfundingId: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -830,6 +1151,11 @@ input CrowdfundingBlockInput {
   blockStyleName: String
   crowdfundingId: String
   disabled: Boolean
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 type CrowdfundingGoal implements BaseCrowdfundingGoal {
@@ -964,6 +1290,120 @@ type DeletePollVotesResult {
   count: Int!
 }
 
+type DeliveryChannelCount {
+  channel: MailChannel!
+
+  """People on this channel; mail also counts everyone without a decision."""
+  userCount: Int!
+}
+
+"""One person and how their messages reach them."""
+type DeliveryChannelUserModel {
+  """
+  Whether the postal address is complete enough for letters; letters cannot be chosen otherwise.
+  """
+  canReceiveLetters: Boolean!
+  changedAt: DateTime
+  changedBy: MailLogRecipient
+
+  """How automated subscription mails reach this user."""
+  channel: MailChannel!
+
+  """
+  How the email address fares: a placeholder or dead address is not reached by email, though email may still be chosen.
+  """
+  emailSegment: MailEmailSegment!
+  origin: DeliveryPreferenceOrigin
+  reason: String
+  user: MailLogRecipient!
+}
+
+type DeliveryModeAudiencePreview {
+  """How the people split by email segment."""
+  segments: [MailSegmentCount!]!
+
+  """People in the audience."""
+  userCount: Int!
+
+  """
+  People without a usable postal address; they are skipped when moving to letters.
+  """
+  withoutAddressCount: Int!
+}
+
+"""
+One bulk switch of an audience, kept for the record with the filter that chose them.
+"""
+type DeliveryModeBulkChangeModel {
+  """The MailAudienceInput that was applied."""
+  audience: JSONObject!
+  changed: Int!
+  changedBy: MailLogRecipient
+  channel: MailChannel!
+  createdAt: DateTime!
+  id: String!
+  skippedWithoutAddress: Int!
+
+  """People the filter matched."""
+  userCount: Int!
+}
+
+type DeliveryModeBulkResult {
+  changed: Int!
+  skippedWithoutAddress: Int!
+}
+
+"""
+manual: set by an admin, final until an admin changes it. suggestion: set by confirming a suggestion, may be suggested back.
+"""
+enum DeliveryPreferenceOrigin {
+  manual
+  suggestion
+}
+
+type DeliverySuggestionConfirmAllResult {
+  confirmed: Int!
+
+  """Suggestions that no longer applied."""
+  skipped: Int!
+}
+
+type DeliverySuggestionCounts {
+  toLetter: Int!
+  toMail: Int!
+}
+
+type DeliverySuggestionEmailQuality {
+  level: EmailQualityLevel!
+  reason: String!
+  since: DateTime!
+}
+
+"""toLetter: move to printed letters. toMail: move back to mail."""
+enum DeliverySuggestionKind {
+  toLetter
+  toMail
+}
+
+type DeliverySuggestionModel {
+  """Suggested since."""
+  createdAt: DateTime!
+  emailQuality: DeliverySuggestionEmailQuality
+  id: String!
+  kind: DeliverySuggestionKind!
+
+  """Why, e.g. emailQuality:dead or placeholderEmail."""
+  reason: String!
+  user: MailLogRecipient!
+}
+
+type DeliverySuggestionRecomputeResult {
+  """Suggestions that no longer apply."""
+  removed: Int!
+  toLetter: Int!
+  toMail: Int!
+}
+
 type DiscountCode implements HasMemberPlanLc {
   code: String!
   createdAt: DateTime!
@@ -1048,6 +1488,29 @@ enum EditorBlockType {
   Title
 }
 
+"""
+active: logged in or clicked recently. unknown: nothing decided. unresponsive: mails delivered, no reaction for a long time. dead: bounced, invalid, complained or unsubscribed.
+"""
+enum EmailQualityLevel {
+  active
+  dead
+  unknown
+  unresponsive
+}
+
+type EmailQualityRefreshModel {
+  """
+  Mails that were still in an open state and could be looked up at the provider.
+  """
+  checked: Int!
+
+  """People whose email level was re-evaluated."""
+  recomputed: Int!
+
+  """Mails whose state the provider reported differently."""
+  updated: Int!
+}
+
 type Event {
   createdAt: DateTime!
   description: RichText
@@ -1073,6 +1536,14 @@ type EventBlock implements BaseBlock {
   disabled: Boolean
   events: [Event!]!
   filter: EventBlockFilter!
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -1091,6 +1562,18 @@ input EventBlockInput {
   blockStyleName: String
   disabled: Boolean
   filter: EventBlockFilterInput!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
+}
+
+type EventCreatedAction implements BaseAction & HasEventLc {
+  actionType: ActionType!
+  date: DateTime!
+  event: Event!
+  eventId: String!
 }
 
 input EventFilter {
@@ -1152,6 +1635,13 @@ input EventTeaserInput {
 }
 
 type ExternalApp {
+  """
+  The linked API key, for editors who may see it in the API keys list. Never contains the secret.
+  """
+  apiToken: ApiToken
+
+  """The API key the app reads the We.Publish API with."""
+  apiTokenId: String
   createdAt: DateTime!
   description: String
   icon: String
@@ -1193,6 +1683,14 @@ type FacebookPostBlock implements BaseBlock {
   blockStyleName: String
   disabled: Boolean
   postID: String
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
   userID: String
 }
@@ -1202,6 +1700,11 @@ input FacebookPostBlockInput {
   blockStyleName: String
   disabled: Boolean
   postID: String
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   userID: String
 }
 
@@ -1209,6 +1712,14 @@ type FacebookVideoBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
   userID: String
   videoID: String
@@ -1218,6 +1729,11 @@ input FacebookVideoBlockInput {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   userID: String
   videoID: String
 }
@@ -1245,6 +1761,14 @@ type FlexBlock implements BaseBlock {
   blockStyleName: String
   blocks: [BlockWithAlignment!]!
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -1253,6 +1777,11 @@ input FlexBlockInput {
   blockStyleName: String
   blocks: [BlockWithAlignmentInput!]!
   disabled: Boolean
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 type FlexTeaser {
@@ -1304,6 +1833,11 @@ type Goodie implements HasImage {
   memberPlans: [MemberPlan!]!
   modifiedAt: DateTime!
   name: String!
+
+  """
+  Payment periodicities the goodie is offered with. Empty means every periodicity of the member plan.
+  """
+  paymentPeriodicities: [PaymentPeriodicity!]!
   stock: Int
 }
 
@@ -1327,6 +1861,14 @@ type HTMLBlock implements BaseBlock {
   blockStyleName: String
   disabled: Boolean
   html: String
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -1335,6 +1877,11 @@ input HTMLBlockInput {
   blockStyleName: String
   disabled: Boolean
   html: String
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 interface HasArticle {
@@ -1342,8 +1889,28 @@ interface HasArticle {
   articleID: String!
 }
 
+interface HasArticleLc {
+  article: Article!
+  articleId: String!
+}
+
+interface HasAuthor {
+  author: Author!
+  authorId: String!
+}
+
 interface HasBlockContent {
   blocks: [BlockContent!]!
+}
+
+interface HasComment {
+  comment: Comment!
+  commentId: String!
+}
+
+interface HasEventLc {
+  event: Event!
+  eventId: String!
 }
 
 interface HasImage {
@@ -1425,14 +1992,34 @@ interface HasPage {
   pageID: String!
 }
 
+interface HasPageLc {
+  page: Page!
+  pageId: String!
+}
+
 interface HasPaymentMethod {
   paymentMethod: PaymentMethod!
   paymentMethodID: String!
 }
 
+interface HasPoll {
+  poll: FullPoll!
+  pollId: String!
+}
+
+interface HasSubscriptionLc {
+  subscription: PublicSubscription!
+  subscriptionId: String!
+}
+
 interface HasUser {
   user: User!
   userID: String!
+}
+
+interface HasUserLc {
+  user: User!
+  userId: String!
 }
 
 type IFrameBlock implements BaseBlock {
@@ -1441,7 +2028,15 @@ type IFrameBlock implements BaseBlock {
   disabled: Boolean
   height: Int
   sandbox: String
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
   styleCustom: String
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   title: String
   type: BlockType!
   url: String
@@ -1455,6 +2050,11 @@ input IFrameBlockInput {
   height: Int
   sandbox: String
   styleCustom: String
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   title: String
   url: String
   width: Int
@@ -1493,6 +2093,14 @@ type ImageBlock implements BaseBlock & HasImage {
   image: Image
   imageID: String
   linkUrl: String
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -1503,6 +2111,11 @@ input ImageBlockInput {
   disabled: Boolean
   imageID: String
   linkUrl: String
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 input ImageFilter {
@@ -1515,6 +2128,14 @@ type ImageGalleryBlock implements BaseBlock {
   blockStyleName: String
   disabled: Boolean
   images: [ImageGalleryImage!]!
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -1523,6 +2144,11 @@ input ImageGalleryBlockInput {
   blockStyleName: String
   disabled: Boolean
   images: [ImageGalleryImageInput!]!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 type ImageGalleryImage implements HasImage {
@@ -1611,6 +2237,14 @@ type InstagramPostBlock implements BaseBlock {
   blockStyleName: String
   disabled: Boolean
   postID: String
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -1619,6 +2253,11 @@ input InstagramPostBlockInput {
   blockStyleName: String
   disabled: Boolean
   postID: String
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 type Invoice implements HasOptionalSubscription {
@@ -1634,6 +2273,11 @@ type Invoice implements HasOptionalSubscription {
   manuallySetAsPaidByUserId: String
   modifiedAt: DateTime!
   paidAt: DateTime
+
+  """
+  The payments made or attempted for this invoice, oldest first. Invoices imported from another system have none.
+  """
+  payments: [Payment!]!
   scheduledDeactivationAt: DateTime!
   subscription: PublicSubscription
   subscriptionID: String
@@ -1696,11 +2340,101 @@ input KeyEnabledInput {
   key: String
 }
 
+"""Where the address window sits on the printed sheet."""
+enum LetterAddressPosition {
+  left
+  right
+}
+
+enum LetterDeliveryProduct {
+  bulk
+  cheap
+  fast
+  premium
+  registered
+}
+
+input LetterLayoutInput {
+  footerHeightMm: Int!
+  footerHtml: String!
+  headerHeightMm: Int!
+  headerHtml: String!
+  isDefault: Boolean!
+  name: String!
+}
+
+"""
+Stationery for printed letters: a header and a footer repeated on every page of the pdf.
+"""
+type LetterLayoutModel {
+  createdAt: DateTime!
+
+  """Height of the footer band in millimetres from the bottom edge."""
+  footerHeightMm: Int!
+  footerHtml: String!
+
+  """Height of the header band in millimetres from the top edge."""
+  headerHeightMm: Int!
+  headerHtml: String!
+  id: String!
+
+  """Templates without stationery of their own print on this one."""
+  isDefault: Boolean!
+  modifiedAt: DateTime!
+  name: String!
+}
+
+input LetterLayoutPreviewInput {
+  footerHeightMm: Int!
+  footerHtml: String!
+  headerHeightMm: Int!
+  headerHtml: String!
+}
+
+type LetterLayoutPreviewModel {
+  """A sample letter on this stationery, as base64 pdf."""
+  pdf: String!
+}
+
+input LetterPrintInput {
+  addressPosition: LetterAddressPosition
+  deliveryProduct: LetterDeliveryProduct
+  printMode: LetterPrintMode
+  printSpectrum: LetterPrintSpectrum
+}
+
+enum LetterPrintMode {
+  duplex
+  simplex
+}
+
+enum LetterPrintSpectrum {
+  color
+  grayscale
+}
+
+enum LetterProviderEnvironment {
+  production
+  staging
+}
+
+enum LetterProviderType {
+  pingen
+}
+
 type ListicleBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
   items: [ListicleItem!]!
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -1709,6 +2443,11 @@ input ListicleBlockInput {
   blockStyleName: String
   disabled: Boolean
   items: [ListicleItemInput!]!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 type ListicleItem implements HasImage {
@@ -1736,6 +2475,14 @@ enum LoginStatus {
 input MailAudienceInput {
   autoRenew: Boolean
   base: MailRecipientBase!
+
+  """Restrict to placeholder or real email addresses. Defaults to all."""
+  emailFilter: MailEmailFilter
+
+  """
+  Restrict to people in any of these email segments. Empty or absent means everyone.
+  """
+  emailSegments: [MailEmailSegment!]
 
   """
   Win-back audience only: start of an explicit period the subscription ended in.
@@ -1777,6 +2524,11 @@ input MailAudienceInput {
   """
   isPaid: Boolean
 
+  """
+  Applies to every base: which mails the person did or did not receive. An empty list means no restriction.
+  """
+  mailHistory: MailHistoryFilterInput
+
   """Restrict to subscriptions of these member plans."""
   memberPlanIDs: [String!]
   paymentMethodID: String
@@ -1794,7 +2546,70 @@ input MailAudienceInput {
   subscriptionState: MailSubscriptionState
 }
 
+"""Whether a send goes out as an email or as a printed letter."""
+enum MailChannel {
+  letter
+  mail
+}
+
+enum MailEmailFilter {
+  all
+  placeholder
+  real
+}
+
+"""
+placeholder: generated address, reachable by letter only. dead: bounced, invalid, complained or unsubscribed. unresponsive: mails delivered, no login or click for a long time. unknown: nothing decided yet. active: logged in or clicked recently.
+"""
+enum MailEmailSegment {
+  active
+  dead
+  placeholder
+  unknown
+  unresponsive
+}
+
+input MailHistoryCondition {
+  """Only mails sent on this channel. Absent means either."""
+  channel: MailChannel
+
+  """Sent on or after."""
+  from: DateTime
+
+  """The mail template that was, or was not, sent."""
+  mailTemplateId: String!
+
+  """
+  true: keeps people who did NOT receive such a mail, including people with no mail at all.
+  """
+  negate: Boolean
+
+  """
+  Only mails that ended in one of these states. Empty or absent means any.
+  """
+  states: [MailLogState!]
+
+  """Sent on or before."""
+  to: DateTime
+}
+
+input MailHistoryFilterInput {
+  conditions: [MailHistoryCondition!]!
+
+  """Defaults to all."""
+  match: MailHistoryMatch
+}
+
+"""
+all: every condition must hold (AND). any: one condition suffices (OR).
+"""
+enum MailHistoryMatch {
+  all
+  any
+}
+
 input MailLogFilter {
+  channel: MailChannel
   mailSendJobId: String
   mailTemplateId: String
   recipientId: String
@@ -1803,6 +2618,9 @@ input MailLogFilter {
 }
 
 type MailLogModel {
+  """Letters only: the address the letter was sent to."""
+  address: String
+  channel: MailChannel!
   createdAt: DateTime!
 
   """Why a rejected mail could not be delivered."""
@@ -1811,6 +2629,9 @@ type MailLogModel {
   mailProviderID: String!
   mailSendJobId: String
   mailTemplate: MailLogTemplate!
+
+  """Letters only: id the print vendor assigned to the letter."""
+  providerLetterID: String
   recipient: MailLogRecipient!
   sentDate: DateTime!
   state: MailLogState!
@@ -1828,10 +2649,13 @@ type MailLogRecipient {
 enum MailLogState {
   accepted
   bounced
+  canceled
   deferred
   delivered
+  dispatched
   rejected
   submitted
+  undeliverable
 }
 
 type MailLogSyncModel {
@@ -1877,6 +2701,11 @@ enum MailRecipientBase {
   noActiveSubscription
 }
 
+type MailSegmentCount {
+  segment: MailEmailSegment!
+  userCount: Int!
+}
+
 enum MailSendAudience {
   allUsers
   filteredSubscriptions
@@ -1885,11 +2714,18 @@ enum MailSendAudience {
 
 input MailSendJobInput {
   audience: MailAudienceInput!
+
+  """Defaults to mail."""
+  channel: MailChannel
   mailTemplateId: String!
+
+  """Letter sends only. Ignored for mail."""
+  print: LetterPrintInput
 }
 
 type MailSendJobModel {
   audience: MailSendAudience!
+  channel: MailChannel!
   createdAt: DateTime!
   createdByUserId: String!
   error: String
@@ -1903,6 +2739,11 @@ type MailSendJobModel {
   mailTemplateId: String!
   modifiedAt: DateTime!
 
+  """
+  What became of the mails after sending. Bounces arrive over hours or days; refresh to pull late ones.
+  """
+  outcome: MailSendJobOutcome!
+
   """How often the job was picked up again after an interruption."""
   resumeCount: Int!
 
@@ -1914,6 +2755,22 @@ type MailSendJobModel {
   startedAt: DateTime
   status: MailSendJobState!
   totalCount: Int!
+}
+
+type MailSendJobOutcome {
+  """Mails that bounced or were rejected by the provider."""
+  bounced: Int!
+
+  """Mails somebody clicked a link in."""
+  clicked: Int!
+
+  """
+  Recipients whose address counts as dead by now, from this or a later mail.
+  """
+  dead: Int!
+
+  """Mails the provider reported as delivered."""
+  delivered: Int!
 }
 
 type MailSendJobRecipientModel {
@@ -1948,7 +2805,11 @@ enum MailSendJobState {
 
 input MailSendPreviewInput {
   audience: MailAudienceInput!
+
+  """Defaults to mail. A letter preview renders the pdf."""
+  channel: MailChannel
   mailTemplateId: String!
+  print: LetterPrintInput
 
   """
   Row id of the recipient to render for. Defaults to the first of the audience.
@@ -1957,7 +2818,13 @@ input MailSendPreviewInput {
 }
 
 type MailSendPreviewModel {
+  """Empty for a letter preview."""
   html: String!
+
+  """
+  Letter previews only: the rendered pdf, base64 encoded, exactly as it would be printed.
+  """
+  pdf: String
 
   """The recipient this preview was rendered for."""
   recipient: MailSendRecipientModel
@@ -1967,7 +2834,15 @@ type MailSendPreviewModel {
 
 type MailSendRecipientModel {
   email: String!
+
+  """Which email segment the recipient falls into."""
+  emailSegment: MailEmailSegment!
   firstName: String
+
+  """
+  Whether the user has a postal address a letter can be sent to. A letter send skips recipients without one.
+  """
+  hasAddress: Boolean!
 
   """
   Row identity. A user appears once per matching subscription, so this combines both.
@@ -1985,13 +2860,25 @@ type MailSendRecipientPreview {
   """
   allowsSubscriptionTemplates: Boolean!
 
-  """Number of mails that would be sent."""
+  """
+  Number of messages that would be sent over the given channel. A letter send reaches every person once, so it equals `userCount`.
+  """
   count: Int!
+
+  """
+  How the people of this audience split into email segments, ignoring the segments picked, so the split stays visible while choosing.
+  """
+  segments: [MailSegmentCount!]!
 
   """
   Number of distinct people reached. Lower than `count` when someone has several matching subscriptions.
   """
   userCount: Int!
+
+  """
+  How many of the recipients have no usable postal address and would be skipped by a letter send.
+  """
+  withoutAddressCount: Int!
 }
 
 enum MailSubscriptionState {
@@ -2015,9 +2902,18 @@ input MailTemplateInput {
   context: MailTemplateContext
   description: String
   htmlContent: String!
+
+  """Uploaded pdf printed after the letter pages, e.g. a QR-bill."""
+  letterAppendixId: String
+  letterLayoutId: String
   name: String!
   subject: String!
   textContent: String
+}
+
+type MailTemplateLetterPreviewModel {
+  """The rendered letter as a base64 encoded pdf."""
+  pdf: String!
 }
 
 type MailTemplateModel {
@@ -2025,6 +2921,14 @@ type MailTemplateModel {
   description: String
   htmlContent: String!
   id: String!
+
+  """Uploaded pdf printed after the letter pages, e.g. a QR-bill."""
+  letterAppendixId: String
+
+  """
+  Stationery a letter printed from this template is set on; null means the default.
+  """
+  letterLayoutId: String
   name: String!
   status: String!
   subject: String!
@@ -2035,6 +2939,12 @@ input MailTemplatePreviewInput {
   """Mail type / context id, e.g. "renewal"."""
   contextId: String!
   htmlContent: String!
+
+  """Uploaded pdf printed after the letter pages, e.g. a QR-bill."""
+  letterAppendixId: String
+
+  """Stationery to show a letter preview on; null for the default."""
+  letterLayoutId: String
   subject: String!
 
   """Subscription to take sample data from."""
@@ -2072,6 +2982,13 @@ enum MailchimpContactStatus {
   Subscribed
 }
 
+type MailchimpDraft {
+  editUrl: String!
+  id: String!
+  title: String!
+  webId: Int!
+}
+
 type MailchimpFormBlock implements BaseBlock {
   autoFocus: Boolean!
   blockStyle: String
@@ -2082,11 +2999,19 @@ type MailchimpFormBlock implements BaseBlock {
   doubleOptIn: Boolean
   interests: [String!]!
   listId: String
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
   steps: [MailchimpFormStep!]!
   submitButtonLabel: String
   successPage: MailchimpFormSuccessPage
   successUrl: String
   syncProviderId: String
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -2105,6 +3030,11 @@ input MailchimpFormBlockInput {
   successPage: MailchimpFormSuccessPageInput
   successUrl: String
   syncProviderId: String
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 type MailchimpFormFieldConfig {
@@ -2581,8 +3511,16 @@ type Mutation {
   """Adds a new comment made by you."""
   addUserComment(challenge: ChallengeInput, guestUsername: String, itemID: String!, itemType: CommentItemType!, parentID: String, text: RichText!, title: String): Comment!
 
+  """
+  Called by We.Publish One. Replaces the feature state of this medium and returns the features now switched on.
+  """
+  applyMediumFeatures(features: JSONObject!): [String!]!
+
   """Approves a comment"""
   approveComment(id: String!): Comment!
+
+  """Hides the campaign from the default list. Campaigns are never deleted."""
+  archiveNewsletterCampaign(id: String!): NewsletterCampaign!
 
   """
   Stop a running send job. Unsent recipients stay open and can be continued.
@@ -2601,14 +3539,35 @@ type Mutation {
   ): PublicSubscription!
 
   """
+  Cancels a pending payment method change; the subscription keeps its current payment method.
+  """
+  cancelSubscriptionPaymentMethodChange(id: String!): SubscriptionPaymentMethodChange!
+
+  """
   This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null
   """
   cancelUserSubscription(id: String!): PublicSubscription
 
   """
+  Moves one of the authenticated user's subscriptions to another payment method. With an open invoice, the invoice is paid with the new payment method; otherwise the new payment method is authorized without a charge. The subscription keeps its current payment method until then.
+  """
+  changeSubscriptionPaymentMethod(failureURL: String, paymentMethodId: String!, subscriptionId: String!, successURL: String): StartedSubscriptionPaymentMethodChange!
+
+  """
+  Asks the payment provider whether the reader finished paying or authorizing, for when they return before the provider reported it.
+  """
+  checkSubscriptionPaymentMethodChange(id: String!): SubscriptionPaymentMethodChange!
+
+  """Apply every open suggestion of a direction"""
+  confirmAllDeliverySuggestions(kind: DeliverySuggestionKind!): DeliverySuggestionConfirmAllResult!
+
+  """
   Confirms that the manual action required by a changelog entry has been completed. Requires the permission to update settings.
   """
   confirmChangelogEntry(id: String!, locale: String): ChangelogEntry!
+
+  """Apply one suggestion; refused when it no longer holds"""
+  confirmDeliverySuggestion(id: String!): Boolean!
 
   """Confirms a pending email change for the logged-in user."""
   confirmEmailChange(newEmail: String!): SensitiveDataUser!
@@ -2622,10 +3581,39 @@ type Mutation {
   createAISetting(apiKey: String, id: String!, name: String, systemPrompt: String, type: AIProviderType!, webhookEndpointSecret: String): SettingAIProvider!
 
   """Creates a new analytics provider setting."""
-  createAnalyticsProviderSetting(articlePrefix: String, credentials: SettingAnalyticsCredentialsInput, id: String!, name: String, property: String, type: AnalyticsProviderType!): SettingAnalyticsProvider!
+  createAnalyticsProviderSetting(
+    """Api key of Plausible or Umami."""
+    apiKey: String
+    articlePrefix: String
+
+    """Service account credentials of Google Analytics."""
+    credentials: SettingAnalyticsCredentialsInput
+    id: String!
+    name: String
+    property: String
+    type: AnalyticsProviderType!
+
+    """Base url of the API, used for self hosted instances."""
+    url: String
+  ): SettingAnalyticsProvider!
+
+  """
+  Creates an api token and returns its secret. The secret is shown once and cannot be retrieved again.
+  """
+  createApiToken(
+    """When the token stops working."""
+    expiresAt: DateTime!
+    name: String!
+
+    """The permissions this token carries."""
+    scopes: [String!]!
+  ): CreatedApiToken!
 
   """Creates an article."""
   createArticle(authors: [ArticleRevisionAuthorInput!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
+
+  """Creates a new article template."""
+  createArticleTemplate(blocks: [BlockContentInput!]!, metadata: ArticleTemplateMetadataInput!, name: String!): ArticleTemplate!
 
   """Creates a new author."""
   createAuthor(bio: RichText, hideOnArticle: Boolean!, hideOnTeam: Boolean!, hideOnTeaser: Boolean!, imageID: String, jobTitle: String, links: [AuthorLinkInput!]!, name: String!, slug: Slug!, tagIds: [String!]!): Author!
@@ -2666,7 +3654,19 @@ type Mutation {
   createExternalAppToken(externalAppId: String!): ExternalAppToken!
 
   """Creates a new goodie."""
-  createGoodie(active: Boolean!, description: RichText, imageID: String, memberPlanIDs: [String!]!, name: String!, stock: Int): Goodie!
+  createGoodie(
+    active: Boolean!
+    description: RichText
+    imageID: String
+    memberPlanIDs: [String!]!
+    name: String!
+
+    """
+    Payment periodicities the goodie is offered with. Empty or omitted means every periodicity of the member plan.
+    """
+    paymentPeriodicities: [PaymentPeriodicity!]
+    stock: Int
+  ): Goodie!
   createImpersonationGrant(
     """
     S256 PKCE challenge of a support login; the grant then redeems only with its verifier.
@@ -2686,6 +3686,31 @@ type Mutation {
   """Returns a JWT that is valid for 1min for the current logged in user."""
   createJWTForWebsiteLogin: SessionWithToken!
 
+  """Create a letter layout."""
+  createLetterLayout(input: LetterLayoutInput!): LetterLayoutModel!
+
+  """Creates a new letter provider setting."""
+  createLetterProviderSetting(
+    autoSend: Boolean
+    clientId: String
+    clientSecret: String
+    defaultAddressPosition: LetterAddressPosition
+    defaultDeliveryProduct: LetterDeliveryProduct
+    defaultPrintMode: LetterPrintMode
+    defaultPrintSpectrum: LetterPrintSpectrum
+    environment: LetterProviderEnvironment
+    id: String!
+    name: String
+    organisationId: String
+
+    """
+    Email addresses containing this are placeholders, not real inboxes (e.g. @placeholder.example.com).
+    """
+    placeholderEmailContains: String
+    type: LetterProviderType!
+    webhookSigningKey: String
+  ): SettingLetterProvider!
+
   """Sets up the mail provider. Only possible while none is configured."""
   createMailProviderSetting(apiKey: String, fromAddress: String, id: String!, mailchimp_baseURL: String, mailgun_baseDomain: String, mailgun_mailDomain: String, name: String, replyToAddress: String, slack_webhookURL: String, smtp_host: String, smtp_port: Int, smtp_secure: Boolean, smtp_user: String, type: MailProviderType!, webhookEndpointSecret: String): SettingMailProvider!
 
@@ -2700,9 +3725,13 @@ type Mutation {
 
   """Creates a new navigation."""
   createNavigation(key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
+  createNewsletterCampaign(document: JSONObject, title: String!): NewsletterCampaign!
 
   """Creates an page."""
-  createPage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, imageID: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
+  createPage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, hideFooter: Boolean! = false, hideHeader: Boolean! = false, imageID: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
+
+  """Creates a new page template."""
+  createPageTemplate(blocks: [BlockContentInput!]!, metadata: PageTemplateMetadataInput!, name: String!): PageTemplate!
 
   """
   This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput.
@@ -2720,6 +3749,9 @@ type Mutation {
 
   """Creates a paywall."""
   createPaywall(active: Boolean!, alternativeSubscribeUrl: String, anyMemberPlan: Boolean!, bypassTokens: [String!]!, circumventDescription: RichText, description: RichText, fadeout: Boolean!, hideContentAfter: Int!, memberPlanIds: [String!]!, name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
+
+  """Creates a new pdf renderer setting."""
+  createPdfRendererSetting(cloudflare_accountId: String, cloudflare_apiToken: String, gotenberg_password: String, gotenberg_url: String, gotenberg_username: String, id: String!, name: String, timeoutMs: Int, type: PdfRendererType!): SettingPdfRenderer!
 
   """Creates a new peer."""
   createPeer(hostURL: String!, information: RichText, isDisabled: Boolean, name: String!, slug: String!, token: String!): Peer!
@@ -2768,7 +3800,7 @@ type Mutation {
   createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
 
   """Create a subscription interval"""
-  createSubscriptionInterval(daysAwayFromEnding: Int, event: SubscriptionEvent!, mailTemplateId: String, subscriptionFlowId: String!): [SubscriptionFlowModel!]!
+  createSubscriptionInterval(daysAwayFromEnding: Int, event: SubscriptionEvent!, mailTemplateId: String, sendAsLetter: Boolean, subscriptionFlowId: String!): [SubscriptionFlowModel!]!
 
   """Sets up the sync provider. Only possible while none is configured."""
   createSyncProviderSetting(enabled: Boolean, id: String!, mailchimp_apiKey: String, mailchimp_defaultInterestGroupIds: [String!], mailchimp_extensions: JSONObject, mailchimp_interestGroupMappings: [JSONObject!], mailchimp_listId: String, mailchimp_mergeFieldMappings: [JSONObject!], name: String, type: SyncProviderType!): SettingSyncProvider!
@@ -2825,6 +3857,12 @@ type Mutation {
   """Deletes an article."""
   deleteArticle(id: String!): String!
 
+  """Deletes an existing article template."""
+  deleteArticleTemplate(id: String!): ArticleTemplate!
+
+  """Deletes an existing audio."""
+  deleteAudio(id: String!): String!
+
   """Deletes an existing author."""
   deleteAuthor(id: String!): Author!
   deleteBanner(id: String!): Boolean
@@ -2863,6 +3901,14 @@ type Mutation {
   """Deletes an existing invoice."""
   deleteInvoice(id: String!): Invoice!
 
+  """
+  Delete a letter layout. Refused while a mail template still prints on it.
+  """
+  deleteLetterLayout(id: String!): LetterLayoutModel!
+
+  """Deletes an existing letter provider setting."""
+  deleteLetterProviderSetting(id: String!): SettingLetterProvider!
+
   """Delete an existing mail template"""
   deleteMailTemplate(id: String!): Boolean
 
@@ -2878,6 +3924,9 @@ type Mutation {
   """Deletes an page."""
   deletePage(id: String!): String!
 
+  """Deletes an existing page template."""
+  deletePageTemplate(id: String!): PageTemplate!
+
   """Deletes an existing payment method."""
   deletePaymentMethod(id: String!): PaymentMethod!
 
@@ -2886,6 +3935,9 @@ type Mutation {
 
   """Deletes a paywall."""
   deletePaywall(id: String!): Paywall!
+
+  """Deletes an existing pdf renderer setting."""
+  deletePdfRendererSetting(id: String!): SettingPdfRenderer!
 
   """Deletes an existing peer."""
   deletePeer(id: String!): String!
@@ -2932,6 +3984,9 @@ type Mutation {
   """Deletes an existing userrole."""
   deleteUserRole(id: String!): UserRole!
 
+  """Deletes an existing video."""
+  deleteVideo(id: String!): String!
+
   """
   Discards the current draft and reverts to the latest published revision.
   """
@@ -2952,6 +4007,11 @@ type Mutation {
 
   """Duplicates an article."""
   duplicateArticle(id: String!): Article!
+
+  """
+  A new campaign with the given one's document. The Mailchimp draft is not copied.
+  """
+  duplicateNewsletterCampaign(id: String!): NewsletterCampaign!
 
   """Duplicates an page."""
   duplicatePage(id: String!): Page!
@@ -3002,6 +4062,11 @@ type Mutation {
     userID: String!
   ): PublicSubscription!
 
+  """
+  Decline one suggestion: the user stays on their channel as a manual decision, never suggested again
+  """
+  keepDeliverySuggestion(id: String!): Boolean!
+
   """Likes an article."""
   likeArticle(id: String!): Article!
 
@@ -3015,6 +4080,7 @@ type Mutation {
 
   """Publishes an article at the given time."""
   publishArticle(id: String!, publishedAt: DateTime!): Article!
+  publishNewsletterCampaign(id: String!): NewsletterPublishResult!
 
   """Publishes an page at the given time."""
   publishPage(id: String!, publishedAt: DateTime!): Page!
@@ -3023,6 +4089,22 @@ type Mutation {
   This mutation allows to rate a comment. Supports logged in and anonymous
   """
   rateComment(answerId: String!, commentId: String!, value: Int!): Comment!
+
+  """Reactivates a deactivated subscription."""
+  reactivateSubscription(id: String!): PublicSubscription!
+
+  """
+  Removes the cancellation of one of the authenticated user's own subscriptions. If the subscription is no longer paid for, a new invoice is created.
+  """
+  reactivateUserSubscription(id: String!): PublicSubscription!
+
+  """Rebuild the suggestions now instead of waiting for the night"""
+  recomputeDeliverySuggestions: DeliverySuggestionRecomputeResult!
+
+  """
+  Pull late delivery states from the mail provider, then re-evaluate everyone's email quality. The nightly job does the same; this is for looking at a campaign's result now.
+  """
+  refreshEmailQuality: EmailQualityRefreshModel!
 
   """
   This mutation registers a new member by providing name, email, and other required information.
@@ -3033,7 +4115,7 @@ type Mutation {
   rejectComment(id: String!, rejectionReason: CommentRejectionReason!): Comment!
 
   """
-  Rebuilds the payment, tracking pixel, mail and challenge providers from their settings, so integration changes take effect without restarting the API.
+  Rebuilds the payment, tracking pixel, mail, challenge, letter and pdf renderer providers from their settings, so integration changes take effect without restarting the API.
   """
   reloadProviders: Boolean!
 
@@ -3077,8 +4159,23 @@ type Mutation {
   """
   retryPeriodicJob: PeriodicJob!
 
+  """
+  Undoes an upgrade of a subscription as long as the new subscription has not been paid for.
+  """
+  revertSubscriptionUpgrade(id: String!): PublicSubscription!
+
+  """
+  Undoes an upgrade of one of the authenticated user's own subscriptions as long as the new subscription has not been paid for. The replacement subscription is removed and the original one continues.
+  """
+  revertUserSubscriptionUpgrade(subscriptionId: String!): PublicSubscription!
+
   """This mutation revokes and deletes the active session."""
   revokeActiveSession: Boolean!
+
+  """
+  Revokes one of your api tokens, or anyone's with CAN_REVOKE_ALL_API_TOKENS. The token stops working immediately.
+  """
+  revokeApiToken(id: String!): ApiToken!
   revokeImpersonationSessions(ids: [String!]): Int!
 
   """
@@ -3103,6 +4200,19 @@ type Mutation {
   sendWebsiteLogin(email: String!): String!
 
   """
+  Switch everyone in an audience; letters skip people without a usable address
+  """
+  setDeliveryModeForAudience(audience: MailAudienceInput!, channel: MailChannel!): DeliveryModeBulkResult!
+
+  """
+  Stores which customer of a payment provider each user is (for bexio the contact id), replacing the user's previous one of that provider; up to 500 users per call. Users that do not exist are skipped. Returns how many users were updated.
+  """
+  setPaymentProviderCustomers(customers: [PaymentProviderCustomerInput!]!, paymentProviderId: String!): Int!
+
+  """Switch a user between mailed and printed subscription mails"""
+  setUserDeliveryMode(channel: MailChannel!, reason: String, userId: String!): UserDeliveryPreferenceModel!
+
+  """
   Ask the mail provider for the current delivery state of mails that are still open. Complements the provider webhook, which is not reachable in local development.
   """
   syncMailLogStates(limit: Int): MailLogSyncModel!
@@ -3112,6 +4222,7 @@ type Mutation {
 
   """Triggers a mailchimp sync in the background."""
   triggerMailchimpSync(id: String!): Boolean!
+  unarchiveNewsletterCampaign(id: String!): NewsletterCampaign!
 
   """Unpublishes all revisions of an article."""
   unpublishArticle(id: String!): Article!
@@ -3123,10 +4234,32 @@ type Mutation {
   updateAISetting(apiKey: String, id: String, name: String, systemPrompt: String, webhookEndpointSecret: String): SettingAIProvider!
 
   """Updates an existing analytics provider setting."""
-  updateAnalyticsProviderSetting(articlePrefix: String, credentials: SettingAnalyticsCredentialsInput, id: String, name: String, property: String): SettingAnalyticsProvider!
+  updateAnalyticsProviderSetting(
+    """Api key of Plausible or Umami."""
+    apiKey: String
+    articlePrefix: String
+
+    """Service account credentials of Google Analytics."""
+    credentials: SettingAnalyticsCredentialsInput
+
+    """Uses this provider for Hot & Trending instead of the current one."""
+    hotAndTrending: Boolean
+    id: String
+    name: String
+    property: String
+
+    """Base url of the API, used for self hosted instances."""
+    url: String
+  ): SettingAnalyticsProvider!
 
   """Updates an article."""
   updateArticle(authors: [ArticleRevisionAuthorInput!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
+
+  """Updates an existing article template."""
+  updateArticleTemplate(blocks: [BlockContentInput!]!, id: String!, metadata: ArticleTemplateMetadataInput!, name: String!): ArticleTemplate!
+
+  """Updates an existing audio."""
+  updateAudio(description: String, id: String!, license: String, link: String, source: String, title: String): Audio!
 
   """Updates an existing author."""
   updateAuthor(bio: RichText, hideOnArticle: Boolean, hideOnTeam: Boolean, hideOnTeaser: Boolean, id: String!, imageID: String, jobTitle: String, links: [AuthorLinkInput!], name: String, slug: Slug, tagIds: [String!]): Author!
@@ -3151,7 +4284,7 @@ type Mutation {
   updateCrowdfunding(input: UpdateCrowdfundingInput!): Crowdfunding!
 
   """Updates the current logged in user."""
-  updateCurrentUser(address: UserAddressInput, birthday: DateTime, challengeAnswer: ChallengeInput, firstName: String, flair: String, name: String, password: String): SensitiveDataUser!
+  updateCurrentUser(address: UserAddressInput, birthday: DateTime, firstName: String, flair: String, name: String): SensitiveDataUser!
 
   """Updates an existing discountCode."""
   updateDiscountCode(code: String, discountPercent: Int, id: String!, memberPlanId: String, validFrom: DateTime, validTo: DateTime): DiscountCode!
@@ -3163,16 +4296,65 @@ type Mutation {
   updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, lead: String, location: String, name: String, startsAt: DateTime, status: EventStatus = Scheduled, tagIds: [String!]): Event!
 
   """Updates an existing external app."""
-  updateExternalApp(description: String, icon: String, id: String!, name: String, target: ExternalAppsTarget, url: String): ExternalApp!
+  updateExternalApp(
+    """
+    An API key you may see that has neither expired nor been revoked; null unlinks the key.
+    """
+    apiTokenId: String
+    description: String
+    icon: String
+    id: String!
+    name: String
+    target: ExternalAppsTarget
+    url: String
+  ): ExternalApp!
 
   """Updates an existing goodie."""
-  updateGoodie(active: Boolean, description: RichText, id: String!, imageID: String, memberPlanIDs: [String!], name: String, stock: Int): Goodie!
+  updateGoodie(
+    active: Boolean
+    description: RichText
+    id: String!
+    imageID: String
+    memberPlanIDs: [String!]
+    name: String
+
+    """
+    Payment periodicities the goodie is offered with. Empty or omitted means every periodicity of the member plan.
+    """
+    paymentPeriodicities: [PaymentPeriodicity!]
+    stock: Int
+  ): Goodie!
 
   """Updates an existing image."""
   updateImage(description: String, filename: String, focalPointX: Float = 0.5, focalPointY: Float = 0.5, id: String!, license: String, link: String, source: String, tags: [String!], title: String): Image!
 
   """Updates an existing invoice."""
   updateInvoice(currency: Currency, description: String, dueAt: DateTime, id: String!, items: [InvoiceItemInput!], mail: String, manuallySetAsPaidByUserId: String, scheduledDeactivationAt: DateTime, subscriptionID: String): Invoice!
+
+  """Update a letter layout."""
+  updateLetterLayout(id: String!, input: LetterLayoutInput!): LetterLayoutModel!
+
+  """Updates an existing letter provider setting."""
+  updateLetterProviderSetting(
+    autoSend: Boolean
+    clientId: String
+    clientSecret: String
+    defaultAddressPosition: LetterAddressPosition
+    defaultDeliveryProduct: LetterDeliveryProduct
+    defaultPrintMode: LetterPrintMode
+    defaultPrintSpectrum: LetterPrintSpectrum
+    environment: LetterProviderEnvironment
+    id: String
+    name: String
+    organisationId: String
+
+    """
+    Email addresses containing this are placeholders, not real inboxes (e.g. @placeholder.example.com).
+    """
+    placeholderEmailContains: String
+    type: LetterProviderType
+    webhookSigningKey: String
+  ): SettingLetterProvider!
 
   """Updates an existing mail provider setting."""
   updateMailProviderSetting(apiKey: String, fromAddress: String, id: String, mailchimp_baseURL: String, mailgun_baseDomain: String, mailgun_mailDomain: String, name: String, replyToAddress: String, slack_webhookURL: String, smtp_host: String, smtp_port: Int, smtp_secure: Boolean, smtp_user: String, type: MailProviderType, webhookEndpointSecret: String): SettingMailProvider!
@@ -3185,9 +4367,13 @@ type Mutation {
 
   """Updates an existing navigation."""
   updateNavigation(id: String!, key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
+  updateNewsletterCampaign(document: JSONObject!, id: String!, title: String): NewsletterCampaign!
 
   """Updates an page."""
-  updatePage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, id: String!, imageID: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
+  updatePage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, hideFooter: Boolean! = false, hideHeader: Boolean! = false, id: String!, imageID: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
+
+  """Updates an existing page template."""
+  updatePageTemplate(blocks: [BlockContentInput!]!, id: String!, metadata: PageTemplateMetadataInput!, name: String!): PageTemplate!
 
   """
   This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated.
@@ -3203,6 +4389,9 @@ type Mutation {
   """Updates a paywall."""
   updatePaywall(active: Boolean, alternativeSubscribeUrl: String, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, fadeout: Boolean, hideContentAfter: Int, id: String!, memberPlanIds: [String!], name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
 
+  """Updates an existing pdf renderer setting."""
+  updatePdfRendererSetting(cloudflare_accountId: String, cloudflare_apiToken: String, gotenberg_password: String, gotenberg_url: String, gotenberg_username: String, id: String, name: String, timeoutMs: Int, type: PdfRendererType): SettingPdfRenderer!
+
   """Updates an existing peer."""
   updatePeer(hostURL: String, id: String!, information: RichText, isDisabled: Boolean, name: String, slug: String, token: String): Peer!
 
@@ -3215,6 +4404,11 @@ type Mutation {
   """Update the comment rating system."""
   updateRatingSystem(answers: [UpdateCommentRatingSystemAnswerInput!], id: String!, name: String): CommentRatingSystem!
 
+  """
+  Marks an SEO checklist item as done or not done and returns all completed items.
+  """
+  updateSeoChecklistItem(completed: Boolean!, itemId: String!): [SeoChecklistItem!]!
+
   """Updates an existing setting."""
   updateSetting(name: SettingName!, value: GraphQLSettingValueType): Setting!
 
@@ -3225,7 +4419,7 @@ type Mutation {
   updateSubscriptionFlow(autoRenewal: [Boolean!], id: String!, paymentMethodIds: [String!], periodicities: [PaymentPeriodicity!]): [SubscriptionFlowModel!]!
 
   """Update an existing subscription interval"""
-  updateSubscriptionInterval(daysAwayFromEnding: Int, id: String!, mailTemplateId: String): [SubscriptionFlowModel!]!
+  updateSubscriptionInterval(daysAwayFromEnding: Int, id: String!, mailTemplateId: String, sendAsLetter: Boolean): [SubscriptionFlowModel!]!
 
   """Updates an existing sync provider setting."""
   updateSyncProviderSetting(enabled: Boolean, id: String!, mailchimp_apiKey: String, mailchimp_defaultInterestGroupIds: [String!], mailchimp_extensions: JSONObject, mailchimp_interestGroupMappings: [JSONObject!], mailchimp_listId: String, mailchimp_mergeFieldMappings: [JSONObject!], name: String): SettingSyncProvider!
@@ -3261,11 +4455,28 @@ type Mutation {
   """
   updateUserSubscription(id: String!, input: UpdateUserSubscriptionInput!): PublicSubscription
 
+  """Updates an existing video."""
+  updateVideo(description: String, id: String!, license: String, link: String, source: String, title: String): Video!
+
   """Updates the website settings."""
-  updateWebsiteSettings(ads: WebsiteAdsInput, analytics: WebsiteAnalyticsInput, fonts: [WebsiteRemoteFontInput!], mail: WebsiteMailInput, theme: JSONObject): WebsiteSettings!
+  updateWebsiteSettings(ads: WebsiteAdsInput, analytics: WebsiteAnalyticsInput, fonts: [WebsiteRemoteFontInput!], theme: JSONObject): WebsiteSettings!
 
   """"""
   upgradeUserSubscription(discountCode: String, failureURL: String, goodieId: String, memberPlanId: String!, monthlyAmount: Float!, paymentMethodId: String!, subscriptionId: String!, successURL: String): Payment!
+
+  """Uploads a new audio."""
+  uploadAudio(
+    description: String
+
+    """Length in seconds, as the browser reported it on upload."""
+    duration: Float
+    file: Upload!
+    filename: String
+    license: String
+    link: String
+    source: String
+    title: String
+  ): Audio!
 
   """Uploads a new document."""
   uploadDocument(description: String, file: Upload!, filename: String, title: String): Document!
@@ -3275,6 +4486,25 @@ type Mutation {
 
   """This mutation allows to upload and update the user's profile image."""
   uploadUserProfileImage(description: String, file: Upload!, filename: String, focalPointX: Float! = 0.5, focalPointY: Float! = 0.5, license: String, link: String, source: String, tags: [String!]!, title: String): SensitiveDataUser
+
+  """Uploads a new video."""
+  uploadVideo(
+    description: String
+
+    """Length in seconds, as the browser reported it on upload."""
+    duration: Float
+    file: Upload!
+    filename: String
+    height: Int
+    license: String
+    link: String
+
+    """A frame grabbed from the video in the browser, used as its thumbnail."""
+    poster: Upload
+    source: String
+    title: String
+    width: Int
+  ): Video!
 
   """
   This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous
@@ -3303,6 +4533,55 @@ enum NavigationLinkType {
   Article
   External
   Page
+}
+
+type NewsletterCampaign {
+  blockCount: Int!
+  createdAt: DateTime!
+  document: JSONObject!
+  id: String!
+  images: [Image!]!
+  mailchimpCampaignId: String
+  mailchimpCampaignWebId: Int
+  mailchimpEditUrl: String
+  modifiedAt: DateTime!
+  status: NewsletterCampaignStatus!
+  title: String!
+}
+
+enum NewsletterCampaignStatus {
+  active
+  archived
+}
+
+type NewsletterInterestCategory {
+  groups: [String!]!
+  title: String!
+}
+
+type NewsletterMergeFields {
+  error: String
+  fields: [NewsletterMergeTag!]!
+  interests: [NewsletterInterestCategory!]!
+}
+
+type NewsletterMergeTag {
+  description: String!
+  kind: String
+  label: String!
+  tag: String!
+}
+
+type NewsletterPublishResult {
+  campaign: MailchimpDraft!
+  created: Boolean!
+  report: NewsletterReport!
+}
+
+type NewsletterReport {
+  bytes: Int!
+  missingArticles: [String!]!
+  missingFooter: [String!]!
 }
 
 type NotificationConfirmation {
@@ -3359,6 +4638,8 @@ type Page {
   createdAt: DateTime!
   draft: PageRevision
   hidden: Boolean!
+  hideFooter: Boolean!
+  hideHeader: Boolean!
   id: String!
   latest: PageRevision!
   modifiedAt: DateTime!
@@ -3369,6 +4650,13 @@ type Page {
   slug: String
   tags: [Tag!]!
   url: String!
+}
+
+type PageCreatedAction implements BaseAction & HasPageLc {
+  actionType: ActionType!
+  date: DateTime!
+  page: Page!
+  pageId: String!
 }
 
 input PageFilter {
@@ -3411,7 +4699,17 @@ type PageNavigationLink implements BaseNavigationLink & HasPage {
 
 type PageRevision implements HasBlockContent & HasOptionalUserLc {
   archivedAt: DateTime
-  blocks: [BlockContent!]!
+  blocks(
+    """
+    Omits blocks that should be hidden. Only users who can read pages may pass `false`, everyone else gets the displayed blocks.
+    """
+    onlyDisplayed: Boolean! = true
+  ): [BlockContent!]!
+
+  """
+  When the set of displayed blocks changes next, so caches can expire in time. Null while no block is timed.
+  """
+  blocksChangeAt: DateTime
   createdAt: DateTime!
   description: String
   id: String!
@@ -3459,14 +4757,86 @@ input PageTeaserInput {
   title: String
 }
 
+type PageTemplate {
+  """The content (name and blocks) of the page template."""
+  blockTemplate: BlockTemplate!
+  blockTemplateId: String!
+  createdAt: DateTime!
+  id: String!
+  metadata: PageTemplateMetadata!
+  modifiedAt: DateTime!
+}
+
+input PageTemplateFilter {
+  name: String
+}
+
+type PageTemplateMetadata {
+  description: String
+  hidden: Boolean!
+  hideFooter: Boolean!
+  hideHeader: Boolean!
+  image: Image
+  imageID: String
+  properties: [Property!]!
+  seoDescription: String
+  seoTitle: String
+  socialMediaDescription: String
+  socialMediaImage: Image
+  socialMediaImageID: String
+  socialMediaTitle: String
+  tags: [Tag!]!
+  title: String
+}
+
+input PageTemplateMetadataInput {
+  description: String
+  hidden: Boolean!
+  hideFooter: Boolean! = false
+  hideHeader: Boolean! = false
+  imageID: String
+  properties: [PropertyInput!]!
+  seoDescription: String
+  seoTitle: String
+  socialMediaDescription: String
+  socialMediaImageID: String
+  socialMediaTitle: String
+  tagIds: [String!]!
+  title: String
+}
+
+enum PageTemplateSort {
+  CreatedAt
+  ModifiedAt
+  Name
+}
+
+type PaginatedApiTokens {
+  nodes: [ApiToken!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
 type PaginatedArticleRevisions {
   nodes: [ArticleRevision!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
 
+type PaginatedArticleTemplate {
+  nodes: [ArticleTemplate!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
 type PaginatedArticles {
   nodes: [Article!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedAudios {
+  nodes: [Audio!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
@@ -3503,6 +4873,21 @@ type PaginatedChangelogEntries {
 type PaginatedComments {
   nodes: [Comment!]!
   pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedDeliveryChannelUsers {
+  nodes: [DeliveryChannelUserModel!]!
+  totalCount: Int!
+}
+
+type PaginatedDeliveryModeBulkChanges {
+  nodes: [DeliveryModeBulkChangeModel!]!
+  totalCount: Int!
+}
+
+type PaginatedDeliverySuggestions {
+  nodes: [DeliverySuggestionModel!]!
   totalCount: Int!
 }
 
@@ -3578,6 +4963,12 @@ type PaginatedPageRevisions {
   totalCount: Int!
 }
 
+type PaginatedPageTemplate {
+  nodes: [PageTemplate!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
 type PaginatedPages {
   nodes: [Page!]!
   pageInfo: PageInfo!
@@ -3620,9 +5011,17 @@ type PaginatedUserRoles {
   totalCount: Int!
 }
 
+type PaginatedVideos {
+  nodes: [Video!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
 type Payment implements HasPaymentMethod {
+  createdAt: DateTime!
   id: String!
   intentSecret: String!
+  modifiedAt: DateTime!
   paymentMethod: PaymentMethod!
   paymentMethodID: String!
   state: PaymentState!
@@ -3649,6 +5048,23 @@ type PaymentMethod implements HasImageLc {
   paymentProvider: PaymentProvider
   paymentProviderID: String!
   slug: Slug!
+}
+
+"""
+How the reader proves the new payment method: by paying the open invoice with it, by authorizing it without a charge, or not at all.
+"""
+enum PaymentMethodChangeKind {
+  authorization
+  immediate
+  invoicePayment
+}
+
+enum PaymentMethodChangeState {
+  canceled
+  completed
+  expired
+  failed
+  pending
 }
 
 enum PaymentMethodMollie {
@@ -3700,6 +5116,12 @@ type PaymentProvider {
 type PaymentProviderCustomer {
   customerID: String!
   paymentProviderID: String!
+}
+
+input PaymentProviderCustomerInput {
+  """The provider's id for the user, e.g. the bexio contact id."""
+  customerId: String!
+  userId: String!
 }
 
 enum PaymentProviderType {
@@ -3827,6 +5249,11 @@ type PaywallBypass {
   modifiedAt: DateTime!
   paywallId: String!
   token: String!
+}
+
+enum PdfRendererType {
+  cloudflare
+  gotenberg
 }
 
 type Peer {
@@ -3980,6 +5407,14 @@ type PolisConversationBlock implements BaseBlock {
   blockStyleName: String
   conversationID: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -3988,6 +5423,11 @@ input PolisConversationBlockInput {
   blockStyleName: String
   conversationID: String
   disabled: Boolean
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 type Poll {
@@ -4021,6 +5461,14 @@ type PollBlock implements BaseBlock & HasOptionalPoll {
   disabled: Boolean
   poll: FullPoll
   pollId: String
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -4029,6 +5477,11 @@ input PollBlockInput {
   blockStyleName: String
   disabled: Boolean
   pollId: String
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 type PollExternalVote {
@@ -4062,6 +5515,13 @@ enum PollSort {
   CreatedAt
   ModifiedAt
   OpensAt
+}
+
+type PollStartedAction implements BaseAction & HasPoll {
+  actionType: ActionType!
+  date: DateTime!
+  poll: FullPoll!
+  pollId: String!
 }
 
 type PollVote {
@@ -4109,6 +5569,16 @@ input PropertyInput {
 type PublicSubscription implements HasMemberPlan & HasPaymentMethod & HasUser {
   autoRenew: Boolean!
   canExtend: Boolean!
+
+  """
+  Whether the reader can authorize the subscription's payment method anew, e.g. with a new card: only for payment methods renewals are charged with automatically.
+  """
+  canRenewPaymentMethod: Boolean!
+
+  """
+  Whether an upgrade of this subscription can still be undone, meaning it has been replaced by a subscription that has not been paid for yet.
+  """
+  canRevertUpgrade: Boolean!
   confirmed: Boolean!
   createdAt: DateTime!
   currency: Currency!
@@ -4126,6 +5596,11 @@ type PublicSubscription implements HasMemberPlan & HasPaymentMethod & HasUser {
   paymentMethod: PaymentMethod!
   paymentMethodID: String!
   paymentPeriodicity: PaymentPeriodicity!
+
+  """
+  A payment method change that is waiting for the reader to pay or authorize. Until it completes, the subscription keeps its payment method.
+  """
+  pendingPaymentMethodChange: SubscriptionPaymentMethodChange
   periods: [SubscriptionPeriod!]!
   properties: [Property!]!
   startsAt: DateTime!
@@ -4144,6 +5619,12 @@ type Query {
   """The mail createUser would send, or why it sends none."""
   accountCreationMail: ActionMail!
 
+  """Returns latest actions"""
+  actions(
+    """Only these kinds of actions. Empty or omitted means all."""
+    types: [ActionType!]
+  ): [Action!]!
+
   "\n      Returns all active subscribers.\n      Includes subscribers with a cancelled but not run out subscription.\n    "
   activeSubscribers: [DashboardSubscription!]!
 
@@ -4159,6 +5640,22 @@ type Query {
   """Returns all analytics provider settings."""
   analyticsProviderSettings(filter: SettingAnalyticsProviderFilter): [SettingAnalyticsProvider!]!
 
+  """
+  Returns your own api tokens, or everyone's with CAN_GET_ALL_API_TOKENS. Secrets are never included.
+  """
+  apiTokens(
+    """
+    Only tokens created by this user. Ignored without CAN_GET_ALL_API_TOKENS, which already limits you to your own.
+    """
+    createdById: String
+    cursorId: String
+    order: SortOrder = Descending
+    skip: Int = 0
+    sort: ApiTokenSort = CreatedAt
+    status: ApiTokenStatus
+    take: Int = 10
+  ): PaginatedApiTokens!
+
   """Returns an article by id or slug."""
   article(id: String, slug: String): Article!
 
@@ -4170,8 +5667,35 @@ type Query {
   """
   articleRevisions(articleId: String!, cursorId: String, filter: ArticleRevisionFilter, order: SortOrder = Descending, skip: Int = 0, take: Int = 10): PaginatedArticleRevisions!
 
+  """Returns a single article template by ID."""
+  articleTemplate(id: String!): ArticleTemplate!
+
+  """Returns a paginated list of article templates."""
+  articleTemplates(
+    """Cursor for pagination"""
+    cursorId: String
+    filter: ArticleTemplateFilter
+    order: SortOrder = Ascending
+
+    """Number of items to skip"""
+    skip: Int! = 0
+    sort: ArticleTemplateSort! = Name
+
+    """Number of items to fetch"""
+    take: Int! = 10
+  ): PaginatedArticleTemplate!
+
   """Returns a paginated list of articles based on the filters given."""
   articles(cursorId: String, filter: ArticleFilter, order: SortOrder = Descending, skip: Int = 0, sort: ArticleSort = PublishedAt, take: Int = 10): PaginatedArticles!
+
+  """Returns a audio by id."""
+  audio(id: String!): Audio!
+
+  """Returns the current audio storage usage and limit."""
+  audioStorageUsage: AudioStorageUsage!
+
+  """Returns a paginated list of audios based on the filters given."""
+  audios(cursorId: String, filter: AudioFilter, order: SortOrder = Descending, skip: Int = 0, sort: AudioSort = ModifiedAt, take: Int = 10): PaginatedAudios!
 
   """
   Returns a paginated list of audit log entries based on the filters given.
@@ -4300,6 +5824,21 @@ type Query {
   "\n      Returns daily stats in a given timeframe.\n    "
   dailySubscriptionStats(end: DateTime, memberPlanIds: [String!], start: DateTime!): [DailySubscriptionStats!]!
 
+  """How many people each channel reaches, the default channel first"""
+  deliveryChannelCounts: [DeliveryChannelCount!]!
+
+  """What switching an audience's delivery mode would touch"""
+  deliveryModeAudiencePreview(audience: MailAudienceInput!, channel: MailChannel!): DeliveryModeAudiencePreview!
+
+  """Recent bulk switches of an audience's delivery mode, newest first"""
+  deliveryModeBulkChanges(channel: MailChannel, skip: Int, take: Int): PaginatedDeliveryModeBulkChanges!
+
+  """How many suggestions are open, per direction"""
+  deliverySuggestionCounts: DeliverySuggestionCounts!
+
+  """Open suggestions to move users to letters or back to mail"""
+  deliverySuggestions(kind: DeliverySuggestionKind!, skip: Int, take: Int): PaginatedDeliverySuggestions!
+
   """Returns an discountCode by id or discountCode."""
   discountCode(id: String!): DiscountCode!
 
@@ -4350,6 +5889,11 @@ type Query {
 
   """Returns all external apps. Requires authentication."""
   externalApps(filter: ExternalAppFilter): [ExternalApp!]!
+
+  """
+  The features switched on for this medium in We.Publish One (or through WEP_FEATURES).
+  """
+  features: [String!]!
 
   """Returns images by tag."""
   getImagesByTag(tag: String!): [Image!]!
@@ -4410,6 +5954,26 @@ type Query {
   """Returns a paginated list of invoices based on the filters given."""
   invoices(cursorId: String, filter: InvoiceFilter, order: SortOrder = Ascending, skip: Int = 0, sort: InvoiceSort = ModifiedAt, take: Int = 10): InvoiceConnection!
 
+  """
+  Whether a letter integration is configured, so letters can be previewed and sent
+  """
+  letterChannelAvailable: Boolean!
+
+  """A single letter layout."""
+  letterLayout(id: String!): LetterLayoutModel!
+
+  """A sample letter printed on the given, possibly unsaved, stationery."""
+  letterLayoutPreview(input: LetterLayoutPreviewInput!): LetterLayoutPreviewModel!
+
+  """All letter layouts, the default first."""
+  letterLayouts: [LetterLayoutModel!]!
+
+  """Returns a single letter provider setting by id."""
+  letterProviderSetting(id: String!): SettingLetterProvider!
+
+  """Returns all letter provider settings."""
+  letterProviderSettings(filter: SettingLetterProviderFilter): [SettingLetterProvider!]!
+
   """Paginated list of sent mails"""
   mailLogs(filter: MailLogFilter, skip: Int, take: Int): PaginatedMailLog!
 
@@ -4434,13 +5998,16 @@ type Query {
   mailSendPreview(input: MailSendPreviewInput!): MailSendPreviewModel!
 
   """Preview how many recipients an audience resolves to"""
-  mailSendRecipientPreview(audience: MailAudienceInput!): MailSendRecipientPreview!
+  mailSendRecipientPreview(audience: MailAudienceInput!, channel: MailChannel): MailSendRecipientPreview!
 
   """The concrete recipients an audience resolves to"""
-  mailSendRecipients(audience: MailAudienceInput!, skip: Int, take: Int): PaginatedMailSendRecipient!
+  mailSendRecipients(audience: MailAudienceInput!, channel: MailChannel, skip: Int, take: Int): PaginatedMailSendRecipient!
 
   """Return a single mail template, including its html and text body."""
   mailTemplate(id: String!): MailTemplateModel
+
+  """Render a draft mail template as the letter a send would print"""
+  mailTemplateLetterPreview(input: MailTemplatePreviewInput!): MailTemplateLetterPreviewModel!
 
   """
   Placeholders a template uses that would render empty for the given send (empty = none missing)
@@ -4495,6 +6062,13 @@ type Query {
 
   "\n      Returns all new subscribers in a given timeframe.\n      Includes already deactivated ones.\n    "
   newSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
+  newsletterCampaign(id: String!): NewsletterCampaign!
+
+  """The stored issue rendered as the HTML Mailchimp receives."""
+  newsletterCampaignPreview(id: String!): String!
+  newsletterCampaignReport(id: String!): NewsletterReport!
+  newsletterCampaigns(includeArchived: Boolean! = false): [NewsletterCampaign!]!
+  newsletterMergeFields: NewsletterMergeFields!
 
   """
   Returns the instance-wide notification confirmations. Requires authentication.
@@ -4515,6 +6089,24 @@ type Query {
 
   """Returns a paginated list of revisions (version history) for a page."""
   pageRevisions(cursorId: String, filter: PageRevisionFilter, order: SortOrder = Descending, pageId: String!, skip: Int = 0, take: Int = 10): PaginatedPageRevisions!
+
+  """Returns a single page template by ID."""
+  pageTemplate(id: String!): PageTemplate!
+
+  """Returns a paginated list of page templates."""
+  pageTemplates(
+    """Cursor for pagination"""
+    cursorId: String
+    filter: PageTemplateFilter
+    order: SortOrder = Ascending
+
+    """Number of items to skip"""
+    skip: Int! = 0
+    sort: PageTemplateSort! = Name
+
+    """Number of items to fetch"""
+    take: Int! = 10
+  ): PaginatedPageTemplate!
 
   """Returns a paginated list of pages based on the filters given."""
   pages(cursorId: String, filter: PageFilter, order: SortOrder = Descending, skip: Int = 0, sort: PageSort = PublishedAt, take: Int = 10): PaginatedPages!
@@ -4539,6 +6131,12 @@ type Query {
 
   """Returns a list of paywalls based on the filters given."""
   paywalls: [Paywall!]!
+
+  """Returns a single pdf renderer setting by id."""
+  pdfRendererSetting(id: String!): SettingPdfRenderer!
+
+  """Returns all pdf renderer settings."""
+  pdfRendererSettings(filter: SettingPdfRendererFilter): [SettingPdfRenderer!]!
 
   """
   This query takes either the ID or the slug and returns the peer profile.
@@ -4584,6 +6182,9 @@ type Query {
 
   "\n      Returns the revenue generated for the time period given.\n      Only includes paid invoices that have not been manually paid.\n    "
   revenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
+
+  """Returns a checklist of the SEO setup of the website."""
+  seoChecklist: SeoChecklist!
 
   "\n      Returns a single setting by name.\n    "
   setting(name: String!): Setting!
@@ -4676,6 +6277,12 @@ type Query {
   "\n      Returns a list of userConsents. Possible to filter.\n    "
   userConsents(name: String, slug: String, value: Boolean): [UserConsent!]!
 
+  """How a user's automated subscription mails are delivered"""
+  userDeliveryPreference(userId: String!): UserDeliveryPreferenceModel!
+
+  """The open suggestion for one user, if any"""
+  userDeliverySuggestion(userId: String!): DeliverySuggestionModel
+
   """Get all invoices for the authenticated user"""
   userInvoices: [Invoice!]!
   userPollVote(pollId: String!): String
@@ -4709,7 +6316,19 @@ type Query {
     """Number of items to fetch"""
     take: Int! = 10
   ): PaginatedSensitiveDataUsers!
+
+  """The people on one channel, by name, with how they got there"""
+  usersByDeliveryChannel(channel: MailChannel!, search: String, skip: Int, take: Int): PaginatedDeliveryChannelUsers!
   versionInformation: VersionInformation!
+
+  """Returns a video by id."""
+  video(id: String!): Video!
+
+  """Returns the current video storage usage and limit."""
+  videoStorageUsage: VideoStorageUsage!
+
+  """Returns a paginated list of videos based on the filters given."""
+  videos(cursorId: String, filter: VideoFilter, order: SortOrder = Descending, skip: Int = 0, sort: VideoSort = ModifiedAt, take: Int = 10): PaginatedVideos!
 
   """
   Returns the website settings, requires authentication to get sensitive settings.
@@ -4725,6 +6344,14 @@ type QuoteBlock implements BaseBlock & HasImage {
   image: Image
   imageID: String
   quote: String
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -4735,6 +6362,11 @@ input QuoteBlockInput {
   disabled: Boolean
   imageID: String
   quote: String
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 enum RatingSystemType {
@@ -4770,6 +6402,14 @@ type RichTextBlock implements BaseBlock {
   blockStyleName: String
   disabled: Boolean
   richText: RichText
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -4778,6 +6418,11 @@ input RichTextBlockInput {
   blockStyleName: String
   disabled: Boolean
   richText: RichText
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 input SendTestMailTemplateInput {
@@ -4794,6 +6439,11 @@ type SensitiveDataUser implements BaseUser {
   birthday: DateTime
   createdAt: DateTime!
   email: String!
+
+  """
+  How usable the address is, derived from bounces, logins and clicks. Null until evaluated, which counts as unknown.
+  """
+  emailQuality: UserEmailQualityModel
   emailVerifiedAt: DateTime
   firstName: String
   flair: String
@@ -4820,6 +6470,44 @@ type SensitiveDataUser implements BaseUser {
   """
   totpExempt: Boolean!
   userImageID: String
+}
+
+type SeoCheck {
+  detail: String
+  id: SeoCheckId!
+  status: SeoCheckStatus!
+  url: String
+}
+
+enum SeoCheckId {
+  ArticleMarkup
+  Feed
+  NewsSitemap
+  PublicationMetadata
+  Sitemap
+}
+
+enum SeoCheckStatus {
+  Error
+  Info
+  Ok
+  Warning
+}
+
+type SeoChecklist {
+  atomFeedUrl: String!
+  checks: [SeoCheck!]!
+  completedItems: [SeoChecklistItem!]!
+  jsonFeedUrl: String!
+  rssFeedUrl: String!
+  sitemapUrl: String!
+  websiteUrl: String!
+}
+
+type SeoChecklistItem {
+  completedAt: DateTime!
+  completedBy: String
+  itemId: String!
 }
 
 type SessionWithToken {
@@ -4855,6 +6543,9 @@ type Setting {
 type SettingAIProvider implements SettingProvider {
   createdAt: DateTime!
   id: String!
+
+  """Whether an API key is stored. It is never returned itself."""
+  isApiKeySet: Boolean!
   lastLoadedAt: DateTime!
   modifiedAt: DateTime!
   name: String
@@ -4880,12 +6571,23 @@ input SettingAnalyticsCredentialsInput {
 type SettingAnalyticsProvider implements SettingProvider {
   articlePrefix: String
   createdAt: DateTime!
+
+  """Whether this provider powers the Hot & Trending query."""
+  hotAndTrending: Boolean!
   id: String!
+
+  """
+  Whether service account credentials are stored. They are never returned.
+  """
+  isCredentialsSet: Boolean!
   lastLoadedAt: DateTime!
   modifiedAt: DateTime!
   name: String
   property: String
   type: AnalyticsProviderType!
+
+  """Base url of the API, used for self hosted instances."""
+  url: String
 }
 
 input SettingAnalyticsProviderFilter {
@@ -4897,6 +6599,9 @@ input SettingAnalyticsProviderFilter {
 type SettingChallengeProvider implements SettingProvider {
   createdAt: DateTime!
   id: String!
+
+  """Whether a secret is stored. It is never returned itself."""
+  isSecretSet: Boolean!
   lastLoadedAt: DateTime!
   modifiedAt: DateTime!
   name: String
@@ -4913,10 +6618,46 @@ input SettingFilter {
   name: String
 }
 
+type SettingLetterProvider implements SettingProvider {
+  autoSend: Boolean!
+  clientId: String
+  createdAt: DateTime!
+  defaultAddressPosition: LetterAddressPosition
+  defaultDeliveryProduct: LetterDeliveryProduct
+  defaultPrintMode: LetterPrintMode
+  defaultPrintSpectrum: LetterPrintSpectrum
+  environment: LetterProviderEnvironment!
+  id: String!
+  lastLoadedAt: DateTime!
+  modifiedAt: DateTime!
+  name: String
+  organisationId: String
+
+  """
+  Email addresses containing this are placeholders, not real inboxes (e.g. @placeholder.example.com).
+  """
+  placeholderEmailContains: String
+  type: LetterProviderType!
+}
+
+input SettingLetterProviderFilter {
+  id: String
+  name: String
+  type: LetterProviderType
+}
+
 type SettingMailProvider implements SettingProvider {
   createdAt: DateTime!
   fromAddress: String
   id: String!
+
+  """Whether an API key is stored. The key itself is never returned."""
+  isApiKeySet: Boolean!
+
+  """
+  Whether a webhook signing secret is stored. The secret itself is never returned.
+  """
+  isWebhookEndpointSecretSet: Boolean!
   lastLoadedAt: DateTime!
   mailchimp_baseURL: String
   mailgun_baseDomain: String
@@ -4944,6 +6685,8 @@ enum SettingName {
   ALLOW_GUEST_COMMENT_RATING
   ALLOW_GUEST_POLL_VOTING
   COMMENT_CHAR_LIMIT
+  EMAIL_QUALITY_MIN_MAILS_FOR_UNRESPONSIVE
+  EMAIL_QUALITY_UNRESPONSIVE_AFTER_DAYS
   MAIL_PROVIDER_NAME
   MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC
   MAKE_EXPECTED_REVENUE_API_PUBLIC
@@ -4953,11 +6696,13 @@ enum SettingName {
   MAKE_REVENUE_API_PUBLIC
   NEW_ARTICLE_PAYWALL
   NEW_ARTICLE_PEERING
+  PAYMENT_METHOD_CHANGE_EXPIRY_DAYS
   PEERING_TIMEOUT_MS
   RESET_PASSWORD_JWT_EXPIRES_MIN
   SEND_LOGIN_JWT_EXPIRES_MIN
   SESSION_TTL_DAYS
   SHOW_PENDING_WHEN_NOT_PUBLISHED
+  SUBSCRIPTION_EXTEND_WINDOW_DAYS
   SUBSCRIPTION_UPGRADE_BILLS_FULL_DIFFERENCE
 }
 
@@ -4979,6 +6724,14 @@ type SettingPaymentProvider implements SettingProvider {
   createdAt: DateTime!
   deletedAt: DateTime
   id: String!
+
+  """Whether an API key is stored. It is never returned itself."""
+  isApiKeySet: Boolean!
+
+  """
+  Whether a webhook signing secret is stored. It is never returned itself.
+  """
+  isWebhookEndpointSecretSet: Boolean!
   lastLoadedAt: DateTime!
   modifiedAt: DateTime!
   mollie_apiBaseUrl: String
@@ -4998,6 +6751,25 @@ input SettingPaymentProviderFilter {
   id: String
   name: String
   type: PaymentProviderType
+}
+
+type SettingPdfRenderer implements SettingProvider {
+  cloudflare_accountId: String
+  createdAt: DateTime!
+  gotenberg_url: String
+  gotenberg_username: String
+  id: String!
+  lastLoadedAt: DateTime!
+  modifiedAt: DateTime!
+  name: String
+  timeoutMs: Int
+  type: PdfRendererType!
+}
+
+input SettingPdfRendererFilter {
+  id: String
+  name: String
+  type: PdfRendererType
 }
 
 interface SettingProvider {
@@ -5025,6 +6797,9 @@ type SettingSyncProvider implements SettingProvider {
   mailchimp_defaultInterestGroupIds: [String!]
   mailchimp_extensions: JSONObject
   mailchimp_interestGroupMappings: [JSONObject!]
+
+  """Whether a Mailchimp API key is stored. It is never returned itself."""
+  mailchimp_isApiKeySet: Boolean!
   mailchimp_listId: String
   mailchimp_mergeFieldMappings: [JSONObject!]
   modifiedAt: DateTime!
@@ -5052,6 +6827,9 @@ type SettingTrackingPixelProvider implements SettingProvider {
   lastLoadedAt: DateTime!
   modifiedAt: DateTime!
   name: String
+
+  """Whether a ProLitteris password is stored. It is never returned itself."""
+  prolitteris_isPasswordSet: Boolean!
   prolitteris_memberNr: String
   prolitteris_onlyPaidContentAccess: Boolean
   prolitteris_publisherInternalKeyDomain: String
@@ -5076,6 +6854,14 @@ type SoundCloudTrackBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   trackID: String
   type: BlockType!
 }
@@ -5084,7 +6870,22 @@ input SoundCloudTrackBlockInput {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   trackID: String
+}
+
+type StartedSubscriptionPaymentMethodChange {
+  change: SubscriptionPaymentMethodChange!
+
+  """
+  Where the reader pays or authorizes: a redirect URL, or the client secret for Stripe.
+  """
+  intentSecret: String
+  paymentProviderID: String!
 }
 
 type Stats {
@@ -5097,6 +6898,14 @@ type StreamableVideoBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
   videoID: String
 }
@@ -5105,6 +6914,11 @@ input StreamableVideoBlockInput {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   videoID: String
 }
 
@@ -5145,8 +6959,16 @@ type SubscribeBlock implements BaseBlock {
   memberPlanRenderSettings: [SubscribeBlockMemberPlanRenderSetting!]!
   memberPlans: [MemberPlan!]!
   periodicityDisplay: SubscribePeriodicityDisplay
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
   showDiscountCodes: Boolean!
   showGoodies: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -5172,6 +6994,11 @@ input SubscribeBlockInput {
   periodicityDisplay: SubscribePeriodicityDisplay
   showDiscountCodes: Boolean! = false
   showGoodies: Boolean! = false
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 interface SubscribeBlockLayoutConfig {
@@ -5236,6 +7063,13 @@ enum SubscribePeriodicityDisplay {
   Toggle
 }
 
+type SubscriptionCreatedAction implements BaseAction & HasSubscriptionLc {
+  actionType: ActionType!
+  date: DateTime!
+  subscription: PublicSubscription!
+  subscriptionId: String!
+}
+
 type SubscriptionDeactivation {
   date: DateTime!
   reason: SubscriptionDeactivationReason!
@@ -5298,6 +7132,30 @@ type SubscriptionInterval {
   event: SubscriptionEvent!
   id: String!
   mailTemplate: MailTemplateRef
+
+  """Users in letter mode get this event printed instead of mailed."""
+  sendAsLetter: Boolean!
+}
+
+"""
+A reader's request to move a subscription to another payment method. The subscription keeps its current payment method until the change is completed.
+"""
+type SubscriptionPaymentMethodChange implements HasPaymentMethod {
+  """
+  Amount in cents held to authorize the payment method. It is released again and never charged.
+  """
+  amount: Int!
+  completedAt: DateTime
+  createdAt: DateTime!
+  currency: Currency!
+  expiresAt: DateTime!
+  fromPaymentMethodID: String!
+  id: String!
+  kind: PaymentMethodChangeKind!
+  paymentMethod: PaymentMethod!
+  paymentMethodID: String!
+  state: PaymentMethodChangeState!
+  subscriptionID: String!
 }
 
 type SubscriptionPeriod {
@@ -5364,7 +7222,15 @@ type TeaserGridBlock implements BaseBlock {
   blockStyleName: String
   disabled: Boolean
   numColumns: Int!
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
   teasers: [Teaser]!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   title: String
   type: BlockType!
 }
@@ -5375,6 +7241,11 @@ input TeaserGridBlockInput {
   disabled: Boolean
   numColumns: Int!
   teasers: [TeaserInput]!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   title: String
 }
 
@@ -5383,6 +7254,14 @@ type TeaserGridFlexBlock implements BaseBlock {
   blockStyleName: String
   disabled: Boolean
   flexTeasers: [FlexTeaser!]!
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   title: String
   type: BlockType!
 }
@@ -5392,6 +7271,11 @@ input TeaserGridFlexBlockInput {
   blockStyleName: String
   disabled: Boolean
   flexTeasers: [FlexTeaserInput!]!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   title: String
 }
 
@@ -5407,11 +7291,19 @@ type TeaserListBlock implements BaseBlock {
   blockStyleName: String
   disabled: Boolean
   filter: TeaserListBlockFilter!
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
   skip: Int
   sort: TeaserListBlockSort
   take: Int
   teaserType: TeaserType!
   teasers: [Teaser]!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   title: String
   type: BlockType!
 }
@@ -5434,6 +7326,11 @@ input TeaserListBlockInput {
   sort: TeaserListBlockSort
   take: Int
   teaserType: TeaserType!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   title: String
 }
 
@@ -5464,8 +7361,16 @@ type TeaserSlotsAutofillConfig implements BaseBlock {
   disabled: Boolean
   enabled: Boolean!
   filter: TeaserListBlockFilter
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
   sort: TeaserListBlockSort
   teaserType: TeaserType
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -5482,8 +7387,16 @@ type TeaserSlotsBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
   slots: [TeaserSlot!]!
   teasers: [Teaser]!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   title: String
   type: BlockType!
 }
@@ -5494,6 +7407,11 @@ input TeaserSlotsBlockInput {
   blockStyleName: String
   disabled: Boolean
   slots: [TeaserSlotInput!]!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   title: String
 }
 
@@ -5508,6 +7426,14 @@ type TikTokVideoBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
   userID: String
   videoID: String
@@ -5517,6 +7443,11 @@ input TikTokVideoBlockInput {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   userID: String
   videoID: String
 }
@@ -5527,6 +7458,14 @@ type TitleBlock implements BaseBlock {
   disabled: Boolean
   lead: String
   preTitle: String
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   title: String
   type: BlockType!
 }
@@ -5537,6 +7476,11 @@ input TitleBlockInput {
   disabled: Boolean
   lead: String
   preTitle: String
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   title: String
 }
 
@@ -5585,6 +7529,14 @@ type TwitterTweetBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   tweetID: String
   type: BlockType!
   userID: String
@@ -5594,6 +7546,11 @@ input TwitterTweetBlockInput {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   tweetID: String
   userID: String
 }
@@ -5602,6 +7559,14 @@ type UnknownBlock {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -5702,6 +7667,42 @@ type UserConsent {
   value: Boolean!
 }
 
+type UserCreatedAction implements BaseAction & HasUserLc {
+  actionType: ActionType!
+  date: DateTime!
+  user: User!
+  userId: String!
+}
+
+type UserDeliveryPreferenceModel {
+  """
+  Whether the postal address is complete enough for letters; letters cannot be chosen otherwise.
+  """
+  canReceiveLetters: Boolean!
+  changedAt: DateTime
+  changedBy: MailLogRecipient
+
+  """How automated subscription mails reach this user."""
+  channel: MailChannel!
+
+  """
+  How the email address fares: a placeholder or dead address is not reached by email, though email may still be chosen.
+  """
+  emailSegment: MailEmailSegment!
+  origin: DeliveryPreferenceOrigin
+  reason: String
+}
+
+type UserEmailQualityModel {
+  level: EmailQualityLevel!
+
+  """The deciding evidence, e.g. hardBounce or login."""
+  reason: String!
+
+  """When the level was first reached."""
+  since: DateTime!
+}
+
 enum UserEvent {
   ACCOUNT_CREATION
   EMAIL_CHANGE
@@ -5766,10 +7767,56 @@ type VersionInformation {
   version: String!
 }
 
+type Video {
+  createdAt: DateTime!
+  description: String
+
+  """Length in seconds, as the browser reported it on upload."""
+  duration: Float
+  extension: String!
+  fileSize: Int!
+  filename: String
+  hasPoster: Boolean!
+  height: Int
+  id: String!
+  license: String
+  link: String
+  mimeType: String!
+  modifiedAt: DateTime!
+  posterUrl: String
+  source: String
+  title: String
+  url: String!
+  width: Int
+}
+
+input VideoFilter {
+  title: String
+}
+
+enum VideoSort {
+  CreatedAt
+  ModifiedAt
+}
+
+type VideoStorageUsage {
+  limitBytes: Float!
+  usedBytes: Float!
+  videoCount: Int!
+}
+
 type VimeoVideoBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
   videoID: String
 }
@@ -5778,6 +7825,11 @@ input VimeoVideoBlockInput {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   videoID: String
 }
 
@@ -5797,6 +7849,7 @@ type WebsiteAnalytics {
   googleTagManager: KeyEnabled!
   piwik: KeyEnabled!
   plausible: KeyEnabled!
+  umami: KeyEnabled!
 }
 
 input WebsiteAnalyticsInput {
@@ -5804,14 +7857,7 @@ input WebsiteAnalyticsInput {
   googleTagManager: KeyEnabledInput!
   piwik: KeyEnabledInput!
   plausible: KeyEnabledInput!
-}
-
-type WebsiteMail {
-  mailchimp: KeyEnabled
-}
-
-input WebsiteMailInput {
-  mailchimp: KeyEnabledInput!
+  umami: KeyEnabledInput!
 }
 
 type WebsiteRemoteFont {
@@ -5830,14 +7876,32 @@ type WebsiteSettings {
   ads: WebsiteAds!
   analytics: WebsiteAnalytics!
   fonts: [WebsiteRemoteFont!]!
-  mail: WebsiteMail!
   theme: JSONObject!
+}
+
+"""A day of the week, used to time blocks."""
+enum Weekday {
+  Friday
+  Monday
+  Saturday
+  Sunday
+  Thursday
+  Tuesday
+  Wednesday
 }
 
 type YouTubeVideoBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
   videoID: String
 }
@@ -5846,5 +7910,10 @@ input YouTubeVideoBlockInput {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   videoID: String
 }

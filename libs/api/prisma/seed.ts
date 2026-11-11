@@ -219,6 +219,50 @@ const seedSettings = (prisma: PrismaClient) =>
         settingRestriction: { allowedValues: { boolChoice: true } },
       },
     }),
+    prisma.setting.upsert({
+      where: {
+        name: SettingName.EMAIL_QUALITY_UNRESPONSIVE_AFTER_DAYS,
+      },
+      update: {},
+      create: {
+        name: SettingName.EMAIL_QUALITY_UNRESPONSIVE_AFTER_DAYS,
+        value: 180,
+        settingRestriction: { minValue: 1, maxValue: 3650 },
+      },
+    }),
+    prisma.setting.upsert({
+      where: {
+        name: SettingName.SUBSCRIPTION_EXTEND_WINDOW_DAYS,
+      },
+      update: {},
+      create: {
+        name: SettingName.SUBSCRIPTION_EXTEND_WINDOW_DAYS,
+        value: 30,
+        settingRestriction: { minValue: 0, maxValue: 366 },
+      },
+    }),
+    prisma.setting.upsert({
+      where: {
+        name: SettingName.EMAIL_QUALITY_MIN_MAILS_FOR_UNRESPONSIVE,
+      },
+      update: {},
+      create: {
+        name: SettingName.EMAIL_QUALITY_MIN_MAILS_FOR_UNRESPONSIVE,
+        value: 1,
+        settingRestriction: { minValue: 1, maxValue: 100 },
+      },
+    }),
+    prisma.setting.upsert({
+      where: {
+        name: SettingName.PAYMENT_METHOD_CHANGE_EXPIRY_DAYS,
+      },
+      update: {},
+      create: {
+        name: SettingName.PAYMENT_METHOD_CHANGE_EXPIRY_DAYS,
+        value: 14,
+        settingRestriction: { minValue: 1, maxValue: 90 },
+      },
+    }),
 
     prisma.settingAIProvider.upsert({
       where: {
@@ -245,6 +289,7 @@ const seedSettings = (prisma: PrismaClient) =>
           'v1.joXbh+gkDHyDSWR8.xx9rJ27ZN9VWALNkm3ET0w==.Hl8G9f69NSAH5A==',
         property: '1',
         articlePrefix: '/a/',
+        hotAndTrending: true,
       },
     }),
 

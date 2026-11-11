@@ -24,6 +24,9 @@
     "lib": ["es2017", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
+    "strict": false,
+    "types": ["node"],
+    "ignoreDeprecations": "6.0",
     "baseUrl": "."
     }
 }

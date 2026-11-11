@@ -1,11 +1,25 @@
+import type { Event, WithContext } from 'schema-dts';
 import { firstParagraphToPlaintext } from '@wepublish/richtext';
-import { FullEventFragment, FullImageFragment } from '@wepublish/website/api';
+import { stripQueryAndHash } from '@wepublish/utils';
+import {
+  EventStatus,
+  FullEventFragment,
+  FullImageFragment,
+} from '@wepublish/website/api';
 import {
   BuilderEventSEOProps,
   useWebsiteBuilder,
+  seoImageObject,
 } from '@wepublish/website/builder';
 import { formatISO, formatISODuration, intervalToDuration } from 'date-fns';
 import { useMemo } from 'react';
+
+const EVENT_STATUS = {
+  [EventStatus.Cancelled]: 'https://schema.org/EventCancelled',
+  [EventStatus.Postponed]: 'https://schema.org/EventPostponed',
+  [EventStatus.Rescheduled]: 'https://schema.org/EventRescheduled',
+  [EventStatus.Scheduled]: 'https://schema.org/EventScheduled',
+} as const;
 
 export const getEventSEO = (event: FullEventFragment) => {
   const description =
@@ -27,32 +41,21 @@ export const getEventSEO = (event: FullEventFragment) => {
     type: 'website',
     title: event.name,
     description,
-    url: event.url,
+    url: stripQueryAndHash(event.url),
     image,
     schema: {
-      '@context': 'http://schema.org',
+      '@context': 'https://schema.org',
       '@type': 'Event',
       startDate,
       endDate,
       duration,
       keywords: event.tags?.map(tag => tag.tag).join(','),
-      eventStatus: event.status,
-      location: event.location,
-      image:
-        image ?
-          {
-            height: image.height,
-            width: image.width,
-            representativeOfPage: true,
-            contentUrl: image.url,
-            thumbnailUrl: image.m,
-            url: image.url,
-            encodingFormat: 'image/webp',
-          }
-        : undefined,
+      eventStatus: EVENT_STATUS[event.status],
+      location: event.location ?? undefined,
+      image: seoImageObject(image),
       name: event.name,
       description,
-    },
+    } satisfies WithContext<Event>,
   };
 };
 

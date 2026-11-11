@@ -1,0 +1,2 @@
+export const UNSHARED_FALLBACK_TTL_MS = 30000;
+export const DEFAULT_LOCAL_COPY_MS = 2000;
