@@ -72,6 +72,8 @@ export type ProviderOption = {
   /** What the provider is called by its vendor, plus a hint where needed. */
   label: string;
   logo?: string;
+  /** Only meant for testing; not offered to someone setting up for real. */
+  testing?: boolean;
 };
 
 export type IntegrationDefinition = {
@@ -110,9 +112,14 @@ export const mailProviderOptions = (t: TFunction): ProviderOption[] => [
   {
     type: MailProviderType.Slack,
     label: t('integrations.providers.slack'),
+    testing: true,
     logo: slackLogo,
   },
-  { type: MailProviderType.Log, label: t('integrations.providers.log') },
+  {
+    type: MailProviderType.Log,
+    label: t('integrations.providers.log'),
+    testing: true,
+  },
 ];
 
 export const paymentProviderOptions = (t: TFunction): ProviderOption[] => [
@@ -149,6 +156,7 @@ export const paymentProviderOptions = (t: TFunction): ProviderOption[] => [
   {
     type: PaymentProviderType.Simulated,
     label: t('integrations.providers.simulated'),
+    testing: true,
   },
 ];
 

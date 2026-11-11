@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Card, CardContent, Chip, Typography } from '@mui/material';
+import { Card, CardContent, Typography } from '@mui/material';
 import { PropsWithChildren } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -17,7 +17,7 @@ export const EmptyStateProviders = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  align-items: center;
+  align-items: start;
   gap: 16px 24px;
 `;
 
@@ -25,6 +25,15 @@ export const EmptyStateLogo = styled.img`
   height: 28px;
   max-width: 120px;
   object-fit: contain;
+`;
+
+export const EmptyStateProvider = styled.div`
+  display: grid;
+  grid-template-rows: 28px auto;
+  justify-items: center;
+  align-items: center;
+  gap: 8px;
+  width: 140px;
 `;
 
 export const EmptyStateActions = styled.div`
@@ -40,6 +49,7 @@ export function IntegrationEmptyState({
   children,
 }: PropsWithChildren<{ providers?: ProviderOption[] }>) {
   const { t } = useTranslation();
+  const offered = providers.filter(provider => !provider.testing);
 
   return (
     <Card
@@ -55,27 +65,24 @@ export function IntegrationEmptyState({
         </Typography>
 
         <Typography sx={{ color: 'text.secondary', maxWidth: '60ch' }}>
-          {providers.length > 1 ?
+          {offered.length > 1 ?
             t('integrations.empty.description')
           : t('integrations.empty.descriptionSingle')}
         </Typography>
 
-        {providers.length > 0 && (
+        {offered.length > 0 && (
           <EmptyStateProviders>
-            {providers.map(provider =>
-              provider.logo ?
-                <EmptyStateLogo
-                  key={provider.type}
-                  src={provider.logo}
-                  alt={provider.label}
-                  title={provider.label}
-                />
-              : <Chip
-                  key={provider.type}
-                  variant="outlined"
-                  label={provider.label}
-                />
-            )}
+            {offered.map(provider => (
+              <EmptyStateProvider key={provider.type}>
+                {provider.logo ?
+                  <EmptyStateLogo
+                    src={provider.logo}
+                    alt=""
+                  />
+                : <span />}
+                <Typography variant="body2">{provider.label}</Typography>
+              </EmptyStateProvider>
+            ))}
           </EmptyStateProviders>
         )}
 

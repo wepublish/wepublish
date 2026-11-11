@@ -165,6 +165,7 @@ describe('GenericIntegrationList', () => {
         providers={[
           { type: 'MAILGUN', label: 'Mailgun', logo: 'mailgun.svg' },
           { type: 'SMTP', label: 'SMTP server' },
+          { type: 'LOG', label: 'Log only', testing: true },
         ]}
         setup={{
           createMutation: CreateMailProviderSettingDocument,
@@ -177,8 +178,9 @@ describe('GenericIntegrationList', () => {
       screen.getByRole('heading', { name: 'integrations.empty.title' })
     ).toBeInTheDocument();
     expect(screen.getByText('integrations.empty.description')).toBeTruthy();
-    expect(screen.getByRole('img', { name: 'Mailgun' })).toBeInTheDocument();
+    expect(screen.getByText('Mailgun')).toBeInTheDocument();
     expect(screen.getByText('SMTP server')).toBeInTheDocument();
+    expect(screen.queryByText('Log only')).toBeNull();
   });
 
   it('does not offer a choice when there is only one provider', () => {
