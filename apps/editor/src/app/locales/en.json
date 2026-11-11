@@ -3800,6 +3800,8 @@
         "bexioInvoiceMailBodyInfo": "The text of the email Bexio sends with the invoice; the PDF is attached. Placeholders such as :user.firstName: or :memberPlan.name: are replaced automatically. Bexio requires the placeholder [Network Link] in the text.",
         "bexioMarkInvoiceAsOpenInfo": "When enabled, Bexio sets the invoice to «open» after sending it, instead of leaving it as a draft.",
         "bexioContactSyncInfo": "When enabled, We.Publish pushes the name, company, email and address of changed readers to their Bexio contact every night and creates missing contacts for subscriptions paid through Bexio. Groups, phone and everything else on the contact stay as they are in Bexio.",
+        "bexioTestMailbox": "Test mailbox (test instances only)",
+        "bexioTestMailboxInfo": "Bexio companies in their trial only send invoice mails to their own sender address. Invoice mails to an address on this mailbox's domain go to this mailbox instead, e.g. bexio@<id>.resend.app for readers nw-00001@<id>.resend.app. Not available on production.",
         "bexioContactSyncNeverRan": "Has not run yet.",
         "bexioContactSyncLastRun": "Last run: {{date}}, without errors.",
         "bexioContactSyncLastRunFailed": "Last run: {{date}}. Error: {{error}}"

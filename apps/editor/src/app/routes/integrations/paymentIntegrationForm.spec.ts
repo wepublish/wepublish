@@ -1,6 +1,9 @@
 import { PaymentProviderType } from '@wepublish/editor/api';
 
-import { creatablePaymentProviderTypes } from './paymentIntegrationForm';
+import {
+  bexioTestMailboxFields,
+  creatablePaymentProviderTypes,
+} from './paymentIntegrationForm';
 
 describe('creatablePaymentProviderTypes', () => {
   it('offers the simulated provider outside of production', () => {
@@ -20,5 +23,23 @@ describe('creatablePaymentProviderTypes', () => {
     expect(creatablePaymentProviderTypes('')).not.toContain(
       PaymentProviderType.Simulated
     );
+  });
+});
+
+describe('bexioTestMailboxFields', () => {
+  const t = (key: string) => key;
+
+  it('offers the test mailbox outside of production', () => {
+    expect(bexioTestMailboxFields('review', t).map(field => field.name)).toEqual(
+      ['bexio_testMailbox']
+    );
+  });
+
+  it('hides the test mailbox on production', () => {
+    expect(bexioTestMailboxFields('production', t)).toEqual([]);
+  });
+
+  it('hides the test mailbox when the environment is not declared', () => {
+    expect(bexioTestMailboxFields('', t)).toEqual([]);
   });
 });
