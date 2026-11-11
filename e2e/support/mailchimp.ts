@@ -15,7 +15,7 @@ export const subscriberHash = (email: string) =>
 
 /**
  * The real Mailchimp test audience `@mailchimp` scenarios write to (there is
- * no fake). Only what cleanup needs: members the website added are archived.
+ * no fake). Only what cleanup needs: members the website added are deleted.
  */
 export class MailchimpTestAudience {
   constructor(
@@ -39,16 +39,21 @@ export class MailchimpTestAudience {
     };
   }
 
-  /** Archives the member; addresses that never made it into the list are fine. */
-  async archive(email: string) {
-    const response = await this.request.delete(
-      `${this.baseUrl}/lists/${this.config.listId}/members/${subscriberHash(email)}`,
+  /**
+   * Deletes the member for good: the website adds readers as `pending`, which
+   * Mailchimp refuses to archive (405). The address cannot be re-added, which
+   * is fine, as every scenario's reader has a new one. Addresses that never
+   * made it into the list are fine.
+   */
+  async remove(email: string) {
+    const response = await this.request.post(
+      `${this.baseUrl}/lists/${this.config.listId}/members/${subscriberHash(email)}/actions/delete-permanent`,
       { headers: this.headers }
     );
 
     if (!response.ok() && response.status() !== 404) {
       throw new Error(
-        `Mailchimp: archiving ${email} failed: HTTP ${response.status()} ${await response.text()}`
+        `Mailchimp: deleting ${email} failed: HTTP ${response.status()} ${await response.text()}`
       );
     }
   }

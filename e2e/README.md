@@ -115,11 +115,13 @@ skip reason in the report (`pnpm run e2e:report`).
   restore its list, newsletters and `enabled` afterwards
   (`data.offerMailchimpNewsletter`). The API key cannot be read back, so the
   test key stays, and so does the test list where none was set before. The
-  `mailchimp` fixture (`support/mailchimp.ts`) archives the scenario's readers
-  from the audience afterwards. Their addresses use
-  `E2E_MAILCHIMP_EMAIL_DOMAIN` (default `example.test`), since Mailchimp
-  refuses addresses that look fake; new members are `pending` and get a
-  confirmation mail. Scenarios that change the provider share it, so keep them
+  `mailchimp` fixture (`support/mailchimp.ts`) deletes the scenario's readers
+  from the audience for good afterwards (they are `pending`, which Mailchimp
+  cannot archive). Their addresses use
+  `E2E_MAILCHIMP_EMAIL_DOMAIN` (default `wepublish.works`), since Mailchimp
+  refuses addresses that look fake (`example.test`, `example.com`,
+  `mailinator.com`: "Please provide a valid email address"); new members are
+  `pending` and Mailchimp sends them a confirmation mail. Scenarios that change the provider share it, so keep them
   in one feature tagged `@mode:serial`.
 - **Third parties** (`support/third-party.ts`): analytics, ads, Sentry and
   tracking pixels are blocked in every test; Cloudflare Turnstile is not.

@@ -43,7 +43,7 @@ type TestFixtures = {
   inboundInbox: ResendInbox;
   /** The bexio test company; needs @bexio. */
   bexio: BexioTestCompany;
-  /** The Mailchimp test audience; needs @mailchimp. Archives the scenario's readers from it afterwards. */
+  /** The Mailchimp test audience; needs @mailchimp. Deletes the scenario's readers from it afterwards. */
   mailchimp: MailchimpTestAudience;
   checkout: SimulatedCheckout;
 };
@@ -181,8 +181,8 @@ export const test = base.extend<TestFixtures, WorkerFixtures>({
 
     for (const entity of ctx.entities.values()) {
       if (entity.kind === 'reader') {
-        await audience.archive(entity.email).catch(error =>
-          console.warn(`[e2e] could not archive ${entity.email} in Mailchimp: ${(error as Error).message}`)
+        await audience.remove(entity.email).catch(error =>
+          console.warn(`[e2e] could not delete ${entity.email} in Mailchimp: ${(error as Error).message}`)
         );
       }
     }

@@ -6,7 +6,7 @@ type Call = { url: string; auth?: string };
 
 const fakeRequest = (status: number, calls: Call[] = []) =>
   ({
-    delete: async (
+    post: async (
       url: string,
       options?: { headers?: Record<string, string> }
     ) => {
@@ -37,15 +37,16 @@ describe('subscriberHash', () => {
 });
 
 describe('MailchimpTestAudience', () => {
-  it("archives the member in the key's data center", async () => {
+  // pending members, which every reader the website adds is, cannot be archived
+  it("deletes the member permanently in the key's data center", async () => {
     const calls: Call[] = [];
-    await new MailchimpTestAudience(fakeRequest(204, calls), config).archive(
+    await new MailchimpTestAudience(fakeRequest(204, calls), config).remove(
       'mia@example.com'
     );
 
     expect(calls).toEqual([
       {
-        url: `https://us7.api.mailchimp.com/3.0/lists/list1/members/${subscriberHash('mia@example.com')}`,
+        url: `https://us7.api.mailchimp.com/3.0/lists/list1/members/${subscriberHash('mia@example.com')}/actions/delete-permanent`,
         auth: `Basic ${Buffer.from('e2e:secret-us7').toString('base64')}`,
       },
     ]);
@@ -53,13 +54,13 @@ describe('MailchimpTestAudience', () => {
 
   it('accepts readers who never made it into the list', async () => {
     await expect(
-      new MailchimpTestAudience(fakeRequest(404), config).archive('a@b.ch')
+      new MailchimpTestAudience(fakeRequest(404), config).remove('a@b.ch')
     ).resolves.toBeUndefined();
   });
 
   it('fails on any other error', async () => {
     await expect(
-      new MailchimpTestAudience(fakeRequest(401), config).archive('a@b.ch')
+      new MailchimpTestAudience(fakeRequest(401), config).remove('a@b.ch')
     ).rejects.toThrow(/HTTP 401/);
   });
 });

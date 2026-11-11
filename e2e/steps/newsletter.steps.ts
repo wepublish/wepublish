@@ -29,7 +29,7 @@ const newslettersOf = (page: Page, data: TestData, alias: string) =>
 
 Given(
   'the newsletter {string} offered through Mailchimp',
-  // `mailchimp` archives the scenario's readers from the audience afterwards
+  // `mailchimp` deletes the scenario's readers from the audience afterwards
   async ({ data, mailchimp: _audience }, alias: string) => {
     if (!env.mailchimp) {
       throw new Error('Tag the scenario with @mailchimp (see e2e/README.md).');
