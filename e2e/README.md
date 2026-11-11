@@ -112,7 +112,7 @@ skip reason in the report (`pnpm run e2e:report`).
   different origins — a provider bug, see `steps/fixtures.ts`.
 - **Mailchimp** has no fake: `@mailchimp` scenarios point the tenant's one
   Mailchimp sync provider at a real test audience (`E2E_MAILCHIMP_*`) and
-  restore its list, newsletters and `enabled` afterwards
+  restore its list, newsletters, `enabled` and `newslettersInProfile` afterwards
   (`data.offerMailchimpNewsletter`). The API key cannot be read back, so the
   test key stays, and so does the test list where none was set before. The
   `mailchimp` fixture (`support/mailchimp.ts`) deletes the scenario's readers

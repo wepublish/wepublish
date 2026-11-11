@@ -71,11 +71,14 @@ The periodic job expires pending changes after
 
 `SettingSyncProvider` (type `MAILCHIMP`) holds the API key and list; the daily
 sync lives in `libs/membership/api/src/lib/mailchimp-sync`. Its `newsletters`
-(`SettingSyncProviderNewsletter` rows, edited in the editor's sync integration
-form) are the interests readers toggle on `/profile` through
+(`SettingSyncProviderNewsletter` rows, edited on the editor's Newsletters page
+under Communication, `/newsletters`, `libs/membership/editor/src/lib/newsletters`)
+are the interests readers toggle on `/profile` through
 `userNewsletters` / `updateUserNewsletters`
-(`libs/membership/api/src/lib/mailchimp-newsletter`). Only configured interests
-can be changed; new members are added as `pending` (double opt-in). An interest
+(`libs/membership/api/src/lib/mailchimp-newsletter`), only while
+`newslettersInProfile` is on (default off). They also prefill a new interest
+selection of the Mailchimp form block on the same list. Only configured
+interests can be changed; new members are added as `pending` (double opt-in). An interest
 that is also in the sync's interest-group mappings gets flipped by the sync
 whenever a matching subscription starts or ends, regardless of the reader's
 choice.

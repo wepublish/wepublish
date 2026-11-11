@@ -89,6 +89,7 @@ type SyncProvider = {
   id: string;
   enabled: boolean | null;
   mailchimp_listId: string | null;
+  newslettersInProfile: boolean | null;
   newsletters: {
     interestId: string;
     name: string;
@@ -186,8 +187,9 @@ export class TestData {
 
   /**
    * Offers one newsletter: points the tenant's one Mailchimp sync provider at
-   * the test audience, enabled, with only this interest. Restores its list,
-   * newsletters and `enabled` afterwards; the API key cannot be read back, so
+   * the test audience, enabled, with only this interest, shown in the profile.
+   * Restores its list, newsletters, `enabled` and `newslettersInProfile`
+   * afterwards; the API key cannot be read back, so
    * the test key stays, and so does the test list where none was set (the
    * API ignores a null list). A stack without a provider gets one, disabled
    * afterwards (the API cannot delete it). Enabled, the nightly sync would
@@ -199,7 +201,7 @@ export class TestData {
   ) {
     const api = await this.api();
     const name = `${alias} ${this.runId()}`;
-    const fields = `id enabled mailchimp_listId newsletters { interestId name description imageID }`;
+    const fields = `id enabled mailchimp_listId newslettersInProfile newsletters { interestId name description imageID }`;
     const { syncProviderSettings } = await api.gql<{
       syncProviderSettings: SyncProvider[];
     }>(
@@ -219,9 +221,9 @@ export class TestData {
 
     const update = (variables: Record<string, unknown>) =>
       api.gql(
-        `mutation UpdateSyncProvider($id: String!, $enabled: Boolean, $apiKey: String, $listId: String, $newsletters: [SettingSyncProviderNewsletterInput!]) {
+        `mutation UpdateSyncProvider($id: String!, $enabled: Boolean, $apiKey: String, $listId: String, $newsletters: [SettingSyncProviderNewsletterInput!], $inProfile: Boolean) {
           updateSyncProviderSetting(id: $id, enabled: $enabled, mailchimp_apiKey: $apiKey,
-            mailchimp_listId: $listId, newsletters: $newsletters) { id }
+            mailchimp_listId: $listId, newsletters: $newsletters, newslettersInProfile: $inProfile) { id }
         }`,
         { id: provider.id, ...variables }
       );
@@ -231,6 +233,7 @@ export class TestData {
         enabled: !!provider.enabled,
         listId: provider.mailchimp_listId,
         newsletters: provider.newsletters,
+        inProfile: !!provider.newslettersInProfile,
       })
     );
 
@@ -239,6 +242,7 @@ export class TestData {
       apiKey,
       listId,
       newsletters: [{ interestId, name }],
+      inProfile: true,
     });
 
     return this.remember(alias, {
