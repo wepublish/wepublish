@@ -498,6 +498,7 @@ export function userFixture(
     lastLogin: null,
     email,
     emailVerifiedAt: null,
+    emailQuality: null,
     note: null,
     totpEnabled: false,
     totpExempt: false,
