@@ -201,12 +201,15 @@ and RFG sizes the icon from the whole "we", leaving it off-centre.
 ### Website shell (header / footer per route)
 
 Every tenant `_app.tsx` renders `NavBar` / `FooterContainer` only when
-`getWebsiteShell(pageProps)` says so. A route hides them by returning
+`useLiveWebsiteShell(pageProps)` says so. A route hides them by returning
 `shell: {showNavigation?, showFooter?}` in its `getStaticProps` props, so
 don't hide them with CSS. Page routes (`[slug].tsx`, `index.tsx`) build
 `shell` from the page's `hideHeader` / `hideFooter` with `getPageShell`
 ([website-shell.ts](../libs/utils/website/src/lib/website-shell.ts)). A new
-tenant has to do the same.
+tenant has to do the same. On a route that returned a `shell`, the flags of
+the page `PageContainer` loaded in the browser win (`usePageShell`): the
+server query is anonymous, so an unpublished page is `null` there and the
+editor preview would otherwise always show header and footer.
 
 ## File naming
 

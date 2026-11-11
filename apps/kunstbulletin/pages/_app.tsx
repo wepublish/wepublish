@@ -20,7 +20,7 @@ import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import { minimalTheme } from '@wepublish/ui';
 import {
   authLink,
-  getWebsiteShell,
+  useLiveWebsiteShell,
   initWePublishTranslator,
   WebsiteShellProps,
   withJwtHandler,
@@ -118,7 +118,7 @@ function CustomApp({
     [settings]
   );
 
-  const shell = getWebsiteShell(pageProps);
+  const shell = useLiveWebsiteShell(pageProps);
 
   return (
     <PlausibleProvider

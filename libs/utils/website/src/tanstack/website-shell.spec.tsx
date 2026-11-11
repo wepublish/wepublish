@@ -1,4 +1,5 @@
-import { renderHook } from '@testing-library/react';
+import { render, renderHook } from '@testing-library/react';
+import { useReportPageShell } from '@wepublish/website/builder';
 
 import { useWebsiteShell } from './website-shell';
 
@@ -53,5 +54,27 @@ describe('useWebsiteShell', () => {
       showNavigation: false,
       showFooter: false,
     });
+  });
+
+  it('follows the page loaded in the browser on a route with a page shell', () => {
+    matches.mockReturnValue([
+      { loaderData: { shell: { showNavigation: true, showFooter: true } } },
+    ]);
+
+    const Reporter = () => {
+      useReportPageShell({ hideHeader: true, hideFooter: true });
+
+      return null;
+    };
+
+    const shell = renderHook(() => useWebsiteShell());
+    const reporter = render(<Reporter />);
+
+    expect(shell.result.current).toEqual({
+      showNavigation: false,
+      showFooter: false,
+    });
+
+    reporter.unmount();
   });
 });
