@@ -66,9 +66,7 @@ describe('AnalyticsProviderSettingsService', () => {
     };
     expect(credentials).not.toContain('secret-key');
     expect(new SecretCrypto().decrypt(credentials)).toBe('secret-key');
-    expect(resets.reset).toHaveBeenCalledWith(
-      'settings:analyticsprovider'
-    );
+    expect(resets.reset).toHaveBeenCalledWith('settings:analyticsprovider');
   });
 
   test('only one provider powers Hot & Trending', async () => {

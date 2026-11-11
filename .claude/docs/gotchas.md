@@ -10,6 +10,16 @@ gets refactored away by the next agent.
 
 ---
 
+### ⚠️ `tsc -p apps/editor` checks nothing and exits 0
+
+`apps/editor`, `apps/media` and `apps/api-example` have a solution-style
+`tsconfig.json` (`"files": []`, only `references`), so `pnpm tsc -p apps/editor
+--noEmit` compiles zero files and reports success. CI's `website-typecheck.yml`
+runs `tsc --noEmit -p apps/editor/tsconfig.app.json` inside the editor build and
+fails (2026-11-09: a `printIssues` field missing from three `libs/membership/editor`
+call sites, green locally on Vitest and on the useless `tsc`). Run
+`pnpm nx run editor:typecheck` after touching the editor or any `libs/*/editor`.
+
 ### ⚠️ Prisma helpers are deliberately absent from the `@wepublish/testing` barrel
 
 [libs/testing/src/index.ts](../../libs/testing/src/index.ts) exports `act-wait`,
@@ -1377,6 +1387,52 @@ as `upgrade-subscription.service.ts` does.
 
 Pinned by `periodic-job.service.spec.ts` («removes the invoice when the
 provider could not create it»).
+
+---
+
+### ⚠️ Apollo Client 4's `useLazyQuery` ignores `onCompleted` / `onError` without a type error
+
+The editor runs `@apollo/client` 4. Its lazy queries no longer call
+`onCompleted` or `onError`, yet passing them still typechecks. A download
+written as `useLazyQuery(Doc, { onCompleted: data => download(data) })` runs
+the query and then does nothing (2026-11-08: the print-issue «CSV
+herunterladen» buttons; the API answered correctly the whole time).
+
+Await the trigger instead: it resolves with `{ data }` and rejects on an
+error, as `libs/ui/editor/src/lib/panel/exportSubscriptions.tsx` and
+`libs/print-issue/editor/src/lib/print-issue-list-view.tsx` do. A spec that mocks
+`useLazyQuery` must not call `onCompleted` either, or it hides the bug.
+
+Pinned by `libs/print-issue/editor/src/lib/print-issue-list-view.spec.tsx`
+(«lists the draft with its options, CSV, edit, delivered and delete, and the merged list»).
+
+### ⚠️ `prisma migrate deploy` targets `DIRECT_DATABASE_URL` from `.env`, not the `DATABASE_URL` you pass
+
+[prisma.config.ts](../../prisma.config.ts) loads `.env` and takes
+`process.env['DIRECT_DATABASE_URL'] || process.env['DATABASE_URL']` as the
+datasource («DIRECT_DATABASE_URL bypasses PgBouncer»). So
+`DATABASE_URL=postgresql://…/throwaway pnpm prisma migrate deploy` still
+migrates whatever `.env`'s `DIRECT_DATABASE_URL` points at.
+
+Verified 2026-11-08 in a worktree: the command printed «All migrations have
+been successfully applied» while the throwaway database stayed empty, and 12
+migrations (11 from master plus the branch's own) had landed in the shared
+`wepublish` database of another checkout's Docker stack. The API booted
+against the throwaway database then died with `relation
+"public.settings.analyticsProvider" does not exist`.
+
+Override **both** variables for any Prisma CLI call that must hit another
+database: `DATABASE_URL=… DIRECT_DATABASE_URL=… pnpm prisma migrate deploy`.
+The running API reads only `DATABASE_URL`
+(`libs/nest-modules/src/lib/database/prisma.service.ts`), which is why the
+boot and the migration disagreed.
+
+**Load-bearing:** the `DIRECT_DATABASE_URL` preference in `prisma.config.ts`
+is what production relies on for advisory locks through PgBouncer; do not
+"fix" it by dropping the fallback order.
+
+Nothing guards this — a regression here is silent: the CLI reports success
+against the wrong database.
 
 ## Adding an entry
 

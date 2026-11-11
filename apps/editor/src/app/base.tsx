@@ -73,6 +73,7 @@ import {
   CanGetArticle,
   CanGetArticles,
   CanGetAudienceStats,
+  CanGetPrintIssues,
   CanGetAuditLogs,
   CanGetAuthor,
   CanGetAuthors,
@@ -168,6 +169,7 @@ import { useTranslation } from 'react-i18next';
 import {
   MdAccountCircle,
   MdApproval,
+  MdPrint,
   MdAutoFixHigh,
   MdAutorenew,
   MdBadge,
@@ -1139,6 +1141,19 @@ export function Base({ children }: BaseProps) {
                   {t('navbar.banners')}
                 </SidebarNavItem>
               </PermissionControl>
+
+              <FeatureControl feature="print-export">
+                <PermissionControl
+                  qualifyingPermissions={[CanGetPrintIssues.id]}
+                >
+                  <SidebarNavItem
+                    href="/print-issues"
+                    icon={<MdPrint />}
+                  >
+                    {t('navbar.printIssues')}
+                  </SidebarNavItem>
+                </PermissionControl>
+              </FeatureControl>
 
               <PermissionControl
                 qualifyingPermissions={[CanGetAuthors.id, CanGetTags.id]}

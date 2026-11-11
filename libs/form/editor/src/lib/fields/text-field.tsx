@@ -48,9 +48,7 @@ export function TextField({
     password ?
       <IconButton
         edge="end"
-        aria-label={
-          visible ? t('form.password.hide') : t('form.password.show')
-        }
+        aria-label={visible ? t('form.password.hide') : t('form.password.show')}
         onClick={() => setVisible(!visible)}
         disabled={field.disabled}
       >

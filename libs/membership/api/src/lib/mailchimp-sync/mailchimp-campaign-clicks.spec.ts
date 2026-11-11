@@ -69,7 +69,10 @@ describe('MailchimpCampaignClicksService', () => {
     await service.record(LIST_ID, since);
 
     expect(reports.getAllCampaignReports).toHaveBeenCalledWith(
-      expect.objectContaining({ since_send_time: since.toISOString(), count: 100 })
+      expect.objectContaining({
+        since_send_time: since.toISOString(),
+        count: 100,
+      })
     );
   });
 
@@ -81,7 +84,9 @@ describe('MailchimpCampaignClicksService', () => {
       ],
     });
     reports.getSubscribersInfo
-      .mockResolvedValueOnce({ members: clickers('Jane@Example.com', 'bob@example.com') })
+      .mockResolvedValueOnce({
+        members: clickers('Jane@Example.com', 'bob@example.com'),
+      })
       .mockResolvedValueOnce({ members: [] })
       .mockResolvedValueOnce({ members: clickers('jane@example.com') })
       .mockResolvedValueOnce({ members: [] });
@@ -135,7 +140,9 @@ describe('MailchimpCampaignClicksService', () => {
 
   it('skips clicks recorded on an earlier night', async () => {
     reports.getSubscribersInfo
-      .mockResolvedValueOnce({ members: clickers('a@example.com', 'b@example.com') })
+      .mockResolvedValueOnce({
+        members: clickers('a@example.com', 'b@example.com'),
+      })
       .mockResolvedValueOnce({ members: [] });
     prisma.emailQualityEvent.findMany.mockResolvedValue([
       { providerEventId: 'mailchimp-campaign:camp-1:a@example.com' },
