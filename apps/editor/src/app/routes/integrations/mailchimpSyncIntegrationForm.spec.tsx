@@ -1,7 +1,8 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import { createTheme, ThemeProvider } from '@mui/material';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { SyncProviderType } from '@wepublish/editor/api';
+import { MemoryRouter } from 'react-router-dom';
 import type { Mock } from 'vitest';
 
 import { MailchimpSyncIntegrationForm } from './mailchimpSyncIntegrationForm';
@@ -34,7 +35,68 @@ beforeEach(() => {
   });
 });
 
+const renderForm = () =>
+  render(
+    <ThemeProvider theme={createTheme({ cssVariables: true })}>
+      <MemoryRouter>
+        <MailchimpSyncIntegrationForm />
+      </MemoryRouter>
+    </ThemeProvider>
+  );
+
+const givenProvider = () =>
+  (useQuery as unknown as Mock).mockReturnValue({
+    data: {
+      syncProviderSettings: [
+        {
+          id: 'mailchimp-sync',
+          type: SyncProviderType.Mailchimp,
+          name: 'Mailchimp',
+          enabled: true,
+          mailchimp_listId: 'list-1',
+          newslettersInProfile: true,
+          newsletters: [
+            {
+              id: 'n1',
+              interestId: 'a',
+              name: 'Morgen-Briefing',
+              description: null,
+              image: null,
+            },
+          ],
+        },
+      ],
+    },
+    loading: false,
+  });
+
 describe('MailchimpSyncIntegrationForm', () => {
+  // they have their own page under Communication
+  it('leaves the newsletters to the newsletters page', () => {
+    givenProvider();
+    renderForm();
+
+    expect(
+      screen.queryByText('integrations.mailchimpSyncSettings.newsletters')
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: 'newsletterSettings.title' })
+    ).toHaveAttribute('href', '/newsletters');
+  });
+
+  it('keeps the newsletters when saving the integration', async () => {
+    givenProvider();
+    const { container } = renderForm();
+
+    fireEvent.submit(container.querySelector('form')!);
+
+    await waitFor(() => expect(create).toHaveBeenCalled());
+    expect(create.mock.calls[0][0].variables).not.toHaveProperty('newsletters');
+    expect(create.mock.calls[0][0].variables).not.toHaveProperty(
+      'newslettersInProfile'
+    );
+  });
+
   it('sets up the Mailchimp sync while none exists', () => {
     render(<MailchimpSyncIntegrationForm />);
 
@@ -65,11 +127,7 @@ describe('MailchimpSyncIntegrationForm', () => {
       loading: false,
     });
 
-    render(
-      <ThemeProvider theme={createTheme({ cssVariables: true })}>
-        <MailchimpSyncIntegrationForm />
-      </ThemeProvider>
-    );
+    renderForm();
 
     expect(screen.getByRole('textbox', { name: 'name' })).toBeInTheDocument();
     expect(

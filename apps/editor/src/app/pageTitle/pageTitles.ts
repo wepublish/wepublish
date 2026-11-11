@@ -122,6 +122,7 @@ export const PAGE_TITLES: Record<string, string> = {
   '/letterlayouts/edit/:id': 'pageTitles.letterLayoutEdit',
   '/systemmails': 'pageTitles.systemMails',
   '/mailsend': 'pageTitles.mailSend',
+  '/newsletters': 'pageTitles.newsletterSettings',
   '/deliverychannel': 'pageTitles.deliveryChannel',
   '/deliverychannel/:view': 'pageTitles.deliveryChannel',
   '/deliverysuggestions': 'pageTitles.deliveryChannel',

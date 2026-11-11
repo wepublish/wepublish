@@ -199,6 +199,7 @@ import {
   MdTravelExplore,
   MdVpnKey,
   MdVideoLibrary,
+  MdMarkEmailRead,
 } from 'react-icons/md';
 
 import type { CommandDefinition } from './commandDefinition';
@@ -623,6 +624,14 @@ export const NAVIGATION_COMMANDS: CommandDefinition[] = [
     icon: <MdMail />,
     permissions: [CanGetMailTemplates.id, CanUpdateMailTemplates.id],
     perform: ({ navigate }) => navigate('/mailtemplates'),
+  },
+  {
+    id: 'newsletterSettings',
+    titleKey: 'navbar.newsletterSettings',
+    sectionKey: 'navbar.communication',
+    icon: <MdMarkEmailRead />,
+    permissions: [CanGetMailchimpSyncSettings.id],
+    perform: ({ navigate }) => navigate('/newsletters'),
   },
   {
     id: 'letterLayouts',

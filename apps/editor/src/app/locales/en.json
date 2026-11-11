@@ -1990,7 +1990,8 @@
       "auditLog": "Audit log",
       "letterLayouts": "Stationery",
       "language": "Language",
-      "audioLibrary": "Audio"
+      "audioLibrary": "Audio",
+      "newsletterSettings": "Newsletters"
     },
     "pageTitles": {
       "login": "Log in",
@@ -2128,7 +2129,8 @@
       "settings": "Settings",
       "websiteSettings": "Website settings",
       "seo": "SEO checklist",
-      "logout": "Logout"
+      "logout": "Logout",
+      "newsletterSettings": "Newsletters"
     },
     "navigation": {
       "overview": {
@@ -3769,8 +3771,6 @@
         "days": "Days",
         "staticValue": "Value",
         "defaultInterestGroupsHelp": "Interest groups that are always enabled for every contact — regardless of subscription.",
-        "newsletters": "Newsletters in the user profile",
-        "newslettersHelp": "Interests that logged-in readers can subscribe to and unsubscribe from in their profile. Interest groups mapped above are still switched by the sync whenever a matching subscription starts or ends.",
         "addNewsletter": "Add newsletter",
         "lastSync": "Last sync",
         "scheduledInfo": "Runs automatically every day at 3:00 AM (UTC)",
@@ -3823,7 +3823,8 @@
         "enabledInfo": "When enabled, We.Publish transfers all active user accounts with their subscription data to the Mailchimp audience every night. «Sync Now» only works when this is on.",
         "apiKeyInfo": "The API key of your Mailchimp account («Profile» → «Extras» → «API keys»), ending in -us1, -us2 etc. Save it first so that the audiences, merge fields and groups below can be loaded.",
         "listIdInfo": "The Mailchimp audience the user accounts are transferred to. Once the API key is saved, you can pick it from the list; otherwise enter its ID from the audience settings in Mailchimp.",
-        "dryRunInfo": "Shows which contacts would change in Mailchimp, without changing anything there. The dry run limit checks a random sample of that many users; leave it empty to check everyone."
+        "dryRunInfo": "Shows which contacts would change in Mailchimp, without changing anything there. The dry run limit checks a random sample of that many users; leave it empty to check everyone.",
+        "newslettersMoved": "The newsletters readers choose in their profile are set up under Communication:"
       },
       "typeChangeTitle": "Really change the type?",
       "typeChangeWarning": "Changing the type deletes this integration’s entire configuration, including every stored credential. This cannot be undone.",
@@ -5378,6 +5379,18 @@
         "title": "Title",
         "titleHint": "Also the subject line of the Mailchimp draft. Takes effect on save."
       }
+    },
+    "newsletterSettings": {
+      "title": "Newsletters",
+      "description": "The newsletters logged-in readers can subscribe to in their profile. They appear there under “Newsletter” as cards with an image, a name, a description and a checkbox each. Ticking one and saving adds the reader to that interest in Mailchimp; new contacts first get a confirmation email from Mailchimp. The newsletters are also the defaults for new newsletter sign-up blocks.",
+      "setUpHint": "Set up the Mailchimp sync with a list first, so you can offer its interests here as newsletters.",
+      "setUpLink": "Go to the Mailchimp integration",
+      "profile": "In the reader profile",
+      "showInProfile": "Show newsletters in the profile",
+      "showInProfileHelp": "While this is off, readers don’t see the newsletters in their profile and can’t change them there. Their subscriptions in Mailchimp stay as they are.",
+      "newsletters": "Newsletters",
+      "newslettersHelp": "Mailchimp interests of the list, in this order. The name, description and image are what readers see.",
+      "saved": "Newsletters saved"
     }
   }
 }

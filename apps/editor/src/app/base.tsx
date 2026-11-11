@@ -48,6 +48,7 @@ import {
   CanDeleteAudio,
   CanDeleteVideo,
   CanGetAudio,
+  CanGetMailchimpSyncSettings,
   CanGetAudios,
   CanGetVideo,
   CanGetVideos,
@@ -221,6 +222,7 @@ import {
   MdTravelExplore,
   MdKey,
   MdVpnKey,
+  MdMarkEmailRead,
 } from 'react-icons/md';
 import { useLocation } from 'react-router-dom';
 
@@ -1333,6 +1335,17 @@ export function Base({ children }: BaseProps) {
                       icon={<MdMail />}
                     >
                       {t('navbar.mailTemplates')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+
+                  <PermissionControl
+                    qualifyingPermissions={[CanGetMailchimpSyncSettings.id]}
+                  >
+                    <SidebarNavItem
+                      href="/newsletters"
+                      icon={<MdMarkEmailRead />}
+                    >
+                      {t('navbar.newsletterSettings')}
                     </SidebarNavItem>
                   </PermissionControl>
 

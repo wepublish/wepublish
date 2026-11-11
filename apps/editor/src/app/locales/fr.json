@@ -1989,7 +1989,8 @@
       "letterLayouts": "Papier à lettres",
       "articleTemplates": "Modèles d'articles",
       "language": "Langue",
-      "audioLibrary": "Audio"
+      "audioLibrary": "Audio",
+      "newsletterSettings": "Newsletters"
     },
     "pageTitles": {
       "login": "Connexion",
@@ -2127,7 +2128,8 @@
       "settings": "Paramètres",
       "websiteSettings": "Paramètres du site",
       "seo": "Liste de contrôle SEO",
-      "logout": "Déconnexion"
+      "logout": "Déconnexion",
+      "newsletterSettings": "Newsletters"
     },
     "navigation": {
       "overview": {
@@ -3685,8 +3687,6 @@
         "days": "Jours",
         "staticValue": "Valeur",
         "defaultInterestGroupsHelp": "Groupes d’intérêt toujours activés pour chaque contact — indépendamment de l’abonnement.",
-        "newsletters": "Newsletters dans le profil utilisateur",
-        "newslettersHelp": "Intérêts auxquels les lecteurs·rices connecté·e·s peuvent s’abonner et se désabonner dans leur profil. Les groupes d’intérêt associés ci-dessus restent modifiés par la synchronisation dès qu’un abonnement correspondant commence ou se termine.",
         "addNewsletter": "Ajouter une newsletter",
         "lastSync": "Dernière synchronisation",
         "scheduledInfo": "Exécuté automatiquement chaque jour à 3h00 (UTC)",
@@ -3739,7 +3739,8 @@
         "enabledInfo": "Si activé, We.Publish transfère chaque nuit tous les comptes utilisateur actifs et leurs données d’abonnement vers l’audience Mailchimp. « Synchroniser maintenant » ne fonctionne que si cette option est activée.",
         "apiKeyInfo": "La clé API de votre compte Mailchimp (« Profil » → « Extras » → « Clés API »), se terminant par -us1, -us2, etc. Enregistrez-la d’abord pour que les audiences, champs de fusion et groupes ci-dessous puissent être chargés.",
         "listIdInfo": "L’audience Mailchimp vers laquelle les comptes utilisateur sont transférés. Une fois la clé API enregistrée, vous pouvez la choisir dans la liste ; sinon, saisissez son ID figurant dans les paramètres de l’audience dans Mailchimp.",
-        "dryRunInfo": "Montre quels contacts seraient modifiés dans Mailchimp, sans rien y changer. La limite d’essai vérifie un échantillon aléatoire de ce nombre de comptes ; laissez vide pour tout vérifier."
+        "dryRunInfo": "Montre quels contacts seraient modifiés dans Mailchimp, sans rien y changer. La limite d’essai vérifie un échantillon aléatoire de ce nombre de comptes ; laissez vide pour tout vérifier.",
+        "newslettersMoved": "Les newsletters que les lecteur·rices choisissent dans leur profil se configurent sous Communication :"
       },
       "typeChangeTitle": "Changer vraiment le type ?",
       "typeChangeWarning": "Changer le type supprime toute la configuration de cette intégration, y compris les identifiants enregistrés. Cette action est irréversible.",
@@ -5378,6 +5379,18 @@
         "title": "Titre",
         "titleHint": "Sert aussi d’objet au brouillon Mailchimp. Pris en compte à l’enregistrement."
       }
+    },
+    "newsletterSettings": {
+      "title": "Newsletters",
+      "description": "Les newsletters auxquelles les lecteur·rices connecté·es peuvent s’abonner dans leur profil. Elles y apparaissent sous « Newsletter » sous forme de cartes avec une image, un nom, une description et une case à cocher. Cocher une case et enregistrer inscrit la personne à cet intérêt dans Mailchimp ; les nouveaux contacts reçoivent d’abord un e-mail de confirmation de Mailchimp. Les newsletters servent aussi de valeurs par défaut pour les nouveaux blocs d’inscription à la newsletter.",
+      "setUpHint": "Configure d’abord la synchronisation Mailchimp avec une liste pour pouvoir proposer ici ses intérêts comme newsletters.",
+      "setUpLink": "Vers l’intégration Mailchimp",
+      "profile": "Dans le profil des lecteur·rices",
+      "showInProfile": "Afficher les newsletters dans le profil",
+      "showInProfileHelp": "Désactivé, les lecteur·rices ne voient pas les newsletters dans leur profil et ne peuvent pas les y modifier. Leurs inscriptions dans Mailchimp restent inchangées.",
+      "newsletters": "Newsletters",
+      "newslettersHelp": "Intérêts Mailchimp de la liste, dans cet ordre. Le nom, la description et l’image sont ce que voient les lecteur·rices.",
+      "saved": "Newsletters enregistrées"
     }
   }
 }
