@@ -28,6 +28,7 @@ import {
   ChangeEvent,
   ComponentType,
   ReactNode,
+  useId,
   useMemo,
   useState,
 } from 'react';
@@ -126,6 +127,8 @@ export interface GenericIntegrationFormProps<
     | FieldDefinition<TFormValues>[]
     | ((setting: TSetting) => FieldDefinition<TFormValues>[]);
   getLogo?: (setting: TSetting) => string | undefined;
+  /** Queries to refetch after saving, e.g. when saving changes other settings */
+  refetchQueries?: DocumentNode[];
 
   renderActions?: (setting: TSetting) => ReactNode;
 }
@@ -139,11 +142,14 @@ export function SingleGenericIntegrationForm<
   mutation,
   fields,
   getLogo,
+  refetchQueries,
   renderActions,
 }: GenericIntegrationFormProps<TSetting, TFormValues>) {
   const { t } = useTranslation();
 
-  const [updateSettings, { loading: updating }] = useMutation(mutation, {});
+  const [updateSettings, { loading: updating }] = useMutation(mutation, {
+    refetchQueries: refetchQueries?.map(query => ({ query })),
+  });
 
   const formatLastLoaded = (date?: Date | string) => {
     if (!date) {
@@ -200,6 +206,8 @@ export function SingleGenericIntegrationForm<
   });
 
   const logo = getLogo?.(setting);
+  const formId = useId();
+  const labelIdFor = (name: string) => `${formId}-${name}-label`;
 
   return (
     <form
@@ -245,7 +253,9 @@ export function SingleGenericIntegrationForm<
                   {field.type === 'checkbox' ?
                     ' '
                   : <>
-                      {field.label}
+                      <span id={labelIdFor(String(field.name))}>
+                        {field.label}
+                      </span>
                       {info && (
                         <>
                           {' '}
@@ -277,6 +287,11 @@ export function SingleGenericIntegrationForm<
                           disabled={field.disabled}
                           fullWidth
                           {...restField}
+                          slotProps={{
+                            select: {
+                              labelId: labelIdFor(String(field.name)),
+                            },
+                          }}
                         >
                           {(field.options || []).map(option => (
                             <MenuItem
@@ -307,7 +322,20 @@ export function SingleGenericIntegrationForm<
                           onChange={(_event, chosen) => onChange(chosen)}
                           disabled={field.disabled}
                           {...restField}
-                          renderInput={params => <MuiTextField {...params} />}
+                          renderInput={params => (
+                            <MuiTextField
+                              {...params}
+                              slotProps={{
+                                ...params.slotProps,
+                                htmlInput: {
+                                  ...params.slotProps.htmlInput,
+                                  'aria-labelledby': labelIdFor(
+                                    String(field.name)
+                                  ),
+                                },
+                              }}
+                            />
+                          )}
                         />
                       );
                     }
@@ -373,6 +401,11 @@ export function SingleGenericIntegrationForm<
                         autoComplete={field.autoComplete}
                         fullWidth
                         {...restField}
+                        slotProps={{
+                          htmlInput: {
+                            'aria-labelledby': labelIdFor(String(field.name)),
+                          },
+                        }}
                       />
                     );
                   }}

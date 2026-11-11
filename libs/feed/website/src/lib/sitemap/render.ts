@@ -22,6 +22,7 @@ import { buildSitemapIndex, buildUrlset, SitemapUrl } from './xml';
 
 export type SitemapSiteConfig = {
   title: string;
+  description?: string;
   lang?: string;
   mode?: 'single' | 'index';
   pageUrls?: string[];
@@ -141,10 +142,10 @@ const fetchPages = ({ client }: SitemapContext) =>
     return data?.pages;
   }, MAX_URLS);
 
-type Resolved = Required<
-  Omit<SitemapSiteConfig, 'filterArticle' | 'articleUrl' | 'pageUrl'>
-> &
-  Pick<SitemapSiteConfig, 'filterArticle' | 'articleUrl' | 'pageUrl'>;
+type Optional = 'description' | 'filterArticle' | 'articleUrl' | 'pageUrl';
+
+type Resolved = Required<Omit<SitemapSiteConfig, Optional>> &
+  Pick<SitemapSiteConfig, Optional>;
 
 const newsCutoff = (config: Resolved, now: Date) =>
   new Date(now.getTime() - config.newsMaxAgeDays * 24 * 60 * 60 * 1000);
@@ -202,13 +203,11 @@ const pageUrls = async (
       changefreq: 'daily',
       priority: 1,
     },
-    ...config.pageUrls.map(
-      (path): SitemapUrl => ({
-        loc: `${siteUrl}${path}`,
-        changefreq: 'weekly',
-        priority: 0.8,
-      })
-    ),
+    ...config.pageUrls.map((path): SitemapUrl => ({
+      loc: `${siteUrl}${path}`,
+      changefreq: 'weekly',
+      priority: 0.8,
+    })),
     ...pages
       .filter(({ slug }) => slug !== config.homepageSlug)
       .map(page => ({

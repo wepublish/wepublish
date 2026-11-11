@@ -94,7 +94,8 @@ export class PaymentProviderSettingsResolver {
   }
 
   @ResolveField(() => Boolean, {
-    description: 'Whether a webhook signing secret is stored. It is never returned itself.',
+    description:
+      'Whether a webhook signing secret is stored. It is never returned itself.',
   })
   isWebhookEndpointSecretSet(@Parent() setting: SettingRow) {
     return !!setting.webhookEndpointSecret;

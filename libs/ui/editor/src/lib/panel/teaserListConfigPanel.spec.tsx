@@ -49,6 +49,14 @@ describe('TeaserListConfigPanel', () => {
     ).not.toHaveStyle({ width: '200px' });
   });
 
+  it('names the tags picker after its label', () => {
+    renderPanel();
+
+    expect(
+      screen.getByRole('combobox', { name: 'blocks.teaserList.tagsLabel' })
+    ).toBeInTheDocument();
+  });
+
   it('shows closing the drawer as a text button', () => {
     renderPanel();
 

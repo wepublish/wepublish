@@ -1,7 +1,8 @@
-import { useLazyQuery, useMutation } from '@apollo/client/react';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client/react';
 import {
   Alert,
   Autocomplete,
+  Box,
   Button,
   ButtonGroup,
   Card,
@@ -11,7 +12,6 @@ import {
   DialogContent,
   DialogTitle,
   FormControl,
-  FormLabel,
   MenuItem,
   Stack,
   TextField,
@@ -22,10 +22,14 @@ import {
   CreateMailTemplateDocument,
   MailTemplateByIdDocument,
   MailTemplateContext,
+  MailTemplateLetterPreviewDocument,
+  MailTemplateLetterPreviewQuery,
+  MailTemplateLetterPreviewQueryVariables,
   MailTemplatePreviewDocument,
   MailTemplatePreviewInput,
   MailTemplatePreviewQuery,
   MailTemplatePreviewQueryVariables,
+  LetterLayoutsDocument,
   MailTemplateSubscriptionsDocument,
   SendTestMailTemplateDocument,
   UpdateMailTemplateDocument,
@@ -39,10 +43,11 @@ import {
   enqueueSnackbar,
   PageTitle,
 } from '@wepublish/ui/editor';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { DEFAULT_MUTATION_OPTIONS } from '../common';
+import { FieldLabel } from '../field-label';
 import { HtmlSourceEditor, HtmlSourceEditorHandle } from './html-source-editor';
 import { HtmlVisualEditor, HtmlVisualEditorHandle } from './html-visual-editor';
 import {
@@ -54,9 +59,13 @@ import {
   readShellSettings,
 } from './mail-html';
 import { MailColorPicker } from './color-picker';
+import { LetterAppendixPicker } from './letter-appendix-picker';
+import { LetterPreview } from './letter-preview';
+import { useLetterChannel } from './use-letter-channel';
 import { MailPreview } from './mail-preview';
 import { MAIL_PLACEHOLDER_CONTEXTS } from './mail-placeholders';
 import { PlaceholderPicker } from './placeholder-picker';
+import { testMailInput } from './test-mail-input';
 import {
   CanCreateMailTemplates,
   CanGetMailTemplates,
@@ -111,6 +120,23 @@ function MailTemplateEdit() {
   const [contentWidth, setContentWidth] = useState(DEFAULT_CONTENT_WIDTH);
   const [editorKey, setEditorKey] = useState(0);
   const [activeField, setActiveField] = useState<'subject' | 'body'>('body');
+  const [nameError, setNameError] = useState(false);
+  const [purposeError, setPurposeError] = useState(false);
+  const nameInputRef = useRef<HTMLInputElement>(null);
+  const purposeRef = useRef<HTMLInputElement>(null);
+  const fieldId = useId();
+  const ids = {
+    purpose: `${fieldId}-purpose`,
+    name: `${fieldId}-name`,
+    description: `${fieldId}-description`,
+    subject: `${fieldId}-subject`,
+    sample: `${fieldId}-sample`,
+    background: `${fieldId}-background`,
+    width: `${fieldId}-width`,
+    bodyMode: `${fieldId}-body-mode`,
+    letterLayout: `${fieldId}-letter-layout`,
+    letterAppendix: `${fieldId}-letter-appendix`,
+  };
 
   // The canonical HTML lives in a ref so typing never re-renders the page
   // (which would reset the iframe/CodeMirror cursor).
@@ -122,6 +148,9 @@ function MailTemplateEdit() {
   // The mail type must be chosen explicitly so preview/test use the data a real
   // mail of that type would carry (more realistic than a generic dump).
   const [contextId, setContextId] = useState<MailTemplateContext | null>(null);
+  // Stationery for the letter version; null prints on the default layout.
+  const [letterLayoutId, setLetterLayoutId] = useState<string | null>(null);
+  const [letterAppendixId, setLetterAppendixId] = useState<string | null>(null);
   const [subscriptionId, setSubscriptionId] = useState<string | null>(null);
   const [previewHtml, setPreviewHtml] = useState<string | null>(null);
   const [previewSubject, setPreviewSubject] = useState('');
@@ -141,6 +170,15 @@ function MailTemplateEdit() {
   const [previewLoading, setPreviewLoading] = useState(false);
   const [previewError, setPreviewError] = useState<string | null>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [letterPdf, setLetterPdf] = useState<string | null>(null);
+  const [letterLoading, setLetterLoading] = useState(false);
+  // Without a letter integration there is nothing to render a letter with.
+  const { letterAvailable } = useLetterChannel();
+  const { data: letterLayoutData } = useQuery(LetterLayoutsDocument, {
+    skip: !letterAvailable,
+  });
+  const letterLayouts = letterLayoutData?.letterLayouts ?? [];
+  const defaultLetterLayout = letterLayouts.find(layout => layout.isDefault);
   const [sendTest, { loading: testLoading }] = useMutation(
     SendTestMailTemplateDocument,
     DEFAULT_MUTATION_OPTIONS(t)
@@ -163,6 +201,8 @@ function MailTemplateEdit() {
       setSubject(template.subject);
       setTextContent(template.textContent ?? '');
       setContextId(template.context ?? null);
+      setLetterLayoutId(template.letterLayoutId ?? null);
+      setLetterAppendixId(template.letterAppendixId ?? null);
       htmlRef.current = template.htmlContent || createEmptyEmailHtml();
       const shell = readShellSettings(htmlRef.current);
       setBackgroundColor(shell.backgroundColor);
@@ -247,10 +287,16 @@ function MailTemplateEdit() {
     // The text fallback is always regenerated from the HTML on save.
     textContent: deriveTextFromHtml(htmlRef.current),
     context: contextId,
+    letterLayoutId,
+    letterAppendixId,
   });
 
   const save = async (close: boolean) => {
+    setNameError(!name);
+    setPurposeError(!contextId);
+
     if (!name) {
+      nameInputRef.current?.focus();
       enqueueSnackbar(t('mailTemplates.edit.nameRequired'), {
         variant: 'error',
       });
@@ -259,6 +305,7 @@ function MailTemplateEdit() {
     // The mail type is enforced on save (existing null-type templates still
     // load, but can't be saved again without choosing one).
     if (!contextId) {
+      purposeRef.current?.focus();
       enqueueSnackbar(
         t(
           'mailTemplates.edit.selectMailType',
@@ -291,6 +338,8 @@ function MailTemplateEdit() {
     subject,
     htmlContent: htmlRef.current,
     textContent,
+    letterLayoutId,
+    letterAppendixId,
   });
 
   // Preview/test never block on a missing mail type: fall back to `custom`
@@ -329,11 +378,40 @@ function MailTemplateEdit() {
     }
   };
 
+  // Rendered by the same pdf renderer a letter send uses, so the sheet shows
+  // exactly what would be printed.
+  const doPreviewLetter = async () => {
+    const ctx = effectiveContext();
+    setLetterLoading(true);
+    setPreviewError(null);
+    try {
+      const { data, error } = await client.query<
+        MailTemplateLetterPreviewQuery,
+        MailTemplateLetterPreviewQueryVariables
+      >({
+        query: MailTemplateLetterPreviewDocument,
+        variables: { input: previewInput(ctx) },
+        fetchPolicy: 'no-cache',
+        errorPolicy: 'all',
+      });
+      if (error) {
+        throw error;
+      }
+      setLetterPdf(data!.mailTemplateLetterPreview.pdf);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      setPreviewError(message);
+      enqueueSnackbar(message, { variant: 'error' });
+    } finally {
+      setLetterLoading(false);
+    }
+  };
+
   const doSendTest = async () => {
     const ctx = effectiveContext();
     await sendTest({
       variables: {
-        input: previewInput(ctx),
+        input: testMailInput(previewInput(ctx)),
       },
     });
     enqueueSnackbar(t('mailTemplates.edit.testSent'), { variant: 'success' });
@@ -394,9 +472,16 @@ function MailTemplateEdit() {
       >
         <Card
           variant="outlined"
-          sx={{ flex: 1, minWidth: 360, bgcolor: 'background.paper' }}
+          sx={{
+            flex: 1,
+            minWidth: 'min(360px, 100%)',
+            bgcolor: 'background.paper',
+          }}
         >
-          <CardHeader title={t('mailTemplates.edit.details', 'Details')} />
+          <CardHeader
+            title={t('mailTemplates.edit.details', 'Details')}
+            slotProps={{ title: { component: 'h2' } }}
+          />
 
           <CardContent>
             <Stack
@@ -408,19 +493,35 @@ function MailTemplateEdit() {
                   style={{ flex: 1, minWidth: 200, marginBottom: 0 }}
                   fullWidth
                 >
-                  <FormLabel>
-                    {t('mailTemplates.edit.mailType')} *{' '}
-                    <InfoTooltip text={t('mailTemplates.edit.purposeHint')} />
-                  </FormLabel>
+                  <FieldLabel
+                    id={ids.purpose}
+                    label={t('mailTemplates.edit.mailType')}
+                    help={t('mailTemplates.edit.purposeHint')}
+                    required
+                  />
                   <TextField
                     select
+                    required
                     value={contextId ?? ''}
-                    onChange={event =>
+                    onChange={event => {
+                      setPurposeError(false);
                       setContextId(
                         (event.target.value as MailTemplateContext) || null
-                      )
+                      );
+                    }}
+                    inputRef={purposeRef}
+                    error={purposeError}
+                    helperText={
+                      purposeError ?
+                        t('mailTemplates.edit.selectMailType')
+                      : undefined
                     }
-                    slotProps={{ select: { displayEmpty: true } }}
+                    slotProps={{
+                      select: {
+                        displayEmpty: true,
+                        labelId: ids.purpose,
+                      },
+                    }}
                     fullWidth
                   >
                     <MenuItem value="">
@@ -456,38 +557,121 @@ function MailTemplateEdit() {
                   style={{ flex: 1, minWidth: 200, marginBottom: 0 }}
                   fullWidth
                 >
-                  <FormLabel>{t('mailTemplates.name')}</FormLabel>
+                  <FieldLabel
+                    id={ids.name}
+                    label={t('mailTemplates.name')}
+                    required
+                  />
                   <TextField
                     value={name}
-                    onChange={event => setName(event.target.value)}
+                    required
+                    inputRef={nameInputRef}
+                    onChange={event => {
+                      setNameError(false);
+                      setName(event.target.value);
+                    }}
+                    error={nameError}
+                    helperText={
+                      nameError ?
+                        t('mailTemplates.edit.nameRequired')
+                      : undefined
+                    }
+                    slotProps={{
+                      htmlInput: { 'aria-labelledby': ids.name },
+                    }}
                   />
                 </FormControl>
                 <FormControl
                   style={{ flex: 1, minWidth: 200, marginBottom: 0 }}
                   fullWidth
                 >
-                  <FormLabel>
-                    {t('mailTemplates.description')}{' '}
-                    <InfoTooltip
-                      text={t('mailTemplates.edit.descriptionHelp')}
-                    />
-                  </FormLabel>
+                  <FieldLabel
+                    id={ids.description}
+                    label={t('mailTemplates.description')}
+                    help={t('mailTemplates.edit.descriptionHelp')}
+                  />
                   <TextField
                     value={description}
                     onChange={event => setDescription(event.target.value)}
+                    slotProps={{
+                      htmlInput: { 'aria-labelledby': ids.description },
+                    }}
                   />
                 </FormControl>
                 <FormControl
                   style={{ flex: 1, minWidth: 200, marginBottom: 0 }}
                   fullWidth
                 >
-                  <FormLabel>{t('mailTemplates.subject')}</FormLabel>
+                  <FieldLabel
+                    id={ids.subject}
+                    label={t('mailTemplates.subject')}
+                  />
                   <TextField
                     value={subject}
                     onChange={event => setSubject(event.target.value)}
                     onFocus={() => setActiveField('subject')}
+                    slotProps={{
+                      htmlInput: { 'aria-labelledby': ids.subject },
+                    }}
                   />
                 </FormControl>
+                {letterAvailable && (
+                  <FormControl
+                    style={{ flex: 1, minWidth: 200, marginBottom: 0 }}
+                    fullWidth
+                  >
+                    <FieldLabel
+                      id={ids.letterLayout}
+                      label={t('mailTemplates.edit.letterLayout')}
+                      help={t('mailTemplates.edit.letterLayoutHelp')}
+                    />
+                    <TextField
+                      select
+                      value={letterLayoutId ?? ''}
+                      onChange={event =>
+                        setLetterLayoutId(event.target.value || null)
+                      }
+                      slotProps={{
+                        select: {
+                          displayEmpty: true,
+                          labelId: ids.letterLayout,
+                        },
+                      }}
+                    >
+                      <MenuItem value="">
+                        {defaultLetterLayout ?
+                          t('mailTemplates.edit.letterLayoutDefault', {
+                            name: defaultLetterLayout.name,
+                          })
+                        : t('mailTemplates.edit.letterLayoutNone')}
+                      </MenuItem>
+                      {letterLayouts.map(layout => (
+                        <MenuItem
+                          key={layout.id}
+                          value={layout.id}
+                        >
+                          {layout.name}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </FormControl>
+                )}
+                {letterAvailable && (
+                  <FormControl
+                    style={{ flex: 1, minWidth: 200, marginBottom: 0 }}
+                    fullWidth
+                  >
+                    <FieldLabel
+                      id={ids.letterAppendix}
+                      label={t('mailTemplates.edit.letterAppendix')}
+                      help={t('mailTemplates.edit.letterAppendixHelp')}
+                    />
+                    <LetterAppendixPicker
+                      value={letterAppendixId}
+                      onChange={setLetterAppendixId}
+                    />
+                  </FormControl>
+                )}
               </div>
             </Stack>
           </CardContent>
@@ -495,9 +679,16 @@ function MailTemplateEdit() {
 
         <Card
           variant="outlined"
-          sx={{ flex: 1, minWidth: 360, bgcolor: 'background.paper' }}
+          sx={{
+            flex: 1,
+            minWidth: 'min(360px, 100%)',
+            bgcolor: 'background.paper',
+          }}
         >
-          <CardHeader title={t('mailTemplates.edit.previewAndTest')} />
+          <CardHeader
+            title={t('mailTemplates.edit.previewAndTest')}
+            slotProps={{ title: { component: 'h2' } }}
+          />
 
           <CardContent>
             <div
@@ -509,12 +700,11 @@ function MailTemplateEdit() {
               }}
             >
               <div style={{ flex: 1, minWidth: 200 }}>
-                <FormLabel>
-                  {t('mailTemplates.edit.sampleSubscription')}{' '}
-                  <InfoTooltip
-                    text={t('mailTemplates.edit.sampleSubscriptionHelp')}
-                  />
-                </FormLabel>
+                <FieldLabel
+                  id={ids.sample}
+                  label={t('mailTemplates.edit.sampleSubscription')}
+                  help={t('mailTemplates.edit.sampleSubscriptionHelp')}
+                />
                 <Autocomplete
                   options={(
                     subscriptionData?.mailTemplateSubscriptions ?? []
@@ -537,6 +727,13 @@ function MailTemplateEdit() {
                     <TextField
                       {...params}
                       placeholder={t('mailTemplates.edit.sampleDataFallback')}
+                      slotProps={{
+                        ...params.slotProps,
+                        htmlInput: {
+                          ...params.slotProps.htmlInput,
+                          'aria-labelledby': ids.sample,
+                        },
+                      }}
                     />
                   )}
                 />
@@ -552,6 +749,15 @@ function MailTemplateEdit() {
                 >
                   {t('mailTemplates.edit.preview')}
                 </Button>
+                {letterAvailable && (
+                  <Button
+                    variant="outlined"
+                    loading={letterLoading}
+                    onClick={doPreviewLetter}
+                  >
+                    {t('mailTemplates.edit.previewLetter')}
+                  </Button>
+                )}
                 <Button
                   variant="outlined"
                   loading={testLoading}
@@ -586,21 +792,29 @@ function MailTemplateEdit() {
           </CardContent>
         </Card>
       </div>
-      <div
-        style={{
+      <Box
+        sx={{
           display: 'flex',
-          gap: 24,
-          marginTop: 16,
+          flexDirection: { xs: 'column', md: 'row' },
+          gap: 3,
+          marginTop: 2,
           alignItems: 'stretch',
         }}
       >
         {/* Bounded to the editor column's height: the picker is absolutely
             positioned so it never grows the row, and scrolls internally. */}
-        <div style={{ width: 320, flexShrink: 0, position: 'relative' }}>
-          <div
-            style={{
-              position: 'absolute',
+        <Box
+          sx={{
+            width: { xs: '100%', md: 320 },
+            flexShrink: 0,
+            position: 'relative',
+          }}
+        >
+          <Box
+            sx={{
+              position: { xs: 'static', md: 'absolute' },
               inset: 0,
+              maxHeight: { xs: 360, md: 'none' },
               overflowY: 'auto',
             }}
           >
@@ -608,13 +822,18 @@ function MailTemplateEdit() {
               onInsert={insertToken}
               context={contextId}
             />
-          </div>
-        </div>
+          </Box>
+        </Box>
 
         <div style={{ flex: 1, minWidth: 0 }}>
           <Stack
             direction="row"
-            sx={{ alignItems: 'center', justifyContent: 'space-between' }}
+            useFlexGap
+            sx={{
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+            }}
             spacing={1}
             style={{ marginBottom: 8 }}
           >
@@ -623,32 +842,34 @@ function MailTemplateEdit() {
               sx={{ alignItems: 'center' }}
               spacing={1}
             >
-              <ButtonGroup size="small">
-                <Button
-                  variant="outlined"
-                  onClick={() => switchMode('visual')}
-                >
-                  {t('mailTemplates.wysiwyg')}
-                </Button>
-                <Button
-                  variant="outlined"
-                  onClick={() => switchMode('html')}
-                >
-                  {t('mailTemplates.rawHtml')}
-                </Button>
-                <Button
-                  variant="outlined"
-                  onClick={() => switchMode('text')}
-                >
-                  {t('mailTemplates.textContent')}
-                </Button>
+              <ButtonGroup
+                size="small"
+                aria-label={t('mailTemplates.edit.bodyMode')}
+              >
+                {(
+                  [
+                    ['visual', t('mailTemplates.wysiwyg')],
+                    ['html', t('mailTemplates.rawHtml')],
+                    ['text', t('mailTemplates.textContent')],
+                  ] as const
+                ).map(([mode, label]) => (
+                  <Button
+                    key={mode}
+                    variant={bodyMode === mode ? 'contained' : 'outlined'}
+                    aria-pressed={bodyMode === mode}
+                    onClick={() => switchMode(mode)}
+                  >
+                    {label}
+                  </Button>
+                ))}
               </ButtonGroup>
               <InfoTooltip text={t('mailTemplates.edit.bodyModeHelp')} />
             </Stack>
 
             <Stack
               direction="row"
-              sx={{ alignItems: 'center' }}
+              useFlexGap
+              sx={{ alignItems: 'center', flexWrap: 'wrap' }}
               spacing={2}
             >
               <Stack
@@ -656,10 +877,11 @@ function MailTemplateEdit() {
                 sx={{ alignItems: 'center' }}
                 spacing={0.75}
               >
-                <FormLabel style={{ margin: 0 }}>
-                  {t('mailTemplates.edit.background', 'Background')}{' '}
-                  <InfoTooltip text={t('mailTemplates.edit.backgroundHelp')} />
-                </FormLabel>
+                <FieldLabel
+                  id={ids.background}
+                  label={t('mailTemplates.edit.background', 'Background')}
+                  help={t('mailTemplates.edit.backgroundHelp')}
+                />
                 <MailColorPicker
                   value={backgroundColor}
                   label={t('mailTemplates.edit.background', 'Background')}
@@ -672,12 +894,11 @@ function MailTemplateEdit() {
                 sx={{ alignItems: 'center' }}
                 spacing={0.75}
               >
-                <FormLabel style={{ margin: 0 }}>
-                  {t('mailTemplates.edit.contentWidth', 'Width (px)')}{' '}
-                  <InfoTooltip
-                    text={t('mailTemplates.edit.contentWidthHelp')}
-                  />
-                </FormLabel>
+                <FieldLabel
+                  id={ids.width}
+                  label={t('mailTemplates.edit.contentWidth', 'Width (px)')}
+                  help={t('mailTemplates.edit.contentWidthHelp')}
+                />
                 <TextField
                   type="number"
                   value={contentWidth}
@@ -688,7 +909,12 @@ function MailTemplateEdit() {
                     }
                   }}
                   slotProps={{
-                    htmlInput: { min: 320, max: 1200, step: 20 },
+                    htmlInput: {
+                      min: 320,
+                      max: 1200,
+                      step: 20,
+                      'aria-labelledby': ids.width,
+                    },
                   }}
                   style={{ width: 96 }}
                 />
@@ -750,7 +976,7 @@ function MailTemplateEdit() {
             }
           </div>
         </div>
-      </div>
+      </Box>
       <Dialog
         fullWidth
         open={previewOpen}
@@ -762,6 +988,17 @@ function MailTemplateEdit() {
         </DialogTitle>
         <DialogContent style={{ height: '85vh' }}>
           <MailPreview html={previewHtml ?? ''} />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        fullScreen
+        open={!!letterPdf}
+        onClose={() => setLetterPdf(null)}
+      >
+        <DialogTitle>{t('mailTemplates.edit.letterPreviewTitle')}</DialogTitle>
+        <DialogContent style={{ height: '85vh' }}>
+          {letterPdf && <LetterPreview pdf={letterPdf} />}
         </DialogContent>
       </Dialog>
     </div>

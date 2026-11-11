@@ -177,6 +177,17 @@ ENV NODE_ENV=production
 ENV HOSTNAME=0.0.0.0
 ENV ADDRESS=0.0.0.0
 ENV PORT=4000
+# `ENV` does not cross a `FROM`, and unlike the Next stages nothing here is
+# inlined at build time: `getPublicEnv()` and `createStartPageCache()` read
+# these out of the *running* process. Declared only in the build stage, they
+# arrive empty — which switches the shared page cache off silently, because
+# `createStartPageCache` falls back to a pod-local LRU when it has no build id
+# to scope Dragonfly keys with. The `api` stage re-declares `APP_RELEASE_ID`
+# for the same reason.
+ARG APP_RELEASE_ID
+ENV APP_RELEASE_ID=${APP_RELEASE_ID}
+ARG SSR_FETCH_TIMEOUT_MS
+ENV SSR_FETCH_TIMEOUT_MS=${SSR_FETCH_TIMEOUT_MS}
 # Sentry initialises here, not inside the server bundle: `Sentry.init` has to
 # run before the modules it instruments are imported, and `map-secrets.js`
 # spawns `node <serverPath>` with the environment it inherits, so this is the

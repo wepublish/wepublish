@@ -15,10 +15,7 @@ import {
   UseInterceptors,
   NotFoundException,
 } from '@nestjs/common';
-import {
-  FileFieldsInterceptor,
-  FileInterceptor,
-} from '@nestjs/platform-node';
+import { FileFieldsInterceptor, FileInterceptor } from '@nestjs/platform-node';
 import {
   MediaService,
   SupportedImagesValidator,
@@ -207,8 +204,6 @@ export class AppController {
         );
       }
       return;
-    } else {
-      await this.linkCache.set(imageId, variant, { uri, exists: true });
     }
 
     this.setProductionCacheHeaders(res);

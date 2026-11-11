@@ -49,6 +49,16 @@ export const fetchDailyBriefing = async (
 
     return response?.campaigns ?? [];
   } catch (error) {
+    // Logged as well as reported: an empty briefing teaser looks exactly like
+    // a tenant that has not published one, so without this a bad key or a
+    // changed response shape is invisible in the pod logs. The Next page did
+    // the same.
+    console.error(
+      'daily briefing fetch failed',
+      (error as { status?: number })?.status,
+      (error as { response?: { body?: unknown } })?.response?.body ??
+        (error as Error)?.message
+    );
     captureException(error);
 
     return [];

@@ -250,7 +250,9 @@ describe('ApiTokenList', () => {
       screen.getByRole('combobox', { name: /overview.status/ })
     ).toBeInTheDocument();
     expect(
-      screen.queryByPlaceholderText('apiTokenList.overview.filterByOwner')
+      screen.queryByRole('combobox', {
+        name: 'apiTokenList.overview.filterByOwner',
+      })
     ).toBeNull();
   });
 
@@ -259,9 +261,9 @@ describe('ApiTokenList', () => {
 
     fireEvent.click(screen.getByRole('button', { name: /filter/i }));
 
-    const picker = await screen.findByPlaceholderText(
-      'apiTokenList.overview.filterByOwner'
-    );
+    const picker = await screen.findByRole('combobox', {
+      name: 'apiTokenList.overview.filterByOwner',
+    });
 
     fireEvent.mouseDown(picker);
     fireEvent.click(await screen.findByText(/Grace/));

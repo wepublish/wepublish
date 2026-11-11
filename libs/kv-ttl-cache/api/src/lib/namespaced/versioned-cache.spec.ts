@@ -26,6 +26,8 @@ const INTEGRATION_NAMESPACES = [
   'settings:ai',
   'settings:analyticsprovider',
   'settings:syncprovider',
+  'settings:letterprovider',
+  'settings:pdfrenderer',
 ];
 
 const START = new Date('2026-10-02T10:00:00.000Z').getTime();

@@ -156,6 +156,11 @@ function PageTemplateEditView() {
   return (
     <TemplateEditorLayout
       i18nPrefix="pageTemplates"
+      title={
+        isNew ?
+          t('pageTitles.pageTemplateCreate')
+        : t('pageTitles.pageTemplateEdit')
+      }
       backPath="/pages/templates"
       permissions={{
         create: CanCreatePageTemplate.id,
