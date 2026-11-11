@@ -14,6 +14,7 @@ import { Route as SplatRouteImport } from './routes/$'
 import { Route as SlugRouteImport } from './routes/$slug'
 import { Route as AtomDotxmlRouteImport } from './routes/atom[.]xml'
 import { Route as FeedDotjsonRouteImport } from './routes/feed[.]json'
+import { Route as LlmsDottxtRouteImport } from './routes/llms[.]txt'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as MitmachenRouteImport } from './routes/mitmachen'
 import { Route as RssDotxmlRouteImport } from './routes/rss[.]xml'
@@ -63,6 +64,11 @@ const AtomDotxmlRoute = AtomDotxmlRouteImport.update({
 const FeedDotjsonRoute = FeedDotjsonRouteImport.update({
   id: '/feed.json',
   path: '/feed.json',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LlmsDottxtRoute = LlmsDottxtRouteImport.update({
+  id: '/llms.txt',
+  path: '/llms.txt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -199,6 +205,7 @@ export interface FileRoutesByFullPath {
   '/$slug': typeof SlugRoute
   '/atom.xml': typeof AtomDotxmlRoute
   '/feed.json': typeof FeedDotjsonRoute
+  '/llms.txt': typeof LlmsDottxtRoute
   '/login': typeof LoginRoute
   '/mitmachen': typeof MitmachenRoute
   '/rss.xml': typeof RssDotxmlRoute
@@ -231,6 +238,7 @@ export interface FileRoutesByTo {
   '/$slug': typeof SlugRoute
   '/atom.xml': typeof AtomDotxmlRoute
   '/feed.json': typeof FeedDotjsonRoute
+  '/llms.txt': typeof LlmsDottxtRoute
   '/login': typeof LoginRoute
   '/mitmachen': typeof MitmachenRoute
   '/rss.xml': typeof RssDotxmlRoute
@@ -264,6 +272,7 @@ export interface FileRoutesById {
   '/$slug': typeof SlugRoute
   '/atom.xml': typeof AtomDotxmlRoute
   '/feed.json': typeof FeedDotjsonRoute
+  '/llms.txt': typeof LlmsDottxtRoute
   '/login': typeof LoginRoute
   '/mitmachen': typeof MitmachenRoute
   '/rss.xml': typeof RssDotxmlRoute
@@ -298,6 +307,7 @@ export interface FileRouteTypes {
     | '/$slug'
     | '/atom.xml'
     | '/feed.json'
+    | '/llms.txt'
     | '/login'
     | '/mitmachen'
     | '/rss.xml'
@@ -330,6 +340,7 @@ export interface FileRouteTypes {
     | '/$slug'
     | '/atom.xml'
     | '/feed.json'
+    | '/llms.txt'
     | '/login'
     | '/mitmachen'
     | '/rss.xml'
@@ -362,6 +373,7 @@ export interface FileRouteTypes {
     | '/$slug'
     | '/atom.xml'
     | '/feed.json'
+    | '/llms.txt'
     | '/login'
     | '/mitmachen'
     | '/rss.xml'
@@ -395,6 +407,7 @@ export interface RootRouteChildren {
   SlugRoute: typeof SlugRoute
   AtomDotxmlRoute: typeof AtomDotxmlRoute
   FeedDotjsonRoute: typeof FeedDotjsonRoute
+  LlmsDottxtRoute: typeof LlmsDottxtRoute
   LoginRoute: typeof LoginRoute
   MitmachenRoute: typeof MitmachenRoute
   RssDotxmlRoute: typeof RssDotxmlRoute
@@ -457,6 +470,13 @@ declare module '@tanstack/react-router' {
       path: '/feed.json'
       fullPath: '/feed.json'
       preLoaderRoute: typeof FeedDotjsonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/llms.txt': {
+      id: '/llms.txt'
+      path: '/llms.txt'
+      fullPath: '/llms.txt'
+      preLoaderRoute: typeof LlmsDottxtRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -643,6 +663,7 @@ const rootRouteChildren: RootRouteChildren = {
   SlugRoute: SlugRoute,
   AtomDotxmlRoute: AtomDotxmlRoute,
   FeedDotjsonRoute: FeedDotjsonRoute,
+  LlmsDottxtRoute: LlmsDottxtRoute,
   LoginRoute: LoginRoute,
   MitmachenRoute: MitmachenRoute,
   RssDotxmlRoute: RssDotxmlRoute,

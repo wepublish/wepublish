@@ -5,6 +5,9 @@ import type { ImageURIObject } from '../media-service/media.service';
 
 export const LINK_TTL = 3 * 24 * 60 * 60 * 1000;
 
+/** How long the bucket's lifecycle rule keeps a transformed image. */
+export const TRANSFORMED_IMAGE_TTL = 30 * 24 * 60 * 60 * 1000;
+
 export const MISSING_LINK_TTL = 4 * 60 * 60 * 1000;
 
 export const REJECTED_VARIANT_TTL = 60 * 60 * 1000;
@@ -85,7 +88,11 @@ export class LinkCache {
   async forget(id: string) {
     const generation = randomBytes(8).toString('hex');
 
-    await this.generations.set(hashKey(id), generation, LINK_TTL);
+    await this.generations.set(
+      hashKey(id),
+      generation,
+      Math.max(LINK_TTL, TRANSFORMED_IMAGE_TTL)
+    );
     await this.generationChecks.set(
       hashKey(id),
       generation,

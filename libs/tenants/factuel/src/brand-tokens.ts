@@ -145,6 +145,7 @@ export const courantTokens = {
       bannerText: '1rem',
       bannerCta: '1.25rem',
       footerLink: '1.25rem',
+      navMenuItem: '3rem',
     },
     leading: { subtitle1: 1.4, bannerCta: 1.15 },
     spacing: {
