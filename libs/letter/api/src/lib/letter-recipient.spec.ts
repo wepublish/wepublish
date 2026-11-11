@@ -121,6 +121,15 @@ describe('canReceiveLetters', () => {
     expect(canReceiveLetters(user({}))).toBe(true);
     expect(canReceiveLetters(user(null))).toBe(false);
   });
+
+  // Pingen posts a letter with a QR-bill within Switzerland only.
+  it('needs a Swiss address for a letter with a payment slip', () => {
+    expect(canReceiveLetters(user({}), { withPaymentSlip: true })).toBe(true);
+    expect(
+      canReceiveLetters(user({ country: 'DE' }), { withPaymentSlip: true })
+    ).toBe(false);
+    expect(canReceiveLetters(user({ country: 'DE' }))).toBe(true);
+  });
 });
 
 describe('countryName', () => {
