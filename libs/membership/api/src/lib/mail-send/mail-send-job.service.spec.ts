@@ -1,6 +1,20 @@
 import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import { MailContext, mailLogType } from '@wepublish/mail/api';
 import { FeaturesService } from '@wepublish/features/api';
+import { LetterContext } from '@wepublish/letter/api';
+import {
+  LetterAddressPosition,
+  LetterDeliveryProduct,
+  LetterPrintMode,
+  LetterPrintSpectrum,
+  MailChannel,
+  PrismaClient,
+} from '@prisma/client';
+import { MailSendJobService } from './mail-send-job.service';
+import { MailSendRecipientService } from './mail-send-recipient.service';
+import { MailRecipientBase } from './mail-send.model';
+import type { Mock } from 'vitest';
+import { version } from 'uuid';
 
 const defaultBuildMailData = vi.fn(
   async ({
@@ -21,20 +35,25 @@ const defaultBuildMailData = vi.fn(
     purlQr: '',
   })
 );
-import { LetterContext } from '@wepublish/letter/api';
-import {
-  LetterAddressPosition,
-  LetterDeliveryProduct,
-  LetterPrintMode,
-  LetterPrintSpectrum,
-  MailChannel,
-  PrismaClient,
-} from '@prisma/client';
-import { MailSendJobService } from './mail-send-job.service';
-import { MailSendRecipientService } from './mail-send-recipient.service';
-import { MailRecipientBase } from './mail-send.model';
-import type { Mock } from 'vitest';
-import { version } from 'uuid';
+
+/** Template data carrying a personal login code, as the purl provider builds it. */
+const withPurl = vi.fn(
+  async ({
+    recipient,
+    optionalData,
+  }: {
+    recipient: Record<string, unknown>;
+    optionalData: Record<string, unknown>;
+  }) => ({
+    user: recipient,
+    optional: optionalData,
+    jwt: '',
+    currentDate: new Date(),
+    purl: 'https://zwoelf.example/l/ABCDE-FGHJK',
+    purlCode: 'ABCDE-FGHJK',
+    purlQr: '<svg/>',
+  })
+);
 
 const makeService = (
   prisma: any,
@@ -335,6 +354,38 @@ describe('previewForAudience as a letter', () => {
       '%PDF-1.4 preview'
     );
   });
+
+  it('prints a sample login code on the preview', async () => {
+    const prisma = fakePrisma({
+      ...template('custom'),
+      htmlContent: '<p>{{purlCode}}</p>',
+      subject: 'Brief',
+    });
+    const letterContext = {
+      renderLetter: vi.fn(async () => Buffer.from('%PDF-1.4 preview')),
+      resolveLayout: vi.fn(async () => null),
+    };
+
+    await makeService(
+      prisma,
+      { buildMailData: withPurl },
+      recipientService,
+      letterContext
+    ).previewForAudience({
+      mailTemplateId: 'tpl-1',
+      audience,
+      channel: MailChannel.letter,
+    });
+
+    expect(withPurl).toHaveBeenCalledWith(
+      expect.objectContaining({ mode: 'preview', purlOrigin: 'letter' })
+    );
+    expect(letterContext.renderLetter).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ purlCode: 'ABCDE-FGHJK' }),
+      })
+    );
+  });
 });
 
 /**
@@ -539,6 +590,39 @@ describe('MailSendJobService', () => {
         })
       );
       expect(prisma.jobs[0].status).toBe('done');
+    });
+
+    it('prints each recipient their own login code on the letter', async () => {
+      const prisma = fakePrisma({
+        ...template('custom'),
+        htmlContent: '<p>{{purlCode}}</p>',
+      });
+      const letterContext = { sendLetter: vi.fn(async () => 'log-1') };
+
+      await makeService(
+        prisma,
+        { sendMail: vi.fn(), buildMailData: withPurl },
+        recipientServiceFor(['u1']),
+        letterContext
+      ).createJob(
+        { mailTemplateId: 'tpl-1', audience, channel: MailChannel.letter },
+        'editor-1'
+      );
+      await settle(prisma);
+
+      expect(withPurl).toHaveBeenCalledWith(
+        expect.objectContaining({
+          mode: 'send',
+          purlOrigin: 'letter',
+          // No login link on paper unless the template asks for one.
+          mintJwt: false,
+        })
+      );
+      expect(letterContext.sendLetter).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ purlCode: 'ABCDE-FGHJK' }),
+        })
+      );
     });
 
     it('plans and queues a letter send once per person', async () => {

@@ -37,6 +37,8 @@ describe('MailController', () => {
     textContent: null,
     externalMailTemplateId: null,
     context: null,
+    letterAppendixId: null,
+    letterLayoutId: null,
     createdAt: new Date(),
     modifiedAt: new Date(),
   };
@@ -50,6 +52,8 @@ describe('MailController', () => {
     textContent: null,
     externalMailTemplateId: null,
     context: null,
+    letterAppendixId: null,
+    letterLayoutId: null,
     createdAt: new Date(),
     modifiedAt: new Date(),
   };

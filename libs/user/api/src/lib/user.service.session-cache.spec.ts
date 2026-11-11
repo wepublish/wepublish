@@ -100,7 +100,7 @@ describe('UserService session cache', () => {
     ],
     [
       'confirming an email change',
-      () => service.confirmEmailChange('user-1', 'new@example.com'),
+      () => service.confirmEmailChange('confirmation-token'),
     ],
   ])('clears cached sessions after %s', async (_, change) => {
     await change();

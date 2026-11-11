@@ -9,7 +9,7 @@ import {
 } from '@prisma/client';
 import { v7 as uuidv7 } from 'uuid';
 import { MailContext } from './mail-context';
-import { templateUsesJwt } from './mail-data';
+import { PurlOrigin, templateUsesJwt } from './mail-data';
 import { MailProviderRecipientError } from './mail-provider/mail-provider.interface';
 import {
   qualityTypeForRejectReason,
@@ -132,7 +132,7 @@ export class MailController {
    * Build the data for passing it to the mail templates
    * @returns a HashMap of configuration data
    */
-  private async buildData(purlOrigin: 'mail' | 'letter' = 'mail') {
+  private async buildData(purlOrigin: PurlOrigin = 'mail') {
     const template = await this.prismaService.mailTemplate.findUnique({
       where: { id: this.config.mailTemplateId },
       select: { subject: true, htmlContent: true, textContent: true },
