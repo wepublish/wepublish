@@ -4,6 +4,8 @@ import mailchimp from '@mailchimp/mailchimp_marketing';
 import { SyncProviderSettingsService } from '@wepublish/settings/api';
 import { MailchimpSyncService } from './mailchimp-sync.service';
 import { ClickTrackingExtension } from './extensions/click-tracking.extension';
+import { MailchimpAudienceEvidenceService } from './mailchimp-audience-evidence';
+import { MailchimpCampaignClicksService } from './mailchimp-campaign-clicks';
 import type { Mock } from 'vitest';
 
 vi.mock('@mailchimp/mailchimp_marketing', () => ({
@@ -129,6 +131,14 @@ const syncProviderSettingsServiceMock = {
   updateSyncResult: vi.fn(),
 };
 
+const audienceEvidence = {
+  record: vi.fn().mockResolvedValue({ recorded: 0 }),
+};
+
+const campaignClicks = {
+  record: vi.fn().mockResolvedValue({ campaigns: 0, recorded: 0 }),
+};
+
 describe('MailchimpSyncService', () => {
   let service: MailchimpSyncService;
 
@@ -165,6 +175,8 @@ describe('MailchimpSyncService', () => {
           provide: ClickTrackingExtension,
           useValue: { execute: vi.fn() },
         },
+        { provide: MailchimpAudienceEvidenceService, useValue: audienceEvidence },
+        { provide: MailchimpCampaignClicksService, useValue: campaignClicks },
       ],
     }).compile();
 
@@ -376,6 +388,78 @@ describe('MailchimpSyncService', () => {
       expect(change.isNew).toBe(true);
       expect(change.mergeFields['ACTIVE_ABO']).toBe('-1');
       expect(change.interests[ABO_A_GROUP_ID]).toBe(false);
+    });
+  });
+
+  describe('audience status as email quality evidence', () => {
+    const cleaned = {
+      id: 'abc',
+      email_address: mockUser.email.toLowerCase(),
+      status: 'cleaned',
+      last_changed: '2026-10-20T03:00:00+00:00',
+      merge_fields: {},
+      interests: {},
+    };
+
+    beforeEach(() => {
+      mailchimpStub.lists.getListMembersInfo.mockResolvedValue({
+        members: [cleaned],
+        total_items: 1,
+      });
+    });
+
+    it('asks Mailchimp for the fields the status needs', async () => {
+      await service.executeSyncById(CONFIG_ID);
+
+      expect(mailchimpStub.lists.getListMembersInfo).toHaveBeenCalledWith(
+        syncConfig.mailchimp_listId,
+        expect.objectContaining({
+          fields: expect.arrayContaining([
+            'members.id',
+            'members.status',
+            'members.unsubscribe_reason',
+            'members.last_changed',
+          ]),
+        })
+      );
+    });
+
+    it('hands the whole audience to the evidence on a real run', async () => {
+      await service.executeSyncById(CONFIG_ID);
+
+      expect(audienceEvidence.record).toHaveBeenCalledWith(
+        syncConfig.mailchimp_listId,
+        [cleaned]
+      );
+    });
+
+    it('reads the clicks of the last week of campaigns on a real run', async () => {
+      const before = Date.now();
+
+      await service.executeSyncById(CONFIG_ID);
+
+      expect(campaignClicks.record).toHaveBeenCalledTimes(1);
+      const [listId, since] = campaignClicks.record.mock.calls[0];
+      expect(listId).toBe(syncConfig.mailchimp_listId);
+      expect(before - since.getTime()).toBeGreaterThanOrEqual(7 * DAY_MS);
+      expect(before - since.getTime()).toBeLessThan(7 * DAY_MS + 60_000);
+    });
+
+    it('records nothing on a dry run', async () => {
+      await dryRun();
+
+      expect(audienceEvidence.record).not.toHaveBeenCalled();
+      expect(campaignClicks.record).not.toHaveBeenCalled();
+    });
+
+    it('still syncs the contacts when the evidence fails', async () => {
+      audienceEvidence.record.mockRejectedValueOnce(new Error('db down'));
+      campaignClicks.record.mockRejectedValueOnce(new Error('rate limited'));
+
+      await expect(service.executeSyncById(CONFIG_ID)).resolves.not.toThrow();
+      expect(
+        syncProviderSettingsServiceMock.updateSyncResult
+      ).toHaveBeenCalledWith(CONFIG_ID);
     });
   });
 });
