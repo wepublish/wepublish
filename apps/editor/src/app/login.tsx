@@ -28,9 +28,10 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { SupportLoginButton } from './supportLoginButton';
 import { Background } from './ui/loginBackground';
 import { TotpQrCode } from './ui/totpQrCode';
+import { isForbidden } from './wepublishLogin';
+import { WepublishLoginButton } from './wepublishLoginButton';
 
 function useQuery() {
   const { search } = useLocation();
@@ -214,7 +215,11 @@ export function Login() {
         forceTotpSetup(token);
       }
     } catch (error: any) {
-      setError(error?.message || t('login.unauthorized'));
+      setError(
+        isForbidden(error) ?
+          t('login.wepublish.only')
+        : error?.message || t('login.unauthorized')
+      );
       setTotpToken('');
     }
   }
@@ -353,6 +358,7 @@ export function Login() {
     <LoginTemplate
       title={t('login.login')}
       backgroundChildren={<Background />}
+      footer={<WepublishLoginButton />}
     >
       <Form>
         <Stack
@@ -419,7 +425,6 @@ export function Login() {
           </ForgotPasswordLink>
         </Stack>
       </Form>
-      <SupportLoginButton />
     </LoginTemplate>
   );
 }

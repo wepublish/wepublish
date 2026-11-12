@@ -1,24 +1,11 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { PrismaClient, User, UserEvent } from '@prisma/client';
 import {
-  AuditLogAction,
-  AuditLogActorType,
-  PrismaClient,
-  User,
-  UserEvent,
-} from '@prisma/client';
-import { AuditLogService } from '@wepublish/audit-log/api';
-import { InvalidCredentialsError, NotActiveError } from './session.errors';
+  InvalidCredentialsError,
+  NotActiveError,
+  WepublishLoginOnlyError,
+} from './session.errors';
 import nanoid from 'nanoid/generate';
-import {
-  ImpersonationError,
-  assertCodeChallenge,
-  assertDuration,
-  assertReason,
-  codeChallengeOf,
-  isImpersonationEnabled,
-  isSupportAccount,
-  type ImpersonationClaims,
-} from './impersonation';
 import { UserAuthenticationService } from './user-authentication.service';
 import { JwtAuthenticationService } from './jwt-authentication.service';
 import {
@@ -55,8 +42,7 @@ export class SessionService {
     private settingsService: SettingsService,
     private mailContext: MailContext,
     private totpService: TotpService,
-    private sessionCache: SessionCacheInvalidator,
-    private auditLog: AuditLogService
+    private sessionCache: SessionCacheInvalidator
   ) {}
 
   private async sessionTtlMs(): Promise<number> {
@@ -109,6 +95,10 @@ export class SessionService {
       throw new NotActiveError();
     }
 
+    if (user.wepublishLoginSubject) {
+      throw new WepublishLoginOnlyError();
+    }
+
     if (user.totpEnabled) {
       // User has TOTP configured - require valid code to get a session.
       // No exceptions: password login without TOTP = no session.
@@ -122,17 +112,7 @@ export class SessionService {
     return this.createUserSession(user);
   }
 
-  async createSessionWithJWT(
-    jwt: string,
-    totpToken?: string,
-    codeVerifier?: string
-  ) {
-    const grant = await this.jwtService.verifyImpersonationGrant(jwt);
-
-    if (grant) {
-      return this.redeemImpersonationGrant(grant, codeVerifier);
-    }
-
+  async createSessionWithJWT(jwt: string, totpToken?: string) {
     // Try preview audience first (1-min JWT from editor, skips TOTP)
     let isPreview = false;
     let user = null;
@@ -157,6 +137,10 @@ export class SessionService {
 
     if (!user.active) {
       throw new NotActiveError();
+    }
+
+    if (!isPreview && user.wepublishLoginSubject) {
+      throw new WepublishLoginOnlyError();
     }
 
     // Preview JWTs skip TOTP - the editor user already passed 2FA
@@ -184,133 +168,6 @@ export class SessionService {
     await this.sessionCache.invalidate();
 
     return !!revoked;
-  }
-
-  async createImpersonationGrant({
-    userId,
-    durationMinutes,
-    reason,
-    impersonatedBy,
-    codeChallenge,
-  }: {
-    userId: string;
-    durationMinutes: number;
-    reason?: string | null;
-    impersonatedBy: string;
-    codeChallenge?: string | null;
-  }) {
-    if (!isImpersonationEnabled(process.env)) {
-      throw new ImpersonationError('Impersonation is disabled for this medium');
-    }
-
-    const minutes = assertDuration(durationMinutes);
-    const actor = assertReason(impersonatedBy);
-    const challenge = assertCodeChallenge(codeChallenge);
-
-    const user = await this.prisma.user.findUnique({ where: { id: userId } });
-
-    if (!user) {
-      throw new ImpersonationError('Unknown user');
-    }
-
-    if (!user.active) {
-      throw new ImpersonationError('User is not active');
-    }
-
-    const checkedReason =
-      reason?.trim() || !isSupportAccount(user.email) ?
-        assertReason(reason ?? '')
-      : null;
-
-    const jti = nanoid(IDAlphabet, 32);
-    const expiresAt = new Date(Date.now() + 60 * 1000);
-
-    await this.prisma.impersonationGrant.create({
-      data: { jti, expiresAt, codeChallenge: challenge },
-    });
-
-    const token = await this.jwtService.generateImpersonationGrant({
-      userId,
-      durationMinutes: minutes,
-      impersonatedBy: actor,
-      reason: checkedReason,
-      jti,
-    });
-
-    return { token, expiresAt, durationMinutes: minutes, email: user.email };
-  }
-
-  private async redeemImpersonationGrant(
-    claims: ImpersonationClaims,
-    codeVerifier?: string
-  ) {
-    const redeemed = await this.prisma.impersonationGrant.updateMany({
-      where: {
-        jti: claims.jti,
-        redeemedAt: null,
-        codeChallenge: codeVerifier ? codeChallengeOf(codeVerifier) : null,
-      },
-      data: { redeemedAt: new Date() },
-    });
-
-    if (redeemed.count !== 1) {
-      await this.recordImpersonation(claims, {
-        error:
-          'Impersonation grant refused: already redeemed or wrong code verifier',
-      });
-      throw new InvalidCredentialsError();
-    }
-
-    const user = await this.prisma.user.findUnique({
-      where: { id: claims.userId },
-    });
-
-    if (!user) {
-      await this.recordImpersonation(claims, {
-        error: 'Impersonation grant refused: unknown user',
-      });
-      throw new InvalidCredentialsError();
-    }
-
-    if (!user.active) {
-      await this.recordImpersonation(claims, {
-        user,
-        error: 'Impersonation grant refused: user is not active',
-      });
-      throw new NotActiveError();
-    }
-
-    const session = await this.createUserSession(user, {
-      ttlMs: assertDuration(claims.durationMinutes) * 60 * 1000,
-      impersonatedBy: claims.impersonatedBy,
-      impersonationReason: claims.reason,
-    });
-
-    await this.recordImpersonation(claims, {
-      user,
-      sessionId: session.sessionId,
-    });
-
-    return session;
-  }
-
-  private recordImpersonation(
-    claims: ImpersonationClaims,
-    outcome: { user?: User; sessionId?: string; error?: string }
-  ) {
-    return this.auditLog.record({
-      mutation: 'createSessionWithJWT',
-      action: AuditLogAction.other,
-      entity: 'Session',
-      recordId: outcome.sessionId ?? null,
-      actorType: AuditLogActorType.user,
-      userId: claims.userId,
-      userEmail: outcome.user?.email ?? null,
-      sessionId: outcome.sessionId ?? null,
-      impersonatedBy: claims.impersonatedBy,
-      success: !outcome.error,
-      errorMessage: outcome.error ?? null,
-    });
   }
 
   async listImpersonationSessions() {
@@ -349,7 +206,7 @@ export class SessionService {
     options?: {
       ttlMs?: number;
       impersonatedBy?: string;
-      impersonationReason?: string | null;
+      impersonationReason?: string;
     }
   ) {
     const token = nanoid(IDAlphabet, 64);

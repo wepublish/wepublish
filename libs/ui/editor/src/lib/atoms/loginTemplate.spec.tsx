@@ -33,4 +33,23 @@ describe('LoginTemplate', () => {
       screen.getByRole('heading', { level: 1, name: 'Login' })
     ).toBeTruthy();
   });
+
+  it('puts the footer below the card, outside of it', () => {
+    render(
+      <ThemeProvider theme={theme}>
+        <LoginTemplate footer={<button>Staff</button>}>
+          <form aria-label="Login" />
+        </LoginTemplate>
+      </ThemeProvider>
+    );
+
+    const card = screen.getByRole('form').parentElement!;
+    const footer = screen.getByRole('button', { name: 'Staff' });
+
+    expect(screen.getByRole('main').contains(footer)).toBe(true);
+    expect(card.contains(footer)).toBe(false);
+    expect(
+      card.compareDocumentPosition(footer) & Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
+  });
 });

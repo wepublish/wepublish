@@ -8,3 +8,7 @@ export * from './totp.model';
 export * from './totp.service';
 export * from './totp.resolver';
 export * from './impersonation';
+export * from './wepublish-login';
+export * from './wepublish-login.model';
+export * from './wepublish-login.service';
+export * from './wepublish-login.resolver';

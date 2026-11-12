@@ -26,11 +26,11 @@ import {
   scrubEvent,
   scrubRecordingEvent,
 } from './app/sentryScrub';
-import { captureSupportLoginResult } from './app/supportLogin';
 import { createEditorTheme } from './app/theme';
+import { captureWepublishLoginResult } from './app/wepublishLogin';
 import { ElementID } from './shared/elementID';
 
-captureSupportLoginResult();
+captureWepublishLoginResult();
 
 const { sentryDSN, apiURL, appName, appEnvironment } = getSettings();
 

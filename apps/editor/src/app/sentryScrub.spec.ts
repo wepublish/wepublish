@@ -9,14 +9,14 @@ const GRANT = 'eyJhbGciOiJFZERTQSJ9.eyJzdWIiOiJ1In0.c2lnbmF0dXJl';
 
 describe('scrubbing login secrets before they reach Sentry', () => {
   it.each([
-    [`/login/impersonate/${GRANT}`, '/login/impersonate/[redacted]'],
+    [`/login/jwt/${GRANT}`, '/login/jwt/[redacted]'],
     [
       `https://editor.medium.ch/login/jwt/${GRANT}?x=1`,
       'https://editor.medium.ch/login/jwt/[redacted]?x=1',
     ],
     [
-      'https://editor.medium.ch/login/support#code=grant&state=s',
-      'https://editor.medium.ch/login/support',
+      'https://editor.medium.ch/login/wepublish#code=the-code&state=s',
+      'https://editor.medium.ch/login/wepublish',
     ],
     ['/articles/edit/123', '/articles/edit/123'],
   ])('turns %s into %s', (value, scrubbed) => {
@@ -26,11 +26,11 @@ describe('scrubbing login secrets before they reach Sentry', () => {
   it('scrubs the transaction name and the request url of an event', () => {
     expect(
       scrubEvent({
-        transaction: `/login/impersonate/${GRANT}`,
+        transaction: `/login/jwt/${GRANT}`,
         request: { url: `https://editor.medium.ch/login/jwt/${GRANT}` },
       })
     ).toEqual({
-      transaction: '/login/impersonate/[redacted]',
+      transaction: '/login/jwt/[redacted]',
       request: { url: 'https://editor.medium.ch/login/jwt/[redacted]' },
     });
   });
@@ -39,11 +39,11 @@ describe('scrubbing login secrets before they reach Sentry', () => {
     expect(
       scrubBreadcrumb({
         category: 'navigation',
-        data: { from: `/login/impersonate/${GRANT}`, to: '/' },
+        data: { from: `/login/jwt/${GRANT}`, to: '/' },
       })
     ).toEqual({
       category: 'navigation',
-      data: { from: '/login/impersonate/[redacted]', to: '/' },
+      data: { from: '/login/jwt/[redacted]', to: '/' },
     });
   });
 

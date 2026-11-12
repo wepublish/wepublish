@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client/react';
 import {
-  CreateSessionWithJwtDocument,
+  CreateSessionWithWepublishLoginDocument,
   LocalStorageKey,
 } from '@wepublish/editor/api';
 import {
@@ -12,47 +12,50 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import {
-  captureSupportLoginResult,
-  takeCapturedSupportLoginResult,
-  takeSupportLoginAttempt,
-} from './supportLogin';
 import { Background } from './ui/loginBackground';
+import {
+  captureWepublishLoginResult,
+  isForbidden,
+  takeCapturedWepublishLoginResult,
+  takeWepublishLoginAttempt,
+} from './wepublishLogin';
 
-export function LoginSupport() {
+function takeLogin() {
+  captureWepublishLoginResult();
+
+  const result = takeCapturedWepublishLoginResult();
+  const attempt = result ? takeWepublishLoginAttempt(result.state) : null;
+
+  return result && attempt ?
+      { code: result.code, codeVerifier: attempt.verifier }
+    : null;
+}
+
+export function LoginWepublish() {
   const navigate = useNavigate();
   const authDispatch = useContext(AuthDispatchContext);
   const { t } = useTranslation();
 
-  const [authenticateWithJWT] = useMutation(CreateSessionWithJwtDocument);
-  const [error, setError] = useState<string>();
+  const [authenticate] = useMutation(CreateSessionWithWepublishLoginDocument);
+  const [login] = useState(takeLogin);
+  const [error, setError] = useState(
+    login ? undefined : 'login.wepublish.failed'
+  );
   const started = useRef(false);
 
   useEffect(() => {
-    if (started.current) {
+    if (!login || started.current) {
       return;
     }
 
     started.current = true;
 
-    captureSupportLoginResult();
-
-    const result = takeCapturedSupportLoginResult();
-    const attempt = result ? takeSupportLoginAttempt(result.state) : null;
-
-    if (!result || !attempt) {
-      setError(t('login.support.failed'));
-      return;
-    }
-
-    authenticateWithJWT({
-      variables: { jwt: result.code, codeVerifier: attempt.verifier },
-    })
+    authenticate({ variables: login })
       .then(response => {
-        const session = response.data?.createSessionWithJWT;
+        const session = response.data?.createSessionWithWepublishLogin;
 
-        if (!session?.impersonated) {
-          setError(t('login.support.failed'));
+        if (!session) {
+          setError('login.wepublish.failed');
           return;
         }
 
@@ -61,7 +64,7 @@ export function LoginSupport() {
         );
 
         if (!permissions.includes('CAN_LOGIN_EDITOR')) {
-          setError(t('login.unauthorized'));
+          setError('login.unauthorized');
           return;
         }
 
@@ -78,13 +81,19 @@ export function LoginSupport() {
 
         navigate('/', { replace: true });
       })
-      .catch(() => setError(t('login.support.failed')));
-  }, [authenticateWithJWT, authDispatch, navigate, t]);
+      .catch(error =>
+        setError(
+          isForbidden(error) ?
+            'login.wepublish.forbidden'
+          : 'login.wepublish.failed'
+        )
+      );
+  }, [authenticate, authDispatch, login, navigate]);
 
   return (
     <LoginTemplate backgroundChildren={<Background />}>
-      <p>{error ?? t('login.support.pending')}</p>
-      {error && <a href="/login">{t('login.support.backToLogin')}</a>}
+      <p>{t(error ?? 'login.wepublish.pending')}</p>
+      {error && <a href="/login">{t('login.wepublish.backToLogin')}</a>}
     </LoginTemplate>
   );
 }

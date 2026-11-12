@@ -10,6 +10,7 @@ import { UploadImageInput } from '@wepublish/image/api';
 import { ProfileService } from './profile.service';
 import { BadRequestException } from '@nestjs/common';
 import { UserService } from './user.service';
+import { assertNotManagedByWepublishLogin } from './managed-by-wepublish-login';
 
 @Resolver()
 export class ProfileResolver {
@@ -40,6 +41,8 @@ export class ProfileResolver {
     @Args('passwordRepeated') passwordRepeated: string,
     @CurrentUser() { id, user }: UserSession
   ) {
+    assertNotManagedByWepublishLogin(user);
+
     if (password !== passwordRepeated) {
       throw new BadRequestException(
         'password and passwordRepeated are not equal'
@@ -62,6 +65,8 @@ export class ProfileResolver {
     @Args() uploadImageInput: UploadImageInput,
     @CurrentUser() session: UserSession
   ) {
+    assertNotManagedByWepublishLogin(session.user);
+
     return this.profileService.uploadUserProfileImage(
       session.user,
       uploadImageInput
@@ -77,6 +82,8 @@ export class ProfileResolver {
     @Args('newEmail') newEmail: string,
     @CurrentUser() { user }: UserSession
   ): Promise<boolean> {
+    assertNotManagedByWepublishLogin(user);
+
     await this.userService.requestEmailChange(user.id, newEmail);
     return true;
   }
@@ -89,6 +96,8 @@ export class ProfileResolver {
     @Args('newEmail') newEmail: string,
     @CurrentUser() { user }: UserSession
   ) {
+    assertNotManagedByWepublishLogin(user);
+
     return this.userService.confirmEmailChange(user.id, newEmail);
   }
 }

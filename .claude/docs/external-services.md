@@ -193,6 +193,46 @@ query (`AnalyticsProviderHotAndTrendingDataSource` in `libs/article/api`);
 setting it on one row clears it on the others. Plausible and Umami keep their
 api key encrypted in `credentials` and take an optional `url` for self-hosting.
 
+## We.Publish login (auth.wepublish.cloud)
+
+We.Publish staff sign in to any editor through Zitadel at
+`auth.wepublish.cloud` ("Anmeldung für We.Publish-Mitarbeitende", a quiet
+link below the login card via `LoginTemplate`'s `footer`). Code
+in `libs/session/api/src/lib/wepublish-*.ts`, editor side in
+`apps/editor/src/app/wepublishLogin.ts`.
+
+- `APP_ENVIRONMENT` picks client and Zitadel role: `production` → client
+  `399257510109839364` + `login-cms-admin-production`; `staging` / `review` →
+  client `399257571782819844` + `login-cms-admin-staging` / `-review`; any
+  other value (e.g. `local`) → staging client + review role. Unset
+  `APP_ENVIRONMENT` or `EDITOR_URL` turns the login off (`wepublishLogin` is
+  null, the button hides).
+- The redirect URI is always `EDITOR_URL/login/wepublish`, built by the API —
+  each editor URL must be registered in the Zitadel app.
+- Authorization code + PKCE, public client (no secret). The code comes back in
+  the fragment, which `captureWepublishLoginResult()` in `main.tsx` removes
+  before Sentry starts. `createSessionWithWepublishLogin(code, codeVerifier)`
+  redeems it, verifies the ID token (issuer, audience, `azp`, JWKS), and reads
+  email, names and `urn:zitadel:iam:org:project:roles` from userinfo.
+- Refused unless the role for this environment is present, the ID token's
+  `amr` contains `mfa` and the email is verified.
+- The account is found by `users.wepublishLoginSubject` (Zitadel `sub`), else
+  by email, else created (`admin`, no welcome mail). Every login resets it to
+  `roleIDs: ['admin']`, `active: true` and Zitadel's names. Connecting an
+  account ends all its other sessions.
+- A connected account is read-only: `assertNotManagedByWepublishLogin`
+  (`libs/user/api`) refuses `updateUser`, `resetPassword`, `deleteUser`,
+  `resetUserTotp` and the person's own `updateCurrentUser`, `updatePassword`,
+  `uploadUserProfileImage` and email change. `SensitiveDataUser.managedByWepublishLogin`
+  tells the editor, which shows the account read-only. Internal code calling
+  `UserService` directly (the login's own reset) is not affected.
+- A connected account (`wepublishLoginSubject` set) can sign in no other way:
+  `createSession` and website-audience `createSessionWithJWT` throw
+  `WepublishLoginOnlyError`. Only the editor's own preview JWT
+  (`createJWTForWebsiteLogin`, audience `preview`) still works.
+- Sign-ins, refusals, user creation and resets are written to the audit log
+  under `createSessionWithWepublishLogin`.
+
 ## We.Publish One
 
 The One dashboard (`WEP_ONE_URL`) and the API authenticate each other with EdDSA
@@ -201,33 +241,12 @@ credentials. `libs/one/api` holds the client, the heartbeat and the guards;
 `@OneScopedJwt(scope)` is the only way into a One-facing resolver, and the
 global guard denies anything without it.
 
-Impersonation (One signs in as a user of this medium) is on unless a medium
-sets `WEP_ONE_IMPERSONATION=false` (`isImpersonationEnabled`). A grant is a
-60-second single-use JWT that the editor redeems at `/login/impersonate/:jwt` —
-a route that accepts nothing but an impersonation grant, since it skips TOTP and
-any other JWT pointed at it would be a way around two-factor. It needs a reason,
-except for the support account `admin@wepublish.ch` (`SUPPORT_LOGIN_EMAIL`,
-decided from the real user record, never from what One sends).
-
-The editor's **We.Publish Support Login** (below the normal login, hidden when
-`supportLoginEnabled` is false) is the same grant as an authorization-code flow:
-the editor keeps `state` and a PKCE verifier in `sessionStorage`, sends the
-browser to `WEP_ONE_URL/impersonation/support-login`, One signs the operator in,
-matches `redirect_uri` exactly against the editor it knows for that medium, asks
-that medium's API for a grant for `admin@wepublish.ch` with the S256
-`codeChallenge` once the operator confirms, and returns the grant in the
-fragment (`/login/support#code=…&state=…`) — never sent to a server, log or
-referrer. `captureSupportLoginResult()` in `main.tsx` takes it out of the
-address **before Sentry starts**; the page then checks `state` and redeems it
-with `createSessionWithJWT(jwt, codeVerifier)`. Sentry scrubs the tokens in
-`/login/impersonate/:jwt` and `/login/jwt/:jwt` (`sentryScrub.ts`). Every
-redeemed or refused impersonation grant writes an audit log entry
-(`createSessionWithJWT`, `impersonatedBy` = the One operator) — the audit
-interceptor itself only sees mutations with `@Permissions`, so
-`SessionService` records these directly. A grant with a challenge redeems only
-with its verifier (`impersonation_grants.codeChallenge`), so a code that leaks
-or is opened in another browser is useless; a grant from another medium fails
-the signature and issuer check.
+Impersonation has no login any more: One's impersonation API and the
+`/login/impersonate` grant were removed. The data stays for a later in-editor
+impersonation — `sessions.impersonatedBy` / `impersonationReason` /
+`impersonatedAt`, `impersonation_grants`, `audit_logs.impersonatedBy` (still
+shown and filterable in the audit log and in One's stats), and
+`createUserSession(user, {impersonatedBy, …})`.
 
 **Feature toggles** come from One too: per medium, staff-only (One's
 `ClientFeatures`).

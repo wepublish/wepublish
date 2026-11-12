@@ -2185,32 +2185,6 @@ input ImageTransformation {
   width: Int
 }
 
-type ImpersonationGrantResult {
-  durationMinutes: Int!
-  email: String!
-  expiresAt: DateTime!
-  token: String!
-}
-
-type ImpersonationSessionInfo {
-  createdAt: DateTime!
-  expiresAt: DateTime!
-  id: String!
-  impersonatedBy: String
-  impersonationReason: String
-  userEmail: String!
-  userId: String!
-  userName: String
-}
-
-type ImpersonationUser {
-  active: Boolean!
-  email: String!
-  id: String!
-  name: String
-  roles: [String!]!
-}
-
 input ImportArticleOptions {
   importAuthors: Boolean
   importContentImages: Boolean
@@ -3667,18 +3641,6 @@ type Mutation {
     paymentPeriodicities: [PaymentPeriodicity!]
     stock: Int
   ): Goodie!
-  createImpersonationGrant(
-    """
-    S256 PKCE challenge of a support login; the grant then redeems only with its verifier.
-    """
-    codeChallenge: String
-    durationMinutes: Int!
-    impersonatedBy: String!
-
-    """Required, except for signing in as the We.Publish support account."""
-    reason: String
-    userId: String!
-  ): ImpersonationGrantResult!
 
   """Creates a new invoice."""
   createInvoice(currency: Currency!, description: String, dueAt: DateTime!, items: [InvoiceItemInput!]!, mail: String!, manuallySetAsPaidByUserId: String, scheduledDeactivationAt: DateTime!, subscriptionID: String): Invoice!
@@ -3768,13 +3730,16 @@ type Mutation {
   """Creates a rating system answer."""
   createRatingSystemAnswer(answer: String, ratingSystemId: String!, type: RatingSystemType!): CommentRatingSystemAnswer!
   createSession(email: String!, password: String!, totpToken: String): SessionWithToken!
-  createSessionWithJWT(
-    """
-    The PKCE verifier of a support login, required when its grant carries a code challenge.
-    """
-    codeVerifier: String
-    jwt: String!
-    totpToken: String
+  createSessionWithJWT(jwt: String!, totpToken: String): SessionWithToken!
+
+  """
+  Signs a We.Publish admin in with the code auth.wepublish.cloud returned: as the account connected to that We.Publish identity, else the one with its email, else a new one. The account becomes an admin with the names from We.Publish and can only sign in this way from then on.
+  """
+  createSessionWithWepublishLogin(
+    code: String!
+
+    """The PKCE verifier of the login."""
+    codeVerifier: String!
   ): SessionWithToken!
 
   """Creates a new subscription."""
@@ -4176,7 +4141,6 @@ type Mutation {
   Revokes one of your api tokens, or anyone's with CAN_REVOKE_ALL_API_TOKENS. The token stops working immediately.
   """
   revokeApiToken(id: String!): ApiToken!
-  revokeImpersonationSessions(ids: [String!]): Int!
 
   """
   This mutation sends a login link to the email if the user exists. Method will always return email address
@@ -5930,9 +5894,6 @@ type Query {
 
   """Returns a paginated list of images based on the filters given."""
   images(cursorId: String, filter: ImageFilter, order: SortOrder = Descending, skip: Int = 0, sort: ImageSort = ModifiedAt, take: Int = 10): PaginatedImages!
-  impersonationEnabled: Boolean!
-  impersonationSearchUsers(limit: Int, query: String!): [ImpersonationUser!]!
-  impersonationSessions: [ImpersonationSessionInfo!]!
 
   "\n      Returns a more detailed version of a single importable event, by id and source.\n    "
   importedEvent(filter: SingleEventFilter!): EventFromSource!
@@ -6218,11 +6179,6 @@ type Query {
   """Returns a paginated list of subscriptions based on the filters given."""
   subscriptionsAsCsv(activeAt: DateTime, autoRenew: Boolean, cancellationDateFrom: DateFilter, cancellationDateTo: DateFilter, deactivationDateFrom: DateFilter, deactivationDateTo: DateFilter, deactivationReason: String, extendable: Boolean, memberPlanID: String, paidUntilFrom: DateFilter, paidUntilTo: DateFilter, paymentMethodID: String, paymentPeriodicity: PaymentPeriodicity, startsAtFrom: DateFilter, startsAtTo: DateFilter, subscriptionIDs: [String!], userHasAddress: Boolean, userID: String, userIDs: [String!]): String!
 
-  """
-  Whether the editor offers the We.Publish support login on its login page.
-  """
-  supportLoginEnabled: Boolean!
-
   """Returns a single sync provider setting by id."""
   syncProviderSetting(id: String!): SettingSyncProvider!
 
@@ -6334,6 +6290,9 @@ type Query {
   Returns the website settings, requires authentication to get sensitive settings.
   """
   websiteSettings: WebsiteSettings!
+
+  """How the editor starts the We.Publish login, or null where it is off."""
+  wepublishLogin: WepublishLoginClient
 }
 
 type QuoteBlock implements BaseBlock & HasImage {
@@ -6450,6 +6409,11 @@ type SensitiveDataUser implements BaseUser {
   id: String!
   image: Image
   lastLogin: DateTime
+
+  """
+  Whether the account signs in with the We.Publish login. We.Publish manages it, so it cannot be changed or deleted.
+  """
+  managedByWepublishLogin: Boolean!
   modifiedAt: DateTime!
   name: String!
   note: String
@@ -7888,6 +7852,16 @@ enum Weekday {
   Thursday
   Tuesday
   Wednesday
+}
+
+"""
+Where the editor sends a We.Publish admin to sign in with auth.wepublish.cloud.
+"""
+type WepublishLoginClient {
+  authorizationUrl: String!
+  clientId: String!
+  redirectUri: String!
+  scope: String!
 }
 
 type YouTubeVideoBlock implements BaseBlock {

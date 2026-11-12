@@ -22,6 +22,14 @@ import { JwksController } from './jwks.controller';
 import { TotpService } from './totp.service';
 import { TotpResolver } from './totp.resolver';
 import { WebsiteTokenController } from './website-token.controller';
+import { createRemoteJWKSet } from 'jose';
+import {
+  WEPUBLISH_LOGIN_KEYS,
+  WepublishIdentityService,
+} from './wepublish-identity.service';
+import { WEPUBLISH_LOGIN_JWKS_URL } from './wepublish-login';
+import { WepublishLoginResolver } from './wepublish-login.resolver';
+import { WepublishLoginService } from './wepublish-login.service';
 import {
   SessionCacheModule,
   SCOPED_JWT_VERIFIER,
@@ -89,6 +97,13 @@ export class SessionModule {
       RegisterResolver,
       TotpService,
       TotpResolver,
+      WepublishIdentityService,
+      WepublishLoginService,
+      WepublishLoginResolver,
+      {
+        provide: WEPUBLISH_LOGIN_KEYS,
+        useFactory: () => createRemoteJWKSet(new URL(WEPUBLISH_LOGIN_JWKS_URL)),
+      },
       {
         provide: SESSION_TTL_TOKEN,
         useFactory: async (...args: any[]) => {

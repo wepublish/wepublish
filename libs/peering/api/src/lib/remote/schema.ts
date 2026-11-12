@@ -2125,35 +2125,6 @@ export type ImageTransformation = {
   width?: InputMaybe<Scalars['Int']['input']>;
 };
 
-export type ImpersonationGrantResult = {
-  __typename?: 'ImpersonationGrantResult';
-  durationMinutes: Scalars['Int']['output'];
-  email: Scalars['String']['output'];
-  expiresAt: Scalars['DateTime']['output'];
-  token: Scalars['String']['output'];
-};
-
-export type ImpersonationSessionInfo = {
-  __typename?: 'ImpersonationSessionInfo';
-  createdAt: Scalars['DateTime']['output'];
-  expiresAt: Scalars['DateTime']['output'];
-  id: Scalars['String']['output'];
-  impersonatedBy?: Maybe<Scalars['String']['output']>;
-  impersonationReason?: Maybe<Scalars['String']['output']>;
-  userEmail: Scalars['String']['output'];
-  userId: Scalars['String']['output'];
-  userName?: Maybe<Scalars['String']['output']>;
-};
-
-export type ImpersonationUser = {
-  __typename?: 'ImpersonationUser';
-  active: Scalars['Boolean']['output'];
-  email: Scalars['String']['output'];
-  id: Scalars['String']['output'];
-  name?: Maybe<Scalars['String']['output']>;
-  roles: Array<Scalars['String']['output']>;
-};
-
 export type ImportArticleOptions = {
   importAuthors?: InputMaybe<Scalars['Boolean']['input']>;
   importContentImages?: InputMaybe<Scalars['Boolean']['input']>;
@@ -3397,7 +3368,6 @@ export type Mutation = {
   createExternalAppToken: ExternalAppToken;
   /** Creates a new goodie. */
   createGoodie: Goodie;
-  createImpersonationGrant: ImpersonationGrantResult;
   /** Creates a new invoice. */
   createInvoice: Invoice;
   /** Returns a JWT that is valid for 1min for the current logged in user. */
@@ -3445,6 +3415,8 @@ export type Mutation = {
   createRatingSystemAnswer: CommentRatingSystemAnswer;
   createSession: SessionWithToken;
   createSessionWithJWT: SessionWithToken;
+  /** Signs a We.Publish admin in with the code auth.wepublish.cloud returned: as the account connected to that We.Publish identity, else the one with its email, else a new one. The account becomes an admin with the names from We.Publish and can only sign in this way from then on. */
+  createSessionWithWepublishLogin: SessionWithToken;
   /** Creates a new subscription. */
   createSubscription: PublicSubscription;
   /** Create a new subscription flow */
@@ -3663,7 +3635,6 @@ export type Mutation = {
   revokeActiveSession: Scalars['Boolean']['output'];
   /** Revokes one of your api tokens, or anyone's with CAN_REVOKE_ALL_API_TOKENS. The token stops working immediately. */
   revokeApiToken: ApiToken;
-  revokeImpersonationSessions: Scalars['Int']['output'];
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendJWTLogin: Scalars['String']['output'];
   /** Manually send a mail template to a single user */
@@ -4086,15 +4057,6 @@ export type MutationCreateGoodieArgs = {
 };
 
 
-export type MutationCreateImpersonationGrantArgs = {
-  codeChallenge?: InputMaybe<Scalars['String']['input']>;
-  durationMinutes: Scalars['Int']['input'];
-  impersonatedBy: Scalars['String']['input'];
-  reason?: InputMaybe<Scalars['String']['input']>;
-  userId: Scalars['String']['input'];
-};
-
-
 export type MutationCreateInvoiceArgs = {
   currency: Currency;
   description?: InputMaybe<Scalars['String']['input']>;
@@ -4350,9 +4312,14 @@ export type MutationCreateSessionArgs = {
 
 
 export type MutationCreateSessionWithJwtArgs = {
-  codeVerifier?: InputMaybe<Scalars['String']['input']>;
   jwt: Scalars['String']['input'];
   totpToken?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationCreateSessionWithWepublishLoginArgs = {
+  code: Scalars['String']['input'];
+  codeVerifier: Scalars['String']['input'];
 };
 
 
@@ -4942,11 +4909,6 @@ export type MutationRevertUserSubscriptionUpgradeArgs = {
 
 export type MutationRevokeApiTokenArgs = {
   id: Scalars['String']['input'];
-};
-
-
-export type MutationRevokeImpersonationSessionsArgs = {
-  ids?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 
@@ -7021,9 +6983,6 @@ export type Query = {
   image: Image;
   /** Returns a paginated list of images based on the filters given. */
   images: PaginatedImages;
-  impersonationEnabled: Scalars['Boolean']['output'];
-  impersonationSearchUsers: Array<ImpersonationUser>;
-  impersonationSessions: Array<ImpersonationSessionInfo>;
   /**
    *
    *       Returns a more detailed version of a single importable event, by id and source.
@@ -7240,8 +7199,6 @@ export type Query = {
   subscriptions: PublicSubscriptionConnection;
   /** Returns a paginated list of subscriptions based on the filters given. */
   subscriptionsAsCsv: Scalars['String']['output'];
-  /** Whether the editor offers the We.Publish support login on its login page. */
-  supportLoginEnabled: Scalars['Boolean']['output'];
   /** Returns a single sync provider setting by id. */
   syncProviderSetting: SettingSyncProvider;
   /** Returns all sync provider settings. */
@@ -7299,6 +7256,8 @@ export type Query = {
   videos: PaginatedVideos;
   /** Returns the website settings, requires authentication to get sensitive settings. */
   websiteSettings: WebsiteSettings;
+  /** How the editor starts the We.Publish login, or null where it is off. */
+  wepublishLogin?: Maybe<WepublishLoginClient>;
 };
 
 
@@ -7649,12 +7608,6 @@ export type QueryImagesArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<ImageSort>;
   take?: InputMaybe<Scalars['Int']['input']>;
-};
-
-
-export type QueryImpersonationSearchUsersArgs = {
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  query: Scalars['String']['input'];
 };
 
 
@@ -8360,6 +8313,8 @@ export type SensitiveDataUser = BaseUser & {
   id: Scalars['String']['output'];
   image?: Maybe<Image>;
   lastLogin?: Maybe<Scalars['DateTime']['output']>;
+  /** Whether the account signs in with the We.Publish login. We.Publish manages it, so it cannot be changed or deleted. */
+  managedByWepublishLogin: Scalars['Boolean']['output'];
   modifiedAt: Scalars['DateTime']['output'];
   name: Scalars['String']['output'];
   note?: Maybe<Scalars['String']['output']>;
@@ -9727,6 +9682,15 @@ export enum Weekday {
   Tuesday = 'Tuesday',
   Wednesday = 'Wednesday'
 }
+
+/** Where the editor sends a We.Publish admin to sign in with auth.wepublish.cloud. */
+export type WepublishLoginClient = {
+  __typename?: 'WepublishLoginClient';
+  authorizationUrl: Scalars['String']['output'];
+  clientId: Scalars['String']['output'];
+  redirectUri: Scalars['String']['output'];
+  scope: Scalars['String']['output'];
+};
 
 export type YouTubeVideoBlock = BaseBlock & {
   __typename?: 'YouTubeVideoBlock';

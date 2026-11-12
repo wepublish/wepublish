@@ -17,16 +17,8 @@ mutation CreateSession($email: String!, $password: String!, $totpToken: String) 
   }
 }
 
-mutation CreateSessionWithJWT(
-  $jwt: String!
-  $totpToken: String
-  $codeVerifier: String
-) {
-  createSessionWithJWT(
-    jwt: $jwt
-    totpToken: $totpToken
-    codeVerifier: $codeVerifier
-  ) {
+mutation CreateSessionWithJWT($jwt: String!, $totpToken: String) {
+  createSessionWithJWT(jwt: $jwt, totpToken: $totpToken) {
     user {
       email
       totpEnabled
@@ -75,6 +67,26 @@ mutation ResetUserTotp($userId: String!) {
   resetUserTotp(userId: $userId)
 }
 
-query SupportLoginEnabled {
-  supportLoginEnabled
+query WepublishLogin {
+  wepublishLogin {
+    authorizationUrl
+    clientId
+    redirectUri
+    scope
+  }
+}
+
+mutation CreateSessionWithWepublishLogin(
+  $code: String!
+  $codeVerifier: String!
+) {
+  createSessionWithWepublishLogin(code: $code, codeVerifier: $codeVerifier) {
+    user {
+      email
+      roles {
+        ...FullUserRole
+      }
+    }
+    token
+  }
 }

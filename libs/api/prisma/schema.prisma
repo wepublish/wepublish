@@ -1186,7 +1186,6 @@ model ImpersonationGrant {
   jti       String    @unique
   expiresAt DateTime  @db.Timestamptz(3)
   redeemedAt DateTime? @db.Timestamptz(3)
-  codeChallenge String?
 
   @@index([expiresAt])
   @@map("impersonation_grants")
@@ -1385,6 +1384,7 @@ model User {
   totpSecret      String?
   totpEnabled     Boolean   @default(false)
   totpExempt      Boolean   @default(false)
+  wepublishLoginSubject String? @unique
   userImageID     String?
   userImage       Image?    @relation(fields: [userImageID], references: [id])
   note            String?

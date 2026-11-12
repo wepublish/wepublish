@@ -1,10 +1,10 @@
-const SECRET_PATH = /\/login\/(impersonate|jwt)\/[^/?#\s]+/g;
-const SUPPORT_LOGIN_FRAGMENT = /(\/login\/support)#[^\s]*/g;
+const SECRET_PATH = /\/login\/jwt\/[^/?#\s]+/g;
+const WEPUBLISH_LOGIN_FRAGMENT = /(\/login\/wepublish)#[^\s]*/g;
 
 export function scrubLoginSecrets(value: string): string {
   return value
-    .replace(SECRET_PATH, '/login/$1/[redacted]')
-    .replace(SUPPORT_LOGIN_FRAGMENT, '$1');
+    .replace(SECRET_PATH, '/login/jwt/[redacted]')
+    .replace(WEPUBLISH_LOGIN_FRAGMENT, '$1');
 }
 
 const scrubbed = <T>(value: T): T =>
