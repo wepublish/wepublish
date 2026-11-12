@@ -9,4 +9,5 @@ export enum WepBlockStyles {
   LogoBand = 'LogoBand',
   Feature = 'Feature',
   TeaserCards = 'TeaserCards',
+  LatestNews = 'LatestNews',
 }

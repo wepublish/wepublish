@@ -122,6 +122,11 @@ export const FooterIcons = styled('div')`
 export const FooterIconLink = styled('a')`
   display: block;
   line-height: 0;
+
+  &,
+  &:hover {
+    text-decoration: none;
+  }
 `;
 
 export const FooterIcon = styled('img')`

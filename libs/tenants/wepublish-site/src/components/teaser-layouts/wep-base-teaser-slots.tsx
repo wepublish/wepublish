@@ -3,6 +3,7 @@ import { BuilderTeaserSlotsBlockProps } from '@wepublish/website/builder';
 import { cond, T } from 'ramda';
 
 import { HeroLinks, isHeroLinks } from '../hero/hero-links';
+import { isLatestNews, LatestNews } from '../latest-news/latest-news';
 import { isLogoBand, LogoBand } from '../logo-band/logo-band';
 import { isTeaserCards, TeaserCards } from '../teaser-cards/teaser-cards';
 import {
@@ -23,6 +24,10 @@ export const WepBaseTeaserSlots = cond([
   [
     isHeroLinks,
     (props: BuilderTeaserSlotsBlockProps) => <HeroLinks {...props} />,
+  ],
+  [
+    isLatestNews,
+    (props: BuilderTeaserSlotsBlockProps) => <LatestNews {...props} />,
   ],
   [
     isTeaserCards,

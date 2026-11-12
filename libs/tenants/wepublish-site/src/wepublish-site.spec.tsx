@@ -1,5 +1,5 @@
 import { CSSProperties } from 'react';
-import { fireEvent, screen } from '@testing-library/react';
+import { fireEvent, screen, within } from '@testing-library/react';
 import {
   mockArticle,
   mockArticleRevision,
@@ -479,6 +479,95 @@ describe('We.Publish website tenant', () => {
         'href',
         expect.stringMatching(/\/share$/)
       );
+    });
+  });
+
+  describe('latest news', () => {
+    const article = (title: string, author: string, publishedAt: string) =>
+      mockArticleTeaser({
+        title,
+        image: mockImage({ title: `Bild ${title}` }),
+        article: mockArticle({
+          publishedAt,
+          latest: mockArticleRevision({
+            blocks: [],
+            authors: [
+              mockArticleRevisionAuthor({
+                author: mockAuthor({ name: author }),
+              }),
+            ],
+          }),
+        }),
+      });
+
+    const latestNews = () =>
+      mockTeaserSlotsBlock({
+        blockStyle: WepBlockStyles.LatestNews,
+        title: 'Aktuelles von We.Publish',
+        teasers: [
+          article(
+            'Hackathon bei der Hauptstadt',
+            'Ramona Sprenger',
+            '2026-09-08T10:00:00.000Z'
+          ),
+          article(
+            'ganzgraz: We.Publish wächst nach Österreich',
+            'Michael Scheurer',
+            '2025-04-19T10:00:00.000Z'
+          ),
+          mockCustomTeaser({
+            title: null,
+            preTitle: 'Alle anzeigen',
+            lead: null,
+            contentUrl: '/de/aktuelles',
+            image: null,
+          }),
+        ],
+      });
+
+    it('shows the title of the block as a heading', () => {
+      renderTenantPage([latestNews()]);
+
+      expect(
+        screen.getByRole('heading', {
+          level: 2,
+          name: 'Aktuelles von We.Publish',
+        })
+      ).toBeInTheDocument();
+    });
+
+    it('shows each article with its image, title, authors and date', () => {
+      renderTenantPage([latestNews()]);
+
+      const hackathon = screen.getByRole('article', {
+        name: 'Hackathon bei der Hauptstadt',
+      });
+
+      expect(
+        within(hackathon).getByRole('img', {
+          name: 'Bild Hackathon bei der Hauptstadt',
+        })
+      ).toBeInTheDocument();
+      expect(hackathon).toHaveTextContent(
+        'Ramona Sprenger, 08. September 2026'
+      );
+    });
+
+    it('links each article', () => {
+      renderTenantPage([latestNews()]);
+
+      expect(
+        screen.getByRole('link', { name: /Hackathon bei der Hauptstadt/ })
+      ).toHaveAttribute('href', expect.stringMatching(/.+/));
+    });
+
+    it('turns an entry without image into the button to all articles', () => {
+      renderTenantPage([latestNews()]);
+
+      expect(
+        screen.getByRole('link', { name: 'Alle anzeigen' })
+      ).toHaveAttribute('href', expect.stringMatching(/\/aktuelles$/));
+      expect(screen.getAllByRole('article')).toHaveLength(2);
     });
   });
 

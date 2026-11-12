@@ -18,6 +18,7 @@ import {
 } from './break-blocks/attention-catcher';
 import { Feature, isFeature } from './feature/feature';
 import { Hero, isHero } from './hero/hero';
+import { isLatestNews } from './latest-news/latest-news';
 import { isLogoBand } from './logo-band/logo-band';
 import { isTeaserCards } from './teaser-cards/teaser-cards';
 import { MainSpacer } from './wep-main-spacer';
@@ -50,7 +51,8 @@ export const WepBlockRenderer = (props: BuilderBlockRendererProps) => {
               (isHomePage && props.index < 2) ||
               isLogoBand(block) ||
               isFeature(block) ||
-              isTeaserCards(block)
+              isTeaserCards(block) ||
+              isLatestNews(block)
             ) ?
               css``
             : css`

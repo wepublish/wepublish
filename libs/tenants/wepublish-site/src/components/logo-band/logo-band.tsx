@@ -132,6 +132,12 @@ export const LogoBandLink = styled('a')`
   width: 64px;
   height: 28px;
   cursor: inherit;
+
+  &,
+  &:hover {
+    text-decoration: none;
+  }
+
   -webkit-user-drag: none;
 
   ${({ theme }) => theme.breakpoints.up('md')} {

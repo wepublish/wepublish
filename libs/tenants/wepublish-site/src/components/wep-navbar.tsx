@@ -57,6 +57,11 @@ export const NavbarHomeLink = styled('a')`
   display: block;
   line-height: 0;
   margin-right: auto;
+
+  &,
+  &:hover {
+    text-decoration: none;
+  }
 `;
 
 export const NavbarLogo = styled('img')`
