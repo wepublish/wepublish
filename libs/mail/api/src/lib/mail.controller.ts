@@ -15,7 +15,12 @@ import {
   qualityTypeForRejectReason,
   recordEmailQualitySafely,
 } from './email-quality-recorder';
-import { LetterDeliveryError, LetterRecipient } from './letter-sender';
+import {
+  LetterAttachment,
+  LetterDeliveryError,
+  LetterRecipient,
+} from './letter-sender';
+import { resolveLetterRecipient } from './resolve-letter-recipient';
 
 export enum mailLogType {
   SubscriptionFlow,
@@ -56,6 +61,17 @@ export type MailControllerConfig = {
    * link or a password reset is no use on paper.
    */
   asLetter?: boolean;
+  /**
+   * The recipient the caller already resolved to paper (`null`: to mail),
+   * when it had to decide before the send — the nightly job does, before it
+   * asks the payment provider for the invoice. Skips the lookup here.
+   */
+  letterRecipient?: LetterRecipient | null;
+  /**
+   * A pdf printed after the template, e.g. the provider's invoice with its
+   * payment slip. Nothing for a mail: the provider emails that itself.
+   */
+  letterAttachment?: LetterAttachment;
 };
 
 /**
@@ -255,19 +271,62 @@ export class MailController {
   }
 
   /**
-   * The user with their address when this send goes to paper: the event is
-   * switched to letters, the user prefers them, and letters can be printed.
-   * Anything missing means the mail goes out as usual — except a placeholder
-   * address without a usable postal one, which can be reached neither way;
+   * The user with their address when this send goes to paper, as the caller
+   * decided or as `resolveLetterRecipient` decides now. Anything missing means
+   * the mail goes out as usual — except a placeholder address that prefers
+   * letters but has no usable postal one: it can be reached neither way, so
    * that is logged and `handled`.
    */
   private async resolveLetterRecipient(
     mailLogId: string
   ): Promise<LetterRecipient | 'handled' | null> {
+    if (this.config.letterRecipient !== undefined) {
+      return this.config.letterRecipient;
+    }
+
+    const recipient = await resolveLetterRecipient({
+      prisma: this.prismaService,
+      letterSender: this.mailContext.letterSender,
+      recipient: this.config.recipient,
+      asLetter: this.config.asLetter,
+      logger: this.logger,
+    });
+
+    if (
+      recipient ||
+      !(await this.mailContext.isPlaceholderEmail(
+        this.config.recipient.email
+      )) ||
+      !(await this.wantsUnprintableLetter())
+    ) {
+      return recipient;
+    }
+
+    this.logger.warn(
+      `<${this.config.recipient.email}> prefers letters but has no usable postal address and no real email.`
+    );
+    await this.writeLog(
+      mailLogId,
+      MailLogState.rejected,
+      null,
+      'LETTER_ADDRESS_UNUSABLE',
+      undefined,
+      MailChannel.letter
+    );
+
+    return 'handled';
+  }
+
+  /**
+   * Whether `resolveLetterRecipient` mailed instead only because the address
+   * is unusable: the send is switched to letters, the user prefers them and
+   * letters can be printed.
+   */
+  private async wantsUnprintableLetter(): Promise<boolean> {
     const sender = this.mailContext.letterSender;
 
     if (!this.config.asLetter || !sender) {
-      return null;
+      return false;
     }
 
     const preference =
@@ -275,51 +334,10 @@ export class MailController {
         where: { userId: this.config.recipient.id },
       });
 
-    if (preference?.channel !== MailChannel.letter) {
-      return null;
-    }
-
-    if (!(await sender.isConfigured())) {
-      this.logger.warn(
-        `No letter integration is configured; mailing <${this.config.recipient.email}> instead.`
-      );
-
-      return null;
-    }
-
-    // The callers hand in a bare user; the address lives in its own row.
-    const user = await this.prismaService.user.findUnique({
-      where: { id: this.config.recipient.id },
-      include: { address: true },
-    });
-
-    if (!user || !sender.canReceiveLetters(user)) {
-      if (
-        await this.mailContext.isPlaceholderEmail(this.config.recipient.email)
-      ) {
-        this.logger.warn(
-          `<${this.config.recipient.email}> prefers letters but has no usable postal address and no real email.`
-        );
-        await this.writeLog(
-          mailLogId,
-          MailLogState.rejected,
-          null,
-          'LETTER_ADDRESS_UNUSABLE',
-          undefined,
-          MailChannel.letter
-        );
-
-        return 'handled';
-      }
-
-      this.logger.warn(
-        `<${this.config.recipient.email}> prefers letters but has no usable postal address; mailing instead.`
-      );
-
-      return null;
-    }
-
-    return user;
+    return (
+      preference?.channel === MailChannel.letter &&
+      (await sender.isConfigured())
+    );
   }
 
   /**
@@ -342,6 +360,9 @@ export class MailController {
           mailIdentifier: this.generateMailIdentifier(),
           type: MAIL_LOG_TYPE_MAP[this.config.mailType],
         },
+        ...(this.config.letterAttachment && {
+          attachment: this.config.letterAttachment,
+        }),
       });
     } catch (error) {
       throw new LetterDeliveryError(

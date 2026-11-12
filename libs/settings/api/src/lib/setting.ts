@@ -43,6 +43,9 @@ export enum SettingName {
   EMAIL_QUALITY_EVIDENCE_WARN_AFTER_DAYS = 'emailQualityEvidenceWarnAfterDays',
   SUBSCRIPTION_EXTEND_WINDOW_DAYS = 'subscriptionExtendWindowDays',
   PAYMENT_METHOD_CHANGE_EXPIRY_DAYS = 'paymentMethodChangeExpiryDays',
+  PRINT_ISSUES_PER_YEAR = 'printIssuesPerYear',
+  PRINT_EXPORT_DEFAULTS = 'printExportDefaults',
+  PRINT_BEXIO_KINDS = 'printBexioKinds',
 }
 
 export type CreateSettingArgs<T> = Omit<Setting<T>, 'id'>;

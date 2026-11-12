@@ -9,6 +9,7 @@ import { MailLogSyncService } from '../mail-send/mail-log-sync.service';
 import { SuppressionSyncService } from '../mail-send/suppression-sync.service';
 import { EmailQualityService } from '../email-quality/email-quality.service';
 import { DeliverySuggestionService } from '../delivery-mode/delivery-suggestion.service';
+import { BexioContactSyncService } from '@wepublish/payment/api';
 
 describe('PeriodicJobExecutor', () => {
   afterEach(() => {
@@ -23,6 +24,11 @@ describe('PeriodicJobExecutor', () => {
       }),
       concurrentExecute: vi.fn(async () => {
         ran.push('periodic jobs guarded by the database');
+      }),
+    };
+    const bexioContactSync = {
+      syncAll: vi.fn(async () => {
+        ran.push('bexio contact sync');
       }),
     };
     const mailchimpSync = {
@@ -51,6 +57,7 @@ describe('PeriodicJobExecutor', () => {
       }),
     };
     const services = new Map<unknown, unknown>([
+      [BexioContactSyncService, bexioContactSync],
       [MailchimpSyncService, mailchimpSync],
       [MailLogSyncService, mailLogSync],
       [SuppressionSyncService, suppressionSync],
@@ -84,6 +91,7 @@ describe('PeriodicJobExecutor', () => {
 
     expect(ran).toEqual([
       'periodic jobs',
+      'bexio contact sync',
       'mailchimp sync',
       'mail log sync',
       'suppression sync',
@@ -101,6 +109,7 @@ describe('PeriodicJobExecutor', () => {
 
     expect(ran).toEqual([
       'periodic jobs',
+      'bexio contact sync',
       'mailchimp sync',
       'suppression sync',
       'email quality',
@@ -138,6 +147,7 @@ describe('PeriodicJobExecutor', () => {
 
     expect(ran).toEqual([
       'periodic jobs guarded by the database',
+      'bexio contact sync',
       'mailchimp sync',
       'mail log sync',
       'suppression sync',
@@ -157,6 +167,7 @@ describe('PeriodicJobExecutor', () => {
     await executor.handleCron();
 
     expect(ran).toEqual([
+      'bexio contact sync',
       'mailchimp sync',
       'mail log sync',
       'suppression sync',

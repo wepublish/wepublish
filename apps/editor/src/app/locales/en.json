@@ -1005,6 +1005,151 @@
       "network": "No connection to the server. Please check your internet connection and try again.",
       "unexpected": "Something went wrong. Please try again – if the problem persists, contact support."
     },
+    "form": {
+      "loading": "Loading …",
+      "loadError": {
+        "title": "The data could not be loaded",
+        "retry": "Try again"
+      },
+      "errorSummary": {
+        "title": "Please fix these entries before saving"
+      },
+      "field": {
+        "moreInfo": "More information"
+      },
+      "select": {
+        "empty": "None"
+      },
+      "password": {
+        "show": "Show password",
+        "hide": "Hide password"
+      },
+      "array": {
+        "add": "Add entry",
+        "remove": "Remove entry {{position}}",
+        "reorder": "Reorder",
+        "dragHandle": "Drag to reorder entry {{position}}",
+        "roleDescription": "sortable entry",
+        "dragInstructions": "To pick up an entry, press Space or Enter. Move it with the arrow keys, then press Space or Enter again to drop it, or Escape to cancel.",
+        "dragStart": "Picked up entry {{position}}.",
+        "dragOver": "Entry {{position}} is over position {{target}}.",
+        "dragEnd": "Entry {{position}} dropped at position {{target}}.",
+        "dragCancel": "Moving cancelled. Entry {{position}} is back in its place.",
+        "empty": "No entries yet",
+        "actions": "Actions"
+      },
+      "union": {
+        "type": "Type"
+      },
+      "autocomplete": {
+        "noOptions": "No options",
+        "clear": "Clear",
+        "open": "Open list",
+        "close": "Close list",
+        "loading": "Loading …"
+      },
+      "date": {
+        "today": "Today",
+        "tomorrow": "Tomorrow",
+        "now": "Now"
+      },
+      "color": {
+        "pick": "Pick color",
+        "invalid": "Please enter a hex color such as #1a2b3c"
+      },
+      "secret": {
+        "show": "Show value",
+        "hide": "Hide value"
+      },
+      "view": {
+        "readOnly": "Read only",
+        "discard": "Discard changes",
+        "discardChanges": {
+          "title": "Discard unsaved changes?",
+          "body": "Your changes have not been saved and will be lost.",
+          "keep": "Keep editing",
+          "discard": "Discard"
+        },
+        "sectionErrors_one": "{{count}} error",
+        "sectionErrors_other": "{{count}} errors"
+      },
+      "value": {
+        "on": "On",
+        "off": "Off",
+        "empty": "(empty)",
+        "changed": "changed"
+      },
+      "units": {
+        "seconds": "seconds",
+        "seconds_one": "second",
+        "minutes": "minutes",
+        "minutes_one": "minute",
+        "days": "days",
+        "days_one": "day",
+        "milliseconds": "milliseconds",
+        "milliseconds_one": "millisecond"
+      },
+      "errors": {
+        "required": "This field is required",
+        "invalid": "This value is not valid",
+        "invalid_value": "Please choose one of the available options",
+        "not_multiple_of": "Please enter a multiple of {{divisor}}",
+        "unexpected": "The form could not be checked. Please try again.",
+        "server": "Saving failed. Please try again.",
+        "invalid_type": {
+          "string": "Please enter a text",
+          "number": "Please enter a number",
+          "int": "Please enter a whole number",
+          "boolean": "Please choose yes or no",
+          "date": "Please enter a valid date",
+          "array": "Please enter a list of values",
+          "object": "These details are incomplete"
+        },
+        "invalid_format": {
+          "default": "The format is not valid",
+          "email": "Please enter a valid email address",
+          "url": "Please enter a valid URL",
+          "regex": "The format is not valid",
+          "uuid": "Please enter a valid UUID"
+        },
+        "too_small": {
+          "string": {
+            "min": "Please enter at least {{minimum}} characters",
+            "exact": "Please enter exactly {{minimum}} characters"
+          },
+          "array": {
+            "min": "Please add at least {{minimum}} entries",
+            "exact": "Please add exactly {{minimum}} entries"
+          },
+          "number": {
+            "inclusive": "Please enter {{minimum}} or more",
+            "exclusive": "Please enter more than {{minimum}}"
+          },
+          "date": {
+            "inclusive": "Please choose {{minimum, P}} or later",
+            "exclusive": "Please choose a date after {{minimum, P}}"
+          }
+        },
+        "too_big": {
+          "string": {
+            "max": "Please enter at most {{maximum}} characters",
+            "exact": "Please enter exactly {{maximum}} characters"
+          },
+          "array": {
+            "max": "Please add at most {{maximum}} entries",
+            "exact": "Please add exactly {{maximum}} entries"
+          },
+          "number": {
+            "inclusive": "Please enter {{maximum}} or less",
+            "exclusive": "Please enter less than {{maximum}}"
+          },
+          "date": {
+            "inclusive": "Please choose {{maximum, P}} or earlier",
+            "exclusive": "Please choose a date before {{maximum, P}}"
+          }
+        }
+      }
+    },
     "errorMessages": {
       "invalidEmailErrorMessage": "Please enter a valid email address",
       "invalidRange": "Value out of range. Please input a number between {{min}} and {{max}}.",
@@ -1926,6 +2071,7 @@
       }
     },
     "navbar": {
+      "printIssues": "Print issues",
       "deliverySuggestions": "Delivery channel",
       "articles": "Articles",
       "authors": "Authors",
@@ -1996,6 +2142,9 @@
       "audioLibrary": "Audio"
     },
     "pageTitles": {
+      "printIssues": "Print issues",
+      "printIssueCreate": "New print issue",
+      "printIssueEdit": "Edit print issue",
       "login": "Log in",
       "impersonate": "Log in as user",
       "resetPassword": "Reset password",
@@ -2131,7 +2280,8 @@
       "settings": "Settings",
       "websiteSettings": "Website settings",
       "seo": "SEO checklist",
-      "logout": "Logout"
+      "logout": "Logout",
+      "printIssueList": "Print list"
     },
     "navigation": {
       "overview": {
@@ -2569,6 +2719,9 @@
     "save": "Save",
     "saveAndClose": "Save & Close",
     "settingList": {
+      "printIssues": "Print issues",
+      "printIssuesPerYear": "Issues per year (print)",
+      "issues": "issues",
       "activeSubscriptionsApiPublic": "Make the active subscriptions API accessible by the public",
       "allowCommentEditing": "Allow comment editing",
       "allowGuestCommentRating": "Allow guest ratings on comments",
@@ -2645,6 +2798,7 @@
       "emailQualityMinMailsForUnresponsive": "… delivered mails",
       "emailQualityEvidenceWarnAfterDays": "Warn without delivery reports after … days",
       "info": {
+        "printIssuesPerYear": "How many printed issues a yearly subscription is worth. Readers whose paid period ends stay in the print exports until they received that many. 0 switches the rule off until the import has brought in the earlier issues of the year.",
         "allowCommentEditing": "Readers can still change the text of their own comments after posting them.",
         "commentCharLimit": "Maximum number of characters a comment may contain. Longer comments cannot be submitted.",
         "subscriptionExtendWindowDays": "How many days before a subscription ends readers see \"Renew now\" in their profile. 30 = as before; 365 = any time, as long as no invoice is open.",
@@ -2657,8 +2811,12 @@
         "revenueApiPublic": "Makes the revenue from paid invoices of a chosen period available via the public API without login, e.g. for live figures on your website. The data is anonymised. Leave it off if you don't need it.",
         "loginMinutes": "How long login links sent by e-mail stay valid, in minutes (60 = 1 hour, 1440 = 1 day, 10080 = 1 week). After that, a new link must be requested.",
         "passwordToken": "How long the e-mail link for resetting a password stays valid, in minutes (60 = 1 hour, 1440 = 1 day).",
-        "peerToken": "How long to wait for partner media (peers) when loading their articles, in milliseconds (1000 = 1 second). After that, the request is cancelled."
-      }
+        "peerToken": "How long to wait for partner media (peers) when loading their articles, in milliseconds (1000 = 1 second). After that, the request is cancelled.",
+        "printExportDefaults": "What a new print issue starts from. Adjustable per issue; every delivery keeps the options it was computed with.",
+        "printBexioKinds": "How the print list recognises orders in bexio. «Period»: the keyword starts the description of the contact link (e.g. «NW Geschenkabo»), the period is in the invoice title (year «2027» or «15.03.2026–14.03.2027»); every linked person receives one copy. «Issue»: the keyword starts an invoice position, followed by the issue (e.g. «Einzelheft 6.26»); the position's quantity counts."
+      },
+      "printExportDefaults": "Print list: default options",
+      "printBexioKinds": "bexio delivery types"
     },
     "automaticMails": {
       "title": "Automated messages",
@@ -3214,6 +3372,8 @@
     },
     "yes": "Yes",
     "memberplanForm": {
+      "printIssuesPerPeriod": "Printed issues per period",
+      "printIssuesPerPeriodHelpText": "How many printed issues a subscription paid «{{periodicity}}» is guaranteed to receive. Empty: computed pro rata from the value configured under <i>Settings > Settings > Print issues > «Issues per year (print)»</i>. 0: subscriptions with this payment interval receive no printed issues.",
       "trialSubscription": "Advanced settings",
       "configureTrialBtn": "Configure for trial subscriptions",
       "extendableToggle": "Extendable",
@@ -3670,6 +3830,7 @@
         "bexioInvoiceMailBodyNewMembership": "Invoice Mail Body (New Membership)",
         "bexioInvoiceMailBodyRenewalMembership": "Invoice Mail Body (Renewal Membership)",
         "bexioMarkInvoiceAsOpen": "Mark Invoice as Open",
+        "bexioContactSync": "Sync contacts to Bexio nightly",
         "bexioInvoiceTitleNewMembership": "Invoice Title (New Membership)",
         "bexioInvoiceTitleRenewalMembership": "Invoice Title (Renewal Membership)",
         "typeInfo": "The payment service this integration is connected to. It is set when the integration is created and cannot be changed.",
@@ -3690,7 +3851,11 @@
         "bexioInvoiceTitleInfo": "The title printed on the invoice. You can use different titles for new subscriptions and renewals.",
         "bexioInvoiceMailSubjectInfo": "The subject of the email Bexio sends with the invoice. Placeholders such as :user.firstName: or :memberPlan.name: are replaced automatically.",
         "bexioInvoiceMailBodyInfo": "The text of the email Bexio sends with the invoice; the PDF is attached. Placeholders such as :user.firstName: or :memberPlan.name: are replaced automatically. Bexio requires the placeholder [Network Link] in the text.",
-        "bexioMarkInvoiceAsOpenInfo": "When enabled, Bexio sets the invoice to «open» after sending it, instead of leaving it as a draft."
+        "bexioMarkInvoiceAsOpenInfo": "When enabled, Bexio sets the invoice to «open» after sending it, instead of leaving it as a draft.",
+        "bexioContactSyncInfo": "When enabled, We.Publish pushes the name, company, email and address of changed readers to their Bexio contact every night and creates missing contacts for subscriptions paid through Bexio. Groups, phone and everything else on the contact stay as they are in Bexio.",
+        "bexioContactSyncNeverRan": "Has not run yet.",
+        "bexioContactSyncLastRun": "Last run: {{date}}, without errors.",
+        "bexioContactSyncLastRunFailed": "Last run: {{date}}. Error: {{error}}"
       },
       "placeholderSecret": "Unchanged (Hidden)",
       "secretNotSet": "Not set",
@@ -3781,7 +3946,20 @@
         "articlePrefixInfo": "The part of the address that comes before an article's slug on your website. Only page views of addresses starting with it count as article reads.",
         "propertyInfo": "The numeric ID of your Google Analytics 4 property (not the G-… measurement ID). You find it in Google Analytics under «Admin» → «Property details».",
         "credentialsInfo": "The JSON key file of a Google Cloud service account with read access to your Analytics property. Drag the file into the box below; it is only stored when you save.",
-        "readFileError": "The file could not be read."
+        "readFileError": "The file could not be read.",
+        "hotAndTrending": "Use for Hot & Trending",
+        "hotAndTrendingInfo": "Hot & Trending reads its page views from this provider. Only one provider can be used at a time, choosing this one turns it off for the others.",
+        "apiKey": "API key",
+        "plausibleApiKeyInfo": "A Stats API key from your Plausible account settings («API Keys»). On Plausible Cloud the Stats API needs a Business plan.",
+        "umamiApiKeyInfo": "An API key from Umami Cloud («Settings» → «API keys»), or the token of a user with access to the website for a self-hosted Umami.",
+        "plausibleSiteId": "Site domain",
+        "plausibleSiteIdInfo": "The domain of the site as you added it to Plausible, e.g. example.com.",
+        "umamiWebsiteId": "Website ID",
+        "umamiWebsiteIdInfo": "The ID of the website in Umami. You find it under «Settings» → «Websites» → «Edit».",
+        "plausibleUrl": "Plausible URL",
+        "plausibleUrlInfo": "Only needed for a self-hosted Plausible, e.g. https://plausible.example.com. Leave it empty to use plausible.io.",
+        "umamiUrl": "Umami API URL",
+        "umamiUrlInfo": "Only needed for a self-hosted Umami, e.g. https://umami.example.com/api. Leave it empty to use Umami Cloud."
       },
       "mailchimpSync": "Mailchimp Sync",
       "mailchimpSyncSettings": {
@@ -3901,7 +4079,7 @@
       "paymentProviderInfo": "Services that process the payments for subscriptions, e.g. Payrexx, Stripe, Mollie or invoices via Bexio.",
       "trackingPixelInfo": "Adds the ProLitteris counting pixel to your articles so that their reads count towards your copyright royalties.",
       "mailProviderInfo": "The service We.Publish uses to send emails, such as login links, payment reminders or subscription confirmations.",
-      "analyticsInfo": "Reads the page views from Google Analytics to find out which articles are currently read the most (Hot & Trending).",
+      "analyticsInfo": "Reads the page views from Google Analytics, Plausible or Umami to find out which articles are currently read the most (Hot & Trending).",
       "mailchimpSyncInfo": "Transfers all active user accounts and their subscription data to a Mailchimp audience every night, so you can target newsletters by subscription.",
       "lastLoadedInfo": "When We.Publish last loaded this configuration, e.g. to process a payment. This shows you whether the integration is in use.",
       "setUp": "Set up",
@@ -3942,16 +4120,13 @@
           "pro": "<url>Piwik PRO</url> is a privacy-focused analytics platform and an alternative to Google Analytics.",
           "proLocator": "You can find it in the Menu > Administration > Site > ID of your administration panel",
           "proInvalid": "Must be a valid Piwik ID (e.g., xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)"
-        }
-      },
-      "mail": {
-        "title": "Mail",
-        "mailchimp": {
-          "title": "Mailchimp",
-          "enable": "Enable Mailchimp",
-          "mailchimp": "<url>Mailchimp</url> is an email marketing platform that lets you manage newsletters and subscriber lists. This gives the website access to your newsletters and lets it display them.",
-          "apiKeyLocator": "You can find it in the <url>API keys section</url> of your Mailchimp account. Make sure that it is a Mailchimp key and not a Mandrill key.",
-          "apiKeyInvalid": "Must be a valid Mailchimp API-Key (e.g., XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX-us1)"
+        },
+        "umami": {
+          "title": "Umami",
+          "enable": "Enable Umami",
+          "um": "<url>Umami</url> is a privacy-focused, open source alternative to Google Analytics.",
+          "umLocator": "You can find it in the <url>website settings</url> of your Umami dashboard",
+          "umInvalid": "Must be a valid website ID (e.g., xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)"
         }
       },
       "ads": {
@@ -5098,6 +5273,288 @@
       "deleteQuestion": "Delete “{{name}}”? Templates printing on it have to choose another first.",
       "deleteConfirm": "Delete",
       "noLayouts": "No stationery yet. Create one so letters get a header and footer."
+    },
+    "printIssues": {
+      "title": "Print issues",
+      "intro": "Each printed issue with its print lists: who receives a copy is decided as of the ship day – from we.publish and bexio. Every print list delivered to the printshop counts toward the issues each reader paid for.",
+      "create": "New issue",
+      "noIssues": "No issues yet.",
+      "saved": "Issue saved",
+      "duplicated": "Issue duplicated – please adjust the ship day.",
+      "closed": "Issue closed",
+      "reopened": "Issue unlocked",
+      "exported": "Print list created – a draft until it is marked as delivered.",
+      "exportedReplaced": "Print list updated",
+      "exportedSupplement": "Supplement created – a draft until it is marked as delivered.",
+      "delivered": "Print list marked as delivered",
+      "deliveryDeleted": "Print list deleted",
+      "deliveryTakenBack": "Delivery taken back – the print list is a draft again",
+      "issueDateRequired": "Please enter the ship day.",
+      "drawer": {
+        "createTitle": "New issue",
+        "editTitle": "Issue {{label}}"
+      },
+      "fields": {
+        "issue": "Issue",
+        "number": "Number",
+        "numberTo": "to number",
+        "numberToInvalid": "Greater than the number",
+        "year": "Year",
+        "countsAs": "Counts as",
+        "countsAsOption_one": "1 issue",
+        "countsAsOption_other": "{{count}} issues",
+        "countsAsHelp": "How many issues the double issue counts as towards the number of printed issues a subscription guarantees. Readers owed only one more copy still receive it.",
+        "issueDate": "Ship day",
+        "issueDateHelp": "The day the issue reaches the readers. The print list checks who receives a copy on that day – not on the day of the export.",
+        "status": "Status",
+        "deliveries": "Print lists",
+        "copies": "Copies",
+        "closedAt": "Closed",
+        "title": "Topic",
+        "note": "Note",
+        "image": "Image"
+      },
+      "status": {
+        "open": "Open",
+        "exported": "Exported",
+        "closed": "Closed",
+        "historic": "Historic"
+      },
+      "deliveriesCell": "{{count}} · {{delivered}} delivered",
+      "listCell": {
+        "lists": "1 print list",
+        "listsWithSupplements_one": "1 print list, 1 supplement",
+        "listsWithSupplements_other": "1 print list, {{count}} supplements",
+        "delivered_one": "{{delivered}} of 1 list delivered to the printshop",
+        "delivered_other": "{{delivered}} of {{count}} lists delivered to the printshop",
+        "deliveredNone": "No list delivered to the printshop yet",
+        "draftHint": "{{name}} is still a draft and counts toward the readers’ quotas only once it is marked as delivered."
+      },
+      "closedLine": "{{date}} · {{name}}",
+      "actions": {
+        "list": "Manage print lists",
+        "duplicate": "Duplicate issue",
+        "close": "Close issue",
+        "reopen": "Unlock issue",
+        "historic": "Historic issue, always closed",
+        "delete": "Delete issue"
+      },
+      "lockReason": {
+        "close": "Close the issue: every print list is delivered to the printshop. No more supplements are expected afterwards; unlocking is possible at any time.",
+        "draft": "Cannot close yet: {{name}} is a draft. The issue can be closed once every print list is marked as delivered.",
+        "noLists": "Cannot close yet: the issue has no print list.",
+        "reopen": "Unlock the issue to create supplements.",
+        "historic": "Historic issue, closed for good. The issue was created outside the system and has no print lists."
+      },
+      "deleteReason": {
+        "delivered": "Cannot delete: at least one print list was already delivered to the printshop and counts toward the number of printed issues readers with a subscription are entitled to. Take back the delivery first in the issue's print lists – possible as long as no later issue has a print list.",
+        "draft": "Delete the issue – its print list is still a draft and is deleted with it.",
+        "empty": "Delete the issue – it has no print list yet.",
+        "historic": "Delete the historic issue. It then no longer counts toward the number of printed issues readers with a subscription are entitled to."
+      },
+      "deleteTitle": "Delete issue",
+      "deleteQuestion": "Delete issue {{label}}? Draft print lists are deleted with it.",
+      "deleteConfirm": "Delete",
+      "closeTitle": "Close issue?",
+      "closeQuestion": "Close issue {{label}}? No further supplements are expected. «Unlock» undoes this at any time.",
+      "closeConfirm": "Close",
+      "listView": {
+        "title": "Print lists of issue {{label}}",
+        "section": "Manage print lists",
+        "shipDay": "Ship day {{date}}",
+        "back": "Back to the print issues"
+      },
+      "historicNoExport": "A historic issue comes from the import and has no print list: it counts as delivered for everyone who had a paid subscription at the time. Number, date and note can be corrected in the issue list.",
+      "closedInfo": "Issue closed – to create a supplement, unlock the issue first.",
+      "options": {
+        "title": "Export options for the print list",
+        "intro": "Which member plans receive this print list, plus further export options. «Compute» stores the options on the issue and computes the list as of the ship day.",
+        "reset": "Reset to defaults",
+        "unsaved": "The options changed – compute again before exporting."
+      },
+      "run": {
+        "title": "Check and export"
+      },
+      "compute": "Compute",
+      "recompute": "Compute again",
+      "computing": "Computing – bexio is read as well, this takes a moment …",
+      "computedLine": "Computed on {{date}} at {{time}} by {{name}}",
+      "count": {
+        "addresses_one": "{{count}} address",
+        "addresses_other": "{{count}} addresses",
+        "copies_one": "{{count}} copy",
+        "copies_other": "{{count}} copies",
+        "grace_one": "{{count}} copy owed",
+        "grace_other": "{{count}} copies owed",
+        "gifts_one": "{{count}} gift copy",
+        "gifts_other": "{{count}} gift copies"
+      },
+      "showList_one": "Show list ({{count}} address)",
+      "showList_other": "Show list ({{count}} addresses)",
+      "runListTitle": "List of issue {{label}}",
+      "export": "Export print list",
+      "exportSupplement": "Export supplement",
+      "exportTitle": {
+        "export": "Export print list?",
+        "replace": "Update print list?",
+        "supplement": "Export supplement?"
+      },
+      "exportQuestion": {
+        "export": "Save {{addresses}} ({{copies}}, of which {{grace}} and {{gifts}}) as the print list of issue {{label}}. It stays a draft until it is marked as delivered to the printshop.",
+        "replace": "Updates the print list of {{date}}: its addresses are discarded, {{addresses}} ({{copies}}) take their place. It stays a draft until it is marked as delivered.",
+        "supplement": "Save {{addresses}} ({{copies}}) as «supplement {{batch}}» of issue {{label}} – only addresses in no earlier print list of this issue are exported."
+      },
+      "exportConfirm": {
+        "export": "Export",
+        "replace": "Update print list",
+        "supplement": "Export supplement"
+      },
+      "supplementEmpty": "Nobody new – there is nothing to supplement.",
+      "runConflict": "The list was computed again in the meantime, is older than 24 hours or no longer matches the print lists. Please compute and check it again.",
+      "earlierDrafts_one": "Issue {{labels}} still has a draft print list. Until it is marked as delivered, its copies count toward no quota – copies still owed may come out too high here.",
+      "earlierDrafts_other": "Issues {{labels}} still have draft print lists. Until they are marked as delivered, their copies count toward no quota – copies still owed may come out too high here.",
+      "steps": {
+        "options": "Options",
+        "check": "Check",
+        "export": "Export"
+      },
+      "flow": {
+        "create": "Create print list",
+        "editFirst": "Edit print list",
+        "editSupplement": "Edit last supplement",
+        "supplement": "Create supplement",
+        "cancel": "Cancel",
+        "discard": "Discard"
+      },
+      "deliveries": {
+        "name": "List name",
+        "empty": "No print list yet.",
+        "export": "Print list",
+        "supplement": "Supplement {{batch}}",
+        "exportedAt": "Created on · by",
+        "options": "Export options",
+        "addresses": "Addresses",
+        "copies": "Copies",
+        "status": "Status",
+        "draft": "Draft",
+        "deliveredLine": "Delivered on {{date}} · {{name}}",
+        "csv": "CSV",
+        "csvTooltip": "Download {{name}} as CSV",
+        "edit": "Edit",
+        "editTooltip": "Edit {{name}}",
+        "deliver": "Mark as delivered",
+        "deliverTooltip": "Mark {{name}} as delivered once it was handed to the printshop. Changes to the complete list remain possible at any time as supplements.",
+        "deliverTitle": "Mark print list as delivered?",
+        "deliverQuestion": "Mark {{name}} of issue {{label}} as «delivered to the printshop»? It is locked from then on, and its copies count toward the calculation of the remaining issues readers are entitled to. As long as no later issue has a print list, the delivery can be taken back.",
+        "deliverConfirm": "Mark as delivered",
+        "undeliver": "Take back the delivery",
+        "undeliverTooltip": "Make {{name}} a draft again – to correct it, deliver it anew or delete it.",
+        "undeliverTitle": "Take back the delivery?",
+        "undeliverQuestion": "Make {{name}} of issue {{label}} a draft again? Its copies then no longer count toward the issues readers are entitled to until it is marked as delivered again. Date and name of the delivery are lost.",
+        "undeliverConfirm": "Take back",
+        "undeliverClosed": "The issue is closed – unlock it first.",
+        "undeliverLater": "Not possible: issue {{label}} already has a print list computed with this delivery. Delete or take back that one first.",
+        "delete": "Delete",
+        "deleteTitle": "Delete print list?",
+        "deleteQuestion": "Delete {{name}}? Its addresses are discarded.",
+        "deleteConfirm": "Delete",
+        "fullList": "Download the complete list",
+        "fullListHint": "Print list & all supplements merged"
+      },
+      "summary": {
+        "none": "–",
+        "headline": "{{rows}}, {{copies}} – as of {{date}}",
+        "withGifts": "incl. gift copies",
+        "graceWarning": "More than 5 % of the rows are copies still owed – are all historic issues recorded and is «issues per year» right?",
+        "sources": "Sources",
+        "wepublish": "we.publish",
+        "totalSubscriptions": "Subscriptions checked",
+        "byPlan": "Plans",
+        "byKind": "bexio delivery types",
+        "byCountry": "Countries",
+        "hints": {
+          "title": "Notes",
+          "unpaid": "open",
+          "openWithoutInvoice": "open without invoice",
+          "grace": "Copy owed",
+          "gifts": "Gift copy",
+          "kuendigungen": "Cancelled as of",
+          "missingAddress": "No address",
+          "placeholderEmail": "Placeholder e-mail",
+          "duplicates": "Duplicate",
+          "alreadyExported": "Already in a print list"
+        },
+        "skipped": {
+          "title": "Skipped",
+          "donation": "Donations",
+          "excludedPlan": "Plan not selected",
+          "future": "Starts after the ship day",
+          "unpaidDeactivation": "Deactivated unpaid",
+          "replaced": "Replaced",
+          "deactivated": "Deactivated",
+          "lapsed": "Lapsed",
+          "exhausted": "Quota received",
+          "noPrintIssues": "No printed issues (0 on the plan)"
+        },
+        "bexio": {
+          "title": "bexio",
+          "notConfigured": "bexio is not read: no bexio payment provider with an API key is set up under Integrations. Institutions, gifts, bookshops and single issues are missing.",
+          "notIncluded": "bexio was not read for this list: the option is switched off.",
+          "invoicesInWindow": "Invoices in the window",
+          "canceled": "Cancelled",
+          "skippedProvider": "Created by the payment provider",
+          "skippedImported": "Imported legacy invoices",
+          "otherPeriod": "Other year / other issue",
+          "detailFetched": "Positions read",
+          "ungeprueft": "Unchecked",
+          "contactMissing": "Contact missing",
+          "skippedOpen": "Unpaid, left out",
+          "noValidPeriod": "Without a valid period or issue",
+          "excludedKind": "Delivery type not selected",
+          "quantityMismatch": "Quantity ≠ links"
+        }
+      },
+      "rowsTable": {
+        "name": "Name / company",
+        "place": "Place",
+        "copies": "Copies",
+        "plan": "Plan",
+        "status": "Payment status",
+        "hint": "Note",
+        "empty": "No addresses."
+      }
+    },
+    "printExportOptions": {
+      "memberPlans": "Plans",
+      "memberPlansHelp": "Only subscriptions of these plans go into the list. Empty: every plan.",
+      "allPlans": "all plans",
+      "plansCount_one": "{{count}} plan",
+      "plansCount_other": "{{count}} plans",
+      "includeBexio": "Include bexio",
+      "includeBexioHelp": "Institutions, gift subscriptions, bookshops and single issues from bexio – read with the key of the bexio payment provider under Integrations.",
+      "bexioNotConfigured": "No bexio payment provider with an API key is set up under Integrations; bexio cannot be read.",
+      "bexioKinds": "bexio delivery types",
+      "bexioNoKinds": "No bexio delivery types configured – add them under Settings › Print issues. Until then nothing is listed from bexio.",
+      "bexioShort": "bexio",
+      "bexioKindsCount_one": "bexio: {{count}} delivery type",
+      "bexioKindsCount_other": "bexio: {{count}} delivery types",
+      "includeOpen": "Export ordered but unpaid copies",
+      "includeOpenHelp": "Renewing subscriptions whose invoice is not paid yet receive a copy. With this option off, they receive only copies already paid for.",
+      "openShort": "open",
+      "includeUpcoming": "Export gift copies",
+      "includeUpcomingHelp": "Subscriptions that start after the ship day receive this issue as a gift. It does not count toward the paid issues.",
+      "upcomingShort": "gift"
+    },
+    "printBexioKinds": {
+      "kind": "bexio delivery type {{label}}",
+      "label": "Label",
+      "word": "Keyword in bexio",
+      "refersTo": "Refers to",
+      "refersToPeriod": "Period",
+      "refersToIssue": "Issue",
+      "add": "Add bexio delivery type",
+      "delete": "Delete bexio delivery type {{label}}",
+      "empty": "No bexio delivery types yet. Without a bexio delivery type nothing is listed from bexio."
     },
     "autosave": {
       "label": "Autosave",
