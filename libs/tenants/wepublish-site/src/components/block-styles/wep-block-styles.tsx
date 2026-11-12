@@ -14,4 +14,6 @@ export enum WepBlockStyles {
   TeaserCards = 'TeaserCards',
   LatestNews = 'LatestNews',
   NetworkNews = 'NetworkNews',
+  EventList = 'EventList',
+  Offers = 'Offers',
 }

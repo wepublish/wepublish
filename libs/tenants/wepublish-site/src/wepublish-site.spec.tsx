@@ -8,7 +8,9 @@ import {
   mockAuthor,
   mockBreakBlock,
   mockCustomTeaser,
+  mockEvent,
   mockImage,
+  mockEventTeaser,
   mockNavigations,
   mockQuoteBlock,
   mockTeaserSlotsBlock,
@@ -753,6 +755,155 @@ describe('We.Publish website tenant', () => {
           screen.getByText('Jan Amsler').closest('figure') as HTMLElement
         ).queryByRole('img')
       ).not.toBeInTheDocument();
+    });
+  });
+
+  describe('event list', () => {
+    const event = (name: string, location: string) =>
+      mockEventTeaser({
+        title: null,
+        image: null,
+        event: mockEvent({
+          name,
+          location,
+          url: `/de/event/${name.toLowerCase().replaceAll(' ', '-')}`,
+          image: mockImage({ title: `Bild ${name}` }),
+          startsAt: new Date(2026, 9, 17).toISOString(),
+          endsAt: new Date(2026, 9, 19).toISOString(),
+        }),
+      });
+
+    const eventList = () =>
+      mockTeaserSlotsBlock({
+        blockStyle: WepBlockStyles.EventList,
+        title: 'Events',
+        teasers: [
+          event('Media Makers Camp', 'Ligerz, Bern'),
+          event('Medien Austausch', 'online'),
+          mockCustomTeaser({
+            title: null,
+            preTitle: 'Alle anzeigen',
+            lead: null,
+            contentUrl: '/de/event',
+            image: null,
+          }),
+        ],
+      });
+
+    it('shows the title of the block and the button to all events', () => {
+      renderTenantPage([eventList()]);
+
+      expect(
+        screen.getByRole('heading', { level: 2, name: 'Events' })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: 'Alle anzeigen' })
+      ).toHaveAttribute('href', expect.stringMatching(/\/event$/));
+      expect(screen.getAllByRole('article')).toHaveLength(2);
+    });
+
+    it('shows each event with its image, name, date and place', () => {
+      renderTenantPage([eventList()]);
+
+      const camp = screen.getByRole('article', { name: 'Media Makers Camp' });
+
+      expect(
+        within(camp).getByRole('img', { name: 'Bild Media Makers Camp' })
+      ).toBeInTheDocument();
+      expect(camp).toHaveTextContent('17.–19. Oktober 2026');
+      expect(camp).toHaveTextContent('Ligerz, Bern');
+    });
+
+    it('links each event to its page', () => {
+      renderTenantPage([eventList()]);
+
+      expect(
+        screen.getByRole('link', { name: /Media Makers Camp/ })
+      ).toHaveAttribute('href', expect.stringMatching(/media-makers-camp$/));
+    });
+  });
+
+  describe('offers', () => {
+    const offer = (
+      title: string,
+      lead: string,
+      url: string,
+      overrides: Partial<Parameters<typeof mockCustomTeaser>[0]> = {}
+    ) =>
+      mockCustomTeaser({
+        title,
+        lead,
+        preTitle: null,
+        contentUrl: url,
+        image: null,
+        ...overrides,
+      });
+
+    const offers = () =>
+      mockTeaserSlotsBlock({
+        blockStyle: WepBlockStyles.Offers,
+        title: 'Aktuelle Angebote',
+        teasers: [
+          offer(
+            'Fundraising',
+            'Wir übernehmen den grössten Teil des Fundraising-Prozesses.',
+            '/de/fundraising',
+            { image: mockImage({ title: 'Bild Fundraising' }) }
+          ),
+          offer(
+            'KI-Werkzeuge',
+            'KI-gestützte Werkzeuge für Recherche und Textarbeit.',
+            '/de/ki',
+            { preTitle: 'Zu den Werkzeugen' }
+          ),
+        ],
+      });
+
+    it('shows the title of the block and each offer with its text', () => {
+      renderTenantPage([offers()]);
+
+      expect(
+        screen.getByRole('heading', { level: 2, name: 'Aktuelle Angebote' })
+      ).toBeInTheDocument();
+
+      const fundraising = screen.getByRole('article', { name: 'Fundraising' });
+
+      expect(fundraising).toHaveTextContent(
+        'Wir übernehmen den grössten Teil des Fundraising-Prozesses.'
+      );
+    });
+
+    it('shows the image of an offer only when it has one', () => {
+      renderTenantPage([offers()]);
+
+      expect(
+        within(screen.getByRole('article', { name: 'Fundraising' })).getByRole(
+          'img',
+          { name: 'Bild Fundraising' }
+        )
+      ).toBeInTheDocument();
+      expect(
+        within(
+          screen.getByRole('article', { name: 'KI-Werkzeuge' })
+        ).queryByRole('img')
+      ).not.toBeInTheDocument();
+    });
+
+    it('links the button of each offer, "Mehr erfahren" unless the pre-title says otherwise', () => {
+      renderTenantPage([offers()]);
+
+      expect(
+        within(screen.getByRole('article', { name: 'Fundraising' })).getByRole(
+          'link',
+          { name: 'Mehr erfahren' }
+        )
+      ).toHaveAttribute('href', expect.stringMatching(/\/fundraising$/));
+      expect(
+        within(screen.getByRole('article', { name: 'KI-Werkzeuge' })).getByRole(
+          'link',
+          { name: 'Zu den Werkzeugen' }
+        )
+      ).toHaveAttribute('href', expect.stringMatching(/\/ki$/));
     });
   });
 

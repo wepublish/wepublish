@@ -11,5 +11,8 @@
   "navbar": {
     "openMenu": "Menü öffnen",
     "closeMenu": "Menü schliessen"
+  },
+  "offers": {
+    "readMore": "Mehr erfahren"
   }
 }

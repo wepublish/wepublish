@@ -2,12 +2,10 @@ import { CSSObject } from '@emotion/react';
 import styled from '@emotion/styled';
 import {
   hasBlockStyle,
-  isFilledTeaser,
   joinAuthorNames,
   selectTeaserAuthors,
   selectTeaserDate,
   selectTeaserImage,
-  selectTeaserPreTitle,
   selectTeaserTarget,
   selectTeaserTitle,
   selectTeaserUrl,
@@ -15,7 +13,6 @@ import {
 import { FullTeaserFragment } from '@wepublish/website/api';
 import {
   BuilderTeaserSlotsBlockProps,
-  Button,
   Image,
   Link,
   useWebsiteBuilder,
@@ -23,8 +20,8 @@ import {
 import { useId } from 'react';
 
 import { designText } from '../../theme';
+import { BlockHeader, splitButtonTeaser } from '../block-header';
 import { WepBlockStyles } from '../block-styles/wep-block-styles';
-import { tertiaryButton } from '../button-styles';
 
 export const isLatestNews = ({
   blockStyle,
@@ -38,23 +35,6 @@ export const LatestNewsWrapper = styled('section')`
   ${({ theme }) => theme.breakpoints.up('md')} {
     gap: 60px;
   }
-`;
-
-export const LatestNewsHeader = styled('div')`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: ${({ theme }) => theme.spacing(2)};
-`;
-
-export const LatestNewsTitle = styled('h2')`
-  ${designText.h3 as CSSObject}
-  margin: 0;
-`;
-
-export const LatestNewsButton = styled(Button)`
-  ${({ theme }) => tertiaryButton(theme)}
 `;
 
 export const LatestNewsArticles = styled('div')`
@@ -149,33 +129,14 @@ export const LatestNews = ({
   title,
   teasers,
 }: BuilderTeaserSlotsBlockProps) => {
-  const filledTeasers = teasers.filter(isFilledTeaser);
-  const isButton = (teaser: FullTeaserFragment) =>
-    teaser.__typename === 'CustomTeaser' && !teaser.image;
-  const articles = filledTeasers.filter(teaser => !isButton(teaser));
-  const button = filledTeasers.find(isButton);
-  const buttonLabel = button && selectTeaserPreTitle(button);
-  const buttonUrl = button && selectTeaserUrl(button);
+  const { entries: articles, button } = splitButtonTeaser(teasers);
 
   return (
     <LatestNewsWrapper className={className}>
-      {(title || buttonLabel) && (
-        <LatestNewsHeader>
-          {title && <LatestNewsTitle>{title}</LatestNewsTitle>}
-
-          {buttonLabel && buttonUrl && (
-            <LatestNewsButton
-              variant="outlined"
-              disableRipple
-              LinkComponent={Link}
-              href={buttonUrl}
-              target={selectTeaserTarget(button) ?? undefined}
-            >
-              {buttonLabel}
-            </LatestNewsButton>
-          )}
-        </LatestNewsHeader>
-      )}
+      <BlockHeader
+        title={title}
+        button={button}
+      />
 
       <LatestNewsArticles>
         {articles.map((teaser, index) => (

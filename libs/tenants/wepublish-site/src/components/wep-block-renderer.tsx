@@ -16,11 +16,13 @@ import {
   AttentionCatcher,
   isAttentionCatcher,
 } from './break-blocks/attention-catcher';
+import { isEventList } from './event-list/event-list';
 import { Feature, isFeature } from './feature/feature';
 import { Hero, isHero } from './hero/hero';
 import { isLatestNews } from './latest-news/latest-news';
 import { isLogoBand } from './logo-band/logo-band';
 import { isNetworkNews } from './network-news/network-news';
+import { isOffers } from './offers/offers';
 import { isTeaserCards } from './teaser-cards/teaser-cards';
 import { MainSpacer } from './wep-main-spacer';
 
@@ -55,7 +57,9 @@ export const WepBlockRenderer = (props: BuilderBlockRendererProps) => {
               isAttentionCatcher(block) ||
               isTeaserCards(block) ||
               isLatestNews(block) ||
-              isNetworkNews(block)
+              isNetworkNews(block) ||
+              isEventList(block) ||
+              isOffers(block)
             ) ?
               css``
             : css`
