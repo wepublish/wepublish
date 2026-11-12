@@ -1180,6 +1180,16 @@ export enum Currency {
   Eur = 'EUR'
 }
 
+/** What the current session may do and whether it is an impersonation. */
+export type CurrentSession = {
+  __typename?: 'CurrentSession';
+  /** Whether the session may impersonate users: a We.Publish login with the impersonate-cms role. */
+  canImpersonate: Scalars['Boolean']['output'];
+  expiresAt?: Maybe<Scalars['DateTime']['output']>;
+  /** Who is signed in as this user, if the session is an impersonation. */
+  impersonatedBy?: Maybe<Scalars['String']['output']>;
+};
+
 export type CustomTeaser = BaseTeaser & HasImage & {
   __typename?: 'CustomTeaser';
   contentUrl?: Maybe<Scalars['String']['output']>;
@@ -3446,6 +3456,8 @@ export type Mutation = {
   createUserSubscription: Payment;
   /** Allows guests and authenticated users to create additional subscriptions */
   createUserSubscriptionWithConfirmation: Scalars['Boolean']['output'];
+  /** Lets a We.Publish supporter open the website as the given user for an hour. Needs a We.Publish login with the impersonate-cms role. */
+  createWebsiteImpersonation: WebsiteImpersonation;
   /** Deletes all sync errors for a config so all contacts will be retried. */
   deleteAllMailchimpSyncErrors: Scalars['Boolean']['output'];
   /** Deletes an article. */
@@ -3565,6 +3577,8 @@ export type Mutation = {
   extendUserSubscription: Payment;
   /** Generates a TOTP setup for the current user. Returns a QR code and secret for authenticator app configuration. */
   generateTotpSetup: TotpSetup;
+  /** Signs a We.Publish supporter in to the editor as the given user for an hour. Needs a We.Publish login with the impersonate-cms role. */
+  impersonateUser: SessionWithToken;
   /**
    *
    *       Creates and event based on data from importable events list and an id and provider.
@@ -4461,6 +4475,12 @@ export type MutationCreateUserSubscriptionWithConfirmationArgs = {
 };
 
 
+export type MutationCreateWebsiteImpersonationArgs = {
+  reason: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
+};
+
+
 export type MutationDeleteAllMailchimpSyncErrorsArgs = {
   configId: Scalars['String']['input'];
 };
@@ -4741,6 +4761,12 @@ export type MutationExtendUserSubscriptionArgs = {
 
 export type MutationGenerateTotpSetupArgs = {
   website?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationImpersonateUserArgs = {
+  reason: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 };
 
 
@@ -6918,6 +6944,7 @@ export type Query = {
   crowdfunding: Crowdfunding;
   /** Returns a list of crowdfundings. */
   crowdfundings: Array<Crowdfunding>;
+  currentSession: CurrentSession;
   /**
    *
    *       Returns daily stats in a given timeframe.
@@ -9649,6 +9676,13 @@ export type WebsiteAnalyticsInput = {
   piwik: KeyEnabledInput;
   plausible: KeyEnabledInput;
   umami: KeyEnabledInput;
+};
+
+/** A single-use grant the website redeems through createSessionWithJWT within a minute. */
+export type WebsiteImpersonation = {
+  __typename?: 'WebsiteImpersonation';
+  token: Scalars['String']['output'];
+  url: Scalars['String']['output'];
 };
 
 export type WebsiteRemoteFont = {

@@ -6,6 +6,8 @@ import {
   WepublishLoginOnlyError,
 } from './session.errors';
 import nanoid from 'nanoid/generate';
+import { assertNotManagedByWepublishLogin } from '@wepublish/user/api';
+import { assertDuration, type ImpersonationClaims } from './impersonation';
 import { UserAuthenticationService } from './user-authentication.service';
 import { JwtAuthenticationService } from './jwt-authentication.service';
 import {
@@ -113,6 +115,12 @@ export class SessionService {
   }
 
   async createSessionWithJWT(jwt: string, totpToken?: string) {
+    const grant = await this.jwtService.verifyImpersonationGrant(jwt);
+
+    if (grant) {
+      return this.redeemImpersonationGrant(grant);
+    }
+
     // Try preview audience first (1-min JWT from editor, skips TOTP)
     let isPreview = false;
     let user = null;
@@ -170,6 +178,37 @@ export class SessionService {
     return !!revoked;
   }
 
+  private async redeemImpersonationGrant(claims: ImpersonationClaims) {
+    const redeemed = await this.prisma.impersonationGrant.updateMany({
+      where: { jti: claims.jti, redeemedAt: null },
+      data: { redeemedAt: new Date() },
+    });
+
+    if (redeemed.count !== 1) {
+      throw new InvalidCredentialsError();
+    }
+
+    const user = await this.prisma.user.findUnique({
+      where: { id: claims.userId },
+    });
+
+    if (!user) {
+      throw new InvalidCredentialsError();
+    }
+
+    if (!user.active) {
+      throw new NotActiveError();
+    }
+
+    assertNotManagedByWepublishLogin(user);
+
+    return this.createUserSession(user, {
+      ttlMs: assertDuration(claims.durationMinutes) * 60 * 1000,
+      impersonatedBy: claims.impersonatedBy,
+      impersonationReason: claims.reason,
+    });
+  }
+
   async listImpersonationSessions() {
     return this.prisma.session.findMany({
       where: {
@@ -207,6 +246,7 @@ export class SessionService {
       ttlMs?: number;
       impersonatedBy?: string;
       impersonationReason?: string;
+      canImpersonate?: boolean;
     }
   ) {
     const token = nanoid(IDAlphabet, 64);
@@ -227,6 +267,7 @@ export class SessionService {
               impersonatedAt: new Date(),
             }
           : {}),
+          ...(options?.canImpersonate ? { canImpersonate: true } : {}),
           user: {
             connect: {
               id: user.id,

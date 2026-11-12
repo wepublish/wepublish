@@ -232,6 +232,20 @@ in `libs/session/api/src/lib/wepublish-*.ts`, editor side in
   (`createJWTForWebsiteLogin`, audience `preview`) still works.
 - Sign-ins, refusals, user creation and resets are written to the audit log
   under `createSessionWithWepublishLogin`.
+- **Impersonation.** The Zitadel role `impersonate-cms` (any environment) marks
+  the session `sessions.canImpersonate`; `currentSession` reports it. The user
+  view then offers "Als diese Person anmelden": `impersonateUser(userId,
+  reason)` returns an editor session of the user, and
+  `createWebsiteImpersonation(userId, reason)` a 60-second single-use grant
+  (`impersonation_grants`, audience `impersonation`) that the website redeems
+  through `createSessionWithJWT`, handed over by the preview handshake
+  (`startPreviewHandshake`). Both sessions last an hour, carry
+  `impersonatedBy` (the supporter's email) and `impersonationReason`, cannot
+  impersonate themselves and are refused for inactive and We.Publish
+  accounts. The editor keeps the supporter's token under
+  `wepublish/impersonator-session` and shows `ImpersonationBar`; the website
+  shows its own bar from `withJwtHandler`. Every action in such a session
+  carries `impersonatedBy` in the audit log.
 
 ## We.Publish One
 
@@ -241,12 +255,8 @@ credentials. `libs/one/api` holds the client, the heartbeat and the guards;
 `@OneScopedJwt(scope)` is the only way into a One-facing resolver, and the
 global guard denies anything without it.
 
-Impersonation has no login any more: One's impersonation API and the
-`/login/impersonate` grant were removed. The data stays for a later in-editor
-impersonation — `sessions.impersonatedBy` / `impersonationReason` /
-`impersonatedAt`, `impersonation_grants`, `audit_logs.impersonatedBy` (still
-shown and filterable in the audit log and in One's stats), and
-`createUserSession(user, {impersonatedBy, …})`.
+One has no impersonation API any more. We.Publish support impersonates from
+the editor instead (see the We.Publish login below).
 
 **Feature toggles** come from One too: per medium, staff-only (One's
 `ClientFeatures`).

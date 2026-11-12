@@ -72,6 +72,8 @@ import { MdLockReset } from 'react-icons/md';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { z } from 'zod';
 
+import { ImpersonateUserPanel } from './impersonateUserPanel';
+
 const PropertyRow = styled.div`
   display: grid;
   grid-template-columns: minmax(0, 2fr) minmax(0, 3fr) auto;
@@ -1139,6 +1141,7 @@ function UserEditView() {
                   </CardContent>
                 </Card>
               )}
+              {user && <ImpersonateUserPanel user={user} />}
             </PanelStack>
           </PageColumns>
 

@@ -90,3 +90,34 @@ mutation CreateSessionWithWepublishLogin(
     token
   }
 }
+
+query CurrentSession {
+  currentSession {
+    canImpersonate
+    impersonatedBy
+    expiresAt
+  }
+}
+
+mutation ImpersonateUser($userId: String!, $reason: String!) {
+  impersonateUser(userId: $userId, reason: $reason) {
+    user {
+      email
+      roles {
+        ...FullUserRole
+      }
+    }
+    token
+  }
+}
+
+mutation CreateWebsiteImpersonation($userId: String!, $reason: String!) {
+  createWebsiteImpersonation(userId: $userId, reason: $reason) {
+    token
+    url
+  }
+}
+
+mutation EndImpersonation {
+  revokeActiveSession
+}

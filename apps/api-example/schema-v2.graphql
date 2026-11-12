@@ -1187,6 +1187,18 @@ enum Currency {
   EUR
 }
 
+"""What the current session may do and whether it is an impersonation."""
+type CurrentSession {
+  """
+  Whether the session may impersonate users: a We.Publish login with the impersonate-cms role.
+  """
+  canImpersonate: Boolean!
+  expiresAt: DateTime
+
+  """Who is signed in as this user, if the session is an impersonation."""
+  impersonatedBy: String
+}
+
 type CustomTeaser implements BaseTeaser & HasImage {
   contentUrl: String
   image: Image
@@ -3816,6 +3828,11 @@ type Mutation {
   """
   createUserSubscriptionWithConfirmation(autoRenew: Boolean!, discountCode: String, goodieId: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Float!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], userId: String): Boolean!
 
+  """
+  Lets a We.Publish supporter open the website as the given user for an hour. Needs a We.Publish login with the impersonate-cms role.
+  """
+  createWebsiteImpersonation(reason: String!, userId: String!): WebsiteImpersonation!
+
   """Deletes all sync errors for a config so all contacts will be retried."""
   deleteAllMailchimpSyncErrors(configId: String!): Boolean!
 
@@ -3998,6 +4015,11 @@ type Mutation {
     """
     website: Boolean
   ): TotpSetup!
+
+  """
+  Signs a We.Publish supporter in to the editor as the given user for an hour. Needs a We.Publish login with the impersonate-cms role.
+  """
+  impersonateUser(reason: String!, userId: String!): SessionWithToken!
 
   "\n      Creates and event based on data from importable events list and an id and provider.\n      Also, uploads an image to WePublish Image library.\n    "
   importEvent(id: String!, source: String!): String!
@@ -5784,6 +5806,7 @@ type Query {
 
   """Returns a list of crowdfundings."""
   crowdfundings: [Crowdfunding!]!
+  currentSession: CurrentSession!
 
   "\n      Returns daily stats in a given timeframe.\n    "
   dailySubscriptionStats(end: DateTime, memberPlanIds: [String!], start: DateTime!): [DailySubscriptionStats!]!
@@ -7822,6 +7845,14 @@ input WebsiteAnalyticsInput {
   piwik: KeyEnabledInput!
   plausible: KeyEnabledInput!
   umami: KeyEnabledInput!
+}
+
+"""
+A single-use grant the website redeems through createSessionWithJWT within a minute.
+"""
+type WebsiteImpersonation {
+  token: String!
+  url: String!
 }
 
 type WebsiteRemoteFont {

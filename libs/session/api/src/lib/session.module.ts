@@ -30,6 +30,8 @@ import {
 import { WEPUBLISH_LOGIN_JWKS_URL } from './wepublish-login';
 import { WepublishLoginResolver } from './wepublish-login.resolver';
 import { WepublishLoginService } from './wepublish-login.service';
+import { ImpersonationResolver } from './impersonation.resolver';
+import { ImpersonationService } from './impersonation.service';
 import {
   SessionCacheModule,
   SCOPED_JWT_VERIFIER,
@@ -100,6 +102,8 @@ export class SessionModule {
       WepublishIdentityService,
       WepublishLoginService,
       WepublishLoginResolver,
+      ImpersonationService,
+      ImpersonationResolver,
       {
         provide: WEPUBLISH_LOGIN_KEYS,
         useFactory: () => createRemoteJWKSet(new URL(WEPUBLISH_LOGIN_JWKS_URL)),

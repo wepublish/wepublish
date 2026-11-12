@@ -1,5 +1,15 @@
 export const MAX_IMPERSONATION_MINUTES = 720;
 export const DEFAULT_IMPERSONATION_MINUTES = 60;
+export const IMPERSONATION_GRANT_TTL_SECONDS = 60;
+export const IMPERSONATION_AUDIENCE = 'impersonation';
+
+export interface ImpersonationClaims {
+  userId: string;
+  durationMinutes: number;
+  impersonatedBy: string;
+  reason: string;
+  jti: string;
+}
 
 export class ImpersonationError extends Error {}
 

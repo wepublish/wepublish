@@ -6,6 +6,7 @@ export const WEPUBLISH_LOGIN_JWKS_URL = `${WEPUBLISH_LOGIN_ISSUER}/oauth/v2/keys
 export const WEPUBLISH_LOGIN_ROLES_CLAIM = 'urn:zitadel:iam:org:project:roles';
 export const WEPUBLISH_LOGIN_SCOPE = `openid email profile ${WEPUBLISH_LOGIN_ROLES_CLAIM}`;
 export const WEPUBLISH_LOGIN_PATH = '/login/wepublish';
+export const WEPUBLISH_IMPERSONATE_ROLE = 'impersonate-cms';
 
 export const WEPUBLISH_LOGIN_PRODUCTION_CLIENT_ID = '399257510109839364';
 export const WEPUBLISH_LOGIN_STAGING_CLIENT_ID = '399257571782819844';

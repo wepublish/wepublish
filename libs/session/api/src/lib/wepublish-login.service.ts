@@ -11,6 +11,7 @@ import { UserService } from '@wepublish/user/api';
 import { SessionService } from './session.service';
 import { WepublishIdentityService } from './wepublish-identity.service';
 import {
+  WEPUBLISH_IMPERSONATE_ROLE,
   WEPUBLISH_LOGIN_AUTHORIZATION_URL,
   WEPUBLISH_LOGIN_SCOPE,
   refusalOf,
@@ -91,7 +92,12 @@ export class WepublishLoginService {
         await this.connectAndReset(existing, identity)
       : await this.createUser(identity);
 
-    const session = await this.sessionService.createUserSession(user);
+    const session = await this.sessionService.createUserSession(
+      user,
+      ...(identity.roles.includes(WEPUBLISH_IMPERSONATE_ROLE) ?
+        [{ canImpersonate: true }]
+      : [])
+    );
 
     await this.recordSignIn({ user, sessionId: session.sessionId });
 

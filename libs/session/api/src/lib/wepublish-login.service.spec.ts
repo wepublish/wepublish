@@ -152,6 +152,21 @@ describe('WepublishLoginService', () => {
       expect(session.token).toBe('token-1');
     });
 
+    it('lets the session impersonate when We.Publish grants impersonate-cms', async () => {
+      prisma.user.findUnique.mockResolvedValue(connectedUser);
+      identityService.signIn.mockResolvedValue({
+        ...identity,
+        roles: [...identity.roles, 'impersonate-cms'],
+      });
+
+      await service.createSession('code-1', 'verifier-1');
+
+      expect(sessionService.createUserSession).toHaveBeenCalledWith(
+        connectedUser,
+        { canImpersonate: true }
+      );
+    });
+
     it('signs in as the account already connected to this We.Publish identity, even under another email', async () => {
       prisma.user.findUnique.mockResolvedValue(connectedUser);
 

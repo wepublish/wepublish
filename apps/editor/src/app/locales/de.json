@@ -1528,6 +1528,21 @@
       },
       "title": "Einstellungen"
     },
+    "impersonation": {
+      "title": "Als diese Person anmelden",
+      "info": "Nur für den We.Publish-Support. Die Sitzung dauert eine Stunde, und alles, was du darin tust, steht im Audit-Log.",
+      "editor": "Im Editor",
+      "website": "Auf der Website",
+      "dialogTitle": "Als {{email}} anmelden",
+      "reason": "Grund",
+      "reasonHelp": "Zum Beispiel die Ticketnummer. Er wird mit der Sitzung gespeichert.",
+      "cancel": "Abbrechen",
+      "confirm": "Anmelden",
+      "failed": "Die Anmeldung als diese Person hat nicht geklappt.",
+      "popupBlocked": "Der Browser hat das Fenster der Website blockiert. Bitte erlaube Pop-ups für den Editor.",
+      "active": "Du bist als {{email}} angemeldet (We.Publish-Support: {{supporter}}).",
+      "end": "Beenden"
+    },
     "login": {
       "wepublish": {
         "backToLogin": "Zurück zum Login",

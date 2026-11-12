@@ -90,6 +90,10 @@
     "useLinkInstead": "Recevoir plutôt un lien de connexion par e-mail",
     "verifyingCredentials": "Un instant s'il vous plaît, les identifiants saisis sont en cours de vérification...",
     "alertLoginLinkSent": "Si un compte existe pour l'adresse e-mail \"{email}\", vous recevrez bientôt un lien de connexion dans votre boîte de réception. Cela peut prendre un moment. Veuillez également vérifier votre dossier de courrier indésirable. Si vous ne recevez pas d'e-mail, vous pourrez demander un nouveau lien dans une minute.",
+    "impersonation": {
+      "active": "Vous êtes connecté·e en tant que {name} (support We.Publish : {supporter}).",
+      "end": "Terminer"
+    },
     "totp": {
       "code": "Code de confirmation (2FA)",
       "emailLoginDisabled": "La connexion par lien e-mail n'est pas disponible pour ce compte. Si un compte existe pour cette adresse, connectez-vous avec votre mot de passe et votre code de confirmation.",

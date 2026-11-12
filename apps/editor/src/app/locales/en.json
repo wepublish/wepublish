@@ -1528,6 +1528,21 @@
       },
       "title": "Settings"
     },
+    "impersonation": {
+      "title": "Sign in as this person",
+      "info": "For We.Publish support only. The session lasts an hour, and everything you do in it is recorded in the audit log.",
+      "editor": "In the editor",
+      "website": "On the website",
+      "dialogTitle": "Sign in as {{email}}",
+      "reason": "Reason",
+      "reasonHelp": "For example the ticket number. It is stored with the session.",
+      "cancel": "Cancel",
+      "confirm": "Sign in",
+      "failed": "Signing in as this person did not work.",
+      "popupBlocked": "The browser blocked the website window. Please allow pop-ups for the editor.",
+      "active": "You are signed in as {{email}} (We.Publish support: {{supporter}}).",
+      "end": "End"
+    },
     "login": {
       "wepublish": {
         "backToLogin": "Back to login",

@@ -12,3 +12,6 @@ export * from './wepublish-login';
 export * from './wepublish-login.model';
 export * from './wepublish-login.service';
 export * from './wepublish-login.resolver';
+export * from './impersonation.model';
+export * from './impersonation.service';
+export * from './impersonation.resolver';

@@ -1528,6 +1528,21 @@
       },
       "title": "Paramètres"
     },
+    "impersonation": {
+      "title": "Se connecter en tant que cette personne",
+      "info": "Réservé au support We.Publish. La session dure une heure et tout ce que vous y faites est enregistré dans le journal d’audit.",
+      "editor": "Dans l’éditeur",
+      "website": "Sur le site",
+      "dialogTitle": "Se connecter en tant que {{email}}",
+      "reason": "Motif",
+      "reasonHelp": "Par exemple le numéro de ticket. Il est enregistré avec la session.",
+      "cancel": "Annuler",
+      "confirm": "Se connecter",
+      "failed": "La connexion en tant que cette personne n’a pas fonctionné.",
+      "popupBlocked": "Le navigateur a bloqué la fenêtre du site. Veuillez autoriser les fenêtres contextuelles pour l’éditeur.",
+      "active": "Vous êtes connecté·e en tant que {{email}} (support We.Publish : {{supporter}}).",
+      "end": "Terminer"
+    },
     "login": {
       "wepublish": {
         "backToLogin": "Retour à la connexion",
