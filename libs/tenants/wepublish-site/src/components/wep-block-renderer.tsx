@@ -19,6 +19,7 @@ import {
 import { Feature, isFeature } from './feature/feature';
 import { Hero, isHero } from './hero/hero';
 import { isLogoBand } from './logo-band/logo-band';
+import { isTeaserCards } from './teaser-cards/teaser-cards';
 import { MainSpacer } from './wep-main-spacer';
 
 export const WepBlockRenderer = (props: BuilderBlockRendererProps) => {
@@ -48,7 +49,8 @@ export const WepBlockRenderer = (props: BuilderBlockRendererProps) => {
             (
               (isHomePage && props.index < 2) ||
               isLogoBand(block) ||
-              isFeature(block)
+              isFeature(block) ||
+              isTeaserCards(block)
             ) ?
               css``
             : css`

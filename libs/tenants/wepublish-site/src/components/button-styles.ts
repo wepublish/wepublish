@@ -29,6 +29,32 @@ export const primaryButton = (theme: Theme) => css`
   }
 `;
 
+/** Outlined button as large as the primary one ("Secondary"), e.g. in the teaser cards */
+export const secondaryButton = (theme: Theme) => css`
+  ${designText.text as CSSObject}
+  padding: 15px 30px;
+  border: 1.5px solid ${theme.palette.common.black};
+  border-radius: 3px;
+  background-color: transparent;
+  color: ${theme.palette.common.black};
+  text-decoration: none;
+  text-transform: none;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: none;
+
+  &:hover {
+    border-width: 1.5px;
+    background-color: rgba(0, 0, 0, 0.05);
+    box-shadow: none;
+    text-decoration: none;
+  }
+
+  &:active {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+`;
+
 /** Outlined button in the mono font ("Tertiary"), e.g. "We.Start" */
 export const tertiaryButton = (theme: Theme) => css`
   ${designText.textSmallMono as CSSObject}

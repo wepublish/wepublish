@@ -23,7 +23,6 @@ import { WepBlockStyles } from '../block-styles/wep-block-styles';
 import { tertiaryButtonOnDark } from '../button-styles';
 import { HeroLinks } from '../hero/hero-links';
 import { extraColumn } from '../page-columns';
-import { blockGap } from '../wep-content-wrapper';
 import { useLogoBandScroll } from './use-logo-band-scroll';
 
 export const isLogoBand = ({
@@ -41,13 +40,10 @@ export const LogoBandWrapper = styled('section')`
   padding: 30px 0;
   color: ${({ theme }) => theme.palette.common.white};
 
-  // Right below the hero, without a white gap in between (every block sits in its own container)
-  *:has(> ${HeroLinks}) + * > & {
-    margin-top: calc(-${({ theme }) => theme.spacing(blockGap.xs)} - 1px);
-
-    ${({ theme }) => theme.breakpoints.up('md')} {
-      margin-top: calc(-${({ theme }) => theme.spacing(blockGap.md)} - 1px);
-    }
+  // Right below the hero, without a gap in between (every block sits in its own
+  // container; 1px overlap against a hairline seam)
+  *:has(> ${HeroLinks}) + *:has(> &) {
+    margin-top: -1px;
   }
 `;
 

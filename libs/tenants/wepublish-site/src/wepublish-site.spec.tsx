@@ -410,6 +410,78 @@ describe('We.Publish website tenant', () => {
     });
   });
 
+  describe('teaser cards', () => {
+    const card = (title: string, label: string, url: string) =>
+      mockCustomTeaser({
+        title,
+        preTitle: label,
+        lead: null,
+        contentUrl: url,
+        openInNewTab: false,
+        image: mockImage({ title: `Illustration ${label}` }),
+      });
+
+    const cards = () =>
+      mockTeaserSlotsBlock({
+        blockStyle: WepBlockStyles.TeaserCards,
+        title: null,
+        teasers: [
+          card(
+            'Wir begleiten (neue) Medien in Gründung und Wandel',
+            'We.Start',
+            '/de/start'
+          ),
+          card(
+            'Wir sind ein Netzwerk, das gemeinsam lernt',
+            'We.Share',
+            '/de/share'
+          ),
+        ],
+      });
+
+    it('shows each card with its title on the mint background', () => {
+      renderTenantPage([cards()]);
+
+      const title = screen.getByRole('heading', {
+        name: 'Wir sind ein Netzwerk, das gemeinsam lernt',
+      });
+
+      expect(
+        screen.getByRole('heading', {
+          name: 'Wir begleiten (neue) Medien in Gründung und Wandel',
+        })
+      ).toBeInTheDocument();
+      expect(backgroundsOf(title)).toContain(
+        wepublishSiteTenant.createTheme().palette.primary.light
+      );
+    });
+
+    it('shows the illustration of each card', () => {
+      renderTenantPage([cards()]);
+
+      expect(
+        screen.getByRole('img', { name: 'Illustration We.Start' })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('img', { name: 'Illustration We.Share' })
+      ).toBeInTheDocument();
+    });
+
+    // The test router leaves out the locale prefix that Next.js adds to the links
+    it('links the button of each card, labelled with the pre-title', () => {
+      renderTenantPage([cards()]);
+
+      expect(screen.getByRole('link', { name: 'We.Start' })).toHaveAttribute(
+        'href',
+        expect.stringMatching(/\/start$/)
+      );
+      expect(screen.getByRole('link', { name: 'We.Share' })).toHaveAttribute(
+        'href',
+        expect.stringMatching(/\/share$/)
+      );
+    });
+  });
+
   describe('logo band', () => {
     const logo = (title: string, contentUrl: string) =>
       mockCustomTeaser({

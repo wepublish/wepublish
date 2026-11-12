@@ -20,26 +20,36 @@ import {
   TeaserSlotsTeasers,
   WepTeaserSlots,
 } from '../teaser-layouts/wep-teaser-slots';
-import { blockGap } from '../wep-content-wrapper';
-import { heroBackground } from './hero';
+import { heroBackground, HeroWrapper } from './hero';
 
 export const isHeroLinks = ({
   blockStyle,
 }: Pick<BuilderTeaserSlotsBlockProps, 'blockStyle'>) =>
   hasBlockStyle(WepBlockStyles.HeroLinks)({ blockStyle });
 
+// Space between the hero and its links, smaller than the gap between blocks
+const heroGap = { xs: 5, md: 15 };
+
 export const HeroLinks = styled(WepTeaserSlots)`
-  // Also covers the gap to the hero above (1px more against a hairline seam)
+  // Covers the space to the hero above (1px more against a hairline seam)
   ${({ theme }) =>
-    heroBackground(theme, `calc(${theme.spacing(blockGap.xs)} + 1px)`)}
+    heroBackground(theme, `calc(${theme.spacing(heroGap.xs)} + 1px)`)}
   display: block;
   padding-bottom: ${({ theme }) => theme.spacing(8)};
 
   ${({ theme }) => theme.breakpoints.up('md')} {
-    clip-path: inset(
-      calc(-${({ theme }) => theme.spacing(blockGap.md)} - 1px) -100vmax 0
-    );
+    ${({ theme }) =>
+      heroBackground(theme, `calc(${theme.spacing(heroGap.md)} + 1px)`)}
     padding-bottom: ${({ theme }) => theme.spacing(16)};
+  }
+
+  // Closer to the hero than blocks are to each other (every block sits in its own container)
+  *:has(> ${HeroWrapper}) + *:has(> &) {
+    margin-top: ${({ theme }) => theme.spacing(heroGap.xs)};
+
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      margin-top: ${({ theme }) => theme.spacing(heroGap.md)};
+    }
   }
 
   // Below each other: the titles in one column, the buttons right aligned in a

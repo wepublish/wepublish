@@ -4,6 +4,7 @@ import { cond, T } from 'ramda';
 
 import { HeroLinks, isHeroLinks } from '../hero/hero-links';
 import { isLogoBand, LogoBand } from '../logo-band/logo-band';
+import { isTeaserCards, TeaserCards } from '../teaser-cards/teaser-cards';
 import {
   isTeaserSlotsExpertise,
   TeaserSlotsExpertise,
@@ -22,6 +23,10 @@ export const WepBaseTeaserSlots = cond([
   [
     isHeroLinks,
     (props: BuilderTeaserSlotsBlockProps) => <HeroLinks {...props} />,
+  ],
+  [
+    isTeaserCards,
+    (props: BuilderTeaserSlotsBlockProps) => <TeaserCards {...props} />,
   ],
   [
     isLogoBand,
