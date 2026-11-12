@@ -1,4 +1,4 @@
-import { css, CSSObject, Theme } from '@emotion/react';
+import { css, Theme } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
 import { hasBlockStyle, isBreakBlock } from '@wepublish/block-content/website';
@@ -17,6 +17,7 @@ import { allPass } from 'ramda';
 import heroIllustration from '../../assets/hero-illustration.webp';
 import { staticImageSrc } from '../../assets/static-image';
 import { WepBlockStyles } from '../block-styles/wep-block-styles';
+import { primaryButton } from '../button-styles';
 
 /**
  * Paints the primary colour over the full viewport width (and `top` above the
@@ -62,18 +63,7 @@ export const HeroContent = styled('div')`
 `;
 
 export const HeroButton = styled(Button)`
-  ${({ theme }) => theme.typography.body1 as CSSObject}
-  border-radius: 3px;
-  padding: 15px 30px;
-  text-transform: none;
-  background-color: ${({ theme }) => theme.palette.common.black};
-  color: ${({ theme }) => theme.palette.common.white};
-  box-shadow: none;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.palette.common.black};
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
-  }
+  ${({ theme }) => primaryButton(theme)}
 `;
 
 const illustrationStyles = css`
@@ -107,6 +97,8 @@ export const Hero = ({
       {!hideButton && linkURL && linkText && (
         <HeroButton
           variant="contained"
+          disableElevation
+          disableRipple
           LinkComponent={Link}
           href={linkURL}
           target={linkTarget ?? undefined}

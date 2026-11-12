@@ -63,7 +63,7 @@ const textStyle = (
   }),
 });
 
-const designText = {
+export const designText = {
   h1: textStyle(headingFont, 800, 1.2, { xs: 33, md: 46, lg: 60 }),
   h2: textStyle(headingFont, 800, 1.3, { xs: 25, md: 34, lg: 42 }),
   h3: textStyle(headingFont, 600, 1.3, { xs: 22, md: 26, lg: 29 }),

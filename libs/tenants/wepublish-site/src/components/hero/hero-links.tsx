@@ -1,4 +1,3 @@
-import { CSSObject } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
 import {
@@ -16,6 +15,7 @@ import {
 } from '@wepublish/website/builder';
 
 import { WepBlockStyles } from '../block-styles/wep-block-styles';
+import { tertiaryButton } from '../button-styles';
 import {
   TeaserSlotsTeasers,
   WepTeaserSlots,
@@ -89,20 +89,8 @@ export const HeroLinkTitle = styled('h2')`
 `;
 
 export const HeroLinkButton = styled(Button)`
-  ${({ theme }) => theme.typography.teaserMeta as CSSObject}
+  ${({ theme }) => tertiaryButton(theme)}
   flex-shrink: 0;
-  border: 1.5px solid ${({ theme }) => theme.palette.common.black};
-  border-radius: 3px;
-  padding: 7px 15px;
-  text-transform: none;
-  background-color: transparent;
-  color: ${({ theme }) => theme.palette.common.black};
-
-  &:hover {
-    border-width: 1.5px;
-    background-color: ${({ theme }) => theme.palette.common.black};
-    color: ${({ theme }) => theme.palette.common.white};
-  }
 `;
 
 export const HeroLink = ({ teaser, className }: BuilderTeaserProps) => {
@@ -125,6 +113,7 @@ export const HeroLink = ({ teaser, className }: BuilderTeaserProps) => {
       {href && label && (
         <HeroLinkButton
           variant="outlined"
+          disableRipple
           LinkComponent={Link}
           href={href}
           target={target}
