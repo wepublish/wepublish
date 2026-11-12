@@ -293,7 +293,7 @@ export default defineConfig(({ mode }) => {
           process.env.PRERENDER === '1' ?
             [{ path: '/' }, { path: '/signup' }, { path: '/mitmachen' }]
           : [],
-        // We emit our own sitemap at /api/sitemap from the We.Publish API.
+        // We emit our own sitemap at /sitemap.xml from the We.Publish API.
         sitemap: { enabled: false },
       }),
 
