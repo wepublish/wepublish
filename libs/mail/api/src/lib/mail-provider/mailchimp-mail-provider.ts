@@ -72,7 +72,16 @@ interface VerifyWebhookSignatureProps {
   signature: string;
   url: string;
   params: Record<string, any>;
+  /** Defaults to the webhook key configured on the integration. */
+  key?: string;
 }
+
+/**
+ * While a webhook is being created, Mandrill checks its URL with an empty batch
+ * signed with this fixed key, as the webhook's own key does not exist yet:
+ * https://mailchimp.com/developer/transactional/guides/track-respond-activity-webhooks/
+ */
+const MANDRILL_URL_CHECK_KEY = 'test-webhook';
 
 /**
  * Map the state `messages/info` reports onto our own. Mandrill's `sent` means
@@ -198,8 +207,9 @@ export class MailchimpMailProvider extends BaseMailProvider {
     signature,
     url,
     params,
+    key,
   }: VerifyWebhookSignatureProps): Promise<boolean> {
-    const config = await this.getConfig();
+    const secret = key ?? (await this.getConfig())?.webhookEndpointSecret;
     const keys = Object.keys(params).sort();
 
     const longString = keys.reduce((sig, key) => {
@@ -207,7 +217,7 @@ export class MailchimpMailProvider extends BaseMailProvider {
     }, url || '');
 
     const generatedSignature = crypto
-      .createHmac('sha1', config?.webhookEndpointSecret ?? '')
+      .createHmac('sha1', secret ?? '')
       .update(longString)
       .digest('base64');
 
@@ -225,13 +235,24 @@ export class MailchimpMailProvider extends BaseMailProvider {
       throw new Error('Webhook Header is missing signature');
     }
 
-    if (
-      !(await this.verifyWebhookSignature({
-        signature: req.headers['x-mandrill-signature'],
-        url: `https://${req.headers.host}${req.originalUrl}`,
-        params: req.body,
-      }))
-    ) {
+    const signed = {
+      signature: req.headers['x-mandrill-signature'],
+      url: `https://${req.headers.host}${req.originalUrl}`,
+      params: req.body,
+    };
+
+    if (!(await this.verifyWebhookSignature(signed))) {
+      // An empty batch carries nothing to forge, so the URL check may pass.
+      if (
+        req.body?.mandrill_events === '[]' &&
+        (await this.verifyWebhookSignature({
+          ...signed,
+          key: MANDRILL_URL_CHECK_KEY,
+        }))
+      ) {
+        return [];
+      }
+
       throw new MailWebhookSignatureError('Webhook signature failed');
     }
 
