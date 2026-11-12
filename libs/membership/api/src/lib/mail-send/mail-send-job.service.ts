@@ -17,7 +17,12 @@ import {
   PrismaClient,
 } from '@prisma/client';
 import { v7 as uuidv7 } from 'uuid';
-import { composeMail, MailContext, mailLogType } from '@wepublish/mail/api';
+import {
+  MailContext,
+  composeMail,
+  mailLogType,
+  templateUsesJwt,
+} from '@wepublish/mail/api';
 import {
   canReceiveLetters,
   LetterContext,
@@ -559,7 +564,13 @@ export class MailSendJobService {
         await this.letterContext.sendLetter({
           mailTemplateId: template.id,
           recipient: recipient.user,
-          data: { user: recipient.user, optional: optionalData },
+          data: await this.mailContext.buildMailData({
+            recipient: recipient.user,
+            optionalData,
+            mode: 'send',
+            purlOrigin: 'letter',
+            mintJwt: templateUsesJwt(template),
+          }),
           print: {
             addressPosition: job.addressPosition,
             deliveryProduct: job.deliveryProduct,
@@ -764,7 +775,12 @@ export class MailSendJobService {
         layout: await this.letterContext.resolveLayout(template.letterLayoutId),
         addressPosition: print.addressPosition,
         printMode: print.printMode,
-        data: { user: recipient.user, optional: optionalData },
+        data: await this.mailContext.buildMailData({
+          recipient: recipient.user,
+          optionalData,
+          mode: 'preview',
+          purlOrigin: 'letter',
+        }),
         recipient: toLetterAddress(recipient.user),
       });
 
@@ -776,19 +792,17 @@ export class MailSendJobService {
       };
     }
 
-    const jwt = await this.mailContext.jwtGenerator(recipient.user.id);
     const composed = composeMail(
       {
         subject: template.subject,
         htmlContent: template.htmlContent,
         textContent: template.textContent,
       },
-      {
-        user: recipient.user,
-        optional: optionalData,
-        jwt,
-        currentDate: new Date(),
-      }
+      await this.mailContext.buildMailData({
+        recipient: recipient.user,
+        optionalData,
+        mode: 'preview',
+      })
     );
 
     return {

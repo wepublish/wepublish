@@ -1,3 +1,4 @@
+import { SAMPLE_PURL_DATA } from '@wepublish/mail/api';
 import { MailTemplate } from '@prisma/client';
 import { extractPlaceholders, resolvableKeys } from '@wepublish/mail/api';
 import {
@@ -23,6 +24,7 @@ const SAMPLE_RECIPIENT = {
   emailVerifiedAt: new Date('2025-02-01T12:00:00.000Z'),
   pendingEmail: 'new.jane@example.com',
   pendingEmailAt: new Date('2026-06-01T12:00:00.000Z'),
+  pendingEmailTokenHash: null,
   name: 'Doe',
   firstName: 'Jane',
   flair: 'Vorstandsmitglied',
@@ -80,6 +82,7 @@ export function findMissingPlaceholders(
         optional: {},
         jwt: SAMPLE_JWT,
         currentDate: new Date(),
+        ...SAMPLE_PURL_DATA,
       };
 
   const available = new Set(resolvableKeys(data).map(key => key.toLowerCase()));

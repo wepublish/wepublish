@@ -1228,13 +1228,352 @@ exports[`SettingList > renders successfully 1`] = `
                       </div>
                     </div>
                     <div
+                      class="emotion-23 emotion-24"
+                    >
+                      <label
+                        class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-25"
+                      >
+                        <span
+                          class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-26"
+                        >
+                          <input
+                            class="PrivateSwitchBase-input emotion-27"
+                            data-indeterminate="false"
+                            name="LOGIN_CODE_ENABLED"
+                            type="checkbox"
+                            value="false"
+                          />
+                          <svg
+                            aria-hidden="true"
+                            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-28"
+                            data-testid="CheckBoxOutlineBlankIcon"
+                            focusable="false"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                            />
+                          </svg>
+                        </span>
+                        <span
+                          class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-29"
+                        >
+                          settingList.loginCodeEnabled
+                        </span>
+                      </label>
+                      <button
+                        aria-label="settingList.warnings.loginCodeEnabled"
+                        class="emotion-30 emotion-31"
+                        data-mui-internal-clone-element="true"
+                        type="button"
+                      >
+                        <svg
+                          fill="currentColor"
+                          height="16"
+                          stroke="currentColor"
+                          stroke-width="0"
+                          viewBox="0 0 24 24"
+                          width="16"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M0 0h24v24H0z"
+                            fill="none"
+                          />
+                          <path
+                            d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                    <div
                       class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-50"
                     >
                       <label
                         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-51"
                         data-shrink="true"
-                        for="_r_o_"
-                        id="_r_o_-label"
+                        for="_r_p_"
+                        id="_r_p_-label"
+                      >
+                        settingList.loginCodeMaxUses
+                      </label>
+                      <div
+                        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-52"
+                      >
+                        <input
+                          aria-invalid="false"
+                          class="MuiInputBase-input MuiOutlinedInput-input emotion-53"
+                          id="_r_p_"
+                          name="LOGIN_CODE_MAX_USES"
+                          type="number"
+                          value="5"
+                        />
+                        <div
+                          class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-54"
+                        >
+                          settingList.loginCodeUses
+                          <button
+                            aria-label="settingList.warnings.loginCodeMaxUses"
+                            class="emotion-30 emotion-31"
+                            data-mui-internal-clone-element="true"
+                            type="button"
+                          >
+                            <svg
+                              fill="currentColor"
+                              height="16"
+                              stroke="currentColor"
+                              stroke-width="0"
+                              viewBox="0 0 24 24"
+                              width="16"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M0 0h24v24H0z"
+                                fill="none"
+                              />
+                              <path
+                                d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                        <fieldset
+                          aria-hidden="true"
+                          class="MuiOutlinedInput-notchedOutline emotion-57"
+                        >
+                          <legend
+                            class="emotion-58"
+                          >
+                            <span>
+                              settingList.loginCodeMaxUses
+                            </span>
+                          </legend>
+                        </fieldset>
+                      </div>
+                    </div>
+                    <div
+                      class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-50"
+                    >
+                      <label
+                        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-51"
+                        data-shrink="true"
+                        for="_r_r_"
+                        id="_r_r_-label"
+                      >
+                        settingList.loginCodeValidDays
+                      </label>
+                      <div
+                        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-52"
+                      >
+                        <input
+                          aria-invalid="false"
+                          class="MuiInputBase-input MuiOutlinedInput-input emotion-53"
+                          id="_r_r_"
+                          name="LOGIN_CODE_VALID_DAYS"
+                          type="number"
+                          value="90"
+                        />
+                        <div
+                          class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-54"
+                        >
+                          settingList.days
+                          <button
+                            aria-label="settingList.warnings.loginCodeValidDays"
+                            class="emotion-30 emotion-31"
+                            data-mui-internal-clone-element="true"
+                            type="button"
+                          >
+                            <svg
+                              fill="currentColor"
+                              height="16"
+                              stroke="currentColor"
+                              stroke-width="0"
+                              viewBox="0 0 24 24"
+                              width="16"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M0 0h24v24H0z"
+                                fill="none"
+                              />
+                              <path
+                                d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                        <fieldset
+                          aria-hidden="true"
+                          class="MuiOutlinedInput-notchedOutline emotion-57"
+                        >
+                          <legend
+                            class="emotion-58"
+                          >
+                            <span>
+                              settingList.loginCodeValidDays
+                            </span>
+                          </legend>
+                        </fieldset>
+                      </div>
+                    </div>
+                    <div
+                      class="emotion-23 emotion-24"
+                    >
+                      <div
+                        class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-50"
+                      >
+                        <div
+                          class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-51"
+                          data-shrink="true"
+                          id="_r_t_-label"
+                        >
+                          settingList.loginCodeSecondFactor
+                        </div>
+                        <div
+                          class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiSelect-root emotion-229"
+                        >
+                          <div
+                            aria-expanded="false"
+                            aria-haspopup="listbox"
+                            aria-labelledby="_r_t_-label"
+                            class="MuiSelect-select MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input emotion-230"
+                            id="_r_t_"
+                            role="combobox"
+                            tabindex="0"
+                          >
+                            settingList.loginCodeSecondFactorOptions.none
+                          </div>
+                          <input
+                            aria-hidden="true"
+                            aria-invalid="false"
+                            class="MuiSelect-nativeInput emotion-231"
+                            id="_r_v_"
+                            name="LOGIN_CODE_SECOND_FACTOR"
+                            tabindex="-1"
+                            value="none"
+                          />
+                          <svg
+                            aria-hidden="true"
+                            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon emotion-232"
+                            data-testid="ArrowDropDownIcon"
+                            focusable="false"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M7 10l5 5 5-5z"
+                            />
+                          </svg>
+                          <fieldset
+                            aria-hidden="true"
+                            class="MuiOutlinedInput-notchedOutline emotion-57"
+                          >
+                            <legend
+                              class="emotion-58"
+                            >
+                              <span>
+                                settingList.loginCodeSecondFactor
+                              </span>
+                            </legend>
+                          </fieldset>
+                        </div>
+                      </div>
+                      <button
+                        aria-label="settingList.warnings.loginCodeSecondFactor"
+                        class="emotion-30 emotion-31"
+                        data-mui-internal-clone-element="true"
+                        type="button"
+                      >
+                        <svg
+                          fill="currentColor"
+                          height="16"
+                          stroke="currentColor"
+                          stroke-width="0"
+                          viewBox="0 0 24 24"
+                          width="16"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M0 0h24v24H0z"
+                            fill="none"
+                          />
+                          <path
+                            d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                    <div
+                      class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-50"
+                    >
+                      <label
+                        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-238"
+                        data-shrink="false"
+                        for="_r_11_"
+                        id="_r_11_-label"
+                      >
+                        settingList.placeholderEmailPatterns
+                      </label>
+                      <div
+                        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-52"
+                      >
+                        <input
+                          aria-invalid="false"
+                          class="MuiInputBase-input MuiOutlinedInput-input emotion-53"
+                          id="_r_11_"
+                          name="PLACEHOLDER_EMAIL_PATTERNS"
+                          type="text"
+                          value=""
+                        />
+                        <div
+                          class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-54"
+                        >
+                          <button
+                            aria-label="settingList.warnings.placeholderEmailPatterns"
+                            class="emotion-30 emotion-31"
+                            data-mui-internal-clone-element="true"
+                            type="button"
+                          >
+                            <svg
+                              fill="currentColor"
+                              height="16"
+                              stroke="currentColor"
+                              stroke-width="0"
+                              viewBox="0 0 24 24"
+                              width="16"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M0 0h24v24H0z"
+                                fill="none"
+                              />
+                              <path
+                                d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                        <fieldset
+                          aria-hidden="true"
+                          class="MuiOutlinedInput-notchedOutline emotion-57"
+                        >
+                          <legend
+                            class="emotion-245"
+                          >
+                            <span>
+                              settingList.placeholderEmailPatterns
+                            </span>
+                          </legend>
+                        </fieldset>
+                      </div>
+                    </div>
+                    <div
+                      class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-50"
+                    >
+                      <label
+                        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-51"
+                        data-shrink="true"
+                        for="_r_13_"
+                        id="_r_13_-label"
                       >
                         settingList.passwordToken
                       </label>
@@ -1244,7 +1583,7 @@ exports[`SettingList > renders successfully 1`] = `
                         <input
                           aria-invalid="false"
                           class="MuiInputBase-input MuiOutlinedInput-input emotion-53"
-                          id="_r_o_"
+                          id="_r_13_"
                           name="RESET_PASSWORD_JWT_EXPIRES_MIN"
                           type="number"
                           value="0"
@@ -1328,8 +1667,8 @@ exports[`SettingList > renders successfully 1`] = `
                       <label
                         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-51"
                         data-shrink="true"
-                        for="_r_q_"
-                        id="_r_q_-label"
+                        for="_r_15_"
+                        id="_r_15_-label"
                       >
                         settingList.emailQualityUnresponsiveAfterDays
                       </label>
@@ -1339,7 +1678,7 @@ exports[`SettingList > renders successfully 1`] = `
                         <input
                           aria-invalid="false"
                           class="MuiInputBase-input MuiOutlinedInput-input emotion-53"
-                          id="_r_q_"
+                          id="_r_15_"
                           name="EMAIL_QUALITY_UNRESPONSIVE_AFTER_DAYS"
                           type="number"
                           value="180"
@@ -1393,8 +1732,8 @@ exports[`SettingList > renders successfully 1`] = `
                       <label
                         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-51"
                         data-shrink="true"
-                        for="_r_s_"
-                        id="_r_s_-label"
+                        for="_r_17_"
+                        id="_r_17_-label"
                       >
                         settingList.emailQualityMinMailsForUnresponsive
                       </label>
@@ -1404,7 +1743,7 @@ exports[`SettingList > renders successfully 1`] = `
                         <input
                           aria-invalid="false"
                           class="MuiInputBase-input MuiOutlinedInput-input emotion-53"
-                          id="_r_s_"
+                          id="_r_17_"
                           name="EMAIL_QUALITY_MIN_MAILS_FOR_UNRESPONSIVE"
                           type="number"
                           value="1"
@@ -1457,8 +1796,8 @@ exports[`SettingList > renders successfully 1`] = `
                       <label
                         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-51"
                         data-shrink="true"
-                        for="_r_u_"
-                        id="_r_u_-label"
+                        for="_r_19_"
+                        id="_r_19_-label"
                       >
                         settingList.emailQualityEvidenceWarnAfterDays
                       </label>
@@ -1468,7 +1807,7 @@ exports[`SettingList > renders successfully 1`] = `
                         <input
                           aria-invalid="false"
                           class="MuiInputBase-input MuiOutlinedInput-input emotion-53"
-                          id="_r_u_"
+                          id="_r_19_"
                           name="EMAIL_QUALITY_EVIDENCE_WARN_AFTER_DAYS"
                           type="number"
                           value="14"
@@ -1552,8 +1891,8 @@ exports[`SettingList > renders successfully 1`] = `
                       <label
                         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-51"
                         data-shrink="true"
-                        for="_r_10_"
-                        id="_r_10_-label"
+                        for="_r_1b_"
+                        id="_r_1b_-label"
                       >
                         settingList.peerToken
                       </label>
@@ -1563,7 +1902,7 @@ exports[`SettingList > renders successfully 1`] = `
                         <input
                           aria-invalid="false"
                           class="MuiInputBase-input MuiOutlinedInput-input emotion-53"
-                          id="_r_10_"
+                          id="_r_1b_"
                           name="PEERING_TIMEOUT_MS"
                           type="number"
                           value="100"
@@ -1701,13 +2040,13 @@ exports[`SettingList > renders successfully 1`] = `
                       </button>
                     </div>
                     <div
-                      class="MuiFormControl-root MuiFormControl-fullWidth emotion-273"
+                      class="MuiFormControl-root MuiFormControl-fullWidth emotion-321"
                     >
                       <div
                         class="emotion-23 emotion-24"
                       >
                         <label
-                          class="MuiFormLabel-root MuiFormLabel-colorPrimary emotion-276"
+                          class="MuiFormLabel-root MuiFormLabel-colorPrimary emotion-324"
                           id="setting-new-article-paywall-label"
                         >
                           settingList.newArticlePaywall
@@ -1738,7 +2077,7 @@ exports[`SettingList > renders successfully 1`] = `
                         </button>
                       </div>
                       <div
-                        class="MuiAutocomplete-root MuiAutocomplete-fullWidth MuiAutocomplete-hasPopupIcon emotion-279"
+                        class="MuiAutocomplete-root MuiAutocomplete-fullWidth MuiAutocomplete-hasPopupIcon emotion-327"
                       >
                         <div
                           class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-50"
@@ -1754,18 +2093,18 @@ exports[`SettingList > renders successfully 1`] = `
                               autocapitalize="none"
                               autocomplete="off"
                               class="MuiInputBase-input MuiOutlinedInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-53"
-                              id="_r_14_"
+                              id="_r_1f_"
                               role="combobox"
                               spellcheck="false"
                               type="text"
                               value=""
                             />
                             <div
-                              class="MuiAutocomplete-endAdornment emotion-283"
+                              class="MuiAutocomplete-endAdornment emotion-331"
                             >
                               <button
                                 aria-label="Open"
-                                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium MuiAutocomplete-popupIndicator emotion-284"
+                                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium MuiAutocomplete-popupIndicator emotion-332"
                                 tabindex="-1"
                                 title="Open"
                                 type="button"
@@ -1788,7 +2127,7 @@ exports[`SettingList > renders successfully 1`] = `
                               class="MuiOutlinedInput-notchedOutline emotion-57"
                             >
                               <legend
-                                class="emotion-287"
+                                class="emotion-335"
                               >
                                 <span
                                   aria-hidden="true"

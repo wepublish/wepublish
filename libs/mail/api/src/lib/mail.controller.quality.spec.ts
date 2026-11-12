@@ -1,5 +1,7 @@
 import { EmailQualityEventType } from '@prisma/client';
 import { MailController, mailLogType } from './mail.controller';
+import { MailContext } from './mail-context';
+import { EMPTY_PURL_DATA } from './mail-data';
 import {
   MailProviderError,
   MailProviderRecipientError,
@@ -11,12 +13,18 @@ const send = async (error: Error, withRecorder = true) => {
   const recorder = {
     recordMailSignals: vi.fn(async () => undefined),
   };
-  const prisma = { mailLog: { create: vi.fn(async () => ({})) } };
+  const prisma = {
+    mailLog: { create: vi.fn(async () => ({})) },
+    mailTemplate: { findUnique: vi.fn(async () => null) },
+  };
   const mailContext = {
     sendComposedMail: vi.fn(async () => {
       throw error;
     }),
     jwtGenerator: vi.fn(async () => 'jwt'),
+    isPlaceholderEmail: vi.fn(async () => false),
+    purlProvider: { purlFor: vi.fn(async () => EMPTY_PURL_DATA) },
+    buildMailData: MailContext.prototype.buildMailData,
     mailProvider: { id: 'mailchimp' },
     emailQualityRecorder: withRecorder ? recorder : undefined,
   };
@@ -90,13 +98,19 @@ describe('MailController email quality evidence', () => {
         throw error;
       }),
       jwtGenerator: vi.fn(async () => 'jwt'),
+      isPlaceholderEmail: vi.fn(async () => false),
+      purlProvider: { purlFor: vi.fn(async () => EMPTY_PURL_DATA) },
+      buildMailData: MailContext.prototype.buildMailData,
       mailProvider: { id: 'mailchimp' },
       emailQualityRecorder: recorder,
     };
 
     await expect(
       new MailController(
-        { mailLog: { create: vi.fn() } } as any,
+        {
+          mailLog: { create: vi.fn() },
+          mailTemplate: { findUnique: vi.fn(async () => null) },
+        } as any,
         mailContext as any,
         {
           mailTemplateId: 'template-1',

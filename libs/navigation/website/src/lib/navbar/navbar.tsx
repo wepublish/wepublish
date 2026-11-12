@@ -255,6 +255,7 @@ export function Navbar({
   loginBtn = { href: '/login' },
   profileBtn = { href: '/profile' },
   subscribeBtn = { href: '/mitmachen' },
+  accountSetupPending = false,
   isMenuOpen: controlledIsMenuOpen,
   onMenuToggle,
   navPaperClassName,
@@ -367,7 +368,7 @@ export function Navbar({
           <NavbarActions isMenuOpen={isMenuOpen}>
             {navbarActions}
 
-            {hasUnpaidInvoices && profileBtn && (
+            {!accountSetupPending && hasUnpaidInvoices && profileBtn && (
               <Button
                 LinkComponent={Link}
                 color="warning"
@@ -398,6 +399,7 @@ export function Navbar({
               )}
 
             {!hideMenu &&
+              !accountSetupPending &&
               hasRunningSubscription &&
               !hasUnpaidInvoices &&
               profileBtn && (
@@ -421,6 +423,7 @@ export function Navbar({
           subscribeBtn={subscribeBtn}
           profileBtn={profileBtn}
           loginBtn={loginBtn}
+          accountSetupPending={accountSetupPending}
           paperActions={paperActions}
           main={mainItems}
           categories={categories}
@@ -573,6 +576,7 @@ const NavPaper = ({
   className,
   children,
   paperActions,
+  accountSetupPending = false,
 }: PropsWithChildren<{
   loginBtn?: ButtonProps | null;
   profileBtn?: ButtonProps | null;
@@ -585,6 +589,7 @@ const NavPaper = ({
   isMenuOpen: boolean;
   className?: string;
   paperActions?: ReactNode;
+  accountSetupPending?: boolean;
 }>) => {
   const {
     elements: { Link, Button, H4, H6 },
@@ -633,7 +638,7 @@ const NavPaper = ({
         <NavPaperActions>
           {paperActions}
 
-          {hasUnpaidInvoices && profileBtn && (
+          {!accountSetupPending && hasUnpaidInvoices && profileBtn && (
             <Button
               LinkComponent={Link}
               variant="contained"
@@ -658,7 +663,7 @@ const NavPaper = ({
             </Button>
           )}
 
-          {hasUser && profileBtn && (
+          {hasUser && !accountSetupPending && profileBtn && (
             <Button
               LinkComponent={Link}
               variant="outlined"

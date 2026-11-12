@@ -1,0 +1,32 @@
+fragment FullUserLoginCode on UserLoginCodeStatus {
+  id
+  createdAt
+  expiresAt
+  maxUses
+  usesRemaining
+  lastUsedAt
+  revokedAt
+  issuedBy
+  secondFactor
+  secondFactorAvailable
+}
+
+query UserLoginCode($userId: String!) {
+  userLoginCode(userId: $userId) {
+    ...FullUserLoginCode
+  }
+}
+
+mutation RevokeUserLoginCode($userId: String!) {
+  revokeUserLoginCode(userId: $userId)
+}
+
+mutation ReissueUserLoginCode($userId: String!) {
+  reissueUserLoginCode(userId: $userId) {
+    status {
+      ...FullUserLoginCode
+    }
+    code
+    purl
+  }
+}

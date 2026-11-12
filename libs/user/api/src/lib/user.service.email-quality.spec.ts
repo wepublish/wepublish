@@ -1,7 +1,10 @@
 import type { Mock } from 'vitest';
 import { Test } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
-import { SessionCacheInvalidator } from '@wepublish/authentication/api';
+import {
+  AuthenticationService,
+  SessionCacheInvalidator,
+} from '@wepublish/authentication/api';
 import { PublicContentCacheInvalidator } from '@wepublish/public-content-cache/api';
 import { MailContext, MailchimpContactService } from '@wepublish/mail/api';
 import { UserService } from './user.service';
@@ -54,6 +57,12 @@ describe('UserService email quality', () => {
         },
         { provide: UserDataloaderService, useValue: { prime: vi.fn() } },
         {
+          provide: AuthenticationService,
+          useValue: {
+            revokeUserSessions: vi.fn().mockResolvedValue(undefined),
+          },
+        },
+        {
           provide: SessionCacheInvalidator,
           useValue: { invalidate: vi.fn().mockResolvedValue(undefined) },
         },
@@ -83,7 +92,7 @@ describe('UserService email quality', () => {
   });
 
   it('re-evaluates the level when the user confirms a new address', async () => {
-    await service.confirmEmailChange('user-1', 'new@example.com');
+    await service.confirmEmailChange('confirmation-token');
 
     expect(recorder.recompute).toHaveBeenCalledWith('user-1');
   });
@@ -92,7 +101,7 @@ describe('UserService email quality', () => {
     recorder.recompute.mockRejectedValue(new Error('db down'));
 
     await expect(
-      service.confirmEmailChange('user-1', 'new@example.com')
+      service.confirmEmailChange('confirmation-token')
     ).resolves.toMatchObject({ email: 'new@example.com' });
   });
 });
