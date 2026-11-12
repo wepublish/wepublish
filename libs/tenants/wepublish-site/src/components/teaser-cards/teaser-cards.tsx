@@ -33,13 +33,12 @@ export const isTeaserCards = ({
 export const TeaserCards = styled(WepTeaserSlots)`
   display: block;
 
+  // Next to each other only where each card has room for the illustration and
+  // the title (from about 1300px), below each other otherwise
   ${TeaserSlotsTeasers} {
     display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 600px), 1fr));
     gap: 30px;
-
-    ${({ theme }) => theme.breakpoints.up('md')} {
-      grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
-    }
   }
 
   // All 12 columns, as wide as the navbar
@@ -62,12 +61,6 @@ export const TeaserCardWrapper = styled('article')`
   ${({ theme }) => theme.breakpoints.up('sm')} {
     grid-template-columns: minmax(0, 196px) minmax(0, 1fr);
     gap: 50px;
-  }
-
-  // Two cards next to each other leave less room for the illustration
-  ${({ theme }) => theme.breakpoints.between('md', 'lg')} {
-    grid-template-columns: minmax(0, 130px) minmax(0, 1fr);
-    gap: 30px;
   }
 `;
 
