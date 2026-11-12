@@ -3,6 +3,7 @@ import { BuilderTeaserSlotsBlockProps } from '@wepublish/website/builder';
 import { cond, T } from 'ramda';
 
 import { HeroLinks, isHeroLinks } from '../hero/hero-links';
+import { isLogoBand, LogoBand } from '../logo-band/logo-band';
 import {
   isTeaserSlotsExpertise,
   TeaserSlotsExpertise,
@@ -21,6 +22,10 @@ export const WepBaseTeaserSlots = cond([
   [
     isHeroLinks,
     (props: BuilderTeaserSlotsBlockProps) => <HeroLinks {...props} />,
+  ],
+  [
+    isLogoBand,
+    (props: BuilderTeaserSlotsBlockProps) => <LogoBand {...props} />,
   ],
   [
     isTeaserSlotsExpertise,

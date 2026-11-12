@@ -26,7 +26,7 @@ import { primaryButton } from '../button-styles';
 export const heroBackground = (theme: Theme, top: string) => css`
   background-color: ${theme.palette.primary.main};
   box-shadow: 0 0 0 100vmax ${theme.palette.primary.main};
-  clip-path: inset(-${top} -100vmax 0);
+  clip-path: inset(calc(-1 * ${top}) -100vmax 0);
 `;
 
 export const isHero = (

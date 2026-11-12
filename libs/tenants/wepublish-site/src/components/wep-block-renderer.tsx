@@ -17,6 +17,7 @@ import {
   isAttentionCatcher,
 } from './break-blocks/attention-catcher';
 import { Hero, isHero } from './hero/hero';
+import { isLogoBand } from './logo-band/logo-band';
 import { MainSpacer } from './wep-main-spacer';
 
 export const WepBlockRenderer = (props: BuilderBlockRendererProps) => {
@@ -41,8 +42,8 @@ export const WepBlockRenderer = (props: BuilderBlockRendererProps) => {
       cond([
         [
           anyPass([block => true]),
-          () =>
-            isHomePage && props.index < 2 ?
+          (block: FullBlockFragment) =>
+            (isHomePage && props.index < 2) || isLogoBand(block) ?
               css``
             : css`
                 ${theme.breakpoints.up('md')} {

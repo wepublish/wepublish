@@ -1,5 +1,5 @@
 import { CSSProperties } from 'react';
-import { screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import {
   mockArticle,
   mockArticleRevision,
@@ -315,6 +315,125 @@ describe('We.Publish website tenant', () => {
       expect(
         backgroundsOf(screen.getByText('Digitale Infrastruktur'))
       ).toContain(primaryColor);
+    });
+  });
+
+  describe('logo band', () => {
+    const logo = (title: string, contentUrl: string) =>
+      mockCustomTeaser({
+        title: null,
+        preTitle: null,
+        lead: null,
+        contentUrl,
+        openInNewTab: true,
+        image: mockImage({ title, description: null }),
+      });
+
+    const logoBand = () =>
+      mockTeaserSlotsBlock({
+        blockStyle: WepBlockStyles.LogoBand,
+        title: 'Für und mit unabhängigen Medien',
+        teasers: [
+          logo('Bajour', 'https://bajour.ch/'),
+          logo('Tsüri', 'https://tsri.ch/'),
+          mockCustomTeaser({
+            title: null,
+            preTitle: 'Mehr erfahren',
+            lead: null,
+            contentUrl: '/netzwerk',
+            image: null,
+          }),
+        ],
+      });
+
+    it('shows the title on the dark background', () => {
+      renderTenantPage([logoBand()]);
+
+      const title = screen.getByRole('heading', {
+        name: 'Für und mit unabhängigen Medien',
+      });
+
+      expect(backgroundsOf(title)).toContain(
+        wepublishSiteTenant.createTheme().palette.primary.dark
+      );
+    });
+
+    it('links every logo once to its medium, in a new tab', () => {
+      renderTenantPage([logoBand()]);
+
+      const bajour = screen.getByRole('link', { name: 'Bajour' });
+
+      expect(bajour).toHaveAttribute('href', 'https://bajour.ch/');
+      expect(bajour).toHaveAttribute('target', '_blank');
+      expect(screen.getByRole('link', { name: 'Tsüri' })).toHaveAttribute(
+        'href',
+        'https://tsri.ch/'
+      );
+    });
+
+    it('keeps the copy for the endless loop away from screen readers and the keyboard', () => {
+      renderTenantPage([logoBand()]);
+
+      const copies = Array.from(
+        document.querySelectorAll('a[href="https://bajour.ch/"]')
+      );
+
+      expect(copies).toHaveLength(2);
+      expect(copies[1].closest('[aria-hidden="true"]')).not.toBeNull();
+      expect(copies[1]).toHaveAttribute('tabindex', '-1');
+    });
+
+    it('does not open a logo when the band was dragged', () => {
+      renderTenantPage([logoBand()]);
+
+      const bajour = screen.getByRole('link', { name: 'Bajour' });
+
+      fireEvent.pointerDown(bajour, { clientX: 300, button: 0 });
+      fireEvent.pointerMove(bajour, { clientX: 200, buttons: 1 });
+      fireEvent.pointerUp(bajour, { clientX: 200 });
+
+      expect(fireEvent.click(bajour)).toBe(false);
+    });
+
+    it('opens a logo on a plain click', () => {
+      renderTenantPage([logoBand()]);
+
+      const bajour = screen.getByRole('link', { name: 'Bajour' });
+
+      fireEvent.pointerDown(bajour, { clientX: 300, button: 0 });
+      fireEvent.pointerUp(bajour, { clientX: 300 });
+
+      expect(fireEvent.click(bajour)).toBe(true);
+    });
+
+    it('names a logo link after the medium when the image has no title', () => {
+      renderTenantPage([
+        mockTeaserSlotsBlock({
+          blockStyle: WepBlockStyles.LogoBand,
+          title: null,
+          teasers: [
+            mockCustomTeaser({
+              title: null,
+              preTitle: null,
+              contentUrl: 'https://www.zwoelf.ch/',
+              image: mockImage({ title: null, description: null }),
+            }),
+          ],
+        }),
+      ]);
+
+      expect(
+        screen.getByRole('link', { name: 'zwoelf.ch' })
+      ).toBeInTheDocument();
+    });
+
+    it('turns an entry without image into the button next to the title', () => {
+      renderTenantPage([logoBand()]);
+
+      expect(
+        screen.getByRole('link', { name: 'Mehr erfahren' })
+      ).toHaveAttribute('href', '/netzwerk');
+      expect(document.querySelectorAll('a[href="/netzwerk"]')).toHaveLength(1);
     });
   });
 

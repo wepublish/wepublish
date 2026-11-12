@@ -6,4 +6,5 @@ export enum WepBlockStyles {
   AttentionCatcher = 'AttentionCatcher',
   Hero = 'Hero',
   HeroLinks = 'HeroLinks',
+  LogoBand = 'LogoBand',
 }
