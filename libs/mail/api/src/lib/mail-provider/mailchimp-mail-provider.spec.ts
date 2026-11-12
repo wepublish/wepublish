@@ -564,12 +564,15 @@ describe('MailchimpMailProvider', () => {
       ]),
     };
 
-    const signedWith = (key: string) =>
+    // What Mandrill posts to check the URL while a webhook is being created
+    const urlCheck = { mandrill_events: '[]' };
+
+    const signedWith = (key: string, payload = body) =>
       createHmac('sha1', key)
-        .update(`${url}mandrill_events${body.mandrill_events}`)
+        .update(`${url}mandrill_events${payload.mandrill_events}`)
         .digest('base64');
 
-    const webhook = (signature: string) => ({
+    const webhook = (signature: string, payload = body) => ({
       req: {
         method: 'POST',
         headers: {
@@ -577,8 +580,28 @@ describe('MailchimpMailProvider', () => {
           host: 'api.example.com',
         },
         originalUrl: '/v1/mail-webhook/mailchimp',
-        body,
+        body: payload,
       },
+    });
+
+    // Mandrill signs that check with the fixed key `test-webhook`: the
+    // webhook's own key does not exist before the webhook does.
+    it("accepts Mandrill's URL check while a webhook is being created", async () => {
+      const provider = await makeProvider();
+
+      await expect(
+        provider.webhookForSendMail(
+          webhook(signedWith('test-webhook', urlCheck), urlCheck) as never
+        )
+      ).resolves.toEqual([]);
+    });
+
+    it('refuses events signed with the URL check key', async () => {
+      const provider = await makeProvider();
+
+      await expect(
+        provider.webhookForSendMail(webhook(signedWith('test-webhook')) as never)
+      ).rejects.toThrow('Webhook signature failed');
     });
 
     it('refuses a webhook that was not signed with the webhook key', async () => {
