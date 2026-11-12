@@ -103,7 +103,7 @@ an uncached 502 and report the error to Sentry instead of throwing.
 
 ### Business Domain Libraries
 
-`membership`, `payment`, `user-subscription`, `member-plan`, `crowdfunding`, `mail`, `event`, `consent`
+`membership`, `payment`, `user-subscription`, `member-plan`, `crowdfunding`, `mail`, `event`, `consent`, `print-issue`
 
 ### Infrastructure Libraries
 

@@ -9,6 +9,8 @@ import {
 import {
   Invoice,
   InvoiceItem,
+  MailChannel,
+  MailLogState,
   MemberPlan,
   PaymentMethod,
   PaymentProviderCustomer,
@@ -21,13 +23,12 @@ import {
   User,
 } from '@prisma/client';
 import {
-  LetterDeliveryError,
+  LetterAttachment,
   MailContext,
-  MailController,
-  MailProviderRecipientError,
-  mailLogType,
+  resolveLetterRecipient,
 } from '@wepublish/mail/api';
 import { InvoicePaidNotifier, PaymentsService } from '@wepublish/payment/api';
+import { InvoiceDeliveryService, PaperSide } from './invoice-delivery.service';
 import { PaymentMethodChangeService } from '../payment-method-change/payment-method-change.service';
 import {
   add,
@@ -44,7 +45,11 @@ import { SubscriptionEventDictionary } from '../subscription-event-dictionary/su
 import { Action } from '../subscription-event-dictionary/subscription-event-dictionary.type';
 import { SubscriptionService } from './subscription.service';
 import { PeriodicJobRunObject } from './periodic-job.type';
-import { addErrorContext, getMaxTake } from '@wepublish/utils/api';
+import {
+  addErrorContext,
+  describeError,
+  getMaxTake,
+} from '@wepublish/utils/api';
 import {
   DistributedLocks,
   type HeldLock,
@@ -57,6 +62,13 @@ export const NIGHT_CLAIM_MS = 12 * 60 * 60 * 1000;
 
 const RUN_LOCK = 'periodic-job-run';
 const RUN_LOCK_TTL_MS = 2 * 60 * 1000;
+
+/** How often a refused invoice letter is offered again before someone has to look. */
+const INVOICE_LETTER_ATTEMPTS = 3;
+
+type OpenInvoice = Awaited<
+  ReturnType<SubscriptionService['findAllOpenInvoices']>
+>[number];
 
 const heldLock = (acquired: LockResult) =>
   acquired.status === 'acquired' ? acquired.lock : undefined;
@@ -109,7 +121,8 @@ export class PeriodicJobService {
     private payments: PaymentsService,
     private invoicePaidNotifier: InvoicePaidNotifier,
     private locks: DistributedLocks,
-    private paymentMethodChanges: PaymentMethodChangeService
+    private paymentMethodChanges: PaymentMethodChangeService,
+    private invoiceDelivery: InvoiceDeliveryService
   ) {}
 
   async isRunning(job: RunState) {
@@ -280,6 +293,8 @@ export class PeriodicJobService {
       await this.createMissingInvoicesForActiveSubscriptions(
         periodicJobRunObject
       );
+      this.logger.log('Processing invoice letters still missing...');
+      await this.postMissingInvoiceLetters(periodicJobRunObject.date);
       this.logger.log('Processing expiry of payment method changes...');
       // by the clock, not the run date: a catch-up run of an earlier day must
       // not keep changes alive that have expired since
@@ -550,23 +565,14 @@ export class PeriodicJobService {
       deactivationDate
     );
 
-    const paymentProvider =
-      await this.payments.findPaymentProviderByPaymentMethodeId(
-        subscriptionToCreateInvoice.paymentMethodID
-      );
-    if (paymentProvider) {
-      const subscription = await this.prismaService.subscription.findUnique({
-        where: {
-          id: subscriptionToCreateInvoice.id,
-        },
-      });
+    const outcome = await this.invoiceDelivery.createRemoteInvoice(
+      subscriptionToCreateInvoice,
+      invoice,
+      creationEvent
+    );
 
-      if (subscription) {
-        await paymentProvider.createRemoteInvoice({
-          subscription,
-          invoice,
-        });
-      }
+    if ('skip' in outcome) {
+      return outcome.skip !== 'removed';
     }
 
     await this.sendTemplateMail(
@@ -574,9 +580,133 @@ export class PeriodicJobService {
       subscriptionToCreateInvoice.user,
       periodicJobRunObject.isRetry,
       { subscriptionToCreateInvoice, invoice },
-      periodicJobRunObject.date
+      periodicJobRunObject.date,
+      outcome.send
     );
     return true;
+  }
+
+  /**
+   * Post the invoice letter to every reader in letter mode whose open invoice
+   * has not been posted yet: the print vendor refused it (a rejected log entry
+   * sits under the identifier a retried run skips), its pdf could not be
+   * fetched that night, or the invoice went out by email before the reader
+   * was moved to letters. Nothing else carries the invoice to them.
+   */
+  public async postMissingInvoiceLetters(runDate: Date) {
+    const letterSender = this.mailContext.letterSender;
+
+    if (!letterSender || !(await letterSender.isConfigured())) {
+      return;
+    }
+
+    const readers = await this.prismaService.userDeliveryPreference.findMany({
+      where: { channel: MailChannel.letter },
+      select: { userId: true },
+    });
+    const userIds = new Set(readers.map(({ userId }) => userId));
+
+    if (!userIds.size) {
+      return;
+    }
+
+    const invoices = (
+      await this.subscriptionController.findAllOpenInvoices()
+    ).filter(invoice => userIds.has(invoice.subscription?.user?.id ?? ''));
+
+    for (const invoice of invoices) {
+      await this.inContext(
+        `Posting the invoice letter for invoice ${invoice.id} failed`,
+        () => this.postInvoiceLetter(runDate, invoice)
+      );
+    }
+  }
+
+  private async postInvoiceLetter(runDate: Date, invoice: OpenInvoice) {
+    const subscription = invoice.subscription;
+
+    if (!subscription?.user) {
+      return;
+    }
+
+    const creationEvent = (
+      await this.subscriptionEventDictionary.getActionsForSubscriptions({
+        memberplanId: subscription.memberPlanID,
+        paymentMethodId: subscription.paymentMethodID,
+        periodicity: subscription.paymentPeriodicity,
+        autorenwal: subscription.autoRenew,
+        events: [SubscriptionEvent.INVOICE_CREATION],
+      })
+    ).find(action => action.type === SubscriptionEvent.INVOICE_CREATION);
+
+    if (!creationEvent?.mailTemplateId || !creationEvent.sendAsLetter) {
+      return;
+    }
+
+    const attempts = await this.prismaService.mailLog.findMany({
+      where: {
+        recipientID: subscription.user.id,
+        mailTemplateId: creationEvent.mailTemplateId,
+        channel: MailChannel.letter,
+        sentDate: { gte: invoice.createdAt },
+      },
+      select: { state: true },
+    });
+
+    if (attempts.some(({ state }) => state !== MailLogState.rejected)) {
+      return;
+    }
+
+    if (attempts.length >= INVOICE_LETTER_ATTEMPTS) {
+      this.logger.error(
+        `The invoice letter for invoice ${invoice.id} was refused ${attempts.length} times and is not posted again`
+      );
+
+      return;
+    }
+
+    const letterRecipient = await resolveLetterRecipient({
+      prisma: this.prismaService,
+      letterSender: this.mailContext.letterSender,
+      recipient: subscription.user,
+      asLetter: true,
+      withPaymentSlip: true,
+      logger: this.logger,
+    });
+
+    if (!letterRecipient) {
+      return;
+    }
+
+    let letterAttachment: LetterAttachment | undefined;
+
+    try {
+      letterAttachment =
+        await this.invoiceDelivery.renderRemoteInvoice(invoice);
+    } catch (error) {
+      // Another night, rather than a letter without the invoice; the
+      // provider's outage must not take the run down either.
+      this.logger.warn(
+        `Invoice ${invoice.id} is not posted tonight, the payment provider could not render it: ${describeError(error)}`
+      );
+
+      return;
+    }
+
+    // Never posted and nothing to print: an invoice the editor created, or a
+    // provider without invoices of its own.
+    if (!attempts.length && !letterAttachment) {
+      return;
+    }
+
+    await this.sendTemplateMail(
+      creationEvent,
+      subscription.user,
+      false,
+      { subscriptionToCreateInvoice: subscription, invoice },
+      runDate,
+      { letterRecipient, letterAttachment }
+    );
   }
 
   private async chargeInvoice(
@@ -911,59 +1041,22 @@ export class PeriodicJobService {
     return dateArray;
   }
 
-  /**
-   * Send an email and store it in the Mail Log
-   *
-   * A recipient the mail provider refuses — a bounced address, a spam
-   * complaint, an unsubscribe — is logged and stepped over: one unreachable
-   * member must not stop the run before it has created invoices, charged them
-   * and deactivated overdue subscriptions. The rejection is already on that
-   * member's mail log entry, written by the {@link MailController}. Every other
-   * failure still aborts the run, because it says the provider or its
-   * configuration is broken and no further mail of this run would go out
-   * either.
-   *
-   * @param action the event and template to send
-   * @param user the recipient
-   * @param isRetry whether this is a retried delivery
-   * @param optionalData unknown
-   * @param periodicJobRunDate the current date for the delivery
-   */
-  private async sendTemplateMail(
+  /** A subscription-flow mail or letter, through the shared invoice delivery. */
+  private sendTemplateMail(
     action: Action,
     user: User,
     isRetry: boolean,
     optionalData: Record<string, any>,
-    periodicJobRunDate: Date
+    periodicJobRunDate: Date,
+    paper?: PaperSide
   ) {
-    if (!action.mailTemplateId || !user) {
-      return;
-    }
-
-    try {
-      await new MailController(this.prismaService, this.mailContext, {
-        daysAwayFromEnding: action.daysAwayFromEnding,
-        mailTemplateId: action.mailTemplateId,
-        recipient: user,
-        isRetry,
-        optionalData,
-        periodicJobRunDate,
-        mailType: mailLogType.SubscriptionFlow,
-        asLetter: action.sendAsLetter,
-      }).sendMail();
-    } catch (error) {
-      // A refused address or a print vendor outage concerns this recipient
-      // only; the run goes on with the others.
-      if (
-        !(error instanceof MailProviderRecipientError) &&
-        !(error instanceof LetterDeliveryError)
-      ) {
-        throw error;
-      }
-
-      this.logger.warn(
-        `Skipping mail to ${user.email}: ${(error as Error).message}`
-      );
-    }
+    return this.invoiceDelivery.sendFlowMail(
+      action,
+      user,
+      isRetry,
+      optionalData,
+      periodicJobRunDate,
+      paper
+    );
   }
 }

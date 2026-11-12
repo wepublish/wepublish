@@ -10,6 +10,16 @@ gets refactored away by the next agent.
 
 ---
 
+### ⚠️ `tsc -p apps/editor` checks nothing and exits 0
+
+`apps/editor`, `apps/media` and `apps/api-example` have a solution-style
+`tsconfig.json` (`"files": []`, only `references`), so `pnpm tsc -p apps/editor
+--noEmit` compiles zero files and reports success. CI's `website-typecheck.yml`
+runs `tsc --noEmit -p apps/editor/tsconfig.app.json` inside the editor build and
+fails (2026-11-09: a `printIssues` field missing from three `libs/membership/editor`
+call sites, green locally on Vitest and on the useless `tsc`). Run
+`pnpm nx run editor:typecheck` after touching the editor or any `libs/*/editor`.
+
 ### ⚠️ Prisma helpers are deliberately absent from the `@wepublish/testing` barrel
 
 [libs/testing/src/index.ts](../../libs/testing/src/index.ts) exports `act-wait`,
@@ -893,6 +903,12 @@ compiler before ("Compilation Skipped: Use of incompatible library"); removing
 `watch` lets it compile them, which can surface fresh `set-state-in-effect`
 errors in code that was never checked.
 
+Two siblings, linted in `libs/form/*`: spreading RHF's form object
+(`{ ...form, extra }` is memoised on `form`, whose `formState` RHF swaps every
+render, so `isLoading` stays `true`) and reading `useFormContext().formState`
+(frozen at its first value) — use the `useSchemaForm` handle and
+`useFormState`/`useFormStatus` ([libs/form/README.md](../../libs/form/README.md#react-compiler-rules)).
+
 ---
 
 ### ⚠️ The compiler turns a hoisted inner function into a `const`
@@ -1201,6 +1217,12 @@ so the media image ships `/wepublish/ca.crt` for `NODE_EXTRA_CA_CERTS`.
 
 ---
 
+### ⚠️ Prisma 7 with the pg adapter names the unique index, not the fields
+
+The API sends ``Unique constraint failed on the constraint: `consents_slug_key` ``, which `humanizeError`'s `fields: (…)` regex misses; match it with `uniqueConstraint(...)` from `@wepublish/form/editor` (pinned by `libs/form/editor/src/lib/view/unique-constraint.spec.ts`).
+
+---
+
 ### ⚠️ The newsletter renderer is shared, and several things keep it working
 
 `libs/newsletter/email` draws the Puck canvas *and* the mail. Load-bearing:
@@ -1343,6 +1365,74 @@ Only `ganzgraz` and `munotgloeggli` take `settingsTheme`; every other tenant's
 elsewhere is a behaviour change, not a fix.
 
 ---
+
+### ⚠️ Cancelling an unsent renewal invoice does not make the nightly job create it again
+
+`PeriodicJobService.createRemoteInvoice`
+(`libs/membership/api/src/lib/periodic-job/periodic-job.service.ts`)
+hard-deletes the we.publish invoice — payment, `subscriptionPeriod`,
+`invoiceItem`, invoice, in that order — when the payment provider could not
+create its side of it.
+
+`getActiveSubscriptionsWithoutInvoice` (`subscription.service.ts`) requires not
+only no open invoice but `periods: { none: { startsAt: { gt: runDate } } }`.
+The invoice's period starts in the future (the invoice is created up to 90 days
+ahead), so `canceledAt` alone keeps the subscription excluded until `paidUntil`,
+and `getNextPeriod` then continues after the orphaned period: a whole
+periodicity of coverage is skipped.
+
+**Load-bearing:** all four deletes. `SubscriptionPeriod.invoiceID` has no
+cascade and `InvoiceItem.invoiceId` is `SetNull`, so each must go explicitly,
+as `upgrade-subscription.service.ts` does.
+
+Pinned by `periodic-job.service.spec.ts` («removes the invoice when the
+provider could not create it»).
+
+---
+
+### ⚠️ Apollo Client 4's `useLazyQuery` ignores `onCompleted` / `onError` without a type error
+
+The editor runs `@apollo/client` 4. Its lazy queries no longer call
+`onCompleted` or `onError`, yet passing them still typechecks. A download
+written as `useLazyQuery(Doc, { onCompleted: data => download(data) })` runs
+the query and then does nothing (2026-11-08: the print-issue «CSV
+herunterladen» buttons; the API answered correctly the whole time).
+
+Await the trigger instead: it resolves with `{ data }` and rejects on an
+error, as `libs/ui/editor/src/lib/panel/exportSubscriptions.tsx` and
+`libs/print-issue/editor/src/lib/print-issue-list-view.tsx` do. A spec that mocks
+`useLazyQuery` must not call `onCompleted` either, or it hides the bug.
+
+Pinned by `libs/print-issue/editor/src/lib/print-issue-list-view.spec.tsx`
+(«lists the draft with its options, CSV, edit, delivered and delete, and the merged list»).
+
+### ⚠️ `prisma migrate deploy` targets `DIRECT_DATABASE_URL` from `.env`, not the `DATABASE_URL` you pass
+
+[prisma.config.ts](../../prisma.config.ts) loads `.env` and takes
+`process.env['DIRECT_DATABASE_URL'] || process.env['DATABASE_URL']` as the
+datasource («DIRECT_DATABASE_URL bypasses PgBouncer»). So
+`DATABASE_URL=postgresql://…/throwaway pnpm prisma migrate deploy` still
+migrates whatever `.env`'s `DIRECT_DATABASE_URL` points at.
+
+Verified 2026-11-08 in a worktree: the command printed «All migrations have
+been successfully applied» while the throwaway database stayed empty, and 12
+migrations (11 from master plus the branch's own) had landed in the shared
+`wepublish` database of another checkout's Docker stack. The API booted
+against the throwaway database then died with `relation
+"public.settings.analyticsProvider" does not exist`.
+
+Override **both** variables for any Prisma CLI call that must hit another
+database: `DATABASE_URL=… DIRECT_DATABASE_URL=… pnpm prisma migrate deploy`.
+The running API reads only `DATABASE_URL`
+(`libs/nest-modules/src/lib/database/prisma.service.ts`), which is why the
+boot and the migration disagreed.
+
+**Load-bearing:** the `DIRECT_DATABASE_URL` preference in `prisma.config.ts`
+is what production relies on for advisory locks through PgBouncer; do not
+"fix" it by dropping the fallback order.
+
+Nothing guards this — a regression here is silent: the CLI reports success
+against the wrong database.
 
 ## Adding an entry
 

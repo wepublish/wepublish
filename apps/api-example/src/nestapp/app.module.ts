@@ -93,6 +93,7 @@ import { GraphQLRichText, SlateToPmMigrator } from '@wepublish/richtext/api';
 import { SessionModule } from '@wepublish/session/api';
 import { OneModule } from '@wepublish/one/api';
 import { FeaturesModule } from '@wepublish/features/api';
+import { PrintIssueModule } from '@wepublish/print-issue/api';
 import {
   SeoChecklistModule,
   SettingModule,
@@ -284,6 +285,7 @@ import { API_SHARED_NAMESPACES } from './shared-namespaces';
     }),
 
     FeaturesModule,
+    PrintIssueModule,
     OneModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
