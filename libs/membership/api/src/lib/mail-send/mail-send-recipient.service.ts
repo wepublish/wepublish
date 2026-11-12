@@ -1,3 +1,4 @@
+import { loadPlaceholderEmailPatterns } from '@wepublish/utils/api';
 import { Injectable } from '@nestjs/common';
 import {
   EmailQualityLevel,
@@ -579,15 +580,12 @@ export class MailSendRecipientService {
     }
   }
 
-  /** The substrings marking a generated address, from the letter integration. */
+  /**
+   * The substrings marking a generated address: the placeholder setting plus
+   * the letter integration's pattern.
+   */
   async placeholderPatterns(): Promise<string[]> {
-    const settings = await this.prisma.settingLetterProvider.findMany({
-      select: { placeholderEmailContains: true },
-    });
-
-    return settings
-      .map(({ placeholderEmailContains }) => placeholderEmailContains?.trim())
-      .filter((pattern): pattern is string => !!pattern);
+    return loadPlaceholderEmailPatterns(this.prisma);
   }
 
   /**
@@ -684,8 +682,9 @@ export class MailSendRecipientService {
       })),
     };
 
-    // `email` is non-null, so the complement is a plain negated match. The
-    // outer `mode` also applies inside `not`: this compiles to `NOT ILIKE`.
+    // The complement spelled out per pattern instead of `NOT`: `email` is
+    // required, so there is no NULL case to lose. `mode` only exists on the
+    // outer filter and applies inside `not` too: this compiles to `NOT ILIKE`.
     const isReal: Prisma.UserWhereInput = {
       AND: patterns.map(pattern => ({
         email: { mode: 'insensitive', not: { contains: pattern } },

@@ -1,6 +1,7 @@
 import { Logger } from '@nestjs/common';
 import {
   EmailQualityEventSource,
+  MailChannel,
   MailLogState,
   MailLogType,
   PrismaClient,
@@ -8,6 +9,7 @@ import {
 } from '@prisma/client';
 import { v7 as uuidv7 } from 'uuid';
 import { MailContext } from './mail-context';
+import { PurlOrigin, templateUsesJwt } from './mail-data';
 import { MailProviderRecipientError } from './mail-provider/mail-provider.interface';
 import {
   qualityTypeForRejectReason,
@@ -45,6 +47,7 @@ export type MailControllerConfig = {
   mailType: mailLogType;
   /** Override the auto-generated login JWT with a custom token (e.g. password reset). */
   jwtOverride?: string;
+  recipientEmailOverride?: string;
   /** Set for mails produced by a manual bulk send job. */
   mailSendJobId?: string | null;
   /**
@@ -145,21 +148,24 @@ export class MailController {
    * Build the data for passing it to the mail templates
    * @returns a HashMap of configuration data
    */
-  private async buildData() {
-    // Cloned, so the caller's objects are not touched and no template sees a
-    // user's authorization fields, nested ones included.
-    const recipient = withoutSecrets(
-      JSON.parse(JSON.stringify(this.config.recipient))
-    );
+  private async buildData(purlOrigin: PurlOrigin = 'mail') {
+    const template = await this.prismaService.mailTemplate.findUnique({
+      where: { id: this.config.mailTemplateId },
+      select: { subject: true, htmlContent: true, textContent: true },
+    });
 
-    return {
-      user: recipient,
-      optional: withoutSecrets(this.config.optionalData),
-      jwt:
-        this.config.jwtOverride ??
-        (await this.mailContext.jwtGenerator(recipient.id)),
-      currentDate: new Date(),
-    };
+    return this.mailContext.buildMailData({
+      // Cloned, so the caller's objects are not touched and no template sees a
+      // user's authorization fields, nested ones included.
+      recipient: withoutSecrets(
+        JSON.parse(JSON.stringify(this.config.recipient))
+      ),
+      optionalData: withoutSecrets(this.config.optionalData),
+      jwtOverride: this.config.jwtOverride,
+      mode: 'send',
+      purlOrigin,
+      mintJwt: !template || templateUsesJwt(template),
+    });
   }
 
   /**
@@ -178,11 +184,34 @@ export class MailController {
     }
 
     const mailLogId = this.config.mailLogId ?? uuidv7();
+    const recipientEmail =
+      this.config.recipientEmailOverride ?? this.config.recipient.email;
 
-    const letterRecipient = await this.resolveLetterRecipient();
+    // Before the placeholder check: a placeholder address is exactly who a
+    // letter is for.
+    const letterRecipient = await this.resolveLetterRecipient(mailLogId);
+
+    if (letterRecipient === 'handled') {
+      return;
+    }
 
     if (letterRecipient) {
       await this.sendAsLetter(mailLogId, letterRecipient);
+
+      return;
+    }
+
+    if (await this.mailContext.isPlaceholderEmail(recipientEmail)) {
+      this.logger.warn(
+        `Recipient <${recipientEmail}> is a placeholder address. Suppressing mail template <${this.config.mailTemplateId}>.`
+      );
+
+      await this.writeLog(
+        mailLogId,
+        MailLogState.rejected,
+        null,
+        'PLACEHOLDER_EMAIL_SUPPRESSED'
+      );
 
       return;
     }
@@ -194,7 +223,7 @@ export class MailController {
         {
           mailLogID: mailLogId,
           mailTemplateId: this.config.mailTemplateId,
-          recipient: this.config.recipient.email,
+          recipient: recipientEmail,
           data: await this.buildData(),
         }
       ));
@@ -243,20 +272,72 @@ export class MailController {
 
   /**
    * The user with their address when this send goes to paper, as the caller
-   * decided or as `resolveLetterRecipient` decides now.
+   * decided or as `resolveLetterRecipient` decides now. Anything missing means
+   * the mail goes out as usual — except a placeholder address that prefers
+   * letters but has no usable postal one: it can be reached neither way, so
+   * that is logged and `handled`.
    */
-  private resolveLetterRecipient(): Promise<LetterRecipient | null> {
+  private async resolveLetterRecipient(
+    mailLogId: string
+  ): Promise<LetterRecipient | 'handled' | null> {
     if (this.config.letterRecipient !== undefined) {
-      return Promise.resolve(this.config.letterRecipient);
+      return this.config.letterRecipient;
     }
 
-    return resolveLetterRecipient({
+    const recipient = await resolveLetterRecipient({
       prisma: this.prismaService,
       letterSender: this.mailContext.letterSender,
       recipient: this.config.recipient,
       asLetter: this.config.asLetter,
       logger: this.logger,
     });
+
+    if (
+      recipient ||
+      !(await this.mailContext.isPlaceholderEmail(
+        this.config.recipient.email
+      )) ||
+      !(await this.wantsUnprintableLetter())
+    ) {
+      return recipient;
+    }
+
+    this.logger.warn(
+      `<${this.config.recipient.email}> prefers letters but has no usable postal address and no real email.`
+    );
+    await this.writeLog(
+      mailLogId,
+      MailLogState.rejected,
+      null,
+      'LETTER_ADDRESS_UNUSABLE',
+      undefined,
+      MailChannel.letter
+    );
+
+    return 'handled';
+  }
+
+  /**
+   * Whether `resolveLetterRecipient` mailed instead only because the address
+   * is unusable: the send is switched to letters, the user prefers them and
+   * letters can be printed.
+   */
+  private async wantsUnprintableLetter(): Promise<boolean> {
+    const sender = this.mailContext.letterSender;
+
+    if (!this.config.asLetter || !sender) {
+      return false;
+    }
+
+    const preference =
+      await this.prismaService.userDeliveryPreference.findUnique({
+        where: { userId: this.config.recipient.id },
+      });
+
+    return (
+      preference?.channel === MailChannel.letter &&
+      (await sender.isConfigured())
+    );
   }
 
   /**
@@ -272,7 +353,7 @@ export class MailController {
       await this.mailContext.letterSender!.sendLetter({
         mailTemplateId: this.config.mailTemplateId,
         recipient,
-        data: await this.buildData(),
+        data: await this.buildData('letter'),
         mailLogId,
         mailSendJobId: this.config.mailSendJobId,
         log: {
@@ -298,12 +379,14 @@ export class MailController {
     state: MailLogState,
     subject: string | null,
     error: string | null,
-    providerMessageID?: string
+    providerMessageID?: string,
+    channel: MailChannel = MailChannel.mail
   ): Promise<void> {
     try {
       await this.prismaService.mailLog.create({
         data: {
           id: mailLogId,
+          channel,
           recipient: {
             connect: {
               id: this.config.recipient.id,

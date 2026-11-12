@@ -1,4 +1,5 @@
 import { MailContext } from './mail-context';
+import { EMPTY_PURL_DATA } from './mail-data';
 import { MailController, mailLogType } from './mail.controller';
 
 // The password hash and the TOTP secret never reach the mail layer: Prisma
@@ -27,10 +28,14 @@ async function templateData(optionalData: Record<string, any>) {
   const mailContext = {
     mailProvider: { id: 'mailgun' },
     jwtGenerator: vi.fn(async () => 'jwt-1'),
+    purlProvider: { purlFor: vi.fn(async () => EMPTY_PURL_DATA) },
+    isPlaceholderEmail: vi.fn(async () => false),
+    buildMailData: MailContext.prototype.buildMailData,
     sendComposedMail,
   } as unknown as MailContext;
   const prisma = {
     mailLog: { count: vi.fn(async () => 0), create: vi.fn() },
+    mailTemplate: { findUnique: vi.fn(async () => null) },
   } as any;
 
   await new MailController(prisma, mailContext, {

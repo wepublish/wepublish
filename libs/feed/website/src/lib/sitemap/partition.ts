@@ -1,7 +1,9 @@
 export type Period = { year: number; month?: number };
 
 export type SitemapChunk =
-  { type: 'news' } | { type: 'pages' } | ({ type: 'articles' } & Period);
+  | { type: 'news' }
+  | { type: 'pages' }
+  | ({ type: 'articles' } & Period);
 
 export type CacheableSitemap = SitemapChunk | { type: 'index' };
 

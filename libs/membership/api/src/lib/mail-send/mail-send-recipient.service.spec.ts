@@ -1116,6 +1116,7 @@ describe('audience filtering (semantics)', () => {
       const prisma = {
         user: { count: vi.fn(async () => 0) },
         subscription: { count: vi.fn(async () => 0) },
+        setting: { findUnique: vi.fn(async () => null) },
         settingLetterProvider: {
           findMany: vi.fn(async () =>
             patterns.map(placeholderEmailContains => ({
@@ -1139,6 +1140,7 @@ describe('audience filtering (semantics)', () => {
       const prisma = {
         user: { count: vi.fn(async () => 5) },
         settingLetterProvider: { findMany: vi.fn() },
+        setting: { findUnique: vi.fn() },
       };
 
       await makeService(prisma).count({
@@ -1227,6 +1229,7 @@ describe('audience filtering (semantics)', () => {
       const prisma = {
         user: { count: vi.fn(async () => 0) },
         subscription: { count: vi.fn(async () => 0) },
+        setting: { findUnique: vi.fn(async () => null) },
         settingLetterProvider: {
           findMany: vi.fn(async () =>
             patterns.map(placeholderEmailContains => ({
@@ -1396,8 +1399,11 @@ describe('audience filtering (semantics)', () => {
       });
     });
 
-    it('loads the trimmed patterns once for the recipient rows', async () => {
+    it('loads the trimmed patterns from the setting and the letter integration', async () => {
       const prisma = {
+        setting: {
+          findUnique: vi.fn(async () => ({ value: '@import.example.com' })),
+        },
         settingLetterProvider: {
           findMany: vi.fn(async () => [
             { placeholderEmailContains: ` ${PATTERN} ` },
@@ -1407,6 +1413,7 @@ describe('audience filtering (semantics)', () => {
       };
 
       await expect(makeService(prisma).placeholderPatterns()).resolves.toEqual([
+        '@import.example.com',
         PATTERN,
       ]);
     });

@@ -1,6 +1,7 @@
 import {
   FullSessionWithTokenFragment,
   FullSessionWithTokenWithoutUserFragment,
+  SessionOrigin,
 } from '@wepublish/website/api';
 import { MOCK_FAR_FUTURE_DATE, MOCK_REFERENCE_DATE } from './faker';
 import { definedOnly } from './overrides';
@@ -12,6 +13,8 @@ export const mockSession = (
   token: '1234-1234',
   createdAt: MOCK_REFERENCE_DATE,
   expiresAt: MOCK_FAR_FUTURE_DATE,
+  origin: SessionOrigin.Password,
+  restricted: false,
   ...definedOnly(overrides),
 });
 
