@@ -1,5 +1,9 @@
 import { css, useTheme } from '@emotion/react';
-import { BlockRenderer } from '@wepublish/block-content/website';
+import {
+  BlockRenderer,
+  isRichTextBlock,
+  isYouTubeVideoBlock,
+} from '@wepublish/block-content/website';
 import { ImageContext } from '@wepublish/image/website';
 import { FullBlockFragment } from '@wepublish/website/api';
 import {
@@ -10,7 +14,7 @@ import {
 } from '@wepublish/website/builder';
 import { useRouter } from 'next/router';
 import { anyPass, cond } from 'ramda';
-import { JSX, memo, useMemo } from 'react';
+import { createContext, JSX, memo, useContext, useMemo } from 'react';
 
 import {
   AttentionCatcher,
@@ -27,7 +31,21 @@ import { isOffers } from './offers/offers';
 import { isTeaserCards } from './teaser-cards/teaser-cards';
 import { MainSpacer } from './wep-main-spacer';
 
+/** The block after the one being rendered, e.g. to know that a text is the title of a video */
+const NextBlockContext = createContext<FullBlockFragment | undefined>(
+  undefined
+);
+
+/** A video and the text right before it (its title) are as wide as the hero */
+export const isVideoOrItsTitle = (
+  block: FullBlockFragment,
+  nextBlock?: FullBlockFragment
+) =>
+  isYouTubeVideoBlock(block) ||
+  (isRichTextBlock(block) && !!nextBlock && isYouTubeVideoBlock(nextBlock));
+
 export const WepBlockRenderer = (props: BuilderBlockRendererProps) => {
+  const nextBlock = useContext(NextBlockContext);
   const { asPath } = useRouter();
   const isHomePage = asPath === '/' || asPath === '/de' || asPath === '/fr';
   const theme = useTheme();
@@ -61,7 +79,8 @@ export const WepBlockRenderer = (props: BuilderBlockRendererProps) => {
               isNetworkNews(block) ||
               isEventList(block) ||
               isOffers(block) ||
-              isPlainBreakBlock(block)
+              isPlainBreakBlock(block) ||
+              isVideoOrItsTitle(block, nextBlock)
             ) ?
               css``
             : css`
@@ -76,7 +95,7 @@ export const WepBlockRenderer = (props: BuilderBlockRendererProps) => {
               `,
         ],
       ]),
-    [isHomePage, props.index, theme]
+    [isHomePage, props.index, theme, nextBlock]
   );
 
   if (props.type === 'Page') {
@@ -114,12 +133,14 @@ export const WepBlocks = memo(({ blocks, type }: BuilderBlocksProps) => {
             : {}
           }
         >
-          <Renderer
-            block={block}
-            index={index}
-            count={blocks.length}
-            type={type}
-          />
+          <NextBlockContext.Provider value={blocks[index + 1]}>
+            <Renderer
+              block={block}
+              index={index}
+              count={blocks.length}
+              type={type}
+            />
+          </NextBlockContext.Provider>
         </ImageContext.Provider>
       ))}
     </>

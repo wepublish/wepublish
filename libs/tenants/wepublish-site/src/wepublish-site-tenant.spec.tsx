@@ -7,7 +7,7 @@ import { WepBreakBlock } from './components/break-blocks/wep-break-block';
 import { WepBaseTeaserSlots } from './components/teaser-layouts/wep-base-teaser-slots';
 import { WepBaseTeaser } from './components/teasers/wep-base-teaser';
 import { WepArticle } from './components/wep-article';
-import { WepBlockRenderer } from './components/wep-block-renderer';
+import { WepBlockRenderer, WepBlocks } from './components/wep-block-renderer';
 import { WepContentWrapper } from './components/wep-content-wrapper';
 import { WepFooter } from './components/wep-footer';
 import { WepLink } from './components/wep-link';
@@ -71,6 +71,7 @@ describe('wepublishSiteTenant', () => {
       Article: WepArticle,
       Page: WepPage,
       blocks: {
+        Blocks: WepBlocks,
         Renderer: WepBlockRenderer,
         BaseTeaser: WepBaseTeaser,
         TeaserSlots: WepBaseTeaserSlots,
