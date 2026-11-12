@@ -16,6 +16,7 @@ import {
   AttentionCatcher,
   isAttentionCatcher,
 } from './break-blocks/attention-catcher';
+import { isPlainBreakBlock } from './break-blocks/wep-break-block';
 import { isEventList } from './event-list/event-list';
 import { Feature, isFeature } from './feature/feature';
 import { Hero, isHero } from './hero/hero';
@@ -59,7 +60,8 @@ export const WepBlockRenderer = (props: BuilderBlockRendererProps) => {
               isLatestNews(block) ||
               isNetworkNews(block) ||
               isEventList(block) ||
-              isOffers(block)
+              isOffers(block) ||
+              isPlainBreakBlock(block)
             ) ?
               css``
             : css`

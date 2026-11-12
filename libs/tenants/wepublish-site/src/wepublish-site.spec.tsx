@@ -298,6 +298,40 @@ describe('We.Publish website tenant', () => {
     );
   });
 
+  describe('break block without style', () => {
+    const breakBlock = () =>
+      mockBreakBlock({
+        text: 'Als Stiftung fördern wir Medienvielfalt',
+        hideButton: false,
+        linkText: 'Mehr erfahren',
+        linkURL: '/de/ueber-uns',
+        image: mockImage({ title: 'Das Team' }),
+      });
+
+    // The default test screen (1024px) gets the md size
+    it('sets the title in the size of H3', () => {
+      renderTenantPage([breakBlock()]);
+
+      expect(
+        getComputedStyle(
+          screen.getByRole('heading', {
+            name: 'Als Stiftung fördern wir Medienvielfalt',
+          })
+        ).fontSize
+      ).toBe(`${H3.md}px`);
+    });
+
+    it('shows the image, the title and the button', () => {
+      renderTenantPage([breakBlock()]);
+
+      expect(screen.getByRole('img', { name: 'Das Team' })).toBeInTheDocument();
+      // The test router leaves out the locale prefix that Next.js adds to the links
+      expect(
+        screen.getByRole('link', { name: 'Mehr erfahren' })
+      ).toHaveAttribute('href', expect.stringMatching(/\/ueber-uns$/));
+    });
+  });
+
   describe('hero', () => {
     const heroBlock = (image: ReturnType<typeof mockImage> | null = null) =>
       mockBreakBlock({
