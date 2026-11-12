@@ -15,7 +15,10 @@ import {
   renderWithProviders,
   resetTranslations,
 } from '@wepublish/mocks/website';
-import { FullBlockFragment } from '@wepublish/website/api';
+import {
+  FullBlockFragment,
+  FullBreakBlockFragment,
+} from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 
 import heroIllustration from './assets/hero-illustration.webp';
@@ -321,6 +324,89 @@ describe('We.Publish website tenant', () => {
       expect(
         backgroundsOf(screen.getByText('Digitale Infrastruktur'))
       ).toContain(primaryColor);
+    });
+  });
+
+  describe('feature', () => {
+    const paragraphs = (...texts: string[]) =>
+      ({
+        type: 'doc',
+        content: texts.map(text => ({
+          type: 'paragraph',
+          content: [{ type: 'text', text }],
+        })),
+      }) as FullBreakBlockFragment['richText'];
+
+    const featureBlock = (
+      overrides: Partial<FullBreakBlockFragment> = {}
+    ): FullBreakBlockFragment =>
+      mockBreakBlock({
+        blockStyle: WepBlockStyles.Feature,
+        text: 'Alles, was Redaktionen zum Publizieren brauchen',
+        richText: paragraphs(
+          'Von der ersten Idee bis zur fertigen Ausgabe.',
+          '#Publizieren #Crowdfunding #Newsletter',
+          '#Abonnement #Member'
+        ),
+        hideButton: false,
+        linkText: 'Mehr erfahren',
+        linkURL: '/we-develop',
+        linkTarget: null,
+        image: mockImage({ title: 'Screenshot des Editors' }),
+        ...overrides,
+      });
+
+    it('shows the title as a heading', () => {
+      renderTenantPage([featureBlock()]);
+
+      expect(
+        screen.getByRole('heading', {
+          level: 2,
+          name: 'Alles, was Redaktionen zum Publizieren brauchen',
+        })
+      ).toBeInTheDocument();
+    });
+
+    it('shows every word with a # in front as a tag', () => {
+      renderTenantPage([featureBlock()]);
+
+      expect(
+        screen.getAllByRole('listitem').map(tag => tag.textContent)
+      ).toEqual([
+        'Publizieren',
+        'Crowdfunding',
+        'Newsletter',
+        'Abonnement',
+        'Member',
+      ]);
+    });
+
+    it('shows the rest of the text as a paragraph', () => {
+      renderTenantPage([featureBlock()]);
+
+      expect(
+        screen.getByText('Von der ersten Idee bis zur fertigen Ausgabe.')
+      ).toBeInTheDocument();
+      expect(screen.queryByText(/#/)).not.toBeInTheDocument();
+    });
+
+    it('shows the image and links the button', () => {
+      renderTenantPage([featureBlock()]);
+
+      expect(
+        screen.getByRole('img', { name: 'Screenshot des Editors' })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: 'Mehr erfahren' })
+      ).toHaveAttribute('href', '/we-develop');
+    });
+
+    it('leaves out the button when the editor hides it', () => {
+      renderTenantPage([featureBlock({ hideButton: true })]);
+
+      expect(
+        screen.queryByRole('link', { name: 'Mehr erfahren' })
+      ).not.toBeInTheDocument();
     });
   });
 

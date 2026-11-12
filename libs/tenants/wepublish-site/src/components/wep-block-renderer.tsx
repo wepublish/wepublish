@@ -16,6 +16,7 @@ import {
   AttentionCatcher,
   isAttentionCatcher,
 } from './break-blocks/attention-catcher';
+import { Feature, isFeature } from './feature/feature';
 import { Hero, isHero } from './hero/hero';
 import { isLogoBand } from './logo-band/logo-band';
 import { MainSpacer } from './wep-main-spacer';
@@ -29,6 +30,7 @@ export const WepBlockRenderer = (props: BuilderBlockRendererProps) => {
     () =>
       cond([
         [isHero, (block: BuilderBreakBlockProps) => <Hero {...block} />],
+        [isFeature, (block: BuilderBreakBlockProps) => <Feature {...block} />],
         [
           isAttentionCatcher,
           (block: BuilderBreakBlockProps) => <AttentionCatcher {...block} />,
@@ -43,7 +45,11 @@ export const WepBlockRenderer = (props: BuilderBlockRendererProps) => {
         [
           anyPass([block => true]),
           (block: FullBlockFragment) =>
-            (isHomePage && props.index < 2) || isLogoBand(block) ?
+            (
+              (isHomePage && props.index < 2) ||
+              isLogoBand(block) ||
+              isFeature(block)
+            ) ?
               css``
             : css`
                 ${theme.breakpoints.up('md')} {
