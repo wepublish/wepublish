@@ -45,6 +45,12 @@ export const isVideoOrItsTitle = (
   isYouTubeVideoBlock(block) ||
   (isRichTextBlock(block) && !!nextBlock && isYouTubeVideoBlock(nextBlock));
 
+/** A text to read (not the title of a video) gets the narrowest column, so that its lines stay short */
+export const isReadingText = (
+  block: FullBlockFragment,
+  nextBlock?: FullBlockFragment
+) => isRichTextBlock(block) && !isVideoOrItsTitle(block, nextBlock);
+
 export const WepBlockRenderer = (props: BuilderBlockRendererProps) => {
   const nextBlock = useContext(NextBlockContext);
   const { asPath } = useRouter();
@@ -67,6 +73,25 @@ export const WepBlockRenderer = (props: BuilderBlockRendererProps) => {
   const styles = useMemo(
     () =>
       cond([
+        [
+          (block: FullBlockFragment) => isReadingText(block, nextBlock),
+          // 750 of the 1273px of the hero columns in the design, in the middle
+          () => css`
+            ${theme.breakpoints.up('md')} {
+              grid-template-columns: minmax(
+                0,
+                calc(
+                  min(100%, ${theme.breakpoints.values['lg']}px) * 750 / 1273
+                )
+              ) !important;
+              justify-content: center;
+            }
+
+            p {
+              hyphens: manual;
+            }
+          `,
+        ],
         [
           anyPass([block => true]),
           (block: FullBlockFragment) =>
