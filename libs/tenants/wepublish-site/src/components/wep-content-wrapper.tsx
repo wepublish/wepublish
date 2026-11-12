@@ -2,6 +2,9 @@ import styled from '@emotion/styled';
 import { ContentWrapperStyled } from '@wepublish/content/website';
 
 import { HeroWrapper } from './hero/hero';
+import { LatestNewsWrapper } from './latest-news/latest-news';
+import { LogoBandWrapper } from './logo-band/logo-band';
+import { NetworkNewsWrapper } from './network-news/network-news';
 
 /** Space between the blocks of a page */
 export const blockGap = 'var(--block-gap)';
@@ -31,6 +34,18 @@ export const WepContentWrapper = styled(ContentWrapperStyled)`
 
     ${({ theme }) => theme.breakpoints.up('lg')} {
       --block-gap: 250px;
+
+      // The first block after the hero (which ends with the logo band) is closer
+      & > *:has(> ${LogoBandWrapper}) + * {
+        margin-top: 180px;
+      }
+    }
+
+    // The news of the network belong to the news of We.Publish above them
+    & > *:has(> ${LatestNewsWrapper}) + *:has(> ${NetworkNewsWrapper}) {
+      ${({ theme }) => theme.breakpoints.up('md')} {
+        margin-top: 120px;
+      }
     }
   }
 `;

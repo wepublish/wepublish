@@ -20,6 +20,7 @@ import { Feature, isFeature } from './feature/feature';
 import { Hero, isHero } from './hero/hero';
 import { isLatestNews } from './latest-news/latest-news';
 import { isLogoBand } from './logo-band/logo-band';
+import { isNetworkNews } from './network-news/network-news';
 import { isTeaserCards } from './teaser-cards/teaser-cards';
 import { MainSpacer } from './wep-main-spacer';
 
@@ -52,7 +53,8 @@ export const WepBlockRenderer = (props: BuilderBlockRendererProps) => {
               isLogoBand(block) ||
               isFeature(block) ||
               isTeaserCards(block) ||
-              isLatestNews(block)
+              isLatestNews(block) ||
+              isNetworkNews(block)
             ) ?
               css``
             : css`

@@ -571,6 +571,79 @@ describe('We.Publish website tenant', () => {
     });
   });
 
+  describe('network news', () => {
+    const news = (medium: string, title: string, date: string, url: string) =>
+      mockCustomTeaser({
+        title,
+        preTitle: null,
+        lead: date,
+        contentUrl: url,
+        openInNewTab: true,
+        image: mockImage({ title: medium, description: null }),
+      });
+
+    const networkNews = () =>
+      mockTeaserSlotsBlock({
+        blockStyle: WepBlockStyles.NetworkNews,
+        title: 'Neues aus dem Netzwerk',
+        teasers: [
+          news(
+            'Hauptstadt',
+            'Launcht Abo Plus',
+            '19. April 2025',
+            'https://www.hauptstadt.be/'
+          ),
+          news(
+            'Reflekt',
+            'Braucht Unterstützung',
+            '19. April 2025',
+            'https://reflekt.ch/'
+          ),
+        ],
+      });
+
+    it('shows the title of the block as a heading', () => {
+      renderTenantPage([networkNews()]);
+
+      expect(
+        screen.getByRole('heading', {
+          level: 2,
+          name: 'Neues aus dem Netzwerk',
+        })
+      ).toBeInTheDocument();
+    });
+
+    it('shows each news with the logo of the medium, its title and date', () => {
+      renderTenantPage([networkNews()]);
+
+      const news = screen.getByRole('article', { name: 'Launcht Abo Plus' });
+
+      expect(
+        within(news).getByRole('img', { name: 'Hauptstadt' })
+      ).toBeInTheDocument();
+      expect(news).toHaveTextContent('19. April 2025');
+    });
+
+    it('links each news to the medium', () => {
+      renderTenantPage([networkNews()]);
+
+      const link = screen.getByRole('link', { name: /Launcht Abo Plus/ });
+
+      expect(link).toHaveAttribute('href', 'https://www.hauptstadt.be/');
+      expect(link).toHaveAttribute('target', '_blank');
+    });
+
+    // The image from the editor is the whole tile: the logo on its colour
+    it('fills the tile with the image from the editor', () => {
+      renderTenantPage([networkNews()]);
+
+      expect(
+        getComputedStyle(screen.getByRole('img', { name: 'Hauptstadt' }))
+          .objectFit
+      ).toBe('cover');
+    });
+  });
+
   describe('logo band', () => {
     const logo = (title: string, contentUrl: string) =>
       mockCustomTeaser({
