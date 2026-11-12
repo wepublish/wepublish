@@ -476,6 +476,22 @@ traced, nor a node builtin. The same class of bug hid
 `@sentry/server-runtime-injection`, a static import of `@sentry/node` that
 nitro did not trace — add it to `traceDeps`.
 
+### 6.17 The CMS theme (Website Settings colours, fonts) is ignored
+
+The Next `_app.tsx` passed `settingsTheme={settings?.theme}` to
+`TenantProviders`; the `app.tsx` template copied between migrations does not,
+so `createTheme()` runs without it and nothing fails. Pass
+`settingsTheme={websiteSettings?.theme as ThemeOptions | undefined}`.
+`apps/neuewege` does; the tenants migrated before it do not yet.
+
+### 6.18 A tenant with no `libs/tenants/<tenant>`
+
+Some tenants built their theme inline in `_app.tsx`. Put the
+`WebsiteTenantConfig` in the app (`apps/neuewege/src/config.ts`) and import it
+where the others import `<tenant>Config`. App-specific `next.config.js`
+redirects become routes; a `:path*` redirect that must keep its query is
+`apps/neuewege/src/integration/legacy-redirects.ts`.
+
 ---
 
 ## 7. Deployment

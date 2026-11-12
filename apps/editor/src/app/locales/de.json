@@ -2945,7 +2945,13 @@
         "generate": "Generieren",
         "generateToken": "Token generieren",
         "name": "Name",
-        "tokenWarning": "Token können später nicht mehr abgerufen werden. Speichere sie an einem sicheren Ort."
+        "tokenWarning": "Token können später nicht mehr abgerufen werden. Speichere sie an einem sicheren Ort.",
+        "roles": "Rollen",
+        "noRoles": "Keine Rollen – keine Berechtigungen",
+        "noRolesWarning": "Ohne Rolle darf das Token nichts. Wähle die Rollen, deren Berechtigungen Programme mit diesem Token erhalten sollen.",
+        "rolesInfo": "Eine Anfrage mit diesem Token erhält die Berechtigungen dieser Rollen. Änderungen gelten sofort.",
+        "editRoles": "Rollen bearbeiten",
+        "editRolesOf": "Rollen von {{name}}"
       }
     },
     "untitled": "Ohne Titel",
@@ -3103,7 +3109,7 @@
         "title": {
           "activated": "Abonnement deaktivieren"
         },
-        "willBeDeactivated": "Das Abonnement wird am {{date, ccc PP p}} deaktiviert"
+        "willBeDeactivated": "Das Abonnement wird am {{date, ccc PP p}} deaktiviert. Grund: {{reason}}"
       },
       "revertUpgrade": {
         "title": "Upgrade rückgängig",
@@ -3754,6 +3760,8 @@
         "bexioInvoiceMailBodyInfo": "Der Text der E-Mail, mit der Bexio die Rechnung verschickt; das PDF wird angehängt. Platzhalter wie :user.firstName: oder :memberPlan.name: werden automatisch ersetzt. Bexio verlangt den Platzhalter [Network Link] im Text.",
         "bexioMarkInvoiceAsOpenInfo": "Wenn aktiv, setzt Bexio die Rechnung nach dem Versand auf «offen», statt sie als Entwurf zu belassen.",
         "bexioContactSyncInfo": "Wenn aktiv, überträgt We.Publish jede Nacht Name, Firma, E-Mail und Adresse geänderter Leser:innen in ihren Bexio-Kontakt und legt für Abos mit Bexio-Zahlung fehlende Kontakte an. Gruppen, Telefon und alles Weitere im Kontakt bleiben, wie sie in Bexio sind.",
+        "bexioTestMailbox": "Test-Postfach (nur Testinstanzen)",
+        "bexioTestMailboxInfo": "Bexio-Firmen in der Testphase senden Rechnungsmails nur an die eigene Absenderadresse. Rechnungsmails an eine Adresse auf der Domain dieses Postfachs gehen stattdessen an dieses Postfach, z. B. bexio@<id>.resend.app für Leser*innen nw-00001@<id>.resend.app. Auf Produktion nicht verfügbar.",
         "bexioContactSyncNeverRan": "Noch nie gelaufen.",
         "bexioContactSyncLastRun": "Letzter Lauf: {{date}}, ohne Fehler.",
         "bexioContactSyncLastRunFailed": "Letzter Lauf: {{date}}. Fehler: {{error}}"
@@ -4213,7 +4221,8 @@
       "apps": "Apps",
       "noAppsFound": "Keine externen Apps konfiguriert.",
       "notFound": "Externe App nicht gefunden",
-      "appsInfo": "Verknüpfungen zu externen Tools, die auf dem Dashboard unter «We.Publish Apps» erscheinen. «Ziel» bestimmt, ob eine App in einem neuen Browser-Tab oder direkt im Editor geöffnet wird. Manche Websites lassen sich nicht im Editor anzeigen – öffne sie in einem neuen Tab."
+      "appsInfo": "Verknüpfungen zu externen Tools, die auf dem Dashboard unter «We.Publish Apps» erscheinen. «Ziel» bestimmt, ob eine App in einem neuen Browser-Tab oder direkt im Editor geöffnet wird. Manche Websites lassen sich nicht im Editor anzeigen – öffne sie in einem neuen Tab.",
+      "noToken": "Die App konnte nicht geöffnet werden: Es wurde kein Zugriffstoken ausgestellt."
     },
     "externalAppForm": {
       "apiKey": "API-Schlüssel",

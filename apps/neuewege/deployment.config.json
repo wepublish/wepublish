@@ -1,11 +1,9 @@
 {
-  "tdl": {
-    "production": "wepublish.cloud",
-    "staging": "wepublish.works"
-  },
+  "has_staging": false,
   "website": {
     "production": {
       "deployment": true,
+      "custom_domain": "https://abos.neuewege.ch",
       "env": {},
       "secret_env": []
     },

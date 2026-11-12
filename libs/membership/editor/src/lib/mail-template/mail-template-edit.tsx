@@ -667,6 +667,7 @@ function MailTemplateEdit() {
                       help={t('mailTemplates.edit.letterAppendixHelp')}
                     />
                     <LetterAppendixPicker
+                      labelId={ids.letterAppendix}
                       value={letterAppendixId}
                       onChange={setLetterAppendixId}
                     />

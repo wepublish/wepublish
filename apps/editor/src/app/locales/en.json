@@ -2993,7 +2993,13 @@
         "generate": "Generate",
         "generateToken": "Generate Token",
         "name": "Name",
-        "tokenWarning": "Tokens cannot be retrieved later. It is recommended that you copy and save your token somewhere safe."
+        "tokenWarning": "Tokens cannot be retrieved later. It is recommended that you copy and save your token somewhere safe.",
+        "roles": "Roles",
+        "noRoles": "No roles – no permissions",
+        "noRolesWarning": "Without a role the token may do nothing. Pick the roles whose permissions programs using this token should have.",
+        "rolesInfo": "A request with this token gets the permissions of these roles. Changes apply immediately.",
+        "editRoles": "Edit roles",
+        "editRolesOf": "Roles of {{name}}"
       }
     },
     "untitled": "Untitled",
@@ -3151,7 +3157,7 @@
         "title": {
           "activated": "Deactivate subscription"
         },
-        "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}"
+        "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}. Reason: {{reason}}"
       },
       "revertUpgrade": {
         "title": "Undo upgrade",
@@ -3815,6 +3821,8 @@
         "bexioInvoiceMailBodyInfo": "The text of the email Bexio sends with the invoice; the PDF is attached. Placeholders such as :user.firstName: or :memberPlan.name: are replaced automatically. Bexio requires the placeholder [Network Link] in the text.",
         "bexioMarkInvoiceAsOpenInfo": "When enabled, Bexio sets the invoice to «open» after sending it, instead of leaving it as a draft.",
         "bexioContactSyncInfo": "When enabled, We.Publish pushes the name, company, email and address of changed readers to their Bexio contact every night and creates missing contacts for subscriptions paid through Bexio. Groups, phone and everything else on the contact stay as they are in Bexio.",
+        "bexioTestMailbox": "Test mailbox (test instances only)",
+        "bexioTestMailboxInfo": "Bexio companies in their trial only send invoice mails to their own sender address. Invoice mails to an address on this mailbox's domain go to this mailbox instead, e.g. bexio@<id>.resend.app for readers nw-00001@<id>.resend.app. Not available on production.",
         "bexioContactSyncNeverRan": "Has not run yet.",
         "bexioContactSyncLastRun": "Last run: {{date}}, without errors.",
         "bexioContactSyncLastRunFailed": "Last run: {{date}}. Error: {{error}}"
@@ -4273,7 +4281,8 @@
       "apps": "Apps",
       "noAppsFound": "No external apps configured.",
       "notFound": "External app not found",
-      "appsInfo": "Shortcuts to external tools that appear on the dashboard under «We.Publish Apps». «Target» decides whether an app opens in a new browser tab or inside the editor. Some websites can't be shown inside the editor – open those in a new tab."
+      "appsInfo": "Shortcuts to external tools that appear on the dashboard under «We.Publish Apps». «Target» decides whether an app opens in a new browser tab or inside the editor. Some websites can't be shown inside the editor – open those in a new tab.",
+      "noToken": "The app could not be opened: no access token was issued."
     },
     "externalAppForm": {
       "apiKey": "API key",

@@ -44,9 +44,14 @@ import {
 import fetch, { RequestInit } from 'node-fetch';
 import { bexioContactFields, ContactUser } from './bexio-contact-mapping';
 import { BexioCountries, BexioCountry } from './bexio-countries';
+import { invoiceMailRecipient } from './bexio-test-mailbox';
 
 const BEXIO_BASE_URL = 'https://api.bexio.com/2.0';
+const BEXIO_USERS_URL = 'https://api.bexio.com/3.0/users';
 const COUNTRIES_TTL_MS = 24 * 60 * 60 * 1000;
+
+const escapeHtml = (text: string) =>
+  text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 export type SyncContactUser = ContactUser & {
   paymentProviderCustomers: PaymentProviderCustomer[];
@@ -73,6 +78,8 @@ const isNotFound = (error: unknown): boolean => {
 export class BexioPaymentProvider extends BasePaymentProvider {
   // bexio's country list changes rarely; one load serves a whole night.
   private countryList?: { loadedAt: number; countries: BexioCountries };
+  // The name that signs the invoices, of the bexio user `bexio_userId`.
+  private signer?: { loadedAt: number; userId: number; name: string };
 
   constructor(props: PaymentProviderProps) {
     super(props);
@@ -541,6 +548,73 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     return (await response.json()) as BexioCountry[];
   }
 
+  /**
+   * The invoice's closing, signed by the bexio user the invoices belong to.
+   * Left out, bexio fills in its default text, which names whoever owns the
+   * API token. Without the user's name the invoice still goes out, with that
+   * default.
+   */
+  private async invoiceFooter(
+    apiKey: string | null,
+    userId: number
+  ): Promise<string | undefined> {
+    try {
+      let signer = this.signer;
+
+      if (
+        !signer ||
+        signer.userId !== userId ||
+        Date.now() - signer.loadedAt >= COUNTRIES_TTL_MS
+      ) {
+        signer = {
+          loadedAt: Date.now(),
+          userId,
+          name: await this.fetchUserName(apiKey, userId),
+        };
+        this.signer = signer;
+      }
+
+      return `Sie haben Fragen? Melden Sie sich bei uns.<br/><br/>Freundliche Grüsse<br/>${escapeHtml(signer.name)}`;
+    } catch (error) {
+      logger('bexioPaymentProvider').warn(
+        'Bexio user %s could not be read for the invoice footer, using bexio’s own: %s',
+        userId,
+        describeError(error)
+      );
+
+      return undefined;
+    }
+  }
+
+  private async fetchUserName(
+    apiKey: string | null,
+    userId: number
+  ): Promise<string> {
+    const response = await fetch(`${BEXIO_USERS_URL}/${userId}`, {
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+      },
+      signal: AbortSignal.timeout(30_000) as unknown as RequestInit['signal'],
+    });
+
+    if (response.status !== 200) {
+      throw new ResponseNOK(response.status);
+    }
+
+    const { firstname, lastname } = (await response.json()) as {
+      firstname?: string | null;
+      lastname?: string | null;
+    };
+    const name = [firstname, lastname].filter(Boolean).join(' ').trim();
+
+    if (!name) {
+      throw new Error(`bexio user ${userId} has no name`);
+    }
+
+    return name;
+  }
+
   private async contactFields(user: ContactUser) {
     return bexioContactFields(
       user,
@@ -620,6 +694,8 @@ export class BexioPaymentProvider extends BasePaymentProvider {
       invoice.subscription.memberPlan
     );
     const config = await this.getConfig();
+    const userId = this.assertProperty('bexio_userId', config.bexio_userId);
+    const footer = await this.invoiceFooter(config.apiKey, userId);
 
     const bexioInvoice: InvoicesStatic.InvoiceCreate = {
       title:
@@ -627,7 +703,8 @@ export class BexioPaymentProvider extends BasePaymentProvider {
           config.bexio_invoiceTitleRenewalMembership || ''
         : config.bexio_invoiceTitleNewMembership || '',
       contact_id: contact.id,
-      user_id: this.assertProperty('bexio_userId', config.bexio_userId),
+      user_id: userId,
+      ...(footer ? { footer } : {}),
       mwst_type: 0,
       mwst_is_net: false,
       api_reference: invoice.id,
@@ -676,7 +753,10 @@ export class BexioPaymentProvider extends BasePaymentProvider {
       }
 
       const sentInvoice = await bexio.invoices.send(created.id, {
-        recipient_email: contact.mail,
+        recipient_email: invoiceMailRecipient(
+          contact.mail,
+          config.bexio_testMailbox
+        ),
         subject: stringReplaceMap.replace(
           isRenewal ?
             config.bexio_invoiceMailSubjectRenewalMembership || ''

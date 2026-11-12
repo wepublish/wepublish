@@ -565,6 +565,8 @@ export type BaseToken = {
   id: Scalars['String']['output'];
   modifiedAt: Scalars['DateTime']['output'];
   name: Scalars['String']['output'];
+  /** The user roles whose permissions a request with this token gets. */
+  roleIDs: Array<Scalars['String']['output']>;
 };
 
 export type BaseUser = {
@@ -2197,6 +2199,18 @@ export type ImportArticleOptions = {
   importTags?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+export type ImportSubscriptionPeriodInput = {
+  /** Period amount in cents. */
+  amount: Scalars['Int']['input'];
+  endsAt: Scalars['DateTime']['input'];
+  invoiceDescription?: InputMaybe<Scalars['String']['input']>;
+  /** Whether the invoice for this period was paid. */
+  paid: Scalars['Boolean']['input'];
+  /** Payment date for a paid period; defaults to the period start. */
+  paidAt?: InputMaybe<Scalars['DateTime']['input']>;
+  startsAt: Scalars['DateTime']['input'];
+};
+
 export type ImportedEventFilter = {
   from?: InputMaybe<Scalars['String']['input']>;
   location?: InputMaybe<Scalars['String']['input']>;
@@ -3412,6 +3426,8 @@ export type Mutation = {
   createAISetting: SettingAiProvider;
   /** Creates a new analytics provider setting. */
   createAnalyticsProviderSetting: SettingAnalyticsProvider;
+  /** Runs the invoice creation and charging steps of the daily periodic job on demand, without affecting the job run log. Requires an editor session and is additionally password protected. */
+  createAndChargeInvoices: Scalars['Boolean']['output'];
   /** Creates an api token and returns its secret. The secret is shown once and cannot be retrieved again. */
   createApiToken: CreatedApiToken;
   /** Creates an article. */
@@ -3562,7 +3578,7 @@ export type Mutation = {
   deleteGoodie: Goodie;
   /** Deletes an existing image. */
   deleteImage: Scalars['String']['output'];
-  /** Deletes an existing invoice. */
+  /** Deletes an existing invoice. A PAID invoice is billing history and is only deleted with cascade: true (removes its billing period and items along). */
   deleteInvoice: Invoice;
   /** Delete a letter layout. Refused while a mail template still prints on it. */
   deleteLetterLayout: LetterLayoutModel;
@@ -3748,6 +3764,8 @@ export type Mutation = {
   setUserDeliveryMode: UserDeliveryPreferenceModel;
   /** Ask the mail provider for the current delivery state of mails that are still open. Complements the provider webhook, which is not reachable in local development. */
   syncMailLogStates: MailLogSyncModel;
+  /** Checks all open invoices against their payment providers and updates the local payment state. Requires an editor session and is additionally password protected. */
+  syncOpenInvoiceStates: Scalars['Boolean']['output'];
   /** Sends a test email for the given event */
   testSystemMail: Scalars['Boolean']['output'];
   /** Triggers a mailchimp sync in the background. */
@@ -3851,12 +3869,16 @@ export type Mutation = {
   updateSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Update an existing subscription interval */
   updateSubscriptionInterval: Array<SubscriptionFlowModel>;
+  /** Data correction: moves a subscription that is still on fromPaymentMethodId to toPaymentMethodId and changes nothing else. Unlike updateSubscription it also takes deactivated subscriptions and never touches invoices, periods or the payment provider. Returns whether it moved the subscription; swap the payment methods to undo it. */
+  updateSubscriptionPaymentMethod: Scalars['Boolean']['output'];
   /** Updates an existing sync provider setting. */
   updateSyncProviderSetting: SettingSyncProvider;
   /** Updates an existing mail flow */
   updateSystemMail: Array<SystemMailModel>;
   /** Updates an existing tag. */
   updateTag: Tag;
+  /** Renames a token or replaces its roles. Cached sessions of the token are cleared, so new roles apply at once. */
+  updateToken: Token;
   /** Updates an existing tracking pixel setting. */
   updateTrackingPixelSetting: SettingTrackingPixelProvider;
   /** Updates an existing user. */
@@ -4016,6 +4038,11 @@ export type MutationCreateAnalyticsProviderSettingArgs = {
   property?: InputMaybe<Scalars['String']['input']>;
   type: AnalyticsProviderType;
   url?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationCreateAndChargeInvoicesArgs = {
+  password: Scalars['String']['input'];
 };
 
 
@@ -4338,6 +4365,7 @@ export type MutationCreatePaymentProviderSettingArgs = {
   bexio_invoiceTitleRenewalMembership?: InputMaybe<Scalars['String']['input']>;
   bexio_markInvoiceAsOpen?: InputMaybe<Scalars['Boolean']['input']>;
   bexio_taxId?: InputMaybe<Scalars['Float']['input']>;
+  bexio_testMailbox?: InputMaybe<Scalars['String']['input']>;
   bexio_unitId?: InputMaybe<Scalars['Float']['input']>;
   bexio_userId?: InputMaybe<Scalars['Float']['input']>;
   id: Scalars['String']['input'];
@@ -4497,6 +4525,7 @@ export type MutationCreateTagArgs = {
 
 export type MutationCreateTokenArgs = {
   name: Scalars['String']['input'];
+  roleIDs?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 
@@ -4664,6 +4693,7 @@ export type MutationDeleteImageArgs = {
 
 
 export type MutationDeleteInvoiceArgs = {
+  cascade?: InputMaybe<Scalars['Boolean']['input']>;
   id: Scalars['String']['input'];
 };
 
@@ -4902,12 +4932,14 @@ export type MutationImportPeerArticleArgs = {
 
 export type MutationImportSubscriptionArgs = {
   autoRenew: Scalars['Boolean']['input'];
+  deactivationReason?: InputMaybe<SubscriptionDeactivationReason>;
   extendable: Scalars['Boolean']['input'];
   memberPlanID: Scalars['String']['input'];
   monthlyAmount: Scalars['Float']['input'];
   paidUntil?: InputMaybe<Scalars['DateTime']['input']>;
   paymentMethodID: Scalars['String']['input'];
   paymentPeriodicity: PaymentPeriodicity;
+  periods?: InputMaybe<Array<ImportSubscriptionPeriodInput>>;
   properties: Array<PropertyInput>;
   skipMail?: InputMaybe<Scalars['Boolean']['input']>;
   startsAt: Scalars['DateTime']['input'];
@@ -5117,6 +5149,11 @@ export type MutationSetUserDeliveryModeArgs = {
 
 export type MutationSyncMailLogStatesArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type MutationSyncOpenInvoiceStatesArgs = {
+  password: Scalars['String']['input'];
 };
 
 
@@ -5525,6 +5562,7 @@ export type MutationUpdatePaymentProviderSettingArgs = {
   bexio_invoiceTitleRenewalMembership?: InputMaybe<Scalars['String']['input']>;
   bexio_markInvoiceAsOpen?: InputMaybe<Scalars['Boolean']['input']>;
   bexio_taxId?: InputMaybe<Scalars['Float']['input']>;
+  bexio_testMailbox?: InputMaybe<Scalars['String']['input']>;
   bexio_unitId?: InputMaybe<Scalars['Float']['input']>;
   bexio_userId?: InputMaybe<Scalars['Float']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
@@ -5663,6 +5701,13 @@ export type MutationUpdateSubscriptionIntervalArgs = {
 };
 
 
+export type MutationUpdateSubscriptionPaymentMethodArgs = {
+  fromPaymentMethodId: Scalars['String']['input'];
+  subscriptionId: Scalars['String']['input'];
+  toPaymentMethodId: Scalars['String']['input'];
+};
+
+
 export type MutationUpdateSyncProviderSettingArgs = {
   enabled?: InputMaybe<Scalars['Boolean']['input']>;
   id: Scalars['String']['input'];
@@ -5689,6 +5734,13 @@ export type MutationUpdateTagArgs = {
   main?: InputMaybe<Scalars['Boolean']['input']>;
   tag?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<TagType>;
+};
+
+
+export type MutationUpdateTokenArgs = {
+  id: Scalars['String']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+  roleIDs?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 
@@ -9064,6 +9116,7 @@ export type SettingPaymentProvider = SettingProvider & {
   bexio_invoiceTitleRenewalMembership?: Maybe<Scalars['String']['output']>;
   bexio_markInvoiceAsOpen?: Maybe<Scalars['Boolean']['output']>;
   bexio_taxId?: Maybe<Scalars['Float']['output']>;
+  bexio_testMailbox?: Maybe<Scalars['String']['output']>;
   bexio_unitId?: Maybe<Scalars['Float']['output']>;
   bexio_userId?: Maybe<Scalars['Float']['output']>;
   createdAt: Scalars['DateTime']['output'];
@@ -9793,6 +9846,8 @@ export type Token = BaseToken & {
   id: Scalars['String']['output'];
   modifiedAt: Scalars['DateTime']['output'];
   name: Scalars['String']['output'];
+  /** The user roles whose permissions a request with this token gets. */
+  roleIDs: Array<Scalars['String']['output']>;
 };
 
 export type TokenWithSecret = BaseToken & {
@@ -9801,6 +9856,8 @@ export type TokenWithSecret = BaseToken & {
   id: Scalars['String']['output'];
   modifiedAt: Scalars['DateTime']['output'];
   name: Scalars['String']['output'];
+  /** The user roles whose permissions a request with this token gets. */
+  roleIDs: Array<Scalars['String']['output']>;
   token: Scalars['String']['output'];
 };
 

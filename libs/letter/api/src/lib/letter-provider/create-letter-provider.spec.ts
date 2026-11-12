@@ -6,6 +6,14 @@ import {
 import { loadLetterProvider } from './create-letter-provider';
 import { PingenLetterProvider } from './pingen-letter-provider';
 
+let testing: NamespacedCacheTesting;
+
+beforeEach(async () => {
+  testing = await createNamespacedCacheTesting();
+});
+
+afterEach(() => testing.close());
+
 describe('loadLetterProvider', () => {
   let testing: NamespacedCacheTesting;
 

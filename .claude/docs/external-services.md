@@ -33,11 +33,22 @@
   a 429 ends the night's run. The run's time and first error land in
   `bexio_contactSyncAt` / `bexio_contactSyncError`, shown in the editor's
   bexio form.
-  - The print export (`libs/print-issue/api`, feature `print-export`, editor
-    «Druckausgaben» in the left nav after «Banner») reads `kb_invoice` and `contact` **read-only** with
-    this provider's API key (`BexioPrintSourceService`; the key needs
-    `kb_invoice_show` and `contact_show`). Without a bexio provider that has a
-    key, a run lists we.publish members only and says so in its summary.
+  **Test mailbox (test instances only):** a bexio company in its trial only
+  emails its own sender address. `bexio_testMailbox` sends invoice mails to
+  recipients on the mailbox's domain to the mailbox instead
+  (`invoiceMailRecipient`); the contact keeps the reader's address. Ignored,
+  refused on save and hidden in the editor unless `APP_ENVIRONMENT` is set and
+  not `production` (`isTestEnvironment`, `libs/utils/api`).
+  **Invoice footer:** the provider sets the closing itself, signed with the
+  name of bexio user `bexio_userId` (`GET /3.0/users/{id}`, cached a day).
+  Left out, bexio's default footer names the API token's owner instead. If
+  the name can't be read, the invoice goes out with that default.
+  **Print export (read-only):** the print export (`libs/print-issue/api`,
+  feature `print-export`, editor «Druckausgaben» in the left nav after
+  «Banner») reads `kb_invoice` and `contact` **read-only** with this
+  provider's API key (`BexioPrintSourceService`; the key needs
+  `kb_invoice_show` and `contact_show`). Without a bexio provider that has a
+  key, a run lists we.publish members only and says so in its summary.
 
 - Simulated (`simulated` type) — no external service: `createIntent` sends the
   customer to a checkout page served by the API at

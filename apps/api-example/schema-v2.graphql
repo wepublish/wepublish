@@ -546,6 +546,9 @@ interface BaseToken {
   id: String!
   modifiedAt: DateTime!
   name: String!
+
+  """The user roles whose permissions a request with this token gets."""
+  roleIDs: [String!]!
 }
 
 interface BaseUser {
@@ -2268,6 +2271,20 @@ input ImportArticleOptions {
   importTags: Boolean
 }
 
+input ImportSubscriptionPeriodInput {
+  """Period amount in cents."""
+  amount: Int!
+  endsAt: DateTime!
+  invoiceDescription: String
+
+  """Whether the invoice for this period was paid."""
+  paid: Boolean!
+
+  """Payment date for a paid period; defaults to the period start."""
+  paidAt: DateTime
+  startsAt: DateTime!
+}
+
 input ImportedEventFilter {
   from: String
   location: String
@@ -3669,6 +3686,11 @@ type Mutation {
   ): SettingAnalyticsProvider!
 
   """
+  Runs the invoice creation and charging steps of the daily periodic job on demand, without affecting the job run log. Requires an editor session and is additionally password protected.
+  """
+  createAndChargeInvoices(password: String!): Boolean!
+
+  """
   Creates an api token and returns its secret. The secret is shown once and cannot be retrieved again.
   """
   createApiToken(
@@ -3805,7 +3827,7 @@ type Mutation {
   createPaymentMethod(active: Boolean!, description: String!, gracePeriod: Int!, imageId: String, name: String!, paymentProviderID: String!, slug: Slug!): PaymentMethod!
 
   """Creates a new payment provider setting."""
-  createPaymentProviderSetting(apiKey: String, bexio_accountId: Float, bexio_contactSync: Boolean, bexio_countryId: Float, bexio_invoiceMailBodyNewMembership: String, bexio_invoiceMailBodyRenewalMembership: String, bexio_invoiceMailSubjectNewMembership: String, bexio_invoiceMailSubjectRenewalMembership: String, bexio_invoiceTemplateNewMembership: String, bexio_invoiceTemplateRenewalMembership: String, bexio_invoiceTitleNewMembership: String, bexio_invoiceTitleRenewalMembership: String, bexio_markInvoiceAsOpen: Boolean, bexio_taxId: Float, bexio_unitId: Float, bexio_userId: Float, id: String!, mollie_apiBaseUrl: String, mollie_methods: [PaymentMethodMollie!], name: String, offSessionPayments: Boolean, payrexx_instancename: String, payrexx_pm: [PayrexxPM!], payrexx_psp: [PayrexxPSP!], payrexx_vatrate: String, simulated_declineRenewals: Boolean, stripe_methods: [StripePaymentMethod!], type: PaymentProviderType!, webhookEndpointSecret: String): SettingPaymentProvider!
+  createPaymentProviderSetting(apiKey: String, bexio_accountId: Float, bexio_contactSync: Boolean, bexio_countryId: Float, bexio_invoiceMailBodyNewMembership: String, bexio_invoiceMailBodyRenewalMembership: String, bexio_invoiceMailSubjectNewMembership: String, bexio_invoiceMailSubjectRenewalMembership: String, bexio_invoiceTemplateNewMembership: String, bexio_invoiceTemplateRenewalMembership: String, bexio_invoiceTitleNewMembership: String, bexio_invoiceTitleRenewalMembership: String, bexio_markInvoiceAsOpen: Boolean, bexio_taxId: Float, bexio_testMailbox: String, bexio_unitId: Float, bexio_userId: Float, id: String!, mollie_apiBaseUrl: String, mollie_methods: [PaymentMethodMollie!], name: String, offSessionPayments: Boolean, payrexx_instancename: String, payrexx_pm: [PayrexxPM!], payrexx_psp: [PayrexxPSP!], payrexx_vatrate: String, simulated_declineRenewals: Boolean, stripe_methods: [StripePaymentMethod!], type: PaymentProviderType!, webhookEndpointSecret: String): SettingPaymentProvider!
 
   """Creates a paywall."""
   createPaywall(active: Boolean!, alternativeSubscribeUrl: String, anyMemberPlan: Boolean!, bypassTokens: [String!]!, circumventDescription: RichText, description: RichText, fadeout: Boolean!, hideContentAfter: Int!, memberPlanIds: [String!]!, name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
@@ -3865,7 +3887,12 @@ type Mutation {
   createTag(color: Color, description: RichText, main: Boolean! = false, tag: String, type: TagType!): Tag!
 
   """Creates a token and returns it's secret once."""
-  createToken(name: String!): TokenWithSecret!
+  createToken(
+    name: String!
+
+    """User roles for the token. Without roles a token has no permissions."""
+    roleIDs: [String!]
+  ): TokenWithSecret!
 
   """Creates a new tracking pixel setting."""
   createTrackingPixelSetting(id: String!, name: String, prolitteris_memberNr: String, prolitteris_onlyPaidContentAccess: Boolean, prolitteris_password: String, prolitteris_publisherInternalKeyDomain: String, prolitteris_usePublisherInternalKey: Boolean, prolitteris_username: String, type: TrackingPixelProviderType!): SettingTrackingPixelProvider!
@@ -3954,8 +3981,10 @@ type Mutation {
   """Deletes an existing image."""
   deleteImage(id: String!): String!
 
-  """Deletes an existing invoice."""
-  deleteInvoice(id: String!): Invoice!
+  """
+  Deletes an existing invoice. A PAID invoice is billing history and is only deleted with cascade: true (removes its billing period and items along).
+  """
+  deleteInvoice(cascade: Boolean, id: String!): Invoice!
 
   """
   Delete a letter layout. Refused while a mail template still prints on it.
@@ -4123,16 +4152,26 @@ type Mutation {
   """Imports a subscription."""
   importSubscription(
     autoRenew: Boolean!
+
+    """
+    Import the subscription as already cancelled: a deactivation with this reason is created directly (date = paidUntil when in the future, else now) — no mail, no payment-provider call.
+    """
+    deactivationReason: SubscriptionDeactivationReason
     extendable: Boolean!
     memberPlanID: String!
     monthlyAmount: Float!
     paidUntil: DateTime
     paymentMethodID: String!
     paymentPeriodicity: PaymentPeriodicity!
+
+    """
+    Historical periods to import: one invoice + one subscription period is created per entry (paid entries with a back-dated paidAt). When given, replaces the single synthesized invoice/period.
+    """
+    periods: [ImportSubscriptionPeriodInput!]
     properties: [PropertyInput!]!
 
     """
-    When true, suppress the subscribe mail to the user, e.g. when an editor chose not to mail the reader or for bulk imports.
+    When true, suppress any subscription / invoice mail dispatched as part of this import. Useful for bulk migrations.
     """
     skipMail: Boolean
     startsAt: DateTime!
@@ -4301,6 +4340,11 @@ type Mutation {
   Ask the mail provider for the current delivery state of mails that are still open. Complements the provider webhook, which is not reachable in local development.
   """
   syncMailLogStates(limit: Int): MailLogSyncModel!
+
+  """
+  Checks all open invoices against their payment providers and updates the local payment state. Requires an editor session and is additionally password protected.
+  """
+  syncOpenInvoiceStates(password: String!): Boolean!
 
   """Sends a test email for the given event"""
   testSystemMail(event: UserEvent!): Boolean!
@@ -4474,7 +4518,7 @@ type Mutation {
   updatePaymentMethod(active: Boolean, description: String, gracePeriod: Int, id: String!, imageId: String, name: String, paymentProviderID: String, slug: Slug): PaymentMethod!
 
   """Updates an existing payment provider setting."""
-  updatePaymentProviderSetting(apiKey: String, bexio_accountId: Float, bexio_contactSync: Boolean, bexio_countryId: Float, bexio_invoiceMailBodyNewMembership: String, bexio_invoiceMailBodyRenewalMembership: String, bexio_invoiceMailSubjectNewMembership: String, bexio_invoiceMailSubjectRenewalMembership: String, bexio_invoiceTemplateNewMembership: String, bexio_invoiceTemplateRenewalMembership: String, bexio_invoiceTitleNewMembership: String, bexio_invoiceTitleRenewalMembership: String, bexio_markInvoiceAsOpen: Boolean, bexio_taxId: Float, bexio_unitId: Float, bexio_userId: Float, id: String, mollie_apiBaseUrl: String, mollie_methods: [PaymentMethodMollie!], name: String, offSessionPayments: Boolean, payrexx_instancename: String, payrexx_pm: [PayrexxPM!], payrexx_psp: [PayrexxPSP!], payrexx_vatrate: String, simulated_declineRenewals: Boolean, stripe_methods: [StripePaymentMethod!], webhookEndpointSecret: String): SettingPaymentProvider!
+  updatePaymentProviderSetting(apiKey: String, bexio_accountId: Float, bexio_contactSync: Boolean, bexio_countryId: Float, bexio_invoiceMailBodyNewMembership: String, bexio_invoiceMailBodyRenewalMembership: String, bexio_invoiceMailSubjectNewMembership: String, bexio_invoiceMailSubjectRenewalMembership: String, bexio_invoiceTemplateNewMembership: String, bexio_invoiceTemplateRenewalMembership: String, bexio_invoiceTitleNewMembership: String, bexio_invoiceTitleRenewalMembership: String, bexio_markInvoiceAsOpen: Boolean, bexio_taxId: Float, bexio_testMailbox: String, bexio_unitId: Float, bexio_userId: Float, id: String, mollie_apiBaseUrl: String, mollie_methods: [PaymentMethodMollie!], name: String, offSessionPayments: Boolean, payrexx_instancename: String, payrexx_pm: [PayrexxPM!], payrexx_psp: [PayrexxPSP!], payrexx_vatrate: String, simulated_declineRenewals: Boolean, stripe_methods: [StripePaymentMethod!], webhookEndpointSecret: String): SettingPaymentProvider!
 
   """Updates a paywall."""
   updatePaywall(active: Boolean, alternativeSubscribeUrl: String, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, fadeout: Boolean, hideContentAfter: Int, id: String!, memberPlanIds: [String!], name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
@@ -4516,6 +4560,18 @@ type Mutation {
   """Update an existing subscription interval"""
   updateSubscriptionInterval(daysAwayFromEnding: Int, id: String!, mailTemplateId: String, sendAsLetter: Boolean): [SubscriptionFlowModel!]!
 
+  """
+  Data correction: moves a subscription that is still on fromPaymentMethodId to toPaymentMethodId and changes nothing else. Unlike updateSubscription it also takes deactivated subscriptions and never touches invoices, periods or the payment provider. Returns whether it moved the subscription; swap the payment methods to undo it.
+  """
+  updateSubscriptionPaymentMethod(
+    """
+    The payment method the subscription is expected to be on; it is only moved while it still is.
+    """
+    fromPaymentMethodId: String!
+    subscriptionId: String!
+    toPaymentMethodId: String!
+  ): Boolean!
+
   """Updates an existing sync provider setting."""
   updateSyncProviderSetting(enabled: Boolean, id: String!, mailchimp_apiKey: String, mailchimp_defaultInterestGroupIds: [String!], mailchimp_extensions: JSONObject, mailchimp_interestGroupMappings: [JSONObject!], mailchimp_listId: String, mailchimp_mergeFieldMappings: [JSONObject!], name: String): SettingSyncProvider!
 
@@ -4529,6 +4585,17 @@ type Mutation {
 
   """Updates an existing tag."""
   updateTag(color: Color, description: RichText, id: String!, main: Boolean = false, tag: String, type: TagType): Tag!
+
+  """
+  Renames a token or replaces its roles. Cached sessions of the token are cleared, so new roles apply at once.
+  """
+  updateToken(
+    id: String!
+    name: String
+
+    """User roles for the token. Without roles a token has no permissions."""
+    roleIDs: [String!]
+  ): Token!
 
   """Updates an existing tracking pixel setting."""
   updateTrackingPixelSetting(id: String, name: String, prolitteris_memberNr: String, prolitteris_onlyPaidContentAccess: Boolean, prolitteris_password: String, prolitteris_publisherInternalKeyDomain: String, prolitteris_usePublisherInternalKey: Boolean, prolitteris_username: String): SettingTrackingPixelProvider!
@@ -7193,6 +7260,7 @@ type SettingPaymentProvider implements SettingProvider {
   bexio_invoiceTitleRenewalMembership: String
   bexio_markInvoiceAsOpen: Boolean
   bexio_taxId: Float
+  bexio_testMailbox: String
   bexio_unitId: Float
   bexio_userId: Float
   createdAt: DateTime!
@@ -7970,6 +8038,9 @@ type Token implements BaseToken {
   id: String!
   modifiedAt: DateTime!
   name: String!
+
+  """The user roles whose permissions a request with this token gets."""
+  roleIDs: [String!]!
 }
 
 type TokenWithSecret implements BaseToken {
@@ -7977,6 +8048,9 @@ type TokenWithSecret implements BaseToken {
   id: String!
   modifiedAt: DateTime!
   name: String!
+
+  """The user roles whose permissions a request with this token gets."""
+  roleIDs: [String!]!
   token: String!
 }
 
