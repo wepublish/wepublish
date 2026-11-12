@@ -14,6 +14,7 @@ import { WepLink } from './components/wep-link';
 import { WepNavbar } from './components/wep-navbar';
 import { WepPage } from './components/wep-page';
 import { WepQuoteBlock } from './components/wep-quote-block';
+import { WepTitleBlock } from './components/wep-title-block';
 import deOverriden from './locales/deOverriden.json';
 import frOverriden from './locales/frOverriden.json';
 import theme from './theme';
@@ -77,6 +78,7 @@ describe('wepublishSiteTenant', () => {
         TeaserSlots: WepBaseTeaserSlots,
         Quote: WepQuoteBlock,
         Break: WepBreakBlock,
+        Title: WepTitleBlock,
       },
       elements: { Link: WepLink },
     });

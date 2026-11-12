@@ -15,6 +15,7 @@ import { WepNavbar } from './components/wep-navbar';
 import { WepPage } from './components/wep-page';
 import { WepQuoteBlock } from './components/wep-quote-block';
 import { WepTenantGlobalStyles } from './components/wep-tenant-global-styles';
+import { WepTitleBlock } from './components/wep-title-block';
 import deOverriden from './locales/deOverriden.json';
 import frOverriden from './locales/frOverriden.json';
 import theme from './theme';
@@ -41,6 +42,7 @@ export const wepublishSiteTenant: WebsiteTenantConfig = {
       TeaserSlots: WepBaseTeaserSlots,
       Quote: WepQuoteBlock,
       Break: WepBreakBlock,
+      Title: WepTitleBlock,
     },
     elements: { Link: WepLink },
     date: { format: dateFormatter },

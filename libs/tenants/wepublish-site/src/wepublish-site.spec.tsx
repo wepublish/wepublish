@@ -14,6 +14,7 @@ import {
   mockNavigations,
   mockQuoteBlock,
   mockTeaserSlotsBlock,
+  mockTitleBlock,
   applyTenantTranslations,
   renderWithProviders,
   resetTranslations,
@@ -296,6 +297,45 @@ describe('We.Publish website tenant', () => {
     expect(backgroundsOf(screen.getByText('Newsletter'))).not.toContain(
       primaryColor
     );
+  });
+
+  describe('title block', () => {
+    const titleBlock = () =>
+      mockTitleBlock({
+        preTitle: 'We.Publish Foundation',
+        title: 'Über uns',
+        lead: 'Wir fördern die Medienvielfalt in der Schweiz.',
+      });
+
+    // The default test screen (1024px) gets the md sizes
+    it('sets the title as the page heading in the size of H1', () => {
+      renderTenantPage([titleBlock()]);
+
+      const title = screen.getByRole('heading', { level: 1, name: 'Über uns' });
+
+      expect(getComputedStyle(title).fontSize).toBe(`${H1.md}px`);
+    });
+
+    it('shows the pre-title as plain text above the title', () => {
+      renderTenantPage([titleBlock()]);
+
+      const preTitle = screen.getByText('We.Publish Foundation');
+
+      expect(getComputedStyle(preTitle).fontSize).toBe(`${Text.md}px`);
+      expect(backgroundsOf(preTitle)[0]).toMatch(
+        /^(rgba\(0, 0, 0, 0\)|transparent|)$/
+      );
+    });
+
+    it('shows the lead in the size of the paragraph', () => {
+      renderTenantPage([titleBlock()]);
+
+      expect(
+        getComputedStyle(
+          screen.getByText('Wir fördern die Medienvielfalt in der Schweiz.')
+        ).fontSize
+      ).toBe(`${Paragraph.md}px`);
+    });
   });
 
   describe('break block without style', () => {

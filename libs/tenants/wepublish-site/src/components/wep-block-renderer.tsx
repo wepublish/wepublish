@@ -2,6 +2,7 @@ import { css, useTheme } from '@emotion/react';
 import {
   BlockRenderer,
   isRichTextBlock,
+  isTitleBlock,
   isYouTubeVideoBlock,
 } from '@wepublish/block-content/website';
 import { ImageContext } from '@wepublish/image/website';
@@ -80,6 +81,7 @@ export const WepBlockRenderer = (props: BuilderBlockRendererProps) => {
               isEventList(block) ||
               isOffers(block) ||
               isPlainBreakBlock(block) ||
+              isTitleBlock(block) ||
               isVideoOrItsTitle(block, nextBlock)
             ) ?
               css``

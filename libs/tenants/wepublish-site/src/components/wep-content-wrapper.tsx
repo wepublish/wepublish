@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import {
   RichTextBlockWrapper,
+  TitleBlockWrapper,
   YouTubeVideoBlockWrapper,
 } from '@wepublish/block-content/website';
 import { ContentWrapperStyled } from '@wepublish/content/website';
@@ -25,6 +26,17 @@ export const WepContentWrapper = styled(ContentWrapperStyled)`
 
   ${({ theme }) => theme.breakpoints.up('md')} {
     --block-gap: ${({ theme }) => theme.spacing(15)};
+  }
+
+  // A page that opens with a title block leaves more room below the navbar, as in the design
+  & > *:first-child:has(${TitleBlockWrapper}) {
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      padding-top: 60px;
+    }
+
+    ${({ theme }) => theme.breakpoints.up('lg')} {
+      padding-top: 100px;
+    }
   }
 
   // Closer to the text above it: into the gap between the blocks
