@@ -4524,6 +4524,7 @@
         "unknown": "Unbekannt",
         "active": "Aktiv",
         "hint": "Mehrere Status gelten als «oder». «Reagiert nicht»: Mails wurden zugestellt, aber seit längerem kein Login und kein Klick (Einstellung «E-Mail-Qualität»). Per Brief erreichen: Platzhalter + Nicht erreichbar.",
+        "hintWithoutPlaceholder": "Mehrere Status gelten als «oder». «Reagiert nicht»: Mails wurden zugestellt, aber seit längerem kein Login und kein Klick (Einstellung «E-Mail-Qualität»).",
         "overview": "User dieser Zielgruppe nach E-Mail-Status (unabhängig von der Auswahl)",
         "refresh": "Status aktualisieren",
         "refreshing": "Status werden aktualisiert …",

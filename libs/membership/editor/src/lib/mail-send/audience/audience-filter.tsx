@@ -67,6 +67,15 @@ export function AudienceFilter({
   onSegmentsRefreshed,
 }: AudienceFilterProps) {
   const { t } = useTranslation();
+  // The API only reports the placeholder status when the medium has a
+  // placeholder pattern; until the counts arrive it is held back, so a medium
+  // without one never sees it flash up.
+  const offersPlaceholder = !!segmentCounts?.some(
+    ({ segment }) => segment === MailEmailSegment.Placeholder
+  );
+  const visibleSegments = EMAIL_SEGMENT_ORDER.filter(
+    segment => offersPlaceholder || segment !== MailEmailSegment.Placeholder
+  );
   const fieldId = useId();
   const labelId = (field: string) => `${fieldId}-${field}`;
   const { data: memberPlanData } = useQuery(MemberPlanListDocument, {
@@ -212,7 +221,7 @@ export function AudienceFilter({
           useFlexGap
           sx={{ alignItems: 'center', flexWrap: 'wrap', marginTop: 0.5 }}
         >
-          {EMAIL_SEGMENT_ORDER.map(segment => {
+          {visibleSegments.map(segment => {
             const picked = state.emailSegments.includes(segment);
             const people = segmentCounts?.find(
               count => count.segment === segment
@@ -242,7 +251,11 @@ export function AudienceFilter({
           })}
           <EmailQualityRefreshButton onDone={onSegmentsRefreshed} />
         </Stack>
-        <FormHelperText>{t('mailSend.emailSegments.hint')}</FormHelperText>
+        <FormHelperText>
+          {offersPlaceholder ?
+            t('mailSend.emailSegments.hint')
+          : t('mailSend.emailSegments.hintWithoutPlaceholder')}
+        </FormHelperText>
       </FormControl>
 
       <Divider />
