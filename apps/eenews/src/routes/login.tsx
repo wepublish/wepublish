@@ -17,6 +17,7 @@ import { add } from 'date-fns';
 import { useEffect, useRef } from 'react';
 
 import { defaultHead } from '../integration/default-head';
+import { withEenewsPageShell } from '../integration/with-page-shell';
 
 const LoginWrapper = styled('div')`
   display: grid;
@@ -28,7 +29,7 @@ export const Route = createFileRoute('/login')({
   validateSearch: loginSearchSchema,
   loaderDeps: ({ search: { jwt } }) => ({ jwt }),
   loader: loginRouteLoader,
-  component: Login,
+  component: withEenewsPageShell(Login),
   head: defaultHead,
 });
 

@@ -5,6 +5,8 @@ import { subscribeRouteLoader } from '@wepublish/utils/website/tanstack';
 import { PageDocument, PageQuery } from '@wepublish/website/api';
 import { z } from 'zod';
 
+import { withEenewsPageShell } from '../integration/with-page-shell';
+
 export const Route = createFileRoute('/mitmachen')({
   validateSearch: z.object({
     jwt: z.string().optional(),
@@ -31,7 +33,7 @@ export const Route = createFileRoute('/mitmachen')({
 
     return { ...subscribe, shell: getPageShell(page.data?.page) };
   },
-  component: Mitmachen,
+  component: withEenewsPageShell(Mitmachen),
 });
 
 function Mitmachen() {

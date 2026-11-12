@@ -9,6 +9,8 @@ import {
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { deleteCookie, getCookie } from 'cookies-next';
 
+import { withEenewsPageShell } from '../integration/with-page-shell';
+
 const SignupWrapper = styled('div')`
   display: grid;
   justify-content: center;
@@ -19,7 +21,7 @@ const SignupWrapper = styled('div')`
  * profile, which the root route now does for every page, so no loader is left.
  */
 export const Route = createFileRoute('/signup')({
-  component: SignUp,
+  component: withEenewsPageShell(SignUp),
   head: () => ({ meta: [{ title: 'Registrieren | EE News' }] }),
 });
 
