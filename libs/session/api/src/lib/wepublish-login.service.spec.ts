@@ -11,6 +11,7 @@ import {
 } from './wepublish-login';
 
 const editor = 'https://editor-bajour.wepublish.cloud';
+const TWELVE_HOURS = 12 * 60 * 60 * 1000;
 
 const identity: WepublishIdentity = {
   subject: 'zitadel-1',
@@ -145,9 +146,9 @@ describe('WepublishLoginService', () => {
         },
       });
       expect(sessionService.createUserSession).toHaveBeenCalledWith(
-        expect.objectContaining({ id: 'user-1' })
+        expect.objectContaining({ id: 'user-1' }),
+        { ttlMs: TWELVE_HOURS }
       );
-      expect(sessionService.createUserSession.mock.calls[0]).toHaveLength(1);
       expect(userService.createUser).not.toHaveBeenCalled();
       expect(session.token).toBe('token-1');
     });
@@ -163,7 +164,7 @@ describe('WepublishLoginService', () => {
 
       expect(sessionService.createUserSession).toHaveBeenCalledWith(
         connectedUser,
-        { canImpersonate: true }
+        { ttlMs: TWELVE_HOURS, canImpersonate: true }
       );
     });
 
@@ -177,7 +178,8 @@ describe('WepublishLoginService', () => {
       });
       expect(prisma.user.findFirst).not.toHaveBeenCalled();
       expect(sessionService.createUserSession).toHaveBeenCalledWith(
-        connectedUser
+        connectedUser,
+        { ttlMs: TWELVE_HOURS }
       );
     });
 
@@ -219,9 +221,10 @@ describe('WepublishLoginService', () => {
         roleIDs: ['admin'],
         active: true,
       });
-      expect(sessionService.createUserSession).toHaveBeenCalledWith(
-        expect.objectContaining({ roleIDs: ['admin'], firstName: 'Jane' })
-      );
+      expect(sessionService.createUserSession.mock.calls[0][0]).toMatchObject({
+        roleIDs: ['admin'],
+        firstName: 'Jane',
+      });
     });
 
     it('resets a connected account whose role was changed in the editor', async () => {
@@ -266,9 +269,9 @@ describe('WepublishLoginService', () => {
         data: { wepublishLoginSubject: 'zitadel-1' },
       });
       expect(userService.updateUser).not.toHaveBeenCalled();
-      expect(sessionService.createUserSession).toHaveBeenCalledWith(
-        expect.objectContaining({ id: 'user-2' })
-      );
+      expect(sessionService.createUserSession.mock.calls[0][0]).toMatchObject({
+        id: 'user-2',
+      });
     });
 
     it('names a user after the full name or the email when We.Publish has no family name', async () => {
@@ -340,9 +343,9 @@ describe('WepublishLoginService', () => {
       expect(userService.updateUser).toHaveBeenCalledWith(
         expect.objectContaining({ id: 'user-1', active: true })
       );
-      expect(sessionService.createUserSession).toHaveBeenCalledWith(
-        expect.objectContaining({ active: true })
-      );
+      expect(sessionService.createUserSession.mock.calls[0][0]).toMatchObject({
+        active: true,
+      });
     });
 
     it('refuses everything where the login is off, without asking We.Publish', async () => {

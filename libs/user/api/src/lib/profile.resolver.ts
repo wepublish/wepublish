@@ -1,5 +1,6 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import {
+  assertNotImpersonating,
   Authenticated,
   AuthSessionType,
   CurrentUser,
@@ -39,9 +40,12 @@ export class ProfileResolver {
   async updatePassword(
     @Args('password') password: string,
     @Args('passwordRepeated') passwordRepeated: string,
-    @CurrentUser() { id, user }: UserSession
+    @CurrentUser() session: UserSession
   ) {
+    const { id, user } = session;
+
     assertNotManagedByWepublishLogin(user);
+    assertNotImpersonating(session);
 
     if (password !== passwordRepeated) {
       throw new BadRequestException(
@@ -80,9 +84,12 @@ export class ProfileResolver {
   })
   async requestEmailChange(
     @Args('newEmail') newEmail: string,
-    @CurrentUser() { user }: UserSession
+    @CurrentUser() session: UserSession
   ): Promise<boolean> {
+    const { user } = session;
+
     assertNotManagedByWepublishLogin(user);
+    assertNotImpersonating(session);
 
     await this.userService.requestEmailChange(user.id, newEmail);
     return true;
@@ -94,9 +101,12 @@ export class ProfileResolver {
   })
   async confirmEmailChange(
     @Args('newEmail') newEmail: string,
-    @CurrentUser() { user }: UserSession
+    @CurrentUser() session: UserSession
   ) {
+    const { user } = session;
+
     assertNotManagedByWepublishLogin(user);
+    assertNotImpersonating(session);
 
     return this.userService.confirmEmailChange(user.id, newEmail);
   }

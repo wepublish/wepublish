@@ -85,6 +85,45 @@ export class ImpersonationService {
       reason
     );
 
+    const token = await this.mintGrant({
+      userId: user.id,
+      durationMinutes: DEFAULT_IMPERSONATION_MINUTES,
+      impersonatedBy: supporter,
+      reason: checkedReason,
+    });
+
+    await this.record('createWebsiteImpersonation', 'User', user, supporter, {
+      recordId: user.id,
+      sessionId: null,
+    });
+
+    return { token, url: this.websiteURL };
+  }
+
+  async continueOnWebsite(session: UserSession) {
+    const current = await this.prisma.session.findUnique({
+      where: { id: session.id },
+      select: { impersonationReason: true, expiresAt: true },
+    });
+    const expiresAt = current?.expiresAt ?? session.expiresAt;
+
+    return {
+      token: await this.mintGrant({
+        userId: session.user.id,
+        durationMinutes: Math.max(
+          1,
+          Math.floor((expiresAt.getTime() - Date.now()) / 60_000)
+        ),
+        impersonatedBy: session.impersonatedBy ?? '',
+        reason: current?.impersonationReason ?? '',
+      }),
+      expiresAt: new Date(Date.now() + IMPERSONATION_GRANT_TTL_SECONDS * 1000),
+    };
+  }
+
+  private async mintGrant(
+    claims: Omit<Parameters<JwtService['generateImpersonationGrant']>[0], 'jti'>
+  ) {
     const jti = randomUUID();
 
     await this.prisma.impersonationGrant.create({
@@ -96,20 +135,7 @@ export class ImpersonationService {
       },
     });
 
-    const token = await this.jwtService.generateImpersonationGrant({
-      userId: user.id,
-      durationMinutes: DEFAULT_IMPERSONATION_MINUTES,
-      impersonatedBy: supporter,
-      reason: checkedReason,
-      jti,
-    });
-
-    await this.record('createWebsiteImpersonation', 'User', user, supporter, {
-      recordId: user.id,
-      sessionId: null,
-    });
-
-    return { token, url: this.websiteURL };
+    return this.jwtService.generateImpersonationGrant({ ...claims, jti });
   }
 
   private async check(

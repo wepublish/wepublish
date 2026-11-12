@@ -30,6 +30,7 @@ const reader = {
 describe('ImpersonationService', () => {
   let prisma: {
     user: { findUnique: Mock };
+    session: { findUnique: Mock };
     impersonationGrant: { create: Mock };
   };
   let sessionService: { createUserSession: Mock };
@@ -40,6 +41,12 @@ describe('ImpersonationService', () => {
   beforeEach(() => {
     prisma = {
       user: { findUnique: vi.fn().mockResolvedValue(reader) },
+      session: {
+        findUnique: vi.fn().mockResolvedValue({
+          impersonationReason: 'Ticket 4711',
+          expiresAt: new Date(Date.now() + 25 * 60 * 1000 + 30 * 1000),
+        }),
+      },
       impersonationGrant: { create: vi.fn().mockResolvedValue({}) },
     };
     sessionService = {
@@ -167,6 +174,50 @@ describe('ImpersonationService', () => {
           userId: 'user-2',
           impersonatedBy: 'jane@wepublish.ch',
         })
+      );
+    });
+  });
+
+  describe('continueOnWebsite', () => {
+    const impersonated = {
+      ...staff,
+      id: 'session-2',
+      canImpersonate: false,
+      impersonatedBy: 'jane@wepublish.ch',
+      user: { id: 'user-2', email: 'reader@example.com' },
+    };
+
+    it('hands the website a grant for the same impersonation and the time left', async () => {
+      const result = await service.continueOnWebsite(impersonated as never);
+
+      expect(prisma.session.findUnique).toHaveBeenCalledWith({
+        where: { id: 'session-2' },
+        select: { impersonationReason: true, expiresAt: true },
+      });
+      const [{ data }] = prisma.impersonationGrant.create.mock.calls[0];
+      expect(jwtService.generateImpersonationGrant).toHaveBeenCalledWith({
+        userId: 'user-2',
+        durationMinutes: 25,
+        impersonatedBy: 'jane@wepublish.ch',
+        reason: 'Ticket 4711',
+        jti: data.jti,
+      });
+      expect(result.token).toBe('grant-jwt');
+      expect(result.expiresAt.getTime() - Date.now()).toBeLessThanOrEqual(
+        60 * 1000
+      );
+    });
+
+    it('never grants less than a minute', async () => {
+      prisma.session.findUnique.mockResolvedValue({
+        impersonationReason: 'Ticket 4711',
+        expiresAt: new Date(Date.now() + 10 * 1000),
+      });
+
+      await service.continueOnWebsite(impersonated as never);
+
+      expect(jwtService.generateImpersonationGrant).toHaveBeenCalledWith(
+        expect.objectContaining({ durationMinutes: 1 })
       );
     });
   });

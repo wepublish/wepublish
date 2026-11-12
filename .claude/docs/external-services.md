@@ -246,6 +246,14 @@ in `libs/session/api/src/lib/wepublish-*.ts`, editor side in
   `wepublish/impersonator-session` and shows `ImpersonationBar`; the website
   shows its own bar from `withJwtHandler`. Every action in such a session
   carries `impersonatedBy` in the audit log.
+- An impersonation cannot outlive itself or leave access behind:
+  `createJWTForWebsiteLogin` (the editor preview) in an impersonated session
+  hands the website a grant for the same supporter, reason and remaining time
+  (`ImpersonationService.continueOnWebsite`) instead of an ordinary preview
+  JWT, and `assertNotImpersonating` (`libs/authentication/api`) refuses
+  password and email changes, API tokens, external-app tokens and 2FA setup.
+- We.Publish login sessions last 12 hours (`WEPUBLISH_LOGIN_SESSION_MS`), so
+  removing a Zitadel role takes effect within half a day.
 
 ## We.Publish One
 
