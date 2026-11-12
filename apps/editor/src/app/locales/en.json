@@ -1528,7 +1528,31 @@
       },
       "title": "Settings"
     },
+    "impersonation": {
+      "title": "Sign in as this person",
+      "info": "For We.Publish support only. The session lasts an hour, and everything you do in it is recorded in the audit log.",
+      "editor": "In the editor",
+      "website": "On the website",
+      "dialogTitle": "Sign in as {{email}}",
+      "reason": "Reason",
+      "reasonHelp": "For example the ticket number. It is stored with the session.",
+      "cancel": "Cancel",
+      "confirm": "Sign in",
+      "failed": "Signing in as this person did not work.",
+      "popupBlocked": "The browser blocked the website window. Please allow pop-ups for the editor.",
+      "active": "You are signed in as {{email}} (We.Publish support: {{supporter}}).",
+      "end": "End"
+    },
     "login": {
+      "wepublish": {
+        "backToLogin": "Back to login",
+        "button": "Sign-in for We.Publish staff",
+        "failed": "Signing in with We.Publish did not work. Please try again.",
+        "forbidden": "Your We.Publish account has no access to this editor.",
+        "only": "This account signs in with We.Publish. Please use “Sign-in for We.Publish staff” below.",
+        "pending": "Signing in with We.Publish …",
+        "unavailable": "The We.Publish login cannot be started here right now."
+      },
       "email": "Email",
       "login": "Login",
       "next": "Next",
@@ -1548,11 +1572,6 @@
         "invalidCode": "Invalid verification code. Please try again.",
         "setupError": "Failed to generate 2FA setup. Please try again.",
         "setupSuccess": "Two-factor authentication has been enabled successfully."
-      },
-      "impersonate": {
-        "pending": "Signing in as the user …",
-        "failed": "Sign-in failed. The link has expired or was already used.",
-        "notAGrant": "This link is not a valid impersonation link."
       },
       "jwt": "Signing in …"
     },
@@ -2143,7 +2162,6 @@
       "printIssueCreate": "New print issue",
       "printIssueEdit": "Edit print issue",
       "login": "Log in",
-      "impersonate": "Log in as user",
       "resetPassword": "Reset password",
       "setPassword": "Set new password",
       "dashboard": "Dashboard",
@@ -3036,6 +3054,7 @@
       "totpExemptInfo": "This user is exempt from the two-factor authentication requirement.",
       "totpExemptLabel": "Exempt from 2FA requirement",
       "totpExemptWarning": "⚠️ SECURITY WARNING ⚠️\n\nYou are about to DISABLE the two-factor authentication requirement for this user!\n\nThis significantly reduces the security of this account. The user will be able to log in to the editor with only a password, without any second factor.\n\nThis should only be used in exceptional circumstances.\n\nAre you sure you want to proceed?",
+      "managedByWepublishLogin": "This account belongs to We.Publish staff and is managed by the We.Publish login. It cannot be changed, deactivated or deleted here.",
       "properties": "Properties",
       "resetPassword": "Reset Password",
       "resetPasswordFor": "Reset the password for {{userName}}",
@@ -3085,6 +3104,7 @@
         "oneSubscription": "1 subscription",
         "resetPassword": "Reset Password",
         "resetTotp": "Reset 2FA",
+        "managedByWepublishLogin": "We.Publish account",
         "resetTotpTitle": "Reset Two-Factor Authentication",
         "resetTotpConfirmation": "Are you sure you want to reset the two-factor authentication for {{name}}? They will need to set up 2FA again on their next login.",
         "totpResetSuccess": "Two-factor authentication has been reset successfully.",

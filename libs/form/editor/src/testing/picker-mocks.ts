@@ -502,6 +502,7 @@ export function userFixture(
     note: null,
     totpEnabled: false,
     totpExempt: false,
+    managedByWepublishLogin: false,
     address: null,
     image: null,
     properties: [],

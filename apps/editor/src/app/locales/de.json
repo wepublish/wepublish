@@ -1528,7 +1528,31 @@
       },
       "title": "Einstellungen"
     },
+    "impersonation": {
+      "title": "Als diese Person anmelden",
+      "info": "Nur für den We.Publish-Support. Die Sitzung dauert eine Stunde, und alles, was du darin tust, steht im Audit-Log.",
+      "editor": "Im Editor",
+      "website": "Auf der Website",
+      "dialogTitle": "Als {{email}} anmelden",
+      "reason": "Grund",
+      "reasonHelp": "Zum Beispiel die Ticketnummer. Er wird mit der Sitzung gespeichert.",
+      "cancel": "Abbrechen",
+      "confirm": "Anmelden",
+      "failed": "Die Anmeldung als diese Person hat nicht geklappt.",
+      "popupBlocked": "Der Browser hat das Fenster der Website blockiert. Bitte erlaube Pop-ups für den Editor.",
+      "active": "Du bist als {{email}} angemeldet (We.Publish-Support: {{supporter}}).",
+      "end": "Beenden"
+    },
     "login": {
+      "wepublish": {
+        "backToLogin": "Zurück zum Login",
+        "button": "Anmeldung für We.Publish-Mitarbeitende",
+        "failed": "Die Anmeldung mit We.Publish hat nicht geklappt. Bitte versuche es nochmals.",
+        "forbidden": "Dein We.Publish-Konto hat keinen Zugang zu diesem Editor.",
+        "only": "Dieses Konto meldet sich mit We.Publish an. Bitte nutze unten «Anmeldung für We.Publish-Mitarbeitende».",
+        "pending": "Anmeldung mit We.Publish …",
+        "unavailable": "Die Anmeldung mit We.Publish lässt sich hier gerade nicht starten."
+      },
       "email": "E-Mail",
       "login": "Login",
       "next": "Weiter",
@@ -1548,11 +1572,6 @@
         "invalidCode": "Ungültiger Bestätigungscode. Bitte versuche es erneut.",
         "setupError": "Fehler beim Erstellen der 2FA-Einrichtung. Bitte versuche es erneut.",
         "setupSuccess": "Zwei-Faktor-Authentifizierung wurde erfolgreich aktiviert."
-      },
-      "impersonate": {
-        "pending": "Anmeldung als Benutzer läuft …",
-        "failed": "Die Anmeldung ist fehlgeschlagen. Der Link ist abgelaufen oder wurde bereits verwendet.",
-        "notAGrant": "Dieser Link ist kein gültiger Impersonations-Link."
       },
       "jwt": "Anmeldung läuft …"
     },
@@ -2142,7 +2161,6 @@
       "printIssueCreate": "Neue Druckausgabe",
       "printIssueEdit": "Druckausgabe bearbeiten",
       "login": "Anmelden",
-      "impersonate": "Als User anmelden",
       "resetPassword": "Passwort zurücksetzen",
       "setPassword": "Neues Passwort festlegen",
       "dashboard": "Dashboard",
@@ -2988,6 +3006,7 @@
       "totpExemptInfo": "Dieser Benutzer ist von der Zwei-Faktor-Authentifizierungspflicht befreit.",
       "totpExemptLabel": "Von 2FA-Pflicht befreien",
       "totpExemptWarning": "⚠️ SICHERHEITSWARNUNG ⚠️\n\nDu bist dabei, die Zwei-Faktor-Authentifizierungspflicht für diesen Benutzer zu DEAKTIVIEREN!\n\nDies reduziert die Sicherheit dieses Kontos erheblich. Der Benutzer kann sich nur mit einem Passwort im Editor anmelden, ohne einen zweiten Faktor.\n\nDies sollte nur in Ausnahmefällen verwendet werden.\n\nBist du sicher, dass du fortfahren möchtest?",
+      "managedByWepublishLogin": "Dieses Konto gehört zum We.Publish-Team und wird über die We.Publish-Anmeldung verwaltet. Es kann hier nicht geändert, deaktiviert oder gelöscht werden.",
       "properties": "Eigenschaften",
       "resetPassword": "Passwort zurücksetzen",
       "resetPasswordFor": "Passwort für {{userName}} zurücksetzen",
@@ -3037,6 +3056,7 @@
         "oneSubscription": "1 Abo",
         "resetPassword": "Passwort zurücksetzen",
         "resetTotp": "2FA zurücksetzen",
+        "managedByWepublishLogin": "We.Publish-Konto",
         "resetTotpTitle": "Zwei-Faktor-Authentifizierung zurücksetzen",
         "resetTotpConfirmation": "Möchtest du die Zwei-Faktor-Authentifizierung für {{name}} wirklich zurücksetzen? Der Benutzer muss 2FA beim nächsten Login erneut einrichten.",
         "totpResetSuccess": "Zwei-Faktor-Authentifizierung wurde erfolgreich zurückgesetzt.",

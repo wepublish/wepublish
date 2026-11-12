@@ -3,7 +3,7 @@ import { matchRoutes } from 'react-router-dom';
 export const PAGE_TITLES: Record<string, string> = {
   '/login': 'pageTitles.login',
   '/login/jwt/:jwt': 'pageTitles.login',
-  '/login/impersonate/:jwt': 'pageTitles.impersonate',
+  '/login/wepublish': 'pageTitles.login',
   '/login/reset-password': 'pageTitles.resetPassword',
   '/login/set-password': 'pageTitles.setPassword',
   '/dashboard': 'pageTitles.dashboard',
