@@ -20,7 +20,7 @@ import { RefObject, useRef } from 'react';
 
 import { designText } from '../../theme';
 import { WepBlockStyles } from '../block-styles/wep-block-styles';
-import { tertiaryButton } from '../button-styles';
+import { tertiaryButtonOnDark } from '../button-styles';
 import { HeroLinks } from '../hero/hero-links';
 import { extraColumn } from '../page-columns';
 import { blockGap } from '../wep-content-wrapper';
@@ -77,17 +77,7 @@ export const LogoBandTitle = styled('h2')`
 `;
 
 export const LogoBandButton = styled(Button)`
-  ${({ theme }) => tertiaryButton(theme)}
-  border-color: ${({ theme }) => theme.palette.common.white};
-  color: ${({ theme }) => theme.palette.common.white};
-
-  &:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-  }
-
-  &:active {
-    background-color: rgba(255, 255, 255, 0.2);
-  }
+  ${({ theme }) => tertiaryButtonOnDark(theme)}
 `;
 
 // Runs from the left to the right edge of the viewport and scrolls sideways

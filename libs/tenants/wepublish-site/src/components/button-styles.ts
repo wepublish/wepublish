@@ -55,3 +55,18 @@ export const tertiaryButton = (theme: Theme) => css`
     background-color: rgba(0, 0, 0, 0.1);
   }
 `;
+
+/** The outlined button on a dark background, e.g. in the logo band and the footer */
+export const tertiaryButtonOnDark = (theme: Theme) => css`
+  ${tertiaryButton(theme)}
+  border-color: ${theme.palette.common.white};
+  color: ${theme.palette.common.white};
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  &:active {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+`;

@@ -174,7 +174,7 @@ export const LanguageSwitchList = styled('ul')`
   // The background of what is below: the hero (or the open menu) or the page
   background-color: ${({ theme }) => theme.palette.common.white};
 
-  body:has(${HeroWrapper}) &,
+  body:has(${HeroWrapper}) ${NavbarWrapper} &,
   [data-menu-open='true'] & {
     background-color: ${({ theme }) => theme.palette.primary.main};
   }
@@ -240,7 +240,7 @@ const lockScroll = (
   />
 );
 
-const LanguageSwitch = () => {
+export const LanguageSwitch = ({ className }: { className?: string }) => {
   const { locale, locales = [] } = useRouter();
   const [isOpen, setOpen] = useState(false);
   const listId = useId();
@@ -258,7 +258,7 @@ const LanguageSwitch = () => {
 
   return (
     <ClickAwayListener onClickAway={() => setOpen(false)}>
-      <LanguageSwitchWrapper>
+      <LanguageSwitchWrapper className={className}>
         <LanguageSwitchButton
           type="button"
           aria-expanded={isOpen}

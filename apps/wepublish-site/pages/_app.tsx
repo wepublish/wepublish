@@ -149,16 +149,17 @@ function CustomApp({
 
             {shell.showFooter && (
               <FooterContainer
-                slug={localizeSlug('footer', locale)}
+                slug={localizeSlug('footer-services', locale)}
                 categorySlugs={[
                   [
-                    localizeSlug('main-footer', locale),
-                    localizeSlug('categories', locale),
-                    localizeSlug('ueber-uns', locale),
-                    `sprachwahl`,
+                    localizeSlug('footer-offers', locale),
+                    localizeSlug('footer-network', locale),
+                    localizeSlug('footer-wepublish', locale),
+                    localizeSlug('footer-tech', locale),
+                    localizeSlug('footer-contact', locale),
                   ],
                 ]}
-                iconSlug={localizeSlug('icons', locale)}
+                iconSlug={localizeSlug('footer-icons', locale)}
               />
             )}
           </Spacer>
