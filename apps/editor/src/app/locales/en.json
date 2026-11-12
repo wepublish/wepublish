@@ -2754,6 +2754,13 @@
       "newArticlePaywall": "Freshly created articles will require a subscription by default",
       "subscriptionPlans": "Subscription Plans",
       "subscriptionUpgradeModel": "On upgrade, bill the full price difference (instead of the pro-rated remaining credit)",
+      "feeds": "Feeds",
+      "feedPaywalledContent": "Paywalled articles in RSS, Atom and JSON feeds",
+      "feedPaywalledContentChoice": {
+        "lead": "Lead only",
+        "visible": "The part shown before the paywall",
+        "full": "The whole text"
+      },
       "subscriptionExtendWindowDays": "Renewal window (days before the end)",
       "paymentMethodChangeExpiryDays": "Payment method change waiting time (days)",
       "warnings": {
@@ -2766,6 +2773,7 @@
         "newArticlePeering": "Will not affect already created articles",
         "newArticlePaywall": "Will not affect already created articles",
         "subscriptionUpgradeModel": "When enabled, an upgrade always charges the difference between the new and current plan price, regardless of how much time is left in the current period. When disabled, only the unused (pro-rated) remainder of the current period is credited.",
+        "feedPaywalledContent": "Free articles always appear in the feeds with their whole text. This setting applies to articles behind an active paywall. Feeds are read by the Swiss media database (SMD) and feed readers, among others; changes show within ten minutes.",
         "sessionTtlDays": "How long a login stays valid before signing in again is required. Applies from the next login; sessions already open keep their lifetime.",
         "emailQualityUnresponsiveAfterDays": "An email address counts as “unresponsive” when this many days passed without a login or a click in a mail, although mails were delivered. Re-evaluated nightly and via “Refresh statuses”.",
         "emailQualityMinMailsForUnresponsive": "This many mails must have been delivered to the address before it can count as “unresponsive”.",
