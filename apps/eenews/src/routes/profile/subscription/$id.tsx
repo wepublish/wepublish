@@ -5,6 +5,7 @@ import {
   withAuthGuard,
 } from '@wepublish/utils/website/tanstack';
 
+import { defaultHead } from '../../../integration/default-head';
 import { withEenewsPageShell } from '../../../integration/with-page-shell';
 
 /**
@@ -14,4 +15,5 @@ import { withEenewsPageShell } from '../../../integration/with-page-shell';
 export const Route = createFileRoute('/profile/subscription/$id')({
   ...subscriptionRoute(),
   component: withAuthGuard(withEenewsPageShell(EenewsSubscriptionDetail)),
+  head: defaultHead,
 });
