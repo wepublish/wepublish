@@ -3,6 +3,10 @@ export { Advertisement } from './components/advertisement';
 export { EenewsTeaserGrid } from './components/blocks/eenews-teaser-grid';
 export { EenewsOpenInvoices } from './components/eenews-open-invoices';
 export { EenewsPageShell } from './components/eenews-page-shell';
+export {
+  EENEWS_DOSSIER_INDEX_TITLE,
+  eenewsTagTitle,
+} from './components/eenews-tag-title';
 export { EenewsProfile } from './components/eenews-profile';
 export { EenewsSubscriptionDetail } from './components/eenews-subscription-detail';
 export { EenewsTagPage } from './components/eenews-tag-page';

@@ -12,7 +12,6 @@ import {
 import { TagType } from '@wepublish/website/api';
 import { z } from 'zod';
 
-import { defaultHead } from '../../../integration/default-head';
 import { loadEenewsTag, TAG_TAKE } from '../../../integration/tag-queries';
 
 const paramsSchema = z.object({
@@ -41,7 +40,7 @@ export const Route = createFileRoute('/a/tag/$tag')({
   },
   component: EenewsTag,
   notFoundComponent: FourOhFourPage,
-  head: defaultHead,
+  // No `head` title: EenewsTagPage renders TagSEO ("<tag> — ee-news.ch").
 });
 
 function EenewsTag() {

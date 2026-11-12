@@ -1,7 +1,9 @@
 import { useQuery } from '@apollo/client/react';
 import { createFileRoute } from '@tanstack/react-router';
-import { EenewsTagPage } from '@wepublish/tenant/eenews';
-import { defaultHead } from '../../../integration/default-head';
+import {
+  EENEWS_DOSSIER_INDEX_TITLE,
+  EenewsTagPage,
+} from '@wepublish/tenant/eenews';
 import {
   ApolloRouterContext,
   mergeApolloCache,
@@ -47,7 +49,7 @@ export const Route = createFileRoute('/a/tag/')({
     return { whitelistTagIds };
   },
   component: DossierIndex,
-  head: defaultHead,
+  head: () => ({ meta: [{ title: EENEWS_DOSSIER_INDEX_TITLE }] }),
 });
 
 function DossierIndex() {

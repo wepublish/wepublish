@@ -12,6 +12,7 @@ import {
   BuilderRouterContext,
   BuilderTagProps,
   Link,
+  TagSEO,
   useWebsiteBuilder,
   WebsiteBuilderProvider,
 } from '@wepublish/website/builder';
@@ -20,6 +21,7 @@ import { MdClose } from 'react-icons/md';
 
 import { ActiveBadgeTagContext } from '../context/active-badge-tag-context';
 import { EenewsPagination } from './eenews-pagination';
+import { eenewsTagTitle } from './eenews-tag-title';
 import { EenewsTeaser } from './teasers/eenews-teaser';
 import { enrichTeasersWithAds } from './teasers/eenews-teaser-ads';
 import {
@@ -346,6 +348,14 @@ export const EenewsTagPage = ({
 
   return (
     <div className={className}>
+      {/* Title, description, canonical and og tags of the tag. */}
+      {tag && (
+        <TagSEO
+          tag={tag}
+          title={eenewsTagTitle(tag)}
+        />
+      )}
+
       {isListingRoot ?
         <ListingHero>
           <ListingHeroInner>
