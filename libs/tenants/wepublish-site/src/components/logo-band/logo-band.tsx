@@ -22,6 +22,7 @@ import { designText } from '../../theme';
 import { WepBlockStyles } from '../block-styles/wep-block-styles';
 import { tertiaryButton } from '../button-styles';
 import { HeroLinks } from '../hero/hero-links';
+import { extraColumn } from '../page-columns';
 import { blockGap } from '../wep-content-wrapper';
 import { useLogoBandScroll } from './use-logo-band-scroll';
 
@@ -62,18 +63,10 @@ export const LogoBandHeader = styled('div')`
     align-items: center;
   }
 
-  // The hero takes 10 of 12 columns, this row all 12: one column more on either side,
-  // as far as the page margin allows
+  // All 12 columns, as wide as the navbar
   ${({ theme }) => theme.breakpoints.up('lg')} {
     margin-inline: calc(
-      -1 *
-        max(
-          0px,
-          min(
-            100% / 10,
-            (100vw - 100%) / 2 - ${({ theme }) => theme.spacing(3)}
-          )
-        )
+      -1 * ${({ theme }) => extraColumn(theme, '100%', '100vw')}
     );
   }
 `;

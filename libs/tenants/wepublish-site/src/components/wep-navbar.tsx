@@ -17,6 +17,7 @@ import logo from '../assets/wepublish-logo.svg';
 import { designText } from '../theme';
 import { primaryButton, tertiaryButton } from './button-styles';
 import { HeroWrapper } from './hero/hero';
+import { contentWidth, extraColumn } from './page-columns';
 
 // Below this breakpoint the links move into a menu behind a button
 const desktop = 'lg';
@@ -37,6 +38,12 @@ export const NavbarBar = styled(Container)`
   ${({ theme }) => theme.breakpoints.up(desktop)} {
     gap: 50px;
     padding-top: 51px;
+    // All 12 columns, as wide as the bottom row of the logo band
+    max-width: none;
+    padding-inline: calc(
+      (100% - ${({ theme }) => contentWidth(theme)}) / 2 -
+        ${({ theme }) => extraColumn(theme, contentWidth(theme), '100%')}
+    );
   }
 `;
 
@@ -116,7 +123,7 @@ export const NavbarLink = styled('a')`
   white-space: nowrap;
 
   &:hover {
-    text-decoration: underline;
+    text-decoration: none;
   }
 
   ${({ theme }) => theme.breakpoints.up(desktop)} {
