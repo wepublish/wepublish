@@ -15,6 +15,7 @@ import { WepNavbar } from './components/wep-navbar';
 import { WepPage } from './components/wep-page';
 import { WepQuoteBlock } from './components/wep-quote-block';
 import deOverriden from './locales/deOverriden.json';
+import frOverriden from './locales/frOverriden.json';
 import theme from './theme';
 import { wepublishSiteTenant } from './wepublish-site-tenant';
 
@@ -54,10 +55,10 @@ describe('wepublishSiteTenant', () => {
     expect(wepublishSiteTenant.createTheme()).toBe(theme);
   });
 
-  it('carries the german translations overrides and date locale', () => {
+  it('carries the translation overrides and the german date locale', () => {
     expect(wepublishSiteTenant.translations).toEqual({
       lng: 'de',
-      overrides: { de: deOverriden },
+      overrides: { de: deOverriden, fr: frOverriden },
     });
     expect(wepublishSiteTenant.dateLocale).toBe(de);
   });

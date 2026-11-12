@@ -16,6 +16,7 @@ import { WepPage } from './components/wep-page';
 import { WepQuoteBlock } from './components/wep-quote-block';
 import { WepTenantGlobalStyles } from './components/wep-tenant-global-styles';
 import deOverriden from './locales/deOverriden.json';
+import frOverriden from './locales/frOverriden.json';
 import theme from './theme';
 
 const dateFormatter = (date: Date, includeTime = true) =>
@@ -47,7 +48,7 @@ export const wepublishSiteTenant: WebsiteTenantConfig = {
   blockStyles: Object.values(WepBlockStyles),
   translations: {
     lng: 'de',
-    overrides: { de: deOverriden },
+    overrides: { de: deOverriden, fr: frOverriden },
   },
   dateLocale: de,
   GlobalStyles: WepTenantGlobalStyles,

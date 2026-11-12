@@ -2,12 +2,10 @@ import { css, GlobalStyles, Theme } from '@mui/material';
 
 const globalCSS = (theme: Theme) => css`
   :root {
-    --navbar-bg-color-hero-off-screen: transparent;
     --breakpoint-width: 100%;
 
     ${theme.breakpoints.up('md')} {
       --breakpoint-width: ${theme.breakpoints.values.md}px;
-      --navbar-bg-color-hero-off-screen: transparent;
       --container-max-width: ${theme.breakpoints.values.md}px;
     }
     ${theme.breakpoints.up('lg')} {

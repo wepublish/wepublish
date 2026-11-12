@@ -7,5 +7,9 @@
     "meta": {
       "seperator": ", "
     }
+  },
+  "navbar": {
+    "openMenu": "Menü öffnen",
+    "closeMenu": "Menü schliessen"
   }
 }

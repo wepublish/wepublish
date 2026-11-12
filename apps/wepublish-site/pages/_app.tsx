@@ -131,8 +131,8 @@ function CustomApp({
           <Spacer>
             {shell.showNavigation && (
               <NavBar
-                categorySlugs={[[localizeSlug('main-header', locale)]]}
-                slug={localizeSlug('main', locale)}
+                categorySlugs={[]}
+                slug={localizeSlug('main-header', locale)}
                 headerSlug={localizeSlug('header', locale)}
                 iconSlug={localizeSlug('icons', locale)}
                 profileBtn={null}
