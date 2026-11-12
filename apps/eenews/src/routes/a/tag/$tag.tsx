@@ -21,7 +21,8 @@ const paramsSchema = z.object({
 
 /** `pages/a/tag/[tag].tsx` */
 export const Route = createFileRoute('/a/tag/$tag')({
-  validateSearch: pageSearchSchema,
+  // `?filter=` drives the topic-page chips in `EenewsTagPage`.
+  validateSearch: pageSearchSchema.extend({ filter: z.string().optional() }),
   loader: async ({
     context,
     params: { tag },

@@ -1,5 +1,5 @@
-import { useRouter } from 'next/router';
-import { useEffect, useRef } from 'react';
+import { BuilderRouterContext } from '@wepublish/website/builder';
+import { useContext, useEffect, useRef } from 'react';
 
 interface ReviveInstance {
   refresh: () => void;
@@ -61,7 +61,9 @@ export const ReviveAd = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const onStatusChangeRef = useRef(onStatusChange);
 
-  const router = useRouter();
+  // Every navigation re-runs the effect below, which remounts the slot so
+  // Revive serves a fresh ad (was `routeChangeComplete`).
+  const { asPath } = useContext(BuilderRouterContext);
 
   useEffect(() => {
     onStatusChangeRef.current = onStatusChange;
@@ -95,15 +97,13 @@ export const ReviveAd = ({
     const completedEvent = `revive-${reviveId}-completed`;
 
     mountSlot();
-    router.events.on('routeChangeComplete', mountSlot);
     document.addEventListener(completedEvent, reportDelivery);
 
     return () => {
-      router.events.off('routeChangeComplete', mountSlot);
       document.removeEventListener(completedEvent, reportDelivery);
       container.replaceChildren();
     };
-  }, [zoneId, reviveId, router]);
+  }, [zoneId, reviveId, asPath]);
 
   return <div ref={containerRef} />;
 };

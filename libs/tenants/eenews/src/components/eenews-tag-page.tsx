@@ -9,12 +9,13 @@ import {
   TagListDocument,
 } from '@wepublish/website/api';
 import {
+  BuilderRouterContext,
   BuilderTagProps,
   Link,
   useWebsiteBuilder,
   WebsiteBuilderProvider,
 } from '@wepublish/website/builder';
-import { useRouter } from 'next/router';
+import { useContext } from 'react';
 import { MdClose } from 'react-icons/md';
 
 import { ActiveBadgeTagContext } from '../context/active-badge-tag-context';
@@ -249,7 +250,8 @@ export const EenewsTagPage = ({
     blocks: { Teaser: BuilderTeaser },
   } = useWebsiteBuilder();
   const theme = useTheme();
-  const router = useRouter();
+  const { query, asPath } = useContext(BuilderRouterContext);
+  const pathname = asPath.split(/[?#]/)[0];
 
   const tag = tagResult.data?.tag;
   const isListingRoot = !tag;
@@ -295,8 +297,8 @@ export const EenewsTagPage = ({
   };
 
   const intersectionSlug =
-    isTopicPage && typeof router.query.filter === 'string' ?
-      router.query.filter.toLowerCase()
+    isTopicPage && typeof query.filter === 'string' ?
+      query.filter.toLowerCase()
     : undefined;
   const intersectionTagId =
     intersectionSlug ? tagIdByName.get(intersectionSlug) : undefined;
@@ -377,7 +379,7 @@ export const EenewsTagPage = ({
                 return null;
               }
               const chipActive = activeChipSlug === slug;
-              const base = router.asPath.split('?')[0];
+              const base = pathname;
               let href: string;
               if (isTopicPage) {
                 href =
@@ -420,7 +422,7 @@ export const EenewsTagPage = ({
             })}
             {activeChipSlug && (
               <ResetChip
-                href={isTopicPage ? router.asPath.split('?')[0] : '/a/tag'}
+                href={isTopicPage ? pathname : '/a/tag'}
                 aria-label="Filter zurücksetzen"
               >
                 <MdClose size={18} />
