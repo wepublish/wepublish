@@ -33,6 +33,8 @@ export const periodicityPriceSchema = z
     amountMin: z.number().int().min(0).nullish(),
     amountTarget: z.number().int().min(0).nullish(),
     amountMax: z.number().int().min(0).nullish(),
+    /** printed issues one period is worth (print export); empty = pro rata */
+    printIssues: z.number().int().min(0).nullish(),
   })
   .refine(
     price =>

@@ -218,7 +218,13 @@ function UserEditView() {
       streetAddress2Number: z.string().nullish(),
       zipCode: z.string().nullish(),
       city: z.string().nullish(),
-      country: z.enum(userCountryNames as [string, ...string[]]).nullish(),
+      // the address is optional, so is its country: '' is the empty default
+      country: z
+        .union([
+          z.literal(''),
+          z.enum(userCountryNames as [string, ...string[]]),
+        ])
+        .nullish(),
     }),
     image: z.custom<FullImageFragment>().optional(),
     properties: z.array(z.custom<ListValue<UserProperty>>()),
@@ -817,6 +823,7 @@ function UserEditView() {
                             renderInput={params => (
                               <TextField
                                 {...params}
+                                inputRef={field.ref}
                                 label={t('userCreateOrEditView.country')}
                                 error={Boolean(error)}
                                 helperText={error?.message}

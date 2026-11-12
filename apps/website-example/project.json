@@ -1,53 +1,48 @@
 {
   "name": "website-example",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/website-example",
+  "sourceRoot": "apps/website-example/src",
   "projectType": "application",
   "tags": [],
   "targets": {
-    "typecheck": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "tsc --noEmit -p apps/website-example/tsconfig.json"
-      }
-    },
     "build": {
-      "executor": "@nx/next:build",
+      "executor": "nx:run-commands",
+      "cache": true,
       "dependsOn": [],
-      "outputs": ["{options.outputPath}"],
-      "defaultConfiguration": "production",
+      "inputs": ["production", "^production"],
+      "outputs": [
+        "{workspaceRoot}/dist/apps/{projectName}",
+        "{projectRoot}/src/routeTree.gen.ts"
+      ],
       "options": {
-        "outputPath": "dist/apps/website-example"
-      },
-      "configurations": {
-        "development": {
-          "outputPath": "apps/website-example"
-        },
-        "production": {}
+        "command": "NODE_OPTIONS=--max-old-space-size=8192 vite build && NODE_OPTIONS=--max-old-space-size=8192 vite build --config vite.instrument.config.mts",
+        "cwd": "{projectRoot}"
       }
     },
     "serve": {
-      "executor": "@nx/next:server",
-      "defaultConfiguration": "development",
+      "executor": "nx:run-commands",
+      "continuous": true,
       "options": {
-        "buildTarget": "website-example:build",
-        "dev": true
-      },
-      "configurations": {
-        "development": {
-          "buildTarget": "website-example:build:development",
-          "dev": true
-        },
-        "production": {
-          "buildTarget": "website-example:build:production",
-          "dev": false
-        }
+        "command": "vite dev --port 4200",
+        "cwd": "{projectRoot}"
       }
     },
-    "export": {
-      "executor": "@nx/next:export",
+    "preview": {
+      "executor": "nx:run-commands",
+      "continuous": true,
+      "dependsOn": ["build"],
       "options": {
-        "buildTarget": "website-example:build:production"
+        "command": "node --import ../../dist/apps/website-example/.output/server/instrument.server.mjs ../../dist/apps/website-example/.output/server/index.mjs",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "inputs": ["production", "^production"],
+      "options": {
+        "command": "tsc -p tsconfig.json --noEmit",
+        "cwd": "{projectRoot}"
       }
     },
     "test": {

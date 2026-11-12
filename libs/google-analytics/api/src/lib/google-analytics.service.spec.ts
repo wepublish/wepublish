@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { CircuitOpenError, ResilienceModule } from '@nestjs/resilience';
 import { PrismaClient } from '@prisma/client';
 import {
   GA_CLIENT_OPTIONS,
@@ -80,6 +81,7 @@ describe('GoogleAnalyticsService', () => {
 
     module = await Test.createTestingModule({
       imports: [
+        ResilienceModule.forRoot(),
         NamespacedCacheTestingModule.forRoot({
           sharedNamespaces: GOOGLE_ANALYTICS_SHARED_NAMESPACES,
         }),
@@ -178,7 +180,7 @@ describe('GoogleAnalyticsService', () => {
     await failingLookup();
 
     await expect(service.getMostViewedArticles({})).rejects.toThrow(
-      'Circuit breaker is open'
+      CircuitOpenError
     );
   });
 
@@ -263,7 +265,9 @@ describe('GoogleAnalyticsService', () => {
     expect(runReportSpy).toHaveBeenCalledTimes(3);
 
     // Circuit is now open — should not call runReport
-    await failingLookup();
+    await expect(service.getMostViewedArticles({})).rejects.toThrow(
+      CircuitOpenError
+    );
     expect(runReportSpy).toHaveBeenCalledTimes(3);
   });
 

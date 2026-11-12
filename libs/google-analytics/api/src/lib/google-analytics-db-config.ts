@@ -27,6 +27,7 @@ export class GoogleAnalyticsDbConfig {
           credentials: null,
           property: null,
           articlePrefix: '',
+          hotAndTrending: true,
         },
       ],
       skipDuplicates: true,

@@ -10,6 +10,7 @@ export * from './lib/mail-provider/fake-mail-provider';
 
 export * from './lib/email-quality-recorder';
 export * from './lib/letter-sender';
+export * from './lib/resolve-letter-recipient';
 export * from './lib/mail.webhook';
 export * from './lib/mail.controller';
 export * from './lib/mail-context';
@@ -19,3 +20,4 @@ export * from './lib/mails.module';
 export * from './lib/mailchimp-contact/mailchimp-contact.service';
 export * from './lib/mailchimp-contact/mailchimp-error';
 export * from './lib/mailchimp-contact/mailchimp-contact.module';
+export * from './lib/mail-provider/brevo-mail-provider';

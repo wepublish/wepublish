@@ -1005,6 +1005,151 @@
       "network": "Pas de connexion au serveur. Vérifiez votre connexion Internet et réessayez.",
       "unexpected": "Une erreur est survenue. Réessayez – si le problème persiste, contactez le support."
     },
+    "form": {
+      "loading": "Chargement …",
+      "loadError": {
+        "title": "Les données n’ont pas pu être chargées",
+        "retry": "Réessayer"
+      },
+      "errorSummary": {
+        "title": "Veuillez corriger ces informations avant d’enregistrer"
+      },
+      "field": {
+        "moreInfo": "Plus d’informations"
+      },
+      "select": {
+        "empty": "Aucune sélection"
+      },
+      "password": {
+        "show": "Afficher le mot de passe",
+        "hide": "Masquer le mot de passe"
+      },
+      "array": {
+        "add": "Ajouter une entrée",
+        "remove": "Supprimer l’entrée {{position}}",
+        "reorder": "Réorganiser",
+        "dragHandle": "Glisser pour réordonner l’entrée {{position}}",
+        "roleDescription": "entrée triable",
+        "dragInstructions": "Pour saisir une entrée, appuyez sur Espace ou Entrée. Déplacez-la avec les flèches, puis appuyez à nouveau sur Espace ou Entrée pour la déposer, ou sur Échap pour annuler.",
+        "dragStart": "Entrée {{position}} saisie.",
+        "dragOver": "L’entrée {{position}} est au-dessus de la position {{target}}.",
+        "dragEnd": "Entrée {{position}} déposée à la position {{target}}.",
+        "dragCancel": "Déplacement annulé. L’entrée {{position}} est revenue à sa place.",
+        "empty": "Aucune entrée pour l’instant",
+        "actions": "Actions"
+      },
+      "union": {
+        "type": "Type"
+      },
+      "autocomplete": {
+        "noOptions": "Aucune option",
+        "clear": "Effacer",
+        "open": "Ouvrir la liste",
+        "close": "Fermer la liste",
+        "loading": "Chargement …"
+      },
+      "date": {
+        "today": "Aujourd’hui",
+        "tomorrow": "Demain",
+        "now": "Maintenant"
+      },
+      "color": {
+        "pick": "Choisir la couleur",
+        "invalid": "Veuillez entrer une couleur hexadécimale, par exemple #1a2b3c"
+      },
+      "secret": {
+        "show": "Afficher la valeur",
+        "hide": "Masquer la valeur"
+      },
+      "view": {
+        "readOnly": "Lecture seule",
+        "discard": "Annuler les modifications",
+        "discardChanges": {
+          "title": "Abandonner les modifications non enregistrées ?",
+          "body": "Vos modifications ne sont pas enregistrées et seront perdues.",
+          "keep": "Continuer l’édition",
+          "discard": "Abandonner"
+        },
+        "sectionErrors_one": "{{count}} erreur",
+        "sectionErrors_other": "{{count}} erreurs"
+      },
+      "value": {
+        "on": "Activé",
+        "off": "Désactivé",
+        "empty": "(vide)",
+        "changed": "modifié"
+      },
+      "units": {
+        "seconds": "secondes",
+        "seconds_one": "seconde",
+        "minutes": "minutes",
+        "minutes_one": "minute",
+        "days": "jours",
+        "days_one": "jour",
+        "milliseconds": "millisecondes",
+        "milliseconds_one": "milliseconde"
+      },
+      "errors": {
+        "required": "Ce champ est requis",
+        "invalid": "Cette valeur n’est pas valide",
+        "invalid_value": "Veuillez choisir l’une des options proposées",
+        "not_multiple_of": "Veuillez entrer un multiple de {{divisor}}",
+        "unexpected": "Le formulaire n’a pas pu être vérifié. Veuillez réessayer.",
+        "server": "L’enregistrement a échoué. Veuillez réessayer.",
+        "invalid_type": {
+          "string": "Veuillez entrer un texte",
+          "number": "Veuillez entrer un nombre",
+          "int": "Veuillez entrer un nombre entier",
+          "boolean": "Veuillez choisir oui ou non",
+          "date": "Veuillez entrer une date valide",
+          "array": "Veuillez entrer une liste de valeurs",
+          "object": "Ces informations sont incomplètes"
+        },
+        "invalid_format": {
+          "default": "Le format n’est pas valide",
+          "email": "Veuillez entrer une adresse e-mail valide",
+          "url": "Veuillez entrer une URL valide",
+          "regex": "Le format n’est pas valide",
+          "uuid": "Veuillez entrer un UUID valide"
+        },
+        "too_small": {
+          "string": {
+            "min": "Veuillez entrer au moins {{minimum}} caractères",
+            "exact": "Veuillez entrer exactement {{minimum}} caractères"
+          },
+          "array": {
+            "min": "Veuillez ajouter au moins {{minimum}} entrées",
+            "exact": "Veuillez ajouter exactement {{minimum}} entrées"
+          },
+          "number": {
+            "inclusive": "Veuillez entrer {{minimum}} ou plus",
+            "exclusive": "Veuillez entrer une valeur supérieure à {{minimum}}"
+          },
+          "date": {
+            "inclusive": "Veuillez choisir le {{minimum, P}} ou une date ultérieure",
+            "exclusive": "Veuillez choisir une date postérieure au {{minimum, P}}"
+          }
+        },
+        "too_big": {
+          "string": {
+            "max": "Veuillez entrer au maximum {{maximum}} caractères",
+            "exact": "Veuillez entrer exactement {{maximum}} caractères"
+          },
+          "array": {
+            "max": "Veuillez ajouter au maximum {{maximum}} entrées",
+            "exact": "Veuillez ajouter exactement {{maximum}} entrées"
+          },
+          "number": {
+            "inclusive": "Veuillez entrer {{maximum}} ou moins",
+            "exclusive": "Veuillez entrer une valeur inférieure à {{maximum}}"
+          },
+          "date": {
+            "inclusive": "Veuillez choisir le {{maximum, P}} ou une date antérieure",
+            "exclusive": "Veuillez choisir une date antérieure au {{maximum, P}}"
+          }
+        }
+      }
+    },
     "errorMessages": {
       "invalidEmailErrorMessage": "Veuillez entrer une adresse e-mail valide",
       "invalidRange": "La valeur doit être comprise entre {{min}} et {{max}}.",
@@ -1925,6 +2070,7 @@
       }
     },
     "navbar": {
+      "printIssues": "Numéros imprimés",
       "deliverySuggestions": "Canal de distribution",
       "articles": "Articles",
       "authors": "Auteur·trice·s",
@@ -1995,6 +2141,9 @@
       "audioLibrary": "Audio"
     },
     "pageTitles": {
+      "printIssues": "Numéros imprimés",
+      "printIssueCreate": "Nouveau numéro imprimé",
+      "printIssueEdit": "Modifier le numéro imprimé",
       "login": "Connexion",
       "impersonate": "Se connecter en tant qu’utilisateur·trice",
       "resetPassword": "Réinitialiser le mot de passe",
@@ -2130,7 +2279,8 @@
       "settings": "Paramètres",
       "websiteSettings": "Paramètres du site",
       "seo": "Liste de contrôle SEO",
-      "logout": "Déconnexion"
+      "logout": "Déconnexion",
+      "printIssueList": "Liste d’impression"
     },
     "navigation": {
       "overview": {
@@ -2568,6 +2718,9 @@
     "save": "Enregistrer",
     "saveAndClose": "Enregistrer et fermer",
     "settingList": {
+      "printIssues": "Numéros imprimés",
+      "printIssuesPerYear": "Numéros par an (imprimé)",
+      "issues": "numéros",
       "allowGuestCommentRating": "Autoriser les évaluations anonymes des commentaires",
       "comments": "Commentaires",
       "days": "jours",
@@ -2618,6 +2771,7 @@
         "sessionTtlDays": "Combien de temps une connexion reste valable avant de devoir se reconnecter. S’applique dès la prochaine connexion ; les sessions ouvertes gardent leur durée.",
         "emailQualityUnresponsiveAfterDays": "Une adresse e-mail est considérée « sans réaction » lorsque ce nombre de jours s’est écoulé sans connexion ni clic dans un e-mail, alors que des e-mails ont été remis. Réévalué chaque nuit et via « Actualiser les statuts ».",
         "emailQualityMinMailsForUnresponsive": "Ce nombre d’e-mails doit avoir été remis à l’adresse avant qu’elle puisse être considérée « sans réaction ».",
+        "emailQualityEvidenceWarnAfterDays": "Après ce nombre de jours sans rapport de distribution du service d’e-mail (webhook, interrogation, audience newsletter), l’outil de communication et la page du canal de distribution signalent que le statut e-mail ne repose que sur les connexions.",
         "newArticlePaywall": "N’affectera pas les articles déjà créés",
         "newArticlePeering": "N’affectera pas les articles déjà créés",
         "showPendingWhenNotPublished": "Cela exposera publiquement les articles et pages en attente (et donc aussi les robots d’indexation), même s’ils n’ont encore jamais été publiés."
@@ -2626,6 +2780,7 @@
       "emailQuality": "Qualité des e-mails",
       "emailQualityUnresponsiveAfterDays": "« Sans réaction » après … jours",
       "emailQualityMinMailsForUnresponsive": "… e-mails remis",
+      "emailQualityEvidenceWarnAfterDays": "Avertir sans rapport de distribution après … jours",
       "activeSubscriptionsApiPublic": "Rendre l’API des abonnements actifs accessible au public",
       "expectedRevenueApiPublic": "Rendre l’API des revenus attendus accessible au public",
       "newDeactivationsApiPublic": "Rendre l’API des nouvelles désactivations accessible au public",
@@ -2642,6 +2797,7 @@
       "newArticlePeering": "Les articles nouvellement créés seront partagés par peering par défaut",
       "showPendingWhenNotPublished": "Afficher un article ou une page en attente, même s’ils ne sont pas encore publiés.",
       "info": {
+        "printIssuesPerYear": "Combien de numéros imprimés vaut un abonnement annuel. Les lecteur·trice·s dont la période payée se termine restent dans les exports jusqu’à avoir reçu ce nombre. 0 désactive la règle jusqu’à ce que l’import ait saisi les numéros précédents de l’année.",
         "allowCommentEditing": "Les lecteur·trice·s peuvent encore modifier le texte de leurs propres commentaires après les avoir publiés.",
         "commentCharLimit": "Nombre maximal de caractères qu’un commentaire peut contenir. Les commentaires plus longs ne peuvent pas être envoyés.",
         "subscriptionExtendWindowDays": "Combien de jours avant l’échéance d’un abonnement les lecteur·trice·s voient «Renouveler maintenant» dans leur profil. 30 = comme avant ; 365 = à tout moment, tant qu’aucune facture n’est ouverte.",
@@ -2654,8 +2810,12 @@
         "revenueApiPublic": "Rend les revenus des factures payées d’une période choisie accessibles sans connexion via l’API publique, p.ex. pour afficher des chiffres en direct sur votre site. Les données sont anonymisées. Laissez cette option désactivée si vous n’en avez pas besoin.",
         "loginMinutes": "Durée de validité, en minutes, des liens de connexion envoyés par e-mail (60 = 1 heure, 1440 = 1 jour, 10080 = 1 semaine). Ensuite, un nouveau lien doit être demandé.",
         "passwordToken": "Durée de validité, en minutes, du lien envoyé par e-mail pour réinitialiser le mot de passe (60 = 1 heure, 1440 = 1 jour).",
-        "peerToken": "Durée d’attente des médias partenaires (peers) lors du chargement de leurs articles, en millisecondes (1000 = 1 seconde). Ensuite, la requête est annulée."
-      }
+        "peerToken": "Durée d’attente des médias partenaires (peers) lors du chargement de leurs articles, en millisecondes (1000 = 1 seconde). Ensuite, la requête est annulée.",
+        "printExportDefaults": "Ce avec quoi un nouveau numéro imprimé démarre. Ajustable par numéro ; chaque livraison conserve les options avec lesquelles elle a été calculée.",
+        "printBexioKinds": "Comment la liste d’impression reconnaît les commandes dans bexio. «Période» : le mot-clé commence la description du lien de contact (p. ex. «NW Geschenkabo»), la période figure dans le titre de la facture (année «2027» ou «15.03.2026–14.03.2027») ; chaque personne liée reçoit un exemplaire. «Numéro» : le mot-clé commence une position de facture, suivi du numéro (p. ex. «Einzelheft 6.26») ; la quantité de la position compte."
+      },
+      "printExportDefaults": "Liste d’impression : options par défaut",
+      "printBexioKinds": "Types de réception bexio"
     },
     "automaticMails": {
       "title": "Messages automatiques",
@@ -3146,6 +3306,8 @@
     },
     "yes": "Oui",
     "memberplanForm": {
+      "printIssuesPerPeriod": "Numéros imprimés par période",
+      "printIssuesPerPeriodHelpText": "Combien de numéros imprimés un abonnement payé «{{periodicity}}» est garanti de recevoir. Vide : calculé au prorata de la valeur configurée sous <i>Paramètres > Paramètres > Numéros imprimés > «Numéros par an (imprimé)»</i>. 0 : les abonnements avec cet intervalle de paiement ne reçoivent aucun numéro imprimé.",
       "trialSubscription": "Paramètres avancés",
       "configureTrialBtn": "Configurer des abonnements d’essai",
       "extendableToggle": "Extensible",
@@ -3592,6 +3754,7 @@
         "bexioInvoiceMailBodyNewMembership": "Corps de l’e-mail de facture (Nouvelle adhésion)",
         "bexioInvoiceMailBodyRenewalMembership": "Corps de l’e-mail de facture (Renouvellement d’adhésion)",
         "bexioMarkInvoiceAsOpen": "Marquer la facture comme ouverte",
+        "bexioContactSync": "Synchroniser les contacts vers Bexio chaque nuit",
         "bexioInvoiceTitleNewMembership": "Titre de la facture (Nouvelle adhésion)",
         "bexioInvoiceTitleRenewalMembership": "Titre de la facture (Renouvellement d’adhésion)",
         "typeInfo": "Le service de paiement auquel cette intégration est reliée. Il est défini lors de la création et ne peut pas être modifié.",
@@ -3612,7 +3775,11 @@
         "bexioInvoiceTitleInfo": "Le titre imprimé sur la facture. Vous pouvez utiliser des titres différents pour les nouveaux abonnements et les renouvellements.",
         "bexioInvoiceMailSubjectInfo": "L’objet de l’e-mail avec lequel Bexio envoie la facture. Les espaces réservés comme :user.firstName: ou :memberPlan.name: sont remplacés automatiquement.",
         "bexioInvoiceMailBodyInfo": "Le texte de l’e-mail avec lequel Bexio envoie la facture ; le PDF est joint. Les espaces réservés comme :user.firstName: ou :memberPlan.name: sont remplacés automatiquement. Bexio exige l’espace réservé [Network Link] dans le texte.",
-        "bexioMarkInvoiceAsOpenInfo": "Si activé, Bexio passe la facture à « ouverte » après l’envoi, au lieu de la laisser en brouillon."
+        "bexioMarkInvoiceAsOpenInfo": "Si activé, Bexio passe la facture à « ouverte » après l’envoi, au lieu de la laisser en brouillon.",
+        "bexioContactSyncInfo": "Si activé, We.Publish transmet chaque nuit le nom, l’entreprise, l’e-mail et l’adresse des lecteurs modifiés à leur contact Bexio et crée les contacts manquants pour les abonnements payés via Bexio. Les groupes, le téléphone et tout le reste du contact restent tels qu’ils sont dans Bexio.",
+        "bexioContactSyncNeverRan": "N’a pas encore tourné.",
+        "bexioContactSyncLastRun": "Dernière exécution : {{date}}, sans erreur.",
+        "bexioContactSyncLastRunFailed": "Dernière exécution : {{date}}. Erreur : {{error}}"
       },
       "placeholderSecret": "Inchangé (masqué)",
       "secretNotSet": "Non défini",
@@ -3641,17 +3808,26 @@
         "smtpUser": "Nom d’utilisateur SMTP",
         "smtpPassword": "Mot de passe SMTP",
         "webhookEndpointSecret": "Secret du point de terminaison du webhook",
-        "typeInfo": "Le service qui envoie les e-mails. MAILCHIMP correspond à Mailchimp Transactional (Mandrill). SLACK et LOG ne distribuent rien aux lecteur·trice·s – ils servent uniquement aux tests.",
+        "typeInfo": "Le service qui envoie les e-mails. MAILCHIMP correspond à Mailchimp Transactional (Mandrill), BREVO à Brevo (anciennement Sendinblue). SLACK et LOG ne distribuent rien aux lecteur·trice·s – ils servent uniquement aux tests.",
         "fromAddressInfo": "L’adresse d’expéditeur visible par les lecteur·trice·s, p. ex. abo@example.ch. Son domaine doit être vérifié auprès du service d’e-mail, sinon les e-mails risquent d’arriver dans les spams.",
         "replyToAddressInfo": "L’adresse à laquelle arrivent les réponses à vos e-mails. Si le champ est vide, les réponses vont à l’adresse d’expéditeur.",
-        "apiKeyInfo": "La clé API de votre compte auprès du service d’e-mail (Mailchimp Transactional/Mandrill ou Mailgun). Sans elle, aucun e-mail ne peut être envoyé.",
-        "webhookEndpointSecretInfo": "Permet à We.Publish de vérifier que les rapports de distribution (p. ex. rebonds) proviennent bien du service d’e-mail. Copiez la clé de signature du webhook depuis Mandrill ou Mailgun. Sans elle, le statut de distribution n’est pas mis à jour.",
+        "apiKeyInfo": "La clé API de votre compte auprès du service d’e-mail (Mailchimp Transactional/Mandrill, Mailgun ou Brevo). Sans elle, aucun e-mail ne peut être envoyé.",
+        "webhookEndpointSecretInfo": "Permet à We.Publish de vérifier que les rapports de distribution (p. ex. rebonds) proviennent bien du service d’e-mail. Copiez la clé de signature du webhook depuis Mandrill ou Mailgun. Pour Brevo, choisissez un mot de passe aléatoire et ajoutez-le sous la forme ?key=… à l’URL du webhook que vous saisissez dans Brevo. Sans elle, le statut de distribution n’est pas mis à jour.",
         "mailgunBaseDomainInfo": "L’adresse de l’API Mailgun sans https:// : api.mailgun.net, ou api.eu.mailgun.net si votre compte est hébergé dans l’UE.",
         "mailgunMailDomainInfo": "Le domaine d’envoi que vous avez configuré dans Mailgun, p. ex. mg.example.ch.",
         "slackWebhookUrlInfo": "L’adresse d’un webhook entrant Slack. Au lieu d’être distribué, chaque e-mail est publié dans ce canal Slack – pratique pour les tests.",
         "smtpHostInfo": "L’adresse du serveur d’envoi, p. ex. smtp.example.ch. Votre fournisseur de messagerie vous l’indique.",
         "smtpPortInfo": "Généralement 587 ou 465 – voir les indications de votre fournisseur de messagerie.",
-        "smtpSecureInfo": "À activer pour le port 465. Pour le port 587, laissez désactivé – la connexion est alors chiffrée via STARTTLS."
+        "smtpSecureInfo": "À activer pour le port 465. Pour le port 587, laissez désactivé – la connexion est alors chiffrée via STARTTLS.",
+        "evidence": {
+          "title": "Rapports de distribution",
+          "info": "Indique si le service d’e-mail atteint We.Publish. Si les deux restent vides, le statut e-mail des utilisateur·trice·s ne repose que sur les connexions et les clics dans la newsletter.",
+          "lastWebhookAt": "Dernier rapport par webhook",
+          "lastPollAt": "Dernière interrogation",
+          "lastPollError": "Erreur lors de la dernière interrogation",
+          "never": "jamais",
+          "notReporting": "Ce service ne signale aucun statut de distribution."
+        }
       },
       "trackingPixelSettings": {
         "type": "Type",
@@ -3680,10 +3856,35 @@
         "articlePrefixInfo": "La partie de l’adresse qui précède le slug d’un article sur votre site. Seules les pages vues dont l’adresse commence ainsi comptent comme lectures d’articles.",
         "propertyInfo": "L’ID numérique de votre propriété Google Analytics 4 (pas l’ID de mesure G-…). Vous le trouvez dans Google Analytics sous « Administration » → « Détails de la propriété ».",
         "credentialsInfo": "Le fichier de clé JSON d’un compte de service Google Cloud ayant accès en lecture à votre propriété Analytics. Glissez le fichier dans la zone ci-dessous ; il n’est enregistré qu’au moment de sauvegarder.",
-        "readFileError": "Le fichier n’a pas pu être lu."
+        "readFileError": "Le fichier n’a pas pu être lu.",
+        "hotAndTrending": "Utiliser pour Hot & Trending",
+        "hotAndTrendingInfo": "Hot & Trending lit les pages vues de ce fournisseur. Un seul fournisseur peut être utilisé à la fois ; choisir celui-ci le désactive pour les autres.",
+        "apiKey": "Clé API",
+        "plausibleApiKeyInfo": "Une clé Stats API issue des paramètres de votre compte Plausible (« API Keys »). Sur Plausible Cloud, la Stats API nécessite un abonnement Business.",
+        "umamiApiKeyInfo": "Une clé API d’Umami Cloud (« Settings » → « API keys ») ou, pour un Umami auto-hébergé, le jeton d’un utilisateur ayant accès au site.",
+        "plausibleSiteId": "Domaine du site",
+        "plausibleSiteIdInfo": "Le domaine du site tel que vous l’avez ajouté à Plausible, p. ex. example.com.",
+        "umamiWebsiteId": "ID du site",
+        "umamiWebsiteIdInfo": "L’ID du site dans Umami. Vous le trouvez sous « Settings » → « Websites » → « Edit ».",
+        "plausibleUrl": "URL de Plausible",
+        "plausibleUrlInfo": "Uniquement pour un Plausible auto-hébergé, p. ex. https://plausible.example.com. Laissez vide pour utiliser plausible.io.",
+        "umamiUrl": "URL de l’API Umami",
+        "umamiUrlInfo": "Uniquement pour un Umami auto-hébergé, p. ex. https://umami.example.com/api. Laissez vide pour utiliser Umami Cloud."
       },
       "mailchimpSync": "Mailchimp Sync",
       "mailchimpSyncSettings": {
+        "audienceWebhook": {
+          "title": "Rapports de l’audience",
+          "info": "Mailchimp informe We.Publish immédiatement lorsqu’un contact a été nettoyé (rebonds, abus) ou s’est désabonné. Sans webhook, cela n’arrive qu’avec la synchronisation nocturne. We.Publish enregistre lui-même le webhook auprès de Mailchimp ; l’API doit pour cela être accessible depuis Mailchimp.",
+          "registeredAt": "Enregistré auprès de Mailchimp le {{date}}",
+          "notRegistered": "Pas encore enregistré auprès de Mailchimp.",
+          "lastReceived": "Dernier rapport",
+          "never": "aucun pour l’instant",
+          "register": "Enregistrer le webhook auprès de Mailchimp",
+          "renew": "Renouveler l’enregistrement",
+          "registered": "Le webhook est enregistré auprès de Mailchimp.",
+          "failed": "Mailchimp a refusé l’enregistrement : {{error}}"
+        },
         "enabled": "Activé",
         "apiKey": "Clé API Mailchimp",
         "listId": "ID de liste/audience Mailchimp",
@@ -3789,7 +3990,7 @@
       "paymentProviderInfo": "Services qui traitent les paiements des abonnements, p. ex. Payrexx, Stripe, Mollie ou les factures via Bexio.",
       "trackingPixelInfo": "Ajoute le pixel de comptage de ProLitteris à vos articles afin que les lectures soient prises en compte pour vos droits d’auteur.",
       "mailProviderInfo": "Le service par lequel We.Publish envoie les e-mails, p. ex. les liens de connexion, les rappels de paiement ou les confirmations d’abonnement.",
-      "analyticsInfo": "Lit les pages vues dans Google Analytics afin de déterminer quels articles sont actuellement les plus lus (Hot & Trending).",
+      "analyticsInfo": "Lit les pages vues dans Google Analytics, Plausible ou Umami afin de déterminer quels articles sont actuellement les plus lus (Hot & Trending).",
       "mailchimpSyncInfo": "Transfère chaque nuit tous les comptes utilisateur actifs et leurs données d’abonnement vers une audience Mailchimp, afin de cibler vos newsletters selon l’abonnement.",
       "lastLoadedInfo": "Moment où We.Publish a chargé cette configuration pour la dernière fois, p. ex. pour traiter un paiement. Vous voyez ainsi si l’intégration est utilisée.",
       "setUp": "Configurer",
@@ -3845,16 +4046,13 @@
           "pro": "<url>Piwik PRO</url> est une plateforme d’analyse respectueuse de la vie privée et une alternative à Google Analytics.",
           "proLocator": "Tu le trouves dans le Menu > Administration > Site > ID de ton panneau d’administration",
           "proInvalid": "Doit être un ID Piwik valide (p. ex. xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)"
-        }
-      },
-      "mail": {
-        "title": "E-mail",
-        "mailchimp": {
-          "title": "Mailchimp",
-          "enable": "Activer Mailchimp",
-          "mailchimp": "<url>Mailchimp</url> est une plateforme de marketing par e-mail qui te permet de gérer des newsletters et des listes d’abonnés. Cela permet au site web d’accéder à tes newsletters et de les afficher.",
-          "apiKeyLocator": "Tu le trouves dans la <url>section des clés API</url> de ton compte Mailchimp. Assure-toi que c’est une clé Mailchimp et non Mandrill.",
-          "apiKeyInvalid": "Doit être une clé API Mailchimp valide (p. ex. XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX-us1)"
+        },
+        "umami": {
+          "title": "Umami",
+          "enable": "Activer Umami",
+          "um": "<url>Umami</url> est une alternative open source et respectueuse de la vie privée à Google Analytics.",
+          "umLocator": "Vous le trouverez dans les <url>paramètres du site</url> de votre tableau de bord Umami",
+          "umInvalid": "Doit être un ID de site valide (p. ex. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)"
         }
       },
       "ads": {
@@ -4332,6 +4530,12 @@
         "refresh": "Actualiser les statuts",
         "refreshing": "Actualisation des statuts …",
         "refreshed": "{{updated}} statuts de remise récupérés chez le fournisseur ({{checked}} vérifiés), {{recomputed}} personnes réévaluées."
+      },
+      "emailEvidence": {
+        "noProviderReports": "Le service d’e-mail ({{provider}}) ne signale aucun statut de distribution. Le statut e-mail ne repose que sur les connexions, les adresses confirmées et les clics dans la newsletter.",
+        "never": "Aucun rapport de distribution n’est jamais arrivé du service d’e-mail. Le statut e-mail ne repose que sur les connexions. Vérifiez le secret du webhook dans les intégrations et l’interrogation nocturne.",
+        "stale": "Aucun rapport de distribution du service d’e-mail depuis {{days}} jours (dernier : {{lastAt}}). Vérifiez le webhook et l’interrogation nocturne.",
+        "pollError": "La dernière interrogation du service d’e-mail a échoué : {{error}}"
       },
       "endedWindow": {
         "label": "Période de désactivation de l’abonnement",
@@ -5069,6 +5273,288 @@
       "deleteQuestion": "Supprimer « {{name}} » ? Les modèles qui l’utilisent doivent d’abord en choisir un autre.",
       "deleteConfirm": "Supprimer",
       "noLayouts": "Pas encore de papier à lettres. Créez-en un pour que les lettres aient un en-tête et un pied de page."
+    },
+    "printIssues": {
+      "title": "Numéros imprimés",
+      "intro": "Chaque numéro imprimé avec ses listes d’impression : qui reçoit un exemplaire se décide à la date de parution – depuis we.publish et bexio. Chaque liste d’impression livrée à l’imprimerie compte dans les numéros payés par les lecteur·trice·s.",
+      "create": "Nouveau numéro",
+      "noIssues": "Pas encore de numéro.",
+      "saved": "Numéro enregistré",
+      "duplicated": "Numéro dupliqué – veuillez adapter la date de parution.",
+      "closed": "Numéro clôturé",
+      "reopened": "Numéro déverrouillé",
+      "exported": "Liste d’impression créée – un brouillon jusqu’à ce qu’elle soit marquée comme livrée.",
+      "exportedReplaced": "Liste d’impression mise à jour",
+      "exportedSupplement": "Complément créé – un brouillon jusqu’à ce qu’il soit marqué comme livré.",
+      "delivered": "Liste d’impression marquée comme livrée",
+      "deliveryDeleted": "Liste d’impression supprimée",
+      "deliveryTakenBack": "Livraison annulée – la liste d’impression est de nouveau un brouillon",
+      "issueDateRequired": "Veuillez indiquer la date de parution.",
+      "drawer": {
+        "createTitle": "Nouveau numéro",
+        "editTitle": "Numéro {{label}}"
+      },
+      "fields": {
+        "issue": "Numéro",
+        "number": "Numéro",
+        "numberTo": "au numéro",
+        "numberToInvalid": "Supérieur au numéro",
+        "year": "Année",
+        "countsAs": "Compte pour",
+        "countsAsOption_one": "1 numéro",
+        "countsAsOption_other": "{{count}} numéros",
+        "countsAsHelp": "Combien de numéros le numéro double compte dans le nombre de numéros imprimés garanti par un abonnement. Les lecteur·trice·s à qui il ne reste qu’un exemplaire le reçoivent quand même.",
+        "issueDate": "Date de parution",
+        "issueDateHelp": "Le jour où le numéro parvient aux lecteur·trice·s. La liste d’impression vérifie qui reçoit un exemplaire ce jour-là – pas le jour de l’export.",
+        "status": "Statut",
+        "deliveries": "Listes d’impression",
+        "copies": "Exemplaires",
+        "closedAt": "Clôturé",
+        "title": "Thème",
+        "note": "Note",
+        "image": "Image"
+      },
+      "status": {
+        "open": "Ouvert",
+        "exported": "Exporté",
+        "closed": "Clôturé",
+        "historic": "Historique"
+      },
+      "deliveriesCell": "{{count}} · {{delivered}} livrée(s)",
+      "listCell": {
+        "lists": "1 liste d’impression",
+        "listsWithSupplements_one": "1 liste d’impression, 1 complément",
+        "listsWithSupplements_other": "1 liste d’impression, {{count}} compléments",
+        "delivered_one": "{{delivered}} sur 1 liste livrée à l’imprimerie",
+        "delivered_other": "{{delivered}} sur {{count}} listes livrées à l’imprimerie",
+        "deliveredNone": "Aucune liste livrée à l’imprimerie pour l’instant",
+        "draftHint": "{{name}} est encore un brouillon et ne compte pour les quotas des lecteur·trice·s qu’une fois marquée comme livrée."
+      },
+      "closedLine": "{{date}} · {{name}}",
+      "actions": {
+        "list": "Gérer les listes d’impression",
+        "duplicate": "Dupliquer le numéro",
+        "close": "Clôturer le numéro",
+        "reopen": "Déverrouiller le numéro",
+        "historic": "Numéro historique, toujours clôturé",
+        "delete": "Supprimer le numéro"
+      },
+      "lockReason": {
+        "close": "Clôturer le numéro : toutes les listes d’impression sont livrées à l’imprimerie. Aucun complément n’est plus attendu ensuite ; le déverrouillage reste possible à tout moment.",
+        "draft": "Clôture pas encore possible : {{name}} est un brouillon. Le numéro se clôture une fois toutes les listes d’impression marquées comme livrées.",
+        "noLists": "Clôture pas encore possible : le numéro n’a pas encore de liste d’impression.",
+        "reopen": "Déverrouiller le numéro pour créer des compléments.",
+        "historic": "Numéro historique, clôturé pour de bon. Le numéro a été créé en dehors du système et n’a pas de listes d’impression."
+      },
+      "deleteReason": {
+        "delivered": "Suppression impossible : au moins une liste d’impression a déjà été livrée à l’imprimerie et compte dans le nombre de numéros imprimés auxquels les lecteur·trice·s abonné·e·s ont droit. Annulez d’abord la livraison dans les listes d’impression du numéro – possible tant qu’aucun numéro ultérieur n’a de liste d’impression.",
+        "draft": "Supprimer le numéro – sa liste d’impression est encore un brouillon et sera supprimée avec lui.",
+        "empty": "Supprimer le numéro – il n’a pas encore de liste d’impression.",
+        "historic": "Supprimer le numéro historique. Il ne compte alors plus dans le nombre de numéros imprimés auxquels les lecteur·trice·s abonné·e·s ont droit."
+      },
+      "deleteTitle": "Supprimer le numéro",
+      "deleteQuestion": "Supprimer le numéro {{label}} ? Les listes d’impression en brouillon sont supprimées avec lui.",
+      "deleteConfirm": "Supprimer",
+      "closeTitle": "Clôturer le numéro ?",
+      "closeQuestion": "Clôturer le numéro {{label}} ? Aucun autre complément n’est attendu. «Déverrouiller» annule cela à tout moment.",
+      "closeConfirm": "Clôturer",
+      "listView": {
+        "title": "Listes d’impression du numéro {{label}}",
+        "section": "Gérer les listes d’impression",
+        "shipDay": "Date de parution {{date}}",
+        "back": "Retour aux numéros imprimés"
+      },
+      "historicNoExport": "Un numéro historique vient de l’import et n’a pas de liste d’impression : il compte comme livré pour toute personne qui avait alors un abonnement payé. Numéro, date et note se corrigent dans la liste des numéros.",
+      "closedInfo": "Numéro clôturé – pour créer un complément, déverrouillez d’abord le numéro.",
+      "options": {
+        "title": "Options d’export de la liste d’impression",
+        "intro": "Quels types d’abonnement reçoivent cette liste d’impression, ainsi que d’autres options pour l’export. «Calculer» enregistre les options sur le numéro et calcule la liste à la date de parution.",
+        "reset": "Rétablir les valeurs par défaut",
+        "unsaved": "Les options ont changé – recalculez avant d’exporter."
+      },
+      "run": {
+        "title": "Vérifier et exporter"
+      },
+      "compute": "Calculer",
+      "recompute": "Recalculer",
+      "computing": "Calcul en cours – bexio est lu aussi, cela prend un moment …",
+      "computedLine": "Calculé le {{date}} à {{time}} par {{name}}",
+      "count": {
+        "addresses_one": "{{count}} adresse",
+        "addresses_other": "{{count}} adresses",
+        "copies_one": "{{count}} exemplaire",
+        "copies_other": "{{count}} exemplaires",
+        "grace_one": "{{count}} exemplaire dû",
+        "grace_other": "{{count}} exemplaires dus",
+        "gifts_one": "{{count}} exemplaire offert",
+        "gifts_other": "{{count}} exemplaires offerts"
+      },
+      "showList_one": "Voir la liste ({{count}} adresse)",
+      "showList_other": "Voir la liste ({{count}} adresses)",
+      "runListTitle": "Liste du numéro {{label}}",
+      "export": "Exporter la liste d’impression",
+      "exportSupplement": "Exporter le complément",
+      "exportTitle": {
+        "export": "Exporter la liste d’impression ?",
+        "replace": "Mettre à jour la liste d’impression ?",
+        "supplement": "Exporter le complément ?"
+      },
+      "exportQuestion": {
+        "export": "Enregistrer {{addresses}} ({{copies}}, dont {{grace}} et {{gifts}}) comme liste d’impression du numéro {{label}}. Elle reste un brouillon jusqu’à ce qu’elle soit marquée comme livrée à l’imprimerie.",
+        "replace": "Met à jour la liste d’impression du {{date}} : ses adresses sont abandonnées, {{addresses}} ({{copies}}) prennent leur place. Elle reste un brouillon jusqu’à ce qu’elle soit marquée comme livrée.",
+        "supplement": "Enregistrer {{addresses}} ({{copies}}) comme «complément {{batch}}» du numéro {{label}} – seules les adresses absentes de toute liste d’impression précédente de ce numéro sont exportées."
+      },
+      "exportConfirm": {
+        "export": "Exporter",
+        "replace": "Mettre à jour la liste",
+        "supplement": "Exporter le complément"
+      },
+      "supplementEmpty": "Personne de nouveau – il n’y a rien à compléter.",
+      "runConflict": "La liste a été recalculée entre-temps, date de plus de 24 heures ou ne correspond plus aux listes d’impression. Veuillez la recalculer et la vérifier.",
+      "earlierDrafts_one": "Le numéro {{labels}} a encore une liste d’impression en brouillon. Tant qu’elle n’est pas marquée comme livrée, ses exemplaires ne comptent pour aucun quota – les exemplaires dus peuvent être trop élevés ici.",
+      "earlierDrafts_other": "Les numéros {{labels}} ont encore des listes d’impression en brouillon. Tant qu’elles ne sont pas marquées comme livrées, leurs exemplaires ne comptent pour aucun quota – les exemplaires dus peuvent être trop élevés ici.",
+      "steps": {
+        "options": "Options",
+        "check": "Vérifier",
+        "export": "Exporter"
+      },
+      "flow": {
+        "create": "Créer une liste d’impression",
+        "editFirst": "Modifier la liste d’impression",
+        "editSupplement": "Modifier le dernier complément",
+        "supplement": "Créer un complément",
+        "cancel": "Annuler",
+        "discard": "Abandonner"
+      },
+      "deliveries": {
+        "name": "Nom de la liste",
+        "empty": "Pas encore de liste d’impression.",
+        "export": "Liste d’impression",
+        "supplement": "Complément {{batch}}",
+        "exportedAt": "Créée le · par",
+        "options": "Options d’export",
+        "addresses": "Adresses",
+        "copies": "Exemplaires",
+        "status": "Statut",
+        "draft": "Brouillon",
+        "deliveredLine": "Livrée le {{date}} · {{name}}",
+        "csv": "CSV",
+        "csvTooltip": "Télécharger {{name}} en CSV",
+        "edit": "Modifier",
+        "editTooltip": "Modifier {{name}}",
+        "deliver": "Marquer comme livrée",
+        "deliverTooltip": "Marquer {{name}} comme livrée après remise à l’imprimerie. Des modifications de la liste complète restent possibles à tout moment sous forme de compléments.",
+        "deliverTitle": "Marquer la liste d’impression comme livrée ?",
+        "deliverQuestion": "Marquer {{name}} du numéro {{label}} comme «livraison à l’imprimerie effectuée» ? La liste est ensuite verrouillée, et ses exemplaires entrent dans le calcul des numéros restants auxquels les lecteur·trice·s ont droit. Tant qu’aucun numéro ultérieur n’a de liste d’impression, la livraison peut être annulée.",
+        "deliverConfirm": "Marquer comme livrée",
+        "undeliver": "Annuler la livraison",
+        "undeliverTooltip": "Remettre {{name}} à l’état de brouillon – pour la corriger, la livrer à nouveau ou la supprimer.",
+        "undeliverTitle": "Annuler la livraison ?",
+        "undeliverQuestion": "Remettre {{name}} du numéro {{label}} à l’état de brouillon ? Ses exemplaires ne comptent alors plus dans les numéros auxquels les lecteur·trice·s ont droit, jusqu’à ce qu’elle soit à nouveau marquée comme livrée. La date et le nom de la livraison sont perdus.",
+        "undeliverConfirm": "Annuler la livraison",
+        "undeliverClosed": "Le numéro est clôturé – déverrouillez-le d’abord.",
+        "undeliverLater": "Impossible : le numéro {{label}} a déjà une liste d’impression calculée avec cette livraison. Supprimez-la ou annulez-la d’abord.",
+        "delete": "Supprimer",
+        "deleteTitle": "Supprimer la liste d’impression ?",
+        "deleteQuestion": "Supprimer {{name}} ? Ses adresses sont abandonnées.",
+        "deleteConfirm": "Supprimer",
+        "fullList": "Télécharger la liste complète",
+        "fullListHint": "Liste d’impression & tous les compléments fusionnés"
+      },
+      "summary": {
+        "none": "–",
+        "headline": "{{rows}}, {{copies}} – au {{date}}",
+        "withGifts": "y compris les exemplaires offerts",
+        "graceWarning": "Plus de 5 % des lignes sont des exemplaires encore dus – tous les numéros historiques sont-ils saisis et «numéros par an» est-il correct ?",
+        "sources": "Sources",
+        "wepublish": "we.publish",
+        "totalSubscriptions": "Abonnements vérifiés",
+        "byPlan": "Types d’abonnement",
+        "byKind": "Types de réception bexio",
+        "byCountry": "Pays",
+        "hints": {
+          "title": "Remarques",
+          "unpaid": "ouvert",
+          "openWithoutInvoice": "ouvert sans facture",
+          "grace": "Exemplaire dû",
+          "gifts": "Exemplaire offert",
+          "kuendigungen": "Résiliation au",
+          "missingAddress": "Pas d’adresse",
+          "placeholderEmail": "E-mail provisoire",
+          "duplicates": "Doublon",
+          "alreadyExported": "Déjà dans une liste d’impression"
+        },
+        "skipped": {
+          "title": "Ignorés",
+          "donation": "Dons",
+          "excludedPlan": "Plan non sélectionné",
+          "future": "Début après la date de parution",
+          "unpaidDeactivation": "Désactivé impayé",
+          "replaced": "Remplacé",
+          "deactivated": "Désactivé",
+          "lapsed": "Échu",
+          "exhausted": "Quota reçu",
+          "noPrintIssues": "Aucun numéro imprimé (0 dans le plan)"
+        },
+        "bexio": {
+          "title": "bexio",
+          "notConfigured": "bexio n’est pas lu : aucun prestataire de paiement bexio avec clé API n’est configuré sous Intégrations. Institutions, cadeaux, librairies et numéros à l’unité manquent.",
+          "notIncluded": "bexio n’a pas été lu pour cette liste : l’option est désactivée.",
+          "invoicesInWindow": "Factures dans la fenêtre",
+          "canceled": "Annulées",
+          "skippedProvider": "Créées par le prestataire de paiement",
+          "skippedImported": "Anciennes factures importées",
+          "otherPeriod": "Autre année / autre numéro",
+          "detailFetched": "Positions lues",
+          "ungeprueft": "Non vérifiées",
+          "contactMissing": "Contact manquant",
+          "skippedOpen": "Impayées, ignorées",
+          "noValidPeriod": "Sans indication valable",
+          "excludedKind": "Type de réception non choisi",
+          "quantityMismatch": "Quantité ≠ liens"
+        }
+      },
+      "rowsTable": {
+        "name": "Nom / entreprise",
+        "place": "Lieu",
+        "copies": "Ex.",
+        "plan": "Type d’abonnement",
+        "status": "Statut de paiement",
+        "hint": "Remarque",
+        "empty": "Aucune adresse."
+      }
+    },
+    "printExportOptions": {
+      "memberPlans": "Plans d’abonnement",
+      "memberPlansHelp": "Seuls les abonnements de ces plans entrent dans la liste. Vide : tous les plans.",
+      "allPlans": "tous les plans",
+      "plansCount_one": "{{count}} plan",
+      "plansCount_other": "{{count}} plans",
+      "includeBexio": "Inclure bexio",
+      "includeBexioHelp": "Institutions, abonnements cadeaux, librairies et numéros à l’unité depuis bexio – lus avec la clé du prestataire de paiement bexio sous Intégrations.",
+      "bexioNotConfigured": "Aucun prestataire de paiement bexio avec clé API n’est configuré sous Intégrations ; bexio ne peut pas être lu.",
+      "bexioKinds": "Types de réception bexio",
+      "bexioNoKinds": "Aucun type de réception bexio configuré – à créer sous Paramètres › Numéros imprimés. D’ici là, rien n’est listé depuis bexio.",
+      "bexioShort": "bexio",
+      "bexioKindsCount_one": "bexio : {{count}} type de réception",
+      "bexioKindsCount_other": "bexio : {{count}} types de réception",
+      "includeOpen": "Exporter les exemplaires commandés mais impayés",
+      "includeOpenHelp": "Les abonnements qui se renouvellent mais dont la facture n’est pas encore payée reçoivent un exemplaire. Option désactivée, ils ne reçoivent que les exemplaires déjà payés.",
+      "openShort": "ouvert",
+      "includeUpcoming": "Exporter les exemplaires offerts",
+      "includeUpcomingHelp": "Les abonnements qui commencent après la date de parution reçoivent ce numéro en cadeau. Il ne compte pas dans les numéros payés.",
+      "upcomingShort": "offert"
+    },
+    "printBexioKinds": {
+      "kind": "Type de réception bexio {{label}}",
+      "label": "Libellé",
+      "word": "Mot-clé dans bexio",
+      "refersTo": "Se rapporte à",
+      "refersToPeriod": "Période",
+      "refersToIssue": "Numéro",
+      "add": "Ajouter un type de réception bexio",
+      "delete": "Supprimer le type de réception bexio {{label}}",
+      "empty": "Pas encore de types de réception bexio. Sans type de réception bexio, rien n’est listé depuis bexio."
     },
     "autosave": {
       "label": "Enregistrement auto",

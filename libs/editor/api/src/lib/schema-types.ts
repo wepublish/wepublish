@@ -73,7 +73,9 @@ export type AllowedSettingVals = {
 };
 
 export enum AnalyticsProviderType {
-  Google = 'GOOGLE'
+  Google = 'GOOGLE',
+  Plausible = 'PLAUSIBLE',
+  Umami = 'UMAMI'
 }
 
 export type ApiToken = {
@@ -1469,6 +1471,43 @@ export enum EditorBlockType {
   Title = 'Title'
 }
 
+/** Where the email status comes from: whether the mail provider reports anything, when it last did, and how much evidence arrived lately. */
+export type EmailEvidenceModel = {
+  __typename: 'EmailEvidenceModel';
+  /** When the provider was last asked for delivery states. */
+  lastPollAt?: Maybe<Scalars['DateTime']['output']>;
+  /** What went wrong on the last poll; null when it succeeded. */
+  lastPollError?: Maybe<Scalars['String']['output']>;
+  /** Newest evidence from any provider source. Null means the status rests on logins and confirmations alone. */
+  lastProviderEvidenceAt?: Maybe<Scalars['DateTime']['output']>;
+  /** When the provider last called the webhook with a verified request. */
+  lastWebhookAt?: Maybe<Scalars['DateTime']['output']>;
+  providerName?: Maybe<Scalars['String']['output']>;
+  /** Whether the configured provider reports delivery outcomes at all. SMTP never does. */
+  providerReportsDelivery: Scalars['Boolean']['output'];
+  providerType?: Maybe<MailProviderType>;
+  sources: Array<EmailEvidenceSourceModel>;
+  /** Days without provider evidence after which the editor warns (setting emailQualityEvidenceWarnAfterDays). */
+  warnAfterDays: Scalars['Int']['output'];
+};
+
+export type EmailEvidenceSourceModel = {
+  __typename: 'EmailEvidenceSourceModel';
+  /** Events of this source in the last 30 days. */
+  count: Scalars['Int']['output'];
+  /** When the newest event of this source arrived, ever. */
+  lastAt?: Maybe<Scalars['DateTime']['output']>;
+  source: EmailQualityEventSource;
+};
+
+/** send: the provider refused the address when a mail was sent. webhook: the provider reported it. poll: asked of the provider or read from a newsletter audience. verification: an address verification service. */
+export enum EmailQualityEventSource {
+  Poll = 'poll',
+  Send = 'send',
+  Verification = 'verification',
+  Webhook = 'webhook'
+}
+
 /** active: logged in or clicked recently. unknown: nothing decided. unresponsive: mails delivered, no reaction for a long time. dead: bounced, invalid, complained or unsubscribed. */
 export enum EmailQualityLevel {
   Active = 'active',
@@ -2566,6 +2605,7 @@ export type MailProviderModel = {
 };
 
 export enum MailProviderType {
+  Brevo = 'BREVO',
   Log = 'LOG',
   Mailchimp = 'MAILCHIMP',
   Mailgun = 'MAILGUN',
@@ -2805,6 +2845,14 @@ export type MailTemplateSubscriptionOption = {
   __typename: 'MailTemplateSubscriptionOption';
   id: Scalars['String']['output'];
   label: Scalars['String']['output'];
+};
+
+/** The audience webhook the api registered at Mailchimp; the URL carries the secret. */
+export type MailchimpAudienceWebhook = {
+  __typename: 'MailchimpAudienceWebhook';
+  registeredAt: Scalars['DateTime']['output'];
+  url: Scalars['String']['output'];
+  webhookId: Scalars['String']['output'];
 };
 
 export type MailchimpContactInput = {
@@ -3355,6 +3403,10 @@ export type Mutation = {
   changeSubscriptionPaymentMethod: StartedSubscriptionPaymentMethodChange;
   /** Asks the payment provider whether the reader finished paying or authorizing, for when they return before the provider reported it. */
   checkSubscriptionPaymentMethodChange: SubscriptionPaymentMethodChange;
+  /** Close the issue: no more Nachlieferungen expected. Every delivery must be handed over. Reversible. */
+  closePrintIssue: PrintIssue;
+  /** Compute the list and store it for checking. What exporting it does follows from the state: the first delivery, the delivery not handed over yet written anew, or the next Nachlieferung. Replaces a stored list. */
+  computePrintIssueRun: PrintIssueRun;
   /** Apply every open suggestion of a direction */
   confirmAllDeliverySuggestions: DeliverySuggestionConfirmAllResult;
   /** Confirms that the manual action required by a changelog entry has been completed. Requires the permission to update settings. */
@@ -3448,6 +3500,8 @@ export type Mutation = {
   createPollAnswer: PollAnswer;
   /** Creates a new external vote source. */
   createPollExternalVoteSource: PollExternalVoteSource;
+  /** Create a print issue. */
+  createPrintIssue: PrintIssue;
   /** Creates a rating system answer. */
   createRatingSystemAnswer: CommentRatingSystemAnswer;
   createSession: SessionWithToken;
@@ -3555,6 +3609,10 @@ export type Mutation = {
   deletePollExternalVoteSource: PollExternalVoteSource;
   /** Delete poll votes */
   deletePollVotes: DeletePollVotesResult;
+  /** Delete a print issue none of whose lists was handed to the printshop. */
+  deletePrintIssue: PrintIssue;
+  /** Delete a delivery that was not handed to the printshop yet. */
+  deletePrintIssueDelivery: PrintIssue;
   /** Deletes a rating system answer. */
   deleteRatingSystemAnswer: CommentRatingSystemAnswer;
   /** Deletes an existing subscription. */
@@ -3582,6 +3640,8 @@ export type Mutation = {
   deleteUserRole: UserRole;
   /** Deletes an existing video. */
   deleteVideo: Scalars['String']['output'];
+  /** «Übergeben»: the file went to the printshop. The delivery is immutable from then on and its copies count for the readers' quota. Reversible with undeliverPrintIssueDelivery while no later list was built on it. */
+  deliverPrintIssueDelivery: PrintIssue;
   /** Discards the current draft and reverts to the latest published revision. */
   discardArticleDraft: Article;
   /** Discards the current draft and reverts to the latest published revision. */
@@ -3596,8 +3656,12 @@ export type Mutation = {
   duplicateNewsletterCampaign: NewsletterCampaign;
   /** Duplicates an page. */
   duplicatePage: Page;
+  /** Create the next issue of the same year with the same options. It keeps the ship day of the original until it is edited. */
+  duplicatePrintIssue: PrintIssue;
   /** Enables two-factor authentication for the current user after verifying the TOTP token. */
   enableTotp: Scalars['Boolean']['output'];
+  /** Write exactly the checked list (computedAt) as a delivery. Refuses a list computed again in between, one older than 24 hours, and one whose mode the state no longer allows. */
+  exportPrintIssueRun: PrintIssue;
   /** Allows authenticated users to extend existing subscriptions */
   extendUserSubscription: Payment;
   /** Generates a TOTP setup for the current user. Returns a QR code and secret for authenticator app configuration. */
@@ -3638,6 +3702,8 @@ export type Mutation = {
   recomputeDeliverySuggestions: DeliverySuggestionRecomputeResult;
   /** Pull late delivery states from the mail provider, then re-evaluate everyone's email quality. The nightly job does the same; this is for looking at a campaign's result now. */
   refreshEmailQuality: EmailQualityRefreshModel;
+  /** Registers (or renews) the audience webhook at Mailchimp, so cleaned and unsubscribed members reach the email quality as they happen. */
+  registerMailchimpAudienceWebhook: MailchimpAudienceWebhook;
   /** This mutation registers a new member by providing name, email, and other required information. */
   registerMember: Registration;
   /** Revokes existing personal login links of a user and issues a new one. The code is returned exactly once. */
@@ -3648,6 +3714,8 @@ export type Mutation = {
   reloadProviders: Scalars['Boolean']['output'];
   /** Renews a subscription. */
   renewSubscription: PublicSubscription;
+  /** Reopen a closed issue so that more Nachlieferungen can follow. */
+  reopenPrintIssue: PrintIssue;
   /** Requests the user to change the comment's content */
   requestChangesOnComment: Comment;
   /** Requests an email change. A confirmation link is sent to the new email address. A restricted session must also confirm the configured second factor from the letter; without one it may only replace a placeholder address. */
@@ -3702,6 +3770,8 @@ export type Mutation = {
   /** Triggers a mailchimp sync in the background. */
   triggerMailchimpSync: Scalars['Boolean']['output'];
   unarchiveNewsletterCampaign: NewsletterCampaign;
+  /** «Lieferung zurücknehmen»: the delivery is a draft again and its copies count for no quota until it is handed over anew. Only the newest list of the newest issue with lists, on an open issue. */
+  undeliverPrintIssueDelivery: PrintIssue;
   /** Unpublishes all revisions of an article. */
   unpublishArticle: Article;
   /** Unpublishes all revisions of an page. */
@@ -3784,6 +3854,8 @@ export type Mutation = {
   updatePeerProfile: PeerProfile;
   /** Updates an existing poll. */
   updatePoll: FullPoll;
+  /** Update a print issue. The status never changes; a stored list is dropped when the ship day or the options change. */
+  updatePrintIssue: PrintIssue;
   /** Update the comment rating system. */
   updateRatingSystem: CommentRatingSystem;
   /** Marks an SEO checklist item as done or not done and returns all completed items. */
@@ -3905,6 +3977,16 @@ export type MutationCheckSubscriptionPaymentMethodChangeArgs = {
 };
 
 
+export type MutationClosePrintIssueArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationComputePrintIssueRunArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationConfirmAllDeliverySuggestionsArgs = {
   kind: DeliverySuggestionKind;
 };
@@ -3943,12 +4025,14 @@ export type MutationCreateAiSettingArgs = {
 
 
 export type MutationCreateAnalyticsProviderSettingArgs = {
+  apiKey?: InputMaybe<Scalars['String']['input']>;
   articlePrefix?: InputMaybe<Scalars['String']['input']>;
   credentials?: InputMaybe<SettingAnalyticsCredentialsInput>;
   id: Scalars['String']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
   property?: InputMaybe<Scalars['String']['input']>;
   type: AnalyticsProviderType;
+  url?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -4259,6 +4343,7 @@ export type MutationCreatePaymentMethodArgs = {
 export type MutationCreatePaymentProviderSettingArgs = {
   apiKey?: InputMaybe<Scalars['String']['input']>;
   bexio_accountId?: InputMaybe<Scalars['Float']['input']>;
+  bexio_contactSync?: InputMaybe<Scalars['Boolean']['input']>;
   bexio_countryId?: InputMaybe<Scalars['Float']['input']>;
   bexio_invoiceMailBodyNewMembership?: InputMaybe<Scalars['String']['input']>;
   bexio_invoiceMailBodyRenewalMembership?: InputMaybe<Scalars['String']['input']>;
@@ -4344,6 +4429,11 @@ export type MutationCreatePollAnswerArgs = {
 export type MutationCreatePollExternalVoteSourceArgs = {
   pollId: Scalars['String']['input'];
   source?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationCreatePrintIssueArgs = {
+  input: PrintIssueInputModel;
 };
 
 
@@ -4687,6 +4777,16 @@ export type MutationDeletePollVotesArgs = {
 };
 
 
+export type MutationDeletePrintIssueArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationDeletePrintIssueDeliveryArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationDeleteRatingSystemAnswerArgs = {
   id: Scalars['String']['input'];
 };
@@ -4742,6 +4842,11 @@ export type MutationDeleteVideoArgs = {
 };
 
 
+export type MutationDeliverPrintIssueDeliveryArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationDiscardArticleDraftArgs = {
   id: Scalars['String']['input'];
 };
@@ -4778,8 +4883,19 @@ export type MutationDuplicatePageArgs = {
 };
 
 
+export type MutationDuplicatePrintIssueArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationEnableTotpArgs = {
   totpToken: Scalars['String']['input'];
+};
+
+
+export type MutationExportPrintIssueRunArgs = {
+  computedAt: Scalars['DateTime']['input'];
+  id: Scalars['String']['input'];
 };
 
 
@@ -4879,6 +4995,11 @@ export type MutationReactivateUserSubscriptionArgs = {
 };
 
 
+export type MutationRegisterMailchimpAudienceWebhookArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationRegisterMemberArgs = {
   address?: InputMaybe<UserAddressInput>;
   birthday?: InputMaybe<Scalars['DateTime']['input']>;
@@ -4903,6 +5024,11 @@ export type MutationRejectCommentArgs = {
 
 
 export type MutationRenewSubscriptionArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationReopenPrintIssueArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -5044,6 +5170,11 @@ export type MutationUnarchiveNewsletterCampaignArgs = {
 };
 
 
+export type MutationUndeliverPrintIssueDeliveryArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationUnpublishArticleArgs = {
   id: Scalars['String']['input'];
 };
@@ -5064,11 +5195,14 @@ export type MutationUpdateAiSettingArgs = {
 
 
 export type MutationUpdateAnalyticsProviderSettingArgs = {
+  apiKey?: InputMaybe<Scalars['String']['input']>;
   articlePrefix?: InputMaybe<Scalars['String']['input']>;
   credentials?: InputMaybe<SettingAnalyticsCredentialsInput>;
+  hotAndTrending?: InputMaybe<Scalars['Boolean']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   property?: InputMaybe<Scalars['String']['input']>;
+  url?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -5414,6 +5548,7 @@ export type MutationUpdatePaymentMethodArgs = {
 export type MutationUpdatePaymentProviderSettingArgs = {
   apiKey?: InputMaybe<Scalars['String']['input']>;
   bexio_accountId?: InputMaybe<Scalars['Float']['input']>;
+  bexio_contactSync?: InputMaybe<Scalars['Boolean']['input']>;
   bexio_countryId?: InputMaybe<Scalars['Float']['input']>;
   bexio_invoiceMailBodyNewMembership?: InputMaybe<Scalars['String']['input']>;
   bexio_invoiceMailBodyRenewalMembership?: InputMaybe<Scalars['String']['input']>;
@@ -5504,6 +5639,12 @@ export type MutationUpdatePollArgs = {
   infoText?: InputMaybe<Scalars['RichText']['input']>;
   opensAt?: InputMaybe<Scalars['DateTime']['input']>;
   question?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationUpdatePrintIssueArgs = {
+  id: Scalars['String']['input'];
+  input: PrintIssueInputModel;
 };
 
 
@@ -5658,7 +5799,6 @@ export type MutationUpdateWebsiteSettingsArgs = {
   ads?: InputMaybe<WebsiteAdsInput>;
   analytics?: InputMaybe<WebsiteAnalyticsInput>;
   fonts?: InputMaybe<Array<WebsiteRemoteFontInput>>;
-  mail?: InputMaybe<WebsiteMailInput>;
   theme?: InputMaybe<Scalars['JSONObject']['input']>;
 };
 
@@ -6667,6 +6807,8 @@ export type PeriodicityPrice = {
   amountTarget?: Maybe<Scalars['Int']['output']>;
   label?: Maybe<Scalars['String']['output']>;
   periodicity: PaymentPeriodicity;
+  /** Printed issues one paid period of this periodicity is worth (print export). Empty: the medium's issues per year, pro rata. */
+  printIssues?: Maybe<Scalars['Int']['output']>;
 };
 
 export type PeriodicityPriceInput = {
@@ -6675,6 +6817,8 @@ export type PeriodicityPriceInput = {
   amountTarget?: InputMaybe<Scalars['Int']['input']>;
   label?: InputMaybe<Scalars['String']['input']>;
   periodicity: PaymentPeriodicity;
+  /** Printed issues one paid period of this periodicity is worth (print export). Empty: the medium's issues per year, pro rata. */
+  printIssues?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type Permission = {
@@ -6830,6 +6974,278 @@ export type PollVoteFilter = {
 export enum PollVoteSort {
   CreatedAt = 'CreatedAt'
 }
+
+/** One of the medium's bexio kinds (setting printBexioKinds). */
+export type PrintBexioKind = {
+  __typename: 'PrintBexioKind';
+  id: Scalars['String']['output'];
+  /** What the lists call it. */
+  label: Scalars['String']['output'];
+  /** «period»: a year or a date range follows the word; «issue»: an issue. */
+  refersTo: Scalars['String']['output'];
+};
+
+/** What the options can do on this medium. */
+export type PrintExportContext = {
+  __typename: 'PrintExportContext';
+  /** A bexio payment provider with an API key exists; without it the bexio option has no effect. */
+  bexioConfigured: Scalars['Boolean']['output'];
+  /** The medium's bexio kinds (setting printBexioKinds); none until configured. */
+  bexioKinds: Array<PrintBexioKind>;
+  /** The medium's defaults for a new issue (setting printExportDefaults). */
+  defaults: PrintIssueOptions;
+};
+
+/** One printed issue of the magazine. Its lists are evaluated as of the ship day. */
+export type PrintIssue = HasImageLc & {
+  __typename: 'PrintIssue';
+  closedAt?: Maybe<Scalars['DateTime']['output']>;
+  closedBy?: Maybe<PrintIssueUser>;
+  /** How many issues it counts as against a reader's period: the numbers it covers, or fewer. */
+  countsAs: Scalars['Int']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  /** In batch order. */
+  deliveries: Array<PrintIssueDelivery>;
+  id: Scalars['String']['output'];
+  image?: Maybe<Image>;
+  imageId?: Maybe<Scalars['String']['output']>;
+  /** Ship day, YYYY-MM-DD. */
+  issueDate: Scalars['String']['output'];
+  /** «1.27»; a double issue «3/4.26» */
+  label: Scalars['String']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  note?: Maybe<Scalars['String']['output']>;
+  number: Scalars['Int']['output'];
+  /** The last number of a double issue: «3/4.26» has 4. */
+  numberTo?: Maybe<Scalars['Int']['output']>;
+  options: PrintIssueOptions;
+  status: PrintIssueStatus;
+  /** The issue's topic. */
+  title?: Maybe<Scalars['String']['output']>;
+  year: Scalars['Int']['output'];
+};
+
+export type PrintIssueBexioStats = {
+  __typename: 'PrintIssueBexioStats';
+  canceled: Scalars['Int']['output'];
+  /** A bexio payment provider with an API key exists. */
+  configured: Scalars['Boolean']['output'];
+  contactMissing: Scalars['Int']['output'];
+  detailFetched: Scalars['Int']['output'];
+  /** Found, but of a kind the options leave out. */
+  excludedKind: Scalars['Int']['output'];
+  /** The options asked for bexio and it was read. */
+  included: Scalars['Boolean']['output'];
+  invoicesInWindow: Scalars['Int']['output'];
+  /** A kind's word without a valid year, date range or issue. */
+  noValidPeriod: Scalars['Int']['output'];
+  otherPeriod: Scalars['Int']['output'];
+  path?: Maybe<Scalars['String']['output']>;
+  /** Invoices whose billed quantity differs from the linked recipients. */
+  quantityMismatch: Scalars['Int']['output'];
+  skippedImported: Scalars['Int']['output'];
+  /** Unpaid invoices left out because the options leave «offen» out. */
+  skippedOpen: Scalars['Int']['output'];
+  skippedProvider: Scalars['Int']['output'];
+  ungeprueft: Scalars['Int']['output'];
+  zeroCopies: Scalars['Int']['output'];
+};
+
+export type PrintIssueCount = {
+  __typename: 'PrintIssueCount';
+  count: Scalars['Int']['output'];
+  key: Scalars['String']['output'];
+};
+
+/** One list handed to the printshop: the export (batch 0) or a Nachlieferung. Until it is handed over it can be computed again and replaced, or deleted; from then on it is immutable and its copies count for the readers' quota. */
+export type PrintIssueDelivery = {
+  __typename: 'PrintIssueDelivery';
+  /** 0 = the export, n = the n-th Nachlieferung. */
+  batch: Scalars['Int']['output'];
+  copyCount: Scalars['Int']['output'];
+  /** When the list was exported. */
+  createdAt: Scalars['DateTime']['output'];
+  createdBy?: Maybe<PrintIssueUser>;
+  /** «übergeben»: when the file went to the printshop. */
+  deliveredAt?: Maybe<Scalars['DateTime']['output']>;
+  deliveredBy?: Maybe<PrintIssueUser>;
+  filename: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  /** The options this list was computed with. */
+  options: PrintIssueOptions;
+  rowCount: Scalars['Int']['output'];
+  summary: PrintIssueSummary;
+};
+
+export type PrintIssueFileModel = {
+  __typename: 'PrintIssueFileModel';
+  /** UTF-8 with BOM, «;» separated, CRLF. */
+  csv: Scalars['String']['output'];
+  filename: Scalars['String']['output'];
+};
+
+export type PrintIssueInputModel = {
+  /** How many issues it counts as against a reader's period, 1 up to the numbers it covers. Left out: the numbers it covers. */
+  countsAs?: InputMaybe<Scalars['Int']['input']>;
+  /** Shipped before the export tracked issues. */
+  historic?: Scalars['Boolean']['input'];
+  /** e.g. the cover. Left out: an edit keeps the image; null removes it. */
+  imageId?: InputMaybe<Scalars['String']['input']>;
+  /** Ship day, YYYY-MM-DD. */
+  issueDate: Scalars['String']['input'];
+  note?: InputMaybe<Scalars['String']['input']>;
+  number: Scalars['Int']['input'];
+  /** The last number of a double issue («3/4.26»: 4); null for a single one. */
+  numberTo?: InputMaybe<Scalars['Int']['input']>;
+  /** Left out: a new issue takes the medium's defaults, an edited one keeps its own. */
+  options?: InputMaybe<PrintIssueOptionsInput>;
+  /** The issue's topic. */
+  title?: InputMaybe<Scalars['String']['input']>;
+  year: Scalars['Int']['input'];
+};
+
+/** What a list is computed from. */
+export type PrintIssueOptions = {
+  __typename: 'PrintIssueOptions';
+  /** Only these of the medium's bexio kinds (ids from the export context); null = every one. */
+  bexioKindIds?: Maybe<Array<Scalars['String']['output']>>;
+  /** Read bexio (institutions, gifts, bookshops, single issues) when a provider is configured. */
+  includeBexio: Scalars['Boolean']['output'];
+  /** Renewing readers whose invoice is not paid yet stay in («offen»). */
+  includeOpen: Scalars['Boolean']['output'];
+  /** Subscriptions starting after the ship day get a copy as a gift («Vorab-Exemplar»). */
+  includeUpcoming: Scalars['Boolean']['output'];
+  /** Only these member plans; null = every subscription plan. */
+  memberPlanIds?: Maybe<Array<Scalars['String']['output']>>;
+};
+
+/** Options to set; what is left out keeps its value (the defaults for a new issue). */
+export type PrintIssueOptionsInput = {
+  /** Left out keeps the current kinds; null or empty = every kind. */
+  bexioKindIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  includeBexio?: InputMaybe<Scalars['Boolean']['input']>;
+  includeOpen?: InputMaybe<Scalars['Boolean']['input']>;
+  includeUpcoming?: InputMaybe<Scalars['Boolean']['input']>;
+  memberPlanIds?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+/** One line of the print run: one address, `anzahl` copies. */
+export type PrintIssueRow = {
+  __typename: 'PrintIssueRow';
+  aboTyp: Scalars['String']['output'];
+  adressnummer: Scalars['String']['output'];
+  anrede: Scalars['String']['output'];
+  anzahl: Scalars['Int']['output'];
+  beginn: Scalars['String']['output'];
+  bemerkungen: Scalars['String']['output'];
+  email: Scalars['String']['output'];
+  firma: Scalars['String']['output'];
+  hausnummer: Scalars['String']['output'];
+  hinweis: Scalars['String']['output'];
+  land: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  ort: Scalars['String']['output'];
+  plz: Scalars['String']['output'];
+  quelle: Scalars['String']['output'];
+  strasse: Scalars['String']['output'];
+  vorname: Scalars['String']['output'];
+  zahlungsstatus: Scalars['String']['output'];
+  zusatz: Scalars['String']['output'];
+};
+
+/** A computed list waiting to be checked. Exporting writes exactly these rows as a delivery. */
+export type PrintIssueRun = {
+  __typename: 'PrintIssueRun';
+  /** The batch the delivery gets: 0 = the export, n = the n-th Nachlieferung. */
+  batch: Scalars['Int']['output'];
+  /** Pass it back when exporting: a run computed again in between is refused. */
+  computedAt: Scalars['DateTime']['output'];
+  computedBy?: Maybe<PrintIssueUser>;
+  /** The delivery a replace run writes anew. */
+  deliveryId?: Maybe<Scalars['String']['output']>;
+  /** The CSV file name the delivery gets. */
+  filename: Scalars['String']['output'];
+  mode: PrintIssueRunMode;
+  rows: Array<PrintIssueRow>;
+  summary: PrintIssueSummary;
+};
+
+/** What exporting the run does: export creates the first delivery; replace writes the delivery not handed over yet anew; supplement appends the next Nachlieferung. */
+export enum PrintIssueRunMode {
+  Export = 'export',
+  Replace = 'replace',
+  Supplement = 'supplement'
+}
+
+/** Subscriptions the run left out, by reason. */
+export type PrintIssueSkipped = {
+  __typename: 'PrintIssueSkipped';
+  deactivated: Scalars['Int']['output'];
+  donation: Scalars['Int']['output'];
+  /** Plan not among the options' member plans. */
+  excludedPlan: Scalars['Int']['output'];
+  exhausted: Scalars['Int']['output'];
+  future: Scalars['Int']['output'];
+  lapsed: Scalars['Int']['output'];
+  /** Plan sets 0 printed issues for the subscription's periodicity. */
+  noPrintIssues: Scalars['Int']['output'];
+  replaced: Scalars['Int']['output'];
+  unpaidDeactivation: Scalars['Int']['output'];
+};
+
+export type PrintIssueSources = {
+  __typename: 'PrintIssueSources';
+  bexio: Scalars['Int']['output'];
+  wepublish: Scalars['Int']['output'];
+};
+
+/** open: lists can be computed, exported and handed over; closed: no more Nachlieferungen expected (reversible); historic: shipped before the export tracked issues (imported). */
+export enum PrintIssueStatus {
+  Closed = 'closed',
+  Historic = 'historic',
+  Open = 'open'
+}
+
+/** What one run of the export found. */
+export type PrintIssueSummary = {
+  __typename: 'PrintIssueSummary';
+  /** Left out because another delivery of the issue exported them. */
+  alreadyExported: Scalars['Int']['output'];
+  bexio: PrintIssueBexioStats;
+  byCountry: Array<PrintIssueCount>;
+  byKind: Array<PrintIssueCount>;
+  byPlan: Array<PrintIssueCount>;
+  bySource: PrintIssueSources;
+  copies: Scalars['Int']['output'];
+  /** The day the entitlement was evaluated at (YYYY-MM-DD). */
+  date: Scalars['String']['output'];
+  duplicates: Scalars['Int']['output'];
+  /** Rows marked «Vorab-Exemplar»: subscriptions starting after the ship day. */
+  gifts: Scalars['Int']['output'];
+  /** Rows marked «Restexemplar»: copies still owed to an ended period. */
+  grace: Scalars['Int']['output'];
+  includeUpcoming: Scalars['Boolean']['output'];
+  /** The issue, e.g. «1.27». */
+  issue: Scalars['String']['output'];
+  kuendigungen: Scalars['Int']['output'];
+  missingAddress: Scalars['Int']['output'];
+  /** Of those, rows without any renewal invoice yet. */
+  openWithoutInvoice: Scalars['Int']['output'];
+  placeholderEmail: Scalars['Int']['output'];
+  rows: Scalars['Int']['output'];
+  skipped: PrintIssueSkipped;
+  totalSubscriptions: Scalars['Int']['output'];
+  /** Rows marked «offen»: renewing, invoice not paid yet. */
+  unpaid: Scalars['Int']['output'];
+  warnings: Array<Scalars['String']['output']>;
+};
+
+export type PrintIssueUser = {
+  __typename: 'PrintIssueUser';
+  firstName?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+};
 
 export enum ProductType {
   Donation = 'Donation',
@@ -7011,6 +7427,8 @@ export type Query = {
   documentStorageUsage: DocumentStorageUsage;
   /** Returns a paginated list of documents based on the filters given. */
   documents: PaginatedDocuments;
+  /** Where the email status comes from: whether and when the mail provider reported anything. The editor warns when no provider evidence arrived for a while. */
+  emailEvidence: EmailEvidenceModel;
   /** Returns an event by id. */
   event: Event;
   /**
@@ -7217,6 +7635,16 @@ export type Query = {
   /** Returns a paginated list of polls based on the filters given. */
   polls: PaginatedPolls;
   primaryBanner?: Maybe<Banner>;
+  /** What the options can do here, and the medium's defaults for a new issue. */
+  printExportContext: PrintExportContext;
+  /** One print issue with its deliveries. */
+  printIssue: PrintIssue;
+  /** The CSV for the printshop: one delivery, or every delivery of the issue merged in export order. */
+  printIssueCsv: PrintIssueFileModel;
+  /** The computed list waiting to be checked, if any. */
+  printIssueRun?: Maybe<PrintIssueRun>;
+  /** All print issues, the newest first. */
+  printIssues: Array<PrintIssue>;
   promptHTML: Chat;
   provider: MailProviderModel;
   /** This query returns the comment rating system. */
@@ -8068,6 +8496,22 @@ export type QueryPrimaryBannerArgs = {
 };
 
 
+export type QueryPrintIssueArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryPrintIssueCsvArgs = {
+  deliveryId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryPrintIssueRunArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type QueryPromptHtmlArgs = {
   chatId?: InputMaybe<Scalars['String']['input']>;
   query: Scalars['String']['input'];
@@ -8538,6 +8982,8 @@ export type SettingAnalyticsProvider = SettingProvider & {
   __typename: 'SettingAnalyticsProvider';
   articlePrefix?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
+  /** Whether this provider powers the Hot & Trending query. */
+  hotAndTrending: Scalars['Boolean']['output'];
   id: Scalars['String']['output'];
   /** Whether service account credentials are stored. They are never returned. */
   isCredentialsSet: Scalars['Boolean']['output'];
@@ -8546,6 +8992,8 @@ export type SettingAnalyticsProvider = SettingProvider & {
   name?: Maybe<Scalars['String']['output']>;
   property?: Maybe<Scalars['String']['output']>;
   type: AnalyticsProviderType;
+  /** Base url of the API, used for self hosted instances. */
+  url?: Maybe<Scalars['String']['output']>;
 };
 
 export type SettingAnalyticsProviderFilter = {
@@ -8612,6 +9060,12 @@ export type SettingMailProvider = SettingProvider & {
   /** Whether a webhook signing secret is stored. The secret itself is never returned. */
   isWebhookEndpointSecretSet: Scalars['Boolean']['output'];
   lastLoadedAt: Scalars['DateTime']['output'];
+  /** When the provider was last asked for delivery states. */
+  lastPollAt?: Maybe<Scalars['DateTime']['output']>;
+  /** What went wrong on the last poll; null when it succeeded. */
+  lastPollError?: Maybe<Scalars['String']['output']>;
+  /** When the provider last called the webhook with a verified request. */
+  lastWebhookAt?: Maybe<Scalars['DateTime']['output']>;
   mailchimp_baseURL?: Maybe<Scalars['String']['output']>;
   mailgun_baseDomain?: Maybe<Scalars['String']['output']>;
   mailgun_mailDomain?: Maybe<Scalars['String']['output']>;
@@ -8638,6 +9092,7 @@ export enum SettingName {
   AllowGuestCommentRating = 'ALLOW_GUEST_COMMENT_RATING',
   AllowGuestPollVoting = 'ALLOW_GUEST_POLL_VOTING',
   CommentCharLimit = 'COMMENT_CHAR_LIMIT',
+  EmailQualityEvidenceWarnAfterDays = 'EMAIL_QUALITY_EVIDENCE_WARN_AFTER_DAYS',
   EmailQualityMinMailsForUnresponsive = 'EMAIL_QUALITY_MIN_MAILS_FOR_UNRESPONSIVE',
   EmailQualityUnresponsiveAfterDays = 'EMAIL_QUALITY_UNRESPONSIVE_AFTER_DAYS',
   LoginCodeEnabled = 'LOGIN_CODE_ENABLED',
@@ -8656,6 +9111,9 @@ export enum SettingName {
   PaymentMethodChangeExpiryDays = 'PAYMENT_METHOD_CHANGE_EXPIRY_DAYS',
   PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
   PlaceholderEmailPatterns = 'PLACEHOLDER_EMAIL_PATTERNS',
+  PrintBexioKinds = 'PRINT_BEXIO_KINDS',
+  PrintExportDefaults = 'PRINT_EXPORT_DEFAULTS',
+  PrintIssuesPerYear = 'PRINT_ISSUES_PER_YEAR',
   ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
   SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN',
   SessionTtlDays = 'SESSION_TTL_DAYS',
@@ -8667,6 +9125,9 @@ export enum SettingName {
 export type SettingPaymentProvider = SettingProvider & {
   __typename: 'SettingPaymentProvider';
   bexio_accountId?: Maybe<Scalars['Float']['output']>;
+  bexio_contactSync?: Maybe<Scalars['Boolean']['output']>;
+  bexio_contactSyncAt?: Maybe<Scalars['DateTime']['output']>;
+  bexio_contactSyncError?: Maybe<Scalars['String']['output']>;
   bexio_countryId?: Maybe<Scalars['Float']['output']>;
   bexio_invoiceMailBodyNewMembership?: Maybe<Scalars['String']['output']>;
   bexio_invoiceMailBodyRenewalMembership?: Maybe<Scalars['String']['output']>;
@@ -8752,6 +9213,8 @@ export type SettingSyncProvider = SettingProvider & {
   lastLoadedAt: Scalars['DateTime']['output'];
   lastSyncAt?: Maybe<Scalars['DateTime']['output']>;
   lastSyncError?: Maybe<Scalars['String']['output']>;
+  /** When the audience webhook last delivered a verified call. */
+  lastWebhookAt?: Maybe<Scalars['DateTime']['output']>;
   mailchimp_defaultInterestGroupIds?: Maybe<Array<Scalars['String']['output']>>;
   mailchimp_extensions?: Maybe<Scalars['JSONObject']['output']>;
   mailchimp_interestGroupMappings?: Maybe<Array<Scalars['JSONObject']['output']>>;
@@ -8759,6 +9222,9 @@ export type SettingSyncProvider = SettingProvider & {
   mailchimp_isApiKeySet: Scalars['Boolean']['output'];
   mailchimp_listId?: Maybe<Scalars['String']['output']>;
   mailchimp_mergeFieldMappings?: Maybe<Array<Scalars['JSONObject']['output']>>;
+  /** Id of the audience webhook the api registered at Mailchimp. */
+  mailchimp_webhookId?: Maybe<Scalars['String']['output']>;
+  mailchimp_webhookRegisteredAt?: Maybe<Scalars['DateTime']['output']>;
   modifiedAt: Scalars['DateTime']['output'];
   name?: Maybe<Scalars['String']['output']>;
   type: SyncProviderType;
@@ -9769,6 +10235,7 @@ export type WebsiteAnalytics = {
   googleTagManager: KeyEnabled;
   piwik: KeyEnabled;
   plausible: KeyEnabled;
+  umami: KeyEnabled;
 };
 
 export type WebsiteAnalyticsInput = {
@@ -9776,15 +10243,7 @@ export type WebsiteAnalyticsInput = {
   googleTagManager: KeyEnabledInput;
   piwik: KeyEnabledInput;
   plausible: KeyEnabledInput;
-};
-
-export type WebsiteMail = {
-  __typename: 'WebsiteMail';
-  mailchimp?: Maybe<KeyEnabled>;
-};
-
-export type WebsiteMailInput = {
-  mailchimp: KeyEnabledInput;
+  umami: KeyEnabledInput;
 };
 
 export type WebsiteRemoteFont = {
@@ -9805,7 +10264,6 @@ export type WebsiteSettings = {
   ads: WebsiteAds;
   analytics: WebsiteAnalytics;
   fonts: Array<WebsiteRemoteFont>;
-  mail: WebsiteMail;
   theme: Scalars['JSONObject']['output'];
 };
 
