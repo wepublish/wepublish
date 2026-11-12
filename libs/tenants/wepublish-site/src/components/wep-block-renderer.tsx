@@ -52,6 +52,7 @@ export const WepBlockRenderer = (props: BuilderBlockRendererProps) => {
               (isHomePage && props.index < 2) ||
               isLogoBand(block) ||
               isFeature(block) ||
+              isAttentionCatcher(block) ||
               isTeaserCards(block) ||
               isLatestNews(block) ||
               isNetworkNews(block)

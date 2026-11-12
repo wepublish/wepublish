@@ -217,17 +217,74 @@ describe('We.Publish website tenant', () => {
     ).toEqual([staticImageSrc(logo), staticImageSrc(logoAlt)]);
   });
 
-  it('paints an attention catcher break block in the primary colour', () => {
-    renderTenantPage([
+  describe('attention catcher', () => {
+    const attentionCatcher = (
+      overrides: Partial<FullBreakBlockFragment> = {}
+    ): FullBreakBlockFragment =>
       mockBreakBlock({
         blockStyle: WepBlockStyles.AttentionCatcher,
         text: 'Werde Teil von We.Publish',
-      }),
-    ]);
+        hideButton: false,
+        linkText: 'Mehr erfahren',
+        linkURL: '/demo',
+        linkTarget: null,
+        image: null,
+        ...overrides,
+      });
 
-    expect(
-      backgroundsOf(screen.getByText('Werde Teil von We.Publish'))
-    ).toContain(primaryColor);
+    it.each([
+      [WepBlockStyles.AttentionCatcher, primaryColor],
+      [
+        WepBlockStyles.AttentionCatcherMint,
+        wepublishSiteTenant.createTheme().palette.primary.light,
+      ],
+      [WepBlockStyles.AttentionCatcherRose, '#f3d5e1'],
+      [WepBlockStyles.AttentionCatcherBlue, '#87f5fb'],
+    ])('paints %s in its colour', (blockStyle, colour) => {
+      renderTenantPage([attentionCatcher({ blockStyle })]);
+
+      expect(
+        backgroundsOf(
+          screen.getByRole('heading', { name: 'Werde Teil von We.Publish' })
+        )
+      ).toContain(colour);
+    });
+
+    it('shows the title, the text and the button', () => {
+      renderTenantPage([attentionCatcher()]);
+
+      expect(
+        screen.getByRole('heading', {
+          level: 2,
+          name: 'Werde Teil von We.Publish',
+        })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: 'Mehr erfahren' })
+      ).toHaveAttribute('href', '/demo');
+    });
+
+    it('shows the image from the editor next to the text', () => {
+      renderTenantPage([
+        attentionCatcher({ image: mockImage({ title: 'Media Makers Camp' }) }),
+      ]);
+
+      expect(
+        screen.getByRole('img', { name: 'Media Makers Camp' })
+      ).toBeInTheDocument();
+    });
+
+    it('works without an image', () => {
+      renderTenantPage([attentionCatcher()]);
+
+      expect(
+        within(
+          screen
+            .getByRole('heading', { name: 'Werde Teil von We.Publish' })
+            .closest('section') as HTMLElement
+        ).queryByRole('img')
+      ).not.toBeInTheDocument();
+    });
   });
 
   it('keeps a break block without the attention catcher style uncoloured', () => {
