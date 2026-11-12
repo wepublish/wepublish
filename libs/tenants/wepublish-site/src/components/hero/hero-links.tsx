@@ -42,12 +42,17 @@ export const HeroLinks = styled(WepTeaserSlots)`
     padding-bottom: ${({ theme }) => theme.spacing(16)};
   }
 
+  // Below each other: the titles in one column, the buttons right aligned in a
+  // second one, at least 30px away from the longest title
   ${TeaserSlotsTeasers} {
-    display: flex;
-    flex-direction: column;
-    gap: ${({ theme }) => theme.spacing(4)};
+    display: grid;
+    grid-template-columns: max-content max-content;
+    justify-content: start;
+    column-gap: 30px;
+    row-gap: ${({ theme }) => theme.spacing(4)};
 
     ${({ theme }) => theme.breakpoints.up('md')} {
+      display: flex;
       flex-direction: row;
       gap: 50px;
     }
@@ -55,13 +60,14 @@ export const HeroLinks = styled(WepTeaserSlots)`
 `;
 
 export const HeroLinkWrapper = styled('article')`
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 30px;
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  align-items: end;
 
   // Title above the button, so that the three links fit next to each other
   ${({ theme }) => theme.breakpoints.up('md')} {
+    display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
@@ -91,6 +97,8 @@ export const HeroLinkTitle = styled('h2')`
 export const HeroLinkButton = styled(Button)`
   ${({ theme }) => tertiaryButton(theme)}
   flex-shrink: 0;
+  // Right aligned in the column of the buttons on small screens
+  justify-self: end;
 `;
 
 export const HeroLink = ({ teaser, className }: BuilderTeaserProps) => {

@@ -44,12 +44,13 @@ const breakPointValues = {
 
 // Text styles of the Figma design. All sizes are scaled down by 20/22 so that
 // Text is 1.25rem on desktop. The design only has desktop sizes (lg and up);
-// md is a step between them and the mobile sizes (xs).
+// md is a step between them and the mobile sizes (xs). The title gets one more
+// step for tablets (sm).
 const textStyle = (
   fontFamily: string,
   fontWeight: number,
   lineHeight: number,
-  fontSizes: { xs: number; md: number; lg: number }
+  fontSizes: { xs: number; sm?: number; md: number; lg: number }
 ) => ({
   fontFamily,
   fontWeight,
@@ -64,7 +65,7 @@ const textStyle = (
 });
 
 export const designText = {
-  h1: textStyle(headingFont, 800, 1.2, { xs: 33, md: 46, lg: 60 }),
+  h1: textStyle(headingFont, 800, 1.2, { xs: 33, sm: 40, md: 46, lg: 60 }),
   h2: textStyle(headingFont, 800, 1.3, { xs: 25, md: 34, lg: 42 }),
   h3: textStyle(headingFont, 600, 1.3, { xs: 22, md: 26, lg: 29 }),
   h4: textStyle(headingFont, 600, 1.3, { xs: 18, md: 20, lg: 22 }),

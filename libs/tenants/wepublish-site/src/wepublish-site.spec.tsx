@@ -89,11 +89,13 @@ describe('We.Publish website tenant', () => {
   // Text styles of the Figma design (file "Website", frame "Fonts"), all sizes
   // scaled down by 20/22 so that Text is 1.25rem on desktop. The design only has
   // desktop sizes (lg and up); md is a step between them and the mobile sizes (xs).
+  // The title gets one more step for tablets (sm).
   const H1 = {
     font: 'Bricolage Grotesque',
     weight: 800,
     lineHeight: 1.2,
     xs: 33,
+    sm: 40,
     md: 46,
     lg: 60,
   };
@@ -166,9 +168,11 @@ describe('We.Publish website tenant', () => {
     ['teaserMeta', Mono],
   ] as const)('sets %s like the design', (variant, design) => {
     const { breakpoints, typography } = wepublishSiteTenant.createTheme();
+    const sm = `@media (min-width:${breakpoints.values.sm}px)`;
     const md = `@media (min-width:${breakpoints.values.md}px)`;
     const lg = `@media (min-width:${breakpoints.values.lg}px)`;
     const style = typography[variant] as CSSProperties & {
+      [sm]?: CSSProperties;
       [md]?: CSSProperties;
       [lg]?: CSSProperties;
     };
@@ -179,6 +183,7 @@ describe('We.Publish website tenant', () => {
       lineHeight: style.lineHeight,
       letterSpacing: style.letterSpacing,
       xs: style.fontSize,
+      sm: style[sm]?.fontSize,
       md: style[md]?.fontSize,
       lg: style[lg]?.fontSize,
     }).toEqual({
@@ -187,6 +192,7 @@ describe('We.Publish website tenant', () => {
       lineHeight: design.lineHeight,
       letterSpacing: 0,
       xs: rem(design.xs),
+      sm: 'sm' in design ? rem(design.sm) : undefined,
       md: rem(design.md),
       lg: rem(design.lg),
     });
