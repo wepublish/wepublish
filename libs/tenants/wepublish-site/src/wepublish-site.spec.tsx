@@ -10,6 +10,7 @@ import {
   mockCustomTeaser,
   mockImage,
   mockNavigations,
+  mockQuoteBlock,
   mockTeaserSlotsBlock,
   applyTenantTranslations,
   renderWithProviders,
@@ -698,6 +699,60 @@ describe('We.Publish website tenant', () => {
         getComputedStyle(screen.getByRole('img', { name: 'Hauptstadt' }))
           .objectFit
       ).toBe('cover');
+    });
+  });
+
+  describe('quote', () => {
+    const quote = (image: ReturnType<typeof mockImage> | null) =>
+      mockQuoteBlock({
+        quote: 'Das spart uns schlichtweg Zeit und Geld.',
+        author: 'Jan Amsler, Co-Chefredaktor OnlineReports',
+        image,
+      });
+
+    it('shows the quote', () => {
+      renderTenantPage([quote(null)]);
+
+      expect(
+        screen
+          .getByText('Das spart uns schlichtweg Zeit und Geld.')
+          .closest('blockquote')
+      ).toBeInTheDocument();
+    });
+
+    it('splits the author into name and role at the first comma', () => {
+      renderTenantPage([quote(null)]);
+
+      expect(screen.getByText('Jan Amsler')).toBeInTheDocument();
+      expect(
+        screen.getByText('Co-Chefredaktor OnlineReports')
+      ).toBeInTheDocument();
+    });
+
+    it('shows only the name when the author has no role', () => {
+      renderTenantPage([
+        mockQuoteBlock({ quote: 'Gut.', author: 'Jan Amsler', image: null }),
+      ]);
+
+      expect(screen.getByText('Jan Amsler')).toBeInTheDocument();
+    });
+
+    it('shows the portrait next to the name when there is one', () => {
+      renderTenantPage([quote(mockImage({ title: 'Porträt Jan Amsler' }))]);
+
+      expect(
+        screen.getByRole('img', { name: 'Porträt Jan Amsler' })
+      ).toBeInTheDocument();
+    });
+
+    it('leaves out the portrait when there is none', () => {
+      renderTenantPage([quote(null)]);
+
+      expect(
+        within(
+          screen.getByText('Jan Amsler').closest('figure') as HTMLElement
+        ).queryByRole('img')
+      ).not.toBeInTheDocument();
     });
   });
 
