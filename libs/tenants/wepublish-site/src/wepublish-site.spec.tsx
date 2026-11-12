@@ -673,6 +673,27 @@ describe('We.Publish website tenant', () => {
       ).toBeInTheDocument();
     });
 
+    // H4 below the H3 of "Aktuelles von We.Publish"
+    it('sets its title smaller than the title of the news of We.Publish', () => {
+      renderTenantPage([
+        mockTeaserSlotsBlock({
+          blockStyle: WepBlockStyles.LatestNews,
+          title: 'Aktuelles von We.Publish',
+          teasers: [],
+        }),
+        networkNews(),
+      ]);
+
+      const fontSize = (name: string) =>
+        parseFloat(
+          getComputedStyle(screen.getByRole('heading', { name })).fontSize
+        );
+
+      expect(fontSize('Neues aus dem Netzwerk')).toBeLessThan(
+        fontSize('Aktuelles von We.Publish')
+      );
+    });
+
     it('shows each news with the logo of the medium, its title and date', () => {
       renderTenantPage([networkNews()]);
 

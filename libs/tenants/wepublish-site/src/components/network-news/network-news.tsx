@@ -34,8 +34,9 @@ export const NetworkNewsWrapper = styled('section')`
   }
 `;
 
+// Smaller than the title of the news of We.Publish above it (H4 instead of H3)
 export const NetworkNewsTitle = styled('h2')`
-  ${designText.h3 as CSSObject}
+  ${designText.h4 as CSSObject}
   margin: 0;
 `;
 
