@@ -542,6 +542,45 @@ describe('We.Publish website tenant', () => {
         screen.queryByRole('link', { name: 'Mehr erfahren' })
       ).not.toBeInTheDocument();
     });
+
+    const imageSide = (title: string) =>
+      screen
+        .getByRole('heading', { name: title })
+        .closest('section')
+        ?.getAttribute('data-image');
+
+    it('puts the image of features in a row alternately left and right, from the left again after another block', () => {
+      renderTenantPage([
+        featureBlock({ text: 'Erstes' }),
+        featureBlock({ text: 'Zweites' }),
+        featureBlock({ text: 'Drittes' }),
+        mockQuoteBlock({ quote: 'Dazwischen', author: 'Jemand', image: null }),
+        featureBlock({ text: 'Nach dem Zitat' }),
+      ]);
+
+      expect(
+        ['Erstes', 'Zweites', 'Drittes', 'Nach dem Zitat'].map(imageSide)
+      ).toEqual(['left', 'right', 'left', 'left']);
+    });
+
+    it('starts from the left again after a feature without image', () => {
+      renderTenantPage([
+        featureBlock({ text: 'Ohne Bild', image: null }),
+        featureBlock({ text: 'Erstes mit Bild' }),
+        featureBlock({ text: 'Zweites mit Bild' }),
+      ]);
+
+      expect(['Erstes mit Bild', 'Zweites mit Bild'].map(imageSide)).toEqual([
+        'left',
+        'right',
+      ]);
+    });
+
+    it('sets a feature without image in the middle of the page', () => {
+      renderTenantPage([featureBlock({ text: 'Ohne Bild', image: null })]);
+
+      expect(imageSide('Ohne Bild')).toBe('none');
+    });
   });
 
   describe('teaser cards', () => {
