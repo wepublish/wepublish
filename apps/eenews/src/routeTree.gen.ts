@@ -34,6 +34,7 @@ import { Route as SitemapChunkRouteImport } from './routes/sitemap/$chunk'
 import { Route as AIdIdRouteImport } from './routes/a/id/$id'
 import { Route as ATagIndexRouteImport } from './routes/a/tag/index'
 import { Route as ATagTagRouteImport } from './routes/a/tag/$tag'
+import { Route as ProfileSubscriptionIndexRouteImport } from './routes/profile/subscription/index'
 import { Route as ProfileSubscriptionIdRouteImport } from './routes/profile/subscription/$id'
 import { Route as ProfileSubscriptionDeactivatedRouteImport } from './routes/profile/subscription/deactivated'
 
@@ -162,6 +163,12 @@ const ATagTagRoute = ATagTagRouteImport.update({
   path: '/a/tag/$tag',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProfileSubscriptionIndexRoute =
+  ProfileSubscriptionIndexRouteImport.update({
+    id: '/profile/subscription/',
+    path: '/profile/subscription/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ProfileSubscriptionIdRoute = ProfileSubscriptionIdRouteImport.update({
   id: '/profile/subscription/$id',
   path: '/profile/subscription/$id',
@@ -202,6 +209,7 @@ export interface FileRoutesByFullPath {
   '/profile/subscription/$id': typeof ProfileSubscriptionIdRoute
   '/profile/subscription/deactivated': typeof ProfileSubscriptionDeactivatedRoute
   '/a/tag/': typeof ATagIndexRoute
+  '/profile/subscription/': typeof ProfileSubscriptionIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -231,6 +239,7 @@ export interface FileRoutesByTo {
   '/profile/subscription/$id': typeof ProfileSubscriptionIdRoute
   '/profile/subscription/deactivated': typeof ProfileSubscriptionDeactivatedRoute
   '/a/tag': typeof ATagIndexRoute
+  '/profile/subscription': typeof ProfileSubscriptionIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -261,6 +270,7 @@ export interface FileRoutesById {
   '/profile/subscription/$id': typeof ProfileSubscriptionIdRoute
   '/profile/subscription/deactivated': typeof ProfileSubscriptionDeactivatedRoute
   '/a/tag/': typeof ATagIndexRoute
+  '/profile/subscription/': typeof ProfileSubscriptionIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -292,6 +302,7 @@ export interface FileRouteTypes {
     | '/profile/subscription/$id'
     | '/profile/subscription/deactivated'
     | '/a/tag/'
+    | '/profile/subscription/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -321,6 +332,7 @@ export interface FileRouteTypes {
     | '/profile/subscription/$id'
     | '/profile/subscription/deactivated'
     | '/a/tag'
+    | '/profile/subscription'
   id:
     | '__root__'
     | '/'
@@ -350,6 +362,7 @@ export interface FileRouteTypes {
     | '/profile/subscription/$id'
     | '/profile/subscription/deactivated'
     | '/a/tag/'
+    | '/profile/subscription/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -380,6 +393,7 @@ export interface RootRouteChildren {
   ProfileSubscriptionIdRoute: typeof ProfileSubscriptionIdRoute
   ProfileSubscriptionDeactivatedRoute: typeof ProfileSubscriptionDeactivatedRoute
   ATagIndexRoute: typeof ATagIndexRoute
+  ProfileSubscriptionIndexRoute: typeof ProfileSubscriptionIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -559,6 +573,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ATagTagRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/profile/subscription/': {
+      id: '/profile/subscription/'
+      path: '/profile/subscription'
+      fullPath: '/profile/subscription/'
+      preLoaderRoute: typeof ProfileSubscriptionIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profile/subscription/$id': {
       id: '/profile/subscription/$id'
       path: '/profile/subscription/$id'
@@ -604,6 +625,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProfileSubscriptionIdRoute: ProfileSubscriptionIdRoute,
   ProfileSubscriptionDeactivatedRoute: ProfileSubscriptionDeactivatedRoute,
   ATagIndexRoute: ATagIndexRoute,
+  ProfileSubscriptionIndexRoute: ProfileSubscriptionIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

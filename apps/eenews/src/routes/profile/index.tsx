@@ -1,8 +1,12 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { profileRoute } from '@wepublish/utils/website/tanstack';
+import { EenewsProfile } from '@wepublish/tenant/eenews';
+import { profileRoute, withAuthGuard } from '@wepublish/utils/website/tanstack';
 
-/** `pages/profile/index.tsx` */
+import { withEenewsPageShell } from '../../integration/with-page-shell';
+
+/** `pages/profile/index.tsx` — ee-news's own profile, not the shared one. */
 export const Route = createFileRoute('/profile/')({
   ...profileRoute(),
+  component: withAuthGuard(withEenewsPageShell(EenewsProfile)),
   head: () => ({ meta: [{ title: 'Profil | EE News' }] }),
 });
