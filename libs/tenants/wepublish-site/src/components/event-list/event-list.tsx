@@ -36,6 +36,8 @@ export const EventListWrapper = styled('section')`
 
 export const EventListEvents = styled('div')`
   display: grid;
+  // Never wider than the screen, even while an image is missing
+  grid-template-columns: minmax(0, 1fr);
   gap: ${({ theme }) => theme.spacing(5)};
 
   ${({ theme }) => theme.breakpoints.up('sm')} {
@@ -47,6 +49,7 @@ export const EventListEvent = styled('article')`
   a,
   a:hover {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: ${({ theme }) => theme.spacing(2)};
     color: inherit;
     text-decoration: none;

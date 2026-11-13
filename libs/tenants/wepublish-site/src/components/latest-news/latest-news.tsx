@@ -39,6 +39,8 @@ export const LatestNewsWrapper = styled('section')`
 
 export const LatestNewsArticles = styled('div')`
   display: grid;
+  // The columns never wider than the screen, even while an image is missing
+  grid-template-columns: minmax(0, 1fr);
   gap: 50px 35px;
 
   ${({ theme }) => theme.breakpoints.up('sm')} {
@@ -54,6 +56,7 @@ export const LatestNewsArticle = styled('article')`
   a,
   a:hover {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: 30px;
     color: inherit;
     text-decoration: none;

@@ -12,6 +12,7 @@ export const articlesPerPage = 10;
 
 export const ArticleOverviewWrapper = styled('div')`
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: ${({ theme }) => theme.spacing(8)};
 
   // As much room below the navbar as a page that opens with a title block
@@ -34,11 +35,13 @@ export const ArticleOverviewPagination = styled('div')`
     flex-wrap: nowrap;
   }
 
+  // Smaller on phones, so that all the numbers fit in one row
   .MuiPaginationItem-root {
     ${designText.textSmallMono as CSSObject}
-    min-width: 41px;
-    height: 41px;
-    margin: 0 2.5px;
+    min-width: 32px;
+    height: 32px;
+    margin: 0;
+    padding: 0 4px;
     border: none;
     border-radius: 3px;
     color: ${({ theme }) => theme.palette.common.black};
@@ -50,6 +53,13 @@ export const ArticleOverviewPagination = styled('div')`
     &.Mui-selected,
     &.Mui-selected:hover {
       background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    ${({ theme }) => theme.breakpoints.up('sm')} {
+      min-width: 41px;
+      height: 41px;
+      margin: 0 2.5px;
+      padding: 0 6px;
     }
   }
 `;

@@ -1,5 +1,7 @@
 import styled from '@emotion/styled';
 import {
+  ImageBlockInnerWrapper,
+  ImageBlockWrapper,
   RichTextBlockWrapper,
   TitleBlockWrapper,
   YouTubeVideoBlockWrapper,
@@ -26,6 +28,18 @@ export const WepContentWrapper = styled(ContentWrapperStyled)`
 
   ${({ theme }) => theme.breakpoints.up('md')} {
     --block-gap: ${({ theme }) => theme.spacing(15)};
+  }
+
+  // An image never wider than the column, even before it has loaded (it
+  // would otherwise take the width of the original and push the text out)
+  ${ImageBlockWrapper}, ${ImageBlockInnerWrapper} {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  // The player is 300px wide by default, too wide for the smallest phones
+  ${YouTubeVideoBlockWrapper} {
+    min-width: 0;
+    max-width: 100%;
   }
 
   // A page that opens with a title block leaves more room below the navbar, as in the design

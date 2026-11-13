@@ -55,6 +55,8 @@ const aboveMenu = css`
 export const NavbarHomeLink = styled('a')`
   ${aboveMenu}
   display: block;
+  // On the smallest phones the logo gets narrower instead of pushing the buttons out
+  min-width: 0;
   line-height: 0;
   margin-right: auto;
 
@@ -66,6 +68,7 @@ export const NavbarHomeLink = styled('a')`
 
 export const NavbarLogo = styled('img')`
   width: 140px;
+  max-width: 100%;
   height: auto;
 
   ${({ theme }) => theme.breakpoints.up(desktop)} {

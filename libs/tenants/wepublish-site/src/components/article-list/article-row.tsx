@@ -26,6 +26,8 @@ export const ArticleRowWrapper = styled('article')`
   a,
   a:hover {
     display: grid;
+    // Never wider than the screen, even while the image is missing
+    grid-template-columns: minmax(0, 1fr);
     gap: ${({ theme }) => theme.spacing(2)};
     color: inherit;
     text-decoration: none;
@@ -118,6 +120,7 @@ export const ArticleRow = ({
 
 export const ArticleRows = styled('div')`
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: ${({ theme }) => theme.spacing(6)};
 
   ${({ theme }) => theme.breakpoints.up('sm')} {
