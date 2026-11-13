@@ -29,5 +29,10 @@
     "preTitle": "Événement",
     "saveCalendarFile": "Enregistrer dans le calendrier (.ics)",
     "addToGoogleCalendar": "Ajouter à Google Agenda"
+  },
+  "teamPage": {
+    "preTitle": "Les personnes derrière We.Publish",
+    "title": "Équipe",
+    "lead": "We.Publish est porté par une équipe interdisciplinaire forte d’une longue expérience dans le journalisme, la technologie, le design et le développement organisationnel."
   }
 }
