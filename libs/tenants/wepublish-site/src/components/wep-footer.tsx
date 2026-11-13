@@ -162,10 +162,33 @@ export const FooterLanguageSwitch = styled(LanguageSwitch)`
   }
 `;
 
+const getHostname = (url: string): string | null => {
+  try {
+    return new URL(url).hostname.toLowerCase();
+  } catch {
+    return null;
+  }
+};
+
+const hostMatches = (url: string, domain: string): boolean => {
+  const host = getHostname(url);
+  const normalizedDomain = domain.toLowerCase();
+
+  return host === normalizedDomain || host?.endsWith(`.${normalizedDomain}`) === true;
+};
+
+const isMailtoLink = (url: string): boolean => {
+  try {
+    return new URL(url).protocol === 'mailto:';
+  } catch {
+    return url.startsWith('mailto:');
+  }
+};
+
 const icons = [
-  { matches: (url: string) => url.includes('linkedin.com'), src: linkedin },
-  { matches: (url: string) => url.startsWith('mailto:'), src: mail },
-  { matches: (url: string) => url.includes('github.com'), src: github },
+  { matches: (url: string) => hostMatches(url, 'linkedin.com'), src: linkedin },
+  { matches: (url: string) => isMailtoLink(url), src: mail },
+  { matches: (url: string) => hostMatches(url, 'github.com'), src: github },
 ];
 
 const iconFor = (link: NavigationLink) => {
