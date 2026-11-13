@@ -1,195 +1,247 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import {
+  EngagementActionRole,
+  EngagementActionType,
+  EngagementAudience,
+  EngagementEnforcement,
+  EngagementGoal,
+  EngagementPlacement,
+} from '@prisma/client';
+import {
+  EngagementRuleWithStages,
+  EngagementStageWithActions,
+} from '@wepublish/engagement/api';
 import { BannerResolver } from './banner.resolver';
-import { BannerService } from './banner.service';
-import { BannerActionService } from './banner-action.service';
-import { Banner, BannerDocumentType } from './banner.model';
-import { LoginStatus } from '@prisma/client';
-import { ImageDataloaderService } from '@wepublish/image/api';
+import {
+  BannerDocumentType,
+  LoginStatus,
+  PrimaryBannerArgs,
+} from './banner.model';
+import { toBanner } from './to-banner';
+
+const stage = (
+  overrides: Partial<EngagementStageWithActions> = {}
+): EngagementStageWithActions => ({
+  id: 'stage-1',
+  ruleId: 'rule-1',
+  createdAt: new Date('2023-01-01'),
+  modifiedAt: new Date('2023-01-01'),
+  afterArticles: 0,
+  placement: EngagementPlacement.BANNER,
+  enforcement: EngagementEnforcement.SOFT,
+  requirement: null,
+  previewBlocks: null,
+  dismissible: true,
+  hideForMinutes: 1440,
+  delaySeconds: 5,
+  title: 'Test Banner',
+  text: 'Test Banner Text',
+  cta: 'Read on',
+  description: null,
+  html: null,
+  embedUrl: null,
+  imageId: 'image-1',
+  actions: [
+    {
+      id: 'action-1',
+      stageId: 'stage-1',
+      createdAt: new Date('2023-01-01'),
+      modifiedAt: new Date('2023-01-01'),
+      type: EngagementActionType.URL,
+      label: 'Subscribe',
+      url: 'https://example.com',
+      style: 'primary',
+      role: EngagementActionRole.PRIMARY,
+    },
+    {
+      id: 'action-2',
+      stageId: 'stage-1',
+      createdAt: new Date('2023-01-01'),
+      modifiedAt: new Date('2023-01-01'),
+      type: EngagementActionType.LOGIN,
+      label: 'Login',
+      url: '',
+      style: '',
+      role: EngagementActionRole.OTHER,
+    },
+  ],
+  ...overrides,
+});
+
+const announcement = (
+  id: string,
+  overrides: Partial<EngagementRuleWithStages> = {}
+): EngagementRuleWithStages => ({
+  id,
+  createdAt: new Date('2023-01-01'),
+  modifiedAt: new Date('2023-01-01'),
+  name: id,
+  goal: EngagementGoal.ANNOUNCEMENT,
+  active: true,
+  priority: 0,
+  version: 1,
+  audience: EngagementAudience.ALL,
+  showOnArticles: true,
+  showOnPageIds: ['page-1'],
+  includePeeredArticles: true,
+  meterWindowDays: null,
+  stages: [stage()],
+  ...overrides,
+});
+
+// The banners the audience engagement migration made, with its priorities.
+const migrated = {
+  all: announcement('all', { audience: EngagementAudience.ALL, priority: 0 }),
+  loggedIn: announcement('logged-in', {
+    audience: EngagementAudience.REGISTERED,
+    priority: 1,
+  }),
+  unsubscribed: announcement('unsubscribed', {
+    audience: EngagementAudience.NON_MEMBERS,
+    priority: 2,
+  }),
+  loggedOut: announcement('logged-out', {
+    audience: EngagementAudience.ANONYMOUS,
+    priority: 3,
+  }),
+  subscribed: announcement('subscribed', {
+    audience: EngagementAudience.MEMBERS,
+    priority: 3,
+  }),
+  bypassed: announcement('bypassed', {
+    audience: EngagementAudience.PAYWALL_BYPASSED,
+    priority: 4,
+  }),
+};
+
+const args = (
+  overrides: Partial<PrimaryBannerArgs> = {}
+): PrimaryBannerArgs => ({
+  documentType: BannerDocumentType.ARTICLE,
+  documentId: 'article-1',
+  loggedIn: false,
+  hasSubscription: false,
+  hasPaywallBypass: false,
+  ...overrides,
+});
 
 describe('BannerResolver', () => {
-  let resolver: BannerResolver;
+  let rules: EngagementRuleWithStages[];
+  const images = { load: vi.fn().mockResolvedValue({ id: 'image-1' }) };
+  const resolver = () =>
+    new BannerResolver(
+      { getActiveRules: async () => rules } as never,
+      images as never
+    );
 
-  const mockBanner: Banner = {
-    id: '1',
-    imageId: '123',
-    active: true,
-    delay: 0,
-    title: '',
-    text: '',
-    showOnArticles: false,
-    showForLoginStatus: LoginStatus.ALL,
-    collapsible: true,
-    hideForMinutes: 24 * 60,
-  };
+  beforeEach(() => {
+    rules = [];
+  });
 
-  const mockBannerService = {
-    findAll: vi.fn(),
-    findOne: vi.fn(),
-    findFirst: vi.fn(),
-    findPages: vi.fn(),
-    create: vi.fn(),
-    update: vi.fn(),
-    delete: vi.fn(),
-  };
+  it('maps an announcement onto the banner type older websites select', async () => {
+    rules = [announcement('rule-1')];
 
-  const mockBannerActionService = {
-    findAll: vi.fn(),
-  };
+    expect(await resolver().primaryBanner(args())).toMatchSnapshot();
+  });
 
-  const mockImageDataloaderService = {
-    load: vi.fn().mockReturnValue({ __typename: 'Image', id: '123' }),
-    prime: vi.fn(),
-  };
+  it('answers no banner without a matching announcement', async () => {
+    rules = [
+      announcement('inactive', { active: false }),
+      announcement('pages only', { showOnArticles: false }),
+      announcement('metered', {
+        goal: EngagementGoal.NEWSLETTER,
+        meterWindowDays: 30,
+      }),
+    ];
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        BannerResolver,
-        {
-          provide: BannerService,
-          useValue: mockBannerService,
-        },
-        {
-          provide: BannerActionService,
-          useValue: mockBannerActionService,
-        },
-        {
-          provide: ImageDataloaderService,
-          useValue: mockImageDataloaderService,
-        },
+    expect(await resolver().primaryBanner(args())).toBeNull();
+  });
+
+  it('answers the banners of a page', async () => {
+    rules = [
+      announcement('elsewhere', { showOnPageIds: ['page-2'] }),
+      announcement('here'),
+    ];
+
+    expect(
+      await resolver().primaryBanner(
+        args({ documentType: BannerDocumentType.PAGE, documentId: 'page-1' })
+      )
+    ).toMatchObject({ id: 'here', showOnPages: [{ id: 'page-1' }] });
+  });
+
+  describe('Scenarios C and E: the audience that fits the reader best wins, as before', () => {
+    it.each([
+      ['an anonymous reader', args(), Object.values(migrated), 'logged-out'],
+      [
+        'an anonymous reader without a logged out banner',
+        args(),
+        [migrated.all, migrated.unsubscribed, migrated.loggedIn],
+        'unsubscribed',
       ],
-    }).compile();
+      [
+        'a logged-in reader without a subscription',
+        args({ loggedIn: true }),
+        Object.values(migrated),
+        'unsubscribed',
+      ],
+      [
+        'a logged-in reader without a subscription, without an unsubscribed banner',
+        args({ loggedIn: true }),
+        [migrated.all, migrated.loggedIn, migrated.loggedOut],
+        'logged-in',
+      ],
+      [
+        'a subscriber',
+        args({ loggedIn: true, hasSubscription: true }),
+        Object.values(migrated),
+        'subscribed',
+      ],
+      [
+        'a subscriber without a subscribed banner',
+        args({ loggedIn: true, hasSubscription: true }),
+        [migrated.all, migrated.loggedIn, migrated.unsubscribed],
+        'logged-in',
+      ],
+      [
+        'a reader with a paywall bypass',
+        args({ hasPaywallBypass: true }),
+        Object.values(migrated),
+        'bypassed',
+      ],
+      ['anyone else', args(), [migrated.all, migrated.subscribed], 'all'],
+    ])('picks the banner for %s', async (_, reader, available, expected) => {
+      rules = available;
 
-    resolver = module.get<BannerResolver>(BannerResolver);
-  });
+      expect((await resolver().primaryBanner(reader))?.id).toBe(expected);
+    });
 
-  afterEach(() => {
-    vi.clearAllMocks();
-  });
+    it('prefers a higher priority among banners for the same audience', async () => {
+      rules = [
+        announcement('a', { priority: 0 }),
+        announcement('b', { priority: 5 }),
+      ];
 
-  it('should be defined', () => {
-    expect(resolver).toBeDefined();
-  });
-
-  describe('banners', () => {
-    it('should return array of banners', async () => {
-      mockBannerService.findAll.mockResolvedValue([mockBanner]);
-      const result = await resolver.banners({ skip: 0, take: 10 });
-      expect(result).toEqual([mockBanner]);
+      expect((await resolver().primaryBanner(args()))?.id).toBe('b');
     });
   });
 
-  describe('banner', () => {
-    it('should return a single banner', async () => {
-      mockBannerService.findOne.mockResolvedValue(mockBanner);
-      const result = await resolver.banner('1');
-      expect(result).toEqual(mockBanner);
-    });
+  it('resolves the image', async () => {
+    rules = [announcement('rule-1')];
+    const banner = await resolver().primaryBanner(args());
 
-    it('should throw NotFoundException when banner not found', async () => {
-      mockBannerService.findOne.mockResolvedValue(null);
-      await expect(resolver.banner('1')).rejects.toThrow();
-    });
+    expect(await resolver().image(banner!)).toEqual({ id: 'image-1' });
+    expect(images.load).toHaveBeenCalledWith('image-1');
   });
+});
 
-  describe('primaryBanner', () => {
-    it('should return the primary banner', async () => {
-      mockBannerService.findFirst.mockResolvedValue(mockBanner);
-      const result = await resolver.primaryBanner({
-        documentType: BannerDocumentType.ARTICLE,
-        documentId: '1',
-        loggedIn: true,
-        hasSubscription: false,
-        hasPaywallBypass: false,
-      });
-
-      expect(result).toEqual(mockBanner);
+describe('toBanner', () => {
+  it('shows a rule for specific plans to subscribers on older websites', () => {
+    const rule = announcement('plans', {
+      audience: EngagementAudience.MEMBER_PLANS,
     });
 
-    it('should return null when no primary banner found', async () => {
-      mockBannerService.findFirst.mockResolvedValue(null);
-      const result = await resolver.primaryBanner({
-        documentType: BannerDocumentType.ARTICLE,
-        documentId: '1',
-        loggedIn: true,
-        hasSubscription: false,
-        hasPaywallBypass: false,
-      });
-
-      expect(result).toEqual(null);
-    });
-  });
-
-  describe('actions', () => {
-    it('should return banner actions', async () => {
-      const mockActions = [{ id: '1', bannerId: '1', type: 'CLICK' }];
-      mockBannerActionService.findAll.mockResolvedValue(mockActions);
-      const result = await resolver.actions(mockBanner);
-      expect(result).toEqual(mockActions);
-    });
-  });
-
-  describe('image', () => {
-    it('should return image when imageId exists', () => {
-      const result = resolver.image(mockBanner);
-      expect(result).toEqual({ __typename: 'Image', id: '123' });
-    });
-
-    it('should return null when no imageId', () => {
-      const bannerWithoutImage = { ...mockBanner, imageId: undefined };
-      const result = resolver.image(bannerWithoutImage);
-      expect(result).toBeNull();
-    });
-  });
-
-  describe('showOnPages', () => {
-    it('should return pages for banner', async () => {
-      const mockPages = [{ id: '1', name: 'Test Page' }];
-      mockBannerService.findPages.mockResolvedValue(mockPages);
-      const result = await resolver.showOnPages(mockBanner);
-      expect(result).toEqual(mockPages);
-    });
-  });
-
-  describe('mutations', () => {
-    it('should create banner', async () => {
-      const createInput = {
-        name: 'New Banner',
-        active: true,
-        delay: 0,
-        title: 'New Banner Title',
-        text: 'New Banner Text',
-        showOnArticles: false,
-        showForLoginStatus: LoginStatus.ALL,
-        collapsible: true,
-        hideForMinutes: 24 * 60,
-      };
-      mockBannerService.create.mockResolvedValue(mockBanner);
-      const result = await resolver.createBanner(createInput);
-      expect(result).toEqual(mockBanner);
-    });
-
-    it('should update banner', async () => {
-      const updateInput = {
-        id: '1',
-        title: 'Updated Banner Title',
-        text: 'Updated Banner Text',
-        active: true,
-        delay: 0,
-        showOnArticles: false,
-        showForLoginStatus: LoginStatus.ALL,
-        actions: [],
-        collapsible: true,
-        hideForMinutes: 24 * 60,
-      };
-      mockBannerService.update.mockResolvedValue(mockBanner);
-      const result = await resolver.updateBanner(updateInput);
-      expect(result).toEqual(mockBanner);
-    });
-
-    it('should delete banner', async () => {
-      await resolver.deleteBanner('1');
-      expect(mockBannerService.delete).toHaveBeenCalledWith('1');
-    });
+    expect(toBanner(rule, rule.stages[0]).showForLoginStatus).toBe(
+      LoginStatus.SUBSCRIBED
+    );
   });
 });

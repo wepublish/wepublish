@@ -25,6 +25,10 @@ import { MemberPlanModule } from '@wepublish/member-plan/api';
     HasPaywallResolver,
     HasOptionalPaywallResolver,
   ],
-  exports: [PaywallDataloaderService, PaywallService],
+  exports: [
+    PaywallDataloaderService,
+    PaywallMemberPlansDataloader,
+    PaywallService,
+  ],
 })
 export class PaywallModule {}

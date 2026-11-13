@@ -2,10 +2,10 @@ import { gql } from '@apollo/client';
 import { useMutation } from '@apollo/client/react';
 import { css, Global } from '@emotion/react';
 import {
-  BannerList,
-  CreateBannerForm,
-  EditBannerForm,
-} from '@wepublish/banner/editor';
+  CreateEngagementRule,
+  EditEngagementRule,
+  EngagementRuleList,
+} from '@wepublish/engagement/editor';
 import {
   ConsentCreateView,
   ConsentEditView,
@@ -53,9 +53,11 @@ import {
   Route,
   RouterProvider,
   Routes,
+  useParams,
 } from 'react-router-dom';
 
 import { Base } from './base';
+import { RedirectMoved } from './redirect-moved';
 import { EditorCommandPaletteSurface } from './commandPalette/editorCommandPalette';
 import { EditorGlobalStyles } from './editorGlobalStyles';
 import { Login } from './login';
@@ -188,6 +190,21 @@ const Logout = () => {
   return (
     <Navigate
       to="/login"
+      replace
+    />
+  );
+};
+
+/**
+ * Banners and content gates became engagement rules with the same ids, so
+ * their old links still lead to the rule.
+ */
+const RedirectToEngagementRule = () => {
+  const { id } = useParams();
+
+  return (
+    <Navigate
+      to={id ? `/audience-engagement/edit/${id}` : '/audience-engagement'}
       replace
     />
   );
@@ -344,7 +361,7 @@ function AppRoutes() {
           }
         />
         <Route
-          path="articles/paywalls"
+          path="audience-engagement/paywalls"
           element={
             <Base>
               <PaywallList />
@@ -352,7 +369,7 @@ function AppRoutes() {
           }
         />
         <Route
-          path="articles/paywalls/edit/:id"
+          path="audience-engagement/paywalls/edit/:id"
           element={
             <Base>
               <PaywallEditView />
@@ -360,12 +377,54 @@ function AppRoutes() {
           }
         />
         <Route
-          path="articles/paywalls/create"
+          path="audience-engagement/paywalls/create"
           element={
             <Base>
               <PaywallCreateView />
             </Base>
           }
+        />
+        <Route
+          path="audience-engagement"
+          element={
+            <Base>
+              <EngagementRuleList />
+            </Base>
+          }
+        />
+        <Route
+          path="audience-engagement/create"
+          element={
+            <Base>
+              <CreateEngagementRule />
+            </Base>
+          }
+        />
+        <Route
+          path="audience-engagement/edit/:id"
+          element={
+            <Base>
+              <EditEngagementRule />
+            </Base>
+          }
+        />
+        {/* Paywalls moved to Audience Engagement */}
+        <Route
+          path="articles/paywalls/*"
+          element={
+            <RedirectMoved
+              from="/articles/paywalls"
+              to="/audience-engagement/paywalls"
+            />
+          }
+        />
+        <Route
+          path="articles/content-gates/edit/:id"
+          element={<RedirectToEngagementRule />}
+        />
+        <Route
+          path="articles/content-gates/*"
+          element={<RedirectToEngagementRule />}
         />
         {/* Pages Routes */}
         <Route
@@ -757,28 +816,12 @@ function AppRoutes() {
           }
         />
         <Route
-          path="banners"
-          element={
-            <Base>
-              <BannerList />
-            </Base>
-          }
-        />
-        <Route
-          path="banners/create"
-          element={
-            <Base>
-              <CreateBannerForm />
-            </Base>
-          }
-        />
-        <Route
           path="banners/edit/:id"
-          element={
-            <Base>
-              <EditBannerForm />
-            </Base>
-          }
+          element={<RedirectToEngagementRule />}
+        />
+        <Route
+          path="banners/*"
+          element={<RedirectToEngagementRule />}
         />
         {/* Print issues: the issue form is a drawer over the list */}
         <Route

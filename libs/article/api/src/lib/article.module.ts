@@ -21,6 +21,10 @@ import {
 } from '@wepublish/block-content/api';
 import { SettingModule } from '@wepublish/settings/api';
 import { TagModule } from '@wepublish/tag/api';
+import { EngagementModule } from '@wepublish/engagement/api';
+import { PaywallModule } from '@wepublish/paywall/api';
+import { ArticleAccessService } from './article-access.service';
+import { ViewArticleResolver } from './view-article.resolver';
 import {
   ArticleTemplateMetadataResolver,
   ArticleTemplateResolver,
@@ -35,6 +39,8 @@ import { ArticleTemplateService } from './article-template/article-template.serv
     AuthorModule,
     SettingModule,
     TagModule,
+    EngagementModule,
+    PaywallModule,
     forwardRef(() => BlockContentModule),
     forwardRef(() => BlockTemplateModule),
   ],
@@ -45,6 +51,8 @@ import { ArticleTemplateService } from './article-template/article-template.serv
     ArticleService,
     ArticleResolver,
     ArticleRevisionResolver,
+    ArticleAccessService,
+    ViewArticleResolver,
     ArticleTemplateService,
     ArticleTemplateResolver,
     ArticleTemplateMetadataResolver,

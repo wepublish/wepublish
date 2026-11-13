@@ -18,6 +18,7 @@ export * from './lib/session';
 export * from './lib/setting';
 export * from './lib/navigation';
 export * from './lib/banner';
+export * from './lib/engagement';
 export * from './lib/paywall';
 export * from './lib/pagination';
 export * from './lib/tweet';

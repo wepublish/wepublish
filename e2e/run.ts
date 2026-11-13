@@ -1,15 +1,19 @@
 // Entry point of `pnpm run e2e`: takes the targets and target flags, passes the
 // rest to `playwright test`.
 //
-//   pnpm run e2e tsri                       # tsri website (local)
+//   pnpm run e2e tsri                       # tsri website + editor (local)
+//   pnpm run e2e tsri --only website        # tsri website only
 //   pnpm run e2e editor                     # editor only
-//   pnpm run e2e tsri,editor --environment staging --grep @smoke
+//   pnpm run e2e tsri --environment staging --grep @smoke
 //   pnpm run e2e tsri,bajour                # one run per tenant, in turn
 //   pnpm run e2e:dev tsri                   # docker services, `next dev`, UI mode
 //
-// Leading comma-separated words are targets: `editor` selects the editor
-// project, any other word an `apps/<name>` tenant (E2E_APP) and its website
-// project. Without them, both projects of E2E_APP run (see support/targets.ts).
+// Leading comma-separated words are targets: any word but `editor` is an
+// `apps/<name>` tenant (E2E_APP) and selects its website and editor projects;
+// `editor` alone selects only the editor. Without targets, both projects of
+// E2E_APP run (see support/targets.ts). `--only website|editor` overrides the
+// selection: Playwright's own `--project` does not get here, Nx's `run` takes
+// it for itself.
 // Anything else, from the first word that is not a target, is a flag or a
 // Playwright file filter.
 //
@@ -65,6 +69,18 @@ for (let i = 0; i < args.length; i++) {
     continue;
   }
 
+  if (flag === '--only') {
+    const project = inlineValue ?? args[++i];
+
+    if (project !== 'website' && project !== 'editor') {
+      console.error('--only needs website or editor, e.g. --only=website');
+      process.exit(1);
+    }
+
+    playwrightArgs.push(`--project=${project}`);
+    continue;
+  }
+
   if (!variable) {
     playwrightArgs.push(args[i]);
     continue;
@@ -82,15 +98,28 @@ for (let i = 0; i < args.length; i++) {
 
 const tenants = [...new Set(targets.filter(target => target !== 'editor'))];
 const projectArgs: string[] = [];
+const choosesProjects = playwrightArgs.some(
+  arg => arg === '--project' || arg.startsWith('--project=')
+);
 
-if (targets.length) {
+// The editor talks to the tenant's API, so it comes along with every tenant;
+// `editor` alone runs only the editor. An `--only` of the caller wins.
+// `--project=<name>`, not `--project <name>`: the option is variadic, so a
+// file filter after it would be read as one more project.
+if (targets.length && !choosesProjects) {
   if (tenants.length) {
-    projectArgs.push('--project', 'website');
+    projectArgs.push('--project=website');
   }
 
-  if (targets.includes('editor')) {
-    projectArgs.push('--project', 'editor');
-  }
+  projectArgs.push('--project=editor');
+}
+
+// UI mode ignores `--project` in its Projects filter and, until you tick
+// others, shows only the first project.
+if (playwrightArgs.includes('--ui') && projectArgs.length > 1) {
+  console.log(
+    '[e2e] UI mode shows only the website tests at first: tick "editor" under Projects in the sidebar (remembered from then on).'
+  );
 }
 
 const run = (

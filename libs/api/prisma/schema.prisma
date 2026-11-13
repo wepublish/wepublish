@@ -122,6 +122,9 @@ model Article {
   paywall   Paywall? @relation(fields: [paywallId], references: [id], onDelete: SetNull)
   paywallId String?  @db.Uuid
 
+  /// Leaves the article out of metered engagement rules.
+  contentGateDisabled Boolean @default(false)
+
   navigations              NavigationLink[]
   tags                     TaggedArticles[]
   revisions                ArticleRevision[]
@@ -284,9 +287,9 @@ model Image {
   events         Event[]
   paymentMethods PaymentMethod[]
 
-  banners               Banner[]
-  peerProfileLogo       PeerProfile[] @relation("logo")
-  peerProfileSquareLogo PeerProfile[] @relation("squareLogo")
+  engagementStages      EngagementStage[]
+  peerProfileLogo       PeerProfile[]     @relation("logo")
+  peerProfileSquareLogo PeerProfile[]     @relation("squareLogo")
   goodies               Goodie[]
   printIssues           PrintIssue[]
 
@@ -588,11 +591,11 @@ model Invoice {
   // When the RENEWAL_SUCCESS mail for this invoice went out. Claimed
   // atomically so the webhook, the nightly job and the admin path can never
   // send it twice.
-  renewalSuccessMailSentAt   DateTime? @db.Timestamptz(3)
+  renewalSuccessMailSentAt  DateTime?     @db.Timestamptz(3)
 
   // Set when an admin marked the invoice as paid and explicitly asked for no
   // mail. Blocks every later path from sending one.
-  suppressRenewalSuccessMail Boolean   @default(false)
+  suppressRenewalSuccessMail Boolean @default(false)
 
   subscriptionID String?
   subscription   Subscription? @relation(fields: [subscriptionID], references: [id], onDelete: SetNull)
@@ -867,7 +870,7 @@ model MemberPlan {
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   name                           String
-  slug                           String                   @unique
+  slug                           String                       @unique
   tags                           String[]
   shortDescription               Json?
   slateShortDescription          Json?
@@ -878,11 +881,11 @@ model MemberPlan {
   periodicityPricing             MemberPlanPeriodicityPrice[]
   defaultPaymentPeriodicity      PaymentPeriodicity?
   availablePaymentMethods        AvailablePaymentMethod[]
-  migrateToTargetPaymentMethod   PaymentMethod?           @relation("PaymentMethodMigration", fields: [migrateToTargetPaymentMethodID], references: [id])
+  migrateToTargetPaymentMethod   PaymentMethod?               @relation("PaymentMethodMigration", fields: [migrateToTargetPaymentMethodID], references: [id])
   migrateToTargetPaymentMethodID String?
-  extendable                     Boolean                  @default(true)
+  extendable                     Boolean                      @default(true)
   maxCount                       Int?
-  productType                    ProductType              @default(Subscription)
+  productType                    ProductType                  @default(Subscription)
   externalReward                 String?
 
   imageID String?
@@ -900,10 +903,11 @@ model MemberPlan {
   subscription      Subscription[]
   subscriptionFlows SubscriptionFlow[]
 
-  crowdfundings Crowdfunding[]
-  paywalls      PaywallMemberplan[]
-  discountCodes DiscountCode[]
-  goodies       Goodie[]
+  crowdfundings   Crowdfunding[]
+  paywalls        PaywallMemberplan[]
+  discountCodes   DiscountCode[]
+  engagementRules EngagementRule[]    @relation("EngagementRuleAudienceMemberPlans")
+  goodies         Goodie[]
 
   @@index([name])
   @@map("member.plans")
@@ -989,8 +993,8 @@ model Page {
   modifiedAt  DateTime  @updatedAt @db.Timestamptz(3)
   publishedAt DateTime? @db.Timestamptz(3)
 
-  slug   String?
-  hidden Boolean @default(false)
+  slug       String?
+  hidden     Boolean @default(false)
   hideHeader Boolean @default(false)
   hideFooter Boolean @default(false)
 
@@ -1000,7 +1004,7 @@ model Page {
   memberPlansSuccess      MemberPlan[]            @relation("successPage")
   memberPlansFail         MemberPlan[]            @relation("failPage")
   memberPlansConfirmation MemberPlan[]            @relation("confirmationPage")
-  banners                 Banner[]
+  engagementRules         EngagementRule[]
   PagesRevisionPublished  PagesRevisionPublished?
   PagesRevisionPending    PagesRevisionPending?
   PagesRevisionDraft      PagesRevisionDraft?
@@ -1187,8 +1191,8 @@ model ImpersonationGrant {
   id        String   @id @default(dbgenerated("uuidv7()"))
   createdAt DateTime @default(now()) @db.Timestamptz(3)
 
-  jti       String    @unique
-  expiresAt DateTime  @db.Timestamptz(3)
+  jti        String    @unique
+  expiresAt  DateTime  @db.Timestamptz(3)
   redeemedAt DateTime? @db.Timestamptz(3)
 
   @@index([expiresAt])
@@ -1914,65 +1918,132 @@ model NewsletterCampaign {
   @@map("newsletter_campaigns")
 }
 
-model Banner {
-  id         String   @id @default(dbgenerated("uuidv7()"))
-  createdAt  DateTime @default(now()) @db.Timestamptz(3)
-  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
-
-  title    String
-  text     String
-  cta      String?
-  html     String?
-  embedUrl String?
-
-  imageId String?
-  image   Image?  @relation(fields: [imageId], references: [id])
-
-  active         Boolean @default(true)
-  collapsible    Boolean @default(true)
-  hideForMinutes Int     @default(1440)
-
-  delay Int @default(0)
-
-  showOnArticles     Boolean     @default(true)
-  showOnPages        Page[]
-  showForLoginStatus LoginStatus @default(ALL)
-
-  actions BannerAction[]
-
-  @@map("banners")
+enum EngagementGoal {
+  ANNOUNCEMENT
+  NEWSLETTER
+  MEMBERSHIP
 }
 
-enum LoginStatus {
-  PAYWALL_BYPASSED @map("paywall_bypassed")
-  UNSUBSCRIBED     @map("unsubscribed")
-  SUBSCRIBED       @map("subscribed")
-  LOGGED_IN        @map("logged_in")
-  LOGGED_OUT       @map("logged_out")
-  ALL              @map("all")
+enum EngagementAudience {
+  ALL
+  ANONYMOUS
+  REGISTERED
+  NON_MEMBERS
+  MEMBERS
+  PAYWALL_BYPASSED
+  /// Readers with an active subscription to one of `audienceMemberPlans`.
+  MEMBER_PLANS
 }
 
-model BannerAction {
-  id         String   @id @default(dbgenerated("uuidv7()"))
-  createdAt  DateTime @default(now()) @db.Timestamptz(3)
-  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
-
-  banner   Banner @relation(fields: [bannerId], references: [id], onDelete: Cascade)
-  bannerId String
-
-  label String
-  url   String
-
-  style String           @default("")
-  role  BannerActionRole @default(OTHER)
-
-  @@map("banner_actions")
+enum EngagementPlacement {
+  BANNER
+  MODAL
+  INLINE
+  CUTOFF
 }
 
-enum BannerActionRole {
+enum EngagementEnforcement {
+  SOFT
+  HARD
+}
+
+enum EngagementRequirement {
+  REGISTRATION
+  MEMBERSHIP
+  /// An email address for the newsletter, no account.
+  NEWSLETTER
+}
+
+enum EngagementActionType {
+  URL
+  NEWSLETTER
+  LOGIN
+  REGISTER
+  MEMBERSHIP
+}
+
+enum EngagementActionRole {
   PRIMARY @map("primary")
   CANCEL  @map("cancel")
   OTHER   @map("other")
+}
+
+/// Who sees which prompt, when, and whether it restricts the article.
+/// Paywalls are separate: see Paywall.
+model EngagementRule {
+  id         String   @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  name     String
+  goal     EngagementGoal
+  active   Boolean        @default(true)
+  priority Int            @default(0)
+  /// Bumped on every update, so readers see a changed prompt again.
+  version  Int            @default(1)
+
+  audience              EngagementAudience @default(ALL)
+  /// Only for the MEMBER_PLANS audience.
+  audienceMemberPlans   MemberPlan[]       @relation("EngagementRuleAudienceMemberPlans")
+  showOnArticles        Boolean            @default(true)
+  showOnPages           Page[]
+  includePeeredArticles Boolean            @default(false)
+
+  meterWindowDays       Int?
+
+  stages EngagementStage[]
+
+  @@map("engagement_rules")
+}
+
+model EngagementStage {
+  id         String   @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  rule   EngagementRule @relation(fields: [ruleId], references: [id], onDelete: Cascade)
+  ruleId String         @db.Uuid
+
+  afterArticles Int                    @default(0)
+  placement     EngagementPlacement
+  enforcement   EngagementEnforcement  @default(SOFT)
+  requirement   EngagementRequirement?
+  previewBlocks Int?
+
+  dismissible    Boolean @default(true)
+  hideForMinutes Int     @default(1440)
+  delaySeconds   Int     @default(0)
+
+  title       String?
+  text        String?
+  cta         String?
+  description Json?
+  html        String?
+  embedUrl    String?
+  imageId     String?
+  image       Image?  @relation(fields: [imageId], references: [id], onDelete: SetNull)
+
+  actions EngagementAction[]
+
+  @@unique([ruleId, afterArticles])
+  @@map("engagement_stages")
+}
+
+model EngagementAction {
+  id         String   @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  stage   EngagementStage @relation(fields: [stageId], references: [id], onDelete: Cascade)
+  stageId String          @db.Uuid
+
+  type  EngagementActionType @default(URL)
+  label String
+  url   String               @default("")
+  style String               @default("")
+  role  EngagementActionRole @default(OTHER)
+
+  @@map("engagement_actions")
 }
 
 enum CrowdfundingGoalType {
@@ -2032,6 +2103,8 @@ model Paywall {
 
   hideContentAfter Int     @default(3)
   fadeout          Boolean @default(true)
+  /// Cut the blocks on the server instead of hiding them with CSS.
+  enforced         Boolean @default(false)
 
   memberPlans PaywallMemberplan[]
   articles    Article[]
@@ -2371,11 +2444,11 @@ model SettingPaymentProvider {
 
   stripe_methods StripePaymentMethod[]
 
-  payrexx_instancename String?
-  payrexx_psp          PayrexxPSP[]
-  payrexx_pm           PayrexxPM[]
-  payrexx_vatrate      Decimal?     @db.Decimal(5, 4)
-  simulated_declineRenewals Boolean  @default(false)
+  payrexx_instancename      String?
+  payrexx_psp               PayrexxPSP[]
+  payrexx_pm                PayrexxPM[]
+  payrexx_vatrate           Decimal?     @db.Decimal(5, 4)
+  simulated_declineRenewals Boolean      @default(false)
 
   bexio_userId                              Int?
   bexio_countryId                           Int?

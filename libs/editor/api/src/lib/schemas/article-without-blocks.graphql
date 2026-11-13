@@ -54,6 +54,7 @@ fragment ArticleWithoutBlocks on Article {
   url
   previewUrl
   paywallId
+  contentGateDisabled
 
   latest {
     ...FullArticleRevisionWithoutBlocks

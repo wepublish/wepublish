@@ -29,4 +29,5 @@ fragment FullPaywall on Paywall {
 
   fadeout
   hideContentAfter
+  enforced
 }

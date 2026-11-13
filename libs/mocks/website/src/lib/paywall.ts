@@ -15,6 +15,7 @@ export const mockPaywall = ({
   anyMemberPlan: true,
   fadeout: true,
   hideContentAfter: 3,
+  enforced: false,
   alternativeSubscribeUrl: null,
   upgradeDescription: null,
   upgradeCircumventDescription: null,

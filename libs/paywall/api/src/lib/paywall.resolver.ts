@@ -19,10 +19,19 @@ import { Paywall as PPaywall } from '@prisma/client';
 import {
   CanCreatePaywall,
   CanDeletePaywall,
+  CanGetArticle,
   CanUpdatePaywall,
 } from '@wepublish/permissions';
-import { Permissions } from '@wepublish/permissions/api';
-import { Public } from '@wepublish/authentication/api';
+import {
+  Permissions,
+  hasPermission,
+  permissionsOf,
+} from '@wepublish/permissions/api';
+import {
+  AuthSession,
+  CurrentUser,
+  Public,
+} from '@wepublish/authentication/api';
 import { MemberPlan } from '@wepublish/member-plan/api';
 
 @Resolver(() => Paywall)
@@ -76,8 +85,24 @@ export class PaywallResolver {
     return this.paywallMemberPlansDataloader.load(parent.id);
   }
 
-  @ResolveField(() => [PaywallBypass])
-  async bypasses(@Parent() parent: PPaywall) {
+  @ResolveField(() => [PaywallBypass], {
+    description: `Empty for enforced paywalls, unless the reader may edit paywalls or read every article: their tokens open the article on the server.`,
+  })
+  async bypasses(
+    @Parent() parent: PPaywall,
+    @CurrentUser() session: AuthSession | undefined
+  ) {
+    const permissions = permissionsOf(session);
+
+    if (
+      parent.enforced &&
+      ![CanCreatePaywall, CanUpdatePaywall, CanGetArticle].some(permission =>
+        hasPermission(permission, permissions)
+      )
+    ) {
+      return [];
+    }
+
     return this.paywallService.getPaywallBypasses(parent.id);
   }
 }

@@ -1,45 +1,36 @@
-import { screen } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import {
-  mockBanner,
+  NEWSLETTER_COOKIE_KEY,
+  storeNewsletterToken,
+} from '@wepublish/engagement/website';
+import {
+  mockAnnouncementPrompt,
+  mockEngagementPrompt,
   mockOperation,
-  mockSensitiveDataUser,
-  mockSubscription,
   renderWithProviders,
 } from '@wepublish/mocks/website';
 import { BYPASS_COOKIE_KEY } from '@wepublish/paywall/website';
 import {
   BannerDocumentType,
-  FullBannerFragment,
-  FullSubscriptionFragment,
-  PrimaryBannerDocument,
-  PrimaryBannerQueryVariables,
-  SubscriptionsDocument,
+  EngagementDocumentType,
+  EngagementPromptsDocument,
+  EngagementPromptsQueryVariables,
+  FullEngagementPromptFragment,
 } from '@wepublish/website/api';
 import { BannerContainer } from './banner-container';
-import { BANNER_STORAGE_KEY } from './collapse-banner';
 
-const banner = mockBanner();
+let requested: EngagementPromptsQueryVariables[];
 
-const primaryBanner = (
-  variables: Partial<PrimaryBannerQueryVariables>,
-  result: FullBannerFragment | null = banner
-) =>
-  mockOperation(PrimaryBannerDocument, {
-    variables: {
-      documentId: '1',
-      documentType: BannerDocumentType.Article,
-      loggedIn: false,
-      hasSubscription: false,
-      hasPaywallBypass: false,
-      ...variables,
+/** The prompts of the page, recording what the container asked for. */
+const engagementPrompts = (prompts: FullEngagementPromptFragment[]) =>
+  mockOperation(EngagementPromptsDocument, {
+    variables: (variables: EngagementPromptsQueryVariables) => {
+      requested.push(variables);
+
+      return true;
     },
-    data: { __typename: 'Query', primaryBanner: result },
-  });
-
-const subscriptions = (userSubscriptions: FullSubscriptionFragment[]) =>
-  mockOperation(SubscriptionsDocument, {
-    variables: {},
-    data: { __typename: 'Query', userSubscriptions },
+    maxUsageCount: Number.POSITIVE_INFINITY,
+    data: { __typename: 'Query', engagementPrompts: prompts },
   });
 
 const renderContainer = (options: Parameters<typeof renderWithProviders>[1]) =>
@@ -53,69 +44,80 @@ const renderContainer = (options: Parameters<typeof renderWithProviders>[1]) =>
 
 describe('BannerContainer', () => {
   beforeEach(() => {
-    localStorage.removeItem(BANNER_STORAGE_KEY);
+    requested = [];
+    localStorage.clear();
   });
 
   afterEach(() => {
     document.cookie = `${BYPASS_COOKIE_KEY}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+    document.cookie = `${NEWSLETTER_COOKIE_KEY}=; path=/; max-age=0`;
   });
 
-  it('loads the primary banner for a logged out reader', async () => {
-    renderContainer({ mocks: [primaryBanner({})] });
+  it('shows the banner prompt of an article', async () => {
+    renderContainer({ mocks: [engagementPrompts([mockAnnouncementPrompt()])] });
 
-    expect(await screen.findByText(banner.title)).toBeInTheDocument();
-  });
-
-  it('asks for the banner of logged in readers without subscription', async () => {
-    renderContainer({
-      user: mockSensitiveDataUser(),
-      mocks: [
-        subscriptions([mockSubscription({ isActive: false })]),
-        primaryBanner({ loggedIn: true }),
-      ],
+    expect(
+      await screen.findByText('Our annual crowdfunding')
+    ).toBeInTheDocument();
+    expect(requested[0]).toMatchObject({
+      documentId: '1',
+      documentType: EngagementDocumentType.Article,
     });
-
-    expect(await screen.findByText(banner.title)).toBeInTheDocument();
   });
 
-  it('waits for the subscriptions and asks for the banner of subscribers', async () => {
-    const subscriberBanner = mockBanner({ title: 'Danke für dein Abo' });
+  it('shows a pop-up prompt as modal', async () => {
+    renderContainer({ mocks: [engagementPrompts([mockEngagementPrompt()])] });
 
-    renderContainer({
-      user: mockSensitiveDataUser(),
-      mocks: [
-        subscriptions([mockSubscription()]),
-        primaryBanner(
-          { loggedIn: true, hasSubscription: true },
-          subscriberBanner
-        ),
-      ],
-    });
-
-    expect(await screen.findByText('Danke für dein Abo')).toBeInTheDocument();
+    expect(
+      await screen.findByText('Enjoying our journalism?')
+    ).toBeInTheDocument();
   });
 
   it('tells the API about a paywall bypass', async () => {
     document.cookie = `${BYPASS_COOKIE_KEY}=token; path=/`;
 
-    renderContainer({ mocks: [primaryBanner({ hasPaywallBypass: true })] });
+    renderContainer({ mocks: [engagementPrompts([])] });
 
-    expect(await screen.findByText(banner.title)).toBeInTheDocument();
+    await waitFor(() =>
+      expect(requested).toContainEqual(
+        expect.objectContaining({ paywallBypassToken: 'token' })
+      )
+    );
   });
 
-  it('asks without a document id on pages without one', async () => {
+  it('asks once, with the bypass token from the start', async () => {
+    document.cookie = `${BYPASS_COOKIE_KEY}=token; path=/`;
+
+    renderContainer({ mocks: [engagementPrompts([])] });
+
+    await waitFor(() => expect(requested).toHaveLength(1));
+    await act(() => new Promise(resolve => setTimeout(resolve, 20)));
+
+    expect(requested).toEqual([
+      expect.objectContaining({ paywallBypassToken: 'token' }),
+    ]);
+  });
+
+  it('asks again, with the token, once the reader signed up for the newsletter', async () => {
+    renderContainer({ mocks: [engagementPrompts([])] });
+
+    await waitFor(() => expect(requested.length).toBeGreaterThan(0));
+    act(() => storeNewsletterToken('signed.token'));
+
+    await waitFor(() =>
+      expect(requested).toContainEqual(
+        expect.objectContaining({ newsletterToken: 'signed.token' })
+      )
+    );
+  });
+
+  it('asks for nothing on pages without a document id', async () => {
     renderWithProviders(
       <BannerContainer documentType={BannerDocumentType.Page} />,
-      {
-        mocks: [
-          primaryBanner({
-            documentId: '',
-            documentType: BannerDocumentType.Page,
-          }),
-        ],
-      }
+      { mocks: [engagementPrompts([mockAnnouncementPrompt()])] }
     );
 
-    expect(await screen.findByText(banner.title)).toBeInTheDocument();
+    await waitFor(() => expect(requested).toEqual([]));
+    expect(screen.queryByText('Our annual crowdfunding')).toBeNull();
   });
 });

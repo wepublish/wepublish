@@ -15,5 +15,6 @@ import { NewsletterRenderService } from './newsletter-render.service';
     NewsletterMailchimpService,
     NewsletterRenderService,
   ],
+  exports: [NewsletterMailchimpService],
 })
 export class NewsletterModule {}

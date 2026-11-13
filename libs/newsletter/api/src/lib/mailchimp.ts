@@ -5,6 +5,7 @@
  * setting is needed. Auth is HTTP Basic with any username.
  */
 import { HttpException, HttpStatus } from '@nestjs/common';
+import { createHash } from 'crypto';
 import type { InterestCategory, MergeTag } from '@wepublish/newsletter/email';
 import { INTEREST_NAME, isSystemMergeTag } from '@wepublish/newsletter/email';
 
@@ -335,4 +336,22 @@ export async function findReusableDraft(
 
     throw cause;
   }
+}
+
+/**
+ * Adds an address to the audience as `pending`: Mailchimp asks the reader to
+ * confirm it (double opt-in). An address already on the list keeps its status,
+ * so an unsubscribed reader is not signed up again behind their back.
+ */
+export async function subscribeMember(
+  apiKey: string,
+  audienceId: string,
+  email: string
+): Promise<void> {
+  const hash = createHash('md5').update(email).digest('hex');
+
+  await call(apiKey, 'PUT', `/lists/${audienceId}/members/${hash}`, {
+    email_address: email,
+    status_if_new: 'pending',
+  });
 }

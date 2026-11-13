@@ -1,6 +1,7 @@
 import { expect, Page } from '@playwright/test';
 import { target } from '../support/env';
 import { Article, TestData } from '../support/factories';
+import { waitForOperation } from '../support/graphql-traffic';
 import { subscribePlanOf } from '../support/targets';
 import { Given, ScenarioContext, Then, When } from './fixtures';
 
@@ -26,37 +27,55 @@ const paywallOf = (page: Page, article: Article) => {
 /** The tenant's plan for journeys that buy one: see `subscribePlanOf`. */
 const subscribePlan = () => subscribePlanOf(target.app);
 
+// An ordinary paywall hides the rest in the browser, an enforced one is cut
+// on the server.
+const paywallKinds = ['ordinary', 'enforced'];
+
 async function createPaywalledArticle(
   data: TestData,
   alias: string,
+  kind: string,
   memberPlanSlug: string
 ) {
+  if (!paywallKinds.includes(kind)) {
+    throw new Error(
+      `Unknown paywall "${kind}", expected one of ${paywallKinds.join(', ')}.`
+    );
+  }
+
   await data.ensureSubscribePage();
   await data.createPaywalledArticle({
     alias,
     memberPlanSlugs: [memberPlanSlug],
+    enforced: kind === 'enforced',
   });
 }
 
 Given(
-  'a paywalled article {string} for the plan {string}',
-  async ({ data }, alias: string, memberPlanSlug: string) =>
-    createPaywalledArticle(data, alias, memberPlanSlug)
+  'an article {string} behind an {word} paywall for the plan {string}',
+  async ({ data }, alias: string, kind: string, memberPlanSlug: string) =>
+    createPaywalledArticle(data, alias, kind, memberPlanSlug)
 );
 
 Given(
-  "a paywalled article {string} for the tenant's subscribe plan",
-  async ({ data }, alias: string) =>
-    createPaywalledArticle(data, alias, subscribePlan())
+  "an article {string} behind an {word} paywall for the tenant's subscribe plan",
+  async ({ data }, alias: string, kind: string) =>
+    createPaywalledArticle(data, alias, kind, subscribePlan())
 );
 
+/**
+ * Opened means the site told the API about the visit (`viewArticle`): only
+ * then is the read on the reader's meter and the access decided.
+ */
 When(
   '{string} opens the article {string}',
   async ({ page, data, ctx }, _reader: string, alias: string) => {
     const article = data.get('article', alias);
+    const viewed = waitForOperation(page, 'ViewArticle');
 
     await page.goto(article.path);
     await expect(page.getByText(article.title).first()).toBeVisible();
+    await viewed;
     ctx.currentArticle = alias;
   }
 );

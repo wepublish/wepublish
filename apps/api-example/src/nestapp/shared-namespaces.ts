@@ -1,5 +1,5 @@
-import { BANNER_SHARED_NAMESPACES } from '@wepublish/banner/api';
 import { CROWDFUNDING_SHARED_NAMESPACES } from '@wepublish/crowdfunding/api';
+import { ENGAGEMENT_SHARED_NAMESPACES } from '@wepublish/engagement/api';
 import { GOOGLE_ANALYTICS_SHARED_NAMESPACES } from '@wepublish/google-analytics/api';
 import { MEMBER_PLAN_SHARED_NAMESPACES } from '@wepublish/member-plan/api';
 import { NAVIGATION_SHARED_NAMESPACES } from '@wepublish/navigation/api';
@@ -14,7 +14,7 @@ export const API_SHARED_NAMESPACES: readonly string[] = [
   ...PUBLIC_CONTENT_SHARED_NAMESPACES,
   ...SETTINGS_SHARED_NAMESPACES,
   ...NAVIGATION_SHARED_NAMESPACES,
-  ...BANNER_SHARED_NAMESPACES,
+  ...ENGAGEMENT_SHARED_NAMESPACES,
   ...MEMBER_PLAN_SHARED_NAMESPACES,
   ...PEERING_SHARED_NAMESPACES,
   ...CROWDFUNDING_SHARED_NAMESPACES,

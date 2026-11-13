@@ -29,6 +29,7 @@ export const emptyArticleMetadata: ArticleMetadata = {
   canonicalUrl: '',
   shared: undefined,
   paywall: undefined,
+  contentGateDisabled: false,
   hidden: false,
   disableComments: false,
   breaking: false,

@@ -68,7 +68,7 @@ libs/<domain>/
 
 ### Content Domain Libraries
 
-`article`, `page`, `image`, `author`, `tag`, `category`, `navigation`, `comments`, `poll`, `banner`, `richtext`, `feed`, `newsletter`
+`article`, `page`, `image`, `author`, `tag`, `category`, `navigation`, `comments`, `poll`, `paywall`, `engagement`, `richtext`, `feed`, `newsletter`
 
 **Sitemaps:** every website serves `/api/sitemap` (plus `/api/sitemap/[chunk]`:
 `news`, `pages`, `articles-YYYY` per past year, `articles-YYYY-MM` per month
@@ -80,6 +80,32 @@ of the current year in `index` mode) through
 hooks) live in `apps/<app>/src/sitemap.ts`. Fetch with the lean `Sitemap*`
 documents (`libs/website/api/src/lib/schemas/sitemap.graphql`), never
 `ArticleList`, and leave peered articles out. `generateSitemap` is deprecated.
+
+**Audience engagement** (`libs/engagement/{api,editor,website}`): banners,
+newsletter/membership prompts and metered content gates are one
+`EngagementRule` model with ordered `EngagementStage`s (by `afterArticles`,
+the articles a reader already read in `meterWindowDays`) and their actions.
+Only the last stage may be `HARD` (cut the article to `previewBlocks`).
+`evaluate.ts` orders the prompts: `priority` (an editor "show this first"
+override), then the more specific rule (narrower audience, pages only), then
+the newest; the website shows at most one per slot (banner, modal, in-article)
+in `resolve-engagement.ts`. The editor mirrors this order to show conflicts
+(`engagement-conflicts.ts`) — change both together. A `NEWSLETTER`
+requirement is a newsletter wall (the only one a newsletter-goal rule may end
+in): `signUpForNewsletter` (with a challenge for anonymous readers) signs the
+email up with the Mailchimp integration and answers a signed `newsletterToken`
+(valid a year), which the website keeps in the `wep_newsletter` cookie and sends
+with `viewArticle` and `engagementPrompts`; it passes the wall and silences
+newsletter-goal rules.
+**Paywalls stay their own model** (`libs/paywall`): they are attached per
+article (`Article.paywallId`), check specific member plans and bypass tokens,
+and the website and peering still read `Article.paywall`. Who gets every block
+is decided once in `evaluateArticleAccess` (`libs/article/api`): privileged
+readers, then an active *enforced* paywall alone, then the metered rules
+(paywalled articles are left out of them). In the editor, paywalls live under
+Audience Engagement (`/audience-engagement/paywalls`, forms still in
+`apps/editor/src/app/routes/paywall`); the Articles menu only links there, and
+old `/articles/paywalls` links redirect.
 
 **llms.txt:** every website serves `/llms.txt` from the same `src/sitemap.ts`
 config, so its `filterArticle` and url hooks apply. It follows

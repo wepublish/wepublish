@@ -6,7 +6,11 @@ import {
   Author,
 } from '@wepublish/author/api';
 import { Image, ImageDataloaderService } from '@wepublish/image/api';
-import { CurrentUser, UserSession } from '@wepublish/authentication/api';
+import {
+  AuthSession,
+  CurrentUser,
+  UserSession,
+} from '@wepublish/authentication/api';
 import { CanGetArticle } from '@wepublish/permissions';
 import { hasPermission, permissionsOf } from '@wepublish/permissions/api';
 import { BlockTreeLoader, BlockContent } from '@wepublish/block-content/api';
@@ -16,6 +20,8 @@ import {
 } from '@wepublish/public-content-cache/api';
 import { forwardRef, Inject } from '@nestjs/common';
 import { Property } from '@wepublish/property/api';
+import { ArticleAccessService, ArticleRequest } from './article-access.service';
+import { isRestricted } from './article-access';
 
 @Resolver(() => ArticleRevision)
 export class ArticleRevisionResolver {
@@ -24,10 +30,13 @@ export class ArticleRevisionResolver {
     private blockTreeLoader: BlockTreeLoader,
     private authorDataLoader: ArticleAuthorDataloader,
     private socialMediaAuthorDataLoader: ArticleSocialMediaAuthorDataloader,
-    private imageDataloaderService: ImageDataloaderService
+    private imageDataloaderService: ImageDataloaderService,
+    private articleAccess: ArticleAccessService
   ) {}
 
-  @ResolveField(() => [BlockContent])
+  @ResolveField(() => [BlockContent], {
+    description: `Readers without access only get the preview blocks: the server cuts paywalled and metered articles, the website does not hide them. viewArticle grants access for the article it returns.`,
+  })
   async blocks(
     @Parent() parent: ArticleRevision,
     @Args('onlyDisplayed', {
@@ -37,8 +46,8 @@ export class ArticleRevisionResolver {
         'Omits blocks that should be hidden. Only users who can read articles may pass `false`, everyone else gets the displayed blocks.',
     })
     onlyDisplayed: boolean,
-    @Context() context: object,
-    @CurrentUser() user: UserSession | undefined
+    @Context() context: { req: ArticleRequest },
+    @CurrentUser() session: AuthSession | undefined
   ) {
     if (!onlyDisplayed) {
       skipAnswerCache(context);
@@ -50,10 +59,21 @@ export class ArticleRevisionResolver {
       limitAnswerCache(context, changeAt);
     }
 
-    return this.blockTreeLoader.loadBlocks(parent.blocks, {
+    // Cut after loading: block templates expand into the blocks a reader
+    // sees, and hidden blocks do not count towards the preview.
+    const blocks = await this.blockTreeLoader.loadBlocks(parent.blocks, {
       onlyDisplayed:
-        onlyDisplayed || !hasPermission(CanGetArticle, permissionsOf(user)),
+        onlyDisplayed || !hasPermission(CanGetArticle, permissionsOf(session)),
     });
+    const access = await this.articleAccess.accessFor(
+      context.req,
+      session,
+      parent.articleId
+    );
+
+    return isRestricted(access) ?
+        blocks.slice(0, access.previewBlocks)
+      : blocks;
   }
 
   @ResolveField(() => Date, {
@@ -63,6 +83,18 @@ export class ArticleRevisionResolver {
   })
   async blocksChangeAt(@Parent() parent: ArticleRevision) {
     return this.blockTreeLoader.nextChange(parent.blocks);
+  }
+
+  @ResolveField(() => Boolean, {
+    description: `Whether the reader has no access to the article and only gets its preview blocks.`,
+  })
+  async restricted(
+    @Parent() parent: ArticleRevision,
+    @Context('req') req: ArticleRequest,
+    @CurrentUser() session: AuthSession | undefined
+  ) {
+    return !(await this.articleAccess.accessFor(req, session, parent.articleId))
+      .granted;
   }
 
   @ResolveField(() => [Property])

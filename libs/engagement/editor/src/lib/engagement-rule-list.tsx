@@ -1,0 +1,346 @@
+import { useMutation, useQuery } from '@apollo/client/react';
+import {
+  Button,
+  Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Stack,
+  Switch,
+  Typography,
+} from '@mui/material';
+import {
+  DeleteEngagementRuleDocument,
+  EngagementRulesDocument,
+  FullEngagementRuleFragment,
+  PaywallListDocument,
+  UpdateEngagementRuleDocument,
+} from '@wepublish/editor/api';
+import {
+  CanCreateEngagementRule,
+  CanDeleteEngagementRule,
+  CanGetEngagementRules,
+  CanUpdateEngagementRule,
+} from '@wepublish/permissions';
+import {
+  createCheckedPermissionComponent,
+  DataTable,
+  enqueueSnackbar,
+  getOperationNameFromDocument,
+  humanizeError,
+  IconButton,
+  IconButtonTooltip,
+  Link,
+  ListViewActions,
+  ListViewContainer,
+  ListViewHeader,
+  PageTitle,
+  TableWrapper,
+} from '@wepublish/ui/editor';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { MdAdd, MdContentCopy, MdDelete } from 'react-icons/md';
+import { Link as RouterLink } from 'react-router-dom';
+import {
+  engagementRuleToValues,
+  showsFirst,
+  toEngagementRuleInput,
+} from './engagement-rule-values';
+import { describeConflict, findConflicts } from './engagement-conflicts';
+import { StageSummary } from './stage-summary';
+import { summarizeWhere } from './summarize-rule';
+
+export const ENGAGEMENT_PATH = '/audience-engagement';
+
+const ruleValues = (rule: FullEngagementRuleFragment) => ({
+  ...rule,
+  stages: engagementRuleToValues(rule).stages,
+});
+
+const showError = (error: Error) =>
+  enqueueSnackbar(humanizeError(error), {
+    variant: 'error',
+    autoHideDuration: 8000,
+  });
+
+function EngagementRuleList() {
+  const { t } = useTranslation();
+  const [ruleToDelete, setRuleToDelete] =
+    useState<FullEngagementRuleFragment>();
+  const { data, loading } = useQuery(EngagementRulesDocument);
+  const rules = data?.engagementRules ?? [];
+  const { data: paywallData } = useQuery(PaywallListDocument);
+  const [updateRule] = useMutation(UpdateEngagementRuleDocument, {
+    onError: showError,
+  });
+  const [deleteRule] = useMutation(DeleteEngagementRuleDocument, {
+    refetchQueries: [getOperationNameFromDocument(EngagementRulesDocument)],
+    onError: showError,
+    onCompleted: () =>
+      enqueueSnackbar(t('toast.deletedSuccess'), {
+        variant: 'success',
+        autoHideDuration: 3000,
+      }),
+  });
+
+  const toggle = (rule: FullEngagementRuleFragment, active: boolean) =>
+    updateRule({
+      variables: {
+        input: {
+          id: rule.id,
+          ...toEngagementRuleInput({ ...engagementRuleToValues(rule), active }),
+        },
+      },
+    });
+
+  return (
+    <>
+      <ListViewContainer>
+        <ListViewHeader>
+          <PageTitle>{t('engagement.list.title')}</PageTitle>
+        </ListViewHeader>
+
+        <ListViewActions>
+          <Button
+            component={RouterLink}
+            to={`${ENGAGEMENT_PATH}/create`}
+            variant="contained"
+            startIcon={<MdAdd />}
+          >
+            {t('engagement.list.create')}
+          </Button>
+        </ListViewActions>
+      </ListViewContainer>
+
+      <TableWrapper>
+        <DataTable
+          storageKey="engagement-rules"
+          data={data?.engagementRules ?? []}
+          loading={loading}
+          emptyMessage={t('engagement.list.empty')}
+          columns={[
+            {
+              id: 'active',
+              label: t('engagement.list.active'),
+              width: 90,
+              render: rule => (
+                <Switch
+                  checked={rule.active}
+                  slotProps={{
+                    input: {
+                      'aria-label': t('engagement.list.toggle', {
+                        name: rule.name,
+                      }),
+                    },
+                  }}
+                  onChange={(_event, active) => toggle(rule, active)}
+                />
+              ),
+            },
+            {
+              id: 'name',
+              label: t('engagement.list.name'),
+              render: rule => (
+                <Stack
+                  direction="row"
+                  sx={{ gap: 1, alignItems: 'center', flexWrap: 'wrap' }}
+                >
+                  <Link
+                    component={RouterLink}
+                    to={`${ENGAGEMENT_PATH}/edit/${rule.id}`}
+                  >
+                    {rule.name}
+                  </Link>
+                  {showsFirst(rule.priority) && (
+                    <Chip
+                      size="small"
+                      variant="outlined"
+                      label={t('engagement.list.showsFirst')}
+                    />
+                  )}
+                </Stack>
+              ),
+            },
+            {
+              id: 'goal',
+              label: t('engagement.list.goal'),
+              render: rule => (
+                <Chip
+                  size="small"
+                  label={t(`engagement.goal.${rule.goal}`)}
+                />
+              ),
+            },
+            {
+              id: 'audience',
+              label: t('engagement.list.audience'),
+              render: rule => t(`engagement.audience.${rule.audience}`),
+            },
+            {
+              id: 'where',
+              label: t('engagement.list.where'),
+              render: rule => summarizeWhere(rule, t),
+            },
+            {
+              id: 'summary',
+              label: t('engagement.list.summary'),
+              minWidth: 280,
+              render: rule => (
+                <>
+                  <StageSummary
+                    rule={{
+                      goal: rule.goal,
+                      stages: engagementRuleToValues(rule).stages,
+                    }}
+                    testId={`rule-summary-${rule.id}`}
+                  />
+                  {/* A settled conflict only matters to the rule shown
+                      second: the first one says so with its chip. */}
+                  {rule.active &&
+                    findConflicts(ruleValues(rule), rules.map(ruleValues))
+                      .filter(({ settled, first }) => !settled || !first)
+                      .map(conflict => (
+                        <Typography
+                          key={conflict.rule.id}
+                          variant="body2"
+                          color={
+                            conflict.settled ? 'text.secondary' : 'warning.main'
+                          }
+                          data-testid={
+                            conflict.settled ? 'conflict-settled' : 'conflict'
+                          }
+                        >
+                          {describeConflict(conflict, t)}
+                        </Typography>
+                      ))}
+                </>
+              ),
+            },
+            {
+              id: 'action',
+              label: t('action'),
+              width: 100,
+              align: 'center',
+              fixed: true,
+              render: rule => (
+                <>
+                  <IconButtonTooltip caption={t('engagement.list.copy')}>
+                    <IconButton
+                      component={RouterLink}
+                      to={`${ENGAGEMENT_PATH}/create?copyOf=${rule.id}`}
+                      aria-label={t('engagement.list.copy')}
+                      size="small"
+                    >
+                      <MdContentCopy />
+                    </IconButton>
+                  </IconButtonTooltip>
+
+                  <IconButtonTooltip caption={t('delete')}>
+                    <IconButton
+                      aria-label={t('delete')}
+                      color="error"
+                      size="small"
+                      onClick={() => setRuleToDelete(rule)}
+                    >
+                      <MdDelete />
+                    </IconButton>
+                  </IconButtonTooltip>
+                </>
+              ),
+            },
+          ]}
+        />
+      </TableWrapper>
+
+      <Stack
+        spacing={1}
+        sx={{ mt: 4 }}
+      >
+        <Typography variant="h3">{t('engagement.list.paywalls')}</Typography>
+        <Typography variant="body2">
+          {t('engagement.list.paywallsDescription')}{' '}
+          <Link
+            component={RouterLink}
+            to={`${ENGAGEMENT_PATH}/paywalls`}
+          >
+            {t('engagement.list.managePaywalls')}
+          </Link>
+        </Typography>
+
+        {paywallData?.paywalls.map(paywall => (
+          <Stack
+            key={paywall.id}
+            direction="row"
+            spacing={1}
+            sx={{ alignItems: 'center' }}
+          >
+            <Link
+              component={RouterLink}
+              to={`${ENGAGEMENT_PATH}/paywalls/edit/${paywall.id}`}
+            >
+              {paywall.name || t('comments.edit.unnamedPaywall')}
+            </Link>
+            {paywall.enforced && (
+              <Chip
+                size="small"
+                color="primary"
+                label={t('engagement.list.enforced')}
+              />
+            )}
+            {!paywall.active && (
+              <Chip
+                size="small"
+                label={t('engagement.list.inactive')}
+              />
+            )}
+            <Typography variant="body2">
+              {paywall.anyMemberPlan ?
+                t('engagement.list.anyMemberPlan')
+              : paywall.memberPlans.map(({ name }) => name).join(', ')}
+            </Typography>
+          </Stack>
+        ))}
+      </Stack>
+
+      <Dialog
+        open={!!ruleToDelete}
+        onClose={() => setRuleToDelete(undefined)}
+      >
+        <DialogTitle>{t('engagement.delete.title')}</DialogTitle>
+        <DialogContent>
+          {t('engagement.delete.body', { name: ruleToDelete?.name })}
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="text"
+            onClick={() => setRuleToDelete(undefined)}
+          >
+            {t('cancel')}
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={async () => {
+              if (ruleToDelete) {
+                await deleteRule({ variables: { id: ruleToDelete.id } });
+              }
+
+              setRuleToDelete(undefined);
+            }}
+          >
+            {t('engagement.delete.confirm')}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
+  );
+}
+
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  CanGetEngagementRules.id,
+  CanCreateEngagementRule.id,
+  CanUpdateEngagementRule.id,
+  CanDeleteEngagementRule.id,
+])(EngagementRuleList);
+export { CheckedPermissionComponent as EngagementRuleList };

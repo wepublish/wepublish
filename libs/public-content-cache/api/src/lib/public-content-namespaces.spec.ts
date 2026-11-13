@@ -15,6 +15,7 @@ describe('public content namespaces', () => {
       'content:authors',
       'content:images',
       'content:paywalls',
+      'content:engagement',
       'content:polls',
       'graphql:comments',
     ]);
@@ -43,7 +44,7 @@ describe('public content namespaces', () => {
     expect(PAGE_CONTENT_NAMESPACES).toEqual([
       'graphql:content',
       'navigations',
-      'banners',
+      'content:engagement',
       'settings',
       'website-settings',
       'peer-profile',
@@ -54,12 +55,14 @@ describe('public content namespaces', () => {
 });
 
 describe('website layout', () => {
-  it.each(['navigations', 'settings', 'banners', 'content:paywalls'])(
-    'counts %s as layout every page shows',
-    namespace => {
-      expect(WEBSITE_LAYOUT_NAMESPACES).toContain(namespace);
-    }
-  );
+  it.each([
+    'navigations',
+    'settings',
+    'content:engagement',
+    'content:paywalls',
+  ])('counts %s as layout every page shows', namespace => {
+    expect(WEBSITE_LAYOUT_NAMESPACES).toContain(namespace);
+  });
 
   it.each(['graphql:content', 'content:articles', 'content:images'])(
     'does not count %s as layout',

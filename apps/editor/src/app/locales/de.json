@@ -238,6 +238,8 @@
         "breakingNewsInfo": "Markiert den Artikel als Breaking News. Je nach Design deiner Website erhält sein Teaser eine spezielle Kennzeichnung.",
         "peeringInfo": "Erlaubt Partnermedien im We.Publish-Netzwerk (Peers), diesen Artikel zu übernehmen und auf ihrer Website zu publizieren.",
         "paywallInfo": "Wähle eine Paywall, wenn nur Leser*innen mit passendem Abo diesen Artikel lesen können sollen. Leer lassen für freien Zugang.",
+        "contentGateDisabled": "Von gezählten Engagement-Regeln ausnehmen",
+        "contentGateDisabledInfo": "Gezählte Engagement-Regeln (Newsletter- und Mitgliedschafts-Hinweise, die Artikel zählen) erscheinen nie auf diesem Artikel und schränken ihn nie ein. Ankündigungen erscheinen weiterhin. Artikel mit Paywall überlässt du der Paywall.",
         "hiddenInfo": "Ausgeblendete Artikel erscheinen nicht in automatischen Artikellisten auf der Website (z.B. neueste Artikel oder Tag-Seiten), bleiben aber über ihren direkten Link erreichbar.",
         "contentUrlInfo": "Die Webadresse, zu der Leser*innen beim Klick auf den Teaser gelangen.",
         "teaserPropertiesInfo": "Zusätzliche Schlüssel-Wert-Paare, die deine Website für spezielle Darstellungen nutzen kann. Nur nötig, wenn die Entwickler*innen deiner Website dich darum gebeten haben. Öffentliche Eigenschaften sind über die öffentliche API sichtbar.",
@@ -2090,7 +2092,6 @@
       "deliverySuggestions": "Zustellkanal",
       "articles": "Artikel",
       "authors": "Autor*innen",
-      "banners": "Banner",
       "blocks": {
         "polls": "Umfragen",
         "blockStyles": "Block-Styling",
@@ -2154,6 +2155,7 @@
       "auditLog": "Audit-Log",
       "letterLayouts": "Briefpapier",
       "language": "Sprache",
+      "audienceEngagement": "Audience Engagement",
       "audioLibrary": "Audio"
     },
     "pageTitles": {
@@ -2231,9 +2233,6 @@
       "newsletter": "Newsletter",
       "newsletterEdit": "Newsletter bearbeiten",
       "newsletterPreview": "Newsletter-Vorschau",
-      "banners": "Banner",
-      "bannerCreate": "Neues Banner",
-      "bannerEdit": "Banner bearbeiten",
       "authors": "Autor*innen",
       "authorCreate": "Neue*r Autor*in",
       "authorEdit": "Autor*in bearbeiten",
@@ -2276,7 +2275,6 @@
       "letterLayouts": "Briefpapier",
       "letterLayoutCreate": "Neues Briefpapier",
       "letterLayoutEdit": "Briefpapier bearbeiten",
-      "systemMails": "Konto- & Login-E-Mails",
       "mailSend": "E-Mail senden",
       "deliveryChannel": "Zustellkanal",
       "mailLog": "Gesendete E-Mails",
@@ -2295,6 +2293,9 @@
       "websiteSettings": "Website-Einstellungen",
       "seo": "SEO-Checkliste",
       "logout": "Logout",
+      "engagement": "Audience Engagement",
+      "engagementCreate": "Neue Engagement-Regel",
+      "engagementEdit": "Engagement-Regel bearbeiten",
       "printIssueList": "Druckliste"
     },
     "navigation": {
@@ -3586,7 +3587,9 @@
         "fadeoutHelpText": "Die Überblendung ermöglicht eine Vorschau auf den restlichen Inhalt.",
         "bypassesInfo": "Geheime Codes, mit denen man Artikel hinter dieser Paywall ohne Abo lesen kann, z.B. für eine Print- oder Event-Aktion. Teile den Link oder QR-Code: Wer ihn öffnet, hat für einige Stunden freien Zugang.",
         "showQrCode": "QR-Code anzeigen",
-        "hideContentAfterInfo": "Wie viele Blöcke des Artikels (z.B. Titel, Lead, Absätze) Leser:innen ohne Zugang noch sehen, bevor der Rest ausgeblendet wird. Standard: 3."
+        "hideContentAfterInfo": "Wie viele Blöcke des Artikels (z.B. Titel, Lead, Absätze) Leser:innen ohne Zugang noch sehen, bevor der Rest ausgeblendet wird. Standard: 3.",
+        "enforced": "Auf dem Server durchsetzen",
+        "enforcedHelpText": "Leser*innen ohne Zugang erhalten nur die ersten Blöcke, der Rest verlässt den Server nie. Ohne diese Option blendet die Website den Rest aus, was sich umgehen lässt. Aktualisiere zuerst die Websites."
       },
       "overview": {
         "areYouSure": "Bist du sicher?",
@@ -5638,7 +5641,7 @@
         "video": "Video hochladen",
         "audio": "Audio hochladen",
         "navigation": "Navigation erstellen",
-        "banner": "Banner erstellen",
+        "engagementRule": "Engagement-Regel erstellen",
         "author": "Autor:in erstellen",
         "authorTag": "Autor:innen-Tag erstellen",
         "user": "Benutzer:in erstellen",
@@ -5654,7 +5657,11 @@
         "peer": "Peer erstellen",
         "userRole": "Benutzerrolle erstellen",
         "token": "Token generieren",
-        "apiToken": "API-Schlüssel generieren"
+        "apiToken": "API-Schlüssel generieren",
+        "newsletterPrompt": "Newsletter ausbauen (neue Engagement-Regel)",
+        "membershipPrompt": "Mitgliedschaften fördern (neue Engagement-Regel)",
+        "announcement": "Ankündigung anzeigen (neue Engagement-Regel)",
+        "restrictPremium": "Premium-Inhalte einschränken (neue Paywall)"
       },
       "trigger": "Suchen oder springen…",
       "keys": {
@@ -5880,6 +5887,226 @@
         "heading": "Einstellungen",
         "title": "Titel",
         "titleHint": "Zugleich die Betreffzeile des Mailchimp-Entwurfs. Wird beim Speichern übernommen."
+      }
+    },
+    "engagement": {
+      "list": {
+        "title": "Audience Engagement",
+        "create": "Neue Regel",
+        "empty": "Noch keine Engagement-Regeln.",
+        "active": "Aktiv",
+        "toggle": "{{name}} aktivieren",
+        "name": "Name",
+        "goal": "Ziel",
+        "audience": "Zielgruppe",
+        "where": "Wo",
+        "summary": "Zusammenfassung",
+        "articles": "Artikel",
+        "pages_one": "{{count}} Seite",
+        "pages_other": "{{count}} Seiten",
+        "peered": "geteilte Artikel",
+        "paywalls": "Zugang zu Inhalten (Paywalls)",
+        "paywallsDescription": "Paywalls behalten Artikel Mitgliedern bestimmter Abos vor. Eine durchgesetzte Paywall wird auf dem Server geprüft.",
+        "managePaywalls": "Paywalls verwalten",
+        "enforced": "Durchgesetzt",
+        "inactive": "Inaktiv",
+        "anyMemberPlan": "Jedes Abo",
+        "copy": "Kopieren",
+        "showsFirst": "Wird zuerst gezeigt"
+      },
+      "delete": {
+        "title": "Engagement-Regel löschen?",
+        "body": "«{{name}}» erscheint sofort nicht mehr.",
+        "confirm": "Löschen"
+      },
+      "create": {
+        "title": "Neue Engagement-Regel"
+      },
+      "edit": {
+        "title": "Engagement-Regel bearbeiten"
+      },
+      "preset": {
+        "growNewsletter": "Newsletter ausbauen",
+        "growNewsletterInfo": "Mach aus regelmässigen Leser*innen Newsletter-Abonnent*innen.",
+        "promoteMemberships": "Mitgliedschaften fördern",
+        "promoteMembershipsInfo": "Lade engagierte Leser*innen ein, deine Publikation mit einer Mitgliedschaft zu unterstützen.",
+        "restrictPremium": "Premium-Inhalte einschränken",
+        "restrictPremiumInfo": "Reserviere ausgewählte Artikel für zahlende Mitglieder. Öffnet eine neue Paywall.",
+        "displayAnnouncement": "Ankündigung anzeigen",
+        "displayAnnouncementInfo": "Informiere alle Leser*innen über etwas, z. B. ein Crowdfunding oder einen Anlass.",
+        "restrictPremiumAudience": "Leser*innen ohne eines der gewählten Abos",
+        "restrictPremiumStep": "Jeder Artikel der Paywall: nach der Vorschau abgeschnitten, auf dem Server geprüft",
+        "for": "Für",
+        "steps": "Was Leser*innen sehen"
+      },
+      "goal": {
+        "ANNOUNCEMENT": "Ankündigung",
+        "ANNOUNCEMENTInfo": "Ein Hinweis ab dem ersten Besuch. Ohne Zählung, nichts wird eingeschränkt.",
+        "NEWSLETTER": "Newsletter",
+        "NEWSLETTERInfo": "Hinweise für den Newsletter, nach den gelesenen Artikeln gestaffelt.",
+        "MEMBERSHIP": "Mitgliedschaft",
+        "MEMBERSHIPInfo": "Hinweise für Mitgliedschaften, nach den gelesenen Artikeln gestaffelt."
+      },
+      "audience": {
+        "ALL": "Alle",
+        "ALLInfo": "Alle Leser*innen.",
+        "ANONYMOUS": "Anonyme Leser*innen",
+        "ANONYMOUSInfo": "Leser*innen, die nicht eingeloggt sind.",
+        "REGISTERED": "Eingeloggte Leser*innen",
+        "REGISTEREDInfo": "Eingeloggte Leser*innen, mit oder ohne Mitgliedschaft.",
+        "NON_MEMBERS": "Leser*innen ohne Mitgliedschaft",
+        "NON_MEMBERSInfo": "Anonyme und eingeloggte Leser*innen ohne aktive Mitgliedschaft.",
+        "MEMBERS": "Mitglieder",
+        "MEMBERSInfo": "Leser*innen mit aktiver Mitgliedschaft, gratis oder bezahlt.",
+        "PAYWALL_BYPASSED": "Leser*innen mit Paywall-Freischaltlink",
+        "PAYWALL_BYPASSEDInfo": "Leser*innen, die einen Freischaltlink einer aktiven Paywall geöffnet haben.",
+        "MEMBER_PLANS": "Leser:innen mit einem bestimmten Abo",
+        "MEMBER_PLANSInfo": "Leser:innen mit einem aktiven Abo eines der Pläne, die du wählst, z. B. um ein Upgrade anzubieten."
+      },
+      "placement": {
+        "BANNER": "Banner oben auf der Seite",
+        "MODAL": "Pop-up über dem Artikel",
+        "INLINE": "Box im Artikeltext",
+        "CUTOFF": "Box am Ende des Artikels"
+      },
+      "requirement": {
+        "REGISTRATION": "Registrierung",
+        "MEMBERSHIP": "Mitgliedschaft",
+        "NEWSLETTER": "Newsletter-Anmeldung (nur E-Mail)"
+      },
+      "actionType": {
+        "URL": "Link",
+        "NEWSLETTER": "Newsletter-Anmeldung",
+        "LOGIN": "Login",
+        "REGISTER": "Registrierung",
+        "MEMBERSHIP": "Mitgliedschaft"
+      },
+      "actionRole": {
+        "PRIMARY": "Primär",
+        "CANCEL": "Schliessen",
+        "OTHER": "Weitere"
+      },
+      "summary": {
+        "announcement": "Ab dem ersten Besuch: {{placement}}",
+        "placement": {
+          "BANNER": "Banner",
+          "MODAL": "Pop-up",
+          "INLINE": "Box im Artikel",
+          "CUTOFF": "Box am Artikelende"
+        },
+        "requirement": {
+          "REGISTRATION": "Registrierung",
+          "MEMBERSHIP": "Mitgliedschaft",
+          "NEWSLETTER": "Newsletter-Anmeldung"
+        },
+        "closable": "{{placement}}, schliessbar",
+        "article": "Beim {{number}}. Artikel",
+        "articles": "Beim {{from}}.–{{to}}. Artikel",
+        "fromArticle": "Ab dem {{number}}. Artikel",
+        "hard_one": "{{requirement}} nötig, {{count}} Block Vorschau",
+        "hard_other": "{{requirement}} nötig, {{count}} Blöcke Vorschau"
+      },
+      "form": {
+        "goal": "Ziel",
+        "name": "Name",
+        "active": "Aktiv",
+        "newsletterNote": "Eine Newsletter-Sperre fragt nur nach der E-Mail-Adresse: Leserinnen und Leser geben sie direkt im Hinweis ein und werden über die Mailchimp-Integration angemeldet (sie bestätigen per Mail). Danach lassen Newsletter-Regeln sie in Ruhe.",
+        "audience": "Zielgruppe",
+        "trigger": "Wo und wann",
+        "showOnArticles": "Auf Artikeln anzeigen",
+        "includePeeredArticles": "Geteilte Artikel einschliessen",
+        "includePeeredArticlesInfo": "Artikel, die von Peers importiert wurden. Über deren Zugang entscheiden ihre Verlage.",
+        "showOnPages": "Auf Seiten anzeigen",
+        "meterWindowDays": "Artikel der letzten … Tage zählen",
+        "meterWindowDaysInfo": "Früher gelesene Artikel zählen nicht mehr. Jeder Artikel zählt einmal.",
+        "problems": "Die Regel kann so nicht gespeichert werden:",
+        "moreOptions": "Weitere Optionen",
+        "presentation": "Darstellung und Aktionen",
+        "message": "Hinweis",
+        "stage": "Stufe {{number}}",
+        "removeStage": "Stufe entfernen",
+        "addStage": "Stufe hinzufügen",
+        "afterArticles": "Anzeigen, sobald jemand … Artikel gelesen hat",
+        "afterArticlesInfo": "Zählt die anderen Artikel, die diese Person im Zeitraum gelesen hat, jeden Artikel einmal. 0 zeigt es ab dem allerersten Artikel.",
+        "placement": "Platzierung",
+        "placementInfo": "Wo Leser:innen es sehen. Nur die letzte Stufe kann am Ende des Artikels stehen.",
+        "hard": "Artikel einschränken",
+        "hardInfo": "Wer die Voraussetzung nicht erfüllt, erhält nur die Vorschau-Blöcke. Wird auf dem Server geprüft.",
+        "requirement": "Voraussetzung",
+        "requirementInfo": "Was es zum Weiterlesen braucht. Wer sie schon erfüllt, sieht die Regel nicht.",
+        "previewBlocks": "Vorschau-Blöcke",
+        "previewBlocksInfo": "Wie viele Blöcke eingeschränkte Leser*innen erhalten, Titel und Lead eingeschlossen.",
+        "title": "Titel",
+        "description": "Text",
+        "text": "Kurzer Text",
+        "html": "HTML",
+        "htmlInfo": "Eigenes HTML. Im Banner ersetzt es Titel, Text und Aktionen, sonst steht es unter dem Text.",
+        "embedUrl": "Embed-URL",
+        "embedUrlInfo": "Ein Iframe im Banner, z. B. ein Formular.",
+        "cta": "Call to Action",
+        "ctaInfo": "Eine Zeile über den Buttons.",
+        "image": "Bild",
+        "dismissible": "Kann geschlossen werden",
+        "dismissibleInfo": "Leser*innen können ihn schliessen, danach bleibt er für die unten angegebene Zeit weg.",
+        "hideForMinutes": "Nach dem Schliessen … Minuten ausblenden",
+        "hideForMinutesInfo": "Eine geänderte Regel erscheint sofort wieder.",
+        "delaySeconds": "Nach … Sekunden anzeigen",
+        "actions": "Aktionen",
+        "actionsInfo": "Buttons. Login, Registrierung und Mitgliedschaft führen auf ihre Seiten der Website.",
+        "actionType": "Typ",
+        "actionLabel": "Beschriftung",
+        "actionLabelDefault": "Standard der Website",
+        "actionUrl": "URL",
+        "actionRole": "Rolle",
+        "addAction": "Aktion hinzufügen",
+        "audienceMemberPlans": "Abo-Pläne",
+        "showFirst": "Diese Regel zuerst zeigen",
+        "showFirstInfo": "Eine Person sieht höchstens ein Banner, ein Pop-up und eine Box im Artikel gleichzeitig. Ohne diese Einstellung wird die spezifischere Regel zuerst gezeigt (engeres Publikum, nur gewählte Seiten), danach die neuste.",
+        "newsletterUrlInfo": "Leer lassen, um die E-Mail-Adresse direkt im Hinweis abzufragen"
+      },
+      "validation": {
+        "required": "Pflichtfeld",
+        "min": "Zu klein",
+        "ascending": "Muss höher sein als bei Stufe {{step}} ({{count}})",
+        "hardNotLast": "Nur die letzte Stufe kann den Artikel einschränken",
+        "hardNeedsCutoff": "Eine einschränkende Stufe steht nach dem Artikel",
+        "onlyHard": "Nur für eine Stufe, die den Artikel einschränkt",
+        "announcementSingleStage": "Eine Ankündigung hat einen Hinweis",
+        "announcementFromStart": "Eine Ankündigung erscheint ab dem ersten Artikel",
+        "announcementSoft": "Eine Ankündigung kann den Artikel nicht einschränken",
+        "announcementNoMeter": "Eine Ankündigung zählt keine Artikel",
+        "newsletterWallRequired": "Eine Newsletter-Regel verlangt die Newsletter-Anmeldung",
+        "wholeNumber": "Gib eine ganze Zahl ein"
+      },
+      "copyName": "{{name}} (Kopie)",
+      "view": {
+        "edit": "Regel bearbeiten",
+        "overview": "Übersicht"
+      },
+      "review": {
+        "title": "Was diese Regel macht",
+        "goesLive": "Aktiv: Leser:innen sehen es, sobald du speicherst.",
+        "inactive": "Inaktiv: gespeichert, aber niemand sieht es, bis du es einschaltest.",
+        "who": "Wer",
+        "where": "Wo",
+        "nowhere": "Noch nirgends: wähle Artikel oder Seiten",
+        "steps": "Was Leser:innen sehen, Schritt für Schritt",
+        "untitled": "Kein Titel",
+        "back": "Zurück zur Bearbeitung",
+        "confirm": "Regel erstellen"
+      },
+      "conflict": {
+        "title": "Konkurriert mit anderen Regeln",
+        "settledTitle": "Reihenfolge festgelegt",
+        "competes": "Konkurriert mit «{{name}}» um: {{slots}} ({{audience}}).",
+        "thisFirst": "Diese Regel wird zuerst gezeigt.",
+        "otherFirst": "«{{name}}» wird zuerst gezeigt.",
+        "slot": {
+          "banner": "Banner",
+          "modal": "Pop-up",
+          "inline": "Box im Artikel",
+          "restriction": "Einschränkung des Artikels"
+        }
       }
     }
   }

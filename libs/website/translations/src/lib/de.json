@@ -9,6 +9,23 @@
     "backToProfile": "Zurück zum Profil",
     "profile": "Profil"
   },
+  "engagement": {
+    "action": {
+      "LOGIN": "Login",
+      "REGISTER": "Kostenlos registrieren",
+      "MEMBERSHIP": "Abonnent*in werden",
+      "NEWSLETTER": "Newsletter abonnieren",
+      "URL": "Mehr erfahren"
+    },
+    "dismiss": "Weiterlesen",
+    "newsletterWall": {
+      "email": "E-Mail-Adresse",
+      "captcha": "Captcha",
+      "submit": "Weiterlesen",
+      "error": "Das hat nicht geklappt. Prüfe deine E-Mail-Adresse und versuche es nochmals.",
+      "done": "Danke! Bestätige deine Anmeldung in der E-Mail, die wir dir eben geschickt haben."
+    }
+  },
   "banner": {
     "close": "Banner schliessen"
   },

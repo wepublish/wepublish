@@ -28,6 +28,8 @@ export * from './lib/teaser.components';
 
 export * from './lib/paywall.interface';
 export * from './lib/paywall.components';
+export * from './lib/engagement-prompt.interface';
+export * from './lib/engagement-prompt.components';
 
 export * from './lib/ui.interface';
 export * from './lib/ui.components';

@@ -21,6 +21,7 @@ fragment FullArticleRevision on ArticleRevision {
   blocks {
     ...FullBlock
   }
+  restricted
 
   authors {
     role

@@ -1,0 +1,40 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`BannerResolver > maps an announcement onto the banner type older websites select 1`] = `
+{
+  "actions": [
+    {
+      "id": "action-1",
+      "label": "Subscribe",
+      "role": "PRIMARY",
+      "style": "primary",
+      "url": "https://example.com",
+    },
+    {
+      "id": "action-2",
+      "label": "Login",
+      "role": "OTHER",
+      "style": "",
+      "url": "/login",
+    },
+  ],
+  "active": true,
+  "collapsible": true,
+  "cta": "Read on",
+  "delay": 5,
+  "embedUrl": null,
+  "hideForMinutes": 1440,
+  "html": null,
+  "id": "rule-1",
+  "imageId": "image-1",
+  "showForLoginStatus": "ALL",
+  "showOnArticles": true,
+  "showOnPages": [
+    {
+      "id": "page-1",
+    },
+  ],
+  "text": "Test Banner Text",
+  "title": "Test Banner",
+}
+`;

@@ -97,6 +97,7 @@ enum ApiTokenStatus {
 }
 
 type Article implements HasOptionalPaywall & HasOptionalPeerLc {
+  contentGateDisabled: Boolean!
   createdAt: DateTime!
   disableComments: Boolean!
   draft: ArticleRevision
@@ -119,6 +120,24 @@ type Article implements HasOptionalPaywall & HasOptionalPeerLc {
   tags: [Tag!]!
   trackingPixels: [TrackingPixel!]!
   url: String!
+}
+
+type ArticleAccess {
+  granted: Boolean!
+  paywallId: String
+  previewBlocks: Int
+  requirement: EngagementRequirement
+  ruleId: String
+  source: ArticleAccessSource
+  stageId: String
+}
+
+"""
+What keeps a reader from the full article: a paywall or a metered engagement rule.
+"""
+enum ArticleAccessSource {
+  ENGAGEMENT_RULE
+  PAYWALL
 }
 
 type ArticleCreatedAction implements BaseAction & HasArticleLc {
@@ -164,6 +183,10 @@ type ArticleNavigationLink implements BaseNavigationLink & HasArticle {
 type ArticleRevision implements HasBlockContent & HasOptionalUserLc {
   archivedAt: DateTime
   authors: [ArticleRevisionAuthor!]!
+
+  """
+  Readers without access only get the preview blocks: the server cuts paywalled and metered articles, the website does not hide them. viewArticle grants access for the article it returns.
+  """
   blocks(
     """
     Omits blocks that should be hidden. Only users who can read articles may pass `false`, everyone else gets the displayed blocks.
@@ -186,6 +209,11 @@ type ArticleRevision implements HasBlockContent & HasOptionalUserLc {
   preTitle: String
   properties: [Property!]!
   publishedAt: DateTime
+
+  """
+  Whether the reader has no access to the article and only gets its preview blocks.
+  """
+  restricted: Boolean!
   seoDescription: String
   seoTitle: String
   socialMediaAuthors: [Author!]!
@@ -280,6 +308,7 @@ input ArticleTemplateMetadataInput {
   authors: [ArticleRevisionAuthorInput!]!
   breaking: Boolean!
   canonicalUrl: String
+  contentGateDisabled: Boolean
   disableComments: Boolean!
   hidden: Boolean!
   hideAuthor: Boolean!
@@ -303,6 +332,19 @@ enum ArticleTemplateSort {
   CreatedAt
   ModifiedAt
   Name
+}
+
+type ArticleView {
+  access: ArticleAccess!
+
+  """The article, with every block when access was granted."""
+  article: Article!
+
+  """
+  The anonymous reader's meter, signed. Keep it and send it with the next viewArticle. Null for logged-in readers, whose meter stays on the server.
+  """
+  meterToken: String
+  prompts: [EngagementPrompt!]!
 }
 
 type Audio {
@@ -1044,30 +1086,6 @@ input ConsentFilter {
   slug: String
 }
 
-input CreateBannerActionInput {
-  label: String!
-  role: BannerActionRole!
-  style: String!
-  url: String!
-}
-
-input CreateBannerInput {
-  actions: [CreateBannerActionInput!]
-  active: Boolean!
-  collapsible: Boolean!
-  cta: String
-  delay: Int!
-  embedUrl: String
-  hideForMinutes: Int!
-  html: String
-  imageId: String
-  showForLoginStatus: LoginStatus!
-  showOnArticles: Boolean!
-  showOnPages: [PageModelInput!]
-  text: String!
-  title: String!
-}
-
 input CreateCrowdfundingGoalInput {
   amount: Float!
   description: String
@@ -1086,6 +1104,22 @@ input CreateCrowdfundingInput {
 
 input CreateCrowdfundingMemberPlan {
   id: String!
+}
+
+input CreateEngagementRuleInput {
+  active: Boolean! = true
+  audience: EngagementAudience! = ALL
+
+  """Only for the MEMBER_PLANS audience, which needs at least one."""
+  audienceMemberPlanIds: [String!]! = []
+  goal: EngagementGoal!
+  includePeeredArticles: Boolean! = false
+  meterWindowDays: Int
+  name: String!
+  priority: Int! = 0
+  showOnArticles: Boolean! = true
+  showOnPageIds: [String!]! = []
+  stages: [EngagementStageInput!]!
 }
 
 input CreateExternalAppInput {
@@ -1572,6 +1606,164 @@ type EmailQualityRefreshModel {
 
   """Mails whose state the provider reported differently."""
   updated: Int!
+}
+
+type EngagementAction {
+  id: String!
+
+  """Empty for the website's default label of the type."""
+  label: String!
+  role: EngagementActionRole!
+  style: String!
+  type: EngagementActionType!
+  url: String!
+}
+
+input EngagementActionInput {
+  label: String! = ""
+  role: EngagementActionRole! = OTHER
+  style: String! = ""
+  type: EngagementActionType! = URL
+  url: String! = ""
+}
+
+enum EngagementActionRole {
+  CANCEL
+  OTHER
+  PRIMARY
+}
+
+enum EngagementActionType {
+  LOGIN
+  MEMBERSHIP
+  NEWSLETTER
+  REGISTER
+  URL
+}
+
+"""Who a rule is for, decided from the session."""
+enum EngagementAudience {
+  ALL
+  ANONYMOUS
+  MEMBERS
+  MEMBER_PLANS
+  NON_MEMBERS
+  PAYWALL_BYPASSED
+  REGISTERED
+}
+
+enum EngagementDocumentType {
+  ARTICLE
+  PAGE
+}
+
+"""
+A soft stage can be dismissed, a hard stage cuts the article down to its preview blocks.
+"""
+enum EngagementEnforcement {
+  HARD
+  SOFT
+}
+
+"""
+What a rule promotes. An announcement is one soft stage from the first article on.
+"""
+enum EngagementGoal {
+  ANNOUNCEMENT
+  MEMBERSHIP
+  NEWSLETTER
+}
+
+enum EngagementPlacement {
+  BANNER
+  CUTOFF
+  INLINE
+  MODAL
+}
+
+"""
+One stage of a rule that applies to the reader, as the website shows it.
+"""
+type EngagementPrompt {
+  goal: EngagementGoal!
+  ruleId: String!
+  ruleVersion: Int!
+  stage: EngagementStage!
+}
+
+"""What a reader needs to get past a hard stage."""
+enum EngagementRequirement {
+  MEMBERSHIP
+  NEWSLETTER
+  REGISTRATION
+}
+
+type EngagementRule {
+  active: Boolean!
+  audience: EngagementAudience!
+
+  """The plans of the MEMBER_PLANS audience."""
+  audienceMemberPlanIds: [String!]!
+  createdAt: DateTime!
+  goal: EngagementGoal!
+  id: String!
+  includePeeredArticles: Boolean!
+  meterWindowDays: Int
+  modifiedAt: DateTime!
+  name: String!
+
+  """Higher priorities fill the website's slots first."""
+  priority: Int!
+  showOnArticles: Boolean!
+  showOnPageIds: [String!]!
+  stages: [EngagementStage!]!
+
+  """Bumped on every update, so dismissed prompts show again."""
+  version: Int!
+}
+
+type EngagementStage {
+  actions: [EngagementAction!]!
+
+  """Shown once the reader read this many other articles in the window."""
+  afterArticles: Int!
+  cta: String
+  delaySeconds: Int!
+  description: RichText
+  dismissible: Boolean!
+  embedUrl: String
+  enforcement: EngagementEnforcement!
+  hideForMinutes: Int!
+  html: String
+  id: String!
+  image: Image
+  imageId: String
+  placement: EngagementPlacement!
+  previewBlocks: Int
+  requirement: EngagementRequirement
+  text: String
+  title: String
+}
+
+input EngagementStageInput {
+  actions: [EngagementActionInput!]! = []
+
+  """Shown once the reader read this many other articles in the window."""
+  afterArticles: Int!
+  cta: String
+  delaySeconds: Int! = 0
+  description: RichText
+  dismissible: Boolean! = true
+  embedUrl: String
+  enforcement: EngagementEnforcement!
+  hideForMinutes: Int! = 1440
+  html: String
+  imageId: String
+  placement: EngagementPlacement!
+  previewBlocks: Int
+  requirement: EngagementRequirement
+  text: String
+  title: String
 }
 
 type Event {
@@ -3667,14 +3859,13 @@ type Mutation {
   ): CreatedApiToken!
 
   """Creates an article."""
-  createArticle(authors: [ArticleRevisionAuthorInput!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
+  createArticle(authors: [ArticleRevisionAuthorInput!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, contentGateDisabled: Boolean, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
 
   """Creates a new article template."""
   createArticleTemplate(blocks: [BlockContentInput!]!, metadata: ArticleTemplateMetadataInput!, name: String!): ArticleTemplate!
 
   """Creates a new author."""
   createAuthor(bio: RichText, hideOnArticle: Boolean!, hideOnTeam: Boolean!, hideOnTeaser: Boolean!, imageID: String, jobTitle: String, links: [AuthorLinkInput!]!, name: String!, slug: Slug!, tagIds: [String!]!): Author!
-  createBanner(input: CreateBannerInput!): Banner!
 
   """Creates a new block style."""
   createBlockStyle(blocks: [EditorBlockType!]!, name: String!): BlockStyle!
@@ -3698,6 +3889,7 @@ type Mutation {
 
   """Creates a new discountCode."""
   createDiscountCode(code: String!, discountPercent: Int!, memberPlanId: String!, validFrom: DateTime!, validTo: DateTime!): DiscountCode!
+  createEngagementRule(input: CreateEngagementRuleInput!): EngagementRule!
 
   """Creates a new event."""
   createEvent(description: RichText, endsAt: DateTime, imageId: String, lead: String, location: String, name: String!, startsAt: DateTime!, status: EventStatus! = Scheduled, tagIds: [String!]): Event!
@@ -3793,7 +3985,7 @@ type Mutation {
   createPaymentProviderSetting(apiKey: String, bexio_accountId: Float, bexio_contactSync: Boolean, bexio_countryId: Float, bexio_invoiceMailBodyNewMembership: String, bexio_invoiceMailBodyRenewalMembership: String, bexio_invoiceMailSubjectNewMembership: String, bexio_invoiceMailSubjectRenewalMembership: String, bexio_invoiceTemplateNewMembership: String, bexio_invoiceTemplateRenewalMembership: String, bexio_invoiceTitleNewMembership: String, bexio_invoiceTitleRenewalMembership: String, bexio_markInvoiceAsOpen: Boolean, bexio_taxId: Float, bexio_unitId: Float, bexio_userId: Float, id: String!, mollie_apiBaseUrl: String, mollie_methods: [PaymentMethodMollie!], name: String, offSessionPayments: Boolean, payrexx_instancename: String, payrexx_pm: [PayrexxPM!], payrexx_psp: [PayrexxPSP!], payrexx_vatrate: String, simulated_declineRenewals: Boolean, stripe_methods: [StripePaymentMethod!], type: PaymentProviderType!, webhookEndpointSecret: String): SettingPaymentProvider!
 
   """Creates a paywall."""
-  createPaywall(active: Boolean!, alternativeSubscribeUrl: String, anyMemberPlan: Boolean!, bypassTokens: [String!]!, circumventDescription: RichText, description: RichText, fadeout: Boolean!, hideContentAfter: Int!, memberPlanIds: [String!]!, name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
+  createPaywall(active: Boolean!, alternativeSubscribeUrl: String, anyMemberPlan: Boolean!, bypassTokens: [String!]!, circumventDescription: RichText, description: RichText, enforced: Boolean! = false, fadeout: Boolean!, hideContentAfter: Int!, memberPlanIds: [String!]!, name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
 
   """Creates a new pdf renderer setting."""
   createPdfRendererSetting(cloudflare_accountId: String, cloudflare_apiToken: String, gotenberg_password: String, gotenberg_url: String, gotenberg_username: String, id: String!, name: String, timeoutMs: Int, type: PdfRendererType!): SettingPdfRenderer!
@@ -3921,7 +4113,6 @@ type Mutation {
 
   """Deletes an existing author."""
   deleteAuthor(id: String!): Author!
-  deleteBanner(id: String!): Boolean
 
   """Deletes an existing block style."""
   deleteBlockStyle(id: String!): BlockStyle!
@@ -3941,6 +4132,7 @@ type Mutation {
 
   """Deletes an existing document."""
   deleteDocument(id: String!): String!
+  deleteEngagementRule(id: String!): EngagementRule!
 
   """Deletes an existing event."""
   deleteEvent(id: String!): Event!
@@ -4302,6 +4494,11 @@ type Mutation {
   setUserDeliveryMode(channel: MailChannel!, reason: String, userId: String!): UserDeliveryPreferenceModel!
 
   """
+  Signs an email up for the newsletter, pending its confirmation by mail. Newsletter walls only ask for this. Readers who are not logged in solve the challenge first, so no script sends confirmation mails to other people's addresses.
+  """
+  signUpForNewsletter(challengeAnswer: ChallengeInput, email: String!): NewsletterSignup!
+
+  """
   Ask the mail provider for the current delivery state of mails that are still open. Complements the provider webhook, which is not reachable in local development.
   """
   syncMailLogStates(limit: Int): MailLogSyncModel!
@@ -4347,7 +4544,7 @@ type Mutation {
   ): SettingAnalyticsProvider!
 
   """Updates an article."""
-  updateArticle(authors: [ArticleRevisionAuthorInput!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
+  updateArticle(authors: [ArticleRevisionAuthorInput!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, contentGateDisabled: Boolean, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
 
   """Updates an existing article template."""
   updateArticleTemplate(blocks: [BlockContentInput!]!, id: String!, metadata: ArticleTemplateMetadataInput!, name: String!): ArticleTemplate!
@@ -4357,7 +4554,6 @@ type Mutation {
 
   """Updates an existing author."""
   updateAuthor(bio: RichText, hideOnArticle: Boolean, hideOnTeam: Boolean, hideOnTeaser: Boolean, id: String!, imageID: String, jobTitle: String, links: [AuthorLinkInput!], name: String, slug: Slug, tagIds: [String!]): Author!
-  updateBanner(input: UpdateBannerInput!): Banner!
 
   """Updates an existing block style."""
   updateBlockStyle(blocks: [EditorBlockType!], id: String!, name: String): BlockStyle!
@@ -4385,6 +4581,9 @@ type Mutation {
 
   """Updates an existing document."""
   updateDocument(description: String, id: String!, title: String): Document!
+
+  """Replaces the rule's stages and bumps its version."""
+  updateEngagementRule(input: UpdateEngagementRuleInput!): EngagementRule!
 
   """Updates an existing event."""
   updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, lead: String, location: String, name: String, startsAt: DateTime, status: EventStatus = Scheduled, tagIds: [String!]): Event!
@@ -4481,7 +4680,26 @@ type Mutation {
   updatePaymentProviderSetting(apiKey: String, bexio_accountId: Float, bexio_contactSync: Boolean, bexio_countryId: Float, bexio_invoiceMailBodyNewMembership: String, bexio_invoiceMailBodyRenewalMembership: String, bexio_invoiceMailSubjectNewMembership: String, bexio_invoiceMailSubjectRenewalMembership: String, bexio_invoiceTemplateNewMembership: String, bexio_invoiceTemplateRenewalMembership: String, bexio_invoiceTitleNewMembership: String, bexio_invoiceTitleRenewalMembership: String, bexio_markInvoiceAsOpen: Boolean, bexio_taxId: Float, bexio_unitId: Float, bexio_userId: Float, id: String, mollie_apiBaseUrl: String, mollie_methods: [PaymentMethodMollie!], name: String, offSessionPayments: Boolean, payrexx_instancename: String, payrexx_pm: [PayrexxPM!], payrexx_psp: [PayrexxPSP!], payrexx_vatrate: String, simulated_declineRenewals: Boolean, stripe_methods: [StripePaymentMethod!], webhookEndpointSecret: String): SettingPaymentProvider!
 
   """Updates a paywall."""
-  updatePaywall(active: Boolean, alternativeSubscribeUrl: String, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, fadeout: Boolean, hideContentAfter: Int, id: String!, memberPlanIds: [String!], name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
+  updatePaywall(
+    active: Boolean
+    alternativeSubscribeUrl: String
+    anyMemberPlan: Boolean
+    bypassTokens: [String!]
+    circumventDescription: RichText
+    description: RichText
+
+    """
+    Cut the blocks after hideContentAfter on the server, instead of hiding them on the website.
+    """
+    enforced: Boolean
+    fadeout: Boolean
+    hideContentAfter: Int
+    id: String!
+    memberPlanIds: [String!]
+    name: String
+    upgradeCircumventDescription: RichText
+    upgradeDescription: RichText
+  ): Paywall!
 
   """Updates an existing pdf renderer setting."""
   updatePdfRendererSetting(cloudflare_accountId: String, cloudflare_apiToken: String, gotenberg_password: String, gotenberg_url: String, gotenberg_username: String, id: String, name: String, timeoutMs: Int, type: PdfRendererType): SettingPdfRenderer!
@@ -4606,6 +4824,11 @@ type Mutation {
   ): Video!
 
   """
+  Records that the reader opens an article and decides their access: the only way past a hard engagement stage or an enforced paywall. A mutation on purpose, so it is never cached or prefetched.
+  """
+  viewArticle(input: ViewArticleInput!): ArticleView!
+
+  """
   This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous
   """
   voteOnPoll(answerId: String!): PollVote
@@ -4681,6 +4904,13 @@ type NewsletterReport {
   bytes: Int!
   missingArticles: [String!]!
   missingFooter: [String!]!
+}
+
+type NewsletterSignup {
+  """
+  Keep it (the website uses a cookie) and send it with viewArticle and engagementPrompts: it gets the reader past newsletter walls and keeps newsletter prompts away.
+  """
+  newsletterToken: String!
 }
 
 type NotificationConfirmation {
@@ -4779,10 +5009,6 @@ type PageInfo {
 }
 
 type PageModel {
-  id: String!
-}
-
-input PageModelInput {
   id: String!
 }
 
@@ -5332,6 +5558,11 @@ type Paywall {
   circumventDescription: RichText
   createdAt: DateTime!
   description: RichText
+
+  """
+  Cut the blocks after hideContentAfter on the server, instead of hiding them on the website.
+  """
+  enforced: Boolean!
   fadeout: Boolean!
   hideContentAfter: Int!
   id: String!
@@ -6168,8 +6399,6 @@ type Query {
 
   """Get a paginated list of authors with optional filtering and sorting"""
   authors(cursorId: String, filter: AuthorFilter, order: SortOrder = Descending, skip: Int, sort: AuthorSort = ModifiedAt, take: Int): PaginatedAuthors!
-  banner(id: String!): Banner!
-  banners(skip: Int!, take: Int!): [Banner!]!
 
   """Returns a list of block styles."""
   blockStyles: [BlockStyle!]!
@@ -6320,6 +6549,28 @@ type Query {
   Where the email status comes from: whether and when the mail provider reported anything. The editor warns when no provider evidence arrived for a while.
   """
   emailEvidence: EmailEvidenceModel!
+
+  """
+  The prompts for the reader on a page or article, without placing them on the meter: soft stages only, no cutoff. Articles use the viewArticle mutation, which meters and decides access.
+  """
+  engagementPrompts(
+    documentId: String!
+    documentType: EngagementDocumentType!
+
+    """
+    The newsletterToken of signUpForNewsletter, checked on the server: newsletter prompts leave readers who signed up alone.
+    """
+    newsletterToken: String
+
+    """
+    A paywall bypass token, checked on the server, for rules shown to readers with a bypass.
+    """
+    paywallBypassToken: String
+  ): [EngagementPrompt!]!
+  engagementRule(id: String!): EngagementRule!
+
+  """All engagement rules, highest priority first."""
+  engagementRules: [EngagementRule!]!
 
   """Returns an event by id."""
   event(id: String!): Event!
@@ -6613,7 +6864,11 @@ type Query {
 
   """Returns a paginated list of polls based on the filters given."""
   polls(cursorId: String, filter: PollFilter, order: SortOrder = Descending, skip: Int = 0, sort: PollSort = OpensAt, take: Int = 10): PaginatedPolls!
-  primaryBanner(documentId: String!, documentType: BannerDocumentType!, hasPaywallBypass: Boolean!, hasSubscription: Boolean!, loggedIn: Boolean!): Banner
+
+  """
+  The announcement engagement rule that fits the reader best, as a banner.
+  """
+  primaryBanner(documentId: String!, documentType: BannerDocumentType!, hasPaywallBypass: Boolean!, hasSubscription: Boolean!, loggedIn: Boolean!): Banner @deprecated(reason: "Use engagementPrompts.")
 
   """
   What the options can do here, and the medium's defaults for a new issue.
@@ -8061,24 +8316,6 @@ type UnknownBlock {
   type: BlockType!
 }
 
-input UpdateBannerInput {
-  actions: [CreateBannerActionInput!]
-  active: Boolean!
-  collapsible: Boolean!
-  cta: String
-  delay: Int!
-  embedUrl: String
-  hideForMinutes: Int!
-  html: String
-  id: String!
-  imageId: String
-  showForLoginStatus: LoginStatus!
-  showOnArticles: Boolean!
-  showOnPages: [PageModelInput!]
-  text: String!
-  title: String!
-}
-
 input UpdateCommentRatingSystemAnswerInput {
   answer: String
   id: String!
@@ -8094,6 +8331,23 @@ input UpdateCrowdfundingInput {
   id: String!
   memberPlans: [CreateCrowdfundingMemberPlan!]
   name: String
+}
+
+input UpdateEngagementRuleInput {
+  active: Boolean! = true
+  audience: EngagementAudience! = ALL
+
+  """Only for the MEMBER_PLANS audience, which needs at least one."""
+  audienceMemberPlanIds: [String!]! = []
+  goal: EngagementGoal!
+  id: String!
+  includePeeredArticles: Boolean! = false
+  meterWindowDays: Int
+  name: String!
+  priority: Int! = 0
+  showOnArticles: Boolean! = true
+  showOnPageIds: [String!]! = []
+  stages: [EngagementStageInput!]!
 }
 
 input UpdateUserSubscriptionInput {
@@ -8294,6 +8548,17 @@ type VideoStorageUsage {
   limitBytes: Float!
   usedBytes: Float!
   videoCount: Int!
+}
+
+input ViewArticleInput {
+  articleId: String!
+
+  """The meterToken the last viewArticle answered, for anonymous readers."""
+  meterToken: String
+
+  """The newsletterToken of signUpForNewsletter, for newsletter walls."""
+  newsletterToken: String
+  paywallBypassToken: String
 }
 
 type VimeoVideoBlock implements BaseBlock {

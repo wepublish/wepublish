@@ -1,0 +1,507 @@
+import {
+  EngagementAudience,
+  EngagementEnforcement,
+  EngagementGoal,
+  EngagementPlacement,
+  EngagementRequirement,
+} from '@prisma/client';
+import {
+  EngagementTarget,
+  EvaluatedRule,
+  EvaluatedStage,
+  currentStage,
+  matchingRules,
+  maxMeterWindowDays,
+  meteredAccess,
+  resolvePrompts,
+} from './evaluate';
+import { Meter, emptyMeter, recordRead, toMinute } from './meter';
+import { ReaderContext } from './reader-context';
+
+const now = new Date('2026-10-26T12:00:00Z');
+
+const stage = (
+  id: string,
+  afterArticles: number,
+  overrides: Partial<EvaluatedStage> = {}
+): EvaluatedStage => ({
+  id,
+  afterArticles,
+  placement: EngagementPlacement.MODAL,
+  enforcement: EngagementEnforcement.SOFT,
+  requirement: null,
+  previewBlocks: null,
+  ...overrides,
+});
+
+const hardStage = (
+  id: string,
+  afterArticles: number,
+  requirement: EngagementRequirement = EngagementRequirement.REGISTRATION
+) =>
+  stage(id, afterArticles, {
+    placement: EngagementPlacement.CUTOFF,
+    enforcement: EngagementEnforcement.HARD,
+    requirement,
+    previewBlocks: 3,
+  });
+
+const rule = (overrides: Partial<EvaluatedRule> = {}): EvaluatedRule => ({
+  id: 'metered',
+  goal: EngagementGoal.NEWSLETTER,
+  active: true,
+  priority: 0,
+  audience: EngagementAudience.ALL,
+  showOnArticles: true,
+  showOnPageIds: [],
+  includePeeredArticles: false,
+  meterWindowDays: 30,
+  stages: [stage('soft', 2), hardStage('hard', 4)],
+  ...overrides,
+});
+
+const announcement = (overrides: Partial<EvaluatedRule> = {}) =>
+  rule({
+    id: 'announcement',
+    goal: EngagementGoal.ANNOUNCEMENT,
+    meterWindowDays: null,
+    stages: [stage('banner', 0, { placement: EngagementPlacement.BANNER })],
+    ...overrides,
+  });
+
+const reader = (overrides: Partial<ReaderContext> = {}): ReaderContext => ({
+  kind: 'anonymous',
+  privileged: false,
+  loggedIn: false,
+  activeMemberPlanIds: [],
+  newsletter: 'unknown',
+  ...overrides,
+});
+
+const anonymous = reader();
+const registered = reader({ kind: 'user', loggedIn: true, userId: 'u' });
+const member = reader({
+  kind: 'user',
+  loggedIn: true,
+  userId: 'u',
+  activeMemberPlanIds: ['plan'],
+});
+
+const article = (
+  articleId = 'article',
+  overrides: Partial<Extract<EngagementTarget, { kind: 'article' }>> = {}
+): EngagementTarget => ({
+  kind: 'article',
+  articleId,
+  contentGateDisabled: false,
+  peered: false,
+  ...overrides,
+});
+
+const meterOf = (...articleIds: string[]): Meter =>
+  articleIds.reduce(
+    (meter, id) => recordRead(meter, id, now, { maxWindowDays: 30 }),
+    emptyMeter()
+  );
+
+const ids = (rules: EvaluatedRule[]) => rules.map(({ id }) => id);
+
+describe('matchingRules', () => {
+  it('only matches active rules', () => {
+    expect(
+      ids(matchingRules([rule({ active: false })], anonymous, article()))
+    ).toEqual([]);
+  });
+
+  it.each([
+    [EngagementAudience.ANONYMOUS, ['anonymous']],
+    [EngagementAudience.REGISTERED, ['registered', 'member']],
+    [EngagementAudience.NON_MEMBERS, ['anonymous', 'registered']],
+    [EngagementAudience.MEMBERS, ['member']],
+  ])('matches %s to %j', (audience, expected) => {
+    const readers = { anonymous, registered, member };
+    const announcementFor = announcement({ audience });
+
+    expect(
+      Object.entries(readers)
+        .filter(
+          ([, r]) => matchingRules([announcementFor], r, article()).length
+        )
+        .map(([name]) => name)
+    ).toEqual(expected);
+  });
+
+  it('leaves out newsletter rules once the reader gave their email', () => {
+    const subscribed = reader({ newsletter: 'subscribed' });
+    const growNewsletter = rule({
+      id: 'newsletter',
+      goal: EngagementGoal.NEWSLETTER,
+      stages: [stage('soft', 1)],
+    });
+
+    expect(ids(matchingRules([growNewsletter], anonymous, article()))).toEqual([
+      'newsletter',
+    ]);
+    expect(ids(matchingRules([growNewsletter], subscribed, article()))).toEqual(
+      []
+    );
+  });
+
+  it('lets readers past a newsletter wall with their email alone', () => {
+    const wall = rule({
+      id: 'wall',
+      goal: EngagementGoal.MEMBERSHIP,
+      stages: [hardStage('hard', 3, EngagementRequirement.NEWSLETTER)],
+    });
+
+    expect(ids(matchingRules([wall], registered, article()))).toEqual(['wall']);
+    expect(
+      ids(
+        matchingRules([wall], reader({ newsletter: 'subscribed' }), article())
+      )
+    ).toEqual([]);
+  });
+
+  it('matches subscribers of the chosen plans', () => {
+    const forPlan = announcement({
+      audience: EngagementAudience.MEMBER_PLANS,
+      audienceMemberPlanIds: ['plan'],
+    });
+    const forOtherPlan = announcement({
+      id: 'other',
+      audience: EngagementAudience.MEMBER_PLANS,
+      audienceMemberPlanIds: ['other-plan'],
+    });
+
+    expect(
+      ids(matchingRules([forPlan, forOtherPlan], member, article()))
+    ).toEqual(['announcement']);
+    expect(ids(matchingRules([forPlan], registered, article()))).toEqual([]);
+  });
+
+  it('skips a rule whose hard requirement the reader already meets', () => {
+    expect(ids(matchingRules([rule()], registered, article()))).toEqual([]);
+    expect(
+      ids(
+        matchingRules(
+          [
+            rule({
+              stages: [hardStage('hard', 4, EngagementRequirement.MEMBERSHIP)],
+            }),
+          ],
+          registered,
+          article()
+        )
+      )
+    ).toEqual(['metered']);
+  });
+
+  it('leaves articles excluded from metered rules to announcements', () => {
+    expect(
+      ids(
+        matchingRules(
+          [rule(), announcement()],
+          anonymous,
+          article('a', { contentGateDisabled: true })
+        )
+      )
+    ).toEqual(['announcement']);
+  });
+
+  it('only meters peered articles when the rule includes them', () => {
+    const peered = article('a', { peered: true });
+
+    expect(ids(matchingRules([rule()], anonymous, peered))).toEqual([]);
+    expect(
+      ids(
+        matchingRules(
+          [rule({ includePeeredArticles: true })],
+          anonymous,
+          peered
+        )
+      )
+    ).toEqual(['metered']);
+  });
+
+  it('targets articles and the selected pages', () => {
+    const onPage = announcement({
+      showOnArticles: false,
+      showOnPageIds: ['page-1'],
+    });
+
+    expect(ids(matchingRules([onPage], anonymous, article()))).toEqual([]);
+    expect(
+      ids(
+        matchingRules([onPage], anonymous, { kind: 'page', pageId: 'page-1' })
+      )
+    ).toEqual(['announcement']);
+    expect(
+      ids(
+        matchingRules([onPage], anonymous, { kind: 'page', pageId: 'page-2' })
+      )
+    ).toEqual([]);
+  });
+});
+
+describe('currentStage', () => {
+  it('is the last stage the reader has reached', () => {
+    const metered = rule();
+
+    expect(currentStage(metered, 0)).toBeUndefined();
+    expect(currentStage(metered, 1)).toBeUndefined();
+    expect(currentStage(metered, 2)?.id).toBe('soft');
+    expect(currentStage(metered, 3)?.id).toBe('soft');
+    expect(currentStage(metered, 4)?.id).toBe('hard');
+    expect(currentStage(metered, 99)?.id).toBe('hard');
+  });
+});
+
+describe('maxMeterWindowDays', () => {
+  it('is the longest window of the metered rules', () => {
+    expect(
+      maxMeterWindowDays([
+        rule({ meterWindowDays: 7 }),
+        rule({ meterWindowDays: 90 }),
+        announcement(),
+      ])
+    ).toBe(90);
+    expect(maxMeterWindowDays([announcement()])).toBe(0);
+  });
+});
+
+describe('meteredAccess', () => {
+  it('restricts every hard stage when the reader has no meter', () => {
+    expect(meteredAccess({ rules: [rule()], articleId: 'a', now })).toEqual({
+      granted: false,
+      ruleId: 'metered',
+      stageId: 'hard',
+      requirement: EngagementRequirement.REGISTRATION,
+      previewBlocks: 3,
+    });
+  });
+
+  it('grants articles without a hard stage', () => {
+    expect(
+      meteredAccess({
+        rules: [rule({ stages: [stage('soft', 2)] }), announcement()],
+        articleId: 'a',
+        now,
+      })
+    ).toEqual({ granted: true, record: true });
+
+    expect(
+      meteredAccess({ rules: [announcement()], articleId: 'a', now })
+    ).toEqual({ granted: true, record: false });
+  });
+
+  describe('Scenario A: soft, then hard, at the configured thresholds', () => {
+    it('grants the first four articles and restricts the fifth', () => {
+      const results = ['a1', 'a2', 'a3', 'a4', 'a5'].map((articleId, index) =>
+        meteredAccess({
+          rules: [rule()],
+          meter: meterOf(...['a1', 'a2', 'a3', 'a4'].slice(0, index)),
+          articleId,
+          now,
+        })
+      );
+
+      expect(results.map(result => result.granted)).toEqual([
+        true,
+        true,
+        true,
+        true,
+        false,
+      ]);
+    });
+
+    it('shows nothing for two articles, the modal for two, then the cutoff', () => {
+      const shown = ['a1', 'a2', 'a3', 'a4', 'a5'].map((articleId, index) => {
+        const meter = meterOf(...['a1', 'a2', 'a3', 'a4'].slice(0, index));
+        const access = meteredAccess({
+          rules: [rule()],
+          meter,
+          articleId,
+          now,
+        });
+
+        return resolvePrompts({
+          rules: [rule()],
+          meter,
+          articleId,
+          now,
+          restriction: access.granted ? undefined : access,
+        }).map(({ stage }) => stage.id);
+      });
+
+      expect(shown).toEqual([[], [], ['soft'], ['soft'], ['hard']]);
+    });
+
+    it('follows other thresholds just the same', () => {
+      const custom = rule({
+        stages: [stage('soft', 0), hardStage('hard', 1)],
+      });
+
+      expect(
+        meteredAccess({
+          rules: [custom],
+          meter: meterOf(),
+          articleId: 'a',
+          now,
+        }).granted
+      ).toBe(true);
+      expect(
+        meteredAccess({
+          rules: [custom],
+          meter: meterOf('a'),
+          articleId: 'b',
+          now,
+        }).granted
+      ).toBe(false);
+    });
+  });
+
+  it('grants an article read again within the window', () => {
+    expect(
+      meteredAccess({
+        rules: [rule()],
+        meter: meterOf('a1', 'a2', 'a3', 'a4'),
+        articleId: 'a2',
+        now,
+      }).granted
+    ).toBe(true);
+  });
+
+  it('forgets reads that left the window', () => {
+    const old: Meter = {
+      reads: ['a1', 'a2', 'a3', 'a4'].map(id => [
+        id,
+        toMinute(now) - 31 * 24 * 60,
+      ]),
+    };
+
+    expect(
+      meteredAccess({ rules: [rule()], meter: old, articleId: 'a5', now })
+        .granted
+    ).toBe(true);
+  });
+
+  it('restricts by the first rule that restricts, in prompt order', () => {
+    const low = rule({ id: 'low', priority: 0 });
+    const high = rule({
+      id: 'high',
+      priority: 5,
+      stages: [hardStage('high-hard', 1, EngagementRequirement.MEMBERSHIP)],
+    });
+
+    expect(
+      meteredAccess({
+        rules: [low, high],
+        meter: meterOf('a1', 'a2', 'a3', 'a4'),
+        articleId: 'a5',
+        now,
+      })
+    ).toMatchObject({ granted: false, ruleId: 'high', stageId: 'high-hard' });
+  });
+});
+
+describe('resolvePrompts', () => {
+  it('orders by priority, hard before soft, then the newest rule', () => {
+    const rules = [
+      announcement({
+        id: 'a',
+        priority: 1,
+        createdAt: new Date('2026-01-01'),
+      }),
+      announcement({
+        id: 'b',
+        priority: 1,
+        createdAt: new Date('2026-02-01'),
+      }),
+      rule({ id: 'hard', priority: 1, stages: [hardStage('h', 0)] }),
+      announcement({ id: 'top', priority: 9 }),
+    ];
+
+    expect(
+      resolvePrompts({
+        rules,
+        articleId: 'x',
+        now,
+        restriction: { ruleId: 'hard', stageId: 'h' },
+      }).map(({ rule }) => rule.id)
+    ).toEqual(['top', 'hard', 'b', 'a']);
+  });
+
+  it('puts the more specific rule first at the same priority', () => {
+    const everyone = announcement({ id: 'everyone' });
+    const anonymousOnly = announcement({
+      id: 'anonymous',
+      audience: EngagementAudience.ANONYMOUS,
+    });
+    const plans = announcement({
+      id: 'plans',
+      audience: EngagementAudience.MEMBER_PLANS,
+      audienceMemberPlanIds: ['plan'],
+    });
+
+    expect(
+      resolvePrompts({
+        rules: [everyone, anonymousOnly, plans],
+        articleId: 'x',
+        now,
+      }).map(({ rule }) => rule.id)
+    ).toEqual(['plans', 'anonymous', 'everyone']);
+  });
+
+  it('puts rules for chosen pages before rules for every article', () => {
+    const everywhere = announcement({
+      id: 'everywhere',
+      showOnPageIds: ['page-1'],
+    });
+    const pageOnly = announcement({
+      id: 'page-only',
+      showOnArticles: false,
+      showOnPageIds: ['page-1'],
+    });
+
+    expect(
+      resolvePrompts({ rules: [everywhere, pageOnly], now }).map(
+        ({ rule }) => rule.id
+      )
+    ).toEqual(['page-only', 'everywhere']);
+  });
+
+  it('accepts dates that came back from the cache as strings', () => {
+    const older = announcement({
+      id: 'older',
+      createdAt: '2026-01-01T00:00:00.000Z' as unknown as Date,
+    });
+    const newer = announcement({
+      id: 'newer',
+      createdAt: '2026-02-01T00:00:00.000Z' as unknown as Date,
+    });
+
+    expect(
+      resolvePrompts({ rules: [older, newer], now }).map(({ rule }) => rule.id)
+    ).toEqual(['newer', 'older']);
+  });
+
+  it('falls back to the soft stage when the hard one does not restrict', () => {
+    expect(
+      resolvePrompts({
+        rules: [rule()],
+        meter: meterOf('a1', 'a2', 'a3', 'a4', 'a5'),
+        articleId: 'a2',
+        now,
+      }).map(({ stage }) => stage.id)
+    ).toEqual(['soft']);
+  });
+
+  it('shows no hard stage on pages', () => {
+    expect(
+      resolvePrompts({
+        rules: [rule({ stages: [stage('soft', 0), hardStage('hard', 0)] })],
+        now,
+      }).map(({ stage }) => stage.id)
+    ).toEqual(['soft']);
+  });
+});

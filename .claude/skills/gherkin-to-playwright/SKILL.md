@@ -28,8 +28,8 @@ e2e/
 
 | Goal                                      | Command                                                                   |
 | ----------------------------------------- | ------------------------------------------------------------------------- |
-| Run everything for a tenant               | `pnpm run e2e tsri,editor --environment staging` (or `E2E_APP`/`E2E_ENV`) |
-| One application                           | `pnpm run e2e editor` / `pnpm run e2e tsri` (website)                       |
+| Run everything for a tenant               | `pnpm run e2e tsri --environment staging` (website + editor; or `E2E_APP`/`E2E_ENV`) |
+| One application                           | `pnpm run e2e editor` / `pnpm run e2e tsri --only website`                  |
 | Run by tag                                | `pnpm run e2e tsri --grep @smoke` (regex: `"@smoke\|@seo"`)              |
 | List missing steps + paste-ready snippets | `cd e2e && pnpm exec bddgen`                                              |
 | Debug headed / UI mode                    | `pnpm run e2e tsri --headed` or `--ui`                                    |

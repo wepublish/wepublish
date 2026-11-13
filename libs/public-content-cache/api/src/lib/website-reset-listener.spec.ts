@@ -48,7 +48,7 @@ describe('WebsiteResetListener', () => {
     it.each([
       'graphql:content',
       'navigations',
-      'banners',
+      'content:engagement',
       'settings',
       'website-settings',
       'peer-profile',
@@ -105,7 +105,7 @@ describe('WebsiteResetListener', () => {
   describe('website layout version', () => {
     it.each([
       'navigations',
-      'banners',
+      'content:engagement',
       'settings',
       'website-settings',
       'peer-profile',

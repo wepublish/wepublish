@@ -29,7 +29,6 @@ import {
   addClientCacheToProps,
   ArticleDocument,
   ArticleListDocument,
-  BannerDocumentType,
   CommentItemType,
   CommentListDocument,
   CommentSort,
@@ -38,7 +37,6 @@ import {
   HotAndTrendingDocument,
   NavigationListDocument,
   PeerProfileDocument,
-  PrimaryBannerDocument,
   SettingListDocument,
   SortOrder,
 } from '@wepublish/website/api';
@@ -249,16 +247,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       }),
       client.query({
         query: PeerProfileDocument,
-      }),
-      client.query({
-        query: PrimaryBannerDocument,
-        variables: {
-          documentType: BannerDocumentType.Article,
-          documentId: article.data.article.id,
-          loggedIn: false,
-          hasSubscription: false,
-          hasPaywallBypass: false,
-        },
       }),
     ]);
   }

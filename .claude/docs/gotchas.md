@@ -10,6 +10,43 @@ gets refactored away by the next agent.
 
 ---
 
+### ⚠️ `ArticleRevision.blocks` is truncated for readers without access
+
+[article-revision.resolver.ts](../../libs/article/api/src/lib/article-revision.resolver.ts)
+returns only `previewBlocks` blocks when `evaluateArticleAccess`
+([article-access.ts](../../libs/article/api/src/lib/article-access.ts))
+restricts the reader: an enforced paywall, or a `HARD` engagement stage. That
+includes ISR pages, RSS and any anonymous API consumer. Editors, previews and
+peers always get every block.
+
+Do not "fix" missing blocks by hiding the cut with CSS: the point is that
+restricted content never reaches the HTML or `__NEXT_DATA__`. `viewArticle`
+grants access for the article it returns.
+
+Paywalls are deliberately **not** engagement rules (see
+[architecture.md](../../.ai/architecture.md)); an earlier attempt merged
+paywalls, banners and content gates into one `gates` table and was dropped.
+`20261111200000_audience_engagement` replaces the unreleased
+`20261021120000_unify_gates` and copes with databases that applied it; it runs
+in one `BEGIN`/`COMMIT` because Prisma does not wrap migrations in a
+transaction.
+
+Pinned by `article-access.spec.ts` and `view-article.resolver.spec.ts`.
+
+---
+
+### ⚠️ TanStack tenants' `vite dev` dies on a fresh dependency cache
+
+With an empty or invalidated Vite cache (`--force`, a new lockfile, a new
+worktree), the client dependency scan of `apps/website-example` (and the other
+TanStack tenants) picks up `@sentry/profiling-node` / `@sentry/nextjs` and the
+optimizer fails with `UNLOADABLE_DEPENDENCY … sentry_cpu_profiler-*.node`; the
+server never answers. A warm cache hides it. Builds are fine (`ssr.external`).
+Workaround until the config excludes them: run `vite dev` with a wrapper config
+that adds those three `@sentry/*` packages to `optimizeDeps.exclude`.
+
+---
+
 ### ⚠️ `tsc -p apps/editor` checks nothing and exits 0
 
 `apps/editor`, `apps/media` and `apps/api-example` have a solution-style

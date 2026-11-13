@@ -152,6 +152,7 @@ export class ArticleService {
       properties,
       blocks,
       paywallId,
+      contentGateDisabled,
       ...revision
     }: CreateArticleInput,
     userId: string | null | undefined
@@ -161,6 +162,7 @@ export class ArticleService {
     const article = await this.prisma.article.create({
       data: {
         paywallId,
+        contentGateDisabled,
         likes,
         slug: slug && slug.toLowerCase(),
         shared,
@@ -217,6 +219,7 @@ export class ArticleService {
       slug,
       shared,
       paywallId,
+      contentGateDisabled,
       hidden,
       disableComments,
       authors,
@@ -247,6 +250,7 @@ export class ArticleService {
         likes,
         slug: slug && slug.toLowerCase(),
         paywallId,
+        contentGateDisabled,
         shared,
         hidden,
         disableComments,
@@ -495,6 +499,7 @@ export class ArticleService {
     const result = await this.prisma.article.create({
       data: {
         paywallId: article.paywallId,
+        contentGateDisabled: article.contentGateDisabled,
         shared: article.shared,
         hidden: article.hidden,
         disableComments: article.disableComments,
