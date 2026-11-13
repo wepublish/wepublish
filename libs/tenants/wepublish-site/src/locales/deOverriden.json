@@ -33,5 +33,10 @@
     "upcoming": "Kommende Events",
     "noUpcoming": "Zurzeit sind keine Events geplant.",
     "past": "Vergangene Events"
+  },
+  "eventPage": {
+    "preTitle": "Event",
+    "saveCalendarFile": "Im Kalender speichern (.ics)",
+    "addToGoogleCalendar": "Zu Google Kalender hinzufügen"
   }
 }

@@ -4,6 +4,7 @@ import { de } from 'date-fns/locale';
 
 import { WepBlockStyles } from './components/block-styles/wep-block-styles';
 import { WepBreakBlock } from './components/break-blocks/wep-break-block';
+import { WepEvent } from './components/event/wep-event';
 import { WepBaseTeaserSlots } from './components/teaser-layouts/wep-base-teaser-slots';
 import { WepBaseTeaser } from './components/teasers/wep-base-teaser';
 import { WepArticle } from './components/wep-article';
@@ -35,6 +36,7 @@ export const wepublishSiteTenant: WebsiteTenantConfig = {
     Navbar: WepNavbar,
     ContentWrapper: WepContentWrapper,
     Article: WepArticle,
+    Event: WepEvent,
     Page: WepPage,
     blocks: {
       Blocks: WepBlocks,

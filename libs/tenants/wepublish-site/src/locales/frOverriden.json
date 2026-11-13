@@ -24,5 +24,10 @@
     "upcoming": "Événements à venir",
     "noUpcoming": "Aucun événement n’est prévu pour le moment.",
     "past": "Événements passés"
+  },
+  "eventPage": {
+    "preTitle": "Événement",
+    "saveCalendarFile": "Enregistrer dans le calendrier (.ics)",
+    "addToGoogleCalendar": "Ajouter à Google Agenda"
   }
 }
