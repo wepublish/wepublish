@@ -73,6 +73,10 @@
       "none": "Aucun cadeau",
       "soldOut": "Ce cadeau est malheureusement épuisé. Veuillez en choisir un autre."
     },
+    "errors": {
+      "amountBelowMin": "Le montant est inférieur au montant minimum.",
+      "memberPlanUnavailableForPeriodicity": "Ce plan d’abonnement n’est pas disponible pour cet intervalle de paiement."
+    },
     "warning": {
       "confirmationTitle": "Êtes-vous sûr ?",
       "openInvoices": "Vous avez déjà un abonnement avec des factures impayées. Vous pouvez consulter vos factures impayées dans votre <Link href=\"/profile\">profil</Link>.",
@@ -90,6 +94,10 @@
     "useLinkInstead": "Recevoir plutôt un lien de connexion par e-mail",
     "verifyingCredentials": "Un instant s'il vous plaît, les identifiants saisis sont en cours de vérification...",
     "alertLoginLinkSent": "Si un compte existe pour l'adresse e-mail \"{email}\", vous recevrez bientôt un lien de connexion dans votre boîte de réception. Cela peut prendre un moment. Veuillez également vérifier votre dossier de courrier indésirable. Si vous ne recevez pas d'e-mail, vous pourrez demander un nouveau lien dans une minute.",
+    "impersonation": {
+      "active": "Vous êtes connecté·e en tant que {name} (support We.Publish : {supporter}).",
+      "end": "Terminer"
+    },
     "totp": {
       "code": "Code de confirmation (2FA)",
       "emailLoginDisabled": "La connexion par lien e-mail n'est pas disponible pour ce compte. Si un compte existe pour cette adresse, connectez-vous avec votre mot de passe et votre code de confirmation.",
@@ -196,6 +204,7 @@
     "unpaid": "Facture impayée",
     "paid": "Facture payée",
     "canceled": "Facture annulée",
+    "forPlan": "pour {plan}",
     "number": "N° de facture",
     "completedAt": "Terminé le",
     "dueAt": "Échéance le",
@@ -267,6 +276,7 @@
       "suggested": "Suggéré",
       "occupation": "Fonction / Profession",
       "passwordsDoNotMatch": "Les mots de passe ne correspondent pas.",
+      "emailsDoNotMatch": "Les adresses e-mail ne correspondent pas.",
       "errors": {
         "minLength": "{minimum, plural, one {Ne doit pas être vide} other {Min. # caractères}}",
         "chooseOption": "Veuillez choisir une option"

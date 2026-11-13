@@ -16,6 +16,3 @@ export * from './medium-features.resolver';
 export * from './medium-audit-log.model';
 export * from './medium-audit-log.service';
 export * from './medium-audit-log.resolver';
-export * from './impersonation.model';
-export * from './impersonation.service';
-export * from './impersonation.resolver';

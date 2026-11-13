@@ -1,5 +1,9 @@
 import { FeaturesService } from '@wepublish/features/api';
-import { LetterRecipient, LetterSender } from '@wepublish/mail/api';
+import {
+  LetterRecipient,
+  LetterRecipientOptions,
+  LetterSender,
+} from '@wepublish/mail/api';
 import { LetterContext, SendTemplateLetterProps } from './letter-context';
 
 /**
@@ -22,8 +26,11 @@ export class GatedLetterSender implements LetterSender {
     );
   }
 
-  canReceiveLetters(user: LetterRecipient): boolean {
-    return this.context.canReceiveLetters(user);
+  canReceiveLetters(
+    user: LetterRecipient,
+    options?: LetterRecipientOptions
+  ): boolean {
+    return this.context.canReceiveLetters(user, options);
   }
 
   sendLetter(props: SendTemplateLetterProps): Promise<string> {

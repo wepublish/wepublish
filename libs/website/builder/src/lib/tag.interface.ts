@@ -24,4 +24,6 @@ export type BuilderTagProps = {
 
 export type BuilderTagSEOProps = {
   tag: FullTagFragment;
+  /** Replaces the default `<title>` ("<tag> — <site title>"). */
+  title?: string;
 };

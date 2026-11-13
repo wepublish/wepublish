@@ -7,13 +7,17 @@
     "title": "Connexion pour les abonnés",
     "noAccount": "(Si vous n'avez pas encore de compte, <Link>cliquez ici.</Link>)"
   },
+  "signup": {
+    "title": "Inscrivez-vous dès aujourd’hui",
+    "hasAccount": "(Si vous avez déjà un compte, <Link>cliquez ici.</Link>)"
+  },
   "article": {
     "related": "Cela pourrait également vous intéresser",
     "comments": "Commentaires"
   },
   "navbar": {
-    "subscribe": "J'adhère",
-    "subscribeShort": "J'adhère"
+    "subscribe": "S’inscrire",
+    "subscribeShort": "S’inscrire"
   },
   "subscribe": {
     "support": {

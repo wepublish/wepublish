@@ -17,6 +17,7 @@ import {
 import { useContext } from 'react';
 
 import { courantTokens } from '../brand-tokens';
+import { TeamMemberBreakBlock } from './courant-break-block';
 
 const { pageGap, columnGap, articleGap, blockGaps } = courantTokens.layout;
 const { warmGray } = courantTokens.colors;
@@ -81,12 +82,21 @@ const CourantContentWrapperStyled = styled(ContentWrapperStyled)`
     & > * {
       grid-column: 3/11;
     }
+
+    /* && to beat upstream ContentWrapperStyled's BreakBlockWrapper → 2/12 rule. */
+    && > ${TeamMemberBreakBlock} {
+      grid-column: 3/11;
+    }
   }
 `;
 
 const CourantArticleContentWrapperStyled = styled(CourantContentWrapperStyled)`
   ${({ theme }) => theme.breakpoints.up('lg')} {
     & > * {
+      grid-column: 4/10;
+    }
+
+    && > ${TeamMemberBreakBlock} {
       grid-column: 4/10;
     }
   }

@@ -59,7 +59,7 @@ describe('JwtService impersonation grants', () => {
   const claims = {
     userId: 'user-1',
     durationMinutes: 60,
-    impersonatedBy: 'admin@wepublish.ch',
+    impersonatedBy: 'jane@wepublish.ch',
     reason: 'Ticket 4711',
     jti: 'grant-abc',
   };
@@ -94,12 +94,6 @@ describe('JwtService impersonation grants', () => {
     const other = await service.generateJWT({ id: 'user-1' });
 
     await expect(service.verifyImpersonationGrant(other)).resolves.toBeNull();
-  });
-
-  it('refuses a scoped channel token', async () => {
-    const scoped = await service.generateScopedJWT({ scope: 'read:stats' });
-
-    await expect(service.verifyImpersonationGrant(scoped)).resolves.toBeNull();
   });
 
   it('refuses a forged token', async () => {

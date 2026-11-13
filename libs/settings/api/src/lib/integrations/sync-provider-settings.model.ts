@@ -47,6 +47,21 @@ export class SettingSyncProvider extends SettingProvider {
 
   @Field({ nullable: true })
   lastSyncError?: string;
+
+  @Field(() => String, {
+    nullable: true,
+    description: 'Id of the audience webhook the api registered at Mailchimp.',
+  })
+  mailchimp_webhookId?: string | null;
+
+  @Field(() => Date, { nullable: true })
+  mailchimp_webhookRegisteredAt?: Date | null;
+
+  @Field(() => Date, {
+    nullable: true,
+    description: 'When the audience webhook last delivered a verified call.',
+  })
+  lastWebhookAt?: Date | null;
 }
 
 @InputType()
@@ -70,6 +85,9 @@ export class CreateSettingSyncProviderInput extends OmitType(
     'modifiedAt',
     'lastSyncAt',
     'lastSyncError',
+    'mailchimp_webhookId',
+    'mailchimp_webhookRegisteredAt',
+    'lastWebhookAt',
   ] as const,
   ArgsType
 ) {

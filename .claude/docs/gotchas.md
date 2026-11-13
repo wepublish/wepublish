@@ -10,6 +10,16 @@ gets refactored away by the next agent.
 
 ---
 
+### ⚠️ `tsc -p apps/editor` checks nothing and exits 0
+
+`apps/editor`, `apps/media` and `apps/api-example` have a solution-style
+`tsconfig.json` (`"files": []`, only `references`), so `pnpm tsc -p apps/editor
+--noEmit` compiles zero files and reports success. CI's `website-typecheck.yml`
+runs `tsc --noEmit -p apps/editor/tsconfig.app.json` inside the editor build and
+fails (2026-11-09: a `printIssues` field missing from three `libs/membership/editor`
+call sites, green locally on Vitest and on the useless `tsc`). Run
+`pnpm nx run editor:typecheck` after touching the editor or any `libs/*/editor`.
+
 ### ⚠️ Prisma helpers are deliberately absent from the `@wepublish/testing` barrel
 
 [libs/testing/src/index.ts](../../libs/testing/src/index.ts) exports `act-wait`,
@@ -704,6 +714,11 @@ and the nightly `MailLogSyncService` poll reconciles what a webhook missed.
 Providers must throw `MailWebhookSignatureError`, not a plain `Error`, for a
 failed signature.
 
+Mandrill checks the URL while a webhook is being **created** with an empty
+batch (`mandrill_events=[]`) signed with the fixed key `test-webhook` — the
+webhook's own key does not exist yet. The Mailchimp provider lets exactly that
+through; refusing it makes Mandrill reject the webhook URL.
+
 Pinned by `libs/mail/api/src/lib/mail.webhook.spec.ts` ("refuses a call that
 does not come from the provider", "answers 200 to a payload it cannot handle").
 
@@ -892,6 +907,12 @@ This is also why components taking `watch` were quietly _skipped_ by the
 compiler before ("Compilation Skipped: Use of incompatible library"); removing
 `watch` lets it compile them, which can surface fresh `set-state-in-effect`
 errors in code that was never checked.
+
+Two siblings, linted in `libs/form/*`: spreading RHF's form object
+(`{ ...form, extra }` is memoised on `form`, whose `formState` RHF swaps every
+render, so `isLoading` stays `true`) and reading `useFormContext().formState`
+(frozen at its first value) — use the `useSchemaForm` handle and
+`useFormState`/`useFormStatus` ([libs/form/README.md](../../libs/form/README.md#react-compiler-rules)).
 
 ---
 
@@ -1169,14 +1190,21 @@ may not import `scope:api-only` libs (`website-revalidation`,
 against Apollo and Prisma. The profiles behind
 [`LinkCache`](../../libs/media/api/src/lib/link-cache/link-cache.ts), each
 shared one kept locally for 2 s:
-- `media:links` (`val:media:links:<sha>`): objects that exist. Shared, 3 days,
-  across releases.
+- `media:links` (`val:media:links:<sha>`): objects that exist. Shared, across
+  releases. Documents, video and audio: 3 days, written by the controller.
+  Image variants: written by `MediaService` when it transforms, and live
+  exactly as long as the transformed object: 30 days from its
+  `lastModified` (`TRANSFORMED_IMAGE_TTL`, the transformation bucket's
+  lifecycle rule; change both together). A link that outlived its object
+  redirected to a deleted file and never triggered a new transform. An
+  object past 30 days the bucket has not deleted yet is transformed again.
 - `media:rejected-variants` (`val:<release>:media:rejected-variants:<sha>`):
   variants the guard rejects (400), 1 h, per release since a deploy can change
   the guard's limits. Only signed requests get that far.
 - `media:missing-links`: objects that don't exist. 4 h and **local only**.
 - `media:generations` (`val:media:generations:<sha>`): written only by the
-  authenticated image/document `DELETE`, 3 days. Every link key hashes
+  authenticated image/document `DELETE`, as long as the longest link (30
+  days); any shorter and a forgotten link comes back. Every link key hashes
   `[id, generation, variant]`, so a delete orphans all variants of that id on
   every replica within 2 s (each replica re-reads an id's generation at most
   every 2 s, remembered in the local `media:generation-checks`). Variants
@@ -1191,6 +1219,12 @@ misses included, is kept for at most 30 s, so the media server goes back to R2
 more often for the length of the outage.
 A Dragonfly misconfiguration crash-loops the media pod, as it does the API's,
 so the media image ships `/wepublish/ca.crt` for `NODE_EXTRA_CA_CERTS`.
+
+---
+
+### ⚠️ Prisma 7 with the pg adapter names the unique index, not the fields
+
+The API sends ``Unique constraint failed on the constraint: `consents_slug_key` ``, which `humanizeError`'s `fields: (…)` regex misses; match it with `uniqueConstraint(...)` from `@wepublish/form/editor` (pinned by `libs/form/editor/src/lib/view/unique-constraint.spec.ts`).
 
 ---
 
@@ -1336,6 +1370,92 @@ Only `ganzgraz` and `munotgloeggli` take `settingsTheme`; every other tenant's
 elsewhere is a behaviour change, not a fix.
 
 ---
+
+### ⚠️ Cancelling an unsent renewal invoice does not make the nightly job create it again
+
+`PeriodicJobService.createRemoteInvoice`
+(`libs/membership/api/src/lib/periodic-job/periodic-job.service.ts`)
+hard-deletes the we.publish invoice — payment, `subscriptionPeriod`,
+`invoiceItem`, invoice, in that order — when the payment provider could not
+create its side of it.
+
+`getActiveSubscriptionsWithoutInvoice` (`subscription.service.ts`) requires not
+only no open invoice but `periods: { none: { startsAt: { gt: runDate } } }`.
+The invoice's period starts in the future (the invoice is created up to 90 days
+ahead), so `canceledAt` alone keeps the subscription excluded until `paidUntil`,
+and `getNextPeriod` then continues after the orphaned period: a whole
+periodicity of coverage is skipped.
+
+**Load-bearing:** all four deletes. `SubscriptionPeriod.invoiceID` has no
+cascade and `InvoiceItem.invoiceId` is `SetNull`, so each must go explicitly,
+as `upgrade-subscription.service.ts` does.
+
+Pinned by `periodic-job.service.spec.ts` («removes the invoice when the
+provider could not create it»).
+
+---
+
+### ⚠️ Apollo Client 4's `useLazyQuery` ignores `onCompleted` / `onError` without a type error
+
+The editor runs `@apollo/client` 4. Its lazy queries no longer call
+`onCompleted` or `onError`, yet passing them still typechecks. A download
+written as `useLazyQuery(Doc, { onCompleted: data => download(data) })` runs
+the query and then does nothing (2026-11-08: the print-issue «CSV
+herunterladen» buttons; the API answered correctly the whole time).
+
+Await the trigger instead: it resolves with `{ data }` and rejects on an
+error, as `libs/ui/editor/src/lib/panel/exportSubscriptions.tsx` and
+`libs/print-issue/editor/src/lib/print-issue-list-view.tsx` do. A spec that mocks
+`useLazyQuery` must not call `onCompleted` either, or it hides the bug.
+
+Pinned by `libs/print-issue/editor/src/lib/print-issue-list-view.spec.tsx`
+(«lists the draft with its options, CSV, edit, delivered and delete, and the merged list»).
+
+### ⚠️ `prisma migrate deploy` targets `DIRECT_DATABASE_URL` from `.env`, not the `DATABASE_URL` you pass
+
+[prisma.config.ts](../../prisma.config.ts) loads `.env` and takes
+`process.env['DIRECT_DATABASE_URL'] || process.env['DATABASE_URL']` as the
+datasource («DIRECT_DATABASE_URL bypasses PgBouncer»). So
+`DATABASE_URL=postgresql://…/throwaway pnpm prisma migrate deploy` still
+migrates whatever `.env`'s `DIRECT_DATABASE_URL` points at.
+
+Verified 2026-11-08 in a worktree: the command printed «All migrations have
+been successfully applied» while the throwaway database stayed empty, and 12
+migrations (11 from master plus the branch's own) had landed in the shared
+`wepublish` database of another checkout's Docker stack. The API booted
+against the throwaway database then died with `relation
+"public.settings.analyticsProvider" does not exist`.
+
+Override **both** variables for any Prisma CLI call that must hit another
+database: `DATABASE_URL=… DIRECT_DATABASE_URL=… pnpm prisma migrate deploy`.
+The running API reads only `DATABASE_URL`
+(`libs/nest-modules/src/lib/database/prisma.service.ts`), which is why the
+boot and the migration disagreed.
+
+**Load-bearing:** the `DIRECT_DATABASE_URL` preference in `prisma.config.ts`
+is what production relies on for advisory locks through PgBouncer; do not
+"fix" it by dropping the fallback order.
+
+Nothing guards this — a regression here is silent: the CLI reports success
+against the wrong database.
+
+### ⚠️ Feeds must load `FeedArticleList`; with `ArticleList` they shrink to the lead
+
+`generateFeed` serialises `latest.blocks` into `content:encoded`, but
+`ArticleList`/`SlimArticle` never selects blocks. Every tenant feed shipped
+lead-only for years while `feed-generator.spec.ts` stayed green, because
+`mockArticle()` carries blocks the production query never fetched. Found
+2026-11-12: the Schweizer Mediendatenbank, which ingests online sources from
+publisher feeds, showed reflekt articles with their lead only.
+
+Widening `SlimArticle` is the wrong fix: every list on every site would fetch
+bodies.
+
+**Load-bearing:** `feed.graphql` (`FeedBlock`, `paywall { active
+hideContentAfter }`); `generateFeed` typed on `FeedArticleFragment` without a
+cast, so a tenant on the wrong document fails `tsc`. Pinned by
+`libs/feed/website/src/lib/feed-article-list.spec.ts`, which runs the real
+document against `schema-v2.graphql`.
 
 ## Adding an entry
 

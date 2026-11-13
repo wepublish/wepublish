@@ -9,11 +9,16 @@ import {
 import sharp from 'sharp';
 import { Readable } from 'stream';
 import {
+  getTransformationKey,
   signImageTransformations,
   TransformationsDto,
 } from '@wepublish/media-transform-guard';
 import { generateKeyPair } from 'jose';
 import { JwksClientService } from '../authentication/jwks-client.service';
+import {
+  type LinkCache,
+  TRANSFORMED_IMAGE_TTL,
+} from '../link-cache/link-cache';
 import { MAX_CONCURRENT_TRANSFORMS, MediaService } from './media.service';
 
 const STORAGE_DEFAULT_CONTENT_TYPE = 'binary/octet-stream';
@@ -75,13 +80,16 @@ const createService = (
     },
   };
 
+  const links = { set: vi.fn() };
+
   const service = new MediaService(
     uploads,
     transformations,
-    jwksClient as unknown as JwksClientService
+    jwksClient as unknown as JwksClientService,
+    links as unknown as LinkCache
   );
 
-  return { service, uploads, transformations };
+  return { service, uploads, transformations, links };
 };
 
 const MINIMAL_PDF = Buffer.from(
@@ -414,6 +422,68 @@ describe('MediaService images', () => {
 
     expect(await uploads.exists('images/image-4')).toBe(false);
     expect(await transformations.exists(uri)).toBe(false);
+  });
+
+  describe('the link cache', () => {
+    const DAY = 24 * 60 * 60 * 1000;
+    const variant = getTransformationKey({});
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    it('caches the link when the image is transformed, for as long as the transformation is kept', async () => {
+      const { service, links } = createService();
+      await service.saveImage('image-5', await createImage());
+
+      const { uri } = await service.getImageUri(
+        'image-5',
+        {} as TransformationsDto
+      );
+
+      expect(links.set).toHaveBeenCalledExactlyOnceWith(
+        'image-5',
+        variant,
+        { uri, exists: true },
+        TRANSFORMED_IMAGE_TTL
+      );
+    });
+
+    it('caches an existing transformation only for what is left of its lifetime', async () => {
+      vi.useFakeTimers({ toFake: ['Date'] });
+      const { service, links, transformations } = createService();
+      await service.saveImage('image-6', await createImage());
+      await service.getImageUri('image-6', {} as TransformationsDto);
+      vi.advanceTimersByTime(10 * DAY);
+
+      await service.getImageUri('image-6', {} as TransformationsDto);
+
+      expect(transformations.writes).toHaveLength(1);
+      expect(links.set).toHaveBeenLastCalledWith(
+        'image-6',
+        variant,
+        { uri: transformations.writes[0], exists: true },
+        TRANSFORMED_IMAGE_TTL - 10 * DAY
+      );
+    });
+
+    it('transforms again once the transformation outlived its lifetime', async () => {
+      vi.useFakeTimers({ toFake: ['Date'] });
+      const { service, links, transformations } = createService();
+      await service.saveImage('image-7', await createImage());
+      await service.getImageUri('image-7', {} as TransformationsDto);
+      vi.advanceTimersByTime(TRANSFORMED_IMAGE_TTL + DAY);
+
+      await service.getImageUri('image-7', {} as TransformationsDto);
+
+      expect(transformations.writes).toHaveLength(2);
+      expect(links.set).toHaveBeenLastCalledWith(
+        'image-7',
+        variant,
+        { uri: transformations.writes[1], exists: true },
+        TRANSFORMED_IMAGE_TTL
+      );
+    });
   });
 
   it('rejects when the original breaks off mid-download', async () => {

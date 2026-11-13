@@ -19,7 +19,10 @@ const solvedChallenge = {
 
 type Props = ComponentProps<typeof RegistrationForm>;
 
-const renderRegistrationForm = (props: Partial<Props> = {}) => {
+const renderRegistrationForm = (
+  props: Partial<Props> = {},
+  locale: 'de' | 'fr' = 'de'
+) => {
   const onRegister = vi.fn();
 
   renderWithProviders(
@@ -28,7 +31,8 @@ const renderRegistrationForm = (props: Partial<Props> = {}) => {
       register={idle}
       onRegister={onRegister}
       {...props}
-    />
+    />,
+    { locale }
   );
 
   return { onRegister, user: userEvent.setup() };
@@ -217,6 +221,28 @@ describe('RegistrationForm', () => {
         'true'
       )
     );
+    expect(onRegister).not.toHaveBeenCalled();
+  });
+
+  it('explains mismatching repeated fields in French on a French site', async () => {
+    const { user, onRegister } = renderRegistrationForm(
+      { fields: ['emailRepeated', 'password', 'passwordRepeated'] },
+      'fr'
+    );
+
+    await user.type(field('user.form.lastName'), 'Bar');
+    await user.type(field('user.form.email'), 'foobar@email.com');
+    await user.type(field('user.form.emailRepeated'), 'foobaz@email.com');
+    await user.type(field('user.form.password'), 'supersecret123');
+    await user.type(field('user.form.passwordRepeated'), 'supersecret124');
+    await user.click(registerButton());
+
+    expect(
+      await screen.findByText('Les mots de passe ne correspondent pas.')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText('Les adresses e-mail ne correspondent pas.')
+    ).toBeInTheDocument();
     expect(onRegister).not.toHaveBeenCalled();
   });
 

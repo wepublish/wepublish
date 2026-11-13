@@ -1,25 +1,53 @@
-import {
-  FullArticleFragment,
-  SlimArticleFragment,
-} from '@wepublish/website/api';
-import type { Feed, Item } from 'feed';
 import { getArticleSEO } from '@wepublish/article/website';
-import { isRichTextBlock } from '@wepublish/block-content/website';
-import { generateHTML } from '@tiptap/html';
-import type {
-  RichtextElements,
-  RichtextJSONDocument,
-} from '@wepublish/richtext';
+import { FeedArticleFragment } from '@wepublish/website/api';
+import type { Feed, Item } from 'feed';
 
-export const toHtml = async (document: RichtextJSONDocument) => {
-  const { editorConfig } = await import('@wepublish/richtext/editor/config');
+import { blocksToFeedHtml } from './blocks-to-feed-html';
 
-  return generateHTML(document, editorConfig.extensions ?? []);
+export { toHtml } from './blocks-to-feed-html';
+
+export const FEED_PAYWALLED_CONTENT = ['lead', 'visible', 'full'] as const;
+
+export type FeedPaywalledContent = (typeof FEED_PAYWALLED_CONTENT)[number];
+
+export const FEED_PAYWALLED_CONTENT_SETTING = 'feedPaywalledContent';
+
+export const toFeedPaywalledContent = (value: unknown): FeedPaywalledContent =>
+  FEED_PAYWALLED_CONTENT.find(choice => choice === value) ?? 'lead';
+
+export type FeedOptions = {
+  paywalledContent?: FeedPaywalledContent;
 };
 
 const escapeXml = (str: string): string => {
   return str.replace(/&/g, '&amp;');
 };
+
+const publishedBlocks = (
+  article: FeedArticleFragment,
+  paywalledContent: FeedPaywalledContent
+) => {
+  if (article.peerId) {
+    return [];
+  }
+
+  if (!article.paywall?.active || paywalledContent === 'full') {
+    return article.latest.blocks;
+  }
+
+  if (paywalledContent === 'visible') {
+    return article.latest.blocks.slice(0, article.paywall.hideContentAfter);
+  }
+
+  return [];
+};
+
+const itemContent = async (
+  article: FeedArticleFragment,
+  paywalledContent: FeedPaywalledContent
+) =>
+  (await blocksToFeedHtml(publishedBlocks(article, paywalledContent))) ||
+  (article.latest.lead ?? undefined);
 
 export const generateFeed =
   ({
@@ -31,23 +59,13 @@ export const generateFeed =
     },
     'generator'
   >) =>
-  async (articles: (FullArticleFragment | SlimArticleFragment)[]) => {
-    const items = articles.map(async (slimArticle): Promise<Item> => {
-      const article = slimArticle as FullArticleFragment;
+  async (
+    articles: FeedArticleFragment[],
+    { paywalledContent = 'lead' }: FeedOptions = {}
+  ) => {
+    const items = articles.map(async (article): Promise<Item> => {
       const seo = getArticleSEO(article);
-
-      const content = await toHtml({
-        attrs: undefined,
-        type: 'doc',
-        content:
-          article.latest?.blocks?.reduce((acc, curr) => {
-            if (isRichTextBlock(curr)) {
-              acc.push(...(curr.richText?.content ?? []));
-            }
-
-            return acc;
-          }, [] as RichtextElements[]) ?? [],
-      });
+      const content = await itemContent(article, paywalledContent);
 
       const authors = article.latest.authors.map(({ author }) => ({
         name: author.name,
@@ -64,7 +82,7 @@ export const generateFeed =
             }
           : undefined,
         description: seo.schema.description,
-        content: content ? content : (article.latest.lead ?? undefined),
+        content,
         author: authors.length ? authors : undefined,
         guid: article.id,
         link: article.url,

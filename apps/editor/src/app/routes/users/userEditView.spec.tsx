@@ -1,6 +1,7 @@
 import { createTheme, ThemeProvider } from '@mui/material';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import {
+  AccountCreationMailDocument,
   UserDocument,
   UserSubscriptionListDocument,
 } from '@wepublish/editor/api';
@@ -9,11 +10,13 @@ import type { Mock } from 'vitest';
 
 import { UserEditView } from './userEditView';
 
+const query = vi.hoisted(() => vi.fn(async () => ({ data: {} })));
+
 vi.mock('@apollo/client/react', async importOriginal => ({
   ...(await importOriginal<typeof import('@apollo/client/react')>()),
   useQuery: vi.fn(),
   useLazyQuery: () => [vi.fn(), { loading: false }],
-  useApolloClient: () => ({ query: vi.fn(async () => ({ data: {} })) }),
+  useApolloClient: () => ({ query }),
   useMutation: () => [vi.fn(async () => ({ data: {} })), { loading: false }],
 }));
 
@@ -110,7 +113,10 @@ const renderAt = (path: string) =>
   );
 
 beforeEach(() => mockedUseQuery.mockReset());
-afterEach(() => vi.restoreAllMocks());
+afterEach(() => {
+  vi.restoreAllMocks();
+  query.mockClear();
+});
 
 describe('UserEditView', () => {
   it('keeps the empty first name field controlled while typing', async () => {
@@ -241,6 +247,77 @@ describe('UserEditView', () => {
     ).toBeTruthy();
   });
 
+  it('shows an account managed by the We.Publish login read-only', async () => {
+    query.mockResolvedValueOnce({
+      data: { user: { ...user, managedByWepublishLogin: true } },
+    } as never);
+    mockQueries([[UserDocument, { user }]]);
+    renderAt('/users/edit/user-1');
+
+    expect(
+      await screen.findByText('userCreateOrEditView.managedByWepublishLogin')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('textbox', { name: /userCreateOrEditView.firstName/ })
+    ).toBeDisabled();
+    expect(
+      screen.getByRole('button', { name: 'chooseEditImage.chooseImage' })
+    ).toBeDisabled();
+    expect(
+      screen.getByRole('button', { name: /addEntry|add/i })
+    ).toBeDisabled();
+    screen
+      .getAllByRole('button', { name: /^(save|saveAndClose)$/ })
+      .forEach(button => expect(button).toBeDisabled());
+  });
+
+  it('leaves out access, roles and 2FA, which We.Publish manages for such an account', async () => {
+    query.mockResolvedValueOnce({
+      data: { user: { ...user, managedByWepublishLogin: true } },
+    } as never);
+    mockQueries([[UserDocument, { user }]]);
+    renderAt('/users/edit/user-1');
+
+    await screen.findByText('userCreateOrEditView.managedByWepublishLogin');
+
+    expect(
+      screen.queryByText('userCreateOrEditView.passwordHeader')
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('checkbox', { name: /userCreateOrEditView.active/ })
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', {
+        name: /userCreateOrEditView.resetPassword/,
+      })
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('combobox', {
+        name: /userCreateOrEditView.userRoles/,
+      })
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: /userList.overview.resetTotp/ })
+    ).not.toBeInTheDocument();
+  });
+
+  it('says nothing about the We.Publish login for other accounts', async () => {
+    query.mockResolvedValueOnce({
+      data: { user: { ...user, managedByWepublishLogin: false } },
+    } as never);
+    mockQueries([[UserDocument, { user }]]);
+    renderAt('/users/edit/user-1');
+
+    expect(
+      await screen.findByRole('textbox', {
+        name: /userCreateOrEditView.firstName/,
+      })
+    ).toBeEnabled();
+    expect(
+      screen.queryByText('userCreateOrEditView.managedByWepublishLogin')
+    ).not.toBeInTheDocument();
+  });
+
   it('keeps the active flag with the rest of access', async () => {
     mockQueries([[UserDocument, { user }]]);
     renderAt('/users/edit/user-1');
@@ -277,5 +354,29 @@ describe('UserEditView', () => {
       await screen.findByText('userMail.titleWithLetters')
     ).toBeInTheDocument();
     expect(screen.queryByText('userMail.title')).not.toBeInTheDocument();
+  });
+
+  it('creates a user without a country', async () => {
+    mockQueries();
+    const { container } = renderAt('/users/create');
+
+    const type = (name: string, value: string) =>
+      fireEvent.change(
+        container.querySelector(`input[name="${name}"]`) as HTMLInputElement,
+        { target: { value } }
+      );
+
+    await screen.findByText('userCreateOrEditView.userDataTitle');
+    type('name', 'Muster');
+    type('email', 'max@test.ch');
+    type('password', 'a-long-enough-password');
+    fireEvent.click(screen.getByRole('button', { name: 'save' }));
+
+    // past validation, creating starts by looking up the account mail
+    await waitFor(() =>
+      expect(query).toHaveBeenCalledWith(
+        expect.objectContaining({ query: AccountCreationMailDocument })
+      )
+    );
   });
 });

@@ -16,12 +16,15 @@ import {
 } from './letter-provider/letter-provider.interface';
 import {
   attachmentIdsOf,
+  type LetterAttachment,
+  type LetterRecipientOptions,
   LetterSender,
   MAIL_TEMPLATE_ATTACHMENT_IDS,
   MailAttachmentRenderer,
 } from '@wepublish/mail/api';
 import {
   canReceiveLetters,
+  PAYMENT_SLIP_COUNTRY,
   toLetterAddress,
   UserWithAddress,
 } from './letter-recipient';
@@ -44,12 +47,6 @@ export interface LetterContextProps {
   attachmentRenderer?: MailAttachmentRenderer;
 }
 
-/**
- * Pingen prints Swiss QR-bills on perforated paper but only posts letters
- * carrying one within Switzerland, so the appendix is left out elsewhere.
- */
-const APPENDIX_COUNTRY = 'CH';
-
 export type { LetterPrintSettings } from './letter-print-defaults';
 
 export interface RenderLetterProps {
@@ -61,6 +58,11 @@ export interface RenderLetterProps {
   layout?: LetterLayoutContent | null;
   /** Duplex printing needs the appendix to start on an odd page. */
   printMode?: LetterPrintMode;
+  /**
+   * A document printed after the letter, e.g. the payment provider's invoice
+   * with its payment slip. Takes the place of the template's static appendix.
+   */
+  attachment?: LetterAttachment;
 }
 
 export interface SendTemplateLetterProps {
@@ -78,6 +80,8 @@ export interface SendTemplateLetterProps {
    * logged under its own id.
    */
   log?: { mailIdentifier?: string; type?: MailLogType };
+  /** A document printed after the letter, e.g. the invoice with its payment slip. */
+  attachment?: LetterAttachment;
 }
 
 /** The letter states that map onto a mail log state one-to-one. */
@@ -149,6 +153,7 @@ export class LetterContext implements LetterSender {
     recipient,
     layout,
     printMode,
+    attachment,
   }: RenderLetterProps): Promise<Buffer> {
     let letter = await this.pdfRenderer.render(
       composeLetter({
@@ -159,38 +164,51 @@ export class LetterContext implements LetterSender {
         layout,
       })
     );
+    const appendixId = template.letterAppendixId;
 
-    for (const attachment of await this.renderAttachments(
+    for (const document of await this.renderAttachments(
       template.attachmentIds ?? [],
       data
     )) {
       // Duplex: each document starts on a sheet of its own, not on the back
       // of the one before.
-      letter = await appendPdf(letter, attachment.content, {
+      letter = await appendPdf(letter, document.content, {
         padToOddPage: printMode === LetterPrintMode.duplex,
-        name: attachment.filename,
+        name: document.filename,
       });
     }
 
-    if (!template.letterAppendixId) {
+    if (!attachment && !appendixId) {
       return letter;
     }
 
-    if (recipient.country !== APPENDIX_COUNTRY) {
+    // Both carry a payment slip, which is only posted within Switzerland.
+    if (recipient.country !== PAYMENT_SLIP_COUNTRY) {
       this.logger.warn(
-        `Letter appendix <${template.letterAppendixId}> left out for a recipient in ${recipient.country}`
+        `${
+          attachment ?
+            `Document <${attachment.name}>`
+          : `Letter appendix <${appendixId}>`
+        } left out for a recipient in ${recipient.country}`
       );
 
       return letter;
     }
 
-    return appendPdf(
-      letter,
-      await this.loadAppendix(template.letterAppendixId),
-      {
-        padToOddPage: printMode === LetterPrintMode.duplex,
-      }
-    );
+    // The provider's own document, with its per-invoice payment slip, takes
+    // the place of the static one.
+    const appendix =
+      attachment ? attachment.content
+      : appendixId ? await this.loadAppendix(appendixId)
+      : null;
+
+    if (!appendix) {
+      return letter;
+    }
+
+    return appendPdf(letter, appendix, {
+      padToOddPage: printMode === LetterPrintMode.duplex,
+    });
   }
 
   private async renderAttachments(
@@ -268,14 +286,12 @@ export class LetterContext implements LetterSender {
     );
   }
 
-  /**
-   * Render one letter, hand it to the print vendor and record the outcome in
-   * the mail log. Throws if either step fails; the log entry is written either
-   * way, so a failed letter leaves a trace like a failed mail does.
-   */
   /** Whether the user's postal address is complete enough to be posted to. */
-  canReceiveLetters(user: UserWithAddress): boolean {
-    return canReceiveLetters(user);
+  canReceiveLetters(
+    user: UserWithAddress,
+    options?: LetterRecipientOptions
+  ): boolean {
+    return canReceiveLetters(user, options);
   }
 
   /**
@@ -295,6 +311,11 @@ export class LetterContext implements LetterSender {
     });
   }
 
+  /**
+   * Render one letter, hand it to the print vendor and record the outcome in
+   * the mail log. Throws if either step fails; the log entry is written either
+   * way, so a failed letter leaves a trace like a failed mail does.
+   */
   async sendLetter(props: SendTemplateLetterProps): Promise<string> {
     const mailLogId = props.mailLogId ?? randomUUID();
     const address = toLetterAddress(props.recipient);
@@ -321,6 +342,7 @@ export class LetterContext implements LetterSender {
         recipient: address,
         layout: await this.resolveLayout(template.letterLayoutId),
         printMode: print.printMode,
+        attachment: props.attachment,
       });
 
       const result = await this.letterProvider.sendLetter({

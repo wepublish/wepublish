@@ -5,7 +5,39 @@
 - Stripe
 - Mollie
 - Payrexx
-- Bexio
+- Bexio — no charge, an invoice. `createRemoteInvoice` (nightly job, the
+  `INVOICE_CREATION` day) creates the `kb_invoice` and has Bexio email it with
+  the pdf, or — for a reader in letter mode with a Swiss address
+  (`channel: letter`) — issues it (`bexio_markInvoiceAsOpen`) and hands the pdf
+  back to print after the invoice-creation letter. The Bexio invoice id is kept
+  as a `Payment` (`intentID`) so `checkStateOfOpenInvoices` polls it and
+  `cancelRemoteSubscription` can cancel it; `renderRemoteInvoice` fetches the
+  pdf again by that payment. Once Bexio created the invoice, a failed issue /
+  pdf / send is returned as `deliveryError`, never thrown — a retry would
+  create a second invoice. Keep `offSessionPayments` **off** for Bexio: with it
+  on, the due date runs `createIntent` → a second Bexio invoice plus a
+  RENEWAL_FAILED mail.
+  **Contact sync (opt-in):** `SettingPaymentProvider.bexio_contactSync` has
+  `BexioContactSyncService` (`libs/payment/api/.../bexio/`, a `runNight`
+  step before the Mailchimp sync) push reader data to bexio every night:
+  readers with a stored contact (`PaymentProviderCustomer.customerID`) whose
+  `User`/`UserAddress.modifiedAt` is newer than `PaymentProviderCustomer.syncedAt`,
+  and readers on a bexio payment method without a contact (found by email or
+  created). `bexioContactFields` is the one mapping (name/company, email,
+  street, number, address line 2, postcode, city, country) used by the sync
+  and by the invoice-time `createOrUpdateContact`; it is sent with bexio's
+  partial edit, so groups, phone and the rest of the contact are untouched.
+  `country_id` comes from `BexioCountries` (`GET /2.0/country`, cached a day,
+  `normalizeCountry` from `@wepublish/utils/api`), the configured one as
+  fallback. A stored id bexio answers 404 for is skipped, never recreated;
+  a 429 ends the night's run. The run's time and first error land in
+  `bexio_contactSyncAt` / `bexio_contactSyncError`, shown in the editor's
+  bexio form.
+  - The print export (`libs/print-issue/api`, feature `print-export`, editor
+    «Druckausgaben» in the left nav after «Banner») reads `kb_invoice` and `contact` **read-only** with
+    this provider's API key (`BexioPrintSourceService`; the key needs
+    `kb_invoice_show` and `contact_show`). Without a bexio provider that has a
+    key, a run lists we.publish members only and says so in its summary.
 
 - Simulated (`simulated` type) — no external service: `createIntent` sends the
   customer to a checkout page served by the API at
@@ -66,12 +98,61 @@ The periodic job expires pending changes after
 - Mailchimp — the newsletter editor (`libs/newsletter`, behind the
   `newsletter-editor` feature, `WEP_FEATURES=newsletter-editor` locally) pushes
   drafts, never sends, through the Marketing API key and list of the sync-provider integration
+- Brevo (`brevo-mail-provider.ts`, plain `fetch` against api.brevo.com; mail
+  log id in the `X-Mailin-custom` header; the webhook URL in Brevo carries
+  `?key=<webhookEndpointSecret>` since Brevo signs nothing; blocked contacts
+  are its suppression list, the events endpoint its poll)
 
 Mail, challenge (captcha) and Mailchimp sync run with exactly one provider
 each: the runtime uses the first non-deleted row. Their `create*Setting`
 mutations only succeed while none exists (the editor then shows «Einrichten»),
 and there is no delete mutation, so a medium never ends up without one. Change
 type or credentials on the existing row instead.
+
+### Email quality evidence (what providers tell us about addresses)
+
+Everything lands in `email_quality_events` through `EMAIL_QUALITY_RECORDER`
+(`EmailQualityService`, `libs/membership/api/.../email-quality/`), deduped on
+`providerEventId`; the level in `user_email_quality` is recomputed on record
+and nightly. Sources today:
+
+- Transactional mail provider (one per installation): send-time refusal
+  (Mandrill only), webhook (Mandrill, Mailgun, Brevo; `mail.webhook.ts`),
+  nightly poll of open mail logs (`MailLogSyncService`; Mandrill
+  `messages/info`, Mailgun events API by the Message-Id kept from the send
+  answer, Brevo `smtp/statistics/events`). SMTP, Slack and Log report nothing.
+- Provider suppression lists, nightly after the mail log poll and on the
+  refresh button (`SuppressionSyncService` → `provider.listSuppressions()`):
+  Mandrill's rejects denylist (expired entries included), Mailgun's bounces,
+  complaints and unsubscribes of the sending domain, Brevo's blocked
+  contacts (every reason code blocks transactional mail). Account-wide, so they
+  cover mails sent outside We.Publish. A Mailgun unsubscribe from a tag is
+  `optedOut`; domain-wide (`*`) it is `unsubscribed`. Entries already stored
+  (by `providerEventId`) are skipped so nobody is re-evaluated for nothing.
+- Mailchimp audience, inside the nightly Mailchimp sync (never on a dry run):
+  `cleaned` members → `hardBounce`, `unsubscribed` → `optedOut`
+  (`mailchimp-audience-evidence.ts`), and the clickers of the last 7 days of
+  campaigns → `clicked`, dated by the campaign's send time
+  (`mailchimp-campaign-clicks.ts`). These reach every user with that address.
+- Mailchimp audience webhook, `POST /audience-webhooks/mailchimp/:configId?key=…`
+  (`mailchimp-audience-webhook.ts`, membership lib): `cleaned` → hardBounce
+  (reason `abuse` → spamComplaint), `unsubscribe` → optedOut (`abuse` →
+  spamComplaint), `upemail` only logged. Mailchimp signs nothing, so the URL
+  carries a secret stored encrypted on the sync provider row
+  (`mailchimp_webhookSecret`); the api registers the webhook itself
+  (`registerMailchimpAudienceWebhook`, needs `HOST_URL`, button in the sync
+  integration), keeps `mailchimp_webhookId` and adopts one Mailchimp already
+  has. Mailchimp documents no retry, so the nightly audience pull stays the
+  fallback and the controller answers 200 to anything but a bad key.
+- `optedOut` is not in the evaluator's `DEAD_TYPES`: leaving a newsletter does
+  not make an inbox dead. `unsubscribed` stays dead, because Mandrill and
+  Mailgun refuse every further mail to such an address.
+
+Observability: `SettingMailProvider.lastWebhookAt` (every verified webhook
+call), `lastPollAt` / `lastPollError` (every poll), shown on the mail
+integration; query `emailEvidence` (`CanGetMailLogs`) sums events per source and
+the editor warns on the communication tool and the delivery channel page when
+no provider evidence arrived for `emailQualityEvidenceWarnAfterDays` (14).
 
 ## PDF Renderer
 
@@ -98,12 +179,39 @@ Automated subscription mails can reach a user as a printed letter. The pieces:
   editor («Auch per Brief») print; user-flow mails (login, password, email
   change) never do. The three senders (periodic job, legacy `member-context`,
   renewal success) pass it as `asLetter` into `MailController`.
-- `MailController.sendMail` (`libs/mail/api`) branches before mailing when
-  `asLetter`, the user prefers letters and the `LETTER_SENDER` is configured;
-  it reloads the user with address and falls back to mail without a usable
-  one. The letter is logged under the same `mailIdentifier`/`type` as a mail
-  would be, so retried runs skip it. A failed print throws
-  `LetterDeliveryError`; the periodic job steps over it.
+- `MailController.sendMail` (`libs/mail/api`) branches before mailing through
+  `resolveLetterRecipient()`: `asLetter`, the user prefers letters, the
+  `LETTER_SENDER` is configured, the reloaded address is usable — and Swiss
+  when the letter carries a payment slip (`withPaymentSlip`); anything missing
+  means mail. A caller that had to decide earlier hands the result in as
+  `letterRecipient` (`null` = mail) and a pdf to print after the template as
+  `letterAttachment`. The letter is logged under the same
+  `mailIdentifier`/`type` as a mail would be, so retried runs skip it. A failed
+  print throws `LetterDeliveryError`; the periodic job steps over it.
+- Invoice letters: the periodic job resolves the channel *before* it asks the
+  payment provider (`createRemoteInvoice({ channel })`), keeps the provider's
+  invoice as a `Payment`, and prints the returned pdf after the
+  `INVOICE_CREATION` letter. A provider that could not create its invoice makes
+  the job hard-delete the we.publish invoice with its period, items and payment
+  so the next run tries again (cancelling would not, see gotchas). A reader in
+  letter mode whose pdf the provider could not render gets no cover letter
+  that night. The sweep `postMissingInvoiceLetters` (after invoice creation,
+  also run by `createAndChargeInvoices`) posts the invoice letter for every
+  open invoice of a reader in letter mode that has no non-rejected letter log
+  for the template since the invoice was created — refused letters, a missing
+  pdf, or a reader moved to letters after the invoice was emailed — with the
+  pdf fetched again through `renderRemoteInvoice`; at most 3 attempts, nothing
+  when there was never a letter and there is no pdf to print, and another
+  night when the provider cannot render it. All of this lives in
+  `InvoiceDeliveryService` (`libs/membership/api/src/lib/periodic-job/`),
+  which the nightly job and the editor share.
+- Editor renew and reactivate (`renewSubscription`, `reactivateSubscription`)
+  create the we.publish invoice only, as before — unless the feature
+  `editor-renewal-provider-invoice` is on for the medium: then
+  `InvoiceDeliveryService.deliverRenewal` does what the nightly job does
+  (provider invoice, payment, invoice-creation mail or letter), and a provider
+  that could not create its invoice fails the editor action with nothing left
+  behind, so the editor can retry.
 - `LETTER_SENDER` is a `GatedLetterSender` from `LettersModule`
   (`libs/letter/api`): `isConfigured()` = `paper-letters` && `paper-letter-flow`
   && letter integration configured. The feature keys live only there and in
@@ -151,6 +259,9 @@ Automated subscription mails can reach a user as a printed letter. The pieces:
 A template's `letterAppendixId` (an uploaded pdf `Document`, e.g. a static
 QR-bill) is appended after rendering by `appendPdf` (pdf-lib, renderer-agnostic)
 — CH recipients only, padded to an odd page for duplex (Pingen's QR paper rules).
+A document the sender hands in (`attachment`, e.g. the Bexio invoice with its
+per-invoice QR-bill) is appended the same way and takes the static appendix's
+place.
 
 ### Template attachments (Word → pdf)
 
@@ -208,10 +319,90 @@ layout: only the letter path consults it.
 
 ## Analytics Provider
 
+Website tracking (website settings; Next tenants render `ThirdPartyScripts`
+from `@wepublish/utils/website/next` in `pages/_app.tsx`, TanStack tenants
+render `Analytics` from `@wepublish/utils/website/tanstack` in `src/app.tsx` —
+add a new script to both):
+
 - Google Analytics
 - Google Tag Manager
 - Plausible
 - Piwik PRO
+- Umami (Umami Cloud script, key = website ID)
+
+Hot & Trending (analytics integrations, `settings.analyticsProvider`):
+
+- Google Analytics (`libs/google-analytics/api`, row `google-analytics`)
+- Plausible (`libs/plausible/api`, row `plausible`, Stats API v2)
+- Umami (`libs/umami/api`, row `umami`, `/websites/:id/metrics`)
+
+Each row is created on boot by its `*DbConfig.initDatabaseConfiguration()`.
+The `hotAndTrending` flag picks the provider that answers the `hotAndTrending`
+query (`AnalyticsProviderHotAndTrendingDataSource` in `libs/article/api`);
+setting it on one row clears it on the others. Plausible and Umami keep their
+api key encrypted in `credentials` and take an optional `url` for self-hosting.
+
+## We.Publish login (auth.wepublish.cloud)
+
+We.Publish staff sign in to any editor through Zitadel at
+`auth.wepublish.cloud` ("Anmeldung für We.Publish-Mitarbeitende", a quiet
+link below the login card via `LoginTemplate`'s `footer`). Code
+in `libs/session/api/src/lib/wepublish-*.ts`, editor side in
+`apps/editor/src/app/wepublishLogin.ts`.
+
+- `APP_ENVIRONMENT` picks client and Zitadel role: `production` → client
+  `399257510109839364` + `login-cms-admin-production`; `staging` / `review` →
+  client `399257571782819844` + `login-cms-admin-staging` / `-review`; any
+  other value (e.g. `local`) → staging client + review role. Unset
+  `APP_ENVIRONMENT` or `EDITOR_URL` turns the login off (`wepublishLogin` is
+  null, the button hides).
+- The redirect URI is always `EDITOR_URL/login/wepublish`, built by the API —
+  each editor URL must be registered in the Zitadel app.
+- Authorization code + PKCE, public client (no secret). The code comes back in
+  the fragment, which `captureWepublishLoginResult()` in `main.tsx` removes
+  before Sentry starts. `createSessionWithWepublishLogin(code, codeVerifier)`
+  redeems it, verifies the ID token (issuer, audience, `azp`, JWKS), and reads
+  email, names and `urn:zitadel:iam:org:project:roles` from userinfo.
+- Refused unless the role for this environment is present, the ID token's
+  `amr` contains `mfa` and the email is verified.
+- The account is found by `users.wepublishLoginSubject` (Zitadel `sub`), else
+  by email, else created (`admin`, no welcome mail). Every login resets it to
+  `roleIDs: ['admin']`, `active: true` and Zitadel's names. Connecting an
+  account ends all its other sessions.
+- A connected account is read-only: `assertNotManagedByWepublishLogin`
+  (`libs/user/api`) refuses `updateUser`, `resetPassword`, `deleteUser`,
+  `resetUserTotp` and the person's own `updateCurrentUser`, `updatePassword`,
+  `uploadUserProfileImage` and email change. `SensitiveDataUser.managedByWepublishLogin`
+  tells the editor, which shows the account read-only. Internal code calling
+  `UserService` directly (the login's own reset) is not affected.
+- A connected account (`wepublishLoginSubject` set) can sign in no other way:
+  `createSession` and website-audience `createSessionWithJWT` throw
+  `WepublishLoginOnlyError`. Only the editor's own preview JWT
+  (`createJWTForWebsiteLogin`, audience `preview`) still works.
+- Sign-ins, refusals, user creation and resets are written to the audit log
+  under `createSessionWithWepublishLogin`.
+- **Impersonation.** The Zitadel role `impersonate-cms` (any environment) marks
+  the session `sessions.canImpersonate`; `currentSession` reports it. The user
+  view then offers "Als diese Person anmelden": `impersonateUser(userId,
+  reason)` returns an editor session of the user, and
+  `createWebsiteImpersonation(userId, reason)` a 60-second single-use grant
+  (`impersonation_grants`, audience `impersonation`) that the website redeems
+  through `createSessionWithJWT`, handed over by the preview handshake
+  (`startPreviewHandshake`). Both sessions last an hour, carry
+  `impersonatedBy` (the supporter's email) and `impersonationReason`, cannot
+  impersonate themselves and are refused for inactive and We.Publish
+  accounts. The editor keeps the supporter's token under
+  `wepublish/impersonator-session` and shows `ImpersonationBar`; the website
+  shows its own bar from `withJwtHandler`. Every action in such a session
+  carries `impersonatedBy` in the audit log.
+- An impersonation cannot outlive itself or leave access behind:
+  `createJWTForWebsiteLogin` (the editor preview) in an impersonated session
+  hands the website a grant for the same supporter, reason and remaining time
+  (`ImpersonationService.continueOnWebsite`) instead of an ordinary preview
+  JWT, and `assertNotImpersonating` (`libs/authentication/api`) refuses
+  password and email changes, API tokens, external-app tokens and 2FA setup.
+- We.Publish login sessions last 12 hours (`WEPUBLISH_LOGIN_SESSION_MS`), so
+  removing a Zitadel role takes effect within half a day.
 
 ## We.Publish One
 
@@ -221,11 +412,8 @@ credentials. `libs/one/api` holds the client, the heartbeat and the guards;
 `@OneScopedJwt(scope)` is the only way into a One-facing resolver, and the
 global guard denies anything without it.
 
-Impersonation (One signs in as a user of this medium) is off unless
-`WEP_ONE_IMPERSONATION=true`. A grant is a 60-second single-use JWT that the
-editor redeems at `/login/impersonate/:jwt` — a route that accepts nothing but
-an impersonation grant, since it skips TOTP and any other JWT pointed at it
-would be a way around two-factor.
+One has no impersonation API any more. We.Publish support impersonates from
+the editor instead (see the We.Publish login below).
 
 **Feature toggles** come from One too: per medium, staff-only (One's
 `ClientFeatures`).
