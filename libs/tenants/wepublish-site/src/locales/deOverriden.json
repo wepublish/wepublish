@@ -14,5 +14,10 @@
   },
   "offers": {
     "readMore": "Mehr erfahren"
+  },
+  "articleList": {
+    "by": "von",
+    "overviewPreTitle": "Aus dem We.Publish Ökosystem",
+    "overviewTitle": "Aktuelles"
   }
 }

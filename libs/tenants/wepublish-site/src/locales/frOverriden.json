@@ -5,5 +5,10 @@
   },
   "offers": {
     "readMore": "En savoir plus"
+  },
+  "articleList": {
+    "by": "par",
+    "overviewPreTitle": "De l'écosystème We.Publish",
+    "overviewTitle": "Actualités"
   }
 }

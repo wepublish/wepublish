@@ -30,6 +30,7 @@ import { staticImageSrc } from './assets/static-image';
 import logo from './assets/wepublish-logo.svg';
 import logoAlt from './assets/wepublish-logo-alt.svg';
 import { WepBlockStyles } from './components/block-styles/wep-block-styles';
+import { WepArticleOverview } from './components/article-list/article-overview';
 import { wepublishSiteTenant } from './wepublish-site-tenant';
 
 const navigation = {
@@ -297,6 +298,108 @@ describe('We.Publish website tenant', () => {
     expect(backgroundsOf(screen.getByText('Newsletter'))).not.toContain(
       primaryColor
     );
+  });
+
+  describe('article list', () => {
+    const teaser = (title: string, author: string) =>
+      mockArticleTeaser({
+        title,
+        lead: `Lead von ${title}`,
+        image: mockImage({ title: `Bild ${title}` }),
+        article: mockArticle({
+          publishedAt: new Date(2026, 8, 8, 10).toISOString(),
+          latest: mockArticleRevision({
+            blocks: [],
+            authors: [
+              mockArticleRevisionAuthor({
+                author: mockAuthor({ name: author }),
+              }),
+            ],
+          }),
+        }),
+      });
+
+    it('shows each article in a row with image, title, lead, authors and date', () => {
+      renderTenantPage([
+        mockTeaserSlotsBlock({
+          blockStyle: WepBlockStyles.ArticleList,
+          title: null,
+          teasers: [
+            teaser('Bienvenue, Courant', 'Ramona Sprenger'),
+            teaser('Hackathon bei der Hauptstadt', 'Nina Graf'),
+          ],
+        }),
+      ]);
+
+      const courant = screen.getByRole('article', {
+        name: 'Bienvenue, Courant',
+      });
+
+      expect(
+        within(courant).getByRole('img', { name: 'Bild Bienvenue, Courant' })
+      ).toBeInTheDocument();
+      expect(courant).toHaveTextContent('Lead von Bienvenue, Courant');
+      expect(courant).toHaveTextContent(
+        'von Ramona Sprenger, 08. September 2026'
+      );
+      expect(within(courant).getByRole('link')).toBeInTheDocument();
+      expect(screen.getAllByRole('article')).toHaveLength(2);
+    });
+  });
+
+  describe('article overview', () => {
+    const articles = (count: number, locale: string) =>
+      Array.from({ length: count }, (_, index) =>
+        mockArticle({
+          slug: `artikel-${index + 1}-${locale}`,
+          url: `https://wepublish.ch/a/artikel-${index + 1}-${locale}`,
+          latest: mockArticleRevision({
+            blocks: [],
+            title: `Artikel ${index + 1} (${locale})`,
+          }),
+        })
+      );
+
+    const renderOverview = (page?: number) =>
+      renderWithProviders(
+        <WepArticleOverview
+          articles={[...articles(12, 'de'), ...articles(2, 'fr')]}
+          page={page}
+          onPageChange={() => undefined}
+        />,
+        { tenant: wepublishSiteTenant, router: { locale: 'de' } }
+      );
+
+    it('opens with the title of the overview', () => {
+      renderOverview();
+
+      expect(
+        screen.getByRole('heading', { level: 1, name: 'Aktuelles' })
+      ).toBeInTheDocument();
+    });
+
+    it('lists only the articles of the current language, ten per page', () => {
+      renderOverview();
+
+      expect(screen.getAllByRole('article')).toHaveLength(10);
+      expect(
+        screen.queryByRole('article', { name: 'Artikel 1 (fr)' })
+      ).not.toBeInTheDocument();
+    });
+
+    it('shows the rest on the next page', () => {
+      renderOverview(2);
+
+      expect(
+        screen.getAllByRole('article').map(article => article.textContent)
+      ).toEqual([
+        expect.stringContaining('Artikel 11 (de)'),
+        expect.stringContaining('Artikel 12 (de)'),
+      ]);
+      expect(
+        screen.getByRole('navigation', { name: /pagination/i })
+      ).toBeInTheDocument();
+    });
   });
 
   describe('title block', () => {

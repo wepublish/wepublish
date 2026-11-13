@@ -17,6 +17,7 @@ import { useRouter } from 'next/router';
 import { anyPass, cond } from 'ramda';
 import { createContext, JSX, memo, useContext, useMemo } from 'react';
 
+import { isArticleList } from './article-list/article-list';
 import {
   AttentionCatcher,
   isAttentionCatcher,
@@ -138,6 +139,7 @@ export const WepBlockRenderer = (props: BuilderBlockRendererProps) => {
               isOffers(block) ||
               isPlainBreakBlock(block) ||
               isTitleBlock(block) ||
+              isArticleList(block) ||
               isVideoOrItsTitle(block, nextBlock)
             ) ?
               css``
