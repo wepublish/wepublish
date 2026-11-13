@@ -10,9 +10,11 @@ import {
   mockCustomTeaser,
   mockEvent,
   mockImage,
+  mockImageBlock,
   mockEventTeaser,
   mockNavigations,
   mockQuoteBlock,
+  mockRichTextBlock,
   mockTeaserSlotsBlock,
   mockTitleBlock,
   applyTenantTranslations,
@@ -136,8 +138,8 @@ describe('We.Publish website tenant', () => {
     weight: 400,
     lineHeight: 1.5,
     xs: 18,
-    md: 22,
-    lg: 27,
+    md: 21,
+    lg: 25,
   };
   const Text = {
     font: 'Archivo',
@@ -174,6 +176,7 @@ describe('We.Publish website tenant', () => {
     ['categoryLinkTitle', Mono],
     ['categoryAddressText', Text],
     ['teaserMeta', Mono],
+    ['caption', Mono],
   ] as const)('sets %s like the design', (variant, design) => {
     const { breakpoints, typography } = wepublishSiteTenant.createTheme();
     const sm = `@media (min-width:${breakpoints.values.sm}px)`;
@@ -938,6 +941,57 @@ describe('We.Publish website tenant', () => {
         getComputedStyle(screen.getByRole('img', { name: 'Hauptstadt' }))
           .objectFit
       ).toBe('cover');
+    });
+  });
+
+  describe('rich text', () => {
+    it('highlights a quote of the text in the size of H3', () => {
+      renderTenantPage([
+        mockRichTextBlock({
+          richText: {
+            type: 'doc',
+            content: [
+              {
+                type: 'blockquote',
+                content: [
+                  {
+                    type: 'paragraph',
+                    content: [
+                      {
+                        type: 'text',
+                        text: 'Alles, was unabhängige Redaktionen brauchen.',
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          } as FullBreakBlockFragment['richText'],
+        }),
+      ]);
+
+      const highlight = screen.getByText(
+        'Alles, was unabhängige Redaktionen brauchen.'
+      );
+
+      expect(highlight.closest('blockquote')).toBeInTheDocument();
+      expect(getComputedStyle(highlight).fontSize).toBe(`${H3.md}px`);
+      expect(getComputedStyle(highlight).fontFamily).toContain(
+        'Bricolage Grotesque'
+      );
+    });
+  });
+
+  describe('image', () => {
+    it('shows the caption in the mono font', () => {
+      renderTenantPage([mockImageBlock({ caption: 'Merch im Coop City' })]);
+
+      const caption = screen
+        .getByText(/Merch im Coop City/)
+        .closest('figcaption') as HTMLElement;
+
+      expect(getComputedStyle(caption).fontFamily).toContain('Space Mono');
+      expect(getComputedStyle(caption).fontSize).toBe(`${Mono.md}px`);
     });
   });
 

@@ -14,6 +14,7 @@ import { WepLink } from './components/wep-link';
 import { WepNavbar } from './components/wep-navbar';
 import { WepPage } from './components/wep-page';
 import { WepQuoteBlock } from './components/wep-quote-block';
+import { WepRichTextBlock } from './components/wep-rich-text-block';
 import { WepTenantGlobalStyles } from './components/wep-tenant-global-styles';
 import { WepTitleBlock } from './components/wep-title-block';
 import deOverriden from './locales/deOverriden.json';
@@ -43,6 +44,7 @@ export const wepublishSiteTenant: WebsiteTenantConfig = {
       Quote: WepQuoteBlock,
       Break: WepBreakBlock,
       Title: WepTitleBlock,
+      RichText: WepRichTextBlock,
     },
     elements: { Link: WepLink },
     date: { format: dateFormatter },
