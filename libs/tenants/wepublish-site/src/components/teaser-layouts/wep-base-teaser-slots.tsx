@@ -2,6 +2,13 @@ import { TeaserSlotsBlock } from '@wepublish/block-content/website';
 import { BuilderTeaserSlotsBlockProps } from '@wepublish/website/builder';
 import { cond, T } from 'ramda';
 
+import { EventList, isEventList } from '../event-list/event-list';
+import { HeroLinks, isHeroLinks } from '../hero/hero-links';
+import { isLatestNews, LatestNews } from '../latest-news/latest-news';
+import { isLogoBand, LogoBand } from '../logo-band/logo-band';
+import { isNetworkNews, NetworkNews } from '../network-news/network-news';
+import { isOffers, Offers } from '../offers/offers';
+import { isTeaserCards, TeaserCards } from '../teaser-cards/teaser-cards';
 import {
   isTeaserSlotsExpertise,
   TeaserSlotsExpertise,
@@ -17,6 +24,31 @@ import {
 } from './teaser-slots-services';
 
 export const WepBaseTeaserSlots = cond([
+  [
+    isHeroLinks,
+    (props: BuilderTeaserSlotsBlockProps) => <HeroLinks {...props} />,
+  ],
+  [isOffers, (props: BuilderTeaserSlotsBlockProps) => <Offers {...props} />],
+  [
+    isEventList,
+    (props: BuilderTeaserSlotsBlockProps) => <EventList {...props} />,
+  ],
+  [
+    isNetworkNews,
+    (props: BuilderTeaserSlotsBlockProps) => <NetworkNews {...props} />,
+  ],
+  [
+    isLatestNews,
+    (props: BuilderTeaserSlotsBlockProps) => <LatestNews {...props} />,
+  ],
+  [
+    isTeaserCards,
+    (props: BuilderTeaserSlotsBlockProps) => <TeaserCards {...props} />,
+  ],
+  [
+    isLogoBand,
+    (props: BuilderTeaserSlotsBlockProps) => <LogoBand {...props} />,
+  ],
   [
     isTeaserSlotsExpertise,
     (props: BuilderTeaserSlotsBlockProps) => (

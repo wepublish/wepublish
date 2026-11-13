@@ -123,12 +123,6 @@ declare module '@mui/material/Typography' {
   }
 }
 
-declare module '@mui/material/Toolbar' {
-  interface ToolbarPropsVariantOverrides {
-    navbarInnerWrapper: true;
-  }
-}
-
 declare module '@mui/material/Link' {
   interface LinkPropsVariantOverrides {
     categoryLink: true;

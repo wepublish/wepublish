@@ -1,24 +1,29 @@
+import { CSSObject } from '@emotion/react';
 import styled from '@emotion/styled';
-import { QuoteBlock, QuoteContent } from '@wepublish/block-content/website';
+import { BuilderQuoteBlockProps, Image } from '@wepublish/website/builder';
 
-export const WepQuoteBlock = styled(QuoteBlock)`
-  margin-left: 0;
-  border: none;
-  ${({ theme }) => theme.breakpoints.up('xs')} {
-    grid-template-columns: 155px auto;
-    grid-template-rows: repeat(3, auto);
-    padding: 0;
-  }
+import { designText } from '../theme';
 
-  ${QuoteContent} {
-    display: contents;
-  }
+/** "Jan Amsler, Co-Chefredaktor OnlineReports" → name and role */
+export const splitAuthor = (author: string | null | undefined) => {
+  const [name, ...role] = (author ?? '').split(',');
+
+  return { name: name.trim(), role: role.join(',').trim() };
+};
+
+export const QuoteWrapper = styled('figure')`
+  display: grid;
+  gap: 40px;
+  margin: 0;
+`;
+
+export const QuoteText = styled('blockquote')`
+  margin: 0;
 
   p {
-    grid-column: 1 / -1;
-    grid-row: 1 / 2;
-
-    quotes: '\201E' '\201C';
+    ${designText.h3 as CSSObject}
+    margin: 0;
+    quotes: '«' '»';
 
     &::before {
       content: open-quote;
@@ -28,17 +33,65 @@ export const WepQuoteBlock = styled(QuoteBlock)`
       content: close-quote;
     }
   }
+`;
 
-  img {
-    grid-row: 2 / 4;
-    grid-column: 1 / 2;
-    justify-self: start;
-    width: 100%;
-    max-width: 155px;
-  }
+export const QuoteAuthor = styled('figcaption')`
+  display: flex;
+  align-items: center;
+  gap: 30px;
+`;
 
-  cite {
-    grid-row: 2 / 3;
-    grid-column: 2 / 3;
+export const QuotePortrait = styled(Image)`
+  flex-shrink: 0;
+  width: 120px;
+  aspect-ratio: 181 / 217;
+  object-fit: cover;
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    width: 181px;
   }
 `;
+
+export const QuoteName = styled('p')`
+  ${designText.h3 as CSSObject}
+  margin: 0;
+`;
+
+export const QuoteRole = styled('p')`
+  ${designText.textSmallMono as CSSObject}
+  margin: 0;
+`;
+
+/**
+ * The quote above the author: a portrait (optional) next to the name and the
+ * role, which the editor writes after a comma in the author field.
+ */
+export const WepQuoteBlock = ({
+  className,
+  quote,
+  author,
+  image,
+}: BuilderQuoteBlockProps) => {
+  const { name, role } = splitAuthor(author);
+
+  return (
+    <QuoteWrapper className={className}>
+      {quote && (
+        <QuoteText>
+          <p>{quote}</p>
+        </QuoteText>
+      )}
+
+      {(name || image) && (
+        <QuoteAuthor>
+          {image && <QuotePortrait image={image} />}
+
+          <div>
+            {name && <QuoteName>{name}</QuoteName>}
+            {role && <QuoteRole>{role}</QuoteRole>}
+          </div>
+        </QuoteAuthor>
+      )}
+    </QuoteWrapper>
+  );
+};
