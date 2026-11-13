@@ -63,6 +63,7 @@ export const AUDIENCE_SPECIFICITY: Record<EngagementAudience, number> = {
   [EngagementAudience.Anonymous]: 2,
   [EngagementAudience.Members]: 2,
   [EngagementAudience.PaywallBypassed]: 3,
+  [EngagementAudience.MonthlyMembers]: 3,
   [EngagementAudience.MemberPlans]: 4,
 };
 
@@ -77,6 +78,7 @@ const READERS: Record<EngagementAudience, Reader[]> = {
   [EngagementAudience.Members]: ['member'],
   [EngagementAudience.PaywallBypassed]: ['anonymous', 'registered', 'member'],
   [EngagementAudience.MemberPlans]: ['member'],
+  [EngagementAudience.MonthlyMembers]: ['member'],
 };
 
 const slotOf = (

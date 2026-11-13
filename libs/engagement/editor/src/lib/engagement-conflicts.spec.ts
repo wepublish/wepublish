@@ -117,6 +117,22 @@ describe('findConflicts', () => {
     ).toEqual(['Crowdfunding launch']);
   });
 
+  it('finds rules for members when one is for monthly subscribers, naming them', () => {
+    const monthly = banner({
+      id: 'new',
+      audience: EngagementAudience.MonthlyMembers,
+    });
+
+    expect(
+      findConflicts(monthly, [banner({ audience: EngagementAudience.Members })])
+    ).toMatchObject([{ audience: EngagementAudience.MonthlyMembers }]);
+    expect(
+      findConflicts(monthly, [
+        banner({ audience: EngagementAudience.NonMembers }),
+      ])
+    ).toEqual([]);
+  });
+
   it('only finds rules on the same articles or pages', () => {
     const page = (id: string, pageId: string) =>
       banner({ id, showOnArticles: false, showOnPageIds: [pageId] });

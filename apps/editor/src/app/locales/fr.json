@@ -5910,6 +5910,8 @@
         "growNewsletterInfo": "Transforme tes lecteur·rice·s régulier·ère·s en abonné·e·s à la newsletter.",
         "promoteMemberships": "Promouvoir les abonnements",
         "promoteMembershipsInfo": "Invite les lecteur·rice·s engagé·e·s à soutenir ta publication avec un abonnement.",
+        "switchToYearly": "Du mensuel à l’annuel",
+        "switchToYearlyInfo": "Propose aux lecteur·rice·s qui paient chaque mois de payer une fois par an, dès le prochain renouvellement.",
         "restrictPremium": "Restreindre le contenu premium",
         "restrictPremiumInfo": "Réserve des articles choisis aux membres payants. Ouvre une nouvelle paywall.",
         "displayAnnouncement": "Afficher une annonce",
@@ -5941,7 +5943,9 @@
         "PAYWALL_BYPASSED": "Lecteur·rice·s avec un lien de déblocage",
         "PAYWALL_BYPASSEDInfo": "Les lecteur·rice·s qui ont ouvert un lien de déblocage d’une paywall active.",
         "MEMBER_PLANS": "Lecteur·rice·s avec un abonnement précis",
-        "MEMBER_PLANSInfo": "Lecteur·rice·s avec un abonnement actif à l’un des plans que tu choisis, p. ex. pour proposer une mise à niveau."
+        "MEMBER_PLANSInfo": "Lecteur·rice·s avec un abonnement actif à l’un des plans que tu choisis, p. ex. pour proposer une mise à niveau.",
+        "MONTHLY_MEMBERS": "Lecteur·rice·s qui paient chaque mois",
+        "MONTHLY_MEMBERSInfo": "Les lecteur·rice·s avec un abonnement en cours, non résilié, payé chaque mois."
       },
       "placement": {
         "BANNER": "Bannière en haut de la page",
@@ -5959,7 +5963,8 @@
         "NEWSLETTER": "Inscription à la newsletter",
         "LOGIN": "Login",
         "REGISTER": "Inscription",
-        "MEMBERSHIP": "Abonnement"
+        "MEMBERSHIP": "Abonnement",
+        "SWITCH_TO_YEARLY": "Passer au paiement annuel"
       },
       "actionRole": {
         "PRIMARY": "Principale",

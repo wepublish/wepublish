@@ -5910,6 +5910,8 @@
         "growNewsletterInfo": "Mach aus regelmässigen Leser*innen Newsletter-Abonnent*innen.",
         "promoteMemberships": "Mitgliedschaften fördern",
         "promoteMembershipsInfo": "Lade engagierte Leser*innen ein, deine Publikation mit einer Mitgliedschaft zu unterstützen.",
+        "switchToYearly": "Monatlich zu jährlich",
+        "switchToYearlyInfo": "Bitte Leser*innen, die monatlich zahlen, ab der nächsten Verlängerung einmal im Jahr zu zahlen.",
         "restrictPremium": "Premium-Inhalte einschränken",
         "restrictPremiumInfo": "Reserviere ausgewählte Artikel für zahlende Mitglieder. Öffnet eine neue Paywall.",
         "displayAnnouncement": "Ankündigung anzeigen",
@@ -5941,7 +5943,9 @@
         "PAYWALL_BYPASSED": "Leser*innen mit Paywall-Freischaltlink",
         "PAYWALL_BYPASSEDInfo": "Leser*innen, die einen Freischaltlink einer aktiven Paywall geöffnet haben.",
         "MEMBER_PLANS": "Leser:innen mit einem bestimmten Abo",
-        "MEMBER_PLANSInfo": "Leser:innen mit einem aktiven Abo eines der Pläne, die du wählst, z. B. um ein Upgrade anzubieten."
+        "MEMBER_PLANSInfo": "Leser:innen mit einem aktiven Abo eines der Pläne, die du wählst, z. B. um ein Upgrade anzubieten.",
+        "MONTHLY_MEMBERS": "Leser*innen, die monatlich zahlen",
+        "MONTHLY_MEMBERSInfo": "Leser*innen mit einem laufenden, nicht gekündigten Abo, das sie monatlich zahlen."
       },
       "placement": {
         "BANNER": "Banner oben auf der Seite",
@@ -5959,7 +5963,8 @@
         "NEWSLETTER": "Newsletter-Anmeldung",
         "LOGIN": "Login",
         "REGISTER": "Registrierung",
-        "MEMBERSHIP": "Mitgliedschaft"
+        "MEMBERSHIP": "Mitgliedschaft",
+        "SWITCH_TO_YEARLY": "Auf jährliche Zahlung umstellen"
       },
       "actionRole": {
         "PRIMARY": "Primär",
