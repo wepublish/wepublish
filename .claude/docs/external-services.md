@@ -228,6 +228,12 @@ Automated subscription mails can reach a user as a printed letter. The pieces:
   dropped and refused) or `keepDeliverySuggestion`, which stores the user's
   current channel as a manual decision with reason `kept` — that is what makes
   «Beibehalten» survive the nightly recompute without a column of its own.
+  `deliverySuggestions` and `confirmAllDeliverySuggestions` take the same
+  `DeliverySuggestionFilter` (`suggestionFilterWhere`), so «apply all» only
+  touches what the filtered card lists. Its reason is not the stored
+  `reason` but `suggestionReasonOf`: `placeholderEmail`, else the evidence
+  type before the `:` in `UserEmailQuality.reason` (`hardBounce`, `login`…),
+  else `none`; `deliverySuggestionReasons` counts them per kind.
 - Editor: one area, «Zustellkanal», at `/deliverychannel/:view`
   (`libs/membership/editor/src/lib/delivery-mode/delivery-channel-page.tsx`,
   `/deliverysuggestions` redirects). Views: `overview` (default; counts per
