@@ -143,6 +143,18 @@ describe('AuthenticationService', () => {
       user: { id: 'user-1', roleIDs: ['editor'] },
     };
 
+    it('carries whether the session may impersonate', async () => {
+      vi.spyOn(prisma.session, 'findFirst').mockResolvedValue({
+        ...userSession,
+        canImpersonate: true,
+      } as any);
+      vi.spyOn(prisma.userRole, 'findMany').mockResolvedValue([]);
+
+      const session = await service.getUserSession('secret-token');
+
+      expect(session).toMatchObject({ canImpersonate: true });
+    });
+
     it('reuses a cached user session instead of querying again', async () => {
       const sessionSpy = vi
         .spyOn(prisma.session, 'findFirst')

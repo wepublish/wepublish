@@ -397,62 +397,74 @@ function UserList() {
               width: 180,
               align: 'center',
               fixed: true,
-              render: (rowData: TinyUserFragment) => (
-                <>
-                  <PermissionControl
-                    qualifyingPermissions={[CanResetUserPassword.id]}
+              render: (rowData: TinyUserFragment) =>
+                rowData.managedByWepublishLogin ?
+                  <Tooltip
+                    title={t('userCreateOrEditView.managedByWepublishLogin')}
                   >
-                    <IconButtonTooltip
-                      caption={t('userList.overview.resetPassword')}
+                    <Typography
+                      variant="caption"
+                      color="text.secondary"
                     >
-                      <IconButton
-                        size="small"
-                        aria-label={t('userList.overview.resetPassword')}
-                        onClick={e => {
-                          setCurrentUser(rowData as TinyUserFragment);
-                          setIsResetUserPasswordOpen(true);
-                        }}
-                      >
-                        <MdPassword />
-                      </IconButton>
-                    </IconButtonTooltip>
-                  </PermissionControl>
-                  <PermissionControl
-                    qualifyingPermissions={[CanResetUserTotp.id]}
-                  >
-                    <IconButtonTooltip
-                      caption={t('userList.overview.resetTotp')}
+                      {t('userList.overview.managedByWepublishLogin')}
+                    </Typography>
+                  </Tooltip>
+                : <>
+                    <PermissionControl
+                      qualifyingPermissions={[CanResetUserPassword.id]}
                     >
-                      <IconButton
-                        size="small"
-                        aria-label={t('userList.overview.resetTotp')}
-                        disabled={!(rowData as TinyUserFragment).totpEnabled}
-                        onClick={() => {
-                          setCurrentUser(rowData as TinyUserFragment);
-                          setIsResetTotpDialogOpen(true);
-                        }}
+                      <IconButtonTooltip
+                        caption={t('userList.overview.resetPassword')}
                       >
-                        <MdLockReset />
-                      </IconButton>
-                    </IconButtonTooltip>
-                  </PermissionControl>
-                  <PermissionControl qualifyingPermissions={[CanDeleteUser.id]}>
-                    <IconButtonTooltip caption={t('delete')}>
-                      <IconButton
-                        size="small"
-                        color="error"
-                        aria-label={t('delete')}
-                        onClick={() => {
-                          setConfirmationDialogOpen(true);
-                          setCurrentUser(rowData as TinyUserFragment);
-                        }}
+                        <IconButton
+                          size="small"
+                          aria-label={t('userList.overview.resetPassword')}
+                          onClick={e => {
+                            setCurrentUser(rowData as TinyUserFragment);
+                            setIsResetUserPasswordOpen(true);
+                          }}
+                        >
+                          <MdPassword />
+                        </IconButton>
+                      </IconButtonTooltip>
+                    </PermissionControl>
+                    <PermissionControl
+                      qualifyingPermissions={[CanResetUserTotp.id]}
+                    >
+                      <IconButtonTooltip
+                        caption={t('userList.overview.resetTotp')}
                       >
-                        <MdDelete />
-                      </IconButton>
-                    </IconButtonTooltip>
-                  </PermissionControl>
-                </>
-              ),
+                        <IconButton
+                          size="small"
+                          aria-label={t('userList.overview.resetTotp')}
+                          disabled={!(rowData as TinyUserFragment).totpEnabled}
+                          onClick={() => {
+                            setCurrentUser(rowData as TinyUserFragment);
+                            setIsResetTotpDialogOpen(true);
+                          }}
+                        >
+                          <MdLockReset />
+                        </IconButton>
+                      </IconButtonTooltip>
+                    </PermissionControl>
+                    <PermissionControl
+                      qualifyingPermissions={[CanDeleteUser.id]}
+                    >
+                      <IconButtonTooltip caption={t('delete')}>
+                        <IconButton
+                          size="small"
+                          color="error"
+                          aria-label={t('delete')}
+                          onClick={() => {
+                            setConfirmationDialogOpen(true);
+                            setCurrentUser(rowData as TinyUserFragment);
+                          }}
+                        >
+                          <MdDelete />
+                        </IconButton>
+                      </IconButtonTooltip>
+                    </PermissionControl>
+                  </>,
             },
           ]}
         />

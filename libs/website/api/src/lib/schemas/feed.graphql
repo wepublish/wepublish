@@ -1,0 +1,81 @@
+fragment FeedImage on Image {
+  url
+  m: transformURL(input: { width: 800 })
+  title
+  description
+}
+
+fragment FeedBlock on BlockContent {
+  __typename
+
+  ... on RichTextBlock {
+    ...FullRichTextBlock
+  }
+
+  ... on TitleBlock {
+    ...FullTitleBlock
+  }
+
+  ... on QuoteBlock {
+    quote
+    author
+  }
+
+  ... on ImageBlock {
+    caption
+    image {
+      ...FeedImage
+    }
+  }
+}
+
+fragment FeedArticle on Article {
+  ...SlimArticle
+
+  latest {
+    seoDescription
+
+    blocks {
+      ...FeedBlock
+
+      ... on FlexBlock {
+        blocks {
+          alignment {
+            x
+            y
+          }
+
+          block {
+            ...FeedBlock
+          }
+        }
+      }
+    }
+  }
+
+  paywall {
+    id
+    active
+    hideContentAfter
+  }
+}
+
+query FeedArticleList(
+  $filter: ArticleFilter
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: ArticleSort
+) {
+  articles(
+    filter: $filter
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...FeedArticle
+    }
+  }
+}

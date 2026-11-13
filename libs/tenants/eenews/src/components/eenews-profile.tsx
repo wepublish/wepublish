@@ -2,6 +2,7 @@ import { useMutation, useQuery } from '@apollo/client/react';
 import { useApolloClient } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
+import { useNavigate } from '@tanstack/react-router';
 import { SubscriptionListContainer } from '@wepublish/membership/website';
 import {
   PersonalDataFormContainer,
@@ -11,9 +12,12 @@ import {
   ConfirmEmailChangeDocument,
   SubscriptionsDocument,
 } from '@wepublish/website/api';
-import { Link, useWebsiteBuilder } from '@wepublish/website/builder';
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import {
+  BuilderRouterContext,
+  Link,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { OpenInvoicesCard } from './eenews-open-invoices';
@@ -57,30 +61,41 @@ export const EenewsProfile = () => {
     elements: { Alert },
   } = useWebsiteBuilder();
   const { t } = useTranslation();
-  const router = useRouter();
+  const navigate = useNavigate();
+  const { query } = useContext(BuilderRouterContext);
+  const newEmail =
+    typeof query.confirmEmailChange === 'string' ?
+      query.confirmEmailChange
+    : undefined;
   const client = useApolloClient();
   const [confirmEmailChange, { data: confirmData, error: confirmError }] =
     useMutation(ConfirmEmailChangeDocument);
 
   useEffect(() => {
-    const newEmail = router.query.confirmEmailChange as string | undefined;
-
-    if (newEmail) {
-      const { confirmEmailChange: _, jwt: __, ...query } = router.query;
-      confirmEmailChange({ variables: { newEmail } })
-        .then(async () => {
-          await router.replace({ pathname: '/profile', query }, undefined, {
-            shallow: true,
-          });
-          await client.refetchQueries({ include: ['Me'] });
-        })
-        .catch(async () => {
-          await router.replace({ pathname: '/profile', query }, undefined, {
-            shallow: true,
-          });
-        });
+    if (!newEmail) {
+      return;
     }
-  }, [router.query.confirmEmailChange, confirmEmailChange, router, client]);
+
+    // Drop the magic-link params from the URL once they have been consumed.
+    const dropConfirmParams = () =>
+      navigate({
+        to: '/profile',
+        search: ({
+          confirmEmailChange: _,
+          jwt: __,
+          ...rest
+        }: Record<string, unknown>) => rest,
+        replace: true,
+        resetScroll: false,
+      } as never);
+
+    confirmEmailChange({ variables: { newEmail } })
+      .then(async () => {
+        await dropConfirmParams();
+        await client.refetchQueries({ include: ['Me'] });
+      })
+      .catch(dropConfirmParams);
+  }, [newEmail, confirmEmailChange, navigate, client]);
 
   const { data: subscriptionData } = useQuery(SubscriptionsDocument, {
     fetchPolicy: 'cache-only',

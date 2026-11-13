@@ -714,6 +714,11 @@ and the nightly `MailLogSyncService` poll reconciles what a webhook missed.
 Providers must throw `MailWebhookSignatureError`, not a plain `Error`, for a
 failed signature.
 
+Mandrill checks the URL while a webhook is being **created** with an empty
+batch (`mandrill_events=[]`) signed with the fixed key `test-webhook` — the
+webhook's own key does not exist yet. The Mailchimp provider lets exactly that
+through; refusing it makes Mandrill reject the webhook URL.
+
 Pinned by `libs/mail/api/src/lib/mail.webhook.spec.ts` ("refuses a call that
 does not come from the provider", "answers 200 to a payload it cannot handle").
 
@@ -1448,6 +1453,24 @@ is what production relies on for advisory locks through PgBouncer; do not
 
 Nothing guards this — a regression here is silent: the CLI reports success
 against the wrong database.
+
+### ⚠️ Feeds must load `FeedArticleList`; with `ArticleList` they shrink to the lead
+
+`generateFeed` serialises `latest.blocks` into `content:encoded`, but
+`ArticleList`/`SlimArticle` never selects blocks. Every tenant feed shipped
+lead-only for years while `feed-generator.spec.ts` stayed green, because
+`mockArticle()` carries blocks the production query never fetched. Found
+2026-11-12: the Schweizer Mediendatenbank, which ingests online sources from
+publisher feeds, showed reflekt articles with their lead only.
+
+Widening `SlimArticle` is the wrong fix: every list on every site would fetch
+bodies.
+
+**Load-bearing:** `feed.graphql` (`FeedBlock`, `paywall { active
+hideContentAfter }`); `generateFeed` typed on `FeedArticleFragment` without a
+cast, so a tenant on the wrong document fails `tsc`. Pinned by
+`libs/feed/website/src/lib/feed-article-list.spec.ts`, which runs the real
+document against `schema-v2.graphql`.
 
 ## Adding an entry
 

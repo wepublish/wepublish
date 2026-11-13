@@ -7,7 +7,11 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
-import { CurrentUser, UserSession } from '@wepublish/authentication/api';
+import {
+  CurrentUser,
+  UserSession,
+  assertNotImpersonating,
+} from '@wepublish/authentication/api';
 import {
   CanCreateApiToken,
   CanGetAllApiTokens,
@@ -75,6 +79,8 @@ export class ApiTokenResolver {
     if (!session?.user) {
       throw new UnauthorizedException();
     }
+
+    assertNotImpersonating(session);
 
     return this.service.createToken(args, {
       userId: session.user.id,
