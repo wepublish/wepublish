@@ -20,6 +20,13 @@ import {
   useUnsavedChangesDialog,
   enqueueSnackbar,
   PageTitle,
+  FeatureControl,
+  PrintExportOptionsFields,
+  printExportOptionsOf,
+  describePrintExportOptions,
+  DEFAULT_PRINT_EXPORT_OPTIONS,
+  PrintBexioKindsFields,
+  printBexioKindsOf,
 } from '@wepublish/ui/editor';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -44,6 +51,8 @@ import {
   FormLabel,
   Grid,
   InputAdornment,
+  Radio,
+  RadioGroup,
   Stack,
   TextField,
 } from '@mui/material';
@@ -88,6 +97,10 @@ const SETTINGS = {
   [SettingName.EmailQualityMinMailsForUnresponsive]: {
     label: 'settingList.emailQualityMinMailsForUnresponsive',
     value: 1,
+  },
+  [SettingName.EmailQualityEvidenceWarnAfterDays]: {
+    label: 'settingList.emailQualityEvidenceWarnAfterDays',
+    value: 14,
   },
   [SettingName.SendLoginJwtExpiresMin]: {
     label: 'settingList.loginMinutes',
@@ -157,7 +170,25 @@ const SETTINGS = {
     label: 'settingList.paymentMethodChangeExpiryDays',
     value: 14,
   },
+  [SettingName.PrintIssuesPerYear]: {
+    label: 'settingList.printIssuesPerYear',
+    value: 0,
+  },
+  [SettingName.PrintExportDefaults]: {
+    label: 'settingList.printExportDefaults',
+    value: DEFAULT_PRINT_EXPORT_OPTIONS,
+  },
+  [SettingName.PrintBexioKinds]: {
+    label: 'settingList.printBexioKinds',
+    value: [],
+  },
+  [SettingName.FeedPaywalledContent]: {
+    label: 'settingList.feedPaywalledContent',
+    value: 'lead',
+  },
 } as Record<SettingName, { label: string; value: unknown }>;
+
+const FEED_PAYWALLED_CONTENT_CHOICES = ['lead', 'visible', 'full'] as const;
 
 type SettingValues = Record<SettingName, unknown>;
 
@@ -175,6 +206,7 @@ const NUMBER_FALLBACK_RANGES: Partial<Record<SettingName, [number, number]>> = {
   [SettingName.CommentCharLimit]: [0, 10000],
   [SettingName.SubscriptionExtendWindowDays]: [0, 366],
   [SettingName.PaymentMethodChangeExpiryDays]: [1, 90],
+  [SettingName.PrintIssuesPerYear]: [0, 52],
 };
 
 type Restrictions = Partial<
@@ -297,7 +329,11 @@ function SettingList() {
   }, [fetchError, t, updateSettingError]);
 
   const valueText = useCallback(
-    (value: boolean | string): string => {
+    (value: unknown, name?: SettingName): string => {
+      if (name === SettingName.FeedPaywalledContent) {
+        return t(`settingList.feedPaywalledContentChoice.${value}`);
+      }
+
       if (value === true) {
         return t('settingList.enabled');
       }
@@ -306,7 +342,21 @@ function SettingList() {
         return t('settingList.disabled');
       }
 
-      return value;
+      // the bexio kinds are a list: name them
+      if (Array.isArray(value)) {
+        return (
+          printBexioKindsOf(value)
+            .map(kind => kind.label || kind.word)
+            .join(', ') || t('printBexioKinds.empty')
+        );
+      }
+
+      // the print export defaults are an object: name what they switch on
+      if (typeof value === 'object' && value !== null) {
+        return describePrintExportOptions(printExportOptionsOf(value), t);
+      }
+
+      return String(value ?? '');
     },
     [t]
   );
@@ -548,6 +598,78 @@ function SettingList() {
                     </CardContent>
                   </Card>
                 </Grid>
+
+                <FeatureControl feature="print-export">
+                  <Grid size={{ xs: 12 }}>
+                    <Card>
+                      <CardHeader title={t('settingList.printIssues')} />
+
+                      <CardContent>
+                        <Stack
+                          spacing={3}
+                          sx={{ width: '100%' }}
+                        >
+                          {renderNumberInput(
+                            SettingName.PrintIssuesPerYear,
+                            t('settingList.info.printIssuesPerYear'),
+                            t('settingList.issues')
+                          )}
+
+                          {/* how lists recognise orders in bexio; the defaults below offer these kinds */}
+                          <Controller
+                            control={control}
+                            name={SettingName.PrintBexioKinds}
+                            render={({ field }) => (
+                              <Stack spacing={1}>
+                                <SettingRow>
+                                  <FormLabel>
+                                    {t('settingList.printBexioKinds')}
+                                  </FormLabel>
+                                  <InfoTooltip
+                                    text={t('settingList.info.printBexioKinds')}
+                                  />
+                                </SettingRow>
+                                <PrintBexioKindsFields
+                                  value={printBexioKindsOf(field.value)}
+                                  onChange={field.onChange}
+                                  disabled={isDisabled}
+                                />
+                              </Stack>
+                            )}
+                          />
+
+                          {/* what a new print issue starts from; the form saves it like every setting */}
+                          <Controller
+                            control={control}
+                            name={SettingName.PrintExportDefaults}
+                            render={({ field }) => (
+                              <Stack spacing={1}>
+                                <SettingRow>
+                                  <FormLabel>
+                                    {t('settingList.printExportDefaults')}
+                                  </FormLabel>
+                                  <InfoTooltip
+                                    text={t(
+                                      'settingList.info.printExportDefaults'
+                                    )}
+                                  />
+                                </SettingRow>
+                                <PrintExportOptionsFields
+                                  value={printExportOptionsOf(field.value)}
+                                  onChange={field.onChange}
+                                  disabled={isDisabled}
+                                  bexioKinds={printBexioKindsOf(
+                                    values[SettingName.PrintBexioKinds]
+                                  )}
+                                />
+                              </Stack>
+                            )}
+                          />
+                        </Stack>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                </FeatureControl>
               </Grid>
             </Grid>
 
@@ -611,6 +733,14 @@ function SettingList() {
                             'settingList.warnings.emailQualityMinMailsForUnresponsive'
                           )
                         )}
+
+                        {renderNumberInput(
+                          SettingName.EmailQualityEvidenceWarnAfterDays,
+                          t(
+                            'settingList.warnings.emailQualityEvidenceWarnAfterDays'
+                          ),
+                          t('settingList.days')
+                        )}
                       </Stack>
                     </CardContent>
                   </Card>
@@ -631,6 +761,53 @@ function SettingList() {
                           t('settingList.ms')
                         )}
                       </Stack>
+                    </CardContent>
+                  </Card>
+                </Grid>
+
+                <Grid size={{ xs: 12 }}>
+                  <Card>
+                    <CardHeader title={t('settingList.feeds')} />
+
+                    <CardContent>
+                      <FormControl fullWidth>
+                        <SettingRow>
+                          <FormLabel id="setting-feed-paywalled-content-label">
+                            {t(
+                              SETTINGS[SettingName.FeedPaywalledContent].label
+                            )}
+                          </FormLabel>
+                          <InfoTooltip
+                            text={t(
+                              'settingList.warnings.feedPaywalledContent'
+                            )}
+                          />
+                        </SettingRow>
+
+                        <Controller
+                          control={control}
+                          name={SettingName.FeedPaywalledContent}
+                          render={({ field }) => (
+                            <RadioGroup
+                              {...field}
+                              aria-labelledby="setting-feed-paywalled-content-label"
+                              value={field.value as string}
+                            >
+                              {FEED_PAYWALLED_CONTENT_CHOICES.map(choice => (
+                                <FormControlLabel
+                                  key={choice}
+                                  value={choice}
+                                  disabled={isDisabled}
+                                  control={<Radio />}
+                                  label={t(
+                                    `settingList.feedPaywalledContentChoice.${choice}`
+                                  )}
+                                />
+                              ))}
+                            </RadioGroup>
+                          )}
+                        />
+                      </FormControl>
                     </CardContent>
                   </Card>
                 </Grid>
@@ -708,8 +885,8 @@ function SettingList() {
                 label={t(SETTINGS[name].label)}
                 key={name}
               >
-                <s>{valueText(defaultValues?.[name] as boolean | string)}</s>{' '}
-                {valueText(values[name] as boolean | string)}
+                <s>{valueText(defaultValues?.[name], name)}</s>{' '}
+                {valueText(values[name], name)}
               </DescriptionListItemWrapper>
             ))}
           </DescriptionList>

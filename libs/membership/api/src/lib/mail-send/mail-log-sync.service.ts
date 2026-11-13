@@ -56,6 +56,40 @@ export class MailLogSyncService {
       return { checked: 0, updated: 0 };
     }
 
+    try {
+      const result = await this.poll(provider, limit);
+      await this.notePoll(provider.id, null);
+
+      return result;
+    } catch (error) {
+      await this.notePoll(provider.id, (error as Error).message);
+      throw error;
+    }
+  }
+
+  /**
+   * When the provider was last asked and what went wrong, on its settings
+   * row, so an admin can tell a silent provider from a broken poll.
+   */
+  private async notePoll(providerId: string, error: string | null) {
+    try {
+      await this.prisma.settingMailProvider.update({
+        where: { id: providerId },
+        data: { lastPollAt: new Date(), lastPollError: error },
+      });
+    } catch (noteError) {
+      this.logger.warn(
+        `Could not note the poll on mailProvider ${providerId}: ${
+          (noteError as Error).message
+        }`
+      );
+    }
+  }
+
+  private async poll(
+    provider: NonNullable<MailContext['mailProvider']>,
+    limit: number
+  ): Promise<MailLogSyncResult> {
     // Only mails the provider gave us a handle for can be looked up. SMTP and
     // Slack never return one, so their logs are simply left alone.
     // Message ids belong to the provider that sent the mail; after switching

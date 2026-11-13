@@ -1,14 +1,13 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { PrismaClient, User, UserEvent } from '@prisma/client';
-import { InvalidCredentialsError, NotActiveError } from './session.errors';
-import nanoid from 'nanoid/generate';
 import {
-  ImpersonationError,
-  assertDuration,
-  assertReason,
-  isImpersonationEnabled,
-  type ImpersonationClaims,
-} from './impersonation';
+  InvalidCredentialsError,
+  NotActiveError,
+  WepublishLoginOnlyError,
+} from './session.errors';
+import nanoid from 'nanoid/generate';
+import { assertNotManagedByWepublishLogin } from '@wepublish/user/api';
+import { assertDuration, type ImpersonationClaims } from './impersonation';
 import { UserAuthenticationService } from './user-authentication.service';
 import { JwtAuthenticationService } from './jwt-authentication.service';
 import {
@@ -98,6 +97,10 @@ export class SessionService {
       throw new NotActiveError();
     }
 
+    if (user.wepublishLoginSubject) {
+      throw new WepublishLoginOnlyError();
+    }
+
     if (user.totpEnabled) {
       // User has TOTP configured - require valid code to get a session.
       // No exceptions: password login without TOTP = no session.
@@ -144,6 +147,10 @@ export class SessionService {
       throw new NotActiveError();
     }
 
+    if (!isPreview && user.wepublishLoginSubject) {
+      throw new WepublishLoginOnlyError();
+    }
+
     // Preview JWTs skip TOTP - the editor user already passed 2FA
     if (!isPreview && user.totpEnabled) {
       if (!totpToken) {
@@ -171,53 +178,6 @@ export class SessionService {
     return !!revoked;
   }
 
-  async createImpersonationGrant({
-    userId,
-    durationMinutes,
-    reason,
-    impersonatedBy,
-  }: {
-    userId: string;
-    durationMinutes: number;
-    reason: string;
-    impersonatedBy: string;
-  }) {
-    if (!isImpersonationEnabled(process.env)) {
-      throw new ImpersonationError('Impersonation is disabled for this medium');
-    }
-
-    const minutes = assertDuration(durationMinutes);
-    const checkedReason = assertReason(reason);
-    const actor = assertReason(impersonatedBy);
-
-    const user = await this.prisma.user.findUnique({ where: { id: userId } });
-
-    if (!user) {
-      throw new ImpersonationError('Unknown user');
-    }
-
-    if (!user.active) {
-      throw new ImpersonationError('User is not active');
-    }
-
-    const jti = nanoid(IDAlphabet, 32);
-    const expiresAt = new Date(Date.now() + 60 * 1000);
-
-    await this.prisma.impersonationGrant.create({
-      data: { jti, expiresAt },
-    });
-
-    const token = await this.jwtService.generateImpersonationGrant({
-      userId,
-      durationMinutes: minutes,
-      impersonatedBy: actor,
-      reason: checkedReason,
-      jti,
-    });
-
-    return { token, expiresAt, durationMinutes: minutes, email: user.email };
-  }
-
   private async redeemImpersonationGrant(claims: ImpersonationClaims) {
     const redeemed = await this.prisma.impersonationGrant.updateMany({
       where: { jti: claims.jti, redeemedAt: null },
@@ -239,6 +199,8 @@ export class SessionService {
     if (!user.active) {
       throw new NotActiveError();
     }
+
+    assertNotManagedByWepublishLogin(user);
 
     return this.createUserSession(user, {
       ttlMs: assertDuration(claims.durationMinutes) * 60 * 1000,
@@ -284,6 +246,7 @@ export class SessionService {
       ttlMs?: number;
       impersonatedBy?: string;
       impersonationReason?: string;
+      canImpersonate?: boolean;
     }
   ) {
     const token = nanoid(IDAlphabet, 64);
@@ -292,7 +255,7 @@ export class SessionService {
       Date.now() + (options?.ttlMs ?? (await this.sessionTtlMs()))
     );
 
-    const [{ createdAt }] = await Promise.all([
+    const [{ id: sessionId, createdAt }] = await Promise.all([
       this.prisma.session.create({
         data: {
           token,
@@ -304,6 +267,7 @@ export class SessionService {
               impersonatedAt: new Date(),
             }
           : {}),
+          ...(options?.canImpersonate ? { canImpersonate: true } : {}),
           user: {
             connect: {
               id: user.id,
@@ -320,6 +284,7 @@ export class SessionService {
     return {
       user,
       token,
+      sessionId,
       createdAt,
       expiresAt,
       totpEnabled: user.totpEnabled,

@@ -13,6 +13,8 @@ import { MemoryRouter, Route, Routes, useNavigate } from 'react-router-dom';
 import { Base } from './base';
 import { createEditorTheme } from './theme';
 
+vi.mock('./impersonationBar', () => ({ ImpersonationBar: () => null }));
+
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string) => key,

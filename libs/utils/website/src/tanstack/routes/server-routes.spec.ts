@@ -1,5 +1,11 @@
 // @vitest-environment node
+import { captureException } from '@sentry/tanstackstart-react';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
 import { feedHandler, healthHandler } from './server-routes';
+
+vi.mock('@sentry/tanstackstart-react', () => ({ captureException: vi.fn() }));
 
 /**
  * Byte-for-byte the policy the Next feed endpoints served, kept here so the
@@ -35,7 +41,32 @@ describe('server routes', () => {
     }
   );
 
+  it('answers 502 without caching and reports to Sentry when the API rejects the feed query', async () => {
+    const error = new Error(
+      'Response not successful: Received status code 400'
+    );
+
+    const response = await feedHandler(
+      new Request('https://site.test/rss.xml'),
+      async () => {
+        throw error;
+      },
+      () => 'https://site.test',
+      'rss2'
+    );
+
+    expect(response.status).toBe(502);
+    expect(response.headers.get('cache-control')).toBe('no-store');
+    expect(captureException).toHaveBeenCalledWith(error);
+  });
+
   it('never lets the probe endpoint be cached', () => {
     expect(healthHandler().headers.get('cache-control')).toBe('no-store');
+  });
+
+  it('stays out of the server-only instrumentation, which drags the native profiler into client bundles', () => {
+    const source = readFileSync(join(__dirname, 'server-routes.ts'), 'utf8');
+
+    expect(source).not.toMatch(/from '\.\.\/sentry\/instrumentation'/);
   });
 });

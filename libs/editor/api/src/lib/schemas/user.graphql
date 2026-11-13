@@ -36,6 +36,7 @@ fragment FullUser on SensitiveDataUser {
   note
   totpEnabled
   totpExempt
+  managedByWepublishLogin
   roles {
     ...FullUserRole
   }
@@ -51,6 +52,7 @@ fragment TinyUser on SensitiveDataUser {
   lastLogin
   email
   totpEnabled
+  managedByWepublishLogin
   roles {
     ...FullUserRole
   }

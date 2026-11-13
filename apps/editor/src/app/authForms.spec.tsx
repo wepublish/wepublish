@@ -1,3 +1,4 @@
+import { CombinedGraphQLErrors } from '@apollo/client';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { ReactNode } from 'react';
@@ -49,6 +50,8 @@ vi.mock('@apollo/client/react', async importOriginal => ({
 
 vi.mock('./ui/loginBackground', () => ({ Background: () => null }));
 
+vi.mock('./wepublishLoginButton', () => ({ WepublishLoginButton: () => null }));
+
 const theme = createTheme({ cssVariables: true });
 
 const renderPage = (page: ReactNode, url = '/login') =>
@@ -99,6 +102,28 @@ describe('Login', () => {
     type('login.password', 'y');
 
     expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+  });
+
+  it('points an account connected to the We.Publish login to that login', async () => {
+    authenticate.mockRejectedValue(
+      new CombinedGraphQLErrors({
+        errors: [
+          {
+            message: 'This account signs in with the We.Publish login.',
+            extensions: { code: 'FORBIDDEN' },
+          },
+        ],
+      })
+    );
+    renderPage(<Login />);
+
+    type('login.email', 'jane@wepublish.ch');
+    type('login.password', 'x');
+    fireEvent.click(screen.getByRole('button', { name: 'login.login' }));
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'login.wepublish.only'
+    );
   });
 
   it('keeps a failed 2FA setup on the page without blaming the code field', async () => {

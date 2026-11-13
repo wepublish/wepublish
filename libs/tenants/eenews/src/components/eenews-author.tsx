@@ -1,17 +1,18 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
+import { useReplaceSearch } from '@wepublish/utils/website/tanstack';
 import {
   ArticleListDocument,
   FullTeaserFragment,
 } from '@wepublish/website/api';
 import {
   BuilderAuthorProps,
+  BuilderRouterContext,
   useWebsiteBuilder,
   WebsiteBuilderProvider,
 } from '@wepublish/website/builder';
-import { useRouter } from 'next/router';
-import { useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 
 import { EenewsPagination } from './eenews-pagination';
 import { EenewsTeaser } from './teasers/eenews-teaser';
@@ -84,10 +85,11 @@ export const EenewsAuthor = ({ data, className }: BuilderAuthorProps) => {
     blocks: { Teaser: BuilderTeaser },
   } = useWebsiteBuilder();
 
-  const router = useRouter();
+  const { query } = useContext(BuilderRouterContext);
+  const replaceSearch = useReplaceSearch();
   const author = data?.author;
 
-  const pageRaw = Number(router.query.page);
+  const pageRaw = Number(query.page);
   const currentPage = Number.isFinite(pageRaw) && pageRaw >= 1 ? pageRaw : 1;
 
   const variables = useMemo(
@@ -130,10 +132,7 @@ export const EenewsAuthor = ({ data, className }: BuilderAuthorProps) => {
   );
 
   const goToPage = (next: number) => {
-    router.replace({ query: { ...router.query, page: next } }, undefined, {
-      shallow: true,
-      scroll: true,
-    });
+    replaceSearch(previous => ({ ...previous, page: next }));
     if (typeof window !== 'undefined') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }

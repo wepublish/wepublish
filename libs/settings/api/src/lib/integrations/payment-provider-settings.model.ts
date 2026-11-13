@@ -109,6 +109,16 @@ export class SettingPaymentProvider extends SettingProvider {
   @Field(type => Boolean, { nullable: true })
   bexio_markInvoiceAsOpen?: boolean;
 
+  // Nightly push of reader data to bexio contacts, and how the last run went.
+  @Field(type => Boolean, { nullable: true })
+  bexio_contactSync?: boolean;
+
+  @Field(type => Date, { nullable: true })
+  bexio_contactSyncAt?: Date | null;
+
+  @Field(type => String, { nullable: true })
+  bexio_contactSyncError?: string | null;
+
   @Field({ nullable: true })
   mollie_apiBaseUrl?: string;
 }
@@ -129,6 +139,9 @@ export class CreateSettingPaymentProviderInput extends OmitType(
     'createdAt',
     'lastLoadedAt',
     'modifiedAt',
+    // written by the nightly sync, not by the editor
+    'bexio_contactSyncAt',
+    'bexio_contactSyncError',
   ] as const,
   ArgsType
 ) {

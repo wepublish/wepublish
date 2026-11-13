@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import {
   LetterProviderType,
   PrismaClient,
@@ -106,7 +107,7 @@ class LetterProviderConfig {
     try {
       return this.crypto.decrypt(value);
     } catch (e) {
-      console.error(e);
+      new Logger('LetterProviderConfig').error(e as Error);
       throw new Error(
         `Failed to decrypt ${field} for Letter provider setting ${this.id}`
       );

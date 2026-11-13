@@ -1,12 +1,6 @@
-import { generateFeed } from '@wepublish/feed/website';
+import { generateFeed, queryFeed } from '@wepublish/feed/website';
 import { getApiUrl } from '@wepublish/utils/website';
-import {
-  ArticleListDocument,
-  ArticleListQueryVariables,
-  ArticleSort,
-  SortOrder,
-  getApiClient,
-} from '@wepublish/website/api';
+import { ArticleSort, SortOrder, getApiClient } from '@wepublish/website/api';
 import { Feed } from 'feed';
 import { NextApiRequest } from 'next';
 import process from 'node:process';
@@ -32,14 +26,11 @@ export const getFeed = async (req: NextApiRequest): Promise<Feed> => {
     typePolicies: {},
   });
 
-  const { data } = await client.query({
-    query: ArticleListDocument,
-    variables: {
-      take: 50,
-      sort: ArticleSort.PublishedAt,
-      order: SortOrder.Descending,
-    } as ArticleListQueryVariables,
+  const { articles, options } = await queryFeed(client, {
+    take: 50,
+    sort: ArticleSort.PublishedAt,
+    order: SortOrder.Descending,
   });
 
-  return generate(data?.articles.nodes ?? []);
+  return generate(articles, options);
 };
