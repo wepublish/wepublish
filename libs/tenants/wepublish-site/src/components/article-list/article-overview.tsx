@@ -64,7 +64,7 @@ export const ArticleOverviewPagination = styled('div')`
   }
 `;
 
-const isInLanguage =
+export const isInLanguage =
   (locale: string | undefined) =>
   ({ slug }: Pick<SlimArticleFragment, 'slug'>) =>
     !locale || !!slug?.endsWith(`-${locale}`);

@@ -22,5 +22,8 @@
   },
   "article": {
     "share": "Teilen"
+  },
+  "author": {
+    "articlesBy": "Beiträge von {name}"
   }
 }

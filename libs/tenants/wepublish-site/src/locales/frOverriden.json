@@ -13,5 +13,8 @@
   },
   "article": {
     "share": "Partager"
+  },
+  "author": {
+    "articlesBy": "Articles de {name}"
   }
 }

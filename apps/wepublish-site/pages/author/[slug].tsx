@@ -1,10 +1,6 @@
 import { useQuery } from '@apollo/client/react';
 import { CombinedGraphQLErrors } from '@apollo/client';
-import {
-  ArticleListContainer,
-  ArticleWrapper,
-} from '@wepublish/article/website';
-import { AuthorContainer } from '@wepublish/author/website';
+import { WepAuthorPage } from '@wepublish/tenant/wepublish-site';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
   ArticleListDocument,
@@ -13,124 +9,59 @@ import {
   AuthorQuery,
   NavigationListDocument,
   PeerProfileDocument,
-  SlimArticleFragment,
   addClientCacheToProps,
   getApiClient,
 } from '@wepublish/website/api';
-import { useWebsiteBuilder } from '@wepublish/website/builder';
-import { GetStaticProps, InferGetStaticPropsType } from 'next';
-import Head from 'next/head';
+import { GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
-import { useCallback, useMemo } from 'react';
 import { z } from 'zod';
 
-const take = 10;
+// All articles of the person at once: the language is only in the slug, so
+// the page filters and pages them itself
+const take = 500;
 
 const pageSchema = z.object({
-  page: z.coerce.number().gte(1).optional(),
+  page: z.coerce.number().gte(1).optional().default(1),
   slug: z.string(),
 });
 
-export default function AuthorPage({
-  className,
-}: InferGetStaticPropsType<typeof getStaticProps> & {
-  className?: string;
-}) {
-  const {
-    elements: { Pagination, H3 },
-  } = useWebsiteBuilder();
+const articleVariables = (authorId?: string) => ({
+  take,
+  skip: 0,
+  filter: { authors: authorId ? [authorId] : [] },
+});
 
-  const { query, replace, locale } = useRouter();
+export default function AuthorPage() {
+  const { query, replace } = useRouter();
   const { page, slug } = pageSchema.parse(query);
 
   const { data } = useQuery(AuthorDocument, {
     fetchPolicy: 'cache-only',
-    variables: {
-      slug,
-    },
+    variables: { slug },
   });
-
-  const variables = useMemo(
-    () => ({
-      take,
-      skip: ((page ?? 1) - 1) * take,
-      filter: {
-        authors: data?.author?.id ? [data?.author?.id] : [],
-      },
-    }),
-    [page, data?.author?.id]
-  );
-
-  const localeFilter = useCallback(
-    (articles: SlimArticleFragment[]) =>
-      articles.filter(article => article.slug?.endsWith(`-${locale}`)),
-    [locale]
-  );
 
   const { data: articleListData } = useQuery(ArticleListDocument, {
     fetchPolicy: 'cache-only',
-    variables,
+    variables: articleVariables(data?.author?.id),
+    skip: !data?.author?.id,
   });
 
-  const localizedArticles = useMemo(
-    () => localeFilter(articleListData?.articles.nodes ?? []),
-    [articleListData?.articles.nodes, localeFilter]
-  );
-
-  const pageCount = useMemo(() => {
-    if (
-      articleListData?.articles.totalCount &&
-      articleListData?.articles.totalCount > take
-    ) {
-      return Math.ceil(articleListData.articles.totalCount / take);
-    }
-
-    return 1;
-  }, [articleListData?.articles.totalCount]);
-
-  const canonicalUrl = `/author/${slug}`;
+  if (!data?.author) {
+    return null;
+  }
 
   return (
-    <ArticleWrapper className={className}>
-      <AuthorContainer slug={slug as string} />
-
-      {data?.author && (
-        <>
-          {!!localizedArticles.length && (
-            <H3 component={'h2'}>Alle Artikel von {data.author.name}</H3>
-          )}
-          <ArticleListContainer
-            variables={variables}
-            filter={localeFilter}
-          />
-
-          {pageCount > 1 && (
-            <>
-              <Head>
-                <link
-                  rel="canonical"
-                  key="canonical"
-                  href={canonicalUrl}
-                />
-              </Head>
-              <Pagination
-                page={page ?? 1}
-                count={pageCount}
-                onChange={(_, value) =>
-                  replace(
-                    {
-                      query: { ...query, page: value },
-                    },
-                    undefined,
-                    { shallow: true, scroll: true }
-                  )
-                }
-              />
-            </>
-          )}
-        </>
-      )}
-    </ArticleWrapper>
+    <WepAuthorPage
+      author={data.author}
+      articles={articleListData?.articles.nodes ?? []}
+      page={page}
+      onPageChange={value =>
+        replace({ query: { ...query, page: value } }, undefined, {
+          shallow: true,
+          scroll: true,
+        })
+      }
+    />
   );
 }
 
@@ -171,13 +102,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   await client.query<ArticleListQuery>({
     query: ArticleListDocument,
-    variables: {
-      take,
-      skip: 0,
-      filter: {
-        authors: author.data?.author?.id ? [author.data.author.id] : [],
-      },
-    },
+    variables: articleVariables(author.data?.author?.id),
   });
 
   const props = addClientCacheToProps(client, {});
