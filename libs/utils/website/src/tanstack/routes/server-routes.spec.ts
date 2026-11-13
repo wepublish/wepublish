@@ -64,9 +64,13 @@ describe('server routes', () => {
     expect(healthHandler().headers.get('cache-control')).toBe('no-store');
   });
 
-  it('stays out of the server-only instrumentation, which drags the native profiler into client bundles', () => {
-    const source = readFileSync(join(__dirname, 'server-routes.ts'), 'utf8');
+  it('is exported by the server barrel only, so a server-only import here cannot reach a client bundle', () => {
+    const exportsOf = (file: string) =>
+      readFileSync(join(__dirname, file), 'utf8');
 
-    expect(source).not.toMatch(/from '\.\.\/sentry\/instrumentation'/);
+    expect(exportsOf('index.ts')).not.toMatch(/['/]server-routes'/);
+    expect(exportsOf('../../tanstack-server.ts')).toMatch(
+      /export \* from '\.\/tanstack\/routes\/server-routes';/
+    );
   });
 });

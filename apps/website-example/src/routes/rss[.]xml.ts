@@ -1,6 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { feedHandler } from '@wepublish/utils/website/tanstack';
-import { getSiteUrl } from '@wepublish/utils/website/tanstack/server';
+import {
+  feedHandler,
+  getSiteUrl,
+} from '@wepublish/utils/website/tanstack/server';
 
 import { getFeed } from '../feed';
 
