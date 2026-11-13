@@ -11,3 +11,8 @@ après les pages de la lettre.
 
 Un document encore joint à un modèle ne peut plus être supprimé : un e-mail ne
 perd ainsi jamais ses pièces jointes sans que personne ne s'en aperçoive.
+
+Un modèle peut joindre jusqu'à cinq documents, 15 Mo au total. Les modèles
+utilisés comme e-mails système, par exemple pour le lien de connexion ou la
+réinitialisation du mot de passe, ne peuvent pas avoir de pièces jointes : ces
+e-mails n'attendent ainsi jamais la conversion d'un document.

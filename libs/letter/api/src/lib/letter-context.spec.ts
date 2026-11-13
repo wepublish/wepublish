@@ -83,6 +83,7 @@ function createContext(
 
       return makePdf(1);
     },
+    canConvertDocuments: async () => true,
     convertDocument: async () => makePdf(1),
   };
 

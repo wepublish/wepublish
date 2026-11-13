@@ -11,3 +11,8 @@ den Briefseiten gedruckt.
 
 Ein Dokument, das noch an einer Vorlage hängt, lässt sich nicht mehr löschen –
 so verliert eine Mail ihre Anhänge nie unbemerkt.
+
+Eine Vorlage kann bis zu fünf Dokumente mit zusammen 15 MB anhängen. Vorlagen,
+die als System-Mail dienen, etwa für den Login-Link oder das Zurücksetzen des
+Passworts, können keine Anhänge haben – diese Mails warten so nie auf die
+Umwandlung eines Dokuments.

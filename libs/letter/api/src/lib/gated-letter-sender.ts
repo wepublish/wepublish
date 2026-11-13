@@ -30,3 +30,11 @@ export class GatedLetterSender implements LetterSender {
     return this.context.sendLetter(props);
   }
 }
+
+/**
+ * Whether templates may carry attachments. They ship with the letters, whose
+ * pdf renderer converts them; while the feature is off nothing is attached.
+ */
+export const mailAttachmentsEnabled =
+  (features: FeaturesService) => (): Promise<boolean> =>
+    features.isEnabled('paper-letters');

@@ -1456,7 +1456,7 @@
         "letterAppendixNone": "Keiner",
         "letterAppendixHelp": "PDF aus «Dokumente», das nach den Briefseiten gedruckt wird, z. B. ein QR-Einzahlungsschein (A4, Schein am unteren Rand). Nur für Adressen in der Schweiz; bei Duplexdruck wird bei Bedarf eine leere Seite eingefügt, damit der Schein auf einer Vorderseite liegt.",
         "attachments": "Anhänge (Word)",
-        "attachmentsHelp": "Word-Dokumente (.docx) aus «Dokumente». Sie werden mit denselben Platzhaltern wie die E-Mail ausgefüllt, als PDF angehängt und in dieser Reihenfolge mit jeder E-Mail dieser Vorlage versandt, auch mit automatischen. Ein Brief druckt sie nach seinen Seiten (A4). Lässt sich ein Anhang nicht erstellen, wird die E-Mail nicht versandt. Benötigt Gotenberg als PDF-Renderer.",
+        "attachmentsHelp": "Word-Dokumente (.docx) aus «Dokumente», höchstens 5 und zusammen 15 MB. Sie werden mit denselben Platzhaltern wie die E-Mail ausgefüllt (im Text und in Link-Adressen, nicht in Feldfunktionen), als PDF angehängt und in dieser Reihenfolge mit jeder E-Mail dieser Vorlage versandt, auch mit automatischen Abo-E-Mails. System-E-Mails (Login, Passwort) können keine Anhänge haben. Ein Brief druckt sie nach seinen Seiten (A4). Lässt sich ein Anhang nicht erstellen, wird die E-Mail nicht versandt. Ein persönliches Dokument wird für jeden Empfänger einzeln umgewandelt, und PDF-Anhänge lassen E-Mails eher im Spam landen: lieber wenige und kleine. Benötigt Gotenberg als PDF-Renderer.",
         "attachmentsNone": "Keine",
         "attachmentsNoDocuments": "Keine Word-Dokumente (.docx) unter «Dokumente»",
         "letterPreviewTitle": "Briefvorschau",

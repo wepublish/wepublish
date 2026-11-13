@@ -1,5 +1,9 @@
 import { BadRequestException, ForbiddenException } from '@nestjs/common';
-import { MailContext, mailLogType } from '@wepublish/mail/api';
+import {
+  MailAttachmentError,
+  MailContext,
+  mailLogType,
+} from '@wepublish/mail/api';
 import { FeaturesService } from '@wepublish/features/api';
 import {
   DocumentAttachmentRenderer,
@@ -643,6 +647,85 @@ describe('MailSendJobService', () => {
         sentCount: 1,
         failedCount: 1,
       });
+    });
+
+    it('keeps its heartbeat fresh while slow mails go out', async () => {
+      // A job is taken for dead after ten minutes without a heartbeat; ten
+      // mails that each wait a minute for their attachments are not that.
+      const start = new Date('2026-11-13T10:00:00Z').getTime();
+      vi.useFakeTimers({ toFake: ['Date'] });
+      vi.setSystemTime(start);
+
+      try {
+        const prisma = fakePrisma();
+        const recipientService = recipientServiceFor(['u1', 'u2', 'u3']);
+        const heartbeats: number[] = [];
+        const mailContext = {
+          sendMail: vi.fn(async () => {
+            heartbeats.push(prisma.jobs[0].heartbeatAt.getTime());
+            vi.setSystemTime(Date.now() + 70_000);
+          }),
+        };
+        seedJob(prisma);
+
+        await makeService(prisma, mailContext, recipientService).drain();
+
+        expect(heartbeats).toEqual([start, start + 70_000, start + 140_000]);
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    it('stops when the attachments of several mails in a row cannot be rendered', async () => {
+      // Every mail of the job carries the same documents: once they fail a
+      // few times in a row, they fail for everyone left.
+      const prisma = fakePrisma();
+      const recipientService = recipientServiceFor(['u1', 'u2', 'u3', 'u4']);
+      const mailContext = {
+        sendMail: vi.fn(async () => {
+          throw new MailAttachmentError('Gotenberg is down');
+        }),
+      };
+      seedJob(prisma);
+
+      await makeService(prisma, mailContext, recipientService).drain();
+
+      expect(mailContext.sendMail).toHaveBeenCalledTimes(3);
+      expect(prisma.entries.map((entry: any) => entry.state)).toEqual([
+        'failed',
+        'failed',
+        'failed',
+        'pending',
+      ]);
+      expect(prisma.jobs[0].status).toBe('failed');
+      expect(prisma.jobs[0].error).toMatch(/attachments .* Gotenberg is down/);
+    });
+
+    it('goes on through attachment failures with a sent mail in between', async () => {
+      const prisma = fakePrisma();
+      const recipientService = recipientServiceFor([
+        'u1',
+        'u2',
+        'u3',
+        'u4',
+        'u5',
+      ]);
+      const failure = new MailAttachmentError('timeout');
+      const mailContext = {
+        sendMail: vi
+          .fn()
+          .mockRejectedValueOnce(failure)
+          .mockRejectedValueOnce(failure)
+          .mockResolvedValueOnce(undefined)
+          .mockRejectedValueOnce(failure)
+          .mockRejectedValueOnce(failure),
+      };
+      seedJob(prisma);
+
+      await makeService(prisma, mailContext, recipientService).drain();
+
+      expect(mailContext.sendMail).toHaveBeenCalledTimes(5);
+      expect(prisma.jobs[0].status).toBe('done');
     });
 
     it('never sends to a recipient a second time when the job runs again', async () => {

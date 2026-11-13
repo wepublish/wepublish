@@ -82,6 +82,21 @@ describe('GotenbergPdfRenderer', () => {
     });
   });
 
+  describe('canConvertDocuments', () => {
+    it('converts documents once it has a url', async () => {
+      expect(await createRenderer().canConvertDocuments()).toBe(true);
+    });
+
+    it('does not convert documents without any url', async () => {
+      expect(
+        await createRenderer({
+          ...config,
+          gotenberg_url: null,
+        }).canConvertDocuments()
+      ).toBe(false);
+    });
+  });
+
   it('posts the html as index.html and takes the page size from the css', async () => {
     fetchMock.mockResolvedValue(response(PDF));
 

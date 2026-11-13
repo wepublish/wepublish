@@ -1456,7 +1456,7 @@
         "letterAppendixNone": "Aucun",
         "letterAppendixHelp": "PDF des «Documents» imprimé après les pages de la lettre, p. ex. un bulletin QR (A4, bulletin au bord inférieur). Uniquement pour les adresses en Suisse ; en impression recto verso, une page blanche est ajoutée si nécessaire pour que le bulletin soit sur un recto.",
         "attachments": "Pièces jointes (Word)",
-        "attachmentsHelp": "Documents Word (.docx) des «Documents». Ils sont complétés avec les mêmes espaces réservés que l'e-mail, joints en PDF et envoyés dans cet ordre avec chaque e-mail de ce modèle, y compris les envois automatiques. Une lettre les imprime après ses pages (A4). Si une pièce jointe ne peut pas être créée, l'e-mail n'est pas envoyé. Nécessite Gotenberg comme moteur PDF.",
+        "attachmentsHelp": "Documents Word (.docx) des «Documents», 5 au plus et 15 Mo au total. Ils sont complétés avec les mêmes espaces réservés que l'e-mail (dans le texte et les adresses des liens, pas dans les champs), joints en PDF et envoyés dans cet ordre avec chaque e-mail de ce modèle, y compris les e-mails d'abonnement automatiques. Les e-mails système (connexion, mot de passe) ne peuvent pas avoir de pièces jointes. Une lettre les imprime après ses pages (A4). Si une pièce jointe ne peut pas être créée, l'e-mail n'est pas envoyé. Un document personnel est converti pour chaque destinataire, l'un après l'autre, et les PDF joints font plus facilement classer un e-mail comme spam : en joindre peu et de petits. Nécessite Gotenberg comme moteur PDF.",
         "attachmentsNone": "Aucune",
         "attachmentsNoDocuments": "Aucun document Word (.docx) dans «Documents»",
         "letterPreviewTitle": "Aperçu de la lettre",

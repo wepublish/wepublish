@@ -166,6 +166,26 @@ describe('MailContext', () => {
       expect(sendMail).not.toHaveBeenCalled();
     });
 
+    it('leaves the attachments out of a mail sent without them', async () => {
+      // Login and password mails must never wait for a document conversion.
+      const render = renderPdfs();
+      const { context, sendMail } = setup({
+        attachments: ['contract'],
+        renderer: { render },
+      });
+
+      await context.sendComposedMail({
+        mailTemplateId: 'template-1',
+        recipient: 'jane@example.com',
+        mailLogID: 'log-1',
+        data,
+        withAttachments: false,
+      });
+
+      expect(render).not.toHaveBeenCalled();
+      expect(sendMail.mock.calls[0][0]).not.toHaveProperty('attachments');
+    });
+
     it('does not send attachments it has no renderer for', async () => {
       const { context, sendMail } = setup({
         attachments: ['contract'],

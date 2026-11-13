@@ -2,7 +2,7 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { PrismaClient, UserEvent, UserFlowMail } from '@prisma/client';
 import { SystemMailModel, SystemMailUpdateInput } from './system-mail.model';
 import { MailContext, mailLogType } from '@wepublish/mail/api';
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { CurrentUser, UserSession } from '@wepublish/authentication/api';
 import {
   CanGetSystemMails,
@@ -38,6 +38,19 @@ export class SystemMailResolver {
     if (!userMail) {
       throw new NotFoundException(
         'There is no userflow present in the database.'
+      );
+    }
+
+    // System mails go out while someone waits for them (a login link, a
+    // password reset), so they never carry attachments; see MailController.
+    if (
+      systemMail.mailTemplateId &&
+      (await this.prismaService.mailTemplateAttachment.count({
+        where: { mailTemplateId: systemMail.mailTemplateId },
+      }))
+    ) {
+      throw new BadRequestException(
+        'This template has attachments, which a system mail cannot carry. Remove them from the template or choose another one.'
       );
     }
 
