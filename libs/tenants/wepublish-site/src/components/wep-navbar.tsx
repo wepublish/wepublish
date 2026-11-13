@@ -22,6 +22,9 @@ import { contentWidth, extraColumn } from './page-columns';
 // Below this breakpoint the links move into a menu behind a button
 const desktop = 'lg';
 
+// Large screens get a higher bar with more room between its parts
+const wide = '@media (min-width: 1440px)';
+
 export const NavbarWrapper = styled('nav')`
   position: relative;
   z-index: 10;
@@ -44,6 +47,12 @@ export const NavbarBar = styled(Container)`
       (100% - ${({ theme }) => contentWidth(theme)}) / 2 -
         ${({ theme }) => extraColumn(theme, contentWidth(theme), '100%')}
     );
+  }
+
+  ${wide} {
+    gap: 80px;
+    padding-top: 70px;
+    padding-bottom: 40px;
   }
 `;
 
@@ -99,6 +108,10 @@ export const NavbarMenu = styled('div', {
     overflow: visible;
     background-color: transparent;
   }
+
+  ${wide} {
+    gap: 80px;
+  }
 `;
 
 export const NavbarLinks = styled('ul')`
@@ -111,6 +124,10 @@ export const NavbarLinks = styled('ul')`
   ${({ theme }) => theme.breakpoints.up(desktop)} {
     flex-direction: row;
     gap: 50px;
+  }
+
+  ${wide} {
+    gap: 70px;
   }
 `;
 
