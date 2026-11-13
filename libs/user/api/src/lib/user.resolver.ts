@@ -22,6 +22,7 @@ import {
   SensitiveDataUser,
 } from './user.model';
 import { UserService } from './user.service';
+import { assertNotManagedByWepublishLogin } from './managed-by-wepublish-login';
 import { Image, ImageDataloaderService } from '@wepublish/image/api';
 import { UserDataloaderService } from './user-dataloader.service';
 import {
@@ -70,10 +71,12 @@ export class UserResolver {
   @Mutation(() => SensitiveDataUser, {
     description: `Resets the password of a user.`,
   })
-  public resetPassword(
+  public async resetPassword(
     @Args('id') id: string,
     @Args('password', { nullable: true }) password?: string
   ) {
+    assertNotManagedByWepublishLogin(await this.dataloader.load(id));
+
     return this.service.resetPassword(id, password);
   }
 
@@ -87,7 +90,9 @@ export class UserResolver {
   @Mutation(() => SensitiveDataUser, {
     description: `Updates an existing user.`,
   })
-  public updateUser(@Args() input: UpdateUserInput) {
+  public async updateUser(@Args() input: UpdateUserInput) {
+    assertNotManagedByWepublishLogin(await this.dataloader.load(input.id));
+
     return this.service.updateUser({
       ...input,
     });
@@ -97,10 +102,12 @@ export class UserResolver {
   @Mutation(() => SensitiveDataUser, {
     description: `Updates the current logged in user.`,
   })
-  public updateCurrentUser(
+  public async updateCurrentUser(
     @Args() input: UpdateCurrentUserInput,
     @CurrentUser() { user }: UserSession
   ) {
+    assertNotManagedByWepublishLogin(user);
+
     return this.service.updateUser({
       ...input,
       id: user.id,
@@ -111,7 +118,9 @@ export class UserResolver {
   @Mutation(() => SensitiveDataUser, {
     description: `Deletes an existing user.`,
   })
-  public deleteUser(@Args('id') id: string) {
+  public async deleteUser(@Args('id') id: string) {
+    assertNotManagedByWepublishLogin(await this.dataloader.load(id));
+
     return this.service.deleteUser(id);
   }
 

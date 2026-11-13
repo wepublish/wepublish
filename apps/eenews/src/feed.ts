@@ -1,29 +1,31 @@
 import { generateFeed, queryFeed } from '@wepublish/feed/website';
-import { getApiUrl } from '@wepublish/utils/website';
-import { ArticleSort, SortOrder, getApiClient } from '@wepublish/website/api';
-import { NextApiRequest } from 'next';
-import process from 'node:process';
+import { createSsrClient } from '@wepublish/utils/website/tanstack/server';
+import { ArticleSort, SortOrder } from '@wepublish/website/api';
 
-export const getFeed = async (req: NextApiRequest) => {
-  const siteUrl = process.env.WEBSITE_URL || '';
+/**
+ * Port of `apps/eenews/src/feed.ts`. Took a `NextApiRequest`; now takes the
+ * plain `Request` URL that the TanStack server route handler receives.
+ */
+export const getFeed = async (requestUrl: string, siteUrl: string) => {
+  const { pathname, search } = new URL(requestUrl);
+  const self = `${siteUrl}${pathname}${search}`;
 
   const generate = await generateFeed({
-    id: `${siteUrl + req.url}`,
-    link: siteUrl,
+    id: self,
+    link: self,
     title: 'We.Publish',
     ttl: 10, // in minutes
     copyright: 'We.Publish',
     categories: ['OSS', 'CMS', 'Journalism'],
     updated: new Date(),
     feedLinks: {
-      json: `${siteUrl + req.url}/api/json-feed`,
-      atom: `${siteUrl + req.url}/api/atom-feed`,
-      rss: `${siteUrl + req.url}/api/rss-feed`,
+      json: `${siteUrl}/feed.json`,
+      atom: `${siteUrl}/atom.xml`,
+      rss: `${siteUrl}/rss.xml`,
     },
   });
-  const client = getApiClient(getApiUrl(), [], {
-    typePolicies: {},
-  });
+
+  const client = createSsrClient();
 
   const { articles, options } = await queryFeed(client, {
     take: 50,

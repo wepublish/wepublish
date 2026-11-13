@@ -1180,6 +1180,16 @@ export enum Currency {
   Eur = 'EUR'
 }
 
+/** What the current session may do and whether it is an impersonation. */
+export type CurrentSession = {
+  __typename?: 'CurrentSession';
+  /** Whether the session may impersonate users: a We.Publish login with the impersonate-cms role. */
+  canImpersonate: Scalars['Boolean']['output'];
+  expiresAt?: Maybe<Scalars['DateTime']['output']>;
+  /** Who is signed in as this user, if the session is an impersonation. */
+  impersonatedBy?: Maybe<Scalars['String']['output']>;
+};
+
 export type CustomTeaser = BaseTeaser & HasImage & {
   __typename?: 'CustomTeaser';
   contentUrl?: Maybe<Scalars['String']['output']>;
@@ -2160,35 +2170,6 @@ export type ImageTransformation = {
   rotation?: InputMaybe<ImageRotation>;
   sharpen?: InputMaybe<Scalars['Boolean']['input']>;
   width?: InputMaybe<Scalars['Int']['input']>;
-};
-
-export type ImpersonationGrantResult = {
-  __typename?: 'ImpersonationGrantResult';
-  durationMinutes: Scalars['Int']['output'];
-  email: Scalars['String']['output'];
-  expiresAt: Scalars['DateTime']['output'];
-  token: Scalars['String']['output'];
-};
-
-export type ImpersonationSessionInfo = {
-  __typename?: 'ImpersonationSessionInfo';
-  createdAt: Scalars['DateTime']['output'];
-  expiresAt: Scalars['DateTime']['output'];
-  id: Scalars['String']['output'];
-  impersonatedBy?: Maybe<Scalars['String']['output']>;
-  impersonationReason?: Maybe<Scalars['String']['output']>;
-  userEmail: Scalars['String']['output'];
-  userId: Scalars['String']['output'];
-  userName?: Maybe<Scalars['String']['output']>;
-};
-
-export type ImpersonationUser = {
-  __typename?: 'ImpersonationUser';
-  active: Scalars['Boolean']['output'];
-  email: Scalars['String']['output'];
-  id: Scalars['String']['output'];
-  name?: Maybe<Scalars['String']['output']>;
-  roles: Array<Scalars['String']['output']>;
 };
 
 export type ImportArticleOptions = {
@@ -3447,7 +3428,6 @@ export type Mutation = {
   createExternalAppToken: ExternalAppToken;
   /** Creates a new goodie. */
   createGoodie: Goodie;
-  createImpersonationGrant: ImpersonationGrantResult;
   /** Creates a new invoice. */
   createInvoice: Invoice;
   /** Returns a JWT that is valid for 1min for the current logged in user. */
@@ -3497,6 +3477,8 @@ export type Mutation = {
   createRatingSystemAnswer: CommentRatingSystemAnswer;
   createSession: SessionWithToken;
   createSessionWithJWT: SessionWithToken;
+  /** Signs a We.Publish admin in with the code auth.wepublish.cloud returned: as the account connected to that We.Publish identity, else the one with its email, else a new one. The account becomes an admin with the names from We.Publish and can only sign in this way from then on. */
+  createSessionWithWepublishLogin: SessionWithToken;
   /** Creates a new subscription. */
   createSubscription: PublicSubscription;
   /** Create a new subscription flow */
@@ -3526,6 +3508,8 @@ export type Mutation = {
   createUserSubscription: Payment;
   /** Allows guests and authenticated users to create additional subscriptions */
   createUserSubscriptionWithConfirmation: Scalars['Boolean']['output'];
+  /** Lets a We.Publish supporter open the website as the given user for an hour. Needs a We.Publish login with the impersonate-cms role. */
+  createWebsiteImpersonation: WebsiteImpersonation;
   /** Deletes all sync errors for a config so all contacts will be retried. */
   deleteAllMailchimpSyncErrors: Scalars['Boolean']['output'];
   /** Deletes an article. */
@@ -3655,6 +3639,8 @@ export type Mutation = {
   extendUserSubscription: Payment;
   /** Generates a TOTP setup for the current user. Returns a QR code and secret for authenticator app configuration. */
   generateTotpSetup: TotpSetup;
+  /** Signs a We.Publish supporter in to the editor as the given user for an hour. Needs a We.Publish login with the impersonate-cms role. */
+  impersonateUser: SessionWithToken;
   /**
    *
    *       Creates and event based on data from importable events list and an id and provider.
@@ -3729,7 +3715,6 @@ export type Mutation = {
   revokeActiveSession: Scalars['Boolean']['output'];
   /** Revokes one of your api tokens, or anyone's with CAN_REVOKE_ALL_API_TOKENS. The token stops working immediately. */
   revokeApiToken: ApiToken;
-  revokeImpersonationSessions: Scalars['Int']['output'];
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendJWTLogin: Scalars['String']['output'];
   /** Manually send a mail template to a single user */
@@ -4166,14 +4151,6 @@ export type MutationCreateGoodieArgs = {
 };
 
 
-export type MutationCreateImpersonationGrantArgs = {
-  durationMinutes: Scalars['Int']['input'];
-  impersonatedBy: Scalars['String']['input'];
-  reason: Scalars['String']['input'];
-  userId: Scalars['String']['input'];
-};
-
-
 export type MutationCreateInvoiceArgs = {
   currency: Currency;
   description?: InputMaybe<Scalars['String']['input']>;
@@ -4440,6 +4417,12 @@ export type MutationCreateSessionWithJwtArgs = {
 };
 
 
+export type MutationCreateSessionWithWepublishLoginArgs = {
+  code: Scalars['String']['input'];
+  codeVerifier: Scalars['String']['input'];
+};
+
+
 export type MutationCreateSubscriptionArgs = {
   autoRenew: Scalars['Boolean']['input'];
   extendable: Scalars['Boolean']['input'];
@@ -4575,6 +4558,12 @@ export type MutationCreateUserSubscriptionWithConfirmationArgs = {
   paymentPeriodicity: PaymentPeriodicity;
   subscriptionProperties?: InputMaybe<Array<PropertyInput>>;
   userId?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationCreateWebsiteImpersonationArgs = {
+  reason: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 };
 
 
@@ -4887,6 +4876,12 @@ export type MutationGenerateTotpSetupArgs = {
 };
 
 
+export type MutationImpersonateUserArgs = {
+  reason: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
+};
+
+
 export type MutationImportEventArgs = {
   id: Scalars['String']['input'];
   source: Scalars['String']['input'];
@@ -5062,11 +5057,6 @@ export type MutationRevertUserSubscriptionUpgradeArgs = {
 
 export type MutationRevokeApiTokenArgs = {
   id: Scalars['String']['input'];
-};
-
-
-export type MutationRevokeImpersonationSessionsArgs = {
-  ids?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 
@@ -7364,6 +7354,7 @@ export type Query = {
   crowdfunding: Crowdfunding;
   /** Returns a list of crowdfundings. */
   crowdfundings: Array<Crowdfunding>;
+  currentSession: CurrentSession;
   /**
    *
    *       Returns daily stats in a given timeframe.
@@ -7431,9 +7422,6 @@ export type Query = {
   image: Image;
   /** Returns a paginated list of images based on the filters given. */
   images: PaginatedImages;
-  impersonationEnabled: Scalars['Boolean']['output'];
-  impersonationSearchUsers: Array<ImpersonationUser>;
-  impersonationSessions: Array<ImpersonationSessionInfo>;
   /**
    *
    *       Returns a more detailed version of a single importable event, by id and source.
@@ -7717,6 +7705,8 @@ export type Query = {
   videos: PaginatedVideos;
   /** Returns the website settings, requires authentication to get sensitive settings. */
   websiteSettings: WebsiteSettings;
+  /** How the editor starts the We.Publish login, or null where it is off. */
+  wepublishLogin?: Maybe<WepublishLoginClient>;
 };
 
 
@@ -8067,12 +8057,6 @@ export type QueryImagesArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<ImageSort>;
   take?: InputMaybe<Scalars['Int']['input']>;
-};
-
-
-export type QueryImpersonationSearchUsersArgs = {
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  query: Scalars['String']['input'];
 };
 
 
@@ -8794,6 +8778,8 @@ export type SensitiveDataUser = BaseUser & {
   id: Scalars['String']['output'];
   image?: Maybe<Image>;
   lastLogin?: Maybe<Scalars['DateTime']['output']>;
+  /** Whether the account signs in with the We.Publish login. We.Publish manages it, so it cannot be changed or deleted. */
+  managedByWepublishLogin: Scalars['Boolean']['output'];
   modifiedAt: Scalars['DateTime']['output'];
   name: Scalars['String']['output'];
   note?: Maybe<Scalars['String']['output']>;
@@ -10149,6 +10135,13 @@ export type WebsiteAnalyticsInput = {
   umami: KeyEnabledInput;
 };
 
+/** A single-use grant the website redeems through createSessionWithJWT within a minute. */
+export type WebsiteImpersonation = {
+  __typename?: 'WebsiteImpersonation';
+  token: Scalars['String']['output'];
+  url: Scalars['String']['output'];
+};
+
 export type WebsiteRemoteFont = {
   __typename?: 'WebsiteRemoteFont';
   name: Scalars['String']['output'];
@@ -10180,6 +10173,15 @@ export enum Weekday {
   Tuesday = 'Tuesday',
   Wednesday = 'Wednesday'
 }
+
+/** Where the editor sends a We.Publish admin to sign in with auth.wepublish.cloud. */
+export type WepublishLoginClient = {
+  __typename?: 'WepublishLoginClient';
+  authorizationUrl: Scalars['String']['output'];
+  clientId: Scalars['String']['output'];
+  redirectUri: Scalars['String']['output'];
+  scope: Scalars['String']['output'];
+};
 
 export type YouTubeVideoBlock = BaseBlock & {
   __typename?: 'YouTubeVideoBlock';

@@ -1528,7 +1528,31 @@
       },
       "title": "Paramètres"
     },
+    "impersonation": {
+      "title": "Se connecter en tant que cette personne",
+      "info": "Réservé au support We.Publish. La session dure une heure et tout ce que vous y faites est enregistré dans le journal d’audit.",
+      "editor": "Dans l’éditeur",
+      "website": "Sur le site",
+      "dialogTitle": "Se connecter en tant que {{email}}",
+      "reason": "Motif",
+      "reasonHelp": "Par exemple le numéro de ticket. Il est enregistré avec la session.",
+      "cancel": "Annuler",
+      "confirm": "Se connecter",
+      "failed": "La connexion en tant que cette personne n’a pas fonctionné.",
+      "popupBlocked": "Le navigateur a bloqué la fenêtre du site. Veuillez autoriser les fenêtres contextuelles pour l’éditeur.",
+      "active": "Vous êtes connecté·e en tant que {{email}} (support We.Publish : {{supporter}}).",
+      "end": "Terminer"
+    },
     "login": {
+      "wepublish": {
+        "backToLogin": "Retour à la connexion",
+        "button": "Connexion pour le personnel de We.Publish",
+        "failed": "La connexion avec We.Publish n’a pas fonctionné. Veuillez réessayer.",
+        "forbidden": "Votre compte We.Publish n’a pas accès à cet éditeur.",
+        "only": "Ce compte se connecte avec We.Publish. Veuillez utiliser « Connexion pour le personnel de We.Publish » en bas.",
+        "pending": "Connexion avec We.Publish …",
+        "unavailable": "La connexion avec We.Publish ne peut pas être lancée ici pour le moment."
+      },
       "email": "E-mail",
       "login": "Connexion",
       "next": "Suivant",
@@ -1548,11 +1572,6 @@
         "invalidCode": "Code de vérification invalide. Veuillez réessayer.",
         "setupError": "Échec de la configuration de la 2FA. Veuillez réessayer.",
         "setupSuccess": "L’authentification à deux facteurs a été activée avec succès."
-      },
-      "impersonate": {
-        "pending": "Connexion en tant qu’utilisateur …",
-        "failed": "La connexion a échoué. Le lien a expiré ou a déjà été utilisé.",
-        "notAGrant": "Ce lien n’est pas un lien d’usurpation valide."
       },
       "jwt": "Connexion en cours …"
     },
@@ -2142,7 +2161,6 @@
       "printIssueCreate": "Nouveau numéro imprimé",
       "printIssueEdit": "Modifier le numéro imprimé",
       "login": "Connexion",
-      "impersonate": "Se connecter en tant qu’utilisateur·trice",
       "resetPassword": "Réinitialiser le mot de passe",
       "setPassword": "Définir un nouveau mot de passe",
       "dashboard": "Tableau de bord",
@@ -2996,6 +3014,7 @@
       "totpExemptInfo": "Cet utilisateur est exempté de l’exigence d’authentification à deux facteurs.",
       "totpExemptLabel": "Exempter de l’exigence 2FA",
       "totpExemptWarning": "⚠️ AVERTISSEMENT DE SÉCURITÉ ⚠️\n\nVous êtes sur le point de DÉSACTIVER l’exigence d’authentification à deux facteurs pour cet utilisateur !\n\nCela réduit considérablement la sécurité de ce compte. L’utilisateur pourra se connecter à l’éditeur avec un simple mot de passe, sans second facteur.\n\nCela ne devrait être utilisé que dans des circonstances exceptionnelles.\n\nÊtes-vous sûr·e de vouloir continuer ?",
+      "managedByWepublishLogin": "Ce compte appartient au personnel de We.Publish et est géré par la connexion We.Publish. Il ne peut pas être modifié, désactivé ou supprimé ici.",
       "resetPassword": "Réinitialiser le mot de passe",
       "resetPasswordFor": "Réinitialiser le mot de passe de {{userName}}",
       "selectUserImage": "Choisir une photo de profil",
@@ -3045,6 +3064,7 @@
         "oneSubscription": "1 abonnement",
         "resetPassword": "Réinitialiser le mot de passe",
         "resetTotp": "Réinitialiser la 2FA",
+        "managedByWepublishLogin": "Compte We.Publish",
         "resetTotpTitle": "Réinitialiser l’authentification à deux facteurs",
         "resetTotpConfirmation": "Êtes-vous sûr·e de vouloir réinitialiser l’authentification à deux facteurs pour {{name}} ? L’utilisateur devra configurer à nouveau la 2FA lors de sa prochaine connexion.",
         "totpResetSuccess": "L’authentification à deux facteurs a été réinitialisée avec succès.",

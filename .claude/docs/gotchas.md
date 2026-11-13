@@ -714,6 +714,11 @@ and the nightly `MailLogSyncService` poll reconciles what a webhook missed.
 Providers must throw `MailWebhookSignatureError`, not a plain `Error`, for a
 failed signature.
 
+Mandrill checks the URL while a webhook is being **created** with an empty
+batch (`mandrill_events=[]`) signed with the fixed key `test-webhook` — the
+webhook's own key does not exist yet. The Mailchimp provider lets exactly that
+through; refusing it makes Mandrill reject the webhook URL.
+
 Pinned by `libs/mail/api/src/lib/mail.webhook.spec.ts` ("refuses a call that
 does not come from the provider", "answers 200 to a payload it cannot handle").
 

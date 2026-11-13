@@ -304,6 +304,68 @@ query (`AnalyticsProviderHotAndTrendingDataSource` in `libs/article/api`);
 setting it on one row clears it on the others. Plausible and Umami keep their
 api key encrypted in `credentials` and take an optional `url` for self-hosting.
 
+## We.Publish login (auth.wepublish.cloud)
+
+We.Publish staff sign in to any editor through Zitadel at
+`auth.wepublish.cloud` ("Anmeldung für We.Publish-Mitarbeitende", a quiet
+link below the login card via `LoginTemplate`'s `footer`). Code
+in `libs/session/api/src/lib/wepublish-*.ts`, editor side in
+`apps/editor/src/app/wepublishLogin.ts`.
+
+- `APP_ENVIRONMENT` picks client and Zitadel role: `production` → client
+  `399257510109839364` + `login-cms-admin-production`; `staging` / `review` →
+  client `399257571782819844` + `login-cms-admin-staging` / `-review`; any
+  other value (e.g. `local`) → staging client + review role. Unset
+  `APP_ENVIRONMENT` or `EDITOR_URL` turns the login off (`wepublishLogin` is
+  null, the button hides).
+- The redirect URI is always `EDITOR_URL/login/wepublish`, built by the API —
+  each editor URL must be registered in the Zitadel app.
+- Authorization code + PKCE, public client (no secret). The code comes back in
+  the fragment, which `captureWepublishLoginResult()` in `main.tsx` removes
+  before Sentry starts. `createSessionWithWepublishLogin(code, codeVerifier)`
+  redeems it, verifies the ID token (issuer, audience, `azp`, JWKS), and reads
+  email, names and `urn:zitadel:iam:org:project:roles` from userinfo.
+- Refused unless the role for this environment is present, the ID token's
+  `amr` contains `mfa` and the email is verified.
+- The account is found by `users.wepublishLoginSubject` (Zitadel `sub`), else
+  by email, else created (`admin`, no welcome mail). Every login resets it to
+  `roleIDs: ['admin']`, `active: true` and Zitadel's names. Connecting an
+  account ends all its other sessions.
+- A connected account is read-only: `assertNotManagedByWepublishLogin`
+  (`libs/user/api`) refuses `updateUser`, `resetPassword`, `deleteUser`,
+  `resetUserTotp` and the person's own `updateCurrentUser`, `updatePassword`,
+  `uploadUserProfileImage` and email change. `SensitiveDataUser.managedByWepublishLogin`
+  tells the editor, which shows the account read-only. Internal code calling
+  `UserService` directly (the login's own reset) is not affected.
+- A connected account (`wepublishLoginSubject` set) can sign in no other way:
+  `createSession` and website-audience `createSessionWithJWT` throw
+  `WepublishLoginOnlyError`. Only the editor's own preview JWT
+  (`createJWTForWebsiteLogin`, audience `preview`) still works.
+- Sign-ins, refusals, user creation and resets are written to the audit log
+  under `createSessionWithWepublishLogin`.
+- **Impersonation.** The Zitadel role `impersonate-cms` (any environment) marks
+  the session `sessions.canImpersonate`; `currentSession` reports it. The user
+  view then offers "Als diese Person anmelden": `impersonateUser(userId,
+  reason)` returns an editor session of the user, and
+  `createWebsiteImpersonation(userId, reason)` a 60-second single-use grant
+  (`impersonation_grants`, audience `impersonation`) that the website redeems
+  through `createSessionWithJWT`, handed over by the preview handshake
+  (`startPreviewHandshake`). Both sessions last an hour, carry
+  `impersonatedBy` (the supporter's email) and `impersonationReason`, cannot
+  impersonate themselves and are refused for inactive and We.Publish
+  accounts. The editor keeps the supporter's token under
+  `wepublish/impersonator-session` and shows `ImpersonationBar`; the website
+  shows its own bar from `withJwtHandler`. Every action in such a session
+  carries `impersonatedBy` in the audit log.
+- An impersonation cannot outlive itself or leave access behind:
+  `createJWTForWebsiteLogin` (the editor preview) in an impersonated session
+  hands the website a grant for the same supporter, reason and remaining time
+  (`ImpersonationService.continueOnWebsite`) instead of an ordinary preview
+  JWT, and `assertNotImpersonating` (`libs/authentication/api`) refuses
+  password and email changes, API tokens, external-app tokens and 2FA setup.
+- We.Publish login sessions last 12 hours (`WEPUBLISH_LOGIN_SESSION_MS`), so
+  removing a Zitadel role takes effect within half a day.
+
 ## We.Publish One
 
 The One dashboard (`WEP_ONE_URL`) and the API authenticate each other with EdDSA
@@ -312,11 +374,8 @@ credentials. `libs/one/api` holds the client, the heartbeat and the guards;
 `@OneScopedJwt(scope)` is the only way into a One-facing resolver, and the
 global guard denies anything without it.
 
-Impersonation (One signs in as a user of this medium) is off unless
-`WEP_ONE_IMPERSONATION=true`. A grant is a 60-second single-use JWT that the
-editor redeems at `/login/impersonate/:jwt` — a route that accepts nothing but
-an impersonation grant, since it skips TOTP and any other JWT pointed at it
-would be a way around two-factor.
+One has no impersonation API any more. We.Publish support impersonates from
+the editor instead (see the We.Publish login below).
 
 **Feature toggles** come from One too: per medium, staff-only (One's
 `ClientFeatures`).

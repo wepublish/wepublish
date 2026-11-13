@@ -77,7 +77,12 @@ export type MailControllerConfig = {
  * (see `PrismaService`), so they never reach a template. These fields stay on
  * the row because the API needs them for authorization.
  */
-const SECRET_FIELDS = new Set(['roleIDs', 'totpEnabled', 'totpExempt']);
+const SECRET_FIELDS = new Set([
+  'roleIDs',
+  'totpEnabled',
+  'totpExempt',
+  'wepublishLoginSubject',
+]);
 
 /**
  * A copy of template data without a user's authorization fields, wherever a
