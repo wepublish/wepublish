@@ -1,16 +1,13 @@
 import { CSSObject } from '@emotion/react';
 import styled from '@emotion/styled';
 import { joinAuthorNames } from '@wepublish/block-content/website';
-import {
-  BuilderImageProps,
-  Image,
-  Link,
-  useWebsiteBuilder,
-} from '@wepublish/website/builder';
+import { BuilderImageProps, Image, Link } from '@wepublish/website/builder';
+import { useRouter } from 'next/router';
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { designText } from '../../theme';
+import { formatListDate } from '../format-list-date';
 
 export type ArticleRowProps = {
   href?: string | null;
@@ -87,16 +84,14 @@ export const ArticleRow = ({
   date,
 }: ArticleRowProps) => {
   const { t } = useTranslation();
-  const {
-    date: { format },
-  } = useWebsiteBuilder();
+  const { locale } = useRouter();
   const titleId = useId();
 
   const byline =
     authors?.length ?
       `${t('articleList.by')} ${joinAuthorNames(authors, ', ', ', ')}`
     : undefined;
-  const meta = [byline, date && format(new Date(date), false)]
+  const meta = [byline, date && formatListDate(date, locale)]
     .filter(Boolean)
     .join(', ');
 

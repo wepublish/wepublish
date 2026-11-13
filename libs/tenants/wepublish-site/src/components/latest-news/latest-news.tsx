@@ -16,13 +16,14 @@ import {
   BuilderTeaserSlotsBlockProps,
   Image,
   Link,
-  useWebsiteBuilder,
 } from '@wepublish/website/builder';
+import { useRouter } from 'next/router';
 import { useId } from 'react';
 
 import { designText } from '../../theme';
 import { BlockHeader, splitButtonTeaser } from '../block-header';
 import { WepBlockStyles } from '../block-styles/wep-block-styles';
+import { formatListDate } from '../format-list-date';
 
 export const isLatestNews = ({
   blockStyle,
@@ -106,14 +107,12 @@ export const NewsCard = ({
   authors?: string[] | null;
   date?: string | null;
 }) => {
-  const {
-    date: { format },
-  } = useWebsiteBuilder();
+  const { locale } = useRouter();
   const titleId = useId();
 
   const meta = [
     joinAuthorNames(authors ?? [], ', ', ', '),
-    date && format(new Date(date), false),
+    date && formatListDate(date, locale),
   ]
     .filter(Boolean)
     .join(', ');

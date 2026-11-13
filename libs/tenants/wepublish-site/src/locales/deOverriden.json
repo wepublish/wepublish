@@ -25,5 +25,13 @@
   },
   "author": {
     "articlesBy": "Beiträge von {name}"
+  },
+  "eventOverview": {
+    "preTitle": "Aus dem We.Publish Ökosystem",
+    "title": "Events",
+    "lead": "Wir organisieren regelmässig Austauschformate, Camps und Workshops für Medienschaffende und alle, die unabhängigen Journalismus mitgestalten wollen.",
+    "upcoming": "Kommende Events",
+    "noUpcoming": "Zurzeit sind keine Events geplant.",
+    "past": "Vergangene Events"
   }
 }

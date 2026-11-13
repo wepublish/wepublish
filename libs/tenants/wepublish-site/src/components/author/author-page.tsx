@@ -12,6 +12,7 @@ import { designText } from '../../theme';
 import {
   ArticleOverviewPagination,
   isInLanguage,
+  pageBottomSpace,
 } from '../article-list/article-overview';
 import { BlockHeader } from '../block-header';
 import { tertiaryButton } from '../button-styles';
@@ -25,6 +26,7 @@ import {
 export const articlesPerPage = 9;
 
 export const AuthorPageWrapper = styled('div')`
+  ${({ theme }) => pageBottomSpace(theme)}
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: ${({ theme }) => theme.spacing(5)};

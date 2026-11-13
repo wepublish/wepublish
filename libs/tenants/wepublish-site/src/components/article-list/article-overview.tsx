@@ -1,4 +1,4 @@
-import { CSSObject } from '@emotion/react';
+import { css, CSSObject, Theme } from '@emotion/react';
 import styled from '@emotion/styled';
 import { SlimArticleFragment } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
@@ -10,7 +10,24 @@ import { ArticleRow, ArticleRows } from './article-row';
 
 export const articlesPerPage = 10;
 
+/**
+ * Room below an overview page, 180px to the footer as in the design (24px of
+ * them are below the page already)
+ */
+export const pageBottomSpace = (theme: Theme) => css`
+  padding-bottom: 40px;
+
+  ${theme.breakpoints.up('md')} {
+    padding-bottom: 96px;
+  }
+
+  ${theme.breakpoints.up('lg')} {
+    padding-bottom: 156px;
+  }
+`;
+
 export const ArticleOverviewWrapper = styled('div')`
+  ${({ theme }) => pageBottomSpace(theme)}
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: ${({ theme }) => theme.spacing(8)};

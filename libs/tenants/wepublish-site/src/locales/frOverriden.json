@@ -8,7 +8,7 @@
   },
   "articleList": {
     "by": "par",
-    "overviewPreTitle": "De l'écosystème We.Publish",
+    "overviewPreTitle": "De l’écosystème We.Publish",
     "overviewTitle": "Actualités"
   },
   "article": {
@@ -16,5 +16,13 @@
   },
   "author": {
     "articlesBy": "Articles de {name}"
+  },
+  "eventOverview": {
+    "preTitle": "De l’écosystème We.Publish",
+    "title": "Événements",
+    "lead": "Nous organisons régulièrement des formats d’échange, des camps et des ateliers pour les professionnel·le·s des médias et toutes celles et ceux qui veulent façonner le journalisme indépendant.",
+    "upcoming": "Événements à venir",
+    "noUpcoming": "Aucun événement n’est prévu pour le moment.",
+    "past": "Événements passés"
   }
 }
