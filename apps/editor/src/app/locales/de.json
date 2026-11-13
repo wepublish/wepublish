@@ -3047,6 +3047,17 @@
         "amountOfSubscriptions": "{{amount}} Abos",
         "createdAt": "Erstellt",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
+        "emailQuality": "E-Mail-Status",
+        "emailQualitySince": "E-Mail-Status seit",
+        "emailQualitySinceDate": "{{emailQualitySinceDate, PP}}",
+        "emailSegments": {
+          "active": "Aktiv",
+          "unknown": "Unbekannt",
+          "unresponsive": "Reagiert nicht",
+          "dead": "Unzustellbar",
+          "placeholder": "Platzhalter",
+          "deadHint": "Bounce, ungültige Adresse, Spam-Beschwerde oder vom Mailanbieter abgemeldet"
+        },
         "firstName": "Vorname",
         "subscriptionStatus": {
           "Active": "Aktiv",

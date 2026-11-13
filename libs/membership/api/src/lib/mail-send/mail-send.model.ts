@@ -1,3 +1,4 @@
+import { MailEmailSegment } from '@wepublish/user/api';
 import {
   Field,
   GraphQLISODateTime,
@@ -56,25 +57,8 @@ registerEnumType(MailEmailFilter, {
   name: 'MailEmailFilter',
 });
 
-/**
- * Who can still be reached by email. `placeholder` is recognised by the
- * address pattern of the letter integration; the others are the stored
- * email quality level (see EmailQualityLevel), `unknown` including people
- * never evaluated. Picking several means any of them.
- */
-export enum MailEmailSegment {
-  placeholder = 'placeholder',
-  dead = 'dead',
-  unresponsive = 'unresponsive',
-  unknown = 'unknown',
-  active = 'active',
-}
-
-registerEnumType(MailEmailSegment, {
-  name: 'MailEmailSegment',
-  description:
-    'placeholder: generated address, reachable by letter only. dead: bounced, invalid, complained or unsubscribed. unresponsive: mails delivered, no login or click for a long time. unknown: nothing decided yet. active: logged in or clicked recently.',
-});
+// Moved to the user lib so the user list filters by the same segments.
+export { MailEmailSegment };
 
 registerEnumType(MailRecipientBase, {
   name: 'MailRecipientBase',

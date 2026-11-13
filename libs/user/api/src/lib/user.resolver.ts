@@ -22,6 +22,7 @@ import {
   SensitiveDataUser,
 } from './user.model';
 import { UserService } from './user.service';
+import { MailEmailSegment } from './email-segment';
 import { assertNotManagedByWepublishLogin } from './managed-by-wepublish-login';
 import { Image, ImageDataloaderService } from '@wepublish/image/api';
 import { UserDataloaderService } from './user-dataloader.service';
@@ -53,6 +54,14 @@ export class UserResolver {
   })
   public users(@Args() filter: UserListArgs) {
     return this.service.getUsers(filter);
+  }
+
+  @Permissions(CanGetUsers)
+  @Query(() => [MailEmailSegment], {
+    description: `The email segments the user list can be filtered by, best to worst; placeholder only when a placeholder pattern is configured.`,
+  })
+  public userEmailSegments() {
+    return this.service.getEmailSegments();
   }
 
   @Permissions(CanGetUser)

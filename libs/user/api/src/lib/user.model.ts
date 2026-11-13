@@ -16,6 +16,7 @@ import { Property, PropertyInput } from '@wepublish/property/api';
 import { PaginatedType, SortOrder } from '@wepublish/utils/api';
 import { UserRole } from './user-role.model';
 import { ChallengeInput } from '@wepublish/challenge/api';
+import { MailEmailSegment } from './email-segment';
 
 @ObjectType()
 export class UserAddress {
@@ -205,6 +206,13 @@ export class UserFilter {
 
   @Field(() => [String], { nullable: true })
   userRole?: string[];
+
+  @Field(() => [MailEmailSegment], {
+    nullable: true,
+    description:
+      'Any of these email segments; the same segments as the mail-send audience.',
+  })
+  emailSegments?: MailEmailSegment[];
 }
 
 export enum UserSort {
@@ -213,6 +221,8 @@ export enum UserSort {
   Name = 'Name',
   FirstName = 'FirstName',
   SubscriptionCount = 'SubscriptionCount',
+  EmailQuality = 'EmailQuality',
+  EmailQualitySince = 'EmailQualitySince',
 }
 
 registerEnumType(UserSort, {
