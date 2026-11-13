@@ -23,7 +23,7 @@ vi.mock('react-i18next', () => ({
 }));
 
 vi.mock('./mailIntegrationForm', () => ({
-  MailIntegrationForm: () => <div>mail form</div>,
+  MailIntegrationForm: () => <div data-testid="mail-form" />,
 }));
 
 const renderView = (path: string) =>
@@ -55,7 +55,7 @@ describe('IntegrationEditView', () => {
       })
     ).toBeInTheDocument();
     expect(screen.getByText('integrations.mailProviderInfo')).toBeVisible();
-    expect(screen.getByText('mail form')).toBeInTheDocument();
+    expect(screen.getByTestId('mail-form')).toBeInTheDocument();
   });
 
   it('points to the integration it is easily confused with', () => {
