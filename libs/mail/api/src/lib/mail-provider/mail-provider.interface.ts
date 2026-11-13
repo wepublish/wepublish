@@ -5,6 +5,7 @@ import {
 } from '@prisma/client';
 import { NextHandleFunction } from 'connect';
 import type { NodeRequest } from '@nestjs/platform-node';
+import { MailAttachment } from '../mail-attachment';
 
 export interface WebhookForSendMailProps {
   req: NodeRequest;
@@ -17,6 +18,8 @@ export interface SendMailProps {
   subject: string;
   message?: string;
   messageHtml?: string;
+  /** Files to send along; absent when the template attaches none. */
+  attachments?: MailAttachment[];
 }
 
 /** Evidence about the recipient's address a provider reports for a mail. */

@@ -189,4 +189,25 @@ describe('CloudflarePdfRenderer', () => {
       /did not return a pdf/
     );
   });
+
+  it('says it cannot convert documents, so attachments are not offered', async () => {
+    expect(await createRenderer().canConvertDocuments()).toBe(false);
+  });
+
+  // Browser rendering only prints html; Word files need LibreOffice.
+  it('refuses to convert an office document, naming Gotenberg', async () => {
+    await expect(
+      createRenderer().convertDocument(
+        new Uint8Array([0x50, 0x4b]),
+        'document.docx'
+      )
+    ).rejects.toThrow(/Gotenberg/);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('reports the refusal as a pdf renderer error', async () => {
+    await expect(
+      createRenderer().convertDocument(new Uint8Array(), 'document.docx')
+    ).rejects.toBeInstanceOf(PdfRendererError);
+  });
 });

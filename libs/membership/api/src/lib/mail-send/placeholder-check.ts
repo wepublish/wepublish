@@ -60,7 +60,9 @@ function templateText(template: TemplateContent): string {
  */
 export function findMissingPlaceholders(
   template: TemplateContent,
-  withSubscriptionData: boolean
+  withSubscriptionData: boolean,
+  /** Placeholders used in the documents attached to the template. */
+  attachmentPlaceholders: string[] = []
 ): string[] {
   const contextId = (template.context ?? 'custom') as MailTemplateContextId;
 
@@ -83,7 +85,10 @@ export function findMissingPlaceholders(
       };
 
   const available = new Set(resolvableKeys(data).map(key => key.toLowerCase()));
-  return extractPlaceholders(templateText(template)).filter(
-    key => !available.has(key.toLowerCase())
-  );
+  const used = new Set([
+    ...extractPlaceholders(templateText(template)),
+    ...attachmentPlaceholders,
+  ]);
+
+  return [...used].filter(key => !available.has(key.toLowerCase()));
 }

@@ -1,6 +1,12 @@
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import { MailContext } from '@wepublish/mail/api';
-import { LetterContext } from '@wepublish/letter/api';
+import {
+  DocumentAttachmentRenderer,
+  DOCX_MIME_TYPE,
+  LetterContext,
+  MAX_ATTACHMENT_BYTES,
+  MAX_TEMPLATE_ATTACHMENTS,
+} from '@wepublish/letter/api';
 import { PrismaClient } from '@prisma/client';
 import { MailTemplateService } from './mail-template.service';
 import { version } from 'uuid';
@@ -8,12 +14,14 @@ import { version } from 'uuid';
 const makeService = (
   prisma: any,
   mailContext: any = {},
-  letterContext: any = {}
+  letterContext: any = {},
+  attachments: any = { isAvailable: vi.fn(async () => true) }
 ) =>
   new MailTemplateService(
     prisma as PrismaClient,
     mailContext as unknown as MailContext,
-    letterContext as unknown as LetterContext
+    letterContext as unknown as LetterContext,
+    attachments as DocumentAttachmentRenderer
   );
 
 describe('MailTemplateService', () => {
@@ -192,6 +200,236 @@ describe('MailTemplateService', () => {
     });
   });
 
+  describe('attachments', () => {
+    const input = {
+      name: 'Vertrag',
+      subject: 'Ihr Vertrag',
+      htmlContent: '<p>Hallo</p>',
+    };
+
+    const docx = (id: string, title: string, fileSize = 20_000) => ({
+      id,
+      title,
+      mimeType: DOCX_MIME_TYPE,
+      fileSize,
+    });
+
+    const documents = [
+      docx('contract', 'Vertrag'),
+      docx('terms', 'AGB'),
+      { id: 'flyer', title: 'Flyer', mimeType: 'application/pdf', fileSize: 1 },
+      ...Array.from({ length: MAX_TEMPLATE_ATTACHMENTS + 1 }, (_, index) =>
+        docx(`d${index}`, `Dokument ${index}`)
+      ),
+      docx('big', 'Katalog', MAX_ATTACHMENT_BYTES / 2 + 1),
+      docx('bigger', 'Preisliste', MAX_ATTACHMENT_BYTES / 2 + 1),
+    ];
+
+    const prismaMock = ({ systemMail = null as string | null } = {}) => ({
+      mailTemplate: {
+        create: vi.fn(async () => ({ id: 't1' })),
+        update: vi.fn(async () => ({ id: 't1' })),
+      },
+      document: {
+        findMany: vi.fn(async ({ where }: any) =>
+          documents.filter(({ id }) => where.id.in.includes(id))
+        ),
+      },
+      userFlowMail: {
+        findFirst: vi.fn(async () =>
+          systemMail ? { event: systemMail } : null
+        ),
+      },
+    });
+
+    const ordered = {
+      include: {
+        attachments: {
+          select: { documentId: true },
+          orderBy: { position: 'asc' },
+        },
+      },
+    };
+
+    it('creates a template with its attachments in the order given', async () => {
+      const prisma = prismaMock();
+
+      await makeService(prisma).createMailTemplate({
+        ...input,
+        attachmentIds: ['terms', 'contract'],
+      });
+
+      expect(prisma.mailTemplate.create).toHaveBeenCalledWith({
+        data: {
+          ...input,
+          attachments: {
+            create: [
+              { documentId: 'terms', position: 0 },
+              { documentId: 'contract', position: 1 },
+            ],
+          },
+        },
+        ...ordered,
+      });
+    });
+
+    it('creates a template without attachments as before', async () => {
+      const prisma = prismaMock();
+
+      await makeService(prisma).createMailTemplate(input);
+
+      expect(prisma.mailTemplate.create).toHaveBeenCalledWith({
+        data: input,
+        ...ordered,
+      });
+      expect(prisma.document.findMany).not.toHaveBeenCalled();
+    });
+
+    it('replaces the attachments of a template it updates', async () => {
+      const prisma = prismaMock();
+
+      await makeService(prisma).updateMailTemplate('t1', {
+        ...input,
+        attachmentIds: ['contract'],
+      });
+
+      expect(prisma.mailTemplate.update).toHaveBeenCalledWith({
+        where: { id: 't1' },
+        data: {
+          ...input,
+          attachments: {
+            deleteMany: {},
+            create: [{ documentId: 'contract', position: 0 }],
+          },
+        },
+        ...ordered,
+      });
+    });
+
+    it('removes every attachment for an empty list', async () => {
+      // Also once attachments are gone, and on a system mail.
+      const prisma = prismaMock({ systemMail: 'LOGIN_LINK' });
+      const attachments = { isAvailable: vi.fn(async () => false) };
+
+      await makeService(prisma, {}, {}, attachments).updateMailTemplate('t1', {
+        ...input,
+        attachmentIds: [],
+      });
+
+      expect(prisma.mailTemplate.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: { ...input, attachments: { deleteMany: {}, create: [] } },
+        })
+      );
+    });
+
+    it('keeps the attachments of a template updated without a list', async () => {
+      const prisma = prismaMock();
+
+      await makeService(prisma).updateMailTemplate('t1', input);
+
+      expect(prisma.mailTemplate.update).toHaveBeenCalledWith({
+        where: { id: 't1' },
+        data: input,
+        ...ordered,
+      });
+    });
+
+    // Attachments ship dark with the letters, and only a renderer that
+    // converts Word documents (Gotenberg) can render them; saving them where
+    // they cannot be rendered would fail every mail of the template.
+    it('refuses attachments where they cannot be rendered', async () => {
+      const prisma = prismaMock();
+      const attachments = { isAvailable: vi.fn(async () => false) };
+
+      await expect(
+        makeService(prisma, {}, {}, attachments).createMailTemplate({
+          ...input,
+          attachmentIds: ['contract'],
+        })
+      ).rejects.toThrow(ForbiddenException);
+      expect(prisma.mailTemplate.create).not.toHaveBeenCalled();
+    });
+
+    // A login link would otherwise wait for a document conversion.
+    it('refuses attachments on a template sent as a system mail', async () => {
+      const prisma = prismaMock({ systemMail: 'LOGIN_LINK' });
+
+      await expect(
+        makeService(prisma).updateMailTemplate('t1', {
+          ...input,
+          attachmentIds: ['contract'],
+        })
+      ).rejects.toThrow(/system mail LOGIN_LINK/);
+      expect(prisma.userFlowMail.findFirst).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { mailTemplateId: 't1' } })
+      );
+      expect(prisma.mailTemplate.update).not.toHaveBeenCalled();
+    });
+
+    it(`refuses more than ${MAX_TEMPLATE_ATTACHMENTS} documents`, async () => {
+      const prisma = prismaMock();
+
+      await expect(
+        makeService(prisma).createMailTemplate({
+          ...input,
+          attachmentIds: Array.from(
+            { length: MAX_TEMPLATE_ATTACHMENTS + 1 },
+            (_, index) => `d${index}`
+          ),
+        })
+      ).rejects.toThrow(BadRequestException);
+      expect(prisma.mailTemplate.create).not.toHaveBeenCalled();
+    });
+
+    it('refuses documents too large together for a mail to carry', async () => {
+      const prisma = prismaMock();
+
+      await expect(
+        makeService(prisma).createMailTemplate({
+          ...input,
+          attachmentIds: ['big', 'bigger'],
+        })
+      ).rejects.toThrow(/too large/);
+      expect(prisma.mailTemplate.create).not.toHaveBeenCalled();
+    });
+
+    it('refuses a document that is not a Word document', async () => {
+      const prisma = prismaMock();
+
+      await expect(
+        makeService(prisma).createMailTemplate({
+          ...input,
+          attachmentIds: ['flyer'],
+        })
+      ).rejects.toThrow(/"Flyer" is not a Word document/);
+      expect(prisma.mailTemplate.create).not.toHaveBeenCalled();
+    });
+
+    it('refuses a document that does not exist', async () => {
+      const prisma = prismaMock();
+
+      await expect(
+        makeService(prisma).updateMailTemplate('t1', {
+          ...input,
+          attachmentIds: ['gone'],
+        })
+      ).rejects.toThrow(BadRequestException);
+      expect(prisma.mailTemplate.update).not.toHaveBeenCalled();
+    });
+
+    it('refuses the same document twice', async () => {
+      const prisma = prismaMock();
+
+      await expect(
+        makeService(prisma).createMailTemplate({
+          ...input,
+          attachmentIds: ['contract', 'contract'],
+        })
+      ).rejects.toThrow(BadRequestException);
+    });
+  });
+
   describe('isLetterChannelAvailable', () => {
     it.each([true, false])(
       'reports whether letters are configured (%s)',
@@ -233,6 +471,28 @@ describe('MailTemplateService', () => {
             htmlContent: '<p>Hallo</p>',
             letterAppendixId: 'qr-bill',
           },
+        })
+      );
+    });
+
+    it('prints the attachments chosen on the draft', async () => {
+      const render = renderLetter();
+      const service = makeService(
+        {},
+        {},
+        { renderLetter: render, resolveLayout }
+      );
+
+      await service.previewLetter({
+        contextId: 'renewal',
+        subscriptionId: null,
+        html: '<p>Hallo</p>',
+        attachmentIds: ['contract'],
+      });
+
+      expect(render).toHaveBeenCalledWith(
+        expect.objectContaining({
+          template: expect.objectContaining({ attachmentIds: ['contract'] }),
         })
       );
     });
@@ -419,6 +679,27 @@ describe('MailTemplateService', () => {
       const [{ mailLogID }] = mailContext.sendComposedContent.mock
         .calls[0] as any;
       expect(version(mailLogID)).toBe(7);
+    });
+
+    it('attaches the documents chosen on the draft', async () => {
+      const mailContext = {
+        jwtGenerator: vi.fn(async () => 'jwt'),
+        sendComposedContent: vi.fn(async () => undefined),
+      };
+
+      await makeService({}, mailContext).sendTest({
+        contextId: 'renewal',
+        subscriptionId: null,
+        currentUserId: 'u1',
+        recipient: 'test@wepublish.ch',
+        subject: 'Hi',
+        html: '<p>Hi</p>',
+        attachmentIds: ['contract'],
+      });
+
+      expect(mailContext.sendComposedContent).toHaveBeenCalledWith(
+        expect.objectContaining({ attachmentIds: ['contract'] })
+      );
     });
   });
 

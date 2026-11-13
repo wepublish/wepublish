@@ -163,6 +163,7 @@ export class MailSendResolver {
       html: result.html,
       text: result.text,
       pdf: result.pdf,
+      attachments: result.attachments,
       recipient:
         result.recipient ?
           {

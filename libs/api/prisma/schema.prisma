@@ -308,7 +308,8 @@ model Document {
   fileSize    Int
   extension   String
 
-  mailTemplates MailTemplate[]
+  mailTemplates           MailTemplate[]
+  mailTemplateAttachments MailTemplateAttachment[]
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -1763,6 +1764,11 @@ model MailTemplate {
   letterAppendixId String?
   letterAppendix   Document? @relation(fields: [letterAppendixId], references: [id], onDelete: SetNull)
 
+  // Word documents filled in with the same placeholders, converted to pdf and
+  // attached to every mail sent from this template, or printed after the
+  // letter pages.
+  attachments MailTemplateAttachment[]
+
   subscriptionIntervals SubscriptionInterval[]
 
   userFlowMails UserFlowMail[]
@@ -1777,6 +1783,21 @@ model MailTemplate {
   letterLayoutId String?
 
   @@map("mail_templates")
+}
+
+// One Word document attached to a mail template, at its place in the list.
+// A document still attached cannot be deleted: a mail would otherwise lose
+// it without anyone noticing.
+model MailTemplateAttachment {
+  mailTemplateId String
+  mailTemplate   MailTemplate @relation(fields: [mailTemplateId], references: [id], onDelete: Cascade)
+  documentId     String
+  document       Document     @relation(fields: [documentId], references: [id], onDelete: Restrict)
+  position       Int
+
+  @@id([mailTemplateId, documentId])
+  @@index([documentId])
+  @@map("mail_template_attachments")
 }
 
 // Stationery for printed letters: a header and a footer repeated on every

@@ -17,6 +17,7 @@ import {
 import {
   LetterAttachment,
   LetterDeliveryError,
+  MailAttachmentError,
   MailContext,
   MailController,
   MailControllerConfig,
@@ -284,9 +285,13 @@ export class InvoiceDeliveryService {
         ...paper,
       }).sendMail();
     } catch (error) {
+      // A refused address, a print vendor outage or attachments that cannot
+      // be rendered concern this recipient only; the run goes on with the
+      // others. The mail log keeps the reason.
       if (
         !(error instanceof MailProviderRecipientError) &&
-        !(error instanceof LetterDeliveryError)
+        !(error instanceof LetterDeliveryError) &&
+        !(error instanceof MailAttachmentError)
       ) {
         throw error;
       }

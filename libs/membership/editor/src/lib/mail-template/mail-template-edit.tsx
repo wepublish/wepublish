@@ -60,6 +60,7 @@ import {
 } from './mail-html';
 import { MailColorPicker } from './color-picker';
 import { LetterAppendixPicker } from './letter-appendix-picker';
+import { MailAttachmentPicker } from './mail-attachment-picker';
 import { LetterPreview } from './letter-preview';
 import { useLetterChannel } from './use-letter-channel';
 import { MailPreview } from './mail-preview';
@@ -136,6 +137,7 @@ function MailTemplateEdit() {
     bodyMode: `${fieldId}-body-mode`,
     letterLayout: `${fieldId}-letter-layout`,
     letterAppendix: `${fieldId}-letter-appendix`,
+    attachments: `${fieldId}-attachments`,
   };
 
   // The canonical HTML lives in a ref so typing never re-renders the page
@@ -151,6 +153,8 @@ function MailTemplateEdit() {
   // Stationery for the letter version; null prints on the default layout.
   const [letterLayoutId, setLetterLayoutId] = useState<string | null>(null);
   const [letterAppendixId, setLetterAppendixId] = useState<string | null>(null);
+  // Word documents attached to every mail, in this order.
+  const [attachmentIds, setAttachmentIds] = useState<string[]>([]);
   const [subscriptionId, setSubscriptionId] = useState<string | null>(null);
   const [previewHtml, setPreviewHtml] = useState<string | null>(null);
   const [previewSubject, setPreviewSubject] = useState('');
@@ -173,7 +177,7 @@ function MailTemplateEdit() {
   const [letterPdf, setLetterPdf] = useState<string | null>(null);
   const [letterLoading, setLetterLoading] = useState(false);
   // Without a letter integration there is nothing to render a letter with.
-  const { letterAvailable } = useLetterChannel();
+  const { letterAvailable, paperLetters } = useLetterChannel();
   const { data: letterLayoutData } = useQuery(LetterLayoutsDocument, {
     skip: !letterAvailable,
   });
@@ -203,6 +207,7 @@ function MailTemplateEdit() {
       setContextId(template.context ?? null);
       setLetterLayoutId(template.letterLayoutId ?? null);
       setLetterAppendixId(template.letterAppendixId ?? null);
+      setAttachmentIds(template.attachmentIds ?? []);
       htmlRef.current = template.htmlContent || createEmptyEmailHtml();
       const shell = readShellSettings(htmlRef.current);
       setBackgroundColor(shell.backgroundColor);
@@ -289,6 +294,9 @@ function MailTemplateEdit() {
     context: contextId,
     letterLayoutId,
     letterAppendixId,
+    // Attachments ship with the letters; without the feature the api refuses
+    // them, and leaving them out keeps whatever the template has.
+    ...(paperLetters ? { attachmentIds } : {}),
   });
 
   const save = async (close: boolean) => {
@@ -340,6 +348,7 @@ function MailTemplateEdit() {
     textContent,
     letterLayoutId,
     letterAppendixId,
+    attachmentIds,
   });
 
   // Preview/test never block on a missing mail type: fall back to `custom`
@@ -615,6 +624,23 @@ function MailTemplateEdit() {
                     }}
                   />
                 </FormControl>
+                {paperLetters && (
+                  <FormControl
+                    style={{ flex: '1 1 100%', minWidth: 200, marginBottom: 0 }}
+                    fullWidth
+                  >
+                    <FieldLabel
+                      id={ids.attachments}
+                      label={t('mailTemplates.edit.attachments')}
+                      help={t('mailTemplates.edit.attachmentsHelp')}
+                    />
+                    <MailAttachmentPicker
+                      value={attachmentIds}
+                      onChange={setAttachmentIds}
+                      labelId={ids.attachments}
+                    />
+                  </FormControl>
+                )}
                 {letterAvailable && (
                   <FormControl
                     style={{ flex: 1, minWidth: 200, marginBottom: 0 }}

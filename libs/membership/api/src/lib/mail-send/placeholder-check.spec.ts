@@ -42,6 +42,25 @@ describe('findMissingPlaceholders', () => {
     expect(findMissingPlaceholders(tpl, true)).toEqual([]);
   });
 
+  it('checks the placeholders of the attachments as well', () => {
+    const tpl = template('<p>{{user_firstName}}</p>');
+
+    expect(
+      findMissingPlaceholders(tpl, false, [
+        'user_name',
+        'optional_subscription_memberPlan_name',
+      ])
+    ).toEqual(['optional_subscription_memberPlan_name']);
+  });
+
+  it('flags a placeholder used in the template and an attachment once', () => {
+    const tpl = template('<p>{{optional_does_not_exist}}</p>');
+
+    expect(
+      findMissingPlaceholders(tpl, false, ['optional_does_not_exist'])
+    ).toEqual(['optional_does_not_exist']);
+  });
+
   it('always flags a genuinely unknown placeholder', () => {
     const tpl = template('<p>{{optional_does_not_exist}}</p>');
 

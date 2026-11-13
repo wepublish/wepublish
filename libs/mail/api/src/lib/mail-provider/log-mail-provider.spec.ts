@@ -65,6 +65,28 @@ describe('LogMailProvider', () => {
     });
   });
 
+  it('names the attachments and their sizes, but not their content', async () => {
+    const provider = await makeProvider();
+    const info = vi.spyOn(provider['log'], 'info').mockImplementation();
+
+    await provider.sendMail({
+      ...sendProps,
+      attachments: [
+        {
+          filename: 'Vertrag.pdf',
+          contentType: 'application/pdf',
+          content: Buffer.from('%PDF-1.7'),
+        },
+      ],
+    });
+
+    expect(info.mock.calls[0][0]).toMatchObject({
+      attachments: [
+        { filename: 'Vertrag.pdf', contentType: 'application/pdf', bytes: 8 },
+      ],
+    });
+  });
+
   it('falls back to the html body when there is no plain text', async () => {
     const provider = await makeProvider();
     const info = vi.spyOn(provider['log'], 'info').mockImplementation();
