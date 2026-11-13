@@ -1579,6 +1579,7 @@ export enum EngagementActionType {
   Membership = 'MEMBERSHIP',
   Newsletter = 'NEWSLETTER',
   Register = 'REGISTER',
+  SwitchToYearly = 'SWITCH_TO_YEARLY',
   Url = 'URL'
 }
 
@@ -1588,6 +1589,7 @@ export enum EngagementAudience {
   Anonymous = 'ANONYMOUS',
   Members = 'MEMBERS',
   MemberPlans = 'MEMBER_PLANS',
+  MonthlyMembers = 'MONTHLY_MEMBERS',
   NonMembers = 'NON_MEMBERS',
   PaywallBypassed = 'PAYWALL_BYPASSED',
   Registered = 'REGISTERED'

@@ -28,6 +28,8 @@ const LOGIN_STATUS: Record<EngagementAudience, LoginStatus> = {
   PAYWALL_BYPASSED: LoginStatus.PAYWALL_BYPASSED,
   // Older websites can not tell plans apart.
   MEMBER_PLANS: LoginStatus.SUBSCRIBED,
+  // Never matches there: older websites do not say how a reader pays.
+  MONTHLY_MEMBERS: LoginStatus.SUBSCRIBED,
 };
 
 const ROLE: Record<EngagementActionRole, BannerActionRole> = {
@@ -41,6 +43,7 @@ const URL_OF: Partial<Record<EngagementActionType, string>> = {
   LOGIN: '/login',
   REGISTER: '/signup',
   MEMBERSHIP: '/mitmachen',
+  SWITCH_TO_YEARLY: '/profile',
 };
 
 export const toBanner = (

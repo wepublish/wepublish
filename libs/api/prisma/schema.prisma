@@ -1931,6 +1931,8 @@ enum EngagementAudience {
   PAYWALL_BYPASSED
   /// Readers with an active subscription to one of `audienceMemberPlans`.
   MEMBER_PLANS
+  /// Readers with an active, not cancelled subscription they pay monthly.
+  MONTHLY_MEMBERS
 }
 
 enum EngagementPlacement {
@@ -1958,6 +1960,8 @@ enum EngagementActionType {
   LOGIN
   REGISTER
   MEMBERSHIP
+  /// Leads to the reader's monthly subscription, asking to switch it to yearly.
+  SWITCH_TO_YEARLY
 }
 
 enum EngagementActionRole {

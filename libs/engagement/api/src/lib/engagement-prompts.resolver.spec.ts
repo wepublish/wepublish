@@ -297,6 +297,55 @@ describe('EngagementPromptsResolver', () => {
     ).toEqual(['bypassed-stage']);
   });
 
+  it('leads monthly subscribers to switching their own subscription to yearly', async () => {
+    rules = [
+      rule('yearly', {
+        audience: EngagementAudience.MONTHLY_MEMBERS,
+        stages: [
+          stage('yearly-stage', {
+            actions: [
+              {
+                id: 'switch',
+                stageId: 'yearly-stage',
+                createdAt: new Date('2026-01-01'),
+                modifiedAt: new Date('2026-01-01'),
+                type: EngagementActionType.SWITCH_TO_YEARLY,
+                label: '',
+                url: '',
+                style: '',
+                role: EngagementActionRole.PRIMARY,
+              },
+            ],
+          }),
+        ],
+      }),
+    ];
+    session = { type: 'user', user: { id: 'user-1' }, roles: [] };
+    prisma.subscription.findMany.mockResolvedValueOnce([
+      {
+        id: 'sub-1',
+        memberPlanID: 'plan-1',
+        startsAt: new Date('2026-01-01'),
+        paidUntil: new Date(Date.now() + 86_400_000),
+        paymentPeriodicity: 'monthly',
+        extendable: true,
+        deactivation: null,
+        paymentMethod: { gracePeriod: 0 },
+      },
+    ]);
+
+    const { body } = await send(
+      promptsQuery('documentType: PAGE, documentId: "page-1"')
+    );
+
+    expect(body.data.engagementPrompts[0].stage.actions).toEqual([
+      expect.objectContaining({
+        type: EngagementActionType.SWITCH_TO_YEARLY,
+        url: '/profile/subscription/sub-1?switchTo=yearly',
+      }),
+    ]);
+  });
+
   it('stops asking readers for their email once they signed up', async () => {
     rules = [
       rule('newsletter', { goal: EngagementGoal.NEWSLETTER }),

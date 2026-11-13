@@ -163,7 +163,7 @@ export class ArticleAccessService {
           isRestricted(access) && access.ruleId && access.stageId ?
             { ruleId: access.ruleId, stageId: access.stageId }
           : undefined,
-      }).map(toEngagementPrompt),
+      }).map(prompt => toEngagementPrompt(prompt, reader)),
     };
   }
 
