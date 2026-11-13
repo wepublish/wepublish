@@ -55,7 +55,7 @@ import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete, MdLockReset, MdPassword } from 'react-icons/md';
 import { Link as RouterLink } from 'react-router-dom';
 
-const USER_FILTER_FIELDS = ['userRole', 'text'] as const;
+const USER_FILTER_FIELDS = ['userRole', 'emailSegments', 'text'] as const;
 
 function mapColumFieldToGraphQLField(columnField: string): UserSort | null {
   switch (columnField) {
@@ -69,6 +69,10 @@ function mapColumFieldToGraphQLField(columnField: string): UserSort | null {
       return UserSort.FirstName;
     case 'subscriptionCount':
       return UserSort.SubscriptionCount;
+    case 'emailQuality':
+      return UserSort.EmailQuality;
+    case 'emailQualitySince':
+      return UserSort.EmailQualitySince;
     default:
       return null;
   }
@@ -295,6 +299,8 @@ function UserList() {
             'firstname',
             'name',
             'subscriptionCount',
+            'emailQuality',
+            'emailQualitySince',
           ]}
           columns={[
             {
@@ -390,6 +396,41 @@ function UserList() {
                   </Tooltip>
                 );
               },
+            },
+            {
+              // Same segments as the mail-send audience; people never
+              // evaluated have no row and count as unknown. A placeholder
+              // address is only recognised in the filter, not here.
+              id: 'emailquality',
+              label: t('userList.overview.emailQuality'),
+              width: 200,
+              align: 'left',
+              sortKey: 'emailQuality',
+              defaultHidden: true,
+              render: ({ emailQuality }: TinyUserFragment) =>
+                t(
+                  `userList.overview.emailSegments.${emailQuality?.level ?? 'unknown'}`
+                ),
+              exportValue: ({ emailQuality }) =>
+                t(
+                  `userList.overview.emailSegments.${emailQuality?.level ?? 'unknown'}`
+                ),
+            },
+            {
+              id: 'emailqualitysince',
+              label: t('userList.overview.emailQualitySince'),
+              width: 160,
+              align: 'left',
+              sortKey: 'emailQualitySince',
+              defaultHidden: true,
+              render: ({ emailQuality }: TinyUserFragment) =>
+                emailQuality ?
+                  t('userList.overview.emailQualitySinceDate', {
+                    emailQualitySinceDate: new Date(emailQuality.since),
+                  })
+                : null,
+              exportValue: ({ emailQuality }) =>
+                emailQuality ? new Date(emailQuality.since) : null,
             },
             {
               id: 'action',

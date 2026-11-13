@@ -1,4 +1,4 @@
-import { useLazyQuery } from '@apollo/client/react';
+import { useLazyQuery, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   Autocomplete,
@@ -14,6 +14,7 @@ import {
   FullAuthorFragment,
   ImportedEventFilter,
   InputMaybe,
+  MailEmailSegment,
   PageFilter,
   PeerArticleFilter,
   PeerListDocument,
@@ -21,6 +22,7 @@ import {
   PollVoteFilter,
   Scalars,
   TagType,
+  UserEmailSegmentsDocument,
   UserFilter,
   UserRoleListDocument,
 } from '@wepublish/editor/api';
@@ -97,6 +99,7 @@ type Field =
   | 'dates'
   | 'providers'
   | 'userRole'
+  | 'emailSegments'
   | 'text'
   | 'name'
   | 'location'
@@ -145,6 +148,12 @@ export function ListViewFilters({
     useLazyQuery(UserRoleListDocument);
 
   const userRoles = userRoleData?.userRoles?.nodes ?? [];
+
+  // The API leaves out placeholder when no placeholder pattern is configured.
+  const { data: emailSegmentData } = useQuery(UserEmailSegmentsDocument, {
+    skip: !fields.includes('emailSegments'),
+  });
+  const emailSegments = emailSegmentData?.userEmailSegments ?? [];
 
   const [peerListFetch, { data: peerListData }] = useLazyQuery(
     PeerListDocument,
@@ -207,6 +216,10 @@ export function ListViewFilters({
       value = { userRole: null };
     }
 
+    if (value.emailSegments && !value.emailSegments.length) {
+      value = { emailSegments: null };
+    }
+
     if (value.answerIds && !value.answerIds.length) {
       value = { answerIds: null };
     }
@@ -254,6 +267,25 @@ export function ListViewFilters({
             }))}
             value={filter?.userRole ?? []}
             onChange={userRole => updateFilter({ userRole })}
+          />
+        </div>
+      )}
+
+      {fields.includes('emailSegments') && (
+        <div>
+          <MultiSelectFilter
+            data-testid="emailSegments-combobox"
+            label={t('userList.overview.emailQuality')}
+            options={emailSegments.map(segment => ({
+              value: segment,
+              label: t(`userList.overview.emailSegments.${segment}`),
+              hint:
+                segment === MailEmailSegment.Dead ?
+                  t('userList.overview.emailSegments.deadHint')
+                : undefined,
+            }))}
+            value={filter?.emailSegments ?? []}
+            onChange={emailSegments => updateFilter({ emailSegments })}
           />
         </div>
       )}

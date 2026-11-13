@@ -3047,6 +3047,17 @@
         "amountOfSubscriptions": "{{amount}} abonnements",
         "createdAt": "Créé",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
+        "emailQuality": "Statut e-mail",
+        "emailQualitySince": "Statut e-mail depuis",
+        "emailQualitySinceDate": "{{emailQualitySinceDate, PP}}",
+        "emailSegments": {
+          "active": "Active",
+          "unknown": "Inconnu",
+          "unresponsive": "Sans réaction",
+          "dead": "Non distribuable",
+          "placeholder": "Substitution",
+          "deadHint": "Rebond, adresse invalide, plainte pour spam ou désabonnement chez le fournisseur"
+        },
         "firstName": "Prénom",
         "subscriptionStatus": {
           "Active": "Actif",

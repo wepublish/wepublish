@@ -3095,6 +3095,17 @@
         "amountOfSubscriptions": "{{amount}} subscriptions",
         "createdAt": "Created",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
+        "emailQuality": "Email status",
+        "emailQualitySince": "Email status since",
+        "emailQualitySinceDate": "{{emailQualitySinceDate, PP}}",
+        "emailSegments": {
+          "active": "Active",
+          "unknown": "Unknown",
+          "unresponsive": "Unresponsive",
+          "dead": "Undeliverable",
+          "placeholder": "Placeholder",
+          "deadHint": "Bounce, invalid address, spam complaint or unsubscribed at the mail provider"
+        },
         "firstName": "First Name",
         "subscriptionStatus": {
           "Active": "Active",
