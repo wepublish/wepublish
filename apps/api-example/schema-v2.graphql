@@ -7428,6 +7428,11 @@ type Query {
   """The open suggestion for one user, if any"""
   userDeliverySuggestion(userId: String!): DeliverySuggestionModel
 
+  """
+  The email segments the user list can be filtered by, best to worst; placeholder only when a placeholder pattern is configured.
+  """
+  userEmailSegments: [MailEmailSegment!]!
+
   """Get all invoices for the authenticated user"""
   userInvoices: [Invoice!]!
   userPollVote(pollId: String!): String
@@ -9002,6 +9007,10 @@ enum UserEvent {
 }
 
 input UserFilter {
+  """
+  Any of these email segments; the same segments as the mail-send audience.
+  """
+  emailSegments: [MailEmailSegment!]
   name: String
   text: String
   userRole: [String!]
@@ -9029,6 +9038,8 @@ enum UserRoleSort {
 
 enum UserSort {
   CreatedAt
+  EmailQuality
+  EmailQualitySince
   FirstName
   ModifiedAt
   Name
