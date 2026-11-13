@@ -12,16 +12,18 @@ import {
 } from '@wepublish/block-content/website';
 import { FullTeaserFragment } from '@wepublish/website/api';
 import {
+  BuilderImageProps,
   BuilderTeaserSlotsBlockProps,
   Image,
   Link,
-  useWebsiteBuilder,
 } from '@wepublish/website/builder';
+import { useRouter } from 'next/router';
 import { useId } from 'react';
 
 import { designText } from '../../theme';
 import { BlockHeader, splitButtonTeaser } from '../block-header';
 import { WepBlockStyles } from '../block-styles/wep-block-styles';
+import { formatListDate } from '../format-list-date';
 
 export const isLatestNews = ({
   blockStyle,
@@ -39,6 +41,8 @@ export const LatestNewsWrapper = styled('section')`
 
 export const LatestNewsArticles = styled('div')`
   display: grid;
+  // The columns never wider than the screen, even while an image is missing
+  grid-template-columns: minmax(0, 1fr);
   gap: 50px 35px;
 
   ${({ theme }) => theme.breakpoints.up('sm')} {
@@ -54,6 +58,7 @@ export const LatestNewsArticle = styled('article')`
   a,
   a:hover {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: 30px;
     color: inherit;
     text-decoration: none;
@@ -84,40 +89,64 @@ export const LatestNewsMeta = styled('p')`
   hyphens: manual;
 `;
 
-const LatestNewsTeaser = ({ teaser }: { teaser: FullTeaserFragment }) => {
-  const {
-    date: { format },
-  } = useWebsiteBuilder();
+/** An article as card: the image, the title and "<authors>, <date>" below */
+export const NewsCard = ({
+  className,
+  href,
+  target,
+  image,
+  title,
+  authors,
+  date,
+}: {
+  className?: string;
+  href?: string | null;
+  target?: string | null;
+  image?: BuilderImageProps['image'] | null;
+  title?: string | null;
+  authors?: string[] | null;
+  date?: string | null;
+}) => {
+  const { locale } = useRouter();
   const titleId = useId();
 
-  const image = selectTeaserImage(teaser);
-  const authors = selectTeaserAuthors(teaser) ?? [];
-  const date = selectTeaserDate(teaser);
   const meta = [
-    joinAuthorNames(authors, ', ', ', '),
-    date && format(new Date(date), false),
+    joinAuthorNames(authors ?? [], ', ', ', '),
+    date && formatListDate(date, locale),
   ]
     .filter(Boolean)
     .join(', ');
 
   return (
-    <LatestNewsArticle aria-labelledby={titleId}>
+    <LatestNewsArticle
+      className={className}
+      aria-labelledby={titleId}
+    >
       <Link
-        href={selectTeaserUrl(teaser) ?? undefined}
-        target={selectTeaserTarget(teaser) ?? undefined}
+        href={href ?? undefined}
+        target={target ?? undefined}
       >
         {image && <LatestNewsImage image={image} />}
 
         <LatestNewsText>
-          <LatestNewsArticleTitle id={titleId}>
-            {selectTeaserTitle(teaser)}
-          </LatestNewsArticleTitle>
+          <LatestNewsArticleTitle id={titleId}>{title}</LatestNewsArticleTitle>
           {meta && <LatestNewsMeta>{meta}</LatestNewsMeta>}
         </LatestNewsText>
       </Link>
     </LatestNewsArticle>
   );
 };
+
+const LatestNewsTeaser = ({ teaser }: { teaser: FullTeaserFragment }) => (
+  <NewsCard
+    href={selectTeaserUrl(teaser)}
+    target={selectTeaserTarget(teaser)}
+    image={selectTeaserImage(teaser)}
+    title={selectTeaserTitle(teaser)}
+    authors={selectTeaserAuthors(teaser)}
+    date={selectTeaserDate(teaser)}
+  />
+);
 
 /**
  * The latest articles below the title of the block. A custom teaser without

@@ -9,10 +9,12 @@ import {
 } from '@wepublish/block-content/website';
 import { FullTeaserFragment } from '@wepublish/website/api';
 import {
+  BuilderImageProps,
   BuilderTeaserSlotsBlockProps,
   Image,
   Link,
 } from '@wepublish/website/builder';
+import { useRouter } from 'next/router';
 import { useId } from 'react';
 
 import { designText } from '../../theme';
@@ -36,6 +38,8 @@ export const EventListWrapper = styled('section')`
 
 export const EventListEvents = styled('div')`
   display: grid;
+  // Never wider than the screen, even while an image is missing
+  grid-template-columns: minmax(0, 1fr);
   gap: ${({ theme }) => theme.spacing(5)};
 
   ${({ theme }) => theme.breakpoints.up('sm')} {
@@ -47,14 +51,18 @@ export const EventListEvent = styled('article')`
   a,
   a:hover {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: ${({ theme }) => theme.spacing(2)};
     color: inherit;
     text-decoration: none;
 
+    // The image on the left, the text over the whole width without one
     ${({ theme }) => theme.breakpoints.up('sm')} {
-      grid-template-columns: minmax(0, 401px) minmax(0, 1fr);
-      align-items: start;
-      gap: 30px;
+      &:has(img) {
+        grid-template-columns: minmax(0, 401px) minmax(0, 1fr);
+        align-items: start;
+        gap: 30px;
+      }
     }
   }
 `;
@@ -82,35 +90,68 @@ export const EventListDetail = styled('p')`
   color: ${({ theme }) => theme.palette.primary.dark};
 `;
 
-const EventListTeaser = ({ teaser }: { teaser: FullTeaserFragment }) => {
+/** An event with its image on the left, name, date and place on the right */
+export const EventRow = ({
+  className,
+  href,
+  target,
+  image,
+  title,
+  startsAt,
+  endsAt,
+  location,
+}: {
+  className?: string;
+  href?: string | null;
+  target?: string | null;
+  image?: BuilderImageProps['image'] | null;
+  title?: string | null;
+  startsAt?: string | null;
+  endsAt?: string | null;
+  location?: string | null;
+}) => {
   const titleId = useId();
-  const event = teaser.__typename === 'EventTeaser' ? teaser.event : null;
-  const image = selectTeaserImage(teaser);
+  const { locale } = useRouter();
 
   return (
-    <EventListEvent aria-labelledby={titleId}>
+    <EventListEvent
+      className={className}
+      aria-labelledby={titleId}
+    >
       <Link
-        href={selectTeaserUrl(teaser) ?? undefined}
-        target={selectTeaserTarget(teaser) ?? undefined}
+        href={href ?? undefined}
+        target={target ?? undefined}
       >
         {image && <EventListImage image={image} />}
 
         <EventListText>
-          <EventListTitle id={titleId}>
-            {selectTeaserTitle(teaser)}
-          </EventListTitle>
+          <EventListTitle id={titleId}>{title}</EventListTitle>
 
-          {event?.startsAt && (
+          {startsAt && (
             <EventListDetail>
-              {formatEventDate(event.startsAt, event.endsAt)}
+              {formatEventDate(startsAt, endsAt, locale)}
             </EventListDetail>
           )}
-          {event?.location && (
-            <EventListDetail>{event.location}</EventListDetail>
-          )}
+          {location && <EventListDetail>{location}</EventListDetail>}
         </EventListText>
       </Link>
     </EventListEvent>
+  );
+};
+
+const EventListTeaser = ({ teaser }: { teaser: FullTeaserFragment }) => {
+  const event = teaser.__typename === 'EventTeaser' ? teaser.event : null;
+
+  return (
+    <EventRow
+      href={selectTeaserUrl(teaser)}
+      target={selectTeaserTarget(teaser)}
+      image={selectTeaserImage(teaser)}
+      title={selectTeaserTitle(teaser)}
+      startsAt={event?.startsAt}
+      endsAt={event?.endsAt}
+      location={event?.location}
+    />
   );
 };
 

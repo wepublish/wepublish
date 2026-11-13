@@ -4,7 +4,7 @@ import {
   mockYouTubeVideoBlock,
 } from '@wepublish/mocks/website';
 
-import { isVideoOrItsTitle } from './wep-block-renderer';
+import { isReadingText, isVideoOrItsTitle } from './wep-block-renderer';
 
 describe('isVideoOrItsTitle', () => {
   it('is true for a video', () => {
@@ -22,5 +22,22 @@ describe('isVideoOrItsTitle', () => {
       false
     );
     expect(isVideoOrItsTitle(mockRichTextBlock())).toBe(false);
+  });
+});
+
+describe('isReadingText', () => {
+  it('is true for a text', () => {
+    expect(isReadingText(mockRichTextBlock(), mockQuoteBlock())).toBe(true);
+    expect(isReadingText(mockRichTextBlock())).toBe(true);
+  });
+
+  it('is false for the title of a video', () => {
+    expect(isReadingText(mockRichTextBlock(), mockYouTubeVideoBlock())).toBe(
+      false
+    );
+  });
+
+  it('is false for other blocks', () => {
+    expect(isReadingText(mockQuoteBlock())).toBe(false);
   });
 });

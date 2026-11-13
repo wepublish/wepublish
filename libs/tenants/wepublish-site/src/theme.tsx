@@ -69,7 +69,7 @@ export const designText = {
   h2: textStyle(headingFont, 800, 1.3, { xs: 25, md: 34, lg: 42 }),
   h3: textStyle(headingFont, 600, 1.3, { xs: 22, md: 26, lg: 29 }),
   h4: textStyle(headingFont, 600, 1.3, { xs: 18, md: 20, lg: 22 }),
-  paragraph: textStyle(bodyFont, 400, 1.5, { xs: 18, md: 22, lg: 27 }),
+  paragraph: textStyle(bodyFont, 400, 1.5, { xs: 18, md: 21, lg: 25 }),
   text: textStyle(bodyFont, 400, 1.5, { xs: 16, md: 18, lg: 20 }),
   textSmallMono: textStyle(monoFont, 400, 1.5, { xs: 15, md: 16, lg: 16 }),
 };
@@ -182,11 +182,7 @@ const theme = createTheme(WePTheme, {
     },
     // image
     ...{
-      caption: {
-        fontFamily: bodyFont,
-        fontSize: '0.75rem',
-        lineHeight: 1.2,
-      },
+      caption: designText.textSmallMono,
     },
     // break block
     ...{
