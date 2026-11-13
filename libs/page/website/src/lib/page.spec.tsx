@@ -75,4 +75,17 @@ describe('Page', () => {
 
     expect(screen.getByText('Comments')).toBeInTheDocument();
   });
+
+  it('shows its children without the unavailable notice when the page is missing', () => {
+    renderPage(null, {
+      error: new Error('Page not found'),
+      children: <p>Team</p>,
+    });
+
+    expect(screen.getByText('Team')).toBeInTheDocument();
+    expect(unavailableHeading()).not.toBeInTheDocument();
+    expect(
+      document.querySelector('meta[name="robots"][content="noindex"]')
+    ).not.toBeInTheDocument();
+  });
 });
