@@ -16,6 +16,9 @@ export const actionHref = ({
       return '/signup';
     case EngagementActionType.Membership:
       return url || '/mitmachen';
+    // The API leads it to the reader's monthly subscription.
+    case EngagementActionType.SwitchToYearly:
+      return url || '/profile';
     default:
       return url;
   }
@@ -31,4 +34,6 @@ export const actionLabel = (
 export const returnsToArticle = ({
   type,
 }: Pick<FullEngagementActionFragment, 'type'>) =>
-  type !== EngagementActionType.Url && type !== EngagementActionType.Newsletter;
+  type !== EngagementActionType.Url &&
+  type !== EngagementActionType.Newsletter &&
+  type !== EngagementActionType.SwitchToYearly;

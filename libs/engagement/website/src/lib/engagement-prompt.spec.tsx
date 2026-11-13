@@ -280,6 +280,38 @@ describe('EngagementPrompt', () => {
     );
   });
 
+  it('leads monthly subscribers to switching their subscription to yearly', () => {
+    renderWithProviders(
+      <EngagementPrompt
+        prompt={mockEngagementPrompt({
+          stage: {
+            placement: EngagementPlacement.Banner,
+            actions: [
+              mockEngagementAction({
+                id: 'switch',
+                type: EngagementActionType.SwitchToYearly,
+                label: '',
+                url: '/profile/subscription/sub-1?switchTo=yearly',
+              }),
+              mockEngagementAction({
+                id: 'fallback',
+                type: EngagementActionType.SwitchToYearly,
+                label: 'My subscriptions',
+                url: '',
+                role: EngagementActionRole.Other,
+              }),
+            ],
+          },
+        })}
+      />
+    );
+
+    expect(linkOf(t('engagement.action.SWITCH_TO_YEARLY'))).toBe(
+      '/profile/subscription/sub-1?switchTo=yearly'
+    );
+    expect(linkOf('My subscriptions')).toBe('/profile');
+  });
+
   describe('newsletter wall', () => {
     const wall = () =>
       mockHardEngagementPrompt({
