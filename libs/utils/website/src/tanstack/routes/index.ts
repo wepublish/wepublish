@@ -25,5 +25,4 @@ export * from './content';
 export * from './events';
 export * from './misc';
 export * from './search';
-export * from './server-routes';
 export * from './shared';
