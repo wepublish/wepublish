@@ -1,20 +1,16 @@
-import { useQuery } from '@apollo/client/react';
-import styled from '@emotion/styled';
+import { ApolloClient } from '@apollo/client';
 import { createServerFn } from '@tanstack/react-start';
-import { ContentWrapper } from '@wepublish/content/website';
 import {
-  InvoiceListContainer,
-  SubscriptionListContainer,
-} from '@wepublish/membership/website';
-import {
+  FeaturesDocument,
   InvoicesDocument,
   MeDocument,
+  MemberPlanListDocument,
+  NavigationListDocument,
   SubscriptionsDocument,
   SubscriptionsQuery,
 } from '@wepublish/website/api';
-import { Link, useWebsiteBuilder } from '@wepublish/website/builder';
-import { useTranslation } from 'react-i18next';
 
+import { ProfileSubscription } from '../../lib/components/profile/profile-subscription';
 import {
   createAuthenticatedSsrClient,
   extractCache,
@@ -24,25 +20,33 @@ import {
 import { withAuthGuard } from '../auth-guard';
 import { useQueryParams } from '../router-hooks';
 
-const SubscriptionsWrapper = styled(ContentWrapper)`
-  display: grid;
-  gap: ${({ theme }) => theme.spacing(3)};
+/**
+ * What the subscription page renders, fetched on the server. The feature
+ * flags decide between the edit page and the old card; the active member
+ * plans are the edit page's upgrade options. A subscription counts as missing
+ * only when the list loaded and does not have it.
+ */
+export const prefetchSubscription = async (client: ApolloClient, id: string) => {
+  const [subscriptions] = await Promise.all([
+    client.query<SubscriptionsQuery>({ query: SubscriptionsDocument }),
+    client.query({ query: InvoicesDocument }),
+    client.query({ query: MeDocument }),
+    client.query({ query: NavigationListDocument }),
+    client.query({ query: FeaturesDocument }),
+    client.query({
+      query: MemberPlanListDocument,
+      variables: { take: 50, filter: { active: true } },
+    }),
+  ]);
 
-  ${({ theme }) => theme.breakpoints.up('md')} {
-    grid-template-columns: 1fr 1fr;
-    gap: ${({ theme }) => theme.spacing(10)};
-
-    & > * {
-      grid-column: unset;
-    }
-  }
-`;
-
-const SubscriptionListWrapper = styled('div')`
-  display: flex;
-  flex-flow: column;
-  gap: ${({ theme }) => theme.spacing(2)};
-`;
+  return {
+    subscriptionMissing:
+      !subscriptions.error &&
+      !subscriptions.data?.userSubscriptions.find(
+        subscription => subscription.id === id
+      ),
+  };
+};
 
 /**
  * TanStack port of `SubscriptionPage.getInitialProps`.
@@ -69,21 +73,10 @@ export const loadSubscription = createServerFn({ method: 'GET' })
     }
 
     const sessionToken = minted ?? getRequestSessionToken();
-    let subscriptionMissing = false;
-
-    if (sessionToken) {
-      const [subscriptions] = await Promise.all([
-        client.query<SubscriptionsQuery>({ query: SubscriptionsDocument }),
-        client.query({ query: InvoicesDocument }),
-        client.query({ query: MeDocument }),
-      ]);
-
-      subscriptionMissing =
-        !subscriptions.error &&
-        !subscriptions.data?.userSubscriptions.find(
-          subscription => subscription.id === data.id
-        );
-    }
+    const { subscriptionMissing } =
+      sessionToken ?
+        await prefetchSubscription(client, data.id)
+      : { subscriptionMissing: false };
 
     return {
       sessionToken,
@@ -94,45 +87,8 @@ export const loadSubscription = createServerFn({ method: 'GET' })
 
 function SubscriptionPageComponent() {
   const { id } = useQueryParams();
-  const {
-    elements: { H4 },
-  } = useWebsiteBuilder();
-  const { t } = useTranslation();
 
-  const { data } = useQuery(SubscriptionsDocument, {
-    fetchPolicy: 'cache-only',
-  });
-  const subscription = data?.userSubscriptions.find(sub => sub.id === id);
-
-  return (
-    <SubscriptionsWrapper>
-      <SubscriptionListWrapper>
-        <H4 component={'h1'}>
-          {t('user.subscriptionsDetail', {
-            type: subscription?.memberPlan.productType,
-          })}
-        </H4>
-
-        <SubscriptionListContainer
-          filter={subscriptions =>
-            subscriptions.filter(subscription => subscription.id === id)
-          }
-        />
-      </SubscriptionListWrapper>
-
-      <SubscriptionListWrapper>
-        <H4 component={'h1'}>{t('invoice.invoices')}</H4>
-
-        <InvoiceListContainer
-          filter={invoices =>
-            invoices.filter(invoice => invoice.subscriptionID === id)
-          }
-        />
-      </SubscriptionListWrapper>
-
-      <Link href="/profile">{t('navbar.backToProfile')}</Link>
-    </SubscriptionsWrapper>
-  );
+  return <ProfileSubscription id={id as string} />;
 }
 
 export const SubscriptionPage = withAuthGuard(SubscriptionPageComponent);

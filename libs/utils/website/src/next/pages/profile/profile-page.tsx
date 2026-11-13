@@ -22,8 +22,8 @@ import { ssrAuthLink } from '../../../lib/auth-link';
 import { getSessionTokenProps } from '../../get-session-token-props';
 
 import { getApiUrl } from '../../../lib/api-url';
-import { ProfileDetails } from './profile-details';
-import { ProfileSubscriptions } from './profile-subscriptions';
+import { ProfileDetails } from '../../../lib/components/profile/profile-details';
+import { ProfileSubscriptions } from '../../../lib/components/profile/profile-subscriptions';
 
 type ProfilePageProps = Omit<
   ComponentProps<typeof PersonalDataFormContainer>,
