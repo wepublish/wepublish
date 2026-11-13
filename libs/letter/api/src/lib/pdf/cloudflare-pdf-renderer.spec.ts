@@ -190,6 +190,10 @@ describe('CloudflarePdfRenderer', () => {
     );
   });
 
+  it('says it cannot convert documents, so attachments are not offered', async () => {
+    expect(await createRenderer().canConvertDocuments()).toBe(false);
+  });
+
   // Browser rendering only prints html; Word files need LibreOffice.
   it('refuses to convert an office document, naming Gotenberg', async () => {
     await expect(

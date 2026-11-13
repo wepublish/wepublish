@@ -34,6 +34,10 @@ export class GotenbergPdfRenderer extends BasePdfRenderer {
     return !!(config?.gotenberg_url || this.fallback.url);
   }
 
+  canConvertDocuments(): Promise<boolean> {
+    return this.isConfigured();
+  }
+
   async render(html: string): Promise<Buffer> {
     const form = new FormData();
     form.append('files', new Blob([html], { type: 'text/html' }), 'index.html');

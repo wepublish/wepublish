@@ -5,7 +5,6 @@ import {
 } from '@nestjs/common';
 import { LetterAddressPosition, Prisma, PrismaClient } from '@prisma/client';
 import { v7 as uuidv7 } from 'uuid';
-import { FeaturesService } from '@wepublish/features/api';
 import {
   composeMail,
   convertMandrillPlaceholders,
@@ -17,10 +16,13 @@ import {
   MailTemplateContent,
 } from '@wepublish/mail/api';
 import {
+  DocumentAttachmentRenderer,
   DOCX_MIME_TYPE,
   LetterAddress,
   LetterAddressError,
   LetterContext,
+  MAX_ATTACHMENT_BYTES,
+  MAX_TEMPLATE_ATTACHMENTS,
   toLetterAddress,
 } from '@wepublish/letter/api';
 import { MailTemplateInput } from './mail-template.model';
@@ -45,7 +47,7 @@ export class MailTemplateService {
     private prisma: PrismaClient,
     private mailContext: MailContext,
     private letterContext: LetterContext,
-    private features: FeaturesService
+    private attachments: DocumentAttachmentRenderer
   ) {}
 
   async createMailTemplate({ attachmentIds, ...input }: MailTemplateInput) {
@@ -67,7 +69,7 @@ export class MailTemplateService {
     id: string,
     { attachmentIds, ...input }: MailTemplateInput
   ) {
-    await this.assertAttachable(attachmentIds);
+    await this.assertAttachable(attachmentIds, id);
 
     return this.prisma.mailTemplate.update({
       where: { id },
@@ -96,17 +98,42 @@ export class MailTemplateService {
   }
 
   /**
-   * Attachments ship dark with the letters, whose pdf renderer converts them.
-   * Only Word documents can be filled in, so nothing else is let through.
+   * Only what every mail of the template can carry is let through: Word
+   * documents, which only a renderer that converts them (Gotenberg) can fill
+   * in, few and small enough for a mail, and none on a template sent as a
+   * system mail, which someone waits for (a login link, a password reset).
+   * Attachments ship dark with the letters.
    */
-  private async assertAttachable(attachmentIds?: string[] | null) {
+  private async assertAttachable(
+    attachmentIds?: string[] | null,
+    templateId?: string
+  ) {
     if (!attachmentIds?.length) {
       return;
     }
 
-    if (!(await this.features.isEnabled('paper-letters'))) {
+    if (!(await this.attachments.isAvailable())) {
       throw new ForbiddenException(
-        'Mail attachments are not enabled for this medium.'
+        'Mail attachments are not available for this medium: they need paper letters and a pdf renderer that converts Word documents (Gotenberg).'
+      );
+    }
+
+    if (templateId) {
+      const systemMail = await this.prisma.userFlowMail.findFirst({
+        where: { mailTemplateId: templateId },
+        select: { event: true },
+      });
+
+      if (systemMail) {
+        throw new BadRequestException(
+          `This template is sent as the system mail ${systemMail.event}, which must not wait for attachments. Use another template for mails with attachments.`
+        );
+      }
+    }
+
+    if (attachmentIds.length > MAX_TEMPLATE_ATTACHMENTS) {
+      throw new BadRequestException(
+        `A template can attach at most ${MAX_TEMPLATE_ATTACHMENTS} documents.`
       );
     }
 
@@ -116,7 +143,13 @@ export class MailTemplateService {
 
     const documents = await this.prisma.document.findMany({
       where: { id: { in: attachmentIds } },
-      select: { id: true, title: true, filename: true, mimeType: true },
+      select: {
+        id: true,
+        title: true,
+        filename: true,
+        mimeType: true,
+        fileSize: true,
+      },
     });
 
     for (const id of attachmentIds) {
@@ -133,6 +166,19 @@ export class MailTemplateService {
           }" is not a Word document (.docx); only those can be attached.`
         );
       }
+    }
+
+    // The pdfs come out about as large as the Word files; the send checks the
+    // pdfs themselves.
+    if (
+      documents.reduce((bytes, { fileSize }) => bytes + fileSize, 0) >
+      MAX_ATTACHMENT_BYTES
+    ) {
+      throw new BadRequestException(
+        `The documents are too large together for a mail: at most ${
+          MAX_ATTACHMENT_BYTES / 1024 / 1024
+        } MB.`
+      );
     }
   }
 

@@ -1,10 +1,15 @@
 import { Document, PrismaClient } from '@prisma/client';
+import { MailAttachmentError } from '@wepublish/mail/api';
 import { strFromU8, strToU8, unzipSync, zipSync } from 'fflate';
-import { PdfRenderer } from '../pdf/pdf-renderer';
+import { PdfRenderer, PdfRendererError } from '../pdf/pdf-renderer';
 import {
   attachmentFilename,
+  CONVERSION_FAILURES_BEFORE_PAUSE,
+  CONVERSION_PAUSE_MS,
   DOCX_MIME_TYPE,
   DocumentAttachmentRenderer,
+  MAX_ATTACHMENT_BYTES,
+  RecentCache,
 } from './document-attachment-renderer';
 
 const docx = (text: string) =>
@@ -15,8 +20,15 @@ const docx = (text: string) =>
     ),
   });
 
+/** The text Word would show: every text node of the body, in order. */
 const textOf = (file: Uint8Array) =>
-  strFromU8(unzipSync(file)['word/document.xml']).replace(/<[^>]+>/g, '');
+  [
+    ...strFromU8(unzipSync(file)['word/document.xml']).matchAll(
+      /<w:t(?:\s[^>]*)?>([^<]*)<\/w:t>/g
+    ),
+  ]
+    .map(match => match[1])
+    .join('');
 
 const document = (
   id: string,
@@ -41,6 +53,7 @@ function setup({
     contract: docx('Hallo {{user_firstName}}'),
     terms: docx('Es gelten die AGB.'),
   } as Record<string, Uint8Array>,
+  enabled = async () => true,
 } = {}) {
   const findMany = vi.fn(
     async ({ where }: { where: { id: { in: string[] } } }) =>
@@ -59,6 +72,7 @@ function setup({
   const converted: { text: string; filename: string }[] = [];
   const pdfRenderer = {
     isConfigured: async () => true,
+    canConvertDocuments: vi.fn(async () => true),
     render: vi.fn(),
     convertDocument: vi.fn(async (file: Uint8Array, filename: string) => {
       converted.push({ text: textOf(file), filename });
@@ -71,6 +85,7 @@ function setup({
     prisma: { document: { findMany } } as unknown as PrismaClient,
     pdfRenderer,
     documentUrl: async id => `https://media/document/${id}`,
+    enabled,
   });
 
   return { renderer, findMany, fetchMock, pdfRenderer, converted };
@@ -178,9 +193,162 @@ describe('DocumentAttachmentRenderer', () => {
       new Error('Gotenberg is down')
     );
 
-    await expect(renderer.render(['contract'], data)).rejects.toThrow(
+    const failure = renderer.render(['contract'], data);
+
+    await expect(failure).rejects.toThrow(
       'Attachment "Vertrag" could not be rendered: Gotenberg is down'
     );
+    // Every caller tells a failed attachment from a failed delivery by this.
+    await expect(failure).rejects.toBeInstanceOf(MailAttachmentError);
+  });
+
+  describe('when the medium has attachments switched off', () => {
+    it('attaches nothing, without asking anyone', async () => {
+      // Templates keep their attachments while the feature is off, invisible
+      // in the editor; a mail must not carry what nobody can see.
+      const { renderer, findMany, fetchMock, pdfRenderer } = setup({
+        enabled: async () => false,
+      });
+
+      expect(await renderer.render(['contract'], data)).toEqual([]);
+      expect(await renderer.placeholders(['contract'])).toEqual([]);
+      expect(findMany).not.toHaveBeenCalled();
+      expect(fetchMock).not.toHaveBeenCalled();
+      expect(pdfRenderer.convertDocument).not.toHaveBeenCalled();
+    });
+
+    it('is not available', async () => {
+      const { renderer } = setup({ enabled: async () => false });
+
+      expect(await renderer.isAvailable()).toBe(false);
+    });
+  });
+
+  describe('isAvailable', () => {
+    it('is available with a renderer that converts documents', async () => {
+      const { renderer } = setup();
+
+      expect(await renderer.isAvailable()).toBe(true);
+    });
+
+    it('is not available with a renderer that only prints html', async () => {
+      const { renderer, pdfRenderer } = setup();
+      pdfRenderer.canConvertDocuments.mockResolvedValue(false);
+
+      expect(await renderer.isAvailable()).toBe(false);
+    });
+
+    it('is not available without any renderer', async () => {
+      const { renderer, pdfRenderer } = setup();
+      pdfRenderer.canConvertDocuments.mockRejectedValue(
+        new Error('No pdf renderer is configured.')
+      );
+
+      expect(await renderer.isAvailable()).toBe(false);
+    });
+  });
+
+  describe('when conversions keep failing', () => {
+    beforeEach(() => {
+      vi.useFakeTimers({ toFake: ['Date'] });
+      vi.setSystemTime(new Date('2026-11-13T10:00:00Z'));
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    async function failInARow(
+      renderer: DocumentAttachmentRenderer,
+      times: number
+    ) {
+      for (let attempt = 0; attempt < times; attempt++) {
+        await expect(renderer.render(['terms'], data)).rejects.toThrow(
+          'timed out'
+        );
+      }
+    }
+
+    it('stops asking the renderer for a while, failing at once', async () => {
+      // Each attempt at a renderer that is down waits for its timeout; a send
+      // job would otherwise wait that long for every recipient.
+      const { renderer, pdfRenderer } = setup();
+      pdfRenderer.convertDocument.mockRejectedValue(
+        new PdfRendererError('timed out')
+      );
+
+      await failInARow(renderer, CONVERSION_FAILURES_BEFORE_PAUSE);
+      pdfRenderer.convertDocument.mockClear();
+
+      const paused = renderer.render(['terms'], data);
+
+      await expect(paused).rejects.toThrow(
+        /Converting attachments is paused .* timed out/
+      );
+      await expect(paused).rejects.toBeInstanceOf(MailAttachmentError);
+      expect(pdfRenderer.convertDocument).not.toHaveBeenCalled();
+    });
+
+    it('tries again after the pause, and goes on once that works', async () => {
+      const { renderer, pdfRenderer } = setup();
+      pdfRenderer.convertDocument.mockRejectedValue(
+        new PdfRendererError('timed out')
+      );
+      await failInARow(renderer, CONVERSION_FAILURES_BEFORE_PAUSE);
+
+      vi.setSystemTime(Date.now() + CONVERSION_PAUSE_MS);
+      pdfRenderer.convertDocument.mockResolvedValue(Buffer.from('%PDF-ok'));
+
+      await expect(renderer.render(['terms'], data)).resolves.toHaveLength(1);
+      await expect(renderer.render(['contract'], data)).resolves.toHaveLength(
+        1
+      );
+    });
+
+    it('pauses again at once when the first try after the pause fails', async () => {
+      const { renderer, pdfRenderer } = setup();
+      pdfRenderer.convertDocument.mockRejectedValue(
+        new PdfRendererError('timed out')
+      );
+      await failInARow(renderer, CONVERSION_FAILURES_BEFORE_PAUSE);
+
+      vi.setSystemTime(Date.now() + CONVERSION_PAUSE_MS);
+      await failInARow(renderer, 1);
+      pdfRenderer.convertDocument.mockClear();
+
+      await expect(renderer.render(['terms'], data)).rejects.toThrow(/paused/);
+      expect(pdfRenderer.convertDocument).not.toHaveBeenCalled();
+    });
+
+    it('does not pause for failures with a success in between', async () => {
+      const { renderer, pdfRenderer } = setup();
+      pdfRenderer.convertDocument.mockRejectedValue(
+        new PdfRendererError('timed out')
+      );
+      await failInARow(renderer, CONVERSION_FAILURES_BEFORE_PAUSE - 1);
+      pdfRenderer.convertDocument.mockResolvedValueOnce(Buffer.from('%PDF-ok'));
+      await renderer.render(['contract'], data);
+      await failInARow(renderer, CONVERSION_FAILURES_BEFORE_PAUSE - 1);
+      pdfRenderer.convertDocument.mockClear();
+
+      await expect(renderer.render(['terms'], data)).rejects.toThrow(
+        'timed out'
+      );
+      expect(pdfRenderer.convertDocument).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it('refuses attachments too large together for a mail to carry', async () => {
+    // Mail providers cap a message at about 25 MB, and base64 adds a third.
+    const { renderer, pdfRenderer } = setup();
+    const half = Buffer.alloc(MAX_ATTACHMENT_BYTES / 2 + 1);
+    half.write('%PDF-');
+    pdfRenderer.convertDocument.mockResolvedValue(half);
+
+    const failure = renderer.render(['contract', 'terms'], data);
+
+    await expect(failure).rejects.toThrow(/too large/);
+    await expect(failure).rejects.toBeInstanceOf(MailAttachmentError);
   });
 
   it('fails for a document that no longer exists', async () => {
@@ -225,6 +393,75 @@ describe('DocumentAttachmentRenderer', () => {
     expect(await renderer.placeholders(['contract', 'terms'])).toEqual([
       'user_firstName',
     ]);
+  });
+});
+
+describe('RecentCache', () => {
+  const bytes = (size: number) => new Uint8Array(size);
+
+  function cache(limits: { entries: number; bytes: number }) {
+    const loads: string[] = [];
+    const recent = new RecentCache<Uint8Array>(limits, value => value.length);
+    const get = (key: string, size = 1) =>
+      recent.get(key, async () => {
+        loads.push(key);
+
+        return bytes(size);
+      });
+
+    return { get, loads };
+  }
+
+  it('keeps the latest entries, up to their number', async () => {
+    const { get, loads } = cache({ entries: 2, bytes: 100 });
+
+    await get('a');
+    await get('b');
+    await get('a');
+    await get('c');
+    await get('a');
+    await get('b');
+
+    expect(loads).toEqual(['a', 'b', 'c', 'b']);
+  });
+
+  it('drops the least recently used entries once they hold too many bytes', async () => {
+    const { get, loads } = cache({ entries: 10, bytes: 10 });
+
+    await get('a', 4);
+    await get('b', 4);
+    await get('a', 4);
+    await get('c', 4);
+    await get('a', 4);
+    await get('b', 4);
+
+    expect(loads).toEqual(['a', 'b', 'c', 'b']);
+  });
+
+  it('does not keep a value larger than all it may hold', async () => {
+    const { get, loads } = cache({ entries: 10, bytes: 10 });
+
+    await get('small', 4);
+    await get('huge', 11);
+    await get('huge', 11);
+    await get('small', 4);
+
+    expect(loads).toEqual(['small', 'huge', 'huge']);
+  });
+
+  it('drops a failed load, so the next caller tries again', async () => {
+    const recent = new RecentCache<Uint8Array>(
+      { entries: 10, bytes: 10 },
+      value => value.length
+    );
+    const load = vi
+      .fn<() => Promise<Uint8Array>>()
+      .mockRejectedValueOnce(new Error('down'))
+      .mockResolvedValueOnce(bytes(1));
+
+    await expect(recent.get('a', load)).rejects.toThrow('down');
+    await expect(recent.get('a', load)).resolves.toHaveLength(1);
+    expect(load).toHaveBeenCalledTimes(2);
   });
 });
 

@@ -60,8 +60,10 @@ vi.mock('@wepublish/ui/editor', async importOriginal => ({
   ),
 }));
 
+const letterChannel = { paperLetters: true, letterAvailable: true };
+
 vi.mock('../mail-template/use-letter-channel', () => ({
-  useLetterChannel: () => ({ paperLetters: true, letterAvailable: true }),
+  useLetterChannel: () => letterChannel,
 }));
 
 vi.mock('../delivery-mode/use-paper-letter-flow', () => ({
@@ -447,6 +449,24 @@ describe('MailSendPage (accessibility)', () => {
         })}`
       )
     ).toBeTruthy();
+  });
+
+  // Nothing is attached while the feature is off, whatever the template has.
+  it('names no attachments while the medium has them switched off', () => {
+    letterChannel.paperLetters = false;
+    letterChannel.letterAvailable = false;
+
+    try {
+      renderPage();
+
+      fireEvent.mouseDown(screen.getAllByRole('combobox')[0]);
+      fireEvent.click(screen.getByRole('option', { name: 'Vertrag' }));
+
+      expect(screen.queryByText(/^mailSend\.attachments/)).toBeNull();
+    } finally {
+      letterChannel.paperLetters = true;
+      letterChannel.letterAvailable = true;
+    }
   });
 
   it('previews the attachments the mail carries for the recipient', () => {

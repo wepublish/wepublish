@@ -15,6 +15,29 @@ const TEXT_PART =
   /^word\/(document|header\d*|footer\d*|footnotes|endnotes)\.xml$/;
 
 /**
+ * Where a part keeps the addresses of its links and of anything it pulls in
+ * from elsewhere (`word/_rels/document.xml.rels` and the like).
+ */
+const RELATIONSHIPS_PART = /(^|\/)_rels\/[^/]*\.rels$/;
+
+const RELATIONSHIP_REGEX = /<Relationship\b[^>]*?(?:\/>|>\s*<\/Relationship>)/g;
+
+const HYPERLINK_TYPE = /\/relationships\/hyperlink$/;
+
+/**
+ * A `{{ key }}` in a link address. Word may write the braces and spaces
+ * percent-encoded.
+ */
+const LINK_PLACEHOLDER_REGEX =
+  /(?:\{|%7B){2}(?:\s|%20)*([\w.]+)(?:\s|%20)*(?:\}|%7D){2}/gi;
+
+/**
+ * Stands in for a line break of a value until the text node around it is
+ * written; xml cannot carry it, so it never comes out of a document.
+ */
+const LINE_BREAK = '\u0000';
+
+/**
  * Every zip entry is stamped with this instead of the current time, so the same
  * input always renders to the same bytes and callers can cache by content. The
  * second of January keeps the date inside the zip range in every timezone.
@@ -105,7 +128,7 @@ function renderParagraph(
   const edits = findPlaceholders(text).map(({ index, length, key }) => ({
     start: index,
     end: index + length,
-    value: escapeXml(resolve(key)),
+    value: escapeXml(resolve(key)).replace(/\r\n?|\n/g, LINE_BREAK),
   }));
 
   if (!edits.length) {
@@ -137,11 +160,18 @@ function renderParagraph(
 
     if (touched) {
       output += text.slice(position, nodeEnd);
+      // The value may start or end with a space, which Word drops from a
+      // node that does not ask to keep them.
+      const attributes = preserveSpaces(node.attributes);
+
       replaced.push({
         node,
-        // The value may start or end with a space, which Word drops from a
-        // node that does not ask to keep them.
-        xml: `<w:t${preserveSpaces(node.attributes)}>${output}</w:t>`,
+        // A line break of a value, e.g. in an address block, ends the text
+        // node and continues the run on the next line.
+        xml: output
+          .split(LINE_BREAK)
+          .map(line => `<w:t${attributes}>${line}</w:t>`)
+          .join('<w:br/>'),
       });
     }
 
@@ -167,6 +197,55 @@ function renderPart(xml: string, resolve: (key: string) => string): string {
   return output + xml.slice(position);
 }
 
+function attributeOf(element: string, name: string): string | undefined {
+  return element.match(new RegExp(`\\s${name}="([^"]*)"`))?.[1];
+}
+
+/**
+ * The relationships of a part, cut down to what is safe to convert: anything
+ * external other than a link (a linked image, an embedded object's source, an
+ * attached template) is dropped, since the converter would fetch it and a
+ * document must not make it reach into our network. Placeholders in the
+ * addresses of links are filled in, so a link can carry e.g. a login token.
+ */
+function renderRelationships(
+  xml: string,
+  resolve: (key: string) => string
+): string {
+  return xml.replace(RELATIONSHIP_REGEX, element => {
+    if (attributeOf(element, 'TargetMode') !== 'External') {
+      return element;
+    }
+
+    if (!HYPERLINK_TYPE.test(attributeOf(element, 'Type') ?? '')) {
+      return '';
+    }
+
+    return element.replace(
+      /(\sTarget=")([^"]*)"/,
+      (_match, start: string, target: string) =>
+        `${start}${target.replace(LINK_PLACEHOLDER_REGEX, (_placeholder, key) =>
+          escapeXml(resolve(key))
+        )}"`
+    );
+  });
+}
+
+/** The placeholders in the addresses of a part's links. */
+function linkPlaceholders(xml: string): string[] {
+  return [...xml.matchAll(RELATIONSHIP_REGEX)]
+    .filter(([element]) =>
+      HYPERLINK_TYPE.test(attributeOf(element, 'Type') ?? '')
+    )
+    .flatMap(([element]) =>
+      [
+        ...(attributeOf(element, 'Target') ?? '').matchAll(
+          LINK_PLACEHOLDER_REGEX
+        ),
+      ].map(match => match[1])
+    );
+}
+
 function readDocx(docx: Uint8Array): Record<string, Uint8Array> {
   let files: Record<string, Uint8Array>;
 
@@ -189,9 +268,14 @@ function readDocx(docx: Uint8Array): Record<string, Uint8Array> {
 
 /**
  * Fill a Word document (.docx) in with the same `{{ key }}` placeholders and
- * lookup a mail template uses, in the body, headers, footers and notes. `data`
- * is the enriched placeholder map, as for `renderTemplate`. Values are inserted
- * as plain text. Every other part of the file is kept as it was.
+ * lookup a mail template uses, in the body, headers, footers, notes and the
+ * addresses of links. `data` is the enriched placeholder map, as for
+ * `renderTemplate`. Values are inserted as plain text; their line breaks
+ * become line breaks of the document. Externally linked content is dropped
+ * (see `renderRelationships`). Every other part of the file is kept as it was.
+ *
+ * Not filled in: text Word keeps outside the text of a part, i.e. field codes
+ * and content controls bound to custom xml.
  */
 export function renderDocxTemplate(
   docx: Uint8Array,
@@ -202,8 +286,9 @@ export function renderDocxTemplate(
 
   for (const [name, content] of Object.entries(readDocx(docx))) {
     files[name] =
-      TEXT_PART.test(name) ?
-        strToU8(renderPart(strFromU8(content), resolve))
+      TEXT_PART.test(name) ? strToU8(renderPart(strFromU8(content), resolve))
+      : RELATIONSHIPS_PART.test(name) ?
+        strToU8(renderRelationships(strFromU8(content), resolve))
       : content;
   }
 
@@ -212,7 +297,8 @@ export function renderDocxTemplate(
 
 /** The distinct `{{ key }}` placeholders a Word document uses. */
 export function extractDocxPlaceholders(docx: Uint8Array): string[] {
-  const text = Object.entries(readDocx(docx))
+  const files = Object.entries(readDocx(docx));
+  const text = files
     .filter(([name]) => TEXT_PART.test(name))
     .flatMap(([, content]) =>
       paragraphs(strFromU8(content)).map(nodes =>
@@ -220,6 +306,9 @@ export function extractDocxPlaceholders(docx: Uint8Array): string[] {
       )
     )
     .join('\n');
+  const links = files
+    .filter(([name]) => RELATIONSHIPS_PART.test(name))
+    .flatMap(([, content]) => linkPlaceholders(strFromU8(content)));
 
-  return extractPlaceholders(text);
+  return [...new Set([...extractPlaceholders(text), ...links])];
 }

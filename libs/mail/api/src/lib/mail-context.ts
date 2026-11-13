@@ -21,6 +21,11 @@ export interface SendComposedMailProps {
   readonly recipient: string;
   readonly mailLogID: string;
   readonly data: Record<string, any>;
+  /**
+   * Whether the documents attached to the template go along. On when left
+   * out; account mails send without them.
+   */
+  readonly withAttachments?: boolean;
 }
 
 export interface SendComposedContentProps {
@@ -169,6 +174,7 @@ export class MailContext implements MailContextInterface {
     recipient,
     data,
     mailLogID,
+    withAttachments = true,
   }: SendComposedMailProps): Promise<{
     subject: string;
     providerMessageID?: string;
@@ -196,7 +202,7 @@ export class MailContext implements MailContextInterface {
     // Rendered before anything is handed over: a mail whose documents cannot
     // be rendered fails as a whole rather than going out without them.
     const attachments = await this.renderAttachments(
-      attachmentIdsOf(template),
+      withAttachments ? attachmentIdsOf(template) : [],
       data
     );
 

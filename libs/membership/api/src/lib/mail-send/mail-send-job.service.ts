@@ -21,6 +21,7 @@ import {
   attachmentIdsOf,
   composeMail,
   MAIL_TEMPLATE_ATTACHMENT_IDS,
+  MailAttachmentError,
   MailContext,
   mailLogType,
 } from '@wepublish/mail/api';
@@ -53,8 +54,22 @@ const BATCH_SIZE = 100;
 /** How many queued recipients are loaded per send round. */
 const SEND_BATCH_SIZE = 25;
 
-/** Write progress to the job row after this many recipients. */
+/** Write progress to the job row after this many recipients… */
 const PROGRESS_EVERY = 10;
+
+/**
+ * …or once this much time has passed, whichever comes first: mails whose
+ * attachments are converted one by one can take a minute each, and the
+ * heartbeat must stay well inside {@link STALLED_AFTER_MS}.
+ */
+const PROGRESS_INTERVAL_MS = 60 * 1000;
+
+/**
+ * A job stops after this many mails in a row whose attachments could not be
+ * rendered. They are the same documents for every mail, so the rest would
+ * fail alike; the job can be continued once the cause is fixed.
+ */
+const ATTACHMENT_FAILURES_BEFORE_STOP = 3;
 
 /**
  * A `running` job that has not reported progress for this long is considered
@@ -486,6 +501,8 @@ export class MailSendJobService {
   ): Promise<void> {
     const jobId = job.id;
     let processed = 0;
+    let progressAt = Date.now();
+    let attachmentFailuresInARow = 0;
 
     for (;;) {
       if (!(await this.isRunning(jobId))) {
@@ -526,10 +543,26 @@ export class MailSendJobService {
           continue;
         }
 
-        await this.deliver(job, template, entry, recipient);
+        const failure = await this.deliver(job, template, entry, recipient);
 
-        if (++processed % PROGRESS_EVERY === 0) {
+        if (!(failure instanceof MailAttachmentError)) {
+          attachmentFailuresInARow = 0;
+        } else if (
+          ++attachmentFailuresInARow >= ATTACHMENT_FAILURES_BEFORE_STOP
+        ) {
+          // Caught by processJob, which fails the job and leaves the rest of
+          // the queue pending.
+          throw new Error(
+            `Stopped after ${attachmentFailuresInARow} mails in a row whose attachments could not be rendered: ${failure.message} Continue the job, retrying the failed mails, once that is fixed.`
+          );
+        }
+
+        if (
+          ++processed % PROGRESS_EVERY === 0 ||
+          Date.now() - progressAt >= PROGRESS_INTERVAL_MS
+        ) {
           await this.writeProgress(jobId);
+          progressAt = Date.now();
         }
       }
 
@@ -540,8 +573,8 @@ export class MailSendJobService {
   /**
    * Send one queued message and record the outcome on its queue row. Never
    * throws: a recipient that cannot be reached must not stop the rest of the
-   * job. Which medium is used is the job's decision — everything else about a
-   * send is the same either way.
+   * job. Returns why the message failed, if it did. Which medium is used is
+   * the job's decision — everything else about a send is the same either way.
    */
   private async deliver(
     job: Pick<
@@ -556,7 +589,7 @@ export class MailSendJobService {
     template: MailTemplate,
     entry: Pick<MailSendJobRecipient, 'id'>,
     recipient: MailRecipient
-  ): Promise<void> {
+  ): Promise<Error | null> {
     const mailLogId = uuidv7();
     const isLetter = job.channel === MailChannel.letter;
 
@@ -594,6 +627,8 @@ export class MailSendJobService {
         sentAt: new Date(),
         error: null,
       });
+
+      return null;
     } catch (error) {
       const message = (error as Error).message;
 
@@ -607,6 +642,8 @@ export class MailSendJobService {
           recipient.user.email
         }: ${message}`
       );
+
+      return error as Error;
     }
   }
 

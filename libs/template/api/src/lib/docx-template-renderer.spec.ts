@@ -33,6 +33,14 @@ function docx(parts: Record<string, string | Uint8Array>): Uint8Array {
 const part = (file: Uint8Array, name: string) =>
   strFromU8(unzipSync(file)[name]);
 
+const relationships = (...entries: string[]) =>
+  `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">${entries.join(
+    ''
+  )}</Relationships>`;
+
+const hyperlink = (id: string, target: string) =>
+  `<Relationship Id="${id}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" Target="${target}" TargetMode="External"/>`;
+
 /** The text Word would show for a part: every text node, in order. */
 const textOf = (xml: string) =>
   [...xml.matchAll(/<w:t(?:\s[^>]*)?>([^<]*)<\/w:t>/g)]
@@ -230,6 +238,80 @@ describe('renderDocxTemplate', () => {
     }
   });
 
+  it('breaks a value over several lines where it has line breaks', () => {
+    // An address block is one placeholder with a newline per line.
+    const file = docx({
+      'word/document.xml': documentXml(paragraph(run('An: {{address}}.'))),
+    });
+
+    const xml = part(
+      renderDocxTemplate(file, { address: 'Musterweg 1\r\n8000 Zürich' }),
+      'word/document.xml'
+    );
+
+    expect(xml).toContain(
+      '<w:t xml:space="preserve">An: Musterweg 1</w:t><w:br/><w:t xml:space="preserve">8000 Zürich.</w:t>'
+    );
+  });
+
+  it('fills the placeholders in the address of a link', () => {
+    // Word keeps a link's address in the relationships of the part, and may
+    // write the braces percent-encoded.
+    const file = docx({
+      'word/document.xml': documentXml(paragraph(run('Login'))),
+      'word/_rels/document.xml.rels': relationships(
+        hyperlink('rId1', 'https://example.com/login?jwt={{jwt}}&amp;a=1'),
+        hyperlink('rId2', 'https://example.com/%7B%7Bslug%7d%7D')
+      ),
+      'word/_rels/footer1.xml.rels': relationships(
+        hyperlink('rId1', 'https://example.com/{{ slug }}')
+      ),
+    });
+
+    const rendered = renderDocxTemplate(file, {
+      jwt: 'a.b-c',
+      slug: 'x"&y',
+    });
+
+    expect(part(rendered, 'word/_rels/document.xml.rels')).toBe(
+      relationships(
+        hyperlink('rId1', 'https://example.com/login?jwt=a.b-c&amp;a=1'),
+        hyperlink('rId2', 'https://example.com/x&quot;&amp;y')
+      )
+    );
+    expect(part(rendered, 'word/_rels/footer1.xml.rels')).toBe(
+      relationships(hyperlink('rId1', 'https://example.com/x&quot;&amp;y'))
+    );
+  });
+
+  it('drops linked content the converter would fetch, but keeps links', () => {
+    // LibreOffice loads externally linked images, objects and templates while
+    // converting; a document must not make it reach into our network.
+    const internal =
+      '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>';
+    const file = docx({
+      'word/document.xml': documentXml(paragraph(run('Text'))),
+      'word/_rels/document.xml.rels': relationships(
+        internal,
+        hyperlink('rId2', 'https://example.com/'),
+        '<Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="http://10.0.0.1/logo.png" TargetMode="External"/>',
+        '<Relationship TargetMode="External" Id="rId4" Target="file:///etc/passwd" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/oleObject" />'
+      ),
+      'word/_rels/settings.xml.rels': relationships(
+        '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/attachedTemplate" Target="http://intranet/normal.dotm" TargetMode="External"/>'
+      ),
+    });
+
+    const rendered = renderDocxTemplate(file, data);
+
+    expect(part(rendered, 'word/_rels/document.xml.rels')).toBe(
+      relationships(internal, hyperlink('rId2', 'https://example.com/'))
+    );
+    expect(part(rendered, 'word/_rels/settings.xml.rels')).toBe(
+      relationships()
+    );
+  });
+
   it('refuses a file that is not a zip', () => {
     expect(() =>
       renderDocxTemplate(strToU8('{\\rtf1 not a docx}'), data)
@@ -260,5 +342,16 @@ describe('extractDocxPlaceholders', () => {
       'user_firstName',
       'user_name',
     ]);
+  });
+
+  it('lists the placeholders in the address of a link', () => {
+    const file = docx({
+      'word/document.xml': documentXml(paragraph(run('Login'))),
+      'word/_rels/document.xml.rels': relationships(
+        hyperlink('rId1', 'https://example.com/login?jwt=%7B%7Bjwt%7D%7D')
+      ),
+    });
+
+    expect(extractDocxPlaceholders(file)).toEqual(['jwt']);
   });
 });

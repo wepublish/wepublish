@@ -10,7 +10,10 @@ import { PrismaModule } from '@wepublish/nest-modules';
 import { LETTER_SENDER, MAIL_ATTACHMENT_RENDERER } from '@wepublish/mail/api';
 import { createAsyncOptionsProvider } from '@wepublish/utils/api';
 import { DocumentAttachmentRenderer } from './attachments/document-attachment-renderer';
-import { GatedLetterSender } from './gated-letter-sender';
+import {
+  GatedLetterSender,
+  mailAttachmentsEnabled,
+} from './gated-letter-sender';
 import { LetterContext } from './letter-context';
 import { LetterLayoutResolver } from './letter-layout/letter-layout.resolver';
 import { LetterLayoutService } from './letter-layout/letter-layout.service';
@@ -67,10 +70,16 @@ export class LettersModule {
         provide: DocumentAttachmentRenderer,
         useFactory: (
           { pdfRenderer, documentUrl }: LettersModuleOptions,
-          prisma: PrismaClient
+          prisma: PrismaClient,
+          features: FeaturesService
         ) =>
-          new DocumentAttachmentRenderer({ pdfRenderer, prisma, documentUrl }),
-        inject: [LETTERS_MODULE_OPTIONS, PrismaClient],
+          new DocumentAttachmentRenderer({
+            pdfRenderer,
+            prisma,
+            documentUrl,
+            enabled: mailAttachmentsEnabled(features),
+          }),
+        inject: [LETTERS_MODULE_OPTIONS, PrismaClient, FeaturesService],
       },
       // The mail lib attaches a template's documents through this; it only
       // knows the token, not this lib.
