@@ -30,6 +30,7 @@ export const mockCrowdfunding = ({
   revenue: 73000 * 100,
   subscriptions: 120,
   countSubscriptionsUntil: null,
+  goals: [],
   activeGoal,
   ...definedOnly(overrides),
 });

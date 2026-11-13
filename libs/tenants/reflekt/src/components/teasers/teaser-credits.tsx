@@ -40,7 +40,7 @@ export const TeaserCredits = styled(ReflektTeaser)`
 
   & ${TeaserTitle} {
     grid-row: 1 / 2;
-    font-family: ${recife.style.fontFamily};
+    font-family: ${recife.family};
     font-size: 1.125rem;
     line-height: 1.25;
     text-align: center;

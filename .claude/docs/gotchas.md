@@ -1163,6 +1163,21 @@ only there because undici's types and `@types/node`'s don't line up.
 Pinned by `storage-fetch.spec.ts`, which checks the cap and the timeouts through
 the real `fetch` against a local server. The wiring in `app.module.ts` is not tested.
 
+---
+
+### ⚠️ R2 deletes every transformed object after 30 days
+
+A lifecycle rule on each `*-transformed` bucket (`storage.tf` in
+application-configuration: 30 days in production, 7 in staging) deletes every
+object by upload age. Image variants survive it: their link lives exactly as
+long as the object (`TRANSFORMED_IMAGE_TTL`, see the link-cache entry below)
+and a variant past that age is transformed again. Nothing else does yet:
+document/video/audio copies and thumbnails are served from a 3-day link and
+404 once the bucket has deleted them, and `saveVideoPoster` stores posters
+_only_ in the transformed bucket, so they expire for good. The constant is
+30 days everywhere, so staging images break after its 7-day rule. A final R2
+404 looks like an R2 outage (reflekt, 2026-11); it is this rule.
+
 ### ⚠️ cache-manager 7: TTLs are milliseconds, `max` is ignored, tiers don't backfill
 
 `CacheModule.register({ttl, max})` without `stores` builds a plain Keyv `Map`.

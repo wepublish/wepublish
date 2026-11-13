@@ -193,7 +193,7 @@ export const ReflektMemberPlanItem = styled(MemberPlanItem)`
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: ${[euclidCircularB.style.fontFamily, 'sans-serif'].join(',')};
+    font-family: ${[euclidCircularB.family, 'sans-serif'].join(',')};
     font-weight: 500;
     font-size: clamp(3.25rem, 42cqi, 8.5rem);
     line-height: 1;
@@ -211,7 +211,7 @@ export const ReflektMemberPlanItem = styled(MemberPlanItem)`
     align-content: space-between;
     justify-items: center;
     padding-block: ${({ theme }) => theme.spacing(1, 2)};
-    font-family: ${[euclidCircularB.style.fontFamily, 'sans-serif'].join(',')};
+    font-family: ${[euclidCircularB.family, 'sans-serif'].join(',')};
     font-weight: 500;
     font-size: clamp(0.875rem, 8cqi, 1.75rem);
     line-height: 1.1;
@@ -220,7 +220,7 @@ export const ReflektMemberPlanItem = styled(MemberPlanItem)`
 
     &::before {
       content: 'CHF PRO JAHR';
-      font-family: ${[robotoMono.style.fontFamily, 'sans-serif'].join(',')};
+      font-family: ${[robotoMono.family, 'sans-serif'].join(',')};
       font-weight: 400;
       font-size: clamp(0.65rem, 4.5cqi, 1.1rem);
       letter-spacing: 0.05em;

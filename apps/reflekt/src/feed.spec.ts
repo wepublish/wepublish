@@ -9,7 +9,6 @@ import {
   FeedArticleListDocument,
   SettingDocument,
 } from '@wepublish/website/api';
-import { NextApiRequest } from 'next';
 
 import { getFeed } from './feed';
 
@@ -56,7 +55,8 @@ const respondWith = (feedPaywalledContent: unknown) =>
       }
   );
 
-const request = { url: '/api/rss-feed' } as NextApiRequest;
+const feed = () =>
+  getFeed('https://reflekt.test/rss.xml', 'https://reflekt.test');
 
 describe('reflekt feed', () => {
   beforeEach(() => {
@@ -66,7 +66,7 @@ describe('reflekt feed', () => {
   it('queries the full-text feed document and the paywall choice', async () => {
     respondWith('lead');
 
-    await getFeed(request);
+    await feed();
 
     expect(query).toHaveBeenCalledWith(
       expect.objectContaining({ query: FeedArticleListDocument })
@@ -82,13 +82,13 @@ describe('reflekt feed', () => {
   it('publishes the body of a free article', async () => {
     respondWith('lead');
 
-    expect((await getFeed(request)).rss2()).toContain('<p>Mandian Tuan</p>');
+    expect((await feed()).rss2()).toContain('<p>Mandian Tuan</p>');
   });
 
   it('follows the paywall choice of the medium', async () => {
     respondWith('full');
 
-    expect((await getFeed(request)).rss2()).toContain('<p>Behind the wall</p>');
+    expect((await feed()).rss2()).toContain('<p>Behind the wall</p>');
   });
 
   it('keeps paywalled articles to their lead when the choice cannot be read', async () => {
@@ -106,7 +106,7 @@ describe('reflekt feed', () => {
       };
     });
 
-    const rss = (await getFeed(request)).rss2();
+    const rss = (await feed()).rss2();
 
     expect(rss).not.toContain('<p>Behind the wall</p>');
     expect(rss).toContain('Behind the wall lead');

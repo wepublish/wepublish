@@ -4,7 +4,10 @@ import {
   useRouterState,
   useSearch,
 } from '@tanstack/react-router';
-import { BuilderRouterContext } from '@wepublish/website/builder';
+import {
+  BuilderRouterContext,
+  BuilderRouterNavigateOptions,
+} from '@wepublish/website/builder';
 import { PropsWithChildren, useMemo } from 'react';
 
 export type QueryParams = Record<string, string | string[] | undefined>;
@@ -57,11 +60,34 @@ export const useReplaceSearch = () => {
     });
 };
 
+const toNavigateOptions = (href: string, replace: boolean) => {
+  const url = new URL(href, 'http://localhost');
+  const hash = url.hash.slice(1);
+
+  return {
+    to: url.pathname,
+    search: Object.fromEntries(url.searchParams),
+    ...(hash ? { hash } : {}),
+    replace,
+  };
+};
+
 /** Replacement for `withBuilderRouter` from `@wepublish/utils/website`. */
 export const BuilderRouterProvider = ({ children }: PropsWithChildren) => {
   const query = useQueryParams();
   const asPath = useAsPath();
-  const value = useMemo(() => ({ query, asPath }), [query, asPath]);
+  const navigate = useNavigate();
+  const value = useMemo(
+    () => ({
+      query,
+      asPath,
+      navigate: (
+        href: string,
+        { replace = false }: BuilderRouterNavigateOptions = {}
+      ) => navigate(toNavigateOptions(href, replace) as never),
+    }),
+    [query, asPath, navigate]
+  );
 
   return (
     <BuilderRouterContext.Provider value={value}>

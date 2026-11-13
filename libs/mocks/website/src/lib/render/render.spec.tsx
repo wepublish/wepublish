@@ -156,6 +156,30 @@ describe('renderWithProviders', () => {
     expect(router.push).toHaveBeenCalledWith('/search');
   });
 
+  it('navigates through the builder router with the test router', async () => {
+    const user = userEvent.setup();
+    const Route = () => {
+      const { navigate } = useContext(BuilderRouterContext);
+
+      return (
+        <>
+          <button onClick={() => navigate?.('/search')}>push</button>
+          <button onClick={() => navigate?.('/profile', { replace: true })}>
+            replace
+          </button>
+        </>
+      );
+    };
+
+    const { router } = renderWithProviders(<Route />);
+
+    await user.click(screen.getByRole('button', { name: 'push' }));
+    await user.click(screen.getByRole('button', { name: 'replace' }));
+
+    expect(router.push).toHaveBeenCalledWith('/search');
+    expect(router.replace).toHaveBeenCalledWith('/profile');
+  });
+
   it('renders German by default and French on request', () => {
     const Label = () => {
       const { t } = useTranslation();

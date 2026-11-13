@@ -225,6 +225,7 @@ of the six below.
 | `styled(PageContainer)` wrapper | the home page loses its column span | shell parity |
 | `fullWidth={false}` read as "wrapper present" | the home page goes full-bleed | shell parity |
 | `new URL(f, import.meta.url)` for fonts | `file:///…/.output/server/_ssr/fonts/…`, no webfont | §6.17 |
+| `articleBySlugRoute()` with no props | related articles and comments under every reflekt article (its Next page rendered `ArticleContainer` alone) | nothing — rule 5 |
 
 Two rules follow:
 
@@ -235,6 +236,26 @@ Two rules follow:
    `createTheme` merges it; every other tenant's is `createTheme: () => theme`
    and ignores the argument on purpose. Do not wire the prop into a tenant
    whose config does not read it — that is a behaviour change dressed as a fix.
+3. **A tenant config with its own `builder.elements` loses them** when the
+   app passes `extra={{ elements: { Link } }}`: `TenantProviders` spreads
+   `extra` over the builder props, and `elements` is replaced, not merged.
+   Spread the config's elements in — `{ ...tenant.builder.elements, Link }`,
+   as `apps/reflekt/src/app.tsx` does.
+4. **Every TanStack tenant needs a `/search` route**, linked or not. The
+   shared `SearchPage` navigates to `'/search'`, typed against the app's
+   generated route tree, so a tenant without the route fails `typecheck`
+   inside the library (reflekt never had one in Next; it has one now).
+5. **A factory's defaults are the generic page, not the tenant's.**
+   `ArticlePage` renders related articles and comments unless the route passes
+   `relatedTitle: null` / `commentsTitle: null`. Before accepting a factory's
+   defaults, diff the deleted `pages/*.tsx` against the factory's component;
+   `apps/reflekt/src/article-routes.spec.ts` pins reflekt's opt-out.
+
+To see what the Next app actually rendered once it is gone: `git archive
+<migration-commit>^ | tar -x -C <tmp>`, symlink the repo's `node_modules` in,
+and run `node_modules/.bin/next dev apps/<tenant> --webpack -p 4300` with
+`API_URL` set to the tenant's production API. `--webpack` is required —
+Turbopack refuses a `node_modules` symlink outside its root.
 
 `gruppetto` composes `WebsiteProvider` + `WebsiteBuilderProvider` by hand
 instead of `TenantProviders`, so the shell-parity markers for the providers do
@@ -415,6 +436,10 @@ HTML, which Next never did.
 - SVG imports are URL strings under Vite, objects under Next (`markUrl.src`).
 - Stale `dist/` inside the project gets linted; keep it in `.gitignore` *and*
   the eslint ignores.
+- `cacheDir` must not be `node_modules/.vite/<project>`: `vitest.shared.ts`
+  keeps the project's Vitest cache there, and `nx test <app>` rewrites it under
+  a running dev server, whose pre-bundled deps then fail to import. reflekt
+  uses `node_modules/.vite/<project>-dev`; the other tenants still collide.
 
 ---
 
