@@ -20,7 +20,7 @@ import {
 } from '@wepublish/tenant/onlinereports';
 import {
   authLink,
-  getWebsiteShell,
+  useLiveWebsiteShell,
   initWePublishTranslator,
   WebsiteShellProps,
   withJwtHandler,
@@ -141,7 +141,7 @@ function CustomApp({
     websiteSettings ??
     (typeof window !== 'undefined' ? window.WEBSITE_SETTINGS : undefined);
 
-  const shell = getWebsiteShell(pageProps);
+  const shell = useLiveWebsiteShell(pageProps);
 
   return (
     <PlausibleProvider

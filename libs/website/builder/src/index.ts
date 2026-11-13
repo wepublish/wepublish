@@ -15,6 +15,7 @@ export * from './lib/user.interface';
 export * from './lib/website-builder.context';
 export * from './lib/website-tenant.interface';
 export * from './lib/hooks/use-async-action';
+export * from './lib/hooks/use-page-shell';
 export * from './lib/api-alert';
 
 export * from './lib/richText.interface';

@@ -19,7 +19,7 @@ import {
 import {
   AsyncSessionProvider,
   authLink,
-  getWebsiteShell,
+  useLiveWebsiteShell,
   initWePublishTranslator,
   withJwtHandler,
   withSessionProvider,
@@ -104,7 +104,7 @@ function CustomApp({
     websiteSettings ??
     (typeof window !== 'undefined' ? window.WEBSITE_SETTINGS : undefined);
 
-  const shell = getWebsiteShell(pageProps);
+  const shell = useLiveWebsiteShell(pageProps);
 
   return (
     <PlausibleProvider
