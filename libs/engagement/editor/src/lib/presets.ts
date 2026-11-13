@@ -15,6 +15,7 @@ import {
 export type EngagementPresetId =
   | 'growNewsletter'
   | 'promoteMemberships'
+  | 'switchToYearly'
   | 'restrictPremium'
   | 'displayAnnouncement';
 
@@ -71,6 +72,21 @@ export const ENGAGEMENT_PRESETS: Record<
           afterArticles: 3,
           placement: EngagementPlacement.Inline,
           actions: [actionDefaults({ type: EngagementActionType.Membership })],
+        }),
+      ],
+    }),
+  // Shown on every article, so a reader who closes it is left alone a month.
+  switchToYearly: () =>
+    rule({
+      goal: EngagementGoal.Announcement,
+      audience: EngagementAudience.MonthlyMembers,
+      stages: [
+        stageDefaults({
+          placement: EngagementPlacement.Banner,
+          hideForMinutes: 30 * 24 * 60,
+          actions: [
+            actionDefaults({ type: EngagementActionType.SwitchToYearly }),
+          ],
         }),
       ],
     }),

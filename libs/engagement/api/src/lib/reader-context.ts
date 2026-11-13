@@ -1,4 +1,8 @@
-import { EngagementAudience, EngagementRequirement } from '@prisma/client';
+import {
+  EngagementAudience,
+  EngagementRequirement,
+  PaymentPeriodicity,
+} from '@prisma/client';
 import { AuthSession, AuthSessionType } from '@wepublish/authentication/api';
 import { CanGetArticle, CanPreview } from '@wepublish/permissions';
 import { hasPermission, permissionsOf } from '@wepublish/permissions/api';
@@ -25,13 +29,22 @@ export type ReaderContext = {
   loggedIn: boolean;
   userId?: string;
   activeMemberPlanIds: string[];
+  /**
+   * A running subscription the reader pays monthly and could switch to yearly
+   * payments, see `MONTHLY_MEMBERS`.
+   */
+  monthlySubscriptionId?: string;
   newsletter: NewsletterStatus;
   /** A paywall bypass token the server checked. */
   paywallBypassed?: boolean;
 };
 
 export type ReaderSubscription = {
+  id?: string;
   memberPlanId: string;
+  paymentPeriodicity?: PaymentPeriodicity;
+  extendable?: boolean;
+  deactivated?: boolean;
   startsAt: Date;
   paidUntil: Date | null;
   gracePeriod: number;
@@ -75,6 +88,12 @@ export function readerContextFrom({
   }
 
   const active = subscriptions.filter(isActiveSubscription);
+  const monthly = active.find(
+    ({ paymentPeriodicity, extendable, deactivated }) =>
+      paymentPeriodicity === PaymentPeriodicity.monthly &&
+      extendable !== false &&
+      !deactivated
+  );
 
   return {
     kind: 'user',
@@ -84,6 +103,7 @@ export function readerContextFrom({
     loggedIn: true,
     userId: session.user.id,
     activeMemberPlanIds: [...new Set(active.map(s => s.memberPlanId))],
+    ...(monthly?.id && { monthlySubscriptionId: monthly.id }),
     newsletter,
   };
 }
@@ -110,6 +130,8 @@ export function matchesAudience(
       return !!reader.paywallBypassed;
     case EngagementAudience.MEMBER_PLANS:
       return memberPlanIds.some(id => reader.activeMemberPlanIds.includes(id));
+    case EngagementAudience.MONTHLY_MEMBERS:
+      return !!reader.monthlySubscriptionId;
   }
 }
 

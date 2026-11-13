@@ -1,4 +1,8 @@
-import { EngagementAudience, EngagementRequirement } from '@prisma/client';
+import {
+  EngagementAudience,
+  EngagementRequirement,
+  PaymentPeriodicity,
+} from '@prisma/client';
 import {
   ApiTokenSession,
   AuthSessionType,
@@ -80,6 +84,44 @@ describe('readerContextFrom', () => {
         subscriptions: [subscription({ paidUntil: new Date('2026-10-01') })],
       })
     ).toMatchObject({ activeMemberPlanIds: [] });
+  });
+
+  it('knows a running monthly subscription, which could be paid yearly', () => {
+    expect(
+      readerContextFrom({
+        session: userSession(),
+        subscriptions: [
+          subscription({
+            id: 'yearly',
+            paymentPeriodicity: PaymentPeriodicity.yearly,
+          }),
+          subscription({
+            id: 'monthly',
+            paymentPeriodicity: PaymentPeriodicity.monthly,
+          }),
+        ],
+      })
+    ).toMatchObject({ monthlySubscriptionId: 'monthly' });
+  });
+
+  it.each([
+    ['cancelled', { deactivated: true }],
+    ['not renewable', { extendable: false }],
+    ['ran out', { paidUntil: new Date('2026-10-01') }],
+    ['paid yearly', { paymentPeriodicity: PaymentPeriodicity.yearly }],
+  ])('knows no monthly subscription when it is %s', (_, overrides) => {
+    expect(
+      readerContextFrom({
+        session: userSession(),
+        subscriptions: [
+          subscription({
+            id: 'monthly',
+            paymentPeriodicity: PaymentPeriodicity.monthly,
+            ...overrides,
+          }),
+        ],
+      }).monthlySubscriptionId
+    ).toBeUndefined();
   });
 
   it('lets editors read everything', () => {
@@ -170,6 +212,8 @@ describe('matchesAudience', () => {
     [EngagementAudience.PAYWALL_BYPASSED, [false, false, false, false]],
     // Without plans to match.
     [EngagementAudience.MEMBER_PLANS, [false, false, false, false]],
+    // None of them pays monthly.
+    [EngagementAudience.MONTHLY_MEMBERS, [false, false, false, false]],
   ])(
     '%s matches [anonymous, registered, free member, paying member] = %j',
     (audience, expected) => {
@@ -192,6 +236,15 @@ describe('matchesAudience', () => {
   it('ignores plans for the other audiences', () => {
     expect(
       matchesAudience(EngagementAudience.ANONYMOUS, anonymous, ['paid'])
+    ).toBe(true);
+  });
+
+  it('matches readers with a monthly subscription', () => {
+    expect(
+      matchesAudience(
+        EngagementAudience.MONTHLY_MEMBERS,
+        reader({ ...payingMember, monthlySubscriptionId: 'monthly' })
+      )
     ).toBe(true);
   });
 

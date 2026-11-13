@@ -244,4 +244,37 @@ describe('toBanner', () => {
       LoginStatus.SUBSCRIBED
     );
   });
+
+  it('leaves a rule for monthly subscribers out on older websites', async () => {
+    const rules = [
+      announcement('monthly', {
+        audience: EngagementAudience.MONTHLY_MEMBERS,
+      }),
+    ];
+
+    expect(
+      await new BannerResolver(
+        { getActiveRules: async () => rules } as never,
+        {} as never
+      ).primaryBanner(args({ loggedIn: true, hasSubscription: true }))
+    ).toBeNull();
+  });
+
+  it('leads a switch to yearly to the profile on older websites', () => {
+    const rule = announcement('monthly');
+    const [stage] = rule.stages;
+
+    expect(
+      toBanner(rule, {
+        ...stage,
+        actions: [
+          {
+            ...stage.actions[0],
+            type: EngagementActionType.SWITCH_TO_YEARLY,
+            url: '',
+          },
+        ],
+      }).actions?.[0].url
+    ).toBe('/profile');
+  });
 });

@@ -296,6 +296,31 @@ describe('engagement rule values', () => {
   });
 });
 
+describe('switchToYearly preset', () => {
+  it('asks monthly subscribers in a banner to switch, for a month at a time', () => {
+    const preset = ENGAGEMENT_PRESETS.switchToYearly();
+
+    expect(preset).toMatchObject({
+      goal: EngagementGoal.Announcement,
+      audience: EngagementAudience.MonthlyMembers,
+      stages: [
+        {
+          placement: EngagementPlacement.Banner,
+          dismissible: true,
+          hideForMinutes: 30 * 24 * 60,
+          actions: [
+            {
+              type: EngagementActionType.SwitchToYearly,
+              role: EngagementActionRole.Primary,
+            },
+          ],
+        },
+      ],
+    });
+    expect(engagementRuleProblems(preset)).toEqual([]);
+  });
+});
+
 describe('showsFirst', () => {
   it('is any priority above the default', () => {
     expect(showsFirst(SHOW_FIRST_PRIORITY)).toBe(true);

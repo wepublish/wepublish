@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next';
 import {
   MdCampaign,
   MdCardMembership,
+  MdEventRepeat,
   MdLock,
   MdMail,
   MdOutlineTimeline,
@@ -32,6 +33,7 @@ import { summarizeStages } from './summarize-rule';
 const PRESET_ORDER: EngagementPresetId[] = [
   'growNewsletter',
   'promoteMemberships',
+  'switchToYearly',
   'restrictPremium',
   'displayAnnouncement',
 ];
@@ -44,6 +46,7 @@ const PRESET_LOOK: Record<
 > = {
   growNewsletter: { icon: MdMail, color: 'info' },
   promoteMemberships: { icon: MdCardMembership, color: 'success' },
+  switchToYearly: { icon: MdEventRepeat, color: 'info' },
   restrictPremium: { icon: MdLock, color: 'warning' },
   displayAnnouncement: { icon: MdCampaign, color: 'secondary' },
 };
@@ -294,6 +297,7 @@ const usePresetFacts = (): Record<EngagementPresetId, PresetFacts> => {
     return {
       growNewsletter: fromRule('growNewsletter'),
       promoteMemberships: fromRule('promoteMemberships'),
+      switchToYearly: fromRule('switchToYearly'),
       restrictPremium: {
         placement: EngagementPlacement.Cutoff,
         audience: t('engagement.preset.restrictPremiumAudience'),

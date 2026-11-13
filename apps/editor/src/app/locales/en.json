@@ -5910,6 +5910,8 @@
         "growNewsletterInfo": "Turn regular readers into newsletter subscribers.",
         "promoteMemberships": "Promote memberships",
         "promoteMembershipsInfo": "Invite engaged readers to support your publication with a membership.",
+        "switchToYearly": "Switch monthly to yearly",
+        "switchToYearlyInfo": "Ask readers who pay monthly to pay once a year instead, from their next renewal.",
         "restrictPremium": "Restrict premium content",
         "restrictPremiumInfo": "Keep selected articles for paying members. Opens a new paywall.",
         "displayAnnouncement": "Display an announcement",
@@ -5941,7 +5943,9 @@
         "PAYWALL_BYPASSED": "Readers with a paywall bypass link",
         "PAYWALL_BYPASSEDInfo": "Readers who opened a bypass link of an active paywall.",
         "MEMBER_PLANS": "Readers with a specific subscription",
-        "MEMBER_PLANSInfo": "Readers with an active subscription to one of the plans you choose, e.g. to offer an upgrade."
+        "MEMBER_PLANSInfo": "Readers with an active subscription to one of the plans you choose, e.g. to offer an upgrade.",
+        "MONTHLY_MEMBERS": "Readers who pay monthly",
+        "MONTHLY_MEMBERSInfo": "Readers with a running, not cancelled subscription they pay monthly."
       },
       "placement": {
         "BANNER": "Banner at the top of the page",
@@ -5959,7 +5963,8 @@
         "NEWSLETTER": "Newsletter signup",
         "LOGIN": "Login",
         "REGISTER": "Registration",
-        "MEMBERSHIP": "Membership"
+        "MEMBERSHIP": "Membership",
+        "SWITCH_TO_YEARLY": "Switch to yearly payments"
       },
       "actionRole": {
         "PRIMARY": "Primary",

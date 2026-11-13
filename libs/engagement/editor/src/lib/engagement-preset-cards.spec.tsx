@@ -38,6 +38,7 @@ describe('EngagementPresetCards', () => {
     ).toEqual([
       'growNewsletter',
       'promoteMemberships',
+      'switchToYearly',
       'restrictPremium',
       'displayAnnouncement',
     ]);
@@ -56,6 +57,11 @@ describe('EngagementPresetCards', () => {
         .getByTestId('preset-illustration')
         .getAttribute('data-placement')
     ).toBe(EngagementPlacement.Inline);
+    expect(
+      within(card('switchToYearly'))
+        .getByTestId('preset-illustration')
+        .getAttribute('data-placement')
+    ).toBe(EngagementPlacement.Banner);
     expect(
       within(card('restrictPremium'))
         .getByTestId('preset-illustration')

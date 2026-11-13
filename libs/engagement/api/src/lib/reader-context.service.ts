@@ -58,9 +58,13 @@ export class ReaderContextService {
       this.prisma.subscription.findMany({
         where: { userID: session.user.id },
         select: {
+          id: true,
           memberPlanID: true,
           startsAt: true,
           paidUntil: true,
+          paymentPeriodicity: true,
+          extendable: true,
+          deactivation: { select: { id: true } },
           paymentMethod: { select: { gracePeriod: true } },
         },
       }),
@@ -72,7 +76,11 @@ export class ReaderContextService {
       previewHeader,
       newsletter,
       subscriptions: subscriptions.map(subscription => ({
+        id: subscription.id,
         memberPlanId: subscription.memberPlanID,
+        paymentPeriodicity: subscription.paymentPeriodicity,
+        extendable: subscription.extendable,
+        deactivated: !!subscription.deactivation,
         startsAt: subscription.startsAt,
         paidUntil: subscription.paidUntil,
         gracePeriod: subscription.paymentMethod.gracePeriod,

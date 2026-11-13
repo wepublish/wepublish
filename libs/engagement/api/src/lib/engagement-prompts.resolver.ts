@@ -68,7 +68,7 @@ export class EngagementPromptsResolver {
         target
       ),
       now: new Date(),
-    }).map(toEngagementPrompt);
+    }).map(prompt => toEngagementPrompt(prompt, reader));
   }
 
   private async targetOf(
