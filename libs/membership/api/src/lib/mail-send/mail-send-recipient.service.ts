@@ -80,6 +80,26 @@ export const emailSegmentOf = (
   return (emailQuality?.level as MailEmailSegment) ?? MailEmailSegment.unknown;
 };
 
+/**
+ * Users whose address matches one of the placeholder patterns; null without
+ * patterns. Never hand Prisma the `OR: []` this would otherwise be: the
+ * deployed Prisma matches every row with it, which made a tenant without a
+ * pattern count its whole audience as placeholders.
+ */
+export const placeholderEmailWhere = (
+  patterns: readonly string[]
+): Prisma.UserWhereInput | null =>
+  patterns.length ?
+    {
+      OR: patterns.map(pattern => ({
+        email: { contains: pattern, mode: 'insensitive' as const },
+      })),
+    }
+  : null;
+
+/** Matches no user — Prisma documents `in: []` as an empty result. */
+const NOBODY: Prisma.UserWhereInput = { id: { in: [] } };
+
 /** A field that is either unset or empty. */
 const blank = (field: keyof Prisma.UserAddressWhereInput) => [
   { [field]: null },
@@ -303,8 +323,15 @@ export class MailSendRecipientService {
   async countUsersBySegment(
     audience: MailAudienceInput
   ): Promise<{ segment: MailEmailSegment; userCount: number }[]> {
+    // Without a configured pattern there are no placeholders to pick, so the
+    // segment is not offered at all rather than shown with a count of 0.
+    const hasPatterns = (await this.placeholderPatterns()).length > 0;
+    const segments = Object.values(MailEmailSegment).filter(
+      segment => hasPatterns || segment !== MailEmailSegment.placeholder
+    );
+
     return Promise.all(
-      Object.values(MailEmailSegment).map(async segment => ({
+      segments.map(async segment => ({
         segment,
         userCount: await this.countUsers({
           ...audience,
@@ -678,19 +705,20 @@ export class MailSendRecipientService {
 
     const patterns = await this.placeholderPatterns();
 
-    const isPlaceholder: Prisma.UserWhereInput = {
-      OR: patterns.map(pattern => ({
-        email: { contains: pattern, mode: 'insensitive' },
-      })),
-    };
+    // Without a configured pattern nobody is a placeholder and everybody is
+    // real — said explicitly, never as an empty `OR`/`AND`.
+    const isPlaceholder = placeholderEmailWhere(patterns) ?? NOBODY;
 
     // `email` is non-null, so the complement is a plain negated match. The
     // outer `mode` also applies inside `not`: this compiles to `NOT ILIKE`.
-    const isReal: Prisma.UserWhereInput = {
-      AND: patterns.map(pattern => ({
-        email: { mode: 'insensitive', not: { contains: pattern } },
-      })),
-    };
+    const isReal: Prisma.UserWhereInput =
+      patterns.length ?
+        {
+          AND: patterns.map(pattern => ({
+            email: { mode: 'insensitive', not: { contains: pattern } },
+          })),
+        }
+      : {};
 
     const parts: Prisma.UserWhereInput[] = [];
 

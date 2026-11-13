@@ -180,6 +180,19 @@ loads it.
 
 ---
 
+### ⚠️ Never hand Prisma an empty `OR` built from a list
+
+`{ OR: list.map(…) }` with an empty `list` matches **every** row on the deployed
+Prisma 7, not none. The mail-send "Platzhalter" segment did that on tenants
+without a placeholder pattern and counted (and would have mailed) the whole
+audience (TSRI, 2026-11). Specs stayed green because
+[where-matcher.ts](../../libs/membership/api/src/lib/mail-send/where-matcher.ts)
+evaluated `OR: []` as false; it now throws on an empty `AND`/`OR`. Guard the
+list and say "nobody" explicitly (`{ id: { in: [] } }`) or "everybody" (`{}`),
+as `placeholderEmailWhere` in `mail-send-recipient.service.ts` does.
+
+---
+
 ### ⚠️ CI runs one Vitest worker per project — `maxWorkers: 1` is load-bearing
 
 The `ci` configuration in [nx.json](../../nx.json) sets `maxWorkers: 1`.

@@ -110,6 +110,31 @@ describe('AudienceFilter email status', () => {
     });
   });
 
+  it('offers no placeholder status when the medium has no placeholder pattern', () => {
+    renderFilter({
+      segmentCounts: [{ segment: MailEmailSegment.Active, userCount: 7 }],
+    });
+
+    expect(
+      within(statusGroup()).queryByRole('button', {
+        name: /mailSend\.emailSegments\.placeholder/,
+      })
+    ).toBeNull();
+    expect(
+      screen.getByText('mailSend.emailSegments.hintWithoutPlaceholder')
+    ).toBeTruthy();
+  });
+
+  it('holds the placeholder status back until the counts say it exists', () => {
+    renderFilter({ segmentCounts: undefined });
+
+    expect(
+      within(statusGroup()).queryByRole('button', {
+        name: 'mailSend.emailSegments.placeholder',
+      })
+    ).toBeNull();
+  });
+
   it('names the statuses alone while their counts are not known yet', () => {
     renderFilter({ segmentCounts: undefined });
 

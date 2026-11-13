@@ -106,6 +106,17 @@ const matchesOperators = (value: unknown, condition: Where): boolean =>
 
 export const matches = (row: Row, where: Where): boolean =>
   Object.entries(where).every(([key, condition]) => {
+    if ((key === 'AND' || key === 'OR') && !(condition as Where[]).length) {
+      // An empty list has no meaning a reader can rely on: older Prisma read
+      // `OR: []` as "nothing", the deployed Prisma 7 matches every row with it
+      // (a mail-send placeholder segment counted a whole tenant that way).
+      // Rejected like `NOT`, so a filter must say "nobody" or "everybody"
+      // explicitly instead of a spec quietly picking one of the two.
+      throw new Error(
+        `where-matcher: empty "${key}" is ambiguous — Prisma versions disagree on it. Build an explicit filter instead.`
+      );
+    }
+
     if (key === 'AND') {
       return (condition as Where[]).every(part => matches(row, part));
     }
