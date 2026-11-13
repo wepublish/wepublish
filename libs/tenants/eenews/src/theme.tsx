@@ -1,51 +1,27 @@
-import { createTheme, CSSObject, Theme, ThemeOptions } from '@mui/material';
+import {
+  createTheme,
+  css,
+  CSSObject,
+  GlobalStyles,
+  Theme,
+  ThemeOptions,
+} from '@mui/material';
 import { theme as WePTheme } from '@wepublish/ui';
-import { Cactus_Classical_Serif } from 'next/font/google';
-import localFont from 'next/font/local';
 import { PartialDeep } from 'type-fest';
 import { CSSProperties } from 'react';
 
-export const gilroy = localFont({
-  src: [
-    {
-      path: './assets/fonts/gilroy/Gilroy-Light.woff2',
-      weight: '300',
-      style: 'normal',
-    },
-    {
-      path: './assets/fonts/gilroy/Gilroy.woff2',
-      weight: '400',
-      style: 'normal',
-    },
-    {
-      path: './assets/fonts/gilroy/Gilroy-Medium.woff2',
-      weight: '500',
-      style: 'normal',
-    },
-    {
-      path: './assets/fonts/gilroy/Gilroy-Bold.woff2',
-      weight: '700',
-      style: 'normal',
-    },
-    {
-      path: './assets/fonts/gilroy/Gilroy-Extrabold.woff2',
-      weight: '800',
-      style: 'normal',
-    },
-  ],
-});
+import gilroyBold from './assets/fonts/gilroy/Gilroy-Bold.woff2';
+import gilroyExtrabold from './assets/fonts/gilroy/Gilroy-Extrabold.woff2';
+import gilroyLight from './assets/fonts/gilroy/Gilroy-Light.woff2';
+import gilroyMedium from './assets/fonts/gilroy/Gilroy-Medium.woff2';
+import gilroyRegular from './assets/fonts/gilroy/Gilroy.woff2';
 
-const cactus = Cactus_Classical_Serif({
-  weight: ['400'],
-  style: ['normal'],
-  subsets: ['latin', 'latin-ext'],
-  display: 'swap',
-  preload: true,
-});
+export const gilroy = { family: 'Gilroy' };
+const cactus = { family: 'Cactus Classical Serif' };
 
-const sans = [gilroy.style.fontFamily, 'system-ui', 'sans-serif'].join(',');
+const sans = [gilroy.family, 'system-ui', 'sans-serif'].join(',');
 
-const serif = [cactus.style.fontFamily, 'Georgia', 'serif'].join(',');
+const serif = [cactus.family, 'Georgia', 'serif'].join(',');
 
 const eenewsColors = {
   accent: '#195a7d',
@@ -325,3 +301,49 @@ const theme = createTheme(WePTheme, {
 } as unknown as PartialDeep<Theme> | ThemeOptions);
 
 export { theme as default };
+
+export const EenewsFontFaces = () => (
+  <GlobalStyles
+    styles={css`
+      @font-face {
+        font-family: ${gilroy.family};
+        src: url('${gilroyLight}') format('woff2');
+        font-weight: 300;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: ${gilroy.family};
+        src: url('${gilroyRegular}') format('woff2');
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: ${gilroy.family};
+        src: url('${gilroyMedium}') format('woff2');
+        font-weight: 500;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: ${gilroy.family};
+        src: url('${gilroyBold}') format('woff2');
+        font-weight: 700;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: ${gilroy.family};
+        src: url('${gilroyExtrabold}') format('woff2');
+        font-weight: 800;
+        font-style: normal;
+        font-display: swap;
+      }
+    `}
+  />
+);

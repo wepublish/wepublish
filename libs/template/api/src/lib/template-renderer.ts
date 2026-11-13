@@ -25,6 +25,7 @@ const SENSITIVE_KEYS = new Set([
   'totpEnabled',
   'totpExempt',
   'roleIDs',
+  'wepublishLoginSubject',
 ]);
 
 export function flattenMailData<T>(ob: T): Record<string, any> {

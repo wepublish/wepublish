@@ -32,3 +32,24 @@ describe('createdBy', () => {
     expect(loader.load).not.toHaveBeenCalled();
   });
 });
+
+describe('createApiToken', () => {
+  it('refuses while signed in as someone else', async () => {
+    const service = { createToken: vi.fn() };
+    const { ImpersonatingError } =
+      await import('@wepublish/authentication/api');
+
+    await expect(
+      new ApiTokenResolver(service as never, {} as never).createApiToken(
+        { name: 'Import' } as never,
+        {
+          type: 'user',
+          impersonatedBy: 'jane@wepublish.ch',
+          user: { id: 'user-2' },
+          roles: [],
+        } as never
+      )
+    ).rejects.toBeInstanceOf(ImpersonatingError);
+    expect(service.createToken).not.toHaveBeenCalled();
+  });
+});

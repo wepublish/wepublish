@@ -1,4 +1,5 @@
 import { Int, Parent, ResolveField, Resolver } from '@nestjs/graphql';
+import { isManagedByWepublishLogin } from './managed-by-wepublish-login';
 import {
   PaymentProviderCustomer,
   SensitiveDataUser,
@@ -81,5 +82,13 @@ export class SensitiveDataUserResolver {
   @ResolveField(() => UserEmailQualityModel, { nullable: true })
   public async emailQuality(@Parent() { id }: SensitiveDataUser) {
     return await this.emailQualityDataloader.load(id);
+  }
+
+  @ResolveField(() => Boolean, {
+    description:
+      'Whether the account signs in with the We.Publish login. We.Publish manages it, so it cannot be changed or deleted.',
+  })
+  public managedByWepublishLogin(@Parent() user: PUser) {
+    return isManagedByWepublishLogin(user);
   }
 }

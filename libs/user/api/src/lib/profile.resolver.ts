@@ -1,5 +1,6 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import {
+  assertNotImpersonating,
   Authenticated,
   AuthSessionType,
   CurrentUser,
@@ -10,6 +11,7 @@ import { UploadImageInput } from '@wepublish/image/api';
 import { ProfileService } from './profile.service';
 import { BadRequestException } from '@nestjs/common';
 import { UserService } from './user.service';
+import { assertNotManagedByWepublishLogin } from './managed-by-wepublish-login';
 
 @Resolver()
 export class ProfileResolver {
@@ -38,8 +40,13 @@ export class ProfileResolver {
   async updatePassword(
     @Args('password') password: string,
     @Args('passwordRepeated') passwordRepeated: string,
-    @CurrentUser() { id, user }: UserSession
+    @CurrentUser() session: UserSession
   ) {
+    const { id, user } = session;
+
+    assertNotManagedByWepublishLogin(user);
+    assertNotImpersonating(session);
+
     if (password !== passwordRepeated) {
       throw new BadRequestException(
         'password and passwordRepeated are not equal'
@@ -62,6 +69,8 @@ export class ProfileResolver {
     @Args() uploadImageInput: UploadImageInput,
     @CurrentUser() session: UserSession
   ) {
+    assertNotManagedByWepublishLogin(session.user);
+
     return this.profileService.uploadUserProfileImage(
       session.user,
       uploadImageInput
@@ -75,8 +84,13 @@ export class ProfileResolver {
   })
   async requestEmailChange(
     @Args('newEmail') newEmail: string,
-    @CurrentUser() { user }: UserSession
+    @CurrentUser() session: UserSession
   ): Promise<boolean> {
+    const { user } = session;
+
+    assertNotManagedByWepublishLogin(user);
+    assertNotImpersonating(session);
+
     await this.userService.requestEmailChange(user.id, newEmail);
     return true;
   }
@@ -87,8 +101,13 @@ export class ProfileResolver {
   })
   async confirmEmailChange(
     @Args('newEmail') newEmail: string,
-    @CurrentUser() { user }: UserSession
+    @CurrentUser() session: UserSession
   ) {
+    const { user } = session;
+
+    assertNotManagedByWepublishLogin(user);
+    assertNotImpersonating(session);
+
     return this.userService.confirmEmailChange(user.id, newEmail);
   }
 }

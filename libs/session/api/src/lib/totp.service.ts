@@ -12,6 +12,7 @@ import {
   createHash,
   randomBytes,
 } from 'crypto';
+import { assertNotManagedByWepublishLogin } from '@wepublish/user/api';
 
 const appName = process.env.APP_NAME || 'local';
 const capitalizedAppName = appName.charAt(0).toUpperCase() + appName.slice(1);
@@ -286,12 +287,14 @@ export class TotpService {
   async resetTotp(userId: string) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
-      select: { id: true },
+      select: { id: true, wepublishLoginSubject: true },
     });
 
     if (!user) {
       throw new BadRequestException('User not found.');
     }
+
+    assertNotManagedByWepublishLogin(user);
 
     await this.prisma.user.update({
       where: { id: userId },

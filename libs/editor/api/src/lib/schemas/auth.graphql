@@ -66,3 +66,58 @@ mutation EnableTotp($totpToken: String!) {
 mutation ResetUserTotp($userId: String!) {
   resetUserTotp(userId: $userId)
 }
+
+query WepublishLogin {
+  wepublishLogin {
+    authorizationUrl
+    clientId
+    redirectUri
+    scope
+  }
+}
+
+mutation CreateSessionWithWepublishLogin(
+  $code: String!
+  $codeVerifier: String!
+) {
+  createSessionWithWepublishLogin(code: $code, codeVerifier: $codeVerifier) {
+    user {
+      email
+      roles {
+        ...FullUserRole
+      }
+    }
+    token
+  }
+}
+
+query CurrentSession {
+  currentSession {
+    canImpersonate
+    impersonatedBy
+    expiresAt
+  }
+}
+
+mutation ImpersonateUser($userId: String!, $reason: String!) {
+  impersonateUser(userId: $userId, reason: $reason) {
+    user {
+      email
+      roles {
+        ...FullUserRole
+      }
+    }
+    token
+  }
+}
+
+mutation CreateWebsiteImpersonation($userId: String!, $reason: String!) {
+  createWebsiteImpersonation(userId: $userId, reason: $reason) {
+    token
+    url
+  }
+}
+
+mutation EndImpersonation {
+  revokeActiveSession
+}
