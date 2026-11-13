@@ -25,7 +25,8 @@ const paidInvoice = mockInvoice({
 });
 
 const renderInvoiceListItem = (
-  props: Partial<BuilderInvoiceListItemProps> = {}
+  props: Partial<BuilderInvoiceListItemProps> = {},
+  locale: 'de' | 'fr' = 'de'
 ) => {
   const pay = vi.fn(async () => undefined);
 
@@ -35,7 +36,8 @@ const renderInvoiceListItem = (
       canPay={false}
       pay={pay}
       {...props}
-    />
+    />,
+    { locale }
   );
 
   return { pay, user: userEvent.setup() };
@@ -99,8 +101,18 @@ describe('InvoiceListItem', () => {
     renderInvoiceListItem({ subscription: null });
 
     expect(screen.getByRole('heading')).toHaveTextContent(t('invoice.paid'));
-    expect(screen.getByRole('heading')).not.toHaveTextContent('für');
+    expect(screen.getByRole('heading')).toHaveTextContent(
+      new RegExp(`^${t('invoice.paid')}$`)
+    );
     expect(metaLine('invoice.amount')).toHaveTextContent('CHF 125.50');
+  });
+
+  it('names the plan in French on a French site', () => {
+    renderInvoiceListItem(unpaid, 'fr');
+
+    expect(screen.getByRole('heading')).toHaveTextContent(
+      'Facture impayée pour Jahresabo'
+    );
   });
 
   it('shows the amount in the currency of the member plan', () => {
