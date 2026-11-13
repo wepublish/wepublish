@@ -2756,6 +2756,13 @@
       "successTitle": "Enregistré",
       "subscriptionPlans": "Plans d’abonnement",
       "subscriptionUpgradeModel": "Lors d’une mise à niveau, facturer la différence de prix complète (au lieu du crédit restant au prorata)",
+      "feeds": "Flux",
+      "feedPaywalledContent": "Articles payants dans les flux RSS, Atom et JSON",
+      "feedPaywalledContentChoice": {
+        "lead": "Le chapeau uniquement",
+        "visible": "La partie visible avant le paywall",
+        "full": "Le texte intégral"
+      },
       "subscriptionExtendWindowDays": "Fenêtre de renouvellement (jours avant l’échéance)",
       "paymentMethodChangeExpiryDays": "Délai pour un changement de moyen de paiement (jours)",
       "warnings": {
@@ -2765,6 +2772,7 @@
         "guestPollVote": "Autoriser les votes des utilisateur·trice·s non authentifié·e·s pour les sondages.",
         "invoiceReminders": "Nombre de rappels de paiement par facture (un rappel par jour).",
         "subscriptionUpgradeModel": "Lorsque cette option est activée, une mise à niveau facture toujours la différence entre le prix du nouveau plan et celui du plan actuel, quel que soit le temps restant dans la période en cours. Lorsqu’elle est désactivée, seul le solde restant (au prorata) non utilisé de la période en cours est crédité.",
+        "feedPaywalledContent": "Les articles gratuits figurent toujours dans les flux avec leur texte intégral. Ce réglage concerne les articles derrière un paywall actif. Les flux sont lus notamment par la Banque de données suisse des médias (SMD) et les lecteurs de flux ; les changements apparaissent en dix minutes au plus.",
         "sessionTtlDays": "Combien de temps une connexion reste valable avant de devoir se reconnecter. S’applique dès la prochaine connexion ; les sessions ouvertes gardent leur durée.",
         "emailQualityUnresponsiveAfterDays": "Une adresse e-mail est considérée « sans réaction » lorsque ce nombre de jours s’est écoulé sans connexion ni clic dans un e-mail, alors que des e-mails ont été remis. Réévalué chaque nuit et via « Actualiser les statuts ».",
         "emailQualityMinMailsForUnresponsive": "Ce nombre d’e-mails doit avoir été remis à l’adresse avant qu’elle puisse être considérée « sans réaction ».",

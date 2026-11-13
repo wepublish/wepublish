@@ -600,7 +600,9 @@ describe('MailchimpMailProvider', () => {
       const provider = await makeProvider();
 
       await expect(
-        provider.webhookForSendMail(webhook(signedWith('test-webhook')) as never)
+        provider.webhookForSendMail(
+          webhook(signedWith('test-webhook')) as never
+        )
       ).rejects.toThrow('Webhook signature failed');
     });
 

@@ -2758,6 +2758,13 @@
       "newArticlePaywall": "Neu erstellte Artikel benötigen ein Abo, um gelesen zu werden.",
       "subscriptionPlans": "Abo-Pläne",
       "subscriptionUpgradeModel": "Beim Upgrade die volle Preisdifferenz verrechnen (statt des anteiligen Restguthabens)",
+      "feeds": "Feeds",
+      "feedPaywalledContent": "Artikel hinter der Paywall in RSS-, Atom- und JSON-Feeds",
+      "feedPaywalledContentChoice": {
+        "lead": "Nur der Lead",
+        "visible": "Der vor der Paywall sichtbare Teil",
+        "full": "Der ganze Text"
+      },
       "subscriptionExtendWindowDays": "Verlängerungsfenster (Tage vor Ablauf)",
       "paymentMethodChangeExpiryDays": "Wartezeit für Zahlungsmethoden-Wechsel (Tage)",
       "warnings": {
@@ -2769,6 +2776,7 @@
         "newArticlePeering": "Hat keinen Einfluss auf bereits erstellte Artikel",
         "newArticlePaywall": "Hat keinen Einfluss auf bereits erstellte Artikel",
         "subscriptionUpgradeModel": "Wenn aktiviert, wird bei einem Upgrade immer die Differenz zwischen dem neuen und dem aktuellen Plan-Preis verrechnet, unabhängig davon, wie viel Zeit in der aktuellen Periode noch verbleibt. Wenn deaktiviert, wird nur das ungenutzte (anteilige) Restguthaben der aktuellen Periode angerechnet.",
+        "feedPaywalledContent": "Freie Artikel erscheinen in den Feeds immer mit dem ganzen Text. Diese Einstellung gilt für Artikel hinter einer aktiven Paywall. Feeds werden u. a. von der Schweizer Mediendatenbank (SMD) und Feed-Readern gelesen; Änderungen erscheinen nach höchstens zehn Minuten.",
         "sessionTtlDays": "Wie lange eine Anmeldung gültig bleibt, bevor man sich neu anmelden muss. Gilt ab der nächsten Anmeldung; bestehende Sitzungen behalten ihre Laufzeit.",
         "emailQualityUnresponsiveAfterDays": "Eine E-Mail-Adresse gilt als «reagiert nicht», wenn so viele Tage lang weder ein Login noch ein Klick in einer Mail erfolgt ist, obwohl Mails zugestellt wurden. Wird nächtlich und über «Status aktualisieren» neu bewertet.",
         "emailQualityMinMailsForUnresponsive": "So viele Mails müssen an die Adresse zugestellt worden sein, bevor sie als «reagiert nicht» gelten kann.",
