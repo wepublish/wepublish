@@ -1,6 +1,7 @@
 import {
   Field,
   GraphQLISODateTime,
+  InputType,
   Int,
   ObjectType,
   registerEnumType,
@@ -128,6 +129,49 @@ export class PaginatedDeliverySuggestions {
 
   @Field(() => Int)
   totalCount!: number;
+}
+
+@InputType()
+export class DeliverySuggestionFilter {
+  @Field(() => [String], {
+    nullable: true,
+    description:
+      'Any of these reasons: placeholderEmail, the evidence type behind the email status (e.g. hardBounce, login), or none.',
+  })
+  reasons?: string[] | null;
+
+  @Field(() => GraphQLISODateTime, {
+    nullable: true,
+    description: 'Email status since, from.',
+  })
+  emailSinceFrom?: Date | null;
+
+  @Field(() => GraphQLISODateTime, {
+    nullable: true,
+    description: 'Email status since, to.',
+  })
+  emailSinceTo?: Date | null;
+
+  @Field(() => GraphQLISODateTime, {
+    nullable: true,
+    description: 'Suggested since, from.',
+  })
+  createdFrom?: Date | null;
+
+  @Field(() => GraphQLISODateTime, {
+    nullable: true,
+    description: 'Suggested since, to.',
+  })
+  createdTo?: Date | null;
+}
+
+@ObjectType()
+export class DeliverySuggestionReasonCount {
+  @Field({ description: 'A reason as DeliverySuggestionFilter.reasons takes it.' })
+  reason!: string;
+
+  @Field(() => Int)
+  count!: number;
 }
 
 @ObjectType()

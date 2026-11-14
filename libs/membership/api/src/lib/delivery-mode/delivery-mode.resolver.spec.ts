@@ -33,6 +33,7 @@ function setup() {
     keep: vi.fn(async () => undefined),
     confirm: vi.fn(async () => undefined),
     confirmAll: vi.fn(),
+    reasons: vi.fn(async () => []),
     recomputeAll: vi.fn(async () => ({ skipped: true })),
   };
   const resolver = new DeliveryModeResolver(
@@ -108,6 +109,45 @@ describe('DeliveryModeResolver', () => {
     );
   });
 
+  it('hands the suggestion filter to the list and to confirm-all', async () => {
+    const { resolver, suggestions } = setup();
+    const filter = { reasons: ['hardBounce'] };
+
+    await resolver.deliverySuggestions(
+      DeliverySuggestionKind.toLetter,
+      0,
+      20,
+      filter
+    );
+    await resolver.confirmAllDeliverySuggestions(
+      session,
+      DeliverySuggestionKind.toLetter,
+      filter
+    );
+
+    expect(suggestions.list).toHaveBeenCalledWith(
+      DeliverySuggestionKind.toLetter,
+      0,
+      20,
+      filter
+    );
+    expect(suggestions.confirmAll).toHaveBeenCalledWith(
+      DeliverySuggestionKind.toLetter,
+      'admin',
+      filter
+    );
+  });
+
+  it('counts the suggestions of a kind per reason', async () => {
+    const { resolver, suggestions } = setup();
+
+    await resolver.deliverySuggestionReasons(DeliverySuggestionKind.toMail);
+
+    expect(suggestions.reasons).toHaveBeenCalledWith(
+      DeliverySuggestionKind.toMail
+    );
+  });
+
   it('reports zeros when a recompute was skipped', async () => {
     const { resolver } = setup();
 
@@ -142,6 +182,7 @@ describe('DeliveryModeResolver', () => {
     for (const method of [
       'deliveryChannelCounts',
       'usersByDeliveryChannel',
+      'deliverySuggestionReasons',
     ] as const) {
       expect(
         Reflect.getMetadata(
@@ -218,7 +259,8 @@ describe('DeliveryModeResolver', () => {
     expect(suggestions.list).toHaveBeenCalledWith(
       DeliverySuggestionKind.toLetter,
       0,
-      20
+      20,
+      undefined
     );
   });
 });

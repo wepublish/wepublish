@@ -1391,6 +1391,25 @@ type DeliverySuggestionEmailQuality {
   since: DateTime!
 }
 
+input DeliverySuggestionFilter {
+  """Suggested since, from."""
+  createdFrom: DateTime
+
+  """Suggested since, to."""
+  createdTo: DateTime
+
+  """Email status since, from."""
+  emailSinceFrom: DateTime
+
+  """Email status since, to."""
+  emailSinceTo: DateTime
+
+  """
+  Any of these reasons: placeholderEmail, the evidence type behind the email status (e.g. hardBounce, login), or none.
+  """
+  reasons: [String!]
+}
+
 """toLetter: move to printed letters. toMail: move back to mail."""
 enum DeliverySuggestionKind {
   toLetter
@@ -1407,6 +1426,13 @@ type DeliverySuggestionModel {
   """Why, e.g. emailQuality:dead or placeholderEmail."""
   reason: String!
   user: MailLogRecipient!
+}
+
+type DeliverySuggestionReasonCount {
+  count: Int!
+
+  """A reason as DeliverySuggestionFilter.reasons takes it."""
+  reason: String!
 }
 
 type DeliverySuggestionRecomputeResult {
@@ -3615,8 +3641,10 @@ type Mutation {
   """
   computePrintIssueRun(id: String!): PrintIssueRun!
 
-  """Apply every open suggestion of a direction"""
-  confirmAllDeliverySuggestions(kind: DeliverySuggestionKind!): DeliverySuggestionConfirmAllResult!
+  """
+  Apply every open suggestion of a direction, or only those the filter keeps
+  """
+  confirmAllDeliverySuggestions(filter: DeliverySuggestionFilter, kind: DeliverySuggestionKind!): DeliverySuggestionConfirmAllResult!
 
   """
   Confirms that the manual action required by a changelog entry has been completed. Requires the permission to update settings.
@@ -6280,8 +6308,11 @@ type Query {
   """How many suggestions are open, per direction"""
   deliverySuggestionCounts: DeliverySuggestionCounts!
 
+  """The reasons among the open suggestions of a direction, most first"""
+  deliverySuggestionReasons(kind: DeliverySuggestionKind!): [DeliverySuggestionReasonCount!]!
+
   """Open suggestions to move users to letters or back to mail"""
-  deliverySuggestions(kind: DeliverySuggestionKind!, skip: Int, take: Int): PaginatedDeliverySuggestions!
+  deliverySuggestions(filter: DeliverySuggestionFilter, kind: DeliverySuggestionKind!, skip: Int, take: Int): PaginatedDeliverySuggestions!
 
   """Returns an discountCode by id or discountCode."""
   discountCode(id: String!): DiscountCode!
