@@ -210,7 +210,7 @@ describe('UpgradeContainer', () => {
           monthlyAmount: 800,
           goodieId: null,
           discountCode: '',
-          successURL: `${window.location.origin}/abo/danke`,
+          successURL: `${window.location.origin}/abo/danke?wepConversion=upgrade`,
           failureURL: `${window.location.origin}/abo/fehler`,
         },
         data: {
@@ -223,7 +223,9 @@ describe('UpgradeContainer', () => {
     await user.click(await upgradeButton(91, plusPlan));
 
     await waitFor(() =>
-      expect(window.location.href).toBe(`${window.location.origin}/abo/danke`)
+      expect(window.location.href).toBe(
+        `${window.location.origin}/abo/danke?wepConversion=upgrade`
+      )
     );
   });
 
@@ -241,7 +243,7 @@ describe('UpgradeContainer', () => {
           monthlyAmount: 800,
           goodieId: null,
           discountCode: '',
-          successURL: `${window.location.origin}/abo/danke`,
+          successURL: `${window.location.origin}/abo/danke?wepConversion=upgrade`,
           failureURL: `${window.location.origin}/abo/fehler`,
         },
         errors: [{ message: 'Card declined' }],

@@ -60,6 +60,16 @@ const donation = mockSubscription({
   },
 }) as FullSubscriptionFragment;
 
+const activeSubscription = mockSubscription({
+  id: 'active',
+  memberPlan: mockMemberPlan({
+    name: 'Mitgliedschaft',
+    productType: ProductType.Subscription,
+  }),
+  isActive: true,
+  deactivation: null,
+}) as FullSubscriptionFragment;
+
 describe('ProfileSubscriptions', () => {
   it('shows subscriptions and invoices as one history when the medium has it', async () => {
     renderWith(['profile-subscription-history']);
@@ -86,6 +96,27 @@ describe('ProfileSubscriptions', () => {
     expect(
       screen.queryByRole('heading', { name: 'Aktive Spenden' })
     ).not.toBeInTheDocument();
+  });
+
+  it('links to another subscription at the url the medium sets', async () => {
+    renderWithProviders(
+      <ProfileSubscriptions subscribeAnotherUrl="/upgrade" />,
+      {
+        mocks: mocks([], [activeSubscription]),
+      }
+    );
+
+    expect(
+      await screen.findByRole('link', { name: 'Anderes Abo lösen' })
+    ).toHaveAttribute('href', '/upgrade');
+  });
+
+  it('links to another subscription at /mitmachen by default', async () => {
+    renderWith([], [activeSubscription]);
+
+    expect(
+      await screen.findByRole('link', { name: 'Anderes Abo lösen' })
+    ).toHaveAttribute('href', '/mitmachen');
   });
 
   it('shows the subscription cards otherwise', async () => {

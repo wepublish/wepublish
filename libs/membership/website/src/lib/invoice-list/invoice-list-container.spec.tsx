@@ -148,7 +148,7 @@ describe('InvoiceListContainer', () => {
             variables: {
               invoiceId: 'open-invoice',
               paymentMethodId: 'payrexx',
-              successURL: 'https://example.com/success',
+              successURL: 'https://example.com/success?wepConversion=invoice',
               failureURL: 'https://example.com/fail',
             },
             data,
@@ -190,7 +190,8 @@ describe('InvoiceListContainer', () => {
               autoRenew: true,
               monthlyAmount: 2500,
               paymentPeriodicity: PaymentPeriodicity.Quarterly,
-              successURL: 'https://example.com/success',
+              successURL:
+                'https://example.com/success?wepConversion=subscription',
               failureURL: 'https://example.com/fail',
             },
             data,

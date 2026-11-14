@@ -98,7 +98,7 @@ const GoodieSlider = memo(function GoodieSlider({
         variant="h2"
         component="h2"
       >
-        <a id="Crowdfunding-Geschenk">Crowdfunding-Geschenk</a>
+        <a id="Willkommensgeschenk">Willkommensgeschenk</a>
       </GoodieSliderTitle>
 
       <ReflektImageSliderSlim images={images} />

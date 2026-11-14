@@ -6,6 +6,12 @@ fragment FullCrowdfunding on Crowdfunding {
   goalType
   countSubscriptionsUntil
 
+  goals {
+    id
+    title
+    amount
+  }
+
   activeGoal {
     id
     title

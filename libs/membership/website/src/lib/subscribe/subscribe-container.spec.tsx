@@ -272,7 +272,7 @@ describe('SubscribeContainer', () => {
       mockOperation(SubscribeDocument, {
         variables: {
           ...subscribeVariables,
-          successURL: redirectUrl('/abo/danke'),
+          successURL: redirectUrl('/abo/danke?wepConversion=subscription'),
           failureURL: redirectUrl('/abo/fehler'),
         },
         data: {
@@ -287,7 +287,9 @@ describe('SubscribeContainer', () => {
     expect(await screen.findByText('logged in')).toBeInTheDocument();
     expect(setToken).toHaveBeenCalledTimes(1);
     await waitFor(() =>
-      expect(window.location.href).toBe(redirectUrl('/abo/danke'))
+      expect(window.location.href).toBe(
+        redirectUrl('/abo/danke?wepConversion=subscription')
+      )
     );
   });
 
@@ -323,7 +325,7 @@ describe('SubscribeContainer', () => {
           variables: {
             ...subscribeVariables,
             deactivateSubscriptionId: subscription.id,
-            successURL: redirectUrl('/abo/danke'),
+            successURL: redirectUrl('/abo/danke?wepConversion=subscription'),
             failureURL: redirectUrl('/abo/fehler'),
           },
           errors: [{ message: 'Card declined' }],

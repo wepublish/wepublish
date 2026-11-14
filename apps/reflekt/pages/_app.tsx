@@ -34,8 +34,10 @@ import {
 import { setDefaultOptions } from 'date-fns';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import Script from 'next/script';
-import PlausibleProvider from 'next-plausible';
+import PlausibleProvider, { usePlausible } from 'next-plausible';
+import { useEffect, useRef } from 'react';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
@@ -61,6 +63,47 @@ const NavBar = styled(NavbarContainer)`
   grid-column: -1/1;
   z-index: 11;
 `;
+
+const CONVERSION_EVENTS: Record<string, string[]> = {
+  subscription: ['Payment success', 'Subscription success'],
+  upgrade: ['Payment success', 'Subscription success'],
+  invoice: ['Payment success'],
+};
+
+function PlausibleConversionEvents() {
+  const router = useRouter();
+  const plausible = usePlausible();
+  const handled = useRef(false);
+
+  useEffect(() => {
+    if (!router.isReady || handled.current) {
+      return;
+    }
+
+    const conversion = router.query.wepConversion;
+
+    if (typeof conversion !== 'string') {
+      return;
+    }
+
+    const events = CONVERSION_EVENTS[conversion];
+
+    if (!events) {
+      return;
+    }
+
+    handled.current = true;
+    events.forEach(event => plausible(event, { props: { type: conversion } }));
+
+    const query = { ...router.query };
+    delete query.wepConversion;
+    void router.replace({ pathname: router.pathname, query }, undefined, {
+      shallow: true,
+    });
+  }, [router, plausible]);
+
+  return null;
+}
 
 export type CustomAppProps = AppProps<
   {
@@ -99,6 +142,8 @@ function CustomApp({
       }
       src={`https://plausible.io/js/${settings?.analytics.plausible.key}.js`}
     >
+      <PlausibleConversionEvents />
+
       <AppCacheProvider emotionCache={cache}>
         <TenantProviders
           config={reflektTenant}

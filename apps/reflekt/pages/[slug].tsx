@@ -51,6 +51,12 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       query: NavigationListDocument,
     }),
     client.query({
+      query: PageDocument,
+      variables: {
+        slug: 'footer',
+      },
+    }),
+    client.query({
       query: PeerProfileDocument,
     }),
   ]);
