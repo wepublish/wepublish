@@ -36,6 +36,7 @@ export const subscriptionFixture = (
     externalReward: null,
     pendingPaymentMethodChange: null,
     canRenewPaymentMethod: false,
+    switchablePeriodicities: [],
     ...overrides,
   }) satisfies FullSubscriptionFragment;
 

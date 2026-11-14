@@ -68,6 +68,7 @@ import {
   RenewalMailModule,
   SubscriptionModule,
   UpgradeSubscriptionModule,
+  PeriodicitySwitchModule,
   GoodieModule,
   DiscountCodeModule,
 } from '@wepublish/membership/api';
@@ -336,6 +337,7 @@ import { API_SHARED_NAMESPACES } from './shared-namespaces';
     }),
     SubscriptionModule,
     UpgradeSubscriptionModule,
+    PeriodicitySwitchModule,
     NavigationModule,
     TagModule,
     EventsImportModule.registerAsync({
