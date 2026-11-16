@@ -7,17 +7,14 @@ import {
   User,
 } from '@prisma/client';
 import { v7 as uuidv7 } from 'uuid';
+import { MailAttachment } from './mail-attachment';
 import { MailContext } from './mail-context';
 import { MailProviderRecipientError } from './mail-provider/mail-provider.interface';
 import {
   qualityTypeForRejectReason,
   recordEmailQualitySafely,
 } from './email-quality-recorder';
-import {
-  LetterAttachment,
-  LetterDeliveryError,
-  LetterRecipient,
-} from './letter-sender';
+import { LetterDeliveryError, LetterRecipient } from './letter-sender';
 import { resolveLetterRecipient } from './resolve-letter-recipient';
 
 export enum mailLogType {
@@ -26,6 +23,17 @@ export enum mailLogType {
   SystemMail,
   Manual,
 }
+
+/**
+ * Mails someone is waiting for (login links, password resets and the other
+ * account mails, and their tests). They go out without the template's
+ * attachments, so they never wait on a document conversion; the editor does
+ * not let such a template carry any.
+ */
+const SENT_WITHOUT_ATTACHMENTS = new Set([
+  mailLogType.UserFlow,
+  mailLogType.SystemMail,
+]);
 
 /** Map the internal send-type enum to the persisted MailLog origin. */
 const MAIL_LOG_TYPE_MAP: Record<mailLogType, MailLogType> = {
@@ -65,10 +73,11 @@ export type MailControllerConfig = {
    */
   letterRecipient?: LetterRecipient | null;
   /**
-   * A pdf printed after the template, e.g. the provider's invoice with its
-   * payment slip. Nothing for a mail: the provider emails that itself.
+   * A ready-made file that goes with the template on either channel, e.g. the
+   * payment provider's invoice pdf: printed after the template in a letter,
+   * attached after the template's own documents in a mail.
    */
-  letterAttachment?: LetterAttachment;
+  attachment?: MailAttachment;
 };
 
 /**
@@ -201,6 +210,10 @@ export class MailController {
           mailTemplateId: this.config.mailTemplateId,
           recipient: this.config.recipient.email,
           data: await this.buildData(),
+          withAttachments: !SENT_WITHOUT_ATTACHMENTS.has(this.config.mailType),
+          ...(this.config.attachment && {
+            attachments: [this.config.attachment],
+          }),
         }
       ));
     } catch (error) {
@@ -247,6 +260,21 @@ export class MailController {
   }
 
   /**
+   * Note that this mail is held back and why, without sending anything — e.g.
+   * the invoice-creation mail whose invoice pdf the payment provider could
+   * not render yet. The entry tells the editor why the reader is waiting and
+   * tells the night sweep the mail is still owed.
+   */
+  public async recordDeferred(reason: string): Promise<void> {
+    await this.writeLog(
+      this.config.mailLogId ?? uuidv7(),
+      MailLogState.deferred,
+      null,
+      reason
+    );
+  }
+
+  /**
    * The user with their address when this send goes to paper, as the caller
    * decided or as `resolveLetterRecipient` decides now.
    */
@@ -284,8 +312,11 @@ export class MailController {
           mailIdentifier: this.generateMailIdentifier(),
           type: MAIL_LOG_TYPE_MAP[this.config.mailType],
         },
-        ...(this.config.letterAttachment && {
-          attachment: this.config.letterAttachment,
+        ...(this.config.attachment && {
+          attachment: {
+            content: this.config.attachment.content,
+            name: this.config.attachment.filename,
+          },
         }),
       });
     } catch (error) {

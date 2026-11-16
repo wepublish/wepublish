@@ -17,6 +17,15 @@
   create a second invoice. Keep `offSessionPayments` **off** for Bexio: with it
   on, the due date runs `createIntent` → a second Bexio invoice plus a
   RENEWAL_FAILED mail.
+  **we.publish delivers (opt-in):** `bexio_invoiceMailByWePublish` makes
+  `deliversInvoiceItself()` false, so renewal invoices are issued + rendered
+  for every reader and the pdf goes out with the invoice-creation flow mail
+  (`MailControllerConfig.attachment`, every mail provider) or letter. Checkout
+  invoices (`createIntent`) are still emailed by Bexio. No pdf → nothing is
+  sent and a `deferred` mail-log entry is written; `postMissingInvoiceDeliveries`
+  mails readers with only deferred/rejected entries (≤3 refusals), which is
+  what keeps checkout invoices (no entry) out. Bexio then shows no email
+  history for the invoice.
   **Contact sync (opt-in):** `SettingPaymentProvider.bexio_contactSync` has
   `BexioContactSyncService` (`libs/payment/api/.../bexio/`, a `runNight`
   step before the Mailchimp sync) push reader data to bexio every night:
@@ -279,6 +288,44 @@ QR-bill) is appended after rendering by `appendPdf` (pdf-lib, renderer-agnostic)
 A document the sender hands in (`attachment`, e.g. the Bexio invoice with its
 per-invoice QR-bill) is appended the same way and takes the static appendix's
 place.
+
+### Template attachments (Word → pdf)
+
+`MailTemplateAttachment` rows (ordered by `position`) attach `.docx` documents
+to a template. Every send of it — `/mailsend`, test mails and the subscription
+flows — fills each one in with the template's `{{placeholders}}`
+(`renderDocxTemplate`, `libs/template/api`: joins the runs Word splits a
+placeholder into, per paragraph, xml-escapes values, turns their newlines into
+`<w:br/>`, fills link addresses in the `.rels` parts, and drops every other
+`TargetMode="External"` relationship so LibreOffice fetches nothing; field
+codes and custom-xml content controls are not filled), converts it through
+Gotenberg's LibreOffice route (`PdfRenderer.convertDocument`; Cloudflare
+refuses, `canConvertDocuments()` says so) and attaches the pdf. A letter prints
+them after its pages and before the QR appendix (A4 only, each on its own sheet
+in duplex). The work is `DocumentAttachmentRenderer` (`libs/letter/api`),
+handed to `MailContext` through the `MAIL_ATTACHMENT_RENDERER` token the way
+`LETTER_SENDER` is; while `paper-letters` is off it attaches nothing. An
+attachment that cannot be rendered fails its mail with a `MailAttachmentError`
+(logged `rejected`); the nightly job skips that recipient like a
+`LetterDeliveryError` instead of stopping the run, and a `/mailsend` job stops
+after three in a row (the rest stays pending). After three failed conversions
+in a row the renderer pauses conversions for a minute, failing at once instead
+of waiting for Gotenberg's 60 s timeout. Saving attachments needs
+`isAvailable()` (the flag and a converting renderer), at most 5 documents and
+15 MB (`MAX_TEMPLATE_ATTACHMENTS`, `MAX_ATTACHMENT_BYTES`, also checked on the
+rendered pdfs), and a template that is no system mail. `UserFlow`/`SystemMail`
+sends (login link, password reset, …) never render attachments, and
+`updateSystemMail` refuses a template with any. A document still attached
+cannot be deleted. Rendered files are cached by content hash (20 files and
+50 MB per cache and API instance), so a document without per-recipient
+placeholders is converted once per send job, not once per recipient; one with
+them (`{{purl}}`, a name) costs a LibreOffice conversion per recipient (a send
+job converts one after the other, ~1–3 s each), so a large send keeps
+LibreOffice busy for hours; Chromium (html letters) has its own queue
+(`--chromium-max-queue-size` vs. `--libreoffice-max-queue-size`). Run
+Gotenberg with `--libreoffice-deny-private-ips` so nothing a document points
+at (e.g. an `INCLUDEPICTURE` field) reaches internal networks; the `.rels`
+stripping is only defence in depth.
 
 ### Letter layouts (Briefpapier)
 

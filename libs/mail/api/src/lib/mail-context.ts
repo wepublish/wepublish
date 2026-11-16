@@ -8,16 +8,36 @@ import { SecretCrypto } from '@wepublish/settings/api';
 import { composeMail, MailTemplateContent } from './mail-renderer';
 import { EmailQualityRecorder } from './email-quality-recorder';
 import { LetterSender } from './letter-sender';
+import {
+  attachmentIdsOf,
+  MAIL_TEMPLATE_ATTACHMENT_IDS,
+  MailAttachment,
+  MailAttachmentError,
+  MailAttachmentRenderer,
+} from './mail-attachment';
 
 export interface SendComposedMailProps {
   readonly mailTemplateId: string;
   readonly recipient: string;
   readonly mailLogID: string;
   readonly data: Record<string, any>;
+  /**
+   * Whether the documents attached to the template go along. On when left
+   * out; account mails send without them.
+   */
+  readonly withAttachments?: boolean;
+  /**
+   * Ready-made files the caller sends along, after the template's own
+   * documents — e.g. the payment provider's invoice pdf. Sent even when
+   * `withAttachments` is off: that switch only concerns the template.
+   */
+  readonly attachments?: MailAttachment[];
 }
 
 export interface SendComposedContentProps {
   readonly content: MailTemplateContent;
+  /** Documents to attach, as chosen on the draft. */
+  readonly attachmentIds?: string[];
   readonly recipient: string;
   readonly mailLogID: string;
   readonly data: Record<string, any>;
@@ -112,6 +132,8 @@ export interface MailContextProps {
   readonly emailQualityRecorder?: EmailQualityRecorder;
   /** Prints automated mails for users in letter mode; absent without letters. */
   readonly letterSender?: LetterSender;
+  /** Renders the documents attached to templates; absent without letters. */
+  readonly attachmentRenderer?: MailAttachmentRenderer;
 }
 
 @Injectable()
@@ -122,6 +144,7 @@ export class MailContext implements MailContextInterface {
   jwtGenerator: (userId: string) => Promise<string>;
   emailQualityRecorder?: EmailQualityRecorder;
   letterSender?: LetterSender;
+  attachmentRenderer?: MailAttachmentRenderer;
 
   constructor(props: MailContextProps) {
     this.mailProvider = props.mailProvider;
@@ -130,6 +153,7 @@ export class MailContext implements MailContextInterface {
     this.jwtGenerator = props.jwtGenerator;
     this.emailQualityRecorder = props.emailQualityRecorder;
     this.letterSender = props.letterSender;
+    this.attachmentRenderer = props.attachmentRenderer;
   }
 
   async sendMail(
@@ -156,6 +180,8 @@ export class MailContext implements MailContextInterface {
     recipient,
     data,
     mailLogID,
+    withAttachments = true,
+    attachments: extraAttachments = [],
   }: SendComposedMailProps): Promise<{
     subject: string;
     providerMessageID?: string;
@@ -166,6 +192,7 @@ export class MailContext implements MailContextInterface {
 
     const template = await this.prisma.mailTemplate.findUnique({
       where: { id: mailTemplateId },
+      include: MAIL_TEMPLATE_ATTACHMENT_IDS,
     });
 
     if (!template) {
@@ -179,6 +206,15 @@ export class MailContext implements MailContextInterface {
     ).getConfig();
 
     const composed = composeMail(template, data);
+    // Rendered before anything is handed over: a mail whose documents cannot
+    // be rendered fails as a whole rather than going out without them.
+    const attachments = [
+      ...(await this.renderAttachments(
+        withAttachments ? attachmentIdsOf(template) : [],
+        data
+      )),
+      ...extraAttachments,
+    ];
 
     const result = await this.mailProvider.sendMail({
       mailLogID,
@@ -187,6 +223,7 @@ export class MailContext implements MailContextInterface {
       subject: composed.subject,
       message: composed.message,
       messageHtml: composed.messageHtml,
+      ...(attachments.length ? { attachments } : {}),
     });
 
     return {
@@ -201,6 +238,7 @@ export class MailContext implements MailContextInterface {
    */
   async sendComposedContent({
     content,
+    attachmentIds = [],
     recipient,
     data,
     mailLogID,
@@ -216,6 +254,7 @@ export class MailContext implements MailContextInterface {
     ).getConfig();
 
     const composed = composeMail(content, data);
+    const attachments = await this.renderAttachments(attachmentIds, data);
 
     const result = await this.mailProvider.sendMail({
       mailLogID,
@@ -224,9 +263,31 @@ export class MailContext implements MailContextInterface {
       subject: composed.subject,
       message: composed.message,
       messageHtml: composed.messageHtml,
+      ...(attachments.length ? { attachments } : {}),
     });
 
     return { providerMessageID: result?.providerMessageID };
+  }
+
+  private async renderAttachments(
+    documentIds: string[],
+    data: Record<string, unknown>
+  ): Promise<MailAttachment[]> {
+    if (!documentIds.length) {
+      return [];
+    }
+
+    if (!this.attachmentRenderer) {
+      throw new MailAttachmentError(
+        'This template has attachments, but nothing is set up to render them.'
+      );
+    }
+
+    try {
+      return await this.attachmentRenderer.render(documentIds, data);
+    } catch (error) {
+      throw new MailAttachmentError((error as Error).message, error);
+    }
   }
 
   async getUserTemplateId(
