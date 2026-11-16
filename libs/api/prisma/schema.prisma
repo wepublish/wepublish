@@ -2576,6 +2576,10 @@ model SettingPaymentProvider {
   bexio_invoiceMailBodyRenewalMembership    String?
   bexio_markInvoiceAsOpen                   Boolean?
   bexio_testMailbox                         String?
+  // We.Publish delivers the renewal invoice pdf to every reader (attached to
+  // the invoice-creation mail, or printed after the letter); bexio only
+  // issues it and sends nothing. Off or null: bexio emails it as before.
+  bexio_invoiceMailByWePublish              Boolean?
   // Nightly push of reader data (name, email, address) to bexio contacts;
   // when it last ran and what went wrong, for the integration form.
   bexio_contactSync                         Boolean?

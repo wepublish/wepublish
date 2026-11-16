@@ -15,8 +15,8 @@ import {
   User,
 } from '@prisma/client';
 import {
-  LetterAttachment,
   LetterDeliveryError,
+  MailAttachment,
   MailAttachmentError,
   MailContext,
   MailController,
@@ -28,6 +28,7 @@ import {
 import {
   InvoiceWithItems,
   PaymentsService,
+  RemoteInvoiceDocument,
   RemoteInvoiceResult,
 } from '@wepublish/payment/api';
 import { describeError } from '@wepublish/utils/api';
@@ -37,12 +38,14 @@ import { Action } from '../subscription-event-dictionary/subscription-event-dict
 import { isLegacySubscription } from '../subscription/legacy-subscription';
 
 /**
- * What the invoice-creation mail is told about the paper side. `mailLogId`:
- * the entry a replacement letter was given when the held one was taken back.
+ * What the invoice-creation mail is told about its delivery: the reader to
+ * print it for, if any, and the provider's invoice pdf that goes with it on
+ * either channel. `mailLogId`: the entry a replacement letter was given when
+ * the held one was taken back.
  */
-export type PaperSide = Pick<
+export type DeliverySide = Pick<
   MailControllerConfig,
-  'letterRecipient' | 'letterAttachment' | 'mailLogId'
+  'letterRecipient' | 'attachment' | 'mailLogId'
 >;
 
 /** The subscription and invoice a flow mail is about, for the mail log. */
@@ -54,11 +57,18 @@ export type MailTrigger = Pick<
 /**
  * Whether the invoice-creation mail goes out now. `removed`: the provider
  * could not create the invoice and it is gone for the next attempt.
- * `deferred`: the reader gets paper but there is no invoice pdf to print yet,
- * so the night sweep posts it once there is.
+ * `deferred`: the invoice pdf is needed — the reader gets paper, or we.publish
+ * delivers the invoice instead of the provider — but there is none yet, so
+ * the night sweep sends it once there is.
  */
 export type RemoteInvoiceOutcome =
-  { send: PaperSide } | { skip: 'removed' | 'deferred' };
+  { send: DeliverySide } | { skip: 'removed' | 'deferred' };
+
+const asAttachment = (document: RemoteInvoiceDocument): MailAttachment => ({
+  filename: document.name,
+  contentType: document.mime,
+  content: document.content,
+});
 
 /**
  * What happens around a renewal invoice once it exists in we.publish: the
@@ -103,10 +113,12 @@ export class InvoiceDeliveryService {
       throw new NotFoundException('No invoice creation found!');
     }
 
+    const runDate = startOfDay(new Date());
     const outcome = await this.createRemoteInvoice(
       subscription,
       invoice,
-      creationEvent
+      creationEvent,
+      runDate
     );
 
     if ('skip' in outcome) {
@@ -124,7 +136,7 @@ export class InvoiceDeliveryService {
       subscription.user,
       false,
       { subscriptionToCreateInvoice: subscription, invoice },
-      startOfDay(new Date()),
+      runDate,
       {
         ...outcome.send,
         subscriptionId: subscription.id,
@@ -135,8 +147,10 @@ export class InvoiceDeliveryService {
 
   /**
    * Have the payment provider create the invoice on its side: emailed by the
-   * provider, or — for a reader in letter mode with a Swiss address — issued
-   * and handed back as a pdf to print after the invoice-creation letter. The
+   * provider, or — for a reader in letter mode with a Swiss address, or for
+   * every reader when the provider leaves delivery to we.publish — issued and
+   * handed back as a pdf, printed after the invoice-creation letter or
+   * attached to the invoice-creation mail. The
    * provider's invoice is kept as a payment so the nightly poll sees it being
    * paid. Nothing is left behind when the provider could not create it, not
    * even the invoice, so the next attempt starts afresh.
@@ -144,7 +158,8 @@ export class InvoiceDeliveryService {
   async createRemoteInvoice(
     subscription: Subscription & { user: User },
     invoice: Invoice & { items: InvoiceItem[] },
-    creationEvent: Action
+    creationEvent: Action,
+    runDate: Date = startOfDay(new Date())
   ): Promise<RemoteInvoiceOutcome> {
     const letterRecipient = await resolveLetterRecipient({
       prisma: this.prisma,
@@ -174,6 +189,7 @@ export class InvoiceDeliveryService {
       },
     });
 
+    const weDeliver = !(await paymentProvider.deliversInvoiceItself());
     let remote: RemoteInvoiceResult | undefined;
 
     try {
@@ -217,22 +233,52 @@ export class InvoiceDeliveryService {
       );
     }
 
-    // A cover letter without the invoice is of no use to the reader.
-    if (letterRecipient && !remote.document) {
+    // A cover letter without the invoice is of no use to the reader, nor is
+    // a cover mail when the provider does not send the invoice itself.
+    if ((letterRecipient || weDeliver) && !remote.document) {
+      // The letter sweep finds letter readers by their preference; a mail
+      // reader is found by this entry, which also tells the editor why the
+      // reader is waiting.
+      if (!letterRecipient) {
+        await this.recordDeferredMail(
+          creationEvent,
+          subscription.user,
+          runDate,
+          `The invoice pdf is not available yet: ${
+            remote.deliveryError ?? 'the payment provider rendered none'
+          }`
+        );
+      }
+
       return { skip: 'deferred' };
     }
 
     return {
       send: {
         letterRecipient,
-        ...(remote.document && {
-          letterAttachment: {
-            content: remote.document.content,
-            name: remote.document.name,
-          },
-        }),
+        ...(remote.document && { attachment: asAttachment(remote.document) }),
       },
     };
+  }
+
+  private async recordDeferredMail(
+    action: Action,
+    user: User,
+    runDate: Date,
+    reason: string
+  ) {
+    if (!action.mailTemplateId) {
+      return;
+    }
+
+    await new MailController(this.prisma, this.mailContext, {
+      daysAwayFromEnding: action.daysAwayFromEnding,
+      mailTemplateId: action.mailTemplateId,
+      recipient: user,
+      periodicJobRunDate: runDate,
+      optionalData: {},
+      mailType: mailLogType.SubscriptionFlow,
+    }).recordDeferred(reason);
   }
 
   /** Remove an invoice nothing was paid on, with everything hanging off it. */
@@ -247,6 +293,39 @@ export class InvoiceDeliveryService {
     ]);
   }
 
+  /** Whether any payment provider leaves delivering its invoices to we.publish. */
+  async anyProviderLeavesDeliveryToUs(): Promise<boolean> {
+    for (const provider of this.payments.getProviders()) {
+      if (!(await provider.deliversInvoiceItself())) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * Whether the provider behind an invoice left delivering it to we.publish.
+   * No for an invoice that never reached a provider.
+   */
+  async leavesDeliveryToUs(invoice: Invoice): Promise<boolean> {
+    const payments = await this.payments.findByInvoiceId(invoice.id);
+    const payment = payments.find(({ intentID }) => intentID);
+
+    if (!payment) {
+      return false;
+    }
+
+    const paymentProvider =
+      await this.payments.findPaymentProviderByPaymentMethodeId(
+        payment.paymentMethodID
+      );
+
+    return paymentProvider ?
+        !(await paymentProvider.deliversInvoiceItself())
+      : false;
+  }
+
   /**
    * The provider's pdf of the invoice it created earlier, found through the
    * payment that holds its id. Nothing for an invoice that never reached a
@@ -254,7 +333,7 @@ export class InvoiceDeliveryService {
    */
   async renderRemoteInvoice(
     invoice: Invoice
-  ): Promise<LetterAttachment | undefined> {
+  ): Promise<MailAttachment | undefined> {
     const payments = await this.payments.findByInvoiceId(invoice.id);
     const payment = payments.find(({ intentID }) => intentID);
 
@@ -268,7 +347,7 @@ export class InvoiceDeliveryService {
       );
     const document = await paymentProvider?.renderRemoteInvoice({ payment });
 
-    return document && { content: document.content, name: document.name };
+    return document && asAttachment(document);
   }
 
   /**
@@ -282,7 +361,7 @@ export class InvoiceDeliveryService {
     isRetry: boolean,
     optionalData: Record<string, any>,
     periodicJobRunDate: Date,
-    delivery: PaperSide & MailTrigger = {}
+    delivery: DeliverySide & MailTrigger = {}
   ) {
     if (!action.mailTemplateId || !user) {
       return;
