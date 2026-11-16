@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { ReactElement } from 'react';
 
-import { linesFrom, proseField, toHtml } from './prose-field';
+import { linesFrom, linkTarget, proseField, toHtml } from './prose-field';
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
@@ -95,6 +95,31 @@ describe('prose field', () => {
 
   it('starts an empty field as one empty paragraph', () => {
     expect(toHtml('')).toBe('<p><br></p>');
+  });
+
+  describe('link target', () => {
+    it('makes a bare email address a mailto: link', () => {
+      expect(linkTarget('info@ee-news.ch')).toBe('mailto:info@ee-news.ch');
+    });
+
+    it('makes an address typed after the prefilled https:// a mailto: link', () => {
+      expect(linkTarget('https://info@ee-news.ch')).toBe(
+        'mailto:info@ee-news.ch'
+      );
+    });
+
+    it('leaves web addresses and mailto: links as they are', () => {
+      expect(linkTarget('https://ee-news.ch/mitmachen')).toBe(
+        'https://ee-news.ch/mitmachen'
+      );
+      expect(linkTarget('mailto:info@ee-news.ch')).toBe(
+        'mailto:info@ee-news.ch'
+      );
+    });
+
+    it('leaves merge tags as they are', () => {
+      expect(linkTarget('*|UNSUB|*')).toBe('*|UNSUB|*');
+    });
   });
 
   describe('accessibility', () => {

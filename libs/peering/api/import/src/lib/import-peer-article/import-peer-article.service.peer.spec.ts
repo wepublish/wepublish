@@ -19,7 +19,9 @@ vi.mock('@wepublish/peering/api', () => ({
   createSafeHostUrl: (host: string, path: string) => `${host}/${path}`,
   remote: { ArticleDocument: 'query Article { article { id } }' },
 }));
-vi.mock('./peer-article.model', () => ({}));
+vi.mock('./peer-article.model', () => ({
+  ImportArticleOptions: class {},
+}));
 vi.mock('graphql-request', () => ({
   ClientError: class ClientError extends Error {
     constructor(
