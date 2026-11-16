@@ -12,6 +12,7 @@ import {
 } from '@testing-library/react';
 import { TFunction } from 'i18next';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
+import { MemoryRouter } from 'react-router-dom';
 import {
   EngagementActionRole,
   EngagementActionType,
@@ -22,6 +23,8 @@ import {
   EngagementRequirement,
   EngagementRulesDocument,
   FullEngagementRuleFragment,
+  NewsletterSignupProblem,
+  NewsletterSignupProblemDocument,
 } from '@wepublish/editor/api';
 import { EngagementRuleForm } from './engagement-rule-form';
 import {
@@ -114,6 +117,13 @@ const Harness = ({
   );
 };
 
+const signupProblemMock = (
+  newsletterSignupProblem: NewsletterSignupProblem | null
+) => ({
+  request: { query: NewsletterSignupProblemDocument },
+  result: { data: { newsletterSignupProblem } },
+});
+
 const rulesMock = (rules: FullEngagementRuleFragment[]) => ({
   request: { query: EngagementRulesDocument },
   maxUsageCount: Number.POSITIVE_INFINITY,
@@ -128,10 +138,12 @@ const renderForm = (
   render(
     <ThemeProvider theme={createTheme({ cssVariables: true })}>
       <MockedProvider mocks={mocks}>
-        <Harness
-          values={values}
-          onSubmit={onSubmit}
-        />
+        <MemoryRouter>
+          <Harness
+            values={values}
+            onSubmit={onSubmit}
+          />
+        </MemoryRouter>
       </MockedProvider>
     </ThemeProvider>
   );
@@ -217,6 +229,30 @@ describe('EngagementRuleForm', () => {
     expect(screen.getByTestId('newsletter-note')).toHaveTextContent(
       'engagement.form.newsletterNote'
     );
+  });
+
+  it("warns when the rule asks for the email but sign-ups can't reach Mailchimp", async () => {
+    renderForm(ENGAGEMENT_PRESETS.growNewsletter(), undefined, [
+      signupProblemMock('disabled'),
+    ]);
+
+    expect(
+      await screen.findByTestId('newsletter-signup-problem')
+    ).toHaveTextContent('engagement.form.newsletterProblem.disabled');
+    expect(
+      screen.getByRole('link', {
+        name: 'engagement.form.newsletterProblemLink',
+      })
+    ).toHaveAttribute('href', '/integrations/mailchimp-sync');
+  });
+
+  it('warns about nothing while sign-ups work', async () => {
+    renderForm(ENGAGEMENT_PRESETS.growNewsletter(), undefined, [
+      signupProblemMock(null),
+    ]);
+
+    await new Promise(resolve => setTimeout(resolve, 20));
+    expect(screen.queryByTestId('newsletter-signup-problem')).toBeNull();
   });
 
   it('shows no newsletter note for other goals', () => {

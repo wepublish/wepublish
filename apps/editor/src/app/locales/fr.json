@@ -6070,7 +6070,13 @@
         "audienceMemberPlans": "Plans d’abonnement",
         "showFirst": "Afficher cette règle en premier",
         "showFirstInfo": "Une personne voit au plus une bannière, un pop-up et un encadré dans l’article à la fois. Sans ce réglage, la règle la plus précise s’affiche en premier (public plus restreint, pages choisies uniquement), puis la plus récente.",
-        "newsletterUrlInfo": "Laisse vide pour demander l’adresse e-mail directement dans le message"
+        "newsletterUrlInfo": "Laisse vide pour demander l’adresse e-mail directement dans le message",
+        "newsletterProblem": {
+          "noIntegration": "Les lecteur·rice·s donnent leur adresse e-mail, mais aucune intégration Mailchimp ne l’inscrit. Le mur s’ouvre quand même et l’adresse est perdue.",
+          "disabled": "Les lecteur·rice·s donnent leur adresse e-mail, mais l’intégration Mailchimp est désactivée. Le mur s’ouvre quand même et l’adresse est perdue.",
+          "incomplete": "Les lecteur·rice·s donnent leur adresse e-mail, mais il manque la clé API ou l’audience à l’intégration Mailchimp. Le mur s’ouvre quand même et l’adresse est perdue."
+        },
+        "newsletterProblemLink": "Configurer Mailchimp"
       },
       "validation": {
         "required": "Obligatoire",

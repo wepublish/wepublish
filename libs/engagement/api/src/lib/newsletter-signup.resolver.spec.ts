@@ -4,9 +4,11 @@ import { NewsletterSignupResolver } from './newsletter-signup.resolver';
 describe('NewsletterSignupResolver', () => {
   const signUp = vi.fn();
   const validateChallenge = vi.fn();
+  const signupProblem = vi.fn();
   const resolver = new NewsletterSignupResolver(
     { signUp } as never,
-    { validateChallenge } as never
+    { validateChallenge } as never,
+    { signupProblem } as never
   );
   const answer = { challengeID: 'id', challengeSolution: 'solved' };
 
@@ -44,5 +46,11 @@ describe('NewsletterSignupResolver', () => {
 
     expect(validateChallenge).not.toHaveBeenCalled();
     expect(signUp).toHaveBeenCalledWith('reader@example.com');
+  });
+
+  it('tells editors why newsletter sign-ups can not reach Mailchimp', async () => {
+    signupProblem.mockResolvedValue('incomplete');
+
+    expect(await resolver.newsletterSignupProblem()).toBe('incomplete');
   });
 });

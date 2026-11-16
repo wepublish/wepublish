@@ -21,6 +21,7 @@ import {
   showsFirst,
   stageDefaults,
   toEngagementRuleInput,
+  usesNewsletterSignup,
 } from './engagement-rule-values';
 import { ENGAGEMENT_PRESETS } from './presets';
 
@@ -293,6 +294,37 @@ describe('engagement rule values', () => {
         )
       ).toEqual([]);
     }
+  });
+});
+
+describe('usesNewsletterSignup', () => {
+  const newsletterAction = actionDefaults({
+    type: EngagementActionType.Newsletter,
+  });
+
+  it('is a newsletter wall or a newsletter action without a url outside banners', () => {
+    expect(
+      usesNewsletterSignup(ENGAGEMENT_PRESETS.growNewsletter().stages)
+    ).toBe(true);
+    expect(
+      usesNewsletterSignup([stageDefaults({ actions: [newsletterAction] })])
+    ).toBe(true);
+    expect(
+      usesNewsletterSignup([
+        stageDefaults({
+          actions: [{ ...newsletterAction, url: 'https://example.com' }],
+        }),
+      ])
+    ).toBe(false);
+    expect(
+      usesNewsletterSignup([
+        stageDefaults({
+          placement: EngagementPlacement.Banner,
+          actions: [newsletterAction],
+        }),
+      ])
+    ).toBe(false);
+    expect(usesNewsletterSignup([stageDefaults()])).toBe(false);
   });
 });
 

@@ -42,6 +42,7 @@ const fakeMailchimp = (responses: Record<string, unknown>) => {
 describe('NewsletterMailchimpService', () => {
   let service: NewsletterMailchimpService;
   let configs: Mock;
+  let allSettings: Mock;
 
   beforeEach(async () => {
     vi.restoreAllMocks();
@@ -54,12 +55,24 @@ describe('NewsletterMailchimpService', () => {
       },
     ]);
 
+    allSettings = vi.fn().mockResolvedValue([
+      {
+        type: 'MAILCHIMP',
+        enabled: true,
+        mailchimp_apiKey: 'encrypted',
+        mailchimp_listId: 'list-1',
+      },
+    ]);
+
     const module = await Test.createTestingModule({
       providers: [
         NewsletterMailchimpService,
         {
           provide: SyncProviderSettingsService,
-          useValue: { getEnabledSyncConfigs: configs },
+          useValue: {
+            getEnabledSyncConfigs: configs,
+            syncProviderSettingsList: allSettings,
+          },
         },
       ],
     }).compile();
@@ -215,6 +228,31 @@ describe('NewsletterMailchimpService', () => {
       fields: [],
       interests: [],
       error: expect.stringContaining('System-Merge-Tags'),
+    });
+  });
+
+  describe('signupProblem', () => {
+    const mailchimp = (overrides: Record<string, unknown>) => ({
+      type: 'MAILCHIMP',
+      enabled: true,
+      mailchimp_apiKey: 'encrypted',
+      mailchimp_listId: 'list-1',
+      ...overrides,
+    });
+
+    it('has none when an enabled integration has a key and an audience', async () => {
+      expect(await service.signupProblem()).toBeUndefined();
+    });
+
+    it.each([
+      ['noIntegration', []],
+      ['disabled', [mailchimp({ enabled: false })]],
+      ['incomplete', [mailchimp({ mailchimp_listId: null })]],
+      ['incomplete', [mailchimp({ mailchimp_apiKey: null })]],
+    ])('names %s', async (problem, settings) => {
+      allSettings.mockResolvedValue(settings);
+
+      expect(await service.signupProblem()).toBe(problem);
     });
   });
 

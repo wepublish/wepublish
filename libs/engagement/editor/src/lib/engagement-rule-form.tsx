@@ -16,6 +16,7 @@ import {
   FormHelperText,
   FormLabel,
   IconButton,
+  Link,
   MenuItem,
   Radio,
   RadioGroup,
@@ -34,6 +35,7 @@ import {
   EngagementRequirement,
   EngagementRulesDocument,
   MemberPlanListDocument,
+  NewsletterSignupProblemDocument,
   PageListDocument,
 } from '@wepublish/editor/api';
 import {
@@ -55,6 +57,7 @@ import {
   useWatch,
 } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { Link as RouterLink } from 'react-router-dom';
 import { MdAdd, MdDelete, MdExpandLess, MdExpandMore } from 'react-icons/md';
 import {
   EngagementRuleValues,
@@ -66,6 +69,7 @@ import {
   hardStage,
   isAnnouncement,
   isHard,
+  usesNewsletterSignup,
   outOfOrderAfter,
   stageDefaults,
 } from './engagement-rule-values';
@@ -400,6 +404,34 @@ const ActionList = ({ stageIndex }: { stageIndex: number }) => {
         </Box>
       </Stack>
     </FormControl>
+  );
+};
+
+/** Readers would give their email, but it would reach no Mailchimp audience. */
+const NewsletterSignupWarning = () => {
+  const { t } = useTranslation();
+  const { data } = useQuery(NewsletterSignupProblemDocument, {
+    fetchPolicy: 'cache-and-network',
+  });
+  const problem = data?.newsletterSignupProblem;
+
+  if (!problem) {
+    return null;
+  }
+
+  return (
+    <Alert
+      severity="warning"
+      data-testid="newsletter-signup-problem"
+    >
+      {t(`engagement.form.newsletterProblem.${problem}`)}{' '}
+      <Link
+        component={RouterLink}
+        to="/integrations/mailchimp-sync"
+      >
+        {t('engagement.form.newsletterProblemLink')}
+      </Link>
+    </Alert>
   );
 };
 
@@ -1144,6 +1176,10 @@ export const EngagementRuleForm = ({ ruleId }: { ruleId?: string }) => {
                   >
                     {t('engagement.form.newsletterNote')}
                   </Alert>
+                )}
+
+                {stages && usesNewsletterSignup(stages) && (
+                  <NewsletterSignupWarning />
                 )}
 
                 <ShowFirstField ruleId={ruleId} />

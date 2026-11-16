@@ -127,6 +127,25 @@ export const actionTakesUrl = ({
   (type === EngagementActionType.Url ||
     type === EngagementActionType.Newsletter);
 
+/** Asks readers for their email: a newsletter wall or an in-place sign-up. */
+export const usesNewsletterSignup = (
+  stages: Pick<
+    EngagementStageValues,
+    'placement' | 'enforcement' | 'requirement' | 'actions'
+  >[]
+) =>
+  stages.some(
+    stage =>
+      (isHard(stage) &&
+        stage.requirement === EngagementRequirement.Newsletter) ||
+      (stage.placement !== EngagementPlacement.Banner &&
+        stage.actions.some(
+          action =>
+            action.type === EngagementActionType.Newsletter &&
+            !action.url.trim()
+        ))
+  );
+
 /**
  * Mirrors `validate-engagement-rule.ts`: a newsletter action without a url
  * asks for the email right in the prompt, which a banner has no room for.
