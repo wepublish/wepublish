@@ -270,14 +270,21 @@ describe('maxMeterWindowDays', () => {
 });
 
 describe('meteredAccess', () => {
-  it('restricts every hard stage when the reader has no meter', () => {
+  it('counts a reader without a meter as one who has read nothing', () => {
     expect(meteredAccess({ rules: [rule()], articleId: 'a', now })).toEqual({
-      granted: false,
-      ruleId: 'metered',
-      stageId: 'hard',
-      requirement: EngagementRequirement.REGISTRATION,
-      previewBlocks: 3,
+      granted: true,
+      record: true,
     });
+  });
+
+  it('restricts a stage that restricts from the first article, meter or not', () => {
+    expect(
+      meteredAccess({
+        rules: [rule({ stages: [hardStage('hard', 0)] })],
+        articleId: 'a',
+        now,
+      })
+    ).toMatchObject({ granted: false, stageId: 'hard' });
   });
 
   it('grants articles without a hard stage', () => {

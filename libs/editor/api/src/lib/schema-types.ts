@@ -200,7 +200,7 @@ export type ArticleRevision = HasBlockContent & HasOptionalUserLc & {
   __typename: 'ArticleRevision';
   archivedAt?: Maybe<Scalars['DateTime']['output']>;
   authors: Array<ArticleRevisionAuthor>;
-  /** Readers without access only get the preview blocks: the server cuts paywalled and metered articles, the website does not hide them. viewArticle grants access for the article it returns. */
+  /** Readers without access only get the preview blocks: the server cuts paywalled and metered articles, the website does not hide them. viewArticle grants access for the article it returns. Feeds pass forFeed and get every block. */
   blocks: Array<BlockContent>;
   /** When the set of displayed blocks changes next, so caches can expire in time. Null while no block is timed. */
   blocksChangeAt?: Maybe<Scalars['DateTime']['output']>;
@@ -231,6 +231,7 @@ export type ArticleRevision = HasBlockContent & HasOptionalUserLc & {
 
 
 export type ArticleRevisionBlocksArgs = {
+  forFeed?: Scalars['Boolean']['input'];
   onlyDisplayed?: Scalars['Boolean']['input'];
 };
 

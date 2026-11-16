@@ -185,9 +185,14 @@ type ArticleRevision implements HasBlockContent & HasOptionalUserLc {
   authors: [ArticleRevisionAuthor!]!
 
   """
-  Readers without access only get the preview blocks: the server cuts paywalled and metered articles, the website does not hide them. viewArticle grants access for the article it returns.
+  Readers without access only get the preview blocks: the server cuts paywalled and metered articles, the website does not hide them. viewArticle grants access for the article it returns. Feeds pass forFeed and get every block.
   """
   blocks(
+    """
+    Every displayed block, never cut: RSS, Atom and JSON feeds stay unrestricted and apply the feedPaywalledContent setting themselves.
+    """
+    forFeed: Boolean! = false
+
     """
     Omits blocks that should be hidden. Only users who can read articles may pass `false`, everyone else gets the displayed blocks.
     """
