@@ -45,8 +45,12 @@ const Plausible = ({ src }: { src: string }) => (
     <script
       id="plausible-init"
       dangerouslySetInnerHTML={{
-        __html:
-          'window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }',
+        __html: `;(window.plausible = window.plausible || function () {
+  ;(plausible.q = plausible.q || []).push(arguments)
+}), (plausible.init = plausible.init || function (i) {
+  plausible.o = i || {}
+})
+plausible.init()`,
       }}
     />
   </>
