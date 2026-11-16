@@ -4,6 +4,7 @@ import {
   MailProviderMessageState,
   MailProviderTemplate,
   MailProviderTemplateContent,
+  MailQualitySignal,
   SendMailProps,
   SendMailResult,
   WebhookForSendMailProps,
@@ -56,10 +57,14 @@ export abstract class BaseMailProvider implements MailProvider {
   async listTemplates(): Promise<MailProviderTemplate[]> {
     return [];
   }
-  /** Overridden by providers that can be asked about a sent message (Mandrill). */
+  /** Overridden by providers that can be asked about a sent message (Mandrill, Mailgun). */
   async getMessageStates(
     _providerMessageIDs: string[]
   ): Promise<MailProviderMessageState[]> {
+    return [];
+  }
+  /** Overridden by providers that keep suppression lists (Mandrill, Mailgun). */
+  async listSuppressions(): Promise<MailQualitySignal[]> {
     return [];
   }
   async getConfig(): Promise<SettingMailProvider | null> {

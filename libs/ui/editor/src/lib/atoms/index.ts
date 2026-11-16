@@ -53,3 +53,5 @@ export * from './typography';
 export * from './version';
 export * from './mediaBitrate';
 export * from './readMediaMetadata';
+export * from './printExportOptionsFields';
+export * from './printBexioKindsFields';

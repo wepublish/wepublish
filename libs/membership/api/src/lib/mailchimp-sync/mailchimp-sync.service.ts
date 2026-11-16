@@ -10,6 +10,11 @@ import {
   ClickTrackingExtensionConfig,
 } from './extensions/click-tracking.extension';
 import { describeError } from '@wepublish/utils/api';
+import { MailchimpAudienceEvidenceService } from './mailchimp-audience-evidence';
+import {
+  CAMPAIGN_CLICK_LOOKBACK_DAYS,
+  MailchimpCampaignClicksService,
+} from './mailchimp-campaign-clicks';
 import { describeMailchimpError } from '@wepublish/mail/api';
 
 interface SubscriptionLite {
@@ -102,7 +107,9 @@ export class MailchimpSyncService {
   constructor(
     private prisma: PrismaClient,
     private syncProviderSettingsService: SyncProviderSettingsService,
-    private clickTrackingExtension: ClickTrackingExtension
+    private clickTrackingExtension: ClickTrackingExtension,
+    private audienceEvidence: MailchimpAudienceEvidenceService,
+    private campaignClicks: MailchimpCampaignClicksService
   ) {}
 
   /**
@@ -265,6 +272,14 @@ export class MailchimpSyncService {
       mailchimpContactMap = new Map(
         mailchimpContacts.map(m => [m.email_address?.toLowerCase(), m])
       );
+
+      // The audience is in hand anyway: what it says about cleaned and
+      // unsubscribed members is the only place newsletter bounces surface,
+      // and the campaign reports the only place newsletter clicks do.
+      // Evidence is bookkeeping and must not stop the sync.
+      if (!dryRun) {
+        await this.recordEvidence(config, mailchimpContacts);
+      }
     }
 
     // Normalise merge field keys in all fetched contacts: any key that
@@ -655,6 +670,34 @@ export class MailchimpSyncService {
     });
   }
 
+  /** What the audience and its recent campaigns say about the addresses. */
+  private async recordEvidence(
+    config: SettingSyncProvider,
+    members: any[]
+  ): Promise<void> {
+    const listId = config.mailchimp_listId as string;
+    const name = config.name || config.id;
+
+    try {
+      await this.audienceEvidence.record(listId, members);
+    } catch (error) {
+      this.logger.error(
+        `Audience evidence failed for "${name}": ${describeError(error)}`
+      );
+    }
+
+    try {
+      await this.campaignClicks.record(
+        listId,
+        subDays(new Date(), CAMPAIGN_CLICK_LOOKBACK_DAYS)
+      );
+    } catch (error) {
+      this.logger.error(
+        `Campaign clicks failed for "${name}": ${describeError(error)}`
+      );
+    }
+  }
+
   private async getMailchimpContacts(listId: string): Promise<any[]> {
     const allMembers: any[] = [];
     let offset = 0;
@@ -668,10 +711,13 @@ export class MailchimpSyncService {
           offset,
           count: batchSize,
           fields: [
+            'members.id',
             'members.email_address',
             'members.merge_fields',
             'members.interests',
             'members.status',
+            'members.unsubscribe_reason',
+            'members.last_changed',
             'total_items',
           ],
         });

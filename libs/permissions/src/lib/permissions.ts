@@ -1389,6 +1389,35 @@ export const CanRunMailchimpSync: Permission = {
 };
 
 /**
+ * Print issues (print export)
+ */
+
+export const CanGetPrintIssues: Permission = {
+  id: 'CAN_GET_PRINT_ISSUES',
+  description: 'Allows to see print issues and their export summaries',
+  deprecated: false,
+};
+
+export const CanCreatePrintIssue: Permission = {
+  id: 'CAN_CREATE_PRINT_ISSUE',
+  description: 'Allows to create and edit print issues',
+  deprecated: false,
+};
+
+export const CanDeletePrintIssue: Permission = {
+  id: 'CAN_DELETE_PRINT_ISSUE',
+  description: 'Allows to delete print issues that were not exported yet',
+  deprecated: false,
+};
+
+export const CanFinalizePrintIssue: Permission = {
+  id: 'CAN_FINALIZE_PRINT_ISSUE',
+  description:
+    'Allows to finalize the export of a print issue and to add a Nachlieferung',
+  deprecated: false,
+};
+
+/**
  * Website Settings
  */
 export const CanGetWebsiteSettings: Permission = {
@@ -1614,6 +1643,10 @@ export const AllPermissions = [
   CanUpdateMailchimpSyncSettings,
   CanDeleteMailchimpSyncSettings,
   CanRunMailchimpSync,
+  CanGetPrintIssues,
+  CanCreatePrintIssue,
+  CanDeletePrintIssue,
+  CanFinalizePrintIssue,
   CanGetWebsiteSettings,
   CanUpdateWebsiteSettings,
   CanGetAuditLogs,

@@ -141,6 +141,7 @@ export type VitestProjectOptions = {
    */
   nest?: boolean;
   website?: boolean;
+  reactCompiler?: boolean;
   /** Additional setup files, relative to the project root. */
   setupFiles?: string[];
   /** Additional test file globs to exclude, relative to the project root. */
@@ -156,6 +157,7 @@ export const createVitestConfig = ({
   react: withReact = true,
   nest = false,
   website = false,
+  reactCompiler = false,
   setupFiles = [],
   exclude = [],
   overrides,
@@ -194,7 +196,12 @@ export const createVitestConfig = ({
           react({
             jsxImportSource: '@emotion/react',
             babel: {
-              plugins: [['@emotion/babel-plugin', { importMap: emotionImportMap }]],
+              plugins: [
+                ...(reactCompiler ?
+                  [['babel-plugin-react-compiler', { target: '19' }]]
+                : []),
+                ['@emotion/babel-plugin', { importMap: emotionImportMap }],
+              ],
             },
           }),
         ]

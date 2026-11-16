@@ -1,32 +1,19 @@
 import { User, UserAddress } from '@prisma/client';
+import { normalizeCountry } from '@wepublish/utils/api';
+import type { LetterRecipientOptions } from '@wepublish/mail/api';
 import countries from 'i18n-iso-countries';
 import germanCountries from 'i18n-iso-countries/langs/de.json';
 import { LetterAddress } from './letter-provider/letter-provider.interface';
 
 export class LetterAddressError extends Error {}
 
-const COUNTRY_CODES: Record<string, string> = {
-  schweiz: 'CH',
-  suisse: 'CH',
-  svizzera: 'CH',
-  svizra: 'CH',
-  switzerland: 'CH',
-  deutschland: 'DE',
-  germany: 'DE',
-  allemagne: 'DE',
-  österreich: 'AT',
-  oesterreich: 'AT',
-  austria: 'AT',
-  autriche: 'AT',
-  liechtenstein: 'LI',
-  frankreich: 'FR',
-  france: 'FR',
-  francia: 'FR',
-  italien: 'IT',
-  italy: 'IT',
-  italia: 'IT',
-  italie: 'IT',
-};
+export { normalizeCountry };
+
+/**
+ * Pingen prints Swiss QR-bills on perforated paper but only posts letters
+ * carrying one within Switzerland.
+ */
+export const PAYMENT_SLIP_COUNTRY = 'CH';
 
 const FIELD_LIMITS = {
   name: 45,
@@ -36,20 +23,6 @@ const FIELD_LIMITS = {
   zip: 8,
   city: 25,
 };
-
-export function normalizeCountry(country: string | null): string | null {
-  const value = country?.trim();
-
-  if (!value) {
-    return null;
-  }
-
-  if (/^[a-zA-Z]{2}$/.test(value)) {
-    return value.toUpperCase();
-  }
-
-  return COUNTRY_CODES[value.toLowerCase()] ?? null;
-}
 
 // The names come from a table, not from `Intl`: the api runs as a pkg-built
 // binary whose Node carries only reduced ICU data, and its
@@ -122,11 +95,14 @@ export function toLetterAddress(user: UserWithAddress): LetterAddress {
   };
 }
 
-export function canReceiveLetters(user: UserWithAddress): boolean {
+export function canReceiveLetters(
+  user: UserWithAddress,
+  { withPaymentSlip = false }: LetterRecipientOptions = {}
+): boolean {
   try {
-    toLetterAddress(user);
+    const address = toLetterAddress(user);
 
-    return true;
+    return !withPaymentSlip || address.country === PAYMENT_SLIP_COUNTRY;
   } catch {
     return false;
   }

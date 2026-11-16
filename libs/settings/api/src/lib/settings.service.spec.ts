@@ -85,6 +85,27 @@ describe('SettingsService', () => {
     await expect(service.settingsList()).resolves.toEqual([known]);
   });
 
+  test('lists the choice of what feeds carry for paywalled articles', async () => {
+    const feedPaywalledContent: Setting = {
+      id: '1',
+      name: 'feedPaywalledContent',
+      value: 'lead',
+      createdAt: new Date('1/1/2020'),
+      modifiedAt: new Date('2/1/2020'),
+      settingRestriction: {
+        allowedValues: { stringChoice: ['lead', 'visible', 'full'] },
+      },
+    };
+
+    vi.spyOn(prisma.setting, 'findMany').mockResolvedValue([
+      feedPaywalledContent,
+    ]);
+
+    await expect(service.settingsList()).resolves.toEqual([
+      feedPaywalledContent,
+    ]);
+  });
+
   test('should fetch a single setting by ID', async () => {
     const mockSetting: Setting = {
       id: '1',

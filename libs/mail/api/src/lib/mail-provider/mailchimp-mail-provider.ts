@@ -18,8 +18,20 @@ import {
   WebhookForSendMailProps,
 } from './mail-provider.interface';
 import { BaseMailProvider, MailProviderProps } from './base-mail-provider';
+import { qualityTypeForRejectReason } from '../email-quality-recorder';
 
 type MessageMetadata = NonNullable<mailchimp.MessagesMessage['metadata']>;
+
+/** Mandrill's timestamps come as `YYYY-MM-DD HH:MM:SS` in UTC, without a zone. */
+const mandrillDate = (value: string | null | undefined): Date | undefined => {
+  if (!value) {
+    return undefined;
+  }
+
+  const date = new Date(`${value.replace(' ', 'T')}Z`);
+
+  return Number.isNaN(date.getTime()) ? undefined : date;
+};
 
 /** The typings demand a `website` key that Mandrill neither needs nor reads. */
 const mailLogMetadata = (mailLogID: string): MessageMetadata =>
@@ -60,7 +72,16 @@ interface VerifyWebhookSignatureProps {
   signature: string;
   url: string;
   params: Record<string, any>;
+  /** Defaults to the webhook key configured on the integration. */
+  key?: string;
 }
+
+/**
+ * While a webhook is being created, Mandrill checks its URL with an empty batch
+ * signed with this fixed key, as the webhook's own key does not exist yet:
+ * https://mailchimp.com/developer/transactional/guides/track-respond-activity-webhooks/
+ */
+const MANDRILL_URL_CHECK_KEY = 'test-webhook';
 
 /**
  * Map the state `messages/info` reports onto our own. Mandrill's `sent` means
@@ -186,8 +207,9 @@ export class MailchimpMailProvider extends BaseMailProvider {
     signature,
     url,
     params,
+    key,
   }: VerifyWebhookSignatureProps): Promise<boolean> {
-    const config = await this.getConfig();
+    const secret = key ?? (await this.getConfig())?.webhookEndpointSecret;
     const keys = Object.keys(params).sort();
 
     const longString = keys.reduce((sig, key) => {
@@ -195,7 +217,7 @@ export class MailchimpMailProvider extends BaseMailProvider {
     }, url || '');
 
     const generatedSignature = crypto
-      .createHmac('sha1', config?.webhookEndpointSecret ?? '')
+      .createHmac('sha1', secret ?? '')
       .update(longString)
       .digest('base64');
 
@@ -213,13 +235,24 @@ export class MailchimpMailProvider extends BaseMailProvider {
       throw new Error('Webhook Header is missing signature');
     }
 
-    if (
-      !(await this.verifyWebhookSignature({
-        signature: req.headers['x-mandrill-signature'],
-        url: `https://${req.headers.host}${req.originalUrl}`,
-        params: req.body,
-      }))
-    ) {
+    const signed = {
+      signature: req.headers['x-mandrill-signature'],
+      url: `https://${req.headers.host}${req.originalUrl}`,
+      params: req.body,
+    };
+
+    if (!(await this.verifyWebhookSignature(signed))) {
+      // An empty batch carries nothing to forge, so the URL check may pass.
+      if (
+        req.body?.mandrill_events === '[]' &&
+        (await this.verifyWebhookSignature({
+          ...signed,
+          key: MANDRILL_URL_CHECK_KEY,
+        }))
+      ) {
+        return [];
+      }
+
       throw new MailWebhookSignatureError('Webhook signature failed');
     }
 
@@ -334,6 +367,46 @@ export class MailchimpMailProvider extends BaseMailProvider {
     }
 
     return states;
+  }
+
+  /**
+   * Mandrill's rejection denylist: every address that hard-bounced, complained,
+   * unsubscribed or was blocked by hand, for any mail sent through the account.
+   * Expired entries still say what happened at `created_at`. Soft bounces and
+   * account-level reasons say nothing about the address and are skipped. The
+   * endpoint answers up to 1000 entries.
+   */
+  override async listSuppressions(): Promise<MailQualitySignal[]> {
+    const mailchimpClient = await this.getMailchimpClient();
+    const response = await mailchimpClient.rejects.list({
+      include_expired: true,
+    });
+
+    if (this.responseIsError(response)) {
+      throw new MailProviderError(
+        (response.response?.data as Error | undefined)?.message ??
+          'Failed to list the rejection denylist'
+      );
+    }
+
+    return response.flatMap(entry => {
+      const type = qualityTypeForRejectReason(entry.reason);
+      const email = entry.email?.trim().toLowerCase();
+
+      if (!type || !email) {
+        return [];
+      }
+
+      return [
+        {
+          type,
+          email,
+          detail: entry.detail || null,
+          occurredAt: mandrillDate(entry.created_at),
+          providerEventId: `mailchimp-reject:${email}:${entry.created_at}`,
+        },
+      ];
+    });
   }
 
   /**

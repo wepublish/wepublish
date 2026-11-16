@@ -84,6 +84,14 @@ export const Analytics = ({
       />
     )}
 
+    {settings?.analytics.umami.enabled && !!settings.analytics.umami.key && (
+      <script
+        defer
+        src="https://cloud.umami.is/script.js"
+        data-website-id={settings.analytics.umami.key}
+      />
+    )}
+
     {settings?.ads.sparkLoop.enabled && !!settings.ads.sparkLoop.key && (
       <script
         async

@@ -9,11 +9,31 @@ export const LETTER_SENDER = 'LETTER_SENDER';
 
 export type LetterRecipient = User & { address: UserAddress | null };
 
+/**
+ * A pdf printed after the rendered template, e.g. the payment provider's
+ * invoice with its payment slip.
+ */
+export interface LetterAttachment {
+  content: Buffer;
+  name: string;
+}
+
+export interface LetterRecipientOptions {
+  /**
+   * The letter carries a payment slip, which the print vendor posts within
+   * Switzerland only.
+   */
+  withPaymentSlip?: boolean;
+}
+
 export interface LetterSender {
   /** A print vendor and a renderer with their credentials filled in. */
   isConfigured(): Promise<boolean>;
   /** Whether the user's postal address is complete enough to be posted to. */
-  canReceiveLetters(user: LetterRecipient): boolean;
+  canReceiveLetters(
+    user: LetterRecipient,
+    options?: LetterRecipientOptions
+  ): boolean;
   /**
    * Render the template for the user and hand it to the print vendor. Writes
    * the mail log entry itself, submitted or rejected, and rethrows failures.
@@ -26,6 +46,7 @@ export interface LetterSender {
     mailSendJobId?: string | null;
     /** Bookkeeping an automated send needs, so a retry can recognise the letter. */
     log?: { mailIdentifier?: string; type?: MailLogType };
+    attachment?: LetterAttachment;
   }): Promise<string>;
 }
 

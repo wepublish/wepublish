@@ -83,7 +83,7 @@ function AppShell({ websiteSettings, children }: AppShellProps) {
       <Spacer>
         {shell.showNavigation && (
           <NavBar
-            categorySlugs={[['categories', 'about-us']]}
+            categorySlugs={[['categories', 'about-us', 'social']]}
             slug="main"
             headerSlug="header"
             iconSlug="icons"
@@ -102,7 +102,7 @@ function AppShell({ websiteSettings, children }: AppShellProps) {
         {shell.showFooter && (
           <FooterContainer
             slug="footer"
-            categorySlugs={[['categories', 'about-us']]}
+            categorySlugs={[['categories', 'about-us', 'social']]}
             iconSlug="icons"
           />
         )}

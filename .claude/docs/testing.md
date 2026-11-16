@@ -21,6 +21,10 @@ Each project has a `vitest.config.ts` that delegates to the root
 | `libs/*/editor`, `libs/utils`, `apps/<tenant>` | `environment: 'happy-dom'` (default), `react: true` |
 | `libs/*/website`, `libs/ui`, `libs/website`, `libs/tenants/*` | the same, plus `website: true` |
 
+`apps/editor`, `libs/form/*` and editor libs migrated to the form library
+also pass `reactCompiler: true`, so their specs run compiled like the editor
+build ([libs/form/README.md](../../libs/form/README.md#testing)).
+
 NestJS projects **must** pass `nest: true`. It switches the transform to swc
 (es2021 + `decoratorMetadata`) and loads `vitest.setup-nest.ts`. Without it,
 esbuild drops `design:paramtypes`, so Nest constructor injection (e.g.

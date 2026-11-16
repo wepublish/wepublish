@@ -19,6 +19,11 @@ fragment WebsiteSettings on WebsiteSettings {
       enabled
       key
     }
+
+    umami {
+      enabled
+      key
+    }
   }
 
   ads {
@@ -36,23 +41,8 @@ fragment WebsiteSettings on WebsiteSettings {
   }
 }
 
-fragment SensitiveWebsiteSettings on WebsiteSettings {
-  mail {
-    mailchimp {
-      enabled
-      key
-    }
-  }
-}
-
 query WebsiteSettings {
   websiteSettings {
     ...WebsiteSettings
-  }
-}
-
-query SensitiveWebsiteSettings {
-  websiteSettings {
-    ...SensitiveWebsiteSettings
   }
 }

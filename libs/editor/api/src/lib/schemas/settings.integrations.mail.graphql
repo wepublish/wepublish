@@ -17,6 +17,9 @@ query MailProviderSettings {
     smtp_secure
     smtp_user
     type
+    lastWebhookAt
+    lastPollAt
+    lastPollError
     isWebhookEndpointSecretSet
   }
 }
@@ -73,6 +76,9 @@ mutation UpdateMailProviderSetting(
     smtp_secure
     smtp_user
     type
+    lastWebhookAt
+    lastPollAt
+    lastPollError
   }
 }
 

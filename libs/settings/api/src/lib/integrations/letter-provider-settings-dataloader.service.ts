@@ -6,9 +6,7 @@ import DataLoader from 'dataloader';
 @Injectable({
   scope: Scope.REQUEST,
 })
-export class LetterProviderSettingsDataloaderService
-  implements Primeable<SettingLetterProvider>
-{
+export class LetterProviderSettingsDataloaderService implements Primeable<SettingLetterProvider> {
   private dataloader = new DataLoader<string, SettingLetterProvider | null>(
     async (ids: readonly string[]) =>
       createOptionalsArray(

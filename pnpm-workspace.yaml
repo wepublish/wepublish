@@ -45,6 +45,7 @@ catalog:
   '@nestjs/graphql': '^14.0.3'
   '@nestjs/passport': '^12.0.0'
   '@nestjs/platform-node': '^12.3.2'
+  '@nestjs/resilience': '^0.0.3'
   '@nestjs/schedule': '^12.0.2'
   '@nestjs/terminus': '^12.1.0'
   '@node-rs/argon2': '^2.2.2'

@@ -29,8 +29,8 @@ API URLs follow from the deploy workflows' conventions
 `review` needs `E2E_REVIEW_SLOT` (the N of the PR label `review_<N>_<app>`;
 a slot hosts one app at a time). `BASE_URL`, `E2E_EDITOR_URL` and
 `E2E_API_URL` override any of the three. `E2E_APP` defaults to
-`website-example`; only Next.js tenant apps are accepted (not
-`wepublish-site`).
+`website-example`; only tenant apps (Next.js or TanStack Start) are accepted
+(not `wepublish-site`).
 
 ```sh
 pnpm run e2e tsri                                         # tsri website, local
@@ -162,8 +162,10 @@ started (nor migrated) for a URL you override (`BASE_URL`, `E2E_EDITOR_URL`,
 - The tenant is a production build (`nx build --skip-nx-cache
   --experimentalBuildMode=compile` into `dist/apps/<tenant>`, overwriting what
   is there), started like the Docker image from `.next/standalone`: `next dev`
-  compiles each route on its first request, which outlasts test timeouts.
-- `--dev` (`E2E_DEV=true`) serves it with `next dev` instead, for hot reload
+  compiles each route on its first request, which outlasts test timeouts. A
+  TanStack Start tenant (`vite.config.mts`) is built with `nx build` and runs
+  its nitro `.output/server/index.mjs`, again like its image.
+- `--dev` (`E2E_DEV=true`) serves it with `next dev` (TanStack: `vite dev`) instead, for hot reload
   while writing tests; the test timeout goes up to 2 min to cover first-request
   compiles. Ignored when `CI` is set. A Next.js app runs one dev server at a
   time, so stop your own `nx serve <tenant>` first, and don't commit the

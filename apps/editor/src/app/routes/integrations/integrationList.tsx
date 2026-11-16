@@ -6,6 +6,7 @@ import {
   CardContent,
   Typography,
 } from '@mui/material';
+import type { FeatureKey } from '@wepublish/features';
 import {
   CanGetAISettings,
   CanGetAnalyticsProviderSettings,
@@ -17,7 +18,6 @@ import {
   CanGetPdfRendererSettings,
   CanGetTrackingPixelSettings,
 } from '@wepublish/permissions';
-import type { FeatureKey } from '@wepublish/features';
 import {
   FeatureControl,
   InfoTooltip,
@@ -47,9 +47,11 @@ import mailgunLogo from './assets/mailgun.svg';
 import mollieLogo from './assets/mollie.webp';
 import payrexxLogo from './assets/payrexx.webp';
 import pingenLogo from './assets/pingen.svg';
+import plausibleLogo from './assets/plausible.svg';
 import proLitterisLogo from './assets/proLitteris.svg';
 import slackLogo from './assets/slack.webp';
 import stripeLogo from './assets/stripe.svg';
+import umamiLogo from './assets/umami.svg';
 import vercelLogo from './assets/vercel.svg';
 
 const Wrapper = styled.div`
@@ -175,7 +177,11 @@ export function IntegrationList() {
       permission: CanGetAnalyticsProviderSettings.id,
       path: '/integrations/analytics',
       icon: MdAnalytics,
-      logos: [{ src: googleLogo, name: 'Google' }],
+      logos: [
+        { src: googleLogo, name: 'Google' },
+        { src: plausibleLogo, name: 'Plausible' },
+        { src: umamiLogo, name: 'Umami' },
+      ],
     },
     {
       title: t('integrations.mailchimpSync'),
