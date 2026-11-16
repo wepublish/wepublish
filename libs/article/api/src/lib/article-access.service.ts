@@ -28,11 +28,12 @@ import {
   isRestricted,
 } from './article-access';
 
-export type ArticleRequest = ReaderRequest & { engagementGrants?: Set<string> };
-
-const grant = (req: ArticleRequest, articleId: string) => {
-  req.engagementGrants ??= new Set();
-  req.engagementGrants.add(articleId);
+/**
+ * `viewArticle` leaves its decision on the request, so the `blocks` of the
+ * article it returns are cut (or not) the same way.
+ */
+export type ArticleRequest = ReaderRequest & {
+  engagementAccess?: Map<string, ArticleAccessResult>;
 };
 
 /**
@@ -54,13 +55,24 @@ export class ArticleAccessService {
     private signups: NewsletterSignupService
   ) {}
 
+  /**
+   * Access for `ArticleRevision.blocks` without `viewArticle`: server
+   * rendering and API consumers. It reads a logged-in reader's meter but never
+   * records a read; only `viewArticle` does.
+   */
   accessFor(
     req: ArticleRequest,
     session: AuthSession | null | undefined,
     articleId: string
   ): Promise<ArticleAccessResult> {
-    if (!articleId || req.engagementGrants?.has(articleId)) {
+    if (!articleId) {
       return Promise.resolve({ granted: true });
+    }
+
+    const viewed = req.engagementAccess?.get(articleId);
+
+    if (viewed) {
+      return Promise.resolve(viewed);
     }
 
     const known = this.decisions.get(articleId);
@@ -134,9 +146,8 @@ export class ArticleAccessService {
         recordRead(meter, articleId, now, { maxWindowDays })
       : meter;
 
-    if (access.granted) {
-      grant(req, articleId);
-    }
+    req.engagementAccess ??= new Map();
+    req.engagementAccess.set(articleId, access);
 
     return {
       article,
@@ -176,9 +187,12 @@ export class ArticleAccessService {
       return { granted: true };
     }
 
-    const [paywall, rules] = await Promise.all([
+    const [paywall, rules, meter] = await Promise.all([
       this.paywallOf(article),
       this.rules.getActiveRules(),
+      // Logged-in readers' meter lives on the server; anonymous requests
+      // count as having read nothing.
+      this.meters.load(reader, null),
     ]);
 
     return evaluateArticleAccess({
@@ -190,6 +204,7 @@ export class ArticleAccessService {
           reader,
           articleTarget({ ...article, hasActivePaywall: !!paywall?.active })
         ),
+        meter,
         articleId,
         now: new Date(),
       }),

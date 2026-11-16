@@ -1,16 +1,26 @@
+import { SessionTokenContext } from '@wepublish/authentication/website';
 import { FullArticleAccessFragment } from '@wepublish/website/api';
-import { useSyncExternalStore } from 'react';
+import { useContext, useSyncExternalStore } from 'react';
 
+/**
+ * The access the server decided for an article (`viewArticle`), by reader and
+ * article, so `useShowPaywall` anywhere on the page can follow it and a login
+ * or logout never shows another reader's decision.
+ */
 const accessByArticle = new Map<string, FullArticleAccessFragment>();
+
+const keyOf = (articleId: string, readerId: string | undefined) =>
+  `${readerId ?? 'anonymous'}:${articleId}`;
 const listeners = new Set<() => void>();
 
 const notify = () => listeners.forEach(listener => listener());
 
 export function setArticleAccess(
   articleId: string,
-  access: FullArticleAccessFragment
+  access: FullArticleAccessFragment,
+  readerId: string | undefined
 ) {
-  accessByArticle.set(articleId, access);
+  accessByArticle.set(keyOf(articleId, readerId), access);
   notify();
 }
 
@@ -27,9 +37,13 @@ const subscribe = (listener: () => void) => {
   };
 };
 
-export const useArticleAccess = (articleId?: string | null) =>
-  useSyncExternalStore(
+export const useArticleAccess = (articleId?: string | null) => {
+  const [user] = useContext(SessionTokenContext) ?? [];
+
+  return useSyncExternalStore(
     subscribe,
-    () => (articleId ? accessByArticle.get(articleId) : undefined),
+    () =>
+      articleId ? accessByArticle.get(keyOf(articleId, user?.id)) : undefined,
     () => undefined
   );
+};

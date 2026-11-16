@@ -6,7 +6,7 @@ import {
   EngagementRule,
   EngagementStage,
 } from '@prisma/client';
-import { Meter, countedReads, hasRead } from './meter';
+import { Meter, countedReads, emptyMeter, hasRead } from './meter';
 import {
   ReaderContext,
   matchesAudience,
@@ -224,22 +224,21 @@ export function meteredAccess({
     .map(rule => ({ rule, stage: hardStageOf(rule) }))
     .sort(byPromptOrder);
 
+  // Without a meter (server rendering, feeds, API) nothing was read yet.
+  const reads = meter ?? emptyMeter();
+
   for (const { rule, stage } of metered) {
     if (!stage) {
       continue;
     }
 
-    if (!meter) {
-      return restrictedBy(rule, stage);
-    }
-
     const window = windowOf(rule);
 
-    if (hasRead(meter, articleId, window, now)) {
+    if (hasRead(reads, articleId, window, now)) {
       continue;
     }
 
-    if (countedReads(meter, window, now, articleId) >= stage.afterArticles) {
+    if (countedReads(reads, window, now, articleId) >= stage.afterArticles) {
       return restrictedBy(rule, stage);
     }
   }

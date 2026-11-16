@@ -9,7 +9,9 @@ import {
   mockArticleAccess,
   mockArticleRevision,
   mockEngagementPrompt,
+  mockMemberPlan,
   mockRichTextBlock,
+  mockSubscription,
 } from '@wepublish/mocks/website';
 import {
   ArticleDocument,
@@ -154,6 +156,30 @@ describe('useArticleEngagement', () => {
     rerender();
 
     await waitFor(() => expect(views).toHaveLength(2));
+  });
+
+  it("views the article again when the reader's plan changes, though the number of subscriptions does not", async () => {
+    user = { id: 'user-1' };
+    const subscriptions = (memberPlanId: string) =>
+      client.writeQuery({
+        query: SubscriptionsDocument,
+        data: {
+          userSubscriptions: [
+            mockSubscription({
+              memberPlan: mockMemberPlan({ id: memberPlanId }),
+            }),
+          ],
+        },
+      });
+
+    renderHook(() => useArticleEngagement(article), { wrapper });
+    await waitFor(() => expect(views).toHaveLength(1));
+
+    act(() => subscriptions('plan-a'));
+    await waitFor(() => expect(views).toHaveLength(2));
+
+    act(() => subscriptions('plan-b'));
+    await waitFor(() => expect(views).toHaveLength(3));
   });
 
   it('views a logged-in reader once, after their subscriptions loaded', async () => {

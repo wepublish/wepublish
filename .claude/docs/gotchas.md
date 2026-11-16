@@ -15,13 +15,17 @@ gets refactored away by the next agent.
 [article-revision.resolver.ts](../../libs/article/api/src/lib/article-revision.resolver.ts)
 returns only `previewBlocks` blocks when `evaluateArticleAccess`
 ([article-access.ts](../../libs/article/api/src/lib/article-access.ts))
-restricts the reader: an enforced paywall, or a `HARD` engagement stage. That
-includes ISR pages, RSS and any anonymous API consumer. Editors, previews and
-peers always get every block.
+restricts the reader: an enforced paywall, or a `HARD` engagement stage.
+Without `viewArticle` (server rendering, API consumers) an anonymous request
+counts as having read nothing, so only stages that restrict from the first
+article cut it; a logged-in reader's server-side meter counts. `viewArticle`
+leaves its decision on the request for the blocks it returns. Feeds pass
+`blocks(forFeed: true)` and are never cut (a product decision: they apply
+`feedPaywalledContent` themselves). Editors, previews and peers always get
+every block.
 
 Do not "fix" missing blocks by hiding the cut with CSS: the point is that
-restricted content never reaches the HTML or `__NEXT_DATA__`. `viewArticle`
-grants access for the article it returns.
+restricted content never reaches the HTML.
 
 Paywalls are deliberately **not** engagement rules (see
 [architecture.md](../../.ai/architecture.md)); an earlier attempt merged

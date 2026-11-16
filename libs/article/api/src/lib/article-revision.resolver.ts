@@ -35,7 +35,7 @@ export class ArticleRevisionResolver {
   ) {}
 
   @ResolveField(() => [BlockContent], {
-    description: `Readers without access only get the preview blocks: the server cuts paywalled and metered articles, the website does not hide them. viewArticle grants access for the article it returns.`,
+    description: `Readers without access only get the preview blocks: the server cuts paywalled and metered articles, the website does not hide them. viewArticle grants access for the article it returns. Feeds pass forFeed and get every block.`,
   })
   async blocks(
     @Parent() parent: ArticleRevision,
@@ -47,7 +47,14 @@ export class ArticleRevisionResolver {
     })
     onlyDisplayed: boolean,
     @Context() context: { req: ArticleRequest },
-    @CurrentUser() session: AuthSession | undefined
+    @CurrentUser() session: AuthSession | undefined,
+    @Args('forFeed', {
+      type: () => Boolean,
+      defaultValue: false,
+      description:
+        'Every displayed block, never cut: RSS, Atom and JSON feeds stay unrestricted and apply the feedPaywalledContent setting themselves.',
+    })
+    forFeed = false
   ) {
     if (!onlyDisplayed) {
       skipAnswerCache(context);
@@ -65,6 +72,10 @@ export class ArticleRevisionResolver {
       onlyDisplayed:
         onlyDisplayed || !hasPermission(CanGetArticle, permissionsOf(session)),
     });
+    if (forFeed) {
+      return blocks;
+    }
+
     const access = await this.articleAccess.accessFor(
       context.req,
       session,

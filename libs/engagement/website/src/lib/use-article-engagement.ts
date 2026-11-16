@@ -28,6 +28,11 @@ export function useArticleEngagement(article?: { id: string } | null) {
   const articleId = article?.id;
   const { user } = useUser();
   const subscriptions = useActiveSubscriptions();
+  // Access depends on the plans, not on how many subscriptions there are.
+  const memberPlanIds = subscriptions
+    ?.map(({ memberPlan }) => memberPlan.id)
+    .sort()
+    .join();
   const [viewArticle] = useMutation(ViewArticleDocument);
   const [prompts, setPrompts] = useState<{
     articleId: string;
@@ -67,7 +72,7 @@ export function useArticleEngagement(article?: { id: string } | null) {
           storeMeterToken(meterToken);
         }
 
-        setArticleAccess(articleId, access);
+        setArticleAccess(articleId, access, user?.id);
         setPrompts({ articleId, prompts });
       })
       .catch(() => {
@@ -77,14 +82,7 @@ export function useArticleEngagement(article?: { id: string } | null) {
     return () => {
       current = false;
     };
-  }, [
-    articleId,
-    ready,
-    user?.id,
-    subscriptions?.length,
-    newsletterToken,
-    viewArticle,
-  ]);
+  }, [articleId, ready, user?.id, memberPlanIds, newsletterToken, viewArticle]);
 
   return {
     access,

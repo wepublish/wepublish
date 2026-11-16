@@ -224,6 +224,7 @@ describe('ArticleRevisionResolver access', () => {
   let rules: EngagementRuleWithStages[];
   let blockTreeLoader: { loadBlocks: Mock; nextChange: Mock };
   let access: ArticleAccessService;
+  let serverMeter: { reads: [string, number][] };
 
   const resolver = () =>
     new ArticleRevisionResolver(
@@ -244,6 +245,7 @@ describe('ArticleRevisionResolver access', () => {
     };
     paywall = null;
     rules = [];
+    serverMeter = { reads: [] };
     // Block templates expand while loading: the cut must count what is sent.
     blockTreeLoader = {
       loadBlocks: vi.fn(async (blocks: string[]) =>
@@ -258,6 +260,10 @@ describe('ArticleRevisionResolver access', () => {
       { getPaywallBypasses: async () => [] } as never,
       { forRequest: async () => currentReader } as never,
       { getActiveRules: async () => rules } as never,
+      {
+        load: async (r: ReaderContext) =>
+          r.userId ? serverMeter : { reads: [] },
+      } as never,
       {} as never
     );
   });
@@ -289,8 +295,39 @@ describe('ArticleRevisionResolver access', () => {
     expect(await blocksFor()).toHaveLength(5);
   });
 
-  it('only sends the preview of a hard metered stage to readers without a meter', async () => {
+  it('sends a free article in full to readers without a meter, as server rendering and feeds request it', async () => {
     rules = [hardMeter()];
+
+    expect(await blocksFor()).toHaveLength(5);
+  });
+
+  it('only sends the preview of a stage that restricts from the first article', async () => {
+    rules = [
+      hardMeter({ stages: [{ ...hardMeter().stages[0], afterArticles: 0 }] }),
+    ];
+
+    expect(await blocksFor()).toEqual(['a1']);
+  });
+
+  it("counts a logged-in reader's server-side meter, so their page is cut as viewArticle cuts it", async () => {
+    const minute = (Date.now() / 60_000) | 0;
+    rules = [
+      hardMeter({
+        stages: [
+          {
+            ...hardMeter().stages[0],
+            requirement: EngagementRequirement.MEMBERSHIP,
+          },
+        ],
+      }),
+    ];
+    currentReader = reader({ kind: 'user', loggedIn: true, userId: 'u' });
+    serverMeter = {
+      reads: [
+        ['other-1', minute],
+        ['other-2', minute],
+      ],
+    };
 
     expect(await blocksFor()).toEqual(['a1']);
   });
@@ -307,8 +344,36 @@ describe('ArticleRevisionResolver access', () => {
     paywall = enforcedPaywall;
 
     expect(
-      await blocksFor({ engagementGrants: new Set(['article-1']) })
+      await blocksFor({
+        engagementAccess: new Map([['article-1', { granted: true }]]),
+      })
     ).toHaveLength(5);
+  });
+
+  it('sends feeds every displayed block, uncut: they apply their own paywall setting', async () => {
+    article['paywallId'] = 'paywall';
+    paywall = enforcedPaywall;
+    rules = [
+      hardMeter({ stages: [{ ...hardMeter().stages[0], afterArticles: 0 }] }),
+    ];
+
+    expect(
+      await resolver().blocks(revision, true, { req: {} }, undefined, true)
+    ).toHaveLength(5);
+    expect(blockTreeLoader.loadBlocks).toHaveBeenLastCalledWith(
+      revision.blocks,
+      { onlyDisplayed: true }
+    );
+  });
+
+  it('cuts the blocks viewArticle restricted in this request, meter or not', async () => {
+    expect(
+      await blocksFor({
+        engagementAccess: new Map([
+          ['article-1', { granted: false, previewBlocks: 1 } as never],
+        ]),
+      })
+    ).toEqual(['a1']);
   });
 
   it.each([
