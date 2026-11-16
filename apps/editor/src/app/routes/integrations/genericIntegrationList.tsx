@@ -68,8 +68,9 @@ const Toolbar = styled.div`
 
 const GenericIntegrationGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
-  gap: 20px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+  max-width: 960px;
 `;
 
 export function GenericIntegrationList<

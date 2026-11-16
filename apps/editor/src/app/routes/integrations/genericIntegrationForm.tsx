@@ -6,9 +6,7 @@ import {
   Box,
   Button,
   Card,
-  CardActions,
   CardContent,
-  Checkbox,
   CircularProgress,
   Dialog,
   DialogActions,
@@ -20,6 +18,7 @@ import {
   FormLabel,
   MenuItem,
   Stack,
+  Switch,
   TextField as MuiTextField,
   Typography,
 } from '@mui/material';
@@ -55,27 +54,48 @@ import { SetupGuide } from './setupGuide';
 
 const HeaderWrapper = styled.div`
   display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: start;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
   gap: 16px;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 `;
 
 const HeaderTitle = styled.div`
   display: grid;
-  gap: 4px;
-  justify-items: start;
+  gap: 2px;
+  min-width: 0;
 `;
 
 const FieldList = styled.div`
   display: grid;
-  gap: 20px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 16px;
+
+  & > * {
+    grid-column: span 2;
+  }
+
+  @media (min-width: 600px) {
+    & > [data-half='true'] {
+      grid-column: span 1;
+    }
+  }
+`;
+
+const FormFooter = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-top: 1px solid
+    ${({ theme }) => theme.vars?.palette.divider ?? 'rgba(0, 0, 0, 0.12)'};
 `;
 
 const HeaderLogo = styled.img`
-  min-height: 16px;
-  max-height: 28px;
-  max-width: 150px;
+  height: 28px;
+  max-width: 96px;
+  object-fit: contain;
 `;
 
 type TextField = {
@@ -145,6 +165,8 @@ export type FieldDefinition<TFormValues> = Fields & {
   autoComplete?: string;
   /** Heads this field and the ones after it, until the next section. */
   section?: string;
+  /** Takes half the width, next to its neighbour, on wider screens. */
+  half?: boolean;
 };
 
 export interface GenericIntegrationFormProps<
@@ -208,10 +230,27 @@ export function SingleGenericIntegrationForm<
     [fields, setting]
   );
 
-  const { control, handleSubmit } = useForm<z.infer<typeof schema>>({
+  const defaultValues = useMemo(
+    () =>
+      Object.fromEntries(
+        resolvedFields.map(field => [
+          field.name,
+          (setting as Record<string, unknown>)[String(field.name)],
+        ])
+      ),
+    [resolvedFields, setting]
+  );
+
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { isDirty },
+  } = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     mode: 'onTouched',
     reValidateMode: 'onChange',
+    defaultValues: defaultValues as never,
   });
 
   const [pendingTypeChange, setPendingTypeChange] = useState<z.infer<
@@ -226,6 +265,8 @@ export function SingleGenericIntegrationForm<
           id: setting.id,
         },
       });
+
+      reset(formData);
 
       enqueueSnackbar(t('integrations.updateSuccess'), { variant: 'success' });
     } catch (e) {
@@ -283,10 +324,18 @@ export function SingleGenericIntegrationForm<
         >
           <CardContent>
             <HeaderWrapper>
+              {logo ?
+                <HeaderLogo
+                  src={logo}
+                  alt=""
+                />
+              : <span />}
+
               <HeaderTitle>
                 <Typography
-                  variant="h5"
+                  variant="h6"
                   component="h2"
+                  noWrap
                 >
                   {title}
                 </Typography>
@@ -295,32 +344,26 @@ export function SingleGenericIntegrationForm<
                   <Typography
                     variant="body2"
                     sx={{ color: 'text.secondary' }}
+                    noWrap
                   >
                     {typeLabel}
                   </Typography>
                 )}
-
-                {integrationKey && (
-                  <IntegrationStatusChip
-                    status={
-                      complete ?
-                        { state: 'ready', providers: [title] }
-                      : {
-                          state: 'incomplete',
-                          providers: [title],
-                          incomplete: [title],
-                        }
-                    }
-                  />
-                )}
               </HeaderTitle>
 
-              {logo && (
-                <HeaderLogo
-                  src={logo}
-                  alt=""
+              {integrationKey ?
+                <IntegrationStatusChip
+                  status={
+                    complete ?
+                      { state: 'ready', providers: [title] }
+                    : {
+                        state: 'incomplete',
+                        providers: [title],
+                        incomplete: [title],
+                      }
+                  }
                 />
-              )}
+              : <span />}
             </HeaderWrapper>
 
             {guide && (
@@ -348,7 +391,10 @@ export function SingleGenericIntegrationForm<
                         {section}
                       </Typography>
                     )}
-                  <FormControl fullWidth>
+                  <FormControl
+                    fullWidth
+                    data-half={field.half ? 'true' : undefined}
+                  >
                     {field.type !== 'checkbox' && (
                       <FormLabel id={labelIdFor(String(field.name))}>
                         {field.label}
@@ -358,11 +404,6 @@ export function SingleGenericIntegrationForm<
                     <Controller
                       name={field.name}
                       control={control}
-                      defaultValue={
-                        (setting as Record<typeof field.name, unknown>)[
-                          field.name
-                        ] as any
-                      }
                       render={({
                         field: { value, onChange, ...restField },
                         fieldState,
@@ -440,7 +481,7 @@ export function SingleGenericIntegrationForm<
                           return (
                             <FormControlLabel
                               control={
-                                <Checkbox
+                                <Switch
                                   checked={!!value}
                                   onChange={(_event, c) => onChange(c)}
                                   disabled={field.disabled}
@@ -529,11 +570,32 @@ export function SingleGenericIntegrationForm<
             )}
           </CardContent>
 
-          <CardActions>
+          <FormFooter>
+            {renderActions?.(setting)}
+
+            <Box sx={{ flexGrow: 1 }} />
+
+            {isDirty && (
+              <Typography
+                variant="body2"
+                sx={{ color: 'text.secondary' }}
+              >
+                {t('integrations.form.unsaved')}
+              </Typography>
+            )}
+
+            <Button
+              variant="text"
+              disabled={!isDirty || updating}
+              onClick={() => reset()}
+            >
+              {t('integrations.form.discard')}
+            </Button>
+
             <Button
               variant="contained"
               type="submit"
-              disabled={updating}
+              disabled={!isDirty || updating}
             >
               {updating && (
                 <CircularProgress
@@ -545,9 +607,7 @@ export function SingleGenericIntegrationForm<
 
               {t('save')}
             </Button>
-
-            {renderActions?.(setting)}
-          </CardActions>
+          </FormFooter>
         </Card>
       </Stack>
 

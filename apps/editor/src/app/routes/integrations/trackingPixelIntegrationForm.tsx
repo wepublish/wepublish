@@ -98,11 +98,13 @@ export function TrackingPixelIntegrationForm() {
           commonFields.push({
             type: 'text',
             name: 'prolitteris_username',
+            half: true,
             label: t('integrations.trackingPixelSettings.prolitterisUsername'),
             info: t('integrations.trackingPixelSettings.prolitterisLoginInfo'),
           });
           commonFields.push({
             name: 'prolitteris_password',
+            half: true,
             label: t('integrations.trackingPixelSettings.prolitterisPassword'),
             info: t('integrations.trackingPixelSettings.prolitterisLoginInfo'),
             type: 'password',

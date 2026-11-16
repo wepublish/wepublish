@@ -49,6 +49,7 @@ export function PdfRendererIntegrationForm() {
         const commonFields: FieldDefinition<IntegrationFormValues>[] = [
           {
             name: 'type',
+            half: true,
             label: t('integrations.pdfRendererSettings.type'),
             type: 'select',
             options: typeOptionsOf(providersOf('pdf-renderer', t)),
@@ -56,6 +57,7 @@ export function PdfRendererIntegrationForm() {
           {
             type: 'text',
             name: 'name',
+            half: true,
             label: t('name'),
           },
         ];
@@ -64,11 +66,13 @@ export function PdfRendererIntegrationForm() {
           commonFields.push({
             type: 'text',
             name: 'cloudflare_accountId',
+            half: true,
             label: t('integrations.pdfRendererSettings.cloudflareAccountId'),
             info: t('integrations.pdfRendererSettings.cloudflareAccountIdInfo'),
           });
           commonFields.push({
             name: 'cloudflare_apiToken',
+            half: true,
             label: t('integrations.pdfRendererSettings.cloudflareApiToken'),
             info: t('integrations.pdfRendererSettings.cloudflareApiTokenInfo'),
             type: 'password',
@@ -88,10 +92,12 @@ export function PdfRendererIntegrationForm() {
           commonFields.push({
             type: 'text',
             name: 'gotenberg_username',
+            half: true,
             label: t('integrations.pdfRendererSettings.gotenbergUsername'),
           });
           commonFields.push({
             name: 'gotenberg_password',
+            half: true,
             label: t('integrations.pdfRendererSettings.gotenbergPassword'),
             type: 'password',
             placeholder: t('integrations.placeholderSecret'),

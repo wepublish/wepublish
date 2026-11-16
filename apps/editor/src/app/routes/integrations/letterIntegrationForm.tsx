@@ -67,6 +67,7 @@ export function LetterIntegrationForm() {
         const commonFields: FieldDefinition<IntegrationFormValues>[] = [
           {
             name: 'type',
+            half: true,
             label: t('integrations.letterSettings.type'),
             type: 'select',
             options: typeOptionsOf(providersOf('letter', t)),
@@ -75,6 +76,7 @@ export function LetterIntegrationForm() {
           {
             type: 'text',
             name: 'name',
+            half: true,
             label: t('name'),
             info: t('integrations.nameInfo'),
             section: t('integrations.sections.provider'),
@@ -84,6 +86,7 @@ export function LetterIntegrationForm() {
         if (setting.type === LetterProviderType.Pingen) {
           commonFields.push({
             name: 'environment',
+            half: true,
             label: t('integrations.letterSettings.environment'),
             info: t('integrations.letterSettings.environmentInfo'),
             section: t('integrations.sections.connection'),
@@ -96,12 +99,14 @@ export function LetterIntegrationForm() {
           commonFields.push({
             type: 'text',
             name: 'clientId',
+            half: true,
             label: t('integrations.letterSettings.clientId'),
             info: t('integrations.letterSettings.clientIdInfo'),
             section: t('integrations.sections.connection'),
           });
           commonFields.push({
             name: 'clientSecret',
+            half: true,
             label: t('integrations.letterSettings.clientSecret'),
             section: t('integrations.sections.connection'),
             type: 'password',
@@ -111,6 +116,7 @@ export function LetterIntegrationForm() {
           commonFields.push({
             type: 'text',
             name: 'organisationId',
+            half: true,
             label: t('integrations.letterSettings.organisationId'),
             info: t('integrations.letterSettings.organisationIdInfo'),
             section: t('integrations.sections.connection'),

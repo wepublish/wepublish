@@ -3754,6 +3754,12 @@
           "stripe": "Das Signing Secret (whsec_…) des Webhook-Endpoints, den du in Stripe anlegst. Ohne es werden Zahlungen in We.Publish nicht bestätigt.",
           "payrexx": "Ein langes, zufälliges Passwort, das du dir ausdenkst. Hänge es in Payrexx als ?key=… an die Webhook-URL. Ohne es werden Zahlungen in We.Publish nicht bestätigt.",
           "mollie": "Ein langes, zufälliges Passwort, das du dir ausdenkst. We.Publish hängt es an die Adresse, die Mollie aufruft; in Mollie musst du nichts eintragen."
+        },
+        "apiKeyInfoByType": {
+          "stripe": "Der Secret Key (sk_live_…, auf Testsystemen sk_test_…) aus dem Stripe-Dashboard. Ein gespeicherter Schlüssel wird nicht mehr angezeigt.",
+          "payrexx": "Das API-Secret deiner Payrexx-Instanz. Ein gespeicherter Schlüssel wird nicht mehr angezeigt.",
+          "mollie": "Der Live-API-Schlüssel (live_…) aus dem Mollie-Dashboard. Ein gespeicherter Schlüssel wird nicht mehr angezeigt.",
+          "bexio": "Ein Personal Access Token aus dem bexio-Entwicklerportal. Ein gespeicherter Schlüssel wird nicht mehr angezeigt."
         }
       },
       "placeholderSecret": "Unverändert (versteckt)",
@@ -3809,7 +3815,6 @@
         "typeInfo": "Der Dienst, der die E-Mails verschickt. Slack und «Nur protokollieren» stellen Leser:innen nichts zu – sie sind nur zum Testen gedacht. Ein Wechsel des Typs löscht die gespeicherten Schlüssel.",
         "fromAddressInfo": "Die Absenderadresse, die Leserinnen und Leser sehen, z. B. abo@example.ch. Ihre Domain muss beim E-Mail-Dienst verifiziert sein, sonst landen E-Mails womöglich im Spam.",
         "replyToAddressInfo": "Wohin Antworten gehen, wenn jemand auf eine deiner E-Mails antwortet. Bleibt das Feld leer, gehen Antworten an die Absenderadresse.",
-        "apiKeyInfo": "Der API-Schlüssel aus deinem Konto beim E-Mail-Dienst (Mailchimp Transactional/Mandrill, Mailgun oder Brevo). Ohne ihn können keine E-Mails verschickt werden.",
         "mailgunBaseDomainInfo": "Die Adresse der Mailgun-API ohne https://: api.mailgun.net bzw. api.eu.mailgun.net, wenn dein Konto in der EU liegt.",
         "mailgunMailDomainInfo": "Die Versand-Domain, die du in Mailgun eingerichtet hast, z. B. mg.example.ch.",
         "slackWebhookUrlInfo": "Die Adresse eines Slack-Incoming-Webhooks. Statt zugestellt zu werden, landet jede E-Mail in diesem Slack-Kanal – praktisch zum Testen.",
@@ -3829,6 +3834,11 @@
           "mandrill": "Der Key des Webhooks, den du in Mailchimp Transactional unter «Settings» → «Webhooks» anlegst. Ohne ihn werden Bounces und Spam-Meldungen nicht erfasst.",
           "mailgun": "Der «HTTP webhook signing key» von der Seite «API Security» in Mailgun. Ohne ihn werden Bounces und Spam-Meldungen nicht erfasst.",
           "brevo": "Ein langes, zufälliges Passwort, das du dir ausdenkst. Brevo signiert nichts, darum hängst du es als ?key=… an die Webhook-URL, die du in Brevo einträgst. Ohne es werden Bounces und Spam-Meldungen nicht erfasst."
+        },
+        "apiKeyInfoByType": {
+          "mandrill": "Ein API-Schlüssel aus Mailchimp Transactional («Settings» → «SMTP & API Info»), nicht der Schlüssel deines Mailchimp-Newsletter-Kontos. Ohne ihn können keine E-Mails verschickt werden.",
+          "mailgun": "Ein API-Schlüssel von der Seite «API Security» in Mailgun. Ohne ihn können keine E-Mails verschickt werden.",
+          "brevo": "Ein API-Schlüssel aus Brevo («SMTP & API» → «API keys»). Ohne ihn können keine E-Mails verschickt werden."
         }
       },
       "trackingPixelSettings": {
@@ -4068,7 +4078,8 @@
         "bexioRecords": "bexio-Datensätze",
         "invoiceTexts": "Rechnungstexte",
         "contacts": "Kontakte",
-        "automatedLetters": "Automatische Briefe"
+        "automatedLetters": "Automatische Briefe",
+        "general": "Allgemein"
       },
       "guide": {
         "title": "So richtest du {{provider}} ein",
@@ -4188,6 +4199,10 @@
         "title": "Noch nicht eingerichtet",
         "description": "Wähle einen dieser Provider, um loszulegen. Sobald er hinzugefügt ist, zeigt dir eine Schritt-für-Schritt-Anleitung, wo du jeden Schlüssel findest und was du beim Provider eintragen musst.",
         "descriptionSingle": "Richte die Integration ein, um loszulegen. Eine Schritt-für-Schritt-Anleitung zeigt dir dann, wo du jeden Schlüssel findest und was du beim Provider eintragen musst."
+      },
+      "form": {
+        "unsaved": "Ungespeicherte Änderungen",
+        "discard": "Verwerfen"
       }
     },
     "websiteSettings": {

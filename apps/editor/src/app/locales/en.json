@@ -3815,6 +3815,12 @@
           "stripe": "The signing secret (whsec_…) of the webhook endpoint you add in Stripe. Without it, payments are not confirmed in We.Publish.",
           "payrexx": "A long random password you make up. Add it to the webhook URL in Payrexx as ?key=…. Without it, payments are not confirmed in We.Publish.",
           "mollie": "A long random password you make up. We.Publish adds it to the address Mollie calls; nothing needs to be entered in Mollie."
+        },
+        "apiKeyInfoByType": {
+          "stripe": "The secret key (sk_live_…, or sk_test_… on test systems) from the Stripe dashboard. A saved key is not shown again.",
+          "payrexx": "The API secret of your Payrexx instance. A saved key is not shown again.",
+          "mollie": "The live API key (live_…) from the Mollie dashboard. A saved key is not shown again.",
+          "bexio": "A personal access token from the bexio developer portal. A saved key is not shown again."
         }
       },
       "placeholderSecret": "Unchanged (Hidden)",
@@ -3870,7 +3876,6 @@
         "typeInfo": "The service that sends the emails. Slack and «Log only» deliver nothing to readers – they are only meant for testing. Changing the type deletes the stored keys.",
         "fromAddressInfo": "The sender address readers see, e.g. abo@example.ch. Its domain must be verified with the mail service, otherwise emails may end up in spam.",
         "replyToAddressInfo": "Where replies go when someone answers one of your emails. If empty, replies go to the sender address.",
-        "apiKeyInfo": "The API key from your account with the mail service (Mailchimp Transactional/Mandrill, Mailgun or Brevo). Without it, no emails can be sent.",
         "mailgunBaseDomainInfo": "The address of the Mailgun API without https://: api.mailgun.net, or api.eu.mailgun.net if your account is hosted in the EU.",
         "mailgunMailDomainInfo": "The sending domain you set up in Mailgun, e.g. mg.example.ch.",
         "slackWebhookUrlInfo": "The address of a Slack incoming webhook. Instead of being delivered, every email is posted to that Slack channel – useful for testing.",
@@ -3890,6 +3895,11 @@
           "mandrill": "The key of the webhook you add in Mailchimp Transactional under «Settings» → «Webhooks». Without it, bounces and spam reports are not recorded.",
           "mailgun": "The «HTTP webhook signing key» from Mailgun’s «API Security» page. Without it, bounces and spam reports are not recorded.",
           "brevo": "A long random password you make up. Brevo signs nothing, so append it as ?key=… to the webhook URL you enter in Brevo. Without it, bounces and spam reports are not recorded."
+        },
+        "apiKeyInfoByType": {
+          "mandrill": "An API key from Mailchimp Transactional («Settings» → «SMTP & API Info»), not the key of your Mailchimp newsletter account. Without it, no emails can be sent.",
+          "mailgun": "An API key from Mailgun’s «API Security» page. Without it, no emails can be sent.",
+          "brevo": "An API key from Brevo («SMTP & API» → «API keys»). Without it, no emails can be sent."
         }
       },
       "trackingPixelSettings": {
@@ -4128,7 +4138,8 @@
         "bexioRecords": "bexio records",
         "invoiceTexts": "Invoice texts",
         "contacts": "Contacts",
-        "automatedLetters": "Automated letters"
+        "automatedLetters": "Automated letters",
+        "general": "General"
       },
       "guide": {
         "title": "How to set up {{provider}}",
@@ -4248,6 +4259,10 @@
         "title": "Not set up yet",
         "description": "Choose one of these providers to get started. Once it is added, a step-by-step guide shows where to find each key and what to register at the provider.",
         "descriptionSingle": "Set it up to get started. A step-by-step guide then shows where to find each key and what to register at the provider."
+      },
+      "form": {
+        "unsaved": "Unsaved changes",
+        "discard": "Discard"
       }
     },
     "websiteSettings": {

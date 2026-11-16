@@ -107,6 +107,7 @@ export function mailFields(
   const commonFields: FieldDefinition<IntegrationFormValues>[] = [
     {
       name: 'type',
+      half: true,
       label: t('integrations.mailSettings.type'),
       info: t('integrations.mailSettings.typeInfo'),
       type: 'select',
@@ -116,6 +117,7 @@ export function mailFields(
     {
       type: 'text',
       name: 'name',
+      half: true,
       label: t('name'),
       info: t('integrations.nameInfo'),
       section: t('integrations.sections.provider'),
@@ -123,6 +125,7 @@ export function mailFields(
     {
       type: 'text',
       name: 'fromAddress',
+      half: true,
       section: t('integrations.sections.sender'),
       label: t('integrations.mailSettings.fromAddress'),
       info: t('integrations.mailSettings.fromAddressInfo'),
@@ -130,6 +133,7 @@ export function mailFields(
     {
       type: 'text',
       name: 'replyToAddress',
+      half: true,
       label: t('integrations.mailSettings.replyToAddress'),
       info: t('integrations.mailSettings.replyToAddressInfo'),
       section: t('integrations.sections.sender'),
@@ -149,12 +153,24 @@ export function mailFields(
     ),
   };
 
+  const apiKeyInfo: Partial<Record<MailProviderType, string>> = {
+    [MailProviderType.Mailchimp]: t(
+      'integrations.mailSettings.apiKeyInfoByType.mandrill'
+    ),
+    [MailProviderType.Mailgun]: t(
+      'integrations.mailSettings.apiKeyInfoByType.mailgun'
+    ),
+    [MailProviderType.Brevo]: t(
+      'integrations.mailSettings.apiKeyInfoByType.brevo'
+    ),
+  };
+
   if (setting.type && webhookSecretInfo[setting.type]) {
     commonFields.push({
       section: connection,
       name: 'apiKey',
       label: t('integrations.mailSettings.apiKey'),
-      info: t('integrations.mailSettings.apiKeyInfo'),
+      info: apiKeyInfo[setting.type],
       type: 'password',
       autoComplete: 'one-time-code',
       placeholder: secretPlaceholder(setting.isApiKeySet, t),
@@ -175,6 +191,7 @@ export function mailFields(
       section: connection,
       type: 'text',
       name: 'mailgun_baseDomain',
+      half: true,
       label: t('integrations.mailSettings.mailgunBaseDomain'),
       info: t('integrations.mailSettings.mailgunBaseDomainInfo'),
     });
@@ -182,6 +199,7 @@ export function mailFields(
       section: connection,
       type: 'text',
       name: 'mailgun_mailDomain',
+      half: true,
       label: t('integrations.mailSettings.mailgunMailDomain'),
       info: t('integrations.mailSettings.mailgunMailDomainInfo'),
     });
@@ -202,6 +220,7 @@ export function mailFields(
       section: connection,
       type: 'text',
       name: 'smtp_host',
+      half: true,
       label: t('integrations.mailSettings.smtpHost'),
       info: t('integrations.mailSettings.smtpHostInfo'),
     });
@@ -209,6 +228,7 @@ export function mailFields(
       section: connection,
       type: 'number',
       name: 'smtp_port',
+      half: true,
       label: t('integrations.mailSettings.smtpPort'),
       info: t('integrations.mailSettings.smtpPortInfo'),
     });
@@ -223,12 +243,14 @@ export function mailFields(
       section: connection,
       type: 'text',
       name: 'smtp_user',
+      half: true,
       label: t('integrations.mailSettings.smtpUser'),
     });
     commonFields.push({
       section: connection,
       name: 'apiKey',
       label: t('integrations.mailSettings.smtpPassword'),
+      half: true,
       type: 'password',
       autoComplete: 'one-time-code',
       placeholder: secretPlaceholder(setting.isApiKeySet, t),

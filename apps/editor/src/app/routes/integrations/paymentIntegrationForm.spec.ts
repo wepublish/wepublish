@@ -2,6 +2,7 @@ import { PaymentProviderType } from '@wepublish/editor/api';
 
 import {
   creatablePaymentProviderTypes,
+  paymentApiKeyInfo,
   paymentWebhookSecretInfo,
   withPaymentSections,
 } from './paymentIntegrationForm';
@@ -40,6 +41,7 @@ describe('withPaymentSections', () => {
         },
         { type: 'checkbox', name: 'offSessionPayments', label: 'off' },
         { type: 'password', name: 'apiKey', label: 'key' },
+        { type: 'text', name: 'name', label: 'name' },
       ],
       key => key
     );
@@ -50,6 +52,7 @@ describe('withPaymentSections', () => {
       ['bexio_userId', 'integrations.sections.bexioRecords'],
       ['bexio_invoiceTitleNewMembership', 'integrations.sections.invoiceTexts'],
       ['bexio_contactSync', 'integrations.sections.contacts'],
+      ['name', 'integrations.sections.general'],
     ]);
   });
 });
@@ -65,5 +68,19 @@ describe('paymentWebhookSecretInfo', () => {
     expect(
       paymentWebhookSecretInfo(PaymentProviderType.Mollie, key => key)
     ).toBe('integrations.paymentSettings.webhookSecretInfo.mollie');
+  });
+});
+
+describe('paymentApiKeyInfo', () => {
+  it('says where the key of the provider at hand is found', () => {
+    expect(paymentApiKeyInfo(PaymentProviderType.Stripe, key => key)).toBe(
+      'integrations.paymentSettings.apiKeyInfoByType.stripe'
+    );
+    expect(
+      paymentApiKeyInfo(PaymentProviderType.PayrexxSubscription, key => key)
+    ).toBe('integrations.paymentSettings.apiKeyInfoByType.payrexx');
+    expect(paymentApiKeyInfo(PaymentProviderType.Bexio, key => key)).toBe(
+      'integrations.paymentSettings.apiKeyInfoByType.bexio'
+    );
   });
 });

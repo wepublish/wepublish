@@ -96,6 +96,27 @@ function contactSyncStatus(
     : t('integrations.paymentSettings.bexioContactSyncLastRun', { date });
 }
 
+/** Where the API key of the provider at hand is found. */
+export function paymentApiKeyInfo(
+  type: PaymentProviderType | undefined | null,
+  t: (key: string) => string
+) {
+  switch (type) {
+    case PaymentProviderType.Stripe:
+    case PaymentProviderType.StripeCheckout:
+      return t('integrations.paymentSettings.apiKeyInfoByType.stripe');
+    case PaymentProviderType.Payrexx:
+    case PaymentProviderType.PayrexxSubscription:
+      return t('integrations.paymentSettings.apiKeyInfoByType.payrexx');
+    case PaymentProviderType.Mollie:
+      return t('integrations.paymentSettings.apiKeyInfoByType.mollie');
+    case PaymentProviderType.Bexio:
+      return t('integrations.paymentSettings.apiKeyInfoByType.bexio');
+    default:
+      return t('integrations.paymentSettings.apiKeyInfo');
+  }
+}
+
 /** What the webhook secret is for the provider at hand: copied from Stripe, made up for the others. */
 export function paymentWebhookSecretInfo(
   type: PaymentProviderType | undefined | null,
@@ -116,7 +137,12 @@ export function paymentWebhookSecretInfo(
 }
 
 type PaymentSection =
-  'connection' | 'checkout' | 'bexioRecords' | 'invoiceTexts' | 'contacts';
+  | 'connection'
+  | 'checkout'
+  | 'bexioRecords'
+  | 'invoiceTexts'
+  | 'contacts'
+  | 'general';
 
 const paymentSectionOf = (name: string): PaymentSection => {
   if (
@@ -145,6 +171,10 @@ const paymentSectionOf = (name: string): PaymentSection => {
     return 'bexioRecords';
   }
 
+  if (name === 'name') {
+    return 'general';
+  }
+
   if (name === 'bexio_contactSync') {
     return 'contacts';
   }
@@ -162,6 +192,7 @@ const paymentSectionOrder: PaymentSection[] = [
   'bexioRecords',
   'invoiceTexts',
   'contacts',
+  'general',
 ];
 
 /** Groups the fields by the step of the setup they belong to. */
@@ -175,6 +206,7 @@ export function withPaymentSections(
     bexioRecords: t('integrations.sections.bexioRecords'),
     invoiceTexts: t('integrations.sections.invoiceTexts'),
     contacts: t('integrations.sections.contacts'),
+    general: t('integrations.sections.general'),
   };
 
   return paymentSectionOrder.flatMap(section =>
@@ -226,7 +258,7 @@ export function PaymentIntegrationForm() {
           {
             name: 'apiKey',
             label: t('integrations.paymentSettings.apiKey'),
-            info: t('integrations.paymentSettings.apiKeyInfo'),
+            info: paymentApiKeyInfo(setting.type, t),
             type: 'password',
             autoComplete: 'one-time-code',
             placeholder: secretPlaceholder(setting.isApiKeySet, t),
@@ -252,30 +284,35 @@ export function PaymentIntegrationForm() {
           fields.push(
             {
               name: 'bexio_userId',
+              half: true,
               label: t('integrations.paymentSettings.bexioUserId'),
               info: t('integrations.paymentSettings.bexioUserIdInfo'),
               type: 'number',
             },
             {
               name: 'bexio_countryId',
+              half: true,
               label: t('integrations.paymentSettings.bexioCountryId'),
               info: t('integrations.paymentSettings.bexioCountryIdInfo'),
               type: 'number',
             },
             {
               name: 'bexio_unitId',
+              half: true,
               label: t('integrations.paymentSettings.bexioUnitId'),
               info: t('integrations.paymentSettings.bexioUnitIdInfo'),
               type: 'number',
             },
             {
               name: 'bexio_taxId',
+              half: true,
               label: t('integrations.paymentSettings.bexioTaxId'),
               info: t('integrations.paymentSettings.bexioTaxIdInfo'),
               type: 'number',
             },
             {
               name: 'bexio_accountId',
+              half: true,
               label: t('integrations.paymentSettings.bexioAccountId'),
               info: t('integrations.paymentSettings.bexioAccountIdInfo'),
               type: 'number',
@@ -283,6 +320,7 @@ export function PaymentIntegrationForm() {
             {
               type: 'text',
               name: 'bexio_invoiceTemplateNewMembership',
+              half: true,
               label: t(
                 'integrations.paymentSettings.bexioInvoiceTemplateNewMembership'
               ),
@@ -291,6 +329,7 @@ export function PaymentIntegrationForm() {
             {
               type: 'text',
               name: 'bexio_invoiceTemplateRenewalMembership',
+              half: true,
               label: t(
                 'integrations.paymentSettings.bexioInvoiceTemplateRenewalMembership'
               ),
@@ -299,6 +338,7 @@ export function PaymentIntegrationForm() {
             {
               type: 'text',
               name: 'bexio_invoiceTitleNewMembership',
+              half: true,
               label: t(
                 'integrations.paymentSettings.bexioInvoiceTitleNewMembership'
               ),
@@ -307,6 +347,7 @@ export function PaymentIntegrationForm() {
             {
               type: 'text',
               name: 'bexio_invoiceTitleRenewalMembership',
+              half: true,
               label: t(
                 'integrations.paymentSettings.bexioInvoiceTitleRenewalMembership'
               ),
@@ -315,6 +356,7 @@ export function PaymentIntegrationForm() {
             {
               type: 'text',
               name: 'bexio_invoiceMailSubjectNewMembership',
+              half: true,
               label: t(
                 'integrations.paymentSettings.bexioInvoiceMailSubjectNewMembership'
               ),
@@ -325,6 +367,7 @@ export function PaymentIntegrationForm() {
             {
               type: 'text',
               name: 'bexio_invoiceMailSubjectRenewalMembership',
+              half: true,
               label: t(
                 'integrations.paymentSettings.bexioInvoiceMailSubjectRenewalMembership'
               ),

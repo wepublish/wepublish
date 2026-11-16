@@ -3745,6 +3745,12 @@
           "stripe": "Le signing secret (whsec_…) de l’endpoint de webhook que vous ajoutez dans Stripe. Sans lui, les paiements ne sont pas confirmés dans We.Publish.",
           "payrexx": "Un long mot de passe aléatoire que vous inventez. Ajoutez-le à l’URL du webhook dans Payrexx comme ?key=…. Sans lui, les paiements ne sont pas confirmés dans We.Publish.",
           "mollie": "Un long mot de passe aléatoire que vous inventez. We.Publish l’ajoute à l’adresse que Mollie appelle ; rien n’est à saisir dans Mollie."
+        },
+        "apiKeyInfoByType": {
+          "stripe": "La clé secrète (sk_live_…, ou sk_test_… sur les systèmes de test) du tableau de bord Stripe. Une clé enregistrée n’est plus affichée.",
+          "payrexx": "Le secret API de votre instance Payrexx. Une clé enregistrée n’est plus affichée.",
+          "mollie": "La clé API live (live_…) du tableau de bord Mollie. Une clé enregistrée n’est plus affichée.",
+          "bexio": "Un personal access token du portail développeur de bexio. Une clé enregistrée n’est plus affichée."
         }
       },
       "placeholderSecret": "Inchangé (masqué)",
@@ -3780,7 +3786,6 @@
         "typeInfo": "Le service qui envoie les e-mails. Slack et « Journal uniquement » ne distribuent rien aux lecteur·trice·s – ils servent uniquement aux tests. Changer de type supprime les clés enregistrées.",
         "fromAddressInfo": "L’adresse d’expéditeur visible par les lecteur·trice·s, p. ex. abo@example.ch. Son domaine doit être vérifié auprès du service d’e-mail, sinon les e-mails risquent d’arriver dans les spams.",
         "replyToAddressInfo": "L’adresse à laquelle arrivent les réponses à vos e-mails. Si le champ est vide, les réponses vont à l’adresse d’expéditeur.",
-        "apiKeyInfo": "La clé API de votre compte auprès du service d’e-mail (Mailchimp Transactional/Mandrill, Mailgun ou Brevo). Sans elle, aucun e-mail ne peut être envoyé.",
         "mailgunBaseDomainInfo": "L’adresse de l’API Mailgun sans https:// : api.mailgun.net, ou api.eu.mailgun.net si votre compte est hébergé dans l’UE.",
         "mailgunMailDomainInfo": "Le domaine d’envoi que vous avez configuré dans Mailgun, p. ex. mg.example.ch.",
         "slackWebhookUrlInfo": "L’adresse d’un webhook entrant Slack. Au lieu d’être distribué, chaque e-mail est publié dans ce canal Slack – pratique pour les tests.",
@@ -3800,6 +3805,11 @@
           "mandrill": "La clé du webhook que vous ajoutez dans Mailchimp Transactional sous « Settings » → « Webhooks ». Sans elle, les rebonds et signalements de spam ne sont pas enregistrés.",
           "mailgun": "La « HTTP webhook signing key » de la page « API Security » de Mailgun. Sans elle, les rebonds et signalements de spam ne sont pas enregistrés.",
           "brevo": "Un long mot de passe aléatoire que vous inventez. Brevo ne signe rien : ajoutez-le comme ?key=… à l’URL du webhook saisie dans Brevo. Sans lui, les rebonds et signalements de spam ne sont pas enregistrés."
+        },
+        "apiKeyInfoByType": {
+          "mandrill": "Une clé API de Mailchimp Transactional (« Settings » → « SMTP & API Info »), pas la clé de votre compte de newsletter Mailchimp. Sans elle, aucun e-mail ne peut être envoyé.",
+          "mailgun": "Une clé API de la page « API Security » de Mailgun. Sans elle, aucun e-mail ne peut être envoyé.",
+          "brevo": "Une clé API de Brevo (« SMTP & API » → « API keys »). Sans elle, aucun e-mail ne peut être envoyé."
         }
       },
       "trackingPixelSettings": {
@@ -4060,7 +4070,8 @@
         "bexioRecords": "Enregistrements bexio",
         "invoiceTexts": "Textes des factures",
         "contacts": "Contacts",
-        "automatedLetters": "Lettres automatiques"
+        "automatedLetters": "Lettres automatiques",
+        "general": "Général"
       },
       "guide": {
         "title": "Comment configurer {{provider}}",
@@ -4180,6 +4191,10 @@
         "title": "Pas encore configurée",
         "description": "Choisissez l’un de ces fournisseurs pour commencer. Une fois ajouté, un guide pas à pas indique où trouver chaque clé et ce qu’il faut enregistrer chez le fournisseur.",
         "descriptionSingle": "Configurez-la pour commencer. Un guide pas à pas indique ensuite où trouver chaque clé et ce qu’il faut enregistrer chez le fournisseur."
+      },
+      "form": {
+        "unsaved": "Modifications non enregistrées",
+        "discard": "Annuler les modifications"
       }
     },
     "websiteSettings": {

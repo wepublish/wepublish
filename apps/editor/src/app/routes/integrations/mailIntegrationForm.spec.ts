@@ -37,4 +37,10 @@ describe('mailFields', () => {
     ).toBeUndefined();
     expect(field(MailProviderType.Smtp, 'smtp_host')).toBeDefined();
   });
+
+  it('says where the API key of the provider at hand is made', () => {
+    expect(field(MailProviderType.Mailgun, 'apiKey')?.info).toBe(
+      'integrations.mailSettings.apiKeyInfoByType.mailgun'
+    );
+  });
 });

@@ -185,3 +185,64 @@ describe('SingleGenericIntegrationForm guidance', () => {
     expect(screen.getByText('integrations.status.ready')).toBeTruthy();
   });
 });
+
+describe('SingleGenericIntegrationForm editing', () => {
+  const renderName = () =>
+    render(
+      <ThemeProvider theme={createTheme({ cssVariables: true })}>
+        <SingleGenericIntegrationForm
+          setting={
+            { id: 'smtp', type: 'SMTP', name: 'Mail', active: true } as never
+          }
+          schema={z.object({
+            name: z.string().nullish(),
+            active: z.boolean().nullish(),
+          })}
+          mutation={UpdateMailProviderSettingDocument}
+          fields={[
+            { type: 'text', name: 'name', label: 'Name' },
+            { type: 'checkbox', name: 'active', label: 'Active' },
+          ]}
+        />
+      </ThemeProvider>
+    );
+
+  it('only offers to save once something changed', async () => {
+    renderName();
+
+    expect(screen.getByRole('button', { name: 'save' })).toBeDisabled();
+    expect(screen.queryByText('integrations.form.unsaved')).toBeNull();
+
+    await act(() =>
+      fireEvent.change(screen.getByRole('textbox', { name: 'Name' }), {
+        target: { value: 'Newsletter mail' },
+      })
+    );
+
+    expect(screen.getByRole('button', { name: 'save' })).toBeEnabled();
+    expect(screen.getByText('integrations.form.unsaved')).toBeInTheDocument();
+  });
+
+  it('throws unsaved changes away on request', async () => {
+    renderName();
+    const name = screen.getByRole('textbox', { name: 'Name' });
+
+    await act(() =>
+      fireEvent.change(name, { target: { value: 'Newsletter mail' } })
+    );
+    await act(() =>
+      fireEvent.click(
+        screen.getByRole('button', { name: 'integrations.form.discard' })
+      )
+    );
+
+    expect(name).toHaveValue('Mail');
+    expect(screen.getByRole('button', { name: 'save' })).toBeDisabled();
+  });
+
+  it('shows on/off options as switches', () => {
+    renderName();
+
+    expect(screen.getByRole('switch', { name: 'Active' })).toBeChecked();
+  });
+});

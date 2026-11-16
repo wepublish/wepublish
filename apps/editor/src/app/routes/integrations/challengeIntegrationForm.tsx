@@ -40,6 +40,7 @@ export function ChallengeIntegrationForm() {
       fields={setting => [
         {
           name: 'type',
+          half: true,
           label: t('integrations.challengeSettings.type'),
           info: t('integrations.challengeSettings.typeInfo'),
           type: 'select',
@@ -48,6 +49,7 @@ export function ChallengeIntegrationForm() {
         {
           type: 'text',
           name: 'name',
+          half: true,
           label: t('name'),
         },
         {
