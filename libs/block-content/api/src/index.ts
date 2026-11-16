@@ -19,6 +19,7 @@ export * from './lib/break/break-block.model';
 export * from './lib/listicle/listicle-block.model';
 export * from './lib/html/html-block.model';
 export * from './lib/event/event-block.model';
+export * from './lib/authors/authors-block.model';
 export * from './lib/richtext/richtext-block.model';
 export * from './lib/subscribe/subscribe-block.model';
 export * from './lib/mailchimp-form/mailchimp-form-block.model';

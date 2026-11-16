@@ -2,11 +2,13 @@ import { forwardRef, Module } from '@nestjs/common';
 import { BlockStylesModule } from './block-styles/block-styles.module';
 import { BlockTemplateModule } from './block-template/block-template.module';
 import { EventBlockResolver } from './event/event-block.resolver';
+import { AuthorsBlockResolver } from './authors/authors-block.resolver';
 import { CommentBlockResolver } from './comment/comment-block.resolver';
 import { ImageModule } from '@wepublish/image/api';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { CommentModule } from '@wepublish/comments/api';
 import { EventModule } from '@wepublish/event/api';
+import { AuthorModule } from '@wepublish/author/api';
 import { PeerModule } from '@wepublish/peering/api';
 import { ArticleModule } from '@wepublish/article/api';
 import { PageModule } from '@wepublish/page/api';
@@ -33,6 +35,7 @@ import { MailchimpSubscribeService } from './mailchimp-form/mailchimp-subscribe.
     forwardRef(() => ArticleModule),
     forwardRef(() => PageModule),
     EventModule,
+    AuthorModule,
     PeerModule,
     CommentModule,
     TagModule,
@@ -43,6 +46,7 @@ import { MailchimpSubscribeService } from './mailchimp-form/mailchimp-subscribe.
     BaseBlockResolver,
     BlockTimingResolver,
     EventBlockResolver,
+    AuthorsBlockResolver,
     CommentBlockResolver,
     TeaserListBlockResolver,
     TeaserListBlockFilterResolver,

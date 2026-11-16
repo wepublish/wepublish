@@ -194,6 +194,14 @@ fragment FullEventBlock on EventBlock {
   }
 }
 
+fragment FullAuthorsBlock on AuthorsBlock {
+  blockStyle: blockStyleName
+  title
+  authors {
+    ...FullAuthor
+  }
+}
+
 fragment FullCommentBlock on CommentBlock {
   blockStyle: blockStyleName
   comments {
@@ -345,6 +353,10 @@ fragment BlockWithoutTeaser on BlockContent {
 
   ... on EventBlock {
     ...FullEventBlock
+  }
+
+  ... on AuthorsBlock {
+    ...FullAuthorsBlock
   }
 
   ... on CommentBlock {
