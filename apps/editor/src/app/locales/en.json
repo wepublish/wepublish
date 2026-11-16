@@ -2125,6 +2125,7 @@
         "system": "Match system"
       },
       "logout": "Logout",
+      "websiteLogin": "Open the website, signed in",
       "mailTemplates": "Message templates",
       "memberPlans": "Subscription Plans",
       "navigations": "Navigations",
