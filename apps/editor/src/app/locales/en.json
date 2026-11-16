@@ -4066,9 +4066,10 @@
       "letterProviderInfo": "Prints and posts letters to readers, such as invoices and reminders, through Pingen.",
       "pdfRendererInfo": "Turns letters and invoices into PDF files before they are printed or sent. Letter delivery needs it.",
       "overview": {
-        "intro": "Connect the services We.Publish works with. Each one is set up once by an administrator; until then, the feature that relies on it does not work.",
-        "setUp": "Set up",
-        "manage": "Manage"
+        "intro": "Connect the services We.Publish works with. Each is set up once; until then, the feature that relies on it does not work.",
+        "search": "Search integrations",
+        "searchPlaceholder": "Name or provider, e.g. Stripe",
+        "noMatch": "No integration matches your search."
       },
       "status": {
         "notSetUp": "Not set up",
@@ -4080,7 +4081,7 @@
         "email": {
           "title": "Email",
           "description": "How emails reach your readers.",
-          "mailchimpNote": "Mailchimp shows up twice because it is two products with separate API keys. Mailchimp Transactional (formerly Mandrill) sends single emails such as login links – set it up under «Transactional email». Mailchimp Marketing holds your newsletter audience – set it up under «Mailchimp audience»."
+          "mailchimpNote": "Mailchimp appears twice: Mailchimp Transactional (Mandrill) sends single emails such as login links, Mailchimp Marketing holds your newsletter audience. They use different API keys."
         },
         "payments": {
           "title": "Payments",

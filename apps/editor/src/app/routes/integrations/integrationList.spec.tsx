@@ -1,5 +1,5 @@
 import { createTheme, ThemeProvider } from '@mui/material';
-import { render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import {
   MailProviderSettingsDocument,
   PaymentProviderSettingsDocument,
@@ -8,6 +8,7 @@ import {
 } from '@wepublish/editor/api';
 import {
   CanGetAISettings,
+  CanGetChallengeProviderSettings,
   CanGetLetterProviderSettings,
   CanGetMailchimpSyncSettings,
   CanGetMailProviderSettings,
@@ -118,16 +119,14 @@ describe('IntegrationList', () => {
     ).toBeVisible();
   });
 
-  it('offers to set up an integration that has no provider yet', () => {
+  it('opens an integration from its card, named by its title', () => {
     queryResults.set(SettingsIntegrationsAiDocument, { aiSettings: [] });
     renderList();
 
-    const link = within(card('integrations.ai')).getByRole('link', {
-      name: 'integrations.overview.setUp',
-    });
+    const link = screen.getByRole('link', { name: 'integrations.ai' });
 
     expect(link).toHaveAttribute('href', '/integrations/ai');
-    expect(link).toHaveAccessibleDescription('integrations.ai');
+    expect(link).toHaveAccessibleDescription(/integrations.status.notSetUp/);
     expect(
       within(card('integrations.ai')).getByText('integrations.status.notSetUp')
     ).toBeInTheDocument();
@@ -147,11 +146,40 @@ describe('IntegrationList', () => {
       within(payment).getByText('integrations.status.incomplete')
     ).toBeInTheDocument();
     expect(within(payment).getByText('Stripe')).toBeInTheDocument();
+  });
+
+  it('finds integrations by provider, title or purpose, fuzzily', () => {
+    renderList({
+      permissions: [
+        CanGetAISettings.id,
+        CanGetPaymentProviderSettings.id,
+        CanGetMailProviderSettings.id,
+        CanGetChallengeProviderSettings.id,
+      ],
+    });
+
+    const search = screen.getByRole('searchbox', {
+      name: 'integrations.overview.search',
+    });
+
+    fireEvent.change(search, { target: { value: 'v0' } });
+
     expect(
-      within(payment).getByRole('link', {
-        name: 'integrations.overview.manage',
-      })
+      screen.getByRole('link', { name: 'integrations.ai' })
     ).toBeInTheDocument();
+    expect(
+      screen.queryByRole('link', { name: 'integrations.paymentProvider' })
+    ).toBeNull();
+    expect(
+      screen.queryByRole('heading', {
+        level: 2,
+        name: 'integrations.groups.email.title',
+      })
+    ).toBeNull();
+
+    fireEvent.change(search, { target: { value: 'zzzz' } });
+
+    expect(screen.getByText('integrations.overview.noMatch')).toBeTruthy();
   });
 
   it('explains the two Mailchimp integrations next to each other', () => {

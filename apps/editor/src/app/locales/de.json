@@ -4006,9 +4006,10 @@
       "letterProviderInfo": "Druckt Briefe an Leser:innen, etwa Rechnungen und Mahnungen, und verschickt sie per Post über Pingen.",
       "pdfRendererInfo": "Macht aus Briefen und Rechnungen PDF-Dateien, bevor sie gedruckt oder verschickt werden. Der Briefversand braucht sie.",
       "overview": {
-        "intro": "Verbinde die Dienste, mit denen We.Publish arbeitet. Jeder wird einmal von einer Administratorin oder einem Administrator eingerichtet; bis dahin funktioniert die Funktion, die ihn braucht, nicht.",
-        "setUp": "Einrichten",
-        "manage": "Verwalten"
+        "intro": "Verbinde die Dienste, mit denen We.Publish arbeitet. Jeder wird einmal eingerichtet; bis dahin funktioniert die Funktion, die ihn braucht, nicht.",
+        "search": "Integrationen durchsuchen",
+        "searchPlaceholder": "Name oder Provider, z. B. Stripe",
+        "noMatch": "Keine Integration passt zu deiner Suche."
       },
       "status": {
         "notSetUp": "Nicht eingerichtet",
@@ -4020,7 +4021,7 @@
         "email": {
           "title": "E-Mail",
           "description": "Wie E-Mails deine Leser:innen erreichen.",
-          "mailchimpNote": "Mailchimp erscheint zweimal, weil es zwei Produkte mit getrennten API-Schlüsseln sind. Mailchimp Transactional (früher Mandrill) verschickt einzelne E-Mails wie Login-Links – richte es unter «Transaktionale E-Mails» ein. Mailchimp Marketing enthält deine Newsletter-Zielgruppe – richte es unter «Mailchimp-Zielgruppe» ein."
+          "mailchimpNote": "Mailchimp erscheint zweimal: Mailchimp Transactional (Mandrill) verschickt einzelne E-Mails wie Login-Links, Mailchimp Marketing enthält deine Newsletter-Zielgruppe. Beide nutzen verschiedene API-Schlüssel."
         },
         "payments": {
           "title": "Zahlungen",
