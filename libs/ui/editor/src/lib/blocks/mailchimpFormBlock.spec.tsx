@@ -143,7 +143,11 @@ const renderBlock = (
 
   render(
     <ThemeProvider theme={theme}>
-      <MockedProvider mocks={[...extraMocks, ...mocks]}>
+      <MockedProvider
+        mocks={[...extraMocks, ...mocks]}
+        // answer within the tick waitForQueries waits for
+        mockLinkDefaultOptions={{ delay: 0 }}
+      >
         <EditorValidationProvider runAllRef={runAllRef}>
           <Harness />
         </EditorValidationProvider>
@@ -453,6 +457,20 @@ describe('MailchimpFormBlock', () => {
     expect(getOptions(latest.value)).toMatchObject([
       { name: 'Weekly Culture' },
     ]);
+  });
+
+  it('should show the picked interest once the interests have loaded', async () => {
+    renderWithGroupsInput({
+      options: [{ ...emptyOption, id: 'interest-weekly', name: 'Kultur' }],
+    });
+
+    await waitForQueries();
+
+    expect(
+      screen.getByRole('combobox', {
+        name: 'blocks.mailchimpForm.interestOption',
+      })
+    ).toHaveValue('Weekly Culture');
   });
 
   // The naming rules are covered by `nameForPickedInterest` in

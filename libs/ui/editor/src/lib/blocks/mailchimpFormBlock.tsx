@@ -364,9 +364,10 @@ export function MailchimpFormInterestOptionItem({
               isOptionEqualToValue={(option, selected) =>
                 option.value === selected.value
               }
+              // null keeps it controlled while the interests load
               value={
                 interestOptions.find(option => option.value === value.id) ??
-                undefined
+                (null as unknown as { value: string; label: string })
               }
               onChange={(_event, option) => {
                 const id = option.value;
