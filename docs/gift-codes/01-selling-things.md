@@ -117,9 +117,9 @@ The invoice is the order. There is no separate order table: amount is
    `InvoicePaidNotifier.notify(invoiceId)`.
 3. Fulfil. If the invoice is paid and not canceled, each item with neither
    marker set is passed to `handler.fulfil` and then marked
-   (`fulfilledAt`). A product may already hand out its entitlement in
-   `attach`, as a gift code offer with `issueBeforePayment` does. Its `fulfil`
-   then finds nothing to do, and the line is still marked.
+   (`fulfilledAt`). A product that already handed out its entitlement in
+   `attach` finds nothing to do in `fulfil`, and the line is still marked.
+   Gift codes do not: their code is issued only here.
 4. Revoke. If the invoice is canceled and unpaid, each item without
    `revokedAt` is passed to `handler.revoke` and then marked (`revokedAt`). That
    happens whether or not the item was fulfilled before. The reason is
@@ -173,8 +173,8 @@ await prisma.invoiceItem.updateMany({
 The order matters. If the process dies between the handler and the marker
 (deploy, OOM), the marker is still null, so the next `notify` or the nightly
 resync runs the handler again, and its idempotent write is a no-op. Writing
-the marker first would leave a paid code `ordered`, or an early-issued code
-valid after a chargeback, with nothing left to retry it. The price is
+the marker first would leave a paid code `ordered`, or a code valid after a
+chargeback, with nothing left to retry it. The price is
 at-least-once instead of at-most-once: two concurrent runs can both call the
 handler, which is why the handler contract requires idempotent writes.
 

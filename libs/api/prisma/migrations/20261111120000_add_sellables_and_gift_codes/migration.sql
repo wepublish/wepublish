@@ -24,7 +24,7 @@ CREATE TABLE "gift-codes.offers" (
     "memberPlanId" TEXT NOT NULL,
     "periodicity" "PaymentPeriodicity" NOT NULL,
     "redemptionWindowMonths" INTEGER,
-    "issueBeforePayment" BOOLEAN NOT NULL DEFAULT false,
+    "price" INTEGER NOT NULL,
     "allowDiscountCodes" BOOLEAN NOT NULL DEFAULT false,
     "autoRenew" BOOLEAN NOT NULL DEFAULT false,
     "renewalPaymentMethodId" TEXT,

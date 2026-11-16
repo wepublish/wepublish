@@ -19,7 +19,7 @@ import {
 } from '@wepublish/editor/api';
 import { CanCreateInvoice, CanUpdateGiftCodes } from '@wepublish/permissions';
 import { DataTableProps, getExportColumns } from '@wepublish/ui/editor';
-import { MemoryRouter } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import type { Mock } from 'vitest';
 
 import { GiftCodeList } from './giftCodeList';
@@ -179,9 +179,9 @@ const theme = createTheme({ cssVariables: true });
 const renderList = () =>
   render(
     <ThemeProvider theme={theme}>
-      <MemoryRouter>
-        <GiftCodeList />
-      </MemoryRouter>
+      <RouterProvider
+        router={createMemoryRouter([{ path: '*', element: <GiftCodeList /> }])}
+      />
     </ThemeProvider>
   );
 
@@ -665,6 +665,42 @@ describe('GiftCodeList', () => {
         await within(dialog()).findByText('giftCode.create.countInvalid')
       ).toBeTruthy();
       expect(mutationFor(CreateGiftCodesDocument)).not.toHaveBeenCalled();
+    });
+
+    it('rejects a recipient name longer than 200 characters', async () => {
+      permissions.add(CanUpdateGiftCodes.id);
+      renderList();
+
+      openCreate();
+      fill({ count: '1', recipientName: 'a'.repeat(201) });
+      submit();
+
+      expect(
+        await within(dialog()).findByText(
+          'giftCode.create.recipientNameTooLong'
+        )
+      ).toBeTruthy();
+      expect(mutationFor(CreateGiftCodesDocument)).not.toHaveBeenCalled();
+    });
+
+    it('keeps the form open when the server refuses', async () => {
+      mutationFor(CreateGiftCodesDocument).mockRejectedValue(
+        new Error('Gift code offer not found')
+      );
+      permissions.add(CanUpdateGiftCodes.id);
+      renderList();
+
+      openCreate();
+      fill({ count: '1' });
+      submit();
+
+      expect(
+        await within(dialog()).findByText('form.errors.server')
+      ).toBeTruthy();
+      expect(
+        within(dialog()).getByRole('button', { name: 'giftCode.create.submit' })
+      ).toBeInTheDocument();
+      expect(refetch).not.toHaveBeenCalled();
     });
 
     it('requires an offer', async () => {

@@ -8,21 +8,12 @@ import {
   PickType,
   registerEnumType,
 } from '@nestjs/graphql';
-import { Currency, PaymentPeriodicity } from '@prisma/client';
+import { PaymentPeriodicity } from '@prisma/client';
 import { HasImage } from '@wepublish/image/api';
 import { HasMemberPlanLc } from '@wepublish/member-plan/api';
 import type { RichtextJSONDocument } from '@wepublish/richtext';
 import { GraphQLRichText } from '@wepublish/richtext/api';
 import { PaginatedType, SortOrder } from '@wepublish/utils/api';
-
-@ObjectType()
-export class GiftCodePrice {
-  @Field(() => Int)
-  amount!: number;
-
-  @Field(() => Currency)
-  currency!: Currency;
-}
 
 @ObjectType({
   implements: () => [HasImage, HasMemberPlanLc],
@@ -55,8 +46,11 @@ export class GiftCodeOffer extends HasImage {
   @Field(() => Int, { nullable: true })
   redemptionWindowMonths?: number | null;
 
-  @Field()
-  issueBeforePayment!: boolean;
+  @Field(() => Int, {
+    description:
+      'What the buyer pays, in cents of the member plan currency. The redeemed subscription keeps the plan price.',
+  })
+  price!: number;
 
   @Field()
   allowDiscountCodes!: boolean;
@@ -141,7 +135,7 @@ export class CreateGiftCodeOfferInput extends PickType(
     'memberPlanId',
     'periodicity',
     'redemptionWindowMonths',
-    'issueBeforePayment',
+    'price',
   ] as const,
   ArgsType
 ) {

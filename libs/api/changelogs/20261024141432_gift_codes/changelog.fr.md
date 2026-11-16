@@ -20,13 +20,16 @@ Une fois les codes cadeaux activés :
 - Sous **Cadeaux → Offres cadeaux**, vous définissez ce qui peut être offert :
   un plan d’abonnement avec une durée, un nom, une description, une image et
   le nombre de mois pendant lesquels le code est utilisable (vide signifie
-  sans limite). Le prix est toujours le prix actuel du plan pour cette durée.
+  sans limite).
+- Chaque offre a son propre prix. Le formulaire reprend le prix du plan pour
+  la durée choisie et vous indique si le cadeau est moins cher ou plus cher
+  que l’abonnement. L’abonnement lancé par un code garde le prix normal du
+  plan.
 - Chaque offre a ses propres méthodes de paiement. Stripe, Stripe Checkout,
   Payrexx et Mollie acceptent les paiements de cadeaux, les factures Bexio pas
   encore.
-- Avec **Émettre le code avant le paiement**, l’acheteur·euse reçoit le code
-  juste après la commande. Si le paiement n’arrive pas, le code est annulé
-  après 14 jours.
+- L’acheteur·euse voit son code dès que le paiement est arrivé. Une commande
+  qui reste impayée est annulée après 14 jours.
 - **Autoriser les codes de réduction** permet de saisir un code de réduction
   du plan de l’offre. Un code de 100 % rend le cadeau gratuit, et le code
   cadeau est émis tout de suite.

@@ -1,8 +1,8 @@
 # Data model
 
 All changes are in `libs/api/prisma/schema.prisma`, in one migration
-`add_sellables_and_gift_codes`, with CHECK constraints appended by hand to its
-`migration.sql` (the same approach as `20260526154307_add_vouchers`). The
+`20261111120000_add_sellables_and_gift_codes`, with CHECK constraints appended
+by hand to its `migration.sql` (the same approach as `20260526154307_add_vouchers`). The
 migration only adds tables and nullable columns. It needs no backfill and
 rewrites no large table.
 
@@ -86,7 +86,7 @@ model GiftCodeOffer {
   memberPlan             MemberPlan         @relation(fields: [memberPlanId], references: [id], onDelete: Cascade)
   periodicity            PaymentPeriodicity
   redemptionWindowMonths Int?
-  issueBeforePayment     Boolean            @default(false)
+  price                  Int
   allowDiscountCodes     Boolean            @default(false)
   autoRenew              Boolean            @default(false)
   renewalPaymentMethodId String?
@@ -97,11 +97,13 @@ model GiftCodeOffer {
 }
 ```
 
-There is no price column. The price is the plan's current price for that
-periodicity (`amountTarget ?? amountMin`, see
-[D18](decisions.md#d18-price-is-amounttarget-falling-back-to-amountmin)), so
-editors maintain it in one place. `redemptionWindowMonths` null means the code
-never expires.
+`price` is what the buyer pays, in cents of the plan's currency, and must be
+above 0. It may be lower or higher than the plan's own price for that
+periodicity ([D40](decisions.md#d40-offers-store-their-own-price)). It only changes the purchase: the subscription a code
+starts or pays is still billed at the plan's price
+(`amountTarget ?? amountMin`, see
+[D18](decisions.md#d18-price-is-amounttarget-falling-back-to-amountmin)).
+`redemptionWindowMonths` null means the code never expires.
 
 `memberPlanId` is unique: a member plan has at most one gift offer
 ([D29](decisions.md#d29-one-gift-offer-per-member-plan)). Create and update
@@ -113,11 +115,6 @@ BadRequest ("This member plan already has a gift offer.").
 methods that are active, not retired and run by a provider with
 `supportsStandaloneInvoices` are accepted on create and update, and the
 `paymentMethods` field resolver filters the same way at read time.
-
-`issueBeforePayment` true means the purchase creates the code already issued
-(`issuedAt` now, `expiresAt` from the window), so the buyer can hand it over
-before the invoice is paid. The later payment is a no-op for the code, and an
-unpaid timeout or a chargeback still cancels it.
 
 `allowDiscountCodes` true lets the buyer enter a discount code of the offer's
 member plan at purchase
@@ -268,9 +265,8 @@ eingelöst = `redeemed`, storniert = `canceled`, abgelaufen = `expired`.
 - `issuedAt`, `expiresAt`: `GiftCodeService.issueForInvoiceItem` sets them in
   one transaction, `where {invoiceItemId, issuedAt: null, canceledAt: null}`.
   `issuedAt` is the invoice's `paidAt`. `expiresAt` is `paidAt` plus the
-  window, or null. For an offer with `issueBeforePayment`, the checkout's
-  `attach` writes both when it creates the row (now, and now plus the
-  window), so `issueForInvoiceItem` later matches nothing.
+  window, or null. A purchased code is always created unissued; only the
+  paid invoice issues it ([D39](decisions.md#d39-codes-are-issued-and-shown-only-once-paid)).
 - `canceledAt`, `cancellationReason`: `cancelForInvoiceItem` (chargeback,
   invoice canceled) `where {invoiceItemId, canceledAt: null}`, or `cancel`
   (manual) `where {id, canceledAt: null, redeemedAt: null}`, which also
@@ -316,9 +312,8 @@ on a redeemed code, and the editor list can link every redeemed code to the
 invoice it paid.
 
 - `gift-codes_redeemed_requires_issued_check` makes redeeming a code that was
-  never issued impossible at the database level. A code issued before
-  payment counts as issued, so it can be redeemed while unpaid
-  ([D27](decisions.md#d27-codes-can-be-issued-before-payment-per-offer)).
+  never issued impossible at the database level. A purchased code is issued
+  only once its invoice is paid, so it cannot be redeemed before that.
 - A chargeback of the gift purchase after redemption cancels the code
   (`cancelForInvoiceItem` logs a warning for a redeemed code). The invoice
   it paid stays paid, and the subscription is not deactivated.
@@ -326,5 +321,6 @@ invoice it paid.
 ## Seed
 
 `apps/api-example/prisma/seed.ts` upserts one demo `GiftCodeOffer` with a
-fixed id on the `test-abo-chf` plan, yearly, with a 12-month window, after
+fixed id on the `test-abo-chf` plan, yearly, priced at 120.00 CHF (the
+plan's yearly price), with a 12-month window, after
 `seedMemberPlans`.

@@ -160,9 +160,12 @@ export class GiftCodeResolver {
   @ResolveField(() => String, {
     nullable: true,
     description:
-      'Only visible to admins and to the buyer of an issued, uncanceled code.',
+      'Only visible to admins and to the buyer of an issued, uncanceled code whose purchase is paid.',
   })
-  public code(@Parent() giftCode: PGiftCode, @CurrentUser() session: Caller) {
+  public async code(
+    @Parent() giftCode: PGiftCode,
+    @CurrentUser() session: Caller
+  ) {
     if (isGiftCodeAdmin(session)) {
       return formatGiftCode(giftCode.code);
     }
@@ -170,11 +173,13 @@ export class GiftCodeResolver {
     const userId = userIdOf(session);
     const isBuyer = !!userId && userId === giftCode.buyerId;
 
-    if (isBuyer && giftCode.issuedAt && !giftCode.canceledAt) {
-      return formatGiftCode(giftCode.code);
+    if (!isBuyer || !giftCode.issuedAt || giftCode.canceledAt) {
+      return null;
     }
 
-    return null;
+    const purchase = await this.purchaseOf(giftCode);
+
+    return purchase?.invoices?.paidAt ? formatGiftCode(giftCode.code) : null;
   }
 
   @ResolveField(() => SensitiveDataUser, {

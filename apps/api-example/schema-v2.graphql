@@ -1974,7 +1974,9 @@ type GiftCode implements HasMemberPlanLc {
   canceledAt: DateTime
   cancellationReason: GiftCodeCancellationReason
 
-  """Only visible to admins and to the buyer of an issued, uncanceled code."""
+  """
+  Only visible to admins and to the buyer of an issued, uncanceled code whose purchase is paid.
+  """
   code: String
   createdAt: DateTime!
 
@@ -2044,7 +2046,6 @@ type GiftCodeOffer implements HasImage & HasMemberPlanLc {
   id: String!
   image: Image
   imageID: String
-  issueBeforePayment: Boolean!
   memberPlan: MemberPlan!
   memberPlanId: String!
   modifiedAt: DateTime!
@@ -2056,7 +2057,11 @@ type GiftCodeOffer implements HasImage & HasMemberPlanLc {
   """The payment methods a buyer can use for this offer."""
   paymentMethods: [PaymentMethod!]!
   periodicity: PaymentPeriodicity!
-  price: GiftCodePrice!
+
+  """
+  What the buyer pays, in cents of the member plan currency. The redeemed subscription keeps the plan price.
+  """
+  price: Int!
   redemptionWindowMonths: Int
 
   """The payment method of subscriptions that renew automatically."""
@@ -2074,11 +2079,6 @@ enum GiftCodeOfferSort {
   CreatedAt
   ModifiedAt
   Name
-}
-
-type GiftCodePrice {
-  amount: Int!
-  currency: Currency!
 }
 
 type GiftCodeRedemption {
@@ -4054,7 +4054,24 @@ type Mutation {
   createExternalAppToken(externalAppId: String!): ExternalAppToken!
 
   """Creates a gift code offer."""
-  createGiftCodeOffer(active: Boolean!, allowDiscountCodes: Boolean, autoRenew: Boolean, description: RichText, imageID: String, issueBeforePayment: Boolean!, memberPlanId: String!, name: String!, paymentMethodIds: [String!]!, periodicity: PaymentPeriodicity!, redemptionWindowMonths: Int, renewalPaymentMethodId: String): GiftCodeOffer!
+  createGiftCodeOffer(
+    active: Boolean!
+    allowDiscountCodes: Boolean
+    autoRenew: Boolean
+    description: RichText
+    imageID: String
+    memberPlanId: String!
+    name: String!
+    paymentMethodIds: [String!]!
+    periodicity: PaymentPeriodicity!
+
+    """
+    What the buyer pays, in cents of the member plan currency. The redeemed subscription keeps the plan price.
+    """
+    price: Int!
+    redemptionWindowMonths: Int
+    renewalPaymentMethodId: String
+  ): GiftCodeOffer!
 
   """
   Creates issued gift codes without a purchase, e.g. to hand out at events.
@@ -4554,14 +4571,14 @@ type Mutation {
   recomputeDeliverySuggestions: DeliverySuggestionRecomputeResult!
 
   """
-  Pull late delivery states from the mail provider, then re-evaluate everyone's email quality. The nightly job does the same; this is for looking at a campaign's result now.
-  """
-  refreshEmailQuality: EmailQualityRefreshModel!
-
-  """
   Redeems a gift code for your own subscriptions. It pays the open invoice of a subscription with the same member plan and payment periodicity, pays the next period of such a subscription, or starts a new subscription.
   """
   redeemGiftCode(code: String!): GiftCodeRedemption!
+
+  """
+  Pull late delivery states from the mail provider, then re-evaluate everyone's email quality. The nightly job does the same; this is for looking at a campaign's result now.
+  """
+  refreshEmailQuality: EmailQualityRefreshModel!
 
   """
   Registers (or renews) the audience webhook at Mailchimp, so cleaned and unsubscribed members reach the email quality as they happen.
@@ -4779,7 +4796,25 @@ type Mutation {
   ): ExternalApp!
 
   """Updates a gift code offer."""
-  updateGiftCodeOffer(active: Boolean, allowDiscountCodes: Boolean, autoRenew: Boolean, description: RichText, id: String!, imageID: String, issueBeforePayment: Boolean, memberPlanId: String, name: String, paymentMethodIds: [String!], periodicity: PaymentPeriodicity, redemptionWindowMonths: Int, renewalPaymentMethodId: String): GiftCodeOffer!
+  updateGiftCodeOffer(
+    active: Boolean
+    allowDiscountCodes: Boolean
+    autoRenew: Boolean
+    description: RichText
+    id: String!
+    imageID: String
+    memberPlanId: String
+    name: String
+    paymentMethodIds: [String!]
+    periodicity: PaymentPeriodicity
+
+    """
+    What the buyer pays, in cents of the member plan currency. The redeemed subscription keeps the plan price.
+    """
+    price: Int
+    redemptionWindowMonths: Int
+    renewalPaymentMethodId: String
+  ): GiftCodeOffer!
 
   """Updates an existing goodie."""
   updateGoodie(

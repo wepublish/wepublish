@@ -32,16 +32,16 @@ and its existing invoice permission.
 | --- | --- | --- |
 | `giftCodeOffers(filter, sort, order, cursorId, take, skip): PaginatedGiftCodeOffers` | `@Permissions(CanGetGiftCodes, CanUpdateGiftCodes, CanDeleteGiftCodes)` (any of them) | Filter `{memberPlanId, active, name}`, sort `CreatedAt`, `ModifiedAt` (default), `Name` |
 | `giftCodeOffer(id): GiftCodeOffer` | `@Permissions(CanGetGiftCodes, CanUpdateGiftCodes, CanDeleteGiftCodes)` | NotFound when missing |
-| `createGiftCodeOffer(...)` | `@Permissions(CanUpdateGiftCodes)` | Flat args, goodie style. `issueBeforePayment` is a required argument here; `allowDiscountCodes` is optional and defaults to false. |
+| `createGiftCodeOffer(...)` | `@Permissions(CanUpdateGiftCodes)` | Flat args, goodie style. `price` (cents) is required here; `allowDiscountCodes` is optional and defaults to false. |
 | `updateGiftCodeOffer(id, ...)` | `@Permissions(CanUpdateGiftCodes)` | |
 | `deleteGiftCodeOffer(id)` | `@Permissions(CanDeleteGiftCodes)` | BadRequest "This offer has gift codes. Deactivate it instead." |
 
 `GiftCodeOffer` implements `HasImage` and `HasMemberPlanLc`. Fields: `id`,
 `createdAt`, `modifiedAt`, `name`, `description` (rich text), `active`,
-`memberPlanId`, `periodicity`, `redemptionWindowMonths`, `issueBeforePayment`,
+`memberPlanId`, `periodicity`, `redemptionWindowMonths`, `price` (`Int`, cents
+of the plan's currency, [D40](decisions.md#d40-offers-store-their-own-price)),
 `allowDiscountCodes`, `autoRenew`, `renewalPaymentMethodId`, `imageID`, plus
-four field resolvers: `price: GiftCodePrice {amount,
-currency}`, `paymentMethods: [PaymentMethod]` (the offer's methods filtered
+three field resolvers: `paymentMethods: [PaymentMethod]` (the offer's methods filtered
 through `getStandalonePaymentMethods`), `paymentMethodIds: [String]` (as
 configured, for the editor form) and `renewalPaymentMethod: PaymentMethod`
 (through `PaymentMethodDataloader`, null without renewal). The offer reads accept any of the three
@@ -50,8 +50,9 @@ reachable with any of them. Every field is safe to show the public,
 because a separate gift block will show offers on the website later.
 
 Create and update take `paymentMethodIds: [String!]!` (set semantics on
-update) and reject (BadRequest): a plan that already has another offer, a
-plan that does not exist, a periodicity
+update) and reject (BadRequest): a `price` of 0 or less ("The price must be
+greater than 0"; a price below or above the plan's price is fine), a plan
+that already has another offer, a plan that does not exist, a periodicity
 without a price above 0 on the plan, a periodicity the plan does not sell
 ("The member plan is not sold with this periodicity": none of its
 `availablePaymentMethods` rows lists it, see
@@ -73,7 +74,7 @@ renewal method. Writes do not invalidate the public content cache:
 no cached public response contains an offer, because the offer queries need
 a permission and `myGiftCodes` needs a login. The gift block that shows
 offers on the website will have to add that invalidation. The invoice always
-uses the price at submit time.
+uses the offer's price at submit time.
 
 ## Codes (`gift-code.resolver.ts`)
 
@@ -83,7 +84,7 @@ uses the price at submit time.
 | `giftCode(id): GiftCode` | `@Permissions(CanGetGiftCodes)` | |
 | `myGiftCodes: [GiftCode]` | `@Authenticated`, no `@Feature` | `buyerId = session.user.id`, newest first; `[]` while the feature is off |
 | `purchaseGiftCode(...): Payment` | `@Authenticated` | See below |
-| `payGiftCode(...): Payment` | `@Authenticated` | Pay an open order: an `ordered` code, or one issued before payment |
+| `payGiftCode(...): Payment` | `@Authenticated` | Pay an open order (an `ordered` code) |
 | `cancelGiftCode(id): GiftCode` | `@Permissions(CanUpdateGiftCodes)` | BadRequest "Gift code cannot be canceled" when already canceled or redeemed |
 | `createGiftCodes(offerId, count, recipientName): [GiftCode]` | `@Permissions(CanUpdateGiftCodes)` | See below |
 | `redeemGiftCode(code): GiftCodeRedemption` | `@Authenticated` | In `gift-code-redemption.resolver.ts`. See below |
@@ -93,9 +94,8 @@ uses the price at submit time.
 ("Only users can do this.").
 
 `paid: true` lists codes whose purchase invoice has `paidAt`, `paid: false`
-the ones without it (ordered codes and codes issued before payment). It is
-AND-composed with the other filters, so `{status: issued, paid: false}` lists
-the early-issued codes that are still unpaid. Codes an admin created have no
+the ones without it (ordered codes, and canceled codes whose invoice was
+never paid). It is AND-composed with the other filters. Codes an admin created have no
 invoice and match neither `paid: true` nor `paid: false`.
 
 `source: purchase` lists codes with an `invoiceItemId`, `source: admin` the
@@ -118,8 +118,7 @@ invoice's `paidAt` is set), `amount`, `currency`, `invoiceId`, `offer`,
 `redeemedInvoice` is the subscription `Invoice` the code paid, loaded by
 `GiftCodeInvoiceDataloader`, with the same inline check. There is no
 `buyerMail`; the address is `buyer.email`. There is no personal message
-either; Karl removed it. `paid` is what lets the editor tell an early-issued code
-(`issued`, unpaid) from a paid one.
+either; Karl removed it.
 
 ### purchaseGiftCode
 
@@ -131,15 +130,15 @@ Args: `offerId!`, `recipientName!` (trimmed, 1 to 200 characters),
 
 1. Rejects a missing or doubled method selector, with the same message as
    `createPaymentFromInvoice`, and a recipient name out of bounds.
-2. Loads the offer with the plan's pricing. BadRequest "Gift code offer is
+2. Loads the offer with its plan. BadRequest "Gift code offer is
    not available" unless both offer and plan are active. A discount code on
    an offer without `allowDiscountCodes` is rejected with "Discount codes
    cannot be used for this gift."
 3. Looks the method up among the active ones by id or slug. It must be one of
    the offer's methods after the `getStandalonePaymentMethods` filter,
    otherwise "Payment method cannot be used for this purchase".
-4. Takes the price from `GiftCodeOfferService.getPrice`; it must be above 0,
-   otherwise "Gift code offer has no price".
+4. Takes the offer's own `price` and the plan's currency. The plan's price
+   plays no part in the purchase ([D40](decisions.md#d40-offers-store-their-own-price)).
 5. With a discount code, looks it up like the subscription checkout does:
    lower-cased, for the offer's member plan
    (`@@unique([code, memberPlanId])`), between `validFrom` and `validTo`.
@@ -152,9 +151,8 @@ Args: `offerId!`, `recipientName!` (trimmed, 1 to 200 characters),
    line (`quantity: 1`, `amount` = price minus discount, `discountCodeId` when a
    code was used, description "plan name (periodicity)").
    Its `attach` creates the `GiftCode` with a generated code, the snapshot
-   fields, `buyerId` and the recipient name. When the offer has
-   `issueBeforePayment`, the code is created issued (`issuedAt` now,
-   `expiresAt` from the window).
+   fields, `buyerId` and the recipient name. The code is created unissued;
+   only the paid invoice issues it ([D39](decisions.md#d39-codes-are-issued-and-shown-only-once-paid)).
 7. Returns the `Payment`. A website hands it to the shared payment handling
    (redirect, Stripe Elements, or paid at once), as it does for a
    subscription. A free gift comes back as a `paid` payment with an empty
@@ -175,7 +173,7 @@ same rules.
 Args: `id!`, one method selector, `successURL`, `failureURL`. Loads the code
 `where {id, buyerId: userId}` (NotFound otherwise) and requires a code that is
 neither canceled nor redeemed and an invoice that is neither paid nor
-canceled, so an early-issued unpaid code can be paid too. Otherwise
+canceled. Otherwise
 BadRequest "Gift code cannot be paid". It checks the method against the
 offer's methods like `purchaseGiftCode`, then calls
 `PaymentsService.createStandaloneInvoicePayment` directly
@@ -265,8 +263,11 @@ code from a reader; it replaced `payInvoiceWithGiftCode`
    loads the plan with its prices and `availablePaymentMethods` and refuses
    when the plan is gone or inactive, when the code renews automatically but
    the plan is no longer extendable, when the user already has `maxCount`
-   subscriptions of the plan, or when the price for the periodicity
-   (`amountTarget ?? amountMin`, as for offers) is 0. The payment method:
+   subscriptions of the plan, or when the plan's price for the periodicity
+   (`amountTarget ?? amountMin`) is 0. The offer's price is not used: a code
+   bought below or above the plan's price still starts a subscription at the
+   plan's price, whose full-price first invoice the code pays
+   ([D40](decisions.md#d40-offers-store-their-own-price)). The payment method:
    - `autoRenew` true: the code's `renewalPaymentMethodId`, which the plan
      must still offer for the periodicity.
    - `autoRenew` false: the first method in `availablePaymentMethods` order
@@ -324,9 +325,11 @@ does:
 
 - `GiftCode.code` returns `formatGiftCode(code)` when the caller has
   `CanGetGiftCodes` (through `permissionsOf`, so an API token with that
-  permission counts), or is the buyer and the code is issued and not
-  canceled. Everyone else gets null, including the buyer of an `ordered`
-  code. A code issued before payment is visible to its buyer while unpaid.
+  permission counts), or is the buyer, the code is issued and not canceled,
+  and the purchase invoice itself has `paidAt` (read through
+  `GiftCodePurchaseDataloader`, not inferred from `issuedAt`). Everyone else
+  gets null, including the buyer of an `ordered` or unpaid code
+  ([D39](decisions.md#d39-codes-are-issued-and-shown-only-once-paid)).
 - `GiftCode.buyer`, `GiftCode.redeemedBy` and `GiftCode.createdBy` are typed
   `SensitiveDataUser`, so they carry `email`, and return the user only for
   callers with `CanGetGiftCodes`.

@@ -22,10 +22,10 @@ UI passes the `*Document` constants to Apollo's `useQuery` and `useMutation`
 
 ## Editor
 
-The pages copy `routes/goodie/` and `routes/discountCode/`: MUI,
-react-hook-form with zod, `FormProvider`, async `defaultValues`, Controllers
-with `helperText`, `useWatch` instead of `watch()`, no `useSeededState`. The
-routes are gated in `app.tsx` with `createCheckedFeatureComponent('gift-codes')`,
+The offer form and the create-codes dialog use the form library
+`@wepublish/form/editor` (`libs/form/README.md`): a zod/v4 schema with i18n
+keys in `.meta()`, a form view, `useCreateForm` / `useEditForm` and
+`FormPage`. The routes are gated in `app.tsx` with `createCheckedFeatureComponent('gift-codes')`,
 the same way as the newsletter routes.
 
 ### Routes (`apps/editor/src/app/routes/giftCode/`)
@@ -49,17 +49,23 @@ with `feature: 'gift-codes'`. `commands.spec.ts` compares the command registry
 against `app.tsx`, so a route without a command fails the spec, and
 `pageTitles.spec.ts` does the same for page titles.
 
-### Offer form (`giftCodeOfferForm.tsx`)
+### Offer form (`@wepublish/form/editor`)
 
-`createGiftCodeOfferSchema(t)` is a translated zod schema. Fields:
+The offer form is a form view of the form library (`libs/form/README.md`):
+`giftCodeOffer.schema.ts` (zod/v4 schema, `fromGiftCodeOffer`,
+`toGiftCodeOfferVariables`), `giftCodeOffer.view.ts` (sections and paths) and
+`useCreateForm` / `useEditForm` + `FormPage` in the two route views. The
+"Offer" section holds name, description and image; the "Sale" aside holds
+active and then `giftCodeOfferSaleFields.tsx`, a section component that loads
+the plan and the payment methods and renders the remaining fields with
+runtime options, `onValueChange` cascades and dynamic `disabled` / `hidden`.
+Fields:
 
-- name (required), description (rich text, for the buyer once the website
-  shows offers) and image, with the `ChooseEditImage` / `ImageSelectPanel` /
-  `ImageEditPanel` drawers from the goodie form
+- name (required), description (`formFields.richText()`, for the buyer once
+  the website shows offers) and image (`formFields.image()`)
 - active, a checkbox above every other sales setting
-- member plan (`SelectMemberPlan`, single). The atom gained optional
-  `label`, `helperText` and `error` props so the combobox has an accessible
-  name; existing callers are unchanged.
+- member plan (`formFields.memberPlan()`, the library's `SelectMemberPlan`
+  wrapper)
 - periodicity: a select of the periodicities the chosen plan sells (the
   periodicities in its `availablePaymentMethods`, in enum order) whose price
   is above 0. The price comes from `getPeriodPriceRange` in
@@ -70,13 +76,11 @@ against `app.tsx`, so a route without a command fails the spec, and
   plan with `MemberPlanDocument` and follows `memberPlanId` through
   `useWatch`. An offer whose stored periodicity is no longer sold still shows
   it, without a price.
-- payment methods: an inline `Autocomplete` multi-select over every payment
-  method, at least one required. The API rejects methods whose provider
-  cannot take standalone payments; the error shows as a snackbar.
+- payment methods: `MultiSelectField` over every payment method, at least
+  one required. The API rejects methods whose provider cannot take
+  standalone payments; the error shows as a toast plus the form's inline
+  server-error alert.
 - redemption window in months: a number, minimum 1; empty means unlimited
-- issue before payment: a checkbox whose helper text says the buyer gets the
-  code before the money arrives, and that the code is canceled if the payment
-  never comes.
 - allow discount codes: a checkbox below it, off by default. Its helper text
   says the buyer can enter a discount code of this member plan. A 100 % code
   makes the gift free; such an order is paid at once without a provider
@@ -88,17 +92,27 @@ against `app.tsx`, so a route without a command fails the spec, and
   required. Unticking it, or changing the plan, clears the method; changing
   the duration clears it only when the new duration does not offer it.
 
-Below the periodicity a read-only line shows the current price
-(`amountTarget ?? amountMin` of that range, like `GiftCodeOfferService.getPrice`).
-Changing the plan clears the periodicity. The create view navigates to the
-edit view after saving; the edit view loads with
-`client.query(GiftCodeOfferDocument)` as async defaults and resets the form
-with the saved data.
+Below the periodicity sits the price, a `CurrencyField` in the plan's
+currency (amount with two decimals, stored as cents). Choosing a duration
+fills in the plan's price for it (`amountTarget ?? amountMin` of that range)
+while the field is empty or still holds the previous duration's plan price;
+a price the editor typed stays. Its helper text compares it with the plan
+price without blocking the save: "Same price as subscribing", "Cheaper than
+subscribing (plan price X)" or "More expensive than subscribing (plan price
+X)". The plan price is derived in the browser from the plan the form already
+loads; the API has no field for it ([D40](decisions.md#d40-offers-store-their-own-price)). A price of 0 is refused.
+Changing the plan clears the periodicity, and the price too while it still
+was the plan price. The renewal rule ("renew
+automatically" needs a method) is a `crossField` on the schema. Save goes to
+the edit view, Save & close to `/gift-codes/offers`; the edit view loads with
+`useQueryLoader(GiftCodeOfferDocument)`, keyed by the offer id. Server errors
+(such as a second offer for the same plan) show as a toast and an inline
+alert, and the form stays dirty.
 
 ### Offer list
 
 Columns: active, name, member plan, duration, price, redemption window
-("Unlimited" when null), code before payment, discount codes, payment
+("Unlimited" when null), discount codes, payment
 methods, last modified. Delete is shown only with `CanDeleteGiftCodes`.
 The API refuses to delete an offer that has codes; the error goes to
 `enqueueSnackbar(humanizeError(...))`.
@@ -143,12 +157,15 @@ so its content does not switch while it fades out.
   `InvoiceListPanel` is not reused because it needs a subscription id.
 
 Creating codes: with `CanUpdateGiftCodes` the header shows "Create codes",
-which opens `giftCodeCreateDialog.tsx`. The dialog is a react-hook-form with a
-zod schema: offer (every offer, inactive ones marked), number of codes (1 to
-500) and an optional recipient name. It sends `recipientName: null` when the
-field is empty or blank. On success it lists the created codes with a "Copy
-codes" button (one code per line to the clipboard) and the list refetches.
-Server errors go to a snackbar.
+which opens `giftCodeCreateDialog.tsx`. The dialog's form uses
+`editorForm` from `@wepublish/form/editor` directly (a dialog is neither a
+page nor a drawer form view), with `giftCodeCreate.schema.ts`: offer (every
+offer, inactive ones marked), number of codes (1 to 500) and an optional
+recipient name (at most 200 characters). It sends `recipientName: null` when
+the field is empty or blank. On success it lists the created codes with a
+"Copy codes" button (one code per line to the clipboard) and the list
+refetches. Server errors show as a toast and an inline alert; the form stays
+open.
 
 There is no standalone invoice list; gift invoices are reached from the code
 list. The spec's "PDF herunterladen" and "E-Mail erneut senden" actions come
@@ -193,7 +210,7 @@ step:
   a code is issued, and `[]` while the feature is off. A list that calls
   `checkInvoiceStatus(invoiceId)` for unpaid codes (`ordered`, or `issued`
   with `paid` false) picks up a payment whose webhook has not arrived yet.
-- `GiftCodeOffer.price` and `paymentMethods` (already filtered to usable
+- `GiftCodeOffer.price` (cents, in `memberPlan.currency`) and `paymentMethods` (already filtered to usable
   methods) are what an offer card and a payment method picker need. A
   discount code can be checked before submit with `createSubscriptionInfo`,
   which rounds like `purchaseGiftCode`.
