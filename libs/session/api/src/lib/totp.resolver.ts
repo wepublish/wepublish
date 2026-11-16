@@ -5,6 +5,7 @@ import {
   Authenticated,
   CurrentUser,
   UserSession,
+  assertNotImpersonating,
 } from '@wepublish/authentication/api';
 import { Permissions } from '@wepublish/permissions/api';
 import { CanResetUserTotp } from '@wepublish/permissions';
@@ -26,8 +27,12 @@ export class TotpResolver {
         'Set to true when called from a website to use the site name instead of "We.Publish CMS" in the authenticator app.',
     })
     website: boolean | undefined,
-    @CurrentUser() { user }: UserSession
+    @CurrentUser() session: UserSession
   ) {
+    assertNotImpersonating(session);
+
+    const { user } = session;
+
     return this.totpService.setupTotp(user.id, user.email, website ?? false);
   }
 
@@ -38,9 +43,11 @@ export class TotpResolver {
   })
   async enableTotp(
     @Args('totpToken') totpToken: string,
-    @CurrentUser() { user }: UserSession
+    @CurrentUser() session: UserSession
   ) {
-    return this.totpService.enableTotp(user.id, totpToken);
+    assertNotImpersonating(session);
+
+    return this.totpService.enableTotp(session.user.id, totpToken);
   }
 
   @Permissions(CanResetUserTotp)

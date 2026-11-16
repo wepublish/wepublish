@@ -100,6 +100,15 @@ oversized bodies) so they do not reach Sentry.
 `api: { bodyParser: false }` in `config`); TanStack tenants use `feedHandler`
 from `@wepublish/utils/website/tanstack`. Both answer a failed feed query with
 an uncached 502 and report the error to Sentry instead of throwing.
+Every `apps/<app>/src/feed.ts` loads its items with `queryFeed`
+(`FeedArticleList`, `libs/website/api/src/lib/schemas/feed.graphql`), never
+`ArticleList`: the feed items carry the article body — rich text, subtitles,
+quotes and images with captions, flex blocks inlined — as `content:encoded` /
+Atom `content` / `content_html`. Free articles go out in full, peered articles
+with their lead only; for an active paywall the medium's `feedPaywalledContent`
+setting (editor Settings → Feeds: `lead` (default), `visible` =
+`paywall.hideContentAfter` blocks, `full`) decides. The Schweizer
+Mediendatenbank ingests online sources from these feeds.
 
 ### Business Domain Libraries
 

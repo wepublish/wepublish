@@ -1,11 +1,6 @@
-import { generateFeed } from '@wepublish/feed/website';
+import { generateFeed, queryFeed } from '@wepublish/feed/website';
 import { createSsrClient } from '@wepublish/utils/website/tanstack/server';
-import {
-  ArticleListDocument,
-  ArticleListQueryVariables,
-  ArticleSort,
-  SortOrder,
-} from '@wepublish/website/api';
+import { ArticleSort, SortOrder } from '@wepublish/website/api';
 
 /**
  * Port of `apps/wnti/src/feed.ts`. Took a `NextApiRequest`; now takes the
@@ -32,14 +27,11 @@ export const getFeed = async (requestUrl: string, siteUrl: string) => {
 
   const client = createSsrClient();
 
-  const { data } = await client.query({
-    query: ArticleListDocument,
-    variables: {
-      take: 50,
-      sort: ArticleSort.PublishedAt,
-      order: SortOrder.Descending,
-    } as ArticleListQueryVariables,
+  const { articles, options } = await queryFeed(client, {
+    take: 50,
+    sort: ArticleSort.PublishedAt,
+    order: SortOrder.Descending,
   });
 
-  return generate(data?.articles.nodes ?? []);
+  return generate(articles, options);
 };

@@ -1171,6 +1171,7 @@ model Session {
   impersonatedBy      String?
   impersonationReason String?
   impersonatedAt      DateTime? @db.Timestamptz(3)
+  canImpersonate      Boolean   @default(false)
 
   userID String
   user   User   @relation(fields: [userID], references: [id], onDelete: Cascade)
@@ -1394,6 +1395,7 @@ model User {
   totpSecret      String?
   totpEnabled     Boolean   @default(false)
   totpExempt      Boolean   @default(false)
+  wepublishLoginSubject String? @unique
   userImageID     String?
   userImage       Image?    @relation(fields: [userImageID], references: [id])
   note            String?

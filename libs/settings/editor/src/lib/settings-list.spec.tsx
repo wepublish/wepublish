@@ -1,6 +1,6 @@
 import { MockedProvider as MockedProviderBase } from '@apollo/client/testing/react';
 import '@testing-library/jest-dom/vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import {
   FeaturesDocument,
   PaywallListDocument,
@@ -168,7 +168,11 @@ describe('SettingList', () => {
     expect(group('settingList.guestCommenting')).toBe(
       group('settingList.allowCommentEditing')
     );
-    expect(baseElement.querySelectorAll('.MuiFormGroup-root').length).toBe(2);
+    expect(
+      Array.from(baseElement.querySelectorAll('.MuiFormGroup-root')).filter(
+        group => group.querySelector('input[type="checkbox"]')
+      )
+    ).toHaveLength(2);
   });
 
   test('gives the print settings their own section while the print export is on', async () => {
@@ -358,6 +362,94 @@ describe('SettingList', () => {
         })
         .closest('label')
     ).toBeNull();
+  });
+
+  describe('what feeds carry for paywalled articles', () => {
+    const feedSettingsMock = {
+      request: {
+        query: SettingsListDocument,
+      },
+      result: () => ({
+        data: {
+          settings: [
+            ...[
+              [SettingName.SendLoginJwtExpiresMin, 60],
+              [SettingName.ResetPasswordJwtExpiresMin, 60],
+              [SettingName.PeeringTimeoutMs, 3000],
+            ].map(([name, value], index) => ({
+              __typename: 'Setting',
+              id: `valid-${index}`,
+              name,
+              value,
+              settingRestriction: null,
+            })),
+            {
+              __typename: 'Setting',
+              id: '4',
+              name: SettingName.FeedPaywalledContent,
+              value: 'visible',
+              settingRestriction: {
+                allowedValues: { stringChoice: ['lead', 'visible', 'full'] },
+              },
+            },
+          ],
+        } as SettingsListQuery,
+      }),
+    };
+
+    const renderFeedSettings = () =>
+      render(
+        <ThemeProvider theme={theme}>
+          <AuthContext.Provider value={sessionWithPermissions}>
+            <MockedProvider
+              mocks={[feedSettingsMock, paywallListMock]}
+              addTypename={false}
+            >
+              <RouterProvider
+                router={createMemoryRouter([
+                  { path: '*', element: <SettingList /> },
+                ])}
+              />
+            </MockedProvider>
+          </AuthContext.Provider>
+        </ThemeProvider>
+      );
+
+    test('shows the stored choice in its own card', async () => {
+      renderFeedSettings();
+
+      expect(
+        await screen.findByRole('radio', {
+          name: 'settingList.feedPaywalledContentChoice.visible',
+        })
+      ).toBeChecked();
+      expect(screen.getByText('settingList.feeds')).toBeInTheDocument();
+      expect(
+        screen.getByRole('radiogroup', {
+          name: 'settingList.feedPaywalledContent',
+        })
+      ).toBeInTheDocument();
+    });
+
+    test('names the choices in the confirmation', async () => {
+      renderFeedSettings();
+
+      fireEvent.click(
+        await screen.findByRole('radio', {
+          name: 'settingList.feedPaywalledContentChoice.full',
+        })
+      );
+      fireEvent.click(screen.getByRole('button', { name: /save/i }));
+
+      const dialog = await screen.findByRole('dialog');
+
+      expect(dialog).toHaveTextContent(
+        'settingList.feedPaywalledContentChoice.visible'
+      );
+      expect(dialog).toHaveTextContent(
+        'settingList.feedPaywalledContentChoice.full'
+      );
+    });
   });
 
   test('renders the setting list view with settings', async () => {

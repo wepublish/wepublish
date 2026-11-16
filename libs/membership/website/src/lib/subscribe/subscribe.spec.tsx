@@ -196,6 +196,7 @@ const solvedChallenge = loaded({
 type RenderOptions = {
   loggedIn?: boolean;
   builder?: Parameters<typeof renderWithProviders>[1]['builder'];
+  locale?: 'de' | 'fr';
 };
 
 const subscribeProps = (loggedIn: boolean) => {
@@ -229,7 +230,7 @@ const subscribeProps = (loggedIn: boolean) => {
 
 const renderSubscribe = (
   props: Partial<Props> = {},
-  { loggedIn = false, builder }: RenderOptions = {}
+  { loggedIn = false, builder, locale }: RenderOptions = {}
 ) => {
   const { handlers, props: baseProps } = subscribeProps(loggedIn);
 
@@ -238,7 +239,7 @@ const renderSubscribe = (
       {...baseProps}
       {...props}
     />,
-    { user: loggedIn ? mockSensitiveDataUser() : null, builder }
+    { user: loggedIn ? mockSensitiveDataUser() : null, builder, locale }
   );
 
   return { ...handlers, user: userEvent.setup() };
@@ -556,6 +557,22 @@ describe('Subscribe', () => {
 
       expect(
         await screen.findByText('Passwörter stimmen nicht überein.')
+      ).toBeInTheDocument();
+      expect(onSubscribeWithRegister).not.toHaveBeenCalled();
+    });
+
+    it('rejects passwords that do not match in French on a French site', async () => {
+      const { user, onSubscribeWithRegister } = renderSubscribe(
+        { fields: ['password', 'passwordRepeated'] },
+        { locale: 'fr' }
+      );
+
+      await fillNameAndEmail(user);
+      await fillPassword(user, 'supersecret123', 'supersecret124');
+      await submitWhenCaptchaSolved(user);
+
+      expect(
+        await screen.findByText('Les mots de passe ne correspondent pas.')
       ).toBeInTheDocument();
       expect(onSubscribeWithRegister).not.toHaveBeenCalled();
     });

@@ -4,7 +4,6 @@ import {
   MAX_IMPERSONATION_MINUTES,
   assertDuration,
   assertReason,
-  isImpersonationEnabled,
 } from './impersonation';
 
 describe('assertDuration', () => {
@@ -43,38 +42,5 @@ describe('assertReason', () => {
 
   it('caps an overlong reason', () => {
     expect(assertReason('a'.repeat(900))).toHaveLength(500);
-  });
-});
-
-describe('isImpersonationEnabled', () => {
-  it('is on when unset — a medium opts out, not in', () => {
-    expect(isImpersonationEnabled({})).toBe(true);
-  });
-
-  it('is off only when a medium says so', () => {
-    expect(isImpersonationEnabled({ WEP_ONE_IMPERSONATION: 'false' })).toBe(
-      false
-    );
-    expect(isImpersonationEnabled({ WEP_ONE_IMPERSONATION: '0' })).toBe(false);
-    expect(isImpersonationEnabled({ WEP_ONE_IMPERSONATION: 'off' })).toBe(
-      false
-    );
-  });
-
-  it('accepts the off values regardless of casing and padding', () => {
-    expect(isImpersonationEnabled({ WEP_ONE_IMPERSONATION: 'FALSE' })).toBe(
-      false
-    );
-    expect(isImpersonationEnabled({ WEP_ONE_IMPERSONATION: '  false  ' })).toBe(
-      false
-    );
-  });
-
-  it('stays on for anything that does not mean off', () => {
-    for (const value of ['true', 'TRUE', '1', 'yes', '', 'nonsense']) {
-      expect(isImpersonationEnabled({ WEP_ONE_IMPERSONATION: value })).toBe(
-        true
-      );
-    }
   });
 });
