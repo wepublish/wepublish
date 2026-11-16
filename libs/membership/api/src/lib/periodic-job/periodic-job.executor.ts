@@ -5,8 +5,10 @@ import { DistributedClaims } from '@wepublish/dragonfly/api';
 import { NIGHT_CLAIM_MS, PeriodicJobService } from './periodic-job.service';
 import { MailchimpSyncService } from '../mailchimp-sync/mailchimp-sync.service';
 import { MailLogSyncService } from '../mail-send/mail-log-sync.service';
+import { SuppressionSyncService } from '../mail-send/suppression-sync.service';
 import { EmailQualityService } from '../email-quality/email-quality.service';
 import { DeliverySuggestionService } from '../delivery-mode/delivery-suggestion.service';
+import { BexioContactSyncService } from '@wepublish/payment/api';
 
 const SCHEDULE =
   process.env['PERIODIC_JOB_EXECUTION_SCHEDULE'] || '0 0 3 * * *';
@@ -74,6 +76,10 @@ export class PeriodicJobExecutor {
       this.logger.error('Periodic jobs failed:', error);
     }
 
+    // Reader data changed today reaches bexio tonight, for media that want it.
+    await this.runStep('Bexio contact sync', BexioContactSyncService, service =>
+      service.syncAll()
+    );
     await this.runStep('Mailchimp sync', MailchimpSyncService, service =>
       service.executeAllSync()
     );
@@ -82,6 +88,10 @@ export class PeriodicJobExecutor {
     // bounce should count tonight, not tomorrow.
     await this.runStep('Mail log sync', MailLogSyncService, service =>
       service.syncOpenStates(NIGHTLY_MAIL_LOG_SYNC_LIMIT)
+    );
+    // The addresses the provider refuses for any mail, ours or not.
+    await this.runStep('Suppression sync', SuppressionSyncService, service =>
+      service.syncSuppressions()
     );
     await this.runStep('Email quality', EmailQualityService, service =>
       service.recomputeAll()

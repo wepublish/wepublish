@@ -12,6 +12,7 @@ import { forceHideBanner } from '@wepublish/banner/website';
 import { useIntersectionObserver } from 'usehooks-ts';
 
 import { courantTokens } from '../brand-tokens';
+import { AminimaLogo } from './aminima-logo';
 import { CourantLogo } from './courant-logo';
 
 const { footer, pageMaxWidth, pageInline } = courantTokens.layout;
@@ -88,11 +89,16 @@ const CourantFooterTagline = styled('p')`
 const CourantCategoriesGrid = styled('div')`
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: ${({ theme }) => theme.spacing(3)};
+  row-gap: ${({ theme }) => theme.spacing(8)};
+  column-gap: ${({ theme }) => theme.spacing(8)};
   min-width: 0;
 
   ${({ theme }) => theme.breakpoints.up('sm')} {
     grid-template-columns: repeat(auto-fill, minmax(0, 25ch));
+  }
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    column-gap: ${({ theme }) => theme.spacing(3)};
   }
 `;
 
@@ -153,9 +159,9 @@ const CourantFooterIcons = styled('div')`
   margin-inline: auto;
   display: flex;
   flex-flow: row wrap;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
-  gap: ${({ theme }) => theme.spacing(3)};
+  gap: ${({ theme }) => theme.spacing(12)};
   ${({ theme }) => theme.breakpoints.up('sm')} {
     justify-content: flex-end;
   }
@@ -241,6 +247,15 @@ export const CourantFooter = ({
                 />
               </Link>
             ))}
+
+            <Link
+              href="https://aminima.ch?ref=courant"
+              target="_blank"
+              rel="noopener"
+              color="inherit"
+            >
+              <AminimaLogo height={38} />
+            </Link>
 
             {wepublishLogo === 'light' && (
               <Link href="https://wepublish.ch/de/das-projekt/#cms">

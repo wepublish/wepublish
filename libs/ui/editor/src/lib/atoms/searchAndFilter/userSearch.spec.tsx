@@ -1,13 +1,13 @@
 import '@testing-library/jest-dom/vitest';
 
 import { useQuery } from '@apollo/client/react';
-import { createTheme, ThemeProvider } from '@mui/material';
-import { FullUserFragment } from '@wepublish/editor/api';
+import { createTheme, TextField, ThemeProvider } from '@mui/material';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { FullUserFragment } from '@wepublish/editor/api';
 import { ReactNode } from 'react';
 import type { Mock } from 'vitest';
 
-import { UserSearch } from './userSearch';
+import { type UserSearchValue, UserSearch } from './userSearch';
 
 vi.mock('@apollo/client/react', async importOriginal => ({
   ...(await importOriginal<typeof import('@apollo/client/react')>()),
@@ -168,6 +168,46 @@ describe('UserSearch', () => {
     );
 
     expect(clearIcon()).toBeInTheDocument();
+  });
+
+  it('shows a user that carries only its names', () => {
+    renderSearch(
+      <UserSearch<UserSearchValue>
+        name="user"
+        user={{ id: 'user-2', name: 'Keller', firstName: 'Anna' }}
+        onUpdateUser={vi.fn()}
+      />
+    );
+
+    expect(screen.getByRole('combobox')).toHaveValue('Anna Keller ');
+  });
+
+  it('keeps its own spacing only while it renders its own input', () => {
+    const { container, unmount } = renderSearch(
+      <UserSearch
+        name="user"
+        onUpdateUser={vi.fn()}
+      />
+    );
+    const spacing = () =>
+      getComputedStyle(container.firstElementChild as HTMLElement).marginBottom;
+
+    expect(spacing()).not.toBe('');
+
+    unmount();
+
+    const form = renderSearch(
+      <UserSearch
+        name="user"
+        onUpdateUser={vi.fn()}
+        renderInput={params => <TextField {...params} />}
+      />
+    );
+
+    expect(
+      getComputedStyle(form.container.firstElementChild as HTMLElement)
+        .marginBottom
+    ).toBe('');
   });
 
   it('keeps the user where the form cannot do without one', () => {

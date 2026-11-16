@@ -26,6 +26,7 @@ import {
   TransformationsDto,
 } from '@wepublish/media-transform-guard';
 import { JwksClientService } from '../authentication/jwks-client.service';
+import { LinkCache, TRANSFORMED_IMAGE_TTL } from '../link-cache/link-cache';
 import {
   getDocumentCategory,
   getMimeTypeForExtension,
@@ -111,7 +112,8 @@ export class MediaService {
   constructor(
     @InjectDisk(UPLOAD_DISK) private uploads: StorageDisk,
     @InjectDisk(TRANSFORMATION_DISK) private transformations: StorageDisk,
-    private jwksClient: JwksClientService
+    private jwksClient: JwksClientService,
+    private links: LinkCache
   ) {}
 
   public generateETag(buffer: Buffer): string {
@@ -152,6 +154,7 @@ export class MediaService {
 
     const request = this.resolveImageUri(
       imageId,
+      transformationsKey,
       objectUri,
       transformations
     ).finally(() => this.pendingImages.delete(pendingKey));
@@ -162,16 +165,42 @@ export class MediaService {
 
   private async resolveImageUri(
     imageId: string,
+    variant: string,
     objectUri: string,
     transformations: TransformationsDto
   ): Promise<ImageURIObject> {
-    if (await this.transformations.exists(objectUri)) {
-      return { uri: objectUri, exists: true };
+    const lifetime = await this.remainingLifetime(objectUri);
+
+    if (lifetime > 0) {
+      const link = { uri: objectUri, exists: true };
+      await this.links.set(imageId, variant, link, lifetime);
+
+      return link;
     }
 
-    return await this.limitTransforms(() =>
+    const link = await this.limitTransforms(() =>
       this.transformImage(imageId, transformations)
     );
+
+    if (link.exists) {
+      await this.links.set(imageId, variant, link, TRANSFORMED_IMAGE_TTL);
+    }
+
+    return link;
+  }
+
+  private async remainingLifetime(objectUri: string): Promise<number> {
+    try {
+      const { lastModified } = await this.transformations.stat(objectUri);
+
+      return lastModified.getTime() + TRANSFORMED_IMAGE_TTL - Date.now();
+    } catch (e) {
+      if (e instanceof StorageFileNotFoundError) {
+        return 0;
+      }
+
+      throw e;
+    }
   }
 
   private async getFallbackImage(

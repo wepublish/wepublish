@@ -11,6 +11,7 @@ import {
 } from './payment.webhook';
 import { InvoicePaidNotifier } from './invoice-paid.listener';
 import { PaymentAuthorizationNotifier } from './payment-authorization.notifier';
+import { BexioContactSyncService } from './payment-provider/bexio/bexio-contact-sync.service';
 
 @Module({
   imports: [PrismaModule, PaymentMethodModule],
@@ -20,6 +21,7 @@ import { PaymentAuthorizationNotifier } from './payment-authorization.notifier';
     PaymentsResolver,
     InvoicePaidNotifier,
     PaymentAuthorizationNotifier,
+    BexioContactSyncService,
   ],
   controllers: [PaymentWebhookController],
   exports: [
@@ -27,6 +29,7 @@ import { PaymentAuthorizationNotifier } from './payment-authorization.notifier';
     PaymentDataloader,
     InvoicePaidNotifier,
     PaymentAuthorizationNotifier,
+    BexioContactSyncService,
   ],
 })
 export class PaymentsModule {

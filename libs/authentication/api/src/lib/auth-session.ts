@@ -23,6 +23,7 @@ export type UserSession = {
   expiresAt: Date;
   token: string;
   impersonatedBy?: string | null;
+  canImpersonate?: boolean;
 };
 
 export type ApiTokenSession = {

@@ -28,7 +28,11 @@ const TriggerButton = styled('button')`
     width: 24px;
     height: 24px;
     transform: translate(-50%, -50%);
-    border-radius: 50%;
+  }
+
+  .MuiInputLabel-shrink &::before {
+    width: 34px;
+    height: 34px;
   }
 
   &:hover,

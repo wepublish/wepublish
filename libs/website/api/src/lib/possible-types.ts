@@ -157,7 +157,8 @@ const result: PossibleTypesResultData = {
       "UserNewsletter"
     ],
     "HasImageLc": [
-      "PaymentMethod"
+      "PaymentMethod",
+      "PrintIssue"
     ],
     "HasMemberPlan": [
       "PublicSubscription"

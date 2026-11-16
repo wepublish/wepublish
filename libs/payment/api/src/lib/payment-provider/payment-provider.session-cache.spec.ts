@@ -92,4 +92,41 @@ describe('payment provider customers', () => {
       testing.versions.current(SESSION_CACHE_NAMESPACE)
     ).resolves.not.toBe(sessionsBefore);
   });
+
+  // The nightly poll of every open invoice reports the customer each time.
+  it('leaves cached sessions alone when the customer id is already stored', async () => {
+    const prisma = buildPrismaMock();
+    prisma.user.findUnique.mockResolvedValue({
+      id: 'user-1',
+      paymentProviderCustomers: [
+        { paymentProviderID: 'mollie', customerID: 'cus-1' },
+      ],
+    });
+    await testing.cache.setNs(
+      'settings:paymentprovider',
+      'mollie',
+      { offSessionPayments: true },
+      60
+    );
+    const reset = vi.spyOn(testing.resets, 'reset');
+    const provider = new MolliePaymentProvider({
+      id: 'mollie',
+      incomingRequestHandler: bodyParser.urlencoded({ extended: true }),
+      prisma: prisma as unknown as PrismaClient,
+      kv: testing.cache,
+      resets: testing.resets,
+    });
+
+    await provider.updatePaymentWithIntentState({
+      intentState: {
+        paymentID: 'pay-1',
+        state: PaymentState.paid,
+        paymentData: '{}',
+        customerID: 'cus-1',
+      } as IntentState,
+    });
+
+    expect(prisma.user.update).not.toHaveBeenCalled();
+    expect(reset).not.toHaveBeenCalledWith(SESSION_CACHE_NAMESPACE);
+  });
 });

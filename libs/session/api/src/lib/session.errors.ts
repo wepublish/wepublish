@@ -1,4 +1,4 @@
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException } from '@nestjs/common';
 
 export class InvalidCredentialsError extends BadRequestException {
   constructor() {
@@ -15,5 +15,11 @@ export class NotActiveError extends BadRequestException {
 export class UserNotFoundError extends BadRequestException {
   constructor() {
     super('The user was not found.');
+  }
+}
+
+export class WepublishLoginOnlyError extends ForbiddenException {
+  constructor() {
+    super('This account signs in with the We.Publish login.');
   }
 }

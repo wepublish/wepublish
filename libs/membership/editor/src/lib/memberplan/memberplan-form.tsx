@@ -16,7 +16,7 @@ import {
   FullAvailablePaymentMethodFragment,
 } from '@wepublish/editor/api';
 import { MemberPlanFormValues } from './memberplan-schema';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { slugify } from '@wepublish/utils';
 import {
   ALL_PAYMENT_PERIODICITIES,
@@ -684,9 +684,22 @@ export function MemberPlanForm({
                   </div>
 
                   <div>
+                    {/* the help may use <strong>, <em>, <i> and <br/> */}
                     <FieldLabel
                       id={ids.defaultPeriodicity}
                       label={t('memberplanForm.defaultPaymentPeriodicity')}
+                      helpLabel={t('memberplanForm.defaultPaymentPeriodicity')}
+                      help={
+                        <Trans
+                          i18nKey="memberplanForm.defaultPaymentPeriodicityHelpText"
+                          components={{
+                            strong: <strong />,
+                            em: <em />,
+                            i: <i />,
+                            br: <br />,
+                          }}
+                        />
+                      }
                     />
                     <Controller
                       control={control}
@@ -698,12 +711,7 @@ export function MemberPlanForm({
                           value={field.value ?? ''}
                           disabled={loading}
                           error={Boolean(error)}
-                          helperText={
-                            error?.message ??
-                            t(
-                              'memberplanForm.defaultPaymentPeriodicityHelpText'
-                            )
-                          }
+                          helperText={error?.message}
                           slotProps={{
                             select: { labelId: ids.defaultPeriodicity },
                           }}

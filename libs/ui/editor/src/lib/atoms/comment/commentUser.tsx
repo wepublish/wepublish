@@ -60,9 +60,7 @@ export function CommentUser({ comment, setComment }: CommentUserProps) {
             key={`user-${comment?.user}`}
             name="selectFromExistingUser"
             placeholder={t('commentUser.selectExistingUser')}
-            // @ts-expect-error test
             onUpdateUser={setUser}
-            // @ts-expect-error test
             user={comment?.user}
           />
         </Grid>

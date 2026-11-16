@@ -221,6 +221,19 @@ const seedSettings = (prisma: PrismaClient) =>
     }),
     prisma.setting.upsert({
       where: {
+        name: SettingName.FEED_PAYWALLED_CONTENT,
+      },
+      update: {},
+      create: {
+        name: SettingName.FEED_PAYWALLED_CONTENT,
+        value: 'lead',
+        settingRestriction: {
+          allowedValues: { stringChoice: ['lead', 'visible', 'full'] },
+        },
+      },
+    }),
+    prisma.setting.upsert({
+      where: {
         name: SettingName.EMAIL_QUALITY_UNRESPONSIVE_AFTER_DAYS,
       },
       update: {},
@@ -243,6 +256,64 @@ const seedSettings = (prisma: PrismaClient) =>
     }),
     prisma.setting.upsert({
       where: {
+        name: SettingName.PRINT_ISSUES_PER_YEAR,
+      },
+      update: {},
+      create: {
+        name: SettingName.PRINT_ISSUES_PER_YEAR,
+        value: 0,
+        settingRestriction: { minValue: 0, maxValue: 52 },
+      },
+    }),
+    prisma.setting.upsert({
+      where: {
+        name: SettingName.PRINT_EXPORT_DEFAULTS,
+      },
+      update: {},
+      create: {
+        name: SettingName.PRINT_EXPORT_DEFAULTS,
+        value: {
+          memberPlanIds: null,
+          includeBexio: true,
+          bexioKindIds: null,
+          includeOpen: true,
+          includeUpcoming: false,
+        },
+      },
+    }),
+    // Neue Wege's bexio kinds (guide «Auftrag für Broker und Schenker:innen»,
+    // Nov 2026); every other medium starts without any
+    prisma.setting.upsert({
+      where: {
+        name: SettingName.PRINT_BEXIO_KINDS,
+      },
+      update: {},
+      create: {
+        name: SettingName.PRINT_BEXIO_KINDS,
+        value: [
+          {
+            id: 'nw-geschenkabo',
+            label: 'Geschenkabo',
+            word: 'NW Geschenkabo',
+            refersTo: 'period',
+          },
+          {
+            id: 'nw-broker',
+            label: 'Broker-Abo',
+            word: 'NW Abo Endkund:in',
+            refersTo: 'period',
+          },
+          {
+            id: 'nw-einzelheft',
+            label: 'Einzelheft',
+            word: 'Einzelheft',
+            refersTo: 'issue',
+          },
+        ],
+      },
+    }),
+    prisma.setting.upsert({
+      where: {
         name: SettingName.EMAIL_QUALITY_MIN_MAILS_FOR_UNRESPONSIVE,
       },
       update: {},
@@ -250,6 +321,17 @@ const seedSettings = (prisma: PrismaClient) =>
         name: SettingName.EMAIL_QUALITY_MIN_MAILS_FOR_UNRESPONSIVE,
         value: 1,
         settingRestriction: { minValue: 1, maxValue: 100 },
+      },
+    }),
+    prisma.setting.upsert({
+      where: {
+        name: SettingName.EMAIL_QUALITY_EVIDENCE_WARN_AFTER_DAYS,
+      },
+      update: {},
+      create: {
+        name: SettingName.EMAIL_QUALITY_EVIDENCE_WARN_AFTER_DAYS,
+        value: 14,
+        settingRestriction: { minValue: 1, maxValue: 365 },
       },
     }),
     prisma.setting.upsert({
@@ -289,6 +371,7 @@ const seedSettings = (prisma: PrismaClient) =>
           'v1.joXbh+gkDHyDSWR8.xx9rJ27ZN9VWALNkm3ET0w==.Hl8G9f69NSAH5A==',
         property: '1',
         articlePrefix: '/a/',
+        hotAndTrending: true,
       },
     }),
 

@@ -9,7 +9,7 @@ Align all code suggestions, architecture recommendations, and technical solution
 - **Material UI (MUI)** as UI component library — styling via `styled()` with tagged template literals (`@emotion/styled`)
 - **Apollo Client** for GraphQL communication (with generated hooks via GraphQL Code Generator)
 - **React Hook Form** for forms
-- **Zod** for schema validation
+- **Zod** for schema validation — `@wepublish/form/*` and its form schemas use the zod 4 API via `zod/v4`; everything else is classic `zod`
 - **React Icons** for icons
 - **react-i18next** for internationalization
 - **React Router v6** for client-side routing in the editor app

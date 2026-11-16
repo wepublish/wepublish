@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { AppBar, Box, css, Theme } from '@mui/material';
-import { MdWarning } from 'react-icons/md';
+import { MdPerson, MdWarning } from 'react-icons/md';
 import {
   ExtendedNavbarProps,
   NavbarActions,
@@ -49,12 +49,21 @@ const CourantNavbarWrapper = styled(NavbarWrapper)`
   }
 `;
 
+// Collapse the reserved links column when no top-level links are rendered;
+// re-expand automatically if a second child appears.
+const CourantNavbarMain = styled(NavbarMain)`
+  grid-template-columns: max-content;
+  &:has(> :nth-child(2)) {
+    grid-template-columns: max-content 1fr;
+  }
+`;
+
 // Match gutters with rest of page layout
 const CourantNavbarInnerWrapper = styled(NavbarInnerWrapper)`
   width: 100%;
   max-width: ${pageMaxWidth}px;
   margin-inline: auto;
-  grid-template-columns: max-content 1fr max-content;
+  grid-template-columns: auto auto 1fr;
   column-gap: ${({ theme }) => theme.spacing(2)};
   padding-inline: ${({ theme }) => theme.spacing(pageInline.xs)};
 
@@ -77,7 +86,13 @@ const CourantIconButtonWrapper = styled(NavbarIconButtonWrapper)`
   color: ${({ theme }) => theme.palette.common.black};
   aspect-ratio: unset;
   width: auto;
-  padding-inline: ${({ theme }) => theme.spacing(1.5)};
+  padding-inline: 0;
+
+  /* Offset the IconButton's own inline padding so the burger's visual edge
+     aligns with the page gutter. MUI IconButton size="large" = 12px padding. */
+  .MuiIconButton-root {
+    margin-inline-start: -12px;
+  }
 
   svg {
     font-size: 1.5rem;
@@ -91,7 +106,7 @@ const CourantIconButtonWrapper = styled(NavbarIconButtonWrapper)`
 `;
 
 const logoStyles = (theme: Theme) => css`
-  height: ${theme.spacing(5)};
+  height: ${theme.spacing(4.5)};
   width: auto;
   display: flex;
 
@@ -177,7 +192,7 @@ export const CourantNavbar = ({
         css={appBarStyles(isMenuOpen)}
       >
         <CourantNavbarInnerWrapper>
-          <NavbarMain>
+          <CourantNavbarMain>
             <CourantIconButtonWrapper>
               <IconButton
                 size="large"
@@ -203,7 +218,7 @@ export const CourantNavbar = ({
                 ))}
               </NavbarLinks>
             )}
-          </NavbarMain>
+          </CourantNavbarMain>
 
           <NavbarLoginLink
             href="/"
@@ -247,9 +262,22 @@ export const CourantNavbar = ({
               <Button
                 LinkComponent={Link}
                 size="medium"
+                aria-label={t('navbar.myAccount')}
                 {...profileBtn}
               >
-                {t('navbar.myAccount')}
+                <Box sx={{ display: { xs: 'none', sm: 'inline' } }}>
+                  {t('navbar.myAccount')}
+                </Box>
+                <Box
+                  component="span"
+                  sx={{
+                    display: { xs: 'inline-flex', sm: 'none' },
+                    lineHeight: 0,
+                  }}
+                  aria-hidden
+                >
+                  <MdPerson />
+                </Box>
               </Button>
             )}
           </NavbarActions>
@@ -262,7 +290,6 @@ export const CourantNavbar = ({
           isMenuOpen={isMenuOpen}
           closeMenu={toggleMenu}
           main={mainItems}
-          categories={categories}
           loginBtn={loginBtn}
           profileBtn={profileBtn}
           subscribeBtn={subscribeBtn}

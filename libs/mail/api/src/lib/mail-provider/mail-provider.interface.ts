@@ -130,6 +130,15 @@ export interface MailProvider {
     providerMessageIDs: string[]
   ): Promise<MailProviderMessageState[]>;
 
+  /**
+   * The addresses the provider refuses to deliver to and why: its rejection
+   * denylist, bounce and complaint lists. These are kept per account or
+   * domain, so they cover mails sent outside We.Publish too. Each signal
+   * carries the address and a provider event id for deduplication. Providers
+   * without such lists return an empty list.
+   */
+  listSuppressions(): Promise<MailQualitySignal[]>;
+
   /** Fetch a template's content from the remote provider (for import/migration). */
   getTemplateContent(
     externalMailTemplateId: string

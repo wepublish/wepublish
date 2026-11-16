@@ -61,6 +61,8 @@ import {
   CanGetArticle,
   CanGetArticles,
   CanGetAudienceStats,
+  CanCreatePrintIssue,
+  CanGetPrintIssues,
   CanGetAuditLogs,
   CanGetAuthor,
   CanGetAuthors,
@@ -200,6 +202,7 @@ import {
   MdVpnKey,
   MdVideoLibrary,
   MdMarkEmailRead,
+  MdPrint,
 } from 'react-icons/md';
 
 import type { CommandDefinition } from './commandDefinition';
@@ -508,6 +511,22 @@ export const NAVIGATION_COMMANDS: CommandDefinition[] = [
       CanDeleteBanner.id,
     ],
     perform: ({ navigate }) => navigate('/banners'),
+  },
+  {
+    id: 'printIssues',
+    titleKey: 'navbar.printIssues',
+    icon: <MdPrint />,
+    permissions: [CanGetPrintIssues.id],
+    feature: 'print-export',
+    perform: ({ navigate }) => navigate('/print-issues'),
+  },
+  {
+    id: 'printIssueCreate',
+    titleKey: 'printIssues.create',
+    icon: <MdPrint />,
+    permissions: [CanCreatePrintIssue.id],
+    feature: 'print-export',
+    perform: ({ navigate }) => navigate('/print-issues/create'),
   },
   {
     id: 'authors',
@@ -871,14 +890,6 @@ export const NAVIGATION_COMMANDS: CommandDefinition[] = [
     icon: <MdAnalytics />,
     permissions: [CanGetWebsiteSettings.id, CanUpdateWebsiteSettings.id],
     perform: ({ navigate }) => navigate('/settings/website/analytics'),
-  },
-  {
-    id: 'websiteMail',
-    titleKey: 'websiteSettings.mail.title',
-    sectionKey: 'websiteSettings.navbar',
-    icon: <MdMail />,
-    permissions: [CanGetWebsiteSettings.id, CanUpdateWebsiteSettings.id],
-    perform: ({ navigate }) => navigate('/settings/website/mail'),
   },
   {
     id: 'websiteAds',

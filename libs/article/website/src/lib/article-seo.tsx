@@ -6,7 +6,13 @@ import {
 } from '@wepublish/block-content/website';
 import { firstParagraphToPlaintext, toPlaintext } from '@wepublish/richtext';
 import { stripQueryAndHash } from '@wepublish/utils';
-import { FullArticleFragment, FullImageFragment } from '@wepublish/website/api';
+import {
+  FullArticleRevisionFragment,
+  FullBlockFragment,
+  FullImageFragment,
+  SlimArticleFragment,
+  SlimArticleRevisionFragment,
+} from '@wepublish/website/api';
 import {
   BuilderArticleSEOProps,
   useWebsiteBuilder,
@@ -14,7 +20,30 @@ import {
 } from '@wepublish/website/builder';
 import { Fragment, useMemo } from 'react';
 
-export const getArticleSEO = (article: FullArticleFragment) => {
+export type ArticleSEOInput = Pick<
+  SlimArticleFragment,
+  'url' | 'slug' | 'hidden' | 'publishedAt' | 'tags'
+> & {
+  latest: Pick<
+    SlimArticleRevisionFragment,
+    'title' | 'lead' | 'publishedAt' | 'authors' | 'image'
+  > &
+    Partial<
+      Pick<
+        FullArticleRevisionFragment,
+        | 'seoTitle'
+        | 'seoDescription'
+        | 'socialMediaTitle'
+        | 'socialMediaDescription'
+        | 'canonicalUrl'
+        | 'socialMediaImage'
+      >
+    > & {
+      blocks?: ReadonlyArray<Partial<Pick<FullBlockFragment, '__typename'>>>;
+    };
+};
+
+export const getArticleSEO = (article: ArticleSEOInput) => {
   const firstTitle = article.latest.blocks?.find(block => isTitleBlock(block));
   const firstRichText = article.latest.blocks?.find(block =>
     isRichTextBlock(block)

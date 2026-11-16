@@ -5,9 +5,20 @@ import {
   FullNavigationFragment,
   NavigationListQuery,
 } from '@wepublish/website/api';
-import { BuilderNavbarProps, Link } from '@wepublish/website/builder';
-import { useRouter } from 'next/router';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useNavigate } from '@tanstack/react-router';
+import {
+  BuilderNavbarProps,
+  BuilderRouterContext,
+  Link,
+} from '@wepublish/website/builder';
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { MdClose, MdMenu, MdSearch } from 'react-icons/md';
 
 import logo from '../assets/ee-news-logo.png';
@@ -453,7 +464,8 @@ export const EenewsNavbar = ({
   hasUnpaidInvoices,
   children,
 }: BuilderNavbarProps) => {
-  const router = useRouter();
+  const navigate = useNavigate();
+  const { asPath } = useContext(BuilderRouterContext);
   const { hasUser, logout } = useUser();
   const navbarRef = useRef<HTMLElement>(null);
   const [isOpen, setOpen] = useState(false);
@@ -502,10 +514,8 @@ export const EenewsNavbar = ({
 
   const close = useCallback(() => setOpen(false), []);
 
-  useEffect(() => {
-    router.events.on('routeChangeComplete', close);
-    return () => router.events.off('routeChangeComplete', close);
-  }, [router.events, close]);
+  // Close the menu after every navigation (was `routeChangeComplete`).
+  useEffect(close, [asPath, close]);
 
   const onToggle = () => {
     setOpen(o => !o);
@@ -532,7 +542,7 @@ export const EenewsNavbar = ({
     if (!url) {
       return false;
     }
-    const path = router.asPath.split(/[?#]/)[0];
+    const path = asPath.split(/[?#]/)[0];
     return path === url || path.startsWith(url + '/');
   };
 
@@ -549,7 +559,7 @@ export const EenewsNavbar = ({
       .filter((s): s is string => Boolean(s))
   );
   const isDossierActive = (): boolean => {
-    const path = router.asPath.split(/[?#]/)[0];
+    const path = asPath.split(/[?#]/)[0];
     if (path === '/a/tag') {
       return true;
     }
@@ -635,7 +645,7 @@ export const EenewsNavbar = ({
                 type="button"
                 onClick={async () => {
                   await logout();
-                  router.push('/');
+                  await navigate({ to: '/' });
                 }}
               >
                 <Typography

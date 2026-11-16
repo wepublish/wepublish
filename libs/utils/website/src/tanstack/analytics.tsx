@@ -45,8 +45,12 @@ const Plausible = ({ src }: { src: string }) => (
     <script
       id="plausible-init"
       dangerouslySetInnerHTML={{
-        __html:
-          'window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }',
+        __html: `;(window.plausible = window.plausible || function () {
+  ;(plausible.q = plausible.q || []).push(arguments)
+}), (plausible.init = plausible.init || function (i) {
+  plausible.o = i || {}
+})
+plausible.init()`,
       }}
     />
   </>
@@ -81,6 +85,14 @@ export const Analytics = ({
         dangerouslySetInnerHTML={{
           __html: `(function(window, document, dataLayerName, id) { window[dataLayerName]=window[dataLayerName]||[],window[dataLayerName].push({start:(new Date).getTime(),event:"stg.start"});var scripts=document.getElementsByTagName('script')[0],tags=document.createElement('script'); var qP=[];dataLayerName!=="dataLayer"&&qP.push("data_layer_name="+dataLayerName);var qPString=qP.length>0?("?"+qP.join("&")):""; tags.async=!0,tags.src="https://flimmer.containers.piwik.pro/"+id+".js"+qPString,scripts.parentNode.insertBefore(tags,scripts); !function(a,n,i){a[n]=a[n]||{};for(var c=0;c<i.length;c++)!function(i){a[n][i]=a[n][i]||{},a[n][i].api=a[n][i].api||function(){var a=[].slice.call(arguments,0);"string"==typeof a[0]&&window[dataLayerName].push({event:n+"."+i+":"+a[0],parameters:[].slice.call(arguments,1)})}}(i[c])}(window,"ppms",["tm","cm"]); })(window, document, 'dataLayer', '${settings.analytics.piwik.key}');`,
         }}
+      />
+    )}
+
+    {settings?.analytics.umami.enabled && !!settings.analytics.umami.key && (
+      <script
+        defer
+        src="https://cloud.umami.is/script.js"
+        data-website-id={settings.analytics.umami.key}
       />
     )}
 

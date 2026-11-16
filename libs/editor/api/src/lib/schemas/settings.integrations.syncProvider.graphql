@@ -25,6 +25,17 @@ query SyncProviderSettings {
         ...FullImage
       }
     }
+    mailchimp_webhookId
+    mailchimp_webhookRegisteredAt
+    lastWebhookAt
+  }
+}
+
+mutation RegisterMailchimpAudienceWebhook($id: String!) {
+  registerMailchimpAudienceWebhook(id: $id) {
+    url
+    webhookId
+    registeredAt
   }
 }
 
@@ -79,6 +90,9 @@ mutation UpdateSyncProviderSetting(
         ...FullImage
       }
     }
+    mailchimp_webhookId
+    mailchimp_webhookRegisteredAt
+    lastWebhookAt
   }
 }
 

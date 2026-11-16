@@ -14,3 +14,4 @@ export * from './lib/scoped-jwt.decorator';
 export * from './lib/scoped-jwt.guard';
 export * from './lib/auth-token.decorator';
 export * from './lib/session-cache';
+export * from './lib/impersonating';
