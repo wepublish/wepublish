@@ -89,12 +89,24 @@ query UsersByDeliveryChannel(
   }
 }
 
-query DeliverySuggestions($kind: DeliverySuggestionKind!, $skip: Int, $take: Int) {
-  deliverySuggestions(kind: $kind, skip: $skip, take: $take) {
+query DeliverySuggestions(
+  $kind: DeliverySuggestionKind!
+  $skip: Int
+  $take: Int
+  $filter: DeliverySuggestionFilter
+) {
+  deliverySuggestions(kind: $kind, skip: $skip, take: $take, filter: $filter) {
     nodes {
       ...DeliverySuggestion
     }
     totalCount
+  }
+}
+
+query DeliverySuggestionReasons($kind: DeliverySuggestionKind!) {
+  deliverySuggestionReasons(kind: $kind) {
+    reason
+    count
   }
 }
 
@@ -158,8 +170,11 @@ mutation KeepDeliverySuggestion($id: String!) {
   keepDeliverySuggestion(id: $id)
 }
 
-mutation ConfirmAllDeliverySuggestions($kind: DeliverySuggestionKind!) {
-  confirmAllDeliverySuggestions(kind: $kind) {
+mutation ConfirmAllDeliverySuggestions(
+  $kind: DeliverySuggestionKind!
+  $filter: DeliverySuggestionFilter
+) {
+  confirmAllDeliverySuggestions(kind: $kind, filter: $filter) {
     confirmed
     skipped
   }

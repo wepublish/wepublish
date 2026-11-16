@@ -2042,7 +2042,30 @@
           "unresponsive": "Reagiert nicht seit {{date}}",
           "unknown": "Unbekannt seit {{date}}"
         },
-        "recomputedDaily": "(täglich automatisch neu berechnet)"
+        "recomputedDaily": "(täglich automatisch neu berechnet)",
+        "filter": {
+          "reason": "Grund",
+          "emailSince": "E-Mail-Status seit",
+          "created": "Vorgeschlagen seit"
+        },
+        "reasonFilter": {
+          "placeholderEmail": "Platzhalter-Adresse",
+          "hardBounce": "Hard Bounce",
+          "invalid": "Ungültige Adresse",
+          "blocked": "Vom E-Mail-Dienst gesperrt",
+          "spamComplaint": "Spam-Beschwerde",
+          "unsubscribed": "Beim E-Mail-Dienst abgemeldet",
+          "clicked": "Link angeklickt",
+          "verified": "Adresse geprüft",
+          "login": "Eingeloggt",
+          "emailVerified": "E-Mail-Adresse bestätigt",
+          "noInteraction": "Keine Reaktion",
+          "noEvidence": "Keine Hinweise",
+          "none": "Kein E-Mail-Status"
+        },
+        "confirmAllFiltered": "Alle {{count}} gefilterten übernehmen",
+        "confirmAllFilteredText": "Übernommen werden nur die Vorschläge, die dem Filter entsprechen.",
+        "emptyFiltered": "Keine Vorschläge entsprechen dem Filter."
       },
       "assign": {
         "steps": {
