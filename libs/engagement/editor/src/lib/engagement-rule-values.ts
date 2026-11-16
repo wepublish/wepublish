@@ -39,6 +39,7 @@ export type EngagementStageValues = {
   embedUrl: string | null;
   imageId: string | null;
   image: FullImageFragment | null;
+  blockTemplateId: string | null;
   actions: EngagementActionValues[];
 };
 
@@ -86,6 +87,7 @@ export const stageDefaults = (
   html: null,
   embedUrl: null,
   imageId: null,
+  blockTemplateId: null,
   image: null,
   actions: [],
   ...stage,
@@ -258,6 +260,13 @@ export function engagementRuleProblems(
       }
     }
 
+    if (
+      stage.blockTemplateId &&
+      stage.placement === EngagementPlacement.Banner
+    ) {
+      problem(`${path}.blockTemplateId`, 'notInBanner');
+    }
+
     stage.actions.forEach((action, actionIndex) => {
       if (actionNeedsUrl(action, stage.placement) && !action.url.trim()) {
         problem(`${path}.actions.${actionIndex}.url`, 'required');
@@ -314,6 +323,7 @@ const stageSchema = (t: TFunction) =>
     html: z.string().nullable(),
     embedUrl: z.string().nullable(),
     imageId: z.string().nullable(),
+    blockTemplateId: z.string().nullable(),
     image: z.custom<FullImageFragment>().nullable(),
     actions: z.array(actionSchema),
   });

@@ -16,3 +16,7 @@ Pour commencer, choisis un modèle (développer la newsletter, promouvoir les ab
 **Inscription à la newsletter sans compte :** une étape peut demander uniquement l’adresse e-mail, directement dans le message. L’adresse est inscrite via ton intégration Mailchimp (Paramètres → Intégrations) et doit être confirmée par e-mail.
 
 **Les paywalls** se trouvent maintenant aussi sous Audience Engagement ; le menu Articles y renvoie toujours. Un paywall peut désormais être appliqué sur le serveur : les lecteur·rice·s sans accès ne reçoivent alors que les premiers blocs de l’article. Mets à jour tes sites avant de l’activer.
+
+**Modèles de blocs dans les messages :** au lieu d’écrire le texte d’une étape, tu peux choisir un de tes modèles de blocs (pop-ups, encadrés dans l’article et la restriction ; les bannières gardent leurs textes). Le titre et les boutons restent.
+
+Si une règle demande l’adresse e-mail aux lecteur·rice·s mais que les inscriptions n’atteignent pas Mailchimp, le formulaire de la règle t’indique pourquoi et renvoie vers l’intégration.

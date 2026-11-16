@@ -89,6 +89,7 @@ CREATE TABLE "engagement_stages" (
     "html" TEXT,
     "embedUrl" TEXT,
     "imageId" TEXT,
+    "blockTemplateId" TEXT,
 
     CONSTRAINT "engagement_stages_pkey" PRIMARY KEY ("id")
 );
@@ -437,6 +438,9 @@ ALTER TABLE "engagement_stages" ADD CONSTRAINT "engagement_stages_ruleId_fkey" F
 
 -- AddForeignKey
 ALTER TABLE "engagement_stages" ADD CONSTRAINT "engagement_stages_imageId_fkey" FOREIGN KEY ("imageId") REFERENCES "images"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "engagement_stages" ADD CONSTRAINT "engagement_stages_blockTemplateId_fkey" FOREIGN KEY ("blockTemplateId") REFERENCES "block_templates"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "engagement_actions" ADD CONSTRAINT "engagement_actions_stageId_fkey" FOREIGN KEY ("stageId") REFERENCES "engagement_stages"("id") ON DELETE CASCADE ON UPDATE CASCADE;

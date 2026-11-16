@@ -1867,8 +1867,9 @@ model BlockTemplate {
   name   String @unique
   blocks Json
 
-  articleTemplate ArticleTemplate?
-  pageTemplate    PageTemplate?
+  articleTemplate  ArticleTemplate?
+  pageTemplate     PageTemplate?
+  engagementStages EngagementStage[]
 
   @@map("block_templates")
 }
@@ -2022,6 +2023,10 @@ model EngagementStage {
   embedUrl    String?
   imageId     String?
   image       Image?  @relation(fields: [imageId], references: [id], onDelete: SetNull)
+
+  /// Shown instead of the texts (not in banners).
+  blockTemplateId String?
+  blockTemplate   BlockTemplate? @relation(fields: [blockTemplateId], references: [id], onDelete: SetNull)
 
   actions EngagementAction[]
 

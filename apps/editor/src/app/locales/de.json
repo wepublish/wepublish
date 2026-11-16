@@ -6076,7 +6076,10 @@
           "disabled": "Leser*innen geben ihre E-Mail-Adresse an, aber die Mailchimp-Integration ist ausgeschaltet. Die Sperre lässt sie trotzdem durch, die Adresse geht verloren.",
           "incomplete": "Leser*innen geben ihre E-Mail-Adresse an, aber der Mailchimp-Integration fehlen API-Key oder Zielgruppe. Die Sperre lässt sie trotzdem durch, die Adresse geht verloren."
         },
-        "newsletterProblemLink": "Mailchimp einrichten"
+        "newsletterProblemLink": "Mailchimp einrichten",
+        "blockTemplate": "Inhalt",
+        "blockTemplateInfo": "Schreib den Inhalt hier, oder zeig stattdessen eine Block-Vorlage (Titel und Buttons bleiben).",
+        "ownContent": "Hier schreiben"
       },
       "validation": {
         "required": "Pflichtfeld",
@@ -6090,7 +6093,8 @@
         "announcementSoft": "Eine Ankündigung kann den Artikel nicht einschränken",
         "announcementNoMeter": "Eine Ankündigung zählt keine Artikel",
         "newsletterWallRequired": "Eine Newsletter-Regel verlangt die Newsletter-Anmeldung",
-        "wholeNumber": "Gib eine ganze Zahl ein"
+        "wholeNumber": "Gib eine ganze Zahl ein",
+        "notInBanner": "Ein Banner zeigt nur Texte"
       },
       "copyName": "{{name}} (Kopie)",
       "view": {

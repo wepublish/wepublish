@@ -62,6 +62,7 @@ const rule: FullEngagementRuleFragment = {
       html: null,
       embedUrl: null,
       imageId: null,
+      blockTemplateId: null,
       image: null,
       actions: [
         {
@@ -112,6 +113,7 @@ describe('engagement rule values', () => {
           html: null,
           embedUrl: null,
           imageId: null,
+          blockTemplateId: null,
           actions: [
             {
               type: EngagementActionType.Newsletter,
@@ -294,6 +296,24 @@ describe('engagement rule values', () => {
         )
       ).toEqual([]);
     }
+  });
+});
+
+describe('block templates', () => {
+  it('refuses one in a banner, like the server', () => {
+    expect(
+      engagementRuleProblems(
+        metered({
+          stages: [
+            stageDefaults({
+              afterArticles: 0,
+              placement: EngagementPlacement.Banner,
+              blockTemplateId: 'template-1',
+            }),
+          ],
+        })
+      )
+    ).toContainEqual({ path: 'stages.0.blockTemplateId', code: 'notInBanner' });
   });
 });
 

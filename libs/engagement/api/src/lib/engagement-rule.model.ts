@@ -1,3 +1,4 @@
+import { BlockTemplate } from '@wepublish/block-content/api';
 import {
   ArgsType,
   Field,
@@ -149,6 +150,15 @@ export class EngagementStage {
   @Field(() => Image, { nullable: true })
   image?: Image | null;
 
+  @Field(() => String, {
+    nullable: true,
+    description: `A block template shown instead of the texts (not in banners).`,
+  })
+  blockTemplateId?: string | null;
+
+  @Field(() => BlockTemplate, { nullable: true })
+  blockTemplate?: BlockTemplate | null;
+
   @Field(() => [EngagementAction])
   actions!: EngagementAction[];
 }
@@ -156,7 +166,15 @@ export class EngagementStage {
 @InputType()
 export class EngagementStageInput extends OmitType(
   EngagementStage,
-  ['id', 'image', 'actions', 'dismissible', 'hideForMinutes', 'delaySeconds'],
+  [
+    'id',
+    'image',
+    'blockTemplate',
+    'actions',
+    'dismissible',
+    'hideForMinutes',
+    'delaySeconds',
+  ],
   InputType
 ) {
   @Field({ defaultValue: true })

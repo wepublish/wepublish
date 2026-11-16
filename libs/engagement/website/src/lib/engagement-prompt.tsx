@@ -14,6 +14,7 @@ import {
   EngagementEnforcement,
   EngagementPlacement,
   EngagementRequirement,
+  FullBlockFragment,
   FullEngagementActionFragment,
   SignUpForNewsletterDocument,
 } from '@wepublish/website/api';
@@ -182,7 +183,7 @@ export const EngagementPrompt = ({
   const setIntendedRoute = useSetIntendedRoute();
   const {
     elements: { Button, Link, Modal, H4, Paragraph },
-    blocks: { RichText },
+    blocks: { RichText, Renderer },
   } = useWebsiteBuilder();
   const { stage } = prompt;
   const [closed, setClosed] = useState(false);
@@ -234,19 +235,33 @@ export const EngagementPrompt = ({
   // A modal names itself by the title (or else the call to action), so that
   // is left out of its body.
   const modalTitle = stage.title ?? stage.cta ?? '';
+  const template = stage.blockTemplate;
   const content = (inModal: boolean) => (
     <>
-      {stage.image?.url && (
+      {!template && stage.image?.url && (
         <EngagementPromptImage
           src={stage.image.url}
           alt={stage.image.description ?? ''}
         />
       )}
       {!inModal && stage.title && <H4 component="p">{stage.title}</H4>}
-      {stage.description && <RichText richText={stage.description} />}
-      {stage.text && <Paragraph>{stage.text}</Paragraph>}
-      {stage.html && <div dangerouslySetInnerHTML={{ __html: stage.html }} />}
-      {stage.cta && !(inModal && modalTitle === stage.cta) && (
+      {template?.blocks.map((block, index) => (
+        <Renderer
+          key={index}
+          block={block as FullBlockFragment}
+          type="Page"
+          index={index}
+          count={template.blocks.length}
+        />
+      ))}
+      {!template && stage.description && (
+        <RichText richText={stage.description} />
+      )}
+      {!template && stage.text && <Paragraph>{stage.text}</Paragraph>}
+      {!template && stage.html && (
+        <div dangerouslySetInnerHTML={{ __html: stage.html }} />
+      )}
+      {!template && stage.cta && !(inModal && modalTitle === stage.cta) && (
         <Paragraph gutterBottom={false}>{stage.cta}</Paragraph>
       )}
       {(isWall || signupAction) && (

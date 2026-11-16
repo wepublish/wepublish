@@ -1,3 +1,4 @@
+import { BlockTemplateDataloaderService } from '@wepublish/block-content/api';
 import { NewsletterMailchimpService } from '@wepublish/newsletter/api';
 import { ChallengeService } from '@wepublish/challenge/api';
 import type { Mock } from 'vitest';
@@ -159,6 +160,10 @@ describe('EngagementPromptsResolver', () => {
           useValue: { getActiveRules: () => Promise.resolve(rules) },
         },
         { provide: ImageDataloaderService, useValue: { load: vi.fn() } },
+        {
+          provide: BlockTemplateDataloaderService,
+          useValue: { load: vi.fn() },
+        },
       ],
     }).compile();
 

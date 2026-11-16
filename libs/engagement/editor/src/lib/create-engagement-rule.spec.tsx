@@ -53,6 +53,7 @@ const rule: FullEngagementRuleFragment = {
       html: null,
       embedUrl: null,
       imageId: null,
+      blockTemplateId: null,
       image: null,
       actions: [
         {

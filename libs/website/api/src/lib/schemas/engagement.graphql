@@ -33,6 +33,10 @@ fragment FullEngagementPrompt on EngagementPrompt {
       ...FullImage
     }
 
+    blockTemplate {
+      ...FullBlockTemplate
+    }
+
     actions {
       ...FullEngagementAction
     }

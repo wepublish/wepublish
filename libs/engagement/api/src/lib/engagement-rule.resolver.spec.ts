@@ -1,3 +1,4 @@
+import { BlockTemplateDataloaderService } from '@wepublish/block-content/api';
 import type { Mock } from 'vitest';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { INestApplication } from '@nestjs/common';
@@ -109,6 +110,10 @@ describe('EngagementRuleResolver', () => {
         EngagementStageResolver,
         { provide: EngagementRuleService, useValue: service },
         { provide: ImageDataloaderService, useValue: { load: vi.fn() } },
+        {
+          provide: BlockTemplateDataloaderService,
+          useValue: { load: vi.fn() },
+        },
         { provide: APP_GUARD, useClass: PermissionsGuard },
       ],
     }).compile();

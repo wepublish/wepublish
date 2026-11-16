@@ -6076,7 +6076,10 @@
           "disabled": "Les lecteur·rice·s donnent leur adresse e-mail, mais l’intégration Mailchimp est désactivée. Le mur s’ouvre quand même et l’adresse est perdue.",
           "incomplete": "Les lecteur·rice·s donnent leur adresse e-mail, mais il manque la clé API ou l’audience à l’intégration Mailchimp. Le mur s’ouvre quand même et l’adresse est perdue."
         },
-        "newsletterProblemLink": "Configurer Mailchimp"
+        "newsletterProblemLink": "Configurer Mailchimp",
+        "blockTemplate": "Contenu",
+        "blockTemplateInfo": "Écris le contenu ici, ou affiche plutôt un modèle de blocs (le titre et les boutons restent).",
+        "ownContent": "L’écrire ici"
       },
       "validation": {
         "required": "Obligatoire",
@@ -6090,7 +6093,8 @@
         "announcementSoft": "Une annonce ne peut pas restreindre l’article",
         "announcementNoMeter": "Une annonce ne compte pas les articles",
         "newsletterWallRequired": "Une règle newsletter demande l’inscription à la newsletter",
-        "wholeNumber": "Saisis un nombre entier"
+        "wholeNumber": "Saisis un nombre entier",
+        "notInBanner": "Une bannière n’affiche que des textes"
       },
       "copyName": "{{name}} (copie)",
       "view": {

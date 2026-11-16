@@ -1732,6 +1732,10 @@ type EngagementStage {
 
   """Shown once the reader read this many other articles in the window."""
   afterArticles: Int!
+  blockTemplate: BlockTemplate
+
+  """A block template shown instead of the texts (not in banners)."""
+  blockTemplateId: String
   cta: String
   delaySeconds: Int!
   description: RichText
@@ -1755,6 +1759,9 @@ input EngagementStageInput {
 
   """Shown once the reader read this many other articles in the window."""
   afterArticles: Int!
+
+  """A block template shown instead of the texts (not in banners)."""
+  blockTemplateId: String
   cta: String
   delaySeconds: Int! = 0
   description: RichText

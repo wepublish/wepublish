@@ -556,38 +556,42 @@ fragment FullTeaserSlotsBlock on TeaserSlotsBlock {
   }
 }
 
+fragment FullBlockTemplate on BlockTemplate {
+  id
+  name
+
+  blocks {
+    ...BlockWithoutTeaser
+
+    ... on TeaserGridFlexBlock {
+      ...FullTeaserGridFlexBlock
+    }
+
+    ... on TeaserGridBlock {
+      ...FullTeaserGridBlock
+    }
+
+    ... on TeaserListBlock {
+      ...FullTeaserListBlock
+    }
+
+    ... on TeaserSlotsBlock {
+      ...FullTeaserSlotsBlock
+    }
+
+    ... on FlexBlock {
+      ...FullFlexBlock
+    }
+  }
+}
+
 fragment FullBlockTemplateBlock on BlockTemplateBlock {
   blockStyle: blockStyleName
   type
   templateId
 
   template {
-    id
-    name
-
-    blocks {
-      ...BlockWithoutTeaser
-
-      ... on TeaserGridFlexBlock {
-        ...FullTeaserGridFlexBlock
-      }
-
-      ... on TeaserGridBlock {
-        ...FullTeaserGridBlock
-      }
-
-      ... on TeaserListBlock {
-        ...FullTeaserListBlock
-      }
-
-      ... on TeaserSlotsBlock {
-        ...FullTeaserSlotsBlock
-      }
-
-      ... on FlexBlock {
-        ...FullFlexBlock
-      }
-    }
+    ...FullBlockTemplate
   }
 }
 

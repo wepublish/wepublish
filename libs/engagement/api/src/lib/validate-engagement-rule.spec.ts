@@ -189,6 +189,31 @@ describe('validateEngagementRule', () => {
     ).toEqual(['stages.0.actions.0.url: required']);
   });
 
+  it('shows a block template in pop-ups, boxes and the cutoff, not in a banner', () => {
+    expect(
+      codes(
+        metered({
+          stages: [
+            soft(2, { blockTemplateId: 'template' }),
+            hard(4, { blockTemplateId: 'template' }),
+          ],
+        })
+      )
+    ).toEqual([]);
+    expect(
+      codes(
+        announcement({
+          stages: [
+            soft(0, {
+              placement: EngagementPlacement.BANNER,
+              blockTemplateId: 'template',
+            }),
+          ],
+        })
+      )
+    ).toEqual(['stages.0.blockTemplateId: notInBanner']);
+  });
+
   it('needs a newsletter url in a banner, which has no room for the email', () => {
     expect(
       codes(
