@@ -6116,6 +6116,13 @@ export type NewsletterSignup = {
   newsletterToken: Scalars['String']['output'];
 };
 
+/** Why newsletter sign-ups can not reach Mailchimp: no integration, one that is switched off, or one without an API key or audience. */
+export enum NewsletterSignupProblem {
+  Disabled = 'disabled',
+  Incomplete = 'incomplete',
+  NoIntegration = 'noIntegration'
+}
+
 export type NotificationConfirmation = {
   __typename: 'NotificationConfirmation';
   confirmedByUserId?: Maybe<Scalars['String']['output']>;
@@ -7733,6 +7740,8 @@ export type Query = {
   newsletterCampaignReport: NewsletterReport;
   newsletterCampaigns: Array<NewsletterCampaign>;
   newsletterMergeFields: NewsletterMergeFields;
+  /** Why newsletter sign-ups (newsletter walls, newsletter actions without a url) can not reach Mailchimp; null when they can. */
+  newsletterSignupProblem?: Maybe<NewsletterSignupProblem>;
   /** Returns the instance-wide notification confirmations. Requires authentication. */
   notificationConfirmations: Array<NotificationConfirmation>;
   /** Returns the current user's read notifications. Requires authentication. */

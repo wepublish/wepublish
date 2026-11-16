@@ -1,3 +1,4 @@
+import { NewsletterMailchimpService } from '@wepublish/newsletter/api';
 import { ChallengeService } from '@wepublish/challenge/api';
 import type { Mock } from 'vitest';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
@@ -138,6 +139,10 @@ describe('EngagementPromptsResolver', () => {
         {
           provide: NewsletterVerifier,
           useClass: UnavailableNewsletterVerifier,
+        },
+        {
+          provide: NewsletterMailchimpService,
+          useValue: { signupProblem: async () => undefined },
         },
         {
           provide: ChallengeService,

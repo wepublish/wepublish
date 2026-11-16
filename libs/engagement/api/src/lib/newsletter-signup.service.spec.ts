@@ -1,4 +1,4 @@
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, Logger } from '@nestjs/common';
 import { deriveMeterSecret } from './meter-token';
 import { NewsletterSignupService } from './newsletter-signup.service';
 import {
@@ -10,8 +10,10 @@ const meterSecret = deriveMeterSecret('a jwt private key');
 
 describe('NewsletterSignupService', () => {
   const subscribe = vi.fn();
+  const signupProblem = vi.fn();
   const service = new NewsletterSignupService(meterSecret, {
     subscribe,
+    signupProblem,
   } as never);
 
   beforeEach(() => {
@@ -37,12 +39,17 @@ describe('NewsletterSignupService', () => {
     }
   );
 
-  it('still lets the reader past the wall without a Mailchimp integration', async () => {
+  it('still lets the reader past the wall without a Mailchimp integration, and logs why', async () => {
     subscribe.mockResolvedValue(false);
+    signupProblem.mockResolvedValue('disabled');
+    const error = vi
+      .spyOn(Logger.prototype, 'error')
+      .mockImplementation(() => undefined);
 
     expect(service.statusOf(await service.signUp('reader@example.com'))).toBe(
       'subscribed'
     );
+    expect(error).toHaveBeenCalledWith(expect.stringContaining('switched off'));
   });
 
   it('lets no one past the wall when Mailchimp refused the address, without telling why', async () => {

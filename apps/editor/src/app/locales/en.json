@@ -6070,7 +6070,13 @@
         "audienceMemberPlans": "Member plans",
         "showFirst": "Show this first",
         "showFirstInfo": "A reader sees at most one banner, one pop-up and one box in the article at a time. Without this, the more specific rule is shown first (a narrower audience, chosen pages only), then the newest.",
-        "newsletterUrlInfo": "Leave empty to ask for the email right in the prompt"
+        "newsletterUrlInfo": "Leave empty to ask for the email right in the prompt",
+        "newsletterProblem": {
+          "noIntegration": "Readers would give their email, but there is no Mailchimp integration to sign it up with: they get past the wall, the address goes nowhere.",
+          "disabled": "Readers would give their email, but the Mailchimp integration is switched off: they get past the wall, the address goes nowhere.",
+          "incomplete": "Readers would give their email, but the Mailchimp integration has no API key or audience: they get past the wall, the address goes nowhere."
+        },
+        "newsletterProblemLink": "Set up Mailchimp"
       },
       "validation": {
         "required": "Required",

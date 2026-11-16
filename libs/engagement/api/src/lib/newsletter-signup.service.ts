@@ -4,7 +4,10 @@ import {
   Injectable,
   Logger,
 } from '@nestjs/common';
-import { NewsletterMailchimpService } from '@wepublish/newsletter/api';
+import {
+  NewsletterMailchimpService,
+  NewsletterSignupProblem,
+} from '@wepublish/newsletter/api';
 import { METER_SECRET } from './meter-token';
 import {
   deriveNewsletterSecret,
@@ -12,6 +15,12 @@ import {
   verifyNewsletterToken,
 } from './newsletter-token';
 import { NewsletterStatus } from './reader-context';
+
+const PROBLEMS: Record<NewsletterSignupProblem, string> = {
+  noIntegration: 'there is no Mailchimp integration',
+  disabled: 'the Mailchimp integration is switched off',
+  incomplete: 'the Mailchimp integration has no API key or audience',
+};
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -52,8 +61,10 @@ export class NewsletterSignupService {
     }
 
     if (!subscribed) {
-      this.logger.warn(
-        'A reader signed up at a newsletter wall, but no Mailchimp integration is set up.'
+      const problem = await this.mailchimp.signupProblem();
+
+      this.logger.error(
+        `A reader signed up for the newsletter, but the address went nowhere: ${PROBLEMS[problem ?? 'noIntegration']} (Settings → Integrations). The reader got past the wall anyway.`
       );
     }
 

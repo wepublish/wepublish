@@ -4918,6 +4918,15 @@ type NewsletterSignup {
   newsletterToken: String!
 }
 
+"""
+Why newsletter sign-ups can not reach Mailchimp: no integration, one that is switched off, or one without an API key or audience.
+"""
+enum NewsletterSignupProblem {
+  disabled
+  incomplete
+  noIntegration
+}
+
 type NotificationConfirmation {
   confirmedByUserId: String
   createdAt: DateTime!
@@ -6771,6 +6780,11 @@ type Query {
   newsletterCampaignReport(id: String!): NewsletterReport!
   newsletterCampaigns(includeArchived: Boolean! = false): [NewsletterCampaign!]!
   newsletterMergeFields: NewsletterMergeFields!
+
+  """
+  Why newsletter sign-ups (newsletter walls, newsletter actions without a url) can not reach Mailchimp; null when they can.
+  """
+  newsletterSignupProblem: NewsletterSignupProblem
 
   """
   Returns the instance-wide notification confirmations. Requires authentication.

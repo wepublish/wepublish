@@ -81,3 +81,7 @@ mutation DeleteEngagementRule($id: String!) {
     ...FullEngagementRule
   }
 }
+
+query NewsletterSignupProblem {
+  newsletterSignupProblem
+}
