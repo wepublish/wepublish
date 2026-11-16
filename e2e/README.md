@@ -73,6 +73,7 @@ development.
 | `E2E_IMAP_USER` + `E2E_IMAP_PASSWORD`                         | `@mail`                 | a real mailbox, Ethereal on review; Mailpit wins if both set |
 | `E2E_RESEND_API_KEY` + `E2E_RESEND_DOMAIN`                    | `@inbound-mail`         | mail from outside servers (bexio) on the Resend domain      |
 | `E2E_BEXIO_API_TOKEN` and not `production`                    | `@bexio`                | the bexio **test** company the target's provider writes to  |
+| `E2E_PINGEN_CLIENT_ID` + `_CLIENT_SECRET` + `_ORGANISATION_ID`, not `production` | `@letter` | a Pingen account; the letter provider is set to its staging environment |
 | `E2E_MAILCHIMP_API_KEY` + `_LIST_ID` + `_INTEREST_ID`        | `@mailchimp`            | a real test audience (no fake); never production            |
 
 Every scenario carries a domain tag (`@auth`, `@paywall`, …) and the
@@ -103,7 +104,21 @@ skip reason in the report (`pnpm run e2e:report`).
 - **`bexio`** (`support/bexio.ts`) reads the bexio test company: the invoice
   the provider created for a we.publish invoice (`api_reference`), and its
   status. Invoices a scenario records in `ctx.bexioInvoices` are canceled
-  afterwards; the contacts bexio got stay. Unit specs of this support code: `pnpm nx test e2e`.
+  afterwards; the contacts bexio got stay. `pdf(id)` downloads the invoice
+  pdf the way the provider does for We.Publish's own delivery. Unit specs of
+  this support code: `pnpm nx test e2e`.
+- **Mail attachments:** `Mail.attachments` (filename, type, bytes) from
+  Mailpit and IMAP; the Resend inbox does not read them.
+- **Letters** have no fake: `@letter` scenarios point the tenant's letter
+  provider at Pingen's **staging** environment with `autoSend` off (nothing
+  is printed) and keep it so, as the secret cannot be read back. The check is
+  the reader's mail log (`mailLogs`, channel `letter`): a `providerLetterID`
+  and the address. The renewal journey (`bexio-renewal.feature`) also
+  switches the bexio provider to `bexio_invoiceMailByWePublish` and the
+  plan's invoice-creation interval to `sendAsLetter`, restoring both
+  afterwards (`@mode:serial`), and needs the features
+  `editor-renewal-provider-invoice`, `paper-letters` and `paper-letter-flow`
+  on the target (it skips with the missing ones named).
 - **`checkout`** (`support/simulated-payment.ts`) drives the SIMULATED payment
   provider's checkout page (Pay / Decline / Cancel). It is the only payment
   fake: Stripe and Payrexx are never mocked over HTTP. `@payment` scenarios
@@ -187,7 +202,14 @@ started (nor migrated) for a URL you override (`BASE_URL`, `E2E_EDITOR_URL`,
   `CAN_UPDATE_SYSTEM_MAILS`, `CAN_CREATE_ARTICLE`, `CAN_PUBLISH_ARTICLE`,
   `CAN_DELETE_ARTICLE`, `CAN_CREATE_PAYWALL`, `CAN_DELETE_PAYWALL`,
   `CAN_CREATE_PAGE`, `CAN_PUBLISH_PAGE`,
-  `CAN_UPDATE_CHALLENGE_PROVIDER_SETTINGS`.
+  `CAN_UPDATE_CHALLENGE_PROVIDER_SETTINGS`. The bexio renewal journey also
+  needs `CAN_CREATE_INVOICE` (`markInvoiceAsPaid`),
+  `CAN_GET_PAYMENT_PROVIDER_SETTINGS`, `CAN_UPDATE_PAYMENT_PROVIDER_SETTINGS`,
+  `CAN_GET_LETTER_PROVIDER_SETTINGS`, `CAN_UPDATE_LETTER_PROVIDER_SETTINGS`,
+  `CAN_RELOAD_PROVIDERS`, `CAN_GET_SUBSCRIPTION_FLOWS`,
+  `CAN_UPDATE_SUBSCRIPTION_FLOW`, `CAN_MANAGE_USER-DELIVERY-MODE` and
+  `CAN_GET_MAIL-LOGS` (the address goes through `updateUser`, covered by
+  `CAN_CREATE_USER`).
 - `@mail` journeys read the mailbox the review's mail provider sends to,
   over IMAP (`support/imap-inbox.ts`): `E2E_IMAP_USER` and
   `E2E_IMAP_PASSWORD` (secrets of the same names in CI), optional

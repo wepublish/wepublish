@@ -103,6 +103,8 @@ export class ResendInbox implements Inbox {
       to: mail.to,
       html: mail.html ?? '',
       text: mail.text ?? '',
+      // Not read: the journeys check bexio's own mails by their link only.
+      attachments: [],
     };
   }
 

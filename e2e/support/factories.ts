@@ -1,5 +1,22 @@
 import { base, de_CH, en, Faker } from '@faker-js/faker';
 import { ApiClient } from './api-client';
+import { MailLog } from './mail-logs';
+import { Flow, FlowQuery, flowFor } from './subscription-flows';
+
+export type PostalAddress = {
+  streetAddress: string;
+  streetAddressNumber?: string;
+  zipCode: string;
+  city: string;
+  country: string;
+};
+
+/** A Pingen account used in its staging environment only. */
+export type PingenTestAccount = {
+  clientId: string;
+  clientSecret: string;
+  organisationId: string;
+};
 
 /**
  * Synthetic test data, created through the GraphQL API and deleted again after
@@ -397,14 +414,247 @@ export class TestData {
       api.gql(`mutation { deleteSubscription(id: "${createSubscription.id}") { id } }`)
     );
 
-    return createSubscription;
+    return {
+      id: createSubscription.id,
+      memberPlanId: plan.id,
+      paymentMethodId: paymentMethod.id,
+      periodicity: 'yearly',
+      autoRenew: true,
+    } satisfies FlowQuery & { id: string };
+  }
+
+  /**
+   * Marks the subscription's open invoices as paid without a mail, e.g. the
+   * one a new subscription starts with, so it can be renewed.
+   */
+  async payOpenInvoices(subscriptionId: string) {
+    const api = await this.api();
+
+    for (let open = await this.findOpenInvoice(subscriptionId); open; open = await this.findOpenInvoice(subscriptionId)) {
+      await api.gql(
+        `mutation MarkPaid($id: String!) { markInvoiceAsPaid(id: $id, sendMail: false) { id } }`,
+        { id: open.id }
+      );
+    }
+  }
+
+  /**
+   * Renews the subscription as an editor does, and returns the new invoice.
+   * With the feature `editor-renewal-provider-invoice` this is the nightly
+   * job's handling: the payment provider's invoice and the invoice-creation
+   * mail or letter.
+   */
+  async renewSubscription(subscriptionId: string) {
+    const api = await this.api();
+
+    await api.gql(`mutation Renew($id: String!) { renewSubscription(id: $id) { id } }`, {
+      id: subscriptionId,
+    });
+
+    const renewed = await this.findOpenInvoice(subscriptionId);
+
+    if (!renewed) {
+      throw new Error(`Renewing subscription ${subscriptionId} left no open invoice.`);
+    }
+
+    return renewed;
+  }
+
+  /** The features switched on for the target's medium (One or WEP_FEATURES). */
+  async features() {
+    const api = await this.api();
+    const { features } = await api.gql<{ features: string[] }>(`query { features }`);
+
+    return features;
+  }
+
+  /** The reader's postal address; `country` as an ISO code or a name. */
+  async setAddress(reader: Reader, address: PostalAddress) {
+    const api = await this.api();
+
+    await api.gql(
+      `mutation SetAddress($id: String, $address: UserAddressInput) {
+        updateUser(id: $id, address: $address) { id }
+      }`,
+      { id: reader.id, address }
+    );
+  }
+
+  /** Letters or mails for this reader; goes with the reader when it is deleted. */
+  async setDeliveryMode(reader: Reader, channel: 'mail' | 'letter') {
+    const api = await this.api();
+    const { setUserDeliveryMode } = await api.gql<{
+      setUserDeliveryMode: { channel: string; canReceiveLetters: boolean };
+    }>(
+      `mutation SetDeliveryMode($userId: String!, $channel: MailChannel!) {
+        setUserDeliveryMode(userId: $userId, channel: $channel, reason: "e2e") { channel canReceiveLetters }
+      }`,
+      { userId: reader.id, channel }
+    );
+
+    return setUserDeliveryMode;
+  }
+
+  /**
+   * Changes settings of the payment provider behind a payment method for the
+   * scenario and puts the values it read back afterwards. The provider is
+   * shared: scenarios that change it belong in one `@mode:serial` feature.
+   */
+  async withPaymentProviderSettings(
+    paymentMethodSlug: string,
+    settings: Partial<Record<'bexio_invoiceMailByWePublish', boolean>>
+  ) {
+    const api = await this.api();
+    const { paymentProviderID } = await this.paymentMethod(paymentMethodSlug);
+    const fields = Object.keys(settings).join(' ');
+    const { paymentProviderSetting } = await api.gql<{
+      paymentProviderSetting: Record<string, unknown>;
+    }>(`query Setting($id: String!) { paymentProviderSetting(id: $id) { ${fields} } }`, {
+      id: paymentProviderID,
+    });
+
+    const update = (values: Record<string, unknown>) =>
+      api
+        .gql(
+          `mutation UpdateSetting(${Object.keys(values)
+            .map(key => `$${key}: Boolean`)
+            .join(', ')}, $id: String) {
+            updatePaymentProviderSetting(id: $id, ${Object.keys(values)
+              .map(key => `${key}: $${key}`)
+              .join(', ')}) { id }
+          }`,
+          { id: paymentProviderID, ...values }
+        )
+        .then(() => this.reloadProviders());
+
+    await update(settings);
+    this.onCleanup(`payment provider ${paymentProviderID} settings`, () =>
+      update(
+        Object.fromEntries(
+          Object.keys(settings).map(key => [key, paymentProviderSetting[key] ?? false])
+        )
+      )
+    );
+  }
+
+  /**
+   * Has the subscription flow the API applies to this subscription send its
+   * invoice-creation event as a letter (to readers in letter mode), and
+   * switches it back afterwards. Shared like the payment provider.
+   */
+  async withInvoiceCreationAsLetter(subscription: FlowQuery) {
+    const api = await this.api();
+    const { subscriptionFlows } = await api.gql<{ subscriptionFlows: Flow[] }>(
+      `query { subscriptionFlows(defaultFlowOnly: false) {
+        id default memberPlan { id } paymentMethods { id } periodicities autoRenewal
+        intervals { id event daysAwayFromEnding sendAsLetter mailTemplate { id } }
+      } }`
+    );
+    const flow = flowFor(subscriptionFlows, subscription);
+    const interval = flow.intervals.find(({ event }) => event === 'INVOICE_CREATION');
+
+    if (!interval?.mailTemplate) {
+      throw new Error(
+        `Subscription flow ${flow.id} has no invoice-creation mail template, so nothing would be sent.`
+      );
+    }
+
+    if (interval.sendAsLetter) {
+      return;
+    }
+
+    // The API drops the template unless the update names it again.
+    const update = (sendAsLetter: boolean) =>
+      api.gql(
+        `mutation UpdateInterval($id: String!, $mailTemplateId: String, $daysAwayFromEnding: Int, $sendAsLetter: Boolean) {
+          updateSubscriptionInterval(id: $id, mailTemplateId: $mailTemplateId,
+            daysAwayFromEnding: $daysAwayFromEnding, sendAsLetter: $sendAsLetter) { id }
+        }`,
+        {
+          id: interval.id,
+          mailTemplateId: interval.mailTemplate?.id,
+          daysAwayFromEnding: interval.daysAwayFromEnding,
+          sendAsLetter,
+        }
+      );
+
+    await update(true);
+    this.onCleanup(`invoice-creation interval ${interval.id}`, () => update(false));
+  }
+
+  /**
+   * Points the letter provider at Pingen's staging environment with the test
+   * account, without sending letters on: nothing is ever printed. Kept
+   * afterwards, as secrets cannot be read back to restore them.
+   */
+  async ensureLetterProviderStaging(pingen: PingenTestAccount) {
+    const api = await this.api();
+    const { letterProviderSettings } = await api.gql<{
+      letterProviderSettings: {
+        id: string;
+        environment: string;
+        autoSend: boolean;
+        clientId: string | null;
+        organisationId: string | null;
+      }[];
+    }>(`query { letterProviderSettings { id environment autoSend clientId organisationId } }`);
+    const [provider] = letterProviderSettings;
+
+    if (!provider) {
+      throw new Error('The target has no letter provider to send the letter with.');
+    }
+
+    if (
+      provider.environment === 'staging' &&
+      !provider.autoSend &&
+      provider.clientId === pingen.clientId &&
+      provider.organisationId === pingen.organisationId
+    ) {
+      return;
+    }
+
+    await api.gql(
+      `mutation PingenStaging($id: String, $clientId: String, $clientSecret: String, $organisationId: String) {
+        updateLetterProviderSetting(id: $id, environment: staging, autoSend: false,
+          clientId: $clientId, clientSecret: $clientSecret, organisationId: $organisationId) { id }
+      }`,
+      { id: provider.id, ...pingen }
+    );
+    await this.reloadProviders();
+  }
+
+  /** The reader's mail log on one channel, newest first. */
+  async mailLogs(reader: Reader, channel: MailLog['channel']) {
+    const api = await this.api();
+    const { mailLogs } = await api.gql<{ mailLogs: { nodes: MailLog[] } }>(
+      `query MailLogs($filter: MailLogFilter) {
+        mailLogs(filter: $filter, take: 20) {
+          nodes { id channel state sentDate address providerLetterID error }
+        }
+      }`,
+      { filter: { recipientId: reader.id, channel } }
+    );
+
+    return mailLogs.nodes;
+  }
+
+  private async reloadProviders() {
+    const api = await this.api();
+
+    await api.gql(`mutation { reloadProviders }`);
   }
 
   async paymentMethod(slug: string) {
     const api = await this.api();
     const { paymentMethods } = await api.gql<{
-      paymentMethods: { id: string; slug: string; name: string; active: boolean }[];
-    }>(`query { paymentMethods { id slug name active } }`);
+      paymentMethods: {
+        id: string;
+        slug: string;
+        name: string;
+        active: boolean;
+        paymentProviderID: string;
+      }[];
+    }>(`query { paymentMethods { id slug name active paymentProviderID } }`);
     const paymentMethod = paymentMethods.find(m => m.slug === slug && m.active);
 
     if (!paymentMethod) {
@@ -420,37 +670,21 @@ export class TestData {
    * would (the API refuses to renew while an invoice is open).
    */
   async openInvoice(subscriptionId: string) {
+    return (await this.findOpenInvoice(subscriptionId)) ?? this.renewSubscription(subscriptionId);
+  }
+
+  private async findOpenInvoice(subscriptionId: string) {
     const api = await this.api();
-    const findOpen = async () => {
-      const { invoices } = await api.gql<{
-        invoices: { nodes: { id: string; paidAt: string | null; canceledAt: string | null }[] };
-      }>(
-        `query Invoices($subscriptionID: String) {
-          invoices(filter: { subscriptionID: $subscriptionID }, take: 10) { nodes { id paidAt canceledAt } }
-        }`,
-        { subscriptionID: subscriptionId }
-      );
+    const { invoices } = await api.gql<{
+      invoices: { nodes: { id: string; paidAt: string | null; canceledAt: string | null }[] };
+    }>(
+      `query Invoices($subscriptionID: String) {
+        invoices(filter: { subscriptionID: $subscriptionID }, take: 10) { nodes { id paidAt canceledAt } }
+      }`,
+      { subscriptionID: subscriptionId }
+    );
 
-      return invoices.nodes.find(i => !i.paidAt && !i.canceledAt);
-    };
-
-    const existing = await findOpen();
-
-    if (existing) {
-      return existing;
-    }
-
-    await api.gql(`mutation Renew($id: String!) { renewSubscription(id: $id) { id } }`, {
-      id: subscriptionId,
-    });
-
-    const renewed = await findOpen();
-
-    if (!renewed) {
-      throw new Error(`Renewing subscription ${subscriptionId} left no open invoice.`);
-    }
-
-    return renewed;
+    return invoices.nodes.find(i => !i.paidAt && !i.canceledAt);
   }
 
   /**

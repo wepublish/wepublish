@@ -1,6 +1,22 @@
 import { ImapFlow } from 'imapflow';
-import { simpleParser } from 'mailparser';
+import { ParsedMail, simpleParser } from 'mailparser';
 import { ImapConfig, Inbox, Mail, MailQuery, poll } from './inbox';
+
+/** A parsed mail as the steps see it. */
+export function toMail(id: string, parsed: ParsedMail): Mail {
+  return {
+    id,
+    subject: parsed.subject ?? '',
+    to: [parsed.to ?? []].flat().flatMap(({ value }) => value.map(({ address }) => address ?? '')),
+    html: typeof parsed.html === 'string' ? parsed.html : '',
+    text: parsed.text ?? '',
+    attachments: parsed.attachments.map(({ filename, contentType, content }) => ({
+      filename: filename ?? '',
+      contentType,
+      content,
+    })),
+  };
+}
 
 type Candidate = {
   uid: number;
@@ -147,15 +163,7 @@ export class ImapInbox implements Inbox {
       // Read once, then gone: keeps the shared mailbox small.
       await client.messageDelete(String(uid), { uid: true });
 
-      const recipients = [parsed.to ?? []].flat().flatMap(({ value }) => value.map(({ address }) => address ?? ''));
-
-      return {
-        id: String(uid),
-        subject: parsed.subject ?? '',
-        to: recipients,
-        html: typeof parsed.html === 'string' ? parsed.html : '',
-        text: parsed.text ?? '',
-      };
+      return toMail(String(uid), parsed);
     } finally {
       lock.release();
     }

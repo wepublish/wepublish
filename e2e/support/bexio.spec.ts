@@ -66,6 +66,28 @@ describe('BexioTestCompany', () => {
     expect(await bexio.invoiceFor('inv-1')).toBeUndefined();
   });
 
+  it('downloads the pdf of an invoice as bexio renders it for the reader', async () => {
+    const calls: Call[] = [];
+    const pdf = Buffer.from('%PDF-1.4 invoice');
+    const bexio = new BexioTestCompany(
+      fakeRequest(
+        {
+          'GET /2.0/kb_invoice/11/pdf?logopaper=1': {
+            name: 'RE-11.pdf',
+            size: pdf.length,
+            mime: 'application/pdf',
+            content: pdf.toString('base64'),
+          },
+        },
+        calls
+      ),
+      { token: 'tok' }
+    );
+
+    expect(await bexio.pdf(11)).toEqual({ name: 'RE-11.pdf', mime: 'application/pdf', content: pdf });
+    expect(calls.map(c => c.url)).toEqual(['https://api.bexio.com/2.0/kb_invoice/11/pdf?logopaper=1']);
+  });
+
   it('cancels an invoice', async () => {
     const calls: Call[] = [];
     const bexio = new BexioTestCompany(
