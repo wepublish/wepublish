@@ -1,7 +1,6 @@
 import { NotFoundException } from '@nestjs/common';
-import { Currency, PaymentPeriodicity } from '@prisma/client';
+import { PaymentPeriodicity } from '@prisma/client';
 import { FEATURE_METADATA_KEY } from '@wepublish/features/api';
-import { MemberPlanDataloader } from '@wepublish/member-plan/api';
 import { PaymentMethodDataloader } from '@wepublish/payment/api';
 import {
   CanDeleteGiftCodes,
@@ -25,14 +24,10 @@ const setup = () => {
     createOffer: vi.fn().mockResolvedValue(offer),
     updateOffer: vi.fn().mockResolvedValue(offer),
     deleteOffer: vi.fn().mockResolvedValue(offer),
-    getPrice: vi.fn().mockReturnValue({ amount: 100, currency: Currency.CHF }),
     getPaymentMethods: vi.fn().mockResolvedValue([{ id: 'pm-1' }]),
     getPaymentMethodIds: vi.fn().mockResolvedValue(['pm-1', 'pm-2']),
   };
   const dataloader = { load: vi.fn().mockResolvedValue(offer) };
-  const memberPlans = {
-    load: vi.fn().mockResolvedValue({ id: 'plan-1', currency: Currency.CHF }),
-  };
   const paymentMethods = {
     load: vi.fn().mockResolvedValue({ id: 'pm-renew', name: 'Rechnung' }),
   };
@@ -40,11 +35,10 @@ const setup = () => {
   const resolver = new GiftCodeOfferResolver(
     service as unknown as GiftCodeOfferService,
     dataloader as unknown as GiftCodeOfferDataloader,
-    memberPlans as unknown as MemberPlanDataloader,
     paymentMethods as unknown as PaymentMethodDataloader
   );
 
-  return { resolver, service, dataloader, memberPlans, paymentMethods };
+  return { resolver, service, dataloader, paymentMethods };
 };
 
 describe('GiftCodeOfferResolver', () => {
@@ -108,7 +102,7 @@ describe('GiftCodeOfferResolver', () => {
       memberPlanId: 'plan-1',
       periodicity: PaymentPeriodicity.yearly,
       active: true,
-      issueBeforePayment: false,
+      price: 12000,
       paymentMethodIds: ['pm-1'],
     };
 
@@ -122,20 +116,6 @@ describe('GiftCodeOfferResolver', () => {
       name: 'x',
     });
     expect(service.deleteOffer).toHaveBeenCalledWith('offer-1');
-  });
-
-  it('prices the offer with its member plan', async () => {
-    const { resolver, service, memberPlans } = setup();
-
-    await expect(resolver.price(offer)).resolves.toEqual({
-      amount: 100,
-      currency: Currency.CHF,
-    });
-    expect(memberPlans.load).toHaveBeenCalledWith('plan-1');
-    expect(service.getPrice).toHaveBeenCalledWith({
-      periodicity: PaymentPeriodicity.yearly,
-      memberPlan: { id: 'plan-1', currency: Currency.CHF },
-    });
   });
 
   it('resolves the filtered payment methods and the configured ids', async () => {

@@ -88,7 +88,7 @@ export class GiftCodeService {
 
     const offer = await this.prisma.giftCodeOffer.findUnique({
       where: { id: input.offerId },
-      include: { memberPlan: { include: { periodicityPricing: true } } },
+      include: { memberPlan: true },
     });
 
     if (!offer?.active || !offer.memberPlan.active) {
@@ -105,11 +105,8 @@ export class GiftCodeService {
       offer.id,
       input
     );
-    const { amount, currency } = this.offers.getPrice(offer);
-
-    if (amount <= 0) {
-      throw new BadRequestException('Gift code offer has no price');
-    }
+    const amount = offer.price;
+    const currency = offer.memberPlan.currency;
 
     const discount =
       discountCode ?
@@ -137,8 +134,6 @@ export class GiftCodeService {
           quantity: 1,
           discountCodeId: discount?.id,
           attach: async (tx, item) => {
-            const issuedAt = offer.issueBeforePayment ? new Date() : null;
-
             await tx.giftCode.create({
               data: {
                 code: generateGiftCode(),
@@ -151,10 +146,6 @@ export class GiftCodeService {
                 recipientName,
                 autoRenew: offer.autoRenew,
                 renewalPaymentMethodId: offer.renewalPaymentMethodId,
-                issuedAt,
-                expiresAt:
-                  issuedAt &&
-                  expiryFrom(issuedAt, offer.redemptionWindowMonths),
               },
             });
           },

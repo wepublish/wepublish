@@ -20,13 +20,15 @@ Wenn Geschenkcodes eingeschaltet sind:
 - Unter **Geschenke → Geschenkangebote** legt ihr fest, was sich verschenken
   lässt: einen Abo-Plan mit einer Laufzeit, einen Namen, eine Beschreibung,
   ein Bild und wie viele Monate der Code einlösbar ist (leer heisst
-  unbegrenzt). Der Preis ist immer der aktuelle Preis des Plans für diese
-  Laufzeit.
+  unbegrenzt).
+- Jedes Angebot hat einen eigenen Preis. Das Formular setzt den Preis des
+  Plans für die gewählte Laufzeit ein und zeigt an, wenn das Geschenk
+  günstiger oder teurer ist als das Abo. Das Abo, das ein Code startet,
+  kostet weiterhin den normalen Preis des Plans.
 - Jedes Angebot hat eigene Zahlungsmethoden. Stripe, Stripe Checkout, Payrexx
   und Mollie nehmen Geschenkzahlungen an, Bexio-Rechnungen noch nicht.
-- Mit **Code vor der Zahlung ausstellen** erhalten Käufer:innen den Code
-  direkt nach der Bestellung. Kommt die Zahlung nicht, wird der Code nach
-  14 Tagen storniert.
+- Käufer:innen sehen ihren Code, sobald die Zahlung eingegangen ist. Eine
+  Bestellung, die unbezahlt bleibt, wird nach 14 Tagen storniert.
 - Mit **Rabattcodes erlauben** können Käufer:innen einen Rabattcode des Plans
   eingeben. Ein Code von 100 % macht das Geschenk gratis, und der
   Geschenkcode wird sofort ausgestellt.

@@ -44,6 +44,7 @@ type GiftCodeOfferRules = Pick<
   CreateGiftCodeOfferInput,
   'memberPlanId' | 'periodicity' | 'redemptionWindowMonths'
 > & {
+  price?: number;
   paymentMethodIds?: string[];
   autoRenew: boolean;
   renewalPaymentMethodId: string | null;
@@ -207,6 +208,7 @@ export class GiftCodeOfferService {
           input.redemptionWindowMonths
         : existing.redemptionWindowMonths,
       paymentMethodIds,
+      price: input.price ?? undefined,
       autoRenew: autoRenew ?? existing.autoRenew,
       renewalPaymentMethodId:
         renewalPaymentMethodUpdate !== undefined ?
@@ -223,6 +225,7 @@ export class GiftCodeOfferService {
         where: { id },
         data: {
           ...input,
+          price: input.price ?? undefined,
           allowDiscountCodes: allowDiscountCodes ?? undefined,
           autoRenew: autoRenew ?? undefined,
           renewalPaymentMethodId: renewalPaymentMethodUpdate,
@@ -268,7 +271,12 @@ export class GiftCodeOfferService {
     paymentMethodIds,
     autoRenew,
     renewalPaymentMethodId,
+    price,
   }: GiftCodeOfferRules) {
+    if (price !== undefined && price <= 0) {
+      throw new BadRequestException('The price must be greater than 0');
+    }
+
     if (redemptionWindowMonths != null && redemptionWindowMonths <= 0) {
       throw new BadRequestException(
         'The redemption window must be at least one month'

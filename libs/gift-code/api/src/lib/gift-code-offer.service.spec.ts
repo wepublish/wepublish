@@ -52,7 +52,6 @@ const offer = (overrides: Record<string, unknown> = {}) => ({
   memberPlanId: 'plan-1',
   periodicity: PaymentPeriodicity.yearly,
   redemptionWindowMonths: 12,
-  issueBeforePayment: false,
   ...overrides,
 });
 
@@ -62,7 +61,7 @@ const createInput = (overrides: Record<string, unknown> = {}) => ({
   memberPlanId: 'plan-1',
   periodicity: PaymentPeriodicity.yearly,
   redemptionWindowMonths: 12,
-  issueBeforePayment: false,
+  price: 12000,
   paymentMethodIds: ['pm-1', 'pm-2'],
   ...overrides,
 });
@@ -185,9 +184,34 @@ describe('GiftCodeOfferService', () => {
           memberPlanId: 'plan-1',
           periodicity: PaymentPeriodicity.yearly,
           redemptionWindowMonths: 12,
-          issueBeforePayment: false,
+          price: 12000,
           paymentMethods: { connect: [{ id: 'pm-1' }, { id: 'pm-2' }] },
         },
+      });
+    });
+
+    it.each([
+      ['zero', 0],
+      ['a negative price', -100],
+    ])('rejects %s as the offer price', async (_, price) => {
+      const { service, prisma } = setup();
+
+      await expect(service.createOffer(createInput({ price }))).rejects.toThrow(
+        'The price must be greater than 0'
+      );
+      expect(prisma.giftCodeOffer.create).not.toHaveBeenCalled();
+    });
+
+    it.each([
+      ['lower', 5000],
+      ['higher', 20000],
+    ])('accepts an offer price %s than the plan price', async (_, price) => {
+      const { service, prisma } = setup();
+
+      await service.createOffer(createInput({ price }));
+
+      expect(prisma.giftCodeOffer.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({ price }),
       });
     });
 
@@ -484,6 +508,26 @@ describe('GiftCodeOfferService', () => {
         where: { id: 'plan-2' },
         include: { periodicityPricing: true, availablePaymentMethods: true },
       });
+      expect(prisma.giftCodeOffer.update).not.toHaveBeenCalled();
+    });
+
+    it('changes the offer price', async () => {
+      const { service, prisma } = setup();
+
+      await service.updateOffer({ id: 'offer-1', price: 9000 });
+
+      expect(prisma.giftCodeOffer.update).toHaveBeenCalledWith({
+        where: { id: 'offer-1' },
+        data: { price: 9000, paymentMethods: undefined },
+      });
+    });
+
+    it('rejects a zero offer price on update', async () => {
+      const { service, prisma } = setup();
+
+      await expect(
+        service.updateOffer({ id: 'offer-1', price: 0 })
+      ).rejects.toThrow('The price must be greater than 0');
       expect(prisma.giftCodeOffer.update).not.toHaveBeenCalled();
     });
 

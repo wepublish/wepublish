@@ -1,23 +1,18 @@
 import { useMutation } from '@apollo/client/react';
-import { createTheme, ThemeProvider } from '@mui/material';
-import {
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-  within,
-} from '@testing-library/react';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import {
   MemberPlanDocument,
   PaymentMethodListDocument,
   PaymentPeriodicity,
 } from '@wepublish/editor/api';
-import { MemoryRouter } from 'react-router-dom';
+import {
+  formSectionOf,
+  getFieldByLabel,
+  renderEditorForm,
+} from '@wepublish/form/editor/testing';
 import type { Mock } from 'vitest';
 
 import { GiftCodeOfferCreateView } from './giftCodeOfferCreateView';
-
-const theme = createTheme({ cssVariables: true });
 
 const navigate = vi.fn();
 
@@ -136,17 +131,15 @@ const mockedUseMutation = useMutation as unknown as Mock;
 const createOffer = vi.fn();
 
 const renderView = () =>
-  render(
-    <ThemeProvider theme={theme}>
-      <MemoryRouter>
-        <GiftCodeOfferCreateView />
-      </MemoryRouter>
-    </ThemeProvider>
-  );
+  renderEditorForm(<GiftCodeOfferCreateView />, {
+    route: '/gift-codes/offers/create',
+  });
+
+const nameField = () => getFieldByLabel(/^giftCodeOffer\.form\.name/);
 
 const choosePeriodicity = (periodicity: PaymentPeriodicity) => {
   fireEvent.mouseDown(
-    screen.getByRole('combobox', { name: 'giftCodeOffer.form.periodicity' })
+    screen.getByRole('combobox', { name: /^giftCodeOffer\.form\.periodicity/ })
   );
   fireEvent.click(
     within(screen.getByRole('listbox')).getByRole('option', {
@@ -155,15 +148,19 @@ const choosePeriodicity = (periodicity: PaymentPeriodicity) => {
   );
 };
 
+const priceField = () => getFieldByLabel(/^giftCodeOffer\.form\.price/);
+
 const choosePaymentMethod = (name: string) => {
   fireEvent.mouseDown(
-    screen.getByRole('combobox', { name: 'giftCodeOffer.form.paymentMethods' })
+    screen.getByRole('combobox', {
+      name: /^giftCodeOffer\.form\.paymentMethods/,
+    })
   );
   fireEvent.click(screen.getByRole('option', { name }));
 };
 
 const fillRequiredFields = () => {
-  fireEvent.change(screen.getByLabelText('giftCodeOffer.form.name'), {
+  fireEvent.change(nameField(), {
     target: { value: 'Ein Jahr schenken' },
   });
   fireEvent.click(screen.getByRole('button', { name: 'pick plan' }));
@@ -176,13 +173,13 @@ const autoRenewCheckbox = () =>
 
 const renewalMethodSelect = () =>
   screen.queryByRole('combobox', {
-    name: 'giftCodeOffer.form.renewalPaymentMethod',
+    name: /^giftCodeOffer\.form\.renewalPaymentMethod/,
   });
 
 const openRenewalMethods = () =>
   fireEvent.mouseDown(
     screen.getByRole('combobox', {
-      name: 'giftCodeOffer.form.renewalPaymentMethod',
+      name: /^giftCodeOffer\.form\.renewalPaymentMethod/,
     })
   );
 
@@ -190,6 +187,9 @@ beforeEach(() => {
   planOverrides = {};
   navigate.mockReset();
   createOffer.mockReset();
+  createOffer.mockResolvedValue({
+    data: { createGiftCodeOffer: { id: 'offer-1' } },
+  });
   mockedUseMutation.mockReset();
   mockedUseMutation.mockReturnValue([createOffer, { loading: false }]);
 });
@@ -198,16 +198,16 @@ describe('GiftCodeOfferCreateView', () => {
   it('shows active as a ticked checkbox next to the sales settings', () => {
     renderView();
 
-    const active = screen.getByRole('checkbox', {
-      name: 'giftCodeOffer.form.active',
-    });
+    const sale = formSectionOf('giftCodeOffer.form.sections.sale');
 
-    expect(active).toBeChecked();
-    expect(active.closest('.MuiCard-root')).toBe(
-      screen
-        .getByRole('combobox', { name: 'giftCodeOffer.form.paymentMethods' })
-        .closest('.MuiCard-root')
-    );
+    expect(
+      sale.getByRole('checkbox', { name: 'giftCodeOffer.form.active' })
+    ).toBeChecked();
+    expect(
+      sale.getByRole('combobox', {
+        name: /^giftCodeOffer\.form\.paymentMethods/,
+      })
+    ).toBeInTheDocument();
   });
 
   it('puts active above every other sales setting', () => {
@@ -227,7 +227,7 @@ describe('GiftCodeOfferCreateView', () => {
   it('creates an inactive offer once active is unticked', async () => {
     renderView();
 
-    fireEvent.change(screen.getByLabelText('giftCodeOffer.form.name'), {
+    fireEvent.change(nameField(), {
       target: { value: 'Ein Jahr schenken' },
     });
     fireEvent.click(screen.getByRole('button', { name: 'pick plan' }));
@@ -250,7 +250,9 @@ describe('GiftCodeOfferCreateView', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'pick plan' }));
     fireEvent.mouseDown(
-      screen.getByRole('combobox', { name: 'giftCodeOffer.form.periodicity' })
+      screen.getByRole('combobox', {
+        name: /^giftCodeOffer\.form\.periodicity/,
+      })
     );
 
     const options = within(screen.getByRole('listbox'))
@@ -285,7 +287,9 @@ describe('GiftCodeOfferCreateView', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'pick plan' }));
     fireEvent.mouseDown(
-      screen.getByRole('combobox', { name: 'giftCodeOffer.form.periodicity' })
+      screen.getByRole('combobox', {
+        name: /^giftCodeOffer\.form\.periodicity/,
+      })
     );
 
     expect(
@@ -300,26 +304,91 @@ describe('GiftCodeOfferCreateView', () => {
       })
     );
 
-    expect(
-      screen.getByText('giftCodeOffer.form.currentPrice:120.00 CHF')
-    ).toBeInTheDocument();
+    expect(priceField()).toHaveValue('120.00');
   });
 
-  it('shows the price the buyer pays for the chosen duration', () => {
-    renderView();
+  describe('price', () => {
+    it('is prefilled with the plan price of the chosen duration', () => {
+      renderView();
 
-    fireEvent.click(screen.getByRole('button', { name: 'pick plan' }));
-    choosePeriodicity(PaymentPeriodicity.Yearly);
+      fireEvent.click(screen.getByRole('button', { name: 'pick plan' }));
+      choosePeriodicity(PaymentPeriodicity.Yearly);
 
-    expect(
-      screen.getByText('giftCodeOffer.form.currentPrice:120.00 CHF')
-    ).toBeInTheDocument();
+      expect(priceField()).toHaveValue('120.00');
+      expect(
+        screen.getByText('giftCodeOffer.form.priceSameAsPlan')
+      ).toBeInTheDocument();
+    });
+
+    it('follows the duration while it was not edited', () => {
+      renderView();
+
+      fireEvent.click(screen.getByRole('button', { name: 'pick plan' }));
+      choosePeriodicity(PaymentPeriodicity.Yearly);
+      choosePeriodicity(PaymentPeriodicity.Monthly);
+
+      expect(priceField()).toHaveValue('10.00');
+    });
+
+    it('keeps an edited price when the duration changes', () => {
+      renderView();
+
+      fireEvent.click(screen.getByRole('button', { name: 'pick plan' }));
+      choosePeriodicity(PaymentPeriodicity.Yearly);
+      fireEvent.change(priceField(), { target: { value: '99' } });
+      choosePeriodicity(PaymentPeriodicity.Monthly);
+
+      expect(priceField()).toHaveValue('99');
+    });
+
+    it('warns without blocking when the gift is cheaper than subscribing', async () => {
+      renderView();
+
+      fillRequiredFields();
+      fireEvent.change(priceField(), { target: { value: '99' } });
+
+      expect(
+        screen.getByText('giftCodeOffer.form.priceBelowPlan:120.00 CHF')
+      ).toBeInTheDocument();
+
+      fireEvent.click(screen.getByTestId('saveButton'));
+
+      await waitFor(() =>
+        expect(createOffer).toHaveBeenCalledWith({
+          variables: expect.objectContaining({ price: 9900 }),
+        })
+      );
+    });
+
+    it('warns when the gift is more expensive than subscribing', () => {
+      renderView();
+
+      fillRequiredFields();
+      fireEvent.change(priceField(), { target: { value: '150.50' } });
+
+      expect(
+        screen.getByText('giftCodeOffer.form.priceAbovePlan:120.00 CHF')
+      ).toBeInTheDocument();
+    });
+
+    it('will not create a free offer', async () => {
+      renderView();
+
+      fillRequiredFields();
+      fireEvent.change(priceField(), { target: { value: '0' } });
+      fireEvent.click(screen.getByTestId('saveButton'));
+
+      expect(
+        await screen.findByText(/^giftCodeOffer\.form\.priceInvalid/)
+      ).toBeInTheDocument();
+      expect(createOffer).not.toHaveBeenCalled();
+    });
   });
 
   it('will not create an offer without a payment method', async () => {
     renderView();
 
-    fireEvent.change(screen.getByLabelText('giftCodeOffer.form.name'), {
+    fireEvent.change(nameField(), {
       target: { value: 'Ein Jahr schenken' },
     });
     fireEvent.click(screen.getByRole('button', { name: 'pick plan' }));
@@ -327,7 +396,7 @@ describe('GiftCodeOfferCreateView', () => {
     fireEvent.click(screen.getByTestId('saveButton'));
 
     expect(
-      await screen.findByText('giftCodeOffer.form.paymentMethodsRequired')
+      await screen.findByText(/^giftCodeOffer\.form\.paymentMethodsRequired/)
     ).toBeInTheDocument();
     expect(createOffer).not.toHaveBeenCalled();
   });
@@ -335,19 +404,14 @@ describe('GiftCodeOfferCreateView', () => {
   it('creates the offer with what was entered', async () => {
     renderView();
 
-    fireEvent.change(screen.getByLabelText('giftCodeOffer.form.name'), {
+    fireEvent.change(nameField(), {
       target: { value: 'Ein Jahr schenken' },
     });
     fireEvent.click(screen.getByRole('button', { name: 'pick plan' }));
     choosePeriodicity(PaymentPeriodicity.Yearly);
     fireEvent.change(
-      screen.getByLabelText('giftCodeOffer.form.redemptionWindowMonths'),
+      getFieldByLabel(/^giftCodeOffer\.form\.redemptionWindowMonths/),
       { target: { value: '12' } }
-    );
-    fireEvent.click(
-      screen.getByRole('checkbox', {
-        name: 'giftCodeOffer.form.issueBeforePayment',
-      })
     );
     fireEvent.click(
       screen.getByRole('checkbox', {
@@ -363,11 +427,11 @@ describe('GiftCodeOfferCreateView', () => {
           name: 'Ein Jahr schenken',
           description: null,
           active: true,
-          issueBeforePayment: true,
           allowDiscountCodes: true,
           memberPlanId: 'plan-1',
           periodicity: PaymentPeriodicity.Yearly,
           redemptionWindowMonths: 12,
+          price: 12000,
           imageID: null,
           paymentMethodIds: ['method-2'],
           autoRenew: false,
@@ -439,7 +503,7 @@ describe('GiftCodeOfferCreateView', () => {
 
       expect(
         await screen.findByText(
-          'giftCodeOffer.form.renewalPaymentMethodRequired'
+          /^giftCodeOffer\.form\.renewalPaymentMethodRequired/
         )
       ).toBeInTheDocument();
       expect(createOffer).not.toHaveBeenCalled();
@@ -487,7 +551,7 @@ describe('GiftCodeOfferCreateView', () => {
 
       expect(
         await screen.findByText(
-          'giftCodeOffer.form.renewalPaymentMethodRequired'
+          /^giftCodeOffer\.form\.renewalPaymentMethodRequired/
         )
       ).toBeInTheDocument();
       expect(createOffer).not.toHaveBeenCalled();
@@ -531,12 +595,71 @@ describe('GiftCodeOfferCreateView', () => {
     });
   });
 
-  it('opens the new offer once it is created', () => {
+  it('picking another plan forgets the duration', () => {
     renderView();
 
-    const { onCompleted } = mockedUseMutation.mock.calls.at(-1)![1];
-    onCompleted({ createGiftCodeOffer: { id: 'offer-1' } });
+    fireEvent.click(screen.getByRole('button', { name: 'pick plan' }));
+    choosePeriodicity(PaymentPeriodicity.Yearly);
+    fireEvent.click(screen.getByRole('button', { name: 'pick plan' }));
 
-    expect(navigate).toHaveBeenCalledWith('./../edit/offer-1');
+    expect(
+      screen.getByRole('combobox', {
+        name: /^giftCodeOffer\.form\.periodicity/,
+      })
+    ).not.toHaveTextContent('memberPlanList.paymentPeriodicity.yearly');
+  });
+
+  it('asks for a name', async () => {
+    renderView();
+
+    fireEvent.click(screen.getByTestId('saveButton'));
+
+    expect(
+      await screen.findAllByText(/^form\.errors\.required/)
+    ).not.toHaveLength(0);
+    expect(createOffer).not.toHaveBeenCalled();
+  });
+
+  it('opens the new offer once it is created', async () => {
+    createOffer.mockResolvedValue({
+      data: { createGiftCodeOffer: { id: 'offer-1' } },
+    });
+    renderView();
+
+    fillRequiredFields();
+    fireEvent.click(screen.getByTestId('saveButton'));
+
+    await waitFor(() =>
+      expect(navigate).toHaveBeenCalledWith('/gift-codes/offers/edit/offer-1')
+    );
+  });
+
+  it('goes back to the offers once it is created with save and close', async () => {
+    createOffer.mockResolvedValue({
+      data: { createGiftCodeOffer: { id: 'offer-1' } },
+    });
+    renderView();
+
+    fillRequiredFields();
+    fireEvent.click(screen.getByTestId('saveAndCloseButton'));
+
+    await waitFor(() =>
+      expect(navigate).toHaveBeenCalledWith('/gift-codes/offers')
+    );
+  });
+
+  it('shows why the server refused the offer and stays on the form', async () => {
+    createOffer.mockRejectedValue(
+      new Error('This member plan already has a gift offer.')
+    );
+    renderView();
+
+    fillRequiredFields();
+    fireEvent.click(screen.getByTestId('saveButton'));
+
+    expect(
+      await screen.findAllByText(/This member plan already has a gift offer/)
+    ).not.toHaveLength(0);
+    expect(navigate).not.toHaveBeenCalled();
   });
 });

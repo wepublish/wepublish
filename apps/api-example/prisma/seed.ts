@@ -992,6 +992,7 @@ async function seedGiftCodeOffers(prisma: PrismaClient) {
       memberPlan: { connect: { slug: MEMBER_PLAN_SLUGS.chfYearly } },
       periodicity: 'yearly',
       redemptionWindowMonths: 12,
+      price: 12000,
       paymentMethods: { connect: [{ id: 'simulated' }] },
     },
   });

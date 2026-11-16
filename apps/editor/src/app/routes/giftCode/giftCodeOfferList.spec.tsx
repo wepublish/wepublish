@@ -62,7 +62,6 @@ const offer = {
   name: 'Ein Jahr schenken',
   description: null,
   active: true,
-  issueBeforePayment: true,
   allowDiscountCodes: false,
   periodicity: PaymentPeriodicity.Yearly,
   redemptionWindowMonths: null,
@@ -75,7 +74,7 @@ const offer = {
   autoRenew: true,
   renewalPaymentMethodId: 'method-3',
   renewalPaymentMethod: { id: 'method-3', name: 'Rechnung' },
-  price: { amount: 12000, currency: 'CHF' },
+  price: 9900,
 };
 
 const theme = createTheme({ cssVariables: true });
@@ -134,7 +133,7 @@ describe('GiftCodeOfferList', () => {
     expect(
       within(row).getByText('memberPlanList.paymentPeriodicity.yearly')
     ).toBeInTheDocument();
-    expect(within(row).getByText('120.00 CHF')).toBeInTheDocument();
+    expect(within(row).getByText('99.00 CHF')).toBeInTheDocument();
     expect(
       within(row).getByText('giftCodeOffer.overview.unlimited')
     ).toBeInTheDocument();

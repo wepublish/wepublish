@@ -36,7 +36,7 @@ const offer = (overrides: Record<string, unknown> = {}) => ({
   memberPlanId: 'plan-1',
   periodicity: PaymentPeriodicity.yearly,
   redemptionWindowMonths: 12,
-  issueBeforePayment: false,
+  price: 12000,
   allowDiscountCodes: false,
   autoRenew: false,
   renewalPaymentMethodId: null,
@@ -124,7 +124,7 @@ const setup = () => {
   const offers = {
     getPrice: vi
       .fn()
-      .mockReturnValue({ amount: 12000, currency: Currency.CHF }),
+      .mockReturnValue({ amount: 15000, currency: Currency.CHF }),
     getPaymentMethods: vi
       .fn()
       .mockResolvedValue([{ id: 'pm-1' }, { id: 'pm-2' }]),
@@ -173,14 +173,13 @@ describe('GiftCodeService', () => {
   });
 
   describe('purchase', () => {
-    it('checks out one gift code line at the offer price', async () => {
-      const { service, checkout, payment, offers } = setup();
+    it('checks out one gift code line at the offer price, not the plan price', async () => {
+      const { service, checkout, payment } = setup();
 
       await expect(service.purchase(buyer, purchaseInput())).resolves.toBe(
         payment
       );
 
-      expect(offers.getPrice).toHaveBeenCalledWith(offer());
       expect(checkout.checkout).toHaveBeenCalledWith({
         userId: 'user-1',
         mail: 'buyer@example.com',
@@ -225,8 +224,6 @@ describe('GiftCodeService', () => {
           recipientName: 'Anna',
           autoRenew: false,
           renewalPaymentMethodId: null,
-          issuedAt: null,
-          expiresAt: null,
         },
       });
     });
@@ -265,55 +262,14 @@ describe('GiftCodeService', () => {
       expect(first).not.toBe(second);
     });
 
-    it('issues the code at purchase when the offer says so', async () => {
-      const { service, checkout, tx, prisma } = setup();
-      prisma.giftCodeOffer.findUnique.mockResolvedValue(
-        offer({ issueBeforePayment: true })
-      );
-
-      await service.purchase(buyer, purchaseInput());
-      await checkoutLine(checkout).attach(
-        tx as never,
-        { id: 'item-9' } as never
-      );
-
-      expect(tx.giftCode.create).toHaveBeenCalledWith({
-        data: expect.objectContaining({
-          issuedAt: NOW,
-          expiresAt: new Date('2027-10-24T12:00:00.000Z'),
-        }),
-      });
-    });
-
-    it('issues an early code without expiry for an unlimited window', async () => {
-      const { service, checkout, tx, prisma } = setup();
-      prisma.giftCodeOffer.findUnique.mockResolvedValue(
-        offer({ issueBeforePayment: true, redemptionWindowMonths: null })
-      );
-
-      await service.purchase(buyer, purchaseInput());
-      await checkoutLine(checkout).attach(
-        tx as never,
-        { id: 'item-9' } as never
-      );
-
-      expect(tx.giftCode.create).toHaveBeenCalledWith({
-        data: expect.objectContaining({
-          redemptionWindowMonths: null,
-          issuedAt: NOW,
-          expiresAt: null,
-        }),
-      });
-    });
-
-    it('loads the offer with its member plan prices', async () => {
+    it('loads the offer with its member plan', async () => {
       const { service, prisma } = setup();
 
       await service.purchase(buyer, purchaseInput());
 
       expect(prisma.giftCodeOffer.findUnique).toHaveBeenCalledWith({
         where: { id: 'offer-1' },
-        include: { memberPlan: { include: { periodicityPricing: true } } },
+        include: { memberPlan: true },
       });
     });
 
@@ -385,16 +341,6 @@ describe('GiftCodeService', () => {
         'Payment method cannot be used for this purchase'
       );
       expect(offers.getPaymentMethods).toHaveBeenCalledWith('offer-1');
-      expect(checkout.checkout).not.toHaveBeenCalled();
-    });
-
-    it('rejects a zero price', async () => {
-      const { service, offers, checkout } = setup();
-      offers.getPrice.mockReturnValue({ amount: 0, currency: Currency.CHF });
-
-      await expect(service.purchase(buyer, purchaseInput())).rejects.toThrow(
-        BadRequestException
-      );
       expect(checkout.checkout).not.toHaveBeenCalled();
     });
 
@@ -483,16 +429,14 @@ describe('GiftCodeService', () => {
         );
       });
 
-      it('rounds the discount like the subscription checkout', async () => {
-        const { service, prisma, offers, checkout } = setup();
-        prisma.giftCodeOffer.findUnique.mockResolvedValue(discountOffer());
+      it('rounds the discount on the offer price like the subscription checkout', async () => {
+        const { service, prisma, checkout } = setup();
+        prisma.giftCodeOffer.findUnique.mockResolvedValue(
+          offer({ allowDiscountCodes: true, price: 9990 })
+        );
         prisma.discountCode.findUnique.mockResolvedValue(
           discountCode({ discountPercent: 15 })
         );
-        offers.getPrice.mockReturnValue({
-          amount: 9990,
-          currency: Currency.CHF,
-        });
 
         await service.purchase(
           buyer,
@@ -559,17 +503,6 @@ describe('GiftCodeService', () => {
         successURL: 'https://example.com/ok',
         failureURL: 'https://example.com/fail',
       });
-    });
-
-    it('lets the buyer pay a code that was issued before payment', async () => {
-      const { service, prisma, payments } = setup();
-      prisma.giftCode.findFirst.mockResolvedValue(
-        ownedCode({ issuedAt: NOW, expiresAt: null })
-      );
-
-      await service.pay('user-1', payInput());
-
-      expect(payments.createStandaloneInvoicePayment).toHaveBeenCalled();
     });
 
     it('does not find the code of another buyer', async () => {
@@ -708,28 +641,6 @@ describe('GiftCodeService', () => {
       expect(prisma.giftCode.updateMany).toHaveBeenCalledWith({
         where: { invoiceItemId: 'item-1', canceledAt: null },
         data: { canceledAt: NOW, cancellationReason: reason },
-      });
-    });
-
-    it('also cancels a code that was issued before payment', async () => {
-      const { service, prisma } = setup();
-      prisma.giftCode.findUnique.mockResolvedValue({
-        id: 'gc-1',
-        issuedAt: NOW,
-        redeemedAt: null,
-      });
-
-      await service.cancelForInvoiceItem(
-        'item-1',
-        GiftCodeCancellationReason.invoiceCanceled
-      );
-
-      expect(prisma.giftCode.updateMany).toHaveBeenCalledWith({
-        where: { invoiceItemId: 'item-1', canceledAt: null },
-        data: {
-          canceledAt: NOW,
-          cancellationReason: GiftCodeCancellationReason.invoiceCanceled,
-        },
       });
     });
   });

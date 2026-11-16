@@ -2926,7 +2926,7 @@ model GiftCodeOffer {
   memberPlan             MemberPlan         @relation(fields: [memberPlanId], references: [id], onDelete: Cascade)
   periodicity            PaymentPeriodicity
   redemptionWindowMonths Int?
-  issueBeforePayment     Boolean            @default(false)
+  price                  Int
   allowDiscountCodes     Boolean            @default(false)
   autoRenew              Boolean            @default(false)
   renewalPaymentMethodId String?
