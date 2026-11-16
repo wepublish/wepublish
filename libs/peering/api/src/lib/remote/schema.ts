@@ -1881,7 +1881,7 @@ export type GiftCode = HasMemberPlanLc & {
   buyerId?: Maybe<Scalars['String']['output']>;
   canceledAt?: Maybe<Scalars['DateTime']['output']>;
   cancellationReason?: Maybe<GiftCodeCancellationReason>;
-  /** Only visible to admins and to the buyer of an issued, uncanceled code. */
+  /** Only visible to admins and to the buyer of an issued, uncanceled code whose purchase is paid. */
   code?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   /** The admin who created the code. Only visible to admins. */
@@ -1940,7 +1940,6 @@ export type GiftCodeOffer = HasImage & HasMemberPlanLc & {
   id: Scalars['String']['output'];
   image?: Maybe<Image>;
   imageID?: Maybe<Scalars['String']['output']>;
-  issueBeforePayment: Scalars['Boolean']['output'];
   memberPlan: MemberPlan;
   memberPlanId: Scalars['String']['output'];
   modifiedAt: Scalars['DateTime']['output'];
@@ -1950,7 +1949,8 @@ export type GiftCodeOffer = HasImage & HasMemberPlanLc & {
   /** The payment methods a buyer can use for this offer. */
   paymentMethods: Array<PaymentMethod>;
   periodicity: PaymentPeriodicity;
-  price: GiftCodePrice;
+  /** What the buyer pays, in cents of the member plan currency. The redeemed subscription keeps the plan price. */
+  price: Scalars['Int']['output'];
   redemptionWindowMonths?: Maybe<Scalars['Int']['output']>;
   /** The payment method of subscriptions that renew automatically. */
   renewalPaymentMethod?: Maybe<PaymentMethod>;
@@ -1969,11 +1969,21 @@ export enum GiftCodeOfferSort {
   Name = 'Name'
 }
 
-export type GiftCodePrice = {
-  __typename?: 'GiftCodePrice';
-  amount: Scalars['Int']['output'];
-  currency: Currency;
+export type GiftCodeRedemption = {
+  __typename?: 'GiftCodeRedemption';
+  action: GiftCodeRedemptionAction;
+  invoice: Invoice;
+  subscription: PublicSubscription;
 };
+
+export enum GiftCodeRedemptionAction {
+  /** The code started a new subscription and paid its first period. */
+  CreatedSubscription = 'createdSubscription',
+  /** The code paid the next period of an existing subscription. */
+  ExtendedSubscription = 'extendedSubscription',
+  /** The code paid the open invoice of an existing subscription. */
+  PaidInvoice = 'paidInvoice'
+}
 
 export enum GiftCodeSort {
   CreatedAt = 'CreatedAt',
@@ -3854,8 +3864,6 @@ export type Mutation = {
   markNotificationRead: NotificationRead;
   /** Starts a new payment for an unpaid gift code. */
   payGiftCode: Payment;
-  /** Pays an open invoice of one of your subscriptions with a gift code for the same member plan and payment periodicity. */
-  payInvoiceWithGiftCode: Invoice;
   /** Publishes an article at the given time. */
   publishArticle: Article;
   publishNewsletterCampaign: NewsletterPublishResult;
@@ -3871,6 +3879,8 @@ export type Mutation = {
   reactivateUserSubscription: PublicSubscription;
   /** Rebuild the suggestions now instead of waiting for the night */
   recomputeDeliverySuggestions: DeliverySuggestionRecomputeResult;
+  /** Redeems a gift code for your own subscriptions. It pays the open invoice of a subscription with the same member plan and payment periodicity, pays the next period of such a subscription, or starts a new subscription. */
+  redeemGiftCode: GiftCodeRedemption;
   /** Pull late delivery states from the mail provider, then re-evaluate everyone's email quality. The nightly job does the same; this is for looking at a campaign's result now. */
   refreshEmailQuality: EmailQualityRefreshModel;
   /** Registers (or renews) the audience webhook at Mailchimp, so cleaned and unsubscribed members reach the email quality as they happen. */
@@ -4349,11 +4359,11 @@ export type MutationCreateGiftCodeOfferArgs = {
   autoRenew?: InputMaybe<Scalars['Boolean']['input']>;
   description?: InputMaybe<Scalars['RichText']['input']>;
   imageID?: InputMaybe<Scalars['String']['input']>;
-  issueBeforePayment: Scalars['Boolean']['input'];
   memberPlanId: Scalars['String']['input'];
   name: Scalars['String']['input'];
   paymentMethodIds: Array<Scalars['String']['input']>;
   periodicity: PaymentPeriodicity;
+  price: Scalars['Int']['input'];
   redemptionWindowMonths?: InputMaybe<Scalars['Int']['input']>;
   renewalPaymentMethodId?: InputMaybe<Scalars['String']['input']>;
 };
@@ -5172,12 +5182,6 @@ export type MutationPayGiftCodeArgs = {
 };
 
 
-export type MutationPayInvoiceWithGiftCodeArgs = {
-  code: Scalars['String']['input'];
-  invoiceId: Scalars['String']['input'];
-};
-
-
 export type MutationPublishArticleArgs = {
   id: Scalars['String']['input'];
   publishedAt: Scalars['DateTime']['input'];
@@ -5220,6 +5224,11 @@ export type MutationReactivateSubscriptionArgs = {
 
 export type MutationReactivateUserSubscriptionArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type MutationRedeemGiftCodeArgs = {
+  code: Scalars['String']['input'];
 };
 
 
@@ -5591,11 +5600,11 @@ export type MutationUpdateGiftCodeOfferArgs = {
   description?: InputMaybe<Scalars['RichText']['input']>;
   id: Scalars['String']['input'];
   imageID?: InputMaybe<Scalars['String']['input']>;
-  issueBeforePayment?: InputMaybe<Scalars['Boolean']['input']>;
   memberPlanId?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   paymentMethodIds?: InputMaybe<Array<Scalars['String']['input']>>;
   periodicity?: InputMaybe<PaymentPeriodicity>;
+  price?: InputMaybe<Scalars['Int']['input']>;
   redemptionWindowMonths?: InputMaybe<Scalars['Int']['input']>;
   renewalPaymentMethodId?: InputMaybe<Scalars['String']['input']>;
 };

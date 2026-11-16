@@ -161,8 +161,8 @@ function GiftCodeOfferList() {
               width: 120,
               align: 'right',
               render: offer =>
-                formatAmount(offer.price.amount, offer.price.currency),
-              exportValue: offer => offer.price.amount / 100,
+                formatAmount(offer.price, offer.memberPlan.currency),
+              exportValue: offer => offer.price / 100,
             },
             {
               id: 'redemptionwindow',
@@ -175,13 +175,6 @@ function GiftCodeOfferList() {
                   })
                 : t('giftCodeOffer.overview.unlimited'),
               exportValue: offer => offer.redemptionWindowMonths,
-            },
-            {
-              id: 'issuebeforepayment',
-              label: t('giftCodeOffer.overview.issueBeforePayment'),
-              width: 160,
-              render: offer => (offer.issueBeforePayment ? '✅' : '❌'),
-              exportValue: offer => offer.issueBeforePayment,
             },
             {
               id: 'allowdiscountcodes',

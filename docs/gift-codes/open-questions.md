@@ -7,9 +7,9 @@ on the answer, but changing a default later means the change listed under it.
 
 | # | Question | Built now | Changing it means |
 | --- | --- | --- | --- |
-| 1 | Does the buyer pay the plan's `amountTarget` for the periodicity, or always `amountMin`? | `amountTarget ?? amountMin` ([D18](decisions.md#d18-price-is-amounttarget-falling-back-to-amountmin)) | One line in `GiftCodeOfferService.getPrice` and its spec |
+| 1 | Which plan price does a redeemed code's subscription get, `amountTarget` or always `amountMin`? (The buyer now pays the offer's own price, [D40](decisions.md#d40-offers-store-their-own-price).) | `amountTarget ?? amountMin` ([D18](decisions.md#d18-price-is-amounttarget-falling-back-to-amountmin)) | One line in `GiftCodeOfferService.getPrice` and its spec |
 | 2 | Should unpaid orders be canceled automatically, and after how long? | After 14 days; the code becomes `canceled` with reason `invoiceCanceled` ([D20](decisions.md#d20-unpaid-orders-auto-cancel-after-14-days)) | The `unpaidCancelAfterDays` checkout argument, or dropping reconciler step B |
-| 3 | Does the redemption window start at payment confirmation or at order time? | Payment confirmation; a code issued before payment counts from the order ([D21](decisions.md#d21-the-redemption-window-counts-from-payment-confirmation)) | `issueForInvoiceItem` uses the invoice's `createdAt` instead of `paidAt` |
+| 3 | Does the redemption window start at payment confirmation or at order time? | Payment confirmation ([D21](decisions.md#d21-the-redemption-window-counts-from-payment-confirmation)) | `issueForInvoiceItem` uses the invoice's `createdAt` instead of `paidAt` |
 | 4 | May a member plan be deleted when only canceled or expired codes exist? The spec says only unredeemed codes block it. | Any sold code blocks it, via FK `Restrict` ([D22](decisions.md#d22-any-sold-code-blocks-member-plan-deletion)) | An app-level check plus a different delete rule on `GiftCode.memberPlanId`, which needs a migration and a decision on what happens to the codes' plan reference |
 | 5 | Should gift purchases count as revenue in the dashboard and medium stats? | Counted as-is, without a plan ([D23](decisions.md#d23-gift-revenue-counts-as-is-in-dashboards)) | Filtering or a per-kind breakdown in `DashboardInvoiceService` and `MediumStatsService` |
 | 6 | Admin and custom roles only, or also the built-in editor role? | Admin and custom roles only ([D24](decisions.md#d24-permissions-are-admin-and-custom-roles-only)) | Add the three ids to `EditorPermissions` and update `permissions.spec.ts` |
@@ -19,9 +19,11 @@ on the answer, but changing a default later means the change listed under it.
 
 ## Decided by Karl
 
-Issuing the code before payment is a per-offer switch
-([D27](decisions.md#d27-codes-can-be-issued-before-payment-per-offer)), and
-the payment methods are configured per offer
+A code is issued and shown to its buyer only once its purchase is paid; the
+earlier per-offer switch to issue it before payment is gone
+([D39](decisions.md#d39-codes-are-issued-and-shown-only-once-paid)). Each offer stores the price the buyer pays, which may differ
+from the plan's price; the subscription a code starts keeps the plan's price
+([D40](decisions.md#d40-offers-store-their-own-price)). The payment methods are configured per offer
 ([D19](decisions.md#d19-payment-methods-are-configured-per-offer-filtered-by-capability)).
 A member plan has at most one gift offer
 ([D29](decisions.md#d29-one-gift-offer-per-member-plan)), and each offer
@@ -59,6 +61,10 @@ refused.
 
 ## Not decided yet
 
+- Sending the code before payment comes back later as an email setting: once
+  gift codes send mails, an offer (or the medium) may say whether the buyer
+  gets the code by email right after ordering. The API does not show it
+  before payment today ([D39](decisions.md#d39-codes-are-issued-and-shown-only-once-paid)).
 - `createGiftCodes` creates at most 500 codes per call. Is that enough for the
   largest event, or should bigger batches run as a job?
 - Codes an admin created carry no revenue: no invoice, no amount, and they

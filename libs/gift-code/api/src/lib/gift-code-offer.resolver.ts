@@ -9,7 +9,6 @@ import {
 } from '@nestjs/graphql';
 import { GiftCodeOffer as PGiftCodeOffer } from '@prisma/client';
 import { Feature } from '@wepublish/features/api';
-import { MemberPlanDataloader } from '@wepublish/member-plan/api';
 import { PaymentMethod, PaymentMethodDataloader } from '@wepublish/payment/api';
 import {
   CanDeleteGiftCodes,
@@ -22,7 +21,6 @@ import {
   CreateGiftCodeOfferInput,
   GiftCodeOffer,
   GiftCodeOfferListArgs,
-  GiftCodePrice,
   PaginatedGiftCodeOffers,
   UpdateGiftCodeOfferInput,
 } from './gift-code-offer.model';
@@ -34,7 +32,6 @@ export class GiftCodeOfferResolver {
   constructor(
     private offerService: GiftCodeOfferService,
     private dataloader: GiftCodeOfferDataloader,
-    private memberPlans: MemberPlanDataloader,
     private paymentMethodDataloader: PaymentMethodDataloader
   ) {}
 
@@ -76,22 +73,6 @@ export class GiftCodeOfferResolver {
   })
   public deleteGiftCodeOffer(@Args('id') id: string) {
     return this.offerService.deleteOffer(id);
-  }
-
-  @ResolveField(() => GiftCodePrice)
-  public async price(@Parent() offer: PGiftCodeOffer) {
-    const memberPlan = await this.memberPlans.load(offer.memberPlanId);
-
-    if (!memberPlan) {
-      throw new NotFoundException(
-        `Member plan ${offer.memberPlanId} was not found.`
-      );
-    }
-
-    return this.offerService.getPrice({
-      periodicity: offer.periodicity,
-      memberPlan,
-    });
   }
 
   @ResolveField(() => [PaymentMethod], {

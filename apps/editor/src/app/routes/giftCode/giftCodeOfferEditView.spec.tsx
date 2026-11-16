@@ -1,17 +1,17 @@
 import { useApolloClient, useMutation } from '@apollo/client/react';
-import { createTheme, ThemeProvider } from '@mui/material';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import {
   MemberPlanDocument,
   PaymentMethodListDocument,
   PaymentPeriodicity,
 } from '@wepublish/editor/api';
-import { MemoryRouter } from 'react-router-dom';
+import {
+  getFieldByLabel,
+  renderEditorForm,
+} from '@wepublish/form/editor/testing';
 import type { Mock } from 'vitest';
 
 import { GiftCodeOfferEditView } from './giftCodeOfferEditView';
-
-const theme = createTheme({ cssVariables: true });
 
 const plan = {
   id: 'plan-1',
@@ -45,7 +45,6 @@ const offer = {
   name: 'Ein Jahr schenken',
   description: null,
   active: true,
-  issueBeforePayment: false,
   allowDiscountCodes: true,
   periodicity: PaymentPeriodicity.Yearly,
   redemptionWindowMonths: 12,
@@ -58,7 +57,7 @@ const offer = {
   autoRenew: true,
   renewalPaymentMethodId: 'method-3',
   renewalPaymentMethod: { id: 'method-3', name: 'Rechnung' },
-  price: { amount: 12000, currency: 'CHF' },
+  price: 9900,
 };
 
 vi.mock('@apollo/client/react', async importOriginal => ({
@@ -91,7 +90,7 @@ vi.mock('@apollo/client/react', async importOriginal => ({
 vi.mock('react-router-dom', async importOriginal => ({
   ...(await importOriginal<typeof import('react-router-dom')>()),
   useParams: () => ({ id: 'offer-1' }),
-  useNavigate: () => vi.fn(),
+  useNavigate: () => navigate,
 }));
 
 vi.mock('react-i18next', () => ({
@@ -109,23 +108,22 @@ vi.mock('@wepublish/ui/editor', async importOriginal => ({
   SelectMemberPlan: () => null,
 }));
 
+const navigate = vi.fn();
 const mockedUseMutation = useMutation as unknown as Mock;
 const mockedUseApolloClient = useApolloClient as unknown as Mock;
 const updateOffer = vi.fn();
 const query = vi.fn();
 
 const renderView = () =>
-  render(
-    <ThemeProvider theme={theme}>
-      <MemoryRouter>
-        <GiftCodeOfferEditView />
-      </MemoryRouter>
-    </ThemeProvider>
-  );
+  renderEditorForm(<GiftCodeOfferEditView />, {
+    route: '/gift-codes/offers/edit/offer-1',
+  });
 
 beforeEach(() => {
   planOverrides = {};
+  navigate.mockReset();
   updateOffer.mockReset();
+  updateOffer.mockResolvedValue({ data: { updateGiftCodeOffer: offer } });
   mockedUseMutation.mockReset();
   mockedUseMutation.mockReturnValue([updateOffer, { loading: false }]);
 
@@ -142,9 +140,7 @@ describe('GiftCodeOfferEditView', () => {
       await screen.findByDisplayValue('Ein Jahr schenken')
     ).toBeInTheDocument();
     expect(screen.getByDisplayValue('12')).toBeInTheDocument();
-    expect(
-      screen.getByText('giftCodeOffer.form.currentPrice:120.00 CHF')
-    ).toBeInTheDocument();
+    expect(screen.getByDisplayValue('99.00')).toBeInTheDocument();
     expect(query).toHaveBeenCalledTimes(1);
     expect(query).toHaveBeenCalledWith(
       expect.objectContaining({ variables: { id: 'offer-1' } })
@@ -165,20 +161,44 @@ describe('GiftCodeOfferEditView', () => {
 
     expect(
       await screen.findByRole('combobox', {
-        name: 'giftCodeOffer.form.periodicity',
+        name: /^giftCodeOffer\.form\.periodicity/,
       })
     ).toHaveTextContent('memberPlanList.paymentPeriodicity.yearly');
     expect(
-      screen.queryByText(/giftCodeOffer\.form\.currentPrice/)
-    ).not.toBeInTheDocument();
+      screen.getByText('giftCodeOffer.form.priceHelp')
+    ).toBeInTheDocument();
   });
 
-  it('renders nothing until the offer has loaded', () => {
+  it('shows a spinner and no fields until the offer has loaded', () => {
     query.mockReturnValue(new Promise(() => undefined));
 
-    const { container } = renderView();
+    renderView();
 
-    expect(container).toBeEmptyDOMElement();
+    expect(
+      screen.getByRole('progressbar', { name: 'form.loading' })
+    ).toBeInTheDocument();
+    expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
+  });
+
+  it('goes back to the offers after save and close', async () => {
+    renderView();
+
+    await screen.findByDisplayValue('Ein Jahr schenken');
+    fireEvent.click(screen.getByTestId('saveAndCloseButton'));
+
+    await waitFor(() =>
+      expect(navigate).toHaveBeenCalledWith('/gift-codes/offers')
+    );
+  });
+
+  it('stays on the offer after save', async () => {
+    renderView();
+
+    await screen.findByDisplayValue('Ein Jahr schenken');
+    fireEvent.click(screen.getByTestId('saveButton'));
+
+    await waitFor(() => expect(updateOffer).toHaveBeenCalled());
+    expect(navigate).not.toHaveBeenCalled();
   });
 
   it('saves what was edited and keeps the rest', async () => {
@@ -188,7 +208,7 @@ describe('GiftCodeOfferEditView', () => {
       target: { value: 'Ein Jahr Lesefreude' },
     });
     fireEvent.change(
-      screen.getByLabelText('giftCodeOffer.form.redemptionWindowMonths'),
+      getFieldByLabel(/^giftCodeOffer\.form\.redemptionWindowMonths/),
       { target: { value: '' } }
     );
     fireEvent.click(screen.getByTestId('saveButton'));
@@ -200,11 +220,11 @@ describe('GiftCodeOfferEditView', () => {
           name: 'Ein Jahr Lesefreude',
           description: null,
           active: true,
-          issueBeforePayment: false,
           allowDiscountCodes: true,
           memberPlanId: 'plan-1',
           periodicity: PaymentPeriodicity.Yearly,
           redemptionWindowMonths: null,
+          price: 9900,
           imageID: null,
           paymentMethodIds: ['method-1'],
           autoRenew: true,
@@ -212,6 +232,15 @@ describe('GiftCodeOfferEditView', () => {
         },
       })
     );
+  });
+
+  it('shows the stored price and that it is cheaper than subscribing', async () => {
+    renderView();
+
+    expect(await screen.findByDisplayValue('99.00')).toBeInTheDocument();
+    expect(
+      screen.getByText(/^giftCodeOffer\.form\.priceBelowPlan/)
+    ).toBeInTheDocument();
   });
 
   it('shows how the offer renews', async () => {
@@ -224,7 +253,7 @@ describe('GiftCodeOfferEditView', () => {
     ).toBeChecked();
     expect(
       screen.getByRole('combobox', {
-        name: 'giftCodeOffer.form.renewalPaymentMethod',
+        name: /^giftCodeOffer\.form\.renewalPaymentMethod/,
       })
     ).toHaveTextContent('Rechnung');
   });

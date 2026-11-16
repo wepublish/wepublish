@@ -205,6 +205,14 @@ describe('GiftCodeResolver', () => {
   });
 
   describe('code', () => {
+    const paidPurchase = {
+      id: 'item-1',
+      amount: 6000,
+      quantity: 2,
+      invoiceId: 'inv-1',
+      invoices: { id: 'inv-1', currency: Currency.CHF, paidAt: issuedAt },
+    };
+
     it.each([
       ['an anonymous caller', giftCode(), null],
       ['another user', giftCode(), session('other-1')],
@@ -223,36 +231,46 @@ describe('GiftCodeResolver', () => {
         giftCode(),
         session('editor-1', [CanUpdateGiftCodes]),
       ],
-    ])('is hidden from %s', (_, parent, caller) => {
-      const { resolver } = setup();
+    ])('is hidden from %s', async (_, parent, caller) => {
+      const { resolver, purchases } = setup();
+      purchases.load.mockResolvedValue(paidPurchase);
 
-      expect(resolver.code(parent, caller)).toBeNull();
+      expect(await resolver.code(parent, caller)).toBeNull();
     });
 
-    it('is shown formatted to the buyer of an issued code', () => {
-      const { resolver } = setup();
+    it('is hidden from the buyer while the purchase invoice is unpaid, even if the code is issued', async () => {
+      const { resolver, purchases } = setup();
 
-      expect(resolver.code(giftCode(), session('buyer-1'))).toBe(
+      expect(await resolver.code(giftCode(), session('buyer-1'))).toBeNull();
+      expect(purchases.load).toHaveBeenCalledWith('item-1');
+    });
+
+    it('is shown formatted to the buyer once the purchase invoice is paid', async () => {
+      const { resolver, purchases } = setup();
+      purchases.load.mockResolvedValue(paidPurchase);
+
+      expect(await resolver.code(giftCode(), session('buyer-1'))).toBe(
         'ABCD-EFGH-JKMN'
       );
     });
 
-    it('is shown to an admin, even before issuance or after cancellation', () => {
-      const { resolver } = setup();
+    it('is shown to an admin, even unpaid, before issuance or after cancellation', async () => {
+      const { resolver, purchases } = setup();
 
-      expect(resolver.code(giftCode({ issuedAt: null }), admin)).toBe(
+      expect(await resolver.code(giftCode({ issuedAt: null }), admin)).toBe(
         'ABCD-EFGH-JKMN'
       );
-      expect(resolver.code(giftCode({ canceledAt: issuedAt }), admin)).toBe(
-        'ABCD-EFGH-JKMN'
-      );
+      expect(
+        await resolver.code(giftCode({ canceledAt: issuedAt }), admin)
+      ).toBe('ABCD-EFGH-JKMN');
+      expect(purchases.load).not.toHaveBeenCalled();
     });
 
-    it('is shown to an api token with the permission', () => {
+    it('is shown to an api token with the permission', async () => {
       const { resolver } = setup();
 
       expect(
-        resolver.code(giftCode(), {
+        await resolver.code(giftCode(), {
           type: AuthSessionType.ApiToken,
           id: 'token-1',
           name: 'Token',

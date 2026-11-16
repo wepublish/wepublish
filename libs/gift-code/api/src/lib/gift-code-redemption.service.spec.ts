@@ -982,6 +982,19 @@ describe('GiftCodeRedemptionService.redeem', () => {
       }
     );
 
+    it('bills the new subscription at the plan price, not the price the buyer paid for the offer', async () => {
+      const ctx = setup();
+      ctx.prisma.giftCode.findFirst.mockResolvedValue(
+        giftCode({ offer: { id: 'offer-1', price: 5000 } })
+      );
+
+      await ctx.service.redeem('user-1', 'ABCDEFGHJKMN');
+
+      expect(ctx.memberContext.createSubscription).toHaveBeenCalledWith(
+        expect.objectContaining({ monthlyAmount: 1000 })
+      );
+    });
+
     it('loads the plan with its prices and payment methods', async () => {
       const ctx = setup();
 

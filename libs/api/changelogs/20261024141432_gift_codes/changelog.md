@@ -19,12 +19,15 @@ Once gift codes are switched on:
 
 - Under **Gifts → Gift offers** you set up what can be given: one
   subscription plan with one duration, a name, a description, an image and
-  how many months the code can be redeemed (empty means unlimited). The price
-  is always the plan's current price for that duration.
+  how many months the code can be redeemed (empty means unlimited).
+- Each offer has its own price. The form fills in the plan's price for the
+  chosen duration and tells you when the gift is cheaper or more expensive
+  than subscribing. The subscription a code starts still costs the plan's
+  normal price.
 - Each offer has its own payment methods. Stripe, Stripe Checkout, Payrexx and
   Mollie can take gift payments; Bexio invoices cannot yet.
-- **Issue the code before payment** gives the buyer the code right after
-  ordering. If the payment never arrives, the code is canceled after 14 days.
+- Buyers see their code once the payment has arrived. An order that stays
+  unpaid is canceled after 14 days.
 - **Allow discount codes** lets buyers enter a discount code of the offer's
   plan. A 100 % code makes the gift free, and the code is issued at once.
 - **Renew automatically** decides whether the subscription started with a

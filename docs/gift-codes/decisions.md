@@ -6,8 +6,10 @@ competing designs were scored and the risk-first one was built with two parts
 taken from the others. D18 to D26 are defaults chosen for open questions. They
 are built that way now and are marked "default, confirm with Karl" until he
 answers; [open-questions.md](open-questions.md) lists them as questions. D19
-and D27 to D38 are Karl's changes after the design. D11 was dropped by D32,
-and D38 replaced the separate pay mutation of D36.
+and D27 to D40 are Karl's changes after the design. D11 was dropped by D32,
+D38 replaced the separate pay mutation of D36, D39 reverted D27, and D40
+replaced the plan price at purchase (D18 still prices redeemed
+subscriptions).
 
 ## D1: Standalone sellable invoices with a guarded early return
 
@@ -383,7 +385,7 @@ Default, confirm with Karl.
 
 Decision. `expiresAt = addMonths(paidAt, redemptionWindowMonths)`, set when
 the code is issued. `null` window means it never expires. A code issued before
-payment (D27) counts from the order instead, because there is no `paidAt` yet.
+payment (D27, since reverted by D39) counted from the order.
 
 Why. A buyer who pays by invoice two weeks after ordering should not lose two
 weeks of validity.
@@ -441,6 +443,9 @@ Why. Support needs it when a buyer has lost the code, and there is no email
 to resend in V1.
 
 ## D27: Codes can be issued before payment, per offer
+
+Reverted by Karl, see [D39](#d39-codes-are-issued-and-shown-only-once-paid).
+Kept for the record.
 
 Decided by Karl.
 
@@ -768,9 +773,6 @@ Consequences.
 - The subscription's payment method stays as it is: no migration to the
   plan's `migrateToTargetPaymentMethodID`, no customer lookup or storage. The
   `Payment` row records the current method for bookkeeping only.
-- A code issued before payment can pay an invoice while its own purchase is
-  still unpaid, like any early-issued code
-  ([D27](#d27-codes-can-be-issued-before-payment-per-offer)).
 - The code's `autoRenew` and `renewalPaymentMethodId` are ignored here; the
   subscription keeps its own renewal settings.
 - Only the API and the editor list exist. The website does not offer the
@@ -877,3 +879,52 @@ Consequences.
   rolled back sends nothing.
 - `GiftCodeModule` imports `MemberContextModule`. `membership` does not
   import `gift-code`, so there is no module cycle.
+
+## D39: Codes are issued and shown only once paid
+
+Decided by Karl, reverting [D27](#d27-codes-can-be-issued-before-payment-per-offer).
+
+Context. With D27 a buyer could get a code, hand it over and have it
+redeemed before paying, and the unpaid timeout then canceled a code that
+had already paid someone's subscription.
+
+Decision. `GiftCodeOffer.issueBeforePayment` is gone (schema, GraphQL,
+editor). The checkout's `attach` always creates the code unissued; only the
+paid invoice issues it through `issueForInvoiceItem`. `GiftCode.code`
+returns the code to its buyer only when the code is issued, not canceled,
+and the purchase invoice itself has `paidAt`, read through
+`GiftCodePurchaseDataloader`, so a code that is somehow issued on an unpaid
+invoice still stays hidden. Admins (`CanGetGiftCodes`) always see it, and
+codes an admin created have no buyer.
+
+Consequences.
+- `GiftCode.paid` and the editor's payment filter stay: they still tell
+  ordered or canceled-unpaid codes from paid ones.
+- A buyer who pays by invoice waits for the payment before getting the code.
+  Sending the code earlier will come back as an email setting once gift
+  codes send mails; see [open-questions.md](open-questions.md).
+
+## D40: Offers store their own price
+
+Decided by Karl, replacing D18 for the purchase.
+
+Context. The buyer paid the plan's current price for the periodicity, and
+the offer had no price of its own, so a gift could not be cheaper or dearer
+than subscribing.
+
+Decision. `GiftCodeOffer.price Int` (cents, not null, in the plan's
+currency). Create requires it, update may change it, and both reject 0 or
+less. A price below or above the plan's price is allowed. `purchaseGiftCode`
+charges `offer.price`, and a discount code applies on top of it with the
+same rounding as before. The old `price: GiftCodePrice` field resolver is
+gone; `price` is the stored `Int`, and the editor derives the plan's price
+itself from the plan its form already loads, to prefill the field and to
+say whether the gift is cheaper or more expensive than subscribing.
+
+Consequences.
+- The price only changes what the buyer pays. Redemption ignores it: a new
+  subscription gets `monthlyAmount` from the plan's price (D18), its first
+  invoice is the full plan price and is paid by the code, and paying or
+  extending an existing subscription does not touch its price.
+- Changing the plan's price no longer changes the gift's price; editors keep
+  both in sync by hand. The form warns when they differ.

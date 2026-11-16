@@ -6,7 +6,6 @@ fragment FullGiftCodeOffer on GiftCodeOffer {
   name
   description
   active
-  issueBeforePayment
   allowDiscountCodes
   periodicity
   redemptionWindowMonths
@@ -37,10 +36,7 @@ fragment FullGiftCodeOffer on GiftCodeOffer {
     name
   }
 
-  price {
-    amount
-    currency
-  }
+  price
 }
 
 query GiftCodeOfferList(
@@ -84,11 +80,11 @@ mutation CreateGiftCodeOffer(
   $name: String!
   $description: RichText
   $active: Boolean!
-  $issueBeforePayment: Boolean!
   $allowDiscountCodes: Boolean
   $memberPlanId: String!
   $periodicity: PaymentPeriodicity!
   $redemptionWindowMonths: Int
+  $price: Int!
   $imageID: String
   $paymentMethodIds: [String!]!
   $autoRenew: Boolean
@@ -98,11 +94,11 @@ mutation CreateGiftCodeOffer(
     name: $name
     description: $description
     active: $active
-    issueBeforePayment: $issueBeforePayment
     allowDiscountCodes: $allowDiscountCodes
     memberPlanId: $memberPlanId
     periodicity: $periodicity
     redemptionWindowMonths: $redemptionWindowMonths
+    price: $price
     imageID: $imageID
     paymentMethodIds: $paymentMethodIds
     autoRenew: $autoRenew
@@ -117,11 +113,11 @@ mutation UpdateGiftCodeOffer(
   $name: String
   $description: RichText
   $active: Boolean
-  $issueBeforePayment: Boolean
   $allowDiscountCodes: Boolean
   $memberPlanId: String
   $periodicity: PaymentPeriodicity
   $redemptionWindowMonths: Int
+  $price: Int
   $imageID: String
   $paymentMethodIds: [String!]
   $autoRenew: Boolean
@@ -132,11 +128,11 @@ mutation UpdateGiftCodeOffer(
     name: $name
     description: $description
     active: $active
-    issueBeforePayment: $issueBeforePayment
     allowDiscountCodes: $allowDiscountCodes
     memberPlanId: $memberPlanId
     periodicity: $periodicity
     redemptionWindowMonths: $redemptionWindowMonths
+    price: $price
     imageID: $imageID
     paymentMethodIds: $paymentMethodIds
     autoRenew: $autoRenew

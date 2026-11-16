@@ -2,8 +2,8 @@
 
 A reader buys a gift code (Geschenkgutschein) for one member plan and one
 periodicity, for example "Jahresabo Digital, 1 Jahr", and pays for it like a
-subscription. The code is issued once the payment is confirmed, or right at
-the order when the offer is set to issue before payment. The buyer hands it to
+subscription. The code is issued, and shown to the buyer, once the payment is
+confirmed. The buyer hands it to
 someone else, who redeems it for a subscription period paid by the code. Admins
 can also create codes without a purchase, for example to hand out at an
 event. The product spec is the German pitch "Geschenkgutscheine für We.Publish" from
@@ -17,9 +17,9 @@ contract and in the payment path; the gift code lib on top of it is small.
 
 This change covers the API and the editor for buying a gift code:
 
-- offers in the editor (plan, periodicity, name, description, image, active,
-  optional redemption window in months, the payment methods buyers can use,
-  whether the code is issued before payment, whether buyers may enter a
+- offers in the editor (plan, periodicity, price, name, description, image,
+  active, optional redemption window in months, the payment methods buyers
+  can use, whether buyers may enter a
   discount code, and whether the subscription a code starts renews
   automatically and with which of the plan's payment methods). Each member
   plan has at most one offer
@@ -29,8 +29,7 @@ This change covers the API and the editor for buying a gift code:
 - a standalone invoice per purchase, paid through the existing payment
   providers
 - issuing the code when the invoice is paid, by any path: webhook, polling,
-  the buyer re-checking, an admin marking it paid. An offer with
-  `issueBeforePayment` issues it at the order instead.
+  the buyer re-checking, an admin marking it paid.
 - cancelling the code on chargeback, on an unpaid timeout, or by hand in the
   editor
 - a gift code list in the editor, with status, payment (paid or unpaid) and
@@ -91,8 +90,7 @@ reads the code        <──   myGiftCodes (GiftCode.code shown once issued)
 
 A chargeback, an admin cancel or the 14-day unpaid timeout sets `canceledAt` on
 the invoice instead. The same `notify` call then lets the handler cancel the
-code and marks `InvoiceItem.revokedAt`. That also cancels a code issued before
-payment. The lifecycle is described in
+code and marks `InvoiceItem.revokedAt`. The lifecycle is described in
 [01-selling-things.md](01-selling-things.md).
 
 ## Feature flag
