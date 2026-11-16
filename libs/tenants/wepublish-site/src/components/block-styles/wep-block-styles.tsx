@@ -3,6 +3,7 @@ export enum WepBlockStyles {
   TeaserNews = 'TeaserNews',
   TeaserServices = 'TeaserServices',
   LogoWall = 'LogoWall',
+  MediaList = 'MediaList',
   AttentionCatcher = 'AttentionCatcher',
   AttentionCatcherMint = 'AttentionCatcherMint',
   AttentionCatcherRose = 'AttentionCatcherRose',
