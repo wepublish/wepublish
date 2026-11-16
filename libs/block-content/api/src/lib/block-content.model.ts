@@ -16,6 +16,7 @@ import { TitleBlock, TitleBlockInput } from './title/title-block.model';
 import { ImageBlock, ImageBlockInput } from './image/image-block.model';
 import { BreakBlock, BreakBlockInput } from './break/break-block.model';
 import { EventBlock, EventBlockInput } from './event/event-block.model';
+import { AuthorsBlock, AuthorsBlockInput } from './authors/authors-block.model';
 import { CommentBlock, CommentBlockInput } from './comment/comment-block.model';
 import { PollBlock, PollBlockInput } from './poll/poll-block.model';
 import {
@@ -121,6 +122,7 @@ export const BlockContent = createUnionType({
       ImageGalleryBlock,
       BreakBlock,
       EventBlock,
+      AuthorsBlock,
       CommentBlock,
       PollBlock,
       CrowdfundingBlock,
@@ -169,6 +171,8 @@ export const BlockContent = createUnionType({
         return CrowdfundingBlock.name;
       case BlockType.Event:
         return EventBlock.name;
+      case BlockType.Authors:
+        return AuthorsBlock.name;
       case BlockType.Comment:
         return CommentBlock.name;
       case BlockType.Embed:
@@ -245,6 +249,9 @@ export class BlockContentInput {
   [BlockType.Crowdfunding]?: CrowdfundingBlockInput;
   @Field(() => EventBlockInput, { nullable: true })
   [BlockType.Event]?: EventBlockInput;
+
+  @Field(() => AuthorsBlockInput, { nullable: true })
+  [BlockType.Authors]?: AuthorsBlockInput;
   @Field(() => CommentBlockInput, { nullable: true })
   [BlockType.Comment]?: CommentBlockInput;
   @Field(() => SubscribeBlockInput, { nullable: true })

@@ -1,6 +1,7 @@
 import {
   BlockType,
   FullArticleTeaserFragment,
+  FullAuthorsBlockFragment,
   FullBildwurfAdBlockFragment,
   FullBlockFragment,
   FullBlockTemplateBlockFragment,
@@ -47,6 +48,7 @@ import { mockImage } from './image';
 import { mockRichText } from './richtext';
 import { mockPoll } from './poll';
 import { mockEvent } from './event';
+import { mockAuthor } from './author';
 import { mockComment } from './comment';
 import { mockArticle, mockArticleRevision } from './article';
 import { mockPage, mockPageRevision } from './page';
@@ -154,6 +156,17 @@ export const mockEventBlock = ({
   __typename: 'EventBlock',
   blockStyle: null,
   events,
+  ...definedOnly(overrides),
+});
+
+export const mockAuthorsBlock = ({
+  authors = [mockAuthor(), mockAuthor(), mockAuthor()],
+  ...overrides
+}: Partial<FullAuthorsBlockFragment> = {}): FullAuthorsBlockFragment => ({
+  __typename: 'AuthorsBlock',
+  blockStyle: null,
+  title: 'Team',
+  authors,
   ...definedOnly(overrides),
 });
 

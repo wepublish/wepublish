@@ -464,6 +464,31 @@ export enum AuthorSort {
   Name = 'Name'
 }
 
+export type AuthorsBlock = BaseBlock & {
+  __typename?: 'AuthorsBlock';
+  authorIds: Array<Scalars['String']['output']>;
+  authors: Array<Author>;
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
+  title?: Maybe<Scalars['String']['output']>;
+  type: BlockType;
+};
+
+export type AuthorsBlockInput = {
+  authorIds?: Array<Scalars['String']['input']>;
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: InputMaybe<BlockTimingInput>;
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type AvailablePaymentMethod = {
   __typename?: 'AvailablePaymentMethod';
   forceAutoRenewal: Scalars['Boolean']['output'];
@@ -601,9 +626,10 @@ export type BildwurfAdBlockInput = {
   zoneID?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type BlockContent = BildwurfAdBlock | BlockTemplateBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HtmlBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | MailchimpFormBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock;
+export type BlockContent = AuthorsBlock | BildwurfAdBlock | BlockTemplateBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HtmlBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | MailchimpFormBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock;
 
 export type BlockContentInput = {
+  authors?: InputMaybe<AuthorsBlockInput>;
   bildwurfAd?: InputMaybe<BildwurfAdBlockInput>;
   blockTemplate?: InputMaybe<BlockTemplateBlockInput>;
   comment?: InputMaybe<CommentBlockInput>;
@@ -733,6 +759,7 @@ export type BlockTimingInput = {
 };
 
 export enum BlockType {
+  Authors = 'Authors',
   BildwurfAd = 'BildwurfAd',
   BlockTemplate = 'BlockTemplate',
   Comment = 'Comment',
@@ -1457,6 +1484,7 @@ export type DocumentStorageUsage = {
 };
 
 export enum EditorBlockType {
+  Authors = 'Authors',
   BlockTemplate = 'BlockTemplate',
   Comment = 'Comment',
   Crowdfunding = 'Crowdfunding',

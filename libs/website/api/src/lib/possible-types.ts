@@ -27,6 +27,7 @@ const result: PossibleTypesResultData = {
       "UserCreatedAction"
     ],
     "BaseBlock": [
+      "AuthorsBlock",
       "BildwurfAdBlock",
       "BlockTemplateBlock",
       "BreakBlock",
@@ -85,6 +86,7 @@ const result: PossibleTypesResultData = {
       "User"
     ],
     "BlockContent": [
+      "AuthorsBlock",
       "BildwurfAdBlock",
       "BlockTemplateBlock",
       "BreakBlock",
