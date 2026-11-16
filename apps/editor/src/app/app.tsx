@@ -61,8 +61,8 @@ import { RedirectMoved } from './redirect-moved';
 import { EditorCommandPaletteSurface } from './commandPalette/editorCommandPalette';
 import { EditorGlobalStyles } from './editorGlobalStyles';
 import { Login } from './login';
-import { LoginImpersonate } from './loginImpersonate';
 import { LoginJwt } from './loginJwt';
+import { LoginWepublish } from './loginWepublish';
 import { DocumentTitle } from './pageTitle/documentTitle';
 import { ResetPassword } from './resetPassword';
 import { ArticleTemplateEditView } from './routes/articleTemplate/articleTemplateEditView';
@@ -234,8 +234,8 @@ function AppRoutes() {
           element={<LoginJwt />}
         />
         <Route
-          path="login/impersonate/:jwt"
-          element={<LoginImpersonate />}
+          path="login/wepublish"
+          element={<LoginWepublish />}
         />
         <Route
           path="login/reset-password"

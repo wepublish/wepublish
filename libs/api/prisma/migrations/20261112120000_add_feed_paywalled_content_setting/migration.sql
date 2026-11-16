@@ -1,0 +1,1 @@
+INSERT INTO "settings" ("id", "modifiedAt", "name", "value", "settingRestriction") VALUES (gen_random_uuid(), CURRENT_TIMESTAMP, 'feedPaywalledContent', '"lead"'::jsonb, '{"allowedValues": {"stringChoice": ["lead", "visible", "full"]}}'::jsonb) ON CONFLICT ("name") DO NOTHING;
