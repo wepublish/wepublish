@@ -17,6 +17,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ENGAGEMENT_PATH } from './engagement-rule-list';
+import { ENGAGEMENT_PRESETS } from './presets';
 import {
   EngagementRuleValues,
   createEngagementRuleSchema,
@@ -40,12 +41,23 @@ function EditEngagementRule() {
   const form = useForm<EngagementRuleValues>({
     resolver: zodResolver(createEngagementRuleSchema(t)),
     defaultValues: async () => {
-      const { data } = await client.query({
-        query: EngagementRuleDocument,
-        variables: { id: ruleId },
-      });
+      try {
+        const { data } = await client.query({
+          query: EngagementRuleDocument,
+          variables: { id: ruleId },
+        });
 
-      return engagementRuleToValues(data!.engagementRule);
+        if (data?.engagementRule) {
+          return engagementRuleToValues(data.engagementRule);
+        }
+      } catch (error) {
+        enqueueSnackbar(humanizeError(error), { variant: 'error' });
+      }
+
+      // An unknown or deleted rule: back to the list, these values never show.
+      navigate(ENGAGEMENT_PATH, { replace: true });
+
+      return ENGAGEMENT_PRESETS.displayAnnouncement();
     },
   });
 

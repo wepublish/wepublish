@@ -228,7 +228,10 @@ describe('BannerResolver', () => {
     rules = [announcement('rule-1')];
     const banner = await resolver().primaryBanner(args());
 
-    expect(await resolver().image(banner!)).toEqual({ id: 'image-1' });
+    expect(banner).not.toBeNull();
+    expect(
+      await resolver().image(banner as NonNullable<typeof banner>)
+    ).toEqual({ id: 'image-1' });
     expect(images.load).toHaveBeenCalledWith('image-1');
   });
 });

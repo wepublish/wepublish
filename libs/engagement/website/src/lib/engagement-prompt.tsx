@@ -2,6 +2,7 @@ import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { Alert, Box, TextField } from '@mui/material';
 import {
+  BuilderChallengeProps,
   BuilderChallengeRef,
   Challenge,
   useSetIntendedRoute,
@@ -154,7 +155,7 @@ const NewsletterSignupForm = ({
             challengeRef={challengeRef}
             challenge={challenge.data.challenge}
             value={solution}
-            onChange={setSolution as never}
+            onChange={setSolution as BuilderChallengeProps['onChange']}
             label={t('engagement.newsletterWall.captcha')}
           />
         </Box>
