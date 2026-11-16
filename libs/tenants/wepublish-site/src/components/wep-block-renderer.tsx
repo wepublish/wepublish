@@ -1,6 +1,7 @@
 import { css, useTheme } from '@emotion/react';
 import {
   BlockRenderer,
+  isAuthorsBlock,
   isRichTextBlock,
   isTitleBlock,
   isYouTubeVideoBlock,
@@ -140,6 +141,7 @@ export const WepBlockRenderer = (props: BuilderBlockRendererProps) => {
               isPlainBreakBlock(block) ||
               isTitleBlock(block) ||
               isArticleList(block) ||
+              isAuthorsBlock(block) ||
               isVideoOrItsTitle(block, nextBlock)
             ) ?
               css``
