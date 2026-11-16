@@ -10,6 +10,7 @@ import {
   mockHardEngagementPrompt,
   mockImage,
   mockOperation,
+  mockTitleBlock,
   mockUser,
   renderWithProviders,
 } from '@wepublish/mocks/website';
@@ -95,6 +96,33 @@ describe('EngagementPrompt', () => {
     fireEvent.click(screen.getByText(t('engagement.dismiss')));
     expect(onDismiss).toHaveBeenCalled();
     expect(screen.queryByText('Subscribe to our newsletter')).toBeNull();
+  });
+
+  it('shows the blocks of a block template instead of its texts', () => {
+    renderWithProviders(
+      <EngagementPrompt
+        prompt={mockEngagementPrompt({
+          stage: {
+            placement: EngagementPlacement.Inline,
+            title: 'Stay informed',
+            cta: 'Every Friday in your inbox.',
+            blockTemplate: {
+              __typename: 'BlockTemplate',
+              id: 'template-1',
+              name: 'Newsletter box',
+              blocks: [
+                mockTitleBlock({ title: 'From the template', lead: null }),
+              ],
+            },
+          },
+        })}
+      />
+    );
+
+    expect(screen.getByText('Stay informed')).toBeInTheDocument();
+    expect(screen.getByText('From the template')).toBeInTheDocument();
+    expect(screen.getByText('Subscribe to our newsletter')).toBeInTheDocument();
+    expect(screen.queryByText('Every Friday in your inbox.')).toBeNull();
   });
 
   it('closes the prompt with a cancel action instead of following it', () => {

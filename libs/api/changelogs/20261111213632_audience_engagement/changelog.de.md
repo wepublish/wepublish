@@ -16,3 +16,7 @@ Zum Start wählst du eine Vorlage (Newsletter ausbauen, Mitgliedschaften förder
 **Newsletter-Anmeldung ohne Konto:** Eine Stufe kann Leser*innen nur nach der E-Mail-Adresse fragen, direkt im Hinweis. Die Adresse wird über deine Mailchimp-Integration (Einstellungen → Integrationen) angemeldet und muss per E-Mail bestätigt werden.
 
 **Paywalls** findest du jetzt ebenfalls unter Audience Engagement; das Menü Artikel verlinkt weiterhin darauf. Eine Paywall lässt sich neu auf dem Server durchsetzen: Leser*innen ohne Zugang erhalten dann nur die ersten Blöcke des Artikels. Aktualisiere deine Websites, bevor du das einschaltest.
+
+**Block-Vorlagen in Hinweisen:** Statt den Text einer Stufe zu schreiben, kannst du eine deiner Block-Vorlagen wählen (Pop-ups, Boxen im Artikel und die Sperre; Banner behalten ihre Texte). Titel und Buttons bleiben.
+
+Fragt eine Regel Leser*innen nach der E-Mail-Adresse, aber Anmeldungen erreichen Mailchimp nicht, sagt dir das Regelformular warum und verlinkt die Integration.

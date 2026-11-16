@@ -85,7 +85,8 @@ documents (`libs/website/api/src/lib/schemas/sitemap.graphql`), never
 newsletter/membership prompts and metered content gates are one
 `EngagementRule` model with ordered `EngagementStage`s (by `afterArticles`,
 the articles a reader already read in `meterWindowDays`) and their actions.
-Only the last stage may be `HARD` (cut the article to `previewBlocks`).
+Only the last stage may be `HARD` (cut the article to `previewBlocks`). A stage can show a
+block template (`blockTemplateId`) instead of its texts, except in banners.
 `evaluate.ts` orders the prompts: `priority` (an editor "show this first"
 override), then the more specific rule (narrower audience, pages only), then
 the newest; the website shows at most one per slot (banner, modal, in-article)

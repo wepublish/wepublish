@@ -35,6 +35,7 @@ import {
   EngagementRequirement,
   EngagementRulesDocument,
   MemberPlanListDocument,
+  BlockTemplateListDocument,
   NewsletterSignupProblemDocument,
   PageListDocument,
 } from '@wepublish/editor/api';
@@ -407,6 +408,50 @@ const ActionList = ({ stageIndex }: { stageIndex: number }) => {
   );
 };
 
+/** Content from a block template instead of the texts. */
+const BlockTemplateField = ({
+  name,
+}: {
+  name: `stages.${number}.blockTemplateId`;
+}) => {
+  const { t } = useTranslation();
+  const { control } = useFormContext<EngagementRuleValues>();
+  const { data } = useQuery(BlockTemplateListDocument, {
+    variables: { take: 100 },
+    fetchPolicy: 'cache-and-network',
+  });
+  const templates = data?.blockTemplates.nodes ?? [];
+
+  return (
+    <Controller
+      control={control}
+      name={name}
+      render={({ field }) => (
+        <TextField
+          select
+          label={label(
+            t('engagement.form.blockTemplate'),
+            t('engagement.form.blockTemplateInfo')
+          )}
+          value={templates.length ? (field.value ?? '') : ''}
+          onChange={event => field.onChange(event.target.value || null)}
+          fullWidth
+        >
+          <MenuItem value="">{t('engagement.form.ownContent')}</MenuItem>
+          {templates.map(({ id, name: templateName }) => (
+            <MenuItem
+              key={id}
+              value={id}
+            >
+              {templateName}
+            </MenuItem>
+          ))}
+        </TextField>
+      )}
+    />
+  );
+};
+
 /** Readers would give their email, but it would reach no Mailchimp audience. */
 const NewsletterSignupWarning = () => {
   const { t } = useTranslation();
@@ -540,6 +585,9 @@ const StageFields = ({
   const [editImage, setEditImage] = useState(false);
   const isLast = index === count - 1;
   const hard = stage?.enforcement === EngagementEnforcement.Hard;
+  // A block template replaces the texts, the title and buttons stay.
+  const fromTemplate =
+    !!stage?.blockTemplateId && stage.placement !== EngagementPlacement.Banner;
   const placements = Object.values(EngagementPlacement).filter(
     placement =>
       placement !== EngagementPlacement.Cutoff ||
@@ -727,19 +775,25 @@ const StageFields = ({
               label={t('engagement.form.title')}
             />
 
-            <FormControl fullWidth>
-              <FormLabel>{t('engagement.form.description')}</FormLabel>
-              <Controller
-                control={control}
-                name={`stages.${index}.description`}
-                render={({ field }) => (
-                  <RichTextBlock
-                    value={field.value ?? undefined}
-                    onChange={field.onChange}
-                  />
-                )}
-              />
-            </FormControl>
+            {stage?.placement !== EngagementPlacement.Banner && (
+              <BlockTemplateField name={`stages.${index}.blockTemplateId`} />
+            )}
+
+            {!fromTemplate && (
+              <FormControl fullWidth>
+                <FormLabel>{t('engagement.form.description')}</FormLabel>
+                <Controller
+                  control={control}
+                  name={`stages.${index}.description`}
+                  render={({ field }) => (
+                    <RichTextBlock
+                      value={field.value ?? undefined}
+                      onChange={field.onChange}
+                    />
+                  )}
+                />
+              </FormControl>
+            )}
 
             {stage?.placement === EngagementPlacement.Banner && (
               <TextFieldControl
@@ -764,40 +818,46 @@ const StageFields = ({
               inUse={moreOptionsInUse}
               hasErrors={moreOptionsHaveErrors}
             >
-              <TextFieldControl
-                name={`stages.${index}.cta`}
-                label={label(
-                  t('engagement.form.cta'),
-                  t('engagement.form.ctaInfo')
-                )}
-              />
-
-              <FormControl fullWidth>
-                <FormLabel>{t('engagement.form.image')}</FormLabel>
-                <ChooseEditImage
-                  image={stage?.image}
-                  disabled={false}
-                  openChooseModalOpen={() => setChooseImage(true)}
-                  openEditModalOpen={() => setEditImage(true)}
-                  removeImage={() => {
-                    setValue(`stages.${index}.image`, null, {
-                      shouldDirty: true,
-                    });
-                    setValue(`stages.${index}.imageId`, null, {
-                      shouldDirty: true,
-                    });
-                  }}
+              {!fromTemplate && (
+                <TextFieldControl
+                  name={`stages.${index}.cta`}
+                  label={label(
+                    t('engagement.form.cta'),
+                    t('engagement.form.ctaInfo')
+                  )}
                 />
-              </FormControl>
+              )}
 
-              <TextFieldControl
-                name={`stages.${index}.html`}
-                label={label(
-                  t('engagement.form.html'),
-                  t('engagement.form.htmlInfo')
-                )}
-                multiline
-              />
+              {!fromTemplate && (
+                <FormControl fullWidth>
+                  <FormLabel>{t('engagement.form.image')}</FormLabel>
+                  <ChooseEditImage
+                    image={stage?.image}
+                    disabled={false}
+                    openChooseModalOpen={() => setChooseImage(true)}
+                    openEditModalOpen={() => setEditImage(true)}
+                    removeImage={() => {
+                      setValue(`stages.${index}.image`, null, {
+                        shouldDirty: true,
+                      });
+                      setValue(`stages.${index}.imageId`, null, {
+                        shouldDirty: true,
+                      });
+                    }}
+                  />
+                </FormControl>
+              )}
+
+              {!fromTemplate && (
+                <TextFieldControl
+                  name={`stages.${index}.html`}
+                  label={label(
+                    t('engagement.form.html'),
+                    t('engagement.form.htmlInfo')
+                  )}
+                  multiline
+                />
+              )}
 
               {stage?.placement === EngagementPlacement.Banner && (
                 <TextFieldControl

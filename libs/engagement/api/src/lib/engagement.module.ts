@@ -1,5 +1,7 @@
+import { BlockTemplateModule } from '@wepublish/block-content/api';
 import {
   DynamicModule,
+  forwardRef,
   FactoryProvider,
   Module,
   ModuleMetadata,
@@ -28,6 +30,8 @@ import { ReaderContextService } from './reader-context.service';
     PublicContentInvalidatorModule,
     ImageModule,
     NewsletterModule,
+    // block-content → article → engagement: a cycle.
+    forwardRef(() => BlockTemplateModule),
   ],
   providers: [
     EngagementRuleService,

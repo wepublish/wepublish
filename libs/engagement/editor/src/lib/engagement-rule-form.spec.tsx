@@ -21,6 +21,7 @@ import {
   EngagementGoal,
   EngagementPlacement,
   EngagementRequirement,
+  BlockTemplateListDocument,
   EngagementRulesDocument,
   FullEngagementRuleFragment,
   NewsletterSignupProblem,
@@ -72,6 +73,7 @@ const competing: FullEngagementRuleFragment = {
       html: null,
       embedUrl: null,
       imageId: null,
+      blockTemplateId: null,
       image: null,
       actions: [
         {
@@ -115,6 +117,36 @@ const Harness = ({
       </form>
     </FormProvider>
   );
+};
+
+const blockTemplatesMock = {
+  request: { query: BlockTemplateListDocument, variables: { take: 100 } },
+  maxUsageCount: Number.POSITIVE_INFINITY,
+  result: {
+    data: {
+      blockTemplates: {
+        __typename: 'PaginatedBlockTemplate',
+        nodes: [
+          {
+            __typename: 'BlockTemplate',
+            id: 'template-1',
+            createdAt: '2026-01-01T00:00:00.000Z',
+            modifiedAt: '2026-01-01T00:00:00.000Z',
+            name: 'Newsletter box',
+            blocks: [],
+          },
+        ],
+        pageInfo: {
+          __typename: 'PageInfo',
+          startCursor: null,
+          endCursor: null,
+          hasNextPage: false,
+          hasPreviousPage: false,
+        },
+        totalCount: 1,
+      },
+    },
+  },
 };
 
 const signupProblemMock = (
@@ -341,6 +373,38 @@ describe('EngagementRuleForm', () => {
     expect(problems).toHaveTextContent('engagement.form.name');
     expect(problems).toHaveTextContent('engagement.form.stage');
     expect(problems).toHaveTextContent('engagement.validation.ascending');
+  });
+
+  it('shows a block template instead of the texts it replaces', async () => {
+    renderForm(ENGAGEMENT_PRESETS.promoteMemberships(), undefined, [
+      blockTemplatesMock,
+    ]);
+    const [stage] = screen.getAllByTestId(/^stage-/);
+
+    expect(stage).toHaveTextContent('engagement.form.description');
+
+    fireEvent.mouseDown(
+      within(stage).getByRole('combobox', {
+        name: /engagement.form.blockTemplate/,
+      })
+    );
+    fireEvent.click(
+      await screen.findByRole('option', { name: 'Newsletter box' })
+    );
+
+    expect(values().stages[0].blockTemplateId).toBe('template-1');
+    expect(stage).not.toHaveTextContent('engagement.form.description');
+    expect(stage).toHaveTextContent('engagement.form.title');
+  });
+
+  it('offers no block template in a banner, which only shows texts', () => {
+    renderForm(ENGAGEMENT_PRESETS.displayAnnouncement(), undefined, [
+      blockTemplatesMock,
+    ]);
+
+    expect(
+      screen.queryByRole('combobox', { name: /engagement.form.blockTemplate/ })
+    ).toBeNull();
   });
 
   it('keeps rarely needed stage options behind more options', () => {

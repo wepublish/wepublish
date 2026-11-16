@@ -52,6 +52,7 @@ export const mockEngagementPrompt = ({
     html = null,
     embedUrl = null,
     image = null,
+    blockTemplate = null,
     actions = [mockEngagementAction()],
   } = {} as Partial<Stage>,
 }: Partial<
@@ -79,6 +80,7 @@ export const mockEngagementPrompt = ({
     html,
     embedUrl,
     image,
+    blockTemplate,
     actions,
   },
 });

@@ -14,6 +14,7 @@ export type EngagementStageDraft = {
   enforcement: EngagementEnforcement;
   requirement?: EngagementRequirement | null;
   previewBlocks?: number | null;
+  blockTemplateId?: string | null;
   actions: Array<{
     type: EngagementActionType;
     url?: string | null;
@@ -116,6 +117,14 @@ export function validateEngagementRule(
       if (stage.previewBlocks != null) {
         problem(`${path}.previewBlocks`, 'onlyHard');
       }
+    }
+
+    // A banner only shows texts.
+    if (
+      stage.blockTemplateId &&
+      stage.placement === EngagementPlacement.BANNER
+    ) {
+      problem(`${path}.blockTemplateId`, 'notInBanner');
     }
 
     stage.actions.forEach((action, actionIndex) => {

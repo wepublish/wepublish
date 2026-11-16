@@ -17,3 +17,7 @@ To start, pick a template (grow the newsletter, promote memberships, show an ann
 **Newsletter sign-up without an account:** a step can ask readers only for their email address, right in the prompt. The address is signed up through your Mailchimp integration (Settings → Integrations) and has to be confirmed by email.
 
 **Paywalls** are now found under Audience Engagement too; the Articles menu still links to them. A paywall can now be enforced on the server: readers without access then only receive the first blocks of the article. Update your websites before turning that on.
+
+**Block templates in prompts:** instead of writing a step's text, you can pick one of your block templates (pop-ups, boxes in the article and the cutoff; banners keep their texts). The title and buttons stay.
+
+If a rule asks readers for their email address but sign-ups can't reach Mailchimp, the rule form tells you why and links to the integration.
