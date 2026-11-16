@@ -7776,6 +7776,8 @@ export type Query = {
   userDeliveryPreference: UserDeliveryPreferenceModel;
   /** The open suggestion for one user, if any */
   userDeliverySuggestion?: Maybe<DeliverySuggestionModel>;
+  /** The email segments the user list can be filtered by, best to worst; placeholder only when a placeholder pattern is configured. */
+  userEmailSegments: Array<MailEmailSegment>;
   /** Get all invoices for the authenticated user */
   userInvoices: Array<Invoice>;
   userPollVote?: Maybe<Scalars['String']['output']>;
@@ -10100,6 +10102,8 @@ export enum UserEvent {
 }
 
 export type UserFilter = {
+  /** Any of these email segments; the same segments as the mail-send audience. */
+  emailSegments?: InputMaybe<Array<MailEmailSegment>>;
   name?: InputMaybe<Scalars['String']['input']>;
   text?: InputMaybe<Scalars['String']['input']>;
   userRole?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -10128,6 +10132,8 @@ export enum UserRoleSort {
 
 export enum UserSort {
   CreatedAt = 'CreatedAt',
+  EmailQuality = 'EmailQuality',
+  EmailQualitySince = 'EmailQualitySince',
   FirstName = 'FirstName',
   ModifiedAt = 'ModifiedAt',
   Name = 'Name',
