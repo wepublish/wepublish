@@ -81,6 +81,7 @@ describe('ResendInbox', () => {
       to: ['nw-00001@abc.resend.app'],
       html: '<a href="https://x.test/pay">Pay</a>',
       text: 'Pay',
+      attachments: [],
     });
     expect(calls.map(c => c.url)).toEqual([
       'https://api.resend.com/emails/receiving?limit=100',
