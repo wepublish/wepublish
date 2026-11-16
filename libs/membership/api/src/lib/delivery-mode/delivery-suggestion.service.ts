@@ -18,6 +18,7 @@ import { MailEmailSegment } from '../mail-send/mail-send.model';
 import {
   emailSegmentOf,
   MailSendRecipientService,
+  placeholderEmailWhere,
 } from '../mail-send/mail-send-recipient.service';
 import {
   DeliverySuggestionConfirmAllResult,
@@ -33,18 +34,6 @@ export const DELIVERY_SUGGESTION_STALE = 'DELIVERY_SUGGESTION_STALE';
 const CHUNK = 500;
 
 type Desired = { kind: DeliverySuggestionKind; reason: string };
-
-/** Users whose address matches one of the placeholder patterns; null without patterns. */
-export const placeholderEmailWhere = (
-  patterns: readonly string[]
-): Prisma.UserWhereInput | null =>
-  patterns.length ?
-    {
-      OR: patterns.map(pattern => ({
-        email: { contains: pattern, mode: 'insensitive' as const },
-      })),
-    }
-  : null;
 
 const userSelect = {
   id: true,
