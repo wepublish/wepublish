@@ -117,6 +117,36 @@ describe('BrevoMailProvider', () => {
       });
     });
 
+    it('sends attachments base64 encoded, as Brevo takes them', async () => {
+      await (
+        await makeProvider()
+      ).sendMail({
+        ...sendProps,
+        attachments: [
+          {
+            filename: 'invoice.pdf',
+            contentType: 'application/pdf',
+            content: Buffer.from('%PDF-1.7'),
+          },
+        ],
+      });
+
+      expect(JSON.parse(calls[0].init.body as string).attachment).toEqual([
+        {
+          name: 'invoice.pdf',
+          content: Buffer.from('%PDF-1.7').toString('base64'),
+        },
+      ]);
+    });
+
+    it('sends no attachment field for a mail without any', async () => {
+      await (await makeProvider()).sendMail({ ...sendProps, attachments: [] });
+
+      expect(JSON.parse(calls[0].init.body as string)).not.toHaveProperty(
+        'attachment'
+      );
+    });
+
     it('says what Brevo answered when it refuses a mail', async () => {
       answers.push({
         status: 400,

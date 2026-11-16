@@ -3787,6 +3787,8 @@
         "bexioInvoiceMailSubjectInfo": "Der Betreff der E-Mail, mit der Bexio die Rechnung verschickt. Platzhalter wie :user.firstName: oder :memberPlan.name: werden automatisch ersetzt.",
         "bexioInvoiceMailBodyInfo": "Der Text der E-Mail, mit der Bexio die Rechnung verschickt; das PDF wird angehängt. Platzhalter wie :user.firstName: oder :memberPlan.name: werden automatisch ersetzt. Bexio verlangt den Platzhalter [Network Link] im Text.",
         "bexioMarkInvoiceAsOpenInfo": "Wenn aktiv, setzt Bexio die Rechnung nach dem Versand auf «offen», statt sie als Entwurf zu belassen.",
+        "bexioInvoiceMailByWePublish": "We.Publish verschickt die Bexio-Rechnungen",
+        "bexioInvoiceMailByWePublishInfo": "Wenn aktiv, verschickt Bexio die Rechnungen von Erneuerungen nicht mehr selbst, sondern stellt sie nur aus. We.Publish hängt das Bexio-PDF an die Mail «Rechnung erstellt» des Abo-Ablaufs an oder druckt es nach dem Brief. Passen Sie diese Vorlage an, falls sie auf eine separate Mail von Bexio verweist. In Bexio erscheint für diese Rechnungen kein E-Mail-Verlauf. Zusammen mit «Rechnung als offen markieren» verwenden, sonst ist das PDF ein Entwurf. Rechnungen aus dem Checkout verschickt weiterhin Bexio.",
         "bexioContactSyncInfo": "Wenn aktiv, überträgt We.Publish jede Nacht Name, Firma, E-Mail und Adresse geänderter Leser:innen in ihren Bexio-Kontakt und legt für Abos mit Bexio-Zahlung fehlende Kontakte an. Gruppen, Telefon und alles Weitere im Kontakt bleiben, wie sie in Bexio sind.",
         "bexioContactSyncNeverRan": "Noch nie gelaufen.",
         "bexioContactSyncLastRun": "Letzter Lauf: {{date}}, ohne Fehler.",
