@@ -71,7 +71,6 @@ const givenProvider = () =>
   });
 
 describe('MailchimpSyncIntegrationForm', () => {
-  // they have their own page under Communication
   it('leaves the newsletters to the newsletters page', () => {
     givenProvider();
     renderForm();

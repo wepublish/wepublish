@@ -37,10 +37,6 @@ const mailchimpError = (error: any) => {
   return new Error(`${title} (${status}): ${detail}`);
 };
 
-/**
- * Lets logged in users toggle the Mailchimp interests (newsletters) an admin
- * configured on a sync provider.
- */
 @Injectable()
 export class MailchimpNewsletterService {
   constructor(private syncProviderSettings: SyncProviderSettingsService) {}

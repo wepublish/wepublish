@@ -186,14 +186,11 @@ export class TestData {
   }
 
   /**
-   * Offers one newsletter: points the tenant's one Mailchimp sync provider at
-   * the test audience, enabled, with only this interest, shown in the profile.
-   * Restores its list, newsletters, `enabled` and `newslettersInProfile`
-   * afterwards; the API key cannot be read back, so
-   * the test key stays, and so does the test list where none was set (the
-   * API ignores a null list). A stack without a provider gets one, disabled
-   * afterwards (the API cannot delete it). Enabled, the nightly sync would
-   * push every reader into the audience: scenarios keep it on for seconds.
+   * Points the Mailchimp sync provider at the test audience with only this
+   * interest, and restores it afterwards. The API key cannot be read back and
+   * a provider cannot be deleted, so the test key stays and a created provider
+   * is only disabled. Enabled, the nightly sync would push every reader into
+   * the audience, so it stays on for seconds only.
    */
   async offerMailchimpNewsletter(
     alias: string,

@@ -243,7 +243,6 @@ const moveUp = (header: HTMLElement) =>
 const moveDown = (header: HTMLElement) =>
   within(header).getByLabelText('blocks.mailchimpForm.moveDown');
 
-// The newsletters of the "Newsletters" page, on the provider of the block.
 const providerWithNewsletters = (listId: string): MockedResponse => ({
   request: { query: SyncProviderSettingsDocument, variables: anyVariables },
   ...reusable,

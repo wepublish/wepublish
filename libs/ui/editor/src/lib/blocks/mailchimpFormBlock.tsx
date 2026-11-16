@@ -551,8 +551,6 @@ export function MailchimpFormBlock({
     SyncProviderSettingsDocument
   );
 
-  // The newsletters of the "Newsletters" page, as options of a new interest
-  // selection, when the block uses the provider's list.
   const newsletterDefaults = useMemo((): MailchimpFormInterestOptionValue[] => {
     const provider = syncData?.syncProviderSettings.find(
       ({ id }) => id === value.syncProviderId

@@ -46,11 +46,7 @@ type NewsletterSettings = {
   newsletters: MailchimpFormInterestOptionValue[];
 };
 
-/**
- * The newsletters readers can choose in their profile: Mailchimp interests of
- * the sync provider's list, with the name, description and image they are
- * shown with. They are also the defaults of the newsletter subscribe block.
- */
+/** Also the defaults of the newsletter subscribe block. */
 export function NewsletterSettingsPage() {
   const { t } = useTranslation();
   const canUpdate = useAuthorisation(CanUpdateMailchimpSyncSettings.id);
