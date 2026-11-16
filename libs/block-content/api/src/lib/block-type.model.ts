@@ -29,6 +29,7 @@ export enum BlockType {
   Crowdfunding = 'crowdfunding',
   Comment = 'comment',
   Event = 'event',
+  Authors = 'authors',
   Subscribe = 'subscribe',
   MailchimpForm = 'mailchimpForm',
   FlexBlock = 'flexBlock',

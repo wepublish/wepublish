@@ -152,7 +152,10 @@ boundaries.
 
 Adding a field that reaches the website:
 
-1. `schema.prisma` → `pnpm prisma migrate dev --name ...`
+1. `schema.prisma` → `pnpm prisma migrate dev --name ...`, then
+   `pnpm prisma generate` — Prisma 7's `migrate dev` no longer regenerates the
+   client, so a new enum value (e.g. a `BlockType`, which the API also publishes
+   as `EditorBlockType`) is missing from the schema until you do
 2. Write the **failing test** in `libs/<domain>/api` (see [testing.md](testing.md))
 3. Model + resolver/service in `libs/<domain>/api` → test passes
 4. Start the API so `schema-v2.graphql` regenerates

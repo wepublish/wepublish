@@ -17,4 +17,5 @@ export enum WepBlockStyles {
   EventList = 'EventList',
   Offers = 'Offers',
   ArticleList = 'ArticleList',
+  PeopleList = 'PeopleList',
 }

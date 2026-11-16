@@ -24,6 +24,7 @@ import {
   MdInterests,
   MdMarkEmailRead,
   MdMoney,
+  MdPeople,
   MdPhoto,
   MdPhotoLibrary,
   MdQueryStats,
@@ -34,6 +35,7 @@ import {
 
 import { BlockMapForValue } from '../atoms/blockList';
 import { isFunctionalUpdate } from '../utility';
+import { AuthorsBlock } from './authorsBlock';
 import { BlockTemplateBlock } from './blockTemplateBlock';
 import { CommentBlock } from './commentBlock';
 import { CrowdfundingBlock } from './CrowdfundingBlock';
@@ -379,6 +381,14 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     defaultValue: { filter: {}, events: [], blockStyle: undefined },
     label: 'blocks.event.label',
     icon: <MdEvent />,
+  },
+
+  [EditorBlockType.Authors]: {
+    group: 'teasers',
+    field: props => <AuthorsBlock {...props} />,
+    defaultValue: { title: '', authors: [], blockStyle: undefined },
+    label: 'blocks.authors.label',
+    icon: <MdPeople />,
   },
 
   [EditorBlockType.FlexBlock]: {

@@ -92,7 +92,15 @@ export const TeamMemberMail = styled(Link)`
 const mailOf = ({ links }: FullAuthorFragment) =>
   links?.find(({ url }) => url.startsWith('mailto:'))?.url;
 
-const Member = ({ author }: { author: FullAuthorFragment }) => {
+/** A person with portrait, name, job title and e-mail address, e.g. in the team */
+export const PersonCard = ({
+  author,
+  nameAs = 'h2',
+}: {
+  author: FullAuthorFragment;
+  /** The heading level of the name, one below the title above the people */
+  nameAs?: 'h2' | 'h3';
+}) => {
   const nameId = useId();
   const mail = mailOf(author);
 
@@ -101,7 +109,10 @@ const Member = ({ author }: { author: FullAuthorFragment }) => {
       {author.image && <TeamMemberPortrait image={author.image} />}
 
       <TeamMemberText>
-        <TeamMemberName id={nameId}>
+        <TeamMemberName
+          as={nameAs}
+          id={nameId}
+        >
           <Link href={author.url}>{author.name}</Link>
         </TeamMemberName>
 
@@ -142,7 +153,7 @@ export const WepTeamPage = ({ authors }: { authors: FullAuthorFragment[] }) => {
         {authors
           .filter(author => !author.hideOnTeam)
           .map(author => (
-            <Member
+            <PersonCard
               key={author.id}
               author={author}
             />
