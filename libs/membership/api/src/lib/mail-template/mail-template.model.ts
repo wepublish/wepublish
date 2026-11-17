@@ -68,6 +68,17 @@ export class MailTemplateVariantModel {
   letterAppendixId?: string | null;
 }
 
+@ObjectType({
+  description: 'A member plan whose communication flow sends a template.',
+})
+export class MailTemplateMemberPlanModel {
+  @Field()
+  id!: string;
+
+  @Field()
+  name!: string;
+}
+
 @ObjectType()
 export class MailTemplateModel {
   @Field()
@@ -88,7 +99,8 @@ export class MailTemplateModel {
   @Field()
   status!: string;
 
-  // `channels`, `variants`, `subject` and the deprecated content fields are
+  // `channels`, `variants`, `subject`, the table fields (`letterLayoutName`,
+  // `letterAppendixName`, `memberPlans`) and the deprecated content fields are
   // resolved by `MailTemplatesResolver`.
 }
 

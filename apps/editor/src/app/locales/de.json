@@ -1595,6 +1595,21 @@
       "goToLogin": "Zum Login"
     },
     "mailTemplates": {
+      "list": {
+        "search": "Suchen",
+        "channels": "Zustellkanäle",
+        "letterLayout": "Briefpapier",
+        "letterLayoutDefault": "Standard",
+        "letterAppendix": "Zusatzseiten",
+        "letterAppendixNone": "Keine",
+        "memberPlans": "Abo-Pläne",
+        "memberPlansHint": "Abo-Pläne, deren Kommunikationsablauf diese Vorlage verschickt. Der Standard-Ablauf gehört zu keinem Abo-Plan und erscheint hier nicht.",
+        "noMatch": "Keine Vorlage passt zu den Filtern.",
+        "statuses": {
+          "ok": "Verwendet",
+          "unused": "Nicht verwendet"
+        }
+      },
       "availableTemplates": "Mitteilungsvorlagen",
       "cancel": "Abbrechen",
       "content": "Inhalt",
