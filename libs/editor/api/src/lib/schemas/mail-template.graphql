@@ -95,6 +95,7 @@ fragment MailTemplateVariant on MailTemplateVariantModel {
   subject
   htmlContent
   textContent
+  sameAsMail
   letterLayoutId
   letterAppendixId
 }

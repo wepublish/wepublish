@@ -14,7 +14,10 @@ import {
   DialogContentText,
   DialogTitle,
   FormControl,
+  FormControlLabel,
   MenuItem,
+  Radio,
+  RadioGroup,
   Stack,
   Tab,
   Tabs,
@@ -49,7 +52,7 @@ import {
   enqueueSnackbar,
   PageTitle,
 } from '@wepublish/ui/editor';
-import { useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { DEFAULT_MUTATION_OPTIONS } from '../common';
@@ -77,6 +80,7 @@ import {
   draftsFromVariants,
   newVersionDraft,
   removedChannels,
+  sharedLetterDraft,
   variantInputs,
   VERSION_ORDER,
   VersionDraft,
@@ -128,10 +132,12 @@ function MailTemplateEdit() {
   const [description, setDescription] = useState('');
   // What the template says on each channel. The body of the version being
   // edited lives in `htmlRef` until the author leaves it or saves.
-  const [drafts, setDrafts] = useState<VersionDrafts>(() => ({
+  const [storedDrafts, setDrafts] = useState<VersionDrafts>(() => ({
     [MailChannel.Mail]: newVersionDraft(),
   }));
-  const [activeChannel, setActiveChannel] = useState(MailChannel.Mail);
+  const [chosenChannel, setActiveChannel] = useState(MailChannel.Mail);
+  // The author took the letter off a new template: it does not come back.
+  const [letterDeclined, setLetterDeclined] = useState(false);
   // The versions the api has, so the ones taken away here can be deleted.
   const [savedChannels, setSavedChannels] = useState<MailChannel[]>([]);
   const [textContent, setTextContent] = useState('');
@@ -163,6 +169,9 @@ function MailTemplateEdit() {
     versionPanel: `${fieldId}-version`,
     removeTitle: `${fieldId}-remove-title`,
     removeText: `${fieldId}-remove-text`,
+    letterText: `${fieldId}-letter-text`,
+    shareTitle: `${fieldId}-share-title`,
+    shareText: `${fieldId}-share-text`,
     versionTab: (channel: MailChannel) => `${fieldId}-version-${channel}`,
   };
 
@@ -221,19 +230,58 @@ function MailTemplateEdit() {
     htmlRef.current = html;
   };
 
+  const letterAllowed = allowsLetterVersion(contextId);
+
+  // A new template comes with a letter that says what the email says, where
+  // letters can be sent and the purpose allows one. Derived, not stored: the
+  // letter appears once letters turn out to be available, and goes again
+  // when a purpose is chosen that is email only.
+  const drafts = useMemo((): VersionDrafts => {
+    if (isEdit) {
+      return storedDrafts;
+    }
+
+    const letter = storedDrafts[MailChannel.Letter];
+
+    if (!letterAllowed && letter?.sameAsMail) {
+      const rest = { ...storedDrafts };
+      delete rest[MailChannel.Letter];
+
+      return rest;
+    }
+
+    if (
+      letterAvailable &&
+      letterAllowed &&
+      !letter &&
+      !letterDeclined &&
+      storedDrafts[MailChannel.Mail]
+    ) {
+      return { ...storedDrafts, [MailChannel.Letter]: sharedLetterDraft() };
+    }
+
+    return storedDrafts;
+  }, [isEdit, storedDrafts, letterAllowed, letterAvailable, letterDeclined]);
+
+  const activeChannel =
+    drafts[chosenChannel] ? chosenChannel : (
+      (VERSION_ORDER.find(channel => drafts[channel]) ?? MailChannel.Mail)
+    );
   const isLetter = activeChannel === MailChannel.Letter;
   const activeDraft: VersionDraft = drafts[activeChannel] ?? newVersionDraft();
-  const subject = activeDraft.subject;
+  const mailDraft = drafts[MailChannel.Mail];
+  // The letter shows the email's words and has none of its own to edit.
+  const shared = isLetter && activeDraft.sameAsMail && !!mailDraft;
+  const subject = shared ? mailDraft.subject : activeDraft.subject;
   const letterLayoutId = activeDraft.letterLayoutId;
   const letterAppendixId = activeDraft.letterAppendixId;
 
   const updateActiveDraft = (
     change: (draft: VersionDraft) => Partial<VersionDraft>
   ) =>
-    setDrafts(current => {
-      const draft = current[activeChannel] ?? newVersionDraft();
-
-      return { ...current, [activeChannel]: { ...draft, ...change(draft) } };
+    setDrafts({
+      ...drafts,
+      [activeChannel]: { ...activeDraft, ...change(activeDraft) },
     });
   const setSubject = (next: string | ((previous: string) => string)) =>
     updateActiveDraft(draft => ({
@@ -243,12 +291,17 @@ function MailTemplateEdit() {
   /** Every version as it stands, the open one with what was typed since. */
   const currentDrafts = (): VersionDrafts => ({
     ...drafts,
-    [activeChannel]: { ...activeDraft, html: htmlRef.current },
+    // A shared letter has the email's body in the editor, not one to keep.
+    [activeChannel]:
+      shared ? activeDraft : { ...activeDraft, html: htmlRef.current },
   });
 
   /** Put a version into the editor: its body, and the frame it is set in. */
   const openVersion = (channel: MailChannel, from: VersionDrafts) => {
-    htmlRef.current = from[channel]?.html ?? createEmptyEmailHtml();
+    const draft = from[channel];
+    htmlRef.current =
+      (draft?.sameAsMail ? from[MailChannel.Mail]?.html : draft?.html) ??
+      createEmptyEmailHtml();
     const shell = readShellSettings(htmlRef.current);
     setBackgroundColor(shell.backgroundColor);
     setContentWidth(shell.contentWidth);
@@ -275,7 +328,12 @@ function MailTemplateEdit() {
     const current = currentDrafts();
     const next = {
       ...current,
-      [channel]: newVersionDraft(current[activeChannel]),
+      // A letter starts out saying what the email says; any other version
+      // as a copy of the one being looked at.
+      [channel]:
+        channel === MailChannel.Letter && current[MailChannel.Mail] ?
+          sharedLetterDraft()
+        : newVersionDraft(current[activeChannel]),
     };
 
     setDrafts(next);
@@ -290,8 +348,27 @@ function MailTemplateEdit() {
   const removeActiveVersion = () => {
     setConfirmRemoval(false);
 
-    const rest: VersionDrafts = { ...currentDrafts() };
+    const all = currentDrafts();
+    const rest: VersionDrafts = { ...all };
     delete rest[activeChannel];
+
+    const mail = all[MailChannel.Mail];
+    const letter = rest[MailChannel.Letter];
+
+    // The letter took its words from the email being removed: it keeps them.
+    if (activeChannel === MailChannel.Mail && mail && letter?.sameAsMail) {
+      rest[MailChannel.Letter] = {
+        ...letter,
+        sameAsMail: false,
+        subject: mail.subject,
+        html: mail.html,
+      };
+    }
+
+    if (activeChannel === MailChannel.Letter) {
+      setLetterDeclined(true);
+    }
+
     const remaining = VERSION_ORDER.find(channel => rest[channel]);
 
     if (!remaining) {
@@ -300,6 +377,39 @@ function MailTemplateEdit() {
 
     setDrafts(rest);
     openVersion(remaining, rest);
+  };
+
+  // Going back to the email's text throws the letter's own away, so it is
+  // asked for first.
+  const [confirmShare, setConfirmShare] = useState(false);
+
+  const setLetterShared = (sameAsMail: boolean) => {
+    setConfirmShare(false);
+
+    const all = currentDrafts();
+    const mail = all[MailChannel.Mail];
+    const letter = all[MailChannel.Letter];
+
+    if (!mail || !letter) {
+      return;
+    }
+
+    const next = {
+      ...all,
+      [MailChannel.Letter]:
+        sameAsMail ?
+          { ...letter, sameAsMail: true }
+          // Its own text starts as the email's, ready to adapt.
+        : {
+            ...letter,
+            sameAsMail: false,
+            subject: mail.subject,
+            html: mail.html,
+          },
+    };
+
+    setDrafts(next);
+    openVersion(MailChannel.Letter, next);
   };
 
   useEffect(() => {
@@ -337,8 +447,6 @@ function MailTemplateEdit() {
     channel =>
       !drafts[channel] && (channel !== MailChannel.Letter || letterAvailable)
   );
-  const letterAllowed = allowsLetterVersion(contextId);
-
   // Rewrite the gray frame color / content width on the current shell and
   // remount the editor so the change is visible immediately.
   const applyShell = (
@@ -367,6 +475,10 @@ function MailTemplateEdit() {
   };
 
   const insertToken = (token: string) => {
+    // A shared letter has nothing of its own to insert into.
+    if (shared) {
+      return;
+    }
     if (activeField === 'subject') {
       // The caret is always at the end here, so the subject itself is the
       // context the login token is judged against.
@@ -876,6 +988,38 @@ function MailTemplateEdit() {
                 }
                 style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}
               >
+                {isLetter && mailDraft && (
+                  <FormControl
+                    style={{ flex: '1 1 100%', minWidth: 200, marginBottom: 0 }}
+                    fullWidth
+                  >
+                    <FieldLabel
+                      id={ids.letterText}
+                      label={t('mailTemplates.edit.letterText.label')}
+                    />
+                    <RadioGroup
+                      row
+                      aria-labelledby={ids.letterText}
+                      value={activeDraft.sameAsMail ? 'same' : 'own'}
+                      onChange={(_event, value) =>
+                        value === 'own' ?
+                          setLetterShared(false)
+                        : setConfirmShare(true)
+                      }
+                    >
+                      <FormControlLabel
+                        value="same"
+                        control={<Radio size="small" />}
+                        label={t('mailTemplates.edit.letterText.same')}
+                      />
+                      <FormControlLabel
+                        value="own"
+                        control={<Radio size="small" />}
+                        label={t('mailTemplates.edit.letterText.own')}
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                )}
                 {/* On a letter the subject takes a row of its own, with the
                     stationery and the appendix side by side below it. */}
                 <FormControl
@@ -892,6 +1036,7 @@ function MailTemplateEdit() {
                   />
                   <TextField
                     value={subject}
+                    disabled={shared}
                     onChange={event => setSubject(event.target.value)}
                     onFocus={() => setActiveField('subject')}
                     slotProps={{
@@ -1131,6 +1276,8 @@ function MailTemplateEdit() {
             direction="row"
             useFlexGap
             sx={{
+              // Nothing to format on a letter that shows the email's words.
+              display: shared ? 'none' : undefined,
               gridColumn: { md: 2 },
               gridRow: { md: 1 },
               alignItems: 'center',
@@ -1238,7 +1385,48 @@ function MailTemplateEdit() {
             }}
           >
             {/* eslint-disable react-hooks/refs */}
-            {bodyMode === 'visual' ?
+            {shared ?
+              <Box
+                sx={{
+                  position: 'relative',
+                  height: '100%',
+                  border: 1,
+                  borderColor: 'divider',
+                  borderRadius: 1,
+                  overflow: 'hidden',
+                }}
+              >
+                {/* The email's body as it stands, to look at only. */}
+                <iframe
+                  title={t('mailTemplates.edit.letterText.same')}
+                  srcDoc={mailDraft.html}
+                  sandbox=""
+                  tabIndex={-1}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    border: 0,
+                    opacity: 0.6,
+                  }}
+                />
+                <Typography
+                  variant="caption"
+                  sx={{
+                    position: 'absolute',
+                    zIndex: 1,
+                    right: 16,
+                    bottom: 12,
+                    paddingBlock: 0.5,
+                    paddingInline: 1,
+                    borderRadius: 1,
+                    bgcolor: 'grey.200',
+                    color: 'grey.900',
+                  }}
+                >
+                  {t('mailTemplates.edit.letterText.sameNote')}
+                </Typography>
+              </Box>
+            : bodyMode === 'visual' ?
               <HtmlVisualEditor
                 key={`visual-${editorKey}`}
                 ref={visualRef}
@@ -1321,6 +1509,37 @@ function MailTemplateEdit() {
         <DialogContent style={{ height: '85vh' }}>
           <MailPreview html={previewHtml ?? ''} />
         </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={confirmShare}
+        onClose={() => setConfirmShare(false)}
+        aria-labelledby={ids.shareTitle}
+        aria-describedby={ids.shareText}
+      >
+        <DialogTitle id={ids.shareTitle}>
+          {t('mailTemplates.edit.letterText.confirm.title')}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id={ids.shareText}>
+            {t('mailTemplates.edit.letterText.confirm.text')}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="text"
+            onClick={() => setConfirmShare(false)}
+          >
+            {t('mailTemplates.cancel')}
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => setLetterShared(true)}
+          >
+            {t('mailTemplates.edit.letterText.confirm.confirm')}
+          </Button>
+        </DialogActions>
       </Dialog>
 
       <Dialog

@@ -1807,6 +1807,10 @@ model MailTemplateVariant {
   // Plain-text alternative of an email. Unused for a letter.
   textContent String?
 
+  // Letter only: the letter says what the email says. Subject and body are
+  // then read from the mail variant; layout and appendix stay the letter's.
+  sameAsMail Boolean @default(false)
+
   // Letter only. Stationery the letter is set on; null means the default.
   letterLayout   LetterLayout? @relation(fields: [letterLayoutId], references: [id])
   letterLayoutId String?

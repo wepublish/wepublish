@@ -331,7 +331,25 @@ describe('MailTemplateEdit', () => {
       expect(subjectField()).toBeTruthy();
     });
 
-    it('starts a new template with the email version only', () => {
+    const letterText = (mode: 'same' | 'own') =>
+      within(
+        screen.getByRole('radiogroup', {
+          name: 'mailTemplates.edit.letterText.label',
+        })
+      ).getByRole('radio', { name: `mailTemplates.edit.letterText.${mode}` });
+
+    const loadSaved = async (channels: MailChannel[], over = {}) => {
+      loadTemplate.mockResolvedValue({
+        data: { mailTemplate: savedTemplate(channels, over) },
+      });
+      renderPage('/mailtemplates/edit/tpl-1');
+
+      await waitFor(() =>
+        expect(subjectField()).toHaveValue(`Subject ${channels[0]}`)
+      );
+    };
+
+    it('starts a new template with an email and a letter that says the same', () => {
       withLetters();
       renderPage();
 
@@ -339,21 +357,112 @@ describe('MailTemplateEdit', () => {
         'aria-selected',
         'true'
       );
+
+      fireEvent.click(versionTab(MailChannel.Letter));
+
+      expect(letterText('same')).toBeChecked();
       expect(
-        screen.queryByRole('tab', { name: 'deliveryMode.channel.letter' })
-      ).toBeNull();
-      expect(
-        screen.queryByRole('combobox', {
+        screen.getByRole('combobox', {
           name: /^mailTemplates\.edit\.letterLayout/,
         })
-      ).toBeNull();
+      ).toBeTruthy();
     });
 
-    it('adds a letter version as a copy of the email and opens it', () => {
+    it('shows the words of the email on a letter that says the same, not to be typed into', () => {
       withLetters();
       renderPage();
 
       fireEvent.change(subjectField(), { target: { value: 'Ihre Rechnung' } });
+      fireEvent.click(versionTab(MailChannel.Letter));
+
+      expect(subjectField()).toHaveValue('Ihre Rechnung');
+      expect(subjectField()).toBeDisabled();
+      expect(
+        screen.queryByRole('group', { name: 'mailTemplates.edit.bodyMode' })
+      ).toBeNull();
+      expect(
+        screen.getByText('mailTemplates.edit.letterText.sameNote')
+      ).toBeTruthy();
+    });
+
+    it('gives the letter a text of its own, starting from the email', () => {
+      withLetters();
+      renderPage();
+
+      fireEvent.change(subjectField(), { target: { value: 'Email subject' } });
+      fireEvent.click(versionTab(MailChannel.Letter));
+      fireEvent.click(letterText('own'));
+
+      expect(letterText('own')).toBeChecked();
+      expect(subjectField()).toBeEnabled();
+      expect(subjectField()).toHaveValue('Email subject');
+      expect(
+        screen.getByRole('group', { name: 'mailTemplates.edit.bodyMode' })
+      ).toBeTruthy();
+    });
+
+    it('keeps a subject per version once the letter has its own text', () => {
+      withLetters();
+      renderPage();
+
+      fireEvent.change(subjectField(), { target: { value: 'Email subject' } });
+      fireEvent.click(versionTab(MailChannel.Letter));
+      fireEvent.click(letterText('own'));
+      fireEvent.change(subjectField(), { target: { value: 'Letter title' } });
+      fireEvent.click(versionTab(MailChannel.Mail));
+
+      expect(subjectField()).toHaveValue('Email subject');
+
+      fireEvent.click(versionTab(MailChannel.Letter));
+
+      expect(subjectField()).toHaveValue('Letter title');
+    });
+
+    it('asks before throwing the letter text away for the email text', async () => {
+      withLetters();
+      await loadSaved([MailChannel.Mail, MailChannel.Letter]);
+      fireEvent.click(versionTab(MailChannel.Letter));
+
+      expect(letterText('own')).toBeChecked();
+
+      fireEvent.click(letterText('same'));
+
+      const dialog = screen.getByRole('dialog', {
+        name: 'mailTemplates.edit.letterText.confirm.title',
+      });
+
+      fireEvent.click(
+        within(dialog).getByRole('button', {
+          name: 'mailTemplates.edit.letterText.confirm.confirm',
+        })
+      );
+
+      await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+      expect(letterText('same')).toBeChecked();
+      expect(subjectField()).toHaveValue('Subject mail');
+      expect(subjectField()).toBeDisabled();
+    });
+
+    it('keeps the letter text when that question is cancelled', async () => {
+      withLetters();
+      await loadSaved([MailChannel.Mail, MailChannel.Letter]);
+      fireEvent.click(versionTab(MailChannel.Letter));
+      fireEvent.click(letterText('same'));
+      fireEvent.click(
+        within(screen.getByRole('dialog')).getByRole('button', {
+          name: 'mailTemplates.cancel',
+        })
+      );
+
+      await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+      expect(letterText('own')).toBeChecked();
+      expect(subjectField()).toHaveValue('Subject letter');
+    });
+
+    it('adds a letter to a saved template as one that says the same', async () => {
+      withLetters();
+      await loadSaved([MailChannel.Mail]);
+
       fireEvent.click(
         screen.getByRole('button', {
           name: 'mailTemplates.edit.addVersion.letter',
@@ -364,32 +473,135 @@ describe('MailTemplateEdit', () => {
         'aria-selected',
         'true'
       );
-      expect(subjectField()).toHaveValue('Ihre Rechnung');
-      expect(
-        screen.getByRole('combobox', {
-          name: /^mailTemplates\.edit\.letterLayout/,
-        })
-      ).toBeTruthy();
+      expect(letterText('same')).toBeChecked();
+      expect(subjectField()).toHaveValue('Subject mail');
     });
 
-    it('keeps a subject per version', () => {
+    it('saves a letter that says the same without a copy of the email', async () => {
       withLetters();
-      renderPage();
-
-      fireEvent.change(subjectField(), { target: { value: 'Email subject' } });
+      await loadSaved([MailChannel.Mail]);
       fireEvent.click(
         screen.getByRole('button', {
           name: 'mailTemplates.edit.addVersion.letter',
         })
       );
-      fireEvent.change(subjectField(), { target: { value: 'Letter title' } });
-      fireEvent.click(versionTab(MailChannel.Mail));
+      fireEvent.click(
+        screen.getByRole('button', { name: 'mailTemplates.save' })
+      );
 
-      expect(subjectField()).toHaveValue('Email subject');
+      await waitFor(() =>
+        expect(mutation('UpdateMailTemplate')).toHaveBeenCalled()
+      );
+      expect(
+        mutation('UpdateMailTemplate').mock.calls[0][0].variables.input
+          .variants[1]
+      ).toEqual({
+        channel: MailChannel.Letter,
+        subject: '',
+        htmlContent: '',
+        sameAsMail: true,
+        letterLayoutId: null,
+        letterAppendixId: null,
+      });
+    });
 
+    it('opens a saved letter that says the same as such', async () => {
+      withLetters();
+      loadTemplate.mockResolvedValue({
+        data: {
+          mailTemplate: savedTemplate([MailChannel.Mail, MailChannel.Letter], {
+            variants: [
+              savedVariant(MailChannel.Mail),
+              savedVariant(MailChannel.Letter, {
+                subject: '',
+                htmlContent: '',
+                sameAsMail: true,
+              }),
+            ],
+          }),
+        },
+      });
+      renderPage('/mailtemplates/edit/tpl-1');
+
+      await waitFor(() => expect(subjectField()).toHaveValue('Subject mail'));
       fireEvent.click(versionTab(MailChannel.Letter));
 
-      expect(subjectField()).toHaveValue('Letter title');
+      expect(letterText('same')).toBeChecked();
+      expect(subjectField()).toHaveValue('Subject mail');
+    });
+
+    it('has no letter on a new template whose purpose is email only', () => {
+      withLetters();
+      renderPage();
+
+      expect(versionTab(MailChannel.Letter)).toBeTruthy();
+
+      fireEvent.mouseDown(
+        screen.getByRole('combobox', {
+          name: /^mailTemplates\.edit\.mailType/,
+        })
+      );
+      fireEvent.click(
+        within(screen.getByRole('listbox')).getByRole('option', {
+          name: /mailTemplates\.placeholderContexts\.account/,
+        })
+      );
+
+      expect(
+        screen.queryByRole('tab', { name: 'deliveryMode.channel.letter' })
+      ).toBeNull();
+    });
+
+    it('leaves the letter its words when the email is removed', async () => {
+      withLetters();
+      loadTemplate.mockResolvedValue({
+        data: {
+          mailTemplate: savedTemplate([MailChannel.Mail, MailChannel.Letter], {
+            variants: [
+              savedVariant(MailChannel.Mail),
+              savedVariant(MailChannel.Letter, {
+                subject: '',
+                htmlContent: '',
+                sameAsMail: true,
+              }),
+            ],
+          }),
+        },
+      });
+      renderPage('/mailtemplates/edit/tpl-1');
+
+      await waitFor(() => expect(subjectField()).toHaveValue('Subject mail'));
+      fireEvent.click(
+        screen.getByRole('button', {
+          name: 'mailTemplates.edit.removeVersion',
+        })
+      );
+      fireEvent.click(
+        within(screen.getByRole('dialog')).getByRole('button', {
+          name: 'mailTemplates.edit.removeVersionConfirm.confirm',
+        })
+      );
+
+      await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+      expect(subjectField()).toHaveValue('Subject mail');
+      expect(subjectField()).toBeEnabled();
+
+      fireEvent.click(
+        screen.getByRole('button', { name: 'mailTemplates.save' })
+      );
+
+      await waitFor(() =>
+        expect(mutation('UpdateMailTemplate')).toHaveBeenCalled()
+      );
+      expect(
+        mutation('UpdateMailTemplate').mock.calls[0][0].variables.input.variants
+      ).toEqual([
+        expect.objectContaining({
+          channel: MailChannel.Letter,
+          subject: 'Subject mail',
+          sameAsMail: false,
+        }),
+      ]);
     });
 
     it('offers no letter version for a purpose that is email only', () => {
@@ -614,9 +826,9 @@ describe('MailTemplateEdit', () => {
       expect(subjectField()).toHaveValue('Subject letter');
     });
 
-    it('keeps the last version: there is nothing to remove it for', () => {
+    it('keeps the last version: there is nothing to remove it for', async () => {
       withLetters();
-      renderPage();
+      await loadSaved([MailChannel.Mail]);
 
       expect(
         screen.queryByRole('button', {

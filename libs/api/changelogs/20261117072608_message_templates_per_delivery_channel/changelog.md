@@ -6,15 +6,16 @@ actionRequired: false
 
 **One template, a version per channel**
 
-If printed letters are switched on for your medium, a message template now has a tab per delivery channel: **Email** and **Letter**. Each version has its own subject and its own text, so a letter no longer has to reuse the wording of the email.
+If printed letters are switched on for your medium, a message template now has a tab per delivery channel: **Email** and **Letter**. The letter says what the email says until you give it a text of its own.
 
-- **Add letter version** starts the letter as a copy of the email, ready to adapt.
+- On the **Letter** tab, **Same as email** is the default: there is one text to maintain. Choose **Own text** to give the letter its own subject and text; it starts as a copy of the email.
+- A new template comes with a letter version. An existing one gets it with **Add letter version**.
 - Stationery and additional pages (PDF) belong to the letter version and show on its tab only.
 - Each tab has its own preview. A test mail is sent from the email tab.
 - **Remove this version** asks before it removes anything.
 - Templates for account messages (login link, password reset, email change) stay email only.
 
-Your existing templates keep working as before. A template that already went out as a letter has received a letter version with the same text as its email.
+Your existing templates keep working as before. A template that already went out as a letter has received a letter version that says the same as its email.
 
 **What this means for sending**
 

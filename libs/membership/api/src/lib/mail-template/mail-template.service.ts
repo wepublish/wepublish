@@ -56,12 +56,16 @@ const CONTEXTS_WITHOUT_LETTER: MailTemplateContext[] = [
  */
 const variantData = (variant: MailTemplateVariantInput) => {
   const isLetter = variant.channel === MailChannel.letter;
+  // A letter that says what the email says keeps no copy of it, so the two
+  // cannot drift apart.
+  const sameAsMail = isLetter && !!variant.sameAsMail;
 
   return {
     channel: variant.channel,
-    subject: variant.subject,
-    htmlContent: variant.htmlContent,
+    subject: sameAsMail ? '' : variant.subject,
+    htmlContent: sameAsMail ? '' : variant.htmlContent,
     textContent: isLetter ? null : (variant.textContent ?? null),
+    sameAsMail,
     letterLayoutId: isLetter ? (variant.letterLayoutId ?? null) : null,
     letterAppendixId: isLetter ? (variant.letterAppendixId ?? null) : null,
   };
@@ -162,6 +166,24 @@ export class MailTemplateService {
       throw new ForbiddenException('Letters are not enabled for this medium.');
     }
 
+    for (const variant of variants) {
+      if (!variant.sameAsMail) {
+        continue;
+      }
+
+      if (variant.channel !== MailChannel.letter) {
+        throw new BadRequestException(
+          'Only a letter version can take its text from the email.'
+        );
+      }
+
+      if (![...channels, ...existingChannels].includes(MailChannel.mail)) {
+        throw new BadRequestException(
+          'A letter that takes its text from the email needs an email version.'
+        );
+      }
+    }
+
     if (
       context &&
       CONTEXTS_WITHOUT_LETTER.includes(context) &&
@@ -185,7 +207,7 @@ export class MailTemplateService {
     const template = await this.prisma.mailTemplate.findUnique({
       where: { id: templateId },
       select: {
-        variants: { select: { channel: true } },
+        variants: { select: { channel: true, sameAsMail: true } },
         _count: {
           select: { subscriptionIntervals: true, userFlowMails: true },
         },
@@ -209,6 +231,12 @@ export class MailTemplateService {
     }
 
     if (channel === MailChannel.mail) {
+      if (template.variants.some(variant => variant.sameAsMail)) {
+        throw new BadRequestException(
+          'The letter version takes its text from the email. Give the letter a text of its own before removing the email version.'
+        );
+      }
+
       if (template._count.subscriptionIntervals > 0) {
         throw new BadRequestException(
           'This template is still assigned to a subscription flow, which always sends the email. Please unassign it before removing the email version.'

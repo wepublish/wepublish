@@ -2828,6 +2828,8 @@ export type MailTemplateVariantInput = {
   /** Uploaded pdf printed after the letter pages, e.g. a QR-bill. */
   letterAppendixId?: InputMaybe<Scalars['String']['input']>;
   letterLayoutId?: InputMaybe<Scalars['String']['input']>;
+  /** Letter only: take subject and body from the email version, which the template must have. The subject and body handed in are ignored. */
+  sameAsMail?: InputMaybe<Scalars['Boolean']['input']>;
   subject: Scalars['String']['input'];
   textContent?: InputMaybe<Scalars['String']['input']>;
 };
@@ -2842,6 +2844,8 @@ export type MailTemplateVariantModel = {
   letterAppendixId?: Maybe<Scalars['String']['output']>;
   /** Letter only: stationery the letter is set on; null means the default. */
   letterLayoutId?: Maybe<Scalars['String']['output']>;
+  /** Letter only: the letter says what the email says. Its own subject and body are empty then; sends read the email version. */
+  sameAsMail: Scalars['Boolean']['output'];
   /** The email's subject line; for a letter the title its log entry carries. */
   subject: Scalars['String']['output'];
   /** Plain-text alternative of an email. Unused for a letter. */

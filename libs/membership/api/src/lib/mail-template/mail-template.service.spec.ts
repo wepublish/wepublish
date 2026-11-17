@@ -129,6 +129,7 @@ describe('MailTemplateService', () => {
                 subject: 'Hi',
                 htmlContent: '<p>Hi</p>',
                 textContent: 'Hi',
+                sameAsMail: false,
                 letterLayoutId: null,
                 letterAppendixId: null,
               },
@@ -137,12 +138,65 @@ describe('MailTemplateService', () => {
                 subject: 'Ihre Rechnung',
                 htmlContent: '<p>Guten Tag</p>',
                 textContent: null,
+                sameAsMail: false,
                 letterLayoutId: 'layout-1',
                 letterAppendixId: 'doc-1',
               },
             ],
           },
         },
+      });
+    });
+
+    describe('a letter that says what the email says', () => {
+      const sharedLetter = {
+        channel: MailChannel.letter,
+        subject: 'ignored',
+        htmlContent: '<p>ignored</p>',
+        sameAsMail: true,
+        letterLayoutId: 'layout-1',
+      };
+
+      it('stores no words of its own, only its stationery', async () => {
+        const { service, create } = setup();
+
+        await service.createMailTemplate({
+          name: 'Rechnung',
+          variants: [mailVersion, sharedLetter],
+        });
+
+        expect(create.mock.calls[0][0].data.variants.create[1]).toEqual({
+          channel: MailChannel.letter,
+          subject: '',
+          htmlContent: '',
+          textContent: null,
+          sameAsMail: true,
+          letterLayoutId: 'layout-1',
+          letterAppendixId: null,
+        });
+      });
+
+      it('needs an email to take the words from', async () => {
+        const { service, create } = setup();
+
+        await expect(
+          service.createMailTemplate({
+            name: 'Brief',
+            variants: [sharedLetter],
+          })
+        ).rejects.toThrow(BadRequestException);
+        expect(create).not.toHaveBeenCalled();
+      });
+
+      it('is a thing of the letter: the email cannot point at itself', async () => {
+        const { service } = setup();
+
+        await expect(
+          service.createMailTemplate({
+            name: 'Mail',
+            variants: [{ ...mailVersion, sameAsMail: true }],
+          })
+        ).rejects.toThrow(BadRequestException);
       });
     });
 
@@ -236,6 +290,7 @@ describe('MailTemplateService', () => {
         subject: 'Hi',
         htmlContent: '<p>Hi</p>',
         textContent: 'Hi',
+        sameAsMail: false,
         letterLayoutId: null,
         letterAppendixId: null,
       };
@@ -262,6 +317,26 @@ describe('MailTemplateService', () => {
           },
         },
       });
+    });
+
+    it('lets a letter take the words of an email saved before', async () => {
+      const { service, update } = setup([MailChannel.mail]);
+
+      await service.updateMailTemplate('t1', {
+        name: 'Rechnung',
+        variants: [
+          {
+            channel: MailChannel.letter,
+            subject: '',
+            htmlContent: '',
+            sameAsMail: true,
+          },
+        ],
+      });
+
+      expect(
+        update.mock.calls[0][0].data.variants.upsert[0].create.sameAsMail
+      ).toBe(true);
     });
 
     it('saves the shared fields alone when no version is handed in', async () => {
@@ -292,7 +367,9 @@ describe('MailTemplateService', () => {
       subscriptionIntervals = 0,
       userFlowMails = 0,
       letterIntervals = 0,
+      letterSameAsMail = false,
     }: {
+      letterSameAsMail?: boolean;
       channels?: MailChannel[];
       subscriptionIntervals?: number;
       userFlowMails?: number;
@@ -303,7 +380,10 @@ describe('MailTemplateService', () => {
         mailTemplate: {
           findUnique: vi.fn(async () => ({
             id: 't1',
-            variants: channels.map(channel => ({ channel })),
+            variants: channels.map(channel => ({
+              channel,
+              sameAsMail: channel === MailChannel.letter && letterSameAsMail,
+            })),
             _count: { subscriptionIntervals, userFlowMails },
           })),
         },
@@ -324,6 +404,15 @@ describe('MailTemplateService', () => {
           templateId_channel: { templateId: 't1', channel: MailChannel.letter },
         },
       });
+    });
+
+    it('keeps the email while the letter takes its words from it', async () => {
+      const { service, remove } = setup({ letterSameAsMail: true });
+
+      await expect(
+        service.deleteMailTemplateVariant('t1', MailChannel.mail)
+      ).rejects.toThrow(BadRequestException);
+      expect(remove).not.toHaveBeenCalled();
     });
 
     it('keeps the last version: a template has to say something', async () => {

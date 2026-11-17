@@ -47,6 +47,12 @@ export class MailTemplateVariantModel {
   })
   textContent?: string | null;
 
+  @Field({
+    description:
+      'Letter only: the letter says what the email says. Its own subject and body are empty then; sends read the email version.',
+  })
+  sameAsMail!: boolean;
+
   @Field(() => String, {
     nullable: true,
     description:
@@ -105,6 +111,13 @@ export class MailTemplateVariantInput {
 
   @Field(() => String, { nullable: true })
   textContent?: string | null;
+
+  @Field(() => Boolean, {
+    nullable: true,
+    description:
+      'Letter only: take subject and body from the email version, which the template must have. The subject and body handed in are ignored.',
+  })
+  sameAsMail?: boolean | null;
 
   @Field(() => String, { nullable: true })
   letterLayoutId?: string | null;

@@ -5,6 +5,7 @@ import {
   draftsFromVariants,
   newVersionDraft,
   removedChannels,
+  sharedLetterDraft,
   sendChannelFor,
   templatesForChannel,
   variantInputs,
@@ -63,6 +64,7 @@ describe('draftsFromVariants', () => {
     expect(drafts[MailChannel.Mail]).toEqual({
       subject: 'Subject mail',
       html: '<p>mail</p>',
+      sameAsMail: false,
       letterLayoutId: null,
       letterAppendixId: null,
     });
@@ -85,12 +87,14 @@ describe('newVersionDraft', () => {
       newVersionDraft({
         subject: 'Hello',
         html: '<p>Hi</p>',
+        sameAsMail: false,
         letterLayoutId: 'layout-1',
         letterAppendixId: 'doc-1',
       })
     ).toEqual({
       subject: 'Hello',
       html: '<p>Hi</p>',
+      sameAsMail: false,
       letterLayoutId: null,
       letterAppendixId: null,
     });
@@ -113,12 +117,14 @@ describe('variantInputs', () => {
         [MailChannel.Letter]: {
           subject: 'L',
           html: '<p>l</p>',
+          sameAsMail: false,
           letterLayoutId: 'layout-1',
           letterAppendixId: 'doc-1',
         },
         [MailChannel.Mail]: {
           subject: 'M',
           html: '<p>m</p>',
+          sameAsMail: false,
           letterLayoutId: 'stale',
           letterAppendixId: 'stale',
         },
@@ -137,6 +143,7 @@ describe('variantInputs', () => {
         channel: MailChannel.Letter,
         subject: 'L',
         htmlContent: '<p>l</p>',
+        sameAsMail: false,
         letterLayoutId: 'layout-1',
         letterAppendixId: 'doc-1',
       },
@@ -150,6 +157,7 @@ describe('variantInputs', () => {
           [MailChannel.Letter]: {
             subject: 'L',
             html: '',
+            sameAsMail: false,
             letterLayoutId: null,
             letterAppendixId: null,
           },
@@ -204,5 +212,53 @@ describe('sendChannelFor', () => {
     expect(
       sendChannelFor([MailChannel.Letter], MailChannel.Mail, [MailChannel.Mail])
     ).toBeNull();
+  });
+});
+
+describe('a letter that says what the email says', () => {
+  it('reads the flag of a saved letter', () => {
+    expect(
+      draftsFromVariants([
+        variant(MailChannel.Mail),
+        variant(MailChannel.Letter, {
+          subject: '',
+          htmlContent: '',
+          sameAsMail: true,
+        }),
+      ])[MailChannel.Letter]?.sameAsMail
+    ).toBe(true);
+  });
+
+  it('starts without words of its own', () => {
+    expect(sharedLetterDraft()).toMatchObject({
+      subject: '',
+      sameAsMail: true,
+      letterLayoutId: null,
+      letterAppendixId: null,
+    });
+  });
+
+  it('is saved without a copy of the email, with its stationery', () => {
+    expect(
+      variantInputs(
+        {
+          [MailChannel.Mail]: newVersionDraft(),
+          [MailChannel.Letter]: {
+            ...sharedLetterDraft(),
+            subject: 'left over',
+            html: '<p>left over</p>',
+            letterLayoutId: 'layout-1',
+          },
+        },
+        html => html
+      )[1]
+    ).toEqual({
+      channel: MailChannel.Letter,
+      subject: '',
+      htmlContent: '',
+      sameAsMail: true,
+      letterLayoutId: 'layout-1',
+      letterAppendixId: null,
+    });
   });
 });

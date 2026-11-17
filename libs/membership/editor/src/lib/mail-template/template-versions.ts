@@ -11,6 +11,11 @@ import { createEmptyEmailHtml } from './mail-html';
 export type VersionDraft = {
   subject: string;
   html: string;
+  /**
+   * Letter only: the letter says what the email says. Its own subject and
+   * body are not used then, and not saved.
+   */
+  sameAsMail: boolean;
   letterLayoutId: string | null;
   letterAppendixId: string | null;
 };
@@ -48,6 +53,7 @@ export const draftsFromVariants = (
       {
         subject: variant.subject,
         html: variant.htmlContent || createEmptyEmailHtml(),
+        sameAsMail: !!variant.sameAsMail,
         letterLayoutId: variant.letterLayoutId ?? null,
         letterAppendixId: variant.letterAppendixId ?? null,
       },
@@ -62,8 +68,18 @@ export const draftsFromVariants = (
 export const newVersionDraft = (copyFrom?: VersionDraft): VersionDraft => ({
   subject: copyFrom?.subject ?? '',
   html: copyFrom?.html ?? createEmptyEmailHtml(),
+  sameAsMail: false,
   letterLayoutId: null,
   letterAppendixId: null,
+});
+
+/**
+ * A letter that says what the email says: the default, so there is one text
+ * to maintain until the letter needs its own.
+ */
+export const sharedLetterDraft = (): VersionDraft => ({
+  ...newVersionDraft(),
+  sameAsMail: true,
 });
 
 /** The versions to save, in the shape the api takes them. */
@@ -81,8 +97,10 @@ export const variantInputs = (
     return channel === MailChannel.Letter ?
         {
           channel,
-          subject: draft.subject,
-          htmlContent: draft.html,
+          // No copy of the email is kept, so the two cannot drift apart.
+          subject: draft.sameAsMail ? '' : draft.subject,
+          htmlContent: draft.sameAsMail ? '' : draft.html,
+          sameAsMail: draft.sameAsMail,
           letterLayoutId: draft.letterLayoutId,
           letterAppendixId: draft.letterAppendixId,
         }

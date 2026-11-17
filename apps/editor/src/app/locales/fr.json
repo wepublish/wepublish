@@ -1607,6 +1607,17 @@
           "letter": "Ajouter la version lettre"
         },
         "removeVersion": "Supprimer cette version",
+        "letterText": {
+          "label": "Texte",
+          "same": "Comme l’e-mail",
+          "own": "Texte propre",
+          "sameNote": "Cette lettre utilise l’objet et le texte de l’e-mail. Modifiez-les dans l’onglet « E-mail ».",
+          "confirm": {
+            "title": "Abandonner le texte propre de la lettre ?",
+            "text": "La lettre utilisera de nouveau l’objet et le texte de l’e-mail. Son texte propre sera perdu.",
+            "confirm": "Abandonner"
+          }
+        },
         "removeVersionConfirm": {
           "title": {
             "mail": "Supprimer la version e-mail ?",

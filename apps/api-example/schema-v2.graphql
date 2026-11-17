@@ -3016,6 +3016,11 @@ input MailTemplateVariantInput {
   """Uploaded pdf printed after the letter pages, e.g. a QR-bill."""
   letterAppendixId: String
   letterLayoutId: String
+
+  """
+  Letter only: take subject and body from the email version, which the template must have. The subject and body handed in are ignored.
+  """
+  sameAsMail: Boolean
   subject: String!
   textContent: String
 }
@@ -3033,6 +3038,11 @@ type MailTemplateVariantModel {
 
   """Letter only: stationery the letter is set on; null means the default."""
   letterLayoutId: String
+
+  """
+  Letter only: the letter says what the email says. Its own subject and body are empty then; sends read the email version.
+  """
+  sameAsMail: Boolean!
 
   """
   The email's subject line; for a letter the title its log entry carries.

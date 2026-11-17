@@ -1607,6 +1607,17 @@
           "letter": "Brief-Version hinzufügen"
         },
         "removeVersion": "Diese Version entfernen",
+        "letterText": {
+          "label": "Text",
+          "same": "Wie E-Mail",
+          "own": "Eigener Text",
+          "sameNote": "Dieser Brief verwendet Betreff und Text der E-Mail. Bearbeite sie im Tab «E-Mail».",
+          "confirm": {
+            "title": "Eigenen Brieftext verwerfen?",
+            "text": "Der Brief verwendet danach wieder Betreff und Text der E-Mail. Sein eigener Text geht verloren.",
+            "confirm": "Verwerfen"
+          }
+        },
         "removeVersionConfirm": {
           "title": {
             "mail": "E-Mail-Version entfernen?",

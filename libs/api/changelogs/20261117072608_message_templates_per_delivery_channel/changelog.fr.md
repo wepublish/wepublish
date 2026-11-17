@@ -5,15 +5,16 @@ lead: Un modèle peut désormais dire autre chose par e-mail et par lettre. Les 
 
 **Un modèle, une version par canal**
 
-Si les lettres imprimées sont activées pour votre média, un modèle de message a désormais un onglet par canal de distribution : **E-mail** et **Lettre**. Chaque version a son propre objet et son propre texte. Une lettre n’a donc plus à reprendre la formulation de l’e-mail.
+Si les lettres imprimées sont activées pour votre média, un modèle de message a désormais un onglet par canal de distribution : **E-mail** et **Lettre**. La lettre dit la même chose que l’e-mail jusqu’à ce que vous lui donniez un texte propre.
 
-- **Ajouter la version lettre** crée la lettre comme copie de l’e-mail, que vous pouvez adapter.
+- Dans l’onglet **Lettre**, **Comme l’e-mail** est le réglage par défaut : vous ne gérez qu’un seul texte. Avec **Texte propre**, la lettre reçoit son propre objet et son propre texte ; elle commence comme copie de l’e-mail.
+- Un nouveau modèle a d’emblée une version lettre. Un modèle existant la reçoit avec **Ajouter la version lettre**.
 - Le papier à lettres et les pages supplémentaires (PDF) appartiennent à la version lettre et n’apparaissent que sur son onglet.
 - Chaque onglet a son propre aperçu. Un e-mail de test s’envoie depuis l’onglet e-mail.
 - **Supprimer cette version** demande une confirmation avant de supprimer quoi que ce soit.
 - Les modèles pour les messages de compte (lien de connexion, réinitialisation du mot de passe, changement d’e-mail) restent des modèles d’e-mail uniquement.
 
-Vos modèles existants fonctionnent comme avant. Un modèle déjà envoyé sous forme de lettre a reçu une version lettre avec le même texte que son e-mail.
+Vos modèles existants fonctionnent comme avant. Un modèle déjà envoyé sous forme de lettre a reçu une version lettre qui dit la même chose que son e-mail.
 
 **Ce que cela change pour l’envoi**
 

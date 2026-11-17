@@ -1608,6 +1608,17 @@
           "letter": "Add letter version"
         },
         "removeVersion": "Remove this version",
+        "letterText": {
+          "label": "Text",
+          "same": "Same as email",
+          "own": "Own text",
+          "sameNote": "This letter uses the subject and text of the email. Edit them on the \"Email\" tab.",
+          "confirm": {
+            "title": "Discard the letter's own text?",
+            "text": "The letter will use the subject and text of the email again. Its own text will be lost.",
+            "confirm": "Discard"
+          }
+        },
         "removeVersionConfirm": {
           "title": {
             "mail": "Remove the email version?",

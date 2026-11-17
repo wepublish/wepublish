@@ -67,3 +67,47 @@ describe('requireTemplateVariant', () => {
     ).rejects.toThrow('MailTemplate <template-1> has no letter version!');
   });
 });
+
+describe('a letter that says what the email says', () => {
+  const sharedLetter = {
+    id: 'variant-2',
+    templateId: 'template-1',
+    channel: MailChannel.letter,
+    subject: '',
+    htmlContent: '',
+    textContent: null,
+    sameAsMail: true,
+    letterLayoutId: 'layout-1',
+    letterAppendixId: 'doc-1',
+  };
+
+  const setupShared = (mail: typeof mailVariant | null = mailVariant) => {
+    const findUnique = vi.fn(async ({ where }: any) =>
+      where.templateId_channel.channel === MailChannel.letter ?
+        sharedLetter
+      : mail
+    );
+
+    return { prisma: { mailTemplateVariant: { findUnique } } as any };
+  };
+
+  it('carries the words of the email on the stationery of the letter', async () => {
+    const { prisma } = setupShared();
+
+    await expect(
+      findTemplateVariant(prisma, 'template-1', MailChannel.letter)
+    ).resolves.toEqual({
+      ...sharedLetter,
+      subject: 'Hello',
+      htmlContent: '<p>Hello</p>',
+    });
+  });
+
+  it('is nothing once the email it points at is gone', async () => {
+    const { prisma } = setupShared(null);
+
+    await expect(
+      findTemplateVariant(prisma, 'template-1', MailChannel.letter)
+    ).resolves.toBeNull();
+  });
+});
