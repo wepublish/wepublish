@@ -15,7 +15,7 @@ const SWISS_ADDRESS: PostalAddress = {
   streetAddressNumber: '1',
   zipCode: '8004',
   city: 'Zürich',
-  country: 'CH',
+  country: 'Schweiz',
 };
 
 Given('We.Publish delivers the bexio invoices', async ({ data, $testInfo }) => {
