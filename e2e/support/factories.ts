@@ -641,7 +641,7 @@ export class TestData {
     return features;
   }
 
-  /** The reader's postal address; `country` as an ISO code or a name. */
+  /** The reader's postal address; `country` is the German name the profile form stores, e.g. `Schweiz`. */
   async setAddress(reader: Reader, address: PostalAddress) {
     const api = await this.api();
 
