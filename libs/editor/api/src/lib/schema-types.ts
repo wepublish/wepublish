@@ -91,6 +91,8 @@ export type ApiToken = {
   /** The user who created this token. Null once that user is deleted. */
   createdBy?: Maybe<User>;
   createdById?: Maybe<Scalars['String']['output']>;
+  /** Whether the user who created this key still allows it to work, checked the way a call with the key is. A key list asks this once per row. */
+  creatorState: ApiTokenCreatorState;
   /** When the token stops working. */
   expiresAt: Scalars['DateTime']['output'];
   id: Scalars['String']['output'];
@@ -103,6 +105,28 @@ export type ApiToken = {
   /** The permissions this token carries. */
   scopes: Array<Scalars['String']['output']>;
 };
+
+export enum ApiTokenBlockedReason {
+  CreatorInactive = 'CreatorInactive',
+  CreatorMayNotCreateApiTokens = 'CreatorMayNotCreateApiTokens',
+  CreatorMissing = 'CreatorMissing'
+}
+
+/** A key acts on behalf of the user who created it. This is the check every call with the key goes through; expiry and revocation are separate. */
+export type ApiTokenCreatorState = {
+  __typename: 'ApiTokenCreatorState';
+  blockedReason?: Maybe<ApiTokenBlockedReason>;
+  /** Permissions of the key its creator no longer holds; calls that need one are refused. */
+  missingScopes: Array<Scalars['String']['output']>;
+  state: ApiTokenCreatorStateKind;
+};
+
+/** What the user who created a key still allows it: everything it holds (ok), nothing (blocked: every call is refused), or only some of its permissions (limited). */
+export enum ApiTokenCreatorStateKind {
+  Blocked = 'Blocked',
+  Limited = 'Limited',
+  Ok = 'Ok'
+}
 
 export enum ApiTokenSort {
   CreatedAt = 'CreatedAt',

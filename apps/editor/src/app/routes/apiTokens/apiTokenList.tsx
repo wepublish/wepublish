@@ -224,6 +224,19 @@ function ApiTokenList() {
                     color="warning"
                     label={t('apiTokenList.overview.expired')}
                   />
+                : row.creatorState.blockedReason ?
+                  <Tooltip
+                    title={t(
+                      `apiTokenList.overview.blockedReason.${row.creatorState.blockedReason}`
+                    )}
+                  >
+                    <Chip
+                      size="small"
+                      color="error"
+                      variant="outlined"
+                      label={t('apiTokenList.overview.blocked')}
+                    />
+                  </Tooltip>
                 : daysLeft(row.expiresAt) <= EXPIRY_WARNING_DAYS ?
                   <Chip
                     size="small"
@@ -241,6 +254,8 @@ function ApiTokenList() {
               exportValue: row =>
                 row.revokedAt ? t('apiTokenList.overview.revoked')
                 : hasExpired(row.expiresAt) ? t('apiTokenList.overview.expired')
+                : row.creatorState.blockedReason ?
+                  t('apiTokenList.overview.blocked')
                 : t('apiTokenList.overview.active'),
             },
             {
@@ -265,19 +280,36 @@ function ApiTokenList() {
               width: 260,
               align: 'left',
               render: row => (
-                <Tooltip title={row.scopes.join(', ')}>
-                  <Stack
-                    direction="row"
-                    spacing={0.5}
-                  >
+                <Stack
+                  direction="row"
+                  spacing={0.5}
+                >
+                  <Tooltip title={row.scopes.join(', ')}>
                     <Chip
                       size="small"
                       label={t('apiTokenList.overview.scopeCount', {
                         count: row.scopes.length,
                       })}
                     />
-                  </Stack>
-                </Tooltip>
+                  </Tooltip>
+
+                  {row.creatorState.missingScopes.length > 0 && (
+                    <Tooltip
+                      title={t('apiTokenList.overview.missingScopesHelp', {
+                        scopes: row.creatorState.missingScopes.join(', '),
+                      })}
+                    >
+                      <Chip
+                        size="small"
+                        color="warning"
+                        variant="outlined"
+                        label={t('apiTokenList.overview.missingScopes', {
+                          count: row.creatorState.missingScopes.length,
+                        })}
+                      />
+                    </Tooltip>
+                  )}
+                </Stack>
               ),
               exportValue: row => row.scopes.join(', '),
             },

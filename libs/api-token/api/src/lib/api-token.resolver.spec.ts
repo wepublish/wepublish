@@ -53,3 +53,26 @@ describe('createApiToken', () => {
     expect(service.createToken).not.toHaveBeenCalled();
   });
 });
+
+describe('creatorState', () => {
+  it('reports what the creator still allows the key, without the creator‘s details', async () => {
+    const creatorCheck = vi.fn(async () => ({
+      state: 'limited',
+      blockedReason: null,
+      missingScopes: ['CAN_DELETE_ARTICLE'],
+      creator: { id: 'u1', email: 'u1@example.test' },
+    }));
+    const key = { createdById: 'u1', scopes: ['CAN_DELETE_ARTICLE'] };
+
+    await expect(
+      new ApiTokenResolver({ creatorCheck } as never, {} as never).creatorState(
+        key as never
+      )
+    ).resolves.toEqual({
+      state: 'limited',
+      blockedReason: null,
+      missingScopes: ['CAN_DELETE_ARTICLE'],
+    });
+    expect(creatorCheck).toHaveBeenCalledWith(key);
+  });
+});

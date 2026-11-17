@@ -5684,6 +5684,15 @@
         "lastUsed": "Dernière utilisation",
         "never": "Jamais utilisée",
         "status": "Statut",
+        "blocked": "Bloquée",
+        "blockedReason": {
+          "creatorMissing": "La personne qui a créé cette clé n’existe plus. La clé ne fonctionne plus ; créez-en une nouvelle.",
+          "creatorInactive": "La personne qui a créé cette clé est désactivée. La clé ne fonctionne pas tant qu’elle le reste.",
+          "creatorMayNotCreateApiTokens": "La personne qui a créé cette clé ne peut plus créer de clés API. La clé ne fonctionne pas tant que c’est le cas."
+        },
+        "missingScopes_one": "{{count}} droit manquant",
+        "missingScopes_other": "{{count}} droits manquants",
+        "missingScopesHelp": "La personne qui a créé cette clé n’a plus ces droits. Les appels qui en ont besoin sont refusés : {{scopes}}",
         "active": "Active",
         "revoked": "Révoquée",
         "revoke": "Révoquer",

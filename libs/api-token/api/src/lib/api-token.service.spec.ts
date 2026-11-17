@@ -16,7 +16,9 @@ const creatorRole = (permissionIDs: string[]) => ({
 });
 
 const prismaMock = ({
-  users = [{ id: 'u1', email: 'u1@example.test', active: true, roleIDs: ['r1'] }],
+  users = [
+    { id: 'u1', email: 'u1@example.test', active: true, roleIDs: ['r1'] },
+  ],
   roles = [
     creatorRole([
       'CAN_CREATE_API_TOKEN',
@@ -195,7 +197,9 @@ describe('resolveToken', () => {
 
   it('refuses a token whose creator is inactive', async () => {
     const prisma = prismaMock({
-      users: [{ id: 'u1', email: 'u1@example.test', active: false, roleIDs: ['r1'] }],
+      users: [
+        { id: 'u1', email: 'u1@example.test', active: false, roleIDs: ['r1'] },
+      ],
     });
 
     await expect(stored(prisma)).rejects.toThrow(UnauthorizedException);
@@ -223,7 +227,14 @@ describe('resolveToken', () => {
 
   it('lets an admin‘s token keep every scope', async () => {
     const prisma = prismaMock({
-      users: [{ id: 'u1', email: 'u1@example.test', active: true, roleIDs: ['admin'] }],
+      users: [
+        {
+          id: 'u1',
+          email: 'u1@example.test',
+          active: true,
+          roleIDs: ['admin'],
+        },
+      ],
       roles: [{ id: 'admin', permissionIDs: [] }],
     });
 
@@ -366,6 +377,62 @@ describe('resolveToken', () => {
     await service(prisma).resolveToken('wep_x');
 
     expect(prisma.apiToken.update).toHaveBeenCalled();
+  });
+});
+
+describe('creatorCheck', () => {
+  const key = (over: Record<string, unknown> = {}) => ({
+    createdById: 'u1',
+    scopes: ['CAN_GET_EVENTS', 'CAN_DELETE_ARTICLE'],
+    ...over,
+  });
+
+  it('is ok while the creator holds every scope of the key', async () => {
+    expect(await service(prismaMock()).creatorCheck(key())).toMatchObject({
+      state: 'ok',
+      blockedReason: null,
+      missingScopes: [],
+    });
+  });
+
+  it('is blocked once the creator is deleted', async () => {
+    expect(
+      await service(prismaMock()).creatorCheck(key({ createdById: null }))
+    ).toMatchObject({ state: 'blocked', blockedReason: 'creatorMissing' });
+  });
+
+  it('is blocked while the creator is inactive', async () => {
+    const prisma = prismaMock({
+      users: [
+        { id: 'u1', email: 'u1@example.test', active: false, roleIDs: ['r1'] },
+      ],
+    });
+
+    expect(await service(prisma).creatorCheck(key())).toMatchObject({
+      state: 'blocked',
+      blockedReason: 'creatorInactive',
+    });
+  });
+
+  it('is blocked when the creator may no longer create api keys', async () => {
+    const prisma = prismaMock({ roles: [creatorRole(['CAN_GET_EVENTS'])] });
+
+    expect(await service(prisma).creatorCheck(key())).toMatchObject({
+      state: 'blocked',
+      blockedReason: 'creatorMayNotCreateApiTokens',
+    });
+  });
+
+  it('is limited by the scopes the creator no longer holds, and names them', async () => {
+    const prisma = prismaMock({
+      roles: [creatorRole(['CAN_CREATE_API_TOKEN', 'CAN_GET_EVENTS'])],
+    });
+
+    expect(await service(prisma).creatorCheck(key())).toMatchObject({
+      state: 'limited',
+      blockedReason: null,
+      missingScopes: ['CAN_DELETE_ARTICLE'],
+    });
   });
 });
 

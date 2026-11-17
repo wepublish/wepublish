@@ -5684,6 +5684,15 @@
         "lastUsed": "Zuletzt verwendet",
         "never": "Nie verwendet",
         "status": "Status",
+        "blocked": "Blockiert",
+        "blockedReason": {
+          "creatorMissing": "Die Person, die diesen Schlüssel erstellt hat, existiert nicht mehr. Der Schlüssel funktioniert nicht mehr; erstellen Sie einen neuen.",
+          "creatorInactive": "Die Person, die diesen Schlüssel erstellt hat, ist deaktiviert. Solange funktioniert der Schlüssel nicht.",
+          "creatorMayNotCreateApiTokens": "Die Person, die diesen Schlüssel erstellt hat, darf keine API-Schlüssel mehr erstellen. Solange funktioniert der Schlüssel nicht."
+        },
+        "missingScopes_one": "{{count}} Recht fehlt",
+        "missingScopes_other": "{{count}} Rechte fehlen",
+        "missingScopesHelp": "Die Person, die diesen Schlüssel erstellt hat, hat diese Rechte nicht mehr. Aufrufe, die sie brauchen, werden abgelehnt: {{scopes}}",
         "active": "Aktiv",
         "revoked": "Widerrufen",
         "revoke": "Widerrufen",

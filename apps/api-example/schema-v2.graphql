@@ -74,6 +74,11 @@ type ApiToken {
   createdBy: User
   createdById: String
 
+  """
+  Whether the user who created this key still allows it to work, checked the way a call with the key is. A key list asks this once per row.
+  """
+  creatorState: ApiTokenCreatorState!
+
   """When the token stops working."""
   expiresAt: DateTime!
   id: String!
@@ -87,6 +92,34 @@ type ApiToken {
 
   """The permissions this token carries."""
   scopes: [String!]!
+}
+
+enum ApiTokenBlockedReason {
+  CreatorInactive
+  CreatorMayNotCreateApiTokens
+  CreatorMissing
+}
+
+"""
+A key acts on behalf of the user who created it. This is the check every call with the key goes through; expiry and revocation are separate.
+"""
+type ApiTokenCreatorState {
+  blockedReason: ApiTokenBlockedReason
+
+  """
+  Permissions of the key its creator no longer holds; calls that need one are refused.
+  """
+  missingScopes: [String!]!
+  state: ApiTokenCreatorStateKind!
+}
+
+"""
+What the user who created a key still allows it: everything it holds (ok), nothing (blocked: every call is refused), or only some of its permissions (limited).
+"""
+enum ApiTokenCreatorStateKind {
+  Blocked
+  Limited
+  Ok
 }
 
 enum ApiTokenSort {
