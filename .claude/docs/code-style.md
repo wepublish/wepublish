@@ -214,7 +214,8 @@ site.
   `Mail` — compounds too (`E-Mail-Vorlage`, `Test-E-Mail`, `E-Mail-Server`).
   Brand names (Mailchimp, Mailgun, Mailpit) stay as they are. Quote with
   guillemets `«…»` (no inner spaces), never `„…“` or `"…"`.
-- **French:** `vous`. The typographic apostrophe `’`, never `'`. Quote with
+- **French:** informal `tu` (older editor strings outside Integrations still
+  use `vous`; switch them when you touch them). The typographic apostrophe `’`, never `'`. Quote with
   `« … »` (spaces inside), never `"…"`.
 
 ## Nest

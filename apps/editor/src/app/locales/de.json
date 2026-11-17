@@ -3813,7 +3813,7 @@
         "smtpPassword": "SMTP-Passwort",
         "webhookEndpointSecret": "Webhook-Signaturschlüssel",
         "typeInfo": "Der Dienst, der die E-Mails verschickt. Slack und «Nur protokollieren» stellen Leser:innen nichts zu – sie sind nur zum Testen gedacht. Ein Wechsel des Typs löscht die gespeicherten Schlüssel.",
-        "fromAddressInfo": "Die Absenderadresse, die Leserinnen und Leser sehen, z. B. abo@example.ch. Ihre Domain muss beim E-Mail-Dienst verifiziert sein, sonst landen E-Mails womöglich im Spam.",
+        "fromAddressInfo": "Die Absenderadresse, die Leserinnen und Leser sehen, z. B. abo@example.ch. Deine Domain muss beim E-Mail-Dienst verifiziert sein, sonst landen E-Mails womöglich im Spam.",
         "replyToAddressInfo": "Wohin Antworten gehen, wenn jemand auf eine deiner E-Mails antwortet. Bleibt das Feld leer, gehen Antworten an die Absenderadresse.",
         "mailgunBaseDomainInfo": "Die Adresse der Mailgun-API ohne https://: api.mailgun.net bzw. api.eu.mailgun.net, wenn dein Konto in der EU liegt.",
         "mailgunMailDomainInfo": "Die Versand-Domain, die du in Mailgun eingerichtet hast, z. B. mg.example.ch.",
@@ -4372,7 +4372,7 @@
           "fromWidth": "ab {{width}}px",
           "addScreenSize": "Bildschirmgrösse hinzufügen",
           "screenSizeRemoved": "{{name}} entfernt",
-          "removeScreenSizeHint": "Mit der Entf-Taste entfernen Sie diese Bildschirmgrösse",
+          "removeScreenSizeHint": "Mit der Entf-Taste entfernst du diese Bildschirmgrösse",
           "undo": "Rückgängig",
           "screenSizeInfo": "Diese Werte gelten für Bildschirme ab {{width}}px Breite. Was ausgeschaltet ist, wird von der nächstkleineren Bildschirmgrösse übernommen.",
           "inheritedFromBaseline": "Übernommen: {{value}} vom «Ausgangswert»",
@@ -4602,7 +4602,7 @@
         "test_mail": {
           "short": "Nur für deine eigenen Tests.",
           "description": "Wird nie automatisch an Leser*innen verschickt. Mit dieser Vorlage kannst du den E-Mail-Versand selbst ausprobieren.",
-          "example": "«Test-E-Mail – wenn Sie das lesen, funktioniert der Versand.»"
+          "example": "«Test-E-Mail – wenn du das liest, funktioniert der Versand.»"
         }
       }
     },
@@ -5862,7 +5862,7 @@
     "apiTokenList": {
       "overview": {
         "apiTokens": "API-Schlüssel",
-        "apiTokensInfo": "Mit einem API-Schlüssel kann ein Skript oder ein anderes System die API nutzen, ohne sich als Person anzumelden. Ein Schlüssel hat nur die Rechte, die Sie ihm geben.",
+        "apiTokensInfo": "Mit einem API-Schlüssel kann ein Skript oder ein anderes System die API nutzen, ohne sich als Person anzumelden. Ein Schlüssel hat nur die Rechte, die du ihm gibst.",
         "generateToken": "API-Schlüssel erstellen",
         "name": "Name",
         "prefix": "Schlüssel",
@@ -5892,11 +5892,11 @@
         "close": "Schliessen",
         "name": "Name",
         "scopes": "Rechte",
-        "scopesHelp": "Sie können nur Rechte vergeben, die Sie selbst haben.",
-        "creationSuccess": "Ihr API-Schlüssel wurde erstellt.",
+        "scopesHelp": "Du kannst nur Rechte vergeben, die du selbst hast.",
+        "creationSuccess": "Dein API-Schlüssel wurde erstellt.",
         "copy": "Schlüssel kopieren",
         "copied": "Schlüssel kopiert",
-        "tokenWarning": "Kopieren Sie den Schlüssel jetzt. Er wird nur einmal angezeigt und lässt sich nicht erneut abrufen – wenn er verloren geht, erstellen Sie einen neuen.",
+        "tokenWarning": "Kopiere den Schlüssel jetzt. Er wird nur einmal angezeigt und lässt sich nicht erneut abrufen – wenn er verloren geht, erstellst du einen neuen.",
         "revokeToken": "API-Schlüssel widerrufen",
         "revokeTokenText": "«{{name}}» wirklich widerrufen? Alles, was diesen Schlüssel nutzt, funktioniert sofort nicht mehr.",
         "cancel": "Abbrechen",
