@@ -5101,6 +5101,7 @@
         "failed": "Échoué",
         "filterBySession": "Filtrer par cette session",
         "tokenActor": "Jeton API : {{name}}",
+        "tokenActorOnBehalf": "Clé API : {{name}} · {{user}}",
         "impersonatedActor": "{{impersonator}} en tant que {{actor}}",
         "unknownActor": "Inconnu",
         "notSupported": "Cette installation ne tient pas de journal d’audit. Les entrées apparaîtront une fois la migration appliquée.",

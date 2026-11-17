@@ -5109,6 +5109,7 @@
         "failed": "Fehlgeschlagen",
         "filterBySession": "Nach dieser Session filtern",
         "tokenActor": "API-Token: {{name}}",
+        "tokenActorOnBehalf": "API-Schlüssel: {{name}} · {{user}}",
         "impersonatedActor": "{{impersonator}} als {{actor}}",
         "unknownActor": "Unbekannt",
         "notSupported": "Diese Installation führt kein Audit-Log. Sobald die Migration eingespielt ist, erscheinen hier die Einträge.",
