@@ -86,22 +86,8 @@ const mergeFieldMappingSchema = z.object({
 const interestGroupMappingSchema = z.object({
   groupId: z.string().min(1),
   expression: z.string().min(1),
-  autoAdd: z.boolean().optional(),
-  autoRemove: z.boolean().optional(),
-});
-
-type InterestGroupMapping = z.infer<typeof interestGroupMappingSchema>;
-
-/**
- * Mappings stored before `autoAdd`/`autoRemove` existed lack both flags. The
- * sync treats a missing flag as on, so show it as on.
- */
-const withAutoFlags = (
-  mapping: InterestGroupMapping
-): InterestGroupMapping => ({
-  ...mapping,
-  autoAdd: mapping.autoAdd ?? true,
-  autoRemove: mapping.autoRemove ?? true,
+  autoAdd: z.boolean(),
+  autoRemove: z.boolean(),
 });
 
 const clickTrackingExtensionSchema = z.object({
@@ -824,10 +810,9 @@ function SyncProviderSettingCard({
       mailchimp_listId: setting.mailchimp_listId ?? '',
       mailchimp_mergeFieldMappings: (setting.mailchimp_mergeFieldMappings ??
         []) as SyncProviderFormValues['mailchimp_mergeFieldMappings'],
-      mailchimp_interestGroupMappings: (
+      mailchimp_interestGroupMappings:
         (setting.mailchimp_interestGroupMappings ??
-          []) as InterestGroupMapping[]
-      ).map(withAutoFlags),
+          []) as SyncProviderFormValues['mailchimp_interestGroupMappings'],
       mailchimp_defaultInterestGroupIds:
         setting.mailchimp_defaultInterestGroupIds ?? [],
       mailchimp_extensions: {
@@ -1387,7 +1372,7 @@ function SyncProviderSettingCard({
                         control={
                           <Checkbox
                             size="small"
-                            checked={value ?? true}
+                            checked={value}
                             onChange={(_event, checked) => onChange(checked)}
                           />
                         }
@@ -1406,7 +1391,7 @@ function SyncProviderSettingCard({
                         control={
                           <Checkbox
                             size="small"
-                            checked={value ?? true}
+                            checked={value}
                             onChange={(_event, checked) => onChange(checked)}
                           />
                         }
