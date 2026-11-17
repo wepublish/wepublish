@@ -6,6 +6,12 @@ enum AIProviderType {
   V0
 }
 
+"""The API key that did something on behalf of the user named next to it."""
+type ActingApiToken {
+  id: String!
+  name: String!
+}
+
 union Action = ArticleCreatedAction | AuthorCreatedAction | CommentCreatedAction | EventCreatedAction | PageCreatedAction | PollStartedAction | SubscriptionCreatedAction | UserCreatedAction
 
 """
@@ -1318,6 +1324,9 @@ type DeliveryChannelUserModel {
   changedAt: DateTime
   changedBy: MailLogRecipient
 
+  """Set when an API key made the change on behalf of `changedBy`."""
+  changedByApiToken: ActingApiToken
+
   """How automated subscription mails reach this user."""
   channel: MailChannel!
 
@@ -1351,6 +1360,9 @@ type DeliveryModeBulkChangeModel {
   audience: JSONObject!
   changed: Int!
   changedBy: MailLogRecipient
+
+  """Set when an API key made the change on behalf of `changedBy`."""
+  changedByApiToken: ActingApiToken
   channel: MailChannel!
   createdAt: DateTime!
   id: String!
@@ -2306,6 +2318,11 @@ type Invoice implements HasOptionalSubscription {
   id: String!
   items: [InvoiceItem!]!
   mail: String!
+
+  """
+  Set when an API key marked the invoice as paid on behalf of `manuallySetAsPaidByUser`.
+  """
+  manuallySetAsPaidByApiTokenId: String
   manuallySetAsPaidByUser: User
   manuallySetAsPaidByUserId: String
   modifiedAt: DateTime!
@@ -5691,6 +5708,9 @@ type PrintIssue implements HasImageLc {
   closedAt: DateTime
   closedBy: PrintIssueUser
 
+  """Set when an API key did it on behalf of `closedBy`."""
+  closedByApiToken: PrintIssueApiToken
+
   """
   How many issues it counts as against a reader's period: the numbers it covers, or fewer.
   """
@@ -5720,6 +5740,12 @@ type PrintIssue implements HasImageLc {
   """The issue's topic."""
   title: String
   year: Int!
+}
+
+"""The API key that did something on behalf of the user named next to it."""
+type PrintIssueApiToken {
+  id: String!
+  name: String!
 }
 
 type PrintIssueBexioStats {
@@ -5770,9 +5796,15 @@ type PrintIssueDelivery {
   createdAt: DateTime!
   createdBy: PrintIssueUser
 
+  """Set when an API key did it on behalf of `createdBy`."""
+  createdByApiToken: PrintIssueApiToken
+
   """«übergeben»: when the file went to the printshop."""
   deliveredAt: DateTime
   deliveredBy: PrintIssueUser
+
+  """Set when an API key did it on behalf of `deliveredBy`."""
+  deliveredByApiToken: PrintIssueApiToken
   filename: String!
   id: String!
 
@@ -5893,6 +5925,9 @@ type PrintIssueRun {
   """
   computedAt: DateTime!
   computedBy: PrintIssueUser
+
+  """Set when an API key did it on behalf of `computedBy`."""
+  computedByApiToken: PrintIssueApiToken
 
   """The delivery a replace run writes anew."""
   deliveryId: String
@@ -8173,6 +8208,9 @@ type UserDeliveryPreferenceModel {
   canReceiveLetters: Boolean!
   changedAt: DateTime
   changedBy: MailLogRecipient
+
+  """Set when an API key made the change on behalf of `changedBy`."""
+  changedByApiToken: ActingApiToken
 
   """How automated subscription mails reach this user."""
   channel: MailChannel!

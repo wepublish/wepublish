@@ -1,5 +1,8 @@
 import { ForbiddenException } from '@nestjs/common';
-import { ApiTokenSession, AuthSessionType } from '@wepublish/authentication/api';
+import {
+  ApiTokenSession,
+  AuthSessionType,
+} from '@wepublish/authentication/api';
 import { CanGetInvoice } from '@wepublish/permissions';
 import { PERMISSIONS_METADATA_KEY } from '@wepublish/permissions/api';
 import { InvoicePaymentsDataloader } from './invoice-payments.dataloader';
@@ -40,7 +43,7 @@ describe('InvoiceResolver', () => {
 
       expect(service.markInvoiceAsPaid).toHaveBeenCalledWith(
         'inv-1',
-        'creator-1',
+        { userId: 'creator-1', apiTokenId: 'key-1' },
         false
       );
     });

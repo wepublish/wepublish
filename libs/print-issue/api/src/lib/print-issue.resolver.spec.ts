@@ -12,6 +12,8 @@ const session = {
   user: { id: 'editor-1' },
 } as unknown as UserSession;
 
+const editor = { userId: 'editor-1', apiTokenId: null };
+
 const apiKey: ApiTokenSession = {
   type: AuthSessionType.ApiToken,
   id: 'key-1',
@@ -82,7 +84,7 @@ describe('PrintIssueResolver', () => {
 
     const result = await resolver.computePrintIssueRun('issue-1', session);
 
-    expect(issues.computeRun).toHaveBeenCalledWith('issue-1', 'editor-1');
+    expect(issues.computeRun).toHaveBeenCalledWith('issue-1', editor);
     expect(result).toMatchObject({
       mode: 'export',
       batch: 0,
@@ -96,7 +98,10 @@ describe('PrintIssueResolver', () => {
 
     await resolver.computePrintIssueRun('issue-1', apiKey);
 
-    expect(issues.computeRun).toHaveBeenCalledWith('issue-1', 'creator-1');
+    expect(issues.computeRun).toHaveBeenCalledWith('issue-1', {
+      userId: 'creator-1',
+      apiTokenId: 'key-1',
+    });
   });
 
   it('answers null when no run is waiting', async () => {
@@ -117,7 +122,7 @@ describe('PrintIssueResolver', () => {
 
     expect(issues.exportRun).toHaveBeenCalledWith(
       'issue-1',
-      'editor-1',
+      editor,
       computedAt
     );
     expect(result).toMatchObject({ label: '1.27', issueDate: '2027-01-15' });
@@ -132,9 +137,9 @@ describe('PrintIssueResolver', () => {
     await resolver.reopenPrintIssue('issue-1');
     await resolver.duplicatePrintIssue('issue-1');
 
-    expect(issues.deliver).toHaveBeenCalledWith('del-0', 'editor-1');
+    expect(issues.deliver).toHaveBeenCalledWith('del-0', editor);
     expect(issues.deleteDelivery).toHaveBeenCalledWith('del-0');
-    expect(issues.close).toHaveBeenCalledWith('issue-1', 'editor-1');
+    expect(issues.close).toHaveBeenCalledWith('issue-1', editor);
     expect(issues.reopen).toHaveBeenCalledWith('issue-1');
     expect(issues.duplicate).toHaveBeenCalledWith('issue-1');
   });

@@ -20,6 +20,8 @@ const session = {
   user: { id: 'admin' },
 } as UserSession;
 
+const admin = { userId: 'admin', apiTokenId: null };
+
 const apiKey: ApiTokenSession = {
   type: AuthSessionType.ApiToken,
   id: 'key-1',
@@ -93,7 +95,10 @@ describe('DeliveryModeResolver', () => {
     expect(preferences.set).toHaveBeenCalledWith(
       'u1',
       MailChannel.letter,
-      expect.objectContaining({ changedByUserId: 'creator-1' })
+      expect.objectContaining({
+        changedByUserId: 'creator-1',
+        changedByApiTokenId: 'key-1',
+      })
     );
   });
 
@@ -107,6 +112,7 @@ describe('DeliveryModeResolver', () => {
       origin: 'manual',
       reason: 'moved',
       changedByUserId: 'admin',
+      changedByApiTokenId: null,
     });
   });
 
@@ -116,7 +122,7 @@ describe('DeliveryModeResolver', () => {
     await expect(
       resolver.confirmDeliverySuggestion(session, 's1')
     ).resolves.toBe(true);
-    expect(suggestions.confirm).toHaveBeenCalledWith('s1', 'admin');
+    expect(suggestions.confirm).toHaveBeenCalledWith('s1', admin);
   });
 
   it('switches an audience in the name of the admin', async () => {
@@ -132,7 +138,7 @@ describe('DeliveryModeResolver', () => {
     expect(preferences.setForAudience).toHaveBeenCalledWith(
       audience,
       MailChannel.mail,
-      'admin'
+      admin
     );
   });
 
@@ -228,7 +234,7 @@ describe('DeliveryModeResolver', () => {
     await expect(resolver.keepDeliverySuggestion(session, 's1')).resolves.toBe(
       true
     );
-    expect(suggestions.keep).toHaveBeenCalledWith('s1', 'admin');
+    expect(suggestions.keep).toHaveBeenCalledWith('s1', admin);
   });
 
   it("answers with a person's open suggestion", async () => {

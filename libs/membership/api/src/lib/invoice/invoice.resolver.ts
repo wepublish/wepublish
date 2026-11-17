@@ -127,7 +127,7 @@ export class InvoiceResolver {
     @Args('sendMail', { type: () => Boolean, defaultValue: true })
     sendMail: boolean
   ) {
-    return this.service.markInvoiceAsPaid(id, actorOf(session).userId, sendMail);
+    return this.service.markInvoiceAsPaid(id, actorOf(session), sendMail);
   }
 
   @ResolveField(() => [InvoiceItem])

@@ -1934,6 +1934,7 @@
       "paymentProviderStatusInfo": "✅ signifie que tous les moyens de paiement de ce plan sont reliés à un prestataire de paiement. ❌ signifie qu’au moins un moyen de paiement n’a pas de prestataire et que les lecteur·rice·s ne peuvent donc pas payer avec."
     },
     "deliveryMode": {
+      "viaApiKey": "via la clé API «{{key}}»",
       "panelTitle": "Canal de distribution",
       "channel": {
         "mail": "E-mail",
@@ -5265,6 +5266,7 @@
       "noLayouts": "Pas encore de papier à lettres. Créez-en un pour que les lettres aient un en-tête et un pied de page."
     },
     "printIssues": {
+      "viaApiKey": "via la clé API «{{key}}»",
       "title": "Numéros imprimés",
       "intro": "Chaque numéro imprimé avec ses listes d’impression : qui reçoit un exemplaire se décide à la date de parution – depuis we.publish et bexio. Chaque liste d’impression livrée à l’imprimerie compte dans les numéros payés par les lecteur·trice·s.",
       "create": "Nouveau numéro",

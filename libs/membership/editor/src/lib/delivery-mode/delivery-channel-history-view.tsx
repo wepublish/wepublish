@@ -134,6 +134,10 @@ export function DeliveryChannelHistoryView() {
                             .join(' ') || change.changedBy.email}
                         </Link>
                       : t('deliveryMode.bulk.history.unknownUser')}
+                      {change.changedByApiToken &&
+                        ` · ${t('deliveryMode.viaApiKey', {
+                          key: change.changedByApiToken.name,
+                        })}`}
                     </TableCell>
                     <TableCell>
                       <Chip
