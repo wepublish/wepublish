@@ -1623,7 +1623,7 @@
         "testRecipientPlaceholder": "Your account email",
         "preview": "Preview",
         "sendTest": "Send test",
-        "previewLetter": "Preview as letter",
+        "previewLetter": "Preview",
         "letterAppendix": "QR-bill (PDF)",
         "letterAppendixNone": "None",
         "letterAppendixHelp": "PDF from \"Documents\" printed after the letter pages, e.g. a QR-bill (A4, slip at the bottom edge). Only for addresses in Switzerland; with duplex printing a blank page is added when needed so the slip lands on a front page.",
@@ -1701,7 +1701,7 @@
       "htmlContent": "HTML content",
       "name": "Name",
       "placeholders": "Placeholders",
-      "placeholdersHint": "Click to insert into the selected field",
+      "placeholdersHint": "Clicking a placeholder inserts it into the template.",
       "placeholderSelectType": "Choose a purpose above to see its placeholders.",
       "mailTypes": {
         "account": "Account & login",
@@ -1715,10 +1715,10 @@
       "placeholderAlways": "Always available — every mail",
       "placeholderContextLabel": "Additional fields for this purpose",
       "placeholderContexts": {
-        "account": "Account & login (creation, login link, password reset)",
+        "account": "Account & login",
         "emailChange": "Email change",
-        "subscription": "Subscription (new, confirmed, deactivation)",
-        "renewal": "Renewal — automated (success / failed)",
+        "subscription": "Subscription",
+        "renewal": "Automated renewal",
         "invoiceCreation": "Invoice created",
         "custom": "Free mail to a subscriber",
         "customNoSubscription": "Free mail to a non-subscriber"

@@ -98,6 +98,27 @@ const describePlaceholder = (t: TFunction, placeholder: MailPlaceholder) =>
     jwt: '{{jwt}}',
   });
 
+/**
+ * A group's title with what there is to know about it in a tooltip beside it,
+ * not inside: the heading keeps its own name.
+ */
+function GroupHeading({ title, hint }: { title: string; hint?: string }) {
+  return (
+    <Box
+      sx={{ display: 'flex', alignItems: 'center', gap: 0.5, marginBottom: 1 }}
+    >
+      <Typography
+        variant="subtitle2"
+        component="h3"
+        sx={{ margin: 0 }}
+      >
+        {title}
+      </Typography>
+      {hint && <InfoTooltip text={hint} />}
+    </Box>
+  );
+}
+
 export function PlaceholderPicker({
   onInsert,
   context,
@@ -223,7 +244,14 @@ export function PlaceholderPicker({
 
   return (
     <div style={{ paddingRight: 4 }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 0.5,
+          marginBottom: 1.5,
+        }}
+      >
         <Typography
           component="h2"
           variant="body1"
@@ -231,17 +259,12 @@ export function PlaceholderPicker({
         >
           {t('mailTemplates.placeholders')}
         </Typography>
-        <InfoTooltip text={t('mailTemplates.placeholdersInfo')} />
+        {/* How to use them first, what they are below: the tooltip keeps
+            line breaks. */}
+        <InfoTooltip
+          text={`${t('mailTemplates.placeholdersHint')}\n${t('mailTemplates.placeholdersInfo')}`}
+        />
       </Box>
-      <Typography
-        variant="caption"
-        style={{ marginBottom: 8 }}
-        sx={{
-          display: 'block',
-        }}
-      >
-        {t('mailTemplates.placeholdersHint')}
-      </Typography>
       <TextField
         fullWidth
         placeholder={t('mailTemplates.searchPlaceholders', 'Search…')}
@@ -267,29 +290,16 @@ export function PlaceholderPicker({
           </Typography>
 
       : <>
-          <Typography
-            variant="subtitle2"
-            component="h3"
-            style={{ marginBottom: 2 }}
-          >
-            {t(
+          <GroupHeading
+            title={t(
               'mailTemplates.placeholderAlways',
               'Always available — every mail'
             )}
-          </Typography>
-          <Typography
-            variant="caption"
-            color="text.secondary"
-            style={{ marginBottom: 8 }}
-            sx={{
-              display: 'block',
-            }}
-          >
-            {t(
+            hint={t(
               'mailTemplates.placeholderAlwaysHint',
               'These recipient fields work in every template, no matter which purpose is selected.'
             )}
-          </Typography>
+          />
           <PlaceholderGroup>
             {ALWAYS_PLACEHOLDERS.map(renderPlaceholder)}
           </PlaceholderGroup>
@@ -316,28 +326,17 @@ export function PlaceholderPicker({
                 )}
               </Typography>
             : <>
-                <Typography
-                  variant="subtitle2"
-                  component="h3"
-                  style={{ marginBottom: 2 }}
-                >
-                  {t(selectedContext.titleKey, selectedContext.title)}
-                </Typography>
-                {selectedContext.note && (
-                  <Typography
-                    variant="caption"
-                    color="text.secondary"
-                    style={{ marginBottom: 8 }}
-                    sx={{
-                      display: 'block',
-                    }}
-                  >
-                    {t(
-                      `mailTemplates.placeholderContextNotes.${selectedContext.id}`,
-                      selectedContext.note
-                    )}
-                  </Typography>
-                )}
+                <GroupHeading
+                  title={t(selectedContext.titleKey, selectedContext.title)}
+                  hint={
+                    selectedContext.note ?
+                      t(
+                        `mailTemplates.placeholderContextNotes.${selectedContext.id}`,
+                        selectedContext.note
+                      )
+                    : undefined
+                  }
+                />
                 {selectedContext.placeholders.length > 0 ?
                   <PlaceholderGroup>
                     {selectedContext.placeholders.map(renderPlaceholder)}

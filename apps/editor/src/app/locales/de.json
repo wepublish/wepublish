@@ -1622,7 +1622,7 @@
         "testRecipientPlaceholder": "Deine Konto-E-Mail",
         "preview": "Vorschau",
         "sendTest": "Test senden",
-        "previewLetter": "Als Brief anzeigen",
+        "previewLetter": "Vorschau",
         "letterAppendix": "QR-Einzahlungsschein (PDF)",
         "letterAppendixNone": "Keiner",
         "letterAppendixHelp": "PDF aus «Dokumente», das nach den Briefseiten gedruckt wird, z. B. ein QR-Einzahlungsschein (A4, Schein am unteren Rand). Nur für Adressen in der Schweiz; bei Duplexdruck wird bei Bedarf eine leere Seite eingefügt, damit der Schein auf einer Vorderseite liegt.",
@@ -1700,7 +1700,7 @@
       "htmlContent": "HTML-Inhalt",
       "name": "Name",
       "placeholders": "Platzhalter",
-      "placeholdersHint": "Zum Einfügen ins gewählte Feld klicken",
+      "placeholdersHint": "Ein Klick auf einen Platzhalter fügt ihn ins Template ein.",
       "placeholderSelectType": "Wähle oben einen Verwendungszweck, um dessen Platzhalter zu sehen.",
       "mailTypes": {
         "account": "Konto & Login",
@@ -1734,10 +1734,10 @@
         "rappen": "Rappen"
       },
       "placeholderContexts": {
-        "account": "Konto & Login (Registrierung, Login-Link, Passwort-Reset)",
+        "account": "Konto & Login",
         "emailChange": "E-Mail-Änderung",
-        "subscription": "Abo (neu, bestätigt, Deaktivierung)",
-        "renewal": "Verlängerung – automatisch (Erfolg / Fehlschlag)",
+        "subscription": "Abo",
+        "renewal": "Automatische Verlängerung",
         "invoiceCreation": "Rechnung erstellt",
         "custom": "Freie E-Mail an Abonnent:in",
         "customNoSubscription": "Freie E-Mail an Nicht-Abonnent:in"

@@ -1622,7 +1622,7 @@
         "testRecipientPlaceholder": "Votre e-mail de compte",
         "preview": "Aperçu",
         "sendTest": "Envoyer un test",
-        "previewLetter": "Aperçu en lettre",
+        "previewLetter": "Aperçu",
         "letterAppendix": "Bulletin QR (PDF)",
         "letterAppendixNone": "Aucun",
         "letterAppendixHelp": "PDF des «Documents» imprimé après les pages de la lettre, p. ex. un bulletin QR (A4, bulletin au bord inférieur). Uniquement pour les adresses en Suisse ; en impression recto verso, une page blanche est ajoutée si nécessaire pour que le bulletin soit sur un recto.",
@@ -1700,7 +1700,7 @@
       "htmlContent": "Contenu HTML",
       "name": "Nom",
       "placeholders": "Espaces réservés",
-      "placeholdersHint": "Cliquer pour insérer dans le champ sélectionné",
+      "placeholdersHint": "Un clic sur un espace réservé l’insère dans le modèle.",
       "placeholderSelectType": "Choisissez une utilisation ci-dessus pour voir ses espaces réservés.",
       "mailTypes": {
         "account": "Compte & connexion",
@@ -1733,10 +1733,10 @@
       "placeholderAlways": "Toujours disponible — dans chaque e-mail",
       "placeholderContextLabel": "Champs supplémentaires pour cette utilisation",
       "placeholderContexts": {
-        "account": "Compte & connexion (création, lien de connexion, réinitialisation du mot de passe)",
+        "account": "Compte & connexion",
         "emailChange": "Changement d’e-mail",
-        "subscription": "Abonnement (nouveau, confirmé, désactivation)",
-        "renewal": "Renouvellement — automatique (succès / échec)",
+        "subscription": "Abonnement",
+        "renewal": "Renouvellement automatique",
         "invoiceCreation": "Facture créée",
         "custom": "E-mail libre à un·e abonné·e",
         "customNoSubscription": "E-mail libre à un·e non-abonné·e"

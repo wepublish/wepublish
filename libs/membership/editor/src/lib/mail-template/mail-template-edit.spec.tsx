@@ -222,6 +222,44 @@ describe('MailTemplateEdit', () => {
     expect(screen.getByRole('listbox')).toBeTruthy();
   });
 
+  it('explains each purpose in a tooltip instead of a line below it', () => {
+    renderPage();
+
+    fireEvent.mouseDown(
+      screen.getByRole('combobox', { name: /^mailTemplates\.edit\.mailType/ })
+    );
+
+    const list = screen.getByRole('listbox');
+    const purposes = within(list).getAllByRole('option').slice(1);
+
+    expect(purposes.length).toBeGreaterThan(0);
+    for (const purpose of purposes) {
+      expect(
+        within(purpose).getByRole('button', {
+          name: /^mailTemplates\.purposeDescriptions\./,
+        })
+      ).toBeTruthy();
+    }
+    expect(
+      within(list).queryByText(/^mailTemplates\.purposeDescriptions\./)
+    ).toBeNull();
+  });
+
+  it('shows the chosen purpose by its name alone', () => {
+    renderPage();
+
+    const purpose = screen.getByRole('combobox', {
+      name: /^mailTemplates\.edit\.mailType/,
+    });
+    fireEvent.mouseDown(purpose);
+    fireEvent.click(
+      within(screen.getByRole('listbox')).getAllByRole('option')[1]
+    );
+
+    expect(within(purpose).queryByRole('button')).toBeNull();
+    expect(purpose.textContent).not.toBe('');
+  });
+
   it('moves focus to the purpose when saving without one', () => {
     renderPage();
 

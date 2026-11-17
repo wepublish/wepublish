@@ -597,8 +597,8 @@ function MailTemplateEdit() {
           </Button>
         </ListViewActions>
       </ListViewContainer>
-      {/* The two tiles stick together as one header row so the preview
-          controls stay reachable while scrolling the editor. */}
+      {/* Not sticky: with the versions the tiles are tall enough to cover
+          most of the window, and the editor would scroll away behind them. */}
       <div
         style={{
           display: 'flex',
@@ -606,10 +606,6 @@ function MailTemplateEdit() {
           flexWrap: 'wrap',
           alignItems: 'stretch',
           marginTop: 16,
-          position: 'sticky',
-          top: 0,
-          zIndex: 10,
-          background: 'var(--mui-palette-background-default)',
         }}
       >
         <Card
@@ -631,6 +627,8 @@ function MailTemplateEdit() {
               sx={{ width: '100%' }}
             >
               <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+                {/* Purpose and name share the first row; the description
+                    takes the second. */}
                 <FormControl
                   style={{ flex: 1, minWidth: 200, marginBottom: 0 }}
                   fullWidth
@@ -662,11 +660,30 @@ function MailTemplateEdit() {
                       select: {
                         displayEmpty: true,
                         labelId: ids.purpose,
+                        // The name alone: the hints belong to the list.
+                        renderValue: value =>
+                          contextOptions.find(option => option.value === value)
+                            ?.label ??
+                          t(
+                            'mailTemplates.edit.selectMailTypePlaceholder',
+                            'Choose a purpose …'
+                          ),
                       },
                     }}
                     fullWidth
                   >
-                    <MenuItem value="">
+                    {/* A dashed line sets "no purpose yet" apart from the
+                        purposes. On the item itself: the select turns every
+                        child into an option, a divider included. */}
+                    <MenuItem
+                      value=""
+                      sx={{
+                        borderBottom: '1px dashed',
+                        borderColor: 'divider',
+                        marginBottom: 1,
+                        paddingBottom: 1,
+                      }}
+                    >
                       {t(
                         'mailTemplates.edit.selectMailTypePlaceholder',
                         'Choose a purpose …'
@@ -677,20 +694,20 @@ function MailTemplateEdit() {
                       <MenuItem
                         key={option.value}
                         value={option.value}
-                        sx={{ display: 'block', paddingBlock: 0.5 }}
+                        sx={{ gap: 0.75 }}
                       >
-                        <div>{option.label}</div>
-                        <Typography
-                          variant="caption"
-                          color="text.secondary"
-                          sx={{
-                            display: 'block',
-                            whiteSpace: 'normal',
-                            lineHeight: 1.35,
-                          }}
+                        {option.label}
+                        {/* Reading the hint must not choose the purpose. */}
+                        <span
+                          style={{ display: 'inline-flex' }}
+                          onClick={event => event.stopPropagation()}
+                          onMouseDown={event => event.stopPropagation()}
                         >
-                          {(option as { description?: string }).description}
-                        </Typography>
+                          <InfoTooltip
+                            text={option.description}
+                            placement="right"
+                          />
+                        </span>
                       </MenuItem>
                     ))}
                   </TextField>
@@ -724,7 +741,7 @@ function MailTemplateEdit() {
                   />
                 </FormControl>
                 <FormControl
-                  style={{ flex: 1, minWidth: 200, marginBottom: 0 }}
+                  style={{ flex: '1 1 100%', minWidth: 200, marginBottom: 0 }}
                   fullWidth
                 >
                   <FieldLabel
@@ -840,8 +857,14 @@ function MailTemplateEdit() {
                 }
                 style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}
               >
+                {/* On a letter the subject takes a row of its own, with the
+                    stationery and the appendix side by side below it. */}
                 <FormControl
-                  style={{ flex: 1, minWidth: 200, marginBottom: 0 }}
+                  style={{
+                    flex: isLetter ? '1 1 100%' : 1,
+                    minWidth: 200,
+                    marginBottom: 0,
+                  }}
                   fullWidth
                 >
                   <FieldLabel

@@ -61,4 +61,35 @@ describe('PlaceholderPicker', () => {
       })
     ).toBeTruthy();
   });
+
+  it('says how to insert a placeholder in the heading tooltip, first line', () => {
+    renderPicker();
+
+    expect(
+      screen.getByRole('button', {
+        name: /^mailTemplates\.placeholdersHint\smailTemplates\.placeholdersInfo$/,
+      })
+    ).toBeTruthy();
+    expect(screen.queryByText('mailTemplates.placeholdersHint')).toBeNull();
+  });
+
+  it('explains a group in a tooltip next to its heading', () => {
+    renderPicker();
+
+    expect(
+      screen.getByRole('button', {
+        name: 'mailTemplates.placeholderAlwaysHint',
+      })
+    ).toBeTruthy();
+    expect(
+      screen.queryByText('mailTemplates.placeholderAlwaysHint')
+    ).toBeNull();
+    // The heading keeps its own name: the tooltip sits beside it.
+    expect(
+      screen.getByRole('heading', {
+        level: 3,
+        name: 'mailTemplates.placeholderAlways',
+      })
+    ).toBeTruthy();
+  });
 });
