@@ -5704,7 +5704,7 @@
         "expiresInDays_other": "Läuft in {{count}} Tagen ab",
         "expiresDate": "{{expiresDate, ccc PP p}}",
         "owner": "Besitzer",
-        "ownerUnknown": "Gelöschte Person",
+        "ownerUnknown": "Gelöschter User",
         "filterByOwner": "Nach Besitzer filtern",
         "anyStatus": "Jeder Status"
       },

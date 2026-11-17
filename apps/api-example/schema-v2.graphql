@@ -122,10 +122,17 @@ enum ApiTokenCreatorStateKind {
   Ok
 }
 
+"""
+Status sorts working keys before expired and revoked ones (ascending). Owner sorts by the creator's name, then first name.
+"""
 enum ApiTokenSort {
   CreatedAt
+  ExpiresAt
   LastUsedAt
   Name
+  Owner
+  ScopeCount
+  Status
 }
 
 """A revoked token counts as revoked even once it has also expired."""

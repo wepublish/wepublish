@@ -10,8 +10,10 @@ import {
   prefixOf,
   verifyApiToken,
 } from './api-token.crypto';
-import { ApiTokenStatus } from './api-token.model';
-import { ApiTokenService } from './api-token.service';
+import { SortOrder } from '@wepublish/utils/api';
+
+import { ApiTokenSort, ApiTokenStatus } from './api-token.model';
+import { ApiTokenService, createApiTokenOrder } from './api-token.service';
 
 const creatorRole = (permissionIDs: string[]) => ({
   id: 'r1',
@@ -596,5 +598,66 @@ describe('ownership scoping', () => {
     });
 
     expect(prisma.apiToken.update).toHaveBeenCalled();
+  });
+});
+
+describe('sorting the key list', () => {
+  it('sorts by status: working keys, then expired, then revoked', () => {
+    expect(
+      createApiTokenOrder(ApiTokenSort.Status, SortOrder.Ascending)
+    ).toEqual([
+      { revokedAt: { sort: 'asc', nulls: 'first' } },
+      { expiresAt: 'desc' },
+    ]);
+    expect(
+      createApiTokenOrder(ApiTokenSort.Status, SortOrder.Descending)
+    ).toEqual([
+      { revokedAt: { sort: 'desc', nulls: 'last' } },
+      { expiresAt: 'asc' },
+    ]);
+  });
+
+  it('sorts by the expiry date', () => {
+    expect(
+      createApiTokenOrder(ApiTokenSort.ExpiresAt, SortOrder.Ascending)
+    ).toEqual({ expiresAt: 'asc' });
+  });
+
+  it('sorts by the owner‘s name, then first name', () => {
+    expect(
+      createApiTokenOrder(ApiTokenSort.Owner, SortOrder.Descending)
+    ).toEqual([
+      { createdBy: { name: 'desc' } },
+      { createdBy: { firstName: 'desc' } },
+    ]);
+  });
+
+  it('sorts by the number of permissions, across pages', async () => {
+    const store = [
+      { id: 'two', scopes: ['A', 'B'], createdAt: new Date(3) },
+      { id: 'none', scopes: [], createdAt: new Date(2) },
+      { id: 'three', scopes: ['A', 'B', 'C'], createdAt: new Date(1) },
+    ];
+    const prisma = {
+      apiToken: {
+        count: vi.fn(async () => store.length),
+        findMany: vi.fn(async () => store),
+      },
+    };
+
+    const page = (skip: number) =>
+      service(prisma).getApiTokens(
+        {
+          sort: ApiTokenSort.ScopeCount,
+          order: SortOrder.Descending,
+          take: 2,
+          skip,
+        },
+        { userId: 'u1', canSeeAll: true }
+      );
+
+    expect((await page(0)).nodes.map(n => n.id)).toEqual(['three', 'two']);
+    expect((await page(0)).pageInfo.hasNextPage).toBe(true);
+    expect((await page(2)).nodes.map(n => n.id)).toEqual(['none']);
   });
 });

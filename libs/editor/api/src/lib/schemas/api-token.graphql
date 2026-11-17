@@ -32,6 +32,8 @@ query ApiTokenList(
   $cursorId: String
   $createdById: String
   $status: ApiTokenStatus
+  $sort: ApiTokenSort
+  $order: SortOrder
 ) {
   apiTokens(
     take: $take
@@ -39,6 +41,8 @@ query ApiTokenList(
     cursorId: $cursorId
     createdById: $createdById
     status: $status
+    sort: $sort
+    order: $order
   ) {
     nodes {
       ...FullApiToken

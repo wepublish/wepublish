@@ -364,4 +364,29 @@ describe('ApiTokenList', () => {
       screen.queryByText(/apiTokenList\.overview\.missingScopes/)
     ).toBeNull();
   });
+
+  it.each([
+    ['apiTokenList.overview.status', 'Status'],
+    ['apiTokenList.overview.scopes', 'ScopeCount'],
+    ['apiTokenList.overview.lastUsed', 'LastUsedAt'],
+    ['apiTokenList.overview.expires', 'ExpiresAt'],
+  ])('sorts the keys on the server by the column %s', async (label, sort) => {
+    renderList();
+
+    fireEvent.click(await screen.findByRole('button', { name: label }));
+
+    await waitFor(() => expect(tokenVariables()).toMatchObject({ sort }));
+  });
+
+  it('sorts by owner when the reader sees everyone‘s keys', async () => {
+    renderAt('/api-tokens', CanGetAllApiTokens.id);
+
+    fireEvent.click(
+      await screen.findByRole('button', { name: 'apiTokenList.overview.owner' })
+    );
+
+    await waitFor(() =>
+      expect(tokenVariables()).toMatchObject({ sort: 'Owner' })
+    );
+  });
 });
