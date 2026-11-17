@@ -30,9 +30,9 @@ registerEnumType(ApiTokenStatus, {
 });
 
 export enum ApiTokenCreatorStateKind {
-  Ok = 'ok',
-  Blocked = 'blocked',
-  Limited = 'limited',
+  Ok = 'Ok',
+  Blocked = 'Blocked',
+  Limited = 'Limited',
 }
 
 registerEnumType(ApiTokenCreatorStateKind, {
@@ -41,9 +41,9 @@ registerEnumType(ApiTokenCreatorStateKind, {
 });
 
 export enum ApiTokenBlockedReason {
-  CreatorMissing = 'creatorMissing',
-  CreatorInactive = 'creatorInactive',
-  CreatorMayNotCreateApiTokens = 'creatorMayNotCreateApiTokens',
+  CreatorMissing = 'CreatorMissing',
+  CreatorInactive = 'CreatorInactive',
+  CreatorMayNotCreateApiTokens = 'CreatorMayNotCreateApiTokens',
 }
 
 registerEnumType(ApiTokenBlockedReason, {

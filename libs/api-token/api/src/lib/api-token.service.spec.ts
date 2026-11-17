@@ -1,5 +1,8 @@
 import { ForbiddenException, UnauthorizedException } from '@nestjs/common';
-import { EXPIRED_API_TOKEN } from '@wepublish/authentication/api';
+import {
+  BLOCKED_API_TOKEN,
+  EXPIRED_API_TOKEN,
+} from '@wepublish/authentication/api';
 
 import {
   API_TOKEN_PREFIX,
@@ -193,6 +196,12 @@ describe('resolveToken', () => {
 
     await expect(resolving).rejects.toThrow(UnauthorizedException);
     await expect(resolving).rejects.toThrow(/created .* no longer exists/);
+  });
+
+  it('marks a refusal for its creator, so the request stops instead of running anonymously', async () => {
+    await expect(stored(prismaMock({ users: [] }))).rejects.toMatchObject({
+      cause: BLOCKED_API_TOKEN,
+    });
   });
 
   it('refuses a token whose creator is inactive', async () => {
@@ -389,7 +398,7 @@ describe('creatorCheck', () => {
 
   it('is ok while the creator holds every scope of the key', async () => {
     expect(await service(prismaMock()).creatorCheck(key())).toMatchObject({
-      state: 'ok',
+      state: 'Ok',
       blockedReason: null,
       missingScopes: [],
     });
@@ -398,7 +407,7 @@ describe('creatorCheck', () => {
   it('is blocked once the creator is deleted', async () => {
     expect(
       await service(prismaMock()).creatorCheck(key({ createdById: null }))
-    ).toMatchObject({ state: 'blocked', blockedReason: 'creatorMissing' });
+    ).toMatchObject({ state: 'Blocked', blockedReason: 'CreatorMissing' });
   });
 
   it('is blocked while the creator is inactive', async () => {
@@ -409,8 +418,8 @@ describe('creatorCheck', () => {
     });
 
     expect(await service(prisma).creatorCheck(key())).toMatchObject({
-      state: 'blocked',
-      blockedReason: 'creatorInactive',
+      state: 'Blocked',
+      blockedReason: 'CreatorInactive',
     });
   });
 
@@ -418,8 +427,8 @@ describe('creatorCheck', () => {
     const prisma = prismaMock({ roles: [creatorRole(['CAN_GET_EVENTS'])] });
 
     expect(await service(prisma).creatorCheck(key())).toMatchObject({
-      state: 'blocked',
-      blockedReason: 'creatorMayNotCreateApiTokens',
+      state: 'Blocked',
+      blockedReason: 'CreatorMayNotCreateApiTokens',
     });
   });
 
@@ -429,7 +438,7 @@ describe('creatorCheck', () => {
     });
 
     expect(await service(prisma).creatorCheck(key())).toMatchObject({
-      state: 'limited',
+      state: 'Limited',
       blockedReason: null,
       missingScopes: ['CAN_DELETE_ARTICLE'],
     });
