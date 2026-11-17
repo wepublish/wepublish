@@ -145,12 +145,11 @@ function MailTemplateList() {
 
   const matching = useMemo(
     () =>
-      sortTemplates(
-        filterTemplates(templates, filter),
-        sortField,
-        sortOrder,
-        context => mailTypeLabel(context, (k, f) => t(k, f)) ?? context
-      ),
+      sortTemplates(filterTemplates(templates, filter), sortField, sortOrder, {
+        purpose: context =>
+          mailTypeLabel(context, (k, f) => t(k, f)) ?? context,
+        defaultLayout: t('mailTemplates.list.letterLayoutDefault'),
+      }),
     [templates, filter, sortField, sortOrder, t]
   );
 

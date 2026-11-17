@@ -156,7 +156,12 @@ describe('layoutOptions', () => {
 
 describe('sortTemplates', () => {
   const sorted = (field: string, order: 'asc' | 'desc' = 'asc') =>
-    ids(sortTemplates(rows, field, order, purposeLabel));
+    ids(
+      sortTemplates(rows, field, order, {
+        purpose: purposeLabel,
+        defaultLayout: 'Standard',
+      })
+    );
 
   it('sorts by name without minding the case', () => {
     expect(sorted('name')).toEqual(['login', 'invoice', 'welcome']);
@@ -176,15 +181,33 @@ describe('sortTemplates', () => {
     expect(sorted('status', 'desc')).toEqual(['login', 'invoice', 'welcome']);
   });
 
-  it('keeps rows without a value at the end in both directions', () => {
-    expect(sorted('description')).toEqual(['welcome', 'login', 'invoice']);
-    expect(sorted('description', 'desc')).toEqual([
+  it('sorts the stationery by what the table shows, the default one included', () => {
+    // welcome: «Briefpapier Verlag», invoice: a letter on the default
+    // stationery, shown as «Standard», login: no letter.
+    expect(sorted('letterLayoutName')).toEqual(['welcome', 'invoice', 'login']);
+    expect(sorted('letterLayoutName', 'desc')).toEqual([
+      'login',
+      'invoice',
+      'welcome',
+    ]);
+  });
+
+  it('puts rows without a value last, and first when the order is reversed', () => {
+    expect(sorted('letterAppendixName')).toEqual([
       'welcome',
       'login',
       'invoice',
     ]);
-    expect(sorted('letterLayoutName', 'desc')[0]).toBe('welcome');
-    expect(sorted('letterAppendixName')[0]).toBe('welcome');
+    expect(sorted('letterAppendixName', 'desc')).toEqual([
+      'login',
+      'invoice',
+      'welcome',
+    ]);
+    expect(sorted('description', 'desc')).toEqual([
+      'login',
+      'invoice',
+      'welcome',
+    ]);
   });
 
   it('leaves the list alone for a field it does not know', () => {

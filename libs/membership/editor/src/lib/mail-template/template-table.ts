@@ -106,16 +106,24 @@ export const TEMPLATE_SORT_FIELDS = [
   'letterAppendixName',
 ];
 
+/** The texts the table shows where a row holds no text of its own. */
+export type TemplateSortLabels = {
+  purpose: (context: string) => string;
+  /** What a letter on the default stationery shows in its column. */
+  defaultLayout: string;
+};
+
+// Sorting goes by what a cell shows, so a column never looks unsorted.
 const sortValue = (
   row: TemplateRow,
   field: string,
-  purposeLabel: (context: string) => string
+  labels: TemplateSortLabels
 ): string | number | null => {
   switch (field) {
     case 'name':
       return row.name;
     case 'context':
-      return row.context ? purposeLabel(row.context) : null;
+      return row.context ? labels.purpose(row.context) : null;
     case 'description':
       return row.description || null;
     case 'subject':
@@ -123,7 +131,9 @@ const sortValue = (
     case 'status':
       return STATUS_ORDER.indexOf(row.status);
     case 'letterLayoutName':
-      return row.letterLayoutName ?? null;
+      return hasLetter(row) ?
+          (row.letterLayoutName ?? labels.defaultLayout)
+        : null;
     case 'letterAppendixName':
       return row.letterAppendixName ?? null;
     default:
@@ -131,11 +141,30 @@ const sortValue = (
   }
 };
 
+const compareValues = (
+  left: string | number | null,
+  right: string | number | null
+) => {
+  // Empty cells come after everything else; reversing the order brings
+  // them to the top, so a second click always does something.
+  if (left === null || right === null) {
+    return (
+      left === right ? 0
+      : left === null ? 1
+      : -1
+    );
+  }
+
+  return typeof left === 'number' && typeof right === 'number' ?
+      left - right
+    : byText(String(left), String(right));
+};
+
 export const sortTemplates = (
   rows: TemplateRow[],
   field: string,
   order: 'asc' | 'desc',
-  purposeLabel: (context: string) => string
+  labels: TemplateSortLabels
 ): TemplateRow[] => {
   if (!TEMPLATE_SORT_FIELDS.includes(field)) {
     return rows;
@@ -144,22 +173,10 @@ export const sortTemplates = (
   const direction = order === 'desc' ? -1 : 1;
 
   return [...rows].sort((a, b) => {
-    const left = sortValue(a, field, purposeLabel);
-    const right = sortValue(b, field, purposeLabel);
-
-    // Rows without a value stay at the end, whichever way the rest is sorted.
-    if (left === null || right === null) {
-      return (
-        left === right ? byText(a.name, b.name)
-        : left === null ? 1
-        : -1
-      );
-    }
-
-    const compared =
-      typeof left === 'number' && typeof right === 'number' ?
-        left - right
-      : byText(String(left), String(right));
+    const compared = compareValues(
+      sortValue(a, field, labels),
+      sortValue(b, field, labels)
+    );
 
     return compared ? compared * direction : byText(a.name, b.name);
   });
