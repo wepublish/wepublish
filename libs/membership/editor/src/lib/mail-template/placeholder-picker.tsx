@@ -22,7 +22,15 @@ const PlaceholderFormats = styled.div`
   align-items: center;
   flex-wrap: wrap;
   flex-basis: 100%;
-  gap: ${({ theme }) => theme.spacing(0.75)};
+  /* The title sits close to its own chips: little space below it, the usual
+     space beside it when a chip fits on the same line. */
+  gap: ${({ theme }) => `${theme.spacing(0.25)} ${theme.spacing(0.75)}`};
+  /* A little air above each titled set, so it reads as a block of its own. */
+  margin-top: ${({ theme }) => theme.spacing(1)};
+
+  &:first-child {
+    margin-top: 0;
+  }
 `;
 
 interface PlaceholderPickerProps {
@@ -105,7 +113,18 @@ const describePlaceholder = (t: TFunction, placeholder: MailPlaceholder) =>
 function GroupHeading({ title, hint }: { title: string; hint?: string }) {
   return (
     <Box
-      sx={{ display: 'flex', alignItems: 'center', gap: 0.5, marginBottom: 1 }}
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 0.5,
+        marginBottom: 1,
+        // A tinted bar, so the eye finds where one group ends and the next
+        // begins. A theme colour: it follows light and dark mode.
+        paddingBlock: 0.5,
+        paddingInline: 1,
+        borderRadius: 1,
+        bgcolor: 'action.hover',
+      }}
     >
       <Typography
         variant="subtitle2"
@@ -189,6 +208,10 @@ export function PlaceholderPicker({
           <Typography
             variant="caption"
             aria-hidden
+            // Level with the text inside the chips below, not with their
+            // outline, and on a line of its own even when a chip would fit
+            // beside it.
+            sx={{ paddingLeft: '8px', flexBasis: '100%' }}
           >
             {name}
           </Typography>
@@ -242,6 +265,58 @@ export function PlaceholderPicker({
     );
   };
 
+  /**
+   * The chips of a list, neighbours of the same set under a title of their
+   * own. Not for search results: there every hit stands for itself.
+   */
+  const renderPlaceholders = (
+    placeholders: MailPlaceholder[],
+    /** The set the untitled chips at the start of the list are shown as. */
+    leadingSet: string
+  ) => {
+    const runs: { set?: string; items: MailPlaceholder[] }[] = [];
+    let leading = true;
+
+    for (const placeholder of placeholders) {
+      // A placeholder with formats brings a title of its own.
+      leading &&= !placeholder.set && !placeholder.kind;
+
+      const set = leading ? leadingSet : placeholder.set;
+      const last = runs.at(-1);
+
+      if (last && set && last.set === set) {
+        last.items.push(placeholder);
+      } else {
+        runs.push({ set, items: [placeholder] });
+      }
+    }
+
+    return runs.flatMap(({ set, items }) => {
+      if (!set) {
+        return items.map(renderPlaceholder);
+      }
+
+      const title = t(`mailTemplates.placeholderGroups.${set}`, set);
+
+      return (
+        <PlaceholderFormats
+          key={`set-${set}-${items[0].key}`}
+          role="group"
+          aria-label={title}
+        >
+          <Typography
+            variant="caption"
+            aria-hidden
+            sx={{ paddingLeft: '8px', flexBasis: '100%' }}
+          >
+            {title}
+          </Typography>
+          <PlaceholderGroup>{items.map(renderPlaceholder)}</PlaceholderGroup>
+        </PlaceholderFormats>
+      );
+    });
+  };
+
   return (
     <div style={{ paddingRight: 4 }}>
       <Box
@@ -259,15 +334,18 @@ export function PlaceholderPicker({
         >
           {t('mailTemplates.placeholders')}
         </Typography>
-        {/* How to use them first, what they are below: the tooltip keeps
-            line breaks. */}
+        {/* How to use them first, what they are below, as two bullets: the
+            tooltip keeps line breaks. */}
         <InfoTooltip
-          text={`${t('mailTemplates.placeholdersHint')}\n${t('mailTemplates.placeholdersInfo')}`}
+          text={`• ${t('mailTemplates.placeholdersHint')}\n• ${t('mailTemplates.placeholdersInfo')}`}
         />
       </Box>
       <TextField
         fullWidth
-        placeholder={t('mailTemplates.searchPlaceholders', 'Search…')}
+        placeholder={t(
+          'mailTemplates.searchPlaceholders',
+          'Filter placeholders…'
+        )}
         slotProps={{
           htmlInput: {
             'aria-label': t('mailTemplates.searchPlaceholdersLabel'),
@@ -298,17 +376,10 @@ export function PlaceholderPicker({
             )}
           />
           <PlaceholderGroup>
-            {ALWAYS_PLACEHOLDERS.map(renderPlaceholder)}
+            {renderPlaceholders(ALWAYS_PLACEHOLDERS, 'person')}
           </PlaceholderGroup>
 
-          <Box
-            sx={{
-              marginTop: 2.5,
-              paddingTop: 1.5,
-              borderTop: '1px solid',
-              borderTopColor: 'divider',
-            }}
-          >
+          <Box sx={{ marginTop: 2.5 }}>
             {!selectedContext ?
               <Typography
                 variant="caption"
@@ -336,7 +407,10 @@ export function PlaceholderPicker({
                 />
                 {selectedContext.placeholders.length > 0 ?
                   <PlaceholderGroup>
-                    {selectedContext.placeholders.map(renderPlaceholder)}
+                    {renderPlaceholders(
+                      selectedContext.placeholders,
+                      'general'
+                    )}
                   </PlaceholderGroup>
                 : <Typography
                     variant="caption"

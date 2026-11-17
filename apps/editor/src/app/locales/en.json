@@ -1643,13 +1643,17 @@
         "selectMailTypePlaceholder": "Choose a purpose …",
         "testRecipientHint": "Test mails are always sent to your own account.",
         "generateTextFromHtml": "Generate from HTML",
-        "textContentReadonlyHint": "Automatically generated from the content. Edit the visual or HTML tab to change it.",
         "background": "Background",
         "contentWidth": "Width (px)",
         "purposeHint": "The purpose defines in which situation this template is sent. It determines which data — and therefore which placeholders — are available: only an invoice template knows the invoice amount, for example.",
         "descriptionHelp": "Internal only: helps you and your team find the template in the list. It does not appear in the email.",
         "sampleSubscriptionHelp": "Pick an existing subscription to fill the preview and the test mail with its real data. Without a choice, made-up sample data is used. The test mail still only goes to you.",
-        "bodyModeHelp": "Visual: edit the content like in a word processor. HTML: edit the source code directly — for advanced users. Plain text: the text-only version for email programs without HTML; it is generated automatically.",
+        "textContentGenerated": "Generated automatically from the HTML / visual content",
+        "bodyModeHints": {
+          "visual": "Edit the content like in a word processor.",
+          "html": "Edit the source code directly — for advanced users.",
+          "text": "The text-only version for email programs without HTML. It is generated automatically from the content; edit the visual or HTML tab to change it."
+        },
         "backgroundHelp": "Color of the area around the email's content.",
         "contentWidthHelp": "Maximum width of the content in pixels. 600 px is a proven value that looks good in most email programs. On narrow screens the content shrinks automatically.",
         "bodyMode": "Editor mode",
@@ -1753,6 +1757,11 @@
       "importConfirm": "Import & overwrite",
       "importWarning": "This imports every template from the mail provider. Unknown ones are created, already imported ones have their HTML and subject overwritten. Local changes to them will be lost.",
       "importDone": "Imported {{count}} template(s) from the provider.",
+      "placeholderGroups": {
+        "user": "User",
+        "person": "Person",
+        "general": "General"
+      },
       "placeholderNames": {
         "user_fullName": "Full name",
         "user_firstName": "First name",
@@ -1824,7 +1833,7 @@
         "custom": "Invoices come as an array: optional_invoices_0_* (newest first).",
         "customNoSubscription": "Only recipient fields are available — this mail goes to people without a subscription."
       },
-      "searchPlaceholders": "Search…",
+      "searchPlaceholders": "Filter placeholders…",
       "noPlaceholders": "No matching placeholders.",
       "placeholderExample": "Example",
       "purposeDescriptions": {
@@ -1883,8 +1892,8 @@
         "optional_invoices_0_description": "Description of the latest invoice."
       },
       "statusHelp": "A check mark means an automatic email uses this template. «Unused» means no automatic email uses it — you can still send it by hand via «Manual messages».",
-      "placeholdersInfo": "Placeholders are replaced automatically with each recipient's data when the email is sent, e.g. their first name. This makes every email personal.",
-      "searchPlaceholdersLabel": "Search placeholders",
+      "placeholdersInfo": "Placeholders are replaced automatically with the matching data when the message is sent, e.g. the recipient's first name.",
+      "searchPlaceholdersLabel": "Filter placeholders",
       "empty": "No message templates yet."
     },
     "mailTemplateSelect": {

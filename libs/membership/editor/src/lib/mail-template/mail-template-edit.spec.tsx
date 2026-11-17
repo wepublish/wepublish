@@ -197,6 +197,48 @@ describe('MailTemplateEdit', () => {
     expect(visual).toHaveAttribute('aria-pressed', 'false');
   });
 
+  it('explains every editor mode on a line of its own in one tooltip', () => {
+    renderPage();
+
+    const help = screen.getByRole('button', {
+      name: /bodyModeHints\.visual[\s\S]*bodyModeHints\.html[\s\S]*bodyModeHints\.text/,
+    });
+
+    expect(help.getAttribute('aria-label')?.split('\n')).toEqual([
+      '• mailTemplates.wysiwyg: mailTemplates.edit.bodyModeHints.visual',
+      '• mailTemplates.rawHtml: mailTemplates.edit.bodyModeHints.html',
+      '• mailTemplates.textContent: mailTemplates.edit.bodyModeHints.text',
+    ]);
+  });
+
+  it('shows no separate hint above the plain text', () => {
+    renderPage();
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'mailTemplates.textContent' })
+    );
+
+    expect(
+      screen.queryByText('mailTemplates.edit.textContentReadonlyHint')
+    ).toBeNull();
+  });
+
+  it('marks the plain text as generated, on the text itself', () => {
+    renderPage();
+
+    expect(
+      screen.queryByText('mailTemplates.edit.textContentGenerated')
+    ).toBeNull();
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'mailTemplates.textContent' })
+    );
+
+    expect(
+      screen.getByText('mailTemplates.edit.textContentGenerated')
+    ).toBeTruthy();
+  });
+
   it('flags a missing name on the field and moves focus to it', () => {
     renderPage();
 

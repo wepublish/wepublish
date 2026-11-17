@@ -28,6 +28,11 @@ export interface MailPlaceholder {
    * - 'money': `<key>` (Rappen), `<key>_chf`, `<key>_display` (with currency).
    */
   kind?: 'date' | 'money';
+  /**
+   * Neighbours with the same set are shown together under one title,
+   * i18n `mailTemplates.placeholderGroups.<set>`.
+   */
+  set?: string;
 }
 
 export interface MailPlaceholderContext {
@@ -86,12 +91,14 @@ export const ALWAYS_PLACEHOLDERS: MailPlaceholder[] = [
     label: 'User ID',
     description: 'Eindeutige ID des Users.',
     example: 'ckpqr5abc0001',
+    set: 'user',
   },
   {
     key: 'user_active',
     label: 'Active',
     description: 'Ob das Konto aktiv ist (true/false).',
     example: 'true',
+    set: 'user',
   },
   {
     key: 'user_lastLogin',

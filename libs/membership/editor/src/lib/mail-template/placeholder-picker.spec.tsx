@@ -67,7 +67,7 @@ describe('PlaceholderPicker', () => {
 
     expect(
       screen.getByRole('button', {
-        name: /^mailTemplates\.placeholdersHint\smailTemplates\.placeholdersInfo$/,
+        name: /^• mailTemplates\.placeholdersHint\s• mailTemplates\.placeholdersInfo$/,
       })
     ).toBeTruthy();
     expect(screen.queryByText('mailTemplates.placeholdersHint')).toBeNull();
@@ -91,5 +91,61 @@ describe('PlaceholderPicker', () => {
         name: 'mailTemplates.placeholderAlways',
       })
     ).toBeTruthy();
+  });
+
+  it('titles the user fields as a set of their own', () => {
+    renderPicker();
+
+    const user = screen.getByRole('group', {
+      name: 'mailTemplates.placeholderGroups.user',
+    });
+
+    expect(
+      within(user)
+        .getAllByRole('button')
+        .map(chip => chip.textContent)
+    ).toEqual([
+      'mailTemplates.placeholderNames.user_id',
+      'mailTemplates.placeholderNames.user_active',
+    ]);
+  });
+
+  it('titles the first batch of the always-available fields too', () => {
+    renderPicker();
+
+    const person = screen.getByRole('group', {
+      name: 'mailTemplates.placeholderGroups.person',
+    });
+
+    expect(
+      within(person)
+        .getAllByRole('button')
+        .map(chip => chip.textContent)
+    ).toEqual([
+      'mailTemplates.placeholderNames.user_fullName',
+      'mailTemplates.placeholderNames.user_firstName',
+      'mailTemplates.placeholderNames.user_name',
+      'mailTemplates.placeholderNames.user_email',
+      'mailTemplates.placeholderNames.user_flair',
+    ]);
+  });
+
+  it('titles the first batch of a purpose as its general fields', () => {
+    render(
+      <ThemeProvider theme={createTheme({ cssVariables: true })}>
+        <PlaceholderPicker
+          onInsert={vi.fn()}
+          context={'invoiceCreation' as never}
+        />
+      </ThemeProvider>
+    );
+
+    expect(
+      within(
+        screen.getByRole('group', {
+          name: 'mailTemplates.placeholderGroups.general',
+        })
+      ).getAllByRole('button').length
+    ).toBeGreaterThan(0);
   });
 });

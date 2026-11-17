@@ -1642,13 +1642,17 @@
         "selectMailTypePlaceholder": "Choisir une utilisation …",
         "testRecipientHint": "Les e-mails de test sont toujours envoyés à votre propre compte.",
         "generateTextFromHtml": "Générer depuis le HTML",
-        "textContentReadonlyHint": "Généré automatiquement à partir du contenu. Modifiez l’onglet visuel ou HTML pour le changer.",
         "background": "Arrière-plan",
         "contentWidth": "Largeur (px)",
         "purposeHint": "L’utilisation définit dans quelle situation ce modèle est envoyé. Elle détermine les données — et donc les espaces réservés — disponibles : seul un modèle de facture connaît le montant de la facture, par exemple.",
         "descriptionHelp": "Visible uniquement en interne : aide votre équipe à retrouver le modèle dans la liste. N’apparaît pas dans l’e-mail.",
         "sampleSubscriptionHelp": "Choisissez un abonnement existant pour remplir l’aperçu et l’e-mail de test avec ses données réelles. Sans sélection, des données d’exemple fictives sont utilisées. L’e-mail de test n’est envoyé qu’à vous.",
-        "bodyModeHelp": "Visuel : modifiez le contenu comme dans un traitement de texte. HTML : modifiez directement le code source – pour utilisateur·trice·s avancé·e·s. Texte brut : la version texte pour les programmes de messagerie sans HTML ; elle est générée automatiquement.",
+        "textContentGenerated": "Généré automatiquement à partir du contenu HTML / visuel",
+        "bodyModeHints": {
+          "visual": "Modifiez le contenu comme dans un traitement de texte.",
+          "html": "Modifiez directement le code source – pour utilisateur·trice·s avancé·e·s.",
+          "text": "La version texte pour les programmes de messagerie sans HTML. Elle est générée automatiquement à partir du contenu ; modifiez l’onglet visuel ou HTML pour la changer."
+        },
         "backgroundHelp": "Couleur de la surface autour du contenu de l’e-mail.",
         "contentWidthHelp": "Largeur maximale du contenu en pixels. 600 px est une valeur éprouvée qui s’affiche bien dans la plupart des programmes de messagerie. Sur les petits écrans, le contenu se rétrécit automatiquement.",
         "bodyMode": "Mode d’édition",
@@ -1752,6 +1756,11 @@
         "custom": "E-mail libre à un·e abonné·e",
         "customNoSubscription": "E-mail libre à un·e non-abonné·e"
       },
+      "placeholderGroups": {
+        "user": "Utilisateur",
+        "person": "Personne",
+        "general": "Général"
+      },
       "placeholderNames": {
         "user_fullName": "Nom complet",
         "user_firstName": "Prénom",
@@ -1823,7 +1832,7 @@
         "custom": "Les factures arrivent sous forme de tableau : optional_invoices_0_* (la plus récente en premier).",
         "customNoSubscription": "Seuls les champs du destinataire sont disponibles — cet e-mail s’adresse à des personnes sans abonnement."
       },
-      "searchPlaceholders": "Rechercher …",
+      "searchPlaceholders": "Filtrer les espaces réservés …",
       "noPlaceholders": "Aucun espace réservé correspondant.",
       "placeholderExample": "Exemple",
       "purposeDescriptions": {
@@ -1882,8 +1891,8 @@
         "optional_invoices_0_description": "Description de la dernière facture."
       },
       "statusHelp": "Une coche signifie qu’un e-mail automatique utilise ce modèle. « Inutilisé » signifie qu’aucun e-mail automatique ne l’utilise – vous pouvez tout de même l’envoyer manuellement via « Messages manuels ».",
-      "placeholdersInfo": "Les espaces réservés sont remplacés automatiquement à l’envoi par les données de chaque destinataire, p. ex. son prénom. Chaque e-mail devient ainsi personnel.",
-      "searchPlaceholdersLabel": "Rechercher des espaces réservés",
+      "placeholdersInfo": "Les espaces réservés sont remplacés automatiquement à l’envoi par les données correspondantes, p. ex. le prénom du ou de la destinataire.",
+      "searchPlaceholdersLabel": "Filtrer les espaces réservés",
       "empty": "Aucun modèle de message pour le moment."
     },
     "mailTemplateSelect": {

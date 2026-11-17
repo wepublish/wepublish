@@ -569,6 +569,15 @@ function MailTemplateEdit() {
     enqueueSnackbar(t('mailTemplates.edit.testSent'), { variant: 'success' });
   };
 
+  // A letter has no plain-text alternative.
+  const bodyModes = (
+    [
+      ['visual', t('mailTemplates.wysiwyg')],
+      ['html', t('mailTemplates.rawHtml')],
+      ['text', t('mailTemplates.textContent')],
+    ] as const
+  ).filter(([mode]) => mode !== 'text' || !isLetter);
+
   const contextOptions = MAIL_PLACEHOLDER_CONTEXTS.map(c => ({
     label: t(c.titleKey, c.title),
     description: t(`mailTemplates.purposeDescriptions.${c.id}`),
@@ -1077,22 +1086,28 @@ function MailTemplateEdit() {
           </CardContent>
         </Card>
       </div>
+      {/* A grid, so the placeholders start level with the editor: the
+          editor's toolbar sits in a row of its own above it, and the cell
+          beside the toolbar stays empty. Stacked on a narrow window. */}
       <Box
         sx={{
-          display: 'flex',
-          flexDirection: { xs: 'column', md: 'row' },
-          gap: 3,
+          display: 'grid',
+          gridTemplateColumns: {
+            xs: 'minmax(0, 1fr)',
+            md: '320px minmax(0, 1fr)',
+          },
+          columnGap: 3,
           marginTop: 2,
-          alignItems: 'stretch',
         }}
       >
-        {/* Bounded to the editor column's height: the picker is absolutely
+        {/* Bounded to the editor's height: the picker is absolutely
             positioned so it never grows the row, and scrolls internally. */}
         <Box
           sx={{
-            width: { xs: '100%', md: 320 },
-            flexShrink: 0,
+            gridColumn: { md: 1 },
+            gridRow: { md: 2 },
             position: 'relative',
+            marginBottom: { xs: 3, md: 0 },
           }}
         >
           <Box
@@ -1110,11 +1125,14 @@ function MailTemplateEdit() {
           </Box>
         </Box>
 
-        <div style={{ flex: 1, minWidth: 0 }}>
+        {/* No box of its own: toolbar and editor are placed in the grid. */}
+        <Box sx={{ display: 'contents' }}>
           <Stack
             direction="row"
             useFlexGap
             sx={{
+              gridColumn: { md: 2 },
+              gridRow: { md: 1 },
               alignItems: 'center',
               justifyContent: 'space-between',
               flexWrap: 'wrap',
@@ -1131,26 +1149,27 @@ function MailTemplateEdit() {
                 size="small"
                 aria-label={t('mailTemplates.edit.bodyMode')}
               >
-                {(
-                  [
-                    ['visual', t('mailTemplates.wysiwyg')],
-                    ['html', t('mailTemplates.rawHtml')],
-                    ['text', t('mailTemplates.textContent')],
-                  ] as const
-                )
-                  .filter(([mode]) => mode !== 'text' || !isLetter)
-                  .map(([mode, label]) => (
-                    <Button
-                      key={mode}
-                      variant={bodyMode === mode ? 'contained' : 'outlined'}
-                      aria-pressed={bodyMode === mode}
-                      onClick={() => switchMode(mode)}
-                    >
-                      {label}
-                    </Button>
-                  ))}
+                {bodyModes.map(([mode, label]) => (
+                  <Button
+                    key={mode}
+                    variant={bodyMode === mode ? 'contained' : 'outlined'}
+                    aria-pressed={bodyMode === mode}
+                    onClick={() => switchMode(mode)}
+                  >
+                    {label}
+                  </Button>
+                ))}
               </ButtonGroup>
-              <InfoTooltip text={t('mailTemplates.edit.bodyModeHelp')} />
+              {/* One bullet per mode on offer, each on its own line: the
+                  tooltip keeps line breaks. */}
+              <InfoTooltip
+                text={bodyModes
+                  .map(
+                    ([mode, label]) =>
+                      `• ${label}: ${t(`mailTemplates.edit.bodyModeHints.${mode}`)}`
+                  )
+                  .join('\n')}
+              />
             </Stack>
 
             <Stack
@@ -1209,9 +1228,14 @@ function MailTemplateEdit() {
             </Stack>
           </Stack>
 
-          <div
+          <Box
             onFocus={() => setActiveField('body')}
-            style={{ height: 'calc(100vh - 320px)', minHeight: 480 }}
+            sx={{
+              gridColumn: { md: 2 },
+              gridRow: { md: 2 },
+              height: 'calc(100vh - 320px)',
+              minHeight: 480,
+            }}
           >
             {/* eslint-disable react-hooks/refs */}
             {bodyMode === 'visual' ?
@@ -1230,39 +1254,60 @@ function MailTemplateEdit() {
                 onChange={handleHtmlChange}
               />
             : /* eslint-enable react-hooks/refs */
-              <div
-                style={{
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                }}
-              >
-                <Typography
-                  variant="caption"
-                  style={{ marginBottom: 6, color: 'text.secondary' }}
+              <Box sx={{ position: 'relative', height: '100%' }}>
+                {/* The text scrolls in a box of the editor's height, so the
+                    note below stays in the corner of what is on screen. */}
+                <Box
                   sx={{
-                    display: 'block',
+                    height: '100%',
+                    overflowY: 'auto',
+                    display: 'flex',
+                    flexDirection: 'column',
                   }}
                 >
-                  {t(
-                    'mailTemplates.edit.textContentReadonlyHint',
-                    'Automatically generated from the content. Edit the visual or HTML tab to change it.'
-                  )}
-                </Typography>
-                <TextField
-                  value={textContent}
-                  slotProps={{ input: { readOnly: true } }}
-                  style={{
-                    flex: 1,
-                    fontFamily: 'monospace',
-                    resize: 'none',
+                  <TextField
+                    value={textContent}
+                    slotProps={{ input: { readOnly: true } }}
+                    sx={{
+                      // Fills the editor's box even for a short text: the
+                      // note sits in the corner of that box.
+                      flex: '1 0 auto',
+                      '& .MuiInputBase-root': {
+                        flex: 1,
+                        alignItems: 'flex-start',
+                        fontFamily: 'monospace',
+                        // Room for the note, so it never covers the last line.
+                        paddingBottom: 7,
+                      },
+                    }}
+                    fullWidth
+                    multiline
+                  />
+                </Box>
+                {/* Says on the text itself why it cannot be typed into. Dark
+                    on light grey in both colour modes, and clicks pass
+                    through to the text below. */}
+                <Typography
+                  variant="caption"
+                  sx={{
+                    position: 'absolute',
+                    zIndex: 1,
+                    right: 16,
+                    bottom: 12,
+                    paddingBlock: 0.5,
+                    paddingInline: 1,
+                    borderRadius: 1,
+                    bgcolor: 'grey.200',
+                    color: 'grey.900',
+                    pointerEvents: 'none',
                   }}
-                  multiline
-                />
-              </div>
+                >
+                  {t('mailTemplates.edit.textContentGenerated')}
+                </Typography>
+              </Box>
             }
-          </div>
-        </div>
+          </Box>
+        </Box>
       </Box>
       <Dialog
         fullWidth
