@@ -7,6 +7,7 @@ import {
   PaymentsModule,
   SellableModule,
 } from '@wepublish/payment/api';
+import { PublicContentInvalidatorModule } from '@wepublish/public-content-cache/api';
 import { UserModule } from '@wepublish/user/api';
 import { GiftCodeAttemptLimiter } from './gift-code-attempt-limiter';
 import { GiftCodeInvoiceDataloader } from './gift-code-invoice.dataloader';
@@ -29,6 +30,7 @@ import { GiftCodeService } from './gift-code.service';
     MemberPlanModule,
     MemberContextModule,
     UserModule,
+    PublicContentInvalidatorModule,
   ],
   providers: [
     GiftCodeOfferService,

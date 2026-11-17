@@ -6,7 +6,7 @@ competing designs were scored and the risk-first one was built with two parts
 taken from the others. D18 to D26 are defaults chosen for open questions. They
 are built that way now and are marked "default, confirm with Karl" until he
 answers; [open-questions.md](open-questions.md) lists them as questions. D19
-and D27 to D40 are Karl's changes after the design. D11 was dropped by D32,
+and D27 to D45 are Karl's changes after the design. D11 was dropped by D32,
 D38 replaced the separate pay mutation of D36, D39 reverted D27, and D40
 replaced the plan price at purchase (D18 still prices redeemed
 subscriptions).
@@ -568,6 +568,9 @@ Consequences.
 
 ## D32: Website and gift block come later
 
+The blocks arrived with [D41](#d41-gift-code-blocks) to
+[D45](#d45-a-block-to-sell-gift-codes); the profile part is still to come.
+
 Decided by Karl.
 
 Context. The first version also had a website side: an "Abonnieren /
@@ -928,3 +931,128 @@ Consequences.
   extending an existing subscription does not touch its price.
 - Changing the plan's price no longer changes the gift's price; editors keep
   both in sync by hand. The form warns when they differ.
+
+## D41: Gift code blocks
+
+Decided by Karl (item 13). What the three block changes
+([D43](#d43-the-subscribe-block-links-to-a-redemption-page),
+[D44](#d44-a-block-to-redeem-a-code), [D45](#d45-a-block-to-sell-gift-codes))
+share on the API and in the editor.
+
+Context. Readers need a place on the website to redeem a code and to buy
+one, and the subscribe block should point gift recipients to that place.
+
+Decision.
+- `redeemGiftCode` and `giftCodeOffers` are new values in both `BlockType`
+  enums. The Prisma one needs migration
+  `20261116120000_add_gift_code_blocks`.
+- The feature flag gates the resolved data, not the storage. With
+  `gift-codes` off, `showGiftCodeRedemption` is false, the redemption page
+  is null and `giftCodeOffers` is `[]`. The editor offers the two blocks and
+  the subscribe option only while the feature is on.
+- Offer writes invalidate cached `pages` and `articles`, because those
+  answers now contain offers.
+
+Consequences.
+- Turning the feature on or off does not invalidate cached pages. They catch
+  up when they expire.
+- The editor saves what it loaded. Saving a subscribe block while the
+  feature is off stores `showGiftCodeRedemption` false, so the option has to
+  be ticked again after the feature comes back on.
+
+## D42: Website gift code blocks
+
+Decided by Karl (item 13), website part.
+
+Context. The blocks from [D41](#d41-gift-code-blocks) need website
+components, and the redeem form will later be reused on the profile page.
+
+Decision.
+- The forms are builder slots (`GiftCodeRedeem`, `GiftCodePurchase`) fed by
+  containers in `libs/membership/website`, which own the Apollo calls. The
+  block components only map block data onto the containers.
+- Logged-out readers get the subscribe form's login link, `UserForm` and
+  challenge, and are registered before the gift code call.
+
+Consequences.
+- The website has no feature check of its own. It relies on the API
+  returning no offers and no redemption page while the flag is off.
+
+## D43: The subscribe block links to a redemption page
+
+Decided by Karl (item 13a).
+
+Context. A gift recipient often lands on the subscribe page first and
+should find the place to redeem the code from there.
+
+Decision.
+- `SubscribeBlock.showGiftCodeRedemption` (default false) and
+  `giftCodeRedemptionPageId`. The API resolves `giftCodeRedemptionPage`
+  through `PageDataloaderService`, like other page links.
+- The editor shows a page picker and a link text field once the option is
+  ticked; unticking clears both.
+- The website shows the block's link text beside the "Abo wählen" heading,
+  linking to the page's URL. Without a text it falls back to «Willst du ein
+  Geschenkabo einlösen? Hier klicken.» (Karl asked for the text to come from
+  the block.) The link is a
+  `giftCodeRedemptionUrl` prop of `Subscribe`, so tenant subscribe forms
+  that reuse the lib component get it.
+
+Consequences.
+- No link when the option is off, the page is missing or the feature is off.
+- Tenants that replace `Subscribe` completely do not show the link unless
+  they read `giftCodeRedemptionUrl`.
+
+## D44: A block to redeem a code
+
+Decided by Karl (item 13b).
+
+Context. Readers need a place to enter a code. The profile page will need
+the same form later.
+
+Decision.
+- `RedeemGiftCodeBlock` with only the registration fields
+  (`SubscribeBlockField`, default first name, password, password repeated).
+  It had a title and lead at first; Karl dropped them because the title and
+  rich text blocks already cover that.
+- The website form is the `GiftCodeRedeem` slot behind
+  `GiftCodeRedeemContainer`, which takes no block data. It calls
+  `redeemGiftCode` and shows one sentence per `action`, or the API's
+  generic error.
+
+Consequences.
+- The profile page can mount `GiftCodeRedeemContainer` as is; that part is
+  not built ([open-questions.md](open-questions.md#for-the-website-step)).
+
+## D45: A block to sell gift codes
+
+Decided by Karl (item 13c).
+
+Context. Offers were taken out of the subscribe block
+([D32](#d32-website-and-gift-block-come-later)), so they need a block of
+their own.
+
+Decision.
+- `GiftCodeOffersBlock` stores the registration fields, `giftCodeOfferIds`
+  (picked in the editor from active offers), `showDiscountCodes` (default
+  false) and `askRecipientName` (default true). It has none of the
+  subscribe block's layout options.
+- `giftCodeOffers` returns the active offers of active member plans among
+  the ids, in the stored order. An offer of an inactive plan would be
+  refused by `purchaseGiftCode`, so the block leaves it out.
+- `purchaseGiftCode.recipientName` became optional, because
+  `askRecipientName: false` must still allow a purchase. Empty or blank is
+  stored as null, as for admin codes ([D34](#d34-admins-can-create-codes-without-a-purchase)).
+  When the block asks for the name, the website requires it.
+- The discount code input shows only when the block's `showDiscountCodes`
+  and the offer's `allowDiscountCodes` are both on.
+- The website form is the `GiftCodePurchase` slot behind
+  `GiftCodePurchaseContainer`. It pays through the subscribe flow's
+  `handlePayment` and `PaymentForm` (`usePurchaseGiftCode`); success and
+  failure go to `/profile`.
+
+Consequences.
+- `/profile` does not list the buyer's codes yet, so after paying the buyer
+  sees no code on the website until the profile part is built.
+- An active offer whose payment methods are all unusable still shows, and
+  its form cannot be sent.

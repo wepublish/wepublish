@@ -35,9 +35,10 @@ Bexio invoice payment in V1
 means subscription-less invoice support in its provider, then flipping
 `supportsStandaloneInvoices`.
 An invoice sells one kind of thing
-([D31](decisions.md#d31-one-sellable-kind-per-invoice)). The website and a
-separate gift block come later, built together with Karl
-([D32](decisions.md#d32-website-and-gift-block-come-later)).
+([D31](decisions.md#d31-one-sellable-kind-per-invoice)). Gift offers are
+sold from a block of their own
+([D45](decisions.md#d45-a-block-to-sell-gift-codes)), and codes are redeemed
+from another block ([D44](decisions.md#d44-a-block-to-redeem-a-code)).
 A 100 % discount code may make a gift free; CHF 0 invoices of gifts, new
 subscriptions and upgrades are paid without contacting a provider
 ([D33](decisions.md#d33-chf-0-invoices-are-paid-without-a-provider)).
@@ -85,11 +86,24 @@ refused.
 
 ## For the website step
 
-- Where does the buyer land after paying an open code? The first website
-  version showed the same "Danke für deinen Kauf" alert as for a new
-  purchase.
-- Which pages carry the gift block, and does it show every active offer or a
-  chosen set, as the subscribe block's `giftCodeOfferIds` did (D11)?
+The two gift code blocks and the subscribe block link are built
+([D43](decisions.md#d43-the-subscribe-block-links-to-a-redemption-page) to
+[D45](decisions.md#d45-a-block-to-sell-gift-codes)). The gift block sells a
+chosen set of offers. Still open:
+
+- The profile page: the buyer's codes (`myGiftCodes`) and a redeem field.
+  The plan is to mount `GiftCodeRedeemContainer` there as is
+  ([05-editor-and-website.md](05-editor-and-website.md#not-built-yet-the-profile)).
+  Should the profile show it to every reader, or only on tenants with the
+  feature on?
+- Buyers land on `/profile` after paying, which shows no code and no
+  thank-you note yet. Should a purchase get a success page of its own?
+- An active offer whose payment methods are all unusable still shows in the
+  block, and its form cannot be sent. Should the block leave such offers
+  out, as it does offers of inactive plans?
+- The password and email mismatch messages in the gift code forms are
+  German only, copied from the subscribe form, so French readers see German
+  there too. Fix both forms together?
 
 ## For the redemption step
 
@@ -101,9 +115,9 @@ refused.
   live with one message unless this changes.
 - Is 10 attempts per user per hour the right limit for codes? It only
   counts logged-in users; many accounts can still guess in parallel.
-- Where does the website offer the "redeem a code" field: in the profile, on
-  the payment page of an open invoice, on a page of its own, or several of
-  these? The mutation is the same everywhere.
+- Besides the redeem block and, later, the profile, should the payment page
+  of an open invoice offer the "redeem a code" field too? The mutation is
+  the same everywhere.
 - The spec merges the discount code field into "Gutschein- oder Rabattcode".
   The design has not looked at how that field and the redemption mutation fit
   together.

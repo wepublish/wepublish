@@ -313,7 +313,30 @@ fragment BlockWithoutTeaser on BlockContent {
     goodieMinValue
     goodieMinValueAppliesToUpgrade
     hideRepeatGoodieOnUpgrade
+    showGiftCodeRedemption
+    giftCodeRedemptionPageId
+    giftCodeRedemptionLinkText
     type
+  }
+
+  ... on RedeemGiftCodeBlock {
+    disabled
+    blockStyle
+    blockStyleName
+    type
+    fields
+  }
+
+  ... on GiftCodeOffersBlock {
+    disabled
+    blockStyle
+    blockStyleName
+    type
+    fields
+    giftCodeOfferIds
+    defaultGiftCodeOfferId
+    showDiscountCodes
+    askRecipientName
   }
 
   ... on MailchimpFormBlock {

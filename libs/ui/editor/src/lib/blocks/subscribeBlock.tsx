@@ -59,6 +59,8 @@ import {
 } from '../atoms/blockSection';
 import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
 import { InfoTooltip, InfoTrigger } from '../atoms/infoTooltip';
+import { SelectPage } from '../atoms/page/selectPage';
+import { useFeature } from '../featureContext';
 import {
   getPeriodPriceRange,
   getPlanPeriodicities,
@@ -68,7 +70,7 @@ import { ClickPopover } from '../popover';
 import { PAYMENT_PERIODICITY_MONTHS } from '../utility';
 import { SubscribeBlockValue } from './types';
 
-const PlanList = styled('ul')`
+export const PlanList = styled('ul')`
   container-type: inline-size;
   display: grid;
   margin: 0;
@@ -117,7 +119,7 @@ const PlanItem = styled('li')`
 `;
 
 const DragHandle = styled('div')`
-  grid-row: span 2;
+  grid-row: 1 / -1;
   align-self: start;
 
   @container (max-width: 480px) {
@@ -126,7 +128,7 @@ const DragHandle = styled('div')`
   }
 `;
 
-const PlanHeader = styled('div')`
+export const PlanHeader = styled('div')`
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto auto;
   grid-template-areas: 'summary layout default';
@@ -146,7 +148,7 @@ const PlanHeader = styled('div')`
   }
 `;
 
-const PlanSummary = styled('div')`
+export const PlanSummary = styled('div')`
   grid-area: summary;
   display: grid;
   min-width: 0;
@@ -180,7 +182,7 @@ const PlanLayoutToggle = styled(ToggleButtonGroup)`
   }
 `;
 
-const PlanDefault = styled(FormControlLabel)`
+export const PlanDefault = styled(FormControlLabel)`
   grid-area: default;
   margin: 0;
   white-space: nowrap;
@@ -222,7 +224,7 @@ const PlanAmountsBreakdown = styled('div')`
   font-size: 12px;
 `;
 
-const InlineLabel = styled('span')`
+export const InlineLabel = styled('span')`
   display: inline-flex;
   gap: ${({ theme }) => theme.spacing(0.5)};
   align-items: center;
@@ -338,7 +340,7 @@ type SortablePlanRowProps = {
   children: ReactNode;
 };
 
-const SortablePlanRow = ({
+export const SortablePlanRow = ({
   id,
   label,
   disabled,
@@ -395,6 +397,47 @@ const SUBSCRIBE_BLOCK_FIELDS = [
   SubscribeBlockField.Password,
   SubscribeBlockField.PasswordRepeated,
 ];
+
+export const SubscribeBlockFieldsSection = ({
+  fields,
+  disabled,
+  onChange,
+}: {
+  fields: SubscribeBlockField[];
+  disabled?: boolean;
+  onChange: (fields: SubscribeBlockField[]) => void;
+}) => {
+  const { t } = useTranslation();
+
+  return (
+    <BlockSection>
+      <BlockSectionHeader title={t('blocks.subscribe.selectFields')} />
+
+      <Autocomplete
+        multiple
+        disableCloseOnSelect
+        disabled={disabled}
+        options={SUBSCRIBE_BLOCK_FIELDS}
+        getOptionLabel={field => t(`blocks.subscribe.${field}`)}
+        value={fields}
+        onChange={(_event, fields) => onChange(fields)}
+        renderInput={params => (
+          <TextField
+            {...params}
+            slotProps={{
+              ...params.slotProps,
+              htmlInput: {
+                ...params.slotProps.htmlInput,
+                'aria-label': t('blocks.subscribe.selectFields'),
+              },
+            }}
+            helperText={t('blocks.subscribe.selectFieldsSelectionHint')}
+          />
+        )}
+      />
+    </BlockSection>
+  );
+};
 
 export const renderLayouts: SubscribeBlockRenderLayout[] = [
   SubscribeBlockRenderLayout.None,
@@ -502,6 +545,7 @@ export const SubscribeBlock = ({
   disabled,
 }: BlockProps<SubscribeBlockValue>) => {
   const { t } = useTranslation();
+  const giftCodes = useFeature('gift-codes');
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 4 } })
@@ -820,10 +864,10 @@ export const SubscribeBlock = ({
   );
 
   const handleFieldsChange = useCallback(
-    (fields: string[]) => {
+    (fields: SubscribeBlockField[]) => {
       onChange(current => ({
         ...current,
-        fields: (fields as SubscribeBlockField[]) ?? [],
+        fields: fields ?? [],
       }));
     },
     [onChange]
@@ -1387,32 +1431,78 @@ export const SubscribeBlock = ({
         />
       </BlockSection>
 
-      <BlockSection>
-        <BlockSectionHeader title={t('blocks.subscribe.selectFields')} />
+      {giftCodes && (
+        <BlockSection>
+          <BlockSectionHeader
+            title={t('blocks.subscribe.giftCodeRedemptionHeading')}
+          />
 
-        <Autocomplete
-          multiple
-          disableCloseOnSelect
-          disabled={disabled}
-          options={SUBSCRIBE_BLOCK_FIELDS}
-          getOptionLabel={field => t(`blocks.subscribe.${field}`)}
-          value={value.fields}
-          onChange={(_event, fields) => handleFieldsChange(fields)}
-          renderInput={params => (
-            <TextField
-              {...params}
-              slotProps={{
-                ...params.slotProps,
-                htmlInput: {
-                  ...params.slotProps.htmlInput,
-                  'aria-label': t('blocks.subscribe.selectFields'),
-                },
-              }}
-              helperText={t('blocks.subscribe.selectFieldsSelectionHint')}
-            />
-          )}
-        />
-      </BlockSection>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={!!value.showGiftCodeRedemption}
+                disabled={disabled}
+                onChange={(_event, checked) =>
+                  onChange(current => ({
+                    ...current,
+                    showGiftCodeRedemption: checked,
+                    giftCodeRedemptionPageId:
+                      checked ? current.giftCodeRedemptionPageId : null,
+                    giftCodeRedemptionLinkText:
+                      checked ? current.giftCodeRedemptionLinkText : null,
+                  }))
+                }
+              />
+            }
+            label={
+              <Typography variant="body2">
+                {t('blocks.subscribe.showGiftCodeRedemption')}
+              </Typography>
+            }
+          />
+
+          <Collapse
+            in={!!value.showGiftCodeRedemption}
+            unmountOnExit
+          >
+            <SubSettings>
+              <SelectPage
+                label={t('blocks.subscribe.giftCodeRedemptionPage')}
+                disabled={disabled}
+                selectedPage={value.giftCodeRedemptionPageId}
+                setSelectedPage={giftCodeRedemptionPageId =>
+                  onChange(current => ({
+                    ...current,
+                    giftCodeRedemptionPageId,
+                  }))
+                }
+              />
+
+              <TextField
+                fullWidth
+                label={t('blocks.subscribe.giftCodeRedemptionLinkText')}
+                helperText={t(
+                  'blocks.subscribe.giftCodeRedemptionLinkTextHelp'
+                )}
+                disabled={disabled}
+                value={value.giftCodeRedemptionLinkText ?? ''}
+                onChange={event =>
+                  onChange(current => ({
+                    ...current,
+                    giftCodeRedemptionLinkText: event.target.value,
+                  }))
+                }
+              />
+            </SubSettings>
+          </Collapse>
+        </BlockSection>
+      )}
+
+      <SubscribeBlockFieldsSection
+        fields={value.fields}
+        disabled={disabled}
+        onChange={handleFieldsChange}
+      />
     </BlockSections>
   );
 };

@@ -1,6 +1,7 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Currency, PaymentPeriodicity, PrismaClient } from '@prisma/client';
 import { PaymentsService } from '@wepublish/payment/api';
+import { PublicContentCacheInvalidator } from '@wepublish/public-content-cache/api';
 import { GiftCodeOfferService } from './gift-code-offer.service';
 
 const yearlyPrice = (
@@ -106,19 +107,61 @@ const setup = () => {
     getStandalonePaymentMethods: vi.fn().mockResolvedValue([]),
   };
 
+  const publicContentCache = { invalidate: vi.fn() };
+
   const service = new GiftCodeOfferService(
     prisma as unknown as PrismaClient,
-    payments as unknown as PaymentsService
+    payments as unknown as PaymentsService,
+    publicContentCache as unknown as PublicContentCacheInvalidator
   );
 
-  return { service, prisma, payments };
+  return { service, prisma, payments, publicContentCache };
 };
 
 describe('GiftCodeOfferService', () => {
-  it('depends only on prisma and the payments service', () => {
+  it('depends only on prisma, the payments service and the public content cache', () => {
     expect(
       Reflect.getMetadata('design:paramtypes', GiftCodeOfferService)
-    ).toEqual([PrismaClient, PaymentsService]);
+    ).toEqual([PrismaClient, PaymentsService, PublicContentCacheInvalidator]);
+  });
+
+  describe('public content cache', () => {
+    type Context = ReturnType<typeof setup>;
+
+    it.each([
+      [
+        'creating',
+        ({ service }: Context) => service.createOffer(createInput()),
+      ],
+      [
+        'updating',
+        ({ service }: Context) =>
+          service.updateOffer({ id: 'offer-1', name: 'Neu' }),
+      ],
+      ['deleting', ({ service }: Context) => service.deleteOffer('offer-1')],
+    ])(
+      'invalidates cached pages and articles after %s an offer, because gift blocks show offers',
+      async (_action, write) => {
+        const context = setup();
+
+        await write(context);
+
+        expect(context.publicContentCache.invalidate).toHaveBeenCalledWith(
+          'pages',
+          'articles'
+        );
+      }
+    );
+
+    it('keeps the cache when a write is rejected', async () => {
+      const context = setup();
+      context.prisma.giftCode.count.mockResolvedValue(1);
+
+      await expect(context.service.deleteOffer('offer-1')).rejects.toThrow(
+        BadRequestException
+      );
+      expect(context.publicContentCache.invalidate).not.toHaveBeenCalled();
+    });
   });
 
   describe('getPrice', () => {

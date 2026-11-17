@@ -1,9 +1,8 @@
 # Editor and website
 
-The editor UI for managing gift codes, and what the website will build on.
-Everything in the editor is hidden while the `gift-codes` feature is off.
-There is no website UI yet
-([D32](decisions.md#d32-website-and-gift-block-come-later)).
+The editor UI for managing gift codes, and the website blocks.
+Everything in the editor is hidden while the `gift-codes` feature is off; on
+the website the API hides the data instead (no offers, no redemption link).
 
 ## GraphQL documents and codegen
 
@@ -11,7 +10,11 @@ There is no website UI yet
 list, get, create, update and delete, and the code list fragment, list, get,
 create (`CreateGiftCodes`) and cancel. The payment method multi-select reuses the existing
 `PaymentMethodList` query. `invoice.graphql` adds `userID` and `sellableKind`
-to the `Invoice` fragment. The website has no gift code documents yet.
+to the `Invoice` fragment. The website's
+`libs/website/api/src/lib/schemas/gift-code.graphql` holds
+`FullGiftCodeOffer`, `FullGiftCodeRedemption`, `PurchaseGiftCode` and
+`RedeemGiftCode`; `block-content.graphql` holds `FullRedeemGiftCodeBlock`,
+`FullGiftCodeOffersBlock` and the two new `FullSubscribeBlock` fields.
 
 Boot the API so `schema-v2.graphql` is refreshed, then run
 `pnpm run generate-api`. A stale SDL gives wrong generated types. Never edit
@@ -176,7 +179,30 @@ with the email and PDF step.
 `memberPlanList.tsx` shows the delete error in a snackbar, so the new "still
 used by subscriptions or gift codes" message is visible.
 
-The subscribe block's editor is unchanged. Offers get their own block later.
+### Blocks (`libs/ui/editor/src/lib/blocks/`)
+
+- `BlockCaseProps.feature` (in `atoms/blockList.tsx`) hides a block from the
+  add-block menu unless `useFeatures()` has the key, and while features are
+  still loading. `RedeemGiftCode` and `GiftCodeOffers` set
+  `feature: 'gift-codes'`. Existing blocks of those types still render when
+  the flag is off.
+- `subscribeBlock.tsx`: a "Gift codes" section, shown only with
+  `useFeature('gift-codes')`, with the checkbox `showGiftCodeRedemption` and,
+  when it is ticked, a `SelectPage` for `giftCodeRedemptionPageId` and a text
+  field for `giftCodeRedemptionLinkText`. Unticking clears both. The user field picker is now the exported
+  `SubscribeBlockFieldsSection`, which the two new blocks reuse.
+- `redeemGiftCodeBlock.tsx`: only the user fields.
+- `giftCodeOffersBlock.tsx`: a multi-select of active offers
+  (`GiftCodeOfferList`, `filter: {active: true}`, 200), below it the chosen
+  offers in their own "order" section, as the subscribe block's sortable list
+  (`PlanList`, `SortablePlanRow`, dnd-kit) with name, price · periodicity and
+  a "Standard" radio per row (`defaultGiftCodeOfferId`; the first offer counts
+  as default while it is unset, and it is cleared when that offer is
+  removed), the checkboxes "ask for the recipient's name" and "show discount
+  code input" one per line, and the user fields. The list parts are exported
+  from `subscribeBlock.tsx` for this.
+- `types.ts` maps both blocks and the two subscribe fields between
+  `FullBlock` and `BlockContentInput`; `block.graphql` selects them.
 
 ### Locales
 
@@ -184,42 +210,91 @@ The subscribe block's editor is unchanged. Offers get their own block later.
 `de` and `fr` of `apps/editor/src/app/locales/`. German is Swiss German (no ß, «»
 quotes, lowercase du); French uses vous. `locales.spec.ts` checks parity.
 
-## Website and the gift block
+## Website
 
-Karl builds the website side and a separate gift block later
-([D32](decisions.md#d32-website-and-gift-block-come-later)), so none of it
-exists yet. The subscribe block, the profile page, the builder and the
-website translations are as on master. What is already in place for that
-step:
+The website has no feature check of its own: with `gift-codes` off the API
+returns no offers and no redemption page, so the blocks render nothing and
+the link stays hidden. Translations live in
+`libs/website/translations` (`giftCode.*`, `subscribe.giftCodeRedemption.link`).
 
-- `redeemGiftCode(code)` is the one mutation a "redeem a code" field needs.
-  Its `action` says what happened (`paidInvoice`, `extendedSubscription` or
-  `createdSubscription`), so the page can show the right confirmation and
-  link `subscription`. A refused code always gets the same message, "This
-  gift code cannot be redeemed.", and the 11th attempt in an hour gets
-  Forbidden ([04-api.md](04-api.md#redeemgiftcode)).
-- `purchaseGiftCode` and `payGiftCode` return a `Payment`. Hooks built like
-  `useSubscribe` in `libs/payment/website/src/lib/handle-payment.tsx` can pass
-  it to the file's internal `handlePayment`, which already covers Stripe
-  Elements, Payrexx and Mollie redirects, and payments that are paid at once,
-  including a gift that a 100 % discount code makes free.
-- Success and failure URLs come back with `invoiceId`, `amount`, `currency`
-  and `sellableKind=giftCode` added
-  ([03-payments.md](03-payments.md#paymentsservice-paymentsservicets)).
-- `myGiftCodes` returns the buyer's codes newest first, with `code` only once
-  a code is issued, and `[]` while the feature is off. A list that calls
+### Builder slots (`libs/website/builder`)
+
+| Slot | Props | Default component |
+| --- | --- | --- |
+| `GiftCodeRedeem` | `BuilderGiftCodeRedeemProps` | `GiftCodeRedeem` |
+| `GiftCodePurchase` | `BuilderGiftCodePurchaseProps` | `GiftCodePurchase` |
+| `blocks.RedeemGiftCode` | `BuilderRedeemGiftCodeBlockProps` | `RedeemGiftCodeBlock` |
+| `blocks.GiftCodeOffers` | `BuilderGiftCodeOffersBlockProps` | `GiftCodeOffersBlock` |
+
+All four default to `NoComponent` in the builder context and are registered
+in `libs/website/src/lib/website.provider.tsx`. `BuilderSubscribeProps` gets
+the optional `giftCodeRedemptionUrl` and `giftCodeRedemptionText`.
+
+### Components (`libs/membership/website/src/lib/gift-code/`)
+
+- `GiftCodeRedeem` is presentational: a code field, and for logged-out
+  readers a login link (`/login?intended=<path>`), the `UserForm` with the
+  block's fields and the challenge, like the subscribe form. After success it
+  replaces the form with one sentence per `action`
+  (`giftCode.redeem.success.*`). Errors show the API message, which is the
+  same generic text for every refused code.
+- `GiftCodeRedeemContainer` runs `RedeemGiftCode` (and `Register` first when
+  logged out) and renders the `GiftCodeRedeem` slot. It takes no block data,
+  so the profile page can mount it later as is.
+- `GiftCodePurchase`: offer radios (name, duration, price), the recipient
+  name (required, at most 200 characters, only with `askRecipientName`), the
+  discount code (only when the block's `showDiscountCodes` and the offer's
+  `allowDiscountCodes` are both on), `UserForm` and challenge when logged
+  out, and `PaymentMethodPicker` over the selected offer's `paymentMethods`.
+  It sends `recipientName: null` and `discountCode: null` when they are not
+  shown or empty.
+- `GiftCodePurchaseContainer` uses `usePurchaseGiftCode` from
+  `libs/payment/website/src/lib/handle-payment.tsx` and mounts `PaymentForm`,
+  so Stripe, Payrexx, Mollie and immediately paid (CHF 0) purchases redirect
+  like subscribing. Success and failure both go to `/profile` (failure with
+  `?error=`); offers have no success page of their own.
+- The register-then-act schema handling is shared by both forms in
+  `gift-code-register-schema.ts`.
+
+### Blocks (`libs/block-content/website/src/lib/gift-code/`)
+
+- `RedeemGiftCodeBlock`: only `GiftCodeRedeemContainer` with the block's
+  fields. Headings and intro text come from the usual title and rich text
+  blocks around it.
+- `GiftCodeOffersBlock`: `GiftCodePurchaseContainer` with the block's offers,
+  options and `defaultGiftCodeOfferId` as `defaultOfferId` (the first offer
+  when it is unset or no longer listed); nothing when the list is empty.
+- Both forms reuse the subscribe form's layout parts (`SubscribeWrapper`,
+  `SubscribeSection`, `SubscribeButton`, ...), and the offers render as the
+  builder's `MemberPlanItem` inside `MemberPlanPickerRadios`, so tenant
+  overrides of the plan cards apply to the offer cards too.
+- `SubscribeBlock` passes `giftCodeRedemptionPage.url` as
+  `giftCodeRedemptionUrl` when `showGiftCodeRedemption` is on, and
+  `giftCodeRedemptionLinkText` as `giftCodeRedemptionText`. `Subscribe`
+  then renders a link with that text, or «Willst du ein Geschenkabo einlösen?
+  Hier klicken.» when the block has none,
+  beside the "Abo wählen" heading in the `memberPlans` area (the heading
+  still shows only with more than one plan). Without a URL the markup is
+  unchanged. Tenant subscribe blocks that wrap the lib's `SubscribeBlock`
+  (zwoelf, factuel, reflekt, hauptstadt, onlinereports) get the link without
+  changes.
+
+Mocks: `mockGiftCodeOffer`, `mockGiftCodeRedemption`,
+`mockRedeemGiftCodeBlock` and `mockGiftCodeOffersBlock` in
+`libs/mocks/website`.
+
+### Not built yet: the profile
+
+The buyer's codes and a redeem field on `/profile` come later. What that
+step can use:
+
+- `GiftCodeRedeemContainer` mounts without block data; pass the
+  registration fields the profile wants, or none for a logged-in reader.
+- `myGiftCodes` returns the buyer's codes newest first, with `code` only
+  once a code is issued, and `[]` while the feature is off. Calling
   `checkInvoiceStatus(invoiceId)` for unpaid codes (`ordered`, or `issued`
   with `paid` false) picks up a payment whose webhook has not arrived yet.
-- `GiftCodeOffer.price` (cents, in `memberPlan.currency`) and `paymentMethods` (already filtered to usable
-  methods) are what an offer card and a payment method picker need. A
-  discount code can be checked before submit with `createSubscriptionInfo`,
-  which rounds like `purchaseGiftCode`.
-- The offer queries need a gift code permission today, so a public gift block
-  will need its own resolver for active offers, and offer writes then have to
-  invalidate the cached `pages` and `articles` again
-  ([04-api.md](04-api.md#offers-gift-code-offerresolverts)). Importing
-  `gift-code/api` from `block-content` closes a module loop, see
-  [D10](decisions.md#d10-a-new-lib-libsgift-codeapi).
-- Website specs render with `renderWithProviders` from
-  `@wepublish/mocks/website` (see `.claude/docs/testing.md`); gift code mocks
-  go into `libs/mocks/website` with them.
+- Purchases come back to `/profile` with `invoiceId`, `amount`, `currency`
+  and `sellableKind=giftCode` added
+  ([03-payments.md](03-payments.md#paymentsservice-paymentsservicets)), so
+  the profile can show a thank-you note for a gift.

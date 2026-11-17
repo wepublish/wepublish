@@ -18,6 +18,7 @@ import {
   isPaymentMethodRetired,
   PaymentsService,
 } from '@wepublish/payment/api';
+import { PublicContentCacheInvalidator } from '@wepublish/public-content-cache/api';
 import {
   getMaxTake,
   getPeriodPriceRange,
@@ -78,7 +79,8 @@ const rethrowDuplicateMemberPlan = (error: unknown): never => {
 export class GiftCodeOfferService {
   constructor(
     private prisma: PrismaClient,
-    private payments: PaymentsService
+    private payments: PaymentsService,
+    private publicContentCache: PublicContentCacheInvalidator
   ) {}
 
   async getOffers({
@@ -164,7 +166,7 @@ export class GiftCodeOfferService {
     });
     await this.assertMemberPlanIsFree(input.memberPlanId);
 
-    return this.prisma.giftCodeOffer
+    const offer = await this.prisma.giftCodeOffer
       .create({
         data: {
           ...input,
@@ -177,6 +179,10 @@ export class GiftCodeOfferService {
         },
       })
       .catch(rethrowDuplicateMemberPlan);
+
+    await this.invalidateGiftBlocks();
+
+    return offer;
   }
 
   async updateOffer({
@@ -220,7 +226,7 @@ export class GiftCodeOfferService {
       id
     );
 
-    return this.prisma.giftCodeOffer
+    const offer = await this.prisma.giftCodeOffer
       .update({
         where: { id },
         data: {
@@ -236,6 +242,10 @@ export class GiftCodeOfferService {
         },
       })
       .catch(rethrowDuplicateMemberPlan);
+
+    await this.invalidateGiftBlocks();
+
+    return offer;
   }
 
   async deleteOffer(id: string) {
@@ -249,7 +259,15 @@ export class GiftCodeOfferService {
       );
     }
 
-    return this.prisma.giftCodeOffer.delete({ where: { id } });
+    const offer = await this.prisma.giftCodeOffer.delete({ where: { id } });
+
+    await this.invalidateGiftBlocks();
+
+    return offer;
+  }
+
+  private invalidateGiftBlocks() {
+    return this.publicContentCache.invalidate('pages', 'articles');
   }
 
   private async assertMemberPlanIsFree(memberPlanId: string, offerId?: string) {

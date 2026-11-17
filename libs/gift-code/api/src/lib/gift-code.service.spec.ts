@@ -464,17 +464,34 @@ describe('GiftCodeService', () => {
       });
     });
 
-    it.each([
-      ['an empty recipient name', { recipientName: '   ' }],
-      ['a too long recipient name', { recipientName: 'a'.repeat(201) }],
-    ])('rejects %s', async (_, overrides) => {
+    it('rejects a too long recipient name', async () => {
       const { service, checkout } = setup();
 
       await expect(
-        service.purchase(buyer, purchaseInput(overrides))
+        service.purchase(
+          buyer,
+          purchaseInput({ recipientName: 'a'.repeat(201) })
+        )
       ).rejects.toThrow(BadRequestException);
       expect(checkout.checkout).not.toHaveBeenCalled();
     });
+
+    it.each([undefined, null, '', '   '])(
+      'stores the recipient name %j as null',
+      async recipientName => {
+        const { service, checkout, tx } = setup();
+
+        await service.purchase(buyer, purchaseInput({ recipientName }));
+        await checkoutLine(checkout).attach(
+          tx as never,
+          { id: 'item-9' } as never
+        );
+
+        expect(tx.giftCode.create).toHaveBeenCalledWith({
+          data: expect.objectContaining({ recipientName: null }),
+        });
+      }
+    );
   });
 
   describe('pay', () => {

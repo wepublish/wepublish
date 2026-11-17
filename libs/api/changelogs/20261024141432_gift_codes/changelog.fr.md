@@ -1,19 +1,17 @@
 ---
 title: Codes cadeaux, et abonnements gratuits avec un code de réduction de 100 %
-lead: Les abonnements et les changements d’abonnement rendus gratuits par un code de réduction de 100 % fonctionnent désormais. Les codes cadeaux sont prêts dans l’éditeur ; l’achat et l’utilisation d’un code sur le site web suivront, la fonction reste donc désactivée d’ici là.
+lead: Les abonnements et les changements d’abonnement rendus gratuits par un code de réduction de 100 % fonctionnent désormais. Deux nouveaux blocs permettent de vendre et d’utiliser des codes cadeaux sur votre site ; ils sont activés par média.
 ---
 
-Déjà actif sur tous les médias : un nouvel abonnement ou un changement
-d’abonnement qui coûte CHF 0, par exemple avec un code de réduction de 100 %
-ou parce que le crédit de l’abonnement actuel couvre tout le changement, est
-maintenant confirmé immédiatement, sans passer par le prestataire de paiement.
-Jusqu’ici, ces commandes échouaient chez le prestataire.
+Ceci s’applique déjà à tous les médias : un nouvel abonnement ou un
+changement d’abonnement qui coûte CHF 0 est maintenant confirmé
+immédiatement, sans passer par le prestataire de paiement. C’est le cas par
+exemple avec un code de réduction de 100 %, ou quand le crédit de
+l’abonnement actuel couvre tout le changement. Jusqu’ici, ces commandes
+échouaient chez le prestataire.
 
-Les codes cadeaux sont activés par média dès que les lecteur·rice·s peuvent
-utiliser un code sur le site web. D’ici là, rien ne change pour les codes
-cadeaux, ni dans l’éditeur ni sur votre site. Les lecteur·rice·s ne peuvent pas encore
-acheter de cadeau sur le site ; le formulaire d’achat et un bloc cadeau
-séparé suivront.
+Les codes cadeaux sont activés par média. Tant qu’ils ne le sont pas, rien ne
+change pour les codes cadeaux, ni dans l’éditeur ni sur votre site.
 
 Une fois les codes cadeaux activés :
 
@@ -31,7 +29,7 @@ Une fois les codes cadeaux activés :
 - L’acheteur·euse voit son code dès que le paiement est arrivé. Une commande
   qui reste impayée est annulée après 14 jours.
 - **Autoriser les codes de réduction** permet de saisir un code de réduction
-  du plan de l’offre. Un code de 100 % rend le cadeau gratuit, et le code
+  du plan de l’offre. Avec un code de 100 %, le cadeau est gratuit et le code
   cadeau est émis tout de suite.
 - **Renouveler automatiquement** définit si l’abonnement démarré avec un code
   continue après la période offerte, et avec quelle méthode de paiement du
@@ -39,19 +37,33 @@ Une fois les codes cadeaux activés :
 - **Cadeaux → Codes cadeaux** liste tous les codes avec leur statut,
   l’acheteur·euse, la personne qui l’a utilisé, le nom du destinataire et le
   paiement. Vous pouvez filtrer par paiement (payé ou non payé) et par origine
-  (achat ou créé par un·e admin). Vous pouvez annuler un code ou marquer sa
-  facture comme payée. L’annulation ne rembourse pas l’argent ; le
-  remboursement se fait toujours chez le prestataire de paiement.
+  (achat ou créé par un·e admin), annuler un code ou marquer sa facture comme
+  payée. L’annulation ne rembourse pas l’argent ; vous effectuez toujours le
+  remboursement chez le prestataire de paiement.
 - **Créer des codes** dans la même liste distribue des codes sans achat, par
   exemple lors d’événements : choisissez une offre, le nombre de codes
   (jusqu’à 500) et, si vous le souhaitez, le nom du destinataire. Les codes
   sont valables tout de suite et se copient en une fois.
-- À l’utilisation, We.Publish choisit lui-même ce qui se passe. Si la
+- Quand un code est utilisé, We.Publish détermine lui-même la suite. Si la
   personne a déjà un abonnement non résilié avec le même plan et la même
   durée, le code paie sa facture ouverte ou la période suivante. Sinon, le
   code démarre un nouvel abonnement avec le réglage de renouvellement de
-  l’offre. La méthode de paiement d’un abonnement ne change jamais. Le site
-  web ne propose pas encore l’utilisation d’un code. La liste indique quelle
-  facture un code a payée, avec un lien vers l’abonnement.
+  l’offre. La méthode de paiement d’un abonnement ne change jamais. La liste
+  indique quelle facture un code a payée, avec un lien vers l’abonnement.
+- Le bloc **Vendre des codes cadeaux** vend des codes cadeaux sur votre site.
+  Vous choisissez quelles offres il affiche et dans quel ordre, quels champs
+  d’inscription remplissent les acheteur·euse·s non connecté·e·s, si le nom
+  du destinataire est demandé et si un code de réduction peut être saisi. Le
+  paiement passe par les mêmes méthodes et redirections que l’abonnement.
+- Dans le bloc **Utiliser un code cadeau**, les lecteur·rice·s saisissent un
+  code. Celles et ceux qui ne sont pas connecté·e·s peuvent se connecter ou
+  s’inscrire dans le même formulaire. Le bloc indique ensuite si le code a
+  démarré un nouvel abonnement, prolongé un abonnement existant ou payé une
+  facture ouverte.
+- Dans le bloc **S’abonner**, **Proposer d’utiliser un code cadeau** ajoute à
+  côté du choix de l’abonnement le lien « Vous souhaitez utiliser un
+  abonnement cadeau ? Cliquez ici. ». Il mène à la page que vous choisissez,
+  en général celle du bloc d’utilisation.
 
-Il n’y a pas encore d’e-mails ni de bons PDF pour les codes cadeaux.
+Les codes cadeaux n’ont pas encore d’e-mails ni de bons PDF, et les
+acheteur·euse·s ne voient pas encore leurs codes dans leur profil sur le site.

@@ -524,6 +524,11 @@
         "discountCodesHeading": "Discount codes",
         "showGoodies": "Show goodie selection",
         "showDiscountCodes": "Show discount code input",
+        "giftCodeRedemptionHeading": "Gift codes",
+        "showGiftCodeRedemption": "Show gift code redemption link",
+        "giftCodeRedemptionPage": "Redemption page",
+        "giftCodeRedemptionLinkText": "Link text",
+        "giftCodeRedemptionLinkTextHelp": "Leave empty to use the default text.",
         "goodieMinValue": {
           "label": "Minimum amount for a goodie",
           "hint": "Readers who pay less do not get to choose a goodie. Leave empty for no minimum."
@@ -655,6 +660,20 @@
         "leadText": "Lead Text",
         "title": "Title",
         "preTitle": "Pre-title"
+      },
+      "redeemGiftCode": {
+        "label": "Redeem gift code"
+      },
+      "giftCodeOffers": {
+        "label": "Sell gift codes",
+        "selectOffers": "Gift offers on sale",
+        "selectOffersHint": "Only active offers are shown to readers, in this order.",
+        "displayHeading": "Display",
+        "askRecipientName": "Ask for the recipient’s name",
+        "defaultOfferTitle": "Selected by default — this offer is preselected when the page loads.",
+        "orderHeading": "Gift offer order",
+        "orderHelp": "Drag the offers into the order in which they appear on the website and choose which offer is preselected.",
+        "showDiscountCodes": "Show discount code input (only for offers that allow discount codes)"
       },
       "mailchimpForm": {
         "label": "Newsletter form",
@@ -3730,10 +3749,10 @@
         "redemptionWindowMonthsHelp": "Counted from the payment. Leave empty to let the code be redeemed at any time.",
         "redemptionWindowMonthsInvalid": "Enter a whole number of at least 1",
         "paymentMethods": "Payment methods",
-        "paymentMethodsHelp": "Buyers can pay the gift with these methods. Not every payment provider supports single purchases.",
+        "paymentMethodsHelp": "Buyers can pay for the gift with these methods. Not every payment provider supports single purchases.",
         "paymentMethodsRequired": "Choose at least one payment method",
         "allowDiscountCodes": "Allow discount codes",
-        "allowDiscountCodesHelp": "Buyers can enter a discount code of this member plan when buying the gift.",
+        "allowDiscountCodesHelp": "Buyers can enter a discount code for this member plan when buying the gift.",
         "autoRenew": "Renew automatically",
         "autoRenewHelp": "The subscription started with a code renews automatically once the gift period ends.",
         "autoRenewNotExtendable": "This member plan cannot be extended, so it cannot renew automatically.",
@@ -3832,7 +3851,7 @@
         "submit": "Create codes",
         "createdTitle_one": "{{count}} gift code created",
         "createdTitle_other": "{{count}} gift codes created",
-        "createdBody": "The codes are issued. You also find them in the list.",
+        "createdBody": "The codes are issued. You can also find them in the list.",
         "copy": "Copy codes",
         "copied": "Codes copied to the clipboard",
         "close": "Done"
@@ -3848,7 +3867,7 @@
       },
       "dialogs": {
         "cancelTitle": "Cancel gift code?",
-        "cancelBody": "The gift code for {{ giftCode }} can no longer be redeemed. Refunds are not handled here; settle them with the payment provider.",
+        "cancelBody": "The gift code for {{ giftCode }} can no longer be redeemed. Handle refunds with the payment provider.",
         "cancelConfirm": "Cancel gift code",
         "markAsPaidTitle": "Mark as paid?",
         "markAsPaidBody": "The invoice for {{ giftCode }} is marked as paid. If the code has not been issued yet, it is issued now. Only do this once the money has arrived.",

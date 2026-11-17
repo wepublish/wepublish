@@ -31,6 +31,8 @@ export enum BlockType {
   Event = 'event',
   Subscribe = 'subscribe',
   MailchimpForm = 'mailchimpForm',
+  RedeemGiftCode = 'redeemGiftCode',
+  GiftCodeOffers = 'giftCodeOffers',
   FlexBlock = 'flexBlock',
   BlockTemplate = 'blockTemplate',
 }

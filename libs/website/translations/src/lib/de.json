@@ -77,6 +77,9 @@
       "confirmationTitle": "Bist du dir sicher?",
       "openInvoices": "Du hast bereits schon ein Abo mit offenen Rechnungen. Du kannst deine offenen Rechnungen in deinem <Link href=\"/profile\">Profil</Link> anschauen.",
       "alreadyHasSubscription": "Du hast dieses Abo schon, bist du dir sicher? Du kannst deine Abos in deinem <Link href=\"/profile\">Profil</Link> anschauen."
+    },
+    "giftCodeRedemption": {
+      "link": "Willst du ein Geschenkabo einlösen? Hier klicken."
     }
   },
   "login": {
@@ -520,5 +523,22 @@
     "stripe-checkout": "Kreditkarte",
     "mollie": "Online-Zahlung",
     "no-charge": "Kostenlos"
+  },
+  "giftCode": {
+    "redeem": {
+      "code": "Geschenkcode",
+      "submit": "Code einlösen",
+      "loginLink": "Du hast schon ein Konto? Hier anmelden.",
+      "success": {
+        "createdSubscription": "Dein Abo «{memberPlan}» ist jetzt aktiv.",
+        "extendedSubscription": "Dein Abo «{memberPlan}» wurde verlängert.",
+        "paidInvoice": "Die offene Rechnung deines Abos «{memberPlan}» ist bezahlt."
+      }
+    },
+    "purchase": {
+      "chooseOffer": "Geschenk wählen",
+      "recipientName": "Name der beschenkten Person",
+      "submit": "Geschenk für {amount} kaufen"
+    }
   }
 }
