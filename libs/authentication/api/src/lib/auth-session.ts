@@ -31,7 +31,10 @@ export type ApiTokenSession = {
   id: string;
   name: string;
   token: string;
+  /** The token's scopes that its creator still holds. */
   permissions: string[];
+  /** The user the token acts on behalf of. */
+  createdBy: Pick<User, 'id' | 'email'>;
 };
 
 export const EXPIRED_API_TOKEN = 'expired-api-token';

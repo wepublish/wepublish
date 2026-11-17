@@ -1,6 +1,10 @@
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { DeliverySuggestionKind, MailChannel } from '@prisma/client';
-import { CurrentUser, UserSession } from '@wepublish/authentication/api';
+import {
+  CurrentUser,
+  actorOf,
+  AuthSession,
+} from '@wepublish/authentication/api';
 import { Feature } from '@wepublish/features/api';
 import {
   CanGetUser,
@@ -127,7 +131,7 @@ export class DeliveryModeResolver {
     description: `Switch a user between mailed and printed subscription mails`,
   })
   async setUserDeliveryMode(
-    @CurrentUser() session: UserSession,
+    @CurrentUser() session: AuthSession,
     @Args('userId') userId: string,
     @Args('channel', { type: () => MailChannel }) channel: MailChannel,
     @Args('reason', { nullable: true }) reason?: string
@@ -135,7 +139,7 @@ export class DeliveryModeResolver {
     await this.preferences.set(userId, channel, {
       origin: 'manual',
       reason,
-      changedByUserId: session.user.id,
+      changedByUserId: actorOf(session).userId,
     });
 
     return this.preferences.get(userId);
@@ -146,10 +150,10 @@ export class DeliveryModeResolver {
     description: `Apply one suggestion; refused when it no longer holds`,
   })
   async confirmDeliverySuggestion(
-    @CurrentUser() session: UserSession,
+    @CurrentUser() session: AuthSession,
     @Args('id') id: string
   ) {
-    await this.suggestions.confirm(id, session.user.id);
+    await this.suggestions.confirm(id, actorOf(session).userId);
 
     return true;
   }
@@ -159,10 +163,10 @@ export class DeliveryModeResolver {
     description: `Decline one suggestion: the user stays on their channel as a manual decision, never suggested again`,
   })
   async keepDeliverySuggestion(
-    @CurrentUser() session: UserSession,
+    @CurrentUser() session: AuthSession,
     @Args('id') id: string
   ) {
-    await this.suggestions.keep(id, session.user.id);
+    await this.suggestions.keep(id, actorOf(session).userId);
 
     return true;
   }
@@ -172,11 +176,11 @@ export class DeliveryModeResolver {
     description: `Apply every open suggestion of a direction`,
   })
   confirmAllDeliverySuggestions(
-    @CurrentUser() session: UserSession,
+    @CurrentUser() session: AuthSession,
     @Args('kind', { type: () => DeliverySuggestionKind })
     kind: DeliverySuggestionKind
   ) {
-    return this.suggestions.confirmAll(kind, session.user.id);
+    return this.suggestions.confirmAll(kind, actorOf(session).userId);
   }
 
   @Permissions(CanManageUserDeliveryMode)
@@ -184,11 +188,11 @@ export class DeliveryModeResolver {
     description: `Switch everyone in an audience; letters skip people without a usable address`,
   })
   setDeliveryModeForAudience(
-    @CurrentUser() session: UserSession,
+    @CurrentUser() session: AuthSession,
     @Args('audience') audience: MailAudienceInput,
     @Args('channel', { type: () => MailChannel }) channel: MailChannel
   ) {
-    return this.preferences.setForAudience(audience, channel, session.user.id);
+    return this.preferences.setForAudience(audience, channel, actorOf(session).userId);
   }
 
   @Permissions(CanManageUserDeliveryMode)

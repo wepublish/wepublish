@@ -11,6 +11,8 @@ import {
   CurrentUser,
   Public,
   UserSession,
+  requireSessionUser,
+  AuthSession,
 } from '@wepublish/authentication/api';
 import { UserSubscriptionService } from './user-subscription.service';
 import {
@@ -34,8 +36,8 @@ export class UserSubscriptionResolver {
   @Query(() => [PublicSubscription], {
     description: `This query returns the subscriptions of the authenticated user.`,
   })
-  async userSubscriptions(@CurrentUser() session: UserSession) {
-    return this.userSubscriptionService.getUserSubscriptions(session.user.id);
+  async userSubscriptions(@CurrentUser() session: AuthSession) {
+    return this.userSubscriptionService.getUserSubscriptions(requireSessionUser(session).id);
   }
 
   @Public()

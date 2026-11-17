@@ -2,7 +2,8 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import {
   Authenticated,
   CurrentUser,
-  UserSession,
+  requireSessionUser,
+  AuthSession,
 } from '@wepublish/authentication/api';
 import { CanUpdateSettings } from '@wepublish/permissions';
 import { Permissions } from '@wepublish/permissions/api';
@@ -38,12 +39,12 @@ export class ChangelogResolver {
   })
   confirmChangelogEntry(
     @Args('id') id: string,
-    @CurrentUser() session: UserSession,
+    @CurrentUser() session: AuthSession,
     @Args('locale', { nullable: true }) locale?: string
   ) {
     return this.changelogService.confirmChangelogEntry(
       id,
-      session.user.id,
+      requireSessionUser(session).id,
       locale
     );
   }

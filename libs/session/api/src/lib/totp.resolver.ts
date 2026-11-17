@@ -6,6 +6,8 @@ import {
   CurrentUser,
   UserSession,
   assertNotImpersonating,
+  requireSessionUser,
+  AuthSession,
 } from '@wepublish/authentication/api';
 import { Permissions } from '@wepublish/permissions/api';
 import { CanResetUserTotp } from '@wepublish/permissions';
@@ -43,11 +45,11 @@ export class TotpResolver {
   })
   async enableTotp(
     @Args('totpToken') totpToken: string,
-    @CurrentUser() session: UserSession
+    @CurrentUser() session: AuthSession
   ) {
     assertNotImpersonating(session);
 
-    return this.totpService.enableTotp(session.user.id, totpToken);
+    return this.totpService.enableTotp(requireSessionUser(session).id, totpToken);
   }
 
   @Permissions(CanResetUserTotp)

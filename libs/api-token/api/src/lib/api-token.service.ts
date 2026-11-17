@@ -4,8 +4,13 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { ApiToken, Prisma, PrismaClient } from '@prisma/client';
+import { ApiToken, Prisma, PrismaClient, User } from '@prisma/client';
 import { EXPIRED_API_TOKEN } from '@wepublish/authentication/api';
+import { CanCreateApiToken } from '@wepublish/permissions';
+import {
+  addPredefinedPermissions,
+  permissionsOf,
+} from '@wepublish/permissions/api';
 import {
   getMaxTake,
   graphQLSortOrderToPrisma,
@@ -43,6 +48,16 @@ export interface ApiTokenReader {
 export interface ApiTokenRevoker {
   userId: string;
   canRevokeAll: boolean;
+}
+
+/**
+ * A token acts on behalf of the user who created it: `permissions` are the
+ * token's scopes that this user still holds right now.
+ */
+export interface ResolvedApiToken {
+  apiToken: ApiToken;
+  creator: Pick<User, 'id' | 'email'>;
+  permissions: string[];
 }
 
 const LAST_USED_RESOLUTION_MS = 60_000;
@@ -121,7 +136,7 @@ export class ApiTokenService {
     return { apiToken, token };
   }
 
-  async resolveToken(token: string): Promise<ApiToken | null> {
+  async resolveToken(token: string): Promise<ResolvedApiToken | null> {
     const candidates = await this.prisma.apiToken.findMany({
       where: { prefix: prefixOf(token) },
     });
@@ -146,9 +161,49 @@ export class ApiTokenService {
       );
     }
 
+    const { creator, held } = await this.creatorOf(apiToken);
+
     await this.touch(apiToken);
 
-    return apiToken;
+    return {
+      apiToken,
+      creator: { id: creator.id, email: creator.email },
+      permissions: apiToken.scopes.filter(scope => held.has(scope)),
+    };
+  }
+
+  /**
+   * Checked on every call and never cached, so deleting, deactivating or
+   * demoting a user takes effect on their tokens at once.
+   */
+  private async creatorOf(apiToken: ApiToken) {
+    const creator =
+      apiToken.createdById ?
+        await this.prisma.user.findUnique({
+          where: { id: apiToken.createdById },
+        })
+      : null;
+
+    if (!creator?.active) {
+      throw new UnauthorizedException(
+        `The user who created the API key "${apiToken.name}" no longer exists or is inactive.`
+      );
+    }
+
+    const roles = (
+      await this.prisma.userRole.findMany({
+        where: { id: { in: creator.roleIDs } },
+      })
+    ).map(addPredefinedPermissions);
+    const held = new Set(permissionsOf({ roles }));
+
+    if (!held.has(CanCreateApiToken.id)) {
+      throw new UnauthorizedException(
+        `The user who created the API key "${apiToken.name}" may no longer create API keys (${CanCreateApiToken.id}).`
+      );
+    }
+
+    return { creator, held };
   }
 
   async getApiTokens(
