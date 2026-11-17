@@ -3,6 +3,7 @@ import { PrismaClient, SettingSyncProvider } from '@prisma/client';
 import { NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { SyncProviderSettingsDataloaderService } from './sync-provider-settings-dataloader.service';
+import { SecretCrypto } from './secrets-crypto';
 import { SyncProviderSettingsService } from './sync-provider-settings.service';
 
 const existing = {
@@ -70,5 +71,26 @@ describe('SyncProviderSettingsService', () => {
       } as never)
     ).rejects.toThrow('already set up');
     expect(create).not.toHaveBeenCalled();
+  });
+
+  test('hands out the key of a sync provider that is not enabled yet', async () => {
+    vi.spyOn(prisma.settingSyncProvider, 'findUnique').mockResolvedValue({
+      ...existing,
+      mailchimp_apiKey: new SecretCrypto().encrypt('abc123-us1'),
+    } as SettingSyncProvider);
+
+    await expect(
+      service.getSyncConfig('mailchimp-sync')
+    ).resolves.toMatchObject({
+      id: 'mailchimp-sync',
+      enabled: false,
+      decryptedApiKey: 'abc123-us1',
+    });
+  });
+
+  test('reports a sync provider that does not exist', async () => {
+    vi.spyOn(prisma.settingSyncProvider, 'findUnique').mockResolvedValue(null);
+
+    await expect(service.getSyncConfig('unknown')).rejects.toThrow('not found');
   });
 });

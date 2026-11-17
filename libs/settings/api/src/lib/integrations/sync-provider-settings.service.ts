@@ -139,13 +139,39 @@ export class SyncProviderSettingsService {
       where: { enabled: true },
     });
 
-    return settings.map(setting => ({
+    return settings.map(setting => this.withDecryptedApiKey(setting));
+  }
+
+  /**
+   * Get one sync provider setting with its decrypted API key, enabled or not,
+   * so the editor can look up the Mailchimp names before the sync is switched on.
+   */
+  async getSyncConfig(
+    id: string
+  ): Promise<SettingSyncProvider & { decryptedApiKey: string | null }> {
+    const setting = await this.prisma.settingSyncProvider.findUnique({
+      where: { id },
+    });
+
+    if (!setting) {
+      throw new NotFoundException(
+        `Sync Provider Setting with id ${id} not found`
+      );
+    }
+
+    return this.withDecryptedApiKey(setting);
+  }
+
+  private withDecryptedApiKey(
+    setting: SettingSyncProvider
+  ): SettingSyncProvider & { decryptedApiKey: string | null } {
+    return {
       ...setting,
       decryptedApiKey:
         setting.mailchimp_apiKey ?
           this.crypto.decrypt(setting.mailchimp_apiKey)
         : null,
-    }));
+    };
   }
 
   /**
