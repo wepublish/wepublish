@@ -272,6 +272,20 @@ describe('single mode', () => {
     expect(locs(xml)).not.toContain(`${siteUrl}/a/archived`);
   });
 
+  it('leaves out the pages the media filters out', async () => {
+    const client = fakeClient({
+      pages: [page('about', hoursAgo(5)), page('spende', hoursAgo(5))],
+    });
+
+    const xml = await renderSitemap(
+      { ...config, filterPage: ({ slug }) => slug !== 'spende' },
+      { client, siteUrl, now }
+    );
+
+    expect(locs(xml)).toContain(`${siteUrl}/about`);
+    expect(locs(xml)).not.toContain(`${siteUrl}/spende`);
+  });
+
   it('lets the media build its own urls', async () => {
     const client = fakeClient({
       pages: [page('about-fr', hoursAgo(5))],
