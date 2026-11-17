@@ -27,6 +27,39 @@ Given('We.Publish delivers the bexio invoices', async ({ data, $testInfo }) => {
   await data.withPaymentProviderSettings('bexio', { bexio_invoiceMailByWePublish: true });
 });
 
+Given('bexio delivers its invoices itself', async ({ data, $testInfo }) => {
+  const features = await data.features();
+
+  $testInfo.skip(
+    !features.includes(RENEWAL_FEATURES[0]),
+    `needs the feature ${RENEWAL_FEATURES[0]} on the target`
+  );
+
+  await data.withPaymentProviderSettings('bexio', { bexio_invoiceMailByWePublish: false });
+});
+
+Given(
+  'a reader {string} with an inbound mailbox and a paid {string} subscription paying with {string}',
+  async (
+    { data, ctx, inboundInbox },
+    alias: string,
+    memberPlanSlug: string,
+    paymentMethodSlug: string
+  ) => {
+    // Using the inbox checks the daily quota before bexio sends anything.
+    void inboundInbox;
+
+    if (!env.resend) {
+      throw new Error('Tag the scenario with @inbound-mail.');
+    }
+
+    // bexio only emails addresses on the Resend domain to the test mailbox.
+    const reader = await data.createUser(alias, { emailDomain: env.resend.domain });
+
+    await subscribe(data, ctx, { alias, reader, memberPlanSlug, paymentMethodSlug });
+  }
+);
+
 Given(
   'a reader {string} with a paid {string} subscription paying with {string}',
   async ({ data, ctx }, alias: string, memberPlanSlug: string, paymentMethodSlug: string) => {
@@ -71,18 +104,14 @@ When(
   'the subscriptions of {string} and {string} are renewed',
   async ({ data, ctx }, first: string, second: string) => {
     for (const alias of [first, second]) {
-      const subscription = ctx.subscriptions.get(alias);
-
-      if (!subscription) {
-        throw new Error(`"${alias}" has no subscription. Add a Given step that creates it.`);
-      }
-
-      const invoice = await data.renewSubscription(subscription.id);
-
-      ctx.openInvoices.set(alias, { invoiceId: invoice.id, subscriptionId: subscription.id });
+      await renew(data, ctx, alias);
     }
   }
 );
+
+When('the subscription of {string} is renewed', async ({ data, ctx }, alias: string) => {
+  await renew(data, ctx, alias);
+});
 
 Then(
   '{string} receives the renewal mail with the bexio invoice attached',
@@ -139,6 +168,18 @@ async function subscribe(
   ctx.subscriptions.set(alias, subscription);
 
   return subscription;
+}
+
+async function renew(data: TestData, ctx: ScenarioContext, alias: string) {
+  const subscription = ctx.subscriptions.get(alias);
+
+  if (!subscription) {
+    throw new Error(`"${alias}" has no subscription. Add a Given step that creates it.`);
+  }
+
+  const invoice = await data.renewSubscription(subscription.id);
+
+  ctx.openInvoices.set(alias, { invoiceId: invoice.id, subscriptionId: subscription.id });
 }
 
 function renewalInvoiceOf(ctx: ScenarioContext, alias: string) {
