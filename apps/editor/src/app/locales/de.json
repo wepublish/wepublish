@@ -1914,8 +1914,9 @@
       "empty": "Noch keine Mitteilungsvorlagen."
     },
     "mailTemplateSelect": {
-      "sendAsLetter": "Auch per Brief",
-      "sendAsLetterHint": "Personen mit Zustellkanal Brief bekommen diese Mitteilung gedruckt statt per E-Mail.",
+      "channels": "Zustellkanäle",
+      "noLetterVersion": "Diese Vorlage hat keine Brief-Version. Füge sie in der Vorlage hinzu, damit Personen mit Zustellkanal Brief diese Mitteilung gedruckt bekommen; bis dahin erhalten sie die E-Mail.",
+      "sendAsLetterHint": "Die E-Mail geht immer raus. Ist Brief angewählt, bekommen Personen mit Zustellkanal Brief diese Mitteilung gedruckt statt per E-Mail.",
       "noMailSentSelectNow": "Keine E-Mail senden"
     },
     "memberPlanEdit": {
@@ -2150,7 +2151,7 @@
         "emailUnreachable": "E-Mail-Adresse nicht erreichbar ({{segment}}) – Mitteilungen per E-Mail kommen nicht an."
       },
       "flows": {
-        "letterHint": "Mitteilungen mit «Auch per Brief» erreichen User mit Zustellkanal Brief in gedruckter Form; alle anderen gehen per E-Mail.",
+        "letterHint": "Mitteilungen, bei denen «Brief» angewählt ist, erreichen User mit Zustellkanal Brief in gedruckter Form; alle anderen gehen per E-Mail.",
         "manage": "Zustellkanäle verwalten"
       }
     },
