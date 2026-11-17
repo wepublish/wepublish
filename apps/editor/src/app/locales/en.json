@@ -1608,6 +1608,17 @@
           "letter": "Add letter version"
         },
         "removeVersion": "Remove this version",
+        "removeVersionConfirm": {
+          "title": {
+            "mail": "Remove the email version?",
+            "letter": "Remove the letter version?"
+          },
+          "text": {
+            "mail": "The email template of this template will be deleted.",
+            "letter": "The letter template of this template will be deleted."
+          },
+          "confirm": "Remove"
+        },
         "letterNotForPurpose": "This purpose has no letter version: the message carries a login link and goes out by email at once.",
         "createHeader": "Create message template",
         "editHeader": "Edit message template",
@@ -1624,9 +1635,9 @@
         "preview": "Preview",
         "sendTest": "Send test",
         "previewLetter": "Preview",
-        "letterAppendix": "QR-bill (PDF)",
+        "letterAppendix": "Additional pages (PDF)",
         "letterAppendixNone": "None",
-        "letterAppendixHelp": "PDF from \"Documents\" printed after the letter pages, e.g. a QR-bill (A4, slip at the bottom edge). Only for addresses in Switzerland; with duplex printing a blank page is added when needed so the slip lands on a front page.",
+        "letterAppendixHelp": "The pages are added at the end of the letter. Choose from the PDF files uploaded under \"Documents\".",
         "letterPreviewTitle": "Letter preview",
         "selectMailType": "Please choose a purpose first.",
         "selectMailTypePlaceholder": "Choose a purpose …",
@@ -1645,7 +1656,7 @@
         "letterLayout": "Stationery",
         "letterLayoutDefault": "Default ({{name}})",
         "letterLayoutNone": "Default (none yet)",
-        "letterLayoutHelp": "Header and footer when this template is printed as a letter. Ignored for emails."
+        "letterLayoutHelp": "Header and footer"
       },
       "editor": {
         "undo": "Undo",
@@ -1712,7 +1723,7 @@
         "custom": "Free mail (subscriber)",
         "customNoSubscription": "Free mail (no subscription)"
       },
-      "placeholderAlways": "Always available — every mail",
+      "placeholderAlways": "Always available",
       "placeholderContextLabel": "Additional fields for this purpose",
       "placeholderContexts": {
         "account": "Account & login",

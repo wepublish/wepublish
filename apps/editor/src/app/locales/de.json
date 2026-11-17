@@ -1607,6 +1607,17 @@
           "letter": "Brief-Version hinzufügen"
         },
         "removeVersion": "Diese Version entfernen",
+        "removeVersionConfirm": {
+          "title": {
+            "mail": "E-Mail-Version entfernen?",
+            "letter": "Brief-Version entfernen?"
+          },
+          "text": {
+            "mail": "Das E-Mail-Template dieser Vorlage wird gelöscht.",
+            "letter": "Das Brief-Template dieser Vorlage wird gelöscht."
+          },
+          "confirm": "Entfernen"
+        },
         "letterNotForPurpose": "Für diesen Verwendungszweck gibt es keine Brief-Version: Die Mitteilung enthält einen Login-Link und geht sofort per E-Mail raus.",
         "createHeader": "Mitteilungsvorlage erstellen",
         "editHeader": "Mitteilungsvorlage bearbeiten",
@@ -1623,9 +1634,9 @@
         "preview": "Vorschau",
         "sendTest": "Test senden",
         "previewLetter": "Vorschau",
-        "letterAppendix": "QR-Einzahlungsschein (PDF)",
-        "letterAppendixNone": "Keiner",
-        "letterAppendixHelp": "PDF aus «Dokumente», das nach den Briefseiten gedruckt wird, z. B. ein QR-Einzahlungsschein (A4, Schein am unteren Rand). Nur für Adressen in der Schweiz; bei Duplexdruck wird bei Bedarf eine leere Seite eingefügt, damit der Schein auf einer Vorderseite liegt.",
+        "letterAppendix": "Zusatzseiten (PDF)",
+        "letterAppendixNone": "Keine",
+        "letterAppendixHelp": "Die Seiten werden dem Brief am Ende hinzugefügt. Wähle aus den PDF-Dateien, die unter «Dokumente» hochgeladen wurden.",
         "letterPreviewTitle": "Briefvorschau",
         "selectMailType": "Bitte zuerst einen Verwendungszweck wählen.",
         "selectMailTypePlaceholder": "Verwendungszweck wählen …",
@@ -1644,7 +1655,7 @@
         "letterLayout": "Briefpapier",
         "letterLayoutDefault": "Standard ({{name}})",
         "letterLayoutNone": "Standard (keines vorhanden)",
-        "letterLayoutHelp": "Kopf- und Fusszeile, wenn diese Vorlage als Brief gedruckt wird. Für E-Mails ohne Bedeutung."
+        "letterLayoutHelp": "Kopf- und Fusszeile"
       },
       "editor": {
         "undo": "Rückgängig",
@@ -1711,7 +1722,7 @@
         "custom": "Freie E-Mail (Abo)",
         "customNoSubscription": "Freie E-Mail (ohne Abo)"
       },
-      "placeholderAlways": "Immer verfügbar – in jeder E-Mail",
+      "placeholderAlways": "Immer verfügbar",
       "placeholderAlwaysHint": "Diese Empfänger-Felder funktionieren in jeder Vorlage, unabhängig vom gewählten Verwendungszweck.",
       "searchPlaceholders": "Platzhalter suchen …",
       "noPlaceholders": "Keine passenden Platzhalter.",

@@ -9,7 +9,9 @@ import {
   CardContent,
   CardHeader,
   Dialog,
+  DialogActions,
   DialogContent,
+  DialogContentText,
   DialogTitle,
   FormControl,
   MenuItem,
@@ -159,6 +161,8 @@ function MailTemplateEdit() {
     letterLayout: `${fieldId}-letter-layout`,
     letterAppendix: `${fieldId}-letter-appendix`,
     versionPanel: `${fieldId}-version`,
+    removeTitle: `${fieldId}-remove-title`,
+    removeText: `${fieldId}-remove-text`,
     versionTab: (channel: MailChannel) => `${fieldId}-version-${channel}`,
   };
 
@@ -278,8 +282,14 @@ function MailTemplateEdit() {
     openVersion(channel, next);
   };
 
+  // Removing a version throws away what was written for it, so it is asked
+  // for first.
+  const [confirmRemoval, setConfirmRemoval] = useState(false);
+
   // Only taken out of the form: the api hears of it on save.
   const removeActiveVersion = () => {
+    setConfirmRemoval(false);
+
     const rest: VersionDrafts = { ...currentDrafts() };
     delete rest[activeChannel];
     const remaining = VERSION_ORDER.find(channel => rest[channel]);
@@ -829,7 +839,7 @@ function MailTemplateEdit() {
                       size="small"
                       variant="text"
                       color="error"
-                      onClick={removeActiveVersion}
+                      onClick={() => setConfirmRemoval(true)}
                     >
                       {t('mailTemplates.edit.removeVersion')}
                     </Button>
@@ -1266,6 +1276,37 @@ function MailTemplateEdit() {
         <DialogContent style={{ height: '85vh' }}>
           <MailPreview html={previewHtml ?? ''} />
         </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={confirmRemoval}
+        onClose={() => setConfirmRemoval(false)}
+        aria-labelledby={ids.removeTitle}
+        aria-describedby={ids.removeText}
+      >
+        <DialogTitle id={ids.removeTitle}>
+          {t(`mailTemplates.edit.removeVersionConfirm.title.${activeChannel}`)}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id={ids.removeText}>
+            {t(`mailTemplates.edit.removeVersionConfirm.text.${activeChannel}`)}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="text"
+            onClick={() => setConfirmRemoval(false)}
+          >
+            {t('mailTemplates.cancel')}
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={removeActiveVersion}
+          >
+            {t('mailTemplates.edit.removeVersionConfirm.confirm')}
+          </Button>
+        </DialogActions>
       </Dialog>
 
       <Dialog

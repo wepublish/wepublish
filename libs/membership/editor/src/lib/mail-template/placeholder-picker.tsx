@@ -291,10 +291,7 @@ export function PlaceholderPicker({
 
       : <>
           <GroupHeading
-            title={t(
-              'mailTemplates.placeholderAlways',
-              'Always available — every mail'
-            )}
+            title={t('mailTemplates.placeholderAlways', 'Always available')}
             hint={t(
               'mailTemplates.placeholderAlwaysHint',
               'These recipient fields work in every template, no matter which purpose is selected.'

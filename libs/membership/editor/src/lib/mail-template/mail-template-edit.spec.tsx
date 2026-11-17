@@ -494,6 +494,26 @@ describe('MailTemplateEdit', () => {
         })
       );
 
+      // Asked first: the version is still there until confirmed. Behind the
+      // open dialog the page is hidden from the accessibility tree.
+      expect(
+        screen.getByRole('tab', {
+          name: 'deliveryMode.channel.letter',
+          hidden: true,
+        })
+      ).toBeTruthy();
+
+      fireEvent.click(
+        within(
+          screen.getByRole('dialog', {
+            name: 'mailTemplates.edit.removeVersionConfirm.title.letter',
+          })
+        ).getByRole('button', {
+          name: 'mailTemplates.edit.removeVersionConfirm.confirm',
+        })
+      );
+
+      await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
       expect(
         screen.queryByRole('tab', { name: 'deliveryMode.channel.letter' })
       ).toBeNull();
@@ -517,6 +537,39 @@ describe('MailTemplateEdit', () => {
       ).toBeLessThan(
         mutation('DeleteMailTemplateVariant').mock.invocationCallOrder[0]
       );
+    });
+
+    it('keeps the version when the removal is cancelled', async () => {
+      withLetters();
+      loadTemplate.mockResolvedValue({
+        data: {
+          mailTemplate: savedTemplate([MailChannel.Mail, MailChannel.Letter]),
+        },
+      });
+      renderPage('/mailtemplates/edit/tpl-1');
+
+      await waitFor(() => expect(subjectField()).toHaveValue('Subject mail'));
+      fireEvent.click(versionTab(MailChannel.Letter));
+      fireEvent.click(
+        screen.getByRole('button', {
+          name: 'mailTemplates.edit.removeVersion',
+        })
+      );
+
+      const dialog = screen.getByRole('dialog');
+      const buttons = within(dialog).getAllByRole('button');
+
+      // Cancel on the left, as in the other dialogs.
+      expect(buttons[0]).toHaveAccessibleName('mailTemplates.cancel');
+
+      fireEvent.click(buttons[0]);
+
+      await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+      expect(versionTab(MailChannel.Letter)).toHaveAttribute(
+        'aria-selected',
+        'true'
+      );
+      expect(subjectField()).toHaveValue('Subject letter');
     });
 
     it('keeps the last version: there is nothing to remove it for', () => {

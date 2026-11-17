@@ -1607,6 +1607,17 @@
           "letter": "Ajouter la version lettre"
         },
         "removeVersion": "Supprimer cette version",
+        "removeVersionConfirm": {
+          "title": {
+            "mail": "Supprimer la version e-mail ?",
+            "letter": "Supprimer la version lettre ?"
+          },
+          "text": {
+            "mail": "Le modèle e-mail de ce modèle sera supprimé.",
+            "letter": "Le modèle lettre de ce modèle sera supprimé."
+          },
+          "confirm": "Supprimer"
+        },
         "letterNotForPurpose": "Cet usage n’a pas de version lettre : le message contient un lien de connexion et part immédiatement par e-mail.",
         "createHeader": "Créer un modèle de message",
         "editHeader": "Modifier le modèle de message",
@@ -1623,9 +1634,9 @@
         "preview": "Aperçu",
         "sendTest": "Envoyer un test",
         "previewLetter": "Aperçu",
-        "letterAppendix": "Bulletin QR (PDF)",
-        "letterAppendixNone": "Aucun",
-        "letterAppendixHelp": "PDF des «Documents» imprimé après les pages de la lettre, p. ex. un bulletin QR (A4, bulletin au bord inférieur). Uniquement pour les adresses en Suisse ; en impression recto verso, une page blanche est ajoutée si nécessaire pour que le bulletin soit sur un recto.",
+        "letterAppendix": "Pages supplémentaires (PDF)",
+        "letterAppendixNone": "Aucune",
+        "letterAppendixHelp": "Les pages sont ajoutées à la fin de la lettre. Choisissez parmi les fichiers PDF téléversés sous «Documents».",
         "letterPreviewTitle": "Aperçu de la lettre",
         "selectMailType": "Veuillez d’abord choisir une utilisation.",
         "selectMailTypePlaceholder": "Choisir une utilisation …",
@@ -1644,7 +1655,7 @@
         "letterLayout": "Papier à lettres",
         "letterLayoutDefault": "Par défaut ({{name}})",
         "letterLayoutNone": "Par défaut (aucun)",
-        "letterLayoutHelp": "En-tête et pied de page lorsque ce modèle est imprimé en lettre. Sans effet pour les e-mails."
+        "letterLayoutHelp": "En-tête et pied de page"
       },
       "editor": {
         "undo": "Annuler",
@@ -1730,7 +1741,7 @@
       "importConfirm": "Importer & écraser",
       "importWarning": "Cela importe tous les modèles du fournisseur de messagerie. Les modèles inconnus sont créés, ceux déjà importés voient leur HTML et leur objet écrasés. Les modifications locales seront perdues.",
       "importDone": "{{count}} modèle(s) importé(s) depuis le fournisseur.",
-      "placeholderAlways": "Toujours disponible — dans chaque e-mail",
+      "placeholderAlways": "Toujours disponible",
       "placeholderContextLabel": "Champs supplémentaires pour cette utilisation",
       "placeholderContexts": {
         "account": "Compte & connexion",
