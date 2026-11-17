@@ -6,6 +6,12 @@ enum AIProviderType {
   V0
 }
 
+"""The API key that did something on behalf of the user named next to it."""
+type ActingApiToken {
+  id: String!
+  name: String!
+}
+
 union Action = ArticleCreatedAction | AuthorCreatedAction | CommentCreatedAction | EventCreatedAction | PageCreatedAction | PollStartedAction | SubscriptionCreatedAction | UserCreatedAction
 
 """
@@ -68,6 +74,11 @@ type ApiToken {
   createdBy: User
   createdById: String
 
+  """
+  Whether the user who created this key still allows it to work, checked the way a call with the key is. A key list asks this once per row.
+  """
+  creatorState: ApiTokenCreatorState!
+
   """When the token stops working."""
   expiresAt: DateTime!
   id: String!
@@ -81,6 +92,34 @@ type ApiToken {
 
   """The permissions this token carries."""
   scopes: [String!]!
+}
+
+enum ApiTokenBlockedReason {
+  CreatorInactive
+  CreatorMayNotCreateApiTokens
+  CreatorMissing
+}
+
+"""
+A key acts on behalf of the user who created it. This is the check every call with the key goes through; expiry and revocation are separate.
+"""
+type ApiTokenCreatorState {
+  blockedReason: ApiTokenBlockedReason
+
+  """
+  Permissions of the key its creator no longer holds; calls that need one are refused.
+  """
+  missingScopes: [String!]!
+  state: ApiTokenCreatorStateKind!
+}
+
+"""
+What the user who created a key still allows it: everything it holds (ok), nothing (blocked: every call is refused), or only some of its permissions (limited).
+"""
+enum ApiTokenCreatorStateKind {
+  Blocked
+  Limited
+  Ok
 }
 
 enum ApiTokenSort {
@@ -1321,6 +1360,9 @@ type DeliveryChannelUserModel {
   changedAt: DateTime
   changedBy: MailLogRecipient
 
+  """Set when an API key made the change on behalf of `changedBy`."""
+  changedByApiToken: ActingApiToken
+
   """How automated subscription mails reach this user."""
   channel: MailChannel!
 
@@ -1354,6 +1396,9 @@ type DeliveryModeBulkChangeModel {
   audience: JSONObject!
   changed: Int!
   changedBy: MailLogRecipient
+
+  """Set when an API key made the change on behalf of `changedBy`."""
+  changedByApiToken: ActingApiToken
   channel: MailChannel!
   createdAt: DateTime!
   id: String!
@@ -2349,6 +2394,11 @@ type Invoice implements HasOptionalSubscription {
   id: String!
   items: [InvoiceItem!]!
   mail: String!
+
+  """
+  Set when an API key marked the invoice as paid on behalf of `manuallySetAsPaidByUser`.
+  """
+  manuallySetAsPaidByApiTokenId: String
   manuallySetAsPaidByUser: User
   manuallySetAsPaidByUserId: String
   modifiedAt: DateTime!
@@ -5812,6 +5862,9 @@ type PrintIssue implements HasImageLc {
   closedAt: DateTime
   closedBy: PrintIssueUser
 
+  """Set when an API key did it on behalf of `closedBy`."""
+  closedByApiToken: PrintIssueApiToken
+
   """
   How many issues it counts as against a reader's period: the numbers it covers, or fewer.
   """
@@ -5841,6 +5894,12 @@ type PrintIssue implements HasImageLc {
   """The issue's topic."""
   title: String
   year: Int!
+}
+
+"""The API key that did something on behalf of the user named next to it."""
+type PrintIssueApiToken {
+  id: String!
+  name: String!
 }
 
 type PrintIssueBexioStats {
@@ -5891,9 +5950,15 @@ type PrintIssueDelivery {
   createdAt: DateTime!
   createdBy: PrintIssueUser
 
+  """Set when an API key did it on behalf of `createdBy`."""
+  createdByApiToken: PrintIssueApiToken
+
   """«übergeben»: when the file went to the printshop."""
   deliveredAt: DateTime
   deliveredBy: PrintIssueUser
+
+  """Set when an API key did it on behalf of `deliveredBy`."""
+  deliveredByApiToken: PrintIssueApiToken
   filename: String!
   id: String!
 
@@ -6014,6 +6079,9 @@ type PrintIssueRun {
   """
   computedAt: DateTime!
   computedBy: PrintIssueUser
+
+  """Set when an API key did it on behalf of `computedBy`."""
+  computedByApiToken: PrintIssueApiToken
 
   """The delivery a replace run writes anew."""
   deliveryId: String
@@ -8312,6 +8380,9 @@ type UserDeliveryPreferenceModel {
   canReceiveLetters: Boolean!
   changedAt: DateTime
   changedBy: MailLogRecipient
+
+  """Set when an API key made the change on behalf of `changedBy`."""
+  changedByApiToken: ActingApiToken
 
   """How automated subscription mails reach this user."""
   channel: MailChannel!

@@ -6,6 +6,7 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
+import type { SessionActor } from '@wepublish/authentication/api';
 import { Prisma, PrismaClient } from '@prisma/client';
 import {
   getMaxTake,
@@ -165,7 +166,7 @@ export class InvoiceService {
   }
 
   @PrimeDataLoader(InvoiceDataloader)
-  async markInvoiceAsPaid(id: string, userId: string, sendMail = true) {
+  async markInvoiceAsPaid(id: string, actor: SessionActor, sendMail = true) {
     const invoice = await this.prisma.invoice.findUnique({
       where: {
         id,
@@ -213,7 +214,8 @@ export class InvoiceService {
     const invoiceMarkedAsPaid = await this.prisma.invoice.update({
       where: { id },
       data: {
-        manuallySetAsPaidByUserId: userId,
+        manuallySetAsPaidByUserId: actor.userId,
+        manuallySetAsPaidByApiTokenId: actor.apiTokenId,
         paidAt: new Date(),
         ...(sendMail ? {} : { suppressRenewalSuccessMail: true }),
       },

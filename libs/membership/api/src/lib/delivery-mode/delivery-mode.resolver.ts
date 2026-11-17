@@ -151,10 +151,13 @@ export class DeliveryModeResolver {
     @Args('channel', { type: () => MailChannel }) channel: MailChannel,
     @Args('reason', { nullable: true }) reason?: string
   ) {
+    const actor = actorOf(session);
+
     await this.preferences.set(userId, channel, {
       origin: 'manual',
       reason,
-      changedByUserId: actorOf(session).userId,
+      changedByUserId: actor.userId,
+      changedByApiTokenId: actor.apiTokenId,
     });
 
     return this.preferences.get(userId);
@@ -168,7 +171,7 @@ export class DeliveryModeResolver {
     @CurrentUser() session: AuthSession,
     @Args('id') id: string
   ) {
-    await this.suggestions.confirm(id, actorOf(session).userId);
+    await this.suggestions.confirm(id, actorOf(session));
 
     return true;
   }
@@ -181,7 +184,7 @@ export class DeliveryModeResolver {
     @CurrentUser() session: AuthSession,
     @Args('id') id: string
   ) {
-    await this.suggestions.keep(id, actorOf(session).userId);
+    await this.suggestions.keep(id, actorOf(session));
 
     return true;
   }
@@ -197,7 +200,7 @@ export class DeliveryModeResolver {
     @Args('filter', { type: () => DeliverySuggestionFilter, nullable: true })
     filter?: DeliverySuggestionFilter
   ) {
-    return this.suggestions.confirmAll(kind, actorOf(session).userId, filter);
+    return this.suggestions.confirmAll(kind, actorOf(session), filter);
   }
 
   @Permissions(CanManageUserDeliveryMode)
@@ -209,11 +212,7 @@ export class DeliveryModeResolver {
     @Args('audience') audience: MailAudienceInput,
     @Args('channel', { type: () => MailChannel }) channel: MailChannel
   ) {
-    return this.preferences.setForAudience(
-      audience,
-      channel,
-      actorOf(session).userId
-    );
+    return this.preferences.setForAudience(audience, channel, actorOf(session));
   }
 
   @Permissions(CanManageUserDeliveryMode)

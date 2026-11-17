@@ -24,6 +24,8 @@ import {
   verifyApiToken,
 } from './api-token.crypto';
 import {
+  ApiTokenBlockedReason,
+  ApiTokenCreatorStateKind,
   ApiTokenListArgs,
   ApiTokenSort,
   ApiTokenStatus,
@@ -59,6 +61,24 @@ export interface ResolvedApiToken {
   creator: Pick<User, 'id' | 'email'>;
   permissions: string[];
 }
+
+export interface ApiTokenCreatorCheck {
+  state: ApiTokenCreatorStateKind;
+  blockedReason: ApiTokenBlockedReason | null;
+  /** Scopes of the key its creator no longer holds. */
+  missingScopes: string[];
+  creator: Pick<User, 'id' | 'email'> | null;
+}
+
+const blocked = (
+  blockedReason: ApiTokenBlockedReason,
+  creator: ApiTokenCreatorCheck['creator'] = null
+): ApiTokenCreatorCheck => ({
+  state: ApiTokenCreatorStateKind.Blocked,
+  blockedReason,
+  missingScopes: [],
+  creator,
+});
 
 const LAST_USED_RESOLUTION_MS = 60_000;
 
@@ -161,49 +181,81 @@ export class ApiTokenService {
       );
     }
 
-    const { creator, held } = await this.creatorOf(apiToken);
+    const check = await this.creatorCheck(apiToken);
+
+    if (!check.creator || check.state === ApiTokenCreatorStateKind.Blocked) {
+      throw new UnauthorizedException(
+        (
+          check.blockedReason ===
+            ApiTokenBlockedReason.CreatorMayNotCreateApiTokens
+        ) ?
+          `The user who created the API key "${apiToken.name}" may no longer create API keys (${CanCreateApiToken.id}).`
+        : `The user who created the API key "${apiToken.name}" no longer exists or is inactive.`
+      );
+    }
 
     await this.touch(apiToken);
 
     return {
       apiToken,
-      creator: { id: creator.id, email: creator.email },
-      permissions: apiToken.scopes.filter(scope => held.has(scope)),
+      creator: check.creator,
+      permissions: apiToken.scopes.filter(
+        scope => !check.missingScopes.includes(scope)
+      ),
     };
   }
 
   /**
-   * Checked on every call and never cached, so deleting, deactivating or
-   * demoting a user takes effect on their tokens at once.
+   * What the creator still allows this key. The one check behind both the
+   * calls made with a key and what the key list shows, so they cannot differ.
+   * Never cached: deleting, deactivating or demoting a user takes effect on
+   * their keys at once.
    */
-  private async creatorOf(apiToken: ApiToken) {
-    const creator =
+  async creatorCheck(
+    apiToken: Pick<ApiToken, 'createdById' | 'scopes'>
+  ): Promise<ApiTokenCreatorCheck> {
+    const user =
       apiToken.createdById ?
         await this.prisma.user.findUnique({
           where: { id: apiToken.createdById },
         })
       : null;
 
-    if (!creator?.active) {
-      throw new UnauthorizedException(
-        `The user who created the API key "${apiToken.name}" no longer exists or is inactive.`
-      );
+    if (!user) {
+      return blocked(ApiTokenBlockedReason.CreatorMissing);
+    }
+
+    const creator = { id: user.id, email: user.email };
+
+    if (!user.active) {
+      return blocked(ApiTokenBlockedReason.CreatorInactive, creator);
     }
 
     const roles = (
       await this.prisma.userRole.findMany({
-        where: { id: { in: creator.roleIDs } },
+        where: { id: { in: user.roleIDs } },
       })
     ).map(addPredefinedPermissions);
     const held = new Set(permissionsOf({ roles }));
 
     if (!held.has(CanCreateApiToken.id)) {
-      throw new UnauthorizedException(
-        `The user who created the API key "${apiToken.name}" may no longer create API keys (${CanCreateApiToken.id}).`
+      return blocked(
+        ApiTokenBlockedReason.CreatorMayNotCreateApiTokens,
+        creator
       );
     }
 
-    return { creator, held };
+    const missingScopes = apiToken.scopes.filter(scope => !held.has(scope));
+
+    return {
+      state:
+        missingScopes.length ?
+          ApiTokenCreatorStateKind.Limited
+        : ApiTokenCreatorStateKind.Ok,
+      blockedReason: null,
+      missingScopes,
+      creator,
+    };
   }
 
   async getApiTokens(

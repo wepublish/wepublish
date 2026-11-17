@@ -62,7 +62,7 @@ import {
   MUTATION_OPTIONS_WITH_SUCCESS_MESSAGE,
   newestDelivery,
   nextIssue,
-  personName,
+  actorName,
   PRINT_ISSUES_PATH,
   printIssueCreatePath,
   printIssueEditPath,
@@ -328,7 +328,7 @@ function PrintIssueList() {
                 issue.closedAt ?
                   t('printIssues.closedLine', {
                     date: day(issue.closedAt),
-                    name: personName(issue.closedBy),
+                    name: actorName(t, issue.closedBy, issue.closedByApiToken),
                   })
                 : '',
             },

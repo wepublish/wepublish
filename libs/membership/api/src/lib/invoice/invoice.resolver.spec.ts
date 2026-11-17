@@ -43,7 +43,7 @@ describe('InvoiceResolver', () => {
 
       expect(service.markInvoiceAsPaid).toHaveBeenCalledWith(
         'inv-1',
-        'creator-1',
+        { userId: 'creator-1', apiTokenId: 'key-1' },
         false
       );
     });

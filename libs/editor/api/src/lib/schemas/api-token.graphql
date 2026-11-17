@@ -18,6 +18,12 @@ fragment FullApiToken on ApiToken {
     id
     name
   }
+
+  creatorState {
+    state
+    blockedReason
+    missingScopes
+  }
 }
 
 query ApiTokenList(

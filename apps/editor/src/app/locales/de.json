@@ -1940,6 +1940,7 @@
       "paymentProviderStatusInfo": "✅ heisst, alle Zahlungsmethoden dieses Abo-Plans sind mit einem Zahlungsanbieter verbunden. ❌ heisst, mindestens einer Zahlungsmethode fehlt der Anbieter – damit können Leser:innen nicht bezahlen."
     },
     "deliveryMode": {
+      "viaApiKey": "via API-Schlüssel «{{key}}»",
       "panelTitle": "Zustellkanal",
       "channel": {
         "mail": "E-Mail",
@@ -5319,6 +5320,7 @@
       "noLayouts": "Noch kein Briefpapier. Erstelle eines, damit Briefe eine Kopf- und Fusszeile bekommen."
     },
     "printIssues": {
+      "viaApiKey": "via API-Schlüssel «{{key}}»",
       "title": "Druckausgaben",
       "intro": "Die gedruckten Ausgaben mit den zugehörigen Empfänger:innen als Drucklisten aus allen Daten zusammengezogen und exportiert.<br /><br />Ein Exemplar kann in einigen Fällen auch noch jemand empfangen, mit einem am Erscheinungsdatum bereits inaktiven digitalen Abo, falls gleichzeitig die pro Abo-Dauer garantierte Anzahl gedruckter Ausgaben noch nicht vollständig erhalten wurde.<br/><br/>Die an die Druckerei übermittelten Drucklisten bilden die Basis sowohl für den Versand an die Leser:innen als auch für die Ermittlung, ob die garantierte Anzahl Ausgaben empfangen wurde.",
       "create": "Neue Ausgabe",
@@ -5736,6 +5738,15 @@
         "lastUsed": "Zuletzt verwendet",
         "never": "Nie verwendet",
         "status": "Status",
+        "blocked": "Blockiert",
+        "blockedReason": {
+          "creatorMissing": "Die Person, die diesen Schlüssel erstellt hat, existiert nicht mehr. Der Schlüssel funktioniert nicht mehr; erstellen Sie einen neuen.",
+          "creatorInactive": "Die Person, die diesen Schlüssel erstellt hat, ist deaktiviert. Solange funktioniert der Schlüssel nicht.",
+          "creatorMayNotCreateApiTokens": "Die Person, die diesen Schlüssel erstellt hat, darf keine API-Schlüssel mehr erstellen. Solange funktioniert der Schlüssel nicht."
+        },
+        "missingScopes_one": "{{count}} Recht fehlt",
+        "missingScopes_other": "{{count}} Rechte fehlen",
+        "missingScopesHelp": "Die Person, die diesen Schlüssel erstellt hat, hat diese Rechte nicht mehr. Aufrufe, die sie brauchen, werden abgelehnt: {{scopes}}",
         "active": "Aktiv",
         "revoked": "Widerrufen",
         "revoke": "Widerrufen",

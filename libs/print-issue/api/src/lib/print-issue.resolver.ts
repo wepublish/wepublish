@@ -87,9 +87,7 @@ export class PrintIssueResolver {
     @Args('id') id: string,
     @CurrentUser() session: AuthSession
   ) {
-    return toRunModel(
-      await this.issues.computeRun(id, actorOf(session).userId)
-    );
+    return toRunModel(await this.issues.computeRun(id, actorOf(session)));
   }
 
   @Permissions(CanGetPrintIssues, CanGetSubscriptions, CanGetUsers)
@@ -163,7 +161,7 @@ export class PrintIssueResolver {
     @CurrentUser() session: AuthSession
   ) {
     return toPrintIssueModel(
-      await this.issues.exportRun(id, actorOf(session).userId, computedAt)
+      await this.issues.exportRun(id, actorOf(session), computedAt)
     );
   }
 
@@ -176,9 +174,7 @@ export class PrintIssueResolver {
     @Args('id') id: string,
     @CurrentUser() session: AuthSession
   ) {
-    return toPrintIssueModel(
-      await this.issues.deliver(id, actorOf(session).userId)
-    );
+    return toPrintIssueModel(await this.issues.deliver(id, actorOf(session)));
   }
 
   @Permissions(CanFinalizePrintIssue)
@@ -207,9 +203,7 @@ export class PrintIssueResolver {
     @Args('id') id: string,
     @CurrentUser() session: AuthSession
   ) {
-    return toPrintIssueModel(
-      await this.issues.close(id, actorOf(session).userId)
-    );
+    return toPrintIssueModel(await this.issues.close(id, actorOf(session)));
   }
 
   @Permissions(CanFinalizePrintIssue)

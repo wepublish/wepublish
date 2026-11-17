@@ -9,6 +9,10 @@ fragment UserDeliveryPreference on UserDeliveryPreferenceModel {
     name
     firstName
   }
+  changedByApiToken {
+    id
+    name
+  }
   canReceiveLetters
   emailSegment
 }
@@ -29,6 +33,10 @@ fragment DeliveryChannelUser on DeliveryChannelUserModel {
     email
     name
     firstName
+  }
+  changedByApiToken {
+    id
+    name
   }
   canReceiveLetters
 }
@@ -146,6 +154,10 @@ query DeliveryModeBulkChanges($skip: Int, $take: Int, $channel: MailChannel) {
         email
         name
         firstName
+      }
+      changedByApiToken {
+        id
+        name
       }
     }
     totalCount
