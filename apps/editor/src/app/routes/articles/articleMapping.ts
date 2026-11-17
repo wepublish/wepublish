@@ -50,7 +50,8 @@ export function articleTemplateMetadataToArticleMetadata(
 export function articleToArticleMetadata(
   article: FullArticleFragment
 ): ArticleMetadata {
-  const { latest, slug, url, likes, trackingPixels } = article;
+  const { latest, slug, url, likes, trackingPixels, contentGateDisabled } =
+    article;
 
   return {
     ...articleTemplateMetadataToArticleMetadata({
@@ -63,6 +64,7 @@ export function articleToArticleMetadata(
     }),
     slug,
     url,
+    contentGateDisabled,
     likes: likes ?? 0,
     trackingPixels: trackingPixels || undefined,
   };

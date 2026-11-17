@@ -8,9 +8,13 @@ import {
 } from '@mui/material';
 import {
   CanCreateArticle,
+  CanCreateEngagementRule,
+  CanDeleteEngagementRule,
+  CanGetEngagementRule,
+  CanGetEngagementRules,
+  CanUpdateEngagementRule,
   CanCreateArticleTemplate,
   CanCreateAuthor,
-  CanCreateBanner,
   CanCreateBlockStyle,
   CanCreateBlockTemplate,
   CanCreateCommentRatingSystem,
@@ -37,7 +41,6 @@ import {
   CanDeleteArticle,
   CanDeleteArticleTemplate,
   CanDeleteAuthor,
-  CanDeleteBanner,
   CanDeleteBlockStyle,
   CanDeleteBlockTemplate,
   CanDeleteCommentRatingSystem,
@@ -77,8 +80,6 @@ import {
   CanGetAuditLogs,
   CanGetAuthor,
   CanGetAuthors,
-  CanGetBanner,
-  CanGetBanners,
   CanGetChallengeProviderSettings,
   CanGetCommentRatingSystem,
   CanGetComments,
@@ -743,7 +744,7 @@ export function Base({ children }: BaseProps) {
                     ]}
                   >
                     <SidebarNavItem
-                      href="/articles/paywalls"
+                      href="/audience-engagement/paywalls"
                       icon={<MdPayment />}
                     >
                       {t('paywall.navbar')}
@@ -1129,17 +1130,18 @@ export function Base({ children }: BaseProps) {
 
               <PermissionControl
                 qualifyingPermissions={[
-                  CanGetBanners.id,
-                  CanGetBanner.id,
-                  CanCreateBanner.id,
-                  CanDeleteBanner.id,
+                  CanGetEngagementRules.id,
+                  CanGetEngagementRule.id,
+                  CanCreateEngagementRule.id,
+                  CanUpdateEngagementRule.id,
+                  CanDeleteEngagementRule.id,
                 ]}
               >
                 <SidebarNavItem
-                  href="/banners"
+                  href="/audience-engagement"
                   icon={<MdSignpost />}
                 >
-                  {t('navbar.banners')}
+                  {t('navbar.audienceEngagement')}
                 </SidebarNavItem>
               </PermissionControl>
 

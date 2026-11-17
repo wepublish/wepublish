@@ -13,6 +13,7 @@ import {
   findReusableDraft,
   MailchimpError,
   setCampaignHtml,
+  subscribeMember,
   updateDraftCampaign,
 } from './mailchimp';
 
@@ -20,6 +21,9 @@ interface MailchimpConfig {
   apiKey: string;
   audienceId: string;
 }
+
+export type NewsletterSignupProblem =
+  'noIntegration' | 'disabled' | 'incomplete';
 
 export interface MergeFields {
   fields: MergeTag[];
@@ -113,6 +117,55 @@ export class NewsletterMailchimpService {
     await setCampaignHtml(apiKey, campaign.id, html);
 
     return { campaign, created: !existing };
+  }
+
+  /**
+   * Why newsletter sign-ups can not reach Mailchimp, or nothing when they can:
+   * no Mailchimp integration, one that is switched off, or one without an API
+   * key or audience.
+   */
+  async signupProblem(): Promise<NewsletterSignupProblem | undefined> {
+    const mailchimp = (
+      await this.syncSettings.syncProviderSettingsList()
+    ).filter(({ type }) => type === 'MAILCHIMP');
+    const enabled = mailchimp.filter(({ enabled }) => enabled);
+
+    if (!mailchimp.length) {
+      return 'noIntegration';
+    }
+
+    if (!enabled.length) {
+      return 'disabled';
+    }
+
+    return (
+        enabled.some(
+          ({ mailchimp_apiKey, mailchimp_listId }) =>
+            mailchimp_apiKey && mailchimp_listId
+        )
+      ) ?
+        undefined
+      : 'incomplete';
+  }
+
+  /**
+   * Signs an address up for the newsletter (newsletter walls). `false` when
+   * no Mailchimp integration is set up, so there is nowhere to sign it up.
+   */
+  async subscribe(email: string): Promise<boolean> {
+    const config = await this.config();
+
+    if (!config) {
+      return false;
+    }
+
+    await subscribeMember(
+      config.apiKey,
+      config.audienceId,
+      email.trim().toLowerCase()
+    );
+
+    return true;
   }
 
   /**

@@ -12,10 +12,10 @@ export function storePaywallBypassToken(token: string): void {
   });
 }
 
-export function hasPaywallBypass(): boolean {
+export function getPaywallBypassToken(): string | undefined {
   const token = getCookie(BYPASS_COOKIE_KEY);
 
-  return !!token;
+  return typeof token === 'string' && token ? token : undefined;
 }
 
 export function hasValidPaywallBypass(validTokens: string[]): boolean {

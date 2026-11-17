@@ -56,6 +56,7 @@ export const CACHEABLE_QUERIES = new Set([
   'author',
   'authors',
   'commentsForItem',
+  'engagementPrompts',
   'event',
   'events',
   'getImagesByTag',

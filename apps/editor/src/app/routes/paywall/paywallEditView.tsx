@@ -42,6 +42,7 @@ const mapApiDataToInput = (
   alternativeSubscribeUrl: paywall.alternativeSubscribeUrl,
   hideContentAfter: paywall.hideContentAfter ?? 3,
   fadeout: paywall.fadeout ?? true,
+  enforced: paywall.enforced,
   bypasses: paywall.bypasses ?? [],
 });
 

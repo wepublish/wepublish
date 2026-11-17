@@ -65,6 +65,11 @@ export class Paywall {
   @Field()
   fadeout!: boolean;
 
+  @Field({
+    description: `Cut the blocks after hideContentAfter on the server, instead of hiding them on the website.`,
+  })
+  enforced!: boolean;
+
   @Field(() => [MemberPlan])
   memberPlans!: MemberPlan[];
 
@@ -83,6 +88,9 @@ export class CreatePaywallInput extends OmitType(
 
   @Field(() => [String])
   bypassTokens!: string[];
+
+  @Field({ defaultValue: false })
+  override enforced!: boolean;
 }
 
 @ArgsType()

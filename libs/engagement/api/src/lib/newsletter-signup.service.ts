@@ -1,0 +1,81 @@
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
+import {
+  NewsletterMailchimpService,
+  NewsletterSignupProblem,
+} from '@wepublish/newsletter/api';
+import { METER_SECRET } from './meter-token';
+import {
+  deriveNewsletterSecret,
+  signNewsletterToken,
+  verifyNewsletterToken,
+} from './newsletter-token';
+import { NewsletterStatus } from './reader-context';
+
+const PROBLEMS: Record<NewsletterSignupProblem, string> = {
+  noIntegration: 'there is no Mailchimp integration',
+  disabled: 'the Mailchimp integration is switched off',
+  incomplete: 'the Mailchimp integration has no API key or audience',
+};
+
+const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+/**
+ * Newsletter walls: a reader gives their email, which is signed up with the
+ * Mailchimp integration, and gets a token that lets them past every newsletter
+ * wall and keeps newsletter prompts away.
+ */
+@Injectable()
+export class NewsletterSignupService {
+  private logger = new Logger(NewsletterSignupService.name);
+  private secret: Buffer;
+
+  constructor(
+    @Inject(METER_SECRET) meterSecret: Buffer,
+    private mailchimp: NewsletterMailchimpService
+  ) {
+    this.secret = deriveNewsletterSecret(meterSecret);
+  }
+
+  async signUp(email: string): Promise<string> {
+    const address = email.trim().toLowerCase();
+
+    if (address.length > 254 || !EMAIL.test(address)) {
+      throw new BadRequestException('Invalid email address.');
+    }
+
+    // Without an integration there is nowhere to sign up, which is the
+    // medium's to fix: the reader still gets past the wall.
+    let subscribed: boolean;
+
+    try {
+      subscribed = await this.mailchimp.subscribe(address);
+    } catch (error) {
+      // Mailchimp's answer names the audience: it stays in the log.
+      this.logger.warn(`Mailchimp refused a newsletter signup: ${error}`);
+      throw new BadRequestException('The newsletter signup failed.');
+    }
+
+    if (!subscribed) {
+      const problem = await this.mailchimp.signupProblem();
+
+      this.logger.error(
+        `A reader signed up for the newsletter, but the address went nowhere: ${PROBLEMS[problem ?? 'noIntegration']} (Settings → Integrations). The reader got past the wall anyway.`
+      );
+    }
+
+    return signNewsletterToken(
+      { email: address, signedUpAt: new Date() },
+      this.secret
+    );
+  }
+
+  /** `subscribed` for a token signed here, otherwise nothing is known. */
+  statusOf(token: string | null | undefined): NewsletterStatus | undefined {
+    return verifyNewsletterToken(token, this.secret) ? 'subscribed' : undefined;
+  }
+}

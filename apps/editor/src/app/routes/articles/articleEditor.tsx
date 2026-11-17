@@ -507,6 +507,7 @@ function ArticleEditor() {
     return {
       ...articleMetadataToMetadataInput(metadata),
       slug: metadata.slug,
+      contentGateDisabled: metadata.contentGateDisabled ?? false,
       canonicalUrl: metadata.canonicalUrl,
       blocks: blocks.map(mapBlockValueToBlockInput),
       likes: metadata.likes ?? 0,

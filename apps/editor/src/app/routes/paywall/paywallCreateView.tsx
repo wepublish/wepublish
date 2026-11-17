@@ -11,7 +11,7 @@ import {
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { PaywallForm, PaywallFormValues, paywallSchema } from './paywallForm';
 
@@ -26,6 +26,7 @@ const PaywallCreateView = () => {
   const { t } = useTranslation();
   const [shouldClose, setShouldClose] = useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const closePath = './../..';
 
   const form = useForm<PaywallFormValues>({
@@ -38,6 +39,8 @@ const PaywallCreateView = () => {
       bypasses: [],
       fadeout: true,
       hideContentAfter: 3,
+      // "Restrict premium content" in Audience Engagement opens this form.
+      enforced: searchParams.get('enforced') === 'true',
     },
   });
 

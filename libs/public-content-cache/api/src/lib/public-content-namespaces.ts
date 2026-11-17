@@ -7,7 +7,13 @@ export const NAVIGATIONS_NAMESPACE = 'navigations';
 export const CONTENT_CACHE_TTL_SECONDS = 300;
 
 export type PublicContent =
-  'articles' | 'pages' | 'authors' | 'images' | 'paywalls' | 'polls';
+  | 'articles'
+  | 'pages'
+  | 'authors'
+  | 'images'
+  | 'paywalls'
+  | 'engagement'
+  | 'polls';
 
 export const contentCacheNamespace = (content: PublicContent) =>
   `content:${content}`;
@@ -15,7 +21,7 @@ export const contentCacheNamespace = (content: PublicContent) =>
 export const PAGE_CONTENT_NAMESPACES: readonly string[] = [
   PUBLIC_CONTENT_NAMESPACE,
   NAVIGATIONS_NAMESPACE,
-  'banners',
+  contentCacheNamespace('engagement'),
   'settings',
   'website-settings',
   'peer-profile',
@@ -36,6 +42,7 @@ export const PUBLIC_CONTENT_SHARED_NAMESPACES: readonly string[] = [
   contentCacheNamespace('authors'),
   contentCacheNamespace('images'),
   contentCacheNamespace('paywalls'),
+  contentCacheNamespace('engagement'),
   contentCacheNamespace('polls'),
   PUBLIC_COMMENTS_NAMESPACE,
 ];
