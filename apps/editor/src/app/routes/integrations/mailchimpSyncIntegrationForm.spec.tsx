@@ -125,7 +125,12 @@ describe('MailchimpSyncIntegrationForm', () => {
               mailchimp_listId: 'list-1',
               mailchimp_mergeFieldMappings: [],
               mailchimp_interestGroupMappings: [
-                { groupId: 'grp-1', expression: 'slug:contains:abo' },
+                {
+                  groupId: 'grp-1',
+                  expression: 'slug:contains:abo',
+                  autoAdd: true,
+                  autoRemove: true,
+                },
               ],
               mailchimp_defaultInterestGroupIds: [],
               mailchimp_extensions: {},
