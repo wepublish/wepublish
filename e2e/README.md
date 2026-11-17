@@ -118,7 +118,10 @@ skip reason in the report (`pnpm run e2e:report`).
   plan's invoice-creation interval to `sendAsLetter`, restoring both
   afterwards (`@mode:serial`), and needs the features
   `editor-renewal-provider-invoice`, `paper-letters` and `paper-letter-flow`
-  on the target (it skips with the missing ones named).
+  on the target (it skips with the missing ones named). Its second scenario
+  switches the setting off, so bexio emails the renewal invoice itself, and
+  reads that mail in the Resend inbox like the checkout journey
+  (`@inbound-mail`, one mail of the daily budget).
 - **`checkout`** (`support/simulated-payment.ts`) drives the SIMULATED payment
   provider's checkout page (Pay / Decline / Cancel). It is the only payment
   fake: Stripe and Payrexx are never mocked over HTTP. `@payment` scenarios
