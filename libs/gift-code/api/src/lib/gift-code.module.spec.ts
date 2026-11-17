@@ -12,6 +12,10 @@ import {
   SellableRegistry,
 } from '@wepublish/payment/api';
 import {
+  PublicContentCacheInvalidator,
+  PublicContentInvalidatorModule,
+} from '@wepublish/public-content-cache/api';
+import {
   GiftCodeAttemptLimiter,
   GiftCodeInvoiceDataloader,
   GiftCodeModule,
@@ -103,6 +107,7 @@ describe('GiftCodeModule', () => {
         { provide: SellableCheckoutService, useValue: {} },
         { provide: InvoicePaidNotifier, useValue: {} },
         { provide: FeaturesService, useValue: {} },
+        { provide: PublicContentCacheInvalidator, useValue: {} },
       ],
     }).compile();
 
@@ -111,5 +116,9 @@ describe('GiftCodeModule', () => {
     expect(module.get(SellableRegistry).get(SellableKind.giftCode)).toBe(
       module.get(GiftCodeSellableHandler)
     );
+  });
+
+  it('imports the public content invalidator for offer writes', () => {
+    expect(metadata('imports')).toContain(PublicContentInvalidatorModule);
   });
 });

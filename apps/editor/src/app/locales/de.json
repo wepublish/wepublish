@@ -525,6 +525,11 @@
         "discountCodesHeading": "Rabattcodes",
         "showGoodies": "Goodie-Auswahl anzeigen",
         "showDiscountCodes": "Rabattcode-Eingabe anzeigen",
+        "giftCodeRedemptionHeading": "Geschenkcodes",
+        "showGiftCodeRedemption": "Link zum Einlösen von Geschenkcodes anzeigen",
+        "giftCodeRedemptionPage": "Seite zum Einlösen",
+        "giftCodeRedemptionLinkText": "Linktext",
+        "giftCodeRedemptionLinkTextHelp": "Leer lassen, um den Standardtext zu verwenden.",
         "goodieMinValue": {
           "label": "Mindestbetrag für ein Goodie",
           "hint": "Wer weniger bezahlt, kann kein Goodie auswählen. Leer lassen für keinen Mindestbetrag."
@@ -656,6 +661,20 @@
         "leadText": "Lead-Text",
         "title": "Titel",
         "preTitle": "Oberzeile"
+      },
+      "redeemGiftCode": {
+        "label": "Geschenkcode einlösen"
+      },
+      "giftCodeOffers": {
+        "label": "Geschenkcodes verkaufen",
+        "selectOffers": "Geschenkangebote im Verkauf",
+        "selectOffersHint": "Leserinnen und Leser sehen nur aktive Angebote, in dieser Reihenfolge.",
+        "displayHeading": "Darstellung",
+        "askRecipientName": "Nach dem Namen der beschenkten Person fragen",
+        "defaultOfferTitle": "Standardmässig ausgewählt – dieses Angebot ist nach dem Laden der Seite vorausgewählt.",
+        "orderHeading": "Reihenfolge der Geschenkangebote",
+        "orderHelp": "Ziehe die Angebote in die Reihenfolge, in der sie auf der Website erscheinen, und wähle, welches Angebot vorausgewählt ist.",
+        "showDiscountCodes": "Rabattcode-Eingabe anzeigen (nur bei Angeboten, die Rabattcodes erlauben)"
       },
       "mailchimpForm": {
         "label": "Newsletter-Formular",
@@ -3923,7 +3942,7 @@
       },
       "dialogs": {
         "cancelTitle": "Geschenkcode stornieren?",
-        "cancelBody": "Der Geschenkcode für {{ giftCode }} kann danach nicht mehr eingelöst werden. Rückerstattungen laufen nicht hier, sondern über den Zahlungsanbieter.",
+        "cancelBody": "Der Geschenkcode für {{ giftCode }} kann danach nicht mehr eingelöst werden. Rückerstattungen laufen über den Zahlungsanbieter.",
         "cancelConfirm": "Geschenkcode stornieren",
         "markAsPaidTitle": "Als bezahlt markieren?",
         "markAsPaidBody": "Die Rechnung für {{ giftCode }} wird als bezahlt markiert. Ist der Code noch nicht ausgestellt, wird er jetzt ausgestellt. Mach das erst, wenn das Geld eingegangen ist.",

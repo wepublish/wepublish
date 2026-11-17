@@ -6,10 +6,9 @@ which returns `[]` while the feature is off. A profile page will query it on
 every tenant, and failing there would mean one failing request per profile
 view.
 
-No website uses these operations yet. `purchaseGiftCode`, `payGiftCode` and
-`myGiftCodes` stay in the schema for the website step, and the offer fields
-for the separate gift block
-([D32](decisions.md#d32-website-and-gift-block-come-later)).
+The website uses `purchaseGiftCode` and `redeemGiftCode` through the gift
+code blocks ([05-editor-and-website.md](05-editor-and-website.md#website)).
+`payGiftCode` and `myGiftCodes` have no website caller yet.
 
 ## Permissions
 
@@ -70,11 +69,11 @@ renewals". `autoRenew` and `renewalPaymentMethodId` are optional on create
 (default false / null). On update, an omitted value keeps the stored one,
 `autoRenew: false` without a method clears the method, and the merged offer is
 validated again, so changing the plan or periodicity re-checks the stored
-renewal method. Writes do not invalidate the public content cache:
-no cached public response contains an offer, because the offer queries need
-a permission and `myGiftCodes` needs a login. The gift block that shows
-offers on the website will have to add that invalidation. The invoice always
-uses the offer's price at submit time.
+renewal method. Create, update and delete invalidate the cached `pages` and
+`articles` through `PublicContentCacheInvalidator`, because the gift code
+offers block puts offers into public page and article answers. A rejected
+write invalidates nothing. The invoice always uses the offer's price at
+submit time.
 
 ## Codes (`gift-code.resolver.ts`)
 
@@ -122,14 +121,16 @@ either; Karl removed it.
 
 ### purchaseGiftCode
 
-Args: `offerId!`, `recipientName!` (trimmed, 1 to 200 characters),
+Args: `offerId!`, `recipientName` (optional, trimmed, at most 200
+characters; empty or blank is stored as null, because the gift code offers
+block can skip the question, see [D45](decisions.md#d45-a-block-to-sell-gift-codes)),
 `discountCode` (trimmed; empty means none), exactly one of
 `paymentMethodId` or `paymentMethodSlug`, `successURL`, `failureURL`.
 
 `GiftCodeService.purchase`:
 
 1. Rejects a missing or doubled method selector, with the same message as
-   `createPaymentFromInvoice`, and a recipient name out of bounds.
+   `createPaymentFromInvoice`, and a recipient name that is too long.
 2. Loads the offer with its plan. BadRequest "Gift code offer is
    not available" unless both offer and plan are active. A discount code on
    an offer without `allowDiscountCodes` is rejected with "Discount codes
@@ -309,6 +310,37 @@ period, items and payments, and for `createdSubscription` the subscription.
 It skips that removal when the invoice is paid or another code has claimed
 the invoice or the new subscription in the meantime. An open invoice the
 subscription had before is never removed.
+
+## Blocks (`libs/block-content/api/src/lib/gift-code/`, `subscribe/`)
+
+Decided in [D41](decisions.md#d41-gift-code-blocks) and [D43](decisions.md#d43-the-subscribe-block-links-to-a-redemption-page) to [D45](decisions.md#d45-a-block-to-sell-gift-codes). Blocks are stored as JSON
+in the revision, so only the `BlockType` enums changed: GraphQL
+`BlockType.redeemGiftCode` and `giftCodeOffers`, and the Prisma `BlockType`
+enum (`EditorBlockType` in GraphQL, used by block styles) through migration
+`20261116120000_add_gift_code_blocks`.
+
+| Block | Stored fields | Resolved fields |
+| --- | --- | --- |
+| `SubscribeBlock` (added) | `showGiftCodeRedemption` (default false), `giftCodeRedemptionPageId`, `giftCodeRedemptionLinkText` (nullable; the website uses its default text when empty) | `showGiftCodeRedemption` is false while `gift-codes` is off; `giftCodeRedemptionPage: Page` through `PageDataloaderService`, null when the feature or the option is off or no page is set |
+| `RedeemGiftCodeBlock` | `fields: [SubscribeBlockField]` (default first name, password, password repeated) | none; the website calls `redeemGiftCode` |
+| `GiftCodeOffersBlock` | `fields: [SubscribeBlockField]` (subscribe default), `giftCodeOfferIds` (display order), `defaultGiftCodeOfferId` (preselected offer, nullable), `showDiscountCodes` (default false), `askRecipientName` (default true) | `giftCodeOffers: [GiftCodeOffer]`: the active offers of active member plans among the ids, in the stored order, `[]` while `gift-codes` is off; `giftCodeOfferIds` drops ids of deleted offers |
+
+`fields` reuses the subscribe block's enum: which registration fields a
+logged-out reader is asked for. The website shows the discount code input
+only when `showDiscountCodes` is on and the chosen offer has
+`allowDiscountCodes`.
+
+`block-content` imports the offer model and `GiftCodeOfferDataloader` by
+relative path and provides the dataloader itself instead of importing
+`GiftCodeModule`. Importing the `@wepublish/gift-code/api` barrel closes the
+loop `block-content` → `gift-code` → `membership` → `member-plan` → `page`
+→ `block-content`, and `DiscountCode extends HasMemberPlanLc` then crashes
+with "Class extends value undefined" ([D10](decisions.md#d10-a-new-lib-libsgift-codeapi)).
+`SubscribeBlockField` moved to `subscribe/subscribe-block-field.model.ts` for
+the same reason: the new block models use it in decorator defaults, which run
+while `subscribe-block.model.ts` may still be loading. Root `eslint` flags the
+relative imports (`@nx/enforce-module-boundaries`); `block-content/api` is in
+`.nxignore`, so `nx lint` never runs on it.
 
 ## Other additions
 

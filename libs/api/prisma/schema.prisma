@@ -1948,6 +1948,8 @@ enum BlockType {
   HTML           @map("html")
   Subscribe      @map("subscribe")
   MailchimpForm  @map("mailchimpForm")
+  RedeemGiftCode @map("redeemGiftCode")
+  GiftCodeOffers @map("giftCodeOffers")
   Crowdfunding   @map("crowdfunding")
   Poll           @map("poll")
   Comment        @map("comment")

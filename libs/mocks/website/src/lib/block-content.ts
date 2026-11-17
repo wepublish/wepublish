@@ -14,6 +14,7 @@ import {
   FullFlexAlignmentFragment,
   FullFlexBlockFragment,
   FullFlexTeaserFragment,
+  FullGiftCodeOffersBlockFragment,
   FullHtmlBlockFragment,
   FullIFrameBlockFragment,
   FullImageBlockFragment,
@@ -25,6 +26,7 @@ import {
   FullPolisConversationBlockFragment,
   FullPollBlockFragment,
   FullQuoteBlockFragment,
+  FullRedeemGiftCodeBlockFragment,
   FullRichTextBlockFragment,
   FullSoundCloudTrackBlockFragment,
   FullStreamableVideoBlockFragment,
@@ -51,7 +53,11 @@ import { mockComment } from './comment';
 import { mockArticle, mockArticleRevision } from './article';
 import { mockPage, mockPageRevision } from './page';
 import { mockCrowdfunding } from './crowdfunding';
-import { mockMemberPlan, mockPeriodicityPrice } from './membership';
+import {
+  mockGiftCodeOffer,
+  mockMemberPlan,
+  mockPeriodicityPrice,
+} from './membership';
 import { faker } from './faker';
 import { definedOnly } from './overrides';
 
@@ -611,9 +617,43 @@ export const mockSubscribeBlock = ({
   goodieMinValue: null,
   goodieMinValueAppliesToUpgrade: false,
   hideRepeatGoodieOnUpgrade: false,
+  showGiftCodeRedemption: false,
+  giftCodeRedemptionPage: null,
+  giftCodeRedemptionLinkText: null,
   memberPlans,
   memberPlanIds,
   memberPlanRenderSettings,
+  ...definedOnly(overrides),
+});
+
+export const mockRedeemGiftCodeBlock = (
+  overrides: Partial<FullRedeemGiftCodeBlockFragment> = {}
+): FullRedeemGiftCodeBlockFragment => ({
+  __typename: 'RedeemGiftCodeBlock',
+  blockStyle: null,
+  fields: [],
+  ...definedOnly(overrides),
+});
+
+export const mockGiftCodeOffersBlock = ({
+  giftCodeOffers = [
+    mockGiftCodeOffer(),
+    mockGiftCodeOffer({
+      name: 'Monatsabo verschenken',
+      periodicity: PaymentPeriodicity.Monthly,
+      price: 1500,
+    }),
+  ],
+  ...overrides
+}: Partial<FullGiftCodeOffersBlockFragment> = {}): FullGiftCodeOffersBlockFragment => ({
+  __typename: 'GiftCodeOffersBlock',
+  blockStyle: null,
+  fields: [],
+  giftCodeOfferIds: giftCodeOffers.map(({ id }) => id),
+  defaultGiftCodeOfferId: null,
+  giftCodeOffers,
+  showDiscountCodes: false,
+  askRecipientName: true,
   ...definedOnly(overrides),
 });
 

@@ -525,6 +525,11 @@
         "discountCodesHeading": "Codes de réduction",
         "showGoodies": "Afficher la sélection de goodies",
         "showDiscountCodes": "Afficher le champ de code de réduction",
+        "giftCodeRedemptionHeading": "Codes cadeaux",
+        "showGiftCodeRedemption": "Afficher le lien pour utiliser un code cadeau",
+        "giftCodeRedemptionPage": "Page d’utilisation",
+        "giftCodeRedemptionLinkText": "Texte du lien",
+        "giftCodeRedemptionLinkTextHelp": "Laissez vide pour utiliser le texte par défaut.",
         "goodieMinValue": {
           "label": "Montant minimal pour un goodie",
           "hint": "Les lecteurs qui paient moins ne peuvent pas choisir de goodie. Laisser vide pour aucun minimum."
@@ -656,6 +661,20 @@
         "leadText": "Chapeau",
         "title": "Titre",
         "preTitle": "Pré-titre"
+      },
+      "redeemGiftCode": {
+        "label": "Utiliser un code cadeau"
+      },
+      "giftCodeOffers": {
+        "label": "Vendre des codes cadeaux",
+        "selectOffers": "Offres cadeaux en vente",
+        "selectOffersHint": "Seules les offres actives sont affichées, dans cet ordre.",
+        "displayHeading": "Affichage",
+        "askRecipientName": "Demander le nom du destinataire",
+        "defaultOfferTitle": "Sélectionnée par défaut — cette offre est présélectionnée au chargement de la page.",
+        "orderHeading": "Ordre des offres cadeaux",
+        "orderHelp": "Faites glisser les offres dans l’ordre où elles apparaissent sur le site et choisissez l’offre présélectionnée.",
+        "showDiscountCodes": "Afficher le champ de code de réduction (seulement pour les offres qui l’autorisent)"
       },
       "mailchimpForm": {
         "label": "Formulaire newsletter",
@@ -3800,7 +3819,7 @@
         "paymentMethodsHelp": "Les acheteur·euse·s peuvent payer le cadeau avec ces méthodes. Tous les fournisseurs de paiement ne prennent pas en charge les achats uniques.",
         "paymentMethodsRequired": "Choisissez au moins une méthode de paiement",
         "allowDiscountCodes": "Autoriser les codes de réduction",
-        "allowDiscountCodesHelp": "Les acheteur·euses peuvent saisir un code de réduction de cet abonnement lors de l’achat du cadeau.",
+        "allowDiscountCodesHelp": "Les acheteur·euse·s peuvent saisir un code de réduction de cet abonnement lors de l’achat du cadeau.",
         "autoRenew": "Renouveler automatiquement",
         "autoRenewHelp": "L’abonnement démarré avec un code se renouvelle automatiquement à la fin de la période offerte.",
         "autoRenewNotExtendable": "Cet abonnement ne peut pas être prolongé, il ne peut donc pas se renouveler automatiquement.",
@@ -3915,7 +3934,7 @@
       },
       "dialogs": {
         "cancelTitle": "Annuler le code cadeau ?",
-        "cancelBody": "Le code cadeau pour {{ giftCode }} ne pourra plus être utilisé. Les remboursements ne se font pas ici, mais auprès du fournisseur de paiement.",
+        "cancelBody": "Le code cadeau pour {{ giftCode }} ne pourra plus être utilisé. Les remboursements se font auprès du fournisseur de paiement.",
         "cancelConfirm": "Annuler le code cadeau",
         "markAsPaidTitle": "Marquer comme payé ?",
         "markAsPaidBody": "La facture pour {{ giftCode }} est marquée comme payée. Si le code n’a pas encore été émis, il l’est maintenant. Ne le faites qu’une fois l’argent reçu.",
