@@ -63,7 +63,11 @@ export class ImapInbox implements Inbox {
     private readonly config: ImapConfig,
     /** Mails received before this are ignored. */
     private readonly since: Date,
-    private readonly options: { purgeOlderThanDays?: number } = {}
+    private readonly options: {
+      purgeOlderThanDays?: number;
+      /** Leave read mails in the mailbox, so people can look at them afterwards. */
+      keepMails?: boolean;
+    } = {}
   ) {}
 
   private async connect(): Promise<ImapFlow> {
@@ -161,7 +165,9 @@ export class ImapInbox implements Inbox {
 
       const parsed = await simpleParser(message.source);
       // Read once, then gone: keeps the shared mailbox small.
-      await client.messageDelete(String(uid), { uid: true });
+      if (!this.options.keepMails) {
+        await client.messageDelete(String(uid), { uid: true });
+      }
 
       return toMail(String(uid), parsed);
     } finally {

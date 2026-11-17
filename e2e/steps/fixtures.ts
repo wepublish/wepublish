@@ -127,6 +127,7 @@ export const test = base.extend<TestFixtures, WorkerFixtures>({
       : env.imap ?
         new ImapInbox(env.imap, since, {
           purgeOlderThanDays: env.imapPurgeOlderThanDays,
+          keepMails: env.keepMails,
         })
       : undefined;
 

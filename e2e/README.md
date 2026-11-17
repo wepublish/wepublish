@@ -224,7 +224,9 @@ started (nor migrated) for a URL you override (`BASE_URL`, `E2E_EDITOR_URL`,
   started (30 s slack) and deletes each mail it read. Ethereal allows 100 MB
   per account and expires mails after hours to days;
   `E2E_IMAP_PURGE_OLDER_THAN_DAYS` deletes older mails once per worker (off by
-  default, since others may use the account).
+  default, since others may use the account). `E2E_KEEP_MAILS=true` (workflow input
+  `keep_mails`) leaves the mails a scenario read in the mailbox, to look at
+  them afterwards (e.g. the bexio pdf attached to a renewal mail).
 - `@bexio` journeys check what the bexio provider did in the bexio test
   company through bexio's API (`E2E_BEXIO_API_TOKEN`, the test company's
   token as in the review seed). During its trial bexio only emails its own
