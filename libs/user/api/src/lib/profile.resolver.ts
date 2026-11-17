@@ -5,6 +5,8 @@ import {
   AuthSessionType,
   CurrentUser,
   UserSession,
+  requireSessionUser,
+  AuthSession,
 } from '@wepublish/authentication/api';
 import { SensitiveDataUser } from './user.model';
 import { UploadImageInput } from '@wepublish/image/api';
@@ -67,14 +69,13 @@ export class ProfileResolver {
   })
   async uploadUserProfileImage(
     @Args() uploadImageInput: UploadImageInput,
-    @CurrentUser() session: UserSession
+    @CurrentUser() session: AuthSession
   ) {
-    assertNotManagedByWepublishLogin(session.user);
+    const user = requireSessionUser(session);
 
-    return this.profileService.uploadUserProfileImage(
-      session.user,
-      uploadImageInput
-    );
+    assertNotManagedByWepublishLogin(user);
+
+    return this.profileService.uploadUserProfileImage(user, uploadImageInput);
   }
 
   @Authenticated()

@@ -1,9 +1,25 @@
-import type { UserSession } from '@wepublish/authentication/api';
+import {
+  type ApiTokenSession,
+  AuthSessionType,
+  type UserSession,
+} from '@wepublish/authentication/api';
 import type { BexioPrintSourceService } from './bexio/bexio-print-source.service';
 import { PrintIssueResolver } from './print-issue.resolver';
 import type { PrintIssueService } from './print-issue.service';
 
-const session = { user: { id: 'editor-1' } } as unknown as UserSession;
+const session = {
+  type: AuthSessionType.User,
+  user: { id: 'editor-1' },
+} as unknown as UserSession;
+
+const apiKey: ApiTokenSession = {
+  type: AuthSessionType.ApiToken,
+  id: 'key-1',
+  name: 'e2e',
+  token: 'secret',
+  permissions: [],
+  createdBy: { id: 'creator-1', email: 'creator@example.test' },
+};
 const computedAt = new Date('2026-12-20T09:00:00.000Z');
 const run = {
   mode: 'export',
@@ -73,6 +89,14 @@ describe('PrintIssueResolver', () => {
       computedAt,
       summary: { byPlan: [{ key: 'Jahresabo', count: 2 }] },
     });
+  });
+
+  it('computes the run on behalf of the creator of an api key', async () => {
+    const { resolver, issues } = makeResolver();
+
+    await resolver.computePrintIssueRun('issue-1', apiKey);
+
+    expect(issues.computeRun).toHaveBeenCalledWith('issue-1', 'creator-1');
   });
 
   it('answers null when no run is waiting', async () => {

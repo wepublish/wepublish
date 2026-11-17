@@ -19,6 +19,8 @@ import {
   CurrentUser,
   UserSession,
   assertNotImpersonating,
+  requireSessionUser,
+  AuthSession,
 } from '@wepublish/authentication/api';
 import { JwtService } from '@wepublish/session/api';
 
@@ -103,7 +105,7 @@ export class ExternalAppsResolver {
   })
   async createExternalAppToken(
     @Args('externalAppId') externalAppId: string,
-    @CurrentUser() session: UserSession
+    @CurrentUser() session: AuthSession
   ): Promise<ExternalAppToken> {
     assertNotImpersonating(session);
 
@@ -116,7 +118,7 @@ export class ExternalAppsResolver {
     const expiresInMinutes = 240;
     // the userinfo endpoint matches the audience against the app's origin
     const token = await this.jwtService.generateJWT({
-      id: session.user.id,
+      id: requireSessionUser(session).id,
       expiresInMinutes,
       audience: new URL(app.url).origin,
     });
