@@ -36,6 +36,8 @@ export const env = {
   /** Deletes older mails from the shared IMAP mailbox once per worker; off by default. */
   imapPurgeOlderThanDays:
     Number(process.env.E2E_IMAP_PURGE_OLDER_THAN_DAYS) || undefined,
+  /** Leaves the mails a scenario read in the IMAP mailbox instead of deleting them. */
+  keepMails: process.env.E2E_KEEP_MAILS === 'true',
   /** Resend receiving domain: mail from outside servers (bexio's invoice mails). */
   resend:
     process.env.E2E_RESEND_API_KEY && process.env.E2E_RESEND_DOMAIN ?
