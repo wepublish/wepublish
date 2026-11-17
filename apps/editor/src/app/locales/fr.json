@@ -4195,6 +4195,17 @@
       "form": {
         "unsaved": "Modifications non enregistrées",
         "discard": "Annuler les modifications"
+      },
+      "taglines": {
+        "mail": "Liens de connexion, factures et rappels par e-mail",
+        "mailchimpSync": "Copie tes lecteur·trice·s dans ton audience newsletter",
+        "payment": "Encaisse les paiements des abonnements",
+        "challenge": "Protège tes formulaires contre les robots de spam",
+        "ai": "Écrit des blocs HTML à partir d’une description",
+        "analytics": "Trouve tes articles les plus lus",
+        "trackingPixel": "Compte les lectures pour tes droits d’auteur",
+        "letter": "Imprime et poste des lettres aux lecteur·trice·s",
+        "pdfRenderer": "Transforme lettres et factures en PDF"
       }
     },
     "websiteSettings": {

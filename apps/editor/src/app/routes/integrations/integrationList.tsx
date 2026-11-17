@@ -162,7 +162,7 @@ function IntegrationCard({
             variant="body2"
             sx={{ color: 'text.secondary' }}
           >
-            {integration.summary}
+            {integration.tagline}
           </IntegrationSummary>
 
           <IntegrationProviders>

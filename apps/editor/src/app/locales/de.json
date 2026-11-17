@@ -4203,6 +4203,17 @@
       "form": {
         "unsaved": "Ungespeicherte Änderungen",
         "discard": "Verwerfen"
+      },
+      "taglines": {
+        "mail": "Login-Links, Rechnungen und Erinnerungen per E-Mail",
+        "mailchimpSync": "Bringt Leser:innen in deine Newsletter-Zielgruppe",
+        "payment": "Wickelt die Zahlungen für Abos ab",
+        "challenge": "Hält Spam-Bots von deinen Formularen fern",
+        "ai": "Schreibt HTML-Blöcke nach deiner Beschreibung",
+        "analytics": "Findet deine meistgelesenen Artikel",
+        "trackingPixel": "Zählt Zugriffe für die Urheberrechtsvergütung",
+        "letter": "Druckt Briefe und verschickt sie per Post",
+        "pdfRenderer": "Macht aus Briefen und Rechnungen PDFs"
       }
     },
     "websiteSettings": {

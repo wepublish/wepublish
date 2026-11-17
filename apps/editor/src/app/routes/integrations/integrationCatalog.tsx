@@ -81,7 +81,10 @@ export type IntegrationDefinition = {
   path: string;
   group: IntegrationGroupKey;
   title: string;
+  /** The full explanation, shown on the integration's own page. */
   summary: string;
+  /** A few words for the overview card. */
+  tagline: string;
   icon: ElementType;
   permission: Permission;
   feature?: FeatureKey;
@@ -221,6 +224,7 @@ export function integrationCatalog(t: TFunction): IntegrationDefinition[] {
       group: 'email',
       title: t('integrations.mailProvider'),
       summary: t('integrations.mailProviderInfo'),
+      tagline: t('integrations.taglines.mail'),
       icon: MdEmail,
       permission: CanGetMailProviderSettings,
       query: MailProviderSettingsDocument,
@@ -239,6 +243,7 @@ export function integrationCatalog(t: TFunction): IntegrationDefinition[] {
       group: 'email',
       title: t('integrations.mailchimpSync'),
       summary: t('integrations.mailchimpSyncInfo'),
+      tagline: t('integrations.taglines.mailchimpSync'),
       icon: MdSync,
       permission: CanGetMailchimpSyncSettings,
       query: SyncProviderSettingsDocument,
@@ -263,6 +268,7 @@ export function integrationCatalog(t: TFunction): IntegrationDefinition[] {
       group: 'payments',
       title: t('integrations.paymentProvider'),
       summary: t('integrations.paymentProviderInfo'),
+      tagline: t('integrations.taglines.payment'),
       icon: MdCreditCard,
       permission: CanGetPaymentProviderSettings,
       query: PaymentProviderSettingsDocument,
@@ -279,6 +285,7 @@ export function integrationCatalog(t: TFunction): IntegrationDefinition[] {
       group: 'website',
       title: t('integrations.challengeProvider'),
       summary: t('integrations.challengeProviderInfo'),
+      tagline: t('integrations.taglines.challenge'),
       icon: MdSecurity,
       permission: CanGetChallengeProviderSettings,
       query: SettingsIntegrationsChallengeDocument,
@@ -291,6 +298,7 @@ export function integrationCatalog(t: TFunction): IntegrationDefinition[] {
       group: 'website',
       title: t('integrations.ai'),
       summary: t('integrations.aiInfo'),
+      tagline: t('integrations.taglines.ai'),
       icon: MdSmartToy,
       permission: CanGetAISettings,
       query: SettingsIntegrationsAiDocument,
@@ -305,6 +313,7 @@ export function integrationCatalog(t: TFunction): IntegrationDefinition[] {
       group: 'reach',
       title: t('integrations.analytics'),
       summary: t('integrations.analyticsInfo'),
+      tagline: t('integrations.taglines.analytics'),
       icon: MdLocalFireDepartment,
       permission: CanGetAnalyticsProviderSettings,
       query: SettingsIntegrationsAnalyticsDocument,
@@ -329,6 +338,7 @@ export function integrationCatalog(t: TFunction): IntegrationDefinition[] {
       group: 'reach',
       title: t('integrations.trackingPixel'),
       summary: t('integrations.trackingPixelInfo'),
+      tagline: t('integrations.taglines.trackingPixel'),
       icon: MdCopyright,
       permission: CanGetTrackingPixelSettings,
       query: TrackingPixelSettingsDocument,
@@ -347,6 +357,7 @@ export function integrationCatalog(t: TFunction): IntegrationDefinition[] {
       group: 'print',
       title: t('integrations.letterProvider'),
       summary: t('integrations.letterProviderInfo'),
+      tagline: t('integrations.taglines.letter'),
       icon: MdMarkunreadMailbox,
       permission: CanGetLetterProviderSettings,
       feature: 'paper-letters',
@@ -368,6 +379,7 @@ export function integrationCatalog(t: TFunction): IntegrationDefinition[] {
       group: 'print',
       title: t('integrations.pdfRenderer'),
       summary: t('integrations.pdfRendererInfo'),
+      tagline: t('integrations.taglines.pdfRenderer'),
       icon: MdPictureAsPdf,
       permission: CanGetPdfRendererSettings,
       feature: 'paper-letters',

@@ -4263,6 +4263,17 @@
       "form": {
         "unsaved": "Unsaved changes",
         "discard": "Discard"
+      },
+      "taglines": {
+        "mail": "Login links, invoices and reminders by email",
+        "mailchimpSync": "Syncs readers into your newsletter audience",
+        "payment": "Takes the payments for subscriptions",
+        "challenge": "Keeps spam bots out of your forms",
+        "ai": "Writes HTML blocks from a description",
+        "analytics": "Finds your most-read articles",
+        "trackingPixel": "Counts reads for copyright royalties",
+        "letter": "Prints and posts letters to readers",
+        "pdfRenderer": "Turns letters and invoices into PDFs"
       }
     },
     "websiteSettings": {

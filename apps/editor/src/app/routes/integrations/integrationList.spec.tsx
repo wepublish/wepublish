@@ -111,12 +111,13 @@ describe('IntegrationList', () => {
     ).toBeNull();
   });
 
-  it('says what an integration is for without hiding it in a tooltip', () => {
+  it('says in a few words what an integration is for', () => {
     renderList();
 
-    expect(
-      within(card('integrations.ai')).getByText('integrations.aiInfo')
-    ).toBeVisible();
+    const ai = card('integrations.ai');
+
+    expect(within(ai).getByText('integrations.taglines.ai')).toBeVisible();
+    expect(within(ai).queryByText('integrations.aiInfo')).toBeNull();
   });
 
   it('opens an integration from its card, named by its title', () => {
