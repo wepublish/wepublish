@@ -8,9 +8,8 @@ import {
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
-import cloudflareLogo from './assets/cloudflare.svg';
-import hcaptchaLogo from './assets/hcaptcha.webp';
 import { GenericIntegrationList } from './genericIntegrationList';
+import { providersOf, typeOptionsOf } from './integrationCatalog';
 import { secretPlaceholder } from './secretPlaceholder';
 
 const challengeSettingsSchema = z.object({
@@ -24,39 +23,33 @@ type IntegrationFormValues = z.infer<typeof challengeSettingsSchema>;
 
 export function ChallengeIntegrationForm() {
   const { t } = useTranslation();
+  const providers = providersOf('challenge', t);
 
   return (
     <GenericIntegrationList<SettingChallengeProvider, IntegrationFormValues>
+      integrationKey="challenge"
+      providers={providers}
       query={SettingsIntegrationsChallengeDocument}
       mutation={UpdateSettingsIntegrationsChallengeDocument}
       dataKey="challengeProviderSettings"
       setup={{
         createMutation: CreateSettingsIntegrationsChallengeDocument,
-        types: Object.values(ChallengeProviderType).map(type => ({
-          label: type,
-          value: type,
-        })),
+        types: typeOptionsOf(providers),
       }}
       schema={challengeSettingsSchema}
-      getLogo={setting =>
-        setting.type === ChallengeProviderType.Hcaptcha ?
-          hcaptchaLogo
-        : cloudflareLogo
-      }
       fields={setting => [
         {
           name: 'type',
+          half: true,
           label: t('integrations.challengeSettings.type'),
           info: t('integrations.challengeSettings.typeInfo'),
           type: 'select',
-          options: Object.values(ChallengeProviderType).map(v => ({
-            label: v,
-            value: v,
-          })),
+          options: typeOptionsOf(providers),
         },
         {
           type: 'text',
           name: 'name',
+          half: true,
           label: t('name'),
         },
         {

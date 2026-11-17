@@ -19,6 +19,7 @@ import {
   GenericIntegrationFormProps,
   SingleGenericIntegrationForm,
 } from './genericIntegrationForm';
+import { IntegrationEmptyState } from './integrationEmptyState';
 import {
   AddIntegrationButton,
   CreateFixedIntegrationButton,
@@ -67,8 +68,9 @@ const Toolbar = styled.div`
 
 const GenericIntegrationGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
-  gap: 20px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+  max-width: 960px;
 `;
 
 export function GenericIntegrationList<
@@ -137,39 +139,38 @@ export function GenericIntegrationList<
 
   if (!settings?.length) {
     return (
-      <>
-        <Alert severity="warning">
-          {setup ?
-            t('integrations.setUpHint')
-          : t('integrations.noSettingsFound')}
-        </Alert>
-
-        {(addButton || fixedProvider || setup) && (
-          <Toolbar>
-            {addButton}
-
-            {setup && (
-              <AddIntegrationButton
-                types={setup.types}
-                mutation={setup.createMutation}
-                refetchQuery={query}
-                existingIds={[]}
-                label={t('integrations.setUp')}
-              />
-            )}
-
-            {fixedProvider && (
-              <CreateFixedIntegrationButton
-                id={fixedProvider.id}
-                type={fixedProvider.type}
-                name={fixedProvider.name}
-                mutation={fixedProvider.createMutation}
-                refetchQuery={query}
-              />
-            )}
-          </Toolbar>
+      <IntegrationEmptyState providers={formProps.providers}>
+        {registry && (
+          <AddIntegrationButton
+            types={registry.types}
+            mutation={registry.createMutation}
+            refetchQuery={query}
+            existingIds={[]}
+            label={t('integrations.setUp')}
+          />
         )}
-      </>
+
+        {setup && (
+          <AddIntegrationButton
+            types={setup.types}
+            mutation={setup.createMutation}
+            refetchQuery={query}
+            existingIds={[]}
+            label={t('integrations.setUp')}
+          />
+        )}
+
+        {fixedProvider && (
+          <CreateFixedIntegrationButton
+            id={fixedProvider.id}
+            type={fixedProvider.type}
+            name={fixedProvider.name}
+            mutation={fixedProvider.createMutation}
+            refetchQuery={query}
+            label={t('integrations.setUp')}
+          />
+        )}
+      </IntegrationEmptyState>
     );
   }
 

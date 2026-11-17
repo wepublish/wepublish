@@ -24,6 +24,18 @@ export type ProviderTypeOption = {
   value: string;
 };
 
+/** A readable identifier for a new provider, as it will appear in its webhook URL. */
+export function suggestedIdFor(type: string, existingIds: string[]) {
+  const base = type.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  let id = base;
+
+  for (let n = 2; existingIds.includes(id); n++) {
+    id = `${base}-${n}`;
+  }
+
+  return id;
+}
+
 export function DeleteIntegrationButton({
   id,
   mutation,
@@ -108,6 +120,7 @@ export function AddIntegrationButton({
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [id, setId] = useState('');
+  const [idEdited, setIdEdited] = useState(false);
   const [type, setType] = useState<string | null>(null);
   const typeLabelId = useId();
   const idLabelId = useId();
@@ -119,6 +132,7 @@ export function AddIntegrationButton({
   const close = () => {
     setOpen(false);
     setId('');
+    setIdEdited(false);
     setType(null);
   };
 
@@ -186,8 +200,8 @@ export function AddIntegrationButton({
                   const value = option.value;
                   setType(value);
 
-                  if (!id && value) {
-                    setId(value);
+                  if (!idEdited && value) {
+                    setId(suggestedIdFor(value, existingIds));
                   }
                 }}
                 disableClearable
@@ -211,7 +225,10 @@ export function AddIntegrationButton({
 
               <TextField
                 value={id}
-                onChange={event => setId(event.target.value)}
+                onChange={event => {
+                  setId(event.target.value);
+                  setIdEdited(true);
+                }}
                 slotProps={{
                   htmlInput: {
                     'aria-labelledby': idLabelId,

@@ -11,6 +11,7 @@ import { z } from 'zod';
 
 import { FieldDefinition } from './genericIntegrationForm';
 import { GenericIntegrationList } from './genericIntegrationList';
+import { providersOf, typeOptionsOf } from './integrationCatalog';
 
 const pdfRendererSettingsSchema = z.object({
   name: z.string().nullish().or(z.literal('')),
@@ -33,32 +34,30 @@ export function PdfRendererIntegrationForm() {
 
   return (
     <GenericIntegrationList<SettingPdfRenderer, IntegrationFormValues>
+      integrationKey="pdf-renderer"
+      providers={providersOf('pdf-renderer', t)}
       query={PdfRendererSettingsDocument}
       mutation={UpdatePdfRendererSettingDocument}
       dataKey="pdfRendererSettings"
       registry={{
         createMutation: CreatePdfRendererSettingDocument,
         deleteMutation: DeletePdfRendererSettingDocument,
-        types: Object.values(PdfRendererType).map(value => ({
-          label: value,
-          value,
-        })),
+        types: typeOptionsOf(providersOf('pdf-renderer', t)),
       }}
       schema={pdfRendererSettingsSchema}
       fields={setting => {
         const commonFields: FieldDefinition<IntegrationFormValues>[] = [
           {
             name: 'type',
+            half: true,
             label: t('integrations.pdfRendererSettings.type'),
             type: 'select',
-            options: Object.values(PdfRendererType).map(v => ({
-              label: v,
-              value: v,
-            })),
+            options: typeOptionsOf(providersOf('pdf-renderer', t)),
           },
           {
             type: 'text',
             name: 'name',
+            half: true,
             label: t('name'),
           },
         ];
@@ -67,11 +66,15 @@ export function PdfRendererIntegrationForm() {
           commonFields.push({
             type: 'text',
             name: 'cloudflare_accountId',
+            half: true,
             label: t('integrations.pdfRendererSettings.cloudflareAccountId'),
+            info: t('integrations.pdfRendererSettings.cloudflareAccountIdInfo'),
           });
           commonFields.push({
             name: 'cloudflare_apiToken',
+            half: true,
             label: t('integrations.pdfRendererSettings.cloudflareApiToken'),
+            info: t('integrations.pdfRendererSettings.cloudflareApiTokenInfo'),
             type: 'password',
             placeholder: t('integrations.placeholderSecret'),
             autoComplete: 'one-time-code',
@@ -83,15 +86,18 @@ export function PdfRendererIntegrationForm() {
             type: 'text',
             name: 'gotenberg_url',
             label: t('integrations.pdfRendererSettings.gotenbergUrl'),
+            info: t('integrations.pdfRendererSettings.gotenbergUrlInfo'),
             placeholder: 'http://gotenberg:3000',
           });
           commonFields.push({
             type: 'text',
             name: 'gotenberg_username',
+            half: true,
             label: t('integrations.pdfRendererSettings.gotenbergUsername'),
           });
           commonFields.push({
             name: 'gotenberg_password',
+            half: true,
             label: t('integrations.pdfRendererSettings.gotenbergPassword'),
             type: 'password',
             placeholder: t('integrations.placeholderSecret'),
@@ -103,6 +109,7 @@ export function PdfRendererIntegrationForm() {
           type: 'number',
           name: 'timeoutMs',
           label: t('integrations.pdfRendererSettings.timeoutMs'),
+          info: t('integrations.pdfRendererSettings.timeoutMsInfo'),
           placeholder: '60000',
         });
 

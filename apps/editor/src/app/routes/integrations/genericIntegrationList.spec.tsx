@@ -101,14 +101,12 @@ describe('GenericIntegrationList', () => {
 
     mockedUseQuery.mockReturnValue(setting(true, '2026-01-01T00:00:00.000Z'));
     const { rerender } = render(list());
-    expect((screen.getByRole('checkbox') as HTMLInputElement).checked).toBe(
-      true
-    );
+    expect((screen.getByRole('switch') as HTMLInputElement).checked).toBe(true);
 
     mockedUseQuery.mockReturnValue(setting(false, '2026-01-02T00:00:00.000Z'));
     rerender(list());
 
-    expect((screen.getByRole('checkbox') as HTMLInputElement).checked).toBe(
+    expect((screen.getByRole('switch') as HTMLInputElement).checked).toBe(
       false
     );
   });
@@ -147,5 +145,61 @@ describe('GenericIntegrationList', () => {
     renderList();
 
     expect(screen.getByRole('textbox', { name: 'search' })).toBeTruthy();
+  });
+
+  it('welcomes a first setup with the providers to choose from', () => {
+    mockedUseQuery.mockReturnValue({
+      data: { mailProviderSettings: [] },
+      loading: false,
+    });
+
+    render(
+      <GenericIntegrationList
+        query={MailProviderSettingsDocument}
+        mutation={UpdateMailProviderSettingDocument}
+        dataKey="mailProviderSettings"
+        schema={z.object({})}
+        fields={[]}
+        providers={[
+          { type: 'MAILGUN', label: 'Mailgun', logo: 'mailgun.svg' },
+          { type: 'SMTP', label: 'SMTP server' },
+          { type: 'LOG', label: 'Log only', testing: true },
+        ]}
+        setup={{
+          createMutation: CreateMailProviderSettingDocument,
+          types: [{ label: 'SMTP server', value: 'SMTP' }],
+        }}
+      />
+    );
+
+    expect(
+      screen.getByRole('heading', { name: 'integrations.empty.title' })
+    ).toBeInTheDocument();
+    expect(screen.getByText('integrations.empty.description')).toBeTruthy();
+    expect(screen.getByText('Mailgun')).toBeInTheDocument();
+    expect(screen.getByText('SMTP server')).toBeInTheDocument();
+    expect(screen.queryByText('Log only')).toBeNull();
+  });
+
+  it('does not offer a choice when there is only one provider', () => {
+    mockedUseQuery.mockReturnValue({
+      data: { mailProviderSettings: [] },
+      loading: false,
+    });
+
+    render(
+      <GenericIntegrationList
+        query={MailProviderSettingsDocument}
+        mutation={UpdateMailProviderSettingDocument}
+        dataKey="mailProviderSettings"
+        schema={z.object({})}
+        fields={[]}
+        providers={[{ type: 'V0', label: 'v0 by Vercel' }]}
+      />
+    );
+
+    expect(
+      screen.getByText('integrations.empty.descriptionSingle')
+    ).toBeTruthy();
   });
 });

@@ -10,9 +10,9 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
-import proLitterisLogo from './assets/proLitteris.svg';
 import { FieldDefinition } from './genericIntegrationForm';
 import { GenericIntegrationList } from './genericIntegrationList';
+import { providersOf, typeOptionsOf } from './integrationCatalog';
 import { secretPlaceholder } from './secretPlaceholder';
 
 // The stored password is never sent to the editor and an empty one keeps it,
@@ -66,6 +66,8 @@ export function TrackingPixelIntegrationForm() {
 
   return (
     <GenericIntegrationList<SettingTrackingPixelProvider, IntegrationFormValues>
+      integrationKey="tracking-pixel"
+      providers={providersOf('tracking-pixel', t)}
       query={TrackingPixelSettingsDocument}
       mutation={UpdateTrackingPixelSettingDocument}
       dataKey="trackingPixelSettings"
@@ -73,31 +75,10 @@ export function TrackingPixelIntegrationForm() {
       registry={{
         createMutation: CreateTrackingPixelSettingDocument,
         deleteMutation: DeleteTrackingPixelSettingDocument,
-        types: Object.values(TrackingPixelProviderType).map(value => ({
-          label: value,
-          value,
-        })),
-      }}
-      getLogo={setting => {
-        switch (setting.type) {
-          case TrackingPixelProviderType.Prolitteris:
-            return proLitterisLogo;
-          default:
-            return undefined;
-        }
+        types: typeOptionsOf(providersOf('tracking-pixel', t)),
       }}
       fields={setting => {
         const commonFields: FieldDefinition<IntegrationFormValues>[] = [
-          {
-            name: 'type',
-            label: t('integrations.trackingPixelSettings.type'),
-            type: 'select',
-            options: Object.values(TrackingPixelProviderType).map(v => ({
-              label: v,
-              value: v,
-            })),
-            disabled: true,
-          },
           {
             type: 'text',
             name: 'name',
@@ -117,11 +98,13 @@ export function TrackingPixelIntegrationForm() {
           commonFields.push({
             type: 'text',
             name: 'prolitteris_username',
+            half: true,
             label: t('integrations.trackingPixelSettings.prolitterisUsername'),
             info: t('integrations.trackingPixelSettings.prolitterisLoginInfo'),
           });
           commonFields.push({
             name: 'prolitteris_password',
+            half: true,
             label: t('integrations.trackingPixelSettings.prolitterisPassword'),
             info: t('integrations.trackingPixelSettings.prolitterisLoginInfo'),
             type: 'password',
