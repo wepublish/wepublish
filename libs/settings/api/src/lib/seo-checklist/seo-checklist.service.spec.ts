@@ -99,6 +99,46 @@ describe('SeoChecklistService', () => {
     });
   });
 
+  test('probes the nested sitemaps of a sitemap index', async () => {
+    mockPrisma.article.findFirst.mockResolvedValue(null);
+    mockPrisma.peerProfile.findFirst.mockResolvedValue(null);
+
+    const indexResponses: Record<string, string> = {
+      'https://example.com/api/sitemap': `<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<sitemap><loc>https://example.com/api/sitemap/news</loc></sitemap>
+<sitemap><loc>https://example.com/api/sitemap/pages</loc></sitemap>
+</sitemapindex>`,
+      'https://example.com/api/sitemap/news':
+        '<urlset xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"><url></url></urlset>',
+      'https://example.com/api/sitemap/pages':
+        '<urlset><url></url><url></url></urlset>',
+    };
+
+    fetchSpy.mockImplementation(async (input: string | URL | Request) => {
+      const body = indexResponses[input.toString()];
+
+      return body ?
+          new Response(body, { status: 200 })
+        : new Response('', { status: 404 });
+    });
+
+    const checklist = await service.getChecklist();
+
+    expect(fetchSpy.mock.calls.map(([url]) => url)).toEqual(
+      expect.arrayContaining([
+        'https://example.com/api/sitemap/news',
+        'https://example.com/api/sitemap/pages',
+      ])
+    );
+    expect(
+      checklist.checks.find(check => check.id === SeoCheckId.Sitemap)
+    ).toMatchObject({ status: SeoCheckStatus.Ok, detail: '3' });
+    expect(
+      checklist.checks.find(check => check.id === SeoCheckId.NewsSitemap)
+        ?.status
+    ).toBe(SeoCheckStatus.Ok);
+  });
+
   test('does not probe an article when none is published', async () => {
     mockPrisma.article.findFirst.mockResolvedValue(null);
     mockPrisma.peerProfile.findFirst.mockResolvedValue(null);

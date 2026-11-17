@@ -7,6 +7,7 @@ export type SeoProbeResult =
 export type SeoChecksInput = {
   websiteUrl: string;
   sitemap: SeoProbeResult;
+  nestedSitemaps?: SeoProbeResult[];
   rssFeed: SeoProbeResult;
   latestArticleUrl: string | null;
   latestArticle: SeoProbeResult | null;
@@ -29,6 +30,27 @@ export const getSeoUrls = (websiteUrl: string) => {
   };
 };
 
+const decodeXmlEntities = (value: string) =>
+  value
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'")
+    .replace(/&amp;/g, '&');
+
+export const isSitemapIndex = (body: string) => body.includes('<sitemapindex');
+
+export const getSitemapIndexLocs = (body: string): string[] => {
+  if (!isSitemapIndex(body)) {
+    return [];
+  }
+
+  return [...body.matchAll(/<sitemap>[\s\S]*?<\/sitemap>/g)]
+    .map(([entry]) => entry.match(/<loc>([\s\S]*?)<\/loc>/)?.[1])
+    .filter((loc): loc is string => !!loc)
+    .map(loc => decodeXmlEntities(loc.trim()));
+};
+
 const isOk = (
   probe: SeoProbeResult | null
 ): probe is Extract<SeoProbeResult, { reachable: true }> =>
@@ -37,10 +59,24 @@ const isOk = (
 const describeFailure = (probe: SeoProbeResult) =>
   'error' in probe ? probe.error : `HTTP ${probe.status}`;
 
+const getUrlsets = (input: SeoChecksInput): string[] => {
+  if (!isOk(input.sitemap)) {
+    return [];
+  }
+
+  const candidates =
+    isSitemapIndex(input.sitemap.body) ?
+      (input.nestedSitemaps ?? []).filter(isOk).map(probe => probe.body)
+    : [input.sitemap.body];
+
+  return candidates.filter(body => body.includes('<urlset'));
+};
+
 const checkSitemap = (input: SeoChecksInput): SeoCheck[] => {
   const { sitemapUrl } = getSeoUrls(input.websiteUrl);
+  const urlsets = getUrlsets(input);
 
-  if (!isOk(input.sitemap) || !input.sitemap.body.includes('<urlset')) {
+  if (!urlsets.length) {
     return [
       {
         id: SeoCheckId.Sitemap,
@@ -59,8 +95,11 @@ const checkSitemap = (input: SeoChecksInput): SeoCheck[] => {
     ];
   }
 
-  const urlCount = (input.sitemap.body.match(/<url>/g) ?? []).length;
-  const hasNews = input.sitemap.body.includes(NEWS_SITEMAP_NAMESPACE);
+  const urlCount = urlsets.reduce(
+    (count, body) => count + (body.match(/<url>/g) ?? []).length,
+    0
+  );
+  const hasNews = urlsets.some(body => body.includes(NEWS_SITEMAP_NAMESPACE));
 
   return [
     {

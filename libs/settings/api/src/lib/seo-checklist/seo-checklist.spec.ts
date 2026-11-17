@@ -1,6 +1,7 @@
 import {
   deriveSeoChecks,
   getSeoUrls,
+  getSitemapIndexLocs,
   SEO_CHECKLIST_ITEM_ID,
   SeoChecksInput,
   SeoProbeResult,
@@ -88,6 +89,81 @@ describe('deriveSeoChecks', () => {
     ).toBe(SeoCheckStatus.Error);
   });
 
+  describe('with a sitemap index', () => {
+    const sitemapIndex = `<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<sitemap><loc>https://example.com/api/sitemap/news</loc></sitemap>
+<sitemap><loc>https://example.com/api/sitemap/pages</loc></sitemap>
+</sitemapindex>`;
+
+    const newsChunk = `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
+<url><loc>https://example.com/a/foo</loc></url>
+</urlset>`;
+
+    const pagesChunk = `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url><loc>https://example.com</loc></url>
+<url><loc>https://example.com/about</loc></url>
+</urlset>`;
+
+    test('counts the urls of all nested sitemaps', () => {
+      const input = {
+        ...baseInput,
+        sitemap: ok(sitemapIndex),
+        nestedSitemaps: [ok(newsChunk), ok(pagesChunk)],
+      };
+
+      expect(getCheck(input, SeoCheckId.Sitemap)).toMatchObject({
+        status: SeoCheckStatus.Ok,
+        detail: '3',
+        url: 'https://example.com/api/sitemap',
+      });
+      expect(getCheck(input, SeoCheckId.NewsSitemap)?.status).toBe(
+        SeoCheckStatus.Ok
+      );
+    });
+
+    test('reports the news namespace as info when no nested sitemap has it', () => {
+      const input = {
+        ...baseInput,
+        sitemap: ok(sitemapIndex),
+        nestedSitemaps: [ok(pagesChunk)],
+      };
+
+      expect(getCheck(input, SeoCheckId.NewsSitemap)?.status).toBe(
+        SeoCheckStatus.Info
+      );
+    });
+
+    test('ignores unreachable nested sitemaps', () => {
+      const input = {
+        ...baseInput,
+        sitemap: ok(sitemapIndex),
+        nestedSitemaps: [
+          { reachable: false, error: 'timeout' } as const,
+          ok(pagesChunk),
+        ],
+      };
+
+      expect(getCheck(input, SeoCheckId.Sitemap)).toMatchObject({
+        status: SeoCheckStatus.Ok,
+        detail: '2',
+      });
+    });
+
+    test('errors when no nested sitemap is a urlset', () => {
+      const input = {
+        ...baseInput,
+        sitemap: ok(sitemapIndex),
+        nestedSitemaps: [{ reachable: true, status: 500, body: '' } as const],
+      };
+
+      expect(getCheck(input, SeoCheckId.Sitemap)).toMatchObject({
+        status: SeoCheckStatus.Error,
+        detail: 'No <urlset> found',
+      });
+    });
+  });
+
   test('detects the existing rss feed', () => {
     expect(getCheck(baseInput, SeoCheckId.Feed)).toMatchObject({
       status: SeoCheckStatus.Ok,
@@ -170,6 +246,27 @@ describe('getSeoUrls', () => {
       atomFeedUrl: 'https://example.com/api/atom-feed',
       jsonFeedUrl: 'https://example.com/api/json-feed',
     });
+  });
+});
+
+describe('getSitemapIndexLocs', () => {
+  test('returns the nested sitemap urls of a sitemap index', () => {
+    expect(
+      getSitemapIndexLocs(`<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<sitemap><loc>https://example.com/api/sitemap/news</loc></sitemap>
+<sitemap>
+  <loc> https://example.com/api/sitemap/a?x=1&amp;y=2 </loc>
+  <lastmod>2026-09-30T20:00:00.000Z</lastmod>
+</sitemap>
+</sitemapindex>`)
+    ).toEqual([
+      'https://example.com/api/sitemap/news',
+      'https://example.com/api/sitemap/a?x=1&y=2',
+    ]);
+  });
+
+  test('returns nothing for a plain urlset', () => {
+    expect(getSitemapIndexLocs(sitemap)).toEqual([]);
   });
 });
 

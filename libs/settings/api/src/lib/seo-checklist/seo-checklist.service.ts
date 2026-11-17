@@ -4,12 +4,14 @@ import { URLAdapter } from '@wepublish/nest-modules';
 import {
   deriveSeoChecks,
   getSeoUrls,
+  getSitemapIndexLocs,
   SEO_CHECKLIST_ITEM_ID,
   SeoProbeResult,
 } from './seo-checklist';
 import { SeoChecklist, SeoChecklistItem } from './seo-checklist.model';
 
 const PROBE_TIMEOUT = 5000;
+const MAX_NESTED_SITEMAPS = 50;
 
 @Injectable()
 export class SeoChecklistService {
@@ -38,11 +40,12 @@ export class SeoChecklistService {
     const latestArticleUrl =
       latestArticle ? await this.urlAdapter.getArticleUrl(latestArticle) : null;
 
-    const [sitemap, rssFeed, latestArticleProbe] = await Promise.all([
-      this.probe(urls.sitemapUrl),
-      this.probe(urls.rssFeedUrl),
-      latestArticleUrl ? this.probe(latestArticleUrl) : null,
-    ]);
+    const [{ sitemap, nestedSitemaps }, rssFeed, latestArticleProbe] =
+      await Promise.all([
+        this.probeSitemap(urls.sitemapUrl),
+        this.probe(urls.rssFeedUrl),
+        latestArticleUrl ? this.probe(latestArticleUrl) : null,
+      ]);
 
     return {
       websiteUrl,
@@ -50,6 +53,7 @@ export class SeoChecklistService {
       checks: deriveSeoChecks({
         websiteUrl,
         sitemap,
+        nestedSitemaps,
         rssFeed,
         latestArticleUrl,
         latestArticle: latestArticleProbe,
@@ -100,6 +104,22 @@ export class SeoChecklistService {
     }
 
     return this.getCompletedItems();
+  }
+
+  private async probeSitemap(url: string) {
+    const sitemap = await this.probe(url);
+    const nestedUrls =
+      sitemap.reachable ?
+        getSitemapIndexLocs(sitemap.body)
+          .filter(loc => /^https?:\/\//.test(loc))
+          .slice(0, MAX_NESTED_SITEMAPS)
+      : [];
+
+    const nestedSitemaps = await Promise.all(
+      nestedUrls.map(nestedUrl => this.probe(nestedUrl))
+    );
+
+    return { sitemap, nestedSitemaps };
   }
 
   private async probe(url: string): Promise<SeoProbeResult> {
