@@ -162,8 +162,8 @@ export class PurchaseGiftCodeInput {
   @Field()
   offerId!: string;
 
-  @Field()
-  recipientName!: string;
+  @Field(() => String, { nullable: true })
+  recipientName?: string | null;
 
   @Field({ nullable: true })
   discountCode?: string;

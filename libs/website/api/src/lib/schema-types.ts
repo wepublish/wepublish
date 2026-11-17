@@ -637,7 +637,7 @@ export type BildwurfAdBlockInput = {
   zoneID?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type BlockContent = BildwurfAdBlock | BlockTemplateBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HtmlBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | MailchimpFormBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock;
+export type BlockContent = BildwurfAdBlock | BlockTemplateBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | GiftCodeOffersBlock | HtmlBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | MailchimpFormBlock | PolisConversationBlock | PollBlock | QuoteBlock | RedeemGiftCodeBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock;
 
 export type BlockContentInput = {
   bildwurfAd?: InputMaybe<BildwurfAdBlockInput>;
@@ -649,6 +649,7 @@ export type BlockContentInput = {
   facebookPost?: InputMaybe<FacebookPostBlockInput>;
   facebookVideo?: InputMaybe<FacebookVideoBlockInput>;
   flexBlock?: InputMaybe<FlexBlockInput>;
+  giftCodeOffers?: InputMaybe<GiftCodeOffersBlockInput>;
   html?: InputMaybe<HtmlBlockInput>;
   image?: InputMaybe<ImageBlockInput>;
   imageGallery?: InputMaybe<ImageGalleryBlockInput>;
@@ -659,6 +660,7 @@ export type BlockContentInput = {
   polisConversation?: InputMaybe<PolisConversationBlockInput>;
   poll?: InputMaybe<PollBlockInput>;
   quote?: InputMaybe<QuoteBlockInput>;
+  redeemGiftCode?: InputMaybe<RedeemGiftCodeBlockInput>;
   richText?: InputMaybe<RichTextBlockInput>;
   soundCloudTrack?: InputMaybe<SoundCloudTrackBlockInput>;
   streamableVideo?: InputMaybe<StreamableVideoBlockInput>;
@@ -778,6 +780,7 @@ export enum BlockType {
   FacebookPost = 'FacebookPost',
   FacebookVideo = 'FacebookVideo',
   FlexBlock = 'FlexBlock',
+  GiftCodeOffers = 'GiftCodeOffers',
   Html = 'HTML',
   Image = 'Image',
   ImageGallery = 'ImageGallery',
@@ -788,6 +791,7 @@ export enum BlockType {
   PolisConversation = 'PolisConversation',
   Poll = 'Poll',
   Quote = 'Quote',
+  RedeemGiftCode = 'RedeemGiftCode',
   RichText = 'RichText',
   SoundCloudTrack = 'SoundCloudTrack',
   StreamableVideo = 'StreamableVideo',
@@ -1503,6 +1507,7 @@ export enum EditorBlockType {
   Embed = 'Embed',
   Event = 'Event',
   FlexBlock = 'FlexBlock',
+  GiftCodeOffers = 'GiftCodeOffers',
   Html = 'HTML',
   Image = 'Image',
   ImageGallery = 'ImageGallery',
@@ -1511,6 +1516,7 @@ export enum EditorBlockType {
   MailchimpForm = 'MailchimpForm',
   Poll = 'Poll',
   Quote = 'Quote',
+  RedeemGiftCode = 'RedeemGiftCode',
   RichText = 'RichText',
   Subscribe = 'Subscribe',
   TeaserGrid1 = 'TeaserGrid1',
@@ -1968,6 +1974,37 @@ export enum GiftCodeOfferSort {
   ModifiedAt = 'ModifiedAt',
   Name = 'Name'
 }
+
+export type GiftCodeOffersBlock = BaseBlock & {
+  __typename: 'GiftCodeOffersBlock';
+  askRecipientName: Scalars['Boolean']['output'];
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
+  defaultGiftCodeOfferId?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
+  fields: Array<SubscribeBlockField>;
+  giftCodeOfferIds: Array<Scalars['String']['output']>;
+  giftCodeOffers: Array<GiftCodeOffer>;
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
+  showDiscountCodes: Scalars['Boolean']['output'];
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
+  type: BlockType;
+};
+
+export type GiftCodeOffersBlockInput = {
+  askRecipientName?: Scalars['Boolean']['input'];
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
+  defaultGiftCodeOfferId?: InputMaybe<Scalars['String']['input']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
+  fields?: Array<SubscribeBlockField>;
+  giftCodeOfferIds?: Array<Scalars['String']['input']>;
+  showDiscountCodes?: Scalars['Boolean']['input'];
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: InputMaybe<BlockTimingInput>;
+};
 
 export type GiftCodeRedemption = {
   __typename: 'GiftCodeRedemption';
@@ -5205,7 +5242,7 @@ export type MutationPurchaseGiftCodeArgs = {
   offerId: Scalars['String']['input'];
   paymentMethodId?: InputMaybe<Scalars['String']['input']>;
   paymentMethodSlug?: InputMaybe<Scalars['Slug']['input']>;
-  recipientName: Scalars['String']['input'];
+  recipientName?: InputMaybe<Scalars['String']['input']>;
   successURL?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -9061,6 +9098,28 @@ export enum RatingSystemType {
   Star = 'star'
 }
 
+export type RedeemGiftCodeBlock = BaseBlock & {
+  __typename: 'RedeemGiftCodeBlock';
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
+  fields: Array<SubscribeBlockField>;
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
+  type: BlockType;
+};
+
+export type RedeemGiftCodeBlockInput = {
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
+  fields?: Array<SubscribeBlockField>;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: InputMaybe<BlockTimingInput>;
+};
+
 export type Registration = {
   __typename: 'Registration';
   session: SessionWithTokenWithoutUser;
@@ -9631,6 +9690,9 @@ export type SubscribeBlock = BaseBlock & {
   blockStyleName?: Maybe<Scalars['String']['output']>;
   disabled?: Maybe<Scalars['Boolean']['output']>;
   fields: Array<SubscribeBlockField>;
+  giftCodeRedemptionLinkText?: Maybe<Scalars['String']['output']>;
+  giftCodeRedemptionPage?: Maybe<Page>;
+  giftCodeRedemptionPageId?: Maybe<Scalars['String']['output']>;
   goodieMinValue?: Maybe<Scalars['Int']['output']>;
   goodieMinValueAppliesToUpgrade: Scalars['Boolean']['output'];
   hideRepeatGoodieOnUpgrade: Scalars['Boolean']['output'];
@@ -9641,6 +9703,7 @@ export type SubscribeBlock = BaseBlock & {
   /** Whether the block should display. */
   shouldDisplay: Scalars['Boolean']['output'];
   showDiscountCodes: Scalars['Boolean']['output'];
+  showGiftCodeRedemption: Scalars['Boolean']['output'];
   showGoodies: Scalars['Boolean']['output'];
   /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
   timing?: Maybe<BlockTiming>;
@@ -9661,6 +9724,8 @@ export type SubscribeBlockInput = {
   blockStyleName?: InputMaybe<Scalars['String']['input']>;
   disabled?: InputMaybe<Scalars['Boolean']['input']>;
   fields?: Array<SubscribeBlockField>;
+  giftCodeRedemptionLinkText?: InputMaybe<Scalars['String']['input']>;
+  giftCodeRedemptionPageId?: InputMaybe<Scalars['String']['input']>;
   goodieMinValue?: InputMaybe<Scalars['Int']['input']>;
   goodieMinValueAppliesToUpgrade?: Scalars['Boolean']['input'];
   hideRepeatGoodieOnUpgrade?: Scalars['Boolean']['input'];
@@ -9668,6 +9733,7 @@ export type SubscribeBlockInput = {
   memberPlanRenderSettings: Array<SubscribeBlockMemberPlanRenderSettingInput>;
   periodicityDisplay?: InputMaybe<SubscribePeriodicityDisplay>;
   showDiscountCodes?: Scalars['Boolean']['input'];
+  showGiftCodeRedemption?: Scalars['Boolean']['input'];
   showGoodies?: Scalars['Boolean']['input'];
   /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
   timing?: InputMaybe<BlockTimingInput>;

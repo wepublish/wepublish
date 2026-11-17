@@ -74,15 +74,15 @@ export class GiftCodeService {
   ): Promise<Payment> {
     assertSingleSelector(input);
 
-    const recipientName = input.recipientName.trim();
+    const recipientName = input.recipientName?.trim() || null;
     const discountCode = input.discountCode?.trim() || null;
 
     if (
-      !recipientName ||
+      recipientName &&
       recipientName.length > GIFT_CODE_RECIPIENT_NAME_MAX_LENGTH
     ) {
       throw new BadRequestException(
-        `The recipient name must have 1 to ${GIFT_CODE_RECIPIENT_NAME_MAX_LENGTH} characters`
+        `The recipient name must have at most ${GIFT_CODE_RECIPIENT_NAME_MAX_LENGTH} characters`
       );
     }
 

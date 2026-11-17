@@ -19,6 +19,8 @@ export * from './listicleBlock';
 export * from './pollBlock';
 export * from './quoteBlock';
 export * from './subscribeBlock';
+export * from './giftCodeOffersBlock';
+export * from './redeemGiftCodeBlock';
 export * from './teaserGridBlock';
 export * from './teaserGridFlexBlock';
 export * from './titleBlock';

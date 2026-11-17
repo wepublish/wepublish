@@ -185,6 +185,14 @@ export const SubscribeNarrowSection = styled(SubscribeSection)`
 
 export const SubscribeOpenInvoicesNotice = styled('div')``;
 
+export const SubscribeMemberPlansHeading = styled('div')`
+  display: flex;
+  flex-flow: row wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: ${({ theme }) => theme.spacing(1, 3)};
+`;
+
 export const SubscribeExistingSubscriptionNotice = styled('div')``;
 
 export const clampMonthlyAmount = (amount: number, min: number, max?: number) =>
@@ -217,6 +225,8 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   periodicityDisplay,
   hiddenAreas = NO_HIDDEN_AREAS,
   onInvalid,
+  giftCodeRedemptionUrl,
+  giftCodeRedemptionText,
 }: BuilderSubscribeProps<T>) => {
   const {
     meta: { locale, siteTitle },
@@ -857,9 +867,21 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           )}
 
           <SubscribeSection area="memberPlans">
-            {(memberPlans.data?.memberPlans.nodes.length ?? 0) > 1 && (
-              <H5 component="h2">{t('subscribe.chooseSubscription')}</H5>
-            )}
+            {giftCodeRedemptionUrl ?
+              <SubscribeMemberPlansHeading>
+                {(memberPlans.data?.memberPlans.nodes.length ?? 0) > 1 && (
+                  <H5 component="h2">{t('subscribe.chooseSubscription')}</H5>
+                )}
+
+                <Link href={giftCodeRedemptionUrl}>
+                  {giftCodeRedemptionText ||
+                    t('subscribe.giftCodeRedemption.link')}
+                </Link>
+              </SubscribeMemberPlansHeading>
+            : (memberPlans.data?.memberPlans.nodes.length ?? 0) > 1 && (
+                <H5 component="h2">{t('subscribe.chooseSubscription')}</H5>
+              )
+            }
 
             {useOfferCards ?
               <Controller

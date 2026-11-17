@@ -106,6 +106,14 @@ import {
   MailchimpFormBlock,
   MailchimpFormBlockInput,
 } from './mailchimp-form/mailchimp-form-block.model';
+import {
+  RedeemGiftCodeBlock,
+  RedeemGiftCodeBlockInput,
+} from './gift-code/redeem-gift-code-block.model';
+import {
+  GiftCodeOffersBlock,
+  GiftCodeOffersBlockInput,
+} from './gift-code/gift-code-offers-block.model';
 
 export const BlockContent = createUnionType({
   name: 'BlockContent',
@@ -138,6 +146,8 @@ export const BlockContent = createUnionType({
       YouTubeVideoBlock,
       SubscribeBlock,
       MailchimpFormBlock,
+      RedeemGiftCodeBlock,
+      GiftCodeOffersBlock,
       TeaserGridBlock,
       TeaserGridFlexBlock,
       TeaserListBlock,
@@ -199,6 +209,10 @@ export const BlockContent = createUnionType({
         return SubscribeBlock.name;
       case BlockType.MailchimpForm:
         return MailchimpFormBlock.name;
+      case BlockType.RedeemGiftCode:
+        return RedeemGiftCodeBlock.name;
+      case BlockType.GiftCodeOffers:
+        return GiftCodeOffersBlock.name;
       case BlockType.TeaserGrid:
         return TeaserGridBlock.name;
       case BlockType.TeaserGridFlex:
@@ -251,6 +265,10 @@ export class BlockContentInput {
   [BlockType.Subscribe]?: SubscribeBlockInput;
   @Field(() => MailchimpFormBlockInput, { nullable: true })
   [BlockType.MailchimpForm]?: MailchimpFormBlockInput;
+  @Field(() => RedeemGiftCodeBlockInput, { nullable: true })
+  [BlockType.RedeemGiftCode]?: RedeemGiftCodeBlockInput;
+  @Field(() => GiftCodeOffersBlockInput, { nullable: true })
+  [BlockType.GiftCodeOffers]?: GiftCodeOffersBlockInput;
 
   @Field(() => IFrameBlockInput, { nullable: true })
   [BlockType.Embed]?: IFrameBlockInput;

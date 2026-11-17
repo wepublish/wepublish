@@ -634,7 +634,7 @@ input BildwurfAdBlockInput {
   zoneID: String
 }
 
-union BlockContent = BildwurfAdBlock | BlockTemplateBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | MailchimpFormBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
+union BlockContent = BildwurfAdBlock | BlockTemplateBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | GiftCodeOffersBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | MailchimpFormBlock | PolisConversationBlock | PollBlock | QuoteBlock | RedeemGiftCodeBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
 
 input BlockContentInput {
   bildwurfAd: BildwurfAdBlockInput
@@ -646,6 +646,7 @@ input BlockContentInput {
   facebookPost: FacebookPostBlockInput
   facebookVideo: FacebookVideoBlockInput
   flexBlock: FlexBlockInput
+  giftCodeOffers: GiftCodeOffersBlockInput
   html: HTMLBlockInput
   image: ImageBlockInput
   imageGallery: ImageGalleryBlockInput
@@ -656,6 +657,7 @@ input BlockContentInput {
   polisConversation: PolisConversationBlockInput
   poll: PollBlockInput
   quote: QuoteBlockInput
+  redeemGiftCode: RedeemGiftCodeBlockInput
   richText: RichTextBlockInput
   soundCloudTrack: SoundCloudTrackBlockInput
   streamableVideo: StreamableVideoBlockInput
@@ -789,6 +791,7 @@ enum BlockType {
   FacebookPost
   FacebookVideo
   FlexBlock
+  GiftCodeOffers
   HTML
   Image
   ImageGallery
@@ -799,6 +802,7 @@ enum BlockType {
   PolisConversation
   Poll
   Quote
+  RedeemGiftCode
   RichText
   SoundCloudTrack
   StreamableVideo
@@ -1534,6 +1538,7 @@ enum EditorBlockType {
   Embed
   Event
   FlexBlock
+  GiftCodeOffers
   HTML
   Image
   ImageGallery
@@ -1542,6 +1547,7 @@ enum EditorBlockType {
   MailchimpForm
   Poll
   Quote
+  RedeemGiftCode
   RichText
   Subscribe
   TeaserGrid1
@@ -2053,6 +2059,43 @@ enum GiftCodeOfferSort {
   CreatedAt
   ModifiedAt
   Name
+}
+
+type GiftCodeOffersBlock implements BaseBlock {
+  askRecipientName: Boolean!
+  blockStyle: String
+  blockStyleName: String
+  defaultGiftCodeOfferId: String
+  disabled: Boolean
+  fields: [SubscribeBlockField!]!
+  giftCodeOfferIds: [String!]!
+  giftCodeOffers: [GiftCodeOffer!]!
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+  showDiscountCodes: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
+  type: BlockType!
+}
+
+input GiftCodeOffersBlockInput {
+  askRecipientName: Boolean! = true
+  blockStyle: String
+  blockStyleName: String
+  defaultGiftCodeOfferId: String
+  disabled: Boolean
+  fields: [SubscribeBlockField!]! = [FirstName, Password, PasswordRepeated, Address]
+  giftCodeOfferIds: [String!]! = []
+  showDiscountCodes: Boolean! = false
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 type GiftCodeRedemption {
@@ -4445,7 +4488,7 @@ type Mutation {
   publishPage(id: String!, publishedAt: DateTime!): Page!
 
   """Buys a gift code and starts its payment."""
-  purchaseGiftCode(discountCode: String, failureURL: String, offerId: String!, paymentMethodId: String, paymentMethodSlug: Slug, recipientName: String!, successURL: String): Payment!
+  purchaseGiftCode(discountCode: String, failureURL: String, offerId: String!, paymentMethodId: String, paymentMethodSlug: Slug, recipientName: String, successURL: String): Payment!
 
   """
   This mutation allows to rate a comment. Supports logged in and anonymous
@@ -7223,6 +7266,34 @@ enum RatingSystemType {
   star
 }
 
+type RedeemGiftCodeBlock implements BaseBlock {
+  blockStyle: String
+  blockStyleName: String
+  disabled: Boolean
+  fields: [SubscribeBlockField!]!
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
+  type: BlockType!
+}
+
+input RedeemGiftCodeBlockInput {
+  blockStyle: String
+  blockStyleName: String
+  disabled: Boolean
+  fields: [SubscribeBlockField!]! = [FirstName, Password, PasswordRepeated]
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
+}
+
 type Registration {
   session: SessionWithTokenWithoutUser!
   user: SensitiveDataUser!
@@ -7837,6 +7908,9 @@ type SubscribeBlock implements BaseBlock {
   blockStyleName: String
   disabled: Boolean
   fields: [SubscribeBlockField!]!
+  giftCodeRedemptionLinkText: String
+  giftCodeRedemptionPage: Page
+  giftCodeRedemptionPageId: String
   goodieMinValue: Int
   goodieMinValueAppliesToUpgrade: Boolean!
   hideRepeatGoodieOnUpgrade: Boolean!
@@ -7848,6 +7922,7 @@ type SubscribeBlock implements BaseBlock {
   """Whether the block should display."""
   shouldDisplay: Boolean!
   showDiscountCodes: Boolean!
+  showGiftCodeRedemption: Boolean!
   showGoodies: Boolean!
 
   """
@@ -7871,6 +7946,8 @@ input SubscribeBlockInput {
   blockStyleName: String
   disabled: Boolean
   fields: [SubscribeBlockField!]! = [FirstName, Password, PasswordRepeated, Address]
+  giftCodeRedemptionLinkText: String
+  giftCodeRedemptionPageId: String
   goodieMinValue: Int
   goodieMinValueAppliesToUpgrade: Boolean! = false
   hideRepeatGoodieOnUpgrade: Boolean! = false
@@ -7878,6 +7955,7 @@ input SubscribeBlockInput {
   memberPlanRenderSettings: [SubscribeBlockMemberPlanRenderSettingInput!]!
   periodicityDisplay: SubscribePeriodicityDisplay
   showDiscountCodes: Boolean! = false
+  showGiftCodeRedemption: Boolean! = false
   showGoodies: Boolean! = false
 
   """

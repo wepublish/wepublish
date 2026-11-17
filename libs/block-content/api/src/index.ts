@@ -21,6 +21,8 @@ export * from './lib/html/html-block.model';
 export * from './lib/event/event-block.model';
 export * from './lib/richtext/richtext-block.model';
 export * from './lib/subscribe/subscribe-block.model';
+export * from './lib/gift-code/redeem-gift-code-block.model';
+export * from './lib/gift-code/gift-code-offers-block.model';
 export * from './lib/mailchimp-form/mailchimp-form-block.model';
 export * from './lib/mailchimp-form/mailchimp-subscribe.model';
 export * from './lib/mailchimp-form/mailchimp-subscribe.service';

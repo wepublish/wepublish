@@ -15,7 +15,8 @@ contract and in the payment path; the gift code lib on top of it is small.
 
 ## Scope
 
-This change covers the API and the editor for buying a gift code:
+This change covers the API and the editor for buying a gift code, and the
+website blocks to buy and redeem one:
 
 - offers in the editor (plan, periodicity, price, name, description, image,
   active, optional redemption window in months, the payment methods buyers
@@ -36,8 +37,8 @@ This change covers the API and the editor for buying a gift code:
   source filters, the buyer and the redeemer side by side, and a dialog that
   creates up to 500 issued codes without a purchase
   ([D34](decisions.md#d34-admins-can-create-codes-without-a-purchase))
-- redeeming a code with one mutation, `redeemGiftCode` (API and editor list
-  only; [D38](decisions.md#d38-one-redeem-endpoint)). When the reader has an
+- redeeming a code with one mutation, `redeemGiftCode`
+  ([D38](decisions.md#d38-one-redeem-endpoint)). When the reader has an
   extendable, uncanceled subscription with the same plan and periodicity,
   the code pays its open invoice or its next period; a lifetime
   subscription refuses the code. Otherwise it starts a new subscription with
@@ -46,15 +47,21 @@ This change covers the API and the editor for buying a gift code:
   paid at once without a provider. The same branch fixes new subscriptions and
   upgrades that come to CHF 0, which used to go to the provider with an
   amount of 0 ([D33](decisions.md#d33-chf-0-invoices-are-paid-without-a-provider)).
+- three block changes, in the API, the editor and the website: the subscribe
+  block can link to a page for redeeming a code
+  ([D43](decisions.md#d43-the-subscribe-block-links-to-a-redemption-page)),
+  a block redeems a code, logging in or registering the reader first
+  ([D44](decisions.md#d44-a-block-to-redeem-a-code)), and a block sells the
+  chosen offers through the subscribe flow's payment handling
+  ([D45](decisions.md#d45-a-block-to-sell-gift-codes))
 
 Left for later:
 
-- the website side: the purchase form, the buyer's list of codes in the
-  profile, and a separate gift block that shows offers on a page. Karl builds
-  these later; the subscribe block stays as it is
-  ([D32](decisions.md#d32-website-and-gift-block-come-later)).
-- redeeming on the website: a field where the reader enters the code. The
-  API side is done; see [04-api.md](04-api.md#redeemgiftcode).
+- the buyer's list of codes on the website profile (`myGiftCodes`) and
+  redeeming from the profile. The website has the two gift code blocks and
+  the subscribe block link
+  ([D42](decisions.md#d42-website-gift-code-blocks)), but after paying the
+  buyer lands on `/profile`, which does not show codes yet.
 - every email and the PDF voucher. The spec's PDF template, the mail template,
   "PDF herunterladen" and "E-Mail erneut senden" are all out of scope. Today
   an admin sees the code in the editor list, and the buyer can read it through
@@ -65,7 +72,7 @@ Left for later:
 ## The flow
 
 ```
-Buyer (website, later)       API                                   Provider
+Buyer (website)              API                                   Provider
 ---------------              ---                                   --------
 picks offer, recipient  ──>  purchaseGiftCode
 name, method                 └ SellableCheckoutService.checkout
@@ -97,7 +104,8 @@ code and marks `InvoiceItem.revokedAt`. The lifecycle is described in
 
 Everything ships dark behind the `gift-codes` feature (`stage: 'alpha'` in
 `libs/features/src/lib/features.ts`). The flag covers both gift code
-resolvers, the editor pages, sidebar entries and command palette entries.
+resolvers, the editor pages, sidebar entries, command palette entries and
+the gift code blocks (resolved data and the editor's block menu).
 `myGiftCodes` is the one exception: it has no `@Feature` and returns `[]`
 while the flag is off, so a profile page can query it on every tenant
 without a failing request. The gift code handler's
@@ -114,7 +122,7 @@ every medium as soon as this ships.
 
 ## Files
 
-- [decisions.md](decisions.md): decision log, D1 to D38, including the
+- [decisions.md](decisions.md): decision log, D1 to D45, including the
   defaults picked for open questions and Karl's later changes.
 - [01-selling-things.md](01-selling-things.md): the sellable contract in
   `libs/payment/api` and how to sell a new kind of thing.
@@ -124,8 +132,8 @@ every medium as soon as this ships.
   idempotency, chargebacks by provider, known limits.
 - [04-api.md](04-api.md): GraphQL queries and mutations, guards, security
   rules.
-- [05-editor-and-website.md](05-editor-and-website.md): editor pages, and
-  what the website and the gift block will build on later.
+- [05-editor-and-website.md](05-editor-and-website.md): editor pages and
+  the website blocks.
 - [open-questions.md](open-questions.md): questions for Karl and the default
   that is built until he answers.
 
