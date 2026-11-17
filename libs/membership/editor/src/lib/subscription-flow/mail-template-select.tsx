@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import {
+  MailChannel,
   TinyMailTemplateFragment,
   SubscriptionEvent,
   SubscriptionFlowFragment,
@@ -15,13 +16,18 @@ import { useTranslation } from 'react-i18next';
 import { MdUnsubscribe } from 'react-icons/md';
 import { InfoTooltip, useAuthorisation } from '@wepublish/ui/editor';
 import {
+  Checkbox,
   FormControlLabel,
   MenuItem,
   Stack,
-  Switch,
   TextField,
 } from '@mui/material';
 import { formatTemplateLabel } from '../mail-template/mail-placeholders';
+import { templatesForChannel } from '../mail-template/template-versions';
+import {
+  DEFAULT_DELIVERY_CHANNEL,
+  useDeliveryChannels,
+} from '../delivery-mode/channels';
 import { usePaperLetterFlow } from '../delivery-mode/use-paper-letter-flow';
 import { CanUpdateSubscriptionFlow } from '@wepublish/permissions';
 
@@ -51,6 +57,18 @@ export function MailTemplateSelect({
 
   const client = useContext(SubscriptionClientContext);
   const paperLetterFlow = usePaperLetterFlow();
+  const channels = useDeliveryChannels();
+
+  const selectedId = subscriptionInterval?.object.mailTemplate?.id;
+  const selected = mailTemplates.find(({ id }) => id === selectedId);
+  // The email always goes out, to everyone not on another channel, so only a
+  // template with an email version can be sent from a flow. The chosen one
+  // stays listed whatever it has, or the select would show nothing.
+  const offered = mailTemplates.filter(
+    template =>
+      template.id === selectedId ||
+      templatesForChannel([template], DEFAULT_DELIVERY_CHANNEL).length > 0
+  );
 
   const createOrUpdateInterval = (value: string) => {
     if (subscriptionInterval) {
@@ -87,7 +105,7 @@ export function MailTemplateSelect({
     });
   };
 
-  // Only the switch is sent: days and template stay as they are.
+  // Only the channel is sent: days and template stay as they are.
   const setSendAsLetter = (sendAsLetter: boolean) =>
     subscriptionInterval &&
     client.updateSubscriptionInterval({
@@ -127,7 +145,7 @@ export function MailTemplateSelect({
           {t('mailTemplateSelect.noMailSentSelectNow')}
         </MenuItem>
 
-        {mailTemplates.map(mailTemplate => (
+        {offered.map(mailTemplate => (
           <MenuItem
             key={mailTemplate.id}
             value={mailTemplate.id}
@@ -140,26 +158,55 @@ export function MailTemplateSelect({
           </MenuItem>
         ))}
       </TextField>
-      {paperLetterFlow && subscriptionInterval && (
+      {/* Only for an event that sends something: without a template there
+          is no message to choose channels for. */}
+      {paperLetterFlow && subscriptionInterval && selectedId && (
         <Stack
+          role="group"
+          aria-label={t('mailTemplateSelect.channels')}
           direction="row"
           sx={{ alignItems: 'center', whiteSpace: 'nowrap' }}
         >
-          <FormControlLabel
-            control={
-              <Switch
-                size="small"
-                checked={subscriptionInterval.object.sendAsLetter}
-                disabled={!canUpdateSubscriptionFlow}
-                onChange={(_event, checked) => setSendAsLetter(checked)}
+          {channels.map(({ channel, labelKey, isDefault }) => {
+            // A channel needs its own version of the template. Without one
+            // the box is off, whatever the interval still says: the api
+            // sends the email then.
+            const hasVersion = !!selected?.channels.includes(channel);
+
+            return (
+              <FormControlLabel
+                key={channel}
+                control={
+                  <Checkbox
+                    size="small"
+                    // The default channel is what everyone else gets: shown,
+                    // never switched off.
+                    checked={
+                      isDefault ||
+                      (hasVersion &&
+                        channel === MailChannel.Letter &&
+                        subscriptionInterval.object.sendAsLetter)
+                    }
+                    disabled={
+                      isDefault || !hasVersion || !canUpdateSubscriptionFlow
+                    }
+                    onChange={(_event, checked) => setSendAsLetter(checked)}
+                  />
+                }
+                label={t(labelKey)}
+                // The label's own negative margin would eat the row's gap
+                // now that it no longer sits directly in the row.
+                sx={{ marginLeft: 0, marginRight: 0.5 }}
               />
+            );
+          })}
+          <InfoTooltip
+            text={
+              selected?.channels.includes(MailChannel.Letter) ?
+                t('mailTemplateSelect.sendAsLetterHint')
+              : t('mailTemplateSelect.noLetterVersion')
             }
-            label={t('mailTemplateSelect.sendAsLetter')}
-            // The label's own negative margin would eat the row's gap now that
-            // it no longer sits directly in the row.
-            sx={{ marginLeft: 0, marginRight: 0 }}
           />
-          <InfoTooltip text={t('mailTemplateSelect.sendAsLetterHint')} />
         </Stack>
       )}
     </Stack>
