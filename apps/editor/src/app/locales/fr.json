@@ -1601,8 +1601,15 @@
       "create": "Créer un modèle",
       "description": "Description",
       "edit": {
-        "createHeader": "Créer un modèle",
-        "editHeader": "Modifier le modèle",
+        "versions": "Versions par canal de distribution",
+        "addVersion": {
+          "mail": "Ajouter la version e-mail",
+          "letter": "Ajouter la version lettre"
+        },
+        "removeVersion": "Supprimer cette version",
+        "letterNotForPurpose": "Cet usage n’a pas de version lettre : le message contient un lien de connexion et part immédiatement par e-mail.",
+        "createHeader": "Créer un modèle de message",
+        "editHeader": "Modifier le modèle de message",
         "saveAndClose": "Enregistrer et fermer",
         "nameRequired": "Le nom est requis.",
         "testSent": "E-mail de test envoyé.",
@@ -1718,7 +1725,7 @@
       "textContent": "Contenu en texte brut (repli)",
       "wysiwyg": "Visuel",
       "delete": "Supprimer",
-      "deleteConfirm": "Supprimer ce modèle d’e-mail ?",
+      "deleteConfirm": "Supprimer ce modèle de message ?",
       "importFromProvider": "Importer depuis le fournisseur",
       "importConfirm": "Importer & écraser",
       "importWarning": "Cela importe tous les modèles du fournisseur de messagerie. Les modèles inconnus sont créés, ceux déjà importés voient leur HTML et leur objet écrasés. Les modifications locales seront perdues.",
@@ -1866,7 +1873,7 @@
       "statusHelp": "Une coche signifie qu’un e-mail automatique utilise ce modèle. « Inutilisé » signifie qu’aucun e-mail automatique ne l’utilise – vous pouvez tout de même l’envoyer manuellement via « Messages manuels ».",
       "placeholdersInfo": "Les espaces réservés sont remplacés automatiquement à l’envoi par les données de chaque destinataire, p. ex. son prénom. Chaque e-mail devient ainsi personnel.",
       "searchPlaceholdersLabel": "Rechercher des espaces réservés",
-      "empty": "Aucun modèle d’e-mail pour le moment."
+      "empty": "Aucun modèle de message pour le moment."
     },
     "mailTemplateSelect": {
       "sendAsLetter": "Aussi par lettre",
@@ -2270,9 +2277,9 @@
       "userConsentCreate": "Nouveau consentement d’utilisateur·trice",
       "userConsentEdit": "Modifier le consentement d’utilisateur·trice",
       "automaticEmails": "E-mails automatiques",
-      "mailTemplates": "Modèles d’e-mail",
-      "mailTemplateCreate": "Nouveau modèle d’e-mail",
-      "mailTemplateEdit": "Modifier le modèle d’e-mail",
+      "mailTemplates": "Modèles de message",
+      "mailTemplateCreate": "Nouveau modèle de message",
+      "mailTemplateEdit": "Modifier le modèle de message",
       "letterLayouts": "Papier à lettres",
       "letterLayoutCreate": "Nouveau papier à lettres",
       "letterLayoutEdit": "Modifier le papier à lettres",
@@ -2824,7 +2831,7 @@
     },
     "automaticMails": {
       "title": "Messages automatiques",
-      "intro": "Définissez ici quel modèle d’e-mail est envoyé automatiquement pour quel événement. Choisissez un modèle par événement – ou laissez « Ne pas envoyer d’e-mail » si rien ne doit partir. L’icône ⓘ explique chaque événement.",
+      "intro": "Définissez ici quel modèle de message est envoyé automatiquement pour quel événement. Choisissez un modèle par événement – ou laissez « Ne pas envoyer d’e-mail » si rien ne doit partir. L’icône ⓘ explique chaque événement.",
       "example": "Exemple : {{example}}"
     },
     "subscriptionFlow": {
@@ -4566,6 +4573,10 @@
         "label": "Canal de distribution",
         "mail": "E-mail",
         "letter": "Lettre",
+        "noVersion": {
+          "mail": "Ce modèle n’a pas de version e-mail.",
+          "letter": "Ce modèle n’a pas de version lettre."
+        },
         "withoutAddress": "{{count}} des destinataires n’ont pas d’adresse postale utilisable et seront ignoré·e·s."
       },
       "print": {
@@ -5653,7 +5664,7 @@
         "subscription": "Créer un abonnement",
         "consent": "Créer un consentement",
         "userConsent": "Créer un consentement utilisateur",
-        "mailTemplate": "Créer un modèle d'e-mail",
+        "mailTemplate": "Créer un modèle de message",
         "letterLayout": "Créer un papier à lettres",
         "memberPlan": "Créer un plan d'abonnement",
         "paymentMethod": "Créer un moyen de paiement",

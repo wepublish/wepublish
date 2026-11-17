@@ -55,3 +55,60 @@ describe('MailContext', () => {
     });
   });
 });
+
+describe('MailContext.sendComposedMail', () => {
+  const setup = (variant: Record<string, unknown> | null) => {
+    const sendMail = vi.fn(async () => ({ providerMessageID: 'msg-1' }));
+    const prisma = {
+      mailTemplateVariant: { findUnique: vi.fn(async () => variant) },
+    };
+    const context = new MailContext({
+      prisma: prisma as unknown as PrismaClient,
+      mailProvider: { id: 'mailgun', sendMail } as any,
+      kv: { getOrLoadNs: vi.fn(async () => null) } as any,
+      jwtGenerator: async () => '',
+    });
+
+    return { context, prisma, sendMail };
+  };
+
+  const props = {
+    mailTemplateId: 'template-1',
+    recipient: 'jane@example.com',
+    data: { user: { firstName: 'Jane' } },
+    mailLogID: 'log-1',
+  };
+
+  it('sends what the template says by email', async () => {
+    const { context, prisma, sendMail } = setup({
+      subject: 'Hello {{user_firstName}}',
+      htmlContent: '<p>Hi {{user_firstName}}</p>',
+      textContent: null,
+    });
+
+    await expect(context.sendComposedMail(props)).resolves.toEqual({
+      subject: 'Hello Jane',
+      providerMessageID: 'msg-1',
+    });
+    expect(prisma.mailTemplateVariant.findUnique).toHaveBeenCalledWith({
+      where: {
+        templateId_channel: { templateId: 'template-1', channel: 'mail' },
+      },
+    });
+    expect(sendMail).toHaveBeenCalledWith(
+      expect.objectContaining({
+        subject: 'Hello Jane',
+        messageHtml: expect.stringContaining('Hi Jane'),
+      })
+    );
+  });
+
+  it('refuses a template that was only written as a letter', async () => {
+    const { context, sendMail } = setup(null);
+
+    await expect(context.sendComposedMail(props)).rejects.toThrow(
+      'MailTemplate <template-1> has no mail version!'
+    );
+    expect(sendMail).not.toHaveBeenCalled();
+  });
+});

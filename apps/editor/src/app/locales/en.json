@@ -1602,8 +1602,15 @@
       "create": "Create template",
       "description": "Description",
       "edit": {
-        "createHeader": "Create mail template",
-        "editHeader": "Edit mail template",
+        "versions": "Versions per delivery channel",
+        "addVersion": {
+          "mail": "Add email version",
+          "letter": "Add letter version"
+        },
+        "removeVersion": "Remove this version",
+        "letterNotForPurpose": "This purpose has no letter version: the message carries a login link and goes out by email at once.",
+        "createHeader": "Create message template",
+        "editHeader": "Edit message template",
         "saveAndClose": "Save & close",
         "nameRequired": "Name is required.",
         "testSent": "Test mail sent.",
@@ -1730,7 +1737,7 @@
       "textContent": "Plain text content (fallback)",
       "wysiwyg": "Visual",
       "delete": "Delete",
-      "deleteConfirm": "Delete this mail template?",
+      "deleteConfirm": "Delete this message template?",
       "importFromProvider": "Import from provider",
       "importConfirm": "Import & overwrite",
       "importWarning": "This imports every template from the mail provider. Unknown ones are created, already imported ones have their HTML and subject overwritten. Local changes to them will be lost.",
@@ -1867,7 +1874,7 @@
       "statusHelp": "A check mark means an automatic email uses this template. «Unused» means no automatic email uses it — you can still send it by hand via «Manual messages».",
       "placeholdersInfo": "Placeholders are replaced automatically with each recipient's data when the email is sent, e.g. their first name. This makes every email personal.",
       "searchPlaceholdersLabel": "Search placeholders",
-      "empty": "No mail templates yet."
+      "empty": "No message templates yet."
     },
     "mailTemplateSelect": {
       "sendAsLetter": "Also by letter",
@@ -2271,9 +2278,9 @@
       "userConsentCreate": "New user consent",
       "userConsentEdit": "Edit user consent",
       "automaticEmails": "Automatic emails",
-      "mailTemplates": "Email templates",
-      "mailTemplateCreate": "New email template",
-      "mailTemplateEdit": "Edit email template",
+      "mailTemplates": "Message templates",
+      "mailTemplateCreate": "New message template",
+      "mailTemplateEdit": "Edit message template",
       "letterLayouts": "Stationery",
       "letterLayoutCreate": "New stationery",
       "letterLayoutEdit": "Edit stationery",
@@ -2825,7 +2832,7 @@
     },
     "automaticMails": {
       "title": "Automated messages",
-      "intro": "Here you decide which email template goes out automatically for which event. Pick a template per event – or leave it on “Do not send an email” if nothing should go out. The ⓘ icon explains every event.",
+      "intro": "Here you decide which message template goes out automatically for which event. Pick a template per event – or leave it on “Do not send an email” if nothing should go out. The ⓘ icon explains every event.",
       "example": "Example: {{example}}"
     },
     "subscriptionFlow": {
@@ -4591,6 +4598,10 @@
         "label": "Delivery channel",
         "mail": "Email",
         "letter": "Letter",
+        "noVersion": {
+          "mail": "This template has no email version.",
+          "letter": "This template has no letter version."
+        },
         "withoutAddress": "{{count}} of the recipients have no usable postal address and will be skipped."
       },
       "print": {
@@ -5653,7 +5664,7 @@
         "subscription": "Create subscription",
         "consent": "Create consent",
         "userConsent": "Create user consent",
-        "mailTemplate": "Create email template",
+        "mailTemplate": "Create message template",
         "letterLayout": "Create stationery",
         "memberPlan": "Create subscription plan",
         "paymentMethod": "Create payment method",

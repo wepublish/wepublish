@@ -1,8 +1,17 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { PrismaClient, UserEvent, UserFlowMail } from '@prisma/client';
+import {
+  MailChannel,
+  PrismaClient,
+  UserEvent,
+  UserFlowMail,
+} from '@prisma/client';
 import { SystemMailModel, SystemMailUpdateInput } from './system-mail.model';
-import { MailContext, mailLogType } from '@wepublish/mail/api';
-import { NotFoundException } from '@nestjs/common';
+import {
+  findTemplateVariant,
+  MailContext,
+  mailLogType,
+} from '@wepublish/mail/api';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { CurrentUser, UserSession } from '@wepublish/authentication/api';
 import {
   CanGetSystemMails,
@@ -38,6 +47,20 @@ export class SystemMailResolver {
     if (!userMail) {
       throw new NotFoundException(
         'There is no userflow present in the database.'
+      );
+    }
+
+    // A login link or a password reset only ever goes out as an email.
+    if (
+      systemMail.mailTemplateId &&
+      !(await findTemplateVariant(
+        this.prismaService,
+        systemMail.mailTemplateId,
+        MailChannel.mail
+      ))
+    ) {
+      throw new BadRequestException(
+        'This template has no email version. A system mail is always an email.'
       );
     }
 

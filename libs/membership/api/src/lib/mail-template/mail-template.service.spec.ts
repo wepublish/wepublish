@@ -1,20 +1,38 @@
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import { MailContext } from '@wepublish/mail/api';
 import { LetterContext } from '@wepublish/letter/api';
-import { PrismaClient } from '@prisma/client';
+import { MailChannel, MailTemplateContext, PrismaClient } from '@prisma/client';
+import { FeaturesService } from '@wepublish/features/api';
 import { MailTemplateService } from './mail-template.service';
 import { version } from 'uuid';
 
 const makeService = (
   prisma: any,
   mailContext: any = {},
-  letterContext: any = {}
+  letterContext: any = {},
+  features: any = { isEnabled: vi.fn(async () => true) }
 ) =>
   new MailTemplateService(
     prisma as PrismaClient,
     mailContext as unknown as MailContext,
-    letterContext as unknown as LetterContext
+    letterContext as unknown as LetterContext,
+    features as unknown as FeaturesService
   );
+
+const mailVersion = {
+  channel: MailChannel.mail,
+  subject: 'Hi',
+  htmlContent: '<p>Hi</p>',
+  textContent: 'Hi',
+};
+
+const letterVersion = {
+  channel: MailChannel.letter,
+  subject: 'Ihre Rechnung',
+  htmlContent: '<p>Guten Tag</p>',
+  letterLayoutId: 'layout-1',
+  letterAppendixId: 'doc-1',
+};
 
 describe('MailTemplateService', () => {
   describe('deleteMailTemplate', () => {
@@ -76,21 +94,315 @@ describe('MailTemplateService', () => {
     });
   });
 
+  describe('createMailTemplate', () => {
+    const setup = (features?: any) => {
+      const create = vi.fn(async (args: any) => ({ id: 't1', ...args.data }));
+      const service = makeService(
+        { mailTemplate: { create } },
+        {},
+        {},
+        features
+      );
+
+      return { service, create };
+    };
+
+    it('stores the shared fields on the template and the words per channel', async () => {
+      const { service, create } = setup();
+
+      await service.createMailTemplate({
+        name: 'Rechnung',
+        description: 'Jährlich',
+        context: MailTemplateContext.invoiceCreation,
+        variants: [mailVersion, letterVersion],
+      });
+
+      expect(create).toHaveBeenCalledWith({
+        data: {
+          name: 'Rechnung',
+          description: 'Jährlich',
+          context: MailTemplateContext.invoiceCreation,
+          variants: {
+            create: [
+              {
+                channel: MailChannel.mail,
+                subject: 'Hi',
+                htmlContent: '<p>Hi</p>',
+                textContent: 'Hi',
+                letterLayoutId: null,
+                letterAppendixId: null,
+              },
+              {
+                channel: MailChannel.letter,
+                subject: 'Ihre Rechnung',
+                htmlContent: '<p>Guten Tag</p>',
+                textContent: null,
+                letterLayoutId: 'layout-1',
+                letterAppendixId: 'doc-1',
+              },
+            ],
+          },
+        },
+      });
+    });
+
+    it('accepts a template written as a letter only', async () => {
+      const { service, create } = setup();
+
+      await service.createMailTemplate({
+        name: 'Begleitbrief',
+        context: MailTemplateContext.custom,
+        variants: [letterVersion],
+      });
+
+      expect(create.mock.calls[0][0].data.variants.create).toHaveLength(1);
+    });
+
+    it('refuses a template that says nothing on any channel', async () => {
+      const { service, create } = setup();
+
+      await expect(
+        service.createMailTemplate({ name: 'Leer', variants: [] })
+      ).rejects.toThrow(BadRequestException);
+      expect(create).not.toHaveBeenCalled();
+    });
+
+    it('refuses two versions for the same channel', async () => {
+      const { service } = setup();
+
+      await expect(
+        service.createMailTemplate({
+          name: 'Doppelt',
+          variants: [mailVersion, mailVersion],
+        })
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it('refuses a letter version while letters are switched off', async () => {
+      const { service, create } = setup({
+        isEnabled: vi.fn(async () => false),
+      });
+
+      await expect(
+        service.createMailTemplate({
+          name: 'Rechnung',
+          variants: [mailVersion, letterVersion],
+        })
+      ).rejects.toThrow(ForbiddenException);
+      expect(create).not.toHaveBeenCalled();
+    });
+
+    it.each([MailTemplateContext.account, MailTemplateContext.emailChange])(
+      'refuses a letter version for a %s template: a link is no use on paper',
+      async context => {
+        const { service } = setup();
+
+        await expect(
+          service.createMailTemplate({
+            name: 'Login',
+            context,
+            variants: [mailVersion, letterVersion],
+          })
+        ).rejects.toThrow(BadRequestException);
+      }
+    );
+  });
+
+  describe('updateMailTemplate', () => {
+    const setup = (existingChannels: MailChannel[] = [MailChannel.mail]) => {
+      const update = vi.fn(async (args: any) => ({ id: 't1', ...args.data }));
+      const findMany = vi.fn(async () =>
+        existingChannels.map(channel => ({ channel }))
+      );
+      const service = makeService({
+        mailTemplate: { update },
+        mailTemplateVariant: { findMany },
+      });
+
+      return { service, update };
+    };
+
+    it('writes the versions it is given and leaves the others alone', async () => {
+      const { service, update } = setup([MailChannel.mail, MailChannel.letter]);
+
+      await service.updateMailTemplate('t1', {
+        name: 'Rechnung',
+        context: MailTemplateContext.invoiceCreation,
+        variants: [mailVersion],
+      });
+
+      const content = {
+        channel: MailChannel.mail,
+        subject: 'Hi',
+        htmlContent: '<p>Hi</p>',
+        textContent: 'Hi',
+        letterLayoutId: null,
+        letterAppendixId: null,
+      };
+
+      expect(update).toHaveBeenCalledWith({
+        where: { id: 't1' },
+        data: {
+          name: 'Rechnung',
+          description: null,
+          context: MailTemplateContext.invoiceCreation,
+          variants: {
+            upsert: [
+              {
+                where: {
+                  templateId_channel: {
+                    templateId: 't1',
+                    channel: MailChannel.mail,
+                  },
+                },
+                create: content,
+                update: content,
+              },
+            ],
+          },
+        },
+      });
+    });
+
+    it('saves the shared fields alone when no version is handed in', async () => {
+      const { service, update } = setup();
+
+      await service.updateMailTemplate('t1', { name: 'Neu', variants: [] });
+
+      expect(update.mock.calls[0][0].data.variants).toEqual({ upsert: [] });
+    });
+
+    it('refuses to turn a template with a letter version into a login mail', async () => {
+      const { service, update } = setup([MailChannel.mail, MailChannel.letter]);
+
+      await expect(
+        service.updateMailTemplate('t1', {
+          name: 'Login',
+          context: MailTemplateContext.account,
+          variants: [mailVersion],
+        })
+      ).rejects.toThrow(BadRequestException);
+      expect(update).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('deleteMailTemplateVariant', () => {
+    const setup = ({
+      channels = [MailChannel.mail, MailChannel.letter],
+      subscriptionIntervals = 0,
+      userFlowMails = 0,
+      letterIntervals = 0,
+    }: {
+      channels?: MailChannel[];
+      subscriptionIntervals?: number;
+      userFlowMails?: number;
+      letterIntervals?: number;
+    } = {}) => {
+      const remove = vi.fn(async () => undefined);
+      const service = makeService({
+        mailTemplate: {
+          findUnique: vi.fn(async () => ({
+            id: 't1',
+            variants: channels.map(channel => ({ channel })),
+            _count: { subscriptionIntervals, userFlowMails },
+          })),
+        },
+        subscriptionInterval: { count: vi.fn(async () => letterIntervals) },
+        mailTemplateVariant: { delete: remove },
+      });
+
+      return { service, remove };
+    };
+
+    it('removes a version nothing depends on', async () => {
+      const { service, remove } = setup();
+
+      await service.deleteMailTemplateVariant('t1', MailChannel.letter);
+
+      expect(remove).toHaveBeenCalledWith({
+        where: {
+          templateId_channel: { templateId: 't1', channel: MailChannel.letter },
+        },
+      });
+    });
+
+    it('keeps the last version: a template has to say something', async () => {
+      const { service, remove } = setup({ channels: [MailChannel.mail] });
+
+      await expect(
+        service.deleteMailTemplateVariant('t1', MailChannel.mail)
+      ).rejects.toThrow(BadRequestException);
+      expect(remove).not.toHaveBeenCalled();
+    });
+
+    it('refuses a version the template does not have', async () => {
+      const { service } = setup({ channels: [MailChannel.mail] });
+
+      await expect(
+        service.deleteMailTemplateVariant('t1', MailChannel.letter)
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it('keeps the email while a subscription flow sends the template', async () => {
+      const { service, remove } = setup({ subscriptionIntervals: 1 });
+
+      await expect(
+        service.deleteMailTemplateVariant('t1', MailChannel.mail)
+      ).rejects.toThrow(/subscription flow/);
+      expect(remove).not.toHaveBeenCalled();
+    });
+
+    it('keeps the email while a system mail sends the template', async () => {
+      const { service } = setup({ userFlowMails: 1 });
+
+      await expect(
+        service.deleteMailTemplateVariant('t1', MailChannel.mail)
+      ).rejects.toThrow(/system mail/);
+    });
+
+    it('keeps the letter while an event is switched to letters with it', async () => {
+      const { service, remove } = setup({
+        subscriptionIntervals: 2,
+        letterIntervals: 1,
+      });
+
+      await expect(
+        service.deleteMailTemplateVariant('t1', MailChannel.letter)
+      ).rejects.toThrow(/letter/);
+      expect(remove).not.toHaveBeenCalled();
+    });
+
+    it('removes the letter of a template flows only mail', async () => {
+      const { service, remove } = setup({ subscriptionIntervals: 2 });
+
+      await service.deleteMailTemplateVariant('t1', MailChannel.letter);
+
+      expect(remove).toHaveBeenCalled();
+    });
+  });
+
   describe('importFromProvider', () => {
-    const makeImportService = (remoteTemplates: any[]) => {
+    const makeImportService = (
+      remoteTemplates: any[],
+      existing: { id: string } | null = null
+    ) => {
+      const create = vi.fn(async (args: any) => args);
       const upsert = vi.fn(async (args: any) => args);
       const service = makeService(
-        { mailTemplate: { upsert } },
+        {
+          mailTemplate: { findUnique: vi.fn(async () => existing), create },
+          mailTemplateVariant: { upsert },
+        },
         {
           mailProvider: { listTemplates: vi.fn(async () => remoteTemplates) },
         }
       );
 
-      return { service, upsert };
+      return { service, create, upsert };
     };
 
-    it('creates a local template for every remote one, not just already-linked rows', async () => {
-      const { service, upsert } = makeImportService([
+    it('creates a local template with an email version for every unknown remote one', async () => {
+      const { service, create, upsert } = makeImportService([
         {
           externalId: 'welcome',
           name: 'Welcome',
@@ -106,12 +418,45 @@ describe('MailTemplateService', () => {
       ]);
 
       await expect(service.importFromProvider()).resolves.toBe(2);
-      expect(upsert).toHaveBeenCalledTimes(2);
-      expect(upsert).toHaveBeenCalledWith({
-        where: { externalMailTemplateId: 'welcome' },
-        create: {
+      expect(create).toHaveBeenCalledTimes(2);
+      expect(create).toHaveBeenCalledWith({
+        data: {
           name: 'Welcome',
           externalMailTemplateId: 'welcome',
+          variants: {
+            create: {
+              channel: MailChannel.mail,
+              htmlContent: '<p>a</p>',
+              subject: 'A',
+            },
+          },
+        },
+      });
+      expect(upsert).not.toHaveBeenCalled();
+    });
+
+    it('overwrites the email version of a template imported before, and nothing else', async () => {
+      const { service, create, upsert } = makeImportService(
+        [
+          {
+            externalId: 'welcome',
+            name: 'Welcome',
+            html: '<p>a</p>',
+            subject: 'A',
+          },
+        ],
+        { id: 't1' }
+      );
+
+      await expect(service.importFromProvider()).resolves.toBe(1);
+      expect(create).not.toHaveBeenCalled();
+      expect(upsert).toHaveBeenCalledWith({
+        where: {
+          templateId_channel: { templateId: 't1', channel: MailChannel.mail },
+        },
+        create: {
+          templateId: 't1',
+          channel: MailChannel.mail,
           htmlContent: '<p>a</p>',
           subject: 'A',
         },
@@ -120,7 +465,7 @@ describe('MailTemplateService', () => {
     });
 
     it('converts mandrill merge tags in html and subject', async () => {
-      const { service, upsert } = makeImportService([
+      const { service, create } = makeImportService([
         {
           externalId: 'welcome',
           name: 'Welcome',
@@ -131,16 +476,17 @@ describe('MailTemplateService', () => {
 
       await service.importFromProvider();
 
-      expect(upsert.mock.calls[0][0].create).toMatchObject({
+      expect(create.mock.calls[0][0].data.variants.create).toMatchObject({
         htmlContent: '<p>Hi {{USER_FIRSTNAME}}</p>',
         subject: 'Hello {{USER_NAME}}',
       });
     });
 
     it('keeps the local subject when the provider has none', async () => {
-      const { service, upsert } = makeImportService([
-        { externalId: 'plain', name: 'Plain', html: '<p>a</p>' },
-      ]);
+      const { service, upsert } = makeImportService(
+        [{ externalId: 'plain', name: 'Plain', html: '<p>a</p>' }],
+        { id: 't1' }
+      );
 
       await service.importFromProvider();
 
@@ -151,15 +497,16 @@ describe('MailTemplateService', () => {
     });
 
     it('imports nothing for a provider without a remote template store', async () => {
-      const { service, upsert } = makeImportService([]);
+      const { service, create, upsert } = makeImportService([]);
 
       await expect(service.importFromProvider()).resolves.toBe(0);
+      expect(create).not.toHaveBeenCalled();
       expect(upsert).not.toHaveBeenCalled();
     });
 
     it('surfaces a provider failure instead of reporting zero imports', async () => {
       const service = makeService(
-        { mailTemplate: { upsert: vi.fn() } },
+        {},
         {
           mailProvider: {
             listTemplates: vi.fn(async () => {

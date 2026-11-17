@@ -134,6 +134,7 @@ export class InvoiceDeliveryService {
       prisma: this.prisma,
       letterSender: this.mailContext.letterSender,
       recipient: subscription.user,
+      mailTemplateId: creationEvent.mailTemplateId,
       asLetter: creationEvent.sendAsLetter,
       withPaymentSlip: true,
       logger: this.logger,

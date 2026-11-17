@@ -1601,8 +1601,15 @@
       "create": "Vorlage erstellen",
       "description": "Beschreibung",
       "edit": {
-        "createHeader": "E-Mail-Vorlage erstellen",
-        "editHeader": "E-Mail-Vorlage bearbeiten",
+        "versions": "Versionen pro Zustellkanal",
+        "addVersion": {
+          "mail": "E-Mail-Version hinzufügen",
+          "letter": "Brief-Version hinzufügen"
+        },
+        "removeVersion": "Diese Version entfernen",
+        "letterNotForPurpose": "Für diesen Verwendungszweck gibt es keine Brief-Version: Die Mitteilung enthält einen Login-Link und geht sofort per E-Mail raus.",
+        "createHeader": "Mitteilungsvorlage erstellen",
+        "editHeader": "Mitteilungsvorlage bearbeiten",
         "saveAndClose": "Speichern & schliessen",
         "nameRequired": "Name ist erforderlich.",
         "testSent": "Test-E-Mail gesendet.",
@@ -1795,7 +1802,7 @@
       "textContent": "Textinhalt (Fallback)",
       "wysiwyg": "Visuell",
       "delete": "Löschen",
-      "deleteConfirm": "Diese E-Mail-Vorlage löschen?",
+      "deleteConfirm": "Diese Mitteilungsvorlage löschen?",
       "importFromProvider": "Vom Provider importieren",
       "importConfirm": "Importieren & überschreiben",
       "importWarning": "Dies importiert alle Vorlagen des E-Mail-Providers. Noch unbekannte werden neu angelegt, bereits importierte werden mit HTML und Betreff des Providers überschrieben. Lokale Änderungen daran gehen verloren.",
@@ -1866,7 +1873,7 @@
       "statusHelp": "Ein Häkchen bedeutet: Eine automatische E-Mail verwendet diese Vorlage. «Nicht verwendet» bedeutet: Keine automatische E-Mail nutzt sie – über «Manuelle Mitteilungen» kannst du sie trotzdem von Hand verschicken.",
       "placeholdersInfo": "Platzhalter werden beim Versand automatisch durch die Daten der jeweiligen Person ersetzt, z. B. durch ihren Vornamen. So wird jede E-Mail persönlich.",
       "searchPlaceholdersLabel": "Platzhalter suchen",
-      "empty": "Noch keine E-Mail-Vorlagen."
+      "empty": "Noch keine Mitteilungsvorlagen."
     },
     "mailTemplateSelect": {
       "sendAsLetter": "Auch per Brief",
@@ -2270,9 +2277,9 @@
       "userConsentCreate": "Neue Benutzer-Einwilligung",
       "userConsentEdit": "Benutzer-Einwilligung bearbeiten",
       "automaticEmails": "Automatische E-Mails",
-      "mailTemplates": "E-Mail-Vorlagen",
-      "mailTemplateCreate": "Neue E-Mail-Vorlage",
-      "mailTemplateEdit": "E-Mail-Vorlage bearbeiten",
+      "mailTemplates": "Mitteilungsvorlagen",
+      "mailTemplateCreate": "Neue Mitteilungsvorlage",
+      "mailTemplateEdit": "Mitteilungsvorlage bearbeiten",
       "letterLayouts": "Briefpapier",
       "letterLayoutCreate": "Neues Briefpapier",
       "letterLayoutEdit": "Briefpapier bearbeiten",
@@ -2824,7 +2831,7 @@
     },
     "automaticMails": {
       "title": "Automatische Mitteilungen",
-      "intro": "Hier legst du fest, welche E-Mail-Vorlage bei welchem Ereignis automatisch verschickt wird. Wähle pro Ereignis eine Vorlage – oder lass das Feld auf «Keine E-Mail senden», wenn nichts verschickt werden soll. Das ⓘ-Symbol erklärt jedes Ereignis.",
+      "intro": "Hier legst du fest, welche Mitteilungsvorlage bei welchem Ereignis automatisch verschickt wird. Wähle pro Ereignis eine Vorlage – oder lass das Feld auf «Keine E-Mail senden», wenn nichts verschickt werden soll. Das ⓘ-Symbol erklärt jedes Ereignis.",
       "example": "Beispiel: {{example}}"
     },
     "subscriptionFlow": {
@@ -4572,6 +4579,10 @@
         "label": "Zustellkanal",
         "mail": "E-Mail",
         "letter": "Brief",
+        "noVersion": {
+          "mail": "Diese Vorlage hat keine E-Mail-Version.",
+          "letter": "Diese Vorlage hat keine Brief-Version."
+        },
         "withoutAddress": "{{count}} der Empfänger:innen haben keine brauchbare Postadresse und werden übersprungen."
       },
       "print": {
@@ -5653,7 +5664,7 @@
         "subscription": "Abo erstellen",
         "consent": "Einwilligung erstellen",
         "userConsent": "Benutzer-Einwilligung erstellen",
-        "mailTemplate": "E-Mail-Vorlage erstellen",
+        "mailTemplate": "Mitteilungsvorlage erstellen",
         "letterLayout": "Briefpapier erstellen",
         "memberPlan": "Abo-Plan erstellen",
         "paymentMethod": "Zahlungsmethode erstellen",

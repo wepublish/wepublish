@@ -1,4 +1,9 @@
-import { PrismaClient, SettingMailProvider, UserEvent } from '@prisma/client';
+import {
+  MailChannel,
+  PrismaClient,
+  SettingMailProvider,
+  UserEvent,
+} from '@prisma/client';
 import { BaseMailProvider } from './mail-provider/base-mail-provider';
 
 import { Injectable } from '@nestjs/common';
@@ -8,6 +13,7 @@ import { SecretCrypto } from '@wepublish/settings/api';
 import { composeMail, MailTemplateContent } from './mail-renderer';
 import { EmailQualityRecorder } from './email-quality-recorder';
 import { LetterSender } from './letter-sender';
+import { requireTemplateVariant } from './template-variant';
 
 export interface SendComposedMailProps {
   readonly mailTemplateId: string;
@@ -164,13 +170,11 @@ export class MailContext implements MailContextInterface {
       throw new Error('MailProvider is not set!');
     }
 
-    const template = await this.prisma.mailTemplate.findUnique({
-      where: { id: mailTemplateId },
-    });
-
-    if (!template) {
-      throw new Error(`MailTemplate <${mailTemplateId}> not found!`);
-    }
+    const template = await requireTemplateVariant(
+      this.prisma as PrismaClient,
+      mailTemplateId,
+      MailChannel.mail
+    );
 
     const config = await new MailContextConfig(
       this.prisma,

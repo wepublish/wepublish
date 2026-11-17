@@ -13,11 +13,17 @@ import {
   MailSendJobRecipientState,
   MailSendJobState,
   MailTemplate,
+  MailTemplateVariant,
   Prisma,
   PrismaClient,
 } from '@prisma/client';
 import { v7 as uuidv7 } from 'uuid';
-import { composeMail, MailContext, mailLogType } from '@wepublish/mail/api';
+import {
+  composeMail,
+  findTemplateVariant,
+  MailContext,
+  mailLogType,
+} from '@wepublish/mail/api';
 import {
   canReceiveLetters,
   LetterContext,
@@ -112,6 +118,7 @@ export class MailSendJobService {
     currentUserId: string
   ): Promise<MailSendJob> {
     const template = await this.loadTemplate(templateId);
+    await this.loadVariant(template.id, MailChannel.mail);
 
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
@@ -166,6 +173,7 @@ export class MailSendJobService {
     await this.assertChannelAllowed(input.channel);
 
     const template = await this.loadTemplate(input.mailTemplateId);
+    await this.loadVariant(template.id, input.channel ?? MailChannel.mail);
 
     const totalCount = await this.recipientService.count(
       input.audience,
@@ -736,6 +744,10 @@ export class MailSendJobService {
     await this.assertChannelAllowed(input.channel);
 
     const template = await this.loadTemplate(input.mailTemplateId);
+    const variant = await this.loadVariant(
+      template.id,
+      input.channel ?? MailChannel.mail
+    );
     const recipient = await this.findPreviewRecipient(
       input.audience,
       input.recipientId,
@@ -758,10 +770,10 @@ export class MailSendJobService {
       const print = printSettings(input.print);
       const pdf = await this.letterContext.renderLetter({
         template: {
-          htmlContent: template.htmlContent,
-          letterAppendixId: template.letterAppendixId,
+          htmlContent: variant.htmlContent,
+          letterAppendixId: variant.letterAppendixId,
         },
-        layout: await this.letterContext.resolveLayout(template.letterLayoutId),
+        layout: await this.letterContext.resolveLayout(variant.letterLayoutId),
         addressPosition: print.addressPosition,
         printMode: print.printMode,
         data: { user: recipient.user, optional: optionalData },
@@ -769,7 +781,7 @@ export class MailSendJobService {
       });
 
       return {
-        subject: template.subject,
+        subject: variant.subject,
         html: '',
         pdf: pdf.toString('base64'),
         recipient,
@@ -779,9 +791,9 @@ export class MailSendJobService {
     const jwt = await this.mailContext.jwtGenerator(recipient.user.id);
     const composed = composeMail(
       {
-        subject: template.subject,
-        htmlContent: template.htmlContent,
-        textContent: template.textContent,
+        subject: variant.subject,
+        htmlContent: variant.htmlContent,
+        textContent: variant.textContent,
       },
       {
         user: recipient.user,
@@ -873,11 +885,16 @@ export class MailSendJobService {
    */
   async missingPlaceholders(
     templateId: string,
-    withSubscriptionData: boolean
+    withSubscriptionData: boolean,
+    channel: MailChannel = MailChannel.mail
   ): Promise<string[]> {
     const template = await this.loadTemplate(templateId);
+    const variant = await this.loadVariant(template.id, channel);
 
-    return findMissingPlaceholders(template, withSubscriptionData);
+    return findMissingPlaceholders(
+      { ...variant, context: template.context },
+      withSubscriptionData
+    );
   }
 
   private audienceFor(audience: MailAudienceInput): MailSendAudience {
@@ -900,5 +917,26 @@ export class MailSendJobService {
     }
 
     return template;
+  }
+
+  /**
+   * What the template says on the channel of a send. A template is written
+   * per channel, so one without that version cannot go out on it.
+   */
+  private async loadVariant(
+    templateId: string,
+    channel: MailChannel
+  ): Promise<MailTemplateVariant> {
+    const variant = await findTemplateVariant(this.prisma, templateId, channel);
+
+    if (!variant) {
+      throw new BadRequestException(
+        channel === MailChannel.letter ?
+          'This template has no letter version.'
+        : 'This template has no email version.'
+      );
+    }
+
+    return variant;
   }
 }

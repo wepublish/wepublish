@@ -4,17 +4,63 @@ import {
   ObjectType,
   registerEnumType,
 } from '@nestjs/graphql';
-import { MailTemplateContext } from '@prisma/client';
+import { MailChannel, MailTemplateContext } from '@prisma/client';
 import { MailTemplateStatus } from '@wepublish/mail/api';
 
 registerEnumType(MailTemplateStatus, {
   name: 'MailTemplateStatus',
 });
 
+// Also used by the send models, which import this file for the registration.
+registerEnumType(MailChannel, {
+  name: 'MailChannel',
+  description: 'Whether a send goes out as an email or as a printed letter.',
+});
+
 registerEnumType(MailTemplateContext, {
   name: 'MailTemplateContext',
   description: 'The mail type / context a template is written for.',
 });
+
+@ObjectType({
+  description: 'What a template says on one channel.',
+})
+export class MailTemplateVariantModel {
+  @Field()
+  id!: string;
+
+  @Field(() => MailChannel)
+  channel!: MailChannel;
+
+  @Field({
+    description:
+      "The email's subject line; for a letter the title its log entry carries.",
+  })
+  subject!: string;
+
+  @Field()
+  htmlContent!: string;
+
+  @Field(() => String, {
+    nullable: true,
+    description: 'Plain-text alternative of an email. Unused for a letter.',
+  })
+  textContent?: string | null;
+
+  @Field(() => String, {
+    nullable: true,
+    description:
+      'Letter only: stationery the letter is set on; null means the default.',
+  })
+  letterLayoutId?: string | null;
+
+  @Field(() => String, {
+    nullable: true,
+    description:
+      'Letter only: uploaded pdf printed after the letter pages, e.g. a QR-bill.',
+  })
+  letterAppendixId?: string | null;
+}
 
 @ObjectType()
 export class MailTemplateModel {
@@ -27,23 +73,40 @@ export class MailTemplateModel {
   @Field({ nullable: true })
   description?: string;
 
+  @Field(() => MailTemplateContext, { nullable: true })
+  context?: MailTemplateContext;
+
+  // Declared here as a string, as it always was: left to the resolver alone,
+  // the field would turn into the enum and its values change case on the wire
+  // (`ok` → `Ok`).
+  @Field()
+  status!: string;
+
+  // `channels`, `variants`, `subject` and the deprecated content fields are
+  // resolved by `MailTemplatesResolver`.
+}
+
+@ObjectType()
+export class MailProviderModel {
+  @Field()
+  name!: string;
+}
+
+@InputType()
+export class MailTemplateVariantInput {
+  @Field(() => MailChannel)
+  channel!: MailChannel;
+
   @Field()
   subject!: string;
 
   @Field()
   htmlContent!: string;
 
-  @Field({ nullable: true })
-  textContent?: string;
+  @Field(() => String, { nullable: true })
+  textContent?: string | null;
 
-  @Field(() => MailTemplateContext, { nullable: true })
-  context?: MailTemplateContext;
-
-  @Field(() => String, {
-    nullable: true,
-    description:
-      'Stationery a letter printed from this template is set on; null means the default.',
-  })
+  @Field(() => String, { nullable: true })
   letterLayoutId?: string | null;
 
   @Field(() => String, {
@@ -51,15 +114,6 @@ export class MailTemplateModel {
     description: 'Uploaded pdf printed after the letter pages, e.g. a QR-bill.',
   })
   letterAppendixId?: string | null;
-
-  @Field()
-  status!: string;
-}
-
-@ObjectType()
-export class MailProviderModel {
-  @Field()
-  name!: string;
 }
 
 @InputType()
@@ -70,26 +124,14 @@ export class MailTemplateInput {
   @Field({ nullable: true })
   description?: string;
 
-  @Field()
-  subject!: string;
-
-  @Field()
-  htmlContent!: string;
-
-  @Field({ nullable: true })
-  textContent?: string;
-
   @Field(() => MailTemplateContext, { nullable: true })
   context?: MailTemplateContext;
 
-  @Field(() => String, { nullable: true })
-  letterLayoutId?: string | null;
-
-  @Field(() => String, {
-    nullable: true,
-    description: 'Uploaded pdf printed after the letter pages, e.g. a QR-bill.',
+  @Field(() => [MailTemplateVariantInput], {
+    description:
+      'The versions to write, one per channel. A version left out stays as it is; removing one is `deleteMailTemplateVariant`.',
   })
-  letterAppendixId?: string | null;
+  variants!: MailTemplateVariantInput[];
 }
 
 @ObjectType()

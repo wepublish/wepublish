@@ -117,10 +117,12 @@ query MailSendPreview($input: MailSendPreviewInput!) {
 query MailTemplateMissingPlaceholders(
   $templateId: String!
   $withSubscriptionData: Boolean!
+  $channel: MailChannel
 ) {
   mailTemplateMissingPlaceholders(
     templateId: $templateId
     withSubscriptionData: $withSubscriptionData
+    channel: $channel
   )
 }
 

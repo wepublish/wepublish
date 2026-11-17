@@ -19,6 +19,7 @@ import type {
   LetterRecipientOptions,
   LetterSender,
 } from '@wepublish/mail/api';
+import { requireTemplateVariant } from '@wepublish/mail/api';
 import {
   canReceiveLetters,
   PAYMENT_SLIP_COUNTRY,
@@ -285,13 +286,13 @@ export class LetterContext implements LetterSender {
     const address = toLetterAddress(props.recipient);
     const print = props.print ?? (await this.resolvePrintDefaults());
 
-    const template = await this.prisma.mailTemplate.findUnique({
-      where: { id: props.mailTemplateId },
-    });
-
-    if (!template) {
-      throw new Error(`MailTemplate <${props.mailTemplateId}> not found!`);
-    }
+    // The words on paper are the letter variant's; the email of the same
+    // template is another text.
+    const template = await requireTemplateVariant(
+      this.prisma,
+      props.mailTemplateId,
+      MailChannel.letter
+    );
 
     try {
       const file = await this.renderLetter({

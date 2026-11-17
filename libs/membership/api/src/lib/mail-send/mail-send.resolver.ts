@@ -138,11 +138,18 @@ export class MailSendResolver {
   async mailTemplateMissingPlaceholders(
     @Args('templateId') templateId: string,
     @Args('withSubscriptionData', { type: () => Boolean })
-    withSubscriptionData: boolean
+    withSubscriptionData: boolean,
+    @Args('channel', {
+      type: () => MailChannel,
+      nullable: true,
+      description: 'The version to check; the email when left out.',
+    })
+    channel?: MailChannel | null
   ): Promise<string[]> {
     return this.mailSendJobService.missingPlaceholders(
       templateId,
-      withSubscriptionData
+      withSubscriptionData,
+      channel ?? MailChannel.mail
     );
   }
 

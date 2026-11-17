@@ -27,6 +27,11 @@ const prismaServiceMock = {
     ),
     update: vi.fn((): void => undefined),
   },
+  mailTemplateVariant: {
+    findUnique: vi.fn(async (): Promise<{ id: string } | null> => ({
+      id: 'variant-1',
+    })),
+  },
 };
 
 const mailContestMock = {
@@ -94,6 +99,28 @@ describe('SystemMailResolver', () => {
     expect(result.length).toEqual(2);
     expect(result[0].event).toEqual(UserEvent.ACCOUNT_CREATION);
     expect(result[1].event).toEqual(UserEvent.LOGIN_LINK);
+  });
+
+  it('refuses a template written as a letter only: a system mail is an email', async () => {
+    prismaServiceMock.userFlowMail.update.mockClear();
+    prismaServiceMock.mailTemplateVariant.findUnique.mockResolvedValueOnce(
+      null
+    );
+
+    await expect(
+      resolver.updateSystemMail({
+        event: UserEvent.ACCOUNT_CREATION,
+        mailTemplateId: 'letter-only',
+      })
+    ).rejects.toThrow(/email version/);
+    expect(
+      prismaServiceMock.mailTemplateVariant.findUnique
+    ).toHaveBeenCalledWith({
+      where: {
+        templateId_channel: { templateId: 'letter-only', channel: 'mail' },
+      },
+    });
+    expect(prismaServiceMock.userFlowMail.update).not.toHaveBeenCalled();
   });
 
   it('should test the system mail', async () => {

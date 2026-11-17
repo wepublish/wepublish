@@ -24,14 +24,19 @@ import {
   MailTemplatePreviewInput,
   MailTemplatePreviewModel,
   MailTemplateSubscriptionOption,
+  MailTemplateVariantModel,
   SendTestMailTemplateInput,
 } from './mail-template.model';
-import { PrismaClient } from '@prisma/client';
+import { MailChannel, MailTemplateVariant, PrismaClient } from '@prisma/client';
 import { CurrentUser, UserSession } from '@wepublish/authentication/api';
 import { Feature } from '@wepublish/features/api';
 import { Permissions } from '@wepublish/permissions/api';
 import { MailTemplateService } from './mail-template.service';
 import { UsedMailTemplateDataloader } from './used-mail-template.dataloader';
+import {
+  MailTemplateVariantDataloader,
+  MailTemplateVariantSummaryDataloader,
+} from './mail-template-variant.dataloader';
 import { MailTemplateContextId } from './mail-template-data';
 
 @Resolver(() => MailTemplateModel)
@@ -40,7 +45,9 @@ export class MailTemplatesResolver {
     private prismaService: PrismaClient,
     private mailContext: MailContext,
     private mailTemplateService: MailTemplateService,
-    private usedMailTemplateDataloader: UsedMailTemplateDataloader
+    private usedMailTemplateDataloader: UsedMailTemplateDataloader,
+    private variantDataloader: MailTemplateVariantDataloader,
+    private variantSummaryDataloader: MailTemplateVariantSummaryDataloader
   ) {}
 
   @Permissions(CanGetMailTemplates)
@@ -56,7 +63,7 @@ export class MailTemplatesResolver {
   @Permissions(CanGetMailTemplates)
   @Query(() => MailTemplateModel, {
     nullable: true,
-    description: `Return a single mail template, including its html and text body.`,
+    description: `Return a single mail template; its \`variants\` carry the html and text bodies.`,
   })
   async mailTemplate(@Args('id') id: string) {
     return this.prismaService.mailTemplate.findUnique({
@@ -159,9 +166,7 @@ export class MailTemplatesResolver {
     description: `Create a new mail template`,
   })
   async createMailTemplate(@Args('input') input: MailTemplateInput) {
-    return this.prismaService.mailTemplate.create({
-      data: input,
-    });
+    return this.mailTemplateService.createMailTemplate(input);
   }
 
   @Permissions(CanUpdateMailTemplates)
@@ -172,10 +177,22 @@ export class MailTemplatesResolver {
     @Args('id') id: string,
     @Args('input') input: MailTemplateInput
   ) {
-    return this.prismaService.mailTemplate.update({
-      where: { id },
-      data: input,
-    });
+    return this.mailTemplateService.updateMailTemplate(id, input);
+  }
+
+  @Permissions(CanUpdateMailTemplates)
+  @Mutation(() => Boolean, {
+    nullable: true,
+    description: `Remove what a template says on one channel. Refused while something still sends the template on that channel, and for its last version.`,
+  })
+  async deleteMailTemplateVariant(
+    @Args('templateId') templateId: string,
+    @Args('channel', { type: () => MailChannel }) channel: MailChannel
+  ) {
+    await this.mailTemplateService.deleteMailTemplateVariant(
+      templateId,
+      channel
+    );
   }
 
   @Permissions(CanDeleteMailTemplates)
@@ -229,5 +246,92 @@ export class MailTemplatesResolver {
     const isUsed = await this.usedMailTemplateDataloader.load(template.id);
 
     return isUsed ? MailTemplateStatus.Ok : MailTemplateStatus.Unused;
+  }
+
+  @ResolveField('channels', () => [MailChannel], {
+    description: 'The channels this template is written for, the email first.',
+  })
+  async channels(
+    @Parent() template: MailTemplateModel
+  ): Promise<MailChannel[]> {
+    const variants = await this.variantSummaryDataloader.load(template.id);
+
+    return (variants ?? []).map(({ channel }) => channel);
+  }
+
+  @ResolveField('subject', () => String, {
+    description:
+      'The subject of the email version; the title of the letter for a template written as a letter only.',
+  })
+  async subject(@Parent() template: MailTemplateModel): Promise<string> {
+    const variants = await this.variantSummaryDataloader.load(template.id);
+
+    return variants?.[0]?.subject ?? '';
+  }
+
+  @ResolveField('variants', () => [MailTemplateVariantModel], {
+    description:
+      'What the template says on each channel, bodies included. Ask for it on a single template, not on a list.',
+  })
+  async variants(
+    @Parent() template: MailTemplateModel
+  ): Promise<MailTemplateVariant[]> {
+    return (await this.variantDataloader.load(template.id)) ?? [];
+  }
+
+  private async variantOf(
+    template: MailTemplateModel,
+    channel: MailChannel
+  ): Promise<MailTemplateVariant | undefined> {
+    return (await this.variants(template)).find(
+      variant => variant.channel === channel
+    );
+  }
+
+  @ResolveField('htmlContent', () => String, {
+    deprecationReason: 'Use `variants`: a template has a body per channel.',
+  })
+  async htmlContent(@Parent() template: MailTemplateModel): Promise<string> {
+    return (
+      (await this.variantOf(template, MailChannel.mail))?.htmlContent ?? ''
+    );
+  }
+
+  @ResolveField('textContent', () => String, {
+    nullable: true,
+    deprecationReason: 'Use `variants`: a template has a body per channel.',
+  })
+  async textContent(
+    @Parent() template: MailTemplateModel
+  ): Promise<string | null> {
+    return (
+      (await this.variantOf(template, MailChannel.mail))?.textContent ?? null
+    );
+  }
+
+  @ResolveField('letterLayoutId', () => String, {
+    nullable: true,
+    deprecationReason: 'Use the letter entry of `variants`.',
+  })
+  async letterLayoutId(
+    @Parent() template: MailTemplateModel
+  ): Promise<string | null> {
+    return (
+      (await this.variantOf(template, MailChannel.letter))?.letterLayoutId ??
+      null
+    );
+  }
+
+  @ResolveField('letterAppendixId', () => String, {
+    nullable: true,
+    deprecationReason: 'Use the letter entry of `variants`.',
+  })
+  async letterAppendixId(
+    @Parent() template: MailTemplateModel
+  ): Promise<string | null> {
+    return (
+      (await this.variantOf(template, MailChannel.letter))?.letterAppendixId ??
+      null
+    );
   }
 }

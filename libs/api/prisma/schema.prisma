@@ -309,6 +309,7 @@ model Document {
   extension   String
 
   mailTemplates MailTemplate[]
+  mailTemplateVariants MailTemplateVariant[]
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -1747,6 +1748,13 @@ model MailTemplate {
 
   name        String
   description String?
+
+  // What is sent lives on the variants, one per channel. The content columns
+  // below (subject, htmlContent, textContent, letterAppendixId, letterLayoutId)
+  // are the pre-variant copy: no code reads or writes them any more, and a
+  // follow-up migration drops them.
+  variants MailTemplateVariant[]
+
   subject     String  @default("")
   htmlContent String  @default("")
   textContent String?
@@ -1779,6 +1787,38 @@ model MailTemplate {
   @@map("mail_templates")
 }
 
+/// What a template says on one channel. A template is the group flows, logs
+/// and send jobs point at; a mail and a letter of the same template are two
+/// variants with their own words, because paper carries no links and an email
+/// no address window.
+model MailTemplateVariant {
+  id         String   @id @default(dbgenerated("uuidv7()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  template   MailTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  templateId String
+
+  channel MailChannel
+
+  // The email's subject line; for a letter the title its log entry carries.
+  subject     String  @default("")
+  htmlContent String  @default("")
+  // Plain-text alternative of an email. Unused for a letter.
+  textContent String?
+
+  // Letter only. Stationery the letter is set on; null means the default.
+  letterLayout   LetterLayout? @relation(fields: [letterLayoutId], references: [id])
+  letterLayoutId String?
+
+  // Letter only. Uploaded pdf printed after the letter pages (e.g. a static QR-bill).
+  letterAppendix   Document? @relation(fields: [letterAppendixId], references: [id], onDelete: SetNull)
+  letterAppendixId String?
+
+  @@unique([templateId, channel])
+  @@map("mail_templates.variants")
+}
+
 // Stationery for printed letters: a header and a footer repeated on every
 // page of the pdf. Independent of the template, which only carries the words,
 // so the same words can still go out as a mail without any of this.
@@ -1800,6 +1840,7 @@ model LetterLayout {
   isDefault Boolean @default(false)
 
   mailTemplates MailTemplate[]
+  mailTemplateVariants MailTemplateVariant[]
 
   @@map("letter_layouts")
 }
