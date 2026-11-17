@@ -39,4 +39,7 @@ export type ApiTokenSession = {
 
 export const EXPIRED_API_TOKEN = 'expired-api-token';
 
+/** The key's creator is gone, inactive or may no longer create keys. */
+export const BLOCKED_API_TOKEN = 'blocked-api-token';
+
 export type AuthSession = TokenSession | UserSession | ApiTokenSession;

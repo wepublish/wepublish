@@ -5,7 +5,10 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { ApiToken, Prisma, PrismaClient, User } from '@prisma/client';
-import { EXPIRED_API_TOKEN } from '@wepublish/authentication/api';
+import {
+  BLOCKED_API_TOKEN,
+  EXPIRED_API_TOKEN,
+} from '@wepublish/authentication/api';
 import { CanCreateApiToken } from '@wepublish/permissions';
 import {
   addPredefinedPermissions,
@@ -190,7 +193,8 @@ export class ApiTokenService {
             ApiTokenBlockedReason.CreatorMayNotCreateApiTokens
         ) ?
           `The user who created the API key "${apiToken.name}" may no longer create API keys (${CanCreateApiToken.id}).`
-        : `The user who created the API key "${apiToken.name}" no longer exists or is inactive.`
+        : `The user who created the API key "${apiToken.name}" no longer exists or is inactive.`,
+        { cause: BLOCKED_API_TOKEN }
       );
     }
 

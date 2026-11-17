@@ -5687,9 +5687,9 @@
         "status": "Status",
         "blocked": "Blocked",
         "blockedReason": {
-          "creatorMissing": "The person who created this key no longer exists. The key no longer works; create a new one.",
-          "creatorInactive": "The person who created this key is deactivated. The key does not work until they are active again.",
-          "creatorMayNotCreateApiTokens": "The person who created this key may no longer create API keys. The key does not work until they may again."
+          "CreatorMissing": "The person who created this key no longer exists. The key no longer works; create a new one.",
+          "CreatorInactive": "The person who created this key is deactivated. The key does not work until they are active again.",
+          "CreatorMayNotCreateApiTokens": "The person who created this key may no longer create API keys. The key does not work until they may again."
         },
         "missingScopes_one": "{{count}} permission missing",
         "missingScopes_other": "{{count}} permissions missing",

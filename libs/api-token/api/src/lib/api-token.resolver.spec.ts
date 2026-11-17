@@ -57,7 +57,7 @@ describe('createApiToken', () => {
 describe('creatorState', () => {
   it('reports what the creator still allows the key, without the creator‘s details', async () => {
     const creatorCheck = vi.fn(async () => ({
-      state: 'limited',
+      state: 'Limited',
       blockedReason: null,
       missingScopes: ['CAN_DELETE_ARTICLE'],
       creator: { id: 'u1', email: 'u1@example.test' },
@@ -69,7 +69,7 @@ describe('creatorState', () => {
         key as never
       )
     ).resolves.toEqual({
-      state: 'limited',
+      state: 'Limited',
       blockedReason: null,
       missingScopes: ['CAN_DELETE_ARTICLE'],
     });

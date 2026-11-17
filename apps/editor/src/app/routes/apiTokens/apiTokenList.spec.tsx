@@ -54,14 +54,14 @@ const apiToken = {
   createdById: 'user-1',
   createdBy: { id: 'user-1', name: 'Ada Lovelace' },
   creatorState: {
-    state: 'ok',
+    state: 'Ok',
     blockedReason: null as string | null,
     missingScopes: [] as string[],
   },
 };
 
 const blockedBy = (blockedReason: string) => ({
-  state: 'blocked',
+  state: 'Blocked',
   blockedReason,
   missingScopes: [],
 });
@@ -301,7 +301,7 @@ describe('ApiTokenList', () => {
       ...apiToken,
       createdById: null as never,
       createdBy: null as never,
-      creatorState: blockedBy('creatorMissing'),
+      creatorState: blockedBy('CreatorMissing'),
     });
     renderList();
 
@@ -311,7 +311,7 @@ describe('ApiTokenList', () => {
     expect(screen.queryByText('apiTokenList.overview.active')).toBeNull();
     expect(
       screen.getByLabelText(
-        'apiTokenList.overview.blockedReason.creatorMissing'
+        'apiTokenList.overview.blockedReason.CreatorMissing'
       )
     ).toBeTruthy();
   });
@@ -320,7 +320,7 @@ describe('ApiTokenList', () => {
     listing({
       ...apiToken,
       revokedAt: '2026-05-05T10:00:00.000Z',
-      creatorState: blockedBy('creatorInactive'),
+      creatorState: blockedBy('CreatorInactive'),
     });
     renderList();
 
@@ -335,7 +335,7 @@ describe('ApiTokenList', () => {
       ...apiToken,
       scopes: ['CAN_GET_ARTICLE', 'CAN_DELETE_ARTICLE'],
       creatorState: {
-        state: 'limited',
+        state: 'Limited',
         blockedReason: null,
         missingScopes: ['CAN_DELETE_ARTICLE'],
       },
