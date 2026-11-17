@@ -5758,7 +5758,7 @@
         "expiresInDays_other": "Expire dans {{count}} jours",
         "expiresDate": "{{expiresDate, ccc PP p}}",
         "owner": "Propriétaire",
-        "ownerUnknown": "Personne supprimée",
+        "ownerUnknown": "Utilisateur supprimé",
         "filterByOwner": "Filtrer par propriétaire",
         "anyStatus": "Tout statut"
       },

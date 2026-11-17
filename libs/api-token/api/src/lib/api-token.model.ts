@@ -12,10 +12,15 @@ export enum ApiTokenSort {
   CreatedAt = 'CreatedAt',
   LastUsedAt = 'LastUsedAt',
   Name = 'Name',
+  Status = 'Status',
+  ScopeCount = 'ScopeCount',
+  Owner = 'Owner',
+  ExpiresAt = 'ExpiresAt',
 }
 
 registerEnumType(ApiTokenSort, {
   name: 'ApiTokenSort',
+  description: `Status sorts working keys before expired and revoked ones (ascending). Owner sorts by the creator's name, then first name.`,
 });
 
 export enum ApiTokenStatus {

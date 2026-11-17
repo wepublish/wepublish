@@ -274,7 +274,6 @@ export class ApiTokenService {
     }: ApiTokenListArgs,
     reader: ApiTokenReader
   ) {
-    const orderBy = createApiTokenOrder(sort, order);
     const where: Prisma.ApiTokenWhereInput = {
       ...(reader.canSeeAll ?
         createdById ? { createdById }
@@ -284,14 +283,16 @@ export class ApiTokenService {
     };
 
     const [totalCount, apiTokens] = await Promise.all([
-      this.prisma.apiToken.count({ where, orderBy }),
-      this.prisma.apiToken.findMany({
-        where,
-        skip,
-        take: getMaxTake(take) + 1,
-        orderBy,
-        cursor: cursorId ? { id: cursorId } : undefined,
-      }),
+      this.prisma.apiToken.count({ where }),
+      sort === ApiTokenSort.ScopeCount ?
+        this.byScopeCount(where, order, { cursorId, skip, take })
+      : this.prisma.apiToken.findMany({
+          where,
+          skip,
+          take: getMaxTake(take) + 1,
+          orderBy: createApiTokenOrder(sort, order),
+          cursor: cursorId ? { id: cursorId } : undefined,
+        }),
     ]);
 
     const nodes = apiTokens.slice(0, getMaxTake(take));
@@ -308,6 +309,38 @@ export class ApiTokenService {
         endCursor: lastToken?.id,
       },
     };
+  }
+
+  /**
+   * The database cannot order by the length of `scopes`, so the matching keys
+   * are sorted here. A medium has a few dozen keys at most.
+   */
+  private async byScopeCount(
+    where: Prisma.ApiTokenWhereInput,
+    order: SortOrder,
+    {
+      cursorId,
+      skip = 0,
+      take = 10,
+    }: Pick<ApiTokenListArgs, 'cursorId' | 'skip' | 'take'>
+  ) {
+    const direction = order === SortOrder.Ascending ? 1 : -1;
+    // Newest first among keys with as many permissions, as without sorting.
+    const sorted = (
+      await this.prisma.apiToken.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+      })
+    ).sort((a, b) => direction * (a.scopes.length - b.scopes.length));
+    const start =
+      cursorId ?
+        Math.max(
+          0,
+          sorted.findIndex(({ id }) => id === cursorId)
+        )
+      : 0;
+
+    return sorted.slice(start + skip, start + skip + getMaxTake(take) + 1);
   }
 
   async revokeToken(id: string, revoker: ApiTokenRevoker): Promise<ApiToken> {
@@ -354,5 +387,33 @@ export const createApiTokenOrder = (
 
     case ApiTokenSort.Name:
       return { name: graphQLSortOrderToPrisma(sortOrder) };
+
+    case ApiTokenSort.ExpiresAt:
+      return { expiresAt: graphQLSortOrderToPrisma(sortOrder) };
+
+    case ApiTokenSort.Owner: {
+      const direction = graphQLSortOrderToPrisma(sortOrder);
+
+      return [
+        { createdBy: { name: direction } },
+        { createdBy: { firstName: direction } },
+      ];
+    }
+
+    // Active (not revoked, expiring later) < expired < revoked.
+    case ApiTokenSort.Status:
+      return sortOrder === SortOrder.Ascending ?
+          [
+            { revokedAt: { sort: 'asc', nulls: 'first' } },
+            { expiresAt: 'desc' },
+          ]
+        : [
+            { revokedAt: { sort: 'desc', nulls: 'last' } },
+            { expiresAt: 'asc' },
+          ];
+
+    // Sorted in memory, see `byScopeCount`.
+    case ApiTokenSort.ScopeCount:
+      return { createdAt: 'desc' };
   }
 };
