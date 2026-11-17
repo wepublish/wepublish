@@ -7,7 +7,7 @@ import {
   ProductType,
   SubscriptionsDocument,
 } from '@wepublish/website/api';
-import { useRouter } from 'next/router';
+import { BuilderRouterContext } from '@wepublish/website/builder';
 import { ascend, prop, sortWith } from 'ramda';
 import { useContext, useEffect, useMemo } from 'react';
 
@@ -33,7 +33,7 @@ export const useForceUpgradeRedirect = (
   memberPlans: FullMemberPlanFragment[]
 ) => {
   const { hasUser } = useUser();
-  const router = useRouter();
+  const { query, asPath, navigate } = useContext(BuilderRouterContext);
   const forceUpgrade = useContext(ForceUpgradeContext);
 
   const { data } = useQuery(SubscriptionsDocument, {
@@ -70,21 +70,16 @@ export const useForceUpgradeRedirect = (
   }, [upgradeableSubscriptions, memberPlans]);
 
   const shouldRedirect =
-    forceUpgrade &&
-    !!subscriptionToUpgrade &&
-    !router.query.upgradeSubscriptionId;
+    forceUpgrade && !!subscriptionToUpgrade && !query.upgradeSubscriptionId;
 
   useEffect(() => {
     if (!shouldRedirect || !subscriptionToUpgrade) {
       return;
     }
 
-    router.replace({
-      pathname: router.pathname,
-      query: {
-        ...router.query,
-        upgradeSubscriptionId: encodeURIComponent(subscriptionToUpgrade.id),
-      },
-    });
-  }, [shouldRedirect, subscriptionToUpgrade, router]);
+    const url = new URL(asPath, 'http://localhost');
+    url.searchParams.set('upgradeSubscriptionId', subscriptionToUpgrade.id);
+
+    void navigate?.(`${url.pathname}${url.search}`, { replace: true });
+  }, [shouldRedirect, subscriptionToUpgrade, asPath, navigate]);
 };

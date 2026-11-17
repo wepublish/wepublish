@@ -51,6 +51,7 @@ export const mockArticleRevision = ({
   canonicalUrl: 'https://example.com',
   breaking: false,
   hideAuthor: false,
+  blocksChangeAt: null,
   ...definedOnly(overrides),
 });
 

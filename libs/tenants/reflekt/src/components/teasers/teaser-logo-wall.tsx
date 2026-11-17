@@ -57,7 +57,6 @@ export const TeaserLogoWall = styled(ReflektTeaser)`
       display: block;
       max-width: 100%;
       max-height: 100%;
-      width: auto;
       height: auto;
       object-fit: contain;
     }

@@ -120,7 +120,12 @@ export const renderWithProviders = (
       <ApolloProvider client={client}>
         <TestRouterProvider router={router}>
           <BuilderRouterContext.Provider
-            value={{ query: router.query, asPath: router.asPath }}
+            value={{
+              query: router.query,
+              asPath: router.asPath,
+              navigate: (href, { replace = false } = {}) =>
+                replace ? router.replace(href) : router.push(href),
+            }}
           >
             <TestSessionProvider
               user={user}

@@ -73,6 +73,10 @@
       "none": "Kein Goodie",
       "soldOut": "Dieses Goodie ist leider ausverkauft. Bitte wähle ein anderes."
     },
+    "errors": {
+      "amountBelowMin": "Betrag kleiner wie der Mindestbetrag.",
+      "memberPlanUnavailableForPeriodicity": "Dieser Abo-Plan ist für dieses Zahlungsintervall nicht verfügbar."
+    },
     "warning": {
       "confirmationTitle": "Bist du dir sicher?",
       "openInvoices": "Du hast bereits schon ein Abo mit offenen Rechnungen. Du kannst deine offenen Rechnungen in deinem <Link href=\"/profile\">Profil</Link> anschauen.",
@@ -200,6 +204,7 @@
     "unpaid": "Offene Rechnung",
     "paid": "Bezahlte Rechnung",
     "canceled": "Stornierte Rechnung",
+    "forPlan": "für {plan}",
     "number": "Rechnungs-Nr",
     "completedAt": "Abgeschlossen am",
     "dueAt": "Fällig am",
@@ -271,6 +276,7 @@
       "suggested": "Vorgeschlagen",
       "occupation": "Funktion / Beruf",
       "passwordsDoNotMatch": "Passwörter stimmen nicht überein.",
+      "emailsDoNotMatch": "E-Mailadressen stimmen nicht überein.",
       "errors": {
         "minLength": "{minimum, plural, one {Darf nicht leer sein} other {Mind. # Zeichen}}",
         "chooseOption": "Bitte eine Option wählen"

@@ -19,7 +19,6 @@ import { ReflektGlobalStyles } from './components/reflekt-global-styles';
 import { ReflektGoodiePicker } from './components/reflekt-goodie-picker';
 import { ReflektImageBlock } from './components/reflekt-image-block';
 import { ReflektImageSlider } from './components/reflekt-image-slider';
-import { ReflektLink } from './components/reflekt-link';
 import {
   ReflektListItem,
   ReflektUnorderedList,
@@ -83,7 +82,6 @@ export const reflektTenant: WebsiteTenantConfig = {
     RegistrationForm: ReflektRegistrationForm,
     SubscriptionListItem: ReflektSubscriptionListItem,
     elements: {
-      Link: ReflektLink,
       UnorderedList: ReflektUnorderedList,
       ListItem: ReflektListItem,
       Modal: ReflektModal,

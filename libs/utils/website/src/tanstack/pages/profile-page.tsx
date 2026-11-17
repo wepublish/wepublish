@@ -120,9 +120,13 @@ export const loadProfile = createServerFn({ method: 'GET' })
 type ProfilePageProps = Omit<
   ComponentProps<typeof PersonalDataFormContainer>,
   ''
-> & { className?: string };
+> & { className?: string; subscribeAnotherUrl?: string };
 
-function ProfilePageComponent({ className, ...props }: ProfilePageProps) {
+function ProfilePageComponent({
+  className,
+  subscribeAnotherUrl = '/mitmachen',
+  ...props
+}: ProfilePageProps) {
   const {
     elements: { H4, Alert },
   } = useWebsiteBuilder();
@@ -253,7 +257,7 @@ function ProfilePageComponent({ className, ...props }: ProfilePageProps) {
               <SubscriptionListItemContent>
                 <Button
                   LinkComponent={Link}
-                  href={'/mitmachen'}
+                  href={subscribeAnotherUrl}
                 >
                   {t('user.subscribeAnother')}
                 </Button>

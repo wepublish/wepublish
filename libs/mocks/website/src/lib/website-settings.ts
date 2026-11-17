@@ -24,8 +24,8 @@ export const mockWebsiteSettings = (
     googleTagManager: keyEnabled(),
     plausible: keyEnabled(),
     piwik: keyEnabled(),
+    umami: keyEnabled(),
   },
-  mail: { __typename: 'WebsiteMail', mailchimp: keyEnabled() },
   ads: { __typename: 'WebsiteAds', sparkLoop: keyEnabled() },
   fonts: [],
   theme: {
