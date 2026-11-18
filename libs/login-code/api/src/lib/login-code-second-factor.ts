@@ -1,5 +1,5 @@
 import { registerEnumType } from '@nestjs/graphql';
-import { createHash, timingSafeEqual } from 'crypto';
+import { timingSafeEqual } from 'crypto';
 
 export enum LoginCodeSecondFactor {
   none = 'none',
@@ -71,10 +71,28 @@ export const hasSecondFactor = (
   factor === LoginCodeSecondFactor.none ||
   normalizeSecondFactorAnswer(secondFactorValue(factor, user)).length > 0;
 
-const digest = (value: string) => createHash('sha256').update(value).digest();
+/**
+ * Constant-time comparison of two answers. `timingSafeEqual` needs buffers of
+ * one length, so both are padded to the longer one; the length check comes
+ * after, so a mismatch in length takes as long as one in content. Nothing is
+ * stored here — the expected value is the plain attribute on the user.
+ */
+const safeEqual = (expected: string, given: string) => {
+  const a = Buffer.from(expected);
+  const b = Buffer.from(given);
+  const length = Math.max(a.length, b.length);
+  const paddedA = Buffer.alloc(length);
+  const paddedB = Buffer.alloc(length);
 
-const safeEqual = (expected: string, given: string) =>
-  expected.length > 0 && timingSafeEqual(digest(expected), digest(given));
+  a.copy(paddedA);
+  b.copy(paddedB);
+
+  return (
+    expected.length > 0 &&
+    timingSafeEqual(paddedA, paddedB) &&
+    a.length === b.length
+  );
+};
 
 export const matchesSecondFactor = (
   factor: LoginCodeSecondFactor,
