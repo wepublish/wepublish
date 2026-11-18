@@ -258,19 +258,25 @@ started (nor migrated) for a URL you override (`BASE_URL`, `E2E_EDITOR_URL`,
   `E2E_LOAD_READERS=1200/300` (workflow input `load_readers`), all with a
   bexio subscription due for its renewal invoice today. It then starts the
   nightly run with `runPeriodicJobNow` and reads `apiProcessStats` every 10 s.
-  Both are refused outside review, development and local, and need
-  `CAN_RETRY_PERIODIC_JOB` and `CAN_GET_PERIODIC_JOB_LOG` on the key.
+  Both are refused outside review, development and local. The key needs
+  `CAN_RETRY_PERIODIC_JOB`, `CAN_GET_PERIODIC_JOB_LOG`,
+  `CAN_GET_MAIL_PROVIDER_SETTINGS` and `CAN_UPDATE_MAIL_PROVIDER_SETTINGS`.
   - **Fails when:**
     - the API pod restarts (new hostname or smaller uptime);
     - rss passes `E2E_LOAD_MAX_RSS_MIB` (default 800; the pod's limit is
       1024 MiB);
     - the run fails;
-    - a reader got no mail or letter.
+    - a reader's mail or letter is missing from the mail log, or was
+      refused.
   - **Report:** the memory curve goes into the job summary
     (`test-results/load-memory.md`).
-  - **Mailbox:** the step deletes the readers' mails from the Ethereal
-    mailbox as they arrive (100 MB quota) and keeps 3 samples to check the
-    attached pdf.
+  - **Mails are only logged:** Ethereal refuses after about 200 mails
+    (`429 Rate limited`), and the run stops on that. So the test switches the
+    mail provider to `LOG` for the run. Mails are still composed with
+    bexio's pdf, just not sent. It puts the SMTP provider back afterwards, the
+    password from `E2E_IMAP_PASSWORD` (Ethereal's SMTP and IMAP logins are
+    the same). It refuses a provider it could not put back.
+    `bexio-renewal.feature` checks the pdf in a real mail.
   - **Duration:** the 40/10 trial on review01 took about 4.6 s a reader, so
     1500 take close to two hours. The run may take 3 h, the job 4 h. Retries
     are off for the scenario. Try `40/10` first.
