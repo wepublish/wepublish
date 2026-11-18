@@ -4,7 +4,8 @@ import {
   Authenticated,
   AuthSessionType,
   CurrentUser,
-  UserSession,
+  requireSessionUser,
+  AuthSession,
 } from '@wepublish/authentication/api';
 import { SensitiveDataUser } from './user.model';
 import { UploadImageInput } from '@wepublish/image/api';
@@ -25,7 +26,7 @@ export class ProfileResolver {
     description: `This query returns the user.`,
     nullable: true,
   })
-  async me(@CurrentUser() session: UserSession) {
+  async me(@CurrentUser() session: AuthSession) {
     if (session?.type !== AuthSessionType.User) {
       return null;
     }
@@ -40,9 +41,10 @@ export class ProfileResolver {
   async updatePassword(
     @Args('password') password: string,
     @Args('passwordRepeated') passwordRepeated: string,
-    @CurrentUser() session: UserSession
+    @CurrentUser() session: AuthSession
   ) {
-    const { id, user } = session;
+    const { id } = session;
+    const user = requireSessionUser(session);
 
     assertNotManagedByWepublishLogin(user);
     assertNotImpersonating(session);
@@ -67,14 +69,13 @@ export class ProfileResolver {
   })
   async uploadUserProfileImage(
     @Args() uploadImageInput: UploadImageInput,
-    @CurrentUser() session: UserSession
+    @CurrentUser() session: AuthSession
   ) {
-    assertNotManagedByWepublishLogin(session.user);
+    const user = requireSessionUser(session);
 
-    return this.profileService.uploadUserProfileImage(
-      session.user,
-      uploadImageInput
-    );
+    assertNotManagedByWepublishLogin(user);
+
+    return this.profileService.uploadUserProfileImage(user, uploadImageInput);
   }
 
   @Authenticated()
@@ -84,9 +85,9 @@ export class ProfileResolver {
   })
   async requestEmailChange(
     @Args('newEmail') newEmail: string,
-    @CurrentUser() session: UserSession
+    @CurrentUser() session: AuthSession
   ): Promise<boolean> {
-    const { user } = session;
+    const user = requireSessionUser(session);
 
     assertNotManagedByWepublishLogin(user);
     assertNotImpersonating(session);
@@ -101,9 +102,9 @@ export class ProfileResolver {
   })
   async confirmEmailChange(
     @Args('newEmail') newEmail: string,
-    @CurrentUser() session: UserSession
+    @CurrentUser() session: AuthSession
   ) {
-    const { user } = session;
+    const user = requireSessionUser(session);
 
     assertNotManagedByWepublishLogin(user);
     assertNotImpersonating(session);

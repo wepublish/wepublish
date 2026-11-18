@@ -1,3 +1,4 @@
+import { AuthSessionType } from '@wepublish/authentication/api';
 import { Test, TestingModule } from '@nestjs/testing';
 import { MailTemplate, PrismaClient } from '@prisma/client';
 import {
@@ -311,7 +312,7 @@ describe('MailTemplatesResolver', () => {
 
   it('renders a draft as a letter via the service', async () => {
     const result = await resolver.mailTemplateLetterPreview(
-      { user: { id: 'editor-1' } } as any,
+      { type: AuthSessionType.User, user: { id: 'editor-1' } } as any,
       {
         contextId: 'renewal',
         subscriptionId: 'sub-1',
@@ -331,7 +332,7 @@ describe('MailTemplatesResolver', () => {
 
   it('prints the attachments chosen on the draft in the letter preview', async () => {
     await resolver.mailTemplateLetterPreview(
-      { user: { id: 'editor-1' } } as any,
+      { type: AuthSessionType.User, user: { id: 'editor-1' } } as any,
       {
         contextId: 'renewal',
         subject: 'ignored',
@@ -347,7 +348,10 @@ describe('MailTemplatesResolver', () => {
 
   it('attaches the documents chosen on the draft to the test mail', async () => {
     await resolver.sendTestMailTemplate(
-      { user: { id: 'editor-1', email: 'editor@example.com' } } as any,
+      {
+        type: AuthSessionType.User,
+        user: { id: 'editor-1', email: 'editor@example.com' },
+      } as any,
       {
         contextId: 'renewal',
         subject: 'Hi',

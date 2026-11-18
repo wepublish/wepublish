@@ -81,6 +81,10 @@ fragment PrintIssueDeliveryFields on PrintIssueDelivery {
     name
     firstName
   }
+  createdByApiToken {
+    id
+    name
+  }
   options {
     ...PrintIssueOptionsFields
   }
@@ -92,6 +96,10 @@ fragment PrintIssueDeliveryFields on PrintIssueDelivery {
     id
     name
     firstName
+  }
+  deliveredByApiToken {
+    id
+    name
   }
 }
 
@@ -116,6 +124,10 @@ fragment TinyPrintIssue on PrintIssue {
     id
     name
     firstName
+  }
+  closedByApiToken {
+    id
+    name
   }
   imageId
   image {
@@ -167,6 +179,10 @@ fragment PrintIssueRunFields on PrintIssueRun {
     id
     name
     firstName
+  }
+  computedByApiToken {
+    id
+    name
   }
   filename
   rows {

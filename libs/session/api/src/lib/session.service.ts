@@ -11,8 +11,9 @@ import { assertDuration, type ImpersonationClaims } from './impersonation';
 import { UserAuthenticationService } from './user-authentication.service';
 import { JwtAuthenticationService } from './jwt-authentication.service';
 import {
+  AuthSession,
+  AuthSessionType,
   SessionCacheInvalidator,
-  UserSession,
 } from '@wepublish/authentication/api';
 import { MailContext, mailLogType } from '@wepublish/mail/api';
 import { SettingName, SettingsService } from '@wepublish/settings/api';
@@ -163,8 +164,8 @@ export class SessionService {
     return this.createUserSession(user);
   }
 
-  async revokeSession(session: UserSession | null) {
-    if (!session) {
+  async revokeSession(session: AuthSession | null) {
+    if (session?.type !== AuthSessionType.User) {
       return false;
     }
 

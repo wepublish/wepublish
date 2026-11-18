@@ -1940,6 +1940,7 @@
       "paymentProviderStatusInfo": "✅ signifie que tous les moyens de paiement de ce plan sont reliés à un prestataire de paiement. ❌ signifie qu’au moins un moyen de paiement n’a pas de prestataire et que les lecteur·rice·s ne peuvent donc pas payer avec."
     },
     "deliveryMode": {
+      "viaApiKey": "via la clé API «{{key}}»",
       "panelTitle": "Canal de distribution",
       "channel": {
         "mail": "E-mail",
@@ -5108,6 +5109,7 @@
         "failed": "Échoué",
         "filterBySession": "Filtrer par cette session",
         "tokenActor": "Jeton API : {{name}}",
+        "tokenActorOnBehalf": "Clé API : {{name}} · {{user}}",
         "impersonatedActor": "{{impersonator}} en tant que {{actor}}",
         "unknownActor": "Inconnu",
         "notSupported": "Cette installation ne tient pas de journal d’audit. Les entrées apparaîtront une fois la migration appliquée.",
@@ -5273,6 +5275,7 @@
       "noLayouts": "Pas encore de papier à lettres. Créez-en un pour que les lettres aient un en-tête et un pied de page."
     },
     "printIssues": {
+      "viaApiKey": "via la clé API «{{key}}»",
       "title": "Numéros imprimés",
       "intro": "Chaque numéro imprimé avec ses listes d’impression : qui reçoit un exemplaire se décide à la date de parution – depuis we.publish et bexio. Chaque liste d’impression livrée à l’imprimerie compte dans les numéros payés par les lecteur·trice·s.",
       "create": "Nouveau numéro",
@@ -5690,6 +5693,15 @@
         "lastUsed": "Dernière utilisation",
         "never": "Jamais utilisée",
         "status": "Statut",
+        "blocked": "Bloquée",
+        "blockedReason": {
+          "CreatorMissing": "La personne qui a créé cette clé n’existe plus. La clé ne fonctionne plus ; créez-en une nouvelle.",
+          "CreatorInactive": "La personne qui a créé cette clé est désactivée. La clé ne fonctionne pas tant qu’elle le reste.",
+          "CreatorMayNotCreateApiTokens": "La personne qui a créé cette clé ne peut plus créer de clés API. La clé ne fonctionne pas tant que c’est le cas."
+        },
+        "missingScopes_one": "{{count}} droit manquant",
+        "missingScopes_other": "{{count}} droits manquants",
+        "missingScopesHelp": "La personne qui a créé cette clé n’a plus ces droits. Les appels qui en ont besoin sont refusés : {{scopes}}",
         "active": "Active",
         "revoked": "Révoquée",
         "revoke": "Révoquer",
@@ -5700,7 +5712,7 @@
         "expiresInDays_other": "Expire dans {{count}} jours",
         "expiresDate": "{{expiresDate, ccc PP p}}",
         "owner": "Propriétaire",
-        "ownerUnknown": "Personne supprimée",
+        "ownerUnknown": "Utilisateur supprimé",
         "filterByOwner": "Filtrer par propriétaire",
         "anyStatus": "Tout statut"
       },

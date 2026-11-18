@@ -22,12 +22,19 @@ const options = (overrides: Record<string, unknown> = {}) => ({
   ...overrides,
 });
 
+/** Who did it: a signed-in user, or an API key on behalf of its creator. */
+const by = (userId: string, apiTokenId: string | null = null) => ({
+  userId,
+  apiTokenId,
+});
+
 const delivery = (overrides: Record<string, unknown> = {}) => ({
   id: 'del-0',
   createdAt: new Date('2026-12-19T10:00:00.000Z'),
   issueId: 'issue-1',
   batch: 0,
   createdByUserId: 'editor-1',
+  createdByApiTokenId: null,
   createdBy: { id: 'editor-1', name: 'Muster', firstName: 'Maria' },
   options: options(),
   rowCount: 2,
@@ -36,6 +43,7 @@ const delivery = (overrides: Record<string, unknown> = {}) => ({
   filename: 'druckliste-1.27-2027-01-15.csv',
   deliveredAt: null,
   deliveredByUserId: null,
+  deliveredByApiTokenId: null,
   deliveredBy: null,
   ...overrides,
 });
@@ -55,10 +63,12 @@ const issue = (overrides: Record<string, unknown> = {}) => ({
   options: options(),
   closedAt: null,
   closedByUserId: null,
+  closedByApiTokenId: null,
   closedBy: null,
   pendingRun: null,
   pendingRunAt: null,
   pendingRunByUserId: null,
+  pendingRunByApiTokenId: null,
   pendingRunBy: null,
   deliveries: [] as unknown[],
   ...overrides,
@@ -163,11 +173,14 @@ const makeService = (prisma = makePrisma()) => {
 
 const INCLUDE = {
   closedBy: { select: { id: true, name: true, firstName: true } },
+  closedByApiToken: { select: { id: true, name: true } },
   deliveries: {
     orderBy: { batch: 'asc' },
     include: {
       createdBy: { select: { id: true, name: true, firstName: true } },
+      createdByApiToken: { select: { id: true, name: true } },
       deliveredBy: { select: { id: true, name: true, firstName: true } },
+      deliveredByApiToken: { select: { id: true, name: true } },
     },
   },
 };
@@ -577,6 +590,52 @@ describe('PrintIssueService', () => {
   });
 
   describe('compute: the mode follows the state', () => {
+    it('records the api key next to its creator on everything it does', async () => {
+      const { service, prisma } = makeService();
+      const key = by('creator-1', 'key-1');
+
+      await service.computeRun('issue-1', key);
+
+      expect(prisma.printIssue.update).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            pendingRunByUserId: 'creator-1',
+            pendingRunByApiTokenId: 'key-1',
+          }),
+        })
+      );
+
+      prisma.printIssueDelivery.findUnique.mockResolvedValue(
+        delivery() as never
+      );
+      await service.deliver('del-0', key);
+
+      expect(prisma.printIssueDelivery.updateMany).toHaveBeenLastCalledWith({
+        where: { id: 'del-0', deliveredAt: null },
+        data: {
+          deliveredAt: NOW,
+          deliveredByUserId: 'creator-1',
+          deliveredByApiTokenId: 'key-1',
+        },
+      });
+
+      prisma.printIssue.findUnique.mockResolvedValue(
+        issue({ deliveries: [delivery({ deliveredAt: NOW })] }) as never
+      );
+      await service.close('issue-1', key);
+
+      expect(prisma.printIssue.update).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          data: {
+            status: 'closed',
+            closedAt: NOW,
+            closedByUserId: 'creator-1',
+            closedByApiTokenId: 'key-1',
+          },
+        })
+      );
+    });
+
     it('computes the export of an issue without deliveries, stores the run and names who computed it', async () => {
       const { service, prisma, exporter } = makeService();
       const editor = { id: 'editor-1', name: 'Muster', firstName: 'Maria' };
@@ -584,7 +643,7 @@ describe('PrintIssueService', () => {
         issue({ pendingRunBy: editor }) as never
       );
 
-      const run = await service.computeRun('issue-1', 'editor-1');
+      const run = await service.computeRun('issue-1', by('editor-1'));
 
       expect(exporter.compute).toHaveBeenCalledWith(issue(), {
         options: options(),
@@ -595,10 +654,12 @@ describe('PrintIssueService', () => {
           pendingRun: storedRun(exportResult()),
           pendingRunAt: NOW,
           pendingRunByUserId: 'editor-1',
+          pendingRunByApiTokenId: null,
         },
         select: {
           id: true,
           pendingRunBy: { select: { id: true, name: true, firstName: true } },
+          pendingRunByApiToken: { select: { id: true, name: true } },
         },
       });
       expect(run).toMatchObject({
@@ -615,7 +676,7 @@ describe('PrintIssueService', () => {
         issue({ deliveries: [delivery({ id: 'del-0', batch: 0 })] }) as never
       );
 
-      const run = await service.computeRun('issue-1', 'editor-1');
+      const run = await service.computeRun('issue-1', by('editor-1'));
 
       // the rows of the delivery being replaced do not count as already exported
       expect(exporter.compute).toHaveBeenCalledWith(expect.anything(), {
@@ -641,7 +702,7 @@ describe('PrintIssueService', () => {
       ] as never);
       exporter.compute.mockResolvedValue(exportResult(['Late']));
 
-      const run = await service.computeRun('issue-1', 'editor-1');
+      const run = await service.computeRun('issue-1', by('editor-1'));
 
       expect(prisma.printIssueRecipient.findMany).toHaveBeenCalledWith({
         where: { issueId: 'issue-1' },
@@ -674,7 +735,7 @@ describe('PrintIssueService', () => {
       );
       vi.setSystemTime(new Date('2027-02-01T10:00:00.000Z'));
 
-      await service.computeRun('issue-1', 'editor-1');
+      await service.computeRun('issue-1', by('editor-1'));
 
       expect(exporter.compute).toHaveBeenCalledWith(
         expect.anything(),
@@ -690,13 +751,13 @@ describe('PrintIssueService', () => {
         issue({ status: 'closed' }) as never
       );
       await expect(
-        service.computeRun('issue-1', 'editor-1')
+        service.computeRun('issue-1', by('editor-1'))
       ).rejects.toBeInstanceOf(BadRequestException);
       prisma.printIssue.findUnique.mockResolvedValue(
         issue({ status: 'historic' }) as never
       );
       await expect(
-        service.computeRun('issue-1', 'editor-1')
+        service.computeRun('issue-1', by('editor-1'))
       ).rejects.toBeInstanceOf(BadRequestException);
     });
 
@@ -734,6 +795,7 @@ describe('PrintIssueService', () => {
           pendingRun: run,
           pendingRunAt: computedAt,
           pendingRunByUserId: 'editor-1',
+          pendingRunByApiTokenId: null,
           ...extra,
         }) as never
       );
@@ -745,7 +807,7 @@ describe('PrintIssueService', () => {
       );
       withRun(prisma, storedRun(many));
 
-      await service.exportRun('issue-1', 'editor-2', computedAt);
+      await service.exportRun('issue-1', by('editor-2'), computedAt);
 
       expect(exporter.compute).not.toHaveBeenCalled();
       expect(prisma.printIssueDelivery.create).toHaveBeenCalledWith({
@@ -753,6 +815,7 @@ describe('PrintIssueService', () => {
           issueId: 'issue-1',
           batch: 0,
           createdByUserId: 'editor-2',
+          createdByApiTokenId: null,
           options: options(),
           rowCount: 1201,
           copyCount: 1201,
@@ -786,6 +849,7 @@ describe('PrintIssueService', () => {
           pendingRun: Prisma.DbNull,
           pendingRunAt: null,
           pendingRunByUserId: null,
+          pendingRunByApiTokenId: null,
         },
       });
     });
@@ -814,7 +878,7 @@ describe('PrintIssueService', () => {
         })
       );
 
-      await service.exportRun('issue-1', 'editor-1', computedAt);
+      await service.exportRun('issue-1', by('editor-1'), computedAt);
 
       const chunks = prisma.printIssueRecipient.createMany.mock
         .calls as unknown as [{ data: Record<string, unknown>[] }][];
@@ -840,7 +904,7 @@ describe('PrintIssueService', () => {
       );
       prisma.printIssueDelivery.updateMany.mockResolvedValue({ count: 1 });
 
-      await service.exportRun('issue-1', 'editor-2', computedAt);
+      await service.exportRun('issue-1', by('editor-2'), computedAt);
 
       expect(prisma.printIssueRecipient.deleteMany).toHaveBeenCalledWith({
         where: { deliveryId: 'del-0' },
@@ -850,6 +914,7 @@ describe('PrintIssueService', () => {
         data: expect.objectContaining({
           createdAt: NOW,
           createdByUserId: 'editor-2',
+          createdByApiTokenId: null,
           rowCount: 1,
           copyCount: 1,
           options: options(),
@@ -878,7 +943,7 @@ describe('PrintIssueService', () => {
       );
 
       await expect(
-        service.exportRun('issue-1', 'editor-2', computedAt)
+        service.exportRun('issue-1', by('editor-2'), computedAt)
       ).rejects.toBeInstanceOf(ConflictException);
       expect(prisma.printIssueRecipient.deleteMany).not.toHaveBeenCalled();
       expect(prisma.printIssueRecipient.createMany).not.toHaveBeenCalled();
@@ -896,7 +961,7 @@ describe('PrintIssueService', () => {
         { deliveries: [delivery({ deliveredAt: NOW })] }
       );
 
-      await service.exportRun('issue-1', 'editor-2', computedAt);
+      await service.exportRun('issue-1', by('editor-2'), computedAt);
 
       expect(prisma.printIssueDelivery.create).toHaveBeenCalledWith({
         data: expect.objectContaining({
@@ -920,7 +985,7 @@ describe('PrintIssueService', () => {
       );
 
       await expect(
-        service.exportRun('issue-1', 'editor-2', computedAt)
+        service.exportRun('issue-1', by('editor-2'), computedAt)
       ).rejects.toBeInstanceOf(ConflictException);
     });
 
@@ -928,14 +993,14 @@ describe('PrintIssueService', () => {
       const { service, prisma } = makeService();
 
       await expect(
-        service.exportRun('issue-1', 'editor-1', computedAt)
+        service.exportRun('issue-1', by('editor-1'), computedAt)
       ).rejects.toBeInstanceOf(BadRequestException);
 
       withRun(prisma, storedRun(exportResult()));
       await expect(
         service.exportRun(
           'issue-1',
-          'editor-1',
+          by('editor-1'),
           new Date('2026-12-20T08:00:00.000Z')
         )
       ).rejects.toBeInstanceOf(ConflictException);
@@ -943,7 +1008,7 @@ describe('PrintIssueService', () => {
       const old = new Date('2026-12-19T09:59:00.000Z');
       withRun(prisma, storedRun(exportResult()), { pendingRunAt: old });
       await expect(
-        service.exportRun('issue-1', 'editor-1', old)
+        service.exportRun('issue-1', by('editor-1'), old)
       ).rejects.toThrow(/24/);
       expect(prisma.printIssueRecipient.createMany).not.toHaveBeenCalled();
     });
@@ -960,7 +1025,7 @@ describe('PrintIssueService', () => {
       );
 
       await expect(
-        service.exportRun('issue-1', 'editor-1', computedAt)
+        service.exportRun('issue-1', by('editor-1'), computedAt)
       ).rejects.toBeInstanceOf(BadRequestException);
       expect(prisma.printIssueDelivery.create).not.toHaveBeenCalled();
       expect(prisma.printIssueRecipient.createMany).not.toHaveBeenCalled();
@@ -976,7 +1041,7 @@ describe('PrintIssueService', () => {
         }
       );
 
-      await service.exportRun('issue-1', 'editor-1', computedAt);
+      await service.exportRun('issue-1', by('editor-1'), computedAt);
 
       expect(prisma.printIssueDelivery.create).not.toHaveBeenCalled();
       expect(prisma.printIssue.updateMany).toHaveBeenCalledWith(
@@ -993,6 +1058,7 @@ describe('PrintIssueService', () => {
       const handedOver = delivery({
         deliveredAt: NOW,
         deliveredByUserId: 'editor-1',
+        deliveredByApiTokenId: null,
       });
       prisma.printIssueDelivery.findUnique.mockResolvedValue(
         handedOver as never
@@ -1020,7 +1086,11 @@ describe('PrintIssueService', () => {
       });
       expect(prisma.printIssueDelivery.updateMany).toHaveBeenCalledWith({
         where: { id: 'del-0', deliveredAt: { not: null } },
-        data: { deliveredAt: null, deliveredByUserId: null },
+        data: {
+          deliveredAt: null,
+          deliveredByUserId: null,
+          deliveredByApiTokenId: null,
+        },
       });
       expect(prisma.printIssue.update).toHaveBeenCalledWith({
         where: { id: 'issue-1' },
@@ -1028,6 +1098,7 @@ describe('PrintIssueService', () => {
           pendingRun: Prisma.DbNull,
           pendingRunAt: null,
           pendingRunByUserId: null,
+          pendingRunByApiTokenId: null,
         },
         select: { id: true },
       });
@@ -1043,6 +1114,7 @@ describe('PrintIssueService', () => {
       const handedOver = delivery({
         deliveredAt: NOW,
         deliveredByUserId: 'editor-1',
+        deliveredByApiTokenId: null,
       });
       const refused = async () => {
         await expect(service.undeliver('del-0')).rejects.toBeInstanceOf(
@@ -1098,17 +1170,21 @@ describe('PrintIssueService', () => {
         delivery() as never
       );
 
-      await service.deliver('del-0', 'editor-1');
+      await service.deliver('del-0', by('editor-1'));
 
       expect(prisma.printIssueDelivery.updateMany).toHaveBeenCalledWith({
         where: { id: 'del-0', deliveredAt: null },
-        data: { deliveredAt: NOW, deliveredByUserId: 'editor-1' },
+        data: {
+          deliveredAt: NOW,
+          deliveredByUserId: 'editor-1',
+          deliveredByApiTokenId: null,
+        },
       });
 
       prisma.printIssueDelivery.updateMany.mockResolvedValue({ count: 0 });
-      await expect(service.deliver('del-0', 'editor-1')).rejects.toBeInstanceOf(
-        ConflictException
-      );
+      await expect(
+        service.deliver('del-0', by('editor-1'))
+      ).rejects.toBeInstanceOf(ConflictException);
     });
 
     it('drops a list computed to replace the delivery that was handed over', async () => {
@@ -1117,7 +1193,7 @@ describe('PrintIssueService', () => {
         delivery() as never
       );
 
-      await service.deliver('del-0', 'editor-1');
+      await service.deliver('del-0', by('editor-1'));
 
       expect(prisma.printIssue.update).toHaveBeenCalledWith({
         where: { id: 'issue-1' },
@@ -1125,6 +1201,7 @@ describe('PrintIssueService', () => {
           pendingRun: Prisma.DbNull,
           pendingRunAt: null,
           pendingRunByUserId: null,
+          pendingRunByApiTokenId: null,
         },
         select: { id: true },
       });
@@ -1162,6 +1239,7 @@ describe('PrintIssueService', () => {
           pendingRun: Prisma.DbNull,
           pendingRunAt: null,
           pendingRunByUserId: null,
+          pendingRunByApiTokenId: null,
         },
         select: { id: true },
       });
@@ -1175,11 +1253,16 @@ describe('PrintIssueService', () => {
         issue({ deliveries: [delivery({ deliveredAt: NOW })] }) as never
       );
 
-      await service.close('issue-1', 'editor-1');
+      await service.close('issue-1', by('editor-1'));
 
       expect(prisma.printIssue.update).toHaveBeenCalledWith({
         where: { id: 'issue-1' },
-        data: { status: 'closed', closedAt: NOW, closedByUserId: 'editor-1' },
+        data: {
+          status: 'closed',
+          closedAt: NOW,
+          closedByUserId: 'editor-1',
+          closedByApiTokenId: null,
+        },
         include: INCLUDE,
       });
     });
@@ -1187,9 +1270,9 @@ describe('PrintIssueService', () => {
     it('refuses to close without a delivery or with one still open', async () => {
       const { service, prisma } = makeService();
 
-      await expect(service.close('issue-1', 'editor-1')).rejects.toBeInstanceOf(
-        BadRequestException
-      );
+      await expect(
+        service.close('issue-1', by('editor-1'))
+      ).rejects.toBeInstanceOf(BadRequestException);
       prisma.printIssue.findUnique.mockResolvedValue(
         issue({
           deliveries: [
@@ -1198,9 +1281,9 @@ describe('PrintIssueService', () => {
           ],
         }) as never
       );
-      await expect(service.close('issue-1', 'editor-1')).rejects.toBeInstanceOf(
-        BadRequestException
-      );
+      await expect(
+        service.close('issue-1', by('editor-1'))
+      ).rejects.toBeInstanceOf(BadRequestException);
     });
 
     it('reopens a closed issue any time', async () => {
@@ -1213,7 +1296,12 @@ describe('PrintIssueService', () => {
 
       expect(prisma.printIssue.update).toHaveBeenCalledWith({
         where: { id: 'issue-1' },
-        data: { status: 'open', closedAt: null, closedByUserId: null },
+        data: {
+          status: 'open',
+          closedAt: null,
+          closedByUserId: null,
+          closedByApiTokenId: null,
+        },
         include: INCLUDE,
       });
     });

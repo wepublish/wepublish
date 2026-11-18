@@ -8,7 +8,11 @@ import {
   UserSubscriptionOverview,
 } from './user.model';
 import { PrismaClient } from '@prisma/client';
-import { CurrentUser, UserSession } from '@wepublish/authentication/api';
+import {
+  AuthSession,
+  CurrentUser,
+  userSessionOf,
+} from '@wepublish/authentication/api';
 import { UserRoleDataloader } from './user-role.dataloader';
 import { UserRole } from './user-role.model';
 import { User as PUser } from '@prisma/client';
@@ -52,9 +56,11 @@ export class SensitiveDataUserResolver {
 
   @ResolveField(() => [String])
   public async permissions(
-    @CurrentUser() user: UserSession | undefined,
+    @CurrentUser() session: AuthSession | undefined,
     @Parent() { id }: SensitiveDataUser
   ) {
+    const user = userSessionOf(session);
+
     if (user?.user.id === id) {
       return user.roles.flatMap(r => r.permissionIDs);
     }

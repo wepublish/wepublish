@@ -1,7 +1,7 @@
 import { UnauthorizedException } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 
-import { EXPIRED_API_TOKEN } from './auth-session';
+import { BLOCKED_API_TOKEN, EXPIRED_API_TOKEN } from './auth-session';
 import { OptionalAuthenticationGuard } from './optional-authentication.guard';
 
 vi.mock('@nestjs/graphql', async () => ({
@@ -43,5 +43,16 @@ describe('OptionalAuthenticationGuard', () => {
     await expect(
       new OptionalAuthenticationGuard().canActivate({} as any)
     ).rejects.toBe(expired);
+  });
+
+  it('stops a request made with an api key its creator no longer answers for', async () => {
+    const blocked = new UnauthorizedException('blocked', {
+      cause: BLOCKED_API_TOKEN,
+    });
+    authenticateWith(blocked);
+
+    await expect(
+      new OptionalAuthenticationGuard().canActivate({} as any)
+    ).rejects.toBe(blocked);
   });
 });

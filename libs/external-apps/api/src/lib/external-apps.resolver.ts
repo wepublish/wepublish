@@ -17,15 +17,17 @@ import { ExternalAppsDataloaderService } from './external-apps-dataloader.servic
 import {
   Authenticated,
   CurrentUser,
-  UserSession,
+  userSessionOf,
   assertNotImpersonating,
+  requireSessionUser,
+  AuthSession,
 } from '@wepublish/authentication/api';
 import { JwtService } from '@wepublish/session/api';
 
 export const apiTokenReader = (
-  session: UserSession | undefined
+  session: AuthSession | undefined
 ): ApiTokenReader => ({
-  userId: session?.user?.id,
+  userId: userSessionOf(session)?.user.id,
   permissions: permissionsOf(session),
 });
 
@@ -63,7 +65,7 @@ export class ExternalAppsResolver {
   })
   createExternalApp(
     @Args('input') input: CreateExternalAppInput,
-    @CurrentUser() session: UserSession
+    @CurrentUser() session: AuthSession
   ) {
     return this.externalAppsService.createExternalApp(
       input,
@@ -78,7 +80,7 @@ export class ExternalAppsResolver {
   })
   updateExternalApp(
     @Args() input: UpdateExternalAppInput,
-    @CurrentUser() session: UserSession
+    @CurrentUser() session: AuthSession
   ) {
     return this.externalAppsService.updateExternalApp(
       input,
@@ -103,7 +105,7 @@ export class ExternalAppsResolver {
   })
   async createExternalAppToken(
     @Args('externalAppId') externalAppId: string,
-    @CurrentUser() session: UserSession
+    @CurrentUser() session: AuthSession
   ): Promise<ExternalAppToken> {
     assertNotImpersonating(session);
 
@@ -115,7 +117,7 @@ export class ExternalAppsResolver {
 
     const expiresInMinutes = 240;
     const token = await this.jwtService.generateJWT({
-      id: session.user.id,
+      id: requireSessionUser(session).id,
       expiresInMinutes,
       audience: app.url,
     });

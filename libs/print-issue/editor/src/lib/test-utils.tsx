@@ -95,6 +95,7 @@ export const delivery = (overrides: Record<string, unknown> = {}) => ({
   filename: 'druckliste-1.27-2027-01-15.csv',
   deliveredAt: null,
   deliveredBy: null,
+  deliveredByApiToken: null,
   summary: summary(),
   ...overrides,
 });
@@ -115,6 +116,7 @@ export const issue = (overrides: Record<string, unknown> = {}) => ({
   options: options(),
   closedAt: null,
   closedBy: null,
+  closedByApiToken: null,
   imageId: null,
   image: null,
   deliveries: [] as unknown[],
