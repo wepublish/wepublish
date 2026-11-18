@@ -62,6 +62,18 @@ describe('login code second factor', () => {
     ).toBe(false);
   });
 
+  it('never matches an answer that only starts or ends with the value', () => {
+    expect(
+      matchesSecondFactor(LoginCodeSecondFactor.lastName, user, 'mullerr')
+    ).toBe(false);
+    expect(
+      matchesSecondFactor(LoginCodeSecondFactor.city, user, 'neuzurich')
+    ).toBe(false);
+    expect(
+      matchesSecondFactor(LoginCodeSecondFactor.postalCode, user, '80000')
+    ).toBe(false);
+  });
+
   it('never matches an empty answer or a missing attribute', () => {
     expect(
       matchesSecondFactor(
