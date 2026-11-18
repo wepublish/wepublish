@@ -19,7 +19,17 @@
 
 - **Docker** for local development (`docker-compose.yml`)
 - Multi-stage Dockerfile for all production builds (API, editor, website, media, migration)
-- **MinIO** as S3-compatible object storage for media in local dev
+- **RustFS** (`rustfs/rustfs`, pinned) as S3-compatible object storage for
+  media in local dev; MinIO's images are gone from Docker Hub. The compose
+  `storage` service creates `wepublish-staff` and `wepublish-transformed`
+  (anonymous `download`) with the bundled `rc` after `/health/ready`. Don't
+  swap that for the image's own `/etc/rustfs/bootstrap`: in 1.0.6 its
+  entrypoint calls `rc bucket public-access-block`, which the bundled `rc`
+  0.1.37 lacks, and the container exits. An old `wepublish_storage` (MinIO)
+  volume is readable by RustFS once owned by uid 10001: with `storage`
+  stopped and `wepublish_rustfs` not yet created, `docker run --rm -v
+  wepublish_storage:/from:ro -v wepublish_rustfs:/to alpine sh -c 'cp -a
+  /from/. /to/ && chown -R 10001:10001 /to'`.
 
 ### Runtime dependencies of api, media and editor
 

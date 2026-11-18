@@ -36,23 +36,32 @@ services:
     # (Adding the "ports" property to this file will not forward from a Codespace.)
 
   storage:
-    image: minio/minio:latest
+    image: rustfs/rustfs:1.0.6
     environment:
-      - MINIO_ROOT_USER=root
-      - MINIO_ROOT_PASSWORD=password
-    entrypoint: ['/bin/sh']
-    command: [
-        '-ec',
-        "mkdir -p /data/wepublish-staff /data/wepublish-transformed; \
-        exec minio server /data --console-address=:9001",
-      ]
+      - RUSTFS_ACCESS_KEY=root
+      - RUSTFS_SECRET_KEY=password
+    entrypoint: ['/bin/sh', '-ec']
+    command:
+      - |
+        /etc/rustfs/entrypoint.sh rustfs &
+        pid=$$!
+        trap 'kill $$pid; wait $$pid' TERM INT
+        until curl -fsS http://127.0.0.1:9000/health/ready >/dev/null 2>&1; do
+          kill -0 $$pid
+          sleep 1
+        done
+        rc alias set local http://127.0.0.1:9000 "$$RUSTFS_ACCESS_KEY" "$$RUSTFS_SECRET_KEY"
+        rc bucket create --ignore-existing local/wepublish-staff
+        rc bucket create --ignore-existing local/wepublish-transformed
+        rc bucket anonymous set download local/wepublish-transformed
+        wait $$pid
     ports:
       - 9000:9000
       - 9001:9001
     networks:
       - default
     volumes:
-      - storage_data:/data
+      - rustfs_data:/data
 
   dragonfly:
     image: docker.dragonflydb.io/dragonflydb/dragonfly:v2.0.0
@@ -85,4 +94,4 @@ services:
 
 volumes:
   database_data:
-  storage_data:
+  rustfs_data:

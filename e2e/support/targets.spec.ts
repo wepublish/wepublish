@@ -41,7 +41,7 @@ describe('TanStack Start tenants', () => {
     } as NodeJS.ProcessEnv).find(({ name }) => name === 'website-example');
 
     expect(server?.command).toBe(
-      'pnpm nx build website-example --skip-nx-cache && node --import dist/apps/website-example/.output/server/instrument.server.mjs dist/apps/website-example/.output/server/index.mjs'
+      'pnpm nx build website-example --skip-nx-cache && node --import ./dist/apps/website-example/.output/server/instrument.server.mjs dist/apps/website-example/.output/server/index.mjs'
     );
     expect(server?.env.PORT).toBe('5200');
   });

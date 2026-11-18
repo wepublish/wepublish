@@ -26,7 +26,7 @@ the root `package.json`). Migrations: `libs/api/prisma/migrations/` — 158 and
 counting, named `<timestamp>_<snake_case_description>`.
 
 ```bash
-pnpm run start:docker                       # Postgres + MinIO + Dragonfly
+pnpm run start:docker                       # Postgres + RustFS + Dragonfly
 pnpm prisma migrate dev --name add_foo_to_bar   # create + apply a new migration
 pnpm prisma generate                        # regenerate the client (also runs on `pnpm install`)
 pnpm run migrate                            # migrate deploy + seed (deploy path, CI/prod)

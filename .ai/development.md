@@ -10,7 +10,7 @@
 
 ```bash
 pnpm install                 # Install dependencies
-pnpm run start:docker         # Start PostgreSQL + MinIO (S3) + Dragonfly
+pnpm run start:docker         # Start PostgreSQL + RustFS (S3) + Dragonfly
 pnpm run migrate              # Run Prisma migrations + seed
 pnpm run watch                # Start all services (API, editor, media, website)
 ```
@@ -24,7 +24,7 @@ pnpm run watch                # Start all services (API, editor, media, website)
 | Website | http://localhost:4200 | Example website frontend |
 | Media | http://localhost:4100 | Media/image server |
 | PGAdmin | http://localhost:8000 | Database admin UI |
-| MinIO | http://localhost:9001 | S3 storage console |
+| RustFS | http://localhost:9001/rustfs/console/ | S3 storage console (login `S3_ACCESS_KEY` / `S3_SECRET_KEY`) |
 | Dragonfly | redis://localhost:6379 | Shared caches (`@wepublish/kv-ttl-cache/api`) and coordination (`@wepublish/dragonfly/api`); admin `default`/`dragonfly` |
 
 `docker-compose.yml` also defines `mailpit` for catching outbound mail locally,
@@ -129,7 +129,7 @@ Key variables for local development (set via `.env` or docker-compose):
 | `API_URL` | `http://localhost:4000` | Backend API URL |
 | `MEDIA_SERVER_URL` | `http://localhost:4100` | Public media URL |
 | `MEDIA_SERVER_TOKEN` | `secret` | Media server auth token |
-| `S3_ACCESS_KEY` / `S3_SECRET_KEY` | from `.env` | MinIO credentials |
+| `S3_ACCESS_KEY` / `S3_SECRET_KEY` | from `.env` | RustFS credentials |
 | `GOTENBERG_URL` | `http://localhost:3030` (compose: `http://gotenberg:3000`) | Fallback url of a `gotenberg` pdf renderer without one set in the editor; `GOTENBERG_USERNAME` / `GOTENBERG_PASSWORD` add basic auth |
 | `CLOUDFLARE_ACCOUNT_ID` / `CLOUDFLARE_API_TOKEN` | — | Same fallback for a `cloudflare` pdf renderer |
 | `REDIS_URL` | `redis://wepublish-local:…@localhost:6379/0` | Dragonfly for shared caches and coordination (`@wepublish/dragonfly/api`, api), the page cache (websites) and the link cache (media); unset = all caching per replica |

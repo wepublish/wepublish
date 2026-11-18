@@ -136,7 +136,7 @@ What stays behind on purpose:
 ## Local stack
 
 ```sh
-pnpm run start:docker                 # postgres, minio, dragonfly
+pnpm run start:docker                 # postgres, rustfs, dragonfly
 pnpm run e2e bajour
 ```
 

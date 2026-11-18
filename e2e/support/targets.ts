@@ -265,7 +265,7 @@ function tanstackProdServer(
     name: target.app,
     command: [
       `pnpm nx build ${target.app} --skip-nx-cache`,
-      `node --import ${server}/instrument.server.mjs ${server}/index.mjs`,
+      `node --import ./${server}/instrument.server.mjs ${server}/index.mjs`,
     ].join(' && '),
     url: target.websiteUrl,
     timeout: 600_000,

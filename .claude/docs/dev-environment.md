@@ -42,7 +42,7 @@ Skipping a step fails in a way that looks like an application bug:
 
 ```bash
 pnpm run dev            # everything: docker → migrate → api, editor, media, website-example
-pnpm run start:docker   # just Postgres + MinIO + Dragonfly
+pnpm run start:docker   # just Postgres + RustFS + Dragonfly
 pnpm run migrate        # prisma migrate deploy + seed
 ```
 
@@ -63,15 +63,15 @@ table, one place.
 - **"Start just the API"** → `pnpm run start:docker`, then `pnpm run migrate`, then
   `pnpm run watch:api-example`.
 - **"Reset my database"** → **destructive, and there is no script for it.** The
-  volumes are `wepublish_database` (Postgres) and `wepublish_storage` (MinIO):
+  volumes are `wepublish_database` (Postgres) and `wepublish_rustfs` (RustFS):
 
   ```bash
   docker compose down
-  docker volume rm wepublish_database    # or wepublish_storage for media
+  docker volume rm wepublish_database    # or wepublish_rustfs for media
   pnpm run start:docker && pnpm run migrate
   ```
 
-  `pnpm run clean:media` removes `wepublish_storage` for you. There is no
+  `pnpm run clean:media` removes `wepublish_rustfs` for you. There is no
   equivalent for the database — drop `wepublish_database` explicitly as above.
 
   `docker volume rm` refuses while a container still references the volume, so
