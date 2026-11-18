@@ -26,6 +26,7 @@ import {
   useEffect,
   useId,
 } from 'react';
+import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -89,8 +90,8 @@ const cardStyles = ({
 `;
 
 export const TsriMembershipPlanCard = styled('label', {
-  shouldForwardProp: prop => prop !== 'checked' && prop !== 'disabled',
-})<{ checked: boolean; disabled: boolean }>`
+  shouldForwardProp: prop => prop !== 'checked',
+})<{ checked: boolean }>`
   ${cardStyles}
   cursor: pointer;
 
@@ -98,13 +99,6 @@ export const TsriMembershipPlanCard = styled('label', {
     outline: 2px solid ${({ theme }) => theme.palette.primary.main};
     outline-offset: 2px;
   }
-
-  ${({ disabled }) =>
-    disabled &&
-    css`
-      cursor: not-allowed;
-      opacity: 0.6;
-    `}
 
   .MuiRadio-root {
     position: absolute;
@@ -181,9 +175,21 @@ export const TsriMembershipPlanDetails = styled('div')`
   display: grid;
   gap: ${({ theme }) => theme.spacing(2)};
   align-content: start;
+  font-size: 1rem;
+  line-height: 1.4;
 
-  p {
+  p,
+  li {
     margin: 0;
+    font-size: inherit;
+    line-height: inherit;
+  }
+
+  /* rich text blocks bring their own spacing and line height */
+  & > * {
+    margin: 0;
+    padding: 0;
+    line-height: inherit !important;
   }
 
   ul {
@@ -209,10 +215,6 @@ export const TsriMembershipPlanDetails = styled('div')`
 
 export const TsriMembershipPlanShortDescription = styled('div')`
   font-weight: 700;
-`;
-
-export const TsriMembershipPlanUnavailable = styled('div')`
-  font-style: italic;
 `;
 
 export const TsriMembershipPlanSelect = styled('span', {
@@ -302,7 +304,6 @@ type PlanContentProps = {
   memberPlan: FullMemberPlanFragment;
   periodicity: PaymentPeriodicity;
   checked: boolean;
-  unavailable: boolean;
   detailsId?: string;
 };
 
@@ -310,7 +311,6 @@ const PlanContent = ({
   memberPlan,
   periodicity,
   checked,
-  unavailable,
   detailsId,
 }: PlanContentProps) => {
   const { t } = useTranslation();
@@ -360,12 +360,6 @@ const PlanContent = ({
             }
           </div>
 
-          {unavailable && (
-            <TsriMembershipPlanUnavailable>
-              {t('subscribe.memberplan.periodicityUnavailable')}
-            </TsriMembershipPlanUnavailable>
-          )}
-
           {!!memberPlan.shortDescription?.content?.length && (
             <TsriMembershipPlanShortDescription>
               <RichText richText={memberPlan.shortDescription} />
@@ -397,13 +391,9 @@ const OptionPlan = ({
   const detailsId = useId();
 
   return (
-    <OptionCard
-      checked={props.checked}
-      disabled={props.unavailable}
-    >
+    <OptionCard checked={props.checked}>
       <Radio
         value={memberPlan.id}
-        disabled={props.unavailable}
         disableRipple
         slotProps={{
           input: {
@@ -460,10 +450,27 @@ export const TsriMembershipPlanPicker = ({
     [requiredPeriodicity]
   );
 
+  const form = useFormContext<{ paymentPeriodicity: PaymentPeriodicity }>();
+
+  /**
+   * The toggled periodicity, or the plan's own default when it is not billed
+   * that way, so every plan stays selectable.
+   */
   const periodicityOf = (memberPlan: FullMemberPlanFragment) =>
-    paymentPeriodicity ??
-    getDefaultPeriodicity(memberPlan) ??
-    PaymentPeriodicity.Monthly;
+    paymentPeriodicity && !isUnavailable(memberPlan) ?
+      paymentPeriodicity
+    : (getDefaultPeriodicity(memberPlan) ?? PaymentPeriodicity.Monthly);
+
+  const select = (memberPlanId: string) => {
+    const memberPlan = memberPlans.find(({ id }) => id === memberPlanId);
+
+    // switch the periodicity first, else the form falls back to another plan
+    if (memberPlan && isUnavailable(memberPlan)) {
+      form?.setValue('paymentPeriodicity', periodicityOf(memberPlan));
+    }
+
+    onChange(memberPlanId);
+  };
 
   useEffect(() => {
     if (!memberPlans.length || selectedMemberPlan) {
@@ -482,7 +489,7 @@ export const TsriMembershipPlanPicker = ({
       <TsriMembershipPlans
         name={name}
         value={value ?? ''}
-        onChange={event => onChange(event.target.value)}
+        onChange={event => select(event.target.value)}
       >
         {memberPlans.map(memberPlan => (
           <OptionPlan
@@ -490,7 +497,6 @@ export const TsriMembershipPlanPicker = ({
             memberPlan={memberPlan}
             periodicity={periodicityOf(memberPlan)}
             checked={memberPlan.id === value}
-            unavailable={isUnavailable(memberPlan)}
           />
         ))}
       </TsriMembershipPlans>
@@ -504,7 +510,6 @@ export const TsriMembershipPlanPicker = ({
             memberPlan={selectedMemberPlan}
             periodicity={periodicityOf(selectedMemberPlan)}
             checked
-            unavailable={isUnavailable(selectedMemberPlan)}
           />
         </TsriMembershipSelectedPlan>
       )}

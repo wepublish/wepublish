@@ -36,13 +36,14 @@ const plan = (
   name: string,
   monthly: number,
   shortDescription: string,
-  description: string
+  description: string,
+  availablePaymentMethods = [monthlyAndYearly]
 ) =>
   mockMemberPlan({
     name,
     slug: name.toLowerCase(),
     defaultPaymentPeriodicity: PaymentPeriodicity.Yearly,
-    availablePaymentMethods: [monthlyAndYearly],
+    availablePaymentMethods,
     shortDescription: mockRichTextParagraph(shortDescription),
     description: mockRichTextParagraph(description),
     periodicityPricing: [
@@ -85,10 +86,26 @@ const fixedAmount = (memberPlan: FullMemberPlanFragment, isDefault = false) =>
 
 const loaded = <T,>(data: T) => ({ data, loading: false, error: undefined });
 
-const membershipBlock = (blockStyle: string | null = 'Membership') =>
+const yearlyOnly = mockAvailablePaymentMethod({
+  forceAutoRenewal: false,
+  paymentPeriodicities: [PaymentPeriodicity.Yearly],
+});
+
+const jahresAbo = plan(
+  'Jahres-Abo',
+  2000,
+  'Nur jährlich.',
+  'Ein ganzes Jahr Tsüri',
+  [yearlyOnly]
+);
+
+const membershipBlock = (
+  blockStyle: string | null = 'Membership',
+  extraPlans: FullMemberPlanFragment[] = []
+) =>
   mockSubscribeBlock({
     blockStyle,
-    memberPlans: [chlii, mega, legendaer],
+    memberPlans: [chlii, mega, legendaer, ...extraPlans],
     fields: ['FirstName'],
     memberPlanRenderSettings: [
       fixedAmount(chlii),
@@ -107,7 +124,7 @@ const membershipBlock = (blockStyle: string | null = 'Membership') =>
     ],
   });
 
-const renderBlock = () => {
+const renderBlock = (extraPlans: FullMemberPlanFragment[] = []) => {
   const subscribeBlock = createSubscribeBlockContext({
     challenge: loaded({ __typename: 'Query', challenge: mockChallenge() }),
     userInvoices: loaded({ __typename: 'Query', userInvoices: [] }),
@@ -116,7 +133,7 @@ const renderBlock = () => {
 
   renderWithProviders(
     <TsriBlockRenderer
-      block={membershipBlock()}
+      block={membershipBlock('Membership', extraPlans)}
       index={0}
       count={1}
     />,
@@ -224,6 +241,29 @@ describe('TsriMembershipSubscribe', () => {
       chliiCard.getByText(t('tsri.membership.billedMonthly') as string)
     ).toBeInTheDocument();
     expect(summary('Mega', 'CHF 15', 'Monat')).toBeInTheDocument();
+  });
+
+  it('keeps every plan selectable and the toggle complete when a plan only bills yearly', async () => {
+    const { user } = renderBlock([jahresAbo]);
+    const toggle = (name: string) => screen.getByRole('button', { name });
+
+    await user.click(toggle('Monatlich'));
+
+    const jahresAboRadio = screen.getByRole('radio', { name: 'Jahres-Abo' });
+    expect(jahresAboRadio).toBeEnabled();
+
+    await user.click(card('Jahres-Abo'));
+
+    expect(jahresAboRadio).toBeChecked();
+    expect(toggle('Monatlich')).toBeInTheDocument();
+    expect(toggle('Jährlich')).toHaveAttribute('aria-pressed', 'true');
+    expect(summary('Jahres-Abo', 'CHF 240', 'Jahr')).toBeInTheDocument();
+
+    await user.click(toggle('Monatlich'));
+
+    expect(screen.getByRole('radio', { name: 'Chlii' })).toBeChecked();
+    expect(toggle('Monatlich')).toHaveAttribute('aria-pressed', 'true');
+    expect(summary('Chlii', 'CHF 10', 'Monat')).toBeInTheDocument();
   });
 
   it('shows the selected plan once more for small screens', async () => {
