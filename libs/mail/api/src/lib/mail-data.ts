@@ -1,10 +1,11 @@
 import { renderQrSvg } from '@wepublish/utils/api';
 
-export interface PurlData {
+// A type, not an interface, so mail data passes as a plain record.
+export type PurlData = {
   purl: string;
   purlCode: string;
   purlQr: string;
-}
+};
 
 export type PurlOrigin = 'mail' | 'letter';
 

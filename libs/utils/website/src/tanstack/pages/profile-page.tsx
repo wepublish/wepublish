@@ -1,7 +1,6 @@
-import { useApolloClient, useMutation, useQuery } from '@apollo/client/react';
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { css } from '@mui/material';
-import { useNavigate } from '@tanstack/react-router';
 import { createServerFn } from '@tanstack/react-start';
 import { ContentWrapper } from '@wepublish/content/website';
 import {
@@ -17,7 +16,6 @@ import {
   TotpSetupContainer,
 } from '@wepublish/user/website';
 import {
-  ConfirmEmailChangeDocument,
   InvoicesDocument,
   MeDocument,
   NavigationListDocument,
@@ -25,7 +23,7 @@ import {
   SubscriptionsDocument,
 } from '@wepublish/website/api';
 import { Button, Link, useWebsiteBuilder } from '@wepublish/website/builder';
-import { ComponentProps, useEffect } from 'react';
+import { ComponentProps } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -127,41 +125,9 @@ function ProfilePageComponent({ className, ...props }: ProfilePageProps) {
     elements: { H4, Alert },
   } = useWebsiteBuilder();
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  // The confirm-email page confirms the token from the confirmation link and
+  // sends the reader here once the new address is in place.
   const query = useQueryParams();
-  const client = useApolloClient();
-  const [confirmEmailChange, { data: confirmData, error: confirmError }] =
-    useMutation(ConfirmEmailChangeDocument);
-
-  const confirmEmailChangeParam = query.confirmEmailChange as
-    string | undefined;
-
-  useEffect(() => {
-    if (!confirmEmailChangeParam) {
-      return;
-    }
-
-    const clearQuery = () =>
-      navigate({
-        to: '/profile',
-        search: (previous: Record<string, unknown>) => {
-          const { confirmEmailChange: _confirm, jwt: _jwt, ...rest } = previous;
-
-          return rest;
-        },
-        replace: true,
-      });
-
-    confirmEmailChange({ variables: { newEmail: confirmEmailChangeParam } })
-      .then(async () => {
-        await clearQuery();
-        await client.refetchQueries({ include: ['Me'] });
-      })
-      .catch(async () => {
-        await clearQuery();
-      });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [confirmEmailChangeParam]);
 
   const { data: subscriptonData } = useQuery(SubscriptionsDocument, {
     fetchPolicy: 'cache-only',
@@ -185,11 +151,9 @@ function ProfilePageComponent({ className, ...props }: ProfilePageProps) {
 
   return (
     <>
-      {confirmData && (
+      {query.emailConfirmed && (
         <Alert severity="success">{t('user.emailChangeConfirmed')}</Alert>
       )}
-
-      {confirmError && <Alert severity="error">{confirmError.message}</Alert>}
 
       <SubscriptionsWrapper className={className}>
         {hasUnpaidInvoices && (
