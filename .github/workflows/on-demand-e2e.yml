@@ -62,8 +62,8 @@ jobs:
   e2e:
     name: E2E (${{ inputs.app }} · ${{ inputs.environment }}${{ inputs.review_slot }} · ${{ inputs.project }})
     runs-on: ubuntu-latest
-    # The renewal load test alone takes about an hour.
-    timeout-minutes: ${{ inputs.load_readers != '' && 180 || 30 }}
+    # The renewal load test alone takes up to about three hours.
+    timeout-minutes: ${{ inputs.load_readers != '' && 240 || 30 }}
     env:
       CI: true
       NX_NO_CLOUD: true

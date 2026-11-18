@@ -1,5 +1,12 @@
-import { describe, expect, it } from 'vitest';
-import { inPool, memoryVerdict, MemorySample, parseLoadReaders } from './load';
+import { describe, expect, it, vi } from 'vitest';
+import {
+  inPool,
+  isTransient,
+  memoryVerdict,
+  MemorySample,
+  parseLoadReaders,
+  retryTransient,
+} from './load';
 
 const MIB = 1024 * 1024;
 
@@ -117,5 +124,69 @@ describe('memoryVerdict', () => {
     );
 
     expect(problems).toEqual(['the API did not answer 2 times, first: ECONNREFUSED']);
+  });
+});
+
+describe('isTransient', () => {
+  it.each([
+    'apiRequestContext.post: read ECONNRESET',
+    'apiRequestContext.post: socket hang up',
+    'apiRequestContext.post: connect ETIMEDOUT 1.2.3.4:443',
+    'GraphQL request failed: HTTP 502 <html>Bad Gateway</html>',
+    'GraphQL request failed: HTTP 503 ',
+    'GraphQL request failed: HTTP 504 Gateway Time-out',
+  ])('retries "%s"', message => {
+    expect(isTransient(new Error(message))).toBe(true);
+  });
+
+  it.each([
+    'GraphQL error: createUser: Email already in use',
+    'GraphQL request failed: HTTP 400 bad request',
+    'GraphQL error: importSubscription: Forbidden resource',
+  ])('does not retry "%s"', message => {
+    expect(isTransient(new Error(message))).toBe(false);
+  });
+});
+
+describe('retryTransient', () => {
+  const reset = () => new Error('apiRequestContext.post: read ECONNRESET');
+
+  it('tries again after a dropped connection', async () => {
+    const run = vi.fn().mockRejectedValueOnce(reset()).mockResolvedValue('created');
+
+    await expect(retryTransient(run, { delayMs: 0 })).resolves.toBe('created');
+    expect(run).toHaveBeenCalledTimes(2);
+  });
+
+  it('takes what the dropped call did after all, instead of doing it twice', async () => {
+    const run = vi.fn().mockRejectedValue(reset());
+    const recover = vi.fn().mockResolvedValue('created before the reset');
+
+    await expect(retryTransient(run, { delayMs: 0, recover })).resolves.toBe(
+      'created before the reset'
+    );
+    expect(run).toHaveBeenCalledTimes(1);
+  });
+
+  it('tries again when the dropped call did nothing', async () => {
+    const run = vi.fn().mockRejectedValueOnce(reset()).mockResolvedValue('created');
+    const recover = vi.fn().mockResolvedValue(undefined);
+
+    await expect(retryTransient(run, { delayMs: 0, recover })).resolves.toBe('created');
+    expect(run).toHaveBeenCalledTimes(2);
+  });
+
+  it('gives up after the last attempt with the last error', async () => {
+    const run = vi.fn().mockRejectedValue(reset());
+
+    await expect(retryTransient(run, { attempts: 3, delayMs: 0 })).rejects.toThrow('ECONNRESET');
+    expect(run).toHaveBeenCalledTimes(3);
+  });
+
+  it('does not retry other errors', async () => {
+    const run = vi.fn().mockRejectedValue(new Error('GraphQL error: Forbidden resource'));
+
+    await expect(retryTransient(run, { delayMs: 0 })).rejects.toThrow('Forbidden');
+    expect(run).toHaveBeenCalledTimes(1);
   });
 });

@@ -2,18 +2,25 @@ import { expect } from '@playwright/test';
 import { writeFile } from 'fs/promises';
 import { dirname, join } from 'path';
 import { env } from '../support/env';
-import { BULK_POOL } from '../support/factories';
+import { BULK_POOL, Reader } from '../support/factories';
 import { ImapInbox } from '../support/imap-inbox';
 import { poll } from '../support/inbox';
-import { inPool, LoadRun, memoryTable, memoryVerdict, MemorySample } from '../support/load';
+import {
+  inPool,
+  LoadRun,
+  memoryTable,
+  memoryVerdict,
+  MemorySample,
+  retryTransient,
+} from '../support/load';
 import { MailLog, newestLogSince } from '../support/mail-logs';
 import { Given, ScenarioContext, Then, When } from './fixtures';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const SAMPLE_EVERY_MS = 10_000;
 const SWEEP_EVERY_MS = 60_000;
-/** The run takes about 2 s a renewal (mostly bexio); 1500 take close to an hour. */
-const RUN_TIMEOUT_MS = 2 * 60 * 60 * 1000;
+/** The 40/10 trial on review01 took about 4.6 s a reader (bexio, then mail or letter): 1500 take close to two hours. */
+const RUN_TIMEOUT_MS = 3 * 60 * 60 * 1000;
 const SAMPLE_MAILS = 3;
 
 /** States in which the reader did not get the invoice; `deferred` still lacks bexio's pdf. */
@@ -46,24 +53,38 @@ Given(
       ...Array.from({ length: counts.letter }, () => 'letter' as const),
     ];
     const created = Date.now();
+    // Registered before the first reader exists: a failure halfway must not
+    // leave readers with due subscriptions for the next nightly run.
+    const existing: Reader[] = [];
+    data.deleteAfterwards(existing, { keep: env.keepLoadData });
 
+    // The review ingress now and then drops one of many requests in a row;
+    // retryTransient tries again without doing a write twice.
     const readers = await inPool(channels, BULK_POOL, async (channel, index) => {
       const letter = channel === 'letter';
-      const reader = await data.createUser(undefined, {
-        localPart: `e2e+${runId}-${letter ? 'l' : 'm'}${index}`,
-        address: letter ? data.swissAddress() : undefined,
-        cleanup: false,
-      });
+      let attempt = 0;
+      // A retry takes a new address: a user the dropped call created after
+      // all has no subscription, so the nightly run leaves it alone.
+      const reader = await retryTransient(() =>
+        data.createUser(undefined, {
+          localPart: `e2e+${runId}-${letter ? 'l' : 'm'}${index}${++attempt > 1 ? `r${attempt}` : ''}`,
+          address: letter ? data.swissAddress() : undefined,
+          cleanup: false,
+        })
+      );
+      existing.push(reader);
 
       if (letter) {
-        const preference = await data.setDeliveryMode(reader, 'letter');
+        const preference = await retryTransient(() => data.setDeliveryMode(reader, 'letter'));
 
         if (!preference.canReceiveLetters) {
           throw new Error(`${reader.email} cannot get letters at its synthetic address.`);
         }
       }
 
-      await data.importDueSubscription({ reader, flow, paidUntil });
+      await retryTransient(() => data.importDueSubscription({ reader, flow, paidUntil }), {
+        recover: () => data.subscriptionOf(reader, flow),
+      });
 
       return { channel, reader };
     });
@@ -71,7 +92,6 @@ Given(
     const mailReaders = readers.filter(r => r.channel === 'mail').map(r => r.reader);
     const letterReaders = readers.filter(r => r.channel === 'letter').map(r => r.reader);
 
-    data.deleteAfterwards([...mailReaders, ...letterReaders], { keep: env.keepLoadData });
 
     ctx.load = {
       mailReaders,
@@ -170,7 +190,10 @@ Then('every load reader got the renewal invoice on their channel', async ({ data
   ];
 
   const outcomes = await inPool(readers, BULK_POOL, async ({ reader, channel }) => {
-    const log = newestLogSince(await data.mailLogs(reader, channel), ctx.startedAt);
+    const log = newestLogSince(
+      await retryTransient(() => data.mailLogs(reader, channel)),
+      ctx.startedAt
+    );
 
     return { reader, channel, log, problem: problemOf(channel, log) };
   });
