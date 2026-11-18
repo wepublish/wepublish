@@ -317,6 +317,30 @@ describe('parseSitemap', () => {
       });
     }
   });
+
+  test('says why a sitemap is not valid XML', async () => {
+    await expect(
+      parseSitemap(
+        sitemapUrl,
+        ok(`<urlset>
+<url><loc>https://example.com/a?x=1&y=2</loc></url>
+</urlset>`)
+      )
+    ).resolves.toEqual({
+      url: sitemapUrl,
+      error: 'Invalid XML: Invalid character in entity name on line 2',
+    });
+
+    await expect(
+      parseSitemap(
+        sitemapUrl,
+        ok('<sm:sitemapindex>\n<sm:sitemap><sm:loc>https://exa')
+      )
+    ).resolves.toEqual({
+      url: sitemapUrl,
+      error: 'Invalid XML: Unclosed root tag on line 2',
+    });
+  });
 });
 
 describe('SEO_CHECKLIST_ITEM_ID', () => {

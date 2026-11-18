@@ -44,6 +44,16 @@ const isOk = (
 const describeFailure = (probe: SeoProbeResult) =>
   'error' in probe ? probe.error : `HTTP ${probe.status}`;
 
+const SITEMAP_ROOT = /<(\w+:)?(urlset|sitemapindex)[\s>]/;
+
+// sax reports "Reason\nLine: 0\nColumn: 5\nChar: x", counting lines from 0.
+const describeXmlError = ({ message }: Error) => {
+  const [reason, line] = message.split('\n');
+  const lineIndex = line?.match(/^Line: (\d+)$/)?.[1];
+
+  return lineIndex ? `${reason} on line ${Number(lineIndex) + 1}` : reason;
+};
+
 export const parseSitemap = async (
   url: string,
   probe: SeoProbeResult
@@ -52,10 +62,24 @@ export const parseSitemap = async (
     return { url, error: describeFailure(probe) };
   }
 
-  const xml = await parseStringPromise(probe.body, {
-    trim: true,
-    tagNameProcessors: [processors.stripPrefix],
-  }).catch(() => null);
+  let xml;
+
+  try {
+    xml = await parseStringPromise(probe.body, {
+      trim: true,
+      tagNameProcessors: [processors.stripPrefix],
+    });
+  } catch (error) {
+    // A broken sitemap says what is broken; anything else (an HTML error
+    // page) simply isn't a sitemap.
+    return {
+      url,
+      error:
+        SITEMAP_ROOT.test(probe.body) ?
+          `Invalid XML: ${describeXmlError(error as Error)}`
+        : 'No <urlset> found',
+    };
+  }
 
   if (xml?.sitemapindex !== undefined) {
     return {
