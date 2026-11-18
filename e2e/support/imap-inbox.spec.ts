@@ -58,3 +58,30 @@ describe('ImapInbox.waitForMail', () => {
     expect(imap.messageDelete).not.toHaveBeenCalled();
   });
 });
+
+describe('ImapInbox.sweep', () => {
+  beforeEach(() => imap.messageDelete.mockClear());
+
+  it('counts and deletes the mails to a group of recipients, keeping the mailbox under its quota', async () => {
+    const inbox = new ImapInbox(config, since);
+
+    await expect(inbox.sweep({ toContaining: 'reader@', keep: [] })).resolves.toBe(1);
+    expect(imap.messageDelete).toHaveBeenCalledWith([7], { uid: true });
+  });
+
+  it('leaves the mails a later step still reads', async () => {
+    const inbox = new ImapInbox(config, since);
+
+    await expect(
+      inbox.sweep({ toContaining: 'reader@', keep: ['Reader@example.test'] })
+    ).resolves.toBe(0);
+    expect(imap.messageDelete).not.toHaveBeenCalled();
+  });
+
+  it('only counts when asked to keep mails', async () => {
+    const inbox = new ImapInbox(config, since, { keepMails: true });
+
+    await expect(inbox.sweep({ toContaining: 'reader@', keep: [] })).resolves.toBe(1);
+    expect(imap.messageDelete).not.toHaveBeenCalled();
+  });
+});

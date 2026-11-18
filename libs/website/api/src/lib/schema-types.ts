@@ -78,6 +78,19 @@ export enum AnalyticsProviderType {
   Umami = 'UMAMI'
 }
 
+/** Memory and uptime of the API process that answers. Load tests read it while the periodic job runs: a new hostname or a smaller uptime means the pod restarted. */
+export type ApiProcessStats = {
+  __typename: 'ApiProcessStats';
+  /** Memory outside the V8 heap, e.g. the buffers of pdfs and attachments. */
+  externalBytes: Scalars['Float']['output'];
+  heapUsedBytes: Scalars['Float']['output'];
+  /** The pod's name. */
+  hostname: Scalars['String']['output'];
+  /** Resident memory, the number the pod's memory limit is about. */
+  rssBytes: Scalars['Float']['output'];
+  uptimeSeconds: Scalars['Float']['output'];
+};
+
 export type ApiToken = {
   __typename: 'ApiToken';
   createdAt: Scalars['DateTime']['output'];
@@ -3731,6 +3744,8 @@ export type Mutation = {
   revokeActiveSession: Scalars['Boolean']['output'];
   /** Revokes one of your api tokens, or anyone's with CAN_REVOKE_ALL_API_TOKENS. The token stops working immediately. */
   revokeApiToken: ApiToken;
+  /** Runs today's periodic job again now, also when it already ran tonight. For load tests: only on review, development and local instances. Answers once the run has started; it goes on in the background. Refused while a run is going on. */
+  runPeriodicJobNow: PeriodicJob;
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendJWTLogin: Scalars['String']['output'];
   /** Manually send a mail template to a single user */
@@ -7302,6 +7317,8 @@ export type Query = {
   analyticsProviderSetting: SettingAnalyticsProvider;
   /** Returns all analytics provider settings. */
   analyticsProviderSettings: Array<SettingAnalyticsProvider>;
+  /** Memory and uptime of the API process that answers. For load tests: only on review, development and local instances. */
+  apiProcessStats: ApiProcessStats;
   /** Returns your own api tokens, or everyone's with CAN_GET_ALL_API_TOKENS. Secrets are never included. */
   apiTokens: PaginatedApiTokens;
   /** Returns an article by id or slug. */

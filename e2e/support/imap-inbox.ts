@@ -175,6 +175,45 @@ export class ImapInbox implements Inbox {
     }
   }
 
+  /**
+   * Counts the mails since `since` to recipients containing `toContaining`
+   * and deletes them, except those to `keep`: a load test sends more mails
+   * than the mailbox's quota holds. Returns how many it counted.
+   */
+  async sweep({ toContaining, keep }: { toContaining: string; keep: string[] }): Promise<number> {
+    const client = await this.connect();
+    const kept = new Set(keep.map(address => address.toLowerCase()));
+    const lock = await client.getMailboxLock('INBOX');
+
+    try {
+      await client.noop();
+      // IMAP TO matches a substring of the recipient.
+      const uids = await client.search({ to: toContaining, since: this.since }, { uid: true });
+
+      if (!uids || !uids.length) {
+        return 0;
+      }
+
+      const swept: number[] = [];
+
+      for await (const message of client.fetch(uids, { envelope: true }, { uid: true })) {
+        const to = (message.envelope?.to ?? []).map(({ address }) => (address ?? '').toLowerCase());
+
+        if (!to.some(address => kept.has(address))) {
+          swept.push(message.uid);
+        }
+      }
+
+      if (swept.length && !this.options.keepMails) {
+        await client.messageDelete(swept, { uid: true });
+      }
+
+      return swept.length;
+    } finally {
+      lock.release();
+    }
+  }
+
   async close() {
     await this.client?.logout().catch(() => undefined);
     this.client = undefined;

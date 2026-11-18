@@ -15,6 +15,7 @@ import { MailpitInbox } from '../support/mailpit';
 import { ResendInbox } from '../support/resend-inbox';
 import { SimulatedCheckout } from '../support/simulated-payment';
 import { FlowQuery } from '../support/subscription-flows';
+import type { LoadRun } from '../support/load';
 
 /** Per-scenario state shared between steps. Extend as new steps need it. */
 export type ScenarioContext = {
@@ -31,6 +32,8 @@ export type ScenarioContext = {
   subscriptions: Map<string, FlowQuery & { id: string }>;
   /** When the scenario started, less some slack for the server's clock. */
   startedAt: Date;
+  /** The renewal load test's readers and nightly run (`@load`). */
+  load?: LoadRun;
 };
 
 type TestFixtures = {
