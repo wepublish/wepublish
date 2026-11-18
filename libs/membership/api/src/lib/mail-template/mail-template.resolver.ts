@@ -7,7 +7,12 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
-import { MailContext, MailTemplateStatus } from '@wepublish/mail/api';
+import {
+  attachmentIdsOf,
+  MAIL_TEMPLATE_ATTACHMENT_IDS,
+  MailContext,
+  MailTemplateStatus,
+} from '@wepublish/mail/api';
 import {
   CanCreateMailTemplates,
   CanDeleteMailTemplates,
@@ -17,6 +22,7 @@ import {
   CanUpdateMailTemplates,
 } from '@wepublish/permissions';
 import {
+  ATTACHMENT_IDS_DESCRIPTION,
   MailProviderModel,
   MailTemplateInput,
   MailTemplateLetterPreviewModel,
@@ -55,6 +61,7 @@ export class MailTemplatesResolver {
   async mailTemplates() {
     return this.prismaService.mailTemplate.findMany({
       orderBy: [{ name: 'asc' }],
+      include: MAIL_TEMPLATE_ATTACHMENT_IDS,
     });
   }
 
@@ -66,6 +73,7 @@ export class MailTemplatesResolver {
   async mailTemplate(@Args('id') id: string) {
     return this.prismaService.mailTemplate.findUnique({
       where: { id },
+      include: MAIL_TEMPLATE_ATTACHMENT_IDS,
     });
   }
 
@@ -156,6 +164,7 @@ export class MailTemplatesResolver {
       html: input.htmlContent,
       letterLayoutId: input.letterLayoutId,
       letterAppendixId: input.letterAppendixId,
+      attachmentIds: input.attachmentIds,
     });
   }
 
@@ -164,9 +173,7 @@ export class MailTemplatesResolver {
     description: `Create a new mail template`,
   })
   async createMailTemplate(@Args('input') input: MailTemplateInput) {
-    return this.prismaService.mailTemplate.create({
-      data: input,
-    });
+    return this.mailTemplateService.createMailTemplate(input);
   }
 
   @Permissions(CanUpdateMailTemplates)
@@ -177,10 +184,7 @@ export class MailTemplatesResolver {
     @Args('id') id: string,
     @Args('input') input: MailTemplateInput
   ) {
-    return this.prismaService.mailTemplate.update({
-      where: { id },
-      data: input,
-    });
+    return this.mailTemplateService.updateMailTemplate(id, input);
   }
 
   @Permissions(CanDeleteMailTemplates)
@@ -221,7 +225,29 @@ export class MailTemplatesResolver {
       subject: input.subject,
       html: input.htmlContent,
       text: input.textContent,
+      attachmentIds: input.attachmentIds,
     });
+  }
+
+  @ResolveField('attachmentIds', () => [String], {
+    description: ATTACHMENT_IDS_DESCRIPTION,
+  })
+  async attachmentIds(
+    @Parent()
+    template: MailTemplateModel & { attachments?: { documentId: string }[] }
+  ): Promise<string[]> {
+    // Every query here loads them along; this only covers a template that
+    // reached the field some other way.
+    if (template.attachments) {
+      return attachmentIdsOf(template);
+    }
+
+    const loaded = await this.prismaService.mailTemplate.findUnique({
+      where: { id: template.id },
+      include: MAIL_TEMPLATE_ATTACHMENT_IDS,
+    });
+
+    return loaded ? attachmentIdsOf(loaded) : [];
   }
 
   @ResolveField('status', () => MailTemplateStatus, {

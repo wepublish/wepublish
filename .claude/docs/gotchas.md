@@ -643,6 +643,20 @@ trick or nothing catches it before `nx serve api-example`.
 
 ---
 
+### ⚠️ A tenant `BaseTeaser` override must fall back to block-content's `BaseTeaser`, never `Teaser`
+
+`Teaser` from `@wepublish/block-content/website` is a dispatcher: it renders
+the builder's `blocks.BaseTeaser`. An override registered as `BaseTeaser` that
+falls back to `<Teaser>` renders itself forever. Server rendering never ends,
+the pod's memory climbs until it is killed, and Cloudflare shows 504 for the
+page and 502 for everything else in the meantime (2026-11-18, bajour: every
+unstyled teaser-list block, because `TeaserListBlock` passes no `numColumns`).
+Fall back to the concrete `BaseTeaser` export instead, as munotgloeggli does.
+`bajour.spec.tsx` shows how to test it without hanging the runner: a context
+guard that throws if the override re-enters itself.
+
+---
+
 ### ⚠️ A service with `@PrimeDataLoader` makes everything that injects it request-scoped
 
 `@PrimeDataLoader(X)` property-injects the request-scoped dataloader `X`, so the
