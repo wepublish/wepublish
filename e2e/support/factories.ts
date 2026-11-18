@@ -1,6 +1,6 @@
 import { base, de_CH, en, Faker } from '@faker-js/faker';
 import { ApiClient } from './api-client';
-import { inPool } from './load';
+import { inPool, retryTransient } from './load';
 import { MailLog } from './mail-logs';
 import { Flow, FlowQuery, flowFor } from './subscription-flows';
 
@@ -262,11 +262,12 @@ export class TestData {
 
   /**
    * Deletes many readers after the scenario, a few at a time: one by one,
-   * 1500 readers would take longer than the scenario itself. `keep` leaves
-   * them, e.g. to look at them in the editor.
+   * 1500 readers would take longer than the scenario itself. Takes the
+   * readers when the cleanup runs, so the caller may still add to the array.
+   * `keep` leaves them, e.g. to look at them in the editor.
    */
   deleteAfterwards(readers: Reader[], { keep = false } = {}) {
-    this.onCleanup(`${readers.length} readers`, async () => {
+    this.onCleanup('bulk readers', async () => {
       if (keep) {
         console.warn(`[e2e] kept ${readers.length} readers (${readers[0]?.email} …)`);
         return;
@@ -275,7 +276,7 @@ export class TestData {
       const failed: string[] = [];
 
       await inPool(readers, BULK_POOL, reader =>
-        this.deleteUser(reader.id).catch(error => {
+        retryTransient(() => this.deleteUser(reader.id)).catch(error => {
           failed.push(`${reader.email}: ${(error as Error).message}`);
         })
       );
@@ -710,6 +711,20 @@ export class TestData {
     );
 
     return { ...flow, id: importSubscription.id };
+  }
+
+  /** The reader's first subscription, e.g. one a dropped call created after all. */
+  async subscriptionOf(reader: Reader, flow: FlowQuery) {
+    const api = await this.api();
+    const { subscriptions } = await api.gql<{ subscriptions: { nodes: { id: string }[] } }>(
+      `query ReaderSubscriptions($userID: String!) {
+        subscriptions(filter: { userID: $userID }, take: 1) { nodes { id } }
+      }`,
+      { userID: reader.id }
+    );
+    const [subscription] = subscriptions.nodes;
+
+    return subscription && { ...flow, id: subscription.id };
   }
 
   /** What picks the subscription flow of a yearly, auto-renewing subscription. */

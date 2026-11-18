@@ -1,4 +1,4 @@
-@app:neuewege @mutating @bexio @mail @letter @load @mode:serial @timeout:9000000
+@app:neuewege @mutating @bexio @mail @letter @load @mode:serial @timeout:12600000
 Feature: The nightly run renews all yearly subscriptions at once
   Neue Wege bills per calendar year: most subscriptions end on 31 December
   and get their renewal invoice in the same nightly run, about 1200 by mail
