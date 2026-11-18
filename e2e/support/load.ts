@@ -167,15 +167,16 @@ export function memoryTable(samples: MemorySample[]): string {
 
 /**
  * A dropped connection or a gateway in between, not an answer of the API:
- * worth another try. On review the ingress now and then resets one of many
- * requests in a row.
+ * worth another try. On review, Cloudflare and the ingress now and then drop
+ * one of many requests in a row (ECONNRESET, HTTP 520).
  */
 export function isTransient(error: unknown): boolean {
   const message = error instanceof Error ? error.message : String(error);
 
   return (
     /ECONNRESET|socket hang up|ETIMEDOUT|ECONNREFUSED|EPIPE|EAI_AGAIN/.test(message) ||
-    /GraphQL request failed: HTTP 50[234]\b/.test(message)
+    // 502–504 from a gateway; 520–524 from Cloudflare when the origin dropped the connection.
+    /GraphQL request failed: HTTP (50[234]|52[0-4])\b/.test(message)
   );
 }
 
@@ -187,7 +188,7 @@ export function isTransient(error: unknown): boolean {
 export async function retryTransient<T>(
   run: () => Promise<T>,
   {
-    attempts = 3,
+    attempts = 5,
     delayMs = 2_000,
     recover,
   }: { attempts?: number; delayMs?: number; recover?: () => Promise<T | undefined> } = {}

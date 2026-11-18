@@ -135,6 +135,10 @@ describe('isTransient', () => {
     'GraphQL request failed: HTTP 502 <html>Bad Gateway</html>',
     'GraphQL request failed: HTTP 503 ',
     'GraphQL request failed: HTTP 504 Gateway Time-out',
+    // Cloudflare in front of the review instances: the origin dropped the connection.
+    'GraphQL request failed: HTTP 520 <!DOCTYPE html>',
+    'GraphQL request failed: HTTP 522 <!DOCTYPE html>',
+    'GraphQL request failed: HTTP 524 <!DOCTYPE html>',
   ])('retries "%s"', message => {
     expect(isTransient(new Error(message))).toBe(true);
   });
@@ -142,6 +146,8 @@ describe('isTransient', () => {
   it.each([
     'GraphQL error: createUser: Email already in use',
     'GraphQL request failed: HTTP 400 bad request',
+    'GraphQL request failed: HTTP 500 Internal Server Error',
+    'GraphQL request failed: HTTP 525 SSL handshake failed',
     'GraphQL error: importSubscription: Forbidden resource',
   ])('does not retry "%s"', message => {
     expect(isTransient(new Error(message))).toBe(false);
@@ -181,6 +187,13 @@ describe('retryTransient', () => {
 
     await expect(retryTransient(run, { attempts: 3, delayMs: 0 })).rejects.toThrow('ECONNRESET');
     expect(run).toHaveBeenCalledTimes(3);
+  });
+
+  it('tries five times by default', async () => {
+    const run = vi.fn().mockRejectedValue(reset());
+
+    await expect(retryTransient(run, { delayMs: 0 })).rejects.toThrow('ECONNRESET');
+    expect(run).toHaveBeenCalledTimes(5);
   });
 
   it('does not retry other errors', async () => {
