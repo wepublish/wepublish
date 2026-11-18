@@ -2825,6 +2825,99 @@ describe('PeriodicJobService', () => {
       await lockReleased();
     });
 
+    describe('running today again for a load test', () => {
+      beforeEach(() => {
+        Object.assign(mockPrisma.periodicJob, {
+          upsert: vi.fn(
+            async ({
+              where,
+              create,
+              update,
+            }: {
+              where: Pick<JobRow, 'date'>;
+              create: Pick<JobRow, 'date'> & Partial<JobRow>;
+              update: Partial<JobRow>;
+            }) => {
+              const row = rows.find(candidate => matches(candidate, where));
+
+              if (row) {
+                return { ...Object.assign(row, update) };
+              }
+
+              const created: JobRow = {
+                id: `job-${rows.length + 1}`,
+                executionTime: null,
+                successfullyFinished: null,
+                finishedWithError: null,
+                tries: 0,
+                error: null,
+                ...create,
+              };
+              rows.push(created);
+
+              return { ...created };
+            }
+          ),
+        });
+      });
+
+      it("runs today's job again although tonight's run succeeded", async () => {
+        const tonight = set(daysAgo(0), { hours: 3 });
+        seed({
+          date: daysAgo(0),
+          executionTime: tonight,
+          successfullyFinished: tonight,
+        });
+
+        const job = await service.runTodayNow();
+        await lockReleased();
+
+        expect(job.date).toEqual(dbDate(daysAgo(0)));
+        expect(rows).toHaveLength(1);
+        expect(rows[0].executionTime!.getTime()).toBeGreaterThan(
+          tonight.getTime()
+        );
+        expect(rows[0].successfullyFinished!.getTime()).toBeGreaterThan(
+          tonight.getTime()
+        );
+        expect(
+          mockSubscriptionController.getActiveSubscriptionsWithoutInvoice
+        ).toHaveBeenCalled();
+      });
+
+      it("creates today's run when none ran yet", async () => {
+        await service.runTodayNow();
+        await lockReleased();
+
+        expect(rows.map(row => [row.date, !!row.successfullyFinished])).toEqual(
+          [[dbDate(daysAgo(0)), true]]
+        );
+      });
+
+      it('answers before the run is done and reports it as running', async () => {
+        const finish = holdFirstRun();
+
+        const job = await service.runTodayNow();
+
+        await expect(otherPod.isRunning(job)).resolves.toBe(true);
+        finish();
+        await lockReleased();
+      });
+
+      it('refuses while another run is going on', async () => {
+        failedNight(daysAgo(1));
+        const finish = holdFirstRun();
+        await otherPod.retryAndCatchUp();
+
+        await expect(service.runTodayNow()).rejects.toBeInstanceOf(
+          ConflictException
+        );
+
+        finish();
+        await lockReleased();
+      });
+    });
+
     describe('without Dragonfly', () => {
       it('refuses while the last run started recently and has not finished', async () => {
         const pod = startPod(createLocksWithoutDragonfly());

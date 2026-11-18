@@ -73,6 +73,9 @@ export const NIGHT_CLAIM_MS = 12 * 60 * 60 * 1000;
 const RUN_LOCK = 'periodic-job-run';
 const RUN_LOCK_TTL_MS = 2 * 60 * 1000;
 
+/** How many invoices the run creates between two memory log lines. */
+const MEMORY_LOG_EVERY = 100;
+
 /** How often a refused invoice letter is offered again before someone has to look. */
 const INVOICE_DELIVERY_ATTEMPTS = 3;
 
@@ -279,10 +282,68 @@ export class PeriodicJobService {
     return job;
   }
 
-  private async findRunToRetry(
+  /**
+   * Runs today's job again now, also when it already ran tonight: load tests
+   * create due subscriptions and then need the nightly run. Answers once the
+   * run is taken over; it goes on in the background.
+   */
+  public async runTodayNow(): Promise<PeriodicJob> {
+    const acquired = await this.locks.acquire(RUN_LOCK, RUN_LOCK_TTL_MS);
+
+    if (acquired.status === 'taken') {
+      throw new ConflictException(
+        'A periodic job is already running. Wait until it has finished.'
+      );
+    }
+
+    const lock = heldLock(acquired);
+    // As a retry, so the mails already sent today are skipped.
+    const run: PeriodicJobRunObject = {
+      isRetry: true,
+      date: startOfDay(new Date()),
+      lastStartedAt: null,
+    };
+    let job: PeriodicJob;
+
+    try {
+      await this.refuseWhileARunGoesOn(lock, acquired.status === 'unavailable');
+      job = await this.reopenRun(run.date);
+    } catch (error) {
+      await lock?.release();
+      throw error;
+    }
+
+    this.processRun(run)
+      .catch(error =>
+        this.logger.error("Running today's periodic job again failed:", error)
+      )
+      .finally(() => lock?.release());
+
+    return job;
+  }
+
+  private async reopenRun(runDate: Date) {
+    const now = new Date();
+
+    this.runningJob = await this.prismaService.periodicJob.upsert({
+      where: { date: toDbDate(runDate) },
+      create: { date: toDbDate(runDate), executionTime: now },
+      update: {
+        executionTime: now,
+        successfullyFinished: null,
+        finishedWithError: null,
+        error: null,
+      },
+    });
+
+    return this.runningJob;
+  }
+
+  /** Without Dragonfly, the job log is all that tells a run is going on. */
+  private async refuseWhileARunGoesOn(
     lock: HeldLock | undefined,
     unavailable: boolean
-  ): Promise<RetryRun> {
+  ) {
     if (!lock) {
       if (unavailable) {
         throw new ServiceUnavailableException(
@@ -300,6 +361,13 @@ export class PeriodicJobService {
         );
       }
     }
+  }
+
+  private async findRunToRetry(
+    lock: HeldLock | undefined,
+    unavailable: boolean
+  ): Promise<RetryRun> {
+    await this.refuseWhileARunGoesOn(lock, unavailable);
 
     const [failedRun] = await this.getOutstandingRuns(new Date(), !!lock);
 
@@ -452,6 +520,16 @@ export class PeriodicJobService {
     }
   }
 
+  /** A busy night (all yearly subscriptions at once) is where memory shows. */
+  private logMemory(step: string) {
+    const { rss, heapUsed, external } = process.memoryUsage();
+    const mib = (bytes: number) => `${Math.round(bytes / 1024 / 1024)} MiB`;
+
+    this.logger.log(
+      `${step} · rss ${mib(rss)} · heap ${mib(heapUsed)} · external ${mib(external)}`
+    );
+  }
+
   private async inContext<T>(context: string, run: () => Promise<T>) {
     try {
       return await run();
@@ -551,11 +629,21 @@ export class PeriodicJobService {
           periodicJobRunObject.date
         )
       );
-    for (const subscription of activeSubscriptionsWithoutInvoice) {
+    const total = activeSubscriptionsWithoutInvoice.length;
+    this.logMemory(`Creating ${total} invoices`);
+
+    for (const [
+      index,
+      subscription,
+    ] of activeSubscriptionsWithoutInvoice.entries()) {
       await this.inContext(
         `Creating the invoice for subscription ${subscription.id} failed`,
         () => this.createInvoice(periodicJobRunObject, subscription)
       );
+
+      if ((index + 1) % MEMORY_LOG_EVERY === 0 || index + 1 === total) {
+        this.logMemory(`Created ${index + 1} of ${total} invoices`);
+      }
     }
   }
 
