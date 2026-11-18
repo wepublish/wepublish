@@ -10,6 +10,7 @@ import { MailchimpMailProvider } from './mailchimp-mail-provider';
 import {
   MailProviderError,
   MailProviderRecipientError,
+  MailProviderTransientError,
   MailWebhookSignatureError,
 } from './mail-provider.interface';
 
@@ -173,6 +174,49 @@ describe('MailchimpMailProvider', () => {
 
     await expect((await makeProvider()).sendMail(sendProps)).rejects.toThrow(
       MailProviderError
+    );
+  });
+
+  describe('a temporary failure', () => {
+    const sendError = async () =>
+      (await makeProvider()).sendMail(sendProps).then(
+        () => {
+          throw new Error('Expected the send to fail');
+        },
+        (error: Error) => error
+      );
+
+    it.each([429, 500, 502, 503])(
+      'is worth another try on HTTP %s',
+      async status => {
+        nock(MANDRILL)
+          .post('/api/1.0/messages/send')
+          .reply(status, { status: 'error', message: 'try later' });
+
+        expect(await sendError()).toBeInstanceOf(MailProviderTransientError);
+      }
+    );
+
+    it('is worth another try when the connection drops', async () => {
+      nock(MANDRILL)
+        .post('/api/1.0/messages/send')
+        .replyWithError({ code: 'ECONNRESET', message: 'socket hang up' });
+
+      expect(await sendError()).toBeInstanceOf(MailProviderTransientError);
+    });
+
+    it.each([400, 401, 403])(
+      'is not, on HTTP %s: that needs someone to fix it',
+      async status => {
+        nock(MANDRILL)
+          .post('/api/1.0/messages/send')
+          .reply(status, { status: 'error', message: 'Invalid API key' });
+
+        const error = await sendError();
+
+        expect(error).toBeInstanceOf(MailProviderError);
+        expect(error).not.toBeInstanceOf(MailProviderTransientError);
+      }
     );
   });
 

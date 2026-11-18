@@ -9,6 +9,7 @@ import {
   MailProviderError,
   MailProviderMessageState,
   MailProviderRecipientError,
+  MailProviderTransientError,
   MailProviderTemplate,
   MailProviderTemplateContent,
   MailQualitySignal,
@@ -190,6 +191,23 @@ function mapMandrillInfoToQualitySignals(
   }
 }
 
+/**
+ * No answer (dropped connection, timeout), a rate limit or a server error is
+ * worth another try; anything else (a bad key, a malformed request) is not.
+ */
+const sendError = (error: AxiosError): MailProviderError => {
+  const status = error.response?.status;
+  const message =
+    (error.response?.data as Error | undefined)?.message ?? error.message;
+
+  return !status || status === 429 || status >= 500 ?
+      new MailProviderTransientError(
+        `Mandrill ${status ? `answered ${status}` : 'did not answer'}: ${message}`,
+        { cause: error }
+      )
+    : new MailProviderError(message);
+};
+
 export class MailchimpMailProvider extends BaseMailProvider {
   constructor(props: MailProviderProps) {
     super(props);
@@ -331,7 +349,7 @@ export class MailchimpMailProvider extends BaseMailProvider {
     });
 
     if (this.responseIsError(response)) {
-      throw new MailProviderError((response.response?.data as Error).message);
+      throw sendError(response);
     }
 
     this.throwOnRejectedRecipient(response);

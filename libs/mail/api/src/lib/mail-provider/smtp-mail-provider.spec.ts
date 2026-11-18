@@ -1,3 +1,4 @@
+import { MailProviderTransientError } from './mail-provider.interface';
 import {
   createNamespacedCacheTesting,
   type NamespacedCacheTesting,
@@ -73,5 +74,57 @@ describe('SmtpMailProvider', () => {
     expect(sendMail.mock.calls[0][0].attachments).toEqual([
       { filename: 'Vertrag.pdf', contentType: 'application/pdf', content },
     ]);
+  });
+
+  describe('a temporary failure', () => {
+    const smtpError = (message: string, fields: Record<string, unknown>) =>
+      Object.assign(new Error(message), fields);
+
+    it.each([
+      [
+        'the server rate-limits',
+        smtpError(
+          "Can't send mail - all recipients were rejected: 429 Rate limited",
+          { code: 'EENVELOPE', responseCode: 429 }
+        ),
+      ],
+      [
+        'the server is busy',
+        smtpError('421 Service not available', { responseCode: 421 }),
+      ],
+      [
+        'the mailbox is busy',
+        smtpError('451 Try again later', { responseCode: 451 }),
+      ],
+      [
+        'the connection fails',
+        smtpError('Connection timeout', { code: 'ETIMEDOUT' }),
+      ],
+      [
+        'the connection drops',
+        smtpError('Connection closed', { code: 'ECONNECTION' }),
+      ],
+    ])('is worth another try when %s', async (_, error) => {
+      sendMail.mockRejectedValue(error);
+
+      const thrown = await (await makeProvider())
+        .sendMail(sendProps)
+        .catch((e: Error) => e);
+
+      expect(thrown).toBeInstanceOf(MailProviderTransientError);
+      expect(thrown.message).toContain(error.message);
+    });
+
+    it('is not when the server refuses for good', async () => {
+      const refused = smtpError('550 Mailbox unavailable', {
+        code: 'EENVELOPE',
+        responseCode: 550,
+      });
+      sendMail.mockRejectedValue(refused);
+
+      await expect(
+        (await makeProvider()).sendMail(sendProps)
+      ).rejects.toBe(refused);
+    });
   });
 });

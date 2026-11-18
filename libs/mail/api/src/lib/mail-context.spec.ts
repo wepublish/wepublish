@@ -5,6 +5,11 @@ import {
   MailAttachmentError,
   MailAttachmentRenderer,
 } from './mail-attachment';
+import {
+  MailProviderError,
+  MailProviderRecipientError,
+  MailProviderTransientError,
+} from './mail-provider/mail-provider.interface';
 
 const createContext = (prisma: unknown) =>
   new MailContext({
@@ -212,6 +217,68 @@ describe('MailContext', () => {
       expect(sendMail).toHaveBeenCalledWith(
         expect.objectContaining({ attachments: [pdf('contract')] })
       );
+    });
+  });
+
+  describe('a mail provider that fails for a moment', () => {
+    const setup = (sendMail: ReturnType<typeof vi.fn>) =>
+      new MailContext({
+        prisma: {
+          mailTemplate: {
+            findUnique: vi.fn().mockResolvedValue({
+              id: 'template-1',
+              subject: 'Rechnung',
+              htmlContent: '<p>Rechnung</p>',
+              textContent: null,
+              attachments: [],
+            }),
+          },
+        } as unknown as PrismaClient,
+        mailProvider: { id: 'mandrill', sendMail } as any,
+        kv: { getOrLoadNs: vi.fn().mockResolvedValue({}) } as any,
+        jwtGenerator: async () => '',
+        sendRetryDelaysMs: [0, 0, 0],
+      });
+
+    const send = (context: MailContext) =>
+      context.sendComposedMail({
+        mailTemplateId: 'template-1',
+        recipient: 'jane@example.com',
+        mailLogID: 'log-1',
+        data: {},
+      });
+
+    it('tries again, so one hiccup does not stop a whole renewal run', async () => {
+      const sendMail = vi
+        .fn()
+        .mockRejectedValueOnce(new MailProviderTransientError('503'))
+        .mockResolvedValue({ providerMessageID: 'm-1' });
+
+      await expect(send(setup(sendMail))).resolves.toEqual({
+        subject: 'Rechnung',
+        providerMessageID: 'm-1',
+      });
+      expect(sendMail).toHaveBeenCalledTimes(2);
+    });
+
+    it('gives up after three more attempts with the provider\'s error', async () => {
+      const sendMail = vi
+        .fn()
+        .mockRejectedValue(new MailProviderTransientError('Mandrill down'));
+
+      await expect(send(setup(sendMail))).rejects.toThrow('Mandrill down');
+      expect(sendMail).toHaveBeenCalledTimes(4);
+    });
+
+    it.each([
+      ['a refused recipient', new MailProviderRecipientError('hard-bounce')],
+      ['a provider error that is not temporary', new MailProviderError('401')],
+      ['an unknown error', new Error('boom')],
+    ])('does not try again after %s', async (_, error) => {
+      const sendMail = vi.fn().mockRejectedValue(error);
+
+      await expect(send(setup(sendMail))).rejects.toBe(error);
+      expect(sendMail).toHaveBeenCalledTimes(1);
     });
   });
 });
