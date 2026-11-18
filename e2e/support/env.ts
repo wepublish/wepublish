@@ -1,4 +1,6 @@
 import { BexioConfig } from './bexio';
+// Type only: factories → api-client → env would otherwise be a cycle.
+import type { PingenTestAccount } from './factories';
 import { ImapConfig, mailBackend } from './inbox';
 import { ResendConfig } from './resend-inbox';
 import { resolveTarget } from './targets';
@@ -34,6 +36,8 @@ export const env = {
   /** Deletes older mails from the shared IMAP mailbox once per worker; off by default. */
   imapPurgeOlderThanDays:
     Number(process.env.E2E_IMAP_PURGE_OLDER_THAN_DAYS) || undefined,
+  /** Leaves the mails a scenario read in the IMAP mailbox instead of deleting them. */
+  keepMails: process.env.E2E_KEEP_MAILS === 'true',
   /** Resend receiving domain: mail from outside servers (bexio's invoice mails). */
   resend:
     process.env.E2E_RESEND_API_KEY && process.env.E2E_RESEND_DOMAIN ?
@@ -54,6 +58,22 @@ export const env = {
         token: process.env.E2E_BEXIO_API_TOKEN,
         testMailbox: process.env.E2E_BEXIO_TEST_MAILBOX || undefined,
       } satisfies BexioConfig)
+    : undefined,
+  /**
+   * A Pingen account, used in Pingen's staging environment only: letters are
+   * created there but never printed. There is no fake letter provider.
+   */
+  pingen:
+    (
+      process.env.E2E_PINGEN_CLIENT_ID &&
+      process.env.E2E_PINGEN_CLIENT_SECRET &&
+      process.env.E2E_PINGEN_ORGANISATION_ID
+    ) ?
+      ({
+        clientId: process.env.E2E_PINGEN_CLIENT_ID,
+        clientSecret: process.env.E2E_PINGEN_CLIENT_SECRET,
+        organisationId: process.env.E2E_PINGEN_ORGANISATION_ID,
+      } satisfies PingenTestAccount)
     : undefined,
   /** A real Mailchimp test audience and one of its interests: there is no fake. */
   mailchimp:
@@ -94,6 +114,12 @@ const requirements: Record<string, () => string | undefined> = {
   '@bexio': () =>
     isProduction ? 'never touches the production bexio company'
     : !env.bexio ? 'needs E2E_BEXIO_API_TOKEN (the bexio test company)'
+    : undefined,
+  // Points the tenant's letter provider at Pingen's staging environment.
+  '@letter': () =>
+    isProduction ? 'never sends letters from production'
+    : !env.pingen ?
+      'needs E2E_PINGEN_CLIENT_ID, E2E_PINGEN_CLIENT_SECRET and E2E_PINGEN_ORGANISATION_ID (Pingen staging)'
     : undefined,
   // Points the tenant's one sync provider at the test audience.
   '@mailchimp': () =>
