@@ -3045,7 +3045,8 @@
         "reissue": "Réémettre",
         "issued": "Nouveau code (affiché une seule fois) :",
         "secondFactorAvailable": "Le deuxième facteur « {{factor}} » est renseigné pour cette personne.",
-        "secondFactorMissing": "Le deuxième facteur « {{factor}} » manque pour cette personne – sans cette information, elle ne peut pas enregistrer d’adresse e-mail."
+        "secondFactorMissing": "Le deuxième facteur « {{factor}} » manque pour cette personne – sans cette information, elle ne peut pas enregistrer d’adresse e-mail.",
+        "notForStaff": "Les personnes dont les rôles permettent plus que la lecture derrière le paywall ne reçoivent jamais de code de connexion personnel. {{purl}} reste vide dans leurs e-mails et lettres."
       },
       "totpEnabled": "L’authentification à deux facteurs est activée pour cet utilisateur.",
       "totpDisabled": "L’authentification à deux facteurs n’est pas encore configurée. L’utilisateur sera invité à la configurer lors de sa prochaine connexion à l’éditeur.",

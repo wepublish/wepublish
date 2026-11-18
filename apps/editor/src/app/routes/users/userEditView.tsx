@@ -44,6 +44,7 @@ import {
   UserMailLogPanel,
 } from '@wepublish/membership/editor';
 import { isLoginCodeEnabled } from './login-code-enabled';
+import { mayHoldLoginCode } from './may-hold-login-code';
 import {
   CanCreateUser,
   CanDeleteUser,
@@ -315,6 +316,8 @@ function UserEditView() {
   const canManageLoginCodes =
     useAuthorisation('CAN_MANAGE_USER_LOGIN_CODES') &&
     isLoginCodeEnabled(settingsData?.settings);
+  // Decided on the saved roles, as the API does.
+  const loginCodeAllowed = mayHoldLoginCode(user?.roles);
   const { data: loginCodeData, refetch: refetchLoginCode } = useQuery(
     UserLoginCodeDocument,
     {
@@ -1071,6 +1074,15 @@ function UserEditView() {
                   />
 
                   <CardContent>
+                    {!loginCodeAllowed && (
+                      <Alert
+                        severity="info"
+                        sx={{ mb: 2 }}
+                      >
+                        {t('userCreateOrEditView.loginCode.notForStaff')}
+                      </Alert>
+                    )}
+
                     <Typography style={{ marginBottom: 12 }}>
                       {loginCodeData?.userLoginCode ?
                         t('userCreateOrEditView.loginCode.status', {
@@ -1087,7 +1099,9 @@ function UserEditView() {
                               ).toLocaleString()
                             : t('userCreateOrEditView.loginCode.never'),
                         })
-                      : t('userCreateOrEditView.loginCode.none')}
+                      : loginCodeAllowed ?
+                        t('userCreateOrEditView.loginCode.none')
+                      : null}
                     </Typography>
 
                     {loginCodeData?.userLoginCode &&
@@ -1128,26 +1142,28 @@ function UserEditView() {
                         {t('userCreateOrEditView.loginCode.revoke')}
                       </Button>
 
-                      <Button
-                        variant="contained"
-                        disabled={isReissuingLoginCode}
-                        onClick={async () => {
-                          const result = await reissueUserLoginCode({
-                            variables: { userId: user.id },
-                          });
-
-                          if (result.data?.reissueUserLoginCode) {
-                            setIssuedLoginCode({
-                              code: result.data.reissueUserLoginCode.code,
-                              purl: result.data.reissueUserLoginCode.purl,
+                      {loginCodeAllowed && (
+                        <Button
+                          variant="contained"
+                          disabled={isReissuingLoginCode}
+                          onClick={async () => {
+                            const result = await reissueUserLoginCode({
+                              variables: { userId: user.id },
                             });
-                          }
 
-                          await refetchLoginCode();
-                        }}
-                      >
-                        {t('userCreateOrEditView.loginCode.reissue')}
-                      </Button>
+                            if (result.data?.reissueUserLoginCode) {
+                              setIssuedLoginCode({
+                                code: result.data.reissueUserLoginCode.code,
+                                purl: result.data.reissueUserLoginCode.purl,
+                              });
+                            }
+
+                            await refetchLoginCode();
+                          }}
+                        >
+                          {t('userCreateOrEditView.loginCode.reissue')}
+                        </Button>
+                      )}
                     </Stack>
 
                     {issuedLoginCode && (

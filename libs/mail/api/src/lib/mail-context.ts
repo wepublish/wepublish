@@ -175,6 +175,7 @@ export class MailContext implements MailContextInterface {
     mode,
     purlOrigin = 'mail',
     mintJwt = true,
+    mintPurl = true,
   }: BuildMailDataOptions): Promise<MailData> {
     const user = sanitizeRecipient(recipient) as Record<string, unknown> & {
       id: string;
@@ -185,7 +186,9 @@ export class MailContext implements MailContextInterface {
     let purl = SAMPLE_PURL_DATA;
 
     if (mode === 'send') {
-      if (this.purlProvider) {
+      if (!mintPurl) {
+        purl = EMPTY_PURL_DATA;
+      } else if (this.purlProvider) {
         purl = await this.purlProvider.purlFor(user.id, purlOrigin);
       } else {
         this.logger.warn(

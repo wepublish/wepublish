@@ -9,6 +9,7 @@ import { MailContext, MailchimpContactService } from '@wepublish/mail/api';
 import { UserService } from './user.service';
 import { HibpService } from './hibp.service';
 import { UserDataloaderService } from './user-dataloader.service';
+import { LoginCodeService } from '@wepublish/login-code/api';
 
 describe('UserService password lookup', () => {
   it('asks for the password hash, which every other user query leaves out', async () => {
@@ -22,6 +23,10 @@ describe('UserService password lookup', () => {
         { provide: HibpService, useValue: {} },
         { provide: MailchimpContactService, useValue: {} },
         { provide: UserDataloaderService, useValue: { prime: vi.fn() } },
+        {
+          provide: LoginCodeService,
+          useValue: { revokeIfStaff: vi.fn(), revokeForRole: vi.fn() },
+        },
         { provide: AuthenticationService, useValue: {} },
         { provide: SessionCacheInvalidator, useValue: {} },
         { provide: PublicContentCacheInvalidator, useValue: {} },

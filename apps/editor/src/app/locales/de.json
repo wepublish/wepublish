@@ -3045,7 +3045,8 @@
         "reissue": "Neu ausstellen",
         "issued": "Neuer Code (wird nur einmal angezeigt):",
         "secondFactorAvailable": "Zweiter Faktor «{{factor}}» ist bei dieser Person hinterlegt.",
-        "secondFactorMissing": "Zweiter Faktor «{{factor}}» fehlt bei dieser Person – ohne diese Angabe kann sie keine E-Mail-Adresse hinterlegen."
+        "secondFactorMissing": "Zweiter Faktor «{{factor}}» fehlt bei dieser Person – ohne diese Angabe kann sie keine E-Mail-Adresse hinterlegen.",
+        "notForStaff": "Personen mit Rollen, die mehr erlauben als das Lesen hinter der Paywall, erhalten keinen persönlichen Login-Code. In ihren E-Mails und Briefen bleibt {{purl}} leer."
       },
       "totpEnabled": "Zwei-Faktor-Authentifizierung ist für diesen Benutzer aktiviert.",
       "totpDisabled": "Zwei-Faktor-Authentifizierung ist noch nicht eingerichtet. Der Benutzer wird beim nächsten Editor-Login aufgefordert, diese einzurichten.",

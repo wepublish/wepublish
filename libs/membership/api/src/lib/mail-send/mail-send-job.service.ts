@@ -25,6 +25,7 @@ import {
   MailContext,
   mailLogType,
   templateUsesJwt,
+  templateUsesPurl,
 } from '@wepublish/mail/api';
 import {
   canReceiveLetters,
@@ -607,6 +608,7 @@ export class MailSendJobService {
             mode: 'send',
             purlOrigin: 'letter',
             mintJwt: templateUsesJwt(template),
+            mintPurl: templateUsesPurl(template),
           }),
           print: {
             addressPosition: job.addressPosition,

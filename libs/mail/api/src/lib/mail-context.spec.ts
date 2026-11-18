@@ -82,6 +82,29 @@ describe('MailContext', () => {
       expect(data.purl).toBe('');
       expect(data.purlCode).toBe('');
     });
+
+    it('issues no login code for a mail that does not show one', async () => {
+      const purlFor = vi.fn();
+      const context = new MailContext({
+        prisma: {} as PrismaClient,
+        mailProvider: {} as any,
+        kv: {} as any,
+        jwtGenerator: async () => '',
+        purlProvider: { purlFor },
+      });
+
+      const data = await context.buildMailData({
+        recipient: { id: 'user-1' },
+        optionalData: {},
+        mode: 'send',
+        mintPurl: false,
+      });
+
+      expect(purlFor).not.toHaveBeenCalled();
+      expect(data.purl).toBe('');
+      expect(data.purlCode).toBe('');
+      expect(data.purlQr).toBe('');
+    });
   });
 
   describe('attachments', () => {

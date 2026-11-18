@@ -54,15 +54,30 @@ export type BuildMailDataOptions = {
   mode: 'send' | 'preview';
   purlOrigin?: PurlOrigin;
   mintJwt?: boolean;
+  /** Issue the recipient's login code; skipped when the template shows none. */
+  mintPurl?: boolean;
 };
 
-const JWT_PLACEHOLDER = /{{\s*jwt\s*}}/i;
-
-export const templateUsesJwt = (template: {
+type TemplateParts = {
   subject?: string | null;
   htmlContent?: string | null;
   textContent?: string | null;
-}): boolean =>
+};
+
+const usesPlaceholder = (template: TemplateParts, placeholder: RegExp) =>
   [template.subject, template.htmlContent, template.textContent].some(
-    part => !!part && JWT_PLACEHOLDER.test(part)
+    part => !!part && placeholder.test(part)
   );
+
+const JWT_PLACEHOLDER = /{{\s*jwt\s*}}/i;
+const PURL_PLACEHOLDER = /{{\s*purl(code|qr)?\s*}}/i;
+
+export const templateUsesJwt = (template: TemplateParts): boolean =>
+  usesPlaceholder(template, JWT_PLACEHOLDER);
+
+/**
+ * Whether a template shows the login link, code or QR code. Only then is a
+ * login code issued for its recipient, so no code exists that nobody received.
+ */
+export const templateUsesPurl = (template: TemplateParts): boolean =>
+  usesPlaceholder(template, PURL_PLACEHOLDER);

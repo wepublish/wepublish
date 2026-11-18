@@ -6,6 +6,8 @@ import {
   PurlOrigin,
   PurlProvider,
 } from '@wepublish/mail/api';
+import { grantsOnlyReaderAccess } from '@wepublish/permissions';
+import { addPredefinedPermissions } from '@wepublish/permissions/api';
 import { SecretCrypto, SettingName } from '@wepublish/settings/api';
 import { renderQrSvg } from '@wepublish/utils/api';
 import { addDays } from 'date-fns';
@@ -16,6 +18,7 @@ import {
 import {
   InvalidLoginCodeError,
   LoginCodeDisabledError,
+  LoginCodeNotAllowedError,
 } from './login-code.errors';
 import {
   buildPurl,
@@ -29,6 +32,14 @@ import {
 const DEFAULT_MAX_USES = 5;
 const DEFAULT_VALID_DAYS = 90;
 const MIN_REMAINING_DAYS_FOR_REUSE = 14;
+const REVOKED_FOR_STAFF = 'system:staff-role';
+
+type RoleWithPermissions = { id: string; permissionIDs: string[] };
+
+const grantsMoreThanReaderAccess = (roles: RoleWithPermissions[]) =>
+  !grantsOnlyReaderAccess(
+    roles.map(addPredefinedPermissions).flatMap(role => role.permissionIDs)
+  );
 
 export type IssuedLoginCode = {
   record: UserLoginCode;
@@ -69,6 +80,34 @@ export class LoginCodeService implements PurlProvider {
     }
   }
 
+  /**
+   * Staff never hold a login code: a code session carries every permission of
+   * its account, and a code travels on paper. Reader access through a role
+   * (reading past the paywall) does not make an account staff.
+   */
+  private async mayHoldLoginCode({ roleIDs }: { roleIDs: string[] }) {
+    if (!roleIDs.length) {
+      return true;
+    }
+
+    const roles = await this.prisma.userRole.findMany({
+      where: { id: { in: roleIDs } },
+    });
+
+    return !grantsMoreThanReaderAccess(roles);
+  }
+
+  private async assertMayHoldLoginCode(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { roleIDs: true },
+    });
+
+    if (!user || !(await this.mayHoldLoginCode(user))) {
+      throw new LoginCodeNotAllowedError();
+    }
+  }
+
   private activeWhere(now: Date) {
     return {
       revokedAt: null,
@@ -78,6 +117,8 @@ export class LoginCodeService implements PurlProvider {
   }
 
   async getOrIssue(userId: string, issuedBy: string): Promise<IssuedLoginCode> {
+    await this.assertMayHoldLoginCode(userId);
+
     const now = new Date();
     const reusable = await this.prisma.userLoginCode.findFirst({
       where: {
@@ -129,7 +170,18 @@ export class LoginCodeService implements PurlProvider {
       return EMPTY_PURL_DATA;
     }
 
-    const { canonical } = await this.getOrIssue(userId, origin);
+    let canonical: string;
+
+    try {
+      ({ canonical } = await this.getOrIssue(userId, origin));
+    } catch (error) {
+      if (error instanceof LoginCodeNotAllowedError) {
+        return EMPTY_PURL_DATA;
+      }
+
+      throw error;
+    }
+
     const purl = buildPurl(this.options.websiteURL, canonical);
 
     return {
@@ -159,6 +211,14 @@ export class LoginCodeService implements PurlProvider {
       record.usesRemaining <= 0 ||
       record.expiresAt <= new Date()
     ) {
+      throw new InvalidLoginCodeError();
+    }
+
+    if (!(await this.mayHoldLoginCode(record.user))) {
+      // Given a role after the code was issued. Answered like an unknown code,
+      // so the code does not reveal that its holder is staff.
+      await this.revoke(record.userId, REVOKED_FOR_STAFF);
+
       throw new InvalidLoginCodeError();
     }
 
@@ -193,8 +253,40 @@ export class LoginCodeService implements PurlProvider {
     return count;
   }
 
+  /** After a person's roles changed: staff lose their codes right away. */
+  async revokeIfStaff(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { roleIDs: true },
+    });
+
+    if (user && !(await this.mayHoldLoginCode(user))) {
+      await this.revoke(userId, REVOKED_FOR_STAFF);
+    }
+  }
+
+  /**
+   * After a role's permissions changed: if it now grants more than reader
+   * access, everyone holding it is staff and loses their codes, in one query.
+   */
+  async revokeForRole(roleId: string) {
+    const role = await this.prisma.userRole.findUnique({
+      where: { id: roleId },
+    });
+
+    if (!role || !grantsMoreThanReaderAccess([role])) {
+      return;
+    }
+
+    await this.prisma.userLoginCode.updateMany({
+      where: { revokedAt: null, user: { roleIDs: { has: roleId } } },
+      data: { revokedAt: new Date(), revokedBy: REVOKED_FOR_STAFF },
+    });
+  }
+
   async reissue(userId: string, issuedBy: string) {
     await this.assertEnabled();
+    await this.assertMayHoldLoginCode(userId);
     await this.revoke(userId, issuedBy);
     const { record, canonical } = await this.issue(userId, issuedBy);
 

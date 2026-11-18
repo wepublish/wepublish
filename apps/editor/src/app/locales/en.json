@@ -3099,7 +3099,8 @@
         "reissue": "Reissue",
         "issued": "New code (shown once):",
         "secondFactorAvailable": "Second factor “{{factor}}” is on file for this user.",
-        "secondFactorMissing": "Second factor “{{factor}}” is missing for this user – without it they cannot store an email address."
+        "secondFactorMissing": "Second factor “{{factor}}” is missing for this user – without it they cannot store an email address.",
+        "notForStaff": "People whose roles allow more than reading past the paywall never get a personal login code. {{purl}} stays empty in their emails and letters."
       },
       "totpEnabled": "Two-factor authentication is enabled for this user.",
       "totpDisabled": "Two-factor authentication is not yet configured. The user will be prompted to set it up on their next editor login.",
