@@ -14,6 +14,8 @@ import { Inbox, mailBackend } from '../support/inbox';
 import { MailpitInbox } from '../support/mailpit';
 import { ResendInbox } from '../support/resend-inbox';
 import { SimulatedCheckout } from '../support/simulated-payment';
+import { FlowQuery } from '../support/subscription-flows';
+import type { LoadRun } from '../support/load';
 
 /** Per-scenario state shared between steps. Extend as new steps need it. */
 export type ScenarioContext = {
@@ -26,6 +28,12 @@ export type ScenarioContext = {
   openInvoices: Map<string, { invoiceId: string; subscriptionId: string }>;
   /** bexio invoices the scenario made the provider create; canceled afterwards. */
   bexioInvoices: number[];
+  /** A reader's subscription with what picks its subscription flow, by reader alias. */
+  subscriptions: Map<string, FlowQuery & { id: string }>;
+  /** When the scenario started, less some slack for the server's clock. */
+  startedAt: Date;
+  /** The renewal load test's readers and nightly run (`@load`). */
+  load?: LoadRun;
 };
 
 type TestFixtures = {
@@ -58,7 +66,13 @@ type WorkerFixtures = {
 export const test = base.extend<TestFixtures, WorkerFixtures>({
   // eslint-disable-next-line no-empty-pattern
   ctx: async ({}, use) => {
-    await use({ entities: new Map(), openInvoices: new Map(), bexioInvoices: [] });
+    await use({
+      entities: new Map(),
+      openInvoices: new Map(),
+      bexioInvoices: [],
+      subscriptions: new Map(),
+      startedAt: new Date(Date.now() - 30_000),
+    });
   },
 
   capabilities: [
@@ -116,6 +130,7 @@ export const test = base.extend<TestFixtures, WorkerFixtures>({
       : env.imap ?
         new ImapInbox(env.imap, since, {
           purgeOlderThanDays: env.imapPurgeOlderThanDays,
+          keepMails: env.keepMails,
         })
       : undefined;
 

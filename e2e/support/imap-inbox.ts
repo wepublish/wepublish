@@ -1,6 +1,22 @@
 import { ImapFlow } from 'imapflow';
-import { simpleParser } from 'mailparser';
+import { ParsedMail, simpleParser } from 'mailparser';
 import { ImapConfig, Inbox, Mail, MailQuery, poll } from './inbox';
+
+/** A parsed mail as the steps see it. */
+export function toMail(id: string, parsed: ParsedMail): Mail {
+  return {
+    id,
+    subject: parsed.subject ?? '',
+    to: [parsed.to ?? []].flat().flatMap(({ value }) => value.map(({ address }) => address ?? '')),
+    html: typeof parsed.html === 'string' ? parsed.html : '',
+    text: parsed.text ?? '',
+    attachments: parsed.attachments.map(({ filename, contentType, content }) => ({
+      filename: filename ?? '',
+      contentType,
+      content,
+    })),
+  };
+}
 
 type Candidate = {
   uid: number;
@@ -47,7 +63,11 @@ export class ImapInbox implements Inbox {
     private readonly config: ImapConfig,
     /** Mails received before this are ignored. */
     private readonly since: Date,
-    private readonly options: { purgeOlderThanDays?: number } = {}
+    private readonly options: {
+      purgeOlderThanDays?: number;
+      /** Leave read mails in the mailbox, so people can look at them afterwards. */
+      keepMails?: boolean;
+    } = {}
   ) {}
 
   private async connect(): Promise<ImapFlow> {
@@ -145,17 +165,50 @@ export class ImapInbox implements Inbox {
 
       const parsed = await simpleParser(message.source);
       // Read once, then gone: keeps the shared mailbox small.
-      await client.messageDelete(String(uid), { uid: true });
+      if (!this.options.keepMails) {
+        await client.messageDelete(String(uid), { uid: true });
+      }
 
-      const recipients = [parsed.to ?? []].flat().flatMap(({ value }) => value.map(({ address }) => address ?? ''));
+      return toMail(String(uid), parsed);
+    } finally {
+      lock.release();
+    }
+  }
 
-      return {
-        id: String(uid),
-        subject: parsed.subject ?? '',
-        to: recipients,
-        html: typeof parsed.html === 'string' ? parsed.html : '',
-        text: parsed.text ?? '',
-      };
+  /**
+   * Counts the mails since `since` to recipients containing `toContaining`
+   * and deletes them, except those to `keep`: a load test sends more mails
+   * than the mailbox's quota holds. Returns how many it counted.
+   */
+  async sweep({ toContaining, keep }: { toContaining: string; keep: string[] }): Promise<number> {
+    const client = await this.connect();
+    const kept = new Set(keep.map(address => address.toLowerCase()));
+    const lock = await client.getMailboxLock('INBOX');
+
+    try {
+      await client.noop();
+      // IMAP TO matches a substring of the recipient.
+      const uids = await client.search({ to: toContaining, since: this.since }, { uid: true });
+
+      if (!uids || !uids.length) {
+        return 0;
+      }
+
+      const swept: number[] = [];
+
+      for await (const message of client.fetch(uids, { envelope: true }, { uid: true })) {
+        const to = (message.envelope?.to ?? []).map(({ address }) => (address ?? '').toLowerCase());
+
+        if (!to.some(address => kept.has(address))) {
+          swept.push(message.uid);
+        }
+      }
+
+      if (swept.length && !this.options.keepMails) {
+        await client.messageDelete(swept, { uid: true });
+      }
+
+      return swept.length;
     } finally {
       lock.release();
     }

@@ -1,5 +1,23 @@
 import { base, de_CH, en, Faker } from '@faker-js/faker';
 import { ApiClient } from './api-client';
+import { inPool } from './load';
+import { MailLog } from './mail-logs';
+import { Flow, FlowQuery, flowFor } from './subscription-flows';
+
+export type PostalAddress = {
+  streetAddress: string;
+  streetAddressNumber?: string;
+  zipCode: string;
+  city: string;
+  country: string;
+};
+
+/** A Pingen account used in its staging environment only. */
+export type PingenTestAccount = {
+  clientId: string;
+  clientSecret: string;
+  organisationId: string;
+};
 
 /**
  * Synthetic test data, created through the GraphQL API and deleted again after
@@ -94,7 +112,26 @@ export type AuditLogEntry = {
 
 export type Entity = Reader | Article | Paywall | ApiKey;
 
+export type PeriodicJobRun = {
+  id: string;
+  running: boolean;
+  successfullyFinished: string | null;
+  finishedWithError: string | null;
+  error: string | null;
+};
+
+export type ApiProcessStats = {
+  hostname: string;
+  uptimeSeconds: number;
+  rssBytes: number;
+  heapUsedBytes: number;
+  externalBytes: number;
+};
+
 type Cleanup = { label: string; run: () => Promise<unknown> };
+
+/** How many calls bulk creation and cleanup send at once. */
+export const BULK_POOL = 10;
 
 export class TestData {
   private readonly cleanups: Cleanup[] = [];
@@ -153,32 +190,49 @@ export class TestData {
     }
   }
 
-  /** `emailDomain`: a mailbox outside servers can deliver to, e.g. the Resend domain. */
+  /**
+   * `emailDomain`: a mailbox outside servers can deliver to, e.g. the Resend
+   * domain. `localPart` replaces the run id before the `@`. `cleanup: false`
+   * leaves deleting to the caller, e.g. {@link deleteAfterwards} for many.
+   */
   async createUser(
     alias?: string,
-    { emailDomain = 'example.test', roleIDs = [] as string[] } = {}
+    {
+      emailDomain = 'example.test',
+      roleIDs = [] as string[],
+      localPart,
+      address,
+      cleanup = true,
+    }: {
+      emailDomain?: string;
+      roleIDs?: string[];
+      localPart?: string;
+      address?: PostalAddress;
+      cleanup?: boolean;
+    } = {}
   ) {
     const api = await this.api();
-    const runId = this.runId();
     const firstName = this.faker.person.firstName();
     const name = this.faker.person.lastName();
     const password = `${this.faker.internet.password({ length: 16 })}-Aa1`;
-    const email = `e2e+${runId}@${emailDomain}`;
+    const email = `${localPart ?? `e2e+${this.runId()}`}@${emailDomain}`;
 
     const { createUser } = await api.gql<{ createUser: { id: string } }>(
-      `mutation CreateUser($email: String!, $firstName: String, $name: String!, $password: String, $roleIDs: [String!]!) {
+      `mutation CreateUser($email: String!, $firstName: String, $name: String!, $password: String, $roleIDs: [String!]!, $address: UserAddressInput) {
         createUser(email: $email, firstName: $firstName, name: $name, password: $password,
-          active: true, emailVerifiedAt: "${new Date().toISOString()}",
+          address: $address, active: true, emailVerifiedAt: "${new Date().toISOString()}",
           properties: [], roleIDs: $roleIDs, skipMail: true) { id }
       }`,
-      { email, firstName, name, password, roleIDs }
+      { email, firstName, name, password, roleIDs, address }
     );
 
-    this.onCleanup(`user ${email}`, async () => {
-      if (!this.deletedUsers.has(createUser.id)) {
-        await this.deleteUser(createUser.id);
-      }
-    });
+    if (cleanup) {
+      this.onCleanup(`user ${email}`, async () => {
+        if (!this.deletedUsers.has(createUser.id)) {
+          await this.deleteUser(createUser.id);
+        }
+      });
+    }
 
     return this.remember(alias, {
       kind: 'reader',
@@ -188,6 +242,48 @@ export class TestData {
       firstName,
       name,
     } satisfies Reader);
+  }
+
+  /** A run id for many entities at once, e.g. the load test's readers. */
+  newRunId() {
+    return this.runId();
+  }
+
+  /** A synthetic Swiss postal address (a payment slip needs one). */
+  swissAddress(): PostalAddress {
+    return {
+      streetAddress: this.faker.location.street(),
+      streetAddressNumber: this.faker.location.buildingNumber(),
+      zipCode: String(this.faker.number.int({ min: 1000, max: 9658 })),
+      city: this.faker.location.city(),
+      country: 'Schweiz',
+    };
+  }
+
+  /**
+   * Deletes many readers after the scenario, a few at a time: one by one,
+   * 1500 readers would take longer than the scenario itself. `keep` leaves
+   * them, e.g. to look at them in the editor.
+   */
+  deleteAfterwards(readers: Reader[], { keep = false } = {}) {
+    this.onCleanup(`${readers.length} readers`, async () => {
+      if (keep) {
+        console.warn(`[e2e] kept ${readers.length} readers (${readers[0]?.email} …)`);
+        return;
+      }
+
+      const failed: string[] = [];
+
+      await inPool(readers, BULK_POOL, reader =>
+        this.deleteUser(reader.id).catch(error => {
+          failed.push(`${reader.email}: ${(error as Error).message}`);
+        })
+      );
+
+      if (failed.length) {
+        throw new Error(`${failed.length} not deleted, first: ${failed[0]}`);
+      }
+    });
   }
 
   /**
@@ -570,14 +666,340 @@ export class TestData {
       api.gql(`mutation { deleteSubscription(id: "${createSubscription.id}") { id } }`)
     );
 
-    return createSubscription;
+    return {
+      id: createSubscription.id,
+      memberPlanId: plan.id,
+      paymentMethodId: paymentMethod.id,
+      periodicity: 'yearly',
+      autoRenew: true,
+    } satisfies FlowQuery & { id: string };
+  }
+
+  /**
+   * A subscription that ran a year and ends on `paidUntil`, paid, without a
+   * mail: what the import of a medium's existing members creates. The nightly
+   * run bills it once `paidUntil` is as near as its invoice-creation event.
+   * Deleted with the reader.
+   */
+  async importDueSubscription({
+    reader,
+    flow,
+    paidUntil,
+  }: {
+    reader: Reader;
+    flow: FlowQuery;
+    paidUntil: Date;
+  }) {
+    const api = await this.api();
+    const startsAt = new Date(paidUntil);
+    startsAt.setFullYear(startsAt.getFullYear() - 1);
+
+    const { importSubscription } = await api.gql<{ importSubscription: { id: string } }>(
+      `mutation ImportSubscription($userID: String!, $memberPlanID: String!, $paymentMethodID: String!, $startsAt: DateTime!, $paidUntil: DateTime) {
+        importSubscription(userID: $userID, memberPlanID: $memberPlanID, paymentMethodID: $paymentMethodID,
+          startsAt: $startsAt, paidUntil: $paidUntil, monthlyAmount: 1000, paymentPeriodicity: yearly,
+          autoRenew: true, extendable: true, properties: [], skipMail: true) { id }
+      }`,
+      {
+        userID: reader.id,
+        memberPlanID: flow.memberPlanId,
+        paymentMethodID: flow.paymentMethodId,
+        startsAt: startsAt.toISOString(),
+        paidUntil: paidUntil.toISOString(),
+      }
+    );
+
+    return { ...flow, id: importSubscription.id };
+  }
+
+  /** What picks the subscription flow of a yearly, auto-renewing subscription. */
+  async flowQuery(memberPlanSlug: string, paymentMethodSlug: string): Promise<FlowQuery> {
+    const plan = await this.memberPlan(memberPlanSlug);
+    const paymentMethod =
+      plan.paymentMethods.find(({ slug }) => slug === paymentMethodSlug) ??
+      (await this.paymentMethod(paymentMethodSlug));
+
+    return {
+      memberPlanId: plan.id,
+      paymentMethodId: paymentMethod.id,
+      periodicity: 'yearly',
+      autoRenew: true,
+    };
+  }
+
+  /** The invoice-creation interval of the flow the API applies to the subscription. */
+  async invoiceCreationInterval(subscription: FlowQuery) {
+    const api = await this.api();
+    const { subscriptionFlows } = await api.gql<{ subscriptionFlows: Flow[] }>(
+      `query { subscriptionFlows(defaultFlowOnly: false) {
+        id default memberPlan { id } paymentMethods { id } periodicities autoRenewal
+        intervals { id event daysAwayFromEnding sendAsLetter mailTemplate { id } }
+      } }`
+    );
+    const flow = flowFor(subscriptionFlows, subscription);
+    const interval = flow.intervals.find(({ event }) => event === 'INVOICE_CREATION');
+
+    if (!interval?.mailTemplate) {
+      throw new Error(
+        `Subscription flow ${flow.id} has no invoice-creation mail template, so nothing would be sent.`
+      );
+    }
+
+    return interval;
+  }
+
+  /**
+   * Runs today's nightly job again now (review, development and local only).
+   * Answers once the run started; it goes on in the background.
+   */
+  async runPeriodicJobNow() {
+    const api = await this.api();
+    const { runPeriodicJobNow } = await api.gql<{ runPeriodicJobNow: { id: string } }>(
+      `mutation { runPeriodicJobNow { id } }`
+    );
+
+    return runPeriodicJobNow;
+  }
+
+  /** A run of the nightly job from its log, by id; undefined once older than the last 10. */
+  async periodicJobRun(id: string) {
+    const api = await this.api();
+    const { periodicJobLog } = await api.gql<{ periodicJobLog: PeriodicJobRun[] }>(
+      `query { periodicJobLog(take: 10) { id running successfullyFinished finishedWithError error } }`
+    );
+
+    return periodicJobLog.find(run => run.id === id);
+  }
+
+  /** Memory and uptime of the API process that answers (review, development and local only). */
+  async apiProcessStats() {
+    const api = await this.api();
+    const { apiProcessStats } = await api.gql<{ apiProcessStats: ApiProcessStats }>(
+      `query { apiProcessStats { hostname uptimeSeconds rssBytes heapUsedBytes externalBytes } }`
+    );
+
+    return apiProcessStats;
+  }
+
+  /**
+   * Marks the subscription's open invoices as paid without a mail, e.g. the
+   * one a new subscription starts with, so it can be renewed.
+   */
+  async payOpenInvoices(subscriptionId: string) {
+    const api = await this.api();
+
+    for (let open = await this.findOpenInvoice(subscriptionId); open; open = await this.findOpenInvoice(subscriptionId)) {
+      await api.gql(
+        `mutation MarkPaid($id: String!) { markInvoiceAsPaid(id: $id, sendMail: false) { id } }`,
+        { id: open.id }
+      );
+    }
+  }
+
+  /**
+   * Renews the subscription as an editor does, and returns the new invoice.
+   * With the feature `editor-renewal-provider-invoice` this is the nightly
+   * job's handling: the payment provider's invoice and the invoice-creation
+   * mail or letter.
+   */
+  async renewSubscription(subscriptionId: string) {
+    const api = await this.api();
+
+    await api.gql(`mutation Renew($id: String!) { renewSubscription(id: $id) { id } }`, {
+      id: subscriptionId,
+    });
+
+    const renewed = await this.findOpenInvoice(subscriptionId);
+
+    if (!renewed) {
+      throw new Error(`Renewing subscription ${subscriptionId} left no open invoice.`);
+    }
+
+    return renewed;
+  }
+
+  /** The features switched on for the target's medium (One or WEP_FEATURES). */
+  async features() {
+    const api = await this.api();
+    const { features } = await api.gql<{ features: string[] }>(`query { features }`);
+
+    return features;
+  }
+
+  /** The reader's postal address; `country` is the German name the profile form stores, e.g. `Schweiz`. */
+  async setAddress(reader: Reader, address: PostalAddress) {
+    const api = await this.api();
+
+    await api.gql(
+      `mutation SetAddress($id: String, $address: UserAddressInput) {
+        updateUser(id: $id, address: $address) { id }
+      }`,
+      { id: reader.id, address }
+    );
+  }
+
+  /** Letters or mails for this reader; goes with the reader when it is deleted. */
+  async setDeliveryMode(reader: Reader, channel: 'mail' | 'letter') {
+    const api = await this.api();
+    const { setUserDeliveryMode } = await api.gql<{
+      setUserDeliveryMode: { channel: string; canReceiveLetters: boolean };
+    }>(
+      `mutation SetDeliveryMode($userId: String!, $channel: MailChannel!) {
+        setUserDeliveryMode(userId: $userId, channel: $channel, reason: "e2e") { channel canReceiveLetters }
+      }`,
+      { userId: reader.id, channel }
+    );
+
+    return setUserDeliveryMode;
+  }
+
+  /**
+   * Changes settings of the payment provider behind a payment method for the
+   * scenario and puts the values it read back afterwards. The provider is
+   * shared: scenarios that change it belong in one `@mode:serial` feature.
+   */
+  async withPaymentProviderSettings(
+    paymentMethodSlug: string,
+    settings: Partial<Record<'bexio_invoiceMailByWePublish', boolean>>
+  ) {
+    const api = await this.api();
+    const { paymentProviderID } = await this.paymentMethod(paymentMethodSlug);
+    const fields = Object.keys(settings).join(' ');
+    const { paymentProviderSetting } = await api.gql<{
+      paymentProviderSetting: Record<string, unknown>;
+    }>(`query Setting($id: String!) { paymentProviderSetting(id: $id) { ${fields} } }`, {
+      id: paymentProviderID,
+    });
+
+    const update = (values: Record<string, unknown>) =>
+      api
+        .gql(
+          `mutation UpdateSetting(${Object.keys(values)
+            .map(key => `$${key}: Boolean`)
+            .join(', ')}, $id: String) {
+            updatePaymentProviderSetting(id: $id, ${Object.keys(values)
+              .map(key => `${key}: $${key}`)
+              .join(', ')}) { id }
+          }`,
+          { id: paymentProviderID, ...values }
+        )
+        .then(() => this.reloadProviders());
+
+    await update(settings);
+    this.onCleanup(`payment provider ${paymentProviderID} settings`, () =>
+      update(
+        Object.fromEntries(
+          Object.keys(settings).map(key => [key, paymentProviderSetting[key] ?? false])
+        )
+      )
+    );
+  }
+
+  /**
+   * Has the subscription flow the API applies to this subscription send its
+   * invoice-creation event as a letter (to readers in letter mode), and
+   * switches it back afterwards. Shared like the payment provider.
+   */
+  async withInvoiceCreationAsLetter(subscription: FlowQuery) {
+    const api = await this.api();
+    const interval = await this.invoiceCreationInterval(subscription);
+
+    if (interval.sendAsLetter) {
+      return;
+    }
+
+    // The API drops the template unless the update names it again.
+    const update = (sendAsLetter: boolean) =>
+      api.gql(
+        `mutation UpdateInterval($id: String!, $mailTemplateId: String, $daysAwayFromEnding: Int, $sendAsLetter: Boolean) {
+          updateSubscriptionInterval(id: $id, mailTemplateId: $mailTemplateId,
+            daysAwayFromEnding: $daysAwayFromEnding, sendAsLetter: $sendAsLetter) { id }
+        }`,
+        {
+          id: interval.id,
+          mailTemplateId: interval.mailTemplate?.id,
+          daysAwayFromEnding: interval.daysAwayFromEnding,
+          sendAsLetter,
+        }
+      );
+
+    await update(true);
+    this.onCleanup(`invoice-creation interval ${interval.id}`, () => update(false));
+  }
+
+  /**
+   * Points the letter provider at Pingen's staging environment with the test
+   * account, without sending letters on: nothing is ever printed. Kept
+   * afterwards, as secrets cannot be read back to restore them.
+   */
+  async ensureLetterProviderStaging(pingen: PingenTestAccount) {
+    const api = await this.api();
+    const { letterProviderSettings } = await api.gql<{
+      letterProviderSettings: {
+        id: string;
+        environment: string;
+        autoSend: boolean;
+        clientId: string | null;
+        organisationId: string | null;
+      }[];
+    }>(`query { letterProviderSettings { id environment autoSend clientId organisationId } }`);
+    const [provider] = letterProviderSettings;
+
+    if (!provider) {
+      throw new Error('The target has no letter provider to send the letter with.');
+    }
+
+    if (
+      provider.environment === 'staging' &&
+      !provider.autoSend &&
+      provider.clientId === pingen.clientId &&
+      provider.organisationId === pingen.organisationId
+    ) {
+      return;
+    }
+
+    await api.gql(
+      `mutation PingenStaging($id: String, $clientId: String, $clientSecret: String, $organisationId: String) {
+        updateLetterProviderSetting(id: $id, environment: staging, autoSend: false,
+          clientId: $clientId, clientSecret: $clientSecret, organisationId: $organisationId) { id }
+      }`,
+      { id: provider.id, ...pingen }
+    );
+    await this.reloadProviders();
+  }
+
+  /** The reader's mail log on one channel, newest first. */
+  async mailLogs(reader: Reader, channel: MailLog['channel']) {
+    const api = await this.api();
+    const { mailLogs } = await api.gql<{ mailLogs: { nodes: MailLog[] } }>(
+      `query MailLogs($filter: MailLogFilter) {
+        mailLogs(filter: $filter, take: 20) {
+          nodes { id channel state sentDate address providerLetterID error }
+        }
+      }`,
+      { filter: { recipientId: reader.id, channel } }
+    );
+
+    return mailLogs.nodes;
+  }
+
+  private async reloadProviders() {
+    const api = await this.api();
+
+    await api.gql(`mutation { reloadProviders }`);
   }
 
   async paymentMethod(slug: string) {
     const api = await this.api();
     const { paymentMethods } = await api.gql<{
-      paymentMethods: { id: string; slug: string; name: string; active: boolean }[];
-    }>(`query { paymentMethods { id slug name active } }`);
+      paymentMethods: {
+        id: string;
+        slug: string;
+        name: string;
+        active: boolean;
+        paymentProviderID: string;
+      }[];
+    }>(`query { paymentMethods { id slug name active paymentProviderID } }`);
     const paymentMethod = paymentMethods.find(m => m.slug === slug && m.active);
 
     if (!paymentMethod) {
@@ -593,37 +1015,21 @@ export class TestData {
    * would (the API refuses to renew while an invoice is open).
    */
   async openInvoice(subscriptionId: string) {
+    return (await this.findOpenInvoice(subscriptionId)) ?? this.renewSubscription(subscriptionId);
+  }
+
+  private async findOpenInvoice(subscriptionId: string) {
     const api = await this.api();
-    const findOpen = async () => {
-      const { invoices } = await api.gql<{
-        invoices: { nodes: { id: string; paidAt: string | null; canceledAt: string | null }[] };
-      }>(
-        `query Invoices($subscriptionID: String) {
-          invoices(filter: { subscriptionID: $subscriptionID }, take: 10) { nodes { id paidAt canceledAt } }
-        }`,
-        { subscriptionID: subscriptionId }
-      );
+    const { invoices } = await api.gql<{
+      invoices: { nodes: { id: string; paidAt: string | null; canceledAt: string | null }[] };
+    }>(
+      `query Invoices($subscriptionID: String) {
+        invoices(filter: { subscriptionID: $subscriptionID }, take: 10) { nodes { id paidAt canceledAt } }
+      }`,
+      { subscriptionID: subscriptionId }
+    );
 
-      return invoices.nodes.find(i => !i.paidAt && !i.canceledAt);
-    };
-
-    const existing = await findOpen();
-
-    if (existing) {
-      return existing;
-    }
-
-    await api.gql(`mutation Renew($id: String!) { renewSubscription(id: $id) { id } }`, {
-      id: subscriptionId,
-    });
-
-    const renewed = await findOpen();
-
-    if (!renewed) {
-      throw new Error(`Renewing subscription ${subscriptionId} left no open invoice.`);
-    }
-
-    return renewed;
+    return invoices.nodes.find(i => !i.paidAt && !i.canceledAt);
   }
 
   /**
