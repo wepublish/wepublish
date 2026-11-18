@@ -1,3 +1,4 @@
+import { AuthSessionType } from '@wepublish/authentication/api';
 import { Test, TestingModule } from '@nestjs/testing';
 import { MailTemplate, PrismaClient } from '@prisma/client';
 import {
@@ -272,7 +273,7 @@ describe('MailTemplatesResolver', () => {
 
   it('renders a draft as a letter via the service', async () => {
     const result = await resolver.mailTemplateLetterPreview(
-      { user: { id: 'editor-1' } } as any,
+      { type: AuthSessionType.User, user: { id: 'editor-1' } } as any,
       {
         contextId: 'renewal',
         subscriptionId: 'sub-1',

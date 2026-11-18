@@ -4,7 +4,6 @@ import { TotpSetup } from './totp.model';
 import {
   Authenticated,
   CurrentUser,
-  UserSession,
   assertNotImpersonating,
   requireSessionUser,
   AuthSession,
@@ -29,11 +28,11 @@ export class TotpResolver {
         'Set to true when called from a website to use the site name instead of "We.Publish CMS" in the authenticator app.',
     })
     website: boolean | undefined,
-    @CurrentUser() session: UserSession
+    @CurrentUser() session: AuthSession
   ) {
     assertNotImpersonating(session);
 
-    const { user } = session;
+    const user = requireSessionUser(session);
 
     return this.totpService.setupTotp(user.id, user.email, website ?? false);
   }
@@ -49,7 +48,10 @@ export class TotpResolver {
   ) {
     assertNotImpersonating(session);
 
-    return this.totpService.enableTotp(requireSessionUser(session).id, totpToken);
+    return this.totpService.enableTotp(
+      requireSessionUser(session).id,
+      totpToken
+    );
   }
 
   @Permissions(CanResetUserTotp)

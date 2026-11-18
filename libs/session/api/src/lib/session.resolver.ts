@@ -5,7 +5,6 @@ import { SessionWithToken } from './session.model';
 import {
   CurrentUser,
   Public,
-  UserSession,
   requireSessionUser,
   AuthSession,
   AuthSessionType,
@@ -57,7 +56,7 @@ export class SessionResolver {
     description: 'This mutation revokes and deletes the active session.',
   })
   async revokeActiveSession(
-    @CurrentUser() session: UserSession | null
+    @CurrentUser() session: AuthSession | null
   ): Promise<boolean> {
     return await this.sessionService.revokeSession(session);
   }
