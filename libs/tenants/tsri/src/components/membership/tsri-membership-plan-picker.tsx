@@ -76,6 +76,9 @@ const cardStyles = ({
     ${lighten(theme.palette.primary.light, 0.7)}
   );
   color: ${theme.palette.common.black};
+  /* the site hyphenates text, which tears short labels in narrow cards apart */
+  hyphens: manual;
+  overflow-wrap: break-word;
 
   ${
     checked &&
@@ -92,7 +95,7 @@ export const TsriMembershipPlanCard = styled('label', {
   cursor: pointer;
 
   &:has(input:focus-visible) {
-    outline: 2px solid ${black};
+    outline: 2px solid ${({ theme }) => theme.palette.primary.main};
     outline-offset: 2px;
   }
 
@@ -153,11 +156,7 @@ export const TsriMembershipPlanBody = styled('div')`
   flex-grow: 1;
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing(2)};
-  padding: ${({ theme }) => theme.spacing(1.5)};
-
-  ${({ theme }) => theme.breakpoints.up('md')} {
-    padding: ${({ theme }) => theme.spacing(3, 5, 2)};
-  }
+  padding: ${({ theme }) => theme.spacing(3, 3, 2)};
 `;
 
 export const TsriMembershipPlanPrice = styled('div')`
@@ -168,21 +167,14 @@ export const TsriMembershipPlanPrice = styled('div')`
 `;
 
 export const TsriMembershipPlanAmount = styled('span')`
-  font-size: 1rem;
-
-  ${({ theme }) => theme.breakpoints.up('md')} {
-    font-size: 2.5rem;
-    font-weight: 700;
-    line-height: 1;
-  }
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1;
 `;
 
 export const TsriMembershipPlanUnit = styled('span')`
   font-size: 1rem;
-
-  ${({ theme }) => theme.breakpoints.up('md')} {
-    font-weight: 700;
-  }
+  font-weight: 700;
 `;
 
 export const TsriMembershipPlanDetails = styled('div')`
@@ -231,6 +223,7 @@ export const TsriMembershipPlanSelect = styled('span', {
   padding: ${({ theme }) => theme.spacing(0.5, 2)};
   border-radius: 999px;
   font-weight: 700;
+  white-space: nowrap;
   background-color: ${({ theme }) => theme.palette.common.white};
   color: ${black};
 
@@ -251,6 +244,30 @@ const OptionCard = styled(TsriMembershipPlanCard)`
   ${({ theme }) => theme.breakpoints.down('md')} {
     ${TsriMembershipPlanDetails} {
       display: none;
+    }
+
+    ${TsriMembershipPlanHeader} {
+      padding: ${({ theme }) => theme.spacing(0.5, 1)};
+      font-size: 0.875rem;
+      line-height: 1.2;
+    }
+
+    ${TsriMembershipPlanBody} {
+      gap: ${({ theme }) => theme.spacing(1)};
+      padding: ${({ theme }) => theme.spacing(1)};
+    }
+
+    ${TsriMembershipPlanAmount}, ${TsriMembershipPlanUnit} {
+      font-size: 0.875rem;
+      font-weight: 400;
+      line-height: inherit;
+      white-space: nowrap;
+    }
+
+    ${TsriMembershipPlanSelect} {
+      max-width: 100%;
+      padding: ${({ theme }) => theme.spacing(0.25, 1)};
+      font-size: 0.75rem;
     }
   }
 `;

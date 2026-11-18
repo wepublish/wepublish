@@ -13,7 +13,7 @@ export const formatMembershipPrice = (
   cents: number,
   currency: Currency,
   locale: string
-) => formatCurrency(cents / 100, currency, locale).replace(/\.-$/, '');
+) => formatCurrency(cents / 100, currency, locale).replace(/\.(-|00)$/, '');
 
 export const getMembershipPrice = (
   memberPlan: Pick<FullMemberPlanFragment, 'periodicityPricing'>,

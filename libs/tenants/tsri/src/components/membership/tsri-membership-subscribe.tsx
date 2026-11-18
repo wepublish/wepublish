@@ -67,7 +67,7 @@ const boxSelector = [
   '& > :not([data-area])',
 ].join(', ');
 
-const Wrapper = styled('div')`
+export const TsriMembershipWrapper = styled('div')`
   --tsri-membership-box: ${({ theme }) =>
     lighten(theme.palette.primary.light, 0.6)};
   display: grid;
@@ -275,7 +275,7 @@ export const TsriMembershipSubscribe = (props: BuilderSubscribeBlockProps) => {
         SubscribeSummary={TsriMembershipSummary}
         TransactionFee={MembershipTransactionFee}
       >
-        <Wrapper className={props.className}>
+        <TsriMembershipWrapper className={props.className}>
           <StyledSubscribeBlock
             {...props}
             className={undefined}
@@ -293,7 +293,7 @@ export const TsriMembershipSubscribe = (props: BuilderSubscribeBlockProps) => {
               ))}
             </Benefits>
           )}
-        </Wrapper>
+        </TsriMembershipWrapper>
       </WebsiteBuilderProvider>
     </TsriMembershipCustomAmountContext>
   );

@@ -12,6 +12,7 @@ import {
 } from '@wepublish/block-content/website';
 
 import { SidebarContentWrapper } from './break-blocks/tsri-sidebar-content';
+import { TsriMembershipWrapper } from './membership/tsri-membership-subscribe';
 
 export const TSRI_TWO_COLUMN_CONTENT_CLASS = 'tsri-two-column-content';
 
@@ -28,7 +29,8 @@ export const twoColumnContentStyles = (theme: Theme) => css`
         ${TeaserListBlockWrapper},
         ${TeaserSlotsBlockWrapper},
         ${ImageGalleryBlockWrapper},
-        ${FlexBlockWrapper}
+        ${FlexBlockWrapper},
+        ${TsriMembershipWrapper}
     ) {
     grid-column: 1 / 2;
   }
@@ -40,7 +42,8 @@ export const twoColumnContentStyles = (theme: Theme) => css`
         ${TeaserListBlockWrapper},
         ${TeaserSlotsBlockWrapper},
         ${ImageGalleryBlockWrapper},
-        ${FlexBlockWrapper}
+        ${FlexBlockWrapper},
+        ${TsriMembershipWrapper}
     ) {
     grid-column: -1 / 1;
   }
