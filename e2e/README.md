@@ -262,8 +262,14 @@ started (nor migrated) for a URL you override (`BASE_URL`, `E2E_EDITOR_URL`,
   - **Mailbox:** the step deletes the readers' mails from the Ethereal
     mailbox as they arrive (100 MB quota) and keeps 3 samples to check the
     attached pdf.
-  - **Duration:** about 2 s a renewal (mostly bexio), so 1500 take about an
-    hour. Retries are off for it. Try `40/10` first.
+  - **Duration:** the 40/10 trial on review01 took about 4.6 s a reader, so
+    1500 take close to two hours. The run may take 3 h, the job 4 h. Retries
+    are off for the scenario. Try `40/10` first.
+  - **Dropped requests:** the review ingress now and then resets one of many
+    requests in a row. Creating, reading and deleting readers try again
+    (`retryTransient`) without doing a write twice. A retry gets a new
+    address, and an existing subscription is taken instead of a second one.
+    Readers already created are deleted even when the step fails halfway.
   - **Left behind:**
     - the invoices, in the database and in the bexio test company;
     - the letters, in Pingen staging.

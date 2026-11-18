@@ -164,3 +164,49 @@ export function memoryTable(samples: MemorySample[]): string {
 
   return rows.join('\n');
 }
+
+/**
+ * A dropped connection or a gateway in between, not an answer of the API:
+ * worth another try. On review the ingress now and then resets one of many
+ * requests in a row.
+ */
+export function isTransient(error: unknown): boolean {
+  const message = error instanceof Error ? error.message : String(error);
+
+  return (
+    /ECONNRESET|socket hang up|ETIMEDOUT|ECONNREFUSED|EPIPE|EAI_AGAIN/.test(message) ||
+    /GraphQL request failed: HTTP 50[234]\b/.test(message)
+  );
+}
+
+/**
+ * Runs `run`, and again after a transient error, at most `attempts` times.
+ * A dropped call may still have done its work: `recover` looks for that
+ * result first, so a write is never done twice.
+ */
+export async function retryTransient<T>(
+  run: () => Promise<T>,
+  {
+    attempts = 3,
+    delayMs = 2_000,
+    recover,
+  }: { attempts?: number; delayMs?: number; recover?: () => Promise<T | undefined> } = {}
+): Promise<T> {
+  for (let attempt = 1; ; attempt++) {
+    try {
+      return await run();
+    } catch (error) {
+      if (!isTransient(error) || attempt >= attempts) {
+        throw error;
+      }
+
+      const done = await recover?.();
+
+      if (done !== undefined) {
+        return done;
+      }
+
+      await new Promise(resolve => setTimeout(resolve, delayMs * attempt));
+    }
+  }
+}
