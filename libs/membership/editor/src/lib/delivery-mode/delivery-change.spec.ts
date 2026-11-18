@@ -21,6 +21,25 @@ describe('describeDeliveryChange', () => {
     );
   });
 
+  it('adds the api key that did it on behalf of that person', () => {
+    const withValues = ((key: string, values?: { key?: string }) =>
+      values?.key ? `${key}(${values.key})` : key) as never;
+
+    expect(
+      describeDeliveryChange(
+        withValues,
+        {
+          origin: 'manual',
+          changedBy: { firstName: 'Jane', name: 'Doe' },
+          changedByApiToken: { name: 'Import' },
+        },
+        formatDate
+      )
+    ).toBe(
+      'deliveryMode.origin.manual · Jane Doe · deliveryMode.viaApiKey(Import)'
+    );
+  });
+
   it('leaves out what is not known', () => {
     expect(
       describeDeliveryChange(

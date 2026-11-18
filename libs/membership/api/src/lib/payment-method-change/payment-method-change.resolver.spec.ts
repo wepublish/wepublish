@@ -1,8 +1,11 @@
-import { UserSession } from '@wepublish/authentication/api';
+import { AuthSessionType, UserSession } from '@wepublish/authentication/api';
 import { PaymentMethodChangeResolver } from './payment-method-change.resolver';
 import { PaymentMethodChangeService } from './payment-method-change.service';
 
-const session = { user: { id: 'user-1' } } as UserSession;
+const session = {
+  type: AuthSessionType.User,
+  user: { id: 'user-1' },
+} as UserSession;
 
 describe('PaymentMethodChangeResolver', () => {
   let service: {

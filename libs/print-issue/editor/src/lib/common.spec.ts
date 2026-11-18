@@ -1,5 +1,5 @@
 import { PrintIssueStatus } from '@wepublish/editor/api';
-import { flowKind, nextIssue } from './common';
+import { actorName, flowKind, nextIssue } from './common';
 
 describe('nextIssue', () => {
   it('suggests the next number of the latest year, whatever the order and status', () => {
@@ -72,5 +72,28 @@ describe('flowKind', () => {
     expect(
       flowKind({ status: PrintIssueStatus.Historic, deliveries: [] })
     ).toBeNull();
+  });
+});
+
+describe('actorName', () => {
+  const t = ((key: string, values?: { key?: string }) =>
+    values?.key ? `${key}(${values.key})` : key) as never;
+
+  it('is the person‘s name', () => {
+    expect(actorName(t, { firstName: 'Maria', name: 'Muster' })).toBe(
+      'Maria Muster'
+    );
+  });
+
+  it('adds the api key that did it on behalf of that person', () => {
+    expect(
+      actorName(t, { firstName: 'Maria', name: 'Muster' }, { name: 'Import' })
+    ).toBe('Maria Muster · printIssues.viaApiKey(Import)');
+  });
+
+  it('still names the api key when the person is gone', () => {
+    expect(actorName(t, null, { name: 'Import' })).toBe(
+      'printIssues.viaApiKey(Import)'
+    );
   });
 });

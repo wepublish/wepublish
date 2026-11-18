@@ -1,6 +1,6 @@
 import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
 import { ApiToken } from '@wepublish/api-token/api';
-import { CurrentUser, UserSession } from '@wepublish/authentication/api';
+import { AuthSession, CurrentUser } from '@wepublish/authentication/api';
 
 import { ExternalApp } from './external-apps.model';
 import { ExternalAppsService } from './external-apps.service';
@@ -16,7 +16,7 @@ export class ExternalAppApiTokenResolver {
   })
   apiToken(
     @Parent() app: ExternalApp,
-    @CurrentUser() session: UserSession | undefined
+    @CurrentUser() session: AuthSession | undefined
   ) {
     return this.externalAppsService.linkedApiToken(
       { apiTokenId: app.apiTokenId ?? null },

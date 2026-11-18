@@ -88,7 +88,7 @@ describe('accounts managed by the We.Publish login', () => {
   });
 
   describe('for the person themselves', () => {
-    const session = { id: 'session-1', user: managed } as never;
+    const session = { type: 'user', id: 'session-1', user: managed } as never;
     let profile: ProfileResolver;
 
     beforeEach(() => {
@@ -136,7 +136,7 @@ describe('accounts managed by the We.Publish login', () => {
     it('still lets every other account update its own profile', async () => {
       await users.updateCurrentUser(
         { name: 'Smith' } as never,
-        { id: 'session-2', user: ordinary } as never
+        { type: 'user', id: 'session-2', user: ordinary } as never
       );
 
       expect(service['updateUser']).toHaveBeenCalledWith({

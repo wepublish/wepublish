@@ -1,5 +1,5 @@
 import { MailChannel, PrismaClient } from '@prisma/client';
-import { UserSession } from '@wepublish/authentication/api';
+import { AuthSessionType, UserSession } from '@wepublish/authentication/api';
 import { MailSendResolver } from './mail-send.resolver';
 import { MailSendJobService } from './mail-send-job.service';
 import { MailSendRecipientService } from './mail-send-recipient.service';
@@ -10,7 +10,10 @@ import { SuppressionSyncService } from './suppression-sync.service';
 import { MailEmailSegment, MailRecipientBase } from './mail-send.model';
 import type { Mock } from 'vitest';
 
-const session = { user: { id: 'editor-1' } } as UserSession;
+const session = {
+  type: AuthSessionType.User,
+  user: { id: 'editor-1' },
+} as UserSession;
 
 const makeResolver = (
   prisma: any,

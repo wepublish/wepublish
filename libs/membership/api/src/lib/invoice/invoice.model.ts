@@ -75,6 +75,12 @@ export class Invoice extends HasOptionalSubscription {
   manuallySetAsPaidByUserId?: string;
   @Field(() => User, { nullable: true })
   manuallySetAsPaidByUser?: User;
+  @Field(() => String, {
+    nullable: true,
+    description:
+      'Set when an API key marked the invoice as paid on behalf of `manuallySetAsPaidByUser`.',
+  })
+  manuallySetAsPaidByApiTokenId?: string | null;
 
   @Field(() => Date, { nullable: true })
   paidAt?: Date;

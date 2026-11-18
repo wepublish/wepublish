@@ -2,7 +2,8 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import {
   Authenticated,
   CurrentUser,
-  UserSession,
+  requireSessionUser,
+  AuthSession,
 } from '@wepublish/authentication/api';
 import { NotificationConfirmation } from './notification-confirmation.model';
 import { NotificationConfirmationService } from './notification-confirmation.service';
@@ -34,10 +35,10 @@ export class NotificationConfirmationResolver {
     @Args('source', { type: () => NotificationSource })
     source: NotificationSource,
     @Args('itemId') itemId: string,
-    @CurrentUser() session: UserSession
+    @CurrentUser() session: AuthSession
   ) {
     return this.notificationConfirmationService.confirmNotification(
-      session.user.id,
+      requireSessionUser(session).id,
       source,
       itemId
     );
