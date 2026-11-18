@@ -1,6 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { ApiToken } from '@prisma/client';
 import {
   ApiTokenSession,
   AuthSessionType,
@@ -10,20 +9,21 @@ import type { RequestWithResponse } from './response-back-reference';
 import { Strategy } from 'passport-http-bearer';
 
 import { API_TOKEN_PREFIX } from './api-token.crypto';
-import { ApiTokenService } from './api-token.service';
+import { ApiTokenService, ResolvedApiToken } from './api-token.service';
 
 export const API_TOKEN_STRATEGY = 'api-token';
 export const API_KEY_EXPIRATION_HEADER = 'wepublish-api-key-expiration';
 
 export const apiTokenSession = (
-  apiToken: ApiToken,
+  { apiToken, creator, permissions }: ResolvedApiToken,
   token: string
 ): ApiTokenSession => ({
   type: AuthSessionType.ApiToken,
   id: apiToken.id,
   name: apiToken.name,
   token,
-  permissions: apiToken.scopes,
+  permissions,
+  createdBy: creator,
 });
 
 @Injectable()
@@ -40,7 +40,7 @@ export class ApiTokenStrategy extends PassportStrategy(
       return false;
     }
 
-    const apiToken = await this.apiTokenService
+    const resolved = await this.apiTokenService
       .resolveToken(token)
       .catch(error => {
         if (
@@ -56,15 +56,15 @@ export class ApiTokenStrategy extends PassportStrategy(
         throw error;
       });
 
-    if (!apiToken) {
+    if (!resolved) {
       return false;
     }
 
     req.res?.setHeader(
       API_KEY_EXPIRATION_HEADER,
-      apiToken.expiresAt.toUTCString()
+      resolved.apiToken.expiresAt.toUTCString()
     );
 
-    return apiTokenSession(apiToken, token);
+    return apiTokenSession(resolved, token);
   }
 }

@@ -7,7 +7,10 @@ import {
   CurrentUser,
   Public,
   RequestFingerprint,
-  UserSession,
+  requireSessionUser,
+  requireUserSession,
+  AuthSession,
+  AuthSessionType,
 } from '@wepublish/authentication/api';
 import { ChallengeInput } from '@wepublish/challenge/api';
 import {
@@ -46,7 +49,10 @@ export class SessionResolver {
     description:
       'Origin and restriction state of the current session. Restricted sessions may only complete onboarding.',
   })
-  async sessionInfo(@CurrentUser() session: UserSession): Promise<SessionInfo> {
+  async sessionInfo(
+    @CurrentUser() authSession: AuthSession
+  ): Promise<SessionInfo> {
+    const session = requireUserSession(authSession);
     const secondFactor = await this.secondFactorService.getFactor();
 
     return {
@@ -128,7 +134,7 @@ export class SessionResolver {
     description: 'This mutation revokes and deletes the active session.',
   })
   async revokeActiveSession(
-    @CurrentUser() session: UserSession | null
+    @CurrentUser() session: AuthSession | null
   ): Promise<boolean> {
     return await this.sessionService.revokeSession(session);
   }
@@ -181,11 +187,13 @@ export class SessionResolver {
     description:
       'Returns a JWT that is valid for 1min for the current logged in user.',
   })
-  async createJWTForWebsiteLogin(@CurrentUser() session: UserSession) {
-    if (session.impersonatedBy) {
+  async createJWTForWebsiteLogin(@CurrentUser() session: AuthSession) {
+    const user = requireSessionUser(session);
+
+    if (session.type === AuthSessionType.User && session.impersonatedBy) {
       return this.impersonationService.continueOnWebsite(session);
     }
 
-    return this.sessionService.createJWTForWebsiteLogin(session.user.id);
+    return this.sessionService.createJWTForWebsiteLogin(user.id);
   }
 }

@@ -2,6 +2,8 @@ import { createTheme, ThemeProvider } from '@mui/material';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import {
   AccountCreationMailDocument,
+  SettingName,
+  SettingsListDocument,
   UserDocument,
   UserSubscriptionListDocument,
 } from '@wepublish/editor/api';
@@ -378,5 +380,55 @@ describe('UserEditView', () => {
         expect.objectContaining({ query: AccountCreationMailDocument })
       )
     );
+  });
+});
+
+describe('UserEditView login code', () => {
+  const loginCodesOn = [
+    SettingsListDocument,
+    { settings: [{ name: SettingName.LoginCodeEnabled, value: true }] },
+  ] as [unknown, unknown];
+
+  const withRoles = (...permissionIDs: string[][]) => ({
+    ...user,
+    roles: permissionIDs.map((ids, index) => ({
+      id: `role-${index}`,
+      name: `Role ${index}`,
+      description: null,
+      systemRole: false,
+      permissions: ids.map(id => ({ id, description: id, deprecated: false })),
+    })),
+  });
+
+  it('lets an editor issue a reader a new code', async () => {
+    query.mockResolvedValue({ data: { user: withRoles(['CAN_GET_ARTICLE']) } });
+    mockQueries([loginCodesOn]);
+    renderAt('/users/edit/user-1');
+
+    expect(
+      await screen.findByRole('button', {
+        name: 'userCreateOrEditView.loginCode.reissue',
+      })
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText('userCreateOrEditView.loginCode.notForStaff')
+    ).toBeNull();
+  });
+
+  it('offers staff no code, since the API refuses to issue one', async () => {
+    query.mockResolvedValue({
+      data: { user: withRoles(['CAN_GET_ARTICLE'], ['CAN_LOGIN_EDITOR']) },
+    });
+    mockQueries([loginCodesOn]);
+    renderAt('/users/edit/user-1');
+
+    expect(
+      await screen.findByText('userCreateOrEditView.loginCode.notForStaff')
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', {
+        name: 'userCreateOrEditView.loginCode.reissue',
+      })
+    ).toBeNull();
   });
 });

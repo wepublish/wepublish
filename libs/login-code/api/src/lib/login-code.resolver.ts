@@ -1,6 +1,10 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { PrismaClient } from '@prisma/client';
-import { CurrentUser, UserSession } from '@wepublish/authentication/api';
+import {
+  actorOf,
+  AuthSession,
+  CurrentUser,
+} from '@wepublish/authentication/api';
 import { CanManageUserLoginCodes } from '@wepublish/permissions';
 import { Permissions } from '@wepublish/permissions/api';
 import { UserLoginCodeIssue, UserLoginCodeStatus } from './login-code.model';
@@ -52,9 +56,12 @@ export class LoginCodeResolver {
   })
   async revokeUserLoginCode(
     @Args('userId') userId: string,
-    @CurrentUser() session: UserSession
+    @CurrentUser() session: AuthSession
   ) {
-    await this.loginCodeService.revoke(userId, `editor:${session.user.id}`);
+    await this.loginCodeService.revoke(
+      userId,
+      `editor:${actorOf(session).userId}`
+    );
 
     return true;
   }
@@ -66,11 +73,11 @@ export class LoginCodeResolver {
   })
   async reissueUserLoginCode(
     @Args('userId') userId: string,
-    @CurrentUser() session: UserSession
+    @CurrentUser() session: AuthSession
   ): Promise<UserLoginCodeIssue> {
     const issue = await this.loginCodeService.reissue(
       userId,
-      `editor:${session.user.id}`
+      `editor:${actorOf(session).userId}`
     );
 
     return {

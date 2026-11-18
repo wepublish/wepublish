@@ -9,7 +9,7 @@ import {
 } from '@prisma/client';
 import { v7 as uuidv7 } from 'uuid';
 import { MailContext } from './mail-context';
-import { PurlOrigin, templateUsesJwt } from './mail-data';
+import { PurlOrigin, templateUsesJwt, templateUsesPurl } from './mail-data';
 import { MailProviderRecipientError } from './mail-provider/mail-provider.interface';
 import {
   qualityTypeForRejectReason,
@@ -181,6 +181,7 @@ export class MailController {
       mode: 'send',
       purlOrigin,
       mintJwt: !template || templateUsesJwt(template),
+      mintPurl: !template || templateUsesPurl(template),
     });
   }
 

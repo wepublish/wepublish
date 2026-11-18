@@ -3,7 +3,11 @@ import {
   ForbiddenException,
   NotFoundException,
 } from '@nestjs/common';
-import { AuditLogAction, AuditLogActorType } from '@prisma/client';
+import {
+  AuditLogAction,
+  AuditLogActorType,
+  SessionOrigin,
+} from '@prisma/client';
 import { AuthSessionType } from '@wepublish/authentication/api';
 import type { Mock } from 'vitest';
 import { ImpersonationService } from './impersonation.service';
@@ -113,6 +117,7 @@ describe('ImpersonationService', () => {
       );
 
       expect(sessionService.createUserSession).toHaveBeenCalledWith(reader, {
+        origin: SessionOrigin.impersonation,
         ttlMs: 60 * 60 * 1000,
         impersonatedBy: 'jane@wepublish.ch',
         impersonationReason: 'Ticket 4711',

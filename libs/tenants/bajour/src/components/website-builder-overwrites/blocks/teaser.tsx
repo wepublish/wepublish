@@ -1,4 +1,4 @@
-import { Teaser } from '@wepublish/block-content/website';
+import { BaseTeaser } from '@wepublish/block-content/website';
 import { BuilderTeaserProps } from '@wepublish/website/builder';
 
 import { ArticleCharts } from '../../article-charts/article-charts';
@@ -12,7 +12,7 @@ export const BajourTeaser = (props: BuilderTeaserProps) => {
   }
 
   if (!props.numColumns) {
-    return <Teaser {...props} />;
+    return <BaseTeaser {...props} />;
   }
 
   if (props.numColumns === 1) {

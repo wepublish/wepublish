@@ -4,6 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import type { SessionActor } from '@wepublish/authentication/api';
 import {
   Prisma,
   PrintIssueStatus,
@@ -53,14 +54,23 @@ export type PrintIssueUserRef = {
   firstName: string | null;
 };
 
+/** The API key that did something on behalf of the user named next to it. */
+export type PrintIssueApiTokenRef = {
+  id: string;
+  name: string;
+};
+
 export type PrintIssueDeliveryWithUsers = PrintIssueDelivery & {
   createdBy: PrintIssueUserRef | null;
+  createdByApiToken: PrintIssueApiTokenRef | null;
   deliveredBy: PrintIssueUserRef | null;
+  deliveredByApiToken: PrintIssueApiTokenRef | null;
 };
 
 /** An issue as lists and pages read it: with its deliveries, without the stored run (up to ~0.5 MB). */
 export type PrintIssueWithDeliveries = Omit<PrintIssue, 'pendingRun'> & {
   closedBy: PrintIssueUserRef | null;
+  closedByApiToken: PrintIssueApiTokenRef | null;
   deliveries: PrintIssueDeliveryWithUsers[];
 };
 
@@ -91,6 +101,7 @@ export type PrintIssueRunView = {
   batch: number;
   computedAt: Date;
   computedBy: PrintIssueUserRef | null;
+  computedByApiToken: PrintIssueApiTokenRef | null;
   rows: ExportRow[];
   summary: Summary;
   filename: string;
@@ -107,11 +118,19 @@ const USER_SELECT = {
   select: { id: true, name: true, firstName: true },
 } as const;
 
+const API_TOKEN_SELECT = { select: { id: true, name: true } } as const;
+
 const INCLUDE = {
   closedBy: USER_SELECT,
+  closedByApiToken: API_TOKEN_SELECT,
   deliveries: {
     orderBy: { batch: 'asc' },
-    include: { createdBy: USER_SELECT, deliveredBy: USER_SELECT },
+    include: {
+      createdBy: USER_SELECT,
+      createdByApiToken: API_TOKEN_SELECT,
+      deliveredBy: USER_SELECT,
+      deliveredByApiToken: API_TOKEN_SELECT,
+    },
   },
 } as const;
 
@@ -122,6 +141,7 @@ const CLEAR_RUN = {
   pendingRun: Prisma.DbNull,
   pendingRunAt: null,
   pendingRunByUserId: null,
+  pendingRunByApiTokenId: null,
 };
 
 /** createMany in chunks: a run has ~1,300 rows, a large medium many more */
@@ -308,7 +328,10 @@ export class PrintIssueService {
    * delivery not handed over yet written anew, or the next Nachlieferung.
    * A new computation replaces the stored one.
    */
-  async computeRun(id: string, userId: string): Promise<PrintIssueRunView> {
+  async computeRun(
+    id: string,
+    actor: SessionActor
+  ): Promise<PrintIssueRunView> {
     const issue = await this.findById(id);
     const next = this.nextRun(issue);
     const options = optionsFrom(issue.options);
@@ -330,12 +353,22 @@ export class PrintIssueService {
       data: {
         pendingRun: run as unknown as Prisma.InputJsonValue,
         pendingRunAt: computedAt,
-        pendingRunByUserId: userId,
+        pendingRunByUserId: actor.userId,
+        pendingRunByApiTokenId: actor.apiTokenId,
       },
-      select: { id: true, pendingRunBy: USER_SELECT },
+      select: {
+        id: true,
+        pendingRunBy: USER_SELECT,
+        pendingRunByApiToken: API_TOKEN_SELECT,
+      },
     });
 
-    return this.view(run, computedAt, stored.pendingRunBy);
+    return this.view(
+      run,
+      computedAt,
+      stored.pendingRunBy,
+      stored.pendingRunByApiToken
+    );
   }
 
   /** The stored run for the check step; null when none is waiting. */
@@ -349,7 +382,8 @@ export class PrintIssueService {
     return this.view(
       issue.pendingRun as unknown as StoredRun,
       issue.pendingRunAt,
-      issue.pendingRunBy
+      issue.pendingRunBy,
+      issue.pendingRunByApiToken
     );
   }
 
@@ -361,7 +395,7 @@ export class PrintIssueService {
    */
   async exportRun(
     id: string,
-    userId: string,
+    actor: SessionActor,
     computedAt: Date
   ): Promise<PrintIssueWithDeliveries> {
     const issue = await this.withRun(id);
@@ -393,8 +427,8 @@ export class PrintIssueService {
     await this.prisma.$transaction(async tx => {
       const deliveryId =
         run.mode === 'replace' ?
-          await this.replaceDelivery(tx, run, userId, now)
-        : await this.createDelivery(tx, issue, run, userId);
+          await this.replaceDelivery(tx, run, actor, now)
+        : await this.createDelivery(tx, issue, run, actor);
 
       await this.storeRecipients(tx, id, deliveryId, run.batch, run.recipients);
 
@@ -416,12 +450,16 @@ export class PrintIssueService {
   /** «übergeben»: the file went to the printshop. Reversible with `undeliver` while nothing was built on it. */
   async deliver(
     deliveryId: string,
-    userId: string
+    actor: SessionActor
   ): Promise<PrintIssueWithDeliveries> {
     const delivery = await this.delivery(deliveryId);
     const { count } = await this.prisma.printIssueDelivery.updateMany({
       where: { id: deliveryId, deliveredAt: null },
-      data: { deliveredAt: new Date(), deliveredByUserId: userId },
+      data: {
+        deliveredAt: new Date(),
+        deliveredByUserId: actor.userId,
+        deliveredByApiTokenId: actor.apiTokenId,
+      },
     });
 
     if (count !== 1) {
@@ -486,7 +524,11 @@ export class PrintIssueService {
 
     const { count } = await this.prisma.printIssueDelivery.updateMany({
       where: { id: deliveryId, deliveredAt: { not: null } },
-      data: { deliveredAt: null, deliveredByUserId: null },
+      data: {
+        deliveredAt: null,
+        deliveredByUserId: null,
+        deliveredByApiTokenId: null,
+      },
     });
 
     if (count !== 1) {
@@ -520,7 +562,10 @@ export class PrintIssueService {
   }
 
   /** No more Nachlieferungen expected. Reversible with `reopen`. */
-  async close(id: string, userId: string): Promise<PrintIssueWithDeliveries> {
+  async close(
+    id: string,
+    actor: SessionActor
+  ): Promise<PrintIssueWithDeliveries> {
     const issue = await this.findById(id);
 
     if (issue.status !== PrintIssueStatus.open) {
@@ -548,7 +593,8 @@ export class PrintIssueService {
       data: {
         status: PrintIssueStatus.closed,
         closedAt: new Date(),
-        closedByUserId: userId,
+        closedByUserId: actor.userId,
+        closedByApiTokenId: actor.apiTokenId,
       },
       include: INCLUDE,
     });
@@ -567,6 +613,7 @@ export class PrintIssueService {
         status: PrintIssueStatus.open,
         closedAt: null,
         closedByUserId: null,
+        closedByApiTokenId: null,
       },
       include: INCLUDE,
     });
@@ -697,7 +744,11 @@ export class PrintIssueService {
   private async withRun(id: string) {
     const issue = await this.prisma.printIssue.findUnique({
       where: { id },
-      include: { ...INCLUDE, pendingRunBy: USER_SELECT },
+      include: {
+        ...INCLUDE,
+        pendingRunBy: USER_SELECT,
+        pendingRunByApiToken: API_TOKEN_SELECT,
+      },
     });
 
     if (!issue) {
@@ -791,14 +842,15 @@ export class PrintIssueService {
     tx: Prisma.TransactionClient,
     issue: Pick<PrintIssue, 'id'>,
     run: StoredRun,
-    userId: string
+    actor: SessionActor
   ): Promise<string> {
     try {
       const delivery = await tx.printIssueDelivery.create({
         data: {
           issueId: issue.id,
           batch: run.batch,
-          createdByUserId: userId,
+          createdByUserId: actor.userId,
+          createdByApiTokenId: actor.apiTokenId,
           options: run.options as unknown as Prisma.InputJsonValue,
           rowCount: run.recipients.length,
           copyCount: run.summary.copies,
@@ -826,7 +878,7 @@ export class PrintIssueService {
   private async replaceDelivery(
     tx: Prisma.TransactionClient,
     run: StoredRun,
-    userId: string,
+    actor: SessionActor,
     now: Date
   ): Promise<string> {
     const deliveryId = run.deliveryId;
@@ -841,7 +893,8 @@ export class PrintIssueService {
       where: { id: deliveryId, deliveredAt: null },
       data: {
         createdAt: now,
-        createdByUserId: userId,
+        createdByUserId: actor.userId,
+        createdByApiTokenId: actor.apiTokenId,
         options: run.options as unknown as Prisma.InputJsonValue,
         rowCount: run.recipients.length,
         copyCount: run.summary.copies,
@@ -902,7 +955,8 @@ export class PrintIssueService {
   private view(
     run: StoredRun,
     computedAt: Date,
-    computedBy: PrintIssueUserRef | null
+    computedBy: PrintIssueUserRef | null,
+    computedByApiToken: PrintIssueApiTokenRef | null
   ): PrintIssueRunView {
     return {
       mode: run.mode,
@@ -910,6 +964,7 @@ export class PrintIssueService {
       batch: run.batch,
       computedAt,
       computedBy,
+      computedByApiToken,
       rows: run.recipients.map(recipient => recipient.snapshot),
       summary: run.summary,
       filename: run.filename,

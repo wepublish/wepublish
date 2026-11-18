@@ -12,6 +12,7 @@ import { HibpService } from './hibp.service';
 import { ProfileService } from './profile.service';
 import { UserDataloaderService } from './user-dataloader.service';
 import { UserService } from './user.service';
+import { LoginCodeService } from '@wepublish/login-code/api';
 
 const recordNotFound = () =>
   new Prisma.PrismaClientKnownRequestError('Record to delete does not exist.', {
@@ -235,6 +236,10 @@ describe('UserService comment cache', () => {
           },
         },
         { provide: UserDataloaderService, useValue: { prime: vi.fn() } },
+        {
+          provide: LoginCodeService,
+          useValue: { revokeIfStaff: vi.fn(), revokeForRole: vi.fn() },
+        },
         {
           provide: AuthenticationService,
           useValue: { revokeUserSessions: vi.fn().mockResolvedValue(0) },

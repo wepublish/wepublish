@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
+import { LoginCodeService } from '@wepublish/login-code/api';
 import {
   getMaxTake,
   graphQLSortOrderToPrisma,
@@ -20,7 +21,8 @@ import {
 export class UserRoleService {
   constructor(
     private prisma: PrismaClient,
-    private sessionCache: SessionCacheInvalidator
+    private sessionCache: SessionCacheInvalidator,
+    private loginCodeService: LoginCodeService
   ) {}
 
   @PrimeDataLoader(UserRoleDataloader)
@@ -79,6 +81,12 @@ export class UserRoleService {
       },
     });
     await this.sessionCache.invalidate();
+
+    if (input.permissionIDs !== undefined) {
+      // A role that now grants more than reader access makes its holders
+      // staff, who never hold a login code.
+      await this.loginCodeService.revokeForRole(id);
+    }
 
     return role;
   }

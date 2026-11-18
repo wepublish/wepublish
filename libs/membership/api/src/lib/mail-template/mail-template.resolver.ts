@@ -33,7 +33,12 @@ import {
   SendTestMailTemplateInput,
 } from './mail-template.model';
 import { PrismaClient } from '@prisma/client';
-import { CurrentUser, UserSession } from '@wepublish/authentication/api';
+import {
+  actorOf,
+  AuthSession,
+  CurrentUser,
+  requireSessionUser,
+} from '@wepublish/authentication/api';
 import { Feature } from '@wepublish/features/api';
 import { Permissions } from '@wepublish/permissions/api';
 import { MailTemplateService } from './mail-template.service';
@@ -117,13 +122,13 @@ export class MailTemplatesResolver {
     description: `Render a draft mail template with a mail type's sample data`,
   })
   async mailTemplatePreview(
-    @CurrentUser() user: UserSession,
+    @CurrentUser() session: AuthSession,
     @Args('input') input: MailTemplatePreviewInput
   ): Promise<MailTemplatePreviewModel> {
     const result = await this.mailTemplateService.preview({
       contextId: input.contextId as MailTemplateContextId,
       subscriptionId: input.subscriptionId,
-      currentUserId: user.user.id,
+      currentUserId: actorOf(session).userId,
       subject: input.subject,
       html: input.htmlContent,
       text: input.textContent,
@@ -149,13 +154,13 @@ export class MailTemplatesResolver {
     description: `Render a draft mail template as the letter a send would print`,
   })
   async mailTemplateLetterPreview(
-    @CurrentUser() user: UserSession,
+    @CurrentUser() session: AuthSession,
     @Args('input') input: MailTemplatePreviewInput
   ): Promise<MailTemplateLetterPreviewModel> {
     return this.mailTemplateService.previewLetter({
       contextId: input.contextId as MailTemplateContextId,
       subscriptionId: input.subscriptionId,
-      currentUserId: user.user.id,
+      currentUserId: actorOf(session).userId,
       html: input.htmlContent,
       letterLayoutId: input.letterLayoutId,
       letterAppendixId: input.letterAppendixId,
@@ -205,16 +210,18 @@ export class MailTemplatesResolver {
     description: `Send a test mail for a draft template`,
   })
   async sendTestMailTemplate(
-    @CurrentUser() user: UserSession,
+    @CurrentUser() session: AuthSession,
     @Args('input') input: SendTestMailTemplateInput
   ) {
+    const user = requireSessionUser(session);
+
     // Test mails always go to the current editor only — never an arbitrary
     // address — and carry that user's own login token.
     await this.mailTemplateService.sendTest({
       contextId: input.contextId as MailTemplateContextId,
       subscriptionId: input.subscriptionId,
-      currentUserId: user.user.id,
-      recipient: user.user.email,
+      currentUserId: user.id,
+      recipient: user.email,
       subject: input.subject,
       html: input.htmlContent,
       text: input.textContent,

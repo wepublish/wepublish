@@ -625,12 +625,36 @@ describe('MailSendJobService', () => {
           purlOrigin: 'letter',
           // No login link on paper unless the template asks for one.
           mintJwt: false,
+          mintPurl: true,
         })
       );
       expect(letterContext.sendLetter).toHaveBeenCalledWith(
         expect.objectContaining({
           data: expect.objectContaining({ purlCode: 'ABCDE-FGHJK' }),
         })
+      );
+    });
+
+    it('issues no login code for a letter that does not print one', async () => {
+      const prisma = fakePrisma({
+        ...template('custom'),
+        htmlContent: '<p>Hallo {{user_firstName}}</p>',
+      });
+      const buildMailData = vi.fn(async () => ({}) as never);
+
+      await makeService(
+        prisma,
+        { sendMail: vi.fn(), buildMailData },
+        recipientServiceFor(['u1']),
+        { sendLetter: vi.fn(async () => 'log-1') }
+      ).createJob(
+        { mailTemplateId: 'tpl-1', audience, channel: MailChannel.letter },
+        'editor-1'
+      );
+      await settle(prisma);
+
+      expect(buildMailData).toHaveBeenCalledWith(
+        expect.objectContaining({ mode: 'send', mintPurl: false })
       );
     });
 
@@ -1209,7 +1233,8 @@ describe('MailSendJobService.previewForAudience by mail', () => {
 
     expect(render).toHaveBeenCalledWith(
       ['contract', 'terms'],
-      expect.objectContaining({ user, optional: {}, jwt: 'jwt-1' })
+      // The same data the preview renders the mail with.
+      expect.objectContaining({ user, optional: {} })
     );
     expect(result.html).toContain('Hallo Jane');
     expect(result.attachments).toEqual([

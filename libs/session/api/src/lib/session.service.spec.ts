@@ -408,6 +408,22 @@ describe('SessionService impersonation', () => {
     );
   });
 
+  it('records a session of a login that names no origin as a password one, never restricted', async () => {
+    // The We.Publish staff login has nothing to do with login codes, the only
+    // origin that restricts a session.
+    const session = await service.createUserSession(target as never, {});
+
+    expect(prisma.session.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ origin: SessionOrigin.password }),
+      })
+    );
+    expect(session).toMatchObject({
+      origin: SessionOrigin.password,
+      restricted: false,
+    });
+  });
+
   it('redeems an impersonation grant once for a session of an hour, without TOTP', async () => {
     const before = Date.now();
     const session = await service.createSessionWithJWT('grant');

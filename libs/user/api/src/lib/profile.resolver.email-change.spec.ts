@@ -1,4 +1,5 @@
 import { ForbiddenException } from '@nestjs/common';
+import { AuthSessionType } from '@wepublish/authentication/api';
 import { LoginCodeSecondFactor } from '@wepublish/login-code/api';
 import {
   EMAIL_VERIFICATION_REQUIRED,
@@ -31,6 +32,7 @@ const session = ({
   placeholderEmail: boolean;
 }) =>
   ({
+    type: AuthSessionType.User,
     restricted,
     placeholderEmail,
     user: { id: 'user-1', email: 'old@example.com' },

@@ -1943,6 +1943,7 @@
       "paymentProviderStatusInfo": "✅ heisst, alle Zahlungsmethoden dieses Abo-Plans sind mit einem Zahlungsanbieter verbunden. ❌ heisst, mindestens einer Zahlungsmethode fehlt der Anbieter – damit können Leser:innen nicht bezahlen."
     },
     "deliveryMode": {
+      "viaApiKey": "via API-Schlüssel «{{key}}»",
       "panelTitle": "Zustellkanal",
       "channel": {
         "mail": "E-Mail",
@@ -3045,7 +3046,8 @@
         "reissue": "Neu ausstellen",
         "issued": "Neuer Code (wird nur einmal angezeigt):",
         "secondFactorAvailable": "Zweiter Faktor «{{factor}}» ist bei dieser Person hinterlegt.",
-        "secondFactorMissing": "Zweiter Faktor «{{factor}}» fehlt bei dieser Person – ohne diese Angabe kann sie keine E-Mail-Adresse hinterlegen."
+        "secondFactorMissing": "Zweiter Faktor «{{factor}}» fehlt bei dieser Person – ohne diese Angabe kann sie keine E-Mail-Adresse hinterlegen.",
+        "notForStaff": "Personen mit Rollen, die mehr erlauben als das Lesen hinter der Paywall, erhalten keinen persönlichen Login-Code. In ihren E-Mails und Briefen bleibt {{purl}} leer."
       },
       "totpEnabled": "Zwei-Faktor-Authentifizierung ist für diesen Benutzer aktiviert.",
       "totpDisabled": "Zwei-Faktor-Authentifizierung ist noch nicht eingerichtet. Der Benutzer wird beim nächsten Editor-Login aufgefordert, diese einzurichten.",
@@ -5154,6 +5156,7 @@
         "failed": "Fehlgeschlagen",
         "filterBySession": "Nach dieser Session filtern",
         "tokenActor": "API-Token: {{name}}",
+        "tokenActorOnBehalf": "API-Schlüssel: {{name}} · {{user}}",
         "impersonatedActor": "{{impersonator}} als {{actor}}",
         "unknownActor": "Unbekannt",
         "notSupported": "Diese Installation führt kein Audit-Log. Sobald die Migration eingespielt ist, erscheinen hier die Einträge.",
@@ -5311,6 +5314,7 @@
       "noLayouts": "Noch kein Briefpapier. Erstelle eines, damit Briefe eine Kopf- und Fusszeile bekommen."
     },
     "printIssues": {
+      "viaApiKey": "via API-Schlüssel «{{key}}»",
       "title": "Druckausgaben",
       "intro": "Die gedruckten Ausgaben mit den zugehörigen Empfänger:innen als Drucklisten aus allen Daten zusammengezogen und exportiert.<br /><br />Ein Exemplar kann in einigen Fällen auch noch jemand empfangen, mit einem am Erscheinungsdatum bereits inaktiven digitalen Abo, falls gleichzeitig die pro Abo-Dauer garantierte Anzahl gedruckter Ausgaben noch nicht vollständig erhalten wurde.<br/><br/>Die an die Druckerei übermittelten Drucklisten bilden die Basis sowohl für den Versand an die Leser:innen als auch für die Ermittlung, ob die garantierte Anzahl Ausgaben empfangen wurde.",
       "create": "Neue Ausgabe",
@@ -5718,7 +5722,7 @@
     "apiTokenList": {
       "overview": {
         "apiTokens": "API-Schlüssel",
-        "apiTokensInfo": "Mit einem API-Schlüssel kann ein Skript oder ein anderes System die API nutzen, ohne sich als Person anzumelden. Ein Schlüssel hat nur die Rechte, die Sie ihm geben.",
+        "apiTokensInfo": "Mit einem API-Schlüssel kann ein Skript oder ein anderes System die API nutzen, ohne sich als User anzumelden. Ein Schlüssel hat nur die Rechte, die Sie ihm geben.",
         "generateToken": "API-Schlüssel erstellen",
         "name": "Name",
         "prefix": "Schlüssel",
@@ -5728,6 +5732,15 @@
         "lastUsed": "Zuletzt verwendet",
         "never": "Nie verwendet",
         "status": "Status",
+        "blocked": "Blockiert",
+        "blockedReason": {
+          "CreatorMissing": "Der User, der diesen Schlüssel erstellt hat, existiert nicht mehr. Der Schlüssel funktioniert nicht mehr; erstellen Sie einen neuen.",
+          "CreatorInactive": "Der User, der diesen Schlüssel erstellt hat, ist deaktiviert. Solange funktioniert der Schlüssel nicht.",
+          "CreatorMayNotCreateApiTokens": "Der User, der diesen Schlüssel erstellt hat, darf keine API-Schlüssel mehr erstellen. Solange funktioniert der Schlüssel nicht."
+        },
+        "missingScopes_one": "{{count}} Recht fehlt",
+        "missingScopes_other": "{{count}} Rechte fehlen",
+        "missingScopesHelp": "Der User, der diesen Schlüssel erstellt hat, hat diese Rechte nicht mehr. Aufrufe, die sie brauchen, werden abgelehnt: {{scopes}}",
         "active": "Aktiv",
         "revoked": "Widerrufen",
         "revoke": "Widerrufen",
@@ -5738,7 +5751,7 @@
         "expiresInDays_other": "Läuft in {{count}} Tagen ab",
         "expiresDate": "{{expiresDate, ccc PP p}}",
         "owner": "Besitzer",
-        "ownerUnknown": "Gelöschte Person",
+        "ownerUnknown": "Gelöschter User",
         "filterByOwner": "Nach Besitzer filtern",
         "anyStatus": "Jeder Status"
       },

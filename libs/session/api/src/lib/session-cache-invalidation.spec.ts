@@ -1,6 +1,7 @@
 import type { Mock } from 'vitest';
 import { PrismaClient } from '@prisma/client';
 import {
+  AuthSessionType,
   SessionCacheInvalidator,
   UserSession,
 } from '@wepublish/authentication/api';
@@ -108,7 +109,10 @@ describe('session cache after authentication changes', () => {
   });
 
   it('clears cached sessions after logging out', async () => {
-    await sessions().revokeSession({ token: 'token-1' } as UserSession);
+    await sessions().revokeSession({
+      type: AuthSessionType.User,
+      token: 'token-1',
+    } as UserSession);
 
     expect(sessionCache.invalidate).toHaveBeenCalled();
   });

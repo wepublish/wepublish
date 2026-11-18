@@ -4,7 +4,8 @@ import {
   Authenticated,
   CurrentUser,
   RequiresFullSession,
-  UserSession,
+  requireSessionUser,
+  AuthSession,
 } from '@wepublish/authentication/api';
 import { UpgradeSubscriptionService } from './upgrade-subscription.service';
 import { Payment } from '@wepublish/payment/api';
@@ -21,7 +22,7 @@ export class UpgradeSubscriptionResolver {
     description: ``,
   })
   async upgradeUserSubscription(
-    @CurrentUser() session: UserSession,
+    @CurrentUser() session: AuthSession,
     @Args('subscriptionId') subscriptionId: string,
     @Args('memberPlanId') memberPlanId: string,
     @Args('monthlyAmount', {
@@ -35,7 +36,7 @@ export class UpgradeSubscriptionResolver {
     @Args('failureURL', { nullable: true }) failureURL?: string
   ) {
     return this.upgradeSubscriptionService.upgradeSubscription({
-      userId: session.user.id,
+      userId: requireSessionUser(session).id,
       memberPlanId,
       subscriptionId,
       paymentMethodId,
@@ -52,12 +53,12 @@ export class UpgradeSubscriptionResolver {
     description: `Undoes an upgrade of one of the authenticated user's own subscriptions as long as the new subscription has not been paid for. The replacement subscription is removed and the original one continues.`,
   })
   async revertUserSubscriptionUpgrade(
-    @CurrentUser() session: UserSession,
+    @CurrentUser() session: AuthSession,
     @Args('subscriptionId') subscriptionId: string
   ) {
     return this.upgradeSubscriptionService.revertUpgrade({
       subscriptionId,
-      userId: session.user.id,
+      userId: requireSessionUser(session).id,
     });
   }
 
@@ -77,13 +78,13 @@ export class UpgradeSubscriptionResolver {
     description: ``,
   })
   async upgradeUserSubscriptionInfo(
-    @CurrentUser() session: UserSession,
+    @CurrentUser() session: AuthSession,
     @Args('subscriptionId') subscriptionId: string,
     @Args('memberPlanId') memberPlanId: string,
     @Args('discountCode', { nullable: true }) discountCode?: string
   ): Promise<UpgradeSubscription> {
     return this.upgradeSubscriptionService.getInfo({
-      userId: session.user.id,
+      userId: requireSessionUser(session).id,
       memberPlanId,
       subscriptionId,
       discountCode,

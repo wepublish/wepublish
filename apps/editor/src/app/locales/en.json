@@ -1944,6 +1944,7 @@
       "paymentProviderStatusInfo": "✅ means every payment method of this plan is connected to a payment provider. ❌ means at least one payment method has no provider, so readers cannot pay with it."
     },
     "deliveryMode": {
+      "viaApiKey": "via API key «{{key}}»",
       "panelTitle": "Delivery channel",
       "channel": {
         "mail": "Email",
@@ -3099,7 +3100,8 @@
         "reissue": "Reissue",
         "issued": "New code (shown once):",
         "secondFactorAvailable": "Second factor “{{factor}}” is on file for this user.",
-        "secondFactorMissing": "Second factor “{{factor}}” is missing for this user – without it they cannot store an email address."
+        "secondFactorMissing": "Second factor “{{factor}}” is missing for this user – without it they cannot store an email address.",
+        "notForStaff": "People whose roles allow more than reading past the paywall never get a personal login code. {{purl}} stays empty in their emails and letters."
       },
       "totpEnabled": "Two-factor authentication is enabled for this user.",
       "totpDisabled": "Two-factor authentication is not yet configured. The user will be prompted to set it up on their next editor login.",
@@ -5173,6 +5175,7 @@
         "failed": "Failed",
         "filterBySession": "Filter by this session",
         "tokenActor": "API token: {{name}}",
+        "tokenActorOnBehalf": "API key: {{name}} · {{user}}",
         "impersonatedActor": "{{impersonator}} as {{actor}}",
         "unknownActor": "Unknown",
         "notSupported": "This installation does not keep an audit log. Entries will appear once the migration has been applied.",
@@ -5311,6 +5314,7 @@
       "noLayouts": "No stationery yet. Create one so letters get a header and footer."
     },
     "printIssues": {
+      "viaApiKey": "via API key «{{key}}»",
       "title": "Print issues",
       "intro": "Each printed issue with its print lists: who receives a copy is decided as of the ship day – from we.publish and bexio. Every print list delivered to the printshop counts toward the issues each reader paid for.",
       "create": "New issue",
@@ -5728,6 +5732,15 @@
         "lastUsed": "Last used",
         "never": "Never used",
         "status": "Status",
+        "blocked": "Blocked",
+        "blockedReason": {
+          "CreatorMissing": "The person who created this key no longer exists. The key no longer works; create a new one.",
+          "CreatorInactive": "The person who created this key is deactivated. The key does not work until they are active again.",
+          "CreatorMayNotCreateApiTokens": "The person who created this key may no longer create API keys. The key does not work until they may again."
+        },
+        "missingScopes_one": "{{count}} permission missing",
+        "missingScopes_other": "{{count}} permissions missing",
+        "missingScopesHelp": "The person who created this key no longer holds these permissions. Calls that need them are refused: {{scopes}}",
         "active": "Active",
         "revoked": "Revoked",
         "revoke": "Revoke",

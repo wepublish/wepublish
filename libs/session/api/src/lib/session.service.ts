@@ -11,8 +11,9 @@ import { assertDuration, type ImpersonationClaims } from './impersonation';
 import { UserAuthenticationService } from './user-authentication.service';
 import { JwtAuthenticationService } from './jwt-authentication.service';
 import {
+  AuthSession,
+  AuthSessionType,
   SessionCacheInvalidator,
-  UserSession,
 } from '@wepublish/authentication/api';
 import { MailContext, mailLogType } from '@wepublish/mail/api';
 import { SettingName, SettingsService } from '@wepublish/settings/api';
@@ -236,8 +237,8 @@ export class SessionService {
     });
   }
 
-  async revokeSession(session: UserSession | null) {
-    if (!session) {
+  async revokeSession(session: AuthSession | null) {
+    if (session?.type !== AuthSessionType.User) {
       return false;
     }
 
@@ -317,7 +318,11 @@ export class SessionService {
   async createUserSession(
     user: User,
     options: {
-      origin: SessionOrigin;
+      /**
+       * Only login codes restrict a session. Logins that name none, like the
+       * We.Publish staff login, are stored as the column default: password.
+       */
+      origin?: SessionOrigin;
       ttlMs?: number;
       impersonatedBy?: string;
       impersonationReason?: string;
@@ -325,6 +330,7 @@ export class SessionService {
     }
   ) {
     const token = nanoid(IDAlphabet, 64);
+    const origin = options.origin ?? SessionOrigin.password;
 
     const expiresAt = new Date(
       Date.now() + (options?.ttlMs ?? (await this.sessionTtlMs()))
@@ -335,7 +341,7 @@ export class SessionService {
         data: {
           token,
           expiresAt,
-          origin: options.origin,
+          origin,
           ...(options?.impersonatedBy ?
             {
               impersonatedBy: options.impersonatedBy,
@@ -368,9 +374,9 @@ export class SessionService {
       expiresAt,
       totpEnabled: user.totpEnabled,
       impersonated: !!options?.impersonatedBy,
-      origin: options.origin,
+      origin,
       restricted: isSessionRestricted({
-        origin: options.origin,
+        origin,
         placeholderEmail,
         emailVerifiedAt: user.emailVerifiedAt,
         sessionCreatedAt: createdAt,

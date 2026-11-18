@@ -336,6 +336,15 @@ model ApiToken {
 
   externalApps ExternalApps[]
 
+  // What this key did on behalf of its creator; the user is on the same row.
+  paidInvoices                 Invoice[]                @relation("InvoicePaidByApiToken")
+  deliveryPreferenceChanges    UserDeliveryPreference[] @relation("DeliveryPreferenceChangedByApiToken")
+  deliveryModeBulkChanges      DeliveryModeBulkChange[] @relation("DeliveryModeBulkChangedByApiToken")
+  closedPrintIssues            PrintIssue[]             @relation("PrintIssueClosedByApiToken")
+  pendingPrintIssueRuns        PrintIssue[]             @relation("PrintIssuePendingRunByApiToken")
+  createdPrintIssueDeliveries  PrintIssueDelivery[]     @relation("PrintIssueDeliveryCreatedByApiToken")
+  deliveredPrintIssueDeliveries PrintIssueDelivery[]    @relation("PrintIssueDeliveryDeliveredByApiToken")
+
   @@index([createdAt])
   @@index([createdById])
   @@index([prefix])
@@ -585,6 +594,9 @@ model Invoice {
   scheduledDeactivationAt   DateTime      @db.Timestamptz(3)
   items                     InvoiceItem[]
   manuallySetAsPaidByUserId String?
+  /// Set when an API key marked it as paid, on behalf of that user.
+  manuallySetAsPaidByApiTokenId String?
+  manuallySetAsPaidByApiToken   ApiToken? @relation("InvoicePaidByApiToken", fields: [manuallySetAsPaidByApiTokenId], references: [id], onDelete: SetNull)
   currency                  Currency
   // When the RENEWAL_SUCCESS mail for this invoice went out. Claimed
   // atomically so the webhook, the nightly job and the admin path can never
@@ -2930,6 +2942,9 @@ model UserDeliveryPreference {
 
   changedByUserId String?
   changedBy       User?    @relation("DeliveryPreferenceChangedBy", fields: [changedByUserId], references: [id], onDelete: SetNull)
+  /// Set when an API key made the change, on behalf of that user.
+  changedByApiTokenId String?
+  changedByApiToken   ApiToken? @relation("DeliveryPreferenceChangedByApiToken", fields: [changedByApiTokenId], references: [id], onDelete: SetNull)
   changedAt       DateTime @db.Timestamptz(3)
 
   @@index([channel, origin])
@@ -2953,6 +2968,9 @@ model DeliveryModeBulkChange {
 
   changedByUserId String?
   changedBy       User?   @relation("DeliveryModeBulkChangedBy", fields: [changedByUserId], references: [id], onDelete: SetNull)
+  /// Set when an API key made the change, on behalf of that user.
+  changedByApiTokenId String?
+  changedByApiToken   ApiToken? @relation("DeliveryModeBulkChangedByApiToken", fields: [changedByApiTokenId], references: [id], onDelete: SetNull)
 
   @@index([createdAt(sort: Desc)])
   @@map("user_delivery_bulk_changes")
@@ -3043,6 +3061,9 @@ model PrintIssue {
   closedAt       DateTime? @db.Timestamptz(3)
   closedBy       User?     @relation("PrintIssueClosedBy", fields: [closedByUserId], references: [id], onDelete: SetNull)
   closedByUserId String?
+  /// Set when an API key closed it, on behalf of that user.
+  closedByApiTokenId String?
+  closedByApiToken   ApiToken? @relation("PrintIssueClosedByApiToken", fields: [closedByApiTokenId], references: [id], onDelete: SetNull)
 
   /// The computed list waiting to be checked and exported: exporting writes
   /// exactly these rows, never a new computation. Cleared when exported.
@@ -3050,6 +3071,8 @@ model PrintIssue {
   pendingRunAt       DateTime? @db.Timestamptz(3)
   pendingRunBy       User?     @relation("PrintIssuePendingRunBy", fields: [pendingRunByUserId], references: [id], onDelete: SetNull)
   pendingRunByUserId String?
+  pendingRunByApiTokenId String?
+  pendingRunByApiToken   ApiToken? @relation("PrintIssuePendingRunByApiToken", fields: [pendingRunByApiTokenId], references: [id], onDelete: SetNull)
 
   deliveries PrintIssueDelivery[]
   recipients PrintIssueRecipient[]
@@ -3075,6 +3098,9 @@ model PrintIssueDelivery {
 
   createdBy       User?   @relation("PrintIssueDeliveryCreatedBy", fields: [createdByUserId], references: [id], onDelete: SetNull)
   createdByUserId String?
+  /// Set when an API key exported the list, on behalf of that user.
+  createdByApiTokenId String?
+  createdByApiToken   ApiToken? @relation("PrintIssueDeliveryCreatedByApiToken", fields: [createdByApiTokenId], references: [id], onDelete: SetNull)
 
   /// the options this list was computed with
   options   Json
@@ -3087,6 +3113,8 @@ model PrintIssueDelivery {
   deliveredAt       DateTime? @db.Timestamptz(3)
   deliveredBy       User?     @relation("PrintIssueDeliveryDeliveredBy", fields: [deliveredByUserId], references: [id], onDelete: SetNull)
   deliveredByUserId String?
+  deliveredByApiTokenId String?
+  deliveredByApiToken   ApiToken? @relation("PrintIssueDeliveryDeliveredByApiToken", fields: [deliveredByApiTokenId], references: [id], onDelete: SetNull)
 
   recipients PrintIssueRecipient[]
 

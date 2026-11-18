@@ -1,3 +1,4 @@
+import { AuthSessionType } from '@wepublish/authentication/api';
 import { LoginCodeSecondFactor } from '@wepublish/login-code/api';
 import { SessionResolver } from './session.resolver';
 
@@ -9,6 +10,7 @@ const sessionInfoWith = (
     {} as never,
     { getFactor: vi.fn().mockResolvedValue(secondFactor) } as never
   ).sessionInfo({
+    type: AuthSessionType.User,
     origin: 'purl',
     restricted: true,
     placeholderEmail,

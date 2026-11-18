@@ -10,6 +10,7 @@ import { MailContext, MailchimpContactService } from '@wepublish/mail/api';
 import { UserService } from './user.service';
 import { HibpService } from './hibp.service';
 import { UserDataloaderService } from './user-dataloader.service';
+import { LoginCodeService } from '@wepublish/login-code/api';
 
 const user = {
   id: 'user-1',
@@ -56,6 +57,10 @@ describe('UserService email quality', () => {
           },
         },
         { provide: UserDataloaderService, useValue: { prime: vi.fn() } },
+        {
+          provide: LoginCodeService,
+          useValue: { revokeIfStaff: vi.fn(), revokeForRole: vi.fn() },
+        },
         {
           provide: AuthenticationService,
           useValue: {

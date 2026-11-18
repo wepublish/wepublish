@@ -7,6 +7,12 @@ import {
 import { InvoiceDataloader } from './invoice.dataloader';
 import { createInvoiceFilter, InvoiceService } from './invoice.service';
 
+/** Who did it: a signed-in user, or an API key on behalf of its creator. */
+const by = (userId: string, apiTokenId: string | null = null) => ({
+  userId,
+  apiTokenId,
+});
+
 describe('InvoiceService.checkInvoiceStatus', () => {
   it('notifies that the invoice is paid after checking its payments', async () => {
     const prisma = {
@@ -145,10 +151,21 @@ async function setup() {
 }
 
 describe('InvoiceService.markInvoiceAsPaid', () => {
+  it('records the api key that marked it as paid next to its creator', async () => {
+    const { service, prisma } = await setup();
+
+    await service.markInvoiceAsPaid('inv-2', by('creator-1', 'key-1'));
+
+    expect(prisma.invoice.update.mock.calls.at(-1)?.[0].data).toMatchObject({
+      manuallySetAsPaidByUserId: 'creator-1',
+      manuallySetAsPaidByApiTokenId: 'key-1',
+    });
+  });
+
   it('triggers the renewal success mail by default', async () => {
     const { service, prisma, invoicePaidNotifier } = await setup();
 
-    await service.markInvoiceAsPaid('inv-2', 'admin-1');
+    await service.markInvoiceAsPaid('inv-2', by('admin-1'));
 
     const paidUpdate = prisma.invoice.update.mock.calls.at(-1)?.[0];
     expect(paidUpdate.data.paidAt).toBeInstanceOf(Date);
@@ -160,7 +177,7 @@ describe('InvoiceService.markInvoiceAsPaid', () => {
   it('suppresses the mail in the same update when asked not to send', async () => {
     const { service, prisma, invoicePaidNotifier } = await setup();
 
-    await service.markInvoiceAsPaid('inv-2', 'admin-1', false);
+    await service.markInvoiceAsPaid('inv-2', by('admin-1'), false);
 
     const paidUpdate = prisma.invoice.update.mock.calls.at(-1)?.[0];
     expect(paidUpdate.data.paidAt).toBeInstanceOf(Date);

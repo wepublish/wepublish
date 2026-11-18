@@ -98,3 +98,57 @@ describe('MailController template data', () => {
     expect(optionalData.user.roleIDs).toEqual(['admin']);
   });
 });
+
+describe('MailController login codes', () => {
+  async function purlRequestsFor(template: Record<string, unknown> | null) {
+    const purlFor = vi.fn(async () => EMPTY_PURL_DATA);
+    const mailContext = {
+      mailProvider: { id: 'mailgun' },
+      jwtGenerator: vi.fn(async () => 'jwt-1'),
+      purlProvider: { purlFor },
+      isPlaceholderEmail: vi.fn(async () => false),
+      buildMailData: MailContext.prototype.buildMailData,
+      sendComposedMail: vi.fn(async () => ({
+        subject: 'S',
+        providerMessageID: 'msg-1',
+      })),
+    } as unknown as MailContext;
+    const prisma = {
+      mailLog: { count: vi.fn(async () => 0), create: vi.fn() },
+      mailTemplate: { findUnique: vi.fn(async () => template) },
+    } as any;
+
+    await new MailController(prisma, mailContext, {
+      mailTemplateId: 'template-1',
+      recipient,
+      optionalData: {},
+      mailType: mailLogType.SubscriptionFlow,
+    }).sendMail();
+
+    return purlFor.mock.calls.length;
+  }
+
+  it('issues no login code for a mail that does not show one', async () => {
+    expect(
+      await purlRequestsFor({
+        subject: 'Ihr Abo',
+        htmlContent: '<p>Hallo {{user_firstName}}</p>',
+        textContent: null,
+      })
+    ).toBe(0);
+  });
+
+  it('issues the login code for a mail that shows it', async () => {
+    expect(
+      await purlRequestsFor({
+        subject: 'Ihr Abo',
+        htmlContent: '<a href="{{purl}}">Anmelden</a>',
+        textContent: null,
+      })
+    ).toBe(1);
+  });
+
+  it('issues it for a template kept at the mail provider, whose placeholders are unknown', async () => {
+    expect(await purlRequestsFor(null)).toBe(1);
+  });
+});

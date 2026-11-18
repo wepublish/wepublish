@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as SplatRouteImport } from './routes/$'
 import { Route as SlugRouteImport } from './routes/$slug'
 import { Route as AtomDotxmlRouteImport } from './routes/atom[.]xml'
+import { Route as ConfirmEmailRouteImport } from './routes/confirm-email'
 import { Route as FeedDotjsonRouteImport } from './routes/feed[.]json'
 import { Route as LlmsDottxtRouteImport } from './routes/llms[.]txt'
 import { Route as LoginRouteImport } from './routes/login'
@@ -56,6 +57,11 @@ const SlugRoute = SlugRouteImport.update({
 const AtomDotxmlRoute = AtomDotxmlRouteImport.update({
   id: '/atom.xml',
   path: '/atom.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConfirmEmailRoute = ConfirmEmailRouteImport.update({
+  id: '/confirm-email',
+  path: '/confirm-email',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FeedDotjsonRoute = FeedDotjsonRouteImport.update({
@@ -186,6 +192,7 @@ export interface FileRoutesByFullPath {
   '/$': typeof SplatRoute
   '/$slug': typeof SlugRoute
   '/atom.xml': typeof AtomDotxmlRoute
+  '/confirm-email': typeof ConfirmEmailRoute
   '/feed.json': typeof FeedDotjsonRoute
   '/llms.txt': typeof LlmsDottxtRoute
   '/login': typeof LoginRoute
@@ -216,6 +223,7 @@ export interface FileRoutesByTo {
   '/$': typeof SplatRoute
   '/$slug': typeof SlugRoute
   '/atom.xml': typeof AtomDotxmlRoute
+  '/confirm-email': typeof ConfirmEmailRoute
   '/feed.json': typeof FeedDotjsonRoute
   '/llms.txt': typeof LlmsDottxtRoute
   '/login': typeof LoginRoute
@@ -247,6 +255,7 @@ export interface FileRoutesById {
   '/$': typeof SplatRoute
   '/$slug': typeof SlugRoute
   '/atom.xml': typeof AtomDotxmlRoute
+  '/confirm-email': typeof ConfirmEmailRoute
   '/feed.json': typeof FeedDotjsonRoute
   '/llms.txt': typeof LlmsDottxtRoute
   '/login': typeof LoginRoute
@@ -279,6 +288,7 @@ export interface FileRouteTypes {
     | '/$'
     | '/$slug'
     | '/atom.xml'
+    | '/confirm-email'
     | '/feed.json'
     | '/llms.txt'
     | '/login'
@@ -309,6 +319,7 @@ export interface FileRouteTypes {
     | '/$'
     | '/$slug'
     | '/atom.xml'
+    | '/confirm-email'
     | '/feed.json'
     | '/llms.txt'
     | '/login'
@@ -339,6 +350,7 @@ export interface FileRouteTypes {
     | '/$'
     | '/$slug'
     | '/atom.xml'
+    | '/confirm-email'
     | '/feed.json'
     | '/llms.txt'
     | '/login'
@@ -370,6 +382,7 @@ export interface RootRouteChildren {
   SplatRoute: typeof SplatRoute
   SlugRoute: typeof SlugRoute
   AtomDotxmlRoute: typeof AtomDotxmlRoute
+  ConfirmEmailRoute: typeof ConfirmEmailRoute
   FeedDotjsonRoute: typeof FeedDotjsonRoute
   LlmsDottxtRoute: typeof LlmsDottxtRoute
   LoginRoute: typeof LoginRoute
@@ -424,6 +437,13 @@ declare module '@tanstack/react-router' {
       path: '/atom.xml'
       fullPath: '/atom.xml'
       preLoaderRoute: typeof AtomDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/confirm-email': {
+      id: '/confirm-email'
+      path: '/confirm-email'
+      fullPath: '/confirm-email'
+      preLoaderRoute: typeof ConfirmEmailRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/feed.json': {
@@ -602,6 +622,7 @@ const rootRouteChildren: RootRouteChildren = {
   SplatRoute: SplatRoute,
   SlugRoute: SlugRoute,
   AtomDotxmlRoute: AtomDotxmlRoute,
+  ConfirmEmailRoute: ConfirmEmailRoute,
   FeedDotjsonRoute: FeedDotjsonRoute,
   LlmsDottxtRoute: LlmsDottxtRoute,
   LoginRoute: LoginRoute,

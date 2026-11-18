@@ -35,7 +35,9 @@ import { Payment } from '@wepublish/payment/api';
 import {
   Authenticated,
   CurrentUser,
-  UserSession,
+  actorOf,
+  requireSessionUser,
+  AuthSession,
 } from '@wepublish/authentication/api';
 import { User, UserDataloaderService } from '@wepublish/user/api';
 
@@ -75,8 +77,8 @@ export class InvoiceResolver {
     description: 'Get all invoices for the authenticated user',
   })
   @Authenticated()
-  async userInvoices(@CurrentUser() session: UserSession) {
-    return this.service.getUserInvoices(session.user.id);
+  async userInvoices(@CurrentUser() session: AuthSession) {
+    return this.service.getUserInvoices(requireSessionUser(session).id);
   }
 
   @Query(() => Invoice, {
@@ -86,9 +88,9 @@ export class InvoiceResolver {
   @Authenticated()
   async checkInvoiceStatus(
     @Args('id') id: string,
-    @CurrentUser() session: UserSession
+    @CurrentUser() session: AuthSession
   ) {
-    return this.service.checkInvoiceStatus(id, session.user.id);
+    return this.service.checkInvoiceStatus(id, requireSessionUser(session).id);
   }
 
   @Permissions(CanCreateInvoice)
@@ -121,11 +123,11 @@ export class InvoiceResolver {
   })
   public markInvoiceAsPaid(
     @Args('id') id: string,
-    @CurrentUser() session: UserSession,
+    @CurrentUser() session: AuthSession,
     @Args('sendMail', { type: () => Boolean, defaultValue: true })
     sendMail: boolean
   ) {
-    return this.service.markInvoiceAsPaid(id, session.user.id, sendMail);
+    return this.service.markInvoiceAsPaid(id, actorOf(session), sendMail);
   }
 
   @ResolveField(() => [InvoiceItem])
