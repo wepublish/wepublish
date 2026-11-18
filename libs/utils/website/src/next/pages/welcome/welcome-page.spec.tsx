@@ -9,7 +9,7 @@ import {
 } from '@wepublish/mocks/website';
 import { actWait } from '@wepublish/testing';
 import {
-  CurrentSessionDocument,
+  SessionInfoDocument,
   MeDocument,
   RequestEmailChangeDocument,
 } from '@wepublish/website/api';
@@ -31,12 +31,12 @@ const session = (
   restricted = true,
   { secondFactor = 'none', canReplaceEmail = placeholderEmail } = {}
 ) => ({
-  request: { query: CurrentSessionDocument },
+  request: { query: SessionInfoDocument },
   // Answer right away instead of after MockLink's simulated network delay.
   delay: 0,
   result: {
     data: {
-      currentSession: {
+      sessionInfo: {
         __typename: 'SessionInfo',
         origin: 'purl',
         restricted,

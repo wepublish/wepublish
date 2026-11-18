@@ -12,6 +12,7 @@ import {
 } from '@wepublish/login-code/api';
 import { SessionResolver } from './session.resolver';
 import { SessionService } from './session.service';
+import { ImpersonationService } from './impersonation.service';
 
 @Resolver()
 export class ObligatoryQueryResolver {
@@ -68,9 +69,11 @@ describe('SessionResolver', () => {
   let app: INestApplication;
 
   let sessionService: PartialMocked<SessionService>;
+  let impersonationService: { continueOnWebsite: ReturnType<typeof vi.fn> };
 
   beforeEach(async () => {
     sessionService = createMock(SessionService);
+    impersonationService = { continueOnWebsite: vi.fn() };
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -99,6 +102,10 @@ describe('SessionResolver', () => {
             getFactor: async () => LoginCodeSecondFactor.none,
             mask: async (user: unknown) => user,
           },
+        },
+        {
+          provide: ImpersonationService,
+          useValue: impersonationService,
         },
       ],
     }).compile();

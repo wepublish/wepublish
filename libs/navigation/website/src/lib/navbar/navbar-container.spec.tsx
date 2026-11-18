@@ -9,7 +9,7 @@ import {
   mockPeerProfileQuery,
   mockSensitiveDataUser,
   mockSubscription,
-  mockCurrentSessionQuery,
+  mockSessionInfoQuery,
   mockSettingListQuery,
   renderWithProviders,
 } from '@wepublish/mocks/website';
@@ -62,7 +62,7 @@ const cacheAndNetwork = {
 } as unknown as ApolloClient.DefaultOptions;
 
 // The account setup state is only fetched for a logged in reader.
-const accountSetupMocks = [mockSettingListQuery(), mockCurrentSessionQuery()];
+const accountSetupMocks = [mockSettingListQuery(), mockSessionInfoQuery()];
 
 const renderContainer = ({
   mocks = [],

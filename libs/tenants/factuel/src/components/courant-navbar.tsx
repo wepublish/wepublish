@@ -49,6 +49,15 @@ const CourantNavbarWrapper = styled(NavbarWrapper)`
   }
 `;
 
+// Collapse the reserved links column when no top-level links are rendered;
+// re-expand automatically if a second child appears.
+const CourantNavbarMain = styled(NavbarMain)`
+  grid-template-columns: max-content;
+  &:has(> :nth-child(2)) {
+    grid-template-columns: max-content 1fr;
+  }
+`;
+
 // Match gutters with rest of page layout
 const CourantNavbarInnerWrapper = styled(NavbarInnerWrapper)`
   width: 100%;
@@ -77,7 +86,13 @@ const CourantIconButtonWrapper = styled(NavbarIconButtonWrapper)`
   color: ${({ theme }) => theme.palette.common.black};
   aspect-ratio: unset;
   width: auto;
-  padding-inline: ${({ theme }) => theme.spacing(1.5)};
+  padding-inline: 0;
+
+  /* Offset the IconButton's own inline padding so the burger's visual edge
+     aligns with the page gutter. MUI IconButton size="large" = 12px padding. */
+  .MuiIconButton-root {
+    margin-inline-start: -12px;
+  }
 
   svg {
     font-size: 1.5rem;
@@ -177,7 +192,7 @@ export const CourantNavbar = ({
         css={appBarStyles(isMenuOpen)}
       >
         <CourantNavbarInnerWrapper>
-          <NavbarMain>
+          <CourantNavbarMain>
             <CourantIconButtonWrapper>
               <IconButton
                 size="large"
@@ -203,7 +218,7 @@ export const CourantNavbar = ({
                 ))}
               </NavbarLinks>
             )}
-          </NavbarMain>
+          </CourantNavbarMain>
 
           <NavbarLoginLink
             href="/"

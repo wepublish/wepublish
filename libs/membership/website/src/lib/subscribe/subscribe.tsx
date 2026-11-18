@@ -270,7 +270,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       result = zodAlwaysRefine(result).refine(
         data => data.password === data.passwordRepeated,
         {
-          message: 'Passwörter stimmen nicht überein.',
+          message: t('user.form.passwordsDoNotMatch'),
           path: ['passwordRepeated'],
         }
       );
@@ -280,14 +280,14 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       result = zodAlwaysRefine(result).refine(
         data => data.email === data.emailRepeated,
         {
-          message: 'E-Mailadressen stimmen nicht überein.',
+          message: t('user.form.emailsDoNotMatch'),
           path: ['emailRepeated'],
         }
       );
     }
 
     return result;
-  }, [fieldsToDisplay, schema]);
+  }, [fieldsToDisplay, schema, t]);
 
   const loggedInSchema = subscribeSchema;
   const schem = useMemo(
@@ -312,7 +312,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             );
           },
           {
-            message: `Betrag kleiner wie der Mindestbetrag.`,
+            message: t('subscribe.errors.amountBelowMin'),
             path: ['monthlyAmount'],
           }
         )
@@ -329,7 +329,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           );
         },
         {
-          message: `Dieser Abo-Plan ist für dieses Zahlungsintervall nicht verfügbar.`,
+          message: t('subscribe.errors.memberPlanUnavailableForPeriodicity'),
           path: ['memberPlanId'],
         }
       ),
@@ -339,6 +339,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       loggedOutSchema,
       memberPlans.data?.memberPlans.nodes,
       usesMonthlyOnlyDisplay,
+      t,
     ]
   );
 

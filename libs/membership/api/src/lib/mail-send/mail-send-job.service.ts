@@ -18,13 +18,17 @@ import {
 } from '@prisma/client';
 import { v7 as uuidv7 } from 'uuid';
 import {
-  MailContext,
+  attachmentIdsOf,
   composeMail,
+  MAIL_TEMPLATE_ATTACHMENT_IDS,
+  MailAttachmentError,
+  MailContext,
   mailLogType,
   templateUsesJwt,
 } from '@wepublish/mail/api';
 import {
   canReceiveLetters,
+  DocumentAttachmentRenderer,
   LetterContext,
   printSettings,
   toLetterAddress,
@@ -51,8 +55,22 @@ const BATCH_SIZE = 100;
 /** How many queued recipients are loaded per send round. */
 const SEND_BATCH_SIZE = 25;
 
-/** Write progress to the job row after this many recipients. */
+/** Write progress to the job row after this many recipients… */
 const PROGRESS_EVERY = 10;
+
+/**
+ * …or once this much time has passed, whichever comes first: mails whose
+ * attachments are converted one by one can take a minute each, and the
+ * heartbeat must stay well inside {@link STALLED_AFTER_MS}.
+ */
+const PROGRESS_INTERVAL_MS = 60 * 1000;
+
+/**
+ * A job stops after this many mails in a row whose attachments could not be
+ * rendered. They are the same documents for every mail, so the rest would
+ * fail alike; the job can be continued once the cause is fixed.
+ */
+const ATTACHMENT_FAILURES_BEFORE_STOP = 3;
 
 /**
  * A `running` job that has not reported progress for this long is considered
@@ -90,7 +108,8 @@ export class MailSendJobService {
     private mailContext: MailContext,
     private letterContext: LetterContext,
     private recipientService: MailSendRecipientService,
-    private features: FeaturesService
+    private features: FeaturesService,
+    private attachments: DocumentAttachmentRenderer
   ) {}
 
   /**
@@ -483,6 +502,8 @@ export class MailSendJobService {
   ): Promise<void> {
     const jobId = job.id;
     let processed = 0;
+    let progressAt = Date.now();
+    let attachmentFailuresInARow = 0;
 
     for (;;) {
       if (!(await this.isRunning(jobId))) {
@@ -523,10 +544,26 @@ export class MailSendJobService {
           continue;
         }
 
-        await this.deliver(job, template, entry, recipient);
+        const failure = await this.deliver(job, template, entry, recipient);
 
-        if (++processed % PROGRESS_EVERY === 0) {
+        if (!(failure instanceof MailAttachmentError)) {
+          attachmentFailuresInARow = 0;
+        } else if (
+          ++attachmentFailuresInARow >= ATTACHMENT_FAILURES_BEFORE_STOP
+        ) {
+          // Caught by processJob, which fails the job and leaves the rest of
+          // the queue pending.
+          throw new Error(
+            `Stopped after ${attachmentFailuresInARow} mails in a row whose attachments could not be rendered: ${failure.message} Continue the job, retrying the failed mails, once that is fixed.`
+          );
+        }
+
+        if (
+          ++processed % PROGRESS_EVERY === 0 ||
+          Date.now() - progressAt >= PROGRESS_INTERVAL_MS
+        ) {
           await this.writeProgress(jobId);
+          progressAt = Date.now();
         }
       }
 
@@ -537,8 +574,8 @@ export class MailSendJobService {
   /**
    * Send one queued message and record the outcome on its queue row. Never
    * throws: a recipient that cannot be reached must not stop the rest of the
-   * job. Which medium is used is the job's decision — everything else about a
-   * send is the same either way.
+   * job. Returns why the message failed, if it did. Which medium is used is
+   * the job's decision — everything else about a send is the same either way.
    */
   private async deliver(
     job: Pick<
@@ -553,7 +590,7 @@ export class MailSendJobService {
     template: MailTemplate,
     entry: Pick<MailSendJobRecipient, 'id'>,
     recipient: MailRecipient
-  ): Promise<void> {
+  ): Promise<Error | null> {
     const mailLogId = uuidv7();
     const isLetter = job.channel === MailChannel.letter;
 
@@ -597,6 +634,8 @@ export class MailSendJobService {
         sentAt: new Date(),
         error: null,
       });
+
+      return null;
     } catch (error) {
       const message = (error as Error).message;
 
@@ -610,6 +649,8 @@ export class MailSendJobService {
           recipient.user.email
         }: ${message}`
       );
+
+      return error as Error;
     }
   }
 
@@ -742,6 +783,8 @@ export class MailSendJobService {
     html: string;
     text?: string;
     pdf?: string;
+    /** Mail only; a letter prints them inside its pdf. */
+    attachments: { filename: string; pdf: string }[];
     recipient: MailRecipient | null;
   }> {
     await this.assertChannelAllowed(input.channel);
@@ -754,7 +797,7 @@ export class MailSendJobService {
     );
 
     if (!recipient) {
-      return { subject: '', html: '', recipient: null };
+      return { subject: '', html: '', attachments: [], recipient: null };
     }
 
     const optionalData = await this.buildOptionalData(template, recipient);
@@ -771,6 +814,7 @@ export class MailSendJobService {
         template: {
           htmlContent: template.htmlContent,
           letterAppendixId: template.letterAppendixId,
+          attachmentIds: attachmentIdsOf(template),
         },
         layout: await this.letterContext.resolveLayout(template.letterLayoutId),
         addressPosition: print.addressPosition,
@@ -788,27 +832,40 @@ export class MailSendJobService {
         subject: template.subject,
         html: '',
         pdf: pdf.toString('base64'),
+        attachments: [],
         recipient,
       };
     }
 
+    const data = await this.mailContext.buildMailData({
+      recipient: recipient.user,
+      optionalData,
+      mode: 'preview',
+    });
     const composed = composeMail(
       {
         subject: template.subject,
         htmlContent: template.htmlContent,
         textContent: template.textContent,
       },
-      await this.mailContext.buildMailData({
-        recipient: recipient.user,
-        optionalData,
-        mode: 'preview',
-      })
+      data
     );
+    // Not caught: a document that cannot be rendered fails the send for this
+    // recipient too, so the preview says why before anything goes out.
+    const attachmentIds = attachmentIdsOf(template);
+    const attachments =
+      attachmentIds.length ?
+        await this.attachments.render(attachmentIds, data)
+      : [];
 
     return {
       subject: composed.subject,
       html: composed.messageHtml,
       text: composed.message,
+      attachments: attachments.map(({ filename, content }) => ({
+        filename,
+        pdf: content.toString('base64'),
+      })),
       recipient,
     };
   }
@@ -891,7 +948,35 @@ export class MailSendJobService {
   ): Promise<string[]> {
     const template = await this.loadTemplate(templateId);
 
-    return findMissingPlaceholders(template, withSubscriptionData);
+    return findMissingPlaceholders(
+      template,
+      withSubscriptionData,
+      await this.attachmentPlaceholders(attachmentIdsOf(template))
+    );
+  }
+
+  /**
+   * Only a warning: an attachment that cannot be read now fails the send
+   * itself, with its own message, so the check of the template goes on.
+   */
+  private async attachmentPlaceholders(
+    documentIds: string[]
+  ): Promise<string[]> {
+    if (!documentIds.length) {
+      return [];
+    }
+
+    try {
+      return await this.attachments.placeholders(documentIds);
+    } catch (error) {
+      this.logger.warn(
+        `Could not read the placeholders of attachments ${documentIds.join(
+          ', '
+        )}: ${(error as Error).message}`
+      );
+
+      return [];
+    }
   }
 
   private audienceFor(audience: MailAudienceInput): MailSendAudience {
@@ -904,9 +989,12 @@ export class MailSendJobService {
     return (template.context ?? 'custom') as MailTemplateContextId;
   }
 
-  private async loadTemplate(id: string): Promise<MailTemplate> {
+  private async loadTemplate(
+    id: string
+  ): Promise<MailTemplate & { attachments?: { documentId: string }[] }> {
     const template = await this.prisma.mailTemplate.findUnique({
       where: { id },
+      include: MAIL_TEMPLATE_ATTACHMENT_IDS,
     });
 
     if (!template) {

@@ -1,5 +1,6 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import {
+  assertNotImpersonating,
   AuthenticationService,
   AuthSessionType,
   Authenticated,
@@ -18,6 +19,7 @@ import { UploadImageInput } from '@wepublish/image/api';
 import { ProfileService } from './profile.service';
 import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import { UserService } from './user.service';
+import { assertNotManagedByWepublishLogin } from './managed-by-wepublish-login';
 
 export const EMAIL_VERIFICATION_REQUIRED = 'EMAIL_VERIFICATION_REQUIRED';
 
@@ -52,8 +54,13 @@ export class ProfileResolver {
   async updatePassword(
     @Args('password') password: string,
     @Args('passwordRepeated') passwordRepeated: string,
-    @CurrentUser() { id, user }: UserSession
+    @CurrentUser() session: UserSession
   ) {
+    const { id, user } = session;
+
+    assertNotManagedByWepublishLogin(user);
+    assertNotImpersonating(session);
+
     if (password !== passwordRepeated) {
       throw new BadRequestException(
         'password and passwordRepeated are not equal'
@@ -76,6 +83,8 @@ export class ProfileResolver {
     @Args() uploadImageInput: UploadImageInput,
     @CurrentUser() session: UserSession
   ) {
+    assertNotManagedByWepublishLogin(session.user);
+
     return this.profileService.uploadUserProfileImage(
       session.user,
       uploadImageInput
@@ -92,6 +101,9 @@ export class ProfileResolver {
     @CurrentUser() session: UserSession,
     @Args('secondFactor', { nullable: true }) secondFactor?: string
   ): Promise<boolean> {
+    assertNotManagedByWepublishLogin(session.user);
+    assertNotImpersonating(session);
+
     if (session.restricted) {
       const mayReplace = codeSessionMayReplaceEmail({
         placeholderEmail: session.placeholderEmail,
@@ -145,6 +157,8 @@ export class ProfileResolver {
     @Args('token') token: string,
     @CurrentUser() session?: UserSession
   ) {
+    assertNotImpersonating(session);
+
     return this.userService.confirmEmailChange(token, {
       exceptSessionToken:
         session?.type === AuthSessionType.User ? session.token : undefined,

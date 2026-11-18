@@ -19,6 +19,7 @@ import {
   CurrentUser,
   RequiresFullSession,
   UserSession,
+  assertNotImpersonating,
 } from '@wepublish/authentication/api';
 import { JwtService } from '@wepublish/session/api';
 
@@ -105,6 +106,8 @@ export class ExternalAppsResolver {
     @Args('externalAppId') externalAppId: string,
     @CurrentUser() session: UserSession
   ): Promise<ExternalAppToken> {
+    assertNotImpersonating(session);
+
     const app = await this.externalAppsDataloader.load(externalAppId);
 
     if (!app) {

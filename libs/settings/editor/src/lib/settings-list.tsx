@@ -53,6 +53,8 @@ import {
   Grid,
   InputAdornment,
   MenuItem,
+  Radio,
+  RadioGroup,
   Stack,
   TextField,
 } from '@mui/material';
@@ -202,7 +204,13 @@ const SETTINGS = {
     label: 'settingList.printBexioKinds',
     value: [],
   },
+  [SettingName.FeedPaywalledContent]: {
+    label: 'settingList.feedPaywalledContent',
+    value: 'lead',
+  },
 } as Record<SettingName, { label: string; value: unknown }>;
+
+const FEED_PAYWALLED_CONTENT_CHOICES = ['lead', 'visible', 'full'] as const;
 
 type SettingValues = Record<SettingName, unknown>;
 
@@ -345,7 +353,11 @@ function SettingList() {
   }, [fetchError, t, updateSettingError]);
 
   const valueText = useCallback(
-    (value: unknown): string => {
+    (value: unknown, name?: SettingName): string => {
+      if (name === SettingName.FeedPaywalledContent) {
+        return t(`settingList.feedPaywalledContentChoice.${value}`);
+      }
+
       if (value === true) {
         return t('settingList.enabled');
       }
@@ -865,6 +877,53 @@ function SettingList() {
                   </Card>
                 </Grid>
 
+                <Grid size={{ xs: 12 }}>
+                  <Card>
+                    <CardHeader title={t('settingList.feeds')} />
+
+                    <CardContent>
+                      <FormControl fullWidth>
+                        <SettingRow>
+                          <FormLabel id="setting-feed-paywalled-content-label">
+                            {t(
+                              SETTINGS[SettingName.FeedPaywalledContent].label
+                            )}
+                          </FormLabel>
+                          <InfoTooltip
+                            text={t(
+                              'settingList.warnings.feedPaywalledContent'
+                            )}
+                          />
+                        </SettingRow>
+
+                        <Controller
+                          control={control}
+                          name={SettingName.FeedPaywalledContent}
+                          render={({ field }) => (
+                            <RadioGroup
+                              {...field}
+                              aria-labelledby="setting-feed-paywalled-content-label"
+                              value={field.value as string}
+                            >
+                              {FEED_PAYWALLED_CONTENT_CHOICES.map(choice => (
+                                <FormControlLabel
+                                  key={choice}
+                                  value={choice}
+                                  disabled={isDisabled}
+                                  control={<Radio />}
+                                  label={t(
+                                    `settingList.feedPaywalledContentChoice.${choice}`
+                                  )}
+                                />
+                              ))}
+                            </RadioGroup>
+                          )}
+                        />
+                      </FormControl>
+                    </CardContent>
+                  </Card>
+                </Grid>
+
                 {/* articlePage */}
                 <Grid size={{ xs: 12 }}>
                   <Card>
@@ -938,8 +997,8 @@ function SettingList() {
                 label={t(SETTINGS[name].label)}
                 key={name}
               >
-                <s>{valueText(defaultValues?.[name])}</s>{' '}
-                {valueText(values[name])}
+                <s>{valueText(defaultValues?.[name], name)}</s>{' '}
+                {valueText(values[name], name)}
               </DescriptionListItemWrapper>
             ))}
           </DescriptionList>

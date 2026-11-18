@@ -1,5 +1,6 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { SessionService } from './session.service';
+import { ImpersonationService } from './impersonation.service';
 import { SessionInfo, SessionWithToken } from './session.model';
 import {
   Authenticated,
@@ -23,7 +24,8 @@ type RestrictableSession = { restricted: boolean; user: SecondFactorUser };
 export class SessionResolver {
   constructor(
     private sessionService: SessionService,
-    private secondFactorService: LoginCodeSecondFactorService
+    private secondFactorService: LoginCodeSecondFactorService,
+    private impersonationService: ImpersonationService
   ) {}
 
   private async maskRestricted<T extends RestrictableSession>(
@@ -44,9 +46,7 @@ export class SessionResolver {
     description:
       'Origin and restriction state of the current session. Restricted sessions may only complete onboarding.',
   })
-  async currentSession(
-    @CurrentUser() session: UserSession
-  ): Promise<SessionInfo> {
+  async sessionInfo(@CurrentUser() session: UserSession): Promise<SessionInfo> {
     const secondFactor = await this.secondFactorService.getFactor();
 
     return {
@@ -181,7 +181,11 @@ export class SessionResolver {
     description:
       'Returns a JWT that is valid for 1min for the current logged in user.',
   })
-  async createJWTForWebsiteLogin(@CurrentUser() user: UserSession) {
-    return this.sessionService.createJWTForWebsiteLogin(user.user.id);
+  async createJWTForWebsiteLogin(@CurrentUser() session: UserSession) {
+    if (session.impersonatedBy) {
+      return this.impersonationService.continueOnWebsite(session);
+    }
+
+    return this.sessionService.createJWTForWebsiteLogin(session.user.id);
   }
 }

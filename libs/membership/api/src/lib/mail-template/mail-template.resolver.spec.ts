@@ -73,6 +73,10 @@ const mockTemplate2: MailTemplate = {
   modifiedAt: new Date(),
 };
 
+const attachmentsInOrder = {
+  attachments: { select: { documentId: true }, orderBy: { position: 'asc' } },
+};
+
 const prismaServiceMock = {
   mailTemplate: {
     findMany: vi.fn((): MailTemplate[] => [mockTemplate1, mockTemplate2]),
@@ -112,6 +116,8 @@ const featuresMock = {
 };
 
 const mailTemplateServiceMock = {
+  createMailTemplate: vi.fn(async () => mockTemplate1),
+  updateMailTemplate: vi.fn(async () => mockTemplate1),
   deleteMailTemplate: vi.fn(async () => undefined),
   preview: vi.fn(async () => ({ subject: 's', html: 'h', text: undefined })),
   sendTest: vi.fn(async () => undefined),
@@ -191,6 +197,35 @@ describe('MailTemplatesResolver', () => {
     expect(result[1].name).toEqual('Mock Template 2');
   });
 
+  // One join instead of one lookup per template for `attachmentIds`.
+  it('returns the templates with the ids of their attachments', async () => {
+    await resolver.mailTemplates();
+
+    expect(prismaServiceMock.mailTemplate.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ include: attachmentsInOrder })
+    );
+  });
+
+  it('resolves the attachment ids of a template in their order', async () => {
+    expect(
+      await resolver.attachmentIds({
+        ...mockTemplate1,
+        attachments: [{ documentId: 'terms' }, { documentId: 'contract' }],
+      } as any)
+    ).toEqual(['terms', 'contract']);
+  });
+
+  it('looks the attachments up for a template loaded without them', async () => {
+    prismaServiceMock.mailTemplate.findUnique.mockResolvedValueOnce({
+      ...mockTemplate1,
+      attachments: [{ documentId: 'contract' }],
+    } as any);
+
+    expect(await resolver.attachmentIds(mockTemplate1 as any)).toEqual([
+      'contract',
+    ]);
+  });
+
   // The list query deliberately omits htmlContent/textContent, so the edit view
   // needs a way to load one template's body on its own.
   it('returns a single template by id', async () => {
@@ -198,6 +233,7 @@ describe('MailTemplatesResolver', () => {
 
     expect(prismaServiceMock.mailTemplate.findUnique).toHaveBeenCalledWith({
       where: { id: mockTemplate1.id },
+      include: attachmentsInOrder,
     });
     expect(result?.htmlContent).toEqual('<p>Content 1</p>');
   });
@@ -207,29 +243,32 @@ describe('MailTemplatesResolver', () => {
     expect(await (result as any).name).toBe('MockProvider');
   });
 
-  it('creates a mail template', async () => {
+  // The service stores the attachments and checks them.
+  it('creates a mail template via the service', async () => {
     const input = {
       name: 'New',
       subject: 'Hi',
       htmlContent: '<p>Hi</p>',
+      attachmentIds: ['contract'],
     };
     await resolver.createMailTemplate(input as any);
-    expect(prismaServiceMock.mailTemplate.create).toHaveBeenCalledWith({
-      data: input,
-    });
+    expect(mailTemplateServiceMock.createMailTemplate).toHaveBeenCalledWith(
+      input
+    );
   });
 
-  it('updates a mail template', async () => {
+  it('updates a mail template via the service', async () => {
     const input = {
       name: 'Changed',
       subject: 'Hi',
       htmlContent: '<p>Hi</p>',
+      attachmentIds: ['contract'],
     };
     await resolver.updateMailTemplate(mockTemplate1.id, input as any);
-    expect(prismaServiceMock.mailTemplate.update).toHaveBeenCalledWith({
-      where: { id: mockTemplate1.id },
-      data: input,
-    });
+    expect(mailTemplateServiceMock.updateMailTemplate).toHaveBeenCalledWith(
+      mockTemplate1.id,
+      input
+    );
   });
 
   it('deletes a mail template via the service', async () => {
@@ -288,6 +327,41 @@ describe('MailTemplatesResolver', () => {
       html: '<p>Hi</p>',
     });
     expect(result).toEqual({ pdf: 'cGRm' });
+  });
+
+  it('prints the attachments chosen on the draft in the letter preview', async () => {
+    await resolver.mailTemplateLetterPreview(
+      { user: { id: 'editor-1' } } as any,
+      {
+        contextId: 'renewal',
+        subject: 'ignored',
+        htmlContent: '<p>Hi</p>',
+        attachmentIds: ['contract'],
+      }
+    );
+
+    expect(mailTemplateServiceMock.previewLetter).toHaveBeenCalledWith(
+      expect.objectContaining({ attachmentIds: ['contract'] })
+    );
+  });
+
+  it('attaches the documents chosen on the draft to the test mail', async () => {
+    await resolver.sendTestMailTemplate(
+      { user: { id: 'editor-1', email: 'editor@example.com' } } as any,
+      {
+        contextId: 'renewal',
+        subject: 'Hi',
+        htmlContent: '<p>Hi</p>',
+        attachmentIds: ['contract'],
+      }
+    );
+
+    expect(mailTemplateServiceMock.sendTest).toHaveBeenCalledWith(
+      expect.objectContaining({
+        recipient: 'editor@example.com',
+        attachmentIds: ['contract'],
+      })
+    );
   });
 
   it('reports whether the letter channel is available', async () => {

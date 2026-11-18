@@ -65,8 +65,8 @@ fragment FullSessionWithToken on SessionWithToken {
   restricted
 }
 
-query CurrentSession {
-  currentSession {
+query SessionInfo {
+  sessionInfo {
     origin
     restricted
     placeholderEmail
@@ -221,4 +221,16 @@ mutation LoginWithCode(
   ) {
     ...FullSessionWithToken
   }
+}
+
+
+query CurrentSession {
+  currentSession {
+    impersonatedBy
+    expiresAt
+  }
+}
+
+mutation EndImpersonation {
+  revokeActiveSession
 }

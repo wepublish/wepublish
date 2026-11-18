@@ -36,6 +36,23 @@ describe('Analytics', () => {
     expect(container.innerHTML).toBe('');
   });
 
+  it('renders Plausible and calls plausible.init', () => {
+    render(
+      <Analytics
+        websiteSettings={settings({
+          plausible: { enabled: true, key: 'pa-123' },
+        })}
+      />
+    );
+
+    expect(
+      document.querySelector('#plausible-script')?.getAttribute('src')
+    ).toBe('https://plausible.io/js/pa-123.js');
+    expect(document.querySelector('#plausible-init')?.innerHTML).toContain(
+      'plausible.init()'
+    );
+  });
+
   it('renders Umami with the website id', () => {
     const { container } = render(
       <Analytics

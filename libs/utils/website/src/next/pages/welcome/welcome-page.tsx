@@ -2,7 +2,7 @@ import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   addClientCacheToProps,
-  CurrentSessionDocument,
+  SessionInfoDocument,
   getApiClient,
   LoginCodeSecondFactor,
   MeDocument,
@@ -74,7 +74,7 @@ function WelcomePageComponent({
   const { refreshUser } = useUser();
   const { data: meData } = useQuery(MeDocument);
   const { data: sessionData, refetch: refetchSession } = useQuery(
-    CurrentSessionDocument,
+    SessionInfoDocument,
     { fetchPolicy: 'network-only' }
   );
   const [requestEmailChange, emailChange] = useMutation(
@@ -96,7 +96,7 @@ function WelcomePageComponent({
   const [sentTo, setSentTo] = useState<string | null>(null);
   const [resendSeconds, markSent] = useResendCountdown();
 
-  const session = sessionData?.currentSession;
+  const session = sessionData?.sessionInfo;
   const placeholderEmail = session?.placeholderEmail ?? false;
   const restricted = session?.restricted ?? false;
   const secondFactor = session?.secondFactor ?? LoginCodeSecondFactor.None;
@@ -419,7 +419,7 @@ GuardedWelcome.getInitialProps = async (ctx: NextPageContext) => {
   if (sessionProps.sessionToken) {
     await Promise.all([
       client.query({ query: MeDocument }),
-      client.query({ query: CurrentSessionDocument }),
+      client.query({ query: SessionInfoDocument }),
     ]);
   }
 
