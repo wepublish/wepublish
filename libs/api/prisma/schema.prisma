@@ -290,6 +290,8 @@ model Image {
   goodies               Goodie[]
   printIssues           PrintIssue[]
 
+  syncProviderNewsletters SettingSyncProviderNewsletter[]
+
   @@index([createdAt])
   @@index([modifiedAt])
   @@index([title])
@@ -2547,8 +2549,32 @@ model SettingSyncProvider {
   lastSyncError String?
 
   mailchimpSyncErrors MailchimpSyncError[]
+  newsletters         SettingSyncProviderNewsletter[]
+  // Whether logged-in readers see and toggle the newsletters in their profile.
+  newslettersInProfile Boolean @default(false)
 
   @@map("settings.syncprovider")
+}
+
+// A Mailchimp interest that logged-in users can toggle in their profile.
+model SettingSyncProviderNewsletter {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  syncProviderId String
+  syncProvider   SettingSyncProvider @relation(fields: [syncProviderId], references: [id], onDelete: Cascade)
+
+  interestId  String
+  name        String
+  description String?
+  sort        Int     @default(0)
+
+  imageID String?
+  image   Image?  @relation(fields: [imageID], references: [id], onDelete: SetNull)
+
+  @@unique([syncProviderId, interestId])
+  @@map("settings.syncprovidernewsletter")
 }
 
 model MailchimpSyncError {

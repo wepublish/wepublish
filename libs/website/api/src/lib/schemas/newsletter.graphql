@@ -1,0 +1,24 @@
+fragment FullUserNewsletterGroup on UserNewsletterGroup {
+  syncProviderId
+  newsletters {
+    interestId
+    name
+    description
+    subscribed
+    image {
+      ...FullImage
+    }
+  }
+}
+
+query UserNewsletters {
+  userNewsletters {
+    ...FullUserNewsletterGroup
+  }
+}
+
+mutation UpdateUserNewsletters($input: UpdateUserNewslettersInput!) {
+  updateUserNewsletters(input: $input) {
+    ...FullUserNewsletterGroup
+  }
+}

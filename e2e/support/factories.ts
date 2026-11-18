@@ -75,7 +75,28 @@ export type MemberPlan = {
   paymentMethods: { id: string; slug: string; name: string }[];
 };
 
-export type Entity = Reader | Article | Paywall;
+/** A Mailchimp interest the sync provider offers readers as a newsletter. */
+export type Newsletter = {
+  kind: 'newsletter';
+  interestId: string;
+  /** Unique name the profile shows it under. */
+  name: string;
+};
+
+export type Entity = Reader | Article | Paywall | Newsletter;
+
+type SyncProvider = {
+  id: string;
+  enabled: boolean | null;
+  mailchimp_listId: string | null;
+  newslettersInProfile: boolean | null;
+  newsletters: {
+    interestId: string;
+    name: string;
+    description: string | null;
+    imageID: string | null;
+  }[];
+};
 
 type Cleanup = { label: string; run: () => Promise<unknown> };
 
@@ -87,7 +108,9 @@ export class TestData {
     private readonly api: () => Promise<ApiClient>,
     private readonly faker: Faker,
     private readonly runId: () => string,
-    private readonly entities: Map<string, Entity>
+    private readonly entities: Map<string, Entity>,
+    /** Domain of new readers' addresses unless a step asks for another. */
+    private readonly emailDomain = 'example.test'
   ) {}
 
   /** Looks up an entity a previous step created under `alias`. */
@@ -133,7 +156,7 @@ export class TestData {
   }
 
   /** `emailDomain`: a mailbox outside servers can deliver to, e.g. the Resend domain. */
-  async createUser(alias?: string, { emailDomain = 'example.test' } = {}) {
+  async createUser(alias?: string, { emailDomain = this.emailDomain } = {}) {
     const api = await this.api();
     const runId = this.runId();
     const firstName = this.faker.person.firstName();
@@ -160,6 +183,70 @@ export class TestData {
       firstName,
       name,
     } satisfies Reader);
+  }
+
+  /**
+   * Points the Mailchimp sync provider at the test audience with only this
+   * interest, and restores it afterwards. The API key cannot be read back and
+   * a provider cannot be deleted, so the test key stays and a created provider
+   * is only disabled. Enabled, the nightly sync would push every reader into
+   * the audience, so it stays on for seconds only.
+   */
+  async offerMailchimpNewsletter(
+    alias: string,
+    { apiKey, listId, interestId }: { apiKey: string; listId: string; interestId: string }
+  ) {
+    const api = await this.api();
+    const name = `${alias} ${this.runId()}`;
+    const fields = `id enabled mailchimp_listId newslettersInProfile newsletters { interestId name description imageID }`;
+    const { syncProviderSettings } = await api.gql<{
+      syncProviderSettings: SyncProvider[];
+    }>(
+      `query { syncProviderSettings(filter: { type: MAILCHIMP }) { ${fields} } }`
+    );
+
+    let provider = syncProviderSettings[0];
+
+    if (!provider) {
+      const { createSyncProviderSetting } = await api.gql<{
+        createSyncProviderSetting: SyncProvider;
+      }>(
+        `mutation { createSyncProviderSetting(id: "mailchimp-sync", type: MAILCHIMP, name: "Mailchimp", enabled: false) { ${fields} } }`
+      );
+      provider = createSyncProviderSetting;
+    }
+
+    const update = (variables: Record<string, unknown>) =>
+      api.gql(
+        `mutation UpdateSyncProvider($id: String!, $enabled: Boolean, $apiKey: String, $listId: String, $newsletters: [SettingSyncProviderNewsletterInput!], $inProfile: Boolean) {
+          updateSyncProviderSetting(id: $id, enabled: $enabled, mailchimp_apiKey: $apiKey,
+            mailchimp_listId: $listId, newsletters: $newsletters, newslettersInProfile: $inProfile) { id }
+        }`,
+        { id: provider.id, ...variables }
+      );
+
+    this.onCleanup(`sync provider ${provider.id}`, () =>
+      update({
+        enabled: !!provider.enabled,
+        listId: provider.mailchimp_listId,
+        newsletters: provider.newsletters,
+        inProfile: !!provider.newslettersInProfile,
+      })
+    );
+
+    await update({
+      enabled: true,
+      apiKey,
+      listId,
+      newsletters: [{ interestId, name }],
+      inProfile: true,
+    });
+
+    return this.remember(alias, {
+      kind: 'newsletter',
+      interestId,
+      name,
+    } satisfies Newsletter);
   }
 
   /**

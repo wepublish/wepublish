@@ -2160,7 +2160,8 @@
       "auditLog": "Audit-Log",
       "letterLayouts": "Briefpapier",
       "language": "Sprache",
-      "audioLibrary": "Audio"
+      "audioLibrary": "Audio",
+      "newsletterSettings": "Newsletters"
     },
     "pageTitles": {
       "printIssues": "Druckausgaben",
@@ -2301,6 +2302,7 @@
       "websiteSettings": "Website-Einstellungen",
       "seo": "SEO-Checkliste",
       "logout": "Logout",
+      "newsletterSettings": "Newsletters",
       "printIssueList": "Druckliste"
     },
     "navigation": {
@@ -3942,7 +3944,8 @@
         "days": "Tage",
         "staticValue": "Wert",
         "defaultInterestGroups": "Standard-Interessengruppen",
-        "defaultInterestGroupsHelp": "Interessengruppen, die für jeden Kontakt immer aktiviert werden – unabhängig vom Abo.",
+        "defaultInterestGroupsHelp": "Interessengruppen, die für jeden Kontakt immer aktiviert werden — unabhängig vom Abo.",
+        "addNewsletter": "Newsletter hinzufügen",
         "lastSync": "Letzte Synchronisation",
         "scheduledInfo": "Wird täglich um 3:00 Uhr (UTC) automatisch ausgeführt",
         "triggerSync": "Jetzt synchronisieren",
@@ -3994,7 +3997,8 @@
         "enabledInfo": "Wenn aktiviert, überträgt We.Publish jede Nacht alle aktiven Benutzerkonten samt Abo-Daten in die Mailchimp-Zielgruppe. «Jetzt synchronisieren» geht nur, wenn das aktiviert ist.",
         "apiKeyInfo": "Der API-Schlüssel deines Mailchimp-Kontos («Profil» → «Extras» → «API-Schlüssel»), er endet auf -us1, -us2 usw. Speichere ihn zuerst, damit unten Zielgruppen, Merge-Felder und Gruppen geladen werden können.",
         "listIdInfo": "Die Mailchimp-Zielgruppe, in die die Benutzerkonten übertragen werden. Sobald der API-Schlüssel gespeichert ist, kannst du sie aus der Liste wählen; sonst gib ihre ID aus den Zielgruppen-Einstellungen in Mailchimp ein.",
-        "dryRunInfo": "Zeigt, welche Kontakte sich in Mailchimp ändern würden, ohne dort etwas zu verändern. Das Testlauf-Limit prüft eine zufällige Auswahl von so vielen Benutzerkonten; leer gelassen, werden alle geprüft."
+        "dryRunInfo": "Zeigt, welche Kontakte sich in Mailchimp ändern würden, ohne dort etwas zu verändern. Das Testlauf-Limit prüft eine zufällige Auswahl von so vielen Benutzerkonten; leer gelassen, werden alle geprüft.",
+        "newslettersMoved": "Die Newsletter, die Leser:innen in ihrem Profil wählen, stellst du unter Kommunikation ein:"
       },
       "typeChangeTitle": "Typ wirklich wechseln?",
       "typeChangeWarning": "Beim Wechsel des Typs wird die gesamte Konfiguration dieser Integration gelöscht, einschliesslich aller hinterlegten Zugangsdaten. Das lässt sich nicht rückgängig machen.",
@@ -5897,6 +5901,18 @@
         "title": "Titel",
         "titleHint": "Zugleich die Betreffzeile des Mailchimp-Entwurfs. Wird beim Speichern übernommen."
       }
+    },
+    "newsletterSettings": {
+      "title": "Newsletters",
+      "description": "Die Newsletter, die eingeloggte Leser:innen in ihrem Profil abonnieren können. Sie erscheinen dort unter «Newsletter» als Karten mit Bild, Name und Beschreibung und je einem Häkchen. Wer ein Häkchen setzt und speichert, wird in Mailchimp für dieses Interesse eingetragen; neue Kontakte bekommen von Mailchimp zuerst eine E-Mail zur Bestätigung. Die Newsletter sind auch die Vorgabe für neue Newsletter-Anmeldeblöcke.",
+      "setUpHint": "Richte zuerst die Mailchimp-Synchronisation mit einer Liste ein, damit du deren Interessen hier als Newsletter anbieten kannst.",
+      "setUpLink": "Zur Mailchimp-Integration",
+      "profile": "Im Profil der Leser:innen",
+      "showInProfile": "Newsletter im Profil anzeigen",
+      "showInProfileHelp": "Ausgeschaltet sehen Leser:innen die Newsletter nicht in ihrem Profil und können sie dort nicht ändern. Ihre Anmeldungen in Mailchimp bleiben unverändert.",
+      "newsletters": "Newsletter",
+      "newslettersHelp": "Mailchimp-Interessen der Liste, in dieser Reihenfolge. Name, Beschreibung und Bild sind das, was Leser:innen sehen.",
+      "saved": "Newsletter gespeichert"
     }
   }
 }

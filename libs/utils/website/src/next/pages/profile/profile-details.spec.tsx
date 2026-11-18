@@ -3,9 +3,13 @@ import userEvent from '@testing-library/user-event';
 import {
   mockOperation,
   mockSensitiveDataUser,
+  mockUserNewsletterGroup,
   renderWithProviders,
 } from '@wepublish/mocks/website';
-import { FeaturesDocument } from '@wepublish/website/api';
+import {
+  FeaturesDocument,
+  UserNewslettersDocument,
+} from '@wepublish/website/api';
 import { z } from 'zod';
 
 import { ProfileDetails } from './profile-details';
@@ -17,6 +21,13 @@ const renderWith = (features: string[]) =>
       mockOperation(FeaturesDocument, {
         maxUsageCount: Number.POSITIVE_INFINITY,
         data: { __typename: 'Query', features },
+      }),
+      mockOperation(UserNewslettersDocument, {
+        maxUsageCount: Number.POSITIVE_INFINITY,
+        data: {
+          __typename: 'Query',
+          userNewsletters: [mockUserNewsletterGroup()],
+        },
       }),
     ],
   });
@@ -129,5 +140,29 @@ describe('ProfileDetails', () => {
     expect(
       screen.queryByRole('region', { name: 'Sicherheit' })
     ).not.toBeInTheDocument();
+  });
+
+  describe('the newsletters', () => {
+    const expectNewsletters = async () => {
+      expect(
+        await screen.findByRole('heading', { level: 2, name: 'Newsletter' })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('checkbox', { name: /Daily Briefing/ })
+      ).toBeChecked();
+    };
+
+    it('are chosen below the details with the subscription history', async () => {
+      renderWith(['profile-subscription-history']);
+      await screen.findByRole('region', { name: 'Sicherheit' });
+
+      await expectNewsletters();
+    });
+
+    it('are chosen below the single form otherwise', async () => {
+      renderWith([]);
+
+      await expectNewsletters();
+    });
   });
 });

@@ -14,6 +14,7 @@ import {
   PersonalDataFormContainer,
   PersonalDataInputForm,
   TotpSetupContainer,
+  UserNewslettersContainer,
 } from '@wepublish/user/website';
 import {
   BuilderPersonalDataFormFields,
@@ -131,7 +132,7 @@ export type ProfileDetailsProps = Pick<
 > & { className?: string };
 
 /**
- * The reader's personal data and security. With the subscription history, as
+ * The reader's personal data, security and newsletters. With the subscription history, as
  * wide as its table: the personal data and, in a section of their own, the
  * password and two-factor authentication.
  */
@@ -159,6 +160,8 @@ export function ProfileDetails({
         />
 
         <TotpSetupContainer />
+
+        <UserNewslettersContainer />
       </ProfileWrapper>
     );
   }
@@ -194,6 +197,8 @@ export function ProfileDetails({
           </ProfileSecurityPart>
         </SectionBox>
       </ProfileDetailsColumns>
+
+      <UserNewslettersContainer />
     </ProfileDetailsWrapper>
   );
 }

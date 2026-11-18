@@ -283,7 +283,7 @@ const countErrors = (value: MailchimpFormBlockValue) =>
     ),
   ].filter(Boolean).length;
 
-const emptyInterestOption = (): MailchimpFormInterestOptionValue => ({
+export const emptyInterestOption = (): MailchimpFormInterestOptionValue => ({
   id: '',
   name: '',
   description: null,
@@ -302,7 +302,7 @@ type MailchimpFormInterestOptionItemProps = {
   onRemove: () => void;
 };
 
-function MailchimpFormInterestOptionItem({
+export function MailchimpFormInterestOptionItem({
   value,
   number,
   interestOptions,
@@ -364,9 +364,10 @@ function MailchimpFormInterestOptionItem({
               isOptionEqualToValue={(option, selected) =>
                 option.value === selected.value
               }
+              // null keeps it controlled while the interests load
               value={
                 interestOptions.find(option => option.value === value.id) ??
-                undefined
+                (null as unknown as { value: string; label: string })
               }
               onChange={(_event, option) => {
                 const id = option.value;
@@ -549,6 +550,25 @@ export function MailchimpFormBlock({
   const { data: syncData, loading: syncLoading } = useQuery(
     SyncProviderSettingsDocument
   );
+
+  const newsletterDefaults = useMemo((): MailchimpFormInterestOptionValue[] => {
+    const provider = syncData?.syncProviderSettings.find(
+      ({ id }) => id === value.syncProviderId
+    );
+
+    if (!value.listId || provider?.mailchimp_listId !== value.listId) {
+      return [];
+    }
+
+    return (provider.newsletters ?? []).map(
+      ({ interestId, name, description, image }) => ({
+        id: interestId,
+        name,
+        description,
+        image,
+      })
+    );
+  }, [syncData?.syncProviderSettings, value.syncProviderId, value.listId]);
 
   const providerOptions = useMemo(
     () =>
@@ -981,7 +1001,13 @@ export function MailchimpFormBlock({
                             value={input.inputType ?? 'text'}
                             onChange={event => {
                               const inputType = event.target.value;
-                              updateInput({ inputType });
+                              updateInput({
+                                inputType,
+                                ...(inputType === 'groups' &&
+                                  !input.options.length && {
+                                    options: newsletterDefaults,
+                                  }),
+                              });
                             }}
                             helperText={
                               isGroups ?

@@ -16,6 +16,21 @@ registerEnumType(SyncProviderType, {
   name: 'SyncProviderType',
 });
 
+@InputType()
+export class SettingSyncProviderNewsletterInput {
+  @Field()
+  interestId!: string;
+
+  @Field()
+  name!: string;
+
+  @Field({ nullable: true })
+  description?: string;
+
+  @Field({ nullable: true })
+  imageID?: string;
+}
+
 @ObjectType({
   implements: () => [SettingProvider],
 })
@@ -41,6 +56,13 @@ export class SettingSyncProvider extends SettingProvider {
 
   @Field(() => GraphQLJSONObject, { nullable: true })
   mailchimp_extensions?: Record<string, any>;
+
+  @Field({
+    nullable: true,
+    description:
+      'Whether logged-in readers see the newsletters in their profile and can subscribe to them there.',
+  })
+  newslettersInProfile?: boolean;
 
   @Field({ nullable: true })
   lastSyncAt?: Date;
@@ -99,6 +121,9 @@ export class CreateSettingSyncProviderInput extends OmitType(
 
   @Field({ nullable: true })
   mailchimp_apiKey?: string;
+
+  @Field(() => [SettingSyncProviderNewsletterInput], { nullable: true })
+  newsletters?: SettingSyncProviderNewsletterInput[];
 }
 
 @ArgsType()

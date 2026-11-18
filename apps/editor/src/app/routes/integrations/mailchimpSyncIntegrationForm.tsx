@@ -57,6 +57,7 @@ import {
 import { useCallback, useEffect, useId, useState } from 'react';
 import { Controller, useFieldArray, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { MdAdd, MdDelete, MdExpandMore, MdSync } from 'react-icons/md';
 import { z } from 'zod';
 import { secretPlaceholder } from './secretPlaceholder';
@@ -797,7 +798,7 @@ function SyncProviderSettingCard({
   const {
     control,
     handleSubmit,
-    formState: { isDirty },
+    formState: { isDirty, errors },
     watch,
   } = useForm<SyncProviderFormValues>({
     resolver: zodResolver(syncProviderSchema),
@@ -1445,6 +1446,15 @@ function SyncProviderSettingCard({
                   />
                 )}
               />
+
+              {/* The newsletters readers choose in their profile have their own page. */}
+              <Typography
+                variant="body2"
+                color="textSecondary"
+              >
+                {t('integrations.mailchimpSyncSettings.newslettersMoved')}{' '}
+                <Link to="/newsletters">{t('newsletterSettings.title')}</Link>
+              </Typography>
 
               <Accordion
                 sx={{ mt: 3 }}

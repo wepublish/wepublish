@@ -6,12 +6,14 @@ import {
 import {
   PrismaClient,
   SettingSyncProvider,
+  SettingSyncProviderNewsletter,
   SyncProviderType,
 } from '@prisma/client';
 import {
   CreateSettingSyncProviderInput,
   UpdateSettingSyncProviderInput,
   SettingSyncProviderFilter,
+  SettingSyncProviderNewsletterInput,
 } from './sync-provider-settings.model';
 import { PrimeDataLoader } from '@wepublish/utils/api';
 import { SyncProviderSettingsDataloaderService } from './sync-provider-settings-dataloader.service';
@@ -39,6 +41,41 @@ export class SyncProviderSettingsService {
       ['mailchimp_apiKey', 'mailchimp_webhookSecret'],
       value => this.crypto.encrypt(value)
     );
+  }
+
+  private newslettersCreateData(
+    newsletters: SettingSyncProviderNewsletterInput[]
+  ) {
+    const interestIds = new Set<string>();
+
+    return newsletters.map(
+      ({ interestId, name, description, imageID }, sort) => {
+        if (!interestId || !name?.trim()) {
+          throw new BadRequestException(
+            'Every newsletter needs an interest and a name.'
+          );
+        }
+
+        if (interestIds.has(interestId)) {
+          throw new BadRequestException(
+            `Interest ${interestId} is used more than once.`
+          );
+        }
+
+        interestIds.add(interestId);
+
+        return { interestId, name, description, imageID, sort };
+      }
+    );
+  }
+
+  async newsletters(
+    syncProviderId: string
+  ): Promise<SettingSyncProviderNewsletter[]> {
+    return this.prisma.settingSyncProviderNewsletter.findMany({
+      where: { syncProviderId },
+      orderBy: { sort: 'asc' },
+    });
   }
 
   /** One config with its secrets readable, enabled or not; for the webhook and its registration. */
@@ -136,9 +173,14 @@ export class SyncProviderSettingsService {
       );
     }
 
-    const output = this.encryptSecretsIfPresent(input);
+    const { newsletters, ...output } = this.encryptSecretsIfPresent(input);
     const returnValue = await this.prisma.settingSyncProvider.create({
-      data: output as any,
+      data: {
+        ...output,
+        ...(newsletters && {
+          newsletters: { create: this.newslettersCreateData(newsletters) },
+        }),
+      } as any,
     });
     await this.resets.reset('settings:syncprovider');
     return returnValue;
@@ -149,7 +191,9 @@ export class SyncProviderSettingsService {
     input: UpdateSettingSyncProviderInput
   ): Promise<SettingSyncProvider> {
     const output = this.encryptSecretsIfPresent(input);
-    const { id, ...updateData } = output;
+    const { id, newsletters, ...updateData } = output;
+    const newslettersData =
+      newsletters && this.newslettersCreateData(newsletters);
     const existingSetting = await this.prisma.settingSyncProvider.findUnique({
       where: { id },
     });
@@ -168,7 +212,12 @@ export class SyncProviderSettingsService {
 
     const returnValue = await this.prisma.settingSyncProvider.update({
       where: { id },
-      data: filteredUpdateData,
+      data: {
+        ...filteredUpdateData,
+        ...(newslettersData && {
+          newsletters: { deleteMany: {}, create: newslettersData },
+        }),
+      },
     });
     await this.resets.reset('settings:syncprovider');
     return returnValue;

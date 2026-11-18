@@ -13,6 +13,7 @@ export * from './lib/block-content';
 export * from './lib/crowdfunding';
 export * from './lib/user';
 export * from './lib/membership';
+export * from './lib/newsletter';
 export * from './lib/challenge';
 export * from './lib/session';
 export * from './lib/setting';

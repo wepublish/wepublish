@@ -8,6 +8,7 @@ import {
   MeDocument,
   NavigationListDocument,
   SubscriptionsDocument,
+  UserNewslettersDocument,
   addClientCacheToProps,
   getApiClient,
 } from '@wepublish/website/api';
@@ -114,6 +115,12 @@ GuardedProfile.getInitialProps = async (ctx: NextPageContext) => {
       client.query({
         query: FeaturesDocument,
       }),
+      // Mailchimp being down should not take the profile page with it.
+      client
+        .query({
+          query: UserNewslettersDocument,
+        })
+        .catch(() => undefined),
     ]);
   }
 

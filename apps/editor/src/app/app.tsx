@@ -34,6 +34,7 @@ import {
   MailTemplateEdit,
   MailTemplateList,
   MemberPlanEdit,
+  NewsletterSettings,
   SubscriptionFlowList,
 } from '@wepublish/membership/editor';
 import { SettingList } from '@wepublish/settings/editor';
@@ -1178,6 +1179,14 @@ function AppRoutes() {
           element={
             <Base>
               <MailSendPage />
+            </Base>
+          }
+        />
+        <Route
+          path="newsletters"
+          element={
+            <Base>
+              <NewsletterSettings />
             </Base>
           }
         />
