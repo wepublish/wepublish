@@ -37,6 +37,7 @@ exports[`AuthenticationService > should return a token session 3`] = `
 
 exports[`AuthenticationService > should return a user session 1`] = `
 {
+  "canImpersonate": false,
   "createdAt": 2026-01-01T00:00:00.000Z,
   "expiresAt": undefined,
   "id": undefined,

@@ -26,6 +26,7 @@ export type UserSession = {
   restricted: boolean;
   placeholderEmail: boolean;
   impersonatedBy?: string | null;
+  canImpersonate?: boolean;
 };
 
 export type ApiTokenSession = {

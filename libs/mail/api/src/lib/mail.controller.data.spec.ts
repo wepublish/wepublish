@@ -9,6 +9,7 @@ const secrets = {
   roleIDs: ['admin'],
   totpEnabled: true,
   totpExempt: false,
+  wepublishLoginSubject: 'zitadel-1',
 };
 
 const recipient = {

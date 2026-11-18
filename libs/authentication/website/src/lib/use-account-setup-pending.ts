@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client/react';
 import {
-  CurrentSessionDocument,
+  SessionInfoDocument,
   SettingListDocument,
   SettingName,
 } from '@wepublish/website/api';
@@ -14,7 +14,7 @@ import { useUser } from './session.context';
  */
 export const useAccountSetupPending = (): boolean => {
   const { hasUser } = useUser();
-  const { data: sessionData } = useQuery(CurrentSessionDocument, {
+  const { data: sessionData } = useQuery(SessionInfoDocument, {
     skip: !hasUser,
     fetchPolicy: 'cache-first',
   });
@@ -27,7 +27,5 @@ export const useAccountSetupPending = (): boolean => {
       setting => setting.name === SettingName.LoginCodeEnabled
     )?.value === true;
 
-  return (
-    hasUser && loginCodeEnabled && !!sessionData?.currentSession.restricted
-  );
+  return hasUser && loginCodeEnabled && !!sessionData?.sessionInfo.restricted;
 };

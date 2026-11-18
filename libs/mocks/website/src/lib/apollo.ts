@@ -11,8 +11,8 @@ import {
   ChallengeDocument,
   ChallengeQuery,
   CheckLoginOtpDocument,
-  CurrentSessionDocument,
-  CurrentSessionQuery,
+  SessionInfoDocument,
+  SessionInfoQuery,
   FullBannerFragment,
   FullPeerProfileFragment,
   FullSettingFragment,
@@ -97,15 +97,15 @@ export const mockCheckLoginOtpQuery = (checkLoginOtp = false) =>
     data: { __typename: 'Query', checkLoginOtp },
   });
 
-export const mockCurrentSessionQuery = (
-  overrides: Partial<CurrentSessionQuery['currentSession']> = {}
+export const mockSessionInfoQuery = (
+  overrides: Partial<SessionInfoQuery['sessionInfo']> = {}
 ) =>
-  mockOperation(CurrentSessionDocument, {
+  mockOperation(SessionInfoDocument, {
     variables: anyVariables,
     maxUsageCount: Number.POSITIVE_INFINITY,
     data: {
       __typename: 'Query',
-      currentSession: {
+      sessionInfo: {
         __typename: 'SessionInfo',
         origin: SessionOrigin.Password,
         restricted: false,

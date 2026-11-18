@@ -79,6 +79,8 @@ import { MdLockReset } from 'react-icons/md';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { z } from 'zod';
 
+import { ImpersonateUserPanel } from './impersonateUserPanel';
+
 const PropertyRow = styled.div`
   display: grid;
   grid-template-columns: minmax(0, 2fr) minmax(0, 3fr) auto;
@@ -292,12 +294,14 @@ function UserEditView() {
     {}
   );
 
+  const managed = Boolean(user?.managedByWepublishLogin);
   const isDisabled =
     isLoading ||
     isUserRoleLoading ||
     isCreating ||
     isUpdating ||
-    loadError !== undefined;
+    loadError !== undefined ||
+    managed;
   const canResetPassword = useAuthorisation(CanResetUserPassword.id);
   const canResetTotp = useAuthorisation(CanResetUserTotp.id);
   // The mail panel also lists printed letters once the medium has them.
@@ -506,7 +510,17 @@ function UserEditView() {
           saveAndCloseBtnTitle={t('saveAndClose')}
           closePath={closePath}
           setCloseFn={setCloseAfterSave}
+          disabled={managed}
         />
+
+        {managed && (
+          <Alert
+            severity="info"
+            sx={{ mb: 2 }}
+          >
+            {t('userCreateOrEditView.managedByWepublishLogin')}
+          </Alert>
+        )}
 
         <UserFormGrid>
           <PageColumns data-testid="user-columns">
@@ -526,7 +540,7 @@ function UserEditView() {
                           setImageSelectionOpen(false);
                         }}
                         image={userImage}
-                        disabled={false}
+                        disabled={managed}
                         openChooseModalOpen={() => setImageSelectionOpen(true)}
                         removeImage={() => setValue('image', undefined)}
                         maxHeight={200}
@@ -839,59 +853,65 @@ function UserEditView() {
             </PanelStack>
 
             <PanelStack>
-              <Card>
-                <CardHeader title={t('userCreateOrEditView.passwordHeader')} />
+              {!managed && (
+                <Card>
+                  <CardHeader
+                    title={t('userCreateOrEditView.passwordHeader')}
+                  />
 
-                <CardContent>
-                  <Grid
-                    container
-                    spacing={2}
-                  >
-                    <Grid size={{ xs: 12 }}>
-                      <Box sx={{ marginBottom: 3 }}>
+                  <CardContent>
+                    <Grid
+                      container
+                      spacing={2}
+                    >
+                      <Grid size={{ xs: 12 }}>
+                        <Box sx={{ marginBottom: 3 }}>
+                          <Controller
+                            control={control}
+                            name="active"
+                            render={({ field }) => (
+                              <FormControlLabel
+                                control={
+                                  <Checkbox
+                                    {...field}
+                                    checked={field.value}
+                                    disabled={isDisabled}
+                                  />
+                                }
+                                label={
+                                  <>
+                                    {t('userCreateOrEditView.active')}{' '}
+                                    <InfoTooltip
+                                      text={t(
+                                        'userCreateOrEditView.activeInfo'
+                                      )}
+                                    />
+                                  </>
+                                }
+                              />
+                            )}
+                          />
+                        </Box>
+                      </Grid>
+
+                      <Grid size={{ xs: 12 }}>
                         <Controller
                           control={control}
-                          name="active"
+                          name="password"
                           render={({ field }) => (
-                            <FormControlLabel
-                              control={
-                                <Checkbox
-                                  {...field}
-                                  checked={field.value}
-                                  disabled={isDisabled}
-                                />
-                              }
-                              label={
-                                <>
-                                  {t('userCreateOrEditView.active')}{' '}
-                                  <InfoTooltip
-                                    text={t('userCreateOrEditView.activeInfo')}
-                                  />
-                                </>
-                              }
+                            <EditUserPassword
+                              user={user}
+                              password={field.value ?? ''}
+                              setPassword={field.onChange}
+                              isDisabled={isDisabled || !canResetPassword}
                             />
                           )}
                         />
-                      </Box>
+                      </Grid>
                     </Grid>
-
-                    <Grid size={{ xs: 12 }}>
-                      <Controller
-                        control={control}
-                        name="password"
-                        render={({ field }) => (
-                          <EditUserPassword
-                            user={user}
-                            password={field.value ?? ''}
-                            setPassword={field.onChange}
-                            isDisabled={isDisabled || !canResetPassword}
-                          />
-                        )}
-                      />
-                    </Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              )}
 
               <Card>
                 <CardHeader
@@ -919,6 +939,7 @@ function UserEditView() {
                             <ListInput
                               value={field.value}
                               onChange={field.onChange}
+                              disabled={managed}
                               defaultValue={{
                                 key: '',
                                 value: '',
@@ -930,6 +951,7 @@ function UserEditView() {
                                   <TextField
                                     placeholder={t('articleEditor.panels.key')}
                                     value={value.key}
+                                    disabled={managed}
                                     onChange={event =>
                                       onChange({
                                         ...value,
@@ -943,6 +965,7 @@ function UserEditView() {
                                       'articleEditor.panels.value'
                                     )}
                                     value={value.value}
+                                    disabled={managed}
                                     onChange={event =>
                                       onChange({
                                         ...value,
@@ -955,6 +978,7 @@ function UserEditView() {
                                     control={
                                       <Switch
                                         checked={value.public}
+                                        disabled={managed}
                                         onChange={(_event, isPublic) =>
                                           onChange({
                                             ...value,
@@ -976,67 +1000,69 @@ function UserEditView() {
                 </CardContent>
               </Card>
               {/* roles */}
-              <Card>
-                <CardHeader
-                  title={
-                    <>
-                      <span id={userRolesLabelId}>
-                        {t('userCreateOrEditView.userRoles')}
-                      </span>{' '}
-                      <InfoTooltip
-                        text={t('userCreateOrEditView.userRolesInfo')}
-                      />
-                    </>
-                  }
-                />
-
-                <CardContent>
-                  <Grid
-                    container
-                    spacing={2}
-                  >
-                    <Grid size={{ xs: 12 }}>
-                      <Box sx={{ marginBottom: 3 }}>
-                        <Controller
-                          control={control}
-                          name="roles"
-                          render={({ field }) => (
-                            <Autocomplete
-                              multiple
-                              disableCloseOnSelect
-                              options={userRoles.map(userRole => userRole.id)}
-                              getOptionLabel={id =>
-                                userRoles.find(userRole => userRole.id === id)
-                                  ?.name ?? id
-                              }
-                              value={(field.value ?? []).map(role => role.id)}
-                              onChange={(_event, value) =>
-                                field.onChange(
-                                  userRoles.filter(userRole =>
-                                    value.includes(userRole.id)
-                                  )
-                                )
-                              }
-                              renderInput={params => (
-                                <TextField
-                                  {...params}
-                                  slotProps={{
-                                    ...params.slotProps,
-                                    htmlInput: {
-                                      ...params.slotProps.htmlInput,
-                                      'aria-labelledby': userRolesLabelId,
-                                    },
-                                  }}
-                                />
-                              )}
-                            />
-                          )}
+              {!managed && (
+                <Card>
+                  <CardHeader
+                    title={
+                      <>
+                        <span id={userRolesLabelId}>
+                          {t('userCreateOrEditView.userRoles')}
+                        </span>{' '}
+                        <InfoTooltip
+                          text={t('userCreateOrEditView.userRolesInfo')}
                         />
-                      </Box>
+                      </>
+                    }
+                  />
+
+                  <CardContent>
+                    <Grid
+                      container
+                      spacing={2}
+                    >
+                      <Grid size={{ xs: 12 }}>
+                        <Box sx={{ marginBottom: 3 }}>
+                          <Controller
+                            control={control}
+                            name="roles"
+                            render={({ field }) => (
+                              <Autocomplete
+                                multiple
+                                disableCloseOnSelect
+                                options={userRoles.map(userRole => userRole.id)}
+                                getOptionLabel={id =>
+                                  userRoles.find(userRole => userRole.id === id)
+                                    ?.name ?? id
+                                }
+                                value={(field.value ?? []).map(role => role.id)}
+                                onChange={(_event, value) =>
+                                  field.onChange(
+                                    userRoles.filter(userRole =>
+                                      value.includes(userRole.id)
+                                    )
+                                  )
+                                }
+                                renderInput={params => (
+                                  <TextField
+                                    {...params}
+                                    slotProps={{
+                                      ...params.slotProps,
+                                      htmlInput: {
+                                        ...params.slotProps.htmlInput,
+                                        'aria-labelledby': userRolesLabelId,
+                                      },
+                                    }}
+                                  />
+                                )}
+                              />
+                            )}
+                          />
+                        </Box>
+                      </Grid>
                     </Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              )}
               {/* login code */}
               {user && canManageLoginCodes && (
                 <Card>
@@ -1138,7 +1164,7 @@ function UserEditView() {
                 </Card>
               )}
               {/* two-factor authentication */}
-              {user && canResetTotp && (
+              {user && canResetTotp && !managed && (
                 <Card>
                   <CardHeader title={t('userCreateOrEditView.totpHeader')} />
 
@@ -1244,6 +1270,7 @@ function UserEditView() {
                   </CardContent>
                 </Card>
               )}
+              {user && <ImpersonateUserPanel user={user} />}
             </PanelStack>
           </PageColumns>
 

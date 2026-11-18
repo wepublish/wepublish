@@ -7,8 +7,12 @@ import {
   TotpSetupContainer,
 } from '@wepublish/user/website';
 import { SubscriptionsDocument } from '@wepublish/website/api';
-import { Link, useWebsiteBuilder } from '@wepublish/website/builder';
-import { useRouter } from 'next/router';
+import {
+  BuilderRouterContext,
+  Link,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { OpenInvoicesCard } from './eenews-open-invoices';
@@ -52,7 +56,8 @@ export const EenewsProfile = () => {
     elements: { Alert },
   } = useWebsiteBuilder();
   const { t } = useTranslation();
-  const router = useRouter();
+  const { query } = useContext(BuilderRouterContext);
+
   const { data: subscriptionData } = useQuery(SubscriptionsDocument, {
     fetchPolicy: 'cache-only',
   });
@@ -65,7 +70,7 @@ export const EenewsProfile = () => {
 
   return (
     <Page>
-      {router.query.emailConfirmed && (
+      {query.emailConfirmed && (
         <Alert severity="success">{t('user.emailChangeConfirmed')}</Alert>
       )}
 

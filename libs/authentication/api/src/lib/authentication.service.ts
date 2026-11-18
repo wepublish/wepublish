@@ -107,6 +107,7 @@ export class AuthenticationService {
           sessionCreatedAt: session.createdAt,
         }),
         impersonatedBy: session.impersonatedBy,
+        canImpersonate: session.canImpersonate ?? false,
         user: session.user,
         roles: (
           await this.prisma.userRole.findMany({

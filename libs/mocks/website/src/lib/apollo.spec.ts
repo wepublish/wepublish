@@ -4,7 +4,7 @@ import {
   BannerDocumentType,
   ChallengeDocument,
   CheckLoginOtpDocument,
-  CurrentSessionDocument,
+  SessionInfoDocument,
   PeerProfileDocument,
   PrimaryBannerDocument,
   SettingListDocument,
@@ -15,7 +15,7 @@ import {
 import {
   mockChallengeQuery,
   mockCheckLoginOtpQuery,
-  mockCurrentSessionQuery,
+  mockSessionInfoQuery,
   mockMutationResult,
   mockOperation,
   mockPeerProfileQuery,
@@ -161,11 +161,11 @@ describe('query mocks', () => {
   });
 
   it('answers the current session as a full password session by default', async () => {
-    const client = clientFor([mockCurrentSessionQuery()]);
+    const client = clientFor([mockSessionInfoQuery()]);
 
-    const { data } = await client.query({ query: CurrentSessionDocument });
+    const { data } = await client.query({ query: SessionInfoDocument });
 
-    expect(data?.currentSession).toMatchObject({
+    expect(data?.sessionInfo).toMatchObject({
       origin: SessionOrigin.Password,
       restricted: false,
       placeholderEmail: false,
@@ -174,12 +174,12 @@ describe('query mocks', () => {
 
   it('takes the session a test wants to show', async () => {
     const client = clientFor([
-      mockCurrentSessionQuery({ origin: SessionOrigin.Purl, restricted: true }),
+      mockSessionInfoQuery({ origin: SessionOrigin.Purl, restricted: true }),
     ]);
 
-    const { data } = await client.query({ query: CurrentSessionDocument });
+    const { data } = await client.query({ query: SessionInfoDocument });
 
-    expect(data?.currentSession).toMatchObject({
+    expect(data?.sessionInfo).toMatchObject({
       origin: SessionOrigin.Purl,
       restricted: true,
     });

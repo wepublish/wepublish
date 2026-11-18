@@ -5,7 +5,7 @@ import {
   useUser,
 } from '@wepublish/authentication/website';
 import { actWait } from '@wepublish/testing';
-import { CurrentSessionDocument } from '@wepublish/website/api';
+import { SessionInfoDocument } from '@wepublish/website/api';
 import { GraphQLError } from 'graphql';
 import { PropsWithChildren, useState } from 'react';
 import { withRestrictedSessionRedirect } from './with-restricted-session-redirect';
@@ -14,12 +14,12 @@ vi.mock('next/router', () => ({
   useRouter: () => ({ pathname: '/', replace: vi.fn() }),
 }));
 
-const currentSession = {
-  request: { query: CurrentSessionDocument },
+const sessionInfo = {
+  request: { query: SessionInfoDocument },
   delay: 0,
   result: {
     data: {
-      currentSession: {
+      sessionInfo: {
         __typename: 'SessionInfo',
         origin: 'password',
         restricted: false,
@@ -35,7 +35,7 @@ const currentSession = {
 
 // Asked again while logging out; answers only after the user is gone.
 const askedWhileLoggingOut = {
-  request: { query: CurrentSessionDocument },
+  request: { query: SessionInfoDocument },
   delay: 50,
   result: { errors: [new GraphQLError('Unauthorized')] },
 };
@@ -69,7 +69,7 @@ describe('withRestrictedSessionRedirect', () => {
     });
 
     render(
-      <MockedProvider mocks={[currentSession, askedWhileLoggingOut]}>
+      <MockedProvider mocks={[sessionInfo, askedWhileLoggingOut]}>
         <Session>
           <Page />
         </Session>

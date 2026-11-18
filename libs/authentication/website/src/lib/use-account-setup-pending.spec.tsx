@@ -1,7 +1,7 @@
 import { MockedProvider } from '@apollo/client/testing/react';
 import { renderHook, waitFor } from '@testing-library/react';
 import {
-  CurrentSessionDocument,
+  SessionInfoDocument,
   SettingListDocument,
   SettingName,
 } from '@wepublish/website/api';
@@ -9,12 +9,12 @@ import { PropsWithChildren } from 'react';
 import { SessionTokenContext } from './session.context';
 import { useAccountSetupPending } from './use-account-setup-pending';
 
-const currentSession = (restricted: boolean) => ({
-  request: { query: CurrentSessionDocument },
+const sessionInfo = (restricted: boolean) => ({
+  request: { query: SessionInfoDocument },
   delay: 0,
   result: {
     data: {
-      currentSession: {
+      sessionInfo: {
         __typename: 'SessionInfo',
         origin: 'purl',
         restricted,
@@ -56,7 +56,7 @@ const pendingFor = async ({
 }) => {
   const wrapper = ({ children }: PropsWithChildren) => (
     <MockedProvider
-      mocks={[currentSession(restricted), settings(loginCodeEnabled)]}
+      mocks={[sessionInfo(restricted), settings(loginCodeEnabled)]}
     >
       <SessionTokenContext.Provider
         value={[
