@@ -277,6 +277,11 @@ export class TestData {
 
       await inPool(readers, BULK_POOL, reader =>
         retryTransient(() => this.deleteUser(reader.id)).catch(error => {
+          // A dropped delete went through after all: the retry finds nothing.
+          if (/No record was found for a delete/.test((error as Error).message)) {
+            return;
+          }
+
           failed.push(`${reader.email}: ${(error as Error).message}`);
         })
       );

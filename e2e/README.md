@@ -274,8 +274,9 @@ started (nor migrated) for a URL you override (`BASE_URL`, `E2E_EDITOR_URL`,
   - **Duration:** the 40/10 trial on review01 took about 4.6 s a reader, so
     1500 take close to two hours. The run may take 3 h, the job 4 h. Retries
     are off for the scenario. Try `40/10` first.
-  - **Dropped requests:** the review ingress now and then resets one of many
-    requests in a row. Creating, reading and deleting readers try again
+  - **Dropped requests:** Cloudflare and the review ingress now and then
+    drop one of many requests in a row (`ECONNRESET`, HTTP 502–504 and
+    520–524), up to 5 attempts. Creating, reading and deleting readers try again
     (`retryTransient`) without doing a write twice. A retry gets a new
     address, and an existing subscription is taken instead of a second one.
     Readers already created are deleted even when the step fails halfway.
