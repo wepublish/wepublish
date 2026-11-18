@@ -1,5 +1,6 @@
 import { FormControlLabel, RadioGroup } from '@mui/material';
 import styled from '@emotion/styled';
+import { isEmptyRichtext } from '@wepublish/richtext';
 import { PaymentPeriodicity } from '@wepublish/website/api';
 import {
   BuilderMemberPlanOfferPickerProps,
@@ -183,9 +184,10 @@ export const MemberPlanOfferPicker = forwardRef<
 
       {selectedMemberPlan?.image && <Image image={selectedMemberPlan.image} />}
 
-      {!!selectedMemberPlan?.description?.content?.length && (
-        <RichText richText={selectedMemberPlan.description} />
-      )}
+      {selectedMemberPlan?.description &&
+        !isEmptyRichtext(selectedMemberPlan.description) && (
+          <RichText richText={selectedMemberPlan.description} />
+        )}
     </MemberPlanOfferPickerWrapper>
   );
 });

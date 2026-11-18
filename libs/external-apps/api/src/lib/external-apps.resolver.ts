@@ -17,7 +17,7 @@ import { ExternalAppsDataloaderService } from './external-apps-dataloader.servic
 import {
   Authenticated,
   CurrentUser,
-  UserSession,
+  userSessionOf,
   assertNotImpersonating,
   requireSessionUser,
   AuthSession,
@@ -25,9 +25,9 @@ import {
 import { JwtService } from '@wepublish/session/api';
 
 export const apiTokenReader = (
-  session: UserSession | undefined
+  session: AuthSession | undefined
 ): ApiTokenReader => ({
-  userId: session?.user?.id,
+  userId: userSessionOf(session)?.user.id,
   permissions: permissionsOf(session),
 });
 
@@ -65,7 +65,7 @@ export class ExternalAppsResolver {
   })
   createExternalApp(
     @Args('input') input: CreateExternalAppInput,
-    @CurrentUser() session: UserSession
+    @CurrentUser() session: AuthSession
   ) {
     return this.externalAppsService.createExternalApp(
       input,
@@ -80,7 +80,7 @@ export class ExternalAppsResolver {
   })
   updateExternalApp(
     @Args() input: UpdateExternalAppInput,
-    @CurrentUser() session: UserSession
+    @CurrentUser() session: AuthSession
   ) {
     return this.externalAppsService.updateExternalApp(
       input,

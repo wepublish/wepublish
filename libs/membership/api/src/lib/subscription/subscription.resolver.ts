@@ -25,7 +25,11 @@ import { URLAdapter } from '@wepublish/nest-modules';
 import { MemberPlan, MemberPlanDataloader } from '@wepublish/member-plan/api';
 import { PaymentMethod, PaymentMethodDataloader } from '@wepublish/payment/api';
 import { SubscriptionDeactivationDataloader } from './subscription-deactivation.dataloader';
-import { CurrentUser, UserSession } from '@wepublish/authentication/api';
+import {
+  AuthSession,
+  CurrentUser,
+  userSessionOf,
+} from '@wepublish/authentication/api';
 import { Subscription as PSubscription } from '@prisma/client';
 import {
   hasPermission,
@@ -188,7 +192,7 @@ export class PublicSubscriptionResolver {
   @ResolveField(() => [Property])
   async properties(
     @Parent() { properties }: Subscription,
-    @CurrentUser() user: UserSession | undefined
+    @CurrentUser() user: AuthSession | undefined
   ) {
     return (properties as unknown as Property[])?.filter(
       prop =>
@@ -308,13 +312,13 @@ export class PublicSubscriptionResolver {
   @ResolveField(() => String, { nullable: true })
   async externalReward(
     @Parent() parent: PSubscription,
-    @CurrentUser() user: UserSession | undefined
+    @CurrentUser() user: AuthSession | undefined
   ) {
     const canManage = hasPermission(
       [CanGetSubscription, CanGetSubscriptions],
       permissionsOf(user)
     );
-    const isOwn = parent.userID === user?.user.id;
+    const isOwn = parent.userID === userSessionOf(user)?.user.id;
 
     const [memberPlan, isActive] = await Promise.all([
       this.memberPlanDataloader.load(parent.memberPlanID),

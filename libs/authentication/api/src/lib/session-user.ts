@@ -1,7 +1,7 @@
 import { ForbiddenException } from '@nestjs/common';
 import { User } from '@prisma/client';
 
-import { AuthSession, AuthSessionType } from './auth-session';
+import { AuthSession, AuthSessionType, UserSession } from './auth-session';
 
 /** Who answers for an action: a user, and the api key if one was used. */
 export type SessionActor = {
@@ -34,11 +34,35 @@ export function actorOf(session: AuthSession): SessionActor {
  * not enough: the decorator returns whatever session authenticated.
  */
 export function requireSessionUser(session: AuthSession): User {
+  return requireUserSession(session).user;
+}
+
+/** Like `requireSessionUser`, for services that also need the roles. */
+export function requireUserSession(session: AuthSession): UserSession {
   if (session.type !== AuthSessionType.User) {
     throw new ForbiddenException(
       'This needs a signed-in user; API keys and peering tokens have none.'
     );
   }
 
-  return session.user;
+  return session;
+}
+
+/** The signed-in user's session, or nothing for anyone else. */
+export function userSessionOf(
+  session: AuthSession | null | undefined
+): UserSession | undefined {
+  return session?.type === AuthSessionType.User ? session : undefined;
+}
+
+/**
+ * Like `actorOf`, for operations a peering token may do too: it records
+ * nobody instead of a 403.
+ */
+export function actorUserIdOf(
+  session: AuthSession | null | undefined
+): string | undefined {
+  return session && session.type !== AuthSessionType.Token ?
+      actorOf(session).userId
+    : undefined;
 }

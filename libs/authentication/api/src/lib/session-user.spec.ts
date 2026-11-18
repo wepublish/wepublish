@@ -7,7 +7,13 @@ import {
   TokenSession,
   UserSession,
 } from './auth-session';
-import { actorOf, requireSessionUser } from './session-user';
+import {
+  actorOf,
+  actorUserIdOf,
+  requireSessionUser,
+  requireUserSession,
+  userSessionOf,
+} from './session-user';
 
 const user = { id: 'user-1', email: 'editor@example.test' } as User;
 
@@ -68,5 +74,49 @@ describe('requireSessionUser', () => {
     ['a peering token', peerSession],
   ])('refuses %s, even one created by a user', (_, session) => {
     expect(() => requireSessionUser(session)).toThrow(ForbiddenException);
+  });
+});
+
+describe('requireUserSession', () => {
+  it('returns the session of the signed-in user', () => {
+    expect(requireUserSession(userSession)).toBe(userSession);
+  });
+
+  it.each([
+    ['an api key', apiTokenSession],
+    ['a peering token', peerSession],
+  ])('refuses %s', (_, session) => {
+    expect(() => requireUserSession(session)).toThrow(ForbiddenException);
+  });
+});
+
+describe('userSessionOf', () => {
+  it('is the session of the signed-in user', () => {
+    expect(userSessionOf(userSession)).toBe(userSession);
+  });
+
+  it.each([
+    ['an api key', apiTokenSession],
+    ['a peering token', peerSession],
+    ['no session', undefined],
+  ])('is nothing for %s', (_, session) => {
+    expect(userSessionOf(session)).toBeUndefined();
+  });
+});
+
+describe('actorUserIdOf', () => {
+  it('is the signed-in user', () => {
+    expect(actorUserIdOf(userSession)).toBe('user-1');
+  });
+
+  it('is the creator of an api key', () => {
+    expect(actorUserIdOf(apiTokenSession)).toBe('creator-1');
+  });
+
+  it.each([
+    ['a peering token', peerSession],
+    ['no session', undefined],
+  ])('is nobody for %s', (_, session) => {
+    expect(actorUserIdOf(session)).toBeUndefined();
   });
 });

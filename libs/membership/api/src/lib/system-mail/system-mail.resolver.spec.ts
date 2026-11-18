@@ -1,3 +1,4 @@
+import { AuthSessionType } from '@wepublish/authentication/api';
 import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaClient, User, UserEvent, UserFlowMail } from '@prisma/client';
@@ -131,6 +132,7 @@ describe('SystemMailResolver', () => {
   it('should test the system mail', async () => {
     const result = await resolver.testSystemMail(
       {
+        type: AuthSessionType.User,
         user: FAKE_USER,
       } as any,
       UserEvent.ACCOUNT_CREATION

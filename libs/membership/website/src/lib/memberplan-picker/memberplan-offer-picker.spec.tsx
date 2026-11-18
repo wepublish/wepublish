@@ -8,9 +8,16 @@ import {
   renderWithProviders,
 } from '@wepublish/mocks/website';
 import { PaymentPeriodicity } from '@wepublish/website/api';
+import { RichtextJSONDocument } from '@wepublish/richtext';
 import { ComponentProps, useState } from 'react';
 import { formatRenewalPeriod } from '../formatters/format-renewal-period';
 import { MemberPlanOfferPicker } from './memberplan-offer-picker';
+
+// What the editor saves for a cleared richtext field
+const blankDescription = {
+  type: 'doc',
+  content: [{ type: 'paragraph', content: [] }],
+} as unknown as RichtextJSONDocument;
 
 const monthlyAndYearly = mockAvailablePaymentMethod({
   paymentPeriodicities: [PaymentPeriodicity.Monthly, PaymentPeriodicity.Yearly],
@@ -205,5 +212,25 @@ describe('MemberPlanOfferPicker', () => {
     expect(
       screen.queryByText('Vier Ausgaben pro Jahr')
     ).not.toBeInTheDocument();
+  });
+
+  // The editor saves a touched-then-cleared description as one empty
+  // paragraph. Rendering it adds an empty grid item and with it the wrapper's
+  // gap, so the layout jumps when switching to that plan (ganzgraz /mitmachen).
+  it('renders nothing below the offers for a description of only empty paragraphs', () => {
+    renderOfferPicker({
+      memberPlans: [
+        mockMemberPlan({
+          name: 'Jahresplan',
+          image: null,
+          description: blankDescription,
+          availablePaymentMethods: [monthlyAndYearly],
+        }),
+      ],
+    });
+
+    expect(screen.getByRole('radiogroup').parentElement?.children).toHaveLength(
+      1
+    );
   });
 });
