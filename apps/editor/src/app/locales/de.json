@@ -5675,7 +5675,7 @@
     "apiTokenList": {
       "overview": {
         "apiTokens": "API-Schlüssel",
-        "apiTokensInfo": "Mit einem API-Schlüssel kann ein Skript oder ein anderes System die API nutzen, ohne sich als Person anzumelden. Ein Schlüssel hat nur die Rechte, die Sie ihm geben.",
+        "apiTokensInfo": "Mit einem API-Schlüssel kann ein Skript oder ein anderes System die API nutzen, ohne sich als User anzumelden. Ein Schlüssel hat nur die Rechte, die Sie ihm geben.",
         "generateToken": "API-Schlüssel erstellen",
         "name": "Name",
         "prefix": "Schlüssel",
@@ -5687,13 +5687,13 @@
         "status": "Status",
         "blocked": "Blockiert",
         "blockedReason": {
-          "CreatorMissing": "Die Person, die diesen Schlüssel erstellt hat, existiert nicht mehr. Der Schlüssel funktioniert nicht mehr; erstellen Sie einen neuen.",
-          "CreatorInactive": "Die Person, die diesen Schlüssel erstellt hat, ist deaktiviert. Solange funktioniert der Schlüssel nicht.",
-          "CreatorMayNotCreateApiTokens": "Die Person, die diesen Schlüssel erstellt hat, darf keine API-Schlüssel mehr erstellen. Solange funktioniert der Schlüssel nicht."
+          "CreatorMissing": "Der User, der diesen Schlüssel erstellt hat, existiert nicht mehr. Der Schlüssel funktioniert nicht mehr; erstellen Sie einen neuen.",
+          "CreatorInactive": "Der User, der diesen Schlüssel erstellt hat, ist deaktiviert. Solange funktioniert der Schlüssel nicht.",
+          "CreatorMayNotCreateApiTokens": "Der User, der diesen Schlüssel erstellt hat, darf keine API-Schlüssel mehr erstellen. Solange funktioniert der Schlüssel nicht."
         },
         "missingScopes_one": "{{count}} Recht fehlt",
         "missingScopes_other": "{{count}} Rechte fehlen",
-        "missingScopesHelp": "Die Person, die diesen Schlüssel erstellt hat, hat diese Rechte nicht mehr. Aufrufe, die sie brauchen, werden abgelehnt: {{scopes}}",
+        "missingScopesHelp": "Der User, der diesen Schlüssel erstellt hat, hat diese Rechte nicht mehr. Aufrufe, die sie brauchen, werden abgelehnt: {{scopes}}",
         "active": "Aktiv",
         "revoked": "Widerrufen",
         "revoke": "Widerrufen",
