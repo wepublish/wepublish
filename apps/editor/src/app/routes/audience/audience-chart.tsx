@@ -150,7 +150,7 @@ const LOSSES: FlowSeries[] = [
 ];
 
 const numberLocale = (language: string) =>
-  ({ de: 'de-CH', fr: 'fr-CH' })[language] ?? 'en-GB';
+  ({ de: 'de-CH', fr: 'fr-CH', es: 'es-ES' })[language] ?? 'en-GB';
 
 export function useAudienceChartColors(): {
   [K in keyof AudienceClientFilter]: string | string[];

@@ -4,7 +4,7 @@ import {
   SortOrder,
 } from '@wepublish/editor/api';
 import imageCompression from 'browser-image-compression';
-import { de, enUS, fr } from 'date-fns/locale';
+import { de, enUS, es, fr } from 'date-fns/locale';
 import { DocumentNode, OperationDefinitionNode } from 'graphql';
 import nanoid from 'nanoid';
 import {
@@ -273,6 +273,7 @@ export const AVAILABLE_LANG = [
   { id: 'en', lang: 'en_US', name: 'English', locale: enUS },
   { id: 'fr', lang: 'fr_FR', name: 'Français', locale: fr },
   { id: 'de', lang: 'de_CH', name: 'Deutsch', locale: de },
+  { id: 'es', lang: 'es_ES', name: 'Español', locale: es },
 ];
 
 export async function compressImageForUpload(file: File): Promise<File> {

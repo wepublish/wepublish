@@ -4,6 +4,7 @@ import { join, relative, resolve } from 'node:path';
 
 import de from './de.json';
 import en from './en.json';
+import es from './es.json';
 import fr from './fr.json';
 
 type Catalog = { [key: string]: string | Catalog };
@@ -28,6 +29,7 @@ const keys = {
   en: new Set(keysOf(en.translation as Catalog)),
   de: new Set(keysOf(de.translation as Catalog)),
   fr: new Set(keysOf(fr.translation as Catalog)),
+  es: new Set(keysOf(es.translation as Catalog)),
 };
 
 const usesFormLibrary = /from\s+['"]@wepublish\/form\//;
@@ -185,20 +187,23 @@ const hasKey = (lang: keyof typeof keys, key: string) =>
   [...keys[lang]].some(existing => existing.startsWith(`${key}_`));
 
 describe('editor translations', () => {
-  it.each(['en', 'de', 'fr'] as const)('have no duplicate keys (%s)', lang => {
-    expect(
-      duplicateKeys(readFileSync(join(__dirname, `${lang}.json`), 'utf8'))
-    ).toEqual([]);
-  });
+  it.each(['en', 'de', 'fr', 'es'] as const)(
+    'have no duplicate keys (%s)',
+    lang => {
+      expect(
+        duplicateKeys(readFileSync(join(__dirname, `${lang}.json`), 'utf8'))
+      ).toEqual([]);
+    }
+  );
 
-  it.each(['en', 'de', 'fr'] as const)(
+  it.each(['en', 'de', 'fr', 'es'] as const)(
     'contain every key the editor uses (%s)',
     lang => {
       expect(usedKeys().filter(key => !hasKey(lang, key))).toEqual([]);
     }
   );
 
-  it.each(['en', 'de', 'fr'] as const)(
+  it.each(['en', 'de', 'fr', 'es'] as const)(
     'keep the key families the editor builds at runtime (%s)',
     lang => {
       const missing = usedPrefixes().filter(
@@ -213,18 +218,21 @@ describe('editor translations', () => {
     expect(usedPrefixes().filter(prefix => !prefix.endsWith('.'))).toEqual([]);
   });
 
-  it.each(['en', 'de', 'fr'] as const)(
+  it.each(['en', 'de', 'fr', 'es'] as const)(
     'contain every key the form library builds (%s)',
     lang => {
       expect(formErrorKeys.filter(key => !hasKey(lang, key))).toEqual([]);
     }
   );
 
-  it.each(['de', 'fr'] as const)('translate every English text (%s)', lang => {
-    expect([...keys.en].filter(key => !keys[lang].has(key))).toEqual([]);
-  });
+  it.each(['de', 'fr', 'es'] as const)(
+    'translate every English text (%s)',
+    lang => {
+      expect([...keys.en].filter(key => !keys[lang].has(key))).toEqual([]);
+    }
+  );
 
-  it.each(['de', 'fr'] as const)(
+  it.each(['de', 'fr', 'es'] as const)(
     'have no texts that English lacks (%s)',
     lang => {
       expect([...keys[lang]].filter(key => !keys.en.has(key))).toEqual([]);

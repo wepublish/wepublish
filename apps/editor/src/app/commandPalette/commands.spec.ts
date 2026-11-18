@@ -114,7 +114,7 @@ describe('editor command registry', () => {
     expect(ids).toEqual([...new Set(ids)]);
   });
 
-  it.each(['en', 'de', 'fr'] as const)(
+  it.each(['en', 'de', 'fr', 'es'] as const)(
     'has a title in %s for every command',
     language => {
       const untranslated = allCommands
@@ -128,7 +128,7 @@ describe('editor command registry', () => {
     }
   );
 
-  it.each(['en', 'de', 'fr'] as const)(
+  it.each(['en', 'de', 'fr', 'es'] as const)(
     'has a section name in %s wherever one is claimed',
     language => {
       const untranslated = allCommands
@@ -143,7 +143,7 @@ describe('editor command registry', () => {
     }
   );
 
-  it.each(['en', 'de', 'fr'] as const)(
+  it.each(['en', 'de', 'fr', 'es'] as const)(
     'has the palette chrome translated in %s',
     language => {
       const missing = [
