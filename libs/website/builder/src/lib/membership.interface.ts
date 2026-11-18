@@ -25,6 +25,7 @@ import {
 import { BuilderRegistrationFormProps } from './authentication.interface';
 import { BuilderUserFormFields } from './user.interface';
 import { FieldError, FieldErrors } from 'react-hook-form';
+import { ReactNode } from 'react';
 
 export type BuilderMemberPlanRenderSetting =
   FullSubscribeBlockFragment['memberPlanRenderSettings'][number];
@@ -323,6 +324,8 @@ export type BuilderSubscribeProps<
   hiddenAreas?: readonly SubscribeArea[];
   /** Called when a submit fails validation, e.g. because of a hidden section. */
   onInvalid?: (errors: FieldErrors) => void;
+  /** Replaces the price text on the submit button, e.g. when a summary already tells it. */
+  submitText?: ReactNode;
 } & Pick<BuilderRegistrationFormProps<T>, 'schema' | 'fields'>;
 
 export type BuilderUpgradeProps = {

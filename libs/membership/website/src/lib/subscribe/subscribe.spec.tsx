@@ -407,6 +407,22 @@ describe('Subscribe', () => {
       );
     });
 
+    it('labels the submit button with the given text instead of the price', async () => {
+      const onInvalid = vi.fn();
+      const { user } = renderSubscribe({ submitText: 'Weiter', onInvalid });
+
+      await screen.findByRole('group', { name: TEST_CAPTCHA_LABEL });
+      expect(
+        screen.queryByRole('button', {
+          name: name => name.includes(price(7)),
+        })
+      ).not.toBeInTheDocument();
+
+      await user.click(screen.getByRole('button', { name: 'Weiter' }));
+
+      await waitFor(() => expect(onInvalid).toHaveBeenCalled());
+    });
+
     it('reports the validation errors of a failed submit', async () => {
       const onInvalid = vi.fn();
       const { user } = renderSubscribe({ onInvalid });

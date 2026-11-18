@@ -217,6 +217,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   periodicityDisplay,
   hiddenAreas = NO_HIDDEN_AREAS,
   onInvalid,
+  submitText,
 }: BuilderSubscribeProps<T>) => {
   const {
     meta: { locale, siteTitle },
@@ -1219,7 +1220,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
                 }
               }}
             >
-              {paymentText}
+              {submitText ?? paymentText}
             </SubscribeButton>
 
             {!!discountPercent &&
