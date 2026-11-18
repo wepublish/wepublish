@@ -676,6 +676,7 @@ describe('LetterContext attachments', () => {
       letterAppendixId?: string | null;
       country?: string;
       printMode?: LetterPrintMode;
+      invoice?: { name: string; content: Buffer };
     }
   ) =>
     context.renderLetter({
@@ -688,6 +689,7 @@ describe('LetterContext attachments', () => {
       data: { user },
       recipient: { ...recipient, country: props.country ?? 'CH' },
       printMode: props.printMode,
+      attachment: props.invoice,
     });
 
   it('prints the attachments after the letter, filled in with its data', async () => {
@@ -737,6 +739,20 @@ describe('LetterContext attachments', () => {
 
     // letter, blank, contract (two pages), QR-bill. With the bill before the
     // contract it would be six: letter, blank, bill, blank, contract.
+    expect(await pageCount(pdf)).toBe(5);
+  });
+
+  it('keeps the invoice the sender hands in last', async () => {
+    const { context } = createContext(undefined, {}, attachmentRenderer());
+
+    const pdf = await render(context, {
+      attachmentIds: ['contract'],
+      printMode: LetterPrintMode.duplex,
+      invoice: { name: 'Rechnung.pdf', content: await makePdf(1) },
+    });
+
+    // letter, blank, contract (two pages), invoice; the other way round it
+    // would be letter, blank, invoice, blank, contract.
     expect(await pageCount(pdf)).toBe(5);
   });
 
