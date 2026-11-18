@@ -22,5 +22,25 @@
       "all": "Es gibt keine Veranstaltungen zum Anzeigen.",
       "custom": "Im gewählten Zeitraum gibt es keine Veranstaltungen zum Anzeigen."
     }
+  },
+  "tsri": {
+    "membership": {
+      "perMonth": "/ Monat",
+      "billedPeriodically": "{price}/{unit}, {timeline} abgerechnet",
+      "billedMonthly": "monatlich abgerechnet",
+      "select": "Auswählen",
+      "selected": "Ausgewählt",
+      "selectedPlan": "Deine Mitgliedschaft",
+      "customAmount": "+ eigenen Betrag festlegen",
+      "summary": "Deine Wahl: {memberPlan} für {price}/{unit} — jederzeit änderbar",
+      "transactionFee": "Ich übernehme die 2% Bearbeitungsgebühr, damit der ganze Betrag bei Tsüri ankommt",
+      "submit": "Weiter",
+      "benefits": {
+        "label": "Deine Vorteile",
+        "cancellable": "Jederzeit kündbar",
+        "securePayment": "Sichere Zahlung",
+        "instantAccess": "Sofort freigeschaltet"
+      }
+    }
   }
 }
