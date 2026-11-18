@@ -28,6 +28,7 @@ import type { PeriodicJob as StoredPeriodicJob } from '@prisma/client';
       useValue: {
         getJobLog: vi.fn(),
         retryAndCatchUp: vi.fn(),
+        runTodayNow: vi.fn(),
         isRunning: vi.fn(),
       },
     },
@@ -52,6 +53,27 @@ const retryPeriodicJobMutation = `
         retryPeriodicJob {
             id
             running
+        }
+    }
+`;
+
+const runPeriodicJobNowMutation = `
+    mutation RunPeriodicJobNow {
+        runPeriodicJobNow {
+            id
+            running
+        }
+    }
+`;
+
+const apiProcessStatsQuery = `
+    query ApiProcessStats {
+        apiProcessStats {
+            hostname
+            uptimeSeconds
+            rssBytes
+            heapUsedBytes
+            externalBytes
         }
     }
 `;
@@ -184,5 +206,74 @@ describe('ConsentResolver', () => {
           'A periodic job is already running.'
         );
       });
+  });
+
+  describe('for a load test', () => {
+    afterEach(() => {
+      vi.unstubAllEnvs();
+    });
+
+    it('runs today again on a review instance and answers with the run', async () => {
+      vi.stubEnv('APP_ENVIRONMENT', 'review');
+      const spy = vi
+        .spyOn(service, 'runTodayNow')
+        .mockResolvedValue(storedJob());
+      vi.spyOn(service, 'isRunning').mockResolvedValue(true);
+
+      await request(app.getHttpServer())
+        .post('')
+        .send({ query: runPeriodicJobNowMutation })
+        .expect(res => {
+          expect(res.body.data.runPeriodicJobNow).toEqual({
+            id: '1234',
+            running: true,
+          });
+          expect(spy).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    it.each(['production', 'staging', ''])(
+      'refuses to run today again on "%s"',
+      async APP_ENVIRONMENT => {
+        vi.stubEnv('APP_ENVIRONMENT', APP_ENVIRONMENT);
+        const spy = vi.spyOn(service, 'runTodayNow');
+        spy.mockClear();
+
+        await request(app.getHttpServer())
+          .post('')
+          .send({ query: runPeriodicJobNowMutation })
+          .expect(res => {
+            expect(res.body.errors[0].message).toMatch(/only on review/);
+            expect(spy).not.toHaveBeenCalled();
+          });
+      }
+    );
+
+    it("tells the API process's memory and uptime on a review instance", async () => {
+      vi.stubEnv('APP_ENVIRONMENT', 'review');
+
+      await request(app.getHttpServer())
+        .post('')
+        .send({ query: apiProcessStatsQuery })
+        .expect(res => {
+          const stats = res.body.data.apiProcessStats;
+
+          expect(stats.hostname).toEqual(expect.any(String));
+          expect(stats.uptimeSeconds).toBeGreaterThan(0);
+          expect(stats.rssBytes).toBeGreaterThan(stats.heapUsedBytes);
+          expect(stats.externalBytes).toBeGreaterThan(0);
+        });
+    });
+
+    it('keeps the memory to itself on production', async () => {
+      vi.stubEnv('APP_ENVIRONMENT', 'production');
+
+      await request(app.getHttpServer())
+        .post('')
+        .send({ query: apiProcessStatsQuery })
+        .expect(res => {
+          expect(res.body.errors[0].message).toMatch(/only on review/);
+        });
+    });
   });
 });

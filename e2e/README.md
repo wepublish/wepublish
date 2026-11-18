@@ -75,6 +75,7 @@ development.
 | `E2E_BEXIO_API_TOKEN` and not `production`                    | `@bexio`                | the bexio **test** company the target's provider writes to  |
 | `E2E_PINGEN_CLIENT_ID` + `_CLIENT_SECRET` + `_ORGANISATION_ID`, not `production` | `@letter` | a Pingen account; the letter provider is set to its staging environment |
 | `E2E_MAILCHIMP_API_KEY` + `_LIST_ID` + `_INTEREST_ID`        | `@mailchimp`            | a real test audience (no fake); never production            |
+| `E2E_LOAD_READERS` (`<mail>/<letter>`), not `production` or `staging` | `@load` | the renewal load test; see below                            |
 
 Every scenario carries a domain tag (`@auth`, `@paywall`, …) and the
 capability tags it needs. The `capabilities` fixture compares them with the
@@ -243,11 +244,43 @@ started (nor migrated) for a URL you override (`BASE_URL`, `E2E_EDITOR_URL`,
   a day, and bexio emails every invoice it creates, the review's nightly
   renewals of seeded Resend readers included: one mail per bexio checkout.
   The review's own mails to a Resend reader still land in Ethereal (`inbox`).
+- `@load` is the renewal load test (`renewal-load.feature`, Neue Wege on
+  review). It creates synthetic readers by mail and by letter, e.g.
+  `E2E_LOAD_READERS=1200/300` (workflow input `load_readers`), all with a
+  bexio subscription due for its renewal invoice today. It then starts the
+  nightly run with `runPeriodicJobNow` and reads `apiProcessStats` every 10 s.
+  Both are refused outside review, development and local, and need
+  `CAN_RETRY_PERIODIC_JOB` and `CAN_GET_PERIODIC_JOB_LOG` on the key.
+  - **Fails when:**
+    - the API pod restarts (new hostname or smaller uptime);
+    - rss passes `E2E_LOAD_MAX_RSS_MIB` (default 800; the pod's limit is
+      1024 MiB);
+    - the run fails;
+    - a reader got no mail or letter.
+  - **Report:** the memory curve goes into the job summary
+    (`test-results/load-memory.md`).
+  - **Mailbox:** the step deletes the readers' mails from the Ethereal
+    mailbox as they arrive (100 MB quota) and keeps 3 samples to check the
+    attached pdf.
+  - **Duration:** the 40/10 trial on review01 took about 4.6 s a reader, so
+    1500 take close to two hours. The run may take 3 h, the job 4 h. Retries
+    are off for the scenario. Try `40/10` first.
+  - **Dropped requests:** Cloudflare and the review ingress now and then
+    drop one of many requests in a row (`ECONNRESET`, HTTP 502–504 and
+    520–524), up to 5 attempts. Creating, reading and deleting readers try again
+    (`retryTransient`) without doing a write twice. A retry gets a new
+    address, and an existing subscription is taken instead of a second one.
+    Readers already created are deleted even when the step fails halfway.
+  - **Left behind:**
+    - the invoices, in the database and in the bexio test company;
+    - the letters, in Pingen staging.
+
+    `E2E_KEEP_LOAD_DATA=true` also keeps the readers.
 - `@payment` needs the `simulated` payment method on the plan used (it only
   exists on non-production instances).
 - The database is a copy of production — cleanup matters. Search the editor
   for `e2e+` users or `e2e-` slugs if a run was aborted.
 
 In GitHub: Actions → **E2E tests** → `app`, `environment` (+ `review_slot`),
-`project` (all / website / editor), optional `grep`, `allow_mutation` (on by default; ignored for production) and
-URL overrides.
+`project` (all / website / editor), optional `grep`, `allow_mutation` (on by default; ignored for production),
+`keep_mails`, `load_readers` (with `grep` `@load`) and URL overrides.
