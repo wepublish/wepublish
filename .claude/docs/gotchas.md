@@ -180,16 +180,19 @@ loads it.
 
 ---
 
-### ⚠️ Never hand Prisma an empty `OR` built from a list
+### ⚠️ Prisma 7 drops empty filters inside an `AND`/`OR` list
 
-`{ OR: list.map(…) }` with an empty `list` matches **every** row on the deployed
-Prisma 7, not none. The mail-send "Platzhalter" segment did that on tenants
-without a placeholder pattern and counted (and would have mailed) the whole
-audience (TSRI, 2026-11). Specs stayed green because
+Prisma 7.10 compiles a top-level `OR: []` to "nobody", but silently drops every
+empty entry (`{}`, `{ OR: [] }`, `{ AND: [] }`) of an `AND`/`OR` list:
+`{ AND: [base, { OR: [] }] }` is just `base`, and `{ OR: [{}, x] }` is just `x`.
+Field filters such as `in: []` are never dropped. The mail-send "Platzhalter"
+segment put `{ OR: patterns.map(…) }` without patterns into an `AND` and counted
+(and would have mailed) the whole audience (TSRI, 2026-11).
 [where-matcher.ts](../../libs/membership/api/src/lib/mail-send/where-matcher.ts)
-evaluated `OR: []` as false; it now throws on an empty `AND`/`OR`. Guard the
-list and say "nobody" explicitly (`{ id: { in: [] } }`) or "everybody" (`{}`),
-as `placeholderEmailWhere` in `mail-send-recipient.service.ts` does.
+now throws on an empty `AND`/`OR` and on `{}` inside an `OR`. Never build an
+`OR` from a list that can be empty: say "nobody" as `{ id: { in: [] } }`
+(`NOBODY` in `mail-send-recipient.service.ts`, `NO_SUBSCRIPTION` in
+`subscription-flow.resolver.ts`), and keep `{}` out of `OR` lists.
 
 ---
 
