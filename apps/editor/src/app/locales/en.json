@@ -4691,8 +4691,6 @@
         "job": "Send job",
         "jobAll": "All send jobs",
         "all": "All",
-        "title": "Filter",
-        "reset": "Reset filters",
         "typeHint": "What triggered this send.",
         "channel": "Delivery",
         "jobHelp": "A send job groups all emails sent with one click via «Manual messages». Pick one to see only its emails."
