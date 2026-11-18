@@ -8,6 +8,7 @@ import { ContentWrapper } from '@wepublish/content/website';
 import { ArticleListWrapper } from '@wepublish/article/website';
 import { useMemo } from 'react';
 import { capitalize } from '@mui/material';
+import { isEmptyRichtext } from '@wepublish/richtext';
 import { useTranslation } from 'react-i18next';
 
 export const TagWrapper = styled(ContentWrapper)`
@@ -69,7 +70,7 @@ export function Tag({
       <TagTitleWrapper>
         <H2 component={TagTitle}>{capitalize(tag.tag ?? '')}</H2>
 
-        {!!tag.description?.content?.length && (
+        {tag.description && !isEmptyRichtext(tag.description) && (
           <RichText richText={tag.description} />
         )}
       </TagTitleWrapper>
