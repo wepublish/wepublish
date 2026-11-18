@@ -12,13 +12,7 @@ export type LoadReaders = { mail: number; letter: number };
 export type LoadRun = {
   mailReaders: Reader[];
   letterReaders: Reader[];
-  /** Mail readers whose mails stay in the mailbox for a closer look. */
-  sampleReaders: Reader[];
-  /** What the recipients of the mail readers contain, for sweeping the mailbox. */
-  mailPrefix: string;
   job?: { id: string };
-  /** Mails to the mail readers counted (and swept) in the mailbox so far. */
-  mailsCounted: number;
 };
 
 /** `E2E_LOAD_READERS`: `<mail>/<letter>` readers, e.g. `1200/300`; unset means off. */

@@ -2,6 +2,7 @@ import { base, de_CH, en, Faker } from '@faker-js/faker';
 import { ApiClient } from './api-client';
 import { inPool, retryTransient } from './load';
 import { MailLog } from './mail-logs';
+import { MAIL_PROVIDER_FIELDS, MailProviderSetting, smtpRestore } from './mail-provider';
 import { Flow, FlowQuery, flowFor } from './subscription-flows';
 
 export type PostalAddress = {
@@ -945,6 +946,54 @@ export class TestData {
 
     await update(true);
     this.onCleanup(`invoice-creation interval ${interval.id}`, () => update(false));
+  }
+
+  /**
+   * Switches the tenant's mail provider to LOG for the scenario: mails are
+   * composed, attachments included, and logged instead of sent. Puts the SMTP
+   * provider back afterwards, its password from `mailbox` (the IMAP login,
+   * which on Ethereal is the SMTP login too). Refuses a provider it could not
+   * put back. Shared, like the payment provider.
+   */
+  async withLoggedMails(mailbox: { user: string; password: string } | undefined) {
+    const api = await this.api();
+    const { mailProviderSettings } = await api.gql<{ mailProviderSettings: MailProviderSetting[] }>(
+      `query { mailProviderSettings { ${MAIL_PROVIDER_FIELDS} } }`
+    );
+    const [provider] = mailProviderSettings;
+
+    if (!provider) {
+      throw new Error('The target has no mail provider.');
+    }
+
+    if (provider.type === 'LOG') {
+      return;
+    }
+
+    const restore = smtpRestore(provider, mailbox);
+    // A type change keeps only type and name, so it takes a second update.
+    const update = (values: Record<string, unknown>) =>
+      api.gql(
+        `mutation UpdateMailProvider($id: String, $type: MailProviderType, $name: String, $fromAddress: String,
+          $replyToAddress: String, $smtp_host: String, $smtp_port: Int, $smtp_secure: Boolean,
+          $smtp_user: String, $apiKey: String) {
+          updateMailProviderSetting(id: $id, type: $type, name: $name, fromAddress: $fromAddress,
+            replyToAddress: $replyToAddress, smtp_host: $smtp_host, smtp_port: $smtp_port,
+            smtp_secure: $smtp_secure, smtp_user: $smtp_user, apiKey: $apiKey) { id }
+        }`,
+        values
+      );
+
+    this.onCleanup(`mail provider ${provider.id} back to SMTP`, async () => {
+      const { type, name, ...settings } = restore;
+
+      await update({ id: restore.id, type, name });
+      await update(settings);
+      await this.reloadProviders();
+    });
+
+    await update({ id: provider.id, type: 'LOG', name: provider.name });
+    await this.reloadProviders();
   }
 
   /**
