@@ -66,23 +66,79 @@ beforeEach(() => {
 });
 
 describe('SystemMailSection', () => {
-  it('shows the account mails as one block with a row per event', () => {
-    const { container } = renderPage();
+  it('heads the account mails like the flows above them', () => {
+    renderPage();
 
-    const block = screen.getByRole('region', { name: 'systemMails.title' });
-    const rows = within(block).getAllByRole('listitem');
+    const section = screen.getByRole('region', { name: 'systemMails.title' });
 
     expect(
-      rows.map(row => within(row).getByRole('heading').textContent)
-    ).toEqual([
-      'systemMails.events.account_creation',
-      'systemMails.events.login_link',
-      'systemMails.events.password_reset',
-    ]);
-    expect(
-      within(rows[0]).getByRole('button', { name: /systemMails.sendTest/ })
+      within(section).getByRole('heading', {
+        level: 2,
+        name: 'systemMails.title',
+      })
     ).toBeTruthy();
-    expect(container.querySelector('table')).toBeNull();
+  });
+
+  it('lists the account mails as a table with a row per event', () => {
+    renderPage();
+
+    const table = screen.getByRole('table');
+
+    expect(
+      within(table)
+        .getAllByRole('columnheader')
+        .map(header => header.textContent)
+    ).toEqual([
+      'systemMails.columns.event',
+      'systemMails.columns.userAction',
+      'systemMails.columns.template',
+      'action',
+    ]);
+
+    const rows = within(table).getAllByRole('row').slice(1);
+
+    expect(
+      rows.map(row =>
+        within(row)
+          .getAllByRole('cell')
+          .slice(0, 2)
+          .map(cell => cell.textContent)
+      )
+    ).toEqual([
+      [
+        'systemMails.events.account_creation',
+        'systemMails.eventInfo.account_creation.userAction',
+      ],
+      [
+        'systemMails.events.login_link',
+        'systemMails.eventInfo.login_link.userAction',
+      ],
+      [
+        'systemMails.events.password_reset',
+        'systemMails.eventInfo.password_reset.userAction',
+      ],
+    ]);
+
+    for (const row of rows) {
+      expect(within(row).getByRole('combobox')).toBeTruthy();
+      expect(
+        within(row).getByRole('button', { name: /systemMails.sendTest/ })
+      ).toBeTruthy();
+    }
+  });
+
+  it('explains an event next to its name', () => {
+    renderPage();
+
+    const row = screen
+      .getByText('systemMails.events.login_link')
+      .closest('tr') as HTMLElement;
+
+    expect(
+      within(row).getByRole('button', {
+        name: 'systemMails.eventInfo.login_link.description',
+      })
+    ).toBeTruthy();
   });
 
   it('offers only templates with an email version: a system mail is never a letter', () => {

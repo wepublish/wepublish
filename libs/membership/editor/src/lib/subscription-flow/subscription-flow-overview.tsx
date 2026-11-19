@@ -50,7 +50,6 @@ import { MdAdd, MdDelete, MdEdit } from 'react-icons/md';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { DEFAULT_MUTATION_OPTIONS } from '../common';
 import { usePaperLetterFlow } from '../delivery-mode/use-paper-letter-flow';
-import { MailBlocks } from '../mail-settings-layout';
 import { SystemMailSection } from '../system-mail/system-mail-section';
 import { FlowFilters } from './filter/flow-filters';
 import {
@@ -320,10 +319,14 @@ function FlowTable() {
       id: 'action',
       label: t('action'),
       width: 100,
-      align: 'center',
       fixed: true,
       render: row => (
-        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
+        // From the left edge, so that «edit» sits in the same place in every
+        // row, whether or not «delete» follows it.
+        <Box
+          data-actions
+          sx={{ display: 'flex', justifyContent: 'flex-start', gap: 1 }}
+        >
           <IconButtonTooltip caption={t('edit')}>
             <IconButton
               size="small"
@@ -485,9 +488,7 @@ export function SubscriptionFlowOverview() {
 
       {(canSeeFlows || canChangeFlows) && <FlowTable />}
 
-      <MailBlocks>
-        <SystemMailSection />
-      </MailBlocks>
+      <SystemMailSection />
     </>
   );
 }
