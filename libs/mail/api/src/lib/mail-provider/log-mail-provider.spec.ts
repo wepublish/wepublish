@@ -67,7 +67,9 @@ describe('LogMailProvider', () => {
 
   it('names the attachments and their sizes, but not their content', async () => {
     const provider = await makeProvider();
-    const info = vi.spyOn(provider['log'], 'info').mockImplementation();
+    const info = vi
+      .spyOn(provider['log'], 'info')
+      .mockImplementation(() => undefined);
 
     await provider.sendMail({
       ...sendProps,
