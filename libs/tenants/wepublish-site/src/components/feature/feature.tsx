@@ -47,7 +47,9 @@ export const splitTags = (
   };
 };
 
-export const FeatureWrapper = styled('section')`
+type ImageSide = 'left' | 'right' | 'none';
+
+export const FeatureWrapper = styled('section')<{ 'data-image': ImageSide }>`
   display: grid;
   gap: ${({ theme }) => theme.spacing(5)};
   align-items: center;
@@ -63,11 +65,29 @@ export const FeatureWrapper = styled('section')`
       -1 * ${({ theme }) => extraColumn(theme, '100%', '100vw')}
     );
   }
+
+  // Without image: one column in the middle of the page (750px in the design)
+  &[data-image='none'] {
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      grid-template-columns: minmax(0, 1fr);
+      width: 100%;
+      max-width: calc(
+        min(100%, ${({ theme }) => theme.breakpoints.values.lg}px) * 750 / 1273
+      );
+      margin-inline: auto;
+    }
+  }
 `;
 
 export const FeatureImage = styled(Image)`
   width: 100%;
   height: auto;
+
+  [data-image='right'] > & {
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      order: 1;
+    }
+  }
 `;
 
 export const FeatureContent = styled('div')`
@@ -111,6 +131,7 @@ export const FeatureButton = styled(Button)`
  * with a # in front in the text of the block.
  */
 export const Feature = ({
+  imageRight,
   className,
   text,
   richText,
@@ -119,11 +140,21 @@ export const Feature = ({
   linkText,
   linkURL,
   linkTarget,
-}: BuilderBreakBlockProps) => {
+}: BuilderBreakBlockProps & {
+  /** Features in a row alternate: the image left, then right */
+  imageRight?: boolean;
+}) => {
   const { tags, paragraphs } = splitTags(richText);
+  const imageSide: ImageSide =
+    !image ? 'none'
+    : imageRight ? 'right'
+    : 'left';
 
   return (
-    <FeatureWrapper className={className}>
+    <FeatureWrapper
+      className={className}
+      data-image={imageSide}
+    >
       {image && <FeatureImage image={image} />}
 
       <FeatureContent>

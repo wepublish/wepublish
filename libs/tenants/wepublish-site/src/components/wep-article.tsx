@@ -7,20 +7,12 @@ import {
   ArticleTrackingPixels,
 } from '@wepublish/article/website';
 import {
-  BreakBlockWrapper,
-  EventBlockWrapper,
   ImageBlockWrapper,
-  ImageGalleryBlockWrapper,
-  LightboxWrapper,
-  SliderWrapper,
-  TeaserGridBlockWrapper,
-  TeaserGridFlexBlockWrapper,
-  TeaserListBlockWrapper,
-  TeaserSlotsBlockWrapper,
+  RichTextBlockWrapper,
+  TitleBlockWrapper,
 } from '@wepublish/block-content/website';
 import { CommentListWrapper } from '@wepublish/comments/website';
 import { ContentUnavailable, ContentWrapper } from '@wepublish/content/website';
-import { SubscribeWrapper } from '@wepublish/membership/website';
 import { FullBlockFragment } from '@wepublish/website/api';
 import {
   BuilderArticleProps,
@@ -28,6 +20,10 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { Paywall } from '@wepublish/website/builder';
+
+import { ArticleInfo } from './article-info';
+import { blockGap } from './wep-content-wrapper';
+import { QuoteWrapper } from './wep-quote-block';
 
 const fullWidthMainSpacer = (theme: Theme) => css`
   main > .MuiContainer-root {
@@ -40,6 +36,9 @@ export const ArticleInfoWrapper = styled('aside')`
   display: grid;
   gap: ${({ theme }) => theme.spacing(4)};
   grid-row-start: 2;
+  // 40px below the lead of the intro, closer than the gap between blocks
+  margin-top: calc(40px - ${blockGap});
+  align-self: start;
 `;
 
 export const defaultFadeoutStyles = css`
@@ -66,51 +65,61 @@ export const ArticleWrapper = styled(ContentWrapper)<{
     margin-right: -${({ theme }) => theme.spacing(2)};
   }
 
+  // The hero columns in the middle, each block as wide as in the design
+  // (1273px hero columns: intro 1140, text 750, quote 1010, images and boxes 1273)
   ${({ theme }) => theme.breakpoints.up('md')} {
     grid-template-columns:
-      max(calc(100vw - var(--breakpoint-width)) / 2, 0px)
-      repeat(12, 1fr)
-      max(calc(100vw - var(--breakpoint-width)) / 2, 0px) !important;
-    justify-content: start;
+      minmax(0, 1fr)
+      min(
+        100% - 2 * ${({ theme }) => theme.spacing(3)},
+        ${({ theme }) => theme.breakpoints.values.lg}px
+      )
+      minmax(0, 1fr) !important;
 
-    & > *,
-    & > :is(${ImageBlockWrapper}) {
-      grid-column: 4/12;
-      margin-left: ${({ theme }) => theme.spacing(4)};
-      margin-right: ${({ theme }) => theme.spacing(4)};
-    }
-
-    &
-      > :is(
-        ${SliderWrapper},
-          ${LightboxWrapper},
-          ${EventBlockWrapper},
-          ${BreakBlockWrapper},
-      ) {
-      grid-column: 2/14;
+    // && outweighs the columns the content wrapper gives images and galleries
+    && > * {
+      grid-column: 2;
       margin-left: 0;
       margin-right: 0;
     }
 
+    & > :is(${TitleBlockWrapper}, ${ArticleInfoWrapper}),
+    & > ${TitleBlockWrapper} + ${ImageBlockWrapper} {
+      width: calc(100% * 1140 / 1273);
+      justify-self: start;
+    }
+
     &
       > :is(
-        ${TeaserGridFlexBlockWrapper},
-          ${TeaserGridBlockWrapper},
-          ${TeaserListBlockWrapper},
-          ${TeaserSlotsBlockWrapper},
-          ${ImageGalleryBlockWrapper},
-          ${SubscribeWrapper}
+        ${RichTextBlockWrapper}, ${ArticleListWrapper}, ${CommentListWrapper}
       ) {
-      grid-column: 2/12;
-      margin-left: 0;
-      margin-right: 0;
+      width: calc(100% * 750 / 1273);
+      justify-self: center;
+    }
+
+    & > ${QuoteWrapper} {
+      width: calc(100% * 1010 / 1273);
+      justify-self: center;
     }
 
     & > :is(.abc, .def) {
       grid-column: -1/1;
-      margin-left: 0;
-      margin-right: 0;
     }
+  }
+
+  // The intro leaves as much room below the navbar as the title block of a page
+  & > ${TitleBlockWrapper} {
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      padding-top: 60px;
+    }
+
+    ${({ theme }) => theme.breakpoints.up('lg')} {
+      padding-top: 100px;
+    }
+  }
+
+  & > ${RichTextBlockWrapper} p {
+    hyphens: manual;
   }
 
   ${({
@@ -138,12 +147,6 @@ export const ArticleWrapper = styled(ContentWrapper)<{
         `
       }
     `}
-
-  ${({ theme }) => theme.breakpoints.up('md')} {
-    & > :is(${ArticleListWrapper}, ${CommentListWrapper}) {
-      grid-column: 3/13;
-    }
-  }
 `;
 
 const articleGlobalStyles = <GlobalStyles styles={fullWidthMainSpacer} />;
@@ -188,6 +191,8 @@ export function WepArticle({
       )}
 
       <ArticleInfoWrapper>
+        {article && <ArticleInfo article={article} />}
+
         {data?.article?.peer && (
           <PeerInformation
             {...data.article.peer}

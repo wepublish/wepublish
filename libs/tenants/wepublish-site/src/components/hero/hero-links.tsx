@@ -53,13 +53,17 @@ export const HeroLinks = styled(WepTeaserSlots)`
   }
 
   // Below each other: the titles in one column, the buttons right aligned in a
-  // second one, at least 30px away from the longest title
+  // second one, at least 30px (20px on phones) away from the longest title
   ${TeaserSlotsTeasers} {
     display: grid;
     grid-template-columns: max-content max-content;
     justify-content: start;
-    column-gap: 30px;
+    column-gap: 20px;
     row-gap: ${({ theme }) => theme.spacing(4)};
+
+    ${({ theme }) => theme.breakpoints.up('sm')} {
+      column-gap: 30px;
+    }
 
     ${({ theme }) => theme.breakpoints.up('md')} {
       display: flex;

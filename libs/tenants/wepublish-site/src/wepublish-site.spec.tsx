@@ -10,10 +10,13 @@ import {
   mockCustomTeaser,
   mockEvent,
   mockImage,
+  mockImageBlock,
   mockEventTeaser,
   mockNavigations,
   mockQuoteBlock,
+  mockRichTextBlock,
   mockTeaserSlotsBlock,
+  mockTitleBlock,
   applyTenantTranslations,
   renderWithProviders,
   resetTranslations,
@@ -29,6 +32,7 @@ import { staticImageSrc } from './assets/static-image';
 import logo from './assets/wepublish-logo.svg';
 import logoAlt from './assets/wepublish-logo-alt.svg';
 import { WepBlockStyles } from './components/block-styles/wep-block-styles';
+import { WepArticleOverview } from './components/article-list/article-overview';
 import { wepublishSiteTenant } from './wepublish-site-tenant';
 
 const navigation = {
@@ -134,8 +138,8 @@ describe('We.Publish website tenant', () => {
     weight: 400,
     lineHeight: 1.5,
     xs: 18,
-    md: 22,
-    lg: 27,
+    md: 21,
+    lg: 25,
   };
   const Text = {
     font: 'Archivo',
@@ -172,6 +176,7 @@ describe('We.Publish website tenant', () => {
     ['categoryLinkTitle', Mono],
     ['categoryAddressText', Text],
     ['teaserMeta', Mono],
+    ['caption', Mono],
   ] as const)('sets %s like the design', (variant, design) => {
     const { breakpoints, typography } = wepublishSiteTenant.createTheme();
     const sm = `@media (min-width:${breakpoints.values.sm}px)`;
@@ -296,6 +301,147 @@ describe('We.Publish website tenant', () => {
     expect(backgroundsOf(screen.getByText('Newsletter'))).not.toContain(
       primaryColor
     );
+  });
+
+  describe('article list', () => {
+    const teaser = (title: string, author: string) =>
+      mockArticleTeaser({
+        title,
+        lead: `Lead von ${title}`,
+        image: mockImage({ title: `Bild ${title}` }),
+        article: mockArticle({
+          publishedAt: new Date(2026, 8, 8, 10).toISOString(),
+          latest: mockArticleRevision({
+            blocks: [],
+            authors: [
+              mockArticleRevisionAuthor({
+                author: mockAuthor({ name: author }),
+              }),
+            ],
+          }),
+        }),
+      });
+
+    it('shows each article in a row with image, title, lead, authors and date', () => {
+      renderTenantPage([
+        mockTeaserSlotsBlock({
+          blockStyle: WepBlockStyles.ArticleList,
+          title: null,
+          teasers: [
+            teaser('Bienvenue, Courant', 'Ramona Sprenger'),
+            teaser('Hackathon bei der Hauptstadt', 'Nina Graf'),
+          ],
+        }),
+      ]);
+
+      const courant = screen.getByRole('article', {
+        name: 'Bienvenue, Courant',
+      });
+
+      expect(
+        within(courant).getByRole('img', { name: 'Bild Bienvenue, Courant' })
+      ).toBeInTheDocument();
+      expect(courant).toHaveTextContent('Lead von Bienvenue, Courant');
+      expect(courant).toHaveTextContent(
+        'von Ramona Sprenger, 08. September 2026'
+      );
+      expect(within(courant).getByRole('link')).toBeInTheDocument();
+      expect(screen.getAllByRole('article')).toHaveLength(2);
+    });
+  });
+
+  describe('article overview', () => {
+    const articles = (count: number, locale: string) =>
+      Array.from({ length: count }, (_, index) =>
+        mockArticle({
+          slug: `artikel-${index + 1}-${locale}`,
+          url: `https://wepublish.ch/a/artikel-${index + 1}-${locale}`,
+          latest: mockArticleRevision({
+            blocks: [],
+            title: `Artikel ${index + 1} (${locale})`,
+          }),
+        })
+      );
+
+    const renderOverview = (page?: number) =>
+      renderWithProviders(
+        <WepArticleOverview
+          articles={[...articles(12, 'de'), ...articles(2, 'fr')]}
+          page={page}
+          onPageChange={() => undefined}
+        />,
+        { tenant: wepublishSiteTenant, router: { locale: 'de' } }
+      );
+
+    it('opens with the title of the overview', () => {
+      renderOverview();
+
+      expect(
+        screen.getByRole('heading', { level: 1, name: 'Aktuelles' })
+      ).toBeInTheDocument();
+    });
+
+    it('lists only the articles of the current language, ten per page', () => {
+      renderOverview();
+
+      expect(screen.getAllByRole('article')).toHaveLength(10);
+      expect(
+        screen.queryByRole('article', { name: 'Artikel 1 (fr)' })
+      ).not.toBeInTheDocument();
+    });
+
+    it('shows the rest on the next page', () => {
+      renderOverview(2);
+
+      expect(
+        screen.getAllByRole('article').map(article => article.textContent)
+      ).toEqual([
+        expect.stringContaining('Artikel 11 (de)'),
+        expect.stringContaining('Artikel 12 (de)'),
+      ]);
+      expect(
+        screen.getByRole('navigation', { name: /pagination/i })
+      ).toBeInTheDocument();
+    });
+  });
+
+  describe('title block', () => {
+    const titleBlock = () =>
+      mockTitleBlock({
+        preTitle: 'We.Publish Foundation',
+        title: 'Über uns',
+        lead: 'Wir fördern die Medienvielfalt in der Schweiz.',
+      });
+
+    // The default test screen (1024px) gets the md sizes
+    it('sets the title as the page heading in the size of H1', () => {
+      renderTenantPage([titleBlock()]);
+
+      const title = screen.getByRole('heading', { level: 1, name: 'Über uns' });
+
+      expect(getComputedStyle(title).fontSize).toBe(`${H1.md}px`);
+    });
+
+    it('shows the pre-title as plain text above the title', () => {
+      renderTenantPage([titleBlock()]);
+
+      const preTitle = screen.getByText('We.Publish Foundation');
+
+      expect(getComputedStyle(preTitle).fontSize).toBe(`${Text.md}px`);
+      expect(backgroundsOf(preTitle)[0]).toMatch(
+        /^(rgba\(0, 0, 0, 0\)|transparent|)$/
+      );
+    });
+
+    it('shows the lead in the size of the paragraph', () => {
+      renderTenantPage([titleBlock()]);
+
+      expect(
+        getComputedStyle(
+          screen.getByText('Wir fördern die Medienvielfalt in der Schweiz.')
+        ).fontSize
+      ).toBe(`${Paragraph.md}px`);
+    });
   });
 
   describe('break block without style', () => {
@@ -501,6 +647,45 @@ describe('We.Publish website tenant', () => {
       expect(
         screen.queryByRole('link', { name: 'Mehr erfahren' })
       ).not.toBeInTheDocument();
+    });
+
+    const imageSide = (title: string) =>
+      screen
+        .getByRole('heading', { name: title })
+        .closest('section')
+        ?.getAttribute('data-image');
+
+    it('puts the image of features in a row alternately left and right, from the left again after another block', () => {
+      renderTenantPage([
+        featureBlock({ text: 'Erstes' }),
+        featureBlock({ text: 'Zweites' }),
+        featureBlock({ text: 'Drittes' }),
+        mockQuoteBlock({ quote: 'Dazwischen', author: 'Jemand', image: null }),
+        featureBlock({ text: 'Nach dem Zitat' }),
+      ]);
+
+      expect(
+        ['Erstes', 'Zweites', 'Drittes', 'Nach dem Zitat'].map(imageSide)
+      ).toEqual(['left', 'right', 'left', 'left']);
+    });
+
+    it('starts from the left again after a feature without image', () => {
+      renderTenantPage([
+        featureBlock({ text: 'Ohne Bild', image: null }),
+        featureBlock({ text: 'Erstes mit Bild' }),
+        featureBlock({ text: 'Zweites mit Bild' }),
+      ]);
+
+      expect(['Erstes mit Bild', 'Zweites mit Bild'].map(imageSide)).toEqual([
+        'left',
+        'right',
+      ]);
+    });
+
+    it('sets a feature without image in the middle of the page', () => {
+      renderTenantPage([featureBlock({ text: 'Ohne Bild', image: null })]);
+
+      expect(imageSide('Ohne Bild')).toBe('none');
     });
   });
 
@@ -756,6 +941,57 @@ describe('We.Publish website tenant', () => {
         getComputedStyle(screen.getByRole('img', { name: 'Hauptstadt' }))
           .objectFit
       ).toBe('cover');
+    });
+  });
+
+  describe('rich text', () => {
+    it('highlights a quote of the text in the size of H3', () => {
+      renderTenantPage([
+        mockRichTextBlock({
+          richText: {
+            type: 'doc',
+            content: [
+              {
+                type: 'blockquote',
+                content: [
+                  {
+                    type: 'paragraph',
+                    content: [
+                      {
+                        type: 'text',
+                        text: 'Alles, was unabhängige Redaktionen brauchen.',
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          } as FullBreakBlockFragment['richText'],
+        }),
+      ]);
+
+      const highlight = screen.getByText(
+        'Alles, was unabhängige Redaktionen brauchen.'
+      );
+
+      expect(highlight.closest('blockquote')).toBeInTheDocument();
+      expect(getComputedStyle(highlight).fontSize).toBe(`${H3.md}px`);
+      expect(getComputedStyle(highlight).fontFamily).toContain(
+        'Bricolage Grotesque'
+      );
+    });
+  });
+
+  describe('image', () => {
+    it('shows the caption in the mono font', () => {
+      renderTenantPage([mockImageBlock({ caption: 'Merch im Coop City' })]);
+
+      const caption = screen
+        .getByText(/Merch im Coop City/)
+        .closest('figcaption') as HTMLElement;
+
+      expect(getComputedStyle(caption).fontFamily).toContain('Space Mono');
+      expect(getComputedStyle(caption).fontSize).toBe(`${Mono.md}px`);
     });
   });
 

@@ -207,7 +207,10 @@ Website copy lives in `libs/website/translations/src/lib/{de,fr}.json`, and
 `catalogs.spec.ts` fails when the two drift apart. A tenant overrides single
 keys in `libs/tenants/<tenant>/src/locales/*.json` through its config's
 `translations.overrides`; the app passes them to `initWePublishTranslator`, and
-specs load them with `applyTenantTranslations(tenant)`. Override a key there rather than editing the shared catalog for one
+specs load them with `applyTenantTranslations(tenant)`. The one bilingual site,
+wepublish-site, loads the overrides of each locale and switches the language
+per page in `apps/wepublish-site/src/page-language.ts` (`initWePublishTranslator`
+alone gives every locale the same overrides and stays German). Override a key there rather than editing the shared catalog for one
 site.
 
 - **German:** Swiss Standard German (no `ß`), lowercase `du`. `E-Mail`, never
