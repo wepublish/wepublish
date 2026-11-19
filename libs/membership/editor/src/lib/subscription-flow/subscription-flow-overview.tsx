@@ -288,7 +288,7 @@ function FlowTable() {
       render: row => (
         <Link to={flowPath(row.flow)}>
           {row.isDefault ?
-            t('subscriptionFlow.defaultFlow')
+            t('subscriptionFlow.overview.defaultFlow')
           : (row.memberPlanName ?? t('subscriptionFlow.overview.noMemberPlan'))}
         </Link>
       ),
