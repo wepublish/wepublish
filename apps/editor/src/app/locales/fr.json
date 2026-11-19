@@ -2895,7 +2895,7 @@
     },
     "subscriptionFlow": {
       "overview": {
-        "back": "Tous les messages automatiques",
+        "back": "Tous les flux et messages automatiques",
         "title": "Messages des flux d’abonnement",
         "intro": "Un flux définit quel message est envoyé automatiquement pour quel événement d’abonnement. Le flux standard vaut pour tous les abonnements. Un plan d’abonnement peut avoir ses propres flux pour certains abonnements : un tel flux remplace entièrement le flux standard pour les abonnements concernés.",
         "flow": "Flux",
@@ -2916,11 +2916,13 @@
         "warnings": {
           "noMemberPlan": "Le plan d’abonnement de ce flux a été supprimé. Tant que ce flux existe, aucun message automatique n’est envoyé – supprimez-le.",
           "matchesNothing": "Ne s’applique à aucun abonnement : il manque un moyen de paiement, une périodicité ou un renouvellement.",
-          "notOffered": "N’est plus proposé par le plan d’abonnement : {{values}}. Le flux ne s’applique plus qu’aux abonnements existants."
+          "notOffered": "N’est plus proposé par le plan d’abonnement : {{values}}. Ce flux ne s’applique plus qu’aux abonnements déjà existants."
         }
       },
       "flow": "Flux",
-      "planFlowDescription": "Ce flux remplace le flux standard pour les abonnements de ce plan auxquels ses filtres correspondent. Les événements sans modèle n’envoient rien – le flux standard ne prend pas le relais.",
+      "planFlowDescription": "Ce flux remplace entièrement le flux standard pour les abonnements de son plan qui correspondent aux critères de filtre définis ci-dessous.",
+      "planFlowDescriptionFor": "Ce flux remplace entièrement le flux standard pour les abonnements du plan « {{memberPlan}} » qui correspondent aux critères de filtre définis ci-dessous.",
+      "noFallback": "Les événements sans modèle n’envoient rien – le flux standard ne prend pas le relais.",
       "notFound": "Ce flux n’existe pas (ou plus).",
       "subscribe": "Abonnement conclu",
       "renewal_success": "Renouvellement réussi",
