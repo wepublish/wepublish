@@ -46,7 +46,7 @@ import {
 } from '@wepublish/ui/editor';
 import { useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdAdd, MdDelete, MdEdit } from 'react-icons/md';
+import { MdAdd, MdDelete, MdEdit, MdWarningAmber } from 'react-icons/md';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { DEFAULT_MUTATION_OPTIONS } from '../common';
 import { usePaperLetterFlow } from '../delivery-mode/use-paper-letter-flow';
@@ -69,6 +69,21 @@ const Intro = styled(Typography)`
 
 const Section = styled.section`
   margin-top: ${({ theme }) => theme.spacing(3)};
+`;
+
+const Warning = styled.span`
+  display: flex;
+  align-items: flex-start;
+  gap: ${({ theme }) => theme.spacing(0.5)};
+  margin-top: ${({ theme }) => theme.spacing(0.5)};
+  font-size: 13px;
+  white-space: normal;
+  color: ${({ theme }) => theme.vars.palette.warning.dark};
+
+  > svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
 `;
 
 const PlanFilter = styled.div`
@@ -274,7 +289,7 @@ function FlowTable() {
         <Link to={flowPath(row.flow)}>
           {row.isDefault ?
             t('subscriptionFlow.defaultFlow')
-          : row.memberPlanName}
+          : (row.memberPlanName ?? t('subscriptionFlow.overview.noMemberPlan'))}
         </Link>
       ),
     },
@@ -282,10 +297,20 @@ function FlowTable() {
       id: 'conditions',
       label: t('subscriptionFlow.overview.appliesTo'),
       width: 380,
-      render: row =>
-        row.isDefault ?
-          t('subscriptionFlow.overview.defaultApplies')
-        : row.conditions,
+      render: row => (
+        <>
+          {row.isDefault ?
+            t('subscriptionFlow.overview.defaultApplies')
+          : row.conditions}
+
+          {row.warnings.map(warning => (
+            <Warning key={warning}>
+              <MdWarningAmber aria-hidden />
+              {warning}
+            </Warning>
+          ))}
+        </>
+      ),
     },
     {
       id: 'subscriptions',

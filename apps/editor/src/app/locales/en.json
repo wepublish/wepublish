@@ -2912,6 +2912,12 @@
         "renewal": {
           "true": "with automatic renewal",
           "false": "without automatic renewal"
+        },
+        "noMemberPlan": "No member plan",
+        "warnings": {
+          "noMemberPlan": "The member plan of this flow was deleted. As long as this flow exists, no automated message is sent – delete it.",
+          "matchesNothing": "Applies to no subscription: a payment method, periodicity or renewal is missing.",
+          "notOffered": "No longer offered by the member plan: {{values}}. For these it only applies to existing subscriptions."
         }
       },
       "flow": "Flow",

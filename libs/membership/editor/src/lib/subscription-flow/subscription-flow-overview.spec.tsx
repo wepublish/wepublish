@@ -105,9 +105,25 @@ const defaultFlow = flow({
   ],
 });
 
+// What a plan offers; the flows below only use what their plan offers.
+const offering = (
+  paymentMethods: string[],
+  periodicities: PaymentPeriodicity[]
+) => [
+  {
+    paymentMethods: paymentMethods.map(id => ({ id, name: id })),
+    paymentPeriodicities: periodicities,
+    forceAutoRenewal: false,
+  },
+];
+
 const printFlow = flow({
   id: 'flow-print',
-  memberPlan: { id: 'print', name: 'Print' },
+  memberPlan: {
+    id: 'print',
+    name: 'Print',
+    availablePaymentMethods: offering(['bill'], [PaymentPeriodicity.Yearly]),
+  },
   paymentMethods: [{ id: 'bill', name: 'Rechnung' }],
   periodicities: [PaymentPeriodicity.Yearly],
   autoRenewal: [true],
@@ -116,7 +132,11 @@ const printFlow = flow({
 
 const digitalFlow = flow({
   id: 'flow-digital',
-  memberPlan: { id: 'digital', name: 'Digital' },
+  memberPlan: {
+    id: 'digital',
+    name: 'Digital',
+    availablePaymentMethods: offering(['card'], [PaymentPeriodicity.Monthly]),
+  },
   paymentMethods: [{ id: 'card', name: 'Karte' }],
   periodicities: [PaymentPeriodicity.Monthly],
   autoRenewal: [true],
@@ -247,6 +267,41 @@ describe('SubscriptionFlowOverview', () => {
     expect(within(print).getByText('7')).toBeTruthy();
     expect(
       within(print).getByText('subscriptionFlow.overview.eventsValue(0,5)')
+    ).toBeTruthy();
+  });
+
+  it('says next to its conditions what a flow no longer does', () => {
+    mockQueries([
+      defaultFlow,
+      printFlow,
+      flow({
+        id: 'flow-digital',
+        memberPlan: digitalFlow.memberPlan,
+        paymentMethods: [{ id: 'twint', name: 'Twint' }],
+        periodicities: [PaymentPeriodicity.Monthly],
+        autoRenewal: [true],
+      }),
+    ]);
+    renderOverview();
+
+    expect(
+      within(rowOf('Digital')).getByText(
+        'subscriptionFlow.overview.warnings.notOffered(Twint)'
+      )
+    ).toBeTruthy();
+    expect(
+      within(rowOf('Print')).queryByText(/subscriptionFlow.overview.warnings/)
+    ).toBeNull();
+  });
+
+  it('names a flow left behind by a deleted member plan', () => {
+    mockQueries([defaultFlow, flow({ id: 'flow-orphan' })]);
+    renderOverview();
+
+    const row = rowOf('subscriptionFlow.overview.noMemberPlan');
+
+    expect(
+      within(row).getByText('subscriptionFlow.overview.warnings.noMemberPlan')
     ).toBeTruthy();
   });
 

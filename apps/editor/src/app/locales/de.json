@@ -2911,6 +2911,12 @@
         "renewal": {
           "true": "mit automatischer Verlängerung",
           "false": "ohne automatische Verlängerung"
+        },
+        "noMemberPlan": "Ohne Abo-Plan",
+        "warnings": {
+          "noMemberPlan": "Der Abo-Plan dieses Ablaufs wurde gelöscht. Solange es diesen Ablauf gibt, wird keine automatische Mitteilung verschickt – lösche ihn.",
+          "matchesNothing": "Gilt für kein Abo: Es fehlt eine Zahlungsmethode, Periodizität oder Verlängerung.",
+          "notOffered": "Bietet der Abo-Plan nicht mehr an: {{values}}. Gilt dafür nur noch für bestehende Abos."
         }
       },
       "flow": "Ablauf",
