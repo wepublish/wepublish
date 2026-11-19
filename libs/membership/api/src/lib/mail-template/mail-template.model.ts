@@ -100,7 +100,7 @@ export class MailTemplateModel {
   status!: string;
 
   // `channels`, `variants`, `subject`, the table fields (`letterLayoutName`,
-  // `letterAppendixName`, `memberPlans`) and the deprecated content fields are
+  // `letterAppendixName`, `memberPlans`, `attachmentNames`) and the deprecated content fields are
   // resolved by `MailTemplatesResolver`.
 }
 

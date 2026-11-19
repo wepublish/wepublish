@@ -93,6 +93,7 @@ fragment ListMailTemplate on MailTemplateModel {
   ...TinyMailTemplate
   letterLayoutName
   letterAppendixName
+  attachmentNames
   memberPlans {
     id
     name

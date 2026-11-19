@@ -15,6 +15,7 @@ import {
   MailTemplateVariantSummaryDataloader,
 } from './mail-template-variant.dataloader';
 import { MailTemplateMemberPlanDataloader } from './mail-template-member-plan.dataloader';
+import { MailTemplateAttachmentNameDataloader } from './mail-template-attachment-name.dataloader';
 import { INestApplication, Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriverConfig } from '@nestjs/apollo';
@@ -136,6 +137,19 @@ const prismaServiceMock = {
       : [mailVariant1, letterVariant1, letterVariant2]
     ),
   },
+  mailTemplateAttachment: {
+    // In the order the template lists them, whatever their names are.
+    findMany: vi.fn(async (_args?: any) => [
+      {
+        mailTemplateId: mockTemplate1.id,
+        document: { title: 'Zahlschein', filename: 'zahlschein' },
+      },
+      {
+        mailTemplateId: mockTemplate1.id,
+        document: { title: null, filename: 'agb' },
+      },
+    ]),
+  },
   subscriptionInterval: {
     findMany: vi.fn(async (_args?: any) => [
       {
@@ -224,6 +238,7 @@ const mailTemplateServiceMock = {
     MailTemplateVariantDataloader,
     MailTemplateVariantSummaryDataloader,
     MailTemplateLetterDetailDataloader,
+    MailTemplateAttachmentNameDataloader,
     MailTemplateMemberPlanDataloader,
     { provide: MailTemplateService, useValue: mailTemplateServiceMock },
     { provide: FeaturesService, useValue: featuresMock },
@@ -255,6 +270,7 @@ describe('MailTemplatesResolver', () => {
         MailTemplateVariantDataloader,
         MailTemplateVariantSummaryDataloader,
         MailTemplateLetterDetailDataloader,
+        MailTemplateAttachmentNameDataloader,
         MailTemplateMemberPlanDataloader,
         { provide: PrismaClient, useValue: prismaServiceMock },
         { provide: MailContext, useValue: mailContextMock },
@@ -385,6 +401,38 @@ describe('MailTemplatesResolver', () => {
       await expect(resolver.memberPlans(mockTemplate2 as any)).resolves.toEqual(
         []
       );
+    });
+
+    it('names the attachments of a template in their order', async () => {
+      await expect(
+        resolver.attachmentNames(mockTemplate1 as any)
+      ).resolves.toEqual(['Zahlschein', 'agb']);
+      await expect(
+        resolver.attachmentNames(mockTemplate2 as any)
+      ).resolves.toEqual([]);
+    });
+
+    it('reads the attachment names of many templates in one query', async () => {
+      prismaServiceMock.mailTemplateAttachment.findMany.mockClear();
+
+      await Promise.all([
+        resolver.attachmentNames(mockTemplate1 as any),
+        resolver.attachmentNames(mockTemplate2 as any),
+      ]);
+
+      expect(
+        prismaServiceMock.mailTemplateAttachment.findMany
+      ).toHaveBeenCalledTimes(1);
+      expect(
+        prismaServiceMock.mailTemplateAttachment.findMany
+      ).toHaveBeenCalledWith({
+        where: { mailTemplateId: { in: [mockTemplate1.id, mockTemplate2.id] } },
+        orderBy: { position: 'asc' },
+        select: {
+          mailTemplateId: true,
+          document: { select: { title: true, filename: true } },
+        },
+      });
     });
 
     it('reads the member plans of many templates in one query', async () => {

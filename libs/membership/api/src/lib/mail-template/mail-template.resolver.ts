@@ -51,6 +51,7 @@ import {
   MailTemplateVariantSummaryDataloader,
 } from './mail-template-variant.dataloader';
 import { MailTemplateMemberPlanDataloader } from './mail-template-member-plan.dataloader';
+import { MailTemplateAttachmentNameDataloader } from './mail-template-attachment-name.dataloader';
 import { MailTemplateContextId } from './mail-template-data';
 
 @Resolver(() => MailTemplateModel)
@@ -63,7 +64,8 @@ export class MailTemplatesResolver {
     private variantDataloader: MailTemplateVariantDataloader,
     private variantSummaryDataloader: MailTemplateVariantSummaryDataloader,
     private letterDetailDataloader: MailTemplateLetterDetailDataloader,
-    private memberPlanDataloader: MailTemplateMemberPlanDataloader
+    private memberPlanDataloader: MailTemplateMemberPlanDataloader,
+    private attachmentNameDataloader: MailTemplateAttachmentNameDataloader
   ) {}
 
   @Permissions(CanGetMailTemplates)
@@ -275,6 +277,16 @@ export class MailTemplatesResolver {
     });
 
     return loaded ? attachmentIdsOf(loaded) : [];
+  }
+
+  @ResolveField('attachmentNames', () => [String], {
+    description:
+      'Title, or else the filename, of each attached document, in their order. For the template table.',
+  })
+  async attachmentNames(
+    @Parent() template: MailTemplateModel
+  ): Promise<string[]> {
+    return (await this.attachmentNameDataloader.load(template.id)) ?? [];
   }
 
   @ResolveField('status', () => MailTemplateStatus, {

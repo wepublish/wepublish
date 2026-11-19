@@ -3099,6 +3099,11 @@ type MailTemplateModel {
   """
   attachmentIds: [String!]!
 
+  """
+  Title, or else the filename, of each attached document, in their order. For the template table.
+  """
+  attachmentNames: [String!]!
+
   """The channels this template is written for, the email first."""
   channels: [MailChannel!]!
   context: MailTemplateContext

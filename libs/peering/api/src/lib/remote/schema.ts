@@ -2878,6 +2878,8 @@ export type MailTemplateModel = {
   __typename?: 'MailTemplateModel';
   /** Word documents (.docx) filled in with the same placeholders, converted to pdf and attached to every mail sent from this template, in this order. A printed letter carries them after its pages. */
   attachmentIds: Array<Scalars['String']['output']>;
+  /** Title, or else the filename, of each attached document, in their order. For the template table. */
+  attachmentNames: Array<Scalars['String']['output']>;
   /** The channels this template is written for, the email first. */
   channels: Array<MailChannel>;
   context?: Maybe<MailTemplateContext>;
