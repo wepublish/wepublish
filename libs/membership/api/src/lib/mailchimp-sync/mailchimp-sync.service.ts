@@ -69,10 +69,10 @@ interface MergeFieldMapping {
 interface InterestGroupMapping {
   groupId: string;
   expression: string;
-  /** Flip the group to true for a new matching subscription. */
-  autoAdd: boolean;
-  /** Flip the group to false once matching subscriptions ended. */
-  autoRemove: boolean;
+  /** Flip the group to true for a new matching subscription. Missing means off. */
+  autoAdd?: boolean;
+  /** Flip the group to false once matching subscriptions ended. Missing means off. */
+  autoRemove?: boolean;
 }
 
 export interface DryRunChange {
@@ -1016,7 +1016,9 @@ export class MailchimpSyncService {
     const hasActive = activeSubs.length > 0;
 
     if (hasActive) {
-      const newestActive = activeSubs[0];
+      const newestActive = activeSubs.reduce((newest, sub) =>
+        sub.startsAt > newest.startsAt ? sub : newest
+      );
       if (
         mapping.autoAdd &&
         !currentValue &&

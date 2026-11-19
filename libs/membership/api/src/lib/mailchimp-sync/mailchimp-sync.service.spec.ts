@@ -363,6 +363,17 @@ describe('MailchimpSyncService', () => {
       expect(change.interests[ABO_B_GROUP_ID]).toBe(true);
     });
 
+    it('adds the interest group for a new subscription listed after an older one of the same plan', async () => {
+      prismaMock.subscription.findMany.mockResolvedValue([
+        buildSubscription({ id: 'sub-old', startsAt: daysAgo(365) }),
+        buildSubscription({ id: 'sub-new', startsAt: daysAgo(1) }),
+      ]);
+
+      const result = await dryRun();
+
+      expect(result!.changes[0].interests[ABO_A_GROUP_ID]).toBe(true);
+    });
+
     it('keeps every plan merge field active for an existing contact that was marked inactive', async () => {
       givenMailchimpContact({
         merge_fields: { ACTIVE_ABO: '-1', ABO_A: '-1', ABO_B: '-1' },

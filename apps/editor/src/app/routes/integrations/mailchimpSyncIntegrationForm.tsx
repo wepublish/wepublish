@@ -810,9 +810,16 @@ function SyncProviderSettingCard({
       mailchimp_listId: setting.mailchimp_listId ?? '',
       mailchimp_mergeFieldMappings: (setting.mailchimp_mergeFieldMappings ??
         []) as SyncProviderFormValues['mailchimp_mergeFieldMappings'],
-      mailchimp_interestGroupMappings:
-        (setting.mailchimp_interestGroupMappings ??
-          []) as SyncProviderFormValues['mailchimp_interestGroupMappings'],
+      mailchimp_interestGroupMappings: (
+        (setting.mailchimp_interestGroupMappings ?? []) as NonNullable<
+          SyncProviderFormValues['mailchimp_interestGroupMappings']
+        >
+      ).map(mapping => ({
+        ...mapping,
+        // A missing flag means off, like in the sync.
+        autoAdd: mapping.autoAdd ?? false,
+        autoRemove: mapping.autoRemove ?? false,
+      })),
       mailchimp_defaultInterestGroupIds:
         setting.mailchimp_defaultInterestGroupIds ?? [],
       mailchimp_extensions: {
