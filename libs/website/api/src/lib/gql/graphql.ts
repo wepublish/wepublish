@@ -1483,6 +1483,8 @@ type FeedBlock_FacebookVideoBlock_Fragment = { __typename: 'FacebookVideoBlock' 
 
 type FeedBlock_FlexBlock_Fragment = { __typename: 'FlexBlock' };
 
+type FeedBlock_GiftCodeOffersBlock_Fragment = { __typename: 'GiftCodeOffersBlock' };
+
 type FeedBlock_HtmlBlock_Fragment = { __typename: 'HTMLBlock' };
 
 type FeedBlock_IFrameBlock_Fragment = { __typename: 'IFrameBlock' };
@@ -1505,6 +1507,8 @@ type FeedBlock_PolisConversationBlock_Fragment = { __typename: 'PolisConversatio
 type FeedBlock_PollBlock_Fragment = { __typename: 'PollBlock' };
 
 type FeedBlock_QuoteBlock_Fragment = { __typename: 'QuoteBlock', quote: string | null, author: string | null };
+
+type FeedBlock_RedeemGiftCodeBlock_Fragment = { __typename: 'RedeemGiftCodeBlock' };
 
 type FeedBlock_RichTextBlock_Fragment = (
   { __typename: 'RichTextBlock' }
@@ -1550,6 +1554,7 @@ export type FeedBlockFragment =
   | FeedBlock_FacebookPostBlock_Fragment
   | FeedBlock_FacebookVideoBlock_Fragment
   | FeedBlock_FlexBlock_Fragment
+  | FeedBlock_GiftCodeOffersBlock_Fragment
   | FeedBlock_HtmlBlock_Fragment
   | FeedBlock_IFrameBlock_Fragment
   | FeedBlock_ImageBlock_Fragment
@@ -1560,6 +1565,7 @@ export type FeedBlockFragment =
   | FeedBlock_PolisConversationBlock_Fragment
   | FeedBlock_PollBlock_Fragment
   | FeedBlock_QuoteBlock_Fragment
+  | FeedBlock_RedeemGiftCodeBlock_Fragment
   | FeedBlock_RichTextBlock_Fragment
   | FeedBlock_SoundCloudTrackBlock_Fragment
   | FeedBlock_StreamableVideoBlock_Fragment
@@ -1649,6 +1655,10 @@ export type FeedArticleFragment = (
               & FeedBlock_FlexBlock_Fragment
             )
             | (
+              { __typename: 'GiftCodeOffersBlock' }
+              & FeedBlock_GiftCodeOffersBlock_Fragment
+            )
+            | (
               { __typename: 'HTMLBlock' }
               & FeedBlock_HtmlBlock_Fragment
             )
@@ -1687,6 +1697,10 @@ export type FeedArticleFragment = (
             | (
               { __typename: 'QuoteBlock' }
               & FeedBlock_QuoteBlock_Fragment
+            )
+            | (
+              { __typename: 'RedeemGiftCodeBlock' }
+              & FeedBlock_RedeemGiftCodeBlock_Fragment
             )
             | (
               { __typename: 'RichTextBlock' }
@@ -1748,6 +1762,10 @@ export type FeedArticleFragment = (
         & FeedBlock_FlexBlock_Fragment
       )
       | (
+        { __typename: 'GiftCodeOffersBlock' }
+        & FeedBlock_GiftCodeOffersBlock_Fragment
+      )
+      | (
         { __typename: 'HTMLBlock' }
         & FeedBlock_HtmlBlock_Fragment
       )
@@ -1786,6 +1804,10 @@ export type FeedArticleFragment = (
       | (
         { __typename: 'QuoteBlock' }
         & FeedBlock_QuoteBlock_Fragment
+      )
+      | (
+        { __typename: 'RedeemGiftCodeBlock' }
+        & FeedBlock_RedeemGiftCodeBlock_Fragment
       )
       | (
         { __typename: 'RichTextBlock' }
