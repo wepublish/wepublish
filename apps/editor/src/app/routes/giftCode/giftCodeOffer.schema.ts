@@ -63,6 +63,14 @@ const giftCodeOfferFields = z.object({
     label: 'giftCodeOffer.form.renewalPaymentMethod',
     helperText: 'giftCodeOffer.form.renewalPaymentMethodHelp',
   }),
+  purchaseMailTemplateId: z.string().nullish().meta({
+    label: 'giftCodeOffer.form.purchaseMailTemplate',
+    helperText: 'giftCodeOffer.form.purchaseMailTemplateHelp',
+  }),
+  redemptionMailTemplateId: z.string().nullish().meta({
+    label: 'giftCodeOffer.form.redemptionMailTemplate',
+    helperText: 'giftCodeOffer.form.redemptionMailTemplateHelp',
+  }),
 });
 
 export const giftCodeOfferSchema = crossField(
@@ -99,6 +107,8 @@ export const fromGiftCodeOffer = (
   allowDiscountCodes: offer.allowDiscountCodes,
   autoRenew: offer.autoRenew,
   renewalPaymentMethodId: offer.renewalPaymentMethodId ?? null,
+  purchaseMailTemplateId: offer.purchaseMailTemplateId ?? null,
+  redemptionMailTemplateId: offer.redemptionMailTemplateId ?? null,
 });
 
 export const toGiftCodeOfferVariables = ({
@@ -114,6 +124,8 @@ export const toGiftCodeOfferVariables = ({
   allowDiscountCodes,
   autoRenew,
   renewalPaymentMethodId,
+  purchaseMailTemplateId,
+  redemptionMailTemplateId,
 }: FormOutput<
   typeof giftCodeOfferSchema
 >): CreateGiftCodeOfferMutationVariables => ({
@@ -129,4 +141,6 @@ export const toGiftCodeOfferVariables = ({
   paymentMethodIds,
   autoRenew,
   renewalPaymentMethodId: (autoRenew && renewalPaymentMethodId) || null,
+  purchaseMailTemplateId: purchaseMailTemplateId || null,
+  redemptionMailTemplateId: redemptionMailTemplateId || null,
 });

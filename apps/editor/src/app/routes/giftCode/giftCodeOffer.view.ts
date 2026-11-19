@@ -1,6 +1,7 @@
 import { formView } from '@wepublish/form/editor';
 
 import { giftCodeOfferSchema } from './giftCodeOffer.schema';
+import { GiftCodeOfferMailFields } from './giftCodeOfferMailFields';
 import { GiftCodeOfferSaleFields } from './giftCodeOfferSaleFields';
 
 export const giftCodeOfferView = formView(giftCodeOfferSchema, {
@@ -28,6 +29,12 @@ export const giftCodeOfferView = formView(giftCodeOfferSchema, {
         'autoRenew',
         'renewalPaymentMethodId',
       ],
+    },
+    {
+      title: 'giftCodeOffer.form.sections.mails',
+      description: 'giftCodeOffer.form.sections.mailsDescription',
+      component: GiftCodeOfferMailFields,
+      covers: ['purchaseMailTemplateId', 'redemptionMailTemplateId'],
     },
   ],
 });

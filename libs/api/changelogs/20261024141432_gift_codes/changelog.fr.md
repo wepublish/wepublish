@@ -64,6 +64,17 @@ Une fois les codes cadeaux activés :
   côté du choix de l’abonnement le lien « Vous souhaitez utiliser un
   abonnement cadeau ? Cliquez ici. ». Il mène à la page que vous choisissez,
   en général celle du bloc d’utilisation.
+- Sous **E-mails**, vous choisissez dans chaque offre cadeau un modèle
+  d’e-mail pour l’achat et un pour l’utilisation d’un code. Le premier part
+  chez l’acheteur·euse dès que le paiement est arrivé, le second chez la
+  personne qui a utilisé le code. Sans modèle, aucun e-mail n’est envoyé.
+  Dans les modèles d’e-mail, les types **Code cadeau acheté** et **Code
+  cadeau utilisé** listent les espaces réservés, comme le code, le nom du·de
+  la destinataire et la date jusqu’à laquelle le code peut être utilisé.
+  Les documents Word joints au modèle, comme un bon cadeau, sont remplis avec
+  les mêmes espaces réservés et envoyés en PDF ; l’offre indique les
+  documents que le modèle choisi joint.
 
-Les codes cadeaux n’ont pas encore d’e-mails ni de bons PDF, et les
-acheteur·euse·s ne voient pas encore leurs codes dans leur profil sur le site.
+Les acheteur·euse·s ne voient pas encore leurs codes dans leur profil sur le
+site, et un e-mail de code cadeau ne peut pas encore être renvoyé depuis
+l’éditeur.

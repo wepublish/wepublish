@@ -54,6 +54,11 @@ website blocks to buy and redeem one:
   ([D44](decisions.md#d44-a-block-to-redeem-a-code)), and a block sells the
   chosen offers through the subscribe flow's payment handling
   ([D45](decisions.md#d45-a-block-to-sell-gift-codes))
+- two mails per offer, both optional: one to the buyer once the code is
+  issued, one to the reader who redeemed it. The editor picks a mail
+  template for each on the offer, and documents attached to the template are
+  filled in with the same placeholders
+  ([D46](decisions.md#d46-offers-choose-the-gift-code-mails))
 
 Left for later:
 
@@ -62,10 +67,9 @@ Left for later:
   the subscribe block link
   ([D42](decisions.md#d42-website-gift-code-blocks)), but after paying the
   buyer lands on `/profile`, which does not show codes yet.
-- every email and the PDF voucher. The spec's PDF template, the mail template,
-  "PDF herunterladen" and "E-Mail erneut senden" are all out of scope. Today
-  an admin sees the code in the editor list, and the buyer can read it through
-  `myGiftCodes`.
+- "PDF herunterladen" and "E-Mail erneut senden". A voucher PDF already
+  goes out as a `.docx` attached to the purchase mail's template, filled
+  with the code; only downloading it again and resending are missing.
 - Stripe dispute handling, Bexio support, and widening `userInvoices` to show
   gift invoices. See [03-payments.md](03-payments.md#known-limits).
 

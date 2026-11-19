@@ -39,7 +39,8 @@ and its existing invoice permission.
 `createdAt`, `modifiedAt`, `name`, `description` (rich text), `active`,
 `memberPlanId`, `periodicity`, `redemptionWindowMonths`, `price` (`Int`, cents
 of the plan's currency, [D40](decisions.md#d40-offers-store-their-own-price)),
-`allowDiscountCodes`, `autoRenew`, `renewalPaymentMethodId`, `imageID`, plus
+`allowDiscountCodes`, `autoRenew`, `renewalPaymentMethodId`,
+`purchaseMailTemplateId`, `redemptionMailTemplateId`, `imageID`, plus
 three field resolvers: `paymentMethods: [PaymentMethod]` (the offer's methods filtered
 through `getStandalonePaymentMethods`), `paymentMethodIds: [String]` (as
 configured, for the editor form) and `renewalPaymentMethod: PaymentMethod`
@@ -65,7 +66,9 @@ used for gift codes"). They also check the renewal rules from
 automatically can have a renewal payment method", "This member plan cannot be
 renewed automatically", "The member plan does not offer this renewal payment
 method for this periodicity" and "Payment method <name> cannot be used for
-renewals". `autoRenew` and `renewalPaymentMethodId` are optional on create
+renewals". A mail template id that does not exist is refused with "Mail
+template <id> not found"; null clears it and leaves out keeps it on update.
+`autoRenew` and `renewalPaymentMethodId` are optional on create
 (default false / null). On update, an omitted value keeps the stored one,
 `autoRenew: false` without a method clears the method, and the merged offer is
 validated again, so changing the plan or periodicity re-checks the stored
@@ -300,7 +303,42 @@ code from a reader; it replaced `payInvoiceWithGiftCode`
 8. Resets the attempt count and returns the action, the subscription and the
    paid invoice with its items. For a new subscription it then sends the
    `SUBSCRIBE` mail, which `createSubscription` skipped; a failing mail is
-   logged and does not fail the redemption.
+   logged and does not fail the redemption. Whatever the action, it then
+   sends the offer's redemption mail (see [Mails](#mails)).
+
+### Mails
+
+`GiftCodeMailService` sends the templates the offer chooses
+([D46](decisions.md#d46-offers-choose-the-gift-code-mails)), through
+`MailContext.sendMail` with `mailLogType.GiftCode`, so they are logged as
+`giftCode` and render the template's `{{placeholders}}` the way every other
+template-based mail does:
+
+- Purchase: `GiftCodeSellableHandler.fulfil` sends it to the buyer when
+  `issueForInvoiceItem` returns the code's id, which only the call that
+  issued the code gets. Of the webhook, the polling and an admin marking
+  the invoice paid, exactly one mails. Codes without a buyer (created by an
+  admin, or the buyer deleted) get none.
+- Redemption: `redeemGiftCode` sends it to the redeemer after settling.
+
+The data is `optional.giftCode` (`giftCodeMailData`: the formatted code,
+`recipientName`, `periodicity`, `redemptionWindowMonths`, `autoRenew`,
+`issuedAt`, `expiresAt`, `redeemedAt`, `offer.name`, `memberPlan.name` and
+`slug`, picked field by field so the buyer and the redeemer never land in each
+other's mail) with `optional.invoice` (with items) for the purchase, and
+`optional.subscription` (plan, payment method, periods) and
+`optional.invoice` (the one the code paid) for the redemption. No template, no
+mail. A failing send is logged and in the mail log, and fails neither the
+fulfilment nor the redemption; nothing retries it.
+
+Word documents attached to the template (a voucher, say) go along as PDF,
+filled in with the same data: `MailController` sends every mail type except
+user flow and system mails with the template's attachments, and
+`DocumentAttachmentRenderer` resolves `{{optional_giftCode_*}}` through the
+same `enrichTemplateData` as the mail body. With `paper-letters` off the
+renderer attaches nothing. A document that cannot be rendered fails the mail
+(`MailAttachmentError`, logged as rejected); the code is issued or redeemed
+all the same. Gift code mails are never printed: they do not set `asLetter`.
 
 Every check that can refuse a valid code runs before the claim and answers
 with the same generic error, so the mutation tells a guesser nothing, and a

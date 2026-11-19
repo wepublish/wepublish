@@ -9,6 +9,7 @@ import {
 import { MemberContextService } from '@wepublish/membership/api';
 import { PaymentsService } from '@wepublish/payment/api';
 import { GiftCodeAttemptLimiter } from './gift-code-attempt-limiter';
+import { GiftCodeMailService } from './gift-code-mail.service';
 import { GiftCodeOfferService } from './gift-code-offer.service';
 import { GiftCodeRedemptionAction } from './gift-code-redemption.model';
 import {
@@ -206,6 +207,7 @@ const setup = () => {
     reserve: vi.fn().mockResolvedValue(undefined),
     forget: vi.fn().mockResolvedValue(undefined),
   };
+  const mails = { sendRedemptionMail: vi.fn().mockResolvedValue(undefined) };
 
   const service = new GiftCodeRedemptionService(
     prisma as unknown as PrismaClient,
@@ -215,10 +217,11 @@ const setup = () => {
       prisma as unknown as PrismaClient,
       payments as unknown as PaymentsService
     ),
-    attempts as unknown as GiftCodeAttemptLimiter
+    attempts as unknown as GiftCodeAttemptLimiter,
+    mails as unknown as GiftCodeMailService
   );
 
-  return { service, prisma, payments, memberContext, attempts };
+  return { service, prisma, payments, memberContext, attempts, mails };
 };
 
 type Setup = ReturnType<typeof setup>;
@@ -1236,6 +1239,54 @@ describe('GiftCodeRedemptionService.redeem', () => {
       expect(
         ctx.memberContext.sendMailForSubscriptionEvent
       ).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('the redemption mail', () => {
+    it.each([
+      ['a new subscription', []],
+      ['an existing subscription', [subscription()]],
+    ])('goes out once the code paid %s', async (_case, fitting) => {
+      const ctx = setup();
+      ctx.prisma.subscription.findMany.mockResolvedValue(fitting);
+
+      await ctx.service.redeem('user-1', 'ABCDEFGHJKMN');
+
+      expect(ctx.mails.sendRedemptionMail).toHaveBeenCalledWith('code-1');
+      expect(
+        ctx.mails.sendRedemptionMail.mock.invocationCallOrder[0]
+      ).toBeGreaterThan(
+        ctx.payments.settleSubscriptionInvoiceWithoutCharge.mock
+          .invocationCallOrder[0]
+      );
+    });
+
+    it('stays home when the code is refused', async () => {
+      const ctx = setup();
+      ctx.prisma.giftCode.findFirst.mockResolvedValue(null);
+
+      await expectRejected(ctx.service.redeem('user-1', 'ABCDEFGHJKMN'));
+
+      expect(ctx.mails.sendRedemptionMail).not.toHaveBeenCalled();
+    });
+
+    it('stays home when settling fails', async () => {
+      const ctx = setup();
+      const error = new Error('settling failed');
+      ctx.payments.settleSubscriptionInvoiceWithoutCharge.mockRejectedValue(
+        error
+      );
+      ctx.prisma.invoice.findUnique.mockResolvedValue({
+        id: 'inv-new',
+        paidAt: null,
+        canceledAt: null,
+      });
+
+      await expect(ctx.service.redeem('user-1', 'ABCDEFGHJKMN')).rejects.toBe(
+        error
+      );
+
+      expect(ctx.mails.sendRedemptionMail).not.toHaveBeenCalled();
     });
   });
 

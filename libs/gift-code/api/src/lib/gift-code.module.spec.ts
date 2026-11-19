@@ -1,6 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { PrismaClient, SellableKind } from '@prisma/client';
 import { FeaturesService } from '@wepublish/features/api';
+import { MailContext } from '@wepublish/mail/api';
 import { MemberPlanModule } from '@wepublish/member-plan/api';
 import { MemberContextModule } from '@wepublish/membership/api';
 import {
@@ -18,6 +19,7 @@ import {
 import {
   GiftCodeAttemptLimiter,
   GiftCodeInvoiceDataloader,
+  GiftCodeMailService,
   GiftCodeModule,
   GiftCodeOfferDataloader,
   GiftCodeOfferResolver,
@@ -73,6 +75,10 @@ describe('GiftCodeModule', () => {
     );
   });
 
+  it('provides the gift code mails', () => {
+    expect(metadata('providers')).toContain(GiftCodeMailService);
+  });
+
   it('imports the member context to renew and create subscriptions', () => {
     expect(metadata('imports')).toContain(MemberContextModule);
   });
@@ -84,6 +90,7 @@ describe('GiftCodeModule', () => {
         GiftCodeSellableHandler,
         { provide: GiftCodeService, useValue: {} },
         { provide: FeaturesService, useValue: {} },
+        { provide: GiftCodeMailService, useValue: {} },
       ],
     }).compile();
 
@@ -102,6 +109,8 @@ describe('GiftCodeModule', () => {
         GiftCodeService,
         GiftCodeOfferService,
         GiftCodeOfferDataloader,
+        GiftCodeMailService,
+        { provide: MailContext, useValue: {} },
         { provide: PrismaClient, useValue: {} },
         { provide: PaymentsService, useValue: {} },
         { provide: SellableCheckoutService, useValue: {} },

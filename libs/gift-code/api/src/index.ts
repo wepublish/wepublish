@@ -16,5 +16,6 @@ export * from './lib/gift-code-invoice.dataloader';
 export * from './lib/gift-code-redemption.model';
 export * from './lib/gift-code-redemption.service';
 export * from './lib/gift-code-redemption.resolver';
+export * from './lib/gift-code-mail.service';
 
 export * from './lib/gift-code.module';

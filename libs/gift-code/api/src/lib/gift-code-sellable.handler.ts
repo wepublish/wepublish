@@ -12,6 +12,7 @@ import {
 } from '@wepublish/payment/api';
 import { FeaturesService } from '@wepublish/features/api';
 import { GiftCodeService } from './gift-code.service';
+import { GiftCodeMailService } from './gift-code-mail.service';
 
 @Injectable()
 export class GiftCodeSellableHandler implements SellableHandler, OnModuleInit {
@@ -20,7 +21,8 @@ export class GiftCodeSellableHandler implements SellableHandler, OnModuleInit {
   constructor(
     private registry: SellableRegistry,
     private giftCodes: GiftCodeService,
-    private features: FeaturesService
+    private features: FeaturesService,
+    private mails: GiftCodeMailService
   ) {}
 
   onModuleInit() {
@@ -32,10 +34,16 @@ export class GiftCodeSellableHandler implements SellableHandler, OnModuleInit {
   }
 
   async fulfil(item: InvoiceItem, invoice: SellableInvoice) {
-    await this.giftCodes.issueForInvoiceItem(
+    const issuedId = await this.giftCodes.issueForInvoiceItem(
       item.id,
       invoice.paidAt ?? new Date()
     );
+
+    // Only the run that issued the code mails it, so a webhook and the
+    // polling reconciling the same invoice send one mail between them.
+    if (issuedId) {
+      await this.mails.sendPurchaseMail(issuedId);
+    }
   }
 
   async revoke(

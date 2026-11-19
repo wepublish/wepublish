@@ -101,6 +101,13 @@ const setup = () => {
     settingPaymentProvider: {
       findMany: vi.fn().mockResolvedValue([]),
     },
+    mailTemplate: {
+      findMany: vi
+        .fn()
+        .mockImplementation(async ({ where }) =>
+          where.id.in.map((id: string) => ({ id }))
+        ),
+    },
   };
   const payments = {
     assertStandalonePaymentMethod: vi.fn().mockResolvedValue({}),
@@ -486,6 +493,81 @@ describe('GiftCodeOfferService', () => {
       await expect(service.createOffer(createInput())).rejects.toThrow(
         new BadRequestException('This member plan already has a gift offer.')
       );
+    });
+  });
+
+  describe('mail templates', () => {
+    it('stores the templates for the purchase and the redemption mail', async () => {
+      const { service, prisma } = setup();
+
+      await service.createOffer(
+        createInput({
+          purchaseMailTemplateId: 'tpl-bought',
+          redemptionMailTemplateId: 'tpl-redeemed',
+        })
+      );
+
+      expect(prisma.giftCodeOffer.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          purchaseMailTemplateId: 'tpl-bought',
+          redemptionMailTemplateId: 'tpl-redeemed',
+        }),
+      });
+    });
+
+    it('refuses a template that does not exist', async () => {
+      const { service, prisma } = setup();
+      prisma.mailTemplate.findMany.mockResolvedValue([{ id: 'tpl-bought' }]);
+
+      await expect(
+        service.createOffer(
+          createInput({
+            purchaseMailTemplateId: 'tpl-bought',
+            redemptionMailTemplateId: 'tpl-gone',
+          })
+        )
+      ).rejects.toThrow(
+        new BadRequestException('Mail template tpl-gone not found')
+      );
+      expect(prisma.giftCodeOffer.create).not.toHaveBeenCalled();
+    });
+
+    it('looks nothing up without templates', async () => {
+      const { service, prisma } = setup();
+
+      await service.createOffer(createInput());
+
+      expect(prisma.mailTemplate.findMany).not.toHaveBeenCalled();
+    });
+
+    it('clears a template on update and keeps the other', async () => {
+      const { service, prisma } = setup();
+
+      await service.updateOffer({
+        id: 'offer-1',
+        purchaseMailTemplateId: null,
+      });
+
+      expect(prisma.mailTemplate.findMany).not.toHaveBeenCalled();
+      expect(prisma.giftCodeOffer.update).toHaveBeenCalledWith({
+        where: { id: 'offer-1' },
+        data: { purchaseMailTemplateId: null, paymentMethods: undefined },
+      });
+    });
+
+    it('refuses an unknown template on update', async () => {
+      const { service, prisma } = setup();
+      prisma.mailTemplate.findMany.mockResolvedValue([]);
+
+      await expect(
+        service.updateOffer({
+          id: 'offer-1',
+          redemptionMailTemplateId: 'tpl-gone',
+        })
+      ).rejects.toThrow(
+        new BadRequestException('Mail template tpl-gone not found')
+      );
+      expect(prisma.giftCodeOffer.update).not.toHaveBeenCalled();
     });
   });
 

@@ -146,8 +146,12 @@ chosen set of offers. Still open:
   the canceled subscription's `paidUntil` instead? With `maxCount` 1 the
   same reader is refused, because the canceled subscription still counts.
 - A new subscription gets the plan's `SUBSCRIBE` mail after the code paid
-  it, the same mail a normal new subscription gets. Does gift redemption
-  need its own mail event?
+  it, the same mail a normal new subscription gets, and then the offer's
+  redemption mail ([D46](decisions.md#d46-offers-choose-the-gift-code-mails)).
+  Should the redemption mail replace the `SUBSCRIBE` mail when the offer has
+  one?
+- A failed gift code mail is not sent again. Does the code list need the
+  spec's "E-Mail erneut senden"?
 - When `createSubscription` creates the subscription but cannot create its
   first invoice (no `DEACTIVATION_UNPAID` subscription flow, for example), it
   throws and leaves the subscription without an invoice. That is older than

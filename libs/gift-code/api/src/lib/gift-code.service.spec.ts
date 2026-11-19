@@ -88,7 +88,9 @@ const setup = () => {
   const tx = {
     giftCode: {
       create: vi.fn().mockResolvedValue({}),
-      findUnique: vi.fn().mockResolvedValue({ redemptionWindowMonths: 12 }),
+      findUnique: vi
+        .fn()
+        .mockResolvedValue({ id: 'gc-1', redemptionWindowMonths: 12 }),
       updateMany: vi.fn().mockResolvedValue({ count: 1 }),
     },
   };
@@ -596,11 +598,13 @@ describe('GiftCodeService', () => {
     it('issues the code with an expiry from the payment date', async () => {
       const { service, tx } = setup();
 
-      await service.issueForInvoiceItem('item-1', paidAt);
+      await expect(service.issueForInvoiceItem('item-1', paidAt)).resolves.toBe(
+        'gc-1'
+      );
 
       expect(tx.giftCode.findUnique).toHaveBeenCalledWith({
         where: { invoiceItemId: 'item-1' },
-        select: { redemptionWindowMonths: true },
+        select: { id: true, redemptionWindowMonths: true },
       });
       expect(tx.giftCode.updateMany).toHaveBeenCalledWith({
         where: { invoiceItemId: 'item-1', issuedAt: null, canceledAt: null },
@@ -626,13 +630,15 @@ describe('GiftCodeService', () => {
       );
     });
 
+    // Only the call that issued the code may send the purchase mail, so a
+    // second reconcile of the same invoice must not report it again.
     it('is a no-op for a code that was already issued or canceled', async () => {
       const { service, tx } = setup();
       tx.giftCode.updateMany.mockResolvedValue({ count: 0 });
 
       await expect(
         service.issueForInvoiceItem('item-1', paidAt)
-      ).resolves.toBeUndefined();
+      ).resolves.toBeNull();
     });
 
     it('does nothing when the line has no code', async () => {
@@ -641,7 +647,7 @@ describe('GiftCodeService', () => {
 
       await expect(
         service.issueForInvoiceItem('item-1', paidAt)
-      ).resolves.toBeUndefined();
+      ).resolves.toBeNull();
       expect(tx.giftCode.updateMany).not.toHaveBeenCalled();
     });
   });

@@ -62,6 +62,12 @@ The offer form is a form view of the form library (`libs/form/README.md`):
 active and then `giftCodeOfferSaleFields.tsx`, a section component that loads
 the plan and the payment methods and renders the remaining fields with
 runtime options, `onValueChange` cascades and dynamic `disabled` / `hidden`.
+An "Emails" section below them is `giftCodeOfferMailFields.tsx`: two selects
+over `MailTemplateDocument` (each template named with its mail type, the
+way subscription flows name them), the mail when bought and the mail when
+redeemed; empty means no mail. With `paper-letters` on, each select is
+followed by the membership editor's `TemplateAttachmentsNote`, naming the
+documents the chosen template attaches.
 Fields:
 
 - name (required), description (`formFields.richText()`, for the buyer once
@@ -171,8 +177,20 @@ refetches. Server errors show as a toast and an inline alert; the form stays
 open.
 
 There is no standalone invoice list; gift invoices are reached from the code
-list. The spec's "PDF herunterladen" and "E-Mail erneut senden" actions come
-with the email and PDF step.
+list. The spec's "PDF herunterladen" and "E-Mail erneut senden" actions are
+not built; the mails go out once, when the code is issued and redeemed.
+
+### Mail templates
+
+The template editor has two more mail types, "Gift code bought" and "Gift
+code redeemed" (`giftCodePurchase`, `giftCodeRedemption` in
+`libs/membership/editor/src/lib/mail-template/mail-placeholders.ts`), with
+the `optional_giftCode_*` placeholders. The preview fills them from
+`SAMPLE_GIFT_CODE` in the API's `mail-template-data.ts`, also next to a chosen
+subscription; the letter preview and the test mail fill the template's
+attachments with it too. A manual send of such a template has no gift code,
+so those placeholders stay empty, in the mail and in its attachments, and the
+send page warns about them. The mail log filters by the type `giftCode`.
 
 ### Member plans
 

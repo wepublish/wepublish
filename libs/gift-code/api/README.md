@@ -10,7 +10,9 @@ the sellable contract never sees them. A reader redeems a code with
 `redeemGiftCode` (`GiftCodeRedemptionService`): it pays the open invoice or
 the next period of their own subscription with the same plan and
 periodicity, or starts a new subscription, limited to 10 attempts per hour
-by `GiftCodeAttemptLimiter`. Everything is behind the `gift-codes` feature.
+by `GiftCodeAttemptLimiter`. `GiftCodeMailService` sends the offer's mail
+templates, with the documents attached to them: to the buyer once the code is
+issued, to the redeemer after redeeming. Everything is behind the `gift-codes` feature.
 The website side and the gift block are not built yet; the purchase, list
 and redeem operations wait for the website.
 
