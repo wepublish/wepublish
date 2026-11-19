@@ -25,7 +25,7 @@ export function Page({
 
   return (
     <PageWrapper className={className}>
-      {!data?.page && !loading && <ContentUnavailable />}
+      {!data?.page && !loading && !children && <ContentUnavailable />}
       {data?.page && <PreviewStatusBanner />}
 
       {data?.page && <PageSEO page={data.page} />}
