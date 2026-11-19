@@ -11,6 +11,7 @@ import { PublicContentInvalidatorModule } from '@wepublish/public-content-cache/
 import { UserModule } from '@wepublish/user/api';
 import { GiftCodeAttemptLimiter } from './gift-code-attempt-limiter';
 import { GiftCodeInvoiceDataloader } from './gift-code-invoice.dataloader';
+import { GiftCodeMailService } from './gift-code-mail.service';
 import { GiftCodeOfferDataloader } from './gift-code-offer.dataloader';
 import { GiftCodeOfferResolver } from './gift-code-offer.resolver';
 import { GiftCodeOfferService } from './gift-code-offer.service';
@@ -44,6 +45,7 @@ import { GiftCodeService } from './gift-code.service';
     GiftCodeInvoiceDataloader,
     GiftCodeRedemptionService,
     GiftCodeRedemptionResolver,
+    GiftCodeMailService,
   ],
   exports: [GiftCodeOfferService, GiftCodeOfferDataloader, GiftCodeService],
 })

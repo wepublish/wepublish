@@ -1056,3 +1056,30 @@ Consequences.
   sees no code on the website until the profile part is built.
 - An active offer whose payment methods are all unusable still shows, and
   its form cannot be sent.
+
+## D46: Offers choose the gift code mails
+
+Context. The spec asks for a mail when a code is bought and one when it is
+redeemed, with a PDF voucher. Template attachments (`.docx` filled with the
+template's placeholders and sent as PDF) carry the voucher.
+
+Decision.
+- Each offer has a `purchaseMailTemplateId` and a `redemptionMailTemplateId`,
+  chosen in the offer form. Null sends nothing. The offer is where every
+  other gift code setting lives, and it lets each plan have its own voucher.
+- The purchase mail goes to the buyer once the code is issued, because the
+  code is only shown once paid
+  ([D39](#d39-codes-are-issued-and-shown-only-once-paid)). Only the run of
+  `issueForInvoiceItem` that issued the code sends it.
+- The redemption mail goes to the reader who redeemed the code, for every
+  action. A new subscription still gets the plan's `SUBSCRIBE` mail as well.
+- They go through `MailContext.sendMail` like subscription mails, logged as
+  `MailLogType.giftCode`. User flow and system mails never carry
+  attachments; these do, so the voucher is a Word document attached to the
+  purchase template rather than a PDF the gift code lib renders itself.
+- Two template types, `giftCodePurchase` and `giftCodeRedemption`, give the
+  editor the placeholders and a preview with sample data.
+
+Consequences.
+- A failed send is not retried, and there is no resend in the editor yet.
+- Codes an admin created get the redemption mail, but no purchase mail.

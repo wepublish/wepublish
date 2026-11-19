@@ -164,6 +164,7 @@ export class GiftCodeOfferService {
       autoRenew: autoRenew ?? false,
       renewalPaymentMethodId: renewalPaymentMethodId ?? null,
     });
+    await this.validateMailTemplates(input);
     await this.assertMemberPlanIsFree(input.memberPlanId);
 
     const offer = await this.prisma.giftCodeOffer
@@ -221,6 +222,7 @@ export class GiftCodeOfferService {
           renewalPaymentMethodUpdate
         : existing.renewalPaymentMethodId,
     });
+    await this.validateMailTemplates(input);
     await this.assertMemberPlanIsFree(
       input.memberPlanId ?? existing.memberPlanId,
       id
@@ -394,6 +396,36 @@ export class GiftCodeOfferService {
       throw new BadRequestException(
         `Payment method ${paymentMethod?.name ?? renewalPaymentMethodId} cannot be used for renewals`
       );
+    }
+  }
+
+  private async validateMailTemplates({
+    purchaseMailTemplateId,
+    redemptionMailTemplateId,
+  }: Pick<
+    UpdateGiftCodeOfferInput,
+    'purchaseMailTemplateId' | 'redemptionMailTemplateId'
+  >) {
+    const ids = [purchaseMailTemplateId, redemptionMailTemplateId].filter(
+      (id): id is string => Boolean(id)
+    );
+
+    if (!ids.length) {
+      return;
+    }
+
+    const found = new Set(
+      (
+        await this.prisma.mailTemplate.findMany({
+          where: { id: { in: ids } },
+          select: { id: true },
+        })
+      ).map(({ id }) => id)
+    );
+    const missing = ids.find(id => !found.has(id));
+
+    if (missing) {
+      throw new BadRequestException(`Mail template ${missing} not found`);
     }
   }
 

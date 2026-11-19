@@ -1782,7 +1782,9 @@
         "renewal": "Renewal",
         "invoiceCreation": "Invoice",
         "custom": "Free mail (subscriber)",
-        "customNoSubscription": "Free mail (no subscription)"
+        "customNoSubscription": "Free mail (no subscription)",
+        "giftCodePurchase": "Gift code bought",
+        "giftCodeRedemption": "Gift code redeemed"
       },
       "placeholderAlways": "Always available",
       "placeholderContextLabel": "Additional fields for this purpose",
@@ -1793,7 +1795,9 @@
         "renewal": "Automated renewal",
         "invoiceCreation": "Invoice created",
         "custom": "Free mail to a subscriber",
-        "customNoSubscription": "Free mail to a non-subscriber"
+        "customNoSubscription": "Free mail to a non-subscriber",
+        "giftCodePurchase": "Gift code bought",
+        "giftCodeRedemption": "Gift code redeemed"
       },
       "rawHtml": "HTML",
       "save": "Save",
@@ -1863,7 +1867,16 @@
         "optional_invoice_items_0_name": "Invoice item 1 — name",
         "optional_invoice_items_0_amount": "Invoice item 1 — amount (Rappen)",
         "optional_invoices_0_id": "Latest invoice — ID",
-        "optional_invoices_0_description": "Latest invoice — description"
+        "optional_invoices_0_description": "Latest invoice — description",
+        "optional_giftCode_code": "Gift code",
+        "optional_giftCode_recipientName": "Recipient name",
+        "optional_giftCode_offer_name": "Gift offer",
+        "optional_giftCode_memberPlan_name": "Membership plan name",
+        "optional_giftCode_periodicity": "Payment periodicity (raw)",
+        "optional_giftCode_redemptionWindowMonths": "Redemption window (months)",
+        "optional_giftCode_issuedAt": "Issued at",
+        "optional_giftCode_expiresAt": "Redeemable until",
+        "optional_giftCode_redeemedAt": "Redeemed at"
       },
       "dateFormat": {
         "iso": "ISO",
@@ -1888,7 +1901,9 @@
         "renewal": "Additionally includes plan/payment-method names and invoice data.",
         "invoiceCreation": "Note: subscription fields here use the prefix optional_subscriptionToCreateInvoice_*.",
         "custom": "Invoices come as an array: optional_invoices_0_* (newest first).",
-        "customNoSubscription": "Only recipient fields are available — this mail goes to people without a subscription."
+        "customNoSubscription": "Only recipient fields are available — this mail goes to people without a subscription.",
+        "giftCodePurchase": "Goes to the buyer once the gift code is paid. The invoice is the gift code’s.",
+        "giftCodeRedemption": "Goes to the reader who redeemed the gift code. Subscription and invoice are the ones the code paid."
       },
       "searchPlaceholders": "Filter placeholders…",
       "noPlaceholders": "No matching placeholders.",
@@ -1900,7 +1915,9 @@
         "renewal": "Automatic renewal — successful or failed. Additionally available: plan and payment method names plus the invoice data.",
         "invoiceCreation": "As soon as a new invoice has been created. Additionally available: the invoice and its subscription.",
         "custom": "A mail you send freely to subscribers, e.g. a newsletter via “Manual messages”. Additionally available: the subscription and the latest invoices.",
-        "customNoSubscription": "A mail you send freely to people without a subscription, e.g. an invitation or win-back. Only the recipient fields are available — subscription placeholders stay empty."
+        "customNoSubscription": "A mail you send freely to people without a subscription, e.g. an invitation or win-back. Only the recipient fields are available — subscription placeholders stay empty.",
+        "giftCodePurchase": "Sent to the buyer once a gift code is paid; choose it on the gift code offer. Additionally available: the code, the offer and the invoice.",
+        "giftCodeRedemption": "Sent to the reader who redeemed a gift code; choose it on the gift code offer. Additionally available: the code and the subscription it paid."
       },
       "placeholderDescriptions": {
         "user_fullName": "First and last name together (e.g. for the salutation).",
@@ -1946,7 +1963,16 @@
         "optional_invoice_items_0_name": "Name of the first invoice item (array, index 0).",
         "optional_invoice_items_0_amount": "Amount of the first invoice item in Rappen.",
         "optional_invoices_0_id": "ID of the latest invoice (array, index 0).",
-        "optional_invoices_0_description": "Description of the latest invoice."
+        "optional_invoices_0_description": "Description of the latest invoice.",
+        "optional_giftCode_code": "The code that redeems the gift.",
+        "optional_giftCode_recipientName": "Name of the person the gift is for, as entered when buying. Can be empty.",
+        "optional_giftCode_offer_name": "Name of the gift offer.",
+        "optional_giftCode_memberPlan_name": "Membership plan the code pays for.",
+        "optional_giftCode_periodicity": "Duration the code pays for (raw value): yearly, biannual, quarterly, monthly, biennial.",
+        "optional_giftCode_redemptionWindowMonths": "Months in which the code can be redeemed. Empty when unlimited.",
+        "optional_giftCode_issuedAt": "Issued, i.e. paid, at. Choose a format.",
+        "optional_giftCode_expiresAt": "Redeemable until. Empty when unlimited. Choose a format.",
+        "optional_giftCode_redeemedAt": "Redeemed at. Choose a format."
       },
       "statusHelp": "A check mark means an automatic email uses this template. «Unused» means no automatic email uses it — you can still send it by hand via «Manual messages».",
       "placeholdersInfo": "Placeholders are replaced automatically with the matching data when the message is sent, e.g. the recipient's first name.",
@@ -3896,8 +3922,14 @@
         "renewalPaymentMethodRequired": "Choose the payment method for the renewal",
         "sections": {
           "details": "Offer",
-          "sale": "Sale"
-        }
+          "sale": "Sale",
+          "mails": "Emails",
+          "mailsDescription": "Without a template, no mail is sent. Documents attached to the template are filled in like the mail itself."
+        },
+        "purchaseMailTemplate": "Mail when bought",
+        "purchaseMailTemplateHelp": "Sent to the buyer once the payment is confirmed, with the code.",
+        "redemptionMailTemplate": "Mail when redeemed",
+        "redemptionMailTemplateHelp": "Sent to the reader who redeemed the code."
       },
       "overview": {
         "title": "Gift offers",
@@ -4965,14 +4997,16 @@
         "subscriptionFlow": "Subscription mailing",
         "userFlow": "Event mail",
         "systemMail": "System mail",
-        "manual": "Manual"
+        "manual": "Manual",
+        "giftCode": "Gift code"
       },
       "error": "Error",
       "typeDescriptions": {
         "manual": "Sent by hand via “Manual messages” or “Send test”. Example: a newsletter to all subscribers.",
         "subscriptionFlow": "Time-based, from “Automated messages”, scheduled off the subscription date. Examples: reminder 14 days before it ends, dunning after an unpaid invoice.",
         "userFlow": "Triggered immediately by a concrete action or event. Examples: login link requested, email address changed, renewal payment failed.",
-        "systemMail": "Account mails, configured under “Automated messages” in the “Account & login” section. Examples: welcome mail after registration, password reset."
+        "systemMail": "Account mails, configured under “Automated messages” in the “Account & login” section. Examples: welcome mail after registration, password reset.",
+        "giftCode": "Sent when a gift code is bought or redeemed, with the templates chosen on the gift code offer."
       },
       "errorHelp": {
         "causeTitle": "What happened?",

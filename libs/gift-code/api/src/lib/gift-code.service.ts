@@ -195,27 +195,37 @@ export class GiftCodeService {
     });
   }
 
-  async issueForInvoiceItem(invoiceItemId: string, paidAt: Date) {
-    await this.prisma.$transaction(async tx => {
+  /**
+   * Issue the code of a paid line. Returns its id when this call issued it,
+   * `null` when there is none or it was already issued or canceled: of all
+   * the paths that may reconcile one invoice, only one gets the id.
+   */
+  async issueForInvoiceItem(
+    invoiceItemId: string,
+    paidAt: Date
+  ): Promise<string | null> {
+    return this.prisma.$transaction(async tx => {
       const giftCode = await tx.giftCode.findUnique({
         where: { invoiceItemId },
-        select: { redemptionWindowMonths: true },
+        select: { id: true, redemptionWindowMonths: true },
       });
 
       if (!giftCode) {
         logger('giftCodeService').warn(
           `No gift code found for invoice item ${invoiceItemId}`
         );
-        return;
+        return null;
       }
 
-      await tx.giftCode.updateMany({
+      const { count } = await tx.giftCode.updateMany({
         where: { invoiceItemId, issuedAt: null, canceledAt: null },
         data: {
           issuedAt: paidAt,
           expiresAt: expiryFrom(paidAt, giftCode.redemptionWindowMonths),
         },
       });
+
+      return count === 1 ? giftCode.id : null;
     });
   }
 

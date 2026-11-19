@@ -68,6 +68,13 @@ Back-relations: `User.invoices` ("InvoiceBuyer"), `User.boughtGiftCodes`
 
 `Payment.invoiceID` still has no FK. That is out of scope.
 
+The mails came later, in `20261118120000_add_gift_code_mails`
+([D46](decisions.md#d46-offers-choose-the-gift-code-mails)): two nullable
+columns on the offer (below), `MailLogType.giftCode` for the mail log, and
+`MailTemplateContext.giftCodePurchase` and `giftCodeRedemption` for the
+template editor. `MailTemplate` gets the back-relations
+`giftCodeOfferPurchaseMails` and `giftCodeOfferRedemptionMails`.
+
 ## GiftCodeOffer (`gift-codes.offers`)
 
 What an editor sets up: one plan, one periodicity, and how it is presented.
@@ -93,6 +100,10 @@ model GiftCodeOffer {
   renewalPaymentMethod   PaymentMethod?     @relation("GiftCodeOfferRenewalPaymentMethod", fields: [renewalPaymentMethodId], references: [id], onDelete: SetNull)
   paymentMethods         PaymentMethod[]
   giftCodes              GiftCode[]
+  purchaseMailTemplateId   String?
+  purchaseMailTemplate     MailTemplate? @relation("GiftCodeOfferPurchaseMail", fields: [purchaseMailTemplateId], references: [id], onDelete: Restrict)
+  redemptionMailTemplateId String?
+  redemptionMailTemplate   MailTemplate? @relation("GiftCodeOfferRedemptionMail", fields: [redemptionMailTemplateId], references: [id], onDelete: Restrict)
   @@map("gift-codes.offers")
 }
 ```
@@ -134,6 +145,12 @@ invoice support, because renewals are ordinary subscription invoices. There
 is no CHECK pairing the two columns: deleting the method sets
 `renewalPaymentMethodId` to null and must not fail, and the next save of the
 offer then asks for a new method.
+
+`purchaseMailTemplateId` and `redemptionMailTemplateId` choose the mails
+([D46](decisions.md#d46-offers-choose-the-gift-code-mails)); null sends
+none. The delete rule is `Restrict`, and `deleteMailTemplate` refuses first
+with "This template is still assigned to a gift code offer", as it does for
+subscription flows and system mails.
 
 ## GiftCode (`gift-codes`)
 

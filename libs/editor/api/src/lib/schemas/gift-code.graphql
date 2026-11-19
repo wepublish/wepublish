@@ -37,6 +37,9 @@ fragment FullGiftCodeOffer on GiftCodeOffer {
   }
 
   price
+
+  purchaseMailTemplateId
+  redemptionMailTemplateId
 }
 
 query GiftCodeOfferList(
@@ -89,6 +92,8 @@ mutation CreateGiftCodeOffer(
   $paymentMethodIds: [String!]!
   $autoRenew: Boolean
   $renewalPaymentMethodId: String
+  $purchaseMailTemplateId: String
+  $redemptionMailTemplateId: String
 ) {
   createGiftCodeOffer(
     name: $name
@@ -103,6 +108,8 @@ mutation CreateGiftCodeOffer(
     paymentMethodIds: $paymentMethodIds
     autoRenew: $autoRenew
     renewalPaymentMethodId: $renewalPaymentMethodId
+    purchaseMailTemplateId: $purchaseMailTemplateId
+    redemptionMailTemplateId: $redemptionMailTemplateId
   ) {
     ...FullGiftCodeOffer
   }
@@ -122,6 +129,8 @@ mutation UpdateGiftCodeOffer(
   $paymentMethodIds: [String!]
   $autoRenew: Boolean
   $renewalPaymentMethodId: String
+  $purchaseMailTemplateId: String
+  $redemptionMailTemplateId: String
 ) {
   updateGiftCodeOffer(
     id: $id
@@ -137,6 +146,8 @@ mutation UpdateGiftCodeOffer(
     paymentMethodIds: $paymentMethodIds
     autoRenew: $autoRenew
     renewalPaymentMethodId: $renewalPaymentMethodId
+    purchaseMailTemplateId: $purchaseMailTemplateId
+    redemptionMailTemplateId: $redemptionMailTemplateId
   ) {
     ...FullGiftCodeOffer
   }

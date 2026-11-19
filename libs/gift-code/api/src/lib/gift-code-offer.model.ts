@@ -63,6 +63,20 @@ export class GiftCodeOffer extends HasImage {
 
   @Field(() => String, { nullable: true })
   renewalPaymentMethodId?: string | null;
+
+  @Field(() => String, {
+    nullable: true,
+    description:
+      'Mail template sent to the buyer once the code is issued. None, no mail.',
+  })
+  purchaseMailTemplateId?: string | null;
+
+  @Field(() => String, {
+    nullable: true,
+    description:
+      'Mail template sent to the reader who redeemed a code. None, no mail.',
+  })
+  redemptionMailTemplateId?: string | null;
 }
 
 @InputType()
@@ -136,6 +150,8 @@ export class CreateGiftCodeOfferInput extends PickType(
     'periodicity',
     'redemptionWindowMonths',
     'price',
+    'purchaseMailTemplateId',
+    'redemptionMailTemplateId',
   ] as const,
   ArgsType
 ) {

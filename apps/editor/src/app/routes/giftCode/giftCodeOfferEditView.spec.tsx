@@ -1,6 +1,9 @@
 import { useApolloClient, useMutation } from '@apollo/client/react';
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import {
+  DocumentListDocument,
+  MailTemplateContext,
+  MailTemplateDocument,
   MemberPlanDocument,
   PaymentMethodListDocument,
   PaymentPeriodicity,
@@ -58,7 +61,31 @@ const offer = {
   renewalPaymentMethodId: 'method-3',
   renewalPaymentMethod: { id: 'method-3', name: 'Rechnung' },
   price: 9900,
+  purchaseMailTemplateId: 'tpl-bought',
+  redemptionMailTemplateId: null,
 };
+
+const mailTemplates = [
+  {
+    id: 'tpl-bought',
+    name: 'Gutschein gekauft',
+    context: MailTemplateContext.GiftCodePurchase,
+    attachmentIds: ['doc-voucher', 'doc-terms'],
+  },
+  {
+    id: 'tpl-redeemed',
+    name: 'Gutschein eingelöst',
+    context: MailTemplateContext.GiftCodeRedemption,
+    attachmentIds: [],
+  },
+];
+
+const documents = [
+  { id: 'doc-voucher', title: 'Geschenkurkunde', filename: 'urkunde.docx' },
+  { id: 'doc-terms', title: null, filename: 'agb.docx' },
+];
+
+const features = vi.fn(() => new Set<string>());
 
 vi.mock('@apollo/client/react', async importOriginal => ({
   ...(await importOriginal<typeof import('@apollo/client/react')>()),
@@ -70,6 +97,14 @@ vi.mock('@apollo/client/react', async importOriginal => ({
         data: { memberPlan: { ...plan, ...planOverrides } },
         loading: false,
       };
+    }
+
+    if (document === MailTemplateDocument) {
+      return { data: { mailTemplates }, loading: false };
+    }
+
+    if (document === DocumentListDocument) {
+      return { data: { documents: { nodes: documents } }, loading: false };
     }
 
     if (document === PaymentMethodListDocument) {
@@ -104,6 +139,7 @@ vi.mock('react-i18next', () => ({
 vi.mock('@wepublish/ui/editor', async importOriginal => ({
   ...(await importOriginal<typeof import('@wepublish/ui/editor')>()),
   createCheckedPermissionComponent: () => (component: unknown) => component,
+  useFeature: (feature: string) => features().has(feature),
   RichTextBlock: () => null,
   SelectMemberPlan: () => null,
 }));
@@ -121,6 +157,7 @@ const renderView = () =>
 
 beforeEach(() => {
   planOverrides = {};
+  features.mockReturnValue(new Set());
   navigate.mockReset();
   updateOffer.mockReset();
   updateOffer.mockResolvedValue({ data: { updateGiftCodeOffer: offer } });
@@ -229,6 +266,8 @@ describe('GiftCodeOfferEditView', () => {
           paymentMethodIds: ['method-1'],
           autoRenew: true,
           renewalPaymentMethodId: 'method-3',
+          purchaseMailTemplateId: 'tpl-bought',
+          redemptionMailTemplateId: null,
         },
       })
     );
@@ -276,5 +315,122 @@ describe('GiftCodeOfferEditView', () => {
         }),
       })
     );
+  });
+
+  describe('mails', () => {
+    const mailSelect = (name: RegExp) => screen.getByRole('combobox', { name });
+    const chooseMail = (name: RegExp, option: string | RegExp) => {
+      fireEvent.mouseDown(mailSelect(name));
+      fireEvent.click(
+        within(screen.getByRole('listbox')).getByRole('option', {
+          name: option,
+        })
+      );
+    };
+
+    it('shows which template each mail uses', async () => {
+      renderView();
+
+      await screen.findByDisplayValue('Ein Jahr schenken');
+
+      expect(
+        mailSelect(/^giftCodeOffer\.form\.purchaseMailTemplate/)
+      ).toHaveTextContent(/^Gutschein gekauft/);
+      expect(
+        mailSelect(/^giftCodeOffer\.form\.redemptionMailTemplate/)
+      ).not.toHaveTextContent(/Gutschein/);
+    });
+
+    it('names the mail type of each template', async () => {
+      renderView();
+
+      await screen.findByDisplayValue('Ein Jahr schenken');
+      fireEvent.mouseDown(
+        mailSelect(/^giftCodeOffer\.form\.redemptionMailTemplate/)
+      );
+
+      expect(
+        within(screen.getByRole('listbox')).getByRole('option', {
+          name: /^Gutschein eingelöst \(mailTemplates\.mailTypes\.giftCodeRedemption/,
+        })
+      ).toBeInTheDocument();
+    });
+
+    it('saves the template chosen for a redeemed code', async () => {
+      renderView();
+
+      await screen.findByDisplayValue('Ein Jahr schenken');
+      chooseMail(
+        /^giftCodeOffer\.form\.redemptionMailTemplate/,
+        /^Gutschein eingelöst/
+      );
+      fireEvent.click(screen.getByTestId('saveButton'));
+
+      await waitFor(() =>
+        expect(updateOffer).toHaveBeenCalledWith({
+          variables: expect.objectContaining({
+            purchaseMailTemplateId: 'tpl-bought',
+            redemptionMailTemplateId: 'tpl-redeemed',
+          }),
+        })
+      );
+    });
+
+    // The api attaches a template's documents only with paper letters on.
+    describe('attachments', () => {
+      const note = (count: number, names: string) =>
+        `mailSend.attachments:${count},${names}`;
+
+      it('names the documents the chosen template attaches', async () => {
+        features.mockReturnValue(new Set(['paper-letters']));
+        renderView();
+
+        expect(
+          await screen.findByText(note(2, 'Geschenkurkunde, agb.docx'))
+        ).toBeInTheDocument();
+      });
+
+      it('follows the template chosen', async () => {
+        features.mockReturnValue(new Set(['paper-letters']));
+        renderView();
+
+        await screen.findByText(note(2, 'Geschenkurkunde, agb.docx'));
+        chooseMail(
+          /^giftCodeOffer\.form\.purchaseMailTemplate/,
+          /^Gutschein eingelöst/
+        );
+
+        await waitFor(() =>
+          expect(
+            screen.queryByText(note(2, 'Geschenkurkunde, agb.docx'))
+          ).not.toBeInTheDocument()
+        );
+      });
+
+      it('says nothing without paper letters', async () => {
+        renderView();
+
+        await screen.findByDisplayValue('Ein Jahr schenken');
+
+        expect(screen.queryByText(/^mailSend\.attachments/)).toBeNull();
+      });
+    });
+
+    it('stops sending the purchase mail', async () => {
+      renderView();
+
+      await screen.findByDisplayValue('Ein Jahr schenken');
+      chooseMail(
+        /^giftCodeOffer\.form\.purchaseMailTemplate/,
+        'form.select.empty'
+      );
+      fireEvent.click(screen.getByTestId('saveButton'));
+
+      await waitFor(() =>
+        expect(updateOffer).toHaveBeenCalledWith({
+          variables: expect.objectContaining({ purchaseMailTemplateId: null }),
+        })
+      );
+    });
   });
 });

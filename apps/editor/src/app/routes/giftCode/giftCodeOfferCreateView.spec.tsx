@@ -436,6 +436,8 @@ describe('GiftCodeOfferCreateView', () => {
           paymentMethodIds: ['method-2'],
           autoRenew: false,
           renewalPaymentMethodId: null,
+          purchaseMailTemplateId: null,
+          redemptionMailTemplateId: null,
         },
       })
     );

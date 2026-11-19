@@ -2068,6 +2068,14 @@ type GiftCodeOffer implements HasImage & HasMemberPlanLc {
   What the buyer pays, in cents of the member plan currency. The redeemed subscription keeps the plan price.
   """
   price: Int!
+
+  """
+  Mail template sent to the buyer once the code is issued. None, no mail.
+  """
+  purchaseMailTemplateId: String
+
+  """Mail template sent to the reader who redeemed a code. None, no mail."""
+  redemptionMailTemplateId: String
   redemptionWindowMonths: Int
 
   """The payment method of subscriptions that renew automatically."""
@@ -2993,6 +3001,7 @@ type MailLogTemplate {
 
 """Origin of a sent mail."""
 enum MailLogType {
+  giftCode
   manual
   subscriptionFlow
   systemMail
@@ -3227,6 +3236,8 @@ enum MailTemplateContext {
   custom
   customNoSubscription
   emailChange
+  giftCodePurchase
+  giftCodeRedemption
   invoiceCreation
   renewal
   subscription
@@ -4112,6 +4123,14 @@ type Mutation {
     What the buyer pays, in cents of the member plan currency. The redeemed subscription keeps the plan price.
     """
     price: Int!
+
+    """
+    Mail template sent to the buyer once the code is issued. None, no mail.
+    """
+    purchaseMailTemplateId: String
+
+    """Mail template sent to the reader who redeemed a code. None, no mail."""
+    redemptionMailTemplateId: String
     redemptionWindowMonths: Int
     renewalPaymentMethodId: String
   ): GiftCodeOffer!
@@ -4855,6 +4874,14 @@ type Mutation {
     What the buyer pays, in cents of the member plan currency. The redeemed subscription keeps the plan price.
     """
     price: Int
+
+    """
+    Mail template sent to the buyer once the code is issued. None, no mail.
+    """
+    purchaseMailTemplateId: String
+
+    """Mail template sent to the reader who redeemed a code. None, no mail."""
+    redemptionMailTemplateId: String
     redemptionWindowMonths: Int
     renewalPaymentMethodId: String
   ): GiftCodeOffer!

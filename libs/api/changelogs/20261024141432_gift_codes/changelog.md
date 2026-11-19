@@ -59,6 +59,16 @@ Once gift codes are switched on:
   «Willst du ein Geschenkabo einlösen? Hier klicken.» next to the plan
   choice. It leads to the page you pick, usually the one with the redeem
   block.
+- Under **Emails** in each gift offer you pick a mail template for when a
+  code is bought and one for when it is redeemed. The first goes to the
+  buyer as soon as the payment has arrived, the second to the reader who
+  redeemed the code. Without a template, no mail goes out. In the mail
+  templates, the mail types **Gift code bought** and **Gift code redeemed**
+  list the placeholders, such as the code, the recipient name and the date
+  until which the code can be redeemed. Word documents attached to the
+  template, such as a gift voucher, are filled in with the same placeholders
+  and sent along as PDF; the offer names the documents the chosen template
+  attaches.
 
-Gift codes do not come with emails or PDF vouchers yet, and buyers cannot
-see their codes in their profile on the website yet.
+Buyers cannot see their codes in their profile on the website yet, and a
+gift code mail cannot be sent again from the editor.

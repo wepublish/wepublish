@@ -1977,6 +1977,10 @@ export type GiftCodeOffer = HasImage & HasMemberPlanLc & {
   periodicity: PaymentPeriodicity;
   /** What the buyer pays, in cents of the member plan currency. The redeemed subscription keeps the plan price. */
   price: Scalars['Int']['output'];
+  /** Mail template sent to the buyer once the code is issued. None, no mail. */
+  purchaseMailTemplateId?: Maybe<Scalars['String']['output']>;
+  /** Mail template sent to the reader who redeemed a code. None, no mail. */
+  redemptionMailTemplateId?: Maybe<Scalars['String']['output']>;
   redemptionWindowMonths?: Maybe<Scalars['Int']['output']>;
   /** The payment method of subscriptions that renew automatically. */
   renewalPaymentMethod?: Maybe<PaymentMethod>;
@@ -2798,6 +2802,7 @@ export type MailLogTemplate = {
 
 /** Origin of a sent mail. */
 export enum MailLogType {
+  GiftCode = 'giftCode',
   Manual = 'manual',
   SubscriptionFlow = 'subscriptionFlow',
   SystemMail = 'systemMail',
@@ -2990,6 +2995,8 @@ export enum MailTemplateContext {
   Custom = 'custom',
   CustomNoSubscription = 'customNoSubscription',
   EmailChange = 'emailChange',
+  GiftCodePurchase = 'giftCodePurchase',
+  GiftCodeRedemption = 'giftCodeRedemption',
   InvoiceCreation = 'invoiceCreation',
   Renewal = 'renewal',
   Subscription = 'subscription'
@@ -4472,6 +4479,8 @@ export type MutationCreateGiftCodeOfferArgs = {
   paymentMethodIds: Array<Scalars['String']['input']>;
   periodicity: PaymentPeriodicity;
   price: Scalars['Int']['input'];
+  purchaseMailTemplateId?: InputMaybe<Scalars['String']['input']>;
+  redemptionMailTemplateId?: InputMaybe<Scalars['String']['input']>;
   redemptionWindowMonths?: InputMaybe<Scalars['Int']['input']>;
   renewalPaymentMethodId?: InputMaybe<Scalars['String']['input']>;
 };
@@ -5719,6 +5728,8 @@ export type MutationUpdateGiftCodeOfferArgs = {
   paymentMethodIds?: InputMaybe<Array<Scalars['String']['input']>>;
   periodicity?: InputMaybe<PaymentPeriodicity>;
   price?: InputMaybe<Scalars['Int']['input']>;
+  purchaseMailTemplateId?: InputMaybe<Scalars['String']['input']>;
+  redemptionMailTemplateId?: InputMaybe<Scalars['String']['input']>;
   redemptionWindowMonths?: InputMaybe<Scalars['Int']['input']>;
   renewalPaymentMethodId?: InputMaybe<Scalars['String']['input']>;
 };

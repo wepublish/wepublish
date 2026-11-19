@@ -64,6 +64,16 @@ Wenn Geschenkcodes eingeschaltet sind:
   hinweisen** neben der Abo-Auswahl den Link «Willst du ein Geschenkabo
   einlösen? Hier klicken.» ein. Er führt auf die Seite, die du wählst, meist
   die mit dem Einlöse-Block.
+- Unter **E-Mails** wählst du in jedem Geschenkangebot eine E-Mail-Vorlage
+  für den Kauf und eine für das Einlösen eines Codes. Die erste geht an die
+  Käufer:in, sobald die Zahlung eingegangen ist, die zweite an die Person,
+  die den Code eingelöst hat. Ohne Vorlage geht keine E-Mail raus. In den
+  E-Mail-Vorlagen zeigen die Typen **Geschenkcode gekauft** und
+  **Geschenkcode eingelöst** die Platzhalter, etwa den Code, den Namen der
+  beschenkten Person und das Datum, bis zu dem der Code einlösbar ist.
+  Word-Dokumente, die an der Vorlage hängen, etwa ein Geschenkgutschein,
+  werden mit denselben Platzhaltern ausgefüllt und als PDF mitgeschickt; das
+  Angebot nennt die Dokumente, die die gewählte Vorlage anhängt.
 
-E-Mails und PDF-Gutscheine für Geschenkcodes gibt es noch nicht, und im
-Profil auf der Website sehen Käufer:innen ihre Codes noch nicht.
+Im Profil auf der Website sehen Käufer:innen ihre Codes noch nicht, und eine
+Geschenkcode-E-Mail lässt sich im Editor noch nicht erneut senden.

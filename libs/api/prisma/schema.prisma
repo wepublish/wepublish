@@ -658,6 +658,7 @@ enum MailLogType {
   userFlow         @map("userFlow")
   systemMail       @map("systemMail")
   manual           @map("manual")
+  giftCode         @map("giftCode")
 }
 
 model MailLog {
@@ -1786,6 +1787,11 @@ enum MailTemplateContext {
   custom
   // Free mail to someone without a subscription: recipient fields only.
   customNoSubscription
+  // Sent to the buyer once a gift code is paid: the code and the invoice.
+  giftCodePurchase
+  // Sent to the reader who redeemed a gift code: the code and the
+  // subscription it paid.
+  giftCodeRedemption
 }
 
 model MailTemplate {
@@ -1830,6 +1836,9 @@ model MailTemplate {
   mailLog MailLog[]
 
   mailSendJobs MailSendJob[]
+
+  giftCodeOfferPurchaseMails   GiftCodeOffer[] @relation("GiftCodeOfferPurchaseMail")
+  giftCodeOfferRedemptionMails GiftCodeOffer[] @relation("GiftCodeOfferRedemptionMail")
 
   // Stationery a letter printed from this template is set on. Null means the
   // default layout; the medium is still the send job's choice.
@@ -3232,6 +3241,13 @@ model GiftCodeOffer {
   renewalPaymentMethod   PaymentMethod?     @relation("GiftCodeOfferRenewalPaymentMethod", fields: [renewalPaymentMethodId], references: [id], onDelete: SetNull)
   paymentMethods         PaymentMethod[]
   giftCodes              GiftCode[]
+
+  // Sent to the buyer once the code is issued, and to the reader who redeems
+  // it. No template, no mail.
+  purchaseMailTemplateId   String?
+  purchaseMailTemplate     MailTemplate? @relation("GiftCodeOfferPurchaseMail", fields: [purchaseMailTemplateId], references: [id], onDelete: Restrict)
+  redemptionMailTemplateId String?
+  redemptionMailTemplate   MailTemplate? @relation("GiftCodeOfferRedemptionMail", fields: [redemptionMailTemplateId], references: [id], onDelete: Restrict)
 
   @@map("gift-codes.offers")
 }

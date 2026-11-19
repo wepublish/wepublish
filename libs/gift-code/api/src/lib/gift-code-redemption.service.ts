@@ -18,6 +18,7 @@ import {
 } from '@wepublish/payment/api';
 import { logger, monthlyAmountFromPeriodAmount } from '@wepublish/utils/api';
 import { GiftCodeAttemptLimiter } from './gift-code-attempt-limiter';
+import { GiftCodeMailService } from './gift-code-mail.service';
 import { normalizeGiftCode } from './gift-code-generator';
 import { GiftCodeOfferService } from './gift-code-offer.service';
 import { GiftCodeRedemptionAction } from './gift-code-redemption.model';
@@ -111,7 +112,8 @@ export class GiftCodeRedemptionService {
     private payments: PaymentsService,
     private memberContext: MemberContextService,
     private offers: GiftCodeOfferService,
-    private attempts: GiftCodeAttemptLimiter
+    private attempts: GiftCodeAttemptLimiter,
+    private mails: GiftCodeMailService
   ) {}
 
   async redeem(userId: string, input: string) {
@@ -169,6 +171,8 @@ export class GiftCodeRedemptionService {
     if (createsSubscription(target) && subscription) {
       await this.sendSubscribeMail(subscription);
     }
+
+    await this.mails.sendRedemptionMail(giftCode.id);
 
     return { action: target.action, subscription, invoice };
   }
