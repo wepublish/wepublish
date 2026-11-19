@@ -219,6 +219,45 @@ describe('SelectMailTemplatePanel', () => {
     expect(rowOf('Willkommen').className).not.toContain('highlighted-row');
   });
 
+  it('says on a row what a click on it does, like its button', () => {
+    renderPanel({ selectedId: 'Mahnung' });
+
+    expect(rowOf('Willkommen').getAttribute('title')).toBe(
+      'mailTemplateSelect.chooser.select'
+    );
+    expect(
+      within(rowOf('Willkommen')).getByRole('button', {
+        name: 'mailTemplateSelect.chooser.select',
+      })
+    ).toBeTruthy();
+  });
+
+  it('says on the row and button of the current template that it is chosen already', () => {
+    renderPanel({ selectedId: 'Mahnung' });
+
+    expect(rowOf('Mahnung').getAttribute('title')).toBe(
+      'mailTemplateSelect.chooser.selectCurrent'
+    );
+    expect(
+      within(rowOf('Mahnung')).getByRole('button', {
+        name: 'mailTemplateSelect.chooser.selectCurrent',
+      })
+    ).toBeTruthy();
+  });
+
+  it('keeps the pagination outside the part that scrolls', () => {
+    renderPanel();
+
+    const scrolling = screen.getByRole('table').closest('[data-table-area]');
+
+    expect(scrolling).toBeTruthy();
+    expect(
+      scrolling?.contains(
+        screen.getByRole('button', { name: 'listView.pagination.next' })
+      )
+    ).toBe(false);
+  });
+
   it('lets the event send nothing, if it sends something now', () => {
     renderPanel({ selectedId: 'Mahnung' });
 
@@ -242,7 +281,7 @@ describe('SelectMailTemplatePanel', () => {
     renderPanel();
 
     const link = screen.getByRole('link', {
-      name: 'mailTemplates.create',
+      name: 'mailTemplateSelect.chooser.create',
     });
 
     expect(link.getAttribute('href')).toBe('/mailtemplates/create');

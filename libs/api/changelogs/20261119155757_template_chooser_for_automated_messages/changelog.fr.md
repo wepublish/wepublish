@@ -8,6 +8,6 @@ lead: Le modèle d’un événement de flux ou d’un message de compte ne se ch
 - **Restreint à l’événement.** Le tableau s’ouvre sur les modèles rédigés pour ce type d’événement, par exemple les modèles de facture pour « Création de facture ». « Réinitialiser les filtres » les affiche tous.
 - **La recherche et les filtres** fonctionnent comme dans la liste des modèles de message.
 - **Choisir.** Cliquez sur une ligne ou sur son bouton ⊕ ; le choix est enregistré aussitôt. « Ne pas envoyer de message » retire le modèle de l’événement.
-- « Créer un modèle » ouvre un nouveau modèle dans un autre onglet.
+- « Créer un nouveau modèle » ouvre un nouveau modèle dans un autre onglet.
 
 Comme auparavant, seuls les modèles avec une version e-mail sont proposés.

@@ -1936,7 +1936,9 @@
       "chooser": {
         "title": "Choisir un modèle : {{event}}",
         "select": "Choisir ce modèle",
-        "none": "Ne pas envoyer de message"
+        "selectCurrent": "Choisir ce modèle (déjà choisi)",
+        "none": "Ne pas envoyer de message",
+        "create": "Créer un nouveau modèle"
       },
       "channels": "Canaux de distribution",
       "noLetterVersion": "Ce modèle n’a pas de version lettre. Ajoutez-la dans le modèle pour que les personnes au canal lettre reçoivent ce message imprimé ; d’ici là, elles reçoivent l’e-mail.",
