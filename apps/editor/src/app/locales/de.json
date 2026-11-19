@@ -1163,7 +1163,7 @@
       "noNameErrorMessage": "Bitte Namen eingeben",
       "noPasswordErrorMessage": "Bitte Passwort eingeben",
       "noPaymentMethodErrorMessage": "Bitte gib eine Zahlungsmethode ein",
-      "noPaymentPeriodicityErrorMessage": "Bitte gib die Zahlungsperiodizität ein",
+      "noPaymentPeriodicityErrorMessage": "Bitte gib das Zahlungsintervall ein",
       "noPaymentProviderErrorMessage": "Bitte gib den Zahlungsanbieter ein",
       "noTokenErrorMessage": "Bitte gib den Token ein",
       "noUrlErrorMessage": "Bitte URL eingeben",
@@ -1817,8 +1817,8 @@
         "optional_subscription_periodAmount": "Betrag pro Periode",
         "optional_subscription_periodMonths": "Monate pro Periode",
         "optional_subscription_currency": "Währung",
-        "optional_subscription_paymentPeriodicity": "Zahlungsperiodizität (Code)",
-        "optional_subscription_paymentPeriodicity_display": "Zahlungsperiodizität",
+        "optional_subscription_paymentPeriodicity": "Zahlungsintervall (Code)",
+        "optional_subscription_paymentPeriodicity_display": "Zahlungsintervall",
         "optional_subscription_autoRenew": "Automatische Verlängerung",
         "optional_subscription_startsAt": "Beginnt am",
         "optional_subscription_paidUntil": "Bezahlt bis",
@@ -1959,7 +1959,7 @@
       "createMemberPlanHeader": "Abo-Plan erstellen",
       "description": "Beschreibung",
       "shortDescription": "Kurze Beschreibung",
-      "editPaymentSetting": "Zahlungsmethoden & Periodizitäten bearbeiten",
+      "editPaymentSetting": "Zahlungsmethoden & Laufzeiten bearbeiten",
       "forceAutoRenewal": "Automatische Erneuerung erzwingen",
       "loadingTitle": "Wird geladen …",
       "name": "Name",
@@ -1967,8 +1967,8 @@
       "noMemberPlanName": "Abo-Plan ohne Namen",
       "earliestInvoiceDay": {
         "label": "Früheste Rechnungsstellung: {{days}} Tage ({{periodicity}})",
-        "help": "Abhängig von den gewählten Periodizitäten in den Abo-Plänen können Rechnungen frühestens {{days}} Tage vor Abo-Ablauf erstellt werden. Bei «Monatlich» zum Beispiel kann eine Rechnung frühestens 25 Tage vor Ablauf erstellt werden, was je nach Monat 3 bis 6 Tage nach Abo-Beginn entspricht.",
-        "conflict": "{{flow}} erstellt Rechnungen an Tag {{invoiceDay}}. Für Abos dieses Abo-Plans mit der Periodizität «{{periodicity}}» wird die Rechnung erst {{days}} Tage vor Ablauf erstellt.",
+        "help": "Abhängig von den Laufzeiten, die die Abo-Pläne anbieten, können Rechnungen frühestens {{days}} Tage vor Abo-Ablauf erstellt werden. Bei «Monatlich» zum Beispiel kann eine Rechnung frühestens 25 Tage vor Ablauf erstellt werden, was je nach Monat 3 bis 6 Tage nach Abo-Beginn entspricht.",
+        "conflict": "{{flow}} erstellt Rechnungen an Tag {{invoiceDay}}. Für Abos dieses Abo-Plans mit der Laufzeit «{{periodicity}}» wird die Rechnung erst {{days}} Tage vor Ablauf erstellt.",
         "defaultFlow": "Der Standard-Ablauf",
         "planFlow": "Der Ablauf «{{conditions}}»",
         "openFlow": "Ablauf öffnen"
@@ -2000,7 +2000,7 @@
       "editFlowShort": "Kommunikationsfluss",
       "name": "Name",
       "paymentMethods": "Mögliche Zahlungsmethoden",
-      "paymentPeriodicities": "Zahlungsperiodizitäten",
+      "paymentPeriodicities": "Zahlungsintervalle",
       "paymentPeriodicity": {
         "biannual": "Halbjährlich",
         "monthly": "Monatlich",
@@ -2931,17 +2931,17 @@
         "noMemberPlan": "Ohne Abo-Plan",
         "warnings": {
           "noMemberPlan": "Der Abo-Plan dieses Ablaufs wurde gelöscht. Solange es diesen Ablauf gibt, wird keine automatische Mitteilung verschickt – lösche ihn.",
-          "matchesNothing": "Gilt für kein Abo: Es fehlt eine Zahlungsmethode, Periodizität oder Verlängerung.",
+          "matchesNothing": "Gilt für kein Abo: Es fehlt eine Zahlungsmethode, Laufzeit oder Verlängerung.",
           "notOffered": "Bietet der Abo-Plan nicht mehr an: {{values}}. Dieser Ablauf gilt nur noch für bereits bestehende Abos.",
-          "invoiceTooEarly": "Die Rechnungserstellung an Tag {{day}} ist zu früh für Abos mit der Periodizität «{{periodicity}}»: Ihre Rechnung wird erst {{days}} Tage vor Ablauf erstellt.",
-          "mailsTooEarly": "Tag {{mailDays}} liegt vor dem frühesten Tag für Abos mit der Periodizität «{{periodicity}}» ({{days}} Tage vor Ablauf): Sie erhalten diese Nachrichten nur, wenn ihre nächste Periode dann schon bezahlt ist."
+          "invoiceTooEarly": "Die Rechnungserstellung an Tag {{day}} ist zu früh für Abos mit der Laufzeit «{{periodicity}}»: Ihre Rechnung wird erst {{days}} Tage vor Ablauf erstellt.",
+          "mailsTooEarly": "Tag {{mailDays}} liegt vor dem frühesten Tag für Abos mit der Laufzeit «{{periodicity}}» ({{days}} Tage vor Ablauf): Sie erhalten diese Nachrichten nur, wenn ihre nächste Laufzeit dann schon bezahlt ist."
         }
       },
       "earliestDay": {
-        "byConditions": "Frühestens {{days}} Tage vor Abo-Ablauf: Dieser Ablauf gilt für Abos mit der Periodizität «{{periodicity}}», und eine Rechnung kann erst erstellt werden, wenn die laufende Periode begonnen hat.",
-        "byMemberPlans": "Frühestens {{days}} Tage vor Abo-Ablauf: Dieser Ablauf gilt für alle Abos ohne eigenen Ablauf, und die Periodizität «{{periodicity}}» wird angeboten von: {{memberPlans}}. Eine Rechnung kann erst erstellt werden, wenn die laufende Periode begonnen hat.",
-        "byRunningSubscriptions": "Frühestens {{days}} Tage vor Abo-Ablauf: Dieser Ablauf gilt für alle Abos ohne eigenen Ablauf, und es laufen noch Abos mit der Periodizität «{{periodicity}}». Eine Rechnung kann erst erstellt werden, wenn die laufende Periode begonnen hat.",
-        "nothingOffered": "Frühestens {{days}} Tage vor Abo-Ablauf, solange kein Abo-Plan eine Periodizität anbietet."
+        "byConditions": "Frühestens {{days}} Tage vor Abo-Ablauf: Der aktuelle Ablauf gilt für Abos mit der Laufzeit «{{periodicity}}». Ein noch früheres Rechnungsdatum würde die Dauer der Abo-Laufzeit übersteigen.",
+        "byMemberPlans": "Frühestens {{days}} Tage vor Abo-Ablauf: Der aktuell bearbeitete Ablauf ist der Standard-Ablauf für alle Abos, für die kein separater Ablauf definiert ist. Das frühest mögliche Rechnungsdatum orientiert sich daher an der kürzesten Laufzeit («{{periodicity}}»), welche von einem Abo-Plan angeboten wird ({{memberPlans}}). Ein noch früheres Rechnungsdatum würde die Dauer dessen Abo-Laufzeit übersteigen.",
+        "byRunningSubscriptions": "Frühestens {{days}} Tage vor Abo-Ablauf: Der aktuell bearbeitete Ablauf ist der Standard-Ablauf für alle Abos, für die kein separater Ablauf definiert ist. Das frühest mögliche Rechnungsdatum orientiert sich daher an der kürzesten Laufzeit eines noch laufenden Abos ({{periodicity}}). Ein noch früheres Rechnungsdatum würde die Dauer dessen Abo-Laufzeit übersteigen.",
+        "nothingOffered": "Frühestens {{days}} Tage vor Abo-Ablauf, solange kein Abo-Plan andere Laufzeiten anbietet."
       },
       "flow": "Ablauf",
       "planFlowDescription": "Dieser Ablauf ersetzt den Standard-Ablauf vollständig für die Abos seines Abo-Plans, welche zu den weiter unten definierten Filterkriterien passen.",
@@ -2964,7 +2964,7 @@
       "savedChange": "Änderung erfolgreich gespeichert",
       "add": "Hinzufügen",
       "paymentMethod": "Zahlungsmethode",
-      "periodicity": "Periodizität",
+      "periodicity": "Laufzeit",
       "autoRenewal": "Automatische Verlängerung?",
       "booleanFilter": {
         "true": "Ja",
@@ -2974,7 +2974,7 @@
       "deletePermanently": "Permanent löschen",
       "dropHere": "Hier ablegen",
       "filters": "Filter",
-      "filtersDescription": "Legt fest, für welche Abos dieser Ablauf gilt: Abo-Plan, Zahlungsmethode, Periodizität und automatische Verlängerung.",
+      "filtersDescription": "Legt fest, für welche Abos dieser Ablauf gilt: Abo-Plan, Zahlungsmethode, Laufzeit und automatische Verlängerung.",
       "filtersExample": "Nur Jahresabos, die per Kreditkarte bezahlt werden.",
       "subscriptionEvents": "Abo-Ereignisse",
       "subscriptionEventsDescription": "E-Mails, die sofort verschickt werden, wenn im Abo etwas passiert. Sie sind an kein Datum gebunden.",
@@ -3327,7 +3327,7 @@
       "noAutoRenew": "Abo läuft aus, keine automatische Erneuerung",
       "noDeactivation": "Keine Deaktivierung.",
       "paidUntil": "Bezahlt bis {{date}}",
-      "paymentPeriodicity": "Zahlungsperiodizität: {{paymentPeriodicity}}",
+      "paymentPeriodicity": "Zahlungsintervall: {{paymentPeriodicity}}",
       "periodAmount": "Betrag: {{amount}} {{currency}}",
       "periodCreatedAt": "Erstellt am {{date}}",
       "periodEndsAt": "bis {{date}}",
