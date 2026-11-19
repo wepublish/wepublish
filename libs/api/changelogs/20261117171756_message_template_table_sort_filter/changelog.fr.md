@@ -6,6 +6,7 @@ lead: La liste des modèles de message est désormais un tableau comme les autre
 - **Trier** par nom, usage, statut, description ou objet d’un clic sur l’en-tête de colonne. Un second clic inverse l’ordre.
 - Les **filtres** s’ouvrent avec le bouton « Filtres » : une recherche dans le nom, la description et l’objet, ainsi que l’usage, le statut (utilisé ou non) et le plan d’abonnement.
 - **Plans d’abonnement** est une nouvelle colonne. Elle indique les plans dont les messages automatiques envoient le modèle. Les messages du flux standard n’appartiennent à aucun plan et n’y figurent pas.
+- **Pièces jointes** est une nouvelle colonne. Elle indique les documents joints à un modèle. Un filtre restreint la liste aux modèles avec ou sans pièce jointe.
 - La liste affiche 20 modèles par page ; vous pouvez changer ce nombre en bas.
 - Avec « Colonnes », vous choisissez les colonnes affichées et leur ordre. Le nom mène au modèle.
 

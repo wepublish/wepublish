@@ -1596,6 +1596,11 @@
     },
     "mailTemplates": {
       "list": {
+        "attachments": "Anhänge",
+        "attachmentsFilter": {
+          "with": "Mit Anhang",
+          "without": "Ohne Anhang"
+        },
         "search": "Suchen",
         "channels": "Zustellkanäle",
         "letterLayout": "Briefpapier",

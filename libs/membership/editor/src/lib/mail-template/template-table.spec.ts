@@ -5,6 +5,8 @@ import {
   filterTemplates,
   layoutOptions,
   NO_APPENDIX,
+  WITH_ATTACHMENTS,
+  WITHOUT_ATTACHMENTS,
   pageOf,
   sortTemplates,
   TemplateRow,
@@ -21,6 +23,7 @@ const row = (overrides: Partial<TemplateRow> & { id: string }): TemplateRow =>
     letterLayoutName: null,
     letterAppendixName: null,
     memberPlans: [],
+    attachmentNames: [],
     ...overrides,
   }) as TemplateRow;
 
@@ -35,6 +38,7 @@ const welcome = row({
   letterLayoutName: 'Briefpapier Verlag',
   letterAppendixName: 'QR-Rechnung',
   memberPlans: [{ id: 'digital', name: 'Digital' }],
+  attachmentNames: ['Zahlschein', 'AGB'],
 });
 
 const invoice = row({
@@ -134,6 +138,20 @@ describe('filterTemplates', () => {
     ]);
   });
 
+  it('filters by whether a template has attachments', () => {
+    expect(
+      ids(filterTemplates(rows, { attachments: [WITH_ATTACHMENTS] }))
+    ).toEqual(['welcome']);
+    expect(
+      ids(filterTemplates(rows, { attachments: [WITHOUT_ATTACHMENTS] }))
+    ).toEqual(['invoice', 'login']);
+    expect(
+      filterTemplates(rows, {
+        attachments: [WITH_ATTACHMENTS, WITHOUT_ATTACHMENTS],
+      })
+    ).toEqual(rows);
+  });
+
   it('applies all filters together', () => {
     expect(
       ids(
@@ -204,6 +222,15 @@ describe('sortTemplates', () => {
       'welcome',
     ]);
     expect(sorted('description', 'desc')).toEqual([
+      'login',
+      'invoice',
+      'welcome',
+    ]);
+  });
+
+  it('sorts by the attachments as the cell lists them', () => {
+    expect(sorted('attachmentNames')).toEqual(['welcome', 'login', 'invoice']);
+    expect(sorted('attachmentNames', 'desc')).toEqual([
       'login',
       'invoice',
       'welcome',

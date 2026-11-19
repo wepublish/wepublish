@@ -62,6 +62,7 @@ import {
 } from '@wepublish/permissions';
 import {
   appendixOptions,
+  attachmentsText,
   DEFAULT_LAYOUT,
   filterTemplates,
   layoutOptions,
@@ -73,6 +74,8 @@ import {
   TEMPLATE_SORT_FIELDS,
   TemplateFilter,
   TemplateRow,
+  WITH_ATTACHMENTS,
+  WITHOUT_ATTACHMENTS,
 } from './template-table';
 import { VERSION_ORDER } from './template-versions';
 import { useLetterChannel } from './use-letter-channel';
@@ -275,6 +278,12 @@ function MailTemplateList() {
       render: row => row.letterAppendixName,
     },
     {
+      id: 'attachmentNames',
+      label: t('mailTemplates.list.attachments'),
+      width: 150,
+      render: row => attachmentsText(row),
+    },
+    {
       id: 'memberPlans',
       columnLabel: t('mailTemplates.list.memberPlans'),
       label: (
@@ -418,6 +427,16 @@ function MailTemplateList() {
           onChange={appendices => changeFilter({ appendices })}
         />
       )}
+
+      <MultiSelectFilter
+        label={t('mailTemplates.list.attachments')}
+        options={[WITH_ATTACHMENTS, WITHOUT_ATTACHMENTS].map(value => ({
+          value,
+          label: t(`mailTemplates.list.attachmentsFilter.${value}`),
+        }))}
+        value={filter.attachments ?? []}
+        onChange={attachments => changeFilter({ attachments })}
+      />
 
       <MultiSelectFilter
         label={t('mailTemplates.list.memberPlans')}

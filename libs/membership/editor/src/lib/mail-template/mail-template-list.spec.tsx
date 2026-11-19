@@ -19,6 +19,7 @@ const template = (overrides: Record<string, unknown>) => ({
   letterLayoutName: null,
   letterAppendixName: null,
   memberPlans: [],
+  attachmentNames: [],
   ...overrides,
 });
 
@@ -30,6 +31,7 @@ const templates = [
     letterLayoutName: 'Verlag',
     letterAppendixName: 'QR-Rechnung',
     memberPlans: [{ id: 'digital', name: 'Digital' }],
+    attachmentNames: ['Zahlschein', 'AGB'],
   }),
   template({ name: 'Invoice', subject: 'Apple', status: 'unused' }),
   template({ name: 'Renewal', subject: 'Mango', channels: ['mail', 'letter'] }),
@@ -195,6 +197,21 @@ describe('MailTemplateList', () => {
         'mailTemplates.list.letterLayoutDefault'
       )
     ).toBeNull();
+  });
+
+  it('lists the attachments of a template, with or without letters', () => {
+    (useLetterChannel as unknown as Mock).mockReturnValue({
+      paperLetters: false,
+      letterAvailable: false,
+    });
+
+    renderList();
+
+    const row = screen.getByRole('link', { name: 'Welcome' }).closest('tr');
+
+    expect(
+      within(row as HTMLElement).getByText('Zahlschein, AGB')
+    ).toBeTruthy();
   });
 
   it('leaves the letter columns out where letters are not available', () => {

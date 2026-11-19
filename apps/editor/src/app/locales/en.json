@@ -1597,6 +1597,11 @@
     "name": "Name",
     "mailTemplates": {
       "list": {
+        "attachments": "Attachments",
+        "attachmentsFilter": {
+          "with": "With attachments",
+          "without": "Without attachments"
+        },
         "search": "Search",
         "channels": "Delivery channels",
         "letterLayout": "Stationery",

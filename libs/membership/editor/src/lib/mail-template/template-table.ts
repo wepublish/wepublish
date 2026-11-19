@@ -14,6 +14,7 @@ export type TemplateFilter = {
   statuses?: string[];
   layouts?: string[];
   appendices?: string[];
+  attachments?: string[];
   memberPlans?: string[];
 };
 
@@ -24,6 +25,7 @@ export const TEMPLATE_FILTER_FIELDS = [
   'statuses',
   'layouts',
   'appendices',
+  'attachments',
   'memberPlans',
 ] as const;
 
@@ -32,6 +34,10 @@ export const DEFAULT_LAYOUT = '__default';
 
 /** Filter value for "letter without appendix". */
 export const NO_APPENDIX = '__none';
+
+/** Filter values for templates with and without attached documents. */
+export const WITH_ATTACHMENTS = 'with';
+export const WITHOUT_ATTACHMENTS = 'without';
 
 const hasLetter = (row: TemplateRow) =>
   row.channels.includes(MailChannel.Letter);
@@ -63,6 +69,10 @@ export const filterTemplates = (
       picked(filter.statuses, status => status === row.status) &&
       picked(filter.layouts, layout => layout === layoutOf(row)) &&
       picked(filter.appendices, appendix => appendix === appendixOf(row)) &&
+      picked(
+        filter.attachments,
+        value => (value === WITH_ATTACHMENTS) === !!row.attachmentNames.length
+      ) &&
       picked(filter.memberPlans, id =>
         row.memberPlans.some(plan => plan.id === id)
       )
@@ -93,6 +103,10 @@ export const memberPlanOptions = (rows: TemplateRow[]) =>
     ).values(),
   ].sort((a, b) => byText(a.name, b.name));
 
+/** The attachments of a row as its cell lists them. */
+export const attachmentsText = (row: TemplateRow) =>
+  row.attachmentNames.join(', ');
+
 // Templates something sends come first: they are the ones that matter.
 const STATUS_ORDER = ['ok', 'unused', 'error'];
 
@@ -104,6 +118,7 @@ export const TEMPLATE_SORT_FIELDS = [
   'status',
   'letterLayoutName',
   'letterAppendixName',
+  'attachmentNames',
 ];
 
 /** The texts the table shows where a row holds no text of its own. */
@@ -136,6 +151,8 @@ const sortValue = (
         : null;
     case 'letterAppendixName':
       return row.letterAppendixName ?? null;
+    case 'attachmentNames':
+      return attachmentsText(row) || null;
     default:
       return null;
   }

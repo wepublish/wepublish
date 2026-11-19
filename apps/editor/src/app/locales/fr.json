@@ -1596,6 +1596,11 @@
     },
     "mailTemplates": {
       "list": {
+        "attachments": "Pièces jointes",
+        "attachmentsFilter": {
+          "with": "Avec pièce jointe",
+          "without": "Sans pièce jointe"
+        },
         "search": "Rechercher",
         "channels": "Canaux de distribution",
         "letterLayout": "Papier à lettres",
