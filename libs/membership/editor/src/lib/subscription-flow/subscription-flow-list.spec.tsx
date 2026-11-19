@@ -490,8 +490,18 @@ describe('SubscriptionFlowPage', () => {
         )
       ).toBeTruthy();
       expect(
-        screen.getByText('subscriptionFlow.planFlowDescription')
+        screen.getByText(
+          'subscriptionFlow.planFlowDescriptionFor(Probe-Abo) subscriptionFlow.noFallback'
+        )
       ).toBeTruthy();
+    });
+
+    it('titles the page with the plan name alone, without an icon', () => {
+      renderPage();
+
+      expect(
+        screen.getByRole('heading', { level: 1 }).querySelector('svg')
+      ).toBeNull();
     });
 
     it('has no warning for a flow its plan fully offers', () => {
