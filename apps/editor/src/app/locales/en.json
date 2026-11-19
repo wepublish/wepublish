@@ -2922,11 +2922,11 @@
       "overview": {
         "back": "All automated messages",
         "title": "Messages for subscription flows",
-        "intro": "A flow decides which message goes out automatically for which subscription event. The default flow applies to all subscriptions. A member plan can have flows of its own for some of its subscriptions: such a flow replaces the default flow for those subscriptions completely.",
+        "intro": "A flow decides which message goes out automatically for which subscription event. The default flow applies to all subscriptions. A member plan can have flows of its own for some of its subscriptions: such a flow replaces the default flow for the affected subscriptions completely.",
         "flow": "Flow",
         "appliesTo": "Applies to",
         "defaultApplies": "All subscriptions without a flow of their own",
-        "subscriptions": "Subscriptions",
+        "subscriptions": "Affected subscriptions",
         "events": "Messages",
         "eventsValue": "{{sending}} of {{total}} events",
         "letterEvents": "Of these by letter",
@@ -2941,7 +2941,7 @@
         "warnings": {
           "noMemberPlan": "The member plan of this flow was deleted. As long as this flow exists, no automated message is sent – delete it.",
           "matchesNothing": "Applies to no subscription: a payment method, periodicity or renewal is missing.",
-          "notOffered": "No longer offered by the member plan: {{values}}. For these it only applies to existing subscriptions."
+          "notOffered": "No longer offered by the member plan: {{values}}. The flow only applies to existing subscriptions."
         }
       },
       "flow": "Flow",

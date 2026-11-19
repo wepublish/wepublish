@@ -2921,11 +2921,11 @@
       "overview": {
         "back": "Tous les messages automatiques",
         "title": "Messages des flux d’abonnement",
-        "intro": "Un flux définit quel message est envoyé automatiquement pour quel événement d’abonnement. Le flux standard vaut pour tous les abonnements. Un plan d’abonnement peut avoir ses propres flux pour certains abonnements : un tel flux remplace entièrement le flux standard pour ces abonnements.",
+        "intro": "Un flux définit quel message est envoyé automatiquement pour quel événement d’abonnement. Le flux standard vaut pour tous les abonnements. Un plan d’abonnement peut avoir ses propres flux pour certains abonnements : un tel flux remplace entièrement le flux standard pour les abonnements concernés.",
         "flow": "Flux",
         "appliesTo": "S’applique à",
         "defaultApplies": "Tous les abonnements sans flux propre",
-        "subscriptions": "Abonnements",
+        "subscriptions": "Abonnements concernés",
         "events": "Messages",
         "eventsValue": "{{sending}} événements sur {{total}}",
         "letterEvents": "Dont par lettre",
@@ -2940,7 +2940,7 @@
         "warnings": {
           "noMemberPlan": "Le plan d’abonnement de ce flux a été supprimé. Tant que ce flux existe, aucun message automatique n’est envoyé – supprimez-le.",
           "matchesNothing": "Ne s’applique à aucun abonnement : il manque un moyen de paiement, une périodicité ou un renouvellement.",
-          "notOffered": "N’est plus proposé par le plan d’abonnement : {{values}}. Pour ces valeurs, il ne s’applique plus qu’aux abonnements existants."
+          "notOffered": "N’est plus proposé par le plan d’abonnement : {{values}}. Le flux ne s’applique plus qu’aux abonnements existants."
         }
       },
       "flow": "Flux",
