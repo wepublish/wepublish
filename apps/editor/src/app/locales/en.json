@@ -3034,7 +3034,7 @@
       "title": "Messages for account & login events",
       "sectionDescription": "Emails around the user account. They are triggered by something the person does – no matter whether they have a subscription.",
       "sectionExample": "Someone registers → the welcome email goes out right away.",
-      "sendTest": "Send test to me",
+      "sendTest": "Send test email to me",
       "testSent": "Test email sent to you",
       "columns": {
         "event": "Event type",
@@ -3060,8 +3060,8 @@
           "example": "“Log in with a single click.”"
         },
         "password_reset": {
-          "userAction": "Clicks “Forgot password”",
-          "description": "Goes out when a person clicks “Forgot password”. The email has to contain the link for setting a new password.",
+          "userAction": "An admin or author clicks “Forgot password” on the editor login",
+          "description": "Goes out when someone clicks “Forgot password” on the editor login – it exists only there, not on the website. So it concerns admins, authors and other editor users. The email must contain the link for setting a new password.",
           "example": "“Set a new password here.”"
         },
         "email_change": {

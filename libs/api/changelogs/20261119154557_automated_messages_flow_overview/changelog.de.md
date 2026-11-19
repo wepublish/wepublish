@@ -7,7 +7,7 @@ lead: «Automatische Mitteilungen» öffnet neu eine Liste aller Abo-Abläufe, d
 - **Eine Seite pro Ablauf.** Ein Klick auf einen Ablauf öffnet seine Ereignisse und seine Zeitleiste. Die Seite eines Ablaufs für einen Abo-Plan weist darauf hin, dass er den Standard-Ablauf für seine Abos vollständig ersetzt: Ein Ereignis ohne Vorlage verschickt nichts.
 - **Hinweise.** Die Liste und die Seite eines Ablaufs zeigen, wenn ein Ablauf weniger tut, als seine Bedingungen sagen: wenn der Abo-Plan eine Zahlungsmethode oder Periodizität nicht mehr anbietet (der Ablauf gilt dafür nur noch für bestehende Abos), wenn er für kein Abo gilt, oder wenn sein Abo-Plan gelöscht wurde.
 - **Neuer Ablauf.** Der Knopf «Neuer Ablauf» fragt nach Abo-Plan und Bedingungen und öffnet den neuen Ablauf. Löschen lassen sich Abläufe in der Liste oder auf ihrer Seite.
-- **Mitteilungen zu Konto- & Login-Ereignissen** (Registrierung, Login-Link, Passwort zurücksetzen, geänderte E-Mail-Adresse) stehen neu unter der Liste statt neben dem Standard-Ablauf, als Tabelle: Ereignis-Typ, die Aktion, die es auslöst, die Mitteilungsvorlage und «Test an mich».
+- **Mitteilungen zu Konto- & Login-Ereignissen** (Registrierung, Login-Link, Passwort zurücksetzen, geänderte E-Mail-Adresse) stehen neu unter der Liste statt neben dem Standard-Ablauf, als Tabelle: Ereignis-Typ, die Aktion, die es auslöst, die Mitteilungsvorlage und «Test-E-Mail an mich».
 - In der Liste der Abo-Pläne öffnet der Link in der Spalte «Kommunikationsfluss» die Übersicht, eingegrenzt auf diesen Plan. Alte Links und Lesezeichen funktionieren weiterhin.
 
 Daran, welche Mitteilungen verschickt werden, ändert sich nichts.
