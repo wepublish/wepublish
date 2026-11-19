@@ -309,8 +309,8 @@ placeholder into, per paragraph, xml-escapes values, turns their newlines into
 codes and custom-xml content controls are not filled), converts it through
 Gotenberg's LibreOffice route (`PdfRenderer.convertDocument`; Cloudflare
 refuses, `canConvertDocuments()` says so) and attaches the pdf. A letter prints
-them after its pages and before the QR appendix (A4 only, each on its own sheet
-in duplex). The work is `DocumentAttachmentRenderer` (`libs/letter/api`),
+them after its pages and before the appendix or the sender's document above (A4
+only, each on its own sheet in duplex). The work is `DocumentAttachmentRenderer` (`libs/letter/api`),
 handed to `MailContext` through the `MAIL_ATTACHMENT_RENDERER` token the way
 `LETTER_SENDER` is; while `paper-letters` is off it attaches nothing. An
 attachment that cannot be rendered fails its mail with a `MailAttachmentError`

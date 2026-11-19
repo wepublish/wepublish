@@ -117,25 +117,20 @@ describe('BrevoMailProvider', () => {
       });
     });
 
-    it('sends attachments base64 encoded, as Brevo takes them', async () => {
+    it('sends each attachment base64-encoded under its file name', async () => {
+      const content = Buffer.from('%PDF-1.7');
+
       await (
         await makeProvider()
       ).sendMail({
         ...sendProps,
         attachments: [
-          {
-            filename: 'invoice.pdf',
-            contentType: 'application/pdf',
-            content: Buffer.from('%PDF-1.7'),
-          },
+          { filename: 'Vertrag.pdf', contentType: 'application/pdf', content },
         ],
       });
 
       expect(JSON.parse(calls[0].init.body as string).attachment).toEqual([
-        {
-          name: 'invoice.pdf',
-          content: Buffer.from('%PDF-1.7').toString('base64'),
-        },
+        { name: 'Vertrag.pdf', content: content.toString('base64') },
       ]);
     });
 
