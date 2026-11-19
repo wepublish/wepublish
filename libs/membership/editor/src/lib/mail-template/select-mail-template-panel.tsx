@@ -40,6 +40,7 @@ import { templatesForChannel } from './template-versions';
 import { useLetterChannel } from './use-letter-channel';
 
 const Filters = styled.div`
+  flex-shrink: 0;
   display: grid;
   gap: ${({ theme }) => theme.spacing(1)};
   justify-items: start;
@@ -48,6 +49,24 @@ const Filters = styled.div`
   & > :first-child {
     width: 100%;
   }
+`;
+
+// The filters and the pagination stay put; only the table between them
+// scrolls, so paging is in reach however many rows a page has.
+const Body = styled(DrawerBody)`
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+`;
+
+const TableArea = styled.div`
+  flex: 1;
+  /* On a very low window the drawer body scrolls instead. */
+  min-height: 200px;
+`;
+
+const Paging = styled.div`
+  flex-shrink: 0;
 `;
 
 // The stationery and its extra pages matter when a template is written, not
@@ -127,6 +146,13 @@ export function SelectMailTemplatePanel({
     onClose();
   };
 
+  // What a click on a row or its button does; the current template says
+  // that choosing it changes nothing.
+  const selectHint = (row: TemplateRow) =>
+    row.id === selectedId ?
+      t('mailTemplateSelect.chooser.selectCurrent')
+    : t('mailTemplateSelect.chooser.select');
+
   const columns: DataTableColumn<TemplateRow>[] = [
     ...useTemplateColumns({
       paperLetters,
@@ -139,10 +165,10 @@ export function SelectMailTemplatePanel({
       align: 'center',
       fixed: true,
       render: row => (
-        <IconButtonTooltip caption={t('mailTemplateSelect.chooser.select')}>
+        <IconButtonTooltip caption={selectHint(row)}>
           <IconButton
             size="small"
-            aria-label={t('mailTemplateSelect.chooser.select')}
+            aria-label={selectHint(row)}
             onClick={event => {
               // The row chooses on click as well.
               event.stopPropagation();
@@ -184,7 +210,7 @@ export function SelectMailTemplatePanel({
         </DrawerActions>
       </DrawerHeader>
 
-      <DrawerBody>
+      <Body>
         <Filters>
           <TemplateFilters
             filter={filter}
@@ -211,30 +237,36 @@ export function SelectMailTemplatePanel({
           )}
         </Filters>
 
-        <DataTable
-          data={rows}
-          loading={loading && !data}
-          getRowId={row => row.id}
-          columns={columns}
-          onRowClick={row => choose(row.id)}
-          rowClassName={row =>
-            row.id === selectedId ? 'highlighted-row' : undefined
-          }
-          sortable={TEMPLATE_SORT_FIELDS}
-          sortColumn={sort.field}
-          sortOrder={sort.order}
-          onSort={(field, order) => {
-            setSort({ field, order });
-            setPage(1);
-          }}
-          emptyMessage={t('mailTemplates.list.noMatch')}
-        />
+        <TableArea data-table-area>
+          <DataTable
+            data={rows}
+            loading={loading && !data}
+            getRowId={row => row.id}
+            columns={columns}
+            onRowClick={row => choose(row.id)}
+            rowTitle={selectHint}
+            maxHeight="100%"
+            rowClassName={row =>
+              row.id === selectedId ? 'highlighted-row' : undefined
+            }
+            sortable={TEMPLATE_SORT_FIELDS}
+            sortColumn={sort.field}
+            sortOrder={sort.order}
+            onSort={(field, order) => {
+              setSort({ field, order });
+              setPage(1);
+            }}
+            emptyMessage={t('mailTemplates.list.noMatch')}
+          />
+        </TableArea>
 
-        <Pagination
-          state={{ page, setPage, limit, setLimit }}
-          totalCount={matching.length}
-        />
-      </DrawerBody>
+        <Paging>
+          <Pagination
+            state={{ page, setPage, limit, setLimit }}
+            totalCount={matching.length}
+          />
+        </Paging>
+      </Body>
 
       <DrawerFooter>
         {/* In another tab: the page behind this drawer stays as it is. */}
@@ -246,7 +278,7 @@ export function SelectMailTemplatePanel({
           sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.5 }}
         >
           <MdAdd aria-hidden />
-          {t('mailTemplates.create')}
+          {t('mailTemplateSelect.chooser.create')}
         </MuiLink>
       </DrawerFooter>
     </>

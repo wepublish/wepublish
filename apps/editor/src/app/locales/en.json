@@ -1937,7 +1937,9 @@
       "chooser": {
         "title": "Choose a template: {{event}}",
         "select": "Choose this template",
-        "none": "Send no message"
+        "selectCurrent": "Choose this template (already chosen)",
+        "none": "Send no message",
+        "create": "Create new template"
       },
       "channels": "Delivery channels",
       "noLetterVersion": "This template has no letter version. Add one in the template so people on the letter channel get this message printed; until then they get the email.",
