@@ -8,7 +8,6 @@ import { DRAWER_WIDTHS } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdArrowDropDown, MdUnsubscribe } from 'react-icons/md';
-import { formatTemplateLabel } from './mail-placeholders';
 import { SelectMailTemplatePanel } from './select-mail-template-panel';
 
 // Looks like the select it replaces, so the rows it sits in keep their shape.
@@ -66,7 +65,7 @@ export type MailTemplateFieldProps = {
   /** The template chosen now. */
   value?: string | null;
   /** The templates there are, to show the chosen one by name. */
-  templates: Pick<TinyMailTemplateFragment, 'id' | 'name' | 'context'>[];
+  templates: Pick<TinyMailTemplateFragment, 'id' | 'name'>[];
   /** The purpose the chooser starts narrowed to. */
   purpose?: MailTemplateContext;
   /** What the template is for, e.g. the event; names the field. */
@@ -91,10 +90,8 @@ export function MailTemplateField({
   const [open, setOpen] = useState(false);
 
   const selected = templates.find(({ id }) => id === value);
-  const shown =
-    selected ?
-      formatTemplateLabel(selected.name, selected.context, (k, f) => t(k, f))
-    : t('mailTemplateSelect.noMailSentSelectNow');
+  // The name alone: the purpose is a column and a filter in the chooser.
+  const shown = selected?.name ?? t('mailTemplateSelect.noMailSentSelectNow');
 
   return (
     <>
