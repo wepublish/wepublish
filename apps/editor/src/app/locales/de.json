@@ -2923,13 +2923,13 @@
     },
     "subscriptionFlow": {
       "overview": {
-        "back": "Alle automatischen Mitteilungen",
+        "back": "Alle Abläufe & automatischen Mitteilungen",
         "title": "Mitteilungen zu Abo-Abläufen",
-        "intro": "Ein Ablauf legt fest, welche Mitteilung bei welchem Abo-Ereignis automatisch verschickt wird. Der Standard-Ablauf gilt für alle Abos. Ein Abo-Plan kann eigene Abläufe für bestimmte Abos haben: Ein solcher Ablauf ersetzt den Standard-Ablauf für diese Abos vollständig.",
+        "intro": "Ein Ablauf legt fest, welche Mitteilung bei welchem Abo-Ereignis automatisch verschickt wird. Der Standard-Ablauf gilt für alle Abos. Ein Abo-Plan kann eigene Abläufe für bestimmte Abos haben: Ein solcher Ablauf ersetzt den Standard-Ablauf für die betroffenen Abos vollständig.",
         "flow": "Ablauf",
         "appliesTo": "Gilt für",
         "defaultApplies": "Alle Abos ohne eigenen Ablauf",
-        "subscriptions": "Abos",
+        "subscriptions": "Betroffene Abos",
         "events": "Mitteilungen",
         "eventsValue": "{{sending}} von {{total}} Ereignissen",
         "letterEvents": "Davon per Brief",
@@ -2944,11 +2944,13 @@
         "warnings": {
           "noMemberPlan": "Der Abo-Plan dieses Ablaufs wurde gelöscht. Solange es diesen Ablauf gibt, wird keine automatische Mitteilung verschickt – lösche ihn.",
           "matchesNothing": "Gilt für kein Abo: Es fehlt eine Zahlungsmethode, Periodizität oder Verlängerung.",
-          "notOffered": "Bietet der Abo-Plan nicht mehr an: {{values}}. Gilt dafür nur noch für bestehende Abos."
+          "notOffered": "Bietet der Abo-Plan nicht mehr an: {{values}}. Dieser Ablauf gilt nur noch für bereits bestehende Abos."
         }
       },
       "flow": "Ablauf",
-      "planFlowDescription": "Dieser Ablauf ersetzt den Standard-Ablauf für die Abos dieses Abo-Plans, auf die seine Filter passen. Ereignisse ohne Vorlage verschicken nichts – der Standard-Ablauf springt nicht ein.",
+      "planFlowDescription": "Dieser Ablauf ersetzt den Standard-Ablauf vollständig für die Abos seines Abo-Plans, welche zu den weiter unten definierten Filterkriterien passen.",
+      "planFlowDescriptionFor": "Dieser Ablauf ersetzt den Standard-Ablauf vollständig für die Abos des Abo-Plans «{{memberPlan}}», welche zu den weiter unten definierten Filterkriterien passen.",
+      "noFallback": "Ereignisse ohne Vorlage verschicken nichts – der Standard-Ablauf springt nicht ein.",
       "notFound": "Diesen Ablauf gibt es nicht (mehr).",
       "subscribe": "Abo abgeschlossen",
       "renewal_success": "Verlängerung erfolgreich",

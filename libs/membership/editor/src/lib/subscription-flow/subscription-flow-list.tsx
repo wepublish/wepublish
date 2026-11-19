@@ -22,7 +22,7 @@ import {
 import { createCheckedPermissionComponent } from '@wepublish/ui/editor';
 import { createContext, JSX, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdAltRoute, MdArrowBack, MdCelebration, MdTune } from 'react-icons/md';
+import { MdAltRoute, MdArrowBack, MdCelebration } from 'react-icons/md';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { DEFAULT_MUTATION_OPTIONS } from '../common';
 import { usePaperLetterFlow } from '../delivery-mode/use-paper-letter-flow';
@@ -72,6 +72,11 @@ export interface NonUserActionInterval extends SubscriptionIntervalFragment {
 const PageIntro = styled.div`
   display: grid;
   gap: 6px;
+
+  /* The way back stands apart from the title it leads away from. */
+  > a:first-of-type {
+    margin-bottom: ${({ theme }) => theme.spacing(2)};
+  }
   max-width: 880px;
 
   h2 {
@@ -230,8 +235,6 @@ function SubscriptionFlow() {
             variant="h2"
             component="h1"
           >
-            <MdTune aria-hidden />
-
             {subscriptionFlow.default ?
               t('subscriptionFlow.defaultFlow')
             : subscriptionFlow.memberPlan ?
@@ -256,7 +259,15 @@ function SubscriptionFlow() {
           >
             {subscriptionFlow.default ?
               t('subscriptionFlow.defaultFlowDescription')
-            : t('subscriptionFlow.planFlowDescription')}
+            : [
+                subscriptionFlow.memberPlan ?
+                  t('subscriptionFlow.planFlowDescriptionFor', {
+                    memberPlan: subscriptionFlow.memberPlan.name,
+                  })
+                : t('subscriptionFlow.planFlowDescription'),
+                t('subscriptionFlow.noFallback'),
+              ].join(' ')
+            }
           </Typography>
 
           {warnings.map(warning => (

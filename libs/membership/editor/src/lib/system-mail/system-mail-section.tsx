@@ -56,6 +56,15 @@ const Heading = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing(2)};
 `;
 
+// At most three lines, then cut off; the title holds the whole text.
+const UserAction = styled.span`
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  white-space: normal;
+`;
+
 const EventName = styled.span`
   display: inline-flex;
   align-items: center;
@@ -135,7 +144,7 @@ function SystemMailSection() {
     {
       id: 'event',
       label: t('systemMails.columns.event'),
-      width: 240,
+      width: 190,
       render: systemMail => {
         const eventKey = systemMail.event.toLowerCase();
 
@@ -154,9 +163,16 @@ function SystemMailSection() {
     {
       id: 'userAction',
       label: t('systemMails.columns.userAction'),
-      width: 420,
-      render: systemMail =>
-        t(`systemMails.eventInfo.${systemMail.event.toLowerCase()}.userAction`),
+      // The column that gives way when the window gets narrow: the template
+      // select and the test button keep their width, this text wraps.
+      width: 200,
+      render: systemMail => {
+        const userAction = t(
+          `systemMails.eventInfo.${systemMail.event.toLowerCase()}.userAction`
+        );
+
+        return <UserAction title={userAction}>{userAction}</UserAction>;
+      },
     },
     {
       id: 'template',
@@ -179,7 +195,7 @@ function SystemMailSection() {
     {
       id: 'action',
       label: t('action'),
-      width: 190,
+      width: 220,
       fixed: true,
       render: systemMail => (
         <PermissionControl
