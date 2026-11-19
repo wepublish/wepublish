@@ -157,10 +157,10 @@ describe('RegistrationForm', () => {
     ],
   ] as const)(
     'renders only the name, the email and the fields %j',
-    (fields, expected) => {
+    async (fields, expected) => {
       renderRegistrationForm({ fields: [...fields] });
 
-      expect(visibleFieldLabels()).toEqual(expected);
+      await waitFor(() => expect(visibleFieldLabels()).toEqual(expected));
     }
   );
 

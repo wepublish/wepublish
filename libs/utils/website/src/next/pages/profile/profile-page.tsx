@@ -28,9 +28,13 @@ import { ProfileSubscriptions } from './profile-subscriptions';
 type ProfilePageProps = Omit<
   ComponentProps<typeof PersonalDataFormContainer>,
   ''
-> & { className?: string };
+> & { className?: string; subscribeAnotherUrl?: string };
 
-function ProfilePage({ className, ...props }: ProfilePageProps) {
+function ProfilePage({
+  className,
+  subscribeAnotherUrl,
+  ...props
+}: ProfilePageProps) {
   const {
     elements: { Alert },
   } = useWebsiteBuilder();
@@ -68,7 +72,10 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
 
       {confirmError && <Alert severity="error">{confirmError.message}</Alert>}
 
-      <ProfileSubscriptions className={className} />
+      <ProfileSubscriptions
+        className={className}
+        subscribeAnotherUrl={subscribeAnotherUrl}
+      />
 
       <ProfileDetails
         className={className}

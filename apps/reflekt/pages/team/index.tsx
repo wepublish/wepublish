@@ -8,6 +8,7 @@ import {
   AuthorListDocument,
   AuthorSort,
   NavigationListDocument,
+  PageDocument,
   PeerProfileDocument,
   SortOrder,
   addClientCacheToProps,
@@ -109,6 +110,12 @@ export const getStaticProps: GetStaticProps = async () => {
     }),
     client.query({
       query: NavigationListDocument,
+    }),
+    client.query({
+      query: PageDocument,
+      variables: {
+        slug: 'footer',
+      },
     }),
     client.query({
       query: PeerProfileDocument,

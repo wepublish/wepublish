@@ -10,6 +10,7 @@ import {
   addClientCacheToProps,
   getApiClient,
   NavigationListDocument,
+  PageDocument,
   PeerProfileDocument,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
@@ -63,6 +64,12 @@ export const getStaticProps: GetStaticProps = async () => {
   await Promise.all([
     client.query({
       query: NavigationListDocument,
+    }),
+    client.query({
+      query: PageDocument,
+      variables: {
+        slug: 'footer',
+      },
     }),
     client.query({
       query: PeerProfileDocument,

@@ -25,6 +25,7 @@ import {
   ReflektUnorderedList,
 } from './components/reflekt-lists';
 import { ReflektLoginForm } from './components/reflekt-login-form';
+import { ReflektMemberPlanOfferPicker } from './components/reflekt-memberplan-offer-picker';
 import { ReflektMemberPlanPicker } from './components/reflekt-memberplan-picker';
 import { ReflektMemberPlanItem } from './components/reflekt-memberplan-picker-item';
 import { ReflektModal } from './components/reflekt-modal';
@@ -75,6 +76,7 @@ export const reflektTenant: WebsiteTenantConfig = {
     Upgrade: ReflektUpgrade,
     GoodiePicker: ReflektGoodiePicker,
     MemberPlanPicker: ReflektMemberPlanPicker,
+    MemberPlanOfferPicker: ReflektMemberPlanOfferPicker,
     MemberPlanItem: ReflektMemberPlanItem,
     UserForm: ReflektUserForm,
     LoginForm: ReflektLoginForm,

@@ -538,11 +538,11 @@ describe('Subscribe', () => {
       }
     );
 
-    it('asks for the birthday when configured', () => {
+    it('asks for the birthday when configured', async () => {
       renderSubscribe({ fields: ['birthday'] });
 
       expect(
-        screen.getByRole('group', { name: t('user.form.birthday') })
+        await screen.findByRole('group', { name: t('user.form.birthday') })
       ).toBeInTheDocument();
     });
 
