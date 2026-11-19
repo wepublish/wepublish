@@ -60,8 +60,10 @@ vi.mock('@wepublish/ui/editor', async importOriginal => ({
   ),
 }));
 
+const letterChannel = { paperLetters: true, letterAvailable: true };
+
 vi.mock('../mail-template/use-letter-channel', () => ({
-  useLetterChannel: () => ({ paperLetters: true, letterAvailable: true }),
+  useLetterChannel: () => letterChannel,
 }));
 
 vi.mock('../delivery-mode/use-paper-letter-flow', () => ({
@@ -101,18 +103,28 @@ const answer = (name: string) => {
               name: 'Rechnung',
               context: 'custom',
               channels: ['mail', 'letter'],
+              attachmentIds: [],
             },
             {
               id: 'tpl-2',
               name: 'Erinnerung',
               context: 'custom',
               channels: ['mail'],
+              attachmentIds: [],
             },
             {
               id: 'tpl-3',
               name: 'Begleitbrief',
               context: 'custom',
               channels: ['letter'],
+              attachmentIds: [],
+            },
+            {
+              id: 'tpl-4',
+              name: 'Vertrag',
+              context: 'custom',
+              channels: ['mail'],
+              attachmentIds: ['terms', 'contract'],
             },
           ],
         },
@@ -134,6 +146,17 @@ const answer = (name: string) => {
       return {
         data: { mailTemplateMissingPlaceholders: [] },
         refetch: vi.fn(async () => undefined),
+      };
+    case 'DocumentList':
+      return {
+        data: {
+          documents: {
+            nodes: [
+              { id: 'contract', title: 'Vertrag 2026', filename: 'vertrag' },
+              { id: 'terms', title: null, filename: 'agb.docx' },
+            ],
+          },
+        },
       };
     case 'MailSendRecipients':
       return {
@@ -433,6 +456,95 @@ describe('MailSendPage (accessibility)', () => {
     renderPage();
 
     expect(screen.queryByRole('alert')).toBeNull();
+  });
+
+  it('names the documents the chosen template attaches, in their order', () => {
+    renderPage();
+
+    fireEvent.mouseDown(screen.getAllByRole('combobox')[0]);
+    fireEvent.click(screen.getByRole('option', { name: 'Vertrag' }));
+
+    expect(
+      screen.getByText(
+        `mailSend.attachments:${JSON.stringify({
+          count: 2,
+          names: 'agb.docx, Vertrag 2026',
+        })}`
+      )
+    ).toBeTruthy();
+  });
+
+  // Nothing is attached while the feature is off, whatever the template has.
+  it('names no attachments while the medium has them switched off', () => {
+    letterChannel.paperLetters = false;
+    letterChannel.letterAvailable = false;
+
+    try {
+      renderPage();
+
+      fireEvent.mouseDown(screen.getAllByRole('combobox')[0]);
+      fireEvent.click(screen.getByRole('option', { name: 'Vertrag' }));
+
+      expect(screen.queryByText(/^mailSend\.attachments/)).toBeNull();
+    } finally {
+      letterChannel.paperLetters = true;
+      letterChannel.letterAvailable = true;
+    }
+  });
+
+  it('previews the attachments the mail carries for the recipient', () => {
+    queries.mockImplementation((name: string) =>
+      name === 'MailSendPreview' ?
+        {
+          data: {
+            mailSendPreview: {
+              subject: 'Ihr Vertrag',
+              html: '<p>Hallo</p>',
+              pdf: null,
+              attachments: [{ filename: 'Vertrag 2026.pdf', pdf: 'JVBERi0=' }],
+              recipient: null,
+            },
+          },
+          loading: false,
+          refetch: vi.fn(async () => undefined),
+        }
+      : answer(name)
+    );
+    renderPage();
+    goToAudience();
+    fireEvent.click(screen.getByRole('button', { name: /mailSend\.next/ }));
+
+    expect(
+      screen.getByRole('button', { name: 'Vertrag 2026.pdf' })
+    ).toBeTruthy();
+  });
+
+  // Its options are long (address · member plan); shrunk to its content the
+  // picker shows only a sliver of the chosen one.
+  it('lets the recipient picker take the width beside its label', () => {
+    renderPage();
+    goToAudience();
+    fireEvent.click(screen.getByRole('button', { name: /mailSend\.next/ }));
+
+    const picker = screen
+      .getByRole('combobox', { name: 'mailSend.preview.recipient' })
+      .closest<HTMLElement>('.MuiAutocomplete-root');
+    const label = screen.getByText('mailSend.preview.recipient');
+
+    expect(picker?.style.flexGrow).toBe('1');
+    expect(label.style.flexShrink).toBe('0');
+  });
+
+  it('looks no documents up for a template without attachments', () => {
+    renderPage();
+    pickTemplate();
+
+    expect(screen.queryByText(/^mailSend\.attachments/)).toBeNull();
+    expect(
+      queries.mock.calls.filter(
+        ([name, options]) => name === 'DocumentList' && !options?.skip
+      )
+    ).toEqual([]);
   });
 
   it('labels the template select of the first step', () => {

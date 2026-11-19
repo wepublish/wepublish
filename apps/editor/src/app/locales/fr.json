@@ -1663,6 +1663,10 @@
         "letterAppendix": "Pages supplémentaires (PDF)",
         "letterAppendixNone": "Aucune",
         "letterAppendixHelp": "Les pages sont ajoutées à la fin de la lettre. Choisissez parmi les fichiers PDF téléversés sous «Documents».",
+        "attachments": "Pièces jointes (Word)",
+        "attachmentsHelp": "Documents Word (.docx) des «Documents», 5 au plus et 15 Mo au total. Ils sont complétés avec les mêmes espaces réservés que l'e-mail (dans le texte et les adresses des liens, pas dans les champs), joints en PDF et envoyés dans cet ordre avec chaque e-mail de ce modèle, y compris les e-mails d'abonnement automatiques. Les e-mails système (connexion, mot de passe) ne peuvent pas avoir de pièces jointes. Une lettre les imprime après ses pages (A4). Si une pièce jointe ne peut pas être créée, l'e-mail n'est pas envoyé. Un document personnel est converti pour chaque destinataire, l'un après l'autre, et les PDF joints font plus facilement classer un e-mail comme spam : en joindre peu et de petits. Nécessite Gotenberg comme moteur PDF.",
+        "attachmentsNone": "Aucune",
+        "attachmentsNoDocuments": "Aucun document Word (.docx) dans «Documents»",
         "letterPreviewTitle": "Aperçu de la lettre",
         "selectMailType": "Veuillez d’abord choisir une utilisation.",
         "selectMailTypePlaceholder": "Choisir une utilisation …",
@@ -1707,6 +1711,8 @@
         "desktop": "Ordinateur",
         "tablet": "Tablette",
         "mobile": "Mobile",
+        "attachments": "Pièces jointes",
+        "close": "Fermer",
         "linkTitle": "Lien",
         "linkUrl": "URL",
         "linkText": "Texte du lien",
@@ -1988,6 +1994,7 @@
       "paymentProviderStatusInfo": "✅ signifie que tous les moyens de paiement de ce plan sont reliés à un prestataire de paiement. ❌ signifie qu’au moins un moyen de paiement n’a pas de prestataire et que les lecteur·rice·s ne peuvent donc pas payer avec."
     },
     "deliveryMode": {
+      "viaApiKey": "via la clé API «{{key}}»",
       "panelTitle": "Canal de distribution",
       "channel": {
         "mail": "E-mail",
@@ -4547,6 +4554,8 @@
       },
       "missingPlaceholders": "Attention : ces champs ne seront pas remplis pour ces destinataires : {{placeholders}}",
       "createTemplate": "Nouveau modèle",
+      "attachments_one": "Chaque e-mail contient {{count}} pièce jointe en PDF : {{names}}",
+      "attachments_other": "Chaque e-mail contient {{count}} pièces jointes en PDF : {{names}}",
       "editTemplate": "Modifier le modèle",
       "showRecipients": "Afficher les destinataires",
       "recipientList": {
@@ -5158,6 +5167,7 @@
         "failed": "Échoué",
         "filterBySession": "Filtrer par cette session",
         "tokenActor": "Jeton API : {{name}}",
+        "tokenActorOnBehalf": "Clé API : {{name}} · {{user}}",
         "impersonatedActor": "{{impersonator}} en tant que {{actor}}",
         "unknownActor": "Inconnu",
         "notSupported": "Cette installation ne tient pas de journal d’audit. Les entrées apparaîtront une fois la migration appliquée.",
@@ -5323,6 +5333,7 @@
       "noLayouts": "Pas encore de papier à lettres. Créez-en un pour que les lettres aient un en-tête et un pied de page."
     },
     "printIssues": {
+      "viaApiKey": "via la clé API «{{key}}»",
       "title": "Numéros imprimés",
       "intro": "Chaque numéro imprimé avec ses listes d’impression : qui reçoit un exemplaire se décide à la date de parution – depuis we.publish et bexio. Chaque liste d’impression livrée à l’imprimerie compte dans les numéros payés par les lecteur·trice·s.",
       "create": "Nouveau numéro",
@@ -5740,6 +5751,15 @@
         "lastUsed": "Dernière utilisation",
         "never": "Jamais utilisée",
         "status": "Statut",
+        "blocked": "Bloquée",
+        "blockedReason": {
+          "CreatorMissing": "La personne qui a créé cette clé n’existe plus. La clé ne fonctionne plus ; créez-en une nouvelle.",
+          "CreatorInactive": "La personne qui a créé cette clé est désactivée. La clé ne fonctionne pas tant qu’elle le reste.",
+          "CreatorMayNotCreateApiTokens": "La personne qui a créé cette clé ne peut plus créer de clés API. La clé ne fonctionne pas tant que c’est le cas."
+        },
+        "missingScopes_one": "{{count}} droit manquant",
+        "missingScopes_other": "{{count}} droits manquants",
+        "missingScopesHelp": "La personne qui a créé cette clé n’a plus ces droits. Les appels qui en ont besoin sont refusés : {{scopes}}",
         "active": "Active",
         "revoked": "Révoquée",
         "revoke": "Révoquer",
@@ -5750,7 +5770,7 @@
         "expiresInDays_other": "Expire dans {{count}} jours",
         "expiresDate": "{{expiresDate, ccc PP p}}",
         "owner": "Propriétaire",
-        "ownerUnknown": "Personne supprimée",
+        "ownerUnknown": "Utilisateur supprimé",
         "filterByOwner": "Filtrer par propriétaire",
         "anyStatus": "Tout statut"
       },

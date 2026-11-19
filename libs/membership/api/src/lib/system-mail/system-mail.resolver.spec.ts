@@ -1,3 +1,5 @@
+import { AuthSessionType } from '@wepublish/authentication/api';
+import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaClient, User, UserEvent, UserFlowMail } from '@prisma/client';
 import { SystemMailResolver } from './system-mail.resolver';
@@ -31,6 +33,11 @@ const prismaServiceMock = {
     findUnique: vi.fn(async (): Promise<{ id: string } | null> => ({
       id: 'variant-1',
     })),
+  },
+  mailTemplateAttachment: {
+    count: vi.fn(async ({ where }: any) =>
+      where.mailTemplateId === 'with-attachments' ? 2 : 0
+    ),
   },
 };
 
@@ -123,9 +130,36 @@ describe('SystemMailResolver', () => {
     expect(prismaServiceMock.userFlowMail.update).not.toHaveBeenCalled();
   });
 
+  // A login link must not wait for a document conversion.
+  it('refuses a template that carries attachments', async () => {
+    prismaServiceMock.userFlowMail.update.mockClear();
+
+    await expect(
+      resolver.updateSystemMail({
+        event: UserEvent.LOGIN_LINK,
+        mailTemplateId: 'with-attachments',
+      })
+    ).rejects.toThrow(BadRequestException);
+    expect(prismaServiceMock.userFlowMail.update).not.toHaveBeenCalled();
+  });
+
+  it('clears a system mail without asking about attachments', async () => {
+    prismaServiceMock.mailTemplateAttachment.count.mockClear();
+
+    await resolver.updateSystemMail({
+      event: UserEvent.LOGIN_LINK,
+      mailTemplateId: undefined,
+    } as any);
+
+    expect(
+      prismaServiceMock.mailTemplateAttachment.count
+    ).not.toHaveBeenCalled();
+  });
+
   it('should test the system mail', async () => {
     const result = await resolver.testSystemMail(
       {
+        type: AuthSessionType.User,
         user: FAKE_USER,
       } as any,
       UserEvent.ACCOUNT_CREATION

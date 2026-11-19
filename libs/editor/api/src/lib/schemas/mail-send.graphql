@@ -104,6 +104,10 @@ query MailSendPreview($input: MailSendPreviewInput!) {
     subject
     html
     pdf
+    attachments {
+      filename
+      pdf
+    }
     recipient {
       id
       email

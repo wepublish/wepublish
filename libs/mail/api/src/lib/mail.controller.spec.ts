@@ -18,6 +18,7 @@ describe('MailController', () => {
   let mailContext: MailContext;
   let prismaMock: {
     mailLog: { [method in keyof PrismaClient['mailLog']]?: Mock };
+    mailTemplate: { [method in keyof PrismaClient['mailTemplate']]?: Mock };
     mailTemplateVariant: {
       [method in keyof PrismaClient['mailTemplateVariant']]?: Mock;
     };
@@ -83,6 +84,9 @@ describe('MailController', () => {
         findFirst: vi.fn(),
         update: vi.fn(),
         count: vi.fn(),
+      },
+      mailTemplate: {
+        findUnique: vi.fn(async () => ({ attachments: [] })),
       },
       mailTemplateVariant: {
         findUnique: vi.fn(),

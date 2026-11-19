@@ -6,6 +6,12 @@ enum AIProviderType {
   V0
 }
 
+"""The API key that did something on behalf of the user named next to it."""
+type ActingApiToken {
+  id: String!
+  name: String!
+}
+
 union Action = ArticleCreatedAction | AuthorCreatedAction | CommentCreatedAction | EventCreatedAction | PageCreatedAction | PollStartedAction | SubscriptionCreatedAction | UserCreatedAction
 
 """
@@ -68,6 +74,11 @@ type ApiToken {
   createdBy: User
   createdById: String
 
+  """
+  Whether the user who created this key still allows it to work, checked the way a call with the key is. A key list asks this once per row.
+  """
+  creatorState: ApiTokenCreatorState!
+
   """When the token stops working."""
   expiresAt: DateTime!
   id: String!
@@ -83,10 +94,45 @@ type ApiToken {
   scopes: [String!]!
 }
 
+enum ApiTokenBlockedReason {
+  CreatorInactive
+  CreatorMayNotCreateApiTokens
+  CreatorMissing
+}
+
+"""
+A key acts on behalf of the user who created it. This is the check every call with the key goes through; expiry and revocation are separate.
+"""
+type ApiTokenCreatorState {
+  blockedReason: ApiTokenBlockedReason
+
+  """
+  Permissions of the key its creator no longer holds; calls that need one are refused.
+  """
+  missingScopes: [String!]!
+  state: ApiTokenCreatorStateKind!
+}
+
+"""
+What the user who created a key still allows it: everything it holds (ok), nothing (blocked: every call is refused), or only some of its permissions (limited).
+"""
+enum ApiTokenCreatorStateKind {
+  Blocked
+  Limited
+  Ok
+}
+
+"""
+Status sorts working keys before expired and revoked ones (ascending). Owner sorts by the creator's name, then first name.
+"""
 enum ApiTokenSort {
   CreatedAt
+  ExpiresAt
   LastUsedAt
   Name
+  Owner
+  ScopeCount
+  Status
 }
 
 """A revoked token counts as revoked even once it has also expired."""
@@ -1318,6 +1364,9 @@ type DeliveryChannelUserModel {
   changedAt: DateTime
   changedBy: MailLogRecipient
 
+  """Set when an API key made the change on behalf of `changedBy`."""
+  changedByApiToken: ActingApiToken
+
   """How automated subscription mails reach this user."""
   channel: MailChannel!
 
@@ -1351,6 +1400,9 @@ type DeliveryModeBulkChangeModel {
   audience: JSONObject!
   changed: Int!
   changedBy: MailLogRecipient
+
+  """Set when an API key made the change on behalf of `changedBy`."""
+  changedByApiToken: ActingApiToken
   channel: MailChannel!
   createdAt: DateTime!
   id: String!
@@ -2306,6 +2358,11 @@ type Invoice implements HasOptionalSubscription {
   id: String!
   items: [InvoiceItem!]!
   mail: String!
+
+  """
+  Set when an API key marked the invoice as paid on behalf of `manuallySetAsPaidByUser`.
+  """
+  manuallySetAsPaidByApiTokenId: String
   manuallySetAsPaidByUser: User
   manuallySetAsPaidByUserId: String
   modifiedAt: DateTime!
@@ -2841,6 +2898,16 @@ enum MailSendJobState {
   running
 }
 
+type MailSendPreviewAttachment {
+  """The name the pdf is attached under."""
+  filename: String!
+
+  """
+  The document filled in for the recipient, as pdf, base64 encoded, exactly as the mail carries it.
+  """
+  pdf: String!
+}
+
 input MailSendPreviewInput {
   audience: MailAudienceInput!
 
@@ -2856,6 +2923,11 @@ input MailSendPreviewInput {
 }
 
 type MailSendPreviewModel {
+  """
+  Mail previews only: the template's attachments, in their order. A letter preview prints them inside its pdf.
+  """
+  attachments: [MailSendPreviewAttachment!]!
+
   """Empty for a letter preview."""
   html: String!
 
@@ -2937,6 +3009,10 @@ enum MailTemplateContext {
 }
 
 input MailTemplateInput {
+  """
+  Word documents (.docx) filled in with the same placeholders, converted to pdf and attached to every mail sent from this template, in this order. A printed letter carries them after its pages. Left out, the attachments stay as they are.
+  """
+  attachmentIds: [String!]
   context: MailTemplateContext
   description: String
   name: String!
@@ -2959,6 +3035,11 @@ type MailTemplateMemberPlanModel {
 }
 
 type MailTemplateModel {
+  """
+  Word documents (.docx) filled in with the same placeholders, converted to pdf and attached to every mail sent from this template, in this order. A printed letter carries them after its pages.
+  """
+  attachmentIds: [String!]!
+
   """The channels this template is written for, the email first."""
   channels: [MailChannel!]!
   context: MailTemplateContext
@@ -2998,6 +3079,9 @@ type MailTemplateModel {
 }
 
 input MailTemplatePreviewInput {
+  """Attachments chosen on the draft, possibly not saved yet."""
+  attachmentIds: [String!]
+
   """Mail type / context id, e.g. "renewal"."""
   contextId: String!
   htmlContent: String!
@@ -5764,6 +5848,9 @@ type PrintIssue implements HasImageLc {
   closedAt: DateTime
   closedBy: PrintIssueUser
 
+  """Set when an API key did it on behalf of `closedBy`."""
+  closedByApiToken: PrintIssueApiToken
+
   """
   How many issues it counts as against a reader's period: the numbers it covers, or fewer.
   """
@@ -5793,6 +5880,12 @@ type PrintIssue implements HasImageLc {
   """The issue's topic."""
   title: String
   year: Int!
+}
+
+"""The API key that did something on behalf of the user named next to it."""
+type PrintIssueApiToken {
+  id: String!
+  name: String!
 }
 
 type PrintIssueBexioStats {
@@ -5843,9 +5936,15 @@ type PrintIssueDelivery {
   createdAt: DateTime!
   createdBy: PrintIssueUser
 
+  """Set when an API key did it on behalf of `createdBy`."""
+  createdByApiToken: PrintIssueApiToken
+
   """«übergeben»: when the file went to the printshop."""
   deliveredAt: DateTime
   deliveredBy: PrintIssueUser
+
+  """Set when an API key did it on behalf of `deliveredBy`."""
+  deliveredByApiToken: PrintIssueApiToken
   filename: String!
   id: String!
 
@@ -5966,6 +6065,9 @@ type PrintIssueRun {
   """
   computedAt: DateTime!
   computedBy: PrintIssueUser
+
+  """Set when an API key did it on behalf of `computedBy`."""
+  computedByApiToken: PrintIssueApiToken
 
   """The delivery a replace run writes anew."""
   deliveryId: String
@@ -6969,6 +7071,8 @@ input RichTextBlockInput {
 }
 
 input SendTestMailTemplateInput {
+  """Attachments chosen on the draft, possibly not saved yet."""
+  attachmentIds: [String!]
   contextId: String!
   htmlContent: String!
   subject: String!
@@ -8253,6 +8357,9 @@ type UserDeliveryPreferenceModel {
   canReceiveLetters: Boolean!
   changedAt: DateTime
   changedBy: MailLogRecipient
+
+  """Set when an API key made the change on behalf of `changedBy`."""
+  changedByApiToken: ActingApiToken
 
   """How automated subscription mails reach this user."""
   channel: MailChannel!
