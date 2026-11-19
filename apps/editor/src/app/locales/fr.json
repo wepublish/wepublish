@@ -2935,6 +2935,12 @@
         "renewal": {
           "true": "avec renouvellement automatique",
           "false": "sans renouvellement automatique"
+        },
+        "noMemberPlan": "Sans plan d’abonnement",
+        "warnings": {
+          "noMemberPlan": "Le plan d’abonnement de ce flux a été supprimé. Tant que ce flux existe, aucun message automatique n’est envoyé – supprimez-le.",
+          "matchesNothing": "Ne s’applique à aucun abonnement : il manque un moyen de paiement, une périodicité ou un renouvellement.",
+          "notOffered": "N’est plus proposé par le plan d’abonnement : {{values}}. Pour ces valeurs, il ne s’applique plus qu’aux abonnements existants."
         }
       },
       "flow": "Flux",

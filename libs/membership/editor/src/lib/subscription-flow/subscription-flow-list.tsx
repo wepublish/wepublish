@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  Alert,
   Box,
   CircularProgress,
   Link as MuiLink,
@@ -30,7 +31,7 @@ import { FlowFilters } from './filter/flow-filters';
 import { FlowBlock } from './flow-block';
 import { USER_ACTION_EVENTS } from './flow-events';
 import type { NonUserActionEvents, UserActionEvents } from './flow-events';
-import { conditionsSummary, FLOWS_PATH } from './flow-overview';
+import { conditionsSummary, FLOWS_PATH, flowWarnings } from './flow-overview';
 import { SubscriptionClientContext } from './graphql-client-context';
 import styled from '@emotion/styled';
 import {
@@ -208,6 +209,7 @@ function SubscriptionFlow() {
   }
 
   const conditions = conditionsSummary(subscriptionFlow, t);
+  const warnings = flowWarnings(subscriptionFlow, t);
 
   return (
     <MailTemplatesContext.Provider value={mailTemplates?.mailTemplates || []}>
@@ -232,7 +234,9 @@ function SubscriptionFlow() {
 
             {subscriptionFlow.default ?
               t('subscriptionFlow.defaultFlow')
-            : `«${subscriptionFlow.memberPlan?.name ?? ''}»`}
+            : subscriptionFlow.memberPlan ?
+              `«${subscriptionFlow.memberPlan.name}»`
+            : t('subscriptionFlow.overview.noMemberPlan')}
           </Typography>
 
           {/* A flow has no name: its conditions tell it from the plan's
@@ -254,6 +258,15 @@ function SubscriptionFlow() {
               t('subscriptionFlow.defaultFlowDescription')
             : t('subscriptionFlow.planFlowDescription')}
           </Typography>
+
+          {warnings.map(warning => (
+            <Alert
+              key={warning}
+              severity="warning"
+            >
+              {warning}
+            </Alert>
+          ))}
         </PageIntro>
 
         <MailBlocks>

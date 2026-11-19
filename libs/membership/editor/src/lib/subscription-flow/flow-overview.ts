@@ -2,7 +2,7 @@ import { SubscriptionFlowFragment } from '@wepublish/editor/api';
 
 import { isNonUserEvent, USER_ACTION_EVENTS } from './flow-events';
 
-type Translate = (key: string) => string;
+type Translate = (key: string, options?: Record<string, unknown>) => string;
 
 export const FLOWS_PATH = '/communicationflows';
 
@@ -38,6 +38,66 @@ export const conditionsSummary = (
     .filter(Boolean)
     .join(' · ');
 
+/**
+ * What makes a member plan's flow do less than its conditions say. A flow is
+ * matched against each subscription when a message is due, so nothing breaks
+ * when a plan changes; but the admin should see what has gone stale.
+ */
+export const flowWarnings = (
+  flow: SubscriptionFlowFragment,
+  t: Translate
+): string[] => {
+  if (flow.default) {
+    return [];
+  }
+
+  // Left behind by a deleted plan: the api refuses to look up any message
+  // while such a flow exists.
+  if (!flow.memberPlan) {
+    return [t('subscriptionFlow.overview.warnings.noMemberPlan')];
+  }
+
+  if (
+    !flow.paymentMethods.length ||
+    !flow.periodicities.length ||
+    !flow.autoRenewal.length
+  ) {
+    return [t('subscriptionFlow.overview.warnings.matchesNothing')];
+  }
+
+  const offers = flow.memberPlan.availablePaymentMethods;
+  const offeredMethods = new Set(
+    offers.flatMap(offer => offer.paymentMethods.map(method => method.id))
+  );
+  const offeredPeriodicities = new Set(
+    offers.flatMap(offer => offer.paymentPeriodicities)
+  );
+  const offersWithoutRenewal = offers.some(offer => !offer.forceAutoRenewal);
+
+  // Still matched by subscriptions taken out before the plan changed.
+  const notOffered = [
+    ...flow.paymentMethods
+      .filter(method => !offeredMethods.has(method.id))
+      .map(method => method.name),
+    ...flow.periodicities
+      .filter(periodicity => !offeredPeriodicities.has(periodicity))
+      .map(periodicity =>
+        t(`memberPlanList.paymentPeriodicity.${periodicity}`)
+      ),
+    ...(flow.autoRenewal.includes(false) && !offersWithoutRenewal ?
+      [t('subscriptionFlow.overview.renewal.false')]
+    : []),
+  ];
+
+  return notOffered.length ?
+      [
+        t('subscriptionFlow.overview.warnings.notOffered', {
+          values: notOffered.join(', '),
+        }),
+      ]
+    : [];
+};
+
 /** A flow as the overview lists it. */
 export type FlowRow = {
   id: string;
@@ -46,6 +106,8 @@ export type FlowRow = {
   memberPlanId?: string;
   memberPlanName?: string;
   conditions: string;
+  /** What makes the flow do less than its conditions say. */
+  warnings: string[];
   subscriptions: number;
   /** Events that have a template, so something is sent. */
   eventsWithTemplate: number;
@@ -74,6 +136,7 @@ export const flowRows = (
         memberPlanId: flow.memberPlan?.id,
         memberPlanName: flow.memberPlan?.name,
         conditions: conditionsSummary(flow, t),
+        warnings: flowWarnings(flow, t),
         subscriptions: flow.numberOfSubscriptions,
         eventsWithTemplate: sending.length,
         eventsTotal:
