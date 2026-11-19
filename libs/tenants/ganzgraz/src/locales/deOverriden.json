@@ -5,6 +5,11 @@
       "payForPeriod": "Ich unterstütze ganzgraz {monthlyAmount, select, 0 {gratis} other {{paymentPeriodL} mit {formattedAmount}}}",
       "pay": "Ich unterstütze ganzgraz {monthlyAmount, select, 0 {gratis} other {mit {formattedAmount}}}"
     },
+    "button": {
+      "subscribeForPeriod": "{monthlyAmount, select, 0 {Gratis} other {{renewalPeriod} für {formattedAmount}}} {productType, select, Donation {spenden} other {unterstützen}}",
+      "payForPeriod": "{monthlyAmount, select, 0 {Gratis} other {{paymentPeriod} für {formattedAmount}}} {productType, select, Donation {spenden} other {unterstützen}}",
+      "pay": "{monthlyAmount, select, 0 {Gratis} other {Für {formattedAmount}}} {productType, select, Donation {spenden} other {unterstützen}}"
+    },
     "transactionFees": "Ja, ich will die Bearbeitungsgebühren von 2% übernehmen und damit ganzgraz unterstützen."
   },
   "event": {

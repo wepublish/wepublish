@@ -10,7 +10,8 @@ import {
 import {
   Authenticated,
   CurrentUser,
-  UserSession,
+  AuthSession,
+  requireSessionUser,
 } from '@wepublish/authentication/api';
 import { PaymentsService } from './payments.service';
 
@@ -26,8 +27,10 @@ export class PaymentsResolver {
   })
   async createPaymentFromInvoice(
     @Args('input') input: PaymentFromInvoiceInput,
-    @CurrentUser() { user }: UserSession
+    @CurrentUser() session: AuthSession
   ) {
+    const user = requireSessionUser(session);
+
     return this.paymentsService.createPaymentFromInvoice(user.id, input);
   }
 
@@ -39,8 +42,10 @@ export class PaymentsResolver {
   })
   async createPaymentFromSubscription(
     @Args() args: PaymentFromSubscriptionArgs,
-    @CurrentUser() { user }: UserSession
+    @CurrentUser() session: AuthSession
   ) {
+    const user = requireSessionUser(session);
+
     return this.paymentsService.createPaymentFromSubscription(user.id, args);
   }
 

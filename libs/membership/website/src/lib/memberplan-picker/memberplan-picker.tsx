@@ -1,6 +1,6 @@
 import { FormControlLabel, RadioGroup } from '@mui/material';
 import styled from '@emotion/styled';
-import { toPlaintext } from '@wepublish/richtext';
+import { isEmptyRichtext } from '@wepublish/richtext';
 import {
   BuilderMemberPlanPickerProps,
   useWebsiteBuilder,
@@ -64,7 +64,7 @@ export const MemberPlanPicker = forwardRef<
   const selectedMemberPlan = memberPlans.find(({ id }) => id === value);
   const showPicker =
     showRadioButtons ||
-    toPlaintext(selectedMemberPlan?.description?.content) ||
+    !isEmptyRichtext(selectedMemberPlan?.description) ||
     selectedMemberPlan?.image;
 
   const isUnavailable = useCallback(
@@ -142,9 +142,10 @@ export const MemberPlanPicker = forwardRef<
       )}
       {selectedMemberPlan?.image && <Image image={selectedMemberPlan.image} />}
 
-      {!!selectedMemberPlan?.description?.content?.length && (
-        <RichText richText={selectedMemberPlan.description} />
-      )}
+      {selectedMemberPlan?.description &&
+        !isEmptyRichtext(selectedMemberPlan.description) && (
+          <RichText richText={selectedMemberPlan.description} />
+        )}
     </MemberPlanPickerWrapper>
   );
 });

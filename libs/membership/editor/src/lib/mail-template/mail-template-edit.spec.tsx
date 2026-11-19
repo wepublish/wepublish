@@ -124,6 +124,64 @@ beforeEach(() => {
   loadTemplate.mockResolvedValue({ data: undefined });
 });
 
+const saveNew = () => {
+  fireEvent.change(
+    screen.getByRole('textbox', { name: 'mailTemplates.name' }),
+    { target: { value: 'Vertrag' } }
+  );
+  fireEvent.mouseDown(
+    screen.getByRole('combobox', { name: /^mailTemplates\.edit\.mailType/ })
+  );
+  // The first option is the empty placeholder.
+  fireEvent.click(screen.getAllByRole('option')[1]);
+  fireEvent.click(screen.getByRole('button', { name: 'mailTemplates.save' }));
+};
+
+describe('MailTemplateEdit attachments', () => {
+  it('offers no attachments while paper letters are off', () => {
+    renderPage();
+
+    expect(
+      screen.queryByRole('combobox', { name: 'mailTemplates.edit.attachments' })
+    ).toBeNull();
+  });
+
+  it('offers the attachments with paper letters, even without a letter integration', () => {
+    letterChannel.paperLetters = true;
+    renderPage();
+
+    expect(
+      screen.getByRole('combobox', { name: 'mailTemplates.edit.attachments' })
+    ).toBeTruthy();
+  });
+
+  it('saves the attachments with paper letters on', () => {
+    letterChannel.paperLetters = true;
+    renderPage();
+
+    saveNew();
+
+    expect(mutation('CreateMailTemplate')).toHaveBeenCalledWith({
+      variables: {
+        input: expect.objectContaining({ name: 'Vertrag', attachmentIds: [] }),
+      },
+    });
+  });
+
+  // Without the feature the api refuses attachments; leaving them out keeps
+  // whatever the template has.
+  it('leaves the attachments alone with paper letters off', () => {
+    renderPage();
+
+    saveNew();
+
+    expect(mutation('CreateMailTemplate')).toHaveBeenCalledTimes(1);
+    expect(
+      mutation('CreateMailTemplate').mock.calls[0][0].variables.input
+    ).not.toHaveProperty('attachmentIds');
+  });
+});
+
 describe('MailTemplateEdit', () => {
   it('labels every detail and preview field', () => {
     renderPage();

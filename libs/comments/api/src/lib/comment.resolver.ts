@@ -24,7 +24,9 @@ import {
   CurrentUser,
   Public,
   RequestFingerprint,
-  UserSession,
+  AuthSession,
+  requireUserSession,
+  userSessionOf,
 } from '@wepublish/authentication/api';
 import { Image, ImageDataloaderService } from '@wepublish/image/api';
 import { CommentTagDataloader, Tag } from '@wepublish/tag/api';
@@ -87,7 +89,7 @@ export class CommentResolver {
   })
   async commentsForItem(
     @Args() input: CommentsForItemArgs,
-    @CurrentUser() session: UserSession | null
+    @CurrentUser() session: AuthSession | null
   ) {
     if (hasPermission(CanGetComments, permissionsOf(session))) {
       return this.commentService.getCommentsForItem(input);
@@ -95,7 +97,7 @@ export class CommentResolver {
 
     return this.commentService.getPublicCommentsForItem(
       input,
-      session?.user?.id
+      userSessionOf(session)?.user.id
     );
   }
 
@@ -105,9 +107,12 @@ export class CommentResolver {
   })
   async addUserComment(
     @Args() input: AddUserCommentInput,
-    @CurrentUser() session?: UserSession | null
+    @CurrentUser() session?: AuthSession | null
   ) {
-    return await this.commentService.addUserComment(input, session);
+    return await this.commentService.addUserComment(
+      input,
+      userSessionOf(session)
+    );
   }
 
   @Authenticated()
@@ -116,9 +121,12 @@ export class CommentResolver {
   })
   async updateUserComment(
     @Args() input: UpdateUserCommentInput,
-    @CurrentUser() session: UserSession
+    @CurrentUser() session: AuthSession
   ) {
-    return this.commentService.updateUserComment(input, session);
+    return this.commentService.updateUserComment(
+      input,
+      requireUserSession(session)
+    );
   }
 
   @Permissions(CanUpdateComments)
@@ -127,7 +135,7 @@ export class CommentResolver {
   })
   async createComment(
     @Args() input: CreateCommentInput,
-    @CurrentUser() session: UserSession | null
+    @CurrentUser() session: AuthSession | null
   ) {
     if (
       input.publish &&
@@ -157,7 +165,7 @@ export class CommentResolver {
     @Args('commentId') commentId: string,
     @Args('answerId') answerId: string,
     @Args('value', { type: () => Int }) value: number,
-    @CurrentUser() session: UserSession | null,
+    @CurrentUser() session: AuthSession | null,
     @RequestFingerprint() fingerprint: string
   ) {
     return this.commentService.rateComment(
@@ -165,7 +173,7 @@ export class CommentResolver {
       answerId,
       value,
       fingerprint,
-      session
+      userSessionOf(session) ?? null
     );
   }
 
@@ -219,7 +227,7 @@ export class CommentResolver {
   @ResolveField(() => [CommentRevision])
   async revisions(
     @Parent() comment: DecoratedComment,
-    @CurrentUser() session?: UserSession
+    @CurrentUser() session?: AuthSession
   ) {
     const revisions = comment.revisions ?? [];
 
@@ -256,9 +264,9 @@ export class CommentResolver {
   @ResolveField(() => [CommentRating])
   async userRatings(
     @Parent() comment: DecoratedComment,
-    @CurrentUser() session?: UserSession
+    @CurrentUser() session?: AuthSession
   ) {
-    const userId = session?.user?.id;
+    const userId = userSessionOf(session)?.user.id;
 
     if (!userId) {
       return [];
@@ -270,7 +278,7 @@ export class CommentResolver {
   @ResolveField(() => [OverriddenRating])
   async overriddenRatings(
     @Parent() comment: DecoratedComment,
-    @CurrentUser() session?: UserSession
+    @CurrentUser() session?: AuthSession
   ) {
     if (!hasPermission(CanGetComments, permissionsOf(session))) {
       return [];

@@ -79,6 +79,17 @@ export class LogMailProvider extends BaseMailProvider {
         subject: props.subject,
         body: readableBody(props),
         links: extractLinks(props),
+        ...(props.attachments?.length ?
+          {
+            attachments: props.attachments.map(
+              ({ filename, contentType, content }) => ({
+                filename,
+                contentType,
+                bytes: content.length,
+              })
+            ),
+          }
+        : {}),
       },
       `Mail to ${props.recipient}: ${props.subject}`
     );
