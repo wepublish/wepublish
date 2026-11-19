@@ -350,6 +350,79 @@ describe('We.Publish website tenant', () => {
     });
   });
 
+  describe('media list', () => {
+    const coverage = (title: string, medium: string, date: string) =>
+      mockCustomTeaser({
+        preTitle: medium,
+        title,
+        lead: date,
+        contentUrl: `https://oe1.orf.at/${title.length}`,
+        // the pieces are on other sites, so they open in a new tab anyway
+        openInNewTab: false,
+        image: mockImage({ title: `Bild ${title}` }),
+      });
+
+    const mediaList = (title: string | null = 'In den Medien') =>
+      mockTeaserSlotsBlock({
+        blockStyle: WepBlockStyles.MediaList,
+        title,
+        teasers: [
+          coverage(
+            'Die letzte journalistische Meile',
+            'Ö1 Medienmagazin',
+            '06.08.2026'
+          ),
+          coverage(
+            'Ganzgraz startet einen Newsletter',
+            'Kleine Zeitung',
+            'Mai 2026'
+          ),
+        ],
+      });
+
+    it('lists every piece with its title, medium and date, without image', () => {
+      renderTenantPage([mediaList()]);
+
+      const piece = screen.getByRole('article', {
+        name: 'Die letzte journalistische Meile',
+      });
+
+      expect(within(piece).getByText('Ö1 Medienmagazin')).toBeInTheDocument();
+      expect(within(piece).getByText('06.08.2026')).toBeInTheDocument();
+      expect(within(piece).queryByRole('img')).not.toBeInTheDocument();
+      expect(
+        screen.getAllByRole('article').map(article => article.textContent)
+      ).toEqual([
+        expect.stringContaining('Die letzte journalistische Meile'),
+        expect.stringContaining('Ganzgraz startet einen Newsletter'),
+      ]);
+    });
+
+    it('links each piece to where it was published, in a new tab', () => {
+      renderTenantPage([mediaList()]);
+
+      const link = within(
+        screen.getByRole('article', {
+          name: 'Die letzte journalistische Meile',
+        })
+      ).getByRole('link');
+
+      expect(link).toHaveAttribute(
+        'href',
+        expect.stringContaining('https://oe1.orf.at/')
+      );
+      expect(link).toHaveAttribute('target', '_blank');
+    });
+
+    it('shows the title of the block above the list when there is one', () => {
+      renderTenantPage([mediaList()]);
+
+      expect(
+        screen.getByRole('heading', { level: 2, name: 'In den Medien' })
+      ).toBeInTheDocument();
+    });
+  });
+
   describe('article overview', () => {
     const articles = (count: number, locale: string) =>
       Array.from({ length: count }, (_, index) =>
