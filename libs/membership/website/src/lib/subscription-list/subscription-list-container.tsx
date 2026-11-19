@@ -22,6 +22,7 @@ import {
   PaymentMethodChangeState,
   ReactivateSubscriptionDocument,
   RevertSubscriptionUpgradeDocument,
+  SwitchSubscriptionPeriodicityDocument,
   SubscriptionsDocument,
 } from '@wepublish/website/api';
 import {
@@ -90,6 +91,16 @@ export function SubscriptionListContainer({
       }
     },
   });
+
+  // the open invoice for the next period is replaced by one in the new periodicity
+  const [switchPeriodicity] = useMutation(
+    SwitchSubscriptionPeriodicityDocument,
+    {
+      onCompleted() {
+        invoices.refetch();
+      },
+    }
+  );
 
   const [changePaymentMethod] = useMutation(
     ChangeSubscriptionPaymentMethodDocument
@@ -254,6 +265,11 @@ export function SubscriptionListContainer({
         onCancelPaymentMethodChange={async id => {
           await cancelPaymentMethodChange({ variables: { id } });
           await refreshAfterPaymentMethodChange();
+        }}
+        onSwitchPeriodicity={async (subscriptionId, paymentPeriodicity) => {
+          await switchPeriodicity({
+            variables: { subscriptionId, paymentPeriodicity },
+          });
         }}
       />
     </>

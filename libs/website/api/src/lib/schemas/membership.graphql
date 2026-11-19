@@ -126,6 +126,7 @@ fragment FullSubscription on PublicSubscription {
   canExtend
   canRevertUpgrade
   canRenewPaymentMethod
+  switchablePeriodicities
   isActive
 
   pendingPaymentMethodChange {
@@ -325,6 +326,18 @@ mutation ReactivateSubscription($subscriptionId: String!) {
 
 mutation RevertSubscriptionUpgrade($subscriptionId: String!) {
   revertUserSubscriptionUpgrade(subscriptionId: $subscriptionId) {
+    ...FullSubscription
+  }
+}
+
+mutation SwitchSubscriptionPeriodicity(
+  $subscriptionId: String!
+  $paymentPeriodicity: PaymentPeriodicity!
+) {
+  switchUserSubscriptionPeriodicity(
+    subscriptionId: $subscriptionId
+    paymentPeriodicity: $paymentPeriodicity
+  ) {
     ...FullSubscription
   }
 }
