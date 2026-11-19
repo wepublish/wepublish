@@ -21,7 +21,8 @@ import {
 } from '@wepublish/ui/editor';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdAdd, MdAddCircle, MdClose, MdUnsubscribe } from 'react-icons/md';
+import { IoMdCheckmarkCircle } from 'react-icons/io';
+import { MdAdd, MdClose, MdUnsubscribe } from 'react-icons/md';
 import {
   TemplateFilters,
   templateFilterFields,
@@ -70,8 +71,34 @@ const Paging = styled.div`
 `;
 
 // The stationery and its extra pages matter when a template is written, not
-// when one is picked for an event.
-const LEFT_OUT = ['letterLayoutName', 'letterAppendixName'];
+// when one is picked for an event; neither do its status and the plans that
+// send it already.
+const LEFT_OUT = [
+  'letterLayoutName',
+  'letterAppendixName',
+  'status',
+  'memberPlans',
+];
+
+const LEFT_OUT_FILTERS = ['statuses', 'memberPlans'];
+
+// What a message says comes before the note about it.
+const subjectBeforeDescription = (
+  columns: DataTableColumn<TemplateRow>[]
+): DataTableColumn<TemplateRow>[] => {
+  const subject = columns.findIndex(column => column.id === 'subject');
+  const description = columns.findIndex(column => column.id === 'description');
+
+  if (subject < 0 || description < 0) {
+    return columns;
+  }
+
+  const swapped = [...columns];
+  swapped[subject] = columns[description];
+  swapped[description] = columns[subject];
+
+  return swapped;
+};
 
 export type SelectMailTemplatePanelProps = {
   /** The template the event sends now, if any. */
@@ -138,7 +165,9 @@ export function SelectMailTemplatePanel({
 
   const { page, rows } = pageOf(matching, chosenPage, limit);
 
-  const filterFields = templateFilterFields(paperLetters);
+  const filterFields = templateFilterFields(paperLetters).filter(
+    field => !LEFT_OUT_FILTERS.includes(field)
+  );
   const filterCount = countActiveFilters(filterFields, filter);
 
   const choose = (mailTemplateId: string | null) => {
@@ -154,10 +183,12 @@ export function SelectMailTemplatePanel({
     : t('mailTemplateSelect.chooser.select');
 
   const columns: DataTableColumn<TemplateRow>[] = [
-    ...useTemplateColumns({
-      paperLetters,
-      renderName: row => row.name,
-    }).filter(column => !LEFT_OUT.includes(column.id)),
+    ...subjectBeforeDescription(
+      useTemplateColumns({
+        paperLetters,
+        renderName: row => row.name,
+      }).filter(column => !LEFT_OUT.includes(column.id))
+    ),
     {
       id: 'action',
       label: t('action'),
@@ -175,7 +206,7 @@ export function SelectMailTemplatePanel({
               choose(row.id);
             }}
           >
-            <MdAddCircle />
+            <IoMdCheckmarkCircle />
           </IconButton>
         </IconButtonTooltip>
       ),
@@ -220,6 +251,7 @@ export function SelectMailTemplatePanel({
             }}
             templates={offered}
             paperLetters={paperLetters}
+            leftOut={LEFT_OUT_FILTERS}
           />
 
           {filterCount > 0 && (

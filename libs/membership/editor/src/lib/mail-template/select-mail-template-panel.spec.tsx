@@ -149,10 +149,45 @@ describe('SelectMailTemplatePanel', () => {
 
     expect(within(row).getByText('Deine Rechnung')).toBeTruthy();
     expect(within(row).getByText('Mit Zahlschein')).toBeTruthy();
-    expect(within(row).getByText('Print')).toBeTruthy();
     expect(
       within(row).getByText('mailTemplates.mailTypes.invoiceCreation')
     ).toBeTruthy();
+  });
+
+  it('shows the subject before the description', () => {
+    renderPanel();
+
+    const headers = screen
+      .getAllByRole('columnheader')
+      .map(header => header.textContent);
+
+    expect(headers.indexOf('mailTemplates.subject')).toBeGreaterThan(-1);
+    expect(headers.indexOf('mailTemplates.subject')).toBeLessThan(
+      headers.indexOf('mailTemplates.description')
+    );
+  });
+
+  it('leaves the status and the member plans out, as columns and as filters', () => {
+    renderPanel();
+
+    expect(
+      screen.queryByRole('columnheader', { name: /mailTemplates.status/ })
+    ).toBeNull();
+    expect(
+      screen.queryByRole('columnheader', {
+        name: /mailTemplates.list.memberPlans/,
+      })
+    ).toBeNull();
+    expect(within(rowOf('Neue Rechnung')).queryByText('Print')).toBeNull();
+
+    expect(screen.queryByLabelText('mailTemplates.status')).toBeNull();
+    expect(
+      screen.queryByLabelText('mailTemplates.list.memberPlans')
+    ).toBeNull();
+    // The other filters stay.
+    expect(
+      screen.getAllByLabelText('mailTemplates.list.attachments').length
+    ).toBeGreaterThan(0);
   });
 
   it('starts narrowed to the purpose of the event', () => {
