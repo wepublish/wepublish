@@ -2954,6 +2954,8 @@
         "placeholder": "Nom du tag",
         "title": "Tags",
         "name": "Nom",
+        "page": "Page du tag",
+        "pageInfo": "Affichée à l’adresse du tag sur votre site à la place de la liste des articles avec ce tag. Laisser vide pour afficher la liste d’articles.",
         "description": "Description",
         "markAsMain": "Utiliser comme tag principal",
         "colorInfo": "Certains designs de site utilisent cette couleur pour mettre le tag en évidence, p. ex. comme fond de l’étiquette.",

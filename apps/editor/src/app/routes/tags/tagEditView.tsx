@@ -1,6 +1,6 @@
 import { useApolloClient, useMutation } from '@apollo/client/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { TagDocument, UpdateTagDocument } from '@wepublish/editor/api';
+import { TagDocument, TagType, UpdateTagDocument } from '@wepublish/editor/api';
 import { CanUpdateTag } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
@@ -29,6 +29,7 @@ const TagEditView = () => {
   const closePath = './../..';
   const navigate = useNavigate();
   const { id } = useParams();
+  const [type, setType] = useState<TagType>();
 
   const client = useApolloClient();
 
@@ -38,6 +39,7 @@ const TagEditView = () => {
     color: z.string().nullish(),
     description: z.any().nullish(),
     main: z.boolean(),
+    pageId: z.string().nullish(),
   });
 
   const { control, handleSubmit, formState } = useForm<z.infer<typeof schema>>({
@@ -47,6 +49,8 @@ const TagEditView = () => {
         query: TagDocument,
         variables: { id: id! },
       });
+
+      setType(data?.tag.type);
 
       return data!.tag as z.infer<typeof schema>;
     },
@@ -89,6 +93,8 @@ const TagEditView = () => {
       <TagForm
         control={control}
         disabled={updateLoading}
+        // Only article tags have a page on the website (`/a/tag/<tag>`).
+        withPage={type === TagType.Article}
       />
     </form>
   );

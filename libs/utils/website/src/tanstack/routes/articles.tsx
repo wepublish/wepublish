@@ -85,13 +85,15 @@ export const tagRoute = () => ({
     context: ApolloRouterContext;
     params: { tag: string };
   }) => {
-    const { apollo, found } = await loadTag({ data: { tag } });
+    const { apollo, found, shell } = await loadTag({ data: { tag } });
 
     mergeApolloCache(context.apolloClient, apollo);
 
     if (!found) {
       await bailOutNotFound(context);
     }
+
+    return { shell };
   },
   component: TagPage,
   notFoundComponent: FourOhFourPage,

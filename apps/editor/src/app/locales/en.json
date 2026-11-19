@@ -2996,6 +2996,8 @@
         "placeholder": "Name of tag",
         "title": "Tags",
         "name": "Name",
+        "page": "Tag page",
+        "pageInfo": "Shown at the tag's address on your website instead of the list of articles with this tag. Leave empty to show the article list.",
         "description": "Description",
         "markAsMain": "Use as main tag",
         "colorInfo": "Some website designs use this color to highlight the tag, e.g. as the background of the tag label.",

@@ -1002,6 +1002,7 @@ model Page {
   memberPlansFail         MemberPlan[]            @relation("failPage")
   memberPlansConfirmation MemberPlan[]            @relation("confirmationPage")
   banners                 Banner[]
+  tagPageOverrides        Tag[]
   PagesRevisionPublished  PagesRevisionPublished?
   PagesRevisionPending    PagesRevisionPending?
   PagesRevisionDraft      PagesRevisionDraft?
@@ -1484,6 +1485,10 @@ model Tag {
 
   peer   Peer?   @relation(fields: [peerId], references: [id], onDelete: Restrict)
   peerId String?
+
+  /// Rendered at the tag's url instead of the default article list.
+  page   Page?   @relation(fields: [pageId], references: [id], onDelete: SetNull)
+  pageId String?
 
   comments TaggedComments[]
   events   TaggedEvents[]

@@ -13,6 +13,7 @@ import {
   InfoTooltip,
   RichTextBlock,
   RichTextBlockValue,
+  SelectPage,
 } from '@wepublish/ui/editor';
 import { useId } from 'react';
 import { Control, Controller, FieldValues, Path } from 'react-hook-form';
@@ -26,11 +27,14 @@ export type TagFormValues = {
   color?: string | null;
   description?: RichTextBlockValue['richText'] | null;
   main?: boolean | null;
+  pageId?: string | null;
 };
 
 type TagFormProps<Values extends FieldValues> = {
   control: Control<Values>;
   disabled?: boolean;
+  /** Offers a page that the website shows instead of the tag's articles. */
+  withPage?: boolean;
 };
 
 const TagFormWrapper = styled.div`
@@ -43,6 +47,7 @@ const TagFormWrapper = styled.div`
 export const TagForm = <Values extends TagFormValues & FieldValues>({
   control,
   disabled,
+  withPage,
 }: TagFormProps<Values>) => {
   const { t } = useTranslation();
   const themeColors = useWebsiteThemeColors();
@@ -107,6 +112,28 @@ export const TagForm = <Values extends TagFormValues & FieldValues>({
                 </div>
               )}
             />
+
+            {withPage && (
+              <Controller
+                control={control}
+                name={'pageId' as Path<Values>}
+                render={({ field }) => (
+                  <SelectPage
+                    selectedPage={field.value ?? null}
+                    setSelectedPage={field.onChange}
+                    disabled={disabled}
+                    renderInput={params => (
+                      <TextField
+                        {...params}
+                        name={field.name}
+                        label={t('tags.overview.page')}
+                        helperText={t('tags.overview.pageInfo')}
+                      />
+                    )}
+                  />
+                )}
+              />
+            )}
 
             <Controller
               control={control}

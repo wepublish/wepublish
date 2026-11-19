@@ -167,6 +167,7 @@ export function tagFixture(
     main: false,
     url: `https://example.com/tag/${id}`,
     color: null,
+    pageId: null,
   };
 }
 

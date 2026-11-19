@@ -1,5 +1,9 @@
 import { ApolloClient } from '@apollo/client';
-import { ArticleListDocument, TagDocument } from '@wepublish/website/api';
+import {
+  ArticleListDocument,
+  PageDocument,
+  TagDocument,
+} from '@wepublish/website/api';
 
 import { prefetchTag } from './tag-page';
 
@@ -35,12 +39,38 @@ describe('prefetchTag', () => {
     const tag = { id: 'tag-1', tag: 'klima' };
     const { client, query } = clientReturning({ data: { tag } });
 
-    await expect(prefetchTag(client, { tag: 'klima' })).resolves.toBe(tag);
+    await expect(prefetchTag(client, { tag: 'klima' })).resolves.toEqual({
+      tag,
+      content: tag,
+    });
     expect(query).toHaveBeenCalledWith(
       expect.objectContaining({
         query: ArticleListDocument,
         variables: expect.objectContaining({ filter: { tags: ['tag-1'] } }),
       })
+    );
+    expect(query).not.toHaveBeenCalledWith(
+      expect.objectContaining({ query: PageDocument })
+    );
+  });
+
+  it('prefetches the page chosen for the tag instead of its articles', async () => {
+    const tag = { id: 'tag-1', tag: 'klima', pageId: 'page-1' };
+    const { client, query } = clientReturning({ data: { tag } });
+
+    await expect(prefetchTag(client, { tag: 'klima' })).resolves.toEqual({
+      tag,
+      content: { data: {} },
+      shell: { showNavigation: true, showFooter: true },
+    });
+    expect(query).toHaveBeenCalledWith(
+      expect.objectContaining({
+        query: PageDocument,
+        variables: { id: 'page-1' },
+      })
+    );
+    expect(query).not.toHaveBeenCalledWith(
+      expect.objectContaining({ query: ArticleListDocument })
     );
   });
 });

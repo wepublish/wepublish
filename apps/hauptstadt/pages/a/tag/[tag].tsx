@@ -1,8 +1,9 @@
 import { useQuery } from '@apollo/client/react';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import { PageContainer } from '@wepublish/page/website';
 import { TagTitleWrapper } from '@wepublish/tag/website';
-import { getApiUrl } from '@wepublish/utils/website';
+import { getApiUrl, prefetchPageForTag } from '@wepublish/utils/website';
 import {
   ArticleFilter,
   ArticleListDocument,
@@ -59,12 +60,25 @@ function HauptstadtTagPage({
     },
   });
 
+  const pageId = tagData.data?.tag?.pageId;
+
   const articles = useQuery(ArticleListDocument, {
+    skip: !!pageId,
     variables: {
       ...variables,
       filter: articleFilter,
     },
   });
+
+  // An editor chose a page to show instead of the tag's articles.
+  if (pageId) {
+    return (
+      <PageContainer
+        id={pageId}
+        className={className}
+      />
+    );
+  }
 
   return (
     <Tag
@@ -171,15 +185,18 @@ export const getStaticProps = (async ({ params }) => {
     ...(excludeIds.length ? { tagsNotIn: excludeIds } : {}),
   };
 
+  const pageForTag = await prefetchPageForTag(client, pageTag);
+
   await Promise.all([
-    client.query({
-      query: ArticleListDocument,
-      variables: {
-        take,
-        skip: 0,
-        filter: articleFilter,
-      },
-    }),
+    !pageForTag &&
+      client.query({
+        query: ArticleListDocument,
+        variables: {
+          take,
+          skip: 0,
+          filter: articleFilter,
+        },
+      }),
     client.query({
       query: NavigationListDocument,
     }),
@@ -191,6 +208,7 @@ export const getStaticProps = (async ({ params }) => {
   const props = addClientCacheToProps(client, {
     tag: tag as string,
     articleFilter,
+    ...(pageForTag && { shell: pageForTag.shell }),
   });
 
   return {
