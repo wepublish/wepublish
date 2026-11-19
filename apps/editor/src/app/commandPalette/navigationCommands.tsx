@@ -624,7 +624,7 @@ export const NAVIGATION_COMMANDS: CommandDefinition[] = [
       CanGetSystemMails.id,
       CanUpdateSystemMails.id,
     ],
-    perform: ({ navigate }) => navigate('/communicationflows/edit/default'),
+    perform: ({ navigate }) => navigate('/communicationflows'),
   },
   {
     id: 'deliverySuggestions',
