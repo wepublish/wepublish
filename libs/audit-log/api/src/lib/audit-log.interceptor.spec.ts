@@ -94,6 +94,26 @@ describe('describeActor', () => {
     });
   });
 
+  it('names both the api key and the user who created it', () => {
+    expect(
+      describeActor({
+        type: AuthSessionType.ApiToken,
+        id: 'api-token-1',
+        name: 'Print Import',
+        token: 'secret',
+        permissions: [],
+        createdBy: { id: 'user-1', email: 'editor@example.com' },
+      })
+    ).toEqual({
+      actorType: AuditLogActorType.token,
+      userId: 'user-1',
+      userEmail: 'editor@example.com',
+      tokenName: 'Print Import',
+      sessionId: 'api-token-1',
+      impersonatedBy: null,
+    });
+  });
+
   it('describes an absent session without throwing', () => {
     expect(describeActor(undefined)).toMatchObject({
       userId: null,

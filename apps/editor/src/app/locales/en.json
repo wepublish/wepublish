@@ -1620,6 +1620,10 @@
         "letterAppendix": "QR-bill (PDF)",
         "letterAppendixNone": "None",
         "letterAppendixHelp": "PDF from \"Documents\" printed after the letter pages, e.g. a QR-bill (A4, slip at the bottom edge). Only for addresses in Switzerland; with duplex printing a blank page is added when needed so the slip lands on a front page.",
+        "attachments": "Attachments (Word)",
+        "attachmentsHelp": "Word documents (.docx) from \"Documents\", at most 5 and 15 MB together. They are filled in with the same placeholders as the mail (in the text and in link addresses, not in field codes), attached as PDF and sent in this order with every mail from this template, automated subscription mails included. System mails (login, password) cannot have attachments. A letter prints them after its pages (A4). If an attachment cannot be created, the mail is not sent. A personal document is converted for each recipient one by one, and PDF attachments make mails more likely to land in spam: keep them few and small. Needs Gotenberg as the PDF renderer.",
+        "attachmentsNone": "None",
+        "attachmentsNoDocuments": "No Word documents (.docx) under \"Documents\"",
         "letterPreviewTitle": "Letter preview",
         "selectMailType": "Please choose a purpose first.",
         "selectMailTypePlaceholder": "Choose a purpose …",
@@ -1660,6 +1664,8 @@
         "desktop": "Desktop",
         "tablet": "Tablet",
         "mobile": "Mobile",
+        "attachments": "Attachments",
+        "close": "Close",
         "linkTitle": "Link",
         "linkUrl": "URL",
         "linkText": "Link text",
@@ -1935,6 +1941,7 @@
       "paymentProviderStatusInfo": "✅ means every payment method of this plan is connected to a payment provider. ❌ means at least one payment method has no provider, so readers cannot pay with it."
     },
     "deliveryMode": {
+      "viaApiKey": "via API key «{{key}}»",
       "panelTitle": "Delivery channel",
       "channel": {
         "mail": "Email",
@@ -2795,6 +2802,13 @@
       "newArticlePaywall": "Freshly created articles will require a subscription by default",
       "subscriptionPlans": "Subscription Plans",
       "subscriptionUpgradeModel": "On upgrade, bill the full price difference (instead of the pro-rated remaining credit)",
+      "feeds": "Feeds",
+      "feedPaywalledContent": "Paywalled articles in RSS, Atom and JSON feeds",
+      "feedPaywalledContentChoice": {
+        "lead": "Lead only",
+        "visible": "The part shown before the paywall",
+        "full": "The whole text"
+      },
       "subscriptionExtendWindowDays": "Renewal window (days before the end)",
       "paymentMethodChangeExpiryDays": "Payment method change waiting time (days)",
       "warnings": {
@@ -2807,6 +2821,7 @@
         "newArticlePeering": "Will not affect already created articles",
         "newArticlePaywall": "Will not affect already created articles",
         "subscriptionUpgradeModel": "When enabled, an upgrade always charges the difference between the new and current plan price, regardless of how much time is left in the current period. When disabled, only the unused (pro-rated) remainder of the current period is credited.",
+        "feedPaywalledContent": "Free articles always appear in the feeds with their whole text. This setting applies to articles behind an active paywall. Feeds are read by the Swiss media database (SMD) and feed readers, among others; changes show within ten minutes.",
         "sessionTtlDays": "How long a login stays valid before signing in again is required. Applies from the next login; sessions already open keep their lifetime.",
         "emailQualityUnresponsiveAfterDays": "An email address counts as “unresponsive” when this many days passed without a login or a click in a mail, although mails were delivered. Re-evaluated nightly and via “Refresh statuses”.",
         "emailQualityMinMailsForUnresponsive": "This many mails must have been delivered to the address before it can count as “unresponsive”.",
@@ -3989,10 +4004,12 @@
         "mergeFieldExpression": "Expression (e.g. user.firstName)",
         "addMergeField": "Add Merge Field",
         "interestGroupMappings": "Interest Group Mappings",
-        "interestGroupHelp": "Determines whether a contact is assigned to a Mailchimp interest group based on their subscription. For groups that should always be active, use the default interest groups below instead.\n\nAvailable expressions:\n• slug:equals:value – active on exact subscription slug match\n• slug:contains:value – active if the subscription slug contains \"value\"\n• slug:contains_any:v1,v2 – active if any of the values is contained",
+        "interestGroupHelp": "Determines whether a contact is assigned to a Mailchimp interest group based on their subscription. For groups that should always be active, use the default interest groups below instead.\n\nAvailable expressions:\n• slug:equals:value – active on exact subscription slug match\n• slug:contains:value – active if the subscription slug contains \"value\"\n• slug:contains_any:v1,v2 – active if any of the values is contained\n\nAuto-add sets the group when a new matching subscription starts; auto-remove clears it once all matching subscriptions have ended. Untick either to manage that direction by hand in Mailchimp.",
         "interestGroupId": "Interest Group ID",
         "interestGroupExpression": "Expression (e.g. always)",
         "addInterestGroup": "Add Interest Group",
+        "interestGroupAutoAdd": "Auto-add",
+        "interestGroupAutoRemove": "Auto-remove",
         "defaultInterestGroups": "Default Interest Groups",
         "op_contains": "Slug contains",
         "op_equals": "Slug equals",
@@ -4535,6 +4552,8 @@
       },
       "missingPlaceholders": "Heads up: these placeholders won't be filled for these recipients: {{placeholders}}",
       "createTemplate": "New template",
+      "attachments_one": "Every mail carries {{count}} attachment as PDF: {{names}}",
+      "attachments_other": "Every mail carries {{count}} attachments as PDF: {{names}}",
       "editTemplate": "Edit template",
       "showRecipients": "Show recipients",
       "recipientList": {
@@ -5142,6 +5161,7 @@
         "failed": "Failed",
         "filterBySession": "Filter by this session",
         "tokenActor": "API token: {{name}}",
+        "tokenActorOnBehalf": "API key: {{name}} · {{user}}",
         "impersonatedActor": "{{impersonator}} as {{actor}}",
         "unknownActor": "Unknown",
         "notSupported": "This installation does not keep an audit log. Entries will appear once the migration has been applied.",
@@ -5280,6 +5300,7 @@
       "noLayouts": "No stationery yet. Create one so letters get a header and footer."
     },
     "printIssues": {
+      "viaApiKey": "via API key «{{key}}»",
       "title": "Print issues",
       "intro": "Each printed issue with its print lists: who receives a copy is decided as of the ship day – from we.publish and bexio. Every print list delivered to the printshop counts toward the issues each reader paid for.",
       "create": "New issue",
@@ -5697,6 +5718,15 @@
         "lastUsed": "Last used",
         "never": "Never used",
         "status": "Status",
+        "blocked": "Blocked",
+        "blockedReason": {
+          "CreatorMissing": "The person who created this key no longer exists. The key no longer works; create a new one.",
+          "CreatorInactive": "The person who created this key is deactivated. The key does not work until they are active again.",
+          "CreatorMayNotCreateApiTokens": "The person who created this key may no longer create API keys. The key does not work until they may again."
+        },
+        "missingScopes_one": "{{count}} permission missing",
+        "missingScopes_other": "{{count}} permissions missing",
+        "missingScopesHelp": "The person who created this key no longer holds these permissions. Calls that need them are refused: {{scopes}}",
         "active": "Active",
         "revoked": "Revoked",
         "revoke": "Revoke",

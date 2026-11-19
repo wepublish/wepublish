@@ -140,6 +140,12 @@ function setup({
   return { service, prisma, preferences, letterSender };
 }
 
+/** Who did it: a signed-in user, or an API key on behalf of its creator. */
+const by = (userId: string, apiTokenId: string | null = null) => ({
+  userId,
+  apiTokenId,
+});
+
 describe('DeliverySuggestionService.recomputeAll', () => {
   it('does nothing while letters are not enabled', async () => {
     const { service, prisma } = setup({ configured: false });
@@ -315,18 +321,37 @@ describe('DeliverySuggestionService.confirm', () => {
     reason: 'emailQuality:dead',
   };
 
+  it('records the api key that applied a suggestion next to its creator', async () => {
+    const { service, preferences } = setup({
+      users: [fakeUser('dead')],
+      suggestions: [suggestion],
+    });
+
+    await service.confirm('s1', by('creator-1', 'key-1'));
+
+    expect(preferences.set).toHaveBeenCalledWith(
+      'dead',
+      MailChannel.letter,
+      expect.objectContaining({
+        changedByUserId: 'creator-1',
+        changedByApiTokenId: 'key-1',
+      })
+    );
+  });
+
   it('applies a suggestion that still holds, as a suggestion-made switch', async () => {
     const { service, preferences } = setup({
       users: [fakeUser('dead')],
       suggestions: [suggestion],
     });
 
-    await service.confirm('s1', 'admin');
+    await service.confirm('s1', by('admin'));
 
     expect(preferences.set).toHaveBeenCalledWith('dead', MailChannel.letter, {
       origin: DeliveryPreferenceOrigin.suggestion,
       reason: 'emailQuality:dead',
       changedByUserId: 'admin',
+      changedByApiTokenId: null,
     });
   });
 
@@ -344,7 +369,7 @@ describe('DeliverySuggestionService.confirm', () => {
       suggestions: [suggestion],
     });
 
-    await expect(service.confirm('s1', 'admin')).rejects.toThrow(
+    await expect(service.confirm('s1', by('admin'))).rejects.toThrow(
       BadRequestException
     );
     expect(preferences.set).not.toHaveBeenCalled();
@@ -378,12 +403,13 @@ describe('DeliverySuggestionService.confirm', () => {
       ],
     });
 
-    await service.confirm('s2', 'admin');
+    await service.confirm('s2', by('admin'));
 
     expect(preferences.set).toHaveBeenCalledWith('back', MailChannel.mail, {
       origin: DeliveryPreferenceOrigin.suggestion,
       reason: 'emailQuality:active',
       changedByUserId: 'admin',
+      changedByApiTokenId: null,
     });
   });
 
@@ -411,7 +437,7 @@ describe('DeliverySuggestionService.confirm', () => {
     });
 
     await expect(
-      service.confirmAll(DeliverySuggestionKind.toLetter, 'admin')
+      service.confirmAll(DeliverySuggestionKind.toLetter, by('admin'))
     ).resolves.toEqual({ confirmed: 1, skipped: 1 });
     expect(preferences.set).toHaveBeenCalledTimes(1);
   });
@@ -432,13 +458,14 @@ describe('DeliverySuggestionService.keep', () => {
     });
     preferences.get.mockResolvedValue({ channel: MailChannel.mail });
 
-    await service.keep('s1', 'admin');
+    await service.keep('s1', by('admin'));
 
     expect(preferences.get).toHaveBeenCalledWith('dead');
     expect(preferences.set).toHaveBeenCalledWith('dead', MailChannel.mail, {
       origin: DeliveryPreferenceOrigin.manual,
       reason: 'kept',
       changedByUserId: 'admin',
+      changedByApiTokenId: null,
     });
   });
 
@@ -456,7 +483,7 @@ describe('DeliverySuggestionService.keep', () => {
     });
     preferences.get.mockResolvedValue({ channel: MailChannel.letter });
 
-    await service.keep('s2', 'admin');
+    await service.keep('s2', by('admin'));
 
     expect(preferences.set).toHaveBeenCalledWith(
       'back',
@@ -468,7 +495,7 @@ describe('DeliverySuggestionService.keep', () => {
   it('refuses an unknown suggestion', async () => {
     const { service, preferences } = setup();
 
-    await expect(service.keep('missing', 'admin')).rejects.toBeInstanceOf(
+    await expect(service.keep('missing', by('admin'))).rejects.toBeInstanceOf(
       BadRequestException
     );
     expect(preferences.set).not.toHaveBeenCalled();
@@ -684,7 +711,11 @@ describe('DeliverySuggestionService filters', () => {
   it('confirms all only of the filtered suggestions', async () => {
     const { service, prisma } = setup({ users: [fakeUser('dead')] });
 
-    await service.confirmAll(DeliverySuggestionKind.toLetter, 'admin', filter);
+    await service.confirmAll(
+      DeliverySuggestionKind.toLetter,
+      by('admin'),
+      filter
+    );
 
     expect(prisma.deliverySuggestion.findMany).toHaveBeenCalledWith(
       expect.objectContaining({

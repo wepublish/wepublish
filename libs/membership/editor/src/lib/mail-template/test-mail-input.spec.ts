@@ -20,4 +20,20 @@ describe('testMailInput', () => {
       textContent: 'Hallo',
     });
   });
+
+  it('keeps the attachments chosen on the draft', () => {
+    expect(
+      testMailInput({
+        contextId: 'account',
+        subject: 'Test-E-Mail',
+        htmlContent: '<p>Hallo</p>',
+        attachmentIds: ['contract', 'terms'],
+      })
+    ).toEqual({
+      contextId: 'account',
+      subject: 'Test-E-Mail',
+      htmlContent: '<p>Hallo</p>',
+      attachmentIds: ['contract', 'terms'],
+    });
+  });
 });

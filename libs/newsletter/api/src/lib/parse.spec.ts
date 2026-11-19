@@ -45,6 +45,42 @@ describe('parseDocument', () => {
     ).toThrow(DocumentError);
   });
 
+  it('lets a mailto: link through inside prose', () => {
+    const paragraph =
+      'Ihre Meinung an [info@ee-news.ch](mailto:info@ee-news.ch) mitteilen.';
+
+    expect(
+      parseDocument(withBlocks({ type: 'text', paragraphs: [paragraph] }))
+        .blocks[0]
+    ).toMatchObject({ paragraphs: [paragraph] });
+  });
+
+  it('lets a mailto: link through as a button target', () => {
+    expect(
+      parseDocument(
+        withBlocks({
+          type: 'button',
+          label: 'Schreiben Sie uns',
+          href: 'mailto:info@ee-news.ch',
+        })
+      ).blocks[0]
+    ).toMatchObject({ href: 'mailto:info@ee-news.ch' });
+  });
+
+  it('refuses a mailto: link without an address', () => {
+    expect(() =>
+      parseDocument(withBlocks({ type: 'text', paragraphs: ['[x](mailto:)'] }))
+    ).toThrow('muss eine E-Mail-Adresse enthalten');
+  });
+
+  it('names mailto: among the allowed schemes when refusing a link', () => {
+    expect(() =>
+      parseDocument(
+        withBlocks({ type: 'text', paragraphs: ['[x](ftp://a.b)'] })
+      )
+    ).toThrow('muss mit http://, https:// oder mailto: beginnen');
+  });
+
   it('lets merge tags through as link targets', () => {
     expect(
       parseDocument(

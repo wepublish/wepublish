@@ -5,15 +5,21 @@ export interface LetterPreviewProps {
   /** The rendered letter, base64 encoded, exactly as it would be printed. */
   pdf: string;
   height?: number | string;
+  /** Names the frame; a letter preview by default. */
+  title?: string;
 }
 
 /**
- * Shows the pdf a letter send would hand to the print vendor. The bytes are
- * turned into an object url rather than a `data:` url: browsers refuse to
- * render a pdf from `data:` in a frame, and a long base64 string in an
- * attribute is slow to parse.
+ * Shows the pdf a letter send would hand to the print vendor, or one a mail
+ * carries as attachment. The bytes are turned into an object url rather than a
+ * `data:` url: browsers refuse to render a pdf from `data:` in a frame, and a
+ * long base64 string in an attribute is slow to parse.
  */
-export function LetterPreview({ pdf, height = '100%' }: LetterPreviewProps) {
+export function LetterPreview({
+  pdf,
+  height = '100%',
+  title,
+}: LetterPreviewProps) {
   const { t } = useTranslation();
   const url = useMemo(() => {
     const bytes = Uint8Array.from(atob(pdf), character =>
@@ -37,7 +43,7 @@ export function LetterPreview({ pdf, height = '100%' }: LetterPreviewProps) {
     >
       {url && (
         <iframe
-          title={t('mailSend.preview.letterTitle')}
+          title={title ?? t('mailSend.preview.letterTitle')}
           src={url}
           style={{
             width: '100%',

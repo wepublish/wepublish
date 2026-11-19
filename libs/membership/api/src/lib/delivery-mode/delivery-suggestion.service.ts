@@ -4,6 +4,7 @@ import {
   Injectable,
   Logger,
 } from '@nestjs/common';
+import type { SessionActor } from '@wepublish/authentication/api';
 import {
   DeliveryPreferenceOrigin,
   DeliverySuggestionKind,
@@ -344,7 +345,7 @@ export class DeliverySuggestionService {
    * manual decision. The nightly run never proposes a manual decision again,
    * in either direction, so the answer holds.
    */
-  async keep(id: string, changedByUserId: string): Promise<void> {
+  async keep(id: string, changedBy: SessionActor): Promise<void> {
     const suggestion = await this.prisma.deliverySuggestion.findUnique({
       where: { id },
     });
@@ -359,7 +360,8 @@ export class DeliverySuggestionService {
     await this.preferences.set(suggestion.userId, channel, {
       origin: DeliveryPreferenceOrigin.manual,
       reason: 'kept',
-      changedByUserId,
+      changedByUserId: changedBy.userId,
+      changedByApiTokenId: changedBy.apiTokenId,
     });
   }
 
@@ -367,7 +369,7 @@ export class DeliverySuggestionService {
    * Apply one suggestion. It is checked again first: the night it was made
    * may be a while ago. A stale one is dropped and refused.
    */
-  async confirm(id: string, changedByUserId: string): Promise<void> {
+  async confirm(id: string, changedBy: SessionActor): Promise<void> {
     const suggestion = await this.prisma.deliverySuggestion.findUnique({
       where: { id },
       include: {
@@ -401,7 +403,8 @@ export class DeliverySuggestionService {
       {
         origin: DeliveryPreferenceOrigin.suggestion,
         reason: suggestion.reason,
-        changedByUserId,
+        changedByUserId: changedBy.userId,
+        changedByApiTokenId: changedBy.apiTokenId,
       }
     );
   }
@@ -409,7 +412,7 @@ export class DeliverySuggestionService {
   /** Apply every open suggestion of a kind the filter keeps. */
   async confirmAll(
     kind: DeliverySuggestionKind,
-    changedByUserId: string,
+    changedBy: SessionActor,
     filter?: DeliverySuggestionFilter | null
   ): Promise<DeliverySuggestionConfirmAllResult> {
     const ids = await this.prisma.deliverySuggestion.findMany({
@@ -422,7 +425,7 @@ export class DeliverySuggestionService {
 
     for (const { id } of ids) {
       try {
-        await this.confirm(id, changedByUserId);
+        await this.confirm(id, changedBy);
         confirmed++;
       } catch (error) {
         if (!(error instanceof BadRequestException)) {

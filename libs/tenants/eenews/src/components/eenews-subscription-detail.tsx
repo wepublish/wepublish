@@ -8,8 +8,8 @@ import {
   ProductType,
   SubscriptionsDocument,
 } from '@wepublish/website/api';
-import { Link } from '@wepublish/website/builder';
-import { useRouter } from 'next/router';
+import { BuilderRouterContext, Link } from '@wepublish/website/builder';
+import { useContext } from 'react';
 import { MdChevronLeft } from 'react-icons/md';
 
 import {
@@ -144,8 +144,7 @@ const formatDate = (raw: string | null | undefined): string => {
 };
 
 export const EenewsSubscriptionDetail = () => {
-  const router = useRouter();
-  const id = router.query.id as string | undefined;
+  const id = useContext(BuilderRouterContext).query.id as string | undefined;
 
   const { data } = useQuery(SubscriptionsDocument, {
     fetchPolicy: 'cache-only',

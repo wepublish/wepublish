@@ -1,5 +1,7 @@
 import { css, GlobalStyles, Theme } from '@mui/material';
 
+import { EenewsFontFaces } from '../theme';
+
 const globalCSS = (theme: Theme) => css`
   :root {
     --max-width: 1150px;
@@ -23,4 +25,9 @@ const globalCSS = (theme: Theme) => css`
   }
 `;
 
-export const EenewsGlobalStyles = () => <GlobalStyles styles={globalCSS} />;
+export const EenewsGlobalStyles = () => (
+  <>
+    <EenewsFontFaces />
+    <GlobalStyles styles={globalCSS} />
+  </>
+);

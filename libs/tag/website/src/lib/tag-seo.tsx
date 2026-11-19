@@ -34,11 +34,12 @@ export const getTagSEO = (tag: FullTagFragment) => {
   };
 };
 
-export const TagSEO = ({ tag }: BuilderTagSEOProps) => {
+export const TagSEO = ({ tag, title: customTitle }: BuilderTagSEOProps) => {
   const { meta, Head } = useWebsiteBuilder();
   const seo = useMemo(() => getTagSEO(tag), [tag]);
 
-  const title = `${seo.title ? `${seo.title} —` : ``} ${meta.siteTitle}`;
+  const title =
+    customTitle ?? `${seo.title ? `${seo.title} —` : ``} ${meta.siteTitle}`;
 
   return (
     <Head>

@@ -72,14 +72,14 @@ describe('CourantRichTextBlock inside Courant blocks', () => {
     });
     const style = getComputedStyle(screen.getByText('Article body paragraph.'));
     expect(style.fontFamily).toBe('CourantEditorial, serif');
-    expect(style.fontWeight).toBe('300');
+    expect(style.fontWeight).toBe('400');
   });
 
-  it('renders bold text in the editorial medium weight on Article blocks', () => {
+  it('renders bold text in the editorial bold weight on Article blocks', () => {
     renderWithProviders(<BlocksWithBold type="Article" />, {
       tenant: courantConfig,
     });
     const style = getComputedStyle(screen.getByText('bold word'));
-    expect(style.fontWeight).toBe('500');
+    expect(style.fontWeight).toBe('700');
   });
 });

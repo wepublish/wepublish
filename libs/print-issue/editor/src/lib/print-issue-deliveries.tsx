@@ -31,7 +31,7 @@ import {
   MdLockOpen,
   MdUndo,
 } from 'react-icons/md';
-import { day, newestDelivery, personName } from './common';
+import { actorName, day, newestDelivery } from './common';
 import { ReasonTooltip } from './reason-tooltip';
 
 type Delivery = PrintIssueDeliveryFieldsFragment;
@@ -110,7 +110,7 @@ export function PrintIssueDeliveries({
             label: t('printIssues.deliveries.exportedAt'),
             width: 200,
             render: delivery =>
-              `${day(delivery.createdAt)} · ${personName(delivery.createdBy)}`,
+              `${day(delivery.createdAt)} · ${actorName(t, delivery.createdBy, delivery.createdByApiToken)}`,
           },
           {
             id: 'options',
@@ -160,7 +160,11 @@ export function PrintIssueDeliveries({
               delivery.deliveredAt ?
                 t('printIssues.deliveries.deliveredLine', {
                   date: day(delivery.deliveredAt),
-                  name: personName(delivery.deliveredBy),
+                  name: actorName(
+                    t,
+                    delivery.deliveredBy,
+                    delivery.deliveredByApiToken
+                  ),
                 })
               : <Chip
                   size="small"

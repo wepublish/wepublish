@@ -1,5 +1,9 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { CurrentUser, UserSession } from '@wepublish/authentication/api';
+import {
+  CurrentUser,
+  actorOf,
+  AuthSession,
+} from '@wepublish/authentication/api';
 import { Feature } from '@wepublish/features/api';
 import {
   CanCreatePrintIssue,
@@ -81,9 +85,9 @@ export class PrintIssueResolver {
   })
   async computePrintIssueRun(
     @Args('id') id: string,
-    @CurrentUser() session: UserSession
+    @CurrentUser() session: AuthSession
   ) {
-    return toRunModel(await this.issues.computeRun(id, session.user.id));
+    return toRunModel(await this.issues.computeRun(id, actorOf(session)));
   }
 
   @Permissions(CanGetPrintIssues, CanGetSubscriptions, CanGetUsers)
@@ -154,10 +158,10 @@ export class PrintIssueResolver {
   async exportPrintIssueRun(
     @Args('id') id: string,
     @Args('computedAt') computedAt: Date,
-    @CurrentUser() session: UserSession
+    @CurrentUser() session: AuthSession
   ) {
     return toPrintIssueModel(
-      await this.issues.exportRun(id, session.user.id, computedAt)
+      await this.issues.exportRun(id, actorOf(session), computedAt)
     );
   }
 
@@ -168,9 +172,9 @@ export class PrintIssueResolver {
   })
   async deliverPrintIssueDelivery(
     @Args('id') id: string,
-    @CurrentUser() session: UserSession
+    @CurrentUser() session: AuthSession
   ) {
-    return toPrintIssueModel(await this.issues.deliver(id, session.user.id));
+    return toPrintIssueModel(await this.issues.deliver(id, actorOf(session)));
   }
 
   @Permissions(CanFinalizePrintIssue)
@@ -197,9 +201,9 @@ export class PrintIssueResolver {
   })
   async closePrintIssue(
     @Args('id') id: string,
-    @CurrentUser() session: UserSession
+    @CurrentUser() session: AuthSession
   ) {
-    return toPrintIssueModel(await this.issues.close(id, session.user.id));
+    return toPrintIssueModel(await this.issues.close(id, actorOf(session)));
   }
 
   @Permissions(CanFinalizePrintIssue)

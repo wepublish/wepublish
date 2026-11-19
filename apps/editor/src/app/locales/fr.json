@@ -1619,6 +1619,10 @@
         "letterAppendix": "Bulletin QR (PDF)",
         "letterAppendixNone": "Aucun",
         "letterAppendixHelp": "PDF des «Documents» imprimé après les pages de la lettre, p. ex. un bulletin QR (A4, bulletin au bord inférieur). Uniquement pour les adresses en Suisse ; en impression recto verso, une page blanche est ajoutée si nécessaire pour que le bulletin soit sur un recto.",
+        "attachments": "Pièces jointes (Word)",
+        "attachmentsHelp": "Documents Word (.docx) des «Documents», 5 au plus et 15 Mo au total. Ils sont complétés avec les mêmes espaces réservés que l'e-mail (dans le texte et les adresses des liens, pas dans les champs), joints en PDF et envoyés dans cet ordre avec chaque e-mail de ce modèle, y compris les e-mails d'abonnement automatiques. Les e-mails système (connexion, mot de passe) ne peuvent pas avoir de pièces jointes. Une lettre les imprime après ses pages (A4). Si une pièce jointe ne peut pas être créée, l'e-mail n'est pas envoyé. Un document personnel est converti pour chaque destinataire, l'un après l'autre, et les PDF joints font plus facilement classer un e-mail comme spam : en joindre peu et de petits. Nécessite Gotenberg comme moteur PDF.",
+        "attachmentsNone": "Aucune",
+        "attachmentsNoDocuments": "Aucun document Word (.docx) dans «Documents»",
         "letterPreviewTitle": "Aperçu de la lettre",
         "selectMailType": "Veuillez d’abord choisir une utilisation.",
         "selectMailTypePlaceholder": "Choisir une utilisation …",
@@ -1659,6 +1663,8 @@
         "desktop": "Ordinateur",
         "tablet": "Tablette",
         "mobile": "Mobile",
+        "attachments": "Pièces jointes",
+        "close": "Fermer",
         "linkTitle": "Lien",
         "linkUrl": "URL",
         "linkText": "Texte du lien",
@@ -1934,6 +1940,7 @@
       "paymentProviderStatusInfo": "✅ signifie que tous les moyens de paiement de ce plan sont reliés à un prestataire de paiement. ❌ signifie qu’au moins un moyen de paiement n’a pas de prestataire et que les lecteur·rice·s ne peuvent donc pas payer avec."
     },
     "deliveryMode": {
+      "viaApiKey": "via la clé API «{{key}}»",
       "panelTitle": "Canal de distribution",
       "channel": {
         "mail": "E-mail",
@@ -2779,6 +2786,13 @@
       "successTitle": "Enregistré",
       "subscriptionPlans": "Plans d’abonnement",
       "subscriptionUpgradeModel": "Lors d’une mise à niveau, facturer la différence de prix complète (au lieu du crédit restant au prorata)",
+      "feeds": "Flux",
+      "feedPaywalledContent": "Articles payants dans les flux RSS, Atom et JSON",
+      "feedPaywalledContentChoice": {
+        "lead": "Le chapeau uniquement",
+        "visible": "La partie visible avant le paywall",
+        "full": "Le texte intégral"
+      },
       "subscriptionExtendWindowDays": "Fenêtre de renouvellement (jours avant l’échéance)",
       "paymentMethodChangeExpiryDays": "Délai pour un changement de moyen de paiement (jours)",
       "warnings": {
@@ -2788,6 +2802,7 @@
         "guestPollVote": "Autoriser les votes des utilisateur·trice·s non authentifié·e·s pour les sondages.",
         "invoiceReminders": "Nombre de rappels de paiement par facture (un rappel par jour).",
         "subscriptionUpgradeModel": "Lorsque cette option est activée, une mise à niveau facture toujours la différence entre le prix du nouveau plan et celui du plan actuel, quel que soit le temps restant dans la période en cours. Lorsqu’elle est désactivée, seul le solde restant (au prorata) non utilisé de la période en cours est crédité.",
+        "feedPaywalledContent": "Les articles gratuits figurent toujours dans les flux avec leur texte intégral. Ce réglage concerne les articles derrière un paywall actif. Les flux sont lus notamment par la Banque de données suisse des médias (SMD) et les lecteurs de flux ; les changements apparaissent en dix minutes au plus.",
         "sessionTtlDays": "Combien de temps une connexion reste valable avant de devoir se reconnecter. S’applique dès la prochaine connexion ; les sessions ouvertes gardent leur durée.",
         "emailQualityUnresponsiveAfterDays": "Une adresse e-mail est considérée « sans réaction » lorsque ce nombre de jours s’est écoulé sans connexion ni clic dans un e-mail, alors que des e-mails ont été remis. Réévalué chaque nuit et via « Actualiser les statuts ».",
         "emailQualityMinMailsForUnresponsive": "Ce nombre d’e-mails doit avoir été remis à l’adresse avant qu’elle puisse être considérée « sans réaction ».",
@@ -3905,10 +3920,12 @@
         "mergeFieldExpression": "Expression (p. ex. user.firstName)",
         "addMergeField": "Ajouter un champ de fusion",
         "interestGroupMappings": "Correspondances des groupes d’intérêt",
-        "interestGroupHelp": "Détermine si un contact est attribué à un groupe d’intérêt Mailchimp en fonction de son abonnement. Pour les groupes toujours actifs, utilisez les groupes d’intérêt par défaut ci-dessous.\n\nExpressions disponibles :\n• slug:equals:valeur – actif en cas de correspondance exacte du slug d’abonnement\n• slug:contains:valeur – actif si le slug d’abonnement contient « valeur »\n• slug:contains_any:v1,v2 – actif si l’une des valeurs est contenue",
+        "interestGroupHelp": "Détermine si un contact est attribué à un groupe d’intérêt Mailchimp en fonction de son abonnement. Pour les groupes toujours actifs, utilisez les groupes d’intérêt par défaut ci-dessous.\n\nExpressions disponibles :\n• slug:equals:valeur – actif en cas de correspondance exacte du slug d’abonnement\n• slug:contains:valeur – actif si le slug d’abonnement contient « valeur »\n• slug:contains_any:v1,v2 – actif si l’une des valeurs est contenue\n\nL’ajout auto attribue le groupe dès qu’un nouvel abonnement correspondant commence ; le retrait auto le retire une fois tous les abonnements correspondants terminés. Décochez l’une des options pour gérer ce sens manuellement dans Mailchimp.",
         "interestGroupId": "ID du groupe d’intérêt",
         "interestGroupExpression": "Expression (p. ex. always)",
         "addInterestGroup": "Ajouter un groupe d’intérêt",
+        "interestGroupAutoAdd": "Ajout auto",
+        "interestGroupAutoRemove": "Retrait auto",
         "defaultInterestGroups": "Groupes d’intérêt par défaut",
         "op_contains": "Slug contient",
         "op_equals": "Slug est égal à",
@@ -4508,6 +4525,8 @@
       },
       "missingPlaceholders": "Attention : ces champs ne seront pas remplis pour ces destinataires : {{placeholders}}",
       "createTemplate": "Nouveau modèle",
+      "attachments_one": "Chaque e-mail contient {{count}} pièce jointe en PDF : {{names}}",
+      "attachments_other": "Chaque e-mail contient {{count}} pièces jointes en PDF : {{names}}",
       "editTemplate": "Modifier le modèle",
       "showRecipients": "Afficher les destinataires",
       "recipientList": {
@@ -5115,6 +5134,7 @@
         "failed": "Échoué",
         "filterBySession": "Filtrer par cette session",
         "tokenActor": "Jeton API : {{name}}",
+        "tokenActorOnBehalf": "Clé API : {{name}} · {{user}}",
         "impersonatedActor": "{{impersonator}} en tant que {{actor}}",
         "unknownActor": "Inconnu",
         "notSupported": "Cette installation ne tient pas de journal d’audit. Les entrées apparaîtront une fois la migration appliquée.",
@@ -5280,6 +5300,7 @@
       "noLayouts": "Pas encore de papier à lettres. Créez-en un pour que les lettres aient un en-tête et un pied de page."
     },
     "printIssues": {
+      "viaApiKey": "via la clé API «{{key}}»",
       "title": "Numéros imprimés",
       "intro": "Chaque numéro imprimé avec ses listes d’impression : qui reçoit un exemplaire se décide à la date de parution – depuis we.publish et bexio. Chaque liste d’impression livrée à l’imprimerie compte dans les numéros payés par les lecteur·trice·s.",
       "create": "Nouveau numéro",
@@ -5697,6 +5718,15 @@
         "lastUsed": "Dernière utilisation",
         "never": "Jamais utilisée",
         "status": "Statut",
+        "blocked": "Bloquée",
+        "blockedReason": {
+          "CreatorMissing": "La personne qui a créé cette clé n’existe plus. La clé ne fonctionne plus ; créez-en une nouvelle.",
+          "CreatorInactive": "La personne qui a créé cette clé est désactivée. La clé ne fonctionne pas tant qu’elle le reste.",
+          "CreatorMayNotCreateApiTokens": "La personne qui a créé cette clé ne peut plus créer de clés API. La clé ne fonctionne pas tant que c’est le cas."
+        },
+        "missingScopes_one": "{{count}} droit manquant",
+        "missingScopes_other": "{{count}} droits manquants",
+        "missingScopesHelp": "La personne qui a créé cette clé n’a plus ces droits. Les appels qui en ont besoin sont refusés : {{scopes}}",
         "active": "Active",
         "revoked": "Révoquée",
         "revoke": "Révoquer",
@@ -5707,7 +5737,7 @@
         "expiresInDays_other": "Expire dans {{count}} jours",
         "expiresDate": "{{expiresDate, ccc PP p}}",
         "owner": "Propriétaire",
-        "ownerUnknown": "Personne supprimée",
+        "ownerUnknown": "Utilisateur supprimé",
         "filterByOwner": "Filtrer par propriétaire",
         "anyStatus": "Tout statut"
       },
