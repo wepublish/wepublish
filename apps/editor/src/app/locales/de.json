@@ -2939,6 +2939,12 @@
         "renewal": {
           "true": "mit automatischer Verlängerung",
           "false": "ohne automatische Verlängerung"
+        },
+        "noMemberPlan": "Ohne Abo-Plan",
+        "warnings": {
+          "noMemberPlan": "Der Abo-Plan dieses Ablaufs wurde gelöscht. Solange es diesen Ablauf gibt, wird keine automatische Mitteilung verschickt – lösche ihn.",
+          "matchesNothing": "Gilt für kein Abo: Es fehlt eine Zahlungsmethode, Periodizität oder Verlängerung.",
+          "notOffered": "Bietet der Abo-Plan nicht mehr an: {{values}}. Gilt dafür nur noch für bestehende Abos."
         }
       },
       "flow": "Ablauf",
@@ -4517,7 +4523,7 @@
       "title": "Mitteilungen zu Konto- & Login-Ereignissen",
       "sectionDescription": "E-Mails rund um das Benutzerkonto. Sie werden durch eine Aktion der Person ausgelöst – unabhängig davon, ob sie ein Abo hat.",
       "sectionExample": "Jemand registriert sich → Willkommens-E-Mail geht sofort raus.",
-      "sendTest": "Test an mich",
+      "sendTest": "Test-E-Mail an mich",
       "testSent": "Test-E-Mail an dich verschickt",
       "columns": {
         "event": "Ereignis-Typ",
@@ -4543,8 +4549,8 @@
           "example": "«Mit einem Klick anmelden.»"
         },
         "password_reset": {
-          "userAction": "Klickt auf «Passwort vergessen»",
-          "description": "Geht raus, wenn eine Person «Passwort vergessen» anklickt. Die E-Mail muss den Link zum Setzen eines neuen Passworts enthalten.",
+          "userAction": "Admin oder Autor:in klickt im Editor-Login auf «Passwort vergessen»",
+          "description": "Geht raus, wenn jemand im Login des Editors «Passwort vergessen» anklickt – das gibt es nur dort, nicht auf der Website. Betrifft also Admins, Autor:innen und andere Editor-User. Die E-Mail muss den Link zum Setzen eines neuen Passworts enthalten.",
           "example": "«Hier setzt du ein neues Passwort.»"
         },
         "email_change": {
