@@ -3047,7 +3047,8 @@
         "issued": "Nouveau code (affiché une seule fois) :",
         "secondFactorAvailable": "Le deuxième facteur « {{factor}} » est renseigné pour cette personne.",
         "secondFactorMissing": "Le deuxième facteur « {{factor}} » manque pour cette personne – sans cette information, elle ne peut pas enregistrer d’adresse e-mail.",
-        "notForStaff": "Les personnes dont les rôles permettent plus que la lecture derrière le paywall ne reçoivent jamais de code de connexion personnel. {{purl}} reste vide dans leurs e-mails et lettres."
+        "notForStaff": "Les personnes dont les rôles permettent plus que la lecture derrière le paywall ne reçoivent jamais de code de connexion personnel. {{purl}} reste vide dans leurs e-mails et lettres.",
+        "staffConflict": "Cette personne a un code de connexion personnel, mais un rôle qui permet plus que la lecture derrière le paywall. Le code ne lui permet plus de se connecter et sera révoqué à sa prochaine utilisation. Révoquez-le maintenant ou retirez le rôle."
       },
       "totpEnabled": "L’authentification à deux facteurs est activée pour cet utilisateur.",
       "totpDisabled": "L’authentification à deux facteurs n’est pas encore configurée. L’utilisateur sera invité à la configurer lors de sa prochaine connexion à l’éditeur.",
@@ -3930,10 +3931,12 @@
         "mergeFieldExpression": "Expression (p. ex. user.firstName)",
         "addMergeField": "Ajouter un champ de fusion",
         "interestGroupMappings": "Correspondances des groupes d’intérêt",
-        "interestGroupHelp": "Détermine si un contact est attribué à un groupe d’intérêt Mailchimp en fonction de son abonnement. Pour les groupes toujours actifs, utilisez les groupes d’intérêt par défaut ci-dessous.\n\nExpressions disponibles :\n• slug:equals:valeur – actif en cas de correspondance exacte du slug d’abonnement\n• slug:contains:valeur – actif si le slug d’abonnement contient « valeur »\n• slug:contains_any:v1,v2 – actif si l’une des valeurs est contenue",
+        "interestGroupHelp": "Détermine si un contact est attribué à un groupe d’intérêt Mailchimp en fonction de son abonnement. Pour les groupes toujours actifs, utilisez les groupes d’intérêt par défaut ci-dessous.\n\nExpressions disponibles :\n• slug:equals:valeur – actif en cas de correspondance exacte du slug d’abonnement\n• slug:contains:valeur – actif si le slug d’abonnement contient « valeur »\n• slug:contains_any:v1,v2 – actif si l’une des valeurs est contenue\n\nL’ajout auto attribue le groupe dès qu’un nouvel abonnement correspondant commence ; le retrait auto le retire une fois tous les abonnements correspondants terminés. Décochez l’une des options pour gérer ce sens manuellement dans Mailchimp.",
         "interestGroupId": "ID du groupe d’intérêt",
         "interestGroupExpression": "Expression (p. ex. always)",
         "addInterestGroup": "Ajouter un groupe d’intérêt",
+        "interestGroupAutoAdd": "Ajout auto",
+        "interestGroupAutoRemove": "Retrait auto",
         "defaultInterestGroups": "Groupes d’intérêt par défaut",
         "op_contains": "Slug contient",
         "op_equals": "Slug est égal à",

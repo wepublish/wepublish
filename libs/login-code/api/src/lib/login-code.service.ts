@@ -81,9 +81,11 @@ export class LoginCodeService implements PurlProvider {
   }
 
   /**
-   * Staff never hold a login code: a code session carries every permission of
-   * its account, and a code travels on paper. Reader access through a role
-   * (reading past the paywall) does not make an account staff.
+   * Staff never log in with a login code: a code session carries every
+   * permission of its account, and a code travels on paper. Reader access
+   * through a role (reading past the paywall) does not make an account staff.
+   * Giving someone a staff role leaves their code in place; `verify` refuses
+   * and revokes it when it is used.
    */
   private async mayHoldLoginCode({ roleIDs }: { roleIDs: string[] }) {
     if (!roleIDs.length) {
@@ -251,37 +253,6 @@ export class LoginCodeService implements PurlProvider {
     });
 
     return count;
-  }
-
-  /** After a person's roles changed: staff lose their codes right away. */
-  async revokeIfStaff(userId: string) {
-    const user = await this.prisma.user.findUnique({
-      where: { id: userId },
-      select: { roleIDs: true },
-    });
-
-    if (user && !(await this.mayHoldLoginCode(user))) {
-      await this.revoke(userId, REVOKED_FOR_STAFF);
-    }
-  }
-
-  /**
-   * After a role's permissions changed: if it now grants more than reader
-   * access, everyone holding it is staff and loses their codes, in one query.
-   */
-  async revokeForRole(roleId: string) {
-    const role = await this.prisma.userRole.findUnique({
-      where: { id: roleId },
-    });
-
-    if (!role || !grantsMoreThanReaderAccess([role])) {
-      return;
-    }
-
-    await this.prisma.userLoginCode.updateMany({
-      where: { revokedAt: null, user: { roleIDs: { has: roleId } } },
-      data: { revokedAt: new Date(), revokedBy: REVOKED_FOR_STAFF },
-    });
   }
 
   async reissue(userId: string, issuedBy: string) {

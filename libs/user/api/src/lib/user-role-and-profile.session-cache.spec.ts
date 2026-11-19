@@ -7,7 +7,6 @@ import { PublicContentCacheInvalidator } from '@wepublish/public-content-cache/a
 import { UserRoleService } from './user-role.service';
 import { UserRoleDataloader } from './user-role.dataloader';
 import { ProfileService } from './profile.service';
-import { LoginCodeService } from '@wepublish/login-code/api';
 
 const prisma = {
   userRole: {
@@ -38,10 +37,6 @@ describe('session cache after role and profile changes', () => {
           { provide: PrismaClient, useValue: prisma },
           { provide: SessionCacheInvalidator, useValue: sessionCache },
           { provide: UserRoleDataloader, useValue: { prime: vi.fn() } },
-          {
-            provide: LoginCodeService,
-            useValue: { revokeIfStaff: vi.fn(), revokeForRole: vi.fn() },
-          },
         ],
       }).compile()
     ).get(UserRoleService);

@@ -3101,7 +3101,8 @@
         "issued": "New code (shown once):",
         "secondFactorAvailable": "Second factor “{{factor}}” is on file for this user.",
         "secondFactorMissing": "Second factor “{{factor}}” is missing for this user – without it they cannot store an email address.",
-        "notForStaff": "People whose roles allow more than reading past the paywall never get a personal login code. {{purl}} stays empty in their emails and letters."
+        "notForStaff": "People whose roles allow more than reading past the paywall never get a personal login code. {{purl}} stays empty in their emails and letters.",
+        "staffConflict": "This person holds a personal login code but has a role that allows more than reading past the paywall. The code no longer logs them in and is revoked when it is used. Revoke it now, or remove the role."
       },
       "totpEnabled": "Two-factor authentication is enabled for this user.",
       "totpDisabled": "Two-factor authentication is not yet configured. The user will be prompted to set it up on their next editor login.",
@@ -4020,10 +4021,12 @@
         "mergeFieldExpression": "Expression (e.g. user.firstName)",
         "addMergeField": "Add Merge Field",
         "interestGroupMappings": "Interest Group Mappings",
-        "interestGroupHelp": "Determines whether a contact is assigned to a Mailchimp interest group based on their subscription. For groups that should always be active, use the default interest groups below instead.\n\nAvailable expressions:\n• slug:equals:value – active on exact subscription slug match\n• slug:contains:value – active if the subscription slug contains \"value\"\n• slug:contains_any:v1,v2 – active if any of the values is contained",
+        "interestGroupHelp": "Determines whether a contact is assigned to a Mailchimp interest group based on their subscription. For groups that should always be active, use the default interest groups below instead.\n\nAvailable expressions:\n• slug:equals:value – active on exact subscription slug match\n• slug:contains:value – active if the subscription slug contains \"value\"\n• slug:contains_any:v1,v2 – active if any of the values is contained\n\nAuto-add sets the group when a new matching subscription starts; auto-remove clears it once all matching subscriptions have ended. Untick either to manage that direction by hand in Mailchimp.",
         "interestGroupId": "Interest Group ID",
         "interestGroupExpression": "Expression (e.g. always)",
         "addInterestGroup": "Add Interest Group",
+        "interestGroupAutoAdd": "Auto-add",
+        "interestGroupAutoRemove": "Auto-remove",
         "defaultInterestGroups": "Default Interest Groups",
         "op_contains": "Slug contains",
         "op_equals": "Slug equals",
