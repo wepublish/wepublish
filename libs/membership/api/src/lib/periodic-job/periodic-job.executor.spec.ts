@@ -160,8 +160,10 @@ describe('PeriodicJobExecutor', () => {
 
     expect(ran).toEqual([
       'periodic jobs',
+      'bexio contact sync',
       'mailchimp sync',
       'mail log sync',
+      'suppression sync',
       'email quality',
       'delivery suggestions',
     ]);
