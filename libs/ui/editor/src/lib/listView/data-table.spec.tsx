@@ -133,6 +133,14 @@ describe('DataTable', () => {
     expect(screen.getByText('No articles yet')).toBeInTheDocument();
   });
 
+  it('gives a row the hint it is asked to show', () => {
+    renderTable({ rowTitle: (row: Row) => `Open ${row.title}` });
+
+    const row = screen.getByText(rows[0].title).closest('tr');
+
+    expect(row?.getAttribute('title')).toBe(`Open ${rows[0].title}`);
+  });
+
   it('lets a row be clicked', () => {
     const onRowClick = vi.fn();
     renderTable({ onRowClick });

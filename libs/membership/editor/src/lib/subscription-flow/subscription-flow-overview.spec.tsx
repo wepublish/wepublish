@@ -239,7 +239,10 @@ describe('SubscriptionFlowOverview', () => {
     expect(
       flowLinks().map(link => [link.textContent, link.getAttribute('href')])
     ).toEqual([
-      ['subscriptionFlow.defaultFlow', '/communicationflows/flow/default'],
+      [
+        'subscriptionFlow.overview.defaultFlow',
+        '/communicationflows/flow/default',
+      ],
       ['Digital', '/communicationflows/flow/flow-digital'],
       ['Print', '/communicationflows/flow/flow-print'],
     ]);
@@ -248,7 +251,7 @@ describe('SubscriptionFlowOverview', () => {
   it('says for which subscriptions a flow is, how many these are and how many events send something', () => {
     renderOverview();
 
-    const standard = rowOf('subscriptionFlow.defaultFlow');
+    const standard = rowOf('subscriptionFlow.overview.defaultFlow');
 
     expect(
       within(standard).getByText('subscriptionFlow.overview.defaultApplies')
@@ -331,7 +334,7 @@ describe('SubscriptionFlowOverview', () => {
     renderOverview('/communicationflows?memberPlan=print');
 
     expect(flowLinks().map(link => link.textContent)).toEqual([
-      'subscriptionFlow.defaultFlow',
+      'subscriptionFlow.overview.defaultFlow',
       'Print',
     ]);
   });
@@ -340,9 +343,12 @@ describe('SubscriptionFlowOverview', () => {
     renderOverview();
 
     expect(
-      within(rowOf('subscriptionFlow.defaultFlow')).queryByRole('button', {
-        name: 'delete',
-      })
+      within(rowOf('subscriptionFlow.overview.defaultFlow')).queryByRole(
+        'button',
+        {
+          name: 'delete',
+        }
+      )
     ).toBeNull();
     expect(
       within(rowOf('Print')).getByRole('button', { name: 'delete' })
@@ -398,9 +404,10 @@ describe('SubscriptionFlowOverview', () => {
         .closest('[data-actions]') as HTMLElement;
 
     // Rows start their actions at the same edge instead of centring them.
-    expect(actions('subscriptionFlow.defaultFlow')).toBeTruthy();
+    expect(actions('subscriptionFlow.overview.defaultFlow')).toBeTruthy();
     expect(
-      getComputedStyle(actions('subscriptionFlow.defaultFlow')).justifyContent
+      getComputedStyle(actions('subscriptionFlow.overview.defaultFlow'))
+        .justifyContent
     ).toBe('flex-start');
     expect(getComputedStyle(actions('Print')).justifyContent).toBe(
       'flex-start'

@@ -1937,7 +1937,9 @@
       "chooser": {
         "title": "Choose a template: {{event}}",
         "select": "Choose this template",
-        "none": "Send no message"
+        "selectCurrent": "Choose this template (already chosen)",
+        "none": "Send no message",
+        "create": "Create new template"
       },
       "channels": "Delivery channels",
       "noLetterVersion": "This template has no letter version. Add one in the template so people on the letter channel get this message printed; until then they get the email.",
@@ -2912,7 +2914,8 @@
         "back": "All flows & automated messages",
         "title": "Messages for subscription flows",
         "intro": "A flow decides which message goes out automatically for which subscription event. The default flow applies to all subscriptions. A member plan can have flows of its own for some of its subscriptions: such a flow replaces the default flow for the affected subscriptions completely.",
-        "flow": "Flow",
+        "flow": "Flow for member plan",
+        "defaultFlow": "All → default flow",
         "appliesTo": "Applies to",
         "defaultApplies": "All subscriptions without a flow of their own",
         "subscriptions": "Affected subscriptions",

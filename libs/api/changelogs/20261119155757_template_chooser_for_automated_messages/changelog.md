@@ -9,6 +9,6 @@ actionRequired: false
 - **Narrowed to the event.** The table opens showing the templates written for this kind of event, for example invoice templates for “Invoice creation”. “Reset Filter” shows all of them.
 - **Search and filters** work as in the list of message templates.
 - **Choosing.** Click a row or its ⊕ button; the choice is saved at once. “Send no message” removes the template from the event.
-- “Create template” opens a new template in another tab.
+- “Create new template” opens a new template in another tab.
 
 As before, only templates with an email version are offered.

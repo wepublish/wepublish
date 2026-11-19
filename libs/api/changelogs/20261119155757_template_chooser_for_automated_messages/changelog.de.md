@@ -8,6 +8,6 @@ lead: Die Vorlage eines Ablauf-Ereignisses oder einer Konto-Mitteilung wird nich
 - **Auf das Ereignis eingegrenzt.** Die Tabelle zeigt beim Öffnen die Vorlagen, die für diese Art Ereignis geschrieben sind, zum Beispiel Rechnungsvorlagen bei «Rechnungserstellung». «Filter zurücksetzen» zeigt alle.
 - **Suche und Filter** funktionieren wie in der Liste der Mitteilungsvorlagen.
 - **Wählen.** Klicken Sie auf eine Zeile oder auf ihren ⊕-Knopf; die Wahl wird sofort gespeichert. «Keine Mitteilung senden» entfernt die Vorlage vom Ereignis.
-- «Vorlage erstellen» öffnet eine neue Vorlage in einem anderen Tab.
+- «Neue Vorlage erstellen» öffnet eine neue Vorlage in einem anderen Tab.
 
 Wie bisher werden nur Vorlagen mit einer E-Mail-Version angeboten.

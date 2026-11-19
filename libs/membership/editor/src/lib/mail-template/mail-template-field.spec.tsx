@@ -57,12 +57,12 @@ const renderField = (
 describe('MailTemplateField', () => {
   beforeEach(() => onChange.mockReset());
 
-  it('shows the chosen template with its purpose, named after the event', () => {
+  it('shows the chosen template by its name alone, named after the event', () => {
     renderField({ value: 'mt-1' });
 
     expect(
       screen.getByRole('button', {
-        name: 'Rechnungserstellung: Neue Rechnung (mailTemplates.mailTypes.invoiceCreation)',
+        name: 'Rechnungserstellung: Neue Rechnung',
       })
     ).toBeTruthy();
   });

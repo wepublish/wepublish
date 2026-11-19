@@ -1936,7 +1936,9 @@
       "chooser": {
         "title": "Choisir un modèle : {{event}}",
         "select": "Choisir ce modèle",
-        "none": "Ne pas envoyer de message"
+        "selectCurrent": "Choisir ce modèle (déjà choisi)",
+        "none": "Ne pas envoyer de message",
+        "create": "Créer un nouveau modèle"
       },
       "channels": "Canaux de distribution",
       "noLetterVersion": "Ce modèle n’a pas de version lettre. Ajoutez-la dans le modèle pour que les personnes au canal lettre reçoivent ce message imprimé ; d’ici là, elles reçoivent l’e-mail.",
@@ -2911,7 +2913,8 @@
         "back": "Tous les flux et messages automatiques",
         "title": "Messages des flux d’abonnement",
         "intro": "Un flux définit quel message est envoyé automatiquement pour quel événement d’abonnement. Le flux standard vaut pour tous les abonnements. Un plan d’abonnement peut avoir ses propres flux pour certains abonnements : un tel flux remplace entièrement le flux standard pour les abonnements concernés.",
-        "flow": "Flux",
+        "flow": "Flux pour le plan d’abonnement",
+        "defaultFlow": "Tous → flux par défaut",
         "appliesTo": "S’applique à",
         "defaultApplies": "Tous les abonnements sans flux propre",
         "subscriptions": "Abonnements concernés",
