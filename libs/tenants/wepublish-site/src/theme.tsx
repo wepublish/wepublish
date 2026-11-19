@@ -1,19 +1,78 @@
 import { createTheme, Theme, ThemeOptions } from '@mui/material';
 import { alpha, createBreakpoints } from '@mui/system';
 import { responsiveProperty, theme as WePTheme } from '@wepublish/ui';
-import { Inter } from 'next/font/google';
+import { Archivo, Bricolage_Grotesque, Space_Mono } from 'next/font/google';
 import { mergeDeepRight, reduce } from 'ramda';
 import { PartialDeep } from 'type-fest';
 
 const mergeDeepAll = reduce(mergeDeepRight, {});
 
-const interFont = Inter({
-  weight: ['300', '400', '500', '600', '700'],
-  style: ['normal'],
+// Typefaces from the Figma design (file "Website", frame "Fonts")
+const bricolageGrotesque = Bricolage_Grotesque({
   subsets: ['latin'],
   display: 'swap',
   preload: true,
 });
+
+const archivo = Archivo({
+  subsets: ['latin'],
+  display: 'swap',
+  preload: true,
+});
+
+const spaceMono = Space_Mono({
+  weight: ['400', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+  preload: true,
+});
+
+const headingFont = [bricolageGrotesque.style.fontFamily, 'sans-serif'].join(
+  ','
+);
+const bodyFont = [archivo.style.fontFamily, 'sans-serif'].join(',');
+const monoFont = [spaceMono.style.fontFamily, 'monospace'].join(',');
+
+const breakPointValues = {
+  xs: 0,
+  sm: 600,
+  md: 900,
+  lg: 1133,
+  xl: 1133,
+  xxl: 1133,
+};
+
+// Text styles of the Figma design. All sizes are scaled down by 20/22 so that
+// Text is 1.25rem on desktop. The design only has desktop sizes (lg and up);
+// md is a step between them and the mobile sizes (xs). The title gets one more
+// step for tablets (sm).
+const textStyle = (
+  fontFamily: string,
+  fontWeight: number,
+  lineHeight: number,
+  fontSizes: { xs: number; sm?: number; md: number; lg: number }
+) => ({
+  fontFamily,
+  fontWeight,
+  lineHeight,
+  letterSpacing: 0,
+  ...responsiveProperty({
+    cssProperty: 'fontSize',
+    unit: 'rem',
+    breakpoints: breakPointValues,
+    values: fontSizes,
+  }),
+});
+
+export const designText = {
+  h1: textStyle(headingFont, 800, 1.2, { xs: 33, sm: 40, md: 46, lg: 60 }),
+  h2: textStyle(headingFont, 800, 1.3, { xs: 25, md: 34, lg: 42 }),
+  h3: textStyle(headingFont, 600, 1.3, { xs: 22, md: 26, lg: 29 }),
+  h4: textStyle(headingFont, 600, 1.3, { xs: 18, md: 20, lg: 22 }),
+  paragraph: textStyle(bodyFont, 400, 1.5, { xs: 18, md: 22, lg: 27 }),
+  text: textStyle(bodyFont, 400, 1.5, { xs: 16, md: 18, lg: 20 }),
+  textSmallMono: textStyle(monoFont, 400, 1.5, { xs: 15, md: 16, lg: 16 }),
+};
 
 const colors = {
   primary: {
@@ -36,15 +95,6 @@ const colors = {
     default: '#ffffff',
     paper: '#ffffff',
   },
-};
-
-const breakPointValues = {
-  xs: 0,
-  sm: 600,
-  md: 900,
-  lg: 1133,
-  xl: 1133,
-  xxl: 1133,
 };
 
 const {
@@ -82,106 +132,58 @@ const theme = createTheme(WePTheme, {
     // headings
     ...{
       h1: {
-        fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
+        ...designText.h1,
+        textTransform: 'none',
       },
       h2: {
-        fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
+        ...designText.h2,
         textTransform: 'none',
-        fontWeight: 600,
-        lineHeight: 1.4,
-        ...mergeDeepAll([
-          responsiveProperty({
-            cssProperty: 'fontSize',
-            unit: 'rem',
-            breakpoints: WePTheme.breakpoints.values,
-            values: {
-              xs: 24,
-              md: 40,
-            },
-          }),
-        ]),
       },
       h3: {
-        fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
+        ...designText.h3,
         textTransform: 'none',
-        fontWeight: 500,
-        fontSize: '3rem',
-        lineHeight: 1.2,
       },
       h4: {
-        fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
+        ...designText.h4,
         textTransform: 'none',
-        fontWeight: 500,
-        fontSize: '1.5rem',
       },
       h5: {
-        fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
+        fontFamily: headingFont,
         fontWeight: 700,
         fontSize: '1.125rem',
       },
       h6: {
-        fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
+        fontFamily: headingFont,
       },
       blockTitlePreTitle: {
-        fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
+        ...designText.text,
         backgroundColor: 'transparent',
         padding: 0,
-        letterSpacing: '0.02rem',
-        ...mergeDeepAll([
-          responsiveProperty({
-            cssProperty: 'fontSize',
-            unit: 'rem',
-            breakpoints: WePTheme.breakpoints.values,
-            values: {
-              md: 24,
-            },
-          }),
-          responsiveProperty({
-            cssProperty: 'lineHeight',
-            unit: 'rem',
-            breakpoints: WePTheme.breakpoints.values,
-            values: {
-              xs: 22,
-            },
-          }),
-        ]),
       },
       subtitle1: {
-        fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
-        fontWeight: 400,
-        fontSize: '1.5rem',
-        lineHeight: 1.2,
+        ...designText.paragraph,
         fontStyle: 'normal',
-        letterSpacing: '0.01em',
       },
       subtitle2: {
-        fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
-        fontWeight: 400,
-        fontSize: '1.5rem',
+        ...designText.paragraph,
         fontStyle: 'normal',
       },
     },
     // body
     ...{
-      body1: {
-        fontFamily: [interFont.style.fontFamily, 'serif'].join(','),
-        fontSize: '1.125rem',
-      },
-      body2: {
-        fontFamily: [interFont.style.fontFamily, 'serif'].join(','),
-        fontSize: '1.125rem',
-      },
+      body1: designText.text,
+      body2: designText.text,
     },
     button: {
-      fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: bodyFont,
     },
     overline: {
-      fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: bodyFont,
     },
     // image
     ...{
       caption: {
-        fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
+        fontFamily: bodyFont,
         fontSize: '0.75rem',
         lineHeight: 1.2,
       },
@@ -189,85 +191,37 @@ const theme = createTheme(WePTheme, {
     // break block
     ...{
       blockBreakTitle: {
-        fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
-        fontWeight: 400,
-        lineHeight: 1.3,
+        ...designText.h2,
         textTransform: 'none',
         [breakpoints.up('xs')]: {
           fontStyle: 'normal',
         },
-        ...mergeDeepAll([
-          responsiveProperty({
-            cssProperty: 'fontSize',
-            unit: 'rem',
-            breakpoints: WePTheme.breakpoints.values,
-            values: {
-              xs: 20,
-              md: 32,
-            },
-          }),
-        ]),
       },
-      blockBreakBody: {
-        fontFamily: [interFont.style.fontFamily, 'serif'].join(','),
-      },
+      blockBreakBody: designText.paragraph,
     },
     // BlockQuote
     ...{
       blockQuote: {
-        fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
-        fontWeight: 400,
+        ...designText.h3,
         fontStyle: 'normal',
         textAlign: 'left',
-        lineHeight: 1.2,
-        ...mergeDeepAll([
-          responsiveProperty({
-            cssProperty: 'fontSize',
-            unit: 'rem',
-            breakpoints: WePTheme.breakpoints.values,
-            values: {
-              xs: 20,
-              md: 30,
-            },
-          }),
-        ]),
         '& + cite': {
-          fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
+          ...designText.text,
           fontStyle: 'normal',
           textTransform: 'none',
-          lineHeight: 1,
-          fontWeight: 400,
           justifySelf: 'start',
-          ...mergeDeepAll([
-            responsiveProperty({
-              cssProperty: 'fontSize',
-              unit: 'rem',
-              breakpoints: WePTheme.breakpoints.values,
-              values: {
-                xs: 14,
-                md: 16,
-              },
-            }),
-          ]),
         },
       },
     },
     // Footer
     ...{
       categoryLinkTitle: {
-        fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
+        ...designText.textSmallMono,
         color: colors.common.white,
         display: 'inline-block',
         whiteSpace: 'nowrap',
         margin: 0,
         padding: '0 0.3rem',
-        fontSize: '1.5rem',
-        lineHeight: 1.2,
-        fontWeight: 700,
-        [breakpoints.up('md')]: {
-          fontSize: '1.5rem',
-          lineHeight: 1.2,
-        },
       },
       categoryLinkList: {
         listStyle: 'none',
@@ -286,27 +240,14 @@ const theme = createTheme(WePTheme, {
         padding: 0,
       },
       categoryAddressText: {
-        fontFamily: ['Euclid', 'sans-serif'].join(','),
+        ...designText.text,
         color: colors.common.white,
-        fontWeight: 400,
         fontStyle: 'normal',
-        lineHeight: 1.6,
-        ...mergeDeepAll([
-          responsiveProperty({
-            cssProperty: 'fontSize',
-            unit: 'rem',
-            breakpoints: WePTheme.breakpoints.values,
-            values: {
-              xs: 16,
-              md: 20,
-            },
-          }),
-        ]),
       },
     },
     // TeaserSlots
     teaserSlotsTitle: {
-      fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: headingFont,
       fontWeight: 400,
       color: colors.common.black,
       textTransform: 'none',
@@ -329,7 +270,7 @@ const theme = createTheme(WePTheme, {
     // Teaser
     ...{
       teaserTitle: {
-        fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
+        fontFamily: headingFont,
         backgroundColor: 'transparent',
         margin: 0,
         padding: 0,
@@ -351,7 +292,7 @@ const theme = createTheme(WePTheme, {
         ]),
       },
       teaserPretitle: {
-        fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
+        fontFamily: bodyFont,
         color: colors.common.white,
         backgroundColor: colors.common.black,
         fontSize: '1rem',
@@ -362,7 +303,7 @@ const theme = createTheme(WePTheme, {
         display: 'inline-block',
       },
       teaserLead: {
-        fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
+        fontFamily: bodyFont,
         lineHeight: 1.5,
         fontWeight: 300,
         padding: 0,
@@ -383,11 +324,9 @@ const theme = createTheme(WePTheme, {
         ]),
       },
       teaserMeta: {
-        fontFamily: ['Euclid', 'sans-serif'].join(','),
+        ...designText.textSmallMono,
         backgroundColor: colors.common.white,
         margin: 0,
-        fontSize: '1rem',
-        fontWeight: 700,
         padding: '0 1.5rem',
       },
     },
@@ -457,7 +396,7 @@ const theme = createTheme(WePTheme, {
           // Footer / Header
           props: { variant: 'categoryLink' },
           style: {
-            fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
+            fontFamily: bodyFont,
             fontWeight: 500,
             fontStyle: 'normal',
             color: colors.common.white,
@@ -488,7 +427,7 @@ const theme = createTheme(WePTheme, {
         {
           props: { variant: 'linkToc' },
           style: {
-            fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
+            fontFamily: bodyFont,
             fontWeight: 700,
             lineHeight: 1,
             fontSize: '1.125rem',
@@ -505,7 +444,7 @@ const theme = createTheme(WePTheme, {
         {
           props: { variant: 'linkDownloads' },
           style: {
-            fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
+            fontFamily: bodyFont,
             fontWeight: 400,
             lineHeight: 1,
             fontSize: '1.125rem',
@@ -523,7 +462,7 @@ const theme = createTheme(WePTheme, {
         {
           props: { variant: 'buttonLinkMain' },
           style: {
-            fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
+            fontFamily: bodyFont,
             fontWeight: 500,
             textTransform: 'uppercase',
             color: colors.common.black,
@@ -543,7 +482,7 @@ const theme = createTheme(WePTheme, {
         {
           props: { variant: 'buttonLinkSecondary' },
           style: {
-            fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
+            fontFamily: bodyFont,
             fontWeight: 500,
             textTransform: 'uppercase',
             borderRadius: '9999px',
@@ -581,7 +520,7 @@ const theme = createTheme(WePTheme, {
             },
           },
           '.MuiAccordionSummary-root': {
-            fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
+            fontFamily: bodyFont,
             fontWeight: 500,
             padding: '0',
             gridColumn: '-1 / 1',
@@ -623,7 +562,7 @@ const theme = createTheme(WePTheme, {
             },
           },
           '.MuiAccordionSummary-expandIconWrapper': {
-            fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
+            fontFamily: bodyFont,
             position: 'absolute',
             top: '50%',
             right: '1rem',
@@ -711,126 +650,11 @@ const theme = createTheme(WePTheme, {
   },
 } as PartialDeep<Theme> | ThemeOptions);
 
-export const navbarTheme = createTheme(theme, {
-  typography: {
-    ...{
-      categoryLinkList: {
-        listStyle: 'none',
-        margin: 0,
-        padding: 0,
-        display: 'flex',
-        flexDirection: 'row',
-        columnGap: theme.spacing(1.5),
-        gridColumn: '1 / 2',
-        [breakpoints.up('md')]: {
-          columnGap: theme.spacing(6),
-          gridColumn: '3 / 4',
-        },
-        lineHeight: 1.2,
-        pointerEvents: 'all',
-      },
-      categoryLinkItem: {
-        listStyle: 'none',
-        margin: 0,
-        padding: '0 0',
-        lineHeight: 0,
-        borderRadius: '3px',
-        ['&:last-of-type']: {
-          display: 'none',
-          [breakpoints.up('md')]: {
-            display: 'block',
-          },
-          padding: '0 1rem',
-          backgroundColor: colors.primary.light,
-          ['&:hover']: {
-            backgroundColor: colors.primary.light,
-            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.4)',
-          },
-          ['& *:hover']: {
-            textDecoration: 'none',
-          },
-        },
-      },
-    },
-  },
-  components: {
-    MuiToolbar: {
-      variants: [
-        {
-          props: { variant: 'navbarInnerWrapper' },
-          style: ({ theme }: { theme: Theme }) => ({
-            minHeight: 'unset',
-            aspectRatio: 'var(--changing-aspect-ratio)',
-            margin: '0 auto',
-            width: '100%',
-            backgroundColor: 'transparent',
-            container: 'toolbar/inline-size',
-            position: 'static',
-            boxSizing: 'border-box',
-            display: 'grid',
-            gridTemplateColumns: '1fr auto min-content',
-            gridTemplateRows: 'repeat(2, auto)',
-            transition:
-              'background-color 100ms ease-out 200ms, aspect-ratio 300ms ease-out',
-            ['&&']: {
-              [theme.breakpoints.up('md')]: {
-                gridTemplateRows: 'unset',
-                maxWidth: `${breakPointValues.md + 48}px`,
-              },
-              [theme.breakpoints.up('lg')]: {
-                maxWidth: `${breakPointValues.lg + 48}px`,
-              },
-              [theme.breakpoints.up('xl')]: {
-                maxWidth: `${breakPointValues.xl + 48}px`,
-              },
-            },
-          }),
-        },
-      ],
-    },
-    MuiLink: {
-      variants: [
-        // keep base variants
-        ...(theme.components?.MuiLink?.variants ?? []),
-        // add navbar-specific variants
-        {
-          props: { variant: 'categoryLink' },
-          style: {
-            fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
-            fontWeight: 400,
-            fontStyle: 'normal',
-            color: colors.common.black,
-            display: 'inline-block',
-            whiteSpace: 'nowrap',
-            padding: 0,
-            textDecoration: 'none',
-            lineHeight: 1.8,
-            ['&:hover']: {
-              textDecoration: 'underline',
-            },
-            ...mergeDeepAll([
-              responsiveProperty({
-                cssProperty: 'fontSize',
-                unit: 'rem',
-                breakpoints: WePTheme.breakpoints.values,
-                values: {
-                  xs: 16,
-                  md: 18,
-                },
-              }),
-            ]),
-          },
-        },
-      ],
-    },
-  },
-});
-
 export const teaserNews = createTheme(theme, {
   typography: {
     ...{
       teaserTitle: {
-        fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
+        fontFamily: headingFont,
         backgroundColor: 'transparent',
         margin: 0,
         padding: 0,
@@ -852,23 +676,11 @@ export const teaserNews = createTheme(theme, {
         ]),
       },
       teaserMeta: {
-        fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
+        ...designText.textSmallMono,
         backgroundColor: 'transparent',
         margin: 0,
         color: alpha(theme.palette.common.black, 0.3),
-        fontWeight: 400,
         padding: 0,
-        ...mergeDeepAll([
-          responsiveProperty({
-            cssProperty: 'fontSize',
-            unit: 'px',
-            breakpoints: WePTheme.breakpoints.values,
-            values: {
-              xs: 12,
-              md: 14,
-            },
-          }),
-        ]),
       },
     },
   },
@@ -881,7 +693,7 @@ export const teaserNews = createTheme(theme, {
         {
           props: { variant: 'teaserPretitleLink' },
           style: {
-            fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
+            fontFamily: bodyFont,
             display: 'inline',
             textDecoration: 'underline',
             flexGrow: 0,
@@ -903,7 +715,7 @@ export const teaserServices = createTheme(theme, {
   typography: {
     ...{
       teaserTitle: {
-        fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
+        fontFamily: headingFont,
         backgroundColor: 'transparent',
         margin: 0,
         padding: 0,
@@ -925,7 +737,7 @@ export const teaserServices = createTheme(theme, {
         ]),
       },
       teaserPretitle: {
-        fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
+        fontFamily: bodyFont,
         backgroundColor: 'transparent',
         lineHeight: 1.2,
         fontWeight: 400,
@@ -936,7 +748,7 @@ export const teaserServices = createTheme(theme, {
         alignItems: 'flex-start',
       },
       teaserLead: {
-        fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
+        fontFamily: bodyFont,
         lineHeight: 1.5,
         fontWeight: 300,
         padding: 0,
@@ -967,7 +779,7 @@ export const teaserServices = createTheme(theme, {
         {
           props: { variant: 'teaserPretitleLink' },
           style: {
-            fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
+            fontFamily: bodyFont,
             display: 'inline-block',
             textDecoration: 'none',
             flexGrow: 0,

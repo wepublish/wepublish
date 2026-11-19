@@ -7,7 +7,7 @@ import { WepBreakBlock } from './components/break-blocks/wep-break-block';
 import { WepBaseTeaserSlots } from './components/teaser-layouts/wep-base-teaser-slots';
 import { WepBaseTeaser } from './components/teasers/wep-base-teaser';
 import { WepArticle } from './components/wep-article';
-import { WepBlockRenderer } from './components/wep-block-renderer';
+import { WepBlockRenderer, WepBlocks } from './components/wep-block-renderer';
 import { WepContentWrapper } from './components/wep-content-wrapper';
 import { WepFooter } from './components/wep-footer';
 import { WepLink } from './components/wep-link';
@@ -16,6 +16,7 @@ import { WepPage } from './components/wep-page';
 import { WepQuoteBlock } from './components/wep-quote-block';
 import { WepTenantGlobalStyles } from './components/wep-tenant-global-styles';
 import deOverriden from './locales/deOverriden.json';
+import frOverriden from './locales/frOverriden.json';
 import theme from './theme';
 
 const dateFormatter = (date: Date, includeTime = true) =>
@@ -34,6 +35,7 @@ export const wepublishSiteTenant: WebsiteTenantConfig = {
     Article: WepArticle,
     Page: WepPage,
     blocks: {
+      Blocks: WepBlocks,
       Renderer: WepBlockRenderer,
       BaseTeaser: WepBaseTeaser,
       TeaserSlots: WepBaseTeaserSlots,
@@ -47,7 +49,7 @@ export const wepublishSiteTenant: WebsiteTenantConfig = {
   blockStyles: Object.values(WepBlockStyles),
   translations: {
     lng: 'de',
-    overrides: { de: deOverriden },
+    overrides: { de: deOverriden, fr: frOverriden },
   },
   dateLocale: de,
   GlobalStyles: WepTenantGlobalStyles,
