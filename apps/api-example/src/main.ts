@@ -12,6 +12,12 @@ import helmet from 'helmet';
 
 import { graphqlUploadExpress } from 'graphql-upload';
 import { getBodyParsers } from './body-parsers';
+import { setDefaultAutoSelectFamilyAttemptTimeout } from 'net';
+
+// Node's happy-eyeballs gives each resolved address only 250ms to connect. The pod
+// has no IPv6 route, so a single lost SYN (1s retransmit) to a dual-stack host like
+// Cloudflare fails the whole request with ETIMEDOUT long before any axios timeout.
+setDefaultAutoSelectFamilyAttemptTimeout(2000);
 
 async function bootstrap() {
   const port = process.env.PORT ?? 4000;
