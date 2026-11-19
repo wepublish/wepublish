@@ -10,7 +10,10 @@ import { InfoTooltip, useAuthorisation } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
 
-import { conditionsSummary, flowPath } from '../subscription-flow/flow-overview';
+import {
+  conditionsSummary,
+  flowPath,
+} from '../subscription-flow/flow-overview';
 import {
   invoiceDayConflicts,
   PlanOffer,
@@ -54,20 +57,21 @@ export function EarliestInvoiceDayInfo({
   return (
     <Info>
       <Typography
-        variant="body2"
+        variant="caption"
         color="text.secondary"
       >
         {t('memberPlanEdit.earliestInvoiceDay.label', {
-          days: earliest.days,
-          periodicity: t(
-            `memberPlanList.paymentPeriodicity.${earliest.periodicity}`
-          ),
+          days: -earliest.days,
         })}
       </Typography>
 
+      {/* The flows count the same day as -25, so the hint does too. */}
       <InfoTooltip
         text={t('memberPlanEdit.earliestInvoiceDay.help', {
-          days: -earliest.days,
+          periodicity: t(
+            `memberPlanList.paymentPeriodicity.${earliest.periodicity}`
+          ),
+          day: earliest.days,
         })}
       />
     </Info>

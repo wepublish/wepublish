@@ -1966,8 +1966,8 @@
       "nameRequired": "Name required",
       "noMemberPlanName": "Unnamed subscription plan",
       "earliestInvoiceDay": {
-        "label": "Earliest invoice: {{days}} days ({{periodicity}})",
-        "help": "Depending on the terms the member plans offer, invoices can be created {{days}} days before a subscription ends at the earliest. With “Monthly”, for example, an invoice can be created 25 days before the end at the earliest, which is 3 to 6 days after the subscription began, depending on the month.",
+        "label": "Earliest day for automatic invoicing: {{days}} days before the end",
+        "help": "As the shortest payment interval chosen, “{{periodicity}}” limits the earliest day for creating invoices and sending automated messages to day {{day}}.",
         "conflict": "{{flow}} creates invoices on day {{invoiceDay}}. For subscriptions of this member plan with the term “{{periodicity}}”, the invoice is only created {{days}} days before the end.",
         "defaultFlow": "The default flow",
         "planFlow": "The flow “{{conditions}}”",

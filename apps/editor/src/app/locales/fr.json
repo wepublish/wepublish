@@ -1964,8 +1964,8 @@
       "nameRequired": "Nom requis",
       "noMemberPlanName": "Aucun nom de plan d’abonnement",
       "earliestInvoiceDay": {
-        "label": "Facturation au plus tôt : {{days}} jours ({{periodicity}})",
-        "help": "Selon les durées proposées par les plans d’abonnement, les factures peuvent être créées au plus tôt {{days}} jours avant la fin de l’abonnement. Avec « Mensuel », par exemple, une facture peut être créée au plus tôt 25 jours avant la fin, soit 3 à 6 jours après le début de l’abonnement selon le mois.",
+        "label": "Jour le plus tôt pour la facturation automatique : {{days}} jours avant la fin",
+        "help": "En tant qu’intervalle de paiement le plus court choisi, « {{periodicity}} » limite le jour le plus tôt pour la création des factures et l’envoi des messages automatiques au jour {{day}}.",
         "conflict": "{{flow}} crée les factures au jour {{invoiceDay}}. Pour les abonnements de ce plan d’une durée « {{periodicity}} », la facture n’est créée que {{days}} jours avant la fin.",
         "defaultFlow": "Le flux standard",
         "planFlow": "Le flux « {{conditions}} »",

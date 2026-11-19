@@ -1966,8 +1966,8 @@
       "nameRequired": "Name erforderlich",
       "noMemberPlanName": "Abo-Plan ohne Namen",
       "earliestInvoiceDay": {
-        "label": "Früheste Rechnungsstellung: {{days}} Tage ({{periodicity}})",
-        "help": "Abhängig von den Laufzeiten, die die Abo-Pläne anbieten, können Rechnungen frühestens {{days}} Tage vor Abo-Ablauf erstellt werden. Bei «Monatlich» zum Beispiel kann eine Rechnung frühestens 25 Tage vor Ablauf erstellt werden, was je nach Monat 3 bis 6 Tage nach Abo-Beginn entspricht.",
+        "label": "Frühester Tag für automatische Rechnungserstellung: {{days}} Tage vor Ablauf",
+        "help": "«{{periodicity}}» limitiert als kürzestes gewähltes Zahlungsintervall den frühesten Tag für die Rechnungserstellung und den Versand von automatischen Mitteilungen auf den Tag {{day}}.",
         "conflict": "{{flow}} erstellt Rechnungen an Tag {{invoiceDay}}. Für Abos dieses Abo-Plans mit der Laufzeit «{{periodicity}}» wird die Rechnung erst {{days}} Tage vor Ablauf erstellt.",
         "defaultFlow": "Der Standard-Ablauf",
         "planFlow": "Der Ablauf «{{conditions}}»",

@@ -101,15 +101,25 @@ describe('EarliestInvoiceDayInfo', () => {
     );
 
     expect(
-      screen.getByText(
-        'memberPlanEdit.earliestInvoiceDay.label(-25,memberPlanList.paymentPeriodicity.monthly)'
-      )
+      screen.getByText('memberPlanEdit.earliestInvoiceDay.label(25)')
     ).toBeTruthy();
     expect(
       screen.getByRole('button', {
-        name: 'memberPlanEdit.earliestInvoiceDay.help(25)',
+        name: 'memberPlanEdit.earliestInvoiceDay.help(memberPlanList.paymentPeriodicity.monthly,-25)',
       })
     ).toBeTruthy();
+  });
+
+  it('says it in small print, as a side note to the periodicities', () => {
+    renderWith(
+      <EarliestInvoiceDayInfo offers={[offer(PaymentPeriodicity.Monthly)]} />
+    );
+
+    expect(
+      screen
+        .getByText(/memberPlanEdit.earliestInvoiceDay.label/)
+        .classList.contains('MuiTypography-caption')
+    ).toBe(true);
   });
 
   it('shows nothing while the plan offers no periodicity', () => {
