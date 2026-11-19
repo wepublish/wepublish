@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 import {
   ApiTokenListDocument,
+  ApiTokenSort,
   ApiTokenStatus,
   FullApiTokenFragment,
   FullUserFragment,
@@ -41,6 +42,7 @@ import {
   PermissionControl,
   TableWrapper,
   useAuthorisation,
+  mapTableSortTypeToGraphQLSortOrder,
   useListViewState,
   UserSearch,
   useTableExportQuery,
@@ -60,6 +62,34 @@ const Filters = styled.div`
   gap: ${({ theme }) => theme.spacing(2)};
 `;
 
+/** Columns the list sorts by, on the server, with the API's sort for each. */
+const SORTABLE_COLUMNS = [
+  'status',
+  'scopes',
+  'owner',
+  'lastUsedAt',
+  'expiresAt',
+] as const;
+
+const sortOf = (column: string): ApiTokenSort | undefined => {
+  switch (column) {
+    case 'status':
+      return ApiTokenSort.Status;
+    case 'scopes':
+      return ApiTokenSort.ScopeCount;
+    case 'owner':
+      return ApiTokenSort.Owner;
+    case 'lastUsedAt':
+      return ApiTokenSort.LastUsedAt;
+    case 'expiresAt':
+      return ApiTokenSort.ExpiresAt;
+    case 'createdAt':
+      return ApiTokenSort.CreatedAt;
+    default:
+      return undefined;
+  }
+};
+
 const StatusSelect = styled(TextField)`
   .MuiInputBase-root {
     background: ${({ theme }) => theme.vars.palette.background.paper};
@@ -70,9 +100,15 @@ function ApiTokenList() {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const { limit, setLimit } = useListViewState<string>('apiTokens', {
-    defaultFilter: '',
-  });
+  const { limit, setLimit, sortField, sortOrder, setSort } =
+    useListViewState<string>('apiTokens', {
+      defaultFilter: '',
+      defaultSortField: 'createdAt',
+    });
+  const sort = {
+    sort: sortOf(sortField),
+    order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
+  };
 
   const [activePage, setActivePage] = useState(1);
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
@@ -90,6 +126,7 @@ function ApiTokenList() {
       skip: (activePage - 1) * limit,
       createdById: owner?.id,
       status: status || undefined,
+      ...sort,
     },
   });
 
@@ -98,6 +135,7 @@ function ApiTokenList() {
     {
       createdById: owner?.id,
       status: status || undefined,
+      ...sort,
     },
     data => data.apiTokens
   );
@@ -203,6 +241,13 @@ function ApiTokenList() {
           exportRows={exportApiTokens}
           exportTotalCount={data?.apiTokens.totalCount ?? 0}
           data={data?.apiTokens.nodes ?? []}
+          sortColumn={sortField}
+          sortOrder={sortOrder}
+          sortable={[...SORTABLE_COLUMNS]}
+          onSort={(column, order) => {
+            setSort(column, order);
+            setActivePage(1);
+          }}
           loading={isLoading}
           columns={[
             {
@@ -224,6 +269,19 @@ function ApiTokenList() {
                     color="warning"
                     label={t('apiTokenList.overview.expired')}
                   />
+                : row.creatorState.blockedReason ?
+                  <Tooltip
+                    title={t(
+                      `apiTokenList.overview.blockedReason.${row.creatorState.blockedReason}`
+                    )}
+                  >
+                    <Chip
+                      size="small"
+                      color="error"
+                      variant="outlined"
+                      label={t('apiTokenList.overview.blocked')}
+                    />
+                  </Tooltip>
                 : daysLeft(row.expiresAt) <= EXPIRY_WARNING_DAYS ?
                   <Chip
                     size="small"
@@ -241,6 +299,8 @@ function ApiTokenList() {
               exportValue: row =>
                 row.revokedAt ? t('apiTokenList.overview.revoked')
                 : hasExpired(row.expiresAt) ? t('apiTokenList.overview.expired')
+                : row.creatorState.blockedReason ?
+                  t('apiTokenList.overview.blocked')
                 : t('apiTokenList.overview.active'),
             },
             {
@@ -265,19 +325,36 @@ function ApiTokenList() {
               width: 260,
               align: 'left',
               render: row => (
-                <Tooltip title={row.scopes.join(', ')}>
-                  <Stack
-                    direction="row"
-                    spacing={0.5}
-                  >
+                <Stack
+                  direction="row"
+                  spacing={0.5}
+                >
+                  <Tooltip title={row.scopes.join(', ')}>
                     <Chip
                       size="small"
                       label={t('apiTokenList.overview.scopeCount', {
                         count: row.scopes.length,
                       })}
                     />
-                  </Stack>
-                </Tooltip>
+                  </Tooltip>
+
+                  {row.creatorState.missingScopes.length > 0 && (
+                    <Tooltip
+                      title={t('apiTokenList.overview.missingScopesHelp', {
+                        scopes: row.creatorState.missingScopes.join(', '),
+                      })}
+                    >
+                      <Chip
+                        size="small"
+                        color="warning"
+                        variant="outlined"
+                        label={t('apiTokenList.overview.missingScopes', {
+                          count: row.creatorState.missingScopes.length,
+                        })}
+                      />
+                    </Tooltip>
+                  )}
+                </Stack>
               ),
               exportValue: row => row.scopes.join(', '),
             },

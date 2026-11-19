@@ -31,6 +31,13 @@ export enum AiProviderType {
   V0 = 'V0'
 }
 
+/** The API key that did something on behalf of the user named next to it. */
+export type ActingApiToken = {
+  __typename?: 'ActingApiToken';
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+};
+
 export type Action = ArticleCreatedAction | AuthorCreatedAction | CommentCreatedAction | EventCreatedAction | PageCreatedAction | PollStartedAction | SubscriptionCreatedAction | UserCreatedAction;
 
 /** The mail an admin action in the editor would send to the user, or why it sends none, so the editor can ask the admin before running the action. */
@@ -84,6 +91,8 @@ export type ApiToken = {
   /** The user who created this token. Null once that user is deleted. */
   createdBy?: Maybe<User>;
   createdById?: Maybe<Scalars['String']['output']>;
+  /** Whether the user who created this key still allows it to work, checked the way a call with the key is. A key list asks this once per row. */
+  creatorState: ApiTokenCreatorState;
   /** When the token stops working. */
   expiresAt: Scalars['DateTime']['output'];
   id: Scalars['String']['output'];
@@ -97,10 +106,37 @@ export type ApiToken = {
   scopes: Array<Scalars['String']['output']>;
 };
 
+export enum ApiTokenBlockedReason {
+  CreatorInactive = 'CreatorInactive',
+  CreatorMayNotCreateApiTokens = 'CreatorMayNotCreateApiTokens',
+  CreatorMissing = 'CreatorMissing'
+}
+
+/** A key acts on behalf of the user who created it. This is the check every call with the key goes through; expiry and revocation are separate. */
+export type ApiTokenCreatorState = {
+  __typename?: 'ApiTokenCreatorState';
+  blockedReason?: Maybe<ApiTokenBlockedReason>;
+  /** Permissions of the key its creator no longer holds; calls that need one are refused. */
+  missingScopes: Array<Scalars['String']['output']>;
+  state: ApiTokenCreatorStateKind;
+};
+
+/** What the user who created a key still allows it: everything it holds (ok), nothing (blocked: every call is refused), or only some of its permissions (limited). */
+export enum ApiTokenCreatorStateKind {
+  Blocked = 'Blocked',
+  Limited = 'Limited',
+  Ok = 'Ok'
+}
+
+/** Status sorts working keys before expired and revoked ones (ascending). Owner sorts by the creator's name, then first name. */
 export enum ApiTokenSort {
   CreatedAt = 'CreatedAt',
+  ExpiresAt = 'ExpiresAt',
   LastUsedAt = 'LastUsedAt',
-  Name = 'Name'
+  Name = 'Name',
+  Owner = 'Owner',
+  ScopeCount = 'ScopeCount',
+  Status = 'Status'
 }
 
 /** A revoked token counts as revoked even once it has also expired. */
@@ -1304,6 +1340,8 @@ export type DeliveryChannelUserModel = {
   canReceiveLetters: Scalars['Boolean']['output'];
   changedAt?: Maybe<Scalars['DateTime']['output']>;
   changedBy?: Maybe<MailLogRecipient>;
+  /** Set when an API key made the change on behalf of `changedBy`. */
+  changedByApiToken?: Maybe<ActingApiToken>;
   /** How automated subscription mails reach this user. */
   channel: MailChannel;
   /** How the email address fares: a placeholder or dead address is not reached by email, though email may still be chosen. */
@@ -1330,6 +1368,8 @@ export type DeliveryModeBulkChangeModel = {
   audience: Scalars['JSONObject']['output'];
   changed: Scalars['Int']['output'];
   changedBy?: Maybe<MailLogRecipient>;
+  /** Set when an API key made the change on behalf of `changedBy`. */
+  changedByApiToken?: Maybe<ActingApiToken>;
   channel: MailChannel;
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['String']['output'];
@@ -2225,6 +2265,8 @@ export type Invoice = HasOptionalSubscription & {
   id: Scalars['String']['output'];
   items: Array<InvoiceItem>;
   mail: Scalars['String']['output'];
+  /** Set when an API key marked the invoice as paid on behalf of `manuallySetAsPaidByUser`. */
+  manuallySetAsPaidByApiTokenId?: Maybe<Scalars['String']['output']>;
   manuallySetAsPaidByUser?: Maybe<User>;
   manuallySetAsPaidByUserId?: Maybe<Scalars['String']['output']>;
   modifiedAt: Scalars['DateTime']['output'];
@@ -2683,6 +2725,14 @@ export enum MailSendJobState {
   Running = 'running'
 }
 
+export type MailSendPreviewAttachment = {
+  __typename?: 'MailSendPreviewAttachment';
+  /** The name the pdf is attached under. */
+  filename: Scalars['String']['output'];
+  /** The document filled in for the recipient, as pdf, base64 encoded, exactly as the mail carries it. */
+  pdf: Scalars['String']['output'];
+};
+
 export type MailSendPreviewInput = {
   audience: MailAudienceInput;
   /** Defaults to mail. A letter preview renders the pdf. */
@@ -2695,6 +2745,8 @@ export type MailSendPreviewInput = {
 
 export type MailSendPreviewModel = {
   __typename?: 'MailSendPreviewModel';
+  /** Mail previews only: the template's attachments, in their order. A letter preview prints them inside its pdf. */
+  attachments: Array<MailSendPreviewAttachment>;
   /** Empty for a letter preview. */
   html: Scalars['String']['output'];
   /** Letter previews only: the rendered pdf, base64 encoded, exactly as it would be printed. */
@@ -2753,6 +2805,8 @@ export enum MailTemplateContext {
 }
 
 export type MailTemplateInput = {
+  /** Word documents (.docx) filled in with the same placeholders, converted to pdf and attached to every mail sent from this template, in this order. A printed letter carries them after its pages. Left out, the attachments stay as they are. */
+  attachmentIds?: InputMaybe<Array<Scalars['String']['input']>>;
   context?: InputMaybe<MailTemplateContext>;
   description?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
@@ -2768,6 +2822,8 @@ export type MailTemplateLetterPreviewModel = {
 
 export type MailTemplateModel = {
   __typename?: 'MailTemplateModel';
+  /** Word documents (.docx) filled in with the same placeholders, converted to pdf and attached to every mail sent from this template, in this order. A printed letter carries them after its pages. */
+  attachmentIds: Array<Scalars['String']['output']>;
   /** The channels this template is written for, the email first. */
   channels: Array<MailChannel>;
   context?: Maybe<MailTemplateContext>;
@@ -2790,6 +2846,8 @@ export type MailTemplateModel = {
 };
 
 export type MailTemplatePreviewInput = {
+  /** Attachments chosen on the draft, possibly not saved yet. */
+  attachmentIds?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Mail type / context id, e.g. "renewal". */
   contextId: Scalars['String']['input'];
   htmlContent: Scalars['String']['input'];
@@ -6997,6 +7055,8 @@ export type PrintIssue = HasImageLc & {
   __typename?: 'PrintIssue';
   closedAt?: Maybe<Scalars['DateTime']['output']>;
   closedBy?: Maybe<PrintIssueUser>;
+  /** Set when an API key did it on behalf of `closedBy`. */
+  closedByApiToken?: Maybe<PrintIssueApiToken>;
   /** How many issues it counts as against a reader's period: the numbers it covers, or fewer. */
   countsAs: Scalars['Int']['output'];
   createdAt: Scalars['DateTime']['output'];
@@ -7019,6 +7079,13 @@ export type PrintIssue = HasImageLc & {
   /** The issue's topic. */
   title?: Maybe<Scalars['String']['output']>;
   year: Scalars['Int']['output'];
+};
+
+/** The API key that did something on behalf of the user named next to it. */
+export type PrintIssueApiToken = {
+  __typename?: 'PrintIssueApiToken';
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
 };
 
 export type PrintIssueBexioStats = {
@@ -7062,9 +7129,13 @@ export type PrintIssueDelivery = {
   /** When the list was exported. */
   createdAt: Scalars['DateTime']['output'];
   createdBy?: Maybe<PrintIssueUser>;
+  /** Set when an API key did it on behalf of `createdBy`. */
+  createdByApiToken?: Maybe<PrintIssueApiToken>;
   /** «übergeben»: when the file went to the printshop. */
   deliveredAt?: Maybe<Scalars['DateTime']['output']>;
   deliveredBy?: Maybe<PrintIssueUser>;
+  /** Set when an API key did it on behalf of `deliveredBy`. */
+  deliveredByApiToken?: Maybe<PrintIssueApiToken>;
   filename: Scalars['String']['output'];
   id: Scalars['String']['output'];
   /** The options this list was computed with. */
@@ -7157,6 +7228,8 @@ export type PrintIssueRun = {
   /** Pass it back when exporting: a run computed again in between is refused. */
   computedAt: Scalars['DateTime']['output'];
   computedBy?: Maybe<PrintIssueUser>;
+  /** Set when an API key did it on behalf of `computedBy`. */
+  computedByApiToken?: Maybe<PrintIssueApiToken>;
   /** The delivery a replace run writes anew. */
   deliveryId?: Maybe<Scalars['String']['output']>;
   /** The CSV file name the delivery gets. */
@@ -8798,6 +8871,8 @@ export type RichTextBlockInput = {
 };
 
 export type SendTestMailTemplateInput = {
+  /** Attachments chosen on the draft, possibly not saved yet. */
+  attachmentIds?: InputMaybe<Array<Scalars['String']['input']>>;
   contextId: Scalars['String']['input'];
   htmlContent: Scalars['String']['input'];
   subject: Scalars['String']['input'];
@@ -10009,6 +10084,8 @@ export type UserDeliveryPreferenceModel = {
   canReceiveLetters: Scalars['Boolean']['output'];
   changedAt?: Maybe<Scalars['DateTime']['output']>;
   changedBy?: Maybe<MailLogRecipient>;
+  /** Set when an API key made the change on behalf of `changedBy`. */
+  changedByApiToken?: Maybe<ActingApiToken>;
   /** How automated subscription mails reach this user. */
   channel: MailChannel;
   /** How the email address fares: a placeholder or dead address is not reached by email, though email may still be chosen. */

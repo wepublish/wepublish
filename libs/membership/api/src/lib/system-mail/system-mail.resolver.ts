@@ -12,7 +12,11 @@ import {
   mailLogType,
 } from '@wepublish/mail/api';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { CurrentUser, UserSession } from '@wepublish/authentication/api';
+import {
+  AuthSession,
+  CurrentUser,
+  requireSessionUser,
+} from '@wepublish/authentication/api';
 import {
   CanGetSystemMails,
   CanTestSystemMails,
@@ -64,6 +68,19 @@ export class SystemMailResolver {
       );
     }
 
+    // System mails go out while someone waits for them (a login link, a
+    // password reset), so they never carry attachments; see MailController.
+    if (
+      systemMail.mailTemplateId &&
+      (await this.prismaService.mailTemplateAttachment.count({
+        where: { mailTemplateId: systemMail.mailTemplateId },
+      }))
+    ) {
+      throw new BadRequestException(
+        'This template has attachments, which a system mail cannot carry. Remove them from the template or choose another one.'
+      );
+    }
+
     await this.prismaService.userFlowMail.update({
       where: {
         id: userMail.id,
@@ -84,14 +101,15 @@ export class SystemMailResolver {
     description: `Sends a test email for the given event`,
   })
   async testSystemMail(
-    @CurrentUser() user: UserSession,
+    @CurrentUser() session: AuthSession,
     @Args('event', { type: () => UserEvent }) event: UserEvent
   ) {
+    const recipient = requireSessionUser(session);
     const mailTemplateId = await this.mailContext.getUserTemplateId(event);
 
     await this.mailContext.sendMail({
       mailType: mailLogType.SystemMail,
-      recipient: user.user,
+      recipient,
       optionalData: {},
       mailTemplateId: mailTemplateId || '',
     });

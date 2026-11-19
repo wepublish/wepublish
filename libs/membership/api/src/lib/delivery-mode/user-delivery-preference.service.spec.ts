@@ -76,6 +76,12 @@ function setup(users: ReturnType<typeof user>[] = [user('u1')]) {
 
 const audience = { base: MailRecipientBase.allUsers } as any;
 
+/** Who did it: a signed-in user, or an API key on behalf of its creator. */
+const by = (userId: string, apiTokenId: string | null = null) => ({
+  userId,
+  apiTokenId,
+});
+
 describe('UserDeliveryPreferenceService', () => {
   describe('get', () => {
     it('reports mail for a user without a preference', async () => {
@@ -87,6 +93,7 @@ describe('UserDeliveryPreferenceService', () => {
         reason: null,
         changedAt: null,
         changedBy: null,
+        changedByApiToken: null,
         canReceiveLetters: true,
         emailSegment: MailEmailSegment.unknown,
       });
@@ -130,6 +137,7 @@ describe('UserDeliveryPreferenceService', () => {
         reason: 'bulk',
         changedAt,
         changedBy: { id: 'admin', email: 'a@x.ch', name: 'A', firstName: null },
+        changedByApiToken: null,
         canReceiveLetters: false,
         emailSegment: MailEmailSegment.unknown,
       });
@@ -137,6 +145,42 @@ describe('UserDeliveryPreferenceService', () => {
   });
 
   describe('set', () => {
+    it('stores the api key that switched someone next to its creator', async () => {
+      const { service, prisma } = setup();
+
+      await service.set('u1', MailChannel.letter, {
+        origin: DeliveryPreferenceOrigin.manual,
+        changedByUserId: 'creator-1',
+        changedByApiTokenId: 'key-1',
+      });
+
+      expect(prisma.userDeliveryPreference.upsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          update: expect.objectContaining({
+            changedByUserId: 'creator-1',
+            changedByApiTokenId: 'key-1',
+          }),
+        })
+      );
+    });
+
+    it('keeps which api key switched an audience', async () => {
+      const { service, prisma } = setup();
+
+      await service.setForAudience(
+        {} as never,
+        MailChannel.mail,
+        by('creator-1', 'key-1')
+      );
+
+      expect(prisma.deliveryModeBulkChange.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          changedByUserId: 'creator-1',
+          changedByApiTokenId: 'key-1',
+        }),
+      });
+    });
+
     it('stores a manual switch to letters and drops an open suggestion', async () => {
       const { service, prisma } = setup();
 
@@ -203,7 +247,7 @@ describe('UserDeliveryPreferenceService', () => {
       ]);
 
       await expect(
-        service.setForAudience(audience, MailChannel.letter, 'admin')
+        service.setForAudience(audience, MailChannel.letter, by('admin'))
       ).resolves.toEqual({ changed: 2, skippedWithoutAddress: 1 });
 
       expect(prisma.userDeliveryPreference.upsert).toHaveBeenCalledTimes(2);
@@ -223,14 +267,14 @@ describe('UserDeliveryPreferenceService', () => {
       const { service } = setup([user('u1'), user('u2', false)]);
 
       await expect(
-        service.setForAudience(audience, MailChannel.mail, 'admin')
+        service.setForAudience(audience, MailChannel.mail, by('admin'))
       ).resolves.toEqual({ changed: 2, skippedWithoutAddress: 0 });
     });
 
     it('resolves the audience one row per person', async () => {
       const { service, recipients } = setup();
 
-      await service.setForAudience(audience, MailChannel.mail, 'admin');
+      await service.setForAudience(audience, MailChannel.mail, by('admin'));
 
       expect(recipients.resolvePage).toHaveBeenCalledWith(
         audience,
@@ -253,7 +297,7 @@ describe('UserDeliveryPreferenceService', () => {
         memberPlanIDs: ['plan-1'],
       } as any;
 
-      await service.setForAudience(filtered, MailChannel.letter, 'admin');
+      await service.setForAudience(filtered, MailChannel.letter, by('admin'));
 
       expect(prisma.deliveryModeBulkChange.create).toHaveBeenCalledWith({
         data: {
@@ -263,6 +307,7 @@ describe('UserDeliveryPreferenceService', () => {
           changed: 2,
           skippedWithoutAddress: 1,
           changedByUserId: 'admin',
+          changedByApiTokenId: null,
         },
       });
     });
@@ -270,7 +315,7 @@ describe('UserDeliveryPreferenceService', () => {
     it('records a switch that touched nobody, so the attempt is visible', async () => {
       const { service, prisma } = setup([]);
 
-      await service.setForAudience(audience, MailChannel.letter, 'admin');
+      await service.setForAudience(audience, MailChannel.letter, by('admin'));
 
       expect(prisma.deliveryModeBulkChange.create).toHaveBeenCalledWith({
         data: expect.objectContaining({ userCount: 0, changed: 0 }),
@@ -298,6 +343,7 @@ describe('UserDeliveryPreferenceService', () => {
           changedBy: {
             select: { id: true, email: true, name: true, firstName: true },
           },
+          changedByApiToken: { select: { id: true, name: true } },
         },
       });
     });
@@ -379,6 +425,7 @@ describe('UserDeliveryPreferenceService', () => {
             reason: 'bulk',
             changedAt,
             changedBy: admin,
+            changedByApiToken: null,
             canReceiveLetters: true,
             emailSegment: MailEmailSegment.unknown,
           },
@@ -415,6 +462,7 @@ describe('UserDeliveryPreferenceService', () => {
           reason: null,
           changedAt: null,
           changedBy: null,
+          changedByApiToken: null,
           canReceiveLetters: false,
         })
       );

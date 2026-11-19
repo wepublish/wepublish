@@ -129,6 +129,9 @@ export class MailTemplateVariantInput {
   letterAppendixId?: string | null;
 }
 
+export const ATTACHMENT_IDS_DESCRIPTION =
+  'Word documents (.docx) filled in with the same placeholders, converted to pdf and attached to every mail sent from this template, in this order. A printed letter carries them after its pages.';
+
 @InputType()
 export class MailTemplateInput {
   @Field()
@@ -145,6 +148,12 @@ export class MailTemplateInput {
       'The versions to write, one per channel. A version left out stays as it is; removing one is `deleteMailTemplateVariant`.',
   })
   variants!: MailTemplateVariantInput[];
+
+  @Field(() => [String], {
+    nullable: true,
+    description: `${ATTACHMENT_IDS_DESCRIPTION} Left out, the attachments stay as they are.`,
+  })
+  attachmentIds?: string[] | null;
 }
 
 @ObjectType()
@@ -206,6 +215,12 @@ export class MailTemplatePreviewInput {
     description: 'Uploaded pdf printed after the letter pages, e.g. a QR-bill.',
   })
   letterAppendixId?: string | null;
+
+  @Field(() => [String], {
+    nullable: true,
+    description: 'Attachments chosen on the draft, possibly not saved yet.',
+  })
+  attachmentIds?: string[] | null;
 }
 
 @InputType()
@@ -224,4 +239,10 @@ export class SendTestMailTemplateInput {
 
   @Field({ nullable: true })
   textContent?: string;
+
+  @Field(() => [String], {
+    nullable: true,
+    description: 'Attachments chosen on the draft, possibly not saved yet.',
+  })
+  attachmentIds?: string[] | null;
 }

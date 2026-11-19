@@ -77,6 +77,7 @@ fragment TinyMailTemplate on MailTemplateModel {
   context
   status
   channels
+  attachmentIds
 }
 
 # Adds the mail bodies. Only the single-template edit view needs these.

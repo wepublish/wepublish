@@ -1648,6 +1648,10 @@
         "letterAppendix": "Zusatzseiten (PDF)",
         "letterAppendixNone": "Keine",
         "letterAppendixHelp": "Die Seiten werden dem Brief am Ende hinzugefügt. Wähle aus den PDF-Dateien, die unter «Dokumente» hochgeladen wurden.",
+        "attachments": "Anhänge (Word)",
+        "attachmentsHelp": "Word-Dokumente (.docx) aus «Dokumente», höchstens 5 und zusammen 15 MB. Sie werden mit denselben Platzhaltern wie die E-Mail ausgefüllt (im Text und in Link-Adressen, nicht in Feldfunktionen), als PDF angehängt und in dieser Reihenfolge mit jeder E-Mail dieser Vorlage versandt, auch mit automatischen Abo-E-Mails. System-E-Mails (Login, Passwort) können keine Anhänge haben. Ein Brief druckt sie nach seinen Seiten (A4). Lässt sich ein Anhang nicht erstellen, wird die E-Mail nicht versandt. Ein persönliches Dokument wird für jeden Empfänger einzeln umgewandelt, und PDF-Anhänge lassen E-Mails eher im Spam landen: lieber wenige und kleine. Benötigt Gotenberg als PDF-Renderer.",
+        "attachmentsNone": "Keine",
+        "attachmentsNoDocuments": "Keine Word-Dokumente (.docx) unter «Dokumente»",
         "letterPreviewTitle": "Briefvorschau",
         "selectMailType": "Bitte zuerst einen Verwendungszweck wählen.",
         "selectMailTypePlaceholder": "Verwendungszweck wählen …",
@@ -1692,6 +1696,8 @@
         "desktop": "Desktop",
         "tablet": "Tablet",
         "mobile": "Mobil",
+        "attachments": "Anhänge",
+        "close": "Schliessen",
         "linkTitle": "Link",
         "linkUrl": "URL",
         "linkText": "Linktext",
@@ -1973,6 +1979,7 @@
       "paymentProviderStatusInfo": "✅ heisst, alle Zahlungsmethoden dieses Abo-Plans sind mit einem Zahlungsanbieter verbunden. ❌ heisst, mindestens einer Zahlungsmethode fehlt der Anbieter – damit können Leser:innen nicht bezahlen."
     },
     "deliveryMode": {
+      "viaApiKey": "via API-Schlüssel «{{key}}»",
       "panelTitle": "Zustellkanal",
       "channel": {
         "mail": "E-Mail",
@@ -4540,6 +4547,8 @@
       },
       "missingPlaceholders": "Achtung: Diese Platzhalter werden für diese Empfänger nicht gefüllt: {{placeholders}}",
       "createTemplate": "Neue Vorlage",
+      "attachments_one": "Jede E-Mail enthält {{count}} Anhang als PDF: {{names}}",
+      "attachments_other": "Jede E-Mail enthält {{count}} Anhänge als PDF: {{names}}",
       "editTemplate": "Vorlage bearbeiten",
       "showRecipients": "Empfänger anzeigen",
       "recipientList": {
@@ -5151,6 +5160,7 @@
         "failed": "Fehlgeschlagen",
         "filterBySession": "Nach dieser Session filtern",
         "tokenActor": "API-Token: {{name}}",
+        "tokenActorOnBehalf": "API-Schlüssel: {{name}} · {{user}}",
         "impersonatedActor": "{{impersonator}} als {{actor}}",
         "unknownActor": "Unbekannt",
         "notSupported": "Diese Installation führt kein Audit-Log. Sobald die Migration eingespielt ist, erscheinen hier die Einträge.",
@@ -5308,6 +5318,7 @@
       "noLayouts": "Noch kein Briefpapier. Erstelle eines, damit Briefe eine Kopf- und Fusszeile bekommen."
     },
     "printIssues": {
+      "viaApiKey": "via API-Schlüssel «{{key}}»",
       "title": "Druckausgaben",
       "intro": "Die gedruckten Ausgaben mit den zugehörigen Empfänger:innen als Drucklisten aus allen Daten zusammengezogen und exportiert.<br /><br />Ein Exemplar kann in einigen Fällen auch noch jemand empfangen, mit einem am Erscheinungsdatum bereits inaktiven digitalen Abo, falls gleichzeitig die pro Abo-Dauer garantierte Anzahl gedruckter Ausgaben noch nicht vollständig erhalten wurde.<br/><br/>Die an die Druckerei übermittelten Drucklisten bilden die Basis sowohl für den Versand an die Leser:innen als auch für die Ermittlung, ob die garantierte Anzahl Ausgaben empfangen wurde.",
       "create": "Neue Ausgabe",
@@ -5715,7 +5726,7 @@
     "apiTokenList": {
       "overview": {
         "apiTokens": "API-Schlüssel",
-        "apiTokensInfo": "Mit einem API-Schlüssel kann ein Skript oder ein anderes System die API nutzen, ohne sich als Person anzumelden. Ein Schlüssel hat nur die Rechte, die Sie ihm geben.",
+        "apiTokensInfo": "Mit einem API-Schlüssel kann ein Skript oder ein anderes System die API nutzen, ohne sich als User anzumelden. Ein Schlüssel hat nur die Rechte, die Sie ihm geben.",
         "generateToken": "API-Schlüssel erstellen",
         "name": "Name",
         "prefix": "Schlüssel",
@@ -5725,6 +5736,15 @@
         "lastUsed": "Zuletzt verwendet",
         "never": "Nie verwendet",
         "status": "Status",
+        "blocked": "Blockiert",
+        "blockedReason": {
+          "CreatorMissing": "Der User, der diesen Schlüssel erstellt hat, existiert nicht mehr. Der Schlüssel funktioniert nicht mehr; erstellen Sie einen neuen.",
+          "CreatorInactive": "Der User, der diesen Schlüssel erstellt hat, ist deaktiviert. Solange funktioniert der Schlüssel nicht.",
+          "CreatorMayNotCreateApiTokens": "Der User, der diesen Schlüssel erstellt hat, darf keine API-Schlüssel mehr erstellen. Solange funktioniert der Schlüssel nicht."
+        },
+        "missingScopes_one": "{{count}} Recht fehlt",
+        "missingScopes_other": "{{count}} Rechte fehlen",
+        "missingScopesHelp": "Der User, der diesen Schlüssel erstellt hat, hat diese Rechte nicht mehr. Aufrufe, die sie brauchen, werden abgelehnt: {{scopes}}",
         "active": "Aktiv",
         "revoked": "Widerrufen",
         "revoke": "Widerrufen",
@@ -5735,7 +5755,7 @@
         "expiresInDays_other": "Läuft in {{count}} Tagen ab",
         "expiresDate": "{{expiresDate, ccc PP p}}",
         "owner": "Besitzer",
-        "ownerUnknown": "Gelöschte Person",
+        "ownerUnknown": "Gelöschter User",
         "filterByOwner": "Nach Besitzer filtern",
         "anyStatus": "Jeder Status"
       },

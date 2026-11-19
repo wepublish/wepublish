@@ -63,6 +63,17 @@ export class SmtpMailProvider extends BaseMailProvider {
       subject: props.subject,
       text: props.message,
       html: props.messageHtml,
+      ...(props.attachments?.length ?
+        {
+          attachments: props.attachments.map(
+            ({ filename, contentType, content }) => ({
+              filename,
+              contentType,
+              content,
+            })
+          ),
+        }
+      : {}),
     });
 
     // Handing over to the SMTP server is all this transport ever learns, so

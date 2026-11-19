@@ -69,6 +69,7 @@ import {
 } from './mail-html';
 import { MailColorPicker } from './color-picker';
 import { LetterAppendixPicker } from './letter-appendix-picker';
+import { MailAttachmentPicker } from './mail-attachment-picker';
 import { LetterPreview } from './letter-preview';
 import { useLetterChannel } from './use-letter-channel';
 import { MailPreview } from './mail-preview';
@@ -173,6 +174,7 @@ function MailTemplateEdit() {
     shareTitle: `${fieldId}-share-title`,
     shareText: `${fieldId}-share-text`,
     versionTab: (channel: MailChannel) => `${fieldId}-version-${channel}`,
+    attachments: `${fieldId}-attachments`,
   };
 
   // The canonical HTML lives in a ref so typing never re-renders the page
@@ -185,6 +187,9 @@ function MailTemplateEdit() {
   // The mail type must be chosen explicitly so preview/test use the data a real
   // mail of that type would carry (more realistic than a generic dump).
   const [contextId, setContextId] = useState<MailTemplateContext | null>(null);
+  // Word documents attached to every message of the template, in this
+  // order: the email sends them along, the letter prints them after its pages.
+  const [attachmentIds, setAttachmentIds] = useState<string[]>([]);
   const [subscriptionId, setSubscriptionId] = useState<string | null>(null);
   const [previewHtml, setPreviewHtml] = useState<string | null>(null);
   const [previewSubject, setPreviewSubject] = useState('');
@@ -424,6 +429,7 @@ function MailTemplateEdit() {
       setName(template.name);
       setDescription(template.description ?? '');
       setContextId(template.context ?? null);
+      setAttachmentIds(template.attachmentIds ?? []);
 
       const loaded = draftsFromVariants(template.variants);
       const first =
@@ -526,6 +532,9 @@ function MailTemplateEdit() {
       ),
       deriveTextFromHtml
     ),
+    // Attachments ship with the letters; without the feature the api refuses
+    // them, and leaving them out keeps whatever the template has.
+    ...(paperLetters ? { attachmentIds } : {}),
   });
 
   const save = async (close: boolean) => {
@@ -604,6 +613,7 @@ function MailTemplateEdit() {
     htmlContent: htmlRef.current,
     textContent,
     ...(isLetter ? { letterLayoutId, letterAppendixId } : {}),
+    attachmentIds,
   });
 
   // Preview/test never block on a missing mail type: fall back to `custom`
@@ -888,6 +898,23 @@ function MailTemplateEdit() {
                     }}
                   />
                 </FormControl>
+                {paperLetters && (
+                  <FormControl
+                    style={{ flex: '1 1 100%', minWidth: 200, marginBottom: 0 }}
+                    fullWidth
+                  >
+                    <FieldLabel
+                      id={ids.attachments}
+                      label={t('mailTemplates.edit.attachments')}
+                      help={t('mailTemplates.edit.attachmentsHelp')}
+                    />
+                    <MailAttachmentPicker
+                      value={attachmentIds}
+                      onChange={setAttachmentIds}
+                      labelId={ids.attachments}
+                    />
+                  </FormControl>
+                )}
               </div>
 
               {(paperLetters || shownChannels.length > 1) && (
