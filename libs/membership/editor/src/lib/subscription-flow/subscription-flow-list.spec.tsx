@@ -115,8 +115,20 @@ const customFlow = {
     interval('i-4', SubscriptionEvent.InvoiceCreation, 0),
     interval('i-5', SubscriptionEvent.DeactivationUnpaid, 5),
   ]),
-  memberPlan: { id: 'plan', name: 'Probe-Abo' },
+  memberPlan: {
+    id: 'plan',
+    name: 'Probe-Abo',
+    availablePaymentMethods: [
+      {
+        paymentMethods: [{ id: 'bill', name: 'Rechnung' }],
+        paymentPeriodicities: ['yearly'],
+        forceAutoRenewal: false,
+      },
+    ],
+  },
   paymentMethods: [{ id: 'bill', name: 'Rechnung' }],
+  periodicities: ['yearly'],
+  autoRenewal: [true],
 } as unknown as SubscriptionFlowFragment;
 
 function mockQueries(flows: SubscriptionFlowFragment[]) {
@@ -474,10 +486,35 @@ describe('SubscriptionFlowPage', () => {
       expect(
         screen.getAllByRole('heading', { level: 1 }).map(h => h.textContent)
       ).toEqual(['«Probe-Abo»']);
-      expect(screen.getByText('Rechnung')).toBeTruthy();
+      expect(
+        screen.getByText(
+          'Rechnung · memberPlanList.paymentPeriodicity.yearly · subscriptionFlow.overview.renewal.true'
+        )
+      ).toBeTruthy();
       expect(
         screen.getByText('subscriptionFlow.planFlowDescription')
       ).toBeTruthy();
+    });
+
+    it('has no warning for a flow its plan fully offers', () => {
+      renderPage();
+
+      expect(screen.queryByRole('alert')).toBeNull();
+    });
+
+    it('warns about a flow left behind by a deleted member plan', () => {
+      mockQueries([
+        defaultFlow,
+        { ...customFlow, memberPlan: null } as SubscriptionFlowFragment,
+      ]);
+      renderPage();
+
+      expect(
+        screen.getAllByRole('heading', { level: 1 }).map(h => h.textContent)
+      ).toEqual(['subscriptionFlow.overview.noMemberPlan']);
+      expect(screen.getByRole('alert').textContent).toContain(
+        'subscriptionFlow.overview.warnings.noMemberPlan'
+      );
     });
 
     it('shows this flow only, not the default flow next to it', () => {

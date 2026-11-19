@@ -2916,6 +2916,12 @@
         "renewal": {
           "true": "avec renouvellement automatique",
           "false": "sans renouvellement automatique"
+        },
+        "noMemberPlan": "Sans plan d’abonnement",
+        "warnings": {
+          "noMemberPlan": "Le plan d’abonnement de ce flux a été supprimé. Tant que ce flux existe, aucun message automatique n’est envoyé – supprimez-le.",
+          "matchesNothing": "Ne s’applique à aucun abonnement : il manque un moyen de paiement, une périodicité ou un renouvellement.",
+          "notOffered": "N’est plus proposé par le plan d’abonnement : {{values}}. Pour ces valeurs, il ne s’applique plus qu’aux abonnements existants."
         }
       },
       "flow": "Flux",
@@ -4462,7 +4468,7 @@
       "title": "Messages liés au compte et à la connexion",
       "sectionDescription": "E-mails liés au compte utilisateur. Ils sont déclenchés par une action de la personne, qu’elle ait un abonnement ou non.",
       "sectionExample": "Quelqu’un s’inscrit → l’e-mail de bienvenue part immédiatement.",
-      "sendTest": "M’envoyer un test",
+      "sendTest": "M’envoyer un e-mail de test",
       "testSent": "E-mail de test envoyé",
       "columns": {
         "event": "Type d’événement",
@@ -4488,8 +4494,8 @@
           "example": "« Connectez-vous en un clic. »"
         },
         "password_reset": {
-          "userAction": "Clique sur « Mot de passe oublié »",
-          "description": "Part lorsqu’une personne clique sur « Mot de passe oublié ». L’e-mail doit contenir le lien pour définir un nouveau mot de passe.",
+          "userAction": "Un·e admin ou auteur·rice clique sur « Mot de passe oublié » dans la connexion de l’éditeur",
+          "description": "Envoyé lorsque quelqu’un clique sur « Mot de passe oublié » dans la connexion de l’éditeur – cette fonction n’existe que là, pas sur le site web. Elle concerne donc les admins, auteur·rice·s et autres utilisateur·rice·s de l’éditeur. L’e-mail doit contenir le lien pour définir un nouveau mot de passe.",
           "example": "« Définissez ici un nouveau mot de passe. »"
         },
         "email_change": {

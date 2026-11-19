@@ -9,6 +9,7 @@ import {
   filterFlowRows,
   flowPath,
   flowRows,
+  flowWarnings,
   newFlowId,
 } from './flow-overview';
 
@@ -50,7 +51,7 @@ const defaultFlow = flow({
 
 const printYearly = flow({
   id: 'print-yearly',
-  memberPlan: { id: 'print', name: 'Print' },
+  memberPlan: { id: 'print', name: 'Print', availablePaymentMethods: [] },
   paymentMethods: [{ id: 'bill', name: 'Rechnung' }],
   periodicities: [PaymentPeriodicity.Yearly],
   autoRenewal: [true, false],
@@ -63,7 +64,7 @@ const printYearly = flow({
 
 const digital = flow({
   id: 'digital',
-  memberPlan: { id: 'digital', name: 'Digital' },
+  memberPlan: { id: 'digital', name: 'Digital', availablePaymentMethods: [] },
   paymentMethods: [{ id: 'card', name: 'Karte' }],
   periodicities: [PaymentPeriodicity.Monthly],
   autoRenewal: [true],
@@ -71,7 +72,7 @@ const digital = flow({
 
 const printMonthly = flow({
   id: 'print-monthly',
-  memberPlan: { id: 'print', name: 'Print' },
+  memberPlan: { id: 'print', name: 'Print', availablePaymentMethods: [] },
   paymentMethods: [{ id: 'bill', name: 'Rechnung' }],
   periodicities: [PaymentPeriodicity.Monthly],
   autoRenewal: [true],
@@ -173,5 +174,96 @@ describe('flowPath', () => {
   it('addresses the default flow by name and the others by id', () => {
     expect(flowPath(defaultFlow)).toBe('/communicationflows/flow/default');
     expect(flowPath(digital)).toBe('/communicationflows/flow/digital');
+  });
+});
+
+describe('flowWarnings', () => {
+  const translate = (key: string, options?: Record<string, unknown>) =>
+    options ? `${key}(${Object.values(options).join(',')})` : key;
+
+  const plan = (
+    offers: Array<{
+      paymentMethods: string[];
+      periodicities: PaymentPeriodicity[];
+      forceAutoRenewal?: boolean;
+    }>
+  ) => ({
+    id: 'print',
+    name: 'Print',
+    availablePaymentMethods: offers.map(offer => ({
+      paymentMethods: offer.paymentMethods.map(id => ({ id, name: id })),
+      paymentPeriodicities: offer.periodicities,
+      forceAutoRenewal: offer.forceAutoRenewal ?? false,
+    })),
+  });
+
+  const planFlow = (overrides: Record<string, unknown>) =>
+    flow({
+      memberPlan: plan([
+        {
+          paymentMethods: ['bill', 'card'],
+          periodicities: [PaymentPeriodicity.Yearly],
+        },
+      ]),
+      paymentMethods: [{ id: 'bill', name: 'Rechnung' }],
+      periodicities: [PaymentPeriodicity.Yearly],
+      autoRenewal: [true, false],
+      ...overrides,
+    });
+
+  it('has nothing to say about the default flow or a flow the plan fully offers', () => {
+    expect(flowWarnings(defaultFlow, translate)).toEqual([]);
+    expect(flowWarnings(planFlow({}), translate)).toEqual([]);
+  });
+
+  it('warns that a flow without a member plan stops every automatic message', () => {
+    expect(flowWarnings(planFlow({ memberPlan: null }), translate)).toEqual([
+      'subscriptionFlow.overview.warnings.noMemberPlan',
+    ]);
+  });
+
+  it('warns that a flow without a payment method applies to no subscription', () => {
+    expect(flowWarnings(planFlow({ paymentMethods: [] }), translate)).toEqual([
+      'subscriptionFlow.overview.warnings.matchesNothing',
+    ]);
+  });
+
+  it('names payment methods and periodicities the plan no longer offers', () => {
+    expect(
+      flowWarnings(
+        planFlow({
+          paymentMethods: [
+            { id: 'bill', name: 'Rechnung' },
+            { id: 'twint', name: 'Twint' },
+          ],
+          periodicities: [
+            PaymentPeriodicity.Yearly,
+            PaymentPeriodicity.Monthly,
+          ],
+        }),
+        translate
+      )
+    ).toEqual([
+      'subscriptionFlow.overview.warnings.notOffered(Twint, memberPlanList.paymentPeriodicity.monthly)',
+    ]);
+  });
+
+  it('names "without renewal" when the plan always renews automatically', () => {
+    expect(
+      flowWarnings(
+        planFlow({
+          memberPlan: plan([
+            {
+              paymentMethods: ['bill'],
+              periodicities: [PaymentPeriodicity.Yearly],
+              forceAutoRenewal: true,
+            },
+          ]),
+        }),
+        translate
+      )
+    ).toEqual([
+      'subscriptionFlow.overview.warnings.notOffered(subscriptionFlow.overview.renewal.false)',
+    ]);
   });
 });
