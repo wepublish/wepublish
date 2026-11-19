@@ -6,6 +6,7 @@ import {
 
 import {
   conditionsSummary,
+  earliestDayHint,
   filterFlowRows,
   flowPath,
   flowRows,
@@ -35,6 +36,7 @@ const flow = (overrides: Record<string, unknown>) =>
     periodicities: [],
     intervals: [],
     numberOfSubscriptions: 0,
+    earliestDay: { days: -360, periodicity: null, memberPlans: [] },
     ...overrides,
   }) as unknown as SubscriptionFlowFragment;
 
@@ -216,6 +218,80 @@ describe('flowWarnings', () => {
     expect(flowWarnings(planFlow({}), translate)).toEqual([]);
   });
 
+  describe('an event earlier than the flow allows', () => {
+    const at = (event: SubscriptionEvent, daysAwayFromEnding: number) => ({
+      ...interval(event, null),
+      id: `${event}-${daysAwayFromEnding}`,
+      daysAwayFromEnding,
+    });
+
+    const monthlyAtTheEarliest = {
+      days: -25,
+      periodicity: PaymentPeriodicity.Monthly,
+      memberPlans: [],
+    };
+
+    it('says when the invoice of the shortest subscriptions is created instead', () => {
+      expect(
+        flowWarnings(
+          planFlow({
+            earliestDay: monthlyAtTheEarliest,
+            intervals: [at(SubscriptionEvent.InvoiceCreation, -38)],
+          }),
+          translate
+        )
+      ).toEqual([
+        'subscriptionFlow.overview.warnings.invoiceTooEarly(-38,25,memberPlanList.paymentPeriodicity.monthly)',
+      ]);
+    });
+
+    it('says who of the shortest subscriptions still gets a message that early', () => {
+      expect(
+        flowWarnings(
+          planFlow({
+            earliestDay: monthlyAtTheEarliest,
+            intervals: [
+              at(SubscriptionEvent.Custom, -38),
+              at(SubscriptionEvent.Custom, -30),
+              at(SubscriptionEvent.Custom, -10),
+            ],
+          }),
+          translate
+        )
+      ).toEqual([
+        'subscriptionFlow.overview.warnings.mailsTooEarly(-38, -30,25,memberPlanList.paymentPeriodicity.monthly)',
+      ]);
+    });
+
+    it('holds for the default flow as well', () => {
+      expect(
+        flowWarnings(
+          flow({
+            default: true,
+            earliestDay: monthlyAtTheEarliest,
+            intervals: [at(SubscriptionEvent.InvoiceCreation, -38)],
+          }),
+          translate
+        )
+      ).toHaveLength(1);
+    });
+
+    it('has nothing to say about events on or after the earliest day', () => {
+      expect(
+        flowWarnings(
+          planFlow({
+            earliestDay: monthlyAtTheEarliest,
+            intervals: [
+              at(SubscriptionEvent.InvoiceCreation, -25),
+              at(SubscriptionEvent.DeactivationUnpaid, 5),
+            ],
+          }),
+          translate
+        )
+      ).toEqual([]);
+    });
+  });
+
   it('warns that a flow without a member plan stops every automatic message', () => {
     expect(flowWarnings(planFlow({ memberPlan: null }), translate)).toEqual([
       'subscriptionFlow.overview.warnings.noMemberPlan',
@@ -265,5 +341,75 @@ describe('flowWarnings', () => {
     ).toEqual([
       'subscriptionFlow.overview.warnings.notOffered(subscriptionFlow.overview.renewal.false)',
     ]);
+  });
+});
+
+describe('earliestDayHint', () => {
+  const translate = (key: string, options?: Record<string, unknown>) =>
+    options ? `${key}(${Object.values(options).join(',')})` : key;
+
+  const withEarliestDay = (
+    earliestDay: Record<string, unknown>,
+    isDefault = false
+  ) => flow({ default: isDefault, earliestDay });
+
+  it('explains a plan flow by the shortest periodicity of its conditions', () => {
+    expect(
+      earliestDayHint(
+        withEarliestDay({
+          days: -85,
+          periodicity: PaymentPeriodicity.Quarterly,
+          memberPlans: [],
+        }),
+        translate
+      )
+    ).toBe(
+      'subscriptionFlow.earliestDay.byConditions(85,memberPlanList.paymentPeriodicity.quarterly)'
+    );
+  });
+
+  it('explains the default flow by the member plans that offer the periodicity', () => {
+    expect(
+      earliestDayHint(
+        withEarliestDay(
+          {
+            days: -25,
+            periodicity: PaymentPeriodicity.Monthly,
+            memberPlans: ['Flexabo', 'Probeabo'],
+          },
+          true
+        ),
+        translate
+      )
+    ).toBe(
+      'subscriptionFlow.earliestDay.byMemberPlans(25,memberPlanList.paymentPeriodicity.monthly,Flexabo, Probeabo)'
+    );
+  });
+
+  it('explains the default flow by running subscriptions when no plan offers the periodicity any more', () => {
+    expect(
+      earliestDayHint(
+        withEarliestDay(
+          {
+            days: -25,
+            periodicity: PaymentPeriodicity.Monthly,
+            memberPlans: [],
+          },
+          true
+        ),
+        translate
+      )
+    ).toBe(
+      'subscriptionFlow.earliestDay.byRunningSubscriptions(25,memberPlanList.paymentPeriodicity.monthly)'
+    );
+  });
+
+  it('is careful while the flow applies to no periodicity yet', () => {
+    expect(
+      earliestDayHint(
+        withEarliestDay({ days: -25, periodicity: null, memberPlans: [] }, true),
+        translate
+      )
+    ).toBe('subscriptionFlow.earliestDay.nothingOffered(25)');
   });
 });

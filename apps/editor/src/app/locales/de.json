@@ -1963,6 +1963,14 @@
       "name": "Name",
       "nameRequired": "Name erforderlich",
       "noMemberPlanName": "Abo-Plan ohne Namen",
+      "earliestInvoiceDay": {
+        "label": "Früheste Rechnungsstellung: {{days}} Tage ({{periodicity}})",
+        "help": "Abhängig von den gewählten Periodizitäten in den Abo-Plänen können Rechnungen frühestens {{days}} Tage vor Abo-Ablauf erstellt werden. Bei «Monatlich» zum Beispiel kann eine Rechnung frühestens 25 Tage vor Ablauf erstellt werden, was je nach Monat 3 bis 6 Tage nach Abo-Beginn entspricht.",
+        "conflict": "{{flow}} erstellt Rechnungen an Tag {{invoiceDay}}. Für Abos dieses Abo-Plans mit der Periodizität «{{periodicity}}» wird die Rechnung erst {{days}} Tage vor Ablauf erstellt.",
+        "defaultFlow": "Der Standard-Ablauf",
+        "planFlow": "Der Ablauf «{{conditions}}»",
+        "openFlow": "Ablauf öffnen"
+      },
       "paymentConfigs": "Zahlungseinstellungen",
       "saveAndCloseBtnTitle": "Speichern & Schliessen",
       "saveBtnTitle": "Speichern",
@@ -2921,8 +2929,16 @@
         "warnings": {
           "noMemberPlan": "Der Abo-Plan dieses Ablaufs wurde gelöscht. Solange es diesen Ablauf gibt, wird keine automatische Mitteilung verschickt – lösche ihn.",
           "matchesNothing": "Gilt für kein Abo: Es fehlt eine Zahlungsmethode, Periodizität oder Verlängerung.",
-          "notOffered": "Bietet der Abo-Plan nicht mehr an: {{values}}. Dieser Ablauf gilt nur noch für bereits bestehende Abos."
+          "notOffered": "Bietet der Abo-Plan nicht mehr an: {{values}}. Dieser Ablauf gilt nur noch für bereits bestehende Abos.",
+          "invoiceTooEarly": "Die Rechnungserstellung an Tag {{day}} ist zu früh für Abos mit der Periodizität «{{periodicity}}»: Ihre Rechnung wird erst {{days}} Tage vor Ablauf erstellt.",
+          "mailsTooEarly": "Tag {{mailDays}} liegt vor dem frühesten Tag für Abos mit der Periodizität «{{periodicity}}» ({{days}} Tage vor Ablauf): Sie erhalten diese Nachrichten nur, wenn ihre nächste Periode dann schon bezahlt ist."
         }
+      },
+      "earliestDay": {
+        "byConditions": "Frühestens {{days}} Tage vor Abo-Ablauf: Dieser Ablauf gilt für Abos mit der Periodizität «{{periodicity}}», und eine Rechnung kann erst erstellt werden, wenn die laufende Periode begonnen hat.",
+        "byMemberPlans": "Frühestens {{days}} Tage vor Abo-Ablauf: Dieser Ablauf gilt für alle Abos ohne eigenen Ablauf, und die Periodizität «{{periodicity}}» wird angeboten von: {{memberPlans}}. Eine Rechnung kann erst erstellt werden, wenn die laufende Periode begonnen hat.",
+        "byRunningSubscriptions": "Frühestens {{days}} Tage vor Abo-Ablauf: Dieser Ablauf gilt für alle Abos ohne eigenen Ablauf, und es laufen noch Abos mit der Periodizität «{{periodicity}}». Eine Rechnung kann erst erstellt werden, wenn die laufende Periode begonnen hat.",
+        "nothingOffered": "Frühestens {{days}} Tage vor Abo-Ablauf, solange kein Abo-Plan eine Periodizität anbietet."
       },
       "flow": "Ablauf",
       "planFlowDescription": "Dieser Ablauf ersetzt den Standard-Ablauf vollständig für die Abos seines Abo-Plans, welche zu den weiter unten definierten Filterkriterien passen.",

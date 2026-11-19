@@ -2,8 +2,11 @@ import '@testing-library/jest-dom/vitest';
 import type { Mock } from 'vitest';
 import { useQuery } from '@apollo/client/react';
 import { createTheme, ThemeProvider } from '@mui/material';
-import { fireEvent, render, screen } from '@testing-library/react';
-import { PaymentPeriodicity } from '@wepublish/editor/api';
+import { fireEvent, render, screen, within } from '@testing-library/react';
+import {
+  EarliestInvoiceDaysDocument,
+  PaymentPeriodicity,
+} from '@wepublish/editor/api';
 import { ReactNode, useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { MemoryRouter } from 'react-router-dom';
@@ -100,6 +103,31 @@ describe('MemberPlanForm', () => {
       data: undefined,
       loading: false,
     });
+  });
+
+  it('tells in the payment settings how early the invoices of the plan may be created', () => {
+    (useQuery as unknown as Mock).mockImplementation((document: unknown) => ({
+      data:
+        document === EarliestInvoiceDaysDocument ?
+          {
+            earliestInvoiceDays: [
+              { periodicity: PaymentPeriodicity.Monthly, days: -25 },
+            ],
+          }
+        : undefined,
+      loading: false,
+    }));
+    renderForm();
+
+    const paymentSettings = screen
+      .getByRole('heading', { name: 'memberPlanEdit.paymentConfigs' })
+      .closest('.MuiCard-root') as HTMLElement;
+
+    expect(
+      within(paymentSettings).getByText(
+        'memberPlanEdit.earliestInvoiceDay.label'
+      )
+    ).toBeTruthy();
   });
 
   it('names every field by its visible label', () => {
