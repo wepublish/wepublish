@@ -287,6 +287,7 @@ export class MailController {
       prisma: this.prismaService,
       letterSender: this.mailContext.letterSender,
       recipient: this.config.recipient,
+      mailTemplateId: this.config.mailTemplateId,
       asLetter: this.config.asLetter,
       logger: this.logger,
     });

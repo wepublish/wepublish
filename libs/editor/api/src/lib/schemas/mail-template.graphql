@@ -7,6 +7,13 @@ query MailTemplate {
   }
 }
 
+# The template table: every template with what its columns and filters show.
+query MailTemplateList {
+  mailTemplates {
+    ...ListMailTemplate
+  }
+}
+
 query MailTemplateById($id: String!) {
   mailTemplate(id: $id) {
     ...FullMailTemplate
@@ -27,6 +34,10 @@ mutation UpdateMailTemplate($id: String!, $input: MailTemplateInput!) {
 
 mutation DeleteMailTemplate($id: String!) {
   deleteMailTemplate(id: $id)
+}
+
+mutation DeleteMailTemplateVariant($templateId: String!, $channel: MailChannel!) {
+  deleteMailTemplateVariant(templateId: $templateId, channel: $channel)
 }
 
 mutation ImportMailTemplatesFromProvider {
@@ -72,14 +83,39 @@ fragment TinyMailTemplate on MailTemplateModel {
   subject
   context
   status
+  channels
   attachmentIds
+}
+
+# A row of the template table. The pickers do without these fields, so they
+# stay out of the tiny fragment.
+fragment ListMailTemplate on MailTemplateModel {
+  ...TinyMailTemplate
+  letterLayoutName
+  letterAppendixName
+  memberPlans {
+    id
+    name
+  }
 }
 
 # Adds the mail bodies. Only the single-template edit view needs these.
 fragment FullMailTemplate on MailTemplateModel {
   ...TinyMailTemplate
+  variants {
+    ...MailTemplateVariant
+  }
+}
+
+# What a template says on one channel. The letter version carries the
+# stationery and the appendix; the email version the plain-text alternative.
+fragment MailTemplateVariant on MailTemplateVariantModel {
+  id
+  channel
+  subject
   htmlContent
   textContent
+  sameAsMail
   letterLayoutId
   letterAppendixId
 }

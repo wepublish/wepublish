@@ -3074,14 +3074,12 @@ input MailTemplateInput {
   attachmentIds: [String!]
   context: MailTemplateContext
   description: String
-  htmlContent: String!
-
-  """Uploaded pdf printed after the letter pages, e.g. a QR-bill."""
-  letterAppendixId: String
-  letterLayoutId: String
   name: String!
-  subject: String!
-  textContent: String
+
+  """
+  The versions to write, one per channel. A version left out stays as it is; removing one is `deleteMailTemplateVariant`.
+  """
+  variants: [MailTemplateVariantInput!]!
 }
 
 type MailTemplateLetterPreviewModel {
@@ -3089,27 +3087,54 @@ type MailTemplateLetterPreviewModel {
   pdf: String!
 }
 
+"""A member plan whose communication flow sends a template."""
+type MailTemplateMemberPlanModel {
+  id: String!
+  name: String!
+}
+
 type MailTemplateModel {
   """
   Word documents (.docx) filled in with the same placeholders, converted to pdf and attached to every mail sent from this template, in this order. A printed letter carries them after its pages.
   """
   attachmentIds: [String!]!
+
+  """The channels this template is written for, the email first."""
+  channels: [MailChannel!]!
   context: MailTemplateContext
   description: String
-  htmlContent: String!
+  htmlContent: String! @deprecated(reason: "Use `variants`: a template has a body per channel.")
   id: String!
-
-  """Uploaded pdf printed after the letter pages, e.g. a QR-bill."""
-  letterAppendixId: String
+  letterAppendixId: String @deprecated(reason: "Use the letter entry of `variants`.")
 
   """
-  Stationery a letter printed from this template is set on; null means the default.
+  Title, or else the filename, of the pdf printed after the letter pages. Null without one.
   """
-  letterLayoutId: String
+  letterAppendixName: String
+  letterLayoutId: String @deprecated(reason: "Use the letter entry of `variants`.")
+
+  """
+  Name of the stationery the letter version is set on. Null for the default stationery and for a template without a letter version.
+  """
+  letterLayoutName: String
+
+  """
+  The member plans whose communication flow sends this template, by name. The default flow belongs to no plan and is not listed.
+  """
+  memberPlans: [MailTemplateMemberPlanModel!]!
   name: String!
   status: String!
+
+  """
+  The subject of the email version; the title of the letter for a template written as a letter only.
+  """
   subject: String!
-  textContent: String
+  textContent: String @deprecated(reason: "Use `variants`: a template has a body per channel.")
+
+  """
+  What the template says on each channel, bodies included. Ask for it on a single template, not on a list.
+  """
+  variants: [MailTemplateVariantModel!]!
 }
 
 input MailTemplatePreviewInput {
@@ -3146,6 +3171,50 @@ type MailTemplateRef {
 type MailTemplateSubscriptionOption {
   id: String!
   label: String!
+}
+
+input MailTemplateVariantInput {
+  channel: MailChannel!
+  htmlContent: String!
+
+  """Uploaded pdf printed after the letter pages, e.g. a QR-bill."""
+  letterAppendixId: String
+  letterLayoutId: String
+
+  """
+  Letter only: take subject and body from the email version, which the template must have. The subject and body handed in are ignored.
+  """
+  sameAsMail: Boolean
+  subject: String!
+  textContent: String
+}
+
+"""What a template says on one channel."""
+type MailTemplateVariantModel {
+  channel: MailChannel!
+  htmlContent: String!
+  id: String!
+
+  """
+  Letter only: uploaded pdf printed after the letter pages, e.g. a QR-bill.
+  """
+  letterAppendixId: String
+
+  """Letter only: stationery the letter is set on; null means the default."""
+  letterLayoutId: String
+
+  """
+  Letter only: the letter says what the email says. Its own subject and body are empty then; sends read the email version.
+  """
+  sameAsMail: Boolean!
+
+  """
+  The email's subject line; for a letter the title its log entry carries.
+  """
+  subject: String!
+
+  """Plain-text alternative of an email. Unused for a letter."""
+  textContent: String
 }
 
 """
@@ -4123,6 +4192,11 @@ type Mutation {
 
   """Delete an existing mail template"""
   deleteMailTemplate(id: String!): Boolean
+
+  """
+  Remove what a template says on one channel. Refused while something still sends the template on that channel, and for its last version.
+  """
+  deleteMailTemplateVariant(channel: MailChannel!, templateId: String!): Boolean
 
   """Deletes a single sync error so the contact will be retried."""
   deleteMailchimpSyncError(id: String!): Boolean!
@@ -6674,7 +6748,9 @@ type Query {
   """The concrete recipients an audience resolves to"""
   mailSendRecipients(audience: MailAudienceInput!, channel: MailChannel, skip: Int, take: Int): PaginatedMailSendRecipient!
 
-  """Return a single mail template, including its html and text body."""
+  """
+  Return a single mail template; its `variants` carry the html and text bodies.
+  """
   mailTemplate(id: String!): MailTemplateModel
 
   """Render a draft mail template as the letter a send would print"""
@@ -6683,7 +6759,12 @@ type Query {
   """
   Placeholders a template uses that would render empty for the given send (empty = none missing)
   """
-  mailTemplateMissingPlaceholders(templateId: String!, withSubscriptionData: Boolean!): [String!]!
+  mailTemplateMissingPlaceholders(
+    """The version to check; the email when left out."""
+    channel: MailChannel
+    templateId: String!
+    withSubscriptionData: Boolean!
+  ): [String!]!
 
   """Render a draft mail template with a mail type's sample data"""
   mailTemplatePreview(input: MailTemplatePreviewInput!): MailTemplatePreviewModel!

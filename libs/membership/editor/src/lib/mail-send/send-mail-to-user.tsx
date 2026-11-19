@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  MailChannel,
   MailTemplateDocument,
   MailTemplateMissingPlaceholdersDocument,
   SendMailTemplateToUserDocument,
@@ -14,6 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { MdSend } from 'react-icons/md';
 import { Alert, Button, MenuItem, Stack, TextField } from '@mui/material';
 import { CanSendMailTemplates } from '@wepublish/permissions';
+import { templatesForChannel } from '../mail-template/template-versions';
 
 interface SendMailToUserPanelProps {
   userId: string;
@@ -32,6 +34,7 @@ function SendMailToUserPanel({ userId }: SendMailToUserPanelProps) {
       variables: {
         templateId: templateId as string,
         withSubscriptionData: false,
+        channel: MailChannel.Mail,
       },
     }
   );
@@ -82,14 +85,17 @@ function SendMailToUserPanel({ userId }: SendMailToUserPanelProps) {
           onChange={event => setTemplateId(event.target.value || null)}
           fullWidth
         >
-          {(data?.mailTemplates ?? []).map(template => (
-            <MenuItem
-              key={template.id}
-              value={template.id}
-            >
-              {template.name}
-            </MenuItem>
-          ))}
+          {/* This panel sends an email, so a letter-only template is no use. */}
+          {templatesForChannel(data?.mailTemplates ?? [], MailChannel.Mail).map(
+            template => (
+              <MenuItem
+                key={template.id}
+                value={template.id}
+              >
+                {template.name}
+              </MenuItem>
+            )
+          )}
         </TextField>
 
         <Button

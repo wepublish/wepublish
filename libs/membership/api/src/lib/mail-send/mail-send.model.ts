@@ -23,6 +23,9 @@ import {
   PaymentPeriodicity,
 } from '@prisma/client';
 import { PaginatedType } from '@wepublish/utils/api';
+// Registers `MailChannel` for GraphQL: a template's versions use it too, and
+// an enum is registered once.
+import '../mail-template/mail-template.model';
 
 /**
  * The base set of users an audience is drawn from. `hasSubscription` is the only
@@ -89,11 +92,6 @@ registerEnumType(MailSendAudience, {
 registerEnumType(MailSendJobRecipientState, {
   name: 'MailSendJobRecipientState',
   description: 'Where one planned mail of a send job stands.',
-});
-
-registerEnumType(MailChannel, {
-  name: 'MailChannel',
-  description: 'Whether a send goes out as an email or as a printed letter.',
 });
 
 registerEnumType(LetterAddressPosition, {

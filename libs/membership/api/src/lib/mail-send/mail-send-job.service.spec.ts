@@ -51,7 +51,11 @@ const template = (context: string | null) => ({
  * two arrays, so a test can assert what a second run does to rows a first run
  * already touched.
  */
-function fakePrisma(templateRow: any = template('custom')) {
+function fakePrisma(
+  templateRow: any = template('custom'),
+  // The channels the template is written for; its content is the same on each.
+  channels: MailChannel[] = [MailChannel.mail, MailChannel.letter]
+) {
   const jobs: any[] = [];
   const entries: any[] = [];
   let entrySeq = 0;
@@ -109,6 +113,21 @@ function fakePrisma(templateRow: any = template('custom')) {
     jobs,
     entries,
     mailTemplate: { findUnique: vi.fn(async () => templateRow) },
+    mailTemplateVariant: {
+      findUnique: vi.fn(async ({ where }: any) =>
+        channels.includes(where.templateId_channel.channel) ?
+          {
+            subject: '',
+            htmlContent: '',
+            textContent: null,
+            letterLayoutId: null,
+            letterAppendixId: null,
+            ...templateRow,
+            channel: where.templateId_channel.channel,
+          }
+        : null
+      ),
+    },
     invoice: { findFirst: vi.fn(async () => null) },
     user: {
       findUnique: vi.fn(async ({ where }: any) => ({
@@ -283,6 +302,23 @@ const postalUser = {
     country: 'CH',
   },
 };
+
+/**
+ * One row read both ways: the template carries the attachments, its version
+ * on the channel asked for carries the words.
+ */
+const withVersions = (row: Record<string, unknown>) => ({
+  mailTemplate: { findUnique: vi.fn(async () => row) },
+  mailTemplateVariant: {
+    findUnique: vi.fn(async ({ where }: any) => ({
+      letterLayoutId: null,
+      letterAppendixId: null,
+      sameAsMail: false,
+      ...row,
+      channel: where.templateId_channel.channel,
+    })),
+  },
+});
 
 describe('previewForAudience as a letter', () => {
   const recipientService = {
@@ -955,9 +991,10 @@ describe('MailSendJobService.previewForAudience as letter', () => {
       },
     };
     const prisma = {
-      mailTemplate: {
+      mailTemplate: { findUnique: vi.fn(async () => template('custom')) },
+      mailTemplateVariant: {
         findUnique: vi.fn(async () => ({
-          ...template('custom'),
+          channel: MailChannel.letter,
           subject: 'Rechnung',
           htmlContent: '<p>Hallo</p>',
           letterAppendixId: 'qr-bill',
@@ -989,18 +1026,22 @@ describe('MailSendJobService.previewForAudience as letter', () => {
         printMode: LetterPrintMode.duplex,
       })
     );
+    expect(prisma.mailTemplateVariant.findUnique).toHaveBeenCalledWith({
+      where: {
+        templateId_channel: {
+          templateId: 'tpl-1',
+          channel: MailChannel.letter,
+        },
+      },
+    });
   });
 
   it("prints the template's attachments in the preview", async () => {
-    const prisma = {
-      mailTemplate: {
-        findUnique: vi.fn(async () => ({
-          ...template('custom'),
-          htmlContent: '<p>Hallo</p>',
-          attachments: [{ documentId: 'contract' }],
-        })),
-      },
-    };
+    const prisma = withVersions({
+      ...template('custom'),
+      htmlContent: '<p>Hallo</p>',
+      attachments: [{ documentId: 'contract' }],
+    });
     const renderLetter = vi.fn(async () => Buffer.from('%PDF-1.4 letter'));
     const service = makeService(
       prisma,
@@ -1056,17 +1097,14 @@ describe('MailSendJobService.previewForAudience by mail', () => {
   const user = { id: 'u1', email: 'jane@example.com', firstName: 'Jane' };
   const audience: MailAudienceInput = { base: MailRecipientBase.allUsers };
 
-  const prismaWith = (attachments: { documentId: string }[]) => ({
-    mailTemplate: {
-      findUnique: vi.fn(async () => ({
-        ...template('custom'),
-        subject: 'Ihr Vertrag',
-        htmlContent: '<p>Hallo {{user_firstName}}</p>',
-        textContent: null,
-        attachments,
-      })),
-    },
-  });
+  const prismaWith = (attachments: { documentId: string }[]) =>
+    withVersions({
+      ...template('custom'),
+      subject: 'Ihr Vertrag',
+      htmlContent: '<p>Hallo {{user_firstName}}</p>',
+      textContent: null,
+      attachments,
+    });
 
   const preview = (
     prisma: ReturnType<typeof prismaWith>,
@@ -1142,17 +1180,13 @@ describe('MailSendJobService.previewForAudience by mail', () => {
 });
 
 describe('MailSendJobService.missingPlaceholders', () => {
-  const prisma = {
-    mailTemplate: {
-      findUnique: vi.fn(async () => ({
-        ...template('custom'),
-        subject: 'Hallo {{user_firstName}}',
-        htmlContent: '<p>{{optional_does_not_exist}}</p>',
-        textContent: null,
-        attachments: [{ documentId: 'contract' }],
-      })),
-    },
-  };
+  const prisma = withVersions({
+    ...template('custom'),
+    subject: 'Hallo {{user_firstName}}',
+    htmlContent: '<p>{{optional_does_not_exist}}</p>',
+    textContent: null,
+    attachments: [{ documentId: 'contract' }],
+  });
 
   it('warns about the placeholders of the attachments too', async () => {
     const attachments = {
@@ -1230,5 +1264,81 @@ describe('letter channel behind the paper-letters feature', () => {
     await expect(
       service.createJob({ mailTemplateId: 'tpl-1', audience }, 'editor-1')
     ).resolves.toMatchObject({ channel: MailChannel.mail });
+  });
+});
+
+// A template is written per channel: a send needs the version of its channel.
+describe('sending a template on a channel it is not written for', () => {
+  const audience = { base: MailRecipientBase.allUsers } as any;
+  const recipientService = { count: vi.fn(async () => 3) };
+
+  it('refuses a letter job for a template without a letter version', async () => {
+    const prisma = fakePrisma(template('custom'), [MailChannel.mail]);
+
+    await expect(
+      makeService(prisma, undefined, recipientService).createJob(
+        { mailTemplateId: 'tpl-1', audience, channel: MailChannel.letter },
+        'editor-1'
+      )
+    ).rejects.toThrow(BadRequestException);
+    expect(prisma.jobs).toHaveLength(0);
+  });
+
+  it('refuses a mail job for a template written as a letter only', async () => {
+    const prisma = fakePrisma(template('custom'), [MailChannel.letter]);
+
+    await expect(
+      makeService(prisma, undefined, recipientService).createJob(
+        { mailTemplateId: 'tpl-1', audience },
+        'editor-1'
+      )
+    ).rejects.toThrow(BadRequestException);
+    expect(prisma.jobs).toHaveLength(0);
+  });
+
+  it('refuses to mail a single user a template written as a letter only', async () => {
+    const prisma = fakePrisma(template('custom'), [MailChannel.letter]);
+    const mailContext = { sendMail: vi.fn() };
+
+    await expect(
+      makeService(prisma, mailContext).sendToUser('tpl-1', 'u1', 'editor-1')
+    ).rejects.toThrow(BadRequestException);
+    expect(mailContext.sendMail).not.toHaveBeenCalled();
+    expect(prisma.jobs).toHaveLength(0);
+  });
+
+  it('refuses to preview a channel the template is not written for', async () => {
+    const prisma = fakePrisma(template('custom'), [MailChannel.mail]);
+
+    await expect(
+      makeService(prisma).previewForAudience({
+        mailTemplateId: 'tpl-1',
+        audience,
+        channel: MailChannel.letter,
+      })
+    ).rejects.toThrow(BadRequestException);
+  });
+
+  it('checks the placeholders of the version that is about to go out', async () => {
+    const prisma = fakePrisma({
+      ...template('custom'),
+      htmlContent: '<p>{{optional_subscription_memberPlan_name}}</p>',
+    });
+
+    await expect(
+      makeService(prisma).missingPlaceholders(
+        'tpl-1',
+        false,
+        MailChannel.letter
+      )
+    ).resolves.toEqual(['optional_subscription_memberPlan_name']);
+    expect(prisma.mailTemplateVariant.findUnique).toHaveBeenCalledWith({
+      where: {
+        templateId_channel: {
+          templateId: 'tpl-1',
+          channel: MailChannel.letter,
+        },
+      },
+    });
   });
 });

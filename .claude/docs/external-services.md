@@ -198,6 +198,22 @@ Automated subscription mails can reach a user as a printed letter. The pieces:
   mail|letter, `origin` manual|suggestion, reason, who/when. No row = mail.
   Service `libs/membership/api/src/lib/delivery-mode/`, permission
   `CanManageUserDeliveryMode`, resolver gated by both letter features.
+- A template is written per channel: `MailTemplate` is the group,
+  `MailTemplateVariant` (`mail_templates.variants`, unique per template +
+  `MailChannel`) holds subject, body and — letter only — layout and appendix.
+  Sends read the variant of their channel (`requireTemplateVariant`); the
+  content columns left on `mail_templates` are dead until a follow-up
+  migration drops them. Routing, not fan-out: a letter reader whose template
+  has no letter variant gets the email. A flow or system mail needs a mail
+  variant; letter-only templates are for manual sends. Removing a variant is
+  `deleteMailTemplateVariant` — `updateMailTemplate` never drops one. A
+  letter variant with `sameAsMail` keeps no subject/body: `findTemplateVariant`
+  hands back the mail variant's on the letter's layout and appendix, so read
+  variants through it, never the row. The editor gives a new template such a
+  letter by default. The template table sorts, filters and pages in the
+  browser (`template-table.ts`) over `MailTemplateList`; its extra row fields
+  (`letterLayoutName`, `letterAppendixName`, `memberPlans`) are batched and
+  stay out of `TinyMailTemplate`, which every picker loads.
 - `SubscriptionInterval.sendAsLetter`: only events switched on in the flow
   editor («Auch per Brief») print; user-flow mails (login, password, email
   change) never do. The three senders (periodic job, legacy `member-context`,
