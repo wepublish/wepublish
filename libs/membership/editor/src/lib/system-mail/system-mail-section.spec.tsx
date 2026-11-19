@@ -141,6 +141,18 @@ describe('SystemMailSection', () => {
     }
   });
 
+  it('keeps the whole user action at hand when its column is too narrow for it', () => {
+    renderPage();
+
+    const action = screen.getByText(
+      'systemMails.eventInfo.login_link.userAction'
+    );
+
+    expect(action.getAttribute('title')).toBe(
+      'systemMails.eventInfo.login_link.userAction'
+    );
+  });
+
   it('explains an event next to its name', () => {
     renderPage();
 
