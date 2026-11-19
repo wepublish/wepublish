@@ -3,8 +3,10 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import {
   AccountCreationMailDocument,
   SettingName,
+  LoginCodeSecondFactor,
   SettingsListDocument,
   UserDocument,
+  UserLoginCodeDocument,
   UserSubscriptionListDocument,
 } from '@wepublish/editor/api';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
@@ -424,6 +426,45 @@ describe('UserEditView login code', () => {
 
     expect(
       await screen.findByText('userCreateOrEditView.loginCode.notForStaff')
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', {
+        name: 'userCreateOrEditView.loginCode.reissue',
+      })
+    ).toBeNull();
+  });
+
+  it('warns that a code staff still hold will not log them in, and lets it be revoked', async () => {
+    query.mockResolvedValue({
+      data: { user: withRoles(['CAN_GET_ARTICLE'], ['CAN_LOGIN_EDITOR']) },
+    });
+    mockQueries([
+      loginCodesOn,
+      [
+        UserLoginCodeDocument,
+        {
+          userLoginCode: {
+            usesRemaining: 5,
+            maxUses: 5,
+            expiresAt: '2027-02-01T00:00:00.000Z',
+            lastUsedAt: null,
+            secondFactor: LoginCodeSecondFactor.None,
+          },
+        },
+      ],
+    ]);
+    renderAt('/users/edit/user-1');
+
+    expect(
+      await screen.findByText('userCreateOrEditView.loginCode.staffConflict')
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText('userCreateOrEditView.loginCode.notForStaff')
+    ).toBeNull();
+    expect(
+      screen.getByRole('button', {
+        name: 'userCreateOrEditView.loginCode.revoke',
+      })
     ).toBeInTheDocument();
     expect(
       screen.queryByRole('button', {

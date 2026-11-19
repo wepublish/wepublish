@@ -10,7 +10,6 @@ import {
   PrismaClient,
   UserEvent,
 } from '@prisma/client';
-import { LoginCodeService } from '@wepublish/login-code/api';
 import { hash as argon2Hash } from '@node-rs/argon2';
 import { Validator } from '@wepublish/user';
 import {
@@ -57,8 +56,7 @@ export class UserService {
     private mailchimpContactService: MailchimpContactService,
     private authenticationService: AuthenticationService,
     private sessionCache: SessionCacheInvalidator,
-    private publicContentCache: PublicContentCacheInvalidator,
-    private loginCodeService: LoginCodeService
+    private publicContentCache: PublicContentCacheInvalidator
   ) {}
 
   @PrimeDataLoader(UserDataloaderService)
@@ -313,11 +311,6 @@ export class UserService {
 
     if (active === false) {
       await this.authenticationService.revokeUserSessions(user.id);
-    }
-
-    if (roleIDs !== undefined) {
-      // Staff never hold a login code; one given a role loses it right away.
-      await this.loginCodeService.revokeIfStaff(user.id);
     }
 
     return user;

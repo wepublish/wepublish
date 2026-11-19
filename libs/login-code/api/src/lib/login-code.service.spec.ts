@@ -247,62 +247,6 @@ describe('LoginCodeService', () => {
       });
     });
 
-    describe('once someone becomes staff', () => {
-      const revokedForStaff = {
-        revokedAt: expect.any(Date),
-        revokedBy: 'system:staff-role',
-      };
-
-      it('revokes the codes of a person given a staff role', async () => {
-        const prisma = createPrismaMock({
-          roleIDs: ['paywall-free', 'editor'],
-        });
-        const { service } = createService(prisma);
-
-        await service.revokeIfStaff('user-1');
-
-        expect(prisma.userLoginCode.updateMany).toHaveBeenCalledWith({
-          where: { userId: 'user-1', revokedAt: null },
-          data: revokedForStaff,
-        });
-      });
-
-      it('keeps the code of a reader', async () => {
-        const prisma = createPrismaMock({ roleIDs: ['paywall-free'] });
-        const { service } = createService(prisma);
-
-        await service.revokeIfStaff('user-1');
-
-        expect(prisma.userLoginCode.updateMany).not.toHaveBeenCalled();
-      });
-
-      it.each([['comment-moderator'], ['admin']])(
-        'revokes the codes of everyone holding the %s role at once',
-        async roleId => {
-          const prisma = createPrismaMock();
-          const { service } = createService(prisma);
-
-          await service.revokeForRole(roleId);
-
-          expect(prisma.userLoginCode.updateMany).toHaveBeenCalledTimes(1);
-          expect(prisma.userLoginCode.updateMany).toHaveBeenCalledWith({
-            where: { revokedAt: null, user: { roleIDs: { has: roleId } } },
-            data: revokedForStaff,
-          });
-        }
-      );
-
-      it('leaves the holders of a reader role alone', async () => {
-        const prisma = createPrismaMock();
-        const { service } = createService(prisma);
-
-        await service.revokeForRole('paywall-free');
-        await service.revokeForRole('deleted-role');
-
-        expect(prisma.userLoginCode.updateMany).not.toHaveBeenCalled();
-      });
-    });
-
     it('still serves readers whose role only lets them past the paywall', async () => {
       const prisma = createPrismaMock({ roleIDs: ['paywall-free'] });
       prisma.userLoginCode.findUnique.mockResolvedValue(

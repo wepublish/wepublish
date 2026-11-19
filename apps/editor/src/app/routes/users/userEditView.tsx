@@ -1074,12 +1074,18 @@ function UserEditView() {
                   />
 
                   <CardContent>
+                    {/* A role given later leaves the code in place; the API
+                        refuses and revokes it when it is used. */}
                     {!loginCodeAllowed && (
                       <Alert
-                        severity="info"
+                        severity={
+                          loginCodeData?.userLoginCode ? 'warning' : 'info'
+                        }
                         sx={{ mb: 2 }}
                       >
-                        {t('userCreateOrEditView.loginCode.notForStaff')}
+                        {loginCodeData?.userLoginCode ?
+                          t('userCreateOrEditView.loginCode.staffConflict')
+                        : t('userCreateOrEditView.loginCode.notForStaff')}
                       </Alert>
                     )}
 

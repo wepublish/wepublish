@@ -4,7 +4,6 @@ import {
   AuthenticationService,
   SessionCacheInvalidator,
 } from '@wepublish/authentication/api';
-import { LoginCodeService } from '@wepublish/login-code/api';
 import { MailContext, MailchimpContactService } from '@wepublish/mail/api';
 import { PublicContentCacheInvalidator } from '@wepublish/public-content-cache/api';
 import { HibpService } from './hibp.service';
@@ -13,14 +12,10 @@ import { UserRoleDataloader } from './user-role.dataloader';
 import { UserRoleService } from './user-role.service';
 import { UserService } from './user.service';
 
-// Staff never hold a login code. Becoming staff happens in two places — a
-// person is given a role, or a role is given more permissions — and both
-// revoke the codes right away, instead of when one is next used.
+// Staff never log in with a login code, but becoming staff leaves a code in
+// place: revoking it on saving a role would be an unexpected side effect. The
+// editor shows the conflict, and the code is refused and revoked when used.
 describe('login codes of people who become staff', () => {
-  const loginCodes = {
-    revokeIfStaff: vi.fn().mockResolvedValue(undefined),
-    revokeForRole: vi.fn().mockResolvedValue(undefined),
-  };
   const prisma = {
     user: {
       update: vi.fn().mockResolvedValue({ id: 'user-1' }),
@@ -29,10 +24,13 @@ describe('login codes of people who become staff', () => {
     userRole: {
       update: vi.fn().mockResolvedValue({ id: 'moderator' }),
     },
+    userLoginCode: {
+      update: vi.fn(),
+      updateMany: vi.fn(),
+    },
   };
   const shared = [
     { provide: PrismaClient, useValue: prisma },
-    { provide: LoginCodeService, useValue: loginCodes },
     { provide: SessionCacheInvalidator, useValue: { invalidate: vi.fn() } },
   ];
 
@@ -65,22 +63,15 @@ describe('login codes of people who become staff', () => {
       }).compile()
     ).get(UserRoleService);
 
-  it('revokes them once the roles of a person were saved', async () => {
+  it('keeps them when a person is given a staff role', async () => {
     await (await users()).updateUser({ id: 'user-1', roleIDs: ['editor'] });
 
-    expect(loginCodes.revokeIfStaff).toHaveBeenCalledWith('user-1');
-    expect(prisma.user.update.mock.invocationCallOrder[0]).toBeLessThan(
-      loginCodes.revokeIfStaff.mock.invocationCallOrder[0]
-    );
+    expect(prisma.user.update).toHaveBeenCalled();
+    expect(prisma.userLoginCode.update).not.toHaveBeenCalled();
+    expect(prisma.userLoginCode.updateMany).not.toHaveBeenCalled();
   });
 
-  it('leaves them alone when the roles of a person did not change', async () => {
-    await (await users()).updateUser({ id: 'user-1', note: 'Telefoniert' });
-
-    expect(loginCodes.revokeIfStaff).not.toHaveBeenCalled();
-  });
-
-  it('revokes them for everyone holding a role once its permissions were saved', async () => {
+  it('keeps them when a role they hold is given staff permissions', async () => {
     await (
       await roles()
     ).updateUserRole({
@@ -88,17 +79,8 @@ describe('login codes of people who become staff', () => {
       permissionIDs: ['CAN_TAKE_COMMENT_ACTION'],
     });
 
-    expect(loginCodes.revokeForRole).toHaveBeenCalledWith('moderator');
-    expect(prisma.userRole.update.mock.invocationCallOrder[0]).toBeLessThan(
-      loginCodes.revokeForRole.mock.invocationCallOrder[0]
-    );
-  });
-
-  it('leaves them alone when only the name of a role changed', async () => {
-    await (
-      await roles()
-    ).updateUserRole({ id: 'moderator', name: 'Moderation' });
-
-    expect(loginCodes.revokeForRole).not.toHaveBeenCalled();
+    expect(prisma.userRole.update).toHaveBeenCalled();
+    expect(prisma.userLoginCode.update).not.toHaveBeenCalled();
+    expect(prisma.userLoginCode.updateMany).not.toHaveBeenCalled();
   });
 });

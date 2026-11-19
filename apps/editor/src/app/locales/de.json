@@ -3047,7 +3047,8 @@
         "issued": "Neuer Code (wird nur einmal angezeigt):",
         "secondFactorAvailable": "Zweiter Faktor «{{factor}}» ist bei dieser Person hinterlegt.",
         "secondFactorMissing": "Zweiter Faktor «{{factor}}» fehlt bei dieser Person – ohne diese Angabe kann sie keine E-Mail-Adresse hinterlegen.",
-        "notForStaff": "Personen mit Rollen, die mehr erlauben als das Lesen hinter der Paywall, erhalten keinen persönlichen Login-Code. In ihren E-Mails und Briefen bleibt {{purl}} leer."
+        "notForStaff": "Personen mit Rollen, die mehr erlauben als das Lesen hinter der Paywall, erhalten keinen persönlichen Login-Code. In ihren E-Mails und Briefen bleibt {{purl}} leer.",
+        "staffConflict": "Diese Person hat einen persönlichen Login-Code, aber eine Rolle, die mehr erlaubt als das Lesen hinter der Paywall. Mit dem Code kann sie sich nicht mehr anmelden; er wird beim nächsten Versuch widerrufen. Widerrufe ihn jetzt oder entferne die Rolle."
       },
       "totpEnabled": "Zwei-Faktor-Authentifizierung ist für diesen Benutzer aktiviert.",
       "totpDisabled": "Zwei-Faktor-Authentifizierung ist noch nicht eingerichtet. Der Benutzer wird beim nächsten Editor-Login aufgefordert, diese einzurichten.",
