@@ -2901,7 +2901,7 @@
     "subscriptionFlow": {
       "overview": {
         "back": "Alle automatischen Mitteilungen",
-        "title": "Abo-Abläufe",
+        "title": "Mitteilungen zu Abo-Abläufen",
         "intro": "Ein Ablauf legt fest, welche Mitteilung bei welchem Abo-Ereignis automatisch verschickt wird. Der Standard-Ablauf gilt für alle Abos. Ein Abo-Plan kann eigene Abläufe für bestimmte Abos haben: Ein solcher Ablauf ersetzt den Standard-Ablauf für diese Abos vollständig.",
         "flow": "Ablauf",
         "appliesTo": "Gilt für",
@@ -4467,11 +4467,16 @@
       "reset": "Spalten zurücksetzen"
     },
     "systemMails": {
-      "title": "Konto & Login",
+      "title": "Mitteilungen zu Konto- & Login-Ereignissen",
       "sectionDescription": "E-Mails rund um das Benutzerkonto. Sie werden durch eine Aktion der Person ausgelöst – unabhängig davon, ob sie ein Abo hat.",
       "sectionExample": "Jemand registriert sich → Willkommens-E-Mail geht sofort raus.",
       "sendTest": "Test an mich",
       "testSent": "Test-E-Mail an dich verschickt",
+      "columns": {
+        "event": "Ereignis-Typ",
+        "userAction": "Benutzer-Aktion",
+        "template": "Mitteilungsvorlage"
+      },
       "events": {
         "account_creation": "Registrierung",
         "login_link": "Login-Link",
@@ -4481,27 +4486,27 @@
       },
       "eventInfo": {
         "account_creation": {
-          "short": "Neues Konto wurde erstellt.",
+          "userAction": "Registriert sich oder erhält beim Abo-Kauf ein Konto",
           "description": "Geht raus, sobald sich eine Person neu registriert oder beim Abo-Kauf ein Konto erhält.",
           "example": "«Willkommen – dein Konto ist bereit.»"
         },
         "login_link": {
-          "short": "Anmelden ohne Passwort.",
+          "userAction": "Fordert einen Login-Link an",
           "description": "Geht raus, wenn eine Person sich per Link anmelden will, statt ein Passwort einzugeben. Die E-Mail muss den Login-Link enthalten.",
           "example": "«Mit einem Klick anmelden.»"
         },
         "password_reset": {
-          "short": "Passwort vergessen.",
+          "userAction": "Klickt auf «Passwort vergessen»",
           "description": "Geht raus, wenn eine Person «Passwort vergessen» anklickt. Die E-Mail muss den Link zum Setzen eines neuen Passworts enthalten.",
           "example": "«Hier setzt du ein neues Passwort.»"
         },
         "email_change": {
-          "short": "Neue Adresse bestätigen.",
+          "userAction": "Ändert die eigene E-Mail-Adresse",
           "description": "Geht an die neue Adresse, wenn jemand seine E-Mail-Adresse ändert. Die Änderung gilt erst nach der Bestätigung.",
           "example": "«Bitte bestätige deine neue E-Mail-Adresse.»"
         },
         "test_mail": {
-          "short": "Nur für deine eigenen Tests.",
+          "userAction": "Keine – nur für deine eigenen Tests",
           "description": "Wird nie automatisch an Leser*innen verschickt. Mit dieser Vorlage kannst du den E-Mail-Versand selbst ausprobieren.",
           "example": "«Test-E-Mail – wenn Sie das lesen, funktioniert der Versand.»"
         }

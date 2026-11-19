@@ -3,27 +3,29 @@ import styled from '@emotion/styled';
 import {
   MailTemplateDocument,
   SystemMailsDocument,
+  SystemMailsQuery,
   TestSystemMailDocument,
   UpdateSystemMailDocument,
   UserEvent,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
+  DataTable,
+  DataTableColumn,
   PermissionControl,
   useAuthorisation,
 } from '@wepublish/ui/editor';
-import { useMemo, useState } from 'react';
+import { useId, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdManageAccounts } from 'react-icons/md';
 import { RiTestTubeLine } from 'react-icons/ri';
 import {
   DEFAULT_MUTATION_OPTIONS,
   MUTATION_OPTIONS_WITH_SUCCESS_MESSAGE,
 } from '../common';
-import { EventList, EventRow, MailBlock } from '../mail-settings-layout';
+import { InfoTooltip } from '../mail-settings-layout';
 import { purposeOfEvent } from '../mail-template/event-purpose';
 import { MailTemplateField } from '../mail-template/mail-template-field';
-import { Button } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import {
   CanGetSystemMails,
   CanTestSystemMails,
@@ -42,19 +44,29 @@ const ACCOUNT_EVENT_ORDER: UserEvent[] = [
   UserEvent.TestMail,
 ];
 
-const Controls = styled('div')`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-
-  > .rs-picker {
-    flex: 1 1 200px;
-    min-width: 0;
-  }
+const Section = styled.section`
+  margin-top: ${({ theme }) => theme.spacing(4)};
 `;
+
+const Heading = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing(0.5)};
+  margin-bottom: ${({ theme }) => theme.spacing(2)};
+`;
+
+const EventName = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing(0.5)};
+  font-weight: 600;
+`;
+
+type SystemMail = SystemMailsQuery['systemMails'][number];
 
 function SystemMailSection() {
   const { t } = useTranslation();
+  const headingId = useId();
 
   const { data: systemMails } = useQuery(SystemMailsDocument);
   const { data: mailTemplates } = useQuery(MailTemplateDocument);
@@ -118,62 +130,102 @@ function SystemMailSection() {
     return null;
   }
 
-  return (
-    <MailBlock
-      title={t('systemMails.title')}
-      icon={<MdManageAccounts size={20} />}
-      description={t('systemMails.sectionDescription')}
-      example={t('systemMails.sectionExample')}
-    >
-      <EventList>
-        {events.map(systemMail => {
-          const eventKey = systemMail.event.toLowerCase();
-          const mailTemplateId = assignedTemplateId(
-            systemMail.event,
-            systemMail.mailTemplate?.id
-          );
+  const columns: DataTableColumn<SystemMail>[] = [
+    {
+      id: 'event',
+      label: t('systemMails.columns.event'),
+      width: 240,
+      render: systemMail => {
+        const eventKey = systemMail.event.toLowerCase();
 
-          return (
-            <EventRow
-              key={systemMail.event}
-              title={t(`systemMails.events.${eventKey}`)}
-              hint={t(`systemMails.eventInfo.${eventKey}.short`)}
+        return (
+          <EventName>
+            {t(`systemMails.events.${eventKey}`)}
+
+            <InfoTooltip
               description={t(`systemMails.eventInfo.${eventKey}.description`)}
               example={t(`systemMails.eventInfo.${eventKey}.example`)}
-            >
-              <Controls>
-                <MailTemplateField
-                  value={mailTemplateId}
-                  templates={mailTemplates.mailTemplates}
-                  purpose={purposeOfEvent(systemMail.event)}
-                  label={t(`systemMails.events.${eventKey}`)}
-                  disabled={!canUpdateSystemMails}
-                  onChange={id => assignTemplate(systemMail.event, id)}
-                />
+            />
+          </EventName>
+        );
+      },
+    },
+    {
+      id: 'userAction',
+      label: t('systemMails.columns.userAction'),
+      width: 420,
+      render: systemMail =>
+        t(`systemMails.eventInfo.${systemMail.event.toLowerCase()}.userAction`),
+    },
+    {
+      id: 'template',
+      label: t('systemMails.columns.template'),
+      width: 320,
+      render: systemMail => (
+        <MailTemplateField
+          value={assignedTemplateId(
+            systemMail.event,
+            systemMail.mailTemplate?.id
+          )}
+          templates={mailTemplates?.mailTemplates ?? []}
+          purpose={purposeOfEvent(systemMail.event)}
+          label={t(`systemMails.events.${systemMail.event.toLowerCase()}`)}
+          disabled={!canUpdateSystemMails}
+          onChange={id => assignTemplate(systemMail.event, id)}
+        />
+      ),
+    },
+    {
+      id: 'action',
+      label: t('action'),
+      width: 190,
+      fixed: true,
+      render: systemMail => (
+        <PermissionControl
+          showRejectionMessage={false}
+          qualifyingPermissions={[CanTestSystemMails.id]}
+        >
+          <Button
+            variant="outlined"
+            size="small"
+            startIcon={<RiTestTubeLine />}
+            disabled={
+              !assignedTemplateId(systemMail.event, systemMail.mailTemplate?.id)
+            }
+            onClick={() =>
+              testSystemMail({ variables: { event: systemMail.event } })
+            }
+          >
+            {t('systemMails.sendTest')}
+          </Button>
+        </PermissionControl>
+      ),
+    },
+  ];
 
-                <PermissionControl
-                  showRejectionMessage={false}
-                  qualifyingPermissions={[CanTestSystemMails.id]}
-                >
-                  <Button
-                    variant="outlined"
-                    startIcon={<RiTestTubeLine />}
-                    disabled={!mailTemplateId}
-                    onClick={() =>
-                      testSystemMail({
-                        variables: { event: systemMail.event },
-                      })
-                    }
-                  >
-                    {t('systemMails.sendTest')}
-                  </Button>
-                </PermissionControl>
-              </Controls>
-            </EventRow>
-          );
-        })}
-      </EventList>
-    </MailBlock>
+  return (
+    <Section aria-labelledby={headingId}>
+      <Heading>
+        <Typography
+          id={headingId}
+          variant="h5"
+          component="h2"
+        >
+          {t('systemMails.title')}
+        </Typography>
+
+        <InfoTooltip
+          description={t('systemMails.sectionDescription')}
+          example={t('systemMails.sectionExample')}
+        />
+      </Heading>
+
+      <DataTable
+        data={events}
+        getRowId={systemMail => systemMail.event}
+        columns={columns}
+      />
+    </Section>
   );
 }
 

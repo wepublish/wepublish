@@ -317,15 +317,38 @@ describe('SubscriptionFlowOverview', () => {
     });
   });
 
-  it('shows the account mails below the flows', () => {
+  it('shows the account mails below the flows, as a second table under a heading of the same kind', () => {
     renderOverview();
 
-    const table = screen.getByRole('table');
-    const account = screen.getByRole('region', { name: 'systemMails.title' });
+    const [flows, account] = screen.getAllByRole('table');
 
     expect(
-      table.compareDocumentPosition(account) & Node.DOCUMENT_POSITION_FOLLOWING
+      within(account).getByText('systemMails.events.login_link')
     ).toBeTruthy();
+    expect(
+      flows.compareDocumentPosition(account) & Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
+    expect(
+      screen.getAllByRole('heading', { level: 2 }).map(h => h.textContent)
+    ).toEqual(['subscriptionFlow.overview.title', 'systemMails.title']);
+  });
+
+  it('keeps the edit action in the same place whether or not a row can be deleted', () => {
+    renderOverview();
+
+    const actions = (name: string) =>
+      within(rowOf(name))
+        .getByRole('button', { name: 'edit' })
+        .closest('[data-actions]') as HTMLElement;
+
+    // Rows start their actions at the same edge instead of centring them.
+    expect(actions('subscriptionFlow.defaultFlow')).toBeTruthy();
+    expect(
+      getComputedStyle(actions('subscriptionFlow.defaultFlow')).justifyContent
+    ).toBe('flex-start');
+    expect(getComputedStyle(actions('Print')).justifyContent).toBe(
+      'flex-start'
+    );
   });
 
   describe('creating a flow', () => {
