@@ -10,38 +10,27 @@ import {
   CreateSubscriptionIntervalDocument,
   DeleteSubscriptionFlowDocument,
   DeleteSubscriptionIntervalDocument,
-  FullMemberPlanFragment,
   ListPaymentMethodsDocument,
   MailTemplateDocument,
-  MemberPlanListDocument,
-  SubscriptionEvent,
-  SubscriptionFlowFragment,
   SubscriptionFlowsDocument,
   SubscriptionIntervalFragment,
   TinyMailTemplateFragment,
   UpdateSubscriptionFlowDocument,
   UpdateSubscriptionIntervalDocument,
 } from '@wepublish/editor/api';
-import {
-  createCheckedPermissionComponent,
-  PermissionControl,
-  useSeededState,
-} from '@wepublish/ui/editor';
-import { createContext, JSX, useMemo, useState } from 'react';
+import { createCheckedPermissionComponent } from '@wepublish/ui/editor';
+import { createContext, JSX, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  MdAddCircleOutline,
-  MdAltRoute,
-  MdCelebration,
-  MdTune,
-} from 'react-icons/md';
-import { Link, useParams } from 'react-router-dom';
+import { MdAltRoute, MdArrowBack, MdCelebration, MdTune } from 'react-icons/md';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { DEFAULT_MUTATION_OPTIONS } from '../common';
 import { usePaperLetterFlow } from '../delivery-mode/use-paper-letter-flow';
-import { MailBlock, MailBlocks } from '../mail-settings-layout';
-import { SystemMailSection } from '../system-mail/system-mail-section';
+import { MailBlocks } from '../mail-settings-layout';
 import { FlowFilters } from './filter/flow-filters';
 import { FlowBlock } from './flow-block';
+import { USER_ACTION_EVENTS } from './flow-events';
+import type { NonUserActionEvents, UserActionEvents } from './flow-events';
+import { conditionsSummary, FLOWS_PATH } from './flow-overview';
 import { SubscriptionClientContext } from './graphql-client-context';
 import styled from '@emotion/styled';
 import {
@@ -55,21 +44,11 @@ export const MailTemplatesContext = createContext<TinyMailTemplateFragment[]>(
   []
 );
 
-export const USER_ACTION_EVENTS = [
-  SubscriptionEvent.Subscribe,
-  SubscriptionEvent.ConfirmSubscription,
-  SubscriptionEvent.RenewalSuccess,
-  SubscriptionEvent.RenewalFailed,
-  SubscriptionEvent.DeactivationByUser,
-] as const;
-type UserActionEvents = (typeof USER_ACTION_EVENTS)[number];
-
-export const NON_USER_ACTION_EVENTS = [
-  SubscriptionEvent.InvoiceCreation,
-  SubscriptionEvent.DeactivationUnpaid,
-  SubscriptionEvent.Custom,
-] as const;
-type NonUserActionEvents = (typeof NON_USER_ACTION_EVENTS)[number];
+export {
+  isNonUserEvent,
+  NON_USER_ACTION_EVENTS,
+  USER_ACTION_EVENTS,
+} from './flow-events';
 
 export interface UserActionEvent {
   title: string;
@@ -87,12 +66,6 @@ export interface UserActionInterval extends SubscriptionIntervalFragment {
 export interface NonUserActionInterval extends SubscriptionIntervalFragment {
   event: NonUserActionEvents;
   daysAwayFromEnding: number;
-}
-
-export function isNonUserEvent(
-  event: SubscriptionEvent
-): event is NonUserActionEvents {
-  return NON_USER_ACTION_EVENTS.includes(event as NonUserActionEvents);
 }
 
 const PageIntro = styled.div`
@@ -122,41 +95,31 @@ export interface DecoratedSubscriptionInterval<
   color: IntervalColoring;
 }
 
-interface SubscriptionFlowBlocksProps {
-  memberPlanId?: string;
-  defaultFlowOnly: boolean;
-  memberPlan?: FullMemberPlanFragment;
-}
-
-function SubscriptionFlowBlocks({
-  memberPlanId,
-  defaultFlowOnly,
-  memberPlan,
-}: SubscriptionFlowBlocksProps) {
+/**
+ * One communication flow: the default one, or one a member plan has for some
+ * of its subscriptions. Which flows exist is the overview's business.
+ */
+function SubscriptionFlow() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const paperLetterFlow = usePaperLetterFlow();
-  const countedMemberPlanId = defaultFlowOnly ? undefined : memberPlanId;
 
-  const {
-    data: subscriptionFlows,
-    loading: loadingSubscriptionFlows,
-    refetch: refetchSubscriptionFlows,
-  } = useQuery(SubscriptionFlowsDocument, {
-    variables: {
-      defaultFlowOnly,
-      memberPlanId: countedMemberPlanId,
-    },
-  });
+  const { id } = useParams();
+  const defaultFlowOnly = id === 'default';
+
+  // There is no query for a single flow; the default flow can at least be
+  // asked for alone.
+  const { data: subscriptionFlows, loading: loadingSubscriptionFlows } =
+    useQuery(SubscriptionFlowsDocument, {
+      variables: { defaultFlowOnly },
+    });
 
   const { data: mailTemplates, loading: loadingMailTemplates } =
     useQuery(MailTemplateDocument);
   const { data: paymentMethods } = useQuery(ListPaymentMethodsDocument);
 
   // Mutation methods are later passed to the SubscriptionClientContext, so they can reuse the same client everywhere. This makes the GraphQL cache work across all requests.
-  const mutationOptions = {
-    ...DEFAULT_MUTATION_OPTIONS(t),
-    variables: { memberPlanId: countedMemberPlanId },
-  };
+  const mutationOptions = DEFAULT_MUTATION_OPTIONS(t);
 
   const [createSubscriptionInterval] = useMutation(
     CreateSubscriptionIntervalDocument,
@@ -170,23 +133,19 @@ function SubscriptionFlowBlocks({
     DeleteSubscriptionIntervalDocument,
     mutationOptions
   );
-  const [createSubscriptionFlow] = useMutation(CreateSubscriptionFlowDocument, {
-    ...DEFAULT_MUTATION_OPTIONS(t),
-    onCompleted: () => refetchSubscriptionFlows(),
-  });
+  const [createSubscriptionFlow] = useMutation(
+    CreateSubscriptionFlowDocument,
+    mutationOptions
+  );
   const [updateSubscriptionFlow] = useMutation(
     UpdateSubscriptionFlowDocument,
     mutationOptions
   );
   const [deleteSubscriptionFlow] = useMutation(DeleteSubscriptionFlowDocument, {
     ...mutationOptions,
-    onCompleted: () => refetchSubscriptionFlows(),
+    // The page of a deleted flow has nothing left to show.
+    onCompleted: () => navigate(FLOWS_PATH),
   });
-
-  const loading = useMemo(
-    () => loadingSubscriptionFlows || loadingMailTemplates,
-    [loadingSubscriptionFlows, loadingMailTemplates]
-  );
 
   const userActionEvents: UserActionEvent[] = useMemo(() => {
     return USER_ACTION_EVENTS.map(eventName => {
@@ -202,25 +161,7 @@ function SubscriptionFlowBlocks({
     });
   }, [t]);
 
-  const flowNumbers = useMemo(
-    () =>
-      new Map(
-        (subscriptionFlows?.subscriptionFlows ?? [])
-          .filter(flow => !flow.default)
-          .map((flow, index) => [flow.id, index + 1])
-      ),
-    [subscriptionFlows]
-  );
-
-  const [knownFlowIds, setKnownFlowIds] = useState<Set<string>>();
-
-  useSeededState(
-    subscriptionFlows?.subscriptionFlows,
-    flows => setKnownFlowIds(new Set(flows.map(flow => flow.id))),
-    subscriptionFlows ? 'loaded' : undefined
-  );
-
-  if (loading || !subscriptionFlows) {
+  if (loadingSubscriptionFlows || loadingMailTemplates || !subscriptionFlows) {
     return (
       <Box
         sx={{
@@ -235,23 +176,38 @@ function SubscriptionFlowBlocks({
     );
   }
 
-  const isNewFlow = (flow: SubscriptionFlowFragment) =>
-    Boolean(knownFlowIds) && !knownFlowIds?.has(flow.id);
+  const subscriptionFlow = subscriptionFlows.subscriptionFlows.find(flow =>
+    defaultFlowOnly ? flow.default : flow.id === id
+  );
 
-  const filterSummary = (flow: SubscriptionFlowFragment) =>
-    [
-      flow.paymentMethods.map(paymentMethod => paymentMethod.name).join(', '),
-      flow.periodicities
-        .map(periodicity =>
-          t(`memberPlanList.paymentPeriodicity.${periodicity}`)
-        )
-        .join(', '),
-      flow.autoRenewal
-        .map(autoRenewal => t(`subscriptionFlow.booleanFilter.${autoRenewal}`))
-        .join(', '),
-    ]
-      .filter(Boolean)
-      .join(' · ');
+  const backLink = (
+    <MuiLink
+      component={Link}
+      to={FLOWS_PATH}
+      variant="body2"
+      sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.5 }}
+    >
+      <MdArrowBack aria-hidden />
+      {t('subscriptionFlow.overview.back')}
+    </MuiLink>
+  );
+
+  if (!subscriptionFlow) {
+    return (
+      <PageIntro>
+        {backLink}
+
+        <Typography
+          variant="body1"
+          color="textSecondary"
+        >
+          {t('subscriptionFlow.notFound')}
+        </Typography>
+      </PageIntro>
+    );
+  }
+
+  const conditions = conditionsSummary(subscriptionFlow, t);
 
   return (
     <MailTemplatesContext.Provider value={mailTemplates?.mailTemplates || []}>
@@ -265,75 +221,80 @@ function SubscriptionFlowBlocks({
           deleteSubscriptionFlow,
         }}
       >
-        {/* Which messages print at all is decided here, per event; who gets
-            them printed is decided in the delivery channel area. */}
-        {paperLetterFlow && (
-          // One quiet line across the whole grid, not a block of its own.
+        <PageIntro>
+          {backLink}
+
           <Typography
-            variant="caption"
-            sx={{ gridColumn: '1 / -1', color: 'text.secondary' }}
+            variant="h2"
+            component="h1"
           >
-            {t('deliveryChannel.flows.letterHint')}{' '}
-            <MuiLink
-              component={Link}
-              to="/deliverychannel"
-              variant="caption"
-            >
-              {t('deliveryChannel.flows.manage')}
-            </MuiLink>
+            <MdTune aria-hidden />
+
+            {subscriptionFlow.default ?
+              t('subscriptionFlow.defaultFlow')
+            : `«${subscriptionFlow.memberPlan?.name ?? ''}»`}
           </Typography>
-        )}
 
-        {subscriptionFlows.subscriptionFlows.map(subscriptionFlow => {
-          if (defaultFlowOnly) {
-            return (
-              <FlowBlock
-                key={subscriptionFlow.id}
-                subscriptionFlow={subscriptionFlow}
-                userActionEvents={userActionEvents}
-                title={t('subscriptionFlow.subscriptionEvents')}
-                icon={<MdCelebration size={20} />}
-                description={t(
-                  'subscriptionFlow.subscriptionEventsDescription'
-                )}
-                example={t('subscriptionFlow.subscriptionEventsExample')}
-              />
-            );
-          }
+          {/* A flow has no name: its conditions tell it from the plan's
+              other flows. */}
+          {conditions && (
+            <Typography
+              variant="subtitle1"
+              component="p"
+            >
+              {conditions}
+            </Typography>
+          )}
 
-          if (subscriptionFlow.default) {
-            return (
-              <FlowBlock
-                key={subscriptionFlow.id}
-                subscriptionFlow={subscriptionFlow}
-                userActionEvents={userActionEvents}
-                title={t('subscriptionFlow.defaultFlow')}
-                icon={<MdAltRoute size={20} />}
-                description={t('subscriptionFlow.defaultFlowDescription')}
-                showAffected
-                groupEvents
-                collapsible
-                defaultExpanded={isNewFlow(subscriptionFlow)}
-              />
-            );
-          }
+          <Typography
+            variant="body1"
+            color="textSecondary"
+          >
+            {subscriptionFlow.default ?
+              t('subscriptionFlow.defaultFlowDescription')
+            : t('subscriptionFlow.planFlowDescription')}
+          </Typography>
+        </PageIntro>
 
-          return (
+        <MailBlocks>
+          {/* Which messages print at all is decided here, per event; who gets
+              them printed is decided in the delivery channel area. */}
+          {paperLetterFlow && (
+            // One quiet line across the whole grid, not a block of its own.
+            <Typography
+              variant="caption"
+              sx={{ gridColumn: '1 / -1', color: 'text.secondary' }}
+            >
+              {t('deliveryChannel.flows.letterHint')}{' '}
+              <MuiLink
+                component={Link}
+                to="/deliverychannel"
+                variant="caption"
+              >
+                {t('deliveryChannel.flows.manage')}
+              </MuiLink>
+            </Typography>
+          )}
+
+          {subscriptionFlow.default ?
             <FlowBlock
-              key={subscriptionFlow.id}
               subscriptionFlow={subscriptionFlow}
               userActionEvents={userActionEvents}
-              title={t('subscriptionFlow.flowNumber', {
-                number: flowNumbers.get(subscriptionFlow.id),
-              })}
+              title={t('subscriptionFlow.subscriptionEvents')}
+              icon={<MdCelebration size={20} />}
+              description={t('subscriptionFlow.subscriptionEventsDescription')}
+              example={t('subscriptionFlow.subscriptionEventsExample')}
+              showAffected
+            />
+          : <FlowBlock
+              subscriptionFlow={subscriptionFlow}
+              userActionEvents={userActionEvents}
+              title={t('subscriptionFlow.flow')}
               icon={<MdAltRoute size={20} />}
-              summary={filterSummary(subscriptionFlow)}
-              collapsible
-              defaultExpanded={isNewFlow(subscriptionFlow)}
               filters={
-                memberPlan && (
+                subscriptionFlow.memberPlan && (
                   <FlowFilters
-                    memberPlan={memberPlan}
+                    memberPlan={subscriptionFlow.memberPlan}
                     subscriptionFlow={subscriptionFlow}
                     paymentMethods={paymentMethods}
                   />
@@ -342,96 +303,18 @@ function SubscriptionFlowBlocks({
               showAffected
               groupEvents
             />
-          );
-        })}
-
-        {!defaultFlowOnly && memberPlan && (
-          <PermissionControl
-            showRejectionMessage={false}
-            qualifyingPermissions={[CanCreateSubscriptionFlow.id]}
-          >
-            <MailBlock
-              title={t('subscriptionFlow.newFlow')}
-              icon={<MdAddCircleOutline size={20} />}
-              description={t('subscriptionFlow.filtersDescription')}
-              example={t('subscriptionFlow.filtersExample')}
-            >
-              <FlowFilters
-                memberPlan={memberPlan}
-                createNewFlow
-                paymentMethods={paymentMethods}
-              />
-            </MailBlock>
-          </PermissionControl>
-        )}
+          }
+        </MailBlocks>
       </SubscriptionClientContext.Provider>
     </MailTemplatesContext.Provider>
   );
 }
 
-const CheckedSubscriptionFlowBlocks = createCheckedPermissionComponent([
+const SubscriptionFlowPage = createCheckedPermissionComponent([
   CanGetSubscriptionFlows.id,
   CanUpdateSubscriptionFlow.id,
   CanCreateSubscriptionFlow.id,
   CanDeleteSubscriptionFlow.id,
-])(SubscriptionFlowBlocks);
+])(SubscriptionFlow);
 
-/**
- * All mails the system sends on its own: the account mails and, per member plan,
- * the subscription mails. Every section gates itself, so a user only sees what
- * their permissions allow.
- */
-function SubscriptionFlowList() {
-  const { t } = useTranslation();
-
-  const { id: memberPlanId } = useParams();
-  const defaultFlowOnly = memberPlanId === 'default';
-
-  const { data: memberPlans } = useQuery(MemberPlanListDocument, {
-    variables: { take: 100 },
-    skip: defaultFlowOnly,
-  });
-
-  const memberPlan = useMemo(
-    () => memberPlans?.memberPlans.nodes.find(p => p.id === memberPlanId),
-    [memberPlanId, memberPlans]
-  );
-
-  return (
-    <>
-      <PageIntro>
-        <Typography
-          variant="h2"
-          component="h1"
-        >
-          <MdTune aria-hidden />
-
-          {defaultFlowOnly ?
-            t('automaticMails.title')
-          : `«${memberPlan?.name || ''}»`}
-        </Typography>
-
-        <Typography
-          variant="body1"
-          color="textSecondary"
-        >
-          {defaultFlowOnly ?
-            t('automaticMails.intro')
-          : t('subscriptionFlow.settingsDescription')}
-        </Typography>
-      </PageIntro>
-
-      <MailBlocks split={defaultFlowOnly}>
-        <CheckedSubscriptionFlowBlocks
-          memberPlanId={memberPlanId}
-          defaultFlowOnly={defaultFlowOnly}
-          memberPlan={memberPlan}
-        />
-
-        {defaultFlowOnly && <SystemMailSection />}
-      </MailBlocks>
-    </>
-  );
-}
-
-export { SubscriptionFlowList };
+export { SubscriptionFlowPage };

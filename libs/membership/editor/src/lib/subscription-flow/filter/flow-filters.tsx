@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 import {
   CreateSubscriptionFlowMutationVariables,
-  FullMemberPlanFragment,
   ListPaymentMethodsQuery,
   PaymentPeriodicity,
   SubscriptionFlowFragment,
@@ -42,7 +41,7 @@ const CreateAction = styled('div')`
 `;
 
 interface FlowFiltersProps {
-  memberPlan: FullMemberPlanFragment;
+  memberPlan: { id: string };
   subscriptionFlow?: SubscriptionFlowFragment;
   createNewFlow?: boolean;
   paymentMethods: ListPaymentMethodsQuery | undefined;
