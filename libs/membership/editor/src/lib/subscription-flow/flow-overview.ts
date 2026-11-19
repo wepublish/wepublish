@@ -1,7 +1,4 @@
-import {
-  SubscriptionEvent,
-  SubscriptionFlowFragment,
-} from '@wepublish/editor/api';
+import { SubscriptionFlowFragment } from '@wepublish/editor/api';
 
 import { isNonUserEvent, USER_ACTION_EVENTS } from './flow-events';
 
@@ -41,90 +38,24 @@ export const conditionsSummary = (
     .filter(Boolean)
     .join(' · ');
 
-const periodicityName = (
-  flow: SubscriptionFlowFragment,
-  t: Translate
-): string =>
-  flow.earliestDay.periodicity ?
-    t(`memberPlanList.paymentPeriodicity.${flow.earliestDay.periodicity}`)
-  : '';
-
 /**
- * How early an event of the flow may lie, and why: the invoice of a
- * subscription is only created once its current period has begun, so the
- * shortest periodicity the flow applies to sets the day.
+ * How early an event of the flow may lie, and why. A member plan's flow: the
+ * invoice of a subscription is only created once its current period has
+ * begun, so the shortest periodicity of its conditions sets the day. The
+ * default flow: its day is fixed, as every subscription may fall back to it.
  */
 export const earliestDayHint = (
   flow: SubscriptionFlowFragment,
   t: Translate
 ): string => {
-  const { days, periodicity, memberPlans } = flow.earliestDay;
-  const values = { days: -days, periodicity: periodicityName(flow, t) };
+  const { days, periodicity } = flow.earliestDay;
 
-  if (!periodicity) {
-    return t('subscriptionFlow.earliestDay.nothingOffered', { days: -days });
-  }
-
-  if (!flow.default) {
-    return t('subscriptionFlow.earliestDay.byConditions', values);
-  }
-
-  return memberPlans.length ?
-      t('subscriptionFlow.earliestDay.byMemberPlans', {
-        ...values,
-        memberPlans: memberPlans.join(', '),
-      })
-    : t('subscriptionFlow.earliestDay.byRunningSubscriptions', values);
-};
-
-/**
- * Events lying earlier than the shortest subscriptions of the flow allow, e.g.
- * since a member plan came to offer a shorter periodicity. Their invoice is
- * created on the earliest day instead; a message that early only reaches
- * those whose next period is paid by then.
- */
-const tooEarlyWarnings = (
-  flow: SubscriptionFlowFragment,
-  t: Translate
-): string[] => {
-  const tooEarly = flow.intervals.filter(
-    interval =>
-      interval.daysAwayFromEnding != null &&
-      interval.daysAwayFromEnding < flow.earliestDay.days
-  );
-  const invoice = tooEarly.find(
-    interval => interval.event === SubscriptionEvent.InvoiceCreation
-  );
-  const mailDays = [
-    ...new Set(
-      tooEarly
-        .filter(interval => interval !== invoice)
-        .map(interval => interval.daysAwayFromEnding)
-    ),
-  ];
-  const values = {
-    days: -flow.earliestDay.days,
-    periodicity: periodicityName(flow, t),
-  };
-
-  return [
-    ...(invoice ?
-      [
-        t('subscriptionFlow.overview.warnings.invoiceTooEarly', {
-          day: invoice.daysAwayFromEnding,
-          ...values,
-        }),
-      ]
-    : []),
-    ...(mailDays.length ?
-      [
-        t('subscriptionFlow.overview.warnings.mailsTooEarly', {
-          mailDays: mailDays.join(', '),
-          ...values,
-        }),
-      ]
-    : []),
-  ];
+  return flow.default || !periodicity ?
+      t('subscriptionFlow.earliestDay.defaultFlow', { days: -days })
+    : t('subscriptionFlow.earliestDay.byConditions', {
+        days: -days,
+        periodicity: t(`memberPlanList.paymentPeriodicity.${periodicity}`),
+      });
 };
 
 /**
@@ -136,10 +67,8 @@ export const flowWarnings = (
   flow: SubscriptionFlowFragment,
   t: Translate
 ): string[] => {
-  const tooEarly = tooEarlyWarnings(flow, t);
-
   if (flow.default) {
-    return tooEarly;
+    return [];
   }
 
   // Left behind by a deleted plan: the api refuses to look up any message
@@ -180,16 +109,13 @@ export const flowWarnings = (
     : []),
   ];
 
-  return [
-    ...(notOffered.length ?
+  return notOffered.length ?
       [
         t('subscriptionFlow.overview.warnings.notOffered', {
           values: notOffered.join(', '),
         }),
       ]
-    : []),
-    ...tooEarly,
-  ];
+    : [];
 };
 
 /** A flow as the overview lists it. */

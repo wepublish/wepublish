@@ -102,7 +102,7 @@ const flow = (
     periodicities: [],
     intervals,
     numberOfSubscriptions: 3,
-    earliestDay: { days: -360, periodicity: null, memberPlans: [] },
+    earliestDay: { days: -25, periodicity: null },
   }) as unknown as SubscriptionFlowFragment;
 
 const defaultFlow = flow('flow-default', true, [
@@ -248,6 +248,16 @@ describe('SubscriptionFlowPage', () => {
       );
       expect(
         screen.getByText('subscriptionFlow.subscriptionsAffected(3)')
+      ).toBeTruthy();
+    });
+
+    it('says next to the invoice day that the default flow never acts earlier than 25 days', () => {
+      renderPage();
+
+      expect(
+        screen.getByRole('button', {
+          name: 'subscriptionFlow.earliestDay.defaultFlow(25)',
+        })
       ).toBeTruthy();
     });
 
@@ -541,17 +551,17 @@ describe('SubscriptionFlowPage', () => {
           { ...customFlow, earliestDay, intervals } as SubscriptionFlowFragment,
         ]);
 
-      beforeEach(() =>
-        withEarliestDay({ days: -360, periodicity: 'yearly', memberPlans: [] })
-      );
+      beforeEach(() => withEarliestDay({ days: -360, periodicity: 'yearly' }));
 
       it('is explained next to the day of the invoice creation', () => {
         renderPage();
 
-        const invoiceDay =
-          screen.getByText(dayLabel(0)).closest('li') as HTMLElement;
-        const customMailDay =
-          screen.getByText(dayLabel(-25)).closest('li') as HTMLElement;
+        const invoiceDay = screen
+          .getByText(dayLabel(0))
+          .closest('li') as HTMLElement;
+        const customMailDay = screen
+          .getByText(dayLabel(-25))
+          .closest('li') as HTMLElement;
 
         expect(
           within(invoiceDay).getByRole('button', { name: yearlyHint })
@@ -594,21 +604,6 @@ describe('SubscriptionFlowPage', () => {
 
         expect(input.getAttribute('min')).toBe('-360');
         expect(input.getAttribute('max')).toBe('90');
-      });
-
-      it('warns when the invoice is created earlier than its shortest subscriptions allow', () => {
-        withEarliestDay(
-          { days: -25, periodicity: 'monthly', memberPlans: [] },
-          [
-            interval('i-4', SubscriptionEvent.InvoiceCreation, -38),
-            interval('i-5', SubscriptionEvent.DeactivationUnpaid, 5),
-          ] as SubscriptionFlowFragment['intervals']
-        );
-        renderPage();
-
-        expect(screen.getByRole('alert').textContent).toContain(
-          'subscriptionFlow.overview.warnings.invoiceTooEarly(-38,25,memberPlanList.paymentPeriodicity.monthly)'
-        );
       });
     });
 

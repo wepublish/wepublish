@@ -17,6 +17,14 @@ export const EARLIEST_INVOICE_DAY: Record<PaymentPeriodicity, number> = {
   [PaymentPeriodicity.lifetime]: -720,
 };
 
+/**
+ * The earliest day of the default flow. Every subscription without a flow of
+ * its own runs through it, so it has to suit the shortest of them.
+ */
+export const DEFAULT_FLOW_EARLIEST_DAY = Math.max(
+  ...Object.values(EARLIEST_INVOICE_DAY)
+);
+
 /** The periodicity with the shortest period, if there is any. */
 export function shortestPeriodicity(
   periodicities: PaymentPeriodicity[]
@@ -34,14 +42,4 @@ export function earliestInvoiceDay(periodicities: PaymentPeriodicity[]) {
   return EARLIEST_INVOICE_DAY[
     shortestPeriodicity(periodicities) ?? PaymentPeriodicity.monthly
   ];
-}
-
-/** The earliest invoice day of every periodicity, shortest period first. */
-export function earliestInvoiceDays() {
-  return (Object.keys(EARLIEST_INVOICE_DAY) as PaymentPeriodicity[])
-    .sort((a, b) => mapPaymentPeriodToMonths(a) - mapPaymentPeriodToMonths(b))
-    .map(periodicity => ({
-      periodicity,
-      days: EARLIEST_INVOICE_DAY[periodicity],
-    }));
 }

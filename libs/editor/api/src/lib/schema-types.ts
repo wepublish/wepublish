@@ -1496,14 +1496,6 @@ export type DocumentStorageUsage = {
   usedBytes: Scalars['Float']['output'];
 };
 
-/** How early the invoice of a subscription with this periodicity may be created. */
-export type EarliestInvoiceDay = {
-  __typename: 'EarliestInvoiceDay';
-  /** Days away from the end of the subscription, negative: before it ends. */
-  days: Scalars['Int']['output'];
-  periodicity: PaymentPeriodicity;
-};
-
 export enum EditorBlockType {
   BlockTemplate = 'BlockTemplate',
   Comment = 'Comment',
@@ -7518,8 +7510,6 @@ export type Query = {
   documentStorageUsage: DocumentStorageUsage;
   /** Returns a paginated list of documents based on the filters given. */
   documents: PaginatedDocuments;
-  /** How early the invoice of a subscription may be created, per periodicity, shortest period first. The periodicities a member plan offers set the earliest day of the flows its subscriptions run through. */
-  earliestInvoiceDays: Array<EarliestInvoiceDay>;
   /** Where the email status comes from: whether and when the mail provider reported anything. The editor warns when no provider evidence arrived for a while. */
   emailEvidence: EmailEvidenceModel;
   /** Returns an event by id. */
@@ -9584,9 +9574,7 @@ export type SubscriptionFlowEarliestDay = {
   __typename: 'SubscriptionFlowEarliestDay';
   /** Days away from the end of the subscription, negative: before it ends. */
   days: Scalars['Int']['output'];
-  /** The default flow: names of the member plans that offer this periodicity. Empty when only running subscriptions have it, and for every other flow. */
-  memberPlans: Array<Scalars['String']['output']>;
-  /** The shortest periodicity the flow applies to, which sets the day. Null when the flow applies to none yet. */
+  /** The shortest periodicity a member plan flow applies to, which sets the day. Null for the default flow: its day is fixed. */
   periodicity?: Maybe<PaymentPeriodicity>;
 };
 

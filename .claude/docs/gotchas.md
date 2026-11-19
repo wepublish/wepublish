@@ -1490,18 +1490,17 @@ cast, so a tenant on the wrong document fails `tsc`. Pinned by
 `libs/feed/website/src/lib/feed-article-list.spec.ts`, which runs the real
 document against `schema-v2.graphql`.
 
-### ⚠️ A mail flow's earliest day is derived, and the nightly job enforces it per subscription
+### ⚠️ A mail flow's earliest day depends on the flow alone
 
-There is no fixed lower limit for `daysAwayFromEnding`. It follows from the
-shortest periodicity a flow applies to (`EARLIEST_INVOICE_DAY` in
-`libs/utils/api/src/lib/earliest-invoice-day.ts`: monthly −25 … yearly −360),
-because a subscription is only invoiced once its current period has begun. A
-plan flow uses its own `periodicities`; the default flow uses what active
-member plans offer plus the running subscriptions no other flow takes
-(`SubscriptionFlowService.earliestDay`). Saving a plan never fails over it, so
-an event can end up too early: the editor warns, and `createInvoice` in the
-periodic job clamps the invoice day to the subscription's own periodicity. Do
-not replace this with a constant or drop the clamp.
+`daysAwayFromEnding` has two lower limits (`SubscriptionFlowService.earliestDay`):
+the **default flow** is fixed at −25 (`DEFAULT_FLOW_EARLIEST_DAY`), because every
+subscription may fall back to it; a **member plan's flow** follows the shortest
+periodicity in its own conditions (`EARLIEST_INVOICE_DAY` in
+`libs/utils/api/src/lib/earliest-invoice-day.ts`: monthly −25 … yearly −360).
+Do not make the default flow's limit depend on what member plans offer: a plan
+change could then make a saved flow wrong after the fact. That was tried and
+taken out again. The clamp in `createInvoice` (periodic job) stays as a safety
+net for legacy data.
 
 ## Adding an entry
 

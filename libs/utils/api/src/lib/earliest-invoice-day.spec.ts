@@ -1,8 +1,8 @@
 import { PaymentPeriodicity } from '@prisma/client';
 import {
+  DEFAULT_FLOW_EARLIEST_DAY,
   EARLIEST_INVOICE_DAY,
   earliestInvoiceDay,
-  earliestInvoiceDays,
   shortestPeriodicity,
 } from './earliest-invoice-day';
 
@@ -56,14 +56,11 @@ describe('shortestPeriodicity', () => {
   });
 });
 
-describe('earliestInvoiceDays', () => {
-  it('lists every periodicity from the shortest to the longest', () => {
-    expect(earliestInvoiceDays()[0]).toEqual({
-      periodicity: PaymentPeriodicity.monthly,
-      days: -25,
-    });
-    expect(earliestInvoiceDays()).toHaveLength(
-      Object.values(PaymentPeriodicity).length
+describe('DEFAULT_FLOW_EARLIEST_DAY', () => {
+  it('suits every subscription, the shortest included', () => {
+    expect(DEFAULT_FLOW_EARLIEST_DAY).toBe(
+      Math.max(...Object.values(EARLIEST_INVOICE_DAY))
     );
+    expect(DEFAULT_FLOW_EARLIEST_DAY).toBe(-25);
   });
 });

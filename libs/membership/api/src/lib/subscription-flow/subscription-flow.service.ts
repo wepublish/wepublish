@@ -21,7 +21,11 @@ import {
   PrismaClient,
   SubscriptionEvent,
 } from '@prisma/client';
-import { earliestInvoiceDay, shortestPeriodicity } from '@wepublish/utils/api';
+import {
+  DEFAULT_FLOW_EARLIEST_DAY,
+  earliestInvoiceDay,
+  shortestPeriodicity,
+} from '@wepublish/utils/api';
 
 const SUBSCRIPTION_EVENT_MAX_DAYS_AFTER = 90;
 
@@ -37,10 +41,8 @@ type FlowConditions = {
 /** The earliest day an event of a flow may lie on, and what holds it there. */
 export type EarliestDay = {
   days: number;
-  /** The shortest periodicity the flow applies to; null when it applies to none. */
+  /** The shortest periodicity a member plan's flow applies to; null for the default flow. */
   periodicity: PaymentPeriodicity | null;
-  /** The default flow: the member plans offering that periodicity. */
-  memberPlans: string[];
 };
 
 /** The subscriptions a member plan's flow applies to. */
@@ -124,66 +126,23 @@ export class SubscriptionFlowService {
 
   /**
    * The earliest day an event of this flow may lie on. An invoice is only
-   * created once the current period has begun, so the shortest periodicity the
-   * flow applies to sets it. The default flow applies to whatever no other
-   * flow takes: what the active member plans offer, and the subscriptions
-   * still running with a periodicity that is no longer offered.
+   * created once the current period has begun, so the shortest periodicity a
+   * flow applies to sets it. The default flow is the fallback of every
+   * subscription, so its day is fixed at what suits the shortest of them:
+   * nothing a member plan comes to offer can make it wrong.
    */
   async earliestDay(flow: FlowConditions): Promise<EarliestDay> {
-    if (!flow.default) {
-      return this.earliestDayOf(flow.periodicities);
+    if (flow.default) {
+      return { days: DEFAULT_FLOW_EARLIEST_DAY, periodicity: null };
     }
 
-    const [memberPlans, otherFlows] = await Promise.all([
-      this.prismaService.memberPlan.findMany({
-        where: { active: true },
-        select: {
-          name: true,
-          availablePaymentMethods: { select: { paymentPeriodicities: true } },
-        },
-      }),
-      this.prismaService.subscriptionFlow.findMany({
-        where: { default: false },
-        include: { paymentMethods: true },
-      }),
-    ]);
-    const running = await this.prismaService.subscription.groupBy({
-      by: ['paymentPeriodicity'],
-      where: {
-        deactivation: null,
-        ...(otherFlows.length && {
-          NOT: { OR: otherFlows.map(subscriptionsOfFlow) },
-        }),
-      },
-    });
-    const offers = memberPlans.map(memberPlan => ({
-      name: memberPlan.name,
-      periodicities: memberPlan.availablePaymentMethods.flatMap(
-        offer => offer.paymentPeriodicities
-      ),
-    }));
-    const earliest = this.earliestDayOf([
-      ...offers.flatMap(offer => offer.periodicities),
-      ...running.map(subscriptions => subscriptions.paymentPeriodicity),
-    ]);
-
-    return {
-      ...earliest,
-      memberPlans: offers
-        .filter(
-          offer =>
-            earliest.periodicity &&
-            offer.periodicities.includes(earliest.periodicity)
-        )
-        .map(offer => offer.name),
-    };
+    return this.earliestDayOf(flow.periodicities);
   }
 
   private earliestDayOf(periodicities: PaymentPeriodicity[]): EarliestDay {
     return {
       days: earliestInvoiceDay(periodicities),
       periodicity: shortestPeriodicity(periodicities) ?? null,
-      memberPlans: [],
     };
   }
 
@@ -463,8 +422,7 @@ export class SubscriptionFlowService {
         daysAwayFromEnding:
           interval.daysAwayFromEnding ?? eventToUpdate.daysAwayFromEnding,
       },
-      false,
-      eventToUpdate.daysAwayFromEnding
+      false
     );
 
     // An update that does not mention the template (the letter switch on its
@@ -573,7 +531,10 @@ export class SubscriptionFlowService {
     if (tooEarly.length) {
       throw new BadRequestException(
         `These events are too early for the new conditions: ${tooEarly
-          .map(({ event, daysAwayFromEnding }) => `${event} (${daysAwayFromEnding})`)
+          .map(
+            ({ event, daysAwayFromEnding }) =>
+              `${event} (${daysAwayFromEnding})`
+          )
           .join(', ')}. ${describeEarliestDay(earliest)} Move the events first.`
       );
     }
@@ -634,10 +595,7 @@ export class SubscriptionFlowService {
 
   private async isIntervalValid(
     interval: SubscriptionIntervalCreateInput,
-    checkEventUniqueConstraint = true,
-    // The day an existing event lies on: it may stay there, also when the
-    // flow has since come to apply to a shorter periodicity.
-    storedDay?: number | null
+    checkEventUniqueConstraint = true
   ) {
     if (
       interval.daysAwayFromEnding === null ||
@@ -681,10 +639,7 @@ export class SubscriptionFlowService {
     }
 
     // Limit daysAwayFromEnding
-    if (
-      !!interval.daysAwayFromEnding &&
-      interval.daysAwayFromEnding !== storedDay
-    ) {
+    if (interval.daysAwayFromEnding) {
       await this.assertDayInRange(
         interval.subscriptionFlowId,
         interval.daysAwayFromEnding
@@ -713,5 +668,5 @@ export class SubscriptionFlowService {
 function describeEarliestDay({ days, periodicity }: EarliestDay) {
   return periodicity ?
       `The earliest day is ${days}, as the flow applies to ${periodicity} subscriptions.`
-    : `The earliest day is ${days}.`;
+    : `The earliest day is ${days}: the default flow applies to every subscription without a flow of its own.`;
 }

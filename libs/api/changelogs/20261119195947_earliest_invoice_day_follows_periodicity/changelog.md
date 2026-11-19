@@ -1,13 +1,13 @@
 ---
-title: How early a flow may create invoices now depends on the periodicities
-lead: The days of a communication flow were limited to 25 days before a subscription ends. The limit now follows the shortest periodicity the flow applies to, so a flow for yearly subscriptions can create invoices and send messages up to 360 days ahead.
+title: A flow for longer subscriptions can create invoices earlier
+lead: The days of a communication flow were limited to 25 days before a subscription ends. A member plan's flow may now go as early as the shortest term in its conditions allows, so a flow for yearly subscriptions can create invoices and send messages up to 360 days ahead. The default flow keeps its limit of 25 days.
 actionRequired: false
 ---
 
-- **The earliest day per periodicity.** Monthly 25 days before the end, quarterly 85, half-yearly 175, yearly 360, two-yearly and lifetime 720. An invoice can only be created once the current period has begun, which is why shorter subscriptions allow less lead.
-- **Which periodicity counts.** For the flow of a member plan: the shortest periodicity in its conditions. For the default flow: the shortest periodicity any active member plan offers, or that a subscription without a flow of its own still runs with.
+- **The earliest day per term.** Monthly 25 days before the end, quarterly 85, half-yearly 175, yearly 360, two-yearly and lifetime 720. An invoice can only be created once the current period has begun, which is why shorter subscriptions allow less lead.
+- **A member plan's flow.** The shortest term in the flow's conditions sets its earliest day. A flow for “Yearly” only may go to day -360; one for “Monthly” and “Yearly” stays at -25.
+- **The default flow.** Never earlier than day -25. Every subscription without a flow of its own falls back to it, including the shortest, so its limit does not depend on what the member plans offer.
 - **On the flow page.** The (i) next to the day of “Invoice creation” says what the earliest day is and why. “Change day” and “Add day” only take days within the range.
-- **On the member plan.** “Payment settings” shows the earliest invoice day that follows from the periodicities you tick.
-- **When a plan later offers a shorter periodicity.** The plan can still be saved. The member plan, the flow page and the overview of flows show a warning, and for the shorter subscriptions the invoice is created on their own earliest day.
+- **Adding a shorter term to a flow.** If the flow has events that are too early for it, the change is refused until you move them.
 
-Existing flows keep their days; nothing changes until you move an event.
+Existing flows keep their days: until now none could lie earlier than day -25.

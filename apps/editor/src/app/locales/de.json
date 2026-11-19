@@ -1965,14 +1965,6 @@
       "name": "Name",
       "nameRequired": "Name erforderlich",
       "noMemberPlanName": "Abo-Plan ohne Namen",
-      "earliestInvoiceDay": {
-        "label": "Frühester Tag für automatische Rechnungserstellung: {{days}} Tage vor Ablauf",
-        "help": "«{{periodicity}}» limitiert als kürzestes gewähltes Zahlungsintervall den frühesten Tag für die Rechnungserstellung und den Versand von automatischen Mitteilungen auf den Tag {{day}}.",
-        "conflict": "{{flow}} erstellt Rechnungen an Tag {{invoiceDay}}. Für Abos dieses Abo-Plans mit der Laufzeit «{{periodicity}}» wird die Rechnung erst {{days}} Tage vor Ablauf erstellt.",
-        "defaultFlow": "Der Standard-Ablauf",
-        "planFlow": "Der Ablauf «{{conditions}}»",
-        "openFlow": "Ablauf öffnen"
-      },
       "paymentConfigs": "Zahlungseinstellungen",
       "saveAndCloseBtnTitle": "Speichern & Schliessen",
       "saveBtnTitle": "Speichern",
@@ -2932,16 +2924,12 @@
         "warnings": {
           "noMemberPlan": "Der Abo-Plan dieses Ablaufs wurde gelöscht. Solange es diesen Ablauf gibt, wird keine automatische Mitteilung verschickt – lösche ihn.",
           "matchesNothing": "Gilt für kein Abo: Es fehlt eine Zahlungsmethode, Laufzeit oder Verlängerung.",
-          "notOffered": "Bietet der Abo-Plan nicht mehr an: {{values}}. Dieser Ablauf gilt nur noch für bereits bestehende Abos.",
-          "invoiceTooEarly": "Die Rechnungserstellung an Tag {{day}} ist zu früh für Abos mit der Laufzeit «{{periodicity}}»: Ihre Rechnung wird erst {{days}} Tage vor Ablauf erstellt.",
-          "mailsTooEarly": "Tag {{mailDays}} liegt vor dem frühesten Tag für Abos mit der Laufzeit «{{periodicity}}» ({{days}} Tage vor Ablauf): Sie erhalten diese Nachrichten nur, wenn ihre nächste Laufzeit dann schon bezahlt ist."
+          "notOffered": "Bietet der Abo-Plan nicht mehr an: {{values}}. Dieser Ablauf gilt nur noch für bereits bestehende Abos."
         }
       },
       "earliestDay": {
         "byConditions": "Frühestens {{days}} Tage vor Abo-Ablauf: Der aktuelle Ablauf gilt für Abos mit der Laufzeit «{{periodicity}}». Ein noch früheres Rechnungsdatum würde die Dauer der Abo-Laufzeit übersteigen.",
-        "byMemberPlans": "Frühestens {{days}} Tage vor Abo-Ablauf: Der aktuell bearbeitete Ablauf ist der Standard-Ablauf für alle Abos, für die kein separater Ablauf definiert ist. Das frühest mögliche Rechnungsdatum orientiert sich daher an der kürzesten Laufzeit («{{periodicity}}»), welche von einem Abo-Plan angeboten wird ({{memberPlans}}). Ein noch früheres Rechnungsdatum würde die Dauer dessen Abo-Laufzeit übersteigen.",
-        "byRunningSubscriptions": "Frühestens {{days}} Tage vor Abo-Ablauf: Der aktuell bearbeitete Ablauf ist der Standard-Ablauf für alle Abos, für die kein separater Ablauf definiert ist. Das frühest mögliche Rechnungsdatum orientiert sich daher an der kürzesten Laufzeit eines noch laufenden Abos ({{periodicity}}). Ein noch früheres Rechnungsdatum würde die Dauer dessen Abo-Laufzeit übersteigen.",
-        "nothingOffered": "Frühestens {{days}} Tage vor Abo-Ablauf, solange kein Abo-Plan andere Laufzeiten anbietet."
+        "defaultFlow": "Frühestens {{days}} Tage vor Abo-Ablauf: Der Standard-Ablauf gilt für alle Abos ohne eigenen Ablauf, auch für die mit der kürzesten Laufzeit. Ein Ablauf nur für längere Laufzeiten kann früher beginnen."
       },
       "flow": "Ablauf",
       "planFlowDescription": "Dieser Ablauf ersetzt den Standard-Ablauf vollständig für die Abos seines Abo-Plans, welche zu den weiter unten definierten Filterkriterien passen.",

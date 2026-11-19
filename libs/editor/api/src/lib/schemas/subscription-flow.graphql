@@ -112,7 +112,6 @@ fragment SubscriptionFlow on SubscriptionFlowModel {
   earliestDay {
     days
     periodicity
-    memberPlans
   }
 }
 
@@ -141,11 +140,4 @@ fragment MemberPlanRef on MemberPlan {
   currency
   extendable
   slug
-}
-
-query EarliestInvoiceDays {
-  earliestInvoiceDays {
-    periodicity
-    days
-  }
 }
