@@ -349,6 +349,25 @@ Pinned by `session.provider.spec.tsx` and `preview-status-banner.spec.tsx`.
 
 ---
 
+### ⚠️ The content wrapper's column is `minmax(0, 1fr)`, not the implicit `auto`
+
+The editor preview loads at desktop width and its mobile/tablet buttons only
+shrink the same iframe. `ImageBlock` pins each caption to a measured px width;
+with an `auto` column, every other block's still-wide caption holds the column
+open while one re-measures, so they settle on viewport − left padding. Verified
+2026-11-19 on a hauptstadt article: 1000 → 390px left the page 406px wide
+(captions 374px, right padding gone); a fresh 390px load and a one-image article
+were fine. Real phones never shrink, so only the preview showed it.
+
+Remounting the iframe per device would reload it and lose the scroll position.
+
+**Load-bearing:** `grid-template-columns: minmax(0, 1fr)` in
+[`content-wrapper.tsx`](../../libs/content/website/src/lib/content-wrapper/content-wrapper.tsx).
+
+Pinned by `content-wrapper.spec.tsx`.
+
+---
+
 ### ⚠️ Next never re-renders a stale page for a prefetch, so the page lock expires early
 
 [`page-cache.js`](../../libs/utils/website/src/lib/page-cache/page-cache.js)
