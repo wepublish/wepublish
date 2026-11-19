@@ -86,6 +86,8 @@ const mergeFieldMappingSchema = z.object({
 const interestGroupMappingSchema = z.object({
   groupId: z.string().min(1),
   expression: z.string().min(1),
+  autoAdd: z.boolean(),
+  autoRemove: z.boolean(),
 });
 
 const clickTrackingExtensionSchema = z.object({
@@ -808,9 +810,16 @@ function SyncProviderSettingCard({
       mailchimp_listId: setting.mailchimp_listId ?? '',
       mailchimp_mergeFieldMappings: (setting.mailchimp_mergeFieldMappings ??
         []) as SyncProviderFormValues['mailchimp_mergeFieldMappings'],
-      mailchimp_interestGroupMappings:
-        (setting.mailchimp_interestGroupMappings ??
-          []) as SyncProviderFormValues['mailchimp_interestGroupMappings'],
+      mailchimp_interestGroupMappings: (
+        (setting.mailchimp_interestGroupMappings ?? []) as NonNullable<
+          SyncProviderFormValues['mailchimp_interestGroupMappings']
+        >
+      ).map(mapping => ({
+        ...mapping,
+        // A missing flag means off, like in the sync.
+        autoAdd: mapping.autoAdd ?? false,
+        autoRemove: mapping.autoRemove ?? false,
+      })),
       mailchimp_defaultInterestGroupIds:
         setting.mailchimp_defaultInterestGroupIds ?? [],
       mailchimp_extensions: {
@@ -1361,6 +1370,44 @@ function SyncProviderSettingCard({
                       />
                     )}
                   />
+                  <Controller
+                    name={`mailchimp_interestGroupMappings.${index}.autoAdd`}
+                    control={control}
+                    render={({ field: { value, onChange } }) => (
+                      <FormControlLabel
+                        sx={{ whiteSpace: 'nowrap', mr: 0 }}
+                        control={
+                          <Checkbox
+                            size="small"
+                            checked={value}
+                            onChange={(_event, checked) => onChange(checked)}
+                          />
+                        }
+                        label={t(
+                          'integrations.mailchimpSyncSettings.interestGroupAutoAdd'
+                        )}
+                      />
+                    )}
+                  />
+                  <Controller
+                    name={`mailchimp_interestGroupMappings.${index}.autoRemove`}
+                    control={control}
+                    render={({ field: { value, onChange } }) => (
+                      <FormControlLabel
+                        sx={{ whiteSpace: 'nowrap', mr: 0 }}
+                        control={
+                          <Checkbox
+                            size="small"
+                            checked={value}
+                            onChange={(_event, checked) => onChange(checked)}
+                          />
+                        }
+                        label={t(
+                          'integrations.mailchimpSyncSettings.interestGroupAutoRemove'
+                        )}
+                      />
+                    )}
+                  />
                   <IconButtonTooltip caption={t('delete')}>
                     <IconButton
                       size="small"
@@ -1381,6 +1428,8 @@ function SyncProviderSettingCard({
                   appendInterestGroup({
                     groupId: '',
                     expression: 'slug:contains:',
+                    autoAdd: true,
+                    autoRemove: true,
                   })
                 }
               >
