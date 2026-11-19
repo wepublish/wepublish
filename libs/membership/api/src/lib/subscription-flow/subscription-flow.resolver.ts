@@ -10,7 +10,6 @@ import {
 import {
   CanCreateSubscriptionFlow,
   CanDeleteSubscriptionFlow,
-  CanGetMemberPlans,
   CanGetSubscriptionFlows,
   CanUpdateSubscriptionFlow,
 } from '@wepublish/permissions';
@@ -19,7 +18,6 @@ import {
   subscriptionsOfFlow,
 } from './subscription-flow.service';
 import {
-  EarliestInvoiceDay,
   SubscriptionFlowEarliestDay,
   SubscriptionFlowModel,
   SubscriptionFlowModelCreateInput,
@@ -28,7 +26,6 @@ import {
   SubscriptionIntervalUpdateInput,
 } from './subscription-flow.model';
 import { PrismaClient } from '@prisma/client';
-import { earliestInvoiceDays } from '@wepublish/utils/api';
 import { Permissions } from '@wepublish/permissions/api';
 
 @Resolver(() => SubscriptionFlowModel)
@@ -50,15 +47,6 @@ export class SubscriptionFlowResolver {
       defaultFlowOnly,
       memberPlanId
     );
-  }
-
-  @Permissions(CanGetMemberPlans)
-  @Query(() => [EarliestInvoiceDay], {
-    description:
-      'How early the invoice of a subscription may be created, per periodicity, shortest period first. The periodicities a member plan offers set the earliest day of the flows its subscriptions run through.',
-  })
-  earliestInvoiceDays(): EarliestInvoiceDay[] {
-    return earliestInvoiceDays();
   }
 
   @Permissions(CanCreateSubscriptionFlow)

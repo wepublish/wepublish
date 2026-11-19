@@ -780,9 +780,7 @@ describe('SubscriptionFlowService', () => {
         flowFor([PaymentPeriodicity.yearly, PaymentPeriodicity.monthly])
       );
 
-      await expect(createCustomMailAt(-26)).rejects.toThrow(
-        /-25.*monthly/
-      );
+      await expect(createCustomMailAt(-26)).rejects.toThrow(/-25.*monthly/);
       await expect(createCustomMailAt(-25)).resolves.toBeDefined();
     });
 
@@ -791,9 +789,7 @@ describe('SubscriptionFlowService', () => {
         flowFor([PaymentPeriodicity.yearly])
       );
 
-      await expect(createCustomMailAt(91)).rejects.toThrow(
-        BadRequestException
-      );
+      await expect(createCustomMailAt(91)).rejects.toThrow(BadRequestException);
     });
 
     describe('of the default flow', () => {
@@ -803,81 +799,25 @@ describe('SubscriptionFlowService', () => {
         );
       });
 
-      it('follows what the active member plans offer', async () => {
+      // It is the fallback of every subscription, the shortest included.
+      it('is never earlier than 25 days, whatever the member plans offer', async () => {
         prismaMock.memberPlan.findMany!.mockResolvedValue([
           plan('Jahresabo', PaymentPeriodicity.yearly),
         ]);
 
-        await expect(createCustomMailAt(-38)).resolves.toBeDefined();
-
-        prismaMock.memberPlan.findMany!.mockResolvedValue([
-          plan('Jahresabo', PaymentPeriodicity.yearly),
-          plan('Monatsabo', PaymentPeriodicity.monthly),
-        ]);
-
-        await expect(createCustomMailAt(-38)).rejects.toThrow(/-25.*monthly/);
-        expect(prismaMock.memberPlan.findMany).toHaveBeenCalledWith(
-          expect.objectContaining({ where: { active: true } })
+        await expect(createCustomMailAt(-26)).rejects.toThrow(
+          /-25.*default flow/
         );
+        await expect(createCustomMailAt(-25)).resolves.toBeDefined();
       });
 
-      it('follows the running subscriptions no other flow takes', async () => {
-        prismaMock.memberPlan.findMany!.mockResolvedValue([
-          plan('Jahresabo', PaymentPeriodicity.yearly),
-        ]);
-        prismaMock.subscriptionFlow.findMany!.mockResolvedValue([
-          {
-            ...flowFor([PaymentPeriodicity.quarterly]),
-            id: 'flow-2',
-            paymentMethods: [{ id: 'payment-1' }],
-          },
-        ]);
-        subscriptionGroupBy.mockResolvedValue([
-          { paymentPeriodicity: PaymentPeriodicity.monthly },
-        ]);
-
-        await expect(createCustomMailAt(-38)).rejects.toThrow(/-25.*monthly/);
-        expect(subscriptionGroupBy).toHaveBeenCalledWith(
-          expect.objectContaining({
-            by: ['paymentPeriodicity'],
-            where: {
-              deactivation: null,
-              NOT: {
-                OR: [
-                  expect.objectContaining({
-                    memberPlanID: 'plan-1',
-                    paymentPeriodicity: { in: [PaymentPeriodicity.quarterly] },
-                  }),
-                ],
-              },
-            },
-          })
-        );
-      });
-
-      it('names the plans that offer its shortest periodicity', async () => {
-        prismaMock.memberPlan.findMany!.mockResolvedValue([
-          plan(
-            'Flexabo',
-            PaymentPeriodicity.yearly,
-            PaymentPeriodicity.monthly
-          ),
-          plan('Jahresabo', PaymentPeriodicity.yearly),
-        ]);
-
-        await expect(service.earliestDay(flowFor([], true))).resolves.toEqual({
-          days: -25,
-          periodicity: PaymentPeriodicity.monthly,
-          memberPlans: ['Flexabo'],
-        });
-      });
-
-      it('is as careful as for monthly while nothing is offered yet', async () => {
+      it('is told without looking at member plans or subscriptions', async () => {
         await expect(service.earliestDay(flowFor([], true))).resolves.toEqual({
           days: -25,
           periodicity: null,
-          memberPlans: [],
         });
+        expect(prismaMock.memberPlan.findMany).not.toHaveBeenCalled();
+        expect(subscriptionGroupBy).not.toHaveBeenCalled();
       });
     });
 
@@ -889,11 +829,11 @@ describe('SubscriptionFlowService', () => {
       ).resolves.toEqual({
         days: -85,
         periodicity: PaymentPeriodicity.quarterly,
-        memberPlans: [],
       });
     });
 
-    describe('with an event that is already too early', () => {
+    // Nothing outside a flow can make its days wrong, so none is put up with.
+    describe('with an event that is too early', () => {
       beforeEach(() => {
         prismaMock.subscriptionFlow.findUnique!.mockResolvedValue(
           flowFor([PaymentPeriodicity.monthly])
@@ -903,15 +843,18 @@ describe('SubscriptionFlowService', () => {
         );
       });
 
-      it('still lets its template change', async () => {
+      it('refuses to save it on the day it has: move it first', async () => {
         await expect(
           service.updateInterval({ id: 'interval-1', mailTemplateId: 'mail-2' })
-        ).resolves.toBeDefined();
-      });
-
-      it('still lets it be saved on the day it has', async () => {
+        ).rejects.toThrow(/-25.*monthly/);
         await expect(
           service.updateInterval({ id: 'interval-1', daysAwayFromEnding: -38 })
+        ).rejects.toThrow(/-25.*monthly/);
+      });
+
+      it('lets it move to a day that suits', async () => {
+        await expect(
+          service.updateInterval({ id: 'interval-1', daysAwayFromEnding: -25 })
         ).resolves.toBeDefined();
       });
 
@@ -935,7 +878,10 @@ describe('SubscriptionFlowService', () => {
         service.updateFlow({
           id: 'flow-1',
           paymentMethodIds: ['payment-1'],
-          periodicities: [PaymentPeriodicity.yearly, PaymentPeriodicity.monthly],
+          periodicities: [
+            PaymentPeriodicity.yearly,
+            PaymentPeriodicity.monthly,
+          ],
           autoRenewal: [true],
         });
 

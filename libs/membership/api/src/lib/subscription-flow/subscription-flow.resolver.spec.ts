@@ -196,21 +196,6 @@ describe('Subscription Flow Resolver', () => {
         });
     });
 
-    it('earliestInvoiceDays are not public', () => {
-      return request(app.getHttpServer())
-        .post('')
-        .send({ query: '{ earliestInvoiceDays { periodicity days } }' })
-        .expect(200)
-        .expect(({ body }) => {
-          expect(
-            !!body.errors.find(
-              (error: any) => error.message === 'Forbidden resource'
-            )
-          ).toEqual(true);
-          expect(body.data).toBeNull();
-        });
-    });
-
     it('createSubscriptionFlow is not public', () => {
       return request(app.getHttpServer())
         .post('')
@@ -524,7 +509,6 @@ describe('Subscription Flow Resolver', () => {
       const earliestDay = {
         days: -85,
         periodicity: PaymentPeriodicity.quarterly,
-        memberPlans: [],
       };
       vi.spyOn(subscriptionFlowService, 'earliestDay').mockResolvedValue(
         earliestDay
@@ -535,15 +519,6 @@ describe('Subscription Flow Resolver', () => {
       ).resolves.toEqual(earliestDay);
       expect(subscriptionFlowService.earliestDay).toHaveBeenCalledWith(
         mockSubscriptionFlow
-      );
-    });
-
-    it('lists the earliest invoice day of every periodicity', () => {
-      expect(resolver.earliestInvoiceDays()).toEqual(
-        expect.arrayContaining([
-          { periodicity: PaymentPeriodicity.monthly, days: -25 },
-          { periodicity: PaymentPeriodicity.yearly, days: -360 },
-        ])
       );
     });
 

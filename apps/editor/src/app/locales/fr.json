@@ -1963,14 +1963,6 @@
       "name": "Nom",
       "nameRequired": "Nom requis",
       "noMemberPlanName": "Aucun nom de plan d’abonnement",
-      "earliestInvoiceDay": {
-        "label": "Facturation au plus tôt : {{days}} jours ({{periodicity}})",
-        "help": "Selon les durées proposées par les plans d’abonnement, les factures peuvent être créées au plus tôt {{days}} jours avant la fin de l’abonnement. Avec « Mensuel », par exemple, une facture peut être créée au plus tôt 25 jours avant la fin, soit 3 à 6 jours après le début de l’abonnement selon le mois.",
-        "conflict": "{{flow}} crée les factures au jour {{invoiceDay}}. Pour les abonnements de ce plan d’une durée « {{periodicity}} », la facture n’est créée que {{days}} jours avant la fin.",
-        "defaultFlow": "Le flux standard",
-        "planFlow": "Le flux « {{conditions}} »",
-        "openFlow": "Ouvrir le flux"
-      },
       "paymentConfigs": "Paramètres de paiement",
       "saveAndCloseBtnTitle": "Enregistrer et fermer",
       "saveBtnTitle": "Enregistrer",
@@ -2955,16 +2947,12 @@
         "warnings": {
           "noMemberPlan": "Le plan d’abonnement de ce flux a été supprimé. Tant que ce flux existe, aucun message automatique n’est envoyé – supprimez-le.",
           "matchesNothing": "Ne s’applique à aucun abonnement : il manque un moyen de paiement, une durée ou un renouvellement.",
-          "notOffered": "N’est plus proposé par le plan d’abonnement : {{values}}. Ce flux ne s’applique plus qu’aux abonnements déjà existants.",
-          "invoiceTooEarly": "La création de facture au jour {{day}} est trop tôt pour les abonnements d’une durée « {{periodicity}} » : leur facture n’est créée que {{days}} jours avant la fin.",
-          "mailsTooEarly": "Le jour {{mailDays}} précède le jour le plus tôt pour les abonnements d’une durée « {{periodicity}} » ({{days}} jours avant la fin) : ils ne reçoivent ces messages que si leur prochaine durée d’abonnement est déjà payée à ce moment-là."
+          "notOffered": "N’est plus proposé par le plan d’abonnement : {{values}}. Ce flux ne s’applique plus qu’aux abonnements déjà existants."
         }
       },
       "earliestDay": {
         "byConditions": "Au plus tôt {{days}} jours avant la fin de l’abonnement : ce flux s’applique aux abonnements d’une durée « {{periodicity}} ». Une date de facturation encore plus précoce dépasserait la durée de l’abonnement.",
-        "byMemberPlans": "Au plus tôt {{days}} jours avant la fin de l’abonnement : le flux que vous modifiez est le flux standard pour tous les abonnements sans flux propre. La date de facturation la plus précoce possible se fonde donc sur la durée la plus courte (« {{periodicity}} ») proposée par un plan d’abonnement ({{memberPlans}}). Une date de facturation encore plus précoce dépasserait cette durée d’abonnement.",
-        "byRunningSubscriptions": "Au plus tôt {{days}} jours avant la fin de l’abonnement : le flux que vous modifiez est le flux standard pour tous les abonnements sans flux propre. La date de facturation la plus précoce possible se fonde donc sur la durée la plus courte d’un abonnement encore en cours ({{periodicity}}). Une date de facturation encore plus précoce dépasserait cette durée d’abonnement.",
-        "nothingOffered": "Au plus tôt {{days}} jours avant la fin de l’abonnement, tant qu’aucun plan d’abonnement ne propose d’autres durées."
+        "defaultFlow": "Au plus tôt {{days}} jours avant la fin de l’abonnement : le flux standard s’applique à tous les abonnements sans flux propre, y compris ceux de la durée la plus courte. Un flux réservé aux durées plus longues peut commencer plus tôt."
       },
       "flow": "Flux",
       "planFlowDescription": "Ce flux remplace entièrement le flux standard pour les abonnements de son plan qui correspondent aux critères de filtre définis ci-dessous.",

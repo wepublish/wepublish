@@ -64,30 +64,9 @@ export class SubscriptionFlowEarliestDay {
   @Field(() => PaymentPeriodicity, {
     nullable: true,
     description:
-      'The shortest periodicity the flow applies to, which sets the day. Null when the flow applies to none yet.',
+      'The shortest periodicity a member plan flow applies to, which sets the day. Null for the default flow: its day is fixed.',
   })
   periodicity!: PaymentPeriodicity | null;
-
-  @Field(() => [String], {
-    description:
-      'The default flow: names of the member plans that offer this periodicity. Empty when only running subscriptions have it, and for every other flow.',
-  })
-  memberPlans!: string[];
-}
-
-@ObjectType({
-  description:
-    'How early the invoice of a subscription with this periodicity may be created.',
-})
-export class EarliestInvoiceDay {
-  @Field(() => PaymentPeriodicity)
-  periodicity!: PaymentPeriodicity;
-
-  @Field(() => Int, {
-    description:
-      'Days away from the end of the subscription, negative: before it ends.',
-  })
-  days!: number;
 }
 
 @ObjectType()
