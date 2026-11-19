@@ -30,6 +30,21 @@ vi.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string) => key }),
 }));
 
+// The chooser itself is tested on its own; here it only hands back a choice.
+vi.mock('../mail-template/select-mail-template-panel', () => ({
+  SelectMailTemplatePanel: (props: {
+    purpose?: string;
+    onSelect(id: string | null): void;
+    onClose(): void;
+  }) => (
+    <div>
+      <p>{`purpose:${props.purpose}`}</p>
+      <button onClick={() => props.onSelect('mt-2')}>pick mt-2</button>
+      <button onClick={() => props.onSelect(null)}>pick none</button>
+    </div>
+  ),
+}));
+
 const client = {
   createSubscriptionInterval: vi.fn(),
   updateSubscriptionInterval: vi.fn(),
@@ -153,19 +168,59 @@ describe('MailTemplateSelect channels', () => {
     ).toBeNull();
   });
 
-  it('offers only templates with an email version: the email always goes out', () => {
+  it('shows the template of the event and opens the chooser narrowed to its purpose', () => {
     renderSelect(interval(false));
 
-    fireEvent.mouseDown(
-      screen.getByRole('combobox', { name: 'Invoice creation' })
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Invoice creation: Invoice' })
     );
 
-    expect(
-      within(screen.getByRole('listbox'))
-        .getAllByRole('option')
-        .slice(1)
-        .map(option => option.textContent)
-    ).toEqual(['Invoice', 'Reminder']);
+    expect(screen.getByText('purpose:invoiceCreation')).toBeTruthy();
+  });
+
+  it('gives the event the template that was chosen', () => {
+    renderSelect(interval(false));
+
+    fireEvent.click(screen.getByRole('button', { name: /Invoice creation/ }));
+    fireEvent.click(screen.getByRole('button', { name: 'pick mt-2' }));
+
+    expect(client.updateSubscriptionInterval).toHaveBeenCalledWith({
+      variables: {
+        id: 'interval-1',
+        daysAwayFromEnding: -14,
+        mailTemplateId: 'mt-2',
+      },
+    });
+  });
+
+  it('creates the interval for an event that sent nothing so far', () => {
+    renderSelect(undefined);
+
+    fireEvent.click(
+      screen.getByRole('button', {
+        name: 'Invoice creation: mailTemplateSelect.noMailSentSelectNow',
+      })
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'pick mt-2' }));
+
+    expect(client.createSubscriptionInterval).toHaveBeenCalledWith({
+      variables: expect.objectContaining({
+        mailTemplateId: 'mt-2',
+        subscriptionFlowId: 'flow-1',
+        event: SubscriptionEvent.InvoiceCreation,
+      }),
+    });
+  });
+
+  it('removes the interval when the event is to send nothing', () => {
+    renderSelect(interval(false));
+
+    fireEvent.click(screen.getByRole('button', { name: /Invoice creation/ }));
+    fireEvent.click(screen.getByRole('button', { name: 'pick none' }));
+
+    expect(client.deleteSubscriptionInterval).toHaveBeenCalledWith({
+      variables: { id: 'interval-1' },
+    });
   });
 
   it('has no channels to choose before a template is chosen', () => {

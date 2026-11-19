@@ -438,7 +438,9 @@ describe('SubscriptionFlowPage', () => {
         'subscriptionFlow.subscribe',
         'subscriptionFlow.deactivation_unpaid',
       ]) {
-        expect(screen.getByRole('combobox', { name })).toBeTruthy();
+        expect(
+          screen.getByRole('button', { name: new RegExp(`^${name}: `) })
+        ).toBeTruthy();
       }
     });
 
