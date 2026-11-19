@@ -240,6 +240,8 @@ type TemplateFiltersProps = {
   /** All templates of the table: some filters offer what these use. */
   templates: TemplateRow[];
   paperLetters: boolean;
+  /** Filters this table does without. */
+  leftOut?: string[];
 };
 
 export function TemplateFilters({
@@ -247,6 +249,7 @@ export function TemplateFilters({
   onChange: changeFilter,
   templates,
   paperLetters,
+  leftOut = [],
 }: TemplateFiltersProps) {
   const { t } = useTranslation();
 
@@ -299,15 +302,17 @@ export function TemplateFilters({
         />
       )}
 
-      <MultiSelectFilter
-        label={t('mailTemplates.status')}
-        options={STATUSES.map(status => ({
-          value: status,
-          label: t(`mailTemplates.list.statuses.${status}`),
-        }))}
-        value={filter.statuses ?? []}
-        onChange={statuses => changeFilter({ statuses })}
-      />
+      {!leftOut.includes('statuses') && (
+        <MultiSelectFilter
+          label={t('mailTemplates.status')}
+          options={STATUSES.map(status => ({
+            value: status,
+            label: t(`mailTemplates.list.statuses.${status}`),
+          }))}
+          value={filter.statuses ?? []}
+          onChange={statuses => changeFilter({ statuses })}
+        />
+      )}
 
       {paperLetters && (
         <MultiSelectFilter
@@ -343,15 +348,17 @@ export function TemplateFilters({
         onChange={attachments => changeFilter({ attachments })}
       />
 
-      <MultiSelectFilter
-        label={t('mailTemplates.list.memberPlans')}
-        options={memberPlanOptions(templates).map(plan => ({
-          value: plan.id,
-          label: plan.name,
-        }))}
-        value={filter.memberPlans ?? []}
-        onChange={memberPlans => changeFilter({ memberPlans })}
-      />
+      {!leftOut.includes('memberPlans') && (
+        <MultiSelectFilter
+          label={t('mailTemplates.list.memberPlans')}
+          options={memberPlanOptions(templates).map(plan => ({
+            value: plan.id,
+            label: plan.name,
+          }))}
+          value={filter.memberPlans ?? []}
+          onChange={memberPlans => changeFilter({ memberPlans })}
+        />
+      )}
     </FilterRow>
   );
 }

@@ -1163,7 +1163,7 @@
       "noNameErrorMessage": "Please enter a name",
       "noPasswordErrorMessage": "Please enter a password",
       "noPaymentMethodErrorMessage": "Please enter a payment method",
-      "noPaymentPeriodicityErrorMessage": "Please enter a payment periodicity",
+      "noPaymentPeriodicityErrorMessage": "Please enter a payment interval",
       "noPaymentProviderErrorMessage": "Please enter a payment provider",
       "noTokenErrorMessage": "Please enter a token",
       "noUrlErrorMessage": "Please enter a URL",
@@ -1817,8 +1817,8 @@
         "optional_subscription_periodAmount": "Amount per period",
         "optional_subscription_periodMonths": "Months per period",
         "optional_subscription_currency": "Currency",
-        "optional_subscription_paymentPeriodicity": "Payment periodicity (code)",
-        "optional_subscription_paymentPeriodicity_display": "Payment periodicity",
+        "optional_subscription_paymentPeriodicity": "Payment interval (code)",
+        "optional_subscription_paymentPeriodicity_display": "Payment interval",
         "optional_subscription_autoRenew": "Auto renewal",
         "optional_subscription_startsAt": "Starts at",
         "optional_subscription_paidUntil": "Paid until",
@@ -1959,7 +1959,7 @@
       "createMemberPlanHeader": "Create Subscription Plan",
       "description": "Description",
       "shortDescription": "Short description",
-      "editPaymentSetting": "Edit payment methods & periodicities",
+      "editPaymentSetting": "Edit payment methods & terms",
       "forceAutoRenewal": "Force Auto Renewal",
       "loadingTitle": "Loading",
       "name": "Name",
@@ -1967,8 +1967,8 @@
       "noMemberPlanName": "Unnamed subscription plan",
       "earliestInvoiceDay": {
         "label": "Earliest invoice: {{days}} days ({{periodicity}})",
-        "help": "Depending on the periodicities chosen in the member plans, invoices can be created {{days}} days before a subscription ends at the earliest. With “Monthly”, for example, an invoice can be created 25 days before the end at the earliest, which is 3 to 6 days after the subscription began, depending on the month.",
-        "conflict": "{{flow}} creates invoices on day {{invoiceDay}}. For subscriptions of this member plan with the periodicity “{{periodicity}}”, the invoice is only created {{days}} days before the end.",
+        "help": "Depending on the terms the member plans offer, invoices can be created {{days}} days before a subscription ends at the earliest. With “Monthly”, for example, an invoice can be created 25 days before the end at the earliest, which is 3 to 6 days after the subscription began, depending on the month.",
+        "conflict": "{{flow}} creates invoices on day {{invoiceDay}}. For subscriptions of this member plan with the term “{{periodicity}}”, the invoice is only created {{days}} days before the end.",
         "defaultFlow": "The default flow",
         "planFlow": "The flow “{{conditions}}”",
         "openFlow": "Open flow"
@@ -2001,7 +2001,7 @@
       "editFlowShort": "Edit flow",
       "name": "Name",
       "paymentMethods": "Possible Payment Methods",
-      "paymentPeriodicities": "Payment Periodicities",
+      "paymentPeriodicities": "Payment intervals",
       "paymentPeriodicity": {
         "biannual": "Biannual",
         "monthly": "Monthly",
@@ -2955,17 +2955,17 @@
         "noMemberPlan": "No member plan",
         "warnings": {
           "noMemberPlan": "The member plan of this flow was deleted. As long as this flow exists, no automated message is sent – delete it.",
-          "matchesNothing": "Applies to no subscription: a payment method, periodicity or renewal is missing.",
+          "matchesNothing": "Applies to no subscription: a payment method, term or renewal is missing.",
           "notOffered": "No longer offered by the member plan: {{values}}. This flow only applies to already existing subscriptions.",
-          "invoiceTooEarly": "The invoice creation on day {{day}} is too early for subscriptions with the periodicity “{{periodicity}}”: their invoice is only created {{days}} days before the end.",
-          "mailsTooEarly": "Day {{mailDays}} lies before the earliest day for subscriptions with the periodicity “{{periodicity}}” ({{days}} days before the end): they only get these messages if their next period is already paid by then."
+          "invoiceTooEarly": "The invoice creation on day {{day}} is too early for subscriptions with the term “{{periodicity}}”: their invoice is only created {{days}} days before the end.",
+          "mailsTooEarly": "Day {{mailDays}} lies before the earliest day for subscriptions with the term “{{periodicity}}” ({{days}} days before the end): they only get these messages if their next term is already paid by then."
         }
       },
       "earliestDay": {
-        "byConditions": "{{days}} days before the subscription ends at the earliest: this flow applies to subscriptions with the periodicity “{{periodicity}}”, and an invoice can only be created once the current period has begun.",
-        "byMemberPlans": "{{days}} days before the subscription ends at the earliest: this flow applies to every subscription without a flow of its own, and the periodicity “{{periodicity}}” is offered by: {{memberPlans}}. An invoice can only be created once the current period has begun.",
-        "byRunningSubscriptions": "{{days}} days before the subscription ends at the earliest: this flow applies to every subscription without a flow of its own, and subscriptions with the periodicity “{{periodicity}}” are still running. An invoice can only be created once the current period has begun.",
-        "nothingOffered": "{{days}} days before the subscription ends at the earliest, as long as no member plan offers a periodicity."
+        "byConditions": "{{days}} days before the subscription ends at the earliest: this flow applies to subscriptions with the term “{{periodicity}}”. An even earlier invoice date would exceed the length of the subscription term.",
+        "byMemberPlans": "{{days}} days before the subscription ends at the earliest: the flow you are editing is the default flow for every subscription without a separate flow. The earliest possible invoice date therefore follows the shortest term (“{{periodicity}}”) offered by a member plan ({{memberPlans}}). An even earlier invoice date would exceed the length of that subscription term.",
+        "byRunningSubscriptions": "{{days}} days before the subscription ends at the earliest: the flow you are editing is the default flow for every subscription without a separate flow. The earliest possible invoice date therefore follows the shortest term of a subscription that is still running ({{periodicity}}). An even earlier invoice date would exceed the length of that subscription term.",
+        "nothingOffered": "{{days}} days before the subscription ends at the earliest, as long as no member plan offers other terms."
       },
       "flow": "Flow",
       "planFlowDescription": "This flow completely replaces the default flow for the subscriptions of its member plan that match the filter criteria defined below.",
@@ -2988,7 +2988,7 @@
       "savedChange": "Change successfully saved",
       "add": "Add",
       "paymentMethod": "Payment method",
-      "periodicity": "Periodicity",
+      "periodicity": "Term",
       "autoRenewal": "Auto renewal?",
       "booleanFilter": {
         "true": "Yes",
@@ -2998,7 +2998,7 @@
       "deletePermanently": "Delete permanently",
       "dropHere": "Drop here",
       "filters": "Filters",
-      "filtersDescription": "Defines which subscriptions this flow applies to: subscription plan, payment method, periodicity and auto renewal.",
+      "filtersDescription": "Defines which subscriptions this flow applies to: subscription plan, payment method, term and auto renewal.",
       "filtersExample": "Yearly subscriptions paid by credit card only.",
       "subscriptionEvents": "Subscription events",
       "subscriptionEventsDescription": "Emails that go out immediately when something happens to a subscription. They are not tied to a date.",
@@ -3420,7 +3420,7 @@
       "noAutoRenew": "Subscription expires, no automatic renewal",
       "noDeactivation": "No deactivation.",
       "paidUntil": "Paid until {{date}}",
-      "paymentPeriodicity": "Payment periodicity: {{paymentPeriodicity}}",
+      "paymentPeriodicity": "Payment interval: {{paymentPeriodicity}}",
       "periodAmount": "Amount: {{amount}} {{currency}}",
       "periodCreatedAt": "Created at {{date}}",
       "periodEndsAt": "until {{date}}",
