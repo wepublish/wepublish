@@ -50,6 +50,7 @@ const template = (id: string, name: string, channels: string[]) => ({
 const systemMails = [
   UserEvent.PasswordReset,
   UserEvent.AccountCreation,
+  UserEvent.EmailChange,
   UserEvent.LoginLink,
 ].map(event => ({ __typename: 'SystemMailModel', event, mailTemplate: null }));
 
@@ -112,6 +113,10 @@ describe('SystemMailSection', () => {
       [
         'systemMails.events.login_link',
         'systemMails.eventInfo.login_link.userAction',
+      ],
+      [
+        'systemMails.events.email_change',
+        'systemMails.eventInfo.email_change.userAction',
       ],
       [
         'systemMails.events.password_reset',
