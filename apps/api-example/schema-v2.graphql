@@ -490,6 +490,37 @@ enum AuthorSort {
   Name
 }
 
+type AuthorsBlock implements BaseBlock {
+  authorIds: [String!]!
+  authors: [Author!]!
+  blockStyle: String
+  blockStyleName: String
+  disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
+  title: String
+  type: BlockType!
+}
+
+input AuthorsBlockInput {
+  authorIds: [String!]! = []
+  blockStyle: String
+  blockStyleName: String
+  disabled: Boolean
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
+  title: String
+}
+
 type AvailablePaymentMethod {
   forceAutoRenewal: Boolean!
   paymentMethodIDs: [String!]!
@@ -634,9 +665,10 @@ input BildwurfAdBlockInput {
   zoneID: String
 }
 
-union BlockContent = BildwurfAdBlock | BlockTemplateBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | MailchimpFormBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
+union BlockContent = AuthorsBlock | BildwurfAdBlock | BlockTemplateBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | MailchimpFormBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
 
 input BlockContentInput {
+  authors: AuthorsBlockInput
   bildwurfAd: BildwurfAdBlockInput
   blockTemplate: BlockTemplateBlockInput
   comment: CommentBlockInput
@@ -780,6 +812,7 @@ input BlockTimingInput {
 }
 
 enum BlockType {
+  Authors
   BildwurfAd
   BlockTemplate
   Comment
@@ -1528,6 +1561,7 @@ type DocumentStorageUsage {
 }
 
 enum EditorBlockType {
+  Authors
   BlockTemplate
   Comment
   Crowdfunding

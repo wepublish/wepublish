@@ -5,6 +5,7 @@ import {
   BlockWithAlignment,
   CommentBlockCommentFragment,
   EditorBlockType,
+  FullAuthorFragment,
   FullBlockFragment,
   FullCrowdfundingFragment,
   FullEventFragment,
@@ -201,6 +202,12 @@ export interface EventBlockValue extends BaseBlockValue {
     events: string[] | null;
   }>;
   events: FullEventFragment[];
+}
+
+export interface AuthorsBlockValue extends BaseBlockValue {
+  title: string;
+  /** One row per chosen author, in their order; a new row has none yet */
+  authors: ListValue<FullAuthorFragment | null>[];
 }
 
 export interface CommentBlockValue extends BaseBlockValue {
@@ -529,6 +536,11 @@ export type EventBlockListValue = BlockListValue<
   EventBlockValue
 >;
 
+export type AuthorsBlockListValue = BlockListValue<
+  EditorBlockType.Authors,
+  AuthorsBlockValue
+>;
+
 export type FlexBlockListValue = BlockListValue<
   EditorBlockType.FlexBlock,
   FlexBlockValue
@@ -558,6 +570,7 @@ export type BlockValue =
   | CrowdfundingBlockListValue
   | CommentBlockListValue
   | EventBlockListValue
+  | AuthorsBlockListValue
   | TeaserListBlockListValue
   | FlexBlockListValue
   | BlockTemplateListValue;
@@ -616,6 +629,18 @@ function mapBlockValueToContentInput(block: BlockValue): BlockContentInput {
             events: block.value?.filter.events ?? [],
             tags: block.value?.filter.tags ?? [],
           },
+          blockStyle: block.value.blockStyle,
+          disabled: block.value.disabled,
+        },
+      };
+
+    case EditorBlockType.Authors:
+      return {
+        authors: {
+          title: block.value.title || null,
+          authorIds: block.value.authors.flatMap(({ value }) =>
+            value ? [value.id] : []
+          ),
           blockStyle: block.value.blockStyle,
           disabled: block.value.disabled,
         },
@@ -1602,6 +1627,21 @@ function mapQueryBlockToBlockValue(
           blockStyle: block.blockStyle,
           filter: block.filter,
           events: block.events,
+        },
+      };
+
+    case 'AuthorsBlock':
+      return {
+        key,
+        type: EditorBlockType.Authors,
+        value: {
+          disabled: block.disabled,
+          blockStyle: block.blockStyle,
+          title: block.title ?? '',
+          authors: block.authors.map(author => ({
+            id: nanoid(),
+            value: author,
+          })),
         },
       };
 

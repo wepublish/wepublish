@@ -471,6 +471,11 @@
         "cherryPickInfo": "When switched on, the block shows only the events you tick in the list below. When switched off, it shows all events that match the tag filter.",
         "chooseEvents": "Choose events"
       },
+      "authors": {
+        "label": "People",
+        "title": "Title",
+        "addAuthor": "People"
+      },
       "flexTeaser": {
         "addBlock": "Add Block",
         "chooseTeaser": "Choose Teaser",

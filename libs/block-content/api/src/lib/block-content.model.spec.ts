@@ -35,4 +35,16 @@ describe('mapBlockUnionMap', () => {
       } as unknown as BlockContentInput)
     ).toThrow(BadRequestException);
   });
+
+  it('stores the title and the chosen authors of an authors block', () => {
+    expect(
+      mapBlockUnionMap({
+        authors: { title: 'Stiftungsrat', authorIds: ['b', 'a'] },
+      } as unknown as BlockContentInput)
+    ).toMatchObject({
+      type: 'authors',
+      title: 'Stiftungsrat',
+      authorIds: ['b', 'a'],
+    });
+  });
 });

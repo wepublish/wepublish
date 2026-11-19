@@ -37,6 +37,7 @@ import {
   BuilderBreakBlockProps,
   BuilderCommentBlockProps,
   BuilderEventBlockProps,
+  BuilderAuthorsBlockProps,
   BuilderFacebookPostBlockProps,
   BuilderFacebookVideoBlockProps,
   BuilderHTMLBlockProps,
@@ -255,6 +256,7 @@ export type WebsiteBuilderProps = {
     BildwurfAd: ComponentType<BuilderBildwurfAdBlockProps>;
     IFrame: ComponentType<BuilderIFrameBlockProps>;
     Event: ComponentType<BuilderEventBlockProps>;
+    Authors: ComponentType<BuilderAuthorsBlockProps>;
     Poll: ComponentType<BuilderPollBlockProps>;
     Crowdfunding: ComponentType<BuilderCrowdfundingBlockProps>;
     Listicle: ComponentType<BuilderListicleBlockProps>;
@@ -401,6 +403,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     BildwurfAd: NoComponent,
     IFrame: NoComponent,
     Event: NoComponent,
+    Authors: NoComponent,
     Poll: NoComponent,
     Crowdfunding: NoComponent,
     Listicle: NoComponent,

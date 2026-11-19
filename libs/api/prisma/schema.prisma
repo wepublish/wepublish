@@ -1873,6 +1873,7 @@ enum BlockType {
   Poll           @map("poll")
   Comment        @map("comment")
   Event          @map("event")
+  Authors        @map("authors")
   FlexBlock      @map("flexBlock")
   BlockTemplate  @map("blockTemplate")
 }
