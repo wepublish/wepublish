@@ -109,6 +109,11 @@ fragment SubscriptionFlow on SubscriptionFlowModel {
     ...SubscriptionInterval
   }
   numberOfSubscriptions(memberPlanId: $memberPlanId)
+  earliestDay {
+    days
+    periodicity
+    memberPlans
+  }
 }
 
 fragment SubscriptionInterval on SubscriptionInterval {
@@ -136,4 +141,11 @@ fragment MemberPlanRef on MemberPlan {
   currency
   extendable
   slug
+}
+
+query EarliestInvoiceDays {
+  earliestInvoiceDays {
+    periodicity
+    days
+  }
 }

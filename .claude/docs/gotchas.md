@@ -1503,6 +1503,19 @@ cast, so a tenant on the wrong document fails `tsc`. Pinned by
 `libs/feed/website/src/lib/feed-article-list.spec.ts`, which runs the real
 document against `schema-v2.graphql`.
 
+### ⚠️ A mail flow's earliest day is derived, and the nightly job enforces it per subscription
+
+There is no fixed lower limit for `daysAwayFromEnding`. It follows from the
+shortest periodicity a flow applies to (`EARLIEST_INVOICE_DAY` in
+`libs/utils/api/src/lib/earliest-invoice-day.ts`: monthly −25 … yearly −360),
+because a subscription is only invoiced once its current period has begun. A
+plan flow uses its own `periodicities`; the default flow uses what active
+member plans offer plus the running subscriptions no other flow takes
+(`SubscriptionFlowService.earliestDay`). Saving a plan never fails over it, so
+an event can end up too early: the editor warns, and `createInvoice` in the
+periodic job clamps the invoice day to the subscription's own periodicity. Do
+not replace this with a constant or drop the clamp.
+
 ## Adding an entry
 
 Keep the house style: a future agent must be able to tell _why_ the obvious

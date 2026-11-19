@@ -35,6 +35,10 @@ import {
 } from '@wepublish/ui/editor';
 import { MdAutoFixHigh, MdCheck, MdExpandMore } from 'react-icons/md';
 import { MemberPlanPricing } from './memberplan-pricing';
+import {
+  EarliestInvoiceDayInfo,
+  InvoiceDayConflicts,
+} from './earliest-invoice-day-info';
 import { FieldLabel } from '../field-label';
 import {
   Accordion,
@@ -135,6 +139,11 @@ export function MemberPlanForm({
     defaultPeriodicity: `${fieldId}-default-periodicity`,
     paymentMethods: `${fieldId}-payment-methods`,
   };
+
+  const offers = useMemo(
+    () => availablePaymentMethods.map(({ value }) => value),
+    [availablePaymentMethods]
+  );
 
   const enabledPeriodicities = useMemo(() => {
     const enabled = new Set(
@@ -637,10 +646,20 @@ export function MemberPlanForm({
         <PanelWidth100>
           <CardHeader
             title={t('memberPlanEdit.paymentConfigs')}
-            slotProps={{ title: { component: 'h2' } }}
+            slotProps={{
+              title: { component: 'h2' },
+              // level with the title rather than pulled into the corner
+              action: { sx: { alignSelf: 'center', m: 0 } },
+            }}
+            action={<EarliestInvoiceDayInfo offers={offers} />}
           />
 
           <CardContent>
+            <InvoiceDayConflicts
+              memberPlanId={memberPlanId}
+              offers={offers}
+            />
+
             <Grid
               container
               spacing={2}

@@ -196,6 +196,21 @@ describe('Subscription Flow Resolver', () => {
         });
     });
 
+    it('earliestInvoiceDays are not public', () => {
+      return request(app.getHttpServer())
+        .post('')
+        .send({ query: '{ earliestInvoiceDays { periodicity days } }' })
+        .expect(200)
+        .expect(({ body }) => {
+          expect(
+            !!body.errors.find(
+              (error: any) => error.message === 'Forbidden resource'
+            )
+          ).toEqual(true);
+          expect(body.data).toBeNull();
+        });
+    });
+
     it('createSubscriptionFlow is not public', () => {
       return request(app.getHttpServer())
         .post('')
@@ -385,6 +400,7 @@ describe('Subscription Flow Resolver', () => {
               createFlow: vi.fn(),
               updateFlow: vi.fn(),
               deleteFlow: vi.fn(),
+              earliestDay: vi.fn(),
             },
           },
           {
@@ -502,6 +518,33 @@ describe('Subscription Flow Resolver', () => {
         expect(count).toBe(42);
         expect(prisma.subscription.count).toHaveBeenCalledWith({ where: {} });
       });
+    });
+
+    it('tells the earliest day of a flow as the service works it out', async () => {
+      const earliestDay = {
+        days: -85,
+        periodicity: PaymentPeriodicity.quarterly,
+        memberPlans: [],
+      };
+      vi.spyOn(subscriptionFlowService, 'earliestDay').mockResolvedValue(
+        earliestDay
+      );
+
+      await expect(
+        resolver.earliestDay(mockSubscriptionFlow as any)
+      ).resolves.toEqual(earliestDay);
+      expect(subscriptionFlowService.earliestDay).toHaveBeenCalledWith(
+        mockSubscriptionFlow
+      );
+    });
+
+    it('lists the earliest invoice day of every periodicity', () => {
+      expect(resolver.earliestInvoiceDays()).toEqual(
+        expect.arrayContaining([
+          { periodicity: PaymentPeriodicity.monthly, days: -25 },
+          { periodicity: PaymentPeriodicity.yearly, days: -360 },
+        ])
+      );
     });
 
     it('returns subscription flows for all queries and mutations', async () => {

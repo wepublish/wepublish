@@ -1965,6 +1965,14 @@
       "name": "Name",
       "nameRequired": "Name required",
       "noMemberPlanName": "Unnamed subscription plan",
+      "earliestInvoiceDay": {
+        "label": "Earliest invoice: {{days}} days ({{periodicity}})",
+        "help": "Depending on the periodicities chosen in the member plans, invoices can be created {{days}} days before a subscription ends at the earliest. With “Monthly”, for example, an invoice can be created 25 days before the end at the earliest, which is 3 to 6 days after the subscription began, depending on the month.",
+        "conflict": "{{flow}} creates invoices on day {{invoiceDay}}. For subscriptions of this member plan with the periodicity “{{periodicity}}”, the invoice is only created {{days}} days before the end.",
+        "defaultFlow": "The default flow",
+        "planFlow": "The flow “{{conditions}}”",
+        "openFlow": "Open flow"
+      },
       "paymentConfigs": "Payment settings",
       "saveAndCloseBtnTitle": "Save & Close",
       "saveBtnTitle": "Save",
@@ -2948,8 +2956,16 @@
         "warnings": {
           "noMemberPlan": "The member plan of this flow was deleted. As long as this flow exists, no automated message is sent – delete it.",
           "matchesNothing": "Applies to no subscription: a payment method, periodicity or renewal is missing.",
-          "notOffered": "No longer offered by the member plan: {{values}}. This flow only applies to already existing subscriptions."
+          "notOffered": "No longer offered by the member plan: {{values}}. This flow only applies to already existing subscriptions.",
+          "invoiceTooEarly": "The invoice creation on day {{day}} is too early for subscriptions with the periodicity “{{periodicity}}”: their invoice is only created {{days}} days before the end.",
+          "mailsTooEarly": "Day {{mailDays}} lies before the earliest day for subscriptions with the periodicity “{{periodicity}}” ({{days}} days before the end): they only get these messages if their next period is already paid by then."
         }
+      },
+      "earliestDay": {
+        "byConditions": "{{days}} days before the subscription ends at the earliest: this flow applies to subscriptions with the periodicity “{{periodicity}}”, and an invoice can only be created once the current period has begun.",
+        "byMemberPlans": "{{days}} days before the subscription ends at the earliest: this flow applies to every subscription without a flow of its own, and the periodicity “{{periodicity}}” is offered by: {{memberPlans}}. An invoice can only be created once the current period has begun.",
+        "byRunningSubscriptions": "{{days}} days before the subscription ends at the earliest: this flow applies to every subscription without a flow of its own, and subscriptions with the periodicity “{{periodicity}}” are still running. An invoice can only be created once the current period has begun.",
+        "nothingOffered": "{{days}} days before the subscription ends at the earliest, as long as no member plan offers a periodicity."
       },
       "flow": "Flow",
       "planFlowDescription": "This flow completely replaces the default flow for the subscriptions of its member plan that match the filter criteria defined below.",
