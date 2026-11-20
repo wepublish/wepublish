@@ -417,7 +417,8 @@ function FlowTable() {
       label: t('subscriptionFlow.overview.subscriptionsSum', {
         sum: rows.reduce((sum, row) => sum + row.subscriptions, 0),
       }),
-      width: 170,
+      // Wide enough for the heading with a sum of several digits.
+      width: 190,
       align: 'right',
       render: row => row.subscriptions,
     },

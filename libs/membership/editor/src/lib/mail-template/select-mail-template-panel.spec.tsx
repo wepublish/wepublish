@@ -292,6 +292,24 @@ describe('SelectMailTemplatePanel', () => {
     ).toBeTruthy();
   });
 
+  it('ticks the button of the current template and leaves the others unticked', () => {
+    renderPanel({ selectedId: 'Mahnung' });
+
+    const button = (name: string) =>
+      within(rowOf(name)).getByRole('button', {
+        name: /mailTemplateSelect.chooser.select/,
+      });
+
+    expect(button('Mahnung').getAttribute('aria-pressed')).toBe('true');
+    expect(button('Willkommen').getAttribute('aria-pressed')).toBe('false');
+    expect(
+      button('Mahnung').querySelector('[data-checked="true"]')
+    ).toBeTruthy();
+    expect(
+      button('Willkommen').querySelector('[data-checked="false"]')
+    ).toBeTruthy();
+  });
+
   it('keeps the pagination outside the part that scrolls', () => {
     renderPanel();
 
