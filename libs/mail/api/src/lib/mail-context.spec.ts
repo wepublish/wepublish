@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { MailContext } from './mail-context';
+import { EMPTY_PURL_DATA } from './mail-data';
 import {
   MailAttachment,
   MailAttachmentError,
@@ -60,6 +61,52 @@ describe('MailContext', () => {
     });
   });
 
+  describe('buildMailData', () => {
+    it('keeps the login link (jwt) while personal login codes are switched off', async () => {
+      const context = new MailContext({
+        prisma: {} as PrismaClient,
+        mailProvider: {} as any,
+        kv: {} as any,
+        jwtGenerator: async userId => `jwt-for-${userId}`,
+        // What the login code service hands out while the medium has them off.
+        purlProvider: { purlFor: async () => EMPTY_PURL_DATA },
+      });
+
+      const data = await context.buildMailData({
+        recipient: { id: 'user-1' },
+        optionalData: {},
+        mode: 'send',
+      });
+
+      expect(data.jwt).toBe('jwt-for-user-1');
+      expect(data.purl).toBe('');
+      expect(data.purlCode).toBe('');
+    });
+
+    it('issues no login code for a mail that does not show one', async () => {
+      const purlFor = vi.fn();
+      const context = new MailContext({
+        prisma: {} as PrismaClient,
+        mailProvider: {} as any,
+        kv: {} as any,
+        jwtGenerator: async () => '',
+        purlProvider: { purlFor },
+      });
+
+      const data = await context.buildMailData({
+        recipient: { id: 'user-1' },
+        optionalData: {},
+        mode: 'send',
+        mintPurl: false,
+      });
+
+      expect(purlFor).not.toHaveBeenCalled();
+      expect(data.purl).toBe('');
+      expect(data.purlCode).toBe('');
+      expect(data.purlQr).toBe('');
+    });
+  });
+
   describe('attachments', () => {
     const pdf = (name: string): MailAttachment => ({
       filename: `${name}.pdf`,
@@ -76,16 +123,24 @@ describe('MailContext', () => {
       renderer = { render: renderPdfs() } as MailAttachmentRenderer | null,
     } = {}) {
       const sendMail = vi.fn().mockResolvedValue({ providerMessageID: 'm-1' });
-      const findUnique = vi.fn().mockResolvedValue({
-        id: 'template-1',
+      // The words are the email version's, the attachments the template's.
+      const variant = {
+        id: 'variant-1',
+        templateId: 'template-1',
+        channel: 'mail',
         subject: 'Hallo {{user_firstName}}',
         htmlContent: '<p>Hallo {{user_firstName}}</p>',
         textContent: null,
+      };
+      const findUnique = vi.fn().mockResolvedValue({
         attachments: attachments.map(documentId => ({ documentId })),
       });
 
       const context = new MailContext({
-        prisma: { mailTemplate: { findUnique } } as unknown as PrismaClient,
+        prisma: {
+          mailTemplate: { findUnique },
+          mailTemplateVariant: { findUnique: vi.fn(async () => variant) },
+        } as unknown as PrismaClient,
         mailProvider: { id: 'smtp', sendMail } as any,
         kv: {
           getOrLoadNs: vi.fn().mockResolvedValue({ fromAddress: 'a@b.ch' }),
@@ -130,7 +185,7 @@ describe('MailContext', () => {
 
       expect(findUnique).toHaveBeenCalledWith(
         expect.objectContaining({
-          include: {
+          select: {
             attachments: {
               select: { documentId: true },
               orderBy: { position: 'asc' },
@@ -213,5 +268,63 @@ describe('MailContext', () => {
         expect.objectContaining({ attachments: [pdf('contract')] })
       );
     });
+  });
+});
+
+describe('MailContext.sendComposedMail', () => {
+  const setup = (variant: Record<string, unknown> | null) => {
+    const sendMail = vi.fn(async () => ({ providerMessageID: 'msg-1' }));
+    const prisma = {
+      mailTemplate: { findUnique: vi.fn(async () => ({ attachments: [] })) },
+      mailTemplateVariant: { findUnique: vi.fn(async () => variant) },
+    };
+    const context = new MailContext({
+      prisma: prisma as unknown as PrismaClient,
+      mailProvider: { id: 'mailgun', sendMail } as any,
+      kv: { getOrLoadNs: vi.fn(async () => null) } as any,
+      jwtGenerator: async () => '',
+    });
+
+    return { context, prisma, sendMail };
+  };
+
+  const props = {
+    mailTemplateId: 'template-1',
+    recipient: 'jane@example.com',
+    data: { user: { firstName: 'Jane' } },
+    mailLogID: 'log-1',
+  };
+
+  it('sends what the template says by email', async () => {
+    const { context, prisma, sendMail } = setup({
+      subject: 'Hello {{user_firstName}}',
+      htmlContent: '<p>Hi {{user_firstName}}</p>',
+      textContent: null,
+    });
+
+    await expect(context.sendComposedMail(props)).resolves.toEqual({
+      subject: 'Hello Jane',
+      providerMessageID: 'msg-1',
+    });
+    expect(prisma.mailTemplateVariant.findUnique).toHaveBeenCalledWith({
+      where: {
+        templateId_channel: { templateId: 'template-1', channel: 'mail' },
+      },
+    });
+    expect(sendMail).toHaveBeenCalledWith(
+      expect.objectContaining({
+        subject: 'Hello Jane',
+        messageHtml: expect.stringContaining('Hi Jane'),
+      })
+    );
+  });
+
+  it('refuses a template that was only written as a letter', async () => {
+    const { context, sendMail } = setup(null);
+
+    await expect(context.sendComposedMail(props)).rejects.toThrow(
+      'MailTemplate <template-1> has no mail version!'
+    );
+    expect(sendMail).not.toHaveBeenCalled();
   });
 });

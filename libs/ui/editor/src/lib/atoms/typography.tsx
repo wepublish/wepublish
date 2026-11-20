@@ -7,7 +7,14 @@ import {
 } from 'react';
 
 export type TypographyVariant =
-  'title' | 'h1' | 'h2' | 'h3' | 'body1' | 'body2' | 'subtitle1' | 'subtitle2';
+  | 'title'
+  | 'h1'
+  | 'h2'
+  | 'h3'
+  | 'body1'
+  | 'body2'
+  | 'subtitle1'
+  | 'subtitle2';
 
 export type TypographyTextAlign = 'left' | 'center' | 'right';
 export type TypographyDisplay = 'block' | 'inline';

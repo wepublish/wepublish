@@ -57,7 +57,7 @@ export class MailsModule {
       {
         provide: MailContext,
         useFactory: (
-          { mailProvider, jwtGenerator }: MailsModuleOptions,
+          { mailProvider, jwtGenerator, purlProvider }: MailsModuleOptions,
           prisma: PrismaClient,
           kv: NamespacedCache,
           emailQualityRecorder?: EmailQualityRecorder,
@@ -69,6 +69,7 @@ export class MailsModule {
             mailProvider,
             kv,
             jwtGenerator,
+            purlProvider,
             emailQualityRecorder,
             letterSender,
             attachmentRenderer,

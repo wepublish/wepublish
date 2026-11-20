@@ -22,6 +22,7 @@
 const SENSITIVE_KEYS = new Set([
   'password',
   'totpSecret',
+  'pendingEmailTokenHash',
   'totpEnabled',
   'totpExempt',
   'roleIDs',

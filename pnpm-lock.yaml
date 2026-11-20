@@ -456,6 +456,9 @@ catalogs:
     prosemirror-model:
       specifier: ^1.25.12
       version: 1.25.12
+    qrcode-generator:
+      specifier: ^1.5.2
+      version: 1.5.2
     qs:
       specifier: ^6.16.1
       version: 6.16.1
@@ -983,6 +986,9 @@ importers:
       qr-code-styling:
         specifier: ^1.9.2
         version: 1.9.2
+      qrcode-generator:
+        specifier: 'catalog:'
+        version: 1.5.2
       qs:
         specifier: 'catalog:'
         version: 6.16.1
@@ -1759,6 +1765,9 @@ importers:
       prosemirror-model:
         specifier: 'catalog:'
         version: 1.25.12
+      qrcode-generator:
+        specifier: 'catalog:'
+        version: 1.5.2
       qs:
         specifier: 'catalog:'
         version: 6.16.1

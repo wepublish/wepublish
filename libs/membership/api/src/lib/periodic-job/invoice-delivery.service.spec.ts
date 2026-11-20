@@ -68,10 +68,14 @@ function setup({ letters = false }: { letters?: boolean } = {}) {
     invoiceItem: { deleteMany: vi.fn() },
     invoice: { delete: vi.fn() },
     mailLog: { count: vi.fn(async () => 0), create: vi.fn() },
+    mailTemplate: { findUnique: vi.fn(async () => null) },
     userDeliveryPreference: {
       findUnique: vi.fn(async () =>
         letters ? { channel: MailChannel.letter } : null
       ),
+    },
+    mailTemplateVariant: {
+      findUnique: vi.fn(async () => ({ id: 'variant-1' })),
     },
     user: {
       findUnique: vi.fn(async () => ({
@@ -87,6 +91,11 @@ function setup({ letters = false }: { letters?: boolean } = {}) {
     mailProvider: { id: 'fakeMail' },
     jwtGenerator: vi.fn(async () => 'jwt-1'),
     sendComposedMail: vi.fn(async () => ({ subject: 'S' })),
+    isPlaceholderEmail: vi.fn(async () => false),
+    purlProvider: {
+      purlFor: vi.fn(async () => ({ purl: '', purlCode: '', purlQr: '' })),
+    },
+    buildMailData: MailContext.prototype.buildMailData,
     letterSender,
   };
   const payments = {

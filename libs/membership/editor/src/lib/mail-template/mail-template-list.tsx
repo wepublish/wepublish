@@ -1,96 +1,171 @@
 import { useMutation, useQuery } from '@apollo/client/react';
-import styled from '@emotion/styled';
 import {
   Alert,
+  Box,
   Button,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   Dialog,
-  DialogTitle,
-  DialogContent,
   DialogActions,
-  IconButton,
+  DialogContent,
+  DialogTitle,
   Stack,
-  Chip,
 } from '@mui/material';
 import {
   DeleteMailTemplateDocument,
   ImportMailTemplatesFromProviderDocument,
-  MailTemplateDocument,
+  MailTemplateListDocument,
 } from '@wepublish/editor/api';
 import {
+  clearFilters,
+  countActiveFilters,
+  createCheckedPermissionComponent,
+  DataTable,
+  DataTableColumn,
+  enqueueSnackbar,
+  IconButton,
   IconButtonTooltip,
-  InfoTooltip,
+  Link,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
-  PermissionControl,
-  createCheckedPermissionComponent,
-  enqueueSnackbar,
   PageTitle,
+  Pagination,
+  PermissionControl,
+  TableWrapper,
+  useListViewState,
 } from '@wepublish/ui/editor';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  MdAdd,
-  MdCheck,
-  MdCloudDownload,
-  MdDelete,
-  MdEdit,
-  MdWarning,
-} from 'react-icons/md';
+import { MdAdd, MdCloudDownload, MdDelete, MdEdit } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 import { DEFAULT_MUTATION_OPTIONS } from '../common';
-import { mailTypeLabel } from './mail-placeholders';
 import {
   CanCreateMailTemplates,
   CanDeleteMailTemplates,
   CanGetMailTemplates,
   CanUpdateMailTemplates,
 } from '@wepublish/permissions';
-
-const StatusTag = styled(Chip)`
-  white-space: nowrap;
-
-  .rs-tag-text {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-  }
-
-  svg {
-    flex-shrink: 0;
-    color: var(
-      --wep-state-draft-text,
-      ${({ theme }) => theme.vars.palette.warning.main}
-    );
-  }
-`;
+import {
+  filterTemplates,
+  pageOf,
+  sortTemplates,
+  TEMPLATE_SORT_FIELDS,
+  TemplateFilter,
+  TemplateRow,
+} from './template-table';
+import {
+  TemplateFilters,
+  templateFilterFields,
+  useTemplateColumns,
+  useTemplateSortLabels,
+} from './template-columns';
+import { useLetterChannel } from './use-letter-channel';
 
 function MailTemplateList() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { paperLetters } = useLetterChannel();
 
-  const { data: queryData } = useQuery(MailTemplateDocument);
+  const { data: queryData, loading } = useQuery(MailTemplateListDocument);
+
+  const { filter, setFilter, sortField, sortOrder, setSort, limit, setLimit } =
+    useListViewState<TemplateFilter>('mailTemplates', {
+      defaultSortField: 'name',
+      defaultSortOrder: 'asc',
+      defaultLimit: 20,
+    });
+  const [chosenPage, setPage] = useState(1);
+  const sortLabels = useTemplateSortLabels();
 
   const [deleteMailTemplate] = useMutation(DeleteMailTemplateDocument, {
     ...DEFAULT_MUTATION_OPTIONS(t),
-    refetchQueries: ['MailTemplate'],
+    refetchQueries: ['MailTemplate', 'MailTemplateList'],
   });
   const [importFromProvider, { loading: importing }] = useMutation(
     ImportMailTemplatesFromProviderDocument,
     {
       ...DEFAULT_MUTATION_OPTIONS(t),
-      refetchQueries: ['MailTemplate'],
+      refetchQueries: ['MailTemplate', 'MailTemplateList'],
     }
   );
 
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [importOpen, setImportOpen] = useState(false);
+
+  const templates = useMemo(() => queryData?.mailTemplates ?? [], [queryData]);
+
+  const matching = useMemo(
+    () =>
+      sortTemplates(
+        filterTemplates(templates, filter),
+        sortField,
+        sortOrder,
+        sortLabels
+      ),
+    [templates, filter, sortField, sortOrder, sortLabels]
+  );
+
+  // A filter can leave fewer pages than the one that was open.
+  const { page, rows } = pageOf(matching, chosenPage, limit);
+
+  const changeFilter = (change: Partial<TemplateFilter>) => {
+    setFilter({ ...filter, ...change });
+    setPage(1);
+  };
+
+  const filterFields = templateFilterFields(paperLetters);
+
+  const columns: DataTableColumn<TemplateRow>[] = [
+    ...useTemplateColumns({
+      paperLetters,
+      renderName: row => (
+        <Link to={`/mailtemplates/edit/${row.id}`}>{row.name}</Link>
+      ),
+    }),
+    {
+      id: 'action',
+      label: t('action'),
+      width: 100,
+      align: 'center',
+      fixed: true,
+      render: row => (
+        <Stack
+          direction="row"
+          sx={{ justifyContent: 'center' }}
+          spacing={1}
+        >
+          <PermissionControl
+            showRejectionMessage={false}
+            qualifyingPermissions={[CanUpdateMailTemplates.id]}
+          >
+            <IconButtonTooltip caption={t('edit')}>
+              <IconButton
+                size="small"
+                aria-label={t('edit')}
+                onClick={() => navigate(`/mailtemplates/edit/${row.id}`)}
+              >
+                <MdEdit />
+              </IconButton>
+            </IconButtonTooltip>
+          </PermissionControl>
+          <PermissionControl
+            showRejectionMessage={false}
+            qualifyingPermissions={[CanDeleteMailTemplates.id]}
+          >
+            <IconButtonTooltip caption={t('delete')}>
+              <IconButton
+                size="small"
+                color="error"
+                aria-label={t('delete')}
+                onClick={() => setDeleteId(row.id)}
+              >
+                <MdDelete />
+              </IconButton>
+            </IconButtonTooltip>
+          </PermissionControl>
+        </Stack>
+      ),
+    },
+  ];
 
   const confirmDelete = async () => {
     if (!deleteId) {
@@ -152,110 +227,47 @@ function MailTemplateList() {
         </ListViewActions>
       </ListViewContainer>
 
-      <TableContainer style={{ marginTop: '16px' }}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>
-                <strong>{t('mailTemplates.name')}</strong>
-              </TableCell>
-              <TableCell>
-                <strong>{t('mailTemplates.edit.mailType')}</strong>{' '}
-                <InfoTooltip
-                  text={t('mailTemplates.edit.purposeHint')}
-                  label={t('moreInfo')}
-                />
-              </TableCell>
-              <TableCell>
-                <strong>{t('mailTemplates.description')}</strong>
-              </TableCell>
-              <TableCell>
-                <strong>{t('mailTemplates.subject')}</strong>
-              </TableCell>
-              <TableCell>
-                <strong>{t('mailTemplates.status')}</strong>{' '}
-                <InfoTooltip
-                  text={t('mailTemplates.statusHelp')}
-                  label={t('moreInfo')}
-                />
-              </TableCell>
-              <TableCell align="center">
-                <strong>{t('action')}</strong>
-              </TableCell>
-            </TableRow>
-          </TableHead>
+      <TableWrapper>
+        <Box sx={{ marginTop: 2 }}>
+          <DataTable
+            storageKey={paperLetters ? 'mail-templates' : 'mail-templates-mail'}
+            data={rows}
+            loading={loading && !queryData}
+            getRowId={row => row.id}
+            columns={columns}
+            filters={
+              <TemplateFilters
+                filter={filter}
+                onChange={changeFilter}
+                templates={templates}
+                paperLetters={paperLetters}
+              />
+            }
+            filterCount={countActiveFilters(filterFields, filter)}
+            onResetFilters={() => {
+              setFilter(clearFilters(filterFields, filter));
+              setPage(1);
+            }}
+            sortable={TEMPLATE_SORT_FIELDS}
+            sortColumn={sortField}
+            sortOrder={sortOrder}
+            onSort={(column, order) => {
+              setSort(column, order);
+              setPage(1);
+            }}
+            emptyMessage={
+              templates.length ?
+                t('mailTemplates.list.noMatch')
+              : t('mailTemplates.empty')
+            }
+          />
+        </Box>
 
-          <TableBody>
-            {queryData && !queryData.mailTemplates.length && (
-              <TableRow>
-                <TableCell colSpan={6}>{t('mailTemplates.empty')}</TableCell>
-              </TableRow>
-            )}
-
-            {queryData?.mailTemplates.map(template => (
-              <TableRow key={template.id}>
-                <TableCell>{template.name}</TableCell>
-                <TableCell>
-                  {mailTypeLabel(template.context, (k, f) => t(k, f)) ?? '—'}
-                </TableCell>
-                <TableCell>{template.description}</TableCell>
-                <TableCell>{template.subject}</TableCell>
-                <TableCell>
-                  {template.status === 'ok' ?
-                    <MdCheck
-                      role="img"
-                      aria-label={t('ok')}
-                    />
-                  : <StatusTag
-                      icon={<MdWarning />}
-                      label={t(`mailTemplates.statuses.${template.status}`)}
-                    />
-                  }
-                </TableCell>
-                <TableCell align="center">
-                  <Stack
-                    direction="row"
-                    sx={{ justifyContent: 'center' }}
-                    spacing={1}
-                  >
-                    <PermissionControl
-                      showRejectionMessage={false}
-                      qualifyingPermissions={[CanUpdateMailTemplates.id]}
-                    >
-                      <IconButtonTooltip caption={t('edit')}>
-                        <IconButton
-                          size="small"
-                          aria-label={t('edit')}
-                          onClick={() =>
-                            navigate(`/mailtemplates/edit/${template.id}`)
-                          }
-                        >
-                          <MdEdit />
-                        </IconButton>
-                      </IconButtonTooltip>
-                    </PermissionControl>
-                    <PermissionControl
-                      showRejectionMessage={false}
-                      qualifyingPermissions={[CanDeleteMailTemplates.id]}
-                    >
-                      <IconButtonTooltip caption={t('delete')}>
-                        <IconButton
-                          size="small"
-                          color="error"
-                          aria-label={t('delete')}
-                          onClick={() => setDeleteId(template.id)}
-                        >
-                          <MdDelete />
-                        </IconButton>
-                      </IconButtonTooltip>
-                    </PermissionControl>
-                  </Stack>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+        <Pagination
+          state={{ page, setPage, limit, setLimit }}
+          totalCount={matching.length}
+        />
+      </TableWrapper>
 
       <Dialog
         fullWidth

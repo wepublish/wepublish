@@ -32,7 +32,7 @@ import {
 } from '@wepublish/permissions/api';
 import { NotFoundException } from '@nestjs/common';
 import {
-  Authenticated,
+  RequiresFullSession,
   CurrentUser,
   AuthSession,
   requireSessionUser,
@@ -99,7 +99,7 @@ export class UserResolver {
     });
   }
 
-  @Authenticated()
+  @RequiresFullSession()
   @Mutation(() => SensitiveDataUser, {
     description: `Updates the current logged in user.`,
   })
@@ -111,9 +111,15 @@ export class UserResolver {
 
     assertNotManagedByWepublishLogin(user);
 
+    const { name, firstName, birthday, flair, address } = input;
+
     return this.service.updateUser({
-      ...input,
       id: user.id,
+      name,
+      firstName,
+      birthday,
+      flair,
+      address,
     });
   }
 

@@ -1,3 +1,4 @@
+import { redirect } from '@tanstack/react-router';
 import { z } from 'zod';
 
 import { mergeApolloCache } from '../apollo';
@@ -6,6 +7,10 @@ import {
   loadDeactivatedSubscriptions,
 } from '../pages/deactivated-subscriptions-page';
 import { FourOhFourPage } from '../pages/404-page';
+import {
+  ConfirmEmailPageOptions,
+  createConfirmEmailPage,
+} from '../pages/confirm-email-page';
 import { loadLogin } from '../pages/login-page';
 import { loadProfile, ProfilePage } from '../pages/profile-page';
 import { loadSubscribe } from '../pages/subscribe-page';
@@ -32,7 +37,8 @@ import {
 /** `pages/profile/index.tsx` */
 export const profileRoute = () => ({
   validateSearch: jwtSearchSchema.extend({
-    confirmEmailChange: z.string().optional(),
+    // Set by the confirm-email page once the new address is in place.
+    emailConfirmed: z.string().optional(),
   }),
   loaderDeps: ({ search: { jwt } }: { search: { jwt?: string } }) => ({ jwt }),
   loader: async ({
@@ -50,6 +56,25 @@ export const profileRoute = () => ({
   },
   component: ProfilePage,
 });
+
+/**
+ * `pages/confirm-email.tsx`: the link in the email-change confirmation mail.
+ * Confirmed from the browser, so it renders nothing user-specific on the
+ * server — but its address carries the token: keep it `no-store`.
+ */
+export const confirmEmailRoute = (options: ConfirmEmailPageOptions = {}) => {
+  const loginPath = options.loginPath ?? '/login';
+
+  return {
+    validateSearch: z.object({ token: z.string().optional() }),
+    beforeLoad: ({ search }: { search: { token?: string } }) => {
+      if (!search.token) {
+        throw redirect({ href: loginPath });
+      }
+    },
+    component: createConfirmEmailPage({ ...options, loginPath }),
+  };
+};
 
 /** `pages/profile/subscription/[id].tsx` */
 export const subscriptionRoute = () => ({

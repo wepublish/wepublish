@@ -1163,7 +1163,7 @@
       "noNameErrorMessage": "Veuillez entrer un nom",
       "noPasswordErrorMessage": "Veuillez entrer un mot de passe",
       "noPaymentMethodErrorMessage": "Veuillez sélectionner une méthode de paiement",
-      "noPaymentPeriodicityErrorMessage": "Veuillez sélectionner une périodicité de paiement",
+      "noPaymentPeriodicityErrorMessage": "Veuillez sélectionner un intervalle de paiement",
       "noPaymentProviderErrorMessage": "Veuillez entrer un fournisseur de paiement",
       "noTokenErrorMessage": "Veuillez entrer un token",
       "noUrlErrorMessage": "Veuillez entrer une URL",
@@ -1595,14 +1595,63 @@
       "goToLogin": "Aller à la connexion"
     },
     "mailTemplates": {
+      "list": {
+        "attachments": "Pièces jointes",
+        "attachmentsFilter": {
+          "with": "Avec pièce jointe",
+          "without": "Sans pièce jointe"
+        },
+        "search": "Rechercher",
+        "channels": "Canaux de distribution",
+        "letterLayout": "Papier à lettres",
+        "letterLayoutDefault": "Standard",
+        "letterAppendix": "Pages supplémentaires",
+        "letterAppendixNone": "Aucune",
+        "memberPlans": "Plans d’abonnement",
+        "memberPlansHint": "Plans d’abonnement dont le flux de communication envoie ce modèle. Le flux standard et les flux pour tous les plans n’appartiennent à aucun plan et n’apparaissent pas ici.",
+        "noMatch": "Aucun modèle ne correspond aux filtres.",
+        "statuses": {
+          "ok": "Utilisé",
+          "unused": "Non utilisé"
+        }
+      },
       "availableTemplates": "Modèles de message",
       "cancel": "Annuler",
       "content": "Contenu",
       "create": "Créer un modèle",
       "description": "Description",
       "edit": {
-        "createHeader": "Créer un modèle",
-        "editHeader": "Modifier le modèle",
+        "versions": "Versions par canal de distribution",
+        "addVersion": {
+          "mail": "Ajouter la version e-mail",
+          "letter": "Ajouter la version lettre"
+        },
+        "removeVersion": "Supprimer cette version",
+        "letterText": {
+          "label": "Texte",
+          "same": "Comme l’e-mail",
+          "own": "Texte propre",
+          "sameNote": "Cette lettre utilise l’objet et le texte de l’e-mail. Modifiez-les dans l’onglet « E-mail ».",
+          "confirm": {
+            "title": "Abandonner le texte propre de la lettre ?",
+            "text": "La lettre utilisera de nouveau l’objet et le texte de l’e-mail. Son texte propre sera perdu.",
+            "confirm": "Abandonner"
+          }
+        },
+        "removeVersionConfirm": {
+          "title": {
+            "mail": "Supprimer la version e-mail ?",
+            "letter": "Supprimer la version lettre ?"
+          },
+          "text": {
+            "mail": "Le modèle e-mail de ce modèle sera supprimé.",
+            "letter": "Le modèle lettre de ce modèle sera supprimé."
+          },
+          "confirm": "Supprimer"
+        },
+        "letterNotForPurpose": "Cet usage n’a pas de version lettre : le message contient un lien de connexion et part immédiatement par e-mail.",
+        "createHeader": "Créer un modèle de message",
+        "editHeader": "Modifier le modèle de message",
         "saveAndClose": "Enregistrer et fermer",
         "nameRequired": "Le nom est requis.",
         "testSent": "E-mail de test envoyé.",
@@ -1615,10 +1664,10 @@
         "testRecipientPlaceholder": "Votre e-mail de compte",
         "preview": "Aperçu",
         "sendTest": "Envoyer un test",
-        "previewLetter": "Aperçu en lettre",
-        "letterAppendix": "Bulletin QR (PDF)",
-        "letterAppendixNone": "Aucun",
-        "letterAppendixHelp": "PDF des «Documents» imprimé après les pages de la lettre, p. ex. un bulletin QR (A4, bulletin au bord inférieur). Uniquement pour les adresses en Suisse ; en impression recto verso, une page blanche est ajoutée si nécessaire pour que le bulletin soit sur un recto.",
+        "previewLetter": "Aperçu",
+        "letterAppendix": "Pages supplémentaires (PDF)",
+        "letterAppendixNone": "Aucune",
+        "letterAppendixHelp": "Les pages sont ajoutées à la fin de la lettre. Choisissez parmi les fichiers PDF téléversés sous «Documents».",
         "attachments": "Pièces jointes (Word)",
         "attachmentsHelp": "Documents Word (.docx) des «Documents», 5 au plus et 15 Mo au total. Ils sont complétés avec les mêmes espaces réservés que l'e-mail (dans le texte et les adresses des liens, pas dans les champs), joints en PDF et envoyés dans cet ordre avec chaque e-mail de ce modèle, y compris les e-mails d'abonnement automatiques. Les e-mails système (connexion, mot de passe) ne peuvent pas avoir de pièces jointes. Une lettre les imprime après ses pages (A4). Si une pièce jointe ne peut pas être créée, l'e-mail n'est pas envoyé. Un document personnel est converti pour chaque destinataire, l'un après l'autre, et les PDF joints font plus facilement classer un e-mail comme spam : en joindre peu et de petits. Nécessite Gotenberg comme moteur PDF.",
         "attachmentsNone": "Aucune",
@@ -1628,20 +1677,24 @@
         "selectMailTypePlaceholder": "Choisir une utilisation …",
         "testRecipientHint": "Les e-mails de test sont toujours envoyés à votre propre compte.",
         "generateTextFromHtml": "Générer depuis le HTML",
-        "textContentReadonlyHint": "Généré automatiquement à partir du contenu. Modifiez l’onglet visuel ou HTML pour le changer.",
         "background": "Arrière-plan",
         "contentWidth": "Largeur (px)",
         "purposeHint": "L’utilisation définit dans quelle situation ce modèle est envoyé. Elle détermine les données — et donc les espaces réservés — disponibles : seul un modèle de facture connaît le montant de la facture, par exemple.",
         "descriptionHelp": "Visible uniquement en interne : aide votre équipe à retrouver le modèle dans la liste. N’apparaît pas dans l’e-mail.",
         "sampleSubscriptionHelp": "Choisissez un abonnement existant pour remplir l’aperçu et l’e-mail de test avec ses données réelles. Sans sélection, des données d’exemple fictives sont utilisées. L’e-mail de test n’est envoyé qu’à vous.",
-        "bodyModeHelp": "Visuel : modifiez le contenu comme dans un traitement de texte. HTML : modifiez directement le code source – pour utilisateur·trice·s avancé·e·s. Texte brut : la version texte pour les programmes de messagerie sans HTML ; elle est générée automatiquement.",
+        "textContentGenerated": "Généré automatiquement à partir du contenu HTML / visuel",
+        "bodyModeHints": {
+          "visual": "Modifiez le contenu comme dans un traitement de texte.",
+          "html": "Modifiez directement le code source – pour utilisateur·trice·s avancé·e·s.",
+          "text": "La version texte pour les programmes de messagerie sans HTML. Elle est générée automatiquement à partir du contenu ; modifiez l’onglet visuel ou HTML pour la changer."
+        },
         "backgroundHelp": "Couleur de la surface autour du contenu de l’e-mail.",
         "contentWidthHelp": "Largeur maximale du contenu en pixels. 600 px est une valeur éprouvée qui s’affiche bien dans la plupart des programmes de messagerie. Sur les petits écrans, le contenu se rétrécit automatiquement.",
         "bodyMode": "Mode d’édition",
         "letterLayout": "Papier à lettres",
         "letterLayoutDefault": "Par défaut ({{name}})",
         "letterLayoutNone": "Par défaut (aucun)",
-        "letterLayoutHelp": "En-tête et pied de page lorsque ce modèle est imprimé en lettre. Sans effet pour les e-mails."
+        "letterLayoutHelp": "En-tête et pied de page"
       },
       "editor": {
         "undo": "Annuler",
@@ -1699,7 +1752,7 @@
       "htmlContent": "Contenu HTML",
       "name": "Nom",
       "placeholders": "Espaces réservés",
-      "placeholdersHint": "Cliquer pour insérer dans le champ sélectionné",
+      "placeholdersHint": "Un clic sur un espace réservé l’insère dans le modèle.",
       "placeholderSelectType": "Choisissez une utilisation ci-dessus pour voir ses espaces réservés.",
       "mailTypes": {
         "account": "Compte & connexion",
@@ -1724,21 +1777,26 @@
       "textContent": "Contenu en texte brut (repli)",
       "wysiwyg": "Visuel",
       "delete": "Supprimer",
-      "deleteConfirm": "Supprimer ce modèle d’e-mail ?",
+      "deleteConfirm": "Supprimer ce modèle de message ?",
       "importFromProvider": "Importer depuis le fournisseur",
       "importConfirm": "Importer & écraser",
       "importWarning": "Cela importe tous les modèles du fournisseur de messagerie. Les modèles inconnus sont créés, ceux déjà importés voient leur HTML et leur objet écrasés. Les modifications locales seront perdues.",
       "importDone": "{{count}} modèle(s) importé(s) depuis le fournisseur.",
-      "placeholderAlways": "Toujours disponible — dans chaque e-mail",
+      "placeholderAlways": "Toujours disponible",
       "placeholderContextLabel": "Champs supplémentaires pour cette utilisation",
       "placeholderContexts": {
-        "account": "Compte & connexion (création, lien de connexion, réinitialisation du mot de passe)",
+        "account": "Compte & connexion",
         "emailChange": "Changement d’e-mail",
-        "subscription": "Abonnement (nouveau, confirmé, désactivation)",
-        "renewal": "Renouvellement — automatique (succès / échec)",
+        "subscription": "Abonnement",
+        "renewal": "Renouvellement automatique",
         "invoiceCreation": "Facture créée",
         "custom": "E-mail libre à un·e abonné·e",
         "customNoSubscription": "E-mail libre à un·e non-abonné·e"
+      },
+      "placeholderGroups": {
+        "user": "Utilisateur",
+        "person": "Personne",
+        "general": "Général"
       },
       "placeholderNames": {
         "user_fullName": "Nom complet",
@@ -1752,14 +1810,17 @@
         "user_lastLogin": "Dernière connexion",
         "user_createdAt": "Compte créé le",
         "jwt": "Jeton de connexion (JWT)",
+        "purl": "Lien de connexion personnel",
+        "purlCode": "Code de connexion personnel",
+        "purlQr": "Code QR de connexion personnel",
         "currentDate": "Date actuelle",
         "optional_subscription_id": "ID d’abonnement",
         "optional_subscription_monthlyAmount": "Montant mensuel",
         "optional_subscription_periodAmount": "Montant par période",
         "optional_subscription_periodMonths": "Mois par période",
         "optional_subscription_currency": "Devise",
-        "optional_subscription_paymentPeriodicity": "Périodicité de paiement (code)",
-        "optional_subscription_paymentPeriodicity_display": "Périodicité de paiement",
+        "optional_subscription_paymentPeriodicity": "Intervalle de paiement (code)",
+        "optional_subscription_paymentPeriodicity_display": "Intervalle de paiement",
         "optional_subscription_autoRenew": "Renouvellement automatique",
         "optional_subscription_startsAt": "Commence le",
         "optional_subscription_paidUntil": "Payé jusqu’au",
@@ -1811,7 +1872,7 @@
         "custom": "Les factures arrivent sous forme de tableau : optional_invoices_0_* (la plus récente en premier).",
         "customNoSubscription": "Seuls les champs du destinataire sont disponibles — cet e-mail s’adresse à des personnes sans abonnement."
       },
-      "searchPlaceholders": "Rechercher …",
+      "searchPlaceholders": "Filtrer les espaces réservés …",
       "noPlaceholders": "Aucun espace réservé correspondant.",
       "placeholderExample": "Exemple",
       "purposeDescriptions": {
@@ -1870,13 +1931,25 @@
         "optional_invoices_0_description": "Description de la dernière facture."
       },
       "statusHelp": "Une coche signifie qu’un e-mail automatique utilise ce modèle. « Inutilisé » signifie qu’aucun e-mail automatique ne l’utilise – vous pouvez tout de même l’envoyer manuellement via « Messages manuels ».",
-      "placeholdersInfo": "Les espaces réservés sont remplacés automatiquement à l’envoi par les données de chaque destinataire, p. ex. son prénom. Chaque e-mail devient ainsi personnel.",
-      "searchPlaceholdersLabel": "Rechercher des espaces réservés",
-      "empty": "Aucun modèle d’e-mail pour le moment."
+      "placeholdersInfo": "Les espaces réservés sont remplacés automatiquement à l’envoi par les données correspondantes, p. ex. le prénom du ou de la destinataire.",
+      "searchPlaceholdersLabel": "Filtrer les espaces réservés",
+      "empty": "Aucun modèle de message pour le moment."
     },
     "mailTemplateSelect": {
-      "sendAsLetter": "Aussi par lettre",
-      "sendAsLetterHint": "Les personnes au canal lettre reçoivent ce message imprimé au lieu de l’e-mail.",
+      "chooser": {
+        "title": "Choisir un modèle : {{event}}",
+        "select": "Choisir ce modèle",
+        "selectCurrent": "Choisir ce modèle (déjà choisi)",
+        "none": "Ne pas envoyer de message",
+        "create": "Créer un nouveau modèle",
+        "columns": {
+          "template": "Modèle",
+          "purpose": "Usage"
+        }
+      },
+      "channels": "Canaux de distribution",
+      "noLetterVersion": "Ce modèle n’a pas de version lettre. Ajoutez-la dans le modèle pour que les personnes au canal lettre reçoivent ce message imprimé ; d’ici là, elles reçoivent l’e-mail.",
+      "sendAsLetterHint": "L’e-mail part toujours. Si la lettre est cochée, les personnes au canal lettre reçoivent ce message imprimé au lieu de l’e-mail.",
       "noMailSentSelectNow": "Ne pas envoyer d’e-mail"
     },
     "memberPlanEdit": {
@@ -1891,7 +1964,7 @@
       "createMemberPlanHeader": "Créer un plan d’abonnement",
       "description": "Description",
       "shortDescription": "Brève description",
-      "editPaymentSetting": "Modifier les modes de paiement & périodicités",
+      "editPaymentSetting": "Modifier les modes de paiement & durées",
       "forceAutoRenewal": "Forcer le renouvellement automatique",
       "loadingTitle": "Chargement",
       "name": "Nom",
@@ -1924,7 +1997,7 @@
       "deleteModalTitle": "Supprimer le plan d’abonnement",
       "name": "Nom",
       "paymentMethods": "Méthodes de paiement possibles",
-      "paymentPeriodicities": "Périodicités de paiement",
+      "paymentPeriodicities": "Intervalles de paiement",
       "paymentPeriodicity": {
         "biannual": "Semestriel",
         "monthly": "Mensuel",
@@ -2088,7 +2161,7 @@
         "emailUnreachable": "Adresse e-mail injoignable ({{segment}}) – les e-mails ne parviendront pas à cette personne."
       },
       "flows": {
-        "letterHint": "Les messages marqués « Aussi par lettre » parviennent imprimés aux personnes au canal lettre ; les autres reçoivent un e-mail.",
+        "letterHint": "Les messages dont la case « Lettre » est cochée parviennent imprimés aux personnes au canal lettre ; les autres reçoivent un e-mail.",
         "manage": "Gérer les canaux de distribution"
       }
     },
@@ -2276,10 +2349,11 @@
       "userConsents": "Consentements des utilisateur·trice·s",
       "userConsentCreate": "Nouveau consentement d’utilisateur·trice",
       "userConsentEdit": "Modifier le consentement d’utilisateur·trice",
-      "automaticEmails": "E-mails automatiques",
-      "mailTemplates": "Modèles d’e-mail",
-      "mailTemplateCreate": "Nouveau modèle d’e-mail",
-      "mailTemplateEdit": "Modifier le modèle d’e-mail",
+      "automaticEmails": "Messages automatiques",
+      "communicationFlow": "Modifier le flux",
+      "mailTemplates": "Modèles de message",
+      "mailTemplateCreate": "Nouveau modèle de message",
+      "mailTemplateEdit": "Modifier le modèle de message",
       "letterLayouts": "Papier à lettres",
       "letterLayoutCreate": "Nouveau papier à lettres",
       "letterLayoutEdit": "Modifier le papier à lettres",
@@ -2751,6 +2825,19 @@
       "guestPollVote": "Autoriser les votes anonymes dans les sondages",
       "login": "Connexion",
       "loginMinutes": "Durée de validité du token de connexion par e-mail",
+      "loginCodeEnabled": "Activer les codes de connexion personnels",
+      "loginCodeMaxUses": "Code de connexion personnel : utilisations maximales",
+      "loginCodeValidDays": "Code de connexion personnel : durée de validité",
+      "loginCodeSecondFactor": "Code de connexion personnel : deuxième facteur",
+      "placeholderEmailPatterns": "Adresses e-mail de substitution (motifs)",
+      "loginCodeSecondFactorOptions": {
+        "none": "Aucun",
+        "postalCode": "Code postal",
+        "city": "Localité",
+        "firstName": "Prénom",
+        "lastName": "Nom"
+      },
+      "loginCodeUses": "utilisations",
       "minutes": "minutes",
       "ms": "millisecondes",
       "passwordToken": "Durée de validité du token de réinitialisation du mot de passe par e-mail",
@@ -2778,6 +2865,11 @@
         "guestCommentRating": "Autoriser les votes des utilisateur·trice·s non authentifié·e·s sur les commentaires.",
         "guestPollVote": "Autoriser les votes des utilisateur·trice·s non authentifié·e·s pour les sondages.",
         "invoiceReminders": "Nombre de rappels de paiement par facture (un rappel par jour).",
+        "loginCodeEnabled": "Permet de se connecter avec des codes de connexion personnels envoyés par e-mail ou par courrier ({{purl}}, {{purlCode}}, {{purlQr}}). Désactivé, ces espaces réservés restent vides, aucun code n’est émis et la page de connexion ne propose pas la connexion avec un code. Les liens de connexion envoyés par e-mail ({{jwt}}) ne sont pas concernés et fonctionnent toujours.",
+        "loginCodeMaxUses": "Nombre d’utilisations d’un code de connexion personnel (p. ex. reçu par courrier, {{purl}}) avant expiration. Par défaut : 5.",
+        "loginCodeValidDays": "Nombre de jours pendant lesquels un code de connexion personnel reste valable. Par défaut : 90.",
+        "loginCodeSecondFactor": "Information figurant sur le courrier, demandée en plus lorsqu’une personne connectée avec un code de connexion personnel enregistre une véritable adresse e-mail (uniquement pour les comptes avec e-mail de substitution). Protège contre les codes devinés – code postal recommandé. Après 5 échecs, la session est terminée.",
+        "placeholderEmailPatterns": "Motifs de texte séparés par des virgules, p. ex. @substitution.exemple.org. Les comptes dont l’adresse e-mail contient l’un des motifs sont considérés comme des substituts : aucun e-mail ne leur est envoyé et leurs sessions restent limitées jusqu’à la confirmation d’une véritable adresse. S’applique en plus du motif du prestataire de courrier.",
         "subscriptionUpgradeModel": "Lorsque cette option est activée, une mise à niveau facture toujours la différence entre le prix du nouveau plan et celui du plan actuel, quel que soit le temps restant dans la période en cours. Lorsqu’elle est désactivée, seul le solde restant (au prorata) non utilisé de la période en cours est crédité.",
         "feedPaywalledContent": "Les articles gratuits figurent toujours dans les flux avec leur texte intégral. Ce réglage concerne les articles derrière un paywall actif. Les flux sont lus notamment par la Banque de données suisse des médias (SMD) et les lecteurs de flux ; les changements apparaissent en dix minutes au plus.",
         "sessionTtlDays": "Combien de temps une connexion reste valable avant de devoir se reconnecter. S’applique dès la prochaine connexion ; les sessions ouvertes gardent leur durée.",
@@ -2831,10 +2923,71 @@
     },
     "automaticMails": {
       "title": "Messages automatiques",
-      "intro": "Définissez ici quel modèle d’e-mail est envoyé automatiquement pour quel événement. Choisissez un modèle par événement – ou laissez « Ne pas envoyer d’e-mail » si rien ne doit partir. L’icône ⓘ explique chaque événement.",
       "example": "Exemple : {{example}}"
     },
     "subscriptionFlow": {
+      "overview": {
+        "back": "Tous les flux et messages automatiques",
+        "title": "Messages des flux d’abonnement",
+        "intro": "Un flux définit quel message est envoyé automatiquement pour quel événement d’abonnement. Le flux standard vaut pour tous les abonnements. Un plan d’abonnement peut avoir ses propres flux pour certains abonnements, et un flux peut valoir pour certains abonnements de tous les plans : un tel flux remplace entièrement le flux standard pour les abonnements concernés. Si plusieurs correspondent, le flux du plan d’abonnement passe en premier, puis celui pour tous les plans, enfin le flux standard.",
+        "flow": "Flux pour le plan d’abonnement",
+        "defaultFlow": "Tous → flux par défaut",
+        "appliesTo": "S’applique à",
+        "defaultApplies": "Tous les abonnements sans flux propre",
+        "subscriptions": "Abonnements",
+        "events": "Messages",
+        "eventsValue": "{{sending}} événements sur {{total}}",
+        "letterEvents": "Dont par lettre",
+        "memberPlan": "Plan d’abonnement",
+        "createIntro": "Choisissez le plan d’abonnement – ou « Tous les plans d’abonnement » – et les abonnements auxquels le nouveau flux s’applique. Les messages qu’il envoie se définissent ensuite sur sa page.",
+        "deleteTitle": "Supprimer le flux de « {{memberPlan}} » ?",
+        "renewal": {
+          "true": "avec renouvellement automatique",
+          "false": "sans renouvellement automatique"
+        },
+        "noMemberPlan": "Sans plan d’abonnement",
+        "allMemberPlans": "Tous les plans d’abonnement",
+        "subscriptionsSum": "Abonnements ({{sum}})",
+        "active": "Actif",
+        "switchOff": "Désactiver le flux",
+        "switchOn": "Activer le flux",
+        "deactivateTitle": "Désactiver le flux ?",
+        "activateTitle": "Activer le flux ?",
+        "deactivateQuestion": "Les {{count}} abonnements gérés par ce flux seront ensuite gérés par d’autres flux.",
+        "activateQuestion": "Ce flux prendra ensuite en charge {{count}} abonnements d’autres flux.",
+        "tabs": {
+          "flows": "Flux d’abonnement ({{count}})",
+          "account": "Compte et connexion"
+        },
+        "group": {
+          "default": "Standard",
+          "allMemberPlans": "Pour tous les plans d’abonnement",
+          "memberPlan": "Plan d’abonnement « {{memberPlan}} »"
+        },
+        "any": {
+          "paymentMethods": "tout mode de paiement",
+          "periodicities": "toute durée",
+          "renewal": "avec ou sans renouvellement automatique"
+        },
+        "warnings": {
+          "noMemberPlan": "Le plan d’abonnement de ce flux a été supprimé. Tant que ce flux existe, aucun message automatique n’est envoyé – supprimez-le.",
+          "matchesNothing": "Ne s’applique à aucun abonnement : il manque un moyen de paiement, une durée ou un renouvellement.",
+          "notOffered": "N’est plus proposé par le plan d’abonnement : {{values}}. Ce flux ne s’applique plus qu’aux abonnements déjà existants."
+        }
+      },
+      "earliestDay": {
+        "anyTerm": "Au plus tôt {{days}} jours avant la fin de l’abonnement : ce flux s’applique aux abonnements de toute durée, y compris la plus courte. Limitez-le aux durées plus longues pour qu’il puisse commencer plus tôt.",
+        "byConditions": "Au plus tôt {{days}} jours avant la fin de l’abonnement : ce flux s’applique aux abonnements d’une durée « {{periodicity}} ». Une date de facturation encore plus précoce dépasserait la durée de l’abonnement.",
+        "defaultFlow": "Au plus tôt {{days}} jours avant la fin de l’abonnement : le flux standard s’applique à tous les abonnements sans flux propre, y compris ceux de la durée la plus courte. Un flux réservé aux durées plus longues peut commencer plus tôt."
+      },
+      "flow": "Flux",
+      "planFlowDescription": "Ce flux remplace entièrement le flux standard pour les abonnements de son plan qui correspondent aux critères de filtre définis ci-dessous.",
+      "allPlansFlowDescription": "Ce flux remplace entièrement le flux standard pour les abonnements de tous les plans qui correspondent aux critères de filtre définis ci-dessous. Si un plan a son propre flux pour ces abonnements, celui-ci passe en premier.",
+      "inactiveNotice": "Ce flux est désactivé. Ses abonnements reçoivent les messages du prochain flux correspondant.",
+      "openConditionsHint": "Un champ vide ne restreint pas : le flux s’applique alors à toute valeur. Au moins un champ doit être rempli.",
+      "planFlowDescriptionFor": "Ce flux remplace entièrement le flux standard pour les abonnements du plan « {{memberPlan}} » qui correspondent aux critères de filtre définis ci-dessous.",
+      "noFallback": "Les événements sans modèle n’envoient rien – le flux standard ne prend pas le relais.",
+      "notFound": "Ce flux n’existe pas (ou plus).",
       "subscribe": "Abonnement conclu",
       "renewal_success": "Renouvellement réussi",
       "renewal_failed": "Échec du renouvellement",
@@ -2845,14 +2998,13 @@
       "custom": "Événement personnalisé",
       "settings": "Paramètres du flux d’abonnement",
       "edit": "Modifier le flux d’abonnement",
-      "settingsDescription": "Ces paramètres ne valent que pour ce plan d’abonnement et remplacent les e-mails automatiques.",
       "addNew": "Créer un nouveau flux",
       "dayWithNumber": "jour {{day}}",
       "days": "jours",
       "savedChange": "Modification enregistrée avec succès",
       "add": "Ajouter",
       "paymentMethod": "Mode de paiement",
-      "periodicity": "Périodicité",
+      "periodicity": "Durée",
       "autoRenewal": "Renouvellement automatique ?",
       "booleanFilter": {
         "true": "Oui",
@@ -2862,7 +3014,7 @@
       "deletePermanently": "Supprimer définitivement",
       "dropHere": "Déposer ici",
       "filters": "Filtres",
-      "filtersDescription": "Définit à quels abonnements ce flux s’applique : plan d’abonnement, mode de paiement, périodicité et renouvellement automatique.",
+      "filtersDescription": "Définit à quels abonnements ce flux s’applique : plan d’abonnement, mode de paiement, durée et renouvellement automatique.",
       "filtersExample": "Uniquement les abonnements annuels payés par carte de crédit.",
       "subscriptionEvents": "Événements d’abonnement",
       "subscriptionEventsDescription": "E-mails envoyés immédiatement lorsqu’il se passe quelque chose dans l’abonnement. Ils ne dépendent d’aucune date.",
@@ -2875,8 +3027,7 @@
       "addMail": "Ajouter un e-mail",
       "deleteMail": "Retirer l’e-mail",
       "defaultFlow": "Flux par défaut",
-      "defaultFlowDescription": "S’applique à tous les abonnements auxquels aucun autre flux ne correspond. Les modifications s’appliquent aussi sous « Messages automatiques ».",
-      "flowNumber": "Flux {{number}}",
+      "defaultFlowDescription": "S’applique à tous les abonnements auxquels aucun autre flux ne correspond.",
       "newFlow": "Nouveau flux",
       "newDayTitle": "Nouveau jour dans la chronologie",
       "newDayHint": "Nombre négatif = avant la fin de l’abonnement, nombre positif = après.",
@@ -3016,6 +3167,19 @@
       "passwordChangeSuccess": "Le mot de passe a été changé avec succès !",
       "passwordHeader": "Mots de passe & accès",
       "totpHeader": "Authentification à deux facteurs",
+      "loginCode": {
+        "header": "Code de connexion personnel",
+        "status": "Valable jusqu’au {{expiresAt}} · {{usesRemaining}} utilisations restantes sur {{maxUses}} · dernière utilisation : {{lastUsedAt}}",
+        "never": "jamais",
+        "none": "Aucun code de connexion personnel n’a encore été émis pour cette personne. Il est créé automatiquement lors du premier envoi d’un e-mail ou d’un courrier contenant {{purl}}.",
+        "revoke": "Révoquer",
+        "reissue": "Réémettre",
+        "issued": "Nouveau code (affiché une seule fois) :",
+        "secondFactorAvailable": "Le deuxième facteur « {{factor}} » est renseigné pour cette personne.",
+        "secondFactorMissing": "Le deuxième facteur « {{factor}} » manque pour cette personne – sans cette information, elle ne peut pas enregistrer d’adresse e-mail.",
+        "notForStaff": "Les personnes dont les rôles permettent plus que la lecture derrière le paywall ne reçoivent jamais de code de connexion personnel. {{purl}} reste vide dans leurs e-mails et lettres.",
+        "staffConflict": "Cette personne a un code de connexion personnel, mais un rôle qui permet plus que la lecture derrière le paywall. Le code ne lui permet plus de se connecter et sera révoqué à sa prochaine utilisation. Révoquez-le maintenant ou retirez le rôle."
+      },
       "totpEnabled": "L’authentification à deux facteurs est activée pour cet utilisateur.",
       "totpDisabled": "L’authentification à deux facteurs n’est pas encore configurée. L’utilisateur sera invité à la configurer lors de sa prochaine connexion à l’éditeur.",
       "totpExemptInfo": "Cet utilisateur est exempté de l’exigence d’authentification à deux facteurs.",
@@ -3216,7 +3380,7 @@
       "noAutoRenew": "L’abonnement expire, pas de renouvellement automatique",
       "noDeactivation": "Pas de désactivation.",
       "paidUntil": "Payé jusqu’au {{date}}",
-      "paymentPeriodicity": "Périodicité des paiements : {{paymentPeriodicity}}",
+      "paymentPeriodicity": "Intervalle de paiement : {{paymentPeriodicity}}",
       "periodAmount": "Montant : {{amount}} {{currency}}",
       "periodCreatedAt": "Créé le {{date}}",
       "periodEndsAt": "jusqu’au {{date}}",
@@ -4377,41 +4541,52 @@
       "reset": "Réinitialiser les colonnes"
     },
     "systemMails": {
-      "title": "Compte et connexion",
+      "title": "Messages liés au compte et à la connexion",
       "sectionDescription": "E-mails liés au compte utilisateur. Ils sont déclenchés par une action de la personne, qu’elle ait un abonnement ou non.",
       "sectionExample": "Quelqu’un s’inscrit → l’e-mail de bienvenue part immédiatement.",
-      "sendTest": "M’envoyer un test",
+      "sendTest": "M’envoyer un e-mail de test",
       "testSent": "E-mail de test envoyé",
+      "columns": {
+        "event": "Type d’événement",
+        "userAction": "Action de l’utilisateur",
+        "template": "Modèle de message"
+      },
       "events": {
         "account_creation": "Inscription",
         "login_link": "Lien de connexion",
         "password_reset": "Réinitialisation du mot de passe",
         "email_change": "Adresse e-mail modifiée",
+        "email_verification": "Adresse e-mail confirmée",
         "test_mail": "E-mail de test"
       },
       "eventInfo": {
         "account_creation": {
-          "short": "Un nouveau compte a été créé.",
+          "userAction": "S’inscrit ou reçoit un compte lors de l’achat d’un abonnement",
           "description": "Part dès qu’une personne s’inscrit ou obtient un compte lors de l’achat d’un abonnement.",
           "example": "« Bienvenue – votre compte est prêt. »"
         },
         "login_link": {
-          "short": "Se connecter sans mot de passe.",
+          "userAction": "Demande un lien de connexion",
           "description": "Part lorsqu’une personne souhaite se connecter par lien au lieu de saisir un mot de passe. L’e-mail doit contenir le lien de connexion.",
           "example": "« Connectez-vous en un clic. »"
         },
         "password_reset": {
-          "short": "Mot de passe oublié.",
-          "description": "Part lorsqu’une personne clique sur « Mot de passe oublié ». L’e-mail doit contenir le lien pour définir un nouveau mot de passe.",
+          "userAction": "Un·e admin ou auteur·rice clique sur « Mot de passe oublié » dans la connexion de l’éditeur",
+          "description": "Envoyé lorsque quelqu’un clique sur « Mot de passe oublié » dans la connexion de l’éditeur – cette fonction n’existe que là, pas sur le site web. Elle concerne donc les admins, auteur·rice·s et autres utilisateur·rice·s de l’éditeur. L’e-mail doit contenir le lien pour définir un nouveau mot de passe.",
           "example": "« Définissez ici un nouveau mot de passe. »"
         },
         "email_change": {
-          "short": "Confirmer la nouvelle adresse.",
+          "userAction": "Modifie son adresse e-mail",
           "description": "Part à la nouvelle adresse lorsque quelqu’un modifie son adresse e-mail. Le changement n’est effectif qu’après confirmation.",
           "example": "« Merci de confirmer votre nouvelle adresse e-mail. »"
         },
+        "email_verification": {
+          "userAction": "Confirme son adresse e-mail, p. ex. après une connexion avec un code reçu par courrier",
+          "description": "Part à l’adresse actuelle lorsque quelqu’un la confirme, par exemple après une connexion avec un lien personnel reçu par courrier.",
+          "example": "« Merci de confirmer votre adresse e-mail. »"
+        },
         "test_mail": {
-          "short": "Uniquement pour vos tests.",
+          "userAction": "Aucune – uniquement pour vos tests",
           "description": "N’est jamais envoyé automatiquement aux lectrices et lecteurs. Utilisez ce modèle pour tester vous-même l’envoi.",
           "example": "« E-mail de test – si vous lisez ceci, l’envoi fonctionne. »"
         }
@@ -4577,6 +4752,10 @@
         "label": "Canal de distribution",
         "mail": "E-mail",
         "letter": "Lettre",
+        "noVersion": {
+          "mail": "Ce modèle n’a pas de version e-mail.",
+          "letter": "Ce modèle n’a pas de version lettre."
+        },
         "withoutAddress": "{{count}} des destinataires n’ont pas d’adresse postale utilisable et seront ignoré·e·s."
       },
       "print": {
@@ -5666,7 +5845,7 @@
         "subscription": "Créer un abonnement",
         "consent": "Créer un consentement",
         "userConsent": "Créer un consentement utilisateur",
-        "mailTemplate": "Créer un modèle d'e-mail",
+        "mailTemplate": "Créer un modèle de message",
         "letterLayout": "Créer un papier à lettres",
         "memberPlan": "Créer un plan d'abonnement",
         "paymentMethod": "Créer un moyen de paiement",

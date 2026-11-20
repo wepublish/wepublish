@@ -2448,6 +2448,15 @@ export type ListicleItemInput = {
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
+/** Attribute printed on the letter that a restricted session must confirm before it can claim the account with a real email address. */
+export enum LoginCodeSecondFactor {
+  City = 'city',
+  FirstName = 'firstName',
+  LastName = 'lastName',
+  None = 'none',
+  PostalCode = 'postalCode'
+}
+
 export enum LoginStatus {
   All = 'ALL',
   LoggedIn = 'LOGGED_IN',
@@ -2809,13 +2818,9 @@ export type MailTemplateInput = {
   attachmentIds?: InputMaybe<Array<Scalars['String']['input']>>;
   context?: InputMaybe<MailTemplateContext>;
   description?: InputMaybe<Scalars['String']['input']>;
-  htmlContent: Scalars['String']['input'];
-  /** Uploaded pdf printed after the letter pages, e.g. a QR-bill. */
-  letterAppendixId?: InputMaybe<Scalars['String']['input']>;
-  letterLayoutId?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
-  subject: Scalars['String']['input'];
-  textContent?: InputMaybe<Scalars['String']['input']>;
+  /** The versions to write, one per channel. A version left out stays as it is; removing one is `deleteMailTemplateVariant`. */
+  variants: Array<MailTemplateVariantInput>;
 };
 
 export type MailTemplateLetterPreviewModel = {
@@ -2824,22 +2829,44 @@ export type MailTemplateLetterPreviewModel = {
   pdf: Scalars['String']['output'];
 };
 
+/** A member plan whose communication flow sends a template. */
+export type MailTemplateMemberPlanModel = {
+  __typename: 'MailTemplateMemberPlanModel';
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+};
+
 export type MailTemplateModel = {
   __typename: 'MailTemplateModel';
   /** Word documents (.docx) filled in with the same placeholders, converted to pdf and attached to every mail sent from this template, in this order. A printed letter carries them after its pages. */
   attachmentIds: Array<Scalars['String']['output']>;
+  /** Title, or else the filename, of each attached document, in their order. For the template table. */
+  attachmentNames: Array<Scalars['String']['output']>;
+  /** The channels this template is written for, the email first. */
+  channels: Array<MailChannel>;
   context?: Maybe<MailTemplateContext>;
   description?: Maybe<Scalars['String']['output']>;
+  /** @deprecated Use `variants`: a template has a body per channel. */
   htmlContent: Scalars['String']['output'];
   id: Scalars['String']['output'];
-  /** Uploaded pdf printed after the letter pages, e.g. a QR-bill. */
+  /** @deprecated Use the letter entry of `variants`. */
   letterAppendixId?: Maybe<Scalars['String']['output']>;
-  /** Stationery a letter printed from this template is set on; null means the default. */
+  /** Title, or else the filename, of the pdf printed after the letter pages. Null without one. */
+  letterAppendixName?: Maybe<Scalars['String']['output']>;
+  /** @deprecated Use the letter entry of `variants`. */
   letterLayoutId?: Maybe<Scalars['String']['output']>;
+  /** Name of the stationery the letter version is set on. Null for the default stationery and for a template without a letter version. */
+  letterLayoutName?: Maybe<Scalars['String']['output']>;
+  /** The member plans whose communication flow sends this template, by name. The default flow belongs to no plan and is not listed. */
+  memberPlans: Array<MailTemplateMemberPlanModel>;
   name: Scalars['String']['output'];
   status: Scalars['String']['output'];
+  /** The subject of the email version; the title of the letter for a template written as a letter only. */
   subject: Scalars['String']['output'];
+  /** @deprecated Use `variants`: a template has a body per channel. */
   textContent?: Maybe<Scalars['String']['output']>;
+  /** What the template says on each channel, bodies included. Ask for it on a single template, not on a list. */
+  variants: Array<MailTemplateVariantModel>;
 };
 
 export type MailTemplatePreviewInput = {
@@ -2875,6 +2902,36 @@ export type MailTemplateSubscriptionOption = {
   __typename: 'MailTemplateSubscriptionOption';
   id: Scalars['String']['output'];
   label: Scalars['String']['output'];
+};
+
+export type MailTemplateVariantInput = {
+  channel: MailChannel;
+  htmlContent: Scalars['String']['input'];
+  /** Uploaded pdf printed after the letter pages, e.g. a QR-bill. */
+  letterAppendixId?: InputMaybe<Scalars['String']['input']>;
+  letterLayoutId?: InputMaybe<Scalars['String']['input']>;
+  /** Letter only: take subject and body from the email version, which the template must have. The subject and body handed in are ignored. */
+  sameAsMail?: InputMaybe<Scalars['Boolean']['input']>;
+  subject: Scalars['String']['input'];
+  textContent?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** What a template says on one channel. */
+export type MailTemplateVariantModel = {
+  __typename: 'MailTemplateVariantModel';
+  channel: MailChannel;
+  htmlContent: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  /** Letter only: uploaded pdf printed after the letter pages, e.g. a QR-bill. */
+  letterAppendixId?: Maybe<Scalars['String']['output']>;
+  /** Letter only: stationery the letter is set on; null means the default. */
+  letterLayoutId?: Maybe<Scalars['String']['output']>;
+  /** Letter only: the letter says what the email says. Its own subject and body are empty then; sends read the email version. */
+  sameAsMail: Scalars['Boolean']['output'];
+  /** The email's subject line; for a letter the title its log entry carries. */
+  subject: Scalars['String']['output'];
+  /** Plain-text alternative of an email. Unused for a letter. */
+  textContent?: Maybe<Scalars['String']['output']>;
 };
 
 /** The audience webhook the api registered at Mailchimp; the URL carries the secret. */
@@ -3443,7 +3500,7 @@ export type Mutation = {
   confirmChangelogEntry: ChangelogEntry;
   /** Apply one suggestion; refused when it no longer holds */
   confirmDeliverySuggestion: Scalars['Boolean']['output'];
-  /** Confirms a pending email change for the logged-in user. */
+  /** Confirms a pending email change with the token from the confirmation email. */
   confirmEmailChange: SensitiveDataUser;
   /** Confirms a notification for the whole instance, recording who confirmed it. Requires authentication. */
   confirmNotification: NotificationConfirmation;
@@ -3535,6 +3592,8 @@ export type Mutation = {
   createRatingSystemAnswer: CommentRatingSystemAnswer;
   createSession: SessionWithToken;
   createSessionWithJWT: SessionWithToken;
+  /** Logs in with a personal login code (PURL). Limited uses, expiring and revocable; rate limited per client. */
+  createSessionWithLoginCode: SessionWithToken;
   /** Signs a We.Publish admin in with the code auth.wepublish.cloud returned: as the account connected to that We.Publish identity, else the one with its email, else a new one. The account becomes an admin with the names from We.Publish and can only sign in this way from then on. */
   createSessionWithWepublishLogin: SessionWithToken;
   /** Creates a new subscription. */
@@ -3612,6 +3671,8 @@ export type Mutation = {
   deleteLetterProviderSetting: SettingLetterProvider;
   /** Delete an existing mail template */
   deleteMailTemplate?: Maybe<Scalars['Boolean']['output']>;
+  /** Remove what a template says on one channel. Refused while something still sends the template on that channel, and for its last version. */
+  deleteMailTemplateVariant?: Maybe<Scalars['Boolean']['output']>;
   /** Deletes a single sync error so the contact will be retried. */
   deleteMailchimpSyncError: Scalars['Boolean']['output'];
   /** Deletes an existing memberplan. */
@@ -3739,6 +3800,8 @@ export type Mutation = {
   registerMailchimpAudienceWebhook: MailchimpAudienceWebhook;
   /** This mutation registers a new member by providing name, email, and other required information. */
   registerMember: Registration;
+  /** Revokes existing personal login links of a user and issues a new one. The code is returned exactly once. */
+  reissueUserLoginCode: UserLoginCodeIssue;
   /** Rejects a comment */
   rejectComment: Comment;
   /** Rebuilds the payment, tracking pixel, mail, challenge, letter and pdf renderer providers from their settings, so integration changes take effect without restarting the API. */
@@ -3749,8 +3812,10 @@ export type Mutation = {
   reopenPrintIssue: PrintIssue;
   /** Requests the user to change the comment's content */
   requestChangesOnComment: Comment;
-  /** Requests an email change. A confirmation link is sent to the current email address. */
+  /** Requests an email change. A confirmation link is sent to the new email address. A restricted session must also confirm the configured second factor from the letter; without one it may only replace a placeholder address. */
   requestEmailChange: Scalars['Boolean']['output'];
+  /** Sends a confirmation link to the current email address to verify it. */
+  requestEmailVerification: Scalars['Boolean']['output'];
   /** Resets the password of a user. */
   resetPassword: SensitiveDataUser;
   /** Resets the password using a token from the password reset email. Does not create a session. */
@@ -3773,6 +3838,8 @@ export type Mutation = {
   revokeActiveSession: Scalars['Boolean']['output'];
   /** Revokes one of your api tokens, or anyone's with CAN_REVOKE_ALL_API_TOKENS. The token stops working immediately. */
   revokeApiToken: ApiToken;
+  /** Revokes all personal login links of a user. */
+  revokeUserLoginCode: Scalars['Boolean']['output'];
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendJWTLogin: Scalars['String']['output'];
   /** Manually send a mail template to a single user */
@@ -3787,6 +3854,8 @@ export type Mutation = {
   setDeliveryModeForAudience: DeliveryModeBulkResult;
   /** Stores which customer of a payment provider each user is (for bexio the contact id), replacing the user's previous one of that provider; up to 500 users per call. Users that do not exist are skipped. Returns how many users were updated. */
   setPaymentProviderCustomers: Scalars['Int']['output'];
+  /** Switches a flow on or off. The default flow stays on; a flow switched on must not share subscriptions with another active flow. */
+  setSubscriptionFlowActive: Array<SubscriptionFlowModel>;
   /** Switch a user between mailed and printed subscription mails */
   setUserDeliveryMode: UserDeliveryPreferenceModel;
   /** Ask the mail provider for the current delivery state of mails that are still open. Complements the provider webhook, which is not reachable in local development. */
@@ -4030,7 +4099,7 @@ export type MutationConfirmDeliverySuggestionArgs = {
 
 
 export type MutationConfirmEmailChangeArgs = {
-  newEmail: Scalars['String']['input'];
+  token: Scalars['String']['input'];
 };
 
 
@@ -4475,6 +4544,13 @@ export type MutationCreateSessionWithJwtArgs = {
 };
 
 
+export type MutationCreateSessionWithLoginCodeArgs = {
+  challengeAnswer?: InputMaybe<ChallengeInput>;
+  code: Scalars['String']['input'];
+  totpToken?: InputMaybe<Scalars['String']['input']>;
+};
+
+
 export type MutationCreateSessionWithWepublishLoginArgs = {
   code: Scalars['String']['input'];
   codeVerifier: Scalars['String']['input'];
@@ -4497,8 +4573,9 @@ export type MutationCreateSubscriptionArgs = {
 
 
 export type MutationCreateSubscriptionFlowArgs = {
+  allMemberPlans?: InputMaybe<Scalars['Boolean']['input']>;
   autoRenewal: Array<Scalars['Boolean']['input']>;
-  memberPlanId: Scalars['String']['input'];
+  memberPlanId?: InputMaybe<Scalars['String']['input']>;
   paymentMethodIds: Array<Scalars['String']['input']>;
   periodicities: Array<PaymentPeriodicity>;
 };
@@ -4727,6 +4804,12 @@ export type MutationDeleteLetterProviderSettingArgs = {
 
 export type MutationDeleteMailTemplateArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteMailTemplateVariantArgs = {
+  channel: MailChannel;
+  templateId: Scalars['String']['input'];
 };
 
 
@@ -5041,6 +5124,11 @@ export type MutationRegisterMemberArgs = {
 };
 
 
+export type MutationReissueUserLoginCodeArgs = {
+  userId: Scalars['String']['input'];
+};
+
+
 export type MutationRejectCommentArgs = {
   id: Scalars['String']['input'];
   rejectionReason: CommentRejectionReason;
@@ -5065,6 +5153,7 @@ export type MutationRequestChangesOnCommentArgs = {
 
 export type MutationRequestEmailChangeArgs = {
   newEmail: Scalars['String']['input'];
+  secondFactor?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -5118,6 +5207,11 @@ export type MutationRevokeApiTokenArgs = {
 };
 
 
+export type MutationRevokeUserLoginCodeArgs = {
+  userId: Scalars['String']['input'];
+};
+
+
 export type MutationSendJwtLoginArgs = {
   email: Scalars['String']['input'];
 };
@@ -5153,6 +5247,12 @@ export type MutationSetDeliveryModeForAudienceArgs = {
 export type MutationSetPaymentProviderCustomersArgs = {
   customers: Array<PaymentProviderCustomerInput>;
   paymentProviderId: Scalars['String']['input'];
+};
+
+
+export type MutationSetSubscriptionFlowActiveArgs = {
+  active: Scalars['Boolean']['input'];
+  id: Scalars['String']['input'];
 };
 
 
@@ -7549,7 +7649,7 @@ export type Query = {
   mailSendRecipientPreview: MailSendRecipientPreview;
   /** The concrete recipients an audience resolves to */
   mailSendRecipients: PaginatedMailSendRecipient;
-  /** Return a single mail template, including its html and text body. */
+  /** Return a single mail template; its `variants` carry the html and text bodies. */
   mailTemplate?: Maybe<MailTemplateModel>;
   /** Render a draft mail template as the letter a send would print */
   mailTemplateLetterPreview: MailTemplateLetterPreviewModel;
@@ -7690,6 +7790,8 @@ export type Query = {
   revenue: Array<DashboardInvoice>;
   /** Returns a checklist of the SEO setup of the website. */
   seoChecklist: SeoChecklist;
+  /** Origin and restriction state of the current session. Restricted sessions may only complete onboarding. */
+  sessionInfo: SessionInfo;
   /**
    *
    *       Returns a single setting by name.
@@ -7715,6 +7817,8 @@ export type Query = {
   subscriptionCancellationMail: ActionMail;
   /** The mail createSubscription would send for a subscription with these settings, or why it sends none. */
   subscriptionCreationMail: ActionMail;
+  /** How many subscriptions a flow handles, or would handle once switched on. Not narrowed by any filter. */
+  subscriptionFlowHandledCount: Scalars['Int']['output'];
   /** Returns all subscription flows */
   subscriptionFlows: Array<SubscriptionFlowModel>;
   /** Returns a paginated list of subscriptions based on the filters given. */
@@ -7758,6 +7862,8 @@ export type Query = {
   userDeliverySuggestion?: Maybe<DeliverySuggestionModel>;
   /** Get all invoices for the authenticated user */
   userInvoices: Array<Invoice>;
+  /** The current personal login link of a user, without the code itself. */
+  userLoginCode?: Maybe<UserLoginCodeStatus>;
   userPollVote?: Maybe<Scalars['String']['output']>;
   /** Returns a userrole by id. */
   userRole: UserRole;
@@ -8253,6 +8359,7 @@ export type QueryMailTemplateLetterPreviewArgs = {
 
 
 export type QueryMailTemplateMissingPlaceholdersArgs = {
+  channel?: InputMaybe<MailChannel>;
   templateId: Scalars['String']['input'];
   withSubscriptionData: Scalars['Boolean']['input'];
 };
@@ -8589,6 +8696,11 @@ export type QuerySubscriptionCreationMailArgs = {
 };
 
 
+export type QuerySubscriptionFlowHandledCountArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type QuerySubscriptionFlowsArgs = {
   defaultFlowOnly: Scalars['Boolean']['input'];
   memberPlanId?: InputMaybe<Scalars['String']['input']>;
@@ -8695,6 +8807,11 @@ export type QueryUserDeliveryPreferenceArgs = {
 
 
 export type QueryUserDeliverySuggestionArgs = {
+  userId: Scalars['String']['input'];
+};
+
+
+export type QueryUserLoginCodeArgs = {
   userId: Scalars['String']['input'];
 };
 
@@ -8914,12 +9031,38 @@ export type SeoChecklistItem = {
   itemId: Scalars['String']['output'];
 };
 
+export type SessionInfo = {
+  __typename: 'SessionInfo';
+  /** Whether a restricted session may replace the address on file, instead of having to confirm it first. */
+  canReplaceEmail: Scalars['Boolean']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  expiresAt: Scalars['DateTime']['output'];
+  origin: SessionOrigin;
+  placeholderEmail: Scalars['Boolean']['output'];
+  restricted: Scalars['Boolean']['output'];
+  /** Attribute from the letter a restricted session must confirm when it claims the account with a real email address. */
+  secondFactor: LoginCodeSecondFactor;
+};
+
+export enum SessionOrigin {
+  Impersonation = 'impersonation',
+  Jwt = 'jwt',
+  Password = 'password',
+  Preview = 'preview',
+  Purl = 'purl',
+  Register = 'register'
+}
+
 export type SessionWithToken = {
   __typename: 'SessionWithToken';
   createdAt: Scalars['DateTime']['output'];
   expiresAt: Scalars['DateTime']['output'];
   /** Whether this session was created by redeeming an impersonation grant from the One dashboard. Clients must never treat an ordinary JWT login as impersonation. */
   impersonated: Scalars['Boolean']['output'];
+  /** How this session was created. */
+  origin: SessionOrigin;
+  /** Whether this session is limited to onboarding until a real email address has been confirmed. */
+  restricted: Scalars['Boolean']['output'];
   token: Scalars['String']['output'];
   /** Whether the user has two-factor authentication enabled. If true and the user is an admin, the client must verify TOTP before proceeding. */
   totpEnabled: Scalars['Boolean']['output'];
@@ -9087,6 +9230,10 @@ export enum SettingName {
   EmailQualityMinMailsForUnresponsive = 'EMAIL_QUALITY_MIN_MAILS_FOR_UNRESPONSIVE',
   EmailQualityUnresponsiveAfterDays = 'EMAIL_QUALITY_UNRESPONSIVE_AFTER_DAYS',
   FeedPaywalledContent = 'FEED_PAYWALLED_CONTENT',
+  LoginCodeEnabled = 'LOGIN_CODE_ENABLED',
+  LoginCodeMaxUses = 'LOGIN_CODE_MAX_USES',
+  LoginCodeSecondFactor = 'LOGIN_CODE_SECOND_FACTOR',
+  LoginCodeValidDays = 'LOGIN_CODE_VALID_DAYS',
   MailProviderName = 'MAIL_PROVIDER_NAME',
   MakeActiveSubscribersApiPublic = 'MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC',
   MakeExpectedRevenueApiPublic = 'MAKE_EXPECTED_REVENUE_API_PUBLIC',
@@ -9098,6 +9245,7 @@ export enum SettingName {
   NewArticlePeering = 'NEW_ARTICLE_PEERING',
   PaymentMethodChangeExpiryDays = 'PAYMENT_METHOD_CHANGE_EXPIRY_DAYS',
   PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
+  PlaceholderEmailPatterns = 'PLACEHOLDER_EMAIL_PATTERNS',
   PrintBexioKinds = 'PRINT_BEXIO_KINDS',
   PrintExportDefaults = 'PRINT_EXPORT_DEFAULTS',
   PrintIssuesPerYear = 'PRINT_ISSUES_PER_YEAR',
@@ -9512,21 +9660,51 @@ export type SubscriptionFilter = {
   userIDs?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
+/** What a list of flows is narrowed by. Each given field narrows the count of every flow to the subscriptions with one of its values. */
+export type SubscriptionFlowCountFilter = {
+  autoRenewal?: InputMaybe<Array<Scalars['Boolean']['input']>>;
+  memberPlanIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  paymentMethodIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  periodicities?: InputMaybe<Array<PaymentPeriodicity>>;
+};
+
+/** The earliest day an event of a flow may lie on, and what holds it there. */
+export type SubscriptionFlowEarliestDay = {
+  __typename: 'SubscriptionFlowEarliestDay';
+  /** Days away from the end of the subscription, negative: before it ends. */
+  days: Scalars['Int']['output'];
+  /** The shortest periodicity a member plan flow applies to, which sets the day. Null for the default flow: its day is fixed. */
+  periodicity?: Maybe<PaymentPeriodicity>;
+};
+
 export type SubscriptionFlowModel = {
   __typename: 'SubscriptionFlowModel';
+  /** An inactive flow is skipped: its subscriptions fall to the next flow. The default flow is always active. */
+  active: Scalars['Boolean']['output'];
+  /** A flow for the matching subscriptions of every member plan. It comes after the flows of the plan itself and before the default flow, and has no memberPlan. */
+  allMemberPlans: Scalars['Boolean']['output'];
   autoRenewal: Array<Scalars['Boolean']['output']>;
   default: Scalars['Boolean']['output'];
+  /** The earliest day an event of this flow may lie on. Follows from the shortest periodicity the flow applies to. */
+  earliestDay: SubscriptionFlowEarliestDay;
   id: Scalars['String']['output'];
   intervals: Array<SubscriptionInterval>;
   memberPlan?: Maybe<MemberPlan>;
   numberOfSubscriptions: Scalars['Int']['output'];
   paymentMethods: Array<PaymentMethod>;
   periodicities: Array<PaymentPeriodicity>;
+  /** numberOfSubscriptions, narrowed to what a list of flows is filtered by. */
+  subscriptionCount: Scalars['Int']['output'];
 };
 
 
 export type SubscriptionFlowModelNumberOfSubscriptionsArgs = {
   memberPlanId?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type SubscriptionFlowModelSubscriptionCountArgs = {
+  filter?: InputMaybe<SubscriptionFlowCountFilter>;
 };
 
 export type SubscriptionInterval = {
@@ -10064,6 +10242,7 @@ export type UserEmailQualityModel = {
 export enum UserEvent {
   AccountCreation = 'ACCOUNT_CREATION',
   EmailChange = 'EMAIL_CHANGE',
+  EmailVerification = 'EMAIL_VERIFICATION',
   LoginLink = 'LOGIN_LINK',
   PasswordReset = 'PASSWORD_RESET',
   TestMail = 'TEST_MAIL'
@@ -10073,6 +10252,28 @@ export type UserFilter = {
   name?: InputMaybe<Scalars['String']['input']>;
   text?: InputMaybe<Scalars['String']['input']>;
   userRole?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+export type UserLoginCodeIssue = {
+  __typename: 'UserLoginCodeIssue';
+  code: Scalars['String']['output'];
+  purl: Scalars['String']['output'];
+  status: UserLoginCodeStatus;
+};
+
+export type UserLoginCodeStatus = {
+  __typename: 'UserLoginCodeStatus';
+  createdAt: Scalars['DateTime']['output'];
+  expiresAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  issuedBy?: Maybe<Scalars['String']['output']>;
+  lastUsedAt?: Maybe<Scalars['DateTime']['output']>;
+  maxUses: Scalars['Float']['output'];
+  revokedAt?: Maybe<Scalars['DateTime']['output']>;
+  secondFactor: LoginCodeSecondFactor;
+  /** Whether the user record holds the attribute the configured second factor asks for. */
+  secondFactorAvailable: Scalars['Boolean']['output'];
+  usesRemaining: Scalars['Float']['output'];
 };
 
 export type UserRole = {

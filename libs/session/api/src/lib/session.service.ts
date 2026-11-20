@@ -1,5 +1,5 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { PrismaClient, User, UserEvent } from '@prisma/client';
+import { PrismaClient, SessionOrigin, User, UserEvent } from '@prisma/client';
 import {
   InvalidCredentialsError,
   NotActiveError,
@@ -26,6 +26,16 @@ import {
 } from '@wepublish/utils/api';
 import { JwtService } from './jwt.service';
 import { TotpService } from './totp.service';
+import {
+  AuthenticationService,
+  isSessionRestricted,
+} from '@wepublish/authentication/api';
+import { ChallengeInput, ChallengeService } from '@wepublish/challenge/api';
+import {
+  LoginCodeDisabledError,
+  LoginCodeRateLimiter,
+  LoginCodeService,
+} from '@wepublish/login-code/api';
 import { Property } from '@wepublish/property/api';
 
 const IDAlphabet =
@@ -45,8 +55,69 @@ export class SessionService {
     private settingsService: SettingsService,
     private mailContext: MailContext,
     private totpService: TotpService,
+    private authenticationService: AuthenticationService,
+    private loginCodeService: LoginCodeService,
+    private loginCodeRateLimiter: LoginCodeRateLimiter,
+    private challengeService: ChallengeService,
     private sessionCache: SessionCacheInvalidator
   ) {}
+
+  async createSessionWithLoginCode(
+    code: string,
+    totpToken: string | undefined,
+    fingerprint: string | null,
+    challengeAnswer?: ChallengeInput
+  ) {
+    // Checked first, so a medium without login codes neither asks for a
+    // challenge nor counts the attempt against the client.
+    if (!(await this.loginCodeService.isEnabled())) {
+      throw new LoginCodeDisabledError();
+    }
+
+    const challengeValid =
+      challengeAnswer ?
+        (
+          await this.challengeService.validateChallenge({
+            challengeID: challengeAnswer.challengeID,
+            solution: challengeAnswer.challengeSolution,
+          })
+        ).valid
+      : false;
+
+    await this.loginCodeRateLimiter.assertAllowed(fingerprint, challengeValid);
+
+    try {
+      const record = await this.loginCodeService.verify(code);
+      const user = record.user;
+
+      if (!user.active) {
+        throw new NotActiveError();
+      }
+
+      if (user.totpEnabled) {
+        if (!totpToken) {
+          throw new BadRequestException('TOTP_REQUIRED');
+        }
+
+        await this.totpService.verifyUserTotp(user.id, totpToken);
+      }
+
+      await this.loginCodeService.consume(record.id);
+      await this.loginCodeRateLimiter.clear(fingerprint);
+
+      return this.createUserSession(user, { origin: SessionOrigin.purl });
+    } catch (error) {
+      const totpRequired =
+        error instanceof BadRequestException &&
+        error.message === 'TOTP_REQUIRED';
+
+      if (!totpRequired) {
+        await this.loginCodeRateLimiter.recordFailure(fingerprint);
+      }
+
+      throw error;
+    }
+  }
 
   private async sessionTtlMs(): Promise<number> {
     const days = await this.settingsService
@@ -112,7 +183,7 @@ export class SessionService {
       await this.totpService.verifyUserTotp(user.id, totpToken);
     }
 
-    return this.createUserSession(user);
+    return this.createUserSession(user, { origin: SessionOrigin.password });
   }
 
   async createSessionWithJWT(jwt: string, totpToken?: string) {
@@ -161,7 +232,9 @@ export class SessionService {
       await this.totpService.verifyUserTotp(user.id, totpToken);
     }
 
-    return this.createUserSession(user);
+    return this.createUserSession(user, {
+      origin: isPreview ? SessionOrigin.preview : SessionOrigin.jwt,
+    });
   }
 
   async revokeSession(session: AuthSession | null) {
@@ -204,6 +277,7 @@ export class SessionService {
     assertNotManagedByWepublishLogin(user);
 
     return this.createUserSession(user, {
+      origin: SessionOrigin.impersonation,
       ttlMs: assertDuration(claims.durationMinutes) * 60 * 1000,
       impersonatedBy: claims.impersonatedBy,
       impersonationReason: claims.reason,
@@ -243,7 +317,12 @@ export class SessionService {
 
   async createUserSession(
     user: User,
-    options?: {
+    options: {
+      /**
+       * Only login codes restrict a session. Logins that name none, like the
+       * We.Publish staff login, are stored as the column default: password.
+       */
+      origin?: SessionOrigin;
       ttlMs?: number;
       impersonatedBy?: string;
       impersonationReason?: string;
@@ -251,6 +330,7 @@ export class SessionService {
     }
   ) {
     const token = nanoid(IDAlphabet, 64);
+    const origin = options.origin ?? SessionOrigin.password;
 
     const expiresAt = new Date(
       Date.now() + (options?.ttlMs ?? (await this.sessionTtlMs()))
@@ -261,6 +341,7 @@ export class SessionService {
         data: {
           token,
           expiresAt,
+          origin,
           ...(options?.impersonatedBy ?
             {
               impersonatedBy: options.impersonatedBy,
@@ -282,6 +363,9 @@ export class SessionService {
       }),
     ]);
 
+    const placeholderEmail =
+      await this.authenticationService.isPlaceholderEmail(user.email);
+
     return {
       user,
       token,
@@ -290,6 +374,13 @@ export class SessionService {
       expiresAt,
       totpEnabled: user.totpEnabled,
       impersonated: !!options?.impersonatedBy,
+      origin,
+      restricted: isSessionRestricted({
+        origin,
+        placeholderEmail,
+        emailVerifiedAt: user.emailVerifiedAt,
+        sessionCreatedAt: createdAt,
+      }),
     };
   }
 
@@ -300,6 +391,10 @@ export class SessionService {
 
     if (!user) {
       return;
+    }
+
+    if (await this.mailContext.isPlaceholderEmail(user.email)) {
+      return email;
     }
 
     const lastSendTimeStamp = (user.properties as unknown as Property[]).find(
@@ -370,6 +465,10 @@ export class SessionService {
       return email;
     }
 
+    if (await this.mailContext.isPlaceholderEmail(user.email)) {
+      return email;
+    }
+
     await this.mailContext.sendMail({
       mailTemplateId: remoteTemplate,
       recipient: user,
@@ -421,6 +520,10 @@ export class SessionService {
     });
 
     if (!user) {
+      return email;
+    }
+
+    if (await this.mailContext.isPlaceholderEmail(user.email)) {
       return email;
     }
 

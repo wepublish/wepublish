@@ -1,5 +1,8 @@
 import { useQuery } from '@apollo/client/react';
-import { useUser } from '@wepublish/authentication/website';
+import {
+  useAccountSetupPending,
+  useUser,
+} from '@wepublish/authentication/website';
 import {
   useHasRunningSubscription,
   useHasUnpaidInvoices,
@@ -55,6 +58,7 @@ export function NavbarContainer({
     fetchPolicy: 'cache-first',
   });
   const hasRunningSubscription = useHasRunningSubscription();
+  const accountSetupPending = useAccountSetupPending();
 
   // With the subscription history, the warning is about due invoices only,
   // and in the account the link to it is only worth showing as that warning.
@@ -94,6 +98,7 @@ export function NavbarContainer({
         logo={logo}
         hasUnpaidInvoices={!!hasUnpaidInvoices}
         hasRunningSubscription={!!hasRunningSubscription}
+        accountSetupPending={accountSetupPending}
         navbarActions={navbarActions}
         paperActions={paperActions}
       >

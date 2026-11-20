@@ -19,13 +19,19 @@ describe('PrismaService', () => {
     clientOptions.length = 0;
   });
 
-  // A user row read anywhere, nested relations included, carries neither
-  // secret unless the query asks for it by name.
-  it('leaves the password hash and the TOTP secret out of every user query', () => {
+  // A user row read anywhere, nested relations included, carries none of
+  // its secrets unless the query asks for them by name.
+  it('leaves the password hash, the TOTP secret and the email-change token hash out of every user query', () => {
     new PrismaService();
 
     expect(clientOptions[0]).toMatchObject({
-      omit: { user: { password: true, totpSecret: true } },
+      omit: {
+        user: {
+          password: true,
+          totpSecret: true,
+          pendingEmailTokenHash: true,
+        },
+      },
     });
   });
 });

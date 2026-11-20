@@ -309,6 +309,7 @@ model Document {
   extension   String
 
   mailTemplates           MailTemplate[]
+  mailTemplateVariants    MailTemplateVariant[]
   mailTemplateAttachments MailTemplateAttachment[]
 
   @@index([createdAt])
@@ -880,7 +881,7 @@ model MemberPlan {
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   name                           String
-  slug                           String                   @unique
+  slug                           String                       @unique
   tags                           String[]
   shortDescription               Json?
   slateShortDescription          Json?
@@ -891,11 +892,11 @@ model MemberPlan {
   periodicityPricing             MemberPlanPeriodicityPrice[]
   defaultPaymentPeriodicity      PaymentPeriodicity?
   availablePaymentMethods        AvailablePaymentMethod[]
-  migrateToTargetPaymentMethod   PaymentMethod?           @relation("PaymentMethodMigration", fields: [migrateToTargetPaymentMethodID], references: [id])
+  migrateToTargetPaymentMethod   PaymentMethod?               @relation("PaymentMethodMigration", fields: [migrateToTargetPaymentMethodID], references: [id])
   migrateToTargetPaymentMethodID String?
-  extendable                     Boolean                  @default(true)
+  extendable                     Boolean                      @default(true)
   maxCount                       Int?
-  productType                    ProductType              @default(Subscription)
+  productType                    ProductType                  @default(Subscription)
   externalReward                 String?
 
   imageID String?
@@ -1175,11 +1176,21 @@ model Token {
   @@map("tokens")
 }
 
+enum SessionOrigin {
+  password
+  jwt
+  purl
+  preview
+  impersonation
+  register
+}
+
 model Session {
-  id        String   @id @default(dbgenerated("uuidv7()"))
-  createdAt DateTime @default(now()) @db.Timestamptz(3)
-  expiresAt DateTime @db.Timestamptz(3)
-  token     String   @unique
+  id        String        @id @default(dbgenerated("uuidv7()"))
+  createdAt DateTime      @default(now()) @db.Timestamptz(3)
+  expiresAt DateTime      @db.Timestamptz(3)
+  token     String        @unique
+  origin    SessionOrigin @default(password)
 
   impersonatedBy      String?
   impersonationReason String?
@@ -1200,12 +1211,36 @@ model ImpersonationGrant {
   id        String   @id @default(dbgenerated("uuidv7()"))
   createdAt DateTime @default(now()) @db.Timestamptz(3)
 
-  jti       String    @unique
-  expiresAt DateTime  @db.Timestamptz(3)
+  jti        String    @unique
+  expiresAt  DateTime  @db.Timestamptz(3)
   redeemedAt DateTime? @db.Timestamptz(3)
 
   @@index([expiresAt])
   @@map("impersonation_grants")
+}
+
+model UserLoginCode {
+  id         String   @id @default(dbgenerated("uuidv7()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  codeHash      String @unique
+  codeEncrypted String
+
+  expiresAt     DateTime  @db.Timestamptz(3)
+  maxUses       Int
+  usesRemaining Int
+  lastUsedAt    DateTime? @db.Timestamptz(3)
+  revokedAt     DateTime? @db.Timestamptz(3)
+  revokedBy     String?
+  issuedBy      String?
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("user_login_codes")
 }
 
 model SubscriptionPeriod {
@@ -1390,28 +1425,29 @@ model PaymentProviderCustomer {
 }
 
 model User {
-  id              String    @id @default(dbgenerated("uuidv7()"))
-  createdAt       DateTime  @default(now()) @db.Timestamptz(3)
-  modifiedAt      DateTime  @updatedAt @db.Timestamptz(3)
-  birthday        DateTime? @db.Date
-  email           String    @unique
-  emailVerifiedAt DateTime? @db.Timestamptz(3)
-  pendingEmail    String?
-  pendingEmailAt  DateTime? @db.Timestamptz(3)
-  name            String
-  firstName       String?
-  flair           String?
-  password        String
-  active          Boolean
-  lastLogin       DateTime? @db.Timestamptz(3)
-  roleIDs         String[]
-  totpSecret      String?
-  totpEnabled     Boolean   @default(false)
-  totpExempt      Boolean   @default(false)
-  wepublishLoginSubject String? @unique
-  userImageID     String?
-  userImage       Image?    @relation(fields: [userImageID], references: [id])
-  note            String?
+  id                    String    @id @default(dbgenerated("uuidv7()"))
+  createdAt             DateTime  @default(now()) @db.Timestamptz(3)
+  modifiedAt            DateTime  @updatedAt @db.Timestamptz(3)
+  birthday              DateTime? @db.Date
+  email                 String    @unique
+  emailVerifiedAt       DateTime? @db.Timestamptz(3)
+  pendingEmail          String?
+  pendingEmailAt        DateTime? @db.Timestamptz(3)
+  pendingEmailTokenHash String?   @unique
+  name                  String
+  firstName             String?
+  flair                 String?
+  password              String
+  active                Boolean
+  lastLogin             DateTime? @db.Timestamptz(3)
+  roleIDs               String[]
+  totpSecret            String?
+  totpEnabled           Boolean   @default(false)
+  totpExempt            Boolean   @default(false)
+  wepublishLoginSubject String?   @unique
+  userImageID           String?
+  userImage             Image?    @relation(fields: [userImageID], references: [id])
+  note                  String?
 
   address                  UserAddress?
   properties               Json                      @default("[]")
@@ -1437,6 +1473,7 @@ model User {
   changelogConfirmations    ChangelogEntry[]
   notificationReads         NotificationRead[]
   notificationConfirmations NotificationConfirmation[]
+  loginCodes                UserLoginCode[]
   emailQuality              UserEmailQuality?
   emailQualityEvents        EmailQualityEvent[]
   deliveryPreference        UserDeliveryPreference?
@@ -1679,6 +1716,7 @@ enum UserEvent {
   LOGIN_LINK
   TEST_MAIL
   EMAIL_CHANGE
+  EMAIL_VERIFICATION
 }
 
 model UserFlowMail {
@@ -1714,6 +1752,10 @@ model SubscriptionFlow {
 
   memberPlan   MemberPlan? @relation(fields: [memberPlanId], references: [id])
   memberPlanId String?
+  /// A flow for the matching subscriptions of every member plan. Comes after a plan's own flows and before the default flow. Has no memberPlan.
+  allMemberPlans Boolean @default(false)
+  /// An inactive flow is skipped: its subscriptions fall to the next flow. The default flow is always active.
+  active Boolean @default(true)
 
   paymentMethods PaymentMethod[]
   periodicities  PaymentPeriodicity[]
@@ -1760,6 +1802,13 @@ model MailTemplate {
 
   name        String
   description String?
+
+  // What is sent lives on the variants, one per channel. The content columns
+  // below (subject, htmlContent, textContent, letterAppendixId, letterLayoutId)
+  // are the pre-variant copy: no code reads or writes them any more, and a
+  // follow-up migration drops them.
+  variants MailTemplateVariant[]
+
   subject     String  @default("")
   htmlContent String  @default("")
   textContent String?
@@ -1795,6 +1844,42 @@ model MailTemplate {
   letterLayoutId String?
 
   @@map("mail_templates")
+}
+
+/// What a template says on one channel. A template is the group flows, logs
+/// and send jobs point at; a mail and a letter of the same template are two
+/// variants with their own words, because paper carries no links and an email
+/// no address window.
+model MailTemplateVariant {
+  id         String   @id @default(dbgenerated("uuidv7()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  template   MailTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  templateId String
+
+  channel MailChannel
+
+  // The email's subject line; for a letter the title its log entry carries.
+  subject     String  @default("")
+  htmlContent String  @default("")
+  // Plain-text alternative of an email. Unused for a letter.
+  textContent String?
+
+  // Letter only: the letter says what the email says. Subject and body are
+  // then read from the mail variant; layout and appendix stay the letter's.
+  sameAsMail Boolean @default(false)
+
+  // Letter only. Stationery the letter is set on; null means the default.
+  letterLayout   LetterLayout? @relation(fields: [letterLayoutId], references: [id])
+  letterLayoutId String?
+
+  // Letter only. Uploaded pdf printed after the letter pages (e.g. a static QR-bill).
+  letterAppendix   Document? @relation(fields: [letterAppendixId], references: [id], onDelete: SetNull)
+  letterAppendixId String?
+
+  @@unique([templateId, channel])
+  @@map("mail_templates.variants")
 }
 
 // One Word document attached to a mail template, at its place in the list.
@@ -1833,6 +1918,7 @@ model LetterLayout {
   isDefault Boolean @default(false)
 
   mailTemplates MailTemplate[]
+  mailTemplateVariants MailTemplateVariant[]
 
   @@map("letter_layouts")
 }

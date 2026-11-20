@@ -1,16 +1,33 @@
-import { PrismaClient, SettingMailProvider, UserEvent } from '@prisma/client';
+import {
+  MailChannel,
+  PrismaClient,
+  SettingMailProvider,
+  UserEvent,
+} from '@prisma/client';
 import { BaseMailProvider } from './mail-provider/base-mail-provider';
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { MailController, MailControllerConfig } from './mail.controller';
 import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from '@wepublish/settings/api';
 import { composeMail, MailTemplateContent } from './mail-renderer';
+import {
+  loadPlaceholderEmailPatterns,
+  matchesPlaceholderEmail,
+} from '@wepublish/utils/api';
+import {
+  BuildMailDataOptions,
+  EMPTY_PURL_DATA,
+  MailData,
+  PurlProvider,
+  SAMPLE_PURL_DATA,
+  sanitizeRecipient,
+} from './mail-data';
 import { EmailQualityRecorder } from './email-quality-recorder';
 import { LetterSender } from './letter-sender';
+import { requireTemplateVariant } from './template-variant';
 import {
-  attachmentIdsOf,
-  MAIL_TEMPLATE_ATTACHMENT_IDS,
+  loadAttachmentIds,
   MailAttachment,
   MailAttachmentError,
   MailAttachmentRenderer,
@@ -123,6 +140,7 @@ export interface MailContextProps {
   readonly prisma: PrismaClient;
   readonly kv: NamespacedCache;
   readonly jwtGenerator: (userId: string) => Promise<string>;
+  readonly purlProvider?: PurlProvider;
   readonly emailQualityRecorder?: EmailQualityRecorder;
   /** Prints automated mails for users in letter mode; absent without letters. */
   readonly letterSender?: LetterSender;
@@ -132,10 +150,13 @@ export interface MailContextProps {
 
 @Injectable()
 export class MailContext implements MailContextInterface {
+  private logger = new Logger('MailContext');
+
   mailProvider: BaseMailProvider;
   prisma: PrismaClient;
   kv: NamespacedCache;
   jwtGenerator: (userId: string) => Promise<string>;
+  purlProvider?: PurlProvider;
   emailQualityRecorder?: EmailQualityRecorder;
   letterSender?: LetterSender;
   attachmentRenderer?: MailAttachmentRenderer;
@@ -145,9 +166,69 @@ export class MailContext implements MailContextInterface {
     this.prisma = props.prisma;
     this.kv = props.kv;
     this.jwtGenerator = props.jwtGenerator;
+    this.purlProvider = props.purlProvider;
     this.emailQualityRecorder = props.emailQualityRecorder;
     this.letterSender = props.letterSender;
     this.attachmentRenderer = props.attachmentRenderer;
+  }
+
+  async buildMailData({
+    recipient,
+    optionalData,
+    jwtOverride,
+    mode,
+    purlOrigin = 'mail',
+    mintJwt = true,
+    mintPurl = true,
+  }: BuildMailDataOptions): Promise<MailData> {
+    const user = sanitizeRecipient(recipient) as Record<string, unknown> & {
+      id: string;
+    };
+    const jwt =
+      jwtOverride ?? (mintJwt ? await this.jwtGenerator(user.id) : '');
+
+    let purl = SAMPLE_PURL_DATA;
+
+    if (mode === 'send') {
+      if (!mintPurl) {
+        purl = EMPTY_PURL_DATA;
+      } else if (this.purlProvider) {
+        purl = await this.purlProvider.purlFor(user.id, purlOrigin);
+      } else {
+        this.logger.warn(
+          'No PurlProvider configured; {{purl}} placeholders render empty.'
+        );
+        purl = EMPTY_PURL_DATA;
+      }
+    }
+
+    return {
+      user,
+      optional: optionalData,
+      jwt,
+      currentDate: new Date(),
+      ...purl,
+    };
+  }
+
+  async getPlaceholderEmailPatterns(): Promise<string[]> {
+    return this.kv.getOrLoadNs(
+      'placeholder-email',
+      'patterns',
+      () => loadPlaceholderEmailPatterns(this.prisma),
+      60
+    );
+  }
+
+  async isPlaceholderEmail(email: string | null | undefined): Promise<boolean> {
+    if (!email) {
+      return false;
+    }
+
+    return matchesPlaceholderEmail(
+      email,
+      await this.getPlaceholderEmailPatterns()
+    );
   }
 
   async sendMail(
@@ -183,14 +264,11 @@ export class MailContext implements MailContextInterface {
       throw new Error('MailProvider is not set!');
     }
 
-    const template = await this.prisma.mailTemplate.findUnique({
-      where: { id: mailTemplateId },
-      include: MAIL_TEMPLATE_ATTACHMENT_IDS,
-    });
-
-    if (!template) {
-      throw new Error(`MailTemplate <${mailTemplateId}> not found!`);
-    }
+    const template = await requireTemplateVariant(
+      this.prisma as PrismaClient,
+      mailTemplateId,
+      MailChannel.mail
+    );
 
     const config = await new MailContextConfig(
       this.prisma,
@@ -202,7 +280,9 @@ export class MailContext implements MailContextInterface {
     // Rendered before anything is handed over: a mail whose documents cannot
     // be rendered fails as a whole rather than going out without them.
     const attachments = await this.renderAttachments(
-      withAttachments ? attachmentIdsOf(template) : [],
+      withAttachments ?
+        await loadAttachmentIds(this.prisma as PrismaClient, mailTemplateId)
+      : [],
       data
     );
 
