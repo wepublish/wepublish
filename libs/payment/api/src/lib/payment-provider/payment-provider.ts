@@ -186,6 +186,11 @@ export type WebhookResponse = {
 export interface PaymentProvider {
   id: string;
   remoteManagedSubscription: boolean;
+  /**
+   * The provider answers every payment with «paid» and never takes money (free
+   * subscriptions). An invoice on it is settled as soon as it exists.
+   */
+  settlesWithoutCharge?: boolean;
 
   incomingRequestHandler: NextHandleFunction;
 
@@ -254,6 +259,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
   readonly kv: NamespacedCache;
   readonly resets: Pick<NamespaceResets, 'reset'>;
   readonly remoteManagedSubscription: boolean = false;
+  readonly settlesWithoutCharge: boolean = false;
 
   readonly incomingRequestHandler: NextHandleFunction;
 
