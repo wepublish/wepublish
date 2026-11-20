@@ -44,6 +44,7 @@ import {
 import fetch, { RequestInit } from 'node-fetch';
 import { bexioContactFields, ContactUser } from './bexio-contact-mapping';
 import { BexioCountries, BexioCountry } from './bexio-countries';
+import { invoiceMailRecipient } from './bexio-test-mailbox';
 
 const BEXIO_BASE_URL = 'https://api.bexio.com/2.0';
 const COUNTRIES_TTL_MS = 24 * 60 * 60 * 1000;
@@ -676,7 +677,10 @@ export class BexioPaymentProvider extends BasePaymentProvider {
       }
 
       const sentInvoice = await bexio.invoices.send(created.id, {
-        recipient_email: contact.mail,
+        recipient_email: invoiceMailRecipient(
+          contact.mail,
+          config.bexio_testMailbox
+        ),
         subject: stringReplaceMap.replace(
           isRenewal ?
             config.bexio_invoiceMailSubjectRenewalMembership || ''
