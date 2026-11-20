@@ -108,13 +108,27 @@ export class SubscriptionEventDictionary {
       throw new Error('Default flow is missing!');
     }
 
-    const filteredFlows = this.allFlows.filter(
+    // A flow for all plans takes any value of a condition it leaves open.
+    const takes = <T>(open: boolean, values: T[], value: T) =>
+      (open && !values.length) || values.includes(value);
+
+    const matching = this.allFlows.filter(
       flow =>
-        flow.memberPlanId === query.memberplanId &&
-        flow.paymentMethods.map(pm => pm.id).includes(query.paymentMethodId) &&
-        flow.periodicities.includes(query.periodicity) &&
-        flow.autoRenewal.includes(query.autorenwal)
+        !flow.default &&
+        takes(
+          flow.allMemberPlans,
+          flow.paymentMethods.map(pm => pm.id),
+          query.paymentMethodId
+        ) &&
+        takes(flow.allMemberPlans, flow.periodicities, query.periodicity) &&
+        takes(flow.allMemberPlans, flow.autoRenewal, query.autorenwal)
     );
+    // A flow of the subscription's own plan comes before one for all plans.
+    const ofPlan = matching.filter(
+      flow => !flow.allMemberPlans && flow.memberPlanId === query.memberplanId
+    );
+    const filteredFlows =
+      ofPlan.length ? ofPlan : matching.filter(flow => flow.allMemberPlans);
 
     if (filteredFlows.length === 0) {
       return this.getActionByDay(
@@ -172,7 +186,10 @@ export class SubscriptionEventDictionary {
     }
 
     const nonDefaultFlows = this.allFlows.filter(flow => !flow.default);
-    if (nonDefaultFlows.filter(flow => !flow.memberPlanId).length) {
+    if (
+      nonDefaultFlows.filter(flow => !flow.memberPlanId && !flow.allMemberPlans)
+        .length
+    ) {
       throw new Error(
         'Subscription Flow with no memberplan found that is not default! This is a data integrity error!'
       );
@@ -232,52 +249,55 @@ export class SubscriptionEventDictionary {
     subsciption: Subscription,
     subscriptionEvent: SubscriptionEvent
   ): Promise<TemplateAction | undefined> {
-    let flow = await this.prismaService.subscriptionFlow.findFirst({
-      where: {
-        default: false,
-        memberPlan: {
-          id: subsciption.memberPlanID,
+    const include = {
+      intervals: {
+        where: {
+          event: subscriptionEvent,
         },
-        autoRenewal: {
-          has: subsciption.autoRenew,
-        },
-        periodicities: {
-          has: subsciption.paymentPeriodicity,
-        },
-        paymentMethods: {
-          some: {
-            id: subsciption.paymentMethodID,
-          },
+        include: {
+          mailTemplate: true,
         },
       },
-      include: {
-        intervals: {
-          where: {
-            event: subscriptionEvent,
+    };
+    const autoRenewal = { has: subsciption.autoRenew };
+    const periodicities = { has: subsciption.paymentPeriodicity };
+    const paymentMethods = { some: { id: subsciption.paymentMethodID } };
+
+    // The same order as getActionsForSubscriptions: a flow of the plan, then
+    // one for all plans, then the default flow.
+    const flow =
+      (await this.prismaService.subscriptionFlow.findFirst({
+        where: {
+          default: false,
+          allMemberPlans: false,
+          memberPlan: {
+            id: subsciption.memberPlanID,
           },
-          include: {
-            mailTemplate: true,
-          },
+          autoRenewal,
+          periodicities,
+          paymentMethods,
         },
-      },
-    });
-    if (!flow) {
-      flow = await this.prismaService.subscriptionFlow.findFirst({
+        include,
+      })) ??
+      // A flow for all plans takes any value of a condition it leaves open.
+      (await this.prismaService.subscriptionFlow.findFirst({
+        where: {
+          default: false,
+          allMemberPlans: true,
+          AND: [
+            { OR: [{ autoRenewal: { isEmpty: true } }, { autoRenewal }] },
+            { OR: [{ periodicities: { isEmpty: true } }, { periodicities }] },
+            { OR: [{ paymentMethods: { none: {} } }, { paymentMethods }] },
+          ],
+        },
+        include,
+      })) ??
+      (await this.prismaService.subscriptionFlow.findFirst({
         where: {
           default: true,
         },
-        include: {
-          intervals: {
-            where: {
-              event: subscriptionEvent,
-            },
-            include: {
-              mailTemplate: true,
-            },
-          },
-        },
-      });
-    }
+        include,
+      }));
     const interval = flow?.intervals[0];
 
     if (!interval?.mailTemplate) {

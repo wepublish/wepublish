@@ -4071,7 +4071,18 @@ type Mutation {
   ): PublicSubscription!
 
   """Create a new subscription flow"""
-  createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
+  createSubscriptionFlow(
+    """
+    Creates the flow for the matching subscriptions of every member plan instead of one.
+    """
+    allMemberPlans: Boolean
+    autoRenewal: [Boolean!]!
+
+    """The member plan the flow is for. Leave out with allMemberPlans."""
+    memberPlanId: String
+    paymentMethodIds: [String!]!
+    periodicities: [PaymentPeriodicity!]!
+  ): [SubscriptionFlowModel!]!
 
   """Create a subscription interval"""
   createSubscriptionInterval(daysAwayFromEnding: Int, event: SubscriptionEvent!, mailTemplateId: String, sendAsLetter: Boolean, subscriptionFlowId: String!): [SubscriptionFlowModel!]!
@@ -7942,6 +7953,10 @@ type SubscriptionFlowEarliestDay {
 }
 
 type SubscriptionFlowModel {
+  """
+  A flow for the matching subscriptions of every member plan. It comes after the flows of the plan itself and before the default flow, and has no memberPlan.
+  """
+  allMemberPlans: Boolean!
   autoRenewal: [Boolean!]!
   default: Boolean!
 

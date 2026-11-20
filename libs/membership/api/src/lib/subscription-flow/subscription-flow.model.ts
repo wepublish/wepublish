@@ -77,6 +77,12 @@ export class SubscriptionFlowModel {
   @Field()
   default!: boolean;
 
+  @Field({
+    description:
+      'A flow for the matching subscriptions of every member plan. It comes after the flows of the plan itself and before the default flow, and has no memberPlan.',
+  })
+  allMemberPlans!: boolean;
+
   @Field(() => MemberPlan, { nullable: true })
   memberPlan?: MemberPlan;
 
@@ -135,8 +141,19 @@ export class SubscriptionIntervalUpdateInput extends PartialType(
 
 @ArgsType()
 export class SubscriptionFlowModelCreateInput {
-  @Field()
-  memberPlanId!: string;
+  @Field({
+    nullable: true,
+    description:
+      'The member plan the flow is for. Leave out with allMemberPlans.',
+  })
+  memberPlanId?: string;
+
+  @Field({
+    nullable: true,
+    description:
+      'Creates the flow for the matching subscriptions of every member plan instead of one.',
+  })
+  allMemberPlans?: boolean;
 
   @Field(() => [String])
   paymentMethodIds!: string[];
@@ -150,7 +167,10 @@ export class SubscriptionFlowModelCreateInput {
 
 @ArgsType()
 export class SubscriptionFlowModelUpdateInput extends PartialType(
-  OmitType(SubscriptionFlowModelCreateInput, ['memberPlanId'] as const),
+  OmitType(SubscriptionFlowModelCreateInput, [
+    'memberPlanId',
+    'allMemberPlans',
+  ] as const),
   ArgsType
 ) {
   @Field()

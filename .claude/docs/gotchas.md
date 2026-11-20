@@ -1515,6 +1515,19 @@ change could then make a saved flow wrong after the fact. That was tried and
 taken out again. The clamp in `createInvoice` (periodic job) stays as a safety
 net for legacy data.
 
+### ⚠️ A subscription's flow is looked up in two places, in a fixed order
+
+Plan flow → flow for all plans (`allMemberPlans`) → default flow. The order is
+implemented twice in `subscription-event-dictionary.ts`: in memory in
+`getActionsForSubscriptions` and as queries in `getSubscriptionTemplateAction`.
+Change both. A non-default flow with neither a `memberPlanId` nor
+`allMemberPlans` is an orphan of a deleted plan: `initialize()` throws on it and
+no message goes out, so "all plans" must never be modelled as "plan empty".
+Overlap is only refused within a kind (`filterHasOverlap`). An empty condition
+means "matches nothing" on a member plan's flow but "any value" on a flow for
+all plans (which needs at least one condition); every place that matches
+conditions has to make that distinction.
+
 ## Adding an entry
 
 Keep the house style: a future agent must be able to tell _why_ the obvious

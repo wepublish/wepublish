@@ -446,9 +446,54 @@ describe('SubscriptionFlowOverview', () => {
       expect(
         within(dialog).getByText('subscriptionFlow.paymentMethod')
       ).toBeTruthy();
+      // A member plan's flow needs every condition.
+      expect(
+        within(dialog).queryByText('subscriptionFlow.openConditionsHint')
+      ).toBeNull();
       expect(
         within(dialog).getByRole('button', { name: 'subscriptionFlow.addNew' })
       ).toBeTruthy();
+    });
+
+    it('creates a flow for all member plans when that is chosen instead of a plan', async () => {
+      mutationFor(CreateSubscriptionFlowDocument).mockResolvedValue({
+        data: { createSubscriptionFlow: [] },
+      });
+      renderOverview();
+
+      const dialog = await openPanel();
+
+      choosePlan(dialog, 'subscriptionFlow.overview.allMemberPlans');
+
+      // What an empty field means is said where the fields are.
+      expect(
+        within(dialog).getByText('subscriptionFlow.openConditionsHint')
+      ).toBeTruthy();
+
+      const [paymentMethod] = within(dialog)
+        .getAllByRole('combobox')
+        .filter(field => field.tagName === 'INPUT');
+
+      fireEvent.change(paymentMethod, { target: { value: 'Rech' } });
+      fireEvent.click(await screen.findByRole('option', { name: 'Rechnung' }));
+      fireEvent.click(
+        within(dialog).getByRole('button', { name: 'subscriptionFlow.addNew' })
+      );
+
+      await waitFor(() =>
+        expect(
+          mutationFor(CreateSubscriptionFlowDocument)
+        ).toHaveBeenCalledWith({
+          variables: expect.objectContaining({
+            allMemberPlans: true,
+            paymentMethodIds: ['bill'],
+          }),
+        })
+      );
+      expect(
+        mutationFor(CreateSubscriptionFlowDocument).mock.calls[0][0].variables
+          .memberPlanId
+      ).toBeUndefined();
     });
 
     it('starts with the member plan the list is narrowed to', async () => {

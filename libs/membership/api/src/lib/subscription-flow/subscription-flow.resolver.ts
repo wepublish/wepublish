@@ -113,6 +113,27 @@ export class SubscriptionFlowResolver {
     @Args('memberPlanId', { type: () => String, nullable: true })
     memberPlanId?: string | null
   ): Promise<number> {
+    if (flow.allMemberPlans) {
+      // What the plans' own flows take does not reach a flow for all plans.
+      const planFlows = await this.prismaService.subscriptionFlow.findMany({
+        where: {
+          default: false,
+          allMemberPlans: false,
+          memberPlanId: { not: null },
+        },
+        include: { paymentMethods: true },
+      });
+
+      return await this.prismaService.subscription.count({
+        where: {
+          ...subscriptionsOfFlow({ ...flow, memberPlanId: undefined }),
+          ...(planFlows.length && {
+            NOT: { OR: planFlows.map(subscriptionsOfFlow) },
+          }),
+        },
+      });
+    }
+
     if (!flow.default) {
       return await this.prismaService.subscription.count({
         where: subscriptionsOfFlow({
@@ -122,8 +143,14 @@ export class SubscriptionFlowResolver {
       });
     }
 
+    // Within one member plan: its own flows and those for all plans.
     const otherFlows = await this.prismaService.subscriptionFlow.findMany({
-      where: { default: false, ...(memberPlanId && { memberPlanId }) },
+      where: {
+        default: false,
+        ...(memberPlanId && {
+          OR: [{ memberPlanId }, { allMemberPlans: true }],
+        }),
+      },
       include: { paymentMethods: true },
     });
 
