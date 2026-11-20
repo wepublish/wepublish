@@ -43,6 +43,7 @@ import {
 } from './bexio-utils';
 import fetch, { RequestInit } from 'node-fetch';
 import { bexioContactFields, ContactUser } from './bexio-contact-mapping';
+import { withRequestTimeout } from './bexio-timeout';
 import { BexioCountries, BexioCountry } from './bexio-countries';
 
 const BEXIO_BASE_URL = 'https://api.bexio.com/2.0';
@@ -83,7 +84,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     if (!config.apiKey) {
       throw new Error('Bexio missing api key');
     }
-    return new Bexio(config.apiKey);
+    return withRequestTimeout(new Bexio(config.apiKey));
   }
 
   async webhookForPaymentIntent(
