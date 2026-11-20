@@ -4586,8 +4586,8 @@
           "description": "Audience and filters"
         },
         "content": {
-          "title": "Content & delivery channel",
-          "description": "Template, email or letter"
+          "title": "Delivery channel & content",
+          "description": "Email or letter, template"
         },
         "send": {
           "title": "Send",
@@ -4663,7 +4663,6 @@
         "cancelled": "Canceled"
       },
       "missingPlaceholders": "Heads up: these placeholders won't be filled for these recipients: {{placeholders}}",
-      "createTemplate": "New template",
       "attachments_one": "Every mail carries {{count}} attachment as PDF: {{names}}",
       "attachments_other": "Every mail carries {{count}} attachments as PDF: {{names}}",
       "editTemplate": "Edit template",
@@ -4737,11 +4736,11 @@
         "label": "Delivery channel",
         "mail": "Email",
         "letter": "Letter",
-        "noVersion": {
-          "mail": "This template has no email version.",
-          "letter": "This template has no letter version."
-        },
-        "withoutAddress": "{{count}} of the recipients have no usable postal address and will be skipped."
+        "withoutAddress": "{{count}} of the recipients have no usable postal address and will be skipped.",
+        "templateDropped": {
+          "mail": "“{{template}}” has no email version and was therefore deselected. Choose a template for email.",
+          "letter": "“{{template}}” has no letter version and was therefore deselected. Choose a template for letter."
+        }
       },
       "print": {
         "addressPosition": {
@@ -4814,7 +4813,11 @@
         "matchAll": "all conditions",
         "more": "{{count}} more filters"
       },
-      "deliveryChannelHandOff": "Switch this user group’s delivery channel for good …"
+      "deliveryChannelHandOff": "Switch this user group’s delivery channel for good …",
+      "templateFor": {
+        "mail": "Manual message by email",
+        "letter": "Manual message by letter"
+      }
     },
     "mailLog": {
       "title": "Sent messages",

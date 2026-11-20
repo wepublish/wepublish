@@ -98,6 +98,13 @@ export type SelectMailTemplatePanelProps = {
   purpose?: MailTemplateContext;
   /** What the template is chosen for, e.g. «Rechnungserstellung». */
   eventLabel: string;
+  /**
+   * The channel the template has to be written for. An event always sends
+   * the email; a manual send goes out on the channel picked for it.
+   */
+  channel?: MailChannel;
+  /** Whether sending nothing is a choice: for an event yes, for a send no. */
+  allowNone?: boolean;
   onSelect(mailTemplateId: string | null): void;
   onClose(): void;
 };
@@ -111,6 +118,8 @@ export function SelectMailTemplatePanel({
   selectedId,
   purpose,
   eventLabel,
+  channel = MailChannel.Mail,
+  allowNone = true,
   onSelect,
   onClose,
 }: SelectMailTemplatePanelProps) {
@@ -130,17 +139,17 @@ export function SelectMailTemplatePanel({
   const [chosenPage, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
 
-  // The email always goes out, to everyone not on another channel, so only a
-  // template with an email version can be sent by an event. The one chosen
-  // stays listed whatever it has.
+  // Only a template with a version for the channel can be sent on it. For an
+  // event that is the email: it always goes out, to everyone not on another
+  // channel. The one chosen stays listed whatever it has.
   const offered = useMemo(
     () =>
       (data?.mailTemplates ?? []).filter(
         template =>
           template.id === selectedId ||
-          templatesForChannel([template], MailChannel.Mail).length > 0
+          templatesForChannel([template], channel).length > 0
       ),
-    [data, selectedId]
+    [data, selectedId, channel]
   );
 
   const matching = useMemo(
@@ -229,7 +238,7 @@ export function SelectMailTemplatePanel({
         </DrawerTitle>
 
         <DrawerActions>
-          {selectedId && (
+          {allowNone && selectedId && (
             <Button
               variant="outlined"
               color="inherit"

@@ -3,6 +3,7 @@ import { useQuery } from '@apollo/client/react';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import {
+  MailChannel,
   MailTemplateContext,
   MailTemplateListDocument,
 } from '@wepublish/editor/api';
@@ -336,6 +337,20 @@ describe('SelectMailTemplatePanel', () => {
 
   it('does not offer to send nothing for an event that sends nothing', () => {
     renderPanel();
+
+    expect(
+      screen.queryByRole('button', { name: 'mailTemplateSelect.chooser.none' })
+    ).toBeNull();
+  });
+
+  it('offers the templates written for the channel a send goes out on', () => {
+    renderPanel({ channel: MailChannel.Letter });
+
+    expect(shownNames()).toEqual(['Begleitbrief', 'Neue Rechnung']);
+  });
+
+  it('does not offer to send nothing where a template is needed', () => {
+    renderPanel({ selectedId: 'Mahnung', allowNone: false });
 
     expect(
       screen.queryByRole('button', { name: 'mailTemplateSelect.chooser.none' })
