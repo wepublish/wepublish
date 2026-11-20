@@ -24,7 +24,7 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { useTranslation } from 'react-i18next';
-import { useWebsiteFeature } from '../../../lib/use-website-feature';
+import { useWebsiteFeature } from '../../use-website-feature';
 
 const SubscriptionsWrapper = styled('div')`
   display: flex;
