@@ -4612,8 +4612,8 @@
           "description": "Zielgruppe und Filter"
         },
         "content": {
-          "title": "Inhalt & Zustellkanal",
-          "description": "Vorlage, E-Mail oder Brief"
+          "title": "Zustellkanal & Inhalt",
+          "description": "E-Mail oder Brief, Vorlage"
         },
         "send": {
           "title": "Senden",
@@ -4689,7 +4689,6 @@
         "cancelled": "Abgebrochen"
       },
       "missingPlaceholders": "Achtung: Diese Platzhalter werden für diese Empfänger nicht gefüllt: {{placeholders}}",
-      "createTemplate": "Neue Vorlage",
       "attachments_one": "Jede E-Mail enthält {{count}} Anhang als PDF: {{names}}",
       "attachments_other": "Jede E-Mail enthält {{count}} Anhänge als PDF: {{names}}",
       "editTemplate": "Vorlage bearbeiten",
@@ -4764,11 +4763,11 @@
         "label": "Zustellkanal",
         "mail": "E-Mail",
         "letter": "Brief",
-        "noVersion": {
-          "mail": "Diese Vorlage hat keine E-Mail-Version.",
-          "letter": "Diese Vorlage hat keine Brief-Version."
-        },
-        "withoutAddress": "{{count}} der Empfänger:innen haben keine brauchbare Postadresse und werden übersprungen."
+        "withoutAddress": "{{count}} der Empfänger:innen haben keine brauchbare Postadresse und werden übersprungen.",
+        "templateDropped": {
+          "mail": "«{{template}}» hat keine E-Mail-Version und wurde deshalb abgewählt. Wähle eine Vorlage für E-Mail.",
+          "letter": "«{{template}}» hat keine Brief-Version und wurde deshalb abgewählt. Wähle eine Vorlage für Brief."
+        }
       },
       "print": {
         "addressPosition": {
@@ -4841,7 +4840,11 @@
         "matchAll": "alle Bedingungen",
         "more": "{{count}} weitere Filter"
       },
-      "deliveryChannelHandOff": "Zustellkanal dieser Benutzergruppe dauerhaft umstellen …"
+      "deliveryChannelHandOff": "Zustellkanal dieser Benutzergruppe dauerhaft umstellen …",
+      "templateFor": {
+        "mail": "Manuelle Mitteilung per E-Mail",
+        "letter": "Manuelle Mitteilung per Brief"
+      }
     },
     "mailLog": {
       "title": "Gesendete Mitteilungen",

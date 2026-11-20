@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { ButtonBase, Drawer } from '@mui/material';
 import {
+  MailChannel,
   MailTemplateContext,
   TinyMailTemplateFragment,
 } from '@wepublish/editor/api';
@@ -70,6 +71,15 @@ export type MailTemplateFieldProps = {
   purpose?: MailTemplateContext;
   /** What the template is for, e.g. the event; names the field. */
   label: string;
+  /** The channel the template has to be written for; the email by default. */
+  channel?: MailChannel;
+  /** Whether sending nothing is a choice; it is, unless said otherwise. */
+  allowNone?: boolean;
+  /**
+   * What the empty field says where a template is still to be chosen. Without
+   * it the field says that nothing is sent.
+   */
+  emptyLabel?: string;
   disabled?: boolean;
   onChange(mailTemplateId: string | null): void;
 };
@@ -83,6 +93,9 @@ export function MailTemplateField({
   templates,
   purpose,
   label,
+  channel,
+  allowNone,
+  emptyLabel,
   disabled,
   onChange,
 }: MailTemplateFieldProps) {
@@ -91,7 +104,8 @@ export function MailTemplateField({
 
   const selected = templates.find(({ id }) => id === value);
   // The name alone: the purpose is a column and a filter in the chooser.
-  const shown = selected?.name ?? t('mailTemplateSelect.noMailSentSelectNow');
+  const shown =
+    selected?.name ?? emptyLabel ?? t('mailTemplateSelect.noMailSentSelectNow');
 
   return (
     <>
@@ -102,7 +116,7 @@ export function MailTemplateField({
         onClick={() => setOpen(true)}
       >
         <Value>
-          {!selected && <MdUnsubscribe size={16} />}
+          {!selected && !emptyLabel && <MdUnsubscribe size={16} />}
           <span>{shown}</span>
         </Value>
 
@@ -125,6 +139,8 @@ export function MailTemplateField({
             selectedId={value}
             purpose={purpose}
             eventLabel={label}
+            channel={channel}
+            allowNone={allowNone}
             onSelect={onChange}
             onClose={() => setOpen(false)}
           />
