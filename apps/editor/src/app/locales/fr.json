@@ -4588,8 +4588,8 @@
           "description": "Public cible et filtres"
         },
         "content": {
-          "title": "Contenu et canal de distribution",
-          "description": "Modèle, e-mail ou lettre"
+          "title": "Canal de distribution et contenu",
+          "description": "E-mail ou lettre, modèle"
         },
         "send": {
           "title": "Envoyer",
@@ -4665,7 +4665,6 @@
         "cancelled": "Annulé"
       },
       "missingPlaceholders": "Attention : ces champs ne seront pas remplis pour ces destinataires : {{placeholders}}",
-      "createTemplate": "Nouveau modèle",
       "attachments_one": "Chaque e-mail contient {{count}} pièce jointe en PDF : {{names}}",
       "attachments_other": "Chaque e-mail contient {{count}} pièces jointes en PDF : {{names}}",
       "editTemplate": "Modifier le modèle",
@@ -4742,11 +4741,11 @@
         "label": "Canal de distribution",
         "mail": "E-mail",
         "letter": "Lettre",
-        "noVersion": {
-          "mail": "Ce modèle n’a pas de version e-mail.",
-          "letter": "Ce modèle n’a pas de version lettre."
-        },
-        "withoutAddress": "{{count}} des destinataires n’ont pas d’adresse postale utilisable et seront ignoré·e·s."
+        "withoutAddress": "{{count}} des destinataires n’ont pas d’adresse postale utilisable et seront ignoré·e·s.",
+        "templateDropped": {
+          "mail": "« {{template}} » n’a pas de version e-mail et a donc été désélectionné. Choisissez un modèle pour l’e-mail.",
+          "letter": "« {{template}} » n’a pas de version lettre et a donc été désélectionné. Choisissez un modèle pour la lettre."
+        }
       },
       "print": {
         "addressPosition": {
@@ -4817,7 +4816,11 @@
         "matchAll": "toutes les conditions",
         "more": "{{count}} autres filtres"
       },
-      "deliveryChannelHandOff": "Changer durablement le canal de distribution de ce groupe d’utilisateurs …"
+      "deliveryChannelHandOff": "Changer durablement le canal de distribution de ce groupe d’utilisateurs …",
+      "templateFor": {
+        "mail": "Message manuel par e-mail",
+        "letter": "Message manuel par lettre"
+      }
     },
     "mailLog": {
       "title": "Messages envoyés",

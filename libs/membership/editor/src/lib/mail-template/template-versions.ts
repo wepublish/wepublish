@@ -121,20 +121,3 @@ export const removedChannels = (
   saved: readonly MailChannel[],
   drafts: VersionDrafts
 ): MailChannel[] => saved.filter(channel => !drafts[channel]);
-
-/**
- * The channel a send of this template goes out on: the chosen one while the
- * template is written for it, otherwise one it has. Null when the medium can
- * send on none of the template's channels.
- */
-export const sendChannelFor = (
-  templateChannels: readonly MailChannel[],
-  chosen: MailChannel,
-  sendable: readonly MailChannel[]
-): MailChannel | null => {
-  const usable = VERSION_ORDER.filter(
-    channel => templateChannels.includes(channel) && sendable.includes(channel)
-  );
-
-  return usable.includes(chosen) ? chosen : (usable[0] ?? null);
-};
