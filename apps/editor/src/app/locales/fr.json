@@ -1913,8 +1913,9 @@
       "empty": "Aucun modèle de message pour le moment."
     },
     "mailTemplateSelect": {
-      "sendAsLetter": "Aussi par lettre",
-      "sendAsLetterHint": "Les personnes au canal lettre reçoivent ce message imprimé au lieu de l’e-mail.",
+      "channels": "Canaux de distribution",
+      "noLetterVersion": "Ce modèle n’a pas de version lettre. Ajoutez-la dans le modèle pour que les personnes au canal lettre reçoivent ce message imprimé ; d’ici là, elles reçoivent l’e-mail.",
+      "sendAsLetterHint": "L’e-mail part toujours. Si la lettre est cochée, les personnes au canal lettre reçoivent ce message imprimé au lieu de l’e-mail.",
       "noMailSentSelectNow": "Ne pas envoyer d’e-mail"
     },
     "memberPlanEdit": {
@@ -2126,7 +2127,7 @@
         "emailUnreachable": "Adresse e-mail injoignable ({{segment}}) – les e-mails ne parviendront pas à cette personne."
       },
       "flows": {
-        "letterHint": "Les messages marqués « Aussi par lettre » parviennent imprimés aux personnes au canal lettre ; les autres reçoivent un e-mail.",
+        "letterHint": "Les messages dont la case « Lettre » est cochée parviennent imprimés aux personnes au canal lettre ; les autres reçoivent un e-mail.",
         "manage": "Gérer les canaux de distribution"
       }
     },
