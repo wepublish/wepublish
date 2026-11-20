@@ -1,5 +1,9 @@
 import { DeliverySuggestionKind, MailChannel } from '@prisma/client';
-import { UserSession } from '@wepublish/authentication/api';
+import {
+  ApiTokenSession,
+  AuthSessionType,
+  UserSession,
+} from '@wepublish/authentication/api';
 import { FEATURE_METADATA_KEY } from '@wepublish/features/api';
 import { PERMISSIONS_METADATA_KEY } from '@wepublish/permissions/api';
 import {
@@ -11,7 +15,21 @@ import { DeliveryModeResolver } from './delivery-mode.resolver';
 import { DeliverySuggestionService } from './delivery-suggestion.service';
 import { UserDeliveryPreferenceService } from './user-delivery-preference.service';
 
-const session = { user: { id: 'admin' } } as UserSession;
+const session = {
+  type: AuthSessionType.User,
+  user: { id: 'admin' },
+} as UserSession;
+
+const admin = { userId: 'admin', apiTokenId: null };
+
+const apiKey: ApiTokenSession = {
+  type: AuthSessionType.ApiToken,
+  id: 'key-1',
+  name: 'e2e',
+  token: 'secret',
+  permissions: [],
+  createdBy: { id: 'creator-1', email: 'creator@example.test' },
+};
 
 function setup() {
   const preferences = {
@@ -69,6 +87,21 @@ describe('DeliveryModeResolver', () => {
     }
   });
 
+  it('records the creator of an api key as the one who switched a user', async () => {
+    const { resolver, preferences } = setup();
+
+    await resolver.setUserDeliveryMode(apiKey, 'u1', MailChannel.letter);
+
+    expect(preferences.set).toHaveBeenCalledWith(
+      'u1',
+      MailChannel.letter,
+      expect.objectContaining({
+        changedByUserId: 'creator-1',
+        changedByApiTokenId: 'key-1',
+      })
+    );
+  });
+
   it('records who switched a user and answers with the new state', async () => {
     const { resolver, preferences } = setup();
 
@@ -79,6 +112,7 @@ describe('DeliveryModeResolver', () => {
       origin: 'manual',
       reason: 'moved',
       changedByUserId: 'admin',
+      changedByApiTokenId: null,
     });
   });
 
@@ -88,7 +122,7 @@ describe('DeliveryModeResolver', () => {
     await expect(
       resolver.confirmDeliverySuggestion(session, 's1')
     ).resolves.toBe(true);
-    expect(suggestions.confirm).toHaveBeenCalledWith('s1', 'admin');
+    expect(suggestions.confirm).toHaveBeenCalledWith('s1', admin);
   });
 
   it('switches an audience in the name of the admin', async () => {
@@ -104,7 +138,7 @@ describe('DeliveryModeResolver', () => {
     expect(preferences.setForAudience).toHaveBeenCalledWith(
       audience,
       MailChannel.mail,
-      'admin'
+      admin
     );
   });
 
@@ -200,7 +234,7 @@ describe('DeliveryModeResolver', () => {
     await expect(resolver.keepDeliverySuggestion(session, 's1')).resolves.toBe(
       true
     );
-    expect(suggestions.keep).toHaveBeenCalledWith('s1', 'admin');
+    expect(suggestions.keep).toHaveBeenCalledWith('s1', admin);
   });
 
   it("answers with a person's open suggestion", async () => {

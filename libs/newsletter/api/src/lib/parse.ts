@@ -6,8 +6,8 @@
  *
  * - **Link schemes.** A block's `href` becomes an anchor in the sent mail.
  *   React escapes the *text* of a block, but `href="javascript:…"` is not text —
- *   it survives escaping untouched. Only http(s) and Mailchimp's own `*|TAG|*`
- *   merge tags are allowed through.
+ *   it survives escaping untouched. Only http(s), mailto and Mailchimp's own
+ *   `*|TAG|*` merge tags are allowed through.
  * - **Unknown block types.** `renderBlock` switches exhaustively; a type it has
  *   never heard of would render as nothing at all and the editor would show a
  *   silently empty issue. Better to reject the save.
@@ -90,6 +90,12 @@ function asProseArray(value: unknown, path: string): string[] {
 }
 
 /**
+ * `mailto:` is as inert as http(s) — it opens the reader's mail app and runs
+ * nothing — and an editor linking "schreiben Sie uns an info@…" is routine.
+ */
+const LINK_SCHEMES = new Set(['http:', 'https:', 'mailto:']);
+
+/**
  * Mailchimp merge tags are legitimate hrefs (`*|UNSUB|*`) and are not URLs, so
  * they are matched before parsing rather than after. `MERGE_TAG_HREF` says what
  * counts as one, and why letting it through is safe.
@@ -109,8 +115,14 @@ function asUrl(value: unknown, path: string): string {
     return fail(path, 'muss eine vollständige URL sein');
   }
 
-  if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
-    fail(path, 'muss mit http:// oder https:// beginnen');
+  if (!LINK_SCHEMES.has(parsed.protocol)) {
+    fail(path, 'muss mit http://, https:// oder mailto: beginnen');
+  }
+
+  // `new URL('mailto:')` parses: a mail link with no address opens an empty
+  // message in the reader's mail app, which is never what the author meant.
+  if (parsed.protocol === 'mailto:' && !parsed.pathname.includes('@')) {
+    fail(path, 'muss eine E-Mail-Adresse enthalten');
   }
 
   return parsed.toString();

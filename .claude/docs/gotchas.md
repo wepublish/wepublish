@@ -10,6 +10,16 @@ gets refactored away by the next agent.
 
 ---
 
+### ⚠️ `tsc -p apps/editor` checks nothing and exits 0
+
+`apps/editor`, `apps/media` and `apps/api-example` have a solution-style
+`tsconfig.json` (`"files": []`, only `references`), so `pnpm tsc -p apps/editor
+--noEmit` compiles zero files and reports success. CI's `website-typecheck.yml`
+runs `tsc --noEmit -p apps/editor/tsconfig.app.json` inside the editor build and
+fails (2026-11-09: a `printIssues` field missing from three `libs/membership/editor`
+call sites, green locally on Vitest and on the useless `tsc`). Run
+`pnpm nx run editor:typecheck` after touching the editor or any `libs/*/editor`.
+
 ### ⚠️ Prisma helpers are deliberately absent from the `@wepublish/testing` barrel
 
 [libs/testing/src/index.ts](../../libs/testing/src/index.ts) exports `act-wait`,
@@ -339,6 +349,25 @@ Pinned by `session.provider.spec.tsx` and `preview-status-banner.spec.tsx`.
 
 ---
 
+### ⚠️ The content wrapper's column is `minmax(0, 1fr)`, not the implicit `auto`
+
+The editor preview loads at desktop width and its mobile/tablet buttons only
+shrink the same iframe. `ImageBlock` pins each caption to a measured px width;
+with an `auto` column, every other block's still-wide caption holds the column
+open while one re-measures, so they settle on viewport − left padding. Verified
+2026-11-19 on a hauptstadt article: 1000 → 390px left the page 406px wide
+(captions 374px, right padding gone); a fresh 390px load and a one-image article
+were fine. Real phones never shrink, so only the preview showed it.
+
+Remounting the iframe per device would reload it and lose the scroll position.
+
+**Load-bearing:** `grid-template-columns: minmax(0, 1fr)` in
+[`content-wrapper.tsx`](../../libs/content/website/src/lib/content-wrapper/content-wrapper.tsx).
+
+Pinned by `content-wrapper.spec.tsx`.
+
+---
+
 ### ⚠️ Next never re-renders a stale page for a prefetch, so the page lock expires early
 
 [`page-cache.js`](../../libs/utils/website/src/lib/page-cache/page-cache.js)
@@ -633,6 +662,20 @@ trick or nothing catches it before `nx serve api-example`.
 
 ---
 
+### ⚠️ A tenant `BaseTeaser` override must fall back to block-content's `BaseTeaser`, never `Teaser`
+
+`Teaser` from `@wepublish/block-content/website` is a dispatcher: it renders
+the builder's `blocks.BaseTeaser`. An override registered as `BaseTeaser` that
+falls back to `<Teaser>` renders itself forever. Server rendering never ends,
+the pod's memory climbs until it is killed, and Cloudflare shows 504 for the
+page and 502 for everything else in the meantime (2026-11-18, bajour: every
+unstyled teaser-list block, because `TeaserListBlock` passes no `numColumns`).
+Fall back to the concrete `BaseTeaser` export instead, as munotgloeggli does.
+`bajour.spec.tsx` shows how to test it without hanging the runner: a context
+guard that throws if the override re-enters itself.
+
+---
+
 ### ⚠️ A service with `@PrimeDataLoader` makes everything that injects it request-scoped
 
 `@PrimeDataLoader(X)` property-injects the request-scoped dataloader `X`, so the
@@ -703,6 +746,11 @@ and the nightly `MailLogSyncService` poll reconciles what a webhook missed.
 `res.status(200)`, and the `instanceof MailWebhookSignatureError` → 401 branch.
 Providers must throw `MailWebhookSignatureError`, not a plain `Error`, for a
 failed signature.
+
+Mandrill checks the URL while a webhook is being **created** with an empty
+batch (`mandrill_events=[]`) signed with the fixed key `test-webhook` — the
+webhook's own key does not exist yet. The Mailchimp provider lets exactly that
+through; refusing it makes Mandrill reject the webhook URL.
 
 Pinned by `libs/mail/api/src/lib/mail.webhook.spec.ts` ("refuses a call that
 does not come from the provider", "answers 200 to a payload it cannot handle").
@@ -1377,6 +1425,70 @@ as `upgrade-subscription.service.ts` does.
 
 Pinned by `periodic-job.service.spec.ts` («removes the invoice when the
 provider could not create it»).
+
+---
+
+### ⚠️ Apollo Client 4's `useLazyQuery` ignores `onCompleted` / `onError` without a type error
+
+The editor runs `@apollo/client` 4. Its lazy queries no longer call
+`onCompleted` or `onError`, yet passing them still typechecks. A download
+written as `useLazyQuery(Doc, { onCompleted: data => download(data) })` runs
+the query and then does nothing (2026-11-08: the print-issue «CSV
+herunterladen» buttons; the API answered correctly the whole time).
+
+Await the trigger instead: it resolves with `{ data }` and rejects on an
+error, as `libs/ui/editor/src/lib/panel/exportSubscriptions.tsx` and
+`libs/print-issue/editor/src/lib/print-issue-list-view.tsx` do. A spec that mocks
+`useLazyQuery` must not call `onCompleted` either, or it hides the bug.
+
+Pinned by `libs/print-issue/editor/src/lib/print-issue-list-view.spec.tsx`
+(«lists the draft with its options, CSV, edit, delivered and delete, and the merged list»).
+
+### ⚠️ `prisma migrate deploy` targets `DIRECT_DATABASE_URL` from `.env`, not the `DATABASE_URL` you pass
+
+[prisma.config.ts](../../prisma.config.ts) loads `.env` and takes
+`process.env['DIRECT_DATABASE_URL'] || process.env['DATABASE_URL']` as the
+datasource («DIRECT_DATABASE_URL bypasses PgBouncer»). So
+`DATABASE_URL=postgresql://…/throwaway pnpm prisma migrate deploy` still
+migrates whatever `.env`'s `DIRECT_DATABASE_URL` points at.
+
+Verified 2026-11-08 in a worktree: the command printed «All migrations have
+been successfully applied» while the throwaway database stayed empty, and 12
+migrations (11 from master plus the branch's own) had landed in the shared
+`wepublish` database of another checkout's Docker stack. The API booted
+against the throwaway database then died with `relation
+"public.settings.analyticsProvider" does not exist`.
+
+Override **both** variables for any Prisma CLI call that must hit another
+database: `DATABASE_URL=… DIRECT_DATABASE_URL=… pnpm prisma migrate deploy`.
+The running API reads only `DATABASE_URL`
+(`libs/nest-modules/src/lib/database/prisma.service.ts`), which is why the
+boot and the migration disagreed.
+
+**Load-bearing:** the `DIRECT_DATABASE_URL` preference in `prisma.config.ts`
+is what production relies on for advisory locks through PgBouncer; do not
+"fix" it by dropping the fallback order.
+
+Nothing guards this — a regression here is silent: the CLI reports success
+against the wrong database.
+
+### ⚠️ Feeds must load `FeedArticleList`; with `ArticleList` they shrink to the lead
+
+`generateFeed` serialises `latest.blocks` into `content:encoded`, but
+`ArticleList`/`SlimArticle` never selects blocks. Every tenant feed shipped
+lead-only for years while `feed-generator.spec.ts` stayed green, because
+`mockArticle()` carries blocks the production query never fetched. Found
+2026-11-12: the Schweizer Mediendatenbank, which ingests online sources from
+publisher feeds, showed reflekt articles with their lead only.
+
+Widening `SlimArticle` is the wrong fix: every list on every site would fetch
+bodies.
+
+**Load-bearing:** `feed.graphql` (`FeedBlock`, `paywall { active
+hideContentAfter }`); `generateFeed` typed on `FeedArticleFragment` without a
+cast, so a tenant on the wrong document fails `tsc`. Pinned by
+`libs/feed/website/src/lib/feed-article-list.spec.ts`, which runs the real
+document against `schema-v2.graphql`.
 
 ## Adding an entry
 

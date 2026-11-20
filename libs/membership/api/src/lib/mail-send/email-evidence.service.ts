@@ -7,7 +7,10 @@ import {
 import { MailContext } from '@wepublish/mail/api';
 import { SettingName, SettingsService } from '@wepublish/settings/api';
 import { subDays } from 'date-fns';
-import { EmailEvidenceModel, EmailEvidenceSourceModel } from './mail-send.model';
+import {
+  EmailEvidenceModel,
+  EmailEvidenceSourceModel,
+} from './mail-send.model';
 
 /** Days without provider evidence after which the editor warns. */
 export const DEFAULT_EVIDENCE_WARN_AFTER_DAYS = 14;

@@ -229,6 +229,24 @@ function collect(node: Node, walk: Walk, bold: boolean) {
 }
 
 /** The editable's current content as the lines the document stores. */
+/**
+ * An email address, alone or typed after the `https://` the link popover
+ * starts with. A newsletter never links to a site *with a user name in it*, so
+ * `https://info@ee-news.ch` is always someone meaning "write to us".
+ */
+const EMAIL_LINK = /^(?:https?:\/\/)?([^\s@:/]+@[^\s@:/]+\.[^\s@:/]+)\/?$/i;
+
+/**
+ * What the link popover should link to for what was typed: an email address
+ * becomes a `mailto:` link, anything else is left for the server to judge.
+ */
+export function linkTarget(input: string): string {
+  const url = input.trim();
+  const email = EMAIL_LINK.exec(url);
+
+  return email ? `mailto:${email[1]}` : url;
+}
+
 export function linesFrom(root: HTMLElement): string {
   const walk: Walk = { lines: [], line: '', bullet: false };
 
@@ -537,12 +555,14 @@ function ProseEditor({
 
   const applyLink = () => {
     const selection = restore();
-    const url = link.url.trim();
+    const url = linkTarget(link.url);
 
     setLink(CLOSED);
 
     if (selection) {
-      linkTo(selection, url, url);
+      // With nothing selected the target becomes the link text, and an address
+      // should read as `info@…` in the mail, not as `mailto:info@…`.
+      linkTo(selection, url, url.replace(/^mailto:/, ''));
     }
   };
 

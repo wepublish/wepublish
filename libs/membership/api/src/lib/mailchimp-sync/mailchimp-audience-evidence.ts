@@ -40,7 +40,8 @@ export const audienceMemberSignals = (
 
   const scope = `mailchimp:${listId}`;
   const reason = member.unsubscribe_reason?.trim();
-  const occurredAt = member.last_changed ? new Date(member.last_changed) : undefined;
+  const occurredAt =
+    member.last_changed ? new Date(member.last_changed) : undefined;
 
   return [
     {

@@ -1,5 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { LetterAddressPosition, PrismaClient } from '@prisma/client';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
+import { LetterAddressPosition, Prisma, PrismaClient } from '@prisma/client';
 import { v7 as uuidv7 } from 'uuid';
 import {
   composeMail,
@@ -7,15 +11,21 @@ import {
   deriveComputedFields,
   deriveDateFormats,
   flattenMailData,
+  MAIL_TEMPLATE_ATTACHMENT_IDS,
   MailContext,
   MailTemplateContent,
 } from '@wepublish/mail/api';
 import {
+  DocumentAttachmentRenderer,
+  DOCX_MIME_TYPE,
   LetterAddress,
   LetterAddressError,
   LetterContext,
+  MAX_ATTACHMENT_BYTES,
+  MAX_TEMPLATE_ATTACHMENTS,
   toLetterAddress,
 } from '@wepublish/letter/api';
+import { MailTemplateInput } from './mail-template.model';
 import {
   assembleMailData,
   assembleSampleMailData,
@@ -36,8 +46,141 @@ export class MailTemplateService {
   constructor(
     private prisma: PrismaClient,
     private mailContext: MailContext,
-    private letterContext: LetterContext
+    private letterContext: LetterContext,
+    private attachments: DocumentAttachmentRenderer
   ) {}
+
+  async createMailTemplate({ attachmentIds, ...input }: MailTemplateInput) {
+    await this.assertAttachable(attachmentIds);
+
+    return this.prisma.mailTemplate.create({
+      data: {
+        ...input,
+        ...(attachmentIds ?
+          { attachments: { create: this.attachmentRows(attachmentIds) } }
+        : {}),
+      },
+      include: MAIL_TEMPLATE_ATTACHMENT_IDS,
+    });
+  }
+
+  /** Without `attachmentIds` the attachments stay as they are. */
+  async updateMailTemplate(
+    id: string,
+    { attachmentIds, ...input }: MailTemplateInput
+  ) {
+    await this.assertAttachable(attachmentIds, id);
+
+    return this.prisma.mailTemplate.update({
+      where: { id },
+      data: {
+        ...input,
+        ...(attachmentIds ?
+          {
+            attachments: {
+              deleteMany: {},
+              create: this.attachmentRows(attachmentIds),
+            },
+          }
+        : {}),
+      },
+      include: MAIL_TEMPLATE_ATTACHMENT_IDS,
+    });
+  }
+
+  private attachmentRows(
+    attachmentIds: string[]
+  ): Prisma.MailTemplateAttachmentUncheckedCreateWithoutMailTemplateInput[] {
+    return attachmentIds.map((documentId, position) => ({
+      documentId,
+      position,
+    }));
+  }
+
+  /**
+   * Only what every mail of the template can carry is let through: Word
+   * documents, which only a renderer that converts them (Gotenberg) can fill
+   * in, few and small enough for a mail, and none on a template sent as a
+   * system mail, which someone waits for (a login link, a password reset).
+   * Attachments ship dark with the letters.
+   */
+  private async assertAttachable(
+    attachmentIds?: string[] | null,
+    templateId?: string
+  ) {
+    if (!attachmentIds?.length) {
+      return;
+    }
+
+    if (!(await this.attachments.isAvailable())) {
+      throw new ForbiddenException(
+        'Mail attachments are not available for this medium: they need paper letters and a pdf renderer that converts Word documents (Gotenberg).'
+      );
+    }
+
+    if (templateId) {
+      const systemMail = await this.prisma.userFlowMail.findFirst({
+        where: { mailTemplateId: templateId },
+        select: { event: true },
+      });
+
+      if (systemMail) {
+        throw new BadRequestException(
+          `This template is sent as the system mail ${systemMail.event}, which must not wait for attachments. Use another template for mails with attachments.`
+        );
+      }
+    }
+
+    if (attachmentIds.length > MAX_TEMPLATE_ATTACHMENTS) {
+      throw new BadRequestException(
+        `A template can attach at most ${MAX_TEMPLATE_ATTACHMENTS} documents.`
+      );
+    }
+
+    if (new Set(attachmentIds).size !== attachmentIds.length) {
+      throw new BadRequestException('A document can be attached only once.');
+    }
+
+    const documents = await this.prisma.document.findMany({
+      where: { id: { in: attachmentIds } },
+      select: {
+        id: true,
+        title: true,
+        filename: true,
+        mimeType: true,
+        fileSize: true,
+      },
+    });
+
+    for (const id of attachmentIds) {
+      const document = documents.find(candidate => candidate.id === id);
+
+      if (!document) {
+        throw new BadRequestException(`Document <${id}> not found.`);
+      }
+
+      if (document.mimeType !== DOCX_MIME_TYPE) {
+        throw new BadRequestException(
+          `"${
+            document.title || document.filename || id
+          }" is not a Word document (.docx); only those can be attached.`
+        );
+      }
+    }
+
+    // The pdfs come out about as large as the Word files; the send checks the
+    // pdfs themselves.
+    if (
+      documents.reduce((bytes, { fileSize }) => bytes + fileSize, 0) >
+      MAX_ATTACHMENT_BYTES
+    ) {
+      throw new BadRequestException(
+        `The documents are too large together for a mail: at most ${
+          MAX_ATTACHMENT_BYTES / 1024 / 1024
+        } MB.`
+      );
+    }
+  }
 
   /**
    * Delete a template, but refuse if it is still wired to a subscription flow
@@ -229,6 +372,8 @@ export class MailTemplateService {
     letterLayoutId?: string | null;
     /** Uploaded pdf chosen in the editor, possibly not saved yet. */
     letterAppendixId?: string | null;
+    /** Attachments chosen in the editor, possibly not saved yet. */
+    attachmentIds?: string[] | null;
   }): Promise<{ pdf: string }> {
     const data = await this.buildData(
       input.contextId,
@@ -240,6 +385,7 @@ export class MailTemplateService {
       template: {
         htmlContent: input.html,
         letterAppendixId: input.letterAppendixId,
+        attachmentIds: input.attachmentIds,
       },
       layout: await this.letterContext.resolveLayout(input.letterLayoutId),
       // The window position is chosen per send; a preview shows the default.
@@ -281,6 +427,8 @@ export class MailTemplateService {
     subject: string;
     html: string;
     text?: string | null;
+    /** Attachments chosen in the editor, possibly not saved yet. */
+    attachmentIds?: string[] | null;
   }): Promise<void> {
     const data = await this.buildData(
       input.contextId,
@@ -292,6 +440,7 @@ export class MailTemplateService {
       mailLogID: uuidv7(),
       recipient: input.recipient,
       data,
+      attachmentIds: input.attachmentIds ?? [],
       content: this.toContent({
         ...input,
         subject: `[Test] ${input.subject}`,

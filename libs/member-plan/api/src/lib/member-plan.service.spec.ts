@@ -139,6 +139,41 @@ describe('MemberPlanService cache', () => {
     expect(prisma.memberPlan.findMany).toHaveBeenCalledTimes(2);
   });
 
+  it('stores the printed issues with each periodicity price', async () => {
+    await service.updateMemberPlan({
+      id: 'plan-1',
+      periodicityPricing: [
+        {
+          periodicity: PaymentPeriodicity.yearly,
+          amountMin: 9000,
+          printIssues: 6,
+        },
+        { periodicity: PaymentPeriodicity.monthly, amountMin: 900 },
+      ],
+    } as never);
+
+    expect(prisma.memberPlan.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          periodicityPricing: expect.objectContaining({
+            createMany: {
+              data: [
+                expect.objectContaining({
+                  periodicity: PaymentPeriodicity.yearly,
+                  printIssues: 6,
+                }),
+                expect.objectContaining({
+                  periodicity: PaymentPeriodicity.monthly,
+                  printIssues: null,
+                }),
+              ],
+            },
+          }),
+        }),
+      })
+    );
+  });
+
   it('loads member plans again after one was deleted', async () => {
     await service.getActiveMemberPlans();
     await service.deleteMemberPlan('plan-1');

@@ -149,6 +149,14 @@ export class BrevoMailProvider extends BaseMailProvider {
         textContent: props.message,
         htmlContent: props.messageHtml,
         headers: { 'X-Mailin-custom': props.mailLogID },
+        ...(props.attachments?.length ?
+          {
+            attachment: props.attachments.map(({ filename, content }) => ({
+              name: filename,
+              content: content.toString('base64'),
+            })),
+          }
+        : {}),
       },
       `the mail to ${props.recipient}`
     );
@@ -170,7 +178,8 @@ export class BrevoMailProvider extends BaseMailProvider {
       throw new MailWebhookSignatureError('Webhook key mismatch');
     }
 
-    const events: WebhookEvent[] = Array.isArray(req.body) ? req.body : [req.body];
+    const events: WebhookEvent[] =
+      Array.isArray(req.body) ? req.body : [req.body];
     const statuses: MailLogStatus[] = [];
 
     for (const event of events) {
@@ -273,7 +282,10 @@ export class BrevoMailProvider extends BaseMailProvider {
     const signals: MailQualitySignal[] = [];
 
     for (let offset = 0; ; offset += PAGE) {
-      const body = await this.call<{ count?: number; contacts?: BlockedContact[] }>(
+      const body = await this.call<{
+        count?: number;
+        contacts?: BlockedContact[];
+      }>(
         'GET',
         `/smtp/blockedContacts?limit=${PAGE}&offset=${offset}&sort=desc`
       );
@@ -373,7 +385,10 @@ export class BrevoMailProvider extends BaseMailProvider {
       ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
     });
     const text = await response.text();
-    const parsed = text ? (JSON.parse(text) as T & { code?: string; message?: string }) : ({} as T);
+    const parsed =
+      text ?
+        (JSON.parse(text) as T & { code?: string; message?: string })
+      : ({} as T);
 
     if (!response.ok) {
       const error = parsed as { code?: string; message?: string };

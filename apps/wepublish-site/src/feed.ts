@@ -1,12 +1,6 @@
-import { generateFeed } from '@wepublish/feed/website';
+import { generateFeed, queryFeed } from '@wepublish/feed/website';
 import { getApiUrl } from '@wepublish/utils/website';
-import {
-  ArticleListDocument,
-  ArticleListQueryVariables,
-  ArticleSort,
-  getApiClient,
-  SortOrder,
-} from '@wepublish/website/api';
+import { ArticleSort, getApiClient, SortOrder } from '@wepublish/website/api';
 import { NextApiRequest } from 'next';
 import process from 'node:process';
 
@@ -33,19 +27,16 @@ export const getFeed = async (req: NextApiRequest) => {
     typePolicies: {},
   });
 
-  const { data } = await client.query({
-    query: ArticleListDocument,
-    variables: {
-      take: 50,
-      sort: ArticleSort.PublishedAt,
-      order: SortOrder.Descending,
-    } as ArticleListQueryVariables,
+  const { articles, options } = await queryFeed(client, {
+    take: 50,
+    sort: ArticleSort.PublishedAt,
+    order: SortOrder.Descending,
   });
 
-  const articles = (data?.articles.nodes ?? []).map(article => ({
+  const localized = articles.map(article => ({
     ...article,
     url: localizeUrl(siteUrl, article.slug, 'article'),
   }));
 
-  return generate(articles);
+  return generate(localized, options);
 };

@@ -75,11 +75,36 @@ const syncConfig = {
     { tag: 'FNAME', expression: 'user.firstName' },
   ],
   mailchimp_interestGroupMappings: [
-    { groupId: ABO_A_GROUP_ID, expression: 'slug:equals:abo-a' },
-    { groupId: ABO_B_GROUP_ID, expression: 'slug:equals:abo-b' },
+    {
+      groupId: ABO_A_GROUP_ID,
+      expression: 'slug:equals:abo-a',
+      autoAdd: true,
+      autoRemove: true,
+    },
+    {
+      groupId: ABO_B_GROUP_ID,
+      expression: 'slug:equals:abo-b',
+      autoAdd: true,
+      autoRemove: true,
+    },
   ],
   mailchimp_defaultInterestGroupIds: [NEWSLETTER_GROUP_ID],
   mailchimp_extensions: {},
+};
+
+const givenAboAInterestGroupMapping = (flags: {
+  autoAdd?: boolean;
+  autoRemove?: boolean;
+}) => {
+  syncProviderSettingsServiceMock.getEnabledSyncConfigs.mockResolvedValue([
+    {
+      ...syncConfig,
+      mailchimp_interestGroupMappings: [
+        { ...syncConfig.mailchimp_interestGroupMappings[0], ...flags },
+        syncConfig.mailchimp_interestGroupMappings[1],
+      ],
+    },
+  ]);
 };
 
 const mockUser = {
@@ -175,7 +200,10 @@ describe('MailchimpSyncService', () => {
           provide: ClickTrackingExtension,
           useValue: { execute: vi.fn() },
         },
-        { provide: MailchimpAudienceEvidenceService, useValue: audienceEvidence },
+        {
+          provide: MailchimpAudienceEvidenceService,
+          useValue: audienceEvidence,
+        },
         { provide: MailchimpCampaignClicksService, useValue: campaignClicks },
       ],
     }).compile();
@@ -224,6 +252,22 @@ describe('MailchimpSyncService', () => {
       expect(change.interests[NEWSLETTER_GROUP_ID]).toBe(true);
       expect(change.interests[ABO_A_GROUP_ID]).toBe(true);
     });
+
+    it.each([false, undefined])(
+      'leaves the interest group of a new subscription unset when autoAdd is %s',
+      async autoAdd => {
+        givenAboAInterestGroupMapping({ autoAdd });
+        prismaMock.subscription.findMany.mockResolvedValue([
+          buildSubscription(),
+        ]);
+
+        const result = await dryRun();
+
+        const change = result!.changes[0];
+        expect(change.interests[ABO_A_GROUP_ID]).toBe(false);
+        expect(change.interests[NEWSLETTER_GROUP_ID]).toBe(true);
+      }
+    );
 
     it('syncs a user without any subscription and leaves ACTIVE_ABO unset', async () => {
       const result = await dryRun();
@@ -319,6 +363,17 @@ describe('MailchimpSyncService', () => {
       expect(change.interests[ABO_B_GROUP_ID]).toBe(true);
     });
 
+    it('adds the interest group for a new subscription listed after an older one of the same plan', async () => {
+      prismaMock.subscription.findMany.mockResolvedValue([
+        buildSubscription({ id: 'sub-old', startsAt: daysAgo(365) }),
+        buildSubscription({ id: 'sub-new', startsAt: daysAgo(1) }),
+      ]);
+
+      const result = await dryRun();
+
+      expect(result!.changes[0].interests[ABO_A_GROUP_ID]).toBe(true);
+    });
+
     it('keeps every plan merge field active for an existing contact that was marked inactive', async () => {
       givenMailchimpContact({
         merge_fields: { ACTIVE_ABO: '-1', ABO_A: '-1', ABO_B: '-1' },
@@ -379,6 +434,41 @@ describe('MailchimpSyncService', () => {
       expect(change.mergeFields['ACTIVE_ABO']).toBe('-1');
       expect(change.interests[ABO_A_GROUP_ID]).toBe(false);
       expect(change.interests[NEWSLETTER_GROUP_ID]).toBe(true);
+    });
+
+    it.each([false, undefined])(
+      'keeps the subscription interest group set when autoRemove is %s',
+      async autoRemove => {
+        givenAboAInterestGroupMapping({ autoRemove });
+        givenMailchimpContact({
+          merge_fields: { ACTIVE_ABO: '1', ABO_A: '1' },
+          interests: {
+            [NEWSLETTER_GROUP_ID]: true,
+            [ABO_A_GROUP_ID]: true,
+          },
+        });
+
+        const result = await dryRun();
+
+        const change = result!.changes[0];
+        expect(change.mergeFields['ACTIVE_ABO']).toBe('-1');
+        expect(change.interests[ABO_A_GROUP_ID]).toBe(true);
+      }
+    );
+
+    it('still removes the subscription interest group when only automatic adding is disabled', async () => {
+      givenAboAInterestGroupMapping({ autoAdd: false });
+      givenMailchimpContact({
+        merge_fields: { ACTIVE_ABO: '1', ABO_A: '1' },
+        interests: {
+          [NEWSLETTER_GROUP_ID]: true,
+          [ABO_A_GROUP_ID]: true,
+        },
+      });
+
+      const result = await dryRun();
+
+      expect(result!.changes[0].interests[ABO_A_GROUP_ID]).toBe(false);
     });
 
     it('still syncs ACTIVE_ABO as -1 when the contact does not exist on Mailchimp yet', async () => {

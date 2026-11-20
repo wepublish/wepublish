@@ -8,15 +8,17 @@ export type DeliveryChange = {
   reason?: string | null;
   changedAt?: string | null;
   changedBy?: { firstName?: string | null; name: string } | null;
+  /** The API key that made the change on behalf of that person. */
+  changedByApiToken?: { name: string } | null;
 };
 
 /**
  * How a person got onto their channel, as one line: «Von Hand · Beibehalten ·
- * 12.10.2026 · Jane Doe». Null for someone who never had a decision.
+ * 12.10.2026 · Jane Doe · via API-Schlüssel «Import»». Null for someone who never had a decision.
  */
 export function describeDeliveryChange(
   t: TFunction,
-  { origin, reason, changedAt, changedBy }: DeliveryChange,
+  { origin, reason, changedAt, changedBy, changedByApiToken }: DeliveryChange,
   formatDate: (iso: string) => string
 ): string | null {
   if (!origin) {
@@ -29,6 +31,8 @@ export function describeDeliveryChange(
     changedAt && formatDate(changedAt),
     changedBy &&
       [changedBy.firstName, changedBy.name].filter(Boolean).join(' '),
+    changedByApiToken &&
+      t('deliveryMode.viaApiKey', { key: changedByApiToken.name }),
   ]
     .filter(Boolean)
     .join(' · ');

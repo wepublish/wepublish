@@ -12,10 +12,15 @@ export enum ApiTokenSort {
   CreatedAt = 'CreatedAt',
   LastUsedAt = 'LastUsedAt',
   Name = 'Name',
+  Status = 'Status',
+  ScopeCount = 'ScopeCount',
+  Owner = 'Owner',
+  ExpiresAt = 'ExpiresAt',
 }
 
 registerEnumType(ApiTokenSort, {
   name: 'ApiTokenSort',
+  description: `Status sorts working keys before expired and revoked ones (ascending). Owner sorts by the creator's name, then first name.`,
 });
 
 export enum ApiTokenStatus {
@@ -28,6 +33,43 @@ registerEnumType(ApiTokenStatus, {
   name: 'ApiTokenStatus',
   description: `A revoked token counts as revoked even once it has also expired.`,
 });
+
+export enum ApiTokenCreatorStateKind {
+  Ok = 'Ok',
+  Blocked = 'Blocked',
+  Limited = 'Limited',
+}
+
+registerEnumType(ApiTokenCreatorStateKind, {
+  name: 'ApiTokenCreatorStateKind',
+  description: `What the user who created a key still allows it: everything it holds (ok), nothing (blocked: every call is refused), or only some of its permissions (limited).`,
+});
+
+export enum ApiTokenBlockedReason {
+  CreatorMissing = 'CreatorMissing',
+  CreatorInactive = 'CreatorInactive',
+  CreatorMayNotCreateApiTokens = 'CreatorMayNotCreateApiTokens',
+}
+
+registerEnumType(ApiTokenBlockedReason, {
+  name: 'ApiTokenBlockedReason',
+});
+
+@ObjectType({
+  description: `A key acts on behalf of the user who created it. This is the check every call with the key goes through; expiry and revocation are separate.`,
+})
+export class ApiTokenCreatorState {
+  @Field(() => ApiTokenCreatorStateKind)
+  state!: ApiTokenCreatorStateKind;
+
+  @Field(() => ApiTokenBlockedReason, { nullable: true })
+  blockedReason?: ApiTokenBlockedReason | null;
+
+  @Field(() => [String], {
+    description: `Permissions of the key its creator no longer holds; calls that need one are refused.`,
+  })
+  missingScopes!: string[];
+}
 
 @ObjectType()
 export class ApiToken {

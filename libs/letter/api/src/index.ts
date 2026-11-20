@@ -8,6 +8,7 @@ export * from './lib/letter-recipient';
 export * from './lib/letter-renderer';
 export * from './lib/letter-print-defaults';
 export * from './lib/letter-context';
+export * from './lib/attachments/document-attachment-renderer';
 export * from './lib/gated-letter-sender';
 export * from './lib/letter.webhook';
 export * from './lib/letters-module-options';
