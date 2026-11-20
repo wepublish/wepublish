@@ -11,7 +11,9 @@ export type MailTemplateContextId =
   | 'renewal'
   | 'invoiceCreation'
   | 'custom'
-  | 'customNoSubscription';
+  | 'customNoSubscription'
+  | 'giftCodePurchase'
+  | 'giftCodeRedemption';
 
 export const MAIL_TEMPLATE_CONTEXT_IDS: MailTemplateContextId[] = [
   'account',
@@ -21,6 +23,8 @@ export const MAIL_TEMPLATE_CONTEXT_IDS: MailTemplateContextId[] = [
   'invoiceCreation',
   'custom',
   'customNoSubscription',
+  'giftCodePurchase',
+  'giftCodeRedemption',
 ];
 
 /** Whether a context's data is built from a subscription (vs. user-only). */
@@ -29,7 +33,8 @@ export function contextUsesSubscription(id: MailTemplateContextId): boolean {
     id === 'subscription' ||
     id === 'renewal' ||
     id === 'invoiceCreation' ||
-    id === 'custom'
+    id === 'custom' ||
+    id === 'giftCodeRedemption'
   );
 }
 
@@ -37,6 +42,8 @@ export interface MailDataSources {
   user: any;
   subscription?: any;
   invoice?: any;
+  /** Only a gift code mail has one; see `giftCodeMailData` in the gift code lib. */
+  giftCode?: any;
 }
 
 /** Assemble the `{ user, optional, jwt, currentDate }` payload for a context. */
@@ -50,7 +57,7 @@ export function assembleMailData(
   jwt: string;
   currentDate: Date;
 } {
-  const { user, subscription, invoice } = sources;
+  const { user, subscription, invoice, giftCode } = sources;
   const items = invoice?.items ?? [];
 
   let optional: Record<string, any> = {};
@@ -77,6 +84,14 @@ export function assembleMailData(
     // Free mail to a non-subscriber — there is no subscription to bind.
     case 'customNoSubscription':
       optional = {};
+      break;
+    // Mirrors `GiftCodeMailService`: the buyer gets the code with the invoice
+    // they paid, the redeemer the code with the subscription it paid.
+    case 'giftCodePurchase':
+      optional = { giftCode, invoice };
+      break;
+    case 'giftCodeRedemption':
+      optional = { giftCode, subscription, invoice };
       break;
   }
 
@@ -143,6 +158,58 @@ export const SAMPLE_INVOICE = {
 
 export const SAMPLE_JWT = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.sample.token';
 
+/** The shape `giftCodeMailData` (gift code lib) hands to a template. */
+export const SAMPLE_GIFT_CODE = {
+  code: 'ABCD-EFGH-JKMN',
+  recipientName: 'Max Muster',
+  periodicity: 'yearly',
+  redemptionWindowMonths: 12,
+  autoRenew: false,
+  issuedAt: day('2026-01-12T00:00:00.000Z'),
+  expiresAt: day('2027-01-12T00:00:00.000Z'),
+  redeemedAt: null,
+  offer: { name: 'Jahres-Abo verschenken' },
+  memberPlan: { name: 'Jahres-Abo', slug: 'jahres-abo' },
+};
+
+export const SAMPLE_REDEEMED_GIFT_CODE = {
+  ...SAMPLE_GIFT_CODE,
+  redeemedAt: day('2026-02-01T00:00:00.000Z'),
+};
+
+/** The standalone invoice a buyer pays for a gift code. */
+export const SAMPLE_GIFT_CODE_INVOICE = {
+  id: 'ckinv000gift0004',
+  mail: 'jane.doe@example.com',
+  description: 'Jahres-Abo verschenken',
+  currency: 'CHF',
+  dueAt: day('2026-01-12T00:00:00.000Z'),
+  paidAt: day('2026-01-12T00:00:00.000Z'),
+  items: [
+    {
+      name: 'Jahres-Abo verschenken',
+      description: 'Jahres-Abo (yearly)',
+      amount: 12000,
+      quantity: 1,
+    },
+  ],
+};
+
+/**
+ * The sample gift code (and, for a purchase, its invoice) a context's preview
+ * shows. The editor has no gift code to choose, so it stands in next to a real
+ * subscription too.
+ */
+export const SAMPLE_GIFT_CODES: Partial<
+  Record<MailTemplateContextId, Pick<MailDataSources, 'giftCode' | 'invoice'>>
+> = {
+  giftCodePurchase: {
+    giftCode: SAMPLE_GIFT_CODE,
+    invoice: SAMPLE_GIFT_CODE_INVOICE,
+  },
+  giftCodeRedemption: { giftCode: SAMPLE_REDEEMED_GIFT_CODE },
+};
+
 /** Sample payload for a context, used when no subscription is chosen. */
 export function assembleSampleMailData(contextId: MailTemplateContextId) {
   return assembleMailData(
@@ -151,6 +218,7 @@ export function assembleSampleMailData(contextId: MailTemplateContextId) {
       user: SAMPLE_USER,
       subscription: SAMPLE_SUBSCRIPTION,
       invoice: SAMPLE_INVOICE,
+      ...SAMPLE_GIFT_CODES[contextId],
     },
     SAMPLE_JWT
   );

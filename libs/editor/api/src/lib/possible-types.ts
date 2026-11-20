@@ -36,6 +36,7 @@ const result: PossibleTypesResultData = {
       "FacebookPostBlock",
       "FacebookVideoBlock",
       "FlexBlock",
+      "GiftCodeOffersBlock",
       "HTMLBlock",
       "IFrameBlock",
       "ImageBlock",
@@ -46,6 +47,7 @@ const result: PossibleTypesResultData = {
       "PolisConversationBlock",
       "PollBlock",
       "QuoteBlock",
+      "RedeemGiftCodeBlock",
       "RichTextBlock",
       "SoundCloudTrackBlock",
       "StreamableVideoBlock",
@@ -94,6 +96,7 @@ const result: PossibleTypesResultData = {
       "FacebookPostBlock",
       "FacebookVideoBlock",
       "FlexBlock",
+      "GiftCodeOffersBlock",
       "HTMLBlock",
       "IFrameBlock",
       "ImageBlock",
@@ -104,6 +107,7 @@ const result: PossibleTypesResultData = {
       "PolisConversationBlock",
       "PollBlock",
       "QuoteBlock",
+      "RedeemGiftCodeBlock",
       "RichTextBlock",
       "SoundCloudTrackBlock",
       "StreamableVideoBlock",
@@ -145,6 +149,7 @@ const result: PossibleTypesResultData = {
       "BreakBlock",
       "CustomTeaser",
       "EventTeaser",
+      "GiftCodeOffer",
       "Goodie",
       "ImageBlock",
       "ImageGalleryImage",
@@ -162,7 +167,9 @@ const result: PossibleTypesResultData = {
       "PublicSubscription"
     ],
     "HasMemberPlanLc": [
-      "DiscountCode"
+      "DiscountCode",
+      "GiftCode",
+      "GiftCodeOffer"
     ],
     "HasOneBlockContent": [
       "BlockWithAlignment"

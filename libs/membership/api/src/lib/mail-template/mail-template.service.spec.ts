@@ -30,6 +30,8 @@ describe('MailTemplateService', () => {
       subscriptionIntervals: number;
       userFlowMails: number;
       mailLog: number;
+      giftCodeOfferPurchaseMails?: number;
+      giftCodeOfferRedemptionMails?: number;
     }) => ({
       mailTemplate: {
         findUnique: vi.fn(async () => ({ id: 't1', _count: counts })),
@@ -70,6 +72,23 @@ describe('MailTemplateService', () => {
         makeService(prisma).deleteMailTemplate('t1')
       ).rejects.toThrow(BadRequestException);
     });
+
+    it.each(['giftCodeOfferPurchaseMails', 'giftCodeOfferRedemptionMails'])(
+      'refuses when a gift code offer sends it (%s)',
+      async relation => {
+        const prisma = prismaWithCounts({
+          subscriptionIntervals: 0,
+          userFlowMails: 0,
+          mailLog: 0,
+          [relation]: 1,
+        });
+
+        await expect(
+          makeService(prisma).deleteMailTemplate('t1')
+        ).rejects.toThrow('gift code offer');
+        expect(prisma.mailTemplate.delete).not.toHaveBeenCalled();
+      }
+    );
 
     it('deletes when unused', async () => {
       const prisma = prismaWithCounts({
@@ -430,6 +449,64 @@ describe('MailTemplateService', () => {
     });
   });
 
+  describe('preview of gift code mails (sample data)', () => {
+    it('renders the code, the offer and the paid invoice for a purchase', async () => {
+      const result = await makeService({}).preview({
+        contextId: 'giftCodePurchase',
+        subscriptionId: null,
+        subject: 'Your gift {{optional_giftCode_offer_name}}',
+        html: '<p>{{optional_giftCode_code}} for {{optional_giftCode_recipientName}}, {{optional_giftCode_memberPlan_name}}, valid until {{optional_giftCode_expiresAt_date}}, paid {{optional_invoice_total_display}}</p>',
+        text: null,
+      });
+
+      expect(result.subject).toBe('Your gift Jahres-Abo verschenken');
+      expect(result.html).toBe(
+        '<p>ABCD-EFGH-JKMN for Max Muster, Jahres-Abo, valid until 12.01.2027, paid CHF 120.00</p>'
+      );
+    });
+
+    it('renders the code and the subscription it paid for a redemption', async () => {
+      const result = await makeService({}).preview({
+        contextId: 'giftCodeRedemption',
+        subscriptionId: null,
+        subject: 'Redeemed {{optional_giftCode_code}}',
+        html: '<p>{{optional_giftCode_redeemedAt_date}}: {{optional_subscription_memberPlan_name}} until {{optional_subscription_paidUntil_date}}</p>',
+        text: null,
+      });
+
+      expect(result.subject).toBe('Redeemed ABCD-EFGH-JKMN');
+      expect(result.html).toBe(
+        '<p>01.02.2026: Jahres-Abo until 31.12.2026</p>'
+      );
+    });
+
+    // There is no gift code to choose in the editor, so a sample one stands in
+    // next to the real subscription.
+    it('shows a sample code next to a chosen subscription', async () => {
+      const prisma = {
+        subscription: {
+          findUnique: vi.fn(async () => ({
+            id: 's1',
+            user: { id: 'u1', firstName: 'Max' },
+            memberPlan: { name: 'Monats-Abo' },
+          })),
+        },
+        invoice: { findFirst: vi.fn(async () => null) },
+      };
+
+      const result = await makeService(prisma).preview({
+        contextId: 'giftCodeRedemption',
+        subscriptionId: 's1',
+        subject: '{{optional_giftCode_code}}',
+        html: '<p>{{user_firstName}}: {{optional_subscription_memberPlan_name}}</p>',
+        text: null,
+      });
+
+      expect(result.subject).toBe('ABCD-EFGH-JKMN');
+      expect(result.html).toBe('<p>Max: Monats-Abo</p>');
+    });
+  });
+
   describe('isLetterChannelAvailable', () => {
     it.each([true, false])(
       'reports whether letters are configured (%s)',
@@ -632,6 +709,33 @@ describe('MailTemplateService', () => {
       );
     });
 
+    it('prints the attachments of a gift code mail with a sample code', async () => {
+      const render = renderLetter();
+      const service = makeService(
+        {},
+        {},
+        { renderLetter: render, resolveLayout }
+      );
+
+      await service.previewLetter({
+        contextId: 'giftCodePurchase',
+        subscriptionId: null,
+        html: '<p>{{optional_giftCode_code}}</p>',
+        attachmentIds: ['certificate'],
+      });
+
+      expect(render).toHaveBeenCalledWith(
+        expect.objectContaining({
+          template: expect.objectContaining({ attachmentIds: ['certificate'] }),
+          data: expect.objectContaining({
+            optional: expect.objectContaining({
+              giftCode: expect.objectContaining({ code: 'ABCD-EFGH-JKMN' }),
+            }),
+          }),
+        })
+      );
+    });
+
     it('refuses a subscription whose user has no usable address', async () => {
       const render = renderLetter();
       const prisma = {
@@ -701,6 +805,45 @@ describe('MailTemplateService', () => {
         expect.objectContaining({ attachmentIds: ['contract'] })
       );
     });
+
+    // The documents are filled in with the same data as the mail, so a gift
+    // code certificate shows the sample code in the test mail.
+    it.each([
+      ['giftCodePurchase', null],
+      ['giftCodeRedemption', expect.any(Date)],
+    ] as const)(
+      'fills the documents of a %s mail with a sample code',
+      async (contextId, redeemedAt) => {
+        const mailContext = {
+          jwtGenerator: vi.fn(async () => 'jwt'),
+          sendComposedContent: vi.fn(async () => undefined),
+        };
+
+        await makeService({}, mailContext).sendTest({
+          contextId,
+          subscriptionId: null,
+          currentUserId: 'u1',
+          recipient: 'test@wepublish.ch',
+          subject: 'Hi',
+          html: '<p>Hi</p>',
+          attachmentIds: ['certificate'],
+        });
+
+        expect(mailContext.sendComposedContent).toHaveBeenCalledWith(
+          expect.objectContaining({
+            attachmentIds: ['certificate'],
+            data: expect.objectContaining({
+              optional: expect.objectContaining({
+                giftCode: expect.objectContaining({
+                  code: 'ABCD-EFGH-JKMN',
+                  redeemedAt,
+                }),
+              }),
+            }),
+          })
+        );
+      }
+    );
   });
 
   describe('getPlaceholderKeysByContext (server source of truth)', () => {
@@ -715,6 +858,33 @@ describe('MailTemplateService', () => {
       expect(keys).toContain('optional_subscription_monthlyAmount_display');
       expect(keys).toContain('optional_subscription_startsAt_date');
       expect(keys).toContain('optional_invoice_total_display');
+    });
+
+    it('lists the gift code keys for the gift code mails', () => {
+      const groups = makeService({}).getPlaceholderKeysByContext();
+      const keysOf = (contextId: string) =>
+        groups.find(g => g.contextId === contextId)?.keys.map(k => k.key) ?? [];
+
+      expect(keysOf('giftCodePurchase')).toEqual(
+        expect.arrayContaining([
+          'optional_giftCode_code',
+          'optional_giftCode_recipientName',
+          'optional_giftCode_offer_name',
+          'optional_giftCode_memberPlan_name',
+          'optional_giftCode_expiresAt_date',
+          'optional_invoice_total_display',
+        ])
+      );
+      expect(keysOf('giftCodeRedemption')).toEqual(
+        expect.arrayContaining([
+          'optional_giftCode_code',
+          'optional_giftCode_redeemedAt_date',
+          'optional_subscription_memberPlan_name',
+          'optional_subscription_paidUntil_date',
+          'optional_invoice_total_display',
+        ])
+      );
+      expect(keysOf('renewal')).not.toContain('optional_giftCode_code');
     });
   });
 });

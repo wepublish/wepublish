@@ -285,10 +285,11 @@ model Image {
   paymentMethods PaymentMethod[]
 
   banners               Banner[]
-  peerProfileLogo       PeerProfile[] @relation("logo")
-  peerProfileSquareLogo PeerProfile[] @relation("squareLogo")
+  peerProfileLogo       PeerProfile[]   @relation("logo")
+  peerProfileSquareLogo PeerProfile[]   @relation("squareLogo")
   goodies               Goodie[]
   printIssues           PrintIssue[]
+  giftCodeOffers        GiftCodeOffer[]
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -577,6 +578,10 @@ model InvoiceItem {
   goodie   Goodie? @relation(fields: [goodieId], references: [id], onDelete: SetNull)
   goodieId String?
 
+  fulfilledAt DateTime? @db.Timestamptz(3)
+  revokedAt   DateTime? @db.Timestamptz(3)
+  giftCode    GiftCode?
+
   @@index([invoiceId])
   @@map("invoices.items")
 }
@@ -612,9 +617,18 @@ model Invoice {
 
   subscriptionPeriods SubscriptionPeriod[]
 
+  userID String?
+  user   User?   @relation("InvoiceBuyer", fields: [userID], references: [id], onDelete: SetNull)
+
+  sellableKind SellableKind?
+
+  redeemedGiftCode GiftCode?
+
   @@index([mail])
   @@index([subscriptionID])
   @@index([dueAt])
+  @@index([userID])
+  @@index([sellableKind])
   @@map("invoices")
 }
 
@@ -643,6 +657,7 @@ enum MailLogType {
   userFlow         @map("userFlow")
   systemMail       @map("systemMail")
   manual           @map("manual")
+  giftCode         @map("giftCode")
 }
 
 model MailLog {
@@ -874,6 +889,16 @@ enum ProductType {
   Donation     @map("Donation")
 }
 
+enum SellableKind {
+  giftCode @map("gift-code")
+}
+
+enum GiftCodeCancellationReason {
+  manual          @map("manual")
+  chargeback      @map("chargeback")
+  invoiceCanceled @map("invoice-canceled")
+}
+
 model MemberPlan {
   id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
@@ -913,10 +938,12 @@ model MemberPlan {
   subscription      Subscription[]
   subscriptionFlows SubscriptionFlow[]
 
-  crowdfundings Crowdfunding[]
-  paywalls      PaywallMemberplan[]
-  discountCodes DiscountCode[]
-  goodies       Goodie[]
+  crowdfundings  Crowdfunding[]
+  paywalls       PaywallMemberplan[]
+  discountCodes  DiscountCode[]
+  goodies        Goodie[]
+  giftCodeOffer  GiftCodeOffer?
+  giftCodes      GiftCode[]
 
   @@index([name])
   @@map("member.plans")
@@ -1087,6 +1114,9 @@ model PaymentMethod {
   migrateFromPlans         MemberPlan[]                      @relation("PaymentMethodMigration")
   paymentMethodChangesFrom SubscriptionPaymentMethodChange[] @relation("PaymentMethodChangeFrom")
   paymentMethodChangesTo   SubscriptionPaymentMethodChange[] @relation("PaymentMethodChangeTo")
+  giftCodeOffers           GiftCodeOffer[]
+  giftCodeOfferRenewals    GiftCodeOffer[]                   @relation("GiftCodeOfferRenewalPaymentMethod")
+  giftCodeRenewals         GiftCode[]                        @relation("GiftCodeRenewalPaymentMethod")
 
   @@map("payment.methods")
 }
@@ -1287,6 +1317,7 @@ model Subscription {
   mailSendJobEntries MailSendJobRecipient[]
 
   paymentMethodChanges SubscriptionPaymentMethodChange[]
+  redeemedGiftCodes    GiftCode[]
 
   printDeliveries PrintIssueRecipient[]
 
@@ -1445,6 +1476,10 @@ model User {
   deliveryModeBulkChanges   DeliveryModeBulkChange[] @relation("DeliveryModeBulkChangedBy")
   seoChecklistItems         SeoChecklistItem[]
   apiTokens                 ApiToken[]
+  invoices                  Invoice[]                  @relation("InvoiceBuyer")
+  boughtGiftCodes           GiftCode[]                 @relation("GiftCodeBuyer")
+  redeemedGiftCodes         GiftCode[]                 @relation("GiftCodeRedeemer")
+  createdGiftCodes          GiftCode[]                 @relation("GiftCodeCreator")
 
   @@index([createdAt])
   @@map("users")
@@ -1751,6 +1786,11 @@ enum MailTemplateContext {
   custom
   // Free mail to someone without a subscription: recipient fields only.
   customNoSubscription
+  // Sent to the buyer once a gift code is paid: the code and the invoice.
+  giftCodePurchase
+  // Sent to the reader who redeemed a gift code: the code and the
+  // subscription it paid.
+  giftCodeRedemption
 }
 
 model MailTemplate {
@@ -1788,6 +1828,9 @@ model MailTemplate {
   mailLog MailLog[]
 
   mailSendJobs MailSendJob[]
+
+  giftCodeOfferPurchaseMails   GiftCodeOffer[] @relation("GiftCodeOfferPurchaseMail")
+  giftCodeOfferRedemptionMails GiftCodeOffer[] @relation("GiftCodeOfferRedemptionMail")
 
   // Stationery a letter printed from this template is set on. Null means the
   // default layout; the medium is still the send job's choice.
@@ -1869,6 +1912,8 @@ enum BlockType {
   HTML           @map("html")
   Subscribe      @map("subscribe")
   MailchimpForm  @map("mailchimpForm")
+  RedeemGiftCode @map("redeemGiftCode")
+  GiftCodeOffers @map("giftCodeOffers")
   Crowdfunding   @map("crowdfunding")
   Poll           @map("poll")
   Comment        @map("comment")
@@ -3128,4 +3173,89 @@ model PrintIssueRecipient {
   @@index([subscriptionId])
   @@index([periodId])
   @@map("print.issue_recipients")
+}
+
+model GiftCodeOffer {
+  id                     String             @id @default(dbgenerated("uuidv7()"))
+  createdAt              DateTime           @default(now()) @db.Timestamptz(3)
+  modifiedAt             DateTime           @updatedAt @db.Timestamptz(3)
+  name                   String
+  description            Json?
+  active                 Boolean            @default(true)
+  imageID                String?
+  image                  Image?             @relation(fields: [imageID], references: [id], onDelete: SetNull)
+  memberPlanId           String             @unique
+  memberPlan             MemberPlan         @relation(fields: [memberPlanId], references: [id], onDelete: Cascade)
+  periodicity            PaymentPeriodicity
+  redemptionWindowMonths Int?
+  price                  Int
+  allowDiscountCodes     Boolean            @default(false)
+  autoRenew              Boolean            @default(false)
+  renewalPaymentMethodId String?
+  renewalPaymentMethod   PaymentMethod?     @relation("GiftCodeOfferRenewalPaymentMethod", fields: [renewalPaymentMethodId], references: [id], onDelete: SetNull)
+  paymentMethods         PaymentMethod[]
+  giftCodes              GiftCode[]
+
+  // Sent to the buyer once the code is issued, and to the reader who redeems
+  // it. No template, no mail.
+  purchaseMailTemplateId   String?
+  purchaseMailTemplate     MailTemplate? @relation("GiftCodeOfferPurchaseMail", fields: [purchaseMailTemplateId], references: [id], onDelete: Restrict)
+  redemptionMailTemplateId String?
+  redemptionMailTemplate   MailTemplate? @relation("GiftCodeOfferRedemptionMail", fields: [redemptionMailTemplateId], references: [id], onDelete: Restrict)
+
+  @@map("gift-codes.offers")
+}
+
+model GiftCode {
+  id         String   @id @default(dbgenerated("uuidv7()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  code String @unique
+
+  offerId String
+  offer   GiftCodeOffer @relation(fields: [offerId], references: [id], onDelete: Restrict)
+
+  memberPlanId String
+  memberPlan   MemberPlan @relation(fields: [memberPlanId], references: [id], onDelete: Restrict)
+
+  periodicity            PaymentPeriodicity
+  redemptionWindowMonths Int?
+
+  autoRenew              Boolean        @default(false)
+  renewalPaymentMethodId String?
+  renewalPaymentMethod   PaymentMethod? @relation("GiftCodeRenewalPaymentMethod", fields: [renewalPaymentMethodId], references: [id], onDelete: SetNull)
+
+  invoiceItemId String?      @unique
+  invoiceItem   InvoiceItem? @relation(fields: [invoiceItemId], references: [id], onDelete: Restrict)
+
+  buyerId String?
+  buyer   User?   @relation("GiftCodeBuyer", fields: [buyerId], references: [id], onDelete: SetNull)
+
+  createdByUserId String?
+  createdBy       User?   @relation("GiftCodeCreator", fields: [createdByUserId], references: [id], onDelete: SetNull)
+
+  recipientName String?
+
+  issuedAt  DateTime? @db.Timestamptz(3)
+  expiresAt DateTime? @db.Timestamptz(3)
+
+  canceledAt         DateTime?                   @db.Timestamptz(3)
+  cancellationReason GiftCodeCancellationReason?
+  canceledByUserId   String?
+
+  redeemedAt             DateTime?     @db.Timestamptz(3)
+  redeemedByUserId       String?
+  redeemedBy             User?         @relation("GiftCodeRedeemer", fields: [redeemedByUserId], references: [id], onDelete: SetNull)
+  redeemedSubscriptionId String?
+  redeemedSubscription   Subscription? @relation(fields: [redeemedSubscriptionId], references: [id], onDelete: SetNull)
+  redeemedInvoiceId      String?       @unique
+  redeemedInvoice        Invoice?      @relation(fields: [redeemedInvoiceId], references: [id], onDelete: SetNull)
+
+  @@index([buyerId])
+  @@index([offerId])
+  @@index([memberPlanId])
+  @@index([issuedAt])
+  @@index([redeemedSubscriptionId])
+  @@map("gift-codes")
 }

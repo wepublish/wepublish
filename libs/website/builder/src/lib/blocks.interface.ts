@@ -21,6 +21,8 @@ import {
   FullSoundCloudTrackBlockFragment,
   FullStreamableVideoBlockFragment,
   FullSubscribeBlockFragment,
+  FullRedeemGiftCodeBlockFragment,
+  FullGiftCodeOffersBlockFragment,
   FullMailchimpFormBlockFragment,
   FullTeaserGridFlexBlockFragment,
   FullTeaserListBlockFragment,
@@ -115,6 +117,10 @@ export type BuilderCommentBlockProps = WithBlockProps<FullCommentBlockFragment>;
 export type BuilderSubscribeBlockProps =
   WithBlockProps<FullSubscribeBlockFragment> &
     Pick<BuilderSubscribeProps, 'hiddenAreas' | 'onInvalid'>;
+export type BuilderRedeemGiftCodeBlockProps =
+  WithBlockProps<FullRedeemGiftCodeBlockFragment>;
+export type BuilderGiftCodeOffersBlockProps =
+  WithBlockProps<FullGiftCodeOffersBlockFragment>;
 export type BuilderTeaserGridFlexBlockProps =
   WithBlockProps<FullTeaserGridFlexBlockFragment>;
 export type BuilderTeaserGridBlockProps =

@@ -59,11 +59,18 @@ import {
 } from '../atoms/blockSection';
 import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
 import { InfoTooltip, InfoTrigger } from '../atoms/infoTooltip';
+import { SelectPage } from '../atoms/page/selectPage';
+import { useFeature } from '../featureContext';
+import {
+  getPeriodPriceRange,
+  getPlanPeriodicities,
+  PlanForPeriodAmount,
+} from '../memberPlan/periodicity-pricing';
 import { ClickPopover } from '../popover';
-import { getMonthlyEquivalentRange } from '../utility';
+import { PAYMENT_PERIODICITY_MONTHS } from '../utility';
 import { SubscribeBlockValue } from './types';
 
-const PlanList = styled('ul')`
+export const PlanList = styled('ul')`
   container-type: inline-size;
   display: grid;
   margin: 0;
@@ -112,7 +119,7 @@ const PlanItem = styled('li')`
 `;
 
 const DragHandle = styled('div')`
-  grid-row: span 2;
+  grid-row: 1 / -1;
   align-self: start;
 
   @container (max-width: 480px) {
@@ -121,7 +128,7 @@ const DragHandle = styled('div')`
   }
 `;
 
-const PlanHeader = styled('div')`
+export const PlanHeader = styled('div')`
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto auto;
   grid-template-areas: 'summary layout default';
@@ -141,7 +148,7 @@ const PlanHeader = styled('div')`
   }
 `;
 
-const PlanSummary = styled('div')`
+export const PlanSummary = styled('div')`
   grid-area: summary;
   display: grid;
   min-width: 0;
@@ -175,7 +182,7 @@ const PlanLayoutToggle = styled(ToggleButtonGroup)`
   }
 `;
 
-const PlanDefault = styled(FormControlLabel)`
+export const PlanDefault = styled(FormControlLabel)`
   grid-area: default;
   margin: 0;
   white-space: nowrap;
@@ -217,7 +224,7 @@ const PlanAmountsBreakdown = styled('div')`
   font-size: 12px;
 `;
 
-const InlineLabel = styled('span')`
+export const InlineLabel = styled('span')`
   display: inline-flex;
   gap: ${({ theme }) => theme.spacing(0.5)};
   align-items: center;
@@ -333,7 +340,7 @@ type SortablePlanRowProps = {
   children: ReactNode;
 };
 
-const SortablePlanRow = ({
+export const SortablePlanRow = ({
   id,
   label,
   disabled,
@@ -391,6 +398,47 @@ const SUBSCRIBE_BLOCK_FIELDS = [
   SubscribeBlockField.PasswordRepeated,
 ];
 
+export const SubscribeBlockFieldsSection = ({
+  fields,
+  disabled,
+  onChange,
+}: {
+  fields: SubscribeBlockField[];
+  disabled?: boolean;
+  onChange: (fields: SubscribeBlockField[]) => void;
+}) => {
+  const { t } = useTranslation();
+
+  return (
+    <BlockSection>
+      <BlockSectionHeader title={t('blocks.subscribe.selectFields')} />
+
+      <Autocomplete
+        multiple
+        disableCloseOnSelect
+        disabled={disabled}
+        options={SUBSCRIBE_BLOCK_FIELDS}
+        getOptionLabel={field => t(`blocks.subscribe.${field}`)}
+        value={fields}
+        onChange={(_event, fields) => onChange(fields)}
+        renderInput={params => (
+          <TextField
+            {...params}
+            slotProps={{
+              ...params.slotProps,
+              htmlInput: {
+                ...params.slotProps.htmlInput,
+                'aria-label': t('blocks.subscribe.selectFields'),
+              },
+            }}
+            helperText={t('blocks.subscribe.selectFieldsSelectionHint')}
+          />
+        )}
+      />
+    </BlockSection>
+  );
+};
+
 export const renderLayouts: SubscribeBlockRenderLayout[] = [
   SubscribeBlockRenderLayout.None,
   SubscribeBlockRenderLayout.Slider,
@@ -401,7 +449,7 @@ const DEFAULT_MONTHLY_TILE_VALUES = [1000, 1500, 2000];
 
 const defaultAmountTileValues = (periodicity: PaymentPeriodicity) =>
   DEFAULT_MONTHLY_TILE_VALUES.map(
-    value => value * PERIODICITY_MONTHS[periodicity]
+    value => value * PAYMENT_PERIODICITY_MONTHS[periodicity]
   );
 
 const formatValues = (value: number[] | null | undefined) =>
@@ -413,46 +461,6 @@ const formatValues = (value: number[] | null | undefined) =>
 
 const formatPlanAmount = (amount: number | null | undefined) =>
   amount != null ? (amount / 100).toFixed(2) : '–';
-
-const PERIODICITY_ORDER = [
-  PaymentPeriodicity.Monthly,
-  PaymentPeriodicity.Quarterly,
-  PaymentPeriodicity.Biannual,
-  PaymentPeriodicity.Yearly,
-  PaymentPeriodicity.Biennial,
-  PaymentPeriodicity.Lifetime,
-];
-
-const PERIODICITY_MONTHS: Record<PaymentPeriodicity, number> = {
-  [PaymentPeriodicity.Monthly]: 1,
-  [PaymentPeriodicity.Quarterly]: 3,
-  [PaymentPeriodicity.Biannual]: 6,
-  [PaymentPeriodicity.Yearly]: 12,
-  [PaymentPeriodicity.Biennial]: 24,
-  [PaymentPeriodicity.Lifetime]: 1200,
-};
-
-type PlanForPeriodAmount = {
-  defaultPaymentPeriodicity?: PaymentPeriodicity | null;
-  periodicityPricing?: Array<{
-    periodicity: PaymentPeriodicity;
-    amountMin?: number | null;
-    amountTarget?: number | null;
-    amountMax?: number | null;
-  }> | null;
-  availablePaymentMethods?: Array<{
-    paymentPeriodicities: PaymentPeriodicity[];
-  }> | null;
-};
-
-const getPlanPeriodicities = (
-  plan: PlanForPeriodAmount
-): PaymentPeriodicity[] =>
-  PERIODICITY_ORDER.filter(periodicity =>
-    plan.availablePaymentMethods?.some(paymentMethod =>
-      paymentMethod.paymentPeriodicities.includes(periodicity)
-    )
-  );
 
 const hasNonMonthlyPricing = (plan: PlanForPeriodAmount) =>
   !!plan.periodicityPricing?.some(
@@ -474,30 +482,6 @@ const getDefaultPeriodicity = (
   }
 
   return periodicities[0] ?? PaymentPeriodicity.Yearly;
-};
-
-const calculatePeriodAmount = (
-  monthlyAmount: number,
-  periodicity: PaymentPeriodicity
-) => Math.round(monthlyAmount * PERIODICITY_MONTHS[periodicity]);
-
-const getPeriodPriceRange = (
-  plan: PlanForPeriodAmount,
-  periodicity: PaymentPeriodicity
-) => {
-  const row = plan.periodicityPricing?.find(
-    price => price.periodicity === periodicity
-  );
-  const equivalent = getMonthlyEquivalentRange(plan.periodicityPricing);
-
-  const derive = (amount: number | null | undefined) =>
-    amount != null ? calculatePeriodAmount(amount, periodicity) : null;
-
-  return {
-    amountMin: row?.amountMin ?? derive(equivalent.amountPerMonthMin) ?? 0,
-    amountTarget: row?.amountTarget ?? derive(equivalent.amountPerMonthTarget),
-    amountMax: row?.amountMax ?? derive(equivalent.amountPerMonthMax),
-  };
 };
 
 const formatPlanPriceSummary = (
@@ -561,6 +545,7 @@ export const SubscribeBlock = ({
   disabled,
 }: BlockProps<SubscribeBlockValue>) => {
   const { t } = useTranslation();
+  const giftCodes = useFeature('gift-codes');
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 4 } })
@@ -879,10 +864,10 @@ export const SubscribeBlock = ({
   );
 
   const handleFieldsChange = useCallback(
-    (fields: string[]) => {
+    (fields: SubscribeBlockField[]) => {
       onChange(current => ({
         ...current,
-        fields: (fields as SubscribeBlockField[]) ?? [],
+        fields: fields ?? [],
       }));
     },
     [onChange]
@@ -1446,32 +1431,78 @@ export const SubscribeBlock = ({
         />
       </BlockSection>
 
-      <BlockSection>
-        <BlockSectionHeader title={t('blocks.subscribe.selectFields')} />
+      {giftCodes && (
+        <BlockSection>
+          <BlockSectionHeader
+            title={t('blocks.subscribe.giftCodeRedemptionHeading')}
+          />
 
-        <Autocomplete
-          multiple
-          disableCloseOnSelect
-          disabled={disabled}
-          options={SUBSCRIBE_BLOCK_FIELDS}
-          getOptionLabel={field => t(`blocks.subscribe.${field}`)}
-          value={value.fields}
-          onChange={(_event, fields) => handleFieldsChange(fields)}
-          renderInput={params => (
-            <TextField
-              {...params}
-              slotProps={{
-                ...params.slotProps,
-                htmlInput: {
-                  ...params.slotProps.htmlInput,
-                  'aria-label': t('blocks.subscribe.selectFields'),
-                },
-              }}
-              helperText={t('blocks.subscribe.selectFieldsSelectionHint')}
-            />
-          )}
-        />
-      </BlockSection>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={!!value.showGiftCodeRedemption}
+                disabled={disabled}
+                onChange={(_event, checked) =>
+                  onChange(current => ({
+                    ...current,
+                    showGiftCodeRedemption: checked,
+                    giftCodeRedemptionPageId:
+                      checked ? current.giftCodeRedemptionPageId : null,
+                    giftCodeRedemptionLinkText:
+                      checked ? current.giftCodeRedemptionLinkText : null,
+                  }))
+                }
+              />
+            }
+            label={
+              <Typography variant="body2">
+                {t('blocks.subscribe.showGiftCodeRedemption')}
+              </Typography>
+            }
+          />
+
+          <Collapse
+            in={!!value.showGiftCodeRedemption}
+            unmountOnExit
+          >
+            <SubSettings>
+              <SelectPage
+                label={t('blocks.subscribe.giftCodeRedemptionPage')}
+                disabled={disabled}
+                selectedPage={value.giftCodeRedemptionPageId}
+                setSelectedPage={giftCodeRedemptionPageId =>
+                  onChange(current => ({
+                    ...current,
+                    giftCodeRedemptionPageId,
+                  }))
+                }
+              />
+
+              <TextField
+                fullWidth
+                label={t('blocks.subscribe.giftCodeRedemptionLinkText')}
+                helperText={t(
+                  'blocks.subscribe.giftCodeRedemptionLinkTextHelp'
+                )}
+                disabled={disabled}
+                value={value.giftCodeRedemptionLinkText ?? ''}
+                onChange={event =>
+                  onChange(current => ({
+                    ...current,
+                    giftCodeRedemptionLinkText: event.target.value,
+                  }))
+                }
+              />
+            </SubSettings>
+          </Collapse>
+        </BlockSection>
+      )}
+
+      <SubscribeBlockFieldsSection
+        fields={value.fields}
+        disabled={disabled}
+        onChange={handleFieldsChange}
+      />
     </BlockSections>
   );
 };

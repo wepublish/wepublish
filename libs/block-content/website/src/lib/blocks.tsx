@@ -13,12 +13,16 @@ import {
   BuilderQuoteBlockProps,
   BuilderRichTextBlockProps,
   BuilderSubscribeBlockProps,
+  BuilderRedeemGiftCodeBlockProps,
+  BuilderGiftCodeOffersBlockProps,
   BuilderTitleBlockProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { isFlexBlock } from './nested-blocks/flex-block';
 import { isHtmlBlock } from './html/html-block';
 import { isSubscribeBlock } from './subscribe/subscribe-block';
+import { isRedeemGiftCodeBlock } from './gift-code/redeem-gift-code-block';
+import { isGiftCodeOffersBlock } from './gift-code/gift-code-offers-block';
 import { isMailchimpFormBlock } from './mailchimp-form/mailchimp-form-block';
 import { isImageBlock } from './image/image-block';
 import { isQuoteBlock } from './quote/quote-block';
@@ -411,6 +415,24 @@ export const BlockRenderer = memo(
           block => (
             <blocks.Subscribe
               {...(block as BuilderSubscribeBlockProps)}
+              className={className}
+            />
+          ),
+        ],
+        [
+          isRedeemGiftCodeBlock,
+          block => (
+            <blocks.RedeemGiftCode
+              {...(block as BuilderRedeemGiftCodeBlockProps)}
+              className={className}
+            />
+          ),
+        ],
+        [
+          isGiftCodeOffersBlock,
+          block => (
+            <blocks.GiftCodeOffers
+              {...(block as BuilderGiftCodeOffersBlockProps)}
               className={className}
             />
           ),

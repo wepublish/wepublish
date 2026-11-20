@@ -20,6 +20,31 @@ vi.mock('react-i18next', () => ({
   }),
 }));
 
+const features = vi.hoisted(() => ({ giftCodes: false }));
+
+vi.mock('../featureContext', () => ({
+  useFeature: (feature: string) =>
+    feature === 'gift-codes' && features.giftCodes,
+}));
+
+vi.mock('../atoms/page/selectPage', () => ({
+  SelectPage: ({
+    label,
+    selectedPage,
+    setSelectedPage,
+  }: {
+    label: string;
+    selectedPage?: string | null;
+    setSelectedPage: (page: string | null) => void;
+  }) => (
+    <input
+      aria-label={label}
+      value={selectedPage ?? ''}
+      onChange={event => setSelectedPage(event.target.value || null)}
+    />
+  ),
+}));
+
 const plan = (
   id: string,
   name: string,
@@ -237,5 +262,85 @@ describe('SubscribeBlock', () => {
     );
 
     expect(latest().showDiscountCodes).toBe(true);
+  });
+
+  describe('gift code redemption', () => {
+    afterEach(() => {
+      features.giftCodes = false;
+    });
+
+    it('is not offered without the gift codes feature', () => {
+      render(<Harness value={initialValue()} />);
+
+      expect(
+        screen.queryByRole('checkbox', {
+          name: 'blocks.subscribe.showGiftCodeRedemption',
+        })
+      ).not.toBeInTheDocument();
+    });
+
+    it('asks for the redemption page once switched on', () => {
+      features.giftCodes = true;
+      render(<Harness value={initialValue()} />);
+
+      expect(
+        screen.queryByRole('textbox', {
+          name: 'blocks.subscribe.giftCodeRedemptionPage',
+        })
+      ).not.toBeInTheDocument();
+
+      fireEvent.click(
+        screen.getByRole('checkbox', {
+          name: 'blocks.subscribe.showGiftCodeRedemption',
+        })
+      );
+
+      expect(latest().showGiftCodeRedemption).toBe(true);
+
+      fireEvent.change(
+        screen.getByRole('textbox', {
+          name: 'blocks.subscribe.giftCodeRedemptionPage',
+        }),
+        { target: { value: 'page-1' } }
+      );
+
+      expect(latest().giftCodeRedemptionPageId).toBe('page-1');
+
+      fireEvent.change(
+        screen.getByRole('textbox', {
+          name: 'blocks.subscribe.giftCodeRedemptionLinkText',
+        }),
+        { target: { value: 'Geschenk erhalten? Hier einlösen.' } }
+      );
+
+      expect(latest().giftCodeRedemptionLinkText).toBe(
+        'Geschenk erhalten? Hier einlösen.'
+      );
+    });
+
+    it('forgets the redemption page and link text when switched off', () => {
+      features.giftCodes = true;
+      render(
+        <Harness
+          value={initialValue({
+            showGiftCodeRedemption: true,
+            giftCodeRedemptionPageId: 'page-1',
+            giftCodeRedemptionLinkText: 'Einlösen',
+          })}
+        />
+      );
+
+      fireEvent.click(
+        screen.getByRole('checkbox', {
+          name: 'blocks.subscribe.showGiftCodeRedemption',
+        })
+      );
+
+      expect(latest()).toMatchObject({
+        showGiftCodeRedemption: false,
+        giftCodeRedemptionPageId: null,
+        giftCodeRedemptionLinkText: null,
+      });
+    });
   });
 });

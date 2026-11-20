@@ -318,15 +318,15 @@ export class MailContext implements MailContextInterface {
   }
 
   /**
-   * Ids of every mail template referenced by a subscription interval or a user
-   * flow mail.
+   * Ids of every mail template referenced by a subscription interval, a user
+   * flow mail or a gift code offer.
    *
    * Selects the foreign key rather than joining the template: only the id is
    * ever read, and joining pulled each row's full `htmlContent`/`textContent`
    * along with it.
    */
   async getUsedTemplateIdentifiers(): Promise<string[]> {
-    const [intervals, userFlowMails] = await Promise.all([
+    const [intervals, userFlowMails, giftCodeOffers] = await Promise.all([
       this.prisma.subscriptionInterval.findMany({
         select: {
           mailTemplateId: true,
@@ -337,6 +337,12 @@ export class MailContext implements MailContextInterface {
           mailTemplateId: true,
         },
       }),
+      this.prisma.giftCodeOffer.findMany({
+        select: {
+          purchaseMailTemplateId: true,
+          redemptionMailTemplateId: true,
+        },
+      }),
     ]);
 
     return [
@@ -344,6 +350,12 @@ export class MailContext implements MailContextInterface {
       ...userFlowMails.flatMap(
         userFlowMail => userFlowMail.mailTemplateId ?? []
       ),
+      ...giftCodeOffers.flatMap(offer => [
+        ...(offer.purchaseMailTemplateId ? [offer.purchaseMailTemplateId] : []),
+        ...(offer.redemptionMailTemplateId ?
+          [offer.redemptionMailTemplateId]
+        : []),
+      ]),
     ];
   }
 }

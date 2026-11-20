@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { lighten } from '@mui/material';
 import {
+  GiftCodePurchase,
   MemberPlanItem,
   MemberPlanItemContent,
   MemberPlanItemDescription,
@@ -56,6 +57,12 @@ export const HauptstadtMemberPlanPicker = styled(
     }
   )
 )`
+  ${MemberPlanPickerRadios} {
+    gap: ${({ theme }) => theme.spacing(4)};
+  }
+`;
+
+export const HauptstadtGiftCodePurchase = styled(GiftCodePurchase)`
   ${MemberPlanPickerRadios} {
     gap: ${({ theme }) => theme.spacing(4)};
   }
