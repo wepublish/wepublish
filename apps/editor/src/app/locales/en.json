@@ -1596,6 +1596,26 @@
     },
     "name": "Name",
     "mailTemplates": {
+      "list": {
+        "attachments": "Attachments",
+        "attachmentsFilter": {
+          "with": "With attachments",
+          "without": "Without attachments"
+        },
+        "search": "Search",
+        "channels": "Delivery channels",
+        "letterLayout": "Stationery",
+        "letterLayoutDefault": "Default",
+        "letterAppendix": "Additional pages",
+        "letterAppendixNone": "None",
+        "memberPlans": "Member plans",
+        "memberPlansHint": "Member plans whose communication flow sends this template. The default flow belongs to no member plan and is not listed here.",
+        "noMatch": "No template matches the filters.",
+        "statuses": {
+          "ok": "In use",
+          "unused": "Not in use"
+        }
+      },
       "availableTemplates": "Message templates",
       "cancel": "Cancel",
       "content": "Content",

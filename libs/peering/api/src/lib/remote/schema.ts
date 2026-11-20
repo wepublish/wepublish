@@ -2820,10 +2820,19 @@ export type MailTemplateLetterPreviewModel = {
   pdf: Scalars['String']['output'];
 };
 
+/** A member plan whose communication flow sends a template. */
+export type MailTemplateMemberPlanModel = {
+  __typename?: 'MailTemplateMemberPlanModel';
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+};
+
 export type MailTemplateModel = {
   __typename?: 'MailTemplateModel';
   /** Word documents (.docx) filled in with the same placeholders, converted to pdf and attached to every mail sent from this template, in this order. A printed letter carries them after its pages. */
   attachmentIds: Array<Scalars['String']['output']>;
+  /** Title, or else the filename, of each attached document, in their order. For the template table. */
+  attachmentNames: Array<Scalars['String']['output']>;
   /** The channels this template is written for, the email first. */
   channels: Array<MailChannel>;
   context?: Maybe<MailTemplateContext>;
@@ -2833,8 +2842,14 @@ export type MailTemplateModel = {
   id: Scalars['String']['output'];
   /** @deprecated Use the letter entry of `variants`. */
   letterAppendixId?: Maybe<Scalars['String']['output']>;
+  /** Title, or else the filename, of the pdf printed after the letter pages. Null without one. */
+  letterAppendixName?: Maybe<Scalars['String']['output']>;
   /** @deprecated Use the letter entry of `variants`. */
   letterLayoutId?: Maybe<Scalars['String']['output']>;
+  /** Name of the stationery the letter version is set on. Null for the default stationery and for a template without a letter version. */
+  letterLayoutName?: Maybe<Scalars['String']['output']>;
+  /** The member plans whose communication flow sends this template, by name. The default flow belongs to no plan and is not listed. */
+  memberPlans: Array<MailTemplateMemberPlanModel>;
   name: Scalars['String']['output'];
   status: Scalars['String']['output'];
   /** The subject of the email version; the title of the letter for a template written as a letter only. */

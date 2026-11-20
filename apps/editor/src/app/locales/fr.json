@@ -1595,6 +1595,26 @@
       "goToLogin": "Aller à la connexion"
     },
     "mailTemplates": {
+      "list": {
+        "attachments": "Pièces jointes",
+        "attachmentsFilter": {
+          "with": "Avec pièce jointe",
+          "without": "Sans pièce jointe"
+        },
+        "search": "Rechercher",
+        "channels": "Canaux de distribution",
+        "letterLayout": "Papier à lettres",
+        "letterLayoutDefault": "Standard",
+        "letterAppendix": "Pages supplémentaires",
+        "letterAppendixNone": "Aucune",
+        "memberPlans": "Plans d’abonnement",
+        "memberPlansHint": "Plans d’abonnement dont le flux de communication envoie ce modèle. Le flux standard n’appartient à aucun plan et n’apparaît pas ici.",
+        "noMatch": "Aucun modèle ne correspond aux filtres.",
+        "statuses": {
+          "ok": "Utilisé",
+          "unused": "Non utilisé"
+        }
+      },
       "availableTemplates": "Modèles de message",
       "cancel": "Annuler",
       "content": "Contenu",

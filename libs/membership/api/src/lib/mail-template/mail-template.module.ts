@@ -3,7 +3,10 @@ import { PrismaModule } from '@wepublish/nest-modules';
 import { MailTemplatesResolver } from './mail-template.resolver';
 import { MailTemplateService } from './mail-template.service';
 import { UsedMailTemplateDataloader } from './used-mail-template.dataloader';
+import { MailTemplateMemberPlanDataloader } from './mail-template-member-plan.dataloader';
+import { MailTemplateAttachmentNameDataloader } from './mail-template-attachment-name.dataloader';
 import {
+  MailTemplateLetterDetailDataloader,
   MailTemplateVariantDataloader,
   MailTemplateVariantSummaryDataloader,
 } from './mail-template-variant.dataloader';
@@ -16,6 +19,9 @@ import {
     UsedMailTemplateDataloader,
     MailTemplateVariantDataloader,
     MailTemplateVariantSummaryDataloader,
+    MailTemplateLetterDetailDataloader,
+    MailTemplateMemberPlanDataloader,
+    MailTemplateAttachmentNameDataloader,
   ],
 })
 export class MailTemplateModule {}

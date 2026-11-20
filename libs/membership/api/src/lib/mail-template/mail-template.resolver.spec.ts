@@ -10,9 +10,12 @@ import { MailTemplatesResolver } from './mail-template.resolver';
 import { MailTemplateService } from './mail-template.service';
 import { UsedMailTemplateDataloader } from './used-mail-template.dataloader';
 import {
+  MailTemplateLetterDetailDataloader,
   MailTemplateVariantDataloader,
   MailTemplateVariantSummaryDataloader,
 } from './mail-template-variant.dataloader';
+import { MailTemplateMemberPlanDataloader } from './mail-template-member-plan.dataloader';
+import { MailTemplateAttachmentNameDataloader } from './mail-template-attachment-name.dataloader';
 import { INestApplication, Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriverConfig } from '@nestjs/apollo';
@@ -112,16 +115,60 @@ const letterVariant2 = {
   letterAppendixId: null,
 };
 
+// What the letter of each template is printed on, as the list asks for it.
+const letterDetails = [
+  {
+    templateId: mockTemplate1.id,
+    letterLayout: { name: 'Briefpapier Verlag' },
+    letterAppendix: { title: null, filename: 'qr-rechnung' },
+  },
+  { templateId: mockTemplate2.id, letterLayout: null, letterAppendix: null },
+];
+
 const attachmentsInOrder = {
   attachments: { select: { documentId: true }, orderBy: { position: 'asc' } },
 };
 
 const prismaServiceMock = {
   mailTemplateVariant: {
+    findMany: vi.fn(async (args?: any): Promise<any[]> =>
+      args?.select?.letterLayout ?
+        letterDetails
+      : [mailVariant1, letterVariant1, letterVariant2]
+    ),
+  },
+  mailTemplateAttachment: {
+    // In the order the template lists them, whatever their names are.
     findMany: vi.fn(async (_args?: any) => [
-      mailVariant1,
-      letterVariant1,
-      letterVariant2,
+      {
+        mailTemplateId: mockTemplate1.id,
+        document: { title: 'Zahlschein', filename: 'zahlschein' },
+      },
+      {
+        mailTemplateId: mockTemplate1.id,
+        document: { title: null, filename: 'agb' },
+      },
+    ]),
+  },
+  subscriptionInterval: {
+    findMany: vi.fn(async (_args?: any) => [
+      {
+        mailTemplateId: mockTemplate1.id,
+        subscriptionFlow: { memberPlan: { id: 'plan-b', name: 'Print' } },
+      },
+      {
+        mailTemplateId: mockTemplate1.id,
+        subscriptionFlow: { memberPlan: { id: 'plan-a', name: 'Digital' } },
+      },
+      // Two events of the same plan, and the default flow, which has no plan.
+      {
+        mailTemplateId: mockTemplate1.id,
+        subscriptionFlow: { memberPlan: { id: 'plan-a', name: 'Digital' } },
+      },
+      {
+        mailTemplateId: mockTemplate1.id,
+        subscriptionFlow: { memberPlan: null },
+      },
     ]),
   },
   mailTemplate: {
@@ -190,6 +237,9 @@ const mailTemplateServiceMock = {
     UsedMailTemplateDataloader,
     MailTemplateVariantDataloader,
     MailTemplateVariantSummaryDataloader,
+    MailTemplateLetterDetailDataloader,
+    MailTemplateAttachmentNameDataloader,
+    MailTemplateMemberPlanDataloader,
     { provide: MailTemplateService, useValue: mailTemplateServiceMock },
     { provide: FeaturesService, useValue: featuresMock },
     {
@@ -219,6 +269,9 @@ describe('MailTemplatesResolver', () => {
         UsedMailTemplateDataloader,
         MailTemplateVariantDataloader,
         MailTemplateVariantSummaryDataloader,
+        MailTemplateLetterDetailDataloader,
+        MailTemplateAttachmentNameDataloader,
+        MailTemplateMemberPlanDataloader,
         { provide: PrismaClient, useValue: prismaServiceMock },
         { provide: MailContext, useValue: mailContextMock },
         { provide: MailTemplateService, useValue: mailTemplateServiceMock },
@@ -287,6 +340,111 @@ describe('MailTemplatesResolver', () => {
       include: attachmentsInOrder,
     });
     expect(result?.id).toEqual(mockTemplate1.id);
+  });
+
+  describe('what the template table shows', () => {
+    beforeEach(() => {
+      prismaServiceMock.mailTemplateVariant.findMany.mockClear();
+      prismaServiceMock.subscriptionInterval.findMany.mockClear();
+    });
+
+    it('names the stationery and the appendix of the letter version', async () => {
+      await expect(
+        resolver.letterLayoutName(mockTemplate1 as any)
+      ).resolves.toBe('Briefpapier Verlag');
+      await expect(
+        resolver.letterAppendixName(mockTemplate1 as any)
+      ).resolves.toBe('qr-rechnung');
+    });
+
+    it('leaves both empty for a letter on the default stationery without appendix', async () => {
+      await expect(
+        resolver.letterLayoutName(mockTemplate2 as any)
+      ).resolves.toBeNull();
+      await expect(
+        resolver.letterAppendixName(mockTemplate2 as any)
+      ).resolves.toBeNull();
+    });
+
+    it('reads the letter details of many templates in one query', async () => {
+      await Promise.all([
+        resolver.letterLayoutName(mockTemplate1 as any),
+        resolver.letterAppendixName(mockTemplate1 as any),
+        resolver.letterLayoutName(mockTemplate2 as any),
+      ]);
+
+      expect(
+        prismaServiceMock.mailTemplateVariant.findMany
+      ).toHaveBeenCalledTimes(1);
+      expect(
+        prismaServiceMock.mailTemplateVariant.findMany
+      ).toHaveBeenCalledWith({
+        where: {
+          templateId: { in: [mockTemplate1.id, mockTemplate2.id] },
+          channel: MailChannel.letter,
+        },
+        select: {
+          templateId: true,
+          letterLayout: { select: { name: true } },
+          letterAppendix: { select: { title: true, filename: true } },
+        },
+      });
+    });
+
+    it('lists each member plan whose flow sends the template once, by name', async () => {
+      await expect(resolver.memberPlans(mockTemplate1 as any)).resolves.toEqual(
+        [
+          { id: 'plan-a', name: 'Digital' },
+          { id: 'plan-b', name: 'Print' },
+        ]
+      );
+      await expect(resolver.memberPlans(mockTemplate2 as any)).resolves.toEqual(
+        []
+      );
+    });
+
+    it('names the attachments of a template in their order', async () => {
+      await expect(
+        resolver.attachmentNames(mockTemplate1 as any)
+      ).resolves.toEqual(['Zahlschein', 'agb']);
+      await expect(
+        resolver.attachmentNames(mockTemplate2 as any)
+      ).resolves.toEqual([]);
+    });
+
+    it('reads the attachment names of many templates in one query', async () => {
+      prismaServiceMock.mailTemplateAttachment.findMany.mockClear();
+
+      await Promise.all([
+        resolver.attachmentNames(mockTemplate1 as any),
+        resolver.attachmentNames(mockTemplate2 as any),
+      ]);
+
+      expect(
+        prismaServiceMock.mailTemplateAttachment.findMany
+      ).toHaveBeenCalledTimes(1);
+      expect(
+        prismaServiceMock.mailTemplateAttachment.findMany
+      ).toHaveBeenCalledWith({
+        where: { mailTemplateId: { in: [mockTemplate1.id, mockTemplate2.id] } },
+        orderBy: { position: 'asc' },
+        select: {
+          mailTemplateId: true,
+          document: { select: { title: true, filename: true } },
+        },
+      });
+    });
+
+    it('reads the member plans of many templates in one query', async () => {
+      await Promise.all([
+        resolver.memberPlans(mockTemplate1 as any),
+        resolver.memberPlans(mockTemplate2 as any),
+      ]);
+
+      expect(
+        prismaServiceMock.subscriptionInterval.findMany
+      ).toHaveBeenCalledTimes(1);
+    });
   });
 
   describe('what a template says per channel', () => {

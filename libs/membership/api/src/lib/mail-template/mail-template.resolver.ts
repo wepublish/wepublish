@@ -26,6 +26,7 @@ import {
   MailProviderModel,
   MailTemplateInput,
   MailTemplateLetterPreviewModel,
+  MailTemplateMemberPlanModel,
   MailTemplateModel,
   MailTemplatePreviewInput,
   MailTemplatePreviewModel,
@@ -45,9 +46,12 @@ import { Permissions } from '@wepublish/permissions/api';
 import { MailTemplateService } from './mail-template.service';
 import { UsedMailTemplateDataloader } from './used-mail-template.dataloader';
 import {
+  MailTemplateLetterDetailDataloader,
   MailTemplateVariantDataloader,
   MailTemplateVariantSummaryDataloader,
 } from './mail-template-variant.dataloader';
+import { MailTemplateMemberPlanDataloader } from './mail-template-member-plan.dataloader';
+import { MailTemplateAttachmentNameDataloader } from './mail-template-attachment-name.dataloader';
 import { MailTemplateContextId } from './mail-template-data';
 
 @Resolver(() => MailTemplateModel)
@@ -58,7 +62,10 @@ export class MailTemplatesResolver {
     private mailTemplateService: MailTemplateService,
     private usedMailTemplateDataloader: UsedMailTemplateDataloader,
     private variantDataloader: MailTemplateVariantDataloader,
-    private variantSummaryDataloader: MailTemplateVariantSummaryDataloader
+    private variantSummaryDataloader: MailTemplateVariantSummaryDataloader,
+    private letterDetailDataloader: MailTemplateLetterDetailDataloader,
+    private memberPlanDataloader: MailTemplateMemberPlanDataloader,
+    private attachmentNameDataloader: MailTemplateAttachmentNameDataloader
   ) {}
 
   @Permissions(CanGetMailTemplates)
@@ -272,6 +279,16 @@ export class MailTemplatesResolver {
     return loaded ? attachmentIdsOf(loaded) : [];
   }
 
+  @ResolveField('attachmentNames', () => [String], {
+    description:
+      'Title, or else the filename, of each attached document, in their order. For the template table.',
+  })
+  async attachmentNames(
+    @Parent() template: MailTemplateModel
+  ): Promise<string[]> {
+    return (await this.attachmentNameDataloader.load(template.id)) ?? [];
+  }
+
   @ResolveField('status', () => MailTemplateStatus, {
     description: 'Status of the template',
   })
@@ -305,6 +322,43 @@ export class MailTemplatesResolver {
     const variants = await this.variantSummaryDataloader.load(template.id);
 
     return variants?.[0]?.subject ?? '';
+  }
+
+  @ResolveField('letterLayoutName', () => String, {
+    nullable: true,
+    description:
+      'Name of the stationery the letter version is set on. Null for the default stationery and for a template without a letter version.',
+  })
+  async letterLayoutName(
+    @Parent() template: MailTemplateModel
+  ): Promise<string | null> {
+    const letter = await this.letterDetailDataloader.load(template.id);
+
+    return letter?.letterLayout?.name ?? null;
+  }
+
+  @ResolveField('letterAppendixName', () => String, {
+    nullable: true,
+    description:
+      'Title, or else the filename, of the pdf printed after the letter pages. Null without one.',
+  })
+  async letterAppendixName(
+    @Parent() template: MailTemplateModel
+  ): Promise<string | null> {
+    const appendix = (await this.letterDetailDataloader.load(template.id))
+      ?.letterAppendix;
+
+    return appendix?.title || appendix?.filename || null;
+  }
+
+  @ResolveField('memberPlans', () => [MailTemplateMemberPlanModel], {
+    description:
+      'The member plans whose communication flow sends this template, by name. The default flow belongs to no plan and is not listed.',
+  })
+  async memberPlans(
+    @Parent() template: MailTemplateModel
+  ): Promise<MailTemplateMemberPlanModel[]> {
+    return (await this.memberPlanDataloader.load(template.id)) ?? [];
   }
 
   @ResolveField('variants', () => [MailTemplateVariantModel], {

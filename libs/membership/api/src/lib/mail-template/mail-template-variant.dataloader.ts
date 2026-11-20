@@ -67,3 +67,37 @@ export class MailTemplateVariantDataloader extends DataLoaderService<
     return templateIds.map(id => byChannel(variants[id]));
   }
 }
+
+export type MailTemplateLetterDetail = {
+  templateId: string;
+  letterLayout: { name: string } | null;
+  letterAppendix: { title: string | null; filename: string | null } | null;
+};
+
+/**
+ * What the letter version of each template is printed on: the name of its
+ * stationery and of its appendix. Only the template table asks for it.
+ */
+@Injectable({
+  scope: Scope.REQUEST,
+})
+export class MailTemplateLetterDetailDataloader extends DataLoaderService<MailTemplateLetterDetail> {
+  constructor(private prisma: PrismaClient) {
+    super();
+  }
+
+  protected async loadByKeys(templateIds: string[]) {
+    const letters = await this.prisma.mailTemplateVariant.findMany({
+      where: { templateId: { in: templateIds }, channel: MailChannel.letter },
+      select: {
+        templateId: true,
+        letterLayout: { select: { name: true } },
+        letterAppendix: { select: { title: true, filename: true } },
+      },
+    });
+
+    return templateIds.map(
+      id => letters.find(letter => letter.templateId === id) ?? null
+    );
+  }
+}
