@@ -9,6 +9,7 @@ import {
 import { add } from 'date-fns';
 import {
   CancelPublicSubscriptionInput,
+  CorrectSubscriptionPeriodArgs,
   CreatePublicSubscriptionInput,
   ImportPublicSubscriptionInput,
   PublicSubscription,
@@ -124,6 +125,14 @@ export class PublicSubscriptionResolver {
   })
   public updateSubscription(@Args() input: UpdatePublicSubscriptionInput) {
     return this.service.updateSubscription(input);
+  }
+
+  @Permissions(CanCreateSubscription)
+  @Mutation(returns => PublicSubscription, {
+    description: `Data correction: gives the latest, paid period of a running subscription the periodicity and end it should have had (e.g. a trial that runs as a year), and the subscription the same periodicity. The price of the period stays; paidUntil follows when it was that period's end. Creates, cancels and sends nothing; refuses a subscription with an open invoice.`,
+  })
+  public correctSubscriptionPeriod(@Args() args: CorrectSubscriptionPeriodArgs) {
+    return this.service.correctSubscriptionPeriod(args);
   }
 
   @Permissions(CanCreateSubscription)
