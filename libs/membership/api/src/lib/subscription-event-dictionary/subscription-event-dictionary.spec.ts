@@ -512,6 +512,173 @@ describe('SubscriptionEventDictionary', () => {
     );
   });
 
+  // Plan flow first, then a flow for all plans, then the default flow.
+  describe('a flow for all member plans', () => {
+    const flow = (overrides: Record<string, unknown>) => ({
+      id: 'flow',
+      default: false,
+      allMemberPlans: false,
+      memberPlanId: null,
+      periodicities: [PaymentPeriodicity.yearly],
+      autoRenewal: [true],
+      createdAt: new Date(),
+      modifiedAt: new Date(),
+      paymentMethods: [{ id: 'payrexx' }],
+      ...overrides,
+      intervals: [
+        {
+          id: `${overrides.id}-subscribe`,
+          event: SubscriptionEvent.SUBSCRIBE,
+          daysAwayFromEnding: null,
+          mailTemplate: { id: `${overrides.id}-SUBSCRIBE` },
+          sendAsLetter: false,
+        },
+      ],
+    });
+
+    const defaultFlow = flow({ id: 'default', default: true });
+    const allPlansYearly = flow({ id: 'all-plans', allMemberPlans: true });
+    const planYearly = flow({ id: 'plan', memberPlanId: 'plan-1' });
+
+    const templateFor = async (
+      flows: unknown[],
+      query: Partial<{ memberplanId: string; periodicity: PaymentPeriodicity }>
+    ) => {
+      prismaMock.subscriptionFlow.findMany!.mockResolvedValue(flows);
+
+      const actions = await new SubscriptionEventDictionary(
+        prismaMock as any
+      ).getActionsForSubscriptions({
+        memberplanId: 'plan-2',
+        periodicity: PaymentPeriodicity.yearly,
+        paymentMethodId: 'payrexx',
+        autorenwal: true,
+        events: [SubscriptionEvent.SUBSCRIBE],
+        ...query,
+      });
+
+      return actions[0]?.mailTemplateId;
+    };
+
+    it('takes the matching subscriptions of a plan that has no flow for them', async () => {
+      await expect(
+        templateFor([defaultFlow, planYearly, allPlansYearly], {})
+      ).resolves.toBe('all-plans-SUBSCRIBE');
+    });
+
+    it('leaves a subscription to the flow of its own plan', async () => {
+      await expect(
+        templateFor([defaultFlow, allPlansYearly, planYearly], {
+          memberplanId: 'plan-1',
+        })
+      ).resolves.toBe('plan-SUBSCRIBE');
+    });
+
+    it('leaves what its conditions do not match to the default flow', async () => {
+      await expect(
+        templateFor([defaultFlow, allPlansYearly], {
+          periodicity: PaymentPeriodicity.monthly,
+        })
+      ).resolves.toBe('default-SUBSCRIBE');
+    });
+
+    it('takes any payment method and renewal where those are left open', async () => {
+      const anyYearly = flow({
+        id: 'any-yearly',
+        allMemberPlans: true,
+        paymentMethods: [],
+        autoRenewal: [],
+      });
+      prismaMock.subscriptionFlow.findMany!.mockResolvedValue([
+        defaultFlow,
+        anyYearly,
+      ]);
+
+      const actions = await new SubscriptionEventDictionary(
+        prismaMock as any
+      ).getActionsForSubscriptions({
+        memberplanId: 'plan-2',
+        periodicity: PaymentPeriodicity.yearly,
+        paymentMethodId: 'stripe',
+        autorenwal: false,
+        events: [SubscriptionEvent.SUBSCRIBE],
+      });
+
+      expect(actions[0].mailTemplateId).toBe('any-yearly-SUBSCRIBE');
+    });
+
+    it('does not read an open condition of a member plan flow as any', async () => {
+      await expect(
+        templateFor(
+          [
+            defaultFlow,
+            flow({ id: 'plan', memberPlanId: 'plan-2', paymentMethods: [] }),
+          ],
+          {}
+        )
+      ).resolves.toBe('default-SUBSCRIBE');
+    });
+
+    it('looks up the template of an event in the same order', async () => {
+      prismaMock.subscriptionFlow
+        .findFirst!.mockResolvedValueOnce(null)
+        .mockResolvedValueOnce(allPlansYearly);
+
+      await expect(
+        new SubscriptionEventDictionary(
+          prismaMock as any
+        ).getSubscriptionTemplateAction(
+          {
+            memberPlanID: 'plan-2',
+            paymentMethodID: 'payrexx',
+            paymentPeriodicity: PaymentPeriodicity.yearly,
+            autoRenew: true,
+          } as any,
+          SubscriptionEvent.SUBSCRIBE
+        )
+      ).resolves.toEqual({
+        mailTemplateId: 'all-plans-SUBSCRIBE',
+        sendAsLetter: false,
+      });
+
+      const [planLookup, allPlansLookup] =
+        prismaMock.subscriptionFlow.findFirst!.mock.calls.map(
+          ([args]) => args.where
+        );
+
+      expect(planLookup).toMatchObject({
+        default: false,
+        allMemberPlans: false,
+        memberPlan: { id: 'plan-2' },
+      });
+      // Each condition: left open, or it has the subscription's value.
+      expect(allPlansLookup).toEqual({
+        default: false,
+        allMemberPlans: true,
+        AND: [
+          {
+            OR: [
+              { autoRenewal: { isEmpty: true } },
+              { autoRenewal: { has: true } },
+            ],
+          },
+          {
+            OR: [
+              { periodicities: { isEmpty: true } },
+              { periodicities: { has: PaymentPeriodicity.yearly } },
+            ],
+          },
+          {
+            OR: [
+              { paymentMethods: { none: {} } },
+              { paymentMethods: { some: { id: 'payrexx' } } },
+            ],
+          },
+        ],
+      });
+    });
+  });
+
   describe('letter switch', () => {
     const defaultFlow = {
       id: 'default-flow',
@@ -575,6 +742,7 @@ describe('SubscriptionEventDictionary', () => {
     it('tells which template an event uses and whether it prints', async () => {
       prismaMock.subscriptionFlow
         .findFirst!.mockResolvedValueOnce(null)
+        .mockResolvedValueOnce(null)
         .mockResolvedValueOnce({
           ...defaultFlow,
           intervals: [defaultFlow.intervals[0]],
