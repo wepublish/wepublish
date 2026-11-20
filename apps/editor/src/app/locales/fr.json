@@ -1938,7 +1938,11 @@
         "select": "Choisir ce modèle",
         "selectCurrent": "Choisir ce modèle (déjà choisi)",
         "none": "Ne pas envoyer de message",
-        "create": "Créer un nouveau modèle"
+        "create": "Créer un nouveau modèle",
+        "columns": {
+          "template": "Modèle",
+          "purpose": "Usage"
+        }
       },
       "channels": "Canaux de distribution",
       "noLetterVersion": "Ce modèle n’a pas de version lettre. Ajoutez-la dans le modèle pour que les personnes au canal lettre reçoivent ce message imprimé ; d’ici là, elles reçoivent l’e-mail.",
@@ -2936,18 +2940,6 @@
           "default": "Standard",
           "allMemberPlans": "Pour tous les plans d’abonnement",
           "memberPlan": "Plan d’abonnement « {{memberPlan}} »"
-        },
-        "filter": {
-          "warnings": "Avertissements",
-          "warningsOptions": {
-            "with": "Avec avertissement",
-            "without": "Sans avertissement"
-          },
-          "subscriptions": "Abonnements concernés",
-          "subscriptionsOptions": {
-            "with": "Avec abonnements",
-            "without": "Sans abonnements"
-          }
         },
         "any": {
           "paymentMethods": "tout mode de paiement",

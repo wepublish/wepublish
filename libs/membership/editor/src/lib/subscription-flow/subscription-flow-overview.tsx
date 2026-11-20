@@ -21,7 +21,6 @@ import {
   DeleteSubscriptionFlowDocument,
   ListPaymentMethodsDocument,
   MemberPlanListDocument,
-  PaymentPeriodicity,
   SetSubscriptionFlowActiveDocument,
   SubscriptionFlowCountsDocument,
   SubscriptionFlowHandledCountDocument,
@@ -61,10 +60,8 @@ import { usePaperLetterFlow } from '../delivery-mode/use-paper-letter-flow';
 import { SystemMailSection } from '../system-mail/system-mail-section';
 import { FlowFilters } from './filter/flow-filters';
 import {
-  countFlowFilters,
   filterFlowRows,
-  FLOW_FILTER_PARAMS,
-  FlowFilter,
+  MEMBER_PLAN_PARAM,
   flowPath,
   FlowRow,
   flowRows,
@@ -259,13 +256,7 @@ function FlowTable() {
 
   const [searchParams, setSearchParams] = useSearchParams();
   // The filters live in the address, so a narrowed list can be linked.
-  const filter = Object.fromEntries(
-    Object.entries(FLOW_FILTER_PARAMS).map(([field, param]) => [
-      field,
-      searchParams.getAll(param),
-    ])
-  ) as FlowFilter;
-  const { memberPlanIds } = filter;
+  const memberPlanIds = searchParams.getAll(MEMBER_PLAN_PARAM);
 
   const { data, loading, refetch } = useQuery(SubscriptionFlowsDocument, {
     variables: { defaultFlowOnly: false },
@@ -279,18 +270,13 @@ function FlowTable() {
   const [flowToDelete, setFlowToDelete] = useState<FlowRow>();
   const [creating, setCreating] = useState(false);
 
-  // The counts follow the filters of the conditions and the plan, so that
-  // the rows shown add up to the sum in the header.
+  // The counts follow the plan filter, so that the rows shown add up to the
+  // sum in the header.
   const { data: countData, refetch: refetchCounts } = useQuery(
     SubscriptionFlowCountsDocument,
     {
       variables: {
-        filter: {
-          memberPlanIds: filter.memberPlanIds,
-          paymentMethodIds: filter.paymentMethodIds,
-          periodicities: filter.periodicities as PaymentPeriodicity[],
-          autoRenewal: filter.renewal.map(value => value === 'true'),
-        },
+        filter: { memberPlanIds },
       },
     }
   );
@@ -352,7 +338,7 @@ function FlowTable() {
     await setFlowActive({ variables: { id: row.id, active } });
     await Promise.all([refetch(), refetchCounts()]);
   };
-  const rows = filterFlowRows(allRows, filter);
+  const rows = filterFlowRows(allRows, { memberPlanIds });
 
   const memberPlanOptions = useMemo(
     () =>
@@ -368,45 +354,18 @@ function FlowTable() {
     [allRows]
   );
 
-  // The payment methods some flow names; the other conditions have a fixed
-  // set of values.
-  const paymentMethodOptions = useMemo(
-    () =>
-      [
-        ...new Map(
-          allRows.flatMap(row =>
-            row.flow.paymentMethods.map(
-              paymentMethod =>
-                [paymentMethod.id, paymentMethod.name] as [string, string]
-            )
-          )
-        ),
-      ].map(([value, label]) => ({ value, label })),
-    [allRows]
-  );
-
-  const setFilter = (change: Partial<FlowFilter>) =>
+  const setMemberPlanIds = (ids: string[]) =>
     setSearchParams(
       params => {
         const next = new URLSearchParams(params);
 
-        for (const [field, values] of Object.entries(change)) {
-          const param = FLOW_FILTER_PARAMS[field as keyof FlowFilter];
-
-          next.delete(param);
-          values.forEach(value => next.append(param, value));
-        }
+        next.delete(MEMBER_PLAN_PARAM);
+        ids.forEach(id => next.append(MEMBER_PLAN_PARAM, id));
 
         return next;
       },
       { replace: true }
     );
-
-  const withOrWithout = (kind: 'warnings' | 'subscriptions') =>
-    ['with', 'without'].map(value => ({
-      value,
-      label: t(`subscriptionFlow.overview.filter.${kind}Options.${value}`),
-    }));
 
   const confirmDelete = async () => {
     if (!flowToDelete) {
@@ -580,62 +539,12 @@ function FlowTable() {
                 label={t('subscriptionFlow.overview.memberPlan')}
                 options={memberPlanOptions}
                 value={memberPlanIds}
-                onChange={memberPlanIds => setFilter({ memberPlanIds })}
-              />
-
-              <MultiSelectFilter
-                label={t('subscriptionFlow.paymentMethod')}
-                options={paymentMethodOptions}
-                value={filter.paymentMethodIds}
-                onChange={paymentMethodIds => setFilter({ paymentMethodIds })}
-              />
-
-              <MultiSelectFilter
-                label={t('subscriptionFlow.periodicity')}
-                options={Object.values(PaymentPeriodicity).map(value => ({
-                  value,
-                  label: t(`memberPlanList.paymentPeriodicity.${value}`),
-                }))}
-                value={filter.periodicities}
-                onChange={periodicities => setFilter({ periodicities })}
-              />
-
-              <MultiSelectFilter
-                label={t('subscriptionFlow.autoRenewal')}
-                options={['true', 'false'].map(value => ({
-                  value,
-                  label: t(`subscriptionFlow.overview.renewal.${value}`),
-                }))}
-                value={filter.renewal}
-                onChange={renewal => setFilter({ renewal })}
-              />
-
-              <MultiSelectFilter
-                label={t('subscriptionFlow.overview.filter.warnings')}
-                options={withOrWithout('warnings')}
-                value={filter.warnings}
-                onChange={warnings => setFilter({ warnings })}
-              />
-
-              <MultiSelectFilter
-                label={t('subscriptionFlow.overview.filter.subscriptions')}
-                options={withOrWithout('subscriptions')}
-                value={filter.subscriptions}
-                onChange={subscriptions => setFilter({ subscriptions })}
+                onChange={setMemberPlanIds}
               />
             </Filters>
           }
-          filterCount={countFlowFilters(filter)}
-          onResetFilters={() =>
-            setFilter({
-              memberPlanIds: [],
-              paymentMethodIds: [],
-              periodicities: [],
-              renewal: [],
-              warnings: [],
-              subscriptions: [],
-            })
-          }
+          filterCount={memberPlanIds.length ? 1 : 0}
+          onResetFilters={() => setMemberPlanIds([])}
         />
       </Rows>
 

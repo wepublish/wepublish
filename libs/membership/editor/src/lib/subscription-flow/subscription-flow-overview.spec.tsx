@@ -371,28 +371,32 @@ describe('SubscriptionFlowOverview', () => {
     ]);
   });
 
-  it('narrows to the flows for a term given in the address', () => {
-    renderOverview('/communicationflows?term=monthly');
+  it('offers the member plan as the only filter', () => {
+    renderOverview('/communicationflows?memberPlan=print');
 
-    expect(flowLinks().map(link => link.textContent)).toEqual([
-      'subscriptionFlow.overview.defaultFlow',
-      'Digital',
-    ]);
-  });
-
-  it('offers filters by member plan, by each condition and by state', () => {
-    renderOverview('/communicationflows?term=monthly');
+    expect(
+      screen.getAllByLabelText('subscriptionFlow.overview.memberPlan').length
+    ).toBeGreaterThan(0);
 
     for (const label of [
-      'subscriptionFlow.overview.memberPlan',
       'subscriptionFlow.paymentMethod',
       'subscriptionFlow.periodicity',
       'subscriptionFlow.autoRenewal',
       'subscriptionFlow.overview.filter.warnings',
       'subscriptionFlow.overview.filter.subscriptions',
     ]) {
-      expect(screen.getAllByLabelText(label).length).toBeGreaterThan(0);
+      expect(screen.queryByLabelText(label)).toBeNull();
     }
+  });
+
+  it('does not narrow by anything but the member plan in the address', () => {
+    renderOverview('/communicationflows?term=monthly');
+
+    expect(flowLinks().map(link => link.textContent)).toEqual([
+      'subscriptionFlow.overview.defaultFlow',
+      'Digital',
+      'Print',
+    ]);
   });
 
   it('offers to delete the flows of member plans, never the default flow', () => {
@@ -484,7 +488,7 @@ describe('SubscriptionFlowOverview', () => {
     });
 
     it('switches between them and keeps the flow filters for the way back', () => {
-      renderOverview('/communicationflows?term=monthly');
+      renderOverview('/communicationflows?memberPlan=digital');
 
       fireEvent.click(tab(/subscriptionFlow\.overview\.tabs\.account/));
       expect(screen.getByText('systemMails.events.login_link')).toBeTruthy();
@@ -509,19 +513,12 @@ describe('SubscriptionFlowOverview', () => {
   });
 
   it('counts each flow narrowed to what the list is filtered by', () => {
-    renderOverview('/communicationflows?term=monthly&memberPlan=digital');
+    renderOverview('/communicationflows?memberPlan=digital');
 
     expect(mockedUseQuery).toHaveBeenCalledWith(
       SubscriptionFlowCountsDocument,
       expect.objectContaining({
-        variables: {
-          filter: {
-            memberPlanIds: ['digital'],
-            paymentMethodIds: [],
-            periodicities: ['monthly'],
-            autoRenewal: [],
-          },
-        },
+        variables: { filter: { memberPlanIds: ['digital'] } },
       })
     );
   });
