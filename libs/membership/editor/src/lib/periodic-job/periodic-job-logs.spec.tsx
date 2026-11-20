@@ -5,6 +5,7 @@ import type { FullPeriodicJobFragment } from '@wepublish/editor/api';
 import {
   NotificationConfirmationsDocument,
   PeriodicJobLogsDocument,
+  PeriodicJobStepStatus,
 } from '@wepublish/editor/api';
 import { useHasPermission } from '@wepublish/ui/editor';
 
@@ -60,8 +61,33 @@ const job = (
   running: false,
   tries: 1,
   error: null,
+  steps: [],
   ...overrides,
 });
+
+type Step = FullPeriodicJobFragment['steps'][number];
+
+const step = (overrides: Partial<Step> = {}): Step => ({
+  __typename: 'PeriodicJobStep',
+  key: 'mailLogSync',
+  status: PeriodicJobStepStatus.Ok,
+  counts: [],
+  error: null,
+  startedAt: now,
+  finishedAt: now,
+  ...overrides,
+});
+
+const bexioWarning = () =>
+  step({
+    key: 'bexioContactSync',
+    status: PeriodicJobStepStatus.Warning,
+    counts: [
+      { __typename: 'PeriodicJobStepCount', name: 'readers', value: 1821 },
+      { __typename: 'PeriodicJobStepCount', name: 'failed', value: 7 },
+    ],
+    error: '422 mail is invalid',
+  });
 
 const failedJob = (overrides: Partial<FullPeriodicJobFragment> = {}) =>
   job({
@@ -305,5 +331,67 @@ describe('retrying a failed run', () => {
 
     expect(screen.getByText('periodicJobsLog.errorTime')).toBeTruthy();
     expect(screen.queryByText('periodicJobsLog.successTime')).toBeNull();
+  });
+});
+
+describe('the steps of a night', () => {
+  it('raises a run whose steps had problems on the dashboard, with what went wrong', () => {
+    mockJobs([job({ steps: [step(), bexioWarning()] })]);
+    const onVisibilityChange = vi.fn();
+
+    render(
+      <PeriodicJobsLog
+        onlyProblems
+        onVisibilityChange={onVisibilityChange}
+      />
+    );
+
+    expect(screen.getByText(/periodicJobsLog.stepProblems$/)).toBeTruthy();
+    expect(
+      screen.getByText(/periodicJobsLog.steps.bexioContactSync/)
+    ).toBeTruthy();
+    expect(screen.getByText(/422 mail is invalid/)).toBeTruthy();
+    expect(onVisibilityChange).toHaveBeenLastCalledWith(true);
+  });
+
+  it('names only the steps with problems on the dashboard', () => {
+    mockJobs([job({ steps: [step(), bexioWarning()] })]);
+
+    render(<PeriodicJobsLog onlyProblems />);
+
+    expect(screen.queryByText(/periodicJobsLog.steps.mailLogSync/)).toBeNull();
+  });
+
+  it('lets a problem go once a later night ran clean', () => {
+    mockJobs([
+      job({ id: 'job-2', steps: [step()] }),
+      job({ id: 'job-1', steps: [bexioWarning()] }),
+    ]);
+
+    const { container } = render(<PeriodicJobsLog onlyProblems />);
+
+    expect(container.firstChild).toBeNull();
+  });
+
+  it('lists every step of the run in the job log, with its counts', () => {
+    mockJobs([job({ steps: [step(), bexioWarning()] })]);
+
+    render(<PeriodicJobsLog />);
+
+    expect(screen.getByText(/periodicJobsLog.steps.mailLogSync/)).toBeTruthy();
+    expect(
+      screen.getByText(/periodicJobsLog.steps.bexioContactSync/)
+    ).toBeTruthy();
+    expect(screen.getByText(/periodicJobsLog.counts.readers/)).toBeTruthy();
+  });
+
+  it('keeps a run OK when a step only had nothing to do', () => {
+    mockJobs([
+      job({ steps: [step({ status: PeriodicJobStepStatus.Skipped })] }),
+    ]);
+
+    render(<PeriodicJobsLog />);
+
+    expect(screen.getByText(/: OK$/)).toBeTruthy();
   });
 });

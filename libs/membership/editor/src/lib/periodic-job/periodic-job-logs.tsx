@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import {
   FullPeriodicJobFragment,
   PeriodicJobLogsDocument,
+  PeriodicJobStepStatus,
   RetryPeriodicJobDocument,
 } from '@wepublish/editor/api';
 import { CanRetryPeriodicJob } from '@wepublish/permissions';
@@ -21,6 +22,16 @@ const RETRY_PERMISSION = [CanRetryPeriodicJob.id];
 
 const POLL_WHILE_RUNNING_MS = 10_000;
 
+type JobStep = FullPeriodicJobFragment['steps'][number];
+
+const PROBLEMS: PeriodicJobStepStatus[] = [
+  PeriodicJobStepStatus.Warning,
+  PeriodicJobStepStatus.Error,
+];
+
+const stepProblems = (periodicJob: FullPeriodicJobFragment) =>
+  (periodicJob.steps ?? []).filter(step => PROBLEMS.includes(step.status));
+
 function getSeverity(
   periodicJob: FullPeriodicJobFragment
 ): NotificationSeverity {
@@ -33,13 +44,15 @@ function getSeverity(
   }
 
   if (periodicJob.successfullyFinished) {
-    return 'success';
+    // The job did its part; a sync after it may still have failed.
+    return stepProblems(periodicJob).length ? 'warning' : 'success';
   }
 
   return 'error';
 }
 
 function getStatusText(
+  periodicJob: FullPeriodicJobFragment,
   severity: NotificationSeverity,
   t: (key: string) => string
 ) {
@@ -47,12 +60,69 @@ function getStatusText(
     case 'error':
       return t('periodicJobsLog.failedJob');
     case 'warning':
-      return t('periodicJobsLog.lastRunSuccessful');
+      return periodicJob.finishedWithError ?
+          t('periodicJobsLog.lastRunSuccessful')
+        : t('periodicJobsLog.stepProblems');
     case 'success':
       return 'OK';
     default:
       return t('periodicJobsLog.running');
   }
+}
+
+const STEP_SEVERITY: Record<PeriodicJobStepStatus, string> = {
+  [PeriodicJobStepStatus.Ok]: '✓',
+  [PeriodicJobStepStatus.Skipped]: '–',
+  [PeriodicJobStepStatus.Warning]: '⚠',
+  [PeriodicJobStepStatus.Error]: '✕',
+};
+
+const StepList = styled.ul`
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 2px;
+`;
+
+const StepMark = styled.span`
+  display: inline-block;
+  width: 1.25em;
+`;
+
+function JobSteps({ steps }: { steps: JobStep[] }) {
+  const { t } = useTranslation();
+
+  if (!steps.length) {
+    return null;
+  }
+
+  return (
+    <StepList aria-label={t('periodicJobsLog.stepsLabel')}>
+      {steps.map(step => {
+        const counts = step.counts
+          .map(({ name, value }) =>
+            t(`periodicJobsLog.counts.${name}`, { count: value })
+          )
+          .join(' · ');
+
+        return (
+          <li key={step.key}>
+            <StepMark aria-hidden>{STEP_SEVERITY[step.status]}</StepMark>
+            {`${t(`periodicJobsLog.steps.${step.key}`)}: ${t(
+              `periodicJobsLog.stepStatus.${step.status}`
+            )}${counts ? ` (${counts})` : ''}`}
+            {step.error && (
+              <>
+                {' — '}
+                <i>{step.error}</i>
+              </>
+            )}
+          </li>
+        );
+      })}
+    </StepList>
+  );
 }
 
 const Stack = styled.div`
@@ -153,9 +223,16 @@ export function usePeriodicJobNotifications({
 
   // Runs that were successful in the end (including "successful after
   // retries") only matter in the archive, not as a dashboard notification.
+  // A sync that failed after the job counts too, but only for the newest
+  // night: a later clean night settles it.
   const visibleJobs =
     onlyProblems ?
-      jobs.filter(job => job.running || getSeverity(job) === 'error')
+      jobs.filter(
+        job =>
+          job.running ||
+          getSeverity(job) === 'error' ||
+          (job === jobs[0] && stepProblems(job).length > 0)
+      )
     : jobs;
 
   const hasVisibleProblems =
@@ -199,7 +276,7 @@ export function usePeriodicJobNotifications({
       const severity = getSeverity(periodicJob);
       const title = `${new Date(periodicJob.date).toLocaleString('de', {
         dateStyle: 'medium',
-      })}: ${getStatusText(severity, t)}`;
+      })}: ${getStatusText(periodicJob, severity, t)}`;
 
       return (
         <NotificationItem
@@ -266,6 +343,14 @@ export function usePeriodicJobNotifications({
             {periodicJob.running && (
               <span>{t('periodicJobsLog.runningHint')}</span>
             )}
+
+            <JobSteps
+              steps={
+                onlyProblems ?
+                  stepProblems(periodicJob)
+                : (periodicJob.steps ?? [])
+              }
+            />
           </Information>
         </NotificationItem>
       );

@@ -103,6 +103,14 @@ export interface SyncProgress {
   errorMessage: string | null;
 }
 
+/** What one night's Mailchimp sync did, for the job log. */
+export interface MailchimpSyncRunResult {
+  /** Audiences synced. */
+  synced: number;
+  failed: number;
+  firstError?: string;
+}
+
 @Injectable()
 export class MailchimpSyncService {
   private logger = new Logger('MailchimpSyncService');
@@ -119,9 +127,10 @@ export class MailchimpSyncService {
   /**
    * Execute sync for all enabled configurations.
    */
-  async executeAllSync(): Promise<void> {
+  async executeAllSync(): Promise<MailchimpSyncRunResult> {
     const configs =
       await this.syncProviderSettingsService.getEnabledSyncConfigs();
+    const result: MailchimpSyncRunResult = { synced: 0, failed: 0 };
 
     for (const config of configs) {
       try {
@@ -130,11 +139,14 @@ export class MailchimpSyncService {
         );
         await this.executeSyncForConfig(config);
         await this.syncProviderSettingsService.updateSyncResult(config.id);
+        result.synced++;
         this.logger.log(
           `Mailchimp sync for "${config.name || config.id}" completed successfully.`
         );
       } catch (error) {
         const errorMessage = describeError(error);
+        result.failed++;
+        result.firstError ??= errorMessage;
         this.logger.error(
           `Mailchimp sync failed for "${config.name || config.id}": ${errorMessage}`
         );
@@ -144,6 +156,8 @@ export class MailchimpSyncService {
         );
       }
     }
+
+    return result;
   }
 
   /**
