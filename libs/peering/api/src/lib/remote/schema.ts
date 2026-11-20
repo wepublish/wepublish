@@ -3857,6 +3857,8 @@ export type Mutation = {
   setDeliveryModeForAudience: DeliveryModeBulkResult;
   /** Stores which customer of a payment provider each user is (for bexio the contact id), replacing the user's previous one of that provider; up to 500 users per call. Users that do not exist are skipped. Returns how many users were updated. */
   setPaymentProviderCustomers: Scalars['Int']['output'];
+  /** Switches a flow on or off. The default flow stays on; a flow switched on must not share subscriptions with another active flow. */
+  setSubscriptionFlowActive: Array<SubscriptionFlowModel>;
   /** Switch a user between mailed and printed subscription mails */
   setUserDeliveryMode: UserDeliveryPreferenceModel;
   /** Ask the mail provider for the current delivery state of mails that are still open. Complements the provider webhook, which is not reachable in local development. */
@@ -5231,6 +5233,12 @@ export type MutationSetDeliveryModeForAudienceArgs = {
 export type MutationSetPaymentProviderCustomersArgs = {
   customers: Array<PaymentProviderCustomerInput>;
   paymentProviderId: Scalars['String']['input'];
+};
+
+
+export type MutationSetSubscriptionFlowActiveArgs = {
+  active: Scalars['Boolean']['input'];
+  id: Scalars['String']['input'];
 };
 
 
@@ -7795,6 +7803,8 @@ export type Query = {
   subscriptionCancellationMail: ActionMail;
   /** The mail createSubscription would send for a subscription with these settings, or why it sends none. */
   subscriptionCreationMail: ActionMail;
+  /** How many subscriptions a flow handles, or would handle once switched on. Not narrowed by any filter. */
+  subscriptionFlowHandledCount: Scalars['Int']['output'];
   /** Returns all subscription flows */
   subscriptionFlows: Array<SubscriptionFlowModel>;
   /** Returns a paginated list of subscriptions based on the filters given. */
@@ -8673,6 +8683,11 @@ export type QuerySubscriptionCreationMailArgs = {
   paymentMethodID: Scalars['String']['input'];
   paymentPeriodicity: PaymentPeriodicity;
   userID: Scalars['String']['input'];
+};
+
+
+export type QuerySubscriptionFlowHandledCountArgs = {
+  id: Scalars['String']['input'];
 };
 
 
@@ -9599,6 +9614,14 @@ export type SubscriptionFilter = {
   userIDs?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
+/** What a list of flows is narrowed by. Each given field narrows the count of every flow to the subscriptions with one of its values. */
+export type SubscriptionFlowCountFilter = {
+  autoRenewal?: InputMaybe<Array<Scalars['Boolean']['input']>>;
+  memberPlanIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  paymentMethodIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  periodicities?: InputMaybe<Array<PaymentPeriodicity>>;
+};
+
 /** The earliest day an event of a flow may lie on, and what holds it there. */
 export type SubscriptionFlowEarliestDay = {
   __typename?: 'SubscriptionFlowEarliestDay';
@@ -9610,6 +9633,8 @@ export type SubscriptionFlowEarliestDay = {
 
 export type SubscriptionFlowModel = {
   __typename?: 'SubscriptionFlowModel';
+  /** An inactive flow is skipped: its subscriptions fall to the next flow. The default flow is always active. */
+  active: Scalars['Boolean']['output'];
   /** A flow for the matching subscriptions of every member plan. It comes after the flows of the plan itself and before the default flow, and has no memberPlan. */
   allMemberPlans: Scalars['Boolean']['output'];
   autoRenewal: Array<Scalars['Boolean']['output']>;
@@ -9622,11 +9647,18 @@ export type SubscriptionFlowModel = {
   numberOfSubscriptions: Scalars['Int']['output'];
   paymentMethods: Array<PaymentMethod>;
   periodicities: Array<PaymentPeriodicity>;
+  /** numberOfSubscriptions, narrowed to what a list of flows is filtered by. */
+  subscriptionCount: Scalars['Int']['output'];
 };
 
 
 export type SubscriptionFlowModelNumberOfSubscriptionsArgs = {
   memberPlanId?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type SubscriptionFlowModelSubscriptionCountArgs = {
+  filter?: InputMaybe<SubscriptionFlowCountFilter>;
 };
 
 export type SubscriptionInterval = {

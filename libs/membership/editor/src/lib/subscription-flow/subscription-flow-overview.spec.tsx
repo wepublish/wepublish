@@ -15,7 +15,9 @@ import {
   MailTemplateDocument,
   MemberPlanListDocument,
   PaymentPeriodicity,
+  SetSubscriptionFlowActiveDocument,
   SubscriptionEvent,
+  SubscriptionFlowCountsDocument,
   SubscriptionFlowFragment,
   SubscriptionFlowsDocument,
   SystemMailsDocument,
@@ -29,6 +31,12 @@ const letterFlow = vi.fn(() => false);
 
 vi.mock('../delivery-mode/use-paper-letter-flow', () => ({
   usePaperLetterFlow: () => letterFlow(),
+}));
+
+const { loadHandledCount } = vi.hoisted(() => ({
+  loadHandledCount: vi.fn(async () => ({
+    data: { subscriptionFlowHandledCount: 12 },
+  })),
 }));
 
 const { mutationFor } = vi.hoisted(() => {
@@ -52,6 +60,7 @@ vi.mock('@apollo/client/react', async importOriginal => ({
     mutationFor(document),
     { loading: false },
   ]),
+  useLazyQuery: vi.fn(() => [loadHandledCount]),
 }));
 
 vi.mock('react-router-dom', async importOriginal => ({
@@ -147,9 +156,20 @@ const mockedUseQuery = useQuery as unknown as Mock;
 const refetch = vi.fn();
 const navigate = vi.fn();
 
-function mockQueries(flows: SubscriptionFlowFragment[]) {
+function mockQueries(
+  flows: SubscriptionFlowFragment[],
+  counts?: Record<string, number>
+) {
   const results = new Map<unknown, unknown>([
     [SubscriptionFlowsDocument, { subscriptionFlows: flows }],
+    [
+      SubscriptionFlowCountsDocument,
+      counts && {
+        subscriptionFlows: Object.entries(counts).map(
+          ([id, subscriptionCount]) => ({ id, subscriptionCount })
+        ),
+      },
+    ],
     [MailTemplateDocument, { mailTemplates: [] }],
     [
       ListPaymentMethodsDocument,
@@ -474,6 +494,134 @@ describe('SubscriptionFlowOverview', () => {
         'subscriptionFlow.overview.defaultFlow',
         'Digital',
       ]);
+    });
+  });
+
+  // Each subscription is counted in one flow only, so the counts add up.
+  it('sums the subscriptions of the rows shown in the column header', () => {
+    renderOverview();
+
+    expect(
+      screen.getByRole('columnheader', {
+        name: 'subscriptionFlow.overview.subscriptionsSum(47)',
+      })
+    ).toBeTruthy();
+  });
+
+  it('counts each flow narrowed to what the list is filtered by', () => {
+    renderOverview('/communicationflows?term=monthly&memberPlan=digital');
+
+    expect(mockedUseQuery).toHaveBeenCalledWith(
+      SubscriptionFlowCountsDocument,
+      expect.objectContaining({
+        variables: {
+          filter: {
+            memberPlanIds: ['digital'],
+            paymentMethodIds: [],
+            periodicities: ['monthly'],
+            autoRenewal: [],
+          },
+        },
+      })
+    );
+  });
+
+  it('takes the narrowed counts over the unfiltered ones once they are there', () => {
+    mockQueries([printFlow, defaultFlow, digitalFlow], {
+      'flow-default': 5,
+      'flow-print': 2,
+      'flow-digital': 0,
+    });
+    renderOverview();
+
+    expect(within(rowOf('Print')).getByText('2')).toBeTruthy();
+    expect(
+      screen.getByRole('columnheader', {
+        name: 'subscriptionFlow.overview.subscriptionsSum(7)',
+      })
+    ).toBeTruthy();
+  });
+
+  describe('switching a flow on and off', () => {
+    const toggleOf = (name: string) =>
+      within(rowOf(name)).getByRole('switch', {
+        name: 'subscriptionFlow.overview.active',
+      }) as HTMLInputElement;
+
+    beforeEach(() =>
+      mutationFor(SetSubscriptionFlowActiveDocument).mockReset()
+    );
+
+    it('has a switch for every flow but the default one', () => {
+      renderOverview();
+
+      expect(toggleOf('Print').checked).toBe(true);
+      expect(
+        within(rowOf('subscriptionFlow.overview.defaultFlow')).queryByRole(
+          'switch'
+        )
+      ).toBeNull();
+    });
+
+    it('says where the subscriptions go before switching a flow off', async () => {
+      renderOverview();
+
+      fireEvent.click(toggleOf('Print'));
+
+      const dialog = await screen.findByRole('dialog');
+
+      expect(loadHandledCount).toHaveBeenCalledWith({
+        variables: { id: 'flow-print' },
+      });
+      expect(
+        await within(dialog).findByText(
+          'subscriptionFlow.overview.deactivateQuestion(12)'
+        )
+      ).toBeTruthy();
+
+      fireEvent.click(within(dialog).getByRole('button', { name: 'ok' }));
+
+      await waitFor(() =>
+        expect(
+          mutationFor(SetSubscriptionFlowActiveDocument)
+        ).toHaveBeenCalledWith({
+          variables: { id: 'flow-print', active: false },
+        })
+      );
+    });
+
+    it('leaves the flow as it is when the question is cancelled', async () => {
+      renderOverview();
+
+      fireEvent.click(toggleOf('Print'));
+      fireEvent.click(
+        within(await screen.findByRole('dialog')).getByRole('button', {
+          name: 'cancel',
+        })
+      );
+
+      expect(
+        mutationFor(SetSubscriptionFlowActiveDocument)
+      ).not.toHaveBeenCalled();
+    });
+
+    it('says what a flow takes over before switching it on, and greys it out while off', async () => {
+      mockQueries([
+        defaultFlow,
+        { ...printFlow, active: false } as SubscriptionFlowFragment,
+      ]);
+      renderOverview();
+
+      expect(rowOf('Print').className).toContain('inactive-row');
+      expect(toggleOf('Print').checked).toBe(false);
+
+      fireEvent.click(toggleOf('Print'));
+
+      expect(
+        await within(await screen.findByRole('dialog')).findByText(
+          'subscriptionFlow.overview.activateQuestion(12)'
+        )
+      ).toBeTruthy();
     });
   });
 

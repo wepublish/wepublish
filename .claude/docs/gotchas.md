@@ -1543,6 +1543,12 @@ Overlap is only refused within a kind (`filterHasOverlap`). An empty condition
 means "matches nothing" on a member plan's flow but "any value" on a flow for
 all plans (which needs at least one condition); every place that matches
 conditions has to make that distinction.
+Inactive flows (`active = false`, never the default flow) are skipped by both
+lookups and by the overlap check; switching one on runs the overlap check.
+`SubscriptionFlowService.countSubscriptions` is the one count rule: running
+subscriptions plus those ended within the flow's latest event day, minus what
+an earlier tier takes, so the counts of all flows add up. Don't count
+elsewhere.
 
 ## Adding an entry
 
