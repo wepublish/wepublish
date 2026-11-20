@@ -18,8 +18,9 @@ describe('MailController', () => {
   let mailContext: MailContext;
   let prismaMock: {
     mailLog: { [method in keyof PrismaClient['mailLog']]?: Mock };
-    mailTemplate: {
-      [method in keyof PrismaClient['mailTemplate']]?: Mock;
+    mailTemplate: { [method in keyof PrismaClient['mailTemplate']]?: Mock };
+    mailTemplateVariant: {
+      [method in keyof PrismaClient['mailTemplateVariant']]?: Mock;
     };
     user: { [method in keyof PrismaClient['user']]?: Mock };
     settingLetterProvider: {
@@ -94,6 +95,9 @@ describe('MailController', () => {
         count: vi.fn(),
       },
       mailTemplate: {
+        findUnique: vi.fn(async () => ({ attachments: [] })),
+      },
+      mailTemplateVariant: {
         findUnique: vi.fn(),
       },
       user: {
@@ -194,12 +198,13 @@ describe('MailController', () => {
     prismaMock.mailLog.create!.mockResolvedValueOnce(mockMailLog2 as any);
     prismaMock.mailLog.findFirst!.mockResolvedValueOnce(mockMailLog2 as any);
 
-    prismaMock.mailTemplate.findUnique!.mockImplementation(({ where }: any) =>
-      Promise.resolve(
-        where.id === mockMailTemplate1.id ?
-          mockMailTemplate1
-        : mockMailTemplate2
-      )
+    prismaMock.mailTemplateVariant.findUnique!.mockImplementation(
+      ({ where }: any) =>
+        Promise.resolve(
+          where.templateId_channel.templateId === mockMailTemplate1.id ?
+            mockMailTemplate1
+          : mockMailTemplate2
+        )
     );
 
     // The mail is composed locally and sent fully-rendered via the raw

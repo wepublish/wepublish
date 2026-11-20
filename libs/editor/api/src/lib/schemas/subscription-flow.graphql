@@ -8,13 +8,15 @@ query SubscriptionFlows($defaultFlowOnly: Boolean!, $memberPlanId: String) {
 }
 
 mutation CreateSubscriptionFlow(
-  $memberPlanId: String!
+  $memberPlanId: String
+  $allMemberPlans: Boolean
   $paymentMethodIds: [String!]!
   $periodicities: [PaymentPeriodicity!]!
   $autoRenewal: [Boolean!]!
 ) {
   createSubscriptionFlow(
     memberPlanId: $memberPlanId
+    allMemberPlans: $allMemberPlans
     paymentMethodIds: $paymentMethodIds
     periodicities: $periodicities
     autoRenewal: $autoRenewal
@@ -97,6 +99,8 @@ query ListPaymentMethods {
 fragment SubscriptionFlow on SubscriptionFlowModel {
   id
   default
+  allMemberPlans
+  active
   memberPlan {
     ...MemberPlanRef
   }
@@ -109,6 +113,10 @@ fragment SubscriptionFlow on SubscriptionFlowModel {
     ...SubscriptionInterval
   }
   numberOfSubscriptions(memberPlanId: $memberPlanId)
+  earliestDay {
+    days
+    periodicity
+  }
 }
 
 fragment SubscriptionInterval on SubscriptionInterval {
@@ -136,4 +144,26 @@ fragment MemberPlanRef on MemberPlan {
   currency
   extendable
   slug
+}
+
+# The flows' counts narrowed to what the overview is filtered by.
+query SubscriptionFlowCounts($filter: SubscriptionFlowCountFilter) {
+  subscriptionFlows(defaultFlowOnly: false) {
+    id
+    subscriptionCount(filter: $filter)
+  }
+}
+
+query SubscriptionFlowHandledCount($id: String!) {
+  subscriptionFlowHandledCount(id: $id)
+}
+
+mutation SetSubscriptionFlowActive(
+  $id: String!
+  $active: Boolean!
+  $memberPlanId: String
+) {
+  setSubscriptionFlowActive(id: $id, active: $active) {
+    ...SubscriptionFlow
+  }
 }
