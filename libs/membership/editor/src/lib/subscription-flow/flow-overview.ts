@@ -159,6 +159,8 @@ export type FlowRow = {
   memberPlanId?: string;
   /** The plan's name; "all member plans" for a flow for all of them. */
   memberPlanName?: string;
+  /** The heading the row is listed under: standard, all plans, or its plan. */
+  group: string;
   conditions: string;
   /** What makes the flow do less than its conditions say. */
   warnings: string[];
@@ -196,6 +198,15 @@ export const flowRows = (
           flow.allMemberPlans ?
             t('subscriptionFlow.overview.allMemberPlans')
           : flow.memberPlan?.name,
+        group:
+          flow.default ? t('subscriptionFlow.overview.group.default')
+          : flow.allMemberPlans ?
+            t('subscriptionFlow.overview.group.allMemberPlans')
+          : flow.memberPlan ?
+            t('subscriptionFlow.overview.group.memberPlan', {
+              memberPlan: flow.memberPlan.name,
+            })
+          : t('subscriptionFlow.overview.noMemberPlan'),
         conditions: conditionsSummary(flow, t),
         warnings: flowWarnings(flow, t),
         subscriptions: flow.numberOfSubscriptions,
@@ -215,20 +226,81 @@ export const flowRows = (
         byText(a.conditions, b.conditions)
     );
 
+/** What the overview can be narrowed by. Nothing chosen narrows nothing. */
+export type FlowFilter = {
+  memberPlanIds: string[];
+  paymentMethodIds: string[];
+  periodicities: string[];
+  /** 'true' and 'false': with and without automatic renewal. */
+  renewal: string[];
+  /** 'with' and 'without' a warning. */
+  warnings: string[];
+  /** 'with' and 'without' subscriptions the flow applies to. */
+  subscriptions: string[];
+};
+
+/** The address parameter of each filter, so a narrowed list can be linked. */
+export const FLOW_FILTER_PARAMS: Record<keyof FlowFilter, string> = {
+  memberPlanIds: MEMBER_PLAN_PARAM,
+  paymentMethodIds: 'paymentMethod',
+  periodicities: 'term',
+  renewal: 'renewal',
+  warnings: 'warnings',
+  subscriptions: 'subscriptions',
+};
+
+/** How many of the filters narrow the list. */
+export const countFlowFilters = (filter: Partial<FlowFilter>) =>
+  Object.values(filter).filter(values => values?.length).length;
+
 /**
- * The flows of the chosen member plans. The default flow and the flows for
- * all plans always stay: they are what applies to the subscriptions of those
- * plans that no flow of their own matches.
+ * The flows a filter leaves.
+ *
+ * By member plan and by condition the question is which flows a subscription
+ * like that could fall into. So the default flow always stays, as do the
+ * flows for all plans when a plan is chosen; and a flow for all plans takes
+ * any value of a condition it leaves open.
+ *
+ * By warning and by subscriptions the question is the state of a flow, and
+ * the default flow is looked at like any other.
  */
-export const filterFlowRows = (rows: FlowRow[], memberPlanIds: string[]) =>
-  memberPlanIds.length ?
-    rows.filter(
-      row =>
+export const filterFlowRows = (
+  rows: FlowRow[],
+  {
+    memberPlanIds = [],
+    paymentMethodIds = [],
+    periodicities = [],
+    renewal = [],
+    warnings = [],
+    subscriptions = [],
+  }: Partial<FlowFilter>
+) => {
+  const takes = (row: FlowRow, chosen: string[], values: string[]) =>
+    !chosen.length ||
+    row.isDefault ||
+    (row.allMemberPlans && !values.length) ||
+    values.some(value => chosen.includes(value));
+
+  const is = (chosen: string[], yes: boolean) =>
+    !chosen.length || chosen.includes(yes ? 'with' : 'without');
+
+  return rows.filter(
+    row =>
+      (!memberPlanIds.length ||
         row.isDefault ||
         row.allMemberPlans ||
-        (row.memberPlanId && memberPlanIds.includes(row.memberPlanId))
-    )
-  : rows;
+        (!!row.memberPlanId && memberPlanIds.includes(row.memberPlanId))) &&
+      takes(
+        row,
+        paymentMethodIds,
+        row.flow.paymentMethods.map(paymentMethod => paymentMethod.id)
+      ) &&
+      takes(row, periodicities, row.flow.periodicities) &&
+      takes(row, renewal, row.flow.autoRenewal.map(String)) &&
+      is(warnings, row.warnings.length > 0) &&
+      is(subscriptions, row.subscriptions > 0)
+  );
+};
 
 /** The flow a create mutation added; the api answers with all flows. */
 export const newFlowId = (

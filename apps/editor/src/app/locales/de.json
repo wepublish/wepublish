@@ -2945,6 +2945,24 @@
         },
         "noMemberPlan": "Ohne Abo-Plan",
         "allMemberPlans": "Alle Abo-Pläne",
+        "tabs": {
+          "flows": "Abo-Abläufe ({{count}})",
+          "account": "Konto & Login"
+        },
+        "group": {
+          "default": "Standard",
+          "allMemberPlans": "Für alle Abo-Pläne",
+          "memberPlan": "Abo-Plan «{{memberPlan}}»"
+        },
+        "filter": {
+          "warnings": "Hinweise",
+          "warningsOptions": {
+            "with": "Mit Hinweis",
+            "without": "Ohne Hinweis"
+          },
+          "subscriptions": "Betroffene Abos",
+          "subscriptionsOptions": { "with": "Mit Abos", "without": "Ohne Abos" }
+        },
         "any": {
           "paymentMethods": "jede Zahlungsmethode",
           "periodicities": "jede Laufzeit",
