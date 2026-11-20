@@ -523,6 +523,40 @@ describe('SubscriptionFlowPage', () => {
       expect(screen.queryByRole('alert')).toBeNull();
     });
 
+    describe('for all member plans', () => {
+      beforeEach(() =>
+        mockQueries([
+          defaultFlow,
+          {
+            ...customFlow,
+            memberPlan: null,
+            allMemberPlans: true,
+          } as SubscriptionFlowFragment,
+        ])
+      );
+
+      it('is titled so and says whose subscriptions it takes', () => {
+        renderPage();
+
+        expect(
+          screen.getAllByRole('heading', { level: 1 }).map(h => h.textContent)
+        ).toEqual(['subscriptionFlow.overview.allMemberPlans']);
+        expect(
+          screen.getByText(
+            'subscriptionFlow.allPlansFlowDescription subscriptionFlow.noFallback'
+          )
+        ).toBeTruthy();
+        expect(screen.queryByRole('alert')).toBeNull();
+      });
+
+      it('lets its conditions be changed', () => {
+        renderPage();
+
+        expect(screen.getByText('subscriptionFlow.paymentMethod')).toBeTruthy();
+        expect(screen.getByText('subscriptionFlow.periodicity')).toBeTruthy();
+      });
+    });
+
     it('warns about a flow left behind by a deleted member plan', () => {
       mockQueries([
         defaultFlow,

@@ -102,9 +102,13 @@ type CreateFlowPanelProps = {
   onClose(): void;
 };
 
+// Chosen in place of a member plan: the flow is for all of them.
+const ALL_MEMBER_PLANS = '__all';
+
 /**
- * A new flow for a member plan: which plan, and which of its subscriptions.
- * The page of the new flow opens once it exists; its messages are set there.
+ * A new flow: for which member plan, or for all of them, and which of their
+ * subscriptions. The page of the new flow opens once it exists; its messages
+ * are set there.
  */
 function CreateFlowPanel({
   memberPlanId: initialMemberPlanId,
@@ -170,6 +174,10 @@ function CreateFlowPanel({
             onChange={event => setMemberPlanId(event.target.value)}
             fullWidth
           >
+            <MenuItem value={ALL_MEMBER_PLANS}>
+              {t('subscriptionFlow.overview.allMemberPlans')}
+            </MenuItem>
+
             {(memberPlans?.memberPlans.nodes ?? []).map(memberPlan => (
               <MenuItem
                 key={memberPlan.id}
@@ -201,7 +209,11 @@ function CreateFlowPanel({
                   picked for. */}
               <FlowFilters
                 key={memberPlanId}
-                memberPlan={{ id: memberPlanId }}
+                memberPlan={
+                  memberPlanId === ALL_MEMBER_PLANS ? undefined : (
+                    { id: memberPlanId }
+                  )
+                }
                 createNewFlow
                 paymentMethods={paymentMethods}
               />
