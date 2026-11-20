@@ -6,7 +6,7 @@ import {
   useMemo,
   useRef,
 } from 'react';
-import { Box } from '@mui/material';
+import { Box, useColorScheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import CodeMirror, { ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import { html } from '@codemirror/lang-html';
@@ -66,6 +66,11 @@ const HtmlSourceEditorComponent = forwardRef<
   HtmlSourceEditorProps
 >(function HtmlSourceEditor({ value, onChange, minHeight = 400 }, ref) {
   const editorRef = useRef<ReactCodeMirrorRef>(null);
+  // CodeMirror colours its syntax for a light surface unless told otherwise;
+  // on the dark one the markup would be dark on dark.
+  const { mode, systemMode } = useColorScheme();
+  const colourMode =
+    (mode === 'system' ? systemMode : mode) === 'dark' ? 'dark' : 'light';
 
   const extensions = useMemo(() => [html(), EditorView.lineWrapping], []);
 
@@ -111,6 +116,7 @@ const HtmlSourceEditorComponent = forwardRef<
         value={value}
         height="100%"
         style={{ height: '100%' }}
+        theme={colourMode}
         extensions={extensions}
         onChange={handleChange}
         basicSetup={{

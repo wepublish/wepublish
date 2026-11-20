@@ -14,7 +14,7 @@ import {
   subscriptionFlowNonUniqueEvents,
   subscriptionFlowRequiredEvents,
 } from './subscription-flow.type';
-import { PrismaClient, SubscriptionEvent } from '@prisma/client';
+import { MailChannel, PrismaClient, SubscriptionEvent } from '@prisma/client';
 
 const SUBSCRIPTION_EVENT_MAX_DAYS_BEFORE = -25;
 const SUBSCRIPTION_EVENT_MAX_DAYS_AFTER = 90;
@@ -238,8 +238,55 @@ export class SubscriptionFlowService {
     return this.getFlows(false);
   }
 
+  /**
+   * The channels a template is written for. A flow always mails, so its
+   * template needs an email version; printing the event for readers in letter
+   * mode needs a letter version on top.
+   */
+  private async templateChannels(
+    mailTemplateId: string
+  ): Promise<MailChannel[]> {
+    const variants = await this.prismaService.mailTemplateVariant.findMany({
+      where: { templateId: mailTemplateId },
+      select: { channel: true },
+    });
+
+    return variants.map(({ channel }) => channel);
+  }
+
+  private assertMailable(channels: MailChannel[]) {
+    if (!channels.includes(MailChannel.mail)) {
+      throw new BadRequestException(
+        'This template has no email version. A subscription flow always sends the email.'
+      );
+    }
+  }
+
+  private assertPrintable(channels: MailChannel[]) {
+    if (!channels.includes(MailChannel.letter)) {
+      throw new BadRequestException(
+        'This template has no letter version, so the event cannot be sent as a letter.'
+      );
+    }
+  }
+
   async createInterval(interval: SubscriptionIntervalCreateInput) {
     await this.isIntervalValid(interval);
+
+    if (interval.mailTemplateId) {
+      const channels = await this.templateChannels(interval.mailTemplateId);
+
+      this.assertMailable(channels);
+
+      if (interval.sendAsLetter) {
+        this.assertPrintable(channels);
+      }
+    } else if (interval.sendAsLetter) {
+      throw new BadRequestException(
+        'An event without a template cannot be sent as a letter.'
+      );
+    }
+
     await this.prismaService.subscriptionInterval.create({
       data: {
         daysAwayFromEnding: interval.daysAwayFromEnding,
@@ -289,33 +336,51 @@ export class SubscriptionFlowService {
       false
     );
 
-    await this.prismaService.$transaction([
-      this.prismaService.subscriptionInterval.update({
-        where: { id: interval.id },
-        data: { mailTemplate: { disconnect: true } },
-      }),
-      this.prismaService.subscriptionInterval.update({
-        where: {
-          id: interval.id,
-        },
-        data: {
-          mailTemplate:
-            interval.mailTemplateId ?
-              {
-                connect: {
-                  id: interval.mailTemplateId,
-                },
-              }
-            : {},
-          daysAwayFromEnding: interval.daysAwayFromEnding,
-          // The flow editor updates days and template without mentioning the
-          // switch; only an explicit value changes it.
-          ...(interval.sendAsLetter === undefined ?
-            {}
-          : { sendAsLetter: interval.sendAsLetter }),
-        },
-      }),
-    ]);
+    // An update that does not mention the template (the letter switch on its
+    // own) leaves it where it is; an explicit null takes it off the event.
+    const changesTemplate = !!interval.mailTemplateId;
+    const removesTemplate = interval.mailTemplateId === null;
+    const mailTemplateId =
+      removesTemplate ? null : (
+        (interval.mailTemplateId ?? eventToUpdate.mailTemplateId)
+      );
+    const channels =
+      mailTemplateId ? await this.templateChannels(mailTemplateId) : [];
+
+    if (changesTemplate) {
+      this.assertMailable(channels);
+    }
+
+    if (interval.sendAsLetter) {
+      this.assertPrintable(channels);
+    }
+
+    // The event moves to a template that cannot be printed: readers in letter
+    // mode get its email from now on, and the switch says so.
+    const dropsLetter =
+      (changesTemplate || removesTemplate) &&
+      interval.sendAsLetter === undefined &&
+      eventToUpdate.sendAsLetter &&
+      !channels.includes(MailChannel.letter);
+
+    await this.prismaService.subscriptionInterval.update({
+      where: {
+        id: interval.id,
+      },
+      data: {
+        ...(changesTemplate ?
+          { mailTemplate: { connect: { id: interval.mailTemplateId! } } }
+        : removesTemplate ? { mailTemplate: { disconnect: true } }
+        : {}),
+        daysAwayFromEnding: interval.daysAwayFromEnding,
+        // The flow editor updates days and template without mentioning the
+        // switch; only an explicit value changes it.
+        ...(interval.sendAsLetter === undefined ?
+          {}
+        : { sendAsLetter: interval.sendAsLetter }),
+        ...(dropsLetter ? { sendAsLetter: false } : {}),
+      },
+    });
 
     return this.getFlows(false);
   }

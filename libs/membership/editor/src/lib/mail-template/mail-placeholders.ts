@@ -28,6 +28,11 @@ export interface MailPlaceholder {
    * - 'money': `<key>` (Rappen), `<key>_chf`, `<key>_display` (with currency).
    */
   kind?: 'date' | 'money';
+  /**
+   * Neighbours with the same set are shown together under one title,
+   * i18n `mailTemplates.placeholderGroups.<set>`.
+   */
+  set?: string;
 }
 
 export interface MailPlaceholderContext {
@@ -86,12 +91,14 @@ export const ALWAYS_PLACEHOLDERS: MailPlaceholder[] = [
     label: 'User ID',
     description: 'Eindeutige ID des Users.',
     example: 'ckpqr5abc0001',
+    set: 'user',
   },
   {
     key: 'user_active',
     label: 'Active',
     description: 'Ob das Konto aktiv ist (true/false).',
     example: 'true',
+    set: 'user',
   },
   {
     key: 'user_lastLogin',
@@ -245,7 +252,7 @@ export const MAIL_PLACEHOLDER_CONTEXTS: MailPlaceholderContext[] = [
   {
     id: 'account',
     titleKey: 'mailTemplates.placeholderContexts.account',
-    title: 'Account & login (creation, login link, password reset)',
+    title: 'Account & login',
     note: 'Nur Benutzer-Felder verfügbar.',
     placeholders: [],
   },
@@ -265,7 +272,7 @@ export const MAIL_PLACEHOLDER_CONTEXTS: MailPlaceholderContext[] = [
   {
     id: 'subscription',
     titleKey: 'mailTemplates.placeholderContexts.subscription',
-    title: 'Subscription (new, confirmed, deactivation)',
+    title: 'Subscription',
     note: 'Abo-Stammdaten. Plan- und Zahlungsmethoden-Namen sind hier NICHT verfügbar – nur in Verlängerungs-Mails.',
     placeholders: [
       ...SUBSCRIPTION_SCALARS,
@@ -281,7 +288,7 @@ export const MAIL_PLACEHOLDER_CONTEXTS: MailPlaceholderContext[] = [
   {
     id: 'renewal',
     titleKey: 'mailTemplates.placeholderContexts.renewal',
-    title: 'Renewal — automated (success / failed)',
+    title: 'Automated renewal',
     note: 'Enthält zusätzlich Plan-/Zahlungsmethoden-Namen und Rechnungsdaten.',
     placeholders: [
       ...SUBSCRIPTION_SCALARS,
@@ -368,7 +375,7 @@ export const MAIL_PLACEHOLDER_CONTEXTS: MailPlaceholderContext[] = [
   {
     id: 'custom',
     titleKey: 'mailTemplates.placeholderContexts.custom',
-    title: 'Free mail to a subscriber (subscription + invoices)',
+    title: 'Free mail to a subscriber',
     note: 'Rechnungen kommen als Array: optional_invoices_0_* (neueste zuerst).',
     placeholders: [
       ...SUBSCRIPTION_SCALARS,

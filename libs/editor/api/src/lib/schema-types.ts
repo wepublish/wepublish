@@ -2809,13 +2809,9 @@ export type MailTemplateInput = {
   attachmentIds?: InputMaybe<Array<Scalars['String']['input']>>;
   context?: InputMaybe<MailTemplateContext>;
   description?: InputMaybe<Scalars['String']['input']>;
-  htmlContent: Scalars['String']['input'];
-  /** Uploaded pdf printed after the letter pages, e.g. a QR-bill. */
-  letterAppendixId?: InputMaybe<Scalars['String']['input']>;
-  letterLayoutId?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
-  subject: Scalars['String']['input'];
-  textContent?: InputMaybe<Scalars['String']['input']>;
+  /** The versions to write, one per channel. A version left out stays as it is; removing one is `deleteMailTemplateVariant`. */
+  variants: Array<MailTemplateVariantInput>;
 };
 
 export type MailTemplateLetterPreviewModel = {
@@ -2828,18 +2824,25 @@ export type MailTemplateModel = {
   __typename: 'MailTemplateModel';
   /** Word documents (.docx) filled in with the same placeholders, converted to pdf and attached to every mail sent from this template, in this order. A printed letter carries them after its pages. */
   attachmentIds: Array<Scalars['String']['output']>;
+  /** The channels this template is written for, the email first. */
+  channels: Array<MailChannel>;
   context?: Maybe<MailTemplateContext>;
   description?: Maybe<Scalars['String']['output']>;
+  /** @deprecated Use `variants`: a template has a body per channel. */
   htmlContent: Scalars['String']['output'];
   id: Scalars['String']['output'];
-  /** Uploaded pdf printed after the letter pages, e.g. a QR-bill. */
+  /** @deprecated Use the letter entry of `variants`. */
   letterAppendixId?: Maybe<Scalars['String']['output']>;
-  /** Stationery a letter printed from this template is set on; null means the default. */
+  /** @deprecated Use the letter entry of `variants`. */
   letterLayoutId?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
   status: Scalars['String']['output'];
+  /** The subject of the email version; the title of the letter for a template written as a letter only. */
   subject: Scalars['String']['output'];
+  /** @deprecated Use `variants`: a template has a body per channel. */
   textContent?: Maybe<Scalars['String']['output']>;
+  /** What the template says on each channel, bodies included. Ask for it on a single template, not on a list. */
+  variants: Array<MailTemplateVariantModel>;
 };
 
 export type MailTemplatePreviewInput = {
@@ -2875,6 +2878,36 @@ export type MailTemplateSubscriptionOption = {
   __typename: 'MailTemplateSubscriptionOption';
   id: Scalars['String']['output'];
   label: Scalars['String']['output'];
+};
+
+export type MailTemplateVariantInput = {
+  channel: MailChannel;
+  htmlContent: Scalars['String']['input'];
+  /** Uploaded pdf printed after the letter pages, e.g. a QR-bill. */
+  letterAppendixId?: InputMaybe<Scalars['String']['input']>;
+  letterLayoutId?: InputMaybe<Scalars['String']['input']>;
+  /** Letter only: take subject and body from the email version, which the template must have. The subject and body handed in are ignored. */
+  sameAsMail?: InputMaybe<Scalars['Boolean']['input']>;
+  subject: Scalars['String']['input'];
+  textContent?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** What a template says on one channel. */
+export type MailTemplateVariantModel = {
+  __typename: 'MailTemplateVariantModel';
+  channel: MailChannel;
+  htmlContent: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  /** Letter only: uploaded pdf printed after the letter pages, e.g. a QR-bill. */
+  letterAppendixId?: Maybe<Scalars['String']['output']>;
+  /** Letter only: stationery the letter is set on; null means the default. */
+  letterLayoutId?: Maybe<Scalars['String']['output']>;
+  /** Letter only: the letter says what the email says. Its own subject and body are empty then; sends read the email version. */
+  sameAsMail: Scalars['Boolean']['output'];
+  /** The email's subject line; for a letter the title its log entry carries. */
+  subject: Scalars['String']['output'];
+  /** Plain-text alternative of an email. Unused for a letter. */
+  textContent?: Maybe<Scalars['String']['output']>;
 };
 
 /** The audience webhook the api registered at Mailchimp; the URL carries the secret. */
@@ -3612,6 +3645,8 @@ export type Mutation = {
   deleteLetterProviderSetting: SettingLetterProvider;
   /** Delete an existing mail template */
   deleteMailTemplate?: Maybe<Scalars['Boolean']['output']>;
+  /** Remove what a template says on one channel. Refused while something still sends the template on that channel, and for its last version. */
+  deleteMailTemplateVariant?: Maybe<Scalars['Boolean']['output']>;
   /** Deletes a single sync error so the contact will be retried. */
   deleteMailchimpSyncError: Scalars['Boolean']['output'];
   /** Deletes an existing memberplan. */
@@ -4727,6 +4762,12 @@ export type MutationDeleteLetterProviderSettingArgs = {
 
 export type MutationDeleteMailTemplateArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteMailTemplateVariantArgs = {
+  channel: MailChannel;
+  templateId: Scalars['String']['input'];
 };
 
 
@@ -7549,7 +7590,7 @@ export type Query = {
   mailSendRecipientPreview: MailSendRecipientPreview;
   /** The concrete recipients an audience resolves to */
   mailSendRecipients: PaginatedMailSendRecipient;
-  /** Return a single mail template, including its html and text body. */
+  /** Return a single mail template; its `variants` carry the html and text bodies. */
   mailTemplate?: Maybe<MailTemplateModel>;
   /** Render a draft mail template as the letter a send would print */
   mailTemplateLetterPreview: MailTemplateLetterPreviewModel;
@@ -8253,6 +8294,7 @@ export type QueryMailTemplateLetterPreviewArgs = {
 
 
 export type QueryMailTemplateMissingPlaceholdersArgs = {
+  channel?: InputMaybe<MailChannel>;
   templateId: Scalars['String']['input'];
   withSubscriptionData: Scalars['Boolean']['input'];
 };
