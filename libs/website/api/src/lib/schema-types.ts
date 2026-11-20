@@ -4547,8 +4547,9 @@ export type MutationCreateSubscriptionArgs = {
 
 
 export type MutationCreateSubscriptionFlowArgs = {
+  allMemberPlans?: InputMaybe<Scalars['Boolean']['input']>;
   autoRenewal: Array<Scalars['Boolean']['input']>;
-  memberPlanId: Scalars['String']['input'];
+  memberPlanId?: InputMaybe<Scalars['String']['input']>;
   paymentMethodIds: Array<Scalars['String']['input']>;
   periodicities: Array<PaymentPeriodicity>;
 };
@@ -9580,6 +9581,8 @@ export type SubscriptionFlowEarliestDay = {
 
 export type SubscriptionFlowModel = {
   __typename: 'SubscriptionFlowModel';
+  /** A flow for the matching subscriptions of every member plan. It comes after the flows of the plan itself and before the default flow, and has no memberPlan. */
+  allMemberPlans: Scalars['Boolean']['output'];
   autoRenewal: Array<Scalars['Boolean']['output']>;
   default: Scalars['Boolean']['output'];
   /** The earliest day an event of this flow may lie on. Follows from the shortest periodicity the flow applies to. */

@@ -80,9 +80,32 @@ const printMonthly = flow({
   autoRenewal: [true],
 });
 
+// For the yearly subscriptions of every plan that has no flow for them.
+const allPlansYearly = flow({
+  id: 'all-yearly',
+  allMemberPlans: true,
+  paymentMethods: [{ id: 'bill', name: 'Rechnung' }],
+  periodicities: [PaymentPeriodicity.Yearly],
+  autoRenewal: [true],
+});
+
 const t = (key: string) => key;
 
 describe('flowRows', () => {
+  it('puts a flow for all plans after the default flow and names it so', () => {
+    const [first, second] = flowRows(
+      [printYearly, allPlansYearly, defaultFlow],
+      t
+    );
+
+    expect(first.id).toBe('default-id');
+    expect(second).toMatchObject({
+      id: 'all-yearly',
+      allMemberPlans: true,
+      memberPlanName: 'subscriptionFlow.overview.allMemberPlans',
+    });
+  });
+
   const rows = flowRows([printYearly, digital, defaultFlow, printMonthly], t);
 
   it('puts the default flow first, then the flows by member plan and conditions', () => {
@@ -140,6 +163,22 @@ describe('conditionsSummary', () => {
   });
 });
 
+describe('conditionsSummary of a flow for all plans', () => {
+  it('says "any" for a condition left open, so nothing reads as missing', () => {
+    expect(
+      conditionsSummary(
+        flow({
+          allMemberPlans: true,
+          periodicities: [PaymentPeriodicity.Yearly],
+        }),
+        t
+      )
+    ).toBe(
+      'subscriptionFlow.overview.any.paymentMethods · memberPlanList.paymentPeriodicity.yearly · subscriptionFlow.overview.any.renewal'
+    );
+  });
+});
+
 describe('filterFlowRows', () => {
   const rows = flowRows([defaultFlow, printYearly, digital, printMonthly], t);
 
@@ -156,6 +195,17 @@ describe('filterFlowRows', () => {
     expect(filterFlowRows(rows, ['unknown']).map(row => row.id)).toEqual([
       'default-id',
     ]);
+  });
+
+  it('keeps a flow for all plans: it applies to the chosen plans too', () => {
+    const withAllPlans = flowRows(
+      [defaultFlow, printYearly, allPlansYearly],
+      t
+    );
+
+    expect(
+      filterFlowRows(withAllPlans, ['digital']).map(row => row.id)
+    ).toEqual(['default-id', 'all-yearly']);
   });
 });
 
@@ -216,6 +266,22 @@ describe('flowWarnings', () => {
   it('has nothing to say about the default flow or a flow the plan fully offers', () => {
     expect(flowWarnings(defaultFlow, translate)).toEqual([]);
     expect(flowWarnings(planFlow({}), translate)).toEqual([]);
+  });
+
+  it('has nothing to say about a flow for all plans: no plan is missing, and none has to offer its conditions', () => {
+    expect(flowWarnings(allPlansYearly, translate)).toEqual([]);
+  });
+
+  it('has nothing to say about a flow for all plans with conditions left open: they take any value', () => {
+    expect(
+      flowWarnings(
+        flow({
+          allMemberPlans: true,
+          periodicities: [PaymentPeriodicity.Yearly],
+        }),
+        translate
+      )
+    ).toEqual([]);
   });
 
   it('warns that a flow without a member plan stops every automatic message', () => {
@@ -286,6 +352,18 @@ describe('earliestDayHint', () => {
     ).toBe(
       'subscriptionFlow.earliestDay.byConditions(85,memberPlanList.paymentPeriodicity.quarterly)'
     );
+  });
+
+  it('says of a flow for all plans with an open term that any term includes the shortest', () => {
+    expect(
+      earliestDayHint(
+        flow({
+          allMemberPlans: true,
+          earliestDay: { days: -25, periodicity: null },
+        }),
+        translate
+      )
+    ).toBe('subscriptionFlow.earliestDay.anyTerm(25)');
   });
 
   it('says of the default flow that its day is fixed: it is the fallback of every subscription', () => {

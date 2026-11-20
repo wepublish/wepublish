@@ -1608,7 +1608,7 @@
         "letterAppendix": "Pages supplémentaires",
         "letterAppendixNone": "Aucune",
         "memberPlans": "Plans d’abonnement",
-        "memberPlansHint": "Plans d’abonnement dont le flux de communication envoie ce modèle. Le flux standard n’appartient à aucun plan et n’apparaît pas ici.",
+        "memberPlansHint": "Plans d’abonnement dont le flux de communication envoie ce modèle. Le flux standard et les flux pour tous les plans n’appartiennent à aucun plan et n’apparaissent pas ici.",
         "noMatch": "Aucun modèle ne correspond aux filtres.",
         "statuses": {
           "ok": "Utilisé",
@@ -2904,7 +2904,7 @@
       "overview": {
         "back": "Tous les flux et messages automatiques",
         "title": "Messages des flux d’abonnement",
-        "intro": "Un flux définit quel message est envoyé automatiquement pour quel événement d’abonnement. Le flux standard vaut pour tous les abonnements. Un plan d’abonnement peut avoir ses propres flux pour certains abonnements : un tel flux remplace entièrement le flux standard pour les abonnements concernés.",
+        "intro": "Un flux définit quel message est envoyé automatiquement pour quel événement d’abonnement. Le flux standard vaut pour tous les abonnements. Un plan d’abonnement peut avoir ses propres flux pour certains abonnements, et un flux peut valoir pour certains abonnements de tous les plans : un tel flux remplace entièrement le flux standard pour les abonnements concernés. Si plusieurs correspondent, le flux du plan d’abonnement passe en premier, puis celui pour tous les plans, enfin le flux standard.",
         "flow": "Flux pour le plan d’abonnement",
         "defaultFlow": "Tous → flux par défaut",
         "appliesTo": "S’applique à",
@@ -2914,13 +2914,19 @@
         "eventsValue": "{{sending}} événements sur {{total}}",
         "letterEvents": "Dont par lettre",
         "memberPlan": "Plan d’abonnement",
-        "createIntro": "Choisissez le plan d’abonnement et les abonnements auxquels le nouveau flux s’applique. Les messages qu’il envoie se définissent ensuite sur sa page.",
+        "createIntro": "Choisissez le plan d’abonnement – ou « Tous les plans d’abonnement » – et les abonnements auxquels le nouveau flux s’applique. Les messages qu’il envoie se définissent ensuite sur sa page.",
         "deleteTitle": "Supprimer le flux de « {{memberPlan}} » ?",
         "renewal": {
           "true": "avec renouvellement automatique",
           "false": "sans renouvellement automatique"
         },
         "noMemberPlan": "Sans plan d’abonnement",
+        "allMemberPlans": "Tous les plans d’abonnement",
+        "any": {
+          "paymentMethods": "tout mode de paiement",
+          "periodicities": "toute durée",
+          "renewal": "avec ou sans renouvellement automatique"
+        },
         "warnings": {
           "noMemberPlan": "Le plan d’abonnement de ce flux a été supprimé. Tant que ce flux existe, aucun message automatique n’est envoyé – supprimez-le.",
           "matchesNothing": "Ne s’applique à aucun abonnement : il manque un moyen de paiement, une durée ou un renouvellement.",
@@ -2928,11 +2934,14 @@
         }
       },
       "earliestDay": {
+        "anyTerm": "Au plus tôt {{days}} jours avant la fin de l’abonnement : ce flux s’applique aux abonnements de toute durée, y compris la plus courte. Limitez-le aux durées plus longues pour qu’il puisse commencer plus tôt.",
         "byConditions": "Au plus tôt {{days}} jours avant la fin de l’abonnement : ce flux s’applique aux abonnements d’une durée « {{periodicity}} ». Une date de facturation encore plus précoce dépasserait la durée de l’abonnement.",
         "defaultFlow": "Au plus tôt {{days}} jours avant la fin de l’abonnement : le flux standard s’applique à tous les abonnements sans flux propre, y compris ceux de la durée la plus courte. Un flux réservé aux durées plus longues peut commencer plus tôt."
       },
       "flow": "Flux",
       "planFlowDescription": "Ce flux remplace entièrement le flux standard pour les abonnements de son plan qui correspondent aux critères de filtre définis ci-dessous.",
+      "allPlansFlowDescription": "Ce flux remplace entièrement le flux standard pour les abonnements de tous les plans qui correspondent aux critères de filtre définis ci-dessous. Si un plan a son propre flux pour ces abonnements, celui-ci passe en premier.",
+      "openConditionsHint": "Un champ vide ne restreint pas : le flux s’applique alors à toute valeur. Au moins un champ doit être rempli.",
       "planFlowDescriptionFor": "Ce flux remplace entièrement le flux standard pour les abonnements du plan « {{memberPlan}} » qui correspondent aux critères de filtre définis ci-dessous.",
       "noFallback": "Les événements sans modèle n’envoient rien – le flux standard ne prend pas le relais.",
       "notFound": "Ce flux n’existe pas (ou plus).",
@@ -2975,7 +2984,7 @@
       "addMail": "Ajouter un e-mail",
       "deleteMail": "Retirer l’e-mail",
       "defaultFlow": "Flux par défaut",
-      "defaultFlowDescription": "S’applique à tous les abonnements auxquels aucun flux d’un plan d’abonnement ne correspond.",
+      "defaultFlowDescription": "S’applique à tous les abonnements auxquels aucun autre flux ne correspond.",
       "newFlow": "Nouveau flux",
       "newDayTitle": "Nouveau jour dans la chronologie",
       "newDayHint": "Nombre négatif = avant la fin de l’abonnement, nombre positif = après.",

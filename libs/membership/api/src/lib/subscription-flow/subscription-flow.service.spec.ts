@@ -5,7 +5,10 @@ import {
   PrismaClient,
   SubscriptionEvent,
 } from '@prisma/client';
-import { SubscriptionFlowService } from './subscription-flow.service';
+import {
+  SubscriptionFlowService,
+  subscriptionsOfFlow,
+} from './subscription-flow.service';
 import { BadRequestException } from '@nestjs/common';
 import type { Mock } from 'vitest';
 
@@ -260,6 +263,277 @@ describe('SubscriptionFlowService', () => {
     expect(result.length).toEqual(1);
     expect(result[0].memberPlanId).toEqual(mockMemberPlan.id);
     expect(result[0].intervals.length).toEqual(2);
+  });
+
+  // A subscription must fall into one flow of its plan only.
+  describe('two flows of a plan that would take the same subscription', () => {
+    const yearlyFlow = {
+      id: 'flow-yearly',
+      paymentMethods: [{ id: mockPaymentMethod.id }],
+      periodicities: [PaymentPeriodicity.yearly],
+      autoRenewal: [true],
+    };
+
+    beforeEach(() => {
+      prismaMock.subscriptionFlow.findMany!.mockResolvedValue([yearlyFlow]);
+    });
+
+    it('refuses a new flow for monthly and yearly next to one for yearly', async () => {
+      await expect(
+        service.createFlow({
+          memberPlanId: mockMemberPlan.id,
+          paymentMethodIds: [mockPaymentMethod.id],
+          periodicities: [
+            PaymentPeriodicity.monthly,
+            PaymentPeriodicity.yearly,
+          ],
+          autoRenewal: [true],
+        })
+      ).rejects.toThrow(/overlap/);
+      expect(prismaMock.subscriptionFlow.create).not.toHaveBeenCalled();
+      expect(prismaMock.subscriptionFlow.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: {
+            memberPlan: { id: mockMemberPlan.id },
+            allMemberPlans: false,
+          },
+        })
+      );
+    });
+
+    it('refuses to add yearly to another flow of the plan', async () => {
+      prismaMock.subscriptionFlow.findUnique!.mockResolvedValue({
+        id: 'flow-monthly',
+        default: false,
+        memberPlanId: mockMemberPlan.id,
+        paymentMethods: [{ id: mockPaymentMethod.id }],
+        periodicities: [PaymentPeriodicity.monthly],
+        autoRenewal: [true],
+      });
+
+      await expect(
+        service.updateFlow({
+          id: 'flow-monthly',
+          paymentMethodIds: [mockPaymentMethod.id],
+          periodicities: [
+            PaymentPeriodicity.monthly,
+            PaymentPeriodicity.yearly,
+          ],
+          autoRenewal: [true],
+        })
+      ).rejects.toThrow(/overlap/);
+    });
+
+    it('takes a flow that differs in the payment method', async () => {
+      prismaMock.subscriptionFlow.create!.mockResolvedValue({});
+
+      await expect(
+        service.createFlow({
+          memberPlanId: mockMemberPlan.id,
+          paymentMethodIds: ['another-payment-method'],
+          periodicities: [
+            PaymentPeriodicity.monthly,
+            PaymentPeriodicity.yearly,
+          ],
+          autoRenewal: [true],
+        })
+      ).resolves.toBeDefined();
+    });
+  });
+
+  describe('a flow for all member plans', () => {
+    const allPlansInput = {
+      allMemberPlans: true,
+      paymentMethodIds: [mockPaymentMethod.id],
+      periodicities: [PaymentPeriodicity.yearly],
+      autoRenewal: [true],
+    };
+
+    beforeEach(() => {
+      prismaMock.subscriptionFlow.findMany!.mockResolvedValue([]);
+      prismaMock.subscriptionFlow.create!.mockResolvedValue({});
+    });
+
+    it('is created without a member plan', async () => {
+      await service.createFlow(allPlansInput);
+
+      const { data } = prismaMock.subscriptionFlow.create!.mock.calls[0][0];
+
+      expect(data).toMatchObject({ default: false, allMemberPlans: true });
+      expect(data.memberPlan).toBeUndefined();
+    });
+
+    // A plan's own flow comes first, so the two never compete.
+    it('is only held against the other flows for all plans', async () => {
+      await service.createFlow(allPlansInput);
+
+      expect(prismaMock.subscriptionFlow.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { allMemberPlans: true } })
+      );
+    });
+
+    it('is refused when another flow for all plans takes the same subscriptions', async () => {
+      prismaMock.subscriptionFlow.findMany!.mockResolvedValue([
+        {
+          id: 'flow-all',
+          paymentMethods: [{ id: mockPaymentMethod.id }],
+          periodicities: [
+            PaymentPeriodicity.yearly,
+            PaymentPeriodicity.monthly,
+          ],
+          autoRenewal: [true],
+        },
+      ]);
+
+      await expect(service.createFlow(allPlansInput)).rejects.toThrow(
+        /overlap/
+      );
+    });
+
+    it('must be either for one member plan or for all', async () => {
+      await expect(
+        service.createFlow({ ...allPlansInput, memberPlanId: 'plan-1' })
+      ).rejects.toThrow(BadRequestException);
+      await expect(
+        service.createFlow({ ...allPlansInput, allMemberPlans: false })
+      ).rejects.toThrow(BadRequestException);
+      expect(prismaMock.subscriptionFlow.create).not.toHaveBeenCalled();
+    });
+
+    // An open condition takes any value: "all yearly subscriptions" should
+    // not have to list every payment method there is or will be.
+    describe('with a condition left open', () => {
+      const yearlyOnly = {
+        allMemberPlans: true,
+        paymentMethodIds: [],
+        periodicities: [PaymentPeriodicity.yearly],
+        autoRenewal: [],
+      };
+
+      const stored = (overrides: Record<string, unknown> = {}) => ({
+        id: 'flow-all',
+        default: false,
+        allMemberPlans: true,
+        memberPlanId: null,
+        paymentMethods: [],
+        periodicities: [PaymentPeriodicity.yearly],
+        autoRenewal: [],
+        ...overrides,
+      });
+
+      it('is created', async () => {
+        await expect(service.createFlow(yearlyOnly)).resolves.toBeDefined();
+        expect(prismaMock.subscriptionFlow.create).toHaveBeenCalled();
+      });
+
+      it('needs at least one condition, or it would be a second default flow', async () => {
+        await expect(
+          service.createFlow({ ...yearlyOnly, periodicities: [] })
+        ).rejects.toThrow(/at least one/);
+        expect(prismaMock.subscriptionFlow.create).not.toHaveBeenCalled();
+      });
+
+      it('is refused next to a flow for all plans it shares subscriptions with: open means any', async () => {
+        prismaMock.subscriptionFlow.findMany!.mockResolvedValue([stored()]);
+
+        await expect(
+          service.createFlow({
+            allMemberPlans: true,
+            paymentMethodIds: [mockPaymentMethod.id],
+            periodicities: [PaymentPeriodicity.yearly],
+            autoRenewal: [true],
+          })
+        ).rejects.toThrow(/overlap/);
+      });
+
+      it('stands next to a flow for all plans for other subscriptions', async () => {
+        prismaMock.subscriptionFlow.findMany!.mockResolvedValue([stored()]);
+
+        await expect(
+          service.createFlow({
+            ...yearlyOnly,
+            periodicities: [PaymentPeriodicity.monthly],
+          })
+        ).resolves.toBeDefined();
+      });
+
+      it('cannot have its last condition taken away', async () => {
+        prismaMock.subscriptionFlow.findUnique!.mockResolvedValue(stored());
+
+        await expect(
+          service.updateFlow({
+            id: 'flow-all',
+            paymentMethodIds: [],
+            periodicities: [],
+            autoRenewal: [],
+          })
+        ).rejects.toThrow(/at least one/);
+      });
+
+      it('can have a condition opened while another stays', async () => {
+        prismaMock.subscriptionFlow.findUnique!.mockResolvedValue(
+          stored({ autoRenewal: [true] })
+        );
+        prismaMock.subscriptionInterval.findMany!.mockResolvedValue([]);
+        (prismaMock as any).$transaction.mockResolvedValue([]);
+
+        await expect(
+          service.updateFlow({
+            id: 'flow-all',
+            paymentMethodIds: [],
+            periodicities: [PaymentPeriodicity.yearly],
+            autoRenewal: [],
+          })
+        ).resolves.toBeDefined();
+      });
+
+      it('matches subscriptions by the conditions it has only', () => {
+        expect(subscriptionsOfFlow(stored())).toEqual({
+          memberPlanID: undefined,
+          paymentPeriodicity: { in: [PaymentPeriodicity.yearly] },
+        });
+      });
+
+      // Any term includes the shortest.
+      it('may act 25 days ahead at the earliest while its term is open', async () => {
+        await expect(
+          service.earliestDay(
+            stored({ periodicities: [], autoRenewal: [true] })
+          )
+        ).resolves.toEqual({ days: -25, periodicity: null });
+      });
+    });
+
+    it('a flow of a member plan still needs all three conditions', async () => {
+      await expect(
+        service.createFlow({
+          memberPlanId: mockMemberPlan.id,
+          paymentMethodIds: [],
+          periodicities: [PaymentPeriodicity.yearly],
+          autoRenewal: [true],
+        })
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it('is held against the flows for all plans when its conditions change', async () => {
+      prismaMock.subscriptionFlow.findUnique!.mockResolvedValue({
+        id: 'flow-all',
+        default: false,
+        allMemberPlans: true,
+        memberPlanId: null,
+        paymentMethods: [{ id: mockPaymentMethod.id }],
+        periodicities: [PaymentPeriodicity.yearly],
+        autoRenewal: [true],
+      });
+      prismaMock.subscriptionInterval.findMany!.mockResolvedValue([]);
+      (prismaMock as any).$transaction.mockResolvedValue([]);
+
+      await service.updateFlow({ id: 'flow-all', ...allPlansInput });
+
+      expect(prismaMock.subscriptionFlow.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { allMemberPlans: true } })
+      );
+    });
   });
 
   it('prevents creation of a second default flow', async () => {

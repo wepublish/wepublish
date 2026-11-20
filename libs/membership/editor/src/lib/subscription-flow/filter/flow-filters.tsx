@@ -34,6 +34,14 @@ const FieldLabel = styled('span')`
   color: ${({ theme }) => theme.vars.palette.text.primary};
 `;
 
+const OpenConditionsHint = styled('p')`
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.35;
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
+`;
+
 const CreateAction = styled('div')`
   display: flex;
   justify-content: flex-end;
@@ -41,7 +49,8 @@ const CreateAction = styled('div')`
 `;
 
 interface FlowFiltersProps {
-  memberPlan: { id: string };
+  /** The plan of the flow; none for a flow for all member plans. */
+  memberPlan?: { id: string };
   subscriptionFlow?: SubscriptionFlowFragment;
   createNewFlow?: boolean;
   paymentMethods: ListPaymentMethodsQuery | undefined;
@@ -71,7 +80,9 @@ export function FlowFilters({
     };
 
     setNewFlow({
-      memberPlanId: memberPlan.id,
+      ...(memberPlan ?
+        { memberPlanId: memberPlan.id }
+      : { allMemberPlans: true }),
       paymentMethodIds: payload.paymentMethodIds || oldFlow.paymentMethodIds,
       periodicities: payload.periodicities || oldFlow.periodicities,
       autoRenewal: payload.autoRenewal || oldFlow.autoRenewal,
@@ -180,6 +191,13 @@ export function FlowFilters({
           renderInput={params => <TextField {...params} />}
         />
       </Field>
+
+      {/* A flow for all plans may leave conditions open. */}
+      {!memberPlan && (
+        <OpenConditionsHint>
+          {t('subscriptionFlow.openConditionsHint')}
+        </OpenConditionsHint>
+      )}
 
       {createNewFlow && (
         <CreateAction>

@@ -19,24 +19,40 @@ export const flowPath = (
 ) => `${FLOWS_PATH}/flow/${flow.default ? 'default' : flow.id}`;
 
 /**
- * Which subscriptions a member plan's flow applies to, in words. Empty for
- * the default flow, which narrows nothing.
+ * Which subscriptions a flow applies to, in words. Empty for the default
+ * flow, which narrows nothing. A flow for all plans takes any value of a
+ * condition it leaves open, and says so rather than leaving a gap.
  */
 export const conditionsSummary = (
   flow: SubscriptionFlowFragment,
   t: Translate
-) =>
-  [
-    flow.paymentMethods.map(paymentMethod => paymentMethod.name).join(', '),
-    flow.periodicities
-      .map(periodicity => t(`memberPlanList.paymentPeriodicity.${periodicity}`))
-      .join(', '),
-    flow.autoRenewal
-      .map(autoRenewal => t(`subscriptionFlow.overview.renewal.${autoRenewal}`))
-      .join(', '),
+) => {
+  const orAny = (values: string[], any: string) =>
+    values.length ? values.join(', ')
+    : flow.allMemberPlans ? t(`subscriptionFlow.overview.any.${any}`)
+    : '';
+
+  return [
+    orAny(
+      flow.paymentMethods.map(paymentMethod => paymentMethod.name),
+      'paymentMethods'
+    ),
+    orAny(
+      flow.periodicities.map(periodicity =>
+        t(`memberPlanList.paymentPeriodicity.${periodicity}`)
+      ),
+      'periodicities'
+    ),
+    orAny(
+      flow.autoRenewal.map(autoRenewal =>
+        t(`subscriptionFlow.overview.renewal.${autoRenewal}`)
+      ),
+      'renewal'
+    ),
   ]
     .filter(Boolean)
     .join(' · ');
+};
 
 /**
  * How early an event of the flow may lie, and why. A member plan's flow: the
@@ -50,12 +66,18 @@ export const earliestDayHint = (
 ): string => {
   const { days, periodicity } = flow.earliestDay;
 
-  return flow.default || !periodicity ?
-      t('subscriptionFlow.earliestDay.defaultFlow', { days: -days })
-    : t('subscriptionFlow.earliestDay.byConditions', {
+  if (flow.default) {
+    return t('subscriptionFlow.earliestDay.defaultFlow', { days: -days });
+  }
+
+  // A flow for all plans that leaves the term open: any term, so also the
+  // shortest.
+  return periodicity ?
+      t('subscriptionFlow.earliestDay.byConditions', {
         days: -days,
         periodicity: t(`memberPlanList.paymentPeriodicity.${periodicity}`),
-      });
+      })
+    : t('subscriptionFlow.earliestDay.anyTerm', { days: -days });
 };
 
 /**
@@ -72,17 +94,26 @@ export const flowWarnings = (
   }
 
   // Left behind by a deleted plan: the api refuses to look up any message
-  // while such a flow exists.
-  if (!flow.memberPlan) {
+  // while such a flow exists. A flow for all plans has none by design.
+  if (!flow.memberPlan && !flow.allMemberPlans) {
     return [t('subscriptionFlow.overview.warnings.noMemberPlan')];
   }
 
-  if (
-    !flow.paymentMethods.length ||
-    !flow.periodicities.length ||
-    !flow.autoRenewal.length
-  ) {
+  const given = [
+    flow.paymentMethods,
+    flow.periodicities,
+    flow.autoRenewal,
+  ].filter(values => values.length).length;
+
+  // A member plan's flow needs every condition; a flow for all plans takes
+  // any value of one it leaves open, but needs at least one.
+  if (flow.allMemberPlans ? given === 0 : given < 3) {
     return [t('subscriptionFlow.overview.warnings.matchesNothing')];
+  }
+
+  // No single plan has to offer what a flow for all plans is for.
+  if (!flow.memberPlan) {
+    return [];
   }
 
   const offers = flow.memberPlan.availablePaymentMethods;
@@ -123,7 +154,10 @@ export type FlowRow = {
   id: string;
   flow: SubscriptionFlowFragment;
   isDefault: boolean;
+  /** For the matching subscriptions of every member plan. */
+  allMemberPlans: boolean;
   memberPlanId?: string;
+  /** The plan's name; "all member plans" for a flow for all of them. */
   memberPlanName?: string;
   conditions: string;
   /** What makes the flow do less than its conditions say. */
@@ -140,7 +174,10 @@ export type FlowRow = {
 const byText = (a = '', b = '') =>
   a.localeCompare(b, undefined, { sensitivity: 'base', numeric: true });
 
-/** Every flow as a row: the default flow first, then by plan and conditions. */
+/**
+ * Every flow as a row: the default flow first, then the flows for all plans,
+ * then by plan and conditions.
+ */
 export const flowRows = (
   flows: SubscriptionFlowFragment[],
   t: Translate
@@ -153,8 +190,12 @@ export const flowRows = (
         id: flow.id,
         flow,
         isDefault: flow.default,
+        allMemberPlans: !!flow.allMemberPlans,
         memberPlanId: flow.memberPlan?.id,
-        memberPlanName: flow.memberPlan?.name,
+        memberPlanName:
+          flow.allMemberPlans ?
+            t('subscriptionFlow.overview.allMemberPlans')
+          : flow.memberPlan?.name,
         conditions: conditionsSummary(flow, t),
         warnings: flowWarnings(flow, t),
         subscriptions: flow.numberOfSubscriptions,
@@ -169,19 +210,22 @@ export const flowRows = (
     .sort(
       (a, b) =>
         Number(b.isDefault) - Number(a.isDefault) ||
+        Number(b.allMemberPlans) - Number(a.allMemberPlans) ||
         byText(a.memberPlanName, b.memberPlanName) ||
         byText(a.conditions, b.conditions)
     );
 
 /**
- * The flows of the chosen member plans. The default flow always stays: it is
- * what applies to every subscription of those plans no other flow matches.
+ * The flows of the chosen member plans. The default flow and the flows for
+ * all plans always stay: they are what applies to the subscriptions of those
+ * plans that no flow of their own matches.
  */
 export const filterFlowRows = (rows: FlowRow[], memberPlanIds: string[]) =>
   memberPlanIds.length ?
     rows.filter(
       row =>
         row.isDefault ||
+        row.allMemberPlans ||
         (row.memberPlanId && memberPlanIds.includes(row.memberPlanId))
     )
   : rows;
