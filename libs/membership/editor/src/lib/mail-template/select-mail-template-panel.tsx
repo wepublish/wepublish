@@ -71,34 +71,22 @@ const Paging = styled.div`
 `;
 
 // The stationery and its extra pages matter when a template is written, not
-// when one is picked for an event; neither do its status and the plans that
-// send it already.
+// when one is picked for an event; neither do its status, the plans that send
+// it already and the note about it.
+// Like the row headings of the other tables in this area.
+const Name = styled.strong`
+  font-weight: 600;
+`;
+
 const LEFT_OUT = [
   'letterLayoutName',
   'letterAppendixName',
   'status',
   'memberPlans',
+  'description',
 ];
 
 const LEFT_OUT_FILTERS = ['statuses', 'memberPlans'];
-
-// What a message says comes before the note about it.
-const subjectBeforeDescription = (
-  columns: DataTableColumn<TemplateRow>[]
-): DataTableColumn<TemplateRow>[] => {
-  const subject = columns.findIndex(column => column.id === 'subject');
-  const description = columns.findIndex(column => column.id === 'description');
-
-  if (subject < 0 || description < 0) {
-    return columns;
-  }
-
-  const swapped = [...columns];
-  swapped[subject] = columns[description];
-  swapped[description] = columns[subject];
-
-  return swapped;
-};
 
 export type SelectMailTemplatePanelProps = {
   /** The template the event sends now, if any. */
@@ -182,13 +170,24 @@ export function SelectMailTemplatePanel({
       t('mailTemplateSelect.chooser.selectCurrent')
     : t('mailTemplateSelect.chooser.select');
 
+  const headings: Record<string, string> = {
+    name: t('mailTemplateSelect.chooser.columns.template'),
+    context: t('mailTemplateSelect.chooser.columns.purpose'),
+  };
+
   const columns: DataTableColumn<TemplateRow>[] = [
-    ...subjectBeforeDescription(
-      useTemplateColumns({
-        paperLetters,
-        renderName: row => row.name,
-      }).filter(column => !LEFT_OUT.includes(column.id))
-    ),
+    ...useTemplateColumns({
+      paperLetters,
+      // The name is what a row is chosen by: it reads as its heading.
+      renderName: row => <Name>{row.name}</Name>,
+    })
+      .filter(column => !LEFT_OUT.includes(column.id))
+      // Shorter headings than in the template list: the drawer is narrow.
+      .map(column =>
+        column.id in headings ?
+          { ...column, label: headings[column.id], columnLabel: undefined }
+        : column
+      ),
     {
       id: 'action',
       label: t('action'),
