@@ -15,6 +15,8 @@ import {
   PaymentMethod,
   PaymentProviderCustomer,
   PeriodicJob,
+  PeriodicJobStepStatus,
+  Prisma,
   PrismaClient,
   Subscription,
   SubscriptionDeactivationReason,
@@ -101,6 +103,31 @@ export const isPeriodicJobRunning = (job: RunState, now = Date.now()) =>
 
 type RetryRun = Extract<PeriodicJobRunObject, { isRetry: true }>;
 
+/** The job's own steps, in the order a run takes them. */
+export const CORE_STEP_KEYS = [
+  'customMails',
+  'invoiceStates',
+  'invoiceCreation',
+  'invoiceLetters',
+  'paymentMethodChanges',
+  'charging',
+  'deactivationUnpaid',
+  'deactivationNotRenewed',
+] as const;
+
+type CoreStepKey = (typeof CORE_STEP_KEYS)[number];
+
+/** What one step of the night did, for the job log. */
+export interface NightStepRecord {
+  key: string;
+  status: PeriodicJobStepStatus;
+  /** Counts by name, e.g. `{readers: 1821, failed: 7}`. */
+  counts?: Record<string, number>;
+  error?: string;
+  startedAt: Date;
+  finishedAt: Date;
+}
+
 /**
  * Controller responsible for performing periodic jobs. A new controller
  * instance must be created for every run.
@@ -142,6 +169,14 @@ export class PeriodicJobService {
       orderBy: {
         date: 'desc',
       },
+      include: { steps: { orderBy: { startedAt: 'asc' } } },
+    });
+  }
+
+  getSteps(periodicJobId: string) {
+    return this.prismaService.periodicJobStep.findMany({
+      where: { periodicJobId },
+      orderBy: { startedAt: 'asc' },
     });
   }
 
@@ -286,32 +321,40 @@ export class PeriodicJobService {
     try {
       this.logger.log('Executing periodic job...');
       this.logger.log('Processing custom mails...');
-      await this.sendCustomSubscriptionEmails(periodicJobRunObject);
+      await this.step('customMails', () =>
+        this.sendCustomSubscriptionEmails(periodicJobRunObject)
+      );
       this.logger.log('Processing invoice state changes...');
-      await this.checkStateOfOpenInvoices();
+      await this.step('invoiceStates', () => this.checkStateOfOpenInvoices());
       this.logger.log('Processing invoice creation...');
-      await this.createMissingInvoicesForActiveSubscriptions(
-        periodicJobRunObject
+      await this.step('invoiceCreation', () =>
+        this.createMissingInvoicesForActiveSubscriptions(periodicJobRunObject)
       );
       this.logger.log('Processing invoice letters still missing...');
-      await this.postMissingInvoiceLetters(periodicJobRunObject.date);
+      await this.step('invoiceLetters', () =>
+        this.postMissingInvoiceLetters(periodicJobRunObject.date)
+      );
       this.logger.log('Processing expiry of payment method changes...');
       // by the clock, not the run date: a catch-up run of an earlier day must
       // not keep changes alive that have expired since
-      await this.paymentMethodChanges.expirePending(new Date());
+      await this.step('paymentMethodChanges', () =>
+        this.paymentMethodChanges.expirePending(new Date())
+      );
       this.logger.log('Processing charge of invoices...');
-      await this.chargeUnpaidDueInvoices(periodicJobRunObject);
+      await this.step('charging', () =>
+        this.chargeUnpaidDueInvoices(periodicJobRunObject)
+      );
       this.logger.log(
         'Processing deactivation of subscriptions with unpaid invoice...'
       );
-      await this.deactivateSubscriptionsWithUnpaidInvoices(
-        periodicJobRunObject
+      await this.step('deactivationUnpaid', () =>
+        this.deactivateSubscriptionsWithUnpaidInvoices(periodicJobRunObject)
       );
       this.logger.log(
         'Processing deactivation of subscriptions with which are not auto renewed...'
       );
-      await this.deactivateExpiredNotAutoRenewSubscriptions(
-        periodicJobRunObject
+      await this.step('deactivationNotRenewed', () =>
+        this.deactivateExpiredNotAutoRenewSubscriptions(periodicJobRunObject)
       );
       this.logger.log('Periodic job successfully finished.');
     } catch (e) {
@@ -320,6 +363,74 @@ export class PeriodicJobService {
     }
 
     await this.markJobSuccessful();
+  }
+
+  /** Runs one of the job's own steps and notes it on the running job. */
+  private async step(key: CoreStepKey, run: () => Promise<unknown>) {
+    const startedAt = new Date();
+
+    try {
+      await run();
+    } catch (error) {
+      await this.saveStep(this.runningJob?.id, {
+        key,
+        status: 'error',
+        error: describeError(error),
+        startedAt,
+        finishedAt: new Date(),
+      });
+      throw error;
+    }
+
+    await this.saveStep(this.runningJob?.id, {
+      key,
+      status: 'ok',
+      startedAt,
+      finishedAt: new Date(),
+    });
+  }
+
+  /**
+   * Notes a step of the night that runs after the job (the syncs) on the
+   * newest job, so the log shows the whole night in one place.
+   */
+  async recordNightStep(step: NightStepRecord) {
+    const job = await this.prismaService.periodicJob.findFirst({
+      orderBy: { date: 'desc' },
+      select: { id: true },
+    });
+
+    if (!job) {
+      this.logger.warn(`No periodic job to note step ${step.key} on`);
+      return;
+    }
+
+    await this.saveStep(job.id, step);
+  }
+
+  /** The log is a report: failing to write it never fails the work itself. */
+  private async saveStep(
+    periodicJobId: string | undefined,
+    { counts, error, ...step }: NightStepRecord
+  ) {
+    if (!periodicJobId) {
+      return;
+    }
+
+    try {
+      await this.prismaService.periodicJobStep.create({
+        data: {
+          periodicJobId,
+          ...step,
+          ...(counts ? { counts: counts as Prisma.InputJsonObject } : {}),
+          ...(error ? { error } : {}),
+        },
+      });
+    } catch (saveError) {
+      this.logger.error(
+        `Could not note step ${step.key} on the job log: ${describeError(saveError)}`
+      );
+    }
   }
 
   private async inContext<T>(context: string, run: () => Promise<T>) {
@@ -881,6 +992,17 @@ export class PeriodicJobService {
 
     this.runningJob = claimed;
     this.logger.warn('Retry failed job!');
+
+    // The retry runs every step again and notes them anew.
+    try {
+      await this.prismaService.periodicJobStep.deleteMany({
+        where: { periodicJobId: claimed.id, key: { in: [...CORE_STEP_KEYS] } },
+      });
+    } catch (error) {
+      this.logger.error(
+        `Could not clear the failed try's steps: ${describeError(error)}`
+      );
+    }
 
     return claimed;
   }
