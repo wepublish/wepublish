@@ -7,6 +7,7 @@ import {
 import { SubscriptionFlowService } from './subscription-flow.service';
 import { BadRequestException } from '@nestjs/common';
 import type { Mock } from 'vitest';
+import { FeaturesService } from '@wepublish/features/api';
 
 describe('SubscriptionFlowService', () => {
   let service: SubscriptionFlowService;
@@ -58,7 +59,11 @@ describe('SubscriptionFlowService', () => {
     modifiedAt: new Date(),
   };
 
+  const features = { isEnabled: vi.fn(async (_key: string) => false) };
+
   beforeEach(async () => {
+    features.isEnabled.mockReset().mockResolvedValue(false);
+
     prismaMock = {
       subscriptionFlow: {
         findMany: vi.fn(),
@@ -95,6 +100,7 @@ describe('SubscriptionFlowService', () => {
       providers: [
         SubscriptionFlowService,
         { provide: PrismaClient, useValue: prismaMock },
+        { provide: FeaturesService, useValue: features },
       ],
     }).compile();
 
@@ -251,6 +257,111 @@ describe('SubscriptionFlowService', () => {
     expect(result.length).toEqual(1);
     expect(result[0].memberPlanId).toEqual(mockMemberPlan.id);
     expect(result[0].intervals.length).toEqual(2);
+  });
+
+  describe('legacy subscriptions', () => {
+    const input = {
+      memberPlanId: mockMemberPlan.id,
+      paymentMethodIds: [mockPaymentMethod.id],
+      periodicities: [PaymentPeriodicity.monthly],
+      autoRenewal: [true],
+    };
+    const existing = (legacy: boolean[]) => ({
+      id: 'existing-flow',
+      paymentMethods: [{ id: mockPaymentMethod.id }],
+      periodicities: [PaymentPeriodicity.monthly],
+      autoRenewal: [true],
+      legacy,
+    });
+    const withFeature = () =>
+      features.isEnabled.mockImplementation(
+        async key => key === 'legacy-subscriptions'
+      );
+
+    it('makes a new flow apply to legacy and other subscriptions alike by default', async () => {
+      prismaMock.subscriptionFlow.findMany!.mockResolvedValue([]);
+
+      await service.createFlow(input);
+
+      expect(prismaMock.subscriptionFlow.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({ legacy: [true, false] }),
+      });
+    });
+
+    it('stores that a flow is for legacy subscriptions only', async () => {
+      withFeature();
+      prismaMock.subscriptionFlow.findMany!.mockResolvedValue([]);
+
+      await service.createFlow({ ...input, legacy: [true] });
+
+      expect(prismaMock.subscriptionFlow.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({ legacy: [true] }),
+      });
+    });
+
+    // Without the feature nobody can see or undo the split in the editor.
+    it('refuses a flow for legacy subscriptions only while the feature is off', async () => {
+      prismaMock.subscriptionFlow.findMany!.mockResolvedValue([]);
+
+      await expect(
+        service.createFlow({ ...input, legacy: [true] })
+      ).rejects.toThrow(BadRequestException);
+      expect(prismaMock.subscriptionFlow.create).not.toHaveBeenCalled();
+    });
+
+    it('refuses a flow that is for nobody', async () => {
+      withFeature();
+
+      await expect(
+        service.createFlow({ ...input, legacy: [] })
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it('lets a legacy flow sit next to the flow for all the others', async () => {
+      withFeature();
+      prismaMock.subscriptionFlow.findMany!.mockResolvedValue([
+        existing([false]),
+      ]);
+
+      await expect(
+        service.createFlow({ ...input, legacy: [true] })
+      ).resolves.toBeDefined();
+    });
+
+    it('refuses a legacy flow that an existing flow for everybody already covers', async () => {
+      withFeature();
+      prismaMock.subscriptionFlow.findMany!.mockResolvedValue([
+        existing([true, false]),
+      ]);
+
+      await expect(
+        service.createFlow({ ...input, legacy: [true] })
+      ).rejects.toThrow('there is a filter overlap');
+    });
+
+    it('narrows an existing flow to legacy subscriptions', async () => {
+      withFeature();
+      prismaMock.subscriptionFlow.findUnique!.mockResolvedValue({
+        id: 'flow-1',
+        memberPlanId: mockMemberPlan.id,
+        paymentMethods: [],
+      });
+      prismaMock.subscriptionFlow.findMany!.mockResolvedValue([]);
+      (prismaMock as any).$transaction.mockResolvedValue([]);
+
+      await service.updateFlow({ id: 'flow-1', legacy: [true] });
+
+      expect(prismaMock.subscriptionFlow.update).toHaveBeenCalledWith({
+        where: { id: 'flow-1' },
+        data: expect.objectContaining({ legacy: [true] }),
+      });
+    });
+
+    it('refuses narrowing a flow while the feature is off', async () => {
+      await expect(
+        service.updateFlow({ id: 'flow-1', legacy: [false] })
+      ).rejects.toThrow(BadRequestException);
+    });
   });
 
   it('prevents creation of a second default flow', async () => {

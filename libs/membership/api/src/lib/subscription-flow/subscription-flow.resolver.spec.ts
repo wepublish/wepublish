@@ -449,6 +449,36 @@ describe('Subscription Flow Resolver', () => {
         });
       });
 
+      it('counts only legacy subscriptions for a flow that is for them', async () => {
+        await resolver.numberOfSubscriptions({
+          ...customFlow,
+          legacy: [true],
+        } as any);
+
+        expect(prisma.subscription.count).toHaveBeenCalledWith({
+          where: {
+            ...subscriptionsOfCustomFlow,
+            AND: [{ importedAt: { not: null }, legacyEndedAt: null }],
+          },
+        });
+      });
+
+      it('leaves legacy subscriptions out of a flow for all the others', async () => {
+        await resolver.numberOfSubscriptions({
+          ...customFlow,
+          legacy: [false],
+        } as any);
+
+        expect(prisma.subscription.count).toHaveBeenCalledWith({
+          where: {
+            ...subscriptionsOfCustomFlow,
+            AND: [
+              { OR: [{ importedAt: null }, { legacyEndedAt: { not: null } }] },
+            ],
+          },
+        });
+      });
+
       it('counts every subscription no other flow covers for the default flow', async () => {
         prisma.subscriptionFlow.findMany.mockResolvedValue([customFlow]);
         prisma.subscription.count.mockResolvedValue(30);

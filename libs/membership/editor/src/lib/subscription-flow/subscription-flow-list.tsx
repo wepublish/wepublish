@@ -40,7 +40,7 @@ import { DEFAULT_MUTATION_OPTIONS } from '../common';
 import { usePaperLetterFlow } from '../delivery-mode/use-paper-letter-flow';
 import { MailBlock, MailBlocks } from '../mail-settings-layout';
 import { SystemMailSection } from '../system-mail/system-mail-section';
-import { FlowFilters } from './filter/flow-filters';
+import { FlowFilters, legacyChoiceOf } from './filter/flow-filters';
 import { FlowBlock } from './flow-block';
 import { SubscriptionClientContext } from './graphql-client-context';
 import styled from '@emotion/styled';
@@ -249,6 +249,9 @@ function SubscriptionFlowBlocks({
       flow.autoRenewal
         .map(autoRenewal => t(`subscriptionFlow.booleanFilter.${autoRenewal}`))
         .join(', '),
+      legacyChoiceOf(flow.legacy) === 'all' ? '' : (
+        t(`subscriptionFlow.legacyFilter.${legacyChoiceOf(flow.legacy)}`)
+      ),
     ]
       .filter(Boolean)
       .join(' · ');

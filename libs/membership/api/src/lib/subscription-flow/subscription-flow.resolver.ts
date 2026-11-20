@@ -23,6 +23,10 @@ import {
 } from './subscription-flow.model';
 import { PaymentPeriodicity, Prisma, PrismaClient } from '@prisma/client';
 import { Permissions } from '@wepublish/permissions/api';
+import {
+  flowLegacyWhere,
+  LEGACY_AND_OTHERS,
+} from '../subscription/legacy-subscription';
 
 @Resolver(() => SubscriptionFlowModel)
 export class SubscriptionFlowResolver {
@@ -139,8 +143,12 @@ function subscriptionsOfFlow(flow: {
   paymentMethods: { id: string }[];
   periodicities: PaymentPeriodicity[];
   autoRenewal: boolean[];
+  legacy?: boolean[];
 }): Prisma.SubscriptionWhereInput {
+  const legacy = flowLegacyWhere(flow.legacy ?? LEGACY_AND_OTHERS);
+
   return {
+    ...(legacy.length && { AND: legacy }),
     memberPlanID: flow.memberPlanId ?? undefined,
     paymentMethodID: {
       in: flow.paymentMethods.map(paymentMethod => paymentMethod.id),

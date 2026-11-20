@@ -10,6 +10,7 @@ import {
 } from '@prisma/client';
 import { format, formatISO } from 'date-fns';
 import { SubscriptionWithRelations } from '../legacy/member-context';
+import { isLegacySubscription } from './legacy-subscription';
 
 type UserWithRelations = User & {
   address: UserAddress | null;
@@ -76,6 +77,8 @@ export function mapSubscriptionsAsCsv(subscriptions: CSVSubscription[]) {
       'goodie',
       'goodieId',
       'goodiePaid',
+      'importedAt',
+      'legacy',
     ].join(',') + '\n';
 
   for (const subscription of subscriptions) {
@@ -132,6 +135,10 @@ export function mapSubscriptionsAsCsv(subscriptions: CSVSubscription[]) {
         ),
         goodieItem?.item.goodieId ?? '',
         goodieItem ? Boolean(goodieItem.invoice.paidAt) : '',
+        subscription?.importedAt ?
+          formatISO(subscription.importedAt, { representation: 'date' })
+        : '',
+        isLegacySubscription(subscription),
       ].join(',') + '\r\n';
   }
 

@@ -467,6 +467,27 @@ describe('SubscriptionFlowList', () => {
       ).toBeTruthy();
     });
 
+    // Shown whether or not the feature is on: a flow that is narrowed must
+    // never look like one for everybody.
+    it('says in the summary when a flow is for legacy subscriptions only', () => {
+      mockQueries([defaultFlow, { ...customFlow, legacy: [true] } as never]);
+      renderPage();
+
+      expect(
+        screen.getByText('subscriptionFlow.legacyFilter.only')
+      ).toBeTruthy();
+    });
+
+    it('leaves legacy out of the summary of a flow for everybody', () => {
+      mockQueries([
+        defaultFlow,
+        { ...customFlow, legacy: [true, false] } as never,
+      ]);
+      renderPage();
+
+      expect(screen.queryByText(/subscriptionFlow\.legacyFilter/)).toBeNull();
+    });
+
     it('counts the subscriptions of this member plan only', () => {
       renderPage();
 

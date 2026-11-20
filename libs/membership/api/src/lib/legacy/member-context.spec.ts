@@ -50,7 +50,7 @@ const setup = () => {
     sendAsLetter: true,
   });
 
-  return { context, mailContext };
+  return { context, mailContext, prisma };
 };
 
 const createInput = {
@@ -94,6 +94,51 @@ describe('MemberContext.createSubscription', () => {
       context.createSubscription({ ...createInput, skipMail: true })
     ).resolves.toEqual({ subscription, invoice });
     expect(mailContext.sendMail).not.toHaveBeenCalled();
+  });
+});
+
+describe('MemberContext.importSubscription', () => {
+  const NOW = new Date('2026-11-19T10:00:00Z');
+
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(NOW);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  // The only record that a subscription came from another system: filters and
+  // flows tell legacy subscriptions apart by it.
+  it('records when the subscription was imported', async () => {
+    const { context, prisma } = setup();
+
+    await context.importSubscription({
+      ...createInput,
+      startsAt: new Date('2027-01-01T00:00:00Z'),
+      skipMail: true,
+    });
+
+    expect(prisma.subscription.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ importedAt: NOW }),
+      })
+    );
+  });
+});
+
+describe('MemberContext.createSubscription marker', () => {
+  it('leaves a subscription created here unmarked', async () => {
+    const { context, prisma } = setup();
+
+    await context.createSubscription(createInput);
+
+    expect(prisma.subscription.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.not.objectContaining({ importedAt: expect.anything() }),
+      })
+    );
   });
 });
 

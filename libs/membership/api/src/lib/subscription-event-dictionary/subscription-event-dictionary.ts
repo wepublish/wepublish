@@ -14,6 +14,7 @@ import {
   SubscriptionInterval,
 } from '@prisma/client';
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { isLegacySubscription } from '../subscription/legacy-subscription';
 
 /**
  * This class loads all subscription flows and allows filtering by member plan,
@@ -85,7 +86,7 @@ export class SubscriptionEventDictionary {
 
   /**
    * Try to get the MailTemplates for a specific filter of [memberPlan,
-   * paymentMethod, periodicity, autoRenewal]. You additionally need to pass
+   * paymentMethod, periodicity, autoRenewal, legacy]. You additionally need to pass
    * either `daysAwayFromEnding` or `events` to filter further. If any
    * filter leads to an empty result set, the templates of the default flow are
    * returned.
@@ -113,7 +114,8 @@ export class SubscriptionEventDictionary {
         flow.memberPlanId === query.memberplanId &&
         flow.paymentMethods.map(pm => pm.id).includes(query.paymentMethodId) &&
         flow.periodicities.includes(query.periodicity) &&
-        flow.autoRenewal.includes(query.autorenwal)
+        flow.autoRenewal.includes(query.autorenwal) &&
+        flow.legacy.includes(query.legacy)
     );
 
     if (filteredFlows.length === 0) {
@@ -240,6 +242,9 @@ export class SubscriptionEventDictionary {
         },
         autoRenewal: {
           has: subsciption.autoRenew,
+        },
+        legacy: {
+          has: isLegacySubscription(subsciption),
         },
         periodicities: {
           has: subsciption.paymentPeriodicity,
