@@ -1536,6 +1536,11 @@ function MailTemplateEdit() {
         <DialogContent style={{ height: '85vh' }}>
           <MailPreview html={previewHtml ?? ''} />
         </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setPreviewOpen(false)}>
+            {t('mailTemplates.editor.close')}
+          </Button>
+        </DialogActions>
       </Dialog>
 
       <Dialog
@@ -1606,9 +1611,14 @@ function MailTemplateEdit() {
         onClose={() => setLetterPdf(null)}
       >
         <DialogTitle>{t('mailTemplates.edit.letterPreviewTitle')}</DialogTitle>
-        <DialogContent style={{ height: '85vh' }}>
+        <DialogContent style={{ flex: 1, minHeight: 0 }}>
           {letterPdf && <LetterPreview pdf={letterPdf} />}
         </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setLetterPdf(null)}>
+            {t('mailTemplates.editor.close')}
+          </Button>
+        </DialogActions>
       </Dialog>
     </div>
   );
