@@ -650,7 +650,8 @@ describe('SubscriptionFlowService', () => {
           { memberPlanID: { in: ['plan-1', 'plan-2'] } },
           { paymentMethodID: { in: ['payment-1'] } },
           { paymentPeriodicity: { in: [PaymentPeriodicity.yearly] } },
-          { autoRenew: { in: [false] } },
+          // A yes/no field cannot be asked for `in`.
+          { OR: [{ autoRenew: false }] },
         ])
       );
     });
