@@ -1,6 +1,9 @@
 import { useQuery } from '@apollo/client/react';
 import { Alert, Stack, SxProps, Theme } from '@mui/material';
-import { EmailEvidenceDocument, EmailEvidenceQuery } from '@wepublish/editor/api';
+import {
+  EmailEvidenceDocument,
+  EmailEvidenceQuery,
+} from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
 
 type Evidence = EmailEvidenceQuery['emailEvidence'];
@@ -26,7 +29,10 @@ export const evidenceWarnings = (
   const warnings: EvidenceWarning[] = [];
 
   if (evidence.lastPollError) {
-    warnings.push({ key: 'pollError', params: { error: evidence.lastPollError } });
+    warnings.push({
+      key: 'pollError',
+      params: { error: evidence.lastPollError },
+    });
   }
 
   const lastAt =
@@ -43,7 +49,9 @@ export const evidenceWarnings = (
   if (!evidence.providerReportsDelivery) {
     warnings.push({
       key: 'noProviderReports',
-      params: { provider: evidence.providerName || evidence.providerType || '' },
+      params: {
+        provider: evidence.providerName || evidence.providerType || '',
+      },
     });
   } else if (!lastAt) {
     warnings.push({ key: 'never', params: {} });

@@ -25,9 +25,14 @@ pnpm nx affected -t lint test --base=origin/master
 pnpm nx build <project>                    # e.g. membership-api
 
 # 2b. Apps — not covered by lint, test, or any build target
-pnpm tsc -p ./apps/<app> --noEmit          # single app
+pnpm tsc -p ./apps/<app> --noEmit          # single tenant app
+pnpm nx run editor:typecheck               # editor + every libs/*/editor it imports
 pnpm nx affected -t typecheck --exclude=editor   # apps, as CI runs it (cached)
 ```
+
+For `editor`, `media` and `api-example`, `tsc -p ./apps/<app>` checks nothing
+(see gotchas): use their `typecheck`/`build` target or `-p apps/<app>/tsconfig.app.json`.
+An editor lib's types are only checked there — its Vitest run strips them.
 
 `nx build <project>` runs `tsc` across the whole library rather than only the
 files a spec happens to import, so it is what catches a type error in a file no

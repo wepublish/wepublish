@@ -1,4 +1,5 @@
 import { Int, Parent, ResolveField, Resolver } from '@nestjs/graphql';
+import { isManagedByWepublishLogin } from './managed-by-wepublish-login';
 import {
   PaymentProviderCustomer,
   SensitiveDataUser,
@@ -7,7 +8,11 @@ import {
   UserSubscriptionOverview,
 } from './user.model';
 import { PrismaClient } from '@prisma/client';
-import { CurrentUser, UserSession } from '@wepublish/authentication/api';
+import {
+  AuthSession,
+  CurrentUser,
+  userSessionOf,
+} from '@wepublish/authentication/api';
 import { UserRoleDataloader } from './user-role.dataloader';
 import { UserRole } from './user-role.model';
 import { User as PUser } from '@prisma/client';
@@ -51,9 +56,11 @@ export class SensitiveDataUserResolver {
 
   @ResolveField(() => [String])
   public async permissions(
-    @CurrentUser() user: UserSession | undefined,
+    @CurrentUser() session: AuthSession | undefined,
     @Parent() { id }: SensitiveDataUser
   ) {
+    const user = userSessionOf(session);
+
     if (user?.user.id === id) {
       return user.roles.flatMap(r => r.permissionIDs);
     }
@@ -81,5 +88,13 @@ export class SensitiveDataUserResolver {
   @ResolveField(() => UserEmailQualityModel, { nullable: true })
   public async emailQuality(@Parent() { id }: SensitiveDataUser) {
     return await this.emailQualityDataloader.load(id);
+  }
+
+  @ResolveField(() => Boolean, {
+    description:
+      'Whether the account signs in with the We.Publish login. We.Publish manages it, so it cannot be changed or deleted.',
+  })
+  public managedByWepublishLogin(@Parent() user: PUser) {
+    return isManagedByWepublishLogin(user);
   }
 }

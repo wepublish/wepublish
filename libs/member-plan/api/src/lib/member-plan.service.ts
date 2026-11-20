@@ -402,6 +402,7 @@ function toPeriodicityPriceCreate({
   amountMin,
   amountTarget,
   amountMax,
+  printIssues,
 }: PeriodicityPriceInput): Prisma.MemberPlanPeriodicityPriceCreateManyMemberPlanInput {
   return {
     periodicity,
@@ -409,6 +410,7 @@ function toPeriodicityPriceCreate({
     amountMin: amountMin ?? null,
     amountTarget: amountTarget ?? null,
     amountMax: amountMax ?? null,
+    printIssues: printIssues ?? null,
   };
 }
 

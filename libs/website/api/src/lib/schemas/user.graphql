@@ -189,3 +189,14 @@ mutation UploadImage(
     ...FullSensitiveDataUser
   }
 }
+
+query CurrentSession {
+  currentSession {
+    impersonatedBy
+    expiresAt
+  }
+}
+
+mutation EndImpersonation {
+  revokeActiveSession
+}

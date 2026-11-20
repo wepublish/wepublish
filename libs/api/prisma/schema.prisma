@@ -288,6 +288,7 @@ model Image {
   peerProfileLogo       PeerProfile[] @relation("logo")
   peerProfileSquareLogo PeerProfile[] @relation("squareLogo")
   goodies               Goodie[]
+  printIssues           PrintIssue[]
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -307,7 +308,8 @@ model Document {
   fileSize    Int
   extension   String
 
-  mailTemplates MailTemplate[]
+  mailTemplates           MailTemplate[]
+  mailTemplateAttachments MailTemplateAttachment[]
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -333,6 +335,15 @@ model ApiToken {
   createdBy   User?   @relation(fields: [createdById], references: [id], onDelete: SetNull)
 
   externalApps ExternalApps[]
+
+  // What this key did on behalf of its creator; the user is on the same row.
+  paidInvoices                 Invoice[]                @relation("InvoicePaidByApiToken")
+  deliveryPreferenceChanges    UserDeliveryPreference[] @relation("DeliveryPreferenceChangedByApiToken")
+  deliveryModeBulkChanges      DeliveryModeBulkChange[] @relation("DeliveryModeBulkChangedByApiToken")
+  closedPrintIssues            PrintIssue[]             @relation("PrintIssueClosedByApiToken")
+  pendingPrintIssueRuns        PrintIssue[]             @relation("PrintIssuePendingRunByApiToken")
+  createdPrintIssueDeliveries  PrintIssueDelivery[]     @relation("PrintIssueDeliveryCreatedByApiToken")
+  deliveredPrintIssueDeliveries PrintIssueDelivery[]    @relation("PrintIssueDeliveryDeliveredByApiToken")
 
   @@index([createdAt])
   @@index([createdById])
@@ -583,6 +594,9 @@ model Invoice {
   scheduledDeactivationAt   DateTime      @db.Timestamptz(3)
   items                     InvoiceItem[]
   manuallySetAsPaidByUserId String?
+  /// Set when an API key marked it as paid, on behalf of that user.
+  manuallySetAsPaidByApiTokenId String?
+  manuallySetAsPaidByApiToken   ApiToken? @relation("InvoicePaidByApiToken", fields: [manuallySetAsPaidByApiTokenId], references: [id], onDelete: SetNull)
   currency                  Currency
   // When the RENEWAL_SUCCESS mail for this invoice went out. Claimed
   // atomically so the webhook, the nightly job and the admin path can never
@@ -840,6 +854,8 @@ model MemberPlanPeriodicityPrice {
   amountMin    Int?
   amountTarget Int?
   amountMax    Int?
+  /// Printed issues one paid period of this periodicity is worth (print export); null = the medium's «issues per year» pro rata.
+  printIssues  Int?
 
   memberPlan   MemberPlan @relation(fields: [memberPlanId], references: [id], onDelete: Cascade)
   memberPlanId String
@@ -1168,6 +1184,7 @@ model Session {
   impersonatedBy      String?
   impersonationReason String?
   impersonatedAt      DateTime? @db.Timestamptz(3)
+  canImpersonate      Boolean   @default(false)
 
   userID String
   user   User   @relation(fields: [userID], references: [id], onDelete: Cascade)
@@ -1206,6 +1223,8 @@ model SubscriptionPeriod {
 
   subscription   Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
   subscriptionId String?
+
+  printDeliveries PrintIssueRecipient[]
 
   @@index([subscriptionId])
   @@index([invoiceID])
@@ -1268,6 +1287,8 @@ model Subscription {
   mailSendJobEntries MailSendJobRecipient[]
 
   paymentMethodChanges SubscriptionPaymentMethodChange[]
+
+  printDeliveries PrintIssueRecipient[]
 
   @@index([userID])
   @@index([memberPlanID, createdAt, id])
@@ -1387,6 +1408,7 @@ model User {
   totpSecret      String?
   totpEnabled     Boolean   @default(false)
   totpExempt      Boolean   @default(false)
+  wepublishLoginSubject String? @unique
   userImageID     String?
   userImage       Image?    @relation(fields: [userImageID], references: [id])
   note            String?
@@ -1403,6 +1425,11 @@ model User {
   mailSent                  MailLog[]
   mailSendJobs              MailSendJob[]
   mailSendJobEntries        MailSendJobRecipient[]
+  printIssuesClosed         PrintIssue[]             @relation("PrintIssueClosedBy")
+  printIssueRunsComputed    PrintIssue[]             @relation("PrintIssuePendingRunBy")
+  printDeliveriesCreated    PrintIssueDelivery[]     @relation("PrintIssueDeliveryCreatedBy")
+  printDeliveriesDelivered  PrintIssueDelivery[]     @relation("PrintIssueDeliveryDeliveredBy")
+  printDeliveries           PrintIssueRecipient[]
   consents                  UserConsent[]
   articleRevisions          ArticleRevision[]
   pageRevisions             PageRevision[]
@@ -1749,6 +1776,11 @@ model MailTemplate {
   letterAppendixId String?
   letterAppendix   Document? @relation(fields: [letterAppendixId], references: [id], onDelete: SetNull)
 
+  // Word documents filled in with the same placeholders, converted to pdf and
+  // attached to every mail sent from this template, or printed after the
+  // letter pages.
+  attachments MailTemplateAttachment[]
+
   subscriptionIntervals SubscriptionInterval[]
 
   userFlowMails UserFlowMail[]
@@ -1763,6 +1795,21 @@ model MailTemplate {
   letterLayoutId String?
 
   @@map("mail_templates")
+}
+
+// One Word document attached to a mail template, at its place in the list.
+// A document still attached cannot be deleted: a mail would otherwise lose
+// it without anyone noticing.
+model MailTemplateAttachment {
+  mailTemplateId String
+  mailTemplate   MailTemplate @relation(fields: [mailTemplateId], references: [id], onDelete: Cascade)
+  documentId     String
+  document       Document     @relation(fields: [documentId], references: [id], onDelete: Restrict)
+  position       Int
+
+  @@id([mailTemplateId, documentId])
+  @@index([documentId])
+  @@map("mail_template_attachments")
 }
 
 // Stationery for printed letters: a header and a footer repeated on every
@@ -2859,6 +2906,9 @@ model UserDeliveryPreference {
 
   changedByUserId String?
   changedBy       User?    @relation("DeliveryPreferenceChangedBy", fields: [changedByUserId], references: [id], onDelete: SetNull)
+  /// Set when an API key made the change, on behalf of that user.
+  changedByApiTokenId String?
+  changedByApiToken   ApiToken? @relation("DeliveryPreferenceChangedByApiToken", fields: [changedByApiTokenId], references: [id], onDelete: SetNull)
   changedAt       DateTime @db.Timestamptz(3)
 
   @@index([channel, origin])
@@ -2882,6 +2932,9 @@ model DeliveryModeBulkChange {
 
   changedByUserId String?
   changedBy       User?   @relation("DeliveryModeBulkChangedBy", fields: [changedByUserId], references: [id], onDelete: SetNull)
+  /// Set when an API key made the change, on behalf of that user.
+  changedByApiTokenId String?
+  changedByApiToken   ApiToken? @relation("DeliveryModeBulkChangedByApiToken", fields: [changedByApiTokenId], references: [id], onDelete: SetNull)
 
   @@index([createdAt(sort: Desc)])
   @@map("user_delivery_bulk_changes")
@@ -2906,4 +2959,174 @@ model DeliverySuggestion {
 
   @@index([kind])
   @@map("user_delivery_suggestions")
+}
+
+enum PrintIssueStatus {
+  /// lists can be computed, exported and handed over
+  open     @map("open")
+  /// no more Nachlieferungen expected; reversible
+  closed   @map("closed")
+  /// Shipped before the export tracked issues: number and date only. Counts as
+  /// delivered for every paid period that covered its issueDate.
+  historic @map("historic")
+}
+
+enum PrintIssueRecipientSource {
+  wepublish @map("wepublish")
+  bexio     @map("bexio")
+}
+
+enum PrintIssueRecipientReason {
+  /// paid beyond the issue date («bezahlt bis …», «Kündigung per …»)
+  paid        @map("paid")
+  /// renews and the dunning process has not ended it («offen»)
+  openInvoice @map("openInvoice")
+  /// period over, copies of that period still owed («Restexemplar n/m»)
+  grace       @map("grace")
+  /// subscription starts after the issue date; not charged to any period
+  gift        @map("gift")
+  /// bexio invoice (institutions, gifts, bookshops, single issues)
+  external    @map("external")
+}
+
+/// One printed issue of the magazine. The export for it is evaluated as of
+/// `issueDate`, the day the issue reaches the readers.
+model PrintIssue {
+  id         String   @id @default(dbgenerated("uuidv7()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  /// «1.27» = number 1 of 2027
+  number   Int
+  /// the last number of a double issue: «3/4.26» = number 3, numberTo 4
+  numberTo Int?
+  year     Int
+  /// how many issues it counts as against a reader's period: the numbers it
+  /// covers, or fewer when the medium decides so for this issue
+  countsAs Int     @default(1)
+  /// the issue's topic, e.g. «Wem gehört die Stadt?»
+  title    String?
+
+  /// Ship day (Zurich calendar day); entitlement is evaluated as of this day.
+  issueDate DateTime @db.Date
+
+  status PrintIssueStatus @default(open)
+  note   String?
+
+  /// e.g. the cover; cleared when the image is deleted
+  imageId String?
+  image   Image?  @relation(fields: [imageId], references: [id], onDelete: SetNull)
+
+  /// What a list is computed from: { memberPlanIds: string[] | null,
+  /// includeBexio, includeOpen, includeUpcoming }. Starts from the medium's
+  /// defaults (setting printExportDefaults); each delivery keeps its own copy.
+  options Json
+
+  closedAt       DateTime? @db.Timestamptz(3)
+  closedBy       User?     @relation("PrintIssueClosedBy", fields: [closedByUserId], references: [id], onDelete: SetNull)
+  closedByUserId String?
+  /// Set when an API key closed it, on behalf of that user.
+  closedByApiTokenId String?
+  closedByApiToken   ApiToken? @relation("PrintIssueClosedByApiToken", fields: [closedByApiTokenId], references: [id], onDelete: SetNull)
+
+  /// The computed list waiting to be checked and exported: exporting writes
+  /// exactly these rows, never a new computation. Cleared when exported.
+  pendingRun         Json?
+  pendingRunAt       DateTime? @db.Timestamptz(3)
+  pendingRunBy       User?     @relation("PrintIssuePendingRunBy", fields: [pendingRunByUserId], references: [id], onDelete: SetNull)
+  pendingRunByUserId String?
+  pendingRunByApiTokenId String?
+  pendingRunByApiToken   ApiToken? @relation("PrintIssuePendingRunByApiToken", fields: [pendingRunByApiTokenId], references: [id], onDelete: SetNull)
+
+  deliveries PrintIssueDelivery[]
+  recipients PrintIssueRecipient[]
+
+  @@unique([year, number])
+  @@index([issueDate])
+  @@map("print.issues")
+}
+
+/// One list handed to the printshop: the export (batch 0) or a Nachlieferung.
+/// Until it is «übergeben» it can be computed again and replaced or deleted;
+/// from then on it is immutable and its copies count for the readers' quota.
+model PrintIssueDelivery {
+  id        String   @id @default(dbgenerated("uuidv7()"))
+  /// when the list was exported
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+
+  issue   PrintIssue @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  issueId String
+
+  /// 0 = the export, n = the n-th Nachlieferung
+  batch Int
+
+  createdBy       User?   @relation("PrintIssueDeliveryCreatedBy", fields: [createdByUserId], references: [id], onDelete: SetNull)
+  createdByUserId String?
+  /// Set when an API key exported the list, on behalf of that user.
+  createdByApiTokenId String?
+  createdByApiToken   ApiToken? @relation("PrintIssueDeliveryCreatedByApiToken", fields: [createdByApiTokenId], references: [id], onDelete: SetNull)
+
+  /// the options this list was computed with
+  options   Json
+  rowCount  Int
+  copyCount Int
+  summary   Json
+  filename  String
+
+  /// «übergeben»: the file went to the printshop. Never undone.
+  deliveredAt       DateTime? @db.Timestamptz(3)
+  deliveredBy       User?     @relation("PrintIssueDeliveryDeliveredBy", fields: [deliveredByUserId], references: [id], onDelete: SetNull)
+  deliveredByUserId String?
+  deliveredByApiTokenId String?
+  deliveredByApiToken   ApiToken? @relation("PrintIssueDeliveryDeliveredByApiToken", fields: [deliveredByApiTokenId], references: [id], onDelete: SetNull)
+
+  recipients PrintIssueRecipient[]
+
+  @@unique([issueId, batch])
+  @@map("print.issue_deliveries")
+}
+
+/// One exported address of one issue, frozen: `snapshot` is the CSV row as
+/// written. The links say which paid period the copy was charged to.
+model PrintIssueRecipient {
+  id        String   @id @default(dbgenerated("uuidv7()"))
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+
+  issue   PrintIssue @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  issueId String
+
+  delivery   PrintIssueDelivery @relation(fields: [deliveryId], references: [id], onDelete: Cascade)
+  deliveryId String
+
+  /// 0 = the export, n = the n-th Nachlieferung
+  batch    Int @default(0)
+  position Int
+
+  source PrintIssueRecipientSource
+  reason PrintIssueRecipientReason
+  copies Int                       @default(1)
+
+  user           User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId         String?
+  subscription   Subscription?       @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+  subscriptionId String?
+  period         SubscriptionPeriod? @relation(fields: [periodId], references: [id], onDelete: SetNull)
+  periodId       String?
+
+  bexioInvoiceId Int?
+  /// the recipient: a contact linked to the payer, or the orderer of single copies
+  bexioContactId Int?
+  /// the bexio period the copy belongs to (subscriptions over a period), for copies still owed later
+  bexioPeriodFrom DateTime? @db.Date
+  bexioPeriodTo   DateTime? @db.Date
+
+  snapshot Json
+
+  @@unique([issueId, batch, position])
+  @@unique([issueId, subscriptionId])
+  @@unique([issueId, bexioInvoiceId, bexioContactId])
+  @@index([deliveryId])
+  @@index([subscriptionId])
+  @@index([periodId])
+  @@map("print.issue_recipients")
 }

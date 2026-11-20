@@ -27,8 +27,14 @@ const makeService = ({
     lastPollAt: Date | null;
     lastPollError: string | null;
   } | null,
-  recent = [] as { source: EmailQualityEventSource; _count: { _all: number } }[],
-  latest = [] as { source: EmailQualityEventSource; _max: { createdAt: Date | null } }[],
+  recent = [] as {
+    source: EmailQualityEventSource;
+    _count: { _all: number };
+  }[],
+  latest = [] as {
+    source: EmailQualityEventSource;
+    _max: { createdAt: Date | null };
+  }[],
   warnAfterDays = undefined as number | undefined,
 } = {}) => {
   const groupBy = vi.fn(async (args: { _count?: unknown; _max?: unknown }) =>
@@ -38,7 +44,9 @@ const makeService = ({
     settingMailProvider: { findUnique: vi.fn(async () => provider) },
     emailQualityEvent: { groupBy },
   };
-  const mailContext = { mailProvider: provider ? { id: provider.id } : undefined };
+  const mailContext = {
+    mailProvider: provider ? { id: provider.id } : undefined,
+  };
   const settings = {
     settingByName: vi.fn(async (name: string) => {
       if (
@@ -90,9 +98,18 @@ describe('EmailEvidenceService', () => {
         { source: EmailQualityEventSource.poll, _count: { _all: 3 } },
       ],
       latest: [
-        { source: EmailQualityEventSource.webhook, _max: { createdAt: daysAgo(2) } },
-        { source: EmailQualityEventSource.poll, _max: { createdAt: daysAgo(40) } },
-        { source: EmailQualityEventSource.send, _max: { createdAt: daysAgo(90) } },
+        {
+          source: EmailQualityEventSource.webhook,
+          _max: { createdAt: daysAgo(2) },
+        },
+        {
+          source: EmailQualityEventSource.poll,
+          _max: { createdAt: daysAgo(40) },
+        },
+        {
+          source: EmailQualityEventSource.send,
+          _max: { createdAt: daysAgo(90) },
+        },
       ],
     });
 
@@ -100,7 +117,11 @@ describe('EmailEvidenceService', () => {
 
     expect(summary.sources).toEqual([
       { source: EmailQualityEventSource.send, count: 0, lastAt: daysAgo(90) },
-      { source: EmailQualityEventSource.webhook, count: 12, lastAt: daysAgo(2) },
+      {
+        source: EmailQualityEventSource.webhook,
+        count: 12,
+        lastAt: daysAgo(2),
+      },
       { source: EmailQualityEventSource.poll, count: 3, lastAt: daysAgo(40) },
       { source: EmailQualityEventSource.verification, count: 0, lastAt: null },
     ]);

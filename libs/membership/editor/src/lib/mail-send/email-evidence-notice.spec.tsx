@@ -155,7 +155,9 @@ describe('EmailEvidenceNotice', () => {
 
     expect(screen.getAllByRole('alert')).toHaveLength(2);
     expect(
-      screen.getByText('mailSend.emailEvidence.pollError:{"error":"rate limited"}')
+      screen.getByText(
+        'mailSend.emailEvidence.pollError:{"error":"rate limited"}'
+      )
     ).toBeTruthy();
     expect(screen.getByText('mailSend.emailEvidence.never')).toBeTruthy();
   });

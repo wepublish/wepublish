@@ -31,8 +31,7 @@ const isTestEnvironment = (appEnvironment?: string) =>
 export const creatablePaymentProviderTypes = (appEnvironment?: string) =>
   Object.values(PaymentProviderType).filter(
     type =>
-      type !== PaymentProviderType.Simulated ||
-      isTestEnvironment(appEnvironment)
+      type !== PaymentProviderType.Simulated || isTestEnvironment(appEnvironment)
   );
 
 const paymentSettingsSchema = z.object({

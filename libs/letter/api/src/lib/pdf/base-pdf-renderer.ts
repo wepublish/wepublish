@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import {
   PdfRendererType,
   PrismaClient,
@@ -29,6 +30,8 @@ export abstract class BasePdfRenderer implements PdfRenderer {
 
   abstract isConfigured(): Promise<boolean>;
   abstract render(html: string): Promise<Buffer>;
+  abstract canConvertDocuments(): Promise<boolean>;
+  abstract convertDocument(file: Uint8Array, filename: string): Promise<Buffer>;
 
   /**
    * Posts to the renderer and returns the pdf, turning every way that can go
@@ -129,7 +132,7 @@ class PdfRendererConfig {
     try {
       return this.crypto.decrypt(value);
     } catch (e) {
-      console.error(e);
+      new Logger('PdfRendererConfig').error(e as Error);
       throw new Error(
         `Failed to decrypt ${field} for Pdf renderer setting ${this.id}`
       );

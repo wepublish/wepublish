@@ -16,6 +16,7 @@ import {
   useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ImpersonationBar } from './impersonation-bar';
 
 export const EXPIRED_JWT_MESSAGE =
   'Dieser Link ist nicht mehr gültig. Bitte hier einen neuen Link anfordern oder mit Benutzernamen und Passwort anmelden.';
@@ -255,6 +256,8 @@ export const withJwtHandler = <P extends object>(
     return (
       <>
         {createElement(ControlledComponent, props as P)}
+
+        <ImpersonationBar />
 
         {showTotpPrompt && (
           <TotpOverlay onClick={handleCancel}>

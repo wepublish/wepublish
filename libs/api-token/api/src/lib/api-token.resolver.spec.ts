@@ -32,3 +32,47 @@ describe('createdBy', () => {
     expect(loader.load).not.toHaveBeenCalled();
   });
 });
+
+describe('createApiToken', () => {
+  it('refuses while signed in as someone else', async () => {
+    const service = { createToken: vi.fn() };
+    const { ImpersonatingError } =
+      await import('@wepublish/authentication/api');
+
+    await expect(
+      new ApiTokenResolver(service as never, {} as never).createApiToken(
+        { name: 'Import' } as never,
+        {
+          type: 'user',
+          impersonatedBy: 'jane@wepublish.ch',
+          user: { id: 'user-2' },
+          roles: [],
+        } as never
+      )
+    ).rejects.toBeInstanceOf(ImpersonatingError);
+    expect(service.createToken).not.toHaveBeenCalled();
+  });
+});
+
+describe('creatorState', () => {
+  it('reports what the creator still allows the key, without the creator‘s details', async () => {
+    const creatorCheck = vi.fn(async () => ({
+      state: 'Limited',
+      blockedReason: null,
+      missingScopes: ['CAN_DELETE_ARTICLE'],
+      creator: { id: 'u1', email: 'u1@example.test' },
+    }));
+    const key = { createdById: 'u1', scopes: ['CAN_DELETE_ARTICLE'] };
+
+    await expect(
+      new ApiTokenResolver({ creatorCheck } as never, {} as never).creatorState(
+        key as never
+      )
+    ).resolves.toEqual({
+      state: 'Limited',
+      blockedReason: null,
+      missingScopes: ['CAN_DELETE_ARTICLE'],
+    });
+    expect(creatorCheck).toHaveBeenCalledWith(key);
+  });
+});
