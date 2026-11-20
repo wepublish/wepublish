@@ -2922,6 +2922,12 @@
         },
         "noMemberPlan": "Ohne Abo-Plan",
         "allMemberPlans": "Alle Abo-Pläne",
+        "subscriptionsSum": "Betroffene Abos ({{sum}})",
+        "active": "Aktiv",
+        "deactivateTitle": "Ablauf ausschalten?",
+        "activateTitle": "Ablauf einschalten?",
+        "deactivateQuestion": "Die {{count}} Abos dieses Ablaufs werden danach von anderen Abläufen übernommen.",
+        "activateQuestion": "Dieser Ablauf übernimmt danach {{count}} Abos von anderen Abläufen.",
         "tabs": {
           "flows": "Abo-Abläufe ({{count}})",
           "account": "Konto & Login"
@@ -2959,6 +2965,7 @@
       "flow": "Ablauf",
       "planFlowDescription": "Dieser Ablauf ersetzt den Standard-Ablauf vollständig für die Abos seines Abo-Plans, welche zu den weiter unten definierten Filterkriterien passen.",
       "allPlansFlowDescription": "Dieser Ablauf ersetzt den Standard-Ablauf vollständig für die Abos aller Abo-Pläne, welche zu den weiter unten definierten Filterkriterien passen. Hat ein Abo-Plan für solche Abos einen eigenen Ablauf, geht dieser vor.",
+      "inactiveNotice": "Dieser Ablauf ist ausgeschaltet. Seine Abos erhalten die Mitteilungen des nächsten passenden Ablaufs.",
       "openConditionsHint": "Ein leeres Feld schränkt nicht ein: Der Ablauf gilt dann für jeden Wert. Mindestens ein Feld muss ausgefüllt sein.",
       "planFlowDescriptionFor": "Dieser Ablauf ersetzt den Standard-Ablauf vollständig für die Abos des Abo-Plans «{{memberPlan}}», welche zu den weiter unten definierten Filterkriterien passen.",
       "noFallback": "Ereignisse ohne Vorlage verschicken nichts – der Standard-Ablauf springt nicht ein.",

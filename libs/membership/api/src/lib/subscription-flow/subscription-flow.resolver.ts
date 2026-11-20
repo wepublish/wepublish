@@ -13,11 +13,9 @@ import {
   CanGetSubscriptionFlows,
   CanUpdateSubscriptionFlow,
 } from '@wepublish/permissions';
+import { SubscriptionFlowService } from './subscription-flow.service';
 import {
-  SubscriptionFlowService,
-  subscriptionsOfFlow,
-} from './subscription-flow.service';
-import {
+  SubscriptionFlowCountFilter,
   SubscriptionFlowEarliestDay,
   SubscriptionFlowModel,
   SubscriptionFlowModelCreateInput,
@@ -106,62 +104,54 @@ export class SubscriptionFlowResolver {
   }
 
   @ResolveField('numberOfSubscriptions', () => Int, {
-    description: 'Count of all subscriptions that are affected by this flow',
+    description:
+      'The subscriptions this flow handles: running ones and those ended within its latest day, each counted in the one flow it falls into. Zero for an inactive flow.',
   })
   async numberOfSubscriptions(
     @Parent() flow: SubscriptionFlowModel,
     @Args('memberPlanId', { type: () => String, nullable: true })
     memberPlanId?: string | null
   ): Promise<number> {
-    if (flow.allMemberPlans) {
-      // What the plans' own flows take does not reach a flow for all plans.
-      const planFlows = await this.prismaService.subscriptionFlow.findMany({
-        where: {
-          default: false,
-          allMemberPlans: false,
-          memberPlanId: { not: null },
-        },
-        include: { paymentMethods: true },
-      });
+    return this.subscriptionFlowService.countSubscriptions(
+      flow as never,
+      memberPlanId ? { memberPlanIds: [memberPlanId] } : {}
+    );
+  }
 
-      return await this.prismaService.subscription.count({
-        where: {
-          ...subscriptionsOfFlow({ ...flow, memberPlanId: undefined }),
-          ...(planFlows.length && {
-            NOT: { OR: planFlows.map(subscriptionsOfFlow) },
-          }),
-        },
-      });
-    }
+  @ResolveField('subscriptionCount', () => Int, {
+    description:
+      'numberOfSubscriptions, narrowed to what a list of flows is filtered by.',
+  })
+  async subscriptionCount(
+    @Parent() flow: SubscriptionFlowModel,
+    @Args('filter', { type: () => SubscriptionFlowCountFilter, nullable: true })
+    filter?: SubscriptionFlowCountFilter | null
+  ): Promise<number> {
+    return this.subscriptionFlowService.countSubscriptions(
+      flow as never,
+      filter ?? {}
+    );
+  }
 
-    if (!flow.default) {
-      return await this.prismaService.subscription.count({
-        where: subscriptionsOfFlow({
-          ...flow,
-          memberPlanId: flow.memberPlan?.id,
-        }),
-      });
-    }
+  @Permissions(CanGetSubscriptionFlows)
+  @Query(() => Int, {
+    description:
+      'How many subscriptions a flow handles, or would handle once switched on. Not narrowed by any filter.',
+  })
+  async subscriptionFlowHandledCount(@Args('id') id: string): Promise<number> {
+    return this.subscriptionFlowService.handledCount(id);
+  }
 
-    // Within one member plan: its own flows and those for all plans.
-    const otherFlows = await this.prismaService.subscriptionFlow.findMany({
-      where: {
-        default: false,
-        ...(memberPlanId && {
-          OR: [{ memberPlanId }, { allMemberPlans: true }],
-        }),
-      },
-      include: { paymentMethods: true },
-    });
-
-    return await this.prismaService.subscription.count({
-      where: {
-        ...(memberPlanId && { memberPlanID: memberPlanId }),
-        ...(otherFlows.length && {
-          NOT: { OR: otherFlows.map(subscriptionsOfFlow) },
-        }),
-      },
-    });
+  @Permissions(CanUpdateSubscriptionFlow)
+  @Mutation(() => [SubscriptionFlowModel], {
+    description:
+      'Switches a flow on or off. The default flow stays on; a flow switched on must not share subscriptions with another active flow.',
+  })
+  async setSubscriptionFlowActive(
+    @Args('id') id: string,
+    @Args('active') active: boolean
+  ) {
+    return this.subscriptionFlowService.setFlowActive(id, active);
   }
 
   @ResolveField('earliestDay', () => SubscriptionFlowEarliestDay)

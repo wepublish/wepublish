@@ -2922,6 +2922,12 @@
         },
         "noMemberPlan": "Sans plan d’abonnement",
         "allMemberPlans": "Tous les plans d’abonnement",
+        "subscriptionsSum": "Abonnements concernés ({{sum}})",
+        "active": "Actif",
+        "deactivateTitle": "Désactiver le flux ?",
+        "activateTitle": "Activer le flux ?",
+        "deactivateQuestion": "Les {{count}} abonnements gérés par ce flux seront ensuite gérés par d’autres flux.",
+        "activateQuestion": "Ce flux prendra ensuite en charge {{count}} abonnements d’autres flux.",
         "tabs": {
           "flows": "Flux d’abonnement ({{count}})",
           "account": "Compte et connexion"
@@ -2962,6 +2968,7 @@
       "flow": "Flux",
       "planFlowDescription": "Ce flux remplace entièrement le flux standard pour les abonnements de son plan qui correspondent aux critères de filtre définis ci-dessous.",
       "allPlansFlowDescription": "Ce flux remplace entièrement le flux standard pour les abonnements de tous les plans qui correspondent aux critères de filtre définis ci-dessous. Si un plan a son propre flux pour ces abonnements, celui-ci passe en premier.",
+      "inactiveNotice": "Ce flux est désactivé. Ses abonnements reçoivent les messages du prochain flux correspondant.",
       "openConditionsHint": "Un champ vide ne restreint pas : le flux s’applique alors à toute valeur. Au moins un champ doit être rempli.",
       "planFlowDescriptionFor": "Ce flux remplace entièrement le flux standard pour les abonnements du plan « {{memberPlan}} » qui correspondent aux critères de filtre définis ci-dessous.",
       "noFallback": "Les événements sans modèle n’envoient rien – le flux standard ne prend pas le relais.",
