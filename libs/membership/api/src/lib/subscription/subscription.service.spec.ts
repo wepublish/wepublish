@@ -30,6 +30,163 @@ const makeService = (
 };
 
 describe('SubscriptionService', () => {
+  // A subscription sold or imported with the wrong terms (a trial as a year)
+  // keeps them on its period, and the print export goes by the period. This
+  // corrects the period and the subscription together and touches nothing else.
+  describe('correcting the terms of a period', () => {
+    const start = new Date('2026-10-21T00:00:00.000Z');
+    const yearEnd = new Date('2027-10-20T00:00:00.000Z');
+    const halfYearEnd = new Date('2027-04-20T00:00:00.000Z');
+    const period = {
+      id: 'period-1',
+      startsAt: start,
+      endsAt: yearEnd,
+      amount: 2000,
+      paymentPeriodicity: 'yearly',
+      invoiceID: 'inv-1',
+    };
+    const subscription = (overrides: Record<string, unknown> = {}) => ({
+      id: 'subscription-id',
+      paymentPeriodicity: 'yearly',
+      monthlyAmount: 2000 / 12,
+      paidUntil: yearEnd,
+      deactivation: null,
+      periods: [period],
+      invoices: [{ id: 'inv-1', paidAt: start, canceledAt: null }],
+      ...overrides,
+    });
+    const prismaFor = (found: unknown) => {
+      const prisma = {
+        subscription: {
+          findUnique: vi.fn(async () => found),
+          update: vi.fn(async ({ data }: { data: object }) => ({
+            id: 'subscription-id',
+            ...data,
+          })),
+        },
+        subscriptionPeriod: { update: vi.fn(async () => ({})) },
+        $transaction: vi.fn(async (operations: Promise<unknown>[]) =>
+          Promise.all(operations)
+        ),
+      };
+
+      return prisma;
+    };
+    const args = {
+      subscriptionId: 'subscription-id',
+      periodId: 'period-1',
+      paymentPeriodicity: 'biannual',
+      endsAt: halfYearEnd,
+    } as any;
+
+    it('gives the period its periodicity and end', async () => {
+      const prisma = prismaFor(subscription());
+
+      await makeService(prisma).correctSubscriptionPeriod(args);
+
+      expect(prisma.subscriptionPeriod.update).toHaveBeenCalledWith({
+        where: { id: 'period-1' },
+        data: { paymentPeriodicity: 'biannual', endsAt: halfYearEnd },
+      });
+    });
+
+    it('moves the subscription with it and keeps the price of the period', async () => {
+      const prisma = prismaFor(subscription());
+
+      const corrected =
+        await makeService(prisma).correctSubscriptionPeriod(args);
+
+      expect(prisma.subscription.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: 'subscription-id' },
+          data: {
+            paymentPeriodicity: 'biannual',
+            monthlyAmount: 2000 / 6,
+            paidUntil: halfYearEnd,
+          },
+        })
+      );
+      expect(corrected.paidUntil).toEqual(halfYearEnd);
+    });
+
+    it('leaves a paid-until that is not the end of this period', async () => {
+      const elsewhere = new Date('2027-12-31T00:00:00.000Z');
+      const prisma = prismaFor(subscription({ paidUntil: elsewhere }));
+
+      await makeService(prisma).correctSubscriptionPeriod(args);
+
+      expect(prisma.subscription.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: { paymentPeriodicity: 'biannual', monthlyAmount: 2000 / 6 },
+        })
+      );
+    });
+
+    it.each([
+      ['a subscription that does not exist', null, NotFoundException],
+      [
+        'a deactivated subscription',
+        subscription({ deactivation: { id: 'd' } }),
+        BadRequestException,
+      ],
+      [
+        'a period of another subscription',
+        subscription({ periods: [{ ...period, id: 'other' }] }),
+        NotFoundException,
+      ],
+      [
+        'a period that is not the latest',
+        subscription({
+          periods: [
+            period,
+            {
+              ...period,
+              id: 'later',
+              startsAt: new Date('2027-10-21T00:00:00.000Z'),
+              endsAt: new Date('2028-10-20T00:00:00.000Z'),
+              invoiceID: 'inv-2',
+            },
+          ],
+        }),
+        BadRequestException,
+      ],
+      [
+        'a period whose invoice is not paid',
+        subscription({
+          invoices: [{ id: 'inv-1', paidAt: null, canceledAt: null }],
+        }),
+        BadRequestException,
+      ],
+      [
+        'a subscription with another open invoice',
+        subscription({
+          invoices: [
+            { id: 'inv-1', paidAt: start, canceledAt: null },
+            { id: 'inv-2', paidAt: null, canceledAt: null },
+          ],
+        }),
+        BadRequestException,
+      ],
+    ])('refuses %s and writes nothing', async (_name, found, error) => {
+      const prisma = prismaFor(found);
+
+      await expect(
+        makeService(prisma).correctSubscriptionPeriod(args)
+      ).rejects.toBeInstanceOf(error);
+      expect(prisma.subscriptionPeriod.update).not.toHaveBeenCalled();
+      expect(prisma.subscription.update).not.toHaveBeenCalled();
+    });
+
+    it('refuses an end that is not after the start', async () => {
+      const prisma = prismaFor(subscription());
+
+      await expect(
+        makeService(prisma).correctSubscriptionPeriod({ ...args, endsAt: start })
+      ).rejects.toBeInstanceOf(BadRequestException);
+      expect(prisma.subscriptionPeriod.update).not.toHaveBeenCalled();
+    });
+  });
+
   // With the feature on, an invoice an editor created is handled like the
   // nightly job's: created at the payment provider and mailed or printed.
   describe('handing an editor-created invoice to the payment provider', () => {
