@@ -2947,6 +2947,27 @@
         },
         "noMemberPlan": "No member plan",
         "allMemberPlans": "All member plans",
+        "tabs": {
+          "flows": "Subscription flows ({{count}})",
+          "account": "Account & login"
+        },
+        "group": {
+          "default": "Default",
+          "allMemberPlans": "For all member plans",
+          "memberPlan": "Member plan “{{memberPlan}}”"
+        },
+        "filter": {
+          "warnings": "Warnings",
+          "warningsOptions": {
+            "with": "With a warning",
+            "without": "Without a warning"
+          },
+          "subscriptions": "Affected subscriptions",
+          "subscriptionsOptions": {
+            "with": "With subscriptions",
+            "without": "Without subscriptions"
+          }
+        },
         "any": {
           "paymentMethods": "any payment method",
           "periodicities": "any term",

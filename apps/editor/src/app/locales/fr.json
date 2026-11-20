@@ -2946,6 +2946,27 @@
         },
         "noMemberPlan": "Sans plan d’abonnement",
         "allMemberPlans": "Tous les plans d’abonnement",
+        "tabs": {
+          "flows": "Flux d’abonnement ({{count}})",
+          "account": "Compte et connexion"
+        },
+        "group": {
+          "default": "Standard",
+          "allMemberPlans": "Pour tous les plans d’abonnement",
+          "memberPlan": "Plan d’abonnement « {{memberPlan}} »"
+        },
+        "filter": {
+          "warnings": "Avertissements",
+          "warningsOptions": {
+            "with": "Avec avertissement",
+            "without": "Sans avertissement"
+          },
+          "subscriptions": "Abonnements concernés",
+          "subscriptionsOptions": {
+            "with": "Avec abonnements",
+            "without": "Sans abonnements"
+          }
+        },
         "any": {
           "paymentMethods": "tout mode de paiement",
           "periodicities": "toute durée",
