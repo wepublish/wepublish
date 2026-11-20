@@ -17,6 +17,7 @@ import { ExternalAppsDataloaderService } from './external-apps-dataloader.servic
 import {
   Authenticated,
   CurrentUser,
+  RequiresFullSession,
   userSessionOf,
   assertNotImpersonating,
   requireSessionUser,
@@ -97,7 +98,7 @@ export class ExternalAppsResolver {
     return this.externalAppsService.deleteExternalApp(id);
   }
 
-  @Authenticated()
+  @RequiresFullSession()
   @Mutation(returns => ExternalAppToken, {
     name: 'createExternalAppToken',
     description:

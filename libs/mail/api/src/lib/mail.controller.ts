@@ -8,6 +8,7 @@ import {
 } from '@prisma/client';
 import { v7 as uuidv7 } from 'uuid';
 import { MailContext } from './mail-context';
+import { PurlOrigin, templateUsesJwt, templateUsesPurl } from './mail-data';
 import { MailProviderRecipientError } from './mail-provider/mail-provider.interface';
 import {
   qualityTypeForRejectReason,
@@ -56,6 +57,7 @@ export type MailControllerConfig = {
   mailType: mailLogType;
   /** Override the auto-generated login JWT with a custom token (e.g. password reset). */
   jwtOverride?: string;
+  recipientEmailOverride?: string;
   /** Set for mails produced by a manual bulk send job. */
   mailSendJobId?: string | null;
   /**
@@ -161,21 +163,25 @@ export class MailController {
    * Build the data for passing it to the mail templates
    * @returns a HashMap of configuration data
    */
-  private async buildData() {
+  private async buildData(purlOrigin: PurlOrigin = 'mail') {
+    const template = await this.prismaService.mailTemplate.findUnique({
+      where: { id: this.config.mailTemplateId },
+      select: { subject: true, htmlContent: true, textContent: true },
+    });
+
     // Cloned, so the caller's objects are not touched and no template sees a
     // user's authorization fields, nested ones included.
-    const recipient = withoutSecrets(
-      JSON.parse(JSON.stringify(this.config.recipient))
-    );
-
-    return {
-      user: recipient,
-      optional: withoutSecrets(this.config.optionalData),
-      jwt:
-        this.config.jwtOverride ??
-        (await this.mailContext.jwtGenerator(recipient.id)),
-      currentDate: new Date(),
-    };
+    return this.mailContext.buildMailData({
+      recipient: withoutSecrets(
+        JSON.parse(JSON.stringify(this.config.recipient))
+      ),
+      optionalData: withoutSecrets(this.config.optionalData),
+      jwtOverride: this.config.jwtOverride,
+      mode: 'send',
+      purlOrigin,
+      mintJwt: !template || templateUsesJwt(template),
+      mintPurl: !template || templateUsesPurl(template),
+    });
   }
 
   /**
@@ -194,6 +200,23 @@ export class MailController {
     }
 
     const mailLogId = this.config.mailLogId ?? uuidv7();
+    const recipientEmail =
+      this.config.recipientEmailOverride ?? this.config.recipient.email;
+
+    if (await this.mailContext.isPlaceholderEmail(recipientEmail)) {
+      this.logger.warn(
+        `Recipient <${recipientEmail}> is a placeholder address. Suppressing mail template <${this.config.mailTemplateId}>.`
+      );
+
+      await this.writeLog(
+        mailLogId,
+        MailLogState.rejected,
+        null,
+        'PLACEHOLDER_EMAIL_SUPPRESSED'
+      );
+
+      return;
+    }
 
     const letterRecipient = await this.resolveLetterRecipient();
 
@@ -210,7 +233,7 @@ export class MailController {
         {
           mailLogID: mailLogId,
           mailTemplateId: this.config.mailTemplateId,
-          recipient: this.config.recipient.email,
+          recipient: recipientEmail,
           data: await this.buildData(),
           withAttachments: !SENT_WITHOUT_ATTACHMENTS.has(this.config.mailType),
         }
@@ -289,7 +312,7 @@ export class MailController {
       await this.mailContext.letterSender!.sendLetter({
         mailTemplateId: this.config.mailTemplateId,
         recipient,
-        data: await this.buildData(),
+        data: await this.buildData('letter'),
         mailLogId,
         mailSendJobId: this.config.mailSendJobId,
         log: {

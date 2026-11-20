@@ -22,6 +22,7 @@ describe('MailController', () => {
       [method in keyof PrismaClient['mailTemplate']]?: Mock;
     };
     user: { [method in keyof PrismaClient['user']]?: Mock };
+    setting: { [method in keyof PrismaClient['setting']]?: Mock };
   };
 
   const mockMailTemplate1: MailTemplate = {
@@ -33,6 +34,8 @@ describe('MailController', () => {
     textContent: null,
     externalMailTemplateId: null,
     context: null,
+    letterAppendixId: null,
+    letterLayoutId: null,
     createdAt: new Date(),
     modifiedAt: new Date(),
   };
@@ -46,6 +49,8 @@ describe('MailController', () => {
     textContent: null,
     externalMailTemplateId: null,
     context: null,
+    letterAppendixId: null,
+    letterLayoutId: null,
     createdAt: new Date(),
     modifiedAt: new Date(),
   };
@@ -69,6 +74,7 @@ describe('MailController', () => {
     note: null,
     pendingEmail: null,
     pendingEmailAt: null,
+    pendingEmailTokenHash: null,
     totpSecret: null,
     totpEnabled: false,
     totpExempt: false,
@@ -89,6 +95,9 @@ describe('MailController', () => {
       },
       user: {
         findUnique: vi.fn(),
+      },
+      setting: {
+        findUnique: vi.fn(async () => null),
       },
     };
 

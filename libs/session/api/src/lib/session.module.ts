@@ -33,6 +33,7 @@ import { WepublishLoginService } from './wepublish-login.service';
 import { ImpersonationResolver } from './impersonation.resolver';
 import { ImpersonationService } from './impersonation.service';
 import {
+  AuthenticationModule,
   SessionCacheModule,
   SCOPED_JWT_VERIFIER,
   ScopedJwtGuard,
@@ -63,6 +64,7 @@ export interface SessionModuleAsyncOptions extends Pick<
     UserModule,
     ChallengeModule,
     SettingModule,
+    AuthenticationModule,
     SessionCacheModule,
   ],
   exports: [SessionService, JwtService, SCOPED_JWT_VERIFIER, ScopedJwtGuard],

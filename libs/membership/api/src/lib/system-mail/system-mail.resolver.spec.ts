@@ -60,6 +60,7 @@ const FAKE_USER: User = {
   note: null,
   pendingEmail: null,
   pendingEmailAt: null,
+  pendingEmailTokenHash: null,
   totpSecret: null,
   totpEnabled: false,
   totpExempt: false,

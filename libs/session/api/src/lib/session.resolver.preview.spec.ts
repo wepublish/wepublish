@@ -9,6 +9,7 @@ describe('SessionResolver.createJWTForWebsiteLogin', () => {
   };
   const resolver = new SessionResolver(
     sessionService as never,
+    {} as never,
     impersonationService as never
   );
 

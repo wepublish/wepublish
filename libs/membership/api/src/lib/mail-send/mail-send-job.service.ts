@@ -24,6 +24,8 @@ import {
   MailAttachmentError,
   MailContext,
   mailLogType,
+  templateUsesJwt,
+  templateUsesPurl,
 } from '@wepublish/mail/api';
 import {
   canReceiveLetters,
@@ -600,7 +602,14 @@ export class MailSendJobService {
         await this.letterContext.sendLetter({
           mailTemplateId: template.id,
           recipient: recipient.user,
-          data: { user: recipient.user, optional: optionalData },
+          data: await this.mailContext.buildMailData({
+            recipient: recipient.user,
+            optionalData,
+            mode: 'send',
+            purlOrigin: 'letter',
+            mintJwt: templateUsesJwt(template),
+            mintPurl: templateUsesPurl(template),
+          }),
           print: {
             addressPosition: job.addressPosition,
             deliveryProduct: job.deliveryProduct,
@@ -812,7 +821,12 @@ export class MailSendJobService {
         layout: await this.letterContext.resolveLayout(template.letterLayoutId),
         addressPosition: print.addressPosition,
         printMode: print.printMode,
-        data: { user: recipient.user, optional: optionalData },
+        data: await this.mailContext.buildMailData({
+          recipient: recipient.user,
+          optionalData,
+          mode: 'preview',
+          purlOrigin: 'letter',
+        }),
         recipient: toLetterAddress(recipient.user),
       });
 
@@ -825,12 +839,11 @@ export class MailSendJobService {
       };
     }
 
-    const data = {
-      user: recipient.user,
-      optional: optionalData,
-      jwt: await this.mailContext.jwtGenerator(recipient.user.id),
-      currentDate: new Date(),
-    };
+    const data = await this.mailContext.buildMailData({
+      recipient: recipient.user,
+      optionalData,
+      mode: 'preview',
+    });
     const composed = composeMail(
       {
         subject: template.subject,
