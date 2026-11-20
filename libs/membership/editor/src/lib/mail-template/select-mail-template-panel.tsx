@@ -129,9 +129,12 @@ export function SelectMailTemplatePanel({
 
   const { data, loading } = useQuery(MailTemplateListDocument);
 
-  const [filter, setFilter] = useState<TemplateFilter>(
-    purpose ? { purposes: [purpose] } : {}
-  );
+  // The channel filter starts on the channel the template is chosen for, so
+  // the chooser's own filters say why only these templates are offered.
+  const [filter, setFilter] = useState<TemplateFilter>(() => ({
+    ...(purpose ? { purposes: [purpose] } : {}),
+    ...(paperLetters ? { channels: [channel] } : {}),
+  }));
   const [sort, setSort] = useState<{ field: string; order: 'asc' | 'desc' }>({
     field: 'name',
     order: 'asc',
@@ -152,16 +155,18 @@ export function SelectMailTemplatePanel({
     [data, selectedId, channel]
   );
 
-  const matching = useMemo(
-    () =>
-      sortTemplates(
-        filterTemplates(offered, filter),
-        sort.field,
-        sort.order,
-        sortLabels
-      ),
-    [offered, filter, sort, sortLabels]
-  );
+  const matching = useMemo(() => {
+    // The chosen one stays listed whatever versions it has, so the channels
+    // do not filter it out; the other filters do.
+    const { channels, ...others } = filter;
+    const filtered = filterTemplates(offered, others).filter(
+      template =>
+        template.id === selectedId ||
+        filterTemplates([template], { channels }).length > 0
+    );
+
+    return sortTemplates(filtered, sort.field, sort.order, sortLabels);
+  }, [offered, filter, selectedId, sort, sortLabels]);
 
   const { page, rows } = pageOf(matching, chosenPage, limit);
 

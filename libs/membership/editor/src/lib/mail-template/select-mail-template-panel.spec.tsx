@@ -209,6 +209,35 @@ describe('SelectMailTemplatePanel', () => {
     expect(shownNames()).toEqual(['Mahnung', 'Neue Rechnung']);
   });
 
+  const pickedChannels = () =>
+    within(
+      screen
+        .getByRole('combobox', { name: 'mailTemplates.list.channels' })
+        .closest('.MuiAutocomplete-root') as HTMLElement
+    );
+
+  it('starts with the email picked in the channel filter for an event, which always sends the email', () => {
+    renderPanel();
+
+    expect(
+      pickedChannels().getByText('deliveryMode.channel.mail')
+    ).toBeTruthy();
+    expect(
+      pickedChannels().queryByText('deliveryMode.channel.letter')
+    ).toBeNull();
+  });
+
+  it('starts with the channel of a send picked in the channel filter', () => {
+    renderPanel({ channel: MailChannel.Letter });
+
+    expect(
+      pickedChannels().getByText('deliveryMode.channel.letter')
+    ).toBeTruthy();
+    expect(
+      pickedChannels().queryByText('deliveryMode.channel.mail')
+    ).toBeNull();
+  });
+
   it('shows everything again once the filters are reset', () => {
     renderPanel({ purpose: MailTemplateContext.InvoiceCreation });
 
