@@ -13,15 +13,19 @@ import {
   CanGetSubscriptionFlows,
   CanUpdateSubscriptionFlow,
 } from '@wepublish/permissions';
-import { SubscriptionFlowService } from './subscription-flow.service';
 import {
+  SubscriptionFlowService,
+  subscriptionsOfFlow,
+} from './subscription-flow.service';
+import {
+  SubscriptionFlowEarliestDay,
   SubscriptionFlowModel,
   SubscriptionFlowModelCreateInput,
   SubscriptionFlowModelUpdateInput,
   SubscriptionIntervalCreateInput,
   SubscriptionIntervalUpdateInput,
 } from './subscription-flow.model';
-import { PaymentPeriodicity, Prisma, PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { Permissions } from '@wepublish/permissions/api';
 
 @Resolver(() => SubscriptionFlowModel)
@@ -132,20 +136,11 @@ export class SubscriptionFlowResolver {
       },
     });
   }
-}
 
-function subscriptionsOfFlow(flow: {
-  memberPlanId?: string | null;
-  paymentMethods: { id: string }[];
-  periodicities: PaymentPeriodicity[];
-  autoRenewal: boolean[];
-}): Prisma.SubscriptionWhereInput {
-  return {
-    memberPlanID: flow.memberPlanId ?? undefined,
-    paymentMethodID: {
-      in: flow.paymentMethods.map(paymentMethod => paymentMethod.id),
-    },
-    paymentPeriodicity: { in: flow.periodicities },
-    OR: flow.autoRenewal.map(autoRenew => ({ autoRenew })),
-  };
+  @ResolveField('earliestDay', () => SubscriptionFlowEarliestDay)
+  async earliestDay(
+    @Parent() flow: SubscriptionFlowModel
+  ): Promise<SubscriptionFlowEarliestDay> {
+    return this.subscriptionFlowService.earliestDay(flow);
+  }
 }

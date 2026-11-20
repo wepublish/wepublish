@@ -39,6 +39,26 @@ export const conditionsSummary = (
     .join(' · ');
 
 /**
+ * How early an event of the flow may lie, and why. A member plan's flow: the
+ * invoice of a subscription is only created once its current period has
+ * begun, so the shortest periodicity of its conditions sets the day. The
+ * default flow: its day is fixed, as every subscription may fall back to it.
+ */
+export const earliestDayHint = (
+  flow: SubscriptionFlowFragment,
+  t: Translate
+): string => {
+  const { days, periodicity } = flow.earliestDay;
+
+  return flow.default || !periodicity ?
+      t('subscriptionFlow.earliestDay.defaultFlow', { days: -days })
+    : t('subscriptionFlow.earliestDay.byConditions', {
+        days: -days,
+        periodicity: t(`memberPlanList.paymentPeriodicity.${periodicity}`),
+      });
+};
+
+/**
  * What makes a member plan's flow do less than its conditions say. A flow is
  * matched against each subscription when a message is due, so nothing breaks
  * when a plan changes; but the admin should see what has gone stale.

@@ -385,6 +385,7 @@ describe('Subscription Flow Resolver', () => {
               createFlow: vi.fn(),
               updateFlow: vi.fn(),
               deleteFlow: vi.fn(),
+              earliestDay: vi.fn(),
             },
           },
           {
@@ -502,6 +503,23 @@ describe('Subscription Flow Resolver', () => {
         expect(count).toBe(42);
         expect(prisma.subscription.count).toHaveBeenCalledWith({ where: {} });
       });
+    });
+
+    it('tells the earliest day of a flow as the service works it out', async () => {
+      const earliestDay = {
+        days: -85,
+        periodicity: PaymentPeriodicity.quarterly,
+      };
+      vi.spyOn(subscriptionFlowService, 'earliestDay').mockResolvedValue(
+        earliestDay
+      );
+
+      await expect(
+        resolver.earliestDay(mockSubscriptionFlow as any)
+      ).resolves.toEqual(earliestDay);
+      expect(subscriptionFlowService.earliestDay).toHaveBeenCalledWith(
+        mockSubscriptionFlow
+      );
     });
 
     it('returns subscription flows for all queries and mutations', async () => {

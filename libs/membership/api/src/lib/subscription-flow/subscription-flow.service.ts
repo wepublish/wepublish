@@ -14,10 +14,50 @@ import {
   subscriptionFlowNonUniqueEvents,
   subscriptionFlowRequiredEvents,
 } from './subscription-flow.type';
-import { MailChannel, PrismaClient, SubscriptionEvent } from '@prisma/client';
+import {
+  MailChannel,
+  PaymentPeriodicity,
+  Prisma,
+  PrismaClient,
+  SubscriptionEvent,
+} from '@prisma/client';
+import {
+  DEFAULT_FLOW_EARLIEST_DAY,
+  earliestInvoiceDay,
+  shortestPeriodicity,
+} from '@wepublish/utils/api';
 
-const SUBSCRIPTION_EVENT_MAX_DAYS_BEFORE = -25;
 const SUBSCRIPTION_EVENT_MAX_DAYS_AFTER = 90;
+
+/** A flow as far as the subscriptions it applies to go. */
+type FlowConditions = {
+  default?: boolean;
+  memberPlanId?: string | null;
+  paymentMethods: { id: string }[];
+  periodicities: PaymentPeriodicity[];
+  autoRenewal: boolean[];
+};
+
+/** The earliest day an event of a flow may lie on, and what holds it there. */
+export type EarliestDay = {
+  days: number;
+  /** The shortest periodicity a member plan's flow applies to; null for the default flow. */
+  periodicity: PaymentPeriodicity | null;
+};
+
+/** The subscriptions a member plan's flow applies to. */
+export function subscriptionsOfFlow(
+  flow: FlowConditions
+): Prisma.SubscriptionWhereInput {
+  return {
+    memberPlanID: flow.memberPlanId ?? undefined,
+    paymentMethodID: {
+      in: flow.paymentMethods.map(paymentMethod => paymentMethod.id),
+    },
+    paymentPeriodicity: { in: flow.periodicities },
+    OR: flow.autoRenewal.map(autoRenew => ({ autoRenew })),
+  };
+}
 
 @Injectable()
 export class SubscriptionFlowService {
@@ -82,6 +122,53 @@ export class SubscriptionFlowService {
     }
 
     return flows;
+  }
+
+  /**
+   * The earliest day an event of this flow may lie on. An invoice is only
+   * created once the current period has begun, so the shortest periodicity a
+   * flow applies to sets it. The default flow is the fallback of every
+   * subscription, so its day is fixed at what suits the shortest of them:
+   * nothing a member plan comes to offer can make it wrong.
+   */
+  async earliestDay(flow: FlowConditions): Promise<EarliestDay> {
+    if (flow.default) {
+      return { days: DEFAULT_FLOW_EARLIEST_DAY, periodicity: null };
+    }
+
+    return this.earliestDayOf(flow.periodicities);
+  }
+
+  private earliestDayOf(periodicities: PaymentPeriodicity[]): EarliestDay {
+    return {
+      days: earliestInvoiceDay(periodicities),
+      periodicity: shortestPeriodicity(periodicities) ?? null,
+    };
+  }
+
+  /**
+   * Whether a day is one this flow's events may lie on. A day that is too
+   * early could not be kept for the shortest subscriptions of the flow.
+   */
+  private async assertDayInRange(subscriptionFlowId: string, day: number) {
+    const flow = await this.prismaService.subscriptionFlow.findUnique({
+      where: { id: subscriptionFlowId },
+      include: { paymentMethods: true },
+    });
+
+    if (!flow) {
+      throw new NotFoundException(
+        `The subscription flow '${subscriptionFlowId}' could not be found.`
+      );
+    }
+
+    const earliest = await this.earliestDay(flow);
+
+    if (day < earliest.days || day > SUBSCRIPTION_EVENT_MAX_DAYS_AFTER) {
+      throw new BadRequestException(
+        `daysAwayFromEnding is not in allowed range of ${earliest.days} to ${SUBSCRIPTION_EVENT_MAX_DAYS_AFTER}: ${day}. ${describeEarliestDay(earliest)}`
+      );
+    }
   }
 
   async createFlow(flow: SubscriptionFlowModelCreateInput) {
@@ -167,6 +254,8 @@ export class SubscriptionFlowService {
         "You can't update this flow because there is a filter overlap!"
       );
     }
+
+    await this.assertEventsSuit(originalFlow, flow.periodicities);
 
     await this.prismaService.$transaction([
       this.prismaService.subscriptionFlow.update({
@@ -412,6 +501,45 @@ export class SubscriptionFlowService {
     return this.getFlows(false);
   }
 
+  /**
+   * A flow that is to apply to a shorter periodicity must not have events
+   * that are too early for it: move them first.
+   */
+  private async assertEventsSuit(
+    flow: { id: string; periodicities: PaymentPeriodicity[] },
+    periodicities: PaymentPeriodicity[] | undefined
+  ) {
+    if (!periodicities) {
+      return;
+    }
+
+    const earliest = this.earliestDayOf(periodicities);
+
+    if (earliest.days <= earliestInvoiceDay(flow.periodicities)) {
+      return;
+    }
+
+    const tooEarly = (
+      await this.prismaService.subscriptionInterval.findMany({
+        where: { subscriptionFlowId: flow.id },
+      })
+    ).filter(
+      ({ daysAwayFromEnding }) =>
+        daysAwayFromEnding !== null && daysAwayFromEnding < earliest.days
+    );
+
+    if (tooEarly.length) {
+      throw new BadRequestException(
+        `These events are too early for the new conditions: ${tooEarly
+          .map(
+            ({ event, daysAwayFromEnding }) =>
+              `${event} (${daysAwayFromEnding})`
+          )
+          .join(', ')}. ${describeEarliestDay(earliest)} Move the events first.`
+      );
+    }
+  }
+
   private async filterHasOverlap(
     memberPlanId: string | null,
     newFlow: Partial<SubscriptionFlowModelUpdateInput>
@@ -511,13 +639,10 @@ export class SubscriptionFlowService {
     }
 
     // Limit daysAwayFromEnding
-    if (
-      !!interval.daysAwayFromEnding &&
-      (interval.daysAwayFromEnding < SUBSCRIPTION_EVENT_MAX_DAYS_BEFORE ||
-        interval.daysAwayFromEnding > SUBSCRIPTION_EVENT_MAX_DAYS_AFTER)
-    ) {
-      throw new BadRequestException(
-        `daysAwayFromEnding is not in allowed range of ${SUBSCRIPTION_EVENT_MAX_DAYS_BEFORE} to ${SUBSCRIPTION_EVENT_MAX_DAYS_AFTER}: ${interval.daysAwayFromEnding}`
+    if (interval.daysAwayFromEnding) {
+      await this.assertDayInRange(
+        interval.subscriptionFlowId,
+        interval.daysAwayFromEnding
       );
     }
 
@@ -538,4 +663,10 @@ export class SubscriptionFlowService {
       }
     }
   }
+}
+
+function describeEarliestDay({ days, periodicity }: EarliestDay) {
+  return periodicity ?
+      `The earliest day is ${days}, as the flow applies to ${periodicity} subscriptions.`
+    : `The earliest day is ${days}: the default flow applies to every subscription without a flow of its own.`;
 }

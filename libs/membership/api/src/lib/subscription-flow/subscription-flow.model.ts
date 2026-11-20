@@ -50,6 +50,25 @@ export class SubscriptionInterval {
   sendAsLetter!: boolean;
 }
 
+@ObjectType({
+  description:
+    'The earliest day an event of a flow may lie on, and what holds it there.',
+})
+export class SubscriptionFlowEarliestDay {
+  @Field(() => Int, {
+    description:
+      'Days away from the end of the subscription, negative: before it ends.',
+  })
+  days!: number;
+
+  @Field(() => PaymentPeriodicity, {
+    nullable: true,
+    description:
+      'The shortest periodicity a member plan flow applies to, which sets the day. Null for the default flow: its day is fixed.',
+  })
+  periodicity!: PaymentPeriodicity | null;
+}
+
 @ObjectType()
 export class SubscriptionFlowModel {
   @Field()
@@ -75,6 +94,12 @@ export class SubscriptionFlowModel {
 
   @Field(() => Int)
   numberOfSubscriptions!: number;
+
+  @Field(() => SubscriptionFlowEarliestDay, {
+    description:
+      'The earliest day an event of this flow may lie on. Follows from the shortest periodicity the flow applies to.',
+  })
+  earliestDay!: SubscriptionFlowEarliestDay;
 }
 
 @ArgsType()
