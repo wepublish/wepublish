@@ -3135,7 +3135,7 @@
           "example": "“Please confirm your new email address.”"
         },
         "email_verification": {
-          "short": "Confirm the current address.",
+          "userAction": "Confirms their email address, e.g. after logging in with a code from a letter",
           "description": "Goes to the current address when someone verifies it, for example after logging in with a personal link from a letter.",
           "example": "«Please confirm your email address.»"
         },

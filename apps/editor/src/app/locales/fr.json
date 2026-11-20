@@ -4579,7 +4579,7 @@
           "example": "« Merci de confirmer votre nouvelle adresse e-mail. »"
         },
         "email_verification": {
-          "short": "Confirmer l’adresse actuelle.",
+          "userAction": "Confirme son adresse e-mail, p. ex. après une connexion avec un code reçu par courrier",
           "description": "Part à l’adresse actuelle lorsque quelqu’un la confirme, par exemple après une connexion avec un lien personnel reçu par courrier.",
           "example": "« Merci de confirmer votre adresse e-mail. »"
         },

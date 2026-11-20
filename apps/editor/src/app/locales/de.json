@@ -4587,7 +4587,7 @@
           "example": "«Bitte bestätige deine neue E-Mail-Adresse.»"
         },
         "email_verification": {
-          "short": "Aktuelle Adresse bestätigen.",
+          "userAction": "Bestätigt die eigene E-Mail-Adresse, z. B. nach dem Login mit einem Code aus einem Brief",
           "description": "Geht an die aktuelle Adresse, wenn jemand sie bestätigt – zum Beispiel nach dem Login mit einem persönlichen Link aus einem Brief.",
           "example": "«Bitte bestätigen Sie Ihre E-Mail-Adresse.»"
         },
