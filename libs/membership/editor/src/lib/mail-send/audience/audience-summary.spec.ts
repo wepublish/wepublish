@@ -41,6 +41,15 @@ describe('describeAudience', () => {
     ]);
   });
 
+  it('says when the audience is narrowed to legacy subscriptions', () => {
+    expect(
+      describeAudience({ base: 'hasSubscription', isLegacy: true }, lookups)
+    ).toEqual([
+      'mailSend.base.hasSubscription',
+      'mailSend.isLegacy: mailSend.yes',
+    ]);
+  });
+
   it('reads each mail-history condition as a sentence', () => {
     expect(
       describeAudience(

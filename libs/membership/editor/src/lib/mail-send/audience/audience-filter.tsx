@@ -7,7 +7,7 @@ import {
   PaymentMethodListDocument,
   PaymentPeriodicity,
 } from '@wepublish/editor/api';
-import { DateRangeFilter } from '@wepublish/ui/editor';
+import { DateRangeFilter, useFeature } from '@wepublish/ui/editor';
 import {
   Autocomplete,
   Divider,
@@ -74,6 +74,7 @@ export function AudienceFilter({
   });
   const { data: paymentMethodData } = useQuery(PaymentMethodListDocument);
 
+  const legacyFilter = useFeature('legacy-subscriptions');
   const isSubscriptionBase = state.base === MailRecipientBase.HasSubscription;
   const isWinBackBase = state.base === MailRecipientBase.EndedSubscription;
   const memberPlans = memberPlanData?.memberPlans.nodes ?? [];
@@ -107,6 +108,16 @@ export function AudienceFilter({
       {hint && <FormHelperText>{hint}</FormHelperText>}
     </FormControl>
   );
+
+  const legacySelect =
+    legacyFilter &&
+    triStateSelect(
+      'is-legacy',
+      t('mailSend.isLegacy'),
+      state.isLegacy,
+      isLegacy => ({ isLegacy }),
+      { hint: t('mailSend.isLegacyHint') }
+    );
 
   const memberPlanPicker = (
     <FormControl fullWidth>
@@ -331,6 +342,7 @@ export function AudienceFilter({
           </FormControl>
 
           {memberPlanPicker}
+          {legacySelect}
         </>
       )}
 
@@ -486,6 +498,7 @@ export function AudienceFilter({
             hasReplaced => ({ hasReplaced }),
             { hint: t('mailSend.hasReplacedSubscriptionHint') }
           )}
+          {legacySelect}
         </>
       )}
     </Stack>

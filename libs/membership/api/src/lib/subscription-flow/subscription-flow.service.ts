@@ -15,13 +15,21 @@ import {
   subscriptionFlowRequiredEvents,
 } from './subscription-flow.type';
 import { PrismaClient, SubscriptionEvent } from '@prisma/client';
+import { FeaturesService } from '@wepublish/features/api';
+import {
+  isForLegacyAndOthers,
+  LEGACY_AND_OTHERS,
+} from '../subscription/legacy-subscription';
 
 const SUBSCRIPTION_EVENT_MAX_DAYS_BEFORE = -25;
 const SUBSCRIPTION_EVENT_MAX_DAYS_AFTER = 90;
 
 @Injectable()
 export class SubscriptionFlowService {
-  constructor(private prismaService: PrismaClient) {}
+  constructor(
+    private prismaService: PrismaClient,
+    private features: FeaturesService
+  ) {}
 
   async getFlows(defaultFlowOnly: boolean, memberPlanId?: string) {
     let where = {};
@@ -95,6 +103,8 @@ export class SubscriptionFlowService {
       );
     }
 
+    await this.assertLegacyAllowed(flow.legacy);
+
     if (await this.filterHasOverlap(flow.memberPlanId, flow)) {
       throw new BadRequestException(
         "You can't create this flow because there is a filter overlap!"
@@ -116,6 +126,7 @@ export class SubscriptionFlowService {
         },
         periodicities: flow.periodicities,
         autoRenewal: flow.autoRenewal,
+        legacy: flow.legacy ?? [...LEGACY_AND_OTHERS],
         intervals: {
           create: [
             {
@@ -146,6 +157,8 @@ export class SubscriptionFlowService {
         'Its not allowed to update subscription flow with no periodicities OR autoRenewal OR paymentMethods'
       );
     }
+
+    await this.assertLegacyAllowed(flow.legacy);
 
     const originalFlow = await this.prismaService.subscriptionFlow.findUnique({
       where: {
@@ -192,6 +205,7 @@ export class SubscriptionFlowService {
             : undefined,
           periodicities: flow.periodicities,
           autoRenewal: flow.autoRenewal,
+          legacy: flow.legacy,
         },
       }),
     ]);
@@ -347,6 +361,31 @@ export class SubscriptionFlowService {
     return this.getFlows(false);
   }
 
+  /**
+   * A flow has to be for somebody, and telling legacy subscriptions apart is
+   * only possible where the editor shows it.
+   */
+  private async assertLegacyAllowed(legacy: boolean[] | undefined) {
+    if (!legacy) {
+      return;
+    }
+
+    if (!legacy.length) {
+      throw new BadRequestException(
+        'A subscription flow has to be for legacy subscriptions, the others, or both'
+      );
+    }
+
+    if (
+      !isForLegacyAndOthers(legacy) &&
+      !(await this.features.isEnabled('legacy-subscriptions'))
+    ) {
+      throw new BadRequestException(
+        'Flows for legacy subscriptions need the legacy-subscriptions feature'
+      );
+    }
+  }
+
   private async filterHasOverlap(
     memberPlanId: string | null,
     newFlow: Partial<SubscriptionFlowModelUpdateInput>
@@ -364,8 +403,11 @@ export class SubscriptionFlowService {
         },
         periodicities: true,
         autoRenewal: true,
+        legacy: true,
       },
     });
+
+    const own = allFlows.find(flow => flow.id === newFlow.id);
 
     for (const flow of allFlows) {
       // skip itself
@@ -382,6 +424,11 @@ export class SubscriptionFlowService {
       const existingAr = new Set(flow.autoRenewal);
       const newAr = new Set(newFlow.autoRenewal);
 
+      // An update that leaves legacy alone keeps what the flow has; only a new
+      // flow falls back to being for both.
+      const newLegacy = newFlow.legacy ?? own?.legacy ?? LEGACY_AND_OTHERS;
+      const legacyIntersection = newLegacy.filter(x => flow.legacy.includes(x));
+
       // find filter values that are the same as the existing filter values
       const pmIntersection = new Set([...newPM].filter(x => existingPM.has(x)));
       const peIntersection = new Set([...newPe].filter(x => existingPe.has(x)));
@@ -391,7 +438,8 @@ export class SubscriptionFlowService {
       if (
         pmIntersection.size !== 0 &&
         peIntersection.size !== 0 &&
-        arIntersection.size !== 0
+        arIntersection.size !== 0 &&
+        legacyIntersection.length !== 0
       ) {
         return true;
       }

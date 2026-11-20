@@ -297,6 +297,13 @@ export class MailAudienceInput {
   })
   hasReplacedSubscription?: boolean;
 
+  @Field({
+    nullable: true,
+    description:
+      'Subscribers and win-back audience: true keeps only legacy subscriptions, imported from another system and not paid for here yet; false keeps the rest.',
+  })
+  isLegacy?: boolean;
+
   @Field(() => Int, {
     nullable: true,
     description:

@@ -46,6 +46,7 @@ describe('SubscriptionEventDictionary', () => {
         memberPlanId: null,
         periodicities: [PaymentPeriodicity.monthly, PaymentPeriodicity.yearly],
         autoRenewal: [true, false],
+        legacy: [true, false],
         createdAt: new Date(),
         modifiedAt: new Date(),
         intervals: [
@@ -64,6 +65,7 @@ describe('SubscriptionEventDictionary', () => {
         memberPlanId: 'custom-plan-1',
         periodicities: [PaymentPeriodicity.yearly],
         autoRenewal: [true],
+        legacy: [true, false],
         createdAt: new Date(),
         modifiedAt: new Date(),
         intervals: [
@@ -101,6 +103,7 @@ describe('SubscriptionEventDictionary', () => {
       periodicity: PaymentPeriodicity.yearly,
       paymentMethodId: 'stripe',
       autorenwal: true,
+      legacy: false,
     });
 
     expect(actions.length).toBeGreaterThanOrEqual(2);
@@ -130,6 +133,7 @@ describe('SubscriptionEventDictionary', () => {
           PaymentPeriodicity.lifetime,
         ],
         autoRenewal: [true, false],
+        legacy: [true, false],
         createdAt: new Date(),
         modifiedAt: new Date(),
         intervals: [
@@ -161,6 +165,7 @@ describe('SubscriptionEventDictionary', () => {
       periodicity: PaymentPeriodicity.biannual,
       paymentMethodId: 'payrexx',
       autorenwal: false,
+      legacy: false,
     });
 
     expect(actions.length).toBeGreaterThanOrEqual(1);
@@ -181,6 +186,7 @@ describe('SubscriptionEventDictionary', () => {
         memberPlanId: null,
         periodicities: [PaymentPeriodicity.yearly],
         autoRenewal: [true],
+        legacy: [true, false],
         createdAt: new Date(),
         modifiedAt: new Date(),
         intervals: [],
@@ -192,6 +198,7 @@ describe('SubscriptionEventDictionary', () => {
         memberPlanId: 'custom-plan-1',
         periodicities: [PaymentPeriodicity.yearly],
         autoRenewal: [true],
+        legacy: [true, false],
         createdAt: new Date(),
         modifiedAt: new Date(),
         intervals: [
@@ -229,6 +236,7 @@ describe('SubscriptionEventDictionary', () => {
       periodicity: PaymentPeriodicity.yearly,
       paymentMethodId: 'stripe',
       autorenwal: true,
+      legacy: false,
       daysAwayFromEnding: -7,
     });
 
@@ -245,6 +253,7 @@ describe('SubscriptionEventDictionary', () => {
         memberPlanId: null,
         periodicities: [PaymentPeriodicity.yearly],
         autoRenewal: [true, false],
+        legacy: [true, false],
         createdAt: new Date(),
         modifiedAt: new Date(),
         intervals: [],
@@ -256,6 +265,7 @@ describe('SubscriptionEventDictionary', () => {
         memberPlanId: 'custom-plan-1',
         periodicities: [PaymentPeriodicity.yearly],
         autoRenewal: [false],
+        legacy: [true, false],
         createdAt: new Date(),
         modifiedAt: new Date(),
         intervals: [
@@ -295,6 +305,7 @@ describe('SubscriptionEventDictionary', () => {
       periodicity: PaymentPeriodicity.yearly,
       paymentMethodId: 'stripe',
       autorenwal: false,
+      legacy: false,
       events: [
         SubscriptionEvent.INVOICE_CREATION,
         SubscriptionEvent.DEACTIVATION_UNPAID,
@@ -314,6 +325,7 @@ describe('SubscriptionEventDictionary', () => {
         memberPlanId: 'custom-plan-1',
         periodicities: [PaymentPeriodicity.yearly],
         autoRenewal: [true],
+        legacy: [true, false],
         createdAt: new Date(),
         modifiedAt: new Date(),
         intervals: [],
@@ -329,6 +341,7 @@ describe('SubscriptionEventDictionary', () => {
         periodicity: PaymentPeriodicity.yearly,
         paymentMethodId: 'stripe',
         autorenwal: true,
+        legacy: false,
       })
     ).rejects.toThrow('Default user subscription flow not found!');
   });
@@ -341,6 +354,7 @@ describe('SubscriptionEventDictionary', () => {
         memberPlanId: null,
         periodicities: [PaymentPeriodicity.yearly],
         autoRenewal: [true],
+        legacy: [true, false],
         createdAt: new Date(),
         modifiedAt: new Date(),
         intervals: [],
@@ -356,6 +370,7 @@ describe('SubscriptionEventDictionary', () => {
         periodicity: PaymentPeriodicity.yearly,
         paymentMethodId: 'stripe',
         autorenwal: true,
+        legacy: false,
         daysAwayFromEnding: 10,
         events: [SubscriptionEvent.INVOICE_CREATION],
       })
@@ -480,6 +495,7 @@ describe('SubscriptionEventDictionary', () => {
         memberPlanId: null,
         periodicities: [PaymentPeriodicity.yearly],
         autoRenewal: [true],
+        legacy: [true, false],
         createdAt: new Date(),
         modifiedAt: new Date(),
         intervals: [],
@@ -491,6 +507,7 @@ describe('SubscriptionEventDictionary', () => {
         memberPlanId: null,
         periodicities: [PaymentPeriodicity.monthly],
         autoRenewal: [true],
+        legacy: [true, false],
         createdAt: new Date(),
         modifiedAt: new Date(),
         intervals: [],
@@ -506,6 +523,7 @@ describe('SubscriptionEventDictionary', () => {
         periodicity: PaymentPeriodicity.yearly,
         paymentMethodId: 'stripe',
         autorenwal: true,
+        legacy: false,
       })
     ).rejects.toThrow(
       'Subscription Flow with no memberplan found that is not default! This is a data integrity error!'
@@ -519,6 +537,7 @@ describe('SubscriptionEventDictionary', () => {
       memberPlanId: null,
       periodicities: [PaymentPeriodicity.monthly],
       autoRenewal: [true, false],
+      legacy: [true, false],
       createdAt: new Date(),
       modifiedAt: new Date(),
       intervals: [
@@ -557,6 +576,7 @@ describe('SubscriptionEventDictionary', () => {
         periodicity: PaymentPeriodicity.monthly,
         paymentMethodId: 'payrexx',
         autorenwal: true,
+        legacy: false,
         events: [
           SubscriptionEvent.SUBSCRIBE,
           SubscriptionEvent.INVOICE_CREATION,

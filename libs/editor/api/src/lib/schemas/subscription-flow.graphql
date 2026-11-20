@@ -12,12 +12,14 @@ mutation CreateSubscriptionFlow(
   $paymentMethodIds: [String!]!
   $periodicities: [PaymentPeriodicity!]!
   $autoRenewal: [Boolean!]!
+  $legacy: [Boolean!]
 ) {
   createSubscriptionFlow(
     memberPlanId: $memberPlanId
     paymentMethodIds: $paymentMethodIds
     periodicities: $periodicities
     autoRenewal: $autoRenewal
+    legacy: $legacy
   ) {
     ...SubscriptionFlow
   }
@@ -29,12 +31,14 @@ mutation UpdateSubscriptionFlow(
   $paymentMethodIds: [String!]!
   $periodicities: [PaymentPeriodicity!]!
   $autoRenewal: [Boolean!]!
+  $legacy: [Boolean!]
 ) {
   updateSubscriptionFlow(
     id: $id
     paymentMethodIds: $paymentMethodIds
     periodicities: $periodicities
     autoRenewal: $autoRenewal
+    legacy: $legacy
   ) {
     ...SubscriptionFlow
   }
@@ -101,6 +105,7 @@ fragment SubscriptionFlow on SubscriptionFlowModel {
     ...MemberPlanRef
   }
   autoRenewal
+  legacy
   paymentMethods {
     ...FullPaymentMethod
   }

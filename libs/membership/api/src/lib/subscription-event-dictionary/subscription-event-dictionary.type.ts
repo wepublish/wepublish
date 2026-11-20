@@ -39,6 +39,8 @@ export type LookupActionInput = {
   paymentMethodId: string;
   periodicity: PaymentPeriodicity;
   autorenwal: boolean;
+  /** Whether the subscription is a legacy one, see `isLegacySubscription`. */
+  legacy: boolean;
   daysAwayFromEnding?: number;
 
   events?: SubscriptionEvent[];
