@@ -10,10 +10,12 @@ import {
 
 import { SystemMailSection } from './system-mail-section';
 
+const { updateSystemMail } = vi.hoisted(() => ({ updateSystemMail: vi.fn() }));
+
 vi.mock('@apollo/client/react', async importOriginal => ({
   ...(await importOriginal<typeof import('@apollo/client/react')>()),
   useQuery: vi.fn(),
-  useMutation: () => [vi.fn(), { loading: false }],
+  useMutation: () => [updateSystemMail, { loading: false }],
 }));
 
 vi.mock('@wepublish/ui/editor', async importOriginal => ({
@@ -28,6 +30,21 @@ vi.mock('react-i18next', () => ({
   }),
 }));
 
+// The chooser itself is tested on its own; here it only hands back a choice.
+vi.mock('../mail-template/select-mail-template-panel', () => ({
+  SelectMailTemplatePanel: (props: {
+    purpose?: string;
+    onSelect(id: string | null): void;
+    onClose(): void;
+  }) => (
+    <div>
+      <p>{`purpose:${props.purpose}`}</p>
+      <button onClick={() => props.onSelect('mt-2')}>pick mt-2</button>
+      <button onClick={() => props.onSelect(null)}>pick none</button>
+    </div>
+  ),
+}));
+
 const renderPage = () =>
   render(
     <ThemeProvider theme={createTheme({ cssVariables: true })}>
@@ -36,16 +53,6 @@ const renderPage = () =>
   );
 
 const mockedUseQuery = useQuery as unknown as Mock;
-
-const template = (id: string, name: string, channels: string[]) => ({
-  id,
-  name,
-  description: null,
-  subject: name,
-  context: null,
-  status: 'ok',
-  channels,
-});
 
 const systemMails = [
   UserEvent.PasswordReset,
@@ -125,7 +132,9 @@ describe('SystemMailSection', () => {
     ]);
 
     for (const row of rows) {
-      expect(within(row).getByRole('combobox')).toBeTruthy();
+      expect(
+        within(row).getByRole('button', { name: /^systemMails.events\..+: / })
+      ).toBeTruthy();
       expect(
         within(row).getByRole('button', { name: /systemMails.sendTest/ })
       ).toBeTruthy();
@@ -158,30 +167,42 @@ describe('SystemMailSection', () => {
     ).toBeTruthy();
   });
 
-  it('offers only templates with an email version: a system mail is never a letter', () => {
-    mockedUseQuery.mockImplementation((document: unknown) => ({
-      data:
-        document === SystemMailsDocument ? { systemMails }
-        : document === MailTemplateDocument ?
-          {
-            mailTemplates: [
-              template('tpl-1', 'Willkommen', ['mail']),
-              template('tpl-2', 'Begleitbrief', ['letter']),
-              template('tpl-3', 'Rechnung', ['mail', 'letter']),
-            ],
-          }
-        : undefined,
-    }));
+  it('names each template field after its event and says what it sends', () => {
     renderPage();
 
-    fireEvent.mouseDown(screen.getAllByRole('combobox')[0]);
+    expect(
+      screen.getByRole('button', {
+        name: 'systemMails.events.login_link: mailTemplateSelect.noMailSentSelectNow',
+      })
+    ).toBeTruthy();
+  });
 
-    const options = within(screen.getByRole('listbox'))
-      .getAllByRole('option')
-      .map(option => option.textContent);
+  it('opens the chooser narrowed to account templates and assigns what was chosen', () => {
+    renderPage();
 
-    expect(options.some(label => label?.includes('Willkommen'))).toBe(true);
-    expect(options.some(label => label?.includes('Rechnung'))).toBe(true);
-    expect(options.some(label => label?.includes('Begleitbrief'))).toBe(false);
+    fireEvent.click(
+      screen.getByRole('button', { name: /systemMails.events.password_reset:/ })
+    );
+
+    expect(screen.getByText('purpose:account')).toBeTruthy();
+
+    fireEvent.click(screen.getByRole('button', { name: 'pick mt-2' }));
+
+    expect(updateSystemMail).toHaveBeenCalledWith({
+      variables: { event: UserEvent.PasswordReset, mailTemplateId: 'mt-2' },
+    });
+  });
+
+  it('lets a system mail send nothing', () => {
+    renderPage();
+
+    fireEvent.click(
+      screen.getByRole('button', { name: /systemMails.events.login_link:/ })
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'pick none' }));
+
+    expect(updateSystemMail).toHaveBeenCalledWith({
+      variables: { event: UserEvent.LoginLink, mailTemplateId: null },
+    });
   });
 });

@@ -1934,6 +1934,13 @@
       "empty": "No message templates yet."
     },
     "mailTemplateSelect": {
+      "chooser": {
+        "title": "Choose a template: {{event}}",
+        "select": "Choose this template",
+        "selectCurrent": "Choose this template (already chosen)",
+        "none": "Send no message",
+        "create": "Create new template"
+      },
       "channels": "Delivery channels",
       "noLetterVersion": "This template has no letter version. Add one in the template so people on the letter channel get this message printed; until then they get the email.",
       "sendAsLetterHint": "The email always goes out. With letter ticked, people on the letter channel get this message printed instead of by email.",

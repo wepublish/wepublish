@@ -1933,6 +1933,13 @@
       "empty": "Aucun modèle de message pour le moment."
     },
     "mailTemplateSelect": {
+      "chooser": {
+        "title": "Choisir un modèle : {{event}}",
+        "select": "Choisir ce modèle",
+        "selectCurrent": "Choisir ce modèle (déjà choisi)",
+        "none": "Ne pas envoyer de message",
+        "create": "Créer un nouveau modèle"
+      },
       "channels": "Canaux de distribution",
       "noLetterVersion": "Ce modèle n’a pas de version lettre. Ajoutez-la dans le modèle pour que les personnes au canal lettre reçoivent ce message imprimé ; d’ici là, elles reçoivent l’e-mail.",
       "sendAsLetterHint": "L’e-mail part toujours. Si la lettre est cochée, les personnes au canal lettre reçoivent ce message imprimé au lieu de l’e-mail.",

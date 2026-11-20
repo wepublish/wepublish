@@ -1933,6 +1933,13 @@
       "empty": "Noch keine Mitteilungsvorlagen."
     },
     "mailTemplateSelect": {
+      "chooser": {
+        "title": "Vorlage wählen: {{event}}",
+        "select": "Diese Vorlage wählen",
+        "selectCurrent": "Diese Vorlage wählen (ist bereits gewählt)",
+        "none": "Keine Mitteilung senden",
+        "create": "Neue Vorlage erstellen"
+      },
       "channels": "Zustellkanäle",
       "noLetterVersion": "Diese Vorlage hat keine Brief-Version. Füge sie in der Vorlage hinzu, damit Personen mit Zustellkanal Brief diese Mitteilung gedruckt bekommen; bis dahin erhalten sie die E-Mail.",
       "sendAsLetterHint": "Die E-Mail geht immer raus. Ist Brief angewählt, bekommen Personen mit Zustellkanal Brief diese Mitteilung gedruckt statt per E-Mail.",
