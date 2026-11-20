@@ -9,3 +9,4 @@ actionRequired: false
 - **In the overview.** Flows for all member plans are listed right after the default flow and stay visible when you filter by member plan. “Affected subscriptions” counts only those no member plan flow takes first.
 - **How early it may act.** As for a member plan's flow: the shortest term in its conditions sets the earliest day. A flow for “Yearly” only may create invoices up to 360 days ahead.
 - **No overlaps.** Two flows for all member plans cannot be for the same subscriptions; the second is refused. An empty field counts as every value here.
+- **A grouped list with more filters.** The overview heads the flows by what they are for: “Default”, “For all member plans”, then each member plan. Besides the member plan you can filter by payment method, term and renewal, by flows with a warning, and by flows with or without subscriptions.
