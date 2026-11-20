@@ -2335,7 +2335,8 @@
       "userConsents": "Consentements des utilisateur·trice·s",
       "userConsentCreate": "Nouveau consentement d’utilisateur·trice",
       "userConsentEdit": "Modifier le consentement d’utilisateur·trice",
-      "automaticEmails": "E-mails automatiques",
+      "automaticEmails": "Messages automatiques",
+      "communicationFlow": "Modifier le flux",
       "mailTemplates": "Modèles de message",
       "mailTemplateCreate": "Nouveau modèle de message",
       "mailTemplateEdit": "Modifier le modèle de message",
@@ -2890,10 +2891,40 @@
     },
     "automaticMails": {
       "title": "Messages automatiques",
-      "intro": "Définissez ici quel modèle de message est envoyé automatiquement pour quel événement. Choisissez un modèle par événement – ou laissez « Ne pas envoyer d’e-mail » si rien ne doit partir. L’icône ⓘ explique chaque événement.",
       "example": "Exemple : {{example}}"
     },
     "subscriptionFlow": {
+      "overview": {
+        "back": "Tous les flux et messages automatiques",
+        "title": "Messages des flux d’abonnement",
+        "intro": "Un flux définit quel message est envoyé automatiquement pour quel événement d’abonnement. Le flux standard vaut pour tous les abonnements. Un plan d’abonnement peut avoir ses propres flux pour certains abonnements : un tel flux remplace entièrement le flux standard pour les abonnements concernés.",
+        "flow": "Flux pour le plan d’abonnement",
+        "defaultFlow": "Tous → flux par défaut",
+        "appliesTo": "S’applique à",
+        "defaultApplies": "Tous les abonnements sans flux propre",
+        "subscriptions": "Abonnements concernés",
+        "events": "Messages",
+        "eventsValue": "{{sending}} événements sur {{total}}",
+        "letterEvents": "Dont par lettre",
+        "memberPlan": "Plan d’abonnement",
+        "createIntro": "Choisissez le plan d’abonnement et les abonnements auxquels le nouveau flux s’applique. Les messages qu’il envoie se définissent ensuite sur sa page.",
+        "deleteTitle": "Supprimer le flux de « {{memberPlan}} » ?",
+        "renewal": {
+          "true": "avec renouvellement automatique",
+          "false": "sans renouvellement automatique"
+        },
+        "noMemberPlan": "Sans plan d’abonnement",
+        "warnings": {
+          "noMemberPlan": "Le plan d’abonnement de ce flux a été supprimé. Tant que ce flux existe, aucun message automatique n’est envoyé – supprimez-le.",
+          "matchesNothing": "Ne s’applique à aucun abonnement : il manque un moyen de paiement, une périodicité ou un renouvellement.",
+          "notOffered": "N’est plus proposé par le plan d’abonnement : {{values}}. Ce flux ne s’applique plus qu’aux abonnements déjà existants."
+        }
+      },
+      "flow": "Flux",
+      "planFlowDescription": "Ce flux remplace entièrement le flux standard pour les abonnements de son plan qui correspondent aux critères de filtre définis ci-dessous.",
+      "planFlowDescriptionFor": "Ce flux remplace entièrement le flux standard pour les abonnements du plan « {{memberPlan}} » qui correspondent aux critères de filtre définis ci-dessous.",
+      "noFallback": "Les événements sans modèle n’envoient rien – le flux standard ne prend pas le relais.",
+      "notFound": "Ce flux n’existe pas (ou plus).",
       "subscribe": "Abonnement conclu",
       "renewal_success": "Renouvellement réussi",
       "renewal_failed": "Échec du renouvellement",
@@ -2904,7 +2935,6 @@
       "custom": "Événement personnalisé",
       "settings": "Paramètres du flux d’abonnement",
       "edit": "Modifier le flux d’abonnement",
-      "settingsDescription": "Ces paramètres ne valent que pour ce plan d’abonnement et remplacent les e-mails automatiques.",
       "addNew": "Créer un nouveau flux",
       "dayWithNumber": "jour {{day}}",
       "days": "jours",
@@ -2934,8 +2964,7 @@
       "addMail": "Ajouter un e-mail",
       "deleteMail": "Retirer l’e-mail",
       "defaultFlow": "Flux par défaut",
-      "defaultFlowDescription": "S’applique à tous les abonnements auxquels aucun autre flux ne correspond. Les modifications s’appliquent aussi sous « Messages automatiques ».",
-      "flowNumber": "Flux {{number}}",
+      "defaultFlowDescription": "S’applique à tous les abonnements auxquels aucun flux d’un plan d’abonnement ne correspond.",
       "newFlow": "Nouveau flux",
       "newDayTitle": "Nouveau jour dans la chronologie",
       "newDayHint": "Nombre négatif = avant la fin de l’abonnement, nombre positif = après.",
@@ -4436,11 +4465,16 @@
       "reset": "Réinitialiser les colonnes"
     },
     "systemMails": {
-      "title": "Compte et connexion",
+      "title": "Messages liés au compte et à la connexion",
       "sectionDescription": "E-mails liés au compte utilisateur. Ils sont déclenchés par une action de la personne, qu’elle ait un abonnement ou non.",
       "sectionExample": "Quelqu’un s’inscrit → l’e-mail de bienvenue part immédiatement.",
-      "sendTest": "M’envoyer un test",
+      "sendTest": "M’envoyer un e-mail de test",
       "testSent": "E-mail de test envoyé",
+      "columns": {
+        "event": "Type d’événement",
+        "userAction": "Action de l’utilisateur",
+        "template": "Modèle de message"
+      },
       "events": {
         "account_creation": "Inscription",
         "login_link": "Lien de connexion",
@@ -4450,27 +4484,27 @@
       },
       "eventInfo": {
         "account_creation": {
-          "short": "Un nouveau compte a été créé.",
+          "userAction": "S’inscrit ou reçoit un compte lors de l’achat d’un abonnement",
           "description": "Part dès qu’une personne s’inscrit ou obtient un compte lors de l’achat d’un abonnement.",
           "example": "« Bienvenue – votre compte est prêt. »"
         },
         "login_link": {
-          "short": "Se connecter sans mot de passe.",
+          "userAction": "Demande un lien de connexion",
           "description": "Part lorsqu’une personne souhaite se connecter par lien au lieu de saisir un mot de passe. L’e-mail doit contenir le lien de connexion.",
           "example": "« Connectez-vous en un clic. »"
         },
         "password_reset": {
-          "short": "Mot de passe oublié.",
-          "description": "Part lorsqu’une personne clique sur « Mot de passe oublié ». L’e-mail doit contenir le lien pour définir un nouveau mot de passe.",
+          "userAction": "Un·e admin ou auteur·rice clique sur « Mot de passe oublié » dans la connexion de l’éditeur",
+          "description": "Envoyé lorsque quelqu’un clique sur « Mot de passe oublié » dans la connexion de l’éditeur – cette fonction n’existe que là, pas sur le site web. Elle concerne donc les admins, auteur·rice·s et autres utilisateur·rice·s de l’éditeur. L’e-mail doit contenir le lien pour définir un nouveau mot de passe.",
           "example": "« Définissez ici un nouveau mot de passe. »"
         },
         "email_change": {
-          "short": "Confirmer la nouvelle adresse.",
+          "userAction": "Modifie son adresse e-mail",
           "description": "Part à la nouvelle adresse lorsque quelqu’un modifie son adresse e-mail. Le changement n’est effectif qu’après confirmation.",
           "example": "« Merci de confirmer votre nouvelle adresse e-mail. »"
         },
         "test_mail": {
-          "short": "Uniquement pour vos tests.",
+          "userAction": "Aucune – uniquement pour vos tests",
           "description": "N’est jamais envoyé automatiquement aux lectrices et lecteurs. Utilisez ce modèle pour tester vous-même l’envoi.",
           "example": "« E-mail de test – si vous lisez ceci, l’envoi fonctionne. »"
         }

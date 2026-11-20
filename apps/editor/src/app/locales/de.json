@@ -2335,7 +2335,8 @@
       "userConsents": "Benutzer-Einwilligungen",
       "userConsentCreate": "Neue Benutzer-Einwilligung",
       "userConsentEdit": "Benutzer-Einwilligung bearbeiten",
-      "automaticEmails": "Automatische E-Mails",
+      "automaticEmails": "Automatische Mitteilungen",
+      "communicationFlow": "Ablauf bearbeiten",
       "mailTemplates": "Mitteilungsvorlagen",
       "mailTemplateCreate": "Neue Mitteilungsvorlage",
       "mailTemplateEdit": "Mitteilungsvorlage bearbeiten",
@@ -2890,10 +2891,40 @@
     },
     "automaticMails": {
       "title": "Automatische Mitteilungen",
-      "intro": "Hier legst du fest, welche Mitteilungsvorlage bei welchem Ereignis automatisch verschickt wird. Wähle pro Ereignis eine Vorlage – oder lass das Feld auf «Keine E-Mail senden», wenn nichts verschickt werden soll. Das ⓘ-Symbol erklärt jedes Ereignis.",
       "example": "Beispiel: {{example}}"
     },
     "subscriptionFlow": {
+      "overview": {
+        "back": "Alle Abläufe & automatischen Mitteilungen",
+        "title": "Mitteilungen zu Abo-Abläufen",
+        "intro": "Ein Ablauf legt fest, welche Mitteilung bei welchem Abo-Ereignis automatisch verschickt wird. Der Standard-Ablauf gilt für alle Abos. Ein Abo-Plan kann eigene Abläufe für bestimmte Abos haben: Ein solcher Ablauf ersetzt den Standard-Ablauf für die betroffenen Abos vollständig.",
+        "flow": "Ablauf für Abo-Plan",
+        "defaultFlow": "Alle → Standard-Ablauf",
+        "appliesTo": "Gilt für",
+        "defaultApplies": "Alle Abos ohne eigenen Ablauf",
+        "subscriptions": "Betroffene Abos",
+        "events": "Mitteilungen",
+        "eventsValue": "{{sending}} von {{total}} Ereignissen",
+        "letterEvents": "Davon per Brief",
+        "memberPlan": "Abo-Plan",
+        "createIntro": "Wähle den Abo-Plan und die Abos, für die der neue Ablauf gilt. Welche Mitteilungen er verschickt, legst du danach auf seiner Seite fest.",
+        "deleteTitle": "Ablauf von «{{memberPlan}}» löschen?",
+        "renewal": {
+          "true": "mit automatischer Verlängerung",
+          "false": "ohne automatische Verlängerung"
+        },
+        "noMemberPlan": "Ohne Abo-Plan",
+        "warnings": {
+          "noMemberPlan": "Der Abo-Plan dieses Ablaufs wurde gelöscht. Solange es diesen Ablauf gibt, wird keine automatische Mitteilung verschickt – lösche ihn.",
+          "matchesNothing": "Gilt für kein Abo: Es fehlt eine Zahlungsmethode, Periodizität oder Verlängerung.",
+          "notOffered": "Bietet der Abo-Plan nicht mehr an: {{values}}. Dieser Ablauf gilt nur noch für bereits bestehende Abos."
+        }
+      },
+      "flow": "Ablauf",
+      "planFlowDescription": "Dieser Ablauf ersetzt den Standard-Ablauf vollständig für die Abos seines Abo-Plans, welche zu den weiter unten definierten Filterkriterien passen.",
+      "planFlowDescriptionFor": "Dieser Ablauf ersetzt den Standard-Ablauf vollständig für die Abos des Abo-Plans «{{memberPlan}}», welche zu den weiter unten definierten Filterkriterien passen.",
+      "noFallback": "Ereignisse ohne Vorlage verschicken nichts – der Standard-Ablauf springt nicht ein.",
+      "notFound": "Diesen Ablauf gibt es nicht (mehr).",
       "subscribe": "Abo abgeschlossen",
       "renewal_success": "Verlängerung erfolgreich",
       "renewal_failed": "Verlängerung fehlgeschlagen",
@@ -2904,7 +2935,6 @@
       "custom": "Benutzerdefiniertes Ereignis",
       "settings": "Abonnement-Ablauf-Einstellungen",
       "edit": "Abonnement-Ablauf bearbeiten",
-      "settingsDescription": "Diese Einstellungen gelten nur für diesen Abo-Plan und überschreiben die automatischen E-Mails.",
       "addNew": "Neuen Ablauf erstellen",
       "dayWithNumber": "Tag {{day}}",
       "days": "Tage",
@@ -2934,8 +2964,7 @@
       "addMail": "E-Mail hinzufügen",
       "deleteMail": "E-Mail entfernen",
       "defaultFlow": "Standard-Ablauf",
-      "defaultFlowDescription": "Gilt für alle Abos, auf die kein anderer Ablauf passt. Änderungen hier gelten auch unter «Automatische Mitteilungen».",
-      "flowNumber": "Ablauf {{number}}",
+      "defaultFlowDescription": "Gilt für alle Abos, auf die kein Ablauf eines Abo-Plans passt.",
       "newFlow": "Neuer Ablauf",
       "newDayTitle": "Neuer Tag in der Zeitleiste",
       "newDayHint": "Negative Zahl = vor dem Abo-Ende, positive Zahl = danach.",
@@ -4444,11 +4473,16 @@
       "reset": "Spalten zurücksetzen"
     },
     "systemMails": {
-      "title": "Konto & Login",
+      "title": "Mitteilungen zu Konto- & Login-Ereignissen",
       "sectionDescription": "E-Mails rund um das Benutzerkonto. Sie werden durch eine Aktion der Person ausgelöst – unabhängig davon, ob sie ein Abo hat.",
       "sectionExample": "Jemand registriert sich → Willkommens-E-Mail geht sofort raus.",
-      "sendTest": "Test an mich",
+      "sendTest": "Test-E-Mail an mich",
       "testSent": "Test-E-Mail an dich verschickt",
+      "columns": {
+        "event": "Ereignis-Typ",
+        "userAction": "Benutzer-Aktion",
+        "template": "Mitteilungsvorlage"
+      },
       "events": {
         "account_creation": "Registrierung",
         "login_link": "Login-Link",
@@ -4458,27 +4492,27 @@
       },
       "eventInfo": {
         "account_creation": {
-          "short": "Neues Konto wurde erstellt.",
+          "userAction": "Registriert sich oder erhält beim Abo-Kauf ein Konto",
           "description": "Geht raus, sobald sich eine Person neu registriert oder beim Abo-Kauf ein Konto erhält.",
           "example": "«Willkommen – dein Konto ist bereit.»"
         },
         "login_link": {
-          "short": "Anmelden ohne Passwort.",
+          "userAction": "Fordert einen Login-Link an",
           "description": "Geht raus, wenn eine Person sich per Link anmelden will, statt ein Passwort einzugeben. Die E-Mail muss den Login-Link enthalten.",
           "example": "«Mit einem Klick anmelden.»"
         },
         "password_reset": {
-          "short": "Passwort vergessen.",
-          "description": "Geht raus, wenn eine Person «Passwort vergessen» anklickt. Die E-Mail muss den Link zum Setzen eines neuen Passworts enthalten.",
+          "userAction": "Admin oder Autor:in klickt im Editor-Login auf «Passwort vergessen»",
+          "description": "Geht raus, wenn jemand im Login des Editors «Passwort vergessen» anklickt – das gibt es nur dort, nicht auf der Website. Betrifft also Admins, Autor:innen und andere Editor-User. Die E-Mail muss den Link zum Setzen eines neuen Passworts enthalten.",
           "example": "«Hier setzt du ein neues Passwort.»"
         },
         "email_change": {
-          "short": "Neue Adresse bestätigen.",
+          "userAction": "Ändert die eigene E-Mail-Adresse",
           "description": "Geht an die neue Adresse, wenn jemand seine E-Mail-Adresse ändert. Die Änderung gilt erst nach der Bestätigung.",
           "example": "«Bitte bestätige deine neue E-Mail-Adresse.»"
         },
         "test_mail": {
-          "short": "Nur für deine eigenen Tests.",
+          "userAction": "Keine – nur für deine eigenen Tests",
           "description": "Wird nie automatisch an Leser*innen verschickt. Mit dieser Vorlage kannst du den E-Mail-Versand selbst ausprobieren.",
           "example": "«Test-E-Mail – wenn Sie das lesen, funktioniert der Versand.»"
         }

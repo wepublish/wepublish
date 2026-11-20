@@ -3,19 +3,19 @@ import { useMutation, useQuery } from '@apollo/client/react';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import {
+  DeleteSubscriptionFlowDocument,
   DeleteSubscriptionIntervalDocument,
   ListPaymentMethodsDocument,
   MailTemplateDocument,
-  MemberPlanListDocument,
   SubscriptionEvent,
   SubscriptionFlowFragment,
   SubscriptionFlowsDocument,
   SystemMailsDocument,
 } from '@wepublish/editor/api';
 import { AuthContext, sessionWithPermissions } from '@wepublish/ui/editor';
-import { MemoryRouter, useParams } from 'react-router-dom';
+import { MemoryRouter, useNavigate, useParams } from 'react-router-dom';
 
-import { SubscriptionFlowList } from './subscription-flow-list';
+import { SubscriptionFlowPage } from './subscription-flow-list';
 
 const letterFlow = vi.fn(() => false);
 
@@ -49,6 +49,7 @@ vi.mock('@apollo/client/react', async importOriginal => ({
 vi.mock('react-router-dom', async importOriginal => ({
   ...(await importOriginal<typeof import('react-router-dom')>()),
   useParams: vi.fn(),
+  useNavigate: vi.fn(),
 }));
 
 vi.mock('react-i18next', () => ({
@@ -60,15 +61,19 @@ vi.mock('react-i18next', () => ({
 }));
 
 const page = () => (
-  <ThemeProvider theme={createTheme({ cssVariables: true })}>
-    <SubscriptionFlowList />
-  </ThemeProvider>
+  <MemoryRouter>
+    <ThemeProvider theme={createTheme({ cssVariables: true })}>
+      <SubscriptionFlowPage />
+    </ThemeProvider>
+  </MemoryRouter>
 );
 
 const renderPage = () => render(page());
 
 const mockedUseQuery = useQuery as unknown as Mock;
 const mockedUseParams = useParams as unknown as Mock;
+const mockedUseNavigate = useNavigate as unknown as Mock;
+const navigate = vi.fn();
 
 const interval = (
   id: string,
@@ -104,21 +109,33 @@ const defaultFlow = flow('flow-default', true, [
   interval('i-2', SubscriptionEvent.DeactivationUnpaid, 25),
 ]);
 
-const customFlow = flow('flow-a', false, [
-  interval('i-3', SubscriptionEvent.Custom, -25),
-  interval('i-4', SubscriptionEvent.InvoiceCreation, 0),
-  interval('i-5', SubscriptionEvent.DeactivationUnpaid, 5),
-]);
+const customFlow = {
+  ...flow('flow-a', false, [
+    interval('i-3', SubscriptionEvent.Custom, -25),
+    interval('i-4', SubscriptionEvent.InvoiceCreation, 0),
+    interval('i-5', SubscriptionEvent.DeactivationUnpaid, 5),
+  ]),
+  memberPlan: {
+    id: 'plan',
+    name: 'Probe-Abo',
+    availablePaymentMethods: [
+      {
+        paymentMethods: [{ id: 'bill', name: 'Rechnung' }],
+        paymentPeriodicities: ['yearly'],
+        forceAutoRenewal: false,
+      },
+    ],
+  },
+  paymentMethods: [{ id: 'bill', name: 'Rechnung' }],
+  periodicities: ['yearly'],
+  autoRenewal: [true],
+} as unknown as SubscriptionFlowFragment;
 
 function mockQueries(flows: SubscriptionFlowFragment[]) {
   const results = new Map<unknown, unknown>([
     [SubscriptionFlowsDocument, { subscriptionFlows: flows }],
     [MailTemplateDocument, { mailTemplates: [] }],
     [ListPaymentMethodsDocument, { paymentMethods: [] }],
-    [
-      MemberPlanListDocument,
-      { memberPlans: { nodes: [{ id: 'plan', name: 'Probe-Abo' }] } },
-    ],
     [
       SystemMailsDocument,
       {
@@ -142,17 +159,13 @@ function mockQueries(flows: SubscriptionFlowFragment[]) {
 
 const dayLabel = (day: number) => `subscriptionFlow.dayWithNumber(${day})`;
 
-const flowBlock = (name: string) => screen.getByRole('region', { name });
-
-const expand = (name: string) =>
-  fireEvent.click(
-    within(flowBlock(name)).getByRole('button', { name, expanded: false })
-  );
-
-describe('SubscriptionFlowList', () => {
+describe('SubscriptionFlowPage', () => {
   beforeEach(() => {
     mockedUseQuery.mockReset();
     mockedUseParams.mockReset();
+    navigate.mockReset();
+    mockedUseNavigate.mockReturnValue(navigate);
+    (useMutation as unknown as Mock).mockClear();
   });
 
   describe('with the paper letter flow', () => {
@@ -165,7 +178,7 @@ describe('SubscriptionFlowList', () => {
 
     it('says what printing an event means and where the channels are managed', () => {
       letterFlow.mockReturnValue(true);
-      render(<MemoryRouter>{page()}</MemoryRouter>);
+      renderPage();
 
       expect(screen.getByText('deliveryChannel.flows.letterHint')).toBeTruthy();
       expect(
@@ -205,17 +218,35 @@ describe('SubscriptionFlowList', () => {
       expect(container.querySelector('table')).toBeNull();
     });
 
-    it('shows the subscription events before the account mails', () => {
+    it('leaves the account mails to the overview', () => {
       renderPage();
 
-      const events = screen.getByRole('region', {
-        name: 'subscriptionFlow.subscriptionEvents',
-      });
-      const account = screen.getByRole('region', { name: 'systemMails.title' });
+      expect(
+        screen.queryByRole('region', { name: 'systemMails.title' })
+      ).toBeNull();
+    });
+
+    it('links back to the overview of all flows', () => {
+      renderPage();
 
       expect(
-        events.compareDocumentPosition(account) &
-          Node.DOCUMENT_POSITION_FOLLOWING
+        screen
+          .getByRole('link', { name: 'subscriptionFlow.overview.back' })
+          .getAttribute('href')
+      ).toBe('/communicationflows');
+    });
+
+    it('counts the subscriptions of every member plan the default flow is left with', () => {
+      renderPage();
+
+      expect(mockedUseQuery).toHaveBeenCalledWith(
+        SubscriptionFlowsDocument,
+        expect.objectContaining({
+          variables: { defaultFlowOnly: true },
+        })
+      );
+      expect(
+        screen.getByText('subscriptionFlow.subscriptionsAffected(3)')
       ).toBeTruthy();
     });
 
@@ -351,7 +382,7 @@ describe('SubscriptionFlowList', () => {
 
       expect(
         screen.getAllByRole('heading', { level: 1 }).map(h => h.textContent)
-      ).toEqual(['automaticMails.title']);
+      ).toEqual(['subscriptionFlow.defaultFlow']);
     });
 
     it('nests the headings without skipping a level', () => {
@@ -418,7 +449,6 @@ describe('SubscriptionFlowList', () => {
       for (const name of [
         'subscriptionFlow.subscribe',
         'subscriptionFlow.deactivation_unpaid',
-        'systemMails.events.login_link',
       ]) {
         expect(screen.getByRole('combobox', { name })).toBeTruthy();
       }
@@ -435,147 +465,117 @@ describe('SubscriptionFlowList', () => {
     });
   });
 
-  describe('for a member plan', () => {
+  describe('for the flow of a member plan', () => {
     beforeEach(() => {
-      mockedUseParams.mockReturnValue({ id: 'plan' });
+      mockedUseParams.mockReturnValue({ id: 'flow-a' });
       mockQueries([defaultFlow, customFlow]);
     });
 
-    it('names the button that deletes a flow', () => {
+    const renderAuthorised = () =>
       render(
         <AuthContext.Provider value={sessionWithPermissions}>
           {page()}
         </AuthContext.Provider>
       );
 
-      expect(
-        screen.getAllByRole('button', { name: 'delete' })
-      ).not.toHaveLength(0);
-    });
-
-    it('renders one block per flow and one to create a new flow', () => {
+    it('titles the page after the member plan and says which subscriptions it is for', () => {
       renderPage();
 
       expect(
-        screen.getByRole('region', { name: 'subscriptionFlow.defaultFlow' })
+        screen.getAllByRole('heading', { level: 1 }).map(h => h.textContent)
+      ).toEqual(['«Probe-Abo»']);
+      expect(
+        screen.getByText(
+          'Rechnung · memberPlanList.paymentPeriodicity.yearly · subscriptionFlow.overview.renewal.true'
+        )
       ).toBeTruthy();
       expect(
-        screen.getByRole('region', { name: 'subscriptionFlow.flowNumber(1)' })
-      ).toBeTruthy();
-      expect(
-        screen.getByRole('region', { name: 'subscriptionFlow.newFlow' })
+        screen.getByText(
+          'subscriptionFlow.planFlowDescriptionFor(Probe-Abo) subscriptionFlow.noFallback'
+        )
       ).toBeTruthy();
     });
 
-    it('counts the subscriptions of this member plan only', () => {
+    it('titles the page with the plan name alone, without an icon', () => {
+      renderPage();
+
+      expect(
+        screen.getByRole('heading', { level: 1 }).querySelector('svg')
+      ).toBeNull();
+    });
+
+    it('has no warning for a flow its plan fully offers', () => {
+      renderPage();
+
+      expect(screen.queryByRole('alert')).toBeNull();
+    });
+
+    it('warns about a flow left behind by a deleted member plan', () => {
+      mockQueries([
+        defaultFlow,
+        { ...customFlow, memberPlan: null } as SubscriptionFlowFragment,
+      ]);
+      renderPage();
+
+      expect(
+        screen.getAllByRole('heading', { level: 1 }).map(h => h.textContent)
+      ).toEqual(['subscriptionFlow.overview.noMemberPlan']);
+      expect(screen.getByRole('alert').textContent).toContain(
+        'subscriptionFlow.overview.warnings.noMemberPlan'
+      );
+    });
+
+    it('shows this flow only, not the default flow next to it', () => {
+      renderPage();
+
+      expect(screen.getAllByRole('region')).toHaveLength(1);
+      expect(screen.getByText(dayLabel(-25))).toBeTruthy();
+      expect(screen.queryByText(dayLabel(25))).toBeNull();
+    });
+
+    it('loads all flows to find this one', () => {
       renderPage();
 
       expect(mockedUseQuery).toHaveBeenCalledWith(
         SubscriptionFlowsDocument,
         expect.objectContaining({
-          variables: { defaultFlowOnly: false, memberPlanId: 'plan' },
+          variables: { defaultFlowOnly: false },
         })
       );
-      expect(useMutation).toHaveBeenCalledWith(
-        DeleteSubscriptionIntervalDocument,
-        expect.objectContaining({ variables: { memberPlanId: 'plan' } })
-      );
     });
 
-    it('shows existing flows collapsed and the new flow open', () => {
+    it('lets the conditions of the flow be changed', () => {
       renderPage();
 
-      expect(
-        within(flowBlock('subscriptionFlow.defaultFlow')).getByRole('button', {
-          name: 'subscriptionFlow.defaultFlow',
-          expanded: false,
-        })
-      ).toBeTruthy();
-      expect(
-        within(flowBlock('subscriptionFlow.flowNumber(1)')).queryByText(
-          dayLabel(-25)
-        )
-      ).toBeNull();
-      expect(
-        within(flowBlock('subscriptionFlow.newFlow')).getByText(
-          'subscriptionFlow.addNew'
-        )
-      ).toBeTruthy();
+      expect(screen.getByText('subscriptionFlow.paymentMethod')).toBeTruthy();
+      expect(screen.getByText('subscriptionFlow.periodicity')).toBeTruthy();
     });
 
-    it('opens a flow on click', () => {
+    it('names the button that deletes the flow', () => {
+      renderAuthorised();
+
+      expect(screen.getAllByRole('button', { name: 'delete' })).toHaveLength(1);
+    });
+
+    it('goes back to the overview once the flow is deleted', () => {
       renderPage();
 
-      expand('subscriptionFlow.flowNumber(1)');
+      const [, options] = (useMutation as unknown as Mock).mock.calls.find(
+        ([document]) => document === DeleteSubscriptionFlowDocument
+      ) as [unknown, { onCompleted: () => void }];
 
-      expect(
-        within(flowBlock('subscriptionFlow.flowNumber(1)')).getByText(
-          dayLabel(-25)
-        )
-      ).toBeTruthy();
-    });
+      options.onCompleted();
 
-    it('shows a flow open right after it was created', () => {
-      const { rerender } = renderPage();
-
-      mockQueries([
-        defaultFlow,
-        customFlow,
-        flow('flow-new', false, [
-          interval('i-6', SubscriptionEvent.InvoiceCreation, 0),
-        ]),
-      ]);
-      rerender(page());
-
-      expect(
-        within(flowBlock('subscriptionFlow.flowNumber(2)')).getByRole(
-          'button',
-          { name: 'subscriptionFlow.flowNumber(2)', expanded: true }
-        )
-      ).toBeTruthy();
-      expect(
-        within(flowBlock('subscriptionFlow.flowNumber(1)')).getByRole(
-          'button',
-          { name: 'subscriptionFlow.flowNumber(1)', expanded: false }
-        )
-      ).toBeTruthy();
-    });
-
-    it('shows only the days a flow uses on its own timeline', () => {
-      renderPage();
-      expand('subscriptionFlow.defaultFlow');
-      expand('subscriptionFlow.flowNumber(1)');
-
-      const defaultBlock = screen.getByRole('region', {
-        name: 'subscriptionFlow.defaultFlow',
-      });
-      const customBlock = screen.getByRole('region', {
-        name: 'subscriptionFlow.flowNumber(1)',
-      });
-
-      expect(within(defaultBlock).queryByText(dayLabel(-25))).toBeNull();
-      expect(within(customBlock).getByText(dayLabel(-25))).toBeTruthy();
-      expect(within(customBlock).queryByText(dayLabel(25))).toBeNull();
+      expect(navigate).toHaveBeenCalledWith('/communicationflows');
     });
 
     it('removes the custom mail of a day from the timeline', () => {
       renderPage();
-      expand('subscriptionFlow.defaultFlow');
-      expand('subscriptionFlow.flowNumber(1)');
 
-      const defaultBlock = screen.getByRole('region', {
-        name: 'subscriptionFlow.defaultFlow',
-      });
-      const customBlock = screen.getByRole('region', {
-        name: 'subscriptionFlow.flowNumber(1)',
-      });
-      const removeButtons = within(customBlock).getAllByLabelText(
+      const removeButtons = screen.getAllByLabelText(
         'subscriptionFlow.deleteMail'
       );
 
-      expect(
-        within(defaultBlock).queryAllByLabelText('subscriptionFlow.deleteMail')
-      ).toHaveLength(0);
       expect(removeButtons).toHaveLength(1);
 
       fireEvent.click(removeButtons[0]);
@@ -583,6 +583,25 @@ describe('SubscriptionFlowList', () => {
       expect(
         mutationFor(DeleteSubscriptionIntervalDocument)
       ).toHaveBeenCalledWith({ variables: { id: 'i-3' } });
+    });
+  });
+
+  describe('for a flow that does not exist', () => {
+    beforeEach(() => {
+      mockedUseParams.mockReturnValue({ id: 'gone' });
+      mockQueries([defaultFlow, customFlow]);
+    });
+
+    it('says so and leads back to the overview', () => {
+      renderPage();
+
+      expect(screen.getByText('subscriptionFlow.notFound')).toBeTruthy();
+      expect(screen.queryByRole('region')).toBeNull();
+      expect(
+        screen
+          .getByRole('link', { name: 'subscriptionFlow.overview.back' })
+          .getAttribute('href')
+      ).toBe('/communicationflows');
     });
   });
 });
