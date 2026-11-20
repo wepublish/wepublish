@@ -543,16 +543,36 @@ describe('SubscriptionFlowOverview', () => {
     const toggleOf = (name: string) =>
       within(rowOf(name)).getByRole('switch', {
         name: 'subscriptionFlow.overview.active',
-      }) as HTMLInputElement;
+      });
+
+    const isOn = (name: string) =>
+      toggleOf(name).getAttribute('aria-checked') === 'true';
 
     beforeEach(() =>
       mutationFor(SetSubscriptionFlowActiveDocument).mockReset()
     );
 
+    it('shows the state as a tick: filled while the flow is on, empty while it is off', () => {
+      mockQueries([
+        defaultFlow,
+        printFlow,
+        { ...digitalFlow, active: false } as SubscriptionFlowFragment,
+      ]);
+      renderOverview();
+
+      expect(toggleOf('Print').tagName).toBe('BUTTON');
+      expect(
+        toggleOf('Print').querySelector('[data-checked="true"]')
+      ).toBeTruthy();
+      expect(
+        toggleOf('Digital').querySelector('[data-checked="false"]')
+      ).toBeTruthy();
+    });
+
     it('has a switch for every flow but the default one', () => {
       renderOverview();
 
-      expect(toggleOf('Print').checked).toBe(true);
+      expect(isOn('Print')).toBe(true);
       expect(
         within(rowOf('subscriptionFlow.overview.defaultFlow')).queryByRole(
           'switch'
@@ -610,7 +630,7 @@ describe('SubscriptionFlowOverview', () => {
       renderOverview();
 
       expect(rowOf('Print').className).toContain('inactive-row');
-      expect(toggleOf('Print').checked).toBe(false);
+      expect(isOn('Print')).toBe(false);
 
       fireEvent.click(toggleOf('Print'));
 
