@@ -10,7 +10,6 @@ import {
   DialogTitle,
   Drawer,
   MenuItem,
-  Switch,
   Tab,
   Tabs,
   TextField,
@@ -53,6 +52,10 @@ import {
 } from '@wepublish/ui/editor';
 import { useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import {
+  IoMdCheckmarkCircle,
+  IoMdCheckmarkCircleOutline,
+} from 'react-icons/io';
 import { MdAdd, MdDelete, MdEdit, MdWarningAmber } from 'react-icons/md';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { DEFAULT_MUTATION_OPTIONS } from '../common';
@@ -467,17 +470,28 @@ function FlowTable() {
 
           {/* The default flow is what every subscription falls back to. */}
           {!row.isDefault && canSwitch && (
-            <Switch
-              size="small"
-              checked={row.active}
-              onChange={() => askToSwitch(row)}
-              slotProps={{
-                input: {
-                  role: 'switch',
-                  'aria-label': t('subscriptionFlow.overview.active'),
-                },
-              }}
-            />
+            // A tick with two states, like the one that marks the chosen
+            // template in the chooser.
+            <IconButtonTooltip
+              caption={
+                row.active ?
+                  t('subscriptionFlow.overview.switchOff')
+                : t('subscriptionFlow.overview.switchOn')
+              }
+            >
+              <IconButton
+                size="small"
+                role="switch"
+                aria-checked={row.active}
+                aria-label={t('subscriptionFlow.overview.active')}
+                color={row.active ? 'primary' : 'default'}
+                onClick={() => askToSwitch(row)}
+              >
+                {row.active ?
+                  <IoMdCheckmarkCircle data-checked="true" />
+                : <IoMdCheckmarkCircleOutline data-checked="false" />}
+              </IconButton>
+            </IconButtonTooltip>
           )}
 
           {!row.isDefault && canDelete && (
