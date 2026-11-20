@@ -27,6 +27,12 @@ import {
   shortestPeriodicity,
 } from '@wepublish/utils/api';
 import { startOfDay, subDays } from 'date-fns';
+import { FeaturesService } from '@wepublish/features/api';
+import {
+  flowLegacyWhere,
+  isForLegacyAndOthers,
+  LEGACY_AND_OTHERS,
+} from '../subscription/legacy-subscription';
 
 const SUBSCRIPTION_EVENT_MAX_DAYS_AFTER = 90;
 
@@ -39,6 +45,8 @@ type FlowConditions = {
   paymentMethods: { id: string }[];
   periodicities: PaymentPeriodicity[];
   autoRenewal: boolean[];
+  /** Legacy subscriptions, the others, or both (the default). */
+  legacy?: boolean[];
 };
 
 /** The earliest day an event of a flow may lie on, and what holds it there. */
@@ -64,8 +72,11 @@ export function subscriptionsOfFlow(
   // member plan's flow without a value matches nothing.
   const narrows = (values: unknown[]) =>
     !flow.allMemberPlans || values.length > 0;
+  // Nothing to add for a flow for both; never an empty AND either.
+  const legacy = flowLegacyWhere(flow.legacy ?? LEGACY_AND_OTHERS);
 
   return {
+    ...(legacy.length > 0 && { AND: legacy }),
     memberPlanID: flow.memberPlanId ?? undefined,
     ...(narrows(flow.paymentMethods) && {
       paymentMethodID: {
@@ -99,7 +110,10 @@ type CountableFlow = FlowConditions & {
 
 @Injectable()
 export class SubscriptionFlowService {
-  constructor(private prismaService: PrismaClient) {}
+  constructor(
+    private prismaService: PrismaClient,
+    private features: FeaturesService
+  ) {}
 
   /**
    * How many subscriptions a flow can still send a message to: those still
@@ -363,6 +377,8 @@ export class SubscriptionFlowService {
       );
     }
 
+    await this.assertLegacyAllowed(flow.legacy);
+
     if (await this.filterHasOverlap(flow, flow)) {
       throw new BadRequestException(
         "You can't create this flow because there is a filter overlap!"
@@ -388,6 +404,7 @@ export class SubscriptionFlowService {
         },
         periodicities: flow.periodicities,
         autoRenewal: flow.autoRenewal,
+        legacy: flow.legacy ?? [...LEGACY_AND_OTHERS],
         intervals: {
           create: [
             {
@@ -409,6 +426,8 @@ export class SubscriptionFlowService {
   }
 
   async updateFlow(flow: SubscriptionFlowModelUpdateInput) {
+    await this.assertLegacyAllowed(flow.legacy);
+
     const originalFlow = await this.prismaService.subscriptionFlow.findUnique({
       where: {
         id: flow.id,
@@ -484,6 +503,7 @@ export class SubscriptionFlowService {
             : undefined,
           periodicities: flow.periodicities,
           autoRenewal: flow.autoRenewal,
+          legacy: flow.legacy,
         },
       }),
     ]);
@@ -777,6 +797,31 @@ export class SubscriptionFlowService {
     }
   }
 
+  /**
+   * A flow has to be for somebody, and telling legacy subscriptions apart is
+   * only possible where the editor shows it.
+   */
+  private async assertLegacyAllowed(legacy: boolean[] | undefined) {
+    if (!legacy) {
+      return;
+    }
+
+    if (!legacy.length) {
+      throw new BadRequestException(
+        'A subscription flow has to be for legacy subscriptions, the others, or both'
+      );
+    }
+
+    if (
+      !isForLegacyAndOthers(legacy) &&
+      !(await this.features.isEnabled('legacy-subscriptions'))
+    ) {
+      throw new BadRequestException(
+        'Flows for legacy subscriptions need the legacy-subscriptions feature'
+      );
+    }
+  }
+
   private async filterHasOverlap(
     of: { memberPlanId?: string | null; allMemberPlans?: boolean | null },
     newFlow: Partial<SubscriptionFlowModelUpdateInput>
@@ -806,8 +851,11 @@ export class SubscriptionFlowService {
         },
         periodicities: true,
         autoRenewal: true,
+        legacy: true,
       },
     });
+
+    const own = allFlows.find(flow => flow.id === newFlow.id);
 
     for (const flow of allFlows) {
       // skip itself
@@ -824,12 +872,19 @@ export class SubscriptionFlowService {
       const existingAr = new Set(flow.autoRenewal);
       const newAr = new Set(newFlow.autoRenewal);
 
+      // An update that leaves legacy alone keeps what the flow has; only a new
+      // flow falls back to being for both.
+      const newLegacy = new Set(
+        newFlow.legacy ?? own?.legacy ?? LEGACY_AND_OTHERS
+      );
+
       // Sharing values in every condition means some subscription would
       // fall into both flows.
       if (
         shares(newPM, existingPM) &&
         shares(newPe, existingPe) &&
-        shares(newAr, existingAr)
+        shares(newAr, existingAr) &&
+        shares(newLegacy, new Set(flow.legacy))
       ) {
         return true;
       }

@@ -1,6 +1,7 @@
 import { SubscriptionFlowFragment } from '@wepublish/editor/api';
 
 import { isNonUserEvent, USER_ACTION_EVENTS } from './flow-events';
+import { legacyChoiceOf } from './filter/flow-filters';
 
 type Translate = (key: string, options?: Record<string, unknown>) => string;
 
@@ -48,6 +49,11 @@ export const conditionsSummary = (
         t(`subscriptionFlow.overview.renewal.${autoRenewal}`)
       ),
       'renewal'
+    ),
+    // Shown whether or not the feature is on: a narrowed flow must never
+    // read like one for everybody.
+    legacyChoiceOf(flow.legacy) === 'all' ? '' : (
+      t(`subscriptionFlow.legacyFilter.${legacyChoiceOf(flow.legacy)}`)
     ),
   ]
     .filter(Boolean)

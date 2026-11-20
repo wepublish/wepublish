@@ -14,6 +14,7 @@ import {
   SubscriptionInterval,
 } from '@prisma/client';
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { isLegacySubscription } from '../subscription/legacy-subscription';
 
 /**
  * This class loads all subscription flows and allows filtering by member plan,
@@ -85,7 +86,7 @@ export class SubscriptionEventDictionary {
 
   /**
    * Try to get the MailTemplates for a specific filter of [memberPlan,
-   * paymentMethod, periodicity, autoRenewal]. You additionally need to pass
+   * paymentMethod, periodicity, autoRenewal, legacy]. You additionally need to pass
    * either `daysAwayFromEnding` or `events` to filter further. If any
    * filter leads to an empty result set, the templates of the default flow are
    * returned.
@@ -121,7 +122,8 @@ export class SubscriptionEventDictionary {
           query.paymentMethodId
         ) &&
         takes(flow.allMemberPlans, flow.periodicities, query.periodicity) &&
-        takes(flow.allMemberPlans, flow.autoRenewal, query.autorenwal)
+        takes(flow.allMemberPlans, flow.autoRenewal, query.autorenwal) &&
+        takes(flow.allMemberPlans, flow.legacy, query.legacy)
     );
     // A flow of the subscription's own plan comes before one for all plans.
     const ofPlan = matching.filter(
@@ -266,6 +268,7 @@ export class SubscriptionEventDictionary {
     const autoRenewal = { has: subsciption.autoRenew };
     const periodicities = { has: subsciption.paymentPeriodicity };
     const paymentMethods = { some: { id: subsciption.paymentMethodID } };
+    const legacy = { has: isLegacySubscription(subsciption) };
 
     // The same order as getActionsForSubscriptions: a flow of the plan, then
     // one for all plans, then the default flow.
@@ -281,6 +284,7 @@ export class SubscriptionEventDictionary {
           autoRenewal,
           periodicities,
           paymentMethods,
+          legacy,
         },
         include,
       })) ??
@@ -294,6 +298,7 @@ export class SubscriptionEventDictionary {
             { OR: [{ autoRenewal: { isEmpty: true } }, { autoRenewal }] },
             { OR: [{ periodicities: { isEmpty: true } }, { periodicities }] },
             { OR: [{ paymentMethods: { none: {} } }, { paymentMethods }] },
+            { OR: [{ legacy: { isEmpty: true } }, { legacy }] },
           ],
         },
         include,

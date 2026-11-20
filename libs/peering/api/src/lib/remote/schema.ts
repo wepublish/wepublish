@@ -2498,6 +2498,8 @@ export type MailAudienceInput = {
   hasReplacedSubscription?: InputMaybe<Scalars['Boolean']['input']>;
   /** Subscribers audience only: true keeps only subscriptions that have given notice, including cancellations that only take effect in the future; false keeps the rest. */
   isCanceled?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Subscribers and win-back audience: true keeps only legacy subscriptions, imported from another system and not paid for here yet; false keeps the rest. */
+  isLegacy?: InputMaybe<Scalars['Boolean']['input']>;
   /** Subscribers audience only: true keeps only subscriptions that are currently paid up (started and paidUntil in the future); false keeps the rest. Grace periods are not considered. */
   isPaid?: InputMaybe<Scalars['Boolean']['input']>;
   /** Applies to every base: which mails the person did or did not receive. An empty list means no restriction. */
@@ -4572,6 +4574,7 @@ export type MutationCreateSubscriptionArgs = {
 export type MutationCreateSubscriptionFlowArgs = {
   allMemberPlans?: InputMaybe<Scalars['Boolean']['input']>;
   autoRenewal: Array<Scalars['Boolean']['input']>;
+  legacy?: InputMaybe<Array<Scalars['Boolean']['input']>>;
   memberPlanId?: InputMaybe<Scalars['String']['input']>;
   paymentMethodIds: Array<Scalars['String']['input']>;
   periodicities: Array<PaymentPeriodicity>;
@@ -5784,6 +5787,7 @@ export type MutationUpdateSubscriptionArgs = {
 export type MutationUpdateSubscriptionFlowArgs = {
   autoRenewal?: InputMaybe<Array<Scalars['Boolean']['input']>>;
   id: Scalars['String']['input'];
+  legacy?: InputMaybe<Array<Scalars['Boolean']['input']>>;
   paymentMethodIds?: InputMaybe<Array<Scalars['String']['input']>>;
   periodicities?: InputMaybe<Array<PaymentPeriodicity>>;
 };
@@ -7396,7 +7400,11 @@ export type PublicSubscription = HasMemberPlan & HasPaymentMethod & HasUser & {
   externalReward?: Maybe<Scalars['String']['output']>;
   goodie?: Maybe<Goodie>;
   id: Scalars['String']['output'];
+  /** When the subscription was imported from another system. Null for a subscription created here. */
+  importedAt?: Maybe<Scalars['DateTime']['output']>;
   isActive: Scalars['Boolean']['output'];
+  /** Imported from another system and not paid for here yet. The first payment registered here ends it. */
+  legacy: Scalars['Boolean']['output'];
   memberPlan: MemberPlan;
   memberPlanID: Scalars['String']['output'];
   modifiedAt: Scalars['DateTime']['output'];
@@ -8716,6 +8724,7 @@ export type QuerySubscriptionsAsCsvArgs = {
   deactivationDateTo?: InputMaybe<DateFilter>;
   deactivationReason?: InputMaybe<Scalars['String']['input']>;
   extendable?: InputMaybe<Scalars['Boolean']['input']>;
+  legacy?: InputMaybe<Scalars['Boolean']['input']>;
   memberPlanID?: InputMaybe<Scalars['String']['input']>;
   paidUntilFrom?: InputMaybe<DateFilter>;
   paidUntilTo?: InputMaybe<DateFilter>;
@@ -9601,6 +9610,8 @@ export type SubscriptionFilter = {
   deactivationDateTo?: InputMaybe<DateFilter>;
   deactivationReason?: InputMaybe<Scalars['String']['input']>;
   extendable?: InputMaybe<Scalars['Boolean']['input']>;
+  /** true keeps only legacy subscriptions: imported from another system and not paid for here yet. false keeps the rest. */
+  legacy?: InputMaybe<Scalars['Boolean']['input']>;
   memberPlanID?: InputMaybe<Scalars['String']['input']>;
   paidUntilFrom?: InputMaybe<DateFilter>;
   paidUntilTo?: InputMaybe<DateFilter>;
@@ -9643,6 +9654,8 @@ export type SubscriptionFlowModel = {
   earliestDay: SubscriptionFlowEarliestDay;
   id: Scalars['String']['output'];
   intervals: Array<SubscriptionInterval>;
+  /** Whom the flow is for: legacy subscriptions (true, imported and not paid for here yet), all the others (false), or both. */
+  legacy: Array<Scalars['Boolean']['output']>;
   memberPlan?: Maybe<MemberPlan>;
   numberOfSubscriptions: Scalars['Int']['output'];
   paymentMethods: Array<PaymentMethod>;

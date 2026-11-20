@@ -34,6 +34,7 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { Property } from '@wepublish/property/api';
+import { isLegacySubscription } from '../subscription/legacy-subscription';
 
 export type MemberPlanWithPaymentMethods = MemberPlan & {
   availablePaymentMethods: AvailablePaymentMethod[];
@@ -294,6 +295,7 @@ export class MemberContext implements MemberContextInterface {
         paymentMethodId: subscription.paymentMethodID,
         periodicity: subscription.paymentPeriodicity,
         autorenwal: subscription.autoRenew,
+        legacy: isLegacySubscription(subscription),
         events: [SubscriptionEvent.DEACTIVATION_UNPAID],
       });
       const subscriptionFlowActionDeactivationUnpaid = subscriptionFlows.find(
@@ -999,6 +1001,7 @@ export class MemberContext implements MemberContextInterface {
         autoRenew,
         extendable,
         currency: memberPlan.currency,
+        importedAt: now,
       },
       include: {
         deactivation: true,

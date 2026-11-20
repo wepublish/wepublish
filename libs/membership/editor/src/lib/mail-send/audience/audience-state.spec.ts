@@ -48,6 +48,29 @@ describe('toAudienceInput', () => {
     );
   });
 
+  it('narrows subscribers and win-back to legacy subscriptions', () => {
+    for (const base of [
+      MailRecipientBase.HasSubscription,
+      MailRecipientBase.EndedSubscription,
+    ]) {
+      expect(
+        toAudienceInput({ ...INITIAL_AUDIENCE_STATE, base, isLegacy: 'true' })
+      ).toEqual(expect.objectContaining({ isLegacy: true }));
+      expect(
+        toAudienceInput({ ...INITIAL_AUDIENCE_STATE, base, isLegacy: 'false' })
+      ).toEqual(expect.objectContaining({ isLegacy: false }));
+      expect(
+        toAudienceInput({ ...INITIAL_AUDIENCE_STATE, base }).isLegacy
+      ).toBeUndefined();
+    }
+  });
+
+  it('keeps legacy out of audiences that are not about subscriptions', () => {
+    expect(
+      toAudienceInput({ ...INITIAL_AUDIENCE_STATE, isLegacy: 'true' })
+    ).not.toHaveProperty('isLegacy');
+  });
+
   it('sends either the rolling window or the period for win-back, never both', () => {
     expect(
       toAudienceInput({

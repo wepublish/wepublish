@@ -17,6 +17,7 @@ import {
   MailRecipientBase,
   MailSubscriptionState,
 } from './mail-send.model';
+import { legacySubscriptionWhere } from '../subscription/legacy-subscription';
 
 export type SubscriptionWithRelations = Subscription & {
   memberPlan?: unknown;
@@ -873,6 +874,10 @@ export class MailSendRecipientService {
       and.push({ paymentPeriodicity: audience.paymentPeriodicity });
     }
 
+    if (audience.isLegacy != null) {
+      and.push(legacySubscriptionWhere(audience.isLegacy));
+    }
+
     return { AND: and };
   }
 
@@ -953,6 +958,10 @@ export class MailSendRecipientService {
         replacesSubscriptionID:
           audience.hasReplacedSubscription ? { not: null } : { equals: null },
       });
+    }
+
+    if (audience.isLegacy != null) {
+      and.push(legacySubscriptionWhere(audience.isLegacy));
     }
 
     return and.length ? { AND: and } : {};
