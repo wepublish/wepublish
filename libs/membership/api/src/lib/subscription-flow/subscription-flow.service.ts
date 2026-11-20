@@ -149,8 +149,9 @@ export class SubscriptionFlowService {
       ...(filter.periodicities?.length ?
         [{ paymentPeriodicity: { in: filter.periodicities } }]
       : []),
+      // A boolean has no `in` filter: one alternative per value instead.
       ...(filter.autoRenewal?.length ?
-        [{ autoRenew: { in: filter.autoRenewal } }]
+        [{ OR: filter.autoRenewal.map(autoRenew => ({ autoRenew })) }]
       : []),
     ];
 
