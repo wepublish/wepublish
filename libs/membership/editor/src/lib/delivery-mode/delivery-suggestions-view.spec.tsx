@@ -28,9 +28,51 @@ vi.mock('@apollo/client/react', async importOriginal => ({
   ],
 }));
 
+// The filters have their own tests; here they only hand over a value.
 vi.mock('@wepublish/ui/editor', async importOriginal => ({
   ...(await importOriginal<typeof import('@wepublish/ui/editor')>()),
   useAuthorisation: () => allowed(),
+  MultiSelectFilter: ({
+    label,
+    options,
+    value,
+    onChange,
+  }: {
+    label: string;
+    options: { value: string; label: string }[];
+    value: string[];
+    onChange(value: string[]): void;
+  }) => (
+    <div aria-label={label}>
+      {options.map(option => (
+        <button
+          key={option.value}
+          aria-pressed={value.includes(option.value)}
+          onClick={() => onChange([...value, option.value])}
+        >
+          {option.label}
+        </button>
+      ))}
+    </div>
+  ),
+  DateRangeFilter: ({
+    label,
+    onChange,
+  }: {
+    label: string;
+    onChange(range: { from: Date | null; to: Date | null }): void;
+  }) => (
+    <button
+      onClick={() =>
+        onChange({
+          from: new Date(2026, 8, 1, 12),
+          to: new Date(2026, 8, 30, 12),
+        })
+      }
+    >
+      {label}
+    </button>
+  ),
 }));
 
 vi.mock('react-i18next', () => ({
@@ -53,14 +95,36 @@ const suggestion = {
   },
 };
 
-const answer = (name: string, options?: { variables?: { kind?: string } }) => {
+const answer = (
+  name: string,
+  options?: { variables?: { kind?: string; filter?: unknown } }
+) => {
   if (name === 'DeliverySuggestionCounts') {
-    return { data: { deliverySuggestionCounts: { toLetter: 1, toMail: 0 } } };
+    return { data: { deliverySuggestionCounts: { toLetter: 3, toMail: 0 } } };
+  }
+
+  if (name === 'DeliverySuggestionReasons') {
+    return {
+      data: {
+        deliverySuggestionReasons:
+          options?.variables?.kind === 'toLetter' ?
+            [
+              { reason: 'hardBounce', count: 2 },
+              { reason: 'placeholderEmail', count: 1 },
+            ]
+          : [],
+      },
+    };
   }
 
   return options?.variables?.kind === 'toLetter' ?
       {
-        data: { deliverySuggestions: { nodes: [suggestion], totalCount: 1 } },
+        data: {
+          deliverySuggestions: {
+            nodes: [suggestion],
+            totalCount: options.variables.filter ? 1 : 3,
+          },
+        },
         loading: false,
       }
     : {
@@ -84,6 +148,15 @@ const card = (move: string) =>
       new RegExp(`^deliveryChannel\\.suggestions\\.cardTitle:.*${move}`)
     )
     .closest('.MuiCard-root') as HTMLElement;
+
+const reasonLabel = (reason: string, count: number) =>
+  `deliveryChannel.suggestions.reasonFilter.${reason}:${JSON.stringify({
+    defaultValue: reason,
+  })} (${count})`;
+
+const lastVariables = (name: string) =>
+  queries.mock.calls.filter(([called]) => called === name).at(-1)?.[1]
+    ?.variables;
 
 describe('DeliverySuggestionsView', () => {
   beforeEach(() => {
@@ -113,7 +186,7 @@ describe('DeliverySuggestionsView', () => {
       .map(element => element.textContent);
 
     expect(titles).toEqual([
-      'deliveryChannel.suggestions.cardTitle:{"move":"deliveryMode.switchToLetter","count":1}',
+      'deliveryChannel.suggestions.cardTitle:{"move":"deliveryMode.switchToLetter","count":3}',
       'deliveryChannel.suggestions.cardTitle:{"move":"deliveryMode.switchToMail","count":0}',
     ]);
   });
@@ -193,7 +266,7 @@ describe('DeliverySuggestionsView', () => {
 
     fireEvent.click(
       within(card('switchToLetter')).getByRole('button', {
-        name: 'deliveryMode.confirmAll:{"count":1}',
+        name: 'deliveryMode.confirmAll:{"count":3}',
       })
     );
     fireEvent.click(
@@ -204,6 +277,163 @@ describe('DeliverySuggestionsView', () => {
       'ConfirmAllDeliverySuggestions',
       expect.objectContaining({ variables: { kind: 'toLetter' } })
     );
+  });
+
+  it('offers the reasons of a move with how many each', () => {
+    renderView();
+    const reasons = within(card('switchToLetter')).getByLabelText(
+      'deliveryChannel.suggestions.filter.reason'
+    );
+
+    expect(
+      within(reasons)
+        .getAllByRole('button')
+        .map(button => button.textContent)
+    ).toEqual([
+      reasonLabel('hardBounce', 2),
+      reasonLabel('placeholderEmail', 1),
+    ]);
+  });
+
+  it('lists only the suggestions of the picked reasons, from the first page', () => {
+    renderView();
+
+    fireEvent.click(
+      within(card('switchToLetter')).getByRole('button', {
+        name: reasonLabel('hardBounce', 2),
+      })
+    );
+
+    expect(lastVariables('DeliverySuggestions')).toEqual({
+      kind: 'toLetter',
+      skip: 0,
+      take: 20,
+      filter: { reasons: ['hardBounce'] },
+    });
+  });
+
+  it('limits by the email status date and the date added, whole days', () => {
+    renderView();
+    const letters = within(card('switchToLetter'));
+
+    fireEvent.click(
+      letters.getByRole('button', {
+        name: 'deliveryChannel.suggestions.filter.emailSince',
+      })
+    );
+    fireEvent.click(
+      letters.getByRole('button', {
+        name: 'deliveryChannel.suggestions.filter.created',
+      })
+    );
+
+    expect(lastVariables('DeliverySuggestions')).toEqual({
+      kind: 'toLetter',
+      skip: 0,
+      take: 20,
+      filter: {
+        emailSinceFrom: new Date(2026, 8, 1, 0, 0, 0, 0).toISOString(),
+        emailSinceTo: new Date(2026, 8, 30, 23, 59, 59, 999).toISOString(),
+        createdFrom: new Date(2026, 8, 1, 0, 0, 0, 0).toISOString(),
+        createdTo: new Date(2026, 8, 30, 23, 59, 59, 999).toISOString(),
+      },
+    });
+  });
+
+  it('applies all only of what the filter lists, and says so', () => {
+    renderView();
+    const letters = within(card('switchToLetter'));
+
+    fireEvent.click(
+      letters.getByRole('button', {
+        name: reasonLabel('hardBounce', 2),
+      })
+    );
+    fireEvent.click(
+      letters.getByRole('button', {
+        name: 'deliveryChannel.suggestions.confirmAllFiltered:{"count":1}',
+      })
+    );
+
+    expect(
+      screen.getByText('deliveryChannel.suggestions.confirmAllFilteredText')
+    ).toBeTruthy();
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'deliveryMode.confirmAllYes' })
+    );
+
+    expect(mutate).toHaveBeenCalledWith(
+      'ConfirmAllDeliverySuggestions',
+      expect.objectContaining({
+        variables: { kind: 'toLetter', filter: { reasons: ['hardBounce'] } },
+      })
+    );
+  });
+
+  it('says when the filter leaves nothing', () => {
+    queries.mockImplementation((name, options) =>
+      name === 'DeliverySuggestions' && options?.variables?.filter ?
+        {
+          data: { deliverySuggestions: { nodes: [], totalCount: 0 } },
+          loading: false,
+        }
+      : answer(name, options)
+    );
+    renderView();
+    const letters = within(card('switchToLetter'));
+
+    fireEvent.click(
+      letters.getByRole('button', {
+        name: reasonLabel('hardBounce', 2),
+      })
+    );
+
+    expect(
+      letters.getByText('deliveryChannel.suggestions.emptyFiltered')
+    ).toBeTruthy();
+    expect(
+      letters.queryByRole('button', { name: /confirmAll/ })
+    ).toBeNull();
+    // The filter stays, so it can be undone.
+    expect(
+      letters.getByLabelText('deliveryChannel.suggestions.filter.reason')
+    ).toBeTruthy();
+  });
+
+  it('keeps a picked reason visible after its suggestions are gone', () => {
+    const { rerender } = renderView();
+    fireEvent.click(
+      within(card('switchToLetter')).getByRole('button', {
+        name: reasonLabel('hardBounce', 2),
+      })
+    );
+
+    queries.mockImplementation((name, options) =>
+      name === 'DeliverySuggestionReasons' ?
+        {
+          data: {
+            deliverySuggestionReasons: [
+              { reason: 'placeholderEmail', count: 1 },
+            ],
+          },
+        }
+      : answer(name, options)
+    );
+    rerender(
+      <ThemeProvider theme={createTheme({ cssVariables: true })}>
+        <MemoryRouter>
+          <DeliverySuggestionsView />
+        </MemoryRouter>
+      </ThemeProvider>
+    );
+
+    expect(
+      within(card('switchToLetter')).getByRole('button', {
+        name: reasonLabel('hardBounce', 0),
+        pressed: true,
+      })
+    ).toBeTruthy();
   });
 
   it('says when a move has nothing open, and why that changes', () => {
