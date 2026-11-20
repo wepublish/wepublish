@@ -619,6 +619,20 @@ describe('SubscriptionEventDictionary', () => {
       ).resolves.toBe('default-SUBSCRIBE');
     });
 
+    // A switched-off flow passes its subscriptions to the next one.
+    it('skips an inactive flow', async () => {
+      await expect(
+        templateFor(
+          [
+            defaultFlow,
+            { ...planYearly, active: false },
+            { ...allPlansYearly, active: false },
+          ],
+          { memberplanId: 'plan-1' }
+        )
+      ).resolves.toBe('default-SUBSCRIBE');
+    });
+
     it('looks up the template of an event in the same order', async () => {
       prismaMock.subscriptionFlow
         .findFirst!.mockResolvedValueOnce(null)
@@ -648,12 +662,14 @@ describe('SubscriptionEventDictionary', () => {
 
       expect(planLookup).toMatchObject({
         default: false,
+        active: true,
         allMemberPlans: false,
         memberPlan: { id: 'plan-2' },
       });
       // Each condition: left open, or it has the subscription's value.
       expect(allPlansLookup).toEqual({
         default: false,
+        active: true,
         allMemberPlans: true,
         AND: [
           {

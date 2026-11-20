@@ -156,6 +156,8 @@ export type FlowRow = {
   isDefault: boolean;
   /** For the matching subscriptions of every member plan. */
   allMemberPlans: boolean;
+  /** Switched off flows are skipped; their subscriptions go to the next. */
+  active: boolean;
   memberPlanId?: string;
   /** The plan's name; "all member plans" for a flow for all of them. */
   memberPlanName?: string;
@@ -182,7 +184,9 @@ const byText = (a = '', b = '') =>
  */
 export const flowRows = (
   flows: SubscriptionFlowFragment[],
-  t: Translate
+  t: Translate,
+  /** Counts narrowed to a filter, by flow id; else each flow's own. */
+  counts?: Map<string, number>
 ): FlowRow[] =>
   flows
     .map(flow => {
@@ -193,6 +197,7 @@ export const flowRows = (
         flow,
         isDefault: flow.default,
         allMemberPlans: !!flow.allMemberPlans,
+        active: flow.active !== false,
         memberPlanId: flow.memberPlan?.id,
         memberPlanName:
           flow.allMemberPlans ?
@@ -209,7 +214,7 @@ export const flowRows = (
           : t('subscriptionFlow.overview.noMemberPlan'),
         conditions: conditionsSummary(flow, t),
         warnings: flowWarnings(flow, t),
-        subscriptions: flow.numberOfSubscriptions,
+        subscriptions: counts?.get(flow.id) ?? flow.numberOfSubscriptions,
         eventsWithTemplate: sending.length,
         eventsTotal:
           USER_ACTION_EVENTS.length +

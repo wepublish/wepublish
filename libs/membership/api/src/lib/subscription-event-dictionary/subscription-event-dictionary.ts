@@ -161,17 +161,21 @@ export class SubscriptionEventDictionary {
           },
         },
       })
-    ).map(flow => {
-      return {
-        ...flow,
-        actions: flow.intervals.map(int => ({
-          type: int.event,
-          daysAwayFromEnding: int.daysAwayFromEnding,
-          mailTemplateId: int.mailTemplate ? int.mailTemplate.id : null,
-          sendAsLetter: int.sendAsLetter,
-        })),
-      };
-    });
+    )
+      // A switched-off flow passes its subscriptions to the next one; the
+      // default flow is never off.
+      .filter(flow => flow.default || flow.active !== false)
+      .map(flow => {
+        return {
+          ...flow,
+          actions: flow.intervals.map(int => ({
+            type: int.event,
+            daysAwayFromEnding: int.daysAwayFromEnding,
+            mailTemplateId: int.mailTemplate ? int.mailTemplate.id : null,
+            sendAsLetter: int.sendAsLetter,
+          })),
+        };
+      });
 
     const defaultFlows = this.allFlows.filter(flow => flow.default);
 
@@ -269,6 +273,7 @@ export class SubscriptionEventDictionary {
       (await this.prismaService.subscriptionFlow.findFirst({
         where: {
           default: false,
+          active: true,
           allMemberPlans: false,
           memberPlan: {
             id: subsciption.memberPlanID,
@@ -283,6 +288,7 @@ export class SubscriptionEventDictionary {
       (await this.prismaService.subscriptionFlow.findFirst({
         where: {
           default: false,
+          active: true,
           allMemberPlans: true,
           AND: [
             { OR: [{ autoRenewal: { isEmpty: true } }, { autoRenewal }] },

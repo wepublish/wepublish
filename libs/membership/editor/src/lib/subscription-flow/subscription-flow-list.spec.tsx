@@ -517,6 +517,16 @@ describe('SubscriptionFlowPage', () => {
       ).toBeNull();
     });
 
+    it('says on its page that a flow is switched off', () => {
+      mockQueries([
+        defaultFlow,
+        { ...customFlow, active: false } as SubscriptionFlowFragment,
+      ]);
+      renderPage();
+
+      expect(screen.getByText('subscriptionFlow.inactiveNotice')).toBeTruthy();
+    });
+
     it('has no warning for a flow its plan fully offers', () => {
       renderPage();
 
