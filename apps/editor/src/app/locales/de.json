@@ -1939,7 +1939,11 @@
         "select": "Diese Vorlage wählen",
         "selectCurrent": "Diese Vorlage wählen (ist bereits gewählt)",
         "none": "Keine Mitteilung senden",
-        "create": "Neue Vorlage erstellen"
+        "create": "Neue Vorlage erstellen",
+        "columns": {
+          "template": "Vorlage",
+          "purpose": "Zweck"
+        }
       },
       "channels": "Zustellkanäle",
       "noLetterVersion": "Diese Vorlage hat keine Brief-Version. Füge sie in der Vorlage hinzu, damit Personen mit Zustellkanal Brief diese Mitteilung gedruckt bekommen; bis dahin erhalten sie die E-Mail.",
@@ -2960,15 +2964,6 @@
           "default": "Standard",
           "allMemberPlans": "Für alle Abo-Pläne",
           "memberPlan": "Abo-Plan «{{memberPlan}}»"
-        },
-        "filter": {
-          "warnings": "Hinweise",
-          "warningsOptions": {
-            "with": "Mit Hinweis",
-            "without": "Ohne Hinweis"
-          },
-          "subscriptions": "Betroffene Abos",
-          "subscriptionsOptions": { "with": "Mit Abos", "without": "Ohne Abos" }
         },
         "any": {
           "paymentMethods": "jede Zahlungsmethode",

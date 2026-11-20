@@ -1940,7 +1940,11 @@
         "select": "Choose this template",
         "selectCurrent": "Choose this template (already chosen)",
         "none": "Send no message",
-        "create": "Create new template"
+        "create": "Create new template",
+        "columns": {
+          "template": "Template",
+          "purpose": "Purpose"
+        }
       },
       "channels": "Delivery channels",
       "noLetterVersion": "This template has no letter version. Add one in the template so people on the letter channel get this message printed; until then they get the email.",
@@ -2961,18 +2965,6 @@
           "default": "Default",
           "allMemberPlans": "For all member plans",
           "memberPlan": "Member plan “{{memberPlan}}”"
-        },
-        "filter": {
-          "warnings": "Warnings",
-          "warningsOptions": {
-            "with": "With a warning",
-            "without": "Without a warning"
-          },
-          "subscriptions": "Affected subscriptions",
-          "subscriptionsOptions": {
-            "with": "With subscriptions",
-            "without": "Without subscriptions"
-          }
         },
         "any": {
           "paymentMethods": "any payment method",

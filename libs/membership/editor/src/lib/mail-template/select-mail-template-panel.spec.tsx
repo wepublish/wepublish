@@ -148,23 +148,35 @@ describe('SelectMailTemplatePanel', () => {
     const row = rowOf('Neue Rechnung');
 
     expect(within(row).getByText('Deine Rechnung')).toBeTruthy();
-    expect(within(row).getByText('Mit Zahlschein')).toBeTruthy();
     expect(
       within(row).getByText('mailTemplates.mailTypes.invoiceCreation')
     ).toBeTruthy();
   });
 
-  it('shows the subject before the description', () => {
+  it('heads the name column «template» and the purpose column «purpose», and leaves the description out', () => {
     renderPanel();
 
     const headers = screen
       .getAllByRole('columnheader')
-      .map(header => header.textContent);
+      .map(header => header.textContent?.trim());
 
-    expect(headers.indexOf('mailTemplates.subject')).toBeGreaterThan(-1);
-    expect(headers.indexOf('mailTemplates.subject')).toBeLessThan(
-      headers.indexOf('mailTemplates.description')
-    );
+    expect(headers.slice(0, 2)).toEqual([
+      'mailTemplateSelect.chooser.columns.template',
+      'mailTemplateSelect.chooser.columns.purpose',
+    ]);
+    expect(headers).toContain('mailTemplates.subject');
+    expect(headers).not.toContain('mailTemplates.description');
+    expect(
+      within(rowOf('Neue Rechnung')).queryByText('Mit Zahlschein')
+    ).toBeNull();
+  });
+
+  it('sets the name of a template in bold, as the heading of its row', () => {
+    renderPanel();
+
+    expect(
+      within(rowOf('Neue Rechnung')).getByText('Neue Rechnung').tagName
+    ).toBe('STRONG');
   });
 
   it('leaves the status and the member plans out, as columns and as filters', () => {

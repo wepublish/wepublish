@@ -8,4 +8,4 @@ actionRequired: false
 - **Where the subscriptions go.** While a flow is off, its subscriptions get the messages of the next matching flow: a flow for all member plans, otherwise the default flow. The default flow cannot be switched off.
 - **Overlaps.** A switched-off flow does not block others. Switching it on is refused if it would cover the same subscriptions as an active flow.
 - **“Affected subscriptions” counts who a flow still handles:** running subscriptions, and ended ones whose end lies within the flow's latest event, e.g. 5 days for “Deactivation due to unpaid invoice”. Subscriptions that ended long ago are no longer counted.
-- **The total in the header.** Each subscription is counted in exactly one flow, so the numbers add up. With filters set, every count follows them, and the total sums the rows shown.
+- **The total in the header.** Each subscription is counted in exactly one flow, so the numbers add up. When the list is filtered by member plan, every count follows the filter, and the total sums the rows shown.
