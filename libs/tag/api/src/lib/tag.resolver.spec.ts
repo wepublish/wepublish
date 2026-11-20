@@ -47,6 +47,29 @@ const TagList = `
   }
 `;
 
+const UpdateTagPage = `
+  mutation UpdateTagPage($id: String!, $pageId: String) {
+    updateTag(id: $id, pageId: $pageId) {
+      id
+      pageId
+    }
+  }
+`;
+
+const tagRow = {
+  id: 'id1',
+  tag: 'tag1',
+  createdAt: new Date('2023-01-01'),
+  description: [],
+  main: false,
+  modifiedAt: new Date('2023-01-01'),
+  peerId: null,
+  pageId: null,
+  type: TagType.Article,
+  color: '#ffffff',
+  slateDescription: [],
+};
+
 describe('TagResolver', () => {
   let app: INestApplication;
   let tagService: PartialMocked<TagService>;
@@ -104,6 +127,7 @@ describe('TagResolver', () => {
           main: false,
           modifiedAt: new Date('2023-01-01'),
           peerId: null,
+          pageId: null,
           type: TagType.Article,
           color: '#ffffff',
           slateDescription: [],
@@ -149,6 +173,7 @@ describe('TagResolver', () => {
           main: false,
           modifiedAt: new Date('2023-01-01'),
           peerId: null,
+          pageId: null,
           type: TagType.Article,
           color: '#ffffff',
           slateDescription: [],
@@ -161,6 +186,7 @@ describe('TagResolver', () => {
           main: false,
           modifiedAt: new Date('2023-01-01'),
           peerId: null,
+          pageId: null,
           type: TagType.Article,
           color: '#ffffff',
           slateDescription: [],
@@ -191,6 +217,69 @@ describe('TagResolver', () => {
         expect(urlAdapter.getTagURL?.mock.calls).toMatchSnapshot();
         expect(response.body.errors).toBeUndefined();
         expect(response.body.data).toMatchSnapshot();
+      });
+  });
+
+  test('sets the page that replaces the tag page', async () => {
+    tagService.updateTag?.mockResolvedValue({ ...tagRow, pageId: 'page-1' });
+
+    await request(app.getHttpServer())
+      .post('')
+      .send({
+        query: UpdateTagPage,
+        variables: { id: 'id1', pageId: 'page-1' },
+      })
+      .expect(response => {
+        expect(response.body.errors).toBeUndefined();
+        expect(tagService.updateTag).toHaveBeenCalledWith(
+          expect.objectContaining({ id: 'id1', pageId: 'page-1' })
+        );
+        expect(response.body.data.updateTag).toEqual({
+          id: 'id1',
+          pageId: 'page-1',
+        });
+      });
+  });
+
+  test('leaves the other fields alone when only the page changes', async () => {
+    tagService.updateTag?.mockResolvedValue({
+      ...tagRow,
+      main: true,
+      pageId: 'page-1',
+    });
+
+    await request(app.getHttpServer())
+      .post('')
+      .send({
+        query: UpdateTagPage,
+        variables: { id: 'id1', pageId: 'page-1' },
+      })
+      .expect(response => {
+        expect(response.body.errors).toBeUndefined();
+        expect(tagService.updateTag?.mock.lastCall?.[0]).not.toHaveProperty(
+          'main'
+        );
+      });
+  });
+
+  test('clears the page that replaces the tag page', async () => {
+    tagService.updateTag?.mockResolvedValue(tagRow);
+
+    await request(app.getHttpServer())
+      .post('')
+      .send({
+        query: UpdateTagPage,
+        variables: { id: 'id1', pageId: null },
+      })
+      .expect(response => {
+        expect(response.body.errors).toBeUndefined();
+        expect(tagService.updateTag).toHaveBeenCalledWith(
+          expect.objectContaining({ id: 'id1', pageId: null })
+        );
+        expect(response.body.data.updateTag).toEqual({
+          id: 'id1',
+          pageId: null,
+        });
       });
   });
 });

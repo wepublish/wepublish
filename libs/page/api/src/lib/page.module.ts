@@ -24,6 +24,7 @@ import {
   PageTemplateResolver,
 } from './page-template/page-template.resolver';
 import { PageTemplateService } from './page-template/page-template.service';
+import { TagPageResolver } from './tag-page.resolver';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { PageTemplateService } from './page-template/page-template.service';
     HasPageLcResolver,
     HasOptionalPageResolver,
     HasOptionalPageLcResolver,
+    TagPageResolver,
   ],
   exports: [PageDataloaderService, PageRevisionDataloaderService, PageService],
 })

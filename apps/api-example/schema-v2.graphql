@@ -3940,7 +3940,16 @@ type Mutation {
   createSyncProviderSetting(enabled: Boolean, id: String!, mailchimp_apiKey: String, mailchimp_defaultInterestGroupIds: [String!], mailchimp_extensions: JSONObject, mailchimp_interestGroupMappings: [JSONObject!], mailchimp_listId: String, mailchimp_mergeFieldMappings: [JSONObject!], name: String, type: SyncProviderType!): SettingSyncProvider!
 
   """Creates a new tag."""
-  createTag(color: Color, description: RichText, main: Boolean! = false, tag: String, type: TagType!): Tag!
+  createTag(
+    color: Color
+    description: RichText
+    main: Boolean! = false
+
+    """The page shown at the url of the tag instead of its list of articles."""
+    pageId: String
+    tag: String
+    type: TagType!
+  ): Tag!
 
   """Creates a token and returns it's secret once."""
   createToken(name: String!): TokenWithSecret!
@@ -4615,7 +4624,17 @@ type Mutation {
   ): [SystemMailModel!]!
 
   """Updates an existing tag."""
-  updateTag(color: Color, description: RichText, id: String!, main: Boolean = false, tag: String, type: TagType): Tag!
+  updateTag(
+    color: Color
+    description: RichText
+    id: String!
+    main: Boolean
+
+    """The page shown at the url of the tag instead of its list of articles."""
+    pageId: String
+    tag: String
+    type: TagType
+  ): Tag!
 
   """Updates an existing tracking pixel setting."""
   updateTrackingPixelSetting(id: String, name: String, prolitteris_memberNr: String, prolitteris_onlyPaidContentAccess: Boolean, prolitteris_password: String, prolitteris_publisherInternalKeyDomain: String, prolitteris_usePublisherInternalKey: Boolean, prolitteris_username: String): SettingTrackingPixelProvider!
@@ -7784,6 +7803,9 @@ type Tag {
   description: RichText
   id: String!
   main: Boolean!
+
+  """The page shown at the url of the tag instead of its list of articles."""
+  pageId: String
   tag: String
   type: TagType!
   url: String!

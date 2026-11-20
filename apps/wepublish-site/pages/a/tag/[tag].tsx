@@ -1,5 +1,6 @@
 import { useQuery } from '@apollo/client/react';
-import { getApiUrl } from '@wepublish/utils/website';
+import { PageContainer } from '@wepublish/page/website';
+import { getApiUrl, prefetchPageForTag } from '@wepublish/utils/website';
 import {
   ArticleListDocument,
   NavigationListDocument,
@@ -40,8 +41,10 @@ export default function TagPage({
     },
   });
 
+  const pageId = tagData.data?.tag?.pageId;
+
   const articles = useQuery(ArticleListDocument, {
-    skip: !tagData.data?.tag?.id,
+    skip: !tagData.data?.tag?.id || !!pageId,
     variables: {
       ...variables,
       filter: {
@@ -64,6 +67,16 @@ export default function TagPage({
     }),
     [articles.data, articles.loading, articles.error, locale]
   );
+
+  // An editor chose a page to show instead of the tag's articles.
+  if (pageId) {
+    return (
+      <PageContainer
+        id={pageId}
+        className={className}
+      />
+    );
+  }
 
   return (
     <Tag
@@ -111,19 +124,30 @@ export const getStaticProps = (async ({ params }) => {
     };
   }
 
-  const tagId = tagResult.data.tag.id;
+  const pageTag = tagResult.data.tag;
 
-  await Promise.all([
-    client.query({
-      query: ArticleListDocument,
-      variables: {
-        take,
-        skip: 0,
-        filter: {
-          tags: [tagId],
+  // The page an editor chose for the tag, or else the tag's articles.
+  const prefetchContent = async () => {
+    const pageForTag = await prefetchPageForTag(client, pageTag);
+
+    if (!pageForTag) {
+      await client.query({
+        query: ArticleListDocument,
+        variables: {
+          take,
+          skip: 0,
+          filter: {
+            tags: [pageTag.id],
+          },
         },
-      },
-    }),
+      });
+    }
+
+    return pageForTag;
+  };
+
+  const [pageForTag] = await Promise.all([
+    prefetchContent(),
     client.query({
       query: NavigationListDocument,
     }),
@@ -134,6 +158,7 @@ export const getStaticProps = (async ({ params }) => {
 
   const props = addClientCacheToProps(client, {
     tag: tag as string,
+    ...(pageForTag && { shell: pageForTag.shell }),
   });
 
   return {

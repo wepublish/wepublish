@@ -2955,6 +2955,8 @@
         "placeholder": "Name des Tags",
         "title": "Tags",
         "name": "Name",
+        "page": "Tag-Seite",
+        "pageInfo": "Erscheint unter der Adresse des Tags auf deiner Website anstelle der Liste aller Artikel mit diesem Tag. Leer lassen, um die Artikelliste zu zeigen.",
         "description": "Beschreibung",
         "markAsMain": "Als Haupt-Tag verwenden",
         "colorInfo": "Manche Website-Designs heben den Tag in dieser Farbe hervor, z. B. als Hintergrund des Tag-Labels.",

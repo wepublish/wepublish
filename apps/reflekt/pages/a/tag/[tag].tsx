@@ -1,6 +1,6 @@
 import { TagContainer } from '@wepublish/tag/website';
 import { TagAwareArticleListContext } from '@wepublish/tenant/reflekt';
-import { getApiUrl } from '@wepublish/utils/website';
+import { getApiUrl, prefetchPageForTag } from '@wepublish/utils/website';
 import {
   ArticleListDocument,
   NavigationListDocument,
@@ -77,19 +77,30 @@ export const getStaticProps = (async ({ params }) => {
     };
   }
 
-  const tagId = tagResult.data.tag.id;
+  const pageTag = tagResult.data.tag;
 
-  await Promise.all([
-    client.query({
-      query: ArticleListDocument,
-      variables: {
-        take,
-        skip: 0,
-        filter: {
-          tags: [tagId],
+  // The page an editor chose for the tag, or else the tag's articles.
+  const prefetchContent = async () => {
+    const pageForTag = await prefetchPageForTag(client, pageTag);
+
+    if (!pageForTag) {
+      await client.query({
+        query: ArticleListDocument,
+        variables: {
+          take,
+          skip: 0,
+          filter: {
+            tags: [pageTag.id],
+          },
         },
-      },
-    }),
+      });
+    }
+
+    return pageForTag;
+  };
+
+  const [pageForTag] = await Promise.all([
+    prefetchContent(),
     client.query({
       query: NavigationListDocument,
     }),
@@ -100,6 +111,7 @@ export const getStaticProps = (async ({ params }) => {
 
   const props = addClientCacheToProps(client, {
     tag: tag as string,
+    ...(pageForTag && { shell: pageForTag.shell }),
   });
 
   return {
