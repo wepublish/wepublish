@@ -2952,6 +2952,8 @@
         "allMemberPlans": "Alle Abo-Pläne",
         "subscriptionsSum": "Abos ({{sum}})",
         "active": "Aktiv",
+        "switchOff": "Ablauf ausschalten",
+        "switchOn": "Ablauf einschalten",
         "deactivateTitle": "Ablauf ausschalten?",
         "activateTitle": "Ablauf einschalten?",
         "deactivateQuestion": "Die {{count}} Abos dieses Ablaufs werden danach von anderen Abläufen übernommen.",

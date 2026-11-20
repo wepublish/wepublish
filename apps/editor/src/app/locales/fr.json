@@ -2952,6 +2952,8 @@
         "allMemberPlans": "Tous les plans d’abonnement",
         "subscriptionsSum": "Abonnements ({{sum}})",
         "active": "Actif",
+        "switchOff": "Désactiver le flux",
+        "switchOn": "Activer le flux",
         "deactivateTitle": "Désactiver le flux ?",
         "activateTitle": "Activer le flux ?",
         "deactivateQuestion": "Les {{count}} abonnements gérés par ce flux seront ensuite gérés par d’autres flux.",
