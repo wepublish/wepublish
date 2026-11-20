@@ -12,7 +12,7 @@ import {
   TwitterProvider,
 } from '@wepublish/ui/editor';
 import { Locale } from 'date-fns';
-import { de, enGB, fr } from 'date-fns/locale';
+import { de, enGB, es, fr } from 'date-fns/locale';
 import { registerLocale, setDefaultLocale } from 'react-datepicker';
 import { createRoot } from 'react-dom/client';
 import { useTranslation } from 'react-i18next';
@@ -64,7 +64,7 @@ if (sentryDSN) {
   Sentry.setTag('component', 'editor');
 }
 
-const DATE_LOCALES: Record<string, Locale> = { de, en: enGB, fr };
+const DATE_LOCALES: Record<string, Locale> = { de, en: enGB, fr, es };
 
 Object.entries(DATE_LOCALES).forEach(([language, locale]) =>
   registerLocale(language, locale)

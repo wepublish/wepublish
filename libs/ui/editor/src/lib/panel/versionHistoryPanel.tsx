@@ -18,7 +18,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { format, isAfter, isToday, isYesterday, Locale } from 'date-fns';
-import { de, enUS, fr } from 'date-fns/locale';
+import { de, enUS, es, fr } from 'date-fns/locale';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdHistory, MdPerson, MdRestore, MdVisibility } from 'react-icons/md';
@@ -38,6 +38,7 @@ const DATE_LOCALES: Record<string, Locale> = {
   en: enUS,
   de,
   fr,
+  es,
 };
 
 export interface VersionHistoryAuthor {
