@@ -26,18 +26,24 @@ const client = {
   deleteSubscriptionInterval: vi.fn(),
 };
 
-const interval = (sendAsLetter: boolean) =>
+const interval = (
+  sendAsLetter: boolean,
+  event: SubscriptionEvent = SubscriptionEvent.InvoiceCreation
+) =>
   ({
     object: {
       id: 'interval-1',
       daysAwayFromEnding: -14,
-      event: SubscriptionEvent.InvoiceCreation,
+      event,
       sendAsLetter,
       mailTemplate: { id: 'mt-1', name: 'Invoice' },
     },
   }) as any;
 
-const renderSelect = (subscriptionInterval?: any) =>
+const renderSelect = (
+  subscriptionInterval?: any,
+  event: SubscriptionEvent = SubscriptionEvent.InvoiceCreation
+) =>
   render(
     // The tooltip reads the theme, as it does in the app.
     <ThemeProvider theme={createTheme({ cssVariables: true })}>
@@ -48,7 +54,8 @@ const renderSelect = (subscriptionInterval?: any) =>
           }
           subscriptionInterval={subscriptionInterval}
           subscriptionFlow={{ id: 'flow-1' } as any}
-          event={SubscriptionEvent.InvoiceCreation}
+          event={event}
+          label="template"
         />
       </SubscriptionClientContext.Provider>
     </ThemeProvider>
@@ -102,5 +109,50 @@ describe('MailTemplateSelect letter switch', () => {
     expect(
       screen.queryByLabelText('mailTemplateSelect.sendAsLetter')
     ).toBeNull();
+  });
+});
+
+// Every flow needs «create invoice» and «deactivate unpaid»; the API refuses
+// to delete them. Choosing «no mail» there takes the template off and keeps
+// the event; on any other event the event goes, as it always did.
+describe('MailTemplateSelect without a template', () => {
+  beforeEach(() => vi.clearAllMocks());
+  afterEach(cleanup);
+
+  const chooseNoMail = () => {
+    fireEvent.mouseDown(screen.getByLabelText('template'));
+    fireEvent.click(
+      screen.getByRole('option', {
+        name: /mailTemplateSelect.noMailSentSelectNow/,
+      })
+    );
+  };
+
+  it.each([
+    SubscriptionEvent.InvoiceCreation,
+    SubscriptionEvent.DeactivationUnpaid,
+  ])('keeps the required event %s and only takes its template off', event => {
+    renderSelect(interval(true, event), event);
+
+    chooseNoMail();
+
+    expect(client.updateSubscriptionInterval).toHaveBeenCalledWith({
+      variables: { id: 'interval-1', mailTemplateId: null },
+    });
+    expect(client.deleteSubscriptionInterval).not.toHaveBeenCalled();
+  });
+
+  it('removes any other event', () => {
+    renderSelect(
+      interval(false, SubscriptionEvent.RenewalSuccess),
+      SubscriptionEvent.RenewalSuccess
+    );
+
+    chooseNoMail();
+
+    expect(client.deleteSubscriptionInterval).toHaveBeenCalledWith({
+      variables: { id: 'interval-1' },
+    });
+    expect(client.updateSubscriptionInterval).not.toHaveBeenCalled();
   });
 });
