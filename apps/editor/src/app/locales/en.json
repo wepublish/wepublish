@@ -2952,6 +2952,8 @@
         "allMemberPlans": "All member plans",
         "subscriptionsSum": "Subscriptions ({{sum}})",
         "active": "Active",
+        "switchOff": "Switch flow off",
+        "switchOn": "Switch flow on",
         "deactivateTitle": "Switch flow off?",
         "activateTitle": "Switch flow on?",
         "deactivateQuestion": "The {{count}} subscriptions handled by this flow will then be handled by other flows.",
