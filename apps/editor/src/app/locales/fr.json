@@ -2122,6 +2122,7 @@
         "system": "Comme le système"
       },
       "logout": "Déconnexion",
+      "websiteLogin": "Ouvrir le site en étant connecté",
       "mailTemplates": "Modèles de message",
       "memberPlans": "Plans d’abonnement",
       "navigations": "Menus",

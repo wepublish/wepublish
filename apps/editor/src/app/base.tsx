@@ -231,6 +231,7 @@ import { ColorModePreference, useColorMode } from './colorMode';
 import { useMobileNavigation } from './mobileNavigation';
 import { useSidebarMenu } from './sidebarMenu';
 import { Logo } from './ui/logo';
+import { WebsiteLoginButton } from './websiteLoginButton';
 
 export interface BaseProps {
   children?: ReactNode;
@@ -1665,6 +1666,8 @@ export function Base({ children }: BaseProps) {
                 </MenuItem>
               )}
             </ClickMenu>
+
+            <WebsiteLoginButton />
 
             <ClickMenu
               anchorOrigin={{ vertical: 'top', horizontal: 'left' }}

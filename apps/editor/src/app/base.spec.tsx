@@ -14,6 +14,7 @@ import { Base } from './base';
 import { createEditorTheme } from './theme';
 
 vi.mock('./impersonationBar', () => ({ ImpersonationBar: () => null }));
+vi.mock('./websiteLoginButton', () => ({ WebsiteLoginButton: () => null }));
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
