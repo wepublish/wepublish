@@ -916,6 +916,12 @@ describe('Subscribe', () => {
       expect(subscribeButton()).toBeDisabled();
     });
 
+    it('does not wait for the challenge', () => {
+      renderLoggedIn({ challenge: loading as Props['challenge'] });
+
+      expect(subscribeButton()).toBeEnabled();
+    });
+
     it('shows the error when subscribing fails', async () => {
       const { user, onSubscribe } = renderLoggedIn();
 
