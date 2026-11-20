@@ -21,7 +21,10 @@ import {
 } from '@wepublish/ui/editor';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { IoMdCheckmarkCircle } from 'react-icons/io';
+import {
+  IoMdCheckmarkCircle,
+  IoMdCheckmarkCircleOutline,
+} from 'react-icons/io';
 import { MdAdd, MdClose, MdUnsubscribe } from 'react-icons/md';
 import {
   TemplateFilters,
@@ -199,13 +202,19 @@ export function SelectMailTemplatePanel({
           <IconButton
             size="small"
             aria-label={selectHint(row)}
+            aria-pressed={row.id === selectedId}
+            // Ticked for the template the event has now, an empty tick for
+            // the ones that can be chosen instead.
+            color={row.id === selectedId ? 'primary' : 'default'}
             onClick={event => {
               // The row chooses on click as well.
               event.stopPropagation();
               choose(row.id);
             }}
           >
-            <IoMdCheckmarkCircle />
+            {row.id === selectedId ?
+              <IoMdCheckmarkCircle data-checked="true" />
+            : <IoMdCheckmarkCircleOutline data-checked="false" />}
           </IconButton>
         </IconButtonTooltip>
       ),
