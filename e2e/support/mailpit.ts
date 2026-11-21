@@ -7,6 +7,7 @@ type MailpitMessage = {
   To: { Address: string }[];
   HTML: string;
   Text: string;
+  Attachments?: { PartID: string; FileName: string; ContentType: string }[];
 };
 
 /** Reads mails the API sent to mailpit (docker-compose service `mailpit`). */
@@ -40,7 +41,24 @@ export class MailpitInbox implements Inbox {
       to: message.To.map(({ Address }) => Address),
       html: message.HTML,
       text: message.Text,
+      attachments: await Promise.all(
+        (message.Attachments ?? []).map(async ({ PartID, FileName, ContentType }) => ({
+          filename: FileName,
+          contentType: ContentType,
+          content: await this.part(message.ID, PartID),
+        }))
+      ),
     };
+  }
+
+  private async part(messageId: string, partId: string) {
+    const response = await this.request.get(`${this.url}/api/v1/message/${messageId}/part/${partId}`);
+
+    if (!response.ok()) {
+      throw new Error(`mailpit has no part ${partId} of mail ${messageId}: HTTP ${response.status()}`);
+    }
+
+    return Buffer.from(await response.body());
   }
 
   close() {

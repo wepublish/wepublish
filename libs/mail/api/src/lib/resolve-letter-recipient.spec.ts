@@ -25,7 +25,9 @@ function setup({
   preference = { channel: MailChannel.letter },
   configured = true,
   canReceive = true,
+  letterVariant = { id: 'variant-1' },
 }: {
+  letterVariant?: { id: string } | null;
   preference?: { channel: MailChannel } | null;
   configured?: boolean;
   canReceive?: boolean;
@@ -39,6 +41,7 @@ function setup({
   const prisma = {
     user: { findUnique: vi.fn(async () => ({ ...user, address })) },
     userDeliveryPreference: { findUnique: vi.fn(async () => preference) },
+    mailTemplateVariant: { findUnique: vi.fn(async () => letterVariant) },
   };
 
   const resolve = (
@@ -48,6 +51,7 @@ function setup({
       prisma: prisma as any,
       letterSender,
       recipient: user,
+      mailTemplateId: 'template-1',
       asLetter: true,
       ...overrides,
     });
@@ -76,6 +80,34 @@ describe('resolveLetterRecipient', () => {
       expect.anything(),
       { withPaymentSlip: true }
     );
+  });
+
+  it('is nobody when the template was not written as a letter, so the mail goes out', async () => {
+    const { resolve, prisma, letterSender } = setup({ letterVariant: null });
+    const logger = { warn: vi.fn() };
+
+    await expect(resolve({ logger: logger as any })).resolves.toBeNull();
+    expect(prisma.mailTemplateVariant.findUnique).toHaveBeenCalledWith({
+      where: {
+        templateId_channel: {
+          templateId: 'template-1',
+          channel: MailChannel.letter,
+        },
+      },
+    });
+    expect(letterSender.canReceiveLetters).not.toHaveBeenCalled();
+    expect(logger.warn).toHaveBeenCalledWith(
+      expect.stringContaining('template-1')
+    );
+  });
+
+  it('does not look the letter version up for a user who gets mails', async () => {
+    const { resolve, prisma } = setup({
+      preference: { channel: MailChannel.mail },
+    });
+
+    await expect(resolve()).resolves.toBeNull();
+    expect(prisma.mailTemplateVariant.findUnique).not.toHaveBeenCalled();
   });
 
   it('is nobody for an event that is not switched to letters', async () => {

@@ -134,6 +134,14 @@ describe('BrevoMailProvider', () => {
       ]);
     });
 
+    it('sends no attachment field for a mail without any', async () => {
+      await (await makeProvider()).sendMail({ ...sendProps, attachments: [] });
+
+      expect(JSON.parse(calls[0].init.body as string)).not.toHaveProperty(
+        'attachment'
+      );
+    });
+
     it('says what Brevo answered when it refuses a mail', async () => {
       answers.push({
         status: 400,

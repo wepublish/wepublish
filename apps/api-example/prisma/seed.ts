@@ -1794,11 +1794,25 @@ Du erhältst diese Nachricht an {{user_email}}.`,
 ];
 
 async function seedMailTemplates(prisma: PrismaClient) {
-  for (const { id, ...content } of SEED_MAIL_TEMPLATES) {
+  for (const {
+    id,
+    subject,
+    htmlContent,
+    textContent,
+    ...content
+  } of SEED_MAIL_TEMPLATES) {
+    // The seeded templates are emails; a letter version is written in the
+    // editor where a medium prints.
     await prisma.mailTemplate.upsert({
       where: { id },
       update: {},
-      create: { id, ...content },
+      create: {
+        id,
+        ...content,
+        variants: {
+          create: { channel: 'mail', subject, htmlContent, textContent },
+        },
+      },
     });
 
     console.log(`  ${content.name} — ${content.description}`);

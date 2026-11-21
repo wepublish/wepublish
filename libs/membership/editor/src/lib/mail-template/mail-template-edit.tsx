@@ -9,17 +9,26 @@ import {
   CardContent,
   CardHeader,
   Dialog,
+  DialogActions,
   DialogContent,
+  DialogContentText,
   DialogTitle,
   FormControl,
+  FormControlLabel,
   MenuItem,
+  Radio,
+  RadioGroup,
   Stack,
+  Tab,
+  Tabs,
   TextField,
   Typography,
 } from '@mui/material';
 import { useApolloClient } from '@apollo/client/react';
 import {
   CreateMailTemplateDocument,
+  DeleteMailTemplateVariantDocument,
+  MailChannel,
   MailTemplateByIdDocument,
   MailTemplateContext,
   MailTemplateLetterPreviewDocument,
@@ -43,7 +52,7 @@ import {
   enqueueSnackbar,
   PageTitle,
 } from '@wepublish/ui/editor';
-import { useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { DEFAULT_MUTATION_OPTIONS } from '../common';
@@ -67,6 +76,18 @@ import { MailPreview } from './mail-preview';
 import { MAIL_PLACEHOLDER_CONTEXTS } from './mail-placeholders';
 import { PlaceholderPicker } from './placeholder-picker';
 import { testMailInput } from './test-mail-input';
+import {
+  allowsLetterVersion,
+  draftsFromVariants,
+  newVersionDraft,
+  removedChannels,
+  sharedLetterDraft,
+  variantInputs,
+  VERSION_ORDER,
+  VersionDraft,
+  VersionDrafts,
+} from './template-versions';
+import { deliveryChannel } from '../delivery-mode/channels';
 import {
   CanCreateMailTemplates,
   CanGetMailTemplates,
@@ -110,7 +131,16 @@ function MailTemplateEdit() {
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [subject, setSubject] = useState('');
+  // What the template says on each channel. The body of the version being
+  // edited lives in `htmlRef` until the author leaves it or saves.
+  const [storedDrafts, setDrafts] = useState<VersionDrafts>(() => ({
+    [MailChannel.Mail]: newVersionDraft(),
+  }));
+  const [chosenChannel, setActiveChannel] = useState(MailChannel.Mail);
+  // The author took the letter off a new template: it does not come back.
+  const [letterDeclined, setLetterDeclined] = useState(false);
+  // The versions the api has, so the ones taken away here can be deleted.
+  const [savedChannels, setSavedChannels] = useState<MailChannel[]>([]);
   const [textContent, setTextContent] = useState('');
   const [bodyMode, setBodyMode] = useState<'visual' | 'html' | 'text'>(
     'visual'
@@ -137,6 +167,13 @@ function MailTemplateEdit() {
     bodyMode: `${fieldId}-body-mode`,
     letterLayout: `${fieldId}-letter-layout`,
     letterAppendix: `${fieldId}-letter-appendix`,
+    versionPanel: `${fieldId}-version`,
+    removeTitle: `${fieldId}-remove-title`,
+    removeText: `${fieldId}-remove-text`,
+    letterText: `${fieldId}-letter-text`,
+    shareTitle: `${fieldId}-share-title`,
+    shareText: `${fieldId}-share-text`,
+    versionTab: (channel: MailChannel) => `${fieldId}-version-${channel}`,
     attachments: `${fieldId}-attachments`,
   };
 
@@ -150,10 +187,8 @@ function MailTemplateEdit() {
   // The mail type must be chosen explicitly so preview/test use the data a real
   // mail of that type would carry (more realistic than a generic dump).
   const [contextId, setContextId] = useState<MailTemplateContext | null>(null);
-  // Stationery for the letter version; null prints on the default layout.
-  const [letterLayoutId, setLetterLayoutId] = useState<string | null>(null);
-  const [letterAppendixId, setLetterAppendixId] = useState<string | null>(null);
-  // Word documents attached to every mail, in this order.
+  // Word documents attached to every message of the template, in this
+  // order: the email sends them along, the letter prints them after its pages.
   const [attachmentIds, setAttachmentIds] = useState<string[]>([]);
   const [subscriptionId, setSubscriptionId] = useState<string | null>(null);
   const [previewHtml, setPreviewHtml] = useState<string | null>(null);
@@ -170,6 +205,11 @@ function MailTemplateEdit() {
     UpdateMailTemplateDocument,
     DEFAULT_MUTATION_OPTIONS(t)
   );
+  const [deleteVariant] = useMutation(
+    DeleteMailTemplateVariantDocument,
+    // Removing a version is part of the save, which already confirms.
+    { onError: DEFAULT_MUTATION_OPTIONS(t).onError }
+  );
   const client = useApolloClient();
   const [previewLoading, setPreviewLoading] = useState(false);
   const [previewError, setPreviewError] = useState<string | null>(null);
@@ -177,7 +217,7 @@ function MailTemplateEdit() {
   const [letterPdf, setLetterPdf] = useState<string | null>(null);
   const [letterLoading, setLetterLoading] = useState(false);
   // Without a letter integration there is nothing to render a letter with.
-  const { letterAvailable, paperLetters } = useLetterChannel();
+  const { paperLetters, letterAvailable } = useLetterChannel();
   const { data: letterLayoutData } = useQuery(LetterLayoutsDocument, {
     skip: !letterAvailable,
   });
@@ -191,6 +231,192 @@ function MailTemplateEdit() {
     MailTemplateSubscriptionsDocument
   );
 
+  const handleHtmlChange = (html: string) => {
+    htmlRef.current = html;
+  };
+
+  const letterAllowed = allowsLetterVersion(contextId);
+
+  // A new template comes with a letter that says what the email says, where
+  // letters can be sent and the purpose allows one. Derived, not stored: the
+  // letter appears once letters turn out to be available, and goes again
+  // when a purpose is chosen that is email only.
+  const drafts = useMemo((): VersionDrafts => {
+    if (isEdit) {
+      return storedDrafts;
+    }
+
+    const letter = storedDrafts[MailChannel.Letter];
+
+    if (!letterAllowed && letter?.sameAsMail) {
+      const rest = { ...storedDrafts };
+      delete rest[MailChannel.Letter];
+
+      return rest;
+    }
+
+    if (
+      letterAvailable &&
+      letterAllowed &&
+      !letter &&
+      !letterDeclined &&
+      storedDrafts[MailChannel.Mail]
+    ) {
+      return { ...storedDrafts, [MailChannel.Letter]: sharedLetterDraft() };
+    }
+
+    return storedDrafts;
+  }, [isEdit, storedDrafts, letterAllowed, letterAvailable, letterDeclined]);
+
+  const activeChannel =
+    drafts[chosenChannel] ? chosenChannel : (
+      (VERSION_ORDER.find(channel => drafts[channel]) ?? MailChannel.Mail)
+    );
+  const isLetter = activeChannel === MailChannel.Letter;
+  const activeDraft: VersionDraft = drafts[activeChannel] ?? newVersionDraft();
+  const mailDraft = drafts[MailChannel.Mail];
+  // The letter shows the email's words and has none of its own to edit.
+  const shared = isLetter && activeDraft.sameAsMail && !!mailDraft;
+  const subject = shared ? mailDraft.subject : activeDraft.subject;
+  const letterLayoutId = activeDraft.letterLayoutId;
+  const letterAppendixId = activeDraft.letterAppendixId;
+
+  const updateActiveDraft = (
+    change: (draft: VersionDraft) => Partial<VersionDraft>
+  ) =>
+    setDrafts({
+      ...drafts,
+      [activeChannel]: { ...activeDraft, ...change(activeDraft) },
+    });
+  const setSubject = (next: string | ((previous: string) => string)) =>
+    updateActiveDraft(draft => ({
+      subject: typeof next === 'function' ? next(draft.subject) : next,
+    }));
+
+  /** Every version as it stands, the open one with what was typed since. */
+  const currentDrafts = (): VersionDrafts => ({
+    ...drafts,
+    // A shared letter has the email's body in the editor, not one to keep.
+    [activeChannel]:
+      shared ? activeDraft : { ...activeDraft, html: htmlRef.current },
+  });
+
+  /** Put a version into the editor: its body, and the frame it is set in. */
+  const openVersion = (channel: MailChannel, from: VersionDrafts) => {
+    const draft = from[channel];
+    htmlRef.current =
+      (draft?.sameAsMail ? from[MailChannel.Mail]?.html : draft?.html) ??
+      createEmptyEmailHtml();
+    const shell = readShellSettings(htmlRef.current);
+    setBackgroundColor(shell.backgroundColor);
+    setContentWidth(shell.contentWidth);
+    setActiveChannel(channel);
+    setActiveField('body');
+    // A letter has no plain-text alternative to look at.
+    setBodyMode(mode =>
+      channel === MailChannel.Letter && mode === 'text' ? 'visual' : mode
+    );
+    setEditorKey(k => k + 1);
+  };
+
+  const switchVersion = (channel: MailChannel) => {
+    if (channel === activeChannel) {
+      return;
+    }
+
+    const next = currentDrafts();
+    setDrafts(next);
+    openVersion(channel, next);
+  };
+
+  const addVersion = (channel: MailChannel) => {
+    const current = currentDrafts();
+    const next = {
+      ...current,
+      // A letter starts out saying what the email says; any other version
+      // as a copy of the one being looked at.
+      [channel]:
+        channel === MailChannel.Letter && current[MailChannel.Mail] ?
+          sharedLetterDraft()
+        : newVersionDraft(current[activeChannel]),
+    };
+
+    setDrafts(next);
+    openVersion(channel, next);
+  };
+
+  // Removing a version throws away what was written for it, so it is asked
+  // for first.
+  const [confirmRemoval, setConfirmRemoval] = useState(false);
+
+  // Only taken out of the form: the api hears of it on save.
+  const removeActiveVersion = () => {
+    setConfirmRemoval(false);
+
+    const all = currentDrafts();
+    const rest: VersionDrafts = { ...all };
+    delete rest[activeChannel];
+
+    const mail = all[MailChannel.Mail];
+    const letter = rest[MailChannel.Letter];
+
+    // The letter took its words from the email being removed: it keeps them.
+    if (activeChannel === MailChannel.Mail && mail && letter?.sameAsMail) {
+      rest[MailChannel.Letter] = {
+        ...letter,
+        sameAsMail: false,
+        subject: mail.subject,
+        html: mail.html,
+      };
+    }
+
+    if (activeChannel === MailChannel.Letter) {
+      setLetterDeclined(true);
+    }
+
+    const remaining = VERSION_ORDER.find(channel => rest[channel]);
+
+    if (!remaining) {
+      return;
+    }
+
+    setDrafts(rest);
+    openVersion(remaining, rest);
+  };
+
+  // Going back to the email's text throws the letter's own away, so it is
+  // asked for first.
+  const [confirmShare, setConfirmShare] = useState(false);
+
+  const setLetterShared = (sameAsMail: boolean) => {
+    setConfirmShare(false);
+
+    const all = currentDrafts();
+    const mail = all[MailChannel.Mail];
+    const letter = all[MailChannel.Letter];
+
+    if (!mail || !letter) {
+      return;
+    }
+
+    const next = {
+      ...all,
+      [MailChannel.Letter]:
+        sameAsMail ?
+          { ...letter, sameAsMail: true }
+          // Its own text starts as the email's, ready to adapt.
+        : {
+            ...letter,
+            sameAsMail: false,
+            subject: mail.subject,
+            html: mail.html,
+          },
+    };
+
+    setDrafts(next);
+    openVersion(MailChannel.Letter, next);
+  };
+
   useEffect(() => {
     if (!isEdit) {
       return;
@@ -202,25 +428,31 @@ function MailTemplateEdit() {
       }
       setName(template.name);
       setDescription(template.description ?? '');
-      setSubject(template.subject);
-      setTextContent(template.textContent ?? '');
       setContextId(template.context ?? null);
-      setLetterLayoutId(template.letterLayoutId ?? null);
-      setLetterAppendixId(template.letterAppendixId ?? null);
       setAttachmentIds(template.attachmentIds ?? []);
-      htmlRef.current = template.htmlContent || createEmptyEmailHtml();
-      const shell = readShellSettings(htmlRef.current);
-      setBackgroundColor(shell.backgroundColor);
-      setContentWidth(shell.contentWidth);
-      setEditorKey(k => k + 1);
+
+      const loaded = draftsFromVariants(template.variants);
+      const first =
+        VERSION_ORDER.find(channel => loaded[channel]) ?? MailChannel.Mail;
+      const next = { [first]: newVersionDraft(), ...loaded };
+
+      setSavedChannels(template.variants.map(variant => variant.channel));
+      setDrafts(next);
+      openVersion(first, next);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  const handleHtmlChange = (html: string) => {
-    htmlRef.current = html;
-  };
-
+  // A medium without the letter feature never sees a letter version, and the
+  // api would refuse one: it stays untouched on save.
+  const shownChannels = VERSION_ORDER.filter(
+    channel =>
+      drafts[channel] && (channel !== MailChannel.Letter || paperLetters)
+  );
+  const addableChannels = VERSION_ORDER.filter(
+    channel =>
+      !drafts[channel] && (channel !== MailChannel.Letter || letterAvailable)
+  );
   // Rewrite the gray frame color / content width on the current shell and
   // remount the editor so the change is visible immediately.
   const applyShell = (
@@ -249,6 +481,10 @@ function MailTemplateEdit() {
   };
 
   const insertToken = (token: string) => {
+    // A shared letter has nothing of its own to insert into.
+    if (shared) {
+      return;
+    }
     if (activeField === 'subject') {
       // The caret is always at the end here, so the subject itself is the
       // context the login token is judged against.
@@ -284,16 +520,18 @@ function MailTemplateEdit() {
     // The text tab is read-only — nothing to insert into.
   };
 
-  const buildInput = () => ({
+  const buildInput = (all: VersionDrafts) => ({
     name,
     description,
-    subject,
-    htmlContent: htmlRef.current,
-    // The text fallback is always regenerated from the HTML on save.
-    textContent: deriveTextFromHtml(htmlRef.current),
     context: contextId,
-    letterLayoutId,
-    letterAppendixId,
+    variants: variantInputs(
+      Object.fromEntries(
+        shownChannels.flatMap(channel =>
+          all[channel] ? [[channel, all[channel]]] : []
+        )
+      ),
+      deriveTextFromHtml
+    ),
     // Attachments ship with the letters; without the feature the api refuses
     // them, and leaving them out keeps whatever the template has.
     ...(paperLetters ? { attachmentIds } : {}),
@@ -323,13 +561,41 @@ function MailTemplateEdit() {
       );
       return;
     }
+    const all = currentDrafts();
+    const input = buildInput(all);
+
     if (isEdit) {
-      await updateMailTemplate({ variables: { id: id!, input: buildInput() } });
+      const result = await updateMailTemplate({
+        variables: { id: id!, input },
+      });
+
+      if (result?.error) {
+        return;
+      }
+
+      // After the update, so a version added in the same save is already
+      // there when the last saved one goes.
+      for (const channel of removedChannels(savedChannels, all)) {
+        const removed = await deleteVariant({
+          variables: { templateId: id!, channel },
+        });
+
+        if (removed?.error) {
+          return;
+        }
+      }
+
+      setSavedChannels(current => [
+        ...current.filter(channel => all[channel]),
+        ...input.variants
+          .map(variant => variant.channel)
+          .filter(channel => !current.includes(channel)),
+      ]);
     } else {
       const result = await createMailTemplate({
-        variables: { input: buildInput() },
+        variables: { input },
       });
-      const newId = result.data?.createMailTemplate.id;
+      const newId = result?.data?.createMailTemplate.id;
       if (newId && !close) {
         navigate(`/mailtemplates/edit/${newId}`);
         return;
@@ -346,8 +612,7 @@ function MailTemplateEdit() {
     subject,
     htmlContent: htmlRef.current,
     textContent,
-    letterLayoutId,
-    letterAppendixId,
+    ...(isLetter ? { letterLayoutId, letterAppendixId } : {}),
     attachmentIds,
   });
 
@@ -426,6 +691,15 @@ function MailTemplateEdit() {
     enqueueSnackbar(t('mailTemplates.edit.testSent'), { variant: 'success' });
   };
 
+  // A letter has no plain-text alternative.
+  const bodyModes = (
+    [
+      ['visual', t('mailTemplates.wysiwyg')],
+      ['html', t('mailTemplates.rawHtml')],
+      ['text', t('mailTemplates.textContent')],
+    ] as const
+  ).filter(([mode]) => mode !== 'text' || !isLetter);
+
   const contextOptions = MAIL_PLACEHOLDER_CONTEXTS.map(c => ({
     label: t(c.titleKey, c.title),
     description: t(`mailTemplates.purposeDescriptions.${c.id}`),
@@ -464,8 +738,8 @@ function MailTemplateEdit() {
           </Button>
         </ListViewActions>
       </ListViewContainer>
-      {/* The two tiles stick together as one header row so the preview
-          controls stay reachable while scrolling the editor. */}
+      {/* Not sticky: with the versions the tiles are tall enough to cover
+          most of the window, and the editor would scroll away behind them. */}
       <div
         style={{
           display: 'flex',
@@ -473,10 +747,6 @@ function MailTemplateEdit() {
           flexWrap: 'wrap',
           alignItems: 'stretch',
           marginTop: 16,
-          position: 'sticky',
-          top: 0,
-          zIndex: 10,
-          background: 'var(--mui-palette-background-default)',
         }}
       >
         <Card
@@ -498,6 +768,8 @@ function MailTemplateEdit() {
               sx={{ width: '100%' }}
             >
               <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+                {/* Purpose and name share the first row; the description
+                    takes the second. */}
                 <FormControl
                   style={{ flex: 1, minWidth: 200, marginBottom: 0 }}
                   fullWidth
@@ -529,11 +801,30 @@ function MailTemplateEdit() {
                       select: {
                         displayEmpty: true,
                         labelId: ids.purpose,
+                        // The name alone: the hints belong to the list.
+                        renderValue: value =>
+                          contextOptions.find(option => option.value === value)
+                            ?.label ??
+                          t(
+                            'mailTemplates.edit.selectMailTypePlaceholder',
+                            'Choose a purpose …'
+                          ),
                       },
                     }}
                     fullWidth
                   >
-                    <MenuItem value="">
+                    {/* A dashed line sets "no purpose yet" apart from the
+                        purposes. On the item itself: the select turns every
+                        child into an option, a divider included. */}
+                    <MenuItem
+                      value=""
+                      sx={{
+                        borderBottom: '1px dashed',
+                        borderColor: 'divider',
+                        marginBottom: 1,
+                        paddingBottom: 1,
+                      }}
+                    >
                       {t(
                         'mailTemplates.edit.selectMailTypePlaceholder',
                         'Choose a purpose …'
@@ -544,20 +835,20 @@ function MailTemplateEdit() {
                       <MenuItem
                         key={option.value}
                         value={option.value}
-                        sx={{ display: 'block', paddingBlock: 0.5 }}
+                        sx={{ gap: 0.75 }}
                       >
-                        <div>{option.label}</div>
-                        <Typography
-                          variant="caption"
-                          color="text.secondary"
-                          sx={{
-                            display: 'block',
-                            whiteSpace: 'normal',
-                            lineHeight: 1.35,
-                          }}
+                        {option.label}
+                        {/* Reading the hint must not choose the purpose. */}
+                        <span
+                          style={{ display: 'inline-flex' }}
+                          onClick={event => event.stopPropagation()}
+                          onMouseDown={event => event.stopPropagation()}
                         >
-                          {(option as { description?: string }).description}
-                        </Typography>
+                          <InfoTooltip
+                            text={option.description}
+                            placement="right"
+                          />
+                        </span>
                       </MenuItem>
                     ))}
                   </TextField>
@@ -591,7 +882,7 @@ function MailTemplateEdit() {
                   />
                 </FormControl>
                 <FormControl
-                  style={{ flex: 1, minWidth: 200, marginBottom: 0 }}
+                  style={{ flex: '1 1 100%', minWidth: 200, marginBottom: 0 }}
                   fullWidth
                 >
                   <FieldLabel
@@ -604,23 +895,6 @@ function MailTemplateEdit() {
                     onChange={event => setDescription(event.target.value)}
                     slotProps={{
                       htmlInput: { 'aria-labelledby': ids.description },
-                    }}
-                  />
-                </FormControl>
-                <FormControl
-                  style={{ flex: 1, minWidth: 200, marginBottom: 0 }}
-                  fullWidth
-                >
-                  <FieldLabel
-                    id={ids.subject}
-                    label={t('mailTemplates.subject')}
-                  />
-                  <TextField
-                    value={subject}
-                    onChange={event => setSubject(event.target.value)}
-                    onFocus={() => setActiveField('subject')}
-                    slotProps={{
-                      htmlInput: { 'aria-labelledby': ids.subject },
                     }}
                   />
                 </FormControl>
@@ -641,7 +915,163 @@ function MailTemplateEdit() {
                     />
                   </FormControl>
                 )}
-                {letterAvailable && (
+              </div>
+
+              {(paperLetters || shownChannels.length > 1) && (
+                <Stack
+                  direction="row"
+                  useFlexGap
+                  spacing={1}
+                  sx={{
+                    alignItems: 'center',
+                    flexWrap: 'wrap',
+                    borderBottom: 1,
+                    borderColor: 'divider',
+                  }}
+                >
+                  <Tabs
+                    value={activeChannel}
+                    onChange={(_event, channel: MailChannel) =>
+                      switchVersion(channel)
+                    }
+                    aria-label={t('mailTemplates.edit.versions')}
+                    sx={{ flex: 1, minWidth: 0 }}
+                  >
+                    {shownChannels.map(channel => {
+                      const { icon: Icon, labelKey } = deliveryChannel(channel);
+
+                      return (
+                        <Tab
+                          key={channel}
+                          value={channel}
+                          id={ids.versionTab(channel)}
+                          aria-controls={ids.versionPanel}
+                          icon={<Icon aria-hidden />}
+                          iconPosition="start"
+                          label={t(labelKey)}
+                        />
+                      );
+                    })}
+                  </Tabs>
+
+                  {addableChannels.map(channel => {
+                    const refused =
+                      channel === MailChannel.Letter && !letterAllowed;
+
+                    return (
+                      <Stack
+                        key={channel}
+                        direction="row"
+                        spacing={0.5}
+                        sx={{ alignItems: 'center' }}
+                      >
+                        <Button
+                          size="small"
+                          variant="text"
+                          disabled={refused}
+                          onClick={() => addVersion(channel)}
+                        >
+                          {t(`mailTemplates.edit.addVersion.${channel}`)}
+                        </Button>
+                        {refused && (
+                          <InfoTooltip
+                            text={t('mailTemplates.edit.letterNotForPurpose')}
+                          />
+                        )}
+                      </Stack>
+                    );
+                  })}
+
+                  {shownChannels.length > 1 && (
+                    <Button
+                      size="small"
+                      variant="text"
+                      color="error"
+                      onClick={() => setConfirmRemoval(true)}
+                    >
+                      {t('mailTemplates.edit.removeVersion')}
+                    </Button>
+                  )}
+                </Stack>
+              )}
+
+              {isLetter && !letterAllowed && (
+                <Alert severity="warning">
+                  {t('mailTemplates.edit.letterNotForPurpose')}
+                </Alert>
+              )}
+
+              <div
+                id={ids.versionPanel}
+                role={
+                  shownChannels.length > 1 || paperLetters ?
+                    'tabpanel'
+                  : undefined
+                }
+                aria-labelledby={
+                  shownChannels.length > 1 || paperLetters ?
+                    ids.versionTab(activeChannel)
+                  : undefined
+                }
+                style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}
+              >
+                {isLetter && mailDraft && (
+                  <FormControl
+                    style={{ flex: '1 1 100%', minWidth: 200, marginBottom: 0 }}
+                    fullWidth
+                  >
+                    <FieldLabel
+                      id={ids.letterText}
+                      label={t('mailTemplates.edit.letterText.label')}
+                    />
+                    <RadioGroup
+                      row
+                      aria-labelledby={ids.letterText}
+                      value={activeDraft.sameAsMail ? 'same' : 'own'}
+                      onChange={(_event, value) =>
+                        value === 'own' ?
+                          setLetterShared(false)
+                        : setConfirmShare(true)
+                      }
+                    >
+                      <FormControlLabel
+                        value="same"
+                        control={<Radio size="small" />}
+                        label={t('mailTemplates.edit.letterText.same')}
+                      />
+                      <FormControlLabel
+                        value="own"
+                        control={<Radio size="small" />}
+                        label={t('mailTemplates.edit.letterText.own')}
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                )}
+                {/* On a letter the subject takes a row of its own, with the
+                    stationery and the appendix side by side below it. */}
+                <FormControl
+                  style={{
+                    flex: isLetter ? '1 1 100%' : 1,
+                    minWidth: 200,
+                    marginBottom: 0,
+                  }}
+                  fullWidth
+                >
+                  <FieldLabel
+                    id={ids.subject}
+                    label={t('mailTemplates.subject')}
+                  />
+                  <TextField
+                    value={subject}
+                    disabled={shared}
+                    onChange={event => setSubject(event.target.value)}
+                    onFocus={() => setActiveField('subject')}
+                    slotProps={{
+                      htmlInput: { 'aria-labelledby': ids.subject },
+                    }}
+                  />
+                </FormControl>
+                {isLetter && letterAvailable && (
                   <FormControl
                     style={{ flex: 1, minWidth: 200, marginBottom: 0 }}
                     fullWidth
@@ -655,7 +1085,9 @@ function MailTemplateEdit() {
                       select
                       value={letterLayoutId ?? ''}
                       onChange={event =>
-                        setLetterLayoutId(event.target.value || null)
+                        updateActiveDraft(() => ({
+                          letterLayoutId: event.target.value || null,
+                        }))
                       }
                       slotProps={{
                         select: {
@@ -682,7 +1114,7 @@ function MailTemplateEdit() {
                     </TextField>
                   </FormControl>
                 )}
-                {letterAvailable && (
+                {isLetter && letterAvailable && (
                   <FormControl
                     style={{ flex: 1, minWidth: 200, marginBottom: 0 }}
                     fullWidth
@@ -693,8 +1125,11 @@ function MailTemplateEdit() {
                       help={t('mailTemplates.edit.letterAppendixHelp')}
                     />
                     <LetterAppendixPicker
+                      labelId={ids.letterAppendix}
                       value={letterAppendixId}
-                      onChange={setLetterAppendixId}
+                      onChange={letterAppendixId =>
+                        updateActiveDraft(() => ({ letterAppendixId }))
+                      }
                     />
                   </FormControl>
                 )}
@@ -768,44 +1203,50 @@ function MailTemplateEdit() {
                 direction="row"
                 spacing={1}
               >
-                <Button
-                  variant="contained"
-                  loading={previewLoading}
-                  onClick={doPreview}
-                >
-                  {t('mailTemplates.edit.preview')}
-                </Button>
-                {letterAvailable && (
+                {!isLetter && (
                   <Button
-                    variant="outlined"
+                    variant="contained"
+                    loading={previewLoading}
+                    onClick={doPreview}
+                  >
+                    {t('mailTemplates.edit.preview')}
+                  </Button>
+                )}
+                {isLetter && letterAvailable && (
+                  <Button
+                    variant="contained"
                     loading={letterLoading}
                     onClick={doPreviewLetter}
                   >
                     {t('mailTemplates.edit.previewLetter')}
                   </Button>
                 )}
-                <Button
-                  variant="outlined"
-                  loading={testLoading}
-                  onClick={doSendTest}
-                >
-                  {t('mailTemplates.edit.sendTest')}
-                </Button>
+                {!isLetter && (
+                  <Button
+                    variant="outlined"
+                    loading={testLoading}
+                    onClick={doSendTest}
+                  >
+                    {t('mailTemplates.edit.sendTest')}
+                  </Button>
+                )}
               </Stack>
             </div>
 
-            <Typography
-              variant="caption"
-              style={{ marginTop: 8, color: 'text.secondary' }}
-              sx={{
-                display: 'block',
-              }}
-            >
-              {t(
-                'mailTemplates.edit.testRecipientHint',
-                'Test mails are always sent to your own account.'
-              )}
-            </Typography>
+            {!isLetter && (
+              <Typography
+                variant="caption"
+                style={{ marginTop: 8, color: 'text.secondary' }}
+                sx={{
+                  display: 'block',
+                }}
+              >
+                {t(
+                  'mailTemplates.edit.testRecipientHint',
+                  'Test mails are always sent to your own account.'
+                )}
+              </Typography>
+            )}
 
             {previewError && (
               <Alert
@@ -818,22 +1259,28 @@ function MailTemplateEdit() {
           </CardContent>
         </Card>
       </div>
+      {/* A grid, so the placeholders start level with the editor: the
+          editor's toolbar sits in a row of its own above it, and the cell
+          beside the toolbar stays empty. Stacked on a narrow window. */}
       <Box
         sx={{
-          display: 'flex',
-          flexDirection: { xs: 'column', md: 'row' },
-          gap: 3,
+          display: 'grid',
+          gridTemplateColumns: {
+            xs: 'minmax(0, 1fr)',
+            md: '320px minmax(0, 1fr)',
+          },
+          columnGap: 3,
           marginTop: 2,
-          alignItems: 'stretch',
         }}
       >
-        {/* Bounded to the editor column's height: the picker is absolutely
+        {/* Bounded to the editor's height: the picker is absolutely
             positioned so it never grows the row, and scrolls internally. */}
         <Box
           sx={{
-            width: { xs: '100%', md: 320 },
-            flexShrink: 0,
+            gridColumn: { md: 1 },
+            gridRow: { md: 2 },
             position: 'relative',
+            marginBottom: { xs: 3, md: 0 },
           }}
         >
           <Box
@@ -851,11 +1298,16 @@ function MailTemplateEdit() {
           </Box>
         </Box>
 
-        <div style={{ flex: 1, minWidth: 0 }}>
+        {/* No box of its own: toolbar and editor are placed in the grid. */}
+        <Box sx={{ display: 'contents' }}>
           <Stack
             direction="row"
             useFlexGap
             sx={{
+              // Nothing to format on a letter that shows the email's words.
+              display: shared ? 'none' : undefined,
+              gridColumn: { md: 2 },
+              gridRow: { md: 1 },
               alignItems: 'center',
               justifyContent: 'space-between',
               flexWrap: 'wrap',
@@ -872,13 +1324,7 @@ function MailTemplateEdit() {
                 size="small"
                 aria-label={t('mailTemplates.edit.bodyMode')}
               >
-                {(
-                  [
-                    ['visual', t('mailTemplates.wysiwyg')],
-                    ['html', t('mailTemplates.rawHtml')],
-                    ['text', t('mailTemplates.textContent')],
-                  ] as const
-                ).map(([mode, label]) => (
+                {bodyModes.map(([mode, label]) => (
                   <Button
                     key={mode}
                     variant={bodyMode === mode ? 'contained' : 'outlined'}
@@ -889,7 +1335,16 @@ function MailTemplateEdit() {
                   </Button>
                 ))}
               </ButtonGroup>
-              <InfoTooltip text={t('mailTemplates.edit.bodyModeHelp')} />
+              {/* One bullet per mode on offer, each on its own line: the
+                  tooltip keeps line breaks. */}
+              <InfoTooltip
+                text={bodyModes
+                  .map(
+                    ([mode, label]) =>
+                      `• ${label}: ${t(`mailTemplates.edit.bodyModeHints.${mode}`)}`
+                  )
+                  .join('\n')}
+              />
             </Stack>
 
             <Stack
@@ -948,12 +1403,58 @@ function MailTemplateEdit() {
             </Stack>
           </Stack>
 
-          <div
+          <Box
             onFocus={() => setActiveField('body')}
-            style={{ height: 'calc(100vh - 320px)', minHeight: 480 }}
+            sx={{
+              gridColumn: { md: 2 },
+              gridRow: { md: 2 },
+              height: 'calc(100vh - 320px)',
+              minHeight: 480,
+            }}
           >
             {/* eslint-disable react-hooks/refs */}
-            {bodyMode === 'visual' ?
+            {shared ?
+              <Box
+                sx={{
+                  position: 'relative',
+                  height: '100%',
+                  border: 1,
+                  borderColor: 'divider',
+                  borderRadius: 1,
+                  overflow: 'hidden',
+                }}
+              >
+                {/* The email's body as it stands, to look at only. */}
+                <iframe
+                  title={t('mailTemplates.edit.letterText.same')}
+                  srcDoc={mailDraft.html}
+                  sandbox=""
+                  tabIndex={-1}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    border: 0,
+                    opacity: 0.6,
+                  }}
+                />
+                <Typography
+                  variant="caption"
+                  sx={{
+                    position: 'absolute',
+                    zIndex: 1,
+                    right: 16,
+                    bottom: 12,
+                    paddingBlock: 0.5,
+                    paddingInline: 1,
+                    borderRadius: 1,
+                    bgcolor: 'grey.200',
+                    color: 'grey.900',
+                  }}
+                >
+                  {t('mailTemplates.edit.letterText.sameNote')}
+                </Typography>
+              </Box>
+            : bodyMode === 'visual' ?
               <HtmlVisualEditor
                 key={`visual-${editorKey}`}
                 ref={visualRef}
@@ -969,39 +1470,60 @@ function MailTemplateEdit() {
                 onChange={handleHtmlChange}
               />
             : /* eslint-enable react-hooks/refs */
-              <div
-                style={{
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                }}
-              >
-                <Typography
-                  variant="caption"
-                  style={{ marginBottom: 6, color: 'text.secondary' }}
+              <Box sx={{ position: 'relative', height: '100%' }}>
+                {/* The text scrolls in a box of the editor's height, so the
+                    note below stays in the corner of what is on screen. */}
+                <Box
                   sx={{
-                    display: 'block',
+                    height: '100%',
+                    overflowY: 'auto',
+                    display: 'flex',
+                    flexDirection: 'column',
                   }}
                 >
-                  {t(
-                    'mailTemplates.edit.textContentReadonlyHint',
-                    'Automatically generated from the content. Edit the visual or HTML tab to change it.'
-                  )}
-                </Typography>
-                <TextField
-                  value={textContent}
-                  slotProps={{ input: { readOnly: true } }}
-                  style={{
-                    flex: 1,
-                    fontFamily: 'monospace',
-                    resize: 'none',
+                  <TextField
+                    value={textContent}
+                    slotProps={{ input: { readOnly: true } }}
+                    sx={{
+                      // Fills the editor's box even for a short text: the
+                      // note sits in the corner of that box.
+                      flex: '1 0 auto',
+                      '& .MuiInputBase-root': {
+                        flex: 1,
+                        alignItems: 'flex-start',
+                        fontFamily: 'monospace',
+                        // Room for the note, so it never covers the last line.
+                        paddingBottom: 7,
+                      },
+                    }}
+                    fullWidth
+                    multiline
+                  />
+                </Box>
+                {/* Says on the text itself why it cannot be typed into. Dark
+                    on light grey in both colour modes, and clicks pass
+                    through to the text below. */}
+                <Typography
+                  variant="caption"
+                  sx={{
+                    position: 'absolute',
+                    zIndex: 1,
+                    right: 16,
+                    bottom: 12,
+                    paddingBlock: 0.5,
+                    paddingInline: 1,
+                    borderRadius: 1,
+                    bgcolor: 'grey.200',
+                    color: 'grey.900',
+                    pointerEvents: 'none',
                   }}
-                  multiline
-                />
-              </div>
+                >
+                  {t('mailTemplates.edit.textContentGenerated')}
+                </Typography>
+              </Box>
             }
-          </div>
-        </div>
+          </Box>
+        </Box>
       </Box>
       <Dialog
         fullWidth
@@ -1015,6 +1537,73 @@ function MailTemplateEdit() {
         <DialogContent style={{ height: '85vh' }}>
           <MailPreview html={previewHtml ?? ''} />
         </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setPreviewOpen(false)}>
+            {t('mailTemplates.editor.close')}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={confirmShare}
+        onClose={() => setConfirmShare(false)}
+        aria-labelledby={ids.shareTitle}
+        aria-describedby={ids.shareText}
+      >
+        <DialogTitle id={ids.shareTitle}>
+          {t('mailTemplates.edit.letterText.confirm.title')}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id={ids.shareText}>
+            {t('mailTemplates.edit.letterText.confirm.text')}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="text"
+            onClick={() => setConfirmShare(false)}
+          >
+            {t('mailTemplates.cancel')}
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => setLetterShared(true)}
+          >
+            {t('mailTemplates.edit.letterText.confirm.confirm')}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={confirmRemoval}
+        onClose={() => setConfirmRemoval(false)}
+        aria-labelledby={ids.removeTitle}
+        aria-describedby={ids.removeText}
+      >
+        <DialogTitle id={ids.removeTitle}>
+          {t(`mailTemplates.edit.removeVersionConfirm.title.${activeChannel}`)}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id={ids.removeText}>
+            {t(`mailTemplates.edit.removeVersionConfirm.text.${activeChannel}`)}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="text"
+            onClick={() => setConfirmRemoval(false)}
+          >
+            {t('mailTemplates.cancel')}
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={removeActiveVersion}
+          >
+            {t('mailTemplates.edit.removeVersionConfirm.confirm')}
+          </Button>
+        </DialogActions>
       </Dialog>
 
       <Dialog
@@ -1023,9 +1612,14 @@ function MailTemplateEdit() {
         onClose={() => setLetterPdf(null)}
       >
         <DialogTitle>{t('mailTemplates.edit.letterPreviewTitle')}</DialogTitle>
-        <DialogContent style={{ height: '85vh' }}>
+        <DialogContent style={{ flex: 1, minHeight: 0 }}>
           {letterPdf && <LetterPreview pdf={letterPdf} />}
         </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setLetterPdf(null)}>
+            {t('mailTemplates.editor.close')}
+          </Button>
+        </DialogActions>
       </Dialog>
     </div>
   );

@@ -1163,7 +1163,7 @@
       "noNameErrorMessage": "Please enter a name",
       "noPasswordErrorMessage": "Please enter a password",
       "noPaymentMethodErrorMessage": "Please enter a payment method",
-      "noPaymentPeriodicityErrorMessage": "Please enter a payment periodicity",
+      "noPaymentPeriodicityErrorMessage": "Please enter a payment interval",
       "noPaymentProviderErrorMessage": "Please enter a payment provider",
       "noTokenErrorMessage": "Please enter a token",
       "noUrlErrorMessage": "Please enter a URL",
@@ -1596,14 +1596,63 @@
     },
     "name": "Name",
     "mailTemplates": {
+      "list": {
+        "attachments": "Attachments",
+        "attachmentsFilter": {
+          "with": "With attachments",
+          "without": "Without attachments"
+        },
+        "search": "Search",
+        "channels": "Delivery channels",
+        "letterLayout": "Stationery",
+        "letterLayoutDefault": "Default",
+        "letterAppendix": "Additional pages",
+        "letterAppendixNone": "None",
+        "memberPlans": "Member plans",
+        "memberPlansHint": "Member plans whose communication flow sends this template. The default flow and flows for all member plans belong to no member plan and are not listed here.",
+        "noMatch": "No template matches the filters.",
+        "statuses": {
+          "ok": "In use",
+          "unused": "Not in use"
+        }
+      },
       "availableTemplates": "Message templates",
       "cancel": "Cancel",
       "content": "Content",
       "create": "Create template",
       "description": "Description",
       "edit": {
-        "createHeader": "Create mail template",
-        "editHeader": "Edit mail template",
+        "versions": "Versions per delivery channel",
+        "addVersion": {
+          "mail": "Add email version",
+          "letter": "Add letter version"
+        },
+        "removeVersion": "Remove this version",
+        "letterText": {
+          "label": "Text",
+          "same": "Same as email",
+          "own": "Own text",
+          "sameNote": "This letter uses the subject and text of the email. Edit them on the \"Email\" tab.",
+          "confirm": {
+            "title": "Discard the letter's own text?",
+            "text": "The letter will use the subject and text of the email again. Its own text will be lost.",
+            "confirm": "Discard"
+          }
+        },
+        "removeVersionConfirm": {
+          "title": {
+            "mail": "Remove the email version?",
+            "letter": "Remove the letter version?"
+          },
+          "text": {
+            "mail": "The email template of this template will be deleted.",
+            "letter": "The letter template of this template will be deleted."
+          },
+          "confirm": "Remove"
+        },
+        "letterNotForPurpose": "This purpose has no letter version: the message carries a login link and goes out by email at once.",
+        "createHeader": "Create message template",
+        "editHeader": "Edit message template",
         "saveAndClose": "Save & close",
         "nameRequired": "Name is required.",
         "testSent": "Test mail sent.",
@@ -1614,12 +1663,12 @@
         "sampleDataFallback": "Sample data (none selected)",
         "testRecipient": "Test recipient",
         "testRecipientPlaceholder": "Your account email",
-        "preview": "Preview",
+        "preview": "Email preview",
         "sendTest": "Send test",
-        "previewLetter": "Preview as letter",
-        "letterAppendix": "QR-bill (PDF)",
+        "previewLetter": "Letter preview",
+        "letterAppendix": "Additional pages (PDF)",
         "letterAppendixNone": "None",
-        "letterAppendixHelp": "PDF from \"Documents\" printed after the letter pages, e.g. a QR-bill (A4, slip at the bottom edge). Only for addresses in Switzerland; with duplex printing a blank page is added when needed so the slip lands on a front page.",
+        "letterAppendixHelp": "The pages are added at the end of the letter. Choose from the PDF files uploaded under \"Documents\".",
         "attachments": "Attachments (Word)",
         "attachmentsHelp": "Word documents (.docx) from \"Documents\", at most 5 and 15 MB together. They are filled in with the same placeholders as the mail (in the text and in link addresses, not in field codes), attached as PDF and sent in this order with every mail from this template, automated subscription mails included. System mails (login, password) cannot have attachments. A letter prints them after its pages (A4). If an attachment cannot be created, the mail is not sent. A personal document is converted for each recipient one by one, and PDF attachments make mails more likely to land in spam: keep them few and small. Needs Gotenberg as the PDF renderer.",
         "attachmentsNone": "None",
@@ -1629,20 +1678,24 @@
         "selectMailTypePlaceholder": "Choose a purpose …",
         "testRecipientHint": "Test mails are always sent to your own account.",
         "generateTextFromHtml": "Generate from HTML",
-        "textContentReadonlyHint": "Automatically generated from the content. Edit the visual or HTML tab to change it.",
         "background": "Background",
         "contentWidth": "Width (px)",
         "purposeHint": "The purpose defines in which situation this template is sent. It determines which data — and therefore which placeholders — are available: only an invoice template knows the invoice amount, for example.",
         "descriptionHelp": "Internal only: helps you and your team find the template in the list. It does not appear in the email.",
         "sampleSubscriptionHelp": "Pick an existing subscription to fill the preview and the test mail with its real data. Without a choice, made-up sample data is used. The test mail still only goes to you.",
-        "bodyModeHelp": "Visual: edit the content like in a word processor. HTML: edit the source code directly — for advanced users. Plain text: the text-only version for email programs without HTML; it is generated automatically.",
+        "textContentGenerated": "Generated automatically from the HTML / visual content",
+        "bodyModeHints": {
+          "visual": "Edit the content like in a word processor.",
+          "html": "Edit the source code directly — for advanced users.",
+          "text": "The text-only version for email programs without HTML. It is generated automatically from the content; edit the visual or HTML tab to change it."
+        },
         "backgroundHelp": "Color of the area around the email's content.",
         "contentWidthHelp": "Maximum width of the content in pixels. 600 px is a proven value that looks good in most email programs. On narrow screens the content shrinks automatically.",
         "bodyMode": "Editor mode",
         "letterLayout": "Stationery",
         "letterLayoutDefault": "Default ({{name}})",
         "letterLayoutNone": "Default (none yet)",
-        "letterLayoutHelp": "Header and footer when this template is printed as a letter. Ignored for emails."
+        "letterLayoutHelp": "Header and footer"
       },
       "editor": {
         "undo": "Undo",
@@ -1700,7 +1753,7 @@
       "htmlContent": "HTML content",
       "name": "Name",
       "placeholders": "Placeholders",
-      "placeholdersHint": "Click to insert into the selected field",
+      "placeholdersHint": "Clicking a placeholder inserts it into the template.",
       "placeholderSelectType": "Choose a purpose above to see its placeholders.",
       "mailTypes": {
         "account": "Account & login",
@@ -1711,13 +1764,13 @@
         "custom": "Free mail (subscriber)",
         "customNoSubscription": "Free mail (no subscription)"
       },
-      "placeholderAlways": "Always available — every mail",
+      "placeholderAlways": "Always available",
       "placeholderContextLabel": "Additional fields for this purpose",
       "placeholderContexts": {
-        "account": "Account & login (creation, login link, password reset)",
+        "account": "Account & login",
         "emailChange": "Email change",
-        "subscription": "Subscription (new, confirmed, deactivation)",
-        "renewal": "Renewal — automated (success / failed)",
+        "subscription": "Subscription",
+        "renewal": "Automated renewal",
         "invoiceCreation": "Invoice created",
         "custom": "Free mail to a subscriber",
         "customNoSubscription": "Free mail to a non-subscriber"
@@ -1736,11 +1789,16 @@
       "textContent": "Plain text content (fallback)",
       "wysiwyg": "Visual",
       "delete": "Delete",
-      "deleteConfirm": "Delete this mail template?",
+      "deleteConfirm": "Delete this message template?",
       "importFromProvider": "Import from provider",
       "importConfirm": "Import & overwrite",
       "importWarning": "This imports every template from the mail provider. Unknown ones are created, already imported ones have their HTML and subject overwritten. Local changes to them will be lost.",
       "importDone": "Imported {{count}} template(s) from the provider.",
+      "placeholderGroups": {
+        "user": "User",
+        "person": "Person",
+        "general": "General"
+      },
       "placeholderNames": {
         "user_fullName": "Full name",
         "user_firstName": "First name",
@@ -1759,8 +1817,8 @@
         "optional_subscription_periodAmount": "Amount per period",
         "optional_subscription_periodMonths": "Months per period",
         "optional_subscription_currency": "Currency",
-        "optional_subscription_paymentPeriodicity": "Payment periodicity (code)",
-        "optional_subscription_paymentPeriodicity_display": "Payment periodicity",
+        "optional_subscription_paymentPeriodicity": "Payment interval (code)",
+        "optional_subscription_paymentPeriodicity_display": "Payment interval",
         "optional_subscription_autoRenew": "Auto renewal",
         "optional_subscription_startsAt": "Starts at",
         "optional_subscription_paidUntil": "Paid until",
@@ -1812,7 +1870,7 @@
         "custom": "Invoices come as an array: optional_invoices_0_* (newest first).",
         "customNoSubscription": "Only recipient fields are available — this mail goes to people without a subscription."
       },
-      "searchPlaceholders": "Search…",
+      "searchPlaceholders": "Filter placeholders…",
       "noPlaceholders": "No matching placeholders.",
       "placeholderExample": "Example",
       "purposeDescriptions": {
@@ -1871,13 +1929,25 @@
         "optional_invoices_0_description": "Description of the latest invoice."
       },
       "statusHelp": "A check mark means an automatic email uses this template. «Unused» means no automatic email uses it — you can still send it by hand via «Manual messages».",
-      "placeholdersInfo": "Placeholders are replaced automatically with each recipient's data when the email is sent, e.g. their first name. This makes every email personal.",
-      "searchPlaceholdersLabel": "Search placeholders",
-      "empty": "No mail templates yet."
+      "placeholdersInfo": "Placeholders are replaced automatically with the matching data when the message is sent, e.g. the recipient's first name.",
+      "searchPlaceholdersLabel": "Filter placeholders",
+      "empty": "No message templates yet."
     },
     "mailTemplateSelect": {
-      "sendAsLetter": "Also by letter",
-      "sendAsLetterHint": "People on the letter channel get this message printed instead of emailed.",
+      "chooser": {
+        "title": "Choose a template: {{event}}",
+        "select": "Choose this template",
+        "selectCurrent": "Choose this template (already chosen)",
+        "none": "Send no message",
+        "create": "Create new template",
+        "columns": {
+          "template": "Template",
+          "purpose": "Purpose"
+        }
+      },
+      "channels": "Delivery channels",
+      "noLetterVersion": "This template has no letter version. Add one in the template so people on the letter channel get this message printed; until then they get the email.",
+      "sendAsLetterHint": "The email always goes out. With letter ticked, people on the letter channel get this message printed instead of by email.",
       "noMailSentSelectNow": "Do not send an email"
     },
     "memberPlanEdit": {
@@ -1893,7 +1963,7 @@
       "createMemberPlanHeader": "Create Subscription Plan",
       "description": "Description",
       "shortDescription": "Short description",
-      "editPaymentSetting": "Edit payment methods & periodicities",
+      "editPaymentSetting": "Edit payment methods & terms",
       "forceAutoRenewal": "Force Auto Renewal",
       "loadingTitle": "Loading",
       "name": "Name",
@@ -1927,7 +1997,7 @@
       "editFlowShort": "Edit flow",
       "name": "Name",
       "paymentMethods": "Possible Payment Methods",
-      "paymentPeriodicities": "Payment Periodicities",
+      "paymentPeriodicities": "Payment intervals",
       "paymentPeriodicity": {
         "biannual": "Biannual",
         "monthly": "Monthly",
@@ -2050,7 +2120,30 @@
           "unresponsive": "Unresponsive since {{date}}",
           "unknown": "Unknown since {{date}}"
         },
-        "recomputedDaily": "(recomputed automatically every day)"
+        "recomputedDaily": "(recomputed automatically every day)",
+        "filter": {
+          "reason": "Reason",
+          "emailSince": "Email status since",
+          "created": "Suggested since"
+        },
+        "reasonFilter": {
+          "placeholderEmail": "Placeholder address",
+          "hardBounce": "Hard bounce",
+          "invalid": "Invalid address",
+          "blocked": "Blocked by the mail provider",
+          "spamComplaint": "Spam complaint",
+          "unsubscribed": "Unsubscribed at the mail provider",
+          "clicked": "Clicked a link",
+          "verified": "Address verified",
+          "login": "Logged in",
+          "emailVerified": "Email address confirmed",
+          "noInteraction": "No reaction",
+          "noEvidence": "No evidence",
+          "none": "No email status"
+        },
+        "confirmAllFiltered": "Apply all {{count}} filtered",
+        "confirmAllFilteredText": "Only the suggestions that match the filter are applied.",
+        "emptyFiltered": "No suggestions match the filter."
       },
       "assign": {
         "steps": {
@@ -2089,7 +2182,7 @@
         "emailUnreachable": "Email address unreachable ({{segment}}) – email will not reach this person."
       },
       "flows": {
-        "letterHint": "Messages marked «Also by letter» reach people on the letter channel in print; everyone else gets email.",
+        "letterHint": "Messages with «Letter» ticked reach people on the letter channel in print; everyone else gets email.",
         "manage": "Manage delivery channels"
       }
     },
@@ -2277,10 +2370,11 @@
       "userConsents": "User consents",
       "userConsentCreate": "New user consent",
       "userConsentEdit": "Edit user consent",
-      "automaticEmails": "Automatic emails",
-      "mailTemplates": "Email templates",
-      "mailTemplateCreate": "New email template",
-      "mailTemplateEdit": "Edit email template",
+      "automaticEmails": "Automated messages",
+      "communicationFlow": "Edit flow",
+      "mailTemplates": "Message templates",
+      "mailTemplateCreate": "New message template",
+      "mailTemplateEdit": "Edit message template",
       "letterLayouts": "Stationery",
       "letterLayoutCreate": "New stationery",
       "letterLayoutEdit": "Edit stationery",
@@ -2574,7 +2668,57 @@
       "startTime": "Started at: {{date, ccc PP p}}",
       "successTime": "Success at: {{date, ccc PP p}}",
       "title": "Periodic Job Logs",
-      "tries": "Runs: {{tries}}"
+      "tries": "Runs: {{tries}}",
+      "counts": {
+        "readers_one": "{{count}} reader",
+        "readers_other": "{{count}} readers",
+        "pushed_one": "{{count}} sent",
+        "pushed_other": "{{count}} sent",
+        "failed_one": "{{count}} failed",
+        "failed_other": "{{count}} failed",
+        "synced_one": "{{count}} audience synced",
+        "synced_other": "{{count}} audiences synced",
+        "checked_one": "{{count}} checked",
+        "checked_other": "{{count}} checked",
+        "updated_one": "{{count}} updated",
+        "updated_other": "{{count}} updated",
+        "listed_one": "{{count}} listed",
+        "listed_other": "{{count}} listed",
+        "recorded_one": "{{count}} new",
+        "recorded_other": "{{count}} new",
+        "recomputed_one": "{{count}} re-evaluated",
+        "recomputed_other": "{{count}} re-evaluated",
+        "toLetter_one": "{{count}} to letter",
+        "toLetter_other": "{{count}} to letter",
+        "toMail_one": "{{count}} to email",
+        "toMail_other": "{{count}} to email",
+        "removed_one": "{{count}} removed",
+        "removed_other": "{{count}} removed"
+      },
+      "stepProblems": "Done, but not every step went smoothly.",
+      "stepStatus": {
+        "ok": "OK",
+        "warning": "partly failed",
+        "error": "failed",
+        "skipped": "not in use"
+      },
+      "steps": {
+        "customMails": "Subscription mails",
+        "invoiceStates": "State of open invoices",
+        "invoiceCreation": "Create invoices",
+        "invoiceLetters": "Invoice letters",
+        "paymentMethodChanges": "Payment method changes",
+        "charging": "Charge invoices",
+        "deactivationUnpaid": "End subscriptions with unpaid invoices",
+        "deactivationNotRenewed": "End expired subscriptions",
+        "bexioContactSync": "Contacts to bexio",
+        "mailchimpSync": "Mailchimp sync",
+        "mailLogSync": "Mail delivery states",
+        "suppressionSync": "Suppressed addresses",
+        "emailQuality": "Email quality",
+        "deliverySuggestions": "Delivery channel suggestions"
+      },
+      "stepsLabel": "Tonight's steps"
     },
     "permissions": {
       "contactAdmin": "Please contact your administrator to add any of the following permissions: {{permissions}}",
@@ -2832,10 +2976,71 @@
     },
     "automaticMails": {
       "title": "Automated messages",
-      "intro": "Here you decide which email template goes out automatically for which event. Pick a template per event – or leave it on “Do not send an email” if nothing should go out. The ⓘ icon explains every event.",
       "example": "Example: {{example}}"
     },
     "subscriptionFlow": {
+      "overview": {
+        "back": "All flows & automated messages",
+        "title": "Messages for subscription flows",
+        "intro": "A flow decides which message goes out automatically for which subscription event. The default flow applies to all subscriptions. A member plan can have flows of its own for some of its subscriptions, and a flow can be for some subscriptions of all member plans: such a flow replaces the default flow for the affected subscriptions completely. If several flows are defined, they are applied in this order: 1. flows for a specific member plan → 2. flows for all member plans → 3. the default flow. In the table of flows, this is the direction “from the bottom up”. As soon as a flow matches a subscription, that flow is applied and the matching stops. Flows “further up” in the list are therefore never applied to that subscription.",
+        "flow": "Flow for member plan",
+        "defaultFlow": "All → default flow",
+        "appliesTo": "Applies to",
+        "defaultApplies": "All subscriptions without a flow of their own",
+        "subscriptions": "Affected subscriptions",
+        "events": "Messages",
+        "eventsValue": "{{sending}} of {{total}} events",
+        "letterEvents": "Of these by letter",
+        "memberPlan": "Member plan",
+        "createIntro": "Choose the member plan – or “All member plans” – and the subscriptions the new flow applies to. Which messages it sends is set on its page afterwards.",
+        "deleteTitle": "Delete the flow of “{{memberPlan}}”?",
+        "renewal": {
+          "true": "with automatic renewal",
+          "false": "without automatic renewal"
+        },
+        "noMemberPlan": "No member plan",
+        "allMemberPlans": "All member plans",
+        "subscriptionsSum": "Affected subscriptions ({{sum}})",
+        "active": "Active",
+        "switchOff": "Switch flow off",
+        "switchOn": "Switch flow on",
+        "deactivateTitle": "Switch flow off?",
+        "activateTitle": "Switch flow on?",
+        "deactivateQuestion": "The {{count}} subscriptions handled by this flow will then be handled by other flows.",
+        "activateQuestion": "This flow will then take over {{count}} subscriptions from other flows.",
+        "tabs": {
+          "flows": "Subscription flows ({{count}})",
+          "account": "Account & login"
+        },
+        "group": {
+          "default": "Default",
+          "allMemberPlans": "For all member plans",
+          "memberPlan": "Member plan “{{memberPlan}}”"
+        },
+        "any": {
+          "paymentMethods": "any payment method",
+          "periodicities": "any term",
+          "renewal": "with or without auto renewal"
+        },
+        "warnings": {
+          "noMemberPlan": "The member plan of this flow was deleted. As long as this flow exists, no automated message is sent – delete it.",
+          "matchesNothing": "Applies to no subscription: a payment method, term or renewal is missing.",
+          "notOffered": "No longer offered by the member plan: {{values}}. This flow only applies to already existing subscriptions."
+        }
+      },
+      "earliestDay": {
+        "anyTerm": "{{days}} days before the subscription ends at the earliest: this flow applies to subscriptions of any term, including the shortest. Narrow it to longer terms so it can start earlier.",
+        "byConditions": "{{days}} days before the subscription ends at the earliest: this flow applies to subscriptions with the term “{{periodicity}}”. An even earlier invoice date would exceed the length of the subscription term.",
+        "defaultFlow": "{{days}} days before the subscription ends at the earliest: the default flow applies to every subscription without a flow of its own, including those with the shortest term. A flow for longer terms only can start earlier."
+      },
+      "flow": "Flow",
+      "planFlowDescription": "This flow completely replaces the default flow for the subscriptions of its member plan that match the filter criteria defined below.",
+      "allPlansFlowDescription": "This flow completely replaces the default flow for the subscriptions of all member plans that match the filter criteria defined below. Where a member plan has a flow of its own for such subscriptions, that one comes first.",
+      "inactiveNotice": "This flow is switched off. Its subscriptions get the messages of the next matching flow.",
+      "openConditionsHint": "An empty field does not narrow: the flow then applies to any value. At least one field must be filled in.",
+      "planFlowDescriptionFor": "This flow completely replaces the default flow for the subscriptions of the member plan “{{memberPlan}}” that match the filter criteria defined below.",
+      "noFallback": "Events without a template send nothing – the default flow does not step in.",
+      "notFound": "This flow does not exist (any more).",
       "subscribe": "Subscription started",
       "renewal_success": "Renewal successful",
       "renewal_failed": "Renewal failed",
@@ -2846,14 +3051,13 @@
       "custom": "Custom event",
       "settings": "Subscription flow settings",
       "edit": "Edit subscription flow",
-      "settingsDescription": "These settings apply to this subscription plan only and override the automatic emails.",
       "addNew": "Create new flow",
       "dayWithNumber": "day {{day}}",
       "days": "days",
       "savedChange": "Change successfully saved",
       "add": "Add",
       "paymentMethod": "Payment method",
-      "periodicity": "Periodicity",
+      "periodicity": "Term",
       "autoRenewal": "Auto renewal?",
       "booleanFilter": {
         "true": "Yes",
@@ -2863,7 +3067,7 @@
       "deletePermanently": "Delete permanently",
       "dropHere": "Drop here",
       "filters": "Filters",
-      "filtersDescription": "Defines which subscriptions this flow applies to: subscription plan, payment method, periodicity and auto renewal.",
+      "filtersDescription": "Defines which subscriptions this flow applies to: subscription plan, payment method, term and auto renewal.",
       "filtersExample": "Yearly subscriptions paid by credit card only.",
       "subscriptionEvents": "Subscription events",
       "subscriptionEventsDescription": "Emails that go out immediately when something happens to a subscription. They are not tied to a date.",
@@ -2876,8 +3080,7 @@
       "addMail": "Add email",
       "deleteMail": "Remove email",
       "defaultFlow": "Default flow",
-      "defaultFlowDescription": "Applies to every subscription no other flow matches. Changes here also apply under «Automated messages».",
-      "flowNumber": "Flow {{number}}",
+      "defaultFlowDescription": "Applies to every subscription no other flow matches.",
       "newFlow": "New flow",
       "newDayTitle": "New day in the timeline",
       "newDayHint": "Negative number = before the subscription ends, positive number = after.",
@@ -2946,11 +3149,16 @@
       }
     },
     "systemMails": {
-      "title": "Account & login",
+      "title": "Messages for account & login events",
       "sectionDescription": "Emails around the user account. They are triggered by something the person does – no matter whether they have a subscription.",
       "sectionExample": "Someone registers → the welcome email goes out right away.",
-      "sendTest": "Send test to me",
+      "sendTest": "Send test email to me",
       "testSent": "Test email sent to you",
+      "columns": {
+        "event": "Event type",
+        "userAction": "User action",
+        "template": "Message template"
+      },
       "events": {
         "account_creation": "Registration",
         "login_link": "Login link",
@@ -2960,27 +3168,27 @@
       },
       "eventInfo": {
         "account_creation": {
-          "short": "A new account was created.",
+          "userAction": "Signs up, or gets an account when buying a subscription",
           "description": "Goes out as soon as a person registers or gets an account while buying a subscription.",
           "example": "“Welcome – your account is ready.”"
         },
         "login_link": {
-          "short": "Log in without a password.",
+          "userAction": "Requests a login link",
           "description": "Goes out when a person wants to log in via a link instead of typing a password. The email has to contain the login link.",
           "example": "“Log in with a single click.”"
         },
         "password_reset": {
-          "short": "Password forgotten.",
-          "description": "Goes out when a person clicks “Forgot password”. The email has to contain the link for setting a new password.",
+          "userAction": "An admin or author clicks “Forgot password” on the editor login",
+          "description": "Goes out when someone clicks “Forgot password” on the editor login – it exists only there, not on the website. So it concerns admins, authors and other editor users. The email must contain the link for setting a new password.",
           "example": "“Set a new password here.”"
         },
         "email_change": {
-          "short": "Confirm the new address.",
+          "userAction": "Changes their email address",
           "description": "Goes to the new address when someone changes their email address. The change only takes effect after the confirmation.",
           "example": "“Please confirm your new email address.”"
         },
         "test_mail": {
-          "short": "For your own tests only.",
+          "userAction": "None – for your own tests only",
           "description": "Never sent to readers automatically. Use this template to try out the mail delivery yourself.",
           "example": "“Test mail – if you can read this, sending works.”"
         }
@@ -3026,7 +3234,13 @@
         "generate": "Generate",
         "generateToken": "Generate Token",
         "name": "Name",
-        "tokenWarning": "Tokens cannot be retrieved later. It is recommended that you copy and save your token somewhere safe."
+        "tokenWarning": "Tokens cannot be retrieved later. It is recommended that you copy and save your token somewhere safe.",
+        "roles": "Roles",
+        "noRoles": "No roles – no permissions",
+        "noRolesWarning": "Without a role the token may do nothing. Pick the roles whose permissions programs using this token should have.",
+        "rolesInfo": "A request with this token gets the permissions of these roles. Changes apply immediately.",
+        "editRoles": "Edit roles",
+        "editRolesOf": "Roles of {{name}}"
       }
     },
     "untitled": "Untitled",
@@ -3102,6 +3316,17 @@
         "amountOfSubscriptions": "{{amount}} subscriptions",
         "createdAt": "Created",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
+        "emailQuality": "Email status",
+        "emailQualitySince": "Email status since",
+        "emailQualitySinceDate": "{{emailQualitySinceDate, PP}}",
+        "emailSegments": {
+          "active": "Active",
+          "unknown": "Unknown",
+          "unresponsive": "Unresponsive",
+          "dead": "Undeliverable",
+          "placeholder": "Placeholder",
+          "deadHint": "Bounce, invalid address, spam complaint or unsubscribed at the mail provider"
+        },
         "firstName": "First Name",
         "subscriptionStatus": {
           "Active": "Active",
@@ -3186,7 +3411,7 @@
         "title": {
           "activated": "Deactivate subscription"
         },
-        "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}"
+        "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}. Reason: {{reason}}"
       },
       "revertUpgrade": {
         "title": "Undo upgrade",
@@ -3264,7 +3489,7 @@
       "noAutoRenew": "Subscription expires, no automatic renewal",
       "noDeactivation": "No deactivation.",
       "paidUntil": "Paid until {{date}}",
-      "paymentPeriodicity": "Payment periodicity: {{paymentPeriodicity}}",
+      "paymentPeriodicity": "Payment interval: {{paymentPeriodicity}}",
       "periodAmount": "Amount: {{amount}} {{currency}}",
       "periodCreatedAt": "Created at {{date}}",
       "periodEndsAt": "until {{date}}",
@@ -3849,7 +4074,11 @@
         "bexioInvoiceMailSubjectInfo": "The subject of the email Bexio sends with the invoice. Placeholders such as :user.firstName: or :memberPlan.name: are replaced automatically.",
         "bexioInvoiceMailBodyInfo": "The text of the email Bexio sends with the invoice; the PDF is attached. Placeholders such as :user.firstName: or :memberPlan.name: are replaced automatically. Bexio requires the placeholder [Network Link] in the text.",
         "bexioMarkInvoiceAsOpenInfo": "When enabled, Bexio sets the invoice to «open» after sending it, instead of leaving it as a draft.",
+        "bexioInvoiceMailByWePublish": "We.Publish sends the Bexio invoices",
+        "bexioInvoiceMailByWePublishInfo": "When enabled, Bexio no longer sends renewal invoices itself but only issues them. We.Publish attaches the Bexio pdf to the «invoice created» mail of the subscription flow, or prints it after the letter. Adjust that template if it mentions a separate mail from Bexio. Bexio shows no email history for these invoices. Use together with «Mark Invoice as Open», otherwise the pdf is a draft. Invoices from the checkout are still sent by Bexio.",
         "bexioContactSyncInfo": "When enabled, We.Publish pushes the name, company, email and address of changed readers to their Bexio contact every night and creates missing contacts for subscriptions paid through Bexio. Groups, phone and everything else on the contact stay as they are in Bexio.",
+        "bexioTestMailbox": "Test mailbox (test instances only)",
+        "bexioTestMailboxInfo": "Bexio companies in their trial only send invoice mails to their own sender address. Invoice mails to an address on this mailbox's domain go to this mailbox instead, e.g. bexio@<id>.resend.app for readers nw-00001@<id>.resend.app. Not available on production.",
         "bexioContactSyncNeverRan": "Has not run yet.",
         "bexioContactSyncLastRun": "Last run: {{date}}, without errors.",
         "bexioContactSyncLastRunFailed": "Last run: {{date}}. Error: {{error}}"
@@ -4310,7 +4539,8 @@
       "apps": "Apps",
       "noAppsFound": "No external apps configured.",
       "notFound": "External app not found",
-      "appsInfo": "Shortcuts to external tools that appear on the dashboard under «We.Publish Apps». «Target» decides whether an app opens in a new browser tab or inside the editor. Some websites can't be shown inside the editor – open those in a new tab."
+      "appsInfo": "Shortcuts to external tools that appear on the dashboard under «We.Publish Apps». «Target» decides whether an app opens in a new browser tab or inside the editor. Some websites can't be shown inside the editor – open those in a new tab.",
+      "noToken": "The app could not be opened: no access token was issued."
     },
     "externalAppForm": {
       "apiKey": "API key",
@@ -4451,8 +4681,8 @@
           "description": "Audience and filters"
         },
         "content": {
-          "title": "Content & delivery channel",
-          "description": "Template, email or letter"
+          "title": "Delivery channel & content",
+          "description": "Email or letter, template"
         },
         "send": {
           "title": "Send",
@@ -4528,7 +4758,6 @@
         "cancelled": "Canceled"
       },
       "missingPlaceholders": "Heads up: these placeholders won't be filled for these recipients: {{placeholders}}",
-      "createTemplate": "New template",
       "attachments_one": "Every mail carries {{count}} attachment as PDF: {{names}}",
       "attachments_other": "Every mail carries {{count}} attachments as PDF: {{names}}",
       "editTemplate": "Edit template",
@@ -4554,6 +4783,7 @@
         "unknown": "Unknown",
         "active": "Active",
         "hint": "Several statuses mean any of them. “Unresponsive”: mails were delivered but there has been no login or click for a long time (setting “Email quality”). Reachable by letter: placeholder + dead.",
+        "hintWithoutPlaceholder": "Several statuses mean any of them. “Unresponsive”: mails were delivered but there has been no login or click for a long time (setting “Email quality”).",
         "overview": "People in this audience by email status (regardless of the selection)",
         "refresh": "Refresh statuses",
         "refreshing": "Refreshing statuses …",
@@ -4602,7 +4832,11 @@
         "label": "Delivery channel",
         "mail": "Email",
         "letter": "Letter",
-        "withoutAddress": "{{count}} of the recipients have no usable postal address and will be skipped."
+        "withoutAddress": "{{count}} of the recipients have no usable postal address and will be skipped.",
+        "templateDropped": {
+          "mail": "“{{template}}” has no email version and was therefore deselected. Choose a template for email.",
+          "letter": "“{{template}}” has no letter version and was therefore deselected. Choose a template for letter."
+        }
       },
       "print": {
         "addressPosition": {
@@ -4675,7 +4909,11 @@
         "matchAll": "all conditions",
         "more": "{{count}} more filters"
       },
-      "deliveryChannelHandOff": "Switch this user group’s delivery channel for good …"
+      "deliveryChannelHandOff": "Switch this user group’s delivery channel for good …",
+      "templateFor": {
+        "mail": "Manual message by email",
+        "letter": "Manual message by letter"
+      }
     },
     "mailLog": {
       "title": "Sent messages",
@@ -4693,8 +4931,6 @@
         "job": "Send job",
         "jobAll": "All send jobs",
         "all": "All",
-        "title": "Filter",
-        "reset": "Reset filters",
         "typeHint": "What triggered this send.",
         "channel": "Delivery",
         "jobHelp": "A send job groups all emails sent with one click via «Manual messages». Pick one to see only its emails."
@@ -5666,7 +5902,7 @@
         "subscription": "Create subscription",
         "consent": "Create consent",
         "userConsent": "Create user consent",
-        "mailTemplate": "Create email template",
+        "mailTemplate": "Create message template",
         "letterLayout": "Create stationery",
         "memberPlan": "Create subscription plan",
         "paymentMethod": "Create payment method",

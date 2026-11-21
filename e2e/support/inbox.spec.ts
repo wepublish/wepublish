@@ -1,6 +1,7 @@
+import { simpleParser } from 'mailparser';
 import { describe, expect, it } from 'vitest';
 import { extractLink, mailBackend, type Mail } from './inbox';
-import { pickMessage } from './imap-inbox';
+import { pickMessage, toMail } from './imap-inbox';
 
 const mail = (over: Partial<Mail> = {}): Mail => ({
   id: '1',
@@ -8,7 +9,41 @@ const mail = (over: Partial<Mail> = {}): Mail => ({
   to: ['reader@example.test'],
   html: '',
   text: '',
+  attachments: [],
   ...over,
+});
+
+describe('toMail', () => {
+  const pdf = Buffer.from('%PDF-1.4 invoice');
+  const source = [
+    'From: abo@site.test',
+    'To: reader@example.test',
+    'Subject: Ihre Rechnung',
+    'MIME-Version: 1.0',
+    'Content-Type: multipart/mixed; boundary="b"',
+    '',
+    '--b',
+    'Content-Type: text/plain; charset=utf-8',
+    '',
+    'Im Anhang Ihre Rechnung.',
+    '--b',
+    'Content-Type: application/pdf; name="RE-11.pdf"',
+    'Content-Disposition: attachment; filename="RE-11.pdf"',
+    'Content-Transfer-Encoding: base64',
+    '',
+    pdf.toString('base64'),
+    '--b--',
+    '',
+  ].join('\r\n');
+
+  it('keeps the attachments of the mail with their content', async () => {
+    const parsed = toMail('7', await simpleParser(source));
+
+    expect(parsed).toMatchObject({ id: '7', subject: 'Ihre Rechnung', to: ['reader@example.test'] });
+    expect(parsed.attachments).toEqual([
+      { filename: 'RE-11.pdf', contentType: 'application/pdf', content: pdf },
+    ]);
+  });
 });
 
 describe('mailBackend', () => {

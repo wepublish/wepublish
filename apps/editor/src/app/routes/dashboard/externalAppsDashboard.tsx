@@ -13,13 +13,15 @@ import {
   ExternalAppsDocument,
   ExternalAppsTarget,
 } from '@wepublish/editor/api';
-import { humanizeError } from '@wepublish/ui/editor';
+import { enqueueSnackbar, humanizeError } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
 import { MdExtension } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 
 import { ApiKeyWarning } from '../externalApps/apiKeyWarning';
 import { ICON_REGISTRY } from '../externalApps/iconRegistry';
+import { openExternalApp } from '../externalApps/openExternalApp';
+import { useMintExternalAppToken } from '../externalApps/useExternalAppSrc';
 
 const AppGrid = styled(Grid)`
   padding: ${({ theme }) => theme.spacing(4)};
@@ -67,6 +69,7 @@ export function ExternalAppsDashboard() {
   const { data, loading, error } = useQuery(ExternalAppsDocument, {
     fetchPolicy: 'cache-and-network',
   });
+  const mintToken = useMintExternalAppToken();
 
   if (loading) {
     return (
@@ -122,7 +125,13 @@ export function ExternalAppsDashboard() {
             <CardActionArea
               onClick={() => {
                 if (app.target === ExternalAppsTarget.Blank) {
-                  window.open(app.url, '_blank', 'noopener,noreferrer');
+                  openExternalApp(app.url, () => mintToken(app.id)).catch(
+                    (mintError: unknown) =>
+                      enqueueSnackbar(humanizeError(mintError), {
+                        variant: 'error',
+                        autoHideDuration: 8000,
+                      })
+                  );
                 } else if (app.target === ExternalAppsTarget.Iframe) {
                   navigate(`/external-app/${app.id}`);
                 }

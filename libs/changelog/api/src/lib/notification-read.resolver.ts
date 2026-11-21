@@ -22,7 +22,9 @@ export class NotificationReadResolver {
       "Returns the current user's read notifications. Requires authentication.",
   })
   notificationReads(@CurrentUser() session: AuthSession) {
-    return this.notificationReadService.getNotificationReads(requireSessionUser(session).id);
+    return this.notificationReadService.getNotificationReads(
+      requireSessionUser(session).id
+    );
   }
 
   @Authenticated()

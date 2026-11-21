@@ -39,7 +39,6 @@ import {
   FormControlLabel,
   FormLabel,
   Link as MuiLink,
-  MenuItem,
   Radio,
   RadioGroup,
   Stack,
@@ -51,9 +50,11 @@ import {
 } from '@mui/material';
 import { ReactElement, useEffect, useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdAdd, MdEdit, MdSend } from 'react-icons/md';
+import { MdEdit, MdSend } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import { useLetterChannel } from '../mail-template/use-letter-channel';
+import { MailTemplateField } from '../mail-template/mail-template-field';
+import { templatesForChannel } from '../mail-template/template-versions';
 import { canGoToStep, StepNav, WizardStepper } from './step-nav';
 import { EmailEvidenceNotice } from './email-evidence-notice';
 import { mailErrorHelpKey } from './mail-log-common';
@@ -100,7 +101,8 @@ const DEFAULT_PRINT: PrintSettings = {
  * The three stages the author walks through: content, audience, send. Content
  * comes first because it settles the medium, and the medium decides what the
  * recipient count even means — a letter goes to a person, a mail to a
- * subscription.
+ * subscription. Within it the channel is picked before the template, because
+ * a template is written per channel: the chooser then offers what can be sent.
  */
 const STEP_CONTENT = 0;
 const STEP_AUDIENCE = 1;
@@ -167,8 +169,8 @@ function MailSendPage() {
   const [recipientsOpen, setRecipientsOpen] = useState(false);
   const [jobId, setJobId] = useState<string | null>(null);
   const [step, setStep] = useState(STEP_CONTENT);
-  const fieldId = useId();
-  const templateTitleId = `${fieldId}-template-title`;
+  // The template a change of channel took away, to say why the field is empty.
+  const [dropped, setDropped] = useState<string | null>(null);
   const stepTitleRef = useRef<HTMLHeadingElement>(null);
   const focusStepTitle = useRef(false);
   const stepperVertical = useMediaQuery((theme: Theme) =>
@@ -201,6 +203,24 @@ function MailSendPage() {
   // Without a letter integration every send is a mail, so there is no channel
   // to choose and nothing to say about it.
   const { letterAvailable, paperLetters } = useLetterChannel();
+  const templates = templateData?.mailTemplates ?? [];
+  const template = templates.find(({ id }) => id === templateId);
+
+  const pickTemplate = (id: string | null) => {
+    setTemplateId(id);
+    setDropped(null);
+  };
+
+  // A template is written per channel, so one without a version for the new
+  // channel cannot stay chosen.
+  const pickChannel = (next: MailChannel) => {
+    setChannel(next);
+
+    if (template && !templatesForChannel([template], next).length) {
+      setTemplateId(null);
+      setDropped(template.name);
+    }
+  };
 
   const {
     data: previewData,
@@ -249,6 +269,7 @@ function MailSendPage() {
       variables: {
         templateId: templateId as string,
         withSubscriptionData: allowsSubscriptionTemplates,
+        channel,
       },
     }
   );
@@ -264,9 +285,7 @@ function MailSendPage() {
   // re-sending is a deliberate act (reload the page), never a double click.
   const canSend = !!templateId && count > 0 && !creating && !jobId;
 
-  const templateName = (templateData?.mailTemplates ?? []).find(
-    template => template.id === templateId
-  )?.name;
+  const templateName = template?.name;
 
   // What each step has to produce before the next one makes sense: a template
   // to send, then an audience with recipients.
@@ -355,78 +374,71 @@ function MailSendPage() {
 
           {step === STEP_CONTENT && (
             <>
+              {letterAvailable && (
+                <ChannelPanel
+                  channel={channel}
+                  onChannelChange={pickChannel}
+                  print={print}
+                  onPrintChange={setPrint}
+                  header={
+                    <CardHeader
+                      title={t('mailSend.channel.label')}
+                      slotProps={stepTitleProps}
+                    />
+                  }
+                />
+              )}
+
               <Card
                 variant="outlined"
                 style={{ marginTop: 16 }}
               >
                 <CardHeader
                   title={t('mailSend.template')}
-                  slotProps={{
-                    title: { ...stepTitleProps.title, id: templateTitleId },
-                  }}
+                  // The step starts at its first card.
+                  slotProps={
+                    letterAvailable ?
+                      { title: { component: 'h2' } }
+                    : stepTitleProps
+                  }
                 />
 
                 <CardContent>
-                  <div
-                    style={{ display: 'flex', gap: 12, alignItems: 'center' }}
-                  >
-                    <TextField
-                      select
-                      value={templateId ?? ''}
-                      onChange={event => setTemplateId(event.target.value)}
-                      fullWidth
-                      slotProps={{
-                        select: {
-                          displayEmpty: true,
-                          labelId: templateTitleId,
-                        },
-                      }}
-                    >
-                      <MenuItem value="">
-                        {t('mailSend.selectTemplate')}
-                      </MenuItem>
+                  <MailTemplateField
+                    value={templateId}
+                    templates={templates}
+                    label={t(
+                      `mailSend.templateFor.${isLetter ? 'letter' : 'mail'}`
+                    )}
+                    channel={channel}
+                    // A send without a template is no send.
+                    allowNone={false}
+                    emptyLabel={t('mailSend.selectTemplate')}
+                    onChange={pickTemplate}
+                  />
 
-                      {(templateData?.mailTemplates ?? []).map(template => (
-                        <MenuItem
-                          key={template.id}
-                          value={template.id}
-                        >
-                          {template.name}
-                        </MenuItem>
-                      ))}
-                    </TextField>
-                    <Button
-                      variant="outlined"
-                      startIcon={<MdAdd />}
-                      component={Link}
-                      to="/mailtemplates/create"
-                      target="_blank"
+                  {dropped && (
+                    <Alert
+                      severity="info"
+                      role="status"
+                      sx={{ marginTop: 1.5 }}
                     >
-                      {t('mailSend.createTemplate')}
-                    </Button>
-                  </div>
+                      {t(
+                        `mailSend.channel.templateDropped.${isLetter ? 'letter' : 'mail'}`,
+                        { template: dropped }
+                      )}
+                    </Alert>
+                  )}
+
                   {/* Attachments ship with the letters; without them the
                       api attaches nothing, whatever the template has. */}
                   <TemplateAttachmentsNote
                     attachmentIds={
-                      paperLetters ?
-                        ((templateData?.mailTemplates ?? []).find(
-                          template => template.id === templateId
-                        )?.attachmentIds ?? [])
-                      : []
+                      paperLetters ? (template?.attachmentIds ?? []) : []
                     }
                   />
                 </CardContent>
               </Card>
-
-              {letterAvailable && (
-                <ChannelPanel
-                  channel={channel}
-                  onChannelChange={setChannel}
-                  print={print}
-                  onPrintChange={setPrint}
-                />
-              )}
 
               <StepNav
                 onNext={() => goToStep(STEP_AUDIENCE)}
@@ -626,18 +638,22 @@ function MailSendPage() {
 /**
  * The medium the send goes out through, and — for a letter — how it is printed
  * and posted. Both are the job's, not the template's: the same words can go out
- * as a mail today and as a letter tomorrow.
+ * as a mail today and as a letter tomorrow. It is picked first; the templates
+ * offered afterwards are the ones written for it.
  */
 function ChannelPanel({
   channel,
   onChannelChange,
   print,
   onPrintChange,
+  header,
 }: {
   channel: MailChannel;
   onChannelChange: (channel: MailChannel) => void;
   print: PrintSettings;
   onPrintChange: (print: PrintSettings) => void;
+  /** The card opens the step, so its title takes the focus of the step. */
+  header: ReactElement;
 }) {
   const { t } = useTranslation();
   const isLetter = channel === MailChannel.Letter;
@@ -653,7 +669,7 @@ function ChannelPanel({
       variant="outlined"
       style={{ marginTop: 16 }}
     >
-      <CardHeader title={t('mailSend.channel.label')} />
+      {header}
 
       <CardContent>
         <RadioGroup

@@ -4,7 +4,6 @@ import {
   InterfaceType,
   ObjectType,
   PartialType,
-  PickType,
 } from '@nestjs/graphql';
 
 @InterfaceType()
@@ -20,6 +19,12 @@ export abstract class BaseToken {
 
   @Field()
   name!: string;
+
+  @Field(() => [String], {
+    description:
+      'The user roles whose permissions a request with this token gets.',
+  })
+  roleIDs!: string[];
 }
 
 @ObjectType({
@@ -36,11 +41,17 @@ export class TokenWithSecret extends BaseToken {
 }
 
 @ArgsType()
-export class CreateTokenInput extends PickType(
-  TokenWithSecret,
-  ['name'] as const,
-  ArgsType
-) {}
+export class CreateTokenInput {
+  @Field()
+  name!: string;
+
+  @Field(() => [String], {
+    nullable: true,
+    description:
+      'User roles for the token. Without roles a token has no permissions.',
+  })
+  roleIDs?: string[];
+}
 
 @ArgsType()
 export class UpdateTokenInput extends PartialType(CreateTokenInput, ArgsType) {

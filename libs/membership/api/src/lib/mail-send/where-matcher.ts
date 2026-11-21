@@ -2,10 +2,10 @@
  * Evaluates a Prisma `where` object against a plain record.
  *
  * Test-only. It covers exactly the operators the audience filters build
- * (`AND`/`OR`, `gte`/`lte`/`lt`/`gt`/`in`, `is: null`, and the `none` relation
- * filter) so a spec can assert which recipients an audience actually includes,
- * instead of only asserting the shape of the query — the shape looks right even
- * when the semantics are wrong.
+ * (`AND`/`OR`, `gte`/`lte`/`lt`/`gt`/`in`, `contains`, `not` (also nested),
+ * `is: null`, and the `none` relation filter) so a spec can assert which
+ * recipients an audience actually includes, instead of only asserting the shape
+ * of the query — the shape looks right even when the semantics are wrong.
  *
  * It evaluates in JavaScript, which is two-valued, while Postgres is
  * three-valued: a comparison against NULL is neither true nor false there, and
@@ -106,6 +106,17 @@ const matchesOperators = (value: unknown, condition: Where): boolean =>
 
 export const matches = (row: Row, where: Where): boolean =>
   Object.entries(where).every(([key, condition]) => {
+    if ((key === 'AND' || key === 'OR') && !(condition as Where[]).length) {
+      // An empty list has no meaning a reader can rely on: older Prisma read
+      // `OR: []` as "nothing", the deployed Prisma 7 matches every row with it
+      // (a mail-send placeholder segment counted a whole tenant that way).
+      // Rejected like `NOT`, so a filter must say "nobody" or "everybody"
+      // explicitly instead of a spec quietly picking one of the two.
+      throw new Error(
+        `where-matcher: empty "${key}" is ambiguous — Prisma versions disagree on it. Build an explicit filter instead.`
+      );
+    }
+
     if (key === 'AND') {
       return (condition as Where[]).every(part => matches(row, part));
     }

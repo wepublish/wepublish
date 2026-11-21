@@ -505,7 +505,7 @@ export class DashboardSubscriptionService {
         paidUntil: {
           gte: end,
         },
-        createdAt: {
+        startsAt: {
           lte: end,
         },
         ...memberPlanFilter,

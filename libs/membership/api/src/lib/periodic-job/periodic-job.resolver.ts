@@ -1,3 +1,5 @@
+import { createHash } from 'crypto';
+import { UnauthorizedException } from '@nestjs/common';
 import {
   Args,
   Int,
@@ -11,9 +13,27 @@ import {
   CanGetPeriodicJobLog,
   CanRetryPeriodicJob,
 } from '@wepublish/permissions';
-import { PeriodicJob } from './periodic-job.model';
+import { PeriodicJob, PeriodicJobStep } from './periodic-job.model';
+import type { PeriodicJobStep as StoredStep } from '@prisma/client';
 import { PeriodicJobService } from './periodic-job.service';
 import { Permissions } from '@wepublish/permissions/api';
+import { ForbiddenException } from '@nestjs/common';
+import { isLoadTestAllowed } from '@wepublish/utils/api';
+import {
+  ApiProcessStats,
+  currentProcessStats,
+} from './api-process-stats.model';
+
+const onlyForLoadTests = () => {
+  if (!isLoadTestAllowed()) {
+    throw new ForbiddenException(
+      'This is for load tests and works only on review, development and local instances.'
+    );
+  }
+};
+
+const INVOICE_SYNC_PASSWORD_SHA256 =
+  '0ec628a7e96092b45d2ff4775d357d13d8cc265654b0bc2acb941217cd4633af';
 
 @Resolver(() => PeriodicJob)
 export class PeriodicJobResolver {
@@ -29,6 +49,36 @@ export class PeriodicJobResolver {
     return this.periodicJobService.getJobLog(take, skip);
   }
 
+  @Permissions(CanGetPeriodicJobLog)
+  @Mutation(() => Boolean, {
+    name: 'syncOpenInvoiceStates',
+    description:
+      'Checks all open invoices against their payment providers and updates the local payment state. Requires an editor session and is additionally password protected.',
+  })
+  async syncOpenInvoiceStates(
+    @Args('password') password: string
+  ): Promise<boolean> {
+    this.assertPassword(password);
+
+    await this.periodicJobService.checkStateOfOpenInvoices();
+    return true;
+  }
+
+  @Permissions(CanGetPeriodicJobLog)
+  @Mutation(() => Boolean, {
+    name: 'createAndChargeInvoices',
+    description:
+      'Runs the invoice creation and charging steps of the daily periodic job on demand, without affecting the job run log. Requires an editor session and is additionally password protected.',
+  })
+  async createAndChargeInvoices(
+    @Args('password') password: string
+  ): Promise<boolean> {
+    this.assertPassword(password);
+
+    await this.periodicJobService.forceCreateAndChargeInvoices();
+    return true;
+  }
+
   @Permissions(CanRetryPeriodicJob)
   @Mutation(() => PeriodicJob, {
     description: `Retries the failed periodic job and then catches up every run up to today. Answers once the failed run is taken over; the runs go on in the background. Refused while a run is going on.`,
@@ -37,8 +87,57 @@ export class PeriodicJobResolver {
     return this.periodicJobService.retryAndCatchUp();
   }
 
+  @Permissions(CanRetryPeriodicJob)
+  @Mutation(() => PeriodicJob, {
+    description: `Runs today's periodic job again now, also when it already ran tonight. For load tests: only on review, development and local instances. Answers once the run has started; it goes on in the background. Refused while a run is going on.`,
+  })
+  runPeriodicJobNow() {
+    onlyForLoadTests();
+
+    return this.periodicJobService.runTodayNow();
+  }
+
+  @Permissions(CanGetPeriodicJobLog)
+  @Query(() => ApiProcessStats, {
+    description: `Memory and uptime of the API process that answers. For load tests: only on review, development and local instances.`,
+  })
+  apiProcessStats(): ApiProcessStats {
+    onlyForLoadTests();
+
+    return currentProcessStats();
+  }
+
   @ResolveField(() => Boolean)
   running(@Parent() job: PeriodicJob) {
     return this.periodicJobService.isRunning(job);
+  }
+
+  private assertPassword(password: string) {
+    const hash = createHash('sha256').update(password).digest('hex');
+
+    if (hash !== INVOICE_SYNC_PASSWORD_SHA256) {
+      throw new UnauthorizedException('Invalid password');
+    }
+  }
+
+  /** The log query brings the steps along; a retried job loads its own. */
+  @ResolveField(() => [PeriodicJobStep])
+  async steps(
+    @Parent() job: PeriodicJob & { steps?: StoredStep[] }
+  ): Promise<PeriodicJobStep[]> {
+    const steps = job.steps ?? (await this.periodicJobService.getSteps(job.id));
+
+    return steps.map(
+      ({ key, status, counts, error, startedAt, finishedAt }) => ({
+        key,
+        status,
+        counts: Object.entries((counts ?? {}) as Record<string, unknown>)
+          .filter(([, value]) => typeof value === 'number')
+          .map(([name, value]) => ({ name, value: value as number })),
+        error: error ?? undefined,
+        startedAt,
+        finishedAt,
+      })
+    );
   }
 }
