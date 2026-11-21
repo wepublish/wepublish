@@ -15,12 +15,14 @@ import {
   getMaxTake,
   graphQLSortOrderToPrisma,
   mapDateFilterToPrisma,
+  monthlyAmountFromPeriodAmount,
   PrimeDataLoader,
   SortOrder,
 } from '@wepublish/utils/api';
 import { SubscriptionDataloader } from './subscription.dataloader';
 import {
   CancelPublicSubscriptionInput,
+  CorrectSubscriptionPeriodArgs,
   CreatePublicSubscriptionInput,
   ImportPublicSubscriptionInput,
   UpdateSubscriptionPaymentMethodArgs,
@@ -417,6 +419,103 @@ export class SubscriptionService {
     }
 
     return reactivatedSubscription;
+  }
+
+  /**
+   * Data correction for a subscription sold or imported with the wrong terms,
+   * e.g. a three-issue trial that runs as a year. The period keeps its start,
+   * its invoice and its price and gets the periodicity and end it should have
+   * had; the subscription follows, so the next renewal and everything that
+   * goes by the period (the print export above all) see the same terms.
+   *
+   * Only for the latest period, paid, of a running subscription without an
+   * open invoice: nothing here creates, cancels or sends anything.
+   */
+  @PrimeDataLoader(SubscriptionDataloader)
+  async correctSubscriptionPeriod({
+    subscriptionId,
+    periodId,
+    paymentPeriodicity,
+    endsAt,
+  }: CorrectSubscriptionPeriodArgs) {
+    const subscription = await this.prisma.subscription.findUnique({
+      where: { id: subscriptionId },
+      include: { deactivation: true, periods: true, invoices: true },
+    });
+
+    if (!subscription) {
+      throw new NotFoundException(
+        `Subscription with id ${subscriptionId} was not found.`
+      );
+    }
+
+    if (subscription.deactivation) {
+      throw new BadRequestException(
+        'The period of a deactivated subscription can not be corrected.'
+      );
+    }
+
+    const period = subscription.periods.find(({ id }) => id === periodId);
+
+    if (!period) {
+      throw new NotFoundException(
+        `Period ${periodId} does not belong to subscription ${subscriptionId}.`
+      );
+    }
+
+    if (subscription.periods.some(other => other.endsAt > period.endsAt)) {
+      throw new BadRequestException(
+        'Only the latest period of a subscription can be corrected.'
+      );
+    }
+
+    const invoice = subscription.invoices.find(
+      ({ id }) => id === period.invoiceID
+    );
+
+    if (!invoice?.paidAt || invoice.canceledAt) {
+      throw new BadRequestException('Only a paid period can be corrected.');
+    }
+
+    if (
+      subscription.invoices.some(
+        ({ paidAt, canceledAt }) => !paidAt && !canceledAt
+      )
+    ) {
+      throw new BadRequestException(
+        'The subscription has an open invoice; settle or cancel it first.'
+      );
+    }
+
+    if (endsAt <= period.startsAt) {
+      throw new BadRequestException('The period has to end after it starts.');
+    }
+
+    // paidUntil follows only where it was this period's end; an editor may
+    // have set it to something else on purpose.
+    const paidUntilWasPeriodEnd =
+      subscription.paidUntil?.getTime() === period.endsAt.getTime();
+
+    const [, corrected] = await this.prisma.$transaction([
+      this.prisma.subscriptionPeriod.update({
+        where: { id: period.id },
+        data: { paymentPeriodicity, endsAt },
+      }),
+      this.prisma.subscription.update({
+        where: { id: subscription.id },
+        data: {
+          paymentPeriodicity,
+          monthlyAmount: monthlyAmountFromPeriodAmount(
+            period.amount,
+            paymentPeriodicity
+          ),
+          ...(paidUntilWasPeriodEnd ? { paidUntil: endsAt } : {}),
+        },
+        include: { deactivation: true, periods: true },
+      }),
+    ]);
+
+    return corrected;
   }
 
   async deleteSubscription(id: string) {
