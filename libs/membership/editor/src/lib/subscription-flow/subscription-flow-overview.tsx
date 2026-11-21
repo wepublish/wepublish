@@ -1,8 +1,9 @@
-import { useMutation, useQuery } from '@apollo/client/react';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   Box,
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -19,7 +20,9 @@ import {
   DeleteSubscriptionFlowDocument,
   ListPaymentMethodsDocument,
   MemberPlanListDocument,
-  PaymentPeriodicity,
+  SetSubscriptionFlowActiveDocument,
+  SubscriptionFlowCountsDocument,
+  SubscriptionFlowHandledCountDocument,
   SubscriptionFlowsDocument,
 } from '@wepublish/editor/api';
 import {
@@ -49,6 +52,10 @@ import {
 } from '@wepublish/ui/editor';
 import { useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import {
+  IoMdCheckmarkCircle,
+  IoMdCheckmarkCircleOutline,
+} from 'react-icons/io';
 import { MdAdd, MdDelete, MdEdit, MdWarningAmber } from 'react-icons/md';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { DEFAULT_MUTATION_OPTIONS } from '../common';
@@ -56,10 +63,8 @@ import { usePaperLetterFlow } from '../delivery-mode/use-paper-letter-flow';
 import { SystemMailSection } from '../system-mail/system-mail-section';
 import { FlowFilters } from './filter/flow-filters';
 import {
-  countFlowFilters,
   filterFlowRows,
-  FLOW_FILTER_PARAMS,
-  FlowFilter,
+  MEMBER_PLAN_PARAM,
   flowPath,
   FlowRow,
   flowRows,
@@ -88,6 +93,13 @@ const Warning = styled.span`
   > svg {
     flex-shrink: 0;
     margin-top: 2px;
+  }
+`;
+
+// A switched-off flow is greyed out; its switch stays as it is.
+const Rows = styled.div`
+  & tr.inactive-row > td:not([data-col='action']) {
+    opacity: 0.45;
   }
 `;
 
@@ -243,16 +255,11 @@ function FlowTable() {
   const paperLetterFlow = usePaperLetterFlow();
   const navigate = useNavigate();
   const canDelete = useAuthorisation(CanDeleteSubscriptionFlow.id);
+  const canSwitch = useAuthorisation(CanUpdateSubscriptionFlow.id);
 
   const [searchParams, setSearchParams] = useSearchParams();
   // The filters live in the address, so a narrowed list can be linked.
-  const filter = Object.fromEntries(
-    Object.entries(FLOW_FILTER_PARAMS).map(([field, param]) => [
-      field,
-      searchParams.getAll(param),
-    ])
-  ) as FlowFilter;
-  const { memberPlanIds } = filter;
+  const memberPlanIds = searchParams.getAll(MEMBER_PLAN_PARAM);
 
   const { data, loading, refetch } = useQuery(SubscriptionFlowsDocument, {
     variables: { defaultFlowOnly: false },
@@ -266,11 +273,75 @@ function FlowTable() {
   const [flowToDelete, setFlowToDelete] = useState<FlowRow>();
   const [creating, setCreating] = useState(false);
 
-  const allRows = useMemo(
-    () => flowRows(data?.subscriptionFlows ?? [], t),
-    [data, t]
+  // The counts follow the plan filter, so that the rows shown add up to the
+  // sum in the header.
+  const { data: countData, refetch: refetchCounts } = useQuery(
+    SubscriptionFlowCountsDocument,
+    {
+      variables: {
+        filter: { memberPlanIds },
+      },
+    }
   );
-  const rows = filterFlowRows(allRows, filter);
+  const counts = useMemo(
+    () =>
+      countData &&
+      new Map(
+        countData.subscriptionFlows.map(flow => [
+          flow.id,
+          flow.subscriptionCount,
+        ])
+      ),
+    [countData]
+  );
+
+  const allRows = useMemo(
+    () => flowRows(data?.subscriptionFlows ?? [], t, counts),
+    [data, t, counts]
+  );
+
+  const [setFlowActive] = useMutation(
+    SetSubscriptionFlowActiveDocument,
+    DEFAULT_MUTATION_OPTIONS(t)
+  );
+  const [loadHandledCount] = useLazyQuery(
+    SubscriptionFlowHandledCountDocument,
+    {
+      fetchPolicy: 'network-only',
+    }
+  );
+
+  // Switching asks first, naming how many subscriptions change flow.
+  const [toSwitch, setToSwitch] = useState<{
+    row: FlowRow;
+    active: boolean;
+    count?: number;
+  }>();
+
+  const askToSwitch = async (row: FlowRow) => {
+    setToSwitch({ row, active: !row.active });
+
+    const result = await loadHandledCount({ variables: { id: row.id } });
+
+    setToSwitch(current =>
+      current?.row.id === row.id ?
+        { ...current, count: result.data?.subscriptionFlowHandledCount }
+      : current
+    );
+  };
+
+  const confirmSwitch = async () => {
+    if (!toSwitch) {
+      return;
+    }
+
+    const { row, active } = toSwitch;
+
+    setToSwitch(undefined);
+    await setFlowActive({ variables: { id: row.id, active } });
+    await Promise.all([refetch(), refetchCounts()]);
+  };
+  const rows = filterFlowRows(allRows, { memberPlanIds });
 
   const memberPlanOptions = useMemo(
     () =>
@@ -286,45 +357,18 @@ function FlowTable() {
     [allRows]
   );
 
-  // The payment methods some flow names; the other conditions have a fixed
-  // set of values.
-  const paymentMethodOptions = useMemo(
-    () =>
-      [
-        ...new Map(
-          allRows.flatMap(row =>
-            row.flow.paymentMethods.map(
-              paymentMethod =>
-                [paymentMethod.id, paymentMethod.name] as [string, string]
-            )
-          )
-        ),
-      ].map(([value, label]) => ({ value, label })),
-    [allRows]
-  );
-
-  const setFilter = (change: Partial<FlowFilter>) =>
+  const setMemberPlanIds = (ids: string[]) =>
     setSearchParams(
       params => {
         const next = new URLSearchParams(params);
 
-        for (const [field, values] of Object.entries(change)) {
-          const param = FLOW_FILTER_PARAMS[field as keyof FlowFilter];
-
-          next.delete(param);
-          values.forEach(value => next.append(param, value));
-        }
+        next.delete(MEMBER_PLAN_PARAM);
+        ids.forEach(id => next.append(MEMBER_PLAN_PARAM, id));
 
         return next;
       },
       { replace: true }
     );
-
-  const withOrWithout = (kind: 'warnings' | 'subscriptions') =>
-    ['with', 'without'].map(value => ({
-      value,
-      label: t(`subscriptionFlow.overview.filter.${kind}Options.${value}`),
-    }));
 
   const confirmDelete = async () => {
     if (!flowToDelete) {
@@ -373,8 +417,11 @@ function FlowTable() {
     },
     {
       id: 'subscriptions',
-      label: t('subscriptionFlow.overview.subscriptions'),
-      width: 170,
+      label: t('subscriptionFlow.overview.subscriptionsSum', {
+        sum: rows.reduce((sum, row) => sum + row.subscriptions, 0),
+      }),
+      // Wide enough for the heading with a sum of several digits.
+      width: 190,
       align: 'right',
       render: row => row.subscriptions,
     },
@@ -402,7 +449,7 @@ function FlowTable() {
     {
       id: 'action',
       label: t('action'),
-      width: 100,
+      width: 150,
       fixed: true,
       render: row => (
         // From the left edge, so that «edit» sits in the same place in every
@@ -422,6 +469,31 @@ function FlowTable() {
           </IconButtonTooltip>
 
           {/* The default flow is what every subscription falls back to. */}
+          {!row.isDefault && canSwitch && (
+            // A tick with two states, like the one that marks the chosen
+            // template in the chooser.
+            <IconButtonTooltip
+              caption={
+                row.active ?
+                  t('subscriptionFlow.overview.switchOff')
+                : t('subscriptionFlow.overview.switchOn')
+              }
+            >
+              <IconButton
+                size="small"
+                role="switch"
+                aria-checked={row.active}
+                aria-label={t('subscriptionFlow.overview.active')}
+                color={row.active ? 'primary' : 'default'}
+                onClick={() => askToSwitch(row)}
+              >
+                {row.active ?
+                  <IoMdCheckmarkCircle data-checked="true" />
+                : <IoMdCheckmarkCircleOutline data-checked="false" />}
+              </IconButton>
+            </IconButtonTooltip>
+          )}
+
           {!row.isDefault && canDelete && (
             <IconButtonTooltip caption={t('delete')}>
               <IconButton
@@ -468,75 +540,28 @@ function FlowTable() {
         </ListViewActions>
       </ListViewContainer>
 
-      <DataTable
-        data={rows}
-        loading={loading && !data}
-        getRowId={row => row.id}
-        columns={columns}
-        rowGroup={row => row.group}
-        filters={
-          <Filters>
-            <MultiSelectFilter
-              label={t('subscriptionFlow.overview.memberPlan')}
-              options={memberPlanOptions}
-              value={memberPlanIds}
-              onChange={memberPlanIds => setFilter({ memberPlanIds })}
-            />
-
-            <MultiSelectFilter
-              label={t('subscriptionFlow.paymentMethod')}
-              options={paymentMethodOptions}
-              value={filter.paymentMethodIds}
-              onChange={paymentMethodIds => setFilter({ paymentMethodIds })}
-            />
-
-            <MultiSelectFilter
-              label={t('subscriptionFlow.periodicity')}
-              options={Object.values(PaymentPeriodicity).map(value => ({
-                value,
-                label: t(`memberPlanList.paymentPeriodicity.${value}`),
-              }))}
-              value={filter.periodicities}
-              onChange={periodicities => setFilter({ periodicities })}
-            />
-
-            <MultiSelectFilter
-              label={t('subscriptionFlow.autoRenewal')}
-              options={['true', 'false'].map(value => ({
-                value,
-                label: t(`subscriptionFlow.overview.renewal.${value}`),
-              }))}
-              value={filter.renewal}
-              onChange={renewal => setFilter({ renewal })}
-            />
-
-            <MultiSelectFilter
-              label={t('subscriptionFlow.overview.filter.warnings')}
-              options={withOrWithout('warnings')}
-              value={filter.warnings}
-              onChange={warnings => setFilter({ warnings })}
-            />
-
-            <MultiSelectFilter
-              label={t('subscriptionFlow.overview.filter.subscriptions')}
-              options={withOrWithout('subscriptions')}
-              value={filter.subscriptions}
-              onChange={subscriptions => setFilter({ subscriptions })}
-            />
-          </Filters>
-        }
-        filterCount={countFlowFilters(filter)}
-        onResetFilters={() =>
-          setFilter({
-            memberPlanIds: [],
-            paymentMethodIds: [],
-            periodicities: [],
-            renewal: [],
-            warnings: [],
-            subscriptions: [],
-          })
-        }
-      />
+      <Rows>
+        <DataTable
+          data={rows}
+          loading={loading && !data}
+          getRowId={row => row.id}
+          columns={columns}
+          rowClassName={row => (row.active ? undefined : 'inactive-row')}
+          rowGroup={row => row.group}
+          filters={
+            <Filters>
+              <MultiSelectFilter
+                label={t('subscriptionFlow.overview.memberPlan')}
+                options={memberPlanOptions}
+                value={memberPlanIds}
+                onChange={setMemberPlanIds}
+              />
+            </Filters>
+          }
+          filterCount={memberPlanIds.length ? 1 : 0}
+          onResetFilters={() => setMemberPlanIds([])}
+        />
+      </Rows>
 
       <Drawer
         anchor="right"
@@ -554,6 +579,50 @@ function FlowTable() {
           onClose={() => setCreating(false)}
         />
       </Drawer>
+
+      <Dialog
+        fullWidth
+        maxWidth="xs"
+        open={!!toSwitch}
+        onClose={() => setToSwitch(undefined)}
+      >
+        <DialogTitle>
+          {t(
+            toSwitch?.active ?
+              'subscriptionFlow.overview.activateTitle'
+            : 'subscriptionFlow.overview.deactivateTitle'
+          )}
+        </DialogTitle>
+
+        <DialogContent>
+          {toSwitch?.count === undefined ?
+            <CircularProgress size={20} />
+          : t(
+              toSwitch.active ?
+                'subscriptionFlow.overview.activateQuestion'
+              : 'subscriptionFlow.overview.deactivateQuestion',
+              { count: toSwitch.count }
+            )
+          }
+        </DialogContent>
+
+        <DialogActions>
+          <Button
+            variant="text"
+            onClick={() => setToSwitch(undefined)}
+          >
+            {t('cancel')}
+          </Button>
+
+          <Button
+            variant="contained"
+            disabled={toSwitch?.count === undefined}
+            onClick={confirmSwitch}
+          >
+            {t('ok')}
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <Dialog
         fullWidth

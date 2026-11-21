@@ -1,6 +1,6 @@
 import { createTheme, ThemeProvider } from '@mui/material';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { MailTemplateContext } from '@wepublish/editor/api';
+import { MailChannel, MailTemplateContext } from '@wepublish/editor/api';
 
 import { MailTemplateField } from './mail-template-field';
 
@@ -15,11 +15,14 @@ vi.mock('./select-mail-template-panel', () => ({
     selectedId?: string | null;
     purpose?: string;
     eventLabel: string;
+    channel?: string;
+    allowNone?: boolean;
     onSelect(id: string | null): void;
     onClose(): void;
   }) => (
     <div>
       <p>{`panel:${props.eventLabel}:${props.purpose}:${props.selectedId}`}</p>
+      <p>{`for:${props.channel}:${props.allowNone}`}</p>
       <button
         onClick={() => {
           props.onSelect('mt-2');
@@ -104,6 +107,28 @@ describe('MailTemplateField', () => {
     fireEvent.click(screen.getByRole('button', { name: 'pick' }));
 
     expect(onChange).toHaveBeenCalledWith('mt-2');
+  });
+
+  it('asks for a template in the words it is given, without the no-mail icon', () => {
+    const { container } = renderField({ emptyLabel: 'Vorlage auswählen' });
+
+    const field = screen.getByRole('button', {
+      name: 'Rechnungserstellung: Vorlage auswählen',
+    });
+
+    // Only the arrow that opens the chooser is left.
+    expect(field.querySelectorAll('svg')).toHaveLength(1);
+    expect(container.textContent).not.toContain('noMailSentSelectNow');
+  });
+
+  it('hands the channel on, and whether sending nothing is a choice', () => {
+    renderField({ channel: MailChannel.Letter, allowNone: false });
+
+    fireEvent.click(
+      screen.getByRole('button', { name: /Rechnungserstellung/ })
+    );
+
+    expect(screen.getByText('for:letter:false')).toBeTruthy();
   });
 
   it('cannot be opened when changing is not allowed', () => {

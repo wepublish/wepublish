@@ -1,6 +1,7 @@
 import {
   ArgsType,
   Field,
+  InputType,
   Int,
   ObjectType,
   OmitType,
@@ -83,6 +84,12 @@ export class SubscriptionFlowModel {
   })
   allMemberPlans!: boolean;
 
+  @Field({
+    description:
+      'An inactive flow is skipped: its subscriptions fall to the next flow. The default flow is always active.',
+  })
+  active!: boolean;
+
   @Field(() => MemberPlan, { nullable: true })
   memberPlan?: MemberPlan;
 
@@ -106,6 +113,24 @@ export class SubscriptionFlowModel {
       'The earliest day an event of this flow may lie on. Follows from the shortest periodicity the flow applies to.',
   })
   earliestDay!: SubscriptionFlowEarliestDay;
+}
+
+@InputType({
+  description:
+    'What a list of flows is narrowed by. Each given field narrows the count of every flow to the subscriptions with one of its values.',
+})
+export class SubscriptionFlowCountFilter {
+  @Field(() => [String], { nullable: true })
+  memberPlanIds?: string[];
+
+  @Field(() => [String], { nullable: true })
+  paymentMethodIds?: string[];
+
+  @Field(() => [PaymentPeriodicity], { nullable: true })
+  periodicities?: PaymentPeriodicity[];
+
+  @Field(() => [Boolean], { nullable: true })
+  autoRenewal?: boolean[];
 }
 
 @ArgsType()

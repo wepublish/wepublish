@@ -1662,9 +1662,9 @@
         "sampleDataFallback": "Données d’exemple (aucun sélectionné)",
         "testRecipient": "Destinataire du test",
         "testRecipientPlaceholder": "Votre e-mail de compte",
-        "preview": "Aperçu",
+        "preview": "Aperçu de l’e-mail",
         "sendTest": "Envoyer un test",
-        "previewLetter": "Aperçu",
+        "previewLetter": "Aperçu de la lettre",
         "letterAppendix": "Pages supplémentaires (PDF)",
         "letterAppendixNone": "Aucune",
         "letterAppendixHelp": "Les pages sont ajoutées à la fin de la lettre. Choisissez parmi les fichiers PDF téléversés sous «Documents».",
@@ -1938,7 +1938,11 @@
         "select": "Choisir ce modèle",
         "selectCurrent": "Choisir ce modèle (déjà choisi)",
         "none": "Ne pas envoyer de message",
-        "create": "Créer un nouveau modèle"
+        "create": "Créer un nouveau modèle",
+        "columns": {
+          "template": "Modèle",
+          "purpose": "Usage"
+        }
       },
       "channels": "Canaux de distribution",
       "noLetterVersion": "Ce modèle n’a pas de version lettre. Ajoutez-la dans le modèle pour que les personnes au canal lettre reçoivent ce message imprimé ; d’ici là, elles reçoivent l’e-mail.",
@@ -2904,7 +2908,7 @@
       "overview": {
         "back": "Tous les flux et messages automatiques",
         "title": "Messages des flux d’abonnement",
-        "intro": "Un flux définit quel message est envoyé automatiquement pour quel événement d’abonnement. Le flux standard vaut pour tous les abonnements. Un plan d’abonnement peut avoir ses propres flux pour certains abonnements, et un flux peut valoir pour certains abonnements de tous les plans : un tel flux remplace entièrement le flux standard pour les abonnements concernés. Si plusieurs correspondent, le flux du plan d’abonnement passe en premier, puis celui pour tous les plans, enfin le flux standard.",
+        "intro": "Un flux définit quel message est envoyé automatiquement pour quel événement d’abonnement. Le flux standard vaut pour tous les abonnements. Un plan d’abonnement peut avoir ses propres flux pour certains abonnements, et un flux peut valoir pour certains abonnements de tous les plans : un tel flux remplace entièrement le flux standard pour les abonnements concernés. Si plusieurs flux sont définis, ils sont appliqués dans cet ordre : 1. flux propres à un plan d’abonnement → 2. flux valant pour tous les plans → 3. flux standard. Dans le tableau des flux, cela correspond au sens «de bas en haut». Dès qu’un flux correspond à un abonnement, ce flux est appliqué et la recherche s’arrête. Les flux «plus haut» dans la liste ne sont donc jamais appliqués à cet abonnement.",
         "flow": "Flux pour le plan d’abonnement",
         "defaultFlow": "Tous → flux par défaut",
         "appliesTo": "S’applique à",
@@ -2922,6 +2926,14 @@
         },
         "noMemberPlan": "Sans plan d’abonnement",
         "allMemberPlans": "Tous les plans d’abonnement",
+        "subscriptionsSum": "Abonnements concernés ({{sum}})",
+        "active": "Actif",
+        "switchOff": "Désactiver le flux",
+        "switchOn": "Activer le flux",
+        "deactivateTitle": "Désactiver le flux ?",
+        "activateTitle": "Activer le flux ?",
+        "deactivateQuestion": "Les {{count}} abonnements gérés par ce flux seront ensuite gérés par d’autres flux.",
+        "activateQuestion": "Ce flux prendra ensuite en charge {{count}} abonnements d’autres flux.",
         "tabs": {
           "flows": "Flux d’abonnement ({{count}})",
           "account": "Compte et connexion"
@@ -2930,18 +2942,6 @@
           "default": "Standard",
           "allMemberPlans": "Pour tous les plans d’abonnement",
           "memberPlan": "Plan d’abonnement « {{memberPlan}} »"
-        },
-        "filter": {
-          "warnings": "Avertissements",
-          "warningsOptions": {
-            "with": "Avec avertissement",
-            "without": "Sans avertissement"
-          },
-          "subscriptions": "Abonnements concernés",
-          "subscriptionsOptions": {
-            "with": "Avec abonnements",
-            "without": "Sans abonnements"
-          }
         },
         "any": {
           "paymentMethods": "tout mode de paiement",
@@ -2962,6 +2962,7 @@
       "flow": "Flux",
       "planFlowDescription": "Ce flux remplace entièrement le flux standard pour les abonnements de son plan qui correspondent aux critères de filtre définis ci-dessous.",
       "allPlansFlowDescription": "Ce flux remplace entièrement le flux standard pour les abonnements de tous les plans qui correspondent aux critères de filtre définis ci-dessous. Si un plan a son propre flux pour ces abonnements, celui-ci passe en premier.",
+      "inactiveNotice": "Ce flux est désactivé. Ses abonnements reçoivent les messages du prochain flux correspondant.",
       "openConditionsHint": "Un champ vide ne restreint pas : le flux s’applique alors à toute valeur. Au moins un champ doit être rempli.",
       "planFlowDescriptionFor": "Ce flux remplace entièrement le flux standard pour les abonnements du plan « {{memberPlan}} » qui correspondent aux critères de filtre définis ci-dessous.",
       "noFallback": "Les événements sans modèle n’envoient rien – le flux standard ne prend pas le relais.",
@@ -4558,8 +4559,8 @@
           "description": "Public cible et filtres"
         },
         "content": {
-          "title": "Contenu et canal de distribution",
-          "description": "Modèle, e-mail ou lettre"
+          "title": "Canal de distribution et contenu",
+          "description": "E-mail ou lettre, modèle"
         },
         "send": {
           "title": "Envoyer",
@@ -4635,7 +4636,6 @@
         "cancelled": "Annulé"
       },
       "missingPlaceholders": "Attention : ces champs ne seront pas remplis pour ces destinataires : {{placeholders}}",
-      "createTemplate": "Nouveau modèle",
       "attachments_one": "Chaque e-mail contient {{count}} pièce jointe en PDF : {{names}}",
       "attachments_other": "Chaque e-mail contient {{count}} pièces jointes en PDF : {{names}}",
       "editTemplate": "Modifier le modèle",
@@ -4711,11 +4711,11 @@
         "label": "Canal de distribution",
         "mail": "E-mail",
         "letter": "Lettre",
-        "noVersion": {
-          "mail": "Ce modèle n’a pas de version e-mail.",
-          "letter": "Ce modèle n’a pas de version lettre."
-        },
-        "withoutAddress": "{{count}} des destinataires n’ont pas d’adresse postale utilisable et seront ignoré·e·s."
+        "withoutAddress": "{{count}} des destinataires n’ont pas d’adresse postale utilisable et seront ignoré·e·s.",
+        "templateDropped": {
+          "mail": "« {{template}} » n’a pas de version e-mail et a donc été désélectionné. Choisissez un modèle pour l’e-mail.",
+          "letter": "« {{template}} » n’a pas de version lettre et a donc été désélectionné. Choisissez un modèle pour la lettre."
+        }
       },
       "print": {
         "addressPosition": {
@@ -4786,7 +4786,11 @@
         "matchAll": "toutes les conditions",
         "more": "{{count}} autres filtres"
       },
-      "deliveryChannelHandOff": "Changer durablement le canal de distribution de ce groupe d’utilisateurs …"
+      "deliveryChannelHandOff": "Changer durablement le canal de distribution de ce groupe d’utilisateurs …",
+      "templateFor": {
+        "mail": "Message manuel par e-mail",
+        "letter": "Message manuel par lettre"
+      }
     },
     "mailLog": {
       "title": "Messages envoyés",

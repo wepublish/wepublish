@@ -274,6 +274,12 @@ function SubscriptionFlow() {
             }
           </Typography>
 
+          {subscriptionFlow.active === false && (
+            <Alert severity="info">
+              {t('subscriptionFlow.inactiveNotice')}
+            </Alert>
+          )}
+
           {warnings.map(warning => (
             <Alert
               key={warning}

@@ -3,6 +3,7 @@ import { useQuery } from '@apollo/client/react';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import {
+  MailChannel,
   MailTemplateContext,
   MailTemplateListDocument,
 } from '@wepublish/editor/api';
@@ -148,23 +149,35 @@ describe('SelectMailTemplatePanel', () => {
     const row = rowOf('Neue Rechnung');
 
     expect(within(row).getByText('Deine Rechnung')).toBeTruthy();
-    expect(within(row).getByText('Mit Zahlschein')).toBeTruthy();
     expect(
       within(row).getByText('mailTemplates.mailTypes.invoiceCreation')
     ).toBeTruthy();
   });
 
-  it('shows the subject before the description', () => {
+  it('heads the name column «template» and the purpose column «purpose», and leaves the description out', () => {
     renderPanel();
 
     const headers = screen
       .getAllByRole('columnheader')
-      .map(header => header.textContent);
+      .map(header => header.textContent?.trim());
 
-    expect(headers.indexOf('mailTemplates.subject')).toBeGreaterThan(-1);
-    expect(headers.indexOf('mailTemplates.subject')).toBeLessThan(
-      headers.indexOf('mailTemplates.description')
-    );
+    expect(headers.slice(0, 2)).toEqual([
+      'mailTemplateSelect.chooser.columns.template',
+      'mailTemplateSelect.chooser.columns.purpose',
+    ]);
+    expect(headers).toContain('mailTemplates.subject');
+    expect(headers).not.toContain('mailTemplates.description');
+    expect(
+      within(rowOf('Neue Rechnung')).queryByText('Mit Zahlschein')
+    ).toBeNull();
+  });
+
+  it('sets the name of a template in bold, as the heading of its row', () => {
+    renderPanel();
+
+    expect(
+      within(rowOf('Neue Rechnung')).getByText('Neue Rechnung').tagName
+    ).toBe('STRONG');
   });
 
   it('leaves the status and the member plans out, as columns and as filters', () => {
@@ -194,6 +207,35 @@ describe('SelectMailTemplatePanel', () => {
     renderPanel({ purpose: MailTemplateContext.InvoiceCreation });
 
     expect(shownNames()).toEqual(['Mahnung', 'Neue Rechnung']);
+  });
+
+  const pickedChannels = () =>
+    within(
+      screen
+        .getByRole('combobox', { name: 'mailTemplates.list.channels' })
+        .closest('.MuiAutocomplete-root') as HTMLElement
+    );
+
+  it('starts with the email picked in the channel filter for an event, which always sends the email', () => {
+    renderPanel();
+
+    expect(
+      pickedChannels().getByText('deliveryMode.channel.mail')
+    ).toBeTruthy();
+    expect(
+      pickedChannels().queryByText('deliveryMode.channel.letter')
+    ).toBeNull();
+  });
+
+  it('starts with the channel of a send picked in the channel filter', () => {
+    renderPanel({ channel: MailChannel.Letter });
+
+    expect(
+      pickedChannels().getByText('deliveryMode.channel.letter')
+    ).toBeTruthy();
+    expect(
+      pickedChannels().queryByText('deliveryMode.channel.mail')
+    ).toBeNull();
   });
 
   it('shows everything again once the filters are reset', () => {
@@ -280,6 +322,24 @@ describe('SelectMailTemplatePanel', () => {
     ).toBeTruthy();
   });
 
+  it('ticks the button of the current template and leaves the others unticked', () => {
+    renderPanel({ selectedId: 'Mahnung' });
+
+    const button = (name: string) =>
+      within(rowOf(name)).getByRole('button', {
+        name: /mailTemplateSelect.chooser.select/,
+      });
+
+    expect(button('Mahnung').getAttribute('aria-pressed')).toBe('true');
+    expect(button('Willkommen').getAttribute('aria-pressed')).toBe('false');
+    expect(
+      button('Mahnung').querySelector('[data-checked="true"]')
+    ).toBeTruthy();
+    expect(
+      button('Willkommen').querySelector('[data-checked="false"]')
+    ).toBeTruthy();
+  });
+
   it('keeps the pagination outside the part that scrolls', () => {
     renderPanel();
 
@@ -306,6 +366,20 @@ describe('SelectMailTemplatePanel', () => {
 
   it('does not offer to send nothing for an event that sends nothing', () => {
     renderPanel();
+
+    expect(
+      screen.queryByRole('button', { name: 'mailTemplateSelect.chooser.none' })
+    ).toBeNull();
+  });
+
+  it('offers the templates written for the channel a send goes out on', () => {
+    renderPanel({ channel: MailChannel.Letter });
+
+    expect(shownNames()).toEqual(['Begleitbrief', 'Neue Rechnung']);
+  });
+
+  it('does not offer to send nothing where a template is needed', () => {
+    renderPanel({ selectedId: 'Mahnung', allowNone: false });
 
     expect(
       screen.queryByRole('button', { name: 'mailTemplateSelect.chooser.none' })

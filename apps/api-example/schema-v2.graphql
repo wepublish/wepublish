@@ -4471,6 +4471,11 @@ type Mutation {
   """
   setPaymentProviderCustomers(customers: [PaymentProviderCustomerInput!]!, paymentProviderId: String!): Int!
 
+  """
+  Switches a flow on or off. The default flow stays on; a flow switched on must not share subscriptions with another active flow.
+  """
+  setSubscriptionFlowActive(active: Boolean!, id: String!): [SubscriptionFlowModel!]!
+
   """Switch a user between mailed and printed subscription mails"""
   setUserDeliveryMode(channel: MailChannel!, reason: String, userId: String!): UserDeliveryPreferenceModel!
 
@@ -6872,6 +6877,11 @@ type Query {
   """
   subscriptionCreationMail(autoRenew: Boolean!, memberPlanID: String!, paymentMethodID: String!, paymentPeriodicity: PaymentPeriodicity!, userID: String!): ActionMail!
 
+  """
+  How many subscriptions a flow handles, or would handle once switched on. Not narrowed by any filter.
+  """
+  subscriptionFlowHandledCount(id: String!): Int!
+
   """Returns all subscription flows"""
   subscriptionFlows(defaultFlowOnly: Boolean!, memberPlanId: String): [SubscriptionFlowModel!]!
 
@@ -7809,6 +7819,16 @@ input SubscriptionFilter {
 }
 
 """
+What a list of flows is narrowed by. Each given field narrows the count of every flow to the subscriptions with one of its values.
+"""
+input SubscriptionFlowCountFilter {
+  autoRenewal: [Boolean!]
+  memberPlanIds: [String!]
+  paymentMethodIds: [String!]
+  periodicities: [PaymentPeriodicity!]
+}
+
+"""
 The earliest day an event of a flow may lie on, and what holds it there.
 """
 type SubscriptionFlowEarliestDay {
@@ -7822,6 +7842,11 @@ type SubscriptionFlowEarliestDay {
 }
 
 type SubscriptionFlowModel {
+  """
+  An inactive flow is skipped: its subscriptions fall to the next flow. The default flow is always active.
+  """
+  active: Boolean!
+
   """
   A flow for the matching subscriptions of every member plan. It comes after the flows of the plan itself and before the default flow, and has no memberPlan.
   """
@@ -7839,6 +7864,11 @@ type SubscriptionFlowModel {
   numberOfSubscriptions(memberPlanId: String): Int!
   paymentMethods: [PaymentMethod!]!
   periodicities: [PaymentPeriodicity!]!
+
+  """
+  numberOfSubscriptions, narrowed to what a list of flows is filtered by.
+  """
+  subscriptionCount(filter: SubscriptionFlowCountFilter): Int!
 }
 
 type SubscriptionInterval {
