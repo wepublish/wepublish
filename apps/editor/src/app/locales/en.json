@@ -2714,6 +2714,7 @@
         "bexioContactSync": "Contacts to bexio",
         "mailchimpSync": "Mailchimp sync",
         "mailLogSync": "Mail delivery states",
+        "letterLogSync": "Letter delivery states",
         "suppressionSync": "Suppressed addresses",
         "emailQuality": "Email quality",
         "deliverySuggestions": "Delivery channel suggestions"
@@ -5000,13 +5001,16 @@
       "sync": {
         "action": "Refresh states",
         "hint": "Asks the mail provider for the current delivery state of every mail that is still open.",
-        "done": "Checked {{checked}} open mail(s) at the provider, updated {{updated}}."
+        "done": "Checked {{checked}} open mail(s) at the provider, updated {{updated}}.",
+        "hintWithLetters": "Asks the mail provider and the letter provider for the current delivery state of every mail and letter that is still open.",
+        "doneWithLetters": "Checked {{checked}} open mail(s), updated {{updated}}. Checked {{lettersChecked}} open letter(s), updated {{lettersUpdated}}."
       },
       "stateHelp": {
         "nextTitle": "What you can do",
         "legendTitle": "What the states mean",
         "legendIntro": "The state shows how far a mail got on its way to the recipient. It is reported by the mail provider, not by We.Publish itself.",
         "legendFooter": "State updates normally arrive from the mail provider by webhook. With no webhook configured — or on a local installation the provider cannot reach — the state stays at “submitted”. “Refresh states” then fetches it from the provider directly.\nSMTP and Slack report no delivery states at all, so those mails stay at “submitted”.",
+        "legendFooterLetters": "The same goes for letters: their state arrives from the letter provider by webhook; otherwise “Refresh states” and the nightly run fetch it there directly. A letter handed to the post (“dispatched”) is asked about for another 30 days, because returned post is reported late.",
         "submitted": {
           "name": "submitted",
           "meaning": "We.Publish handed the mail to the mail provider and the provider accepted it. It is queued there. This state says nothing yet about the recipient's mailbox.",
