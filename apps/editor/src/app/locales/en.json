@@ -4567,8 +4567,7 @@
       },
       "endedWindow": {
         "label": "When the subscription was deactivated",
-        "relative": "Last … days",
-        "period": "Fixed period",
+        "window": "Deactivated",
         "days": "days",
         "periodPlaceholder": "Pick from – to",
         "periodHint": "Only subscriptions deactivated between these two dates.",
@@ -4631,6 +4630,23 @@
       },
       "stateHelp": "Active: confirmed, not deactivated and paid. Pending: taken out but not confirmed yet, e.g. because the first payment is still missing. Deactivated: the subscription has ended or its end is already scheduled.",
       "autoRenewHelp": "Yes: the subscription renews itself at the end of the period and is charged again. No: it runs out unless the person renews it themselves.",
+      "dateWindow": {
+        "mode": "{{label}}: fixed or rolling dates",
+        "fixed": "Fixed dates",
+        "rolling": "Rolling",
+        "days": "Number of days",
+        "quick": "{{days}} days",
+        "kinds": {
+          "lastDays": "in the last",
+          "olderThanDays": "more than",
+          "nextDays": "in the next"
+        },
+        "unit": {
+          "lastDays": "days",
+          "olderThanDays": "days ago",
+          "nextDays": "days"
+        }
+      },
       "mailHistory": {
         "label": "Messages received",
         "hint": "Only people who did (or did not) get a given template — on one channel only, if you like.",
@@ -4644,6 +4660,8 @@
         "channel": "Delivery channel",
         "anyChannel": "Any",
         "sentBetween": "Sent between",
+        "minCount": "At least",
+        "times": "times",
         "onSubscription": "Only messages about this very subscription",
         "onlyOpenInvoice": "Only messages about an invoice that is still open",
         "triggerHint": "The subscription and invoice of a message have only been recorded recently. Older messages never meet this condition.",
@@ -4671,6 +4689,12 @@
         "mailHistory": "Messages",
         "received": "received",
         "notReceived": "not received",
+        "minCount": "at least {{count}} times",
+        "rolling": {
+          "lastDays": "in the last {{days}} days",
+          "olderThanDays": "more than {{days}} days ago",
+          "nextDays": "in the next {{days}} days"
+        },
         "onSubscription": "about this subscription",
         "onlyOpenInvoice": "invoice still open",
         "between": "{{from}} – {{to}}",

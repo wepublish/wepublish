@@ -2599,6 +2599,11 @@ input MailAudienceInput {
   endsAtFrom: DateTime
 
   """
+  Subscribers audience only: effective end within a range relative to now. Takes the place of endsAtFrom and endsAtTo when given.
+  """
+  endsAtRolling: MailRollingRange
+
+  """
   Subscribers audience only: only subscriptions whose effective end (cancellation date, else paidUntil) is on or before this date.
   """
   endsAtTo: DateTime
@@ -2632,6 +2637,11 @@ input MailAudienceInput {
   Subscribers audience only: only subscriptions that started on or after this date.
   """
   startsAtFrom: DateTime
+
+  """
+  Subscribers audience only: started within a range relative to now. Takes the place of startsAtFrom and startsAtTo when given.
+  """
+  startsAtRolling: MailRollingRange
 
   """
   Subscribers audience only: only subscriptions that started on or before this date.
@@ -2674,6 +2684,11 @@ input MailHistoryCondition {
   mailTemplateId: String!
 
   """
+  How many such mails it takes, at least. Defaults to 1. With negate: keeps people who got fewer.
+  """
+  minCount: Int
+
+  """
   true: keeps people who did NOT receive such a mail, including people with no mail at all.
   """
   negate: Boolean
@@ -2682,6 +2697,11 @@ input MailHistoryCondition {
   true: only mails about an invoice that is still open (neither paid nor cancelled). Mails sent before the invoice was recorded in the mail log never match.
   """
   onlyOpenInvoice: Boolean
+
+  """
+  Sent within a range relative to now. Takes the place of from and to when given.
+  """
+  rolling: MailRollingRange
 
   """
   Defaults to person. Mails sent before the subscription was recorded in the mail log never match the subscription scope.
@@ -2828,6 +2848,20 @@ enum MailRecipientBase {
   endedSubscription
   hasSubscription
   noActiveSubscription
+}
+
+"""
+lastDays: within the last x days. olderThanDays: more than x days ago. nextDays: within the next x days.
+"""
+enum MailRollingKind {
+  lastDays
+  nextDays
+  olderThanDays
+}
+
+input MailRollingRange {
+  days: Int!
+  kind: MailRollingKind!
 }
 
 type MailSegmentCount {

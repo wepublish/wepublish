@@ -1,6 +1,6 @@
 import { createTheme, ThemeProvider } from '@mui/material';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
-import { MailHistoryMatch } from '@wepublish/editor/api';
+import { MailHistoryMatch, MailRollingKind } from '@wepublish/editor/api';
 
 import { emptyMailHistoryRow } from './audience-state';
 import { MailHistoryFilter } from './mail-history-filter';
@@ -260,5 +260,37 @@ describe('MailHistoryFilter', () => {
         name: 'mailSend.mailHistory.onSubscription',
       })
     ).toBeNull();
+  });
+
+  it('takes how often the template must have been sent', () => {
+    const onChange = renderFilter({
+      match: MailHistoryMatch.All,
+      rows: [row()],
+    });
+
+    fireEvent.change(
+      screen.getByRole('spinbutton', {
+        name: 'mailSend.mailHistory.minCount',
+      }),
+      { target: { value: '3' } }
+    );
+
+    expect(onChange.mock.calls[0][0].rows[0].minCount).toBe(3);
+  });
+
+  it('lets the send period roll', () => {
+    const onChange = renderFilter({
+      match: MailHistoryMatch.All,
+      rows: [row()],
+    });
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'mailSend.dateWindow.rolling' })
+    );
+
+    expect(onChange.mock.calls[0][0].rows[0].rolling).toEqual({
+      kind: MailRollingKind.LastDays,
+      days: 30,
+    });
   });
 });

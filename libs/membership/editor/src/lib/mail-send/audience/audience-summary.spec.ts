@@ -94,6 +94,33 @@ describe('describeAudience', () => {
     ]);
   });
 
+  it('reads rolling ranges and a minimum count in words', () => {
+    expect(
+      describeAudience(
+        {
+          base: 'hasSubscription',
+          startsAtRolling: { kind: 'lastDays', days: 30 },
+          endsAtRolling: { kind: 'nextDays', days: 14 },
+          mailHistory: {
+            conditions: [
+              {
+                mailTemplateId: 'tpl-1',
+                minCount: 2,
+                rolling: { kind: 'olderThanDays', days: 14 },
+              },
+            ],
+          },
+        },
+        lookups
+      )
+    ).toEqual([
+      'mailSend.base.hasSubscription',
+      'mailSend.startsAt: mailSend.audienceSummary.rolling.lastDays:{"days":30}',
+      'mailSend.endsAt: mailSend.audienceSummary.rolling.nextDays:{"days":14}',
+      'mailSend.audienceSummary.mailHistory: mailSend.audienceSummary.received «Adressänderung» (mailSend.audienceSummary.minCount:{"count":2}) mailSend.audienceSummary.rolling.olderThanDays:{"days":14}',
+    ]);
+  });
+
   it('ignores keys it does not know, so older filters still read', () => {
     expect(
       describeAudience({ base: 'allUsers', somethingNew: 1 }, lookups)

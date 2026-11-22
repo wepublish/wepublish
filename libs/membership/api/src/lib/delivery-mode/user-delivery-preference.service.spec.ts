@@ -7,6 +7,7 @@ import {
 import {
   MailEmailSegment,
   MailRecipientBase,
+  MailRollingKind,
 } from '../mail-send/mail-send.model';
 import { MailSendRecipientService } from '../mail-send/mail-send-recipient.service';
 import { UserDeliveryPreferenceService } from './user-delivery-preference.service';
@@ -261,6 +262,51 @@ describe('UserDeliveryPreferenceService', () => {
           }),
         })
       );
+    });
+
+    it('records a rolling range as the dates it meant at the switch', async () => {
+      vi.useFakeTimers({ toFake: ['Date'] });
+      vi.setSystemTime(new Date('2026-11-22T12:00:00.000Z'));
+
+      try {
+        const { service, prisma, recipients } = setup([user('u1')]);
+
+        await service.setForAudience(
+          {
+            ...audience,
+            mailHistory: {
+              conditions: [
+                {
+                  mailTemplateId: 'tpl-1',
+                  rolling: { kind: MailRollingKind.olderThanDays, days: 14 },
+                },
+              ],
+            },
+          },
+          MailChannel.letter,
+          by('admin')
+        );
+
+        const applied = {
+          ...audience,
+          mailHistory: {
+            conditions: [
+              {
+                mailTemplateId: 'tpl-1',
+                to: new Date('2026-11-08T12:00:00.000Z'),
+              },
+            ],
+          },
+        };
+
+        // The people switched and the record kept are the same audience.
+        expect(recipients.resolvePage.mock.calls[0][0]).toEqual(applied);
+        expect(
+          prisma.deliveryModeBulkChange.create.mock.calls[0][0].data.audience
+        ).toEqual(applied);
+      } finally {
+        vi.useRealTimers();
+      }
     });
 
     it('switches everyone back to mail, address or not', async () => {

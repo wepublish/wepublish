@@ -3,9 +3,9 @@ import {
   MailChannel,
   MailHistoryMatch,
   MailLogState,
+  MailRollingKind,
   MailTemplateDocument,
 } from '@wepublish/editor/api';
-import { DateRangeFilter } from '@wepublish/ui/editor';
 import {
   Autocomplete,
   Button,
@@ -15,6 +15,7 @@ import {
   FormHelperText,
   FormLabel,
   IconButton,
+  InputAdornment,
   MenuItem,
   Radio,
   RadioGroup,
@@ -30,6 +31,11 @@ import {
   emptyMailHistoryRow,
   MailHistoryRow,
 } from './audience-state';
+
+import { DateWindowFilter } from './date-window-filter';
+
+/** A mail was sent in the past, so there is no "in the next x days". */
+const SENT_KINDS = [MailRollingKind.LastDays, MailRollingKind.OlderThanDays];
 
 type MailHistoryValue = AudienceFilterState['mailHistory'];
 
@@ -158,6 +164,31 @@ export function MailHistoryFilter({
                 ))}
               </TextField>
 
+              <TextField
+                type="number"
+                size="small"
+                label={t('mailSend.mailHistory.minCount')}
+                value={row.minCount}
+                onChange={event => {
+                  const minCount = parseInt(event.target.value, 10);
+
+                  if (Number.isFinite(minCount) && minCount > 0) {
+                    patchRow(row.id, { minCount });
+                  }
+                }}
+                slotProps={{
+                  htmlInput: { min: 1, max: 99 },
+                  input: {
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        {t('mailSend.mailHistory.times')}
+                      </InputAdornment>
+                    ),
+                  },
+                }}
+                style={{ width: 150 }}
+              />
+
               <Tooltip title={t('mailSend.mailHistory.remove')}>
                 <IconButton
                   size="small"
@@ -231,11 +262,14 @@ export function MailHistoryFilter({
               )}
             </Stack>
 
-            <DateRangeFilter
+            <DateWindowFilter
               label={t('mailSend.mailHistory.sentBetween')}
               disableFuture
-              value={{ from: row.from, to: row.to }}
-              onChange={({ from, to }) => patchRow(row.id, { from, to })}
+              range={{ from: row.from, to: row.to }}
+              rolling={row.rolling}
+              kinds={SENT_KINDS}
+              onRangeChange={({ from, to }) => patchRow(row.id, { from, to })}
+              onRollingChange={rolling => patchRow(row.id, { rolling })}
             />
 
             <Stack>
