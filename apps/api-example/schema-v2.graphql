@@ -3865,25 +3865,6 @@ type Mutation {
   """
   confirmNotification(itemId: String!, source: NotificationSource!): NotificationConfirmation!
 
-  """
-  Data correction: gives the latest, paid period of a running subscription the periodicity and end it should have had (e.g. a trial that runs as a year), and the subscription the same periodicity. The price of the period stays; paidUntil follows when it was that period's end. Creates, cancels and sends nothing; refuses a subscription with an open invoice.
-  """
-  correctSubscriptionPeriod(
-    """The last day the period really covers."""
-    endsAt: DateTime!
-
-    """
-    The periodicity the period was really sold with. The subscription gets it too.
-    """
-    paymentPeriodicity: PaymentPeriodicity!
-
-    """
-    The period to correct. It has to be the latest one of the subscription.
-    """
-    periodId: String!
-    subscriptionId: String!
-  ): PublicSubscription!
-
   """Creates a new AI provider setting."""
   createAISetting(apiKey: String, id: String!, name: String, systemPrompt: String, type: AIProviderType!, webhookEndpointSecret: String): SettingAIProvider!
 
@@ -4838,18 +4819,6 @@ type Mutation {
 
   """Update an existing subscription interval"""
   updateSubscriptionInterval(daysAwayFromEnding: Int, id: String!, mailTemplateId: String, sendAsLetter: Boolean): [SubscriptionFlowModel!]!
-
-  """
-  Data correction: moves a subscription that is still on fromPaymentMethodId to toPaymentMethodId and changes nothing else. Unlike updateSubscription it also takes deactivated subscriptions and never touches invoices, periods or the payment provider. Returns whether it moved the subscription; swap the payment methods to undo it.
-  """
-  updateSubscriptionPaymentMethod(
-    """
-    The payment method the subscription is expected to be on; it is only moved while it still is.
-    """
-    fromPaymentMethodId: String!
-    subscriptionId: String!
-    toPaymentMethodId: String!
-  ): Boolean!
 
   """Updates an existing sync provider setting."""
   updateSyncProviderSetting(enabled: Boolean, id: String!, mailchimp_apiKey: String, mailchimp_defaultInterestGroupIds: [String!], mailchimp_extensions: JSONObject, mailchimp_interestGroupMappings: [JSONObject!], mailchimp_listId: String, mailchimp_mergeFieldMappings: [JSONObject!], name: String): SettingSyncProvider!

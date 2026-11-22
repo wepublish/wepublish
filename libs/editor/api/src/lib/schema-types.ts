@@ -3551,8 +3551,6 @@ export type Mutation = {
   confirmEmailChange: SensitiveDataUser;
   /** Confirms a notification for the whole instance, recording who confirmed it. Requires authentication. */
   confirmNotification: NotificationConfirmation;
-  /** Data correction: gives the latest, paid period of a running subscription the periodicity and end it should have had (e.g. a trial that runs as a year), and the subscription the same periodicity. The price of the period stays; paidUntil follows when it was that period's end. Creates, cancels and sends nothing; refuses a subscription with an open invoice. */
-  correctSubscriptionPeriod: PublicSubscription;
   /** Creates a new AI provider setting. */
   createAISetting: SettingAiProvider;
   /** Creates a new analytics provider setting. */
@@ -4018,8 +4016,6 @@ export type Mutation = {
   updateSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Update an existing subscription interval */
   updateSubscriptionInterval: Array<SubscriptionFlowModel>;
-  /** Data correction: moves a subscription that is still on fromPaymentMethodId to toPaymentMethodId and changes nothing else. Unlike updateSubscription it also takes deactivated subscriptions and never touches invoices, periods or the payment provider. Returns whether it moved the subscription; swap the payment methods to undo it. */
-  updateSubscriptionPaymentMethod: Scalars['Boolean']['output'];
   /** Updates an existing sync provider setting. */
   updateSyncProviderSetting: SettingSyncProvider;
   /** Updates an existing mail flow */
@@ -4166,14 +4162,6 @@ export type MutationConfirmEmailChangeArgs = {
 export type MutationConfirmNotificationArgs = {
   itemId: Scalars['String']['input'];
   source: NotificationSource;
-};
-
-
-export type MutationCorrectSubscriptionPeriodArgs = {
-  endsAt: Scalars['DateTime']['input'];
-  paymentPeriodicity: PaymentPeriodicity;
-  periodId: Scalars['String']['input'];
-  subscriptionId: Scalars['String']['input'];
 };
 
 
@@ -5894,13 +5882,6 @@ export type MutationUpdateSubscriptionIntervalArgs = {
   id: Scalars['String']['input'];
   mailTemplateId?: InputMaybe<Scalars['String']['input']>;
   sendAsLetter?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-
-export type MutationUpdateSubscriptionPaymentMethodArgs = {
-  fromPaymentMethodId: Scalars['String']['input'];
-  subscriptionId: Scalars['String']['input'];
-  toPaymentMethodId: Scalars['String']['input'];
 };
 
 
