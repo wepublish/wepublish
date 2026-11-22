@@ -1205,7 +1205,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             <SubscribeButton
               size={'large'}
               disabled={
-                challenge.loading ||
+                (!hasUserContext && challenge.loading) ||
                 userInvoices.loading ||
                 userSubscriptions.loading ||
                 loading ||
