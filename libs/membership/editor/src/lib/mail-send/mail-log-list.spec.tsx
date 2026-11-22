@@ -1,8 +1,18 @@
 import type { Mock } from 'vitest';
-import { useQuery } from '@apollo/client/react';
+import { useMutation, useQuery } from '@apollo/client/react';
 import { createTheme, ThemeProvider } from '@mui/material';
-import { render, screen, within } from '@testing-library/react';
-import { AuthContext, sessionWithPermissions } from '@wepublish/ui/editor';
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from '@testing-library/react';
+import {
+  AuthContext,
+  enqueueSnackbar,
+  sessionWithPermissions,
+} from '@wepublish/ui/editor';
 import { MemoryRouter } from 'react-router-dom';
 
 import { MailLogList } from './mail-log-list';
@@ -11,6 +21,20 @@ vi.mock('@apollo/client/react', async importOriginal => ({
   ...(await importOriginal<typeof import('@apollo/client/react')>()),
   useQuery: vi.fn(() => ({ data: undefined, loading: false })),
   useMutation: vi.fn(() => [vi.fn(), { loading: false }]),
+}));
+
+vi.mock('@wepublish/ui/editor', async importOriginal => ({
+  ...(await importOriginal<typeof import('@wepublish/ui/editor')>()),
+  enqueueSnackbar: vi.fn(),
+}));
+
+const paperLetters = vi.fn(() => false);
+
+vi.mock('../mail-template/use-letter-channel', () => ({
+  useLetterChannel: () => ({
+    paperLetters: paperLetters(),
+    letterAvailable: paperLetters(),
+  }),
 }));
 
 vi.mock('react-i18next', () => ({
@@ -32,6 +56,120 @@ const renderPage = () =>
   );
 
 describe('MailLogList', () => {
+  beforeEach(() => {
+    paperLetters.mockReturnValue(false);
+    (enqueueSnackbar as unknown as Mock).mockClear();
+  });
+
+  describe('refreshing the delivery states', () => {
+    const syncAnswers = (answer: Record<string, number>) => {
+      const sync = vi.fn(async () => ({
+        data: { syncMailLogStates: answer },
+      }));
+      (useMutation as unknown as Mock).mockReturnValue([
+        sync,
+        { loading: false },
+      ]);
+
+      return sync;
+    };
+
+    const pressSync = () =>
+      fireEvent.click(
+        screen.getByRole('button', { name: /mailLog\.sync\.action/ })
+      );
+
+    afterEach(() => {
+      (useMutation as unknown as Mock).mockReturnValue([
+        vi.fn(),
+        { loading: false },
+      ]);
+    });
+
+    it('reports the mails alone when no letter was asked about', async () => {
+      const sync = syncAnswers({
+        checked: 4,
+        updated: 0,
+        lettersChecked: 0,
+        lettersUpdated: 0,
+      });
+      renderPage();
+
+      pressSync();
+
+      await waitFor(() => expect(enqueueSnackbar).toHaveBeenCalled());
+      expect(sync).toHaveBeenCalledTimes(1);
+      expect(enqueueSnackbar).toHaveBeenCalledWith('mailLog.sync.done', {
+        variant: 'info',
+      });
+    });
+
+    it('reports the letters too once some were asked about', async () => {
+      syncAnswers({
+        checked: 4,
+        updated: 0,
+        lettersChecked: 12,
+        lettersUpdated: 3,
+      });
+      renderPage();
+
+      pressSync();
+
+      await waitFor(() => expect(enqueueSnackbar).toHaveBeenCalled());
+      expect(enqueueSnackbar).toHaveBeenCalledWith(
+        'mailLog.sync.doneWithLetters',
+        { variant: 'success' }
+      );
+    });
+
+    it('explains the button for mails only where no letters are printed', () => {
+      renderPage();
+
+      expect(screen.getByLabelText('mailLog.sync.hint')).toBeTruthy();
+      expect(
+        screen.queryByLabelText('mailLog.sync.hintWithLetters')
+      ).toBeNull();
+    });
+
+    it('explains that letters are asked about too where they are printed', () => {
+      paperLetters.mockReturnValue(true);
+      renderPage();
+
+      expect(
+        screen.getByLabelText('mailLog.sync.hintWithLetters')
+      ).toBeTruthy();
+    });
+  });
+
+  describe('the state legend', () => {
+    const openLegend = () =>
+      fireEvent.click(
+        screen.getByRole('button', { name: 'mailLog.stateHelp.legendTitle' })
+      );
+
+    it('says how letter states are kept current where letters are printed', () => {
+      paperLetters.mockReturnValue(true);
+      renderPage();
+
+      openLegend();
+
+      expect(
+        screen.getByText(/mailLog\.stateHelp\.legendFooterLetters/)
+      ).toBeTruthy();
+    });
+
+    it('leaves letters out where none are printed', () => {
+      renderPage();
+
+      openLegend();
+
+      expect(screen.getByText(/mailLog\.stateHelp\.legendFooter/)).toBeTruthy();
+      expect(
+        screen.queryByText(/mailLog\.stateHelp\.legendFooterLetters/)
+      ).toBeNull();
+    });
+  });
+
   it('ties the tabs to the panel they show', () => {
     renderPage();
 

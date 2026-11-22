@@ -2619,6 +2619,7 @@
         "bexioContactSync": "Contacts vers bexio",
         "mailchimpSync": "Synchronisation Mailchimp",
         "mailLogSync": "États de distribution des mails",
+        "letterLogSync": "États de distribution des lettres",
         "suppressionSync": "Adresses bloquées",
         "emailQuality": "Qualité de l'e-mail",
         "deliverySuggestions": "Suggestions de canal"
@@ -4789,13 +4790,16 @@
       "sync": {
         "action": "Actualiser les statuts",
         "hint": "Demande au fournisseur de messagerie le statut de livraison actuel de tous les e-mails encore en cours.",
-        "done": "{{checked}} e-mail(s) en cours vérifié(s) chez le fournisseur, {{updated}} mis à jour."
+        "done": "{{checked}} e-mail(s) en cours vérifié(s) chez le fournisseur, {{updated}} mis à jour.",
+        "hintWithLetters": "Demande au fournisseur de messagerie et au fournisseur de lettres le statut de livraison actuel de tous les e-mails et lettres encore en cours.",
+        "doneWithLetters": "{{checked}} e-mail(s) en cours vérifié(s), {{updated}} mis à jour. {{lettersChecked}} lettre(s) en cours vérifiée(s), {{lettersUpdated}} mise(s) à jour."
       },
       "stateHelp": {
         "nextTitle": "Ce que vous pouvez faire",
         "legendTitle": "Signification des statuts",
         "legendIntro": "Le statut indique jusqu’où un e-mail est allé sur le chemin du destinataire. Il est communiqué par le fournisseur de messagerie, pas par We.Publish.",
         "legendFooter": "Les statuts arrivent normalement du fournisseur par webhook. Si aucun webhook n’est configuré – ou si l’installation est locale et donc inaccessible au fournisseur – le statut reste sur « submitted ». « Actualiser les statuts » va alors le chercher directement chez le fournisseur.\nSMTP et Slack ne communiquent aucun statut de livraison : ces e-mails restent sur « submitted ».",
+        "legendFooterLetters": "Il en va de même pour les lettres : leur statut arrive du fournisseur de lettres par webhook ; sinon « Actualiser les statuts » et le traitement nocturne vont le chercher directement chez lui. Une lettre remise à la poste (« dispatched ») est encore vérifiée pendant 30 jours, car les retours sont signalés tardivement.",
         "submitted": {
           "name": "submitted — Transmis",
           "meaning": "We.Publish a remis l’e-mail au fournisseur de messagerie, qui l’a accepté. Il est en file d’attente chez lui. Ce statut ne dit encore rien de la boîte du destinataire.",

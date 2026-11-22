@@ -31,6 +31,7 @@ import { useTranslation } from 'react-i18next';
 import { MdFilterList, MdSync } from 'react-icons/md';
 import { useSearchParams } from 'react-router-dom';
 import { DEFAULT_MUTATION_OPTIONS } from '../common';
+import { useLetterChannel } from '../mail-template/use-letter-channel';
 import {
   formatDateTime,
   MailErrorCell,
@@ -150,6 +151,7 @@ export function MailLogTable() {
     },
   });
 
+  const { paperLetters } = useLetterChannel();
   const [syncStates, { loading: syncing }] = useMutation(
     SyncMailLogStatesDocument,
     {
@@ -168,12 +170,21 @@ export function MailLogTable() {
       return;
     }
 
+    // Letters only get a mention where some were asked about; most
+    // installations print none.
     enqueueSnackbar(
-      t('mailLog.sync.done', {
-        checked: sync.checked,
-        updated: sync.updated,
-      }),
-      { variant: sync.updated ? 'success' : 'info' }
+      t(
+        sync.lettersChecked ?
+          'mailLog.sync.doneWithLetters'
+        : 'mailLog.sync.done',
+        {
+          checked: sync.checked,
+          updated: sync.updated,
+          lettersChecked: sync.lettersChecked,
+          lettersUpdated: sync.lettersUpdated,
+        }
+      ),
+      { variant: sync.updated || sync.lettersUpdated ? 'success' : 'info' }
     );
   };
 
@@ -277,7 +288,13 @@ export function MailLogTable() {
                 >
                   <MdSync /> {t('mailLog.sync.action')}
                 </Button>
-                <InfoTooltip text={t('mailLog.sync.hint')} />
+                <InfoTooltip
+                  text={t(
+                    paperLetters ?
+                      'mailLog.sync.hintWithLetters'
+                    : 'mailLog.sync.hint'
+                  )}
+                />
               </Stack>
             </Stack>
           }

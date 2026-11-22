@@ -2457,6 +2457,18 @@ export enum LoginStatus {
   Unsubscribed = 'UNSUBSCRIBED'
 }
 
+export type MailAndLetterLogSyncModel = {
+  __typename?: 'MailAndLetterLogSyncModel';
+  /** Mails that were still in an open state and could be looked up at the provider. */
+  checked: Scalars['Int']['output'];
+  /** Letters that can still change and were looked up at the letter provider. */
+  lettersChecked: Scalars['Int']['output'];
+  /** Letters whose state the provider reported differently. */
+  lettersUpdated: Scalars['Int']['output'];
+  /** Mails whose state the provider reported differently. */
+  updated: Scalars['Int']['output'];
+};
+
 export type MailAudienceInput = {
   autoRenew?: InputMaybe<Scalars['Boolean']['input']>;
   base: MailRecipientBase;
@@ -2590,14 +2602,6 @@ export enum MailLogState {
   Submitted = 'submitted',
   Undeliverable = 'undeliverable'
 }
-
-export type MailLogSyncModel = {
-  __typename?: 'MailLogSyncModel';
-  /** Mails that were still in an open state and could be looked up at the provider. */
-  checked: Scalars['Int']['output'];
-  /** Mails whose state the provider reported differently. */
-  updated: Scalars['Int']['output'];
-};
 
 export type MailLogTemplate = {
   __typename?: 'MailLogTemplate';
@@ -3789,8 +3793,8 @@ export type Mutation = {
   setPaymentProviderCustomers: Scalars['Int']['output'];
   /** Switch a user between mailed and printed subscription mails */
   setUserDeliveryMode: UserDeliveryPreferenceModel;
-  /** Ask the mail provider for the current delivery state of mails that are still open. Complements the provider webhook, which is not reachable in local development. */
-  syncMailLogStates: MailLogSyncModel;
+  /** Ask the mail provider and the letter provider for the current delivery state of mails and letters that are still open. Complements the provider webhooks, which are not reachable in local development. */
+  syncMailLogStates: MailAndLetterLogSyncModel;
   /** Sends a test email for the given event */
   testSystemMail: Scalars['Boolean']['output'];
   /** Triggers a mailchimp sync in the background. */

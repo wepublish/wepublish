@@ -283,6 +283,20 @@ A document the sender hands in (`attachment`, e.g. the Bexio invoice with its
 per-invoice QR-bill) is appended the same way and takes the static appendix's
 place.
 
+### Letter delivery states (webhook + poll)
+
+A letter is a `MailLog` row with `channel = letter`; its state comes from the
+provider's webhook at `/letter-webhooks/<settingLetterProvider id>` (register
+that URL at Pingen, with the signing key from the integration form). The
+fallback is `LetterLogSyncService` (`libs/letter/api`), called by the mail
+log's `syncMailLogStates` mutation and by the nightly step `letterLogSync`: it
+asks the provider about letters still `submitted`/`accepted`, and about
+`dispatched` ones for 30 days after `sentDate` (returned post is reported
+late). One GET per letter, so the nightly limit (2000) is what bounds the
+calls. Webhook and poll share `shouldUpdateLetterLogState`: a state only moves
+forward, and `rejected` ranks with `accepted` because a Pingen issue can be
+resolved and the letter printed after all.
+
 ### Template attachments (Word → pdf)
 
 `MailTemplateAttachment` rows (ordered by `position`) attach `.docx` documents

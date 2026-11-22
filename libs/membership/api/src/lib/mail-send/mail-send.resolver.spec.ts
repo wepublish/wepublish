@@ -1,5 +1,6 @@
 import { MailChannel, PrismaClient } from '@prisma/client';
 import { AuthSessionType, UserSession } from '@wepublish/authentication/api';
+import { LetterLogSyncService } from '@wepublish/letter/api';
 import { MailSendResolver } from './mail-send.resolver';
 import { MailSendJobService } from './mail-send-job.service';
 import { MailSendRecipientService } from './mail-send-recipient.service';
@@ -24,7 +25,8 @@ const makeResolver = (
   emailEvidenceService: any = {},
   suppressionSyncService: any = {
     syncSuppressions: async () => ({ listed: 0, recorded: 0 }),
-  }
+  },
+  letterLogSyncService: any = {}
 ) =>
   new MailSendResolver(
     prisma as PrismaClient,
@@ -33,7 +35,8 @@ const makeResolver = (
     mailLogSyncService as MailLogSyncService,
     emailQualityService as EmailQualityService,
     emailEvidenceService as EmailEvidenceService,
-    suppressionSyncService as SuppressionSyncService
+    suppressionSyncService as SuppressionSyncService,
+    letterLogSyncService as LetterLogSyncService
   );
 
 describe('MailSendResolver', () => {
@@ -305,6 +308,95 @@ describe('MailSendResolver', () => {
 
   // The feedback loop of a campaign: states a provider reported late, then
   // the levels. Manual, because the media decide when to look.
+  describe('syncMailLogStates', () => {
+    const makeSyncResolver = (mailLogSyncService: any, letterLogSync: any) =>
+      makeResolver(
+        {},
+        {},
+        {},
+        mailLogSyncService,
+        {},
+        {},
+        undefined,
+        letterLogSync
+      );
+
+    it('asks the mail provider and the letter provider', async () => {
+      const mailLogSyncService = {
+        syncOpenStates: vi.fn(async () => ({ checked: 5, updated: 2 })),
+      };
+      const letterLogSyncService = {
+        syncOpenStates: vi.fn(async () => ({ checked: 9, updated: 4 })),
+      };
+
+      await expect(
+        makeSyncResolver(
+          mailLogSyncService,
+          letterLogSyncService
+        ).syncMailLogStates(50)
+      ).resolves.toEqual({
+        checked: 5,
+        updated: 2,
+        lettersChecked: 9,
+        lettersUpdated: 4,
+      });
+
+      expect(mailLogSyncService.syncOpenStates).toHaveBeenCalledWith(50);
+      expect(letterLogSyncService.syncOpenStates).toHaveBeenCalledWith(50);
+    });
+
+    it('leaves the limit to each sync when none is given', async () => {
+      const mailLogSyncService = {
+        syncOpenStates: vi.fn(async () => ({ checked: 0, updated: 0 })),
+      };
+      const letterLogSyncService = {
+        syncOpenStates: vi.fn(async () => ({
+          checked: 0,
+          updated: 0,
+          skipped: true,
+        })),
+      };
+
+      await expect(
+        makeSyncResolver(
+          mailLogSyncService,
+          letterLogSyncService
+        ).syncMailLogStates()
+      ).resolves.toEqual({
+        checked: 0,
+        updated: 0,
+        lettersChecked: 0,
+        lettersUpdated: 0,
+      });
+
+      expect(mailLogSyncService.syncOpenStates).toHaveBeenCalledWith(undefined);
+      expect(letterLogSyncService.syncOpenStates).toHaveBeenCalledWith(
+        undefined
+      );
+    });
+
+    // What the mail provider answered is already written; the letters must
+    // not be left out because of it.
+    it('still asks about the letters when the mail provider fails, and fails', async () => {
+      const letterLogSyncService = {
+        syncOpenStates: vi.fn(async () => ({ checked: 9, updated: 4 })),
+      };
+
+      await expect(
+        makeSyncResolver(
+          {
+            syncOpenStates: async () => {
+              throw new Error('mail provider down');
+            },
+          },
+          letterLogSyncService
+        ).syncMailLogStates()
+      ).rejects.toThrow('mail provider down');
+
+      expect(letterLogSyncService.syncOpenStates).toHaveBeenCalled();
+    });
+  });
+
   it('refreshEmailQuality polls the provider and then re-evaluates', async () => {
     const order: string[] = [];
     const mailLogSyncService = {
