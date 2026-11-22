@@ -1,15 +1,10 @@
 import { createTheme, Theme, ThemeOptions } from '@mui/material';
 import { theme as WePTheme } from '@wepublish/ui';
-import { Hanken_Grotesk } from 'next/font/google';
 import { PartialDeep } from 'type-fest';
 
-const hankenGrotesk = Hanken_Grotesk({
-  weight: ['100', '300', '400', '500', '600', '700'],
-  style: ['italic', 'normal'],
-  subsets: ['latin'],
-  display: 'swap',
-  preload: true,
-});
+// Named, not loaded: `next/font/google` only exists in Next. The app requests
+// the stylesheet in its document head (`apps/zwoelf/src/routes/__root.tsx`).
+const hankenGrotesk = { style: { fontFamily: 'Hanken Grotesk' } };
 
 const {
   palette: { augmentColor },

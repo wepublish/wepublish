@@ -11,8 +11,9 @@ import de from '@wepublish/website/translations/de.json';
 
 import { createConfirmEmailPage } from './confirm-email-page';
 
-const { cookie, navigate, replaceSearch } = vi.hoisted(() => ({
+const { cookie, navigate, replaceSearch, query } = vi.hoisted(() => ({
   cookie: { value: undefined as string | undefined },
+  query: { token: 'confirm-token' as string | number },
   navigate: vi.fn(),
   replaceSearch: vi.fn(),
 }));
@@ -29,7 +30,7 @@ vi.mock('@tanstack/react-router', async importOriginal => ({
 
 vi.mock('../router-hooks', async importOriginal => ({
   ...(await importOriginal<object>()),
-  useQueryParams: () => ({ token: 'confirm-token' }),
+  useQueryParams: () => ({ token: query.token }),
   useReplaceSearch: () => replaceSearch,
 }));
 
@@ -68,6 +69,7 @@ const renderPage = async (
 describe('ConfirmEmailPage (TanStack)', () => {
   beforeEach(() => {
     cookie.value = undefined;
+    query.token = 'confirm-token';
     navigate.mockReset();
     replaceSearch.mockReset();
   });
@@ -78,6 +80,23 @@ describe('ConfirmEmailPage (TanStack)', () => {
   // The mock answers one request; a second one fails the test as unmocked.
   it('confirms from the browser, once', async () => {
     await renderPage();
+
+    expect(screen.getByText(de.user.emailConfirmed)).toBeTruthy();
+  });
+
+  // The router reads `?token=123456` as a number.
+  it('confirms a token that is all digits', async () => {
+    query.token = 123456;
+
+    await renderPage(
+      mockOperation(ConfirmEmailChangeDocument, {
+        variables: { token: '123456' },
+        data: {
+          __typename: 'Mutation',
+          confirmEmailChange: mockSensitiveDataUser(),
+        },
+      })
+    );
 
     expect(screen.getByText(de.user.emailConfirmed)).toBeTruthy();
   });

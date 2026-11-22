@@ -382,6 +382,21 @@ never both.
 A zod `.default()` in `validateSearch` makes TanStack canonicalise the URL and
 redirect. Keep `validateSearch` free of defaults; apply them when reading.
 
+### 6.10b A search value of `1` answers 500, or gets rewritten
+
+The router parses the address before `validateSearch` sees it: `?x=1` arrives
+as the number `1`, `?x=true` as a boolean, a token or code of digits only as a
+number. `z.string()` refuses those and the page answers **500** —
+`/profile?emailConfirmed=1` did, which is where the confirm-email page sends
+the reader. Coercing is no way out: the router writes the parsed result back
+(`=true`, `="1"`) and answers with a 307, and `LoginFormContainer` looks for
+exactly `totpRequired=1` in the address.
+
+Take such a value as it comes with `searchValueSchema` (`routes/shared.ts`)
+and read it with `searchText`. Probe every search param a mail or redirect
+sets with `curl -sI` on the built server — a spec that feeds the schema `'1'`
+passes while the real request fails.
+
 ### 6.11 A 404 page served with status 200
 
 TanStack derives the SSR status from a thrown `notFound()`, not from which
@@ -613,6 +628,15 @@ as the alternative.
 
 ## 8. Known gaps
 
+- **The personal login link is zwoelf's only.** `loginCodeRoute` (`/l/$code`),
+  `welcomeRoute` and `withRestrictedSessionRedirect` exist for TanStack since
+  the zwoelf migration; their bodies live in the core
+  (`lib/components/login-code`, `lib/components/welcome`,
+  `lib/restricted-session.ts`) and the Next pages wrap the same code. A tenant
+  that adds them needs `/welcome` and `/l/` in its `no-store` rules
+  (`apps/zwoelf/src/cache-rules.ts` and its spec are the model) and
+  `referrerPolicyFor` in `start.ts`: no other TanStack app sends a
+  `Referrer-Policy` yet.
 - **`website-shell` on a bespoke route.** The shared factories already return
   `{shell}` (`homePageRoute`, `pageBySlugRoute`), and `app.tsx` reads it with
   one `useWebsiteShell()` call, so the per-page wiring every Next tenant

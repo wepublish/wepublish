@@ -174,6 +174,20 @@ export const handleJwtLogin = async (
   return session;
 };
 
+/**
+ * Writes the session cookie the browser's session provider reads. Readable
+ * by script like the one `cookies-next` writes after a login in the browser.
+ */
+export const setSessionCookie = (
+  session: Pick<FullSessionWithTokenWithoutUserFragment, 'expiresAt'> & object
+) =>
+  setCookie(AuthTokenStorageKey, JSON.stringify(session), {
+    expires: new Date(session.expiresAt),
+    sameSite: 'strict',
+    secure: process.env.NODE_ENV === 'production',
+    path: '/',
+  });
+
 /** Absolute site URL for the feed and sitemap server routes. */
 export const getSiteUrl = () => {
   if (process.env.WEBSITE_URL) {

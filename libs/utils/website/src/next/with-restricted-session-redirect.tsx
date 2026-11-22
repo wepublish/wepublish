@@ -1,6 +1,3 @@
-import { useQuery } from '@apollo/client/react';
-import { useUser } from '@wepublish/authentication/website';
-import { SessionInfoDocument } from '@wepublish/website/api';
 import { useRouter } from 'next/router';
 import {
   ComponentType,
@@ -8,6 +5,8 @@ import {
   PropsWithChildren,
   useEffect,
 } from 'react';
+
+import { useRestrictedSession } from '../lib/restricted-session';
 
 export const RESTRICTED_SESSION_ALLOWED_PATHS = [
   '/welcome',
@@ -27,26 +26,7 @@ const RestrictedSessionRedirect = ({
   allowedPaths,
 }: RestrictedSessionRedirectProps) => {
   const router = useRouter();
-  const { hasUser } = useUser();
-  const { data, refetch } = useQuery(SessionInfoDocument, {
-    skip: !hasUser,
-    fetchPolicy: 'cache-and-network',
-  });
-  const restricted = data?.sessionInfo.restricted ?? false;
-
-  useEffect(() => {
-    if (!hasUser) {
-      return;
-    }
-
-    const onFocus = () => {
-      refetch();
-    };
-
-    window.addEventListener('focus', onFocus);
-
-    return () => window.removeEventListener('focus', onFocus);
-  }, [hasUser, refetch]);
+  const restricted = useRestrictedSession();
 
   useEffect(() => {
     if (

@@ -4,4 +4,7 @@ export const sitemapConfig: SitemapSiteConfig = {
   title: 'Zwölf',
   description: 'ZWÖLF ist ein Schweizer Fussballmagazin.',
   pageUrls: ['/author', '/event'],
+  // Not `/api/sitemap`: this tenant serves its sitemap from `/sitemap.xml`
+  // and its chunks from `/sitemap/<chunk>`. Only read in `index` mode.
+  sitemapPath: '/sitemap',
 };

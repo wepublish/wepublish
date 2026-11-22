@@ -11,6 +11,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useQueryParams, useReplaceSearch } from '../router-hooks';
+import { searchText } from '../routes/shared';
 
 export type ConfirmEmailPageOptions = {
   redirectTo?: string;
@@ -37,7 +38,10 @@ export const createConfirmEmailPage = ({
     const { t } = useTranslation();
     const navigate = useNavigate();
     const replaceSearch = useReplaceSearch();
-    const token = useQueryParams().token;
+    // As text: the router reads a token of digits only as a number.
+    const token = searchText(
+      useQueryParams().token as string | number | undefined
+    );
     const [confirm] = useMutation(ConfirmEmailChangeDocument);
     const { refreshUser } = useUser();
     const [outcome, setOutcome] = useState<Outcome>({ state: 'confirming' });
@@ -48,7 +52,7 @@ export const createConfirmEmailPage = ({
     // along. Here the request carries the session, so the API keeps it and
     // the reader can go straight on.
     useEffect(() => {
-      if (typeof token !== 'string' || started.current) {
+      if (!token || started.current) {
         return;
       }
 

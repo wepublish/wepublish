@@ -25,6 +25,7 @@ export * from './lib/session.provider';
 export * from './lib/async-session.provider';
 export * from './lib/user-country';
 export * from './lib/handle-login-code';
+export * from './lib/restricted-session';
 export * from './lib/with-jwt-handler';
 export * from './lib/with-session-provider';
 export * from './lib/website-shell';

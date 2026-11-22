@@ -30,6 +30,23 @@ export const pageSearchSchema = z.object({
   page: z.coerce.number().gte(1).optional(),
 });
 
+/**
+ * A search value the route only passes on or checks for presence.
+ *
+ * The router parses the address before the schema sees it: `?x=1` arrives as
+ * the number `1`, `?x=true` as a boolean. A `z.string()` refuses those and the
+ * page answers 500. Coercing is no way out either — the router writes the
+ * parsed result back into the address (`"1"`, `true`) and answers the first
+ * request with a 307. So the value is taken as it comes; read it with
+ * `searchText`.
+ */
+export const searchValueSchema = z.union([z.string(), z.number(), z.boolean()]);
+
+/** A `searchValueSchema` value as the text it was in the address. */
+export const searchText = (
+  value: string | number | boolean | null | undefined
+): string | undefined => (value == null ? undefined : String(value));
+
 /** `?jwt=` — any page reachable from a magic link must accept it. */
 export const jwtSearchSchema = z.object({ jwt: z.string().optional() });
 
