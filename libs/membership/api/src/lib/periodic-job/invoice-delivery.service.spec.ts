@@ -33,6 +33,7 @@ const flow = (sendAsLetter: boolean) => ({
   default: true,
   memberPlanId: null,
   autoRenewal: [],
+  legacy: [true, false],
   periodicities: [],
   paymentMethods: [],
   intervals: [

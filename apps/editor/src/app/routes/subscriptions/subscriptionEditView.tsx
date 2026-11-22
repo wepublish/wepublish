@@ -68,6 +68,7 @@ import {
   toggleRequiredLabel,
   useActionMailQuestion,
   useAuthorisation,
+  useFeature,
   UserSearch,
   UserSubscriptionDeactivatePanel,
 } from '@wepublish/ui/editor';
@@ -261,6 +262,12 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
   const [pendingPaymentMethodChange, setPendingPaymentMethodChange] =
     useState<FullSubscriptionFragment['pendingPaymentMethodChange']>(null);
 
+  const showImported = useFeature('legacy-subscriptions');
+  const [imported, setImported] = useState<{
+    importedAt: string;
+    legacy: boolean;
+  } | null>(null);
+
   const loadSubscription = useCallback(async () => {
     try {
       if (id) {
@@ -273,6 +280,14 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
         setCanRevertUpgrade(!!subscription?.canRevertUpgrade);
         setPendingPaymentMethodChange(
           subscription?.pendingPaymentMethodChange ?? null
+        );
+        setImported(
+          subscription?.importedAt ?
+            {
+              importedAt: subscription.importedAt,
+              legacy: subscription.legacy,
+            }
+          : null
         );
 
         if (subscription) {
@@ -795,6 +810,17 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                     )}`
                   ),
                 }
+              )}
+            </Alert>
+          )}
+
+          {showImported && imported && (
+            <Alert severity="info">
+              {t(
+                imported.legacy ?
+                  'userSubscriptionEdit.imported.legacy'
+                : 'userSubscriptionEdit.imported.paidHere',
+                { date: new Date(imported.importedAt) }
               )}
             </Alert>
           )}

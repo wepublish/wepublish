@@ -3079,6 +3079,13 @@
       "paymentMethod": "Zahlungsmethode",
       "periodicity": "Laufzeit",
       "autoRenewal": "Automatische Verlängerung?",
+      "legacy": "Altabos",
+      "legacyHint": "Altabo: importiert und hier noch nicht bezahlt. Ein Ablauf nur für Altabos braucht jede Nachricht selbst; der Standardablauf ergänzt fehlende nicht.",
+      "legacyFilter": {
+        "all": "Alle Abos",
+        "only": "Nur Altabos",
+        "none": "Ohne Altabos"
+      },
       "booleanFilter": {
         "true": "Ja",
         "false": "Nein"
@@ -3394,6 +3401,10 @@
         },
         "willBeDeactivated": "Das Abonnement wird am {{date, ccc PP p}} deaktiviert. Grund: {{reason}}"
       },
+      "imported": {
+        "legacy": "Altabo: am {{date, PP}} importiert und hier noch nicht bezahlt.",
+        "paidHere": "Am {{date, PP}} importiert; seither hier bezahlt."
+      },
       "revertUpgrade": {
         "title": "Upgrade rückgängig",
         "modalTitle": "Upgrade rückgängig machen?",
@@ -3622,7 +3633,10 @@
       "renewalTitle": "Laufzeit und Verlängerung"
     },
     "subscriptionListFilter": {
-      "extendable": "Verlängerbar"
+      "extendable": "Verlängerbar",
+      "legacy": "Altabo",
+      "legacyHint": "Importiert und hier noch nicht bezahlt",
+      "legacyAll": "Alle"
     },
     "resources": {
       "teaserType": {
@@ -4843,6 +4857,8 @@
       "isCanceledHint": "Enthält auch Kündigungen, die erst später wirksam werden.",
       "hasReplacedSubscription": "Hat ein anderes Abo ersetzt (z.B. Upgrade)",
       "hasReplacedSubscriptionHint": "Enthält auch Downgrades und Plan-Wechsel; manuelle oder importierte Änderungen werden nicht erkannt.",
+      "isLegacy": "Altabo",
+      "isLegacyHint": "Aus dem alten System importiert und hier noch nicht bezahlt. Mit der ersten hier erfassten Zahlung endet der Status.",
       "startsAt": "Abo-Beginn",
       "endsAt": "Abo-Ende",
       "from": "ab",

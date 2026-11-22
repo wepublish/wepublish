@@ -55,8 +55,11 @@ vi.mock('react-i18next', () => ({
   }),
 }));
 
+const enabledFeatures = new Set<string>();
+
 vi.mock('@wepublish/ui/editor', async importOriginal => ({
   ...(await importOriginal<typeof import('@wepublish/ui/editor')>()),
+  useFeature: (feature: string) => enabledFeatures.has(feature),
   // The permission wrappers would otherwise need an authenticated session.
   createCheckedPermissionComponent: () => (component: unknown) => component,
   PermissionControl: ({ children }: { children: React.ReactNode }) => children,
@@ -110,8 +113,12 @@ const paymentMethod = {
 const subscription = (
   deactivation: unknown,
   canRevertUpgrade = false,
-  pendingPaymentMethodChange: unknown = null
+  pendingPaymentMethodChange: unknown = null,
+  imported: { importedAt?: string | null; legacy?: boolean } = {}
 ) => ({
+  importedAt: null,
+  legacy: false,
+  ...imported,
   canRevertUpgrade,
   pendingPaymentMethodChange,
   id: 'subscription-1',
@@ -291,6 +298,55 @@ describe('SubscriptionEditView', () => {
         'userSubscriptionEdit.paymentMethodChange.pending'
       )
     ).toBeTruthy();
+  });
+
+  describe('imported subscriptions', () => {
+    const importedAt = '2026-11-01T08:00:00.000Z';
+
+    afterEach(() => {
+      enabledFeatures.clear();
+    });
+
+    it('says that a subscription is a legacy one', async () => {
+      enabledFeatures.add('legacy-subscriptions');
+      mockQueries(null, false, null, { importedAt, legacy: true });
+      renderEditView();
+
+      expect(
+        await screen.findByText('userSubscriptionEdit.imported.legacy')
+      ).toBeTruthy();
+    });
+
+    it('says that an imported subscription was since paid for here', async () => {
+      enabledFeatures.add('legacy-subscriptions');
+      mockQueries(null, false, null, { importedAt, legacy: false });
+      renderEditView();
+
+      expect(
+        await screen.findByText('userSubscriptionEdit.imported.paidHere')
+      ).toBeTruthy();
+    });
+
+    it('says nothing about a subscription created here', async () => {
+      enabledFeatures.add('legacy-subscriptions');
+      mockQueries(null);
+      renderEditView();
+
+      await screen.findByText(
+        'userSubscriptionEdit.deactivation.title.activated'
+      );
+      expect(screen.queryByText(/userSubscriptionEdit\.imported/)).toBeNull();
+    });
+
+    it('says nothing while the feature is off', async () => {
+      mockQueries(null, false, null, { importedAt, legacy: true });
+      renderEditView();
+
+      await screen.findByText(
+        'userSubscriptionEdit.deactivation.title.activated'
+      );
+      expect(screen.queryByText(/userSubscriptionEdit\.imported/)).toBeNull();
+    });
   });
 
   it('shows no payment method change when there is none', async () => {

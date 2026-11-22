@@ -1303,6 +1303,10 @@ model Subscription {
   extendable         Boolean                   @default(true)
   currency           Currency
   confirmed          Boolean                   @default(true)
+  /// When importSubscription brought it in from another system; null when it was created here.
+  importedAt         DateTime?                 @db.Timestamptz(3)
+  /// When the first payment was registered here. Legacy = importedAt set and this null.
+  legacyEndedAt      DateTime?                 @db.Timestamptz(3)
 
   paymentMethodID String
   paymentMethod   PaymentMethod @relation(fields: [paymentMethodID], references: [id])
@@ -1760,6 +1764,8 @@ model SubscriptionFlow {
   paymentMethods PaymentMethod[]
   periodicities  PaymentPeriodicity[]
   autoRenewal    Boolean[]
+  /// Whom the flow is for: legacy subscriptions (true), all the others (false), or both.
+  legacy         Boolean[]            @default([true, false])
 
   intervals SubscriptionInterval[]
 

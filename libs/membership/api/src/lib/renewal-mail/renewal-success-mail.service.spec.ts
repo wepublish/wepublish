@@ -20,6 +20,7 @@ const createFlows = (
     default: true,
     memberPlanId: null,
     autoRenewal: [],
+    legacy: [true, false],
     periodicities: [],
     paymentMethods: [],
     intervals: [

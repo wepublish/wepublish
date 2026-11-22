@@ -29,6 +29,8 @@ fragment FullSubscription on PublicSubscription {
     ...Deactivation
   }
   extendable
+  importedAt
+  legacy
   canRevertUpgrade
   currency
   goodie {
@@ -125,6 +127,7 @@ query SubscriptionsAsCsv(
   $autoRenew: Boolean
   $userHasAddress: Boolean
   $extendable: Boolean
+  $legacy: Boolean
   $cancellationDateTo: DateFilter
   $cancellationDateFrom: DateFilter
   $deactivationDateTo: DateFilter
@@ -146,6 +149,7 @@ query SubscriptionsAsCsv(
     autoRenew: $autoRenew
     userHasAddress: $userHasAddress
     extendable: $extendable
+    legacy: $legacy
 
     cancellationDateTo: $cancellationDateTo
     cancellationDateFrom: $cancellationDateFrom

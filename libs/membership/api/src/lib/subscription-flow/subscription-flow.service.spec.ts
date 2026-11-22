@@ -11,6 +11,7 @@ import {
 } from './subscription-flow.service';
 import { BadRequestException } from '@nestjs/common';
 import type { Mock } from 'vitest';
+import { FeaturesService } from '@wepublish/features/api';
 
 describe('SubscriptionFlowService', () => {
   let service: SubscriptionFlowService;
@@ -63,7 +64,11 @@ describe('SubscriptionFlowService', () => {
     modifiedAt: new Date(),
   };
 
+  const features = { isEnabled: vi.fn(async (_key: string) => false) };
+
   beforeEach(async () => {
+    features.isEnabled.mockReset().mockResolvedValue(false);
+
     prismaMock = {
       subscriptionFlow: {
         findMany: vi.fn(),
@@ -107,6 +112,7 @@ describe('SubscriptionFlowService', () => {
       providers: [
         SubscriptionFlowService,
         { provide: PrismaClient, useValue: prismaMock },
+        { provide: FeaturesService, useValue: features },
       ],
     }).compile();
 
@@ -272,6 +278,7 @@ describe('SubscriptionFlowService', () => {
       paymentMethods: [{ id: mockPaymentMethod.id }],
       periodicities: [PaymentPeriodicity.yearly],
       autoRenewal: [true],
+      legacy: [true, false],
     };
 
     beforeEach(() => {
@@ -386,6 +393,7 @@ describe('SubscriptionFlowService', () => {
             PaymentPeriodicity.monthly,
           ],
           autoRenewal: [true],
+          legacy: [true, false],
         },
       ]);
 
@@ -422,6 +430,7 @@ describe('SubscriptionFlowService', () => {
         paymentMethods: [],
         periodicities: [PaymentPeriodicity.yearly],
         autoRenewal: [],
+        legacy: [true, false],
         ...overrides,
       });
 
@@ -501,6 +510,31 @@ describe('SubscriptionFlowService', () => {
       // Prisma 7 drops an `OR: []` inside an AND/OR list, so a member plan's
       // flow without an auto-renewal option would cover every subscription of
       // the plan (see gotchas.md). It has to say "nobody" explicitly.
+      // A legacy-only flow takes the imported subscriptions not paid for here
+      // yet; one for both adds nothing to the query.
+      it('narrows a flow for legacy subscriptions to them', () => {
+        const flow = {
+          memberPlanId: 'plan-1',
+          paymentMethods: [{ id: 'payment-1' }],
+          periodicities: [PaymentPeriodicity.yearly],
+          autoRenewal: [true],
+        };
+
+        expect(subscriptionsOfFlow({ ...flow, legacy: [true] })).toEqual({
+          ...subscriptionsOfFlow(flow),
+          AND: [{ importedAt: { not: null }, legacyEndedAt: null }],
+        });
+        expect(subscriptionsOfFlow({ ...flow, legacy: [false] })).toEqual({
+          ...subscriptionsOfFlow(flow),
+          AND: [
+            { OR: [{ importedAt: null }, { legacyEndedAt: { not: null } }] },
+          ],
+        });
+        expect(subscriptionsOfFlow({ ...flow, legacy: [true, false] })).toEqual(
+          subscriptionsOfFlow(flow)
+        );
+      });
+
       it('lets a member plan flow without an auto-renewal option match no subscription', () => {
         expect(
           subscriptionsOfFlow({
@@ -723,6 +757,7 @@ describe('SubscriptionFlowService', () => {
       paymentMethods: [{ id: mockPaymentMethod.id }],
       periodicities: [PaymentPeriodicity.yearly],
       autoRenewal: [true],
+      legacy: [true, false],
       ...overrides,
     });
 
@@ -764,6 +799,25 @@ describe('SubscriptionFlowService', () => {
       await expect(service.setFlowActive('flow-2', true)).rejects.toThrow(
         /overlap/
       );
+    });
+
+    // The flow being switched on is not among the active ones, so its own
+    // legacy setting has to be handed to the comparison.
+    it('switches a legacy flow on next to an active flow for all the others', async () => {
+      prismaMock.subscriptionFlow.findUnique!.mockResolvedValue(
+        stored({ id: 'flow-2', active: false, legacy: [true] })
+      );
+      prismaMock.subscriptionFlow.findMany!.mockResolvedValueOnce([
+        stored({ id: 'flow-1', legacy: [false] }),
+      ]);
+
+      await expect(
+        service.setFlowActive('flow-2', true)
+      ).resolves.toBeDefined();
+      expect(prismaMock.subscriptionFlow.update).toHaveBeenCalledWith({
+        where: { id: 'flow-2' },
+        data: { active: true },
+      });
       expect(prismaMock.subscriptionFlow.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
           where: expect.objectContaining({ active: true }),
@@ -807,6 +861,111 @@ describe('SubscriptionFlowService', () => {
           where: expect.objectContaining({ active: true }),
         })
       );
+    });
+  });
+
+  describe('legacy subscriptions', () => {
+    const input = {
+      memberPlanId: mockMemberPlan.id,
+      paymentMethodIds: [mockPaymentMethod.id],
+      periodicities: [PaymentPeriodicity.monthly],
+      autoRenewal: [true],
+    };
+    const existing = (legacy: boolean[]) => ({
+      id: 'existing-flow',
+      paymentMethods: [{ id: mockPaymentMethod.id }],
+      periodicities: [PaymentPeriodicity.monthly],
+      autoRenewal: [true],
+      legacy,
+    });
+    const withFeature = () =>
+      features.isEnabled.mockImplementation(
+        async key => key === 'legacy-subscriptions'
+      );
+
+    it('makes a new flow apply to legacy and other subscriptions alike by default', async () => {
+      prismaMock.subscriptionFlow.findMany!.mockResolvedValue([]);
+
+      await service.createFlow(input);
+
+      expect(prismaMock.subscriptionFlow.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({ legacy: [true, false] }),
+      });
+    });
+
+    it('stores that a flow is for legacy subscriptions only', async () => {
+      withFeature();
+      prismaMock.subscriptionFlow.findMany!.mockResolvedValue([]);
+
+      await service.createFlow({ ...input, legacy: [true] });
+
+      expect(prismaMock.subscriptionFlow.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({ legacy: [true] }),
+      });
+    });
+
+    // Without the feature nobody can see or undo the split in the editor.
+    it('refuses a flow for legacy subscriptions only while the feature is off', async () => {
+      prismaMock.subscriptionFlow.findMany!.mockResolvedValue([]);
+
+      await expect(
+        service.createFlow({ ...input, legacy: [true] })
+      ).rejects.toThrow(BadRequestException);
+      expect(prismaMock.subscriptionFlow.create).not.toHaveBeenCalled();
+    });
+
+    it('refuses a flow that is for nobody', async () => {
+      withFeature();
+
+      await expect(
+        service.createFlow({ ...input, legacy: [] })
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it('lets a legacy flow sit next to the flow for all the others', async () => {
+      withFeature();
+      prismaMock.subscriptionFlow.findMany!.mockResolvedValue([
+        existing([false]),
+      ]);
+
+      await expect(
+        service.createFlow({ ...input, legacy: [true] })
+      ).resolves.toBeDefined();
+    });
+
+    it('refuses a legacy flow that an existing flow for everybody already covers', async () => {
+      withFeature();
+      prismaMock.subscriptionFlow.findMany!.mockResolvedValue([
+        existing([true, false]),
+      ]);
+
+      await expect(
+        service.createFlow({ ...input, legacy: [true] })
+      ).rejects.toThrow('there is a filter overlap');
+    });
+
+    it('narrows an existing flow to legacy subscriptions', async () => {
+      withFeature();
+      prismaMock.subscriptionFlow.findUnique!.mockResolvedValue({
+        id: 'flow-1',
+        memberPlanId: mockMemberPlan.id,
+        paymentMethods: [],
+      });
+      prismaMock.subscriptionFlow.findMany!.mockResolvedValue([]);
+      (prismaMock as any).$transaction.mockResolvedValue([]);
+
+      await service.updateFlow({ id: 'flow-1', legacy: [true] });
+
+      expect(prismaMock.subscriptionFlow.update).toHaveBeenCalledWith({
+        where: { id: 'flow-1' },
+        data: expect.objectContaining({ legacy: [true] }),
+      });
+    });
+
+    it('refuses narrowing a flow while the feature is off', async () => {
+      await expect(
+        service.updateFlow({ id: 'flow-1', legacy: [false] })
+      ).rejects.toThrow(BadRequestException);
     });
   });
 

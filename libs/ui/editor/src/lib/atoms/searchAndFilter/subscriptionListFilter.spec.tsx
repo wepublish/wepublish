@@ -2,6 +2,7 @@ import '@testing-library/jest-dom/vitest';
 
 import { createTheme, ThemeProvider } from '@mui/material';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import { SubscriptionListFilter } from './subscriptionListFilter';
 
@@ -20,6 +21,12 @@ vi.mock('react-i18next', () => ({
   }),
 }));
 
+const enabledFeatures = new Set<string>();
+
+vi.mock('../../featureContext', () => ({
+  useFeature: (feature: string) => enabledFeatures.has(feature),
+}));
+
 const renderFilter = (props = {}) =>
   render(
     <ThemeProvider theme={theme}>
@@ -33,6 +40,35 @@ const renderFilter = (props = {}) =>
   );
 
 describe('SubscriptionListFilter', () => {
+  afterEach(() => {
+    enabledFeatures.clear();
+  });
+
+  describe('legacy subscriptions', () => {
+    it('offers no legacy filter while the feature is off', () => {
+      renderFilter();
+
+      expect(
+        screen.queryByRole('combobox', {
+          name: 'subscriptionListFilter.legacy',
+        })
+      ).not.toBeInTheDocument();
+    });
+
+    it('filters for legacy subscriptions with the feature on', async () => {
+      enabledFeatures.add('legacy-subscriptions');
+      const onSetFilter = vi.fn();
+      renderFilter({ filter: {}, onSetFilter });
+
+      await userEvent.click(
+        screen.getByRole('combobox', { name: 'subscriptionListFilter.legacy' })
+      );
+      await userEvent.click(screen.getByRole('option', { name: 'yes' }));
+
+      expect(onSetFilter).toHaveBeenCalledWith({ legacy: true });
+    });
+  });
+
   it('leaves the reset to the toolbar', () => {
     renderFilter();
 

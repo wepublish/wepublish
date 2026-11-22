@@ -7,6 +7,7 @@ import {
   Query,
 } from '@nestjs/graphql';
 import { add } from 'date-fns';
+import { isLegacySubscription } from './legacy-subscription';
 import {
   CancelPublicSubscriptionInput,
   CreatePublicSubscriptionInput,
@@ -187,6 +188,11 @@ export class PublicSubscriptionResolver {
       prop =>
         prop.public || hasPermission(CanGetSubscription, permissionsOf(user))
     );
+  }
+
+  @ResolveField(() => Boolean)
+  legacy(@Parent() subscription: Subscription) {
+    return isLegacySubscription(subscription);
   }
 
   @ResolveField(() => String)

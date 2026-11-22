@@ -62,6 +62,12 @@ export const FEATURES = [
       'Print issue export: the recipient list of a magazine issue from subscriptions and bexio as CSV, with issue tracking and a copies quota',
     stage: 'alpha',
   },
+  {
+    key: 'legacy-subscriptions',
+    description:
+      'Legacy subscriptions: filter imported subscriptions that were not paid for here yet, message them, and give them their own communication flow',
+    stage: 'alpha',
+  },
 ] as const satisfies readonly Feature[];
 
 export type FeatureKey = (typeof FEATURES)[number]['key'];

@@ -39,6 +39,7 @@ import { FeaturesService } from '@wepublish/features/api';
 import { InvoiceDeliveryService } from '../periodic-job/invoice-delivery.service';
 import { SubscriptionWithRelations } from '../legacy/member-context';
 import { mapSubscriptionsAsCsv } from './subscription-as-csv';
+import { legacySubscriptionWhere } from './legacy-subscription';
 
 @Injectable()
 export class SubscriptionService {
@@ -786,6 +787,11 @@ const createUserFilter = (
   return {};
 };
 
+const createLegacyFilter = (
+  filter: Partial<SubscriptionFilter>
+): Prisma.SubscriptionWhereInput =>
+  filter?.legacy == null ? {} : legacySubscriptionWhere(filter.legacy);
+
 export const createSubscriptionFilter = (
   filter: Partial<SubscriptionFilter>
 ): Prisma.SubscriptionWhereInput => ({
@@ -809,5 +815,6 @@ export const createSubscriptionFilter = (
     createExtendableFilter(filter),
     createUserIDsFilter(filter),
     createSubscriptionIDsFilter(filter),
+    createLegacyFilter(filter),
   ],
 });

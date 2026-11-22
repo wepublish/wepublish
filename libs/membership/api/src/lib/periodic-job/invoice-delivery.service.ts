@@ -35,6 +35,7 @@ import { describeError } from '@wepublish/utils/api';
 import { startOfDay } from 'date-fns';
 import { SubscriptionEventDictionary } from '../subscription-event-dictionary/subscription-event-dictionary';
 import { Action } from '../subscription-event-dictionary/subscription-event-dictionary.type';
+import { isLegacySubscription } from '../subscription/legacy-subscription';
 
 /**
  * What the invoice-creation mail is told about its delivery: the reader to
@@ -96,6 +97,7 @@ export class InvoiceDeliveryService {
         paymentMethodId: subscription.paymentMethodID,
         periodicity: subscription.paymentPeriodicity,
         autorenwal: subscription.autoRenew,
+        legacy: isLegacySubscription(subscription),
         events: [SubscriptionEvent.INVOICE_CREATION],
       })
     ).find(action => action.type === SubscriptionEvent.INVOICE_CREATION);
