@@ -5020,8 +5020,7 @@
       },
       "endedWindow": {
         "label": "Période de désactivation de l’abonnement",
-        "relative": "Derniers … jours",
-        "period": "Période fixe",
+        "window": "Désactivé",
         "days": "jours",
         "periodPlaceholder": "Choisir du – au",
         "periodHint": "Uniquement les abonnements désactivés entre ces deux dates.",
@@ -5090,6 +5089,23 @@
           "color": "En couleur"
         }
       },
+      "dateWindow": {
+        "mode": "{{label}} : dates fixes ou glissantes",
+        "fixed": "Dates fixes",
+        "rolling": "Glissant",
+        "days": "Nombre de jours",
+        "quick": "{{days}} jours",
+        "kinds": {
+          "lastDays": "durant les derniers",
+          "olderThanDays": "il y a plus de",
+          "nextDays": "durant les prochains"
+        },
+        "unit": {
+          "lastDays": "jours",
+          "olderThanDays": "jours",
+          "nextDays": "jours"
+        }
+      },
       "mailHistory": {
         "label": "Messages reçus",
         "hint": "Seules les personnes ayant (ou n’ayant pas) reçu un modèle donné – au besoin via un seul canal.",
@@ -5103,6 +5119,8 @@
         "channel": "Canal de distribution",
         "anyChannel": "Indifférent",
         "sentBetween": "Envoyé entre",
+        "minCount": "Au moins",
+        "times": "fois",
         "onSubscription": "Uniquement les messages concernant précisément cet abonnement",
         "onlyOpenInvoice": "Uniquement les messages concernant une facture encore ouverte",
         "triggerHint": "L’abonnement et la facture d’un message ne sont enregistrés que depuis peu. Les messages plus anciens ne remplissent jamais cette condition.",
@@ -5131,6 +5149,12 @@
         "mailHistory": "Messages",
         "received": "reçu",
         "notReceived": "non reçu",
+        "minCount": "au moins {{count}} fois",
+        "rolling": {
+          "lastDays": "au cours des {{days}} derniers jours",
+          "olderThanDays": "il y a plus de {{days}} jours",
+          "nextDays": "au cours des {{days}} prochains jours"
+        },
         "onSubscription": "concernant cet abonnement",
         "onlyOpenInvoice": "facture encore ouverte",
         "between": "{{from}} – {{to}}",

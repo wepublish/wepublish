@@ -11,6 +11,7 @@ import {
   MailAudienceInput,
   MailEmailSegment,
 } from '../mail-send/mail-send.model';
+import { freezeRollingDates } from '../mail-send/rolling-dates';
 import {
   emailSegmentOf,
   MailSendRecipientService,
@@ -133,6 +134,10 @@ export class UserDeliveryPreferenceService {
     channel: MailChannel,
     changedBy: SessionActor
   ): Promise<DeliveryModeBulkResult> {
+    // Rolling dates are fixed here, so the people switched and the record
+    // kept of the switch are the same audience.
+    audience = freezeRollingDates(audience, new Date());
+
     let skip = 0;
     let userCount = 0;
     let changed = 0;

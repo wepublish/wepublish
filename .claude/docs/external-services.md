@@ -294,13 +294,21 @@ Automated subscription mails can reach a user as a printed letter. The pieces:
   with the filter read back as phrases (`describeAudience`, names through
   `useAudienceLookups`, shared with the wizard's review step).
 - `MailAudienceInput.mailHistory` filters any base by the mail log:
-  `{ match: all|any, conditions: [{ mailTemplateId, negate, states?, channel?, from?, to?, scope?, onlyOpenInvoice? }] }`.
+  `{ match: all|any, conditions: [{ mailTemplateId, negate, states?, channel?, from?, to?, rolling?, minCount?, scope?, onlyOpenInvoice? }] }`.
   Built in `mail-send-recipient.service.ts` as `mailSent: { some | none }`
   on the user (`none` for «not sent», never `NOT`, so people without any mail
   stay in), ANDed with the email segments through `buildUserLevelWhere`.
   One condition with `scope: subscription` moves the whole history onto the
   subscription (`mailLogs: { some | none }`, person conditions through
   `user`) for the two subscription bases.
+  `minCount > 1` cannot be a relation filter: `resolveCounts` asks
+  `mailLog.groupBy` who qualifies and the condition becomes `id: { in }`.
+  It runs inside `buildUserLevelWhere`, which every path calls first.
+- Rolling ranges (`MailRollingRange { kind: lastDays|olderThanDays|nextDays, days }`:
+  `startsAtRolling`, `endsAtRolling`, a condition's `rolling`) take the place
+  of their fixed dates and are read against now (`rolling-dates.ts`).
+  `createJob` and `setForAudience` store `freezeRollingDates(audience)`, so
+  job and bulk-change snapshots only ever hold fixed dates.
 - `MailLog.subscriptionId` / `invoiceId` say what a mail was about. The sender
   passes them explicitly (`MailControllerConfig`, `LetterLogDetails`); never
   derive them from `optionalData`, whose keys differ per template context. A
