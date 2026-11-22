@@ -34,6 +34,7 @@ import { InvoicePaidNotifier, PaymentsService } from '@wepublish/payment/api';
 import {
   InvoiceDeliveryService,
   DeliverySide,
+  MailTrigger,
 } from './invoice-delivery.service';
 import { PaymentMethodChangeService } from '../payment-method-change/payment-method-change.service';
 import {
@@ -729,7 +730,8 @@ export class PeriodicJobService {
           subscriptionsWithEvent.user,
           periodicJobRunObject.isRetry,
           { subscription: subscriptionsWithEvent, invoices },
-          periodicJobRunObject.date
+          periodicJobRunObject.date,
+          { subscriptionId: subscriptionsWithEvent.id }
         );
       }
     }
@@ -820,7 +822,11 @@ export class PeriodicJobService {
       periodicJobRunObject.isRetry,
       { subscriptionToCreateInvoice, invoice },
       periodicJobRunObject.date,
-      outcome.send
+      {
+        ...outcome.send,
+        subscriptionId: subscriptionToCreateInvoice.id,
+        invoiceId: invoice.id,
+      }
     );
     return true;
   }
@@ -977,7 +983,12 @@ export class PeriodicJobService {
       false,
       { subscriptionToCreateInvoice: invoice.subscription, invoice },
       runDate,
-      { letterRecipient, attachment }
+      {
+        letterRecipient,
+        attachment,
+        subscriptionId: invoice.subscription!.id,
+        invoiceId: invoice.id,
+      }
     );
   }
 
@@ -1039,7 +1050,12 @@ export class PeriodicJobService {
       false,
       { subscriptionToCreateInvoice: invoice.subscription, invoice },
       runDate,
-      { letterRecipient: null, attachment }
+      {
+        letterRecipient: null,
+        attachment,
+        subscriptionId: invoice.subscription!.id,
+        invoiceId: invoice.id,
+      }
     );
   }
 
@@ -1127,7 +1143,8 @@ export class PeriodicJobService {
         items,
         subscription,
       },
-      periodicJobRunObject.date
+      periodicJobRunObject.date,
+      { subscriptionId: subscription.id, invoiceId: invoice.id }
     );
   }
 
@@ -1208,7 +1225,8 @@ export class PeriodicJobService {
       unpaidInvoice.subscription.user,
       periodicJobRunObject.isRetry,
       { subscription, invoice },
-      periodicJobRunObject.date
+      periodicJobRunObject.date,
+      { subscriptionId: subscription.id, invoiceId: invoice.id }
     );
   }
 
@@ -1414,7 +1432,7 @@ export class PeriodicJobService {
     isRetry: boolean,
     optionalData: Record<string, any>,
     periodicJobRunDate: Date,
-    delivery?: DeliverySide
+    delivery?: DeliverySide & MailTrigger
   ) {
     return this.invoiceDelivery.sendFlowMail(
       action,

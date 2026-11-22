@@ -318,6 +318,25 @@ describe('MailSendResolver', () => {
         (prisma.mailLog.findMany as Mock).mock.calls[0][0].orderBy
       ).toEqual([{ sentDate: 'desc' }, { id: 'desc' }]);
     });
+
+    it('filters by the subscription or invoice a mail is about', async () => {
+      const prisma = {
+        mailLog: {
+          count: vi.fn(async () => 0),
+          findMany: vi.fn(async () => []),
+        },
+      };
+
+      await makeResolver(prisma).mailLogs(
+        { subscriptionId: 'sub-1', invoiceId: 'inv-1' } as any,
+        0,
+        20
+      );
+
+      expect(
+        (prisma.mailLog.findMany as Mock).mock.calls[0][0].where
+      ).toMatchObject({ subscriptionId: 'sub-1', invoiceId: 'inv-1' });
+    });
   });
 
   // The feedback loop of a campaign: states a provider reported late, then

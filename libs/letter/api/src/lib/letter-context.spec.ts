@@ -173,6 +173,41 @@ describe('LetterContext automated sends', () => {
     });
   });
 
+  it('logs the subscription and the invoice the letter is about', async () => {
+    const { context, create } = createContext(sendLetter());
+
+    await context.sendLetter({
+      mailTemplateId: 'template-1',
+      recipient: user,
+      data: { user },
+      print,
+      log: { subscriptionId: 'sub-1', invoiceId: 'inv-1' },
+    });
+
+    expect(create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        subscription: { connect: { id: 'sub-1' } },
+        invoice: { connect: { id: 'inv-1' } },
+      }),
+    });
+  });
+
+  it('logs no trigger for a letter that has none', async () => {
+    const { context, create } = createContext(sendLetter());
+
+    await context.sendLetter({
+      mailTemplateId: 'template-1',
+      recipient: user,
+      data: { user },
+      print,
+    });
+
+    const { data } = create.mock.calls[0][0];
+
+    expect(data.subscription).toBeUndefined();
+    expect(data.invoice).toBeUndefined();
+  });
+
   it('logs a manual send under its own id, as before', async () => {
     const { context, create } = createContext(sendLetter());
 

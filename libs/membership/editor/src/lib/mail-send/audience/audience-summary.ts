@@ -19,7 +19,13 @@ type Condition = {
   channel?: string;
   from?: string;
   to?: string;
+  scope?: string;
+  onlyOpenInvoice?: boolean;
+  rolling?: Rolling;
+  minCount?: number;
 };
+
+type Rolling = { kind?: string; days?: number };
 
 const yesNo = (t: AudienceSummaryLookups['t'], value: unknown) =>
   value ? t('mailSend.yes') : t('mailSend.no');
@@ -47,6 +53,19 @@ const period = (
   return '';
 };
 
+/** A date range in words: the rolling one when there is one, else the dates. */
+const window = (
+  lookups: AudienceSummaryLookups,
+  rolling: Rolling | undefined,
+  from?: string,
+  to?: string
+) =>
+  rolling?.kind ?
+    lookups.t(`mailSend.audienceSummary.rolling.${rolling.kind}`, {
+      days: rolling.days,
+    })
+  : period(lookups, from, to);
+
 const conditionPhrase = (
   lookups: AudienceSummaryLookups,
   condition: Condition
@@ -59,6 +78,15 @@ const conditionPhrase = (
       t(`mailSend.mailHistory.states.${state}`)
     ),
     ...(condition.channel ? [t(`mailSend.channel.${condition.channel}`)] : []),
+    ...((condition.minCount ?? 1) > 1 ?
+      [t('mailSend.audienceSummary.minCount', { count: condition.minCount })]
+    : []),
+    ...(condition.scope === 'subscription' ?
+      [t('mailSend.audienceSummary.onSubscription')]
+    : []),
+    ...(condition.onlyOpenInvoice ?
+      [t('mailSend.audienceSummary.onlyOpenInvoice')]
+    : []),
   ];
 
   return [
@@ -69,7 +97,7 @@ const conditionPhrase = (
     ),
     `«${name}»`,
     details.length ? `(${details.join(', ')})` : '',
-    period(lookups, condition.from, condition.to),
+    window(lookups, condition.rolling, condition.from, condition.to),
   ]
     .filter(Boolean)
     .join(' ');
@@ -132,8 +160,9 @@ export function describeAudience(
     }
   }
 
-  const starts = period(
+  const starts = window(
     lookups,
+    audience['startsAtRolling'] as Rolling | undefined,
     audience['startsAtFrom'] as string,
     audience['startsAtTo'] as string
   );
@@ -141,8 +170,9 @@ export function describeAudience(
     phrases.push(labelled(t('mailSend.startsAt'), starts));
   }
 
-  const ends = period(
+  const ends = window(
     lookups,
+    audience['endsAtRolling'] as Rolling | undefined,
     audience['endsAtFrom'] as string,
     audience['endsAtTo'] as string
   );

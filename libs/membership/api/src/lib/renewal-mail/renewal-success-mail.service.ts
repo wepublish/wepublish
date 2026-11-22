@@ -88,6 +88,8 @@ export class RenewalSuccessMailService implements InvoicePaidListener {
         recipient: user,
         mailType: mailLogType.SubscriptionFlow,
         asLetter: sendAsLetter,
+        subscriptionId: subscription?.id ?? null,
+        invoiceId,
         optionalData: {
           errorCode: '',
           invoice: invoiceData,

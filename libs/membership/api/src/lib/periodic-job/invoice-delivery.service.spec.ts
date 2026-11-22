@@ -132,6 +132,10 @@ describe('InvoiceDeliveryService.deliverRenewal', () => {
       })
     );
     expect(mailContext.sendComposedMail).toHaveBeenCalledTimes(1);
+    expect(prisma.mailLog.create.mock.calls[0][0].data).toMatchObject({
+      subscription: { connect: { id: 'sub-1' } },
+      invoice: { connect: { id: 'inv-1' } },
+    });
   });
 
   it('prints the invoice after the letter for a reader in letter mode', async () => {

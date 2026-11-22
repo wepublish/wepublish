@@ -4832,8 +4832,7 @@
       },
       "endedWindow": {
         "label": "Zeitraum der Abo-Deaktivierung",
-        "relative": "Letzte … Tage",
-        "period": "Fester Zeitraum",
+        "window": "Deaktiviert",
         "days": "Tage",
         "periodPlaceholder": "Von – bis wählen",
         "periodHint": "Nur Abos, die zwischen diesen beiden Daten deaktiviert wurden.",
@@ -4902,6 +4901,56 @@
       },
       "stateHelp": "Aktiv: bestätigt, nicht deaktiviert und bezahlt. Ausstehend: abgeschlossen, aber noch nicht bestätigt – z. B. weil die erste Zahlung noch fehlt. Deaktiviert: Das Abo wurde beendet oder die Beendigung ist bereits eingetragen.",
       "autoRenewHelp": "Ja: Das Abo verlängert sich am Ende der Laufzeit von selbst und wird erneut verrechnet. Nein: Es läuft aus, ausser die Person verlängert es selbst.",
+      "savedFilters": {
+        "title": "Gespeicherte Filter",
+        "intro": "Für das ganze Team sichtbar. Stehen in den manuellen Mitteilungen und bei der Zuweisung des Zustellkanals zur Verfügung.",
+        "save": "Aktuellen Filter speichern",
+        "empty": "Noch kein Filter gespeichert.",
+        "name": "Name",
+        "description": "Beschreibung",
+        "load": "Laden",
+        "overwrite": "Mit aktuellem Filter überschreiben",
+        "edit": "Name und Beschreibung bearbeiten",
+        "delete": "Löschen",
+        "saveTitle": "Filter speichern",
+        "editTitle": "Gespeicherten Filter bearbeiten",
+        "confirmSave": "Speichern",
+        "nameRequired": "Bitte einen Namen eingeben.",
+        "nameTaken": "Diesen Namen gibt es schon.",
+        "overwriteTitle": "Filter überschreiben?",
+        "overwriteQuestion": "«{{name}}» wird durch den aktuellen Filter ersetzt.",
+        "overwriteConfirm": "Überschreiben",
+        "deleteTitle": "Filter löschen?",
+        "deleteQuestion": "«{{name}}» wird gelöscht. Bereits gestartete Versände sind davon nicht betroffen.",
+        "deleteConfirm": "Löschen",
+        "loaded": "«{{name}}» geladen.",
+        "droppedIntro": "Nicht mehr vorhanden und weggelassen:",
+        "dropped": {
+          "memberPlans": "Abo-Pläne: {{count}}",
+          "paymentMethods": "Zahlungsmethoden: {{count}}",
+          "templates": "Vorlagen: {{count}}"
+        },
+        "saved": "Filter gespeichert",
+        "updated": "Filter aktualisiert",
+        "deleted": "Filter gelöscht"
+      },
+      "dateWindow": {
+        "mode": "{{label}}: feste oder rollende Daten",
+        "fixed": "Feste Daten",
+        "rolling": "Rollend",
+        "days": "Anzahl Tage",
+        "quick": "{{days}} Tage",
+        "kinds": {
+          "lastDays": "in den letzten",
+          "olderThanDays": "vor mehr als",
+          "nextDays": "in den nächsten"
+        },
+        "unit": {
+          "lastDays": "Tagen",
+          "olderThanDays": "Tagen",
+          "nextDays": "Tagen"
+        }
+      },
       "mailHistory": {
         "label": "Erhaltene Mitteilungen",
         "hint": "Nur User, die eine bestimmte Vorlage erhalten (oder nicht erhalten) haben – auf Wunsch nur über einen bestimmten Zustellkanal.",
@@ -4915,6 +4964,11 @@
         "channel": "Zustellkanal",
         "anyChannel": "Beliebig",
         "sentBetween": "Versandt zwischen",
+        "minCount": "Mindestens",
+        "times": "mal",
+        "onSubscription": "Nur Mitteilungen zu genau diesem Abo",
+        "onlyOpenInvoice": "Nur Mitteilungen zu einer noch offenen Rechnung",
+        "triggerHint": "Abo und Rechnung einer Mitteilung werden erst seit Kurzem gespeichert. Ältere Mitteilungen erfüllen diese Bedingung nie.",
         "match": {
           "all": "Alle Bedingungen müssen zutreffen",
           "any": "Eine Bedingung genügt"
@@ -4939,6 +4993,14 @@
         "mailHistory": "Mitteilungen",
         "received": "erhalten",
         "notReceived": "nicht erhalten",
+        "minCount": "mindestens {{count}} mal",
+        "rolling": {
+          "lastDays": "in den letzten {{days}} Tagen",
+          "olderThanDays": "vor mehr als {{days}} Tagen",
+          "nextDays": "in den nächsten {{days}} Tagen"
+        },
+        "onSubscription": "zu diesem Abo",
+        "onlyOpenInvoice": "Rechnung noch offen",
         "between": "{{from}} – {{to}}",
         "from": "ab {{from}}",
         "to": "bis {{to}}",
@@ -4958,6 +5020,9 @@
       "sentDate": "Datum",
       "template": "Vorlage",
       "subject": "Betreff",
+      "trigger": "Bezug",
+      "triggerSubscription": "Abo",
+      "triggerInvoice": "Rechnung",
       "state": "Status",
       "type": "Ausgelöst durch",
       "recipient": "Empfänger",

@@ -75,6 +75,16 @@ describe('MemberContext.createSubscription', () => {
     );
   });
 
+  it('tells the mail log which subscription the mail is about', async () => {
+    const { context, mailContext } = setup();
+
+    await context.createSubscription(createInput);
+
+    expect(mailContext.sendMail).toHaveBeenCalledWith(
+      expect.objectContaining({ subscriptionId: 'subscription-1' })
+    );
+  });
+
   it('hands the letter switch of the event to the mail', async () => {
     const { context, mailContext } = setup();
 

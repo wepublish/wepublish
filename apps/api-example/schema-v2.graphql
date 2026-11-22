@@ -1163,6 +1163,12 @@ input CreateExternalAppInput {
   url: String!
 }
 
+input CreateSavedAudienceFilterInput {
+  audience: MailAudienceInput!
+  description: String
+  name: String!
+}
+
 type CreateSubscriptionInfo {
   discountCodeValid: Boolean
   discountPercent: Float
@@ -2669,6 +2675,11 @@ input MailAudienceInput {
   endsAtFrom: DateTime
 
   """
+  Subscribers audience only: effective end within a range relative to now. Takes the place of endsAtFrom and endsAtTo when given.
+  """
+  endsAtRolling: MailRollingRange
+
+  """
   Subscribers audience only: only subscriptions whose effective end (cancellation date, else paidUntil) is on or before this date.
   """
   endsAtTo: DateTime
@@ -2707,6 +2718,11 @@ input MailAudienceInput {
   Subscribers audience only: only subscriptions that started on or after this date.
   """
   startsAtFrom: DateTime
+
+  """
+  Subscribers audience only: started within a range relative to now. Takes the place of startsAtFrom and startsAtTo when given.
+  """
+  startsAtRolling: MailRollingRange
 
   """
   Subscribers audience only: only subscriptions that started on or before this date.
@@ -2749,9 +2765,29 @@ input MailHistoryCondition {
   mailTemplateId: String!
 
   """
+  How many such mails it takes, at least. Defaults to 1. With negate: keeps people who got fewer.
+  """
+  minCount: Int
+
+  """
   true: keeps people who did NOT receive such a mail, including people with no mail at all.
   """
   negate: Boolean
+
+  """
+  true: only mails about an invoice that is still open (neither paid nor cancelled). Mails sent before the invoice was recorded in the mail log never match.
+  """
+  onlyOpenInvoice: Boolean
+
+  """
+  Sent within a range relative to now. Takes the place of from and to when given.
+  """
+  rolling: MailRollingRange
+
+  """
+  Defaults to person. Mails sent before the subscription was recorded in the mail log never match the subscription scope.
+  """
+  scope: MailHistoryScope
 
   """
   Only mails that ended in one of these states. Empty or absent means any.
@@ -2777,12 +2813,26 @@ enum MailHistoryMatch {
   any
 }
 
+"""
+person: any mail the person got. subscription: only mails about the very subscription the audience selects; on an audience without subscriptions it falls back to person.
+"""
+enum MailHistoryScope {
+  person
+  subscription
+}
+
 input MailLogFilter {
   channel: MailChannel
+
+  """Only mails about this invoice."""
+  invoiceId: String
   mailSendJobId: String
   mailTemplateId: String
   recipientId: String
   state: MailLogState
+
+  """Only mails about this subscription."""
+  subscriptionId: String
   type: MailLogType
 }
 
@@ -2795,6 +2845,11 @@ type MailLogModel {
   """Why a rejected mail could not be delivered."""
   error: String
   id: String!
+
+  """
+  The invoice the mail is about, for invoice mails. Null otherwise and for mails sent before this was recorded.
+  """
+  invoiceId: String
   mailProviderID: String!
   mailSendJobId: String
   mailTemplate: MailLogTemplate!
@@ -2805,6 +2860,11 @@ type MailLogModel {
   sentDate: DateTime!
   state: MailLogState!
   subject: String
+
+  """
+  The subscription the mail is about. Null for mails with no such trigger and for mails sent before this was recorded.
+  """
+  subscriptionId: String
   type: MailLogType
 }
 
@@ -2869,6 +2929,20 @@ enum MailRecipientBase {
   endedSubscription
   hasSubscription
   noActiveSubscription
+}
+
+"""
+lastDays: within the last x days. olderThanDays: more than x days ago. nextDays: within the next x days.
+"""
+enum MailRollingKind {
+  lastDays
+  nextDays
+  olderThanDays
+}
+
+input MailRollingRange {
+  days: Int!
+  kind: MailRollingKind!
 }
 
 type MailSegmentCount {
@@ -4056,6 +4130,9 @@ type Mutation {
 
   """Creates a rating system answer."""
   createRatingSystemAnswer(answer: String, ratingSystemId: String!, type: RatingSystemType!): CommentRatingSystemAnswer!
+
+  """Save a recipient filter under a name."""
+  createSavedAudienceFilter(input: CreateSavedAudienceFilterInput!): SavedAudienceFilterModel!
   createSession(email: String!, password: String!, totpToken: String): SessionWithToken!
   createSessionWithJWT(jwt: String!, totpToken: String): SessionWithToken!
 
@@ -4292,6 +4369,9 @@ type Mutation {
 
   """Deletes a rating system answer."""
   deleteRatingSystemAnswer(id: String!): CommentRatingSystemAnswer!
+
+  """Delete a saved recipient filter."""
+  deleteSavedAudienceFilter(id: String!): SavedAudienceFilterModel!
 
   """Deletes an existing subscription."""
   deleteSubscription(id: String!): PublicSubscription!
@@ -4812,6 +4892,11 @@ type Mutation {
 
   """Update the comment rating system."""
   updateRatingSystem(answers: [UpdateCommentRatingSystemAnswerInput!], id: String!, name: String): CommentRatingSystem!
+
+  """
+  Rename a saved recipient filter, change its description or replace the filter it holds.
+  """
+  updateSavedAudienceFilter(id: String!, input: UpdateSavedAudienceFilterInput!): SavedAudienceFilterModel!
 
   """
   Marks an SEO checklist item as done or not done and returns all completed items.
@@ -7048,6 +7133,11 @@ type Query {
   "\n      Returns the revenue generated for the time period given.\n      Only includes paid invoices that have not been manually paid.\n    "
   revenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
 
+  """
+  The saved recipient filters, by name. Needs the permission to send manual messages or to manage delivery channels.
+  """
+  savedAudienceFilters: [SavedAudienceFilterModel!]!
+
   """Returns a checklist of the SEO setup of the website."""
   seoChecklist: SeoChecklist!
 
@@ -7329,6 +7419,18 @@ input RichTextBlockInput {
   The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
   """
   timing: BlockTimingInput
+}
+
+type SavedAudienceFilterModel {
+  """
+  The MailAudienceInput as it was saved. Rolling dates stay rolling, so the filter means the same thing whenever it is loaded.
+  """
+  audience: JSONObject!
+  createdAt: DateTime!
+  description: String
+  id: String!
+  modifiedAt: DateTime!
+  name: String!
 }
 
 input SendTestMailTemplateInput {
@@ -8638,6 +8740,15 @@ input UpdateCrowdfundingInput {
   goals: [CreateCrowdfundingGoalInput!]
   id: String!
   memberPlans: [CreateCrowdfundingMemberPlan!]
+  name: String
+}
+
+input UpdateSavedAudienceFilterInput {
+  """Replaces the saved filter by this one."""
+  audience: MailAudienceInput
+
+  """An empty text removes the description."""
+  description: String
   name: String
 }
 

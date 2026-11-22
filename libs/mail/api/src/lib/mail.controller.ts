@@ -59,6 +59,13 @@ export type MailControllerConfig = {
   /** Set for mails produced by a manual bulk send job. */
   mailSendJobId?: string | null;
   /**
+   * What the mail is about, for the log: the subscription and, for an invoice
+   * mail, the invoice. Said by the caller, never read out of `optionalData`,
+   * whose keys differ from one template context to the next.
+   */
+  subscriptionId?: string | null;
+  invoiceId?: string | null;
+  /**
    * Id the mail log entry has to be written under. Passed in when the caller
    * needs to reference the entry regardless of how the delivery turns out.
    */
@@ -394,6 +401,8 @@ export class MailController {
         log: {
           mailIdentifier: this.generateMailIdentifier(),
           type: MAIL_LOG_TYPE_MAP[this.config.mailType],
+          subscriptionId: this.config.subscriptionId ?? null,
+          invoiceId: this.config.invoiceId ?? null,
         },
         ...(this.config.attachment && {
           attachment: {
@@ -446,6 +455,12 @@ export class MailController {
           },
           ...(this.config.mailSendJobId ?
             { mailSendJob: { connect: { id: this.config.mailSendJobId } } }
+          : {}),
+          ...(this.config.subscriptionId ?
+            { subscription: { connect: { id: this.config.subscriptionId } } }
+          : {}),
+          ...(this.config.invoiceId ?
+            { invoice: { connect: { id: this.config.invoiceId } } }
           : {}),
         },
       });

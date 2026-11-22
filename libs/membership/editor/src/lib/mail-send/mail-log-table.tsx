@@ -33,6 +33,7 @@ import {
   mailLogTypeLabel,
   MailLogStateLegend,
   MailLogStateTag,
+  MailLogTriggerCell,
 } from './mail-log-common';
 
 const DEFAULT_PAGE_SIZE = 50;
@@ -459,6 +460,18 @@ export function MailLogTable() {
             width: 180,
             render: log => log.mailTemplate.name,
             exportValue: log => log.mailTemplate.name,
+          },
+          {
+            id: 'trigger',
+            label: t('mailLog.trigger'),
+            width: 140,
+            render: log => (
+              <MailLogTriggerCell
+                subscriptionId={log.subscriptionId}
+                invoiceId={log.invoiceId}
+              />
+            ),
+            exportValue: log => log.subscriptionId ?? log.invoiceId,
           },
           {
             id: 'subject',

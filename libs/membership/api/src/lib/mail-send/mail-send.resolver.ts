@@ -351,6 +351,8 @@ export class MailSendResolver {
       type: filter?.type,
       channel: filter?.channel,
       mailSendJobId: filter?.mailSendJobId,
+      subscriptionId: filter?.subscriptionId,
+      invoiceId: filter?.invoiceId,
     };
 
     const [totalCount, logs] = await Promise.all([

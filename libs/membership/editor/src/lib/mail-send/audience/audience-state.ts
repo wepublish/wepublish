@@ -4,12 +4,15 @@ import {
   MailEmailSegment,
   MailHistoryCondition,
   MailHistoryMatch,
+  MailHistoryScope,
   MailLogState,
   MailRecipientBase,
+  MailRollingKind,
   MailSubscriptionState,
   PaymentPeriodicity,
 } from '@wepublish/editor/api';
 import { useCallback, useMemo, useState } from 'react';
+import { RollingValue } from './date-window-filter';
 
 /** Mirrors the API default for the win-back look-back window. */
 export const DEFAULT_ENDED_WITHIN_DAYS = 90;
@@ -30,6 +33,14 @@ export type MailHistoryRow = {
   channel: MailChannel | null;
   from: Date | null;
   to: Date | null;
+  /** A range relative to today; takes the place of from/to while set. */
+  rolling: RollingValue | null;
+  /** How many such mails it takes, at least. */
+  minCount: number;
+  /** Only mails about the very subscription the audience selects. */
+  onSubscription: boolean;
+  /** Only mails about an invoice that is still open. */
+  onlyOpenInvoice: boolean;
 };
 
 /** The audience as the controls hold it, before it becomes the API input. */
@@ -45,6 +56,9 @@ export type AudienceFilterState = {
   startsAtTo: Date | null;
   endsAtFrom: Date | null;
   endsAtTo: Date | null;
+  /** Rolling ranges; each takes the place of its fixed dates while set. */
+  startsAtRolling: RollingValue | null;
+  endsAtRolling: RollingValue | null;
   isPaid: TriState;
   isCanceled: TriState;
   hasReplaced: TriState;
@@ -66,6 +80,10 @@ export const emptyMailHistoryRow = (): MailHistoryRow => ({
   channel: null,
   from: null,
   to: null,
+  rolling: null,
+  minCount: 1,
+  onSubscription: false,
+  onlyOpenInvoice: false,
 });
 
 export const INITIAL_AUDIENCE_STATE: AudienceFilterState = {
@@ -80,6 +98,8 @@ export const INITIAL_AUDIENCE_STATE: AudienceFilterState = {
   startsAtTo: null,
   endsAtFrom: null,
   endsAtTo: null,
+  startsAtRolling: null,
+  endsAtRolling: null,
   isPaid: 'any',
   isCanceled: 'any',
   hasReplaced: 'any',
@@ -105,8 +125,14 @@ export const endOfDay = (date?: Date | null): string | undefined => {
 const triState = (value: TriState): boolean | undefined =>
   value === 'any' ? undefined : value === 'true';
 
+/** The bases whose recipients are subscriptions, not just people. */
+export const selectsSubscriptions = (base: MailRecipientBase) =>
+  base === MailRecipientBase.HasSubscription ||
+  base === MailRecipientBase.EndedSubscription;
+
 const toMailHistory = (
-  history: AudienceFilterState['mailHistory']
+  history: AudienceFilterState['mailHistory'],
+  base: MailRecipientBase
 ): MailAudienceInput['mailHistory'] => {
   // A row without a template is still being filled in; it must not turn the
   // whole audience into nobody.
@@ -117,8 +143,18 @@ const toMailHistory = (
       negate: row.negate,
       states: row.states.length ? row.states : undefined,
       channel: row.channel ?? undefined,
-      from: row.from ? row.from.toISOString() : undefined,
-      to: endOfDay(row.to),
+      // Either the rolling range or the fixed dates, never both.
+      rolling: row.rolling ?? undefined,
+      from: !row.rolling && row.from ? row.from.toISOString() : undefined,
+      to: row.rolling ? undefined : endOfDay(row.to),
+      minCount: row.minCount > 1 ? row.minCount : undefined,
+      // Left out rather than sent as "person": an audience without
+      // subscriptions has nothing to bind a mail to.
+      scope:
+        row.onSubscription && selectsSubscriptions(base) ?
+          MailHistoryScope.Subscription
+        : undefined,
+      onlyOpenInvoice: row.onlyOpenInvoice || undefined,
     }));
 
   return conditions.length ? { match: history.match, conditions } : undefined;
@@ -130,7 +166,7 @@ export function toAudienceInput(state: AudienceFilterState): MailAudienceInput {
   // they were sent so far.
   const emailSegments =
     state.emailSegments.length ? state.emailSegments : undefined;
-  const mailHistory = toMailHistory(state.mailHistory);
+  const mailHistory = toMailHistory(state.mailHistory, state.base);
 
   if (state.base === MailRecipientBase.EndedSubscription) {
     const usePeriod =
@@ -164,15 +200,185 @@ export function toAudienceInput(state: AudienceFilterState): MailAudienceInput {
     autoRenew: triState(state.autoRenew),
     paymentMethodID: state.paymentMethodID ?? undefined,
     paymentPeriodicity: state.periodicity ?? undefined,
+    // Either the rolling range or the fixed dates, never both.
+    startsAtRolling: state.startsAtRolling ?? undefined,
     startsAtFrom:
-      state.startsAtFrom ? state.startsAtFrom.toISOString() : undefined,
-    startsAtTo: endOfDay(state.startsAtTo),
-    endsAtFrom: state.endsAtFrom ? state.endsAtFrom.toISOString() : undefined,
-    endsAtTo: endOfDay(state.endsAtTo),
+      !state.startsAtRolling && state.startsAtFrom ?
+        state.startsAtFrom.toISOString()
+      : undefined,
+    startsAtTo: state.startsAtRolling ? undefined : endOfDay(state.startsAtTo),
+    endsAtRolling: state.endsAtRolling ?? undefined,
+    endsAtFrom:
+      !state.endsAtRolling && state.endsAtFrom ?
+        state.endsAtFrom.toISOString()
+      : undefined,
+    endsAtTo: state.endsAtRolling ? undefined : endOfDay(state.endsAtTo),
     isPaid: triState(state.isPaid),
     isCanceled: triState(state.isCanceled),
     hasReplacedSubscription: triState(state.hasReplaced),
     isLegacy: triState(state.isLegacy),
+  };
+}
+
+type Stored = Record<string, unknown>;
+
+const oneOf = <T extends string>(
+  values: Record<string, T>,
+  value: unknown
+): T | null =>
+  (Object.values(values) as unknown[]).includes(value) ? (value as T) : null;
+
+const dateOf = (value: unknown): Date | null => {
+  if (typeof value !== 'string' && !(value instanceof Date)) {
+    return null;
+  }
+
+  const date = new Date(value);
+
+  return Number.isNaN(date.getTime()) ? null : date;
+};
+
+const fromTriState = (value: unknown): TriState =>
+  typeof value === 'boolean' ? (String(value) as TriState) : 'any';
+
+const rollingOf = (value: unknown): RollingValue | null => {
+  const rolling = value as { kind?: unknown; days?: unknown } | null;
+  const kind = oneOf(MailRollingKind, rolling?.kind);
+
+  return kind && typeof rolling?.days === 'number' && rolling.days > 0 ?
+      { kind, days: rolling.days }
+    : null;
+};
+
+const stringsOf = (value: unknown): string[] =>
+  Array.isArray(value) ?
+    value.filter((entry): entry is string => typeof entry === 'string')
+  : [];
+
+/**
+ * A stored audience read back into the controls: the reverse of
+ * `toAudienceInput`. Takes the raw JSON of a saved filter, which may predate
+ * fields that exist today or carry ones that no longer do, so everything is
+ * optional and anything unknown is ignored.
+ */
+export function fromAudienceInput(input: Stored): AudienceFilterState {
+  const history = (input['mailHistory'] ?? {}) as {
+    match?: unknown;
+    conditions?: unknown;
+  };
+  const conditions = (
+    Array.isArray(history.conditions) ?
+      history.conditions
+    : []) as Stored[];
+  const endedFrom = dateOf(input['endedFrom']);
+  const endedTo = dateOf(input['endedTo']);
+  const endedWithinDays = input['endedWithinDays'];
+
+  return {
+    ...INITIAL_AUDIENCE_STATE,
+    base: oneOf(MailRecipientBase, input['base']) ?? MailRecipientBase.AllUsers,
+    emailSegments: stringsOf(input['emailSegments'])
+      .map(segment => oneOf(MailEmailSegment, segment))
+      .filter((segment): segment is MailEmailSegment => !!segment),
+    memberPlanIDs: stringsOf(input['memberPlanIDs']),
+    subscriptionState: oneOf(MailSubscriptionState, input['subscriptionState']),
+    autoRenew: fromTriState(input['autoRenew']),
+    paymentMethodID:
+      typeof input['paymentMethodID'] === 'string' ?
+        input['paymentMethodID']
+      : null,
+    periodicity: oneOf(PaymentPeriodicity, input['paymentPeriodicity']),
+    startsAtFrom: dateOf(input['startsAtFrom']),
+    startsAtTo: dateOf(input['startsAtTo']),
+    endsAtFrom: dateOf(input['endsAtFrom']),
+    endsAtTo: dateOf(input['endsAtTo']),
+    startsAtRolling: rollingOf(input['startsAtRolling']),
+    endsAtRolling: rollingOf(input['endsAtRolling']),
+    isPaid: fromTriState(input['isPaid']),
+    isCanceled: fromTriState(input['isCanceled']),
+    hasReplaced: fromTriState(input['hasReplacedSubscription']),
+    endedWithinDays:
+      typeof endedWithinDays === 'number' && endedWithinDays > 0 ?
+        endedWithinDays
+      : DEFAULT_ENDED_WITHIN_DAYS,
+    endedMode: endedFrom && endedTo ? 'period' : 'days',
+    endedPeriod: endedFrom && endedTo ? [endedFrom, endedTo] : null,
+    mailHistory: {
+      match: oneOf(MailHistoryMatch, history.match) ?? MailHistoryMatch.All,
+      rows: conditions
+        .filter(condition => typeof condition?.['mailTemplateId'] === 'string')
+        .map(condition => ({
+          ...emptyMailHistoryRow(),
+          mailTemplateId: condition['mailTemplateId'] as string,
+          negate: condition['negate'] === true,
+          states: stringsOf(condition['states'])
+            .map(state => oneOf(MailLogState, state))
+            .filter((state): state is MailLogState => !!state),
+          channel: oneOf(MailChannel, condition['channel']),
+          from: dateOf(condition['from']),
+          to: dateOf(condition['to']),
+          rolling: rollingOf(condition['rolling']),
+          minCount:
+            (
+              typeof condition['minCount'] === 'number' &&
+              condition['minCount'] > 1
+            ) ?
+              condition['minCount']
+            : 1,
+          onSubscription: condition['scope'] === MailHistoryScope.Subscription,
+          onlyOpenInvoice: condition['onlyOpenInvoice'] === true,
+        })),
+    },
+  };
+}
+
+/** The names behind the ids a filter refers to, as far as they are loaded. */
+export type AudienceReferences = {
+  memberPlans: Map<string, string>;
+  paymentMethods: Map<string, string>;
+  templates: Map<string, string>;
+};
+
+/** How many references of each kind a loaded filter had to leave out. */
+export type DroppedReferences = Record<keyof AudienceReferences, number>;
+
+/**
+ * A saved filter ready for the controls. A plan, payment method or template
+ * it names may have been deleted since; filtering on it would silently match
+ * nobody, so it is left out and counted for a warning. A list that is empty
+ * has not loaded (or holds nothing to check against) and is not applied.
+ */
+export function loadSavedAudience(
+  input: Stored,
+  references: AudienceReferences
+): { state: AudienceFilterState; dropped: DroppedReferences } {
+  const state = fromAudienceInput(input);
+  const known = (kind: keyof AudienceReferences, id: string) =>
+    !references[kind].size || references[kind].has(id);
+
+  const memberPlanIDs = state.memberPlanIDs.filter(id =>
+    known('memberPlans', id)
+  );
+  const paymentMethodID =
+    state.paymentMethodID && known('paymentMethods', state.paymentMethodID) ?
+      state.paymentMethodID
+    : null;
+  const rows = state.mailHistory.rows.filter(row =>
+    known('templates', row.mailTemplateId as string)
+  );
+
+  return {
+    state: {
+      ...state,
+      memberPlanIDs,
+      paymentMethodID,
+      mailHistory: { ...state.mailHistory, rows },
+    },
+    dropped: {
+      memberPlans: state.memberPlanIDs.length - memberPlanIDs.length,
+      paymentMethods: state.paymentMethodID && !paymentMethodID ? 1 : 0,
+      templates: state.mailHistory.rows.length - rows.length,
+    },
   };
 }
 
@@ -184,7 +390,11 @@ export function useAudienceState(initial = INITIAL_AUDIENCE_STATE) {
       setState(current => ({ ...current, ...patch })),
     []
   );
+  const replace = useCallback(
+    (next: AudienceFilterState) => setState(next),
+    []
+  );
   const audience = useMemo(() => toAudienceInput(state), [state]);
 
-  return { state, update, audience };
+  return { state, update, replace, audience };
 }

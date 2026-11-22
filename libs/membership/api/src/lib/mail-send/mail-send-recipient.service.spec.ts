@@ -7,6 +7,8 @@ import {
   MailEmailFilter,
   MailEmailSegment,
   MailHistoryMatch,
+  MailHistoryScope,
+  MailRollingKind,
   MailRecipientBase,
   MailSubscriptionState,
 } from './mail-send.model';
@@ -837,6 +839,32 @@ describe('audience filtering (semantics)', () => {
           ...audience,
         })
       );
+
+    it('keeps subscriptions that started in a rolling range', async () => {
+      const audience = {
+        startsAtRolling: { kind: MailRollingKind.lastDays, days: 30 },
+      };
+
+      expect(
+        await included(subscription({ startsAt: days(-10) }), audience)
+      ).toBe(true);
+      expect(
+        await included(subscription({ startsAt: days(-60) }), audience)
+      ).toBe(false);
+    });
+
+    it('keeps subscriptions that end in a rolling range', async () => {
+      const audience = {
+        endsAtRolling: { kind: MailRollingKind.nextDays, days: 30 },
+      };
+
+      expect(
+        await included(subscription({ paidUntil: days(20) }), audience)
+      ).toBe(true);
+      expect(
+        await included(subscription({ paidUntil: days(60) }), audience)
+      ).toBe(false);
+    });
 
     it('takes every subscription when nothing is narrowed', async () => {
       expect(await included(subscription({ confirmed: false }))).toBe(true);
@@ -1709,6 +1737,298 @@ describe('audience filtering by mail history', () => {
 
     expect(matches(owner([invoiceMail()]), where)).toBe(true);
     expect(matches(owner([]), where)).toBe(false);
+  });
+
+  describe('sent in a rolling range', () => {
+    const rolling = (kind: MailRollingKind, days_: number) => ({
+      conditions: [condition({ rolling: { kind, days: days_ } })],
+    });
+    const sent = (offset: number) =>
+      person([invoiceMail({ sentDate: days(offset) })]);
+
+    it('keeps mails of the last x days', async () => {
+      const history = rolling(MailRollingKind.lastDays, 7);
+
+      expect(await included(sent(-3), history)).toBe(true);
+      expect(await included(sent(-20), history)).toBe(false);
+    });
+
+    it('keeps mails older than x days', async () => {
+      const history = rolling(MailRollingKind.olderThanDays, 14);
+
+      expect(await included(sent(-20), history)).toBe(true);
+      expect(await included(sent(-3), history)).toBe(false);
+    });
+
+    it('takes the place of fixed dates given along with it', async () => {
+      const history = {
+        conditions: [
+          condition({
+            from: days(-100),
+            to: days(-90),
+            rolling: { kind: MailRollingKind.lastDays, days: 7 },
+          }),
+        ],
+      };
+
+      expect(await included(sent(-3), history)).toBe(true);
+      expect(await included(sent(-95), history)).toBe(false);
+    });
+  });
+
+  describe('sent at least x times', () => {
+    /** Prisma with a mail log that reports these ids as having enough mails. */
+    const counting = (ids: string[], by = 'recipientID') => ({
+      user: { count: vi.fn(async () => 0) },
+      subscription: { count: vi.fn(async () => 0) },
+      mailLog: {
+        groupBy: vi.fn(async () => ids.map(id => ({ [by]: id }))),
+      },
+    });
+    const twice = (overrides: Record<string, any> = {}) => ({
+      conditions: [condition({ minCount: 2, ...overrides })],
+    });
+    const userWhere = async (prisma: any, mailHistory: any) => {
+      await makeService(prisma).count({
+        base: MailRecipientBase.allUsers,
+        mailHistory,
+      });
+
+      return (prisma.user.count as Mock).mock.calls[0][0].where;
+    };
+
+    it('asks the mail log who got the template that often', async () => {
+      const prisma = counting(['u1']);
+
+      await userWhere(prisma, twice({ states: ['delivered'] }));
+
+      expect(prisma.mailLog.groupBy).toHaveBeenCalledWith({
+        by: ['recipientID'],
+        where: { mailTemplateId: 'invoice', state: { in: ['delivered'] } },
+        having: { id: { _count: { gte: 2 } } },
+      });
+    });
+
+    it('keeps exactly those people', async () => {
+      const where = await userWhere(counting(['u1']), twice());
+
+      expect(matches({ id: 'u1' }, where)).toBe(true);
+      expect(matches({ id: 'u2' }, where)).toBe(false);
+    });
+
+    it('keeps everybody else when negated', async () => {
+      const where = await userWhere(counting(['u1']), twice({ negate: true }));
+
+      expect(matches({ id: 'u1' }, where)).toBe(false);
+      expect(matches({ id: 'u2' }, where)).toBe(true);
+    });
+
+    it('keeps nobody when nobody got it that often', async () => {
+      const where = await userWhere(counting([]), twice());
+
+      expect(matches({ id: 'u1' }, where)).toBe(false);
+    });
+
+    it('keeps everybody when negated and nobody got it that often', async () => {
+      const where = await userWhere(counting([]), twice({ negate: true }));
+
+      expect(matches({ id: 'u1' }, where)).toBe(true);
+    });
+
+    it('does not count for "at least once"', async () => {
+      const prisma = counting(['u1']);
+
+      const where = await userWhere(prisma, {
+        conditions: [condition({ minCount: 1 })],
+      });
+
+      expect(prisma.mailLog.groupBy).not.toHaveBeenCalled();
+      expect(matches(person([invoiceMail()]), where)).toBe(true);
+    });
+
+    it('counts per subscription for a condition bound to the subscription', async () => {
+      const prisma = counting(['sub-1'], 'subscriptionId');
+
+      await makeService(prisma).count({
+        base: MailRecipientBase.hasSubscription,
+        mailHistory: twice({ scope: MailHistoryScope.subscription }),
+      });
+
+      expect(prisma.mailLog.groupBy).toHaveBeenCalledWith({
+        by: ['subscriptionId'],
+        where: { mailTemplateId: 'invoice', subscriptionId: { not: null } },
+        having: { id: { _count: { gte: 2 } } },
+      });
+
+      const where = (prisma.subscription.count as Mock).mock.calls[0][0].where;
+
+      expect(matches({ id: 'sub-1' }, where)).toBe(true);
+      expect(matches({ id: 'sub-2' }, where)).toBe(false);
+    });
+
+    it('counts once for an audience resolved page by page', async () => {
+      const prisma = counting(['u1']);
+      const service = makeService(prisma);
+      const audience = {
+        base: MailRecipientBase.allUsers,
+        mailHistory: twice(),
+      };
+
+      await service.count(audience);
+      await service.count(audience);
+
+      expect(prisma.mailLog.groupBy).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('mails about a still-open invoice', () => {
+    const open = { paidAt: null, canceledAt: null };
+    const history = { conditions: [condition({ onlyOpenInvoice: true })] };
+
+    it('keeps the person whose reminded invoice is still open', async () => {
+      expect(
+        await included(person([invoiceMail({ invoice: open })]), history)
+      ).toBe(true);
+    });
+
+    it('drops the person who has paid the reminded invoice', async () => {
+      expect(
+        await included(
+          person([invoiceMail({ invoice: { ...open, paidAt: days(-1) } })]),
+          history
+        )
+      ).toBe(false);
+    });
+
+    it('drops the person whose reminded invoice was cancelled', async () => {
+      expect(
+        await included(
+          person([invoiceMail({ invoice: { ...open, canceledAt: days(-1) } })]),
+          history
+        )
+      ).toBe(false);
+    });
+
+    it('drops a mail that names no invoice, as every mail sent before the invoice was recorded', async () => {
+      expect(
+        await included(person([invoiceMail({ invoice: null })]), history)
+      ).toBe(false);
+    });
+  });
+
+  describe('bound to the subscription', () => {
+    const subscriptionRow = (
+      mailLogs: any[],
+      ownerMails: any[] = mailLogs
+    ) => ({
+      confirmed: true,
+      deactivation: null,
+      paidUntil: days(20),
+      mailLogs,
+      user: { mailSent: ownerMails },
+    });
+    const scoped = (overrides: Record<string, any> = {}) =>
+      condition({ scope: MailHistoryScope.subscription, ...overrides });
+    const whereFor = (
+      mailHistory: any,
+      base = MailRecipientBase.hasSubscription
+    ) => subscriptionWhereFor({ base, mailHistory });
+
+    it('keeps the subscription the mail was about', async () => {
+      const where = await whereFor({ conditions: [scoped()] });
+
+      expect(matches(subscriptionRow([invoiceMail()]), where)).toBe(true);
+    });
+
+    it('drops another subscription of a person who got the mail for a different one', async () => {
+      const where = await whereFor({ conditions: [scoped()] });
+
+      // The owner got the reminder, but about their other subscription.
+      expect(matches(subscriptionRow([], [invoiceMail()]), where)).toBe(false);
+    });
+
+    it('keeps subscriptions nobody was reminded about when negated', async () => {
+      const where = await whereFor({ conditions: [scoped({ negate: true })] });
+
+      expect(matches(subscriptionRow([], [invoiceMail()]), where)).toBe(true);
+      expect(matches(subscriptionRow([invoiceMail()]), where)).toBe(false);
+    });
+
+    it('combines with a condition on the person', async () => {
+      const where = await whereFor({
+        conditions: [scoped(), condition({ mailTemplateId: 'welcome' })],
+      });
+      const welcome = invoiceMail({ mailTemplateId: 'welcome' });
+
+      expect(
+        matches(
+          subscriptionRow([invoiceMail()], [invoiceMail(), welcome]),
+          where
+        )
+      ).toBe(true);
+      // Reminded about this subscription, but never welcomed.
+      expect(matches(subscriptionRow([invoiceMail()]), where)).toBe(false);
+    });
+
+    it('lets one of a person and a subscription condition suffice with "any"', async () => {
+      const where = await whereFor({
+        match: MailHistoryMatch.any,
+        conditions: [scoped(), condition({ mailTemplateId: 'welcome' })],
+      });
+      const welcome = invoiceMail({ mailTemplateId: 'welcome' });
+
+      expect(matches(subscriptionRow([invoiceMail()]), where)).toBe(true);
+      expect(matches(subscriptionRow([], [welcome]), where)).toBe(true);
+      expect(matches(subscriptionRow([], []), where)).toBe(false);
+    });
+
+    it('applies to the ended subscription of a win-back audience', async () => {
+      const where = await whereFor(
+        { conditions: [scoped()] },
+        MailRecipientBase.endedSubscription
+      );
+      const ended = (mailLogs: any[]) => ({
+        confirmed: true,
+        deactivation: { date: days(-5) },
+        paidUntil: days(-5),
+        mailLogs,
+        user: { mailSent: [invoiceMail()], subscriptions: [] },
+      });
+
+      expect(matches(ended([invoiceMail()]), where)).toBe(true);
+      expect(matches(ended([]), where)).toBe(false);
+    });
+
+    it('falls back to the person for an audience without subscriptions', async () => {
+      const where = await userWhereFor({
+        base: MailRecipientBase.allUsers,
+        mailHistory: { conditions: [scoped()] },
+      });
+
+      expect(matches(person([invoiceMail()]), where)).toBe(true);
+      expect(matches(person([]), where)).toBe(false);
+    });
+
+    it('reaches the person once for a letter send', async () => {
+      const prisma = { user: { count: vi.fn(async () => 0) } };
+
+      await makeService(prisma).count(
+        {
+          base: MailRecipientBase.hasSubscription,
+          mailHistory: { conditions: [scoped()] },
+        },
+        MailChannel.letter
+      );
+
+      const where = (prisma.user.count as Mock).mock.calls[0][0].where;
+      const owner = (mailLogs: any[]) => ({
+        mailSent: [invoiceMail()],
+        subscriptions: [subscriptionRow(mailLogs)],
+      });
+
+      expect(matches(owner([invoiceMail()]), where)).toBe(true);
+      expect(matches(owner([]), where)).toBe(false);
+    });
   });
 
   it('applies to the people without an active subscription too', async () => {

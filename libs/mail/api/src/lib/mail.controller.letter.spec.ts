@@ -128,6 +128,8 @@ describe('MailController letter mode', () => {
       log: {
         mailIdentifier: expectedIdentifier,
         type: MailLogType.subscriptionFlow,
+        subscriptionId: null,
+        invoiceId: null,
       },
     });
     // The letter side writes its own log entry.
