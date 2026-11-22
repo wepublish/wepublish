@@ -15,6 +15,7 @@ import {
   Letters,
   OAuth,
   PingenError,
+  PingenResponse,
   PrintMode,
   PrintSpectrum,
 } from 'pingen2-sdk-js';
@@ -298,9 +299,20 @@ export class PingenLetterProvider extends BaseLetterProvider {
     const states: LetterProviderMessageState[] = [];
 
     for (const providerLetterID of providerLetterIDs) {
-      const response = await this.call(() =>
-        letters.getDetails(providerLetterID)
-      );
+      let response: PingenResponse;
+
+      try {
+        response = await this.call(() => letters.getDetails(providerLetterID));
+      } catch (error) {
+        // A letter deleted at Pingen must not keep every other one from
+        // being read. Anything else, like refused credentials, has to fail.
+        if (error instanceof LetterProviderError && error.statusCode === 404) {
+          continue;
+        }
+
+        throw error;
+      }
+
       const resource = await this.call(() =>
         response.toResource<LetterAttributes>()
       );

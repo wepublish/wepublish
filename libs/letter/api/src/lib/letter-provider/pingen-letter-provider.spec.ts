@@ -462,6 +462,49 @@ describe('PingenLetterProvider', () => {
         },
       ]);
     });
+
+    it('skips a letter Pingen no longer knows', async () => {
+      const provider = createProvider();
+
+      lettersMock.getDetails
+        .mockRejectedValueOnce(new PingenError('Not found', 404))
+        .mockResolvedValueOnce(
+          pingenResponse({
+            data: {
+              id: 'letter-2',
+              type: 'letters',
+              attributes: { status: 'sent' },
+            },
+          })
+        );
+
+      const states = await provider.getMessageStates(['letter-1', 'letter-2']);
+
+      expect(states).toEqual([
+        {
+          providerLetterID: 'letter-2',
+          state: LetterState.dispatched,
+          letterData: expect.any(String),
+        },
+      ]);
+    });
+
+    // Rejected credentials have to show up as a failed sync, not as a sync
+    // that found nothing to update.
+    it('fails when Pingen refuses the request', async () => {
+      const provider = createProvider();
+
+      lettersMock.getDetails.mockRejectedValue(
+        new PingenError('Unauthorized', 403)
+      );
+
+      await expect(
+        provider.getMessageStates(['letter-1', 'letter-2'])
+      ).rejects.toMatchObject({
+        name: 'LetterProviderError',
+        statusCode: 403,
+      });
+    });
   });
 
   describe('mapPingenStatusToLetterState', () => {

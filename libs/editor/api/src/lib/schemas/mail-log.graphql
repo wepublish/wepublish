@@ -29,6 +29,8 @@ mutation SyncMailLogStates($limit: Int) {
   syncMailLogStates(limit: $limit) {
     checked
     updated
+    lettersChecked
+    lettersUpdated
   }
 }
 
