@@ -71,6 +71,29 @@ describe('describeAudience', () => {
     ]);
   });
 
+  it('says when a condition is bound to the subscription or to an open invoice', () => {
+    expect(
+      describeAudience(
+        {
+          base: 'hasSubscription',
+          mailHistory: {
+            conditions: [
+              {
+                mailTemplateId: 'tpl-1',
+                scope: 'subscription',
+                onlyOpenInvoice: true,
+              },
+            ],
+          },
+        },
+        lookups
+      )
+    ).toEqual([
+      'mailSend.base.hasSubscription',
+      'mailSend.audienceSummary.mailHistory: mailSend.audienceSummary.received «Adressänderung» (mailSend.audienceSummary.onSubscription, mailSend.audienceSummary.onlyOpenInvoice)',
+    ]);
+  });
+
   it('ignores keys it does not know, so older filters still read', () => {
     expect(
       describeAudience({ base: 'allUsers', somethingNew: 1 }, lookups)

@@ -488,6 +488,117 @@ describe('MailSendJobService', () => {
     });
   });
 
+  describe('what a send is about', () => {
+    const subscriptionRecipients = () => {
+      const recipient = {
+        user: { id: 'u1', email: 'u1@x.ch' },
+        subscription: { id: 'sub-1' },
+      };
+
+      return {
+        count: vi.fn(async () => 1),
+        allowsSubscriptionTemplates: () => true,
+        resolvePage: vi.fn(async (_audience: any, skip: number) =>
+          skip === 0 ? [recipient] : []
+        ),
+        loadQueued: vi.fn(
+          async (refs: any[]) =>
+            new Map(
+              refs.map(ref => [
+                `${ref.userId}:${ref.subscriptionId ?? ''}`,
+                recipient,
+              ])
+            )
+        ),
+      };
+    };
+    const subscriptionAudience = { base: MailRecipientBase.hasSubscription };
+
+    it('tells the mail log which subscription and invoice a mail is about', async () => {
+      const prisma = fakePrisma(template('renewal'));
+      prisma.invoice.findFirst.mockResolvedValue({ id: 'inv-1', items: [] });
+      const mailContext = { sendMail: vi.fn(async () => undefined) };
+
+      await makeService(
+        prisma,
+        mailContext,
+        subscriptionRecipients()
+      ).createJob(
+        { mailTemplateId: 'tpl-1', audience: subscriptionAudience },
+        'editor-1'
+      );
+      await settle(prisma);
+
+      expect((mailContext.sendMail as Mock).mock.calls[0][0]).toMatchObject({
+        subscriptionId: 'sub-1',
+        invoiceId: 'inv-1',
+      });
+    });
+
+    it('names no invoice when the template shows none', async () => {
+      const prisma = fakePrisma(template('subscription'));
+      prisma.invoice.findFirst.mockResolvedValue({ id: 'inv-1', items: [] });
+      const mailContext = { sendMail: vi.fn(async () => undefined) };
+
+      await makeService(
+        prisma,
+        mailContext,
+        subscriptionRecipients()
+      ).createJob(
+        { mailTemplateId: 'tpl-1', audience: subscriptionAudience },
+        'editor-1'
+      );
+      await settle(prisma);
+
+      const sent = (mailContext.sendMail as Mock).mock.calls[0][0];
+
+      expect(sent.subscriptionId).toBe('sub-1');
+      expect(sent.invoiceId ?? null).toBeNull();
+    });
+
+    it('tells the letter log the same', async () => {
+      const prisma = fakePrisma(template('renewal'));
+      prisma.invoice.findFirst.mockResolvedValue({ id: 'inv-1', items: [] });
+      const letterContext = { sendLetter: vi.fn(async () => 'log-1') };
+
+      await makeService(
+        prisma,
+        { sendMail: vi.fn() },
+        subscriptionRecipients(),
+        letterContext
+      ).createJob(
+        {
+          mailTemplateId: 'tpl-1',
+          audience: subscriptionAudience,
+          channel: MailChannel.letter,
+        },
+        'editor-1'
+      );
+      await settle(prisma);
+
+      expect(
+        (letterContext.sendLetter as Mock).mock.calls[0][0].log
+      ).toMatchObject({ subscriptionId: 'sub-1', invoiceId: 'inv-1' });
+    });
+
+    it('names no trigger for a send to people without a subscription', async () => {
+      const prisma = fakePrisma();
+      const mailContext = { sendMail: vi.fn(async () => undefined) };
+
+      await makeService(
+        prisma,
+        mailContext,
+        recipientServiceFor(['u1'])
+      ).createJob({ mailTemplateId: 'tpl-1', audience }, 'editor-1');
+      await settle(prisma);
+
+      const sent = (mailContext.sendMail as Mock).mock.calls[0][0];
+
+      expect(sent.subscriptionId ?? null).toBeNull();
+      expect(sent.invoiceId ?? null).toBeNull();
+    });
+  });
+
   describe('letter channel', () => {
     it('posts letters instead of mails and records the print options', async () => {
       const prisma = fakePrisma();

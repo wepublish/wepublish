@@ -4617,6 +4617,9 @@
         "channel": "Canal de distribution",
         "anyChannel": "Indifférent",
         "sentBetween": "Envoyé entre",
+        "onSubscription": "Uniquement les messages concernant précisément cet abonnement",
+        "onlyOpenInvoice": "Uniquement les messages concernant une facture encore ouverte",
+        "triggerHint": "L’abonnement et la facture d’un message ne sont enregistrés que depuis peu. Les messages plus anciens ne remplissent jamais cette condition.",
         "match": {
           "all": "Toutes les conditions doivent être remplies",
           "any": "Une condition suffit"
@@ -4641,6 +4644,8 @@
         "mailHistory": "Messages",
         "received": "reçu",
         "notReceived": "non reçu",
+        "onSubscription": "concernant cet abonnement",
+        "onlyOpenInvoice": "facture encore ouverte",
         "between": "{{from}} – {{to}}",
         "from": "dès le {{from}}",
         "to": "jusqu’au {{to}}",
@@ -4656,6 +4661,9 @@
       "sentDate": "Date",
       "template": "Modèle",
       "subject": "Objet",
+      "trigger": "Concerne",
+      "triggerSubscription": "Abonnement",
+      "triggerInvoice": "Facture",
       "state": "État",
       "type": "Déclenché par",
       "recipient": "Destinataire",

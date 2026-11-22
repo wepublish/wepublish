@@ -4625,6 +4625,9 @@
         "channel": "Zustellkanal",
         "anyChannel": "Beliebig",
         "sentBetween": "Versandt zwischen",
+        "onSubscription": "Nur Mitteilungen zu genau diesem Abo",
+        "onlyOpenInvoice": "Nur Mitteilungen zu einer noch offenen Rechnung",
+        "triggerHint": "Abo und Rechnung einer Mitteilung werden erst seit Kurzem gespeichert. Ältere Mitteilungen erfüllen diese Bedingung nie.",
         "match": {
           "all": "Alle Bedingungen müssen zutreffen",
           "any": "Eine Bedingung genügt"
@@ -4649,6 +4652,8 @@
         "mailHistory": "Mitteilungen",
         "received": "erhalten",
         "notReceived": "nicht erhalten",
+        "onSubscription": "zu diesem Abo",
+        "onlyOpenInvoice": "Rechnung noch offen",
         "between": "{{from}} – {{to}}",
         "from": "ab {{from}}",
         "to": "bis {{to}}",
@@ -4664,6 +4669,9 @@
       "sentDate": "Datum",
       "template": "Vorlage",
       "subject": "Betreff",
+      "trigger": "Bezug",
+      "triggerSubscription": "Abo",
+      "triggerInvoice": "Rechnung",
       "state": "Status",
       "type": "Ausgelöst durch",
       "recipient": "Empfänger",

@@ -248,10 +248,17 @@ Automated subscription mails can reach a user as a printed letter. The pieces:
   with the filter read back as phrases (`describeAudience`, names through
   `useAudienceLookups`, shared with the wizard's review step).
 - `MailAudienceInput.mailHistory` filters any base by the mail log:
-  `{ match: all|any, conditions: [{ mailTemplateId, negate, states?, channel?, from?, to? }] }`.
+  `{ match: all|any, conditions: [{ mailTemplateId, negate, states?, channel?, from?, to?, scope?, onlyOpenInvoice? }] }`.
   Built in `mail-send-recipient.service.ts` as `mailSent: { some | none }`
   on the user (`none` for «not sent», never `NOT`, so people without any mail
   stay in), ANDed with the email segments through `buildUserLevelWhere`.
+  One condition with `scope: subscription` moves the whole history onto the
+  subscription (`mailLogs: { some | none }`, person conditions through
+  `user`) for the two subscription bases.
+- `MailLog.subscriptionId` / `invoiceId` say what a mail was about. The sender
+  passes them explicitly (`MailControllerConfig`, `LetterLogDetails`); never
+  derive them from `optionalData`, whose keys differ per template context. A
+  new flow mail that omits them is invisible to `scope` and `onlyOpenInvoice`.
 
 - Gotenberg (self-hosted, the default; `gotenberg` service in docker-compose)
 - Cloudflare Browser Rendering

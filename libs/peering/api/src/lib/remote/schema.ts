@@ -2523,6 +2523,10 @@ export type MailHistoryCondition = {
   mailTemplateId: Scalars['String']['input'];
   /** true: keeps people who did NOT receive such a mail, including people with no mail at all. */
   negate?: InputMaybe<Scalars['Boolean']['input']>;
+  /** true: only mails about an invoice that is still open (neither paid nor cancelled). Mails sent before the invoice was recorded in the mail log never match. */
+  onlyOpenInvoice?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Defaults to person. Mails sent before the subscription was recorded in the mail log never match the subscription scope. */
+  scope?: InputMaybe<MailHistoryScope>;
   /** Only mails that ended in one of these states. Empty or absent means any. */
   states?: InputMaybe<Array<MailLogState>>;
   /** Sent on or before. */
@@ -2541,12 +2545,22 @@ export enum MailHistoryMatch {
   Any = 'any'
 }
 
+/** person: any mail the person got. subscription: only mails about the very subscription the audience selects; on an audience without subscriptions it falls back to person. */
+export enum MailHistoryScope {
+  Person = 'person',
+  Subscription = 'subscription'
+}
+
 export type MailLogFilter = {
   channel?: InputMaybe<MailChannel>;
+  /** Only mails about this invoice. */
+  invoiceId?: InputMaybe<Scalars['String']['input']>;
   mailSendJobId?: InputMaybe<Scalars['String']['input']>;
   mailTemplateId?: InputMaybe<Scalars['String']['input']>;
   recipientId?: InputMaybe<Scalars['String']['input']>;
   state?: InputMaybe<MailLogState>;
+  /** Only mails about this subscription. */
+  subscriptionId?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<MailLogType>;
 };
 
@@ -2559,6 +2573,8 @@ export type MailLogModel = {
   /** Why a rejected mail could not be delivered. */
   error?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
+  /** The invoice the mail is about, for invoice mails. Null otherwise and for mails sent before this was recorded. */
+  invoiceId?: Maybe<Scalars['String']['output']>;
   mailProviderID: Scalars['String']['output'];
   mailSendJobId?: Maybe<Scalars['String']['output']>;
   mailTemplate: MailLogTemplate;
@@ -2568,6 +2584,8 @@ export type MailLogModel = {
   sentDate: Scalars['DateTime']['output'];
   state: MailLogState;
   subject?: Maybe<Scalars['String']['output']>;
+  /** The subscription the mail is about. Null for mails with no such trigger and for mails sent before this was recorded. */
+  subscriptionId?: Maybe<Scalars['String']['output']>;
   type?: Maybe<MailLogType>;
 };
 

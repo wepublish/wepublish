@@ -26,7 +26,12 @@ import {
 import { ReactNode, useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FieldLabel } from '../../field-label';
-import { AudienceFilterState, EndedMode, TriState } from './audience-state';
+import {
+  AudienceFilterState,
+  EndedMode,
+  selectsSubscriptions,
+  TriState,
+} from './audience-state';
 import { MailHistoryFilter } from './mail-history-filter';
 import { EmailQualityRefreshButton } from '../email-quality-refresh-button';
 
@@ -249,6 +254,7 @@ export function AudienceFilter({
       <MailHistoryFilter
         value={state.mailHistory}
         onChange={mailHistory => onChange({ mailHistory })}
+        subscriptionBase={selectsSubscriptions(state.base)}
       />
 
       {isWinBackBase && (

@@ -4,6 +4,7 @@ import {
   MailEmailSegment,
   MailHistoryCondition,
   MailHistoryMatch,
+  MailHistoryScope,
   MailLogState,
   MailRecipientBase,
   MailSubscriptionState,
@@ -30,6 +31,10 @@ export type MailHistoryRow = {
   channel: MailChannel | null;
   from: Date | null;
   to: Date | null;
+  /** Only mails about the very subscription the audience selects. */
+  onSubscription: boolean;
+  /** Only mails about an invoice that is still open. */
+  onlyOpenInvoice: boolean;
 };
 
 /** The audience as the controls hold it, before it becomes the API input. */
@@ -64,6 +69,8 @@ export const emptyMailHistoryRow = (): MailHistoryRow => ({
   channel: null,
   from: null,
   to: null,
+  onSubscription: false,
+  onlyOpenInvoice: false,
 });
 
 export const INITIAL_AUDIENCE_STATE: AudienceFilterState = {
@@ -102,8 +109,14 @@ export const endOfDay = (date?: Date | null): string | undefined => {
 const triState = (value: TriState): boolean | undefined =>
   value === 'any' ? undefined : value === 'true';
 
+/** The bases whose recipients are subscriptions, not just people. */
+export const selectsSubscriptions = (base: MailRecipientBase) =>
+  base === MailRecipientBase.HasSubscription ||
+  base === MailRecipientBase.EndedSubscription;
+
 const toMailHistory = (
-  history: AudienceFilterState['mailHistory']
+  history: AudienceFilterState['mailHistory'],
+  base: MailRecipientBase
 ): MailAudienceInput['mailHistory'] => {
   // A row without a template is still being filled in; it must not turn the
   // whole audience into nobody.
@@ -116,6 +129,13 @@ const toMailHistory = (
       channel: row.channel ?? undefined,
       from: row.from ? row.from.toISOString() : undefined,
       to: endOfDay(row.to),
+      // Left out rather than sent as "person": an audience without
+      // subscriptions has nothing to bind a mail to.
+      scope:
+        row.onSubscription && selectsSubscriptions(base) ?
+          MailHistoryScope.Subscription
+        : undefined,
+      onlyOpenInvoice: row.onlyOpenInvoice || undefined,
     }));
 
   return conditions.length ? { match: history.match, conditions } : undefined;
@@ -127,7 +147,7 @@ export function toAudienceInput(state: AudienceFilterState): MailAudienceInput {
   // they were sent so far.
   const emailSegments =
     state.emailSegments.length ? state.emailSegments : undefined;
-  const mailHistory = toMailHistory(state.mailHistory);
+  const mailHistory = toMailHistory(state.mailHistory, state.base);
 
   if (state.base === MailRecipientBase.EndedSubscription) {
     const usePeriod =

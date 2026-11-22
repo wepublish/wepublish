@@ -609,6 +609,7 @@ export class MailSendJobService {
           },
           mailSendJobId: job.id,
           mailLogId,
+          log: this.triggerOf(recipient, optionalData),
         });
       } else {
         await this.mailContext.sendMail({
@@ -619,6 +620,7 @@ export class MailSendJobService {
           mailSendJobId: job.id,
           mailLogId,
           isRetry: false,
+          ...this.triggerOf(recipient, optionalData),
         });
       }
 
@@ -905,6 +907,25 @@ export class MailSendJobService {
    * latest invoice) as `optional` data. Custom templates and user-only
    * recipients get an empty payload.
    */
+  /**
+   * What the mail log says a manual send is about: the recipient's
+   * subscription, and the invoice whose data the template was given. A
+   * template context that shows no invoice names none.
+   */
+  private triggerOf(
+    recipient: MailRecipient,
+    optionalData: Record<string, unknown>
+  ): { subscriptionId: string | null; invoiceId: string | null } {
+    const invoice = (optionalData['invoice'] ??
+      (optionalData['invoices'] as unknown[] | undefined)?.[0]) as
+      { id?: string } | null | undefined;
+
+    return {
+      subscriptionId: recipient.subscription?.id ?? null,
+      invoiceId: invoice?.id ?? null,
+    };
+  }
+
   private async buildOptionalData(
     template: MailTemplate,
     recipient: MailRecipient

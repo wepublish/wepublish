@@ -38,6 +38,7 @@ import {
   mailLogTypeLabel,
   MailLogStateLegend,
   MailLogStateTag,
+  MailLogTriggerCell,
 } from './mail-log-common';
 
 const PAGE_SIZE = 50;
@@ -452,6 +453,9 @@ export function MailLogTable() {
                 <strong>{t('mailLog.template')}</strong>
               </TableCell>
               <TableCell>
+                <strong>{t('mailLog.trigger')}</strong>
+              </TableCell>
+              <TableCell>
                 <strong>{t('mailLog.subject')}</strong>
               </TableCell>
               <TableCell>
@@ -478,7 +482,7 @@ export function MailLogTable() {
           <TableBody>
             {data && !logs.length && (
               <TableRow>
-                <TableCell colSpan={7}>{t('mailLog.empty')}</TableCell>
+                <TableCell colSpan={9}>{t('mailLog.empty')}</TableCell>
               </TableRow>
             )}
 
@@ -487,6 +491,12 @@ export function MailLogTable() {
                 <TableCell>{formatDateTime(log.sentDate)}</TableCell>
                 <TableCell>{log.recipient.email}</TableCell>
                 <TableCell>{log.mailTemplate.name}</TableCell>
+                <TableCell>
+                  <MailLogTriggerCell
+                    subscriptionId={log.subscriptionId}
+                    invoiceId={log.invoiceId}
+                  />
+                </TableCell>
                 <TableCell>{log.subject ?? '—'}</TableCell>
                 <TableCell>
                   <MailLogChannelCell

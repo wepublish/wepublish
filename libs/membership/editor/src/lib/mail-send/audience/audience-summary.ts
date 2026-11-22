@@ -19,6 +19,8 @@ type Condition = {
   channel?: string;
   from?: string;
   to?: string;
+  scope?: string;
+  onlyOpenInvoice?: boolean;
 };
 
 const yesNo = (t: AudienceSummaryLookups['t'], value: unknown) =>
@@ -59,6 +61,12 @@ const conditionPhrase = (
       t(`mailSend.mailHistory.states.${state}`)
     ),
     ...(condition.channel ? [t(`mailSend.channel.${condition.channel}`)] : []),
+    ...(condition.scope === 'subscription' ?
+      [t('mailSend.audienceSummary.onSubscription')]
+    : []),
+    ...(condition.onlyOpenInvoice ?
+      [t('mailSend.audienceSummary.onlyOpenInvoice')]
+    : []),
   ];
 
   return [

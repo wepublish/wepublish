@@ -244,6 +244,14 @@ const createLocksWithoutDragonfly = (
 describe('PeriodicJobService', () => {
   let service: PeriodicJobService;
   let mockPrisma: ReturnType<typeof createMockPrisma>;
+
+  /** What each mail of the run was logged as being about. */
+  const loggedTriggers = () =>
+    mockPrisma.mailLog.create.mock.calls.map(([{ data }]) => ({
+      subscription: data.subscription?.connect.id,
+      invoice: data.invoice?.connect.id,
+    }));
+
   let mockSubscriptionController: ReturnType<
     typeof createMockSubscriptionController
   >;
@@ -371,6 +379,10 @@ describe('PeriodicJobService', () => {
     mockSubscriptionController.createInvoice.mockResolvedValue(createdInvoice);
 
     await service.execute();
+
+    expect(loggedTriggers()).toEqual([
+      { subscription: 'sub-1', invoice: 'inv-new' },
+    ]);
 
     // Verify invoice was created
     expect(mockSubscriptionController.createInvoice).toHaveBeenCalledTimes(1);
@@ -504,6 +516,62 @@ describe('PeriodicJobService', () => {
     ).not.toHaveBeenCalled();
   });
 
+  it('logs the invoice a failed-charge mail is about', async () => {
+    const mail = 'dev-mail@test.wepublish.com';
+    const renewalDate = new Date();
+
+    const mockInvoice = {
+      id: 'inv-1',
+      dueAt: renewalDate,
+      mail,
+      paidAt: null,
+      canceledAt: null,
+      manuallySetAsPaidByUserId: null,
+      scheduledDeactivationAt: add(renewalDate, { days: 5 }),
+      currency: Currency.CHF,
+      items: [{ amount: 2400, quantity: 1, name: 'Yearly Sub' }],
+      subscriptionPeriods: [],
+      subscription: {
+        id: 'sub-1',
+        memberPlanID: 'plan-yearly',
+        paymentMethodID: 'payrexx',
+        paymentPeriodicity: PaymentPeriodicity.yearly,
+        paidUntil: renewalDate,
+        autoRenew: true,
+        monthlyAmount: 200,
+        currency: Currency.CHF,
+        paymentMethod: {
+          id: 'payrexx',
+          paymentProviderID: 'payrexx',
+        },
+        memberPlan: { name: 'yearly' },
+        user: {
+          id: 'user-1',
+          email: mail,
+          paymentProviderCustomers: [],
+        },
+      },
+    };
+
+    mockSubscriptionController.findUnpaidDueInvoices.mockResolvedValue([
+      mockInvoice,
+    ]);
+    mockSubscriptionController.chargeInvoice.mockResolvedValue({
+      action: {
+        type: SubscriptionEvent.RENEWAL_FAILED,
+        daysAwayFromEnding: null,
+        mailTemplateId: 'template-failed',
+      },
+      errorCode: 'card_declined',
+    });
+
+    await service.execute();
+
+    expect(loggedTriggers()).toEqual([
+      { subscription: 'sub-1', invoice: 'inv-1' },
+    ]);
+  });
+
   it('disable subscription', async () => {
     const mail = 'dev-mail@test.wepublish.com';
     const renewalDate = sub(new Date(), { days: 1 });
@@ -537,6 +605,10 @@ describe('PeriodicJobService', () => {
     );
 
     await service.execute();
+
+    expect(loggedTriggers()).toEqual([
+      { subscription: 'sub-1', invoice: 'inv-1' },
+    ]);
 
     // Verify subscription was deactivated
     expect(
@@ -579,6 +651,10 @@ describe('PeriodicJobService', () => {
     mockPrisma.invoice.findMany.mockResolvedValue([]);
 
     await service.execute();
+
+    expect(loggedTriggers()).toEqual([
+      { subscription: 'sub-1', invoice: undefined },
+    ]);
 
     // The custom mail sending is triggered through MailController internally.
     // The test verifies the subscription query was made for custom events.
