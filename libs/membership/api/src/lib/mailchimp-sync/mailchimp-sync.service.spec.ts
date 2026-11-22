@@ -232,6 +232,28 @@ describe('MailchimpSyncService', () => {
     );
   });
 
+  it('reports to the job log how many audiences synced and why one failed', async () => {
+    vi.spyOn(
+      service as unknown as { executeSyncForConfig: () => Promise<void> },
+      'executeSyncForConfig'
+    ).mockRejectedValue({ status: 401, detail: 'API key invalid' });
+
+    expect(await service.executeAllSync()).toEqual({
+      synced: 0,
+      failed: 1,
+      firstError: '401 API key invalid',
+    });
+  });
+
+  it('reports a sync without failures', async () => {
+    vi.spyOn(
+      service as unknown as { executeSyncForConfig: () => Promise<void> },
+      'executeSyncForConfig'
+    ).mockResolvedValue(undefined);
+
+    expect(await service.executeAllSync()).toEqual({ synced: 1, failed: 0 });
+  });
+
   describe('newly created CMS user', () => {
     it('syncs a user missing on Mailchimp as a new contact', async () => {
       prismaMock.subscription.findMany.mockResolvedValue([buildSubscription()]);

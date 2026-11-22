@@ -5,6 +5,11 @@ import {
   UserEvent,
 } from '@prisma/client';
 import { BaseMailProvider } from './mail-provider/base-mail-provider';
+import {
+  MailProviderTransientError,
+  SendMailProps,
+  SendMailResult,
+} from './mail-provider/mail-provider.interface';
 
 import { Injectable, Logger } from '@nestjs/common';
 import { MailController, MailControllerConfig } from './mail.controller';
@@ -43,6 +48,12 @@ export interface SendComposedMailProps {
    * out; account mails send without them.
    */
   readonly withAttachments?: boolean;
+  /**
+   * Ready-made files the caller sends along, after the template's own
+   * documents — e.g. the payment provider's invoice pdf. Sent even when
+   * `withAttachments` is off: that switch only concerns the template.
+   */
+  readonly attachments?: MailAttachment[];
 }
 
 export interface SendComposedContentProps {
@@ -146,7 +157,18 @@ export interface MailContextProps {
   readonly letterSender?: LetterSender;
   /** Renders the documents attached to templates; absent without letters. */
   readonly attachmentRenderer?: MailAttachmentRenderer;
+  /**
+   * The waits before each new attempt when the provider fails for a moment
+   * ({@link MailProviderTransientError}); one attempt more than waits.
+   */
+  readonly sendRetryDelaysMs?: readonly number[];
 }
+
+/**
+ * About a minute in all: long enough for a provider hiccup or a rate limit to
+ * pass, short enough that a real outage still stops the run soon.
+ */
+const SEND_RETRY_DELAYS_MS = [5_000, 15_000, 45_000];
 
 @Injectable()
 export class MailContext implements MailContextInterface {
@@ -160,6 +182,7 @@ export class MailContext implements MailContextInterface {
   emailQualityRecorder?: EmailQualityRecorder;
   letterSender?: LetterSender;
   attachmentRenderer?: MailAttachmentRenderer;
+  private readonly sendRetryDelaysMs: readonly number[];
 
   constructor(props: MailContextProps) {
     this.mailProvider = props.mailProvider;
@@ -170,6 +193,7 @@ export class MailContext implements MailContextInterface {
     this.emailQualityRecorder = props.emailQualityRecorder;
     this.letterSender = props.letterSender;
     this.attachmentRenderer = props.attachmentRenderer;
+    this.sendRetryDelaysMs = props.sendRetryDelaysMs ?? SEND_RETRY_DELAYS_MS;
   }
 
   async buildMailData({
@@ -256,6 +280,7 @@ export class MailContext implements MailContextInterface {
     data,
     mailLogID,
     withAttachments = true,
+    attachments: extraAttachments = [],
   }: SendComposedMailProps): Promise<{
     subject: string;
     providerMessageID?: string;
@@ -279,14 +304,17 @@ export class MailContext implements MailContextInterface {
     const composed = composeMail(template, data);
     // Rendered before anything is handed over: a mail whose documents cannot
     // be rendered fails as a whole rather than going out without them.
-    const attachments = await this.renderAttachments(
-      withAttachments ?
-        await loadAttachmentIds(this.prisma as PrismaClient, mailTemplateId)
-      : [],
-      data
-    );
+    const attachments = [
+      ...(await this.renderAttachments(
+        withAttachments ?
+          await loadAttachmentIds(this.prisma as PrismaClient, mailTemplateId)
+        : [],
+        data
+      )),
+      ...extraAttachments,
+    ];
 
-    const result = await this.mailProvider.sendMail({
+    const result = await this.sendWithRetry({
       mailLogID,
       recipient,
       replyToAddress: config?.replyToAddress ?? config?.fromAddress ?? '',
@@ -337,6 +365,35 @@ export class MailContext implements MailContextInterface {
     });
 
     return { providerMessageID: result?.providerMessageID };
+  }
+
+  /**
+   * Sends through the provider and tries again when it fails for a moment, so
+   * one hiccup does not stop a run of many mails (the nightly renewals). Any
+   * other error, a refused recipient included, goes straight to the caller.
+   * A send that timed out may have been taken after all; that rare duplicate
+   * is the price of not leaving the remaining mails until the next night.
+   */
+  private async sendWithRetry(props: SendMailProps): Promise<SendMailResult> {
+    for (let attempt = 0; ; attempt++) {
+      try {
+        return await this.mailProvider.sendMail(props);
+      } catch (error) {
+        const delay = this.sendRetryDelaysMs[attempt];
+
+        if (
+          !(error instanceof MailProviderTransientError) ||
+          delay === undefined
+        ) {
+          throw error;
+        }
+
+        this.logger.warn(
+          `Mail to ${props.recipient} failed for a moment, trying again in ${delay / 1000} s: ${error.message}`
+        );
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
   }
 
   private async renderAttachments(

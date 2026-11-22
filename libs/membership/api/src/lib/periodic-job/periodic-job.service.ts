@@ -15,6 +15,8 @@ import {
   PaymentMethod,
   PaymentProviderCustomer,
   PeriodicJob,
+  PeriodicJobStepStatus,
+  Prisma,
   PrismaClient,
   Subscription,
   SubscriptionDeactivationReason,
@@ -23,12 +25,16 @@ import {
   User,
 } from '@prisma/client';
 import {
-  LetterAttachment,
+  LetterRecipient,
+  MailAttachment,
   MailContext,
   resolveLetterRecipient,
 } from '@wepublish/mail/api';
 import { InvoicePaidNotifier, PaymentsService } from '@wepublish/payment/api';
-import { InvoiceDeliveryService, PaperSide } from './invoice-delivery.service';
+import {
+  InvoiceDeliveryService,
+  DeliverySide,
+} from './invoice-delivery.service';
 import { PaymentMethodChangeService } from '../payment-method-change/payment-method-change.service';
 import {
   add,
@@ -64,8 +70,11 @@ export const NIGHT_CLAIM_MS = 12 * 60 * 60 * 1000;
 const RUN_LOCK = 'periodic-job-run';
 const RUN_LOCK_TTL_MS = 2 * 60 * 1000;
 
+/** How many invoices the run creates between two memory log lines. */
+const MEMORY_LOG_EVERY = 100;
+
 /** How often a refused invoice letter is offered again before someone has to look. */
-const INVOICE_LETTER_ATTEMPTS = 3;
+const INVOICE_DELIVERY_ATTEMPTS = 3;
 
 type OpenInvoice = Awaited<
   ReturnType<SubscriptionService['findAllOpenInvoices']>
@@ -101,6 +110,31 @@ export const isPeriodicJobRunning = (job: RunState, now = Date.now()) =>
   (job.executionTime?.getTime() ?? 0) > now - NIGHT_CLAIM_MS;
 
 type RetryRun = Extract<PeriodicJobRunObject, { isRetry: true }>;
+
+/** The job's own steps, in the order a run takes them. */
+export const CORE_STEP_KEYS = [
+  'customMails',
+  'invoiceStates',
+  'invoiceCreation',
+  'invoiceLetters',
+  'paymentMethodChanges',
+  'charging',
+  'deactivationUnpaid',
+  'deactivationNotRenewed',
+] as const;
+
+type CoreStepKey = (typeof CORE_STEP_KEYS)[number];
+
+/** What one step of the night did, for the job log. */
+export interface NightStepRecord {
+  key: string;
+  status: PeriodicJobStepStatus;
+  /** Counts by name, e.g. `{readers: 1821, failed: 7}`. */
+  counts?: Record<string, number>;
+  error?: string;
+  startedAt: Date;
+  finishedAt: Date;
+}
 
 /**
  * Controller responsible for performing periodic jobs. A new controller
@@ -143,6 +177,14 @@ export class PeriodicJobService {
       orderBy: {
         date: 'desc',
       },
+      include: { steps: { orderBy: { startedAt: 'asc' } } },
+    });
+  }
+
+  getSteps(periodicJobId: string) {
+    return this.prismaService.periodicJobStep.findMany({
+      where: { periodicJobId },
+      orderBy: { startedAt: 'asc' },
     });
   }
 
@@ -226,10 +268,68 @@ export class PeriodicJobService {
     return job;
   }
 
-  private async findRunToRetry(
+  /**
+   * Runs today's job again now, also when it already ran tonight: load tests
+   * create due subscriptions and then need the nightly run. Answers once the
+   * run is taken over; it goes on in the background.
+   */
+  public async runTodayNow(): Promise<PeriodicJob> {
+    const acquired = await this.locks.acquire(RUN_LOCK, RUN_LOCK_TTL_MS);
+
+    if (acquired.status === 'taken') {
+      throw new ConflictException(
+        'A periodic job is already running. Wait until it has finished.'
+      );
+    }
+
+    const lock = heldLock(acquired);
+    // As a retry, so the mails already sent today are skipped.
+    const run: PeriodicJobRunObject = {
+      isRetry: true,
+      date: startOfDay(new Date()),
+      lastStartedAt: null,
+    };
+    let job: PeriodicJob;
+
+    try {
+      await this.refuseWhileARunGoesOn(lock, acquired.status === 'unavailable');
+      job = await this.reopenRun(run.date);
+    } catch (error) {
+      await lock?.release();
+      throw error;
+    }
+
+    this.processRun(run)
+      .catch(error =>
+        this.logger.error("Running today's periodic job again failed:", error)
+      )
+      .finally(() => lock?.release());
+
+    return job;
+  }
+
+  private async reopenRun(runDate: Date) {
+    const now = new Date();
+
+    this.runningJob = await this.prismaService.periodicJob.upsert({
+      where: { date: toDbDate(runDate) },
+      create: { date: toDbDate(runDate), executionTime: now },
+      update: {
+        executionTime: now,
+        successfullyFinished: null,
+        finishedWithError: null,
+        error: null,
+      },
+    });
+
+    return this.runningJob;
+  }
+
+  /** Without Dragonfly, the job log is all that tells a run is going on. */
+  private async refuseWhileARunGoesOn(
     lock: HeldLock | undefined,
     unavailable: boolean
-  ): Promise<RetryRun> {
+  ) {
     if (!lock) {
       if (unavailable) {
         throw new ServiceUnavailableException(
@@ -247,6 +347,13 @@ export class PeriodicJobService {
         );
       }
     }
+  }
+
+  private async findRunToRetry(
+    lock: HeldLock | undefined,
+    unavailable: boolean
+  ): Promise<RetryRun> {
+    await this.refuseWhileARunGoesOn(lock, unavailable);
 
     const [failedRun] = await this.getOutstandingRuns(new Date(), !!lock);
 
@@ -287,32 +394,40 @@ export class PeriodicJobService {
     try {
       this.logger.log('Executing periodic job...');
       this.logger.log('Processing custom mails...');
-      await this.sendCustomSubscriptionEmails(periodicJobRunObject);
-      this.logger.log('Processing invoice state changes...');
-      await this.checkStateOfOpenInvoices();
-      this.logger.log('Processing invoice creation...');
-      await this.createMissingInvoicesForActiveSubscriptions(
-        periodicJobRunObject
+      await this.step('customMails', () =>
+        this.sendCustomSubscriptionEmails(periodicJobRunObject)
       );
-      this.logger.log('Processing invoice letters still missing...');
-      await this.postMissingInvoiceLetters(periodicJobRunObject.date);
+      this.logger.log('Processing invoice state changes...');
+      await this.step('invoiceStates', () => this.checkStateOfOpenInvoices());
+      this.logger.log('Processing invoice creation...');
+      await this.step('invoiceCreation', () =>
+        this.createMissingInvoicesForActiveSubscriptions(periodicJobRunObject)
+      );
+      this.logger.log('Processing invoice deliveries still missing...');
+      await this.step('invoiceLetters', () =>
+        this.postMissingInvoiceDeliveries(periodicJobRunObject.date)
+      );
       this.logger.log('Processing expiry of payment method changes...');
       // by the clock, not the run date: a catch-up run of an earlier day must
       // not keep changes alive that have expired since
-      await this.paymentMethodChanges.expirePending(new Date());
+      await this.step('paymentMethodChanges', () =>
+        this.paymentMethodChanges.expirePending(new Date())
+      );
       this.logger.log('Processing charge of invoices...');
-      await this.chargeUnpaidDueInvoices(periodicJobRunObject);
+      await this.step('charging', () =>
+        this.chargeUnpaidDueInvoices(periodicJobRunObject)
+      );
       this.logger.log(
         'Processing deactivation of subscriptions with unpaid invoice...'
       );
-      await this.deactivateSubscriptionsWithUnpaidInvoices(
-        periodicJobRunObject
+      await this.step('deactivationUnpaid', () =>
+        this.deactivateSubscriptionsWithUnpaidInvoices(periodicJobRunObject)
       );
       this.logger.log(
         'Processing deactivation of subscriptions with which are not auto renewed...'
       );
-      await this.deactivateExpiredNotAutoRenewSubscriptions(
-        periodicJobRunObject
+      await this.step('deactivationNotRenewed', () =>
+        this.deactivateExpiredNotAutoRenewSubscriptions(periodicJobRunObject)
       );
       this.logger.log('Periodic job successfully finished.');
     } catch (e) {
@@ -321,6 +436,84 @@ export class PeriodicJobService {
     }
 
     await this.markJobSuccessful();
+  }
+
+  /** A busy night (all yearly subscriptions at once) is where memory shows. */
+  private logMemory(step: string) {
+    const { rss, heapUsed, external } = process.memoryUsage();
+    const mib = (bytes: number) => `${Math.round(bytes / 1024 / 1024)} MiB`;
+
+    this.logger.log(
+      `${step} · rss ${mib(rss)} · heap ${mib(heapUsed)} · external ${mib(external)}`
+    );
+  }
+
+  /** Runs one of the job's own steps and notes it on the running job. */
+  private async step(key: CoreStepKey, run: () => Promise<unknown>) {
+    const startedAt = new Date();
+
+    try {
+      await run();
+    } catch (error) {
+      await this.saveStep(this.runningJob?.id, {
+        key,
+        status: 'error',
+        error: describeError(error),
+        startedAt,
+        finishedAt: new Date(),
+      });
+      throw error;
+    }
+
+    await this.saveStep(this.runningJob?.id, {
+      key,
+      status: 'ok',
+      startedAt,
+      finishedAt: new Date(),
+    });
+  }
+
+  /**
+   * Notes a step of the night that runs after the job (the syncs) on the
+   * newest job, so the log shows the whole night in one place.
+   */
+  async recordNightStep(step: NightStepRecord) {
+    const job = await this.prismaService.periodicJob.findFirst({
+      orderBy: { date: 'desc' },
+      select: { id: true },
+    });
+
+    if (!job) {
+      this.logger.warn(`No periodic job to note step ${step.key} on`);
+      return;
+    }
+
+    await this.saveStep(job.id, step);
+  }
+
+  /** The log is a report: failing to write it never fails the work itself. */
+  private async saveStep(
+    periodicJobId: string | undefined,
+    { counts, error, ...step }: NightStepRecord
+  ) {
+    if (!periodicJobId) {
+      return;
+    }
+
+    try {
+      await this.prismaService.periodicJobStep.create({
+        data: {
+          periodicJobId,
+          ...step,
+          ...(counts ? { counts: counts as Prisma.InputJsonObject } : {}),
+          ...(error ? { error } : {}),
+        },
+      });
+    } catch (saveError) {
+      this.logger.error(
+        `Could not note step ${step.key} on the job log: ${describeError(saveError)}`
+      );
+    }
   }
 
   private async inContext<T>(context: string, run: () => Promise<T>) {
@@ -402,7 +595,7 @@ export class PeriodicJobService {
     }
   }
 
-  private async checkStateOfOpenInvoices() {
+  public async checkStateOfOpenInvoices() {
     const invoices = await this.subscriptionController.findAllOpenInvoices();
     for (const invoice of invoices) {
       await this.inContext(
@@ -410,6 +603,27 @@ export class PeriodicJobService {
         () => this.checkInvoiceState(invoice)
       );
     }
+  }
+
+  /**
+   * Runs the invoice creation and charging steps of the daily periodic job
+   * for the current date, without touching the periodic job run log. Intended
+   * for manually triggered testing; deactivation and custom mail steps are
+   * deliberately skipped.
+   */
+  public async forceCreateAndChargeInvoices() {
+    const periodicJobRunObject: PeriodicJobRunObject = {
+      isRetry: false,
+      date: startOfDay(new Date()),
+    };
+
+    this.logger.log('Force run: processing invoice creation...');
+    await this.createMissingInvoicesForActiveSubscriptions(
+      periodicJobRunObject
+    );
+    this.logger.log('Force run: processing charge of invoices...');
+    await this.chargeUnpaidDueInvoices(periodicJobRunObject);
+    this.logger.log('Force run finished.');
   }
 
   private async createMissingInvoicesForActiveSubscriptions(
@@ -422,11 +636,21 @@ export class PeriodicJobService {
           periodicJobRunObject.date
         )
       );
-    for (const subscription of activeSubscriptionsWithoutInvoice) {
+    const total = activeSubscriptionsWithoutInvoice.length;
+    this.logMemory(`Creating ${total} invoices`);
+
+    for (const [
+      index,
+      subscription,
+    ] of activeSubscriptionsWithoutInvoice.entries()) {
       await this.inContext(
         `Creating the invoice for subscription ${subscription.id} failed`,
         () => this.createInvoice(periodicJobRunObject, subscription)
       );
+
+      if ((index + 1) % MEMORY_LOG_EVERY === 0 || index + 1 === total) {
+        this.logMemory(`Created ${index + 1} of ${total} invoices`);
+      }
     }
   }
 
@@ -579,7 +803,8 @@ export class PeriodicJobService {
     const outcome = await this.invoiceDelivery.createRemoteInvoice(
       subscriptionToCreateInvoice,
       invoice,
-      creationEvent
+      creationEvent,
+      periodicJobRunObject.date
     );
 
     if ('skip' in outcome) {
@@ -598,42 +823,62 @@ export class PeriodicJobService {
   }
 
   /**
-   * Post the invoice letter to every reader in letter mode whose open invoice
-   * has not been posted yet: the print vendor refused it (a rejected log entry
-   * sits under the identifier a retried run skips), its pdf could not be
-   * fetched that night, or the invoice went out by email before the reader
-   * was moved to letters. Nothing else carries the invoice to them.
+   * Deliver every open invoice whose invoice-creation mail or letter is still
+   * owed. A reader in letter mode gets the letter posted when the print vendor
+   * refused it (a rejected log entry sits under the identifier a retried run
+   * skips), its pdf could not be fetched that night, or the invoice went out
+   * by email before the reader was moved to letters. Any other reader gets the
+   * mail with the pdf when the invoice's provider leaves delivery to
+   * we.publish and the mail was held back for a missing pdf (a deferred log
+   * entry) or refused. Nothing else carries the invoice to them.
    */
-  public async postMissingInvoiceLetters(runDate: Date) {
+  public async postMissingInvoiceDeliveries(runDate: Date) {
     const letterSender = this.mailContext.letterSender;
+    const letterReaders = new Set<string>();
 
-    if (!letterSender || !(await letterSender.isConfigured())) {
-      return;
+    if (letterSender && (await letterSender.isConfigured())) {
+      const readers = await this.prismaService.userDeliveryPreference.findMany({
+        where: { channel: MailChannel.letter },
+        select: { userId: true },
+      });
+
+      readers.forEach(({ userId }) => letterReaders.add(userId));
     }
 
-    const readers = await this.prismaService.userDeliveryPreference.findMany({
-      where: { channel: MailChannel.letter },
-      select: { userId: true },
-    });
-    const userIds = new Set(readers.map(({ userId }) => userId));
+    const mailsOwed =
+      await this.invoiceDelivery.anyProviderLeavesDeliveryToUs();
 
-    if (!userIds.size) {
+    if (!letterReaders.size && !mailsOwed) {
       return;
     }
 
     const invoices = (
       await this.subscriptionController.findAllOpenInvoices()
-    ).filter(invoice => userIds.has(invoice.subscription?.user?.id ?? ''));
+    ).filter(
+      invoice =>
+        mailsOwed || letterReaders.has(invoice.subscription?.user?.id ?? '')
+    );
 
     for (const invoice of invoices) {
       await this.inContext(
-        `Posting the invoice letter for invoice ${invoice.id} failed`,
-        () => this.postInvoiceLetter(runDate, invoice)
+        `Delivering the missing invoice ${invoice.id} failed`,
+        () =>
+          this.deliverMissingInvoice(
+            runDate,
+            invoice,
+            letterReaders.has(invoice.subscription?.user?.id ?? ''),
+            mailsOwed
+          )
       );
     }
   }
 
-  private async postInvoiceLetter(runDate: Date, invoice: OpenInvoice) {
+  private async deliverMissingInvoice(
+    runDate: Date,
+    invoice: OpenInvoice,
+    inLetterMode: boolean,
+    mailsOwed: boolean
+  ) {
     const subscription = invoice.subscription;
 
     if (!subscription?.user) {
@@ -650,14 +895,48 @@ export class PeriodicJobService {
       })
     ).find(action => action.type === SubscriptionEvent.INVOICE_CREATION);
 
-    if (!creationEvent?.mailTemplateId || !creationEvent.sendAsLetter) {
+    if (!creationEvent?.mailTemplateId) {
       return;
     }
 
+    const letterRecipient =
+      inLetterMode && creationEvent.sendAsLetter ?
+        await resolveLetterRecipient({
+          prisma: this.prismaService,
+          letterSender: this.mailContext.letterSender,
+          recipient: subscription.user,
+          mailTemplateId: creationEvent.mailTemplateId,
+          asLetter: true,
+          withPaymentSlip: true,
+          logger: this.logger,
+        })
+      : null;
+
+    if (letterRecipient) {
+      return this.postInvoiceLetter(
+        runDate,
+        invoice,
+        creationEvent,
+        letterRecipient
+      );
+    }
+
+    if (mailsOwed) {
+      return this.mailOwedInvoice(runDate, invoice, creationEvent);
+    }
+  }
+
+  private async postInvoiceLetter(
+    runDate: Date,
+    invoice: OpenInvoice,
+    creationEvent: Action,
+    letterRecipient: LetterRecipient
+  ) {
+    const user = invoice.subscription!.user!;
     const attempts = await this.prismaService.mailLog.findMany({
       where: {
-        recipientID: subscription.user.id,
-        mailTemplateId: creationEvent.mailTemplateId,
+        recipientID: user.id,
+        mailTemplateId: creationEvent.mailTemplateId!,
         channel: MailChannel.letter,
         sentDate: { gte: invoice.createdAt },
       },
@@ -668,7 +947,7 @@ export class PeriodicJobService {
       return;
     }
 
-    if (attempts.length >= INVOICE_LETTER_ATTEMPTS) {
+    if (attempts.length >= INVOICE_DELIVERY_ATTEMPTS) {
       this.logger.error(
         `The invoice letter for invoice ${invoice.id} was refused ${attempts.length} times and is not posted again`
       );
@@ -676,49 +955,107 @@ export class PeriodicJobService {
       return;
     }
 
-    const letterRecipient = await resolveLetterRecipient({
-      prisma: this.prismaService,
-      letterSender: this.mailContext.letterSender,
-      recipient: subscription.user,
-      mailTemplateId: creationEvent.mailTemplateId,
-      asLetter: true,
-      withPaymentSlip: true,
-      logger: this.logger,
-    });
+    const attachment = await this.renderOwedInvoice(invoice);
 
-    if (!letterRecipient) {
-      return;
-    }
-
-    let letterAttachment: LetterAttachment | undefined;
-
-    try {
-      letterAttachment =
-        await this.invoiceDelivery.renderRemoteInvoice(invoice);
-    } catch (error) {
-      // Another night, rather than a letter without the invoice; the
-      // provider's outage must not take the run down either.
-      this.logger.warn(
-        `Invoice ${invoice.id} is not posted tonight, the payment provider could not render it: ${describeError(error)}`
-      );
-
+    if (attachment === null) {
       return;
     }
 
     // Never posted and nothing to print: an invoice the editor created, or a
     // provider without invoices of its own.
-    if (!attempts.length && !letterAttachment) {
+    if (!attempts.length && !attachment) {
       return;
     }
 
     await this.sendTemplateMail(
       creationEvent,
-      subscription.user,
+      user,
       false,
-      { subscriptionToCreateInvoice: subscription, invoice },
+      { subscriptionToCreateInvoice: invoice.subscription, invoice },
       runDate,
-      { letterRecipient, letterAttachment }
+      { letterRecipient, attachment }
     );
+  }
+
+  /**
+   * The invoice-creation mail with the pdf, for an invoice whose provider
+   * leaves delivery to we.publish. Owed only when it was held back for a
+   * missing pdf or refused, and nothing got through on either channel since —
+   * a checkout's invoice, which the provider emailed, has no entry at all.
+   */
+  private async mailOwedInvoice(
+    runDate: Date,
+    invoice: OpenInvoice,
+    creationEvent: Action
+  ) {
+    if (!(await this.invoiceDelivery.leavesDeliveryToUs(invoice))) {
+      return;
+    }
+
+    const user = invoice.subscription!.user!;
+    const attempts = await this.prismaService.mailLog.findMany({
+      where: {
+        recipientID: user.id,
+        mailTemplateId: creationEvent.mailTemplateId!,
+        sentDate: { gte: invoice.createdAt },
+      },
+      select: { state: true },
+    });
+
+    const owed = attempts.filter(
+      ({ state }) =>
+        state === MailLogState.deferred || state === MailLogState.rejected
+    );
+
+    if (!attempts.length || owed.length < attempts.length) {
+      return;
+    }
+
+    const refusals = owed.filter(
+      ({ state }) => state === MailLogState.rejected
+    ).length;
+
+    if (refusals >= INVOICE_DELIVERY_ATTEMPTS) {
+      this.logger.error(
+        `The invoice mail for invoice ${invoice.id} was refused ${refusals} times and is not sent again`
+      );
+
+      return;
+    }
+
+    const attachment = await this.renderOwedInvoice(invoice);
+
+    if (!attachment) {
+      return;
+    }
+
+    await this.sendTemplateMail(
+      creationEvent,
+      user,
+      false,
+      { subscriptionToCreateInvoice: invoice.subscription, invoice },
+      runDate,
+      { letterRecipient: null, attachment }
+    );
+  }
+
+  /**
+   * The provider's pdf of an owed invoice; `null` when the provider cannot
+   * render it tonight — another night rather than a delivery without the
+   * invoice, and the provider's outage must not take the run down either.
+   */
+  private async renderOwedInvoice(
+    invoice: OpenInvoice
+  ): Promise<MailAttachment | undefined | null> {
+    try {
+      return await this.invoiceDelivery.renderRemoteInvoice(invoice);
+    } catch (error) {
+      this.logger.warn(
+        `Invoice ${invoice.id} is not delivered tonight, the payment provider could not render it: ${describeError(error)}`
+      );
+
+      return null;
+    }
   }
 
   private async chargeInvoice(
@@ -894,6 +1231,17 @@ export class PeriodicJobService {
     this.runningJob = claimed;
     this.logger.warn('Retry failed job!');
 
+    // The retry runs every step again and notes them anew.
+    try {
+      await this.prismaService.periodicJobStep.deleteMany({
+        where: { periodicJobId: claimed.id, key: { in: [...CORE_STEP_KEYS] } },
+      });
+    } catch (error) {
+      this.logger.error(
+        `Could not clear the failed try's steps: ${describeError(error)}`
+      );
+    }
+
     return claimed;
   }
 
@@ -1060,7 +1408,7 @@ export class PeriodicJobService {
     isRetry: boolean,
     optionalData: Record<string, any>,
     periodicJobRunDate: Date,
-    paper?: PaperSide
+    delivery?: DeliverySide
   ) {
     return this.invoiceDelivery.sendFlowMail(
       action,
@@ -1068,7 +1416,7 @@ export class PeriodicJobService {
       isRetry,
       optionalData,
       periodicJobRunDate,
-      paper
+      delivery
     );
   }
 }

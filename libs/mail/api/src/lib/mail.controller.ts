@@ -8,6 +8,7 @@ import {
   User,
 } from '@prisma/client';
 import { v7 as uuidv7 } from 'uuid';
+import { MailAttachment } from './mail-attachment';
 import { MailContext } from './mail-context';
 import { PurlOrigin, templateUsesJwt, templateUsesPurl } from './mail-data';
 import { MailProviderRecipientError } from './mail-provider/mail-provider.interface';
@@ -15,11 +16,7 @@ import {
   qualityTypeForRejectReason,
   recordEmailQualitySafely,
 } from './email-quality-recorder';
-import {
-  LetterAttachment,
-  LetterDeliveryError,
-  LetterRecipient,
-} from './letter-sender';
+import { LetterDeliveryError, LetterRecipient } from './letter-sender';
 import { resolveLetterRecipient } from './resolve-letter-recipient';
 
 export enum mailLogType {
@@ -79,10 +76,11 @@ export type MailControllerConfig = {
    */
   letterRecipient?: LetterRecipient | null;
   /**
-   * A pdf printed after the template, e.g. the provider's invoice with its
-   * payment slip. Nothing for a mail: the provider emails that itself.
+   * A ready-made file that goes with the template on either channel, e.g. the
+   * payment provider's invoice pdf: printed after the template in a letter,
+   * attached after the template's own documents in a mail.
    */
-  letterAttachment?: LetterAttachment;
+  attachment?: MailAttachment;
 };
 
 /**
@@ -243,6 +241,9 @@ export class MailController {
           recipient: recipientEmail,
           data: await this.buildData(),
           withAttachments: !SENT_WITHOUT_ATTACHMENTS.has(this.config.mailType),
+          ...(this.config.attachment && {
+            attachments: [this.config.attachment],
+          }),
         }
       ));
     } catch (error) {
@@ -285,6 +286,21 @@ export class MailController {
       subject,
       null,
       providerMessageID
+    );
+  }
+
+  /**
+   * Note that this mail is held back and why, without sending anything — e.g.
+   * the invoice-creation mail whose invoice pdf the payment provider could
+   * not render yet. The entry tells the editor why the reader is waiting and
+   * tells the night sweep the mail is still owed.
+   */
+  public async recordDeferred(reason: string): Promise<void> {
+    await this.writeLog(
+      this.config.mailLogId ?? uuidv7(),
+      MailLogState.deferred,
+      null,
+      reason
     );
   }
 
@@ -379,8 +395,11 @@ export class MailController {
           mailIdentifier: this.generateMailIdentifier(),
           type: MAIL_LOG_TYPE_MAP[this.config.mailType],
         },
-        ...(this.config.letterAttachment && {
-          attachment: this.config.letterAttachment,
+        ...(this.config.attachment && {
+          attachment: {
+            content: this.config.attachment.content,
+            name: this.config.attachment.filename,
+          },
         }),
       });
     } catch (error) {

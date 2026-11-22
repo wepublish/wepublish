@@ -4,19 +4,28 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Prisma, PrismaClient, Subscription, User } from '@prisma/client';
+import {
+  PaymentState,
+  Prisma,
+  PrismaClient,
+  Subscription,
+  User,
+} from '@prisma/client';
 import {
   getMaxTake,
   graphQLSortOrderToPrisma,
   mapDateFilterToPrisma,
+  monthlyAmountFromPeriodAmount,
   PrimeDataLoader,
   SortOrder,
 } from '@wepublish/utils/api';
 import { SubscriptionDataloader } from './subscription.dataloader';
 import {
   CancelPublicSubscriptionInput,
+  CorrectSubscriptionPeriodArgs,
   CreatePublicSubscriptionInput,
   ImportPublicSubscriptionInput,
+  UpdateSubscriptionPaymentMethodArgs,
   SubscriptionFilter,
   SubscriptionListArgs,
   SubscriptionsCSVArgs,
@@ -202,9 +211,87 @@ export class SubscriptionService {
 
   @PrimeDataLoader(SubscriptionDataloader)
   async createSubscription(input: CreatePublicSubscriptionInput) {
-    const { subscription } = await this.memberContext.createSubscription(input);
+    const { subscription, invoice } =
+      await this.memberContext.createSubscription(input);
 
-    return subscription;
+    return (
+      (await this.settleWithoutCharge(subscription, invoice)) ?? subscription
+    );
+  }
+
+  /**
+   * A subscription an editor creates comes with an open invoice. On a payment
+   * provider that never charges nobody would ever pay it and the subscription
+   * would be deactivated as unpaid — so it is settled at once, the way the
+   * provider settles it for a reader in the checkout. Returns the subscription
+   * as paid, or nothing when the provider is one that charges.
+   */
+  private async settleWithoutCharge(
+    subscription: SubscriptionWithRelations,
+    invoice: InvoiceWithItems
+  ) {
+    const paymentMethod = await this.prisma.paymentMethod.findUnique({
+      where: { id: subscription.paymentMethodID },
+    });
+    const paymentProvider = this.paymentMethodConfig.paymentProviders.find(
+      provider => provider.id === paymentMethod?.paymentProviderID
+    );
+
+    if (!paymentMethod || !paymentProvider?.settlesWithoutCharge) {
+      return;
+    }
+
+    const period = await this.prisma.subscriptionPeriod.findFirst({
+      where: { invoiceID: invoice.id },
+    });
+
+    if (!period) {
+      return;
+    }
+
+    const payment = await this.prisma.payment.create({
+      data: {
+        paymentMethodID: paymentMethod.id,
+        invoiceID: invoice.id,
+        state: PaymentState.created,
+      },
+    });
+    const intent = await paymentProvider.createIntent({
+      paymentID: payment.id,
+      invoice,
+      currency: invoice.currency,
+      saveCustomer: false,
+      backgroundTask: true,
+    });
+
+    await this.prisma.payment.update({
+      where: { id: payment.id },
+      data: {
+        state: intent.state,
+        intentID: intent.intentID,
+        intentData: intent.intentData,
+        intentSecret: intent.intentSecret,
+        paymentData: intent.paymentData,
+      },
+    });
+
+    if (intent.state !== PaymentState.paid) {
+      return;
+    }
+
+    const [, paidSubscription] = await this.prisma.$transaction([
+      this.prisma.invoice.update({
+        where: { id: invoice.id },
+        data: { paidAt: intent.paidAt ?? new Date() },
+      }),
+      this.prisma.subscription.update({
+        where: { id: subscription.id },
+        data: { paidUntil: period.endsAt },
+        include: { deactivation: true, periods: true },
+      }),
+    ]);
+
+    return paidSubscription;
   }
 
   @PrimeDataLoader(SubscriptionDataloader)
@@ -246,6 +333,48 @@ export class SubscriptionService {
       deactivationReason: reason,
       skipMail,
     });
+  }
+
+  /**
+   * Moves a subscription to another payment method and changes nothing else,
+   * for data corrections (e.g. after an import). Unlike updateSubscription it
+   * also takes deactivated subscriptions and never touches invoices, periods
+   * or the payment provider. Only moves it while it is still on
+   * `fromPaymentMethodId`; returns whether it did. The same call with the
+   * payment methods swapped undoes it.
+   */
+  async updateSubscriptionPaymentMethod({
+    subscriptionId,
+    fromPaymentMethodId,
+    toPaymentMethodId,
+  }: UpdateSubscriptionPaymentMethodArgs) {
+    if (fromPaymentMethodId === toPaymentMethodId) {
+      throw new BadRequestException(
+        'The subscription already uses this payment method'
+      );
+    }
+
+    // inactive payment methods are fine: subscriptions keep using them
+    for (const id of [fromPaymentMethodId, toPaymentMethodId]) {
+      if (!(await this.prisma.paymentMethod.findUnique({ where: { id } }))) {
+        throw new NotFoundException('PaymentMethod', id);
+      }
+    }
+
+    if (
+      !(await this.prisma.subscription.findUnique({
+        where: { id: subscriptionId },
+      }))
+    ) {
+      throw new NotFoundException('Subscription', subscriptionId);
+    }
+
+    const { count } = await this.prisma.subscription.updateMany({
+      where: { id: subscriptionId, paymentMethodID: fromPaymentMethodId },
+      data: { paymentMethodID: toPaymentMethodId },
+    });
+
+    return count === 1;
   }
 
   @PrimeDataLoader(SubscriptionDataloader)
@@ -290,6 +419,103 @@ export class SubscriptionService {
     }
 
     return reactivatedSubscription;
+  }
+
+  /**
+   * Data correction for a subscription sold or imported with the wrong terms,
+   * e.g. a three-issue trial that runs as a year. The period keeps its start,
+   * its invoice and its price and gets the periodicity and end it should have
+   * had; the subscription follows, so the next renewal and everything that
+   * goes by the period (the print export above all) see the same terms.
+   *
+   * Only for the latest period, paid, of a running subscription without an
+   * open invoice: nothing here creates, cancels or sends anything.
+   */
+  @PrimeDataLoader(SubscriptionDataloader)
+  async correctSubscriptionPeriod({
+    subscriptionId,
+    periodId,
+    paymentPeriodicity,
+    endsAt,
+  }: CorrectSubscriptionPeriodArgs) {
+    const subscription = await this.prisma.subscription.findUnique({
+      where: { id: subscriptionId },
+      include: { deactivation: true, periods: true, invoices: true },
+    });
+
+    if (!subscription) {
+      throw new NotFoundException(
+        `Subscription with id ${subscriptionId} was not found.`
+      );
+    }
+
+    if (subscription.deactivation) {
+      throw new BadRequestException(
+        'The period of a deactivated subscription can not be corrected.'
+      );
+    }
+
+    const period = subscription.periods.find(({ id }) => id === periodId);
+
+    if (!period) {
+      throw new NotFoundException(
+        `Period ${periodId} does not belong to subscription ${subscriptionId}.`
+      );
+    }
+
+    if (subscription.periods.some(other => other.endsAt > period.endsAt)) {
+      throw new BadRequestException(
+        'Only the latest period of a subscription can be corrected.'
+      );
+    }
+
+    const invoice = subscription.invoices.find(
+      ({ id }) => id === period.invoiceID
+    );
+
+    if (!invoice?.paidAt || invoice.canceledAt) {
+      throw new BadRequestException('Only a paid period can be corrected.');
+    }
+
+    if (
+      subscription.invoices.some(
+        ({ paidAt, canceledAt }) => !paidAt && !canceledAt
+      )
+    ) {
+      throw new BadRequestException(
+        'The subscription has an open invoice; settle or cancel it first.'
+      );
+    }
+
+    if (endsAt <= period.startsAt) {
+      throw new BadRequestException('The period has to end after it starts.');
+    }
+
+    // paidUntil follows only where it was this period's end; an editor may
+    // have set it to something else on purpose.
+    const paidUntilWasPeriodEnd =
+      subscription.paidUntil?.getTime() === period.endsAt.getTime();
+
+    const [, corrected] = await this.prisma.$transaction([
+      this.prisma.subscriptionPeriod.update({
+        where: { id: period.id },
+        data: { paymentPeriodicity, endsAt },
+      }),
+      this.prisma.subscription.update({
+        where: { id: subscription.id },
+        data: {
+          paymentPeriodicity,
+          monthlyAmount: monthlyAmountFromPeriodAmount(
+            period.amount,
+            paymentPeriodicity
+          ),
+          ...(paidUntilWasPeriodEnd ? { paidUntil: endsAt } : {}),
+        },
+        include: { deactivation: true, periods: true },
+      }),
+    ]);
+
+    return corrected;
   }
 
   async deleteSubscription(id: string) {

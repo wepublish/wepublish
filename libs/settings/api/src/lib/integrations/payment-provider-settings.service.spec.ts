@@ -174,6 +174,78 @@ describe('PaymentProviderSettingsService', () => {
     });
   });
 
+  describe('bexio test mailbox', () => {
+    const env = process.env;
+
+    afterEach(() => {
+      process.env = env;
+    });
+
+    const update = (bexio_testMailbox: string | null) => {
+      vi.spyOn(prisma.settingPaymentProvider, 'findUnique').mockResolvedValue(
+        provider({ id: 'bexio' })
+      );
+
+      return service.updatePaymentProviderSetting({
+        id: 'bexio',
+        bexio_testMailbox,
+      } as never);
+    };
+
+    test('can be set outside of production', async () => {
+      process.env = { ...env, APP_ENVIRONMENT: 'review' };
+      const save = vi
+        .spyOn(prisma.settingPaymentProvider, 'update')
+        .mockResolvedValue(provider({ id: 'bexio' }));
+
+      await update('bexio@test.example');
+
+      expect(save.mock.calls[0][0].data).toMatchObject({
+        bexio_testMailbox: 'bexio@test.example',
+      });
+    });
+
+    test('cannot be set on production', async () => {
+      process.env = { ...env, APP_ENVIRONMENT: 'production' };
+      const save = vi.spyOn(prisma.settingPaymentProvider, 'update');
+
+      await expect(update('bexio@test.example')).rejects.toThrow(/production/);
+      expect(save).not.toHaveBeenCalled();
+    });
+
+    test('cannot be set on a deployment without APP_ENVIRONMENT', async () => {
+      process.env = { ...env, APP_ENVIRONMENT: undefined };
+
+      await expect(update('bexio@test.example')).rejects.toThrow(/production/);
+    });
+
+    test('can be cleared on production', async () => {
+      process.env = { ...env, APP_ENVIRONMENT: 'production' };
+      const save = vi
+        .spyOn(prisma.settingPaymentProvider, 'update')
+        .mockResolvedValue(provider({ id: 'bexio' }));
+
+      await update(null);
+
+      expect(save).toHaveBeenCalled();
+    });
+
+    test('cannot be created with one on production', async () => {
+      process.env = { ...env, APP_ENVIRONMENT: 'production' };
+      const upsert = vi.spyOn(prisma.settingPaymentProvider, 'upsert');
+
+      await expect(
+        service.createPaymentProviderSetting({
+          id: 'bexio',
+          name: 'bexio',
+          type: PaymentProviderType.BEXIO,
+          bexio_testMailbox: 'bexio@test.example',
+        } as never)
+      ).rejects.toThrow(/production/);
+      expect(upsert).not.toHaveBeenCalled();
+    });
+  });
+
   test('asks for the providers to be rebuilt after a change', async () => {
     vi.spyOn(prisma.settingPaymentProvider, 'findUnique').mockResolvedValue(
       provider()

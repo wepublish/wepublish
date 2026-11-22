@@ -18,7 +18,8 @@ import {
 } from './pingen-letter-provider';
 
 vi.mock('pingen2-sdk-js', async () => {
-  const actual = await vi.importActual<object>('pingen2-sdk-js');
+  const actual =
+    await vi.importActual<typeof import('pingen2-sdk-js')>('pingen2-sdk-js');
 
   return {
     ...actual,
@@ -116,7 +117,8 @@ describe('PingenLetterProvider', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    // Constructed with `new`, so these must be `function`s, not arrows.
+    // The provider calls these with `new`; Vitest only allows that for a
+    // `function` implementation, not an arrow function.
     (OAuth as unknown as Mock).mockImplementation(function () {
       return oauthMock;
     });

@@ -67,6 +67,22 @@ enum AnalyticsProviderType {
   UMAMI
 }
 
+"""
+Memory and uptime of the API process that answers. Load tests read it while the periodic job runs: a new hostname or a smaller uptime means the pod restarted.
+"""
+type ApiProcessStats {
+  """Memory outside the V8 heap, e.g. the buffers of pdfs and attachments."""
+  externalBytes: Float!
+  heapUsedBytes: Float!
+
+  """The pod's name."""
+  hostname: String!
+
+  """Resident memory, the number the pod's memory limit is about."""
+  rssBytes: Float!
+  uptimeSeconds: Float!
+}
+
 type ApiToken {
   createdAt: DateTime!
 
@@ -592,6 +608,9 @@ interface BaseToken {
   id: String!
   modifiedAt: DateTime!
   name: String!
+
+  """The user roles whose permissions a request with this token gets."""
+  roleIDs: [String!]!
 }
 
 interface BaseUser {
@@ -1443,6 +1462,25 @@ type DeliverySuggestionEmailQuality {
   since: DateTime!
 }
 
+input DeliverySuggestionFilter {
+  """Suggested since, from."""
+  createdFrom: DateTime
+
+  """Suggested since, to."""
+  createdTo: DateTime
+
+  """Email status since, from."""
+  emailSinceFrom: DateTime
+
+  """Email status since, to."""
+  emailSinceTo: DateTime
+
+  """
+  Any of these reasons: placeholderEmail, the evidence type behind the email status (e.g. hardBounce, login), or none.
+  """
+  reasons: [String!]
+}
+
 """toLetter: move to printed letters. toMail: move back to mail."""
 enum DeliverySuggestionKind {
   toLetter
@@ -1459,6 +1497,13 @@ type DeliverySuggestionModel {
   """Why, e.g. emailQuality:dead or placeholderEmail."""
   reason: String!
   user: MailLogRecipient!
+}
+
+type DeliverySuggestionReasonCount {
+  count: Int!
+
+  """A reason as DeliverySuggestionFilter.reasons takes it."""
+  reason: String!
 }
 
 type DeliverySuggestionRecomputeResult {
@@ -2304,6 +2349,20 @@ input ImportArticleOptions {
   importAuthors: Boolean
   importContentImages: Boolean
   importTags: Boolean
+}
+
+input ImportSubscriptionPeriodInput {
+  """Period amount in cents."""
+  amount: Int!
+  endsAt: DateTime!
+  invoiceDescription: String
+
+  """Whether the invoice for this period was paid."""
+  paid: Boolean!
+
+  """Payment date for a paid period; defaults to the period start."""
+  paidAt: DateTime
+  startsAt: DateTime!
 }
 
 input ImportedEventFilter {
@@ -3783,8 +3842,10 @@ type Mutation {
   """
   computePrintIssueRun(id: String!): PrintIssueRun!
 
-  """Apply every open suggestion of a direction"""
-  confirmAllDeliverySuggestions(kind: DeliverySuggestionKind!): DeliverySuggestionConfirmAllResult!
+  """
+  Apply every open suggestion of a direction, or only those the filter keeps
+  """
+  confirmAllDeliverySuggestions(filter: DeliverySuggestionFilter, kind: DeliverySuggestionKind!): DeliverySuggestionConfirmAllResult!
 
   """
   Confirms that the manual action required by a changelog entry has been completed. Requires the permission to update settings.
@@ -3803,6 +3864,25 @@ type Mutation {
   Confirms a notification for the whole instance, recording who confirmed it. Requires authentication.
   """
   confirmNotification(itemId: String!, source: NotificationSource!): NotificationConfirmation!
+
+  """
+  Data correction: gives the latest, paid period of a running subscription the periodicity and end it should have had (e.g. a trial that runs as a year), and the subscription the same periodicity. The price of the period stays; paidUntil follows when it was that period's end. Creates, cancels and sends nothing; refuses a subscription with an open invoice.
+  """
+  correctSubscriptionPeriod(
+    """The last day the period really covers."""
+    endsAt: DateTime!
+
+    """
+    The periodicity the period was really sold with. The subscription gets it too.
+    """
+    paymentPeriodicity: PaymentPeriodicity!
+
+    """
+    The period to correct. It has to be the latest one of the subscription.
+    """
+    periodId: String!
+    subscriptionId: String!
+  ): PublicSubscription!
 
   """Creates a new AI provider setting."""
   createAISetting(apiKey: String, id: String!, name: String, systemPrompt: String, type: AIProviderType!, webhookEndpointSecret: String): SettingAIProvider!
@@ -3823,6 +3903,11 @@ type Mutation {
     """Base url of the API, used for self hosted instances."""
     url: String
   ): SettingAnalyticsProvider!
+
+  """
+  Runs the invoice creation and charging steps of the daily periodic job on demand, without affecting the job run log. Requires an editor session and is additionally password protected.
+  """
+  createAndChargeInvoices(password: String!): Boolean!
 
   """
   Creates an api token and returns its secret. The secret is shown once and cannot be retrieved again.
@@ -3960,7 +4045,7 @@ type Mutation {
   createPaymentMethod(active: Boolean!, description: String!, gracePeriod: Int!, imageId: String, name: String!, paymentProviderID: String!, slug: Slug!): PaymentMethod!
 
   """Creates a new payment provider setting."""
-  createPaymentProviderSetting(apiKey: String, bexio_accountId: Float, bexio_contactSync: Boolean, bexio_countryId: Float, bexio_invoiceMailBodyNewMembership: String, bexio_invoiceMailBodyRenewalMembership: String, bexio_invoiceMailSubjectNewMembership: String, bexio_invoiceMailSubjectRenewalMembership: String, bexio_invoiceTemplateNewMembership: String, bexio_invoiceTemplateRenewalMembership: String, bexio_invoiceTitleNewMembership: String, bexio_invoiceTitleRenewalMembership: String, bexio_markInvoiceAsOpen: Boolean, bexio_taxId: Float, bexio_unitId: Float, bexio_userId: Float, id: String!, mollie_apiBaseUrl: String, mollie_methods: [PaymentMethodMollie!], name: String, offSessionPayments: Boolean, payrexx_instancename: String, payrexx_pm: [PayrexxPM!], payrexx_psp: [PayrexxPSP!], payrexx_vatrate: String, simulated_declineRenewals: Boolean, stripe_methods: [StripePaymentMethod!], type: PaymentProviderType!, webhookEndpointSecret: String): SettingPaymentProvider!
+  createPaymentProviderSetting(apiKey: String, bexio_accountId: Float, bexio_contactSync: Boolean, bexio_countryId: Float, bexio_invoiceMailBodyNewMembership: String, bexio_invoiceMailBodyRenewalMembership: String, bexio_invoiceMailByWePublish: Boolean, bexio_invoiceMailSubjectNewMembership: String, bexio_invoiceMailSubjectRenewalMembership: String, bexio_invoiceTemplateNewMembership: String, bexio_invoiceTemplateRenewalMembership: String, bexio_invoiceTitleNewMembership: String, bexio_invoiceTitleRenewalMembership: String, bexio_markInvoiceAsOpen: Boolean, bexio_taxId: Float, bexio_testMailbox: String, bexio_unitId: Float, bexio_userId: Float, id: String!, mollie_apiBaseUrl: String, mollie_methods: [PaymentMethodMollie!], name: String, offSessionPayments: Boolean, payrexx_instancename: String, payrexx_pm: [PayrexxPM!], payrexx_psp: [PayrexxPSP!], payrexx_vatrate: String, simulated_declineRenewals: Boolean, stripe_methods: [StripePaymentMethod!], type: PaymentProviderType!, webhookEndpointSecret: String): SettingPaymentProvider!
 
   """Creates a paywall."""
   createPaywall(active: Boolean!, alternativeSubscribeUrl: String, anyMemberPlan: Boolean!, bypassTokens: [String!]!, circumventDescription: RichText, description: RichText, fadeout: Boolean!, hideContentAfter: Int!, memberPlanIds: [String!]!, name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
@@ -4046,7 +4131,12 @@ type Mutation {
   createTag(color: Color, description: RichText, main: Boolean! = false, tag: String, type: TagType!): Tag!
 
   """Creates a token and returns it's secret once."""
-  createToken(name: String!): TokenWithSecret!
+  createToken(
+    name: String!
+
+    """User roles for the token. Without roles a token has no permissions."""
+    roleIDs: [String!]
+  ): TokenWithSecret!
 
   """Creates a new tracking pixel setting."""
   createTrackingPixelSetting(id: String!, name: String, prolitteris_memberNr: String, prolitteris_onlyPaidContentAccess: Boolean, prolitteris_password: String, prolitteris_publisherInternalKeyDomain: String, prolitteris_usePublisherInternalKey: Boolean, prolitteris_username: String, type: TrackingPixelProviderType!): SettingTrackingPixelProvider!
@@ -4140,8 +4230,10 @@ type Mutation {
   """Deletes an existing image."""
   deleteImage(id: String!): String!
 
-  """Deletes an existing invoice."""
-  deleteInvoice(id: String!): Invoice!
+  """
+  Deletes an existing invoice. A PAID invoice is billing history and is only deleted with cascade: true (removes its billing period and items along).
+  """
+  deleteInvoice(cascade: Boolean, id: String!): Invoice!
 
   """
   Delete a letter layout. Refused while a mail template still prints on it.
@@ -4319,16 +4411,26 @@ type Mutation {
   """Imports a subscription."""
   importSubscription(
     autoRenew: Boolean!
+
+    """
+    Import the subscription as already cancelled: a deactivation with this reason is created directly (date = paidUntil when in the future, else now) — no mail, no payment-provider call.
+    """
+    deactivationReason: SubscriptionDeactivationReason
     extendable: Boolean!
     memberPlanID: String!
     monthlyAmount: Float!
     paidUntil: DateTime
     paymentMethodID: String!
     paymentPeriodicity: PaymentPeriodicity!
+
+    """
+    Historical periods to import: one invoice + one subscription period is created per entry (paid entries with a back-dated paidAt). When given, replaces the single synthesized invoice/period.
+    """
+    periods: [ImportSubscriptionPeriodInput!]
     properties: [PropertyInput!]!
 
     """
-    When true, suppress the subscribe mail to the user, e.g. when an editor chose not to mail the reader or for bulk imports.
+    When true, suppress any subscription / invoice mail dispatched as part of this import. Useful for bulk migrations.
     """
     skipMail: Boolean
     startsAt: DateTime!
@@ -4470,6 +4572,11 @@ type Mutation {
   revokeUserLoginCode(userId: String!): Boolean!
 
   """
+  Runs today's periodic job again now, also when it already ran tonight. For load tests: only on review, development and local instances. Answers once the run has started; it goes on in the background. Refused while a run is going on.
+  """
+  runPeriodicJobNow: PeriodicJob!
+
+  """
   This mutation sends a login link to the email if the user exists. Method will always return email address
   """
   sendJWTLogin(email: String!): String!
@@ -4512,6 +4619,11 @@ type Mutation {
   Ask the mail provider for the current delivery state of mails that are still open. Complements the provider webhook, which is not reachable in local development.
   """
   syncMailLogStates(limit: Int): MailLogSyncModel!
+
+  """
+  Checks all open invoices against their payment providers and updates the local payment state. Requires an editor session and is additionally password protected.
+  """
+  syncOpenInvoiceStates(password: String!): Boolean!
 
   """Sends a test email for the given event"""
   testSystemMail(event: UserEvent!): Boolean!
@@ -4685,7 +4797,7 @@ type Mutation {
   updatePaymentMethod(active: Boolean, description: String, gracePeriod: Int, id: String!, imageId: String, name: String, paymentProviderID: String, slug: Slug): PaymentMethod!
 
   """Updates an existing payment provider setting."""
-  updatePaymentProviderSetting(apiKey: String, bexio_accountId: Float, bexio_contactSync: Boolean, bexio_countryId: Float, bexio_invoiceMailBodyNewMembership: String, bexio_invoiceMailBodyRenewalMembership: String, bexio_invoiceMailSubjectNewMembership: String, bexio_invoiceMailSubjectRenewalMembership: String, bexio_invoiceTemplateNewMembership: String, bexio_invoiceTemplateRenewalMembership: String, bexio_invoiceTitleNewMembership: String, bexio_invoiceTitleRenewalMembership: String, bexio_markInvoiceAsOpen: Boolean, bexio_taxId: Float, bexio_unitId: Float, bexio_userId: Float, id: String, mollie_apiBaseUrl: String, mollie_methods: [PaymentMethodMollie!], name: String, offSessionPayments: Boolean, payrexx_instancename: String, payrexx_pm: [PayrexxPM!], payrexx_psp: [PayrexxPSP!], payrexx_vatrate: String, simulated_declineRenewals: Boolean, stripe_methods: [StripePaymentMethod!], webhookEndpointSecret: String): SettingPaymentProvider!
+  updatePaymentProviderSetting(apiKey: String, bexio_accountId: Float, bexio_contactSync: Boolean, bexio_countryId: Float, bexio_invoiceMailBodyNewMembership: String, bexio_invoiceMailBodyRenewalMembership: String, bexio_invoiceMailByWePublish: Boolean, bexio_invoiceMailSubjectNewMembership: String, bexio_invoiceMailSubjectRenewalMembership: String, bexio_invoiceTemplateNewMembership: String, bexio_invoiceTemplateRenewalMembership: String, bexio_invoiceTitleNewMembership: String, bexio_invoiceTitleRenewalMembership: String, bexio_markInvoiceAsOpen: Boolean, bexio_taxId: Float, bexio_testMailbox: String, bexio_unitId: Float, bexio_userId: Float, id: String, mollie_apiBaseUrl: String, mollie_methods: [PaymentMethodMollie!], name: String, offSessionPayments: Boolean, payrexx_instancename: String, payrexx_pm: [PayrexxPM!], payrexx_psp: [PayrexxPSP!], payrexx_vatrate: String, simulated_declineRenewals: Boolean, stripe_methods: [StripePaymentMethod!], webhookEndpointSecret: String): SettingPaymentProvider!
 
   """Updates a paywall."""
   updatePaywall(active: Boolean, alternativeSubscribeUrl: String, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, fadeout: Boolean, hideContentAfter: Int, id: String!, memberPlanIds: [String!], name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
@@ -4727,6 +4839,18 @@ type Mutation {
   """Update an existing subscription interval"""
   updateSubscriptionInterval(daysAwayFromEnding: Int, id: String!, mailTemplateId: String, sendAsLetter: Boolean): [SubscriptionFlowModel!]!
 
+  """
+  Data correction: moves a subscription that is still on fromPaymentMethodId to toPaymentMethodId and changes nothing else. Unlike updateSubscription it also takes deactivated subscriptions and never touches invoices, periods or the payment provider. Returns whether it moved the subscription; swap the payment methods to undo it.
+  """
+  updateSubscriptionPaymentMethod(
+    """
+    The payment method the subscription is expected to be on; it is only moved while it still is.
+    """
+    fromPaymentMethodId: String!
+    subscriptionId: String!
+    toPaymentMethodId: String!
+  ): Boolean!
+
   """Updates an existing sync provider setting."""
   updateSyncProviderSetting(enabled: Boolean, id: String!, mailchimp_apiKey: String, mailchimp_defaultInterestGroupIds: [String!], mailchimp_extensions: JSONObject, mailchimp_interestGroupMappings: [JSONObject!], mailchimp_listId: String, mailchimp_mergeFieldMappings: [JSONObject!], name: String): SettingSyncProvider!
 
@@ -4740,6 +4864,17 @@ type Mutation {
 
   """Updates an existing tag."""
   updateTag(color: Color, description: RichText, id: String!, main: Boolean = false, tag: String, type: TagType): Tag!
+
+  """
+  Renames a token or replaces its roles. Cached sessions of the token are cleared, so new roles apply at once.
+  """
+  updateToken(
+    id: String!
+    name: String
+
+    """User roles for the token. Without roles a token has no permissions."""
+    roleIDs: [String!]
+  ): Token!
 
   """Updates an existing tracking pixel setting."""
   updateTrackingPixelSetting(id: String, name: String, prolitteris_memberNr: String, prolitteris_onlyPaidContentAccess: Boolean, prolitteris_password: String, prolitteris_publisherInternalKeyDomain: String, prolitteris_usePublisherInternalKey: Boolean, prolitteris_username: String): SettingTrackingPixelProvider!
@@ -5677,8 +5812,34 @@ type PeriodicJob {
   id: String!
   modifiedAt: DateTime!
   running: Boolean!
+  steps: [PeriodicJobStep!]!
   successfullyFinished: DateTime
   tries: Float!
+}
+
+"""
+What one step of a night did: the job's own steps and the syncs after it.
+"""
+type PeriodicJobStep {
+  counts: [PeriodicJobStepCount!]!
+  error: String
+  finishedAt: DateTime!
+  key: String!
+  startedAt: DateTime!
+  status: PeriodicJobStepStatus!
+}
+
+"""One number a step of the night reports."""
+type PeriodicJobStepCount {
+  name: String!
+  value: Int!
+}
+
+enum PeriodicJobStepStatus {
+  error
+  ok
+  skipped
+  warning
 }
 
 type PeriodicityPrice {
@@ -6309,6 +6470,11 @@ type Query {
   analyticsProviderSettings(filter: SettingAnalyticsProviderFilter): [SettingAnalyticsProvider!]!
 
   """
+  Memory and uptime of the API process that answers. For load tests: only on review, development and local instances.
+  """
+  apiProcessStats: ApiProcessStats!
+
+  """
   Returns your own api tokens, or everyone's with CAN_GET_ALL_API_TOKENS. Secrets are never included.
   """
   apiTokens(
@@ -6505,8 +6671,11 @@ type Query {
   """How many suggestions are open, per direction"""
   deliverySuggestionCounts: DeliverySuggestionCounts!
 
+  """The reasons among the open suggestions of a direction, most first"""
+  deliverySuggestionReasons(kind: DeliverySuggestionKind!): [DeliverySuggestionReasonCount!]!
+
   """Open suggestions to move users to letters or back to mail"""
-  deliverySuggestions(kind: DeliverySuggestionKind!, skip: Int, take: Int): PaginatedDeliverySuggestions!
+  deliverySuggestions(filter: DeliverySuggestionFilter, kind: DeliverySuggestionKind!, skip: Int, take: Int): PaginatedDeliverySuggestions!
 
   """Returns an discountCode by id or discountCode."""
   discountCode(id: String!): DiscountCode!
@@ -6984,6 +7153,11 @@ type Query {
 
   """The open suggestion for one user, if any"""
   userDeliverySuggestion(userId: String!): DeliverySuggestionModel
+
+  """
+  The email segments the user list can be filtered by, best to worst; placeholder only when a placeholder pattern is configured.
+  """
+  userEmailSegments: [MailEmailSegment!]!
 
   """Get all invoices for the authenticated user"""
   userInvoices: [Invoice!]!
@@ -7482,6 +7656,7 @@ type SettingPaymentProvider implements SettingProvider {
   bexio_countryId: Float
   bexio_invoiceMailBodyNewMembership: String
   bexio_invoiceMailBodyRenewalMembership: String
+  bexio_invoiceMailByWePublish: Boolean
   bexio_invoiceMailSubjectNewMembership: String
   bexio_invoiceMailSubjectRenewalMembership: String
   bexio_invoiceTemplateNewMembership: String
@@ -7490,6 +7665,7 @@ type SettingPaymentProvider implements SettingProvider {
   bexio_invoiceTitleRenewalMembership: String
   bexio_markInvoiceAsOpen: Boolean
   bexio_taxId: Float
+  bexio_testMailbox: String
   bexio_unitId: Float
   bexio_userId: Float
   createdAt: DateTime!
@@ -8309,6 +8485,9 @@ type Token implements BaseToken {
   id: String!
   modifiedAt: DateTime!
   name: String!
+
+  """The user roles whose permissions a request with this token gets."""
+  roleIDs: [String!]!
 }
 
 type TokenWithSecret implements BaseToken {
@@ -8316,6 +8495,9 @@ type TokenWithSecret implements BaseToken {
   id: String!
   modifiedAt: DateTime!
   name: String!
+
+  """The user roles whose permissions a request with this token gets."""
+  roleIDs: [String!]!
   token: String!
 }
 
@@ -8536,6 +8718,10 @@ enum UserEvent {
 }
 
 input UserFilter {
+  """
+  Any of these email segments; the same segments as the mail-send audience.
+  """
+  emailSegments: [MailEmailSegment!]
   name: String
   text: String
   userRole: [String!]
@@ -8586,6 +8772,8 @@ enum UserRoleSort {
 
 enum UserSort {
   CreatedAt
+  EmailQuality
+  EmailQualitySince
   FirstName
   ModifiedAt
   Name

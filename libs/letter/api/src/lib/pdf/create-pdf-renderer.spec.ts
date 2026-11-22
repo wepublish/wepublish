@@ -7,6 +7,14 @@ import { CloudflarePdfRenderer } from './cloudflare-pdf-renderer';
 import { createPdfRenderer, loadPdfRenderer } from './create-pdf-renderer';
 import { GotenbergPdfRenderer } from './gotenberg-pdf-renderer';
 
+let testing: NamespacedCacheTesting;
+
+beforeEach(async () => {
+  testing = await createNamespacedCacheTesting();
+});
+
+afterEach(() => testing.close());
+
 describe('loadPdfRenderer', () => {
   let testing: NamespacedCacheTesting;
 

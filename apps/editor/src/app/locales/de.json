@@ -1662,9 +1662,9 @@
         "sampleDataFallback": "Beispieldaten (nichts gewählt)",
         "testRecipient": "Test-Empfänger",
         "testRecipientPlaceholder": "Deine Konto-E-Mail",
-        "preview": "Vorschau",
+        "preview": "Email Vorschau",
         "sendTest": "Test senden",
-        "previewLetter": "Vorschau",
+        "previewLetter": "Brief Vorschau",
         "letterAppendix": "Zusatzseiten (PDF)",
         "letterAppendixNone": "Keine",
         "letterAppendixHelp": "Die Seiten werden dem Brief am Ende hinzugefügt. Wähle aus den PDF-Dateien, die unter «Dokumente» hochgeladen wurden.",
@@ -2122,7 +2122,30 @@
           "unresponsive": "Reagiert nicht seit {{date}}",
           "unknown": "Unbekannt seit {{date}}"
         },
-        "recomputedDaily": "(täglich automatisch neu berechnet)"
+        "recomputedDaily": "(täglich automatisch neu berechnet)",
+        "filter": {
+          "reason": "Grund",
+          "emailSince": "E-Mail-Status seit",
+          "created": "Vorgeschlagen seit"
+        },
+        "reasonFilter": {
+          "placeholderEmail": "Platzhalter-Adresse",
+          "hardBounce": "Hard Bounce",
+          "invalid": "Ungültige Adresse",
+          "blocked": "Vom E-Mail-Dienst gesperrt",
+          "spamComplaint": "Spam-Beschwerde",
+          "unsubscribed": "Beim E-Mail-Dienst abgemeldet",
+          "clicked": "Link angeklickt",
+          "verified": "Adresse geprüft",
+          "login": "Eingeloggt",
+          "emailVerified": "E-Mail-Adresse bestätigt",
+          "noInteraction": "Keine Reaktion",
+          "noEvidence": "Keine Hinweise",
+          "none": "Kein E-Mail-Status"
+        },
+        "confirmAllFiltered": "Alle {{count}} gefilterten übernehmen",
+        "confirmAllFilteredText": "Übernommen werden nur die Vorschläge, die dem Filter entsprechen.",
+        "emptyFiltered": "Keine Vorschläge entsprechen dem Filter."
       },
       "assign": {
         "steps": {
@@ -2647,7 +2670,57 @@
       "startTime": "Gestartet: {{date, ccc PP p}}",
       "successTime": "Erfolgreich: {{date, ccc PP p}}",
       "title": "Automatische Job-Logs",
-      "tries": "Versuche: {{tries}}"
+      "tries": "Versuche: {{tries}}",
+      "counts": {
+        "readers_one": "{{count}} Leser:in",
+        "readers_other": "{{count}} Leser:innen",
+        "pushed_one": "{{count}} übertragen",
+        "pushed_other": "{{count}} übertragen",
+        "failed_one": "{{count}} fehlgeschlagen",
+        "failed_other": "{{count}} fehlgeschlagen",
+        "synced_one": "{{count}} Audience abgeglichen",
+        "synced_other": "{{count}} Audiences abgeglichen",
+        "checked_one": "{{count}} geprüft",
+        "checked_other": "{{count}} geprüft",
+        "updated_one": "{{count}} aktualisiert",
+        "updated_other": "{{count}} aktualisiert",
+        "listed_one": "{{count}} gemeldet",
+        "listed_other": "{{count}} gemeldet",
+        "recorded_one": "{{count}} neu",
+        "recorded_other": "{{count}} neu",
+        "recomputed_one": "{{count}} neu bewertet",
+        "recomputed_other": "{{count}} neu bewertet",
+        "toLetter_one": "{{count}} zu Brief",
+        "toLetter_other": "{{count}} zu Brief",
+        "toMail_one": "{{count}} zu E-Mail",
+        "toMail_other": "{{count}} zu E-Mail",
+        "removed_one": "{{count}} entfernt",
+        "removed_other": "{{count}} entfernt"
+      },
+      "stepProblems": "Erledigt, aber nicht jeder Schritt lief rund.",
+      "stepStatus": {
+        "ok": "OK",
+        "warning": "teilweise fehlgeschlagen",
+        "error": "fehlgeschlagen",
+        "skipped": "nicht aktiv"
+      },
+      "steps": {
+        "customMails": "Abo-Mails",
+        "invoiceStates": "Status offener Rechnungen",
+        "invoiceCreation": "Rechnungen erstellen",
+        "invoiceLetters": "Rechnungsbriefe",
+        "paymentMethodChanges": "Zahlungsart-Wechsel",
+        "charging": "Rechnungen belasten",
+        "deactivationUnpaid": "Abos mit offener Rechnung beenden",
+        "deactivationNotRenewed": "Abgelaufene Abos beenden",
+        "bexioContactSync": "Kontakte nach Bexio",
+        "mailchimpSync": "Mailchimp-Abgleich",
+        "mailLogSync": "Zustellstatus der Mails",
+        "suppressionSync": "Gesperrte Adressen",
+        "emailQuality": "E-Mail-Qualität",
+        "deliverySuggestions": "Vorschläge Zustellweg"
+      },
+      "stepsLabel": "Schritte dieser Nacht"
     },
     "permissions": {
       "contactAdmin": "Bitte kontaktiere den Administrator, um dir folgende Berechtigungen zu erteilen: {{permissions}}",
@@ -2929,12 +3002,12 @@
       "overview": {
         "back": "Alle Abläufe & automatischen Mitteilungen",
         "title": "Mitteilungen zu Abo-Abläufen",
-        "intro": "Ein Ablauf legt fest, welche Mitteilung bei welchem Abo-Ereignis automatisch verschickt wird. Der Standard-Ablauf gilt für alle Abos. Ein Abo-Plan kann eigene Abläufe für bestimmte Abos haben, und ein Ablauf kann für bestimmte Abos aller Abo-Pläne gelten: Ein solcher Ablauf ersetzt den Standard-Ablauf für die betroffenen Abos vollständig. Passen mehrere, gilt zuerst der Ablauf des Abo-Plans, dann der für alle Abo-Pläne, zuletzt der Standard-Ablauf.",
+        "intro": "Ein Ablauf legt fest, welche Mitteilung bei welchem Abo-Ereignis automatisch verschickt wird. Der Standard-Ablauf gilt für alle Abos. Ein Abo-Plan kann eigene Abläufe für bestimmte Abos haben, und ein Ablauf kann für bestimmte Abos aller Abo-Pläne gelten: Ein solcher Ablauf ersetzt den Standard-Ablauf für die betroffenen Abos vollständig. Wurden mehrere Abo-Abläufe definiert, werden sie in dieser Reihenfolge angewendet: 1. Abo-Plan-spezifische Abläufe → 2. Abläufe, die für alle Abo-Pläne gelten → 3. Standard-Ablauf. In der Tabelle mit den Abläufen entspricht dies der Richtung «von unten nach oben». Sobald ein Abo-Ablauf auf ein Abo matcht, wird dieser Ablauf ausgeführt und das Matching-Verfahren abgebrochen. Abläufe «weiter oben» in der Liste werden somit für dieses Abo nie ausgeführt.",
         "flow": "Ablauf für Abo-Plan",
         "defaultFlow": "Alle → Standard-Ablauf",
         "appliesTo": "Gilt für",
         "defaultApplies": "Alle Abos ohne eigenen Ablauf",
-        "subscriptions": "Abos",
+        "subscriptions": "Betroffene Abos",
         "events": "Mitteilungen",
         "eventsValue": "{{sending}} von {{total}} Ereignissen",
         "letterEvents": "Davon per Brief",
@@ -2947,7 +3020,7 @@
         },
         "noMemberPlan": "Ohne Abo-Plan",
         "allMemberPlans": "Alle Abo-Pläne",
-        "subscriptionsSum": "Abos ({{sum}})",
+        "subscriptionsSum": "Betroffene Abos ({{sum}})",
         "active": "Aktiv",
         "switchOff": "Ablauf ausschalten",
         "switchOn": "Ablauf einschalten",
@@ -3129,7 +3202,13 @@
         "generate": "Generieren",
         "generateToken": "Token generieren",
         "name": "Name",
-        "tokenWarning": "Token können später nicht mehr abgerufen werden. Speichere sie an einem sicheren Ort."
+        "tokenWarning": "Token können später nicht mehr abgerufen werden. Speichere sie an einem sicheren Ort.",
+        "roles": "Rollen",
+        "noRoles": "Keine Rollen – keine Berechtigungen",
+        "noRolesWarning": "Ohne Rolle darf das Token nichts. Wähle die Rollen, deren Berechtigungen Programme mit diesem Token erhalten sollen.",
+        "rolesInfo": "Eine Anfrage mit diesem Token erhält die Berechtigungen dieser Rollen. Änderungen gelten sofort.",
+        "editRoles": "Rollen bearbeiten",
+        "editRolesOf": "Rollen von {{name}}"
       }
     },
     "untitled": "Ohne Titel",
@@ -3218,6 +3297,17 @@
         "amountOfSubscriptions": "{{amount}} Abos",
         "createdAt": "Erstellt",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
+        "emailQuality": "E-Mail-Status",
+        "emailQualitySince": "E-Mail-Status seit",
+        "emailQualitySinceDate": "{{emailQualitySinceDate, PP}}",
+        "emailSegments": {
+          "active": "Aktiv",
+          "unknown": "Unbekannt",
+          "unresponsive": "Reagiert nicht",
+          "dead": "Unzustellbar",
+          "placeholder": "Platzhalter",
+          "deadHint": "Bounce, ungültige Adresse, Spam-Beschwerde oder vom Mailanbieter abgemeldet"
+        },
         "firstName": "Vorname",
         "subscriptionStatus": {
           "Active": "Aktiv",
@@ -3302,7 +3392,7 @@
         "title": {
           "activated": "Abonnement deaktivieren"
         },
-        "willBeDeactivated": "Das Abonnement wird am {{date, ccc PP p}} deaktiviert"
+        "willBeDeactivated": "Das Abonnement wird am {{date, ccc PP p}} deaktiviert. Grund: {{reason}}"
       },
       "revertUpgrade": {
         "title": "Upgrade rückgängig",
@@ -3952,7 +4042,11 @@
         "bexioInvoiceMailSubjectInfo": "Der Betreff der E-Mail, mit der Bexio die Rechnung verschickt. Platzhalter wie :user.firstName: oder :memberPlan.name: werden automatisch ersetzt.",
         "bexioInvoiceMailBodyInfo": "Der Text der E-Mail, mit der Bexio die Rechnung verschickt; das PDF wird angehängt. Platzhalter wie :user.firstName: oder :memberPlan.name: werden automatisch ersetzt. Bexio verlangt den Platzhalter [Network Link] im Text.",
         "bexioMarkInvoiceAsOpenInfo": "Wenn aktiv, setzt Bexio die Rechnung nach dem Versand auf «offen», statt sie als Entwurf zu belassen.",
+        "bexioInvoiceMailByWePublish": "We.Publish verschickt die Bexio-Rechnungen",
+        "bexioInvoiceMailByWePublishInfo": "Wenn aktiv, verschickt Bexio die Rechnungen von Erneuerungen nicht mehr selbst, sondern stellt sie nur aus. We.Publish hängt das Bexio-PDF an die Mail «Rechnung erstellt» des Abo-Ablaufs an oder druckt es nach dem Brief. Passen Sie diese Vorlage an, falls sie auf eine separate Mail von Bexio verweist. In Bexio erscheint für diese Rechnungen kein E-Mail-Verlauf. Zusammen mit «Rechnung als offen markieren» verwenden, sonst ist das PDF ein Entwurf. Rechnungen aus dem Checkout verschickt weiterhin Bexio.",
         "bexioContactSyncInfo": "Wenn aktiv, überträgt We.Publish jede Nacht Name, Firma, E-Mail und Adresse geänderter Leser:innen in ihren Bexio-Kontakt und legt für Abos mit Bexio-Zahlung fehlende Kontakte an. Gruppen, Telefon und alles Weitere im Kontakt bleiben, wie sie in Bexio sind.",
+        "bexioTestMailbox": "Test-Postfach (nur Testinstanzen)",
+        "bexioTestMailboxInfo": "Bexio-Firmen in der Testphase senden Rechnungsmails nur an die eigene Absenderadresse. Rechnungsmails an eine Adresse auf der Domain dieses Postfachs gehen stattdessen an dieses Postfach, z. B. bexio@<id>.resend.app für Leser*innen nw-00001@<id>.resend.app. Auf Produktion nicht verfügbar.",
         "bexioContactSyncNeverRan": "Noch nie gelaufen.",
         "bexioContactSyncLastRun": "Letzter Lauf: {{date}}, ohne Fehler.",
         "bexioContactSyncLastRunFailed": "Letzter Lauf: {{date}}. Fehler: {{error}}"
@@ -4414,7 +4508,8 @@
       "apps": "Apps",
       "noAppsFound": "Keine externen Apps konfiguriert.",
       "notFound": "Externe App nicht gefunden",
-      "appsInfo": "Verknüpfungen zu externen Tools, die auf dem Dashboard unter «We.Publish Apps» erscheinen. «Ziel» bestimmt, ob eine App in einem neuen Browser-Tab oder direkt im Editor geöffnet wird. Manche Websites lassen sich nicht im Editor anzeigen – öffne sie in einem neuen Tab."
+      "appsInfo": "Verknüpfungen zu externen Tools, die auf dem Dashboard unter «We.Publish Apps» erscheinen. «Ziel» bestimmt, ob eine App in einem neuen Browser-Tab oder direkt im Editor geöffnet wird. Manche Websites lassen sich nicht im Editor anzeigen – öffne sie in einem neuen Tab.",
+      "noToken": "Die App konnte nicht geöffnet werden: Es wurde kein Zugriffstoken ausgestellt."
     },
     "externalAppForm": {
       "apiKey": "API-Schlüssel",
@@ -4607,8 +4702,8 @@
           "description": "Zielgruppe und Filter"
         },
         "content": {
-          "title": "Inhalt & Zustellkanal",
-          "description": "Vorlage, E-Mail oder Brief"
+          "title": "Zustellkanal & Inhalt",
+          "description": "E-Mail oder Brief, Vorlage"
         },
         "send": {
           "title": "Senden",
@@ -4684,7 +4779,6 @@
         "cancelled": "Abgebrochen"
       },
       "missingPlaceholders": "Achtung: Diese Platzhalter werden für diese Empfänger nicht gefüllt: {{placeholders}}",
-      "createTemplate": "Neue Vorlage",
       "attachments_one": "Jede E-Mail enthält {{count}} Anhang als PDF: {{names}}",
       "attachments_other": "Jede E-Mail enthält {{count}} Anhänge als PDF: {{names}}",
       "editTemplate": "Vorlage bearbeiten",
@@ -4710,6 +4804,7 @@
         "unknown": "Unbekannt",
         "active": "Aktiv",
         "hint": "Mehrere Status gelten als «oder». «Reagiert nicht»: Mails wurden zugestellt, aber seit längerem kein Login und kein Klick (Einstellung «E-Mail-Qualität»). Per Brief erreichen: Platzhalter + Nicht erreichbar.",
+        "hintWithoutPlaceholder": "Mehrere Status gelten als «oder». «Reagiert nicht»: Mails wurden zugestellt, aber seit längerem kein Login und kein Klick (Einstellung «E-Mail-Qualität»).",
         "overview": "User dieser Zielgruppe nach E-Mail-Status (unabhängig von der Auswahl)",
         "refresh": "Status aktualisieren",
         "refreshing": "Status werden aktualisiert …",
@@ -4758,11 +4853,11 @@
         "label": "Zustellkanal",
         "mail": "E-Mail",
         "letter": "Brief",
-        "noVersion": {
-          "mail": "Diese Vorlage hat keine E-Mail-Version.",
-          "letter": "Diese Vorlage hat keine Brief-Version."
-        },
-        "withoutAddress": "{{count}} der Empfänger:innen haben keine brauchbare Postadresse und werden übersprungen."
+        "withoutAddress": "{{count}} der Empfänger:innen haben keine brauchbare Postadresse und werden übersprungen.",
+        "templateDropped": {
+          "mail": "«{{template}}» hat keine E-Mail-Version und wurde deshalb abgewählt. Wähle eine Vorlage für E-Mail.",
+          "letter": "«{{template}}» hat keine Brief-Version und wurde deshalb abgewählt. Wähle eine Vorlage für Brief."
+        }
       },
       "print": {
         "addressPosition": {
@@ -4835,7 +4930,11 @@
         "matchAll": "alle Bedingungen",
         "more": "{{count}} weitere Filter"
       },
-      "deliveryChannelHandOff": "Zustellkanal dieser Benutzergruppe dauerhaft umstellen …"
+      "deliveryChannelHandOff": "Zustellkanal dieser Benutzergruppe dauerhaft umstellen …",
+      "templateFor": {
+        "mail": "Manuelle Mitteilung per E-Mail",
+        "letter": "Manuelle Mitteilung per Brief"
+      }
     },
     "mailLog": {
       "title": "Gesendete Mitteilungen",
@@ -4853,8 +4952,6 @@
         "job": "Versand",
         "jobAll": "Alle Versände",
         "all": "Alle",
-        "title": "Filter",
-        "reset": "Filter zurücksetzen",
         "typeHint": "Wodurch der Versand angestossen wurde.",
         "channel": "Versand",
         "jobHelp": "Ein Versand fasst alle E-Mails zusammen, die mit einem Klick über «Manuelle Mitteilungen» verschickt wurden. Wähle einen aus, um nur dessen E-Mails zu sehen."

@@ -16,7 +16,19 @@
   pdf / send is returned as `deliveryError`, never thrown — a retry would
   create a second invoice. Keep `offSessionPayments` **off** for Bexio: with it
   on, the due date runs `createIntent` → a second Bexio invoice plus a
-  RENEWAL_FAILED mail.
+  RENEWAL_FAILED mail. The `bexio` library has no timeout of its own: `getBexioGateway`
+  wraps every call with `withRequestTimeout` (60 s, `bexio-timeout.ts`), so
+  bexio not answering fails that invoice (created again the next night)
+  instead of stalling the run.
+  **we.publish delivers (opt-in):** `bexio_invoiceMailByWePublish` makes
+  `deliversInvoiceItself()` false, so renewal invoices are issued + rendered
+  for every reader and the pdf goes out with the invoice-creation flow mail
+  (`MailControllerConfig.attachment`, every mail provider) or letter. Checkout
+  invoices (`createIntent`) are still emailed by Bexio. No pdf → nothing is
+  sent and a `deferred` mail-log entry is written; `postMissingInvoiceDeliveries`
+  mails readers with only deferred/rejected entries (≤3 refusals), which is
+  what keeps checkout invoices (no entry) out. Bexio then shows no email
+  history for the invoice.
   **Contact sync (opt-in):** `SettingPaymentProvider.bexio_contactSync` has
   `BexioContactSyncService` (`libs/payment/api/.../bexio/`, a `runNight`
   step before the Mailchimp sync) push reader data to bexio every night:
@@ -30,14 +42,35 @@
   `country_id` comes from `BexioCountries` (`GET /2.0/country`, cached a day,
   `normalizeCountry` from `@wepublish/utils/api`), the configured one as
   fallback. A stored id bexio answers 404 for is skipped, never recreated;
-  a 429 ends the night's run. The run's time and first error land in
-  `bexio_contactSyncAt` / `bexio_contactSyncError`, shown in the editor's
-  bexio form.
-  - The print export (`libs/print-issue/api`, feature `print-export`, editor
-    «Druckausgaben» in the left nav after «Banner») reads `kb_invoice` and `contact` **read-only** with
-    this provider's API key (`BexioPrintSourceService`; the key needs
-    `kb_invoice_show` and `contact_show`). Without a bexio provider that has a
-    key, a run lists we.publish members only and says so in its summary.
+  a 429 or 401 ends the night's run. The run's time and first error land in
+  `bexio_contactSyncAt` / `bexio_contactSyncError`, shown as a status alert
+  under the switch in the editor's bexio form; `syncAll` also returns the
+  counts for the night's job log (see below).
+
+  **Night job log:** every step of the night, the job's own
+  (`CORE_STEP_KEYS` in `periodic-job.service.ts`) and the `runNight` syncs
+  after it, writes a `PeriodicJobStep` row (status ok / warning / error /
+  skipped, counts, error) on the newest `PeriodicJob`. The editor lists them
+  under the job; a warning or error on the newest night raises the job item
+  in the dashboard's Mitteilungen. A new `runNight` step needs a key in
+  `periodicJobsLog.steps.*` (and its count names in `periodicJobsLog.counts.*`)
+  in the editor locales.
+  **Test mailbox (test instances only):** a bexio company in its trial only
+  emails its own sender address. `bexio_testMailbox` sends invoice mails to
+  recipients on the mailbox's domain to the mailbox instead
+  (`invoiceMailRecipient`); the contact keeps the reader's address. Ignored,
+  refused on save and hidden in the editor unless `APP_ENVIRONMENT` is set and
+  not `production` (`isTestEnvironment`, `libs/utils/api`).
+  **Invoice footer:** the provider sets the closing itself, signed with the
+  name of bexio user `bexio_userId` (`GET /3.0/users/{id}`, cached a day).
+  Left out, bexio's default footer names the API token's owner instead. If
+  the name can't be read, the invoice goes out with that default.
+  **Print export (read-only):** the print export (`libs/print-issue/api`,
+  feature `print-export`, editor «Druckausgaben» in the left nav after
+  «Banner») reads `kb_invoice` and `contact` **read-only** with this
+  provider's API key (`BexioPrintSourceService`; the key needs
+  `kb_invoice_show` and `contact_show`). Without a bexio provider that has a
+  key, a run lists we.publish members only and says so in its summary.
 
 - Simulated (`simulated` type) — no external service: `createIntent` sends the
   customer to a checkout page served by the API at
@@ -208,6 +241,11 @@ Automated subscription mails can reach a user as a printed letter. The pieces:
   `letterAttachment`. The letter is logged under the same
   `mailIdentifier`/`type` as a mail would be, so retried runs skip it. A failed
   print throws `LetterDeliveryError`; the periodic job steps over it.
+  A provider that fails for a moment (no answer, HTTP 429/5xx, SMTP 4xx)
+  throws `MailProviderTransientError`. `MailContext.sendComposedMail` tries
+  again after 5, 15 and 45 s before the error reaches the caller, and any
+  other provider error ends the nightly run, so one hiccup does not leave
+  every remaining renewal to the next night.
 - Invoice letters: the periodic job resolves the channel *before* it asks the
   payment provider (`createRemoteInvoice({ channel })`), keeps the provider's
   invoice as a `Payment`, and prints the returned pdf after the
@@ -248,6 +286,12 @@ Automated subscription mails can reach a user as a printed letter. The pieces:
   dropped and refused) or `keepDeliverySuggestion`, which stores the user's
   current channel as a manual decision with reason `kept` — that is what makes
   «Beibehalten» survive the nightly recompute without a column of its own.
+  `deliverySuggestions` and `confirmAllDeliverySuggestions` take the same
+  `DeliverySuggestionFilter` (`suggestionFilterWhere`), so «apply all» only
+  touches what the filtered card lists. Its reason is not the stored
+  `reason` but `suggestionReasonOf`: `placeholderEmail`, else the evidence
+  type before the `:` in `UserEmailQuality.reason` (`hardBounce`, `login`…),
+  else `none`; `deliverySuggestionReasons` counts them per kind.
 - Editor: one area, «Zustellkanal», at `/deliverychannel/:view`
   (`libs/membership/editor/src/lib/delivery-mode/delivery-channel-page.tsx`,
   `/deliverysuggestions` redirects). Views: `overview` (default; counts per

@@ -1663,9 +1663,9 @@
         "sampleDataFallback": "Sample data (none selected)",
         "testRecipient": "Test recipient",
         "testRecipientPlaceholder": "Your account email",
-        "preview": "Preview",
+        "preview": "Email preview",
         "sendTest": "Send test",
-        "previewLetter": "Preview",
+        "previewLetter": "Letter preview",
         "letterAppendix": "Additional pages (PDF)",
         "letterAppendixNone": "None",
         "letterAppendixHelp": "The pages are added at the end of the letter. Choose from the PDF files uploaded under \"Documents\".",
@@ -2123,7 +2123,30 @@
           "unresponsive": "Unresponsive since {{date}}",
           "unknown": "Unknown since {{date}}"
         },
-        "recomputedDaily": "(recomputed automatically every day)"
+        "recomputedDaily": "(recomputed automatically every day)",
+        "filter": {
+          "reason": "Reason",
+          "emailSince": "Email status since",
+          "created": "Suggested since"
+        },
+        "reasonFilter": {
+          "placeholderEmail": "Placeholder address",
+          "hardBounce": "Hard bounce",
+          "invalid": "Invalid address",
+          "blocked": "Blocked by the mail provider",
+          "spamComplaint": "Spam complaint",
+          "unsubscribed": "Unsubscribed at the mail provider",
+          "clicked": "Clicked a link",
+          "verified": "Address verified",
+          "login": "Logged in",
+          "emailVerified": "Email address confirmed",
+          "noInteraction": "No reaction",
+          "noEvidence": "No evidence",
+          "none": "No email status"
+        },
+        "confirmAllFiltered": "Apply all {{count}} filtered",
+        "confirmAllFilteredText": "Only the suggestions that match the filter are applied.",
+        "emptyFiltered": "No suggestions match the filter."
       },
       "assign": {
         "steps": {
@@ -2648,7 +2671,57 @@
       "startTime": "Started at: {{date, ccc PP p}}",
       "successTime": "Success at: {{date, ccc PP p}}",
       "title": "Periodic Job Logs",
-      "tries": "Runs: {{tries}}"
+      "tries": "Runs: {{tries}}",
+      "counts": {
+        "readers_one": "{{count}} reader",
+        "readers_other": "{{count}} readers",
+        "pushed_one": "{{count}} sent",
+        "pushed_other": "{{count}} sent",
+        "failed_one": "{{count}} failed",
+        "failed_other": "{{count}} failed",
+        "synced_one": "{{count}} audience synced",
+        "synced_other": "{{count}} audiences synced",
+        "checked_one": "{{count}} checked",
+        "checked_other": "{{count}} checked",
+        "updated_one": "{{count}} updated",
+        "updated_other": "{{count}} updated",
+        "listed_one": "{{count}} listed",
+        "listed_other": "{{count}} listed",
+        "recorded_one": "{{count}} new",
+        "recorded_other": "{{count}} new",
+        "recomputed_one": "{{count}} re-evaluated",
+        "recomputed_other": "{{count}} re-evaluated",
+        "toLetter_one": "{{count}} to letter",
+        "toLetter_other": "{{count}} to letter",
+        "toMail_one": "{{count}} to email",
+        "toMail_other": "{{count}} to email",
+        "removed_one": "{{count}} removed",
+        "removed_other": "{{count}} removed"
+      },
+      "stepProblems": "Done, but not every step went smoothly.",
+      "stepStatus": {
+        "ok": "OK",
+        "warning": "partly failed",
+        "error": "failed",
+        "skipped": "not in use"
+      },
+      "steps": {
+        "customMails": "Subscription mails",
+        "invoiceStates": "State of open invoices",
+        "invoiceCreation": "Create invoices",
+        "invoiceLetters": "Invoice letters",
+        "paymentMethodChanges": "Payment method changes",
+        "charging": "Charge invoices",
+        "deactivationUnpaid": "End subscriptions with unpaid invoices",
+        "deactivationNotRenewed": "End expired subscriptions",
+        "bexioContactSync": "Contacts to bexio",
+        "mailchimpSync": "Mailchimp sync",
+        "mailLogSync": "Mail delivery states",
+        "suppressionSync": "Suppressed addresses",
+        "emailQuality": "Email quality",
+        "deliverySuggestions": "Delivery channel suggestions"
+      },
+      "stepsLabel": "Tonight's steps"
     },
     "permissions": {
       "contactAdmin": "Please contact your administrator to add any of the following permissions: {{permissions}}",
@@ -2930,12 +3003,12 @@
       "overview": {
         "back": "All flows & automated messages",
         "title": "Messages for subscription flows",
-        "intro": "A flow decides which message goes out automatically for which subscription event. The default flow applies to all subscriptions. A member plan can have flows of its own for some of its subscriptions, and a flow can be for some subscriptions of all member plans: such a flow replaces the default flow for the affected subscriptions completely. Where several match, the member plan's flow comes first, then the one for all member plans, then the default flow.",
+        "intro": "A flow decides which message goes out automatically for which subscription event. The default flow applies to all subscriptions. A member plan can have flows of its own for some of its subscriptions, and a flow can be for some subscriptions of all member plans: such a flow replaces the default flow for the affected subscriptions completely. If several flows are defined, they are applied in this order: 1. flows for a specific member plan → 2. flows for all member plans → 3. the default flow. In the table of flows, this is the direction “from the bottom up”. As soon as a flow matches a subscription, that flow is applied and the matching stops. Flows “further up” in the list are therefore never applied to that subscription.",
         "flow": "Flow for member plan",
         "defaultFlow": "All → default flow",
         "appliesTo": "Applies to",
         "defaultApplies": "All subscriptions without a flow of their own",
-        "subscriptions": "Subscriptions",
+        "subscriptions": "Affected subscriptions",
         "events": "Messages",
         "eventsValue": "{{sending}} of {{total}} events",
         "letterEvents": "Of these by letter",
@@ -2948,7 +3021,7 @@
         },
         "noMemberPlan": "No member plan",
         "allMemberPlans": "All member plans",
-        "subscriptionsSum": "Subscriptions ({{sum}})",
+        "subscriptionsSum": "Affected subscriptions ({{sum}})",
         "active": "Active",
         "switchOff": "Switch flow off",
         "switchOn": "Switch flow on",
@@ -3188,7 +3261,13 @@
         "generate": "Generate",
         "generateToken": "Generate Token",
         "name": "Name",
-        "tokenWarning": "Tokens cannot be retrieved later. It is recommended that you copy and save your token somewhere safe."
+        "tokenWarning": "Tokens cannot be retrieved later. It is recommended that you copy and save your token somewhere safe.",
+        "roles": "Roles",
+        "noRoles": "No roles – no permissions",
+        "noRolesWarning": "Without a role the token may do nothing. Pick the roles whose permissions programs using this token should have.",
+        "rolesInfo": "A request with this token gets the permissions of these roles. Changes apply immediately.",
+        "editRoles": "Edit roles",
+        "editRolesOf": "Roles of {{name}}"
       }
     },
     "untitled": "Untitled",
@@ -3277,6 +3356,17 @@
         "amountOfSubscriptions": "{{amount}} subscriptions",
         "createdAt": "Created",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
+        "emailQuality": "Email status",
+        "emailQualitySince": "Email status since",
+        "emailQualitySinceDate": "{{emailQualitySinceDate, PP}}",
+        "emailSegments": {
+          "active": "Active",
+          "unknown": "Unknown",
+          "unresponsive": "Unresponsive",
+          "dead": "Undeliverable",
+          "placeholder": "Placeholder",
+          "deadHint": "Bounce, invalid address, spam complaint or unsubscribed at the mail provider"
+        },
         "firstName": "First Name",
         "subscriptionStatus": {
           "Active": "Active",
@@ -3361,7 +3451,7 @@
         "title": {
           "activated": "Deactivate subscription"
         },
-        "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}"
+        "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}. Reason: {{reason}}"
       },
       "revertUpgrade": {
         "title": "Undo upgrade",
@@ -4024,7 +4114,11 @@
         "bexioInvoiceMailSubjectInfo": "The subject of the email Bexio sends with the invoice. Placeholders such as :user.firstName: or :memberPlan.name: are replaced automatically.",
         "bexioInvoiceMailBodyInfo": "The text of the email Bexio sends with the invoice; the PDF is attached. Placeholders such as :user.firstName: or :memberPlan.name: are replaced automatically. Bexio requires the placeholder [Network Link] in the text.",
         "bexioMarkInvoiceAsOpenInfo": "When enabled, Bexio sets the invoice to «open» after sending it, instead of leaving it as a draft.",
+        "bexioInvoiceMailByWePublish": "We.Publish sends the Bexio invoices",
+        "bexioInvoiceMailByWePublishInfo": "When enabled, Bexio no longer sends renewal invoices itself but only issues them. We.Publish attaches the Bexio pdf to the «invoice created» mail of the subscription flow, or prints it after the letter. Adjust that template if it mentions a separate mail from Bexio. Bexio shows no email history for these invoices. Use together with «Mark Invoice as Open», otherwise the pdf is a draft. Invoices from the checkout are still sent by Bexio.",
         "bexioContactSyncInfo": "When enabled, We.Publish pushes the name, company, email and address of changed readers to their Bexio contact every night and creates missing contacts for subscriptions paid through Bexio. Groups, phone and everything else on the contact stay as they are in Bexio.",
+        "bexioTestMailbox": "Test mailbox (test instances only)",
+        "bexioTestMailboxInfo": "Bexio companies in their trial only send invoice mails to their own sender address. Invoice mails to an address on this mailbox's domain go to this mailbox instead, e.g. bexio@<id>.resend.app for readers nw-00001@<id>.resend.app. Not available on production.",
         "bexioContactSyncNeverRan": "Has not run yet.",
         "bexioContactSyncLastRun": "Last run: {{date}}, without errors.",
         "bexioContactSyncLastRunFailed": "Last run: {{date}}. Error: {{error}}"
@@ -4485,7 +4579,8 @@
       "apps": "Apps",
       "noAppsFound": "No external apps configured.",
       "notFound": "External app not found",
-      "appsInfo": "Shortcuts to external tools that appear on the dashboard under «We.Publish Apps». «Target» decides whether an app opens in a new browser tab or inside the editor. Some websites can't be shown inside the editor – open those in a new tab."
+      "appsInfo": "Shortcuts to external tools that appear on the dashboard under «We.Publish Apps». «Target» decides whether an app opens in a new browser tab or inside the editor. Some websites can't be shown inside the editor – open those in a new tab.",
+      "noToken": "The app could not be opened: no access token was issued."
     },
     "externalAppForm": {
       "apiKey": "API key",
@@ -4626,8 +4721,8 @@
           "description": "Audience and filters"
         },
         "content": {
-          "title": "Content & delivery channel",
-          "description": "Template, email or letter"
+          "title": "Delivery channel & content",
+          "description": "Email or letter, template"
         },
         "send": {
           "title": "Send",
@@ -4703,7 +4798,6 @@
         "cancelled": "Canceled"
       },
       "missingPlaceholders": "Heads up: these placeholders won't be filled for these recipients: {{placeholders}}",
-      "createTemplate": "New template",
       "attachments_one": "Every mail carries {{count}} attachment as PDF: {{names}}",
       "attachments_other": "Every mail carries {{count}} attachments as PDF: {{names}}",
       "editTemplate": "Edit template",
@@ -4729,6 +4823,7 @@
         "unknown": "Unknown",
         "active": "Active",
         "hint": "Several statuses mean any of them. “Unresponsive”: mails were delivered but there has been no login or click for a long time (setting “Email quality”). Reachable by letter: placeholder + dead.",
+        "hintWithoutPlaceholder": "Several statuses mean any of them. “Unresponsive”: mails were delivered but there has been no login or click for a long time (setting “Email quality”).",
         "overview": "People in this audience by email status (regardless of the selection)",
         "refresh": "Refresh statuses",
         "refreshing": "Refreshing statuses …",
@@ -4777,11 +4872,11 @@
         "label": "Delivery channel",
         "mail": "Email",
         "letter": "Letter",
-        "noVersion": {
-          "mail": "This template has no email version.",
-          "letter": "This template has no letter version."
-        },
-        "withoutAddress": "{{count}} of the recipients have no usable postal address and will be skipped."
+        "withoutAddress": "{{count}} of the recipients have no usable postal address and will be skipped.",
+        "templateDropped": {
+          "mail": "“{{template}}” has no email version and was therefore deselected. Choose a template for email.",
+          "letter": "“{{template}}” has no letter version and was therefore deselected. Choose a template for letter."
+        }
       },
       "print": {
         "addressPosition": {
@@ -4854,7 +4949,11 @@
         "matchAll": "all conditions",
         "more": "{{count}} more filters"
       },
-      "deliveryChannelHandOff": "Switch this user group’s delivery channel for good …"
+      "deliveryChannelHandOff": "Switch this user group’s delivery channel for good …",
+      "templateFor": {
+        "mail": "Manual message by email",
+        "letter": "Manual message by letter"
+      }
     },
     "mailLog": {
       "title": "Sent messages",
@@ -4872,8 +4971,6 @@
         "job": "Send job",
         "jobAll": "All send jobs",
         "all": "All",
-        "title": "Filter",
-        "reset": "Reset filters",
         "typeHint": "What triggered this send.",
         "channel": "Delivery",
         "jobHelp": "A send job groups all emails sent with one click via «Manual messages». Pick one to see only its emails."
