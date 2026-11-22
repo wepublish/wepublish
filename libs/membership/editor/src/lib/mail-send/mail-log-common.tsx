@@ -4,6 +4,7 @@ import { InfoTrigger, ClickPopover } from '@wepublish/ui/editor';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { MdHelpOutline } from 'react-icons/md';
+import { Link } from 'react-router-dom';
 import { useLetterChannel } from '../mail-template/use-letter-channel';
 
 const STATE_COLORS: Record<
@@ -355,6 +356,48 @@ export function MailLogChannelCell({
           sx={{ color: 'text.secondary' }}
         >
           {address}
+        </Typography>
+      )}
+    </Stack>
+  );
+}
+
+/**
+ * What a mail was about. The subscription opens in its edit view; an invoice
+ * has no page of its own and is found there too, so it is only named. Empty
+ * for mails with no such trigger and for those sent before it was recorded.
+ */
+export function MailLogTriggerCell({
+  subscriptionId,
+  invoiceId,
+}: {
+  subscriptionId?: string | null;
+  invoiceId?: string | null;
+}) {
+  const { t } = useTranslation();
+
+  if (!subscriptionId && !invoiceId) {
+    return <>—</>;
+  }
+
+  return (
+    <Stack
+      direction="column"
+      spacing={0.25}
+      sx={{ alignItems: 'flex-start' }}
+    >
+      {subscriptionId && (
+        <Link to={`/subscriptions/edit/${subscriptionId}`}>
+          {t('mailLog.triggerSubscription')}
+        </Link>
+      )}
+      {invoiceId && (
+        <Typography
+          variant="caption"
+          sx={{ color: 'text.secondary' }}
+          title={invoiceId}
+        >
+          {t('mailLog.triggerInvoice')}
         </Typography>
       )}
     </Stack>

@@ -305,4 +305,76 @@ describe('MailLogList', () => {
         .some(status => status.textContent?.includes('mailLog.empty'))
     ).toBe(true);
   });
+
+  describe('what a mail is about', () => {
+    const log = (overrides: object) => ({
+      id: 'log-1',
+      sentDate: '2026-11-01T10:00:00.000Z',
+      state: 'delivered',
+      type: 'subscriptionFlow',
+      channel: 'mail',
+      subject: 'Reminder',
+      recipient: { id: 'u1', email: 'jane@example.com' },
+      mailTemplate: { id: 'tpl-1', name: 'Reminder' },
+      subscriptionId: null,
+      invoiceId: null,
+      ...overrides,
+    });
+
+    const headers = () =>
+      screen.getAllByRole('columnheader').map(header => header.textContent);
+
+    const showTrigger = () => {
+      fireEvent.click(
+        screen.getByRole('button', { name: /columnConfigurator.title/ })
+      );
+      fireEvent.click(
+        screen.getByRole('menuitemcheckbox', { name: 'mailLog.trigger' })
+      );
+      fireEvent.keyDown(screen.getByRole('menu'), { key: 'Escape' });
+    };
+
+    beforeEach(() => {
+      localStorage.clear();
+      (useQuery as unknown as Mock).mockReturnValue({
+        data: {
+          mailTemplates: [],
+          mailSendJobs: { nodes: [] },
+          mailLogs: {
+            nodes: [
+              log({ id: 'log-1', subscriptionId: 'sub-1', invoiceId: 'inv-1' }),
+              log({ id: 'log-2' }),
+            ],
+            totalCount: 2,
+          },
+        },
+        loading: false,
+      });
+    });
+
+    it('keeps the column out of sight until it is switched on', () => {
+      renderPage();
+
+      expect(headers()).not.toContain('mailLog.trigger');
+
+      showTrigger();
+
+      expect(headers()).toContain('mailLog.trigger');
+    });
+
+    it('links a mail to the subscription and names the invoice it is about', () => {
+      renderPage();
+      showTrigger();
+
+      const [, about, noTrigger] = screen.getAllByRole('row');
+
+      expect(
+        within(about)
+          .getByRole('link', { name: 'mailLog.triggerSubscription' })
+          .getAttribute('href')
+      ).toBe('/subscriptions/edit/sub-1');
+      expect(within(about).getByText('mailLog.triggerInvoice')).toBeTruthy();
+      expect(within(noTrigger).queryByRole('link')).toBeNull();
+    });
+  });
 });

@@ -18,6 +18,7 @@ import {
 import {
   HeldLetterOutcome,
   type LetterAttachment,
+  type LetterLogDetails,
   type LetterRecipientOptions,
   LetterSender,
   loadAttachmentIds,
@@ -78,10 +79,10 @@ export interface SendTemplateLetterProps {
   mailSendJobId?: string | null;
   /**
    * Bookkeeping an automated send hands in: the identifier a retried run
-   * recognises the letter by, and which flow it came from. A manual send is
-   * logged under its own id.
+   * recognises the letter by, which flow it came from, and the subscription
+   * and invoice it is about. A manual send is logged under its own id.
    */
-  log?: { mailIdentifier?: string; type?: MailLogType };
+  log?: LetterLogDetails;
   /** A document printed after the letter, e.g. the invoice with its payment slip. */
   attachment?: LetterAttachment;
 }
@@ -489,6 +490,12 @@ export class LetterContext implements LetterSender {
       mailTemplate: { connect: { id: props.mailTemplateId } },
       ...(props.mailSendJobId ?
         { mailSendJob: { connect: { id: props.mailSendJobId } } }
+      : {}),
+      ...(props.log?.subscriptionId ?
+        { subscription: { connect: { id: props.log.subscriptionId } } }
+      : {}),
+      ...(props.log?.invoiceId ?
+        { invoice: { connect: { id: props.log.invoiceId } } }
       : {}),
       state: outcome.state,
       type: props.log?.type ?? MailLogType.manual,

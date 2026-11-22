@@ -514,6 +514,8 @@ export class MemberContext implements MemberContextInterface {
           },
           mailType: mailLogType.UserFlow,
           asLetter: action.sendAsLetter,
+          subscriptionId: subscription.id,
+          invoiceId: invoice.id,
         });
       } else {
         logger('memberContext').info(
@@ -1145,6 +1147,7 @@ export class MemberContext implements MemberContextInterface {
       },
       mailType: mailLogType.UserFlow,
       asLetter: action.sendAsLetter,
+      subscriptionId: subscription.id,
     });
   }
 }

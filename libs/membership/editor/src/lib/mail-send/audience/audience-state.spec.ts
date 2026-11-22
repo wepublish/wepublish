@@ -1,6 +1,7 @@
 import {
   MailChannel,
   MailHistoryMatch,
+  MailHistoryScope,
   MailLogState,
   MailRecipientBase,
 } from '@wepublish/editor/api';
@@ -154,6 +155,65 @@ describe('toAudienceInput', () => {
           },
         ],
       });
+    });
+
+    it('binds a row to the subscription and to a still-open invoice', () => {
+      const [condition] =
+        toAudienceInput({
+          ...INITIAL_AUDIENCE_STATE,
+          base: MailRecipientBase.HasSubscription,
+          mailHistory: {
+            match: MailHistoryMatch.All,
+            rows: [
+              {
+                ...emptyMailHistoryRow(),
+                mailTemplateId: 'tpl-1',
+                onSubscription: true,
+                onlyOpenInvoice: true,
+              },
+            ],
+          },
+        }).mailHistory?.conditions ?? [];
+
+      expect(condition.scope).toBe(MailHistoryScope.Subscription);
+      expect(condition.onlyOpenInvoice).toBe(true);
+    });
+
+    it('leaves both out of a row that does not ask for them', () => {
+      const [condition] =
+        toAudienceInput({
+          ...INITIAL_AUDIENCE_STATE,
+          base: MailRecipientBase.HasSubscription,
+          mailHistory: {
+            match: MailHistoryMatch.All,
+            rows: [{ ...emptyMailHistoryRow(), mailTemplateId: 'tpl-1' }],
+          },
+        }).mailHistory?.conditions ?? [];
+
+      expect(condition.scope).toBeUndefined();
+      expect(condition.onlyOpenInvoice).toBeUndefined();
+    });
+
+    it('drops the subscription binding for an audience without subscriptions', () => {
+      const [condition] =
+        toAudienceInput({
+          ...INITIAL_AUDIENCE_STATE,
+          base: MailRecipientBase.NoActiveSubscription,
+          mailHistory: {
+            match: MailHistoryMatch.All,
+            rows: [
+              {
+                ...emptyMailHistoryRow(),
+                mailTemplateId: 'tpl-1',
+                onSubscription: true,
+                onlyOpenInvoice: true,
+              },
+            ],
+          },
+        }).mailHistory?.conditions ?? [];
+
+      expect(condition.scope).toBeUndefined();
+      expect(condition.onlyOpenInvoice).toBe(true);
     });
 
     it('keeps mail history for every base', () => {

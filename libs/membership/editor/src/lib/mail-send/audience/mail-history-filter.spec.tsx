@@ -60,7 +60,8 @@ const row = (overrides = {}) => ({
 });
 
 const renderFilter = (
-  value = { match: MailHistoryMatch.All, rows: [] as ReturnType<typeof row>[] }
+  value = { match: MailHistoryMatch.All, rows: [] as ReturnType<typeof row>[] },
+  subscriptionBase = false
 ) => {
   const onChange = vi.fn();
 
@@ -69,6 +70,7 @@ const renderFilter = (
       <MailHistoryFilter
         value={value}
         onChange={onChange}
+        subscriptionBase={subscriptionBase}
       />
     </ThemeProvider>
   );
@@ -218,5 +220,45 @@ describe('MailHistoryFilter', () => {
     expect(screen.queryAllByText('mailSend.mailHistory.channel')).toHaveLength(
       0
     );
+  });
+
+  it('lets a row ask for mails about a still-open invoice', () => {
+    const onChange = renderFilter({
+      match: MailHistoryMatch.All,
+      rows: [row()],
+    });
+
+    fireEvent.click(
+      screen.getByRole('checkbox', {
+        name: 'mailSend.mailHistory.onlyOpenInvoice',
+      })
+    );
+
+    expect(onChange.mock.calls[0][0].rows[0].onlyOpenInvoice).toBe(true);
+  });
+
+  it('lets a row be bound to the subscription for an audience of subscriptions', () => {
+    const onChange = renderFilter(
+      { match: MailHistoryMatch.All, rows: [row()] },
+      true
+    );
+
+    fireEvent.click(
+      screen.getByRole('checkbox', {
+        name: 'mailSend.mailHistory.onSubscription',
+      })
+    );
+
+    expect(onChange.mock.calls[0][0].rows[0].onSubscription).toBe(true);
+  });
+
+  it('does not offer the subscription binding for an audience of people', () => {
+    renderFilter({ match: MailHistoryMatch.All, rows: [row()] });
+
+    expect(
+      screen.queryByRole('checkbox', {
+        name: 'mailSend.mailHistory.onSubscription',
+      })
+    ).toBeNull();
   });
 });

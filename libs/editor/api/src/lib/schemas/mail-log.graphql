@@ -11,6 +11,8 @@ fragment FullMailLog on MailLogModel {
   error
   mailProviderID
   mailSendJobId
+  subscriptionId
+  invoiceId
   recipient {
     id
     email

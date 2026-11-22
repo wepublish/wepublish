@@ -45,7 +45,7 @@ export interface LetterSender {
     mailLogId?: string;
     mailSendJobId?: string | null;
     /** Bookkeeping an automated send needs, so a retry can recognise the letter. */
-    log?: { mailIdentifier?: string; type?: MailLogType };
+    log?: LetterLogDetails;
     attachment?: LetterAttachment;
   }): Promise<string>;
   /**
@@ -68,6 +68,17 @@ export interface LetterSender {
     replacementLogId: string
   ): Promise<HeldLetterOutcome>;
 }
+
+/**
+ * What the sender knows about a letter and the letter side writes into its log
+ * entry: how a retry recognises it, where it came from, and what it is about.
+ */
+export type LetterLogDetails = {
+  mailIdentifier?: string;
+  type?: MailLogType;
+  subscriptionId?: string | null;
+  invoiceId?: string | null;
+};
 
 /**
  * `withdrawn`: gone at the vendor, its entry cancelled and the replacement's

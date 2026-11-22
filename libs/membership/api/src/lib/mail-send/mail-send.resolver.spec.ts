@@ -305,6 +305,25 @@ describe('MailSendResolver', () => {
       expect(result.pageInfo.hasPreviousPage).toBe(false);
     });
 
+    it('filters by the subscription or invoice a mail is about', async () => {
+      const prisma = {
+        mailLog: {
+          count: vi.fn(async () => 0),
+          findMany: vi.fn(async () => []),
+        },
+      };
+
+      await makeResolver(prisma).mailLogs(
+        { subscriptionId: 'sub-1', invoiceId: 'inv-1' } as any,
+        0,
+        20
+      );
+
+      expect(
+        (prisma.mailLog.findMany as Mock).mock.calls[0][0].where
+      ).toMatchObject({ subscriptionId: 'sub-1', invoiceId: 'inv-1' });
+    });
+
     // A bulk send writes many mails within the same millisecond; ordered by
     // sentDate alone, offset pages over such ties repeat or skip rows.
     it('orders by a unique key after sentDate so pages do not overlap', async () => {
