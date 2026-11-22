@@ -2764,6 +2764,7 @@
         "bexioContactSync": "Kontakte nach Bexio",
         "mailchimpSync": "Mailchimp-Abgleich",
         "mailLogSync": "Zustellstatus der Mails",
+        "letterLogSync": "Zustellstatus der Briefe",
         "suppressionSync": "Gesperrte Adressen",
         "emailQuality": "E-Mail-Qualität",
         "deliverySuggestions": "Vorschläge Zustellweg",
@@ -5190,13 +5191,16 @@
       "sync": {
         "action": "Status aktualisieren",
         "hint": "Fragt beim E-Mail-Anbieter den aktuellen Zustellstatus aller noch offenen E-Mails ab.",
-        "done": "{{checked}} offene E-Mail(s) beim Anbieter geprüft, {{updated}} aktualisiert."
+        "done": "{{checked}} offene E-Mail(s) beim Anbieter geprüft, {{updated}} aktualisiert.",
+        "hintWithLetters": "Fragt beim E-Mail-Anbieter und beim Briefanbieter den aktuellen Zustellstatus aller noch offenen E-Mails und Briefe ab.",
+        "doneWithLetters": "{{checked}} offene E-Mail(s) geprüft, {{updated}} aktualisiert. {{lettersChecked}} offene(r) Brief(e) geprüft, {{lettersUpdated}} aktualisiert."
       },
       "stateHelp": {
         "nextTitle": "Was du tun kannst",
         "legendTitle": "Bedeutung der Status",
         "legendIntro": "Der Status zeigt, wie weit eine E-Mail auf dem Weg zum Empfänger gekommen ist. Gemeldet wird er vom E-Mail-Anbieter, nicht von We.Publish selbst.",
         "legendFooter": "Statusmeldungen kommen normalerweise per Webhook vom E-Mail-Anbieter. Ist kein Webhook eingerichtet – oder läuft die Installation lokal, wo der Anbieter sie nicht erreichen kann – bleibt der Status auf «submitted» stehen. «Status aktualisieren» holt ihn dann direkt beim Anbieter ab.\nSMTP und Slack melden keine Zustellstatus: dort bleibt es bei «submitted».",
+        "legendFooterLetters": "Für Briefe gilt dasselbe: Ihr Status kommt per Webhook vom Briefanbieter, «Status aktualisieren» und der nächtliche Lauf holen ihn sonst direkt dort ab. Ein Brief, der der Post übergeben wurde («dispatched»), wird noch 30 Tage lang nachgefragt, weil Rückläufer erst spät gemeldet werden.",
         "submitted": {
           "name": "submitted – Übermittelt",
           "meaning": "We.Publish hat die E-Mail an den E-Mail-Anbieter übergeben und dieser hat sie angenommen. Sie ist dort in der Warteschlange. Über das Postfach des Empfängers sagt dieser Status noch nichts aus.",

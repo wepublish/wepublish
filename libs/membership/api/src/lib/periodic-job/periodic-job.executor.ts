@@ -18,6 +18,7 @@ import {
   SellableReconciliationService,
 } from '@wepublish/payment/api';
 import { describeError } from '@wepublish/utils/api';
+import { LetterLogSyncService } from '@wepublish/letter/api';
 import type { MailchimpSyncRunResult } from '../mailchimp-sync/mailchimp-sync.service';
 
 const SCHEDULE =
@@ -28,6 +29,10 @@ const CLAIM_RETRY_FOR_MS = 60_000;
 // The sync service caps a call at 500; one call a night is plenty for the
 // handful of mails whose webhook never arrived.
 const NIGHTLY_MAIL_LOG_SYNC_LIMIT = 500;
+
+// Every letter of a print run is asked about for a month after it went to
+// the post, so a night has to cover a whole run.
+const NIGHTLY_LETTER_LOG_SYNC_LIMIT = 2000;
 
 type StepReport = Pick<NightStepRecord, 'status' | 'counts' | 'error'>;
 
@@ -170,6 +175,11 @@ export class PeriodicJobExecutor {
     // bounce should count tonight, not tomorrow.
     await this.runStep('mailLogSync', MailLogSyncService, service =>
       service.syncOpenStates(NIGHTLY_MAIL_LOG_SYNC_LIMIT)
+    );
+    // The same for letters, on its own so the letter provider being down
+    // does not read as the mail provider failing.
+    await this.runStep('letterLogSync', LetterLogSyncService, service =>
+      service.syncOpenStates(NIGHTLY_LETTER_LOG_SYNC_LIMIT)
     );
     // The addresses the provider refuses for any mail, ours or not.
     await this.runStep('suppressionSync', SuppressionSyncService, service =>

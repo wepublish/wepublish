@@ -462,6 +462,20 @@ export class MailLogSyncModel {
 }
 
 @ObjectType()
+export class MailAndLetterLogSyncModel extends MailLogSyncModel {
+  @Field(() => Int, {
+    description:
+      'Letters that can still change and were looked up at the letter provider.',
+  })
+  lettersChecked!: number;
+
+  @Field(() => Int, {
+    description: 'Letters whose state the provider reported differently.',
+  })
+  lettersUpdated!: number;
+}
+
+@ObjectType()
 export class EmailQualityRefreshModel extends MailLogSyncModel {
   @Field(() => Int, {
     description: 'People whose email level was re-evaluated.',
