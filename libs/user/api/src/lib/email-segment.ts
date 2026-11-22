@@ -69,9 +69,9 @@ export const NOBODY: Prisma.UserWhereInput = { id: { in: [] } };
 
 /**
  * Users whose address matches one of the placeholder patterns; null without
- * patterns. Never hand Prisma the `OR: []` this would otherwise be: the
- * deployed Prisma matches every row with it, which made a tenant without a
- * pattern count its whole audience as placeholders.
+ * patterns. Never hand Prisma the `OR: []` this would otherwise be: Prisma 7
+ * drops it inside an `AND`, which made a tenant without a pattern count its
+ * whole audience as placeholders.
  */
 export const placeholderEmailWhere = (
   patterns: readonly string[]

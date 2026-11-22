@@ -498,6 +498,25 @@ describe('SubscriptionFlowService', () => {
         });
       });
 
+      // Prisma 7 drops an `OR: []` inside an AND/OR list, so a member plan's
+      // flow without an auto-renewal option would cover every subscription of
+      // the plan (see gotchas.md). It has to say "nobody" explicitly.
+      it('lets a member plan flow without an auto-renewal option match no subscription', () => {
+        expect(
+          subscriptionsOfFlow({
+            memberPlanId: 'plan-1',
+            paymentMethods: [{ id: 'payment-1' }],
+            periodicities: [PaymentPeriodicity.yearly],
+            autoRenewal: [],
+          })
+        ).toEqual({
+          memberPlanID: 'plan-1',
+          paymentMethodID: { in: ['payment-1'] },
+          paymentPeriodicity: { in: [PaymentPeriodicity.yearly] },
+          id: { in: [] },
+        });
+      });
+
       // Any term includes the shortest.
       it('may act 25 days ahead at the earliest while its term is open', async () => {
         await expect(

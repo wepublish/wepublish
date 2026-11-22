@@ -49,6 +49,12 @@ export type EarliestDay = {
 };
 
 /**
+ * Matches no subscription. Never an empty `OR`: Prisma 7 drops it inside an
+ * `AND`/`OR` list, which makes it match everything (see gotchas.md).
+ */
+const NO_SUBSCRIPTION: Prisma.SubscriptionWhereInput = { id: { in: [] } };
+
+/**
  * The subscriptions the conditions of a flow match: those of its member plan,
  * or of every plan for a flow for all plans. Which of them a plan's own flow
  * takes first is for the caller to leave out.
@@ -71,9 +77,10 @@ export function subscriptionsOfFlow(
     ...(narrows(flow.periodicities) && {
       paymentPeriodicity: { in: flow.periodicities },
     }),
-    ...(narrows(flow.autoRenewal) && {
-      OR: flow.autoRenewal.map(autoRenew => ({ autoRenew })),
-    }),
+    ...(narrows(flow.autoRenewal) &&
+      (flow.autoRenewal.length ?
+        { OR: flow.autoRenewal.map(autoRenew => ({ autoRenew })) }
+      : NO_SUBSCRIPTION)),
   };
 }
 
