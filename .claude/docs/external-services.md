@@ -263,6 +263,16 @@ Automated subscription mails can reach a user as a printed letter. The pieces:
   of their fixed dates and are read against now (`rolling-dates.ts`).
   `createJob` and `setForAudience` store `freezeRollingDates(audience)`, so
   job and bulk-change snapshots only ever hold fixed dates.
+- Saved filters (`SavedAudienceFilter`, table `mail.audience_filters`: unique
+  name, description, the `MailAudienceInput` as JSON with rolling dates kept
+  rolling; `savedAudienceFilters`, `create|update|deleteSavedAudienceFilter`)
+  are shared by `/mailsend` and `/deliverychannel/assign`. Either
+  `CanSendMailTemplates` or `CanManageUserDeliveryMode` suffices, checked in
+  the resolver because `@Permissions(a, b)` requires both. The editor reads a
+  stored filter back with `fromAudienceInput` (`audience-state.ts`), the
+  reverse of `toAudienceInput`: a new filter field needs both directions, and
+  a removed field or enum value breaks stored filters like it breaks job
+  snapshots.
 - `MailLog.subscriptionId` / `invoiceId` say what a mail was about. The sender
   passes them explicitly (`MailControllerConfig`, `LetterLogDetails`); never
   derive them from `optionalData`, whose keys differ per template context. A

@@ -1131,6 +1131,12 @@ export type CreateExternalAppInput = {
   url: Scalars['String']['input'];
 };
 
+export type CreateSavedAudienceFilterInput = {
+  audience: MailAudienceInput;
+  description?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+};
+
 export type CreateSubscriptionInfo = {
   __typename: 'CreateSubscriptionInfo';
   discountCodeValid?: Maybe<Scalars['Boolean']['output']>;
@@ -3571,6 +3577,8 @@ export type Mutation = {
   createPrintIssue: PrintIssue;
   /** Creates a rating system answer. */
   createRatingSystemAnswer: CommentRatingSystemAnswer;
+  /** Save a recipient filter under a name. */
+  createSavedAudienceFilter: SavedAudienceFilterModel;
   createSession: SessionWithToken;
   createSessionWithJWT: SessionWithToken;
   /** Signs a We.Publish admin in with the code auth.wepublish.cloud returned: as the account connected to that We.Publish identity, else the one with its email, else a new one. The account becomes an admin with the names from We.Publish and can only sign in this way from then on. */
@@ -3684,6 +3692,8 @@ export type Mutation = {
   deletePrintIssueDelivery: PrintIssue;
   /** Deletes a rating system answer. */
   deleteRatingSystemAnswer: CommentRatingSystemAnswer;
+  /** Delete a saved recipient filter. */
+  deleteSavedAudienceFilter: SavedAudienceFilterModel;
   /** Deletes an existing subscription. */
   deleteSubscription: PublicSubscription;
   /** Delete an existing subscription flow */
@@ -3922,6 +3932,8 @@ export type Mutation = {
   updatePrintIssue: PrintIssue;
   /** Update the comment rating system. */
   updateRatingSystem: CommentRatingSystem;
+  /** Rename a saved recipient filter, change its description or replace the filter it holds. */
+  updateSavedAudienceFilter: SavedAudienceFilterModel;
   /** Marks an SEO checklist item as done or not done and returns all completed items. */
   updateSeoChecklistItem: Array<SeoChecklistItem>;
   /** Updates an existing setting. */
@@ -4500,6 +4512,11 @@ export type MutationCreateRatingSystemAnswerArgs = {
 };
 
 
+export type MutationCreateSavedAudienceFilterArgs = {
+  input: CreateSavedAudienceFilterInput;
+};
+
+
 export type MutationCreateSessionArgs = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
@@ -4849,6 +4866,11 @@ export type MutationDeletePrintIssueDeliveryArgs = {
 
 
 export type MutationDeleteRatingSystemAnswerArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteSavedAudienceFilterArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -5703,6 +5725,12 @@ export type MutationUpdateRatingSystemArgs = {
   answers?: InputMaybe<Array<UpdateCommentRatingSystemAnswerInput>>;
   id: Scalars['String']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationUpdateSavedAudienceFilterArgs = {
+  id: Scalars['String']['input'];
+  input: UpdateSavedAudienceFilterInput;
 };
 
 
@@ -7726,6 +7754,8 @@ export type Query = {
    *
    */
   revenue: Array<DashboardInvoice>;
+  /** The saved recipient filters, by name. Needs the permission to send manual messages or to manage delivery channels. */
+  savedAudienceFilters: Array<SavedAudienceFilterModel>;
   /** Returns a checklist of the SEO setup of the website. */
   seoChecklist: SeoChecklist;
   /**
@@ -8866,6 +8896,17 @@ export type RichTextBlockInput = {
   timing?: InputMaybe<BlockTimingInput>;
 };
 
+export type SavedAudienceFilterModel = {
+  __typename: 'SavedAudienceFilterModel';
+  /** The MailAudienceInput as it was saved. Rolling dates stay rolling, so the filter means the same thing whenever it is loaded. */
+  audience: Scalars['JSONObject']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  name: Scalars['String']['output'];
+};
+
 export type SendTestMailTemplateInput = {
   /** Attachments chosen on the draft, possibly not saved yet. */
   attachmentIds?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -10000,6 +10041,14 @@ export type UpdateCrowdfundingInput = {
   goals?: InputMaybe<Array<CreateCrowdfundingGoalInput>>;
   id: Scalars['String']['input'];
   memberPlans?: InputMaybe<Array<CreateCrowdfundingMemberPlan>>;
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateSavedAudienceFilterInput = {
+  /** Replaces the saved filter by this one. */
+  audience?: InputMaybe<MailAudienceInput>;
+  /** An empty text removes the description. */
+  description?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
 };
 

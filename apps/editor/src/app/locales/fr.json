@@ -4603,6 +4603,39 @@
           "color": "En couleur"
         }
       },
+      "savedFilters": {
+        "title": "Filtres enregistrés",
+        "intro": "Visibles par toute l’équipe. Disponibles dans les messages manuels et dans l’attribution du canal de distribution.",
+        "save": "Enregistrer le filtre actuel",
+        "empty": "Aucun filtre enregistré pour l’instant.",
+        "name": "Nom",
+        "description": "Description",
+        "load": "Charger",
+        "overwrite": "Remplacer par le filtre actuel",
+        "edit": "Modifier le nom et la description",
+        "delete": "Supprimer",
+        "saveTitle": "Enregistrer le filtre",
+        "editTitle": "Modifier le filtre enregistré",
+        "confirmSave": "Enregistrer",
+        "nameRequired": "Veuillez saisir un nom.",
+        "nameTaken": "Ce nom existe déjà.",
+        "overwriteTitle": "Remplacer le filtre ?",
+        "overwriteQuestion": "« {{name}} » est remplacé par le filtre actuel.",
+        "overwriteConfirm": "Remplacer",
+        "deleteTitle": "Supprimer le filtre ?",
+        "deleteQuestion": "« {{name}} » est supprimé. Les envois déjà lancés ne sont pas concernés.",
+        "deleteConfirm": "Supprimer",
+        "loaded": "« {{name}} » chargé.",
+        "droppedIntro": "N’existent plus et ont été omis :",
+        "dropped": {
+          "memberPlans": "Plans d’abonnement : {{count}}",
+          "paymentMethods": "Moyens de paiement : {{count}}",
+          "templates": "Modèles : {{count}}"
+        },
+        "saved": "Filtre enregistré",
+        "updated": "Filtre mis à jour",
+        "deleted": "Filtre supprimé"
+      },
       "dateWindow": {
         "mode": "{{label}} : dates fixes ou glissantes",
         "fixed": "Dates fixes",

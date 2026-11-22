@@ -71,6 +71,7 @@ import { TemplateAttachmentsNote } from './template-attachments-note';
 import { usePaperLetterFlow } from '../delivery-mode/use-paper-letter-flow';
 import { AudienceFilter } from './audience/audience-filter';
 import { useAudienceState } from './audience/audience-state';
+import { SavedAudienceFilters } from './audience/saved-audience-filters';
 import {
   RECIPIENTS_PAGE_SIZE,
   RecipientListModal,
@@ -151,6 +152,7 @@ function MailSendPage() {
   const {
     state: audienceState,
     update: updateAudience,
+    replace: replaceAudience,
     audience,
   } = useAudienceState();
 
@@ -324,9 +326,10 @@ function MailSendPage() {
           say so when it reports nothing. */}
       <EmailEvidenceNotice sx={{ marginBottom: 2 }} />
 
-      {/* The preview sits beside the wizard on the send step only, as the last
-          check before sending. The wizard column is a fixed width on every
-          step, so showing the preview never re-flows the wizard. */}
+      {/* Beside the wizard sit the saved filters on the audience step and the
+          preview on the send step, as the last check before sending. The
+          wizard column is a fixed width on every step, so neither re-flows
+          it. */}
       <Box
         sx={{
           display: 'grid',
@@ -335,9 +338,9 @@ function MailSendPage() {
           gridTemplateColumns: {
             xs: '1fr',
             lg:
-              step === STEP_SEND ?
-                `${WIZARD_WIDTH}px minmax(0, 1fr)`
-              : `${WIZARD_WIDTH}px`,
+              step === STEP_CONTENT ?
+                `${WIZARD_WIDTH}px`
+              : `${WIZARD_WIDTH}px minmax(0, 1fr)`,
           },
         }}
       >
@@ -549,6 +552,15 @@ function MailSendPage() {
             </>
           )}
         </Box>
+
+        {step === STEP_AUDIENCE && (
+          <Box sx={{ marginTop: 3, minWidth: 0 }}>
+            <SavedAudienceFilters
+              audience={audience}
+              onLoad={replaceAudience}
+            />
+          </Box>
+        )}
 
         {step === STEP_SEND && (
           <Box sx={{ position: 'sticky', top: 16, marginTop: 3, minWidth: 0 }}>

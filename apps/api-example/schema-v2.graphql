@@ -1144,6 +1144,12 @@ input CreateExternalAppInput {
   url: String!
 }
 
+input CreateSavedAudienceFilterInput {
+  audience: MailAudienceInput!
+  description: String
+  name: String!
+}
+
 type CreateSubscriptionInfo {
   discountCodeValid: Boolean
   discountPercent: Float
@@ -3966,6 +3972,9 @@ type Mutation {
 
   """Creates a rating system answer."""
   createRatingSystemAnswer(answer: String, ratingSystemId: String!, type: RatingSystemType!): CommentRatingSystemAnswer!
+
+  """Save a recipient filter under a name."""
+  createSavedAudienceFilter(input: CreateSavedAudienceFilterInput!): SavedAudienceFilterModel!
   createSession(email: String!, password: String!, totpToken: String): SessionWithToken!
   createSessionWithJWT(jwt: String!, totpToken: String): SessionWithToken!
 
@@ -4169,6 +4178,9 @@ type Mutation {
 
   """Deletes a rating system answer."""
   deleteRatingSystemAnswer(id: String!): CommentRatingSystemAnswer!
+
+  """Delete a saved recipient filter."""
+  deleteSavedAudienceFilter(id: String!): SavedAudienceFilterModel!
 
   """Deletes an existing subscription."""
   deleteSubscription(id: String!): PublicSubscription!
@@ -4653,6 +4665,11 @@ type Mutation {
 
   """Update the comment rating system."""
   updateRatingSystem(answers: [UpdateCommentRatingSystemAnswerInput!], id: String!, name: String): CommentRatingSystem!
+
+  """
+  Rename a saved recipient filter, change its description or replace the filter it holds.
+  """
+  updateSavedAudienceFilter(id: String!, input: UpdateSavedAudienceFilterInput!): SavedAudienceFilterModel!
 
   """
   Marks an SEO checklist item as done or not done and returns all completed items.
@@ -6817,6 +6834,11 @@ type Query {
   "\n      Returns the revenue generated for the time period given.\n      Only includes paid invoices that have not been manually paid.\n    "
   revenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
 
+  """
+  The saved recipient filters, by name. Needs the permission to send manual messages or to manage delivery channels.
+  """
+  savedAudienceFilters: [SavedAudienceFilterModel!]!
+
   """Returns a checklist of the SEO setup of the website."""
   seoChecklist: SeoChecklist!
 
@@ -7055,6 +7077,18 @@ input RichTextBlockInput {
   The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
   """
   timing: BlockTimingInput
+}
+
+type SavedAudienceFilterModel {
+  """
+  The MailAudienceInput as it was saved. Rolling dates stay rolling, so the filter means the same thing whenever it is loaded.
+  """
+  audience: JSONObject!
+  createdAt: DateTime!
+  description: String
+  id: String!
+  modifiedAt: DateTime!
+  name: String!
 }
 
 input SendTestMailTemplateInput {
@@ -8265,6 +8299,15 @@ input UpdateCrowdfundingInput {
   goals: [CreateCrowdfundingGoalInput!]
   id: String!
   memberPlans: [CreateCrowdfundingMemberPlan!]
+  name: String
+}
+
+input UpdateSavedAudienceFilterInput {
+  """Replaces the saved filter by this one."""
+  audience: MailAudienceInput
+
+  """An empty text removes the description."""
+  description: String
   name: String
 }
 

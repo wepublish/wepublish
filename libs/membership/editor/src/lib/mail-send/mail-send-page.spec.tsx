@@ -8,6 +8,7 @@ import {
 } from '@testing-library/react';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 
+import { INITIAL_AUDIENCE_STATE } from './audience/audience-state';
 import { MailSendPage } from './mail-send-page';
 
 /**
@@ -16,6 +17,7 @@ import { MailSendPage } from './mail-send-page';
  */
 const queries = vi.fn();
 const mutate = vi.fn(async () => ({ data: {} }));
+const savedFilterProps = vi.fn();
 
 const operationName = (document: unknown) =>
   (document as { definitions?: { name?: { value?: string } }[] })
@@ -158,6 +160,27 @@ const answer = (name: string) => {
   }
 };
 
+// The saved filters are covered on their own; here a button stands in for
+// loading one.
+vi.mock('./audience/saved-audience-filters', () => ({
+  SavedAudienceFilters: (props: any) => {
+    savedFilterProps(props);
+
+    return (
+      <button
+        onClick={() =>
+          props.onLoad({
+            ...INITIAL_AUDIENCE_STATE,
+            base: 'noActiveSubscription',
+          })
+        }
+      >
+        load saved filter
+      </button>
+    );
+  },
+}));
+
 const lastPreviewAudience = () =>
   queries.mock.calls
     .filter(([name]) => name === 'MailSendRecipientPreview')
@@ -275,6 +298,22 @@ describe('MailSendPage (characterisation)', () => {
       endedTo: undefined,
       memberPlanIDs: undefined,
     });
+  });
+
+  it('offers the saved filters beside the filter on the audience step and loads one into it', () => {
+    renderPage();
+
+    expect(
+      screen.queryByRole('button', { name: 'load saved filter' })
+    ).toBeNull();
+
+    goToAudience();
+    fireEvent.click(screen.getByRole('button', { name: 'load saved filter' }));
+
+    expect(lastPreviewAudience().audience.base).toBe('noActiveSubscription');
+    expect(savedFilterProps.mock.calls.at(-1)?.[0].audience.base).toBe(
+      'noActiveSubscription'
+    );
   });
 
   it('picks an email status in one place, the filter, with its count', () => {
