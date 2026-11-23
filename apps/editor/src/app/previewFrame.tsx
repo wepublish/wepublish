@@ -57,6 +57,13 @@ export const usePreviewState = () => {
   const param = searchParams.get(PREVIEW_PARAM);
   const isPreviewOpen = param !== null;
   const device = isPreviewDevice(param) ? param : DEFAULT_DEVICE;
+  const lastDevice = useRef(device);
+
+  useEffect(() => {
+    if (isPreviewOpen) {
+      lastDevice.current = device;
+    }
+  }, [isPreviewOpen, device]);
 
   const setParam = useCallback(
     (value: PreviewDevice | null) =>
@@ -78,8 +85,8 @@ export const usePreviewState = () => {
   );
 
   const setPreviewOpen = useCallback(
-    (open: boolean) => setParam(open ? device : null),
-    [setParam, device]
+    (open: boolean) => setParam(open ? lastDevice.current : null),
+    [setParam]
   );
 
   const setDevice = useCallback(

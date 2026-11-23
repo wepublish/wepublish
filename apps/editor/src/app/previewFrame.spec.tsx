@@ -288,6 +288,18 @@ describe('usePreviewState', () => {
     expect(result.current.isPreviewOpen).toBe(false);
     expect(location()).toBe('/articles/edit/a1?templateId=t1');
   });
+
+  it('reopens the preview on the device it was last shown on', () => {
+    const { result, location } = renderPreviewState(
+      '/articles/edit/a1?preview=mobile'
+    );
+
+    act(() => result.current.setPreviewOpen(false));
+    act(() => result.current.setPreviewOpen(true));
+
+    expect(result.current.device).toBe('mobile');
+    expect(location()).toBe('/articles/edit/a1?preview=mobile');
+  });
 });
 
 describe('PreviewControls', () => {
