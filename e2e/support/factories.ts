@@ -75,7 +75,21 @@ export type MemberPlan = {
   paymentMethods: { id: string; slug: string; name: string }[];
 };
 
-export type Entity = Reader | Article | Paywall;
+/** Someone working in the editor, signed in through `sessionToken`. */
+export type Staff = {
+  kind: 'staff';
+  id: string;
+  email: string;
+  sessionToken: string;
+};
+
+/** A payment provider a scenario added; its id appears in its webhook URL. */
+export type PaymentProvider = {
+  kind: 'paymentProvider';
+  id: string;
+};
+
+export type Entity = Reader | Article | Paywall | Staff | PaymentProvider;
 
 type Cleanup = { label: string; run: () => Promise<unknown> };
 
@@ -160,6 +174,55 @@ export class TestData {
       firstName,
       name,
     } satisfies Reader);
+  }
+
+  /**
+   * An editor account with the admin role and a session for it. Exempt from
+   * TOTP, like the seed's staff, so the editor opens without a second factor.
+   */
+  async createAdmin(alias: string) {
+    const api = await this.api();
+    const runId = this.runId();
+    const password = `${this.faker.internet.password({ length: 16 })}-Aa1`;
+    const email = `e2e+${runId}@example.test`;
+
+    const { createUser } = await api.gql<{ createUser: { id: string } }>(
+      `mutation CreateAdmin($email: String!, $name: String!, $password: String) {
+        createUser(email: $email, name: $name, password: $password, active: true,
+          emailVerifiedAt: "${new Date().toISOString()}", properties: [],
+          roleIDs: ["admin"], totpExempt: true, skipMail: true) { id }
+      }`,
+      { email, name: this.faker.person.fullName(), password }
+    );
+
+    this.onCleanup(`admin ${email}`, () => this.deleteUser(createUser.id));
+
+    const { token } = await api.as(email, password);
+
+    if (!token) {
+      throw new Error(`No session for the admin ${email}.`);
+    }
+
+    return this.remember(alias, {
+      kind: 'staff',
+      id: createUser.id,
+      email,
+      sessionToken: token,
+    } satisfies Staff);
+  }
+
+  /** A fresh id for a payment provider a scenario adds; deleted afterwards. */
+  newPaymentProvider(alias: string) {
+    const id = this.runId();
+
+    this.onCleanup(`payment provider ${id}`, async () =>
+      (await this.api()).gql(
+        `mutation DeleteProvider($id: String!) { deletePaymentProviderSetting(id: $id) { id } }`,
+        { id }
+      )
+    );
+
+    return this.remember(alias, { kind: 'paymentProvider', id } satisfies PaymentProvider);
   }
 
   /**

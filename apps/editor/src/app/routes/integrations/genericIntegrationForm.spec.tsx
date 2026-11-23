@@ -167,6 +167,14 @@ describe('SingleGenericIntegrationForm guidance', () => {
     ).toBeInTheDocument();
   });
 
+  it('names each provider form after its provider, to tell several apart', () => {
+    renderStripe({ name: 'Shop checkout' });
+
+    expect(
+      screen.getByRole('form', { name: 'Shop checkout' })
+    ).toBeInTheDocument();
+  });
+
   it('opens the setup guide while credentials are missing', () => {
     renderStripe({ isApiKeySet: false });
 

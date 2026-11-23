@@ -307,6 +307,7 @@ export function SingleGenericIntegrationForm<
 
   return (
     <form
+      aria-labelledby={`${formId}-title`}
       onSubmit={event => {
         event.preventDefault();
         onSubmit();
@@ -333,6 +334,7 @@ export function SingleGenericIntegrationForm<
 
               <HeaderTitle>
                 <Typography
+                  id={`${formId}-title`}
                   variant="h6"
                   component="h2"
                   noWrap
