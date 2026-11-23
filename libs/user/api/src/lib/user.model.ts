@@ -223,6 +223,7 @@ export enum UserSort {
   SubscriptionCount = 'SubscriptionCount',
   EmailQuality = 'EmailQuality',
   EmailQualitySince = 'EmailQualitySince',
+  PrintIssuesOwed = 'PrintIssuesOwed',
 }
 
 registerEnumType(UserSort, {

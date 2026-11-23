@@ -9,7 +9,7 @@ const iso = (date: Date | null | undefined) =>
   date ? date.toISOString() : null;
 
 /** The plan with its printed issues per periodicity; unset periodicities are left out. */
-const memberPlanOf = ({
+export const memberPlanOf = ({
   periodicityPricing,
   ...plan
 }: {

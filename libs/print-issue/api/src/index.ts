@@ -9,3 +9,6 @@ export * from './lib/rules/dates';
 export * from './lib/rules/issue';
 export * from './lib/print-issue-start.service';
 export * from './lib/print-issue-start.resolver';
+export * from './lib/progress/progress';
+export * from './lib/progress/progress.model';
+export * from './lib/progress/progress.service';

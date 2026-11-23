@@ -138,6 +138,13 @@ const SubscriptionName = styled('span')`
   font-weight: 600;
 `;
 
+const PrintIssueList = styled('ul')`
+  margin: 0;
+  padding-left: ${({ theme }) => theme.spacing(6.5)};
+  list-style: none;
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
+`;
+
 const formatDate = (date: string | Date) =>
   new Date(date).toLocaleDateString('de-CH', {
     timeZone: 'europe/zurich',
@@ -271,6 +278,21 @@ function UserSubscriptionsList({
       keys.includes(id) ? keys.filter(key => key !== id) : [...keys, id]
     );
 
+  const printIssueLine = (
+    issue: NonNullable<
+      UserSubscriptionFragment['printIssueProgress']
+    >['issues'][number]
+  ) =>
+    t('userSubscriptionList.printIssue', {
+      label: issue.label,
+      date: formatDate(issue.issueDate),
+      batch:
+        issue.batch === 0 ?
+          t('userSubscriptionList.printList')
+        : t('userSubscriptionList.printSupplement', { number: issue.batch }),
+      deliveredAt: formatDate(issue.deliveredAt),
+    });
+
   const copyInvoiceId = (invoiceID: string) => {
     navigator.clipboard.writeText(invoiceID);
     enqueueSnackbar(t('invoice.table.idCopied'), {
@@ -325,6 +347,10 @@ function UserSubscriptionsList({
               const status = getSubscriptionStatus(subscription);
               const isExpandable = periods.length > 0;
               const isExpanded = expanded.includes(subscription.id);
+              const progress =
+                subscription.printIssueProgress?.relevant ?
+                  subscription.printIssueProgress
+                : null;
 
               const statusChip = (
                 <Chip
@@ -443,11 +469,17 @@ function UserSubscriptionsList({
                     </ConfirmedIcon>
                   </TableCell>
 
-                  <TableCell />
+                  <TableCell>
+                    {progress &&
+                      t('userSubscriptionList.printIssuesReceived', {
+                        received: progress.received,
+                        entitled: progress.entitled ?? '∞',
+                      })}
+                  </TableCell>
                 </SubscriptionRow>,
 
                 ...(isExpanded ?
-                  periods.map(period => {
+                  periods.flatMap(period => {
                     const invoiceStatus =
                       period.isPaid ?
                         {
@@ -459,7 +491,10 @@ function UserSubscriptionsList({
                           title: t('userSubscriptionList.invoiceUnpaid'),
                         };
 
-                    return (
+                    const issues =
+                      progress?.periodId === period.id ? progress.issues : [];
+
+                    return [
                       <PeriodTableRow key={period.id}>
                         <TableCell colSpan={2}>
                           <PeriodRange>
@@ -499,8 +534,38 @@ function UserSubscriptionsList({
                             </IdButton>
                           </SingleLineTooltip>
                         </TableCell>
-                      </PeriodTableRow>
-                    );
+                      </PeriodTableRow>,
+                      ...(issues.length ?
+                        [
+                          <PeriodTableRow key={`${period.id}-print-issues`}>
+                            <TableCell colSpan={11}>
+                              <PrintIssueList
+                                aria-label={t(
+                                  'userSubscriptionList.printIssues'
+                                )}
+                              >
+                                {issues.map(issue => (
+                                  <li key={`${issue.label}-${issue.batch}`}>
+                                    {printIssueLine(issue)}
+                                    {issue.countsAs > 1 && (
+                                      <>
+                                        {' · '}
+                                        <span>
+                                          {t(
+                                            'userSubscriptionList.printIssueCountsAs',
+                                            { count: issue.countsAs }
+                                          )}
+                                        </span>
+                                      </>
+                                    )}
+                                  </li>
+                                ))}
+                              </PrintIssueList>
+                            </TableCell>
+                          </PeriodTableRow>,
+                        ]
+                      : []),
+                    ];
                   })
                 : []),
               ];

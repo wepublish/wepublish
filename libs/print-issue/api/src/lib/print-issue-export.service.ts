@@ -12,9 +12,10 @@ import {
   type QuotaConfig,
 } from './rules/entitlement';
 import { readIssueNumbering } from './numbering-setting';
+import { PRINT_ISSUES_PER_YEAR_SETTING } from './quota-setting';
 import { issueLabel, type IssueNumbering } from './rules/issue';
 
-export const PRINT_ISSUES_PER_YEAR_SETTING = 'printIssuesPerYear';
+export { PRINT_ISSUES_PER_YEAR_SETTING } from './quota-setting';
 export const PRINT_ISSUE_COUNTING_SETTING = 'printIssueCounting';
 export const PRINT_BEXIO_KINDS_SETTING = 'printBexioKinds';
 

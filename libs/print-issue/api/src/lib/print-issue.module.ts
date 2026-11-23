@@ -6,10 +6,20 @@ import { PrintIssueExportService } from './print-issue-export.service';
 import { PrintIssueStartResolver } from './print-issue-start.resolver';
 import { PrintIssueStartService } from './print-issue-start.service';
 import { PrintIssueResolver } from './print-issue.resolver';
+import {
+  SubscriptionPrintIssueProgressDataloader,
+  UserPrintIssueProgressDataloader,
+} from './progress/progress.dataloader';
+import {
+  SubscriptionPrintIssueProgressResolver,
+  UserPrintIssueProgressResolver,
+} from './progress/progress.resolver';
+import { PrintIssueProgressService } from './progress/progress.service';
+import { PrintIssueUserListOrderModule } from './progress/user-list-order';
 import { PrintIssueService } from './print-issue.service';
 
 @Module({
-  imports: [PrismaModule, PaymentsModule],
+  imports: [PrismaModule, PaymentsModule, PrintIssueUserListOrderModule],
   providers: [
     BexioPrintSourceService,
     PrintIssueExportService,
@@ -17,7 +27,12 @@ import { PrintIssueService } from './print-issue.service';
     PrintIssueResolver,
     PrintIssueStartService,
     PrintIssueStartResolver,
+    PrintIssueProgressService,
+    UserPrintIssueProgressDataloader,
+    SubscriptionPrintIssueProgressDataloader,
+    UserPrintIssueProgressResolver,
+    SubscriptionPrintIssueProgressResolver,
   ],
-  exports: [PrintIssueService],
+  exports: [PrintIssueService, PrintIssueProgressService],
 })
 export class PrintIssueModule {}

@@ -1,7 +1,9 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   NotFoundException,
+  Optional,
 } from '@nestjs/common';
 import { differenceInMinutes, differenceInSeconds } from 'date-fns';
 import {
@@ -50,6 +52,7 @@ import {
   emailQualitySlices,
   findAcrossSlices,
 } from './email-quality-order';
+import { USER_LIST_ORDER, type UserListOrder } from './user-list-order';
 
 const COMMENT_AUTHOR_FIELDS = [
   'name',
@@ -67,7 +70,10 @@ export class UserService {
     private mailchimpContactService: MailchimpContactService,
     private authenticationService: AuthenticationService,
     private sessionCache: SessionCacheInvalidator,
-    private publicContentCache: PublicContentCacheInvalidator
+    private publicContentCache: PublicContentCacheInvalidator,
+    @Optional()
+    @Inject(USER_LIST_ORDER)
+    private listOrders: UserListOrder[] = []
   ) {}
 
   @PrimeDataLoader(UserDataloaderService)
@@ -102,6 +108,25 @@ export class UserService {
       : [];
     const where = createUserFilter(filter ?? {}, placeholderPatterns);
     const include = { address: true, paymentProviderCustomers: true };
+    const listOrder = (this.listOrders ?? []).find(o => o.sort === sort);
+    const orderedIds = await listOrder?.orderedIds(
+      where,
+      order === SortOrder.Ascending ? 'asc' : 'desc'
+    );
+
+    if (orderedIds) {
+      // sorted by another module: page through its id list in memory
+      const pageIds = orderedIds.slice(skip, skip + getMaxTake(take) + 1);
+      const found = await this.prisma.user.findMany({
+        where: { id: { in: pageIds } },
+        include,
+      });
+      const byId = new Map(found.map(user => [user.id, user]));
+      const users = pageIds.flatMap(id => byId.get(id) ?? []);
+
+      return toUserPage(users, orderedIds.length, skip, take);
+    }
+
     const slices =
       cursorId ? null
       : sort === UserSort.EmailQuality ? emailQualitySlices(order)
@@ -131,23 +156,7 @@ export class UserService {
           }),
         ]);
 
-    const nodes = users.slice(0, getMaxTake(take));
-    const firstUser = nodes[0];
-    const lastUser = nodes[nodes.length - 1];
-
-    const hasPreviousPage = Boolean(skip);
-    const hasNextPage = users.length > nodes.length;
-
-    return {
-      nodes,
-      totalCount,
-      pageInfo: {
-        hasPreviousPage,
-        hasNextPage,
-        startCursor: firstUser?.id,
-        endCursor: lastUser?.id,
-      },
-    };
+    return toUserPage(users, totalCount, skip, take);
   }
 
   /**
@@ -610,6 +619,28 @@ export class UserService {
   }
 }
 
+const toUserPage = <T extends { id: string }>(
+  users: T[],
+  totalCount: number,
+  skip: number,
+  take: number
+) => {
+  const nodes = users.slice(0, getMaxTake(take));
+  const firstUser = nodes[0];
+  const lastUser = nodes[nodes.length - 1];
+
+  return {
+    nodes,
+    totalCount,
+    pageInfo: {
+      hasPreviousPage: Boolean(skip),
+      hasNextPage: users.length > nodes.length,
+      startCursor: firstUser?.id,
+      endCursor: lastUser?.id,
+    },
+  };
+};
+
 export const createUserOrder = (
   field: UserSort,
   sortOrder: SortOrder
@@ -633,6 +664,12 @@ export const createUserOrder = (
     case UserSort.FirstName:
       return {
         firstName: graphQLSortOrderToPrisma(sortOrder),
+      };
+
+    case UserSort.PrintIssuesOwed:
+      // only another module sorts this way (USER_LIST_ORDER); without one, by creation date
+      return {
+        createdAt: graphQLSortOrderToPrisma(sortOrder),
       };
 
     case UserSort.SubscriptionCount:

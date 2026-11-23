@@ -3350,6 +3350,8 @@
           "Expired": "Abgelaufen"
         },
         "subscriptionWithStatus": "{{name}} – {{status}}",
+        "subscriptionWithStatusAndIssues": "{{name}} – {{status}} ({{received}} / {{entitled}} Ausgaben)",
+        "printIssuesOwed": "Ausgaben offen",
         "modifiedAt": "Zuletzt bearbeitet",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Name",
@@ -3465,6 +3467,12 @@
       "firstPrintIssueFromInfo": "«Abo-Start»: Die erste gedruckte Ausgabe ist die erste, die an oder nach diesem Tag erscheint. Wird beim Abschluss auf der Website gesetzt (aktuelle Ausgabe: deren Erscheinungsdatum; kommende: der Tag danach). Leer: jede Ausgabe ab Abo-Beginn."
     },
     "userSubscriptionList": {
+      "printIssuesReceived": "{{received}} / {{entitled}} Ausgaben",
+      "printIssue": "{{label}} · {{date}} · {{batch}}, übergeben {{deliveredAt}}",
+      "printList": "Druckliste",
+      "printSupplement": "Nachlieferung {{number}}",
+      "printIssueCountsAs": "zählt {{count}}-fach",
+      "printIssues": "Erhaltene Druckausgaben",
       "periodRange": "Zeitraum",
       "table": {
         "active": "Aktiv",

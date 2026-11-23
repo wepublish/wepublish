@@ -3350,6 +3350,8 @@
           "Expired": "Expiré"
         },
         "subscriptionWithStatus": "{{name}} – {{status}}",
+        "subscriptionWithStatusAndIssues": "{{name}} – {{status}} ({{received}} / {{entitled}} numéros)",
+        "printIssuesOwed": "Numéros dus",
         "modifiedAt": "Dernière modification",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Nom",
@@ -3465,6 +3467,12 @@
       "firstPrintIssueFromInfo": "«Abo-Start» : le premier numéro imprimé est le premier paru ce jour-là ou après. Défini lors de l’abonnement sur le site (numéro actuel : sa date de parution ; prochain : le lendemain). Vide : chaque numéro dès le début de l’abonnement."
     },
     "userSubscriptionList": {
+      "printIssuesReceived": "{{received}} / {{entitled}} numéros",
+      "printIssue": "{{label}} · {{date}} · {{batch}}, remise le {{deliveredAt}}",
+      "printList": "Liste d'impression",
+      "printSupplement": "Envoi complémentaire {{number}}",
+      "printIssueCountsAs": "compte {{count}}×",
+      "printIssues": "Numéros imprimés reçus",
       "periodRange": "Période",
       "table": {
         "active": "Actif",

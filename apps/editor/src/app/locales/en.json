@@ -3409,6 +3409,8 @@
           "Expired": "Expired"
         },
         "subscriptionWithStatus": "{{name}} – {{status}}",
+        "subscriptionWithStatusAndIssues": "{{name}} – {{status}} ({{received}} / {{entitled}} issues)",
+        "printIssuesOwed": "Issues owed",
         "modifiedAt": "Last modified",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Name",
@@ -3524,6 +3526,12 @@
       "firstPrintIssueFromInfo": "«Abo-Start»: the first printed issue is the first one shipped on or after this day. Set when subscribing on the website (current issue: its ship day; upcoming: the day after). Empty: every issue from the subscription start."
     },
     "userSubscriptionList": {
+      "printIssuesReceived": "{{received}} / {{entitled}} issues",
+      "printIssue": "{{label}} · {{date}} · {{batch}}, handed over {{deliveredAt}}",
+      "printList": "Print list",
+      "printSupplement": "Supplement {{number}}",
+      "printIssueCountsAs": "counts {{count}}×",
+      "printIssues": "Print issues received",
       "periodRange": "Period",
       "table": {
         "active": "Active",

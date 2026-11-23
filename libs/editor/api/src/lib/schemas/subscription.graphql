@@ -287,6 +287,21 @@ fragment UserSubscription on PublicSubscription {
     invoiceID
     isPaid
   }
+
+  printIssueProgress {
+    periodId
+    received
+    entitled
+    owed
+    relevant
+    issues {
+      label
+      issueDate
+      batch
+      deliveredAt
+      countsAs
+    }
+  }
 }
 
 query UserSubscriptionList($userId: String!) {
