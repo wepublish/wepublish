@@ -89,7 +89,7 @@ export function WizardStepper({
   onStep,
   vertical = false,
 }: {
-  steps: { title: ReactNode; description: ReactNode }[];
+  steps: { title: ReactNode; description?: ReactNode }[];
   step: number;
   canGoTo: (target: number) => boolean;
   onStep: (target: number) => void;
@@ -107,7 +107,12 @@ export function WizardStepper({
         <Step key={index}>
           <StepButton
             disabled={!canGoTo(index)}
-            optional={<Typography variant="caption">{description}</Typography>}
+            aria-selected={index === step}
+            optional={
+              description ?
+                <Typography variant="caption">{description}</Typography>
+              : undefined
+            }
             onClick={() => onStep(index)}
           >
             {title}

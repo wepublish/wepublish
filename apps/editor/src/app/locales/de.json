@@ -3983,11 +3983,12 @@
         "listIdInfo": "Die Mailchimp-Zielgruppe, in die die Benutzerkonten übertragen werden. Sobald der API-Schlüssel gespeichert ist, kannst du sie aus der Liste wählen; sonst gib ihre ID aus den Zielgruppen-Einstellungen in Mailchimp ein.",
         "dryRunInfo": "Zeigt, welche Kontakte sich in Mailchimp ändern würden, ohne dort etwas zu verändern. Das Testlauf-Limit prüft eine zufällige Auswahl von so vielen Benutzerkonten; leer gelassen, werden alle geprüft.",
         "stages": {
-          "connect": "1. Verbinden",
-          "map": "2. Daten zuordnen",
-          "sync": "3. Synchronisieren & überwachen",
+          "connect": "Verbinden",
+          "audience": "Zielgruppe",
+          "map": "Daten zuordnen",
+          "sync": "Synchronisieren & überwachen",
           "advanced": "Erweitert",
-          "connectFirst": "Speichere zuerst den API-Schlüssel und wähle eine Zielgruppe. Danach kannst du die Daten zuordnen und die Synchronisation starten."
+          "connectFirst": "Speichere zuerst den API-Schlüssel. Damit holt We.Publish deine Zielgruppen aus Mailchimp; danach wählst du eine, ordnest die Daten zu und startest die Synchronisation."
         }
       },
       "typeChangeTitle": "Typ wirklich wechseln?",

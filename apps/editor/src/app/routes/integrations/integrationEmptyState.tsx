@@ -1,9 +1,11 @@
 import styled from '@emotion/styled';
 import { ButtonBase, Card, CardContent, Typography } from '@mui/material';
+import { DocumentNode } from 'graphql';
 import { PropsWithChildren } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ProviderOption } from './integrationCatalog';
+import { useCreateProvider } from './integrationRegistryActions';
 
 export const EmptyStateContent = styled(CardContent)`
   display: grid;
@@ -141,5 +143,74 @@ export function IntegrationEmptyState({
         <EmptyStateActions>{children}</EmptyStateActions>
       </EmptyStateContent>
     </Card>
+  );
+}
+
+/** The empty state, where picking a provider adds it right away. */
+export function FirstProviderPicker({
+  createMutation,
+  refetchQuery,
+  idOf,
+  ...props
+}: PropsWithChildren<{
+  providers?: ProviderOption[];
+  choices: ProviderChoice[];
+  createMutation?: DocumentNode;
+  refetchQuery: DocumentNode;
+  idOf: (choice: ProviderChoice) => string;
+}>) {
+  if (!createMutation) {
+    return (
+      <IntegrationEmptyState
+        providers={props.providers}
+        children={props.children}
+      />
+    );
+  }
+
+  return (
+    <ChoosableEmptyState
+      {...props}
+      createMutation={createMutation}
+      refetchQuery={refetchQuery}
+      idOf={idOf}
+    />
+  );
+}
+
+function ChoosableEmptyState({
+  createMutation,
+  refetchQuery,
+  idOf,
+  choices,
+  providers,
+  children,
+}: PropsWithChildren<{
+  providers?: ProviderOption[];
+  choices: ProviderChoice[];
+  createMutation: DocumentNode;
+  refetchQuery: DocumentNode;
+  idOf: (choice: ProviderChoice) => string;
+}>) {
+  const [createProvider, creating] = useCreateProvider(
+    createMutation,
+    refetchQuery
+  );
+
+  return (
+    <IntegrationEmptyState
+      providers={providers}
+      choices={choices}
+      disabled={creating}
+      onChoose={choice =>
+        createProvider({
+          id: idOf(choice),
+          type: choice.type,
+          name: choice.label,
+        })
+      }
+    >
+      {children}
+    </IntegrationEmptyState>
   );
 }

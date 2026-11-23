@@ -1,18 +1,19 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import { createTheme, ThemeProvider } from '@mui/material';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { SyncProviderType } from '@wepublish/editor/api';
 import type { Mock } from 'vitest';
 
 import { MailchimpSyncIntegrationForm } from './mailchimpSyncIntegrationForm';
 
 const create = vi.fn();
+const lookup = vi.hoisted(() => vi.fn());
 
 vi.mock('@apollo/client/react', async importOriginal => ({
   ...(await importOriginal<typeof import('@apollo/client/react')>()),
   useQuery: vi.fn(),
   useMutation: vi.fn(),
-  useLazyQuery: () => [vi.fn(), { data: undefined, loading: false }],
+  useLazyQuery: () => [lookup, { data: undefined, loading: false }],
 }));
 
 vi.mock('react-i18next', () => ({
@@ -24,6 +25,7 @@ vi.mock('react-i18next', () => ({
 
 beforeEach(() => {
   create.mockReset();
+  lookup.mockReset();
   (useMutation as unknown as Mock).mockReturnValue([
     create,
     { loading: false },
@@ -38,13 +40,17 @@ describe('MailchimpSyncIntegrationForm', () => {
   it('sets up the Mailchimp sync while none exists', () => {
     render(<MailchimpSyncIntegrationForm />);
 
-    fireEvent.click(screen.getByRole('button', { name: 'integrations.setUp' }));
+    fireEvent.click(
+      screen.getByRole('button', {
+        name: 'integrations.providers.mailchimpMarketing',
+      })
+    );
 
     expect(create).toHaveBeenCalledWith({
       variables: {
         id: 'mailchimp-sync',
         type: SyncProviderType.Mailchimp,
-        name: 'Mailchimp',
+        name: 'integrations.providers.mailchimpMarketing',
       },
     });
   });
@@ -79,6 +85,7 @@ describe('MailchimpSyncIntegrationForm', () => {
     ).toHaveAttribute('name', 'mailchimp_apiKey');
     expect(
       screen.getByRole('combobox', {
+        hidden: true,
         name: 'integrations.mailchimpSyncSettings.listId',
       })
     ).toBeInTheDocument();
@@ -129,19 +136,20 @@ const renderWith = (setting: Record<string, unknown>) => {
   );
 };
 
-const tab = (name: string) =>
+const step = (name: string) =>
   screen.getByRole('tab', {
-    name: new RegExp(`integrations.mailchimpSyncSettings.stages.${name}`),
+    name: new RegExp(`integrations.mailchimpSyncSettings.stages.${name}\\b`),
   });
 
 describe('MailchimpSyncIntegrationForm stages', () => {
-  it('starts with connecting and keeps the later stages closed until then', () => {
+  it('starts with connecting and keeps the later steps closed until then', () => {
     renderWith({});
 
-    expect(tab('connect')).toHaveAttribute('aria-selected', 'true');
-    expect(tab('map')).toBeDisabled();
-    expect(tab('sync')).toBeDisabled();
-    expect(tab('advanced')).toBeDisabled();
+    expect(step('connect')).toHaveAttribute('aria-selected', 'true');
+    expect(step('audience')).toBeDisabled();
+    expect(step('map')).toBeDisabled();
+    expect(step('sync')).toBeDisabled();
+    expect(step('advanced')).toBeDisabled();
     expect(
       screen.getByText('integrations.mailchimpSyncSettings.stages.connectFirst')
     ).toBeInTheDocument();
@@ -150,10 +158,42 @@ describe('MailchimpSyncIntegrationForm stages', () => {
     ).toHaveAttribute('aria-expanded', 'true');
   });
 
+  it('asks for the audience only once the key is saved, as the list comes from Mailchimp', () => {
+    renderWith({});
+
+    expect(
+      screen.queryByRole('combobox', {
+        name: 'integrations.mailchimpSyncSettings.listId',
+      })
+    ).toBeNull();
+
+    cleanup();
+    renderWith({ mailchimp_isApiKeySet: true });
+
+    expect(step('audience')).toHaveAttribute('aria-selected', 'true');
+    expect(
+      screen.getByRole('combobox', {
+        name: 'integrations.mailchimpSyncSettings.listId',
+      })
+    ).toBeVisible();
+    expect(step('map')).toBeDisabled();
+  });
+
+  it('asks Mailchimp for the audiences only once there is a key to ask with', () => {
+    renderWith({});
+    expect(lookup).not.toHaveBeenCalled();
+
+    cleanup();
+    renderWith({ mailchimp_isApiKeySet: true });
+    expect(lookup).toHaveBeenCalledWith({
+      variables: { configId: 'mailchimp-sync' },
+    });
+  });
+
   it('continues with mapping once the key and the audience are saved', () => {
     renderWith({ mailchimp_isApiKeySet: true, mailchimp_listId: 'abc' });
 
-    expect(tab('map')).toHaveAttribute('aria-selected', 'true');
+    expect(step('map')).toHaveAttribute('aria-selected', 'true');
     expect(
       screen.getByRole('heading', {
         level: 2,
@@ -162,7 +202,15 @@ describe('MailchimpSyncIntegrationForm stages', () => {
     ).toBeVisible();
   });
 
-  it('runs and monitors the sync on its own stage', () => {
+  it('moves on with next once a step is done', () => {
+    renderWith({ mailchimp_isApiKeySet: true, mailchimp_listId: 'abc' });
+
+    fireEvent.click(screen.getByRole('button', { name: 'wizard.next' }));
+
+    expect(step('sync')).toHaveAttribute('aria-selected', 'true');
+  });
+
+  it('runs and monitors the sync on its own step', () => {
     renderWith({ mailchimp_isApiKeySet: true, mailchimp_listId: 'abc' });
 
     expect(
@@ -171,7 +219,7 @@ describe('MailchimpSyncIntegrationForm stages', () => {
       })
     ).toBeNull();
 
-    fireEvent.click(tab('sync'));
+    fireEvent.click(step('sync'));
 
     expect(
       screen.getByRole('button', {
@@ -187,7 +235,7 @@ describe('MailchimpSyncIntegrationForm stages', () => {
     ).toBeNull();
   });
 
-  it('opens on the sync stage once data is mapped', () => {
+  it('opens on the sync step once data is mapped', () => {
     renderWith({
       mailchimp_isApiKeySet: true,
       mailchimp_listId: 'abc',
@@ -196,6 +244,6 @@ describe('MailchimpSyncIntegrationForm stages', () => {
       ],
     });
 
-    expect(tab('sync')).toHaveAttribute('aria-selected', 'true');
+    expect(step('sync')).toHaveAttribute('aria-selected', 'true');
   });
 });

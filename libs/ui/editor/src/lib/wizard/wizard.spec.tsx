@@ -97,6 +97,26 @@ describe('WizardStepper', () => {
         .disabled
     ).toBe(true);
   });
+
+  it('marks the step the wizard is on', () => {
+    render(
+      <WizardStepper
+        steps={[{ title: 'Connect' }, { title: 'Audience' }]}
+        step={1}
+        canGoTo={() => true}
+        onStep={() => undefined}
+      />
+    );
+
+    expect(screen.getByRole('tab', { name: /Audience/ })).toHaveAttribute(
+      'aria-selected',
+      'true'
+    );
+    expect(screen.getByRole('tab', { name: /Connect/ })).toHaveAttribute(
+      'aria-selected',
+      'false'
+    );
+  });
 });
 
 describe('useWizard', () => {

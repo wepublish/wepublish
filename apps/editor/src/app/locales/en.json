@@ -4044,11 +4044,12 @@
         "listIdInfo": "The Mailchimp audience the user accounts are transferred to. Once the API key is saved, you can pick it from the list; otherwise enter its ID from the audience settings in Mailchimp.",
         "dryRunInfo": "Shows which contacts would change in Mailchimp, without changing anything there. The dry run limit checks a random sample of that many users; leave it empty to check everyone.",
         "stages": {
-          "connect": "1. Connect",
-          "map": "2. Map data",
-          "sync": "3. Sync & monitor",
+          "connect": "Connect",
+          "audience": "Audience",
+          "map": "Map data",
+          "sync": "Sync & monitor",
           "advanced": "Advanced",
-          "connectFirst": "Save the API key and choose an audience first. Mapping the data and running the sync become available once We.Publish can reach your Mailchimp audience."
+          "connectFirst": "Save the API key first. With it, We.Publish fetches your audiences from Mailchimp; choosing one, mapping the data and running the sync come next."
         }
       },
       "typeChangeTitle": "Really change the type?",

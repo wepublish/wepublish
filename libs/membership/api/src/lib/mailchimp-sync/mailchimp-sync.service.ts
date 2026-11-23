@@ -1181,7 +1181,7 @@ export class MailchimpSyncService {
   async getMailchimpLists(
     configId: string
   ): Promise<{ id: string; name: string; memberCount: number }[]> {
-    const config = await this.getConfigById(configId);
+    const config = await this.getConfigForLookup(configId);
     this.configureMailchimpClient(config);
 
     try {
@@ -1206,7 +1206,7 @@ export class MailchimpSyncService {
     configId: string,
     listId: string
   ): Promise<{ tag: string; name: string; type: string }[]> {
-    const config = await this.getConfigById(configId);
+    const config = await this.getConfigForLookup(configId);
     this.configureMailchimpClient(config);
 
     try {
@@ -1231,7 +1231,7 @@ export class MailchimpSyncService {
     configId: string,
     listId: string
   ): Promise<{ id: string; name: string }[]> {
-    const config = await this.getConfigById(configId);
+    const config = await this.getConfigForLookup(configId);
     this.configureMailchimpClient(config);
 
     try {
@@ -1263,6 +1263,14 @@ export class MailchimpSyncService {
       const title = error?.response?.body?.title ?? 'Mailchimp API error';
       throw new Error(`${title}: ${detail}`);
     }
+  }
+
+  /**
+   * Audiences, merge fields and interest groups are looked up while an admin
+   * sets the sync up, before it is switched on: they only need the key.
+   */
+  private async getConfigForLookup(id: string) {
+    return this.syncProviderSettingsService.getSyncConfig(id);
   }
 
   private async getConfigById(

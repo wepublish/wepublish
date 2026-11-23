@@ -3954,11 +3954,12 @@
         "listIdInfo": "L’audience Mailchimp vers laquelle les comptes utilisateur sont transférés. Une fois la clé API enregistrée, tu peux la choisir dans la liste ; sinon, saisis son ID figurant dans les paramètres de l’audience dans Mailchimp.",
         "dryRunInfo": "Montre quels contacts seraient modifiés dans Mailchimp, sans rien y changer. La limite d’essai vérifie un échantillon aléatoire de ce nombre de comptes ; laisse vide pour tout vérifier.",
         "stages": {
-          "connect": "1. Connecter",
-          "map": "2. Associer les données",
-          "sync": "3. Synchroniser & surveiller",
+          "connect": "Connecter",
+          "audience": "Audience",
+          "map": "Associer les données",
+          "sync": "Synchroniser & surveiller",
           "advanced": "Avancé",
-          "connectFirst": "Enregistre d’abord la clé API et choisis une audience. Tu pourras ensuite associer les données et lancer la synchronisation."
+          "connectFirst": "Enregistre d’abord la clé API. Avec elle, We.Publish récupère tes audiences dans Mailchimp ; ensuite tu en choisis une, tu associes les données et tu lances la synchronisation."
         }
       },
       "typeChangeTitle": "Changer vraiment le type ?",

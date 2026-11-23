@@ -10,7 +10,7 @@ import {
 import { SettingProvider } from '@wepublish/editor/api';
 import { humanizeError } from '@wepublish/ui/editor';
 import { DocumentNode } from 'graphql';
-import { PropsWithChildren, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { FieldValues } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { MdSearch } from 'react-icons/md';
@@ -19,15 +19,13 @@ import {
   GenericIntegrationFormProps,
   SingleGenericIntegrationForm,
 } from './genericIntegrationForm';
-import { ProviderOption } from './integrationCatalog';
-import { IntegrationEmptyState, ProviderChoice } from './integrationEmptyState';
+import { FirstProviderPicker, ProviderChoice } from './integrationEmptyState';
 import {
   AddIntegrationButton,
   CreateFixedIntegrationButton,
   DeleteIntegrationButton,
   ProviderTypeOption,
   suggestedIdFor,
-  useCreateProvider,
 } from './integrationRegistryActions';
 
 interface GenericIntegrationListProps<
@@ -76,75 +74,6 @@ const GenericIntegrationGrid = styled.div`
   gap: 24px;
   max-width: 960px;
 `;
-
-/** The empty state, where picking a provider adds it right away. */
-function FirstProviderPicker({
-  createMutation,
-  refetchQuery,
-  idOf,
-  ...props
-}: PropsWithChildren<{
-  providers?: ProviderOption[];
-  choices: ProviderChoice[];
-  createMutation?: DocumentNode;
-  refetchQuery: DocumentNode;
-  idOf: (choice: ProviderChoice) => string;
-}>) {
-  if (!createMutation) {
-    return (
-      <IntegrationEmptyState
-        providers={props.providers}
-        children={props.children}
-      />
-    );
-  }
-
-  return (
-    <ChoosableEmptyState
-      {...props}
-      createMutation={createMutation}
-      refetchQuery={refetchQuery}
-      idOf={idOf}
-    />
-  );
-}
-
-function ChoosableEmptyState({
-  createMutation,
-  refetchQuery,
-  idOf,
-  choices,
-  providers,
-  children,
-}: PropsWithChildren<{
-  providers?: ProviderOption[];
-  choices: ProviderChoice[];
-  createMutation: DocumentNode;
-  refetchQuery: DocumentNode;
-  idOf: (choice: ProviderChoice) => string;
-}>) {
-  const [createProvider, creating] = useCreateProvider(
-    createMutation,
-    refetchQuery
-  );
-
-  return (
-    <IntegrationEmptyState
-      providers={providers}
-      choices={choices}
-      disabled={creating}
-      onChoose={choice =>
-        createProvider({
-          id: idOf(choice),
-          type: choice.type,
-          name: choice.label,
-        })
-      }
-    >
-      {children}
-    </IntegrationEmptyState>
-  );
-}
 
 export function GenericIntegrationList<
   TSetting extends SettingProvider & { type?: string },

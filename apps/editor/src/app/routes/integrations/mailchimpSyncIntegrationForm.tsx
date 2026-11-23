@@ -25,8 +25,6 @@ import {
   MenuItem,
   Select,
   Switch,
-  Tab,
-  Tabs,
   TextField,
   Typography,
   TypographyProps,
@@ -57,6 +55,9 @@ import {
   humanizeError,
   IconButtonTooltip,
   InfoTooltip,
+  StepNav,
+  useWizard,
+  WizardStepper,
 } from '@wepublish/ui/editor';
 import { useCallback, useEffect, useId, useState } from 'react';
 import { Controller, useFieldArray, useForm, useWatch } from 'react-hook-form';
@@ -67,12 +68,12 @@ import { secretPlaceholder } from './secretPlaceholder';
 
 import { lazyMessage } from '../../utility';
 import mailChimpLogo from './assets/mailchimp.webp';
-import { IntegrationEmptyState } from './integrationEmptyState';
-import { CreateFixedIntegrationButton } from './integrationRegistryActions';
+import { FirstProviderPicker } from './integrationEmptyState';
 import { providerGuide } from './providerGuides';
 import { SetupGuide } from './setupGuide';
 
-type Stage = 'connect' | 'map' | 'sync' | 'advanced';
+const STAGES = ['connect', 'audience', 'map', 'sync', 'advanced'] as const;
+type Stage = (typeof STAGES)[number];
 
 export const StagePanel = styled.div`
   &[hidden] {
@@ -80,10 +81,14 @@ export const StagePanel = styled.div`
   }
 `;
 
-/** Where an admin left off: connecting, mapping the data, or running the sync. */
+/** Where an admin left off: connecting, choosing the audience, mapping the data, or running the sync. */
 const initialStage = (setting: SyncProviderSetting): Stage => {
-  if (!setting.mailchimp_isApiKeySet || !setting.mailchimp_listId) {
+  if (!setting.mailchimp_isApiKeySet) {
     return 'connect';
+  }
+
+  if (!setting.mailchimp_listId) {
+    return 'audience';
   }
 
   const mapped =
@@ -614,24 +619,19 @@ export function MailchimpSyncIntegrationForm() {
   if (!settings?.length) {
     return (
       <>
-        <IntegrationEmptyState
-          providers={[
+        <FirstProviderPicker
+          choices={[
             {
               type: SyncProviderType.Mailchimp,
               label: t('integrations.providers.mailchimpMarketing'),
               logo: mailChimpLogo,
             },
           ]}
-        >
-          <CreateFixedIntegrationButton
-            id="mailchimp-sync"
-            type={SyncProviderType.Mailchimp}
-            name="Mailchimp"
-            mutation={CreateSyncProviderSettingDocument}
-            refetchQuery={SyncProviderSettingsDocument}
-            label={t('integrations.setUp')}
-          />
-        </IntegrationEmptyState>
+          createMutation={CreateSyncProviderSettingDocument}
+          refetchQuery={SyncProviderSettingsDocument}
+          // The API reads the Mailchimp sync under this id.
+          idOf={() => 'mailchimp-sync'}
+        />
       </>
     );
   }
@@ -715,18 +715,19 @@ function SyncProviderSettingCard({
   const { t } = useTranslation();
   const connected =
     !!setting.mailchimp_isApiKeySet && !!setting.mailchimp_listId;
-  const [stage, setStage] = useState<Stage>(() => initialStage(setting));
-  const stageId = useId();
-  const tabProps = (value: Stage) => ({
-    id: `${stageId}-tab-${value}`,
-    'aria-controls': `${stageId}-panel-${value}`,
+  // The audiences come from Mailchimp, so they can only be listed once the key is saved.
+  const wizard = useWizard({
+    complete: [
+      !!setting.mailchimp_isApiKeySet,
+      connected,
+      connected,
+      connected,
+      true,
+    ],
+    initial: STAGES.indexOf(initialStage(setting)),
   });
-  const panelProps = (value: Stage, part?: string) => ({
-    id: part ? undefined : `${stageId}-panel-${value}`,
-    role: part ? undefined : 'tabpanel',
-    'aria-labelledby': part ? undefined : `${stageId}-tab-${value}`,
-    hidden: stage !== value,
-  });
+  const stage = STAGES[wizard.step];
+  const panelProps = (value: Stage) => ({ hidden: stage !== value });
   const guide =
     providerGuide(
       'mailchimp-sync',
@@ -826,6 +827,11 @@ function SyncProviderSettingCard({
     interestGroupsData?.mailchimpInterestGroups ?? [];
 
   useEffect(() => {
+    // Everything below comes from Mailchimp, which needs the saved key.
+    if (!setting.mailchimp_isApiKeySet) {
+      return;
+    }
+
     fetchLists({ variables: { configId: setting.id } });
 
     if (setting.mailchimp_listId) {
@@ -838,6 +844,7 @@ function SyncProviderSettingCard({
     }
   }, [
     setting.id,
+    setting.mailchimp_isApiKeySet,
     setting.mailchimp_listId,
     fetchLists,
     fetchMergeFields,
@@ -901,7 +908,7 @@ function SyncProviderSettingCard({
   });
 
   useEffect(() => {
-    if (watchedListId) {
+    if (watchedListId && setting.mailchimp_isApiKeySet) {
       fetchMergeFields({
         variables: { configId: setting.id, listId: watchedListId },
       });
@@ -909,7 +916,13 @@ function SyncProviderSettingCard({
         variables: { configId: setting.id, listId: watchedListId },
       });
     }
-  }, [watchedListId, setting.id, fetchMergeFields, fetchInterestGroups]);
+  }, [
+    watchedListId,
+    setting.id,
+    setting.mailchimp_isApiKeySet,
+    fetchMergeFields,
+    fetchInterestGroups,
+  ]);
 
   const {
     fields: mergeFields,
@@ -1093,44 +1106,18 @@ function SyncProviderSettingCard({
                 />
               </Typography>
 
-              <Tabs
-                value={stage}
-                onChange={(_event, value: Stage) => setStage(value)}
-                variant="scrollable"
-                sx={{
-                  marginBottom: 3,
-                  borderBottom: 1,
-                  borderColor: 'divider',
-                }}
-              >
-                <Tab
-                  value="connect"
-                  label={t('integrations.mailchimpSyncSettings.stages.connect')}
-                  {...tabProps('connect')}
-                />
-                <Tab
-                  value="map"
-                  label={t('integrations.mailchimpSyncSettings.stages.map')}
-                  disabled={!connected}
-                  {...tabProps('map')}
-                />
-                <Tab
-                  value="sync"
-                  label={t('integrations.mailchimpSyncSettings.stages.sync')}
-                  disabled={!connected}
-                  {...tabProps('sync')}
-                />
-                <Tab
-                  value="advanced"
-                  label={t(
-                    'integrations.mailchimpSyncSettings.stages.advanced'
-                  )}
-                  disabled={!connected}
-                  {...tabProps('advanced')}
-                />
-              </Tabs>
+              <WizardStepper
+                steps={STAGES.map(value => ({
+                  title: t(
+                    `integrations.mailchimpSyncSettings.stages.${value}`
+                  ),
+                }))}
+                step={wizard.step}
+                canGoTo={wizard.canGoTo}
+                onStep={wizard.goTo}
+              />
 
-              <StagePanel {...panelProps('sync', 'enabled')}>
+              <StagePanel {...panelProps('sync')}>
                 <Box sx={{ marginBottom: 3 }}>
                   <Controller
                     name="enabled"
@@ -1235,7 +1222,9 @@ function SyncProviderSettingCard({
                     {t('integrations.mailchimpSyncSettings.apiKeyInfo')}
                   </FormHelperText>
                 </FormControl>
+              </StagePanel>
 
+              <StagePanel {...panelProps('audience')}>
                 <FormControl
                   fullWidth
                   sx={{ marginBottom: 3 }}
@@ -1861,6 +1850,14 @@ function SyncProviderSettingCard({
                   )}
                 </Button>
               </StagePanel>
+
+              <StepNav
+                onBack={wizard.step > 0 ? wizard.back : undefined}
+                onNext={
+                  wizard.step < STAGES.length - 1 ? wizard.next : undefined
+                }
+                nextDisabled={!wizard.canGoTo(wizard.step + 1)}
+              />
             </CardContent>
 
             <CardActions sx={{ flexWrap: 'wrap', gap: 1 }}>
