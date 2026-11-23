@@ -236,13 +236,14 @@ describe('InvoiceDeliveryService.deliverRenewal', () => {
     expect(prisma.mailLog.create).not.toHaveBeenCalled();
   });
 
-  // The editor sees the error; the invoice is gone, so they can simply retry.
+  // The editor sees the error, with the provider's reason; the invoice is
+  // gone, so they can simply retry.
   it('fails and removes the invoice when the provider could not create it', async () => {
     const { service, provider, prisma, mailContext } = setup();
     provider.createRemoteInvoice.mockRejectedValue(new Error('bexio down'));
 
     await expect(service.deliverRenewal(subscription, invoice)).rejects.toThrow(
-      /could not create the invoice/
+      /could not create the invoice.*bexio down/
     );
 
     expect(prisma.invoice.delete).toHaveBeenCalledWith({

@@ -2679,6 +2679,8 @@
         "pushed_other": "{{count}} übertragen",
         "failed_one": "{{count}} fehlgeschlagen",
         "failed_other": "{{count}} fehlgeschlagen",
+        "created_one": "{{count}} erstellt",
+        "created_other": "{{count}} erstellt",
         "synced_one": "{{count}} Audience abgeglichen",
         "synced_other": "{{count}} Audiences abgeglichen",
         "checked_one": "{{count}} geprüft",
