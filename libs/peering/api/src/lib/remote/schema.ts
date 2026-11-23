@@ -7056,6 +7056,8 @@ export type PrintIssueBexioStats = {
   detailFetched: Scalars['Int']['output'];
   /** Found, but of a kind the options leave out. */
   excludedKind: Scalars['Int']['output'];
+  /** Counting per copy: recipients whose running period already received its number. */
+  exhausted: Scalars['Int']['output'];
   /** The options asked for bexio and it was read. */
   included: Scalars['Boolean']['output'];
   invoicesInWindow: Scalars['Int']['output'];
@@ -9101,6 +9103,7 @@ export enum SettingName {
   PrintBexioKinds = 'PRINT_BEXIO_KINDS',
   PrintExportDefaults = 'PRINT_EXPORT_DEFAULTS',
   PrintIssuesPerYear = 'PRINT_ISSUES_PER_YEAR',
+  PrintIssueCounting = 'PRINT_ISSUE_COUNTING',
   ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
   SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN',
   SessionTtlDays = 'SESSION_TTL_DAYS',
@@ -10064,6 +10067,7 @@ export type UserEmailQualityModel = {
 export enum UserEvent {
   AccountCreation = 'ACCOUNT_CREATION',
   EmailChange = 'EMAIL_CHANGE',
+  EmailVerification = 'EMAIL_VERIFICATION',
   LoginLink = 'LOGIN_LINK',
   PasswordReset = 'PASSWORD_RESET',
   TestMail = 'TEST_MAIL'

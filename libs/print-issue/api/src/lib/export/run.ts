@@ -144,6 +144,7 @@ const emptyStats = (): SelectStats => ({
   detailFetched: 0,
   ungeprueft: 0,
   zeroCopies: 0,
+  exhausted: 0,
 });
 
 type Pending = Omit<RecipientDraft, 'snapshot'> & { row: ExportRow };
@@ -189,6 +190,7 @@ export async function runExport(
           historicIssues: quota.historicIssues,
           countsAs,
           delivered: new Map(Object.entries(bexioDelivered)),
+          counting: quota.counting,
         },
         ...window,
       })

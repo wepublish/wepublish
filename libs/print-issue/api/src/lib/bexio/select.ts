@@ -8,7 +8,11 @@ import {
   readIssueOrder,
 } from './parse';
 import { addMonths } from '../rules/dates';
-import { owedWindowMonths, type RuleIssue } from '../rules/entitlement';
+import {
+  owedWindowMonths,
+  type PrintIssueCounting,
+  type RuleIssue,
+} from '../rules/entitlement';
 import { sameIssue } from '../rules/issue';
 
 export type BexioInvoice = {
@@ -48,6 +52,8 @@ export type BexioTopUp = {
   countsAs?: number;
   /** copies in delivered lists by `${invoiceId}:${recipientId}:${period.from}` */
   delivered: Map<string, number>;
+  /** `perCopy` also stops a running period once it got its number; default `perPeriod` */
+  counting?: PrintIssueCounting;
 };
 
 export type SelectStats = {
@@ -64,6 +70,8 @@ export type SelectStats = {
   /** of a kind the options leave out */
   excludedKind: number;
   zeroCopies: number;
+  /** counting per copy: recipients whose running period already got its number */
+  exhausted: number;
   /** invoices whose billed quantity differs from the linked recipients */
   quantityMismatch: number;
   detailFetched: number;
@@ -128,6 +136,7 @@ export async function selectBexioOrders(
     noValidPeriod: 0,
     excludedKind: 0,
     zeroCopies: 0,
+    exhausted: 0,
     quantityMismatch: 0,
     detailFetched: 0,
     ungeprueft: 0,
@@ -210,6 +219,18 @@ export async function selectBexioOrders(
       for (const { link, match } of recipients) {
         if (!wanted(match!.kind)) {
           stats.excludedKind++;
+          continue;
+        }
+
+        if (
+          topUp?.issuesPerYear &&
+          topUp.counting === 'perCopy' &&
+          receivedItsNumber(
+            { invoice, recipientId: link.contactId, period },
+            topUp
+          )
+        ) {
+          stats.exhausted++;
           continue;
         }
 
@@ -368,6 +389,16 @@ export async function selectBexioOrders(
 }
 
 const DAY_MS = 24 * 60 * 60 * 1000;
+
+/** Counting per copy: the running period already got what it is worth. */
+function receivedItsNumber(
+  entry: { invoice: BexioInvoice; recipientId: number; period: BexioPeriod },
+  topUp: BexioTopUp
+): boolean {
+  const { delivered, entitled } = owedCopies(entry, topUp);
+
+  return delivered >= entitled;
+}
 
 /** What a period is worth (its share of the issues per year) and what it got. */
 function owedCopies(

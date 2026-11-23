@@ -5825,6 +5825,11 @@ type PrintIssueBexioStats {
   """Found, but of a kind the options leave out."""
   excludedKind: Int!
 
+  """
+  Counting per copy: recipients whose running period already received its number.
+  """
+  exhausted: Int!
+
   """The options asked for bexio and it was read."""
   included: Boolean!
   invoicesInWindow: Int!
@@ -7283,6 +7288,7 @@ enum SettingName {
   PRINT_BEXIO_KINDS
   PRINT_EXPORT_DEFAULTS
   PRINT_ISSUES_PER_YEAR
+  PRINT_ISSUE_COUNTING
   RESET_PASSWORD_JWT_EXPIRES_MIN
   SEND_LOGIN_JWT_EXPIRES_MIN
   SESSION_TTL_DAYS
@@ -8304,6 +8310,7 @@ type UserEmailQualityModel {
 enum UserEvent {
   ACCOUNT_CREATION
   EMAIL_CHANGE
+  EMAIL_VERIFICATION
   LOGIN_LINK
   PASSWORD_RESET
   TEST_MAIL

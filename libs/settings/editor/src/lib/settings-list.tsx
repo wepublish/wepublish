@@ -174,6 +174,10 @@ const SETTINGS = {
     label: 'settingList.printIssuesPerYear',
     value: 0,
   },
+  [SettingName.PrintIssueCounting]: {
+    label: 'settingList.printIssueCounting',
+    value: 'perPeriod',
+  },
   [SettingName.PrintExportDefaults]: {
     label: 'settingList.printExportDefaults',
     value: DEFAULT_PRINT_EXPORT_OPTIONS,
@@ -189,6 +193,9 @@ const SETTINGS = {
 } as Record<SettingName, { label: string; value: unknown }>;
 
 const FEED_PAYWALLED_CONTENT_CHOICES = ['lead', 'visible', 'full'] as const;
+
+/** Per period: every issue while it runs. Per copy: until it got its number. */
+const PRINT_ISSUE_COUNTING_CHOICES = ['perPeriod', 'perCopy'] as const;
 
 type SettingValues = Record<SettingName, unknown>;
 
@@ -332,6 +339,10 @@ function SettingList() {
     (value: unknown, name?: SettingName): string => {
       if (name === SettingName.FeedPaywalledContent) {
         return t(`settingList.feedPaywalledContentChoice.${value}`);
+      }
+
+      if (name === SettingName.PrintIssueCounting) {
+        return t(`settingList.printIssueCountingChoice.${value}`);
       }
 
       if (value === true) {
@@ -614,6 +625,44 @@ function SettingList() {
                             t('settingList.info.printIssuesPerYear'),
                             t('settingList.issues')
                           )}
+
+                          {/* whether a running period stops once it got its number */}
+                          <FormControl fullWidth>
+                            <SettingRow>
+                              <FormLabel id="setting-print-issue-counting-label">
+                                {t(
+                                  SETTINGS[SettingName.PrintIssueCounting].label
+                                )}
+                              </FormLabel>
+                              <InfoTooltip
+                                text={t('settingList.info.printIssueCounting')}
+                              />
+                            </SettingRow>
+
+                            <Controller
+                              control={control}
+                              name={SettingName.PrintIssueCounting}
+                              render={({ field }) => (
+                                <RadioGroup
+                                  {...field}
+                                  aria-labelledby="setting-print-issue-counting-label"
+                                  value={field.value as string}
+                                >
+                                  {PRINT_ISSUE_COUNTING_CHOICES.map(choice => (
+                                    <FormControlLabel
+                                      key={choice}
+                                      value={choice}
+                                      disabled={isDisabled}
+                                      control={<Radio />}
+                                      label={t(
+                                        `settingList.printIssueCountingChoice.${choice}`
+                                      )}
+                                    />
+                                  ))}
+                                </RadioGroup>
+                              )}
+                            />
+                          </FormControl>
 
                           {/* how lists recognise orders in bexio; the defaults below offer these kinds */}
                           <Controller

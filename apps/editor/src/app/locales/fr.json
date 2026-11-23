@@ -2742,6 +2742,11 @@
     "settingList": {
       "printIssues": "Numéros imprimés",
       "printIssuesPerYear": "Numéros par an (imprimé)",
+      "printIssueCounting": "Décompte des numéros imprimés",
+      "printIssueCountingChoice": {
+        "perPeriod": "Par période : chaque numéro pendant la durée, les manquants suivent après la fin",
+        "perCopy": "Par exemplaire : fin dès que la période a reçu son nombre, même si l’abonnement court encore ; les manquants suivent"
+      },
       "issues": "numéros",
       "allowGuestCommentRating": "Autoriser les évaluations anonymes des commentaires",
       "comments": "Commentaires",
@@ -2809,7 +2814,8 @@
       "newArticlePeering": "Les articles nouvellement créés seront partagés par peering par défaut",
       "showPendingWhenNotPublished": "Afficher un article ou une page en attente, même s’ils ne sont pas encore publiés.",
       "info": {
-        "printIssuesPerYear": "Combien de numéros imprimés vaut un abonnement annuel. Les lecteur·trice·s dont la période payée se termine restent dans les exports jusqu’à avoir reçu ce nombre. 0 désactive la règle jusqu’à ce que l’import ait saisi les numéros précédents de l’année.",
+        "printIssuesPerYear": "Combien de numéros imprimés vaut un abonnement annuel. Les lecteur·trice·s dont la période payée se termine restent dans les exports jusqu’à avoir reçu ce nombre. 0 désactive la règle jusqu’à ce que l’import ait saisi les numéros précédents de l’année. Le décompte ci-dessous détermine si une période en cours peut en recevoir davantage.",
+        "printIssueCounting": "Par période, un abonnement reçoit chaque numéro paru pendant sa période payée, même plus que promis. Par exemplaire, chaque exemplaire livré compte : dès que la période en cours a atteint son nombre, l’abonnement ne reçoit plus de numéro jusqu’à sa prochaine période (ignoré comme « Quota reçu »). Dans les deux cas, les exemplaires manquants suivent après la fin de la période. S’applique aussi aux abonnements bexio, et seulement si « Numéros par an » est supérieur à 0.",
         "allowCommentEditing": "Les lecteur·trice·s peuvent encore modifier le texte de leurs propres commentaires après les avoir publiés.",
         "commentCharLimit": "Nombre maximal de caractères qu’un commentaire peut contenir. Les commentaires plus longs ne peuvent pas être envoyés.",
         "subscriptionExtendWindowDays": "Combien de jours avant l’échéance d’un abonnement les lecteur·trice·s voient «Renouveler maintenant» dans leur profil. 30 = comme avant ; 365 = à tout moment, tant qu’aucune facture n’est ouverte.",
@@ -5514,7 +5520,8 @@
           "skippedOpen": "Impayées, ignorées",
           "noValidPeriod": "Sans indication valable",
           "excludedKind": "Type de réception non choisi",
-          "quantityMismatch": "Quantité ≠ liens"
+          "quantityMismatch": "Quantité ≠ liens",
+          "exhausted": "Quota reçu (période en cours)"
         }
       },
       "rowsTable": {

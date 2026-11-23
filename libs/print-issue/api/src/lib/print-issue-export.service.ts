@@ -6,11 +6,20 @@ import { loadMembers } from './members/load';
 import type { BexioKind } from './bexio/parse';
 import type { PrintExportOptions } from './options';
 import { dbDateToYmd } from './rules/dates';
-import type { QuotaConfig } from './rules/entitlement';
+import {
+  PRINT_ISSUE_COUNTINGS,
+  type PrintIssueCounting,
+  type QuotaConfig,
+} from './rules/entitlement';
 import { issueLabel, type IssueNumbering } from './rules/issue';
 
 export const PRINT_ISSUES_PER_YEAR_SETTING = 'printIssuesPerYear';
+export const PRINT_ISSUE_COUNTING_SETTING = 'printIssueCounting';
 export const PRINT_BEXIO_KINDS_SETTING = 'printBexioKinds';
+
+/** The counting as stored; anything else counts per period, as before the setting. */
+export const printIssueCountingOf = (value: unknown): PrintIssueCounting =>
+  PRINT_ISSUE_COUNTINGS.find(counting => counting === value) ?? 'perPeriod';
 
 const isKind = (value: unknown): value is BexioKind => {
   const kind = value as Partial<BexioKind> | null;
@@ -130,11 +139,17 @@ export class PrintIssueExportService {
     return bexioKindsOf(setting?.value);
   }
 
-  /** The medium's issues per year (0 = owed copies off) and the issues shipped before tracking. */
+  /**
+   * The medium's issues per year (0 = owed copies off), how it counts copies,
+   * and the issues shipped before tracking.
+   */
   private async quota(): Promise<QuotaConfig> {
-    const [setting, historic] = await Promise.all([
+    const [setting, countingSetting, historic] = await Promise.all([
       this.prisma.setting.findUnique({
         where: { name: PRINT_ISSUES_PER_YEAR_SETTING },
+      }),
+      this.prisma.setting.findUnique({
+        where: { name: PRINT_ISSUE_COUNTING_SETTING },
       }),
       this.prisma.printIssue.findMany({
         where: { status: PrintIssueStatus.historic },
@@ -150,6 +165,7 @@ export class PrintIssueExportService {
         issueDate: dbDateToYmd(issue.issueDate),
         countsAs: issue.countsAs,
       })),
+      counting: printIssueCountingOf(countingSetting?.value),
     };
   }
 }

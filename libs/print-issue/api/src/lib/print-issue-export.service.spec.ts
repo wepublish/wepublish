@@ -170,6 +170,26 @@ describe('PrintIssueExportService', () => {
     });
   });
 
+  it('counts the way the medium set, per period for anything it does not know', async () => {
+    const countingFor = async (value: unknown) => {
+      prisma.setting.findUnique.mockImplementation(
+        async ({ where }: { where: { name: string } }) =>
+          where.name === 'printIssuesPerYear' ? { value: 6 }
+          : where.name === 'printIssueCounting' ? { value }
+          : null
+      );
+      vi.mocked(runExport).mockClear();
+      await service.compute(issue, { options });
+
+      return vi.mocked(runExport).mock.calls[0]![0].quota?.counting;
+    };
+
+    await expect(countingFor('perCopy')).resolves.toBe('perCopy');
+    await expect(countingFor('perPeriod')).resolves.toBe('perPeriod');
+    await expect(countingFor('nonsense')).resolves.toBe('perPeriod');
+    await expect(countingFor(null)).resolves.toBe('perPeriod');
+  });
+
   it('switches the owed-copies rule off while the setting is 0 or missing', async () => {
     prisma.setting.findUnique.mockResolvedValue(null);
 
@@ -284,6 +304,8 @@ describe('PrintIssueExportService', () => {
             { issueDate: '2026-08-23', countsAs: 2 },
             { issueDate: '2026-04-10', countsAs: 1 },
           ],
+          // no counting setting stored: per period, as before
+          counting: 'perPeriod',
         },
         excludeSubscriptionIds: undefined,
         excludeBexioRecipients: undefined,

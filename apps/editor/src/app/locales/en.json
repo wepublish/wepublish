@@ -2743,6 +2743,11 @@
     "settingList": {
       "printIssues": "Print issues",
       "printIssuesPerYear": "Issues per year (print)",
+      "printIssueCounting": "How printed issues are counted",
+      "printIssueCountingChoice": {
+        "perPeriod": "Per period: every issue while it runs, missing ones follow after the end",
+        "perCopy": "Per copy: stops once the period received its number, even while the subscription runs; missing ones follow"
+      },
       "issues": "issues",
       "activeSubscriptionsApiPublic": "Make the active subscriptions API accessible by the public",
       "allowCommentEditing": "Allow comment editing",
@@ -2810,7 +2815,8 @@
       "emailQualityMinMailsForUnresponsive": "… delivered mails",
       "emailQualityEvidenceWarnAfterDays": "Warn without delivery reports after … days",
       "info": {
-        "printIssuesPerYear": "How many printed issues a yearly subscription is worth. Readers whose paid period ends stay in the print exports until they received that many. 0 switches the rule off until the import has brought in the earlier issues of the year.",
+        "printIssuesPerYear": "How many printed issues a yearly subscription is worth. Readers whose paid period ends stay in the print exports until they received that many. 0 switches the rule off until the import has brought in the earlier issues of the year. Whether a running period may get more is up to the counting below.",
+        "printIssueCounting": "Per period, a subscription gets every issue published during its paid period, even more than promised. Per copy, every delivered copy counts: once the running period has its number, the subscription gets no further issue until its next period (skipped as «Quota received»). Either way, missing copies follow after the period ends. Applies to bexio subscriptions too, and only while «Issues per year» is above 0.",
         "allowCommentEditing": "Readers can still change the text of their own comments after posting them.",
         "commentCharLimit": "Maximum number of characters a comment may contain. Longer comments cannot be submitted.",
         "subscriptionExtendWindowDays": "How many days before a subscription ends readers see \"Renew now\" in their profile. 30 = as before; 365 = any time, as long as no invoice is open.",
@@ -5514,7 +5520,8 @@
           "skippedOpen": "Unpaid, left out",
           "noValidPeriod": "Without a valid period or issue",
           "excludedKind": "Delivery type not selected",
-          "quantityMismatch": "Quantity ≠ links"
+          "quantityMismatch": "Quantity ≠ links",
+          "exhausted": "Quota received (running period)"
         }
       },
       "rowsTable": {
