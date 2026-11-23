@@ -333,6 +333,10 @@ export function classifySubscription(
   // that copy belongs to the subscription's first period
   const chargedTo = (period: RulePeriod | undefined) =>
     period ?? (startsEarlier ? earliestStarting(sub.periods) : undefined);
+  // counting per copy: that copy is a free extra, charged to no period, so
+  // the first period still gets its full number
+  const freeExtra =
+    startsEarlier && shipDay < subscribedOn && quota.counting === 'perCopy';
   const paidUntil = sub.paidUntil ? zurichDate(sub.paidUntil) : null;
 
   if (startsOn > day) {
@@ -368,7 +372,8 @@ export function classifySubscription(
     }
   } else {
     if (paidUntil !== null && paidUntil >= day) {
-      const charged = chargedTo(chargedPeriod(sub.periods, day));
+      const charged =
+        freeExtra ? undefined : chargedTo(chargedPeriod(sub.periods, day));
 
       if (receivedItsNumber(sub, charged, quota)) {
         return excluded('exhausted');
@@ -390,7 +395,10 @@ export function classifySubscription(
           sub.openInvoiceIds.includes(period.invoiceId)
         )
       );
-      const charged = chargedTo(openPeriod ?? chargedPeriod(sub.periods, day));
+      const charged =
+        freeExtra ? undefined : (
+          chargedTo(openPeriod ?? chargedPeriod(sub.periods, day))
+        );
 
       if (receivedItsNumber(sub, charged, quota)) {
         return excluded('exhausted');

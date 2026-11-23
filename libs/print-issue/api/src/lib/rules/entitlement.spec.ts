@@ -711,6 +711,65 @@ describe('classifySubscription — the first issue the reader chose («Abo-Start
       classifySubscription(reader(null), supplementOf, NO_QUOTA)
     ).toMatchObject({ include: true, reason: 'paid' });
   });
+
+  describe('counting per copy («pro Exemplar»)', () => {
+    const PER_COPY: QuotaConfig = { ...QUOTA_6, counting: 'perCopy' };
+
+    // a free extra: the first period still gets its full number afterwards
+    it('gives the chosen issue that shipped before the start as a free extra, charged to no period', () => {
+      for (const issue of [exportOf, supplementOf]) {
+        expect(
+          classifySubscription(reader(SHIPPED), issue, PER_COPY)
+        ).toMatchObject({ include: true, reason: 'paid', periodId: null });
+      }
+    });
+
+    it('gives it free even when the first period already got its number', () => {
+      const full = {
+        ...reader(SHIPPED),
+        deliveries: Array.from({ length: 6 }, () => ({ periodId: 'pFirst' })),
+      };
+
+      expect(classifySubscription(full, exportOf, PER_COPY)).toMatchObject({
+        include: true,
+        periodId: null,
+      });
+    });
+
+    it('also for a reader whose first invoice is still open', () => {
+      const open = {
+        ...reader(SHIPPED),
+        paidUntil: null,
+        periods: [{ ...FIRST, paid: false }],
+        openInvoiceIds: ['iFirst'],
+      };
+
+      expect(classifySubscription(open, exportOf, PER_COPY)).toMatchObject({
+        include: true,
+        reason: 'openInvoice',
+        periodId: null,
+      });
+    });
+
+    it('charges the issues shipped after the start to the first period as usual', () => {
+      expect(
+        classifySubscription(
+          reader(SHIPPED),
+          { issueDate: '2026-12-04' },
+          PER_COPY
+        )
+      ).toMatchObject({ include: true, reason: 'paid', periodId: 'pFirst' });
+    });
+
+    it('leaves counting per period as it was: the copy counts toward the first period', () => {
+      expect(
+        classifySubscription(reader(SHIPPED), exportOf, {
+          ...PER_COPY,
+          counting: 'perPeriod',
+        })
+      ).toMatchObject({ include: true, periodId: 'pFirst' });
+    });
+  });
 });
 
 describe('entitledIssues', () => {
