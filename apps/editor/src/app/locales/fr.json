@@ -4731,8 +4731,6 @@
         "job": "Envoi",
         "jobAll": "Tous les envois",
         "all": "Tous",
-        "title": "Filtres",
-        "reset": "Réinitialiser les filtres",
         "typeHint": "Ce qui a déclenché l’envoi.",
         "jobHelp": "Un envoi regroupe tous les e-mails envoyés en un clic via « Messages manuels ». Sélectionnez-en un pour ne voir que ses e-mails.",
         "channel": "Envoi"
