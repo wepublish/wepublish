@@ -3,17 +3,19 @@ import {
   MailChannel,
   MailHistoryMatch,
   MailLogState,
+  MailRollingKind,
   MailTemplateDocument,
 } from '@wepublish/editor/api';
-import { DateRangeFilter } from '@wepublish/ui/editor';
 import {
   Autocomplete,
   Button,
+  Checkbox,
   FormControl,
   FormControlLabel,
   FormHelperText,
   FormLabel,
   IconButton,
+  InputAdornment,
   MenuItem,
   Radio,
   RadioGroup,
@@ -30,11 +32,21 @@ import {
   MailHistoryRow,
 } from './audience-state';
 
+import { DateWindowFilter } from './date-window-filter';
+
+/** A mail was sent in the past, so there is no "in the next x days". */
+const SENT_KINDS = [MailRollingKind.LastDays, MailRollingKind.OlderThanDays];
+
 type MailHistoryValue = AudienceFilterState['mailHistory'];
 
 export type MailHistoryFilterProps = {
   value: MailHistoryValue;
   onChange: (value: MailHistoryValue) => void;
+  /**
+   * The audience selects subscriptions, so a condition can be bound to the
+   * very subscription instead of to its owner.
+   */
+  subscriptionBase?: boolean;
 };
 
 /**
@@ -42,7 +54,11 @@ export type MailHistoryFilterProps = {
  * dates" — one row per condition, combined by all or any. Reads like a
  * sentence from left to right, so a filter can be checked at a glance.
  */
-export function MailHistoryFilter({ value, onChange }: MailHistoryFilterProps) {
+export function MailHistoryFilter({
+  value,
+  onChange,
+  subscriptionBase = false,
+}: MailHistoryFilterProps) {
   const { t } = useTranslation();
   const { letterAvailable } = useLetterChannel();
   const { data } = useQuery(MailTemplateDocument);
@@ -148,6 +164,31 @@ export function MailHistoryFilter({ value, onChange }: MailHistoryFilterProps) {
                 ))}
               </TextField>
 
+              <TextField
+                type="number"
+                size="small"
+                label={t('mailSend.mailHistory.minCount')}
+                value={row.minCount}
+                onChange={event => {
+                  const minCount = parseInt(event.target.value, 10);
+
+                  if (Number.isFinite(minCount) && minCount > 0) {
+                    patchRow(row.id, { minCount });
+                  }
+                }}
+                slotProps={{
+                  htmlInput: { min: 1, max: 99 },
+                  input: {
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        {t('mailSend.mailHistory.times')}
+                      </InputAdornment>
+                    ),
+                  },
+                }}
+                style={{ width: 150 }}
+              />
+
               <Tooltip title={t('mailSend.mailHistory.remove')}>
                 <IconButton
                   size="small"
@@ -221,12 +262,50 @@ export function MailHistoryFilter({ value, onChange }: MailHistoryFilterProps) {
               )}
             </Stack>
 
-            <DateRangeFilter
+            <DateWindowFilter
               label={t('mailSend.mailHistory.sentBetween')}
               disableFuture
-              value={{ from: row.from, to: row.to }}
-              onChange={({ from, to }) => patchRow(row.id, { from, to })}
+              range={{ from: row.from, to: row.to }}
+              rolling={row.rolling}
+              kinds={SENT_KINDS}
+              onRangeChange={({ from, to }) => patchRow(row.id, { from, to })}
+              onRollingChange={rolling => patchRow(row.id, { rolling })}
             />
+
+            <Stack>
+              {subscriptionBase && (
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      size="small"
+                      checked={row.onSubscription}
+                      onChange={(_event, onSubscription) =>
+                        patchRow(row.id, { onSubscription })
+                      }
+                    />
+                  }
+                  label={t('mailSend.mailHistory.onSubscription')}
+                />
+              )}
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    size="small"
+                    checked={row.onlyOpenInvoice}
+                    onChange={(_event, onlyOpenInvoice) =>
+                      patchRow(row.id, { onlyOpenInvoice })
+                    }
+                  />
+                }
+                label={t('mailSend.mailHistory.onlyOpenInvoice')}
+              />
+              {((subscriptionBase && row.onSubscription) ||
+                row.onlyOpenInvoice) && (
+                <FormHelperText style={{ marginLeft: 0 }}>
+                  {t('mailSend.mailHistory.triggerHint')}
+                </FormHelperText>
+              )}
+            </Stack>
           </Stack>
         ))}
 

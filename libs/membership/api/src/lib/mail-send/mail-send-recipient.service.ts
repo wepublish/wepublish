@@ -20,9 +20,12 @@ import {
   MailEmailSegment,
   MailHistoryCondition,
   MailHistoryMatch,
+  MailHistoryScope,
+  MailRollingRange,
   MailRecipientBase,
   MailSubscriptionState,
 } from './mail-send.model';
+import { rollingToRange } from './rolling-dates';
 
 export type SubscriptionWithRelations = Subscription & {
   memberPlan?: unknown;
@@ -136,6 +139,9 @@ const withSubscriptionUser = (
   email: Prisma.UserWhereInput | null
 ): Prisma.SubscriptionWhereInput =>
   email ? { AND: [where, { user: email }] } : where;
+
+/** What a counted mail-history condition counts mails per. */
+type CountedBy = 'recipientID' | 'subscriptionId';
 
 /**
  * Resolves a manual-send audience into concrete recipients and counts.
@@ -594,6 +600,10 @@ export class MailSendRecipientService {
   private async buildUserLevelWhere(
     audience: MailAudienceInput
   ): Promise<Prisma.UserWhereInput | null> {
+    // Every path that builds a filter comes through here first, so this is
+    // where the counted conditions are looked up for the synchronous builders.
+    await this.resolveCounts(audience);
+
     const parts = [
       await this.buildEmailWhere(audience),
       this.buildMailHistoryWhere(audience),
@@ -606,18 +616,85 @@ export class MailSendRecipientService {
     return parts.length === 1 ? parts[0] : { AND: parts };
   }
 
+  /** Who qualifies for each counted condition, see `resolveCounts`. */
+  private counted = new WeakMap<
+    MailHistoryCondition,
+    { by: CountedBy; ids: string[] }
+  >();
+
+  /**
+   * Whether the mail history is checked on the subscription the audience
+   * selects instead of on its owner: as soon as one condition asks for it, and
+   * only where the audience has subscriptions to check.
+   */
+  private historyOnSubscription(audience: MailAudienceInput): boolean {
+    return (
+      this.allowsSubscriptionTemplates(audience) &&
+      (audience.mailHistory?.conditions ?? []).some(
+        condition => condition.scope === MailHistoryScope.subscription
+      )
+    );
+  }
+
+  /** The mail history as a filter on the person; null when there is none. */
   private buildMailHistoryWhere(
     audience: MailAudienceInput
   ): Prisma.UserWhereInput | null {
-    const conditions = audience.mailHistory?.conditions ?? [];
-
-    if (!conditions.length) {
+    // Checked on the subscription instead, see `buildSubscriptionHistoryWhere`.
+    if (this.historyOnSubscription(audience)) {
       return null;
     }
 
-    const parts = conditions.map(condition =>
-      this.mailHistoryConditionWhere(condition)
+    return this.combineHistory(
+      audience,
+      (audience.mailHistory?.conditions ?? []).map(condition =>
+        this.personConditionWhere(condition)
+      )
     );
+  }
+
+  /**
+   * The mail history as a filter on the subscription, for an audience with a
+   * condition bound to the subscription. Conditions on the person are kept in
+   * the same filter, through the owner, so "all" and "any" still combine
+   * every condition with every other.
+   */
+  private buildSubscriptionHistoryWhere(
+    audience: MailAudienceInput
+  ): Prisma.SubscriptionWhereInput | null {
+    if (!this.historyOnSubscription(audience)) {
+      return null;
+    }
+
+    return this.combineHistory(
+      audience,
+      (audience.mailHistory?.conditions ?? []).map(
+        (condition): Prisma.SubscriptionWhereInput => {
+          if (condition.scope !== MailHistoryScope.subscription) {
+            return { user: this.personConditionWhere(condition) };
+          }
+
+          if (this.countsMails(condition)) {
+            return this.idsWhere(condition, 'subscriptionId');
+          }
+
+          const log = this.mailLogWhere(condition);
+
+          return condition.negate ?
+              { mailLogs: { none: log } }
+            : { mailLogs: { some: log } };
+        }
+      )
+    );
+  }
+
+  private combineHistory<T extends object>(
+    audience: MailAudienceInput,
+    parts: T[]
+  ): T | { AND: T[] } | { OR: T[] } | null {
+    if (!parts.length) {
+      return null;
+    }
 
     if (parts.length === 1) {
       return parts[0];
@@ -628,10 +705,91 @@ export class MailSendRecipientService {
       : { AND: parts };
   }
 
-  /** One condition on the person's mail log, as a filter on the person. */
-  private mailHistoryConditionWhere(
+  /** Whether a condition asks for more than one such mail. */
+  private countsMails(condition: MailHistoryCondition): boolean {
+    return (condition.minCount ?? 1) > 1;
+  }
+
+  /** What a counted condition counts mails per: the person or the subscription. */
+  private countedBy(
+    audience: MailAudienceInput,
     condition: MailHistoryCondition
-  ): Prisma.UserWhereInput {
+  ): CountedBy {
+    return (
+        this.historyOnSubscription(audience) &&
+          condition.scope === MailHistoryScope.subscription
+      ) ?
+        'subscriptionId'
+      : 'recipientID';
+  }
+
+  /**
+   * "At least x such mails" is not something a relation filter can say, so
+   * the mail log is asked who qualifies and the audience filters on those
+   * ids. Remembered per condition: an audience resolved page by page keeps
+   * the same people from the first page to the last.
+   */
+  private async resolveCounts(audience: MailAudienceInput): Promise<void> {
+    for (const condition of audience.mailHistory?.conditions ?? []) {
+      if (!this.countsMails(condition)) {
+        continue;
+      }
+
+      const by = this.countedBy(audience, condition);
+
+      if (this.counted.get(condition)?.by === by) {
+        continue;
+      }
+
+      const having = { id: { _count: { gte: condition.minCount } } };
+      const where = this.mailLogWhere(condition);
+      const ids =
+        by === 'subscriptionId' ?
+          (
+            await this.prisma.mailLog.groupBy({
+              by: ['subscriptionId'],
+              where: { ...where, subscriptionId: { not: null } },
+              having,
+            })
+          ).map(({ subscriptionId }) => subscriptionId as string)
+        : (
+            await this.prisma.mailLog.groupBy({
+              by: ['recipientID'],
+              where,
+              having,
+            })
+          ).map(({ recipientID }) => recipientID);
+
+      this.counted.set(condition, { by, ids });
+    }
+  }
+
+  /** A counted condition as a filter on the ids the mail log named. */
+  private idsWhere(
+    condition: MailHistoryCondition,
+    by: CountedBy
+  ): { id?: { in: string[] } | { notIn: string[] } } {
+    const counted = this.counted.get(condition);
+
+    if (counted?.by !== by) {
+      throw new Error(
+        'A counted mail-history condition was used before it was resolved'
+      );
+    }
+
+    if (!condition.negate) {
+      // An empty list is "nobody", said explicitly.
+      return { id: { in: counted.ids } };
+    }
+
+    // Nobody got it that often: everybody got it less often.
+    return counted.ids.length ? { id: { notIn: counted.ids } } : {};
+  }
+
+  /** The mails a condition asks about. */
+  private mailLogWhere(
+    condition: MailHistoryCondition
+  ): Prisma.MailLogWhereInput {
     const log: Prisma.MailLogWhereInput = {
       mailTemplateId: condition.mailTemplateId,
     };
@@ -644,9 +802,32 @@ export class MailSendRecipientService {
       log.channel = condition.channel;
     }
 
-    if (condition.from || condition.to) {
-      log.sentDate = this.dateRange(condition.from, condition.to);
+    if (condition.from || condition.to || condition.rolling) {
+      log.sentDate = this.dateRange(
+        condition.from,
+        condition.to,
+        condition.rolling
+      );
     }
+
+    if (condition.onlyOpenInvoice) {
+      // `is` with a filter never matches a mail without an invoice, which is
+      // every mail sent before the invoice was recorded.
+      log.invoice = { is: { paidAt: null, canceledAt: null } };
+    }
+
+    return log;
+  }
+
+  /** One condition on the person's mail log, as a filter on the person. */
+  private personConditionWhere(
+    condition: MailHistoryCondition
+  ): Prisma.UserWhereInput {
+    if (this.countsMails(condition)) {
+      return this.idsWhere(condition, 'recipientID');
+    }
+
+    const log = this.mailLogWhere(condition);
 
     // `none` is a relation filter (NOT EXISTS), not a negated column, so a
     // person with no mail at all is kept. Never `NOT` here.
@@ -715,7 +896,19 @@ export class MailSendRecipientService {
    * The period an ended subscription must fall into: either an explicit range
    * the editor picked, or a rolling window of the last N days.
    */
-  private dateRange(from?: Date, to?: Date): Prisma.DateTimeFilter {
+  /**
+   * A date filter from fixed dates or, when given, from a rolling range read
+   * against this moment.
+   */
+  private dateRange(
+    from?: Date,
+    to?: Date,
+    rolling?: MailRollingRange | null
+  ): Prisma.DateTimeFilter {
+    if (rolling) {
+      ({ from, to } = rollingToRange(rolling, new Date()));
+    }
+
     const range: Prisma.DateTimeFilter = {};
 
     if (from) {
@@ -793,6 +986,12 @@ export class MailSendRecipientService {
       and.push({ paymentPeriodicity: audience.paymentPeriodicity });
     }
 
+    const history = this.buildSubscriptionHistoryWhere(audience);
+
+    if (history) {
+      and.push(history);
+    }
+
     return { AND: and };
   }
 
@@ -828,14 +1027,26 @@ export class MailSendRecipientService {
       and.push({ paymentPeriodicity: audience.paymentPeriodicity });
     }
 
-    if (audience.startsAtFrom || audience.startsAtTo) {
+    if (
+      audience.startsAtFrom ||
+      audience.startsAtTo ||
+      audience.startsAtRolling
+    ) {
       and.push({
-        startsAt: this.dateRange(audience.startsAtFrom, audience.startsAtTo),
+        startsAt: this.dateRange(
+          audience.startsAtFrom,
+          audience.startsAtTo,
+          audience.startsAtRolling
+        ),
       });
     }
 
-    if (audience.endsAtFrom || audience.endsAtTo) {
-      const endsAt = this.dateRange(audience.endsAtFrom, audience.endsAtTo);
+    if (audience.endsAtFrom || audience.endsAtTo || audience.endsAtRolling) {
+      const endsAt = this.dateRange(
+        audience.endsAtFrom,
+        audience.endsAtTo,
+        audience.endsAtRolling
+      );
 
       and.push({
         OR: [
@@ -873,6 +1084,12 @@ export class MailSendRecipientService {
         replacesSubscriptionID:
           audience.hasReplacedSubscription ? { not: null } : { equals: null },
       });
+    }
+
+    const history = this.buildSubscriptionHistoryWhere(audience);
+
+    if (history) {
+      and.push(history);
     }
 
     return and.length ? { AND: and } : {};

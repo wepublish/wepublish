@@ -1146,6 +1146,12 @@ export type CreateExternalAppInput = {
   url: Scalars['String']['input'];
 };
 
+export type CreateSavedAudienceFilterInput = {
+  audience: MailAudienceInput;
+  description?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+};
+
 export type CreateSubscriptionInfo = {
   __typename?: 'CreateSubscriptionInfo';
   discountCodeValid?: Maybe<Scalars['Boolean']['output']>;
@@ -2531,6 +2537,8 @@ export type MailAudienceInput = {
   endedWithinDays?: InputMaybe<Scalars['Int']['input']>;
   /** Subscribers audience only: only subscriptions whose effective end (cancellation date, else paidUntil) is on or after this date. */
   endsAtFrom?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Subscribers audience only: effective end within a range relative to now. Takes the place of endsAtFrom and endsAtTo when given. */
+  endsAtRolling?: InputMaybe<MailRollingRange>;
   /** Subscribers audience only: only subscriptions whose effective end (cancellation date, else paidUntil) is on or before this date. */
   endsAtTo?: InputMaybe<Scalars['DateTime']['input']>;
   /** Subscribers audience only: true keeps only subscriptions that replaced another one (typically an upgrade, but downgrades and lateral plan switches are included too, and manual or imported changes are not detected). */
@@ -2547,6 +2555,8 @@ export type MailAudienceInput = {
   paymentPeriodicity?: InputMaybe<PaymentPeriodicity>;
   /** Subscribers audience only: only subscriptions that started on or after this date. */
   startsAtFrom?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Subscribers audience only: started within a range relative to now. Takes the place of startsAtFrom and startsAtTo when given. */
+  startsAtRolling?: InputMaybe<MailRollingRange>;
   /** Subscribers audience only: only subscriptions that started on or before this date. */
   startsAtTo?: InputMaybe<Scalars['DateTime']['input']>;
   subscriptionState?: InputMaybe<MailSubscriptionState>;
@@ -2580,8 +2590,16 @@ export type MailHistoryCondition = {
   from?: InputMaybe<Scalars['DateTime']['input']>;
   /** The mail template that was, or was not, sent. */
   mailTemplateId: Scalars['String']['input'];
+  /** How many such mails it takes, at least. Defaults to 1. With negate: keeps people who got fewer. */
+  minCount?: InputMaybe<Scalars['Int']['input']>;
   /** true: keeps people who did NOT receive such a mail, including people with no mail at all. */
   negate?: InputMaybe<Scalars['Boolean']['input']>;
+  /** true: only mails about an invoice that is still open (neither paid nor cancelled). Mails sent before the invoice was recorded in the mail log never match. */
+  onlyOpenInvoice?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Sent within a range relative to now. Takes the place of from and to when given. */
+  rolling?: InputMaybe<MailRollingRange>;
+  /** Defaults to person. Mails sent before the subscription was recorded in the mail log never match the subscription scope. */
+  scope?: InputMaybe<MailHistoryScope>;
   /** Only mails that ended in one of these states. Empty or absent means any. */
   states?: InputMaybe<Array<MailLogState>>;
   /** Sent on or before. */
@@ -2600,12 +2618,22 @@ export enum MailHistoryMatch {
   Any = 'any'
 }
 
+/** person: any mail the person got. subscription: only mails about the very subscription the audience selects; on an audience without subscriptions it falls back to person. */
+export enum MailHistoryScope {
+  Person = 'person',
+  Subscription = 'subscription'
+}
+
 export type MailLogFilter = {
   channel?: InputMaybe<MailChannel>;
+  /** Only mails about this invoice. */
+  invoiceId?: InputMaybe<Scalars['String']['input']>;
   mailSendJobId?: InputMaybe<Scalars['String']['input']>;
   mailTemplateId?: InputMaybe<Scalars['String']['input']>;
   recipientId?: InputMaybe<Scalars['String']['input']>;
   state?: InputMaybe<MailLogState>;
+  /** Only mails about this subscription. */
+  subscriptionId?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<MailLogType>;
 };
 
@@ -2618,6 +2646,8 @@ export type MailLogModel = {
   /** Why a rejected mail could not be delivered. */
   error?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
+  /** The invoice the mail is about, for invoice mails. Null otherwise and for mails sent before this was recorded. */
+  invoiceId?: Maybe<Scalars['String']['output']>;
   mailProviderID: Scalars['String']['output'];
   mailSendJobId?: Maybe<Scalars['String']['output']>;
   mailTemplate: MailLogTemplate;
@@ -2627,6 +2657,8 @@ export type MailLogModel = {
   sentDate: Scalars['DateTime']['output'];
   state: MailLogState;
   subject?: Maybe<Scalars['String']['output']>;
+  /** The subscription the mail is about. Null for mails with no such trigger and for mails sent before this was recorded. */
+  subscriptionId?: Maybe<Scalars['String']['output']>;
   type?: Maybe<MailLogType>;
 };
 
@@ -2685,6 +2717,18 @@ export enum MailRecipientBase {
   HasSubscription = 'hasSubscription',
   NoActiveSubscription = 'noActiveSubscription'
 }
+
+/** lastDays: within the last x days. olderThanDays: more than x days ago. nextDays: within the next x days. */
+export enum MailRollingKind {
+  LastDays = 'lastDays',
+  NextDays = 'nextDays',
+  OlderThanDays = 'olderThanDays'
+}
+
+export type MailRollingRange = {
+  days: Scalars['Int']['input'];
+  kind: MailRollingKind;
+};
 
 export type MailSegmentCount = {
   __typename?: 'MailSegmentCount';
@@ -3636,6 +3680,8 @@ export type Mutation = {
   createPrintIssue: PrintIssue;
   /** Creates a rating system answer. */
   createRatingSystemAnswer: CommentRatingSystemAnswer;
+  /** Save a recipient filter under a name. */
+  createSavedAudienceFilter: SavedAudienceFilterModel;
   createSession: SessionWithToken;
   createSessionWithJWT: SessionWithToken;
   /** Signs a We.Publish admin in with the code auth.wepublish.cloud returned: as the account connected to that We.Publish identity, else the one with its email, else a new one. The account becomes an admin with the names from We.Publish and can only sign in this way from then on. */
@@ -3751,6 +3797,8 @@ export type Mutation = {
   deletePrintIssueDelivery: PrintIssue;
   /** Deletes a rating system answer. */
   deleteRatingSystemAnswer: CommentRatingSystemAnswer;
+  /** Delete a saved recipient filter. */
+  deleteSavedAudienceFilter: SavedAudienceFilterModel;
   /** Deletes an existing subscription. */
   deleteSubscription: PublicSubscription;
   /** Delete an existing subscription flow */
@@ -3995,6 +4043,8 @@ export type Mutation = {
   updatePrintIssue: PrintIssue;
   /** Update the comment rating system. */
   updateRatingSystem: CommentRatingSystem;
+  /** Rename a saved recipient filter, change its description or replace the filter it holds. */
+  updateSavedAudienceFilter: SavedAudienceFilterModel;
   /** Marks an SEO checklist item as done or not done and returns all completed items. */
   updateSeoChecklistItem: Array<SeoChecklistItem>;
   /** Updates an existing setting. */
@@ -4593,6 +4643,11 @@ export type MutationCreateRatingSystemAnswerArgs = {
 };
 
 
+export type MutationCreateSavedAudienceFilterArgs = {
+  input: CreateSavedAudienceFilterInput;
+};
+
+
 export type MutationCreateSessionArgs = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
@@ -4951,6 +5006,11 @@ export type MutationDeletePrintIssueDeliveryArgs = {
 
 
 export type MutationDeleteRatingSystemAnswerArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteSavedAudienceFilterArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -5820,6 +5880,12 @@ export type MutationUpdateRatingSystemArgs = {
   answers?: InputMaybe<Array<UpdateCommentRatingSystemAnswerInput>>;
   id: Scalars['String']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationUpdateSavedAudienceFilterArgs = {
+  id: Scalars['String']['input'];
+  input: UpdateSavedAudienceFilterInput;
 };
 
 
@@ -7887,6 +7953,8 @@ export type Query = {
    *
    */
   revenue: Array<DashboardInvoice>;
+  /** The saved recipient filters, by name. Needs the permission to send manual messages or to manage delivery channels. */
+  savedAudienceFilters: Array<SavedAudienceFilterModel>;
   /** Returns a checklist of the SEO setup of the website. */
   seoChecklist: SeoChecklist;
   /**
@@ -9041,6 +9109,17 @@ export type RichTextBlockInput = {
   richText?: InputMaybe<Scalars['RichText']['input']>;
   /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
   timing?: InputMaybe<BlockTimingInput>;
+};
+
+export type SavedAudienceFilterModel = {
+  __typename?: 'SavedAudienceFilterModel';
+  /** The MailAudienceInput as it was saved. Rolling dates stay rolling, so the filter means the same thing whenever it is loaded. */
+  audience: Scalars['JSONObject']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  name: Scalars['String']['output'];
 };
 
 export type SendTestMailTemplateInput = {
@@ -10213,6 +10292,14 @@ export type UpdateCrowdfundingInput = {
   goals?: InputMaybe<Array<CreateCrowdfundingGoalInput>>;
   id: Scalars['String']['input'];
   memberPlans?: InputMaybe<Array<CreateCrowdfundingMemberPlan>>;
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateSavedAudienceFilterInput = {
+  /** Replaces the saved filter by this one. */
+  audience?: InputMaybe<MailAudienceInput>;
+  /** An empty text removes the description. */
+  description?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
 };
 

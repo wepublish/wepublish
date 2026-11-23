@@ -10,6 +10,8 @@ import { MailLogSyncService } from './mail-log-sync.service';
 import { SuppressionSyncService } from './suppression-sync.service';
 import { MailSendJobResolver } from './mail-send-job.resolver';
 import { MailSendJobOutcomeService } from './mail-send-job-outcome.service';
+import { SavedAudienceFilterResolver } from './saved-audience-filter.resolver';
+import { SavedAudienceFilterService } from './saved-audience-filter.service';
 
 @Module({
   imports: [PrismaModule, SettingModule],
@@ -23,6 +25,8 @@ import { MailSendJobOutcomeService } from './mail-send-job-outcome.service';
     MailLogSyncService,
     SuppressionSyncService,
     EmailEvidenceService,
+    SavedAudienceFilterResolver,
+    SavedAudienceFilterService,
   ],
   exports: [MailSendRecipientService],
 })

@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
   Alert,
+  Box,
   Button,
   Card,
   CardContent,
@@ -37,11 +38,15 @@ import {
   useAudienceState,
 } from '../mail-send/audience/audience-state';
 import { describeAudience } from '../mail-send/audience/audience-summary';
+import { SavedAudienceFilters } from '../mail-send/audience/saved-audience-filters';
 import { RecipientListModal } from '../mail-send/audience/recipient-list-modal';
 import { RecipientSummary } from '../mail-send/audience/recipient-summary';
 import { canGoToStep, StepNav, WizardStepper } from '../mail-send/step-nav';
 import { deliveryChannel, useDeliveryChannels } from './channels';
 import { useAudienceLookups } from './use-audience-lookups';
+
+/** As wide as the wizard column of the send page, which hosts the same filter. */
+const FILTER_WIDTH = 560;
 
 const STEP_AUDIENCE = 0;
 const STEP_CHANNEL = 1;
@@ -65,7 +70,7 @@ export function DeliveryChannelAssignView() {
   const handedOver = (
     location.state as { audience?: Partial<AudienceFilterState> } | null
   )?.audience;
-  const { state, update, audience } = useAudienceState(
+  const { state, update, replace, audience } = useAudienceState(
     handedOver ? { ...INITIAL_AUDIENCE_STATE, ...handedOver } : undefined
   );
 
@@ -131,55 +136,78 @@ export function DeliveryChannelAssignView() {
       />
 
       {step === STEP_AUDIENCE && (
-        <>
-          <Card
-            variant="outlined"
-            style={{ marginTop: 16 }}
-          >
-            <CardHeader title={t('deliveryChannel.assign.filterTitle')} />
-            <CardContent>
-              {/* The card's title already says what is being filtered. */}
-              <AudienceFilter
-                state={state}
-                onChange={update}
-                baseLabel={null}
-                segmentCounts={preview?.segments}
-                onSegmentsRefreshed={() => refetch()}
-              />
-            </CardContent>
-          </Card>
+        // The filter keeps the width the wizard has on the send page; the
+        // saved filters take what is left and move below on a narrow screen.
+        <Box
+          sx={{
+            display: 'grid',
+            gap: 3,
+            alignItems: 'start',
+            gridTemplateColumns: {
+              xs: '1fr',
+              lg: `${FILTER_WIDTH}px minmax(0, 1fr)`,
+            },
+          }}
+        >
+          <Box sx={{ minWidth: 0 }}>
+            <Card
+              variant="outlined"
+              style={{ marginTop: 16 }}
+            >
+              <CardHeader title={t('deliveryChannel.assign.filterTitle')} />
+              <CardContent>
+                {/* The card's title already says what is being filtered. */}
+                <AudienceFilter
+                  state={state}
+                  onChange={update}
+                  baseLabel={null}
+                  segmentCounts={preview?.segments}
+                  onSegmentsRefreshed={() => refetch()}
+                />
+              </CardContent>
+            </Card>
 
-          <RecipientSummary
-            loading={loading && !preview}
-            headline={t('deliveryChannel.assign.people', { count: userCount })}
-            count={userCount}
-            userCount={userCount}
-            channel={MailChannel.Mail}
-            withoutAddressCount={0}
-            missing={[]}
-            onShowRecipients={
-              canListRecipients ? () => setRecipientsOpen(true) : undefined
-            }
-            showRecipientsLabel={t('deliveryChannel.overview.showPeople')}
-          />
-
-          {canListRecipients && (
-            <RecipientListModal
-              open={recipientsOpen}
-              onClose={() => setRecipientsOpen(false)}
-              audience={audience}
-              channel={MailChannel.Letter}
-              totalCount={userCount}
-              title={t('deliveryChannel.assign.people', { count: userCount })}
-              withoutAddressLabel={t('deliveryMode.noAddress')}
+            <RecipientSummary
+              loading={loading && !preview}
+              headline={t('deliveryChannel.assign.people', {
+                count: userCount,
+              })}
+              count={userCount}
+              userCount={userCount}
+              channel={MailChannel.Mail}
+              withoutAddressCount={0}
+              missing={[]}
+              onShowRecipients={
+                canListRecipients ? () => setRecipientsOpen(true) : undefined
+              }
+              showRecipientsLabel={t('deliveryChannel.overview.showPeople')}
             />
-          )}
 
-          <StepNav
-            onNext={() => setStep(STEP_CHANNEL)}
-            nextDisabled={!canGoTo(STEP_CHANNEL)}
-          />
-        </>
+            {canListRecipients && (
+              <RecipientListModal
+                open={recipientsOpen}
+                onClose={() => setRecipientsOpen(false)}
+                audience={audience}
+                channel={MailChannel.Letter}
+                totalCount={userCount}
+                title={t('deliveryChannel.assign.people', { count: userCount })}
+                withoutAddressLabel={t('deliveryMode.noAddress')}
+              />
+            )}
+
+            <StepNav
+              onNext={() => setStep(STEP_CHANNEL)}
+              nextDisabled={!canGoTo(STEP_CHANNEL)}
+            />
+          </Box>
+
+          <Box sx={{ minWidth: 0, marginTop: 2 }}>
+            <SavedAudienceFilters
+              audience={audience}
+              onLoad={replace}
+            />
+          </Box>
+        </Box>
       )}
 
       {step === STEP_CHANNEL && (

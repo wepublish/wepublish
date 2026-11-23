@@ -4771,8 +4771,7 @@
       },
       "endedWindow": {
         "label": "Période de désactivation de l’abonnement",
-        "relative": "Derniers … jours",
-        "period": "Période fixe",
+        "window": "Désactivé",
         "days": "jours",
         "periodPlaceholder": "Choisir du – au",
         "periodHint": "Uniquement les abonnements désactivés entre ces deux dates.",
@@ -4839,6 +4838,56 @@
           "color": "En couleur"
         }
       },
+      "savedFilters": {
+        "title": "Filtres enregistrés",
+        "intro": "Visibles par toute l’équipe. Disponibles dans les messages manuels et dans l’attribution du canal de distribution.",
+        "save": "Enregistrer le filtre actuel",
+        "empty": "Aucun filtre enregistré pour l’instant.",
+        "name": "Nom",
+        "description": "Description",
+        "load": "Charger",
+        "overwrite": "Remplacer par le filtre actuel",
+        "edit": "Modifier le nom et la description",
+        "delete": "Supprimer",
+        "saveTitle": "Enregistrer le filtre",
+        "editTitle": "Modifier le filtre enregistré",
+        "confirmSave": "Enregistrer",
+        "nameRequired": "Veuillez saisir un nom.",
+        "nameTaken": "Ce nom existe déjà.",
+        "overwriteTitle": "Remplacer le filtre ?",
+        "overwriteQuestion": "« {{name}} » est remplacé par le filtre actuel.",
+        "overwriteConfirm": "Remplacer",
+        "deleteTitle": "Supprimer le filtre ?",
+        "deleteQuestion": "« {{name}} » est supprimé. Les envois déjà lancés ne sont pas concernés.",
+        "deleteConfirm": "Supprimer",
+        "loaded": "« {{name}} » chargé.",
+        "droppedIntro": "N’existent plus et ont été omis :",
+        "dropped": {
+          "memberPlans": "Plans d’abonnement : {{count}}",
+          "paymentMethods": "Moyens de paiement : {{count}}",
+          "templates": "Modèles : {{count}}"
+        },
+        "saved": "Filtre enregistré",
+        "updated": "Filtre mis à jour",
+        "deleted": "Filtre supprimé"
+      },
+      "dateWindow": {
+        "mode": "{{label}} : dates fixes ou glissantes",
+        "fixed": "Dates fixes",
+        "rolling": "Glissant",
+        "days": "Nombre de jours",
+        "quick": "{{days}} jours",
+        "kinds": {
+          "lastDays": "durant les derniers",
+          "olderThanDays": "il y a plus de",
+          "nextDays": "durant les prochains"
+        },
+        "unit": {
+          "lastDays": "jours",
+          "olderThanDays": "jours",
+          "nextDays": "jours"
+        }
+      },
       "mailHistory": {
         "label": "Messages reçus",
         "hint": "Seules les personnes ayant (ou n’ayant pas) reçu un modèle donné – au besoin via un seul canal.",
@@ -4852,6 +4901,11 @@
         "channel": "Canal de distribution",
         "anyChannel": "Indifférent",
         "sentBetween": "Envoyé entre",
+        "minCount": "Au moins",
+        "times": "fois",
+        "onSubscription": "Uniquement les messages concernant précisément cet abonnement",
+        "onlyOpenInvoice": "Uniquement les messages concernant une facture encore ouverte",
+        "triggerHint": "L’abonnement et la facture d’un message ne sont enregistrés que depuis peu. Les messages plus anciens ne remplissent jamais cette condition.",
         "match": {
           "all": "Toutes les conditions doivent être remplies",
           "any": "Une condition suffit"
@@ -4876,6 +4930,14 @@
         "mailHistory": "Messages",
         "received": "reçu",
         "notReceived": "non reçu",
+        "minCount": "au moins {{count}} fois",
+        "rolling": {
+          "lastDays": "au cours des {{days}} derniers jours",
+          "olderThanDays": "il y a plus de {{days}} jours",
+          "nextDays": "au cours des {{days}} prochains jours"
+        },
+        "onSubscription": "concernant cet abonnement",
+        "onlyOpenInvoice": "facture encore ouverte",
         "between": "{{from}} – {{to}}",
         "from": "dès le {{from}}",
         "to": "jusqu’au {{to}}",
@@ -4895,6 +4957,9 @@
       "sentDate": "Date",
       "template": "Modèle",
       "subject": "Objet",
+      "trigger": "Concerne",
+      "triggerSubscription": "Abonnement",
+      "triggerInvoice": "Facture",
       "state": "État",
       "type": "Déclenché par",
       "recipient": "Destinataire",

@@ -612,6 +612,7 @@ model Invoice {
   subscription   Subscription? @relation(fields: [subscriptionID], references: [id], onDelete: SetNull)
 
   subscriptionPeriods SubscriptionPeriod[]
+  mailLogs            MailLog[]
 
   @@index([mail])
   @@index([subscriptionID])
@@ -696,9 +697,19 @@ model MailLog {
   mailSendJob   MailSendJob? @relation(fields: [mailSendJobId], references: [id], onDelete: SetNull)
   mailSendJobId String?
 
+  // What the mail was about: the subscription and, for invoice mails, the
+  // invoice. Null for mails with no such trigger (login link, password reset)
+  // and on rows written before the columns existed.
+  subscription   Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+  subscriptionId String?
+  invoice        Invoice?      @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
+  invoiceId      String?
+
   @@index([mailIdentifier])
   @@index([recipientID, sentDate(sort: Desc)])
   @@index([mailSendJobId])
+  @@index([subscriptionId])
+  @@index([invoiceId])
   @@index([mailProviderMessageID])
   @@index([channel])
   @@map("mail.log")
@@ -1285,6 +1296,7 @@ model Subscription {
 
   invoices Invoice[]
 
+  mailLogs           MailLog[]
   mailSendJobEntries MailSendJobRecipient[]
 
   paymentMethodChanges SubscriptionPaymentMethodChange[]
@@ -1444,6 +1456,7 @@ model User {
   deliverySuggestion        DeliverySuggestion?
   deliveryPreferenceChanges UserDeliveryPreference[] @relation("DeliveryPreferenceChangedBy")
   deliveryModeBulkChanges   DeliveryModeBulkChange[] @relation("DeliveryModeBulkChangedBy")
+  savedAudienceFilters      SavedAudienceFilter[]    @relation("SavedAudienceFilterCreatedBy")
   seoChecklistItems         SeoChecklistItem[]
   apiTokens                 ApiToken[]
 
@@ -3020,6 +3033,26 @@ model DeliveryModeBulkChange {
 
   @@index([createdAt(sort: Desc)])
   @@map("user_delivery_bulk_changes")
+}
+
+/// A recipient filter kept under a name, to be loaded again in the manual
+/// messages and in the manual channel assignment. Shared by everyone who may
+/// use either tool.
+model SavedAudienceFilter {
+  id         String   @id @default(dbgenerated("uuidv7()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  name        String  @unique
+  description String?
+  /// The MailAudienceInput as the editor built it, rolling dates included.
+  /// Opaque: read back whole, never queried by element.
+  audience Json
+
+  createdByUserId String?
+  createdBy       User?   @relation("SavedAudienceFilterCreatedBy", fields: [createdByUserId], references: [id], onDelete: SetNull)
+
+  @@map("mail.audience_filters")
 }
 
 enum DeliverySuggestionKind {

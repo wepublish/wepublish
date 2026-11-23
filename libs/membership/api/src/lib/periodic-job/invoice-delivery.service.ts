@@ -46,6 +46,12 @@ export type DeliverySide = Pick<
   'letterRecipient' | 'attachment'
 >;
 
+/** The subscription and invoice a flow mail is about, for the mail log. */
+export type MailTrigger = Pick<
+  MailControllerConfig,
+  'subscriptionId' | 'invoiceId'
+>;
+
 /**
  * Whether the invoice-creation mail goes out now. `removed`: the provider
  * could not create the invoice and it is gone for the next attempt.
@@ -128,7 +134,11 @@ export class InvoiceDeliveryService {
       false,
       { subscriptionToCreateInvoice: subscription, invoice },
       runDate,
-      outcome.send
+      {
+        ...outcome.send,
+        subscriptionId: subscription.id,
+        invoiceId: invoice.id,
+      }
     );
   }
 
@@ -348,7 +358,7 @@ export class InvoiceDeliveryService {
     isRetry: boolean,
     optionalData: Record<string, any>,
     periodicJobRunDate: Date,
-    delivery: DeliverySide = {}
+    delivery: DeliverySide & MailTrigger = {}
   ) {
     if (!action.mailTemplateId || !user) {
       return;
