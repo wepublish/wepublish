@@ -34,6 +34,7 @@ import {
   mailLogTypeLabel,
   MailLogStateLegend,
   MailLogStateTag,
+  MailLogRecipientCell,
   MailLogTriggerCell,
 } from './mail-log-common';
 
@@ -467,7 +468,7 @@ export function MailLogTable() {
             id: 'recipient',
             label: t('mailLog.recipient'),
             width: 220,
-            render: log => log.recipient.email,
+            render: log => <MailLogRecipientCell recipient={log.recipient} />,
             exportValue: log => log.recipient.email,
           },
           {
@@ -476,18 +477,6 @@ export function MailLogTable() {
             width: 180,
             render: log => log.mailTemplate.name,
             exportValue: log => log.mailTemplate.name,
-          },
-          {
-            id: 'trigger',
-            label: t('mailLog.trigger'),
-            width: 140,
-            render: log => (
-              <MailLogTriggerCell
-                subscriptionId={log.subscriptionId}
-                invoiceId={log.invoiceId}
-              />
-            ),
-            exportValue: log => log.subscriptionId ?? log.invoiceId,
           },
           {
             id: 'subject',
@@ -517,6 +506,22 @@ export function MailLogTable() {
             width: 160,
             render: log => mailLogTypeLabel(log.type, t),
             exportValue: log => mailLogTypeLabel(log.type, t),
+          },
+          {
+            // For looking something up, not for every day: out of sight
+            // until it is switched on in the column menu.
+            id: 'trigger',
+            defaultHidden: true,
+            label: t('mailLog.trigger'),
+            width: 160,
+            render: log => (
+              <MailLogTriggerCell
+                subscriptionId={log.subscriptionId}
+                invoiceId={log.invoiceId}
+              />
+            ),
+            exportValue: log =>
+              [log.subscriptionId, log.invoiceId].filter(Boolean).join(' · '),
           },
           {
             id: 'state',

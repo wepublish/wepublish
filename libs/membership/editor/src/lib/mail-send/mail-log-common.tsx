@@ -1,6 +1,11 @@
 import { Typography, Stack, Chip } from '@mui/material';
 import { MailChannel, MailLogState, MailLogType } from '@wepublish/editor/api';
-import { InfoTrigger, ClickPopover } from '@wepublish/ui/editor';
+import { CanGetSubscription, CanGetUser } from '@wepublish/permissions';
+import {
+  InfoTrigger,
+  ClickPopover,
+  useHasPermission,
+} from '@wepublish/ui/editor';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { MdHelpOutline } from 'react-icons/md';
@@ -359,6 +364,27 @@ export function MailLogChannelCell({
   );
 }
 
+const MAY_OPEN_USER = [CanGetUser.id];
+const MAY_OPEN_SUBSCRIPTION = [CanGetSubscription.id];
+
+/**
+ * Who a mail went to, as the way to their user page. Only a name for someone
+ * who may not open users: a link would end on the no-access notice.
+ */
+export function MailLogRecipientCell({
+  recipient,
+}: {
+  recipient: { id: string; email: string };
+}) {
+  const mayOpenUser = useHasPermission(MAY_OPEN_USER);
+
+  if (!mayOpenUser) {
+    return <>{recipient.email}</>;
+  }
+
+  return <Link to={`/users/edit/${recipient.id}`}>{recipient.email}</Link>;
+}
+
 /**
  * What a mail was about. The subscription opens in its edit view; an invoice
  * has no page of its own and is found there too, so it is only named. Empty
@@ -372,6 +398,7 @@ export function MailLogTriggerCell({
   invoiceId?: string | null;
 }) {
   const { t } = useTranslation();
+  const mayOpenSubscription = useHasPermission(MAY_OPEN_SUBSCRIPTION);
 
   if (!subscriptionId && !invoiceId) {
     return <>—</>;
@@ -383,11 +410,12 @@ export function MailLogTriggerCell({
       spacing={0.25}
       sx={{ alignItems: 'flex-start' }}
     >
-      {subscriptionId && (
-        <Link to={`/subscriptions/edit/${subscriptionId}`}>
-          {t('mailLog.triggerSubscription')}
-        </Link>
-      )}
+      {subscriptionId &&
+        (mayOpenSubscription ?
+          <Link to={`/subscriptions/edit/${subscriptionId}`}>
+            {t('mailLog.triggerSubscription')}
+          </Link>
+        : <span>{t('mailLog.triggerSubscription')}</span>)}
       {invoiceId && (
         <Typography
           variant="caption"
