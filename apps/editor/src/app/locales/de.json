@@ -3078,6 +3078,8 @@
           "Expired": "Abgelaufen"
         },
         "subscriptionWithStatus": "{{name}} – {{status}}",
+        "subscriptionWithStatusAndIssues": "{{name}} – {{status}} ({{received}} / {{entitled}} Ausgaben)",
+        "printIssuesOwed": "Ausgaben offen",
         "modifiedAt": "Zuletzt bearbeitet",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Name",
@@ -3187,6 +3189,12 @@
       "paidUntilInfo": "Wird automatisch gesetzt, sobald eine Rechnung bezahlt ist. Bis zu diesem Datum ist das Abo bezahlt."
     },
     "userSubscriptionList": {
+      "printIssuesReceived": "{{received}} / {{entitled}} Ausgaben",
+      "printIssue": "{{label}} · {{date}} · {{batch}}, übergeben {{deliveredAt}}",
+      "printList": "Druckliste",
+      "printSupplement": "Nachlieferung {{number}}",
+      "printIssueCountsAs": "zählt {{count}}-fach",
+      "printIssues": "Erhaltene Druckausgaben",
       "periodRange": "Zeitraum",
       "table": {
         "active": "Aktiv",

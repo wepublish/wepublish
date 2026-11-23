@@ -62,6 +62,13 @@ fragment TinyUser on SensitiveDataUser {
     memberPlanName
     status
   }
+  printIssuesOwed
+  printIssueProgress {
+    subscriptionId
+    received
+    entitled
+    relevant
+  }
 }
 
 query TinyUserList(
