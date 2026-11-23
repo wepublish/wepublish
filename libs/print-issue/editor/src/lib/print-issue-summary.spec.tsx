@@ -54,6 +54,23 @@ describe('PrintIssueSummary', () => {
     ).toBeInTheDocument();
   });
 
+  it('names the readers whose chosen first issue comes later («Abo-Start»)', () => {
+    render(
+      <PrintIssueSummary
+        summary={
+          summary({
+            skipped: { ...summary().skipped, beforeFirstIssue: 2 },
+          }) as never
+        }
+      />
+    );
+
+    expect(
+      screen.getByText('printIssues.summary.skipped.beforeFirstIssue')
+        .parentElement
+    ).toHaveTextContent('2');
+  });
+
   it('lists what bexio left out and why', () => {
     render(
       <PrintIssueSummary

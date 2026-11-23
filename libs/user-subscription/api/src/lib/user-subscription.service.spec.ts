@@ -24,6 +24,7 @@ describe('UserSubscriptionService', () => {
     subscription: { findUnique: Mock; update: Mock };
     settingPaymentProvider: { findMany: Mock };
     invoice: { findMany: Mock };
+    printIssue: { findUnique: Mock };
   };
 
   let memberContextMock: {
@@ -76,6 +77,7 @@ describe('UserSubscriptionService', () => {
       subscription: { findUnique: vi.fn(), update: vi.fn() },
       settingPaymentProvider: { findMany: vi.fn().mockResolvedValue([]) },
       invoice: { findMany: vi.fn().mockResolvedValue([]) },
+      printIssue: { findUnique: vi.fn().mockResolvedValue(null) },
     };
 
     memberContextMock = {
@@ -285,6 +287,62 @@ describe('UserSubscriptionService', () => {
             userId: 'userId',
           })
         );
+      });
+    });
+
+    describe('the first printed issue the reader chose («Abo-Start»)', () => {
+      // today is 1.1.2025; #117 shipped on 13.12.2024
+      const shipped = {
+        id: 'issue-117',
+        issueDate: new Date('2024-12-13T00:00:00.000Z'),
+      };
+      const storedFrom = () =>
+        memberContextMock.createSubscription.mock.calls.at(-1)?.[0]
+          .firstPrintIssueFrom;
+
+      beforeEach(() => {
+        prismaMock.printIssue.findUnique.mockReset();
+        prismaMock.printIssue.findUnique.mockResolvedValue(shipped);
+      });
+
+      it('starts with the shipped issue, or with the next one: the day after it', async () => {
+        await service.createSubscription('userId', {
+          ...baseArgs,
+          firstPrintIssue: { currentIssueId: 'issue-117', choice: 'current' },
+        });
+        expect(prismaMock.printIssue.findUnique).toHaveBeenCalledWith({
+          where: { id: 'issue-117' },
+          select: { issueDate: true },
+        });
+        expect(storedFrom()).toEqual(new Date('2024-12-13T00:00:00.000Z'));
+
+        await service.createSubscriptionWithConfirmation('userId', {
+          ...baseArgs,
+          firstPrintIssue: { currentIssueId: 'issue-117', choice: 'upcoming' },
+        });
+        expect(storedFrom()).toEqual(new Date('2024-12-14T00:00:00.000Z'));
+      });
+
+      it('stores no choice for an unknown issue, one not shipped yet, or none at all', async () => {
+        prismaMock.printIssue.findUnique.mockResolvedValueOnce(null);
+        await service.createSubscription('userId', {
+          ...baseArgs,
+          firstPrintIssue: { currentIssueId: 'nope', choice: 'current' },
+        });
+        expect(storedFrom()).toBeNull();
+
+        prismaMock.printIssue.findUnique.mockResolvedValueOnce({
+          id: 'issue-118',
+          issueDate: new Date('2025-01-10T00:00:00.000Z'),
+        });
+        await service.createSubscription('userId', {
+          ...baseArgs,
+          firstPrintIssue: { currentIssueId: 'issue-118', choice: 'current' },
+        });
+        expect(storedFrom()).toBeNull();
+
+        await service.createSubscription('userId', baseArgs);
+        expect(storedFrom()).toBeNull();
       });
     });
 

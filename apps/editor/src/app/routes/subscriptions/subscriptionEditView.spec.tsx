@@ -9,6 +9,7 @@ import {
   ReactivateSubscriptionDocument,
   RevertSubscriptionUpgradeDocument,
   SubscriptionDocument,
+  UpdateSubscriptionDocument,
 } from '@wepublish/editor/api';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import type { Mock } from 'vitest';
@@ -93,11 +94,10 @@ const subscription = (
   deactivation: unknown,
   canRevertUpgrade = false,
   pendingPaymentMethodChange: unknown = null,
-  imported: { importedAt?: string | null; legacy?: boolean } = {}
+  extra: Record<string, unknown> = {}
 ) => ({
   importedAt: null,
   legacy: false,
-  ...imported,
   canRevertUpgrade,
   pendingPaymentMethodChange,
   id: 'subscription-1',
@@ -123,13 +123,15 @@ const subscription = (
   currency: 'CHF',
   goodie: null,
   periods: [],
+  firstPrintIssueFrom: null,
+  ...extra,
 });
 
 const mockQueries = (
   deactivation: unknown,
   canRevertUpgrade = false,
   pendingPaymentMethodChange: unknown = null,
-  imported: { importedAt?: string | null; legacy?: boolean } = {}
+  extra: Record<string, unknown> = {}
 ) => {
   // The results have to be referentially stable, the view reacts to them in effects.
   const refetch = vi.fn();
@@ -144,7 +146,7 @@ const mockQueries = (
             deactivation,
             canRevertUpgrade,
             pendingPaymentMethodChange,
-            imported
+            extra
           ),
         },
       },
@@ -193,12 +195,55 @@ const renderEditView = () =>
   );
 
 beforeEach(() => {
+  enabledFeatures.clear();
   mockedUseQuery.mockReset();
   mutationFor(ReactivateSubscriptionDocument).mockClear();
   mutationFor(RevertSubscriptionUpgradeDocument).mockClear();
 });
 
 describe('SubscriptionEditView', () => {
+  describe('the first printed issue the reader chose («Abo-Start»)', () => {
+    const firstIssueField = () =>
+      screen.queryByRole('textbox', {
+        name: 'userSubscriptionEdit.firstPrintIssueFrom',
+      });
+
+    it('shows and saves it where the print export is on', async () => {
+      enabledFeatures.add('print-export');
+      mockQueries(null, false, null, {
+        firstPrintIssueFrom: '2026-11-14T00:00:00.000Z',
+      });
+      renderEditView();
+
+      await screen.findByRole('checkbox', {
+        name: 'userSubscriptionEdit.autoRenew',
+      });
+      expect(firstIssueField()).toHaveValue('14.11.2026');
+
+      fireEvent.click(screen.getAllByRole('button', { name: 'save' })[0]!);
+
+      await vi.waitFor(() =>
+        expect(mutationFor(UpdateSubscriptionDocument)).toHaveBeenCalledWith(
+          expect.objectContaining({
+            variables: expect.objectContaining({
+              firstPrintIssueFrom: '2026-11-14T00:00:00.000Z',
+            }),
+          })
+        )
+      );
+    });
+
+    it('is not there without the print export', async () => {
+      mockQueries(null);
+      renderEditView();
+
+      await screen.findByRole('checkbox', {
+        name: 'userSubscriptionEdit.autoRenew',
+      });
+      expect(firstIssueField()).toBeNull();
+    });
+  });
+
   it('turns off auto renew when the subscription stops being extendable', async () => {
     mockQueries(null);
     renderEditView();

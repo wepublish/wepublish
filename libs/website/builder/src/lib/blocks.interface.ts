@@ -116,7 +116,10 @@ export type BuilderListicleBlockProps =
 export type BuilderCommentBlockProps = WithBlockProps<FullCommentBlockFragment>;
 export type BuilderSubscribeBlockProps =
   WithBlockProps<FullSubscribeBlockFragment> &
-    Pick<BuilderSubscribeProps, 'hiddenAreas' | 'onInvalid'>;
+    Pick<
+      BuilderSubscribeProps,
+      'hiddenAreas' | 'onInvalid' | 'subscribeExtras'
+    >;
 export type BuilderRedeemGiftCodeBlockProps =
   WithBlockProps<FullRedeemGiftCodeBlockFragment>;
 export type BuilderGiftCodeOffersBlockProps =

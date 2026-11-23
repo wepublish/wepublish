@@ -3459,7 +3459,9 @@
       "startsAt": "Début de l’abonnement",
       "uniqueSubscription": "Abonnement unique",
       "uniqueSubscriptionHelpText": "Un utilisateur ne peut souscrire qu’un seul abonnement par plan d’abonnement unique. Le renouvellement manuel par l’utilisateur n’est pas possible. Le renouvellement automatique est possible.",
-      "paidUntilInfo": "Défini automatiquement dès qu’une facture est payée. L’abonnement est payé jusqu’à cette date."
+      "paidUntilInfo": "Défini automatiquement dès qu’une facture est payée. L’abonnement est payé jusqu’à cette date.",
+      "firstPrintIssueFrom": "Premier numéro imprimé dès le",
+      "firstPrintIssueFromInfo": "«Abo-Start» : le premier numéro imprimé est le premier paru ce jour-là ou après. Défini lors de l’abonnement sur le site (numéro actuel : sa date de parution ; prochain : le lendemain). Vide : chaque numéro dès le début de l’abonnement."
     },
     "userSubscriptionList": {
       "printIssuesReceived": "{{received}} / {{entitled}} numéros",
@@ -5972,7 +5974,8 @@
           "deactivated": "Désactivé",
           "lapsed": "Échu",
           "exhausted": "Quota reçu",
-          "noPrintIssues": "Aucun numéro imprimé (0 dans le plan)"
+          "noPrintIssues": "Aucun numéro imprimé (0 dans le plan)",
+          "beforeFirstIssue": "L’abonnement commence plus tard (premier numéro choisi)"
         },
         "bexio": {
           "title": "bexio",
