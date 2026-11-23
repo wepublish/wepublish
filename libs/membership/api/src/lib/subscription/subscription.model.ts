@@ -106,6 +106,13 @@ export class PublicSubscription
   @Field()
   startsAt!: Date;
 
+  @Field(() => Date, {
+    nullable: true,
+    description:
+      '«Abo-Start»: the first printed issue is the first one shipped on or after this day.',
+  })
+  firstPrintIssueFrom?: Date | null;
+
   @Field(() => Date, { nullable: true })
   paidUntil?: Date;
 
@@ -170,6 +177,7 @@ export class CreatePublicSubscriptionInput extends PickType(
     'monthlyAmount',
     'autoRenew',
     'startsAt',
+    'firstPrintIssueFrom',
     'paidUntil',
     'extendable',
     // Bugged, seems like PickType ignores `implements` meta

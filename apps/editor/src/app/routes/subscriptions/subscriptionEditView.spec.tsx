@@ -9,11 +9,14 @@ import {
   ReactivateSubscriptionDocument,
   RevertSubscriptionUpgradeDocument,
   SubscriptionDocument,
+  UpdateSubscriptionDocument,
 } from '@wepublish/editor/api';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import type { Mock } from 'vitest';
 
 import { SubscriptionEditView } from './subscriptionEditView';
+
+const { features } = vi.hoisted(() => ({ features: new Set<string>() }));
 
 const { mutationFor, queryStore } = vi.hoisted(() => {
   const mutations = new Map<unknown, Mock>();
@@ -55,15 +58,13 @@ vi.mock('react-i18next', () => ({
   }),
 }));
 
-const enabledFeatures = new Set<string>();
-
 vi.mock('@wepublish/ui/editor', async importOriginal => ({
   ...(await importOriginal<typeof import('@wepublish/ui/editor')>()),
-  useFeature: (feature: string) => enabledFeatures.has(feature),
   // The permission wrappers would otherwise need an authenticated session.
   createCheckedPermissionComponent: () => (component: unknown) => component,
   PermissionControl: ({ children }: { children: React.ReactNode }) => children,
   useAuthorisation: () => true,
+  useFeature: (key: string) => features.has(key),
 }));
 
 const { useQuery } = await import('@apollo/client/react');
@@ -114,11 +115,10 @@ const subscription = (
   deactivation: unknown,
   canRevertUpgrade = false,
   pendingPaymentMethodChange: unknown = null,
-  imported: { importedAt?: string | null; legacy?: boolean } = {}
+  extra: Record<string, unknown> = {}
 ) => ({
   importedAt: null,
   legacy: false,
-  ...imported,
   canRevertUpgrade,
   pendingPaymentMethodChange,
   id: 'subscription-1',
@@ -144,13 +144,15 @@ const subscription = (
   currency: 'CHF',
   goodie: null,
   periods: [],
+  firstPrintIssueFrom: null,
+  ...extra,
 });
 
 const mockQueries = (
   deactivation: unknown,
   canRevertUpgrade = false,
   pendingPaymentMethodChange: unknown = null,
-  subscriptionOverrides: Record<string, unknown> = {}
+  extra: Record<string, unknown> = {}
 ) => {
   // The results have to be referentially stable, the view reacts to them in effects.
   const refetch = vi.fn();
@@ -161,14 +163,12 @@ const mockQueries = (
         loading: false,
         refetch,
         data: {
-          subscription: {
-            ...subscription(
-              deactivation,
-              canRevertUpgrade,
-              pendingPaymentMethodChange
-            ),
-            ...subscriptionOverrides,
-          },
+          subscription: subscription(
+            deactivation,
+            canRevertUpgrade,
+            pendingPaymentMethodChange,
+            extra
+          ),
         },
       },
     ],
@@ -256,12 +256,55 @@ const offeredPeriodicities = () => {
 };
 
 beforeEach(() => {
+  features.clear();
   mockedUseQuery.mockReset();
   mutationFor(ReactivateSubscriptionDocument).mockClear();
   mutationFor(RevertSubscriptionUpgradeDocument).mockClear();
 });
 
 describe('SubscriptionEditView', () => {
+  describe('the first printed issue the reader chose («Abo-Start»)', () => {
+    const firstIssueField = () =>
+      screen.queryByRole('textbox', {
+        name: 'userSubscriptionEdit.firstPrintIssueFrom',
+      });
+
+    it('shows and saves it where the print export is on', async () => {
+      features.add('print-export');
+      mockQueries(null, false, null, {
+        firstPrintIssueFrom: '2026-11-14T00:00:00.000Z',
+      });
+      renderEditView();
+
+      await screen.findByRole('checkbox', {
+        name: 'userSubscriptionEdit.autoRenew',
+      });
+      expect(firstIssueField()).toHaveValue('14.11.2026');
+
+      fireEvent.click(screen.getAllByRole('button', { name: 'save' })[0]!);
+
+      await vi.waitFor(() =>
+        expect(mutationFor(UpdateSubscriptionDocument)).toHaveBeenCalledWith(
+          expect.objectContaining({
+            variables: expect.objectContaining({
+              firstPrintIssueFrom: '2026-11-14T00:00:00.000Z',
+            }),
+          })
+        )
+      );
+    });
+
+    it('is not there without the print export', async () => {
+      mockQueries(null);
+      renderEditView();
+
+      await screen.findByRole('checkbox', {
+        name: 'userSubscriptionEdit.autoRenew',
+      });
+      expect(firstIssueField()).toBeNull();
+    });
+  });
+
   it('turns off auto renew when the subscription stops being extendable', async () => {
     mockQueries(null);
     renderEditView();
@@ -304,11 +347,11 @@ describe('SubscriptionEditView', () => {
     const importedAt = '2026-11-01T08:00:00.000Z';
 
     afterEach(() => {
-      enabledFeatures.clear();
+      features.clear();
     });
 
     it('says that a subscription is a legacy one', async () => {
-      enabledFeatures.add('legacy-subscriptions');
+      features.add('legacy-subscriptions');
       mockQueries(null, false, null, { importedAt, legacy: true });
       renderEditView();
 
@@ -318,7 +361,7 @@ describe('SubscriptionEditView', () => {
     });
 
     it('says that an imported subscription was since paid for here', async () => {
-      enabledFeatures.add('legacy-subscriptions');
+      features.add('legacy-subscriptions');
       mockQueries(null, false, null, { importedAt, legacy: false });
       renderEditView();
 
@@ -328,7 +371,7 @@ describe('SubscriptionEditView', () => {
     });
 
     it('says nothing about a subscription created here', async () => {
-      enabledFeatures.add('legacy-subscriptions');
+      features.add('legacy-subscriptions');
       mockQueries(null);
       renderEditView();
 

@@ -177,6 +177,12 @@ export class PrintIssueSkipped {
       "Plan sets 0 printed issues for the subscription's periodicity.",
   })
   noPrintIssues!: number;
+
+  @Field(() => Int, {
+    description:
+      'Shipped before the first issue the reader chose when subscribing («Abo-Start»).',
+  })
+  beforeFirstIssue!: number;
 }
 
 @ObjectType()
@@ -673,6 +679,7 @@ const NO_SKIPS: PrintIssueSkipped = {
   lapsed: 0,
   exhausted: 0,
   noPrintIssues: 0,
+  beforeFirstIssue: 0,
 };
 
 export const toSummaryModel = (summary: Summary): PrintIssueSummary => ({

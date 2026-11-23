@@ -16,6 +16,7 @@ fragment FullSubscription on PublicSubscription {
   monthlyAmount
   autoRenew
   startsAt
+  firstPrintIssueFrom
   paidUntil
   properties {
     key
@@ -211,6 +212,7 @@ mutation UpdateSubscription(
   $monthlyAmount: Float
   $paidUntil: DateTime
   $startsAt: DateTime
+  $firstPrintIssueFrom: DateTime
   $paymentPeriodicity: PaymentPeriodicity
   $properties: [PropertyInput!]
   $userID: String
@@ -224,6 +226,7 @@ mutation UpdateSubscription(
     monthlyAmount: $monthlyAmount
     paidUntil: $paidUntil
     startsAt: $startsAt
+    firstPrintIssueFrom: $firstPrintIssueFrom
     paymentPeriodicity: $paymentPeriodicity
     properties: $properties
     userID: $userID

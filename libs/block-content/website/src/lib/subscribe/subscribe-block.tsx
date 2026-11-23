@@ -34,6 +34,7 @@ export const SubscribeBlock = ({
   periodicityDisplay,
   hiddenAreas,
   onInvalid,
+  subscribeExtras,
 }: BuilderSubscribeBlockProps) => {
   const {
     register: [register],
@@ -136,6 +137,7 @@ export const SubscribeBlock = ({
           periodicityDisplay={periodicityDisplay}
           hiddenAreas={hiddenAreas}
           onInvalid={onInvalid}
+          subscribeExtras={subscribeExtras}
           defaults={{
             email: mail as string | undefined,
             firstName: firstName as string | undefined,
