@@ -157,3 +157,28 @@ mutation DeletePaymentProviderSetting($id: String!) {
     id
   }
 }
+
+query BexioSetupOptions($id: String!) {
+  bexioSetupOptions(id: $id) {
+    accounts {
+      id
+      label
+    }
+    taxes {
+      id
+      label
+    }
+    units {
+      id
+      label
+    }
+    users {
+      id
+      label
+    }
+    countries {
+      id
+      label
+    }
+  }
+}

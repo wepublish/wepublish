@@ -1,4 +1,7 @@
+import { useQuery } from '@apollo/client/react';
 import {
+  BexioSetupOptionsDocument,
+  BexioSetupOptionsQuery,
   CreatePaymentProviderSettingDocument,
   DeletePaymentProviderSettingDocument,
   getSettings,
@@ -14,7 +17,11 @@ import {
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
-import { FieldDefinition } from './genericIntegrationForm';
+import {
+  FieldDefinition,
+  FieldLookups,
+  IntegrationStep,
+} from './genericIntegrationForm';
 import { paymentProviderOptions, typeOptionsOf } from './integrationCatalog';
 import { GenericIntegrationList } from './genericIntegrationList';
 import { secretPlaceholder } from './secretPlaceholder';
@@ -216,6 +223,86 @@ export function withPaymentSections(
   );
 }
 
+type BexioIds = Partial<
+  Record<
+    | 'isApiKeySet'
+    | 'bexio_userId'
+    | 'bexio_countryId'
+    | 'bexio_unitId'
+    | 'bexio_taxId'
+    | 'bexio_accountId',
+    unknown
+  >
+>;
+
+/**
+ * bexio is set up in steps: the token first, as the accounts, taxes, units,
+ * users and countries to choose from are read from bexio with it.
+ */
+export function bexioSteps(
+  setting: BexioIds,
+  t: (key: string) => string
+): IntegrationStep[] {
+  const section = (key: string) => t(`integrations.sections.${key}`);
+  const step = (key: string) =>
+    t(`integrations.paymentSettings.bexioSteps.${key}`);
+
+  return [
+    {
+      title: step('connect'),
+      sections: [section('connection')],
+      complete: !!setting.isApiKeySet,
+    },
+    {
+      title: step('records'),
+      sections: [section('bexioRecords')],
+      complete: [
+        setting.bexio_userId,
+        setting.bexio_countryId,
+        setting.bexio_unitId,
+        setting.bexio_taxId,
+        setting.bexio_accountId,
+      ].every(id => id != null && id !== ''),
+    },
+    {
+      title: step('invoices'),
+      sections: [section('invoiceTexts')],
+      complete: true,
+    },
+    {
+      title: step('contacts'),
+      sections: [section('contacts'), section('general')],
+      complete: true,
+    },
+  ];
+}
+
+/** The bexio records to choose from, per field of the integration. */
+export function bexioLookups(
+  options: BexioSetupOptionsQuery['bexioSetupOptions']
+): FieldLookups {
+  const choices = (list: { id: number; label: string }[]) =>
+    list.map(({ id, label }) => ({ value: id, label }));
+
+  return {
+    bexio_accountId: choices(options.accounts),
+    bexio_taxId: choices(options.taxes),
+    bexio_unitId: choices(options.units),
+    bexio_userId: choices(options.users),
+    bexio_countryId: choices(options.countries),
+  };
+}
+
+/** Reads the records of a bexio integration once its token is saved. */
+function useBexioLookups(setting: SettingPaymentProvider) {
+  const { data } = useQuery(BexioSetupOptionsDocument, {
+    variables: { id: setting.id },
+    skip: setting.type !== PaymentProviderType.Bexio || !setting.isApiKeySet,
+  });
+
+  return data ? bexioLookups(data.bexioSetupOptions) : undefined;
+}
+
 export function PaymentIntegrationForm() {
   const { t } = useTranslation();
 
@@ -230,6 +317,12 @@ export function PaymentIntegrationForm() {
       schema={paymentSettingsSchema}
       integrationKey="payment"
       providers={paymentProviderOptions(t)}
+      steps={setting =>
+        setting.type === PaymentProviderType.Bexio ?
+          bexioSteps(setting, t)
+        : undefined
+      }
+      useLookups={useBexioLookups}
       registry={{
         createMutation: CreatePaymentProviderSettingDocument,
         deleteMutation: DeletePaymentProviderSettingDocument,

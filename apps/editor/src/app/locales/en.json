@@ -3774,11 +3774,11 @@
         "vatRate": "VAT Rate",
         "declineRenewals": "Decline renewals (simulate failed recurring payments)",
         "webhookEndpointSecret": "Webhook secret",
-        "bexioUserId": "Bexio User ID",
-        "bexioCountryId": "Bexio Country ID",
-        "bexioUnitId": "Bexio Unit ID",
-        "bexioTaxId": "Bexio Tax ID",
-        "bexioAccountId": "Bexio Account ID",
+        "bexioUserId": "bexio user",
+        "bexioCountryId": "Country of new contacts",
+        "bexioUnitId": "Unit",
+        "bexioTaxId": "VAT rate",
+        "bexioAccountId": "Revenue account",
         "bexioInvoiceTemplateNewMembership": "Invoice Template (New Membership)",
         "bexioInvoiceTemplateRenewalMembership": "Invoice Template (Renewal Membership)",
         "bexioInvoiceMailSubjectNewMembership": "Invoice Mail Subject (New Membership)",
@@ -3797,11 +3797,11 @@
         "instanceNameInfo": "The name of your Payrexx instance – the part before .payrexx.com in your Payrexx address (e.g. «mymedium» for mymedium.payrexx.com).",
         "vatRateInfo": "The VAT rate in percent that is passed to Payrexx with every payment, e.g. 8.1 or 2.6. Without it, no payment can be started.",
         "pspInfo": "The payment service providers Payrexx should process the payment with. Only select those you have connected in your Payrexx account.",
-        "bexioUserIdInfo": "The numeric ID of the Bexio user account that new contacts and invoices are assigned to.",
-        "bexioCountryIdInfo": "The numeric Bexio ID of the country that new contacts are assigned to, e.g. the ID for Switzerland.",
-        "bexioUnitIdInfo": "The numeric Bexio ID of the unit used for the invoice line, e.g. «piece».",
-        "bexioTaxIdInfo": "The numeric Bexio ID of the VAT rate applied to the invoice line.",
-        "bexioAccountIdInfo": "The numeric Bexio ID of the revenue account the subscription income is booked to.",
+        "bexioUserIdInfo": "The bexio user new contacts and invoices are assigned to.",
+        "bexioCountryIdInfo": "The country new contacts get when their address names none.",
+        "bexioUnitIdInfo": "The unit of the invoice line, e.g. «piece».",
+        "bexioTaxIdInfo": "The VAT rate applied to the invoice line.",
+        "bexioAccountIdInfo": "The revenue account the subscription income is booked to.",
         "bexioInvoiceTemplateInfo": "The Bexio document template (its slug) that defines the layout of the invoice. You can use different templates for new subscriptions and renewals.",
         "bexioInvoiceTitleInfo": "The title printed on the invoice. You can use different titles for new subscriptions and renewals.",
         "bexioInvoiceMailSubjectInfo": "The subject of the email Bexio sends with the invoice. Placeholders such as :user.firstName: or :memberPlan.name: are replaced automatically.",
@@ -3821,6 +3821,12 @@
           "payrexx": "The API secret of your Payrexx instance. A saved key is not shown again.",
           "mollie": "The live API key (live_…) from the Mollie dashboard. A saved key is not shown again.",
           "bexio": "A personal access token from the bexio developer portal. A saved key is not shown again."
+        },
+        "bexioSteps": {
+          "connect": "Connect",
+          "records": "bexio records",
+          "invoices": "Invoices",
+          "contacts": "Contacts & name"
         }
       },
       "placeholderSecret": "Unchanged (Hidden)",
@@ -4202,7 +4208,7 @@
         },
         "bexio": {
           "token": "Create a personal access token in the bexio developer portal and paste it into «API Key».",
-          "ids": "Enter the IDs of the bexio records invoices are booked with: user, country, unit, VAT rate and revenue account. Whoever manages your bookkeeping in bexio can look them up.",
+          "ids": "Save the token, then choose the bexio user, country, unit, VAT rate and revenue account from the lists We.Publish reads from your bexio company. If you are unsure, ask whoever does your bookkeeping in bexio.",
           "texts": "Then set the invoice template, title and email texts – separately for new subscriptions and renewals."
         },
         "noCharge": {

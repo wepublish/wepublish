@@ -23,7 +23,13 @@ import {
   Typography,
 } from '@mui/material';
 import { getSettings, SettingProvider } from '@wepublish/editor/api';
-import { enqueueSnackbar, Textarea } from '@wepublish/ui/editor';
+import {
+  enqueueSnackbar,
+  StepNav,
+  Textarea,
+  useWizard,
+  WizardStepper,
+} from '@wepublish/ui/editor';
 import { DocumentNode } from 'graphql';
 import {
   ChangeEvent,
@@ -191,7 +197,32 @@ export interface GenericIntegrationFormProps<
   renderActions?: (setting: TSetting) => ReactNode;
   /** Read-only state of the integration, shown between the title and the fields. */
   renderStatus?: (setting: TSetting) => ReactNode;
+
+  /**
+   * Splits the setup into steps, e.g. when later fields need data the
+   * provider only hands out once its key is saved. Each step shows the
+   * sections it names; the wizard moves on once a step is complete.
+   */
+  steps?: (setting: TSetting) => IntegrationStep[] | undefined;
+  /**
+   * A hook giving choices for fields that otherwise take an id, loaded from
+   * the provider (e.g. bexio's accounts). Fields with choices become pickers.
+   */
+  useLookups?: (setting: TSetting) => FieldLookups | undefined;
 }
+
+export type IntegrationStep = {
+  title: string;
+  /** The sections (as their headings read) this step shows. */
+  sections: string[];
+  complete: boolean;
+};
+
+export type FieldLookups = Partial<
+  Record<string, { label: string; value: string | number }[]>
+>;
+
+const noLookups = (): FieldLookups | undefined => undefined;
 
 export function SingleGenericIntegrationForm<
   TSetting extends SettingProvider & { type?: string },
@@ -207,8 +238,15 @@ export function SingleGenericIntegrationForm<
   providers = [],
   renderActions,
   renderStatus,
+  steps,
+  useLookups = noLookups,
 }: GenericIntegrationFormProps<TSetting, TFormValues>) {
   const { t } = useTranslation();
+  const lookups = useLookups(setting);
+  const wizardSteps = steps?.(setting);
+  const wizard = useWizard({
+    complete: wizardSteps?.map(step => step.complete) ?? [true],
+  });
 
   const [updateSettings, { loading: updating }] = useMutation(mutation, {
     refetchQueries: refetchQueries?.map(query => ({ query })),
@@ -229,6 +267,31 @@ export function SingleGenericIntegrationForm<
     () => (typeof fields === 'function' ? fields(setting) : fields),
     [fields, setting]
   );
+
+  // A section heads its field and the ones after it, so each field gets the
+  // section it sits in; fields with choices from the provider become pickers.
+  const shownFields = useMemo(() => {
+    let current: string | undefined;
+
+    const placed = resolvedFields.map(field => {
+      current = field.section ?? current;
+      const options = lookups?.[String(field.name)];
+      const picked: FieldDefinition<TFormValues> =
+        options?.length ?
+          { ...field, type: 'select', searchable: true, options }
+        : field;
+
+      return { field: picked, inSection: current };
+    });
+
+    const step = wizardSteps?.[wizard.step];
+
+    return step ?
+        placed.filter(({ inSection }) =>
+          step.sections.includes(inSection ?? '')
+        )
+      : placed;
+  }, [resolvedFields, lookups, wizardSteps, wizard.step]);
 
   const defaultValues = useMemo(
     () =>
@@ -380,184 +443,244 @@ export function SingleGenericIntegrationForm<
 
             {renderStatus?.(setting)}
 
+            {wizardSteps && (
+              <WizardStepper
+                steps={wizardSteps.map(({ title }) => ({ title }))}
+                step={wizard.step}
+                canGoTo={wizard.canGoTo}
+                onStep={wizard.goTo}
+              />
+            )}
+
             <FieldList>
-              {resolvedFields.map(({ info, section, ...field }, index) => (
-                <Fragment key={String(field.name)}>
-                  {section &&
-                    resolvedFields[index - 1]?.section !== section && (
-                      <Typography
-                        variant="subtitle1"
-                        component="h3"
-                        sx={{ fontWeight: 600, marginTop: index ? 1 : 0 }}
-                      >
-                        {section}
-                      </Typography>
-                    )}
-                  <FormControl
-                    fullWidth
-                    data-half={field.half ? 'true' : undefined}
-                  >
-                    {field.type !== 'checkbox' && (
-                      <FormLabel id={labelIdFor(String(field.name))}>
-                        {field.label}
-                      </FormLabel>
-                    )}
+              {shownFields.map(
+                (
+                  { field: { info, section: _section, ...field }, inSection },
+                  index
+                ) => (
+                  <Fragment key={String(field.name)}>
+                    {inSection &&
+                      shownFields[index - 1]?.inSection !== inSection && (
+                        <Typography
+                          variant="subtitle1"
+                          component="h3"
+                          sx={{ fontWeight: 600, marginTop: index ? 1 : 0 }}
+                        >
+                          {inSection}
+                        </Typography>
+                      )}
+                    <FormControl
+                      fullWidth
+                      data-half={field.half ? 'true' : undefined}
+                    >
+                      {field.type !== 'checkbox' && (
+                        <FormLabel id={labelIdFor(String(field.name))}>
+                          {field.label}
+                        </FormLabel>
+                      )}
 
-                    <Controller
-                      name={field.name}
-                      control={control}
-                      render={({
-                        field: { value, onChange, ...restField },
-                        fieldState,
-                      }) => {
-                        const describedBy =
-                          info ? helpIdFor(String(field.name)) : undefined;
+                      <Controller
+                        name={field.name}
+                        control={control}
+                        render={({
+                          field: { value, onChange, ...restField },
+                          fieldState,
+                        }) => {
+                          const describedBy =
+                            info ? helpIdFor(String(field.name)) : undefined;
 
-                        if (field.type === 'select') {
+                          if (field.type === 'select' && field.searchable) {
+                            const options = field.options || [];
+
+                            return (
+                              <Autocomplete
+                                options={options.map(option => option.value)}
+                                getOptionLabel={chosen =>
+                                  options.find(
+                                    option => option.value === chosen
+                                  )?.label ?? String(chosen)
+                                }
+                                value={value ?? null}
+                                onChange={(_event, chosen) => onChange(chosen)}
+                                disabled={field.disabled}
+                                {...restField}
+                                renderInput={params => (
+                                  <MuiTextField
+                                    {...params}
+                                    slotProps={{
+                                      ...params.slotProps,
+                                      htmlInput: {
+                                        ...params.slotProps.htmlInput,
+                                        'aria-labelledby': labelIdFor(
+                                          String(field.name)
+                                        ),
+                                        'aria-describedby': describedBy,
+                                      },
+                                    }}
+                                  />
+                                )}
+                              />
+                            );
+                          }
+
+                          if (field.type === 'select') {
+                            return (
+                              <MuiTextField
+                                select
+                                value={value ?? ''}
+                                onChange={onChange}
+                                disabled={field.disabled}
+                                fullWidth
+                                {...restField}
+                                slotProps={{
+                                  select: {
+                                    labelId: labelIdFor(String(field.name)),
+                                    SelectDisplayProps: {
+                                      'aria-describedby': describedBy,
+                                    },
+                                  },
+                                }}
+                              >
+                                {(field.options || []).map(option => (
+                                  <MenuItem
+                                    key={option.value}
+                                    value={option.value}
+                                  >
+                                    {option.label}
+                                  </MenuItem>
+                                ))}
+                              </MuiTextField>
+                            );
+                          }
+
+                          if (field.type === 'checkPicker') {
+                            return (
+                              <Autocomplete
+                                multiple
+                                disableCloseOnSelect
+                                options={(field.options || []).map(
+                                  option => option.value
+                                )}
+                                getOptionLabel={value =>
+                                  (field.options || []).find(
+                                    option => option.value === value
+                                  )?.label ?? String(value)
+                                }
+                                value={value || []}
+                                onChange={(_event, chosen) => onChange(chosen)}
+                                disabled={field.disabled}
+                                {...restField}
+                                renderInput={params => (
+                                  <MuiTextField
+                                    {...params}
+                                    slotProps={{
+                                      ...params.slotProps,
+                                      htmlInput: {
+                                        ...params.slotProps.htmlInput,
+                                        'aria-labelledby': labelIdFor(
+                                          String(field.name)
+                                        ),
+                                        'aria-describedby': describedBy,
+                                      },
+                                    }}
+                                  />
+                                )}
+                              />
+                            );
+                          }
+
+                          if (field.type === 'checkbox') {
+                            return (
+                              <FormControlLabel
+                                control={
+                                  <Switch
+                                    checked={!!value}
+                                    onChange={(_event, c) => onChange(c)}
+                                    disabled={field.disabled}
+                                    {...restField}
+                                    slotProps={{
+                                      input: {
+                                        'aria-describedby': describedBy,
+                                      },
+                                    }}
+                                  />
+                                }
+                                label={field.label}
+                              />
+                            );
+                          }
+
+                          if (field.type === 'custom') {
+                            return (
+                              <field.render
+                                value={value}
+                                onChange={val => onChange(val)}
+                                disabled={field.disabled}
+                                {...restField}
+                              />
+                            );
+                          }
+
+                          const Field =
+                            field.type === 'textarea' ? Textarea : MuiTextField;
+
                           return (
-                            <MuiTextField
-                              select
-                              value={value ?? ''}
-                              onChange={onChange}
+                            <Field
+                              value={value}
+                              onChange={
+                                field.type === 'number' ?
+                                  (event: ChangeEvent<HTMLInputElement>) =>
+                                    onChange(
+                                      event.target.value === '' ?
+                                        null
+                                      : Number(event.target.value)
+                                    )
+                                : onChange
+                              }
+                              error={!!fieldState.error}
+                              helperText={fieldState.error?.message}
+                              type={field.type}
+                              placeholder={field.placeholder}
                               disabled={field.disabled}
+                              autoComplete={field.autoComplete}
                               fullWidth
                               {...restField}
                               slotProps={{
-                                select: {
-                                  labelId: labelIdFor(String(field.name)),
-                                  SelectDisplayProps: {
-                                    'aria-describedby': describedBy,
-                                  },
+                                htmlInput: {
+                                  'aria-labelledby': labelIdFor(
+                                    String(field.name)
+                                  ),
+                                  'aria-describedby': describedBy,
                                 },
                               }}
-                            >
-                              {(field.options || []).map(option => (
-                                <MenuItem
-                                  key={option.value}
-                                  value={option.value}
-                                >
-                                  {option.label}
-                                </MenuItem>
-                              ))}
-                            </MuiTextField>
-                          );
-                        }
-
-                        if (field.type === 'checkPicker') {
-                          return (
-                            <Autocomplete
-                              multiple
-                              disableCloseOnSelect
-                              options={(field.options || []).map(
-                                option => option.value
-                              )}
-                              getOptionLabel={value =>
-                                (field.options || []).find(
-                                  option => option.value === value
-                                )?.label ?? String(value)
-                              }
-                              value={value || []}
-                              onChange={(_event, chosen) => onChange(chosen)}
-                              disabled={field.disabled}
-                              {...restField}
-                              renderInput={params => (
-                                <MuiTextField
-                                  {...params}
-                                  slotProps={{
-                                    ...params.slotProps,
-                                    htmlInput: {
-                                      ...params.slotProps.htmlInput,
-                                      'aria-labelledby': labelIdFor(
-                                        String(field.name)
-                                      ),
-                                      'aria-describedby': describedBy,
-                                    },
-                                  }}
-                                />
-                              )}
                             />
                           );
-                        }
+                        }}
+                      />
 
-                        if (field.type === 'checkbox') {
-                          return (
-                            <FormControlLabel
-                              control={
-                                <Switch
-                                  checked={!!value}
-                                  onChange={(_event, c) => onChange(c)}
-                                  disabled={field.disabled}
-                                  {...restField}
-                                  slotProps={{
-                                    input: { 'aria-describedby': describedBy },
-                                  }}
-                                />
-                              }
-                              label={field.label}
-                            />
-                          );
-                        }
-
-                        if (field.type === 'custom') {
-                          return (
-                            <field.render
-                              value={value}
-                              onChange={val => onChange(val)}
-                              disabled={field.disabled}
-                              {...restField}
-                            />
-                          );
-                        }
-
-                        const Field =
-                          field.type === 'textarea' ? Textarea : MuiTextField;
-
-                        return (
-                          <Field
-                            value={value}
-                            onChange={
-                              field.type === 'number' ?
-                                (event: ChangeEvent<HTMLInputElement>) =>
-                                  onChange(
-                                    event.target.value === '' ?
-                                      null
-                                    : Number(event.target.value)
-                                  )
-                              : onChange
-                            }
-                            error={!!fieldState.error}
-                            helperText={fieldState.error?.message}
-                            type={field.type}
-                            placeholder={field.placeholder}
-                            disabled={field.disabled}
-                            autoComplete={field.autoComplete}
-                            fullWidth
-                            {...restField}
-                            slotProps={{
-                              htmlInput: {
-                                'aria-labelledby': labelIdFor(
-                                  String(field.name)
-                                ),
-                                'aria-describedby': describedBy,
-                              },
-                            }}
-                          />
-                        );
-                      }}
-                    />
-
-                    {info && (
-                      <FormHelperText
-                        id={helpIdFor(String(field.name))}
-                        sx={{ marginX: 0, whiteSpace: 'pre-line' }}
-                      >
-                        {info}
-                      </FormHelperText>
-                    )}
-                  </FormControl>
-                </Fragment>
-              ))}
+                      {info && (
+                        <FormHelperText
+                          id={helpIdFor(String(field.name))}
+                          sx={{ marginX: 0, whiteSpace: 'pre-line' }}
+                        >
+                          {info}
+                        </FormHelperText>
+                      )}
+                    </FormControl>
+                  </Fragment>
+                )
+              )}
             </FieldList>
+
+            {wizardSteps && (
+              <StepNav
+                onBack={wizard.step > 0 ? wizard.back : undefined}
+                onNext={
+                  wizard.step < wizardSteps.length - 1 ? wizard.next : undefined
+                }
+                nextDisabled={!wizard.canGoTo(wizard.step + 1)}
+              />
+            )}
 
             {setting.lastLoadedAt && (
               <Typography

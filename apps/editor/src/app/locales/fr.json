@@ -3704,11 +3704,11 @@
         "vatRate": "Taux de TVA",
         "declineRenewals": "Refuser les renouvellements (simuler des paiements récurrents échoués)",
         "webhookEndpointSecret": "Secret du webhook",
-        "bexioUserId": "ID utilisateur Bexio",
-        "bexioCountryId": "ID pays Bexio",
-        "bexioUnitId": "ID unité Bexio",
-        "bexioTaxId": "ID taxe Bexio",
-        "bexioAccountId": "ID compte Bexio",
+        "bexioUserId": "Utilisateur bexio",
+        "bexioCountryId": "Pays des nouveaux contacts",
+        "bexioUnitId": "Unité",
+        "bexioTaxId": "Taux de TVA",
+        "bexioAccountId": "Compte de produits",
         "bexioInvoiceTemplateNewMembership": "Modèle de facture (Nouvelle adhésion)",
         "bexioInvoiceTemplateRenewalMembership": "Modèle de facture (Renouvellement d’adhésion)",
         "bexioInvoiceMailSubjectNewMembership": "Objet de l’e-mail de facture (Nouvelle adhésion)",
@@ -3727,11 +3727,11 @@
         "instanceNameInfo": "Le nom de ton instance Payrexx – la partie avant .payrexx.com dans ton adresse Payrexx (p. ex. « monmedia » pour monmedia.payrexx.com).",
         "vatRateInfo": "Le taux de TVA en pour cent transmis à Payrexx avec chaque paiement, p. ex. 8.1 ou 2.6. Sans cette valeur, aucun paiement ne peut être lancé.",
         "pspInfo": "Les prestataires de services de paiement par lesquels Payrexx doit traiter le paiement. Ne sélectionne que ceux que tu as reliés à ton compte Payrexx.",
-        "bexioUserIdInfo": "L’ID numérique du compte utilisateur Bexio auquel les nouveaux contacts et factures sont attribués.",
-        "bexioCountryIdInfo": "L’ID numérique Bexio du pays attribué aux nouveaux contacts, p. ex. l’ID de la Suisse.",
-        "bexioUnitIdInfo": "L’ID numérique Bexio de l’unité utilisée pour la ligne de facture, p. ex. « pièce ».",
-        "bexioTaxIdInfo": "L’ID numérique Bexio du taux de TVA appliqué à la ligne de facture.",
-        "bexioAccountIdInfo": "L’ID numérique Bexio du compte de produits sur lequel les recettes d’abonnement sont comptabilisées.",
+        "bexioUserIdInfo": "L’utilisateur bexio auquel les nouveaux contacts et les factures sont attribués.",
+        "bexioCountryIdInfo": "Le pays que reçoivent les nouveaux contacts quand leur adresse n’en indique aucun.",
+        "bexioUnitIdInfo": "L’unité de la ligne de facture, p. ex. «pièce».",
+        "bexioTaxIdInfo": "Le taux de TVA appliqué à la ligne de facture.",
+        "bexioAccountIdInfo": "Le compte de produits sur lequel les revenus des abonnements sont comptabilisés.",
         "bexioInvoiceTemplateInfo": "Le modèle de document Bexio (son slug) qui définit la mise en page de la facture. Tu peux utiliser des modèles différents pour les nouveaux abonnements et les renouvellements.",
         "bexioInvoiceTitleInfo": "Le titre imprimé sur la facture. Tu peux utiliser des titres différents pour les nouveaux abonnements et les renouvellements.",
         "bexioInvoiceMailSubjectInfo": "L’objet de l’e-mail avec lequel Bexio envoie la facture. Les espaces réservés comme :user.firstName: ou :memberPlan.name: sont remplacés automatiquement.",
@@ -3751,6 +3751,12 @@
           "payrexx": "Le secret API de ton instance Payrexx. Une clé enregistrée n’est plus affichée.",
           "mollie": "La clé API live (live_…) du tableau de bord Mollie. Une clé enregistrée n’est plus affichée.",
           "bexio": "Un personal access token du portail développeur de bexio. Une clé enregistrée n’est plus affichée."
+        },
+        "bexioSteps": {
+          "connect": "Connecter",
+          "records": "Données bexio",
+          "invoices": "Factures",
+          "contacts": "Contacts & nom"
         }
       },
       "placeholderSecret": "Inchangé (masqué)",
@@ -4134,7 +4140,7 @@
         },
         "bexio": {
           "token": "Crée un personal access token dans le portail développeur de bexio et colle-le dans « Clé API ».",
-          "ids": "Saisis les ID des enregistrements bexio utilisés pour comptabiliser les factures : utilisateur·trice, pays, unité, taux de TVA et compte de produits. La personne qui gère ta comptabilité dans bexio peut les retrouver.",
+          "ids": "Enregistre le jeton, puis choisis l’utilisateur bexio, le pays, l’unité, le taux de TVA et le compte de produits dans les listes que We.Publish lit dans ton entreprise bexio. En cas de doute, demande à la personne qui tient la comptabilité dans bexio.",
           "texts": "Définis ensuite le modèle de facture, le titre et les textes de l’e-mail – séparément pour les nouveaux abonnements et les renouvellements."
         },
         "noCharge": {

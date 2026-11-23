@@ -119,6 +119,17 @@ update `webhookUrl` too. The Mail Provider integration is titled «Transactional
 email» and the sync provider «Mailchimp audience», because both use Mailchimp
 (Transactional vs. Marketing keys).
 
+When a provider's later settings come from the provider itself (Mailchimp
+audiences, bexio's account/tax/unit/user/country ids), set it up as a wizard:
+give `GenericIntegrationList` `steps` (sections per step, each with a
+`complete` check; the key is step one) and a `useLookups` hook that turns id
+fields into pickers once the key is saved, as `paymentIntegrationForm.tsx`
+does for bexio with the `bexioSetupOptions` query
+(`libs/payment/api/.../bexio/bexio-setup.resolver.ts`). The stepper and
+`useWizard` are shared from `@wepublish/ui/editor`. Lookups must not depend on
+the integration being switched on (Mailchimp's work before the sync is
+enabled).
+
 ### Email quality evidence (what providers tell us about addresses)
 
 Everything lands in `email_quality_events` through `EMAIL_QUALITY_RECORDER`

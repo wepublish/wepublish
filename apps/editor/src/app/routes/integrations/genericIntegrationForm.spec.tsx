@@ -254,3 +254,87 @@ describe('SingleGenericIntegrationForm editing', () => {
     expect(screen.getByRole('switch', { name: 'Active' })).toBeChecked();
   });
 });
+
+describe('SingleGenericIntegrationForm as a wizard', () => {
+  const renderWizard = (setting: Record<string, unknown>) =>
+    render(
+      <ThemeProvider theme={createTheme({ cssVariables: true })}>
+        <SingleGenericIntegrationForm
+          setting={{ id: 'bexio', type: 'BEXIO', ...setting } as never}
+          schema={z.object({
+            apiKey: z.string().nullish(),
+            bexio_accountId: z.coerce.number().nullish(),
+          })}
+          mutation={UpdateMailProviderSettingDocument}
+          fields={[
+            {
+              type: 'password',
+              name: 'apiKey',
+              label: 'API token',
+              section: 'Connection',
+            },
+            {
+              type: 'number',
+              name: 'bexio_accountId',
+              label: 'Revenue account',
+              section: 'Records',
+            },
+          ]}
+          steps={current => [
+            {
+              title: 'Connect',
+              sections: ['Connection'],
+              complete: !!current.isApiKeySet,
+            },
+            {
+              title: 'Records',
+              sections: ['Records'],
+              complete: !!current.bexio_accountId,
+            },
+          ]}
+          useLookups={current =>
+            current.isApiKeySet ?
+              { bexio_accountId: [{ label: '3400 Abonnemente', value: 7 }] }
+            : undefined
+          }
+        />
+      </ThemeProvider>
+    );
+
+  it('asks for the token first and keeps what needs it for later', () => {
+    renderWizard({});
+
+    expect(screen.getByRole('tab', { name: /Connect/ })).toHaveAttribute(
+      'aria-selected',
+      'true'
+    );
+    expect(screen.getByLabelText('API token')).toBeInTheDocument();
+    expect(screen.queryByText('Revenue account')).toBeNull();
+    expect(screen.getByRole('tab', { name: /Records/ })).toBeDisabled();
+  });
+
+  it('continues where the setup was left off, choosing from what the provider has', () => {
+    renderWizard({ isApiKeySet: true });
+
+    expect(screen.getByRole('tab', { name: /Records/ })).toHaveAttribute(
+      'aria-selected',
+      'true'
+    );
+    expect(screen.queryByLabelText('API token')).toBeNull();
+
+    fireEvent.mouseDown(
+      screen.getByRole('combobox', { name: 'Revenue account' })
+    );
+    expect(
+      screen.getByRole('option', { name: '3400 Abonnemente' })
+    ).toBeInTheDocument();
+  });
+
+  it('goes back to an earlier step with back', () => {
+    renderWizard({ isApiKeySet: true });
+
+    fireEvent.click(screen.getByRole('button', { name: 'wizard.back' }));
+
+    expect(screen.getByLabelText('API token')).toBeInTheDocument();
+  });
+});

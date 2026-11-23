@@ -3713,11 +3713,11 @@
         "vatRate": "Mehrwertsteuersatz",
         "declineRenewals": "Verlängerungen ablehnen (fehlgeschlagene wiederkehrende Zahlungen simulieren)",
         "webhookEndpointSecret": "Webhook-Secret",
-        "bexioUserId": "Bexio-Benutzer-ID",
-        "bexioCountryId": "Bexio-Länder-ID",
-        "bexioUnitId": "Bexio-Einheits-ID",
-        "bexioTaxId": "Bexio-Steuer-ID",
-        "bexioAccountId": "Bexio-Konto-ID",
+        "bexioUserId": "bexio-Benutzer",
+        "bexioCountryId": "Land neuer Kontakte",
+        "bexioUnitId": "Einheit",
+        "bexioTaxId": "MWST-Satz",
+        "bexioAccountId": "Ertragskonto",
         "bexioInvoiceTemplateNewMembership": "Rechnungsvorlage (Neue Mitgliedschaft)",
         "bexioInvoiceTemplateRenewalMembership": "Rechnungsvorlage (Mitgliedschafts-Erneuerung)",
         "bexioInvoiceMailSubjectNewMembership": "Rechnungs-E-Mail-Betreff (Neue Mitgliedschaft)",
@@ -3736,11 +3736,11 @@
         "instanceNameInfo": "Der Name deiner Payrexx-Instanz – der Teil vor .payrexx.com in deiner Payrexx-Adresse (z. B. «meinmedium» bei meinmedium.payrexx.com).",
         "vatRateInfo": "Der Mehrwertsteuersatz in Prozent, der bei jeder Zahlung an Payrexx übergeben wird, z. B. 8.1 oder 2.6. Ohne Angabe kann keine Zahlung gestartet werden.",
         "pspInfo": "Die Zahlungsdienstleister, über die Payrexx die Zahlung abwickeln soll. Wähle nur solche, die du in deinem Payrexx-Konto verbunden hast.",
-        "bexioUserIdInfo": "Die numerische ID des Bexio-Benutzerkontos, dem neue Kontakte und Rechnungen zugeordnet werden.",
-        "bexioCountryIdInfo": "Die numerische Bexio-ID des Landes, das neuen Kontakten zugewiesen wird, z. B. die ID für die Schweiz.",
-        "bexioUnitIdInfo": "Die numerische Bexio-ID der Einheit, die für die Rechnungsposition verwendet wird, z. B. «Stück».",
-        "bexioTaxIdInfo": "Die numerische Bexio-ID des Mehrwertsteuersatzes, der auf die Rechnungsposition angewendet wird.",
-        "bexioAccountIdInfo": "Die numerische Bexio-ID des Ertragskontos, auf das die Abo-Einnahmen gebucht werden.",
+        "bexioUserIdInfo": "Der bexio-Benutzer, dem neue Kontakte und Rechnungen zugeordnet werden.",
+        "bexioCountryIdInfo": "Das Land, das neue Kontakte bekommen, wenn ihre Adresse keines nennt.",
+        "bexioUnitIdInfo": "Die Einheit der Rechnungsposition, z. B. «Stück».",
+        "bexioTaxIdInfo": "Der MWST-Satz der Rechnungsposition.",
+        "bexioAccountIdInfo": "Das Ertragskonto, auf das die Abo-Einnahmen gebucht werden.",
         "bexioInvoiceTemplateInfo": "Die Bexio-Dokumentvorlage (ihr Slug), die das Layout der Rechnung bestimmt. Für neue Abos und Verlängerungen kannst du verschiedene Vorlagen verwenden.",
         "bexioInvoiceTitleInfo": "Der Titel, der auf der Rechnung steht. Für neue Abos und Verlängerungen kannst du verschiedene Titel verwenden.",
         "bexioInvoiceMailSubjectInfo": "Der Betreff der E-Mail, mit der Bexio die Rechnung verschickt. Platzhalter wie :user.firstName: oder :memberPlan.name: werden automatisch ersetzt.",
@@ -3760,6 +3760,12 @@
           "payrexx": "Das API-Secret deiner Payrexx-Instanz. Ein gespeicherter Schlüssel wird nicht mehr angezeigt.",
           "mollie": "Der Live-API-Schlüssel (live_…) aus dem Mollie-Dashboard. Ein gespeicherter Schlüssel wird nicht mehr angezeigt.",
           "bexio": "Ein Personal Access Token aus dem bexio-Entwicklerportal. Ein gespeicherter Schlüssel wird nicht mehr angezeigt."
+        },
+        "bexioSteps": {
+          "connect": "Verbinden",
+          "records": "bexio-Einträge",
+          "invoices": "Rechnungen",
+          "contacts": "Kontakte & Name"
         }
       },
       "placeholderSecret": "Unverändert (versteckt)",
@@ -4142,7 +4148,7 @@
         },
         "bexio": {
           "token": "Erstelle im bexio-Entwicklerportal einen Personal Access Token und füge ihn bei «API-Schlüssel» ein.",
-          "ids": "Trage die IDs der bexio-Datensätze ein, mit denen Rechnungen gebucht werden: Benutzer:in, Land, Einheit, MWST-Satz und Ertragskonto. Wer eure Buchhaltung in bexio betreut, kann sie nachschlagen.",
+          "ids": "Speichere das Token und wähle dann bexio-Benutzer, Land, Einheit, MWST-Satz und Ertragskonto aus den Listen, die We.Publish aus deiner bexio-Firma liest. Wenn du unsicher bist, frag, wer bei euch die Buchhaltung in bexio macht.",
           "texts": "Lege danach Rechnungsvorlage, Titel und E-Mail-Texte fest – getrennt für neue Abos und Verlängerungen."
         },
         "noCharge": {
