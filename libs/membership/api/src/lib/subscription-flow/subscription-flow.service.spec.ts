@@ -690,6 +690,40 @@ describe('SubscriptionFlowService', () => {
       ).toEqual({ active: true, default: false, NOT: { id: 'flow-default' } });
     });
 
+    it('leaves an ended subscription uncounted that an earlier-ending flow takes, though the default flow would still message it', async () => {
+      // As on review02: the flow for all plans ends 5 days after the end,
+      // the default flow 90. A subscription ended 44 days ago is the other
+      // flow's, which has nothing left for it, so neither flow counts it.
+      const allPlansFlow = flow({
+        id: 'flow-all',
+        allMemberPlans: true,
+        memberPlanId: null,
+        paymentMethods: [],
+        periodicities: [],
+      });
+      prismaMock.subscriptionFlow.findMany!.mockResolvedValue([allPlansFlow]);
+
+      await service.countSubscriptions(
+        flow({
+          id: 'flow-default',
+          default: true,
+          memberPlanId: null,
+          intervals: [{ daysAwayFromEnding: 90 }],
+        })
+      );
+
+      expect(where()).toEqual([
+        {
+          OR: [
+            { deactivation: null },
+            { paidUntil: { gte: new Date('2026-08-22T00:00:00.000Z') } },
+          ],
+        },
+        // By conditions only: the other flow's own 5 days play no part.
+        { NOT: { OR: [subscriptionsOfFlow(allPlansFlow as any)] } },
+      ]);
+    });
+
     it('narrows to what the list is filtered by', async () => {
       await service.countSubscriptions(flow(), {
         memberPlanIds: ['plan-1', 'plan-2'],

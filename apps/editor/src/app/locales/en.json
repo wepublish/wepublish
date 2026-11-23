@@ -3023,6 +3023,7 @@
         "noMemberPlan": "No member plan",
         "allMemberPlans": "All member plans",
         "subscriptionsSum": "Affected subscriptions ({{sum}})",
+        "subscriptionsHint": "Running subscriptions, and ended ones while their flow still sends them a message. Switching a flow on or off can therefore change the sum: an ended subscription may move from a flow with later messages to one without.",
         "active": "Active",
         "switchOff": "Switch flow off",
         "switchOn": "Switch flow on",

@@ -41,6 +41,7 @@ import {
   DrawerTitle,
   IconButton,
   IconButtonTooltip,
+  InfoTooltip,
   Link,
   ListViewActions,
   ListViewContainer,
@@ -417,9 +418,18 @@ function FlowTable() {
     },
     {
       id: 'subscriptions',
-      label: t('subscriptionFlow.overview.subscriptionsSum', {
-        sum: rows.reduce((sum, row) => sum + row.subscriptions, 0),
-      }),
+      columnLabel: t('subscriptionFlow.overview.subscriptions'),
+      label: (
+        <>
+          {t('subscriptionFlow.overview.subscriptionsSum', {
+            sum: rows.reduce((sum, row) => sum + row.subscriptions, 0),
+          })}{' '}
+          <InfoTooltip
+            text={t('subscriptionFlow.overview.subscriptionsHint')}
+            label={t('moreInfo')}
+          />
+        </>
+      ),
       // Wide enough for the heading with a sum of several digits.
       width: 190,
       align: 'right',
