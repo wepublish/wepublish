@@ -691,12 +691,11 @@ check-then-write at boot (`findUnique` then `create`) and even Prisma's
 `upsert` (it is a read plus an insert unless Prisma can turn it into a native
 `ON CONFLICT`) let all but one pod die with P2002 on a fresh database (verified
 2026-10-06: `settings.analyticsProvider`, then `settings_name_key`).
-`GoogleAnalyticsDbConfig.initDatabaseConfiguration` and
-`reconcileProviderRegistry` therefore insert with
+`reconcileProviderRegistry` therefore inserts with
 `createMany({ skipDuplicates: true })` (`INSERT … ON CONFLICT DO NOTHING`).
 
-Pinned by `google-analytics-db-config.spec.ts` and the "several replicas" cases
-in `reconcile-provider-registry.spec.ts`, whose fakes race like Prisma does.
+Pinned by the "several replicas" cases in
+`reconcile-provider-registry.spec.ts`, whose fakes race like Prisma does.
 
 ### ⚠️ The mail webhook answers 200 to a payload it cannot process — only a bad signature is a 401
 

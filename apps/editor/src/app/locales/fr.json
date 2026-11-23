@@ -3970,6 +3970,7 @@
       "restored": "Cette intégration existait déjà et a été restaurée telle quelle.",
       "cancel": "Annuler",
       "add": "Ajouter une intégration",
+      "addProvider": "Ajouter {{provider}}",
       "addType": "Type",
       "addId": "Identifiant",
       "addIdHelp": "L’identifiant unique sous lequel l’intégration est appelée. Il figure aussi dans les URL de webhook et ne peut plus être modifié ensuite.",
@@ -4190,7 +4191,8 @@
       "empty": {
         "title": "Pas encore configurée",
         "description": "Choisis l’un de ces fournisseurs pour commencer. Une fois ajouté, un guide pas à pas indique où trouver chaque clé et ce qu’il faut enregistrer chez le fournisseur.",
-        "descriptionSingle": "Configure-la pour commencer. Un guide pas à pas indique ensuite où trouver chaque clé et ce qu’il faut enregistrer chez le fournisseur."
+        "descriptionSingle": "Configure-la pour commencer. Un guide pas à pas indique ensuite où trouver chaque clé et ce qu’il faut enregistrer chez le fournisseur.",
+        "more": "Choisir le type et l’ID toi-même"
       },
       "form": {
         "unsaved": "Modifications non enregistrées",

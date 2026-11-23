@@ -30,11 +30,9 @@ export function AIIntegrationForm() {
       mutation={UpdateSettingsIntegrationsAiDocument}
       dataKey="aiSettings"
       schema={aiSettingsSchema}
-      fixedProvider={{
-        id: 'v0',
-        type: AiProviderType.V0,
-        name: 'V0',
+      fixedProviders={{
         createMutation: CreateAiSettingDocument,
+        providers: [{ id: 'v0', type: AiProviderType.V0 }],
       }}
       fields={setting => [
         {

@@ -1,4 +1,4 @@
-import { AnalyticsProviderType, PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import {
   createNamespacedCacheTesting,
   type NamespacedCacheTesting,
@@ -6,11 +6,6 @@ import {
 import { GoogleAnalyticsDbConfig } from './google-analytics-db-config';
 
 type Row = { id: string } & Record<string, unknown>;
-
-const uniqueViolation = () =>
-  Object.assign(new Error('Unique constraint failed on the fields: (`id`)'), {
-    code: 'P2002',
-  });
 
 class AnalyticsProviderTable {
   rows = new Map<string, Row>();
@@ -20,40 +15,31 @@ class AnalyticsProviderTable {
       this.rows.get(where.id) ?? null
   );
 
-  create = vi.fn(async ({ data }: { data: Row }) => {
-    if (this.rows.has(data.id)) {
-      throw uniqueViolation();
-    }
+  // Like Prisma: update fails for a row that does not exist, updateMany does not.
+  update = vi.fn(
+    async ({ where, data }: { where: { id: string }; data: object }) => {
+      const row = this.rows.get(where.id);
 
-    this.rows.set(data.id, data);
-
-    return data;
-  });
-
-  createMany = vi.fn(
-    async ({
-      data,
-      skipDuplicates,
-    }: {
-      data: Row[];
-      skipDuplicates?: boolean;
-    }) => {
-      let count = 0;
-
-      for (const row of data) {
-        if (this.rows.has(row.id)) {
-          if (!skipDuplicates) {
-            throw uniqueViolation();
-          }
-
-          continue;
-        }
-
-        this.rows.set(row.id, row);
-        count++;
+      if (!row) {
+        throw Object.assign(new Error('Record to update not found.'), {
+          code: 'P2025',
+        });
       }
 
-      return { count };
+      Object.assign(row, data);
+      return row;
+    }
+  );
+
+  updateMany = vi.fn(
+    async ({ where, data }: { where: { id: string }; data: object }) => {
+      const row = this.rows.get(where.id);
+
+      if (row) {
+        Object.assign(row, data);
+      }
+
+      return { count: row ? 1 : 0 };
     }
   );
 }
@@ -61,7 +47,7 @@ class AnalyticsProviderTable {
 describe('GoogleAnalyticsDbConfig', () => {
   let table: AnalyticsProviderTable;
   let testing: NamespacedCacheTesting;
-  const replica = () =>
+  const config = () =>
     new GoogleAnalyticsDbConfig(
       { settingAnalyticsProvider: table } as unknown as PrismaClient,
       testing.cache,
@@ -75,37 +61,30 @@ describe('GoogleAnalyticsDbConfig', () => {
 
   afterEach(() => testing.close());
 
-  it('creates the configuration once when several replicas start at the same time', async () => {
-    await expect(
-      Promise.all([
-        replica().initDatabaseConfiguration(),
-        replica().initDatabaseConfiguration(),
-        replica().initDatabaseConfiguration(),
-      ])
-    ).resolves.toBeDefined();
-
-    expect(table.rows.size).toBe(1);
-    expect(table.rows.get('google-analytics')).toMatchObject({
-      type: AnalyticsProviderType.GOOGLE,
-      name: 'Google Analytics',
-      // Google Analytics has been the Hot & Trending provider before Plausible and Umami
-      hotAndTrending: true,
+  it('works without a stored configuration', async () => {
+    await expect(config().getGoogleAnalytics()).resolves.toEqual({
+      credentials: undefined,
+      property: undefined,
+      articlePrefix: '/a',
     });
+    expect(table.rows.size).toBe(0);
   });
 
-  it('leaves an existing configuration untouched', async () => {
+  it('reads the stored configuration and notes when it was loaded', async () => {
     table.rows.set('google-analytics', {
       id: 'google-analytics',
-      name: 'Our analytics',
+      credentials: null,
       property: '123',
+      articlePrefix: '/article/',
     });
 
-    await replica().initDatabaseConfiguration();
-
-    expect(table.rows.get('google-analytics')).toEqual({
-      id: 'google-analytics',
-      name: 'Our analytics',
+    await expect(config().getGoogleAnalytics()).resolves.toEqual({
+      credentials: undefined,
       property: '123',
+      articlePrefix: '/article/',
     });
+    expect(table.rows.get('google-analytics')?.['lastLoadedAt']).toBeInstanceOf(
+      Date
+    );
   });
 });

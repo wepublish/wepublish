@@ -36,6 +36,33 @@ export function suggestedIdFor(type: string, existingIds: string[]) {
   return id;
 }
 
+/** Adds a provider and refreshes the list; failures show as a snackbar. */
+export function useCreateProvider(
+  mutation: DocumentNode,
+  refetchQuery: DocumentNode
+) {
+  const [create, { loading }] = useMutation(mutation, {
+    refetchQueries: [{ query: refetchQuery }],
+  });
+
+  const createProvider = async (variables: {
+    id: string;
+    type: string;
+    name: string;
+  }) => {
+    try {
+      await create({ variables });
+    } catch (error) {
+      enqueueSnackbar((error as Error).message, {
+        variant: 'error',
+        autoHideDuration: 8000,
+      });
+    }
+  };
+
+  return [createProvider, loading] as const;
+}
+
 export function DeleteIntegrationButton({
   id,
   mutation,
@@ -110,12 +137,14 @@ export function AddIntegrationButton({
   refetchQuery,
   existingIds,
   label,
+  variant,
 }: {
   types: ProviderTypeOption[];
   mutation: DocumentNode;
   refetchQuery: DocumentNode;
   existingIds: string[];
   label?: string;
+  variant?: 'text' | 'outlined' | 'contained';
 }) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
@@ -166,8 +195,8 @@ export function AddIntegrationButton({
   return (
     <>
       <Button
-        variant={label ? 'contained' : 'outlined'}
-        startIcon={<MdAdd />}
+        variant={variant ?? 'outlined'}
+        startIcon={variant === 'text' ? undefined : <MdAdd />}
         onClick={() => setOpen(true)}
       >
         {label ?? t('integrations.add')}
@@ -177,7 +206,7 @@ export function AddIntegrationButton({
         open={open}
         onClose={close}
       >
-        <DialogTitle>{label ?? t('integrations.add')}</DialogTitle>
+        <DialogTitle>{t('integrations.add')}</DialogTitle>
 
         <DialogContent>
           <Stack
@@ -261,7 +290,7 @@ export function AddIntegrationButton({
             disabled={loading || !id || !type || existingIds.includes(id)}
             onClick={onConfirm}
           >
-            {label ?? t('integrations.add')}
+            {t('integrations.add')}
           </Button>
         </DialogActions>
       </Dialog>
@@ -282,32 +311,18 @@ export function CreateFixedIntegrationButton({
   name: string;
   mutation: DocumentNode;
   refetchQuery: DocumentNode;
-  label?: string;
+  label: string;
 }) {
-  const { t } = useTranslation();
-  const [create, { loading }] = useMutation(mutation, {
-    refetchQueries: [{ query: refetchQuery }],
-  });
-
-  const onClick = async () => {
-    try {
-      await create({ variables: { id, type, name } });
-    } catch (error) {
-      enqueueSnackbar((error as Error).message, {
-        variant: 'error',
-        autoHideDuration: 8000,
-      });
-    }
-  };
+  const [createProvider, loading] = useCreateProvider(mutation, refetchQuery);
 
   return (
     <Button
-      variant="contained"
+      variant="outlined"
       startIcon={<MdAdd />}
       disabled={loading}
-      onClick={onClick}
+      onClick={() => createProvider({ id, type, name })}
     >
-      {label ?? t('integrations.add')}
+      {label}
     </Button>
   );
 }

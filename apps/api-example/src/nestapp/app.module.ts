@@ -355,33 +355,20 @@ import { API_SHARED_NAMESPACES } from './shared-namespaces';
         GoogleAnalyticsModule.registerAsync({
           imports: [PrismaModule],
           inject: [PrismaClient, NamespacedCache],
-          useFactory: async (prisma: PrismaClient, kv: NamespacedCache) => {
-            const dbConfig = new GoogleAnalyticsDbConfig(
-              prisma,
-              kv,
-              'google-analytics'
-            );
-            await dbConfig.initDatabaseConfiguration();
-            return dbConfig;
-          },
+          useFactory: (prisma: PrismaClient, kv: NamespacedCache) =>
+            new GoogleAnalyticsDbConfig(prisma, kv, 'google-analytics'),
         }),
         PlausibleModule.registerAsync({
           imports: [PrismaModule],
           inject: [PrismaClient, NamespacedCache],
-          useFactory: async (prisma: PrismaClient, kv: NamespacedCache) => {
-            const dbConfig = new PlausibleDbConfig(prisma, kv, 'plausible');
-            await dbConfig.initDatabaseConfiguration();
-            return dbConfig;
-          },
+          useFactory: (prisma: PrismaClient, kv: NamespacedCache) =>
+            new PlausibleDbConfig(prisma, kv, 'plausible'),
         }),
         UmamiModule.registerAsync({
           imports: [PrismaModule],
           inject: [PrismaClient, NamespacedCache],
-          useFactory: async (prisma: PrismaClient, kv: NamespacedCache) => {
-            const dbConfig = new UmamiDbConfig(prisma, kv, 'umami');
-            await dbConfig.initDatabaseConfiguration();
-            return dbConfig;
-          },
+          useFactory: (prisma: PrismaClient, kv: NamespacedCache) =>
+            new UmamiDbConfig(prisma, kv, 'umami'),
         }),
         PrismaModule,
       ],

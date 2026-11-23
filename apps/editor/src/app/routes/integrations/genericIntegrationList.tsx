@@ -10,7 +10,7 @@ import {
 import { SettingProvider } from '@wepublish/editor/api';
 import { humanizeError } from '@wepublish/ui/editor';
 import { DocumentNode } from 'graphql';
-import { useMemo, useState } from 'react';
+import { PropsWithChildren, useMemo, useState } from 'react';
 import { FieldValues } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { MdSearch } from 'react-icons/md';
@@ -19,12 +19,15 @@ import {
   GenericIntegrationFormProps,
   SingleGenericIntegrationForm,
 } from './genericIntegrationForm';
-import { IntegrationEmptyState } from './integrationEmptyState';
+import { ProviderOption } from './integrationCatalog';
+import { IntegrationEmptyState, ProviderChoice } from './integrationEmptyState';
 import {
   AddIntegrationButton,
   CreateFixedIntegrationButton,
   DeleteIntegrationButton,
   ProviderTypeOption,
+  suggestedIdFor,
+  useCreateProvider,
 } from './integrationRegistryActions';
 
 interface GenericIntegrationListProps<
@@ -43,11 +46,10 @@ interface GenericIntegrationListProps<
     types: ProviderTypeOption[];
   };
 
-  fixedProvider?: {
-    id: string;
-    type: string;
-    name: string;
+  /** Providers the API looks up under a fixed id, one per type (e.g. analytics). */
+  fixedProviders?: {
     createMutation: DocumentNode;
+    providers: { id: string; type: string }[];
   };
 
   setup?: {
@@ -62,7 +64,9 @@ const StyledSearch = styled(TextField)`
 
 const Toolbar = styled.div`
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
+  gap: 8px;
   margin-bottom: 20px;
 `;
 
@@ -73,6 +77,75 @@ const GenericIntegrationGrid = styled.div`
   max-width: 960px;
 `;
 
+/** The empty state, where picking a provider adds it right away. */
+function FirstProviderPicker({
+  createMutation,
+  refetchQuery,
+  idOf,
+  ...props
+}: PropsWithChildren<{
+  providers?: ProviderOption[];
+  choices: ProviderChoice[];
+  createMutation?: DocumentNode;
+  refetchQuery: DocumentNode;
+  idOf: (choice: ProviderChoice) => string;
+}>) {
+  if (!createMutation) {
+    return (
+      <IntegrationEmptyState
+        providers={props.providers}
+        children={props.children}
+      />
+    );
+  }
+
+  return (
+    <ChoosableEmptyState
+      {...props}
+      createMutation={createMutation}
+      refetchQuery={refetchQuery}
+      idOf={idOf}
+    />
+  );
+}
+
+function ChoosableEmptyState({
+  createMutation,
+  refetchQuery,
+  idOf,
+  choices,
+  providers,
+  children,
+}: PropsWithChildren<{
+  providers?: ProviderOption[];
+  choices: ProviderChoice[];
+  createMutation: DocumentNode;
+  refetchQuery: DocumentNode;
+  idOf: (choice: ProviderChoice) => string;
+}>) {
+  const [createProvider, creating] = useCreateProvider(
+    createMutation,
+    refetchQuery
+  );
+
+  return (
+    <IntegrationEmptyState
+      providers={providers}
+      choices={choices}
+      disabled={creating}
+      onChoose={choice =>
+        createProvider({
+          id: idOf(choice),
+          type: choice.type,
+          name: choice.label,
+        })
+      }
+    >
+      {children}
+    </IntegrationEmptyState>
+  );
+}
+
 export function GenericIntegrationList<
   TSetting extends SettingProvider & { type?: string },
   TFormValues extends FieldValues,
@@ -80,7 +153,7 @@ export function GenericIntegrationList<
   query,
   dataKey,
   registry,
-  fixedProvider,
+  fixedProviders,
   setup,
   ...formProps
 }: GenericIntegrationListProps<TSetting, TFormValues>) {
@@ -88,6 +161,26 @@ export function GenericIntegrationList<
   const [searchValue, setSearchValue] = useState('');
 
   const { data, loading, error } = useQuery<Record<string, unknown>>(query, {});
+  const creation = registry ?? setup;
+  const createMutation =
+    creation?.createMutation ?? fixedProviders?.createMutation;
+
+  const providerOf = (type: string) =>
+    formProps.providers?.find(provider => provider.type === type);
+  const choiceOf = (type: string, fallbackLabel = type): ProviderChoice => ({
+    type,
+    label: providerOf(type)?.label ?? fallbackLabel,
+    logo: providerOf(type)?.logo,
+  });
+  const fixedIdOf = (type: string) =>
+    fixedProviders?.providers.find(provider => provider.type === type)?.id;
+
+  // What a first setup can start with: real providers only, test ones stay in the dialog.
+  const firstChoices: ProviderChoice[] = (
+    creation ?
+      creation.types.map(option => choiceOf(option.value, option.label))
+    : (fixedProviders?.providers.map(({ type }) => choiceOf(type)) ??
+      [])).filter(choice => !providerOf(choice.type)?.testing);
 
   const settings = data?.[dataKey] as TSetting[] | undefined;
 
@@ -139,44 +232,57 @@ export function GenericIntegrationList<
 
   if (!settings?.length) {
     return (
-      <IntegrationEmptyState providers={formProps.providers}>
-        {registry && (
+      <FirstProviderPicker
+        providers={formProps.providers}
+        choices={firstChoices}
+        createMutation={createMutation}
+        refetchQuery={query}
+        idOf={choice =>
+          fixedIdOf(choice.type) ?? suggestedIdFor(choice.type, [])
+        }
+      >
+        {creation && (
           <AddIntegrationButton
-            types={registry.types}
-            mutation={registry.createMutation}
+            types={creation.types}
+            mutation={creation.createMutation}
             refetchQuery={query}
             existingIds={[]}
-            label={t('integrations.setUp')}
+            label={t('integrations.empty.more')}
+            variant="text"
           />
         )}
-
-        {setup && (
-          <AddIntegrationButton
-            types={setup.types}
-            mutation={setup.createMutation}
-            refetchQuery={query}
-            existingIds={[]}
-            label={t('integrations.setUp')}
-          />
-        )}
-
-        {fixedProvider && (
-          <CreateFixedIntegrationButton
-            id={fixedProvider.id}
-            type={fixedProvider.type}
-            name={fixedProvider.name}
-            mutation={fixedProvider.createMutation}
-            refetchQuery={query}
-            label={t('integrations.setUp')}
-          />
-        )}
-      </IntegrationEmptyState>
+      </FirstProviderPicker>
     );
   }
 
+  const missingFixed =
+    fixedProviders?.providers.filter(
+      ({ id }) => !settings.some(setting => setting.id === id)
+    ) ?? [];
+
   return (
     <>
-      {addButton && <Toolbar>{addButton}</Toolbar>}
+      {(addButton || missingFixed.length > 0) && (
+        <Toolbar>
+          {addButton}
+
+          {missingFixed.map(({ id, type }) => {
+            const { label } = choiceOf(type);
+
+            return (
+              <CreateFixedIntegrationButton
+                key={id}
+                id={id}
+                type={type}
+                name={label}
+                mutation={fixedProviders!.createMutation}
+                refetchQuery={query}
+                label={t('integrations.addProvider', { provider: label })}
+              />
+            );
+          })}
+        </Toolbar>
+      )}
 
       {settings?.length > 3 && (
         <StyledSearch

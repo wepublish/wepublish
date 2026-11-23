@@ -73,6 +73,7 @@ async function subscribeFromPaywall(
   memberPlanSlug: string
 ) {
   const article = data.get('article', ctx.currentArticle ?? '');
+  await data.ensureSimulatedPayments();
   const plan = await data.memberPlan(memberPlanSlug);
   const simulated = plan.paymentMethods.find(
     ({ slug }) => slug === 'simulated'

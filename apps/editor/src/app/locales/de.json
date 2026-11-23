@@ -3999,6 +3999,7 @@
       "restored": "Diese Integration war bereits vorhanden und wurde unverändert wiederhergestellt.",
       "cancel": "Abbrechen",
       "add": "Integration hinzufügen",
+      "addProvider": "{{provider}} hinzufügen",
       "addType": "Typ",
       "addId": "Kennung",
       "addIdHelp": "Eindeutige Kennung, unter der die Integration angesprochen wird. Wird auch in Webhook-URLs verwendet und lässt sich später nicht ändern.",
@@ -4198,7 +4199,8 @@
       "empty": {
         "title": "Noch nicht eingerichtet",
         "description": "Wähle einen dieser Provider, um loszulegen. Sobald er hinzugefügt ist, zeigt dir eine Schritt-für-Schritt-Anleitung, wo du jeden Schlüssel findest und was du beim Provider eintragen musst.",
-        "descriptionSingle": "Richte die Integration ein, um loszulegen. Eine Schritt-für-Schritt-Anleitung zeigt dir dann, wo du jeden Schlüssel findest und was du beim Provider eintragen musst."
+        "descriptionSingle": "Richte die Integration ein, um loszulegen. Eine Schritt-für-Schritt-Anleitung zeigt dir dann, wo du jeden Schlüssel findest und was du beim Provider eintragen musst.",
+        "more": "Typ und ID selbst wählen"
       },
       "form": {
         "unsaved": "Ungespeicherte Änderungen",

@@ -1,4 +1,4 @@
-import { AnalyticsProviderType, PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import {
   createNamespacedCacheTesting,
   type NamespacedCacheTesting,
@@ -17,8 +17,14 @@ describe('UmamiDbConfig', () => {
   const create = async (row: Record<string, unknown> | null) => {
     testing = await createNamespacedCacheTesting();
     const settingAnalyticsProvider = {
-      createMany: vi.fn().mockResolvedValue({ count: 1 }),
-      update: vi.fn(),
+      update: vi.fn(async () => {
+        if (!row) {
+          throw Object.assign(new Error('Record to update not found.'), {
+            code: 'P2025',
+          });
+        }
+      }),
+      updateMany: vi.fn().mockResolvedValue({ count: row ? 1 : 0 }),
       findUnique: vi.fn().mockResolvedValue(row),
     };
 
@@ -32,21 +38,12 @@ describe('UmamiDbConfig', () => {
     };
   };
 
-  it('creates the configuration if it does not exist yet', async () => {
-    const { config, settingAnalyticsProvider } = await create(null);
+  it('works without a stored configuration', async () => {
+    const { config } = await create(null);
 
-    await config.initDatabaseConfiguration();
-
-    expect(settingAnalyticsProvider.createMany).toHaveBeenCalledWith({
-      data: [
-        expect.objectContaining({
-          id: 'umami',
-          type: AnalyticsProviderType.UMAMI,
-          name: 'Umami',
-          credentials: null,
-        }),
-      ],
-      skipDuplicates: true,
+    await expect(config.getUmami()).resolves.toMatchObject({
+      apiKey: undefined,
+      articlePrefix: '/a',
     });
   });
 

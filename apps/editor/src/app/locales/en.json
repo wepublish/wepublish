@@ -4060,6 +4060,7 @@
       "restored": "This integration already existed and was restored unchanged.",
       "cancel": "Cancel",
       "add": "Add integration",
+      "addProvider": "Add {{provider}}",
       "addType": "Type",
       "addId": "Identifier",
       "addIdHelp": "The unique identifier the integration is addressed by. It also appears in webhook URLs and cannot be changed later.",
@@ -4258,7 +4259,8 @@
       "empty": {
         "title": "Not set up yet",
         "description": "Choose one of these providers to get started. Once it is added, a step-by-step guide shows where to find each key and what to register at the provider.",
-        "descriptionSingle": "Set it up to get started. A step-by-step guide then shows where to find each key and what to register at the provider."
+        "descriptionSingle": "Set it up to get started. A step-by-step guide then shows where to find each key and what to register at the provider.",
+        "more": "Choose type and ID yourself"
       },
       "form": {
         "unsaved": "Unsaved changes",

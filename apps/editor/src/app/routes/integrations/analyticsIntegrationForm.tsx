@@ -188,11 +188,14 @@ export function AnalyticsIntegrationForm() {
       refetchQueries={[SettingsIntegrationsAnalyticsDocument]}
       dataKey="analyticsProviderSettings"
       schema={analyticsSettingsSchema}
-      fixedProvider={{
-        id: 'google-analytics',
-        type: AnalyticsProviderType.Google,
-        name: 'Google Analytics',
+      fixedProviders={{
         createMutation: CreateAnalyticsProviderSettingDocument,
+        // The API reads each analytics provider under its own fixed id.
+        providers: [
+          { id: 'google-analytics', type: AnalyticsProviderType.Google },
+          { id: 'plausible', type: AnalyticsProviderType.Plausible },
+          { id: 'umami', type: AnalyticsProviderType.Umami },
+        ],
       }}
       fields={setting => {
         const fields: FieldDefinition<IntegrationFormValues>[] = [

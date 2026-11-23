@@ -308,8 +308,10 @@ Hot & Trending (analytics integrations, `settings.analyticsProvider`):
 - Plausible (`libs/plausible/api`, row `plausible`, Stats API v2)
 - Umami (`libs/umami/api`, row `umami`, `/websites/:id/metrics`)
 
-Each row is created on boot by its `*DbConfig.initDatabaseConfiguration()`.
-The `hotAndTrending` flag picks the provider that answers the `hotAndTrending`
+Nothing creates these rows (nor any other provider row): neither the seed nor
+the API at boot. Admins add the providers they use in the editor, which creates
+each analytics row under the fixed id the API reads; a `*DbConfig` without its
+row just returns an empty configuration. The `hotAndTrending` flag picks the provider that answers the `hotAndTrending`
 query (`AnalyticsProviderHotAndTrendingDataSource` in `libs/article/api`);
 setting it on one row clears it on the others. Plausible and Umami keep their
 api key encrypted in `credentials` and take an optional `url` for self-hosting.
