@@ -117,8 +117,100 @@ describe('AuditLogList', () => {
     expect(screen.getByText('auditLogList.overview.tokenActor')).toBeTruthy();
   });
 
+  const openFilters = () =>
+    fireEvent.click(
+      screen.getByRole('button', { name: /filterableList.filter.label/ })
+    );
+
+  it('keeps the filters folded away behind the filter button, like the other lists', () => {
+    renderList();
+
+    expect(
+      screen.queryByRole('textbox', { name: 'auditLogList.filter.entity' })
+    ).toBeNull();
+
+    openFilters();
+
+    expect(
+      screen.getByRole('textbox', { name: 'auditLogList.filter.entity' })
+    ).toBeInTheDocument();
+  });
+
+  it('remembers filters and page size for the next visit', () => {
+    const { unmount } = renderList();
+
+    openFilters();
+    fireEvent.change(
+      screen.getByRole('textbox', { name: 'auditLogList.filter.entity' }),
+      { target: { value: 'Article' } }
+    );
+    fireEvent.change(
+      screen.getByRole('combobox', { name: 'listView.pagination.pageSize' }),
+      { target: { value: '50' } }
+    );
+    unmount();
+
+    mockedUseQuery.mockClear();
+    renderList();
+
+    const variables = mockedUseQuery.mock.calls.at(-1)?.[1]?.variables;
+    expect(variables.filter).toMatchObject({ entity: 'Article' });
+    expect(variables.take).toBe(50);
+  });
+
+  it('shows a remembered search and keeps it', async () => {
+    localStorage.setItem(
+      'wepublish:editor:listState:audit-log',
+      JSON.stringify({
+        filter: { search: 'ada' },
+        sortField: 'createdAt',
+        sortOrder: 'desc',
+        limit: 25,
+      })
+    );
+
+    renderList();
+    openFilters();
+
+    expect(
+      screen.getByRole('textbox', {
+        name: 'auditLogList.filter.searchPlaceholder',
+      })
+    ).toHaveValue('ada');
+
+    // past the search debounce
+    await new Promise(resolve => setTimeout(resolve, 400));
+
+    expect(lastFilter()).toMatchObject({ search: 'ada' });
+  });
+
+  it('counts the active filters and resets them', () => {
+    renderList();
+
+    openFilters();
+    fireEvent.change(
+      screen.getByRole('textbox', { name: 'auditLogList.filter.entity' }),
+      { target: { value: 'Article' } }
+    );
+    fireEvent.click(
+      screen.getByRole('checkbox', { name: 'auditLogList.filter.failuresOnly' })
+    );
+
+    expect(
+      screen.getByRole('button', { name: /filterableList.filter.label/ })
+    ).toHaveTextContent('2');
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'filterableList.filter.reset' })
+    );
+
+    expect(lastFilter()?.entity).toBeUndefined();
+    expect(lastFilter()?.success).toBeUndefined();
+  });
+
   it('labels the free-text filters', () => {
     renderList();
+    openFilters();
 
     expect(
       screen.getByRole('textbox', {
