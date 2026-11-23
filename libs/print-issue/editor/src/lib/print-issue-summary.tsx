@@ -99,6 +99,7 @@ export function PrintIssueSummary({
       'lapsed',
       'exhausted',
       'noPrintIssues',
+      'beforeFirstIssue',
     ] as const
   )
     .map(reason => ({

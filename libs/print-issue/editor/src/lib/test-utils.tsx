@@ -61,6 +61,7 @@ export const summary = (overrides: Record<string, unknown> = {}) => ({
     lapsed: 4,
     exhausted: 0,
     noPrintIssues: 0,
+    beforeFirstIssue: 0,
   },
   bexio: {
     configured: true,

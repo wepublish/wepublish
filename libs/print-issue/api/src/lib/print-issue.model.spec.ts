@@ -187,6 +187,7 @@ describe('toRunModel', () => {
       donation: 3,
       excludedPlan: 1,
       noPrintIssues: 0,
+      beforeFirstIssue: 0,
     });
   });
 

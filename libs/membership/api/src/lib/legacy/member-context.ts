@@ -773,6 +773,7 @@ export class MemberContext implements MemberContextInterface {
     discountCodeId,
     goodieId,
     skipMail,
+    firstPrintIssueFrom,
   }: {
     userID: string;
     paymentMethodID: string;
@@ -790,6 +791,8 @@ export class MemberContext implements MemberContextInterface {
     goodieId?: string;
     /** Set when an editor creates the subscription and chose not to mail the reader. */
     skipMail?: boolean;
+    /** «Abo-Start»: the first printed issue is the first shipped on or after this day. */
+    firstPrintIssueFrom?: Date | null;
   }): Promise<{
     subscription: SubscriptionWithRelations;
     invoice: InvoiceWithItems;
@@ -841,6 +844,7 @@ export class MemberContext implements MemberContextInterface {
         extendable,
         currency: memberPlan.currency,
         confirmed: !needsConfirmation,
+        firstPrintIssueFrom: firstPrintIssueFrom ?? null,
       },
       include: {
         deactivation: true,

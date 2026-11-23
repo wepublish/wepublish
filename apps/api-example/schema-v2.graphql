@@ -1853,6 +1853,24 @@ input FacebookVideoBlockInput {
   videoID: String
 }
 
+"""
+current: the issue shipped last is the first one. upcoming: the next one is.
+"""
+enum FirstPrintIssueChoice {
+  current
+  upcoming
+}
+
+"""
+Which printed issue the subscription starts with («Abo-Start»), as the reader chose it from printIssueStart.
+"""
+input FirstPrintIssueInput {
+  choice: FirstPrintIssueChoice!
+
+  """The id of the current issue the reader was shown."""
+  currentIssueId: String!
+}
+
 type FlexAlignment {
   h: Int!
   i: String!
@@ -3915,6 +3933,11 @@ type Mutation {
   createSubscription(
     autoRenew: Boolean!
     extendable: Boolean!
+
+    """
+    «Abo-Start»: the first printed issue is the first one shipped on or after this day.
+    """
+    firstPrintIssueFrom: DateTime
     memberPlanID: String!
     monthlyAmount: Float!
     paidUntil: DateTime
@@ -3978,12 +4001,12 @@ type Mutation {
   createUserRole(description: String, name: String!, permissionIDs: [String!]!): UserRole!
 
   """Allows authenticated users to create additional subscriptions"""
-  createUserSubscription(autoRenew: Boolean!, deactivateSubscriptionId: String, discountCode: String, failureURL: String, goodieId: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Float!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], successURL: String): Payment!
+  createUserSubscription(autoRenew: Boolean!, deactivateSubscriptionId: String, discountCode: String, failureURL: String, firstPrintIssue: FirstPrintIssueInput, goodieId: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Float!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], successURL: String): Payment!
 
   """
   Allows guests and authenticated users to create additional subscriptions
   """
-  createUserSubscriptionWithConfirmation(autoRenew: Boolean!, discountCode: String, goodieId: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Float!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], userId: String): Boolean!
+  createUserSubscriptionWithConfirmation(autoRenew: Boolean!, discountCode: String, firstPrintIssue: FirstPrintIssueInput, goodieId: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Float!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], userId: String): Boolean!
 
   """
   Lets a We.Publish supporter open the website as the given user for an hour. Needs a We.Publish login with the impersonate-cms role.
@@ -4212,6 +4235,11 @@ type Mutation {
   importSubscription(
     autoRenew: Boolean!
     extendable: Boolean!
+
+    """
+    «Abo-Start»: the first printed issue is the first one shipped on or after this day.
+    """
+    firstPrintIssueFrom: DateTime
     memberPlanID: String!
     monthlyAmount: Float!
     paidUntil: DateTime
@@ -4595,7 +4623,24 @@ type Mutation {
   updateSetting(name: SettingName!, value: GraphQLSettingValueType): Setting!
 
   """Updates an existing subscription."""
-  updateSubscription(autoRenew: Boolean, extendable: Boolean, id: String!, memberPlanID: String, monthlyAmount: Float, paidUntil: DateTime, paymentMethodID: String, paymentPeriodicity: PaymentPeriodicity, properties: [PropertyInput!], startsAt: DateTime, userID: String): PublicSubscription!
+  updateSubscription(
+    autoRenew: Boolean
+    extendable: Boolean
+
+    """
+    «Abo-Start»: the first printed issue is the first one shipped on or after this day.
+    """
+    firstPrintIssueFrom: DateTime
+    id: String!
+    memberPlanID: String
+    monthlyAmount: Float
+    paidUntil: DateTime
+    paymentMethodID: String
+    paymentPeriodicity: PaymentPeriodicity
+    properties: [PropertyInput!]
+    startsAt: DateTime
+    userID: String
+  ): PublicSubscription!
 
   """Update an existing subscription flow"""
   updateSubscriptionFlow(autoRenewal: [Boolean!], id: String!, paymentMethodIds: [String!], periodicities: [PaymentPeriodicity!]): [SubscriptionFlowModel!]!
@@ -6036,6 +6081,10 @@ enum PrintIssueRunMode {
 
 """Subscriptions the run left out, by reason."""
 type PrintIssueSkipped {
+  """
+  Shipped before the first issue the reader chose when subscribing («Abo-Start»).
+  """
+  beforeFirstIssue: Int!
   deactivated: Int!
   donation: Int!
 
@@ -6054,6 +6103,17 @@ type PrintIssueSkipped {
 type PrintIssueSources {
   bexio: Int!
   wepublish: Int!
+}
+
+"""
+The issues a new subscriber chooses the first one from: the last shipped and the next.
+"""
+type PrintIssueStart {
+  """Shipped today at the latest, whatever its status."""
+  current: PublicPrintIssue!
+
+  """Ships later; none until staff created it."""
+  upcoming: PublicPrintIssue
 }
 
 """
@@ -6130,6 +6190,20 @@ input PropertyInput {
   value: String!
 }
 
+"""A printed issue as a new subscriber sees it («Abo-Start»)."""
+type PublicPrintIssue {
+  id: String!
+
+  """The ship day (YYYY-MM-DD)."""
+  issueDate: String!
+
+  """As the medium writes it, e.g. «6.26» or «#117»."""
+  label: String!
+
+  """The topic."""
+  title: String
+}
+
 type PublicSubscription implements HasMemberPlan & HasPaymentMethod & HasUser {
   autoRenew: Boolean!
   canExtend: Boolean!
@@ -6149,6 +6223,11 @@ type PublicSubscription implements HasMemberPlan & HasPaymentMethod & HasUser {
   deactivation: SubscriptionDeactivation
   extendable: Boolean!
   externalReward: String
+
+  """
+  «Abo-Start»: the first printed issue is the first one shipped on or after this day.
+  """
+  firstPrintIssueFrom: DateTime
   goodie: Goodie
   id: String!
   isActive: Boolean!
@@ -6756,6 +6835,11 @@ type Query {
 
   """The computed list waiting to be checked, if any."""
   printIssueRun(id: String!): PrintIssueRun
+
+  """
+  The issues a new subscriber chooses where the subscription starts from; null while the print export is off or nothing shipped yet.
+  """
+  printIssueStart: PrintIssueStart
 
   """All print issues, the newest first."""
   printIssues: [PrintIssue!]!
@@ -8331,7 +8415,6 @@ type UserEmailQualityModel {
 enum UserEvent {
   ACCOUNT_CREATION
   EMAIL_CHANGE
-  EMAIL_VERIFICATION
   LOGIN_LINK
   PASSWORD_RESET
   TEST_MAIL

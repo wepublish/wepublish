@@ -415,6 +415,32 @@ describe('runExport', () => {
     expect(result.summary.grace).toBe(1);
   });
 
+  it('keeps a Nachlieferung to the readers whose chosen first issue it is', async () => {
+    // 6.26 shipped on 13.10.2026; both readers subscribed on 20.10.2026
+    const reader = (id: string, userId: string, firstIssueFrom: string) =>
+      subscription({
+        id,
+        userId,
+        startsAt: '2026-10-20T00:00:00.000Z',
+        paidUntil: '2027-10-19T00:00:00.000Z',
+        firstIssueFrom,
+      });
+
+    const result = await runExport(
+      { ...INPUT, date: '2026-11-02', shipDay: '2026-10-13' },
+      {
+        members: membersOf([
+          reader('s-current', 'u1', '2026-10-13'),
+          reader('s-next', 'u3', '2026-10-14'),
+        ]),
+        bexio: null,
+      }
+    );
+
+    expect(result.recipients.map(r => r.subscriptionId)).toEqual(['s-current']);
+    expect(result.summary.skipped).toMatchObject({ beforeFirstIssue: 1 });
+  });
+
   it('lists nothing from bexio and says why while no kind is configured', async () => {
     const result = await runExport(
       { ...INPUT, bexioKinds: [] },

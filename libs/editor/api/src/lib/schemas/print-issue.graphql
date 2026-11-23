@@ -50,6 +50,7 @@ fragment PrintIssueSummaryFields on PrintIssueSummary {
     lapsed
     exhausted
     noPrintIssues
+    beforeFirstIssue
   }
   bexio {
     configured

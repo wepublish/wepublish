@@ -7,8 +7,10 @@ import {
   BuilderSubscribeSummaryProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { chosenIssueLabel, ZwoelfAboStart } from './zwoelf-abo-start';
 import { useZwoelfSubscribeStep } from './zwoelf-subscribe-step-context';
 
 const SummaryBar = styled('div')`
@@ -52,7 +54,38 @@ export const ZwoelfSubscribeSummary = ({
     meta: { locale },
     elements: { Button },
   } = useWebsiteBuilder();
-  const { step, setStep, mode } = useZwoelfSubscribeStep();
+  const {
+    step,
+    setStep,
+    mode,
+    printStart,
+    firstIssue,
+    setFirstIssueMissing,
+    firstIssueApplies,
+    setFirstIssueApplies,
+  } = useZwoelfSubscribeStep();
+
+  // «Abo-Start» is asked only where the plan and duration print issues
+  const printIssues = memberPlan?.periodicityPricing?.find(
+    price => price.periodicity === paymentPeriodicity
+  )?.printIssues;
+  const applies =
+    !!printStart &&
+    memberPlan?.productType === 'Subscription' &&
+    printIssues !== 0;
+
+  useEffect(() => {
+    setFirstIssueApplies(applies);
+  }, [applies, setFirstIssueApplies]);
+
+  const startLabel =
+    firstIssueApplies && firstIssue ?
+      t('zwoelf.subscribe.aboStart.summary', {
+        label:
+          chosenIssueLabel(printStart, firstIssue) ??
+          t('zwoelf.subscribe.aboStart.upcomingShort'),
+      })
+    : undefined;
 
   const choice = [
     t(`zwoelf.subscribe.mode.${mode}`),
@@ -61,6 +94,7 @@ export const ZwoelfSubscribeSummary = ({
     }),
     memberPlan?.name,
     formatCurrency(periodAmount / 100, currency, locale),
+    startLabel,
   ]
     .filter(Boolean)
     .join(' · ');
@@ -73,35 +107,52 @@ export const ZwoelfSubscribeSummary = ({
 
   if (step === 2) {
     return (
-      <SummaryHeader className={className}>
-        {summary}
+      <>
+        {/* a link straight to the second step skipped the choice */}
+        {applies && !firstIssue && <ZwoelfAboStart />}
 
-        <Button
-          variant="text"
-          onClick={() => setStep(1)}
-        >
-          {t('zwoelf.subscribe.summary.back')}
-        </Button>
-      </SummaryHeader>
+        <SummaryHeader className={className}>
+          {summary}
+
+          <Button
+            variant="text"
+            onClick={() => setStep(1)}
+          >
+            {t('zwoelf.subscribe.summary.back')}
+          </Button>
+        </SummaryHeader>
+      </>
     );
   }
 
   return (
-    <SummaryBar className={className}>
-      {summary}
+    <>
+      {applies && <ZwoelfAboStart />}
 
-      <Button
-        variant="contained"
-        size="large"
-        disabled={selectedPlanUnavailable}
-        onClick={async () => {
-          if (await validateSelection()) {
-            setStep(2);
-          }
-        }}
-      >
-        {t('zwoelf.subscribe.summary.next')}
-      </Button>
-    </SummaryBar>
+      <SummaryBar className={className}>
+        {summary}
+
+        <Button
+          variant="contained"
+          size="large"
+          disabled={selectedPlanUnavailable}
+          onClick={async () => {
+            const valid = await validateSelection();
+
+            // «Abo-Start» is required where the plan prints issues
+            if (applies && !firstIssue) {
+              setFirstIssueMissing(true);
+              return;
+            }
+
+            if (valid) {
+              setStep(2);
+            }
+          }}
+        >
+          {t('zwoelf.subscribe.summary.next')}
+        </Button>
+      </SummaryBar>
+    </>
   );
 };

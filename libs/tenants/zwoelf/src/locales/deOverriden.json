@@ -38,6 +38,17 @@
         "chosen": "Gewählt:",
         "next": "Weiter",
         "back": "Zurück zur Auswahl"
+      },
+      "aboStart": {
+        "title": "Abo-Start",
+        "choose": "Ausgabe wählen",
+        "current": "Aktuelle Ausgabe {label}",
+        "upcoming": "Kommende Ausgabe {label}",
+        "upcomingUnknown": "Kommende Ausgabe",
+        "upcomingShort": "kommende Ausgabe",
+        "ships": "erscheint am {day}",
+        "required": "Bitte wähle, mit welcher Ausgabe dein Abo beginnt.",
+        "summary": "Abo-Start: {label}"
       }
     }
   }

@@ -329,10 +329,36 @@ describe('SettingList', () => {
       ).toBe(templateField().closest('.MuiCard-root'));
     });
 
+    test('enables saving once the counting or the template changes', async () => {
+      renderNumbering('perYear', '{range}.{yy}');
+
+      const save = () => screen.getAllByRole('button', { name: /save/i })[0]!;
+
+      fireEvent.click(
+        await screen.findByRole('radio', {
+          name: 'settingList.printIssueNumberingChoice.continuous',
+        })
+      );
+      await waitFor(() => expect(save()).toBeEnabled());
+    });
+
+    test('enables saving once only the template changes', async () => {
+      renderNumbering('perYear', '{range}.{yy}');
+
+      const save = () => screen.getAllByRole('button', { name: /save/i })[0]!;
+
+      fireEvent.click(
+        await screen.findByRole('button', { name: 'Nr. 6/2026' })
+      );
+      await waitFor(() => expect(save()).toBeEnabled());
+    });
+
     test('fills the template in from a preset', async () => {
       renderNumbering('perYear', '{range}.{yy}');
 
-      fireEvent.click(await screen.findByRole('button', { name: 'Nr. 6/2026' }));
+      fireEvent.click(
+        await screen.findByRole('button', { name: 'Nr. 6/2026' })
+      );
 
       expect(templateField()).toHaveValue('Nr. {range}/{yyyy}');
     });
@@ -340,9 +366,12 @@ describe('SettingList', () => {
     test('refuses a template without the year while numbers restart every year', async () => {
       renderNumbering('perYear', '{range}.{yy}');
 
-      fireEvent.change(await screen.findByRole('textbox', {
-        name: 'settingList.printIssueLabelFormat',
-      }), { target: { value: '#{range}' } });
+      fireEvent.change(
+        await screen.findByRole('textbox', {
+          name: 'settingList.printIssueLabelFormat',
+        }),
+        { target: { value: '#{range}' } }
+      );
       fireEvent.click(screen.getByRole('button', { name: /save/i }));
 
       expect(

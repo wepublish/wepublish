@@ -22,7 +22,10 @@ export type RuleDelivery = {
 };
 
 export type RuleIssue = {
+  /** the day the entitlement is evaluated at: the ship day, or later for a Nachlieferung */
   issueDate: string;
+  /** the issue's ship day; default `issueDate` */
+  shipDay?: string;
   /** how many issues it counts as against a period: 2 for a double issue; default 1 */
   countsAs?: number;
 };
@@ -60,6 +63,8 @@ export type RuleSubscription = {
   /** invoices neither paid nor canceled */
   openInvoiceIds: string[];
   deliveries: RuleDelivery[];
+  /** «Abo-Start»: the first issue is the first one shipped on or after this day (YYYY-MM-DD) */
+  firstIssueFrom?: string | null;
 };
 
 export type QuotaConfig = {
@@ -88,7 +93,9 @@ export type ExclusionReason =
   | 'deactivated'
   | 'lapsed'
   | 'exhausted'
-  | 'noPrintIssues';
+  | 'noPrintIssues'
+  /** shipped before the first issue the reader chose («Abo-Start») */
+  | 'beforeFirstIssue';
 
 export type Included = {
   include: true;
@@ -143,6 +150,13 @@ const latestEnding = (periods: RulePeriod[]): RulePeriod | undefined =>
   periods.reduce<RulePeriod | undefined>(
     (latest, period) =>
       !latest || period.endsAt > latest.endsAt ? period : latest,
+    undefined
+  );
+
+const earliestStarting = (periods: RulePeriod[]): RulePeriod | undefined =>
+  periods.reduce<RulePeriod | undefined>(
+    (earliest, period) =>
+      !earliest || period.startsAt < earliest.startsAt ? period : earliest,
     undefined
   );
 
@@ -263,7 +277,23 @@ export function classifySubscription(
     return excluded('noPrintIssues');
   }
 
-  const startsOn = zurichDate(sub.startsAt);
+  // «Abo-Start»: no issue shipped before the one the reader chose, not even
+  // as a Vorab-Exemplar or in a Nachlieferung evaluated later
+  const shipDay = issue.shipDay ?? day;
+
+  if (sub.firstIssueFrom && shipDay < sub.firstIssueFrom) {
+    return excluded('beforeFirstIssue');
+  }
+
+  // a reader who chose an issue shipped before the subscription started
+  // receives it as if the subscription had started then
+  const subscribedOn = zurichDate(sub.startsAt);
+  const startsEarlier =
+    !!sub.firstIssueFrom && sub.firstIssueFrom < subscribedOn;
+  const startsOn = startsEarlier ? sub.firstIssueFrom! : subscribedOn;
+  // that copy belongs to the subscription's first period
+  const chargedTo = (period: RulePeriod | undefined) =>
+    period ?? (startsEarlier ? earliestStarting(sub.periods) : undefined);
   const paidUntil = sub.paidUntil ? zurichDate(sub.paidUntil) : null;
 
   if (startsOn > day) {
@@ -305,7 +335,7 @@ export function classifySubscription(
           `Kündigung per ${formatDe(deactivatedOn)}`
         : `bezahlt bis ${formatDe(paidUntil)}`,
         false,
-        chargedPeriod(sub.periods, day)?.id ?? null
+        chargedTo(chargedPeriod(sub.periods, day))?.id ?? null
       );
     }
 
@@ -320,7 +350,7 @@ export function classifySubscription(
         'openInvoice',
         'offen',
         true,
-        (openPeriod ?? chargedPeriod(sub.periods, day))?.id ?? null,
+        chargedTo(openPeriod ?? chargedPeriod(sub.periods, day))?.id ?? null,
         sub.openInvoiceIds.length === 0
       );
     }
