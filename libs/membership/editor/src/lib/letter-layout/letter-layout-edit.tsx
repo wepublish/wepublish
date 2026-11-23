@@ -13,13 +13,15 @@ import {
   enqueueSnackbar,
   ImageSelectPanel,
   InfoTooltip,
+  ListViewActions,
   ListViewContainer,
   ListViewHeader,
+  PageTitle,
   useSeededState,
 } from '@wepublish/ui/editor';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdImage } from 'react-icons/md';
+import { MdArrowBack, MdImage } from 'react-icons/md';
 import { useNavigate, useParams } from 'react-router-dom';
 import { MUTATION_OPTIONS_WITH_SUCCESS_MESSAGE } from '../common';
 import {
@@ -27,6 +29,7 @@ import {
   HtmlSourceEditorHandle,
 } from '../mail-template/html-source-editor';
 import { LetterPreview } from '../mail-template/letter-preview';
+import { PreviewDialogTitle } from '../mail-template/preview-dialog-title';
 import {
   Button,
   Card,
@@ -34,7 +37,6 @@ import {
   CardHeader,
   Dialog,
   DialogContent,
-  DialogTitle,
   Drawer,
   FormControl,
   FormLabel,
@@ -234,16 +236,20 @@ function LetterLayoutEdit() {
     <div>
       <ListViewContainer>
         <ListViewHeader>
-          <h2>
+          <PageTitle>
             {isEdit ?
               t('letterLayouts.editHeader')
             : t('letterLayouts.createHeader')}
-          </h2>
+          </PageTitle>
         </ListViewHeader>
-        <Stack
-          direction="row"
-          spacing={1}
-        >
+        <ListViewActions>
+          <Button
+            variant="text"
+            startIcon={<MdArrowBack />}
+            onClick={() => navigate('/letterlayouts')}
+          >
+            {t('letterLayouts.back')}
+          </Button>
           <Button
             variant="outlined"
             loading={previewLoading}
@@ -265,7 +271,7 @@ function LetterLayoutEdit() {
           >
             {t('saveAndClose')}
           </Button>
-        </Stack>
+        </ListViewActions>
       </ListViewContainer>
 
       <Card
@@ -360,7 +366,9 @@ function LetterLayoutEdit() {
         onClose={() => setPreviewOpen(false)}
         maxWidth="lg"
       >
-        <DialogTitle>{t('letterLayouts.previewTitle')}</DialogTitle>
+        <PreviewDialogTitle onClose={() => setPreviewOpen(false)}>
+          {t('letterLayouts.previewTitle')}
+        </PreviewDialogTitle>
         <DialogContent style={{ height: '80vh' }}>
           {previewData?.letterLayoutPreview.pdf && (
             <LetterPreview pdf={previewData.letterLayoutPreview.pdf} />

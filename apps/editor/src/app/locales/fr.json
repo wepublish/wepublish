@@ -5255,6 +5255,7 @@
       "create": "Créer un papier à lettres",
       "createHeader": "Créer un papier à lettres",
       "editHeader": "Modifier le papier à lettres",
+      "back": "Retour à la vue d’ensemble",
       "name": "Nom",
       "nameRequired": "Veuillez saisir un nom.",
       "isDefault": "Papier par défaut",

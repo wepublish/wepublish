@@ -1,6 +1,12 @@
 import '@testing-library/jest-dom/vitest';
 
-import { fireEvent, render, screen } from '@testing-library/react';
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { forwardRef } from 'react';
 import { LetterLayoutEdit } from './letter-layout-edit';
@@ -103,6 +109,10 @@ const renderEdit = (path = '/letterlayouts/edit/layout-1') =>
           <Route
             path="/letterlayouts/create"
             element={<LetterLayoutEdit />}
+          />
+          <Route
+            path="/letterlayouts"
+            element={<div>stationery list</div>}
           />
         </Routes>
       </MemoryRouter>
@@ -221,5 +231,32 @@ describe('LetterLayoutEdit', () => {
     );
 
     expect(screen.getByTestId('letter-preview')).toHaveTextContent('JVBERi0=');
+  });
+
+  it('goes back to the stationery list', () => {
+    renderEdit();
+
+    fireEvent.click(screen.getByRole('button', { name: 'letterLayouts.back' }));
+
+    expect(screen.getByText('stationery list')).toBeInTheDocument();
+  });
+
+  it('closes the preview from the button in its top corner', async () => {
+    previewState.data = { letterLayoutPreview: { pdf: 'JVBERi0=' } };
+    renderEdit();
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'letterLayouts.preview' })
+    );
+    expect(screen.getByTestId('letter-preview')).toBeInTheDocument();
+
+    const dialog = screen.getByRole('dialog');
+    fireEvent.click(
+      within(dialog).getByRole('button', { name: 'mailTemplates.editor.close' })
+    );
+
+    await waitFor(() =>
+      expect(screen.queryByTestId('letter-preview')).not.toBeInTheDocument()
+    );
   });
 });
