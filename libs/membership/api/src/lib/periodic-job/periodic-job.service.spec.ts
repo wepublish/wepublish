@@ -1042,7 +1042,7 @@ describe('PeriodicJobService', () => {
     it('has the provider render the invoice for a reader in letter mode and prints it after the letter', async () => {
       provider.createRemoteInvoice.mockResolvedValue({ intent, document });
 
-      await expect(createInvoice()).resolves.toBe(true);
+      await expect(createInvoice()).resolves.toBe('created');
 
       expect(letterSender.canReceiveLetters).toHaveBeenCalledWith(
         expect.objectContaining({ id: 'user-1' }),
@@ -1105,7 +1105,9 @@ describe('PeriodicJobService', () => {
     it('removes the invoice when the provider could not create it, so the next run tries again', async () => {
       provider.createRemoteInvoice.mockRejectedValue(new Error('bexio down'));
 
-      await expect(createInvoice()).resolves.toBe(false);
+      await expect(createInvoice()).resolves.toEqual({
+        failed: expect.stringContaining('bexio down'),
+      });
 
       expect(mockPrisma.payment.deleteMany).toHaveBeenCalledWith({
         where: { invoiceID: 'inv-1' },
@@ -1130,7 +1132,7 @@ describe('PeriodicJobService', () => {
         deliveryError: 'smtp down',
       });
 
-      await expect(createInvoice()).resolves.toBe(true);
+      await expect(createInvoice()).resolves.toBe('created');
 
       expect(mockPrisma.payment.update).toHaveBeenCalled();
       expect(mockPrisma.invoice.delete).not.toHaveBeenCalled();
@@ -1145,7 +1147,7 @@ describe('PeriodicJobService', () => {
         deliveryError: 'pdf failed',
       });
 
-      await expect(createInvoice()).resolves.toBe(true);
+      await expect(createInvoice()).resolves.toBe('created');
 
       expect(mockPrisma.payment.update).toHaveBeenCalled();
       expect(mockPrisma.invoice.delete).not.toHaveBeenCalled();
@@ -1671,7 +1673,7 @@ describe('PeriodicJobService', () => {
       id: 'inv-1',
     });
     const skipped = await service['createInvoice'](pjo, invoice);
-    expect(skipped).toBe(false);
+    expect(skipped).toBe('notDue');
     expect(mockSubscriptionController.createInvoice).not.toHaveBeenCalled();
 
     // When paidUntil is within range, invoice should be created
@@ -1899,6 +1901,65 @@ describe('PeriodicJobService', () => {
       expect(recordedSteps()[1].error).toContain(
         'Checking the state of invoice inv-1 failed: 401 Unauthorized'
       );
+    });
+
+    // A provider that refuses an invoice leaves nothing behind for the next
+    // run to retry, so the run goes on; but the log has to say so: on
+    // 23.11.2026 bexio refused every renewal and the step still read «OK».
+    describe('the invoices it created', () => {
+      const invoiceCreationStep = () =>
+        recordedSteps().find(step => step.key === 'invoiceCreation');
+
+      beforeEach(() => {
+        mockSubscriptionController.getActiveSubscriptionsWithoutInvoice.mockResolvedValue(
+          [{ id: 'sub-1' }, { id: 'sub-2' }, { id: 'sub-3' }, { id: 'sub-4' }]
+        );
+      });
+
+      it('counts the invoices it created', async () => {
+        vi.spyOn(service as any, 'createInvoice')
+          .mockResolvedValueOnce('created')
+          .mockResolvedValueOnce('created')
+          .mockResolvedValueOnce('notDue')
+          .mockResolvedValueOnce('created');
+
+        await service.execute(new Date('2026-11-23T03:00:00Z'));
+
+        expect(invoiceCreationStep()).toEqual(
+          expect.objectContaining({
+            status: 'ok',
+            counts: { created: 3, failed: 0 },
+          })
+        );
+        expect(invoiceCreationStep()?.error).toBeUndefined();
+      });
+
+      it('warns when the payment provider refused invoices, with how many and why', async () => {
+        vi.spyOn(service as any, 'createInvoice')
+          .mockResolvedValueOnce('created')
+          .mockResolvedValueOnce({
+            failed:
+              'Bexio failed while creating the invoice for invoice inv-2: 422 account',
+          })
+          .mockResolvedValueOnce('notDue')
+          .mockResolvedValueOnce({ failed: 'Bexio failed: 429' });
+
+        await service.execute(new Date('2026-11-23T03:00:00Z'));
+
+        expect(invoiceCreationStep()).toEqual(
+          expect.objectContaining({
+            status: 'warning',
+            counts: { created: 1, failed: 2 },
+          })
+        );
+        expect(invoiceCreationStep()?.error).toBe(
+          '2 of 3 invoices could not be created at the payment provider, e.g. Bexio failed while creating the invoice for invoice inv-2: 422 account'
+        );
+        // the rest of the night still runs
+        expect(recordedSteps().map(step => step.key)).toContain(
+          'deactivationNotRenewed'
+        );
+      });
     });
 
     it('records a step of the night on the newest job', async () => {

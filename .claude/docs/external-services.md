@@ -213,10 +213,13 @@ Automated subscription mails can reach a user as a printed letter. The pieces:
   invoice as a `Payment`, and prints the returned pdf after the
   `INVOICE_CREATION` letter. A provider that could not create its invoice makes
   the job hard-delete the we.publish invoice with its period, items and payment
-  so the next run tries again (cancelling would not, see gotchas). A reader in
+  so the next run tries again (cancelling would not, see gotchas), and the
+  night goes on: the `invoiceCreation` step of the job log counts
+  `created`/`failed` and turns `warning` with the first provider error, so a
+  provider refusing every invoice no longer reads «OK». A reader in
   letter mode whose pdf the provider could not render gets no cover letter
-  that night. The sweep `postMissingInvoiceLetters` (after invoice creation,
-  also run by `createAndChargeInvoices`) posts the invoice letter for every
+  that night. The sweep `postMissingInvoiceLetters` (after invoice creation)
+  posts the invoice letter for every
   open invoice of a reader in letter mode that has no non-rejected letter log
   for the template since the invoice was created — refused letters, a missing
   pdf, or a reader moved to letters after the invoice was emailed — with the

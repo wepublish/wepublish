@@ -2581,6 +2581,8 @@
         "pushed_other": "{{count}} transmis",
         "failed_one": "{{count}} échoué",
         "failed_other": "{{count}} échoués",
+        "created_one": "{{count}} créée",
+        "created_other": "{{count}} créées",
         "synced_one": "{{count}} audience synchronisée",
         "synced_other": "{{count}} audiences synchronisées",
         "checked_one": "{{count}} vérifié",

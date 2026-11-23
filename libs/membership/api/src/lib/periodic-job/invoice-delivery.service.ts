@@ -43,12 +43,14 @@ export type PaperSide = Pick<
 
 /**
  * Whether the invoice-creation mail goes out now. `removed`: the provider
- * could not create the invoice and it is gone for the next attempt.
- * `deferred`: the reader gets paper but there is no invoice pdf to print yet,
- * so the night sweep posts it once there is.
+ * could not create the invoice (`error` says why) and it is gone for the next
+ * attempt. `deferred`: the reader gets paper but there is no invoice pdf to
+ * print yet, so the night sweep posts it once there is.
  */
 export type RemoteInvoiceOutcome =
-  { send: PaperSide } | { skip: 'removed' | 'deferred' };
+  | { send: PaperSide }
+  | { skip: 'removed'; error: string }
+  | { skip: 'deferred' };
 
 /**
  * What happens around a renewal invoice once it exists in we.publish: the
@@ -101,7 +103,7 @@ export class InvoiceDeliveryService {
     if ('skip' in outcome) {
       if (outcome.skip === 'removed') {
         throw new ServiceUnavailableException(
-          `The payment provider could not create the invoice for subscription ${subscription.id}; nothing was invoiced, try again`
+          `The payment provider could not create the invoice for subscription ${subscription.id}; nothing was invoiced, try again: ${outcome.error}`
         );
       }
 
@@ -169,12 +171,14 @@ export class InvoiceDeliveryService {
     } catch (error) {
       // Nothing exists at the provider. Cancelling the invoice would keep its
       // future period, which stops the nightly job from invoicing again.
+      const reason = describeError(error);
+
       this.logger.error(
-        `The payment provider could not create invoice ${invoice.id} for subscription ${subscription.id}; the invoice is removed for the next attempt: ${describeError(error)}`
+        `The payment provider could not create invoice ${invoice.id} for subscription ${subscription.id}; the invoice is removed for the next attempt: ${reason}`
       );
       await this.deleteInvoice(invoice.id);
 
-      return { skip: 'removed' };
+      return { skip: 'removed', error: reason };
     }
 
     if (!remote) {

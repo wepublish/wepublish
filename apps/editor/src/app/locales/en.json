@@ -2582,6 +2582,8 @@
         "pushed_other": "{{count}} sent",
         "failed_one": "{{count}} failed",
         "failed_other": "{{count}} failed",
+        "created_one": "{{count}} created",
+        "created_other": "{{count}} created",
         "synced_one": "{{count}} audience synced",
         "synced_other": "{{count}} audiences synced",
         "checked_one": "{{count}} checked",
