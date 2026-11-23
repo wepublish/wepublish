@@ -1547,7 +1547,11 @@ Inactive flows (`active = false`, never the default flow) are skipped by both
 lookups and by the overlap check; switching one on runs the overlap check.
 `SubscriptionFlowService.countSubscriptions` is the one count rule: running
 subscriptions plus those ended within the flow's latest event day, minus what
-an earlier tier takes, so the counts of all flows add up. Don't count
+an earlier tier takes (by conditions, not by its day). The counts add up to
+the subscriptions that can still get a message, not to all of them: an ended
+subscription past its own flow's last day counts nowhere, though the default
+flow would still message it with that flow off. So switching a flow can move
+the sum (29 → 30 on review02, 2026-11-23); that is correct. Don't count
 elsewhere.
 
 ## Adding an entry
