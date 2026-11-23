@@ -6092,6 +6092,10 @@
         "title": "Title",
         "titleHint": "Also the subject line of the Mailchimp draft. Takes effect on save."
       }
+    },
+    "wizard": {
+      "back": "Back",
+      "next": "Next"
     }
   }
 }

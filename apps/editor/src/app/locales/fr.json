@@ -6092,6 +6092,10 @@
         "title": "Titre",
         "titleHint": "Sert aussi d’objet au brouillon Mailchimp. Pris en compte à l’enregistrement."
       }
+    },
+    "wizard": {
+      "back": "Retour",
+      "next": "Suivant"
     }
   }
 }

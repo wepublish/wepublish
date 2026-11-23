@@ -41,3 +41,4 @@ export * from './lib/testUtils';
 export * from './lib/toggleRequiredLabel';
 export * from './lib/useReportQueryErrors';
 export * from './lib/utility';
+export * from './lib/wizard/wizard';

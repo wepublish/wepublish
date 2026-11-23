@@ -6092,6 +6092,10 @@
         "title": "Titel",
         "titleHint": "Zugleich die Betreffzeile des Mailchimp-Entwurfs. Wird beim Speichern übernommen."
       }
+    },
+    "wizard": {
+      "back": "Zurück",
+      "next": "Weiter"
     }
   }
 }

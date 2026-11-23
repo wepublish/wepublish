@@ -6,7 +6,7 @@ import {
   Stepper,
   Typography,
 } from '@mui/material';
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdArrowBack, MdArrowForward } from 'react-icons/md';
 
@@ -36,6 +36,49 @@ export function canGoToStep(
   }
 
   return complete.slice(step, target).every(Boolean);
+}
+
+/**
+ * Where a wizard is, and where it may go: `complete` says per step whether
+ * its work is done, so the wizard only moves forward over finished steps. It
+ * opens at `initial`, or else where the work was left off.
+ */
+export function useWizard({
+  complete,
+  initial,
+  locked = false,
+}: {
+  complete: boolean[];
+  initial?: number;
+  locked?: boolean;
+}) {
+  const [step, setStep] = useState(() => {
+    if (initial !== undefined) {
+      return initial;
+    }
+
+    const open = complete.findIndex(done => !done);
+    return open === -1 ? Math.max(complete.length - 1, 0) : open;
+  });
+
+  const canGoTo = (target: number) =>
+    target >= 0 &&
+    target < complete.length &&
+    canGoToStep(target, { step, complete, locked });
+
+  const goTo = (target: number) => {
+    if (canGoTo(target)) {
+      setStep(target);
+    }
+  };
+
+  return {
+    step,
+    canGoTo,
+    goTo,
+    next: () => goTo(step + 1),
+    back: () => goTo(step - 1),
+  };
 }
 
 /** The steps of a wizard, each one clickable while it can be reached. */
@@ -102,7 +145,7 @@ export function StepNav({
           startIcon={<MdArrowBack />}
           onClick={onBack}
         >
-          {t('mailSend.back')}
+          {t('wizard.back')}
         </Button>
       )}
       {onNext && (
@@ -112,7 +155,7 @@ export function StepNav({
           disabled={nextDisabled}
           onClick={onNext}
         >
-          {t('mailSend.next')}
+          {t('wizard.next')}
         </Button>
       )}
     </Stack>

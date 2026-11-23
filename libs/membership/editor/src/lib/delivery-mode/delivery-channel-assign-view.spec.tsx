@@ -106,7 +106,7 @@ const renderView = (state?: unknown) =>
   );
 
 const next = () =>
-  fireEvent.click(screen.getByRole('button', { name: 'mailSend.next' }));
+  fireEvent.click(screen.getByRole('button', { name: 'wizard.next' }));
 const pick = (channel: string) =>
   fireEvent.click(screen.getByRole('radio', { name: channel }));
 
@@ -149,7 +149,7 @@ describe('DeliveryChannelAssignView', () => {
     expect(
       (
         screen.getByRole('button', {
-          name: 'mailSend.next',
+          name: 'wizard.next',
         }) as HTMLButtonElement
       ).disabled
     ).toBe(true);
@@ -282,7 +282,7 @@ describe('DeliveryChannelAssignView', () => {
     expect(
       (
         screen.getByRole('button', {
-          name: 'mailSend.next',
+          name: 'wizard.next',
         }) as HTMLButtonElement
       ).disabled
     ).toBe(false);
@@ -352,7 +352,7 @@ describe('DeliveryChannelAssignView', () => {
     // Back to the audience, narrow it, straight to review while the preview
     // for the new audience is still on its way.
     fireEvent.click(screen.getByRole('button', { name: 'mailSend.back' }));
-    fireEvent.click(screen.getByRole('button', { name: 'mailSend.back' }));
+    fireEvent.click(screen.getByRole('button', { name: 'wizard.back' }));
     queries.mockImplementation((name: string) =>
       name === 'DeliveryModeAudiencePreview' ?
         { data: undefined, loading: true, refetch: vi.fn() }
@@ -363,7 +363,7 @@ describe('DeliveryChannelAssignView', () => {
     expect(
       (
         screen.getByRole('button', {
-          name: 'mailSend.next',
+          name: 'wizard.next',
         }) as HTMLButtonElement
       ).disabled
     ).toBe(true);
