@@ -14,6 +14,7 @@ import {
   enqueueSnackbar,
   sessionWithPermissions,
 } from '@wepublish/ui/editor';
+import { CanGetMailLogs, CanGetSubscription } from '@wepublish/permissions';
 import { MemoryRouter } from 'react-router-dom';
 
 import { MailLogList } from './mail-log-list';
@@ -46,11 +47,27 @@ vi.mock('react-i18next', () => ({
   }),
 }));
 
-const renderPage = (url = '/maillog') =>
+const sessionWith = (...permissions: string[]) => ({
+  session: {
+    ...sessionWithPermissions.session,
+    sessionRoles: [
+      {
+        ...sessionWithPermissions.session.sessionRoles[0],
+        permissions: permissions.map(id => ({
+          id,
+          description: id,
+          deprecated: false,
+        })),
+      },
+    ],
+  },
+});
+
+const renderPage = (url = '/maillog', auth = sessionWithPermissions) =>
   render(
     <MemoryRouter initialEntries={[url]}>
       <ThemeProvider theme={createTheme({ cssVariables: true })}>
-        <AuthContext.Provider value={sessionWithPermissions}>
+        <AuthContext.Provider value={auth}>
           <MailLogList />
         </AuthContext.Provider>
       </ThemeProvider>
@@ -374,7 +391,49 @@ describe('MailLogList', () => {
           .getAttribute('href')
       ).toBe('/subscriptions/edit/sub-1');
       expect(within(about).getByText('mailLog.triggerInvoice')).toBeTruthy();
-      expect(within(noTrigger).queryByRole('link')).toBeNull();
+      expect(
+        within(noTrigger).queryByRole('link', {
+          name: 'mailLog.triggerSubscription',
+        })
+      ).toBeNull();
+    });
+
+    it('only names the subscription for someone who may not open subscriptions', () => {
+      renderPage('/maillog', sessionWith(CanGetMailLogs.id));
+      showTrigger();
+
+      const [, about] = screen.getAllByRole('row');
+
+      expect(
+        within(about).getByText('mailLog.triggerSubscription')
+      ).toBeTruthy();
+      expect(within(about).queryByRole('link')).toBeNull();
+    });
+
+    it('links the recipient to their user page', () => {
+      renderPage();
+
+      const [, first] = screen.getAllByRole('row');
+
+      expect(
+        within(first)
+          .getByRole('link', { name: 'jane@example.com' })
+          .getAttribute('href')
+      ).toBe('/users/edit/u1');
+    });
+
+    it('only names the recipient for someone who may not open users', () => {
+      renderPage(
+        '/maillog',
+        sessionWith(CanGetMailLogs.id, CanGetSubscription.id)
+      );
+
+      const [, first] = screen.getAllByRole('row');
+
+      expect(within(first).getByText('jane@example.com')).toBeTruthy();
+      expect(
+        within(first).queryByRole('link', { name: 'jane@example.com' })
+      ).toBeNull();
     });
   });
 });

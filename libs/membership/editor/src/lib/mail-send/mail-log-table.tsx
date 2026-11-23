@@ -34,6 +34,7 @@ import {
   mailLogTypeLabel,
   MailLogStateLegend,
   MailLogStateTag,
+  MailLogRecipientCell,
   MailLogTriggerCell,
 } from './mail-log-common';
 
@@ -466,7 +467,7 @@ export function MailLogTable() {
             id: 'recipient',
             label: t('mailLog.recipient'),
             width: 220,
-            render: log => log.recipient.email,
+            render: log => <MailLogRecipientCell recipient={log.recipient} />,
             exportValue: log => log.recipient.email,
           },
           {
