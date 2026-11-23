@@ -8,19 +8,14 @@ import type { PrintExportOptions } from './options';
 import { dbDateToYmd } from './rules/dates';
 import { readIssueNumbering } from './numbering-setting';
 import { readQuota } from './quota-setting';
-import {
-  PRINT_ISSUE_COUNTINGS,
-  type PrintIssueCounting,
-} from './rules/entitlement';
 import { issueLabel, type IssueNumbering } from './rules/issue';
 
-export { PRINT_ISSUES_PER_YEAR_SETTING } from './quota-setting';
-export const PRINT_ISSUE_COUNTING_SETTING = 'printIssueCounting';
+export {
+  PRINT_ISSUE_COUNTING_SETTING,
+  PRINT_ISSUES_PER_YEAR_SETTING,
+  printIssueCountingOf,
+} from './quota-setting';
 export const PRINT_BEXIO_KINDS_SETTING = 'printBexioKinds';
-
-/** The counting as stored; anything else counts per period, as before the setting. */
-export const printIssueCountingOf = (value: unknown): PrintIssueCounting =>
-  PRINT_ISSUE_COUNTINGS.find(counting => counting === value) ?? 'perPeriod';
 
 const isKind = (value: unknown): value is BexioKind => {
   const kind = value as Partial<BexioKind> | null;
