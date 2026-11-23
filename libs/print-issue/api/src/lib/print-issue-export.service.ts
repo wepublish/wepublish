@@ -7,6 +7,7 @@ import type { BexioKind } from './bexio/parse';
 import type { PrintExportOptions } from './options';
 import { dbDateToYmd } from './rules/dates';
 import type { QuotaConfig } from './rules/entitlement';
+import { readIssueNumbering } from './numbering-setting';
 import { issueLabel, type IssueNumbering } from './rules/issue';
 
 export const PRINT_ISSUES_PER_YEAR_SETTING = 'printIssuesPerYear';
@@ -64,17 +65,25 @@ export class PrintIssueExportService {
       excludeBexioRecipients,
     }: ComputeInput
   ): Promise<ExportResult> {
-    const [quota, bexio, bexioKinds, bexioDelivered] = await Promise.all([
-      this.quota(),
-      this.bexioSource.client(),
-      this.bexioKinds(),
-      this.bexioDelivered(),
-    ]);
+    const [quota, bexio, bexioKinds, bexioDelivered, numbering] =
+      await Promise.all([
+        this.quota(),
+        this.bexioSource.client(),
+        this.bexioKinds(),
+        this.bexioDelivered(),
+        readIssueNumbering(this.prisma),
+      ]);
     const shipDay = dbDateToYmd(issue.issueDate);
 
     return runExport(
       {
-        issue: issueLabel(issue),
+        issue: issueLabel(issue, numbering),
+        numbers: {
+          number: issue.number,
+          numberTo: issue.numberTo ?? null,
+          year: issue.year,
+        },
+        numbering,
         countsAs: issue.countsAs,
         date: evaluateAt ?? shipDay,
         ...options,

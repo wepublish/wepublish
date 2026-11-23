@@ -18,6 +18,11 @@ import type {
   PrintIssueWithDeliveries,
 } from './print-issue.service';
 import { dbDateToYmd } from './rules/dates';
+import {
+  DEFAULT_ISSUE_NUMBERING,
+  type IssueCounting,
+  type IssueNumberingConfig,
+} from '@wepublish/utils';
 import { issueLabel } from './rules/issue';
 
 export const PrintIssueRunModeEnum = {
@@ -592,6 +597,32 @@ export class PrintBexioKind {
   refersTo!: string;
 }
 
+export const PrintIssueCountingEnum = {
+  perYear: 'perYear',
+  continuous: 'continuous',
+} as const satisfies Record<IssueCounting, IssueCounting>;
+
+registerEnumType(PrintIssueCountingEnum, {
+  name: 'PrintIssueCounting',
+  description:
+    'perYear: numbers restart every year («6.26»). continuous: they run on («#117»).',
+});
+
+@ObjectType({
+  description:
+    'How the medium numbers its print issues (settings printIssueNumbering and printIssueLabelFormat).',
+})
+export class PrintIssueNumbering {
+  @Field(() => PrintIssueCountingEnum)
+  counting!: IssueCounting;
+
+  @Field({
+    description:
+      'The label template: {range}, {number}, {yy}, {yyyy}, e.g. «{range}.{yy}» or «#{range}».',
+  })
+  format!: string;
+}
+
 @ObjectType({ description: 'What the options can do on this medium.' })
 export class PrintExportContext {
   @Field({
@@ -666,10 +697,11 @@ export const toDeliveryModel = (
 });
 
 export const toPrintIssueModel = (
-  issue: PrintIssueWithDeliveries
+  issue: PrintIssueWithDeliveries,
+  numbering: IssueNumberingConfig = DEFAULT_ISSUE_NUMBERING
 ): PrintIssueModel => ({
   ...issue,
-  label: issueLabel(issue),
+  label: issueLabel(issue, numbering),
   issueDate: dbDateToYmd(issue.issueDate),
   options: optionsOf(issue.options),
   deliveries: issue.deliveries.map(toDeliveryModel),

@@ -2891,6 +2891,19 @@
     "settingList": {
       "printIssues": "Druckausgaben",
       "printIssuesPerYear": "Ausgaben pro Jahr (Druck)",
+      "printIssueNumbering": "Nummerierung der Ausgaben",
+      "printIssueNumberingChoice": {
+        "perYear": "Pro Jahr: die Nummern beginnen jedes Jahr bei 1 (6.26)",
+        "continuous": "Fortlaufend: die Nummern laufen über die Jahre weiter (#117)"
+      },
+      "printIssueLabelFormat": "Schreibweise der Ausgabe",
+      "printIssueLabelFormatPreview": "Vorschau",
+      "printIssueLabelFormatError": {
+        "unknownPlaceholder": "Unbekannter Platzhalter: erlaubt sind {range}, {number}, {yy} und {yyyy}.",
+        "noNumber": "Die Schreibweise braucht die Nummer: {range} oder {number}.",
+        "noYear": "Bei Nummern pro Jahr braucht die Schreibweise das Jahr: {yy} oder {yyyy}.",
+        "tooLong": "Höchstens 40 Zeichen."
+      },
       "issues": "Ausgaben",
       "allowGuestCommentRating": "Erlaube Gast-Bewertungen von Kommentaren",
       "comments": "Kommentare",
@@ -2977,6 +2990,8 @@
       "showPendingWhenNotPublished": "Geplanten Artikel oder geplante Seite auch anzeigen, wenn sie noch nicht publiziert wurde.",
       "info": {
         "printIssuesPerYear": "Wie viele gedruckte Ausgaben ein Jahresabo wert ist. Leser:innen, deren bezahlte Periode endet, bleiben so lange in den Druckexporten, bis sie diese Zahl erhalten haben. 0 schaltet die Regel aus, bis der Import die früheren Ausgaben des Jahres erfasst hat.",
+        "printIssueNumbering": "Pro Jahr beginnt die Nummerierung jedes Jahr neu, eine Ausgabe heisst dann z. B. 6.26. Fortlaufend zählen die Nummern über die Jahre weiter (z. B. #117); das Jahr einer Ausgabe ergibt sich aus ihrem Erscheinungsdatum.",
+        "printIssueLabelFormat": "Wie eine Ausgabe in der Liste, in Dateinamen und in bexio geschrieben wird. Platzhalter: {range} = Nummer, bei Doppelnummern «3/4»; {number} = nur die erste Nummer; {yy} = Jahr zweistellig; {yyyy} = Jahr vierstellig. Einzelheft-Bestellungen in bexio müssen die Ausgabe in dieser Schreibweise nennen (z. B. «Einzelheft #117»).",
         "allowCommentEditing": "Leser*innen können den Text ihrer eigenen Kommentare nach dem Abschicken noch ändern.",
         "commentCharLimit": "Maximale Anzahl Zeichen, die ein Kommentar enthalten darf. Längere Kommentare können nicht abgeschickt werden.",
         "subscriptionExtendWindowDays": "Wie viele Tage vor Ablauf eines Abos Leser*innen im Profil «Jetzt verlängern» sehen. 30 = wie bisher; 365 = jederzeit, solange keine Rechnung offen ist.",
@@ -5659,7 +5674,8 @@
       "issueDateRequired": "Bitte gib das Erscheinungsdatum an.",
       "drawer": {
         "createTitle": "Neue Ausgabe",
-        "editTitle": "Ausgabe {{label}}"
+        "editTitle": "Ausgabe {{label}}",
+        "labelPreview": "Schreibweise"
       },
       "fields": {
         "issue": "Ausgabe",

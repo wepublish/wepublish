@@ -44,6 +44,8 @@ export enum SettingName {
   SUBSCRIPTION_EXTEND_WINDOW_DAYS = 'subscriptionExtendWindowDays',
   PAYMENT_METHOD_CHANGE_EXPIRY_DAYS = 'paymentMethodChangeExpiryDays',
   PRINT_ISSUES_PER_YEAR = 'printIssuesPerYear',
+  PRINT_ISSUE_NUMBERING = 'printIssueNumbering',
+  PRINT_ISSUE_LABEL_FORMAT = 'printIssueLabelFormat',
   PRINT_EXPORT_DEFAULTS = 'printExportDefaults',
   PRINT_BEXIO_KINDS = 'printBexioKinds',
 

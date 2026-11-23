@@ -196,7 +196,12 @@ const KINDS = [
   },
 ];
 
-const INPUT = { issue: '6.26', date: '2026-10-13', bexioKinds: KINDS };
+const INPUT = {
+  issue: '6.26',
+  numbers: { number: 6, year: 2026 },
+  date: '2026-10-13',
+  bexioKinds: KINDS,
+};
 
 describe('runExport', () => {
   it('joins both sources into rows, recipient drafts, a summary and a file name', async () => {
@@ -310,6 +315,28 @@ describe('runExport', () => {
     );
   });
 
+  it("takes the year from the issue's numbers, not from its label", async () => {
+    bexio.invoicesInWindow.mockClear();
+
+    const result = await runExport(
+      {
+        ...INPUT,
+        issue: '#117',
+        numbers: { number: 117, year: 2026 },
+        numbering: { counting: 'continuous', format: '#{range}' },
+      },
+      { members, bexio }
+    );
+
+    // the five years before the issue's year, as for «6.26»
+    expect(bexio.invoicesInWindow).toHaveBeenCalledWith(
+      '2021-01-01',
+      '2026-12-31'
+    );
+    expect(result.filename).toBe('druckliste-117-2026-10-13.csv');
+    expect(result.summary.issue).toBe('#117');
+  });
+
   it('runs without bexio and says so', async () => {
     const result = await runExport(INPUT, { members, bexio: null });
 
@@ -369,6 +396,7 @@ describe('runExport', () => {
       {
         ...INPUT,
         issue: '1.27',
+        numbers: { number: 1, year: 2027 },
         date: '2027-01-15',
         quota: { issuesPerYear: 6, historicIssues: [] },
         bexioDelivered: { '1:11:2026-01-01': 5 },
@@ -478,7 +506,13 @@ describe('runExport', () => {
 
     // a double issue covers two of the copies still owed
     const double = await runExport(
-      { ...INPUT, issue: '3/4.26', countsAs: 2, quota },
+      {
+        ...INPUT,
+        issue: '3/4.26',
+        numbers: { number: 3, numberTo: 4, year: 2026 },
+        countsAs: 2,
+        quota,
+      },
       { members: source, bexio: null }
     );
     expect(double.rows[1]?.zahlungsstatus).toBe('Restexemplar 2–3/6');

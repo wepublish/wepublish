@@ -332,6 +332,29 @@ const seedSettings = (prisma: PrismaClient) =>
     }),
     prisma.setting.upsert({
       where: {
+        name: SettingName.PRINT_ISSUE_NUMBERING,
+      },
+      update: {},
+      create: {
+        name: SettingName.PRINT_ISSUE_NUMBERING,
+        value: 'perYear',
+        settingRestriction: {
+          allowedValues: { stringChoice: ['perYear', 'continuous'] },
+        },
+      },
+    }),
+    prisma.setting.upsert({
+      where: {
+        name: SettingName.PRINT_ISSUE_LABEL_FORMAT,
+      },
+      update: {},
+      create: {
+        name: SettingName.PRINT_ISSUE_LABEL_FORMAT,
+        value: '{range}.{yy}',
+      },
+    }),
+    prisma.setting.upsert({
+      where: {
         name: SettingName.PRINT_EXPORT_DEFAULTS,
       },
       update: {},

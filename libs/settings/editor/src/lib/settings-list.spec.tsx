@@ -237,6 +237,121 @@ describe('SettingList', () => {
     ).toBeInTheDocument();
   });
 
+  describe('how the medium numbers its print issues', () => {
+    const numberingMock = (counting: string, format: string) => ({
+      request: { query: SettingsListDocument },
+      result: () => ({
+        data: {
+          settings: [
+            // the form only saves while these hold valid numbers
+            ...[
+              [SettingName.SendLoginJwtExpiresMin, 60],
+              [SettingName.ResetPasswordJwtExpiresMin, 60],
+              [SettingName.PeeringTimeoutMs, 3000],
+            ].map(([name, value], index) => ({
+              __typename: 'Setting',
+              id: `valid-${index}`,
+              name,
+              value,
+              settingRestriction: null,
+            })),
+            {
+              __typename: 'Setting',
+              id: 'numbering',
+              name: SettingName.PrintIssueNumbering,
+              value: counting,
+              settingRestriction: {
+                allowedValues: { stringChoice: ['perYear', 'continuous'] },
+              },
+            },
+            {
+              __typename: 'Setting',
+              id: 'format',
+              name: SettingName.PrintIssueLabelFormat,
+              value: format,
+              settingRestriction: null,
+            },
+          ],
+        } as SettingsListQuery,
+      }),
+    });
+    const featuresMock = {
+      request: { query: FeaturesDocument },
+      result: () => ({ data: { features: ['print-export'] } }),
+    };
+
+    const renderNumbering = (counting: string, format: string) =>
+      render(
+        <ThemeProvider theme={theme}>
+          <AuthContext.Provider value={sessionWithPermissions}>
+            <MockedProvider
+              mocks={[
+                numberingMock(counting, format),
+                paywallListMock,
+                featuresMock,
+              ]}
+              addTypename={false}
+            >
+              <FeaturesProvider>
+                <RouterProvider
+                  router={createMemoryRouter([
+                    { path: '*', element: <SettingList /> },
+                  ])}
+                />
+              </FeaturesProvider>
+            </MockedProvider>
+          </AuthContext.Provider>
+        </ThemeProvider>
+      );
+
+    const templateField = () =>
+      screen.getByRole('textbox', {
+        name: 'settingList.printIssueLabelFormat',
+      });
+
+    test('shows the stored counting and template with a preview of both kinds of issue', async () => {
+      renderNumbering('continuous', '#{range}');
+
+      expect(
+        await screen.findByRole('radio', {
+          name: 'settingList.printIssueNumberingChoice.continuous',
+        })
+      ).toBeChecked();
+      expect(templateField()).toHaveValue('#{range}');
+      expect(
+        screen.getByText(/settingList\.printIssueLabelFormatPreview/)
+      ).toHaveTextContent('#117 · #117/118');
+      // both sit in the print issues card, below the issues per year
+      expect(
+        screen
+          .getByRole('radiogroup', { name: 'settingList.printIssueNumbering' })
+          .closest('.MuiCard-root')
+      ).toBe(templateField().closest('.MuiCard-root'));
+    });
+
+    test('fills the template in from a preset', async () => {
+      renderNumbering('perYear', '{range}.{yy}');
+
+      fireEvent.click(await screen.findByRole('button', { name: 'Nr. 6/2026' }));
+
+      expect(templateField()).toHaveValue('Nr. {range}/{yyyy}');
+    });
+
+    test('refuses a template without the year while numbers restart every year', async () => {
+      renderNumbering('perYear', '{range}.{yy}');
+
+      fireEvent.change(await screen.findByRole('textbox', {
+        name: 'settingList.printIssueLabelFormat',
+      }), { target: { value: '#{range}' } });
+      fireEvent.click(screen.getByRole('button', { name: /save/i }));
+
+      expect(
+        await screen.findByText('settingList.printIssueLabelFormatError.noYear')
+      ).toBeInTheDocument();
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+  });
+
   test('offers the settings as checkboxes, not switches', async () => {
     const { baseElement } = render(
       <ThemeProvider theme={theme}>
