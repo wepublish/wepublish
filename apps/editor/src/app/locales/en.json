@@ -1718,6 +1718,7 @@
         "letterLayoutHelp": "Header and footer"
       },
       "editor": {
+        "bandCutOff": "Nothing below this line is printed",
         "undo": "Undo",
         "redo": "Redo",
         "bold": "Bold",
@@ -5712,7 +5713,7 @@
       "footerHeight": "Footer height (mm)",
       "headerHeightHint": "At most 40 mm, so the header stays clear of the franking zone. It repeats on every page; 0 mm leaves it out.",
       "footerHeightHint": "At most 40 mm. The letter text keeps this much space from the bottom edge, and never less than 20 mm. The footer repeats on every page; 0 mm leaves it out.",
-      "htmlHint": "HTML with placeholders such as {{user_firstName}}. Use mm for sizes and give images a fixed width and height.",
+      "htmlHint": "Edit visually or as HTML, both with placeholders such as {{user_firstName}}. Anything below the red line is not printed. In HTML, use mm for sizes and give images a fixed width and height.",
       "insertImage": "Insert image",
       "preview": "Preview",
       "previewTitle": "Sample letter on this stationery",
