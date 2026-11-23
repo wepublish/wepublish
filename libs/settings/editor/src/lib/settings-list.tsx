@@ -211,6 +211,10 @@ const SETTINGS = {
     label: 'settingList.printIssueLabelFormat',
     value: DEFAULT_ISSUE_NUMBERING.format,
   },
+  [SettingName.PrintIssueCounting]: {
+    label: 'settingList.printIssueCounting',
+    value: 'perPeriod',
+  },
   [SettingName.PrintExportDefaults]: {
     label: 'settingList.printExportDefaults',
     value: DEFAULT_PRINT_EXPORT_OPTIONS,
@@ -244,6 +248,9 @@ const previewIssues = (counting: IssueCounting) =>
 
 const countingOf = (value: unknown): IssueCounting =>
   value === 'continuous' ? 'continuous' : 'perYear';
+
+/** Per period: every issue while it runs. Per copy: until it got its number. */
+const PRINT_ISSUE_COUNTING_CHOICES = ['perPeriod', 'perCopy'] as const;
 
 type SettingValues = Record<SettingName, unknown>;
 
@@ -417,6 +424,10 @@ function SettingList() {
 
       if (name === SettingName.PrintIssueNumbering) {
         return t(`settingList.printIssueNumberingChoice.${value}`);
+      }
+
+      if (name === SettingName.PrintIssueCounting) {
+        return t(`settingList.printIssueCountingChoice.${value}`);
       }
 
       if (value === true) {
@@ -739,6 +750,44 @@ function SettingList() {
                             />
                           </FormControl>
 
+                          {/* whether a running period stops once it got its number */}
+                          <FormControl fullWidth>
+                            <SettingRow>
+                              <FormLabel id="setting-print-issue-counting-label">
+                                {t(
+                                  SETTINGS[SettingName.PrintIssueCounting].label
+                                )}
+                              </FormLabel>
+                              <InfoTooltip
+                                text={t('settingList.info.printIssueCounting')}
+                              />
+                            </SettingRow>
+
+                            <Controller
+                              control={control}
+                              name={SettingName.PrintIssueCounting}
+                              render={({ field }) => (
+                                <RadioGroup
+                                  {...field}
+                                  aria-labelledby="setting-print-issue-counting-label"
+                                  value={field.value as string}
+                                >
+                                  {PRINT_ISSUE_COUNTING_CHOICES.map(choice => (
+                                    <FormControlLabel
+                                      key={choice}
+                                      value={choice}
+                                      disabled={isDisabled}
+                                      control={<Radio />}
+                                      label={t(
+                                        `settingList.printIssueCountingChoice.${choice}`
+                                      )}
+                                    />
+                                  ))}
+                                </RadioGroup>
+                              )}
+                            />
+                          </FormControl>
+
                           {/* how a label is written: {range}, {number}, {yy}, {yyyy} */}
                           <Controller
                             control={control}
@@ -755,8 +804,9 @@ function SettingList() {
                                     {...field}
                                     value={format}
                                     label={t(
-                                      SETTINGS[SettingName.PrintIssueLabelFormat]
-                                        .label
+                                      SETTINGS[
+                                        SettingName.PrintIssueLabelFormat
+                                      ].label
                                     )}
                                     disabled={isDisabled}
                                     error={Boolean(error)}
@@ -805,8 +855,7 @@ function SettingList() {
                                       >
                                         {formatIssueLabel(
                                           previewIssues(
-                                            preset.includes('{y') ?
-                                              'perYear'
+                                            preset.includes('{y') ? 'perYear'
                                             : 'continuous'
                                           )[0]!,
                                           preset

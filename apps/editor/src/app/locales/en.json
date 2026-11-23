@@ -2907,6 +2907,11 @@
         "noYear": "With numbers per year, the template needs the year: {yy} or {yyyy}.",
         "tooLong": "40 characters at most."
       },
+      "printIssueCounting": "How printed issues are counted",
+      "printIssueCountingChoice": {
+        "perPeriod": "Per period: every issue while it runs, missing ones follow after the end",
+        "perCopy": "Per copy: stops once the period received its number, even while the subscription runs; missing ones follow"
+      },
       "issues": "issues",
       "activeSubscriptionsApiPublic": "Make the active subscriptions API accessible by the public",
       "allowCommentEditing": "Allow comment editing",
@@ -2992,9 +2997,10 @@
       "emailQualityMinMailsForUnresponsive": "… delivered mails",
       "emailQualityEvidenceWarnAfterDays": "Warn without delivery reports after … days",
       "info": {
-        "printIssuesPerYear": "How many printed issues a yearly subscription is worth. Readers whose paid period ends stay in the print exports until they received that many. 0 switches the rule off until the import has brought in the earlier issues of the year.",
+        "printIssuesPerYear": "How many printed issues a yearly subscription is worth. Readers whose paid period ends stay in the print exports until they received that many. 0 switches the rule off until the import has brought in the earlier issues of the year. Whether a running period may get more is up to the counting below.",
         "printIssueNumbering": "Per year, numbering starts again every year, so an issue is called e.g. 6.26. Continuous numbers run on across years (e.g. #117); an issue’s year follows from its ship day.",
         "printIssueLabelFormat": "How an issue is written in the list, in file names and in bexio. Placeholders: {range} = the number, «3/4» for a double issue; {number} = the first number only; {yy} = two-digit year; {yyyy} = four-digit year. Single-copy orders in bexio must name the issue this way (e.g. «Einzelheft #117»).",
+        "printIssueCounting": "Per period, a subscription gets every issue published during its paid period, even more than promised. Per copy, every delivered copy counts: once the running period has its number, the subscription gets no further issue until its next period (skipped as «Quota received»). Either way, missing copies follow after the period ends. Applies to bexio subscriptions too, and only while «Issues per year» is above 0.",
         "allowCommentEditing": "Readers can still change the text of their own comments after posting them.",
         "commentCharLimit": "Maximum number of characters a comment may contain. Longer comments cannot be submitted.",
         "subscriptionExtendWindowDays": "How many days before a subscription ends readers see \"Renew now\" in their profile. 30 = as before; 365 = any time, as long as no invoice is open.",
@@ -5896,7 +5902,8 @@
           "skippedOpen": "Unpaid, left out",
           "noValidPeriod": "Without a valid period or issue",
           "excludedKind": "Delivery type not selected",
-          "quantityMismatch": "Quantity ≠ links"
+          "quantityMismatch": "Quantity ≠ links",
+          "exhausted": "Quota received (running period)"
         }
       },
       "rowsTable": {

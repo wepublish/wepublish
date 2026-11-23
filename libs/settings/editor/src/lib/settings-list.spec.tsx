@@ -332,7 +332,9 @@ describe('SettingList', () => {
     test('fills the template in from a preset', async () => {
       renderNumbering('perYear', '{range}.{yy}');
 
-      fireEvent.click(await screen.findByRole('button', { name: 'Nr. 6/2026' }));
+      fireEvent.click(
+        await screen.findByRole('button', { name: 'Nr. 6/2026' })
+      );
 
       expect(templateField()).toHaveValue('Nr. {range}/{yyyy}');
     });
@@ -340,15 +342,136 @@ describe('SettingList', () => {
     test('refuses a template without the year while numbers restart every year', async () => {
       renderNumbering('perYear', '{range}.{yy}');
 
-      fireEvent.change(await screen.findByRole('textbox', {
-        name: 'settingList.printIssueLabelFormat',
-      }), { target: { value: '#{range}' } });
+      fireEvent.change(
+        await screen.findByRole('textbox', {
+          name: 'settingList.printIssueLabelFormat',
+        }),
+        { target: { value: '#{range}' } }
+      );
       fireEvent.click(screen.getByRole('button', { name: /save/i }));
 
       expect(
         await screen.findByText('settingList.printIssueLabelFormatError.noYear')
       ).toBeInTheDocument();
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+  });
+
+  describe('how print copies are counted', () => {
+    const printSettingsMock = {
+      request: { query: SettingsListDocument },
+      result: () => ({
+        data: {
+          settings: [
+            // the form only saves while these hold valid numbers
+            ...[
+              [SettingName.SendLoginJwtExpiresMin, 60],
+              [SettingName.ResetPasswordJwtExpiresMin, 60],
+              [SettingName.PeeringTimeoutMs, 3000],
+            ].map(([name, value], index) => ({
+              __typename: 'Setting',
+              id: `valid-${index}`,
+              name,
+              value,
+              settingRestriction: null,
+            })),
+            {
+              __typename: 'Setting',
+              id: 'per-year',
+              name: SettingName.PrintIssuesPerYear,
+              value: 6,
+              settingRestriction: { minValue: 0, maxValue: 52 },
+            },
+            {
+              __typename: 'Setting',
+              id: 'counting',
+              name: SettingName.PrintIssueCounting,
+              value: 'perPeriod',
+              settingRestriction: {
+                allowedValues: { stringChoice: ['perPeriod', 'perCopy'] },
+              },
+            },
+          ],
+        } as SettingsListQuery,
+      }),
+    };
+    const featuresMock = {
+      request: { query: FeaturesDocument },
+      result: () => ({ data: { features: ['print-export'] } }),
+    };
+
+    const renderPrintSettings = () =>
+      render(
+        <ThemeProvider theme={theme}>
+          <AuthContext.Provider value={sessionWithPermissions}>
+            <MockedProvider
+              mocks={[printSettingsMock, paywallListMock, featuresMock]}
+              addTypename={false}
+            >
+              <FeaturesProvider>
+                <RouterProvider
+                  router={createMemoryRouter([
+                    { path: '*', element: <SettingList /> },
+                  ])}
+                />
+              </FeaturesProvider>
+            </MockedProvider>
+          </AuthContext.Provider>
+        </ThemeProvider>
+      );
+
+    test('offers the two ways right after the issues per year, with the stored one chosen', async () => {
+      renderPrintSettings();
+
+      expect(
+        await screen.findByRole('radio', {
+          name: 'settingList.printIssueCountingChoice.perPeriod',
+        })
+      ).toBeChecked();
+      expect(
+        screen.getByRole('radio', {
+          name: 'settingList.printIssueCountingChoice.perCopy',
+        })
+      ).not.toBeChecked();
+
+      const group = screen.getByRole('radiogroup', {
+        name: 'settingList.printIssueCounting',
+      });
+      const perYear = screen.getByLabelText('settingList.printIssuesPerYear');
+
+      expect(group.closest('.MuiCard-root')).toBe(
+        perYear.closest('.MuiCard-root')
+      );
+      // next to the issues per year: before the bexio kinds
+      expect(
+        perYear.compareDocumentPosition(group) &
+          Node.DOCUMENT_POSITION_FOLLOWING
+      ).toBeTruthy();
+      expect(
+        group.compareDocumentPosition(
+          screen.getByText('settingList.printBexioKinds')
+        ) & Node.DOCUMENT_POSITION_FOLLOWING
+      ).toBeTruthy();
+    });
+
+    test('names the choices in the confirmation', async () => {
+      renderPrintSettings();
+
+      fireEvent.click(
+        await screen.findByRole('radio', {
+          name: 'settingList.printIssueCountingChoice.perCopy',
+        })
+      );
+      fireEvent.click(screen.getByRole('button', { name: /save/i }));
+
+      const dialog = await screen.findByRole('dialog');
+
+      expect(dialog).toHaveTextContent(
+        'settingList.printIssueCountingChoice.perPeriod'
+      );
+      expect(dialog).toHaveTextContent(
+        'settingList.printIssueCountingChoice.perCopy'
+      );
     });
   });
 

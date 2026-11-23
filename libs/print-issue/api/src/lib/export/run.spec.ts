@@ -415,6 +415,26 @@ describe('runExport', () => {
     expect(result.summary.grace).toBe(1);
   });
 
+  it('stops a running bexio period that got its number when counting per copy', async () => {
+    const run = (counting: 'perPeriod' | 'perCopy') =>
+      runExport(
+        {
+          ...INPUT,
+          quota: { issuesPerYear: 6, historicIssues: [], counting },
+          bexioDelivered: { '1:11:2026-01-01': 6 },
+        },
+        { members: membersOf([]), bexio }
+      );
+
+    const perCopy = await run('perCopy');
+    expect(perCopy.rows.filter(r => r.quelle === 'bexio')).toEqual([]);
+    expect(perCopy.summary.bexio).toMatchObject({ exhausted: 1 });
+
+    const perPeriod = await run('perPeriod');
+    expect(perPeriod.rows.filter(r => r.quelle === 'bexio')).toHaveLength(1);
+    expect(perPeriod.summary.bexio).toMatchObject({ exhausted: 0 });
+  });
+
   it('lists nothing from bexio and says why while no kind is configured', async () => {
     const result = await runExport(
       { ...INPUT, bexioKinds: [] },

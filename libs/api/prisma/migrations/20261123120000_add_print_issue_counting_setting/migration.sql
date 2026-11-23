@@ -1,0 +1,1 @@
+INSERT INTO "settings" ("id", "modifiedAt", "name", "value", "settingRestriction") VALUES (gen_random_uuid(), CURRENT_TIMESTAMP, 'printIssueCounting', '"perPeriod"'::jsonb, '{"allowedValues": {"stringChoice": ["perPeriod", "perCopy"]}}'::jsonb) ON CONFLICT ("name") DO NOTHING;

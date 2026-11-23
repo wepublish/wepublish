@@ -7337,6 +7337,8 @@ export type PrintIssueBexioStats = {
   detailFetched: Scalars['Int']['output'];
   /** Found, but of a kind the options leave out. */
   excludedKind: Scalars['Int']['output'];
+  /** Counting per copy: recipients whose running period already received its number. */
+  exhausted: Scalars['Int']['output'];
   /** The options asked for bexio and it was read. */
   included: Scalars['Boolean']['output'];
   invoicesInWindow: Scalars['Int']['output'];
@@ -9476,6 +9478,7 @@ export enum SettingName {
   PrintBexioKinds = 'PRINT_BEXIO_KINDS',
   PrintExportDefaults = 'PRINT_EXPORT_DEFAULTS',
   PrintIssuesPerYear = 'PRINT_ISSUES_PER_YEAR',
+  PrintIssueCounting = 'PRINT_ISSUE_COUNTING',
   PrintIssueLabelFormat = 'PRINT_ISSUE_LABEL_FORMAT',
   PrintIssueNumbering = 'PRINT_ISSUE_NUMBERING',
   ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
