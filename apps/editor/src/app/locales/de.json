@@ -5700,6 +5700,7 @@
       "create": "Briefpapier erstellen",
       "createHeader": "Briefpapier erstellen",
       "editHeader": "Briefpapier bearbeiten",
+      "back": "Zurück zur Übersicht",
       "name": "Name",
       "nameRequired": "Bitte gib einen Namen an.",
       "isDefault": "Standard-Briefpapier",

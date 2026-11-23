@@ -5700,6 +5700,7 @@
       "create": "Create stationery",
       "createHeader": "Create stationery",
       "editHeader": "Edit stationery",
+      "back": "Back to overview",
       "name": "Name",
       "nameRequired": "Please enter a name.",
       "isDefault": "Default stationery",
