@@ -4682,8 +4682,6 @@
         "job": "Versand",
         "jobAll": "Alle Versände",
         "all": "Alle",
-        "title": "Filter",
-        "reset": "Filter zurücksetzen",
         "typeHint": "Wodurch der Versand angestossen wurde.",
         "channel": "Versand",
         "jobHelp": "Ein Versand fasst alle E-Mails zusammen, die mit einem Klick über «Manuelle Mitteilungen» verschickt wurden. Wähle einen aus, um nur dessen E-Mails zu sehen."

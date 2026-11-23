@@ -320,6 +320,23 @@ describe('MailSendResolver', () => {
         (prisma.mailLog.findMany as Mock).mock.calls[0][0].where
       ).toMatchObject({ subscriptionId: 'sub-1', invoiceId: 'inv-1' });
     });
+
+    // A bulk send writes many mails within the same millisecond; ordered by
+    // sentDate alone, offset pages over such ties repeat or skip rows.
+    it('orders by a unique key after sentDate so pages do not overlap', async () => {
+      const prisma = {
+        mailLog: {
+          count: vi.fn(async () => 0),
+          findMany: vi.fn(async () => []),
+        },
+      };
+
+      await makeResolver(prisma).mailLogs(undefined, 50, 50);
+
+      expect(
+        (prisma.mailLog.findMany as Mock).mock.calls[0][0].orderBy
+      ).toEqual([{ sentDate: 'desc' }, { id: 'desc' }]);
+    });
   });
 
   // The feedback loop of a campaign: states a provider reported late, then
