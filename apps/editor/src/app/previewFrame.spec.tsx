@@ -1,12 +1,29 @@
 import { createTheme, ThemeProvider } from '@mui/material';
 // @vitest-environment-options {"settings":{"disableIframePageLoading":true}}
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import {
+  act,
+  fireEvent,
+  render,
+  renderHook,
+  screen,
+  waitFor,
+} from '@testing-library/react';
 import { enqueueSnackbar } from '@wepublish/ui/editor';
-import { ReactNode } from 'react';
+import { PropsWithChildren, ReactNode } from 'react';
+import { MemoryRouter, useLocation } from 'react-router-dom';
 import type { Mock } from 'vitest';
 
-import { OpenPreviewOptions, startPreviewHandshake } from './openPreview';
-import { PreviewControls, PreviewFrame } from './previewFrame';
+import {
+  openPreviewWindow,
+  OpenPreviewOptions,
+  startPreviewHandshake,
+} from './openPreview';
+import {
+  editorPreviewLink,
+  PreviewControls,
+  PreviewFrame,
+  usePreviewState,
+} from './previewFrame';
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string) => key }),
@@ -14,6 +31,7 @@ vi.mock('react-i18next', () => ({
 
 vi.mock('./openPreview', () => ({
   startPreviewHandshake: vi.fn(),
+  openPreviewWindow: vi.fn(),
 }));
 
 vi.mock('@wepublish/ui/editor', async importOriginal => ({
@@ -180,14 +198,113 @@ describe('PreviewFrame', () => {
   });
 });
 
+describe('editorPreviewLink', () => {
+  it('links to the current editor page with the preview opened on the device', () => {
+    expect(
+      editorPreviewLink(
+        'https://editor.example.com/articles/edit/a1?foo=bar#x',
+        'mobile'
+      )
+    ).toBe(
+      'https://editor.example.com/articles/edit/a1?foo=bar&preview=mobile'
+    );
+  });
+
+  it('replaces a preview device that is already in the url', () => {
+    expect(
+      editorPreviewLink(
+        'https://editor.example.com/pages/edit/p1?preview=desktop',
+        'tablet'
+      )
+    ).toBe('https://editor.example.com/pages/edit/p1?preview=tablet');
+  });
+});
+
+describe('usePreviewState', () => {
+  const renderPreviewState = (url: string) => {
+    let location = '';
+
+    const LocationSpy = () => {
+      const { pathname, search } = useLocation();
+      location = pathname + search;
+
+      return null;
+    };
+
+    const wrapper = ({ children }: PropsWithChildren) => (
+      <MemoryRouter initialEntries={[url]}>
+        {children}
+        <LocationSpy />
+      </MemoryRouter>
+    );
+
+    const hook = renderHook(() => usePreviewState(), { wrapper });
+
+    return { ...hook, location: () => location };
+  };
+
+  it('starts in the editor on the desktop device without a preview param', () => {
+    const { result } = renderPreviewState('/articles/edit/a1');
+
+    expect(result.current.isPreviewOpen).toBe(false);
+    expect(result.current.device).toBe('desktop');
+  });
+
+  it('opens the preview on the device a copied preview link asks for', () => {
+    const { result } = renderPreviewState('/articles/edit/a1?preview=mobile');
+
+    expect(result.current.isPreviewOpen).toBe(true);
+    expect(result.current.device).toBe('mobile');
+  });
+
+  it.each(['', 'fridge'])(
+    'falls back to desktop for the preview param %j',
+    value => {
+      const { result } = renderPreviewState(
+        `/articles/edit/a1?preview=${value}`
+      );
+
+      expect(result.current.isPreviewOpen).toBe(true);
+      expect(result.current.device).toBe('desktop');
+    }
+  );
+
+  it('keeps the url in sync so a reload stays in the preview', () => {
+    const { result, location } = renderPreviewState(
+      '/articles/edit/a1?templateId=t1'
+    );
+
+    act(() => result.current.setPreviewOpen(true));
+
+    expect(location()).toBe('/articles/edit/a1?templateId=t1&preview=desktop');
+
+    act(() => result.current.setDevice('tablet'));
+
+    expect(result.current.device).toBe('tablet');
+    expect(location()).toBe('/articles/edit/a1?templateId=t1&preview=tablet');
+
+    act(() => result.current.setPreviewOpen(false));
+
+    expect(result.current.isPreviewOpen).toBe(false);
+    expect(location()).toBe('/articles/edit/a1?templateId=t1');
+  });
+});
+
 describe('PreviewControls', () => {
   const writeText = vi.fn();
+  const createToken = vi.fn();
+  const onSilence = vi.fn();
 
   beforeEach(() => {
     Object.defineProperty(navigator, 'clipboard', {
       configurable: true,
       value: { writeText },
     });
+    window.history.replaceState(null, '', '/articles/edit/a1');
+  });
+
+  afterEach(() => {
+    window.history.replaceState(null, '', '/');
   });
 
   const renderControls = (onDeviceChange = vi.fn()) =>
@@ -196,6 +313,8 @@ describe('PreviewControls', () => {
         device="tablet"
         onDeviceChange={onDeviceChange}
         previewUrl={PREVIEW_URL}
+        createToken={createToken}
+        onSilence={onSilence}
       />
     );
 
@@ -219,14 +338,17 @@ describe('PreviewControls', () => {
     expect(onDeviceChange).toHaveBeenCalledWith('desktop');
   });
 
-  it('copies the preview url and confirms it', async () => {
+  it('copies a link that opens this preview in the editor, never the bare website url', async () => {
     writeText.mockResolvedValue(undefined);
     renderControls();
 
     fireEvent.click(screen.getByRole('button', { name: 'preview.copyUrl' }));
 
     await waitFor(() => expect(enqueueSnackbar).toHaveBeenCalled());
-    expect(writeText).toHaveBeenCalledWith(PREVIEW_URL);
+    expect(writeText).toHaveBeenCalledWith(
+      `${window.location.origin}/articles/edit/a1?preview=tablet`
+    );
+    expect(writeText).not.toHaveBeenCalledWith(PREVIEW_URL);
     expect(lastSnackbar()[0]).toBe('preview.urlCopied');
     expect(lastSnackbar()[1].variant).toBe('success');
   });
@@ -240,5 +362,32 @@ describe('PreviewControls', () => {
     await waitFor(() => expect(enqueueSnackbar).toHaveBeenCalled());
     expect(lastSnackbar()[0]).toBe('preview.urlCopyFailed');
     expect(lastSnackbar()[1].variant).toBe('error');
+  });
+
+  it('opens the website preview in a new tab and hands it the login through the opener', () => {
+    (openPreviewWindow as Mock).mockReturnValue('opened');
+    renderControls();
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'preview.openInNewTab' })
+    );
+
+    expect(openPreviewWindow).toHaveBeenCalledWith(PREVIEW_URL, {
+      createToken,
+      onSilence,
+    });
+    expect(enqueueSnackbar).not.toHaveBeenCalled();
+  });
+
+  it('reports a blocked popup', () => {
+    (openPreviewWindow as Mock).mockReturnValue('popup-blocked');
+    renderControls();
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'preview.openInNewTab' })
+    );
+
+    expect(lastSnackbar()[0]).toBe('previewHandshake.popupBlocked');
+    expect(lastSnackbar()[1].variant).toBe('warning');
   });
 });

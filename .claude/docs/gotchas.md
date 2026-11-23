@@ -347,6 +347,14 @@ mode) after logging out in one.
 
 Pinned by `session.provider.spec.tsx` and `preview-status-banner.spec.tsx`.
 
+The same reason makes a bare `…?preview` website URL useless anywhere else (new
+tab, the editor tab, a colleague): no opener, no frame, so no handshake and no
+login. The editor's "copy preview link" therefore copies an **editor** link
+(`/articles/edit/:id?preview=<device>`, `editorPreviewLink` in
+`apps/editor/src/app/previewFrame.tsx`). Don't switch it back to the website
+URL or put the JWT into a URL; a login token in history and chat is the leak
+the handshake exists to avoid.
+
 ---
 
 ### ⚠️ The content wrapper's column is `minmax(0, 1fr)`, not the implicit `auto`
