@@ -73,6 +73,7 @@ export const summary = (overrides: Record<string, unknown> = {}) => ({
     skippedOpen: 0,
     excludedKind: 0,
     quantityMismatch: 0,
+    exhausted: 0,
     skippedImported: 0,
     skippedProvider: 0,
     detailFetched: 0,

@@ -238,6 +238,12 @@ export class PrintIssueBexioStats {
       'Invoices whose billed quantity differs from the linked recipients.',
   })
   quantityMismatch!: number;
+
+  @Field(() => Int, {
+    description:
+      'Counting per copy: recipients whose running period already received its number.',
+  })
+  exhausted!: number;
 }
 
 @ObjectType({ description: 'What one run of the export found.' })
@@ -678,6 +684,7 @@ export const toSummaryModel = (summary: Summary): PrintIssueSummary => ({
     excludedKind: 0,
     skippedOpen: 0,
     quantityMismatch: 0,
+    exhausted: 0,
     noValidPeriod:
       (summary.bexio as { einzelheftOhneAusgabe?: number } | undefined)
         ?.einzelheftOhneAusgabe ?? 0,

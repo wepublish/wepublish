@@ -137,6 +137,8 @@ export function PrintIssueSummary({
       ['noValidPeriod', bexio.noValidPeriod],
       ['excludedKind', bexio.excludedKind],
       ['quantityMismatch', bexio.quantityMismatch],
+      // counting per copy: running periods that already got their number
+      ['exhausted', bexio.exhausted],
       ['detailFetched', bexio.detailFetched],
       ['ungeprueft', bexio.ungeprueft],
       ['contactMissing', bexio.contactMissing],
