@@ -2927,6 +2927,7 @@
         "noMemberPlan": "Ohne Abo-Plan",
         "allMemberPlans": "Alle Abo-Pläne",
         "subscriptionsSum": "Betroffene Abos ({{sum}})",
+        "subscriptionsHint": "Laufende Abos und beendete, solange ihr Ablauf ihnen noch eine Mitteilung schickt. Wird ein Ablauf ein- oder ausgeschaltet, kann sich die Summe deshalb ändern: Ein beendetes Abo kann von einem Ablauf mit späteren Mitteilungen zu einem ohne wechseln.",
         "active": "Aktiv",
         "switchOff": "Ablauf ausschalten",
         "switchOn": "Ablauf einschalten",

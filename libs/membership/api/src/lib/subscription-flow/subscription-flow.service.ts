@@ -97,11 +97,15 @@ export class SubscriptionFlowService {
   constructor(private prismaService: PrismaClient) {}
 
   /**
-   * How many subscriptions a flow handles: those still running, and those
-   * ended within the flow's latest day, which can still get a message from
-   * it. A subscription is counted in the one flow it falls into, so the
-   * counts of all flows add up. An inactive flow handles none; ifActive
-   * tells what it would take once switched on.
+   * How many subscriptions a flow can still send a message to: those still
+   * running, and those ended within the flow's latest day. A subscription
+   * belongs to one flow by its conditions alone, never by time, so it is
+   * counted at most once. An ended one whose flow has nothing left for it is
+   * counted nowhere, even if a later-ending flow, such as the default one,
+   * would still message it were that flow switched off. So the counts of all
+   * flows add up to the subscriptions that can still get a message, not to
+   * every subscription. An inactive flow handles none; ifActive tells what it
+   * would take once switched on.
    */
   async countSubscriptions(
     flow: CountableFlow,

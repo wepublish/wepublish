@@ -501,14 +501,31 @@ describe('SubscriptionFlowOverview', () => {
     });
   });
 
-  // Each subscription is counted in one flow only, so the counts add up.
+  // Each subscription is counted in one flow at most, so the header sums them.
   it('sums the subscriptions of the rows shown in the column header', () => {
     renderOverview();
 
     expect(
       screen.getByRole('columnheader', {
-        name: 'subscriptionFlow.overview.subscriptionsSum(47)',
+        name: /^subscriptionFlow\.overview\.subscriptionsSum\(47\)/,
       })
+    ).toBeTruthy();
+  });
+
+  // An ended subscription counts only while its flow still has a message for
+  // it, so switching a flow can change the sum (29 → 30 on review02).
+  it('explains next to the sum which ended subscriptions it counts', async () => {
+    renderOverview();
+
+    const help = within(
+      screen.getByRole('columnheader', {
+        name: /^subscriptionFlow\.overview\.subscriptionsSum\(47\)/,
+      })
+    ).getByRole('button', { name: 'moreInfo' });
+
+    fireEvent.mouseOver(help);
+    expect(
+      await screen.findByText('subscriptionFlow.overview.subscriptionsHint')
     ).toBeTruthy();
   });
 
@@ -534,7 +551,7 @@ describe('SubscriptionFlowOverview', () => {
     expect(within(rowOf('Print')).getByText('2')).toBeTruthy();
     expect(
       screen.getByRole('columnheader', {
-        name: 'subscriptionFlow.overview.subscriptionsSum(7)',
+        name: /^subscriptionFlow\.overview\.subscriptionsSum\(7\)/,
       })
     ).toBeTruthy();
   });
