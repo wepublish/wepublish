@@ -129,6 +129,24 @@ export interface NightStepRecord {
 }
 
 /**
+ * What one of the job's own steps did: counts for the log, and a warning when
+ * part of it failed while the rest of the night may go on.
+ */
+export class StepReport {
+  constructor(
+    readonly counts: Record<string, number>,
+    readonly warning?: string
+  ) {}
+}
+
+/**
+ * How the job handled one subscription due for an invoice: created (also
+ * when its delivery waits for the night sweep), not due yet by its flow, or
+ * refused by the payment provider, with why.
+ */
+export type InvoiceCreationOutcome = 'created' | 'notDue' | { failed: string };
+
+/**
  * Controller responsible for performing periodic jobs. A new controller
  * instance must be created for every run.
  */
@@ -365,12 +383,17 @@ export class PeriodicJobService {
     await this.markJobSuccessful();
   }
 
-  /** Runs one of the job's own steps and notes it on the running job. */
+  /**
+   * Runs one of the job's own steps and notes it on the running job, with
+   * what it did when it hands back a `StepReport`.
+   */
   private async step(key: CoreStepKey, run: () => Promise<unknown>) {
     const startedAt = new Date();
+    let report: StepReport | undefined;
 
     try {
-      await run();
+      const result = await run();
+      report = result instanceof StepReport ? result : undefined;
     } catch (error) {
       await this.saveStep(this.runningJob?.id, {
         key,
@@ -384,7 +407,9 @@ export class PeriodicJobService {
 
     await this.saveStep(this.runningJob?.id, {
       key,
-      status: 'ok',
+      status: report?.warning ? 'warning' : 'ok',
+      ...(report?.counts && { counts: report.counts }),
+      ...(report?.warning && { error: report.warning }),
       startedAt,
       finishedAt: new Date(),
     });
@@ -522,9 +547,13 @@ export class PeriodicJobService {
     }
   }
 
+  /**
+   * An invoice the payment provider refused is removed again for the next
+   * run, so the night goes on; the report counts it and says why.
+   */
   private async createMissingInvoicesForActiveSubscriptions(
     periodicJobRunObject: PeriodicJobRunObject
-  ) {
+  ): Promise<StepReport> {
     const activeSubscriptionsWithoutInvoice =
       await this.subscriptionController.getActiveSubscriptionsWithoutInvoice(
         periodicJobRunObject.date,
@@ -532,12 +561,32 @@ export class PeriodicJobService {
           periodicJobRunObject.date
         )
       );
+    let created = 0;
+    const failures: string[] = [];
+
     for (const subscription of activeSubscriptionsWithoutInvoice) {
-      await this.inContext(
+      const outcome = await this.inContext(
         `Creating the invoice for subscription ${subscription.id} failed`,
         () => this.createInvoice(periodicJobRunObject, subscription)
       );
+
+      if (outcome === 'created') {
+        created++;
+      } else if (typeof outcome === 'object') {
+        failures.push(outcome.failed);
+      }
     }
+
+    const counts = { created, failed: failures.length };
+
+    if (!failures.length) {
+      return new StepReport(counts);
+    }
+
+    return new StepReport(
+      counts,
+      `${failures.length} of ${created + failures.length} invoices could not be created at the payment provider, e.g. ${failures[0]}`
+    );
   }
 
   private async sendCustomSubscriptionEmails(
@@ -626,7 +675,7 @@ export class PeriodicJobService {
       user: User;
       memberPlan: MemberPlan;
     }
-  ) {
+  ): Promise<InvoiceCreationOutcome> {
     const eventInvoiceCreation =
       await this.subscriptionEventDictionary.getActionsForSubscriptions({
         memberplanId: subscriptionToCreateInvoice.memberPlanID,
@@ -661,7 +710,7 @@ export class PeriodicJobService {
         days: creationEvent.daysAwayFromEnding ?? undefined,
       }) > periodicJobRunObject.date
     ) {
-      return false;
+      return 'notDue';
     }
 
     const deactivationDate = add(
@@ -683,7 +732,7 @@ export class PeriodicJobService {
     );
 
     if ('skip' in outcome) {
-      return outcome.skip !== 'removed';
+      return outcome.skip === 'removed' ? { failed: outcome.error } : 'created';
     }
 
     await this.sendTemplateMail(
@@ -694,7 +743,7 @@ export class PeriodicJobService {
       periodicJobRunObject.date,
       outcome.send
     );
-    return true;
+    return 'created';
   }
 
   /**
