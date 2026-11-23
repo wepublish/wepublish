@@ -52,7 +52,7 @@ const positions =
 
 // issue 1.27, shipped 15.01.2027
 const BASE = {
-  issue: '1.27',
+  issue: { number: 1, year: 2027 },
   shipDay: '2027-01-15',
   kinds: KINDS,
   includeOpen: true,
@@ -218,6 +218,37 @@ describe('selectBexioOrders — single copies', () => {
   });
 });
 
+describe('selectBexioOrders — single copies with continuous numbers', () => {
+  it("reads orders in the medium's template, whatever year they name", async () => {
+    const { selected, stats } = await selectBexioOrders(
+      [
+        invoice(1, { title: 'Bestellung' }),
+        invoice(2, { title: 'Bestellung' }),
+        invoice(3, { title: 'Bestellung' }),
+      ],
+      {
+        ...BASE,
+        issue: { number: 117, year: 2027 },
+        numbering: { counting: 'continuous', format: '#{range}' },
+        links: links([]),
+        fetchPositions: positions({
+          1: [{ text: 'Einzelheft #117', quantity: 2 }],
+          2: [{ text: 'Einzelheft 117', quantity: 1 }],
+          3: [{ text: 'Einzelheft #116', quantity: 1 }],
+        }),
+      }
+    );
+
+    expect(selected.map(order => [order.recipientId, order.copies])).toEqual([
+      [101, 2],
+      [102, 1],
+    ]);
+    // the order names the issue as the medium writes it
+    expect(selected[0]!.issue).toBe('#117');
+    expect(stats.otherPeriod).toBe(1);
+  });
+});
+
 describe('selectBexioOrders — single copies of a double issue', () => {
   it('takes orders naming the double issue or either of its numbers', async () => {
     const { selected, stats } = await selectBexioOrders(
@@ -229,7 +260,7 @@ describe('selectBexioOrders — single copies of a double issue', () => {
       ],
       {
         ...BASE,
-        issue: '3/4.27',
+        issue: { number: 3, numberTo: 4, year: 2027 },
         links: links([]),
         fetchPositions: positions({
           1: [{ text: 'Einzelheft 3/4.27', quantity: 1 }],
@@ -341,7 +372,7 @@ describe('selectBexioOrders — copies still owed after a period', () => {
   it('sends a double issue to a recipient owed one copy and says what it counts as', async () => {
     const { selected } = await selectBexioOrders([ended()], {
       ...BASE,
-      issue: '1/2.27',
+      issue: { number: 1, numberTo: 2, year: 2027 },
       links: links([[101, [gift(201)]]]),
       fetchPositions: positions({}),
       topUp: { ...topUp({ '1:201:2026-01-15': 5 }), countsAs: 2 },

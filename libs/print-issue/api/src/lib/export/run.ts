@@ -18,11 +18,20 @@ import {
   type IncludeReason,
   type QuotaConfig,
 } from '../rules/entitlement';
-import { issueYear } from '../rules/issue';
+import {
+  DEFAULT_ISSUE_NUMBERING,
+  issueFileLabel,
+  type IssueNumberingConfig,
+} from '@wepublish/utils';
+import type { IssueNumbering } from '../rules/issue';
 
 export type ExportInput = {
-  /** «6.26»; a double issue «3/4.26» */
+  /** the issue's label as the medium writes it: «6.26», «3/4.26», «#117» */
   issue: string;
+  /** the issue's numbers and year: bexio orders and invoices are matched by them */
+  numbers: IssueNumbering;
+  /** how the medium numbers and writes its issues; default «6.26» per year */
+  numbering?: IssueNumberingConfig;
   /** how many issues it counts as against a reader's period: 2 for a double issue; default 1 */
   countsAs?: number;
   /** the Zurich calendar day the entitlement is evaluated at */
@@ -151,6 +160,8 @@ type Pending = Omit<RecipientDraft, 'snapshot'> & { row: ExportRow };
 export async function runExport(
   {
     issue,
+    numbers,
+    numbering = DEFAULT_ISSUE_NUMBERING,
     countsAs = 1,
     date,
     includeUpcoming = false,
@@ -168,7 +179,7 @@ export async function runExport(
   { members, bexio }: Sources,
   { detailMax = 300 }: RunOptions = {}
 ): Promise<ExportResult> {
-  const year = issueYear(issue);
+  const { year } = numbers;
   // The year in the invoice text decides, the date only narrows the search.
   // Most yearly invoices are written in the autumn before their year, but
   // gifts are paid years ahead (2026 gifts invoiced in January 2024).
@@ -178,7 +189,8 @@ export async function runExport(
     members(),
     bexio && includeBexio ?
       loadBexio(bexio, {
-        issue,
+        issue: numbers,
+        numbering,
         shipDay: shipDay ?? date,
         kinds: bexioKinds,
         kindIds: bexioKindIds,
@@ -361,8 +373,8 @@ export async function runExport(
     rows,
     recipients,
     summary,
-    // «3/4.26» → «3-4.26»: no slash in a file name
-    filename: `druckliste-${issue.replace('/', '-')}-${date}.csv`,
+    // «3/4.26» → «3-4.26», «#117» → «117»: safe in a file name
+    filename: `druckliste-${issueFileLabel(issue)}-${date}.csv`,
     csv: toCsv(rows),
   };
 }
@@ -401,6 +413,7 @@ async function loadBexio(
   bexio: BexioClient,
   {
     issue,
+    numbering,
     shipDay,
     kinds,
     kindIds,
@@ -410,7 +423,8 @@ async function loadBexio(
     from,
     to,
   }: {
-    issue: string;
+    issue: IssueNumbering;
+    numbering: IssueNumberingConfig;
     shipDay: string;
     kinds: BexioKind[];
     kindIds: string[] | null;
@@ -433,6 +447,7 @@ async function loadBexio(
     ]);
   const { selected, stats, warnings } = await selectBexioOrders(invoices, {
     issue,
+    numbering,
     shipDay,
     kinds,
     links,

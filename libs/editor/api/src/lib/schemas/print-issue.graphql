@@ -232,6 +232,13 @@ query PrintExportContext {
   }
 }
 
+query PrintIssueNumbering {
+  printIssueNumbering {
+    counting
+    format
+  }
+}
+
 mutation CreatePrintIssue($input: PrintIssueInputModel!) {
   createPrintIssue(input: $input) {
     ...FullPrintIssue
