@@ -272,6 +272,9 @@ describe('PrintIssueExportService', () => {
     expect(runExport).toHaveBeenCalledWith(
       {
         issue: '1.27',
+        // the numbers decide bexio; no numbering stored: «6.26» per year
+        numbers: { number: 1, numberTo: null, year: 2027 },
+        numbering: { counting: 'perYear', format: '{range}.{yy}' },
         countsAs: 1,
         date: '2027-01-15',
         memberPlanIds: ['p1'],
@@ -294,6 +297,30 @@ describe('PrintIssueExportService', () => {
       },
       expect.objectContaining({ bexio: null })
     );
+  });
+
+  it("labels the issue the medium's way and names the file after it", async () => {
+    prisma.setting.findUnique.mockImplementation(
+      async ({ where }: { where: { name: string } }) =>
+        where.name === 'printIssueNumbering' ? { value: 'continuous' }
+        : where.name === 'printIssueLabelFormat' ? { value: '#{range}' }
+        : null
+    );
+
+    const result = await service.compute(
+      { ...issue, number: 117, year: 2026 },
+      { options }
+    );
+
+    expect(runExport).toHaveBeenCalledWith(
+      expect.objectContaining({
+        issue: '#117',
+        numbers: { number: 117, numberTo: null, year: 2026 },
+        numbering: { counting: 'continuous', format: '#{range}' },
+      }),
+      expect.anything()
+    );
+    expect(result.filename).toBe('druckliste-117-2027-01-15.csv');
   });
 
   it('hands a double issue to the run as one issue with its label and what it counts as', async () => {
