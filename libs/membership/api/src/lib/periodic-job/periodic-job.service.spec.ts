@@ -1194,6 +1194,8 @@ describe('PeriodicJobService', () => {
         isConfigured: vi.fn(async () => true),
         canReceiveLetters: vi.fn(() => true),
         sendLetter: vi.fn(async () => 'log-1'),
+        sendsAutomatically: vi.fn(async () => false),
+        withdrawHeldLetter: vi.fn(async () => 'left'),
       };
       (mockMailContext as any).letterSender = letterSender;
       (mockPrisma as any).userDeliveryPreference = {
@@ -1398,6 +1400,128 @@ describe('PeriodicJobService', () => {
         expect(provider.markRemoteInvoiceSent).toHaveBeenCalledWith({
           payment: expect.objectContaining({ intentID: '42' }),
         });
+      });
+
+      // Each upload is a letter of its own at the vendor, which keeps no
+      // track of duplicates: what it stores is never handed over twice.
+      it('does not post again a refused letter the vendor stores', async () => {
+        mockPrisma.mailLog.findMany.mockResolvedValue([
+          { state: MailLogState.rejected, providerLetterID: 'pingen-1' },
+        ]);
+
+        await service.postMissingInvoiceDeliveries(runDate);
+
+        expect(letterSender.sendLetter).not.toHaveBeenCalled();
+      });
+
+      it('leaves a letter alone that someone took back at the vendor', async () => {
+        mockPrisma.mailLog.findMany.mockResolvedValue([
+          { state: MailLogState.canceled, providerLetterID: 'pingen-1' },
+        ]);
+
+        await service.postMissingInvoiceDeliveries(runDate);
+
+        expect(letterSender.sendLetter).not.toHaveBeenCalled();
+      });
+
+      describe('a letter the vendor holds for someone to act on', () => {
+        const nightBefore = new Date(runDate.getTime() - 20 * 60 * 60 * 1000);
+        const held = (sentDate: Date) => ({
+          id: 'log-held',
+          state: MailLogState.actionRequired,
+          providerLetterID: 'pingen-1',
+          sentDate,
+        });
+
+        beforeEach(() => {
+          mockPrisma.mailLog.findMany.mockResolvedValue([held(nightBefore)]);
+        });
+
+        // Someone confirms every letter there anyway: it is theirs.
+        it('is left to the people at the vendor while letters are confirmed by hand', async () => {
+          await service.postMissingInvoiceDeliveries(runDate);
+
+          expect(letterSender.withdrawHeldLetter).not.toHaveBeenCalled();
+          expect(letterSender.sendLetter).not.toHaveBeenCalled();
+        });
+
+        describe('while letters are printed without anyone confirming them', () => {
+          beforeEach(() => {
+            letterSender.sendsAutomatically.mockResolvedValue(true);
+          });
+
+          it('is replaced on a later night once the vendor let the held one go', async () => {
+            letterSender.withdrawHeldLetter.mockResolvedValue('withdrawn');
+
+            await service.postMissingInvoiceDeliveries(runDate);
+
+            expect(letterSender.withdrawHeldLetter).toHaveBeenCalledWith(
+              'log-held'
+            );
+            expect(letterSender.sendLetter).toHaveBeenCalledWith(
+              expect.objectContaining({
+                attachment: { content: Buffer.from('pdf'), name: 'RE-1.pdf' },
+              })
+            );
+          });
+
+          // Fixed, sent or removed there by a person, or not given up.
+          it('is not replaced when the vendor keeps it or someone dealt with it', async () => {
+            letterSender.withdrawHeldLetter.mockResolvedValue('left');
+
+            await service.postMissingInvoiceDeliveries(runDate);
+
+            expect(letterSender.withdrawHeldLetter).toHaveBeenCalled();
+            expect(letterSender.sendLetter).not.toHaveBeenCalled();
+          });
+
+          // The same pdf would be held for the same reason.
+          it('is not replaced in the run that posted it', async () => {
+            mockPrisma.mailLog.findMany.mockResolvedValue([
+              held(new Date(runDate.getTime() + 60 * 60 * 1000)),
+            ]);
+
+            await service.postMissingInvoiceDeliveries(runDate);
+
+            expect(letterSender.withdrawHeldLetter).not.toHaveBeenCalled();
+            expect(letterSender.sendLetter).not.toHaveBeenCalled();
+          });
+
+          // Taking the held letter back first would leave the reader with
+          // nothing at the vendor.
+          it('is not taken back while the invoice cannot be rendered', async () => {
+            provider.renderRemoteInvoice.mockRejectedValue(new Error('down'));
+
+            await service.postMissingInvoiceDeliveries(runDate);
+
+            expect(letterSender.withdrawHeldLetter).not.toHaveBeenCalled();
+            expect(letterSender.sendLetter).not.toHaveBeenCalled();
+          });
+
+          it('is not replaced a third time', async () => {
+            mockPrisma.mailLog.findMany.mockResolvedValue([
+              { state: MailLogState.canceled, providerLetterID: 'pingen-a' },
+              { state: MailLogState.canceled, providerLetterID: 'pingen-b' },
+              held(nightBefore),
+            ]);
+
+            await service.postMissingInvoiceDeliveries(runDate);
+
+            expect(letterSender.withdrawHeldLetter).not.toHaveBeenCalled();
+            expect(letterSender.sendLetter).not.toHaveBeenCalled();
+          });
+        });
+      });
+
+      it('posts again after a replacement that could not be handed over', async () => {
+        mockPrisma.mailLog.findMany.mockResolvedValue([
+          { state: MailLogState.canceled, providerLetterID: 'pingen-1' },
+          { state: MailLogState.rejected, providerLetterID: null },
+        ]);
+
+        await service.postMissingInvoiceDeliveries(runDate);
+
+        expect(letterSender.sendLetter).toHaveBeenCalledTimes(1);
       });
 
       it('leaves a letter alone that got through', async () => {
