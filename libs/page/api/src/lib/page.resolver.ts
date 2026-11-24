@@ -26,7 +26,8 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import {
   CurrentUser,
   Public,
-  UserSession,
+  actorUserIdOf,
+  AuthSession,
 } from '@wepublish/authentication/api';
 import {
   CanCreatePage,
@@ -115,9 +116,9 @@ export class PageResolver {
   })
   public createPage(
     @Args() input: CreatePageInput,
-    @CurrentUser() user: UserSession | undefined
+    @CurrentUser() session: AuthSession | undefined
   ) {
-    return this.pageService.createPage(input, user?.user?.id);
+    return this.pageService.createPage(input, actorUserIdOf(session));
   }
 
   @Permissions(CanCreatePage)
@@ -126,9 +127,9 @@ export class PageResolver {
   })
   public updatePage(
     @Args() input: UpdatePageInput,
-    @CurrentUser() user: UserSession | undefined
+    @CurrentUser() session: AuthSession | undefined
   ) {
-    return this.pageService.updatePage(input, user?.user?.id);
+    return this.pageService.updatePage(input, actorUserIdOf(session));
   }
 
   @Permissions(CanCreatePage)
@@ -137,9 +138,9 @@ export class PageResolver {
   })
   public duplicatePage(
     @Args('id') id: string,
-    @CurrentUser() user: UserSession | undefined
+    @CurrentUser() session: AuthSession | undefined
   ) {
-    return this.pageService.duplicatePage(id, user?.user?.id);
+    return this.pageService.duplicatePage(id, actorUserIdOf(session));
   }
 
   @Permissions(CanDeletePage)
@@ -184,9 +185,13 @@ export class PageResolver {
   public restorePageRevision(
     @Args('id') id: string,
     @Args('revisionId') revisionId: string,
-    @CurrentUser() user: UserSession | undefined
+    @CurrentUser() session: AuthSession | undefined
   ) {
-    return this.pageService.restorePageRevision(id, revisionId, user?.user?.id);
+    return this.pageService.restorePageRevision(
+      id,
+      revisionId,
+      actorUserIdOf(session)
+    );
   }
 
   @ResolveField(() => PageRevision)

@@ -12,8 +12,15 @@ import {
   PaymentPeriodicity,
 } from '@wepublish/website/api';
 import { t } from 'i18next';
+import { RichtextJSONDocument } from '@wepublish/richtext';
 import { ComponentProps, useState } from 'react';
 import { MemberPlanPicker } from './memberplan-picker';
+
+// What the editor saves for a cleared richtext field
+const blankDescription = {
+  type: 'doc',
+  content: [{ type: 'paragraph', content: [] }],
+} as unknown as RichtextJSONDocument;
 
 const memberPlans = [
   mockMemberPlan({
@@ -137,5 +144,54 @@ describe('MemberPlanPicker', () => {
       screen.getByText(t('subscribe.memberplan.periodicityUnavailable'))
     ).toBeInTheDocument();
     expect(onChange).toHaveBeenCalledWith(monthly.id);
+  });
+
+  // The editor saves a touched-then-cleared description as one empty
+  // paragraph. Rendering it adds an empty grid item and with it the wrapper's
+  // gap, so the layout jumps when switching to that plan (ganzgraz /mitmachen).
+  it('renders nothing below the plans for a description of only empty paragraphs', async () => {
+    const withBlankDescription = mockMemberPlan({
+      name: 'Jahresplan',
+      image: null,
+      description: blankDescription,
+    });
+    const withoutDescription = mockMemberPlan({
+      name: 'Monatsplan',
+      image: null,
+      description: null,
+    });
+
+    const { user } = renderMemberPlanPicker({
+      memberPlans: [withoutDescription, withBlankDescription],
+    });
+
+    await user.click(planRadio(withBlankDescription));
+
+    expect(planRadio(withBlankDescription)).toBeChecked();
+    expect(screen.getByRole('radiogroup').parentElement?.children).toHaveLength(
+      1
+    );
+  });
+
+  it('shows a description that has content but no text', () => {
+    renderMemberPlanPicker({
+      memberPlans: [
+        mockMemberPlan({
+          name: 'Jahresplan',
+          image: null,
+          description: {
+            type: 'doc',
+            content: [
+              {
+                type: 'image',
+                attrs: { src: 'https://example.com/perks.png', alt: 'Perks' },
+              },
+            ],
+          } as unknown as RichtextJSONDocument,
+        }),
+      ],
+    });
+
+    expect(screen.getByRole('img', { name: 'Perks' })).toBeInTheDocument();
   });
 });

@@ -29,6 +29,18 @@ registerEnumType(DeliverySuggestionKind, {
   description: 'toLetter: move to printed letters. toMail: move back to mail.',
 });
 
+@ObjectType({
+  description:
+    'The API key that did something on behalf of the user named next to it.',
+})
+export class ActingApiToken {
+  @Field()
+  id!: string;
+
+  @Field()
+  name!: string;
+}
+
 @ObjectType()
 export class UserDeliveryPreferenceModel {
   @Field(() => MailChannel, {
@@ -47,6 +59,13 @@ export class UserDeliveryPreferenceModel {
 
   @Field(() => MailLogRecipient, { nullable: true })
   changedBy?: MailLogRecipient | null;
+
+  @Field(() => ActingApiToken, {
+    nullable: true,
+    description:
+      'Set when an API key made the change on behalf of `changedBy`.',
+  })
+  changedByApiToken?: ActingApiToken | null;
 
   @Field({
     description:
@@ -186,6 +205,13 @@ export class DeliveryModeBulkChangeModel {
 
   @Field(() => MailLogRecipient, { nullable: true })
   changedBy?: MailLogRecipient | null;
+
+  @Field(() => ActingApiToken, {
+    nullable: true,
+    description:
+      'Set when an API key made the change on behalf of `changedBy`.',
+  })
+  changedByApiToken?: ActingApiToken | null;
 }
 
 @ObjectType()

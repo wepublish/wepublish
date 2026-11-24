@@ -8,9 +8,7 @@ const TTL_S = 21600; // 6h
  * Hands Hot & Trending to the analytics provider that is chosen for it in the
  * analytics integration settings.
  */
-export class AnalyticsProviderHotAndTrendingDataSource
-  implements HotAndTrendingDataSource
-{
+export class AnalyticsProviderHotAndTrendingDataSource implements HotAndTrendingDataSource {
   constructor(
     private readonly prisma: PrismaClient,
     private readonly kv: NamespacedCache,

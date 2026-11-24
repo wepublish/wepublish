@@ -2,7 +2,8 @@ import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import {
   Authenticated,
   CurrentUser,
-  UserSession,
+  AuthSession,
+  requireSessionUser,
 } from '@wepublish/authentication/api';
 import {
   ChangeSubscriptionPaymentMethodArgs,
@@ -21,8 +22,10 @@ export class PaymentMethodChangeResolver {
   })
   async changeSubscriptionPaymentMethod(
     @Args() args: ChangeSubscriptionPaymentMethodArgs,
-    @CurrentUser() { user }: UserSession
+    @CurrentUser() session: AuthSession
   ) {
+    const user = requireSessionUser(session);
+
     return this.service.start(user.id, args);
   }
 
@@ -32,8 +35,10 @@ export class PaymentMethodChangeResolver {
   })
   async checkSubscriptionPaymentMethodChange(
     @Args('id') id: string,
-    @CurrentUser() { user }: UserSession
+    @CurrentUser() session: AuthSession
   ) {
+    const user = requireSessionUser(session);
+
     return this.service.check(user.id, id);
   }
 
@@ -43,8 +48,10 @@ export class PaymentMethodChangeResolver {
   })
   async cancelSubscriptionPaymentMethodChange(
     @Args('id') id: string,
-    @CurrentUser() { user }: UserSession
+    @CurrentUser() session: AuthSession
   ) {
+    const user = requireSessionUser(session);
+
     return this.service.cancel(user.id, id);
   }
 }

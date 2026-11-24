@@ -5,6 +5,7 @@ import { URLAdapter } from '@wepublish/nest-modules';
 import { SeoChecklistService } from './seo-checklist.service';
 import { SeoCheckId, SeoCheckStatus } from './seo-checklist.model';
 import { Mock } from 'vitest';
+import { gzipSync } from 'node:zlib';
 
 const mockPrisma = {
   article: { findFirst: vi.fn() },
@@ -97,6 +98,151 @@ describe('SeoChecklistService', () => {
       sitemapUrl: 'https://example.com/api/sitemap',
       rssFeedUrl: 'https://example.com/api/rss-feed',
     });
+  });
+
+  test('probes the nested sitemaps of a sitemap index', async () => {
+    mockPrisma.article.findFirst.mockResolvedValue(null);
+    mockPrisma.peerProfile.findFirst.mockResolvedValue(null);
+
+    const indexResponses: Record<string, string> = {
+      'https://example.com/api/sitemap': `<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<sitemap><loc>https://example.com/api/sitemap/news</loc></sitemap>
+<sitemap><loc>https://example.com/api/sitemap/pages</loc></sitemap>
+</sitemapindex>`,
+      'https://example.com/api/sitemap/news':
+        '<urlset xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"><url></url></urlset>',
+      'https://example.com/api/sitemap/pages':
+        '<urlset><url></url><url></url></urlset>',
+    };
+
+    fetchSpy.mockImplementation(async (input: string | URL | Request) => {
+      const body = indexResponses[input.toString()];
+
+      return body ?
+          new Response(body, { status: 200 })
+        : new Response('', { status: 404 });
+    });
+
+    const checklist = await service.getChecklist();
+
+    expect(fetchSpy.mock.calls.map(([url]) => url)).toEqual(
+      expect.arrayContaining([
+        'https://example.com/api/sitemap/news',
+        'https://example.com/api/sitemap/pages',
+      ])
+    );
+    expect(
+      checklist.checks.find(check => check.id === SeoCheckId.Sitemap)
+    ).toMatchObject({ status: SeoCheckStatus.Ok, detail: '3' });
+    expect(
+      checklist.checks.find(check => check.id === SeoCheckId.NewsSitemap)
+        ?.status
+    ).toBe(SeoCheckStatus.Ok);
+  });
+
+  test('only probes nested sitemaps on the origin of the sitemap', async () => {
+    mockPrisma.article.findFirst.mockResolvedValue(null);
+    mockPrisma.peerProfile.findFirst.mockResolvedValue(null);
+
+    const indexResponses: Record<string, string> = {
+      'https://example.com/api/sitemap': `<sitemapindex>
+<sitemap><loc>http://169.254.169.254/latest/meta-data</loc></sitemap>
+<sitemap><loc>/api/sitemap/pages</loc></sitemap>
+<sitemap><loc>HTTPS://EXAMPLE.COM/api/sitemap/pages</loc></sitemap>
+<sitemap><loc>https://other.example/sitemap.xml</loc></sitemap>
+</sitemapindex>`,
+      'https://example.com/api/sitemap/pages':
+        '<urlset><url></url><url></url></urlset>',
+    };
+
+    fetchSpy.mockImplementation(async (input: string | URL | Request) => {
+      const body = indexResponses[input.toString()];
+
+      return body ?
+          new Response(body, { status: 200 })
+        : new Response('', { status: 404 });
+    });
+
+    const checklist = await service.getChecklist();
+
+    expect(fetchSpy.mock.calls.map(([url]) => url).sort()).toEqual([
+      'https://example.com/api/rss-feed',
+      'https://example.com/api/sitemap',
+      'https://example.com/api/sitemap/pages',
+    ]);
+    expect(
+      checklist.checks.find(check => check.id === SeoCheckId.Sitemap)
+    ).toMatchObject({
+      status: SeoCheckStatus.Error,
+      detail:
+        'http://169.254.169.254/latest/meta-data: Not on https://example.com (+1 more)',
+    });
+  });
+
+  test('probes at most four nested sitemaps at once', async () => {
+    mockPrisma.article.findFirst.mockResolvedValue(null);
+    mockPrisma.peerProfile.findFirst.mockResolvedValue(null);
+
+    const chunks = Array.from(
+      { length: 10 },
+      (_, index) => `https://example.com/api/sitemap/articles-${2010 + index}`
+    );
+    let running = 0;
+    let maxRunning = 0;
+
+    fetchSpy.mockImplementation(async (input: string | URL | Request) => {
+      const url = input.toString();
+
+      if (url === 'https://example.com/api/sitemap') {
+        return new Response(
+          `<sitemapindex>${chunks.map(chunk => `<sitemap><loc>${chunk}</loc></sitemap>`).join('')}</sitemapindex>`
+        );
+      }
+
+      if (!chunks.includes(url)) {
+        return new Response('', { status: 404 });
+      }
+
+      maxRunning = Math.max(maxRunning, ++running);
+      await new Promise(resolve => setTimeout(resolve, 5));
+      running--;
+
+      return new Response('<urlset><url></url></urlset>');
+    });
+
+    const checklist = await service.getChecklist();
+
+    expect(maxRunning).toBe(4);
+    expect(
+      checklist.checks.find(check => check.id === SeoCheckId.Sitemap)
+    ).toMatchObject({ status: SeoCheckStatus.Ok, detail: '10' });
+  });
+
+  test('decompresses gzipped sitemaps', async () => {
+    mockPrisma.article.findFirst.mockResolvedValue(null);
+    mockPrisma.peerProfile.findFirst.mockResolvedValue(null);
+
+    fetchSpy.mockImplementation(async (input: string | URL | Request) => {
+      switch (input.toString()) {
+        case 'https://example.com/api/sitemap':
+          return new Response(
+            '<sitemapindex><sitemap><loc>https://example.com/sitemap-1.xml.gz</loc></sitemap></sitemapindex>'
+          );
+        case 'https://example.com/sitemap-1.xml.gz':
+          return new Response(
+            gzipSync('<urlset><url></url><url></url></urlset>'),
+            { headers: { 'content-type': 'application/gzip' } }
+          );
+        default:
+          return new Response('', { status: 404 });
+      }
+    });
+
+    const checklist = await service.getChecklist();
+
+    expect(
+      checklist.checks.find(check => check.id === SeoCheckId.Sitemap)
+    ).toMatchObject({ status: SeoCheckStatus.Ok, detail: '2' });
   });
 
   test('does not probe an article when none is published', async () => {

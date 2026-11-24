@@ -10,7 +10,23 @@ import {
 import { CanRunMailchimpSync } from '@wepublish/permissions';
 import { Permissions } from '@wepublish/permissions/api';
 import { MailchimpSyncService } from './mailchimp-sync.service';
+import { MailchimpAudienceWebhookService } from './mailchimp-audience-webhook.service';
 import { GraphQLJSONObject } from 'graphql-type-json';
+
+@ObjectType({
+  description:
+    'The audience webhook the api registered at Mailchimp; the URL carries the secret.',
+})
+export class MailchimpAudienceWebhook {
+  @Field()
+  url!: string;
+
+  @Field()
+  webhookId!: string;
+
+  @Field()
+  registeredAt!: Date;
+}
 
 @ObjectType()
 export class MailchimpSyncDryRunChange {
@@ -146,7 +162,22 @@ export class MailchimpSyncProgressType {
 
 @Resolver()
 export class MailchimpSyncResolver {
-  constructor(private mailchimpSyncService: MailchimpSyncService) {}
+  constructor(
+    private mailchimpSyncService: MailchimpSyncService,
+    private audienceWebhookService: MailchimpAudienceWebhookService
+  ) {}
+
+  @Permissions(CanRunMailchimpSync)
+  @Mutation(returns => MailchimpAudienceWebhook, {
+    name: 'registerMailchimpAudienceWebhook',
+    description:
+      'Registers (or renews) the audience webhook at Mailchimp, so cleaned and unsubscribed members reach the email quality as they happen.',
+  })
+  async registerMailchimpAudienceWebhook(
+    @Args('id') id: string
+  ): Promise<MailchimpAudienceWebhook> {
+    return this.audienceWebhookService.register(id);
+  }
 
   @Permissions(CanRunMailchimpSync)
   @Query(returns => [MailchimpList], {

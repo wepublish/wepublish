@@ -51,6 +51,9 @@ export const ContentWrapperStyled = styled(
   'article'
 )<BuilderContentWrapperProps>`
   display: grid;
+  /* An auto column grows to fit JS-measured widths (image captions) from a
+     wider viewport and keeps the page too wide after it shrinks. */
+  grid-template-columns: minmax(0, 1fr);
   row-gap: ${({ theme }) => theme.spacing(7)};
 
   ${({ theme, fullWidth }) =>

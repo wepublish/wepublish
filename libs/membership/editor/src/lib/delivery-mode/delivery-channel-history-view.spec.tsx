@@ -103,6 +103,37 @@ describe('DeliveryChannelHistoryView', () => {
 
   afterEach(cleanup);
 
+  it('says when an api key switched the audience on behalf of that person', () => {
+    queries.mockImplementation(name =>
+      name === 'DeliveryModeBulkChanges' ?
+        {
+          data: {
+            deliveryModeBulkChanges: {
+              nodes: [
+                {
+                  ...change,
+                  changedByApiToken: { id: 'key-1', name: 'Import' },
+                },
+              ],
+              totalCount,
+            },
+          },
+          loading: false,
+        }
+      : {}
+    );
+
+    renderView();
+
+    expect(screen.getByText(/deliveryMode\.viaApiKey/)).toBeTruthy();
+  });
+
+  it('says nothing about api keys for a change made by hand', () => {
+    renderView();
+
+    expect(screen.queryByText(/deliveryMode\.viaApiKey/)).toBeNull();
+  });
+
   it('names the record for what it holds, until the log is unified', () => {
     renderView();
 

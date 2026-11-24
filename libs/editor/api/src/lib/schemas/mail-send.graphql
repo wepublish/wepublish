@@ -81,11 +81,33 @@ mutation RefreshEmailQuality {
   }
 }
 
+query EmailEvidence {
+  emailEvidence {
+    providerType
+    providerName
+    providerReportsDelivery
+    lastWebhookAt
+    lastPollAt
+    lastPollError
+    lastProviderEvidenceAt
+    warnAfterDays
+    sources {
+      source
+      count
+      lastAt
+    }
+  }
+}
+
 query MailSendPreview($input: MailSendPreviewInput!) {
   mailSendPreview(input: $input) {
     subject
     html
     pdf
+    attachments {
+      filename
+      pdf
+    }
     recipient {
       id
       email

@@ -1,7 +1,10 @@
 import styled from '@emotion/styled';
 import { createServerFn } from '@tanstack/react-start';
 import { ContentWrapper } from '@wepublish/content/website';
-import { SubscriptionListContainer } from '@wepublish/membership/website';
+import {
+  isSubscriptionDeactivated,
+  SubscriptionListContainer,
+} from '@wepublish/membership/website';
 import {
   MeDocument,
   NavigationListDocument,
@@ -63,7 +66,7 @@ function DeactivatedSubscriptions() {
 
       <SubscriptionListContainer
         filter={subscriptions =>
-          subscriptions.filter(subscription => subscription.deactivation)
+          subscriptions.filter(isSubscriptionDeactivated)
         }
       />
 

@@ -1,0 +1,311 @@
+import type { PrismaClient } from '@prisma/client';
+import type { Mock } from 'vitest';
+import type { BexioPrintSourceService } from './bexio/bexio-print-source.service';
+import { runExport } from './export/run';
+import { PrintIssueExportService } from './print-issue-export.service';
+
+// the real run, watched: the service's job is to hand it the right input
+vi.mock('./export/run', async importOriginal => {
+  const actual = await importOriginal<typeof import('./export/run')>();
+
+  return { ...actual, runExport: vi.fn(actual.runExport) };
+});
+
+const issue = {
+  id: 'issue-1',
+  number: 1,
+  numberTo: null,
+  year: 2027,
+  countsAs: 1,
+  issueDate: new Date('2027-01-15T00:00:00.000Z'),
+};
+
+const options = {
+  memberPlanIds: null,
+  includeBexio: true,
+  includeOpen: true,
+  includeUpcoming: false,
+};
+
+const lapsed = {
+  id: 's1',
+  startsAt: new Date('2025-10-01T00:00:00.000Z'),
+  paidUntil: new Date('2026-09-30T00:00:00.000Z'),
+  autoRenew: false,
+  properties: [],
+  userID: 'u1',
+  deactivation: {
+    date: new Date('2026-09-30T00:00:00.000Z'),
+    reason: 'userSelfDeactivated',
+  },
+  memberPlan: {
+    id: 'p1',
+    slug: 'nw-jahresabo',
+    name: 'Jahresabo',
+    productType: 'Subscription',
+    periodicityPricing: [],
+  },
+  periods: [
+    {
+      id: 'per-1',
+      startsAt: new Date('2025-10-01T00:00:00.000Z'),
+      endsAt: new Date('2026-09-30T00:00:00.000Z'),
+      paymentPeriodicity: 'yearly',
+      invoiceID: 'inv-1',
+      invoice: {
+        paidAt: new Date('2025-10-01T00:00:00.000Z'),
+        canceledAt: null,
+      },
+    },
+  ],
+  invoices: [],
+  printDeliveries: [],
+};
+
+const KINDS = [
+  {
+    id: 'gift',
+    label: 'Geschenkabo',
+    word: 'NW Geschenkabo',
+    refersTo: 'period',
+  },
+];
+
+describe('PrintIssueExportService', () => {
+  let prisma: {
+    setting: { findUnique: Mock };
+    printIssue: { findMany: Mock };
+    subscription: { findMany: Mock };
+    user: { findMany: Mock };
+    printIssueRecipient: { findMany: Mock };
+  };
+  let bexioSource: { client: Mock };
+  let service: PrintIssueExportService;
+
+  beforeEach(() => {
+    vi.mocked(runExport).mockClear();
+    prisma = {
+      setting: {
+        findUnique: vi.fn(async ({ where }: { where: { name: string } }) =>
+          where.name === 'printIssuesPerYear' ? { value: 6 }
+          : where.name === 'printBexioKinds' ? { value: KINDS }
+          : null
+        ),
+      },
+      printIssue: {
+        findMany: vi.fn(async () => [
+          // a double issue: counts as two
+          { issueDate: new Date('2026-08-23T00:00:00.000Z'), countsAs: 2 },
+          { issueDate: new Date('2026-04-10T00:00:00.000Z'), countsAs: 1 },
+        ]),
+      },
+      subscription: { findMany: vi.fn(async () => [lapsed]) },
+      user: { findMany: vi.fn(async () => []) },
+      printIssueRecipient: {
+        findMany: vi.fn(async () => [
+          {
+            bexioInvoiceId: 1,
+            bexioContactId: 11,
+            bexioPeriodFrom: new Date('2026-01-01T00:00:00.000Z'),
+            issue: { countsAs: 2 },
+          },
+          {
+            bexioInvoiceId: 1,
+            bexioContactId: 11,
+            bexioPeriodFrom: new Date('2026-01-01T00:00:00.000Z'),
+            issue: { countsAs: 1 },
+          },
+        ]),
+      },
+    };
+    bexioSource = { client: vi.fn(async () => null) };
+    service = new PrintIssueExportService(
+      prisma as unknown as PrismaClient,
+      bexioSource as unknown as BexioPrintSourceService
+    );
+  });
+
+  it('evaluates the issue as of its ship day with the quota from the setting and the historic issues', async () => {
+    const result = await service.compute(issue, { options });
+
+    expect(prisma.setting.findUnique).toHaveBeenCalledWith({
+      where: { name: 'printIssuesPerYear' },
+    });
+    expect(prisma.printIssue.findMany).toHaveBeenCalledWith({
+      where: { status: 'historic' },
+      select: { issueDate: true, countsAs: true },
+    });
+    expect(prisma.subscription.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        select: expect.objectContaining({
+          printDeliveries: expect.objectContaining({
+            where: { delivery: { deliveredAt: { not: null } } },
+          }),
+        }),
+      })
+    );
+    expect(result.summary).toMatchObject({
+      issue: '1.27',
+      date: '2027-01-15',
+      grace: 1,
+    });
+    // both historic issues fall inside the paid period, one of them a double
+    // issue, so three copies are presumed delivered and the fourth of six is owed
+    expect(result.rows[0]!.zahlungsstatus).toBe('Restexemplar 4/6');
+    expect(result.summary.bexio.configured).toBe(false);
+  });
+
+  it('can evaluate later than the ship day and leave earlier batches out', async () => {
+    const result = await service.compute(issue, {
+      options,
+      evaluateAt: '2027-02-01',
+      excludeSubscriptionIds: ['s1'],
+      excludeBexioRecipients: ['7:70'],
+    });
+
+    expect(result.summary).toMatchObject({
+      date: '2027-02-01',
+      rows: 0,
+      alreadyExported: 1,
+    });
+  });
+
+  it('switches the owed-copies rule off while the setting is 0 or missing', async () => {
+    prisma.setting.findUnique.mockResolvedValue(null);
+
+    const result = await service.compute(issue, { options });
+
+    expect(result.summary).toMatchObject({
+      grace: 0,
+      skipped: { deactivated: 1 },
+    });
+  });
+
+  it('hands the bexio client of the payment provider to the run', async () => {
+    const client = {
+      invoicesInWindow: vi.fn(async () => ({
+        invoices: [],
+        path: 'search' as const,
+      })),
+      positions: vi.fn(async () => []),
+      contactLinks: vi.fn(async () => new Map()),
+      contacts: vi.fn(async () => new Map()),
+      countries: vi.fn(async () => new Map()),
+      salutations: vi.fn(async () => new Map()),
+    };
+    bexioSource.client.mockResolvedValue(client);
+
+    const result = await service.compute(issue, { options });
+
+    expect(client.invoicesInWindow).toHaveBeenCalledWith(
+      '2022-01-01',
+      '2027-12-31'
+    );
+    expect(result.summary.bexio).toMatchObject({
+      configured: true,
+      included: true,
+    });
+  });
+
+  it('leaves bexio out when the options say so, even with a provider', async () => {
+    const client = { invoicesInWindow: vi.fn() };
+    bexioSource.client.mockResolvedValue(client);
+
+    const result = await service.compute(issue, {
+      options: { ...options, includeBexio: false },
+    });
+
+    expect(client.invoicesInWindow).not.toHaveBeenCalled();
+    expect(result.summary.bexio).toMatchObject({
+      configured: true,
+      included: false,
+    });
+  });
+
+  it('hands no bexio kinds to the run while the setting holds none or nonsense', async () => {
+    prisma.setting.findUnique.mockImplementation(
+      async ({ where }: { where: { name: string } }) =>
+        where.name === 'printBexioKinds' ? { value: [{ id: 1 }, 'x'] } : null
+    );
+
+    await service.compute(issue, { options });
+
+    expect(runExport).toHaveBeenCalledWith(
+      expect.objectContaining({ bexioKinds: [] }),
+      expect.anything()
+    );
+  });
+
+  it('hands the copies bexio periods got in delivered lists to the run', async () => {
+    await service.compute(issue, { options });
+
+    expect(prisma.printIssueRecipient.findMany).toHaveBeenCalledWith({
+      where: {
+        source: 'bexio',
+        bexioPeriodFrom: { not: null },
+        delivery: { deliveredAt: { not: null } },
+      },
+      select: {
+        bexioInvoiceId: true,
+        bexioContactId: true,
+        bexioPeriodFrom: true,
+        issue: { select: { countsAs: true } },
+      },
+    });
+    // a double issue counts as two copies of the period
+    expect(runExport).toHaveBeenCalledWith(
+      expect.objectContaining({ bexioDelivered: { '1:11:2026-01-01': 3 } }),
+      expect.anything()
+    );
+  });
+
+  it('hands every option to the run next to the quota', async () => {
+    await service.compute(issue, {
+      options: {
+        memberPlanIds: ['p1'],
+        includeBexio: false,
+        includeOpen: false,
+        includeUpcoming: true,
+      },
+    });
+
+    expect(runExport).toHaveBeenCalledWith(
+      {
+        issue: '1.27',
+        countsAs: 1,
+        date: '2027-01-15',
+        memberPlanIds: ['p1'],
+        includeBexio: false,
+        includeOpen: false,
+        includeUpcoming: true,
+        quota: {
+          issuesPerYear: 6,
+          historicIssues: [
+            { issueDate: '2026-08-23', countsAs: 2 },
+            { issueDate: '2026-04-10', countsAs: 1 },
+          ],
+        },
+        excludeSubscriptionIds: undefined,
+        excludeBexioRecipients: undefined,
+        // the medium's kinds and the ship day for bexio periods
+        bexioKinds: KINDS,
+        shipDay: '2027-01-15',
+        bexioDelivered: { '1:11:2026-01-01': 3 },
+      },
+      expect.objectContaining({ bexio: null })
+    );
+  });
+
+  it('hands a double issue to the run as one issue with its label and what it counts as', async () => {
+    const result = await service.compute(
+      { ...issue, number: 3, numberTo: 4, countsAs: 2 },
+      { options }
+    );
+
+    expect(runExport).toHaveBeenCalledWith(
+      expect.objectContaining({ issue: '3/4.27', countsAs: 2 }),
+      expect.anything()
+    );
+    expect(result.filename).toBe('druckliste-3-4.27-2027-01-15.csv');
+  });
+});

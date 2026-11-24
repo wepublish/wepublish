@@ -151,9 +151,16 @@ function AuditLogList() {
 
   const describeActor = (entry: FullAuditLogFragment) => {
     if (entry.actorType === AuditLogActorType.Token) {
-      return t('auditLogList.overview.tokenActor', {
-        name: entry.tokenName ?? t('auditLogList.overview.unknownActor'),
-      });
+      const name = entry.tokenName ?? t('auditLogList.overview.unknownActor');
+
+      // An API key acts on behalf of the person who created it; a peering
+      // token has nobody behind it.
+      return entry.userEmail ?
+          t('auditLogList.overview.tokenActorOnBehalf', {
+            name,
+            user: entry.userEmail,
+          })
+        : t('auditLogList.overview.tokenActor', { name });
     }
 
     const actor = entry.userEmail ?? t('auditLogList.overview.unknownActor');
