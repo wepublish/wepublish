@@ -19,9 +19,10 @@
       "mobile": "Mobile",
       "desktop": "Bureau",
       "tablet": "Tablette",
-      "copyUrl": "Copier l’URL d’aperçu",
-      "urlCopied": "URL d’aperçu copiée dans le presse-papiers",
-      "urlCopyFailed": "L’URL d’aperçu n’a pas pu être copiée",
+      "copyUrl": "Copier le lien vers l’aperçu",
+      "urlCopied": "Lien copié. Il ouvre cet aperçu dans l’éditeur.",
+      "urlCopyFailed": "Le lien vers l’aperçu n’a pas pu être copié",
+      "openInNewTab": "Ouvrir l’aperçu dans un nouvel onglet",
       "loading": "Chargement de l’aperçu …"
     },
     "previewHandshake": {

@@ -19,9 +19,10 @@
       "mobile": "Mobil",
       "desktop": "Desktop",
       "tablet": "Tablet",
-      "copyUrl": "Vorschau-URL kopieren",
-      "urlCopied": "Vorschau-URL in die Zwischenablage kopiert",
-      "urlCopyFailed": "Vorschau-URL konnte nicht kopiert werden",
+      "copyUrl": "Link zur Vorschau kopieren",
+      "urlCopied": "Link kopiert. Er öffnet diese Vorschau im Editor.",
+      "urlCopyFailed": "Link zur Vorschau konnte nicht kopiert werden",
+      "openInNewTab": "Vorschau in neuem Tab öffnen",
       "loading": "Vorschau wird geladen …"
     },
     "previewHandshake": {
