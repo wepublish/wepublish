@@ -2,6 +2,7 @@ import {
   AllPermissions,
   CanCreateApiToken,
   CanDeleteGiftCodes,
+  CanGetActiveSubscriberFirstNames,
   CanGetAllApiTokens,
   CanGetApiTokens,
   CanGetGiftCodes,
@@ -10,6 +11,19 @@ import {
   CanUpdateGiftCodes,
   EditorPermissions,
 } from './permissions';
+
+describe('CanGetActiveSubscriberFirstNames', () => {
+  it('is offered to admins, roles and API keys under a stable id', () => {
+    expect(AllPermissions.map(({ id }) => id)).toContain(
+      'CAN_GET_ACTIVE_SUBSCRIBER_FIRST_NAMES'
+    );
+  });
+
+  it('is not granted to editors by default', () => {
+    expect(CanGetActiveSubscriberFirstNames).toBeDefined();
+    expect(EditorPermissions).not.toContain(CanGetActiveSubscriberFirstNames);
+  });
+});
 
 describe('EditorPermissions', () => {
   it('lets editors manage their own API keys', () => {

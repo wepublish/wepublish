@@ -46,6 +46,15 @@ export class DashboardSubscription {
 }
 
 @ObjectType()
+export class ActiveSubscriberFirstName {
+  @Field(() => String, { nullable: true })
+  firstName!: string | null;
+
+  @Field({ description: 'When the subscription was created.' })
+  createdAt!: Date;
+}
+
+@ObjectType()
 export class DailySubscriptionStatsUser {
   @Field()
   id!: string;

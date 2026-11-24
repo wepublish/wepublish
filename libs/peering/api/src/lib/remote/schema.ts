@@ -73,6 +73,13 @@ export enum ActionType {
   UserCreated = 'UserCreated'
 }
 
+export type ActiveSubscriberFirstName = {
+  __typename?: 'ActiveSubscriberFirstName';
+  /** When the subscription was created. */
+  createdAt: Scalars['DateTime']['output'];
+  firstName?: Maybe<Scalars['String']['output']>;
+};
+
 export type AllowedSettingVals = {
   __typename?: 'AllowedSettingVals';
   boolChoice?: Maybe<Scalars['Boolean']['output']>;
@@ -7706,6 +7713,13 @@ export type Query = {
   accountCreationMail: ActionMail;
   /** Returns latest actions */
   actions: Array<Action>;
+  /**
+   *
+   *       Returns the first name and creation date of every active subscription, newest first.
+   *       Active means the same as for activeSubscribers. Nothing else about the subscriber is exposed.
+   *
+   */
+  activeSubscriberFirstNames: Array<ActiveSubscriberFirstName>;
   /**
    *
    *       Returns all active subscribers.
