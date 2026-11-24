@@ -302,6 +302,31 @@ describe('MailSendResolver', () => {
       expect(result.pageInfo.hasPreviousPage).toBe(false);
     });
 
+    it("hands out the provider's reason for a mail that did not get through", async () => {
+      const mailData = JSON.stringify({
+        msg: { bounce_description: 'bad_mailbox', diag: '554 User unknown' },
+      });
+      const prisma = {
+        mailLog: {
+          count: vi.fn(async () => 3),
+          findMany: vi.fn(async () => [
+            { id: 'l1', state: 'bounced', mailData },
+            { id: 'l2', state: 'deferred', mailData },
+            // The payload of a mail that arrived is no reason for anything.
+            { id: 'l3', state: 'delivered', mailData },
+          ]),
+        },
+      };
+
+      const result = await makeResolver(prisma).mailLogs(undefined, 0, 10);
+
+      expect(result.nodes.map(node => node.bounceReason)).toEqual([
+        'bad_mailbox: 554 User unknown',
+        'bad_mailbox: 554 User unknown',
+        null,
+      ]);
+    });
+
     it('filters by the subscription or invoice a mail is about', async () => {
       const prisma = {
         mailLog: {

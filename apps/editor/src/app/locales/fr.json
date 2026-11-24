@@ -4685,6 +4685,7 @@
         "manual": "Manuel"
       },
       "error": "Erreur",
+      "bounceReason": "Motif du rebond",
       "typeDescriptions": {
         "manual": "Envoyé à la main via « Messages manuels » ou « Envoyer un test ». Exemple : newsletter à tou·te·s les abonné·e·s.",
         "subscriptionFlow": "Programmé depuis « Messages automatiques », calculé à partir de la date d’abonnement. Exemples : rappel 14 jours avant la fin, relance après une facture impayée.",

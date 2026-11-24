@@ -1,6 +1,7 @@
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import {
   MailChannel,
+  MailLogState,
   MailSendJobRecipientState,
   PrismaClient,
 } from '@prisma/client';
@@ -9,6 +10,7 @@ import {
   formatAddressLines,
   LetterAddress,
 } from '@wepublish/letter/api';
+import { bounceReasonOf } from '@wepublish/mail/api';
 import {
   actorOf,
   AuthSession,
@@ -47,6 +49,15 @@ import { SuppressionSyncService } from './suppression-sync.service';
  * nothing to gain from loading the rest of the row — and plenty to lose:
  * templates carry their full html/text body, users their password hash.
  */
+/**
+ * The states whose payload can explain why a mail did not arrive. A rejected
+ * mail carries its reason in `error` already.
+ */
+const STATES_WITH_BOUNCE_REASON = new Set<MailLogState>([
+  MailLogState.bounced,
+  MailLogState.deferred,
+]);
+
 const mailLogTemplateSelect = { select: { id: true, name: true } } as const;
 
 const mailLogRecipientSelect = {
@@ -370,6 +381,10 @@ export class MailSendResolver {
           formatAddressLines(
             log.addressSnapshot as unknown as LetterAddress
           ).join(', ')
+        : null,
+      bounceReason:
+        STATES_WITH_BOUNCE_REASON.has(log.state) ?
+          bounceReasonOf(log.mailData)
         : null,
     }));
 

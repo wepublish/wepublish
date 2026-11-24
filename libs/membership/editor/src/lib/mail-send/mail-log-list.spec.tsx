@@ -185,6 +185,66 @@ describe('MailLogList', () => {
     ).toBe(true);
   });
 
+  describe('why a mail bounced', () => {
+    const log = (overrides: object) => ({
+      id: 'log-1',
+      sentDate: '2026-11-01T10:00:00.000Z',
+      state: 'bounced',
+      type: 'subscriptionFlow',
+      channel: 'mail',
+      subject: 'Invoice',
+      recipient: { id: 'u1', email: 'jane@example.com' },
+      mailTemplate: { id: 'tpl-1', name: 'Invoice' },
+      bounceReason: null,
+      ...overrides,
+    });
+
+    const headers = () =>
+      screen.getAllByRole('columnheader').map(header => header.textContent);
+
+    beforeEach(() => {
+      localStorage.clear();
+      (useQuery as unknown as Mock).mockReturnValue({
+        data: {
+          mailTemplates: [],
+          mailSendJobs: { nodes: [] },
+          mailLogs: {
+            nodes: [
+              log({
+                id: 'log-1',
+                bounceReason: 'bad_mailbox: 554 5.7.1 User unknown',
+              }),
+              log({ id: 'log-2' }),
+            ],
+            totalCount: 2,
+          },
+        },
+        loading: false,
+      });
+    });
+
+    it("shows the provider's reason once the column is switched on", () => {
+      renderPage();
+
+      // A hidden column stays in the document, styled away: ask by role.
+      const reason = { name: 'bad_mailbox: 554 5.7.1 User unknown' };
+
+      expect(headers()).not.toContain('mailLog.bounceReason');
+      expect(screen.queryByRole('cell', reason)).toBeNull();
+
+      fireEvent.click(
+        screen.getByRole('button', { name: /columnConfigurator.title/ })
+      );
+      fireEvent.click(
+        screen.getByRole('menuitemcheckbox', { name: 'mailLog.bounceReason' })
+      );
+      fireEvent.keyDown(screen.getByRole('menu'), { key: 'Escape' });
+
+      expect(headers()).toContain('mailLog.bounceReason');
+      expect(screen.getByRole('cell', reason)).toBeTruthy();
+    });
+  });
+
   describe('what a mail is about', () => {
     const log = (overrides: object) => ({
       id: 'log-1',

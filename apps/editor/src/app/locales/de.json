@@ -4693,6 +4693,7 @@
         "manual": "Manuell"
       },
       "error": "Fehler",
+      "bounceReason": "Bounce-Grund",
       "typeDescriptions": {
         "manual": "Von Hand über «Manuelle Mitteilungen» oder «Test senden» verschickt. Beispiel: Newsletter an alle Abonnent:innen.",
         "subscriptionFlow": "Zeitgesteuert aus «Automatische Mitteilungen», berechnet ab dem Abo-Datum. Beispiele: Erinnerung 14 Tage vor Ablauf, Mahnung nach unbezahlter Rechnung.",
