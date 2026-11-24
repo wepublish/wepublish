@@ -48,7 +48,7 @@ master before trusting it**, because the drift is the whole problem (§6.1).
 @wepublish/utils/website            framework-neutral core   <- no next/*, ever
 @wepublish/utils/website/next       Next pages router
 @wepublish/utils/website/tanstack   TanStack Router/Start
-@wepublish/utils/website/tanstack/server   server-only (cookies, headers, SSR Apollo)
+@wepublish/utils/website/tanstack/server   server-only (cookies, headers, SSR Apollo, server-route handlers)
 ```
 
 The two framework barrels **do not re-export the core**. That is deliberate: an
