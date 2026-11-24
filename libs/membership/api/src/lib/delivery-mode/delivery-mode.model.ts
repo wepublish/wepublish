@@ -186,7 +186,9 @@ export class DeliverySuggestionFilter {
 
 @ObjectType()
 export class DeliverySuggestionReasonCount {
-  @Field({ description: 'A reason as DeliverySuggestionFilter.reasons takes it.' })
+  @Field({
+    description: 'A reason as DeliverySuggestionFilter.reasons takes it.',
+  })
   reason!: string;
 
   @Field(() => Int)

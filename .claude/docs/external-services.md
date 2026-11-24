@@ -187,7 +187,11 @@ Automated subscription mails can reach a user as a printed letter. The pieces:
   letter variant with `sameAsMail` keeps no subject/body: `findTemplateVariant`
   hands back the mail variant's on the letter's layout and appendix, so read
   variants through it, never the row. The editor gives a new template such a
-  letter by default.
+  letter by default. The template table sorts, filters and pages in the
+  browser (`template-table.ts`) over `MailTemplateList`; its extra row fields
+  (`letterLayoutName`, `letterAppendixName`, `memberPlans`,
+  `attachmentNames`) are batched and
+  stay out of `TinyMailTemplate`, which every picker loads.
 - `SubscriptionInterval.sendAsLetter`: only events switched on in the flow
   editor («Auch per Brief») print; user-flow mails (login, password, email
   change) never do. The three senders (periodic job, legacy `member-context`,

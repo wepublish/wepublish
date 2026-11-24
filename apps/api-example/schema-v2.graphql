@@ -3054,11 +3054,22 @@ type MailTemplateLetterPreviewModel {
   pdf: String!
 }
 
+"""A member plan whose communication flow sends a template."""
+type MailTemplateMemberPlanModel {
+  id: String!
+  name: String!
+}
+
 type MailTemplateModel {
   """
   Word documents (.docx) filled in with the same placeholders, converted to pdf and attached to every mail sent from this template, in this order. A printed letter carries them after its pages.
   """
   attachmentIds: [String!]!
+
+  """
+  Title, or else the filename, of each attached document, in their order. For the template table.
+  """
+  attachmentNames: [String!]!
 
   """The channels this template is written for, the email first."""
   channels: [MailChannel!]!
@@ -3067,7 +3078,22 @@ type MailTemplateModel {
   htmlContent: String! @deprecated(reason: "Use `variants`: a template has a body per channel.")
   id: String!
   letterAppendixId: String @deprecated(reason: "Use the letter entry of `variants`.")
+
+  """
+  Title, or else the filename, of the pdf printed after the letter pages. Null without one.
+  """
+  letterAppendixName: String
   letterLayoutId: String @deprecated(reason: "Use the letter entry of `variants`.")
+
+  """
+  Name of the stationery the letter version is set on. Null for the default stationery and for a template without a letter version.
+  """
+  letterLayoutName: String
+
+  """
+  The member plans whose communication flow sends this template, by name. The default flow belongs to no plan and is not listed.
+  """
+  memberPlans: [MailTemplateMemberPlanModel!]!
   name: String!
   status: String!
 

@@ -392,9 +392,7 @@ describe('DeliverySuggestionsView', () => {
     expect(
       letters.getByText('deliveryChannel.suggestions.emptyFiltered')
     ).toBeTruthy();
-    expect(
-      letters.queryByRole('button', { name: /confirmAll/ })
-    ).toBeNull();
+    expect(letters.queryByRole('button', { name: /confirmAll/ })).toBeNull();
     // The filter stays, so it can be undone.
     expect(
       letters.getByLabelText('deliveryChannel.suggestions.filter.reason')

@@ -99,9 +99,7 @@ describe('MailLogList', () => {
     fireEvent.mouseDown(
       screen.getByRole('combobox', { name: /^mailLog\.filter\.state/ })
     );
-    fireEvent.click(
-      screen.getByRole('option', { name: MailLogState.Bounced })
-    );
+    fireEvent.click(screen.getByRole('option', { name: MailLogState.Bounced }));
     fireEvent.change(
       screen.getByRole('combobox', { name: 'listView.pagination.pageSize' }),
       { target: { value: '100' } }
@@ -164,9 +162,9 @@ describe('MailLogList', () => {
     renderPage();
 
     expect(
-      screen.getAllByRole('status').some(status =>
-        status.textContent?.includes('mailLog.empty')
-      )
+      screen
+        .getAllByRole('status')
+        .some(status => status.textContent?.includes('mailLog.empty'))
     ).toBe(true);
   });
 });
