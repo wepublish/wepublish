@@ -42,7 +42,12 @@ const websiteSettingsData: WebsiteSettingsQuery = {
       googleTagManager: keyDisabled,
       plausible: keyDisabled,
       piwik: keyDisabled,
-      umami: keyDisabled,
+      umami: {
+        __typename: 'UmamiAnalytics',
+        enabled: false,
+        key: null,
+        excludedSearchParams: [],
+      },
     },
     ads: { __typename: 'WebsiteAds', sparkLoop: keyDisabled },
     fonts: [],

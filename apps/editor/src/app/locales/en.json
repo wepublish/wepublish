@@ -4126,7 +4126,12 @@
           "enable": "Enable Umami",
           "um": "<url>Umami</url> is a privacy-focused, open source alternative to Google Analytics.",
           "umLocator": "You can find it in the <url>website settings</url> of your Umami dashboard",
-          "umInvalid": "Must be a valid website ID (e.g., xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)"
+          "umInvalid": "Must be a valid website ID (e.g., xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)",
+          "advanced": "Advanced",
+          "excludedSearchParams": "Excluded URL parameters",
+          "excludedSearchParamsHelp": "These URL parameters are removed from the page URL and the referrer before they are sent to Umami, e.g. personal data a newsletter adds to its links (mail, firstName). All other parameters, like the utm parameters, are kept. Upper and lower case do not matter.",
+          "excludedSearchParam": "Parameter name",
+          "addExcludedSearchParam": "Add parameter"
         }
       },
       "ads": {

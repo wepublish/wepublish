@@ -8150,6 +8150,22 @@ input TwitterTweetBlockInput {
   userID: String
 }
 
+type UmamiAnalytics {
+  enabled: Boolean!
+
+  """
+  Search params removed from the url and referrer before they are sent to Umami.
+  """
+  excludedSearchParams: [String!]!
+  key: String
+}
+
+input UmamiAnalyticsInput {
+  enabled: Boolean!
+  excludedSearchParams: [String!]
+  key: String
+}
+
 type UnknownBlock {
   blockStyle: String
   blockStyleName: String
@@ -8447,7 +8463,7 @@ type WebsiteAnalytics {
   googleTagManager: KeyEnabled!
   piwik: KeyEnabled!
   plausible: KeyEnabled!
-  umami: KeyEnabled!
+  umami: UmamiAnalytics!
 }
 
 input WebsiteAnalyticsInput {
@@ -8455,7 +8471,7 @@ input WebsiteAnalyticsInput {
   googleTagManager: KeyEnabledInput!
   piwik: KeyEnabledInput!
   plausible: KeyEnabledInput!
-  umami: KeyEnabledInput!
+  umami: UmamiAnalyticsInput!
 }
 
 """
