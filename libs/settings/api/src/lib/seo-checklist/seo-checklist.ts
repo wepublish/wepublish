@@ -1,12 +1,19 @@
+import { parseStringPromise, processors } from 'xml2js';
 import { SeoCheck, SeoCheckId, SeoCheckStatus } from './seo-checklist.model';
 
 export type SeoProbeResult =
-  | { reachable: true; status: number; body: string }
+  | { reachable: true; status: number; body: string; url?: string }
   | { reachable: false; error: string };
+
+export type SitemapResult =
+  | { url: string; urlCount: number; hasNews: boolean }
+  | { url: string; error: string };
+
+export type SitemapIndex = { url: string; locs: string[] };
 
 export type SeoChecksInput = {
   websiteUrl: string;
-  sitemap: SeoProbeResult;
+  sitemaps: SitemapResult[];
   rssFeed: SeoProbeResult;
   latestArticleUrl: string | null;
   latestArticle: SeoProbeResult | null;
@@ -37,38 +44,112 @@ const isOk = (
 const describeFailure = (probe: SeoProbeResult) =>
   'error' in probe ? probe.error : `HTTP ${probe.status}`;
 
+const SITEMAP_ROOT = /<(\w+:)?(urlset|sitemapindex)[\s>]/;
+
+// sax reports "Reason\nLine: 0\nColumn: 5\nChar: x", counting lines from 0.
+const describeXmlError = ({ message }: Error) => {
+  const [reason, line] = message.split('\n');
+  const lineIndex = line?.match(/^Line: (\d+)$/)?.[1];
+
+  return lineIndex ? `${reason} on line ${Number(lineIndex) + 1}` : reason;
+};
+
+export const parseSitemap = async (
+  url: string,
+  probe: SeoProbeResult
+): Promise<SitemapResult | SitemapIndex> => {
+  if (!isOk(probe)) {
+    return { url, error: describeFailure(probe) };
+  }
+
+  let xml;
+
+  try {
+    xml = await parseStringPromise(probe.body, {
+      trim: true,
+      tagNameProcessors: [processors.stripPrefix],
+    });
+  } catch (error) {
+    // A broken sitemap says what is broken; anything else (an HTML error
+    // page) simply isn't a sitemap.
+    return {
+      url,
+      error:
+        SITEMAP_ROOT.test(probe.body) ?
+          `Invalid XML: ${describeXmlError(error as Error)}`
+        : 'No <urlset> found',
+    };
+  }
+
+  if (xml?.sitemapindex !== undefined) {
+    return {
+      url: probe.url || url,
+      locs: (xml.sitemapindex.sitemap ?? [])
+        .map((sitemap: { loc?: unknown[] }) => sitemap.loc?.[0])
+        .filter(
+          (loc: unknown): loc is string => typeof loc === 'string' && !!loc
+        ),
+    };
+  }
+
+  if (xml?.urlset !== undefined) {
+    return {
+      url,
+      urlCount: xml.urlset.url?.length ?? 0,
+      hasNews: probe.body.includes(NEWS_SITEMAP_NAMESPACE),
+    };
+  }
+
+  return { url, error: 'No <urlset> found' };
+};
+
+type SitemapFailure = Extract<SitemapResult, { error: string }>;
+type Urlset = Exclude<SitemapResult, SitemapFailure>;
+
+const isSitemapFailure = (sitemap: SitemapResult): sitemap is SitemapFailure =>
+  'error' in sitemap;
+
+// The root sitemap's failure is shown as is, a nested one with its url.
+const describeSitemapFailures = (
+  [first, ...rest]: SitemapFailure[],
+  sitemapUrl: string
+) => {
+  if (!first) {
+    return 'No <urlset> found';
+  }
+
+  const reason =
+    first.url === sitemapUrl ? first.error : `${first.url}: ${first.error}`;
+
+  return rest.length ? `${reason} (+${rest.length} more)` : reason;
+};
+
 const checkSitemap = (input: SeoChecksInput): SeoCheck[] => {
   const { sitemapUrl } = getSeoUrls(input.websiteUrl);
+  const failed = input.sitemaps.filter(isSitemapFailure);
+  const urlsets = input.sitemaps.filter(
+    (sitemap): sitemap is Urlset => !isSitemapFailure(sitemap)
+  );
+  const hasNews = urlsets.some(sitemap => sitemap.hasNews);
+  const urlCount = urlsets.reduce(
+    (count, sitemap) => count + sitemap.urlCount,
+    0
+  );
 
-  if (!isOk(input.sitemap) || !input.sitemap.body.includes('<urlset')) {
-    return [
+  return [
+    failed.length || !urlsets.length ?
       {
         id: SeoCheckId.Sitemap,
         status: SeoCheckStatus.Error,
-        detail:
-          isOk(input.sitemap) ? 'No <urlset> found' : (
-            describeFailure(input.sitemap)
-          ),
+        detail: describeSitemapFailures(failed, sitemapUrl),
+        url: sitemapUrl,
+      }
+    : {
+        id: SeoCheckId.Sitemap,
+        status: SeoCheckStatus.Ok,
+        detail: `${urlCount}`,
         url: sitemapUrl,
       },
-      {
-        id: SeoCheckId.NewsSitemap,
-        status: SeoCheckStatus.Info,
-        url: sitemapUrl,
-      },
-    ];
-  }
-
-  const urlCount = (input.sitemap.body.match(/<url>/g) ?? []).length;
-  const hasNews = input.sitemap.body.includes(NEWS_SITEMAP_NAMESPACE);
-
-  return [
-    {
-      id: SeoCheckId.Sitemap,
-      status: SeoCheckStatus.Ok,
-      detail: `${urlCount}`,
-      url: sitemapUrl,
-    },
     {
       id: SeoCheckId.NewsSitemap,
       status: hasNews ? SeoCheckStatus.Ok : SeoCheckStatus.Info,

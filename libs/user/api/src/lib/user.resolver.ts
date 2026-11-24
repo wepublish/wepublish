@@ -34,7 +34,8 @@ import { NotFoundException } from '@nestjs/common';
 import {
   Authenticated,
   CurrentUser,
-  UserSession,
+  AuthSession,
+  requireSessionUser,
 } from '@wepublish/authentication/api';
 import { User as PUser } from '@prisma/client';
 
@@ -104,8 +105,10 @@ export class UserResolver {
   })
   public async updateCurrentUser(
     @Args() input: UpdateCurrentUserInput,
-    @CurrentUser() { user }: UserSession
+    @CurrentUser() session: AuthSession
   ) {
+    const user = requireSessionUser(session);
+
     assertNotManagedByWepublishLogin(user);
 
     return this.service.updateUser({
@@ -138,7 +141,7 @@ export class UserResolver {
   @ResolveField(() => String, { nullable: true })
   public note(
     @Parent() user: PUser,
-    @CurrentUser() session: UserSession | undefined
+    @CurrentUser() session: AuthSession | undefined
   ) {
     if (!hasPermission(CanGetUser, permissionsOf(session))) {
       return null;

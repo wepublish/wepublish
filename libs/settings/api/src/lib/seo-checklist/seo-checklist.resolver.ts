@@ -1,5 +1,9 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { CurrentUser, UserSession } from '@wepublish/authentication/api';
+import {
+  actorUserIdOf,
+  AuthSession,
+  CurrentUser,
+} from '@wepublish/authentication/api';
 import { Permissions } from '@wepublish/permissions/api';
 import { CanGetSettings, CanUpdateSettings } from '@wepublish/permissions';
 import {
@@ -27,12 +31,12 @@ export class SeoChecklistResolver {
   })
   public updateSeoChecklistItem(
     @Args() { itemId, completed }: UpdateSeoChecklistItemArgs,
-    @CurrentUser() session: UserSession | undefined
+    @CurrentUser() session: AuthSession | undefined
   ) {
     return this.seoChecklistService.updateItem(
       itemId,
       completed,
-      session?.user?.id
+      actorUserIdOf(session)
     );
   }
 }

@@ -347,6 +347,33 @@ mode) after logging out in one.
 
 Pinned by `session.provider.spec.tsx` and `preview-status-banner.spec.tsx`.
 
+The same reason makes a bare `…?preview` website URL useless anywhere else (new
+tab, the editor tab, a colleague): no opener, no frame, so no handshake and no
+login. The editor's "copy preview link" therefore copies an **editor** link
+(`/articles/edit/:id?preview=<device>`, `editorPreviewLink` in
+`apps/editor/src/app/previewFrame.tsx`). Don't switch it back to the website
+URL or put the JWT into a URL; a login token in history and chat is the leak
+the handshake exists to avoid.
+
+---
+
+### ⚠️ The content wrapper's column is `minmax(0, 1fr)`, not the implicit `auto`
+
+The editor preview loads at desktop width and its mobile/tablet buttons only
+shrink the same iframe. `ImageBlock` pins each caption to a measured px width;
+with an `auto` column, every other block's still-wide caption holds the column
+open while one re-measures, so they settle on viewport − left padding. Verified
+2026-11-19 on a hauptstadt article: 1000 → 390px left the page 406px wide
+(captions 374px, right padding gone); a fresh 390px load and a one-image article
+were fine. Real phones never shrink, so only the preview showed it.
+
+Remounting the iframe per device would reload it and lose the scroll position.
+
+**Load-bearing:** `grid-template-columns: minmax(0, 1fr)` in
+[`content-wrapper.tsx`](../../libs/content/website/src/lib/content-wrapper/content-wrapper.tsx).
+
+Pinned by `content-wrapper.spec.tsx`.
+
 ---
 
 ### ⚠️ Next never re-renders a stale page for a prefetch, so the page lock expires early
@@ -640,6 +667,20 @@ Guarded for `BlockTreeLoader` only: `block-tree-loader.spec.ts` starts with
 `import './article.service';`, which enters the cycle from the article side and
 reproduces the boot error in a unit test. A new injection site needs the same
 trick or nothing catches it before `nx serve api-example`.
+
+---
+
+### ⚠️ A tenant `BaseTeaser` override must fall back to block-content's `BaseTeaser`, never `Teaser`
+
+`Teaser` from `@wepublish/block-content/website` is a dispatcher: it renders
+the builder's `blocks.BaseTeaser`. An override registered as `BaseTeaser` that
+falls back to `<Teaser>` renders itself forever. Server rendering never ends,
+the pod's memory climbs until it is killed, and Cloudflare shows 504 for the
+page and 502 for everything else in the meantime (2026-11-18, bajour: every
+unstyled teaser-list block, because `TeaserListBlock` passes no `numColumns`).
+Fall back to the concrete `BaseTeaser` export instead, as munotgloeggli does.
+`bajour.spec.tsx` shows how to test it without hanging the runner: a context
+guard that throws if the override re-enters itself.
 
 ---
 

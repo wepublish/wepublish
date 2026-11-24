@@ -1,5 +1,5 @@
 import { MailChannel, PrismaClient } from '@prisma/client';
-import { UserSession } from '@wepublish/authentication/api';
+import { AuthSessionType, UserSession } from '@wepublish/authentication/api';
 import { MailSendResolver } from './mail-send.resolver';
 import { MailSendJobService } from './mail-send-job.service';
 import { MailSendRecipientService } from './mail-send-recipient.service';
@@ -10,7 +10,10 @@ import { SuppressionSyncService } from './suppression-sync.service';
 import { MailEmailSegment, MailRecipientBase } from './mail-send.model';
 import type { Mock } from 'vitest';
 
-const session = { user: { id: 'editor-1' } } as UserSession;
+const session = {
+  type: AuthSessionType.User,
+  user: { id: 'editor-1' },
+} as UserSession;
 
 const makeResolver = (
   prisma: any,
@@ -137,6 +140,30 @@ describe('MailSendResolver', () => {
       allowsSubscriptionTemplates: true,
       segments,
     });
+  });
+
+  it('mailSendPreview hands over the attachments the mail carries', async () => {
+    const attachments = [{ filename: 'Vertrag.pdf', pdf: 'JVBERi0=' }];
+    const jobService = {
+      previewForAudience: vi.fn(async () => ({
+        subject: 'Ihr Vertrag',
+        html: '<p>Hallo</p>',
+        attachments,
+        recipient: null,
+      })),
+    };
+    const recipientService = { placeholderPatterns: vi.fn(async () => []) };
+
+    const preview = await makeResolver(
+      {},
+      jobService,
+      recipientService
+    ).mailSendPreview({
+      mailTemplateId: 'tpl-1',
+      audience: { base: MailRecipientBase.allUsers },
+    });
+
+    expect(preview.attachments).toEqual(attachments);
   });
 
   it('mailSendRecipients lists through the preview order', async () => {

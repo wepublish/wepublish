@@ -27,6 +27,17 @@ export enum mailLogType {
   Manual,
 }
 
+/**
+ * Mails someone is waiting for (login links, password resets and the other
+ * account mails, and their tests). They go out without the template's
+ * attachments, so they never wait on a document conversion; the editor does
+ * not let such a template carry any.
+ */
+const SENT_WITHOUT_ATTACHMENTS = new Set([
+  mailLogType.UserFlow,
+  mailLogType.SystemMail,
+]);
+
 /** Map the internal send-type enum to the persisted MailLog origin. */
 const MAIL_LOG_TYPE_MAP: Record<mailLogType, MailLogType> = {
   [mailLogType.SubscriptionFlow]: MailLogType.subscriptionFlow,
@@ -201,6 +212,7 @@ export class MailController {
           mailTemplateId: this.config.mailTemplateId,
           recipient: this.config.recipient.email,
           data: await this.buildData(),
+          withAttachments: !SENT_WITHOUT_ATTACHMENTS.has(this.config.mailType),
         }
       ));
     } catch (error) {

@@ -38,6 +38,18 @@ registerEnumType(PrintIssueStatus, {
     'open: lists can be computed, exported and handed over; closed: no more Nachlieferungen expected (reversible); historic: shipped before the export tracked issues (imported).',
 });
 
+@ObjectType({
+  description:
+    'The API key that did something on behalf of the user named next to it.',
+})
+export class PrintIssueApiToken {
+  @Field()
+  id!: string;
+
+  @Field()
+  name!: string;
+}
+
 @ObjectType()
 export class PrintIssueUser {
   @Field()
@@ -321,6 +333,12 @@ export class PrintIssueDeliveryModel {
   @Field(() => PrintIssueUser, { nullable: true })
   createdBy!: PrintIssueUser | null;
 
+  @Field(() => PrintIssueApiToken, {
+    nullable: true,
+    description: 'Set when an API key did it on behalf of `createdBy`.',
+  })
+  createdByApiToken!: PrintIssueApiToken | null;
+
   @Field(() => Int, {
     description: '0 = the export, n = the n-th Nachlieferung.',
   })
@@ -351,6 +369,12 @@ export class PrintIssueDeliveryModel {
 
   @Field(() => PrintIssueUser, { nullable: true })
   deliveredBy!: PrintIssueUser | null;
+
+  @Field(() => PrintIssueApiToken, {
+    nullable: true,
+    description: 'Set when an API key did it on behalf of `deliveredBy`.',
+  })
+  deliveredByApiToken!: PrintIssueApiToken | null;
 }
 
 @ObjectType('PrintIssue', {
@@ -409,6 +433,12 @@ export class PrintIssueModel extends HasImageLc {
 
   @Field(() => PrintIssueUser, { nullable: true })
   closedBy!: PrintIssueUser | null;
+
+  @Field(() => PrintIssueApiToken, {
+    nullable: true,
+    description: 'Set when an API key did it on behalf of `closedBy`.',
+  })
+  closedByApiToken!: PrintIssueApiToken | null;
 
   @Field(() => [PrintIssueDeliveryModel], { description: 'In batch order.' })
   deliveries!: PrintIssueDeliveryModel[];
@@ -519,6 +549,12 @@ export class PrintIssueRun {
 
   @Field(() => PrintIssueUser, { nullable: true })
   computedBy!: PrintIssueUser | null;
+
+  @Field(() => PrintIssueApiToken, {
+    nullable: true,
+    description: 'Set when an API key did it on behalf of `computedBy`.',
+  })
+  computedByApiToken!: PrintIssueApiToken | null;
 
   @Field(() => [PrintIssueRow])
   rows!: PrintIssueRow[];

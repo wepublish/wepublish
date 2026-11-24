@@ -32,10 +32,11 @@ type Actor = Pick<
 
 export const describeActor = (session: AuthSession | undefined): Actor => {
   if (session?.type === AuthSessionType.ApiToken) {
+    // The key acted, on behalf of the user who created it.
     return {
       actorType: AuditLogActorType.token,
-      userId: null,
-      userEmail: null,
+      userId: session.createdBy.id,
+      userEmail: session.createdBy.email,
       tokenName: session.name,
       sessionId: session.id,
       impersonatedBy: null,
