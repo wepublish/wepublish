@@ -1,10 +1,44 @@
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 import { WebsiteSettingsFragment } from '@wepublish/website/api';
 import Script from 'next/script';
+import {
+  UMAMI_BEFORE_SEND,
+  umamiBeforeSendScript,
+} from '../lib/umami-before-send';
 
 export type ThirdPartyScriptsProps = {
   settings?: WebsiteSettingsFragment;
 };
+
+// afterInteractive scripts are injected in render order, so the hook exists before the tracker
+function Umami({
+  websiteId,
+  excludedSearchParams,
+}: {
+  websiteId: string;
+  excludedSearchParams?: string[] | null;
+}) {
+  const hasHook = !!excludedSearchParams?.length;
+
+  return (
+    <>
+      {hasHook && (
+        <Script
+          id="umami-before-send"
+          strategy="afterInteractive"
+        >
+          {umamiBeforeSendScript(excludedSearchParams)}
+        </Script>
+      )}
+      <Script
+        src="https://cloud.umami.is/script.js"
+        data-website-id={websiteId}
+        data-before-send={hasHook ? UMAMI_BEFORE_SEND : undefined}
+        strategy="afterInteractive"
+      />
+    </>
+  );
+}
 
 export function ThirdPartyScripts({ settings }: ThirdPartyScriptsProps) {
   return (
@@ -26,10 +60,9 @@ export function ThirdPartyScripts({ settings }: ThirdPartyScriptsProps) {
       )}
 
       {settings?.analytics.umami.enabled && settings?.analytics.umami.key && (
-        <Script
-          src="https://cloud.umami.is/script.js"
-          data-website-id={settings.analytics.umami.key}
-          strategy="afterInteractive"
+        <Umami
+          websiteId={settings.analytics.umami.key}
+          excludedSearchParams={settings.analytics.umami.excludedSearchParams}
         />
       )}
 
