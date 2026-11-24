@@ -7,10 +7,27 @@ type FeedFlexBlock = Extract<FeedBlock, { __typename: 'FlexBlock' }>;
 type NestedFeedBlock = FeedFlexBlock['blocks'][number]['block'];
 type AnyFeedBlock = FeedBlock | NonNullable<NestedFeedBlock>;
 
-export const toHtml = async (document: RichtextJSONDocument) => {
-  const { editorConfig } = await import('@wepublish/richtext/editor/config');
+const nextTurn = () => new Promise<void>(resolve => setImmediate(resolve));
 
-  return generateHTML(document, editorConfig.extensions ?? []);
+let renderQueue: Promise<void> = Promise.resolve();
+
+/**
+ * `generateHTML` opens a happy-dom window per call and releases it only on a
+ * later turn of the event loop. A feed serialises a few hundred documents, so
+ * rendering them together keeps every window alive at once and exhausts the
+ * heap of a website pod. One process-wide queue renders a document at a time
+ * and waits a turn in between, across all feeds being built.
+ */
+export const toHtml = (document: RichtextJSONDocument): Promise<string> => {
+  const html = renderQueue.then(async () => {
+    const { editorConfig } = await import('@wepublish/richtext/editor/config');
+
+    return generateHTML(document, editorConfig.extensions ?? []);
+  });
+
+  renderQueue = html.then(nextTurn, nextTurn);
+
+  return html;
 };
 
 const HTML_ENTITIES: Record<string, string> = {
