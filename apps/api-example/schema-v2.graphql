@@ -3043,6 +3043,11 @@ input MailLogFilter {
 type MailLogModel {
   """Letters only: the address the letter was sent to."""
   address: String
+
+  """
+  What the mail provider said about a bounced or held-back mail: its bounce description and the receiving server's answer. Null when it said nothing.
+  """
+  bounceReason: String
   channel: MailChannel!
   createdAt: DateTime!
 

@@ -5261,6 +5261,7 @@
         "giftCode": "Gift code"
       },
       "error": "Error",
+      "bounceReason": "Bounce reason",
       "typeDescriptions": {
         "manual": "Sent by hand via “Manual messages” or “Send test”. Example: a newsletter to all subscribers.",
         "subscriptionFlow": "Time-based, from “Automated messages”, scheduled off the subscription date. Examples: reminder 14 days before it ends, dunning after an unpaid invoice.",

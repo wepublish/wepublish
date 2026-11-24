@@ -507,6 +507,13 @@ export class MailLogModel {
   })
   error?: string | null;
 
+  @Field(() => String, {
+    nullable: true,
+    description:
+      "What the mail provider said about a bounced or held-back mail: its bounce description and the receiving server's answer. Null when it said nothing.",
+  })
+  bounceReason?: string | null;
+
   @Field()
   mailProviderID!: string;
 
