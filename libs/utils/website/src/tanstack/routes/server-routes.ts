@@ -1,4 +1,4 @@
-import { captureServerError } from '../sentry/instrumentation';
+import { captureException } from '@sentry/tanstackstart-react';
 
 /**
  * Shared handlers for the `pages/api/*` endpoints every tenant duplicated.
@@ -95,7 +95,7 @@ export const feedHandler = async (
   try {
     body = (await getFeed(request.url, getSiteUrl()))[format]();
   } catch (error) {
-    captureServerError(error);
+    captureException(error);
 
     return new Response(null, {
       status: 502,

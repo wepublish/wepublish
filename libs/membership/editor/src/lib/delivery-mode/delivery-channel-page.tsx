@@ -11,6 +11,7 @@ import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
 
+import { EmailEvidenceNotice } from '../mail-send/email-evidence-notice';
 import { DeliveryChannelOverviewView } from './delivery-channel-overview-view';
 import { DeliveryChannelAssignView } from './delivery-channel-assign-view';
 import { DeliveryChannelHistoryView } from './delivery-channel-history-view';
@@ -83,6 +84,10 @@ export function DeliveryChannelPage() {
       >
         {t('deliveryMode.suggestionsIntro')}
       </Typography>
+
+      {/* Suggestions are built from the email status; say when that status
+          has nothing from the provider behind it. */}
+      <EmailEvidenceNotice sx={{ marginTop: 2 }} />
 
       <Tabs
         value={active.key}

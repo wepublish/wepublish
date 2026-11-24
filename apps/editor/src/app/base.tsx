@@ -73,6 +73,7 @@ import {
   CanGetArticle,
   CanGetArticles,
   CanGetAudienceStats,
+  CanGetPrintIssues,
   CanGetAuditLogs,
   CanGetAuthor,
   CanGetAuthors,
@@ -168,6 +169,7 @@ import { useTranslation } from 'react-i18next';
 import {
   MdAccountCircle,
   MdApproval,
+  MdPrint,
   MdAutoFixHigh,
   MdAutorenew,
   MdBadge,
@@ -224,6 +226,7 @@ import {
 } from 'react-icons/md';
 import { useLocation } from 'react-router-dom';
 
+import { ImpersonationBar } from './impersonationBar';
 import { ColorModePreference, useColorMode } from './colorMode';
 import { useMobileNavigation } from './mobileNavigation';
 import { useSidebarMenu } from './sidebarMenu';
@@ -1140,6 +1143,19 @@ export function Base({ children }: BaseProps) {
                 </SidebarNavItem>
               </PermissionControl>
 
+              <FeatureControl feature="print-export">
+                <PermissionControl
+                  qualifyingPermissions={[CanGetPrintIssues.id]}
+                >
+                  <SidebarNavItem
+                    href="/print-issues"
+                    icon={<MdPrint />}
+                  >
+                    {t('navbar.printIssues')}
+                  </SidebarNavItem>
+                </PermissionControl>
+              </FeatureControl>
+
               <PermissionControl
                 qualifyingPermissions={[CanGetAuthors.id, CanGetTags.id]}
               >
@@ -1721,6 +1737,7 @@ export function Base({ children }: BaseProps) {
           tabIndex={-1}
           inert={sidebarIsModal}
         >
+          <ImpersonationBar />
           {children}
         </ChildrenContainer>
       </Layout>

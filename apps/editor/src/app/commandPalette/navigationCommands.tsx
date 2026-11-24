@@ -61,6 +61,8 @@ import {
   CanGetArticle,
   CanGetArticles,
   CanGetAudienceStats,
+  CanCreatePrintIssue,
+  CanGetPrintIssues,
   CanGetAuditLogs,
   CanGetAuthor,
   CanGetAuthors,
@@ -199,6 +201,7 @@ import {
   MdTravelExplore,
   MdVpnKey,
   MdVideoLibrary,
+  MdPrint,
 } from 'react-icons/md';
 
 import type { CommandDefinition } from './commandDefinition';
@@ -507,6 +510,22 @@ export const NAVIGATION_COMMANDS: CommandDefinition[] = [
       CanDeleteBanner.id,
     ],
     perform: ({ navigate }) => navigate('/banners'),
+  },
+  {
+    id: 'printIssues',
+    titleKey: 'navbar.printIssues',
+    icon: <MdPrint />,
+    permissions: [CanGetPrintIssues.id],
+    feature: 'print-export',
+    perform: ({ navigate }) => navigate('/print-issues'),
+  },
+  {
+    id: 'printIssueCreate',
+    titleKey: 'printIssues.create',
+    icon: <MdPrint />,
+    permissions: [CanCreatePrintIssue.id],
+    feature: 'print-export',
+    perform: ({ navigate }) => navigate('/print-issues/create'),
   },
   {
     id: 'authors',

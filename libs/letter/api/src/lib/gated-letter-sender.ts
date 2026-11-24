@@ -1,5 +1,9 @@
 import { FeaturesService } from '@wepublish/features/api';
-import { LetterRecipient, LetterSender } from '@wepublish/mail/api';
+import {
+  LetterRecipient,
+  LetterRecipientOptions,
+  LetterSender,
+} from '@wepublish/mail/api';
 import { LetterContext, SendTemplateLetterProps } from './letter-context';
 
 /**
@@ -22,11 +26,22 @@ export class GatedLetterSender implements LetterSender {
     );
   }
 
-  canReceiveLetters(user: LetterRecipient): boolean {
-    return this.context.canReceiveLetters(user);
+  canReceiveLetters(
+    user: LetterRecipient,
+    options?: LetterRecipientOptions
+  ): boolean {
+    return this.context.canReceiveLetters(user, options);
   }
 
   sendLetter(props: SendTemplateLetterProps): Promise<string> {
     return this.context.sendLetter(props);
   }
 }
+
+/**
+ * Whether templates may carry attachments. They ship with the letters, whose
+ * pdf renderer converts them; while the feature is off nothing is attached.
+ */
+export const mailAttachmentsEnabled =
+  (features: FeaturesService) => (): Promise<boolean> =>
+    features.isEnabled('paper-letters');

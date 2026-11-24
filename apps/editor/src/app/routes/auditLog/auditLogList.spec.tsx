@@ -80,6 +80,43 @@ beforeEach(() => {
 });
 
 describe('AuditLogList', () => {
+  const showing = (over: Partial<typeof entry>) =>
+    mockedUseQuery.mockReturnValue({
+      data: {
+        auditLogs: {
+          supported: true,
+          nodes: [{ ...entry, ...over }],
+          totalCount: 1,
+        },
+      },
+      loading: false,
+    });
+
+  it('names the api key and the person it acted for', () => {
+    showing({
+      actorType: AuditLogActorType.Token,
+      tokenName: 'e2e',
+      userEmail: 'dev@example.test',
+    });
+    renderList();
+
+    expect(
+      screen.getByText('auditLogList.overview.tokenActorOnBehalf')
+    ).toBeTruthy();
+    expect(screen.queryByText('auditLogList.overview.tokenActor')).toBeNull();
+  });
+
+  it('names only the token when nobody stands behind it, as for a peering token', () => {
+    showing({
+      actorType: AuditLogActorType.Token,
+      tokenName: 'Peer',
+      userEmail: null,
+    });
+    renderList();
+
+    expect(screen.getByText('auditLogList.overview.tokenActor')).toBeTruthy();
+  });
+
   it('labels the free-text filters', () => {
     renderList();
 

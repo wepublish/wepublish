@@ -55,6 +55,7 @@ import { MdAdd, MdEdit, MdSend } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import { useLetterChannel } from '../mail-template/use-letter-channel';
 import { canGoToStep, StepNav, WizardStepper } from './step-nav';
+import { EmailEvidenceNotice } from './email-evidence-notice';
 import { mailErrorHelpKey } from './mail-log-common';
 import {
   CancelJobButton,
@@ -66,6 +67,7 @@ import {
 } from './mail-job-common';
 import { MailPreview } from '../mail-template/mail-preview';
 import { LetterPreview } from '../mail-template/letter-preview';
+import { TemplateAttachmentsNote } from './template-attachments-note';
 import { usePaperLetterFlow } from '../delivery-mode/use-paper-letter-flow';
 import { AudienceFilter } from './audience/audience-filter';
 import { useAudienceState } from './audience/audience-state';
@@ -198,7 +200,7 @@ function MailSendPage() {
     useQuery(MailTemplateDocument);
   // Without a letter integration every send is a mail, so there is no channel
   // to choose and nothing to say about it.
-  const { letterAvailable } = useLetterChannel();
+  const { letterAvailable, paperLetters } = useLetterChannel();
 
   const {
     data: previewData,
@@ -318,6 +320,10 @@ function MailSendPage() {
         </ListViewHeader>
       </ListViewContainer>
 
+      {/* The email status segments below rest on what the provider reports;
+          say so when it reports nothing. */}
+      <EmailEvidenceNotice sx={{ marginBottom: 2 }} />
+
       {/* The preview sits beside the wizard on the send step only, as the last
           check before sending. The wizard column is a fixed width on every
           step, so showing the preview never re-flows the wizard. */}
@@ -399,6 +405,17 @@ function MailSendPage() {
                       {t('mailSend.createTemplate')}
                     </Button>
                   </div>
+                  {/* Attachments ship with the letters; without them the
+                      api attaches nothing, whatever the template has. */}
+                  <TemplateAttachmentsNote
+                    attachmentIds={
+                      paperLetters ?
+                        ((templateData?.mailTemplates ?? []).find(
+                          template => template.id === templateId
+                        )?.attachmentIds ?? [])
+                      : []
+                    }
+                  />
                 </CardContent>
               </Card>
 
@@ -843,11 +860,12 @@ function TemplatePreview({
               <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
                 <FormLabel
                   id={recipientLabelId}
-                  style={{ margin: 0 }}
+                  style={{ margin: 0, flexShrink: 0 }}
                 >
                   {t('mailSend.preview.recipient')}
                 </FormLabel>
                 <Autocomplete
+                  style={{ flexGrow: 1, minWidth: 0 }}
                   options={options}
                   getOptionLabel={option => option.label}
                   isOptionEqualToValue={(option, selected) =>
@@ -903,6 +921,7 @@ function TemplatePreview({
               <MailPreview
                 html={preview.html}
                 subject={preview.subject}
+                attachments={preview.attachments}
                 height="max(420px, calc(100vh - 250px))"
               />
             : null}

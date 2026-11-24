@@ -9,6 +9,11 @@ export interface LetterTemplateContent {
   htmlContent: string;
   /** Uploaded pdf (e.g. a static QR-bill) printed after the letter pages. */
   letterAppendixId?: string | null;
+  /**
+   * Word documents filled in with the letter's data and printed after its
+   * pages, before the appendix.
+   */
+  attachmentIds?: string[] | null;
 }
 
 /**

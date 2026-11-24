@@ -8,6 +8,7 @@ import {
   mockTag,
   renderWithProviders,
 } from '@wepublish/mocks/website';
+import { RichtextJSONDocument } from '@wepublish/richtext';
 import {
   ArticleListQueryVariables,
   FullArticleFragment,
@@ -87,6 +88,23 @@ describe('Tag', () => {
     expect(
       screen.getByText('Everything about the climate.')
     ).toBeInTheDocument();
+  });
+
+  it('renders nothing below the heading for a description of only empty paragraphs', () => {
+    renderTag({
+      tagData: mockTag({
+        tag: 'klima',
+        description: {
+          type: 'doc',
+          content: [{ type: 'paragraph', content: [] }],
+        } as unknown as RichtextJSONDocument,
+      }),
+    });
+
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'Klima' }).parentElement
+        ?.children
+    ).toHaveLength(1);
   });
 
   it('lists the articles of the tag', () => {

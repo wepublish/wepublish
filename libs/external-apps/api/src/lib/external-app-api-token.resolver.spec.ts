@@ -1,3 +1,4 @@
+import { AuthSessionType } from '@wepublish/authentication/api';
 import { CanGetAllApiTokens } from '@wepublish/permissions';
 
 // Loaded alone, the api-token barrel pulls in the peering models before
@@ -20,6 +21,7 @@ describe('ExternalAppApiTokenResolver', () => {
       resolver.apiToken(
         { apiTokenId: 'key-1' } as never,
         {
+          type: AuthSessionType.User,
           user: { id: 'admin-1' },
           roles: [{ id: 'admin', permissionIDs: [CanGetAllApiTokens.id] }],
         } as never

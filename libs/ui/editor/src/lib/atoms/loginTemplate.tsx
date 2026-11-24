@@ -6,6 +6,7 @@ export interface LoginTemplateProps {
   children?: ReactNode;
   backgroundChildren?: ReactNode;
   title?: ReactNode;
+  footer?: ReactNode;
 }
 
 const Wrapper = styled.main`
@@ -82,6 +83,15 @@ const Content = styled.div`
   }
 `;
 
+const Footer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  z-index: 1;
+  width: 100%;
+  max-width: 560px;
+  margin-top: 12px;
+`;
+
 const Background = styled.div`
   margin-bottom: 20px;
   z-index: 0;
@@ -91,6 +101,7 @@ export function LoginTemplate({
   backgroundChildren,
   children,
   title,
+  footer,
 }: LoginTemplateProps) {
   return (
     <Wrapper>
@@ -107,6 +118,7 @@ export function LoginTemplate({
         )}
         {children}
       </Content>
+      {footer && <Footer>{footer}</Footer>}
     </Wrapper>
   );
 }

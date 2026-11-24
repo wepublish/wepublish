@@ -14,7 +14,9 @@ import {
   CurrentUser,
   Public,
   RequestFingerprint,
-  UserSession,
+  AuthSession,
+  requireSessionUser,
+  userSessionOf,
 } from '@wepublish/authentication/api';
 
 @Resolver(() => PollVote)
@@ -41,8 +43,10 @@ export class PollVoteResolver {
   @Authenticated()
   async userPollVote(
     @Args('pollId') pollId: string,
-    @CurrentUser() { user }: UserSession
+    @CurrentUser() session: AuthSession
   ): Promise<string | null> {
+    const user = requireSessionUser(session);
+
     return this.pollService.userPollVote(pollId, user.id);
   }
 
@@ -53,13 +57,13 @@ export class PollVoteResolver {
   })
   async voteOnPoll(
     @Args('answerId') answerId: string,
-    @CurrentUser() session: UserSession | null,
+    @CurrentUser() session: AuthSession | null,
     @RequestFingerprint() fingerprint: string
   ) {
     return this.pollService.voteOnPoll(
       answerId,
       fingerprint,
-      session?.user?.id
+      userSessionOf(session)?.user.id
     );
   }
 }

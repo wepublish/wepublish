@@ -9,10 +9,15 @@ import {
   formatAddressLines,
   LetterAddress,
 } from '@wepublish/letter/api';
-import { CurrentUser, UserSession } from '@wepublish/authentication/api';
+import {
+  actorOf,
+  AuthSession,
+  CurrentUser,
+} from '@wepublish/authentication/api';
 import { Permissions } from '@wepublish/permissions/api';
 import { CanGetMailLogs, CanSendMailTemplates } from '@wepublish/permissions';
 import {
+  EmailEvidenceModel,
   EmailQualityRefreshModel,
   MailAudienceInput,
   MailLogFilter,
@@ -34,6 +39,8 @@ import {
 } from './mail-send-recipient.service';
 import { MailLogSyncService } from './mail-log-sync.service';
 import { EmailQualityService } from '../email-quality/email-quality.service';
+import { EmailEvidenceService } from './email-evidence.service';
+import { SuppressionSyncService } from './suppression-sync.service';
 
 /**
  * `MailLogTemplate` and `MailLogRecipient` expose only these fields, so there is
@@ -53,7 +60,9 @@ export class MailSendResolver {
     private mailSendJobService: MailSendJobService,
     private recipientService: MailSendRecipientService,
     private mailLogSyncService: MailLogSyncService,
-    private emailQualityService: EmailQualityService
+    private emailQualityService: EmailQualityService,
+    private emailEvidenceService: EmailEvidenceService,
+    private suppressionSyncService: SuppressionSyncService
   ) {}
 
   @Permissions(CanSendMailTemplates)
@@ -158,6 +167,7 @@ export class MailSendResolver {
       html: result.html,
       text: result.text,
       pdf: result.pdf,
+      attachments: result.attachments,
       recipient:
         result.recipient ?
           {
@@ -186,12 +196,16 @@ export class MailSendResolver {
     description: `Manually send a mail template to a single user`,
   })
   async sendMailTemplateToUser(
-    @CurrentUser() user: UserSession,
+    @CurrentUser() session: AuthSession,
     @Args('templateId') templateId: string,
     @Args('userId') userId: string
   ): Promise<MailSendJobModel> {
     return this.withTemplate(
-      this.mailSendJobService.sendToUser(templateId, userId, user.user.id)
+      this.mailSendJobService.sendToUser(
+        templateId,
+        userId,
+        actorOf(session).userId
+      )
     );
   }
 
@@ -200,11 +214,11 @@ export class MailSendResolver {
     description: `Start a background job sending a template to a filtered audience`,
   })
   async createMailSendJob(
-    @CurrentUser() user: UserSession,
+    @CurrentUser() session: AuthSession,
     @Args('input') input: MailSendJobInput
   ): Promise<MailSendJobModel> {
     return this.withTemplate(
-      this.mailSendJobService.createJob(input, user.user.id)
+      this.mailSendJobService.createJob(input, actorOf(session).userId)
     );
   }
 
@@ -376,9 +390,20 @@ export class MailSendResolver {
   })
   async refreshEmailQuality(): Promise<EmailQualityRefreshModel> {
     const synced = await this.mailLogSyncService.syncOpenStates();
+    // The suppression lists are read whole, so a failure here is the
+    // provider's and the recompute is still worth running.
+    await this.suppressionSyncService.syncSuppressions().catch(() => undefined);
     const { recomputed } = await this.emailQualityService.recomputeAll();
 
     return { ...synced, recomputed };
+  }
+
+  @Permissions(CanGetMailLogs)
+  @Query(() => EmailEvidenceModel, {
+    description: `Where the email status comes from: whether and when the mail provider reported anything. The editor warns when no provider evidence arrived for a while.`,
+  })
+  async emailEvidence(): Promise<EmailEvidenceModel> {
+    return this.emailEvidenceService.summary();
   }
 
   private paginate<T extends { id: string }>(

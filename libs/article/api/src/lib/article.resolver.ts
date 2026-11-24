@@ -33,7 +33,8 @@ import { Permissions, PreviewMode } from '@wepublish/permissions/api';
 import {
   CurrentUser,
   Public,
-  UserSession,
+  actorUserIdOf,
+  AuthSession,
 } from '@wepublish/authentication/api';
 import {
   TrackingPixelDataloader,
@@ -136,9 +137,9 @@ export class ArticleResolver {
   })
   public createArticle(
     @Args() input: CreateArticleInput,
-    @CurrentUser() user: UserSession | undefined
+    @CurrentUser() session: AuthSession | undefined
   ) {
-    return this.articleService.createArticle(input, user?.user?.id);
+    return this.articleService.createArticle(input, actorUserIdOf(session));
   }
 
   @Permissions(CanCreateArticle)
@@ -147,9 +148,9 @@ export class ArticleResolver {
   })
   public updateArticle(
     @Args() input: UpdateArticleInput,
-    @CurrentUser() user: UserSession | undefined
+    @CurrentUser() session: AuthSession | undefined
   ) {
-    return this.articleService.updateArticle(input, user?.user?.id);
+    return this.articleService.updateArticle(input, actorUserIdOf(session));
   }
 
   @Permissions(CanCreateArticle)
@@ -158,9 +159,9 @@ export class ArticleResolver {
   })
   public duplicateArticle(
     @Args('id') id: string,
-    @CurrentUser() user: UserSession | undefined
+    @CurrentUser() session: AuthSession | undefined
   ) {
-    return this.articleService.duplicateArticle(id, user?.user?.id);
+    return this.articleService.duplicateArticle(id, actorUserIdOf(session));
   }
 
   @Permissions(CanDeleteArticle)
@@ -205,12 +206,12 @@ export class ArticleResolver {
   public restoreArticleRevision(
     @Args('id') id: string,
     @Args('revisionId') revisionId: string,
-    @CurrentUser() user: UserSession | undefined
+    @CurrentUser() session: AuthSession | undefined
   ) {
     return this.articleService.restoreArticleRevision(
       id,
       revisionId,
-      user?.user?.id
+      actorUserIdOf(session)
     );
   }
 
