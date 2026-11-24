@@ -4237,6 +4237,7 @@
         "organisationId": "ID d’organisation",
         "webhookSigningKey": "Clé de signature du webhook",
         "autoSend": "Envoyer les lettres automatiquement",
+        "autoSendInfo": "Activé : le prestataire d'impression imprime et expédie chaque lettre dès qu'elle lui est remise. S'il retient une lettre à cause d'un problème, We.Publish la remplace lui-même la nuit suivante, si personne ne s'en est occupé d'ici là. Désactivé : chaque lettre attend chez le prestataire jusqu'à ce que quelqu'un la valide ; une lettre retenue y reste jusqu'à ce que quelqu'un s'en occupe.",
         "placeholderEmailContains": "L’e-mail de substitution contient",
         "defaultAddressPosition": "Fenêtre d’adresse (lettres automatiques)",
         "defaultDeliveryProduct": "Distribution (lettres automatiques)",

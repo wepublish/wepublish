@@ -4041,6 +4041,7 @@
         "organisationId": "Organisations-ID",
         "webhookSigningKey": "Webhook Signing Key",
         "autoSend": "Briefe automatisch versenden",
+        "autoSendInfo": "Ein: Der Druckdienstleister druckt und verschickt jeden Brief, sobald er übergeben ist. Hält er einen Brief wegen eines Problems zurück, ersetzt We.Publish ihn in der folgenden Nacht selbst, sofern sich bis dahin niemand darum gekümmert hat. Aus: Jeder Brief wartet beim Druckdienstleister, bis ihn dort jemand freigibt; ein zurückgehaltener Brief bleibt dort, bis sich jemand darum kümmert.",
         "placeholderEmailContains": "Platzhalter-E-Mail enthält",
         "defaultAddressPosition": "Adressfenster (automatische Briefe)",
         "defaultDeliveryProduct": "Zustellung (automatische Briefe)",
