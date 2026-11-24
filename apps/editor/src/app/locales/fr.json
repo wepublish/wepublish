@@ -3002,6 +3002,7 @@
         "noMemberPlan": "Sans plan d’abonnement",
         "allMemberPlans": "Tous les plans d’abonnement",
         "subscriptionsSum": "Abonnements concernés ({{sum}})",
+        "subscriptionsHint": "Abonnements en cours, et abonnements terminés tant que leur flux leur envoie encore un message. Activer ou désactiver un flux peut donc modifier la somme : un abonnement terminé peut passer d’un flux avec des messages ultérieurs à un flux sans.",
         "active": "Actif",
         "switchOff": "Désactiver le flux",
         "switchOn": "Activer le flux",
