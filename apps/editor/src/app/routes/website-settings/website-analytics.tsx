@@ -115,11 +115,17 @@ const fromFormValues = ({ umami, ...analytics }: AnalyticsFormValues) => ({
   },
 });
 
+const ExcludedSearchParams = styled(AccordionDetails)`
+  display: grid;
+  gap: 24px;
+  justify-items: start;
+`;
+
 const ExcludedSearchParamRow = styled.div`
   display: flex;
   gap: 8px;
   align-items: center;
-  margin-bottom: 8px;
+  justify-self: stretch;
 `;
 
 export const WebsiteAnalyticsWrapper = styled.form`
@@ -648,21 +654,23 @@ export const WebsiteAnalytics = () => {
               {t('websiteSettings.analytics.umami.advanced')}
             </Typography>
           </AccordionSummary>
-          <AccordionDetails>
-            <Typography
-              variant="subtitle2"
-              gutterBottom
-            >
-              {t('websiteSettings.analytics.umami.excludedSearchParams')}
-            </Typography>
-            <Typography
-              variant="body2"
-              color="textSecondary"
-              component={Explainer}
-              gutterBottom
-            >
-              {t('websiteSettings.analytics.umami.excludedSearchParamsHelp')}
-            </Typography>
+          <ExcludedSearchParams>
+            <div>
+              <Typography
+                variant="subtitle2"
+                gutterBottom
+              >
+                {t('websiteSettings.analytics.umami.excludedSearchParams')}
+              </Typography>
+              <Typography
+                variant="body2"
+                color="textSecondary"
+                component={Explainer}
+                sx={{ m: 0 }}
+              >
+                {t('websiteSettings.analytics.umami.excludedSearchParamsHelp')}
+              </Typography>
+            </div>
 
             {excludedSearchParams.map((field, index) => (
               <ExcludedSearchParamRow key={field.id}>
@@ -702,7 +710,7 @@ export const WebsiteAnalytics = () => {
             >
               {t('websiteSettings.analytics.umami.addExcludedSearchParam')}
             </Button>
-          </AccordionDetails>
+          </ExcludedSearchParams>
         </Accordion>
       )}
     </WebsiteAnalyticsWrapper>
