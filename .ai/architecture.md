@@ -76,13 +76,14 @@ of the current year in `index` mode) through
 `createSitemapHandlers` from `@wepublish/feed/website` — TanStack tenants serve
 `/sitemap.xml` + `/sitemap/<chunk>` through its Fetch API twin
 `createSitemapFetchHandlers`, with `/api/sitemap` 301ing there. Per-media settings
-(`mode: 'single' | 'index'`, `pageUrls`, `homepageSlug`, `filterArticle`, url
-hooks) live in `apps/<app>/src/sitemap.ts`. Fetch with the lean `Sitemap*`
+(`mode: 'single' | 'index'`, `pageUrls`, `homepageSlug`, `filterArticle`,
+`filterPage`, url hooks) live in `apps/<app>/src/sitemap.ts`. Fetch with the lean `Sitemap*`
 documents (`libs/website/api/src/lib/schemas/sitemap.graphql`), never
-`ArticleList`, and leave peered articles out. `generateSitemap` is deprecated.
+`ArticleList`, and leave peered articles out. `<loc>` urls are percent-encoded
+in `xml.ts`, because the API returns page and article urls with raw slugs. `generateSitemap` is deprecated.
 
 **llms.txt:** every website serves `/llms.txt` from the same `src/sitemap.ts`
-config, so its `filterArticle` and url hooks apply. It follows
+config, so its `filterArticle`, `filterPage` and url hooks apply. It follows
 llmtxt.info/best-practices: one H1, a factual `description` blockquote (an
 encyclopedia opener, not a slogan), a "Last updated" line, one H2 per CMS
 navigation (published pages only when there is none), the 10 latest articles,
