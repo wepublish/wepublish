@@ -3,7 +3,15 @@ import {
   ForbiddenException,
   Injectable,
 } from '@nestjs/common';
-import { LetterAddressPosition, Prisma, PrismaClient } from '@prisma/client';
+import {
+  LetterAddressPosition,
+  MailChannel,
+  MailTemplate,
+  MailTemplateContext,
+  Prisma,
+  PrismaClient,
+} from '@prisma/client';
+import { FeaturesService } from '@wepublish/features/api';
 import { v7 as uuidv7 } from 'uuid';
 import {
   composeMail,
@@ -25,7 +33,6 @@ import {
   MAX_TEMPLATE_ATTACHMENTS,
   toLetterAddress,
 } from '@wepublish/letter/api';
-import { MailTemplateInput } from './mail-template.model';
 import {
   assembleMailData,
   assembleSampleMailData,
@@ -34,6 +41,41 @@ import {
   SAMPLE_JWT,
   SAMPLE_LETTER_ADDRESS,
 } from './mail-template-data';
+import {
+  MailTemplateInput,
+  MailTemplateVariantInput,
+} from './mail-template.model';
+
+/**
+ * Mail types that are a link to click: a login, a confirmed address. Printed
+ * and posted they arrive days late and cannot be clicked, so they have no
+ * letter version.
+ */
+const CONTEXTS_WITHOUT_LETTER: MailTemplateContext[] = [
+  MailTemplateContext.account,
+  MailTemplateContext.emailChange,
+];
+
+/**
+ * A version as it is stored: an email has no stationery, a letter no
+ * plain-text alternative.
+ */
+const variantData = (variant: MailTemplateVariantInput) => {
+  const isLetter = variant.channel === MailChannel.letter;
+  // A letter that says what the email says keeps no copy of it, so the two
+  // cannot drift apart.
+  const sameAsMail = isLetter && !!variant.sameAsMail;
+
+  return {
+    channel: variant.channel,
+    subject: sameAsMail ? '' : variant.subject,
+    htmlContent: sameAsMail ? '' : variant.htmlContent,
+    textContent: isLetter ? null : (variant.textContent ?? null),
+    sameAsMail,
+    letterLayoutId: isLetter ? (variant.letterLayoutId ?? null) : null,
+    letterAppendixId: isLetter ? (variant.letterAppendixId ?? null) : null,
+  };
+};
 
 export interface PreviewResult {
   subject: string;
@@ -47,15 +89,30 @@ export class MailTemplateService {
     private prisma: PrismaClient,
     private mailContext: MailContext,
     private letterContext: LetterContext,
+    private features: FeaturesService,
     private attachments: DocumentAttachmentRenderer
   ) {}
 
-  async createMailTemplate({ attachmentIds, ...input }: MailTemplateInput) {
+  /** A template with what it says on each channel it is written for. */
+  async createMailTemplate({
+    attachmentIds,
+    ...input
+  }: MailTemplateInput): Promise<MailTemplate> {
+    if (!input.variants.length) {
+      throw new BadRequestException(
+        'A template needs at least one version to send.'
+      );
+    }
+
+    await this.assertVariantsAllowed(input.variants, input.context, []);
     await this.assertAttachable(attachmentIds);
 
     return this.prisma.mailTemplate.create({
       data: {
-        ...input,
+        name: input.name,
+        description: input.description ?? null,
+        context: input.context ?? null,
+        variants: { create: input.variants.map(variantData) },
         ...(attachmentIds ?
           { attachments: { create: this.attachmentRows(attachmentIds) } }
         : {}),
@@ -64,17 +121,45 @@ export class MailTemplateService {
     });
   }
 
-  /** Without `attachmentIds` the attachments stay as they are. */
+  /**
+   * Save the shared fields and the versions handed in. A version left out is
+   * left alone: the editor hides the letter while letters are switched off,
+   * and saving then must not throw the letter away. Removing a version is
+   * `deleteMailTemplateVariant`, which knows what still depends on it.
+   * Without `attachmentIds` the attachments stay as they are; they belong to
+   * the template, so the email and the letter carry the same ones.
+   */
   async updateMailTemplate(
     id: string,
     { attachmentIds, ...input }: MailTemplateInput
-  ) {
+  ): Promise<MailTemplate> {
+    const existing = await this.prisma.mailTemplateVariant.findMany({
+      where: { templateId: id },
+      select: { channel: true },
+    });
+
+    await this.assertVariantsAllowed(
+      input.variants,
+      input.context,
+      existing.map(({ channel }) => channel)
+    );
     await this.assertAttachable(attachmentIds, id);
 
     return this.prisma.mailTemplate.update({
       where: { id },
       data: {
-        ...input,
+        name: input.name,
+        description: input.description ?? null,
+        context: input.context ?? null,
+        variants: {
+          upsert: input.variants.map(variant => ({
+            where: {
+              templateId_channel: { templateId: id, channel: variant.channel },
+            },
+            create: variantData(variant),
+            update: variantData(variant),
+          })),
+        },
         ...(attachmentIds ?
           {
             attachments: {
@@ -85,6 +170,126 @@ export class MailTemplateService {
         : {}),
       },
       include: MAIL_TEMPLATE_ATTACHMENT_IDS,
+    });
+  }
+
+  private async assertVariantsAllowed(
+    variants: MailTemplateVariantInput[],
+    context: MailTemplateContext | null | undefined,
+    existingChannels: MailChannel[]
+  ): Promise<void> {
+    const channels = variants.map(({ channel }) => channel);
+
+    if (new Set(channels).size !== channels.length) {
+      throw new BadRequestException(
+        'A template has one version per channel at most.'
+      );
+    }
+
+    if (
+      channels.includes(MailChannel.letter) &&
+      !(await this.features.isEnabled('paper-letters'))
+    ) {
+      throw new ForbiddenException('Letters are not enabled for this medium.');
+    }
+
+    for (const variant of variants) {
+      if (!variant.sameAsMail) {
+        continue;
+      }
+
+      if (variant.channel !== MailChannel.letter) {
+        throw new BadRequestException(
+          'Only a letter version can take its text from the email.'
+        );
+      }
+
+      if (![...channels, ...existingChannels].includes(MailChannel.mail)) {
+        throw new BadRequestException(
+          'A letter that takes its text from the email needs an email version.'
+        );
+      }
+    }
+
+    if (
+      context &&
+      CONTEXTS_WITHOUT_LETTER.includes(context) &&
+      [...channels, ...existingChannels].includes(MailChannel.letter)
+    ) {
+      throw new BadRequestException(
+        'A template of this mail type cannot have a letter version.'
+      );
+    }
+  }
+
+  /**
+   * Remove what a template says on one channel, unless something still sends
+   * it there: flows and system mails always mail, and an event switched to
+   * letters prints.
+   */
+  async deleteMailTemplateVariant(
+    templateId: string,
+    channel: MailChannel
+  ): Promise<void> {
+    const template = await this.prisma.mailTemplate.findUnique({
+      where: { id: templateId },
+      select: {
+        variants: { select: { channel: true, sameAsMail: true } },
+        _count: {
+          select: { subscriptionIntervals: true, userFlowMails: true },
+        },
+      },
+    });
+
+    if (!template) {
+      throw new BadRequestException('Mail template not found.');
+    }
+
+    if (!template.variants.some(variant => variant.channel === channel)) {
+      throw new BadRequestException(
+        'This template has no version for that channel.'
+      );
+    }
+
+    if (template.variants.length === 1) {
+      throw new BadRequestException(
+        'This is the only version of the template. Delete the template instead.'
+      );
+    }
+
+    if (channel === MailChannel.mail) {
+      if (template.variants.some(variant => variant.sameAsMail)) {
+        throw new BadRequestException(
+          'The letter version takes its text from the email. Give the letter a text of its own before removing the email version.'
+        );
+      }
+
+      if (template._count.subscriptionIntervals > 0) {
+        throw new BadRequestException(
+          'This template is still assigned to a subscription flow, which always sends the email. Please unassign it before removing the email version.'
+        );
+      }
+
+      if (template._count.userFlowMails > 0) {
+        throw new BadRequestException(
+          'This template is still assigned to a system mail. Please unassign it before removing the email version.'
+        );
+      }
+    }
+
+    if (
+      channel === MailChannel.letter &&
+      (await this.prisma.subscriptionInterval.count({
+        where: { mailTemplateId: templateId, sendAsLetter: true },
+      })) > 0
+    ) {
+      throw new BadRequestException(
+        'A subscription flow still sends this template as a letter. Please switch the letter off there before removing the letter version.'
+      );
+    }
+
+    await this.prisma.mailTemplateVariant.delete({
+      where: { templateId_channel: { templateId, channel } },
     });
   }
 
@@ -247,18 +452,46 @@ export class MailTemplateService {
           convertMandrillPlaceholders(remote.subject)
         : undefined;
 
-      await this.prisma.mailTemplate.upsert({
+      const existing = await this.prisma.mailTemplate.findUnique({
         where: { externalMailTemplateId: remote.externalId },
-        create: {
-          name: remote.name,
-          externalMailTemplateId: remote.externalId,
-          htmlContent,
-          subject: subject ?? '',
-        },
-        // Providers without a remote subject (e.g. Mailgun) must not blank the
-        // local one.
-        update: { htmlContent, ...(subject ? { subject } : {}) },
+        select: { id: true },
       });
+
+      if (!existing) {
+        await this.prisma.mailTemplate.create({
+          data: {
+            name: remote.name,
+            externalMailTemplateId: remote.externalId,
+            variants: {
+              create: {
+                channel: MailChannel.mail,
+                htmlContent,
+                subject: subject ?? '',
+              },
+            },
+          },
+        });
+      } else {
+        // A provider only knows emails: a letter version written since is
+        // not its to overwrite.
+        await this.prisma.mailTemplateVariant.upsert({
+          where: {
+            templateId_channel: {
+              templateId: existing.id,
+              channel: MailChannel.mail,
+            },
+          },
+          create: {
+            templateId: existing.id,
+            channel: MailChannel.mail,
+            htmlContent,
+            subject: subject ?? '',
+          },
+          // Providers without a remote subject (e.g. Mailgun) must not blank
+          // the local one.
+          update: { htmlContent, ...(subject ? { subject } : {}) },
+        });
+      }
       imported++;
     }
 

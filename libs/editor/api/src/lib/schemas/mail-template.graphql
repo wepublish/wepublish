@@ -29,6 +29,10 @@ mutation DeleteMailTemplate($id: String!) {
   deleteMailTemplate(id: $id)
 }
 
+mutation DeleteMailTemplateVariant($templateId: String!, $channel: MailChannel!) {
+  deleteMailTemplateVariant(templateId: $templateId, channel: $channel)
+}
+
 mutation ImportMailTemplatesFromProvider {
   importMailTemplatesFromProvider
 }
@@ -72,14 +76,27 @@ fragment TinyMailTemplate on MailTemplateModel {
   subject
   context
   status
+  channels
   attachmentIds
 }
 
 # Adds the mail bodies. Only the single-template edit view needs these.
 fragment FullMailTemplate on MailTemplateModel {
   ...TinyMailTemplate
+  variants {
+    ...MailTemplateVariant
+  }
+}
+
+# What a template says on one channel. The letter version carries the
+# stationery and the appendix; the email version the plain-text alternative.
+fragment MailTemplateVariant on MailTemplateVariantModel {
+  id
+  channel
+  subject
   htmlContent
   textContent
+  sameAsMail
   letterLayoutId
   letterAppendixId
 }

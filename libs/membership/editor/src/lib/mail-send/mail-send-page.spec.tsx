@@ -102,18 +102,28 @@ const answer = (name: string) => {
               id: 'tpl-1',
               name: 'Rechnung',
               context: 'custom',
+              channels: ['mail', 'letter'],
               attachmentIds: [],
             },
             {
               id: 'tpl-2',
               name: 'Erinnerung',
               context: 'custom',
+              channels: ['mail'],
               attachmentIds: [],
             },
             {
               id: 'tpl-3',
+              name: 'Begleitbrief',
+              context: 'custom',
+              channels: ['letter'],
+              attachmentIds: [],
+            },
+            {
+              id: 'tpl-4',
               name: 'Vertrag',
               context: 'custom',
+              channels: ['mail'],
               attachmentIds: ['terms', 'contract'],
             },
           ],
@@ -192,6 +202,19 @@ const pickTemplate = () => {
   fireEvent.mouseDown(screen.getAllByRole('combobox')[0]);
   fireEvent.click(screen.getByRole('option', { name: 'Rechnung' }));
 };
+
+const pickTemplateNamed = (name: string) => {
+  fireEvent.mouseDown(screen.getAllByRole('combobox')[0]);
+  fireEvent.click(screen.getByRole('option', { name }));
+};
+
+const channelRadio = (channel: string) =>
+  screen.getByRole('radio', { name: `mailSend.channel.${channel}` });
+
+const lastMissingPlaceholders = () =>
+  queries.mock.calls
+    .filter(([name]) => name === 'MailTemplateMissingPlaceholders')
+    .at(-1)?.[1].variables;
 
 const goToAudience = () => {
   pickTemplate();
@@ -565,5 +588,63 @@ describe('MailSendPage (accessibility)', () => {
     ]) {
       expect(screen.getByRole('combobox', { name })).toBeTruthy();
     }
+  });
+
+  describe('the version of the template that goes out', () => {
+    it('offers both channels for a template written for both', () => {
+      renderPage();
+      pickTemplateNamed('Rechnung');
+
+      expect(channelRadio('mail')).toBeEnabled();
+      expect(channelRadio('letter')).toBeEnabled();
+    });
+
+    it('offers no letter for a template without a letter version', () => {
+      renderPage();
+      pickTemplateNamed('Erinnerung');
+
+      expect(channelRadio('mail')).toBeChecked();
+      expect(channelRadio('letter')).toBeDisabled();
+      expect(
+        screen.getByText('mailSend.channel.noVersion.letter')
+      ).toBeTruthy();
+    });
+
+    it('sends a template written as a letter only as a letter', () => {
+      renderPage();
+      pickTemplateNamed('Begleitbrief');
+
+      expect(channelRadio('letter')).toBeChecked();
+      expect(channelRadio('mail')).toBeDisabled();
+      expect(lastPreviewAudience().channel).toBe('letter');
+    });
+
+    it('falls back to the email when the next template has no letter', () => {
+      renderPage();
+      pickTemplateNamed('Rechnung');
+      fireEvent.click(channelRadio('letter'));
+
+      expect(lastPreviewAudience().channel).toBe('letter');
+
+      pickTemplateNamed('Erinnerung');
+
+      expect(channelRadio('mail')).toBeChecked();
+      expect(lastPreviewAudience().channel).toBe('mail');
+    });
+
+    it('checks the placeholders of the version being sent', () => {
+      renderPage();
+      pickTemplateNamed('Rechnung');
+
+      expect(lastMissingPlaceholders()).toEqual(
+        expect.objectContaining({ templateId: 'tpl-1', channel: 'mail' })
+      );
+
+      fireEvent.click(channelRadio('letter'));
+
+      expect(lastMissingPlaceholders()).toEqual(
+        expect.objectContaining({ templateId: 'tpl-1', channel: 'letter' })
+      );
+    });
   });
 });

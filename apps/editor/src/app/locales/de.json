@@ -1602,8 +1602,37 @@
       "create": "Vorlage erstellen",
       "description": "Beschreibung",
       "edit": {
-        "createHeader": "E-Mail-Vorlage erstellen",
-        "editHeader": "E-Mail-Vorlage bearbeiten",
+        "versions": "Versionen pro Zustellkanal",
+        "addVersion": {
+          "mail": "E-Mail-Version hinzufügen",
+          "letter": "Brief-Version hinzufügen"
+        },
+        "removeVersion": "Diese Version entfernen",
+        "letterText": {
+          "label": "Text",
+          "same": "Wie E-Mail",
+          "own": "Eigener Text",
+          "sameNote": "Dieser Brief verwendet Betreff und Text der E-Mail. Bearbeite sie im Tab «E-Mail».",
+          "confirm": {
+            "title": "Eigenen Brieftext verwerfen?",
+            "text": "Der Brief verwendet danach wieder Betreff und Text der E-Mail. Sein eigener Text geht verloren.",
+            "confirm": "Verwerfen"
+          }
+        },
+        "removeVersionConfirm": {
+          "title": {
+            "mail": "E-Mail-Version entfernen?",
+            "letter": "Brief-Version entfernen?"
+          },
+          "text": {
+            "mail": "Das E-Mail-Template dieser Vorlage wird gelöscht.",
+            "letter": "Das Brief-Template dieser Vorlage wird gelöscht."
+          },
+          "confirm": "Entfernen"
+        },
+        "letterNotForPurpose": "Für diesen Verwendungszweck gibt es keine Brief-Version: Die Mitteilung enthält einen Login-Link und geht sofort per E-Mail raus.",
+        "createHeader": "Mitteilungsvorlage erstellen",
+        "editHeader": "Mitteilungsvorlage bearbeiten",
         "saveAndClose": "Speichern & schliessen",
         "nameRequired": "Name ist erforderlich.",
         "testSent": "Test-E-Mail gesendet.",
@@ -1616,10 +1645,10 @@
         "testRecipientPlaceholder": "Deine Konto-E-Mail",
         "preview": "Vorschau",
         "sendTest": "Test senden",
-        "previewLetter": "Als Brief anzeigen",
-        "letterAppendix": "QR-Einzahlungsschein (PDF)",
-        "letterAppendixNone": "Keiner",
-        "letterAppendixHelp": "PDF aus «Dokumente», das nach den Briefseiten gedruckt wird, z. B. ein QR-Einzahlungsschein (A4, Schein am unteren Rand). Nur für Adressen in der Schweiz; bei Duplexdruck wird bei Bedarf eine leere Seite eingefügt, damit der Schein auf einer Vorderseite liegt.",
+        "previewLetter": "Vorschau",
+        "letterAppendix": "Zusatzseiten (PDF)",
+        "letterAppendixNone": "Keine",
+        "letterAppendixHelp": "Die Seiten werden dem Brief am Ende hinzugefügt. Wähle aus den PDF-Dateien, die unter «Dokumente» hochgeladen wurden.",
         "attachments": "Anhänge (Word)",
         "attachmentsHelp": "Word-Dokumente (.docx) aus «Dokumente», höchstens 5 und zusammen 15 MB. Sie werden mit denselben Platzhaltern wie die E-Mail ausgefüllt (im Text und in Link-Adressen, nicht in Feldfunktionen), als PDF angehängt und in dieser Reihenfolge mit jeder E-Mail dieser Vorlage versandt, auch mit automatischen Abo-E-Mails. System-E-Mails (Login, Passwort) können keine Anhänge haben. Ein Brief druckt sie nach seinen Seiten (A4). Lässt sich ein Anhang nicht erstellen, wird die E-Mail nicht versandt. Ein persönliches Dokument wird für jeden Empfänger einzeln umgewandelt, und PDF-Anhänge lassen E-Mails eher im Spam landen: lieber wenige und kleine. Benötigt Gotenberg als PDF-Renderer.",
         "attachmentsNone": "Keine",
@@ -1629,20 +1658,24 @@
         "selectMailTypePlaceholder": "Verwendungszweck wählen …",
         "testRecipientHint": "Test-E-Mails werden immer an dein eigenes Konto gesendet.",
         "generateTextFromHtml": "Aus HTML erzeugen",
-        "textContentReadonlyHint": "Wird automatisch aus dem Inhalt erzeugt. Bearbeite den Visuell- oder HTML-Tab, um ihn zu ändern.",
         "background": "Hintergrund",
         "contentWidth": "Breite (px)",
         "purposeHint": "Der Verwendungszweck legt fest, in welcher Situation diese Vorlage verschickt wird. Davon hängt ab, welche Daten – und damit welche Platzhalter – zur Verfügung stehen: Nur eine Rechnungs-Vorlage kennt z.B. den Rechnungsbetrag.",
         "descriptionHelp": "Nur intern sichtbar: Hilft dir und deinem Team, die Vorlage in der Liste wiederzufinden. Erscheint nicht in der E-Mail.",
         "sampleSubscriptionHelp": "Wähle ein bestehendes Abo, damit Vorschau und Test-E-Mail mit dessen echten Daten gefüllt werden. Ohne Auswahl werden erfundene Beispieldaten verwendet. Die Test-E-Mail geht trotzdem nur an dich.",
-        "bodyModeHelp": "Visuell: Inhalt wie in einem Textprogramm bearbeiten. HTML: den Quellcode direkt bearbeiten – nur für Fortgeschrittene. Text-Inhalt: die reine Textversion für E-Mail-Programme ohne HTML; sie wird automatisch erzeugt.",
+        "textContentGenerated": "Automatisch generiert aus dem HTML-/Visuell-Inhalt",
+        "bodyModeHints": {
+          "visual": "Inhalt wie in einem Textprogramm bearbeiten.",
+          "html": "Den Quellcode direkt bearbeiten – nur für Fortgeschrittene.",
+          "text": "Die reine Textversion für E-Mail-Programme ohne HTML. Sie wird automatisch aus dem Inhalt erzeugt; bearbeite den Visuell- oder HTML-Tab, um sie zu ändern."
+        },
         "backgroundHelp": "Farbe der Fläche rund um den Inhalt der E-Mail.",
         "contentWidthHelp": "Maximale Breite des Inhalts in Pixeln. 600 px ist ein bewährter Wert, der in den meisten E-Mail-Programmen gut aussieht. Auf schmalen Bildschirmen wird der Inhalt automatisch schmaler.",
         "bodyMode": "Bearbeitungsmodus",
         "letterLayout": "Briefpapier",
         "letterLayoutDefault": "Standard ({{name}})",
         "letterLayoutNone": "Standard (keines vorhanden)",
-        "letterLayoutHelp": "Kopf- und Fusszeile, wenn diese Vorlage als Brief gedruckt wird. Für E-Mails ohne Bedeutung."
+        "letterLayoutHelp": "Kopf- und Fusszeile"
       },
       "editor": {
         "undo": "Rückgängig",
@@ -1700,7 +1733,7 @@
       "htmlContent": "HTML-Inhalt",
       "name": "Name",
       "placeholders": "Platzhalter",
-      "placeholdersHint": "Zum Einfügen ins gewählte Feld klicken",
+      "placeholdersHint": "Ein Klick auf einen Platzhalter fügt ihn ins Template ein.",
       "placeholderSelectType": "Wähle oben einen Verwendungszweck, um dessen Platzhalter zu sehen.",
       "mailTypes": {
         "account": "Konto & Login",
@@ -1711,9 +1744,9 @@
         "custom": "Freie E-Mail (Abo)",
         "customNoSubscription": "Freie E-Mail (ohne Abo)"
       },
-      "placeholderAlways": "Immer verfügbar – in jeder E-Mail",
+      "placeholderAlways": "Immer verfügbar",
       "placeholderAlwaysHint": "Diese Empfänger-Felder funktionieren in jeder Vorlage, unabhängig vom gewählten Verwendungszweck.",
-      "searchPlaceholders": "Platzhalter suchen …",
+      "searchPlaceholders": "Platzhalter filtern …",
       "noPlaceholders": "Keine passenden Platzhalter.",
       "placeholderExample": "Beispiel",
       "placeholderContextLabel": "Zusätzliche Felder für diesen Verwendungszweck",
@@ -1734,13 +1767,18 @@
         "rappen": "Rappen"
       },
       "placeholderContexts": {
-        "account": "Konto & Login (Registrierung, Login-Link, Passwort-Reset)",
+        "account": "Konto & Login",
         "emailChange": "E-Mail-Änderung",
-        "subscription": "Abo (neu, bestätigt, Deaktivierung)",
-        "renewal": "Verlängerung – automatisch (Erfolg / Fehlschlag)",
+        "subscription": "Abo",
+        "renewal": "Automatische Verlängerung",
         "invoiceCreation": "Rechnung erstellt",
         "custom": "Freie E-Mail an Abonnent:in",
         "customNoSubscription": "Freie E-Mail an Nicht-Abonnent:in"
+      },
+      "placeholderGroups": {
+        "user": "Benutzer",
+        "person": "Person",
+        "general": "Allgemein"
       },
       "placeholderNames": {
         "user_fullName": "Vollständiger Name",
@@ -1802,7 +1840,7 @@
       "textContent": "Textinhalt (Fallback)",
       "wysiwyg": "Visuell",
       "delete": "Löschen",
-      "deleteConfirm": "Diese E-Mail-Vorlage löschen?",
+      "deleteConfirm": "Diese Mitteilungsvorlage löschen?",
       "importFromProvider": "Vom Provider importieren",
       "importConfirm": "Importieren & überschreiben",
       "importWarning": "Dies importiert alle Vorlagen des E-Mail-Providers. Noch unbekannte werden neu angelegt, bereits importierte werden mit HTML und Betreff des Providers überschrieben. Lokale Änderungen daran gehen verloren.",
@@ -1871,9 +1909,9 @@
         "optional_invoices_0_description": "Beschreibung der neuesten Rechnung."
       },
       "statusHelp": "Ein Häkchen bedeutet: Eine automatische E-Mail verwendet diese Vorlage. «Nicht verwendet» bedeutet: Keine automatische E-Mail nutzt sie – über «Manuelle Mitteilungen» kannst du sie trotzdem von Hand verschicken.",
-      "placeholdersInfo": "Platzhalter werden beim Versand automatisch durch die Daten der jeweiligen Person ersetzt, z. B. durch ihren Vornamen. So wird jede E-Mail persönlich.",
-      "searchPlaceholdersLabel": "Platzhalter suchen",
-      "empty": "Noch keine E-Mail-Vorlagen."
+      "placeholdersInfo": "Platzhalter werden beim Versand automatisch durch die entsprechenden Daten ersetzt, z. B. durch den Vornamen der Empfänger:in.",
+      "searchPlaceholdersLabel": "Platzhalter filtern",
+      "empty": "Noch keine Mitteilungsvorlagen."
     },
     "mailTemplateSelect": {
       "sendAsLetter": "Auch per Brief",
@@ -2301,9 +2339,9 @@
       "userConsentCreate": "Neue Benutzer-Einwilligung",
       "userConsentEdit": "Benutzer-Einwilligung bearbeiten",
       "automaticEmails": "Automatische E-Mails",
-      "mailTemplates": "E-Mail-Vorlagen",
-      "mailTemplateCreate": "Neue E-Mail-Vorlage",
-      "mailTemplateEdit": "E-Mail-Vorlage bearbeiten",
+      "mailTemplates": "Mitteilungsvorlagen",
+      "mailTemplateCreate": "Neue Mitteilungsvorlage",
+      "mailTemplateEdit": "Mitteilungsvorlage bearbeiten",
       "letterLayouts": "Briefpapier",
       "letterLayoutCreate": "Neues Briefpapier",
       "letterLayoutEdit": "Briefpapier bearbeiten",
@@ -2855,7 +2893,7 @@
     },
     "automaticMails": {
       "title": "Automatische Mitteilungen",
-      "intro": "Hier legst du fest, welche E-Mail-Vorlage bei welchem Ereignis automatisch verschickt wird. Wähle pro Ereignis eine Vorlage – oder lass das Feld auf «Keine E-Mail senden», wenn nichts verschickt werden soll. Das ⓘ-Symbol erklärt jedes Ereignis.",
+      "intro": "Hier legst du fest, welche Mitteilungsvorlage bei welchem Ereignis automatisch verschickt wird. Wähle pro Ereignis eine Vorlage – oder lass das Feld auf «Keine E-Mail senden», wenn nichts verschickt werden soll. Das ⓘ-Symbol erklärt jedes Ereignis.",
       "example": "Beispiel: {{example}}"
     },
     "subscriptionFlow": {
@@ -4612,6 +4650,10 @@
         "label": "Zustellkanal",
         "mail": "E-Mail",
         "letter": "Brief",
+        "noVersion": {
+          "mail": "Diese Vorlage hat keine E-Mail-Version.",
+          "letter": "Diese Vorlage hat keine Brief-Version."
+        },
         "withoutAddress": "{{count}} der Empfänger:innen haben keine brauchbare Postadresse und werden übersprungen."
       },
       "print": {
@@ -5693,7 +5735,7 @@
         "subscription": "Abo erstellen",
         "consent": "Einwilligung erstellen",
         "userConsent": "Benutzer-Einwilligung erstellen",
-        "mailTemplate": "E-Mail-Vorlage erstellen",
+        "mailTemplate": "Mitteilungsvorlage erstellen",
         "letterLayout": "Briefpapier erstellen",
         "memberPlan": "Abo-Plan erstellen",
         "paymentMethod": "Zahlungsmethode erstellen",
