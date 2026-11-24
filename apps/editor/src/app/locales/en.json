@@ -1915,8 +1915,9 @@
       "empty": "No message templates yet."
     },
     "mailTemplateSelect": {
-      "sendAsLetter": "Also by letter",
-      "sendAsLetterHint": "People on the letter channel get this message printed instead of emailed.",
+      "channels": "Delivery channels",
+      "noLetterVersion": "This template has no letter version. Add one in the template so people on the letter channel get this message printed; until then they get the email.",
+      "sendAsLetterHint": "The email always goes out. With letter ticked, people on the letter channel get this message printed instead of by email.",
       "noMailSentSelectNow": "Do not send an email"
     },
     "memberPlanEdit": {
@@ -2151,7 +2152,7 @@
         "emailUnreachable": "Email address unreachable ({{segment}}) – email will not reach this person."
       },
       "flows": {
-        "letterHint": "Messages marked «Also by letter» reach people on the letter channel in print; everyone else gets email.",
+        "letterHint": "Messages with «Letter» ticked reach people on the letter channel in print; everyone else gets email.",
         "manage": "Manage delivery channels"
       }
     },
