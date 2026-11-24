@@ -1,5 +1,9 @@
 import { css, useTheme } from '@emotion/react';
-import { BlockRenderer } from '@wepublish/block-content/website';
+import {
+  BlockRenderer,
+  isRichTextBlock,
+  isYouTubeVideoBlock,
+} from '@wepublish/block-content/website';
 import { ImageContext } from '@wepublish/image/website';
 import { FullBlockFragment } from '@wepublish/website/api';
 import {
@@ -10,15 +14,38 @@ import {
 } from '@wepublish/website/builder';
 import { useRouter } from 'next/router';
 import { anyPass, cond } from 'ramda';
-import { JSX, memo, useMemo } from 'react';
+import { createContext, JSX, memo, useContext, useMemo } from 'react';
 
 import {
   AttentionCatcher,
   isAttentionCatcher,
 } from './break-blocks/attention-catcher';
+import { isPlainBreakBlock } from './break-blocks/wep-break-block';
+import { isEventList } from './event-list/event-list';
+import { Feature, isFeature } from './feature/feature';
+import { Hero, isHero } from './hero/hero';
+import { isLatestNews } from './latest-news/latest-news';
+import { isLogoBand } from './logo-band/logo-band';
+import { isNetworkNews } from './network-news/network-news';
+import { isOffers } from './offers/offers';
+import { isTeaserCards } from './teaser-cards/teaser-cards';
 import { MainSpacer } from './wep-main-spacer';
 
+/** The block after the one being rendered, e.g. to know that a text is the title of a video */
+const NextBlockContext = createContext<FullBlockFragment | undefined>(
+  undefined
+);
+
+/** A video and the text right before it (its title) are as wide as the hero */
+export const isVideoOrItsTitle = (
+  block: FullBlockFragment,
+  nextBlock?: FullBlockFragment
+) =>
+  isYouTubeVideoBlock(block) ||
+  (isRichTextBlock(block) && !!nextBlock && isYouTubeVideoBlock(nextBlock));
+
 export const WepBlockRenderer = (props: BuilderBlockRendererProps) => {
+  const nextBlock = useContext(NextBlockContext);
   const { asPath } = useRouter();
   const isHomePage = asPath === '/' || asPath === '/de' || asPath === '/fr';
   const theme = useTheme();
@@ -26,6 +53,8 @@ export const WepBlockRenderer = (props: BuilderBlockRendererProps) => {
   const extraBlockMap = useMemo(
     () =>
       cond([
+        [isHero, (block: BuilderBreakBlockProps) => <Hero {...block} />],
+        [isFeature, (block: BuilderBreakBlockProps) => <Feature {...block} />],
         [
           isAttentionCatcher,
           (block: BuilderBreakBlockProps) => <AttentionCatcher {...block} />,
@@ -39,8 +68,20 @@ export const WepBlockRenderer = (props: BuilderBlockRendererProps) => {
       cond([
         [
           anyPass([block => true]),
-          () =>
-            isHomePage && props.index < 2 ?
+          (block: FullBlockFragment) =>
+            (
+              (isHomePage && props.index < 2) ||
+              isLogoBand(block) ||
+              isFeature(block) ||
+              isAttentionCatcher(block) ||
+              isTeaserCards(block) ||
+              isLatestNews(block) ||
+              isNetworkNews(block) ||
+              isEventList(block) ||
+              isOffers(block) ||
+              isPlainBreakBlock(block) ||
+              isVideoOrItsTitle(block, nextBlock)
+            ) ?
               css``
             : css`
                 ${theme.breakpoints.up('md')} {
@@ -54,7 +95,7 @@ export const WepBlockRenderer = (props: BuilderBlockRendererProps) => {
               `,
         ],
       ]),
-    [isHomePage, props.index, theme]
+    [isHomePage, props.index, theme, nextBlock]
   );
 
   if (props.type === 'Page') {
@@ -92,12 +133,14 @@ export const WepBlocks = memo(({ blocks, type }: BuilderBlocksProps) => {
             : {}
           }
         >
-          <Renderer
-            block={block}
-            index={index}
-            count={blocks.length}
-            type={type}
-          />
+          <NextBlockContext.Provider value={blocks[index + 1]}>
+            <Renderer
+              block={block}
+              index={index}
+              count={blocks.length}
+              type={type}
+            />
+          </NextBlockContext.Provider>
         </ImageContext.Provider>
       ))}
     </>

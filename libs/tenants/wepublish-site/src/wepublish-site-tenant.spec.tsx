@@ -7,7 +7,7 @@ import { WepBreakBlock } from './components/break-blocks/wep-break-block';
 import { WepBaseTeaserSlots } from './components/teaser-layouts/wep-base-teaser-slots';
 import { WepBaseTeaser } from './components/teasers/wep-base-teaser';
 import { WepArticle } from './components/wep-article';
-import { WepBlockRenderer } from './components/wep-block-renderer';
+import { WepBlockRenderer, WepBlocks } from './components/wep-block-renderer';
 import { WepContentWrapper } from './components/wep-content-wrapper';
 import { WepFooter } from './components/wep-footer';
 import { WepLink } from './components/wep-link';
@@ -15,6 +15,7 @@ import { WepNavbar } from './components/wep-navbar';
 import { WepPage } from './components/wep-page';
 import { WepQuoteBlock } from './components/wep-quote-block';
 import deOverriden from './locales/deOverriden.json';
+import frOverriden from './locales/frOverriden.json';
 import theme from './theme';
 import { wepublishSiteTenant } from './wepublish-site-tenant';
 
@@ -54,10 +55,10 @@ describe('wepublishSiteTenant', () => {
     expect(wepublishSiteTenant.createTheme()).toBe(theme);
   });
 
-  it('carries the german translations overrides and date locale', () => {
+  it('carries the translation overrides and the german date locale', () => {
     expect(wepublishSiteTenant.translations).toEqual({
       lng: 'de',
-      overrides: { de: deOverriden },
+      overrides: { de: deOverriden, fr: frOverriden },
     });
     expect(wepublishSiteTenant.dateLocale).toBe(de);
   });
@@ -70,6 +71,7 @@ describe('wepublishSiteTenant', () => {
       Article: WepArticle,
       Page: WepPage,
       blocks: {
+        Blocks: WepBlocks,
         Renderer: WepBlockRenderer,
         BaseTeaser: WepBaseTeaser,
         TeaserSlots: WepBaseTeaserSlots,
@@ -103,12 +105,10 @@ describe('wepublishSiteTenant', () => {
     );
   });
 
-  it('paints the home page gradient only on the home page', () => {
-    const home = renderGlobalStyles('/');
-    expect(globalCss()).toContain('linear-gradient');
-    home.unmount();
+  // The orange of the home page comes from the hero blocks, not the body.
+  it.each(['/', '/a/some-article'])('paints no page gradient on %s', path => {
+    renderGlobalStyles(path);
 
-    renderGlobalStyles('/a/some-article');
     expect(globalCss()).not.toContain('linear-gradient');
     expect(globalCss()).toContain('--breakpoint-width');
   });
