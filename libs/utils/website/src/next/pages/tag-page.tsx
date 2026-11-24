@@ -13,6 +13,7 @@ import { useRouter } from 'next/router';
 import { z } from 'zod';
 
 import { getApiUrl } from '../../lib/api-url';
+import { prefetchPageForTag } from '../../lib/page-for-tag';
 
 const take = 25;
 
@@ -75,19 +76,30 @@ export const TagPageGetStaticProps = (async ({ params }) => {
     };
   }
 
-  const tagId = tagResult.data.tag.id;
+  const pageTag = tagResult.data.tag;
 
-  await Promise.all([
-    client.query({
-      query: ArticleListDocument,
-      variables: {
-        take,
-        skip: 0,
-        filter: {
-          tags: [tagId],
+  // The page an editor chose for the tag, or else the tag's articles.
+  const prefetchContent = async () => {
+    const pageForTag = await prefetchPageForTag(client, pageTag);
+
+    if (!pageForTag) {
+      await client.query({
+        query: ArticleListDocument,
+        variables: {
+          take,
+          skip: 0,
+          filter: {
+            tags: [pageTag.id],
+          },
         },
-      },
-    }),
+      });
+    }
+
+    return pageForTag;
+  };
+
+  const [pageForTag] = await Promise.all([
+    prefetchContent(),
     client.query({
       query: NavigationListDocument,
     }),
@@ -98,6 +110,7 @@ export const TagPageGetStaticProps = (async ({ params }) => {
 
   const props = addClientCacheToProps(client, {
     tag,
+    ...(pageForTag && { shell: pageForTag.shell }),
   });
 
   return {

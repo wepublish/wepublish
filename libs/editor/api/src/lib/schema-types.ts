@@ -4531,6 +4531,7 @@ export type MutationCreateTagArgs = {
   color?: InputMaybe<Scalars['Color']['input']>;
   description?: InputMaybe<Scalars['RichText']['input']>;
   main?: Scalars['Boolean']['input'];
+  pageId?: InputMaybe<Scalars['String']['input']>;
   tag?: InputMaybe<Scalars['String']['input']>;
   type: TagType;
 };
@@ -5735,6 +5736,7 @@ export type MutationUpdateTagArgs = {
   description?: InputMaybe<Scalars['RichText']['input']>;
   id: Scalars['String']['input'];
   main?: InputMaybe<Scalars['Boolean']['input']>;
+  pageId?: InputMaybe<Scalars['String']['input']>;
   tag?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<TagType>;
 };
@@ -9591,6 +9593,8 @@ export type Tag = {
   description?: Maybe<Scalars['RichText']['output']>;
   id: Scalars['String']['output'];
   main: Scalars['Boolean']['output'];
+  /** The page shown at the url of the tag instead of its list of articles. */
+  pageId?: Maybe<Scalars['String']['output']>;
   tag?: Maybe<Scalars['String']['output']>;
   type: TagType;
   url: Scalars['String']['output'];

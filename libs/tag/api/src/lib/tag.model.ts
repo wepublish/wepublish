@@ -36,6 +36,13 @@ export class Tag {
 
   @Field(() => ColorScalar, { nullable: true })
   color?: string;
+
+  @Field(() => String, {
+    nullable: true,
+    description:
+      'The page shown at the url of the tag instead of its list of articles.',
+  })
+  pageId?: string | null;
 }
 
 @InputType()
@@ -102,7 +109,7 @@ export class TagListArgs {
 @ArgsType()
 export class CreateTagInput extends PickType(
   Tag,
-  ['tag', 'main', 'type', 'description', 'color'] as const,
+  ['tag', 'main', 'type', 'description', 'color', 'pageId'] as const,
   ArgsType
 ) {}
 
@@ -110,4 +117,8 @@ export class CreateTagInput extends PickType(
 export class UpdateTagInput extends PartialType(CreateTagInput, ArgsType) {
   @Field()
   id!: string;
+
+  // Without a default: an update that leaves `main` out must not unset it.
+  @Field({ nullable: true })
+  main?: boolean;
 }

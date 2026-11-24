@@ -4,10 +4,13 @@ import { TagContainer } from '@wepublish/tag/website';
 import {
   ArticleListDocument,
   TagDocument,
+  TagQuery,
   TagType,
 } from '@wepublish/website/api';
 import { z } from 'zod';
 
+import { prefetchPageForTag } from '../../lib/page-for-tag';
+import { WebsiteShell } from '../../lib/website-shell';
 import { useQueryParams, useReplaceSearch } from '../router-hooks';
 import { runContentQueries } from '../ssr';
 
@@ -23,27 +26,34 @@ export const loadTag = createServerFn({ method: 'GET' })
   .validator((data: { tag: string }) => data)
   .handler(async ({ data }) => {
     let found = false;
+    let shell: WebsiteShell | undefined;
 
     const apollo = await runContentQueries(async client => {
-      const tag = await prefetchTag(client, data);
+      const result = await prefetchTag(client, data);
 
-      found = !!tag;
+      found = !!result;
+      shell = result?.shell;
 
-      return tag;
+      return result?.content ?? null;
     });
 
-    return { apollo, found };
+    return { apollo, found, shell };
   });
 
 /**
  * TanStack port of `TagPageGetStaticProps`. Returns `null` when the tag does
  * not exist so the route can answer with a 404 — Next returned
- * `{ notFound: true, revalidate: 1 }` here.
+ * `{ notFound: true, revalidate: 1 }` here. `content` is what the page shows
+ * (the tag, or the page chosen for it), for the cache window.
  */
 export const prefetchTag = async (
   client: ApolloClient,
   { tag }: { tag: string }
-) => {
+): Promise<{
+  tag: NonNullable<TagQuery['tag']>;
+  content: unknown;
+  shell?: WebsiteShell;
+} | null> => {
   const tagResult = await client.query({
     query: TagDocument,
     variables: { tag, type: TagType.Article },
@@ -51,6 +61,16 @@ export const prefetchTag = async (
 
   if (tagResult.error || !tagResult.data?.tag) {
     return null;
+  }
+
+  const pageForTag = await prefetchPageForTag(client, tagResult.data.tag);
+
+  if (pageForTag) {
+    return {
+      tag: tagResult.data.tag,
+      content: pageForTag.page,
+      shell: pageForTag.shell,
+    };
   }
 
   await client.query({
@@ -62,7 +82,7 @@ export const prefetchTag = async (
     },
   });
 
-  return tagResult.data.tag;
+  return { tag: tagResult.data.tag, content: tagResult.data.tag };
 };
 
 /** TanStack port of `TagPage`. */

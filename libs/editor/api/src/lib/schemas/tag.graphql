@@ -6,6 +6,7 @@ fragment FullTag on Tag {
   main
   url
   color
+  pageId
 }
 
 query Tag($id: String!) {
@@ -57,8 +58,16 @@ mutation UpdateTag(
   $tag: String
   $main: Boolean
   $color: Color
+  $pageId: String
 ) {
-  updateTag(id: $id, tag: $tag, description: $description, main: $main, color: $color) {
+  updateTag(
+    id: $id
+    tag: $tag
+    description: $description
+    main: $main
+    color: $color
+    pageId: $pageId
+  ) {
     ...FullTag
   }
 }

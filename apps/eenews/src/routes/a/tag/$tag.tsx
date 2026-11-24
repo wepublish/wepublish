@@ -30,13 +30,15 @@ export const Route = createFileRoute('/a/tag/$tag')({
     context: ApolloRouterContext;
     params: { tag: string };
   }) => {
-    const { apollo, found } = await loadEenewsTag({ data: { tag } });
+    const { apollo, found, shell } = await loadEenewsTag({ data: { tag } });
 
     mergeApolloCache(context.apolloClient, apollo);
 
     if (!found) {
       await bailOutNotFound(context);
     }
+
+    return { shell };
   },
   component: EenewsTag,
   notFoundComponent: FourOhFourPage,

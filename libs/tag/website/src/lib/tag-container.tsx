@@ -1,4 +1,5 @@
 import { useQuery } from '@apollo/client/react';
+import { PageContainer } from '@wepublish/page/website';
 import {
   ArticleListDocument,
   TagDocument,
@@ -28,8 +29,10 @@ export function TagContainer({
     },
   });
 
+  const pageId = tagData.data?.tag?.pageId;
+
   const articles = useQuery(ArticleListDocument, {
-    skip: !tagData.data?.tag?.id,
+    skip: !tagData.data?.tag?.id || !!pageId,
     variables: {
       ...variables,
       filter: {
@@ -37,6 +40,16 @@ export function TagContainer({
       },
     },
   });
+
+  // An editor picked a page to show instead of the tag's article list.
+  if (pageId) {
+    return (
+      <PageContainer
+        id={pageId}
+        className={className}
+      />
+    );
+  }
 
   return (
     <Tag

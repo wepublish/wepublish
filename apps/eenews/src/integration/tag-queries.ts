@@ -1,5 +1,9 @@
 import { createServerFn } from '@tanstack/react-start';
 import { resolveWhitelistTagIds } from '@wepublish/tenant/eenews';
+import {
+  prefetchPageForTag,
+  type WebsiteShell,
+} from '@wepublish/utils/website';
 import { runContentQueries } from '@wepublish/utils/website/tanstack/server';
 import {
   ArticleListDocument,
@@ -25,6 +29,7 @@ export const loadEenewsTag = createServerFn({ method: 'GET' })
   .validator((data: { tag: string }) => data)
   .handler(async ({ data }) => {
     let found = false;
+    let shell: WebsiteShell | undefined;
 
     const apollo = await runContentQueries(async client => {
       const tagResult = await client.query({
@@ -37,6 +42,15 @@ export const loadEenewsTag = createServerFn({ method: 'GET' })
       }
 
       found = true;
+
+      // An editor chose a page to show instead of the tag's articles.
+      const pageForTag = await prefetchPageForTag(client, tagResult.data.tag);
+
+      if (pageForTag) {
+        shell = pageForTag.shell;
+
+        return pageForTag.page;
+      }
 
       const tagId = tagResult.data.tag.id;
 
@@ -69,7 +83,7 @@ export const loadEenewsTag = createServerFn({ method: 'GET' })
       return tagResult;
     });
 
-    return { apollo, found };
+    return { apollo, found, shell };
   });
 
 /**

@@ -23,6 +23,7 @@ const archived: FullTagFragment = {
   main: false,
   url: 'https://example.com/tag/tag-archived',
   color: null,
+  pageId: null,
 };
 
 const emptyList: TagListQuery = {

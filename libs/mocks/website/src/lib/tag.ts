@@ -13,6 +13,7 @@ export const mockTag = ({
   description,
   main: false,
   color: null,
+  pageId: null,
   url: faker.internet.url(),
   type: TagType.Article,
   ...definedOnly(overrides),
