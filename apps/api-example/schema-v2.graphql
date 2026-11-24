@@ -6177,6 +6177,11 @@ type PrintIssueBexioStats {
   """Found, but of a kind the options leave out."""
   excludedKind: Int!
 
+  """
+  Counting per copy: recipients whose running period already received its number.
+  """
+  exhausted: Int!
+
   """The options asked for bexio and it was read."""
   included: Boolean!
   invoicesInWindow: Int!
@@ -7702,6 +7707,7 @@ enum SettingName {
   PRINT_BEXIO_KINDS
   PRINT_EXPORT_DEFAULTS
   PRINT_ISSUES_PER_YEAR
+  PRINT_ISSUE_COUNTING
   PRINT_ISSUE_LABEL_FORMAT
   PRINT_ISSUE_NUMBERING
   RESET_PASSWORD_JWT_EXPIRES_MIN
