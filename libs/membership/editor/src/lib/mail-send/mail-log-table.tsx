@@ -543,18 +543,13 @@ export function MailLogTable() {
             id: 'error',
             label: t('mailLog.error'),
             width: 240,
-            render: log => <MailErrorCell error={log.error} />,
+            render: log => (
+              <MailErrorCell
+                error={log.error}
+                state={log.state}
+              />
+            ),
             exportValue: log => log.error,
-          },
-          {
-            // What the provider said about a bounce, word for word. Needed
-            // to tell a full mailbox from a missing one, rarely otherwise.
-            id: 'bounceReason',
-            defaultHidden: true,
-            label: t('mailLog.bounceReason'),
-            width: 320,
-            render: log => log.bounceReason ?? '—',
-            exportValue: log => log.bounceReason,
           },
         ]}
       />

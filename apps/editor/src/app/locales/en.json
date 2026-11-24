@@ -5015,7 +5015,6 @@
         "manual": "Manual"
       },
       "error": "Error",
-      "bounceReason": "Bounce reason",
       "typeDescriptions": {
         "manual": "Sent by hand via “Manual messages” or “Send test”. Example: a newsletter to all subscribers.",
         "subscriptionFlow": "Time-based, from “Automated messages”, scheduled off the subscription date. Examples: reminder 14 days before it ends, dunning after an unpaid invoice.",
@@ -5061,6 +5060,18 @@
         "templateMissing": {
           "cause": "The mailing template used here no longer exists.",
           "fix": "Pick an existing template under “Message templates” or create it again, then start the send once more."
+        },
+        "mailboxGone": {
+          "cause": "The recipient's mail server refused the message because the mailbox or the domain does not exist. The address is therefore rated unreachable.",
+          "fix": "1. Check the person's email address for typos and correct it.\n2. If no valid address is known, switch the person to letters: they are suggested under the delivery channel for automated messages, provided a postal address is on file."
+        },
+        "mailboxFull": {
+          "cause": "The recipient's mailbox is full. The message did not arrive; the address is still rated reachable.",
+          "fix": "1. Send the message again later.\n2. If the mailbox stays full, reach the person another way."
+        },
+        "bounce": {
+          "cause": "The recipient's mail server did not accept the message. Its answer is shown below.",
+          "fix": "1. Read the original message: it names the reason, e.g. a temporary failure, a blocked mailbox or suspected spam.\n2. For a temporary failure, send the message again later.\n3. If the address keeps bouncing, check it with the person."
         },
         "generic": {
           "cause": "The mail server rejected the send with the message below.",

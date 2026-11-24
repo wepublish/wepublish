@@ -333,53 +333,65 @@ describe('MailLogList', () => {
       subject: 'Invoice',
       recipient: { id: 'u1', email: 'jane@example.com' },
       mailTemplate: { id: 'tpl-1', name: 'Invoice' },
-      bounceReason: null,
+      error: null,
       ...overrides,
     });
 
-    const headers = () =>
-      screen.getAllByRole('columnheader').map(header => header.textContent);
-
-    beforeEach(() => {
-      localStorage.clear();
+    const showsLogs = (...nodes: object[]) =>
       (useQuery as unknown as Mock).mockReturnValue({
         data: {
           mailTemplates: [],
           mailSendJobs: { nodes: [] },
-          mailLogs: {
-            nodes: [
-              log({
-                id: 'log-1',
-                bounceReason: 'bad_mailbox: 554 5.7.1 User unknown',
-              }),
-              log({ id: 'log-2' }),
-            ],
-            totalCount: 2,
-          },
+          mailLogs: { nodes, totalCount: nodes.length },
         },
         loading: false,
       });
+
+    const explanationOf = (text: string) => {
+      fireEvent.click(screen.getByText(text));
+
+      return screen.getByRole('presentation').textContent;
+    };
+
+    beforeEach(() => {
+      localStorage.clear();
     });
 
-    it("shows the provider's reason once the column is switched on", () => {
+    it("shows the provider's reason in the error column, without switching anything on", () => {
+      showsLogs(log({ error: 'bad_mailbox: 554 5.7.1 User unknown' }));
       renderPage();
 
-      // A hidden column stays in the document, styled away: ask by role.
-      const reason = { name: 'bad_mailbox: 554 5.7.1 User unknown' };
+      const headers = screen
+        .getAllByRole('columnheader')
+        .map(header => header.textContent);
 
-      expect(headers()).not.toContain('mailLog.bounceReason');
-      expect(screen.queryByRole('cell', reason)).toBeNull();
+      expect(headers).toContain('mailLog.error');
+      expect(headers).not.toContain('mailLog.bounceReason');
+      expect(
+        screen.getByRole('cell', {
+          name: 'bad_mailbox: 554 5.7.1 User unknown',
+        })
+      ).toBeTruthy();
+    });
 
-      fireEvent.click(
-        screen.getByRole('button', { name: /columnConfigurator.title/ })
+    it('explains a mailbox that does not exist', () => {
+      showsLogs(log({ error: 'bad_mailbox: 554 5.7.1 User unknown' }));
+      renderPage();
+
+      expect(explanationOf('bad_mailbox: 554 5.7.1 User unknown')).toContain(
+        'mailLog.errorHelp.mailboxGone.cause'
       );
-      fireEvent.click(
-        screen.getByRole('menuitemcheckbox', { name: 'mailLog.bounceReason' })
-      );
-      fireEvent.keyDown(screen.getByRole('menu'), { key: 'Escape' });
+    });
 
-      expect(headers()).toContain('mailLog.bounceReason');
-      expect(screen.getByRole('cell', reason)).toBeTruthy();
+    it('explains a bounce by what the receiving server said, not by the sending setup', () => {
+      showsLogs(
+        log({ state: 'deferred', error: 'general: 451 4.7.1 Try again later' })
+      );
+      renderPage();
+
+      expect(explanationOf('general: 451 4.7.1 Try again later')).toContain(
+        'mailLog.errorHelp.bounce.cause'
+      );
     });
   });
 
