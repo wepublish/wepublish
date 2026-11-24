@@ -546,6 +546,16 @@ export function MailLogTable() {
             render: log => <MailErrorCell error={log.error} />,
             exportValue: log => log.error,
           },
+          {
+            // What the provider said about a bounce, word for word. Needed
+            // to tell a full mailbox from a missing one, rarely otherwise.
+            id: 'bounceReason',
+            defaultHidden: true,
+            label: t('mailLog.bounceReason'),
+            width: 320,
+            render: log => log.bounceReason ?? '—',
+            exportValue: log => log.bounceReason,
+          },
         ]}
       />
 

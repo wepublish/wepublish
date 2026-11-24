@@ -2641,6 +2641,8 @@ export type MailLogModel = {
   __typename?: 'MailLogModel';
   /** Letters only: the address the letter was sent to. */
   address?: Maybe<Scalars['String']['output']>;
+  /** What the mail provider said about a bounced or held-back mail: its bounce description and the receiving server's answer. Null when it said nothing. */
+  bounceReason?: Maybe<Scalars['String']['output']>;
   channel: MailChannel;
   createdAt: Scalars['DateTime']['output'];
   /** Why a rejected mail could not be delivered. */
