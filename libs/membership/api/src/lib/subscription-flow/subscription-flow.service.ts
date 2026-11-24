@@ -48,6 +48,9 @@ export type EarliestDay = {
   periodicity: PaymentPeriodicity | null;
 };
 
+/** Matches no subscription — Prisma documents `in: []` as an empty result. */
+const NO_SUBSCRIPTION: Prisma.SubscriptionWhereInput = { id: { in: [] } };
+
 /**
  * The subscriptions the conditions of a flow match: those of its member plan,
  * or of every plan for a flow for all plans. Which of them a plan's own flow
@@ -71,9 +74,12 @@ export function subscriptionsOfFlow(
     ...(narrows(flow.periodicities) && {
       paymentPeriodicity: { in: flow.periodicities },
     }),
-    ...(narrows(flow.autoRenewal) && {
-      OR: flow.autoRenewal.map(autoRenew => ({ autoRenew })),
-    }),
+    // A boolean has no `in` filter, and Prisma drops an empty `OR` inside a
+    // list instead of matching nothing.
+    ...(narrows(flow.autoRenewal) &&
+      (flow.autoRenewal.length ?
+        { OR: flow.autoRenewal.map(autoRenew => ({ autoRenew })) }
+      : NO_SUBSCRIPTION)),
   };
 }
 
