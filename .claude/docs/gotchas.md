@@ -771,8 +771,13 @@ the top margin and Pingen rejects the letter; a fixed box offset into the
 margin area is clipped by Chromium. The band cap of 40mm (`LAYOUT_BAND_MAX_MM`)
 keeps a header out of the franking zone, whose bottom edge is at 87.5mm.
 
-**Load-bearing:** `margin: 0` in the `@page` rule, the thead/tfoot spacer rows,
-and `CONTENT_TOP_MM - headerSpace` for the body padding.
+The same spacers are the page margin of every page: they are never lower than
+`PAGE_MARGIN_MM` (20mm), also without stationery or with a band of height 0.
+At 0 a letter running onto a second page started at the very edge of the sheet
+there, which Pingen holds back («Validation failed»).
+
+**Load-bearing:** `margin: 0` in the `@page` rule, the thead/tfoot spacer rows
+and their floor, and `CONTENT_TOP_MM - headerSpace` for the body padding.
 
 Pinned by `libs/letter/api/src/lib/letter-renderer.spec.ts`.
 
