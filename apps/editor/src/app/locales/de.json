@@ -1698,6 +1698,7 @@
         "letterLayoutHelp": "Kopf- und Fusszeile"
       },
       "editor": {
+        "bandCutOff": "Unterhalb dieser Linie wird nicht gedruckt",
         "undo": "Rückgängig",
         "redo": "Wiederholen",
         "bold": "Fett",
@@ -5574,7 +5575,7 @@
       "footerHeight": "Höhe Fusszeile (mm)",
       "headerHeightHint": "Höchstens 40 mm, damit die Kopfzeile nicht in die Frankierzone reicht. Sie erscheint auf jeder Seite; 0 mm lässt sie weg.",
       "footerHeightHint": "Höchstens 40 mm. Der Brieftext hält so viel Abstand zum unteren Rand. Die Fusszeile erscheint auf jeder Seite; 0 mm lässt sie weg.",
-      "htmlHint": "HTML mit Platzhaltern wie {{user_firstName}}. Grössen in mm angeben, Bilder mit fester Breite und Höhe.",
+      "htmlHint": "Visuell bearbeiten oder als HTML, beide mit Platzhaltern wie {{user_firstName}}. Was unter der roten Linie steht, wird nicht gedruckt. In HTML Grössen in mm angeben, Bilder mit fester Breite und Höhe.",
       "insertImage": "Bild einfügen",
       "preview": "Vorschau",
       "previewTitle": "Musterbrief auf diesem Briefpapier",
