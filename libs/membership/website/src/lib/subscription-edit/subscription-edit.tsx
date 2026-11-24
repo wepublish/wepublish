@@ -7,6 +7,7 @@ import {
   FullPaymentMethodFragment,
   FullSubscriptionFragment,
   MemberPlanListDocument,
+  PaymentPeriodicity,
 } from '@wepublish/website/api';
 import {
   BuilderSubscriptionListProps,
@@ -46,6 +47,7 @@ const RENEWAL_ACTIONS: readonly SubscriptionAction[] = [
   'extend',
   'reactivate',
   'revertUpgrade',
+  'switchToYearly',
   'cancel',
 ];
 
@@ -150,6 +152,7 @@ type SubscriptionEditDetailsProps = {
   | 'onExtend'
   | 'onChangePaymentMethod'
   | 'onCancelPaymentMethodChange'
+  | 'onSwitchPeriodicity'
 >;
 
 function SubscriptionEditDetails({
@@ -162,6 +165,7 @@ function SubscriptionEditDetails({
   onExtend,
   onChangePaymentMethod,
   onCancelPaymentMethodChange,
+  onSwitchPeriodicity,
 }: SubscriptionEditDetailsProps) {
   const {
     meta: { locale },
@@ -217,6 +221,11 @@ function SubscriptionEditDetails({
     extend: async () => await onExtend?.(id),
     changePaymentMethod,
     cancelPaymentMethodChange: onCancelPaymentMethodChange,
+    switchPeriodicity:
+      onSwitchPeriodicity ?
+        async (paymentPeriodicity: PaymentPeriodicity) =>
+          await onSwitchPeriodicity(id, paymentPeriodicity)
+      : undefined,
     paymentMethodLabel: (method: FullPaymentMethodFragment) =>
       paymentMethodLabel(t, method),
   };

@@ -4,6 +4,7 @@ import {
   mockAvailablePaymentMethod,
   mockMemberPlan,
   mockPaymentMethod,
+  mockPeriodicityPrice,
   mockSubscriptionDeactivation,
   renderWithProviders,
 } from '@wepublish/mocks/website';
@@ -342,6 +343,127 @@ describe('SubscriptionActions', () => {
 
       await user.click(within(dialog).getByRole('button', { name: 'Weiter' }));
       expect(changePaymentMethod).toHaveBeenCalledWith('card');
+    });
+  });
+
+  describe('switching to yearly payments', () => {
+    const monthlyPlan = mockMemberPlan({
+      periodicityPricing: [
+        mockPeriodicityPrice({
+          periodicity: PaymentPeriodicity.Monthly,
+          amountMin: 1000,
+        }),
+      ],
+    });
+    const monthly = subscriptionFixture(
+      { memberPlan: monthlyPlan, paymentMethod: mockPaymentMethod() },
+      {
+        paymentPeriodicity: PaymentPeriodicity.Monthly,
+        monthlyAmount: 1000,
+        paidUntil: '2032-01-01T00:00:00.000Z',
+        switchablePeriodicities: [
+          PaymentPeriodicity.Quarterly,
+          PaymentPeriodicity.Yearly,
+        ],
+      }
+    );
+    const switchPeriodicity = vi.fn(async () => undefined);
+
+    beforeEach(() => switchPeriodicity.mockClear());
+
+    const switchButton = () =>
+      screen.queryByRole('button', { name: t('subscription.switchToYearly') });
+
+    it('is offered when the subscription can switch to yearly', () => {
+      renderActions({ ...monthly, switchPeriodicity });
+
+      expect(switchButton()).toBeInTheDocument();
+    });
+
+    it('is not offered when yearly is not among the periodicities to switch to', () => {
+      renderActions({
+        ...monthly,
+        switchablePeriodicities: [PaymentPeriodicity.Quarterly],
+        switchPeriodicity,
+      });
+
+      expect(switchButton()).toBeNull();
+    });
+
+    it('is not offered without a way to switch', () => {
+      renderActions({ ...monthly });
+
+      expect(switchButton()).toBeNull();
+    });
+
+    it('is not offered for a cancelled subscription', () => {
+      renderActions({
+        ...monthly,
+        deactivation: mockSubscriptionDeactivation(),
+        switchPeriodicity,
+      });
+
+      expect(switchButton()).toBeNull();
+    });
+
+    it('stays out of the immediate actions', () => {
+      renderActions({
+        ...monthly,
+        switchPeriodicity,
+        actions: IMMEDIATE_ACTIONS,
+      });
+
+      expect(switchButton()).toBeNull();
+    });
+
+    it('says from when and what the reader pays, then switches', async () => {
+      renderActions({ ...monthly, switchPeriodicity });
+
+      await userEvent.click(switchButton()!);
+      const dialog = await screen.findByRole('dialog');
+
+      expect(
+        within(dialog).getByText(t('subscription.switchToYearlyTitle'))
+      ).toBeInTheDocument();
+      expect(dialog).toHaveTextContent('CHF 120.-');
+      expect(dialog).toHaveTextContent('CHF 10.-');
+      expect(dialog).toHaveTextContent('01.01.2032');
+      expect(dialog).not.toHaveTextContent(
+        t('subscription.switchToYearlyRaised')
+      );
+
+      await userEvent.click(
+        within(dialog).getByRole('button', {
+          name: t('subscription.switchToYearlySubmit'),
+        })
+      );
+
+      expect(switchPeriodicity).toHaveBeenCalledWith(PaymentPeriodicity.Yearly);
+    });
+
+    it('tells the reader when the yearly minimum raises the amount', async () => {
+      renderActions({
+        ...monthly,
+        memberPlan: mockMemberPlan({
+          periodicityPricing: [
+            mockPeriodicityPrice({
+              periodicity: PaymentPeriodicity.Monthly,
+              amountMin: 1000,
+            }),
+            mockPeriodicityPrice({
+              periodicity: PaymentPeriodicity.Yearly,
+              amountMin: 15000,
+            }),
+          ],
+        }),
+        switchPeriodicity,
+      });
+
+      await userEvent.click(switchButton()!);
+      const dialog = await screen.findByRole('dialog');
+
+      expect(dialog).toHaveTextContent('CHF 150.-');
+      expect(dialog).toHaveTextContent(t('subscription.switchToYearlyRaised'));
     });
   });
 });

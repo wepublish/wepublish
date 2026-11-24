@@ -25,6 +25,7 @@ export const SubscriptionList = ({
   onExtend,
   onChangePaymentMethod,
   onCancelPaymentMethodChange,
+  onSwitchPeriodicity,
   className,
   subscribeUrl,
 }: BuilderSubscriptionListProps) => {
@@ -61,6 +62,12 @@ export const SubscriptionList = ({
             : undefined
           }
           cancelPaymentMethodChange={onCancelPaymentMethodChange}
+          switchPeriodicity={
+            onSwitchPeriodicity ?
+              async paymentPeriodicity =>
+                await onSwitchPeriodicity(subscription.id, paymentPeriodicity)
+            : undefined
+          }
           openInvoiceTotal={
             invoices.data?.userInvoices.find(
               invoice =>

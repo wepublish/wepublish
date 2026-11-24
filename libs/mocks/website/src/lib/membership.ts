@@ -186,6 +186,7 @@ export const mockSubscription = ({
   properties: [],
   pendingPaymentMethodChange: null,
   canRenewPaymentMethod: false,
+  switchablePeriodicities: [],
   memberPlan,
   paymentMethod,
   monthlyAmount,

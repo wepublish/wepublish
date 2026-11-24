@@ -17,6 +17,7 @@ export * from './lib/subscription/has-subscription/has-subscription.resolver';
 export * from './lib/upgrade-subscription/upgrade-subscription.model';
 export * from './lib/upgrade-subscription/upgrade-subscription.resolver';
 export * from './lib/upgrade-subscription/upgrade-subscription.module';
+export * from './lib/periodicity-switch/periodicity-switch.module';
 
 export * from './lib/legacy/member-context';
 export * from './lib/legacy/member-context.service';
