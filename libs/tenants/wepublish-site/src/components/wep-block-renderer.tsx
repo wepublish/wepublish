@@ -28,6 +28,7 @@ import { Feature, isFeature } from './feature/feature';
 import { Hero, isHero } from './hero/hero';
 import { isLatestNews } from './latest-news/latest-news';
 import { isLogoBand } from './logo-band/logo-band';
+import { isMediaList } from './media-list/media-list';
 import { isNetworkNews } from './network-news/network-news';
 import { isOffers } from './offers/offers';
 import { isTeaserCards } from './teaser-cards/teaser-cards';
@@ -136,6 +137,7 @@ export const WepBlockRenderer = (props: BuilderBlockRendererProps) => {
               isLatestNews(block) ||
               isNetworkNews(block) ||
               isEventList(block) ||
+              isMediaList(block) ||
               isOffers(block) ||
               isPlainBreakBlock(block) ||
               isTitleBlock(block) ||

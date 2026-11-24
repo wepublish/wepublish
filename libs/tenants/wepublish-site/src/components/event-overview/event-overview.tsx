@@ -1,7 +1,7 @@
 import { CSSObject } from '@emotion/react';
 import styled from '@emotion/styled';
 import { FullEventFragment } from '@wepublish/website/api';
-import { Link, useWebsiteBuilder } from '@wepublish/website/builder';
+import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { useRouter } from 'next/router';
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -14,6 +14,7 @@ import {
 import { BlockHeaderTitle } from '../block-header';
 import { EventListEvents, EventRow } from '../event-list/event-list';
 import { formatEventDate } from '../event-list/format-event-date';
+import { PlainList, PlainListEntry } from '../plain-list/plain-list';
 
 export const pastEventsPerPage = 10;
 
@@ -56,48 +57,6 @@ export const NoEvents = styled('p')`
   margin: 0;
 `;
 
-// The past events as a plain list, separated by grey lines
-export const PastEventList = styled('div')`
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-`;
-
-export const PastEvent = styled('article')`
-  & + & {
-    border-top: 1px solid #888888;
-    margin-top: 25px;
-    padding-top: 25px;
-
-    ${({ theme }) => theme.breakpoints.up('md')} {
-      margin-top: 35px;
-      padding-top: 35px;
-    }
-  }
-
-  a,
-  a:hover {
-    display: grid;
-    gap: 15px;
-    color: inherit;
-    text-decoration: none;
-  }
-`;
-
-export const PastEventTitle = styled('h3')`
-  ${designText.h4 as CSSObject}
-  margin: 0;
-  hyphens: manual;
-`;
-
-export const PastEventDetails = styled('p')`
-  ${designText.text as CSSObject}
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0 20px;
-  margin: 0;
-  color: ${({ theme }) => theme.palette.primary.dark};
-`;
-
 const endOf = ({ startsAt, endsAt }: FullEventFragment) =>
   new Date(endsAt ?? startsAt);
 
@@ -105,20 +64,17 @@ const byStart = (a: FullEventFragment, b: FullEventFragment) =>
   new Date(a.startsAt).getTime() - new Date(b.startsAt).getTime();
 
 const PastEventEntry = ({ event }: { event: FullEventFragment }) => {
-  const titleId = useId();
   const { locale } = useRouter();
 
   return (
-    <PastEvent aria-labelledby={titleId}>
-      <Link href={event.url}>
-        <PastEventTitle id={titleId}>{event.name}</PastEventTitle>
-
-        <PastEventDetails>
-          <span>{formatEventDate(event.startsAt, event.endsAt, locale)}</span>
-          {event.location && <span>{event.location}</span>}
-        </PastEventDetails>
-      </Link>
-    </PastEvent>
+    <PlainListEntry
+      href={event.url}
+      title={event.name}
+      details={[
+        formatEventDate(event.startsAt, event.endsAt, locale),
+        event.location,
+      ]}
+    />
   );
 };
 
@@ -199,14 +155,14 @@ export const WepEventOverview = ({
             {t('eventOverview.past')}
           </BlockHeaderTitle>
 
-          <PastEventList>
+          <PlainList>
             {pastOnPage.map(event => (
               <PastEventEntry
                 key={event.id}
                 event={event}
               />
             ))}
-          </PastEventList>
+          </PlainList>
 
           {pageCount > 1 && (
             <ArticleOverviewPagination>

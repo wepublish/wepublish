@@ -7,6 +7,7 @@ import { EventList, isEventList } from '../event-list/event-list';
 import { HeroLinks, isHeroLinks } from '../hero/hero-links';
 import { isLatestNews, LatestNews } from '../latest-news/latest-news';
 import { isLogoBand, LogoBand } from '../logo-band/logo-band';
+import { isMediaList, MediaList } from '../media-list/media-list';
 import { isNetworkNews, NetworkNews } from '../network-news/network-news';
 import { isOffers, Offers } from '../offers/offers';
 import { isTeaserCards, TeaserCards } from '../teaser-cards/teaser-cards';
@@ -37,6 +38,10 @@ export const WepBaseTeaserSlots = cond([
   [
     isEventList,
     (props: BuilderTeaserSlotsBlockProps) => <EventList {...props} />,
+  ],
+  [
+    isMediaList,
+    (props: BuilderTeaserSlotsBlockProps) => <MediaList {...props} />,
   ],
   [
     isNetworkNews,
