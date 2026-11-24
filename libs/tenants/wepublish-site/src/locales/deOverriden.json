@@ -14,5 +14,34 @@
   },
   "offers": {
     "readMore": "Mehr erfahren"
+  },
+  "articleList": {
+    "by": "von",
+    "overviewPreTitle": "Aus dem We.Publish Ökosystem",
+    "overviewTitle": "Aktuelles"
+  },
+  "article": {
+    "share": "Teilen"
+  },
+  "author": {
+    "articlesBy": "Beiträge von {name}"
+  },
+  "eventOverview": {
+    "preTitle": "Aus dem We.Publish Ökosystem",
+    "title": "Events",
+    "lead": "Wir organisieren regelmässig Austauschformate, Camps und Workshops für Medienschaffende und alle, die unabhängigen Journalismus mitgestalten wollen.",
+    "upcoming": "Kommende Events",
+    "noUpcoming": "Zurzeit sind keine Events geplant.",
+    "past": "Vergangene Events"
+  },
+  "eventPage": {
+    "preTitle": "Event",
+    "saveCalendarFile": "Im Kalender speichern (.ics)",
+    "addToGoogleCalendar": "Zu Google Kalender hinzufügen"
+  },
+  "teamPage": {
+    "preTitle": "Die Menschen hinter We.Publish",
+    "title": "Team",
+    "lead": "We.Publish wird von einem interdisziplinären Team mit langjähriger Erfahrung in Journalismus, Technologie, Design und Organisationsentwicklung getragen."
   }
 }

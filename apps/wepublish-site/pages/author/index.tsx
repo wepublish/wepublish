@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client/react';
-import { AuthorListContainer } from '@wepublish/author/website';
+import { WepTeamPage } from '@wepublish/tenant/wepublish-site';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
   AuthorListDocument,
@@ -10,89 +10,29 @@ import {
   addClientCacheToProps,
   getApiClient,
 } from '@wepublish/website/api';
-import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
-import Head from 'next/head';
-import { useRouter } from 'next/router';
-import { useMemo } from 'react';
-import { z } from 'zod';
 
-const take = 25;
-
-const pageSchema = z.object({
-  page: z.coerce.number().gte(1).optional(),
-});
+// The whole team on one page
+const variables = {
+  sort: AuthorSort.Name,
+  order: SortOrder.Ascending,
+  take: 100,
+  skip: 0,
+  filter: {
+    hideOnTeam: false,
+  },
+};
 
 export default function AuthorList() {
-  const {
-    elements: { Pagination },
-  } = useWebsiteBuilder();
-
-  const { query, replace } = useRouter();
-  const { page } = pageSchema.parse(query);
-
-  const variables = useMemo(
-    () => ({
-      sort: AuthorSort.Name,
-      order: SortOrder.Ascending,
-      take,
-      skip: ((page ?? 1) - 1) * take,
-      filter: {
-        hideOnTeam: false,
-      },
-    }),
-    [page]
-  );
-
   const { data } = useQuery(AuthorListDocument, {
-    fetchPolicy: 'cache-only',
+    fetchPolicy: 'cache-first',
     variables,
   });
 
-  const pageCount = useMemo(() => {
-    if (data?.authors.totalCount && data?.authors.totalCount > take) {
-      return Math.ceil(data.authors.totalCount / take);
-    }
-
-    return 1;
-  }, [data?.authors.totalCount]);
-
-  const canonicalUrl = '/author';
-
-  return (
-    <>
-      <AuthorListContainer variables={variables} />
-
-      {pageCount > 1 && (
-        <>
-          <Head>
-            <link
-              rel="canonical"
-              key="canonical"
-              href={canonicalUrl}
-            />
-          </Head>
-
-          <Pagination
-            page={page ?? 1}
-            count={pageCount}
-            onChange={(_, value) =>
-              replace(
-                {
-                  query: { ...query, page: value },
-                },
-                undefined,
-                { shallow: true, scroll: true }
-              )
-            }
-          />
-        </>
-      )}
-    </>
-  );
+  return <WepTeamPage authors={data?.authors.nodes ?? []} />;
 }
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getStaticProps = (async () => {
   if (!getApiUrl()) {
     return { props: {}, revalidate: 1 };
   }
@@ -101,15 +41,7 @@ export const getStaticProps: GetStaticProps = async () => {
   await Promise.all([
     client.query({
       query: AuthorListDocument,
-      variables: {
-        take,
-        skip: 0,
-        sort: AuthorSort.Name,
-        order: SortOrder.Ascending,
-        filter: {
-          hideOnTeam: false,
-        },
-      },
+      variables,
     }),
     client.query({
       query: NavigationListDocument,
@@ -119,10 +51,8 @@ export const getStaticProps: GetStaticProps = async () => {
     }),
   ]);
 
-  const props = addClientCacheToProps(client, {});
-
   return {
-    props,
-    revalidate: 60, // every 60 seconds
+    props: addClientCacheToProps(client, {}),
+    revalidate: 60,
   };
-};
+}) satisfies GetStaticProps;

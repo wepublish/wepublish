@@ -4,6 +4,7 @@ import { de } from 'date-fns/locale';
 
 import { WepBlockStyles } from './components/block-styles/wep-block-styles';
 import { WepBreakBlock } from './components/break-blocks/wep-break-block';
+import { WepEvent } from './components/event/wep-event';
 import { WepBaseTeaserSlots } from './components/teaser-layouts/wep-base-teaser-slots';
 import { WepBaseTeaser } from './components/teasers/wep-base-teaser';
 import { WepArticle } from './components/wep-article';
@@ -14,7 +15,9 @@ import { WepLink } from './components/wep-link';
 import { WepNavbar } from './components/wep-navbar';
 import { WepPage } from './components/wep-page';
 import { WepQuoteBlock } from './components/wep-quote-block';
+import { WepRichTextBlock } from './components/wep-rich-text-block';
 import { WepTenantGlobalStyles } from './components/wep-tenant-global-styles';
+import { WepTitleBlock } from './components/wep-title-block';
 import deOverriden from './locales/deOverriden.json';
 import frOverriden from './locales/frOverriden.json';
 import theme from './theme';
@@ -33,6 +36,7 @@ export const wepublishSiteTenant: WebsiteTenantConfig = {
     Navbar: WepNavbar,
     ContentWrapper: WepContentWrapper,
     Article: WepArticle,
+    Event: WepEvent,
     Page: WepPage,
     blocks: {
       Blocks: WepBlocks,
@@ -41,6 +45,8 @@ export const wepublishSiteTenant: WebsiteTenantConfig = {
       TeaserSlots: WepBaseTeaserSlots,
       Quote: WepQuoteBlock,
       Break: WepBreakBlock,
+      Title: WepTitleBlock,
+      RichText: WepRichTextBlock,
     },
     elements: { Link: WepLink },
     date: { format: dateFormatter },

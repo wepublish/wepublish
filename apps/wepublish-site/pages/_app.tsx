@@ -15,7 +15,6 @@ import { wepublishSiteTenant } from '@wepublish/tenant/wepublish-site';
 import {
   authLink,
   getWebsiteShell,
-  initWePublishTranslator,
   WebsiteShellProps,
   withJwtHandler,
   withSessionProvider,
@@ -33,6 +32,7 @@ import {
   createWithApiClient,
 } from '@wepublish/website/api';
 import { setDefaultOptions } from 'date-fns';
+import i18next from 'i18next';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -42,16 +42,14 @@ import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
 import { localizeSlug } from '../src/localize-slug';
+import { setUpTranslations, syncPageLanguage } from '../src/page-language';
 
 setDefaultOptions({
   locale: wepublishSiteTenant.dateLocale,
 });
 
-initWePublishTranslator(
-  wepublishSiteTenant.translations.overrides?.[
-    wepublishSiteTenant.translations.lng
-  ]
-);
+// The texts of both languages, the page shows those of its own (see below)
+void setUpTranslations(wepublishSiteTenant.translations.overrides ?? {});
 z.setErrorMap(zodI18nMap);
 
 const Spacer = styled('div')`
@@ -97,6 +95,8 @@ function CustomApp({
   const siteTitle = wepublishSiteTenant.builder.meta?.siteTitle;
   const router = useRouter();
   const { locale } = router;
+
+  syncPageLanguage(i18next, locale);
 
   const cache = emotionCache ?? createEmotionCache();
   cache.compat = true;

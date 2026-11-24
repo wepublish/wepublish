@@ -2,6 +2,7 @@ import { css, useTheme } from '@emotion/react';
 import {
   BlockRenderer,
   isRichTextBlock,
+  isTitleBlock,
   isYouTubeVideoBlock,
 } from '@wepublish/block-content/website';
 import { ImageContext } from '@wepublish/image/website';
@@ -16,6 +17,7 @@ import { useRouter } from 'next/router';
 import { anyPass, cond } from 'ramda';
 import { createContext, JSX, memo, useContext, useMemo } from 'react';
 
+import { isArticleList } from './article-list/article-list';
 import {
   AttentionCatcher,
   isAttentionCatcher,
@@ -31,10 +33,32 @@ import { isOffers } from './offers/offers';
 import { isTeaserCards } from './teaser-cards/teaser-cards';
 import { MainSpacer } from './wep-main-spacer';
 
-/** The block after the one being rendered, e.g. to know that a text is the title of a video */
-const NextBlockContext = createContext<FullBlockFragment | undefined>(
-  undefined
-);
+/** All blocks of the page and the position of the one being rendered, e.g. to know that a text is the title of a video */
+const BlockPositionContext = createContext<{
+  blocks: FullBlockFragment[];
+  index: number;
+}>({ blocks: [], index: 0 });
+
+const isFeatureWithImage = (block: FullBlockFragment) =>
+  isFeature(block) && !!block.image;
+
+/**
+ * How many features with image come right before the one at `index`: features
+ * in a row alternate their image, any other block (also a feature without image)
+ * starts from the left again.
+ */
+export const featuresBefore = (blocks: FullBlockFragment[], index: number) => {
+  let count = 0;
+
+  while (
+    index - count - 1 >= 0 &&
+    isFeatureWithImage(blocks[index - count - 1])
+  ) {
+    count++;
+  }
+
+  return count;
+};
 
 /** A video and the text right before it (its title) are as wide as the hero */
 export const isVideoOrItsTitle = (
@@ -44,8 +68,15 @@ export const isVideoOrItsTitle = (
   isYouTubeVideoBlock(block) ||
   (isRichTextBlock(block) && !!nextBlock && isYouTubeVideoBlock(nextBlock));
 
+/** A text to read (not the title of a video) gets the narrowest column, so that its lines stay short */
+export const isReadingText = (
+  block: FullBlockFragment,
+  nextBlock?: FullBlockFragment
+) => isRichTextBlock(block) && !isVideoOrItsTitle(block, nextBlock);
+
 export const WepBlockRenderer = (props: BuilderBlockRendererProps) => {
-  const nextBlock = useContext(NextBlockContext);
+  const { blocks, index } = useContext(BlockPositionContext);
+  const nextBlock = blocks[index + 1];
   const { asPath } = useRouter();
   const isHomePage = asPath === '/' || asPath === '/de' || asPath === '/fr';
   const theme = useTheme();
@@ -54,18 +85,45 @@ export const WepBlockRenderer = (props: BuilderBlockRendererProps) => {
     () =>
       cond([
         [isHero, (block: BuilderBreakBlockProps) => <Hero {...block} />],
-        [isFeature, (block: BuilderBreakBlockProps) => <Feature {...block} />],
+        [
+          isFeature,
+          (block: BuilderBreakBlockProps) => (
+            <Feature
+              {...block}
+              imageRight={featuresBefore(blocks, index) % 2 === 1}
+            />
+          ),
+        ],
         [
           isAttentionCatcher,
           (block: BuilderBreakBlockProps) => <AttentionCatcher {...block} />,
         ],
       ]) as (block: FullBlockFragment) => JSX.Element | undefined,
-    []
+    [blocks, index]
   );
 
   const styles = useMemo(
     () =>
       cond([
+        [
+          (block: FullBlockFragment) => isReadingText(block, nextBlock),
+          // 750 of the 1273px of the hero columns in the design, in the middle
+          () => css`
+            ${theme.breakpoints.up('md')} {
+              grid-template-columns: minmax(
+                0,
+                calc(
+                  min(100%, ${theme.breakpoints.values['lg']}px) * 750 / 1273
+                )
+              ) !important;
+              justify-content: center;
+            }
+
+            p {
+              hyphens: manual;
+            }
+          `,
+        ],
         [
           anyPass([block => true]),
           (block: FullBlockFragment) =>
@@ -80,6 +138,8 @@ export const WepBlockRenderer = (props: BuilderBlockRendererProps) => {
               isEventList(block) ||
               isOffers(block) ||
               isPlainBreakBlock(block) ||
+              isTitleBlock(block) ||
+              isArticleList(block) ||
               isVideoOrItsTitle(block, nextBlock)
             ) ?
               css``
@@ -133,14 +193,14 @@ export const WepBlocks = memo(({ blocks, type }: BuilderBlocksProps) => {
             : {}
           }
         >
-          <NextBlockContext.Provider value={blocks[index + 1]}>
+          <BlockPositionContext.Provider value={{ blocks, index }}>
             <Renderer
               block={block}
               index={index}
               count={blocks.length}
               type={type}
             />
-          </NextBlockContext.Provider>
+          </BlockPositionContext.Provider>
         </ImageContext.Provider>
       ))}
     </>

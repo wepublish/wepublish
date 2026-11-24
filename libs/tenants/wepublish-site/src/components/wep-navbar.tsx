@@ -22,6 +22,9 @@ import { contentWidth, extraColumn } from './page-columns';
 // Below this breakpoint the links move into a menu behind a button
 const desktop = 'lg';
 
+// Large screens get a higher bar with more room between its parts
+const wide = '@media (min-width: 1440px)';
+
 export const NavbarWrapper = styled('nav')`
   position: relative;
   z-index: 10;
@@ -45,6 +48,12 @@ export const NavbarBar = styled(Container)`
         ${({ theme }) => extraColumn(theme, contentWidth(theme), '100%')}
     );
   }
+
+  ${wide} {
+    gap: 80px;
+    padding-top: 70px;
+    padding-bottom: 40px;
+  }
 `;
 
 const aboveMenu = css`
@@ -55,6 +64,8 @@ const aboveMenu = css`
 export const NavbarHomeLink = styled('a')`
   ${aboveMenu}
   display: block;
+  // On the smallest phones the logo gets narrower instead of pushing the buttons out
+  min-width: 0;
   line-height: 0;
   margin-right: auto;
 
@@ -66,6 +77,7 @@ export const NavbarHomeLink = styled('a')`
 
 export const NavbarLogo = styled('img')`
   width: 140px;
+  max-width: 100%;
   height: auto;
 
   ${({ theme }) => theme.breakpoints.up(desktop)} {
@@ -96,6 +108,10 @@ export const NavbarMenu = styled('div', {
     overflow: visible;
     background-color: transparent;
   }
+
+  ${wide} {
+    gap: 80px;
+  }
 `;
 
 export const NavbarLinks = styled('ul')`
@@ -108,6 +124,10 @@ export const NavbarLinks = styled('ul')`
   ${({ theme }) => theme.breakpoints.up(desktop)} {
     flex-direction: row;
     gap: 50px;
+  }
+
+  ${wide} {
+    gap: 70px;
   }
 `;
 
