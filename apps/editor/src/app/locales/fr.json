@@ -3310,6 +3310,8 @@
           "Expired": "Expiré"
         },
         "subscriptionWithStatus": "{{name}} – {{status}}",
+        "subscriptionWithStatusAndIssues": "{{name}} – {{status}} ({{received}} / {{entitled}} numéros)",
+        "printIssuesOwed": "Numéros dus",
         "modifiedAt": "Dernière modification",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Nom",
@@ -3419,6 +3421,12 @@
       "paidUntilInfo": "Défini automatiquement dès qu’une facture est payée. L’abonnement est payé jusqu’à cette date."
     },
     "userSubscriptionList": {
+      "printIssuesReceived": "{{received}} / {{entitled}} numéros",
+      "printIssue": "{{label}} · {{date}} · {{batch}}, remise le {{deliveredAt}}",
+      "printList": "Liste d'impression",
+      "printSupplement": "Envoi complémentaire {{number}}",
+      "printIssueCountsAs": "compte {{count}}×",
+      "printIssues": "Numéros imprimés reçus",
       "periodRange": "Période",
       "table": {
         "active": "Actif",

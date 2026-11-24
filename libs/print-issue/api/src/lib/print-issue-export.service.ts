@@ -1,26 +1,21 @@
 import { Injectable } from '@nestjs/common';
-import { PrintIssueStatus, PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { BexioPrintSourceService } from './bexio/bexio-print-source.service';
 import { runExport, type ExportResult } from './export/run';
 import { loadMembers } from './members/load';
 import type { BexioKind } from './bexio/parse';
 import type { PrintExportOptions } from './options';
 import { dbDateToYmd } from './rules/dates';
-import {
-  PRINT_ISSUE_COUNTINGS,
-  type PrintIssueCounting,
-  type QuotaConfig,
-} from './rules/entitlement';
 import { readIssueNumbering } from './numbering-setting';
+import { readQuota } from './quota-setting';
 import { issueLabel, type IssueNumbering } from './rules/issue';
 
-export const PRINT_ISSUES_PER_YEAR_SETTING = 'printIssuesPerYear';
-export const PRINT_ISSUE_COUNTING_SETTING = 'printIssueCounting';
+export {
+  PRINT_ISSUE_COUNTING_SETTING,
+  PRINT_ISSUES_PER_YEAR_SETTING,
+  printIssueCountingOf,
+} from './quota-setting';
 export const PRINT_BEXIO_KINDS_SETTING = 'printBexioKinds';
-
-/** The counting as stored; anything else counts per period, as before the setting. */
-export const printIssueCountingOf = (value: unknown): PrintIssueCounting =>
-  PRINT_ISSUE_COUNTINGS.find(counting => counting === value) ?? 'perPeriod';
 
 const isKind = (value: unknown): value is BexioKind => {
   const kind = value as Partial<BexioKind> | null;
@@ -76,7 +71,7 @@ export class PrintIssueExportService {
   ): Promise<ExportResult> {
     const [quota, bexio, bexioKinds, bexioDelivered, numbering] =
       await Promise.all([
-        this.quota(),
+        readQuota(this.prisma),
         this.bexioSource.client(),
         this.bexioKinds(),
         this.bexioDelivered(),
@@ -146,35 +141,5 @@ export class PrintIssueExportService {
     });
 
     return bexioKindsOf(setting?.value);
-  }
-
-  /**
-   * The medium's issues per year (0 = owed copies off), how it counts copies,
-   * and the issues shipped before tracking.
-   */
-  private async quota(): Promise<QuotaConfig> {
-    const [setting, countingSetting, historic] = await Promise.all([
-      this.prisma.setting.findUnique({
-        where: { name: PRINT_ISSUES_PER_YEAR_SETTING },
-      }),
-      this.prisma.setting.findUnique({
-        where: { name: PRINT_ISSUE_COUNTING_SETTING },
-      }),
-      this.prisma.printIssue.findMany({
-        where: { status: PrintIssueStatus.historic },
-        select: { issueDate: true, countsAs: true },
-      }),
-    ]);
-    const issuesPerYear = Number(setting?.value ?? 0);
-
-    return {
-      issuesPerYear:
-        Number.isFinite(issuesPerYear) && issuesPerYear > 0 ? issuesPerYear : 0,
-      historicIssues: historic.map(issue => ({
-        issueDate: dbDateToYmd(issue.issueDate),
-        countsAs: issue.countsAs,
-      })),
-      counting: printIssueCountingOf(countingSetting?.value),
-    };
   }
 }

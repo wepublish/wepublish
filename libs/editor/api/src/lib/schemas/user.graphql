@@ -66,6 +66,13 @@ fragment TinyUser on SensitiveDataUser {
     level
     since
   }
+  printIssuesOwed
+  printIssueProgress {
+    subscriptionId
+    received
+    entitled
+    relevant
+  }
 }
 
 query TinyUserList(
