@@ -2797,6 +2797,7 @@ export type MailLogRecipient = {
 
 export enum MailLogState {
   Accepted = 'accepted',
+  ActionRequired = 'actionRequired',
   Bounced = 'bounced',
   Canceled = 'canceled',
   Deferred = 'deferred',

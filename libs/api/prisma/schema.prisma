@@ -646,6 +646,11 @@ enum MailLogState {
   dispatched    @map("dispatched")
   undeliverable @map("undeliverable")
   canceled      @map("canceled")
+
+  // The print vendor took the letter and holds it until someone looks at it
+  // there, e.g. because its check of the pdf failed. Not a refusal: the
+  // letter exists at the vendor and must not be handed over a second time.
+  actionRequired @map("actionRequired")
 }
 
 enum MailChannel {

@@ -328,12 +328,25 @@ provider's webhook at `/letter-webhooks/<settingLetterProvider id>` (register
 that URL at Pingen, with the signing key from the integration form). The
 fallback is `LetterLogSyncService` (`libs/letter/api`), called by the mail
 log's `syncMailLogStates` mutation and by the nightly step `letterLogSync`: it
-asks the provider about letters still `submitted`/`accepted`, and about
-`dispatched` ones for 30 days after `sentDate` (returned post is reported
-late). One GET per letter, so the nightly limit (2000) is what bounds the
-calls. Webhook and poll share `shouldUpdateLetterLogState`: a state only moves
-forward, and `rejected` ranks with `accepted` because a Pingen issue can be
-resolved and the letter printed after all.
+asks the provider about letters still `submitted`/`accepted`/`actionRequired`,
+and about `dispatched` ones for 30 days after `sentDate` (returned post is
+reported late). One GET per letter, so the nightly limit (2000) is what bounds
+the calls. Webhook and poll share `shouldUpdateLetterLogState`: a state only
+moves forward, and `actionRequired` ranks with `accepted` because a Pingen
+issue can be resolved and the letter printed after all.
+
+`actionRequired` vs `rejected`: Pingen's `issues` webhook (and the polled
+statuses `action_required`/`invalid`) mean Pingen **has** the letter and holds
+it until someone deals with it there; `rejected` means it never got in (upload
+failed, no account, pdf not rendered). A letter Pingen no longer knows (404 on
+the poll) that was not printed yet becomes `canceled`: someone removed it there.
+Pingen keeps no track of duplicates, so the nightly `invoiceLetters` step
+(`postInvoiceLetter`) never uploads again what Pingen stores. It retries only
+uploads that failed outright, and, with the integration's «send letters
+automatically» on, replaces a held letter on a later night after
+`LetterSender.withdrawHeldLetter` re-read its status and deleted it at Pingen.
+With that setting off a held letter is left to the people confirming letters
+in Pingen.
 
 ### Template attachments (Word → pdf)
 

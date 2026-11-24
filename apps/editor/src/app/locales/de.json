@@ -5080,7 +5080,8 @@
           "rejected": "Abgelehnt",
           "dispatched": "Aufgegeben",
           "undeliverable": "Unzustellbar",
-          "canceled": "Storniert"
+          "canceled": "Storniert",
+          "actionRequired": "Handlung nötig"
         }
       },
       "audienceSummary": {
@@ -5245,6 +5246,11 @@
           "name": "Storniert",
           "meaning": "Der Brief wurde zurückgezogen, bevor er gedruckt wurde.",
           "next": "Nichts zu tun. Es wurde nichts gedruckt und nichts verrechnet."
+        },
+        "actionRequired": {
+          "name": "Handlung nötig",
+          "meaning": "Der Druckdienstleister hat den Brief angenommen, druckt ihn aber nicht: Er hält ihn zurück, bis sich jemand dort darum kümmert, zum Beispiel weil seine Prüfung des PDFs fehlgeschlagen ist. Der Brief liegt beim Druckdienstleister; den Grund nennt die Spalte «Fehler».",
+          "next": "Den Brief beim Druckdienstleister öffnen und ihn dort korrigieren, freigeben oder löschen. Der Status hier folgt von selbst. Nicht erneut senden: Das erzeugt beim Druckdienstleister ein Duplikat. Werden Briefe automatisch versendet, ersetzt We.Publish einen Rechnungsbrief in der folgenden Nacht selbst, sofern sich bis dahin niemand darum gekümmert hat."
         }
       },
       "channel": "Versand",
