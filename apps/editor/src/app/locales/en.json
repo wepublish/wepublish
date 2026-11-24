@@ -3875,6 +3875,7 @@
         "organisationId": "Organisation ID",
         "webhookSigningKey": "Webhook Signing Key",
         "autoSend": "Send letters automatically",
+        "autoSendInfo": "On: the print vendor prints and posts every letter as soon as it is handed over. If it holds a letter back because of a problem, We.Publish replaces the letter itself the following night, unless someone has dealt with it by then. Off: every letter waits at the print vendor until someone releases it there; a letter that is held back stays there until someone deals with it.",
         "placeholderEmailContains": "Placeholder email contains",
         "defaultAddressPosition": "Address window (automated letters)",
         "defaultDeliveryProduct": "Delivery (automated letters)",
