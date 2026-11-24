@@ -9918,6 +9918,20 @@ export type TwitterTweetBlockInput = {
   userID?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type UmamiAnalytics = {
+  __typename?: 'UmamiAnalytics';
+  enabled: Scalars['Boolean']['output'];
+  /** Search params removed from the url and referrer before they are sent to Umami. */
+  excludedSearchParams: Array<Scalars['String']['output']>;
+  key?: Maybe<Scalars['String']['output']>;
+};
+
+export type UmamiAnalyticsInput = {
+  enabled: Scalars['Boolean']['input'];
+  excludedSearchParams?: InputMaybe<Array<Scalars['String']['input']>>;
+  key?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type UnknownBlock = {
   __typename?: 'UnknownBlock';
   blockStyle?: Maybe<Scalars['String']['output']>;
@@ -10201,7 +10215,7 @@ export type WebsiteAnalytics = {
   googleTagManager: KeyEnabled;
   piwik: KeyEnabled;
   plausible: KeyEnabled;
-  umami: KeyEnabled;
+  umami: UmamiAnalytics;
 };
 
 export type WebsiteAnalyticsInput = {
@@ -10209,7 +10223,7 @@ export type WebsiteAnalyticsInput = {
   googleTagManager: KeyEnabledInput;
   piwik: KeyEnabledInput;
   plausible: KeyEnabledInput;
-  umami: KeyEnabledInput;
+  umami: UmamiAnalyticsInput;
 };
 
 /** A single-use grant the website redeems through createSessionWithJWT within a minute. */
