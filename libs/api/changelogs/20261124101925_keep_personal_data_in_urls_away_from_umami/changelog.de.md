@@ -6,4 +6,4 @@ actionRequired: false
 
 Unter *Website-Einstellungen → Analytics* hat der Umami-Bereich ein neues Feld **Erweitert**. Trage dort die Namen der URL-Parameter ein, die wegfallen sollen, etwa `mail`, `firstName` oder `lastName`. Sie werden aus der Seitenadresse und dem Referrer entfernt, bevor etwas an Umami geht. Alle anderen Parameter, wie die `utm_`-Kampagnenparameter, werden weiterhin erfasst.
 
-Die Liste ist optional: Solange sie leer ist, erfasst Umami alles genau wie bisher. Gross- und Kleinschreibung der Parameternamen zählt.
+Die Liste ist optional: Solange sie leer ist, erfasst Umami alles genau wie bisher. Gross- und Kleinschreibung der Parameternamen spielt keine Rolle.

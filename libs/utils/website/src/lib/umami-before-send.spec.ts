@@ -61,10 +61,12 @@ describe('umamiBeforeSendScript', () => {
     });
   });
 
-  it('only matches param names exactly', () => {
+  it('matches whole param names, ignoring case', () => {
     expect(
-      beforeSend('event', { url: '/abo?email=x&Mail=y&mail=z' })
-    ).toMatchObject({ url: '/abo?email=x&Mail=y' });
+      beforeSend('event', {
+        url: '/abo?email=x&Mail=y&mail=z&MAIL=w&FIRSTNAME=Ana',
+      })
+    ).toMatchObject({ url: '/abo?email=x' });
   });
 
   it('passes values it cannot parse through', () => {

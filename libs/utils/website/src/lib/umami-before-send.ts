@@ -7,8 +7,8 @@ export const umamiBeforeSendScript = (excludedSearchParams: string[]) =>
     if (typeof value !== 'string' || !value) return value;
     try {
       var url = new URL(value, location.origin);
-      var found = excluded.filter(function (name) {
-        return url.searchParams.has(name);
+      var found = Array.from(url.searchParams.keys()).filter(function (name) {
+        return excluded.indexOf(name.toLowerCase()) !== -1;
       });
       if (!found.length) return value;
       found.forEach(function (name) {
@@ -28,7 +28,7 @@ export const umamiBeforeSendScript = (excludedSearchParams: string[]) =>
     }
     return payload;
   };
-})(${escapeForScript(excludedSearchParams)});`;
+})(${escapeForScript(excludedSearchParams.map(name => name.toLowerCase()))});`;
 
 const escapeForScript = (value: unknown) =>
   JSON.stringify(value).replace(/</g, '\\u003c');
