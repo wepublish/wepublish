@@ -19,9 +19,10 @@
       "mobile": "Mobile",
       "desktop": "Desktop",
       "tablet": "Tablet",
-      "copyUrl": "Copy preview URL",
-      "urlCopied": "Preview URL copied to clipboard",
-      "urlCopyFailed": "Preview URL could not be copied",
+      "copyUrl": "Copy preview link",
+      "urlCopied": "Link copied. It opens this preview in the editor.",
+      "urlCopyFailed": "Preview link could not be copied",
+      "openInNewTab": "Open preview in a new tab",
       "loading": "Loading preview …"
     },
     "previewHandshake": {

@@ -1,5 +1,7 @@
+import styled from '@emotion/styled';
 import {
   BlockRenderer,
+  hasBlockStyle,
   isTeaserGridBlock,
   isTeaserListBlock,
 } from '@wepublish/block-content/website';
@@ -37,6 +39,16 @@ import {
   isLightBreak,
   isSponsoredBreak,
 } from '../break/bajour-break';
+
+// Same column as images. `&&` outranks the content wrapper's `& > *`,
+// which is inserted after this rule (emotion inserts child styles first).
+const WideBlock = styled('div')`
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    && {
+      grid-column: 2/12;
+    }
+  }
+`;
 
 export const BajourBlockRenderer = (props: BuilderBlockRendererProps) => {
   const {
@@ -95,8 +107,11 @@ export const BajourBlockRenderer = (props: BuilderBlockRendererProps) => {
 
   return (
     extraBlockMap(props.block) ??
-    (isNewsTeasers(props.block) ? <NewsBlock {...props.block} /> : null) ?? (
-      <BlockRenderer {...props} />
-    )
+    (isNewsTeasers(props.block) ? <NewsBlock {...props.block} /> : null) ??
+    (hasBlockStyle('Breit')(props.block) ?
+      <WideBlock>
+        <BlockRenderer {...props} />
+      </WideBlock>
+    : <BlockRenderer {...props} />)
   );
 };

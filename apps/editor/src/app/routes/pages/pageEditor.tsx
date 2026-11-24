@@ -92,8 +92,8 @@ import { copyLinkToClipboard } from '../../copyLink';
 import { LastSavedAt } from '../../lastSavedAt';
 import {
   PreviewControls,
-  PreviewDevice,
   PreviewFrame,
+  usePreviewState,
 } from '../../previewFrame';
 import { useAutosave } from '../../useAutosave';
 import { useAutosaveEnabled } from '../../useAutosaveEnabled';
@@ -157,8 +157,12 @@ function PageEditor() {
   const [restoringRevisionId, setRestoringRevisionId] = useState<string | null>(
     null
   );
-  const [isPreviewOpen, setPreviewOpen] = useState(false);
-  const [previewDevice, setPreviewDevice] = useState<PreviewDevice>('desktop');
+  const {
+    isPreviewOpen,
+    setPreviewOpen,
+    device: previewDevice,
+    setDevice: setPreviewDevice,
+  } = usePreviewState();
 
   const [publishedAt, setPublishedAt] = useState<Date>();
   const [metadata, setMetadata] = useState<PageMetadata>(emptyPageMetadata);
@@ -299,6 +303,17 @@ function PageEditor() {
     pageData?.page?.published ? pageData.page.url : undefined;
   const isPreviewDisabled = hasChanged || !id || !canPreview || !previewUrl;
   const showPreview = isPreviewOpen && !isPreviewDisabled;
+
+  const createPreviewToken = async () => {
+    const { data: jwtData } = await createJWT();
+
+    return jwtData?.createJWTForWebsiteLogin?.token;
+  };
+
+  const onPreviewSilence = () =>
+    enqueueSnackbar(t('previewHandshake.notResponding'), {
+      variant: 'warning',
+    });
 
   const isAuthorized = useAuthorisation(CanCreatePage.id);
 
@@ -662,6 +677,8 @@ function PageEditor() {
                       device={previewDevice}
                       onDeviceChange={setPreviewDevice}
                       previewUrl={previewUrl}
+                      createToken={createPreviewToken}
+                      onSilence={onPreviewSilence}
                     />
                   )}
 
@@ -751,16 +768,8 @@ function PageEditor() {
             previewUrl={previewUrl}
             device={previewDevice}
             title={t('pageEditor.overview.preview')}
-            createToken={async () => {
-              const { data: jwtData } = await createJWT();
-
-              return jwtData?.createJWTForWebsiteLogin?.token;
-            }}
-            onSilence={() =>
-              enqueueSnackbar(t('previewHandshake.notResponding'), {
-                variant: 'warning',
-              })
-            }
+            createToken={createPreviewToken}
+            onSilence={onPreviewSilence}
           />
         )}
 
