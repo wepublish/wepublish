@@ -106,12 +106,12 @@ const countAuditLogFilters = (filter: AuditLogFilter) =>
   Object.entries(filter).filter(
     ([key, value]) =>
       key !== 'to' &&
-      (key === 'from' ? value || filter.to : (
-        value !== undefined &&
+      (key === 'from' ?
+        value || filter.to
+      : value !== undefined &&
         value !== null &&
         value !== '' &&
-        !(Array.isArray(value) && !value.length)
-      ))
+        !(Array.isArray(value) && !value.length))
   ).length;
 
 function AuditLogList() {
@@ -120,7 +120,7 @@ function AuditLogList() {
   const { filter, setFilter, sortOrder, limit, setLimit } =
     useListViewState<AuditLogFilter>('audit-log', {
       defaultSortField: 'createdAt',
-      defaultLimit: 25,
+      defaultLimit: 20,
     });
   const [search, setSearch] = useState(filter.search ?? '');
   const [page, setPage] = useState(1);
@@ -234,7 +234,6 @@ function AuditLogList() {
             <InfoTooltip text={t('auditLogList.overview.titleInfo')} />
           </PageTitle>
         </ListViewHeader>
-
       </ListViewContainer>
 
       <TableWrapper>
@@ -269,7 +268,9 @@ function AuditLogList() {
                   inputLabel: { shrink: true },
                 }}
               >
-                <MenuItem value="">{t('auditLogList.filter.anyAction')}</MenuItem>
+                <MenuItem value="">
+                  {t('auditLogList.filter.anyAction')}
+                </MenuItem>
 
                 {Object.values(AuditLogAction).map(action => (
                   <MenuItem
