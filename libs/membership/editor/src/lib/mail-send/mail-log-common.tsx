@@ -21,15 +21,18 @@ const STATE_COLORS: Record<
   [MailLogState.Dispatched]: 'primary',
   [MailLogState.Undeliverable]: 'error',
   [MailLogState.Canceled]: 'warning',
+  // Not lost, but it will not go out until someone looks at it.
+  [MailLogState.ActionRequired]: 'warning',
 };
 
 /**
  * Order the states follow along a delivery, so the legend reads as the path a
  * mail takes rather than as an alphabetical list.
  */
-const STATE_ORDER: MailLogState[] = [
+export const MAIL_LOG_STATE_ORDER: MailLogState[] = [
   MailLogState.Submitted,
   MailLogState.Accepted,
+  MailLogState.ActionRequired,
   MailLogState.Dispatched,
   MailLogState.Delivered,
   MailLogState.Deferred,
@@ -131,7 +134,7 @@ export function MailLogStateLegend() {
         {t('mailLog.stateHelp.legendIntro')}
       </Typography>
 
-      {STATE_ORDER.map(state => (
+      {MAIL_LOG_STATE_ORDER.map(state => (
         <div
           key={state}
           style={{ marginBottom: 10 }}

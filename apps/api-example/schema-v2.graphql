@@ -2760,6 +2760,7 @@ type MailLogRecipient {
 
 enum MailLogState {
   accepted
+  actionRequired
   bounced
   canceled
   deferred

@@ -4683,7 +4683,8 @@
           "rejected": "Refusé",
           "dispatched": "Posté",
           "undeliverable": "Non distribuable",
-          "canceled": "Annulé"
+          "canceled": "Annulé",
+          "actionRequired": "Action requise"
         }
       },
       "audienceSummary": {
@@ -4844,6 +4845,11 @@
           "name": "Annulée",
           "meaning": "La lettre a été retirée avant d’être imprimée.",
           "next": "Rien à faire. Rien n’a été imprimé ni facturé."
+        },
+        "actionRequired": {
+          "name": "Action requise",
+          "meaning": "Le prestataire d'impression a accepté la lettre mais ne l'imprime pas : il la retient jusqu'à ce que quelqu'un s'en occupe chez lui, par exemple parce que sa vérification du PDF a échoué. La lettre se trouve chez le prestataire ; la colonne « Erreur » en indique la raison.",
+          "next": "Ouvrir la lettre chez le prestataire d'impression et l'y corriger, la valider ou la supprimer. Le statut suit ici de lui-même. Ne pas la renvoyer : cela crée un doublon chez le prestataire. Lorsque les lettres sont envoyées automatiquement, We.Publish remplace lui-même une lettre de facture la nuit suivante, si personne ne s'en est occupé d'ici là."
         }
       },
       "channel": "Envoi",

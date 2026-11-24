@@ -12,10 +12,12 @@ import { randomUUID } from 'crypto';
 import { BaseLetterProvider } from './letter-provider/base-letter-provider';
 import {
   LetterAddress,
+  LetterProviderMessageState,
   LetterState,
 } from './letter-provider/letter-provider.interface';
 import {
   attachmentIdsOf,
+  HeldLetterOutcome,
   type LetterAttachment,
   type LetterRecipientOptions,
   LetterSender,
@@ -93,6 +95,7 @@ const LOG_STATES: Record<LetterState, MailLogState> = {
   [LetterState.undeliverable]: MailLogState.undeliverable,
   [LetterState.rejected]: MailLogState.rejected,
   [LetterState.canceled]: MailLogState.canceled,
+  [LetterState.actionRequired]: MailLogState.actionRequired,
 };
 
 export function toProviderState(state: LetterState): MailLogState {
@@ -143,6 +146,69 @@ export class LetterContext implements LetterSender {
     ]);
 
     return letterProvider && pdfRenderer;
+  }
+
+  sendsAutomatically(): Promise<boolean> {
+    return this.letterProvider.sendsAutomatically();
+  }
+
+  async withdrawHeldLetter(mailLogId: string): Promise<HeldLetterOutcome> {
+    const log = await this.prisma.mailLog.findUnique({
+      where: { id: mailLogId },
+      select: { id: true, state: true, providerLetterID: true },
+    });
+
+    if (log?.state !== MailLogState.actionRequired || !log.providerLetterID) {
+      return 'left';
+    }
+
+    const providerLetterID = log.providerLetterID;
+    let remote: LetterProviderMessageState | undefined;
+
+    try {
+      [remote] = await this.letterProvider.getMessageStates([providerLetterID]);
+    } catch (error) {
+      this.logger.warn(
+        `Letter <${mailLogId}> stays held: the print vendor could not be asked about it: ${(error as Error).message}`
+      );
+
+      return 'left';
+    }
+
+    // A state the vendor does not tell is no licence to remove anything.
+    if (!remote) {
+      return 'left';
+    }
+
+    const state = toProviderState(remote.state);
+
+    // Somebody dealt with it at the vendor: fixed, sent, cancelled, removed.
+    if (state !== MailLogState.actionRequired) {
+      await this.prisma.mailLog.update({
+        where: { id: log.id },
+        data: { state, mailData: remote.letterData, error: null },
+      });
+
+      return 'left';
+    }
+
+    try {
+      await this.letterProvider.deleteLetter(providerLetterID);
+    } catch (error) {
+      this.logger.warn(
+        `Letter <${mailLogId}> stays held: the print vendor does not let it go: ${(error as Error).message}`
+      );
+
+      return 'left';
+    }
+
+    // The reason stays: it says why this letter was taken back.
+    await this.prisma.mailLog.update({
+      where: { id: log.id },
+      data: { state: MailLogState.canceled },
+    });
+
+    return 'withdrawn';
   }
 
   /** Render a template as the pdf that would be printed. */
