@@ -22,6 +22,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { useVirtualizer } from '@tanstack/react-virtual';
+import { useLocalStorage } from '@wepublish/ui';
 import {
   CSSProperties,
   ReactNode,
@@ -58,6 +59,8 @@ const KEYBOARD_RESIZE_STEP = 10;
 const PIN_WIDTH_RATIO = 2;
 
 const ROW_HEIGHT = 37;
+
+const FILTERS_OPEN_PREFIX = 'wepublish:editor:filters-open:';
 
 const cellStyles = `
   overflow: hidden;
@@ -288,7 +291,12 @@ export function DataTable<Row>({
   const headerIdPrefix = useId();
 
   const [openedByUser, setOpenedByUser] = useState<boolean | null>(null);
-  const filtersOpen = openedByUser ?? false;
+  const [storedFiltersOpen, , storeFiltersOpen] = useLocalStorage<boolean>(
+    `${FILTERS_OPEN_PREFIX}${storageKey ?? ''}`,
+    { serialize: String, deserialize: value => value === 'true' }
+  );
+  const filtersOpen =
+    openedByUser ?? (Boolean(storageKey) && storedFiltersOpen === true);
 
   const columnConfig = useColumnConfig(storageKey, columns);
   const hidden = storageKey ? columnConfig.hiddenColumns : hiddenColumns;
@@ -769,7 +777,13 @@ export function DataTable<Row>({
               color="inherit"
               startIcon={<MdFilterList />}
               aria-expanded={filtersOpen}
-              onClick={() => setOpenedByUser(!filtersOpen)}
+              onClick={() => {
+                setOpenedByUser(!filtersOpen);
+
+                if (storageKey) {
+                  storeFiltersOpen(!filtersOpen);
+                }
+              }}
               sx={{
                 color: filtersOpen ? 'text.primary' : 'text.secondary',
                 backgroundColor: filtersOpen ? 'action.selected' : undefined,
