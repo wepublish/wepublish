@@ -2644,8 +2644,9 @@ model WebsiteSettings {
   analyticsPiwikEnabled Boolean @default(false)
   analyticsPiwikId      String?
 
-  analyticsUmamiEnabled Boolean @default(false)
-  analyticsUmamiId      String?
+  analyticsUmamiEnabled              Boolean  @default(false)
+  analyticsUmamiId                   String?
+  analyticsUmamiExcludedSearchParams String[] @default([])
 
   // Ads
   adsSparkLoopEnabled Boolean @default(false)

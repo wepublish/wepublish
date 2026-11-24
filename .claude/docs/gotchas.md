@@ -347,6 +347,14 @@ mode) after logging out in one.
 
 Pinned by `session.provider.spec.tsx` and `preview-status-banner.spec.tsx`.
 
+The same reason makes a bare `…?preview` website URL useless anywhere else (new
+tab, the editor tab, a colleague): no opener, no frame, so no handshake and no
+login. The editor's "copy preview link" therefore copies an **editor** link
+(`/articles/edit/:id?preview=<device>`, `editorPreviewLink` in
+`apps/editor/src/app/previewFrame.tsx`). Don't switch it back to the website
+URL or put the JWT into a URL; a login token in history and chat is the leak
+the handshake exists to avoid.
+
 ---
 
 ### ⚠️ The content wrapper's column is `minmax(0, 1fr)`, not the implicit `auto`
@@ -771,8 +779,13 @@ the top margin and Pingen rejects the letter; a fixed box offset into the
 margin area is clipped by Chromium. The band cap of 40mm (`LAYOUT_BAND_MAX_MM`)
 keeps a header out of the franking zone, whose bottom edge is at 87.5mm.
 
-**Load-bearing:** `margin: 0` in the `@page` rule, the thead/tfoot spacer rows,
-and `CONTENT_TOP_MM - headerSpace` for the body padding.
+The same spacers are the page margin of every page: they are never lower than
+`PAGE_MARGIN_MM` (20mm), also without stationery or with a band of height 0.
+At 0 a letter running onto a second page started at the very edge of the sheet
+there, which Pingen holds back («Validation failed»).
+
+**Load-bearing:** `margin: 0` in the `@page` rule, the thead/tfoot spacer rows
+and their floor, and `CONTENT_TOP_MM - headerSpace` for the body padding.
 
 Pinned by `libs/letter/api/src/lib/letter-renderer.spec.ts`.
 

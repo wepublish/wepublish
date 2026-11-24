@@ -19,9 +19,10 @@
       "mobile": "Mobile",
       "desktop": "Bureau",
       "tablet": "Tablette",
-      "copyUrl": "Copier l’URL d’aperçu",
-      "urlCopied": "URL d’aperçu copiée dans le presse-papiers",
-      "urlCopyFailed": "L’URL d’aperçu n’a pas pu être copiée",
+      "copyUrl": "Copier le lien vers l’aperçu",
+      "urlCopied": "Lien copié. Il ouvre cet aperçu dans l’éditeur.",
+      "urlCopyFailed": "Le lien vers l’aperçu n’a pas pu être copié",
+      "openInNewTab": "Ouvrir l’aperçu dans un nouvel onglet",
       "loading": "Chargement de l’aperçu …"
     },
     "previewHandshake": {
@@ -2108,7 +2109,30 @@
           "unresponsive": "Sans réaction depuis le {{date}}",
           "unknown": "Inconnu depuis le {{date}}"
         },
-        "recomputedDaily": "(recalculées automatiquement chaque jour)"
+        "recomputedDaily": "(recalculées automatiquement chaque jour)",
+        "filter": {
+          "reason": "Motif",
+          "emailSince": "Statut e-mail depuis",
+          "created": "Suggérée depuis"
+        },
+        "reasonFilter": {
+          "placeholderEmail": "Adresse fictive",
+          "hardBounce": "Hard bounce",
+          "invalid": "Adresse invalide",
+          "blocked": "Bloquée par le service e-mail",
+          "spamComplaint": "Plainte pour spam",
+          "unsubscribed": "Désabonné auprès du service e-mail",
+          "clicked": "A cliqué sur un lien",
+          "verified": "Adresse vérifiée",
+          "login": "Connecté",
+          "emailVerified": "Adresse e-mail confirmée",
+          "noInteraction": "Aucune réaction",
+          "noEvidence": "Aucun indice",
+          "none": "Aucun statut e-mail"
+        },
+        "confirmAllFiltered": "Appliquer les {{count}} filtrées",
+        "confirmAllFilteredText": "Seules les suggestions correspondant au filtre sont appliquées.",
+        "emptyFiltered": "Aucune suggestion ne correspond au filtre."
       },
       "assign": {
         "steps": {
@@ -4116,7 +4140,12 @@
           "enable": "Activer Umami",
           "um": "<url>Umami</url> est une alternative open source et respectueuse de la vie privée à Google Analytics.",
           "umLocator": "Vous le trouverez dans les <url>paramètres du site</url> de votre tableau de bord Umami",
-          "umInvalid": "Doit être un ID de site valide (p. ex. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)"
+          "umInvalid": "Doit être un ID de site valide (p. ex. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)",
+          "advanced": "Avancé",
+          "excludedSearchParams": "Paramètres d’URL exclus",
+          "excludedSearchParamsHelp": "Ces paramètres d’URL sont retirés de l’URL de la page et du référent avant d’être envoyés à Umami, p. ex. les données personnelles qu’une newsletter ajoute à ses liens (mail, firstName). Tous les autres paramètres, comme les paramètres utm, sont conservés. La casse ne compte pas.",
+          "excludedSearchParam": "Nom du paramètre",
+          "addExcludedSearchParam": "Ajouter un paramètre"
         }
       },
       "ads": {
@@ -4729,8 +4758,6 @@
         "job": "Envoi",
         "jobAll": "Tous les envois",
         "all": "Tous",
-        "title": "Filtres",
-        "reset": "Réinitialiser les filtres",
         "typeHint": "Ce qui a déclenché l’envoi.",
         "jobHelp": "Un envoi regroupe tous les e-mails envoyés en un clic via « Messages manuels ». Sélectionnez-en un pour ne voir que ses e-mails.",
         "channel": "Envoi"
@@ -5328,7 +5355,7 @@
       "headerHeight": "Hauteur de l’en-tête (mm)",
       "footerHeight": "Hauteur du pied de page (mm)",
       "headerHeightHint": "Au maximum 40 mm, pour que l’en-tête n’empiète pas sur la zone d’affranchissement. Il se répète sur chaque page ; 0 mm le supprime.",
-      "footerHeightHint": "Au maximum 40 mm. Le texte de la lettre garde cet espace par rapport au bord inférieur. Le pied de page se répète sur chaque page ; 0 mm le supprime.",
+      "footerHeightHint": "Au maximum 40 mm. Le texte de la lettre garde cet espace par rapport au bord inférieur, et jamais moins de 20 mm. Le pied de page se répète sur chaque page ; 0 mm le supprime.",
       "htmlHint": "HTML avec des variables comme {{user_firstName}}. Indiquez les tailles en mm et donnez aux images une largeur et une hauteur fixes.",
       "insertImage": "Insérer une image",
       "preview": "Aperçu",

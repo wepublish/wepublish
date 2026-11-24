@@ -57,6 +57,7 @@ describe('bajourTenant', () => {
         'Light',
         'Sponsored',
         'News',
+        'Breit',
         ...Object.values(BriefingType),
       ])
     );

@@ -19,9 +19,10 @@
       "mobile": "Mobil",
       "desktop": "Desktop",
       "tablet": "Tablet",
-      "copyUrl": "Vorschau-URL kopieren",
-      "urlCopied": "Vorschau-URL in die Zwischenablage kopiert",
-      "urlCopyFailed": "Vorschau-URL konnte nicht kopiert werden",
+      "copyUrl": "Link zur Vorschau kopieren",
+      "urlCopied": "Link kopiert. Er öffnet diese Vorschau im Editor.",
+      "urlCopyFailed": "Link zur Vorschau konnte nicht kopiert werden",
+      "openInNewTab": "Vorschau in neuem Tab öffnen",
       "loading": "Vorschau wird geladen …"
     },
     "previewHandshake": {
@@ -2108,7 +2109,30 @@
           "unresponsive": "Reagiert nicht seit {{date}}",
           "unknown": "Unbekannt seit {{date}}"
         },
-        "recomputedDaily": "(täglich automatisch neu berechnet)"
+        "recomputedDaily": "(täglich automatisch neu berechnet)",
+        "filter": {
+          "reason": "Grund",
+          "emailSince": "E-Mail-Status seit",
+          "created": "Vorgeschlagen seit"
+        },
+        "reasonFilter": {
+          "placeholderEmail": "Platzhalter-Adresse",
+          "hardBounce": "Hard Bounce",
+          "invalid": "Ungültige Adresse",
+          "blocked": "Vom E-Mail-Dienst gesperrt",
+          "spamComplaint": "Spam-Beschwerde",
+          "unsubscribed": "Beim E-Mail-Dienst abgemeldet",
+          "clicked": "Link angeklickt",
+          "verified": "Adresse geprüft",
+          "login": "Eingeloggt",
+          "emailVerified": "E-Mail-Adresse bestätigt",
+          "noInteraction": "Keine Reaktion",
+          "noEvidence": "Keine Hinweise",
+          "none": "Kein E-Mail-Status"
+        },
+        "confirmAllFiltered": "Alle {{count}} gefilterten übernehmen",
+        "confirmAllFilteredText": "Übernommen werden nur die Vorschläge, die dem Filter entsprechen.",
+        "emptyFiltered": "Keine Vorschläge entsprechen dem Filter."
       },
       "assign": {
         "steps": {
@@ -4124,7 +4148,12 @@
           "enable": "Umami aktivieren",
           "um": "<url>Umami</url> ist eine datenschutzfreundliche Open-Source-Alternative zu Google Analytics.",
           "umLocator": "Du findest sie in den <url>Website-Einstellungen</url> deines Umami-Dashboards",
-          "umInvalid": "Muss eine gültige Website-ID sein (z.B. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)"
+          "umInvalid": "Muss eine gültige Website-ID sein (z.B. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)",
+          "advanced": "Erweitert",
+          "excludedSearchParams": "Ausgeschlossene URL-Parameter",
+          "excludedSearchParamsHelp": "Diese URL-Parameter werden aus der Seiten-URL und dem Referrer entfernt, bevor sie an Umami gehen, z.B. persönliche Daten, die ein Newsletter an seine Links hängt (mail, firstName). Alle anderen Parameter, etwa die utm-Parameter, bleiben erhalten. Gross- und Kleinschreibung spielt keine Rolle.",
+          "excludedSearchParam": "Parametername",
+          "addExcludedSearchParam": "Parameter hinzufügen"
         }
       },
       "ads": {
@@ -4737,8 +4766,6 @@
         "job": "Versand",
         "jobAll": "Alle Versände",
         "all": "Alle",
-        "title": "Filter",
-        "reset": "Filter zurücksetzen",
         "typeHint": "Wodurch der Versand angestossen wurde.",
         "channel": "Versand",
         "jobHelp": "Ein Versand fasst alle E-Mails zusammen, die mit einem Klick über «Manuelle Mitteilungen» verschickt wurden. Wähle einen aus, um nur dessen E-Mails zu sehen."
@@ -5328,7 +5355,7 @@
       "headerHeight": "Höhe Kopfzeile (mm)",
       "footerHeight": "Höhe Fusszeile (mm)",
       "headerHeightHint": "Höchstens 40 mm, damit die Kopfzeile nicht in die Frankierzone reicht. Sie erscheint auf jeder Seite; 0 mm lässt sie weg.",
-      "footerHeightHint": "Höchstens 40 mm. Der Brieftext hält so viel Abstand zum unteren Rand. Die Fusszeile erscheint auf jeder Seite; 0 mm lässt sie weg.",
+      "footerHeightHint": "Höchstens 40 mm. Der Brieftext hält so viel Abstand zum unteren Rand, mindestens aber 20 mm. Die Fusszeile erscheint auf jeder Seite; 0 mm lässt sie weg.",
       "htmlHint": "HTML mit Platzhaltern wie {{user_firstName}}. Grössen in mm angeben, Bilder mit fester Breite und Höhe.",
       "insertImage": "Bild einfügen",
       "preview": "Vorschau",

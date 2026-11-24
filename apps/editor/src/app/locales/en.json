@@ -19,9 +19,10 @@
       "mobile": "Mobile",
       "desktop": "Desktop",
       "tablet": "Tablet",
-      "copyUrl": "Copy preview URL",
-      "urlCopied": "Preview URL copied to clipboard",
-      "urlCopyFailed": "Preview URL could not be copied",
+      "copyUrl": "Copy preview link",
+      "urlCopied": "Link copied. It opens this preview in the editor.",
+      "urlCopyFailed": "Preview link could not be copied",
+      "openInNewTab": "Open preview in a new tab",
       "loading": "Loading preview …"
     },
     "previewHandshake": {
@@ -2109,7 +2110,30 @@
           "unresponsive": "Unresponsive since {{date}}",
           "unknown": "Unknown since {{date}}"
         },
-        "recomputedDaily": "(recomputed automatically every day)"
+        "recomputedDaily": "(recomputed automatically every day)",
+        "filter": {
+          "reason": "Reason",
+          "emailSince": "Email status since",
+          "created": "Suggested since"
+        },
+        "reasonFilter": {
+          "placeholderEmail": "Placeholder address",
+          "hardBounce": "Hard bounce",
+          "invalid": "Invalid address",
+          "blocked": "Blocked by the mail provider",
+          "spamComplaint": "Spam complaint",
+          "unsubscribed": "Unsubscribed at the mail provider",
+          "clicked": "Clicked a link",
+          "verified": "Address verified",
+          "login": "Logged in",
+          "emailVerified": "Email address confirmed",
+          "noInteraction": "No reaction",
+          "noEvidence": "No evidence",
+          "none": "No email status"
+        },
+        "confirmAllFiltered": "Apply all {{count}} filtered",
+        "confirmAllFilteredText": "Only the suggestions that match the filter are applied.",
+        "emptyFiltered": "No suggestions match the filter."
       },
       "assign": {
         "steps": {
@@ -4184,7 +4208,12 @@
           "enable": "Enable Umami",
           "um": "<url>Umami</url> is a privacy-focused, open source alternative to Google Analytics.",
           "umLocator": "You can find it in the <url>website settings</url> of your Umami dashboard",
-          "umInvalid": "Must be a valid website ID (e.g., xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)"
+          "umInvalid": "Must be a valid website ID (e.g., xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)",
+          "advanced": "Advanced",
+          "excludedSearchParams": "Excluded URL parameters",
+          "excludedSearchParamsHelp": "These URL parameters are removed from the page URL and the referrer before they are sent to Umami, e.g. personal data a newsletter adds to its links (mail, firstName). All other parameters, like the utm parameters, are kept. Upper and lower case do not matter.",
+          "excludedSearchParam": "Parameter name",
+          "addExcludedSearchParam": "Add parameter"
         }
       },
       "ads": {
@@ -4756,8 +4785,6 @@
         "job": "Send job",
         "jobAll": "All send jobs",
         "all": "All",
-        "title": "Filter",
-        "reset": "Reset filters",
         "typeHint": "What triggered this send.",
         "channel": "Delivery",
         "jobHelp": "A send job groups all emails sent with one click via «Manual messages». Pick one to see only its emails."
@@ -5328,7 +5355,7 @@
       "headerHeight": "Header height (mm)",
       "footerHeight": "Footer height (mm)",
       "headerHeightHint": "At most 40 mm, so the header stays clear of the franking zone. It repeats on every page; 0 mm leaves it out.",
-      "footerHeightHint": "At most 40 mm. The letter text keeps this much space from the bottom edge. The footer repeats on every page; 0 mm leaves it out.",
+      "footerHeightHint": "At most 40 mm. The letter text keeps this much space from the bottom edge, and never less than 20 mm. The footer repeats on every page; 0 mm leaves it out.",
       "htmlHint": "HTML with placeholders such as {{user_firstName}}. Use mm for sizes and give images a fixed width and height.",
       "insertImage": "Insert image",
       "preview": "Preview",

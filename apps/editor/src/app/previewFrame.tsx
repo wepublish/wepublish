@@ -6,17 +6,23 @@ import {
   ToggleButtonGroup,
 } from '@mui/material';
 import { enqueueSnackbar } from '@wepublish/ui/editor';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IconType } from 'react-icons';
 import {
   MdContentCopy,
   MdDesktopWindows,
+  MdOpenInNew,
   MdPhoneIphone,
   MdTabletMac,
 } from 'react-icons/md';
+import { useSearchParams } from 'react-router-dom';
 
-import { OpenPreviewOptions, startPreviewHandshake } from './openPreview';
+import {
+  openPreviewWindow,
+  OpenPreviewOptions,
+  startPreviewHandshake,
+} from './openPreview';
 
 const PreviewWrapper = styled('div', {
   shouldForwardProp: propName => propName !== 'device',
@@ -31,6 +37,65 @@ const PreviewWrapper = styled('div', {
 `;
 
 export type PreviewDevice = 'mobile' | 'tablet' | 'desktop';
+
+const PREVIEW_PARAM = 'preview';
+const DEFAULT_DEVICE: PreviewDevice = 'desktop';
+
+const isPreviewDevice = (value: string | null): value is PreviewDevice =>
+  value === 'mobile' || value === 'tablet' || value === 'desktop';
+
+export const editorPreviewLink = (editorUrl: string, device: PreviewDevice) => {
+  const url = new URL(editorUrl);
+  url.searchParams.set(PREVIEW_PARAM, device);
+  url.hash = '';
+
+  return url.toString();
+};
+
+export const usePreviewState = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const param = searchParams.get(PREVIEW_PARAM);
+  const isPreviewOpen = param !== null;
+  const device = isPreviewDevice(param) ? param : DEFAULT_DEVICE;
+  const lastDevice = useRef(device);
+
+  useEffect(() => {
+    if (isPreviewOpen) {
+      lastDevice.current = device;
+    }
+  }, [isPreviewOpen, device]);
+
+  const setParam = useCallback(
+    (value: PreviewDevice | null) =>
+      setSearchParams(
+        current => {
+          const next = new URLSearchParams(current);
+
+          if (value) {
+            next.set(PREVIEW_PARAM, value);
+          } else {
+            next.delete(PREVIEW_PARAM);
+          }
+
+          return next;
+        },
+        { replace: true }
+      ),
+    [setSearchParams]
+  );
+
+  const setPreviewOpen = useCallback(
+    (open: boolean) => setParam(open ? lastDevice.current : null),
+    [setParam]
+  );
+
+  const setDevice = useCallback(
+    (next: PreviewDevice) => setParam(next),
+    [setParam]
+  );
+
+  return { isPreviewOpen, setPreviewOpen, device, setDevice };
+};
 
 type DeviceStyle = {
   width: string;
@@ -169,19 +234,23 @@ export type PreviewControlsProps = {
   onDeviceChange: (device: PreviewDevice) => void;
   previewUrl: string;
   className?: string;
-};
+} & OpenPreviewOptions;
 
 export function PreviewControls({
   device,
   onDeviceChange,
   previewUrl,
   className,
+  createToken,
+  onSilence,
 }: PreviewControlsProps) {
   const { t } = useTranslation();
 
   const copyPreviewUrl = async () => {
     try {
-      await navigator.clipboard.writeText(previewUrl);
+      await navigator.clipboard.writeText(
+        editorPreviewLink(window.location.href, device)
+      );
 
       enqueueSnackbar(t('preview.urlCopied'), {
         variant: 'success',
@@ -190,6 +259,18 @@ export function PreviewControls({
     } catch {
       enqueueSnackbar(t('preview.urlCopyFailed'), {
         variant: 'error',
+        autoHideDuration: 8000,
+      });
+    }
+  };
+
+  const openInNewTab = () => {
+    if (
+      openPreviewWindow(previewUrl, { createToken, onSilence }) ===
+      'popup-blocked'
+    ) {
+      enqueueSnackbar(t('previewHandshake.popupBlocked'), {
+        variant: 'warning',
         autoHideDuration: 8000,
       });
     }
@@ -220,6 +301,14 @@ export function PreviewControls({
         onClick={copyPreviewUrl}
       >
         <MdContentCopy />
+      </IconButton>
+
+      <IconButton
+        title={t('preview.openInNewTab')}
+        aria-label={t('preview.openInNewTab')}
+        onClick={openInNewTab}
+      >
+        <MdOpenInNew />
       </IconButton>
     </PreviewControlsWrapper>
   );

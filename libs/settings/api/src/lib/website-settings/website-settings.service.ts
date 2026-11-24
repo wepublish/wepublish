@@ -7,6 +7,11 @@ import {
   WEBSITE_SETTINGS_CACHE_NAMESPACE,
 } from '../settings-cache';
 
+const cleanSearchParams = (params: string[] | null | undefined) =>
+  params ?
+    [...new Set(params.map(param => param.trim()).filter(Boolean))]
+  : undefined;
+
 @Injectable()
 export class WebsiteSettingsService {
   constructor(
@@ -54,6 +59,9 @@ export class WebsiteSettingsService {
         analyticsUmamiEnabled:
           input.analytics?.umami.enabled ?? settings.analyticsUmamiEnabled,
         analyticsUmamiId: input.analytics?.umami.key,
+        analyticsUmamiExcludedSearchParams: cleanSearchParams(
+          input.analytics?.umami.excludedSearchParams
+        ),
 
         // Ads
         adsSparkLoopEnabled:

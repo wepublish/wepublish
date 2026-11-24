@@ -363,7 +363,7 @@ export class MailSendResolver {
         },
         skip,
         take: boundedTake + 1,
-        orderBy: { sentDate: 'desc' },
+        orderBy: [{ sentDate: 'desc' }, { id: 'desc' }],
       }),
     ]);
 

@@ -1,15 +1,47 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { URLAdapter } from '@wepublish/nest-modules';
+import { promisify } from 'node:util';
+import { gunzip } from 'node:zlib';
 import {
   deriveSeoChecks,
   getSeoUrls,
+  parseSitemap,
   SEO_CHECKLIST_ITEM_ID,
   SeoProbeResult,
+  SitemapResult,
 } from './seo-checklist';
 import { SeoChecklist, SeoChecklistItem } from './seo-checklist.model';
 
 const PROBE_TIMEOUT = 5000;
+const MAX_NESTED_SITEMAPS = 50;
+const MAX_CONCURRENT_PROBES = 4;
+// The sitemap protocol's limit for an uncompressed sitemap.
+const MAX_SITEMAP_SIZE = 50 * 1024 * 1024;
+
+const gunzipAsync = promisify(gunzip);
+
+const isGzip = (body: Buffer) => body[0] === 0x1f && body[1] === 0x8b;
+
+const mapConcurrently = async <T, R>(
+  items: T[],
+  limit: number,
+  fn: (item: T) => Promise<R>
+) => {
+  const results: R[] = new Array(items.length);
+  let next = 0;
+
+  await Promise.all(
+    Array.from({ length: Math.min(limit, items.length) }, async () => {
+      while (next < items.length) {
+        const index = next++;
+        results[index] = await fn(items[index]);
+      }
+    })
+  );
+
+  return results;
+};
 
 @Injectable()
 export class SeoChecklistService {
@@ -38,8 +70,8 @@ export class SeoChecklistService {
     const latestArticleUrl =
       latestArticle ? await this.urlAdapter.getArticleUrl(latestArticle) : null;
 
-    const [sitemap, rssFeed, latestArticleProbe] = await Promise.all([
-      this.probe(urls.sitemapUrl),
+    const [sitemaps, rssFeed, latestArticleProbe] = await Promise.all([
+      this.probeSitemaps(urls.sitemapUrl),
       this.probe(urls.rssFeedUrl),
       latestArticleUrl ? this.probe(latestArticleUrl) : null,
     ]);
@@ -49,7 +81,7 @@ export class SeoChecklistService {
       ...urls,
       checks: deriveSeoChecks({
         websiteUrl,
-        sitemap,
+        sitemaps,
         rssFeed,
         latestArticleUrl,
         latestArticle: latestArticleProbe,
@@ -102,17 +134,64 @@ export class SeoChecklistService {
     return this.getCompletedItems();
   }
 
+  private async probeSitemaps(url: string): Promise<SitemapResult[]> {
+    const sitemap = await this.readSitemap(url);
+
+    if (!('locs' in sitemap)) {
+      return [sitemap];
+    }
+
+    // Children must live on the index's origin (sitemap protocol), so a
+    // tampered index can't make the API fetch arbitrary hosts.
+    const { origin } = new URL(sitemap.url);
+    const nestedUrls = [
+      ...new Set(
+        sitemap.locs.map(loc => URL.parse(loc, sitemap.url)?.href ?? loc)
+      ),
+    ].slice(0, MAX_NESTED_SITEMAPS);
+
+    if (!nestedUrls.length) {
+      return [{ url, error: 'No <urlset> found' }];
+    }
+
+    return mapConcurrently(
+      nestedUrls,
+      MAX_CONCURRENT_PROBES,
+      async (nestedUrl): Promise<SitemapResult> => {
+        if (URL.parse(nestedUrl)?.origin !== origin) {
+          return { url: nestedUrl, error: `Not on ${origin}` };
+        }
+
+        const nested = await this.readSitemap(nestedUrl);
+
+        return 'locs' in nested ?
+            { url: nestedUrl, error: 'Nested sitemap index' }
+          : nested;
+      }
+    );
+  }
+
+  private async readSitemap(url: string) {
+    return parseSitemap(url, await this.probe(url));
+  }
+
   private async probe(url: string): Promise<SeoProbeResult> {
     try {
       const response = await fetch(url, {
         redirect: 'follow',
         signal: AbortSignal.timeout(PROBE_TIMEOUT),
       });
+      const body = Buffer.from(await response.arrayBuffer());
 
       return {
         reachable: true,
         status: response.status,
-        body: await response.text(),
+        url: response.url || url,
+        // `.xml.gz` sitemaps are often served without Content-Encoding.
+        body: (isGzip(body) ?
+          await gunzipAsync(body, { maxOutputLength: MAX_SITEMAP_SIZE })
+        : body
+        ).toString('utf8'),
       };
     } catch (error) {
       return {

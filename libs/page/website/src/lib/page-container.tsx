@@ -6,6 +6,7 @@ import {
 import { BannerDocumentType, PageDocument } from '@wepublish/website/api';
 import {
   BuilderContainerProps,
+  useReportPageShell,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { BannerContainer } from '@wepublish/banner/website';
@@ -30,6 +31,8 @@ export function PageContainer({
       slug,
     },
   });
+
+  useReportPageShell(data?.page);
 
   return (
     <PollBlockProvider>
