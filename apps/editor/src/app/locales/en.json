@@ -2892,6 +2892,19 @@
     "settingList": {
       "printIssues": "Print issues",
       "printIssuesPerYear": "Issues per year (print)",
+      "printIssueNumbering": "Issue numbering",
+      "printIssueNumberingChoice": {
+        "perYear": "Per year: numbers start at 1 every year (6.26)",
+        "continuous": "Continuous: numbers run on across years (#117)"
+      },
+      "printIssueLabelFormat": "How an issue is written",
+      "printIssueLabelFormatPreview": "Preview",
+      "printIssueLabelFormatError": {
+        "unknownPlaceholder": "Unknown placeholder: use {range}, {number}, {yy} and {yyyy}.",
+        "noNumber": "The template needs the number: {range} or {number}.",
+        "noYear": "With numbers per year, the template needs the year: {yy} or {yyyy}.",
+        "tooLong": "40 characters at most."
+      },
       "issues": "issues",
       "activeSubscriptionsApiPublic": "Make the active subscriptions API accessible by the public",
       "allowCommentEditing": "Allow comment editing",
@@ -2960,6 +2973,8 @@
       "emailQualityEvidenceWarnAfterDays": "Warn without delivery reports after … days",
       "info": {
         "printIssuesPerYear": "How many printed issues a yearly subscription is worth. Readers whose paid period ends stay in the print exports until they received that many. 0 switches the rule off until the import has brought in the earlier issues of the year.",
+        "printIssueNumbering": "Per year, numbering starts again every year, so an issue is called e.g. 6.26. Continuous numbers run on across years (e.g. #117); an issue’s year follows from its ship day.",
+        "printIssueLabelFormat": "How an issue is written in the list, in file names and in bexio. Placeholders: {range} = the number, «3/4» for a double issue; {number} = the first number only; {yy} = two-digit year; {yyyy} = four-digit year. Single-copy orders in bexio must name the issue this way (e.g. «Einzelheft #117»).",
         "allowCommentEditing": "Readers can still change the text of their own comments after posting them.",
         "commentCharLimit": "Maximum number of characters a comment may contain. Longer comments cannot be submitted.",
         "subscriptionExtendWindowDays": "How many days before a subscription ends readers see \"Renew now\" in their profile. 30 = as before; 365 = any time, as long as no invoice is open.",
@@ -5625,7 +5640,8 @@
       "issueDateRequired": "Please enter the ship day.",
       "drawer": {
         "createTitle": "New issue",
-        "editTitle": "Issue {{label}}"
+        "editTitle": "Issue {{label}}",
+        "labelPreview": "Written as"
       },
       "fields": {
         "issue": "Issue",

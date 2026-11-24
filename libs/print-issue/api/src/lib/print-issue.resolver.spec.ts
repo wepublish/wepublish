@@ -59,6 +59,11 @@ const makeResolver = () => {
     reopen: vi.fn(async () => issue),
     duplicate: vi.fn(async () => issue),
     csv: vi.fn(async () => ({ filename: 'x.csv', csv: '' })),
+    list: vi.fn(async () => [issue]),
+    numbering: vi.fn(async () => ({
+      counting: 'perYear',
+      format: '{range}.{yy}',
+    })),
     defaults: vi.fn(async () => defaults),
     bexioKinds: vi.fn(async () => [
       {
@@ -152,6 +157,36 @@ describe('PrintIssueResolver', () => {
 
     expect(issues.csv).toHaveBeenNthCalledWith(1, 'issue-1', 'del-1');
     expect(issues.csv).toHaveBeenNthCalledWith(2, 'issue-1', null);
+  });
+
+  it("labels the issues the medium's way, reading its numbering once", async () => {
+    const { resolver, issues } = makeResolver();
+    issues.numbering.mockResolvedValue({
+      counting: 'continuous',
+      format: '#{range}',
+    });
+    issues.list.mockResolvedValue([
+      { ...issue, id: 'issue-2', number: 118 },
+      { ...issue, number: 117 },
+    ]);
+
+    const result = await resolver.printIssues();
+
+    expect(result.map(entry => entry.label)).toEqual(['#118', '#117']);
+    expect(issues.numbering).toHaveBeenCalledTimes(1);
+  });
+
+  it('tells the editor how the medium numbers its issues', async () => {
+    const { resolver, issues } = makeResolver();
+    issues.numbering.mockResolvedValue({
+      counting: 'continuous',
+      format: '#{range}',
+    });
+
+    expect(await resolver.printIssueNumbering()).toEqual({
+      counting: 'continuous',
+      format: '#{range}',
+    });
   });
 
   it("tells the editor what the options can do here and the medium's defaults", async () => {

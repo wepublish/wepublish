@@ -6203,6 +6203,14 @@ type PrintIssueCount {
 }
 
 """
+perYear: numbers restart every year («6.26»). continuous: they run on («#117»).
+"""
+enum PrintIssueCounting {
+  continuous
+  perYear
+}
+
+"""
 One list handed to the printshop: the export (batch 0) or a Nachlieferung. Until it is handed over it can be computed again and replaced, or deleted; from then on it is immutable and its copies count for the readers' quota.
 """
 type PrintIssueDelivery {
@@ -6268,6 +6276,18 @@ input PrintIssueInputModel {
   """The issue's topic."""
   title: String
   year: Int!
+}
+
+"""
+How the medium numbers its print issues (settings printIssueNumbering and printIssueLabelFormat).
+"""
+type PrintIssueNumbering {
+  counting: PrintIssueCounting!
+
+  """
+  The label template: {range}, {number}, {yy}, {yyyy}, e.g. «{range}.{yy}» or «#{range}».
+  """
+  format: String!
 }
 
 """What a list is computed from."""
@@ -7096,6 +7116,11 @@ type Query {
   """
   printIssueCsv(deliveryId: String, id: String!): PrintIssueFileModel!
 
+  """
+  How the medium numbers its print issues: restarting every year or running on, and the label template.
+  """
+  printIssueNumbering: PrintIssueNumbering!
+
   """The computed list waiting to be checked, if any."""
   printIssueRun(id: String!): PrintIssueRun
 
@@ -7677,6 +7702,8 @@ enum SettingName {
   PRINT_BEXIO_KINDS
   PRINT_EXPORT_DEFAULTS
   PRINT_ISSUES_PER_YEAR
+  PRINT_ISSUE_LABEL_FORMAT
+  PRINT_ISSUE_NUMBERING
   RESET_PASSWORD_JWT_EXPIRES_MIN
   SEND_LOGIN_JWT_EXPIRES_MIN
   SESSION_TTL_DAYS
@@ -8757,6 +8784,7 @@ type UserEmailQualityModel {
 enum UserEvent {
   ACCOUNT_CREATION
   EMAIL_CHANGE
+  EMAIL_VERIFICATION
   LOGIN_LINK
   PASSWORD_RESET
   TEST_MAIL

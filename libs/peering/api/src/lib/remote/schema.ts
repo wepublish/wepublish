@@ -7341,6 +7341,12 @@ export type PrintIssueCount = {
   key: Scalars['String']['output'];
 };
 
+/** perYear: numbers restart every year («6.26»). continuous: they run on («#117»). */
+export enum PrintIssueCounting {
+  Continuous = 'continuous',
+  PerYear = 'perYear'
+}
+
 /** One list handed to the printshop: the export (batch 0) or a Nachlieferung. Until it is handed over it can be computed again and replaced, or deleted; from then on it is immutable and its copies count for the readers' quota. */
 export type PrintIssueDelivery = {
   __typename?: 'PrintIssueDelivery';
@@ -7390,6 +7396,14 @@ export type PrintIssueInputModel = {
   /** The issue's topic. */
   title?: InputMaybe<Scalars['String']['input']>;
   year: Scalars['Int']['input'];
+};
+
+/** How the medium numbers its print issues (settings printIssueNumbering and printIssueLabelFormat). */
+export type PrintIssueNumbering = {
+  __typename?: 'PrintIssueNumbering';
+  counting: PrintIssueCounting;
+  /** The label template: {range}, {number}, {yy}, {yyyy}, e.g. «{range}.{yy}» or «#{range}». */
+  format: Scalars['String']['output'];
 };
 
 /** What a list is computed from. */
@@ -7931,6 +7945,8 @@ export type Query = {
   printIssue: PrintIssue;
   /** The CSV for the printshop: one delivery, or every delivery of the issue merged in export order. */
   printIssueCsv: PrintIssueFileModel;
+  /** How the medium numbers its print issues: restarting every year or running on, and the label template. */
+  printIssueNumbering: PrintIssueNumbering;
   /** The computed list waiting to be checked, if any. */
   printIssueRun?: Maybe<PrintIssueRun>;
   /** All print issues, the newest first. */
@@ -9396,6 +9412,8 @@ export enum SettingName {
   PrintBexioKinds = 'PRINT_BEXIO_KINDS',
   PrintExportDefaults = 'PRINT_EXPORT_DEFAULTS',
   PrintIssuesPerYear = 'PRINT_ISSUES_PER_YEAR',
+  PrintIssueLabelFormat = 'PRINT_ISSUE_LABEL_FORMAT',
+  PrintIssueNumbering = 'PRINT_ISSUE_NUMBERING',
   ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
   SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN',
   SessionTtlDays = 'SESSION_TTL_DAYS',
@@ -10403,6 +10421,7 @@ export type UserEmailQualityModel = {
 export enum UserEvent {
   AccountCreation = 'ACCOUNT_CREATION',
   EmailChange = 'EMAIL_CHANGE',
+  EmailVerification = 'EMAIL_VERIFICATION',
   LoginLink = 'LOGIN_LINK',
   PasswordReset = 'PASSWORD_RESET',
   TestMail = 'TEST_MAIL'
