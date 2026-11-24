@@ -62,15 +62,34 @@ describe('composeLetter', () => {
   });
 
   it('keeps the body out of the franking zone', () => {
-    expect(composeLetter(base)).toContain('padding-top: 90mm');
+    // 90mm from the sheet top, minus the 20mm the page margin already takes.
+    expect(composeLetter(base)).toContain('padding-top: 70mm');
   });
 
-  it('reserves no space for stationery without a layout', () => {
+  it('prints no stationery without a layout', () => {
     const html = composeLetter(base);
 
     expect(html).not.toContain('letter-header');
     expect(html).not.toContain('letter-footer');
-    expect(html).toContain('height: 0mm');
+  });
+
+  it('keeps the text clear of the top and bottom edge on every page without a layout', () => {
+    const html = composeLetter(base);
+
+    // thead and tfoot repeat per page: a text running onto a second page
+    // starts below the margin there too, not at the sheet edge.
+    expect(html).toMatch(/<thead>[\s\S]*height: 20mm[\s\S]*<\/thead>/);
+    expect(html).toMatch(/<tfoot>[\s\S]*height: 20mm[\s\S]*<\/tfoot>/);
+  });
+
+  it('keeps page breaks out of the worst places of the authored text only', () => {
+    const html = composeLetter(base);
+
+    expect(html).toMatch(/\.content \{[^}]*orphans: 2;[^}]*widows: 2;/);
+    expect(html).toMatch(/\.content h1,[^{]*\{[^}]*break-after: avoid/);
+    expect(html).toMatch(/\.content tr,[^{]*\{[^}]*break-inside: avoid/);
+    // The table carrying the whole text has to break across pages.
+    expect(html).not.toMatch(/(?<!\.content )\btr\s*[,{]/);
   });
 
   it('prints the recipient into the address window', () => {
@@ -119,6 +138,30 @@ describe('composeLetter with a layout', () => {
     // thead and tfoot repeat per page, so their spacers do the reserving.
     expect(html).toMatch(/<thead>[\s\S]*height: 35mm[\s\S]*<\/thead>/);
     expect(html).toMatch(/<tfoot>[\s\S]*height: 25mm[\s\S]*<\/tfoot>/);
+  });
+
+  it.each([
+    ['thinner than the page margin', 8],
+    ['of no height', 0],
+  ])('keeps the page margin next to a band %s', (_, heightMm) => {
+    const html = composeLetter({
+      ...base,
+      layout: { ...layout, headerHeightMm: heightMm, footerHeightMm: heightMm },
+    });
+
+    expect(html).toMatch(/<thead>[\s\S]*height: 20mm[\s\S]*<\/thead>/);
+    expect(html).toMatch(/<tfoot>[\s\S]*height: 20mm[\s\S]*<\/tfoot>/);
+    expect(html).toContain('padding-top: 70mm');
+  });
+
+  it('prints no band of no height', () => {
+    const html = composeLetter({
+      ...base,
+      layout: { ...layout, headerHeightMm: 0, footerHeightMm: 0 },
+    });
+
+    expect(html).not.toContain('letter-header');
+    expect(html).not.toContain('letter-footer');
   });
 
   it('leaves the address window and the first body line where pingen expects them', () => {
