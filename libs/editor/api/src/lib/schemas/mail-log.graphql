@@ -9,7 +9,6 @@ fragment FullMailLog on MailLogModel {
   address
   subject
   error
-  bounceReason
   mailProviderID
   mailSendJobId
   subscriptionId

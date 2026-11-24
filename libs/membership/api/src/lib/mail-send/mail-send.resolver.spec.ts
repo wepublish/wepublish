@@ -302,28 +302,33 @@ describe('MailSendResolver', () => {
       expect(result.pageInfo.hasPreviousPage).toBe(false);
     });
 
-    it("hands out the provider's reason for a mail that did not get through", async () => {
+    it("names the provider's reason as the error of a mail that did not get through", async () => {
       const mailData = JSON.stringify({
         msg: { bounce_description: 'bad_mailbox', diag: '554 User unknown' },
       });
       const prisma = {
         mailLog: {
-          count: vi.fn(async () => 3),
+          count: vi.fn(async () => 5),
           findMany: vi.fn(async () => [
-            { id: 'l1', state: 'bounced', mailData },
-            { id: 'l2', state: 'deferred', mailData },
+            { id: 'l1', state: 'bounced', mailData, error: null },
+            { id: 'l2', state: 'deferred', mailData, error: null },
             // The payload of a mail that arrived is no reason for anything.
-            { id: 'l3', state: 'delivered', mailData },
+            { id: 'l3', state: 'delivered', mailData, error: null },
+            // An error written down when sending says more than the payload.
+            { id: 'l4', state: 'bounced', mailData, error: 'Sending failed' },
+            { id: 'l5', state: 'rejected', mailData, error: 'invalid-sender' },
           ]),
         },
       };
 
       const result = await makeResolver(prisma).mailLogs(undefined, 0, 10);
 
-      expect(result.nodes.map(node => node.bounceReason)).toEqual([
+      expect(result.nodes.map(node => node.error)).toEqual([
         'bad_mailbox: 554 User unknown',
         'bad_mailbox: 554 User unknown',
         null,
+        'Sending failed',
+        'invalid-sender',
       ]);
     });
 

@@ -4685,7 +4685,6 @@
         "manual": "Manuel"
       },
       "error": "Erreur",
-      "bounceReason": "Motif du rebond",
       "typeDescriptions": {
         "manual": "Envoyé à la main via « Messages manuels » ou « Envoyer un test ». Exemple : newsletter à tou·te·s les abonné·e·s.",
         "subscriptionFlow": "Programmé depuis « Messages automatiques », calculé à partir de la date d’abonnement. Exemples : rappel 14 jours avant la fin, relance après une facture impayée.",
@@ -4731,6 +4730,18 @@
         "templateMissing": {
           "cause": "Le modèle d’envoi utilisé n’existe plus.",
           "fix": "Choisissez un modèle existant sous « Modèles de message » ou recréez-le, puis relancez l’envoi."
+        },
+        "mailboxGone": {
+          "cause": "Le serveur de messagerie du destinataire a refusé le message, car la boîte ou le domaine n’existe pas. L’adresse est donc considérée comme injoignable.",
+          "fix": "1. Vérifiez l’adresse e-mail de la personne et corrigez les fautes de frappe.\n2. Si aucune adresse valable n’est connue, passez la personne au courrier postal : elle est proposée sous le canal de distribution des messages automatiques, pour autant qu’une adresse postale soit enregistrée."
+        },
+        "mailboxFull": {
+          "cause": "La boîte du destinataire est pleine. Le message n’est pas arrivé ; l’adresse reste considérée comme joignable.",
+          "fix": "1. Renvoyez le message plus tard.\n2. Si la boîte reste pleine, contactez la personne par un autre moyen."
+        },
+        "bounce": {
+          "cause": "Le serveur de messagerie du destinataire n’a pas accepté le message. Sa réponse figure ci-dessous.",
+          "fix": "1. Lisez le message d’origine : il indique la raison, p. ex. une panne passagère, une boîte bloquée ou un soupçon de spam.\n2. En cas de panne passagère, renvoyez le message plus tard.\n3. Si l’adresse rebondit à répétition, vérifiez-la avec la personne."
         },
         "generic": {
           "cause": "Le serveur a refusé l’envoi avec le message ci-dessous.",
