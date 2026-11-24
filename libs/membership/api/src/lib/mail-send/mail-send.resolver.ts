@@ -391,10 +391,13 @@ export class MailSendResolver {
             log.addressSnapshot as unknown as LetterAddress
           ).join(', ')
         : null,
-      bounceReason:
-        STATES_WITH_BOUNCE_REASON.has(log.state) ?
+      // A bounce leaves no error behind when it comes in; what the provider
+      // said about it is read from the payload, so it follows the state.
+      error:
+        log.error ??
+        (STATES_WITH_BOUNCE_REASON.has(log.state) ?
           bounceReasonOf(log.mailData)
-        : null,
+        : null),
     }));
 
     return this.paginate(rows, totalCount, skip, boundedTake);

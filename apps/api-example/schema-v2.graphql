@@ -3043,15 +3043,12 @@ input MailLogFilter {
 type MailLogModel {
   """Letters only: the address the letter was sent to."""
   address: String
-
-  """
-  What the mail provider said about a bounced or held-back mail: its bounce description and the receiving server's answer. Null when it said nothing.
-  """
-  bounceReason: String
   channel: MailChannel!
   createdAt: DateTime!
 
-  """Why a rejected mail could not be delivered."""
+  """
+  Why the mail could not be delivered: the error of a rejected one, or what the mail provider said about a bounced or held-back one (its bounce description and the receiving server's answer).
+  """
   error: String
   id: String!
 

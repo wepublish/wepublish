@@ -503,16 +503,10 @@ export class MailLogModel {
 
   @Field(() => String, {
     nullable: true,
-    description: 'Why a rejected mail could not be delivered.',
+    description:
+      "Why the mail could not be delivered: the error of a rejected one, or what the mail provider said about a bounced or held-back one (its bounce description and the receiving server's answer).",
   })
   error?: string | null;
-
-  @Field(() => String, {
-    nullable: true,
-    description:
-      "What the mail provider said about a bounced or held-back mail: its bounce description and the receiving server's answer. Null when it said nothing.",
-  })
-  bounceReason?: string | null;
 
   @Field()
   mailProviderID!: string;
