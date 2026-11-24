@@ -10461,7 +10461,6 @@ export type UserEmailQualityModel = {
 export enum UserEvent {
   AccountCreation = 'ACCOUNT_CREATION',
   EmailChange = 'EMAIL_CHANGE',
-  EmailVerification = 'EMAIL_VERIFICATION',
   LoginLink = 'LOGIN_LINK',
   PasswordReset = 'PASSWORD_RESET',
   TestMail = 'TEST_MAIL'
