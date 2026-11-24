@@ -15,12 +15,13 @@ import {
   LetterState,
 } from './letter-provider/letter-provider.interface';
 import {
-  attachmentIdsOf,
   type LetterAttachment,
+  type LetterLogDetails,
   type LetterRecipientOptions,
   LetterSender,
-  MAIL_TEMPLATE_ATTACHMENT_IDS,
+  loadAttachmentIds,
   MailAttachmentRenderer,
+  requireTemplateVariant,
 } from '@wepublish/mail/api';
 import {
   canReceiveLetters,
@@ -76,10 +77,10 @@ export interface SendTemplateLetterProps {
   mailSendJobId?: string | null;
   /**
    * Bookkeeping an automated send hands in: the identifier a retried run
-   * recognises the letter by, and which flow it came from. A manual send is
-   * logged under its own id.
+   * recognises the letter by, which flow it came from, and the subscription
+   * and invoice it is about. A manual send is logged under its own id.
    */
-  log?: { mailIdentifier?: string; type?: MailLogType };
+  log?: LetterLogDetails;
   /** A document printed after the letter, e.g. the invoice with its payment slip. */
   attachment?: LetterAttachment;
 }
@@ -321,21 +322,24 @@ export class LetterContext implements LetterSender {
     const address = toLetterAddress(props.recipient);
     const print = props.print ?? (await this.resolvePrintDefaults());
 
-    const template = await this.prisma.mailTemplate.findUnique({
-      where: { id: props.mailTemplateId },
-      include: MAIL_TEMPLATE_ATTACHMENT_IDS,
-    });
-
-    if (!template) {
-      throw new Error(`MailTemplate <${props.mailTemplateId}> not found!`);
-    }
+    // The words on paper are the letter variant's; the email of the same
+    // template is another text. The attachments are the template's, shared
+    // by both.
+    const template = await requireTemplateVariant(
+      this.prisma,
+      props.mailTemplateId,
+      MailChannel.letter
+    );
 
     try {
       const file = await this.renderLetter({
         template: {
           htmlContent: template.htmlContent,
           letterAppendixId: template.letterAppendixId,
-          attachmentIds: attachmentIdsOf(template),
+          attachmentIds: await loadAttachmentIds(
+            this.prisma,
+            props.mailTemplateId
+          ),
         },
         addressPosition: print.addressPosition,
         data: props.data,
@@ -390,6 +394,12 @@ export class LetterContext implements LetterSender {
           mailTemplate: { connect: { id: props.mailTemplateId } },
           ...(props.mailSendJobId ?
             { mailSendJob: { connect: { id: props.mailSendJobId } } }
+          : {}),
+          ...(props.log?.subscriptionId ?
+            { subscription: { connect: { id: props.log.subscriptionId } } }
+          : {}),
+          ...(props.log?.invoiceId ?
+            { invoice: { connect: { id: props.log.invoiceId } } }
           : {}),
           state: outcome.state,
           type: props.log?.type ?? MailLogType.manual,

@@ -22,6 +22,7 @@ import {
   SensitiveDataUser,
 } from './user.model';
 import { UserService } from './user.service';
+import { MailEmailSegment } from './email-segment';
 import { assertNotManagedByWepublishLogin } from './managed-by-wepublish-login';
 import { Image, ImageDataloaderService } from '@wepublish/image/api';
 import { UserDataloaderService } from './user-dataloader.service';
@@ -32,7 +33,7 @@ import {
 } from '@wepublish/permissions/api';
 import { NotFoundException } from '@nestjs/common';
 import {
-  Authenticated,
+  RequiresFullSession,
   CurrentUser,
   AuthSession,
   requireSessionUser,
@@ -54,6 +55,14 @@ export class UserResolver {
   })
   public users(@Args() filter: UserListArgs) {
     return this.service.getUsers(filter);
+  }
+
+  @Permissions(CanGetUsers)
+  @Query(() => [MailEmailSegment], {
+    description: `The email segments the user list can be filtered by, best to worst; placeholder only when a placeholder pattern is configured.`,
+  })
+  public userEmailSegments() {
+    return this.service.getEmailSegments();
   }
 
   @Permissions(CanGetUser)
@@ -99,7 +108,7 @@ export class UserResolver {
     });
   }
 
-  @Authenticated()
+  @RequiresFullSession()
   @Mutation(() => SensitiveDataUser, {
     description: `Updates the current logged in user.`,
   })
@@ -111,9 +120,15 @@ export class UserResolver {
 
     assertNotManagedByWepublishLogin(user);
 
+    const { name, firstName, birthday, flair, address } = input;
+
     return this.service.updateUser({
-      ...input,
       id: user.id,
+      name,
+      firstName,
+      birthday,
+      flair,
+      address,
     });
   }
 

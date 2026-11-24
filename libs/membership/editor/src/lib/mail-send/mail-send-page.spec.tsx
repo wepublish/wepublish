@@ -8,6 +8,7 @@ import {
 } from '@testing-library/react';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 
+import { INITIAL_AUDIENCE_STATE } from './audience/audience-state';
 import { MailSendPage } from './mail-send-page';
 
 /**
@@ -16,6 +17,7 @@ import { MailSendPage } from './mail-send-page';
  */
 const queries = vi.fn();
 const mutate = vi.fn(async () => ({ data: {} }));
+const savedFilterProps = vi.fn();
 
 const operationName = (document: unknown) =>
   (document as { definitions?: { name?: { value?: string } }[] })
@@ -57,6 +59,42 @@ vi.mock('@wepublish/ui/editor', async importOriginal => ({
     >
       {label}
     </button>
+  ),
+}));
+
+// The chooser lists and filters the templates itself; here only what the page
+// hands it and takes back matters.
+vi.mock('../mail-template/mail-template-field', () => ({
+  MailTemplateField: (props: {
+    value?: string | null;
+    templates: { id: string; name: string }[];
+    label: string;
+    channel?: string;
+    allowNone?: boolean;
+    emptyLabel?: string;
+    onChange(id: string | null): void;
+  }) => (
+    <div
+      role="group"
+      aria-label={props.label}
+      data-testid="template-field"
+      data-channel={props.channel}
+      data-allow-none={String(props.allowNone)}
+    >
+      <span>
+        chosen:
+        {props.templates.find(({ id }) => id === props.value)?.name ??
+          props.emptyLabel}
+      </span>
+      {props.templates.map(template => (
+        <button
+          key={template.id}
+          onClick={() => props.onChange(template.id)}
+        >
+          {`pick ${template.name}`}
+        </button>
+      ))}
+    </div>
   ),
 }));
 
@@ -102,18 +140,28 @@ const answer = (name: string) => {
               id: 'tpl-1',
               name: 'Rechnung',
               context: 'custom',
+              channels: ['mail', 'letter'],
               attachmentIds: [],
             },
             {
               id: 'tpl-2',
               name: 'Erinnerung',
               context: 'custom',
+              channels: ['mail'],
               attachmentIds: [],
             },
             {
               id: 'tpl-3',
+              name: 'Begleitbrief',
+              context: 'custom',
+              channels: ['letter'],
+              attachmentIds: [],
+            },
+            {
+              id: 'tpl-4',
               name: 'Vertrag',
               context: 'custom',
+              channels: ['mail'],
               attachmentIds: ['terms', 'contract'],
             },
           ],
@@ -158,6 +206,27 @@ const answer = (name: string) => {
   }
 };
 
+// The saved filters are covered on their own; here a button stands in for
+// loading one.
+vi.mock('./audience/saved-audience-filters', () => ({
+  SavedAudienceFilters: (props: any) => {
+    savedFilterProps(props);
+
+    return (
+      <button
+        onClick={() =>
+          props.onLoad({
+            ...INITIAL_AUDIENCE_STATE,
+            base: 'noActiveSubscription',
+          })
+        }
+      >
+        load saved filter
+      </button>
+    );
+  },
+}));
+
 const lastPreviewAudience = () =>
   queries.mock.calls
     .filter(([name]) => name === 'MailSendRecipientPreview')
@@ -188,10 +257,20 @@ const renderPage = () =>
     </ThemeProvider>
   );
 
-const pickTemplate = () => {
-  fireEvent.mouseDown(screen.getAllByRole('combobox')[0]);
-  fireEvent.click(screen.getByRole('option', { name: 'Rechnung' }));
-};
+const pickTemplateNamed = (name: string) =>
+  fireEvent.click(screen.getByRole('button', { name: `pick ${name}` }));
+
+const pickTemplate = () => pickTemplateNamed('Rechnung');
+
+const templateField = () => screen.getByTestId('template-field');
+
+const channelRadio = (channel: string) =>
+  screen.getByRole('radio', { name: `mailSend.channel.${channel}` });
+
+const lastMissingPlaceholders = () =>
+  queries.mock.calls
+    .filter(([name]) => name === 'MailTemplateMissingPlaceholders')
+    .at(-1)?.[1].variables;
 
 const goToAudience = () => {
   pickTemplate();
@@ -275,6 +354,22 @@ describe('MailSendPage (characterisation)', () => {
       endedTo: undefined,
       memberPlanIDs: undefined,
     });
+  });
+
+  it('offers the saved filters beside the filter on the audience step and loads one into it', () => {
+    renderPage();
+
+    expect(
+      screen.queryByRole('button', { name: 'load saved filter' })
+    ).toBeNull();
+
+    goToAudience();
+    fireEvent.click(screen.getByRole('button', { name: 'load saved filter' }));
+
+    expect(lastPreviewAudience().audience.base).toBe('noActiveSubscription');
+    expect(savedFilterProps.mock.calls.at(-1)?.[0].audience.base).toBe(
+      'noActiveSubscription'
+    );
   });
 
   it('picks an email status in one place, the filter, with its count', () => {
@@ -438,8 +533,7 @@ describe('MailSendPage (accessibility)', () => {
   it('names the documents the chosen template attaches, in their order', () => {
     renderPage();
 
-    fireEvent.mouseDown(screen.getAllByRole('combobox')[0]);
-    fireEvent.click(screen.getByRole('option', { name: 'Vertrag' }));
+    pickTemplateNamed('Vertrag');
 
     expect(
       screen.getByText(
@@ -459,8 +553,7 @@ describe('MailSendPage (accessibility)', () => {
     try {
       renderPage();
 
-      fireEvent.mouseDown(screen.getAllByRole('combobox')[0]);
-      fireEvent.click(screen.getByRole('option', { name: 'Vertrag' }));
+      pickTemplateNamed('Vertrag');
 
       expect(screen.queryByText(/^mailSend\.attachments/)).toBeNull();
     } finally {
@@ -524,11 +617,17 @@ describe('MailSendPage (accessibility)', () => {
     ).toEqual([]);
   });
 
-  it('labels the template select of the first step', () => {
+  it('names the template field after the channel the send goes out on', () => {
     renderPage();
 
     expect(
-      screen.getByRole('combobox', { name: /^mailSend\.template/ })
+      screen.getByRole('group', { name: 'mailSend.templateFor.mail' })
+    ).toBeTruthy();
+
+    fireEvent.click(channelRadio('letter'));
+
+    expect(
+      screen.getByRole('group', { name: 'mailSend.templateFor.letter' })
     ).toBeTruthy();
   });
 
@@ -565,5 +664,111 @@ describe('MailSendPage (accessibility)', () => {
     ]) {
       expect(screen.getByRole('combobox', { name })).toBeTruthy();
     }
+  });
+
+  describe('the channel, chosen before the template', () => {
+    it('asks for the channel first, then for the template', () => {
+      renderPage();
+
+      expect(
+        channelRadio('mail').compareDocumentPosition(templateField()) &
+          Node.DOCUMENT_POSITION_FOLLOWING
+      ).toBeTruthy();
+    });
+
+    it('offers both channels before any template is chosen', () => {
+      renderPage();
+
+      expect(channelRadio('mail')).toBeChecked();
+      expect(channelRadio('mail')).toBeEnabled();
+      expect(channelRadio('letter')).toBeEnabled();
+    });
+
+    it('opens the chooser for the chosen channel, where a template is needed', () => {
+      renderPage();
+
+      expect(templateField().dataset.channel).toBe('mail');
+      expect(templateField().dataset.allowNone).toBe('false');
+      expect(screen.getByText('chosen:mailSend.selectTemplate')).toBeTruthy();
+
+      fireEvent.click(channelRadio('letter'));
+
+      expect(templateField().dataset.channel).toBe('letter');
+      expect(lastPreviewAudience().channel).toBe('letter');
+    });
+
+    it('leaves creating a template to the chooser', () => {
+      renderPage();
+
+      expect(
+        document.querySelector('a[href="/mailtemplates/create"]')
+      ).toBeNull();
+    });
+
+    it('keeps the template over a change of channel it is written for', () => {
+      renderPage();
+      pickTemplateNamed('Rechnung');
+      fireEvent.click(channelRadio('letter'));
+
+      expect(screen.getByText('chosen:Rechnung')).toBeTruthy();
+      expect(
+        screen.queryByText(/^mailSend\.channel\.templateDropped/)
+      ).toBeNull();
+    });
+
+    it('drops a template the new channel has no version of, and says so', () => {
+      renderPage();
+      pickTemplateNamed('Erinnerung');
+      fireEvent.click(channelRadio('letter'));
+
+      expect(screen.getByText('chosen:mailSend.selectTemplate')).toBeTruthy();
+      expect(
+        screen.getByText(
+          `mailSend.channel.templateDropped.letter:${JSON.stringify({
+            template: 'Erinnerung',
+          })}`
+        )
+      ).toBeTruthy();
+      expect(
+        screen.getByRole('button', { name: /mailSend\.next/ })
+      ).toBeDisabled();
+
+      // Said until another template is chosen.
+      pickTemplateNamed('Begleitbrief');
+
+      expect(
+        screen.queryByText(/^mailSend\.channel\.templateDropped/)
+      ).toBeNull();
+    });
+
+    it('has no channel to choose without a letter integration: the email it is', () => {
+      letterChannel.paperLetters = false;
+      letterChannel.letterAvailable = false;
+
+      try {
+        renderPage();
+
+        expect(screen.queryByRole('radio')).toBeNull();
+        expect(templateField().dataset.channel).toBe('mail');
+      } finally {
+        letterChannel.paperLetters = true;
+        letterChannel.letterAvailable = true;
+      }
+    });
+
+    it('checks the placeholders of the version being sent', () => {
+      renderPage();
+      pickTemplateNamed('Rechnung');
+
+      expect(lastMissingPlaceholders()).toEqual(
+        expect.objectContaining({ templateId: 'tpl-1', channel: 'mail' })
+      );
+
+      fireEvent.click(channelRadio('letter'));
+
+      expect(lastMissingPlaceholders()).toEqual(
+        expect.objectContaining({ templateId: 'tpl-1', channel: 'letter' })
+      );
+    });
   });
 });

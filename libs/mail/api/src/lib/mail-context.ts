@@ -1,16 +1,38 @@
-import { PrismaClient, SettingMailProvider, UserEvent } from '@prisma/client';
+import {
+  MailChannel,
+  PrismaClient,
+  SettingMailProvider,
+  UserEvent,
+} from '@prisma/client';
 import { BaseMailProvider } from './mail-provider/base-mail-provider';
+import {
+  MailProviderTransientError,
+  SendMailProps,
+  SendMailResult,
+} from './mail-provider/mail-provider.interface';
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { MailController, MailControllerConfig } from './mail.controller';
 import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from '@wepublish/settings/api';
 import { composeMail, MailTemplateContent } from './mail-renderer';
+import {
+  loadPlaceholderEmailPatterns,
+  matchesPlaceholderEmail,
+} from '@wepublish/utils/api';
+import {
+  BuildMailDataOptions,
+  EMPTY_PURL_DATA,
+  MailData,
+  PurlProvider,
+  SAMPLE_PURL_DATA,
+  sanitizeRecipient,
+} from './mail-data';
 import { EmailQualityRecorder } from './email-quality-recorder';
 import { LetterSender } from './letter-sender';
+import { requireTemplateVariant } from './template-variant';
 import {
-  attachmentIdsOf,
-  MAIL_TEMPLATE_ATTACHMENT_IDS,
+  loadAttachmentIds,
   MailAttachment,
   MailAttachmentError,
   MailAttachmentRenderer,
@@ -26,6 +48,12 @@ export interface SendComposedMailProps {
    * out; account mails send without them.
    */
   readonly withAttachments?: boolean;
+  /**
+   * Ready-made files the caller sends along, after the template's own
+   * documents — e.g. the payment provider's invoice pdf. Sent even when
+   * `withAttachments` is off: that switch only concerns the template.
+   */
+  readonly attachments?: MailAttachment[];
 }
 
 export interface SendComposedContentProps {
@@ -123,31 +151,108 @@ export interface MailContextProps {
   readonly prisma: PrismaClient;
   readonly kv: NamespacedCache;
   readonly jwtGenerator: (userId: string) => Promise<string>;
+  readonly purlProvider?: PurlProvider;
   readonly emailQualityRecorder?: EmailQualityRecorder;
   /** Prints automated mails for users in letter mode; absent without letters. */
   readonly letterSender?: LetterSender;
   /** Renders the documents attached to templates; absent without letters. */
   readonly attachmentRenderer?: MailAttachmentRenderer;
+  /**
+   * The waits before each new attempt when the provider fails for a moment
+   * ({@link MailProviderTransientError}); one attempt more than waits.
+   */
+  readonly sendRetryDelaysMs?: readonly number[];
 }
+
+/**
+ * About a minute in all: long enough for a provider hiccup or a rate limit to
+ * pass, short enough that a real outage still stops the run soon.
+ */
+const SEND_RETRY_DELAYS_MS = [5_000, 15_000, 45_000];
 
 @Injectable()
 export class MailContext implements MailContextInterface {
+  private logger = new Logger('MailContext');
+
   mailProvider: BaseMailProvider;
   prisma: PrismaClient;
   kv: NamespacedCache;
   jwtGenerator: (userId: string) => Promise<string>;
+  purlProvider?: PurlProvider;
   emailQualityRecorder?: EmailQualityRecorder;
   letterSender?: LetterSender;
   attachmentRenderer?: MailAttachmentRenderer;
+  private readonly sendRetryDelaysMs: readonly number[];
 
   constructor(props: MailContextProps) {
     this.mailProvider = props.mailProvider;
     this.prisma = props.prisma;
     this.kv = props.kv;
     this.jwtGenerator = props.jwtGenerator;
+    this.purlProvider = props.purlProvider;
     this.emailQualityRecorder = props.emailQualityRecorder;
     this.letterSender = props.letterSender;
     this.attachmentRenderer = props.attachmentRenderer;
+    this.sendRetryDelaysMs = props.sendRetryDelaysMs ?? SEND_RETRY_DELAYS_MS;
+  }
+
+  async buildMailData({
+    recipient,
+    optionalData,
+    jwtOverride,
+    mode,
+    purlOrigin = 'mail',
+    mintJwt = true,
+    mintPurl = true,
+  }: BuildMailDataOptions): Promise<MailData> {
+    const user = sanitizeRecipient(recipient) as Record<string, unknown> & {
+      id: string;
+    };
+    const jwt =
+      jwtOverride ?? (mintJwt ? await this.jwtGenerator(user.id) : '');
+
+    let purl = SAMPLE_PURL_DATA;
+
+    if (mode === 'send') {
+      if (!mintPurl) {
+        purl = EMPTY_PURL_DATA;
+      } else if (this.purlProvider) {
+        purl = await this.purlProvider.purlFor(user.id, purlOrigin);
+      } else {
+        this.logger.warn(
+          'No PurlProvider configured; {{purl}} placeholders render empty.'
+        );
+        purl = EMPTY_PURL_DATA;
+      }
+    }
+
+    return {
+      user,
+      optional: optionalData,
+      jwt,
+      currentDate: new Date(),
+      ...purl,
+    };
+  }
+
+  async getPlaceholderEmailPatterns(): Promise<string[]> {
+    return this.kv.getOrLoadNs(
+      'placeholder-email',
+      'patterns',
+      () => loadPlaceholderEmailPatterns(this.prisma),
+      60
+    );
+  }
+
+  async isPlaceholderEmail(email: string | null | undefined): Promise<boolean> {
+    if (!email) {
+      return false;
+    }
+
+    return matchesPlaceholderEmail(
+      email,
+      await this.getPlaceholderEmailPatterns()
+    );
   }
 
   async sendMail(
@@ -175,6 +280,7 @@ export class MailContext implements MailContextInterface {
     data,
     mailLogID,
     withAttachments = true,
+    attachments: extraAttachments = [],
   }: SendComposedMailProps): Promise<{
     subject: string;
     providerMessageID?: string;
@@ -183,14 +289,11 @@ export class MailContext implements MailContextInterface {
       throw new Error('MailProvider is not set!');
     }
 
-    const template = await this.prisma.mailTemplate.findUnique({
-      where: { id: mailTemplateId },
-      include: MAIL_TEMPLATE_ATTACHMENT_IDS,
-    });
-
-    if (!template) {
-      throw new Error(`MailTemplate <${mailTemplateId}> not found!`);
-    }
+    const template = await requireTemplateVariant(
+      this.prisma as PrismaClient,
+      mailTemplateId,
+      MailChannel.mail
+    );
 
     const config = await new MailContextConfig(
       this.prisma,
@@ -201,12 +304,17 @@ export class MailContext implements MailContextInterface {
     const composed = composeMail(template, data);
     // Rendered before anything is handed over: a mail whose documents cannot
     // be rendered fails as a whole rather than going out without them.
-    const attachments = await this.renderAttachments(
-      withAttachments ? attachmentIdsOf(template) : [],
-      data
-    );
+    const attachments = [
+      ...(await this.renderAttachments(
+        withAttachments ?
+          await loadAttachmentIds(this.prisma as PrismaClient, mailTemplateId)
+        : [],
+        data
+      )),
+      ...extraAttachments,
+    ];
 
-    const result = await this.mailProvider.sendMail({
+    const result = await this.sendWithRetry({
       mailLogID,
       recipient,
       replyToAddress: config?.replyToAddress ?? config?.fromAddress ?? '',
@@ -257,6 +365,35 @@ export class MailContext implements MailContextInterface {
     });
 
     return { providerMessageID: result?.providerMessageID };
+  }
+
+  /**
+   * Sends through the provider and tries again when it fails for a moment, so
+   * one hiccup does not stop a run of many mails (the nightly renewals). Any
+   * other error, a refused recipient included, goes straight to the caller.
+   * A send that timed out may have been taken after all; that rare duplicate
+   * is the price of not leaving the remaining mails until the next night.
+   */
+  private async sendWithRetry(props: SendMailProps): Promise<SendMailResult> {
+    for (let attempt = 0; ; attempt++) {
+      try {
+        return await this.mailProvider.sendMail(props);
+      } catch (error) {
+        const delay = this.sendRetryDelaysMs[attempt];
+
+        if (
+          !(error instanceof MailProviderTransientError) ||
+          delay === undefined
+        ) {
+          throw error;
+        }
+
+        this.logger.warn(
+          `Mail to ${props.recipient} failed for a moment, trying again in ${delay / 1000} s: ${error.message}`
+        );
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
   }
 
   private async renderAttachments(

@@ -1,5 +1,9 @@
 export type DashboardCardId =
-  'notifications' | 'network' | 'activity' | 'audience' | 'externalApps';
+  | 'notifications'
+  | 'network'
+  | 'activity'
+  | 'audience'
+  | 'externalApps';
 
 export type DashboardCardDefinition = {
   id: DashboardCardId;

@@ -1,18 +1,23 @@
 import styled from '@emotion/styled';
 import {
   CreateSubscriptionFlowMutationVariables,
-  FullMemberPlanFragment,
   ListPaymentMethodsQuery,
   PaymentPeriodicity,
   SubscriptionFlowFragment,
   UpdateSubscriptionFlowMutationVariables,
 } from '@wepublish/editor/api';
-import { useAuthorisation } from '@wepublish/ui/editor';
-import { useContext, useState } from 'react';
+import { useAuthorisation, useFeature } from '@wepublish/ui/editor';
+import { useContext, useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd } from 'react-icons/md';
 import { SubscriptionClientContext } from '../graphql-client-context';
-import { Autocomplete, Button, TextField } from '@mui/material';
+import {
+  Autocomplete,
+  Button,
+  FormHelperText,
+  MenuItem,
+  TextField,
+} from '@mui/material';
 import { CanUpdateSubscriptionFlow } from '@wepublish/permissions';
 
 const FilterGrid = styled('div')`
@@ -35,14 +40,39 @@ const FieldLabel = styled('span')`
   color: ${({ theme }) => theme.vars.palette.text.primary};
 `;
 
+const OpenConditionsHint = styled('p')`
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.35;
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
+`;
+
 const CreateAction = styled('div')`
   display: flex;
   justify-content: flex-end;
   grid-column: 1 / -1;
 `;
 
+/** Whom a flow is for, as the API stores it and as the select names it. */
+const LEGACY_CHOICES = {
+  all: [true, false],
+  only: [true],
+  none: [false],
+} as const;
+
+export type LegacyChoice = keyof typeof LEGACY_CHOICES;
+
+export const legacyChoiceOf = (
+  legacy: readonly boolean[] | undefined
+): LegacyChoice =>
+  !legacy || (legacy.includes(true) && legacy.includes(false)) ? 'all'
+  : legacy.includes(true) ? 'only'
+  : 'none';
+
 interface FlowFiltersProps {
-  memberPlan: FullMemberPlanFragment;
+  /** The plan of the flow; none for a flow for all member plans. */
+  memberPlan?: { id: string };
   subscriptionFlow?: SubscriptionFlowFragment;
   createNewFlow?: boolean;
   paymentMethods: ListPaymentMethodsQuery | undefined;
@@ -61,6 +91,8 @@ export function FlowFilters({
   const [newFlow, setNewFlow] =
     useState<CreateSubscriptionFlowMutationVariables>();
   const client = useContext(SubscriptionClientContext);
+  const legacyFilter = useFeature('legacy-subscriptions');
+  const legacyLabelId = useId();
 
   function updateNewFlow(
     payload: Partial<UpdateSubscriptionFlowMutationVariables>
@@ -72,10 +104,13 @@ export function FlowFilters({
     };
 
     setNewFlow({
-      memberPlanId: memberPlan.id,
+      ...(memberPlan ?
+        { memberPlanId: memberPlan.id }
+      : { allMemberPlans: true }),
       paymentMethodIds: payload.paymentMethodIds || oldFlow.paymentMethodIds,
       periodicities: payload.periodicities || oldFlow.periodicities,
       autoRenewal: payload.autoRenewal || oldFlow.autoRenewal,
+      legacy: payload.legacy ?? newFlow?.legacy,
     });
   }
 
@@ -94,6 +129,8 @@ export function FlowFilters({
           subscriptionFlow.paymentMethods.map(pm => pm.id),
         periodicities: payload.periodicities || subscriptionFlow.periodicities,
         autoRenewal: payload.autoRenewal || subscriptionFlow.autoRenewal,
+        // Left out unless it changes: the API then keeps what the flow has.
+        ...(payload.legacy && { legacy: payload.legacy }),
       },
     });
   }
@@ -181,6 +218,43 @@ export function FlowFilters({
           renderInput={params => <TextField {...params} />}
         />
       </Field>
+
+      {/* A flow for all plans may leave conditions open. */}
+      {!memberPlan && (
+        <OpenConditionsHint>
+          {t('subscriptionFlow.openConditionsHint')}
+        </OpenConditionsHint>
+      )}
+
+      {legacyFilter && (
+        <Field>
+          <FieldLabel id={legacyLabelId}>
+            {t('subscriptionFlow.legacy')}
+          </FieldLabel>
+
+          <TextField
+            select
+            disabled={subscriptionFlow?.default || !canUpdateSubscriptionFlow}
+            defaultValue={legacyChoiceOf(subscriptionFlow?.legacy)}
+            onChange={event =>
+              createOrUpdateFlow({
+                legacy: [...LEGACY_CHOICES[event.target.value as LegacyChoice]],
+              })
+            }
+            slotProps={{ select: { labelId: legacyLabelId } }}
+          >
+            {(Object.keys(LEGACY_CHOICES) as LegacyChoice[]).map(choice => (
+              <MenuItem
+                key={choice}
+                value={choice}
+              >
+                {t(`subscriptionFlow.legacyFilter.${choice}`)}
+              </MenuItem>
+            ))}
+          </TextField>
+          <FormHelperText>{t('subscriptionFlow.legacyHint')}</FormHelperText>
+        </Field>
+      )}
 
       {createNewFlow && (
         <CreateAction>

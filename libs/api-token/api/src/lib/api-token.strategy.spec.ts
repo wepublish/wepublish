@@ -40,7 +40,8 @@ describe('apiTokenSession', () => {
 
   it('takes the permissions its creator still holds, not the stored scopes', () => {
     expect(
-      apiTokenSession({ ...resolved, permissions: [] }, 'wep_secret').permissions
+      apiTokenSession({ ...resolved, permissions: [] }, 'wep_secret')
+        .permissions
     ).toEqual([]);
   });
 

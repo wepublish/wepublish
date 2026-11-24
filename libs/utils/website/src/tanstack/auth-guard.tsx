@@ -2,6 +2,7 @@ import { useNavigate } from '@tanstack/react-router';
 import {
   IntendedRouteExpiryInSeconds,
   IntendedRouteStorageKey,
+  sanitizeIntendedRoute,
   useUser,
 } from '@wepublish/authentication/website';
 import { setCookie } from 'cookies-next';
@@ -26,7 +27,7 @@ const AuthGuard = ({ children }: PropsWithChildren) => {
   const asPath = useAsPath();
 
   if (!hasUser && typeof window !== 'undefined') {
-    setCookie(IntendedRouteStorageKey, asPath, {
+    setCookie(IntendedRouteStorageKey, sanitizeIntendedRoute(asPath), {
       expires: add(new Date(), {
         seconds: IntendedRouteExpiryInSeconds,
       }),

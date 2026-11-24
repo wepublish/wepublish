@@ -7,6 +7,7 @@ import {
   PermissionControl,
   useAuthorisation,
   ClickPopover,
+  InfoTooltip,
 } from '@wepublish/ui/editor';
 import { useContext, useId, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -15,6 +16,7 @@ import { MailSubsection } from '../../mail-settings-layout';
 import { DraggableSubscriptionInterval } from '../draggable-subscription-interval';
 import { DroppableSubscriptionInterval } from '../droppable-subscription-interval';
 import { SubscriptionClientContext } from '../graphql-client-context';
+import { earliestDayHint } from '../flow-overview';
 import { decorateInterval, timelineDays } from '../interval-decoration';
 import {
   MailTemplatesContext,
@@ -125,9 +127,9 @@ const RenewalHint = styled('span')`
 
 const PopoverBody = styled('div')`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 6px;
-  min-width: 170px;
+  width: min(300px, calc(100vw - 48px));
 `;
 
 const NewDayBody = styled('div')`
@@ -158,11 +160,16 @@ const NewDayHint = styled('span')`
   color: ${({ theme }) => theme.vars.palette.text.secondary};
 `;
 
+/** The api takes no event later than this after the end of a subscription. */
+const LATEST_DAY = 90;
+
 interface AddDayProps {
+  /** The earliest day an event of the flow may lie on. */
+  earliestDay: number;
   onAdd(day: number): void;
 }
 
-function AddDay({ onAdd }: AddDayProps) {
+function AddDay({ earliestDay, onAdd }: AddDayProps) {
   const { t } = useTranslation();
   const [day, setDay] = useState(-3);
   const titleId = useId();
@@ -199,7 +206,12 @@ function AddDay({ onAdd }: AddDayProps) {
                 defaultValue={day}
                 onChange={event => setDay(+(event.target.value || 0))}
                 slotProps={{
-                  htmlInput: { step: 1, 'aria-labelledby': titleId },
+                  htmlInput: {
+                    step: 1,
+                    min: earliestDay,
+                    max: LATEST_DAY,
+                    'aria-labelledby': titleId,
+                  },
                 }}
               />
 
@@ -279,8 +291,13 @@ function EditDay({ day, subscriptionFlow }: EditDayProps) {
           label={t('subscriptionFlow.editDay')}
           defaultValue={day}
           onChange={event => (editDay.current = +(event.target.value || 0))}
+          helperText={earliestDayHint(subscriptionFlow, t)}
           slotProps={{
-            htmlInput: { step: 1 },
+            htmlInput: {
+              step: 1,
+              min: subscriptionFlow.earliestDay.days,
+              max: LATEST_DAY,
+            },
             input: {
               endAdornment: (
                 <InputAdornment position="end">
@@ -344,7 +361,12 @@ export function Timeline({ subscriptionFlow }: TimelineProps) {
       icon={<MdAlarmOn size={16} />}
       description={t('subscriptionFlow.timelineDescription')}
       example={t('subscriptionFlow.timelineExample')}
-      actions={<AddDay onAdd={addMail} />}
+      actions={
+        <AddDay
+          earliestDay={subscriptionFlow.earliestDay.days}
+          onAdd={addMail}
+        />
+      }
     >
       <DayList>
         {days.map(day => {
@@ -368,6 +390,13 @@ export function Timeline({ subscriptionFlow }: TimelineProps) {
                 <DayName>
                   {t('subscriptionFlow.dayWithNumber', { day })}
                 </DayName>
+
+                {intervals.some(
+                  interval =>
+                    interval.object.event === SubscriptionEvent.InvoiceCreation
+                ) && (
+                  <InfoTooltip text={earliestDayHint(subscriptionFlow, t)} />
+                )}
 
                 {day === 0 ?
                   <RenewalHint>

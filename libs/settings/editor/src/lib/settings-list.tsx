@@ -2,6 +2,7 @@ import { useApolloClient, useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   SettingName,
+  LoginCodeSecondFactor,
   SettingsListDocument,
   UpdateSettingDocument,
 } from '@wepublish/editor/api';
@@ -34,6 +35,13 @@ import { MdCancel, MdSave, MdWarning } from 'react-icons/md';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
+import {
+  DEFAULT_ISSUE_NUMBERING,
+  formatIssueLabel,
+  type IssueCounting,
+  LABEL_FORMAT_PRESETS,
+  validateLabelFormat,
+} from '@wepublish/utils';
 import { CanGetSettings, CanUpdateSettings } from '@wepublish/permissions';
 import {
   Button,
@@ -51,6 +59,7 @@ import {
   FormLabel,
   Grid,
   InputAdornment,
+  MenuItem,
   Radio,
   RadioGroup,
   Stack,
@@ -105,6 +114,26 @@ const SETTINGS = {
   [SettingName.SendLoginJwtExpiresMin]: {
     label: 'settingList.loginMinutes',
     value: 0,
+  },
+  [SettingName.LoginCodeEnabled]: {
+    label: 'settingList.loginCodeEnabled',
+    value: false,
+  },
+  [SettingName.LoginCodeMaxUses]: {
+    label: 'settingList.loginCodeMaxUses',
+    value: 5,
+  },
+  [SettingName.LoginCodeValidDays]: {
+    label: 'settingList.loginCodeValidDays',
+    value: 90,
+  },
+  [SettingName.LoginCodeSecondFactor]: {
+    label: 'settingList.loginCodeSecondFactor',
+    value: LoginCodeSecondFactor.None,
+  },
+  [SettingName.PlaceholderEmailPatterns]: {
+    label: 'settingList.placeholderEmailPatterns',
+    value: '',
   },
   [SettingName.ResetPasswordJwtExpiresMin]: {
     label: 'settingList.passwordToken',
@@ -174,6 +203,18 @@ const SETTINGS = {
     label: 'settingList.printIssuesPerYear',
     value: 0,
   },
+  [SettingName.PrintIssueNumbering]: {
+    label: 'settingList.printIssueNumbering',
+    value: DEFAULT_ISSUE_NUMBERING.counting,
+  },
+  [SettingName.PrintIssueLabelFormat]: {
+    label: 'settingList.printIssueLabelFormat',
+    value: DEFAULT_ISSUE_NUMBERING.format,
+  },
+  [SettingName.PrintIssueCounting]: {
+    label: 'settingList.printIssueCounting',
+    value: 'perPeriod',
+  },
   [SettingName.PrintExportDefaults]: {
     label: 'settingList.printExportDefaults',
     value: DEFAULT_PRINT_EXPORT_OPTIONS,
@@ -190,6 +231,27 @@ const SETTINGS = {
 
 const FEED_PAYWALLED_CONTENT_CHOICES = ['lead', 'visible', 'full'] as const;
 
+/** Numbers restart every year («6.26») or run on («#117»). */
+const PRINT_ISSUE_NUMBERING_CHOICES = ['perYear', 'continuous'] as const;
+
+/** What the template preview shows: a single and a double issue. */
+const previewIssues = (counting: IssueCounting) =>
+  counting === 'continuous' ?
+    [
+      { number: 117, year: 2026 },
+      { number: 117, numberTo: 118, year: 2026 },
+    ]
+  : [
+      { number: 6, year: 2026 },
+      { number: 3, numberTo: 4, year: 2026 },
+    ];
+
+const countingOf = (value: unknown): IssueCounting =>
+  value === 'continuous' ? 'continuous' : 'perYear';
+
+/** Per period: every issue while it runs. Per copy: until it got its number. */
+const PRINT_ISSUE_COUNTING_CHOICES = ['perPeriod', 'perCopy'] as const;
+
 type SettingValues = Record<SettingName, unknown>;
 
 const EMPTY_SETTINGS = Object.fromEntries(
@@ -200,6 +262,8 @@ const NUMBER_FALLBACK_RANGES: Partial<Record<SettingName, [number, number]>> = {
   [SettingName.SessionTtlDays]: [1, 365],
   [SettingName.EmailQualityUnresponsiveAfterDays]: [1, 3650],
   [SettingName.EmailQualityMinMailsForUnresponsive]: [1, 100],
+  [SettingName.LoginCodeMaxUses]: [1, 100],
+  [SettingName.LoginCodeValidDays]: [1, 365],
   [SettingName.SendLoginJwtExpiresMin]: [1, 10080],
   [SettingName.ResetPasswordJwtExpiresMin]: [10, 10080],
   [SettingName.PeeringTimeoutMs]: [1000, 10000],
@@ -214,21 +278,45 @@ type Restrictions = Partial<
 >;
 
 const buildSchema = (restrictions: Restrictions) =>
-  z.object(
-    Object.fromEntries(
-      Object.entries(NUMBER_FALLBACK_RANGES).map(([name, [min, max]]) => {
-        const restriction = restrictions[name as SettingName];
+  z
+    .object({
+      ...Object.fromEntries(
+        Object.entries(NUMBER_FALLBACK_RANGES).map(([name, [min, max]]) => {
+          const restriction = restrictions[name as SettingName];
 
-        return [
-          name,
-          z.coerce
-            .number()
-            .min(restriction?.minValue ?? min)
-            .max(restriction?.maxValue ?? max),
-        ];
-      })
-    )
-  );
+          return [
+            name,
+            z.coerce
+              .number()
+              .min(restriction?.minValue ?? min)
+              .max(restriction?.maxValue ?? max),
+          ];
+        })
+      ),
+      [SettingName.PrintIssueNumbering]: z.unknown().optional(),
+      [SettingName.PrintIssueLabelFormat]: z.unknown().optional(),
+    })
+    // the label template has to fit the counting: per year it needs the year
+    .superRefine((values, ctx) => {
+      const format = values[SettingName.PrintIssueLabelFormat];
+
+      if (format === undefined) {
+        return;
+      }
+
+      const [error] = validateLabelFormat(
+        String(format),
+        countingOf(values[SettingName.PrintIssueNumbering])
+      );
+
+      if (error) {
+        ctx.addIssue({
+          code: 'custom',
+          path: [SettingName.PrintIssueLabelFormat],
+          message: error,
+        });
+      }
+    });
 
 function SettingList() {
   const [showWarning, setShowWarning] = useState<boolean>(false);
@@ -332,6 +420,14 @@ function SettingList() {
     (value: unknown, name?: SettingName): string => {
       if (name === SettingName.FeedPaywalledContent) {
         return t(`settingList.feedPaywalledContentChoice.${value}`);
+      }
+
+      if (name === SettingName.PrintIssueNumbering) {
+        return t(`settingList.printIssueNumberingChoice.${value}`);
+      }
+
+      if (name === SettingName.PrintIssueCounting) {
+        return t(`settingList.printIssueCountingChoice.${value}`);
       }
 
       if (value === true) {
@@ -615,6 +711,163 @@ function SettingList() {
                             t('settingList.issues')
                           )}
 
+                          {/* numbers restart every year or run on */}
+                          <FormControl fullWidth>
+                            <SettingRow>
+                              <FormLabel id="setting-print-issue-numbering-label">
+                                {t(
+                                  SETTINGS[SettingName.PrintIssueNumbering]
+                                    .label
+                                )}
+                              </FormLabel>
+                              <InfoTooltip
+                                text={t('settingList.info.printIssueNumbering')}
+                              />
+                            </SettingRow>
+
+                            <Controller
+                              control={control}
+                              name={SettingName.PrintIssueNumbering}
+                              render={({ field }) => (
+                                <RadioGroup
+                                  {...field}
+                                  aria-labelledby="setting-print-issue-numbering-label"
+                                  value={countingOf(field.value)}
+                                >
+                                  {PRINT_ISSUE_NUMBERING_CHOICES.map(choice => (
+                                    <FormControlLabel
+                                      key={choice}
+                                      value={choice}
+                                      disabled={isDisabled}
+                                      control={<Radio />}
+                                      label={t(
+                                        `settingList.printIssueNumberingChoice.${choice}`
+                                      )}
+                                    />
+                                  ))}
+                                </RadioGroup>
+                              )}
+                            />
+                          </FormControl>
+
+                          {/* whether a running period stops once it got its number */}
+                          <FormControl fullWidth>
+                            <SettingRow>
+                              <FormLabel id="setting-print-issue-counting-label">
+                                {t(
+                                  SETTINGS[SettingName.PrintIssueCounting].label
+                                )}
+                              </FormLabel>
+                              <InfoTooltip
+                                text={t('settingList.info.printIssueCounting')}
+                              />
+                            </SettingRow>
+
+                            <Controller
+                              control={control}
+                              name={SettingName.PrintIssueCounting}
+                              render={({ field }) => (
+                                <RadioGroup
+                                  {...field}
+                                  aria-labelledby="setting-print-issue-counting-label"
+                                  value={field.value as string}
+                                >
+                                  {PRINT_ISSUE_COUNTING_CHOICES.map(choice => (
+                                    <FormControlLabel
+                                      key={choice}
+                                      value={choice}
+                                      disabled={isDisabled}
+                                      control={<Radio />}
+                                      label={t(
+                                        `settingList.printIssueCountingChoice.${choice}`
+                                      )}
+                                    />
+                                  ))}
+                                </RadioGroup>
+                              )}
+                            />
+                          </FormControl>
+
+                          {/* how a label is written: {range}, {number}, {yy}, {yyyy} */}
+                          <Controller
+                            control={control}
+                            name={SettingName.PrintIssueLabelFormat}
+                            render={({ field, fieldState: { error } }) => {
+                              const format = String(field.value ?? '');
+                              const counting = countingOf(
+                                values[SettingName.PrintIssueNumbering]
+                              );
+
+                              return (
+                                <Stack spacing={1}>
+                                  <TextField
+                                    {...field}
+                                    value={format}
+                                    label={t(
+                                      SETTINGS[
+                                        SettingName.PrintIssueLabelFormat
+                                      ].label
+                                    )}
+                                    disabled={isDisabled}
+                                    error={Boolean(error)}
+                                    helperText={
+                                      error ?
+                                        t(
+                                          `settingList.printIssueLabelFormatError.${error.message}`
+                                        )
+                                      : `${t('settingList.printIssueLabelFormatPreview')}: ${previewIssues(
+                                          counting
+                                        )
+                                          .map(issue =>
+                                            formatIssueLabel(issue, format)
+                                          )
+                                          .join(' · ')}`
+                                    }
+                                    fullWidth
+                                    slotProps={{
+                                      input: {
+                                        endAdornment: (
+                                          <InputAdornment position="end">
+                                            <InfoTooltip
+                                              text={t(
+                                                'settingList.info.printIssueLabelFormat'
+                                              )}
+                                            />
+                                          </InputAdornment>
+                                        ),
+                                      },
+                                    }}
+                                  />
+
+                                  <Stack
+                                    direction="row"
+                                    spacing={1}
+                                    useFlexGap
+                                    sx={{ flexWrap: 'wrap' }}
+                                  >
+                                    {LABEL_FORMAT_PRESETS.map(preset => (
+                                      <Button
+                                        key={preset}
+                                        size="small"
+                                        variant="outlined"
+                                        disabled={isDisabled}
+                                        onClick={() => field.onChange(preset)}
+                                      >
+                                        {formatIssueLabel(
+                                          previewIssues(
+                                            preset.includes('{y') ? 'perYear'
+                                            : 'continuous'
+                                          )[0]!,
+                                          preset
+                                        )}
+                                      </Button>
+                                    ))}
+                                  </Stack>
+                                </Stack>
+                              );
+                            }}
+                          />
+
                           {/* how lists recognise orders in bexio; the defaults below offer these kinds */}
                           <Controller
                             control={control}
@@ -698,6 +951,94 @@ function SettingList() {
                           t('settingList.info.loginMinutes'),
                           t('settingList.minutes')
                         )}
+
+                        {renderToggle(
+                          SettingName.LoginCodeEnabled,
+                          t('settingList.warnings.loginCodeEnabled')
+                        )}
+
+                        {renderNumberInput(
+                          SettingName.LoginCodeMaxUses,
+                          t('settingList.warnings.loginCodeMaxUses'),
+                          t('settingList.loginCodeUses')
+                        )}
+
+                        {renderNumberInput(
+                          SettingName.LoginCodeValidDays,
+                          t('settingList.warnings.loginCodeValidDays'),
+                          t('settingList.days')
+                        )}
+
+                        <SettingRow>
+                          <Controller
+                            control={control}
+                            name={SettingName.LoginCodeSecondFactor}
+                            render={({ field }) => (
+                              <TextField
+                                {...field}
+                                select
+                                value={
+                                  (field.value as LoginCodeSecondFactor) ??
+                                  LoginCodeSecondFactor.None
+                                }
+                                label={t(
+                                  SETTINGS[SettingName.LoginCodeSecondFactor]
+                                    .label
+                                )}
+                                disabled={isDisabled}
+                                fullWidth
+                              >
+                                {Object.values(LoginCodeSecondFactor).map(
+                                  value => (
+                                    <MenuItem
+                                      key={value}
+                                      value={value}
+                                    >
+                                      {t(
+                                        `settingList.loginCodeSecondFactorOptions.${value}`
+                                      )}
+                                    </MenuItem>
+                                  )
+                                )}
+                              </TextField>
+                            )}
+                          />
+                          <InfoTooltip
+                            text={t(
+                              'settingList.warnings.loginCodeSecondFactor'
+                            )}
+                          />
+                        </SettingRow>
+
+                        <Controller
+                          control={control}
+                          name={SettingName.PlaceholderEmailPatterns}
+                          render={({ field }) => (
+                            <TextField
+                              {...field}
+                              value={(field.value as string | null) ?? ''}
+                              label={t(
+                                SETTINGS[SettingName.PlaceholderEmailPatterns]
+                                  .label
+                              )}
+                              disabled={isDisabled}
+                              fullWidth
+                              slotProps={{
+                                input: {
+                                  endAdornment: (
+                                    <InputAdornment position="end">
+                                      <InfoTooltip
+                                        text={t(
+                                          'settingList.warnings.placeholderEmailPatterns'
+                                        )}
+                                      />
+                                    </InputAdornment>
+                                  ),
+                                },
+                              }}
+                            />
+                          )}
+                        />
 
                         {renderNumberInput(
                           SettingName.ResetPasswordJwtExpiresMin,

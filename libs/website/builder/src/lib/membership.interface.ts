@@ -323,6 +323,14 @@ export type BuilderSubscribeProps<
   hiddenAreas?: readonly SubscribeArea[];
   /** Called when a submit fails validation, e.g. because of a hidden section. */
   onInvalid?: (errors: FieldErrors) => void;
+  /**
+   * What a tenant adds to the subscription on submit, e.g. the first printed
+   * issue its own section asked for; false stops the submit because something
+   * the tenant needs is missing.
+   */
+  subscribeExtras?: () =>
+    | Partial<Omit<SubscribeMutationVariables, 'failureURL' | 'successURL'>>
+    | false;
 } & Pick<BuilderRegistrationFormProps<T>, 'schema' | 'fields'>;
 
 export type BuilderUpgradeProps = {

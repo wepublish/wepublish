@@ -7,19 +7,34 @@ import {
 
 const recipient = { id: 'user-1', email: 'jane@example.com' } as any;
 
+/** The parts of the context a send touches before the provider answers. */
+const contextFor = (error: Error, emailQualityRecorder: unknown) => ({
+  sendComposedMail: vi.fn(async () => {
+    throw error;
+  }),
+  jwtGenerator: vi.fn(async () => 'jwt'),
+  isPlaceholderEmail: vi.fn(async () => false),
+  buildMailData: vi.fn(async () => ({
+    user: recipient,
+    optional: {},
+    jwt: 'jwt',
+    currentDate: new Date(),
+  })),
+  mailProvider: { id: 'mailchimp' },
+  emailQualityRecorder,
+});
+
+const prismaFor = () => ({
+  mailLog: { create: vi.fn(async () => ({})) },
+  mailTemplate: { findUnique: vi.fn(async () => null) },
+});
+
 const send = async (error: Error, withRecorder = true) => {
   const recorder = {
     recordMailSignals: vi.fn(async () => undefined),
   };
-  const prisma = { mailLog: { create: vi.fn(async () => ({})) } };
-  const mailContext = {
-    sendComposedMail: vi.fn(async () => {
-      throw error;
-    }),
-    jwtGenerator: vi.fn(async () => 'jwt'),
-    mailProvider: { id: 'mailchimp' },
-    emailQualityRecorder: withRecorder ? recorder : undefined,
-  };
+  const prisma = prismaFor();
+  const mailContext = contextFor(error, withRecorder ? recorder : undefined);
 
   await expect(
     new MailController(prisma as any, mailContext as any, {
@@ -85,26 +100,15 @@ describe('MailController email quality evidence', () => {
         throw new Error('database down');
       }),
     };
-    const mailContext = {
-      sendComposedMail: vi.fn(async () => {
-        throw error;
-      }),
-      jwtGenerator: vi.fn(async () => 'jwt'),
-      mailProvider: { id: 'mailchimp' },
-      emailQualityRecorder: recorder,
-    };
+    const mailContext = contextFor(error, recorder);
 
     await expect(
-      new MailController(
-        { mailLog: { create: vi.fn() } } as any,
-        mailContext as any,
-        {
-          mailTemplateId: 'template-1',
-          recipient,
-          optionalData: {},
-          mailType: mailLogType.SubscriptionFlow,
-        }
-      ).sendMail()
+      new MailController(prismaFor() as any, mailContext as any, {
+        mailTemplateId: 'template-1',
+        recipient,
+        optionalData: {},
+        mailType: mailLogType.SubscriptionFlow,
+      }).sendMail()
     ).rejects.toBe(error);
   });
 

@@ -76,13 +76,14 @@ of the current year in `index` mode) through
 `createSitemapHandlers` from `@wepublish/feed/website` — TanStack tenants serve
 `/sitemap.xml` + `/sitemap/<chunk>` through its Fetch API twin
 `createSitemapFetchHandlers`, with `/api/sitemap` 301ing there. Per-media settings
-(`mode: 'single' | 'index'`, `pageUrls`, `homepageSlug`, `filterArticle`, url
-hooks) live in `apps/<app>/src/sitemap.ts`. Fetch with the lean `Sitemap*`
+(`mode: 'single' | 'index'`, `pageUrls`, `homepageSlug`, `filterArticle`,
+`filterPage`, url hooks) live in `apps/<app>/src/sitemap.ts`. Fetch with the lean `Sitemap*`
 documents (`libs/website/api/src/lib/schemas/sitemap.graphql`), never
-`ArticleList`, and leave peered articles out. `generateSitemap` is deprecated.
+`ArticleList`, and leave peered articles out. `<loc>` urls are percent-encoded
+in `xml.ts`, because the API returns page and article urls with raw slugs. `generateSitemap` is deprecated.
 
 **llms.txt:** every website serves `/llms.txt` from the same `src/sitemap.ts`
-config, so its `filterArticle` and url hooks apply. It follows
+config, so its `filterArticle`, `filterPage` and url hooks apply. It follows
 llmtxt.info/best-practices: one H1, a factual `description` blockquote (an
 encyclopedia opener, not a slogan), a "Last updated" line, one H2 per CMS
 navigation (published pages only when there is none), the 10 latest articles,
@@ -98,7 +99,7 @@ oversized bodies) so they do not reach Sentry.
 **Feeds:** Next tenants export `createFeedHandler(getFeed, format)` from
 `@wepublish/feed/website` in `pages/api/{rss,atom,json}-feed.ts` (with
 `api: { bodyParser: false }` in `config`); TanStack tenants use `feedHandler`
-from `@wepublish/utils/website/tanstack`. Both answer a failed feed query with
+from `@wepublish/utils/website/tanstack/server`. Both answer a failed feed query with
 an uncached 502 and report the error to Sentry instead of throwing.
 Every `apps/<app>/src/feed.ts` loads its items with `queryFeed`
 (`FeedArticleList`, `libs/website/api/src/lib/schemas/feed.graphql`), never
@@ -151,6 +152,8 @@ Frontend (Apollo Client)
 - Decorators: `@Public()` (no auth), `@CurrentUser()` (inject session), `@Permissions(...)` (RBAC check)
 - Permission constants: `CanCreateArticle`, `CanDeleteArticle`, `CanPublishArticle`, `CanGetArticle`, etc.
 - `@PreviewMode()` for draft content access
+- External apps (`libs/external-apps/api`): the editor mints a 4 h EdDSA JWT per opened app (`createExternalAppToken`, audience = the app's origin) and hands it over in the URL fragment (`#token=…`, never a query parameter: fragments reach no server or log); apps verify it via `GET /external-apps/userinfo` or the JWKS at `/.well-known/jwks.json`
+- API tokens (`libs/peering/api`, editor Peering → Tokens): a request with `Authorization: Bearer <token>` and `User-Agent: We.Publish/1.0 Peering` gets the permissions of the token's `roleIDs`; roles are set when creating or editing the token (`createToken` / `updateToken`), and a token without roles may do nothing
 - API keys (`libs/api-token`, editor «API Keys»): `Authorization: Bearer wep_…`, stored as a salted argon2id hash and found by their visible `prefix` (never look one up by hash), scopes are permission IDs, they expire (≤ 3 years) and the API announces the expiry in the `wepublish-api-key-expiration` response header. Never send them with the peering user agent: that path only reads peering tokens and refuses the key. A key acts on behalf of the user who created it, checked on every call and never cached (`ApiTokenService.resolveToken`): no creator, an inactive one, or one without `CAN_CREATE_API_TOKEN` is a 401, and the session's permissions are the key's scopes the creator still holds. The audit log records the key and that user. `@CurrentUser()` returns an `AuthSession`, not a `UserSession`, so never read `session.user` in a resolver: use `actorOf(session)` to record who did something (user or key creator; 403 for a peering token), `actorUserIdOf(session)` where a legacy peering token may act too (it records nobody; articles, pages), `requireSessionUser(session)` / `requireUserSession(session)` for the caller's own account (403 for any key or token), and `userSessionOf(session)` where a key is simply not the caller (public mutations, "is this mine" fields), all in `libs/authentication/api/src/lib/session-user.ts`. A record that keeps a "done by" user keeps the key beside it in a nullable `…ByApiTokenId` column (invoices, delivery preferences and bulk changes, print issues and their deliveries): services take the `SessionActor` and write both, and the editor adds «via API-Schlüssel «name»» to the person. A new "done by" column gets the same sibling. `ApiToken.creatorState` (ok / blocked with a reason / limited with the missing scopes) exposes that same check (`ApiTokenService.creatorCheck`) to the key list, which shows «Blockiert» and the missing permissions; it is not part of `ApiTokenStatus` and cannot be filtered on.
 - External apps (`libs/external-apps`) that read the API bring their own API key with the minimal scopes, kept in the app. `ExternalApps.apiTokenId` records which key, so the Apps dashboard and the app's edit page warn 30 days before it expires and once it is expired or revoked. The key is linkable and its metadata visible only to editors who see it in the API keys list.
 - Per-medium feature toggles (`libs/features`, state from We.Publish One): `@Feature('key')` in the API, `useFeature` / `FeatureControl` in the editor — see [conventions.md](conventions.md#feature-toggles-per-medium)

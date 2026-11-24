@@ -50,6 +50,7 @@ fragment PrintIssueSummaryFields on PrintIssueSummary {
     lapsed
     exhausted
     noPrintIssues
+    beforeFirstIssue
   }
   bexio {
     configured
@@ -64,6 +65,7 @@ fragment PrintIssueSummaryFields on PrintIssueSummary {
     skippedOpen
     excludedKind
     quantityMismatch
+    exhausted
     detailFetched
     ungeprueft
     zeroCopies
@@ -229,6 +231,13 @@ query PrintExportContext {
       label
       refersTo
     }
+  }
+}
+
+query PrintIssueNumbering {
+  printIssueNumbering {
+    counting
+    format
   }
 }
 

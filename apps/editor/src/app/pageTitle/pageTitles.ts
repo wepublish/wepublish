@@ -117,6 +117,9 @@ export const PAGE_TITLES: Record<string, string> = {
   '/userConsents': 'pageTitles.userConsents',
   '/userConsents/create': 'pageTitles.userConsentCreate',
   '/userConsents/edit/:id': 'pageTitles.userConsentEdit',
+  '/communicationflows': 'pageTitles.automaticEmails',
+  '/communicationflows/flow/:id': 'pageTitles.communicationFlow',
+  // Redirects to the overview or to the default flow.
   '/communicationflows/edit/:id': 'pageTitles.automaticEmails',
   '/mailtemplates': 'pageTitles.mailTemplates',
   '/mailtemplates/create': 'pageTitles.mailTemplateCreate',

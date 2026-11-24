@@ -1,3 +1,4 @@
+import { SessionOrigin } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
 import { SessionService } from './session.service';
 import { RegisterUserInput, UserService } from '@wepublish/user/api';
@@ -25,7 +26,9 @@ export class RegisterService {
       roleIDs: [],
     });
 
-    const session = await this.sessionService.createUserSession(user);
+    const session = await this.sessionService.createUserSession(user, {
+      origin: SessionOrigin.register,
+    });
 
     return {
       user,

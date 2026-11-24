@@ -263,11 +263,19 @@ export class MemberPlanService {
   }
 
   async deleteMemberPlan(id: string) {
-    const memberPlan = await this.prisma.memberPlan.delete({
-      where: {
-        id,
-      },
-    });
+    // The database would only clear the plan of its flows. A flow that is
+    // neither the default one nor a plan's stops every automatic message, so
+    // the plan's flows go with it; their intervals follow by cascade.
+    const [, memberPlan] = await this.prisma.$transaction([
+      this.prisma.subscriptionFlow.deleteMany({
+        where: { memberPlanId: id, default: false },
+      }),
+      this.prisma.memberPlan.delete({
+        where: {
+          id,
+        },
+      }),
+    ]);
     await this.forgetMemberPlans();
 
     return memberPlan;

@@ -4,15 +4,18 @@ import {
   BannerDocumentType,
   ChallengeDocument,
   CheckLoginOtpDocument,
+  SessionInfoDocument,
   PeerProfileDocument,
   PrimaryBannerDocument,
   SettingListDocument,
   possibleTypes,
+  SessionOrigin,
   SettingName,
 } from '@wepublish/website/api';
 import {
   mockChallengeQuery,
   mockCheckLoginOtpQuery,
+  mockSessionInfoQuery,
   mockMutationResult,
   mockOperation,
   mockPeerProfileQuery,
@@ -155,6 +158,31 @@ describe('query mocks', () => {
 
       expect(data?.checkLoginOtp).toBe(false);
     }
+  });
+
+  it('answers the current session as a full password session by default', async () => {
+    const client = clientFor([mockSessionInfoQuery()]);
+
+    const { data } = await client.query({ query: SessionInfoDocument });
+
+    expect(data?.sessionInfo).toMatchObject({
+      origin: SessionOrigin.Password,
+      restricted: false,
+      placeholderEmail: false,
+    });
+  });
+
+  it('takes the session a test wants to show', async () => {
+    const client = clientFor([
+      mockSessionInfoQuery({ origin: SessionOrigin.Purl, restricted: true }),
+    ]);
+
+    const { data } = await client.query({ query: SessionInfoDocument });
+
+    expect(data?.sessionInfo).toMatchObject({
+      origin: SessionOrigin.Purl,
+      restricted: true,
+    });
   });
 });
 

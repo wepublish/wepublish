@@ -17,6 +17,7 @@ import { ExternalAppsDataloaderService } from './external-apps-dataloader.servic
 import {
   Authenticated,
   CurrentUser,
+  RequiresFullSession,
   userSessionOf,
   assertNotImpersonating,
   requireSessionUser,
@@ -97,7 +98,7 @@ export class ExternalAppsResolver {
     return this.externalAppsService.deleteExternalApp(id);
   }
 
-  @Authenticated()
+  @RequiresFullSession()
   @Mutation(returns => ExternalAppToken, {
     name: 'createExternalAppToken',
     description:
@@ -116,10 +117,11 @@ export class ExternalAppsResolver {
     }
 
     const expiresInMinutes = 240;
+    // the userinfo endpoint matches the audience against the app's origin
     const token = await this.jwtService.generateJWT({
       id: requireSessionUser(session).id,
       expiresInMinutes,
-      audience: app.url,
+      audience: new URL(app.url).origin,
     });
 
     return {

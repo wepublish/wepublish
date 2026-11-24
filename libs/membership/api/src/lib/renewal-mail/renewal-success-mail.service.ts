@@ -9,6 +9,7 @@ import { InvoicePaidListener } from '@wepublish/payment/api';
 import { ActionMailNoMailReason } from '../action-mail/action-mail-reason';
 import { SubscriptionEventDictionary } from '../subscription-event-dictionary/subscription-event-dictionary';
 import { TemplateAction } from '../subscription-event-dictionary/subscription-event-dictionary.type';
+import { isLegacySubscription } from '../subscription/legacy-subscription';
 
 export type PaymentMail =
   TemplateAction | { noMailReason: ActionMailNoMailReason };
@@ -19,6 +20,8 @@ type TemplateLookupSubscription = {
   paymentMethodID: string;
   paymentPeriodicity: PaymentPeriodicity;
   autoRenew: boolean;
+  importedAt: Date | null;
+  legacyEndedAt: Date | null;
 };
 
 @Injectable()
@@ -85,6 +88,8 @@ export class RenewalSuccessMailService implements InvoicePaidListener {
         recipient: user,
         mailType: mailLogType.SubscriptionFlow,
         asLetter: sendAsLetter,
+        subscriptionId: subscription?.id ?? null,
+        invoiceId,
         optionalData: {
           errorCode: '',
           invoice: invoiceData,
@@ -193,6 +198,7 @@ export class RenewalSuccessMailService implements InvoicePaidListener {
           paymentMethodId: subscription.paymentMethodID,
           periodicity: subscription.paymentPeriodicity,
           autorenwal: subscription.autoRenew,
+          legacy: isLegacySubscription(subscription),
           events: [SubscriptionEvent.RENEWAL_SUCCESS],
         });
 

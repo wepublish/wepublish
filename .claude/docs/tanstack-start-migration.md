@@ -48,7 +48,7 @@ master before trusting it**, because the drift is the whole problem (§6.1).
 @wepublish/utils/website            framework-neutral core   <- no next/*, ever
 @wepublish/utils/website/next       Next pages router
 @wepublish/utils/website/tanstack   TanStack Router/Start
-@wepublish/utils/website/tanstack/server   server-only (cookies, headers, SSR Apollo)
+@wepublish/utils/website/tanstack/server   server-only (cookies, headers, SSR Apollo, server-route handlers)
 ```
 
 The two framework barrels **do not re-export the core**. That is deliberate: an
@@ -265,6 +265,19 @@ Vite rewrites a static asset import to the built URL at bundle time,
 identically in the client and the server build. Verify on the output, not in
 dev: `grep -r "file://" dist/apps/<tenant>/.output/server` must find nothing.
 
+### 6.18 A shared page shows an old version on the TanStack tenants
+
+The `tanstack/pages/*` ports are copies of the Next pages taken at migration
+time. A later change to the Next page (a new layout, a feature flag, one more
+prefetched query) does not reach them, and nothing fails. Seen with the reader
+profile: the TanStack tenants kept the old cards after #3251, flag or not.
+
+Keep a page's body in the core (`lib/components/…`) and let the `next/` and
+`tanstack/` pages only fetch and wrap it, as the profile does now. When you
+change a Next page, diff its `tanstack/pages/` twin — including the prefetch:
+a flag read with `useWebsiteFeature` needs `FeaturesDocument` fetched on the
+server, or SSR renders the "off" state.
+
 
 ### 6.1 "it worked last time" — master drifted
 
@@ -368,6 +381,21 @@ never both.
 
 A zod `.default()` in `validateSearch` makes TanStack canonicalise the URL and
 redirect. Keep `validateSearch` free of defaults; apply them when reading.
+
+### 6.10b A search value of `1` answers 500, or gets rewritten
+
+The router parses the address before `validateSearch` sees it: `?x=1` arrives
+as the number `1`, `?x=true` as a boolean, a token or code of digits only as a
+number. `z.string()` refuses those and the page answers **500** —
+`/profile?emailConfirmed=1` did, which is where the confirm-email page sends
+the reader. Coercing is no way out: the router writes the parsed result back
+(`=true`, `="1"`) and answers with a 307, and `LoginFormContainer` looks for
+exactly `totpRequired=1` in the address.
+
+Take such a value as it comes with `searchValueSchema` (`routes/shared.ts`)
+and read it with `searchText`. Probe every search param a mail or redirect
+sets with `curl -sI` on the built server — a spec that feeds the schema `'1'`
+passes while the real request fails.
 
 ### 6.11 A 404 page served with status 200
 
@@ -478,6 +506,22 @@ traced, nor a node builtin. The same class of bug hid
 `@sentry/server-runtime-injection`, a static import of `@sentry/node` that
 nitro did not trace — add it to `traceDeps`.
 
+### 6.17 The CMS theme (Website Settings colours, fonts) is ignored
+
+The Next `_app.tsx` passed `settingsTheme={settings?.theme}` to
+`TenantProviders`; the `app.tsx` template copied between migrations does not,
+so `createTheme()` runs without it and nothing fails. Pass
+`settingsTheme={websiteSettings?.theme as ThemeOptions | undefined}`.
+`apps/neuewege` does; the tenants migrated before it do not yet.
+
+### 6.18 A tenant with no `libs/tenants/<tenant>`
+
+Some tenants built their theme inline in `_app.tsx`. Put the
+`WebsiteTenantConfig` in the app (`apps/neuewege/src/config.ts`) and import it
+where the others import `<tenant>Config`. App-specific `next.config.js`
+redirects become routes; a `:path*` redirect that must keep its query is
+`apps/neuewege/src/integration/legacy-redirects.ts`.
+
 ---
 
 ## 7. Deployment
@@ -584,6 +628,15 @@ as the alternative.
 
 ## 8. Known gaps
 
+- **The personal login link is zwoelf's only.** `loginCodeRoute` (`/l/$code`),
+  `welcomeRoute` and `withRestrictedSessionRedirect` exist for TanStack since
+  the zwoelf migration; their bodies live in the core
+  (`lib/components/login-code`, `lib/components/welcome`,
+  `lib/restricted-session.ts`) and the Next pages wrap the same code. A tenant
+  that adds them needs `/welcome` and `/l/` in its `no-store` rules
+  (`apps/zwoelf/src/cache-rules.ts` and its spec are the model) and
+  `referrerPolicyFor` in `start.ts`: no other TanStack app sends a
+  `Referrer-Policy` yet.
 - **`website-shell` on a bespoke route.** The shared factories already return
   `{shell}` (`homePageRoute`, `pageBySlugRoute`), and `app.tsx` reads it with
   one `useWebsiteShell()` call, so the per-page wiring every Next tenant

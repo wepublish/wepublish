@@ -1,3 +1,4 @@
+import { redirect } from '@tanstack/react-router';
 import { z } from 'zod';
 
 import { mergeApolloCache } from '../apollo';
@@ -6,14 +7,31 @@ import {
   loadDeactivatedSubscriptions,
 } from '../pages/deactivated-subscriptions-page';
 import { FourOhFourPage } from '../pages/404-page';
+import {
+  ConfirmEmailPageOptions,
+  createConfirmEmailPage,
+} from '../pages/confirm-email-page';
+import { loginCodeStepHref } from '../../lib/components/login-code/login-code';
+import {
+  createLoginCodePage,
+  loadLoginCode,
+  LoginCodeLoaderData,
+  LoginCodePageOptions,
+} from '../pages/login-code-page';
 import { loadLogin } from '../pages/login-page';
 import { loadProfile, ProfilePage } from '../pages/profile-page';
 import { loadSubscribe } from '../pages/subscribe-page';
 import { loadSubscription, SubscriptionPage } from '../pages/subscription-page';
 import {
+  createWelcomePage,
+  loadWelcome,
+  WelcomePageOptions,
+} from '../pages/welcome-page';
+import {
   ApolloRouterContext,
   bailOutNotFound,
   jwtSearchSchema,
+  searchValueSchema,
 } from './shared';
 
 /**
@@ -32,7 +50,8 @@ import {
 /** `pages/profile/index.tsx` */
 export const profileRoute = () => ({
   validateSearch: jwtSearchSchema.extend({
-    confirmEmailChange: z.string().optional(),
+    // Set by the confirm-email page once the new address is in place.
+    emailConfirmed: searchValueSchema.optional(),
   }),
   loaderDeps: ({ search: { jwt } }: { search: { jwt?: string } }) => ({ jwt }),
   loader: async ({
@@ -50,6 +69,25 @@ export const profileRoute = () => ({
   },
   component: ProfilePage,
 });
+
+/**
+ * `pages/confirm-email.tsx`: the link in the email-change confirmation mail.
+ * Confirmed from the browser, so it renders nothing user-specific on the
+ * server — but its address carries the token: keep it `no-store`.
+ */
+export const confirmEmailRoute = (options: ConfirmEmailPageOptions = {}) => {
+  const loginPath = options.loginPath ?? '/login';
+
+  return {
+    validateSearch: z.object({ token: searchValueSchema.optional() }),
+    beforeLoad: ({ search }: { search: { token?: string | number | boolean } }) => {
+      if (search.token == null || search.token === '') {
+        throw redirect({ href: loginPath });
+      }
+    },
+    component: createConfirmEmailPage({ ...options, loginPath }),
+  };
+};
 
 /** `pages/profile/subscription/[id].tsx` */
 export const subscriptionRoute = () => ({
@@ -139,10 +177,80 @@ export const loginRouteLoader = async ({
   return { sessionToken };
 };
 
+/**
+ * `pages/l/[code].tsx`: the personal login link from a letter or a mail. The
+ * code is redeemed on the server, which sets the session cookie; the page
+ * then takes the session over and moves on to `next`. A code that needs
+ * another step (TOTP, challenge) is finished on the login page; a refused one
+ * stays here with the reason.
+ *
+ * The session is part of the loader data and the address carries the code:
+ * keep `/l/` `no-store` and `no-referrer`.
+ */
+export const loginCodeRoute = ({
+  next = '/welcome?src=purl',
+  loginPath = '/login',
+}: LoginCodePageOptions = {}) => ({
+  loader: async ({
+    params: { code },
+  }: {
+    params: { code: string };
+  }): Promise<LoginCodeLoaderData> => {
+    const outcome = await loadLoginCode({ data: { code } });
+
+    if (
+      outcome.kind === 'totpRequired' ||
+      outcome.kind === 'challengeRequired'
+    ) {
+      throw redirect({ href: loginCodeStepHref(loginPath, code, outcome.kind) });
+    }
+
+    if (outcome.kind === 'failed') {
+      return { sessionToken: null, failure: outcome.failure };
+    }
+
+    return { sessionToken: outcome.sessionToken, next };
+  },
+  component: createLoginCodePage({ loginPath }),
+});
+
+/**
+ * `pages/welcome.tsx`: the steps after a personal login link (confirm the
+ * email address, set a password). Behind the auth guard and the reader's own:
+ * keep `/welcome` `no-store`.
+ */
+export const welcomeRoute = (options: WelcomePageOptions = {}) => ({
+  validateSearch: z.object({
+    // Set by the confirm-email page once the address is in place.
+    emailConfirmed: searchValueSchema.optional(),
+    // Where the reader came from (`purl` for the personal login link).
+    src: z.string().optional(),
+  }),
+  loader: async ({
+    context: { apolloClient },
+  }: {
+    context: ApolloRouterContext;
+  }) => {
+    const { sessionToken, apollo } = await loadWelcome();
+
+    mergeApolloCache(apolloClient, apollo);
+
+    return { sessionToken };
+  },
+  component: createWelcomePage(options),
+});
+
 /** Search params a login page must accept. */
 export const loginSearchSchema = jwtSearchSchema.extend({
   intended: z.string().optional(),
   mail: z.string().optional(),
   requirePassword: z.coerce.boolean().optional(),
   error: z.string().optional(),
+  // Set by the personal login link (`loginCodeRoute`) when the code alone is
+  // not enough: the form asks for the second step and redeems the code.
+  // Taken as the router reads them, see `searchValueSchema`: the login form
+  // looks for exactly `totpRequired=1` in the address.
+  loginCode: searchValueSchema.optional(),
+  totpRequired: searchValueSchema.optional(),
+  challenge: searchValueSchema.optional(),
 });

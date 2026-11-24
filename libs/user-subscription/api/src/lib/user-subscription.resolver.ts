@@ -10,6 +10,7 @@ import {
   Authenticated,
   CurrentUser,
   Public,
+  RequiresFullSession,
   userSessionOf,
   requireSessionUser,
   AuthSession,
@@ -72,7 +73,7 @@ export class UserSubscriptionResolver {
     };
   }
 
-  @Authenticated()
+  @RequiresFullSession()
   @Mutation(() => Payment, {
     description: `Allows authenticated users to create additional subscriptions`,
   })
@@ -109,7 +110,7 @@ export class UserSubscriptionResolver {
     return true;
   }
 
-  @Authenticated()
+  @RequiresFullSession()
   @Mutation(() => Payment, {
     description: `Allows authenticated users to extend existing subscriptions`,
   })
@@ -122,7 +123,7 @@ export class UserSubscriptionResolver {
     return this.userSubscriptionService.extendSubscription(user.id, args);
   }
 
-  @Authenticated()
+  @RequiresFullSession()
   @Mutation(() => PublicSubscription, {
     nullable: true,
     description: `This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null`,
@@ -140,7 +141,7 @@ export class UserSubscriptionResolver {
     });
   }
 
-  @Authenticated()
+  @RequiresFullSession()
   @Mutation(() => PublicSubscription, {
     description: `Removes the cancellation of one of the authenticated user's own subscriptions. If the subscription is no longer paid for, a new invoice is created.`,
   })

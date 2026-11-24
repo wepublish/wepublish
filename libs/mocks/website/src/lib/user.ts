@@ -5,7 +5,7 @@ import {
   FullUserFragment,
 } from '@wepublish/website/api';
 import { mockImage } from './image';
-import { faker } from './faker';
+import { faker, MOCK_REFERENCE_DATE } from './faker';
 import { definedOnly } from './overrides';
 
 export const mockUserAddress = (
@@ -59,6 +59,7 @@ export const mockSensitiveDataUser = ({
   firstName: faker.person.firstName(),
   flair: faker.person.jobTitle(),
   email: faker.internet.email(),
+  emailVerifiedAt: MOCK_REFERENCE_DATE,
   pendingEmail: null,
   birthday: '1990-01-01T00:00:00.000Z',
   totpEnabled: false,

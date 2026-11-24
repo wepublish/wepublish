@@ -6,6 +6,7 @@ import { PaymentAuthorizationNotifier } from './payment-authorization.notifier';
 import { PaymentMethodConfig } from './payment-method/payment-method.config';
 import { PaymentProvider } from './payment-provider/payment-provider';
 import { PaymentWebhookController } from './payment.webhook';
+import type { Mock } from 'vitest';
 
 function fakeProvider(
   id: string,

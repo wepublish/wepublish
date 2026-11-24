@@ -1,7 +1,10 @@
 import type { Mock } from 'vitest';
 import { Test } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
-import { SessionCacheInvalidator } from '@wepublish/authentication/api';
+import {
+  AuthenticationService,
+  SessionCacheInvalidator,
+} from '@wepublish/authentication/api';
 import { PublicContentCacheInvalidator } from '@wepublish/public-content-cache/api';
 import { MailContext, MailchimpContactService } from '@wepublish/mail/api';
 import { UserService } from './user.service';
@@ -53,6 +56,13 @@ describe('UserService email quality', () => {
           },
         },
         { provide: UserDataloaderService, useValue: { prime: vi.fn() } },
+        {
+          provide: AuthenticationService,
+          useValue: {
+            revokeUserSessions: vi.fn().mockResolvedValue(0),
+            isPlaceholderEmail: vi.fn().mockResolvedValue(false),
+          },
+        },
         {
           provide: SessionCacheInvalidator,
           useValue: { invalidate: vi.fn().mockResolvedValue(undefined) },

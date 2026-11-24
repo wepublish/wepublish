@@ -309,6 +309,7 @@ model Document {
   extension   String
 
   mailTemplates           MailTemplate[]
+  mailTemplateVariants    MailTemplateVariant[]
   mailTemplateAttachments MailTemplateAttachment[]
 
   @@index([createdAt])
@@ -611,6 +612,7 @@ model Invoice {
   subscription   Subscription? @relation(fields: [subscriptionID], references: [id], onDelete: SetNull)
 
   subscriptionPeriods SubscriptionPeriod[]
+  mailLogs            MailLog[]
 
   @@index([mail])
   @@index([subscriptionID])
@@ -695,9 +697,19 @@ model MailLog {
   mailSendJob   MailSendJob? @relation(fields: [mailSendJobId], references: [id], onDelete: SetNull)
   mailSendJobId String?
 
+  // What the mail was about: the subscription and, for invoice mails, the
+  // invoice. Null for mails with no such trigger (login link, password reset)
+  // and on rows written before the columns existed.
+  subscription   Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+  subscriptionId String?
+  invoice        Invoice?      @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
+  invoiceId      String?
+
   @@index([mailIdentifier])
   @@index([recipientID, sentDate(sort: Desc)])
   @@index([mailSendJobId])
+  @@index([subscriptionId])
+  @@index([invoiceId])
   @@index([mailProviderMessageID])
   @@index([channel])
   @@map("mail.log")
@@ -880,7 +892,7 @@ model MemberPlan {
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   name                           String
-  slug                           String                   @unique
+  slug                           String                       @unique
   tags                           String[]
   shortDescription               Json?
   slateShortDescription          Json?
@@ -891,11 +903,11 @@ model MemberPlan {
   periodicityPricing             MemberPlanPeriodicityPrice[]
   defaultPaymentPeriodicity      PaymentPeriodicity?
   availablePaymentMethods        AvailablePaymentMethod[]
-  migrateToTargetPaymentMethod   PaymentMethod?           @relation("PaymentMethodMigration", fields: [migrateToTargetPaymentMethodID], references: [id])
+  migrateToTargetPaymentMethod   PaymentMethod?               @relation("PaymentMethodMigration", fields: [migrateToTargetPaymentMethodID], references: [id])
   migrateToTargetPaymentMethodID String?
-  extendable                     Boolean                  @default(true)
+  extendable                     Boolean                      @default(true)
   maxCount                       Int?
-  productType                    ProductType              @default(Subscription)
+  productType                    ProductType                  @default(Subscription)
   externalReward                 String?
 
   imageID String?
@@ -1175,11 +1187,21 @@ model Token {
   @@map("tokens")
 }
 
+enum SessionOrigin {
+  password
+  jwt
+  purl
+  preview
+  impersonation
+  register
+}
+
 model Session {
-  id        String   @id @default(dbgenerated("uuidv7()"))
-  createdAt DateTime @default(now()) @db.Timestamptz(3)
-  expiresAt DateTime @db.Timestamptz(3)
-  token     String   @unique
+  id        String        @id @default(dbgenerated("uuidv7()"))
+  createdAt DateTime      @default(now()) @db.Timestamptz(3)
+  expiresAt DateTime      @db.Timestamptz(3)
+  token     String        @unique
+  origin    SessionOrigin @default(password)
 
   impersonatedBy      String?
   impersonationReason String?
@@ -1200,12 +1222,36 @@ model ImpersonationGrant {
   id        String   @id @default(dbgenerated("uuidv7()"))
   createdAt DateTime @default(now()) @db.Timestamptz(3)
 
-  jti       String    @unique
-  expiresAt DateTime  @db.Timestamptz(3)
+  jti        String    @unique
+  expiresAt  DateTime  @db.Timestamptz(3)
   redeemedAt DateTime? @db.Timestamptz(3)
 
   @@index([expiresAt])
   @@map("impersonation_grants")
+}
+
+model UserLoginCode {
+  id         String   @id @default(dbgenerated("uuidv7()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  codeHash      String @unique
+  codeEncrypted String
+
+  expiresAt     DateTime  @db.Timestamptz(3)
+  maxUses       Int
+  usesRemaining Int
+  lastUsedAt    DateTime? @db.Timestamptz(3)
+  revokedAt     DateTime? @db.Timestamptz(3)
+  revokedBy     String?
+  issuedBy      String?
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("user_login_codes")
 }
 
 model SubscriptionPeriod {
@@ -1261,6 +1307,10 @@ model Subscription {
   monthlyAmount      Float
   autoRenew          Boolean
   startsAt           DateTime                  @db.Timestamptz(3)
+  /// The first printed issue is the first one shipped on or after this Zurich
+  /// day («Abo-Start»): the ship day of the issue the reader chose, or the day
+  /// after it for the next one. Null: no choice, every issue from startsAt.
+  firstPrintIssueFrom DateTime?                @db.Date
   paidUntil          DateTime?                 @db.Timestamptz(3)
   periods            SubscriptionPeriod[]
   properties         Json                      @default("[]")
@@ -1268,6 +1318,10 @@ model Subscription {
   extendable         Boolean                   @default(true)
   currency           Currency
   confirmed          Boolean                   @default(true)
+  /// When importSubscription brought it in from another system; null when it was created here.
+  importedAt         DateTime?                 @db.Timestamptz(3)
+  /// When the first payment was registered here. Legacy = importedAt set and this null.
+  legacyEndedAt      DateTime?                 @db.Timestamptz(3)
 
   paymentMethodID String
   paymentMethod   PaymentMethod @relation(fields: [paymentMethodID], references: [id])
@@ -1284,6 +1338,7 @@ model Subscription {
 
   invoices Invoice[]
 
+  mailLogs           MailLog[]
   mailSendJobEntries MailSendJobRecipient[]
 
   paymentMethodChanges SubscriptionPaymentMethodChange[]
@@ -1390,28 +1445,29 @@ model PaymentProviderCustomer {
 }
 
 model User {
-  id              String    @id @default(dbgenerated("uuidv7()"))
-  createdAt       DateTime  @default(now()) @db.Timestamptz(3)
-  modifiedAt      DateTime  @updatedAt @db.Timestamptz(3)
-  birthday        DateTime? @db.Date
-  email           String    @unique
-  emailVerifiedAt DateTime? @db.Timestamptz(3)
-  pendingEmail    String?
-  pendingEmailAt  DateTime? @db.Timestamptz(3)
-  name            String
-  firstName       String?
-  flair           String?
-  password        String
-  active          Boolean
-  lastLogin       DateTime? @db.Timestamptz(3)
-  roleIDs         String[]
-  totpSecret      String?
-  totpEnabled     Boolean   @default(false)
-  totpExempt      Boolean   @default(false)
-  wepublishLoginSubject String? @unique
-  userImageID     String?
-  userImage       Image?    @relation(fields: [userImageID], references: [id])
-  note            String?
+  id                    String    @id @default(dbgenerated("uuidv7()"))
+  createdAt             DateTime  @default(now()) @db.Timestamptz(3)
+  modifiedAt            DateTime  @updatedAt @db.Timestamptz(3)
+  birthday              DateTime? @db.Date
+  email                 String    @unique
+  emailVerifiedAt       DateTime? @db.Timestamptz(3)
+  pendingEmail          String?
+  pendingEmailAt        DateTime? @db.Timestamptz(3)
+  pendingEmailTokenHash String?   @unique
+  name                  String
+  firstName             String?
+  flair                 String?
+  password              String
+  active                Boolean
+  lastLogin             DateTime? @db.Timestamptz(3)
+  roleIDs               String[]
+  totpSecret            String?
+  totpEnabled           Boolean   @default(false)
+  totpExempt            Boolean   @default(false)
+  wepublishLoginSubject String?   @unique
+  userImageID           String?
+  userImage             Image?    @relation(fields: [userImageID], references: [id])
+  note                  String?
 
   address                  UserAddress?
   properties               Json                      @default("[]")
@@ -1437,12 +1493,14 @@ model User {
   changelogConfirmations    ChangelogEntry[]
   notificationReads         NotificationRead[]
   notificationConfirmations NotificationConfirmation[]
+  loginCodes                UserLoginCode[]
   emailQuality              UserEmailQuality?
   emailQualityEvents        EmailQualityEvent[]
   deliveryPreference        UserDeliveryPreference?
   deliverySuggestion        DeliverySuggestion?
   deliveryPreferenceChanges UserDeliveryPreference[] @relation("DeliveryPreferenceChangedBy")
   deliveryModeBulkChanges   DeliveryModeBulkChange[] @relation("DeliveryModeBulkChangedBy")
+  savedAudienceFilters      SavedAudienceFilter[]    @relation("SavedAudienceFilterCreatedBy")
   seoChecklistItems         SeoChecklistItem[]
   apiTokens                 ApiToken[]
 
@@ -1679,6 +1737,7 @@ enum UserEvent {
   LOGIN_LINK
   TEST_MAIL
   EMAIL_CHANGE
+  EMAIL_VERIFICATION
 }
 
 model UserFlowMail {
@@ -1714,10 +1773,16 @@ model SubscriptionFlow {
 
   memberPlan   MemberPlan? @relation(fields: [memberPlanId], references: [id])
   memberPlanId String?
+  /// A flow for the matching subscriptions of every member plan. Comes after a plan's own flows and before the default flow. Has no memberPlan.
+  allMemberPlans Boolean @default(false)
+  /// An inactive flow is skipped: its subscriptions fall to the next flow. The default flow is always active.
+  active Boolean @default(true)
 
   paymentMethods PaymentMethod[]
   periodicities  PaymentPeriodicity[]
   autoRenewal    Boolean[]
+  /// Whom the flow is for: legacy subscriptions (true), all the others (false), or both.
+  legacy         Boolean[]            @default([true, false])
 
   intervals SubscriptionInterval[]
 
@@ -1760,6 +1825,13 @@ model MailTemplate {
 
   name        String
   description String?
+
+  // What is sent lives on the variants, one per channel. The content columns
+  // below (subject, htmlContent, textContent, letterAppendixId, letterLayoutId)
+  // are the pre-variant copy: no code reads or writes them any more, and a
+  // follow-up migration drops them.
+  variants MailTemplateVariant[]
+
   subject     String  @default("")
   htmlContent String  @default("")
   textContent String?
@@ -1795,6 +1867,42 @@ model MailTemplate {
   letterLayoutId String?
 
   @@map("mail_templates")
+}
+
+/// What a template says on one channel. A template is the group flows, logs
+/// and send jobs point at; a mail and a letter of the same template are two
+/// variants with their own words, because paper carries no links and an email
+/// no address window.
+model MailTemplateVariant {
+  id         String   @id @default(dbgenerated("uuidv7()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  template   MailTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  templateId String
+
+  channel MailChannel
+
+  // The email's subject line; for a letter the title its log entry carries.
+  subject     String  @default("")
+  htmlContent String  @default("")
+  // Plain-text alternative of an email. Unused for a letter.
+  textContent String?
+
+  // Letter only: the letter says what the email says. Subject and body are
+  // then read from the mail variant; layout and appendix stay the letter's.
+  sameAsMail Boolean @default(false)
+
+  // Letter only. Stationery the letter is set on; null means the default.
+  letterLayout   LetterLayout? @relation(fields: [letterLayoutId], references: [id])
+  letterLayoutId String?
+
+  // Letter only. Uploaded pdf printed after the letter pages (e.g. a static QR-bill).
+  letterAppendix   Document? @relation(fields: [letterAppendixId], references: [id], onDelete: SetNull)
+  letterAppendixId String?
+
+  @@unique([templateId, channel])
+  @@map("mail_templates.variants")
 }
 
 // One Word document attached to a mail template, at its place in the list.
@@ -1833,6 +1941,7 @@ model LetterLayout {
   isDefault Boolean @default(false)
 
   mailTemplates MailTemplate[]
+  mailTemplateVariants MailTemplateVariant[]
 
   @@map("letter_layouts")
 }
@@ -1849,7 +1958,36 @@ model PeriodicJob {
   tries                Int       @default(0)
   error                String?
 
+  steps PeriodicJobStep[]
+
   @@map("periodic_jobs")
+}
+
+/// What one step of a night did: the job's own steps and the syncs after it.
+model PeriodicJobStep {
+  id        String   @id @default(dbgenerated("uuidv7()"))
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+
+  periodicJobId String
+  periodicJob   PeriodicJob @relation(fields: [periodicJobId], references: [id], onDelete: Cascade)
+
+  key        String
+  status     PeriodicJobStepStatus
+  /// Counts by name, e.g. {"readers": 1821, "failed": 7}; shown, never queried.
+  counts     Json?
+  error      String?
+  startedAt  DateTime              @db.Timestamptz(3)
+  finishedAt DateTime              @db.Timestamptz(3)
+
+  @@index([periodicJobId])
+  @@map("periodic_job_steps")
+}
+
+enum PeriodicJobStepStatus {
+  ok
+  warning
+  error
+  skipped
 }
 
 enum BlockType {
@@ -2424,6 +2562,11 @@ model SettingPaymentProvider {
   bexio_invoiceMailSubjectRenewalMembership String?
   bexio_invoiceMailBodyRenewalMembership    String?
   bexio_markInvoiceAsOpen                   Boolean?
+  bexio_testMailbox                         String?
+  // We.Publish delivers the renewal invoice pdf to every reader (attached to
+  // the invoice-creation mail, or printed after the letter); bexio only
+  // issues it and sends nothing. Off or null: bexio emails it as before.
+  bexio_invoiceMailByWePublish              Boolean?
   // Nightly push of reader data (name, email, address) to bexio contacts;
   // when it last ran and what went wrong, for the integration form.
   bexio_contactSync                         Boolean?
@@ -2937,6 +3080,26 @@ model DeliveryModeBulkChange {
 
   @@index([createdAt(sort: Desc)])
   @@map("user_delivery_bulk_changes")
+}
+
+/// A recipient filter kept under a name, to be loaded again in the manual
+/// messages and in the manual channel assignment. Shared by everyone who may
+/// use either tool.
+model SavedAudienceFilter {
+  id         String   @id @default(dbgenerated("uuidv7()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  name        String  @unique
+  description String?
+  /// The MailAudienceInput as the editor built it, rolling dates included.
+  /// Opaque: read back whole, never queried by element.
+  audience Json
+
+  createdByUserId String?
+  createdBy       User?   @relation("SavedAudienceFilterCreatedBy", fields: [createdByUserId], references: [id], onDelete: SetNull)
+
+  @@map("mail.audience_filters")
 }
 
 enum DeliverySuggestionKind {

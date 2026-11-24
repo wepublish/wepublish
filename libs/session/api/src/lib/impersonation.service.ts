@@ -9,6 +9,7 @@ import {
   AuditLogAction,
   AuditLogActorType,
   PrismaClient,
+  SessionOrigin,
 } from '@prisma/client';
 import { AuditLogService } from '@wepublish/audit-log/api';
 import {
@@ -61,6 +62,7 @@ export class ImpersonationService {
     );
 
     const created = await this.sessionService.createUserSession(user, {
+      origin: SessionOrigin.impersonation,
       ttlMs: DEFAULT_IMPERSONATION_MINUTES * 60 * 1000,
       impersonatedBy: supporter,
       impersonationReason: checkedReason,

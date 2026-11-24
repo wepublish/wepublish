@@ -6,7 +6,7 @@ import {
   screen,
   within,
 } from '@testing-library/react';
-import { MailEmailSegment } from '@wepublish/editor/api';
+import { MailEmailSegment, MailRecipientBase } from '@wepublish/editor/api';
 
 import { AudienceFilter, AudienceFilterProps } from './audience-filter';
 import { INITIAL_AUDIENCE_STATE } from './audience-state';
@@ -25,6 +25,13 @@ vi.mock('react-i18next', () => ({
     t: (key: string, options?: Record<string, unknown>) =>
       options ? `${key}:${JSON.stringify(options)}` : key,
   }),
+}));
+
+const enabledFeatures = new Set<string>();
+
+vi.mock('@wepublish/ui/editor', async importOriginal => ({
+  ...(await importOriginal<typeof import('@wepublish/ui/editor')>()),
+  useFeature: (feature: string) => enabledFeatures.has(feature),
 }));
 
 const renderFilter = (overrides: Partial<AudienceFilterProps> = {}) => {
@@ -110,6 +117,31 @@ describe('AudienceFilter email status', () => {
     });
   });
 
+  it('offers no placeholder status when the medium has no placeholder pattern', () => {
+    renderFilter({
+      segmentCounts: [{ segment: MailEmailSegment.Active, userCount: 7 }],
+    });
+
+    expect(
+      within(statusGroup()).queryByRole('button', {
+        name: /mailSend\.emailSegments\.placeholder/,
+      })
+    ).toBeNull();
+    expect(
+      screen.getByText('mailSend.emailSegments.hintWithoutPlaceholder')
+    ).toBeTruthy();
+  });
+
+  it('holds the placeholder status back until the counts say it exists', () => {
+    renderFilter({ segmentCounts: undefined });
+
+    expect(
+      within(statusGroup()).queryByRole('button', {
+        name: 'mailSend.emailSegments.placeholder',
+      })
+    ).toBeNull();
+  });
+
   it('names the statuses alone while their counts are not known yet', () => {
     renderFilter({ segmentCounts: undefined });
 
@@ -124,5 +156,52 @@ describe('AudienceFilter email status', () => {
     expect(
       within(statusGroup()).getByRole('button', { name: 'refresh' })
     ).toBeTruthy();
+  });
+});
+
+describe('AudienceFilter legacy subscriptions', () => {
+  afterEach(() => {
+    cleanup();
+    enabledFeatures.clear();
+  });
+
+  const legacySelect = () =>
+    screen.queryByRole('combobox', { name: 'mailSend.isLegacy' });
+
+  const subscriptionBases = [
+    MailRecipientBase.HasSubscription,
+    MailRecipientBase.EndedSubscription,
+  ];
+
+  it('offers no legacy filter while the feature is off', () => {
+    for (const base of subscriptionBases) {
+      renderFilter({ state: { ...INITIAL_AUDIENCE_STATE, base } });
+
+      expect(legacySelect()).not.toBeInTheDocument();
+      cleanup();
+    }
+  });
+
+  it('narrows subscribers and win-back to legacy subscriptions with the feature on', () => {
+    enabledFeatures.add('legacy-subscriptions');
+
+    for (const base of subscriptionBases) {
+      const { onChange } = renderFilter({
+        state: { ...INITIAL_AUDIENCE_STATE, base },
+      });
+
+      fireEvent.mouseDown(legacySelect() as HTMLElement);
+      fireEvent.click(screen.getByRole('option', { name: 'mailSend.yes' }));
+
+      expect(onChange).toHaveBeenCalledWith({ isLegacy: 'true' });
+      cleanup();
+    }
+  });
+
+  it('has no legacy filter for audiences that are not about subscriptions', () => {
+    enabledFeatures.add('legacy-subscriptions');
+    renderFilter();
+
+    expect(legacySelect()).not.toBeInTheDocument();
   });
 });

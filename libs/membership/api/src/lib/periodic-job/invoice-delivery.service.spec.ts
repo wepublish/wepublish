@@ -33,6 +33,7 @@ const flow = (sendAsLetter: boolean) => ({
   default: true,
   memberPlanId: null,
   autoRenewal: [],
+  legacy: [true, false],
   periodicities: [],
   paymentMethods: [],
   intervals: [
@@ -50,6 +51,7 @@ function setup({ letters = false }: { letters?: boolean } = {}) {
   const provider = {
     createRemoteInvoice: vi.fn(async () => ({ intent })),
     renderRemoteInvoice: vi.fn(async () => undefined),
+    deliversInvoiceItself: vi.fn(async () => true),
   };
   const letterSender = {
     isConfigured: vi.fn(async () => true),
@@ -68,10 +70,14 @@ function setup({ letters = false }: { letters?: boolean } = {}) {
     invoiceItem: { deleteMany: vi.fn() },
     invoice: { delete: vi.fn() },
     mailLog: { count: vi.fn(async () => 0), create: vi.fn() },
+    mailTemplate: { findUnique: vi.fn(async () => null) },
     userDeliveryPreference: {
       findUnique: vi.fn(async () =>
         letters ? { channel: MailChannel.letter } : null
       ),
+    },
+    mailTemplateVariant: {
+      findUnique: vi.fn(async () => ({ id: 'variant-1' })),
     },
     user: {
       findUnique: vi.fn(async () => ({
@@ -87,6 +93,11 @@ function setup({ letters = false }: { letters?: boolean } = {}) {
     mailProvider: { id: 'fakeMail' },
     jwtGenerator: vi.fn(async () => 'jwt-1'),
     sendComposedMail: vi.fn(async () => ({ subject: 'S' })),
+    isPlaceholderEmail: vi.fn(async () => false),
+    purlProvider: {
+      purlFor: vi.fn(async () => ({ purl: '', purlCode: '', purlQr: '' })),
+    },
+    buildMailData: MailContext.prototype.buildMailData,
     letterSender,
   };
   const payments = {
@@ -121,6 +132,10 @@ describe('InvoiceDeliveryService.deliverRenewal', () => {
       })
     );
     expect(mailContext.sendComposedMail).toHaveBeenCalledTimes(1);
+    expect(prisma.mailLog.create.mock.calls[0][0].data).toMatchObject({
+      subscription: { connect: { id: 'sub-1' } },
+      invoice: { connect: { id: 'inv-1' } },
+    });
   });
 
   it('prints the invoice after the letter for a reader in letter mode', async () => {
@@ -142,13 +157,93 @@ describe('InvoiceDeliveryService.deliverRenewal', () => {
     expect(mailContext.sendComposedMail).not.toHaveBeenCalled();
   });
 
-  // The editor sees the error; the invoice is gone, so they can simply retry.
+  it('mails the invoice-creation mail without the pdf when the provider emails the invoice itself', async () => {
+    const { service, mailContext } = setup();
+
+    await service.deliverRenewal(subscription, invoice);
+
+    expect(mailContext.sendComposedMail.mock.calls[0][0]).not.toHaveProperty(
+      'attachments'
+    );
+  });
+
+  describe('when we.publish delivers the invoices', () => {
+    const pdf = {
+      content: Buffer.from('pdf'),
+      name: 'RE-1.pdf',
+      mime: 'application/pdf',
+    };
+
+    it('attaches the pdf to the invoice-creation mail', async () => {
+      const { service, provider, mailContext } = setup();
+      provider.deliversInvoiceItself.mockResolvedValue(false);
+      provider.createRemoteInvoice.mockResolvedValue({
+        intent,
+        document: pdf,
+      });
+
+      await service.deliverRenewal(subscription, invoice);
+
+      expect(mailContext.sendComposedMail).toHaveBeenCalledWith(
+        expect.objectContaining({
+          attachments: [
+            {
+              filename: 'RE-1.pdf',
+              contentType: 'application/pdf',
+              content: pdf.content,
+            },
+          ],
+        })
+      );
+    });
+
+    // Bexio sends nothing then; the night sweep mails it once there is a pdf.
+    it('leaves the mail to the night sweep when the provider rendered no pdf', async () => {
+      const { service, provider, mailContext, prisma } = setup();
+      provider.deliversInvoiceItself.mockResolvedValue(false);
+      provider.createRemoteInvoice.mockResolvedValue({
+        intent,
+        deliveryError: 'pdf failed',
+      });
+
+      await expect(
+        service.deliverRenewal(subscription, invoice)
+      ).resolves.toBeUndefined();
+
+      expect(mailContext.sendComposedMail).not.toHaveBeenCalled();
+      // The entry is what tells the sweep this mail is still owed — and the
+      // editor why the reader is waiting.
+      expect(prisma.mailLog.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          state: 'deferred',
+          mailTemplate: { connect: { id: 'mt-4' } },
+          error: expect.stringContaining('pdf'),
+        }),
+      });
+    });
+  });
+
+  it('notes no deferred mail for a reader in letter mode', async () => {
+    // The letter sweep finds them by their delivery preference.
+    const { service, provider, prisma } = setup({ letters: true });
+    provider.createRemoteInvoice.mockResolvedValue({
+      intent,
+      deliveryError: 'pdf failed',
+    });
+
+    await service.deliverRenewal(subscription, invoice);
+
+    expect(prisma.mailLog.create).not.toHaveBeenCalled();
+  });
+
+  // The editor sees the error, with the provider's reason; the invoice is
+  // gone, so they can simply retry.
   it('fails and removes the invoice when the provider could not create it', async () => {
     const { service, provider, prisma, mailContext } = setup();
     provider.createRemoteInvoice.mockRejectedValue(new Error('bexio down'));
 
     await expect(service.deliverRenewal(subscription, invoice)).rejects.toThrow(
-      /could not create the invoice/
+      /could not create the invoice.*bexio down/
     );
 
     expect(prisma.invoice.delete).toHaveBeenCalledWith({

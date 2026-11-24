@@ -3,11 +3,13 @@ import {
   urlencoded,
 } from '@nestjs/platform-node/body-parser/body-parser.js';
 import type { NodeRequest, NodeResponse } from '@nestjs/platform-node';
+import { LETTER_WEBHOOK_PATH_PREFIX } from '@wepublish/letter/api';
 import { MAIL_WEBHOOK_PATH_PREFIX } from '@wepublish/mail/api';
 import { PAYMENT_WEBHOOK_PATH_PREFIX } from '@wepublish/payment/api';
 import { MAX_PAYLOAD_SIZE } from '@wepublish/utils/api';
 
 const skipPrefixes = [
+  `/${LETTER_WEBHOOK_PATH_PREFIX}`,
   `/${MAIL_WEBHOOK_PATH_PREFIX}`,
   `/${PAYMENT_WEBHOOK_PATH_PREFIX}`,
 ] as const;

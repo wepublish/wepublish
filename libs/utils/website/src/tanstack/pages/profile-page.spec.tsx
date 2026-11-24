@@ -1,0 +1,101 @@
+import { ApolloClient } from '@apollo/client';
+import { render, screen } from '@testing-library/react';
+import {
+  FeaturesDocument,
+  InvoicesDocument,
+  MeDocument,
+  NavigationListDocument,
+  SubscriptionsDocument,
+} from '@wepublish/website/api';
+import { ComponentType, PropsWithChildren } from 'react';
+
+import { prefetchProfile, ProfilePage } from './profile-page';
+
+const query = vi.hoisted(() => ({ current: {} as Record<string, unknown> }));
+
+vi.mock('../auth-guard', () => ({
+  withAuthGuard: (Cmp: ComponentType) => Cmp,
+}));
+
+vi.mock('../router-hooks', () => ({
+  useQueryParams: () => query.current,
+}));
+
+// The shared profile parts decide the layout from the feature flag and have
+// their own specs; here they only have to be the ones rendered.
+vi.mock('../../lib/components/profile/profile-subscriptions', () => ({
+  ProfileSubscriptions: () => <div data-testid="profile-subscriptions" />,
+}));
+
+vi.mock('../../lib/components/profile/profile-details', () => ({
+  ProfileDetails: () => <div data-testid="profile-details" />,
+}));
+
+vi.mock('@wepublish/website/builder', async importOriginal => ({
+  ...(await importOriginal<object>()),
+  useWebsiteBuilder: () => ({
+    elements: {
+      Alert: ({ children }: PropsWithChildren) => (
+        <div role="alert">{children}</div>
+      ),
+    },
+  }),
+}));
+
+// Without an initialised i18n instance `useTranslation` suspends.
+vi.mock('react-i18next', async importOriginal => ({
+  ...(await importOriginal<object>()),
+  useTranslation: () => ({ t: (key: string) => key }),
+}));
+
+describe('prefetchProfile', () => {
+  it('fetches what the profile renders, the feature flags included', async () => {
+    const clientQuery = vi.fn().mockResolvedValue({ data: {} });
+
+    await prefetchProfile({ query: clientQuery } as unknown as ApolloClient);
+
+    expect(clientQuery.mock.calls.map(([options]) => options.query)).toEqual(
+      expect.arrayContaining([
+        MeDocument,
+        NavigationListDocument,
+        InvoicesDocument,
+        SubscriptionsDocument,
+        // decides between the subscription history and the old cards
+        FeaturesDocument,
+      ])
+    );
+  });
+});
+
+describe('ProfilePage', () => {
+  beforeEach(() => {
+    query.current = {};
+  });
+
+  it('renders the shared profile: subscriptions, then the profile details', () => {
+    render(<ProfilePage />);
+
+    const parts = screen
+      .getAllByTestId(/^profile-/)
+      .map(element => element.dataset['testid']);
+
+    expect(parts).toEqual(['profile-subscriptions', 'profile-details']);
+  });
+
+  // The confirmation link opens the confirm-email page, which confirms the
+  // token and sends the reader here with `?emailConfirmed=1`.
+  it('says the new email address is confirmed after the confirmation link', () => {
+    query.current = { emailConfirmed: '1' };
+    render(<ProfilePage />);
+
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      'user.emailChangeConfirmed'
+    );
+  });
+
+  it('says nothing about the email address otherwise', () => {
+    render(<ProfilePage />);
+
+    expect(screen.queryByRole('alert')).toBeNull();
+  });
+});

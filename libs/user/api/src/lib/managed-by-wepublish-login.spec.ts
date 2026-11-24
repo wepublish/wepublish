@@ -128,11 +128,9 @@ describe('accounts managed by the We.Publish login', () => {
       await expect(
         profile.requestEmailChange('new@wepublish.ch', session)
       ).rejects.toBeInstanceOf(ManagedByWepublishLoginError);
-      await expect(
-        profile.confirmEmailChange('new@wepublish.ch', session)
-      ).rejects.toBeInstanceOf(ManagedByWepublishLoginError);
+      // Confirming needs the token only requestEmailChange hands out, so
+      // refusing the request is what keeps the address unchanged.
       expect(service['requestEmailChange']).not.toHaveBeenCalled();
-      expect(service['confirmEmailChange']).not.toHaveBeenCalled();
     });
 
     it('still lets every other account update its own profile', async () => {

@@ -43,10 +43,16 @@ import {
 } from './bexio-utils';
 import fetch, { RequestInit } from 'node-fetch';
 import { bexioContactFields, ContactUser } from './bexio-contact-mapping';
+import { withRequestTimeout } from './bexio-timeout';
 import { BexioCountries, BexioCountry } from './bexio-countries';
+import { invoiceMailRecipient } from './bexio-test-mailbox';
 
 const BEXIO_BASE_URL = 'https://api.bexio.com/2.0';
+const BEXIO_USERS_URL = 'https://api.bexio.com/3.0/users';
 const COUNTRIES_TTL_MS = 24 * 60 * 60 * 1000;
+
+const escapeHtml = (text: string) =>
+  text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 export type SyncContactUser = ContactUser & {
   paymentProviderCustomers: PaymentProviderCustomer[];
@@ -73,6 +79,8 @@ const isNotFound = (error: unknown): boolean => {
 export class BexioPaymentProvider extends BasePaymentProvider {
   // bexio's country list changes rarely; one load serves a whole night.
   private countryList?: { loadedAt: number; countries: BexioCountries };
+  // The name that signs the invoices, of the bexio user `bexio_userId`.
+  private signer?: { loadedAt: number; userId: number; name: string };
 
   constructor(props: PaymentProviderProps) {
     super(props);
@@ -83,7 +91,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     if (!config.apiKey) {
       throw new Error('Bexio missing api key');
     }
-    return new Bexio(config.apiKey);
+    return withRequestTimeout(new Bexio(config.apiKey));
   }
 
   async webhookForPaymentIntent(
@@ -121,15 +129,30 @@ export class BexioPaymentProvider extends BasePaymentProvider {
   }
 
   /**
-   * Creates the renewal invoice in Bexio and either has Bexio email it or, for
-   * a reader who gets letters, issues it and hands back its pdf for printing.
-   * The returned intent carries the Bexio invoice id so the payment can be
-   * polled.
+   * Creates the renewal invoice in Bexio and either has Bexio email it or —
+   * for a reader who gets letters, or for every reader when we.publish
+   * delivers the invoices — issues it and hands back its pdf. The returned
+   * intent carries the Bexio invoice id so the payment can be polled.
    */
   override async createRemoteInvoice(
     props: CreateRemoteInvoiceProps
   ): Promise<RemoteInvoiceResult> {
-    return this.bexioCreate(props.invoice.id, true, '', props.channel);
+    return this.bexioCreate(
+      props.invoice.id,
+      true,
+      '',
+      props.channel,
+      !(await this.deliversInvoiceItself())
+    );
+  }
+
+  /**
+   * Bexio emails its invoices unless the medium has we.publish deliver them
+   * (`bexio_invoiceMailByWePublish`). A checkout is emailed by Bexio either
+   * way: it has no invoice-creation mail to carry the pdf.
+   */
+  override async deliversInvoiceItself(): Promise<boolean> {
+    return !(await this.getConfig()).bexio_invoiceMailByWePublish;
   }
 
   /** The pdf of the Bexio invoice behind a payment, for printing it again. */
@@ -300,6 +323,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
    * @param {boolean} isRenewal - Indicates whether the invoice is a renewal or a new invoice.
    * @param {string} successURL - The url the client gets redirected after successful invoice creation
    * @param {MailChannel} channel - Email the invoice (default) or render it for a letter
+   * @param {boolean} renderForWePublish - Render it for we.publish to deliver, whatever the channel
    *
    * @throws {InvoiceNotFoundError} If the invoice or related data cannot be found in the local database.
    * @throws {Error} For any other generic error.
@@ -312,7 +336,8 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     invoiceId: string,
     isRenewal: boolean,
     successURL = '',
-    channel: MailChannel = MailChannel.mail
+    channel: MailChannel = MailChannel.mail,
+    renderForWePublish = false
   ): Promise<RemoteInvoiceResult> {
     let step = 'loading the invoice';
 
@@ -360,7 +385,13 @@ export class BexioPaymentProvider extends BasePaymentProvider {
         invoice: newInvoice,
         document,
         deliveryError,
-      } = await this.createInvoice(updatedContact, invoice, isRenewal, channel);
+      } = await this.createInvoice(
+        updatedContact,
+        invoice,
+        isRenewal,
+        channel,
+        renderForWePublish
+      );
 
       // The email can differ between we.publish and bexio, so the next
       // invoice finds this contact by its id. Only a convenience: the
@@ -541,6 +572,73 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     return (await response.json()) as BexioCountry[];
   }
 
+  /**
+   * The invoice's closing, signed by the bexio user the invoices belong to.
+   * Left out, bexio fills in its default text, which names whoever owns the
+   * API token. Without the user's name the invoice still goes out, with that
+   * default.
+   */
+  private async invoiceFooter(
+    apiKey: string | null,
+    userId: number
+  ): Promise<string | undefined> {
+    try {
+      let signer = this.signer;
+
+      if (
+        !signer ||
+        signer.userId !== userId ||
+        Date.now() - signer.loadedAt >= COUNTRIES_TTL_MS
+      ) {
+        signer = {
+          loadedAt: Date.now(),
+          userId,
+          name: await this.fetchUserName(apiKey, userId),
+        };
+        this.signer = signer;
+      }
+
+      return `Sie haben Fragen? Melden Sie sich bei uns.<br/><br/>Freundliche Grüsse<br/>${escapeHtml(signer.name)}`;
+    } catch (error) {
+      logger('bexioPaymentProvider').warn(
+        'Bexio user %s could not be read for the invoice footer, using bexio’s own: %s',
+        userId,
+        describeError(error)
+      );
+
+      return undefined;
+    }
+  }
+
+  private async fetchUserName(
+    apiKey: string | null,
+    userId: number
+  ): Promise<string> {
+    const response = await fetch(`${BEXIO_USERS_URL}/${userId}`, {
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+      },
+      signal: AbortSignal.timeout(30_000) as unknown as RequestInit['signal'],
+    });
+
+    if (response.status !== 200) {
+      throw new ResponseNOK(response.status);
+    }
+
+    const { firstname, lastname } = (await response.json()) as {
+      firstname?: string | null;
+      lastname?: string | null;
+    };
+    const name = [firstname, lastname].filter(Boolean).join(' ').trim();
+
+    if (!name) {
+      throw new Error(`bexio user ${userId} has no name`);
+    }
+
+    return name;
+  }
+
   private async contactFields(user: ContactUser) {
     return bexioContactFields(
       user,
@@ -598,7 +696,8 @@ export class BexioPaymentProvider extends BasePaymentProvider {
         (Subscription & { memberPlan: MemberPlan; user: User }) | null;
     },
     isRenewal: boolean,
-    channel: MailChannel = MailChannel.mail
+    channel: MailChannel = MailChannel.mail,
+    renderForWePublish = false
   ): Promise<{
     invoice: InvoicesStatic.Invoice;
     document?: RemoteInvoiceDocument;
@@ -620,6 +719,8 @@ export class BexioPaymentProvider extends BasePaymentProvider {
       invoice.subscription.memberPlan
     );
     const config = await this.getConfig();
+    const userId = this.assertProperty('bexio_userId', config.bexio_userId);
+    const footer = await this.invoiceFooter(config.apiKey, userId);
 
     const bexioInvoice: InvoicesStatic.InvoiceCreate = {
       title:
@@ -627,7 +728,8 @@ export class BexioPaymentProvider extends BasePaymentProvider {
           config.bexio_invoiceTitleRenewalMembership || ''
         : config.bexio_invoiceTitleNewMembership || '',
       contact_id: contact.id,
-      user_id: this.assertProperty('bexio_userId', config.bexio_userId),
+      user_id: userId,
+      ...(footer ? { footer } : {}),
       mwst_type: 0,
       mwst_is_net: false,
       api_reference: invoice.id,
@@ -664,10 +766,10 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     );
 
     try {
-      if (channel === MailChannel.letter) {
+      if (channel === MailChannel.letter || renderForWePublish) {
         return {
           invoice: created,
-          document: await this.renderInvoiceForLetter(
+          document: await this.renderIssuedInvoice(
             bexio,
             created.id,
             markAsOpen
@@ -676,7 +778,10 @@ export class BexioPaymentProvider extends BasePaymentProvider {
       }
 
       const sentInvoice = await bexio.invoices.send(created.id, {
-        recipient_email: contact.mail,
+        recipient_email: invoiceMailRecipient(
+          contact.mail,
+          config.bexio_testMailbox
+        ),
         subject: stringReplaceMap.replace(
           isRenewal ?
             config.bexio_invoiceMailSubjectRenewalMembership || ''
@@ -712,9 +817,9 @@ export class BexioPaymentProvider extends BasePaymentProvider {
 
   /**
    * What emailing does without the email: issue the invoice, as `mark_as_open`
-   * would, and fetch its pdf on Bexio's letterhead for we.publish to print.
+   * would, and fetch its pdf on Bexio's letterhead for we.publish to deliver.
    */
-  private async renderInvoiceForLetter(
+  private async renderIssuedInvoice(
     bexio: Bexio,
     invoiceId: number,
     markAsOpen: boolean

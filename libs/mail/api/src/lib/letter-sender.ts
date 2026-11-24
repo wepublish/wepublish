@@ -45,10 +45,21 @@ export interface LetterSender {
     mailLogId?: string;
     mailSendJobId?: string | null;
     /** Bookkeeping an automated send needs, so a retry can recognise the letter. */
-    log?: { mailIdentifier?: string; type?: MailLogType };
+    log?: LetterLogDetails;
     attachment?: LetterAttachment;
   }): Promise<string>;
 }
+
+/**
+ * What the sender knows about a letter and the letter side writes into its log
+ * entry: how a retry recognises it, where it came from, and what it is about.
+ */
+export type LetterLogDetails = {
+  mailIdentifier?: string;
+  type?: MailLogType;
+  subscriptionId?: string | null;
+  invoiceId?: string | null;
+};
 
 /** A letter that could not be rendered or posted; the log entry is written. */
 export class LetterDeliveryError extends Error {

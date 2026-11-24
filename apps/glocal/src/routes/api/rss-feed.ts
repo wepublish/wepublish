@@ -1,5 +1,5 @@
+import { legacyRedirectHandler } from '@wepublish/utils/website/tanstack/server';
 import { createFileRoute } from '@tanstack/react-router';
-import { legacyRedirectHandler } from '@wepublish/utils/website/tanstack';
 
 /**
  * Legacy Next path. `/api/rss-feed` is baked into existing feed-reader

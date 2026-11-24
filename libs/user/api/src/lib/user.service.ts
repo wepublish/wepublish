@@ -1,9 +1,11 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   NotFoundException,
+  Optional,
 } from '@nestjs/common';
-import { differenceInMinutes } from 'date-fns';
+import { differenceInMinutes, differenceInSeconds } from 'date-fns';
 import {
   CommentItemType,
   Prisma,
@@ -12,7 +14,10 @@ import {
 } from '@prisma/client';
 import { hash as argon2Hash } from '@node-rs/argon2';
 import { Validator } from '@wepublish/user';
-import { SessionCacheInvalidator } from '@wepublish/authentication/api';
+import {
+  AuthenticationService,
+  SessionCacheInvalidator,
+} from '@wepublish/authentication/api';
 import { PublicContentCacheInvalidator } from '@wepublish/public-content-cache/api';
 import {
   getMaxTake,
@@ -36,6 +41,18 @@ import {
 } from '@wepublish/mail/api';
 import * as crypto from 'crypto';
 import { HibpService } from './hibp.service';
+import {
+  EMAIL_SEGMENTS_IN_ORDER,
+  emailSegmentWhere,
+  MailEmailSegment,
+  placeholderEmailPatterns,
+} from './email-segment';
+import {
+  emailQualitySinceSlices,
+  emailQualitySlices,
+  findAcrossSlices,
+} from './email-quality-order';
+import { USER_LIST_ORDER, type UserListOrder } from './user-list-order';
 
 const COMMENT_AUTHOR_FIELDS = [
   'name',
@@ -51,8 +68,12 @@ export class UserService {
     private mailContext: MailContext,
     private hibpService: HibpService,
     private mailchimpContactService: MailchimpContactService,
+    private authenticationService: AuthenticationService,
     private sessionCache: SessionCacheInvalidator,
-    private publicContentCache: PublicContentCacheInvalidator
+    private publicContentCache: PublicContentCacheInvalidator,
+    @Optional()
+    @Inject(USER_LIST_ORDER)
+    private listOrders: UserListOrder[] = []
   ) {}
 
   @PrimeDataLoader(UserDataloaderService)
@@ -81,40 +102,74 @@ export class UserService {
     skip = 0,
     take = 10,
   }: UserListArgs) {
-    const where = createUserFilter(filter ?? {});
-    const orderBy = createUserOrder(sort, order);
+    const placeholderPatterns =
+      filter?.emailSegments?.length ?
+        await placeholderEmailPatterns(this.prisma)
+      : [];
+    const where = createUserFilter(filter ?? {}, placeholderPatterns);
+    const include = { address: true, paymentProviderCustomers: true };
+    const listOrder = (this.listOrders ?? []).find(o => o.sort === sort);
+    const orderedIds = await listOrder?.orderedIds(
+      where,
+      order === SortOrder.Ascending ? 'asc' : 'desc'
+    );
 
-    const [totalCount, users] = await Promise.all([
-      this.prisma.user.count({
-        where,
-      }),
-      this.prisma.user.findMany({
-        where,
-        skip,
-        take: getMaxTake(take) + 1,
-        orderBy,
-        cursor: cursorId ? { id: cursorId } : undefined,
-        include: { address: true, paymentProviderCustomers: true },
-      }),
-    ]);
+    if (orderedIds) {
+      // sorted by another module: page through its id list in memory
+      const pageIds = orderedIds.slice(skip, skip + getMaxTake(take) + 1);
+      const found = await this.prisma.user.findMany({
+        where: { id: { in: pageIds } },
+        include,
+      });
+      const byId = new Map(found.map(user => [user.id, user]));
+      const users = pageIds.flatMap(id => byId.get(id) ?? []);
 
-    const nodes = users.slice(0, getMaxTake(take));
-    const firstUser = nodes[0];
-    const lastUser = nodes[nodes.length - 1];
+      return toUserPage(users, orderedIds.length, skip, take);
+    }
 
-    const hasPreviousPage = Boolean(skip);
-    const hasNextPage = users.length > nodes.length;
+    const slices =
+      cursorId ? null
+      : sort === UserSort.EmailQuality ? emailQualitySlices(order)
+      : sort === UserSort.EmailQualitySince ? emailQualitySinceSlices(order)
+      : null;
 
-    return {
-      nodes,
-      totalCount,
-      pageInfo: {
-        hasPreviousPage,
-        hasNextPage,
-        startCursor: firstUser?.id,
-        endCursor: lastUser?.id,
-      },
-    };
+    const [totalCount, users] =
+      slices ?
+        await findAcrossSlices(
+          where,
+          slices,
+          { skip, take: getMaxTake(take) + 1 },
+          where => this.prisma.user.count({ where }),
+          args => this.prisma.user.findMany({ ...args, include })
+        ).then(({ totalCount, nodes }) => [totalCount, nodes] as const)
+      : await Promise.all([
+          this.prisma.user.count({
+            where,
+          }),
+          this.prisma.user.findMany({
+            where,
+            skip,
+            take: getMaxTake(take) + 1,
+            orderBy: createUserOrder(sort, order),
+            cursor: cursorId ? { id: cursorId } : undefined,
+            include,
+          }),
+        ]);
+
+    return toUserPage(users, totalCount, skip, take);
+  }
+
+  /**
+   * The email segments worth filtering by. Without a configured placeholder
+   * pattern nobody is a placeholder, so that segment is not offered.
+   */
+  async getEmailSegments(): Promise<MailEmailSegment[]> {
+    const hasPatterns =
+      (await placeholderEmailPatterns(this.prisma)).length > 0;
+
+    return EMAIL_SEGMENTS_IN_ORDER.filter(
+      segment => hasPatterns || segment !== MailEmailSegment.placeholder
+    );
   }
 
   async updateUserPassword(
@@ -216,7 +271,36 @@ export class UserService {
   }
 
   @PrimeDataLoader(UserDataloaderService)
-  async updateUser({ id, address, properties, ...input }: UpdateUserInput) {
+  async updateUser({
+    id,
+    address,
+    properties,
+    firstName,
+    name,
+    birthday,
+    email,
+    emailVerifiedAt,
+    userImageID,
+    roleIDs,
+    flair,
+    active,
+    note,
+    totpExempt,
+  }: UpdateUserInput) {
+    const input = {
+      firstName,
+      name,
+      birthday,
+      email,
+      emailVerifiedAt,
+      userImageID,
+      roleIDs,
+      flair,
+      active,
+      note,
+      totpExempt,
+    };
+
     if (input.email) {
       input.email = (input.email as string).toLowerCase();
     }
@@ -274,6 +358,10 @@ export class UserService {
         user.email
       );
       await this.recomputeEmailQuality(user.id);
+    }
+
+    if (active === false) {
+      await this.authenticationService.revokeUserSessions(user.id);
     }
 
     return user;
@@ -352,6 +440,68 @@ export class UserService {
 
   private static readonly EMAIL_CHANGE_EXPIRY_MINUTES = 60;
 
+  private static readonly EMAIL_CHANGE_REQUEST_COOLDOWN_SECONDS = 60;
+
+  private hashEmailChangeToken(token: string) {
+    return crypto.createHash('sha256').update(token).digest('hex');
+  }
+
+  private async sendEmailConfirmation(
+    userId: string,
+    targetEmail: string,
+    event: typeof UserEvent.EMAIL_CHANGE | typeof UserEvent.EMAIL_VERIFICATION
+  ) {
+    const mailTemplateId = await this.mailContext.getUserTemplateId(
+      event,
+      false
+    );
+
+    if (!mailTemplateId) {
+      throw new BadRequestException(
+        'Email confirmation is not configured. Please contact your administrator.'
+      );
+    }
+
+    const current = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { pendingEmailAt: true },
+    });
+
+    if (
+      current?.pendingEmailAt &&
+      differenceInSeconds(new Date(), current.pendingEmailAt) <
+        UserService.EMAIL_CHANGE_REQUEST_COOLDOWN_SECONDS
+    ) {
+      throw new BadRequestException(
+        'Please wait a moment before requesting another confirmation email.'
+      );
+    }
+
+    const token = crypto.randomBytes(32).toString('base64url');
+
+    const user = await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        pendingEmail: targetEmail,
+        pendingEmailAt: new Date(),
+        pendingEmailTokenHash: this.hashEmailChangeToken(token),
+      },
+      include: { address: true, paymentProviderCustomers: true },
+    });
+    await this.sessionCache.invalidate();
+
+    await this.mailContext.sendMail({
+      mailTemplateId,
+      recipient: user,
+      recipientEmailOverride: targetEmail,
+      optionalData: { newEmail: targetEmail },
+      mailType: mailLogType.UserFlow,
+      jwtOverride: token,
+    });
+
+    return user;
+  }
+
   @PrimeDataLoader(UserDataloaderService)
   async requestEmailChange(userId: string, newEmail: string) {
     newEmail = newEmail.toLowerCase();
@@ -367,58 +517,50 @@ export class UserService {
       throw new BadRequestException('Email is already in use.');
     }
 
-    const user = await this.prisma.user.update({
-      where: { id: userId },
-      data: {
-        pendingEmail: newEmail,
-        pendingEmailAt: new Date(),
-      },
-      include: { address: true, paymentProviderCustomers: true },
-    });
-    await this.sessionCache.invalidate();
-
-    const mailTemplateId = await this.mailContext.getUserTemplateId(
-      UserEvent.EMAIL_CHANGE,
-      false
-    );
-
-    await this.mailContext.sendMail({
-      mailTemplateId,
-      recipient: user,
-      optionalData: { newEmail },
-      mailType: mailLogType.UserFlow,
-    });
-
-    return user;
+    return this.sendEmailConfirmation(userId, newEmail, UserEvent.EMAIL_CHANGE);
   }
 
   @PrimeDataLoader(UserDataloaderService)
-  async confirmEmailChange(userId: string, newEmail: string) {
+  async requestEmailVerification(userId: string) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
-      include: { address: true, paymentProviderCustomers: true },
+      select: { email: true },
     });
 
     if (!user) {
       throw new NotFoundException('User not found.');
     }
 
-    if (!user.pendingEmail || !user.pendingEmailAt) {
-      throw new BadRequestException('No pending email change.');
-    }
+    return this.sendEmailConfirmation(
+      userId,
+      user.email,
+      UserEvent.EMAIL_VERIFICATION
+    );
+  }
 
-    if (user.pendingEmail.toLowerCase() !== newEmail.toLowerCase()) {
-      throw new BadRequestException(
-        'Email address does not match the pending email change.'
-      );
+  @PrimeDataLoader(UserDataloaderService)
+  async confirmEmailChange(
+    token: string,
+    options?: { exceptSessionToken?: string }
+  ) {
+    const user = await this.prisma.user.findUnique({
+      where: { pendingEmailTokenHash: this.hashEmailChangeToken(token) },
+    });
+
+    if (!user?.pendingEmail || !user.pendingEmailAt) {
+      throw new BadRequestException('Invalid or expired confirmation link.');
     }
 
     const minutesElapsed = differenceInMinutes(new Date(), user.pendingEmailAt);
 
     if (minutesElapsed > UserService.EMAIL_CHANGE_EXPIRY_MINUTES) {
       await this.prisma.user.update({
-        where: { id: userId },
-        data: { pendingEmail: null, pendingEmailAt: null },
+        where: { id: user.id },
+        data: {
+          pendingEmail: null,
+          pendingEmailAt: null,
+          pendingEmailTokenHash: null,
+        },
       });
       await this.sessionCache.invalidate();
 
@@ -427,28 +569,77 @@ export class UserService {
       );
     }
 
-    const updatedUser = await this.prisma.user.update({
-      where: { id: userId },
-      data: {
-        email: user.pendingEmail,
-        emailVerifiedAt: new Date(),
-        pendingEmail: null,
-        pendingEmailAt: null,
-      },
-      include: { address: true, paymentProviderCustomers: true },
-    });
+    let updatedUser;
+
+    try {
+      updatedUser = await this.prisma.user.update({
+        where: { id: user.id },
+        data: {
+          email: user.pendingEmail,
+          emailVerifiedAt: new Date(),
+          pendingEmail: null,
+          pendingEmailAt: null,
+          pendingEmailTokenHash: null,
+        },
+        include: { address: true, paymentProviderCustomers: true },
+      });
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        throw new BadRequestException('Email is already in use.');
+      }
+
+      throw error;
+    }
+
+    // A new address ends the other sessions, in case someone else got in.
+    // Merely confirming the address on file changes nothing that would need
+    // it, and the session waiting on the welcome page has to stay alive.
+    if (user.email !== updatedUser.email) {
+      await this.authenticationService.revokeUserSessions(user.id, {
+        exceptToken: options?.exceptSessionToken,
+      });
+    }
+    // Cached sessions still carry the old restriction and address.
     await this.sessionCache.invalidate();
 
-    await this.mailchimpContactService.updateContactEmail(
-      updatedUser.id,
-      user.email,
-      updatedUser.email
-    );
+    if (user.email !== updatedUser.email) {
+      await this.mailchimpContactService.updateContactEmail(
+        updatedUser.id,
+        user.email,
+        updatedUser.email
+      );
+    }
+    // Even confirming the address on file is new evidence (emailVerifiedAt).
     await this.recomputeEmailQuality(updatedUser.id);
 
     return updatedUser;
   }
 }
+
+const toUserPage = <T extends { id: string }>(
+  users: T[],
+  totalCount: number,
+  skip: number,
+  take: number
+) => {
+  const nodes = users.slice(0, getMaxTake(take));
+  const firstUser = nodes[0];
+  const lastUser = nodes[nodes.length - 1];
+
+  return {
+    nodes,
+    totalCount,
+    pageInfo: {
+      hasPreviousPage: Boolean(skip),
+      hasNextPage: users.length > nodes.length,
+      startCursor: firstUser?.id,
+      endCursor: lastUser?.id,
+    },
+  };
+};
 
 export const createUserOrder = (
   field: UserSort,
@@ -475,10 +666,31 @@ export const createUserOrder = (
         firstName: graphQLSortOrderToPrisma(sortOrder),
       };
 
+    case UserSort.PrintIssuesOwed:
+      // only another module sorts this way (USER_LIST_ORDER); without one, by creation date
+      return {
+        createdAt: graphQLSortOrderToPrisma(sortOrder),
+      };
+
     case UserSort.SubscriptionCount:
       // many users share the same count, tie-break on id for stable paging
       return [
         { subscriptions: { _count: graphQLSortOrderToPrisma(sortOrder) } },
+        { id: graphQLSortOrderToPrisma(sortOrder) },
+      ];
+
+    // Only reached when paging by cursor; skip-based paging orders these by
+    // slices so that people without a level do not bunch up at one end (see
+    // email-quality-order.ts).
+    case UserSort.EmailQuality:
+      return [
+        { emailQuality: { level: graphQLSortOrderToPrisma(sortOrder) } },
+        { id: graphQLSortOrderToPrisma(sortOrder) },
+      ];
+
+    case UserSort.EmailQualitySince:
+      return [
+        { emailQuality: { since: graphQLSortOrderToPrisma(sortOrder) } },
         { id: graphQLSortOrderToPrisma(sortOrder) },
       ];
   }
@@ -712,13 +924,15 @@ const createTextFilter = (
 };
 
 export const createUserFilter = (
-  filter: Partial<UserFilter>
+  filter: Partial<UserFilter>,
+  placeholderPatterns: readonly string[] = []
 ): Prisma.UserWhereInput => {
   return {
     AND: [
       createNameFilter(filter),
       createTextFilter(filter),
       createUserRoleFilter(filter),
+      emailSegmentWhere(filter.emailSegments ?? [], placeholderPatterns),
     ],
   };
 };

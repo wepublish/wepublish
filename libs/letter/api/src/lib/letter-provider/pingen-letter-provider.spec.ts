@@ -18,7 +18,8 @@ import {
 } from './pingen-letter-provider';
 
 vi.mock('pingen2-sdk-js', async () => {
-  const actual = await vi.importActual<object>('pingen2-sdk-js');
+  const actual =
+    await vi.importActual<typeof import('pingen2-sdk-js')>('pingen2-sdk-js');
 
   return {
     ...actual,
@@ -116,7 +117,8 @@ describe('PingenLetterProvider', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    // Constructed with `new`, so these must be `function`s, not arrows.
+    // The provider calls these with `new`; Vitest only allows that for a
+    // `function` implementation, not an arrow function.
     (OAuth as unknown as Mock).mockImplementation(function () {
       return oauthMock;
     });
@@ -459,6 +461,49 @@ describe('PingenLetterProvider', () => {
           letterData: expect.any(String),
         },
       ]);
+    });
+
+    it('skips a letter Pingen no longer knows', async () => {
+      const provider = createProvider();
+
+      lettersMock.getDetails
+        .mockRejectedValueOnce(new PingenError('Not found', 404))
+        .mockResolvedValueOnce(
+          pingenResponse({
+            data: {
+              id: 'letter-2',
+              type: 'letters',
+              attributes: { status: 'sent' },
+            },
+          })
+        );
+
+      const states = await provider.getMessageStates(['letter-1', 'letter-2']);
+
+      expect(states).toEqual([
+        {
+          providerLetterID: 'letter-2',
+          state: LetterState.dispatched,
+          letterData: expect.any(String),
+        },
+      ]);
+    });
+
+    // Rejected credentials have to show up as a failed sync, not as a sync
+    // that found nothing to update.
+    it('fails when Pingen refuses the request', async () => {
+      const provider = createProvider();
+
+      lettersMock.getDetails.mockRejectedValue(
+        new PingenError('Unauthorized', 403)
+      );
+
+      await expect(
+        provider.getMessageStates(['letter-1', 'letter-2'])
+      ).rejects.toMatchObject({
+        name: 'LetterProviderError',
+        statusCode: 403,
+      });
     });
   });
 

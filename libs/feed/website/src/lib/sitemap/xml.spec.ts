@@ -34,12 +34,49 @@ describe('buildUrlset', () => {
     );
 
     expect(xml).toContain(
-      '<loc>https://example.com/a/?x=1&amp;y=&lt;2&gt;</loc>'
+      // < and > are not allowed in urls, so they are percent-encoded
+      '<loc>https://example.com/a/?x=1&amp;y=%3C2%3E</loc>'
     );
     expect(xml).toContain('<news:name>Bajour &amp; Co</news:name>');
     expect(xml).toContain(
       '<news:title>Tom &amp; &quot;Jerry&quot;</news:title>'
     );
+  });
+
+  it('percent-encodes characters a url may not contain raw', () => {
+    // Bajour has pages with slugs like "Basler*in des Tages", and the API
+    // returns their url unencoded. A raw space makes the url invalid.
+    const xml = buildUrlset([
+      { loc: 'https://example.com/Basler*in des Tages' },
+      { loc: 'https://example.com/Das Nützliche zum Schluss' },
+    ]);
+
+    expect(xml).toContain(
+      '<loc>https://example.com/Basler*in%20des%20Tages</loc>'
+    );
+    expect(xml).toContain(
+      '<loc>https://example.com/Das%20N%C3%BCtzliche%20zum%20Schluss</loc>'
+    );
+  });
+
+  it('keeps urls that are already encoded and the homepage without a trailing slash', () => {
+    const xml = buildUrlset([
+      { loc: 'https://example.com' },
+      { loc: 'https://example.com/a/tag/Basler*in%20des%20Tages' },
+      { loc: 'https://example.com/100%' },
+    ]);
+
+    expect(xml).toContain('<loc>https://example.com</loc>');
+    expect(xml).toContain(
+      '<loc>https://example.com/a/tag/Basler*in%20des%20Tages</loc>'
+    );
+    expect(xml).toContain('<loc>https://example.com/100%25</loc>');
+  });
+
+  it('encodes the locations of a sitemap index', () => {
+    expect(
+      buildSitemapIndex([{ loc: 'https://example.com/a b.xml' }])
+    ).toContain('<loc>https://example.com/a%20b.xml</loc>');
   });
 
   it('adds the news namespace and entries only when given a publication', () => {

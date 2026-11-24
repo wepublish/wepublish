@@ -11,6 +11,8 @@ fragment FullMailLog on MailLogModel {
   error
   mailProviderID
   mailSendJobId
+  subscriptionId
+  invoiceId
   recipient {
     id
     email
@@ -27,6 +29,8 @@ mutation SyncMailLogStates($limit: Int) {
   syncMailLogStates(limit: $limit) {
     checked
     updated
+    lettersChecked
+    lettersUpdated
   }
 }
 

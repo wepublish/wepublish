@@ -19,9 +19,52 @@ import {
 } from '@prisma/client';
 import { MailSendJobService } from './mail-send-job.service';
 import { MailSendRecipientService } from './mail-send-recipient.service';
-import { MailAudienceInput, MailRecipientBase } from './mail-send.model';
+import {
+  MailAudienceInput,
+  MailRecipientBase,
+  MailRollingKind,
+} from './mail-send.model';
 import type { Mock } from 'vitest';
 import { version } from 'uuid';
+
+const defaultBuildMailData = vi.fn(
+  async ({
+    recipient,
+    optionalData,
+    jwtOverride,
+  }: {
+    recipient: Record<string, unknown>;
+    optionalData: Record<string, unknown>;
+    jwtOverride?: string;
+  }) => ({
+    user: recipient,
+    optional: optionalData,
+    jwt: jwtOverride ?? 'test-jwt-token',
+    currentDate: new Date(),
+    purl: '',
+    purlCode: '',
+    purlQr: '',
+  })
+);
+
+/** Template data carrying a personal login code, as the purl provider builds it. */
+const withPurl = vi.fn(
+  async ({
+    recipient,
+    optionalData,
+  }: {
+    recipient: Record<string, unknown>;
+    optionalData: Record<string, unknown>;
+  }) => ({
+    user: recipient,
+    optional: optionalData,
+    jwt: '',
+    currentDate: new Date(),
+    purl: 'https://zwoelf.example/l/ABCDE-FGHJK',
+    purlCode: 'ABCDE-FGHJK',
+    purlQr: '<svg/>',
+  })
+);
 
 const makeService = (
   prisma: any,
@@ -33,7 +76,10 @@ const makeService = (
 ) =>
   new MailSendJobService(
     prisma as PrismaClient,
-    mailContext as unknown as MailContext,
+    {
+      buildMailData: defaultBuildMailData,
+      ...mailContext,
+    } as unknown as MailContext,
     letterContext as unknown as LetterContext,
     recipientService as MailSendRecipientService,
     features as FeaturesService,
@@ -51,7 +97,11 @@ const template = (context: string | null) => ({
  * two arrays, so a test can assert what a second run does to rows a first run
  * already touched.
  */
-function fakePrisma(templateRow: any = template('custom')) {
+function fakePrisma(
+  templateRow: any = template('custom'),
+  // The channels the template is written for; its content is the same on each.
+  channels: MailChannel[] = [MailChannel.mail, MailChannel.letter]
+) {
   const jobs: any[] = [];
   const entries: any[] = [];
   let entrySeq = 0;
@@ -109,6 +159,21 @@ function fakePrisma(templateRow: any = template('custom')) {
     jobs,
     entries,
     mailTemplate: { findUnique: vi.fn(async () => templateRow) },
+    mailTemplateVariant: {
+      findUnique: vi.fn(async ({ where }: any) =>
+        channels.includes(where.templateId_channel.channel) ?
+          {
+            subject: '',
+            htmlContent: '',
+            textContent: null,
+            letterLayoutId: null,
+            letterAppendixId: null,
+            ...templateRow,
+            channel: where.templateId_channel.channel,
+          }
+        : null
+      ),
+    },
     invoice: { findFirst: vi.fn(async () => null) },
     user: {
       findUnique: vi.fn(async ({ where }: any) => ({
@@ -284,6 +349,23 @@ const postalUser = {
   },
 };
 
+/**
+ * One row read both ways: the template carries the attachments, its version
+ * on the channel asked for carries the words.
+ */
+const withVersions = (row: Record<string, unknown>) => ({
+  mailTemplate: { findUnique: vi.fn(async () => row) },
+  mailTemplateVariant: {
+    findUnique: vi.fn(async ({ where }: any) => ({
+      letterLayoutId: null,
+      letterAppendixId: null,
+      sameAsMail: false,
+      ...row,
+      channel: where.templateId_channel.channel,
+    })),
+  },
+});
+
 describe('previewForAudience as a letter', () => {
   const recipientService = {
     resolvePage: vi.fn(async () => [{ user: postalUser }]),
@@ -319,6 +401,38 @@ describe('previewForAudience as a letter', () => {
     );
     expect(Buffer.from(preview.pdf ?? '', 'base64').toString()).toBe(
       '%PDF-1.4 preview'
+    );
+  });
+
+  it('prints a sample login code on the preview', async () => {
+    const prisma = fakePrisma({
+      ...template('custom'),
+      htmlContent: '<p>{{purlCode}}</p>',
+      subject: 'Brief',
+    });
+    const letterContext = {
+      renderLetter: vi.fn(async () => Buffer.from('%PDF-1.4 preview')),
+      resolveLayout: vi.fn(async () => null),
+    };
+
+    await makeService(
+      prisma,
+      { buildMailData: withPurl },
+      recipientService,
+      letterContext
+    ).previewForAudience({
+      mailTemplateId: 'tpl-1',
+      audience,
+      channel: MailChannel.letter,
+    });
+
+    expect(withPurl).toHaveBeenCalledWith(
+      expect.objectContaining({ mode: 'preview', purlOrigin: 'letter' })
+    );
+    expect(letterContext.renderLetter).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ purlCode: 'ABCDE-FGHJK' }),
+      })
     );
   });
 });
@@ -472,6 +586,45 @@ describe('MailSendJobService', () => {
       await settle(prisma);
     });
 
+    it('keeps a rolling range as the dates it meant when the send was created', async () => {
+      vi.useFakeTimers({ toFake: ['Date'] });
+      vi.setSystemTime(new Date('2026-11-22T12:00:00.000Z'));
+
+      try {
+        const prisma = fakePrisma();
+        const recipientService = recipientServiceFor(['u1']);
+
+        await makeService(
+          prisma,
+          { sendMail: vi.fn(async () => undefined) },
+          recipientService
+        ).createJob(
+          {
+            mailTemplateId: 'tpl-1',
+            audience: {
+              base: MailRecipientBase.hasSubscription,
+              startsAtRolling: { kind: MailRollingKind.lastDays, days: 30 },
+            },
+          },
+          'editor-1'
+        );
+
+        const applied = {
+          base: MailRecipientBase.hasSubscription,
+          startsAtFrom: new Date('2026-10-23T12:00:00.000Z'),
+          startsAtTo: new Date('2026-11-22T12:00:00.000Z'),
+        };
+
+        expect(prisma.jobs[0].recipientFilter).toEqual(applied);
+        // Counted with the same dates the queue is built from.
+        expect(recipientService.count.mock.calls[0][0]).toEqual(applied);
+
+        await settle(prisma);
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
     it('sends to every recipient of the audience it resolved', async () => {
       const prisma = fakePrisma();
       const recipientService = recipientServiceFor(['u1', 'u2']);
@@ -485,6 +638,117 @@ describe('MailSendJobService', () => {
 
       expect(mailContext.sendMail).toHaveBeenCalledTimes(2);
       expect(prisma.jobs[0].status).toBe('done');
+    });
+  });
+
+  describe('what a send is about', () => {
+    const subscriptionRecipients = () => {
+      const recipient = {
+        user: { id: 'u1', email: 'u1@x.ch' },
+        subscription: { id: 'sub-1' },
+      };
+
+      return {
+        count: vi.fn(async () => 1),
+        allowsSubscriptionTemplates: () => true,
+        resolvePage: vi.fn(async (_audience: any, skip: number) =>
+          skip === 0 ? [recipient] : []
+        ),
+        loadQueued: vi.fn(
+          async (refs: any[]) =>
+            new Map(
+              refs.map(ref => [
+                `${ref.userId}:${ref.subscriptionId ?? ''}`,
+                recipient,
+              ])
+            )
+        ),
+      };
+    };
+    const subscriptionAudience = { base: MailRecipientBase.hasSubscription };
+
+    it('tells the mail log which subscription and invoice a mail is about', async () => {
+      const prisma = fakePrisma(template('renewal'));
+      prisma.invoice.findFirst.mockResolvedValue({ id: 'inv-1', items: [] });
+      const mailContext = { sendMail: vi.fn(async () => undefined) };
+
+      await makeService(
+        prisma,
+        mailContext,
+        subscriptionRecipients()
+      ).createJob(
+        { mailTemplateId: 'tpl-1', audience: subscriptionAudience },
+        'editor-1'
+      );
+      await settle(prisma);
+
+      expect((mailContext.sendMail as Mock).mock.calls[0][0]).toMatchObject({
+        subscriptionId: 'sub-1',
+        invoiceId: 'inv-1',
+      });
+    });
+
+    it('names no invoice when the template shows none', async () => {
+      const prisma = fakePrisma(template('subscription'));
+      prisma.invoice.findFirst.mockResolvedValue({ id: 'inv-1', items: [] });
+      const mailContext = { sendMail: vi.fn(async () => undefined) };
+
+      await makeService(
+        prisma,
+        mailContext,
+        subscriptionRecipients()
+      ).createJob(
+        { mailTemplateId: 'tpl-1', audience: subscriptionAudience },
+        'editor-1'
+      );
+      await settle(prisma);
+
+      const sent = (mailContext.sendMail as Mock).mock.calls[0][0];
+
+      expect(sent.subscriptionId).toBe('sub-1');
+      expect(sent.invoiceId ?? null).toBeNull();
+    });
+
+    it('tells the letter log the same', async () => {
+      const prisma = fakePrisma(template('renewal'));
+      prisma.invoice.findFirst.mockResolvedValue({ id: 'inv-1', items: [] });
+      const letterContext = { sendLetter: vi.fn(async () => 'log-1') };
+
+      await makeService(
+        prisma,
+        { sendMail: vi.fn() },
+        subscriptionRecipients(),
+        letterContext
+      ).createJob(
+        {
+          mailTemplateId: 'tpl-1',
+          audience: subscriptionAudience,
+          channel: MailChannel.letter,
+        },
+        'editor-1'
+      );
+      await settle(prisma);
+
+      expect(
+        (letterContext.sendLetter as Mock).mock.calls[0][0].log
+      ).toMatchObject({ subscriptionId: 'sub-1', invoiceId: 'inv-1' });
+    });
+
+    it('names no trigger for a send to people without a subscription', async () => {
+      const prisma = fakePrisma();
+      const mailContext = { sendMail: vi.fn(async () => undefined) };
+
+      await makeService(
+        prisma,
+        mailContext,
+        recipientServiceFor(['u1'])
+      ).createJob({ mailTemplateId: 'tpl-1', audience }, 'editor-1');
+      await settle(prisma);
+
+      const sent = (mailContext.sendMail as Mock).mock.calls[0][0];
+
+      expect(sent.subscriptionId ?? null).toBeNull();
+      expect(sent.invoiceId ?? null).toBeNull();
     });
   });
 
@@ -525,6 +789,63 @@ describe('MailSendJobService', () => {
         })
       );
       expect(prisma.jobs[0].status).toBe('done');
+    });
+
+    it('prints each recipient their own login code on the letter', async () => {
+      const prisma = fakePrisma({
+        ...template('custom'),
+        htmlContent: '<p>{{purlCode}}</p>',
+      });
+      const letterContext = { sendLetter: vi.fn(async () => 'log-1') };
+
+      await makeService(
+        prisma,
+        { sendMail: vi.fn(), buildMailData: withPurl },
+        recipientServiceFor(['u1']),
+        letterContext
+      ).createJob(
+        { mailTemplateId: 'tpl-1', audience, channel: MailChannel.letter },
+        'editor-1'
+      );
+      await settle(prisma);
+
+      expect(withPurl).toHaveBeenCalledWith(
+        expect.objectContaining({
+          mode: 'send',
+          purlOrigin: 'letter',
+          // No login link on paper unless the template asks for one.
+          mintJwt: false,
+          mintPurl: true,
+        })
+      );
+      expect(letterContext.sendLetter).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ purlCode: 'ABCDE-FGHJK' }),
+        })
+      );
+    });
+
+    it('issues no login code for a letter that does not print one', async () => {
+      const prisma = fakePrisma({
+        ...template('custom'),
+        htmlContent: '<p>Hallo {{user_firstName}}</p>',
+      });
+      const buildMailData = vi.fn(async () => ({}) as never);
+
+      await makeService(
+        prisma,
+        { sendMail: vi.fn(), buildMailData },
+        recipientServiceFor(['u1']),
+        { sendLetter: vi.fn(async () => 'log-1') }
+      ).createJob(
+        { mailTemplateId: 'tpl-1', audience, channel: MailChannel.letter },
+        'editor-1'
+      );
+      await settle(prisma);
+
+      expect(buildMailData).toHaveBeenCalledWith(
+        expect.objectContaining({ mode: 'send', mintPurl: false })
+      );
     });
 
     it('plans and queues a letter send once per person', async () => {
@@ -955,9 +1276,10 @@ describe('MailSendJobService.previewForAudience as letter', () => {
       },
     };
     const prisma = {
-      mailTemplate: {
+      mailTemplate: { findUnique: vi.fn(async () => template('custom')) },
+      mailTemplateVariant: {
         findUnique: vi.fn(async () => ({
-          ...template('custom'),
+          channel: MailChannel.letter,
           subject: 'Rechnung',
           htmlContent: '<p>Hallo</p>',
           letterAppendixId: 'qr-bill',
@@ -989,18 +1311,22 @@ describe('MailSendJobService.previewForAudience as letter', () => {
         printMode: LetterPrintMode.duplex,
       })
     );
+    expect(prisma.mailTemplateVariant.findUnique).toHaveBeenCalledWith({
+      where: {
+        templateId_channel: {
+          templateId: 'tpl-1',
+          channel: MailChannel.letter,
+        },
+      },
+    });
   });
 
   it("prints the template's attachments in the preview", async () => {
-    const prisma = {
-      mailTemplate: {
-        findUnique: vi.fn(async () => ({
-          ...template('custom'),
-          htmlContent: '<p>Hallo</p>',
-          attachments: [{ documentId: 'contract' }],
-        })),
-      },
-    };
+    const prisma = withVersions({
+      ...template('custom'),
+      htmlContent: '<p>Hallo</p>',
+      attachments: [{ documentId: 'contract' }],
+    });
     const renderLetter = vi.fn(async () => Buffer.from('%PDF-1.4 letter'));
     const service = makeService(
       prisma,
@@ -1056,17 +1382,14 @@ describe('MailSendJobService.previewForAudience by mail', () => {
   const user = { id: 'u1', email: 'jane@example.com', firstName: 'Jane' };
   const audience: MailAudienceInput = { base: MailRecipientBase.allUsers };
 
-  const prismaWith = (attachments: { documentId: string }[]) => ({
-    mailTemplate: {
-      findUnique: vi.fn(async () => ({
-        ...template('custom'),
-        subject: 'Ihr Vertrag',
-        htmlContent: '<p>Hallo {{user_firstName}}</p>',
-        textContent: null,
-        attachments,
-      })),
-    },
-  });
+  const prismaWith = (attachments: { documentId: string }[]) =>
+    withVersions({
+      ...template('custom'),
+      subject: 'Ihr Vertrag',
+      htmlContent: '<p>Hallo {{user_firstName}}</p>',
+      textContent: null,
+      attachments,
+    });
 
   const preview = (
     prisma: ReturnType<typeof prismaWith>,
@@ -1102,7 +1425,8 @@ describe('MailSendJobService.previewForAudience by mail', () => {
 
     expect(render).toHaveBeenCalledWith(
       ['contract', 'terms'],
-      expect.objectContaining({ user, optional: {}, jwt: 'jwt-1' })
+      // The same data the preview renders the mail with.
+      expect.objectContaining({ user, optional: {} })
     );
     expect(result.html).toContain('Hallo Jane');
     expect(result.attachments).toEqual([
@@ -1142,17 +1466,13 @@ describe('MailSendJobService.previewForAudience by mail', () => {
 });
 
 describe('MailSendJobService.missingPlaceholders', () => {
-  const prisma = {
-    mailTemplate: {
-      findUnique: vi.fn(async () => ({
-        ...template('custom'),
-        subject: 'Hallo {{user_firstName}}',
-        htmlContent: '<p>{{optional_does_not_exist}}</p>',
-        textContent: null,
-        attachments: [{ documentId: 'contract' }],
-      })),
-    },
-  };
+  const prisma = withVersions({
+    ...template('custom'),
+    subject: 'Hallo {{user_firstName}}',
+    htmlContent: '<p>{{optional_does_not_exist}}</p>',
+    textContent: null,
+    attachments: [{ documentId: 'contract' }],
+  });
 
   it('warns about the placeholders of the attachments too', async () => {
     const attachments = {
@@ -1230,5 +1550,81 @@ describe('letter channel behind the paper-letters feature', () => {
     await expect(
       service.createJob({ mailTemplateId: 'tpl-1', audience }, 'editor-1')
     ).resolves.toMatchObject({ channel: MailChannel.mail });
+  });
+});
+
+// A template is written per channel: a send needs the version of its channel.
+describe('sending a template on a channel it is not written for', () => {
+  const audience = { base: MailRecipientBase.allUsers } as any;
+  const recipientService = { count: vi.fn(async () => 3) };
+
+  it('refuses a letter job for a template without a letter version', async () => {
+    const prisma = fakePrisma(template('custom'), [MailChannel.mail]);
+
+    await expect(
+      makeService(prisma, undefined, recipientService).createJob(
+        { mailTemplateId: 'tpl-1', audience, channel: MailChannel.letter },
+        'editor-1'
+      )
+    ).rejects.toThrow(BadRequestException);
+    expect(prisma.jobs).toHaveLength(0);
+  });
+
+  it('refuses a mail job for a template written as a letter only', async () => {
+    const prisma = fakePrisma(template('custom'), [MailChannel.letter]);
+
+    await expect(
+      makeService(prisma, undefined, recipientService).createJob(
+        { mailTemplateId: 'tpl-1', audience },
+        'editor-1'
+      )
+    ).rejects.toThrow(BadRequestException);
+    expect(prisma.jobs).toHaveLength(0);
+  });
+
+  it('refuses to mail a single user a template written as a letter only', async () => {
+    const prisma = fakePrisma(template('custom'), [MailChannel.letter]);
+    const mailContext = { sendMail: vi.fn() };
+
+    await expect(
+      makeService(prisma, mailContext).sendToUser('tpl-1', 'u1', 'editor-1')
+    ).rejects.toThrow(BadRequestException);
+    expect(mailContext.sendMail).not.toHaveBeenCalled();
+    expect(prisma.jobs).toHaveLength(0);
+  });
+
+  it('refuses to preview a channel the template is not written for', async () => {
+    const prisma = fakePrisma(template('custom'), [MailChannel.mail]);
+
+    await expect(
+      makeService(prisma).previewForAudience({
+        mailTemplateId: 'tpl-1',
+        audience,
+        channel: MailChannel.letter,
+      })
+    ).rejects.toThrow(BadRequestException);
+  });
+
+  it('checks the placeholders of the version that is about to go out', async () => {
+    const prisma = fakePrisma({
+      ...template('custom'),
+      htmlContent: '<p>{{optional_subscription_memberPlan_name}}</p>',
+    });
+
+    await expect(
+      makeService(prisma).missingPlaceholders(
+        'tpl-1',
+        false,
+        MailChannel.letter
+      )
+    ).resolves.toEqual(['optional_subscription_memberPlan_name']);
+    expect(prisma.mailTemplateVariant.findUnique).toHaveBeenCalledWith({
+      where: {
+        templateId_channel: {
+          templateId: 'tpl-1',
+          channel: MailChannel.letter,
+        },
+      },
+    });
   });
 });

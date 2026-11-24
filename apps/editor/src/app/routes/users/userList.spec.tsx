@@ -1,8 +1,10 @@
 import { useQuery } from '@apollo/client/react';
 import { createTheme, ThemeProvider } from '@mui/material';
-import { render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
+import { TinyUserListDocument, UserSort } from '@wepublish/editor/api';
 import {
   CanCreateUser,
+  CanGetPrintIssues,
   CanDeleteUser,
   CanGetUser,
   CanGetUsers,
@@ -25,10 +27,22 @@ vi.mock('@apollo/client/react', async importOriginal => ({
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
-    t: (key: string) => key,
+    t: (key: string, options?: Record<string, unknown>) =>
+      options && 'received' in options ?
+        `${key} ${options['received']}/${options['entitled']}`
+      : key,
     i18n: { language: 'en' },
   }),
 }));
+
+const features = vi.fn(() => new Set<string>());
+
+vi.mock('@wepublish/ui/editor', async importOriginal => ({
+  ...(await importOriginal<typeof import('@wepublish/ui/editor')>()),
+  useFeature: (feature: string) => features().has(feature),
+}));
+
+afterEach(() => features.mockReturnValue(new Set()));
 
 const mockedUseQuery = useQuery as unknown as Mock;
 
@@ -46,11 +60,17 @@ const user = (id: string, name: string, managedByWepublishLogin: boolean) => ({
   roles: [],
   subscriptionCount: 0,
   subscriptionOverview: [],
+  emailQuality:
+    id === 'reader' ?
+      { level: 'dead', since: '2026-03-04T10:00:00.000Z' }
+    : null,
+  printIssuesOwed: null,
+  printIssueProgress: null,
 });
 
 const theme = createTheme({ cssVariables: true });
 
-const renderList = () =>
+const renderList = ({ printIssues = false } = {}) =>
   render(
     <ThemeProvider theme={theme}>
       <AuthContext.Provider
@@ -67,6 +87,7 @@ const renderList = () =>
                     CanDeleteUser,
                     CanResetUserPassword,
                     CanResetUserTotp,
+                    ...(printIssues ? [CanGetPrintIssues] : []),
                   ].map(({ id }) => ({ id })),
                 },
               ],
@@ -131,5 +152,178 @@ describe('UserList', () => {
     expect(
       within(row).queryByText('userList.overview.managedByWepublishLogin')
     ).not.toBeInTheDocument();
+  });
+});
+
+describe('UserList email status', () => {
+  const headers = () =>
+    screen.getAllByRole('columnheader').map(header => header.textContent);
+
+  const showColumn = (name: string) => {
+    fireEvent.click(
+      screen.getByRole('button', { name: /columnConfigurator.title/ })
+    );
+    fireEvent.click(screen.getByRole('menuitemcheckbox', { name }));
+    fireEvent.keyDown(screen.getByRole('menu'), { key: 'Escape' });
+  };
+
+  it('hides both email status columns until switched on', async () => {
+    renderList();
+    await rowOf('Reader');
+
+    expect(headers()).not.toContain('userList.overview.emailQuality');
+    expect(headers()).not.toContain('userList.overview.emailQualitySince');
+  });
+
+  it('shows the segment as plain text, never-evaluated people as unknown', async () => {
+    renderList();
+    showColumn('userList.overview.emailQuality');
+
+    expect(
+      within(await rowOf('Reader')).getByText(
+        'userList.overview.emailSegments.dead'
+      )
+    ).toBeInTheDocument();
+    expect(
+      within(await rowOf('Staff')).getByText(
+        'userList.overview.emailSegments.unknown'
+      )
+    ).toBeInTheDocument();
+  });
+
+  it('shows since when in its own column, empty without a level', async () => {
+    renderList();
+    showColumn('userList.overview.emailQualitySince');
+
+    const cellUnder = (row: HTMLElement) =>
+      within(row).getAllByRole('cell')[
+        headers().indexOf('userList.overview.emailQualitySince')
+      ];
+
+    expect(cellUnder(await rowOf('Reader')).textContent).toBe(
+      'userList.overview.emailQualitySinceDate'
+    );
+    expect(cellUnder(await rowOf('Staff')).textContent).toBe('');
+  });
+
+  it.each([
+    ['userList.overview.emailQuality', UserSort.EmailQuality],
+    ['userList.overview.emailQualitySince', UserSort.EmailQualitySince],
+  ])('sorts by %s', async (label, sort) => {
+    renderList();
+    showColumn(label);
+
+    fireEvent.click(screen.getByRole('button', { name: label }));
+
+    const listCalls = mockedUseQuery.mock.calls.filter(
+      ([document]) => document === TinyUserListDocument
+    );
+
+    expect(listCalls.at(-1)?.[1]).toEqual(
+      expect.objectContaining({
+        variables: expect.objectContaining({ sort }),
+      })
+    );
+  });
+
+  it('offers the email segments as a filter', async () => {
+    renderList();
+    fireEvent.click(
+      screen.getByRole('button', { name: 'filterableList.filter.label' })
+    );
+
+    expect(
+      await screen.findByRole('combobox', {
+        name: 'userList.overview.emailQuality',
+      })
+    ).toBeInTheDocument();
+  });
+});
+
+describe('UserList print issues', () => {
+  const OWED = 'userList.overview.printIssuesOwed';
+
+  const reader = {
+    ...user('reader', 'Reader', false),
+    subscriptionCount: 2,
+    subscriptionOverview: [
+      { id: 'sub-1', memberPlanName: 'Basic', status: 'active' },
+      { id: 'sub-2', memberPlanName: 'Gönner', status: 'deactivated' },
+    ],
+    printIssuesOwed: 5,
+    printIssueProgress: [
+      { subscriptionId: 'sub-1', received: 7, entitled: 12, relevant: true },
+      { subscriptionId: 'sub-2', received: 3, entitled: 6, relevant: false },
+    ],
+  };
+
+  beforeEach(() => {
+    mockedUseQuery.mockReturnValue({
+      data: {
+        users: {
+          nodes: [reader],
+          totalCount: 1,
+          pageInfo: { hasNextPage: false, hasPreviousPage: false },
+        },
+      },
+      loading: false,
+      refetch: vi.fn(),
+    });
+  });
+
+  it('shows the issues still owed and sorts by them', async () => {
+    features.mockReturnValue(new Set(['print-export']));
+    renderList({ printIssues: true });
+
+    const row = await rowOf('Reader');
+    expect(within(row).getByText('5')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: OWED }));
+
+    const listCalls = mockedUseQuery.mock.calls.filter(
+      ([document]) => document === TinyUserListDocument
+    );
+
+    expect(listCalls.at(-1)?.[1]).toEqual(
+      expect.objectContaining({
+        variables: expect.objectContaining({
+          sort: UserSort.PrintIssuesOwed,
+        }),
+      })
+    );
+  });
+
+  it('adds the received issues to the subscriptions that still count', async () => {
+    features.mockReturnValue(new Set(['print-export']));
+    renderList({ printIssues: true });
+
+    fireEvent.mouseOver(
+      await screen.findByText('userList.overview.amountOfSubscriptions')
+    );
+
+    const tooltip = await screen.findByRole('tooltip');
+    expect(
+      within(tooltip).getByText(
+        'userList.overview.subscriptionWithStatusAndIssues 7/12'
+      )
+    ).toBeInTheDocument();
+    expect(
+      within(tooltip).getByText('userList.overview.subscriptionWithStatus')
+    ).toBeInTheDocument();
+  });
+
+  it('has no such column without print-export', async () => {
+    renderList({ printIssues: true });
+
+    await rowOf('Reader');
+    expect(screen.queryByText(OWED)).not.toBeInTheDocument();
+  });
+
+  it('has no such column without the permission', async () => {
+    features.mockReturnValue(new Set(['print-export']));
+    renderList();
+
+    await rowOf('Reader');
+    expect(screen.queryByText(OWED)).not.toBeInTheDocument();
   });
 });

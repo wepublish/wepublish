@@ -1,4 +1,4 @@
-import { MailChannel, MailLogType } from '@prisma/client';
+import { MailChannel, MailLogState, MailLogType } from '@prisma/client';
 import type { Mock } from 'vitest';
 import { LetterDeliveryError, LetterSender } from './letter-sender';
 import { MailContext } from './mail-context';
@@ -53,10 +53,12 @@ function setup({
   preference = { channel: MailChannel.letter },
   configured = true,
   hasAddress = true,
+  placeholder = false,
 }: {
   preference?: { channel: MailChannel } | null;
   configured?: boolean;
   hasAddress?: boolean;
+  placeholder?: boolean;
 } = {}) {
   const letterSender: { [K in keyof LetterSender]: Mock } = {
     isConfigured: vi.fn(async () => configured),
@@ -66,6 +68,13 @@ function setup({
 
   const prisma = {
     mailLog: { count: vi.fn(async () => 0), create: vi.fn() },
+    mailTemplate: {
+      findUnique: vi.fn(async () => ({
+        subject: 'S',
+        htmlContent: '<p>x</p>',
+        textContent: null,
+      })),
+    },
     user: {
       findUnique: vi.fn(async () => ({
         ...user(),
@@ -73,11 +82,20 @@ function setup({
       })),
     },
     userDeliveryPreference: { findUnique: vi.fn(async () => preference) },
+    mailTemplateVariant: {
+      findUnique: vi.fn(async () => ({ id: 'variant-1' })),
+    },
   };
 
   const mailContext = {
     mailProvider: { id: 'mailgun' },
-    jwtGenerator: vi.fn(async () => 'jwt-1'),
+    isPlaceholderEmail: vi.fn(async () => placeholder),
+    buildMailData: vi.fn(async () => ({
+      user: { id: 'user-1' },
+      optional: { invoice: { id: 'inv-1' } },
+      jwt: 'jwt-1',
+      purlCode: 'ABCDE-12345',
+    })),
     sendComposedMail: vi.fn(async () => ({
       subject: 'S',
       providerMessageID: 'msg-1',
@@ -104,16 +122,14 @@ describe('MailController letter mode', () => {
     expect(letterSender.sendLetter).toHaveBeenCalledWith({
       mailTemplateId: 'template-1',
       recipient: expect.objectContaining({ id: 'user-1', address }),
-      data: expect.objectContaining({
-        user: expect.objectContaining({ id: 'user-1' }),
-        optional: { invoice: { id: 'inv-1' } },
-        jwt: 'jwt-1',
-      }),
+      data: expect.objectContaining({ purlCode: 'ABCDE-12345' }),
       mailLogId: expect.any(String),
       mailSendJobId: null,
       log: {
         mailIdentifier: expectedIdentifier,
         type: MailLogType.subscriptionFlow,
+        subscriptionId: null,
+        invoiceId: null,
       },
     });
     // The letter side writes its own log entry.
@@ -121,16 +137,57 @@ describe('MailController letter mode', () => {
     expect(prisma.mailLog.create).not.toHaveBeenCalled();
   });
 
-  it('leaves the authorization fields out of the letter data', async () => {
-    const { send, letterSender } = setup();
+  it('builds the letter data for the letter, with its login code', async () => {
+    const { send, mailContext } = setup();
 
     await send();
 
-    const { data } = letterSender.sendLetter.mock.calls[0][0];
+    expect(mailContext.buildMailData).toHaveBeenCalledWith(
+      expect.objectContaining({ purlOrigin: 'letter', mode: 'send' })
+    );
+  });
 
-    expect(data.user.roleIDs).toBeUndefined();
-    expect(data.user.totpEnabled).toBeUndefined();
-    expect(data.user.totpExempt).toBeUndefined();
+  it('leaves the authorization fields out of the letter data', async () => {
+    const { send, mailContext } = setup();
+
+    await send();
+
+    const [{ recipient }] = (mailContext.buildMailData as Mock).mock.calls[0];
+
+    expect(recipient.roleIDs).toBeUndefined();
+    expect(recipient.totpEnabled).toBeUndefined();
+    expect(recipient.totpExempt).toBeUndefined();
+  });
+
+  // A placeholder address is exactly who a letter is for: it must reach the
+  // letter branch instead of the placeholder suppression.
+  it('prints for a placeholder address in letter mode', async () => {
+    const { send, letterSender, prisma } = setup({ placeholder: true });
+
+    await send();
+
+    expect(letterSender.sendLetter).toHaveBeenCalledTimes(1);
+    expect(prisma.mailLog.create).not.toHaveBeenCalled();
+  });
+
+  it('records a placeholder address without a usable postal address', async () => {
+    const { send, letterSender, mailContext, prisma } = setup({
+      placeholder: true,
+      hasAddress: false,
+    });
+
+    await send();
+
+    expect(letterSender.sendLetter).not.toHaveBeenCalled();
+    expect(mailContext.sendComposedMail).not.toHaveBeenCalled();
+    expect(prisma.mailLog.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        channel: MailChannel.letter,
+        state: MailLogState.rejected,
+        error: 'LETTER_ADDRESS_UNUSABLE',
+        mailIdentifier: expectedIdentifier,
+      }),
+    });
   });
 
   it('keeps mailing an event that is not switched to letters', async () => {
@@ -199,14 +256,41 @@ describe('MailController letter mode', () => {
     expect(mailContext.sendComposedMail).not.toHaveBeenCalled();
   });
 
+  const invoicePdf = {
+    filename: 'RE-1.pdf',
+    contentType: 'application/pdf',
+    content: Buffer.from('pdf'),
+  };
+
   it('prints a document the caller hands in after the template', async () => {
     const { send, letterSender } = setup();
-    const attachment = { content: Buffer.from('pdf'), name: 'RE-1.pdf' };
 
-    await send({ letterAttachment: attachment });
+    await send({ attachment: invoicePdf });
 
     expect(letterSender.sendLetter).toHaveBeenCalledWith(
-      expect.objectContaining({ attachment })
+      expect.objectContaining({
+        attachment: { content: invoicePdf.content, name: 'RE-1.pdf' },
+      })
+    );
+  });
+
+  it('attaches the document the caller hands in to a mail', async () => {
+    const { send, mailContext } = setup();
+
+    await send({ letterRecipient: null, attachment: invoicePdf });
+
+    expect(mailContext.sendComposedMail).toHaveBeenCalledWith(
+      expect.objectContaining({ attachments: [invoicePdf] })
+    );
+  });
+
+  it('attaches nothing to a mail when the caller hands in nothing', async () => {
+    const { send, mailContext } = setup();
+
+    await send({ letterRecipient: null });
+
+    expect(mailContext.sendComposedMail.mock.calls[0][0]).not.toHaveProperty(
+      'attachments'
     );
   });
 
@@ -243,5 +327,28 @@ describe('MailController letter mode', () => {
 
     expect(prisma.userDeliveryPreference.findUnique).not.toHaveBeenCalled();
     expect(mailContext.sendComposedMail).toHaveBeenCalled();
+  });
+});
+
+describe('MailController.recordDeferred', () => {
+  it('logs the mail as deferred, with why, under the identifier a send would use', async () => {
+    const { prisma, mailContext } = setup();
+
+    await new MailController(
+      prisma as any,
+      mailContext,
+      config()
+    ).recordDeferred('The invoice pdf is not available yet');
+
+    expect(prisma.mailLog.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        state: 'deferred',
+        error: 'The invoice pdf is not available yet',
+        mailIdentifier: expectedIdentifier,
+        recipientEmail: 'jane@example.com',
+        mailTemplate: { connect: { id: 'template-1' } },
+      }),
+    });
+    expect(mailContext.sendComposedMail).not.toHaveBeenCalled();
   });
 });
