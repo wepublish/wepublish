@@ -7,8 +7,6 @@ import {
 } from '@wepublish/block-content/website';
 import {
   formatPeriodUnit,
-  getPlanPeriodicities,
-  PERIODICITY_ORDER,
   PeriodicityPicker,
   Subscribe,
   SubscribeButton,
@@ -18,12 +16,9 @@ import {
 } from '@wepublish/membership/website';
 import {
   FullBlockFragment,
-  FullMemberPlanFragment,
-  PaymentPeriodicity,
   SubscribePeriodicityDisplay,
 } from '@wepublish/website/api';
 import {
-  BuilderPeriodicityPickerProps,
   BuilderRouterContext,
   BuilderSubscribeBlockProps,
   BuilderSubscribeProps,
@@ -33,18 +28,12 @@ import {
   WebsiteBuilderProvider,
 } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
-import {
-  createContext,
-  forwardRef,
-  useContext,
-  useMemo,
-  useState,
-} from 'react';
-import { useFormContext } from 'react-hook-form';
+import { useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdCheck, MdFavorite } from 'react-icons/md';
 
 import { formatMembershipPrice } from './tsri-membership-price';
+import { TsriMembershipPlanItem } from './tsri-membership-plan-item';
 import {
   TsriMembershipCustomAmountContext,
   TsriMembershipPlanPicker,
@@ -171,52 +160,6 @@ export const TsriMembershipPeriodicityToggle = styled(PeriodicityPicker)`
   }
 `;
 
-const MembershipPlansContext = createContext<FullMemberPlanFragment[]>([]);
-
-const offers = (
-  memberPlan: FullMemberPlanFragment,
-  periodicity: PaymentPeriodicity
-) => getPlanPeriodicities(memberPlan).includes(periodicity);
-
-/**
- * The monthly/yearly toggle offers every periodicity a plan of the block is
- * billed in, not only those of the selected plan. Choosing one the selected
- * plan lacks selects the first plan that offers it.
- */
-const MembershipPeriodicityPicker = forwardRef<
-  HTMLButtonElement,
-  BuilderPeriodicityPickerProps
->(function MembershipPeriodicityPicker({ onChange, ...props }, ref) {
-  const memberPlans = useContext(MembershipPlansContext);
-  const form = useFormContext<{ memberPlanId: string }>();
-
-  const periodicities = PERIODICITY_ORDER.filter(periodicity =>
-    memberPlans.some(memberPlan => offers(memberPlan, periodicity))
-  );
-
-  return (
-    <TsriMembershipPeriodicityToggle
-      {...props}
-      ref={ref}
-      periodicities={periodicities.length ? periodicities : props.periodicities}
-      onChange={periodicity => {
-        const selected = memberPlans.find(
-          ({ id }) => id === form?.getValues('memberPlanId')
-        );
-        const fallback = memberPlans.find(memberPlan =>
-          offers(memberPlan, periodicity)
-        );
-
-        if (selected && !offers(selected, periodicity) && fallback) {
-          form?.setValue('memberPlanId', fallback.id);
-        }
-
-        onChange(periodicity);
-      }}
-    />
-  );
-});
-
 export const TsriMembershipTransactionFee = styled(TransactionFee)`
   justify-self: stretch;
   max-width: none;
@@ -273,6 +216,7 @@ const MembershipSubscribe = (props: BuilderSubscribeProps) => {
   return (
     <Subscribe
       {...props}
+      periodicitiesOfAllPlans
       transactionFeeText={t('tsri.membership.transactionFee')}
       submitText={
         <>
@@ -317,38 +261,37 @@ export const TsriMembershipSubscribe = (props: BuilderSubscribeBlockProps) => {
   const customAmount = useMemo(() => ({ open, setOpen }), [open]);
 
   return (
-    <MembershipPlansContext value={props.memberPlans}>
-      <TsriMembershipCustomAmountContext value={customAmount}>
-        <WebsiteBuilderProvider
-          Subscribe={MembershipSubscribe}
-          MemberPlanPicker={TsriMembershipPlanPicker}
-          PeriodicityPicker={MembershipPeriodicityPicker}
-          SubscribeSummary={TsriMembershipSummary}
-          TransactionFee={TsriMembershipTransactionFee}
-        >
-          <TsriMembershipWrapper className={props.className}>
-            <TsriMembershipSubscribeBlock
-              {...props}
-              className={undefined}
-              periodicityDisplay={SubscribePeriodicityDisplay.Toggle}
-              hiddenAreas={open ? NOTHING_HIDDEN : AMOUNT_HIDDEN}
-            />
+    <TsriMembershipCustomAmountContext value={customAmount}>
+      <WebsiteBuilderProvider
+        Subscribe={MembershipSubscribe}
+        MemberPlanPicker={TsriMembershipPlanPicker}
+        MemberPlanItem={TsriMembershipPlanItem}
+        PeriodicityPicker={TsriMembershipPeriodicityToggle}
+        SubscribeSummary={TsriMembershipSummary}
+        TransactionFee={TsriMembershipTransactionFee}
+      >
+        <TsriMembershipWrapper className={props.className}>
+          <TsriMembershipSubscribeBlock
+            {...props}
+            className={undefined}
+            periodicityDisplay={SubscribePeriodicityDisplay.Toggle}
+            hiddenAreas={open ? NOTHING_HIDDEN : AMOUNT_HIDDEN}
+          />
 
-            {!upgradeSubscriptionId && (
-              <TsriMembershipBenefits
-                aria-label={t('tsri.membership.benefits.label')}
-              >
-                {BENEFITS.map(benefit => (
-                  <li key={benefit}>
-                    <MdCheck aria-hidden />
-                    {t(`tsri.membership.benefits.${benefit}`)}
-                  </li>
-                ))}
-              </TsriMembershipBenefits>
-            )}
-          </TsriMembershipWrapper>
-        </WebsiteBuilderProvider>
-      </TsriMembershipCustomAmountContext>
-    </MembershipPlansContext>
+          {!upgradeSubscriptionId && (
+            <TsriMembershipBenefits
+              aria-label={t('tsri.membership.benefits.label')}
+            >
+              {BENEFITS.map(benefit => (
+                <li key={benefit}>
+                  <MdCheck aria-hidden />
+                  {t(`tsri.membership.benefits.${benefit}`)}
+                </li>
+              ))}
+            </TsriMembershipBenefits>
+          )}
+        </TsriMembershipWrapper>
+      </WebsiteBuilderProvider>
+    </TsriMembershipCustomAmountContext>
   );
 };
