@@ -24,8 +24,7 @@ Une fois les codes cadeaux activés :
   que l’abonnement. L’abonnement lancé par un code garde le prix normal du
   plan.
 - Chaque offre a ses propres méthodes de paiement. Stripe, Stripe Checkout,
-  Payrexx et Mollie acceptent les paiements de cadeaux, les factures Bexio pas
-  encore.
+  Payrexx, Mollie et les factures Bexio acceptent les paiements de cadeaux.
 - L’acheteur·euse voit son code dès que le paiement est arrivé. Une commande
   qui reste impayée est annulée après 14 jours.
 - **Autoriser les codes de réduction** permet de saisir un code de réduction
