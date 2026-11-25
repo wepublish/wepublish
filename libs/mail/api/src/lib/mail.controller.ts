@@ -25,6 +25,8 @@ export enum mailLogType {
   UserFlow,
   SystemMail,
   Manual,
+  /** Mails about a gift code: bought, redeemed. */
+  GiftCode,
 }
 
 /**
@@ -44,6 +46,7 @@ const MAIL_LOG_TYPE_MAP: Record<mailLogType, MailLogType> = {
   [mailLogType.UserFlow]: MailLogType.userFlow,
   [mailLogType.SystemMail]: MailLogType.systemMail,
   [mailLogType.Manual]: MailLogType.manual,
+  [mailLogType.GiftCode]: MailLogType.giftCode,
 };
 
 export type MailControllerConfig = {

@@ -23,6 +23,8 @@ import { MemberPlanModule } from '@wepublish/member-plan/api';
 import { SettingModule } from '@wepublish/settings/api';
 import { MailchimpSubscribeResolver } from './mailchimp-form/mailchimp-subscribe.resolver';
 import { MailchimpSubscribeService } from './mailchimp-form/mailchimp-subscribe.service';
+import { GiftCodeOffersBlockResolver } from './gift-code/gift-code-offers-block.resolver';
+import { GiftCodeOfferDataloader } from '../../../../gift-code/api/src/lib/gift-code-offer.dataloader';
 
 @Module({
   imports: [
@@ -50,6 +52,8 @@ import { MailchimpSubscribeService } from './mailchimp-form/mailchimp-subscribe.
     SubscribeBlockResolver,
     MailchimpSubscribeResolver,
     MailchimpSubscribeService,
+    GiftCodeOffersBlockResolver,
+    GiftCodeOfferDataloader,
   ],
   exports: [BlockTreeLoader],
 })

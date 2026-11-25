@@ -117,6 +117,21 @@ export interface SubscribeBlockValue extends BaseBlockValue {
   goodieMinValue?: number | null;
   goodieMinValueAppliesToUpgrade: boolean;
   hideRepeatGoodieOnUpgrade: boolean;
+  showGiftCodeRedemption?: boolean;
+  giftCodeRedemptionPageId?: string | null;
+  giftCodeRedemptionLinkText?: string | null;
+}
+
+export interface RedeemGiftCodeBlockValue extends BaseBlockValue {
+  fields: SubscribeBlockField[];
+}
+
+export interface GiftCodeOffersBlockValue extends BaseBlockValue {
+  fields: SubscribeBlockField[];
+  giftCodeOfferIds: string[];
+  defaultGiftCodeOfferId?: string | null;
+  showDiscountCodes: boolean;
+  askRecipientName: boolean;
 }
 
 export interface MailchimpFormInterestOptionValue {
@@ -514,6 +529,14 @@ export type SubscribeBlockListValue = BlockListValue<
   EditorBlockType.Subscribe,
   SubscribeBlockValue
 >;
+export type RedeemGiftCodeBlockListValue = BlockListValue<
+  EditorBlockType.RedeemGiftCode,
+  RedeemGiftCodeBlockValue
+>;
+export type GiftCodeOffersBlockListValue = BlockListValue<
+  EditorBlockType.GiftCodeOffers,
+  GiftCodeOffersBlockValue
+>;
 export type MailchimpFormBlockListValue = BlockListValue<
   EditorBlockType.MailchimpForm,
   MailchimpFormBlockValue
@@ -553,6 +576,8 @@ export type BlockValue =
   | TeaserSlotsBlockListValue
   | HTMLBlockListValue
   | SubscribeBlockListValue
+  | RedeemGiftCodeBlockListValue
+  | GiftCodeOffersBlockListValue
   | MailchimpFormBlockListValue
   | PollBlockListValue
   | CrowdfundingBlockListValue
@@ -645,6 +670,33 @@ function mapBlockValueToContentInput(block: BlockValue): BlockContentInput {
           goodieMinValueAppliesToUpgrade:
             block.value.goodieMinValueAppliesToUpgrade,
           hideRepeatGoodieOnUpgrade: block.value.hideRepeatGoodieOnUpgrade,
+          showGiftCodeRedemption: block.value.showGiftCodeRedemption ?? false,
+          giftCodeRedemptionPageId:
+            block.value.giftCodeRedemptionPageId ?? null,
+          giftCodeRedemptionLinkText:
+            block.value.giftCodeRedemptionLinkText || null,
+        },
+      };
+
+    case EditorBlockType.RedeemGiftCode:
+      return {
+        redeemGiftCode: {
+          blockStyle: block.value.blockStyle,
+          disabled: block.value.disabled,
+          fields: block.value.fields,
+        },
+      };
+
+    case EditorBlockType.GiftCodeOffers:
+      return {
+        giftCodeOffers: {
+          blockStyle: block.value.blockStyle,
+          disabled: block.value.disabled,
+          fields: block.value.fields,
+          giftCodeOfferIds: block.value.giftCodeOfferIds,
+          defaultGiftCodeOfferId: block.value.defaultGiftCodeOfferId,
+          showDiscountCodes: block.value.showDiscountCodes,
+          askRecipientName: block.value.askRecipientName,
         },
       };
 
@@ -1364,6 +1416,35 @@ function mapQueryBlockToBlockValue(
           memberPlanIds: block.memberPlanIds ?? [],
           periodicityDisplay: block.periodicityDisplay,
           memberPlanRenderSettings: block.memberPlanRenderSettings,
+          showGiftCodeRedemption: block.showGiftCodeRedemption ?? false,
+          giftCodeRedemptionPageId: block.giftCodeRedemptionPageId ?? null,
+          giftCodeRedemptionLinkText: block.giftCodeRedemptionLinkText ?? null,
+        },
+      };
+
+    case 'RedeemGiftCodeBlock':
+      return {
+        key,
+        type: EditorBlockType.RedeemGiftCode,
+        value: {
+          disabled: block.disabled,
+          blockStyle: block.blockStyle,
+          fields: block.fields ?? [],
+        },
+      };
+
+    case 'GiftCodeOffersBlock':
+      return {
+        key,
+        type: EditorBlockType.GiftCodeOffers,
+        value: {
+          disabled: block.disabled,
+          blockStyle: block.blockStyle,
+          fields: block.fields ?? [],
+          giftCodeOfferIds: block.giftCodeOfferIds ?? [],
+          defaultGiftCodeOfferId: block.defaultGiftCodeOfferId ?? null,
+          showDiscountCodes: block.showDiscountCodes ?? false,
+          askRecipientName: block.askRecipientName ?? true,
         },
       };
 
