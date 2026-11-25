@@ -4,7 +4,7 @@ import { ComponentType, PropsWithChildren } from 'react';
 import { PartialDeep } from 'type-fest';
 import { WebsiteBuilderProps } from './website-builder.context';
 
-export type WebsiteTenantLanguage = 'de' | 'fr';
+export type WebsiteTenantLanguage = 'de' | 'en' | 'fr';
 
 export type WebsiteTenantBuilderProps = PartialDeep<
   Omit<WebsiteBuilderProps, 'Head' | 'Script' | 'thirdParty'>

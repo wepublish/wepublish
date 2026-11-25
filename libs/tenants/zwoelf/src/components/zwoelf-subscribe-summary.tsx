@@ -1,8 +1,5 @@
 import styled from '@emotion/styled';
-import {
-  formatCurrency,
-  formatRenewalPeriod,
-} from '@wepublish/membership/website';
+import { formatCurrency } from '@wepublish/membership/website';
 import {
   BuilderSubscribeSummaryProps,
   useWebsiteBuilder,
@@ -57,7 +54,7 @@ export const ZwoelfSubscribeSummary = ({
   const choice = [
     t(`zwoelf.subscribe.mode.${mode}`),
     t(`zwoelf.subscribe.periodicity.${paymentPeriodicity}`, {
-      defaultValue: formatRenewalPeriod(paymentPeriodicity),
+      defaultValue: t(`subscription.renewalPeriod.${paymentPeriodicity}`),
     }),
     memberPlan?.name,
     formatCurrency(periodAmount / 100, currency, locale),

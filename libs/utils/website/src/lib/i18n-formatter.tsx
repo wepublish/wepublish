@@ -12,10 +12,12 @@ import resourcesToBackend from 'i18next-resources-to-backend';
 import { mergeDeepRight, map, pick } from 'ramda';
 
 import de from '@wepublish/website/translations/de.json';
+import en from '@wepublish/website/translations/en.json';
 import fr from '@wepublish/website/translations/fr.json';
 
 const translations: Resource = {
   de,
+  en,
   fr,
 };
 

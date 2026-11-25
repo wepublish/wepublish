@@ -10,7 +10,6 @@ import styled from '@emotion/styled';
 import { PaymentPeriodicity } from '@wepublish/website/api';
 import { BuilderPeriodicityPickerProps } from '@wepublish/website/builder';
 import { forwardRef, useEffect, useId } from 'react';
-import { formatRenewalPeriod } from '../formatters/format-renewal-period';
 import { useTranslation } from 'react-i18next';
 
 export const PeriodicityPickerWrapper = styled(FormControl)`
@@ -71,7 +70,7 @@ export const PeriodicityPicker = forwardRef<
             key={period}
             value={period}
           >
-            {formatRenewalPeriod(period)}
+            {t(`subscription.renewalPeriod.${period}`)}
           </ToggleButton>
         ))}
       </PeriodicityToggleGroup>
@@ -97,7 +96,7 @@ export const PeriodicityPicker = forwardRef<
               key={period}
               value={period}
             >
-              {formatRenewalPeriod(period)}
+              {t(`subscription.renewalPeriod.${period}`)}
             </option>
           ))}
         </Select>

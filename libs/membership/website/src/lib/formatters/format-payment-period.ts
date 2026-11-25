@@ -1,51 +1,6 @@
 import { PaymentPeriodicity } from '@wepublish/website/api';
 import { cond } from 'ramda';
 
-export const formatFirstPaymentPeriod = cond([
-  [period => period === PaymentPeriodicity.Monthly, () => 'Erster Monat'],
-  [period => period === PaymentPeriodicity.Quarterly, () => 'Ersten 3 Monate'],
-  [period => period === PaymentPeriodicity.Biannual, () => 'Ersten 6 Monate'],
-  [period => period === PaymentPeriodicity.Biennial, () => 'Ersten 2 Jahre'],
-  [period => period === PaymentPeriodicity.Lifetime, () => 'Lebenslang'],
-  [(period: PaymentPeriodicity) => true, () => 'Erstes Jahr'],
-]);
-
-export const formatAfterFirstPaymentPeriod = cond([
-  [period => period === PaymentPeriodicity.Monthly, () => 'dem ersten Monat'],
-  [
-    period => period === PaymentPeriodicity.Quarterly,
-    () => 'den ersten 3 Monaten',
-  ],
-  [
-    period => period === PaymentPeriodicity.Biannual,
-    () => 'den ersten 6 Monaten',
-  ],
-  [
-    period => period === PaymentPeriodicity.Biennial,
-    () => 'den ersten 2 Jahren',
-  ],
-  [period => period === PaymentPeriodicity.Lifetime, () => 'Lebenslang'],
-  [(period: PaymentPeriodicity) => true, () => 'dem ersten Jahr'],
-]);
-
-export const formatPaymentPeriod = cond([
-  [period => period === PaymentPeriodicity.Monthly, () => '1 Monat'],
-  [period => period === PaymentPeriodicity.Quarterly, () => '3 Monate'],
-  [period => period === PaymentPeriodicity.Biannual, () => '6 Monate'],
-  [period => period === PaymentPeriodicity.Biennial, () => '2 Jahre'],
-  [period => period === PaymentPeriodicity.Lifetime, () => 'Lebenslang'],
-  [(period: PaymentPeriodicity) => true, () => '1 Jahr'],
-]);
-
-export const formatPaymentTimeline = cond([
-  [period => period === PaymentPeriodicity.Monthly, () => 'monatlich'],
-  [period => period === PaymentPeriodicity.Quarterly, () => 'vierteljährlich'],
-  [period => period === PaymentPeriodicity.Biannual, () => 'halbjährlich'],
-  [period => period === PaymentPeriodicity.Biennial, () => 'zweijährlich'],
-  [period => period === PaymentPeriodicity.Lifetime, () => 'Lebenslang'],
-  [(period: PaymentPeriodicity) => true, () => 'jährlich'],
-]);
-
 export const getPaymentPeriodicyMonths = cond([
   [period => period === PaymentPeriodicity.Monthly, () => 1],
   [period => period === PaymentPeriodicity.Quarterly, () => 3],
@@ -73,15 +28,6 @@ export const PERIODICITY_ORDER = [
   PaymentPeriodicity.Biennial,
   PaymentPeriodicity.Lifetime,
 ] as const;
-
-export const formatPeriodUnit = cond([
-  [period => period === PaymentPeriodicity.Monthly, () => 'Monat'],
-  [period => period === PaymentPeriodicity.Quarterly, () => 'Quartal'],
-  [period => period === PaymentPeriodicity.Biannual, () => 'Halbjahr'],
-  [period => period === PaymentPeriodicity.Biennial, () => '2 Jahre'],
-  [period => period === PaymentPeriodicity.Lifetime, () => 'Lebenslang'],
-  [(period: PaymentPeriodicity) => true, () => 'Jahr'],
-]);
 
 export type PeriodicityPrice = {
   periodicity: PaymentPeriodicity;

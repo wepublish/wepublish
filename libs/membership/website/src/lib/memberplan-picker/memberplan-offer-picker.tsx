@@ -7,11 +7,11 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { forwardRef, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   getDefaultPeriodicity,
   getPlanPeriodicities,
 } from '../formatters/format-payment-period';
-import { formatRenewalPeriod } from '../formatters/format-renewal-period';
 import { findMemberPlanRenderSetting } from '../subscribe/member-plan-render-settings';
 
 export const MemberPlanOfferPickerWrapper = styled('fieldset')`
@@ -93,6 +93,7 @@ export const MemberPlanOfferPicker = forwardRef<
     elements: { Image },
     blocks: { RichText },
   } = useWebsiteBuilder();
+  const { t } = useTranslation();
   const offers = useMemo(() => getMemberPlanOffers(memberPlans), [memberPlans]);
 
   const selectedKey =
@@ -177,7 +178,7 @@ export const MemberPlanOfferPicker = forwardRef<
                 }}
               />
             }
-            label={`${offer.memberPlan.name} ${formatRenewalPeriod(offer.paymentPeriodicity)}`}
+            label={`${offer.memberPlan.name} ${t(`subscription.renewalPeriod.${offer.paymentPeriodicity}`)}`}
           />
         ))}
       </MemberPlanOfferPickerRadios>
