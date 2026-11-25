@@ -142,6 +142,23 @@ export const TsriMembershipSubscribeBlock = styled(SubscribeBlock)`
     border-color: ${({ theme }) => theme.palette.common.black};
   }
 
+  [data-area='paymentPeriodicity'] .MuiFormControlLabel-root {
+    flex-basis: 100%;
+    align-items: flex-start;
+    margin: 0;
+  }
+
+  [data-area='paymentPeriodicity'] .MuiFormControlLabel-label {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  [data-area='paymentPeriodicity'] .MuiCheckbox-root {
+    padding-top: 0;
+    padding-bottom: 0;
+    color: ${({ theme }) => theme.palette.common.black};
+  }
+
   ${SubscribeCancelable} {
     display: none;
   }
