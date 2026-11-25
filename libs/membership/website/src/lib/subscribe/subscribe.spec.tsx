@@ -1145,3 +1145,40 @@ describe('Subscribe', () => {
     });
   });
 });
+
+describe('Subscribe gift code redemption', () => {
+  it('links to the redemption page next to the plan heading', () => {
+    renderSubscribe({ giftCodeRedemptionUrl: '/geschenk-einloesen' });
+
+    const heading = screen.getByRole('heading', {
+      name: t('subscribe.chooseSubscription'),
+    });
+    const link = screen.getByRole('link', {
+      name: t('subscribe.giftCodeRedemption.link'),
+    });
+
+    expect(link).toHaveAttribute('href', '/geschenk-einloesen');
+    expect(heading.parentElement).toContainElement(link);
+  });
+
+  it('uses the given link text', () => {
+    renderSubscribe({
+      giftCodeRedemptionUrl: '/geschenk-einloesen',
+      giftCodeRedemptionText: 'Geschenk erhalten? Hier einlösen.',
+    });
+
+    expect(
+      screen.getByRole('link', { name: 'Geschenk erhalten? Hier einlösen.' })
+    ).toHaveAttribute('href', '/geschenk-einloesen');
+  });
+
+  it('shows no link without a redemption page', () => {
+    renderSubscribe();
+
+    expect(
+      screen.queryByRole('link', {
+        name: t('subscribe.giftCodeRedemption.link'),
+      })
+    ).not.toBeInTheDocument();
+  });
+});

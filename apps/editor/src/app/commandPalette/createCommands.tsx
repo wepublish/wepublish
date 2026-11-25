@@ -28,6 +28,7 @@ import {
   CanCreateUserConsent,
   CanCreateUserRole,
   CanCreateVideo,
+  CanUpdateGiftCodes,
 } from '@wepublish/permissions';
 import {
   MdAccountCircle,
@@ -56,6 +57,7 @@ import {
   MdPayment,
   MdPersonAddAlt1,
   MdPhoto,
+  MdRedeem,
   MdSell,
   MdSignpost,
   MdVpnKey,
@@ -309,6 +311,14 @@ export const CREATE_COMMANDS: CommandDefinition[] = [
     icon: <MdCardGiftcard />,
     permissions: [CanCreateGoodie.id],
     perform: ({ navigate }) => navigate('/goodies/create'),
+  },
+  {
+    id: 'createGiftCodeOffer',
+    titleKey: 'commandPalette.create.giftCodeOffer',
+    icon: <MdRedeem />,
+    permissions: [CanUpdateGiftCodes.id],
+    feature: 'gift-codes',
+    perform: ({ navigate }) => navigate('/gift-codes/offers/create'),
   },
   {
     id: 'createPeer',

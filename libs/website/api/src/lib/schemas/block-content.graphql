@@ -138,6 +138,12 @@ fragment FullSubscribeBlock on SubscribeBlock {
   goodieMinValue
   goodieMinValueAppliesToUpgrade
   hideRepeatGoodieOnUpgrade
+  showGiftCodeRedemption
+  giftCodeRedemptionLinkText
+  giftCodeRedemptionPage {
+    id
+    url
+  }
 }
 
 fragment FullMailchimpFormBlock on MailchimpFormBlock {
@@ -308,6 +314,23 @@ fragment FullIFrameBlock on IFrameBlock {
   sandbox
 }
 
+fragment FullRedeemGiftCodeBlock on RedeemGiftCodeBlock {
+  blockStyle: blockStyleName
+  fields
+}
+
+fragment FullGiftCodeOffersBlock on GiftCodeOffersBlock {
+  blockStyle: blockStyleName
+  fields
+  giftCodeOfferIds
+  defaultGiftCodeOfferId
+  giftCodeOffers {
+    ...FullGiftCodeOffer
+  }
+  showDiscountCodes
+  askRecipientName
+}
+
 fragment BlockWithoutTeaser on BlockContent {
   __typename
 
@@ -337,6 +360,14 @@ fragment BlockWithoutTeaser on BlockContent {
 
   ... on SubscribeBlock {
     ...FullSubscribeBlock
+  }
+
+  ... on RedeemGiftCodeBlock {
+    ...FullRedeemGiftCodeBlock
+  }
+
+  ... on GiftCodeOffersBlock {
+    ...FullGiftCodeOffersBlock
   }
 
   ... on MailchimpFormBlock {

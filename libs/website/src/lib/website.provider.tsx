@@ -45,6 +45,8 @@ import {
   PollBlock,
   CrowdfundingBlock,
   SubscribeBlock,
+  RedeemGiftCodeBlock,
+  GiftCodeOffersBlock,
   QuoteBlock,
   RichTextBlock,
   SoundCloudTrackBlock,
@@ -95,6 +97,8 @@ import {
   PaymentMethodPicker,
   PeriodicityPicker,
   Subscribe,
+  GiftCodeRedeem,
+  GiftCodePurchase,
   SubscriptionList,
   SubscriptionListItem,
   TransactionFee,
@@ -258,6 +262,8 @@ export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
         PaymentMethodPicker={PaymentMethodPicker}
         TransactionFee={TransactionFee}
         Subscribe={Subscribe}
+        GiftCodeRedeem={GiftCodeRedeem}
+        GiftCodePurchase={GiftCodePurchase}
         Upgrade={Upgrade}
         ContentWrapper={ContentWrapperStyled}
         Paywall={Paywall}
@@ -304,6 +310,8 @@ export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
           RichText: RichTextBlock,
           Event: EventBlock,
           Subscribe: SubscribeBlock,
+          RedeemGiftCode: RedeemGiftCodeBlock,
+          GiftCodeOffers: GiftCodeOffersBlock,
           Listicle: ListicleBlock,
           TeaserGridFlex: TeaserGridFlexBlock,
           TeaserGrid: TeaserGridBlock,

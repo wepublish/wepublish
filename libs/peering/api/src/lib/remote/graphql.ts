@@ -25,6 +25,8 @@ type ImportBlock_FacebookVideoBlock_Fragment = { __typename: 'FacebookVideoBlock
 
 type ImportBlock_FlexBlock_Fragment = { __typename: 'FlexBlock' };
 
+type ImportBlock_GiftCodeOffersBlock_Fragment = { __typename: 'GiftCodeOffersBlock' };
+
 type ImportBlock_HtmlBlock_Fragment = { __typename: 'HTMLBlock' };
 
 type ImportBlock_IFrameBlock_Fragment = { __typename: 'IFrameBlock', blockStyle: string | null, type: Types.BlockType, url: string | null, title: string | null, width: number | null, height: number | null, styleCustom: string | null, sandbox: string | null };
@@ -44,6 +46,8 @@ type ImportBlock_PolisConversationBlock_Fragment = { __typename: 'PolisConversat
 type ImportBlock_PollBlock_Fragment = { __typename: 'PollBlock' };
 
 type ImportBlock_QuoteBlock_Fragment = { __typename: 'QuoteBlock', blockStyle: string | null, type: Types.BlockType, quote: string | null, author: string | null, image: { id: string, createdAt: string, modifiedAt: string, filename: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title: string | null, description: string | null, tags: Array<string>, source: string | null, link: string | null, license: string | null, url: string, xxl: string | null, xl: string | null, l: string | null, m: string | null, s: string | null, xs: string | null, xxs: string | null, xxlSquare: string | null, xlSquare: string | null, lSquare: string | null, mSquare: string | null, sSquare: string | null, xsSquare: string | null, xxsSquare: string | null } | null };
+
+type ImportBlock_RedeemGiftCodeBlock_Fragment = { __typename: 'RedeemGiftCodeBlock' };
 
 type ImportBlock_RichTextBlock_Fragment = { __typename: 'RichTextBlock', blockStyle: string | null, type: Types.BlockType, richText: RichtextJSONDocument | null };
 
@@ -83,6 +87,7 @@ export type ImportBlockFragment =
   | ImportBlock_FacebookPostBlock_Fragment
   | ImportBlock_FacebookVideoBlock_Fragment
   | ImportBlock_FlexBlock_Fragment
+  | ImportBlock_GiftCodeOffersBlock_Fragment
   | ImportBlock_HtmlBlock_Fragment
   | ImportBlock_IFrameBlock_Fragment
   | ImportBlock_ImageBlock_Fragment
@@ -93,6 +98,7 @@ export type ImportBlockFragment =
   | ImportBlock_PolisConversationBlock_Fragment
   | ImportBlock_PollBlock_Fragment
   | ImportBlock_QuoteBlock_Fragment
+  | ImportBlock_RedeemGiftCodeBlock_Fragment
   | ImportBlock_RichTextBlock_Fragment
   | ImportBlock_SoundCloudTrackBlock_Fragment
   | ImportBlock_StreamableVideoBlock_Fragment
@@ -139,6 +145,7 @@ export type ArticleQuery = { article: { id: string, url: string, slug: string | 
         | { __typename: 'FacebookPostBlock', blockStyle: string | null, type: Types.BlockType, userID: string | null, postID: string | null }
         | { __typename: 'FacebookVideoBlock', blockStyle: string | null, type: Types.BlockType, userID: string | null, videoID: string | null }
         | { __typename: 'FlexBlock' }
+        | { __typename: 'GiftCodeOffersBlock' }
         | { __typename: 'HTMLBlock' }
         | { __typename: 'IFrameBlock', blockStyle: string | null, type: Types.BlockType, url: string | null, title: string | null, width: number | null, height: number | null, styleCustom: string | null, sandbox: string | null }
         | { __typename: 'ImageBlock', blockStyle: string | null, type: Types.BlockType, caption: string | null, linkUrl: string | null, image: { id: string, createdAt: string, modifiedAt: string, filename: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title: string | null, description: string | null, tags: Array<string>, source: string | null, link: string | null, license: string | null, url: string, xxl: string | null, xl: string | null, l: string | null, m: string | null, s: string | null, xs: string | null, xxs: string | null, xxlSquare: string | null, xlSquare: string | null, lSquare: string | null, mSquare: string | null, sSquare: string | null, xsSquare: string | null, xxsSquare: string | null } | null }
@@ -149,6 +156,7 @@ export type ArticleQuery = { article: { id: string, url: string, slug: string | 
         | { __typename: 'PolisConversationBlock', blockStyle: string | null, type: Types.BlockType, conversationID: string | null }
         | { __typename: 'PollBlock' }
         | { __typename: 'QuoteBlock', blockStyle: string | null, type: Types.BlockType, quote: string | null, author: string | null, image: { id: string, createdAt: string, modifiedAt: string, filename: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title: string | null, description: string | null, tags: Array<string>, source: string | null, link: string | null, license: string | null, url: string, xxl: string | null, xl: string | null, l: string | null, m: string | null, s: string | null, xs: string | null, xxs: string | null, xxlSquare: string | null, xlSquare: string | null, lSquare: string | null, mSquare: string | null, sSquare: string | null, xsSquare: string | null, xxsSquare: string | null } | null }
+        | { __typename: 'RedeemGiftCodeBlock' }
         | { __typename: 'RichTextBlock', blockStyle: string | null, type: Types.BlockType, richText: RichtextJSONDocument | null }
         | { __typename: 'SoundCloudTrackBlock', blockStyle: string | null, type: Types.BlockType, trackID: string | null }
         | { __typename: 'StreamableVideoBlock' }
