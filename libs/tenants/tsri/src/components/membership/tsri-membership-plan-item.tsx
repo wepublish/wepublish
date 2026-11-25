@@ -144,9 +144,11 @@ export const TsriMembershipPlanDetails = styled('div')`
   line-height: 1.4;
 
   p,
+  ul,
   li {
     margin: 0;
     font-size: inherit;
+    font-weight: inherit;
     line-height: inherit;
   }
 
