@@ -30,18 +30,37 @@ vi.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string) => key }),
 }));
 
+// The chooser itself is tested on its own; here it only hands back a choice.
+vi.mock('../mail-template/select-mail-template-panel', () => ({
+  SelectMailTemplatePanel: (props: {
+    purpose?: string;
+    onSelect(id: string | null): void;
+    onClose(): void;
+  }) => (
+    <div>
+      <p>{`purpose:${props.purpose}`}</p>
+      <button onClick={() => props.onSelect('mt-2')}>pick mt-2</button>
+      <button onClick={() => props.onSelect(null)}>pick none</button>
+    </div>
+  ),
+}));
+
 const client = {
   createSubscriptionInterval: vi.fn(),
   updateSubscriptionInterval: vi.fn(),
   deleteSubscriptionInterval: vi.fn(),
 };
 
-const interval = (sendAsLetter: boolean, templateId = 'mt-1') =>
+const interval = (
+  sendAsLetter: boolean,
+  templateId = 'mt-1',
+  event: SubscriptionEvent = SubscriptionEvent.InvoiceCreation
+) =>
   ({
     object: {
       id: 'interval-1',
       daysAwayFromEnding: -14,
-      event: SubscriptionEvent.InvoiceCreation,
+      event,
       sendAsLetter,
       mailTemplate: { id: templateId, name: 'Invoice' },
     },
@@ -73,7 +92,10 @@ const channelBox = (channel: MailChannel) =>
     screen.getByRole('group', { name: 'mailTemplateSelect.channels' })
   ).getByRole('checkbox', { name: `deliveryMode.channel.${channel}` });
 
-const renderSelect = (subscriptionInterval?: any) =>
+const renderSelect = (
+  subscriptionInterval?: any,
+  event: SubscriptionEvent = SubscriptionEvent.InvoiceCreation
+) =>
   render(
     // The tooltip reads the theme, as it does in the app.
     <ThemeProvider theme={createTheme({ cssVariables: true })}>
@@ -82,7 +104,7 @@ const renderSelect = (subscriptionInterval?: any) =>
           mailTemplates={templates}
           subscriptionInterval={subscriptionInterval}
           subscriptionFlow={{ id: 'flow-1' } as any}
-          event={SubscriptionEvent.InvoiceCreation}
+          event={event}
           label="Invoice creation"
         />
       </SubscriptionClientContext.Provider>
@@ -153,19 +175,48 @@ describe('MailTemplateSelect channels', () => {
     ).toBeNull();
   });
 
-  it('offers only templates with an email version: the email always goes out', () => {
+  it('shows the template of the event and opens the chooser narrowed to its purpose', () => {
     renderSelect(interval(false));
 
-    fireEvent.mouseDown(
-      screen.getByRole('combobox', { name: 'Invoice creation' })
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Invoice creation: Invoice' })
     );
 
-    expect(
-      within(screen.getByRole('listbox'))
-        .getAllByRole('option')
-        .slice(1)
-        .map(option => option.textContent)
-    ).toEqual(['Invoice', 'Reminder']);
+    expect(screen.getByText('purpose:invoiceCreation')).toBeTruthy();
+  });
+
+  it('gives the event the template that was chosen', () => {
+    renderSelect(interval(false));
+
+    fireEvent.click(screen.getByRole('button', { name: /Invoice creation/ }));
+    fireEvent.click(screen.getByRole('button', { name: 'pick mt-2' }));
+
+    expect(client.updateSubscriptionInterval).toHaveBeenCalledWith({
+      variables: {
+        id: 'interval-1',
+        daysAwayFromEnding: -14,
+        mailTemplateId: 'mt-2',
+      },
+    });
+  });
+
+  it('creates the interval for an event that sent nothing so far', () => {
+    renderSelect(undefined);
+
+    fireEvent.click(
+      screen.getByRole('button', {
+        name: 'Invoice creation: mailTemplateSelect.noMailSentSelectNow',
+      })
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'pick mt-2' }));
+
+    expect(client.createSubscriptionInterval).toHaveBeenCalledWith({
+      variables: expect.objectContaining({
+        mailTemplateId: 'mt-2',
+        subscriptionFlowId: 'flow-1',
+        event: SubscriptionEvent.InvoiceCreation,
+      }),
+    });
   });
 
   it('has no channels to choose before a template is chosen', () => {
@@ -194,5 +245,46 @@ describe('MailTemplateSelect channels', () => {
     expect(
       screen.queryByRole('group', { name: 'mailTemplateSelect.channels' })
     ).toBeNull();
+  });
+});
+
+// Every flow needs «create invoice» and «deactivate unpaid»; the API refuses
+// to delete them. Choosing «no mail» there takes the template off and keeps
+// the event; on any other event the event goes, as it always did.
+describe('MailTemplateSelect without a template', () => {
+  beforeEach(() => vi.clearAllMocks());
+  afterEach(cleanup);
+
+  const chooseNoMail = () => {
+    fireEvent.click(screen.getByRole('button', { name: /Invoice creation/ }));
+    fireEvent.click(screen.getByRole('button', { name: 'pick none' }));
+  };
+
+  it.each([
+    SubscriptionEvent.InvoiceCreation,
+    SubscriptionEvent.DeactivationUnpaid,
+  ])('keeps the required event %s and only takes its template off', event => {
+    renderSelect(interval(true, 'mt-1', event), event);
+
+    chooseNoMail();
+
+    expect(client.updateSubscriptionInterval).toHaveBeenCalledWith({
+      variables: { id: 'interval-1', mailTemplateId: null },
+    });
+    expect(client.deleteSubscriptionInterval).not.toHaveBeenCalled();
+  });
+
+  it('removes any other event', () => {
+    renderSelect(
+      interval(false, 'mt-1', SubscriptionEvent.RenewalSuccess),
+      SubscriptionEvent.RenewalSuccess
+    );
+
+    chooseNoMail();
+
+    expect(client.deleteSubscriptionInterval).toHaveBeenCalledWith({
+      variables: { id: 'interval-1' },
+    });
+    expect(client.updateSubscriptionInterval).not.toHaveBeenCalled();
   });
 });

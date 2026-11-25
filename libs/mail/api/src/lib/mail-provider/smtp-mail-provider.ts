@@ -4,9 +4,37 @@ import {
   MailProviderTemplateContent,
   SendMailProps,
   SendMailResult,
+  MailProviderTransientError,
   WebhookForSendMailProps,
 } from './mail-provider.interface';
 import { BaseMailProvider, MailProviderProps } from './base-mail-provider';
+
+/** Connection trouble on the way to the SMTP server. */
+const TRANSIENT_SMTP_CODES = new Set([
+  'ECONNECTION',
+  'ETIMEDOUT',
+  'ESOCKET',
+  'EDNS',
+  'ECONNRESET',
+]);
+
+/**
+ * SMTP says "try again later" with a 4xx reply (421 busy, 450/451/452,
+ * and 429 for a rate limit); 5xx means no.
+ */
+const isTransientSmtpError = (error: unknown) => {
+  const { code, responseCode } = (error ?? {}) as {
+    code?: string;
+    responseCode?: number;
+  };
+
+  return (
+    (typeof responseCode === 'number' &&
+      responseCode >= 400 &&
+      responseCode < 500) ||
+    (!!code && TRANSIENT_SMTP_CODES.has(code))
+  );
+};
 
 /**
  * Sends fully-composed mails over SMTP via nodemailer. Connection settings come
@@ -56,25 +84,33 @@ export class SmtpMailProvider extends BaseMailProvider {
       'no-reply@wepublish.local';
     const transporter = await this.createTransporter();
 
-    await transporter.sendMail({
-      from,
-      to: props.recipient,
-      replyTo: props.replyToAddress || undefined,
-      subject: props.subject,
-      text: props.message,
-      html: props.messageHtml,
-      ...(props.attachments?.length ?
-        {
-          attachments: props.attachments.map(
-            ({ filename, contentType, content }) => ({
-              filename,
-              contentType,
-              content,
-            })
-          ),
-        }
-      : {}),
-    });
+    try {
+      await transporter.sendMail({
+        from,
+        to: props.recipient,
+        replyTo: props.replyToAddress || undefined,
+        subject: props.subject,
+        text: props.message,
+        html: props.messageHtml,
+        ...(props.attachments?.length ?
+          {
+            attachments: props.attachments.map(
+              ({ filename, contentType, content }) => ({
+                filename,
+                contentType,
+                content,
+              })
+            ),
+          }
+        : {}),
+      });
+    } catch (error) {
+      throw isTransientSmtpError(error) ?
+          new MailProviderTransientError((error as Error).message, {
+            cause: error,
+          })
+        : error;
+    }
 
     // Handing over to the SMTP server is all this transport ever learns, so
     // there is no id worth storing for a later status lookup.

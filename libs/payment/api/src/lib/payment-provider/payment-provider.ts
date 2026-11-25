@@ -186,6 +186,11 @@ export type WebhookResponse = {
 export interface PaymentProvider {
   id: string;
   remoteManagedSubscription: boolean;
+  /**
+   * The provider answers every payment with «paid» and never takes money (free
+   * subscriptions). An invoice on it is settled as soon as it exists.
+   */
+  settlesWithoutCharge?: boolean;
 
   incomingRequestHandler: NextHandleFunction;
 
@@ -215,6 +220,19 @@ export interface PaymentProvider {
   renderRemoteInvoice(
     props: RenderRemoteInvoiceProps
   ): Promise<RemoteInvoiceDocument | undefined>;
+
+  /**
+   * Records with the provider that we.publish sent the reader an invoice the
+   * provider created earlier, for a provider that keeps track of this.
+   */
+  markRemoteInvoiceSent(props: RenderRemoteInvoiceProps): Promise<void>;
+
+  /**
+   * Whether the provider sends the renewal invoices it creates to the reader
+   * itself. When not, it hands back each invoice's pdf and we.publish
+   * delivers it, by mail or letter; without a pdf there is nothing to send.
+   */
+  deliversInvoiceItself(): Promise<boolean>;
 
   getConfig(): Promise<SettingPaymentProvider | null>;
 
@@ -254,6 +272,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
   readonly kv: NamespacedCache;
   readonly resets: Pick<NamespaceResets, 'reset'>;
   readonly remoteManagedSubscription: boolean = false;
+  readonly settlesWithoutCharge: boolean = false;
 
   readonly incomingRequestHandler: NextHandleFunction;
 
@@ -355,6 +374,14 @@ export abstract class BasePaymentProvider implements PaymentProvider {
     props: RenderRemoteInvoiceProps
   ): Promise<RemoteInvoiceDocument | undefined> {
     return undefined;
+  }
+
+  async markRemoteInvoiceSent(props: RenderRemoteInvoiceProps): Promise<void> {
+    return;
+  }
+
+  async deliversInvoiceItself(): Promise<boolean> {
+    return true;
   }
 
   supportsAuthorization(): boolean {

@@ -12,7 +12,11 @@ import { MailLogsDocument } from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
 import { deliveryChannel } from '../delivery-mode/channels';
 import { useLetterChannel } from '../mail-template/use-letter-channel';
-import { formatDateTime, MailLogStateTag } from './mail-log-common';
+import {
+  formatDateTime,
+  MailLogStateTag,
+  MailLogTriggerCell,
+} from './mail-log-common';
 
 interface UserMailLogPanelProps {
   userId: string;
@@ -52,6 +56,9 @@ export function UserMailLogPanel({ userId }: UserMailLogPanelProps) {
               <strong>{t('mailLog.template')}</strong>
             </TableCell>
             <TableCell>
+              <strong>{t('mailLog.trigger')}</strong>
+            </TableCell>
+            <TableCell>
               <strong>{t('mailLog.subject')}</strong>
             </TableCell>
             {paperLetters && (
@@ -72,6 +79,12 @@ export function UserMailLogPanel({ userId }: UserMailLogPanelProps) {
               <TableRow key={log.id}>
                 <TableCell>{formatDateTime(log.sentDate)}</TableCell>
                 <TableCell>{log.mailTemplate.name}</TableCell>
+                <TableCell>
+                  <MailLogTriggerCell
+                    subscriptionId={log.subscriptionId}
+                    invoiceId={log.invoiceId}
+                  />
+                </TableCell>
                 <TableCell>{log.subject ?? '—'}</TableCell>
                 {paperLetters && (
                   <TableCell sx={{ whiteSpace: 'nowrap' }}>

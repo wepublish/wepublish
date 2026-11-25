@@ -16,7 +16,24 @@
   pdf / send is returned as `deliveryError`, never thrown — a retry would
   create a second invoice. Keep `offSessionPayments` **off** for Bexio: with it
   on, the due date runs `createIntent` → a second Bexio invoice plus a
-  RENEWAL_FAILED mail.
+  RENEWAL_FAILED mail. The `bexio` library has no timeout of its own: `getBexioGateway`
+  wraps every call with `withRequestTimeout` (60 s, `bexio-timeout.ts`), so
+  bexio not answering fails that invoice (created again the next night)
+  instead of stalling the run.
+  **we.publish delivers (opt-in):** `bexio_invoiceMailByWePublish` makes
+  `deliversInvoiceItself()` false, so renewal invoices are issued + rendered
+  for every reader and the pdf goes out with the invoice-creation flow mail
+  (`MailControllerConfig.attachment`, every mail provider) or letter. Checkout
+  invoices (`createIntent`) are still emailed by Bexio. No pdf → nothing is
+  sent and a `deferred` mail-log entry is written; `postMissingInvoiceDeliveries`
+  mails readers with only deferred/rejected entries (≤3 refusals), which is
+  what keeps checkout invoices (no entry) out. Bexio then shows no email
+  history for the invoice.
+  **«Sent» in Bexio:** once a mail or letter carrying the pdf was handed to
+  the mail provider / print vendor, `InvoiceDeliveryService.sendFlowMail`
+  calls `markRemoteInvoiceSent` (Bexio: `POST kb_invoice/{id}/mark_as_sent`,
+  nothing is emailed). A deferred or refused delivery stays unsent; a failing
+  call is logged, never thrown. The API does not return the mark.
   **Contact sync (opt-in):** `SettingPaymentProvider.bexio_contactSync` has
   `BexioContactSyncService` (`libs/payment/api/.../bexio/`, a `runNight`
   step before the Mailchimp sync) push reader data to bexio every night:
@@ -30,14 +47,35 @@
   `country_id` comes from `BexioCountries` (`GET /2.0/country`, cached a day,
   `normalizeCountry` from `@wepublish/utils/api`), the configured one as
   fallback. A stored id bexio answers 404 for is skipped, never recreated;
-  a 429 ends the night's run. The run's time and first error land in
-  `bexio_contactSyncAt` / `bexio_contactSyncError`, shown in the editor's
-  bexio form.
-  - The print export (`libs/print-issue/api`, feature `print-export`, editor
-    «Druckausgaben» in the left nav after «Banner») reads `kb_invoice` and `contact` **read-only** with
-    this provider's API key (`BexioPrintSourceService`; the key needs
-    `kb_invoice_show` and `contact_show`). Without a bexio provider that has a
-    key, a run lists we.publish members only and says so in its summary.
+  a 429 or 401 ends the night's run. The run's time and first error land in
+  `bexio_contactSyncAt` / `bexio_contactSyncError`, shown as a status alert
+  under the switch in the editor's bexio form; `syncAll` also returns the
+  counts for the night's job log (see below).
+
+  **Night job log:** every step of the night, the job's own
+  (`CORE_STEP_KEYS` in `periodic-job.service.ts`) and the `runNight` syncs
+  after it, writes a `PeriodicJobStep` row (status ok / warning / error /
+  skipped, counts, error) on the newest `PeriodicJob`. The editor lists them
+  under the job; a warning or error on the newest night raises the job item
+  in the dashboard's Mitteilungen. A new `runNight` step needs a key in
+  `periodicJobsLog.steps.*` (and its count names in `periodicJobsLog.counts.*`)
+  in the editor locales.
+  **Test mailbox (test instances only):** a bexio company in its trial only
+  emails its own sender address. `bexio_testMailbox` sends invoice mails to
+  recipients on the mailbox's domain to the mailbox instead
+  (`invoiceMailRecipient`); the contact keeps the reader's address. Ignored,
+  refused on save and hidden in the editor unless `APP_ENVIRONMENT` is set and
+  not `production` (`isTestEnvironment`, `libs/utils/api`).
+  **Invoice footer:** the provider sets the closing itself, signed with the
+  name of bexio user `bexio_userId` (`GET /3.0/users/{id}`, cached a day).
+  Left out, bexio's default footer names the API token's owner instead. If
+  the name can't be read, the invoice goes out with that default.
+  **Print export (read-only):** the print export (`libs/print-issue/api`,
+  feature `print-export`, editor «Druckausgaben» in the left nav after
+  «Banner») reads `kb_invoice` and `contact` **read-only** with this
+  provider's API key (`BexioPrintSourceService`; the key needs
+  `kb_invoice_show` and `contact_show`). Without a bexio provider that has a
+  key, a run lists we.publish members only and says so in its summary.
 
 - Simulated (`simulated` type) — no external service: `createIntent` sends the
   customer to a checkout page served by the API at
@@ -191,7 +229,10 @@ Automated subscription mails can reach a user as a printed letter. The pieces:
   browser (`template-table.ts`) over `MailTemplateList`; its extra row fields
   (`letterLayoutName`, `letterAppendixName`, `memberPlans`,
   `attachmentNames`) are batched and
-  stay out of `TinyMailTemplate`, which every picker loads.
+  stay out of `TinyMailTemplate`, which every picker loads. Flow events and
+  system mails pick their template in a drawer with the same table
+  (`MailTemplateField` → `SelectMailTemplatePanel`, columns and filters shared
+  through `template-columns.tsx`), pre-filtered by `purposeOfEvent`.
 - `SubscriptionInterval.sendAsLetter`: only events switched on in the flow
   editor («Auch per Brief») print; user-flow mails (login, password, email
   change) never do. The three senders (periodic job, legacy `member-context`,
@@ -205,15 +246,23 @@ Automated subscription mails can reach a user as a printed letter. The pieces:
   `letterAttachment`. The letter is logged under the same
   `mailIdentifier`/`type` as a mail would be, so retried runs skip it. A failed
   print throws `LetterDeliveryError`; the periodic job steps over it.
+  A provider that fails for a moment (no answer, HTTP 429/5xx, SMTP 4xx)
+  throws `MailProviderTransientError`. `MailContext.sendComposedMail` tries
+  again after 5, 15 and 45 s before the error reaches the caller, and any
+  other provider error ends the nightly run, so one hiccup does not leave
+  every remaining renewal to the next night.
 - Invoice letters: the periodic job resolves the channel *before* it asks the
   payment provider (`createRemoteInvoice({ channel })`), keeps the provider's
   invoice as a `Payment`, and prints the returned pdf after the
   `INVOICE_CREATION` letter. A provider that could not create its invoice makes
   the job hard-delete the we.publish invoice with its period, items and payment
-  so the next run tries again (cancelling would not, see gotchas). A reader in
+  so the next run tries again (cancelling would not, see gotchas), and the
+  night goes on: the `invoiceCreation` step of the job log counts
+  `created`/`failed` and turns `warning` with the first provider error, so a
+  provider refusing every invoice no longer reads «OK». A reader in
   letter mode whose pdf the provider could not render gets no cover letter
-  that night. The sweep `postMissingInvoiceLetters` (after invoice creation,
-  also run by `createAndChargeInvoices`) posts the invoice letter for every
+  that night. The sweep `postMissingInvoiceDeliveries` (after invoice creation)
+  posts the invoice letter for every
   open invoice of a reader in letter mode that has no non-rejected letter log
   for the template since the invoice was created — refused letters, a missing
   pdf, or a reader moved to letters after the invoice was emailed — with the
@@ -271,10 +320,35 @@ Automated subscription mails can reach a user as a printed letter. The pieces:
   with the filter read back as phrases (`describeAudience`, names through
   `useAudienceLookups`, shared with the wizard's review step).
 - `MailAudienceInput.mailHistory` filters any base by the mail log:
-  `{ match: all|any, conditions: [{ mailTemplateId, negate, states?, channel?, from?, to? }] }`.
+  `{ match: all|any, conditions: [{ mailTemplateId, negate, states?, channel?, from?, to?, rolling?, minCount?, scope?, onlyOpenInvoice? }] }`.
   Built in `mail-send-recipient.service.ts` as `mailSent: { some | none }`
   on the user (`none` for «not sent», never `NOT`, so people without any mail
   stay in), ANDed with the email segments through `buildUserLevelWhere`.
+  One condition with `scope: subscription` moves the whole history onto the
+  subscription (`mailLogs: { some | none }`, person conditions through
+  `user`) for the two subscription bases.
+  `minCount > 1` cannot be a relation filter: `resolveCounts` asks
+  `mailLog.groupBy` who qualifies and the condition becomes `id: { in }`.
+  It runs inside `buildUserLevelWhere`, which every path calls first.
+- Rolling ranges (`MailRollingRange { kind: lastDays|olderThanDays|nextDays, days }`:
+  `startsAtRolling`, `endsAtRolling`, a condition's `rolling`) take the place
+  of their fixed dates and are read against now (`rolling-dates.ts`).
+  `createJob` and `setForAudience` store `freezeRollingDates(audience)`, so
+  job and bulk-change snapshots only ever hold fixed dates.
+- Saved filters (`SavedAudienceFilter`, table `mail.audience_filters`: unique
+  name, description, the `MailAudienceInput` as JSON with rolling dates kept
+  rolling; `savedAudienceFilters`, `create|update|deleteSavedAudienceFilter`)
+  are shared by `/mailsend` and `/deliverychannel/assign`. Either
+  `CanSendMailTemplates` or `CanManageUserDeliveryMode` suffices, checked in
+  the resolver because `@Permissions(a, b)` requires both. The editor reads a
+  stored filter back with `fromAudienceInput` (`audience-state.ts`), the
+  reverse of `toAudienceInput`: a new filter field needs both directions, and
+  a removed field or enum value breaks stored filters like it breaks job
+  snapshots.
+- `MailLog.subscriptionId` / `invoiceId` say what a mail was about. The sender
+  passes them explicitly (`MailControllerConfig`, `LetterLogDetails`); never
+  derive them from `optionalData`, whose keys differ per template context. A
+  new flow mail that omits them is invisible to `scope` and `onlyOpenInvoice`.
 
 - Gotenberg (self-hosted, the default; `gotenberg` service in docker-compose)
 - Cloudflare Browser Rendering
@@ -285,6 +359,33 @@ QR-bill) is appended after rendering by `appendPdf` (pdf-lib, renderer-agnostic)
 A document the sender hands in (`attachment`, e.g. the Bexio invoice with its
 per-invoice QR-bill) is appended the same way and takes the static appendix's
 place.
+
+### Letter delivery states (webhook + poll)
+
+A letter is a `MailLog` row with `channel = letter`; its state comes from the
+provider's webhook at `/letter-webhooks/<settingLetterProvider id>` (register
+that URL at Pingen, with the signing key from the integration form). The
+fallback is `LetterLogSyncService` (`libs/letter/api`), called by the mail
+log's `syncMailLogStates` mutation and by the nightly step `letterLogSync`: it
+asks the provider about letters still `submitted`/`accepted`/`actionRequired`,
+and about `dispatched` ones for 30 days after `sentDate` (returned post is
+reported late). One GET per letter, so the nightly limit (2000) is what bounds
+the calls. Webhook and poll share `shouldUpdateLetterLogState`: a state only
+moves forward, and `actionRequired` ranks with `accepted` because a Pingen
+issue can be resolved and the letter printed after all.
+
+`actionRequired` vs `rejected`: Pingen's `issues` webhook (and the polled
+statuses `action_required`/`invalid`) mean Pingen **has** the letter and holds
+it until someone deals with it there; `rejected` means it never got in (upload
+failed, no account, pdf not rendered). A letter Pingen no longer knows (404 on
+the poll) that was not printed yet becomes `canceled`: someone removed it there.
+Pingen keeps no track of duplicates, so the nightly `invoiceLetters` step
+(`postInvoiceLetter`) never uploads again what Pingen stores. It retries only
+uploads that failed outright, and, with the integration's «send letters
+automatically» on, replaces a held letter on a later night after
+`LetterSender.withdrawHeldLetter` re-read its status and deleted it at Pingen.
+With that setting off a held letter is left to the people confirming letters
+in Pingen.
 
 ### Template attachments (Word → pdf)
 

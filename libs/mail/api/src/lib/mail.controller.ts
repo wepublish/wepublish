@@ -7,17 +7,14 @@ import {
   User,
 } from '@prisma/client';
 import { v7 as uuidv7 } from 'uuid';
+import { MailAttachment } from './mail-attachment';
 import { MailContext } from './mail-context';
 import { MailProviderRecipientError } from './mail-provider/mail-provider.interface';
 import {
   qualityTypeForRejectReason,
   recordEmailQualitySafely,
 } from './email-quality-recorder';
-import {
-  LetterAttachment,
-  LetterDeliveryError,
-  LetterRecipient,
-} from './letter-sender';
+import { LetterDeliveryError, LetterRecipient } from './letter-sender';
 import { resolveLetterRecipient } from './resolve-letter-recipient';
 
 export enum mailLogType {
@@ -59,6 +56,13 @@ export type MailControllerConfig = {
   /** Set for mails produced by a manual bulk send job. */
   mailSendJobId?: string | null;
   /**
+   * What the mail is about, for the log: the subscription and, for an invoice
+   * mail, the invoice. Said by the caller, never read out of `optionalData`,
+   * whose keys differ from one template context to the next.
+   */
+  subscriptionId?: string | null;
+  invoiceId?: string | null;
+  /**
    * Id the mail log entry has to be written under. Passed in when the caller
    * needs to reference the entry regardless of how the delivery turns out.
    */
@@ -76,10 +80,11 @@ export type MailControllerConfig = {
    */
   letterRecipient?: LetterRecipient | null;
   /**
-   * A pdf printed after the template, e.g. the provider's invoice with its
-   * payment slip. Nothing for a mail: the provider emails that itself.
+   * A ready-made file that goes with the template on either channel, e.g. the
+   * payment provider's invoice pdf: printed after the template in a letter,
+   * attached after the template's own documents in a mail.
    */
-  letterAttachment?: LetterAttachment;
+  attachment?: MailAttachment;
 };
 
 /**
@@ -213,6 +218,9 @@ export class MailController {
           recipient: this.config.recipient.email,
           data: await this.buildData(),
           withAttachments: !SENT_WITHOUT_ATTACHMENTS.has(this.config.mailType),
+          ...(this.config.attachment && {
+            attachments: [this.config.attachment],
+          }),
         }
       ));
     } catch (error) {
@@ -259,6 +267,21 @@ export class MailController {
   }
 
   /**
+   * Note that this mail is held back and why, without sending anything — e.g.
+   * the invoice-creation mail whose invoice pdf the payment provider could
+   * not render yet. The entry tells the editor why the reader is waiting and
+   * tells the night sweep the mail is still owed.
+   */
+  public async recordDeferred(reason: string): Promise<void> {
+    await this.writeLog(
+      this.config.mailLogId ?? uuidv7(),
+      MailLogState.deferred,
+      null,
+      reason
+    );
+  }
+
+  /**
    * The user with their address when this send goes to paper, as the caller
    * decided or as `resolveLetterRecipient` decides now.
    */
@@ -296,9 +319,14 @@ export class MailController {
         log: {
           mailIdentifier: this.generateMailIdentifier(),
           type: MAIL_LOG_TYPE_MAP[this.config.mailType],
+          subscriptionId: this.config.subscriptionId ?? null,
+          invoiceId: this.config.invoiceId ?? null,
         },
-        ...(this.config.letterAttachment && {
-          attachment: this.config.letterAttachment,
+        ...(this.config.attachment && {
+          attachment: {
+            content: this.config.attachment.content,
+            name: this.config.attachment.filename,
+          },
         }),
       });
     } catch (error) {
@@ -343,6 +371,12 @@ export class MailController {
           },
           ...(this.config.mailSendJobId ?
             { mailSendJob: { connect: { id: this.config.mailSendJobId } } }
+          : {}),
+          ...(this.config.subscriptionId ?
+            { subscription: { connect: { id: this.config.subscriptionId } } }
+          : {}),
+          ...(this.config.invoiceId ?
+            { invoice: { connect: { id: this.config.invoiceId } } }
           : {}),
         },
       });

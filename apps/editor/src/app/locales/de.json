@@ -1164,7 +1164,7 @@
       "noNameErrorMessage": "Bitte Namen eingeben",
       "noPasswordErrorMessage": "Bitte Passwort eingeben",
       "noPaymentMethodErrorMessage": "Bitte gib eine Zahlungsmethode ein",
-      "noPaymentPeriodicityErrorMessage": "Bitte gib die Zahlungsperiodizität ein",
+      "noPaymentPeriodicityErrorMessage": "Bitte gib das Zahlungsintervall ein",
       "noPaymentProviderErrorMessage": "Bitte gib den Zahlungsanbieter ein",
       "noTokenErrorMessage": "Bitte gib den Token ein",
       "noUrlErrorMessage": "Bitte URL eingeben",
@@ -1609,7 +1609,7 @@
         "letterAppendix": "Zusatzseiten",
         "letterAppendixNone": "Keine",
         "memberPlans": "Abo-Pläne",
-        "memberPlansHint": "Abo-Pläne, deren Kommunikationsablauf diese Vorlage verschickt. Der Standard-Ablauf gehört zu keinem Abo-Plan und erscheint hier nicht.",
+        "memberPlansHint": "Abo-Pläne, deren Kommunikationsablauf diese Vorlage verschickt. Der Standard-Ablauf und Abläufe für alle Abo-Pläne gehören zu keinem Abo-Plan und erscheinen hier nicht.",
         "noMatch": "Keine Vorlage passt zu den Filtern.",
         "statuses": {
           "ok": "Verwendet",
@@ -1663,9 +1663,9 @@
         "sampleDataFallback": "Beispieldaten (nichts gewählt)",
         "testRecipient": "Test-Empfänger",
         "testRecipientPlaceholder": "Deine Konto-E-Mail",
-        "preview": "Vorschau",
+        "preview": "Email Vorschau",
         "sendTest": "Test senden",
-        "previewLetter": "Vorschau",
+        "previewLetter": "Brief Vorschau",
         "letterAppendix": "Zusatzseiten (PDF)",
         "letterAppendixNone": "Keine",
         "letterAppendixHelp": "Die Seiten werden dem Brief am Ende hinzugefügt. Wähle aus den PDF-Dateien, die unter «Dokumente» hochgeladen wurden.",
@@ -1698,6 +1698,7 @@
         "letterLayoutHelp": "Kopf- und Fusszeile"
       },
       "editor": {
+        "bandCutOff": "Unterhalb dieser Linie wird nicht gedruckt",
         "undo": "Rückgängig",
         "redo": "Wiederholen",
         "bold": "Fett",
@@ -1818,8 +1819,8 @@
         "optional_subscription_periodAmount": "Betrag pro Periode",
         "optional_subscription_periodMonths": "Monate pro Periode",
         "optional_subscription_currency": "Währung",
-        "optional_subscription_paymentPeriodicity": "Zahlungsperiodizität (Code)",
-        "optional_subscription_paymentPeriodicity_display": "Zahlungsperiodizität",
+        "optional_subscription_paymentPeriodicity": "Zahlungsintervall (Code)",
+        "optional_subscription_paymentPeriodicity_display": "Zahlungsintervall",
         "optional_subscription_autoRenew": "Automatische Verlängerung",
         "optional_subscription_startsAt": "Beginnt am",
         "optional_subscription_paidUntil": "Bezahlt bis",
@@ -1934,6 +1935,17 @@
       "empty": "Noch keine Mitteilungsvorlagen."
     },
     "mailTemplateSelect": {
+      "chooser": {
+        "title": "Vorlage wählen: {{event}}",
+        "select": "Diese Vorlage wählen",
+        "selectCurrent": "Diese Vorlage wählen (ist bereits gewählt)",
+        "none": "Keine Mitteilung senden",
+        "create": "Neue Vorlage erstellen",
+        "columns": {
+          "template": "Vorlage",
+          "purpose": "Zweck"
+        }
+      },
       "channels": "Zustellkanäle",
       "noLetterVersion": "Diese Vorlage hat keine Brief-Version. Füge sie in der Vorlage hinzu, damit Personen mit Zustellkanal Brief diese Mitteilung gedruckt bekommen; bis dahin erhalten sie die E-Mail.",
       "sendAsLetterHint": "Die E-Mail geht immer raus. Ist Brief angewählt, bekommen Personen mit Zustellkanal Brief diese Mitteilung gedruckt statt per E-Mail.",
@@ -1953,7 +1965,7 @@
       "createMemberPlanHeader": "Abo-Plan erstellen",
       "description": "Beschreibung",
       "shortDescription": "Kurze Beschreibung",
-      "editPaymentSetting": "Zahlungsmethoden & Periodizitäten bearbeiten",
+      "editPaymentSetting": "Zahlungsmethoden & Laufzeiten bearbeiten",
       "forceAutoRenewal": "Automatische Erneuerung erzwingen",
       "loadingTitle": "Wird geladen …",
       "name": "Name",
@@ -1986,7 +1998,7 @@
       "editFlowShort": "Kommunikationsfluss",
       "name": "Name",
       "paymentMethods": "Mögliche Zahlungsmethoden",
-      "paymentPeriodicities": "Zahlungsperiodizitäten",
+      "paymentPeriodicities": "Zahlungsintervalle",
       "paymentPeriodicity": {
         "biannual": "Halbjährlich",
         "monthly": "Monatlich",
@@ -2359,7 +2371,8 @@
       "userConsents": "Benutzer-Einwilligungen",
       "userConsentCreate": "Neue Benutzer-Einwilligung",
       "userConsentEdit": "Benutzer-Einwilligung bearbeiten",
-      "automaticEmails": "Automatische E-Mails",
+      "automaticEmails": "Automatische Mitteilungen",
+      "communicationFlow": "Ablauf bearbeiten",
       "mailTemplates": "Mitteilungsvorlagen",
       "mailTemplateCreate": "Neue Mitteilungsvorlage",
       "mailTemplateEdit": "Mitteilungsvorlage bearbeiten",
@@ -2656,7 +2669,60 @@
       "startTime": "Gestartet: {{date, ccc PP p}}",
       "successTime": "Erfolgreich: {{date, ccc PP p}}",
       "title": "Automatische Job-Logs",
-      "tries": "Versuche: {{tries}}"
+      "tries": "Versuche: {{tries}}",
+      "counts": {
+        "readers_one": "{{count}} Leser:in",
+        "readers_other": "{{count}} Leser:innen",
+        "pushed_one": "{{count}} übertragen",
+        "pushed_other": "{{count}} übertragen",
+        "failed_one": "{{count}} fehlgeschlagen",
+        "failed_other": "{{count}} fehlgeschlagen",
+        "created_one": "{{count}} erstellt",
+        "created_other": "{{count}} erstellt",
+        "synced_one": "{{count}} Audience abgeglichen",
+        "synced_other": "{{count}} Audiences abgeglichen",
+        "checked_one": "{{count}} geprüft",
+        "checked_other": "{{count}} geprüft",
+        "updated_one": "{{count}} aktualisiert",
+        "updated_other": "{{count}} aktualisiert",
+        "listed_one": "{{count}} gemeldet",
+        "listed_other": "{{count}} gemeldet",
+        "recorded_one": "{{count}} neu",
+        "recorded_other": "{{count}} neu",
+        "recomputed_one": "{{count}} neu bewertet",
+        "recomputed_other": "{{count}} neu bewertet",
+        "toLetter_one": "{{count}} zu Brief",
+        "toLetter_other": "{{count}} zu Brief",
+        "toMail_one": "{{count}} zu E-Mail",
+        "toMail_other": "{{count}} zu E-Mail",
+        "removed_one": "{{count}} entfernt",
+        "removed_other": "{{count}} entfernt"
+      },
+      "stepProblems": "Erledigt, aber nicht jeder Schritt lief rund.",
+      "stepStatus": {
+        "ok": "OK",
+        "warning": "teilweise fehlgeschlagen",
+        "error": "fehlgeschlagen",
+        "skipped": "nicht aktiv"
+      },
+      "steps": {
+        "customMails": "Abo-Mails",
+        "invoiceStates": "Status offener Rechnungen",
+        "invoiceCreation": "Rechnungen erstellen",
+        "invoiceLetters": "Rechnungsbriefe",
+        "paymentMethodChanges": "Zahlungsart-Wechsel",
+        "charging": "Rechnungen belasten",
+        "deactivationUnpaid": "Abos mit offener Rechnung beenden",
+        "deactivationNotRenewed": "Abgelaufene Abos beenden",
+        "bexioContactSync": "Kontakte nach Bexio",
+        "mailchimpSync": "Mailchimp-Abgleich",
+        "mailLogSync": "Zustellstatus der Mails",
+        "letterLogSync": "Zustellstatus der Briefe",
+        "suppressionSync": "Gesperrte Adressen",
+        "emailQuality": "E-Mail-Qualität",
+        "deliverySuggestions": "Vorschläge Zustellweg"
+      },
+      "stepsLabel": "Schritte dieser Nacht"
     },
     "permissions": {
       "contactAdmin": "Bitte kontaktiere den Administrator, um dir folgende Berechtigungen zu erteilen: {{permissions}}",
@@ -2825,6 +2891,24 @@
     "settingList": {
       "printIssues": "Druckausgaben",
       "printIssuesPerYear": "Ausgaben pro Jahr (Druck)",
+      "printIssueNumbering": "Nummerierung der Ausgaben",
+      "printIssueNumberingChoice": {
+        "perYear": "Pro Jahr: die Nummern beginnen jedes Jahr bei 1 (6.26)",
+        "continuous": "Fortlaufend: die Nummern laufen über die Jahre weiter (#117)"
+      },
+      "printIssueLabelFormat": "Schreibweise der Ausgabe",
+      "printIssueLabelFormatPreview": "Vorschau",
+      "printIssueLabelFormatError": {
+        "unknownPlaceholder": "Unbekannter Platzhalter: erlaubt sind {range}, {number}, {yy} und {yyyy}.",
+        "noNumber": "Die Schreibweise braucht die Nummer: {range} oder {number}.",
+        "noYear": "Bei Nummern pro Jahr braucht die Schreibweise das Jahr: {yy} oder {yyyy}.",
+        "tooLong": "Höchstens 40 Zeichen."
+      },
+      "printIssueCounting": "Zählweise der gedruckten Ausgaben",
+      "printIssueCountingChoice": {
+        "perPeriod": "Pro Periode: jede Ausgabe während der Laufzeit, fehlende werden nach dem Ende nachgeliefert",
+        "perCopy": "Pro Exemplar: Schluss, sobald die Periode ihre Zahl erhalten hat, auch wenn das Abo noch läuft; fehlende werden nachgeliefert"
+      },
       "issues": "Ausgaben",
       "allowGuestCommentRating": "Erlaube Gast-Bewertungen von Kommentaren",
       "comments": "Kommentare",
@@ -2892,7 +2976,10 @@
       "memberships": "Mitgliedschaften",
       "showPendingWhenNotPublished": "Geplanten Artikel oder geplante Seite auch anzeigen, wenn sie noch nicht publiziert wurde.",
       "info": {
-        "printIssuesPerYear": "Wie viele gedruckte Ausgaben ein Jahresabo wert ist. Leser:innen, deren bezahlte Periode endet, bleiben so lange in den Druckexporten, bis sie diese Zahl erhalten haben. 0 schaltet die Regel aus, bis der Import die früheren Ausgaben des Jahres erfasst hat.",
+        "printIssuesPerYear": "Wie viele gedruckte Ausgaben ein Jahresabo wert ist. Leser:innen, deren bezahlte Periode endet, bleiben so lange in den Druckexporten, bis sie diese Zahl erhalten haben. 0 schaltet die Regel aus, bis der Import die früheren Ausgaben des Jahres erfasst hat. Ob eine laufende Periode auch mehr erhalten kann, legt die Zählweise fest.",
+        "printIssueNumbering": "Pro Jahr beginnt die Nummerierung jedes Jahr neu, eine Ausgabe heisst dann z. B. 6.26. Fortlaufend zählen die Nummern über die Jahre weiter (z. B. #117); das Jahr einer Ausgabe ergibt sich aus ihrem Erscheinungsdatum.",
+        "printIssueLabelFormat": "Wie eine Ausgabe in der Liste, in Dateinamen und in bexio geschrieben wird. Platzhalter: {range} = Nummer, bei Doppelnummern «3/4»; {number} = nur die erste Nummer; {yy} = Jahr zweistellig; {yyyy} = Jahr vierstellig. Einzelheft-Bestellungen in bexio müssen die Ausgabe in dieser Schreibweise nennen (z. B. «Einzelheft #117»).",
+        "printIssueCounting": "Pro Periode erhält ein Abo jede Ausgabe, die während seiner bezahlten Periode erscheint, auch mehr als versprochen. Pro Exemplar zählt jedes gelieferte Exemplar: Hat die laufende Periode ihre Zahl erreicht, bekommt das Abo bis zur nächsten Periode keine Ausgabe mehr (übersprungen als «Kontingent erhalten»). In beiden Fällen werden fehlende Exemplare nach dem Ende der Periode nachgeliefert. Gilt auch für Abos aus bexio und wirkt nur, wenn «Ausgaben pro Jahr» grösser als 0 ist.",
         "allowCommentEditing": "Leser*innen können den Text ihrer eigenen Kommentare nach dem Abschicken noch ändern.",
         "commentCharLimit": "Maximale Anzahl Zeichen, die ein Kommentar enthalten darf. Längere Kommentare können nicht abgeschickt werden.",
         "subscriptionExtendWindowDays": "Wie viele Tage vor Ablauf eines Abos Leser*innen im Profil «Jetzt verlängern» sehen. 30 = wie bisher; 365 = jederzeit, solange keine Rechnung offen ist.",
@@ -2914,10 +3001,72 @@
     },
     "automaticMails": {
       "title": "Automatische Mitteilungen",
-      "intro": "Hier legst du fest, welche Mitteilungsvorlage bei welchem Ereignis automatisch verschickt wird. Wähle pro Ereignis eine Vorlage – oder lass das Feld auf «Keine E-Mail senden», wenn nichts verschickt werden soll. Das ⓘ-Symbol erklärt jedes Ereignis.",
       "example": "Beispiel: {{example}}"
     },
     "subscriptionFlow": {
+      "overview": {
+        "back": "Alle Abläufe & automatischen Mitteilungen",
+        "title": "Mitteilungen zu Abo-Abläufen",
+        "intro": "Ein Ablauf legt fest, welche Mitteilung bei welchem Abo-Ereignis automatisch verschickt wird. Der Standard-Ablauf gilt für alle Abos. Ein Abo-Plan kann eigene Abläufe für bestimmte Abos haben, und ein Ablauf kann für bestimmte Abos aller Abo-Pläne gelten: Ein solcher Ablauf ersetzt den Standard-Ablauf für die betroffenen Abos vollständig. Wurden mehrere Abo-Abläufe definiert, werden sie in dieser Reihenfolge angewendet: 1. Abo-Plan-spezifische Abläufe → 2. Abläufe, die für alle Abo-Pläne gelten → 3. Standard-Ablauf. In der Tabelle mit den Abläufen entspricht dies der Richtung «von unten nach oben». Sobald ein Abo-Ablauf auf ein Abo matcht, wird dieser Ablauf ausgeführt und das Matching-Verfahren abgebrochen. Abläufe «weiter oben» in der Liste werden somit für dieses Abo nie ausgeführt.",
+        "flow": "Ablauf für Abo-Plan",
+        "defaultFlow": "Alle → Standard-Ablauf",
+        "appliesTo": "Gilt für",
+        "defaultApplies": "Alle Abos ohne eigenen Ablauf",
+        "subscriptions": "Betroffene Abos",
+        "events": "Mitteilungen",
+        "eventsValue": "{{sending}} von {{total}} Ereignissen",
+        "letterEvents": "Davon per Brief",
+        "memberPlan": "Abo-Plan",
+        "createIntro": "Wähle den Abo-Plan – oder «Alle Abo-Pläne» – und die Abos, für die der neue Ablauf gilt. Welche Mitteilungen er verschickt, legst du danach auf seiner Seite fest.",
+        "deleteTitle": "Ablauf von «{{memberPlan}}» löschen?",
+        "renewal": {
+          "true": "mit automatischer Verlängerung",
+          "false": "ohne automatische Verlängerung"
+        },
+        "noMemberPlan": "Ohne Abo-Plan",
+        "allMemberPlans": "Alle Abo-Pläne",
+        "subscriptionsSum": "Betroffene Abos ({{sum}})",
+        "subscriptionsHint": "Laufende Abos und beendete, solange ihr Ablauf ihnen noch eine Mitteilung schickt. Wird ein Ablauf ein- oder ausgeschaltet, kann sich die Summe deshalb ändern: Ein beendetes Abo kann von einem Ablauf mit späteren Mitteilungen zu einem ohne wechseln.",
+        "active": "Aktiv",
+        "switchOff": "Ablauf ausschalten",
+        "switchOn": "Ablauf einschalten",
+        "deactivateTitle": "Ablauf ausschalten?",
+        "activateTitle": "Ablauf einschalten?",
+        "deactivateQuestion": "Die {{count}} Abos dieses Ablaufs werden danach von anderen Abläufen übernommen.",
+        "activateQuestion": "Dieser Ablauf übernimmt danach {{count}} Abos von anderen Abläufen.",
+        "tabs": {
+          "flows": "Abo-Abläufe ({{count}})",
+          "account": "Konto & Login"
+        },
+        "group": {
+          "default": "Standard",
+          "allMemberPlans": "Für alle Abo-Pläne",
+          "memberPlan": "Abo-Plan «{{memberPlan}}»"
+        },
+        "any": {
+          "paymentMethods": "jede Zahlungsmethode",
+          "periodicities": "jede Laufzeit",
+          "renewal": "mit oder ohne automatische Verlängerung"
+        },
+        "warnings": {
+          "noMemberPlan": "Der Abo-Plan dieses Ablaufs wurde gelöscht. Solange es diesen Ablauf gibt, wird keine automatische Mitteilung verschickt – lösche ihn.",
+          "matchesNothing": "Gilt für kein Abo: Es fehlt eine Zahlungsmethode, Laufzeit oder Verlängerung.",
+          "notOffered": "Bietet der Abo-Plan nicht mehr an: {{values}}. Dieser Ablauf gilt nur noch für bereits bestehende Abos."
+        }
+      },
+      "earliestDay": {
+        "anyTerm": "Frühestens {{days}} Tage vor Abo-Ablauf: Dieser Ablauf gilt für Abos jeder Laufzeit, auch der kürzesten. Schränke ihn auf längere Laufzeiten ein, damit er früher beginnen kann.",
+        "byConditions": "Frühestens {{days}} Tage vor Abo-Ablauf: Der aktuelle Ablauf gilt für Abos mit der Laufzeit «{{periodicity}}». Ein noch früheres Rechnungsdatum würde die Dauer der Abo-Laufzeit übersteigen.",
+        "defaultFlow": "Frühestens {{days}} Tage vor Abo-Ablauf: Der Standard-Ablauf gilt für alle Abos ohne eigenen Ablauf, auch für die mit der kürzesten Laufzeit. Ein Ablauf nur für längere Laufzeiten kann früher beginnen."
+      },
+      "flow": "Ablauf",
+      "planFlowDescription": "Dieser Ablauf ersetzt den Standard-Ablauf vollständig für die Abos seines Abo-Plans, welche zu den weiter unten definierten Filterkriterien passen.",
+      "allPlansFlowDescription": "Dieser Ablauf ersetzt den Standard-Ablauf vollständig für die Abos aller Abo-Pläne, welche zu den weiter unten definierten Filterkriterien passen. Hat ein Abo-Plan für solche Abos einen eigenen Ablauf, geht dieser vor.",
+      "inactiveNotice": "Dieser Ablauf ist ausgeschaltet. Seine Abos erhalten die Mitteilungen des nächsten passenden Ablaufs.",
+      "openConditionsHint": "Ein leeres Feld schränkt nicht ein: Der Ablauf gilt dann für jeden Wert. Mindestens ein Feld muss ausgefüllt sein.",
+      "planFlowDescriptionFor": "Dieser Ablauf ersetzt den Standard-Ablauf vollständig für die Abos des Abo-Plans «{{memberPlan}}», welche zu den weiter unten definierten Filterkriterien passen.",
+      "noFallback": "Ereignisse ohne Vorlage verschicken nichts – der Standard-Ablauf springt nicht ein.",
+      "notFound": "Diesen Ablauf gibt es nicht (mehr).",
       "subscribe": "Abo abgeschlossen",
       "renewal_success": "Verlängerung erfolgreich",
       "renewal_failed": "Verlängerung fehlgeschlagen",
@@ -2928,14 +3077,13 @@
       "custom": "Benutzerdefiniertes Ereignis",
       "settings": "Abonnement-Ablauf-Einstellungen",
       "edit": "Abonnement-Ablauf bearbeiten",
-      "settingsDescription": "Diese Einstellungen gelten nur für diesen Abo-Plan und überschreiben die automatischen E-Mails.",
       "addNew": "Neuen Ablauf erstellen",
       "dayWithNumber": "Tag {{day}}",
       "days": "Tage",
       "savedChange": "Änderung erfolgreich gespeichert",
       "add": "Hinzufügen",
       "paymentMethod": "Zahlungsmethode",
-      "periodicity": "Periodizität",
+      "periodicity": "Laufzeit",
       "autoRenewal": "Automatische Verlängerung?",
       "booleanFilter": {
         "true": "Ja",
@@ -2945,7 +3093,7 @@
       "deletePermanently": "Permanent löschen",
       "dropHere": "Hier ablegen",
       "filters": "Filter",
-      "filtersDescription": "Legt fest, für welche Abos dieser Ablauf gilt: Abo-Plan, Zahlungsmethode, Periodizität und automatische Verlängerung.",
+      "filtersDescription": "Legt fest, für welche Abos dieser Ablauf gilt: Abo-Plan, Zahlungsmethode, Laufzeit und automatische Verlängerung.",
       "filtersExample": "Nur Jahresabos, die per Kreditkarte bezahlt werden.",
       "subscriptionEvents": "Abo-Ereignisse",
       "subscriptionEventsDescription": "E-Mails, die sofort verschickt werden, wenn im Abo etwas passiert. Sie sind an kein Datum gebunden.",
@@ -2958,8 +3106,7 @@
       "addMail": "E-Mail hinzufügen",
       "deleteMail": "E-Mail entfernen",
       "defaultFlow": "Standard-Ablauf",
-      "defaultFlowDescription": "Gilt für alle Abos, auf die kein anderer Ablauf passt. Änderungen hier gelten auch unter «Automatische Mitteilungen».",
-      "flowNumber": "Ablauf {{number}}",
+      "defaultFlowDescription": "Gilt für alle Abos, auf die kein anderer Ablauf passt.",
       "newFlow": "Neuer Ablauf",
       "newDayTitle": "Neuer Tag in der Zeitleiste",
       "newDayHint": "Negative Zahl = vor dem Abo-Ende, positive Zahl = danach.",
@@ -3061,7 +3208,13 @@
         "generate": "Generieren",
         "generateToken": "Token generieren",
         "name": "Name",
-        "tokenWarning": "Token können später nicht mehr abgerufen werden. Speichere sie an einem sicheren Ort."
+        "tokenWarning": "Token können später nicht mehr abgerufen werden. Speichere sie an einem sicheren Ort.",
+        "roles": "Rollen",
+        "noRoles": "Keine Rollen – keine Berechtigungen",
+        "noRolesWarning": "Ohne Rolle darf das Token nichts. Wähle die Rollen, deren Berechtigungen Programme mit diesem Token erhalten sollen.",
+        "rolesInfo": "Eine Anfrage mit diesem Token erhält die Berechtigungen dieser Rollen. Änderungen gelten sofort.",
+        "editRoles": "Rollen bearbeiten",
+        "editRolesOf": "Rollen von {{name}}"
       }
     },
     "untitled": "Ohne Titel",
@@ -3137,6 +3290,17 @@
         "amountOfSubscriptions": "{{amount}} Abos",
         "createdAt": "Erstellt",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
+        "emailQuality": "E-Mail-Status",
+        "emailQualitySince": "E-Mail-Status seit",
+        "emailQualitySinceDate": "{{emailQualitySinceDate, PP}}",
+        "emailSegments": {
+          "active": "Aktiv",
+          "unknown": "Unbekannt",
+          "unresponsive": "Reagiert nicht",
+          "dead": "Unzustellbar",
+          "placeholder": "Platzhalter",
+          "deadHint": "Bounce, ungültige Adresse, Spam-Beschwerde oder vom Mailanbieter abgemeldet"
+        },
         "firstName": "Vorname",
         "subscriptionStatus": {
           "Active": "Aktiv",
@@ -3146,6 +3310,8 @@
           "Expired": "Abgelaufen"
         },
         "subscriptionWithStatus": "{{name}} – {{status}}",
+        "subscriptionWithStatusAndIssues": "{{name}} – {{status}} ({{received}} / {{entitled}} Ausgaben)",
+        "printIssuesOwed": "Ausgaben offen",
         "modifiedAt": "Zuletzt bearbeitet",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Name",
@@ -3221,7 +3387,7 @@
         "title": {
           "activated": "Abonnement deaktivieren"
         },
-        "willBeDeactivated": "Das Abonnement wird am {{date, ccc PP p}} deaktiviert"
+        "willBeDeactivated": "Das Abonnement wird am {{date, ccc PP p}} deaktiviert. Grund: {{reason}}"
       },
       "revertUpgrade": {
         "title": "Upgrade rückgängig",
@@ -3255,6 +3421,12 @@
       "paidUntilInfo": "Wird automatisch gesetzt, sobald eine Rechnung bezahlt ist. Bis zu diesem Datum ist das Abo bezahlt."
     },
     "userSubscriptionList": {
+      "printIssuesReceived": "{{received}} / {{entitled}} Ausgaben",
+      "printIssue": "{{label}} · {{date}} · {{batch}}, übergeben {{deliveredAt}}",
+      "printList": "Druckliste",
+      "printSupplement": "Nachlieferung {{number}}",
+      "printIssueCountsAs": "zählt {{count}}-fach",
+      "printIssues": "Erhaltene Druckausgaben",
       "periodRange": "Zeitraum",
       "table": {
         "active": "Aktiv",
@@ -3299,7 +3471,7 @@
       "noAutoRenew": "Abo läuft aus, keine automatische Erneuerung",
       "noDeactivation": "Keine Deaktivierung.",
       "paidUntil": "Bezahlt bis {{date}}",
-      "paymentPeriodicity": "Zahlungsperiodizität: {{paymentPeriodicity}}",
+      "paymentPeriodicity": "Zahlungsintervall: {{paymentPeriodicity}}",
       "periodAmount": "Betrag: {{amount}} {{currency}}",
       "periodCreatedAt": "Erstellt am {{date}}",
       "periodEndsAt": "bis {{date}}",
@@ -3871,7 +4043,11 @@
         "bexioInvoiceMailSubjectInfo": "Der Betreff der E-Mail, mit der Bexio die Rechnung verschickt. Platzhalter wie :user.firstName: oder :memberPlan.name: werden automatisch ersetzt.",
         "bexioInvoiceMailBodyInfo": "Der Text der E-Mail, mit der Bexio die Rechnung verschickt; das PDF wird angehängt. Platzhalter wie :user.firstName: oder :memberPlan.name: werden automatisch ersetzt. Bexio verlangt den Platzhalter [Network Link] im Text.",
         "bexioMarkInvoiceAsOpenInfo": "Wenn aktiv, setzt Bexio die Rechnung nach dem Versand auf «offen», statt sie als Entwurf zu belassen.",
+        "bexioInvoiceMailByWePublish": "We.Publish verschickt die Bexio-Rechnungen",
+        "bexioInvoiceMailByWePublishInfo": "Wenn aktiv, verschickt Bexio die Rechnungen von Erneuerungen nicht mehr selbst, sondern stellt sie nur aus. We.Publish hängt das Bexio-PDF an die Mail «Rechnung erstellt» des Abo-Ablaufs an oder druckt es nach dem Brief. Passen Sie diese Vorlage an, falls sie auf eine separate Mail von Bexio verweist. In Bexio erscheint für diese Rechnungen kein E-Mail-Verlauf. Zusammen mit «Rechnung als offen markieren» verwenden, sonst ist das PDF ein Entwurf. Rechnungen aus dem Checkout verschickt weiterhin Bexio.",
         "bexioContactSyncInfo": "Wenn aktiv, überträgt We.Publish jede Nacht Name, Firma, E-Mail und Adresse geänderter Leser:innen in ihren Bexio-Kontakt und legt für Abos mit Bexio-Zahlung fehlende Kontakte an. Gruppen, Telefon und alles Weitere im Kontakt bleiben, wie sie in Bexio sind.",
+        "bexioTestMailbox": "Test-Postfach (nur Testinstanzen)",
+        "bexioTestMailboxInfo": "Bexio-Firmen in der Testphase senden Rechnungsmails nur an die eigene Absenderadresse. Rechnungsmails an eine Adresse auf der Domain dieses Postfachs gehen stattdessen an dieses Postfach, z. B. bexio@<id>.resend.app für Leser*innen nw-00001@<id>.resend.app. Auf Produktion nicht verfügbar.",
         "bexioContactSyncNeverRan": "Noch nie gelaufen.",
         "bexioContactSyncLastRun": "Letzter Lauf: {{date}}, ohne Fehler.",
         "bexioContactSyncLastRunFailed": "Letzter Lauf: {{date}}. Fehler: {{error}}"
@@ -3896,6 +4072,7 @@
         "organisationId": "Organisations-ID",
         "webhookSigningKey": "Webhook Signing Key",
         "autoSend": "Briefe automatisch versenden",
+        "autoSendInfo": "Ein: Der Druckdienstleister druckt und verschickt jeden Brief, sobald er übergeben ist. Hält er einen Brief wegen eines Problems zurück, ersetzt We.Publish ihn in der folgenden Nacht selbst, sofern sich bis dahin niemand darum gekümmert hat. Aus: Jeder Brief wartet beim Druckdienstleister, bis ihn dort jemand freigibt; ein zurückgehaltener Brief bleibt dort, bis sich jemand darum kümmert.",
         "placeholderEmailContains": "Platzhalter-E-Mail enthält",
         "defaultAddressPosition": "Adressfenster (automatische Briefe)",
         "defaultDeliveryProduct": "Zustellung (automatische Briefe)",
@@ -4338,7 +4515,8 @@
       "apps": "Apps",
       "noAppsFound": "Keine externen Apps konfiguriert.",
       "notFound": "Externe App nicht gefunden",
-      "appsInfo": "Verknüpfungen zu externen Tools, die auf dem Dashboard unter «We.Publish Apps» erscheinen. «Ziel» bestimmt, ob eine App in einem neuen Browser-Tab oder direkt im Editor geöffnet wird. Manche Websites lassen sich nicht im Editor anzeigen – öffne sie in einem neuen Tab."
+      "appsInfo": "Verknüpfungen zu externen Tools, die auf dem Dashboard unter «We.Publish Apps» erscheinen. «Ziel» bestimmt, ob eine App in einem neuen Browser-Tab oder direkt im Editor geöffnet wird. Manche Websites lassen sich nicht im Editor anzeigen – öffne sie in einem neuen Tab.",
+      "noToken": "Die App konnte nicht geöffnet werden: Es wurde kein Zugriffstoken ausgestellt."
     },
     "externalAppForm": {
       "apiKey": "API-Schlüssel",
@@ -4473,11 +4651,16 @@
       "reset": "Spalten zurücksetzen"
     },
     "systemMails": {
-      "title": "Konto & Login",
+      "title": "Mitteilungen zu Konto- & Login-Ereignissen",
       "sectionDescription": "E-Mails rund um das Benutzerkonto. Sie werden durch eine Aktion der Person ausgelöst – unabhängig davon, ob sie ein Abo hat.",
       "sectionExample": "Jemand registriert sich → Willkommens-E-Mail geht sofort raus.",
-      "sendTest": "Test an mich",
+      "sendTest": "Test-E-Mail an mich",
       "testSent": "Test-E-Mail an dich verschickt",
+      "columns": {
+        "event": "Ereignis-Typ",
+        "userAction": "Benutzer-Aktion",
+        "template": "Mitteilungsvorlage"
+      },
       "events": {
         "account_creation": "Registrierung",
         "login_link": "Login-Link",
@@ -4487,27 +4670,27 @@
       },
       "eventInfo": {
         "account_creation": {
-          "short": "Neues Konto wurde erstellt.",
+          "userAction": "Registriert sich oder erhält beim Abo-Kauf ein Konto",
           "description": "Geht raus, sobald sich eine Person neu registriert oder beim Abo-Kauf ein Konto erhält.",
           "example": "«Willkommen – dein Konto ist bereit.»"
         },
         "login_link": {
-          "short": "Anmelden ohne Passwort.",
+          "userAction": "Fordert einen Login-Link an",
           "description": "Geht raus, wenn eine Person sich per Link anmelden will, statt ein Passwort einzugeben. Die E-Mail muss den Login-Link enthalten.",
           "example": "«Mit einem Klick anmelden.»"
         },
         "password_reset": {
-          "short": "Passwort vergessen.",
-          "description": "Geht raus, wenn eine Person «Passwort vergessen» anklickt. Die E-Mail muss den Link zum Setzen eines neuen Passworts enthalten.",
+          "userAction": "Admin oder Autor:in klickt im Editor-Login auf «Passwort vergessen»",
+          "description": "Geht raus, wenn jemand im Login des Editors «Passwort vergessen» anklickt – das gibt es nur dort, nicht auf der Website. Betrifft also Admins, Autor:innen und andere Editor-User. Die E-Mail muss den Link zum Setzen eines neuen Passworts enthalten.",
           "example": "«Hier setzt du ein neues Passwort.»"
         },
         "email_change": {
-          "short": "Neue Adresse bestätigen.",
+          "userAction": "Ändert die eigene E-Mail-Adresse",
           "description": "Geht an die neue Adresse, wenn jemand seine E-Mail-Adresse ändert. Die Änderung gilt erst nach der Bestätigung.",
           "example": "«Bitte bestätige deine neue E-Mail-Adresse.»"
         },
         "test_mail": {
-          "short": "Nur für deine eigenen Tests.",
+          "userAction": "Keine – nur für deine eigenen Tests",
           "description": "Wird nie automatisch an Leser*innen verschickt. Mit dieser Vorlage kannst du den E-Mail-Versand selbst ausprobieren.",
           "example": "«Test-E-Mail – wenn Sie das lesen, funktioniert der Versand.»"
         }
@@ -4520,8 +4703,8 @@
           "description": "Zielgruppe und Filter"
         },
         "content": {
-          "title": "Inhalt & Zustellkanal",
-          "description": "Vorlage, E-Mail oder Brief"
+          "title": "Zustellkanal & Inhalt",
+          "description": "E-Mail oder Brief, Vorlage"
         },
         "send": {
           "title": "Senden",
@@ -4597,7 +4780,6 @@
         "cancelled": "Abgebrochen"
       },
       "missingPlaceholders": "Achtung: Diese Platzhalter werden für diese Empfänger nicht gefüllt: {{placeholders}}",
-      "createTemplate": "Neue Vorlage",
       "attachments_one": "Jede E-Mail enthält {{count}} Anhang als PDF: {{names}}",
       "attachments_other": "Jede E-Mail enthält {{count}} Anhänge als PDF: {{names}}",
       "editTemplate": "Vorlage bearbeiten",
@@ -4637,8 +4819,7 @@
       },
       "endedWindow": {
         "label": "Zeitraum der Abo-Deaktivierung",
-        "relative": "Letzte … Tage",
-        "period": "Fester Zeitraum",
+        "window": "Deaktiviert",
         "days": "Tage",
         "periodPlaceholder": "Von – bis wählen",
         "periodHint": "Nur Abos, die zwischen diesen beiden Daten deaktiviert wurden.",
@@ -4672,11 +4853,11 @@
         "label": "Zustellkanal",
         "mail": "E-Mail",
         "letter": "Brief",
-        "noVersion": {
-          "mail": "Diese Vorlage hat keine E-Mail-Version.",
-          "letter": "Diese Vorlage hat keine Brief-Version."
-        },
-        "withoutAddress": "{{count}} der Empfänger:innen haben keine brauchbare Postadresse und werden übersprungen."
+        "withoutAddress": "{{count}} der Empfänger:innen haben keine brauchbare Postadresse und werden übersprungen.",
+        "templateDropped": {
+          "mail": "«{{template}}» hat keine E-Mail-Version und wurde deshalb abgewählt. Wähle eine Vorlage für E-Mail.",
+          "letter": "«{{template}}» hat keine Brief-Version und wurde deshalb abgewählt. Wähle eine Vorlage für Brief."
+        }
       },
       "print": {
         "addressPosition": {
@@ -4705,6 +4886,56 @@
       },
       "stateHelp": "Aktiv: bestätigt, nicht deaktiviert und bezahlt. Ausstehend: abgeschlossen, aber noch nicht bestätigt – z. B. weil die erste Zahlung noch fehlt. Deaktiviert: Das Abo wurde beendet oder die Beendigung ist bereits eingetragen.",
       "autoRenewHelp": "Ja: Das Abo verlängert sich am Ende der Laufzeit von selbst und wird erneut verrechnet. Nein: Es läuft aus, ausser die Person verlängert es selbst.",
+      "savedFilters": {
+        "title": "Gespeicherte Filter",
+        "intro": "Für das ganze Team sichtbar. Stehen in den manuellen Mitteilungen und bei der Zuweisung des Zustellkanals zur Verfügung.",
+        "save": "Aktuellen Filter speichern",
+        "empty": "Noch kein Filter gespeichert.",
+        "name": "Name",
+        "description": "Beschreibung",
+        "load": "Laden",
+        "overwrite": "Mit aktuellem Filter überschreiben",
+        "edit": "Name und Beschreibung bearbeiten",
+        "delete": "Löschen",
+        "saveTitle": "Filter speichern",
+        "editTitle": "Gespeicherten Filter bearbeiten",
+        "confirmSave": "Speichern",
+        "nameRequired": "Bitte einen Namen eingeben.",
+        "nameTaken": "Diesen Namen gibt es schon.",
+        "overwriteTitle": "Filter überschreiben?",
+        "overwriteQuestion": "«{{name}}» wird durch den aktuellen Filter ersetzt.",
+        "overwriteConfirm": "Überschreiben",
+        "deleteTitle": "Filter löschen?",
+        "deleteQuestion": "«{{name}}» wird gelöscht. Bereits gestartete Versände sind davon nicht betroffen.",
+        "deleteConfirm": "Löschen",
+        "loaded": "«{{name}}» geladen.",
+        "droppedIntro": "Nicht mehr vorhanden und weggelassen:",
+        "dropped": {
+          "memberPlans": "Abo-Pläne: {{count}}",
+          "paymentMethods": "Zahlungsmethoden: {{count}}",
+          "templates": "Vorlagen: {{count}}"
+        },
+        "saved": "Filter gespeichert",
+        "updated": "Filter aktualisiert",
+        "deleted": "Filter gelöscht"
+      },
+      "dateWindow": {
+        "mode": "{{label}}: feste oder rollende Daten",
+        "fixed": "Feste Daten",
+        "rolling": "Rollend",
+        "days": "Anzahl Tage",
+        "quick": "{{days}} Tage",
+        "kinds": {
+          "lastDays": "in den letzten",
+          "olderThanDays": "vor mehr als",
+          "nextDays": "in den nächsten"
+        },
+        "unit": {
+          "lastDays": "Tagen",
+          "olderThanDays": "Tagen",
+          "nextDays": "Tagen"
+        }
+      },
       "mailHistory": {
         "label": "Erhaltene Mitteilungen",
         "hint": "Nur User, die eine bestimmte Vorlage erhalten (oder nicht erhalten) haben – auf Wunsch nur über einen bestimmten Zustellkanal.",
@@ -4718,6 +4949,11 @@
         "channel": "Zustellkanal",
         "anyChannel": "Beliebig",
         "sentBetween": "Versandt zwischen",
+        "minCount": "Mindestens",
+        "times": "mal",
+        "onSubscription": "Nur Mitteilungen zu genau diesem Abo",
+        "onlyOpenInvoice": "Nur Mitteilungen zu einer noch offenen Rechnung",
+        "triggerHint": "Abo und Rechnung einer Mitteilung werden erst seit Kurzem gespeichert. Ältere Mitteilungen erfüllen diese Bedingung nie.",
         "match": {
           "all": "Alle Bedingungen müssen zutreffen",
           "any": "Eine Bedingung genügt"
@@ -4731,7 +4967,8 @@
           "rejected": "Abgelehnt",
           "dispatched": "Aufgegeben",
           "undeliverable": "Unzustellbar",
-          "canceled": "Storniert"
+          "canceled": "Storniert",
+          "actionRequired": "Handlung nötig"
         }
       },
       "audienceSummary": {
@@ -4742,6 +4979,14 @@
         "mailHistory": "Mitteilungen",
         "received": "erhalten",
         "notReceived": "nicht erhalten",
+        "minCount": "mindestens {{count}} mal",
+        "rolling": {
+          "lastDays": "in den letzten {{days}} Tagen",
+          "olderThanDays": "vor mehr als {{days}} Tagen",
+          "nextDays": "in den nächsten {{days}} Tagen"
+        },
+        "onSubscription": "zu diesem Abo",
+        "onlyOpenInvoice": "Rechnung noch offen",
         "between": "{{from}} – {{to}}",
         "from": "ab {{from}}",
         "to": "bis {{to}}",
@@ -4749,7 +4994,11 @@
         "matchAll": "alle Bedingungen",
         "more": "{{count}} weitere Filter"
       },
-      "deliveryChannelHandOff": "Zustellkanal dieser Benutzergruppe dauerhaft umstellen …"
+      "deliveryChannelHandOff": "Zustellkanal dieser Benutzergruppe dauerhaft umstellen …",
+      "templateFor": {
+        "mail": "Manuelle Mitteilung per E-Mail",
+        "letter": "Manuelle Mitteilung per Brief"
+      }
     },
     "mailLog": {
       "title": "Gesendete Mitteilungen",
@@ -4757,6 +5006,9 @@
       "sentDate": "Datum",
       "template": "Vorlage",
       "subject": "Betreff",
+      "trigger": "Bezug",
+      "triggerSubscription": "Abo",
+      "triggerInvoice": "Rechnung",
       "state": "Status",
       "type": "Ausgelöst durch",
       "recipient": "Empfänger",
@@ -4824,6 +5076,18 @@
           "cause": "Die verwendete Sendungsvorlage existiert nicht mehr.",
           "fix": "Wähle unter «Mitteilungsvorlagen» eine vorhandene Vorlage aus bzw. lege sie neu an und starte den Versand erneut."
         },
+        "mailboxGone": {
+          "cause": "Der Mailserver der Empfängerin oder des Empfängers hat die Mitteilung zurückgewiesen, weil es das Postfach oder die Domain nicht gibt. Die Adresse gilt damit als unerreichbar.",
+          "fix": "1. Prüfe die E-Mail-Adresse der Person auf Tippfehler und korrigiere sie.\n2. Ist keine gültige Adresse bekannt, stelle die Person auf Brief um: Sie erscheint unter «Zustellkanal für automatische Mitteilungen» als Vorschlag, sofern eine Postadresse hinterlegt ist."
+        },
+        "mailboxFull": {
+          "cause": "Das Postfach der Empfängerin oder des Empfängers ist voll. Die Mitteilung ist nicht angekommen; die Adresse gilt weiterhin als erreichbar.",
+          "fix": "1. Sende die Mitteilung später erneut.\n2. Bleibt das Postfach voll, erreiche die Person auf einem anderen Weg."
+        },
+        "bounce": {
+          "cause": "Der Mailserver der Empfängerin oder des Empfängers hat die Mitteilung nicht angenommen. Seine Antwort steht unten.",
+          "fix": "1. Lies die Originalmeldung: Sie nennt den Grund, z.B. eine vorübergehende Störung, ein gesperrtes Postfach oder Spamverdacht.\n2. Bei einer vorübergehenden Störung sende die Mitteilung später erneut.\n3. Bounct die Adresse wiederholt, kläre sie mit der Person."
+        },
         "generic": {
           "cause": "Der E-Mail-Server hat den Versand mit der unten stehenden Meldung abgelehnt.",
           "fix": "1. Prüfe die Einstellungen unter Einstellungen › Integrationen › E-Mail-Provider.\n2. Sieh im Server-Log nach der vollständigen Fehlermeldung.\n3. Sende eine Test-E-Mail aus der Vorlage, um die Verbindung zu prüfen."
@@ -4836,13 +5100,16 @@
       "sync": {
         "action": "Status aktualisieren",
         "hint": "Fragt beim E-Mail-Anbieter den aktuellen Zustellstatus aller noch offenen E-Mails ab.",
-        "done": "{{checked}} offene E-Mail(s) beim Anbieter geprüft, {{updated}} aktualisiert."
+        "done": "{{checked}} offene E-Mail(s) beim Anbieter geprüft, {{updated}} aktualisiert.",
+        "hintWithLetters": "Fragt beim E-Mail-Anbieter und beim Briefanbieter den aktuellen Zustellstatus aller noch offenen E-Mails und Briefe ab.",
+        "doneWithLetters": "{{checked}} offene E-Mail(s) geprüft, {{updated}} aktualisiert. {{lettersChecked}} offene(r) Brief(e) geprüft, {{lettersUpdated}} aktualisiert."
       },
       "stateHelp": {
         "nextTitle": "Was du tun kannst",
         "legendTitle": "Bedeutung der Status",
         "legendIntro": "Der Status zeigt, wie weit eine E-Mail auf dem Weg zum Empfänger gekommen ist. Gemeldet wird er vom E-Mail-Anbieter, nicht von We.Publish selbst.",
         "legendFooter": "Statusmeldungen kommen normalerweise per Webhook vom E-Mail-Anbieter. Ist kein Webhook eingerichtet – oder läuft die Installation lokal, wo der Anbieter sie nicht erreichen kann – bleibt der Status auf «submitted» stehen. «Status aktualisieren» holt ihn dann direkt beim Anbieter ab.\nSMTP und Slack melden keine Zustellstatus: dort bleibt es bei «submitted».",
+        "legendFooterLetters": "Für Briefe gilt dasselbe: Ihr Status kommt per Webhook vom Briefanbieter, «Status aktualisieren» und der nächtliche Lauf holen ihn sonst direkt dort ab. Ein Brief, der der Post übergeben wurde («dispatched»), wird noch 30 Tage lang nachgefragt, weil Rückläufer erst spät gemeldet werden.",
         "submitted": {
           "name": "submitted – Übermittelt",
           "meaning": "We.Publish hat die E-Mail an den E-Mail-Anbieter übergeben und dieser hat sie angenommen. Sie ist dort in der Warteschlange. Über das Postfach des Empfängers sagt dieser Status noch nichts aus.",
@@ -4887,6 +5154,11 @@
           "name": "Storniert",
           "meaning": "Der Brief wurde zurückgezogen, bevor er gedruckt wurde.",
           "next": "Nichts zu tun. Es wurde nichts gedruckt und nichts verrechnet."
+        },
+        "actionRequired": {
+          "name": "Handlung nötig",
+          "meaning": "Der Druckdienstleister hat den Brief angenommen, druckt ihn aber nicht: Er hält ihn zurück, bis sich jemand dort darum kümmert, zum Beispiel weil seine Prüfung des PDFs fehlgeschlagen ist. Der Brief liegt beim Druckdienstleister; den Grund nennt die Spalte «Fehler».",
+          "next": "Den Brief beim Druckdienstleister öffnen und ihn dort korrigieren, freigeben oder löschen. Der Status hier folgt von selbst. Nicht erneut senden: Das erzeugt beim Druckdienstleister ein Duplikat. Werden Briefe automatisch versendet, ersetzt We.Publish einen Rechnungsbrief in der folgenden Nacht selbst, sofern sich bis dahin niemand darum gekümmert hat."
         }
       },
       "channel": "Versand",
@@ -5346,6 +5618,7 @@
       "create": "Briefpapier erstellen",
       "createHeader": "Briefpapier erstellen",
       "editHeader": "Briefpapier bearbeiten",
+      "back": "Zurück zur Übersicht",
       "name": "Name",
       "nameRequired": "Bitte gib einen Namen an.",
       "isDefault": "Standard-Briefpapier",
@@ -5357,7 +5630,7 @@
       "footerHeight": "Höhe Fusszeile (mm)",
       "headerHeightHint": "Höchstens 40 mm, damit die Kopfzeile nicht in die Frankierzone reicht. Sie erscheint auf jeder Seite; 0 mm lässt sie weg.",
       "footerHeightHint": "Höchstens 40 mm. Der Brieftext hält so viel Abstand zum unteren Rand, mindestens aber 20 mm. Die Fusszeile erscheint auf jeder Seite; 0 mm lässt sie weg.",
-      "htmlHint": "HTML mit Platzhaltern wie {{user_firstName}}. Grössen in mm angeben, Bilder mit fester Breite und Höhe.",
+      "htmlHint": "Visuell bearbeiten oder als HTML, beide mit Platzhaltern wie {{user_firstName}}. Was unter der roten Linie steht, wird nicht gedruckt. In HTML Grössen in mm angeben, Bilder mit fester Breite und Höhe.",
       "insertImage": "Bild einfügen",
       "preview": "Vorschau",
       "previewTitle": "Musterbrief auf diesem Briefpapier",
@@ -5386,7 +5659,8 @@
       "issueDateRequired": "Bitte gib das Erscheinungsdatum an.",
       "drawer": {
         "createTitle": "Neue Ausgabe",
-        "editTitle": "Ausgabe {{label}}"
+        "editTitle": "Ausgabe {{label}}",
+        "labelPreview": "Schreibweise"
       },
       "fields": {
         "issue": "Ausgabe",
@@ -5605,7 +5879,8 @@
           "skippedOpen": "Unbezahlt, ausgelassen",
           "noValidPeriod": "Ohne gültige Angabe",
           "excludedKind": "Nicht gewählte Bezugsart",
-          "quantityMismatch": "Menge ≠ Verknüpfungen"
+          "quantityMismatch": "Menge ≠ Verknüpfungen",
+          "exhausted": "Kontingent erhalten (laufende Periode)"
         }
       },
       "rowsTable": {

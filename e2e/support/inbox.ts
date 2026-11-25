@@ -4,12 +4,19 @@
  * `inbox` fixture picks the backend (see `mailBackend`).
  */
 
+export type MailAttachment = {
+  filename: string;
+  contentType: string;
+  content: Buffer;
+};
+
 export type Mail = {
   id: string;
   subject: string;
   to: string[];
   html: string;
   text: string;
+  attachments: MailAttachment[];
 };
 
 export type MailQuery = {

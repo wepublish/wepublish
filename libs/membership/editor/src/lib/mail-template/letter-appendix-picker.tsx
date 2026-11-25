@@ -6,6 +6,8 @@ import { MenuItem, TextField } from '@mui/material';
 const PDF = 'application/pdf';
 
 export type LetterAppendixPickerProps = {
+  /** Id of the label naming the picker. */
+  labelId?: string;
   value: string | null;
   onChange: (documentId: string | null) => void;
 };
@@ -15,6 +17,7 @@ export type LetterAppendixPickerProps = {
  * letter pages. Uploads happen under "Dokumente".
  */
 export function LetterAppendixPicker({
+  labelId,
   value,
   onChange,
 }: LetterAppendixPickerProps) {
@@ -38,7 +41,7 @@ export function LetterAppendixPicker({
       disabled={loading && !options.length}
       value={value ?? ''}
       onChange={event => onChange(event.target.value || null)}
-      slotProps={{ select: { displayEmpty: true } }}
+      slotProps={{ select: { displayEmpty: true, labelId } }}
     >
       <MenuItem value="">{t('mailTemplates.edit.letterAppendixNone')}</MenuItem>
       {options.map(option => (

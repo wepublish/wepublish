@@ -85,6 +85,19 @@ export enum AnalyticsProviderType {
   Umami = 'UMAMI'
 }
 
+/** Memory and uptime of the API process that answers. Load tests read it while the periodic job runs: a new hostname or a smaller uptime means the pod restarted. */
+export type ApiProcessStats = {
+  __typename?: 'ApiProcessStats';
+  /** Memory outside the V8 heap, e.g. the buffers of pdfs and attachments. */
+  externalBytes: Scalars['Float']['output'];
+  heapUsedBytes: Scalars['Float']['output'];
+  /** The pod's name. */
+  hostname: Scalars['String']['output'];
+  /** Resident memory, the number the pod's memory limit is about. */
+  rssBytes: Scalars['Float']['output'];
+  uptimeSeconds: Scalars['Float']['output'];
+};
+
 export type ApiToken = {
   __typename?: 'ApiToken';
   createdAt: Scalars['DateTime']['output'];
@@ -601,6 +614,8 @@ export type BaseToken = {
   id: Scalars['String']['output'];
   modifiedAt: Scalars['DateTime']['output'];
   name: Scalars['String']['output'];
+  /** The user roles whose permissions a request with this token gets. */
+  roleIDs: Array<Scalars['String']['output']>;
 };
 
 export type BaseUser = {
@@ -1129,6 +1144,12 @@ export type CreateExternalAppInput = {
   name: Scalars['String']['input'];
   target: ExternalAppsTarget;
   url: Scalars['String']['input'];
+};
+
+export type CreateSavedAudienceFilterInput = {
+  audience: MailAudienceInput;
+  description?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
 };
 
 export type CreateSubscriptionInfo = {
@@ -2238,6 +2259,18 @@ export type ImportArticleOptions = {
   importTags?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+export type ImportSubscriptionPeriodInput = {
+  /** Period amount in cents. */
+  amount: Scalars['Int']['input'];
+  endsAt: Scalars['DateTime']['input'];
+  invoiceDescription?: InputMaybe<Scalars['String']['input']>;
+  /** Whether the invoice for this period was paid. */
+  paid: Scalars['Boolean']['input'];
+  /** Payment date for a paid period; defaults to the period start. */
+  paidAt?: InputMaybe<Scalars['DateTime']['input']>;
+  startsAt: Scalars['DateTime']['input'];
+};
+
 export type ImportedEventFilter = {
   from?: InputMaybe<Scalars['String']['input']>;
   location?: InputMaybe<Scalars['String']['input']>;
@@ -2477,6 +2510,18 @@ export enum LoginStatus {
   Unsubscribed = 'UNSUBSCRIBED'
 }
 
+export type MailAndLetterLogSyncModel = {
+  __typename?: 'MailAndLetterLogSyncModel';
+  /** Mails that were still in an open state and could be looked up at the provider. */
+  checked: Scalars['Int']['output'];
+  /** Letters that can still change and were looked up at the letter provider. */
+  lettersChecked: Scalars['Int']['output'];
+  /** Letters whose state the provider reported differently. */
+  lettersUpdated: Scalars['Int']['output'];
+  /** Mails whose state the provider reported differently. */
+  updated: Scalars['Int']['output'];
+};
+
 export type MailAudienceInput = {
   autoRenew?: InputMaybe<Scalars['Boolean']['input']>;
   base: MailRecipientBase;
@@ -2492,6 +2537,8 @@ export type MailAudienceInput = {
   endedWithinDays?: InputMaybe<Scalars['Int']['input']>;
   /** Subscribers audience only: only subscriptions whose effective end (cancellation date, else paidUntil) is on or after this date. */
   endsAtFrom?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Subscribers audience only: effective end within a range relative to now. Takes the place of endsAtFrom and endsAtTo when given. */
+  endsAtRolling?: InputMaybe<MailRollingRange>;
   /** Subscribers audience only: only subscriptions whose effective end (cancellation date, else paidUntil) is on or before this date. */
   endsAtTo?: InputMaybe<Scalars['DateTime']['input']>;
   /** Subscribers audience only: true keeps only subscriptions that replaced another one (typically an upgrade, but downgrades and lateral plan switches are included too, and manual or imported changes are not detected). */
@@ -2508,6 +2555,8 @@ export type MailAudienceInput = {
   paymentPeriodicity?: InputMaybe<PaymentPeriodicity>;
   /** Subscribers audience only: only subscriptions that started on or after this date. */
   startsAtFrom?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Subscribers audience only: started within a range relative to now. Takes the place of startsAtFrom and startsAtTo when given. */
+  startsAtRolling?: InputMaybe<MailRollingRange>;
   /** Subscribers audience only: only subscriptions that started on or before this date. */
   startsAtTo?: InputMaybe<Scalars['DateTime']['input']>;
   subscriptionState?: InputMaybe<MailSubscriptionState>;
@@ -2541,8 +2590,16 @@ export type MailHistoryCondition = {
   from?: InputMaybe<Scalars['DateTime']['input']>;
   /** The mail template that was, or was not, sent. */
   mailTemplateId: Scalars['String']['input'];
+  /** How many such mails it takes, at least. Defaults to 1. With negate: keeps people who got fewer. */
+  minCount?: InputMaybe<Scalars['Int']['input']>;
   /** true: keeps people who did NOT receive such a mail, including people with no mail at all. */
   negate?: InputMaybe<Scalars['Boolean']['input']>;
+  /** true: only mails about an invoice that is still open (neither paid nor cancelled). Mails sent before the invoice was recorded in the mail log never match. */
+  onlyOpenInvoice?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Sent within a range relative to now. Takes the place of from and to when given. */
+  rolling?: InputMaybe<MailRollingRange>;
+  /** Defaults to person. Mails sent before the subscription was recorded in the mail log never match the subscription scope. */
+  scope?: InputMaybe<MailHistoryScope>;
   /** Only mails that ended in one of these states. Empty or absent means any. */
   states?: InputMaybe<Array<MailLogState>>;
   /** Sent on or before. */
@@ -2561,12 +2618,22 @@ export enum MailHistoryMatch {
   Any = 'any'
 }
 
+/** person: any mail the person got. subscription: only mails about the very subscription the audience selects; on an audience without subscriptions it falls back to person. */
+export enum MailHistoryScope {
+  Person = 'person',
+  Subscription = 'subscription'
+}
+
 export type MailLogFilter = {
   channel?: InputMaybe<MailChannel>;
+  /** Only mails about this invoice. */
+  invoiceId?: InputMaybe<Scalars['String']['input']>;
   mailSendJobId?: InputMaybe<Scalars['String']['input']>;
   mailTemplateId?: InputMaybe<Scalars['String']['input']>;
   recipientId?: InputMaybe<Scalars['String']['input']>;
   state?: InputMaybe<MailLogState>;
+  /** Only mails about this subscription. */
+  subscriptionId?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<MailLogType>;
 };
 
@@ -2576,9 +2643,11 @@ export type MailLogModel = {
   address?: Maybe<Scalars['String']['output']>;
   channel: MailChannel;
   createdAt: Scalars['DateTime']['output'];
-  /** Why a rejected mail could not be delivered. */
+  /** Why the mail could not be delivered: the error of a rejected one, or what the mail provider said about a bounced or held-back one (its bounce description and the receiving server's answer). */
   error?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
+  /** The invoice the mail is about, for invoice mails. Null otherwise and for mails sent before this was recorded. */
+  invoiceId?: Maybe<Scalars['String']['output']>;
   mailProviderID: Scalars['String']['output'];
   mailSendJobId?: Maybe<Scalars['String']['output']>;
   mailTemplate: MailLogTemplate;
@@ -2588,6 +2657,8 @@ export type MailLogModel = {
   sentDate: Scalars['DateTime']['output'];
   state: MailLogState;
   subject?: Maybe<Scalars['String']['output']>;
+  /** The subscription the mail is about. Null for mails with no such trigger and for mails sent before this was recorded. */
+  subscriptionId?: Maybe<Scalars['String']['output']>;
   type?: Maybe<MailLogType>;
 };
 
@@ -2601,6 +2672,7 @@ export type MailLogRecipient = {
 
 export enum MailLogState {
   Accepted = 'accepted',
+  ActionRequired = 'actionRequired',
   Bounced = 'bounced',
   Canceled = 'canceled',
   Deferred = 'deferred',
@@ -2610,14 +2682,6 @@ export enum MailLogState {
   Submitted = 'submitted',
   Undeliverable = 'undeliverable'
 }
-
-export type MailLogSyncModel = {
-  __typename?: 'MailLogSyncModel';
-  /** Mails that were still in an open state and could be looked up at the provider. */
-  checked: Scalars['Int']['output'];
-  /** Mails whose state the provider reported differently. */
-  updated: Scalars['Int']['output'];
-};
 
 export type MailLogTemplate = {
   __typename?: 'MailLogTemplate';
@@ -2654,6 +2718,18 @@ export enum MailRecipientBase {
   HasSubscription = 'hasSubscription',
   NoActiveSubscription = 'noActiveSubscription'
 }
+
+/** lastDays: within the last x days. olderThanDays: more than x days ago. nextDays: within the next x days. */
+export enum MailRollingKind {
+  LastDays = 'lastDays',
+  NextDays = 'nextDays',
+  OlderThanDays = 'olderThanDays'
+}
+
+export type MailRollingRange = {
+  days: Scalars['Int']['input'];
+  kind: MailRollingKind;
+};
 
 export type MailSegmentCount = {
   __typename?: 'MailSegmentCount';
@@ -3515,10 +3591,14 @@ export type Mutation = {
   confirmEmailChange: SensitiveDataUser;
   /** Confirms a notification for the whole instance, recording who confirmed it. Requires authentication. */
   confirmNotification: NotificationConfirmation;
+  /** Data correction: gives the latest, paid period of a running subscription the periodicity and end it should have had (e.g. a trial that runs as a year), and the subscription the same periodicity. The price of the period stays; paidUntil follows when it was that period's end. Creates, cancels and sends nothing; refuses a subscription with an open invoice. */
+  correctSubscriptionPeriod: PublicSubscription;
   /** Creates a new AI provider setting. */
   createAISetting: SettingAiProvider;
   /** Creates a new analytics provider setting. */
   createAnalyticsProviderSetting: SettingAnalyticsProvider;
+  /** Runs the invoice creation and charging steps of the daily periodic job on demand, without affecting the job run log. Requires an editor session and is additionally password protected. */
+  createAndChargeInvoices: Scalars['Boolean']['output'];
   /** Creates an api token and returns its secret. The secret is shown once and cannot be retrieved again. */
   createApiToken: CreatedApiToken;
   /** Creates an article. */
@@ -3601,6 +3681,8 @@ export type Mutation = {
   createPrintIssue: PrintIssue;
   /** Creates a rating system answer. */
   createRatingSystemAnswer: CommentRatingSystemAnswer;
+  /** Save a recipient filter under a name. */
+  createSavedAudienceFilter: SavedAudienceFilterModel;
   createSession: SessionWithToken;
   createSessionWithJWT: SessionWithToken;
   /** Signs a We.Publish admin in with the code auth.wepublish.cloud returned: as the account connected to that We.Publish identity, else the one with its email, else a new one. The account becomes an admin with the names from We.Publish and can only sign in this way from then on. */
@@ -3672,7 +3754,7 @@ export type Mutation = {
   deleteGoodie: Goodie;
   /** Deletes an existing image. */
   deleteImage: Scalars['String']['output'];
-  /** Deletes an existing invoice. */
+  /** Deletes an existing invoice. A PAID invoice is billing history and is only deleted with cascade: true (removes its billing period and items along). */
   deleteInvoice: Invoice;
   /** Delete a letter layout. Refused while a mail template still prints on it. */
   deleteLetterLayout: LetterLayoutModel;
@@ -3716,6 +3798,8 @@ export type Mutation = {
   deletePrintIssueDelivery: PrintIssue;
   /** Deletes a rating system answer. */
   deleteRatingSystemAnswer: CommentRatingSystemAnswer;
+  /** Delete a saved recipient filter. */
+  deleteSavedAudienceFilter: SavedAudienceFilterModel;
   /** Deletes an existing subscription. */
   deleteSubscription: PublicSubscription;
   /** Delete an existing subscription flow */
@@ -3843,6 +3927,8 @@ export type Mutation = {
   revokeActiveSession: Scalars['Boolean']['output'];
   /** Revokes one of your api tokens, or anyone's with CAN_REVOKE_ALL_API_TOKENS. The token stops working immediately. */
   revokeApiToken: ApiToken;
+  /** Runs today's periodic job again now, also when it already ran tonight. For load tests: only on review, development and local instances. Answers once the run has started; it goes on in the background. Refused while a run is going on. */
+  runPeriodicJobNow: PeriodicJob;
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendJWTLogin: Scalars['String']['output'];
   /** Manually send a mail template to a single user */
@@ -3857,10 +3943,14 @@ export type Mutation = {
   setDeliveryModeForAudience: DeliveryModeBulkResult;
   /** Stores which customer of a payment provider each user is (for bexio the contact id), replacing the user's previous one of that provider; up to 500 users per call. Users that do not exist are skipped. Returns how many users were updated. */
   setPaymentProviderCustomers: Scalars['Int']['output'];
+  /** Switches a flow on or off. The default flow stays on; a flow switched on must not share subscriptions with another active flow. */
+  setSubscriptionFlowActive: Array<SubscriptionFlowModel>;
   /** Switch a user between mailed and printed subscription mails */
   setUserDeliveryMode: UserDeliveryPreferenceModel;
-  /** Ask the mail provider for the current delivery state of mails that are still open. Complements the provider webhook, which is not reachable in local development. */
-  syncMailLogStates: MailLogSyncModel;
+  /** Ask the mail provider and the letter provider for the current delivery state of mails and letters that are still open. Complements the provider webhooks, which are not reachable in local development. */
+  syncMailLogStates: MailAndLetterLogSyncModel;
+  /** Checks all open invoices against their payment providers and updates the local payment state. Requires an editor session and is additionally password protected. */
+  syncOpenInvoiceStates: Scalars['Boolean']['output'];
   /** Sends a test email for the given event */
   testSystemMail: Scalars['Boolean']['output'];
   /** Triggers a mailchimp sync in the background. */
@@ -3954,6 +4044,8 @@ export type Mutation = {
   updatePrintIssue: PrintIssue;
   /** Update the comment rating system. */
   updateRatingSystem: CommentRatingSystem;
+  /** Rename a saved recipient filter, change its description or replace the filter it holds. */
+  updateSavedAudienceFilter: SavedAudienceFilterModel;
   /** Marks an SEO checklist item as done or not done and returns all completed items. */
   updateSeoChecklistItem: Array<SeoChecklistItem>;
   /** Updates an existing setting. */
@@ -3964,12 +4056,16 @@ export type Mutation = {
   updateSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Update an existing subscription interval */
   updateSubscriptionInterval: Array<SubscriptionFlowModel>;
+  /** Data correction: moves a subscription that is still on fromPaymentMethodId to toPaymentMethodId and changes nothing else. Unlike updateSubscription it also takes deactivated subscriptions and never touches invoices, periods or the payment provider. Returns whether it moved the subscription; swap the payment methods to undo it. */
+  updateSubscriptionPaymentMethod: Scalars['Boolean']['output'];
   /** Updates an existing sync provider setting. */
   updateSyncProviderSetting: SettingSyncProvider;
   /** Updates an existing mail flow */
   updateSystemMail: Array<SystemMailModel>;
   /** Updates an existing tag. */
   updateTag: Tag;
+  /** Renames a token or replaces its roles. Cached sessions of the token are cleared, so new roles apply at once. */
+  updateToken: Token;
   /** Updates an existing tracking pixel setting. */
   updateTrackingPixelSetting: SettingTrackingPixelProvider;
   /** Updates an existing user. */
@@ -4111,6 +4207,14 @@ export type MutationConfirmNotificationArgs = {
 };
 
 
+export type MutationCorrectSubscriptionPeriodArgs = {
+  endsAt: Scalars['DateTime']['input'];
+  paymentPeriodicity: PaymentPeriodicity;
+  periodId: Scalars['String']['input'];
+  subscriptionId: Scalars['String']['input'];
+};
+
+
 export type MutationCreateAiSettingArgs = {
   apiKey?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['String']['input'];
@@ -4130,6 +4234,11 @@ export type MutationCreateAnalyticsProviderSettingArgs = {
   property?: InputMaybe<Scalars['String']['input']>;
   type: AnalyticsProviderType;
   url?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationCreateAndChargeInvoicesArgs = {
+  password: Scalars['String']['input'];
 };
 
 
@@ -4436,6 +4545,7 @@ export type MutationCreatePaymentProviderSettingArgs = {
   bexio_countryId?: InputMaybe<Scalars['Float']['input']>;
   bexio_invoiceMailBodyNewMembership?: InputMaybe<Scalars['String']['input']>;
   bexio_invoiceMailBodyRenewalMembership?: InputMaybe<Scalars['String']['input']>;
+  bexio_invoiceMailByWePublish?: InputMaybe<Scalars['Boolean']['input']>;
   bexio_invoiceMailSubjectNewMembership?: InputMaybe<Scalars['String']['input']>;
   bexio_invoiceMailSubjectRenewalMembership?: InputMaybe<Scalars['String']['input']>;
   bexio_invoiceTemplateNewMembership?: InputMaybe<Scalars['String']['input']>;
@@ -4444,6 +4554,7 @@ export type MutationCreatePaymentProviderSettingArgs = {
   bexio_invoiceTitleRenewalMembership?: InputMaybe<Scalars['String']['input']>;
   bexio_markInvoiceAsOpen?: InputMaybe<Scalars['Boolean']['input']>;
   bexio_taxId?: InputMaybe<Scalars['Float']['input']>;
+  bexio_testMailbox?: InputMaybe<Scalars['String']['input']>;
   bexio_unitId?: InputMaybe<Scalars['Float']['input']>;
   bexio_userId?: InputMaybe<Scalars['Float']['input']>;
   id: Scalars['String']['input'];
@@ -4533,6 +4644,11 @@ export type MutationCreateRatingSystemAnswerArgs = {
 };
 
 
+export type MutationCreateSavedAudienceFilterArgs = {
+  input: CreateSavedAudienceFilterInput;
+};
+
+
 export type MutationCreateSessionArgs = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
@@ -4568,8 +4684,9 @@ export type MutationCreateSubscriptionArgs = {
 
 
 export type MutationCreateSubscriptionFlowArgs = {
+  allMemberPlans?: InputMaybe<Scalars['Boolean']['input']>;
   autoRenewal: Array<Scalars['Boolean']['input']>;
-  memberPlanId: Scalars['String']['input'];
+  memberPlanId?: InputMaybe<Scalars['String']['input']>;
   paymentMethodIds: Array<Scalars['String']['input']>;
   periodicities: Array<PaymentPeriodicity>;
 };
@@ -4609,6 +4726,7 @@ export type MutationCreateTagArgs = {
 
 export type MutationCreateTokenArgs = {
   name: Scalars['String']['input'];
+  roleIDs?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 
@@ -4782,6 +4900,7 @@ export type MutationDeleteImageArgs = {
 
 
 export type MutationDeleteInvoiceArgs = {
+  cascade?: InputMaybe<Scalars['Boolean']['input']>;
   id: Scalars['String']['input'];
 };
 
@@ -4888,6 +5007,11 @@ export type MutationDeletePrintIssueDeliveryArgs = {
 
 
 export type MutationDeleteRatingSystemAnswerArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteSavedAudienceFilterArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -5032,12 +5156,14 @@ export type MutationImportPeerArticleArgs = {
 
 export type MutationImportSubscriptionArgs = {
   autoRenew: Scalars['Boolean']['input'];
+  deactivationReason?: InputMaybe<SubscriptionDeactivationReason>;
   extendable: Scalars['Boolean']['input'];
   memberPlanID: Scalars['String']['input'];
   monthlyAmount: Scalars['Float']['input'];
   paidUntil?: InputMaybe<Scalars['DateTime']['input']>;
   paymentMethodID: Scalars['String']['input'];
   paymentPeriodicity: PaymentPeriodicity;
+  periods?: InputMaybe<Array<ImportSubscriptionPeriodInput>>;
   properties: Array<PropertyInput>;
   skipMail?: InputMaybe<Scalars['Boolean']['input']>;
   startsAt: Scalars['DateTime']['input'];
@@ -5233,6 +5359,12 @@ export type MutationSetPaymentProviderCustomersArgs = {
 };
 
 
+export type MutationSetSubscriptionFlowActiveArgs = {
+  active: Scalars['Boolean']['input'];
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationSetUserDeliveryModeArgs = {
   channel: MailChannel;
   reason?: InputMaybe<Scalars['String']['input']>;
@@ -5242,6 +5374,11 @@ export type MutationSetUserDeliveryModeArgs = {
 
 export type MutationSyncMailLogStatesArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type MutationSyncOpenInvoiceStatesArgs = {
+  password: Scalars['String']['input'];
 };
 
 
@@ -5642,6 +5779,7 @@ export type MutationUpdatePaymentProviderSettingArgs = {
   bexio_countryId?: InputMaybe<Scalars['Float']['input']>;
   bexio_invoiceMailBodyNewMembership?: InputMaybe<Scalars['String']['input']>;
   bexio_invoiceMailBodyRenewalMembership?: InputMaybe<Scalars['String']['input']>;
+  bexio_invoiceMailByWePublish?: InputMaybe<Scalars['Boolean']['input']>;
   bexio_invoiceMailSubjectNewMembership?: InputMaybe<Scalars['String']['input']>;
   bexio_invoiceMailSubjectRenewalMembership?: InputMaybe<Scalars['String']['input']>;
   bexio_invoiceTemplateNewMembership?: InputMaybe<Scalars['String']['input']>;
@@ -5650,6 +5788,7 @@ export type MutationUpdatePaymentProviderSettingArgs = {
   bexio_invoiceTitleRenewalMembership?: InputMaybe<Scalars['String']['input']>;
   bexio_markInvoiceAsOpen?: InputMaybe<Scalars['Boolean']['input']>;
   bexio_taxId?: InputMaybe<Scalars['Float']['input']>;
+  bexio_testMailbox?: InputMaybe<Scalars['String']['input']>;
   bexio_unitId?: InputMaybe<Scalars['Float']['input']>;
   bexio_userId?: InputMaybe<Scalars['Float']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
@@ -5745,6 +5884,12 @@ export type MutationUpdateRatingSystemArgs = {
 };
 
 
+export type MutationUpdateSavedAudienceFilterArgs = {
+  id: Scalars['String']['input'];
+  input: UpdateSavedAudienceFilterInput;
+};
+
+
 export type MutationUpdateSeoChecklistItemArgs = {
   completed: Scalars['Boolean']['input'];
   itemId: Scalars['String']['input'];
@@ -5788,6 +5933,13 @@ export type MutationUpdateSubscriptionIntervalArgs = {
 };
 
 
+export type MutationUpdateSubscriptionPaymentMethodArgs = {
+  fromPaymentMethodId: Scalars['String']['input'];
+  subscriptionId: Scalars['String']['input'];
+  toPaymentMethodId: Scalars['String']['input'];
+};
+
+
 export type MutationUpdateSyncProviderSettingArgs = {
   enabled?: InputMaybe<Scalars['Boolean']['input']>;
   id: Scalars['String']['input'];
@@ -5814,6 +5966,13 @@ export type MutationUpdateTagArgs = {
   main?: InputMaybe<Scalars['Boolean']['input']>;
   tag?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<TagType>;
+};
+
+
+export type MutationUpdateTokenArgs = {
+  id: Scalars['String']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+  roleIDs?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 
@@ -6886,9 +7045,35 @@ export type PeriodicJob = {
   id: Scalars['String']['output'];
   modifiedAt: Scalars['DateTime']['output'];
   running: Scalars['Boolean']['output'];
+  steps: Array<PeriodicJobStep>;
   successfullyFinished?: Maybe<Scalars['DateTime']['output']>;
   tries: Scalars['Float']['output'];
 };
+
+/** What one step of a night did: the job's own steps and the syncs after it. */
+export type PeriodicJobStep = {
+  __typename?: 'PeriodicJobStep';
+  counts: Array<PeriodicJobStepCount>;
+  error?: Maybe<Scalars['String']['output']>;
+  finishedAt: Scalars['DateTime']['output'];
+  key: Scalars['String']['output'];
+  startedAt: Scalars['DateTime']['output'];
+  status: PeriodicJobStepStatus;
+};
+
+/** One number a step of the night reports. */
+export type PeriodicJobStepCount = {
+  __typename?: 'PeriodicJobStepCount';
+  name: Scalars['String']['output'];
+  value: Scalars['Int']['output'];
+};
+
+export enum PeriodicJobStepStatus {
+  Error = 'error',
+  Ok = 'ok',
+  Skipped = 'skipped',
+  Warning = 'warning'
+}
 
 export type PeriodicityPrice = {
   __typename?: 'PeriodicityPrice';
@@ -7133,6 +7318,8 @@ export type PrintIssueBexioStats = {
   detailFetched: Scalars['Int']['output'];
   /** Found, but of a kind the options leave out. */
   excludedKind: Scalars['Int']['output'];
+  /** Counting per copy: recipients whose running period already received its number. */
+  exhausted: Scalars['Int']['output'];
   /** The options asked for bexio and it was read. */
   included: Scalars['Boolean']['output'];
   invoicesInWindow: Scalars['Int']['output'];
@@ -7155,6 +7342,12 @@ export type PrintIssueCount = {
   count: Scalars['Int']['output'];
   key: Scalars['String']['output'];
 };
+
+/** perYear: numbers restart every year («6.26»). continuous: they run on («#117»). */
+export enum PrintIssueCounting {
+  Continuous = 'continuous',
+  PerYear = 'perYear'
+}
 
 /** One list handed to the printshop: the export (batch 0) or a Nachlieferung. Until it is handed over it can be computed again and replaced, or deleted; from then on it is immutable and its copies count for the readers' quota. */
 export type PrintIssueDelivery = {
@@ -7207,6 +7400,14 @@ export type PrintIssueInputModel = {
   year: Scalars['Int']['input'];
 };
 
+/** How the medium numbers its print issues (settings printIssueNumbering and printIssueLabelFormat). */
+export type PrintIssueNumbering = {
+  __typename?: 'PrintIssueNumbering';
+  counting: PrintIssueCounting;
+  /** The label template: {range}, {number}, {yy}, {yyyy}, e.g. «{range}.{yy}» or «#{range}». */
+  format: Scalars['String']['output'];
+};
+
 /** What a list is computed from. */
 export type PrintIssueOptions = {
   __typename?: 'PrintIssueOptions';
@@ -7230,6 +7431,22 @@ export type PrintIssueOptionsInput = {
   includeOpen?: InputMaybe<Scalars['Boolean']['input']>;
   includeUpcoming?: InputMaybe<Scalars['Boolean']['input']>;
   memberPlanIds?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+/** How many of the printed issues a subscription paid for it received, as the print export counts: the running period, else the latest paid one. */
+export type PrintIssueProgress = {
+  __typename?: 'PrintIssueProgress';
+  /** What the period is worth; null = unlimited (lifetime). */
+  entitled?: Maybe<Scalars['Int']['output']>;
+  issues: Array<ReceivedPrintIssue>;
+  /** Still to send, never below 0. */
+  owed: Scalars['Int']['output'];
+  periodId: Scalars['String']['output'];
+  /** Copies received in that period, historic issues inside it included. */
+  received: Scalars['Int']['output'];
+  /** Running, or ended and still owed copies within the time of two issues. */
+  relevant: Scalars['Boolean']['output'];
+  subscriptionId: Scalars['String']['output'];
 };
 
 /** One line of the print run: one address, `anzahl` copies. */
@@ -7399,6 +7616,8 @@ export type PublicSubscription = HasMemberPlan & HasPaymentMethod & HasUser & {
   /** A payment method change that is waiting for the reader to pay or authorize. Until it completes, the subscription keeps its payment method. */
   pendingPaymentMethodChange?: Maybe<SubscriptionPaymentMethodChange>;
   periods: Array<SubscriptionPeriod>;
+  /** The printed issues the subscription received in its running (else latest paid) period; null where nothing is promised. */
+  printIssueProgress?: Maybe<PrintIssueProgress>;
   properties: Array<Property>;
   startsAt: Scalars['DateTime']['output'];
   url: Scalars['String']['output'];
@@ -7434,6 +7653,8 @@ export type Query = {
   analyticsProviderSetting: SettingAnalyticsProvider;
   /** Returns all analytics provider settings. */
   analyticsProviderSettings: Array<SettingAnalyticsProvider>;
+  /** Memory and uptime of the API process that answers. For load tests: only on review, development and local instances. */
+  apiProcessStats: ApiProcessStats;
   /** Returns your own api tokens, or everyone's with CAN_GET_ALL_API_TOKENS. Secrets are never included. */
   apiTokens: PaginatedApiTokens;
   /** Returns an article by id or slug. */
@@ -7744,6 +7965,8 @@ export type Query = {
   printIssue: PrintIssue;
   /** The CSV for the printshop: one delivery, or every delivery of the issue merged in export order. */
   printIssueCsv: PrintIssueFileModel;
+  /** How the medium numbers its print issues: restarting every year or running on, and the label template. */
+  printIssueNumbering: PrintIssueNumbering;
   /** The computed list waiting to be checked, if any. */
   printIssueRun?: Maybe<PrintIssueRun>;
   /** All print issues, the newest first. */
@@ -7767,6 +7990,8 @@ export type Query = {
    *
    */
   revenue: Array<DashboardInvoice>;
+  /** The saved recipient filters, by name. Needs the permission to send manual messages or to manage delivery channels. */
+  savedAudienceFilters: Array<SavedAudienceFilterModel>;
   /** Returns a checklist of the SEO setup of the website. */
   seoChecklist: SeoChecklist;
   /**
@@ -7794,6 +8019,8 @@ export type Query = {
   subscriptionCancellationMail: ActionMail;
   /** The mail createSubscription would send for a subscription with these settings, or why it sends none. */
   subscriptionCreationMail: ActionMail;
+  /** How many subscriptions a flow handles, or would handle once switched on. Not narrowed by any filter. */
+  subscriptionFlowHandledCount: Scalars['Int']['output'];
   /** Returns all subscription flows */
   subscriptionFlows: Array<SubscriptionFlowModel>;
   /** Returns a paginated list of subscriptions based on the filters given. */
@@ -7835,6 +8062,8 @@ export type Query = {
   userDeliveryPreference: UserDeliveryPreferenceModel;
   /** The open suggestion for one user, if any */
   userDeliverySuggestion?: Maybe<DeliverySuggestionModel>;
+  /** The email segments the user list can be filtered by, best to worst; placeholder only when a placeholder pattern is configured. */
+  userEmailSegments: Array<MailEmailSegment>;
   /** Get all invoices for the authenticated user */
   userInvoices: Array<Invoice>;
   userPollVote?: Maybe<Scalars['String']['output']>;
@@ -8675,6 +8904,11 @@ export type QuerySubscriptionCreationMailArgs = {
 };
 
 
+export type QuerySubscriptionFlowHandledCountArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type QuerySubscriptionFlowsArgs = {
   defaultFlowOnly: Scalars['Boolean']['input'];
   memberPlanId?: InputMaybe<Scalars['String']['input']>;
@@ -8868,6 +9102,21 @@ export enum RatingSystemType {
   Star = 'star'
 }
 
+/** A printed issue a subscription received: a list handed to the printshop. */
+export type ReceivedPrintIssue = {
+  __typename?: 'ReceivedPrintIssue';
+  /** 0 = the print list, n = Nachlieferung n. */
+  batch: Scalars['Int']['output'];
+  /** How many issues it counts as: 2 for a double issue. */
+  countsAs: Scalars['Int']['output'];
+  /** When the list went to the printshop. */
+  deliveredAt: Scalars['String']['output'];
+  /** The ship day (YYYY-MM-DD). */
+  issueDate: Scalars['String']['output'];
+  /** As the medium writes it, e.g. «6.26» or «#117». */
+  label: Scalars['String']['output'];
+};
+
 export type Registration = {
   __typename?: 'Registration';
   session: SessionWithTokenWithoutUser;
@@ -8914,6 +9163,17 @@ export type RichTextBlockInput = {
   timing?: InputMaybe<BlockTimingInput>;
 };
 
+export type SavedAudienceFilterModel = {
+  __typename?: 'SavedAudienceFilterModel';
+  /** The MailAudienceInput as it was saved. Rolling dates stay rolling, so the filter means the same thing whenever it is loaded. */
+  audience: Scalars['JSONObject']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  name: Scalars['String']['output'];
+};
+
 export type SendTestMailTemplateInput = {
   /** Attachments chosen on the draft, possibly not saved yet. */
   attachmentIds?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -8947,6 +9207,10 @@ export type SensitiveDataUser = BaseUser & {
   paymentProviderCustomers?: Maybe<Array<PaymentProviderCustomer>>;
   pendingEmail?: Maybe<Scalars['String']['output']>;
   permissions: Array<Scalars['String']['output']>;
+  /** The printed issues each of the user's subscriptions received; null without print issues. */
+  printIssueProgress?: Maybe<Array<PrintIssueProgress>>;
+  /** Printed issues still to send to the user, over subscriptions running or still owed copies; null without printed issues. */
+  printIssuesOwed?: Maybe<Scalars['Int']['output']>;
   properties: Array<Property>;
   roleIDs: Array<Scalars['String']['output']>;
   roles: Array<UserRole>;
@@ -9187,6 +9451,9 @@ export enum SettingName {
   PrintBexioKinds = 'PRINT_BEXIO_KINDS',
   PrintExportDefaults = 'PRINT_EXPORT_DEFAULTS',
   PrintIssuesPerYear = 'PRINT_ISSUES_PER_YEAR',
+  PrintIssueCounting = 'PRINT_ISSUE_COUNTING',
+  PrintIssueLabelFormat = 'PRINT_ISSUE_LABEL_FORMAT',
+  PrintIssueNumbering = 'PRINT_ISSUE_NUMBERING',
   ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
   SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN',
   SessionTtlDays = 'SESSION_TTL_DAYS',
@@ -9204,6 +9471,7 @@ export type SettingPaymentProvider = SettingProvider & {
   bexio_countryId?: Maybe<Scalars['Float']['output']>;
   bexio_invoiceMailBodyNewMembership?: Maybe<Scalars['String']['output']>;
   bexio_invoiceMailBodyRenewalMembership?: Maybe<Scalars['String']['output']>;
+  bexio_invoiceMailByWePublish?: Maybe<Scalars['Boolean']['output']>;
   bexio_invoiceMailSubjectNewMembership?: Maybe<Scalars['String']['output']>;
   bexio_invoiceMailSubjectRenewalMembership?: Maybe<Scalars['String']['output']>;
   bexio_invoiceTemplateNewMembership?: Maybe<Scalars['String']['output']>;
@@ -9212,6 +9480,7 @@ export type SettingPaymentProvider = SettingProvider & {
   bexio_invoiceTitleRenewalMembership?: Maybe<Scalars['String']['output']>;
   bexio_markInvoiceAsOpen?: Maybe<Scalars['Boolean']['output']>;
   bexio_taxId?: Maybe<Scalars['Float']['output']>;
+  bexio_testMailbox?: Maybe<Scalars['String']['output']>;
   bexio_unitId?: Maybe<Scalars['Float']['output']>;
   bexio_userId?: Maybe<Scalars['Float']['output']>;
   createdAt: Scalars['DateTime']['output'];
@@ -9598,21 +9867,51 @@ export type SubscriptionFilter = {
   userIDs?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
+/** What a list of flows is narrowed by. Each given field narrows the count of every flow to the subscriptions with one of its values. */
+export type SubscriptionFlowCountFilter = {
+  autoRenewal?: InputMaybe<Array<Scalars['Boolean']['input']>>;
+  memberPlanIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  paymentMethodIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  periodicities?: InputMaybe<Array<PaymentPeriodicity>>;
+};
+
+/** The earliest day an event of a flow may lie on, and what holds it there. */
+export type SubscriptionFlowEarliestDay = {
+  __typename?: 'SubscriptionFlowEarliestDay';
+  /** Days away from the end of the subscription, negative: before it ends. */
+  days: Scalars['Int']['output'];
+  /** The shortest periodicity a member plan flow applies to, which sets the day. Null for the default flow: its day is fixed. */
+  periodicity?: Maybe<PaymentPeriodicity>;
+};
+
 export type SubscriptionFlowModel = {
   __typename?: 'SubscriptionFlowModel';
+  /** An inactive flow is skipped: its subscriptions fall to the next flow. The default flow is always active. */
+  active: Scalars['Boolean']['output'];
+  /** A flow for the matching subscriptions of every member plan. It comes after the flows of the plan itself and before the default flow, and has no memberPlan. */
+  allMemberPlans: Scalars['Boolean']['output'];
   autoRenewal: Array<Scalars['Boolean']['output']>;
   default: Scalars['Boolean']['output'];
+  /** The earliest day an event of this flow may lie on. Follows from the shortest periodicity the flow applies to. */
+  earliestDay: SubscriptionFlowEarliestDay;
   id: Scalars['String']['output'];
   intervals: Array<SubscriptionInterval>;
   memberPlan?: Maybe<MemberPlan>;
   numberOfSubscriptions: Scalars['Int']['output'];
   paymentMethods: Array<PaymentMethod>;
   periodicities: Array<PaymentPeriodicity>;
+  /** numberOfSubscriptions, narrowed to what a list of flows is filtered by. */
+  subscriptionCount: Scalars['Int']['output'];
 };
 
 
 export type SubscriptionFlowModelNumberOfSubscriptionsArgs = {
   memberPlanId?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type SubscriptionFlowModelSubscriptionCountArgs = {
+  filter?: InputMaybe<SubscriptionFlowCountFilter>;
 };
 
 export type SubscriptionInterval = {
@@ -9941,6 +10240,8 @@ export type Token = BaseToken & {
   id: Scalars['String']['output'];
   modifiedAt: Scalars['DateTime']['output'];
   name: Scalars['String']['output'];
+  /** The user roles whose permissions a request with this token gets. */
+  roleIDs: Array<Scalars['String']['output']>;
 };
 
 export type TokenWithSecret = BaseToken & {
@@ -9949,6 +10250,8 @@ export type TokenWithSecret = BaseToken & {
   id: Scalars['String']['output'];
   modifiedAt: Scalars['DateTime']['output'];
   name: Scalars['String']['output'];
+  /** The user roles whose permissions a request with this token gets. */
+  roleIDs: Array<Scalars['String']['output']>;
   token: Scalars['String']['output'];
 };
 
@@ -10065,6 +10368,14 @@ export type UpdateCrowdfundingInput = {
   name?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type UpdateSavedAudienceFilterInput = {
+  /** Replaces the saved filter by this one. */
+  audience?: InputMaybe<MailAudienceInput>;
+  /** An empty text removes the description. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type UpdateUserSubscriptionInput = {
   autoRenew: Scalars['Boolean']['input'];
   id: Scalars['String']['input'];
@@ -10170,6 +10481,8 @@ export enum UserEvent {
 }
 
 export type UserFilter = {
+  /** Any of these email segments; the same segments as the mail-send audience. */
+  emailSegments?: InputMaybe<Array<MailEmailSegment>>;
   name?: InputMaybe<Scalars['String']['input']>;
   text?: InputMaybe<Scalars['String']['input']>;
   userRole?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -10198,9 +10511,12 @@ export enum UserRoleSort {
 
 export enum UserSort {
   CreatedAt = 'CreatedAt',
+  EmailQuality = 'EmailQuality',
+  EmailQualitySince = 'EmailQualitySince',
   FirstName = 'FirstName',
   ModifiedAt = 'ModifiedAt',
   Name = 'Name',
+  PrintIssuesOwed = 'PrintIssuesOwed',
   SubscriptionCount = 'SubscriptionCount'
 }
 

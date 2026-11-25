@@ -26,6 +26,14 @@ class IssuingInvoiceError extends Error {
   }
 }
 
+class MarkingInvoiceAsSentError extends Error {
+  constructor(answer: InvoicesStatic.InvoiceSentAnswer) {
+    super(
+      `Marking the invoice as sent failed with message: ${JSON.stringify(answer)}`
+    );
+  }
+}
+
 /** The invoice exists in Bexio but could not be issued, rendered or sent. */
 class InvoiceDeliveryError extends Error {
   constructor(message: string) {
@@ -70,6 +78,7 @@ export {
   WebhookNotImplementedError,
   SendingInvoiceError,
   IssuingInvoiceError,
+  MarkingInvoiceAsSentError,
   InvoiceDeliveryError,
   UnknownIntentState,
   ResponseNOK,

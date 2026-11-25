@@ -173,6 +173,41 @@ describe('LetterContext automated sends', () => {
     });
   });
 
+  it('logs the subscription and the invoice the letter is about', async () => {
+    const { context, create } = createContext(sendLetter());
+
+    await context.sendLetter({
+      mailTemplateId: 'template-1',
+      recipient: user,
+      data: { user },
+      print,
+      log: { subscriptionId: 'sub-1', invoiceId: 'inv-1' },
+    });
+
+    expect(create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        subscription: { connect: { id: 'sub-1' } },
+        invoice: { connect: { id: 'inv-1' } },
+      }),
+    });
+  });
+
+  it('logs no trigger for a letter that has none', async () => {
+    const { context, create } = createContext(sendLetter());
+
+    await context.sendLetter({
+      mailTemplateId: 'template-1',
+      recipient: user,
+      data: { user },
+      print,
+    });
+
+    const { data } = create.mock.calls[0][0];
+
+    expect(data.subscription).toBeUndefined();
+    expect(data.invoice).toBeUndefined();
+  });
+
   it('logs a manual send under its own id, as before', async () => {
     const { context, create } = createContext(sendLetter());
 
@@ -634,6 +669,139 @@ describe('LetterContext.sendLetter', () => {
         print,
       })
     ).rejects.toThrow('has no address');
+  });
+});
+
+describe('LetterContext.sendsAutomatically', () => {
+  it.each([true, false])(
+    'answers what the letter provider says: %s',
+    async auto => {
+      const { context } = createContext();
+      context.letterProvider.sendsAutomatically = async () => auto;
+
+      await expect(context.sendsAutomatically()).resolves.toBe(auto);
+    }
+  );
+});
+
+describe('LetterContext.withdrawHeldLetter', () => {
+  const held = {
+    id: 'log-1',
+    state: MailLogState.actionRequired,
+    providerLetterID: 'pingen-1',
+  };
+
+  const setup = (
+    log: unknown,
+    remote: unknown[] | Error = [],
+    deleteLetter = vi.fn().mockResolvedValue(undefined)
+  ) => {
+    const { context, prisma } = createContext();
+    const findUnique = vi.fn().mockResolvedValue(log);
+    const update = vi.fn().mockResolvedValue({});
+    const getMessageStates =
+      remote instanceof Error ?
+        vi.fn().mockRejectedValue(remote)
+      : vi.fn().mockResolvedValue(remote);
+
+    Object.assign(prisma.mailLog, { findUnique, update });
+    Object.assign(context.letterProvider, { getMessageStates, deleteLetter });
+
+    return { context, update, getMessageStates, deleteLetter };
+  };
+
+  it('removes a letter the vendor still holds and settles its entry', async () => {
+    const { context, update, getMessageStates, deleteLetter } = setup(held, [
+      { providerLetterID: 'pingen-1', state: LetterState.actionRequired },
+    ]);
+
+    await expect(context.withdrawHeldLetter('log-1')).resolves.toBe(
+      'withdrawn'
+    );
+    expect(getMessageStates).toHaveBeenCalledWith(['pingen-1']);
+    expect(deleteLetter).toHaveBeenCalledWith('pingen-1');
+    expect(update).toHaveBeenCalledWith({
+      where: { id: 'log-1' },
+      data: { state: MailLogState.canceled },
+    });
+  });
+
+  // Someone fixed, sent or cancelled it at the vendor in the meantime.
+  it.each([
+    [LetterState.accepted, MailLogState.accepted],
+    [LetterState.dispatched, MailLogState.dispatched],
+    [LetterState.canceled, MailLogState.canceled],
+  ])(
+    'leaves a letter alone that is %s at the vendor by now, and notes that',
+    async (remoteState, logState) => {
+      const { context, update, deleteLetter } = setup(held, [
+        {
+          providerLetterID: 'pingen-1',
+          state: remoteState,
+          letterData: '{"status":"x"}',
+        },
+      ]);
+
+      await expect(context.withdrawHeldLetter('log-1')).resolves.toBe('left');
+      expect(deleteLetter).not.toHaveBeenCalled();
+      expect(update).toHaveBeenCalledWith({
+        where: { id: 'log-1' },
+        data: { state: logState, mailData: '{"status":"x"}', error: null },
+      });
+    }
+  );
+
+  it('takes a letter someone removed at the vendor as dealt with', async () => {
+    const { context, update, deleteLetter } = setup(held, [
+      { providerLetterID: 'pingen-1', state: LetterState.canceled, gone: true },
+    ]);
+
+    await expect(context.withdrawHeldLetter('log-1')).resolves.toBe('left');
+    expect(deleteLetter).not.toHaveBeenCalled();
+    expect(update).toHaveBeenCalledWith({
+      where: { id: 'log-1' },
+      data: { state: MailLogState.canceled, mailData: undefined, error: null },
+    });
+  });
+
+  it('leaves a letter alone whose state the vendor does not tell', async () => {
+    const { context, update, deleteLetter } = setup(held, []);
+
+    await expect(context.withdrawHeldLetter('log-1')).resolves.toBe('left');
+    expect(deleteLetter).not.toHaveBeenCalled();
+    expect(update).not.toHaveBeenCalled();
+  });
+
+  it('leaves a letter alone while the vendor cannot be asked', async () => {
+    const { context, update, deleteLetter } = setup(held, new Error('down'));
+
+    await expect(context.withdrawHeldLetter('log-1')).resolves.toBe('left');
+    expect(deleteLetter).not.toHaveBeenCalled();
+    expect(update).not.toHaveBeenCalled();
+  });
+
+  // Never a second copy: without the old one gone, no new one may follow.
+  it('leaves a letter alone the vendor does not let go', async () => {
+    const { context, update } = setup(
+      held,
+      [{ providerLetterID: 'pingen-1', state: LetterState.actionRequired }],
+      vi.fn().mockRejectedValue(new Error('409'))
+    );
+
+    await expect(context.withdrawHeldLetter('log-1')).resolves.toBe('left');
+    expect(update).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    ['is not held', { ...held, state: MailLogState.accepted }],
+    ['never reached the vendor', { ...held, providerLetterID: null }],
+    ['does not exist', null],
+  ])('does not ask the vendor about an entry that %s', async (_, log) => {
+    const { context, getMessageStates, deleteLetter } = setup(log);
+
+    await expect(context.withdrawHeldLetter('log-1')).resolves.toBe('left');
+    expect(getMessageStates).not.toHaveBeenCalled();
+    expect(deleteLetter).not.toHaveBeenCalled();
   });
 });
 

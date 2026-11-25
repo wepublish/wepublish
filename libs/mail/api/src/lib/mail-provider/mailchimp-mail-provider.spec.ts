@@ -10,6 +10,7 @@ import { MailchimpMailProvider } from './mailchimp-mail-provider';
 import {
   MailProviderError,
   MailProviderRecipientError,
+  MailProviderTransientError,
   MailWebhookSignatureError,
 } from './mail-provider.interface';
 
@@ -176,6 +177,49 @@ describe('MailchimpMailProvider', () => {
     );
   });
 
+  describe('a temporary failure', () => {
+    const sendError = async () =>
+      (await makeProvider()).sendMail(sendProps).then(
+        () => {
+          throw new Error('Expected the send to fail');
+        },
+        (error: Error) => error
+      );
+
+    it.each([429, 500, 502, 503])(
+      'is worth another try on HTTP %s',
+      async status => {
+        nock(MANDRILL)
+          .post('/api/1.0/messages/send')
+          .reply(status, { status: 'error', message: 'try later' });
+
+        expect(await sendError()).toBeInstanceOf(MailProviderTransientError);
+      }
+    );
+
+    it('is worth another try when the connection drops', async () => {
+      nock(MANDRILL)
+        .post('/api/1.0/messages/send')
+        .replyWithError({ code: 'ECONNRESET', message: 'socket hang up' });
+
+      expect(await sendError()).toBeInstanceOf(MailProviderTransientError);
+    });
+
+    it.each([400, 401, 403])(
+      'is not, on HTTP %s: that needs someone to fix it',
+      async status => {
+        nock(MANDRILL)
+          .post('/api/1.0/messages/send')
+          .reply(status, { status: 'error', message: 'Invalid API key' });
+
+        const error = await sendError();
+
+        expect(error).toBeInstanceOf(MailProviderError);
+        expect(error).not.toBeInstanceOf(MailProviderTransientError);
+      }
+    );
+  });
+
   describe('classifying a refusal', () => {
     const rejectionError = async (
       rejection: Record<string, unknown>
@@ -335,6 +379,51 @@ describe('MailchimpMailProvider', () => {
       ]);
     });
 
+    // Mandrill files a refusal like «554 5.7.1 … User unknown» as a soft
+    // bounce; its description still says the mailbox does not exist.
+    it.each(['bad_mailbox', 'invalid_domain'])(
+      'reports a soft bounce described as %s as a dead address',
+      async bounce_description => {
+        const [status] = await (
+          await makeProvider()
+        ).webhookForSendMail({
+          req: signedRequest([
+            {
+              event: 'soft_bounce',
+              ts: 1790000000,
+              msg: { ...msg, bounce_description, diag: '554 5.7.1 unknown' },
+            },
+          ]),
+        });
+
+        expect(status.state).toBe(MailLogState.bounced);
+        expect(status.qualitySignals).toEqual([
+          {
+            type: EmailQualityEventType.hardBounce,
+            email: 'user@example.com',
+            detail: bounce_description,
+            occurredAt: new Date(1790000000 * 1000),
+            providerEventId: 'mailchimp:msg-1:soft_bounce',
+          },
+        ]);
+      }
+    );
+
+    it('reports nothing about the address for a soft bounce of a full mailbox', async () => {
+      const [status] = await (
+        await makeProvider()
+      ).webhookForSendMail({
+        req: signedRequest([
+          {
+            event: 'soft_bounce',
+            msg: { ...msg, bounce_description: 'mailbox_full' },
+          },
+        ]),
+      });
+
+      expect(status.qualitySignals).toEqual([]);
+    });
+
     it('reports a reject as blocked', async () => {
       const [status] = await (
         await makeProvider()
@@ -475,6 +564,7 @@ describe('MailchimpMailProvider', () => {
     // carry no time, so they cannot be told from a link scanner.
     it.each([
       ['soft-bounced', {}],
+      ['soft-bounced', { bounce_description: 'mailbox_full' }],
       ['sent', { opens: 2, clicks: 1 }],
       ['sent', {}],
     ])(
@@ -489,6 +579,27 @@ describe('MailchimpMailProvider', () => {
         ).getMessageStates(['msg-1']);
 
         expect(state.qualitySignals).toEqual([]);
+      }
+    );
+
+    it.each(['bad_mailbox', 'invalid_domain'])(
+      'reports a soft-bounced mail described as %s as a dead address',
+      async bounce_description => {
+        nock(MANDRILL)
+          .post('/api/1.0/messages/info')
+          .reply(200, { ...infoReply('soft-bounced'), bounce_description });
+
+        const [state] = await (
+          await makeProvider()
+        ).getMessageStates(['msg-1']);
+
+        expect(state.qualitySignals).toEqual([
+          {
+            type: EmailQualityEventType.hardBounce,
+            email: 'user@example.com',
+            detail: bounce_description,
+          },
+        ]);
       }
     );
 

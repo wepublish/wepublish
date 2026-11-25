@@ -7,6 +7,17 @@ import {
   SyncContactUser,
 } from './bexio-payment-provider';
 
+/** What one night's push did for one bexio integration, for the job log. */
+export interface BexioContactSyncResult {
+  providerId: string;
+  readers: number;
+  pushed: number;
+  failed: number;
+  /** bexio stopped the push before every reader was tried. */
+  stopped?: 'rate-limited' | 'key-rejected';
+  firstError?: string;
+}
+
 /**
  * Pushes reader data to bexio contacts once a night, for every bexio
  * integration with the switch on: readers bexio already knows whose data
@@ -25,7 +36,9 @@ export class BexioContactSyncService {
     private payments: PaymentsService
   ) {}
 
-  async syncAll(): Promise<void> {
+  async syncAll(): Promise<BexioContactSyncResult[]> {
+    const results: BexioContactSyncResult[] = [];
+
     for (const provider of this.payments.getProviders()) {
       if (!(provider instanceof BexioPaymentProvider)) {
         continue;
@@ -37,23 +50,29 @@ export class BexioContactSyncService {
         continue;
       }
 
-      await this.syncProvider(provider);
+      results.push(await this.syncProvider(provider));
     }
+
+    return results;
   }
 
-  private async syncProvider(provider: BexioPaymentProvider) {
+  private async syncProvider(
+    provider: BexioPaymentProvider
+  ): Promise<BexioContactSyncResult> {
     const started = new Date();
     const readers = [
       ...(await this.changedKnownReaders(provider.id)),
       ...(await this.unknownBexioReaders(provider.id)),
     ];
+    let pushed = 0;
     let failed = 0;
     let firstError: string | undefined;
-    let keyRejected = false;
+    let stopped: BexioContactSyncResult['stopped'];
 
     for (const reader of readers) {
       try {
         await provider.syncContact(reader);
+        pushed++;
       } catch (error) {
         failed++;
         firstError ??= describeError(error);
@@ -63,6 +82,7 @@ export class BexioContactSyncService {
 
         // Nothing is lost: the next night starts where this one stopped.
         if (bexioStatus(error) === 429) {
+          stopped = 'rate-limited';
           this.logger.error(
             `bexio ${provider.id} rate-limits the contact sync; stopping for tonight`
           );
@@ -71,7 +91,7 @@ export class BexioContactSyncService {
 
         // A rejected key fails every reader the same way.
         if (bexioStatus(error) === 401) {
-          keyRejected = true;
+          stopped = 'key-rejected';
           this.logger.error(
             `bexio ${provider.id} rejects the API key; stopping the contact sync`
           );
@@ -83,7 +103,7 @@ export class BexioContactSyncService {
     }
 
     this.logger.log(
-      `bexio ${provider.id}: ${readers.length - failed} of ${readers.length} readers pushed`
+      `bexio ${provider.id}: ${pushed} of ${readers.length} readers pushed`
     );
 
     await this.prisma.settingPaymentProvider.update({
@@ -91,13 +111,22 @@ export class BexioContactSyncService {
       data: {
         bexio_contactSyncAt: started,
         bexio_contactSyncError:
-          keyRejected ?
+          stopped === 'key-rejected' ?
             `bexio rejects the API key (HTTP 401); stopped at the first of ${readers.length} readers. Enter a valid key in the integration. ${firstError}`
           : failed ?
             `${failed} of ${readers.length} readers failed: ${firstError}`
           : null,
       },
     });
+
+    return {
+      providerId: provider.id,
+      readers: readers.length,
+      pushed,
+      failed,
+      ...(stopped ? { stopped } : {}),
+      ...(firstError ? { firstError } : {}),
+    };
   }
 
   /** Readers with a stored contact whose data changed since the last push. */

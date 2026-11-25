@@ -9,6 +9,7 @@ import {
   MailProviderError,
   MailProviderMessageState,
   MailProviderRecipientError,
+  MailProviderTransientError,
   MailProviderTemplate,
   MailProviderTemplateContent,
   MailQualitySignal,
@@ -129,15 +130,34 @@ function mapMandrillEventToMailLogState(event: string): MailLogState | null {
 }
 
 /**
+ * Soft bounces whose description says the mailbox will never take mail.
+ * Mandrill goes by the SMTP code, so a refusal like «554 5.7.1 … User
+ * unknown» arrives as a soft bounce although nobody lives at the address.
+ */
+const DEAD_SOFT_BOUNCE_DESCRIPTIONS = new Set([
+  'bad_mailbox',
+  'invalid_domain',
+]);
+
+const saysMailboxIsGone = (description: string | undefined | null) =>
+  DEAD_SOFT_BOUNCE_DESCRIPTIONS.has(description?.trim().toLowerCase() ?? '');
+
+/**
  * What a webhook event says about the recipient's address, besides the
- * delivery state. Soft bounces are temporary and opens prove nothing.
+ * delivery state. A soft bounce is temporary unless its description names a
+ * missing mailbox; opens prove nothing.
  */
 function mapMandrillEventToQualityType(
-  event: string
+  event: string,
+  bounceDescription?: string | null
 ): EmailQualityEventType | null {
   switch (event) {
     case 'hard_bounce':
       return EmailQualityEventType.hardBounce;
+    case 'soft_bounce':
+      return saysMailboxIsGone(bounceDescription) ?
+          EmailQualityEventType.hardBounce
+        : null;
     case 'reject':
       return EmailQualityEventType.blocked;
     case 'spam':
@@ -179,6 +199,10 @@ function mapMandrillInfoToQualitySignals(
         EmailQualityEventType.hardBounce,
         info.bounce_description || info.diag
       );
+    case 'soft-bounced':
+      return saysMailboxIsGone(info.bounce_description) ?
+          signal(EmailQualityEventType.hardBounce, info.bounce_description)
+        : [];
     case 'invalid':
       return signal(EmailQualityEventType.invalid);
     case 'spam':
@@ -189,6 +213,23 @@ function mapMandrillInfoToQualitySignals(
       return [];
   }
 }
+
+/**
+ * No answer (dropped connection, timeout), a rate limit or a server error is
+ * worth another try; anything else (a bad key, a malformed request) is not.
+ */
+const sendError = (error: AxiosError): MailProviderError => {
+  const status = error.response?.status;
+  const message =
+    (error.response?.data as Error | undefined)?.message ?? error.message;
+
+  return !status || status === 429 || status >= 500 ?
+      new MailProviderTransientError(
+        `Mandrill ${status ? `answered ${status}` : 'did not answer'}: ${message}`,
+        { cause: error }
+      )
+    : new MailProviderError(message);
+};
 
 export class MailchimpMailProvider extends BaseMailProvider {
   constructor(props: MailProviderProps) {
@@ -261,7 +302,10 @@ export class MailchimpMailProvider extends BaseMailProvider {
 
     for (const mandrillEvent of mandrillEvents) {
       const state = mapMandrillEventToMailLogState(mandrillEvent.event);
-      const qualityType = mapMandrillEventToQualityType(mandrillEvent.event);
+      const qualityType = mapMandrillEventToQualityType(
+        mandrillEvent.event,
+        mandrillEvent.msg?.bounce_description
+      );
       const mailLogID = mandrillEvent?.msg?.metadata?.mail_log_id;
 
       if ((state === null && qualityType === null) || mailLogID === undefined) {
@@ -331,7 +375,7 @@ export class MailchimpMailProvider extends BaseMailProvider {
     });
 
     if (this.responseIsError(response)) {
-      throw new MailProviderError((response.response?.data as Error).message);
+      throw sendError(response);
     }
 
     this.throwOnRejectedRecipient(response);

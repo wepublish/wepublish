@@ -91,6 +91,18 @@ export interface MailProviderTemplate {
 export class MailProviderError extends Error {}
 
 /**
+ * The provider could not take the mail right now — the connection dropped,
+ * it timed out, it is overloaded or rate-limits (HTTP 5xx / 429, SMTP 4xx).
+ * Nothing is wrong with the mail or the recipient: sending it again a little
+ * later is likely to work, so the sender tries again before giving up.
+ */
+export class MailProviderTransientError extends MailProviderError {
+  constructor(message: string, options?: ErrorOptions) {
+    super(message, options);
+  }
+}
+
+/**
  * A webhook call that did not come from the provider. The controller answers
  * it with 401; every other error is ours and must not make the provider
  * retry or, worse, drop the event.

@@ -27,6 +27,8 @@ export const AuthorListItemWrapper = styled('div')`
 export const AuthorListItemImageWrapper = styled(
   AuthorListItemImageWrapperDefault
 )`
+  max-width: initial;
+
   img {
     border-radius: unset;
     aspect-ratio: 365 / 456;

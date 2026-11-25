@@ -1,5 +1,10 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { CreateTokenInput, Token, TokenWithSecret } from './token.model';
+import {
+  CreateTokenInput,
+  Token,
+  TokenWithSecret,
+  UpdateTokenInput,
+} from './token.model';
 import { TokenService } from './token.service';
 import { Permissions } from '@wepublish/permissions/api';
 import {
@@ -26,6 +31,16 @@ export class TokenResolver {
   })
   async createToken(@Args() input: CreateTokenInput) {
     return this.service.createToken(input);
+  }
+
+  // whoever may create a token may set what it is allowed to do
+  @Permissions(CanCreateToken)
+  @Mutation(() => Token, {
+    description:
+      'Renames a token or replaces its roles. Cached sessions of the token are cleared, so new roles apply at once.',
+  })
+  async updateToken(@Args() input: UpdateTokenInput) {
+    return this.service.updateToken(input);
   }
 
   @Permissions(CanDeleteToken)

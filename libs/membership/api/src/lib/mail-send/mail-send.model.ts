@@ -1,3 +1,4 @@
+import { MailEmailSegment } from '@wepublish/user/api';
 import {
   Field,
   GraphQLISODateTime,
@@ -59,25 +60,8 @@ registerEnumType(MailEmailFilter, {
   name: 'MailEmailFilter',
 });
 
-/**
- * Who can still be reached by email. `placeholder` is recognised by the
- * address pattern of the letter integration; the others are the stored
- * email quality level (see EmailQualityLevel), `unknown` including people
- * never evaluated. Picking several means any of them.
- */
-export enum MailEmailSegment {
-  placeholder = 'placeholder',
-  dead = 'dead',
-  unresponsive = 'unresponsive',
-  unknown = 'unknown',
-  active = 'active',
-}
-
-registerEnumType(MailEmailSegment, {
-  name: 'MailEmailSegment',
-  description:
-    'placeholder: generated address, reachable by letter only. dead: bounced, invalid, complained or unsubscribed. unresponsive: mails delivered, no login or click for a long time. unknown: nothing decided yet. active: logged in or clicked recently.',
-});
+// Moved to the user lib so the user list filters by the same segments.
+export { MailEmailSegment };
 
 registerEnumType(MailRecipientBase, {
   name: 'MailRecipientBase',
@@ -158,6 +142,44 @@ registerEnumType(MailHistoryMatch, {
     'all: every condition must hold (AND). any: one condition suffices (OR).',
 });
 
+/** How a rolling date range relates to the moment the audience is resolved. */
+export enum MailRollingKind {
+  lastDays = 'lastDays',
+  olderThanDays = 'olderThanDays',
+  nextDays = 'nextDays',
+}
+
+registerEnumType(MailRollingKind, {
+  name: 'MailRollingKind',
+  description:
+    'lastDays: within the last x days. olderThanDays: more than x days ago. nextDays: within the next x days.',
+});
+
+/**
+ * A date range relative to the moment the audience is resolved, so a filter
+ * kept for later means the same thing next month.
+ */
+@InputType()
+export class MailRollingRange {
+  @Field(() => MailRollingKind)
+  kind!: MailRollingKind;
+
+  @Field(() => Int)
+  days!: number;
+}
+
+/** What a mail-history condition is checked against. */
+export enum MailHistoryScope {
+  person = 'person',
+  subscription = 'subscription',
+}
+
+registerEnumType(MailHistoryScope, {
+  name: 'MailHistoryScope',
+  description:
+    'person: any mail the person got. subscription: only mails about the very subscription the audience selects; on an audience without subscriptions it falls back to person.',
+});
+
 @InputType()
 export class MailHistoryCondition {
   @Field({ description: 'The mail template that was, or was not, sent.' })
@@ -188,6 +210,34 @@ export class MailHistoryCondition {
 
   @Field(() => Date, { nullable: true, description: 'Sent on or before.' })
   to?: Date;
+
+  @Field(() => MailRollingRange, {
+    nullable: true,
+    description:
+      'Sent within a range relative to now. Takes the place of from and to when given.',
+  })
+  rolling?: MailRollingRange;
+
+  @Field(() => Int, {
+    nullable: true,
+    description:
+      'How many such mails it takes, at least. Defaults to 1. With negate: keeps people who got fewer.',
+  })
+  minCount?: number;
+
+  @Field(() => MailHistoryScope, {
+    nullable: true,
+    description:
+      'Defaults to person. Mails sent before the subscription was recorded in the mail log never match the subscription scope.',
+  })
+  scope?: MailHistoryScope;
+
+  @Field({
+    nullable: true,
+    description:
+      'true: only mails about an invoice that is still open (neither paid nor cancelled). Mails sent before the invoice was recorded in the mail log never match.',
+  })
+  onlyOpenInvoice?: boolean;
 }
 
 @InputType()
@@ -274,6 +324,20 @@ export class MailAudienceInput {
   })
   endsAtTo?: Date;
 
+  @Field(() => MailRollingRange, {
+    nullable: true,
+    description:
+      'Subscribers audience only: started within a range relative to now. Takes the place of startsAtFrom and startsAtTo when given.',
+  })
+  startsAtRolling?: MailRollingRange;
+
+  @Field(() => MailRollingRange, {
+    nullable: true,
+    description:
+      'Subscribers audience only: effective end within a range relative to now. Takes the place of endsAtFrom and endsAtTo when given.',
+  })
+  endsAtRolling?: MailRollingRange;
+
   @Field({
     nullable: true,
     description:
@@ -357,6 +421,18 @@ export class MailLogFilter {
 
   @Field({ nullable: true })
   mailSendJobId?: string;
+
+  @Field({
+    nullable: true,
+    description: 'Only mails about this subscription.',
+  })
+  subscriptionId?: string;
+
+  @Field({
+    nullable: true,
+    description: 'Only mails about this invoice.',
+  })
+  invoiceId?: string;
 }
 
 @ObjectType()
@@ -420,7 +496,8 @@ export class MailLogModel {
 
   @Field(() => String, {
     nullable: true,
-    description: 'Why a rejected mail could not be delivered.',
+    description:
+      "Why the mail could not be delivered: the error of a rejected one, or what the mail provider said about a bounced or held-back one (its bounce description and the receiving server's answer).",
   })
   error?: string | null;
 
@@ -429,6 +506,20 @@ export class MailLogModel {
 
   @Field(() => String, { nullable: true })
   mailSendJobId?: string | null;
+
+  @Field(() => String, {
+    nullable: true,
+    description:
+      'The subscription the mail is about. Null for mails with no such trigger and for mails sent before this was recorded.',
+  })
+  subscriptionId?: string | null;
+
+  @Field(() => String, {
+    nullable: true,
+    description:
+      'The invoice the mail is about, for invoice mails. Null otherwise and for mails sent before this was recorded.',
+  })
+  invoiceId?: string | null;
 
   @Field(() => MailLogRecipient)
   recipient!: MailLogRecipient;
@@ -452,6 +543,20 @@ export class MailLogSyncModel {
     description: 'Mails whose state the provider reported differently.',
   })
   updated!: number;
+}
+
+@ObjectType()
+export class MailAndLetterLogSyncModel extends MailLogSyncModel {
+  @Field(() => Int, {
+    description:
+      'Letters that can still change and were looked up at the letter provider.',
+  })
+  lettersChecked!: number;
+
+  @Field(() => Int, {
+    description: 'Letters whose state the provider reported differently.',
+  })
+  lettersUpdated!: number;
 }
 
 @ObjectType()

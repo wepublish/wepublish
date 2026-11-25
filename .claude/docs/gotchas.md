@@ -191,8 +191,8 @@ segment put `{ OR: patterns.map(…) }` without patterns into an `AND` and count
 [where-matcher.ts](../../libs/membership/api/src/lib/mail-send/where-matcher.ts)
 now throws on an empty `AND`/`OR` and on `{}` inside an `OR`. Never build an
 `OR` from a list that can be empty: say "nobody" as `{ id: { in: [] } }`
-(`NOBODY` in `mail-send-recipient.service.ts`, `NO_SUBSCRIPTION` in
-`subscription-flow.resolver.ts`), and keep `{}` out of `OR` lists.
+(`NOBODY` in `libs/user/api/src/lib/email-segment.ts`, `NO_SUBSCRIPTION` in
+`subscription-flow.service.ts`), and keep `{}` out of `OR` lists.
 
 ---
 
@@ -1225,6 +1225,27 @@ only there because undici's types and `@types/node`'s don't line up.
 Pinned by `storage-fetch.spec.ts`, which checks the cap and the timeouts through
 the real `fetch` against a local server. The wiring in `app.module.ts` is not tested.
 
+---
+
+### ⚠️ R2 deletes every transformed object after 30 days
+
+A lifecycle rule on each `*-transformed` bucket (`storage.tf` in
+application-configuration: 30 days in production, 7 in staging) deletes every
+object by upload age. This covers image variants, document/video/audio copies
+and thumbnails. The link cache (`LINK_TTL`, 3 days) and the CDN's cached 301
+(12 h + 1 day stale-while-revalidate) keep pointing at an object after
+`MediaService` checked it. So `MediaService` serves only objects that outlive
+both, and writes older ones again (`transformationRefreshAge`). Without that
+check, every variant 404s for up to ~4.5 days about 30 days after it was first
+rendered (reflekt, 2026-11). Since the R2 404 is final, it looked like an R2
+outage, but it wasn't one.
+
+**Load-bearing:** `S3_TRANSFORMATION_MAX_AGE_DAYS` (default 30) must equal the
+bucket's lifecycle age. Set it to `7` for staging media.
+`saveVideoPoster` stores posters _only_ in the transformed bucket, so they
+expire for good. Pinned by "MediaService transformation lifetime" in
+`media.service.spec.ts`.
+
 ### ⚠️ cache-manager 7: TTLs are milliseconds, `max` is ignored, tiers don't backfill
 
 `CacheModule.register({ttl, max})` without `stores` builds a plain Keyv `Map`.
@@ -1254,12 +1275,14 @@ against Apollo and Prisma. The profiles behind
 shared one kept locally for 2 s:
 - `media:links` (`val:media:links:<sha>`): objects that exist. Shared, across
   releases. Documents, video and audio: 3 days, written by the controller.
-  Image variants: written by `MediaService` when it transforms, and live
-  exactly as long as the transformed object: 30 days from its
-  `lastModified` (`TRANSFORMED_IMAGE_TTL`, the transformation bucket's
-  lifecycle rule; change both together). A link that outlived its object
-  redirected to a deleted file and never triggered a new transform. An
-  object past 30 days the bucket has not deleted yet is transformed again.
+  Image variants: written by `MediaService` when it transforms or finds a
+  fresh object, and end 36 h (the CDN's cached redirect) before the bucket's
+  lifecycle rule deletes the object: `S3_TRANSFORMATION_MAX_AGE_DAYS` (default
+  30) from its `lastModified`, minus those 36 h. A link that outlived its
+  object redirected to a deleted file and never triggered a new transform.
+  See "R2 deletes every transformed object after 30 days" for when an object
+  is written again. `TRANSFORMED_IMAGE_TTL` (30 days) only bounds
+  `media:generations`.
 - `media:rejected-variants` (`val:<release>:media:rejected-variants:<sha>`):
   variants the guard rejects (400), 1 h, per release since a deploy can change
   the guard's limits. Only signed requests get that far.
@@ -1518,6 +1541,41 @@ hideContentAfter }`); `generateFeed` typed on `FeedArticleFragment` without a
 cast, so a tenant on the wrong document fails `tsc`. Pinned by
 `libs/feed/website/src/lib/feed-article-list.spec.ts`, which runs the real
 document against `schema-v2.graphql`.
+
+### ⚠️ A mail flow's earliest day depends on the flow alone
+
+`daysAwayFromEnding` has two lower limits (`SubscriptionFlowService.earliestDay`):
+the **default flow** is fixed at −25 (`DEFAULT_FLOW_EARLIEST_DAY`), because every
+subscription may fall back to it; a **member plan's flow** follows the shortest
+periodicity in its own conditions (`EARLIEST_INVOICE_DAY` in
+`libs/utils/api/src/lib/earliest-invoice-day.ts`: monthly −25 … yearly −360).
+Do not make the default flow's limit depend on what member plans offer: a plan
+change could then make a saved flow wrong after the fact. That was tried and
+taken out again. The clamp in `createInvoice` (periodic job) stays as a safety
+net for legacy data.
+
+### ⚠️ A subscription's flow is looked up in two places, in a fixed order
+
+Plan flow → flow for all plans (`allMemberPlans`) → default flow. The order is
+implemented twice in `subscription-event-dictionary.ts`: in memory in
+`getActionsForSubscriptions` and as queries in `getSubscriptionTemplateAction`.
+Change both. A non-default flow with neither a `memberPlanId` nor
+`allMemberPlans` is an orphan of a deleted plan: `initialize()` throws on it and
+no message goes out, so "all plans" must never be modelled as "plan empty".
+Overlap is only refused within a kind (`filterHasOverlap`). An empty condition
+means "matches nothing" on a member plan's flow but "any value" on a flow for
+all plans (which needs at least one condition); every place that matches
+conditions has to make that distinction.
+Inactive flows (`active = false`, never the default flow) are skipped by both
+lookups and by the overlap check; switching one on runs the overlap check.
+`SubscriptionFlowService.countSubscriptions` is the one count rule: running
+subscriptions plus those ended within the flow's latest event day, minus what
+an earlier tier takes (by conditions, not by its day). The counts add up to
+the subscriptions that can still get a message, not to all of them: an ended
+subscription past its own flow's last day counts nowhere, though the default
+flow would still message it with that flow off. So switching a flow can move
+the sum (29 → 30 on review02, 2026-11-23); that is correct. Don't count
+elsewhere.
 
 ## Adding an entry
 

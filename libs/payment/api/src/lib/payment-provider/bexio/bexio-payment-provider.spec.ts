@@ -12,6 +12,7 @@ import {
 } from '@wepublish/kv-ttl-cache/api/testing';
 import { CreatePaymentIntentProps } from '../payment-provider';
 import { BexioCountries } from './bexio-countries';
+import fetch from 'node-fetch';
 
 vi.mock('axios');
 
@@ -55,10 +56,12 @@ vi.mock('@wepublish/utils/api', async importOriginal => ({
   logger: () => ({ error: mockLoggerError, warn: vi.fn(), info: vi.fn() }),
 }));
 
+const mockBexioInvoiceCreate = vi.fn();
 const mockBexioInvoiceCancel = vi.fn();
 const mockBexioInvoiceSend = vi.fn();
 const mockBexioInvoiceIssue = vi.fn();
 const mockBexioInvoiceShowPdf = vi.fn();
+const mockBexioInvoiceMarkAsSent = vi.fn();
 const mockBexioContactSearch = vi.fn();
 const mockBexioContactCreate = vi.fn();
 const mockBexioContactEdit = vi.fn();
@@ -80,14 +83,11 @@ vi.mock('bexio', () => {
         show: mockBexioContactShow,
       },
       invoices: {
-        create: vi.fn().mockImplementation(() => ({
-          id: 'testid',
-          intentID: '12345',
-          state: PaymentState.submitted,
-        })),
+        create: mockBexioInvoiceCreate,
         send: mockBexioInvoiceSend,
         issue: mockBexioInvoiceIssue,
         showPdf: mockBexioInvoiceShowPdf,
+        markAsSent: mockBexioInvoiceMarkAsSent,
         cancel: mockBexioInvoiceCancel,
       },
     };
@@ -142,6 +142,11 @@ describe('BexioPaymentProvider', () => {
       bexioSettings,
       60
     );
+    mockBexioInvoiceCreate.mockImplementation(() => ({
+      id: 'testid',
+      intentID: '12345',
+      state: PaymentState.submitted,
+    }));
     mockBexioInvoiceSend.mockResolvedValue({ success: true });
     mockBexioInvoiceIssue.mockResolvedValue({ success: true });
     mockBexioInvoiceShowPdf.mockResolvedValue(bexioPdf);
@@ -242,6 +247,11 @@ describe('BexioPaymentProvider', () => {
   });
 
   describe('Creating an invoice in Bexio', () => {
+    const defaultFetch = vi.mocked(fetch).getMockImplementation();
+    afterEach(() => {
+      vi.mocked(fetch).mockImplementation(defaultFetch!);
+    });
+
     const mockContact = {
       id: 123,
       name: 'Test Contact',
@@ -290,6 +300,80 @@ describe('BexioPaymentProvider', () => {
       );
       expect(mockBexioInvoiceIssue).not.toHaveBeenCalled();
       expect(mockBexioInvoiceShowPdf).not.toHaveBeenCalled();
+    });
+
+    // bexio's own default footer names whoever owns the API token.
+    it('closes the invoice with the name of the configured bexio user', async () => {
+      vi.mocked(fetch).mockImplementation((async (url: string) =>
+        url.endsWith('/3.0/users/22') ?
+          {
+            status: 200,
+            json: async () => ({
+              id: 22,
+              firstname: 'Maria',
+              lastname: 'Marggraf',
+            }),
+          }
+        : { status: 404, json: async () => ({}) }) as never);
+
+      await bexioPaymentProvider.createInvoice(mockContact, mockInvoice, false);
+      await bexioPaymentProvider.createInvoice(mockContact, mockInvoice, true);
+
+      expect(mockBexioInvoiceCreate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          footer:
+            'Sie haben Fragen? Melden Sie sich bei uns.<br/><br/>Freundliche Grüsse<br/>Maria Marggraf',
+        })
+      );
+      expect(
+        vi
+          .mocked(fetch)
+          .mock.calls.filter(([url]) => String(url).includes('/users/'))
+      ).toHaveLength(1);
+    });
+
+    it('still creates the invoice, with bexio’s footer, when the bexio user cannot be read', async () => {
+      vi.mocked(fetch).mockImplementation((async () => ({
+        status: 401,
+        json: async () => ({}),
+      })) as never);
+
+      const result = await bexioPaymentProvider.createInvoice(
+        mockContact,
+        mockInvoice,
+        false
+      );
+
+      expect(result.invoice.id).toBe('testid');
+      expect(mockBexioInvoiceCreate.mock.calls[0][0]).not.toHaveProperty(
+        'footer'
+      );
+    });
+
+    it('emails the invoice to the test mailbox when the reader is on its domain', async () => {
+      const env = process.env;
+      process.env = { ...env, APP_ENVIRONMENT: 'review' };
+      await testing.cache.setNs(
+        'settings:paymentprovider',
+        'bexio',
+        { ...bexioSettings, bexio_testMailbox: 'bexio@example.com' },
+        60
+      );
+
+      try {
+        await bexioPaymentProvider.createInvoice(
+          mockContact,
+          mockInvoice,
+          false
+        );
+      } finally {
+        process.env = env;
+      }
+
+      expect(mockBexioInvoiceSend).toHaveBeenCalledWith(
+        'testid',
+        expect.objectContaining({ recipient_email: 'bexio@example.com' })
+      );
     });
 
     it('issues and renders the invoice instead of emailing it when the reader gets letters', async () => {
@@ -425,6 +509,56 @@ describe('BexioPaymentProvider', () => {
       expect(mockBexioInvoiceSend).not.toHaveBeenCalled();
     });
 
+    describe('when we.publish delivers the invoices', () => {
+      beforeEach(async () => {
+        await testing.cache.setNs(
+          'settings:paymentprovider',
+          'bexio',
+          { ...bexioSettings, bexio_invoiceMailByWePublish: true },
+          60
+        );
+      });
+
+      it('says so', async () => {
+        await expect(
+          bexioPaymentProvider.deliversInvoiceItself()
+        ).resolves.toBe(false);
+      });
+
+      it('issues the invoice and hands back its pdf for a reader who gets mails, without emailing', async () => {
+        const result = await bexioPaymentProvider.createRemoteInvoice({
+          ...props,
+          channel: MailChannel.mail,
+        } as never);
+
+        expect(mockBexioInvoiceSend).not.toHaveBeenCalled();
+        expect(mockBexioInvoiceIssue).toHaveBeenCalledWith('testid');
+        expect(result?.document).toEqual({
+          content: Buffer.from('pdf'),
+          name: 'RE-1.pdf',
+          mime: 'application/pdf',
+        });
+      });
+
+      // A checkout has no invoice-creation mail to carry the pdf.
+      it('still has bexio email the invoice of a checkout', async () => {
+        await bexioPaymentProvider.createIntent({
+          invoice: { id: 'inv-1', subscriptionID: 'sub-1' },
+          paymentID: 'pay-1',
+          saveCustomer: false,
+          currency: Currency.CHF,
+        } as never);
+
+        expect(mockBexioInvoiceSend).toHaveBeenCalled();
+      });
+    });
+
+    it('delivers its invoices itself unless told otherwise', async () => {
+      await expect(bexioPaymentProvider.deliversInvoiceItself()).resolves.toBe(
+        true
+      );
+    });
+
     it('reports a failed delivery with the intent instead of throwing', async () => {
       mockBexioInvoiceSend.mockResolvedValue({ success: false });
 
@@ -456,6 +590,35 @@ describe('BexioPaymentProvider', () => {
         } as never)
       ).resolves.toBeUndefined();
       expect(mockBexioInvoiceShowPdf).not.toHaveBeenCalled();
+    });
+
+    it('marks an invoice it created earlier as sent, found by its payment', async () => {
+      mockBexioInvoiceMarkAsSent.mockResolvedValue({ success: true });
+
+      await bexioPaymentProvider.markRemoteInvoiceSent({
+        payment: { id: 'pay-1', intentID: '42' },
+      } as never);
+
+      expect(mockBexioInvoiceMarkAsSent).toHaveBeenCalledWith(42);
+      expect(mockBexioInvoiceSend).not.toHaveBeenCalled();
+    });
+
+    it('marks nothing for a payment that never reached bexio', async () => {
+      await bexioPaymentProvider.markRemoteInvoiceSent({
+        payment: { id: 'pay-1', intentID: null },
+      } as never);
+
+      expect(mockBexioInvoiceMarkAsSent).not.toHaveBeenCalled();
+    });
+
+    it('fails when bexio does not mark the invoice as sent', async () => {
+      mockBexioInvoiceMarkAsSent.mockResolvedValue({ success: false });
+
+      await expect(
+        bexioPaymentProvider.markRemoteInvoiceSent({
+          payment: { id: 'pay-1', intentID: '42' },
+        } as never)
+      ).rejects.toThrow('Marking the invoice as sent failed');
     });
 
     it('still fails a checkout when bexio could not email the invoice', async () => {

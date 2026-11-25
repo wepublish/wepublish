@@ -1,9 +1,16 @@
 import { Typography, Stack, Chip } from '@mui/material';
 import { MailChannel, MailLogState, MailLogType } from '@wepublish/editor/api';
-import { InfoTrigger, ClickPopover } from '@wepublish/ui/editor';
+import { CanGetSubscription, CanGetUser } from '@wepublish/permissions';
+import {
+  InfoTrigger,
+  ClickPopover,
+  useHasPermission,
+} from '@wepublish/ui/editor';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { MdHelpOutline } from 'react-icons/md';
+import { Link } from 'react-router-dom';
+import { useLetterChannel } from '../mail-template/use-letter-channel';
 
 const STATE_COLORS: Record<
   MailLogState,
@@ -20,15 +27,18 @@ const STATE_COLORS: Record<
   [MailLogState.Dispatched]: 'primary',
   [MailLogState.Undeliverable]: 'error',
   [MailLogState.Canceled]: 'warning',
+  // Not lost, but it will not go out until someone looks at it.
+  [MailLogState.ActionRequired]: 'warning',
 };
 
 /**
  * Order the states follow along a delivery, so the legend reads as the path a
  * mail takes rather than as an alphabetical list.
  */
-const STATE_ORDER: MailLogState[] = [
+export const MAIL_LOG_STATE_ORDER: MailLogState[] = [
   MailLogState.Submitted,
   MailLogState.Accepted,
+  MailLogState.ActionRequired,
   MailLogState.Dispatched,
   MailLogState.Delivered,
   MailLogState.Deferred,
@@ -103,6 +113,7 @@ export function MailLogStateTag({ state }: { state: MailLogState }) {
  */
 export function MailLogStateLegend() {
   const { t } = useTranslation();
+  const { paperLetters } = useLetterChannel();
 
   return (
     <ClickPopover
@@ -129,7 +140,7 @@ export function MailLogStateLegend() {
         {t('mailLog.stateHelp.legendIntro')}
       </Typography>
 
-      {STATE_ORDER.map(state => (
+      {MAIL_LOG_STATE_ORDER.map(state => (
         <div
           key={state}
           style={{ marginBottom: 10 }}
@@ -170,6 +181,7 @@ export function MailLogStateLegend() {
         }}
       >
         {t('mailLog.stateHelp.legendFooter')}
+        {paperLetters && `\n${t('mailLog.stateHelp.legendFooterLetters')}`}
       </Typography>
     </ClickPopover>
   );
@@ -221,18 +233,51 @@ const ERROR_HELP_RULES: ReadonlyArray<{ pattern: RegExp; key: string }> = [
   },
 ];
 
-export const mailErrorHelpKey = (error: string): string =>
-  ERROR_HELP_RULES.find(rule => rule.pattern.test(error))?.key ?? 'generic';
+/**
+ * A bounce is the receiving server's answer, reported by the provider after
+ * the mail left: its words say something about the recipient's mailbox, never
+ * about the sending setup the rules above diagnose.
+ */
+const BOUNCE_HELP_RULES: ReadonlyArray<{ pattern: RegExp; key: string }> = [
+  {
+    pattern:
+      /bad_mailbox|invalid_domain|user unknown|no such user|unknown user|does not exist|domain not found/i,
+    key: 'mailboxGone',
+  },
+  {
+    pattern: /mailbox_full|mailbox (is )?full|over quota|quota exceeded/i,
+    key: 'mailboxFull',
+  },
+];
+
+const BOUNCE_STATES: ReadonlySet<MailLogState> = new Set([
+  MailLogState.Bounced,
+  MailLogState.Deferred,
+]);
+
+export const mailErrorHelpKey = (
+  error: string,
+  state?: MailLogState | null
+): string =>
+  state && BOUNCE_STATES.has(state) ?
+    (BOUNCE_HELP_RULES.find(rule => rule.pattern.test(error))?.key ?? 'bounce')
+  : (ERROR_HELP_RULES.find(rule => rule.pattern.test(error))?.key ?? 'generic');
 
 /** The raw error plus a hover explanation of cause and remedy. */
-export function MailErrorCell({ error }: { error?: string | null }) {
+export function MailErrorCell({
+  error,
+  state,
+}: {
+  error?: string | null;
+  state?: MailLogState | null;
+}) {
   const { t } = useTranslation();
 
   if (!error) {
     return <>—</>;
   }
 
-  const key = mailErrorHelpKey(error);
+  const key = mailErrorHelpKey(error, state);
 
   return (
     <ClickPopover
@@ -349,6 +394,71 @@ export function MailLogChannelCell({
           sx={{ color: 'text.secondary' }}
         >
           {address}
+        </Typography>
+      )}
+    </Stack>
+  );
+}
+
+const MAY_OPEN_USER = [CanGetUser.id];
+const MAY_OPEN_SUBSCRIPTION = [CanGetSubscription.id];
+
+/**
+ * Who a mail went to, as the way to their user page. Only a name for someone
+ * who may not open users: a link would end on the no-access notice.
+ */
+export function MailLogRecipientCell({
+  recipient,
+}: {
+  recipient: { id: string; email: string };
+}) {
+  const mayOpenUser = useHasPermission(MAY_OPEN_USER);
+
+  if (!mayOpenUser) {
+    return <>{recipient.email}</>;
+  }
+
+  return <Link to={`/users/edit/${recipient.id}`}>{recipient.email}</Link>;
+}
+
+/**
+ * What a mail was about. The subscription opens in its edit view; an invoice
+ * has no page of its own and is found there too, so it is only named. Empty
+ * for mails with no such trigger and for those sent before it was recorded.
+ */
+export function MailLogTriggerCell({
+  subscriptionId,
+  invoiceId,
+}: {
+  subscriptionId?: string | null;
+  invoiceId?: string | null;
+}) {
+  const { t } = useTranslation();
+  const mayOpenSubscription = useHasPermission(MAY_OPEN_SUBSCRIPTION);
+
+  if (!subscriptionId && !invoiceId) {
+    return <>—</>;
+  }
+
+  return (
+    <Stack
+      direction="column"
+      spacing={0.25}
+      sx={{ alignItems: 'flex-start' }}
+    >
+      {subscriptionId &&
+        (mayOpenSubscription ?
+          <Link to={`/subscriptions/edit/${subscriptionId}`}>
+            {t('mailLog.triggerSubscription')}
+          </Link>
+        : <span>{t('mailLog.triggerSubscription')}</span>)}
+      {invoiceId && (
+        <Typography
+          variant="caption"
+          sx={{ color: 'text.secondary' }}
+          title={invoiceId}
+        >
+          {t('mailLog.triggerInvoice')}
         </Typography>
       )}
     </Stack>

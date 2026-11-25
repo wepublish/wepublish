@@ -43,6 +43,7 @@ import {
   MailAudienceInput,
   MailRecipientBase,
 } from './mail-send.model';
+import { freezeRollingDates } from './rolling-dates';
 import {
   MailRecipient,
   MailSendRecipientService,
@@ -194,8 +195,12 @@ export class MailSendJobService {
     const template = await this.loadTemplate(input.mailTemplateId);
     await this.loadVariant(template.id, input.channel ?? MailChannel.mail);
 
+    // Rolling dates are fixed here: the count, the queue and the record of
+    // the send then all mean the same people, however long the queue takes.
+    const audience = freezeRollingDates(input.audience, new Date());
+
     const totalCount = await this.recipientService.count(
-      input.audience,
+      audience,
       input.channel
     );
 
@@ -203,12 +208,12 @@ export class MailSendJobService {
       data: {
         mailTemplateId: template.id,
         createdByUserId: currentUserId,
-        audience: this.audienceFor(input.audience),
+        audience: this.audienceFor(audience),
         channel: input.channel ?? MailChannel.mail,
         ...printSettings(input.print),
         status: MailSendJobState.queued,
         totalCount,
-        recipientFilter: input.audience as unknown as Prisma.InputJsonValue,
+        recipientFilter: audience as unknown as Prisma.InputJsonValue,
       },
     });
 
@@ -613,6 +618,7 @@ export class MailSendJobService {
           },
           mailSendJobId: job.id,
           mailLogId,
+          log: this.triggerOf(recipient, optionalData),
         });
       } else {
         await this.mailContext.sendMail({
@@ -623,6 +629,7 @@ export class MailSendJobService {
           mailSendJobId: job.id,
           mailLogId,
           isRetry: false,
+          ...this.triggerOf(recipient, optionalData),
         });
       }
 
@@ -913,6 +920,25 @@ export class MailSendJobService {
    * latest invoice) as `optional` data. Custom templates and user-only
    * recipients get an empty payload.
    */
+  /**
+   * What the mail log says a manual send is about: the recipient's
+   * subscription, and the invoice whose data the template was given. A
+   * template context that shows no invoice names none.
+   */
+  private triggerOf(
+    recipient: MailRecipient,
+    optionalData: Record<string, unknown>
+  ): { subscriptionId: string | null; invoiceId: string | null } {
+    const invoice = (optionalData['invoice'] ??
+      (optionalData['invoices'] as unknown[] | undefined)?.[0]) as
+      { id?: string } | null | undefined;
+
+    return {
+      subscriptionId: recipient.subscription?.id ?? null,
+      invoiceId: invoice?.id ?? null,
+    };
+  }
+
   private async buildOptionalData(
     template: MailTemplate,
     recipient: MailRecipient

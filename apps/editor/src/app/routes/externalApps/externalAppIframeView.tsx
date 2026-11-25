@@ -1,11 +1,13 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import { Box, CircularProgress } from '@mui/material';
+import { Box, CircularProgress, Typography } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import { ExternalAppDocument } from '@wepublish/editor/api';
 import { PageTitle } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
+
+import { useExternalAppSrc } from './useExternalAppSrc';
 
 const IframeWrapper = styled(Box)`
   width: calc(100% + 80px);
@@ -33,8 +35,14 @@ export function ExternalAppIframeView() {
     variables: { externalAppId: id! },
     skip: !id,
   });
+  const app = data?.externalApp;
+  const {
+    src,
+    loading: tokenLoading,
+    error: tokenError,
+  } = useExternalAppSrc(app);
 
-  if (loading) {
+  if (loading || tokenLoading) {
     return (
       <Box
         sx={{
@@ -50,7 +58,7 @@ export function ExternalAppIframeView() {
     );
   }
 
-  if (!data?.externalApp) {
+  if (!app) {
     return (
       <Box
         sx={{
@@ -62,12 +70,27 @@ export function ExternalAppIframeView() {
     );
   }
 
+  // never load the app bare: without the token it would not know the user
+  if (!src) {
+    return (
+      <Box
+        sx={{
+          p: 3,
+        }}
+      >
+        <Typography color="error">
+          {tokenError?.message || t('externalApps.noToken')}
+        </Typography>
+      </Box>
+    );
+  }
+
   return (
     <IframeWrapper>
-      <PageTitle sx={visuallyHidden}>{data.externalApp.name}</PageTitle>
+      <PageTitle sx={visuallyHidden}>{app.name}</PageTitle>
       <StyledIframe
-        src={data.externalApp.url}
-        title={data.externalApp.name}
+        src={src}
+        title={app.name}
         allow="fullscreen; microphone; camera; display-capture"
       />
     </IframeWrapper>

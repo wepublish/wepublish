@@ -20,6 +20,7 @@ import {
 import {
   CanCreateUser,
   CanDeleteUser,
+  CanGetPrintIssues,
   CanGetUser,
   CanGetUsers,
   CanResetUserPassword,
@@ -49,13 +50,15 @@ import {
   useListViewState,
   useTableExportQuery,
   PageTitle,
+  useAuthorisation,
+  useFeature,
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete, MdLockReset, MdPassword } from 'react-icons/md';
 import { Link as RouterLink } from 'react-router-dom';
 
-const USER_FILTER_FIELDS = ['userRole', 'text'] as const;
+const USER_FILTER_FIELDS = ['userRole', 'emailSegments', 'text'] as const;
 
 function mapColumFieldToGraphQLField(columnField: string): UserSort | null {
   switch (columnField) {
@@ -69,6 +72,12 @@ function mapColumFieldToGraphQLField(columnField: string): UserSort | null {
       return UserSort.FirstName;
     case 'subscriptionCount':
       return UserSort.SubscriptionCount;
+    case 'emailQuality':
+      return UserSort.EmailQuality;
+    case 'emailQualitySince':
+      return UserSort.EmailQualitySince;
+    case 'printIssuesOwed':
+      return UserSort.PrintIssuesOwed;
     default:
       return null;
   }
@@ -84,6 +93,8 @@ function UserList() {
   const [currentUser, setCurrentUser] = useState<TinyUserFragment>();
 
   const [page, setPage] = useState(1);
+  const canSeePrintIssues = useAuthorisation(CanGetPrintIssues.id);
+  const printIssues = useFeature('print-export') && !!canSeePrintIssues;
 
   const {
     data,
@@ -174,14 +185,28 @@ function UserList() {
   function getSubscriptionTooltip(user: TinyUserFragment) {
     return (
       <>
-        {user.subscriptionOverview.map(({ id, memberPlanName, status }) => (
-          <div key={id}>
-            {t('userList.overview.subscriptionWithStatus', {
-              name: memberPlanName,
-              status: t(`userList.overview.subscriptionStatus.${status}`),
-            })}
-          </div>
-        ))}
+        {user.subscriptionOverview.map(({ id, memberPlanName, status }) => {
+          const progress = user.printIssueProgress?.find(
+            ({ subscriptionId, relevant }) => subscriptionId === id && relevant
+          );
+
+          return (
+            <div key={id}>
+              {progress ?
+                t('userList.overview.subscriptionWithStatusAndIssues', {
+                  name: memberPlanName,
+                  status: t(`userList.overview.subscriptionStatus.${status}`),
+                  received: progress.received,
+                  entitled: progress.entitled ?? '∞',
+                })
+              : t('userList.overview.subscriptionWithStatus', {
+                  name: memberPlanName,
+                  status: t(`userList.overview.subscriptionStatus.${status}`),
+                })
+              }
+            </div>
+          );
+        })}
       </>
     );
   }
@@ -295,6 +320,9 @@ function UserList() {
             'firstname',
             'name',
             'subscriptionCount',
+            'emailQuality',
+            'emailQualitySince',
+            ...(printIssues ? ['printIssuesOwed'] : []),
           ]}
           columns={[
             {
@@ -390,6 +418,56 @@ function UserList() {
                   </Tooltip>
                 );
               },
+            },
+            ...(printIssues ?
+              [
+                {
+                  id: 'printissuesowed',
+                  label: t('userList.overview.printIssuesOwed'),
+                  width: 160,
+                  align: 'right' as const,
+                  sortKey: 'printIssuesOwed',
+                  render: ({ printIssuesOwed }: TinyUserFragment) =>
+                    printIssuesOwed ?? '',
+                  exportValue: ({ printIssuesOwed }: TinyUserFragment) =>
+                    printIssuesOwed ?? null,
+                },
+              ]
+            : []),
+            {
+              // Same segments as the mail-send audience; people never
+              // evaluated have no row and count as unknown. A placeholder
+              // address is only recognised in the filter, not here.
+              id: 'emailquality',
+              label: t('userList.overview.emailQuality'),
+              width: 200,
+              align: 'left',
+              sortKey: 'emailQuality',
+              defaultHidden: true,
+              render: ({ emailQuality }: TinyUserFragment) =>
+                t(
+                  `userList.overview.emailSegments.${emailQuality?.level ?? 'unknown'}`
+                ),
+              exportValue: ({ emailQuality }) =>
+                t(
+                  `userList.overview.emailSegments.${emailQuality?.level ?? 'unknown'}`
+                ),
+            },
+            {
+              id: 'emailqualitysince',
+              label: t('userList.overview.emailQualitySince'),
+              width: 160,
+              align: 'left',
+              sortKey: 'emailQualitySince',
+              defaultHidden: true,
+              render: ({ emailQuality }: TinyUserFragment) =>
+                emailQuality ?
+                  t('userList.overview.emailQualitySinceDate', {
+                    emailQualitySinceDate: new Date(emailQuality.since),
+                  })
+                : null,
+              exportValue: ({ emailQuality }) =>
+                emailQuality ? new Date(emailQuality.since) : null,
             },
             {
               id: 'action',

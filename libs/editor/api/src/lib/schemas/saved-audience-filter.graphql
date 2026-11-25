@@ -1,0 +1,35 @@
+fragment FullSavedAudienceFilter on SavedAudienceFilterModel {
+  id
+  createdAt
+  modifiedAt
+  name
+  description
+  audience
+}
+
+query SavedAudienceFilters {
+  savedAudienceFilters {
+    ...FullSavedAudienceFilter
+  }
+}
+
+mutation CreateSavedAudienceFilter($input: CreateSavedAudienceFilterInput!) {
+  createSavedAudienceFilter(input: $input) {
+    ...FullSavedAudienceFilter
+  }
+}
+
+mutation UpdateSavedAudienceFilter(
+  $id: String!
+  $input: UpdateSavedAudienceFilterInput!
+) {
+  updateSavedAudienceFilter(id: $id, input: $input) {
+    ...FullSavedAudienceFilter
+  }
+}
+
+mutation DeleteSavedAudienceFilter($id: String!) {
+  deleteSavedAudienceFilter(id: $id) {
+    id
+  }
+}

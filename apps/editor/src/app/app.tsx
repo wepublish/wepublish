@@ -29,12 +29,14 @@ import {
   MailLogList,
   MailSendPage,
   DeliveryChannelPage,
+  LegacyFlowRedirect,
   LetterLayoutEdit,
   LetterLayoutList,
   MailTemplateEdit,
   MailTemplateList,
   MemberPlanEdit,
-  SubscriptionFlowList,
+  SubscriptionFlowOverview,
+  SubscriptionFlowPage,
 } from '@wepublish/membership/editor';
 import { SettingList } from '@wepublish/settings/editor';
 import {
@@ -1109,12 +1111,25 @@ function AppRoutes() {
           }
         />
         <Route
-          path="communicationflows/edit/:id"
+          path="communicationflows"
           element={
             <Base>
-              <SubscriptionFlowList />
+              <SubscriptionFlowOverview />
             </Base>
           }
+        />
+        <Route
+          path="communicationflows/flow/:id"
+          element={
+            <Base>
+              <SubscriptionFlowPage />
+            </Base>
+          }
+        />
+        {/* Until the overview there was one page per member plan */}
+        <Route
+          path="communicationflows/edit/:id"
+          element={<LegacyFlowRedirect />}
         />
         <Route
           path="mailtemplates"
@@ -1164,12 +1179,12 @@ function AppRoutes() {
             </Base>
           }
         />
-        {/* System mails are now part of the automatic mails view */}
+        {/* System mails are part of the automated messages overview */}
         <Route
           path="systemmails"
           element={
             <Navigate
-              to="/communicationflows/edit/default"
+              to="/communicationflows"
               replace
             />
           }
