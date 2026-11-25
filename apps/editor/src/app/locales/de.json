@@ -4325,7 +4325,12 @@
           "enable": "Umami aktivieren",
           "um": "<url>Umami</url> ist eine datenschutzfreundliche Open-Source-Alternative zu Google Analytics.",
           "umLocator": "Du findest sie in den <url>Website-Einstellungen</url> deines Umami-Dashboards",
-          "umInvalid": "Muss eine gültige Website-ID sein (z.B. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)"
+          "umInvalid": "Muss eine gültige Website-ID sein (z.B. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)",
+          "advanced": "Erweitert",
+          "excludedSearchParams": "Ausgeschlossene URL-Parameter",
+          "excludedSearchParamsHelp": "Diese URL-Parameter werden aus der Seiten-URL und dem Referrer entfernt, bevor sie an Umami gehen, z.B. persönliche Daten, die ein Newsletter an seine Links hängt (mail, firstName). Alle anderen Parameter, etwa die utm-Parameter, bleiben erhalten. Gross- und Kleinschreibung spielt keine Rolle.",
+          "excludedSearchParam": "Parametername",
+          "addExcludedSearchParam": "Parameter hinzufügen"
         }
       },
       "ads": {

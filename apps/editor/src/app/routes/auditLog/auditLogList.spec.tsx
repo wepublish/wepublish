@@ -136,6 +136,15 @@ describe('AuditLogList', () => {
     ).toBeInTheDocument();
   });
 
+  it('starts on a page size the page size picker offers', () => {
+    renderList();
+
+    const variables = mockedUseQuery.mock.calls.at(-1)?.[1]?.variables;
+    expect(
+      screen.getByRole('combobox', { name: 'listView.pagination.pageSize' })
+    ).toHaveValue(String(variables.take));
+  });
+
   it('remembers filters and page size for the next visit', () => {
     const { unmount } = renderList();
 

@@ -1,4 +1,12 @@
-import { getPageShell, getWebsiteShell } from './website-shell';
+import { render, renderHook } from '@testing-library/react';
+import { useReportPageShell } from '@wepublish/website/builder';
+
+import {
+  getLiveWebsiteShell,
+  getPageShell,
+  getWebsiteShell,
+  useLiveWebsiteShell,
+} from './website-shell';
 
 describe('getWebsiteShell', () => {
   it('shows navigation and footer by default', () => {
@@ -73,5 +81,64 @@ describe('getPageShell', () => {
       showNavigation: false,
       showFooter: false,
     });
+  });
+});
+
+describe('getLiveWebsiteShell', () => {
+  it('keeps the shell of the page props while no page loaded in the browser', () => {
+    expect(
+      getLiveWebsiteShell(
+        { shell: { showNavigation: false, showFooter: true } },
+        undefined
+      )
+    ).toEqual({ showNavigation: false, showFooter: true });
+  });
+
+  it('follows the page loaded in the browser over the server-side shell', () => {
+    expect(
+      getLiveWebsiteShell(
+        { shell: { showNavigation: true, showFooter: true } },
+        { hideHeader: true, hideFooter: true }
+      )
+    ).toEqual({ showNavigation: false, showFooter: false });
+  });
+
+  it('shows again what the page loaded in the browser no longer hides', () => {
+    expect(
+      getLiveWebsiteShell(
+        { shell: { showNavigation: false, showFooter: false } },
+        { hideHeader: false, hideFooter: false }
+      )
+    ).toEqual({ showNavigation: true, showFooter: true });
+  });
+
+  it('ignores the page flags on routes that never asked for a page shell', () => {
+    expect(
+      getLiveWebsiteShell({}, { hideHeader: true, hideFooter: true })
+    ).toEqual({ showNavigation: true, showFooter: true });
+  });
+});
+
+describe('useLiveWebsiteShell', () => {
+  const Reporter = () => {
+    useReportPageShell({ hideHeader: true, hideFooter: false });
+
+    return null;
+  };
+
+  it('applies the flags of the page on screen to the page props shell', () => {
+    const shell = renderHook(() =>
+      useLiveWebsiteShell({
+        shell: { showNavigation: true, showFooter: true },
+      })
+    );
+    const reporter = render(<Reporter />);
+
+    expect(shell.result.current).toEqual({
+      showNavigation: false,
+      showFooter: true,
+    });
+
+    reporter.unmount();
   });
 });

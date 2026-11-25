@@ -62,6 +62,7 @@ export class WebsiteSettingsResolver {
       umami: {
         enabled: parent.analyticsUmamiEnabled,
         key: parent.analyticsUmamiId ?? undefined,
+        excludedSearchParams: parent.analyticsUmamiExcludedSearchParams ?? [],
       },
     };
   }

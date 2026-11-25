@@ -120,7 +120,7 @@ function AuditLogList() {
   const { filter, setFilter, sortOrder, limit, setLimit } =
     useListViewState<AuditLogFilter>('audit-log', {
       defaultSortField: 'createdAt',
-      defaultLimit: 25,
+      defaultLimit: 20,
     });
   const [search, setSearch] = useState(filter.search ?? '');
   const [page, setPage] = useState(1);

@@ -452,7 +452,9 @@ add a new script to both):
 - Google Tag Manager
 - Plausible
 - Piwik PRO
-- Umami (Umami Cloud script, key = website ID)
+- Umami (Umami Cloud script, key = website ID; optional `excludedSearchParams`
+  are stripped from `url`/`referrer` by an inline `data-before-send` hook from
+  `libs/utils/website/src/lib/umami-before-send.ts`, rendered before the tag)
 
 Hot & Trending (analytics integrations, `settings.analyticsProvider`):
 

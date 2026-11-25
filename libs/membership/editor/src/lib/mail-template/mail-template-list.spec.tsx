@@ -235,6 +235,27 @@ describe('MailTemplateList', () => {
     expect(screen.queryByText('Verlag')).toBeNull();
   });
 
+  it('ignores a saved letter filter once letters are not available', () => {
+    window.localStorage.setItem(
+      'wepublish:editor:listState:mailTemplates',
+      JSON.stringify({
+        filter: {
+          channels: ['letter'],
+          layouts: ['Verlag'],
+          appendices: ['QR-Rechnung'],
+        },
+      })
+    );
+    (useLetterChannel as unknown as Mock).mockReturnValue({
+      paperLetters: false,
+      letterAvailable: false,
+    });
+
+    renderList();
+
+    expect(shownNames()).toEqual(['Invoice', 'Renewal', 'Welcome']);
+  });
+
   it('pages through a long list', () => {
     (useQuery as unknown as Mock).mockReturnValue({
       data: {
