@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from '@apollo/client/react';
+import { createTheme, ThemeProvider } from '@mui/material';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { enqueueSnackbar } from '@wepublish/ui/editor';
 import type { Mock } from 'vitest';
@@ -31,6 +32,15 @@ vi.mock('./openPreview', () => ({
 
 const createJWT = vi.fn();
 
+const theme = createTheme({ cssVariables: true });
+
+const renderButton = () =>
+  render(
+    <ThemeProvider theme={theme}>
+      <WebsiteLoginButton />
+    </ThemeProvider>
+  );
+
 describe('WebsiteLoginButton', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -44,9 +54,9 @@ describe('WebsiteLoginButton', () => {
   it('shows nothing until the website address is known', () => {
     (useQuery as Mock).mockReturnValue({ data: undefined });
 
-    const { container } = render(<WebsiteLoginButton />);
+    renderButton();
 
-    expect(container.firstChild).toBeNull();
+    expect(screen.queryByRole('button')).toBeNull();
   });
 
   it('opens the website and hands it a login token for this editor', async () => {
@@ -54,7 +64,7 @@ describe('WebsiteLoginButton', () => {
       data: { createJWTForWebsiteLogin: { token: 'jwt' } },
     });
 
-    render(<WebsiteLoginButton />);
+    renderButton();
     fireEvent.click(
       screen.getByRole('button', { name: 'navbar.websiteLogin' })
     );
@@ -69,10 +79,21 @@ describe('WebsiteLoginButton', () => {
     await expect(createToken()).resolves.toBe('jwt');
   });
 
+  it('explains what the button does on hover', async () => {
+    renderButton();
+    fireEvent.mouseOver(
+      screen.getByRole('button', { name: 'navbar.websiteLogin' })
+    );
+
+    expect(await screen.findByRole('tooltip')).toHaveTextContent(
+      'navbar.websiteLogin'
+    );
+  });
+
   it('tells the editor when the browser blocks the window', () => {
     (openPreviewWindow as Mock).mockReturnValue('popup-blocked');
 
-    render(<WebsiteLoginButton />);
+    renderButton();
     fireEvent.click(
       screen.getByRole('button', { name: 'navbar.websiteLogin' })
     );

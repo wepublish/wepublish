@@ -1,5 +1,6 @@
 import {
   Button,
+  ButtonProps,
   Dialog,
   DialogActions,
   DialogContent,
@@ -12,6 +13,8 @@ export interface ConfirmActionModalProps {
   title: string;
   message: ReactNode;
   loading?: boolean;
+  confirmLabel?: string;
+  confirmColor?: ButtonProps['color'];
   onConfirm(): void;
   onClose(): void;
 }
@@ -20,6 +23,8 @@ export function ConfirmActionModal({
   title,
   message,
   loading,
+  confirmLabel,
+  confirmColor,
   onConfirm,
   onClose,
 }: ConfirmActionModalProps) {
@@ -47,10 +52,11 @@ export function ConfirmActionModal({
 
         <Button
           variant="contained"
+          color={confirmColor}
           loading={loading}
           onClick={onConfirm}
         >
-          {t('confirm')}
+          {confirmLabel ?? t('confirm')}
         </Button>
       </DialogActions>
     </Dialog>

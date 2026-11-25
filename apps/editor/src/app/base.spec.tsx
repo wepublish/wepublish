@@ -176,6 +176,79 @@ describe('Base', () => {
     });
   });
 
+  describe('logout', () => {
+    const LOGGED_OUT = 'Logged out';
+
+    const inBaseWithLogout = () =>
+      inBase(
+        <Routes>
+          <Route
+            path="/logout"
+            element={<h1>{LOGGED_OUT}</h1>}
+          />
+          <Route
+            path="*"
+            element={<h1>{ARTICLES}</h1>}
+          />
+        </Routes>
+      );
+
+    const confirmDialog = () =>
+      screen.findByRole('alertdialog', { name: 'navbar.logoutConfirm.title' });
+
+    it('asks before logging out', async () => {
+      inBaseWithLogout();
+
+      fireEvent.click(screen.getByRole('button', { name: 'navbar.logout' }));
+
+      expect(await confirmDialog()).toHaveTextContent(
+        'navbar.logoutConfirm.message'
+      );
+      expect(screen.getByText(ARTICLES)).toBeInTheDocument();
+    });
+
+    it('marks logging out as a destructive action', async () => {
+      inBaseWithLogout();
+
+      fireEvent.click(screen.getByRole('button', { name: 'navbar.logout' }));
+
+      expect(
+        within(await confirmDialog()).getByRole('button', {
+          name: 'navbar.logoutConfirm.confirm',
+        })
+      ).toHaveClass('MuiButton-colorError');
+    });
+
+    it('logs out once confirmed', async () => {
+      inBaseWithLogout();
+
+      fireEvent.click(screen.getByRole('button', { name: 'navbar.logout' }));
+      fireEvent.click(
+        within(await confirmDialog()).getByRole('button', {
+          name: 'navbar.logoutConfirm.confirm',
+        })
+      );
+
+      expect(
+        await screen.findByRole('heading', { name: LOGGED_OUT })
+      ).toBeInTheDocument();
+    });
+
+    it('stays signed in when cancelled', async () => {
+      inBaseWithLogout();
+
+      fireEvent.click(screen.getByRole('button', { name: 'navbar.logout' }));
+      fireEvent.click(
+        within(await confirmDialog()).getByRole('button', { name: 'cancel' })
+      );
+
+      await waitFor(() =>
+        expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument()
+      );
+      expect(screen.getByRole('heading', { name: ARTICLES })).toBeVisible();
+    });
+  });
+
   describe('on a desktop', () => {
     it('keeps the sidebar operable and out of dialog mode', () => {
       inBase();

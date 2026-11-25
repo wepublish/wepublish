@@ -2116,6 +2116,11 @@
       },
       "logout": "Déconnexion",
       "websiteLogin": "Ouvrir le site en étant connecté",
+      "logoutConfirm": {
+        "title": "Se déconnecter",
+        "message": "Êtes-vous sûr·e ?",
+        "confirm": "Se déconnecter"
+      },
       "mailTemplates": "Modèles de message",
       "memberPlans": "Plans d’abonnement",
       "navigations": "Menus",

@@ -2125,6 +2125,11 @@
       },
       "logout": "Logout",
       "websiteLogin": "Website angemeldet öffnen",
+      "logoutConfirm": {
+        "title": "Abmelden",
+        "message": "Bist du dir sicher?",
+        "confirm": "Abmelden"
+      },
       "mailTemplates": "Mitteilungsvorlagen",
       "memberPlans": "Abo-Pläne",
       "navigations": "Navigationen",

@@ -1,11 +1,5 @@
 import styled from '@emotion/styled';
-import {
-  IconButton as MuiIconButton,
-  List,
-  ListItemIcon,
-  MenuItem,
-  useMediaQuery,
-} from '@mui/material';
+import { List, ListItemIcon, MenuItem, useMediaQuery } from '@mui/material';
 import {
   CanCreateArticle,
   CanCreateArticleTemplate,
@@ -147,6 +141,7 @@ import {
 import {
   ClickMenu,
   CommandPaletteTrigger,
+  ConfirmActionModal,
   FeatureControl,
   Link,
   PermissionControl,
@@ -224,13 +219,14 @@ import {
   MdKey,
   MdVpnKey,
 } from 'react-icons/md';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { ImpersonationBar } from './impersonationBar';
 import { ColorModePreference, useColorMode } from './colorMode';
 import { useMobileNavigation } from './mobileNavigation';
 import { useSidebarMenu } from './sidebarMenu';
 import { Logo } from './ui/logo';
+import { NavIconButton as IconButton } from './ui/navIconButton';
 import { WebsiteLoginButton } from './websiteLoginButton';
 
 export interface BaseProps {
@@ -429,28 +425,6 @@ const Footer = styled('div')`
   border-top: 1px solid var(--wep-shell-border);
 `;
 
-const IconButton = styled(MuiIconButton)`
-  && {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    color: var(--wep-nav-text);
-  }
-
-  &&:hover {
-    background-color: var(--wep-nav-hover-bg);
-    color: ${({ theme }) => theme.vars.palette.text.primary};
-  }
-
-  svg {
-    width: 20px;
-    height: 20px;
-  }
-`;
-
 const MobileBrand = styled(Brand)`
   padding: 0 8px;
 
@@ -523,6 +497,8 @@ function useFocusMainWhenFocusIsLost(
 
 export function Base({ children }: BaseProps) {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
+  const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
   const { preference: colorModePreference, setPreference: setColorMode } =
     useColorMode();
   const {
@@ -1644,29 +1620,6 @@ export function Base({ children }: BaseProps) {
           </Sidenav>
 
           <Footer>
-            <ClickMenu
-              anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-              transformOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-              trigger={
-                <IconButton
-                  title={t('navbar.logout')}
-                  aria-label={t('navbar.logout')}
-                >
-                  <MdLogout />
-                </IconButton>
-              }
-            >
-              {close => (
-                <MenuItem
-                  component={Link}
-                  to="/logout"
-                  onClick={close}
-                >
-                  {t('navbar.logout')}
-                </MenuItem>
-              )}
-            </ClickMenu>
-
             <WebsiteLoginButton />
 
             <ClickMenu
@@ -1730,6 +1683,28 @@ export function Base({ children }: BaseProps) {
                 ))
               }
             </ClickMenu>
+
+            <IconButton
+              title={t('navbar.logout')}
+              aria-label={t('navbar.logout')}
+              onClick={() => setLogoutConfirmOpen(true)}
+            >
+              <MdLogout />
+            </IconButton>
+
+            {logoutConfirmOpen && (
+              <ConfirmActionModal
+                title={t('navbar.logoutConfirm.title')}
+                message={t('navbar.logoutConfirm.message')}
+                confirmLabel={t('navbar.logoutConfirm.confirm')}
+                confirmColor="error"
+                onConfirm={() => {
+                  setLogoutConfirmOpen(false);
+                  navigate('/logout');
+                }}
+                onClose={() => setLogoutConfirmOpen(false)}
+              />
+            )}
           </Footer>
 
           <Version />
