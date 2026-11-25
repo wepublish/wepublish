@@ -22,9 +22,12 @@ import {
   SetDeliveryModeForAudienceDocument,
 } from '@wepublish/editor/api';
 import {
+  canGoToStep,
   enqueueSnackbar,
   humanizeError,
+  StepNav,
   useAuthorisation,
+  WizardStepper,
 } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -39,7 +42,6 @@ import {
 import { describeAudience } from '../mail-send/audience/audience-summary';
 import { RecipientListModal } from '../mail-send/audience/recipient-list-modal';
 import { RecipientSummary } from '../mail-send/audience/recipient-summary';
-import { canGoToStep, StepNav, WizardStepper } from '../mail-send/step-nav';
 import { deliveryChannel, useDeliveryChannels } from './channels';
 import { useAudienceLookups } from './use-audience-lookups';
 

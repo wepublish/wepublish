@@ -1,77 +1,61 @@
 import { PrismaClient } from '@prisma/client';
-import { seedProviders } from './seed';
+import { seed } from './seed';
 
-type Row = { id: string };
+const PROVIDER_TABLES = [
+  'settingPaymentProvider',
+  'settingMailProvider',
+  'settingChallengeProvider',
+  'settingTrackingPixel',
+  'settingSyncProvider',
+  'settingAIProvider',
+  'settingAnalyticsProvider',
+  'settingLetterProvider',
+  'settingPdfRenderer',
+] as const;
 
-const table = (initial: Row[] = []) => {
-  const rows = [...initial];
+/** A fake client that records every write and answers reads with "nothing there yet". */
+const createDb = () => {
+  const writes: string[] = [];
 
-  return {
-    ids: () => rows.map(row => row.id).sort(),
-    count: async () => rows.length,
-    create: async ({ data }: { data: Row }) => {
-      rows.push(data);
-      return data;
-    },
-    createMany: async ({ data }: { data: Row[] }) => {
-      rows.push(...data);
-      return { count: data.length };
-    },
-  };
+  const table = (name: string) =>
+    new Proxy(
+      {},
+      {
+        get: (_target, method: string) => async () => {
+          if (/^(create|upsert|update)/.test(method)) {
+            writes.push(`${name}.${method}`);
+          }
+
+          return method.startsWith('count') ? 0 : null;
+        },
+      }
+    );
+
+  const db = new Proxy(
+    {
+      $transaction: async (operations: Promise<unknown>[]) =>
+        Promise.all(operations),
+    } as Record<string, unknown>,
+    {
+      get: (target, name: string) => target[name] ?? table(name),
+    }
+  );
+
+  return { db: db as unknown as PrismaClient, writes };
 };
 
-const createDb = (
-  initial: {
-    payment?: Row[];
-    mail?: Row[];
-    challenge?: Row[];
-    trackingPixel?: Row[];
-    sync?: Row[];
-  } = {}
-) => ({
-  settingPaymentProvider: table(initial.payment),
-  settingMailProvider: table(initial.mail),
-  settingChallengeProvider: table(initial.challenge),
-  settingTrackingPixel: table(initial.trackingPixel),
-  settingSyncProvider: table(initial.sync),
-});
-
-const seed = (db: ReturnType<typeof createDb>) =>
-  seedProviders(db as unknown as PrismaClient);
-
-describe('seedProviders', () => {
-  it('sets up the default providers on a fresh database', async () => {
-    const db = createDb();
+describe('seed', () => {
+  it('leaves every integration for the admins to add themselves', async () => {
+    const { db, writes } = createDb();
 
     await seed(db);
 
-    expect(db.settingPaymentProvider.ids()).toEqual([
-      'bexio',
-      'mollie',
-      'no-charge',
-      'payrexx',
-      'payrexx-subscription',
-      'stripe',
-      'stripe-checkout',
-    ]);
-    expect(db.settingMailProvider.ids()).toEqual(['smtp']);
-    expect(db.settingChallengeProvider.ids()).toEqual(['turnstile']);
-    expect(db.settingTrackingPixel.ids()).toEqual(['prolitteris']);
-    expect(db.settingSyncProvider.ids()).toEqual(['mailchimp-sync']);
-  });
+    const providerWrites = writes.filter(write =>
+      PROVIDER_TABLES.some(table => write.startsWith(`${table}.`))
+    );
 
-  it('adds nothing to an installation that already has providers', async () => {
-    const db = createDb({
-      mail: [{ id: 'mailgun' }],
-      challenge: [{ id: 'default-turnstile' }],
-    });
-
-    await seed(db);
-
-    expect(db.settingPaymentProvider.ids()).toEqual([]);
-    expect(db.settingMailProvider.ids()).toEqual(['mailgun']);
-    expect(db.settingChallengeProvider.ids()).toEqual(['default-turnstile']);
-    expect(db.settingTrackingPixel.ids()).toEqual([]);
-    expect(db.settingSyncProvider.ids()).toEqual([]);
+    expect(providerWrites).toEqual([]);
+    expect(writes).toContain('userRole.upsert');
+    expect(writes).toContain('setting.upsert');
   });
 });

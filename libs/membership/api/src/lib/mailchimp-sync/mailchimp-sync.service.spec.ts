@@ -13,6 +13,7 @@ vi.mock('@mailchimp/mailchimp_marketing', () => ({
   default: {
     setConfig: vi.fn(),
     lists: {
+      getAllLists: vi.fn(),
       getListMembersInfo: vi.fn(),
       getListMergeFields: vi.fn(),
       setListMember: vi.fn(),
@@ -26,6 +27,7 @@ vi.mock('@mailchimp/mailchimp_marketing', () => ({
 
 const mailchimpStub = mailchimp as unknown as {
   lists: {
+    getAllLists: Mock;
     getListMembersInfo: Mock;
     getListMergeFields: Mock;
     setListMember: Mock;
@@ -153,6 +155,7 @@ const prismaMock = {
 
 const syncProviderSettingsServiceMock = {
   getEnabledSyncConfigs: vi.fn(),
+  getSyncConfig: vi.fn(),
   updateSyncResult: vi.fn(),
 };
 
@@ -564,5 +567,20 @@ describe('MailchimpSyncService', () => {
         syncProviderSettingsServiceMock.updateSyncResult
       ).toHaveBeenCalledWith(CONFIG_ID);
     });
+  });
+
+  it('lists the audiences while setting up, before the sync is switched on', async () => {
+    syncProviderSettingsServiceMock.getEnabledSyncConfigs.mockResolvedValue([]);
+    syncProviderSettingsServiceMock.getSyncConfig.mockResolvedValue({
+      ...syncConfig,
+      enabled: false,
+    });
+    mailchimpStub.lists.getAllLists.mockResolvedValue({
+      lists: [{ id: 'news', name: 'Newsletter', stats: { member_count: 3 } }],
+    });
+
+    await expect(service.getMailchimpLists(CONFIG_ID)).resolves.toEqual([
+      { id: 'news', name: 'Newsletter', memberCount: 3 },
+    ]);
   });
 });

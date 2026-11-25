@@ -109,6 +109,27 @@ mutations only succeed while none exists (the editor then shows «Einrichten»),
 and there is no delete mutation, so a medium never ends up without one. Change
 type or credentials on the existing row instead.
 
+In the editor (`apps/editor/src/app/routes/integrations/`), a new integration
+or provider type goes into `integrationCatalog.tsx` (group, title, permission,
+friendly provider name, logo), `integrationStatus.ts` (what counts as
+complete) and `providerGuides.ts` (setup steps). The guides print the webhook
+URL a provider must call, built from `apiURL` and the
+`{payment,mail,letter}-webhooks/:id` controller prefixes — rename a prefix and
+update `webhookUrl` too. The Mail Provider integration is titled «Transactional
+email» and the sync provider «Mailchimp audience», because both use Mailchimp
+(Transactional vs. Marketing keys).
+
+When a provider's later settings come from the provider itself (Mailchimp
+audiences, bexio's account/tax/unit/user/country ids), set it up as a wizard:
+give `GenericIntegrationList` `steps` (sections per step, each with a
+`complete` check; the key is step one) and a `useLookups` hook that turns id
+fields into pickers once the key is saved, as `paymentIntegrationForm.tsx`
+does for bexio with the `bexioSetupOptions` query
+(`libs/payment/api/.../bexio/bexio-setup.resolver.ts`). The stepper and
+`useWizard` are shared from `@wepublish/ui/editor`. Lookups must not depend on
+the integration being switched on (Mailchimp's work before the sync is
+enabled).
+
 ### Email quality evidence (what providers tell us about addresses)
 
 Everything lands in `email_quality_events` through `EMAIL_QUALITY_RECORDER`
@@ -361,8 +382,10 @@ Hot & Trending (analytics integrations, `settings.analyticsProvider`):
 - Plausible (`libs/plausible/api`, row `plausible`, Stats API v2)
 - Umami (`libs/umami/api`, row `umami`, `/websites/:id/metrics`)
 
-Each row is created on boot by its `*DbConfig.initDatabaseConfiguration()`.
-The `hotAndTrending` flag picks the provider that answers the `hotAndTrending`
+Nothing creates these rows (nor any other provider row): neither the seed nor
+the API at boot. Admins add the providers they use in the editor, which creates
+each analytics row under the fixed id the API reads; a `*DbConfig` without its
+row just returns an empty configuration. The `hotAndTrending` flag picks the provider that answers the `hotAndTrending`
 query (`AnalyticsProviderHotAndTrendingDataSource` in `libs/article/api`);
 setting it on one row clears it on the others. Plausible and Umami keep their
 api key encrypted in `credentials` and take an optional `url` for self-hosting.

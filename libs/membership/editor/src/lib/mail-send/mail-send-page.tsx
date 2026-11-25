@@ -16,13 +16,16 @@ import {
   MailTemplateMissingPlaceholdersDocument,
 } from '@wepublish/editor/api';
 import {
+  canGoToStep,
   createCheckedPermissionComponent,
   enqueueSnackbar,
   humanizeError,
   ListViewContainer,
   ListViewHeader,
   PageTitle,
+  StepNav,
   useAuthorisation,
+  WizardStepper,
 } from '@wepublish/ui/editor';
 import {
   Alert,
@@ -62,7 +65,6 @@ import { MdAdd, MdEdit, MdSend } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import { useLetterChannel } from '../mail-template/use-letter-channel';
 import { sendChannelFor } from '../mail-template/template-versions';
-import { canGoToStep, StepNav, WizardStepper } from './step-nav';
 import { EmailEvidenceNotice } from './email-evidence-notice';
 import { mailErrorHelpKey } from './mail-log-common';
 import {

@@ -1,6 +1,13 @@
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import {
+  act,
+  cleanup,
+  fireEvent,
+  render,
+  renderHook,
+  screen,
+} from '@testing-library/react';
 
-import { canGoToStep, StepNav, WizardStepper } from './step-nav';
+import { canGoToStep, StepNav, useWizard, WizardStepper } from './wizard';
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string) => key }),
@@ -40,8 +47,8 @@ describe('StepNav', () => {
     const onNext = vi.fn();
     render(<StepNav onNext={onNext} />);
 
-    expect(screen.queryByRole('button', { name: 'mailSend.back' })).toBeNull();
-    fireEvent.click(screen.getByRole('button', { name: 'mailSend.next' }));
+    expect(screen.queryByRole('button', { name: 'wizard.back' })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'wizard.next' }));
     expect(onNext).toHaveBeenCalled();
   });
 
@@ -57,7 +64,7 @@ describe('StepNav', () => {
     expect(
       (
         screen.getByRole('button', {
-          name: 'mailSend.next',
+          name: 'wizard.next',
         }) as HTMLButtonElement
       ).disabled
     ).toBe(true);
@@ -89,5 +96,64 @@ describe('WizardStepper', () => {
       (screen.getByRole('tab', { name: /Review/ }) as HTMLButtonElement)
         .disabled
     ).toBe(true);
+  });
+
+  it('marks the step the wizard is on', () => {
+    render(
+      <WizardStepper
+        steps={[{ title: 'Connect' }, { title: 'Audience' }]}
+        step={1}
+        canGoTo={() => true}
+        onStep={() => undefined}
+      />
+    );
+
+    expect(screen.getByRole('tab', { name: /Audience/ })).toHaveAttribute(
+      'aria-selected',
+      'true'
+    );
+    expect(screen.getByRole('tab', { name: /Connect/ })).toHaveAttribute(
+      'aria-selected',
+      'false'
+    );
+  });
+});
+
+describe('useWizard', () => {
+  it('starts at the first step that is not complete yet', () => {
+    const { result } = renderHook(() =>
+      useWizard({ complete: [true, false, false] })
+    );
+
+    expect(result.current.step).toBe(1);
+  });
+
+  it('moves on only once the current step is complete', () => {
+    const { result, rerender } = renderHook(
+      ({ complete }) => useWizard({ complete, initial: 0 }),
+      { initialProps: { complete: [false, false] } }
+    );
+
+    act(() => result.current.next());
+    expect(result.current.step).toBe(0);
+
+    rerender({ complete: [true, false] });
+    act(() => result.current.next());
+    expect(result.current.step).toBe(1);
+
+    act(() => result.current.back());
+    expect(result.current.step).toBe(0);
+  });
+
+  it('ignores a jump to a step that cannot be reached yet', () => {
+    const { result } = renderHook(() =>
+      useWizard({ complete: [true, false, false], initial: 0 })
+    );
+
+    act(() => result.current.goTo(2));
+    expect(result.current.step).toBe(0);
+
+    act(() => result.current.goTo(1));
+    expect(result.current.step).toBe(1);
   });
 });

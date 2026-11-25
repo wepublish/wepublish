@@ -1,11 +1,4 @@
-import {
-  ChallengeProviderType,
-  MailProviderType,
-  PaymentProviderType,
-  PrismaClient,
-  SyncProviderType,
-  TrackingPixelProviderType,
-} from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { SettingName } from '../../settings/api/src/lib/setting';
 
 const seedSettings = (prisma: PrismaClient) =>
@@ -346,35 +339,6 @@ const seedSettings = (prisma: PrismaClient) =>
       },
     }),
 
-    prisma.settingAIProvider.upsert({
-      where: {
-        id: 'v0',
-      },
-      update: {},
-      create: {
-        id: 'v0',
-        name: 'V0',
-        type: 'V0',
-      },
-    }),
-
-    prisma.settingAnalyticsProvider.upsert({
-      where: {
-        id: 'google-analytics',
-      },
-      update: {},
-      create: {
-        id: 'google-analytics',
-        name: 'Google-Analytics',
-        type: 'GOOGLE',
-        credentials:
-          'v1.joXbh+gkDHyDSWR8.xx9rJ27ZN9VWALNkm3ET0w==.Hl8G9f69NSAH5A==',
-        property: '1',
-        articlePrefix: '/a/',
-        hotAndTrending: true,
-      },
-    }),
-
     // remove non-used settings
     prisma.setting.deleteMany({
       where: {
@@ -441,84 +405,12 @@ const seedRoles = (prisma: PrismaClient) =>
     }),
   ] as const;
 
-const DEFAULT_PAYMENT_PROVIDERS = [
-  PaymentProviderType.PAYREXX,
-  PaymentProviderType.PAYREXX_SUBSCRIPTION,
-  PaymentProviderType.STRIPE,
-  PaymentProviderType.STRIPE_CHECKOUT,
-  PaymentProviderType.MOLLIE,
-  PaymentProviderType.BEXIO,
-  PaymentProviderType.NO_CHARGE,
-] as const;
-
-const PROVIDER_IDS: Record<PaymentProviderType, string> = {
-  [PaymentProviderType.PAYREXX]: 'payrexx',
-  [PaymentProviderType.PAYREXX_SUBSCRIPTION]: 'payrexx-subscription',
-  [PaymentProviderType.STRIPE]: 'stripe',
-  [PaymentProviderType.STRIPE_CHECKOUT]: 'stripe-checkout',
-  [PaymentProviderType.MOLLIE]: 'mollie',
-  [PaymentProviderType.BEXIO]: 'bexio',
-  [PaymentProviderType.NO_CHARGE]: 'no-charge',
-  [PaymentProviderType.SIMULATED]: 'simulated',
-};
-
-export async function seedProviders(prisma: PrismaClient) {
-  const existing = await Promise.all([
-    prisma.settingPaymentProvider.count(),
-    prisma.settingMailProvider.count(),
-    prisma.settingChallengeProvider.count(),
-    prisma.settingTrackingPixel.count(),
-    prisma.settingSyncProvider.count(),
-  ]);
-
-  if (existing.some(count => count > 0)) {
-    return;
-  }
-
-  await prisma.settingPaymentProvider.createMany({
-    data: DEFAULT_PAYMENT_PROVIDERS.map(type => ({
-      id: PROVIDER_IDS[type],
-      name: PROVIDER_IDS[type],
-      type,
-    })),
-  });
-
-  await prisma.settingMailProvider.create({
-    data: { id: 'smtp', name: 'SMTP', type: MailProviderType.SMTP },
-  });
-
-  await prisma.settingChallengeProvider.create({
-    data: {
-      id: 'turnstile',
-      name: 'Cloudflare Turnstile',
-      type: ChallengeProviderType.TURNSTILE,
-    },
-  });
-
-  await prisma.settingTrackingPixel.create({
-    data: {
-      id: 'prolitteris',
-      name: 'ProLitteris',
-      type: TrackingPixelProviderType.prolitteris,
-    },
-  });
-
-  await prisma.settingSyncProvider.create({
-    data: {
-      id: 'mailchimp-sync',
-      name: 'Mailchimp',
-      type: SyncProviderType.MAILCHIMP,
-    },
-  });
-}
-
 export async function seed(prisma: PrismaClient) {
   const result = await prisma.$transaction([
     ...seedRoles(prisma),
     ...seedSettings(prisma),
   ] as const);
 
-  await seedProviders(prisma);
-
+  // No integration providers: admins add the ones they use in the editor.
   return result;
 }

@@ -1,4 +1,4 @@
-import { PrismaClient, AnalyticsProviderType } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from '@wepublish/settings/api';
 import { UmamiConfig } from './umami.service';
@@ -15,28 +15,9 @@ export class UmamiDbConfig {
     private readonly id: string
   ) {}
 
-  /**
-   * Initialize the database record if it doesn't exist
-   */
-  async initDatabaseConfiguration(): Promise<void> {
-    await this.prisma.settingAnalyticsProvider.createMany({
-      data: [
-        {
-          id: this.id,
-          type: AnalyticsProviderType.UMAMI,
-          name: 'Umami',
-          credentials: null,
-          property: null,
-          articlePrefix: '',
-          url: null,
-        },
-      ],
-      skipDuplicates: true,
-    });
-  }
-
   private async loadUmami(): Promise<UmamiConfig> {
-    await this.prisma.settingAnalyticsProvider.update({
+    // updateMany: the provider may not be set up (yet), which update would reject.
+    await this.prisma.settingAnalyticsProvider.updateMany({
       where: { id: this.id },
       data: { lastLoadedAt: new Date() },
     });

@@ -75,6 +75,20 @@ export type MemberPlan = {
   paymentMethods: { id: string; slug: string; name: string }[];
 };
 
+/** Someone working in the editor, signed in through `sessionToken`. */
+export type Staff = {
+  kind: 'staff';
+  id: string;
+  email: string;
+  sessionToken: string;
+};
+
+/** A payment provider a scenario added; its id appears in its webhook URL. */
+export type PaymentProvider = {
+  kind: 'paymentProvider';
+  id: string;
+};
+
 /** An API key («API-Schlüssel», `wep_…`) and the user who created it. */
 export type ApiKey = {
   kind: 'apiKey';
@@ -92,7 +106,13 @@ export type AuditLogEntry = {
   success: boolean;
 };
 
-export type Entity = Reader | Article | Paywall | ApiKey;
+export type Entity =
+  | Reader
+  | Article
+  | Paywall
+  | Staff
+  | PaymentProvider
+  | ApiKey;
 
 type Cleanup = { label: string; run: () => Promise<unknown> };
 
@@ -191,9 +211,58 @@ export class TestData {
   }
 
   /**
-   * Registration needs a captcha. A freshly seeded stack has the Turnstile
-   * provider without keys, so the challenge query fails; it then gets
-   * Cloudflare's always-pass test keys and keeps them. Configured keys are
+   * An editor account with the admin role and a session for it. Exempt from
+   * TOTP, like the seed's staff, so the editor opens without a second factor.
+   */
+  async createAdmin(alias: string) {
+    const api = await this.api();
+    const runId = this.runId();
+    const password = `${this.faker.internet.password({ length: 16 })}-Aa1`;
+    const email = `e2e+${runId}@example.test`;
+
+    const { createUser } = await api.gql<{ createUser: { id: string } }>(
+      `mutation CreateAdmin($email: String!, $name: String!, $password: String) {
+        createUser(email: $email, name: $name, password: $password, active: true,
+          emailVerifiedAt: "${new Date().toISOString()}", properties: [],
+          roleIDs: ["admin"], totpExempt: true, skipMail: true) { id }
+      }`,
+      { email, name: this.faker.person.fullName(), password }
+    );
+
+    this.onCleanup(`admin ${email}`, () => this.deleteUser(createUser.id));
+
+    const { token } = await api.as(email, password);
+
+    if (!token) {
+      throw new Error(`No session for the admin ${email}.`);
+    }
+
+    return this.remember(alias, {
+      kind: 'staff',
+      id: createUser.id,
+      email,
+      sessionToken: token,
+    } satisfies Staff);
+  }
+
+  /** A fresh id for a payment provider a scenario adds; deleted afterwards. */
+  newPaymentProvider(alias: string) {
+    const id = this.runId();
+
+    this.onCleanup(`payment provider ${id}`, async () =>
+      (await this.api()).gql(
+        `mutation DeleteProvider($id: String!) { deletePaymentProviderSetting(id: $id) { id } }`,
+        { id }
+      )
+    );
+
+    return this.remember(alias, { kind: 'paymentProvider', id } satisfies PaymentProvider);
+  }
+
+  /**
+   * Registration needs a captcha. The seed sets up no integrations, so a
+   * fresh stack has no challenge provider: it then gets Turnstile with
+   * Cloudflare's always-pass test keys and keeps it. Configured keys are
    * never touched.
    */
   async ensureChallengeKeys(providerId = 'turnstile') {
@@ -209,15 +278,70 @@ export class TestData {
       return;
     }
 
+    const keys = {
+      id: providerId,
+      siteKey: '1x00000000000000000000AA',
+      secret: '1x0000000000000000000000000000000AA',
+    };
+    const { challengeProviderSettings } = await api.gql<{
+      challengeProviderSettings: { id: string }[];
+    }>(`query { challengeProviderSettings { id } }`);
+
+    if (challengeProviderSettings.some(({ id }) => id === providerId)) {
+      await api.gql(
+        `mutation UpdateChallengeKeys($id: String, $siteKey: String, $secret: String) {
+          updateChallengeProviderSetting(id: $id, siteKey: $siteKey, secret: $secret) { id }
+        }`,
+        keys
+      );
+      return;
+    }
+
     await api.gql(
-      `mutation UpdateChallengeKeys($id: String, $siteKey: String, $secret: String) {
-        updateChallengeProviderSetting(id: $id, siteKey: $siteKey, secret: $secret) { id }
+      `mutation CreateChallenge($id: String!, $siteKey: String, $secret: String) {
+        createChallengeProviderSetting(id: $id, name: "Cloudflare Turnstile", type: TURNSTILE, siteKey: $siteKey, secret: $secret) { id }
       }`,
-      {
-        id: providerId,
-        siteKey: '1x00000000000000000000AA',
-        secret: '1x0000000000000000000000000000000AA',
-      }
+      keys
+    );
+  }
+
+  /**
+   * The `simulated` payment method needs its provider. The seed sets up no
+   * integrations, so a fresh stack gets it here, once, and keeps it like seed
+   * data (scenarios running in parallel pay with it).
+   */
+  async ensureSimulatedPayments() {
+    const api = await this.api();
+    const { paymentProviderSettings } = await api.gql<{
+      paymentProviderSettings: { id: string }[];
+    }>(`query { paymentProviderSettings { id } }`);
+
+    if (paymentProviderSettings.some(({ id }) => id === 'simulated')) {
+      return;
+    }
+
+    await api.gql(
+      `mutation { createPaymentProviderSetting(id: "simulated", name: "Simulated", type: SIMULATED, offSessionPayments: true) { id } }`
+    );
+  }
+
+  /**
+   * Mail journeys need a mail provider. The seed sets up no integrations, so
+   * a fresh stack gets SMTP, which the API sends to Mailpit (MAIL_SMTP_HOST,
+   * else localhost:1025), and keeps it. A configured provider is never touched.
+   */
+  async ensureMailProvider() {
+    const api = await this.api();
+    const { mailProviderSettings } = await api.gql<{
+      mailProviderSettings: { id: string }[];
+    }>(`query { mailProviderSettings { id } }`);
+
+    if (mailProviderSettings.length) {
+      return;
+    }
+
+    await api.gql(
+      `mutation { createMailProviderSetting(id: "smtp", name: "SMTP", type: SMTP, fromAddress: "dev@wepublish.ch") { id } }`
     );
   }
 
@@ -541,6 +665,11 @@ export class TestData {
     paymentMethodSlug?: string;
   }) {
     const api = await this.api();
+
+    if (paymentMethodSlug === 'simulated') {
+      await this.ensureSimulatedPayments();
+    }
+
     const plan = await this.memberPlan(memberPlanSlug);
     // Admins may put a subscription on a method the plan does not offer in
     // the checkout (Neue Wege: bexio, for readers who pay by invoice).

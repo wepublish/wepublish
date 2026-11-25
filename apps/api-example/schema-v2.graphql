@@ -606,6 +606,22 @@ interface BaseUser {
   userImageID: String
 }
 
+type BexioSetupOption {
+  id: Int!
+  label: String!
+}
+
+"""
+What a bexio integration can be set to, read from bexio with its token.
+"""
+type BexioSetupOptions {
+  accounts: [BexioSetupOption!]!
+  countries: [BexioSetupOption!]!
+  taxes: [BexioSetupOption!]!
+  units: [BexioSetupOption!]!
+  users: [BexioSetupOption!]!
+}
+
 type BildwurfAdBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
@@ -6378,6 +6394,11 @@ type Query {
   authors(cursorId: String, filter: AuthorFilter, order: SortOrder = Descending, skip: Int, sort: AuthorSort = ModifiedAt, take: Int): PaginatedAuthors!
   banner(id: String!): Banner!
   banners(skip: Int!, take: Int!): [Banner!]!
+
+  """
+  The accounts, taxes, units, users and countries of the bexio company behind a bexio integration, to choose from instead of typing ids.
+  """
+  bexioSetupOptions(id: String!): BexioSetupOptions!
 
   """Returns a list of block styles."""
   blockStyles: [BlockStyle!]!

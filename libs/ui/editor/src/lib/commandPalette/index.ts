@@ -3,6 +3,7 @@ export * from './command';
 export * from './commandPalette';
 export * from './commandPaletteContext';
 export * from './fuzzyMatch';
+export * from './fuzzySearch';
 export * from './groupMatches';
 export * from './searchCommands';
 export * from './commandPaletteTrigger';

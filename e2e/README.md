@@ -119,16 +119,22 @@ skip reason in the report (`pnpm run e2e:report`).
   feature tagged `@mode:serial`.
 - **Third parties** (`support/third-party.ts`): analytics, ads, Sentry and
   tracking pixels are blocked in every test; Cloudflare Turnstile is not.
-- **Captcha:** the seed creates the Turnstile provider without keys, so the
-  `challenge` query fails. Steps that need a captcha call
-  `data.ensureChallengeKeys()`, which sets Cloudflare's always-pass test keys
-  (`1x00000000000000000000AA`) only when none are configured, and keeps them.
+- **Integrations:** the seed sets up no providers (admins add their own in the
+  editor), so the factories add what a journey needs when it is missing, and
+  keep it: `ensureSimulatedPayments()` (the `simulated` provider behind the
+  seeded payment method, called before subscribing or paying),
+  `ensureMailProvider()` (SMTP to Mailpit, before mail journeys) and
+  `ensureChallengeKeys()` (Turnstile with Cloudflare's always-pass test keys
+  `1x00000000000000000000AA`, for captchas). Configured providers are never
+  touched.
   The API still calls Cloudflare to verify, so it needs outbound internet.
 
 What stays behind on purpose:
 
 - the `mitmachen` subscribe page and the `LOGIN_LINK` system-mail template,
   created once when a freshly seeded stack lacks them;
+- the `simulated` payment provider, the SMTP mail provider and Turnstile with
+  test keys, added once when the stack has none (see Integrations above);
 - invoices (and their payment / subscription period) of e2e readers who
   paid: the API cannot delete subscription periods, which block invoice
   deletion. Find them by mail `e2e+`.
@@ -152,7 +158,7 @@ from your dev servers and dev database (`localStack` in `support/targets.ts`):
 Before the tests, `run.ts` runs `prisma migrate deploy` against
 `wepublish_e2e` (creating it on the first run) and seeds it whenever
 migrations were applied, and starts mailpit (`docker compose`, SMTP :1025 for
-the seeded provider, mails at http://localhost:8025). `E2E_DATABASE_URL` picks another database. The
+the SMTP provider `ensureMailProvider()` adds, mails at http://localhost:8025). `E2E_DATABASE_URL` picks another database. The
 servers are started unless already running on those ports (then reused), and
 stopped after the run. Only the selected targets are served, and nothing is
 started (nor migrated) for a URL you override (`BASE_URL`, `E2E_EDITOR_URL`,

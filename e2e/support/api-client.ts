@@ -13,7 +13,7 @@ type GraphQLResponse<T> = {
 export class ApiClient {
   constructor(
     private readonly request: APIRequestContext,
-    private readonly token?: string
+    readonly token?: string
   ) {}
 
   get endpoint() {

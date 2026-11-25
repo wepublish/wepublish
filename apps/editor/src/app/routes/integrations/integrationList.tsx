@@ -1,262 +1,339 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
-  Button,
+  Alert,
   Card,
-  CardActions,
-  CardContent,
+  CardActionArea,
+  Chip,
+  InputAdornment,
+  TextField,
   Typography,
 } from '@mui/material';
-import type { FeatureKey } from '@wepublish/features';
 import {
-  CanGetAISettings,
-  CanGetAnalyticsProviderSettings,
-  CanGetChallengeProviderSettings,
-  CanGetLetterProviderSettings,
-  CanGetMailchimpSyncSettings,
-  CanGetMailProviderSettings,
-  CanGetPaymentProviderSettings,
-  CanGetPdfRendererSettings,
-  CanGetTrackingPixelSettings,
-} from '@wepublish/permissions';
-import {
-  FeatureControl,
-  InfoTooltip,
+  AuthContext,
+  fuzzySearch,
   PageTitle,
-  PermissionControl,
+  useFeatures,
 } from '@wepublish/ui/editor';
-import { type ElementType, useId } from 'react';
+import { useContext, useId, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  MdAnalytics,
-  MdCreditCard,
-  MdEmail,
-  MdMarkunreadMailbox,
-  MdPictureAsPdf,
-  MdSecurity,
-  MdSmartToy,
-  MdSync,
-} from 'react-icons/md';
+import { MdSearch } from 'react-icons/md';
 import { Link as RouterLink } from 'react-router-dom';
 
-import bexioLogo from './assets/bexio.webp';
-import cloudflareLogo from './assets/cloudflare.svg';
-import googleLogo from './assets/google.svg';
-import hcaptchaLogo from './assets/hcaptcha.webp';
-import mailChimpLogo from './assets/mailchimp.webp';
-import mailgunLogo from './assets/mailgun.svg';
-import mollieLogo from './assets/mollie.webp';
-import payrexxLogo from './assets/payrexx.webp';
-import pingenLogo from './assets/pingen.svg';
-import plausibleLogo from './assets/plausible.svg';
-import proLitterisLogo from './assets/proLitteris.svg';
-import slackLogo from './assets/slack.webp';
-import stripeLogo from './assets/stripe.svg';
-import umamiLogo from './assets/umami.svg';
-import vercelLogo from './assets/vercel.svg';
+import {
+  IntegrationDefinition,
+  IntegrationGroup,
+  integrationCatalog,
+  integrationGroups,
+} from './integrationCatalog';
+import { integrationStatus, ProviderSetting } from './integrationStatus';
+import { IntegrationStatusChip } from './integrationStatusChip';
 
-const Wrapper = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px;
-
-  ${({ theme }) => theme.breakpoints.up('md')} {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  ${({ theme }) => theme.breakpoints.up('lg')} {
-    grid-template-columns: repeat(3, 1fr);
-  }
-`;
-
-const Title = styled(PageTitle)`
-  grid-column: -1/1;
-`;
-
-const LogoList = styled.div`
+export const IntegrationListHeader = styled.div`
   display: flex;
-  gap: 12px;
-  margin-top: 12px;
   flex-wrap: wrap;
-  justify-content: space-around;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px 24px;
+  margin-bottom: 24px;
 `;
 
-const IntegrationLogo = styled.img`
-  height: 32px;
+export const IntegrationGroups = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  align-items: start;
+  gap: 32px 24px;
+`;
+
+export const IntegrationGroupSection = styled.section`
+  display: grid;
+  gap: 12px;
+`;
+
+export const IntegrationGroupHeading = styled.div`
+  display: grid;
+  gap: 2px;
+`;
+
+export const IntegrationGrid = styled.div`
+  display: grid;
+  gap: 12px;
+`;
+
+export const IntegrationCardBody = styled.div`
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas:
+    'icon title status'
+    'icon summary summary'
+    'icon providers providers';
+  column-gap: 12px;
+  row-gap: 6px;
+  align-items: center;
+  padding: 14px 16px;
+  height: 100%;
+`;
+
+export const IntegrationIcon = styled.span`
+  grid-area: icon;
+  align-self: start;
+  display: inline-flex;
+  font-size: 20px;
+  padding: 6px;
+  border-radius: 6px;
+  color: ${({ theme }) => theme.vars?.palette.text.secondary};
+  background: ${({ theme }) => theme.vars?.palette.action.hover};
+`;
+
+export const IntegrationSummary = styled(Typography)`
+  grid-area: summary;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+`;
+
+export const IntegrationProviders = styled.div`
+  grid-area: providers;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  min-height: 24px;
+`;
+
+export const IntegrationLogo = styled.img`
+  height: 18px;
+  max-width: 72px;
   object-fit: contain;
 `;
 
-type Integration = {
-  title: string;
-  info?: string;
-  permission: string;
-  path: string;
-  icon: ElementType;
-  logos: { src: string; name: string }[];
-  /** Set for integrations that ship dark behind a feature. */
-  feature?: FeatureKey;
-};
+function IntegrationCard({
+  integration,
+}: {
+  integration: IntegrationDefinition;
+}) {
+  const titleId = useId();
+  const statusId = useId();
+  const { data, loading } = useQuery<Record<string, unknown>>(
+    integration.query,
+    { fetchPolicy: 'cache-and-network' }
+  );
+  const settings = data?.[integration.dataKey] as ProviderSetting[] | undefined;
+  const status = integrationStatus(integration.key, settings);
+  const known = !loading || !!settings;
+  const Icon = integration.icon;
+
+  return (
+    <Card
+      component="article"
+      variant="outlined"
+      sx={{ borderRadius: 1 }}
+    >
+      <CardActionArea
+        component={RouterLink}
+        to={integration.path}
+        aria-labelledby={titleId}
+        aria-describedby={statusId}
+        sx={{ height: '100%' }}
+      >
+        <IntegrationCardBody>
+          <IntegrationIcon aria-hidden>
+            <Icon />
+          </IntegrationIcon>
+
+          <Typography
+            variant="subtitle1"
+            component="h3"
+            id={titleId}
+            sx={{ gridArea: 'title', fontWeight: 600, lineHeight: 1.3 }}
+          >
+            {integration.title}
+          </Typography>
+
+          <span
+            id={statusId}
+            style={{ gridArea: 'status' }}
+          >
+            {known && <IntegrationStatusChip status={status} />}
+          </span>
+
+          <IntegrationSummary
+            variant="body2"
+            sx={{ color: 'text.secondary' }}
+          >
+            {integration.tagline}
+          </IntegrationSummary>
+
+          <IntegrationProviders>
+            {status.state === 'notSetUp' ?
+              integration.providers
+                .filter(provider => provider.logo)
+                .map(provider => (
+                  <IntegrationLogo
+                    key={provider.type}
+                    src={provider.logo}
+                    alt={provider.label}
+                    title={provider.label}
+                  />
+                ))
+            : status.providers.map(provider => (
+                <Chip
+                  key={provider}
+                  size="small"
+                  variant="outlined"
+                  color={
+                    (
+                      status.state === 'incomplete' &&
+                      status.incomplete.includes(provider)
+                    ) ?
+                      'warning'
+                    : 'default'
+                  }
+                  label={provider}
+                />
+              ))
+            }
+          </IntegrationProviders>
+        </IntegrationCardBody>
+      </CardActionArea>
+    </Card>
+  );
+}
+
+/** The integrations this user may open, given their roles and the medium's features. */
+function useVisibleIntegrations(catalog: IntegrationDefinition[]) {
+  const roles = useContext(AuthContext)?.session?.sessionRoles;
+  const features = useFeatures();
+
+  return useMemo(
+    () =>
+      catalog.filter(integration => {
+        const permitted =
+          !roles ||
+          roles.some(role =>
+            role.permissions.some(
+              permission => permission.id === integration.permission.id
+            )
+          );
+        const featured =
+          !integration.feature || !!features?.has(integration.feature);
+
+        return permitted && featured;
+      }),
+    [catalog, roles, features]
+  );
+}
+
+/** Integrations matching the query, by title, purpose or provider name. */
+export function searchIntegrations(
+  integrations: IntegrationDefinition[],
+  groups: IntegrationGroup[],
+  query: string
+) {
+  return fuzzySearch(integrations, query, integration => ({
+    title: integration.title,
+    section: groups.find(group => group.key === integration.group)?.title,
+    keywords: integration.providers.map(provider => provider.label),
+  })).map(({ item }) => item);
+}
 
 export function IntegrationList() {
   const { t } = useTranslation();
-  const listId = useId();
-  const titleId = (path: string) =>
-    `${listId}${path.replace(/\//g, '-')}-title`;
+  const [query, setQuery] = useState('');
+  const catalog = useMemo(() => integrationCatalog(t), [t]);
+  const visible = useVisibleIntegrations(catalog);
+  const allGroups = integrationGroups(t);
+  const matching = searchIntegrations(visible, allGroups, query);
+  const searching = !!query.trim();
 
-  const integrations: Integration[] = [
-    {
-      title: t('integrations.ai'),
-      info: t('integrations.aiInfo'),
-      permission: CanGetAISettings.id,
-      path: '/integrations/ai',
-      icon: MdSmartToy,
-      logos: [{ src: vercelLogo, name: 'Vercel' }],
-    },
-    {
-      title: t('integrations.challengeProvider'),
-      info: t('integrations.challengeProviderInfo'),
-      permission: CanGetChallengeProviderSettings.id,
-      path: '/integrations/challenge',
-      icon: MdSecurity,
-      logos: [
-        { src: cloudflareLogo, name: 'Cloudflare' },
-        { src: hcaptchaLogo, name: 'hCaptcha' },
-      ],
-    },
-    {
-      title: t('integrations.paymentProvider'),
-      info: t('integrations.paymentProviderInfo'),
-      permission: CanGetPaymentProviderSettings.id,
-      path: '/integrations/payment',
-      icon: MdCreditCard,
-      logos: [
-        { src: payrexxLogo, name: 'Payrexx' },
-        { src: stripeLogo, name: 'Stripe' },
-        { src: mollieLogo, name: 'Mollie' },
-        { src: bexioLogo, name: 'bexio' },
-      ],
-    },
-    {
-      title: t('integrations.trackingPixel'),
-      info: t('integrations.trackingPixelInfo'),
-      permission: CanGetTrackingPixelSettings.id,
-      path: '/integrations/tracking-pixel',
-      icon: MdAnalytics,
-      logos: [{ src: proLitterisLogo, name: 'ProLitteris' }],
-    },
-    {
-      title: t('integrations.mailProvider'),
-      info: t('integrations.mailProviderInfo'),
-      permission: CanGetMailProviderSettings.id,
-      path: '/integrations/mail',
-      icon: MdEmail,
-      logos: [
-        { src: mailgunLogo, name: 'Mailgun' },
-        { src: mailChimpLogo, name: 'Mailchimp' },
-        { src: slackLogo, name: 'Slack' },
-      ],
-    },
-    {
-      title: t('integrations.letterProvider'),
-      permission: CanGetLetterProviderSettings.id,
-      feature: 'paper-letters',
-      path: '/integrations/letter',
-      icon: MdMarkunreadMailbox,
-      logos: [{ src: pingenLogo, name: 'Pingen' }],
-    },
-    {
-      title: t('integrations.pdfRenderer'),
-      permission: CanGetPdfRendererSettings.id,
-      feature: 'paper-letters',
-      path: '/integrations/pdf-renderer',
-      icon: MdPictureAsPdf,
-      logos: [{ src: cloudflareLogo, name: 'Cloudflare' }],
-    },
-    {
-      title: t('integrations.analytics'),
-      info: t('integrations.analyticsInfo'),
-      permission: CanGetAnalyticsProviderSettings.id,
-      path: '/integrations/analytics',
-      icon: MdAnalytics,
-      logos: [
-        { src: googleLogo, name: 'Google' },
-        { src: plausibleLogo, name: 'Plausible' },
-        { src: umamiLogo, name: 'Umami' },
-      ],
-    },
-    {
-      title: t('integrations.mailchimpSync'),
-      info: t('integrations.mailchimpSyncInfo'),
-      permission: CanGetMailchimpSyncSettings.id,
-      path: '/integrations/mailchimp-sync',
-      icon: MdSync,
-      logos: [{ src: mailChimpLogo, name: 'Mailchimp' }],
-    },
-  ];
+  const groups = allGroups
+    .map(group => ({
+      ...group,
+      items: matching.filter(integration => integration.group === group.key),
+    }))
+    .filter(group => group.items.length);
 
   return (
-    <Wrapper>
-      <Title>
-        {t('integrations.title')}{' '}
-        <InfoTooltip text={t('integrations.infoText')} />
-      </Title>
-      {integrations.map(integration => {
-        const card = (
-          <PermissionControl
-            key={integration.title}
-            qualifyingPermissions={[integration.permission]}
+    <div>
+      <IntegrationListHeader>
+        <div>
+          <PageTitle>{t('integrations.title')}</PageTitle>
+          <Typography sx={{ color: 'text.secondary', maxWidth: '75ch' }}>
+            {t('integrations.overview.intro')}
+          </Typography>
+        </div>
+
+        {visible.length > 3 && (
+          <TextField
+            type="search"
+            size="small"
+            value={query}
+            onChange={event => setQuery(event.target.value)}
+            placeholder={t('integrations.overview.searchPlaceholder')}
+            sx={{ width: { xs: '100%', sm: 320 } }}
+            slotProps={{
+              htmlInput: { 'aria-label': t('integrations.overview.search') },
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <MdSearch />
+                  </InputAdornment>
+                ),
+              },
+            }}
+          />
+        )}
+      </IntegrationListHeader>
+
+      {searching && !matching.length && (
+        <Typography sx={{ color: 'text.secondary' }}>
+          {t('integrations.overview.noMatch')}
+        </Typography>
+      )}
+
+      <IntegrationGroups>
+        {groups.map(group => (
+          <IntegrationGroupSection
+            key={group.key}
+            aria-labelledby={`integration-group-${group.key}`}
           >
-            <Card
-              variant="outlined"
-              sx={{ borderRadius: 1 }}
-            >
-              <CardContent>
-                <Typography
-                  variant="h6"
-                  component="h2"
-                  sx={{
-                    marginBottom: 2,
-                  }}
-                >
-                  <span id={titleId(integration.path)}>
-                    {integration.title}
-                  </span>{' '}
-                  <InfoTooltip text={integration.info} />
-                </Typography>
+            <IntegrationGroupHeading>
+              <Typography
+                variant="h6"
+                component="h2"
+                id={`integration-group-${group.key}`}
+              >
+                {group.title}
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{ color: 'text.secondary' }}
+              >
+                {group.description}
+              </Typography>
+            </IntegrationGroupHeading>
 
-                <LogoList>
-                  {integration.logos.map(logo => (
-                    <IntegrationLogo
-                      key={logo.name}
-                      src={logo.src}
-                      alt={logo.name}
-                    />
-                  ))}
-                </LogoList>
-              </CardContent>
+            {group.note && group.items.length > 1 && (
+              <Alert
+                severity="info"
+                sx={{ paddingY: 0, typography: 'body2' }}
+              >
+                {group.note}
+              </Alert>
+            )}
 
-              <CardActions>
-                <Button
-                  component={RouterLink}
-                  to={integration.path}
-                  size="small"
-                  aria-describedby={titleId(integration.path)}
-                >
-                  {t('edit')}
-                </Button>
-              </CardActions>
-            </Card>
-          </PermissionControl>
-        );
-
-        return integration.feature ?
-            <FeatureControl
-              key={integration.title}
-              feature={integration.feature}
-            >
-              {card}
-            </FeatureControl>
-          : card;
-      })}
-    </Wrapper>
+            <IntegrationGrid>
+              {group.items.map(integration => (
+                <IntegrationCard
+                  key={integration.key}
+                  integration={integration}
+                />
+              ))}
+            </IntegrationGrid>
+          </IntegrationGroupSection>
+        ))}
+      </IntegrationGroups>
+    </div>
   );
 }

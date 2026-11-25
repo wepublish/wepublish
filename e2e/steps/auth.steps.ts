@@ -11,6 +11,7 @@ const loginWithLink = /Mit Link einloggen|Se connecter avec un lien/i;
 const sessionCookie = 'auth.token';
 
 Given('a reader {string}', async ({ data }, alias: string) => {
+  await data.ensureMailProvider();
   await data.ensureSystemMail('LOGIN_LINK', 'seed-login-link');
   await data.createUser(alias);
 });

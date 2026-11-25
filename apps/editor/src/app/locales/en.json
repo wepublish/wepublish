@@ -3853,24 +3853,19 @@
     },
     "search": "Search",
     "integrations": {
-      "whatAreIntegrations": "What are integrations?",
-      "infoText": "Integrations are third-party interfaces built into We.Publish. These are used, for example, to send emails or process payments securely.",
       "title": "Integrations",
-      "ai": "AI",
-      "challengeProvider": "Challenge Provider",
-      "paymentProvider": "Payment Provider",
-      "trackingPixel": "Tracking Pixel",
-      "analytics": "Hot & Trending Provider",
-      "mailProvider": "Mail Provider",
-      "letterProvider": "Letter Provider",
-      "pdfRenderer": "PDF Renderer",
+      "ai": "AI for HTML blocks",
+      "challengeProvider": "Spam protection",
+      "paymentProvider": "Payments",
+      "trackingPixel": "ProLitteris royalties",
+      "analytics": "Hot & Trending",
+      "mailProvider": "Transactional email",
+      "letterProvider": "Letter delivery",
+      "pdfRenderer": "PDF generation",
       "back": "Back to Integrations",
-      "unknown": "Unknown Integration",
       "notFound": "Integration not found",
-      "configure": "Configure {{integration}}",
       "updateSuccess": "Settings updated successfully",
       "updateError": "Settings update failed",
-      "noSettingsFound": "No settings found",
       "lastLoaded": "Last loaded",
       "aiSettings": {
         "apiKey": "API Key",
@@ -3894,15 +3889,14 @@
         "offSessionPayments": "Off-Session Payments",
         "pm": "Payment Methods",
         "psp": "Payment Service Providers",
-        "type": "Type",
         "vatRate": "VAT Rate",
         "declineRenewals": "Decline renewals (simulate failed recurring payments)",
-        "webhookEndpointSecret": "Webhook Endpoint Secret",
-        "bexioUserId": "Bexio User ID",
-        "bexioCountryId": "Bexio Country ID",
-        "bexioUnitId": "Bexio Unit ID",
-        "bexioTaxId": "Bexio Tax ID",
-        "bexioAccountId": "Bexio Account ID",
+        "webhookEndpointSecret": "Webhook secret",
+        "bexioUserId": "bexio user",
+        "bexioCountryId": "Country of new contacts",
+        "bexioUnitId": "Unit",
+        "bexioTaxId": "VAT rate",
+        "bexioAccountId": "Revenue account",
         "bexioInvoiceTemplateNewMembership": "Invoice Template (New Membership)",
         "bexioInvoiceTemplateRenewalMembership": "Invoice Template (Renewal Membership)",
         "bexioInvoiceMailSubjectNewMembership": "Invoice Mail Subject (New Membership)",
@@ -3913,7 +3907,6 @@
         "bexioContactSync": "Sync contacts to Bexio nightly",
         "bexioInvoiceTitleNewMembership": "Invoice Title (New Membership)",
         "bexioInvoiceTitleRenewalMembership": "Invoice Title (Renewal Membership)",
-        "typeInfo": "The payment service this integration is connected to. It is set when the integration is created and cannot be changed.",
         "offSessionPaymentsInfo": "When enabled, We.Publish charges subscription renewals automatically to the saved payment method, without the subscriber having to pay again. Only enable it if the provider supports recurring payments.",
         "apiKeyInfo": "The secret API key from your account with the payment provider, e.g. in the Stripe dashboard under «Developers» → «API keys». For security reasons, a saved key is not displayed again.",
         "webhookEndpointSecretInfo": "Confirms that payment notifications (webhooks) really come from the provider. For Stripe, copy the signing secret (whsec_…) of your webhook endpoint. For Payrexx and Mollie, choose a random password; for Payrexx, also add it to the webhook URL as ?key=….",
@@ -3922,11 +3915,11 @@
         "instanceNameInfo": "The name of your Payrexx instance – the part before .payrexx.com in your Payrexx address (e.g. «mymedium» for mymedium.payrexx.com).",
         "vatRateInfo": "The VAT rate in percent that is passed to Payrexx with every payment, e.g. 8.1 or 2.6. Without it, no payment can be started.",
         "pspInfo": "The payment service providers Payrexx should process the payment with. Only select those you have connected in your Payrexx account.",
-        "bexioUserIdInfo": "The numeric ID of the Bexio user account that new contacts and invoices are assigned to.",
-        "bexioCountryIdInfo": "The numeric Bexio ID of the country that new contacts are assigned to, e.g. the ID for Switzerland.",
-        "bexioUnitIdInfo": "The numeric Bexio ID of the unit used for the invoice line, e.g. «piece».",
-        "bexioTaxIdInfo": "The numeric Bexio ID of the VAT rate applied to the invoice line.",
-        "bexioAccountIdInfo": "The numeric Bexio ID of the revenue account the subscription income is booked to.",
+        "bexioUserIdInfo": "The bexio user new contacts and invoices are assigned to.",
+        "bexioCountryIdInfo": "The country new contacts get when their address names none.",
+        "bexioUnitIdInfo": "The unit of the invoice line, e.g. «piece».",
+        "bexioTaxIdInfo": "The VAT rate applied to the invoice line.",
+        "bexioAccountIdInfo": "The revenue account the subscription income is booked to.",
         "bexioInvoiceTemplateInfo": "The Bexio document template (its slug) that defines the layout of the invoice. You can use different templates for new subscriptions and renewals.",
         "bexioInvoiceTitleInfo": "The title printed on the invoice. You can use different titles for new subscriptions and renewals.",
         "bexioInvoiceMailSubjectInfo": "The subject of the email Bexio sends with the invoice. Placeholders such as :user.firstName: or :memberPlan.name: are replaced automatically.",
@@ -3935,7 +3928,24 @@
         "bexioContactSyncInfo": "When enabled, We.Publish pushes the name, company, email and address of changed readers to their Bexio contact every night and creates missing contacts for subscriptions paid through Bexio. Groups, phone and everything else on the contact stay as they are in Bexio.",
         "bexioContactSyncNeverRan": "Has not run yet.",
         "bexioContactSyncLastRun": "Last run: {{date}}, without errors.",
-        "bexioContactSyncLastRunFailed": "Last run: {{date}}. Error: {{error}}"
+        "bexioContactSyncLastRunFailed": "Last run: {{date}}. Error: {{error}}",
+        "webhookSecretInfo": {
+          "stripe": "The signing secret (whsec_…) of the webhook endpoint you add in Stripe. Without it, payments are not confirmed in We.Publish.",
+          "payrexx": "A long random password you make up. Add it to the webhook URL in Payrexx as ?key=…. Without it, payments are not confirmed in We.Publish.",
+          "mollie": "A long random password you make up. We.Publish adds it to the address Mollie calls; nothing needs to be entered in Mollie."
+        },
+        "apiKeyInfoByType": {
+          "stripe": "The secret key (sk_live_…, or sk_test_… on test systems) from the Stripe dashboard. A saved key is not shown again.",
+          "payrexx": "The API secret of your Payrexx instance. A saved key is not shown again.",
+          "mollie": "The live API key (live_…) from the Mollie dashboard. A saved key is not shown again.",
+          "bexio": "A personal access token from the bexio developer portal. A saved key is not shown again."
+        },
+        "bexioSteps": {
+          "connect": "Connect",
+          "records": "bexio records",
+          "invoices": "Invoices",
+          "contacts": "Contacts & name"
+        }
       },
       "placeholderSecret": "Unchanged (Hidden)",
       "secretNotSet": "Not set",
@@ -3947,7 +3957,11 @@
         "gotenbergUrl": "Gotenberg URL",
         "gotenbergUsername": "Gotenberg Username",
         "gotenbergPassword": "Gotenberg Password",
-        "timeoutMs": "Timeout (ms)"
+        "timeoutMs": "Timeout (ms)",
+        "cloudflareAccountIdInfo": "Shown on the overview page of your Cloudflare account, in the right-hand column.",
+        "cloudflareApiTokenInfo": "An API token with the permission «Account» → «Browser Rendering» → «Edit».",
+        "gotenbergUrlInfo": "The address of your own Gotenberg server, as the We.Publish API reaches it.",
+        "timeoutMsInfo": "How long to wait for a PDF before giving up, in milliseconds. Leave it empty for 60 seconds."
       },
       "letterSettings": {
         "type": "Type",
@@ -3961,14 +3975,19 @@
         "defaultAddressPosition": "Address window (automated letters)",
         "defaultDeliveryProduct": "Delivery (automated letters)",
         "defaultPrintMode": "Print (automated letters)",
-        "defaultPrintSpectrum": "Colour (automated letters)"
+        "defaultPrintSpectrum": "Colour (automated letters)",
+        "environmentInfo": "Use «staging» while testing: Pingen then prints nothing and charges nothing. Switch to «production» once everything works.",
+        "clientIdInfo": "Client ID and secret of the API access you create in the Pingen app. The secret is only shown once when you create it.",
+        "organisationIdInfo": "The ID of your organisation in Pingen. Letters are sent and charged through it.",
+        "webhookSigningKeyInfo": "Lets We.Publish check that delivery reports really come from Pingen. Pingen shows it when you add the webhook.",
+        "autoSendInfo": "When enabled, letters We.Publish creates itself (e.g. for readers who receive their mail by post) are sent right away instead of waiting for you to release them.",
+        "placeholderEmailContainsInfo": "Readers whose email address contains this text have no real address – e.g. accounts created for postal subscribers. They get letters instead of emails."
       },
       "mailSettings": {
         "type": "Type",
         "fromAddress": "From Address",
         "replyToAddress": "Reply-To Address",
         "apiKey": "API Key",
-        "mailchimpBaseUrl": "Base URL",
         "mailgunBaseDomain": "Base Domain",
         "mailgunMailDomain": "Mail Domain",
         "slackWebhookUrl": "Webhook URL",
@@ -3977,12 +3996,10 @@
         "smtpSecure": "Use TLS (SSL)",
         "smtpUser": "SMTP Username",
         "smtpPassword": "SMTP Password",
-        "webhookEndpointSecret": "Webhook Endpoint Secret",
-        "typeInfo": "The service that sends the emails. MAILCHIMP stands for Mailchimp Transactional (Mandrill), BREVO for Brevo (formerly Sendinblue). SLACK and LOG don't deliver anything to readers – they are only meant for testing.",
+        "webhookEndpointSecret": "Webhook signing key",
+        "typeInfo": "The service that sends the emails. Slack and «Log only» deliver nothing to readers – they are only meant for testing. Changing the type deletes the stored keys.",
         "fromAddressInfo": "The sender address readers see, e.g. abo@example.ch. Its domain must be verified with the mail service, otherwise emails may end up in spam.",
         "replyToAddressInfo": "Where replies go when someone answers one of your emails. If empty, replies go to the sender address.",
-        "apiKeyInfo": "The API key from your account with the mail service (Mailchimp Transactional/Mandrill, Mailgun or Brevo). Without it, no emails can be sent.",
-        "webhookEndpointSecretInfo": "Lets We.Publish check that delivery reports (e.g. bounces) really come from the mail service. Copy the webhook signing key from Mandrill or Mailgun. For Brevo, choose a random password and append it as ?key=… to the webhook URL you enter in Brevo. Without it, the delivery status is not updated.",
         "mailgunBaseDomainInfo": "The address of the Mailgun API without https://: api.mailgun.net, or api.eu.mailgun.net if your account is hosted in the EU.",
         "mailgunMailDomainInfo": "The sending domain you set up in Mailgun, e.g. mg.example.ch.",
         "slackWebhookUrlInfo": "The address of a Slack incoming webhook. Instead of being delivered, every email is posted to that Slack channel – useful for testing.",
@@ -3997,6 +4014,16 @@
           "lastPollError": "Error on the last poll",
           "never": "never",
           "notReporting": "This service reports no delivery states."
+        },
+        "webhookSecretInfo": {
+          "mandrill": "The key of the webhook you add in Mailchimp Transactional under «Settings» → «Webhooks». Without it, bounces and spam reports are not recorded.",
+          "mailgun": "The «HTTP webhook signing key» from Mailgun’s «API Security» page. Without it, bounces and spam reports are not recorded.",
+          "brevo": "A long random password you make up. Brevo signs nothing, so append it as ?key=… to the webhook URL you enter in Brevo. Without it, bounces and spam reports are not recorded."
+        },
+        "apiKeyInfoByType": {
+          "mandrill": "An API key from Mailchimp Transactional («Settings» → «SMTP & API Info»), not the key of your Mailchimp newsletter account. Without it, no emails can be sent.",
+          "mailgun": "An API key from Mailgun’s «API Security» page. Without it, no emails can be sent.",
+          "brevo": "An API key from Brevo («SMTP & API» → «API keys»). Without it, no emails can be sent."
         }
       },
       "trackingPixelSettings": {
@@ -4041,7 +4068,7 @@
         "umamiUrl": "Umami API URL",
         "umamiUrlInfo": "Only needed for a self-hosted Umami, e.g. https://umami.example.com/api. Leave it empty to use Umami Cloud."
       },
-      "mailchimpSync": "Mailchimp Sync",
+      "mailchimpSync": "Mailchimp audience",
       "mailchimpSyncSettings": {
         "audienceWebhook": {
           "title": "Reports from the audience",
@@ -4055,7 +4082,7 @@
           "registered": "The webhook is registered at Mailchimp.",
           "failed": "Mailchimp refused the registration: {{error}}"
         },
-        "enabled": "Enabled",
+        "enabled": "Sync every night",
         "apiKey": "Mailchimp API Key",
         "listId": "Mailchimp List/Audience ID",
         "mergeFieldMappings": "Merge Field Mappings",
@@ -4141,7 +4168,15 @@
         "enabledInfo": "When enabled, We.Publish transfers all active user accounts with their subscription data to the Mailchimp audience every night. «Sync Now» only works when this is on.",
         "apiKeyInfo": "The API key of your Mailchimp account («Profile» → «Extras» → «API keys»), ending in -us1, -us2 etc. Save it first so that the audiences, merge fields and groups below can be loaded.",
         "listIdInfo": "The Mailchimp audience the user accounts are transferred to. Once the API key is saved, you can pick it from the list; otherwise enter its ID from the audience settings in Mailchimp.",
-        "dryRunInfo": "Shows which contacts would change in Mailchimp, without changing anything there. The dry run limit checks a random sample of that many users; leave it empty to check everyone."
+        "dryRunInfo": "Shows which contacts would change in Mailchimp, without changing anything there. The dry run limit checks a random sample of that many users; leave it empty to check everyone.",
+        "stages": {
+          "connect": "Connect",
+          "audience": "Audience",
+          "map": "Map data",
+          "sync": "Sync & monitor",
+          "advanced": "Advanced",
+          "connectFirst": "Save the API key first. With it, We.Publish fetches your audiences from Mailchimp; choosing one, mapping the data and running the sync come next."
+        }
       },
       "typeChangeTitle": "Really change the type?",
       "typeChangeWarning": "Changing the type deletes this integration’s entire configuration, including every stored credential. This cannot be undone.",
@@ -4152,6 +4187,7 @@
       "restored": "This integration already existed and was restored unchanged.",
       "cancel": "Cancel",
       "add": "Add integration",
+      "addProvider": "Add {{provider}}",
       "addType": "Type",
       "addId": "Identifier",
       "addIdHelp": "The unique identifier the integration is addressed by. It also appears in webhook URLs and cannot be changed later.",
@@ -4160,12 +4196,214 @@
       "challengeProviderInfo": "Protects forms on your website, such as registration or comments, against spam bots with an unobtrusive check (Cloudflare Turnstile or hCaptcha).",
       "paymentProviderInfo": "Services that process the payments for subscriptions, e.g. Payrexx, Stripe, Mollie or invoices via Bexio.",
       "trackingPixelInfo": "Adds the ProLitteris counting pixel to your articles so that their reads count towards your copyright royalties.",
-      "mailProviderInfo": "The service We.Publish uses to send emails, such as login links, payment reminders or subscription confirmations.",
+      "mailProviderInfo": "Sends the emails We.Publish writes to one reader at a time: login links, subscription confirmations, payment reminders and invoices.",
       "analyticsInfo": "Reads the page views from Google Analytics, Plausible or Umami to find out which articles are currently read the most (Hot & Trending).",
-      "mailchimpSyncInfo": "Transfers all active user accounts and their subscription data to a Mailchimp audience every night, so you can target newsletters by subscription.",
+      "mailchimpSyncInfo": "Copies your readers and their subscriptions into a Mailchimp audience every night, so you can target newsletters by subscription. The newsletter editor and the Mailchimp signup block use this account too.",
       "lastLoadedInfo": "When We.Publish last loaded this configuration, e.g. to process a payment. This shows you whether the integration is in use.",
       "setUp": "Set up",
-      "setUpHint": "Not set up yet. Set up this integration so the editor and your website can use it."
+      "letterProviderInfo": "Prints and posts letters to readers, such as invoices and reminders, through Pingen.",
+      "pdfRendererInfo": "Turns letters and invoices into PDF files before they are printed or sent. Letter delivery needs it.",
+      "overview": {
+        "intro": "Connect the services We.Publish works with. Each is set up once; until then, the feature that relies on it does not work.",
+        "search": "Search integrations",
+        "searchPlaceholder": "Name or provider, e.g. Stripe",
+        "noMatch": "No integration matches your search."
+      },
+      "status": {
+        "notSetUp": "Not set up",
+        "ready": "Ready",
+        "incomplete": "Needs attention",
+        "paused": "Paused"
+      },
+      "groups": {
+        "email": {
+          "title": "Email",
+          "description": "How emails reach your readers.",
+          "mailchimpNote": "Mailchimp appears twice: Mailchimp Transactional (Mandrill) sends single emails such as login links, Mailchimp Marketing holds your newsletter audience. They use different API keys."
+        },
+        "payments": {
+          "title": "Payments",
+          "description": "Taking payments for subscriptions and sending invoices."
+        },
+        "website": {
+          "title": "Website & editor",
+          "description": "Protection for your website’s forms and tools for the editor."
+        },
+        "reach": {
+          "title": "Reach & royalties",
+          "description": "Which articles are read the most, and getting paid for the reads."
+        },
+        "print": {
+          "title": "Letters & print",
+          "description": "Letters sent by post to your readers."
+        }
+      },
+      "providers": {
+        "mailchimpTransactional": "Mailchimp Transactional (Mandrill)",
+        "mailchimpMarketing": "Mailchimp Marketing",
+        "smtp": "SMTP server",
+        "slack": "Slack (testing only)",
+        "log": "Log only (testing only)",
+        "payrexx": "Payrexx (single payments)",
+        "payrexxSubscription": "Payrexx Subscriptions",
+        "stripe": "Stripe (embedded payment form)",
+        "stripeCheckout": "Stripe Checkout (redirect to Stripe)",
+        "bexio": "bexio (invoices)",
+        "noCharge": "No charge (free subscriptions)",
+        "simulated": "Simulated (testing only)"
+      },
+      "related": {
+        "mailToMailchimpSync": "Looking for your Mailchimp newsletter audience? That is «Mailchimp audience».",
+        "mailchimpSyncToMail": "Want Mailchimp to send login links and other single emails? That is Mailchimp Transactional under «Transactional email».",
+        "letterToPdfRenderer": "Letters are turned into PDFs first – set up «PDF generation» as well."
+      },
+      "nameInfo": "Only shown here in the editor, to tell several providers apart.",
+      "sections": {
+        "provider": "Provider",
+        "sender": "Sender",
+        "connection": "Connection",
+        "checkout": "Checkout",
+        "bexioRecords": "bexio records",
+        "invoiceTexts": "Invoice texts",
+        "contacts": "Contacts",
+        "automatedLetters": "Automated letters",
+        "general": "General"
+      },
+      "guide": {
+        "title": "How to set up {{provider}}",
+        "open": "Open {{host}}",
+        "webhookUrl": "Webhook URL",
+        "copyUrl": "Copy URL",
+        "copied": "URL copied",
+        "copyFailed": "The URL could not be copied. Select it and copy it by hand."
+      },
+      "guides": {
+        "testingOnly": "Only use this for testing – readers do not receive anything.",
+        "mailgun": {
+          "domain": "In Mailgun, add your sending domain (e.g. mg.example.ch) and verify it with the DNS records Mailgun shows. Enter it as «Mail Domain» below; as «Base Domain», enter api.eu.mailgun.net if your account is in the EU, otherwise api.mailgun.net.",
+          "apiKey": "Under «API Security», create an API key and paste it into «API Key».",
+          "signingKey": "On the same page, copy the «HTTP webhook signing key» into «Webhook signing key».",
+          "webhook": "Under «Webhooks», add this URL for the events «delivered», «permanent failure», «temporary failure», «complained» and «unsubscribed», so We.Publish learns about bounces:"
+        },
+        "mandrill": {
+          "account": "Log in to Mailchimp Transactional (formerly Mandrill). It is a paid add-on of your Mailchimp account and has its own keys – the key of your Mailchimp newsletter account does not work here.",
+          "domain": "Under «Settings» → «Domains», add your sender domain and verify it (DKIM and SPF).",
+          "apiKey": "Under «Settings» → «SMTP & API Info», create a new API key and paste it into «API Key».",
+          "webhook": "Under «Settings» → «Webhooks», add a webhook with this URL for sends, bounces, rejects, spam and unsubscribes. Copy its key into «Webhook signing key»:"
+        },
+        "brevo": {
+          "sender": "In Brevo, add and authenticate your sender domain under «Senders, domains & dedicated IPs».",
+          "apiKey": "Under «SMTP & API» → «API keys», create an API key and paste it into «API Key».",
+          "webhook": "Make up a long random password and enter it as «Webhook signing key». Then add a transactional webhook in Brevo with this URL, replacing … with that password:"
+        },
+        "smtp": {
+          "server": "Your email provider tells you the outgoing server (SMTP host), the port and the login. Enter them below.",
+          "port": "Port 465: enable «Use TLS (SSL)». Port 587: leave it off – the connection is then encrypted with STARTTLS.",
+          "sender": "Use a sender address the server is allowed to send from, otherwise emails end up in spam or are refused."
+        },
+        "slack": {
+          "webhook": "Create an incoming webhook for a Slack channel and paste its URL into «Webhook URL». Every email is posted to that channel instead of being delivered."
+        },
+        "log": {
+          "info": "Emails are only written to the API log and never delivered. Only use this for development."
+        },
+        "stripe": {
+          "apiKey": "In the Stripe dashboard, copy the secret key (sk_live_…) and paste it into «API Key». Use the test key (sk_test_…) on test systems.",
+          "webhook": "Under «Developers» → «Webhooks», add an endpoint with this URL for the payment_intent.* and setup_intent.* events:",
+          "webhookCheckout": "Under «Developers» → «Webhooks», add an endpoint with this URL for the checkout.session.* events:",
+          "signingSecret": "Copy the endpoint’s signing secret (whsec_…) into «Webhook secret».",
+          "methods": "Choose the payment methods below that are activated in your Stripe account."
+        },
+        "payrexx": {
+          "instance": "Enter your instance name – the part before .payrexx.com in your Payrexx address.",
+          "apiKey": "In your Payrexx instance, copy the API secret from the API settings and paste it into «API Key».",
+          "webhook": "Make up a long random password and enter it as «Webhook secret». Then add a webhook in Payrexx with this URL (content type JSON), replacing … with that password:",
+          "methods": "Choose the payment service providers and payment methods below that are active in your Payrexx account."
+        },
+        "mollie": {
+          "apiKey": "In the Mollie dashboard, copy the live API key (live_…) and paste it into «API Key».",
+          "apiUrl": "Enter the public address of your We.Publish API as «API URL» – here that is {{apiURL}}. Mollie sends payment updates there; no webhook has to be set up in Mollie.",
+          "secret": "Make up a long random password and enter it as «Webhook secret». We.Publish adds it to the address Mollie calls.",
+          "methods": "Choose the payment methods below that are activated in your Mollie account."
+        },
+        "bexio": {
+          "token": "Create a personal access token in the bexio developer portal and paste it into «API Key».",
+          "ids": "Save the token, then choose the bexio user, country, unit, VAT rate and revenue account from the lists We.Publish reads from your bexio company. If you are unsure, ask whoever does your bookkeeping in bexio.",
+          "texts": "Then set the invoice template, title and email texts – separately for new subscriptions and renewals."
+        },
+        "noCharge": {
+          "info": "Nothing to set up: subscriptions with this payment method are free."
+        },
+        "turnstile": {
+          "widget": "In the Cloudflare dashboard, open «Turnstile», add a widget and enter your website’s domain.",
+          "keys": "Copy the site key and the secret key of the widget into the fields below."
+        },
+        "hcaptcha": {
+          "site": "In the hCaptcha dashboard, add your website under «Sites» and copy its site key into «Site Key».",
+          "secret": "Copy the secret of your account (under «Settings») into «Secret»."
+        },
+        "v0": {
+          "apiKey": "In your v0 account settings, create a key under «API Keys» and paste it into «API Key».",
+          "prompt": "Optionally, add a system prompt with your colours, fonts or style rules."
+        },
+        "google": {
+          "api": "In Google Cloud, enable the «Google Analytics Data API» for a project.",
+          "serviceAccount": "Create a service account in that project, then under «Keys» → «Add key» create a JSON key and download it.",
+          "access": "In Google Analytics, open «Admin» → «Property access management» and add the service account’s email address as «Viewer».",
+          "property": "Enter the property ID (Admin → Property details) and drag the downloaded JSON file into the box below."
+        },
+        "plausible": {
+          "apiKey": "In your Plausible account settings, create a Stats API key under «API Keys» and paste it into «API key».",
+          "site": "Enter the domain exactly as the site is named in Plausible."
+        },
+        "umami": {
+          "apiKey": "In Umami Cloud, create an API key under «Settings» → «API keys». For a self-hosted Umami, use the token of a user with access to the website and enter the «Umami API URL».",
+          "website": "Copy the website ID from «Settings» → «Websites» → «Edit»."
+        },
+        "prolitteris": {
+          "member": "Enter your ProLitteris member number as a publisher.",
+          "mode": "Either enable «Use Publisher Internal Key» and enter the counting domain ProLitteris assigned to you, or enter your ProLitteris login so that We.Publish fetches the pixels."
+        },
+        "pingen": {
+          "client": "In the Pingen app, create API access (client ID and secret) for your organisation and paste both below.",
+          "organisation": "Enter the ID of the organisation the letters should be sent through.",
+          "webhook": "Add a webhook in Pingen with this URL so We.Publish learns when a letter was sent or failed, and copy its signing key into «Webhook Signing Key»:",
+          "staging": "Test with the «staging» environment first, then switch to «production»."
+        },
+        "cloudflarePdf": {
+          "account": "Copy your account ID from the Cloudflare dashboard into «Cloudflare Account ID».",
+          "token": "Create an API token with the permission «Account» → «Browser Rendering» → «Edit» and paste it into «Cloudflare API Token»."
+        },
+        "gotenberg": {
+          "url": "Run your own Gotenberg server and enter its address; add a username and password if it is protected."
+        },
+        "mailchimpSync": {
+          "apiKey": "In Mailchimp, open «Profile» → «Extras» → «API keys» and create a key. It ends in -us1, -us2 etc. This is your Mailchimp Marketing key, not the Mailchimp Transactional one.",
+          "save": "Paste it into «Mailchimp API Key» and save. We.Publish then loads your audiences.",
+          "audience": "Choose the audience your readers should be copied to, save again, and continue with mapping the data."
+        }
+      },
+      "empty": {
+        "title": "Not set up yet",
+        "description": "Choose one of these providers to get started. Once it is added, a step-by-step guide shows where to find each key and what to register at the provider.",
+        "descriptionSingle": "Set it up to get started. A step-by-step guide then shows where to find each key and what to register at the provider.",
+        "more": "Choose type and ID yourself"
+      },
+      "form": {
+        "unsaved": "Unsaved changes",
+        "discard": "Discard"
+      },
+      "taglines": {
+        "mail": "Login links, invoices and reminders by email",
+        "mailchimpSync": "Syncs readers into your newsletter audience",
+        "payment": "Takes the payments for subscriptions",
+        "challenge": "Keeps spam bots out of your forms",
+        "ai": "Writes HTML blocks from a description",
+        "analytics": "Finds your most-read articles",
+        "trackingPixel": "Counts reads for copyright royalties",
+        "letter": "Prints and posts letters to readers",
+        "pdfRenderer": "Turns letters and invoices into PDFs"
+      }
     },
     "websiteSettings": {
       "backToOverview": "Back to overview",
@@ -6002,6 +6240,10 @@
         "title": "Title",
         "titleHint": "Also the subject line of the Mailchimp draft. Takes effect on save."
       }
+    },
+    "wizard": {
+      "back": "Back",
+      "next": "Next"
     }
   }
 }

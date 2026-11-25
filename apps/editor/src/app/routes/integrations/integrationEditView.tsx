@@ -1,17 +1,8 @@
-import { Button, Typography } from '@mui/material';
-import {
-  CanGetAISettings,
-  CanGetAnalyticsProviderSettings,
-  CanGetChallengeProviderSettings,
-  CanGetLetterProviderSettings,
-  CanGetMailchimpSyncSettings,
-  CanGetMailProviderSettings,
-  CanGetPaymentProviderSettings,
-  CanGetPdfRendererSettings,
-  CanGetTrackingPixelSettings,
-  Permission,
-} from '@wepublish/permissions';
-import { InfoTooltip, PermissionControl } from '@wepublish/ui/editor';
+import { useQuery } from '@apollo/client/react';
+import styled from '@emotion/styled';
+import { Alert, Avatar, Button, Link, Typography } from '@mui/material';
+import { PermissionControl } from '@wepublish/ui/editor';
+import { ComponentType, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdArrowBack } from 'react-icons/md';
 import { Link as RouterLink, useParams } from 'react-router-dom';
@@ -19,6 +10,17 @@ import { Link as RouterLink, useParams } from 'react-router-dom';
 import { AIIntegrationForm } from './aiIntegrationForm';
 import { AnalyticsIntegrationForm } from './analyticsIntegrationForm';
 import { ChallengeIntegrationForm } from './challengeIntegrationForm';
+import {
+  IntegrationDefinition,
+  integrationByPath,
+  integrationCatalog,
+} from './integrationCatalog';
+import {
+  IntegrationKey,
+  integrationStatus,
+  ProviderSetting,
+} from './integrationStatus';
+import { IntegrationStatusChip } from './integrationStatusChip';
 import { LetterIntegrationForm } from './letterIntegrationForm';
 import { MailchimpSyncIntegrationForm } from './mailchimpSyncIntegrationForm';
 import { MailIntegrationForm } from './mailIntegrationForm';
@@ -26,144 +28,147 @@ import { PaymentIntegrationForm } from './paymentIntegrationForm';
 import { PdfRendererIntegrationForm } from './pdfRendererIntegrationForm';
 import { TrackingPixelIntegrationForm } from './trackingPixelIntegrationForm';
 
-const useIntegrationTitle = (type: string | undefined) => {
-  const { t } = useTranslation();
-
-  switch (type) {
-    case 'ai':
-      return t('integrations.ai');
-    case 'challenge':
-      return t('integrations.challengeProvider');
-    case 'payment':
-      return t('integrations.paymentProvider');
-    case 'tracking-pixel':
-      return t('integrations.trackingPixel');
-    case 'analytics':
-      return t('integrations.analytics');
-    case 'mail':
-      return t('integrations.mailProvider');
-    case 'letter':
-      return t('integrations.letterProvider');
-    case 'pdf-renderer':
-      return t('integrations.pdfRenderer');
-    case 'mailchimp-sync':
-      return t('integrations.mailchimpSync');
-    default:
-      return t('integrations.unknown');
-  }
+const forms: Record<IntegrationKey, ComponentType> = {
+  ai: AIIntegrationForm,
+  analytics: AnalyticsIntegrationForm,
+  challenge: ChallengeIntegrationForm,
+  letter: LetterIntegrationForm,
+  mail: MailIntegrationForm,
+  'mailchimp-sync': MailchimpSyncIntegrationForm,
+  payment: PaymentIntegrationForm,
+  'pdf-renderer': PdfRendererIntegrationForm,
+  'tracking-pixel': TrackingPixelIntegrationForm,
 };
 
-const useIntegrationInfo = (type: string | undefined) => {
-  const { t } = useTranslation();
+export const IntegrationHeader = styled.header`
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: ${({ theme }) => theme.spacing(1, 2)};
+  align-items: center;
+  margin: ${({ theme }) => theme.spacing(1, 0, 3)};
+`;
 
-  switch (type) {
-    case 'ai':
-      return t('integrations.aiInfo');
-    case 'challenge':
-      return t('integrations.challengeProviderInfo');
-    case 'payment':
-      return t('integrations.paymentProviderInfo');
-    case 'tracking-pixel':
-      return t('integrations.trackingPixelInfo');
-    case 'analytics':
-      return t('integrations.analyticsInfo');
-    case 'mail':
-      return t('integrations.mailProviderInfo');
-    case 'mailchimp-sync':
-      return t('integrations.mailchimpSyncInfo');
-    default:
-      return undefined;
-  }
-};
+export const IntegrationHeaderTitle = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing(1, 2)};
+`;
 
-const getPermission = (type: string | undefined): Permission | undefined => {
-  switch (type) {
-    case 'ai':
-      return CanGetAISettings;
-    case 'challenge':
-      return CanGetChallengeProviderSettings;
-    case 'payment':
-      return CanGetPaymentProviderSettings;
-    case 'tracking-pixel':
-      return CanGetTrackingPixelSettings;
-    case 'analytics':
-      return CanGetAnalyticsProviderSettings;
-    case 'mail':
-      return CanGetMailProviderSettings;
-    case 'letter':
-      return CanGetLetterProviderSettings;
-    case 'pdf-renderer':
-      return CanGetPdfRendererSettings;
-    case 'mailchimp-sync':
-      return CanGetMailchimpSyncSettings;
-    default:
-      return;
+export const IntegrationIntro = styled.div`
+  grid-column: 1 / -1;
+  display: grid;
+  gap: ${({ theme }) => theme.spacing(2)};
+  max-width: 80ch;
+`;
+
+function IntegrationStatusOf({
+  integration,
+}: {
+  integration: IntegrationDefinition;
+}) {
+  const { data } = useQuery<Record<string, unknown>>(integration.query);
+  const settings = data?.[integration.dataKey] as ProviderSetting[] | undefined;
+
+  if (!settings) {
+    return null;
   }
-};
+
+  return (
+    <IntegrationStatusChip
+      status={integrationStatus(integration.key, settings)}
+    />
+  );
+}
 
 export function IntegrationEditView() {
   const { t } = useTranslation();
   const { type } = useParams();
+  const catalog = useMemo(() => integrationCatalog(t), [t]);
+  const integration = integrationByPath(catalog, type);
 
-  const permission = getPermission(type);
-  const title = useIntegrationTitle(type);
-  const info = useIntegrationInfo(type);
+  const back = (
+    <Button
+      component={RouterLink}
+      to={'/integrations'}
+      size="small"
+      variant="text"
+      startIcon={<MdArrowBack />}
+    >
+      {t('integrations.back')}
+    </Button>
+  );
 
-  const renderConfiguration = (() => {
-    switch (type) {
-      case 'ai':
-        return <AIIntegrationForm />;
-      case 'challenge':
-        return <ChallengeIntegrationForm />;
-      case 'payment':
-        return <PaymentIntegrationForm />;
-      case 'mail':
-        return <MailIntegrationForm />;
-      case 'letter':
-        return <LetterIntegrationForm />;
-      case 'pdf-renderer':
-        return <PdfRendererIntegrationForm />;
-      case 'tracking-pixel':
-        return <TrackingPixelIntegrationForm />;
-      case 'analytics':
-        return <AnalyticsIntegrationForm />;
-      case 'mailchimp-sync':
-        return <MailchimpSyncIntegrationForm />;
-      default:
-        return (
-          <Typography>
-            {t('integrations.configure', { integration: title })}
-          </Typography>
-        );
-    }
-  })();
+  if (!integration) {
+    return (
+      <div>
+        {back}
+        <Alert severity="warning">{t('integrations.notFound')}</Alert>
+      </div>
+    );
+  }
+
+  const Form = forms[integration.key];
+  const Icon = integration.icon;
 
   return (
     <PermissionControl
-      qualifyingPermissions={permission ? [permission.id] : []}
+      qualifyingPermissions={[integration.permission.id]}
+      showRejectionMessage
     >
       <div>
-        <Button
-          component={RouterLink}
-          to={'/integrations'}
-          size="small"
-          variant="text"
-          startIcon={<MdArrowBack />}
-        >
-          {t('integrations.back')}
-        </Button>
+        {back}
 
-        <Typography variant="h1">
-          {title}
-          {info && (
-            <>
-              {' '}
-              <InfoTooltip text={info} />
-            </>
-          )}
-        </Typography>
+        <IntegrationHeader>
+          <Avatar
+            variant="rounded"
+            sx={{
+              bgcolor: 'action.selected',
+              color: 'text.primary',
+              width: 48,
+              height: 48,
+            }}
+          >
+            <Icon
+              size={28}
+              aria-hidden
+            />
+          </Avatar>
 
-        <div style={{ marginTop: 20 }}>{renderConfiguration}</div>
+          <IntegrationHeaderTitle>
+            <Typography variant="h1">{integration.title}</Typography>
+            <IntegrationStatusOf integration={integration} />
+          </IntegrationHeaderTitle>
+
+          <IntegrationIntro>
+            <Typography sx={{ color: 'text.secondary' }}>
+              {integration.summary}
+            </Typography>
+
+            {integration.related?.map(related => {
+              const target = integrationByPath(catalog, related.key);
+
+              return (
+                target && (
+                  <Alert
+                    key={related.key}
+                    severity="info"
+                  >
+                    {related.text}{' '}
+                    <Link
+                      component={RouterLink}
+                      to={target.path}
+                    >
+                      {target.title}
+                    </Link>
+                  </Alert>
+                )
+              );
+            })}
+          </IntegrationIntro>
+        </IntegrationHeader>
+
+        <Form />
       </div>
     </PermissionControl>
   );

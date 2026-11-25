@@ -1,9 +1,18 @@
 import { createTheme, ThemeProvider } from '@mui/material';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
+import {
+  MailProviderSettingsDocument,
+  PaymentProviderSettingsDocument,
+  SettingsIntegrationsAiDocument,
+  SyncProviderSettingsDocument,
+} from '@wepublish/editor/api';
 import {
   CanGetAISettings,
+  CanGetChallengeProviderSettings,
   CanGetLetterProviderSettings,
+  CanGetMailchimpSyncSettings,
   CanGetMailProviderSettings,
+  CanGetPaymentProviderSettings,
   CanGetPdfRendererSettings,
 } from '@wepublish/permissions';
 import { AuthContext, FeaturesProvider } from '@wepublish/ui/editor';
@@ -11,11 +20,15 @@ import { MemoryRouter } from 'react-router-dom';
 
 import { IntegrationList } from './integrationList';
 
-const featuresQuery = vi.fn();
+const queryResults = new Map<unknown, unknown>();
+let features: string[] = [];
 
 vi.mock('@apollo/client/react', async importOriginal => ({
   ...(await importOriginal<typeof import('@apollo/client/react')>()),
-  useQuery: (_document: unknown, options?: unknown) => featuresQuery(options),
+  useQuery: (document: unknown) =>
+    queryResults.has(document) ?
+      { data: queryResults.get(document), loading: false }
+    : { data: { features }, loading: false },
 }));
 
 vi.mock('react-i18next', () => ({
@@ -27,9 +40,9 @@ vi.mock('react-i18next', () => ({
 
 const renderList = ({
   permissions = [CanGetAISettings.id],
-  features = [],
-}: { permissions?: string[]; features?: string[] } = {}) => {
-  featuresQuery.mockReturnValue({ data: { features }, loading: false });
+  enabledFeatures = [],
+}: { permissions?: string[]; enabledFeatures?: string[] } = {}) => {
+  features = enabledFeatures;
 
   return render(
     <ThemeProvider theme={createTheme({ cssVariables: true })}>
@@ -62,30 +75,139 @@ const letterPermissions = [
   CanGetPdfRendererSettings.id,
 ];
 
+const card = (title: string) =>
+  screen.getByRole('heading', { level: 3, name: title }).closest('article')!;
+
 describe('IntegrationList', () => {
-  it('titles the page and each integration as headings', () => {
+  beforeEach(() => {
+    queryResults.clear();
+  });
+
+  it('titles the page, each purpose and each integration as headings', () => {
     renderList();
 
     expect(
       screen.getByRole('heading', { level: 1, name: /integrations.title/ })
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('heading', { level: 2, name: /integrations.ai/ })
+      screen.getByRole('heading', {
+        level: 2,
+        name: 'integrations.groups.website.title',
+      })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { level: 3, name: 'integrations.ai' })
     ).toBeInTheDocument();
   });
 
-  it('ties each edit link to the integration it opens', () => {
+  it('only shows the purposes the user can configure something in', () => {
     renderList();
 
     expect(
-      screen.getByRole('link', { name: 'edit' })
-    ).toHaveAccessibleDescription('integrations.ai');
+      screen.queryByRole('heading', {
+        level: 2,
+        name: 'integrations.groups.payments.title',
+      })
+    ).toBeNull();
+  });
+
+  it('says in a few words what an integration is for', () => {
+    renderList();
+
+    const ai = card('integrations.ai');
+
+    expect(within(ai).getByText('integrations.taglines.ai')).toBeVisible();
+    expect(within(ai).queryByText('integrations.aiInfo')).toBeNull();
+  });
+
+  it('opens an integration from its card, named by its title', () => {
+    queryResults.set(SettingsIntegrationsAiDocument, { aiSettings: [] });
+    renderList();
+
+    const link = screen.getByRole('link', { name: 'integrations.ai' });
+
+    expect(link).toHaveAttribute('href', '/integrations/ai');
+    expect(link).toHaveAccessibleDescription(/integrations.status.notSetUp/);
+    expect(
+      within(card('integrations.ai')).getByText('integrations.status.notSetUp')
+    ).toBeInTheDocument();
+  });
+
+  it('shows which providers are connected and which need attention', () => {
+    queryResults.set(PaymentProviderSettingsDocument, {
+      paymentProviderSettings: [
+        { id: 'stripe', name: 'Stripe', type: 'STRIPE', isApiKeySet: false },
+      ],
+    });
+    renderList({ permissions: [CanGetPaymentProviderSettings.id] });
+
+    const payment = card('integrations.paymentProvider');
+
+    expect(
+      within(payment).getByText('integrations.status.incomplete')
+    ).toBeInTheDocument();
+    expect(within(payment).getByText('Stripe')).toBeInTheDocument();
+  });
+
+  it('finds integrations by provider, title or purpose, fuzzily', () => {
+    renderList({
+      permissions: [
+        CanGetAISettings.id,
+        CanGetPaymentProviderSettings.id,
+        CanGetMailProviderSettings.id,
+        CanGetChallengeProviderSettings.id,
+      ],
+    });
+
+    const search = screen.getByRole('searchbox', {
+      name: 'integrations.overview.search',
+    });
+
+    fireEvent.change(search, { target: { value: 'v0' } });
+
+    expect(
+      screen.getByRole('link', { name: 'integrations.ai' })
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole('link', { name: 'integrations.paymentProvider' })
+    ).toBeNull();
+    expect(
+      screen.queryByRole('heading', {
+        level: 2,
+        name: 'integrations.groups.email.title',
+      })
+    ).toBeNull();
+
+    fireEvent.change(search, { target: { value: 'zzzz' } });
+
+    expect(screen.getByText('integrations.overview.noMatch')).toBeTruthy();
+  });
+
+  it('explains the two Mailchimp integrations next to each other', () => {
+    queryResults.set(MailProviderSettingsDocument, {
+      mailProviderSettings: [],
+    });
+    queryResults.set(SyncProviderSettingsDocument, {
+      syncProviderSettings: [],
+    });
+    renderList({
+      permissions: [
+        CanGetMailProviderSettings.id,
+        CanGetMailchimpSyncSettings.id,
+      ],
+    });
+
+    expect(
+      screen.getByText('integrations.groups.email.mailchimpNote')
+    ).toBeInTheDocument();
   });
 
   it('names the supported providers', () => {
     renderList();
 
-    expect(screen.getByRole('img', { name: 'Vercel' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('img', { name: 'v0 by Vercel' })
+    ).toBeInTheDocument();
   });
 
   it('hides the letter integrations while paper letters are off', () => {
@@ -94,10 +216,14 @@ describe('IntegrationList', () => {
     expect(screen.getByText('integrations.mailProvider')).toBeTruthy();
     expect(screen.queryByText('integrations.letterProvider')).toBeNull();
     expect(screen.queryByText('integrations.pdfRenderer')).toBeNull();
+    expect(screen.queryByText('integrations.groups.print.title')).toBeNull();
   });
 
   it('shows them once the medium has the feature', () => {
-    renderList({ permissions: letterPermissions, features: ['paper-letters'] });
+    renderList({
+      permissions: letterPermissions,
+      enabledFeatures: ['paper-letters'],
+    });
 
     expect(screen.getByText('integrations.letterProvider')).toBeTruthy();
     expect(screen.getByText('integrations.pdfRenderer')).toBeTruthy();

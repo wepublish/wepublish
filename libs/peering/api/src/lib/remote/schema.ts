@@ -615,6 +615,22 @@ export type BaseUser = {
   userImageID?: Maybe<Scalars['String']['output']>;
 };
 
+export type BexioSetupOption = {
+  __typename?: 'BexioSetupOption';
+  id: Scalars['Int']['output'];
+  label: Scalars['String']['output'];
+};
+
+/** What a bexio integration can be set to, read from bexio with its token. */
+export type BexioSetupOptions = {
+  __typename?: 'BexioSetupOptions';
+  accounts: Array<BexioSetupOption>;
+  countries: Array<BexioSetupOption>;
+  taxes: Array<BexioSetupOption>;
+  units: Array<BexioSetupOption>;
+  users: Array<BexioSetupOption>;
+};
+
 export type BildwurfAdBlock = BaseBlock & {
   __typename?: 'BildwurfAdBlock';
   blockStyle?: Maybe<Scalars['String']['output']>;
@@ -7462,6 +7478,8 @@ export type Query = {
   authors: PaginatedAuthors;
   banner: Banner;
   banners: Array<Banner>;
+  /** The accounts, taxes, units, users and countries of the bexio company behind a bexio integration, to choose from instead of typing ids. */
+  bexioSetupOptions: BexioSetupOptions;
   /** Returns a list of block styles. */
   blockStyles: Array<BlockStyle>;
   /** Returns a single block template by ID. */
@@ -7993,6 +8011,11 @@ export type QueryBannerArgs = {
 export type QueryBannersArgs = {
   skip: Scalars['Int']['input'];
   take: Scalars['Int']['input'];
+};
+
+
+export type QueryBexioSetupOptionsArgs = {
+  id: Scalars['String']['input'];
 };
 
 

@@ -24,6 +24,45 @@ export type ProviderTypeOption = {
   value: string;
 };
 
+/** A readable identifier for a new provider, as it will appear in its webhook URL. */
+export function suggestedIdFor(type: string, existingIds: string[]) {
+  const base = type.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  let id = base;
+
+  for (let n = 2; existingIds.includes(id); n++) {
+    id = `${base}-${n}`;
+  }
+
+  return id;
+}
+
+/** Adds a provider and refreshes the list; failures show as a snackbar. */
+export function useCreateProvider(
+  mutation: DocumentNode,
+  refetchQuery: DocumentNode
+) {
+  const [create, { loading }] = useMutation(mutation, {
+    refetchQueries: [{ query: refetchQuery }],
+  });
+
+  const createProvider = async (variables: {
+    id: string;
+    type: string;
+    name: string;
+  }) => {
+    try {
+      await create({ variables });
+    } catch (error) {
+      enqueueSnackbar((error as Error).message, {
+        variant: 'error',
+        autoHideDuration: 8000,
+      });
+    }
+  };
+
+  return [createProvider, loading] as const;
+}
+
 export function DeleteIntegrationButton({
   id,
   mutation,
@@ -98,16 +137,19 @@ export function AddIntegrationButton({
   refetchQuery,
   existingIds,
   label,
+  variant,
 }: {
   types: ProviderTypeOption[];
   mutation: DocumentNode;
   refetchQuery: DocumentNode;
   existingIds: string[];
   label?: string;
+  variant?: 'text' | 'outlined' | 'contained';
 }) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [id, setId] = useState('');
+  const [idEdited, setIdEdited] = useState(false);
   const [type, setType] = useState<string | null>(null);
   const typeLabelId = useId();
   const idLabelId = useId();
@@ -119,6 +161,7 @@ export function AddIntegrationButton({
   const close = () => {
     setOpen(false);
     setId('');
+    setIdEdited(false);
     setType(null);
   };
 
@@ -152,8 +195,8 @@ export function AddIntegrationButton({
   return (
     <>
       <Button
-        variant={label ? 'contained' : 'outlined'}
-        startIcon={<MdAdd />}
+        variant={variant ?? 'outlined'}
+        startIcon={variant === 'text' ? undefined : <MdAdd />}
         onClick={() => setOpen(true)}
       >
         {label ?? t('integrations.add')}
@@ -163,7 +206,7 @@ export function AddIntegrationButton({
         open={open}
         onClose={close}
       >
-        <DialogTitle>{label ?? t('integrations.add')}</DialogTitle>
+        <DialogTitle>{t('integrations.add')}</DialogTitle>
 
         <DialogContent>
           <Stack
@@ -186,8 +229,8 @@ export function AddIntegrationButton({
                   const value = option.value;
                   setType(value);
 
-                  if (!id && value) {
-                    setId(value);
+                  if (!idEdited && value) {
+                    setId(suggestedIdFor(value, existingIds));
                   }
                 }}
                 disableClearable
@@ -211,7 +254,10 @@ export function AddIntegrationButton({
 
               <TextField
                 value={id}
-                onChange={event => setId(event.target.value)}
+                onChange={event => {
+                  setId(event.target.value);
+                  setIdEdited(true);
+                }}
                 slotProps={{
                   htmlInput: {
                     'aria-labelledby': idLabelId,
@@ -244,7 +290,7 @@ export function AddIntegrationButton({
             disabled={loading || !id || !type || existingIds.includes(id)}
             onClick={onConfirm}
           >
-            {label ?? t('integrations.add')}
+            {t('integrations.add')}
           </Button>
         </DialogActions>
       </Dialog>
@@ -265,32 +311,18 @@ export function CreateFixedIntegrationButton({
   name: string;
   mutation: DocumentNode;
   refetchQuery: DocumentNode;
-  label?: string;
+  label: string;
 }) {
-  const { t } = useTranslation();
-  const [create, { loading }] = useMutation(mutation, {
-    refetchQueries: [{ query: refetchQuery }],
-  });
-
-  const onClick = async () => {
-    try {
-      await create({ variables: { id, type, name } });
-    } catch (error) {
-      enqueueSnackbar((error as Error).message, {
-        variant: 'error',
-        autoHideDuration: 8000,
-      });
-    }
-  };
+  const [createProvider, loading] = useCreateProvider(mutation, refetchQuery);
 
   return (
     <Button
-      variant="contained"
+      variant="outlined"
       startIcon={<MdAdd />}
       disabled={loading}
-      onClick={onClick}
+      onClick={() => createProvider({ id, type, name })}
     >
-      {label ?? t('integrations.add')}
+      {label}
     </Button>
   );
 }

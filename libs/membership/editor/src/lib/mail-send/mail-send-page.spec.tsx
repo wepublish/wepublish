@@ -218,7 +218,7 @@ const lastMissingPlaceholders = () =>
 
 const goToAudience = () => {
   pickTemplate();
-  fireEvent.click(screen.getByRole('button', { name: /mailSend\.next/ }));
+  fireEvent.click(screen.getByRole('button', { name: /wizard\.next/ }));
 };
 
 // The radio's name is its label followed by its hint.
@@ -324,7 +324,7 @@ describe('MailSendPage (characterisation)', () => {
   it('repeats the email-status counts read-only before sending', () => {
     renderPage();
     goToAudience();
-    fireEvent.click(screen.getByRole('button', { name: /mailSend\.next/ }));
+    fireEvent.click(screen.getByRole('button', { name: /wizard\.next/ }));
 
     expect(screen.getByText('mailSend.emailSegments.overview')).toBeTruthy();
     expect(
@@ -362,7 +362,7 @@ describe('MailSendPage (characterisation)', () => {
     renderPage();
     goToAudience();
     pickBase('hasSubscription');
-    fireEvent.click(screen.getByRole('button', { name: /mailSend\.next/ }));
+    fireEvent.click(screen.getByRole('button', { name: /wizard\.next/ }));
 
     expect(
       screen.queryByRole('button', { name: 'deliveryMode.audience.open' })
@@ -393,7 +393,7 @@ describe('MailSendPage (characterisation)', () => {
   it('sends from the last step after asking, cancel on the left', () => {
     renderPage();
     goToAudience();
-    fireEvent.click(screen.getByRole('button', { name: /mailSend\.next/ }));
+    fireEvent.click(screen.getByRole('button', { name: /wizard\.next/ }));
 
     const send = screen.getByRole('button', { name: /mailSend\.send$/ });
     expect(send.hasAttribute('disabled')).toBe(false);
@@ -512,7 +512,7 @@ describe('MailSendPage (accessibility)', () => {
     );
     renderPage();
     goToAudience();
-    fireEvent.click(screen.getByRole('button', { name: /mailSend\.next/ }));
+    fireEvent.click(screen.getByRole('button', { name: /wizard\.next/ }));
 
     expect(
       screen.getByRole('button', { name: 'Vertrag 2026.pdf' })
@@ -524,7 +524,7 @@ describe('MailSendPage (accessibility)', () => {
   it('lets the recipient picker take the width beside its label', () => {
     renderPage();
     goToAudience();
-    fireEvent.click(screen.getByRole('button', { name: /mailSend\.next/ }));
+    fireEvent.click(screen.getByRole('button', { name: /wizard\.next/ }));
 
     const picker = screen
       .getByRole('combobox', { name: 'mailSend.preview.recipient' })

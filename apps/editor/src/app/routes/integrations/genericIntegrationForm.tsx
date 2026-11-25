@@ -3,11 +3,10 @@ import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Autocomplete,
+  Box,
   Button,
   Card,
-  CardActions,
   CardContent,
-  Checkbox,
   CircularProgress,
   Dialog,
   DialogActions,
@@ -15,18 +14,27 @@ import {
   DialogTitle,
   FormControl,
   FormControlLabel,
+  FormHelperText,
   FormLabel,
   MenuItem,
   Stack,
+  Switch,
   TextField as MuiTextField,
   Typography,
 } from '@mui/material';
-import { SettingProvider } from '@wepublish/editor/api';
-import { enqueueSnackbar, InfoTooltip, Textarea } from '@wepublish/ui/editor';
+import { getSettings, SettingProvider } from '@wepublish/editor/api';
+import {
+  enqueueSnackbar,
+  StepNav,
+  Textarea,
+  useWizard,
+  WizardStepper,
+} from '@wepublish/ui/editor';
 import { DocumentNode } from 'graphql';
 import {
   ChangeEvent,
   ComponentType,
+  Fragment,
   ReactNode,
   useId,
   useMemo,
@@ -36,17 +44,64 @@ import { Controller, FieldValues, Path, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
+import {
+  ProviderOption,
+  providerLabel,
+  providerLogo,
+} from './integrationCatalog';
+import {
+  IntegrationKey,
+  isProviderComplete,
+  ProviderSetting,
+} from './integrationStatus';
+import { IntegrationStatusChip } from './integrationStatusChip';
+import { providerGuide } from './providerGuides';
+import { SetupGuide } from './setupGuide';
+
 const HeaderWrapper = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  gap: 16px;
+  margin-bottom: 20px;
+`;
+
+const HeaderTitle = styled.div`
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+`;
+
+const FieldList = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 16px;
+
+  & > * {
+    grid-column: span 2;
+  }
+
+  @media (min-width: 600px) {
+    & > [data-half='true'] {
+      grid-column: span 1;
+    }
+  }
+`;
+
+const FormFooter = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-top: 1px solid
+    ${({ theme }) => theme.vars?.palette.divider ?? 'rgba(0, 0, 0, 0.12)'};
 `;
 
 const HeaderLogo = styled.img`
-  min-height: 16px;
-  max-height: 28px;
-  max-width: 150px;
+  height: 28px;
+  max-width: 96px;
+  object-fit: contain;
 `;
 
 type TextField = {
@@ -114,6 +169,10 @@ export type FieldDefinition<TFormValues> = Fields & {
   placeholder?: string;
   disabled?: boolean;
   autoComplete?: string;
+  /** Heads this field and the ones after it, until the next section. */
+  section?: string;
+  /** Takes half the width, next to its neighbour, on wider screens. */
+  half?: boolean;
 };
 
 export interface GenericIntegrationFormProps<
@@ -130,10 +189,40 @@ export interface GenericIntegrationFormProps<
   /** Queries to refetch after saving, e.g. when saving changes other settings */
   refetchQueries?: DocumentNode[];
 
+  /** Turns on the setup guide and the readiness check for this integration. */
+  integrationKey?: IntegrationKey;
+  /** Friendly names and logos of the provider types. */
+  providers?: ProviderOption[];
+
   renderActions?: (setting: TSetting) => ReactNode;
   /** Read-only state of the integration, shown between the title and the fields. */
   renderStatus?: (setting: TSetting) => ReactNode;
+
+  /**
+   * Splits the setup into steps, e.g. when later fields need data the
+   * provider only hands out once its key is saved. Each step shows the
+   * sections it names; the wizard moves on once a step is complete.
+   */
+  steps?: (setting: TSetting) => IntegrationStep[] | undefined;
+  /**
+   * A hook giving choices for fields that otherwise take an id, loaded from
+   * the provider (e.g. bexio's accounts). Fields with choices become pickers.
+   */
+  useLookups?: (setting: TSetting) => FieldLookups | undefined;
 }
+
+export type IntegrationStep = {
+  title: string;
+  /** The sections (as their headings read) this step shows. */
+  sections: string[];
+  complete: boolean;
+};
+
+export type FieldLookups = Partial<
+  Record<string, { label: string; value: string | number }[]>
+>;
+
+const noLookups = (): FieldLookups | undefined => undefined;
 
 export function SingleGenericIntegrationForm<
   TSetting extends SettingProvider & { type?: string },
@@ -145,10 +234,19 @@ export function SingleGenericIntegrationForm<
   fields,
   getLogo,
   refetchQueries,
+  integrationKey,
+  providers = [],
   renderActions,
   renderStatus,
+  steps,
+  useLookups = noLookups,
 }: GenericIntegrationFormProps<TSetting, TFormValues>) {
   const { t } = useTranslation();
+  const lookups = useLookups(setting);
+  const wizardSteps = steps?.(setting);
+  const wizard = useWizard({
+    complete: wizardSteps?.map(step => step.complete) ?? [true],
+  });
 
   const [updateSettings, { loading: updating }] = useMutation(mutation, {
     refetchQueries: refetchQueries?.map(query => ({ query })),
@@ -170,10 +268,52 @@ export function SingleGenericIntegrationForm<
     [fields, setting]
   );
 
-  const { control, handleSubmit } = useForm<z.infer<typeof schema>>({
+  // A section heads its field and the ones after it, so each field gets the
+  // section it sits in; fields with choices from the provider become pickers.
+  const shownFields = useMemo(() => {
+    let current: string | undefined;
+
+    const placed = resolvedFields.map(field => {
+      current = field.section ?? current;
+      const options = lookups?.[String(field.name)];
+      const picked: FieldDefinition<TFormValues> =
+        options?.length ?
+          { ...field, type: 'select', searchable: true, options }
+        : field;
+
+      return { field: picked, inSection: current };
+    });
+
+    const step = wizardSteps?.[wizard.step];
+
+    return step ?
+        placed.filter(({ inSection }) =>
+          step.sections.includes(inSection ?? '')
+        )
+      : placed;
+  }, [resolvedFields, lookups, wizardSteps, wizard.step]);
+
+  const defaultValues = useMemo(
+    () =>
+      Object.fromEntries(
+        resolvedFields.map(field => [
+          field.name,
+          (setting as Record<string, unknown>)[String(field.name)],
+        ])
+      ),
+    [resolvedFields, setting]
+  );
+
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { isDirty },
+  } = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     mode: 'onTouched',
     reValidateMode: 'onChange',
+    defaultValues: defaultValues as never,
   });
 
   const [pendingTypeChange, setPendingTypeChange] = useState<z.infer<
@@ -188,6 +328,8 @@ export function SingleGenericIntegrationForm<
           id: setting.id,
         },
       });
+
+      reset(formData);
 
       enqueueSnackbar(t('integrations.updateSuccess'), { variant: 'success' });
     } catch (e) {
@@ -208,12 +350,27 @@ export function SingleGenericIntegrationForm<
     await save(formData);
   });
 
-  const logo = getLogo?.(setting);
+  const logo = getLogo?.(setting) ?? providerLogo(providers, setting.type);
+  const typeLabel = providerLabel(providers, setting.type);
+  const title = setting.name || typeLabel;
+  const complete =
+    !integrationKey ||
+    isProviderComplete(integrationKey, setting as unknown as ProviderSetting);
+  const guide =
+    integrationKey &&
+    providerGuide(
+      integrationKey,
+      setting as unknown as ProviderSetting,
+      t,
+      getSettings().apiURL
+    );
   const formId = useId();
   const labelIdFor = (name: string) => `${formId}-${name}-label`;
+  const helpIdFor = (name: string) => `${formId}-${name}-help`;
 
   return (
     <form
+      aria-labelledby={`${formId}-title`}
       onSubmit={event => {
         event.preventDefault();
         onSubmit();
@@ -230,213 +387,340 @@ export function SingleGenericIntegrationForm<
           }}
         >
           <CardContent>
-            <Typography
-              variant="h5"
-              component={HeaderWrapper}
-              sx={{
-                marginBottom: 2,
-              }}
-            >
-              {setting.name || setting.type}
-
-              {logo && (
+            <HeaderWrapper>
+              {logo ?
                 <HeaderLogo
                   src={logo}
                   alt=""
                 />
-              )}
-            </Typography>
+              : <span />}
+
+              <HeaderTitle>
+                <Typography
+                  id={`${formId}-title`}
+                  variant="h6"
+                  component="h2"
+                  noWrap
+                >
+                  {title}
+                </Typography>
+
+                {title !== typeLabel && (
+                  <Typography
+                    variant="body2"
+                    sx={{ color: 'text.secondary' }}
+                    noWrap
+                  >
+                    {typeLabel}
+                  </Typography>
+                )}
+              </HeaderTitle>
+
+              {integrationKey ?
+                <IntegrationStatusChip
+                  status={
+                    complete ?
+                      { state: 'ready', providers: [title] }
+                    : {
+                        state: 'incomplete',
+                        providers: [title],
+                        incomplete: [title],
+                      }
+                  }
+                />
+              : <span />}
+            </HeaderWrapper>
+
+            {guide && (
+              <Box sx={{ marginBottom: 3 }}>
+                <SetupGuide
+                  provider={typeLabel}
+                  steps={guide}
+                  defaultExpanded={!complete}
+                />
+              </Box>
+            )}
 
             {renderStatus?.(setting)}
 
-            {resolvedFields.map(({ info, ...field }) => (
-              <FormControl
-                key={String(field.name)}
-                fullWidth
-              >
-                <FormLabel>
-                  {field.type === 'checkbox' ?
-                    ' '
-                  : <>
-                      <span id={labelIdFor(String(field.name))}>
-                        {field.label}
-                      </span>
-                      {info && (
-                        <>
-                          {' '}
-                          <InfoTooltip text={info} />
-                        </>
-                      )}
-                    </>
-                  }
-                </FormLabel>
+            {wizardSteps && (
+              <WizardStepper
+                steps={wizardSteps.map(({ title }) => ({ title }))}
+                step={wizard.step}
+                canGoTo={wizard.canGoTo}
+                onStep={wizard.goTo}
+              />
+            )}
 
-                <Controller
-                  name={field.name}
-                  control={control}
-                  defaultValue={
-                    (setting as Record<typeof field.name, unknown>)[
-                      field.name
-                    ] as any
-                  }
-                  render={({
-                    field: { value, onChange, ...restField },
-                    fieldState,
-                  }) => {
-                    if (field.type === 'select') {
-                      return (
-                        <MuiTextField
-                          select
-                          value={value ?? ''}
-                          onChange={onChange}
-                          disabled={field.disabled}
-                          fullWidth
-                          {...restField}
-                          slotProps={{
-                            select: {
-                              labelId: labelIdFor(String(field.name)),
-                            },
-                          }}
+            <FieldList>
+              {shownFields.map(
+                (
+                  { field: { info, section: _section, ...field }, inSection },
+                  index
+                ) => (
+                  <Fragment key={String(field.name)}>
+                    {inSection &&
+                      shownFields[index - 1]?.inSection !== inSection && (
+                        <Typography
+                          variant="subtitle1"
+                          component="h3"
+                          sx={{ fontWeight: 600, marginTop: index ? 1 : 0 }}
                         >
-                          {(field.options || []).map(option => (
-                            <MenuItem
-                              key={option.value}
-                              value={option.value}
-                            >
-                              {option.label}
-                            </MenuItem>
-                          ))}
-                        </MuiTextField>
-                      );
-                    }
+                          {inSection}
+                        </Typography>
+                      )}
+                    <FormControl
+                      fullWidth
+                      data-half={field.half ? 'true' : undefined}
+                    >
+                      {field.type !== 'checkbox' && (
+                        <FormLabel id={labelIdFor(String(field.name))}>
+                          {field.label}
+                        </FormLabel>
+                      )}
 
-                    if (field.type === 'checkPicker') {
-                      return (
-                        <Autocomplete
-                          multiple
-                          disableCloseOnSelect
-                          options={(field.options || []).map(
-                            option => option.value
-                          )}
-                          getOptionLabel={value =>
-                            (field.options || []).find(
-                              option => option.value === value
-                            )?.label ?? String(value)
+                      <Controller
+                        name={field.name}
+                        control={control}
+                        render={({
+                          field: { value, onChange, ...restField },
+                          fieldState,
+                        }) => {
+                          const describedBy =
+                            info ? helpIdFor(String(field.name)) : undefined;
+
+                          if (field.type === 'select' && field.searchable) {
+                            const options = field.options || [];
+
+                            return (
+                              <Autocomplete
+                                options={options.map(option => option.value)}
+                                getOptionLabel={chosen =>
+                                  options.find(
+                                    option => option.value === chosen
+                                  )?.label ?? String(chosen)
+                                }
+                                value={value ?? null}
+                                onChange={(_event, chosen) => onChange(chosen)}
+                                disabled={field.disabled}
+                                {...restField}
+                                renderInput={params => (
+                                  <MuiTextField
+                                    {...params}
+                                    slotProps={{
+                                      ...params.slotProps,
+                                      htmlInput: {
+                                        ...params.slotProps.htmlInput,
+                                        'aria-labelledby': labelIdFor(
+                                          String(field.name)
+                                        ),
+                                        'aria-describedby': describedBy,
+                                      },
+                                    }}
+                                  />
+                                )}
+                              />
+                            );
                           }
-                          value={value || []}
-                          onChange={(_event, chosen) => onChange(chosen)}
-                          disabled={field.disabled}
-                          {...restField}
-                          renderInput={params => (
-                            <MuiTextField
-                              {...params}
+
+                          if (field.type === 'select') {
+                            return (
+                              <MuiTextField
+                                select
+                                value={value ?? ''}
+                                onChange={onChange}
+                                disabled={field.disabled}
+                                fullWidth
+                                {...restField}
+                                slotProps={{
+                                  select: {
+                                    labelId: labelIdFor(String(field.name)),
+                                    SelectDisplayProps: {
+                                      'aria-describedby': describedBy,
+                                    },
+                                  },
+                                }}
+                              >
+                                {(field.options || []).map(option => (
+                                  <MenuItem
+                                    key={option.value}
+                                    value={option.value}
+                                  >
+                                    {option.label}
+                                  </MenuItem>
+                                ))}
+                              </MuiTextField>
+                            );
+                          }
+
+                          if (field.type === 'checkPicker') {
+                            return (
+                              <Autocomplete
+                                multiple
+                                disableCloseOnSelect
+                                options={(field.options || []).map(
+                                  option => option.value
+                                )}
+                                getOptionLabel={value =>
+                                  (field.options || []).find(
+                                    option => option.value === value
+                                  )?.label ?? String(value)
+                                }
+                                value={value || []}
+                                onChange={(_event, chosen) => onChange(chosen)}
+                                disabled={field.disabled}
+                                {...restField}
+                                renderInput={params => (
+                                  <MuiTextField
+                                    {...params}
+                                    slotProps={{
+                                      ...params.slotProps,
+                                      htmlInput: {
+                                        ...params.slotProps.htmlInput,
+                                        'aria-labelledby': labelIdFor(
+                                          String(field.name)
+                                        ),
+                                        'aria-describedby': describedBy,
+                                      },
+                                    }}
+                                  />
+                                )}
+                              />
+                            );
+                          }
+
+                          if (field.type === 'checkbox') {
+                            return (
+                              <FormControlLabel
+                                control={
+                                  <Switch
+                                    checked={!!value}
+                                    onChange={(_event, c) => onChange(c)}
+                                    disabled={field.disabled}
+                                    {...restField}
+                                    slotProps={{
+                                      input: {
+                                        'aria-describedby': describedBy,
+                                      },
+                                    }}
+                                  />
+                                }
+                                label={field.label}
+                              />
+                            );
+                          }
+
+                          if (field.type === 'custom') {
+                            return (
+                              <field.render
+                                value={value}
+                                onChange={val => onChange(val)}
+                                disabled={field.disabled}
+                                {...restField}
+                              />
+                            );
+                          }
+
+                          const Field =
+                            field.type === 'textarea' ? Textarea : MuiTextField;
+
+                          return (
+                            <Field
+                              value={value}
+                              onChange={
+                                field.type === 'number' ?
+                                  (event: ChangeEvent<HTMLInputElement>) =>
+                                    onChange(
+                                      event.target.value === '' ?
+                                        null
+                                      : Number(event.target.value)
+                                    )
+                                : onChange
+                              }
+                              error={!!fieldState.error}
+                              helperText={fieldState.error?.message}
+                              type={field.type}
+                              placeholder={field.placeholder}
+                              disabled={field.disabled}
+                              autoComplete={field.autoComplete}
+                              fullWidth
+                              {...restField}
                               slotProps={{
-                                ...params.slotProps,
                                 htmlInput: {
-                                  ...params.slotProps.htmlInput,
                                   'aria-labelledby': labelIdFor(
                                     String(field.name)
                                   ),
+                                  'aria-describedby': describedBy,
                                 },
                               }}
                             />
-                          )}
-                        />
-                      );
-                    }
-
-                    if (field.type === 'checkbox') {
-                      return (
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              checked={!!value}
-                              onChange={(_event, c) => onChange(c)}
-                              disabled={field.disabled}
-                              {...restField}
-                            />
-                          }
-                          label={
-                            <>
-                              {field.label}
-                              {info && (
-                                <>
-                                  {' '}
-                                  <InfoTooltip text={info} />
-                                </>
-                              )}
-                            </>
-                          }
-                        />
-                      );
-                    }
-
-                    if (field.type === 'custom') {
-                      return (
-                        <field.render
-                          value={value}
-                          onChange={val => onChange(val)}
-                          disabled={field.disabled}
-                          {...restField}
-                        />
-                      );
-                    }
-
-                    const Field =
-                      field.type === 'textarea' ? Textarea : MuiTextField;
-
-                    return (
-                      <Field
-                        value={value}
-                        onChange={
-                          field.type === 'number' ?
-                            (event: ChangeEvent<HTMLInputElement>) =>
-                              onChange(
-                                event.target.value === '' ?
-                                  null
-                                : Number(event.target.value)
-                              )
-                          : onChange
-                        }
-                        error={!!fieldState.error}
-                        helperText={fieldState.error?.message}
-                        type={field.type}
-                        placeholder={field.placeholder}
-                        disabled={field.disabled}
-                        autoComplete={field.autoComplete}
-                        fullWidth
-                        {...restField}
-                        slotProps={{
-                          htmlInput: {
-                            'aria-labelledby': labelIdFor(String(field.name)),
-                          },
+                          );
                         }}
                       />
-                    );
-                  }}
-                />
-              </FormControl>
-            ))}
+
+                      {info && (
+                        <FormHelperText
+                          id={helpIdFor(String(field.name))}
+                          sx={{ marginX: 0, whiteSpace: 'pre-line' }}
+                        >
+                          {info}
+                        </FormHelperText>
+                      )}
+                    </FormControl>
+                  </Fragment>
+                )
+              )}
+            </FieldList>
+
+            {wizardSteps && (
+              <StepNav
+                onBack={wizard.step > 0 ? wizard.back : undefined}
+                onNext={
+                  wizard.step < wizardSteps.length - 1 ? wizard.next : undefined
+                }
+                nextDisabled={!wizard.canGoTo(wizard.step + 1)}
+              />
+            )}
 
             {setting.lastLoadedAt && (
               <Typography
-                align="right"
-                color="gray"
+                variant="caption"
+                component="p"
+                title={t('integrations.lastLoadedInfo')}
+                sx={{ color: 'text.secondary', marginTop: 3 }}
               >
-                <small>
-                  {t('integrations.lastLoaded')}:{' '}
-                  {formatLastLoaded(setting.lastLoadedAt)}{' '}
-                  <InfoTooltip text={t('integrations.lastLoadedInfo')} />
-                </small>
+                {t('integrations.lastLoaded')}:{' '}
+                {formatLastLoaded(setting.lastLoadedAt)}
               </Typography>
             )}
           </CardContent>
 
-          <CardActions>
+          <FormFooter>
+            {renderActions?.(setting)}
+
+            <Box sx={{ flexGrow: 1 }} />
+
+            {isDirty && (
+              <Typography
+                variant="body2"
+                sx={{ color: 'text.secondary' }}
+              >
+                {t('integrations.form.unsaved')}
+              </Typography>
+            )}
+
+            <Button
+              variant="text"
+              disabled={!isDirty || updating}
+              onClick={() => reset()}
+            >
+              {t('integrations.form.discard')}
+            </Button>
+
             <Button
               variant="contained"
               type="submit"
-              disabled={updating}
+              disabled={!isDirty || updating}
             >
               {updating && (
                 <CircularProgress
@@ -448,9 +732,7 @@ export function SingleGenericIntegrationForm<
 
               {t('save')}
             </Button>
-
-            {renderActions?.(setting)}
-          </CardActions>
+          </FormFooter>
         </Card>
       </Stack>
 
