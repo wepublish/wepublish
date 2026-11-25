@@ -1,14 +1,16 @@
 import { useRouterState } from '@tanstack/react-router';
+import { usePageShell } from '@wepublish/website/builder';
 import { useMemo } from 'react';
 
 import {
-  getWebsiteShell,
+  getLiveWebsiteShell,
   WebsiteShell,
   WebsiteShellProps,
 } from '../lib/website-shell';
 
 export const useWebsiteShell = (): WebsiteShell => {
   const matches = useRouterState({ select: state => state.matches });
+  const livePage = usePageShell();
 
   return useMemo(() => {
     const deepest = [...matches]
@@ -17,8 +19,9 @@ export const useWebsiteShell = (): WebsiteShell => {
         match => (match.loaderData as WebsiteShellProps | undefined)?.shell
       );
 
-    return getWebsiteShell(
-      deepest?.loaderData as WebsiteShellProps | undefined
+    return getLiveWebsiteShell(
+      deepest?.loaderData as WebsiteShellProps | undefined,
+      livePage
     );
-  }, [matches]);
+  }, [matches, livePage]);
 };

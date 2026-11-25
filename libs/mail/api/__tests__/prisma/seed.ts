@@ -62,8 +62,13 @@ async function seed() {
         id: `sample-mail-template-${i}`,
         name: `sample-template-${i}`,
         description: `sample-template-description-${i}`,
-        subject: `sample-subject-${i}`,
-        htmlContent: `<p>sample-content-${i}</p>`,
+        variants: {
+          create: {
+            channel: 'mail',
+            subject: `sample-subject-${i}`,
+            htmlContent: `<p>sample-content-${i}</p>`,
+          },
+        },
       },
     });
     mailTemplates.push(template);

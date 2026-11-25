@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import {
   mockChallengeQuery,
   mockOperation,
@@ -10,6 +10,7 @@ import {
   renderWithProviders,
 } from '@wepublish/mocks/website';
 import { PageDocument, PageQueryVariables } from '@wepublish/website/api';
+import { usePageShell } from '@wepublish/website/builder';
 import { PageContainer } from './page-container';
 
 const page = mockPage({
@@ -78,5 +79,40 @@ describe('PageContainer', () => {
     await pageTitle();
 
     expect(screen.getByText('Comments')).toBeInTheDocument();
+  });
+
+  it('hands the hide header/footer flags of the loaded page to the app shell', async () => {
+    const shell: { current?: ReturnType<typeof usePageShell> } = {};
+    const ShellProbe = () => {
+      shell.current = usePageShell();
+
+      return null;
+    };
+
+    const hiding = { ...page, hideHeader: true, hideFooter: true };
+
+    renderWithProviders(
+      <>
+        <ShellProbe />
+        <PageContainer id={page.id} />
+      </>,
+      {
+        mocks: [
+          mockOperation(PageDocument, {
+            variables: { id: page.id },
+            data: { __typename: 'Query', page: hiding },
+          }),
+          ...providerMocks(),
+        ],
+      }
+    );
+
+    expect(shell.current).toBeUndefined();
+
+    await pageTitle();
+
+    await waitFor(() =>
+      expect(shell.current).toEqual({ hideHeader: true, hideFooter: true })
+    );
   });
 });

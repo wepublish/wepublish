@@ -1,3 +1,4 @@
+import { AuthSessionType } from '@wepublish/authentication/api';
 import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaClient, User, UserEvent, UserFlowMail } from '@prisma/client';
@@ -27,6 +28,11 @@ const prismaServiceMock = {
       [mockTemplate1, mockTemplate2].find(m => m.event === event)!
     ),
     update: vi.fn((): void => undefined),
+  },
+  mailTemplateVariant: {
+    findUnique: vi.fn(async (): Promise<{ id: string } | null> => ({
+      id: 'variant-1',
+    })),
   },
   mailTemplateAttachment: {
     count: vi.fn(async ({ where }: any) =>
@@ -102,6 +108,28 @@ describe('SystemMailResolver', () => {
     expect(result[1].event).toEqual(UserEvent.LOGIN_LINK);
   });
 
+  it('refuses a template written as a letter only: a system mail is an email', async () => {
+    prismaServiceMock.userFlowMail.update.mockClear();
+    prismaServiceMock.mailTemplateVariant.findUnique.mockResolvedValueOnce(
+      null
+    );
+
+    await expect(
+      resolver.updateSystemMail({
+        event: UserEvent.ACCOUNT_CREATION,
+        mailTemplateId: 'letter-only',
+      })
+    ).rejects.toThrow(/email version/);
+    expect(
+      prismaServiceMock.mailTemplateVariant.findUnique
+    ).toHaveBeenCalledWith({
+      where: {
+        templateId_channel: { templateId: 'letter-only', channel: 'mail' },
+      },
+    });
+    expect(prismaServiceMock.userFlowMail.update).not.toHaveBeenCalled();
+  });
+
   // A login link must not wait for a document conversion.
   it('refuses a template that carries attachments', async () => {
     prismaServiceMock.userFlowMail.update.mockClear();
@@ -131,6 +159,7 @@ describe('SystemMailResolver', () => {
   it('should test the system mail', async () => {
     const result = await resolver.testSystemMail(
       {
+        type: AuthSessionType.User,
         user: FAKE_USER,
       } as any,
       UserEvent.ACCOUNT_CREATION

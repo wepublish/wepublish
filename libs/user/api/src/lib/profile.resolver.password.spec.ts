@@ -1,3 +1,4 @@
+import { AuthSessionType } from '@wepublish/authentication/api';
 import { ProfileResolver } from './profile.resolver';
 
 describe('ProfileResolver updatePassword', () => {
@@ -9,6 +10,7 @@ describe('ProfileResolver updatePassword', () => {
     const resolver = new ProfileResolver(userService as any, {} as any);
 
     await resolver.updatePassword('a-new-Password-123', 'a-new-Password-123', {
+      type: AuthSessionType.User,
       id: 'session-1',
       user: { id: 'user-1' },
     } as any);

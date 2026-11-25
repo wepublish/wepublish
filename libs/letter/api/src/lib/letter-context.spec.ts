@@ -98,14 +98,22 @@ function createContext(
   const providerSettings = { findUnique: vi.fn().mockResolvedValue(null) };
 
   const prisma = {
-    mailTemplate: {
+    mailTemplateVariant: {
       findUnique: vi.fn().mockResolvedValue({
-        id: 'template-1',
+        id: 'variant-1',
+        templateId: 'template-1',
+        channel: MailChannel.letter,
         subject: 'Ihre Rechnung',
         htmlContent: '<p>Hallo {{user_firstName}}</p>',
         letterLayoutId: null,
         letterAppendixId: null,
         ...template,
+      }),
+    },
+    // The attachments are the template's, shared by its email and letter.
+    mailTemplate: {
+      findUnique: vi.fn().mockResolvedValue({
+        attachments: template.attachments ?? [],
       }),
     },
     letterLayout: layouts,
@@ -473,9 +481,45 @@ describe('LetterContext.resolveLayout', () => {
 });
 
 describe('LetterContext.sendLetter', () => {
+  it('prints what the template says on paper, not its email', async () => {
+    const { context, prisma } = createContext();
+
+    await context.sendLetter({
+      mailTemplateId: 'template-1',
+      recipient: user,
+      data: { user },
+      print,
+    });
+
+    expect(prisma.mailTemplateVariant.findUnique).toHaveBeenCalledWith({
+      where: {
+        templateId_channel: {
+          templateId: 'template-1',
+          channel: MailChannel.letter,
+        },
+      },
+    });
+  });
+
+  it('refuses a template that was not written as a letter', async () => {
+    const sendLetter = vi.fn();
+    const { context, prisma } = createContext(sendLetter);
+    (prisma.mailTemplateVariant.findUnique as Mock).mockResolvedValue(null);
+
+    await expect(
+      context.sendLetter({
+        mailTemplateId: 'template-1',
+        recipient: user,
+        data: { user },
+        print,
+      })
+    ).rejects.toThrow('MailTemplate <template-1> has no letter version!');
+    expect(sendLetter).not.toHaveBeenCalled();
+  });
+
   it('prints the letter on the stationery the template points at', async () => {
     const { context, rendered, prisma, layouts } = createContext();
-    (prisma.mailTemplate.findUnique as Mock).mockResolvedValue({
+    (prisma.mailTemplateVariant.findUnique as Mock).mockResolvedValue({
       id: 'template-1',
       subject: 'Ihre Rechnung',
       htmlContent: '<p>Hallo</p>',
@@ -676,6 +720,7 @@ describe('LetterContext attachments', () => {
       letterAppendixId?: string | null;
       country?: string;
       printMode?: LetterPrintMode;
+      invoice?: { name: string; content: Buffer };
     }
   ) =>
     context.renderLetter({
@@ -688,6 +733,7 @@ describe('LetterContext attachments', () => {
       data: { user },
       recipient: { ...recipient, country: props.country ?? 'CH' },
       printMode: props.printMode,
+      attachment: props.invoice,
     });
 
   it('prints the attachments after the letter, filled in with its data', async () => {
@@ -740,6 +786,20 @@ describe('LetterContext attachments', () => {
     expect(await pageCount(pdf)).toBe(5);
   });
 
+  it('keeps the invoice the sender hands in last', async () => {
+    const { context } = createContext(undefined, {}, attachmentRenderer());
+
+    const pdf = await render(context, {
+      attachmentIds: ['contract'],
+      printMode: LetterPrintMode.duplex,
+      invoice: { name: 'Rechnung.pdf', content: await makePdf(1) },
+    });
+
+    // letter, blank, contract (two pages), invoice; the other way round it
+    // would be letter, blank, invoice, blank, contract.
+    expect(await pageCount(pdf)).toBe(5);
+  });
+
   it('refuses an attachment that is not A4, naming it', async () => {
     const { context } = createContext(
       undefined,
@@ -780,7 +840,7 @@ describe('LetterContext attachments', () => {
 
     expect(prisma.mailTemplate.findUnique).toHaveBeenCalledWith(
       expect.objectContaining({
-        include: {
+        select: {
           attachments: {
             select: { documentId: true },
             orderBy: { position: 'asc' },

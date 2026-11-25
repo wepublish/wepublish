@@ -180,6 +180,22 @@ loads it.
 
 ---
 
+### ⚠️ Prisma 7 drops empty filters inside an `AND`/`OR` list
+
+Prisma 7.10 compiles a top-level `OR: []` to "nobody", but silently drops every
+empty entry (`{}`, `{ OR: [] }`, `{ AND: [] }`) of an `AND`/`OR` list:
+`{ AND: [base, { OR: [] }] }` is just `base`, and `{ OR: [{}, x] }` is just `x`.
+Field filters such as `in: []` are never dropped. The mail-send "Platzhalter"
+segment put `{ OR: patterns.map(…) }` without patterns into an `AND` and counted
+(and would have mailed) the whole audience (TSRI, 2026-11).
+[where-matcher.ts](../../libs/membership/api/src/lib/mail-send/where-matcher.ts)
+now throws on an empty `AND`/`OR` and on `{}` inside an `OR`. Never build an
+`OR` from a list that can be empty: say "nobody" as `{ id: { in: [] } }`
+(`NOBODY` in `mail-send-recipient.service.ts`, `NO_SUBSCRIPTION` in
+`subscription-flow.resolver.ts`), and keep `{}` out of `OR` lists.
+
+---
+
 ### ⚠️ CI runs one Vitest worker per project — `maxWorkers: 1` is load-bearing
 
 The `ci` configuration in [nx.json](../../nx.json) sets `maxWorkers: 1`.
@@ -346,6 +362,33 @@ mode) after logging out in one.
 `sessionStorage.removeItem` on logout.
 
 Pinned by `session.provider.spec.tsx` and `preview-status-banner.spec.tsx`.
+
+The same reason makes a bare `…?preview` website URL useless anywhere else (new
+tab, the editor tab, a colleague): no opener, no frame, so no handshake and no
+login. The editor's "copy preview link" therefore copies an **editor** link
+(`/articles/edit/:id?preview=<device>`, `editorPreviewLink` in
+`apps/editor/src/app/previewFrame.tsx`). Don't switch it back to the website
+URL or put the JWT into a URL; a login token in history and chat is the leak
+the handshake exists to avoid.
+
+---
+
+### ⚠️ The content wrapper's column is `minmax(0, 1fr)`, not the implicit `auto`
+
+The editor preview loads at desktop width and its mobile/tablet buttons only
+shrink the same iframe. `ImageBlock` pins each caption to a measured px width;
+with an `auto` column, every other block's still-wide caption holds the column
+open while one re-measures, so they settle on viewport − left padding. Verified
+2026-11-19 on a hauptstadt article: 1000 → 390px left the page 406px wide
+(captions 374px, right padding gone); a fresh 390px load and a one-image article
+were fine. Real phones never shrink, so only the preview showed it.
+
+Remounting the iframe per device would reload it and lose the scroll position.
+
+**Load-bearing:** `grid-template-columns: minmax(0, 1fr)` in
+[`content-wrapper.tsx`](../../libs/content/website/src/lib/content-wrapper/content-wrapper.tsx).
+
+Pinned by `content-wrapper.spec.tsx`.
 
 ---
 
@@ -643,6 +686,20 @@ trick or nothing catches it before `nx serve api-example`.
 
 ---
 
+### ⚠️ A tenant `BaseTeaser` override must fall back to block-content's `BaseTeaser`, never `Teaser`
+
+`Teaser` from `@wepublish/block-content/website` is a dispatcher: it renders
+the builder's `blocks.BaseTeaser`. An override registered as `BaseTeaser` that
+falls back to `<Teaser>` renders itself forever. Server rendering never ends,
+the pod's memory climbs until it is killed, and Cloudflare shows 504 for the
+page and 502 for everything else in the meantime (2026-11-18, bajour: every
+unstyled teaser-list block, because `TeaserListBlock` passes no `numColumns`).
+Fall back to the concrete `BaseTeaser` export instead, as munotgloeggli does.
+`bajour.spec.tsx` shows how to test it without hanging the runner: a context
+guard that throws if the override re-enters itself.
+
+---
+
 ### ⚠️ A service with `@PrimeDataLoader` makes everything that injects it request-scoped
 
 `@PrimeDataLoader(X)` property-injects the request-scoped dataloader `X`, so the
@@ -738,8 +795,13 @@ the top margin and Pingen rejects the letter; a fixed box offset into the
 margin area is clipped by Chromium. The band cap of 40mm (`LAYOUT_BAND_MAX_MM`)
 keeps a header out of the franking zone, whose bottom edge is at 87.5mm.
 
-**Load-bearing:** `margin: 0` in the `@page` rule, the thead/tfoot spacer rows,
-and `CONTENT_TOP_MM - headerSpace` for the body padding.
+The same spacers are the page margin of every page: they are never lower than
+`PAGE_MARGIN_MM` (20mm), also without stationery or with a band of height 0.
+At 0 a letter running onto a second page started at the very edge of the sheet
+there, which Pingen holds back («Validation failed»).
+
+**Load-bearing:** `margin: 0` in the `@page` rule, the thead/tfoot spacer rows
+and their floor, and `CONTENT_TOP_MM - headerSpace` for the body padding.
 
 Pinned by `libs/letter/api/src/lib/letter-renderer.spec.ts`.
 

@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 
 /** A file sent along with a mail. */
 export interface MailAttachment {
@@ -36,6 +36,23 @@ export const MAIL_TEMPLATE_ATTACHMENT_IDS = {
   },
 } as const satisfies Prisma.MailTemplateInclude;
 
+/**
+ * The documents attached to a template, in their order. They belong to the
+ * template, not to one of its versions: an email sends them along, a letter
+ * prints them after its pages.
+ */
+export async function loadAttachmentIds(
+  prisma: Pick<PrismaClient, 'mailTemplate'>,
+  mailTemplateId: string
+): Promise<string[]> {
+  const template = await prisma.mailTemplate.findUnique({
+    where: { id: mailTemplateId },
+    select: MAIL_TEMPLATE_ATTACHMENT_IDS,
+  });
+
+  return template ? attachmentIdsOf(template) : [];
+}
+
 /** The ids of the documents attached to a template loaded with them. */
 export function attachmentIdsOf(template: {
   attachments?: { documentId: string }[];
@@ -51,7 +68,7 @@ export function attachmentIdsOf(template: {
 export class MailAttachmentError extends Error {
   constructor(
     message: string,
-    readonly cause?: unknown
+    override readonly cause?: unknown
   ) {
     super(message);
     this.name = 'MailAttachmentError';

@@ -53,7 +53,18 @@ const apiToken = {
   lastUsedAt: null,
   createdById: 'user-1',
   createdBy: { id: 'user-1', name: 'Ada Lovelace' },
+  creatorState: {
+    state: 'Ok',
+    blockedReason: null as string | null,
+    missingScopes: [] as string[],
+  },
 };
+
+const blockedBy = (blockedReason: string) => ({
+  state: 'Blocked',
+  blockedReason,
+  missingScopes: [],
+});
 
 const users = [
   {
@@ -283,5 +294,99 @@ describe('ApiTokenList', () => {
       await screen.findByText('apiTokenList.overview.revoked')
     ).toBeTruthy();
     expect(screen.queryByText('apiTokenList.overview.expired')).toBeNull();
+  });
+
+  it('marks a key whose creator is gone as blocked, not active, and says why', async () => {
+    listing({
+      ...apiToken,
+      createdById: null as never,
+      createdBy: null as never,
+      creatorState: blockedBy('CreatorMissing'),
+    });
+    renderList();
+
+    expect(
+      await screen.findByText('apiTokenList.overview.blocked')
+    ).toBeTruthy();
+    expect(screen.queryByText('apiTokenList.overview.active')).toBeNull();
+    expect(
+      screen.getByLabelText(
+        'apiTokenList.overview.blockedReason.CreatorMissing'
+      )
+    ).toBeTruthy();
+  });
+
+  it('keeps a revoked key revoked even when its creator is gone', async () => {
+    listing({
+      ...apiToken,
+      revokedAt: '2026-05-05T10:00:00.000Z',
+      creatorState: blockedBy('CreatorInactive'),
+    });
+    renderList();
+
+    expect(
+      await screen.findByText('apiTokenList.overview.revoked')
+    ).toBeTruthy();
+    expect(screen.queryByText('apiTokenList.overview.blocked')).toBeNull();
+  });
+
+  it('warns about permissions the creator no longer holds, and names them', async () => {
+    listing({
+      ...apiToken,
+      scopes: ['CAN_GET_ARTICLE', 'CAN_DELETE_ARTICLE'],
+      creatorState: {
+        state: 'Limited',
+        blockedReason: null,
+        missingScopes: ['CAN_DELETE_ARTICLE'],
+      },
+    });
+    renderList();
+
+    expect(
+      await screen.findByText('apiTokenList.overview.missingScopes:1')
+    ).toBeTruthy();
+    expect(
+      screen.getByLabelText(
+        'apiTokenList.overview.missingScopesHelp:CAN_DELETE_ARTICLE'
+      )
+    ).toBeTruthy();
+    // The key still works for the rest.
+    expect(screen.getByText('apiTokenList.overview.active')).toBeTruthy();
+  });
+
+  it('says nothing about the creator of a key that simply works', async () => {
+    renderList();
+
+    await screen.findByText('apiTokenList.overview.active');
+
+    expect(screen.queryByText('apiTokenList.overview.blocked')).toBeNull();
+    expect(
+      screen.queryByText(/apiTokenList\.overview\.missingScopes/)
+    ).toBeNull();
+  });
+
+  it.each([
+    ['apiTokenList.overview.status', 'Status'],
+    ['apiTokenList.overview.scopes', 'ScopeCount'],
+    ['apiTokenList.overview.lastUsed', 'LastUsedAt'],
+    ['apiTokenList.overview.expires', 'ExpiresAt'],
+  ])('sorts the keys on the server by the column %s', async (label, sort) => {
+    renderList();
+
+    fireEvent.click(await screen.findByRole('button', { name: label }));
+
+    await waitFor(() => expect(tokenVariables()).toMatchObject({ sort }));
+  });
+
+  it('sorts by owner when the reader sees everyone‘s keys', async () => {
+    renderAt('/api-tokens', CanGetAllApiTokens.id);
+
+    fireEvent.click(
+      await screen.findByRole('button', { name: 'apiTokenList.overview.owner' })
+    );
+
+    await waitFor(() =>
+      expect(tokenVariables()).toMatchObject({ sort: 'Owner' })
+    );
   });
 });

@@ -149,6 +149,14 @@ export class BrevoMailProvider extends BaseMailProvider {
         textContent: props.message,
         htmlContent: props.messageHtml,
         headers: { 'X-Mailin-custom': props.mailLogID },
+        ...(props.attachments?.length ?
+          {
+            attachment: props.attachments.map(({ filename, content }) => ({
+              name: filename,
+              content: content.toString('base64'),
+            })),
+          }
+        : {}),
       },
       `the mail to ${props.recipient}`
     );

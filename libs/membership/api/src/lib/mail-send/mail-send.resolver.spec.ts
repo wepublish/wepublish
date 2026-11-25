@@ -1,5 +1,5 @@
 import { MailChannel, PrismaClient } from '@prisma/client';
-import { UserSession } from '@wepublish/authentication/api';
+import { AuthSessionType, UserSession } from '@wepublish/authentication/api';
 import { MailSendResolver } from './mail-send.resolver';
 import { MailSendJobService } from './mail-send-job.service';
 import { MailSendRecipientService } from './mail-send-recipient.service';
@@ -10,7 +10,10 @@ import { SuppressionSyncService } from './suppression-sync.service';
 import { MailEmailSegment, MailRecipientBase } from './mail-send.model';
 import type { Mock } from 'vitest';
 
-const session = { user: { id: 'editor-1' } } as UserSession;
+const session = {
+  type: AuthSessionType.User,
+  user: { id: 'editor-1' },
+} as UserSession;
 
 const makeResolver = (
   prisma: any,
@@ -297,6 +300,23 @@ describe('MailSendResolver', () => {
       expect(result.totalCount).toBe(3);
       expect(result.pageInfo.hasNextPage).toBe(true);
       expect(result.pageInfo.hasPreviousPage).toBe(false);
+    });
+
+    // A bulk send writes many mails within the same millisecond; ordered by
+    // sentDate alone, offset pages over such ties repeat or skip rows.
+    it('orders by a unique key after sentDate so pages do not overlap', async () => {
+      const prisma = {
+        mailLog: {
+          count: vi.fn(async () => 0),
+          findMany: vi.fn(async () => []),
+        },
+      };
+
+      await makeResolver(prisma).mailLogs(undefined, 50, 50);
+
+      expect(
+        (prisma.mailLog.findMany as Mock).mock.calls[0][0].orderBy
+      ).toEqual([{ sentDate: 'desc' }, { id: 'desc' }]);
     });
   });
 

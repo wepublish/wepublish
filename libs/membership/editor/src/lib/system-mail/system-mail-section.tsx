@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  MailChannel,
   MailTemplateDocument,
   SystemMailsDocument,
   TestSystemMailDocument,
@@ -22,6 +23,7 @@ import {
 } from '../common';
 import { EventList, EventRow, MailBlock } from '../mail-settings-layout';
 import { formatTemplateLabel } from '../mail-template/mail-placeholders';
+import { templatesForChannel } from '../mail-template/template-versions';
 import { Button, MenuItem, TextField } from '@mui/material';
 import {
   CanGetSystemMails,
@@ -93,7 +95,11 @@ function SystemMailSection() {
 
   const templateOptions = useMemo(
     () =>
-      (mailTemplates?.mailTemplates || []).map(mailTemplate => ({
+      // A system mail answers a request at once and is never printed.
+      templatesForChannel(
+        mailTemplates?.mailTemplates || [],
+        MailChannel.Mail
+      ).map(mailTemplate => ({
         label: formatTemplateLabel(
           mailTemplate.name,
           mailTemplate.context,

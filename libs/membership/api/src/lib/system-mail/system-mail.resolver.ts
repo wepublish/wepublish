@@ -1,9 +1,22 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { PrismaClient, UserEvent, UserFlowMail } from '@prisma/client';
+import {
+  MailChannel,
+  PrismaClient,
+  UserEvent,
+  UserFlowMail,
+} from '@prisma/client';
 import { SystemMailModel, SystemMailUpdateInput } from './system-mail.model';
-import { MailContext, mailLogType } from '@wepublish/mail/api';
+import {
+  findTemplateVariant,
+  MailContext,
+  mailLogType,
+} from '@wepublish/mail/api';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { CurrentUser, UserSession } from '@wepublish/authentication/api';
+import {
+  AuthSession,
+  CurrentUser,
+  requireSessionUser,
+} from '@wepublish/authentication/api';
 import {
   CanGetSystemMails,
   CanTestSystemMails,
@@ -41,6 +54,20 @@ export class SystemMailResolver {
       );
     }
 
+    // A login link or a password reset only ever goes out as an email.
+    if (
+      systemMail.mailTemplateId &&
+      !(await findTemplateVariant(
+        this.prismaService,
+        systemMail.mailTemplateId,
+        MailChannel.mail
+      ))
+    ) {
+      throw new BadRequestException(
+        'This template has no email version. A system mail is always an email.'
+      );
+    }
+
     // System mails go out while someone waits for them (a login link, a
     // password reset), so they never carry attachments; see MailController.
     if (
@@ -74,14 +101,15 @@ export class SystemMailResolver {
     description: `Sends a test email for the given event`,
   })
   async testSystemMail(
-    @CurrentUser() user: UserSession,
+    @CurrentUser() session: AuthSession,
     @Args('event', { type: () => UserEvent }) event: UserEvent
   ) {
+    const recipient = requireSessionUser(session);
     const mailTemplateId = await this.mailContext.getUserTemplateId(event);
 
     await this.mailContext.sendMail({
       mailType: mailLogType.SystemMail,
-      recipient: user.user,
+      recipient,
       optionalData: {},
       mailTemplateId: mailTemplateId || '',
     });

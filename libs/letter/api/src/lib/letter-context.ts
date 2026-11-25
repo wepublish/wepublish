@@ -15,12 +15,12 @@ import {
   LetterState,
 } from './letter-provider/letter-provider.interface';
 import {
-  attachmentIdsOf,
   type LetterAttachment,
   type LetterRecipientOptions,
   LetterSender,
-  MAIL_TEMPLATE_ATTACHMENT_IDS,
+  loadAttachmentIds,
   MailAttachmentRenderer,
+  requireTemplateVariant,
 } from '@wepublish/mail/api';
 import {
   canReceiveLetters,
@@ -321,21 +321,24 @@ export class LetterContext implements LetterSender {
     const address = toLetterAddress(props.recipient);
     const print = props.print ?? (await this.resolvePrintDefaults());
 
-    const template = await this.prisma.mailTemplate.findUnique({
-      where: { id: props.mailTemplateId },
-      include: MAIL_TEMPLATE_ATTACHMENT_IDS,
-    });
-
-    if (!template) {
-      throw new Error(`MailTemplate <${props.mailTemplateId}> not found!`);
-    }
+    // The words on paper are the letter variant's; the email of the same
+    // template is another text. The attachments are the template's, shared
+    // by both.
+    const template = await requireTemplateVariant(
+      this.prisma,
+      props.mailTemplateId,
+      MailChannel.letter
+    );
 
     try {
       const file = await this.renderLetter({
         template: {
           htmlContent: template.htmlContent,
           letterAppendixId: template.letterAppendixId,
-          attachmentIds: attachmentIdsOf(template),
+          attachmentIds: await loadAttachmentIds(
+            this.prisma,
+            props.mailTemplateId
+          ),
         },
         addressPosition: print.addressPosition,
         data: props.data,

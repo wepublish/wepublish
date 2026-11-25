@@ -69,6 +69,19 @@ export const LAYOUT_BAND_MAX_MM = 40;
 /** Breathing space between a band and the text flowing past it. */
 const BAND_GAP_MM = 5;
 
+/**
+ * The least distance the flowing text keeps from the top and the bottom edge
+ * of every page, with or without stationery. A text running onto a second
+ * page would otherwise start at the very edge of the sheet there: the sheet
+ * itself has no page margin, the bands and the address window are measured
+ * from its edge.
+ */
+const PAGE_MARGIN_MM = 20;
+
+/** What the text leaves free at an edge: the band and its gap, never less than the page margin. */
+const edgeSpace = (bandHeightMm: number) =>
+  Math.max(bandHeightMm ? bandHeightMm + BAND_GAP_MM : 0, PAGE_MARGIN_MM);
+
 export function clampBandHeight(heightMm: number): number {
   if (!Number.isFinite(heightMm) || heightMm < 0) {
     return 0;
@@ -113,7 +126,8 @@ export function formatAddressLines(address: LetterAddress): string[] {
 /**
  * A band of stationery. Fixed, so the print engine repeats it on every page;
  * the flowing text keeps clear of it through the spacers in the table's head
- * and foot, which are repeated per page as well.
+ * and foot, which are repeated per page as well. Those spacers are there
+ * without a band too: they are the page margin of every page.
  */
 function bandCss(
   className: string,
@@ -152,9 +166,8 @@ export function composeLetter({
 
   const headerHeight = layout ? clampBandHeight(layout.headerHeightMm) : 0;
   const footerHeight = layout ? clampBandHeight(layout.footerHeightMm) : 0;
-  // A band of zero height needs no gap either.
-  const headerSpace = headerHeight ? headerHeight + BAND_GAP_MM : 0;
-  const footerSpace = footerHeight ? footerHeight + BAND_GAP_MM : 0;
+  const headerSpace = edgeSpace(headerHeight);
+  const footerSpace = edgeSpace(footerHeight);
   const header = layout && headerHeight ? render(layout.headerHtml) : null;
   const footer = layout && footerHeight ? render(layout.footerHtml) : null;
 
@@ -207,6 +220,15 @@ export function composeLetter({
   .content {
     /* The header spacer already pushes the first page down by its share. */
     padding-top: ${CONTENT_TOP_MM - headerSpace}mm;
+    orphans: 2;
+    widows: 2;
+  }
+  /* Only what the author wrote: the table carrying it has to break. */
+  .content h1, .content h2, .content h3, .content h4, .content h5, .content h6 {
+    break-after: avoid;
+  }
+  .content tr, .content img {
+    break-inside: avoid;
   }
 </style>
 </head>
