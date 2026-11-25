@@ -2102,7 +2102,7 @@ model EngagementStage {
   imageId     String?
   image       Image?  @relation(fields: [imageId], references: [id], onDelete: SetNull)
 
-  /// Shown instead of the texts (not in banners).
+  /// Shown instead of the texts.
   blockTemplateId String?
   blockTemplate   BlockTemplate? @relation(fields: [blockTemplateId], references: [id], onDelete: SetNull)
 

@@ -17,6 +17,7 @@ import {
   EngagementRequirement,
   FullBlockFragment,
   FullEngagementActionFragment,
+  FullEngagementPromptFragment,
   SignUpForNewsletterDocument,
 } from '@wepublish/website/api';
 import {
@@ -173,6 +174,30 @@ const NewsletterSignupForm = ({
   );
 };
 
+export const EngagementTemplateBlocks = ({
+  template,
+}: {
+  template: NonNullable<FullEngagementPromptFragment['stage']['blockTemplate']>;
+}) => {
+  const {
+    blocks: { Renderer },
+  } = useWebsiteBuilder();
+
+  return (
+    <>
+      {template.blocks.map((block, index) => (
+        <Renderer
+          key={index}
+          block={block as FullBlockFragment}
+          type="Page"
+          index={index}
+          count={template.blocks.length}
+        />
+      ))}
+    </>
+  );
+};
+
 export const EngagementPrompt = ({
   className,
   prompt,
@@ -184,7 +209,7 @@ export const EngagementPrompt = ({
   const setIntendedRoute = useSetIntendedRoute();
   const {
     elements: { Button, Link, Modal, H4, Paragraph },
-    blocks: { RichText, Renderer },
+    blocks: { RichText },
   } = useWebsiteBuilder();
   const { stage } = prompt;
   const [closed, setClosed] = useState(false);
@@ -246,15 +271,7 @@ export const EngagementPrompt = ({
         />
       )}
       {!inModal && stage.title && <H4 component="p">{stage.title}</H4>}
-      {template?.blocks.map((block, index) => (
-        <Renderer
-          key={index}
-          block={block as FullBlockFragment}
-          type="Page"
-          index={index}
-          count={template.blocks.length}
-        />
-      ))}
+      {template && <EngagementTemplateBlocks template={template} />}
       {!template && stage.description && (
         <RichText richText={stage.description} />
       )}

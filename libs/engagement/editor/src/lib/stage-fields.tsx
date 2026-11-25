@@ -255,26 +255,44 @@ const BlockTemplateField = ({
       control={control}
       name={name}
       render={({ field }) => (
-        <TextField
-          select
-          label={label(
-            t('engagement.form.blockTemplate'),
-            t('engagement.form.blockTemplateInfo')
-          )}
-          value={templates.length ? (field.value ?? '') : ''}
-          onChange={event => field.onChange(event.target.value || null)}
-          fullWidth
-        >
-          <MenuItem value="">{t('engagement.form.ownContent')}</MenuItem>
-          {templates.map(({ id, name: templateName }) => (
-            <MenuItem
-              key={id}
-              value={id}
+        <>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={!!field.value}
+                disabled={!field.value && !templates.length}
+                onChange={(_event, checked) =>
+                  field.onChange((checked && templates[0]?.id) || null)
+                }
+              />
+            }
+            label={label(
+              t('engagement.form.useBlockTemplate'),
+              templates.length || field.value ?
+                t('engagement.form.useBlockTemplateInfo')
+              : t('engagement.form.noBlockTemplates')
+            )}
+          />
+
+          {!!field.value && (
+            <TextField
+              select
+              label={t('engagement.form.blockTemplate')}
+              value={templates.length ? field.value : ''}
+              onChange={event => field.onChange(event.target.value)}
+              fullWidth
             >
-              {templateName}
-            </MenuItem>
-          ))}
-        </TextField>
+              {templates.map(({ id, name: templateName }) => (
+                <MenuItem
+                  key={id}
+                  value={id}
+                >
+                  {templateName}
+                </MenuItem>
+              ))}
+            </TextField>
+          )}
+        </>
       )}
     />
   );
@@ -341,8 +359,7 @@ export const StageFields = ({
   const isLast = index === count - 1;
   const hard = stage?.enforcement === EngagementEnforcement.Hard;
   // A block template replaces the texts, the title and buttons stay.
-  const fromTemplate =
-    !!stage?.blockTemplateId && stage.placement !== EngagementPlacement.Banner;
+  const fromTemplate = !!stage?.blockTemplateId;
   const placements = Object.values(EngagementPlacement).filter(
     placement =>
       placement !== EngagementPlacement.Cutoff ||
@@ -532,9 +549,7 @@ export const StageFields = ({
               label={t('engagement.form.title')}
             />
 
-            {stage?.placement !== EngagementPlacement.Banner && (
-              <BlockTemplateField name={`stages.${index}.blockTemplateId`} />
-            )}
+            <BlockTemplateField name={`stages.${index}.blockTemplateId`} />
 
             {!fromTemplate && (
               <FormControl fullWidth>
@@ -552,12 +567,13 @@ export const StageFields = ({
               </FormControl>
             )}
 
-            {stage?.placement === EngagementPlacement.Banner && (
-              <TextFieldControl
-                name={`stages.${index}.text`}
-                label={t('engagement.form.text')}
-              />
-            )}
+            {!fromTemplate &&
+              stage?.placement === EngagementPlacement.Banner && (
+                <TextFieldControl
+                  name={`stages.${index}.text`}
+                  label={t('engagement.form.text')}
+                />
+              )}
 
             {!hard && (
               <SwitchControl
@@ -616,15 +632,16 @@ export const StageFields = ({
                 />
               )}
 
-              {stage?.placement === EngagementPlacement.Banner && (
-                <TextFieldControl
-                  name={`stages.${index}.embedUrl`}
-                  label={label(
-                    t('engagement.form.embedUrl'),
-                    t('engagement.form.embedUrlInfo')
-                  )}
-                />
-              )}
+              {!fromTemplate &&
+                stage?.placement === EngagementPlacement.Banner && (
+                  <TextFieldControl
+                    name={`stages.${index}.embedUrl`}
+                    label={label(
+                      t('engagement.form.embedUrl'),
+                      t('engagement.form.embedUrlInfo')
+                    )}
+                  />
+                )}
 
               {!hard && (
                 <FieldRow>

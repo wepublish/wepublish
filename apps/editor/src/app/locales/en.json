@@ -6190,9 +6190,10 @@
           "incomplete": "Readers would give their email, but the Mailchimp integration has no API key or audience: they get past the wall, the address goes nowhere."
         },
         "newsletterProblemLink": "Set up Mailchimp",
-        "blockTemplate": "Content",
-        "blockTemplateInfo": "Write the content here, or show a block template instead (title and buttons stay).",
-        "ownContent": "Write it here"
+        "blockTemplate": "Block template",
+        "useBlockTemplate": "Show a block template instead",
+        "useBlockTemplateInfo": "Replaces the texts below with the blocks of a template. The title and buttons stay.",
+        "noBlockTemplates": "There are no block templates yet: create one under Block templates first."
       },
       "validation": {
         "required": "Required",
@@ -6206,8 +6207,7 @@
         "announcementSoft": "An announcement can not restrict the article",
         "announcementNoMeter": "An announcement does not count articles",
         "newsletterWallRequired": "A newsletter rule asks for the newsletter signup",
-        "wholeNumber": "Enter a whole number",
-        "notInBanner": "A banner only shows texts"
+        "wholeNumber": "Enter a whole number"
       },
       "copyName": "{{name}} (copy)",
       "view": {

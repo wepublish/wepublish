@@ -119,13 +119,6 @@ export function validateEngagementRule(
       }
     }
 
-    if (
-      stage.blockTemplateId &&
-      stage.placement === EngagementPlacement.BANNER
-    ) {
-      problem(`${path}.blockTemplateId`, 'notInBanner');
-    }
-
     stage.actions.forEach((action, actionIndex) => {
       if (actionNeedsUrl(action, stage.placement) && !action.url?.trim()) {
         problem(`${path}.actions.${actionIndex}.url`, 'required');

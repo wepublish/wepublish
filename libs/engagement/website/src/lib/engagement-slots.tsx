@@ -23,6 +23,7 @@ import {
   trackEngagement,
   trackImpressionOnce,
 } from './engagement-tracking';
+import { EngagementTemplateBlocks } from './engagement-prompt';
 import { promptToBanner } from './prompt-to-banner';
 import { EngagementDismissals } from './resolve-engagement';
 
@@ -175,7 +176,11 @@ export function EngagementBannerSlot({
         loading={false}
         tags={tags}
         className={className}
-      />
+      >
+        {prompt.stage.blockTemplate && (
+          <EngagementTemplateBlocks template={prompt.stage.blockTemplate} />
+        )}
+      </Banner>
     </BannerTracking>
   );
 }

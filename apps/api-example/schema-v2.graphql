@@ -1812,7 +1812,7 @@ type EngagementStage {
   afterArticles: Int!
   blockTemplate: BlockTemplate
 
-  """A block template shown instead of the texts (not in banners)."""
+  """A block template shown instead of the texts."""
   blockTemplateId: String
   cta: String
   delaySeconds: Int!
@@ -1838,7 +1838,7 @@ input EngagementStageInput {
   """Shown once the reader read this many other articles in the window."""
   afterArticles: Int!
 
-  """A block template shown instead of the texts (not in banners)."""
+  """A block template shown instead of the texts."""
   blockTemplateId: String
   cta: String
   delaySeconds: Int! = 0

@@ -68,4 +68,29 @@ describe('promptToBanner', () => {
       ],
     });
   });
+
+  it('leaves out the texts a block template replaces', () => {
+    expect(
+      promptToBanner(
+        mockAnnouncementPrompt({
+          cta: 'Join now',
+          html: '<p>Own markup</p>',
+          blockTemplate: {
+            __typename: 'BlockTemplate',
+            id: 'template-1',
+            name: 'Crowdfunding box',
+            blocks: [],
+          },
+        }),
+        t
+      )
+    ).toMatchObject({
+      title: 'Our annual crowdfunding',
+      text: '',
+      cta: null,
+      html: null,
+      embedUrl: null,
+      image: null,
+    });
+  });
 });

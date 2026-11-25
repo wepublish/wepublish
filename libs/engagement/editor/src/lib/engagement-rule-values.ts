@@ -39,6 +39,7 @@ export type EngagementStageValues = {
   embedUrl: string | null;
   imageId: string | null;
   image: FullImageFragment | null;
+  /** Shown instead of the texts. */
   blockTemplateId: string | null;
   actions: EngagementActionValues[];
 };
@@ -258,13 +259,6 @@ export function engagementRuleProblems(
       if (stage.previewBlocks != null) {
         problem(`${path}.previewBlocks`, 'onlyHard');
       }
-    }
-
-    if (
-      stage.blockTemplateId &&
-      stage.placement === EngagementPlacement.Banner
-    ) {
-      problem(`${path}.blockTemplateId`, 'notInBanner');
     }
 
     stage.actions.forEach((action, actionIndex) => {

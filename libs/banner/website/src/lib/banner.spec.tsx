@@ -62,6 +62,18 @@ describe('Banner', () => {
     );
   });
 
+  it('shows its children instead of the text, title and actions stay', async () => {
+    const banner = mockBanner({ cta: 'Werde Mitglied' });
+    renderBanner(banner, { children: <p>From the template</p> });
+
+    expect(await screen.findByText(banner.title)).toBeInTheDocument();
+    expect(screen.getByText('From the template')).toBeInTheDocument();
+    expect(screen.queryByText(banner.text)).toBeNull();
+    expect(
+      screen.getByRole('link', { name: 'Jetzt abonnieren' })
+    ).toBeInTheDocument();
+  });
+
   it('shows the banner image as background', async () => {
     const banner = mockBanner();
     renderBanner(banner);

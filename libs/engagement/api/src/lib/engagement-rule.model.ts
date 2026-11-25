@@ -152,7 +152,7 @@ export class EngagementStage {
 
   @Field(() => String, {
     nullable: true,
-    description: `A block template shown instead of the texts (not in banners).`,
+    description: `A block template shown instead of the texts.`,
   })
   blockTemplateId?: string | null;
 

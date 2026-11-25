@@ -6190,9 +6190,10 @@
           "incomplete": "Les lecteur·rice·s donnent leur adresse e-mail, mais il manque la clé API ou l’audience à l’intégration Mailchimp. Le mur s’ouvre quand même et l’adresse est perdue."
         },
         "newsletterProblemLink": "Configurer Mailchimp",
-        "blockTemplate": "Contenu",
-        "blockTemplateInfo": "Écris le contenu ici, ou affiche plutôt un modèle de blocs (le titre et les boutons restent).",
-        "ownContent": "L’écrire ici"
+        "blockTemplate": "Modèle de blocs",
+        "useBlockTemplate": "Afficher plutôt un modèle de blocs",
+        "useBlockTemplateInfo": "Remplace les textes ci-dessous par les blocs d’un modèle. Le titre et les boutons restent.",
+        "noBlockTemplates": "Il n’y a pas encore de modèle de blocs : crée-en d’abord un sous Modèles de blocs."
       },
       "validation": {
         "required": "Obligatoire",
@@ -6206,8 +6207,7 @@
         "announcementSoft": "Une annonce ne peut pas restreindre l’article",
         "announcementNoMeter": "Une annonce ne compte pas les articles",
         "newsletterWallRequired": "Une règle newsletter demande l’inscription à la newsletter",
-        "wholeNumber": "Saisis un nombre entier",
-        "notInBanner": "Une bannière n’affiche que des textes"
+        "wholeNumber": "Saisis un nombre entier"
       },
       "copyName": "{{name}} (copie)",
       "view": {

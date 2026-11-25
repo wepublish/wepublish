@@ -189,7 +189,7 @@ describe('validateEngagementRule', () => {
     ).toEqual(['stages.0.actions.0.url: required']);
   });
 
-  it('shows a block template in pop-ups, boxes and the cutoff, not in a banner', () => {
+  it('shows a block template in every placement, banners included', () => {
     expect(
       codes(
         metered({
@@ -211,7 +211,7 @@ describe('validateEngagementRule', () => {
           ],
         })
       )
-    ).toEqual(['stages.0.blockTemplateId: notInBanner']);
+    ).toEqual([]);
   });
 
   it('needs a newsletter url in a banner, which has no room for the email', () => {

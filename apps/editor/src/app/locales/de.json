@@ -6190,9 +6190,10 @@
           "incomplete": "Leser*innen geben ihre E-Mail-Adresse an, aber der Mailchimp-Integration fehlen API-Key oder Zielgruppe. Die Sperre lässt sie trotzdem durch, die Adresse geht verloren."
         },
         "newsletterProblemLink": "Mailchimp einrichten",
-        "blockTemplate": "Inhalt",
-        "blockTemplateInfo": "Schreib den Inhalt hier, oder zeig stattdessen eine Block-Vorlage (Titel und Buttons bleiben).",
-        "ownContent": "Hier schreiben"
+        "blockTemplate": "Block-Vorlage",
+        "useBlockTemplate": "Stattdessen eine Block-Vorlage zeigen",
+        "useBlockTemplateInfo": "Ersetzt die Texte unten durch die Blöcke einer Vorlage. Titel und Buttons bleiben.",
+        "noBlockTemplates": "Es gibt noch keine Block-Vorlagen: leg zuerst eine unter Block-Vorlagen an."
       },
       "validation": {
         "required": "Pflichtfeld",
@@ -6206,8 +6207,7 @@
         "announcementSoft": "Eine Ankündigung kann den Artikel nicht einschränken",
         "announcementNoMeter": "Eine Ankündigung zählt keine Artikel",
         "newsletterWallRequired": "Eine Newsletter-Regel verlangt die Newsletter-Anmeldung",
-        "wholeNumber": "Gib eine ganze Zahl ein",
-        "notInBanner": "Ein Banner zeigt nur Texte"
+        "wholeNumber": "Gib eine ganze Zahl ein"
       },
       "copyName": "{{name}} (Kopie)",
       "view": {

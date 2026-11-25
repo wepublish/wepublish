@@ -135,6 +135,14 @@ const blockTemplatesMock = {
             name: 'Newsletter box',
             blocks: [],
           },
+          {
+            __typename: 'BlockTemplate',
+            id: 'template-2',
+            createdAt: '2026-01-01T00:00:00.000Z',
+            modifiedAt: '2026-01-01T00:00:00.000Z',
+            name: 'Crowdfunding box',
+            blocks: [],
+          },
         ],
         pageInfo: {
           __typename: 'PageInfo',
@@ -143,7 +151,7 @@ const blockTemplatesMock = {
           hasNextPage: false,
           hasPreviousPage: false,
         },
-        totalCount: 1,
+        totalCount: 2,
       },
     },
   },
@@ -392,36 +400,75 @@ describe('EngagementRuleForm', () => {
     expect(problems).toHaveTextContent('engagement.validation.ascending');
   });
 
-  it('shows a block template instead of the texts it replaces', async () => {
+  it('shows a block template instead of the texts once switched on', async () => {
     renderForm(ENGAGEMENT_PRESETS.promoteMemberships(), undefined, [
       blockTemplatesMock,
     ]);
     const [stage] = screen.getAllByTestId(/^stage-/);
+    const useTemplate = await within(stage).findByRole('switch', {
+      name: /engagement.form.useBlockTemplate/,
+    });
 
+    await waitFor(() => expect(useTemplate).toBeEnabled());
+    expect(
+      within(stage).queryByRole('combobox', {
+        name: /engagement.form.blockTemplate/,
+      })
+    ).toBeNull();
     expect(stage).toHaveTextContent('engagement.form.description');
+
+    fireEvent.click(useTemplate);
+
+    expect(values().stages[0].blockTemplateId).toBe('template-1');
+    expect(stage).not.toHaveTextContent('engagement.form.description');
+    expect(stage).toHaveTextContent('engagement.form.title');
 
     fireEvent.mouseDown(
       within(stage).getByRole('combobox', {
         name: /engagement.form.blockTemplate/,
       })
     );
-    fireEvent.click(
-      await screen.findByRole('option', { name: 'Newsletter box' })
-    );
 
-    expect(values().stages[0].blockTemplateId).toBe('template-1');
-    expect(stage).not.toHaveTextContent('engagement.form.description');
-    expect(stage).toHaveTextContent('engagement.form.title');
+    expect(
+      screen.getAllByRole('option').map(option => option.textContent)
+    ).toEqual(['Newsletter box', 'Crowdfunding box']);
+
+    fireEvent.click(screen.getByRole('option', { name: 'Crowdfunding box' }));
+
+    expect(values().stages[0].blockTemplateId).toBe('template-2');
+
+    fireEvent.click(useTemplate);
+
+    expect(values().stages[0].blockTemplateId).toBeNull();
+    expect(stage).toHaveTextContent('engagement.form.description');
   });
 
-  it('offers no block template in a banner, which only shows texts', () => {
+  it('can not switch to a block template while there is none', () => {
+    renderForm(ENGAGEMENT_PRESETS.promoteMemberships());
+    const [stage] = screen.getAllByTestId(/^stage-/);
+
+    expect(
+      within(stage).getByRole('switch', {
+        name: /engagement.form.useBlockTemplate/,
+      })
+    ).toBeDisabled();
+  });
+
+  it('offers a block template in a banner too', async () => {
     renderForm(ENGAGEMENT_PRESETS.displayAnnouncement(), undefined, [
       blockTemplatesMock,
     ]);
+    const [stage] = screen.getAllByTestId(/^stage-/);
+    const useTemplate = within(stage).getByRole('switch', {
+      name: /engagement.form.useBlockTemplate/,
+    });
 
-    expect(
-      screen.queryByRole('combobox', { name: /engagement.form.blockTemplate/ })
-    ).toBeNull();
+    await waitFor(() => expect(useTemplate).toBeEnabled());
+    fireEvent.click(useTemplate);
+
+    expect(values().stages[0].blockTemplateId).toBe('template-1');
+    expect(stage).not.toHaveTextContent('engagement.form.text');
+    expect(stage).toHaveTextContent('engagement.form.title');
   });
 
   it('keeps rarely needed stage options behind more options', () => {

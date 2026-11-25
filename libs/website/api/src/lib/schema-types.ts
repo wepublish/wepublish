@@ -1733,7 +1733,7 @@ export type EngagementStage = {
   /** Shown once the reader read this many other articles in the window. */
   afterArticles: Scalars['Int']['output'];
   blockTemplate?: Maybe<BlockTemplate>;
-  /** A block template shown instead of the texts (not in banners). */
+  /** A block template shown instead of the texts. */
   blockTemplateId?: Maybe<Scalars['String']['output']>;
   cta?: Maybe<Scalars['String']['output']>;
   delaySeconds: Scalars['Int']['output'];
@@ -1757,7 +1757,7 @@ export type EngagementStageInput = {
   actions?: Array<EngagementActionInput>;
   /** Shown once the reader read this many other articles in the window. */
   afterArticles: Scalars['Int']['input'];
-  /** A block template shown instead of the texts (not in banners). */
+  /** A block template shown instead of the texts. */
   blockTemplateId?: InputMaybe<Scalars['String']['input']>;
   cta?: InputMaybe<Scalars['String']['input']>;
   delaySeconds?: Scalars['Int']['input'];

@@ -1,10 +1,16 @@
-import { act, renderHook } from '@testing-library/react';
-import { mockEngagementPrompt } from '@wepublish/mocks/website';
+import { act, renderHook, screen } from '@testing-library/react';
+import {
+  mockAnnouncementPrompt,
+  mockEngagementPrompt,
+  mockTitleBlock,
+  renderWithProviders,
+} from '@wepublish/mocks/website';
 import {
   ENGAGEMENT_DISMISSALS_KEY,
   LEGACY_BANNER_CLOSED_KEY,
 } from './engagement-storage';
 import {
+  EngagementBannerSlot,
   useEngagementDismissals,
   useImpressionWhenShown,
 } from './engagement-slots';
@@ -99,5 +105,30 @@ describe('useImpressionWhenShown', () => {
     act(() => vi.advanceTimersByTime(30_000));
 
     expect(trackImpressionOnce).not.toHaveBeenCalled();
+  });
+});
+
+describe('EngagementBannerSlot', () => {
+  it('shows the blocks of a block template instead of the text', async () => {
+    renderWithProviders(
+      <EngagementBannerSlot
+        prompt={mockAnnouncementPrompt({
+          blockTemplate: {
+            __typename: 'BlockTemplate',
+            id: 'template-1',
+            name: 'Crowdfunding box',
+            blocks: [
+              mockTitleBlock({ title: 'From the template', lead: null }),
+            ],
+          },
+        })}
+      />
+    );
+
+    expect(
+      await screen.findByText('Our annual crowdfunding')
+    ).toBeInTheDocument();
+    expect(screen.getByText('From the template')).toBeInTheDocument();
+    expect(screen.queryByText('Help us reach 1000 members.')).toBeNull();
   });
 });

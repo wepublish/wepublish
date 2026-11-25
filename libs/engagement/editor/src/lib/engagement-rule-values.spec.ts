@@ -300,7 +300,7 @@ describe('engagement rule values', () => {
 });
 
 describe('block templates', () => {
-  it('refuses one in a banner, like the server', () => {
+  it('allows one in a banner, like the server', () => {
     expect(
       engagementRuleProblems(
         metered({
@@ -313,7 +313,7 @@ describe('block templates', () => {
           ],
         })
       )
-    ).toContainEqual({ path: 'stages.0.blockTemplateId', code: 'notInBanner' });
+    ).toEqual([]);
   });
 });
 

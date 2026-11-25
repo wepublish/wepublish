@@ -146,6 +146,7 @@ export const Banner = ({
   error,
   tags,
   className,
+  children,
 }: BuilderBannerProps) => {
   const [showBanner, setShowBanner] = useState(false);
   const [collapsed, setCollapsed] = useState(true);
@@ -304,12 +305,15 @@ export const Banner = ({
               {data.primaryBanner.title}
             </Typography>
 
-            <Typography
-              variant="bannerText"
-              component={BannerText}
-            >
-              {data.primaryBanner.text}
-            </Typography>
+            {children ?
+              <BannerText>{children}</BannerText>
+            : <Typography
+                variant="bannerText"
+                component={BannerText}
+              >
+                {data.primaryBanner.text}
+              </Typography>
+            }
           </BannerContent>
 
           <BannerCta>
