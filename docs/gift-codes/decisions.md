@@ -150,20 +150,28 @@ Consequences. Never hang product fulfilment on `sendMail`.
 ## D7: supportsStandaloneInvoices is opt-in
 
 Context. Not every provider can take a payment for an invoice that has no
-subscription. Bexio builds its invoice from subscription data, and
-PayrexxSubscription and NeverCharge make no sense for one-off purchases.
+subscription. PayrexxSubscription only imports subscriptions Payrexx runs
+itself and has no `createIntent`. NeverCharge would mark every purchase paid
+without charging, which hands out free gifts.
 
 Decision. `PaymentProvider` gets `supportsStandaloneInvoices`, `false` on
-`BasePaymentProvider`. Stripe, StripeCheckout, Payrexx, Mollie and Simulated
-override it with `true`.
+`BasePaymentProvider`. Stripe, StripeCheckout, Payrexx, Mollie, Bexio and
+Simulated override it with `true`.
+
+Bexio first built its invoice from subscription data only. Karl asked to
+lift that where the limit was ours, not Bexio's: without a subscription the
+Bexio contact is the invoice's buyer (`Invoice.user`), the invoice line is
+named after the invoice items, and the mail templates get only the `user`
+placeholders. Title, template and mail texts are the "new membership" ones.
 
 Why. A new provider stays excluded until someone has checked it. All eight
 providers extend `BasePaymentProvider` directly, so nothing inherits `true` by
 accident.
 
-Consequences. Media that only offer invoice payment ("Rechnung") through Bexio
-cannot sell gift codes yet, although the spec lists Rechnung as a payment
-option.
+Consequences. Bexio has no webhook; a gift invoice paid in Bexio is found by
+the reconciler's polling, which looks back 30 days. An unpaid order is
+canceled after 14 days, which can be shorter than a Bexio invoice's payment
+term.
 
 ## D8: A nightly reconciler as an isolated step
 
@@ -359,7 +367,6 @@ Why. Editors want to offer gifts with a different set of methods than the
 subscription itself.
 
 Consequences.
-- No Bexio invoice payment in V1 (D7).
 - The offer's methods must also hold when the buyer pays an open order
   through the generic `createPaymentFromInvoice`. The handler contract got an
   optional `allowedPaymentMethodIds` for this, which

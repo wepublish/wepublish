@@ -27,7 +27,7 @@ describe('PaymentProvider.supportsStandaloneInvoices', () => {
     { provider: PayrexxPaymentProvider, supported: true },
     { provider: MolliePaymentProvider, supported: true },
     { provider: SimulatedPaymentProvider, supported: true },
-    { provider: BexioPaymentProvider, supported: false },
+    { provider: BexioPaymentProvider, supported: true },
     { provider: PayrexxSubscriptionPaymentProvider, supported: false },
     { provider: NeverChargePaymentProvider, supported: false },
   ])(

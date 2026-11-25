@@ -22,8 +22,8 @@ Once gift codes are switched on:
   chosen duration and tells you when the gift is cheaper or more expensive
   than subscribing. The subscription a code starts still costs the plan's
   normal price.
-- Each offer has its own payment methods. Stripe, Stripe Checkout, Payrexx and
-  Mollie can take gift payments; Bexio invoices cannot yet.
+- Each offer has its own payment methods. Stripe, Stripe Checkout, Payrexx,
+  Mollie and Bexio invoices can take gift payments.
 - Buyers see their code once the payment has arrived. An order that stays
   unpaid is canceled after 14 days.
 - **Allow discount codes** lets buyers enter a discount code of the offer's

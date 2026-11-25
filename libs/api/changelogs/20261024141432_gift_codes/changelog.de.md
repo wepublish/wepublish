@@ -22,8 +22,8 @@ Wenn Geschenkcodes eingeschaltet sind:
   Plans für die gewählte Laufzeit ein und zeigt an, wenn das Geschenk
   günstiger oder teurer ist als das Abo. Das Abo, das ein Code startet,
   kostet weiterhin den normalen Preis des Plans.
-- Jedes Angebot hat eigene Zahlungsmethoden. Stripe, Stripe Checkout, Payrexx
-  und Mollie nehmen Geschenkzahlungen an, Bexio-Rechnungen noch nicht.
+- Jedes Angebot hat eigene Zahlungsmethoden. Stripe, Stripe Checkout, Payrexx,
+  Mollie und Bexio-Rechnungen nehmen Geschenkzahlungen an.
 - Käufer:innen sehen ihren Code, sobald die Zahlung eingegangen ist. Eine
   Bestellung, die unbezahlt bleibt, wird nach 14 Tagen storniert.
 - Mit **Rabattcodes erlauben** können Käufer:innen einen Rabattcode des Plans

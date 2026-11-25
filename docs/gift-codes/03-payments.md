@@ -53,7 +53,7 @@ Semantics in [01-selling-things.md](01-selling-things.md#notify-means-settlement
 ### `BasePaymentProvider` (`payment-provider.ts`)
 
 `supportsStandaloneInvoices` is added to the `PaymentProvider` interface and
-defaults to `false` on `BasePaymentProvider`. Five providers override it with
+defaults to `false` on `BasePaymentProvider`. Six providers override it with
 `true`.
 
 `updatePaymentWithIntentState` keeps the payment `findUnique` and `update` and
@@ -241,7 +241,7 @@ this change.
 | Stripe | Yes | No, `charge.dispute.*` events are dropped | Cancel by hand in the editor |
 | Stripe Checkout | Yes | No | Cancel by hand in the editor |
 | Simulated | Yes | No | Not applicable |
-| Bexio | No | No | Not applicable |
+| Bexio | Yes | No, invoices are polled | Cancel by hand in the editor |
 | Payrexx subscription | No | No | Not applicable |
 | NeverCharge | No | No | Not applicable |
 
@@ -266,8 +266,8 @@ Only the label can be wrong; the code is revoked either way.
   of it is still `processing`. If that charge goes through, the reader has
   paid twice. The `PaymentsService` warning names the invoice and the
   payments; the refund is done by hand at the provider.
-- Without Bexio, media that sell "Rechnung" only through Bexio cannot sell
-  gift codes.
+- An unpaid Bexio gift invoice is canceled after 14 days like any other
+  order, which can be shorter than its payment term in Bexio.
 - Dashboard revenue, expected revenue and `MediumStatsService` money include
   gift purchases with no member plan. Failed gift payments may appear in
   at-risk stats.

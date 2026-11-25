@@ -70,7 +70,7 @@ Left for later:
 - "PDF herunterladen" and "E-Mail erneut senden". A voucher PDF already
   goes out as a `.docx` attached to the purchase mail's template, filled
   with the code; only downloading it again and resending are missing.
-- Stripe dispute handling, Bexio support, and widening `userInvoices` to show
+- Stripe dispute handling and widening `userInvoices` to show
   gift invoices. See [03-payments.md](03-payments.md#known-limits).
 
 ## The flow

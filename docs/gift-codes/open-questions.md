@@ -29,11 +29,9 @@ A member plan has at most one gift offer
 ([D29](decisions.md#d29-one-gift-offer-per-member-plan)), and each offer
 decides whether buyers may use a discount code
 ([D30](decisions.md#d30-discount-codes-on-gift-purchases-opt-in-per-offer)).
-Only providers that support standalone invoices are accepted, so there is no
-Bexio invoice payment in V1
-([D7](decisions.md#d7-supportsstandaloneinvoices-is-opt-in)). Enabling Bexio
-means subscription-less invoice support in its provider, then flipping
-`supportsStandaloneInvoices`.
+Only providers that support standalone invoices are accepted
+([D7](decisions.md#d7-supportsstandaloneinvoices-is-opt-in)); Bexio is one of
+them.
 An invoice sells one kind of thing
 ([D31](decisions.md#d31-one-sellable-kind-per-invoice)). Gift offers are
 sold from a block of their own
