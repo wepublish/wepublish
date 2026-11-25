@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { lighten } from '@mui/material';
+import { UserFormWrapper } from '@wepublish/authentication/website';
 import {
   hasBlockStyle,
   isSubscribeBlock,
@@ -99,12 +100,42 @@ export const TsriMembershipSubscribeBlock = styled(SubscribeBlock)`
 
   [data-area='summary'] {
     padding-top: ${({ theme }) => theme.spacing(2.5)};
+    padding-bottom: ${({ theme }) => theme.spacing(2)};
     border-radius: ${({ theme }) => theme.spacing(0.5, 0.5, 0, 0)};
+  }
+
+  ${UserFormWrapper} {
+    gap: ${({ theme }) => theme.spacing(1)};
+  }
+
+  ${UserFormWrapper} > :has(input[name='email']) {
+    grid-column: 1 / -1;
+  }
+
+  .MuiInputBase-root,
+  .MuiInputLabel-root {
+    font-size: 1rem;
   }
 
   .MuiOutlinedInput-root {
     border-radius: 999px;
     background-color: ${({ theme }) => theme.palette.common.white};
+  }
+
+  .MuiOutlinedInput-input {
+    padding: ${({ theme }) => theme.spacing(0.75, 2)};
+  }
+
+  .MuiInputLabel-root {
+    line-height: 1.5;
+  }
+
+  .MuiInputLabel-root:not(.MuiInputLabel-shrink) {
+    transform: translate(
+        ${({ theme }) => theme.spacing(2)},
+        ${({ theme }) => theme.spacing(0.75)}
+      )
+      scale(1);
   }
 
   .MuiOutlinedInput-notchedOutline {
@@ -172,6 +203,10 @@ export const TsriMembershipTransactionFee = styled(TransactionFee)`
     display: none;
   }
 
+  .MuiFormControlLabel-label {
+    font-size: 1rem;
+  }
+
   .MuiCheckbox-root,
   .MuiCheckbox-root.Mui-checked {
     color: ${({ theme }) => theme.palette.common.black};
@@ -180,6 +215,7 @@ export const TsriMembershipTransactionFee = styled(TransactionFee)`
 
 export const TsriMembershipSummaryText = styled('p')`
   margin: 0;
+  font-size: 1rem;
   font-weight: 700;
   text-align: center;
 `;

@@ -115,7 +115,7 @@ export const TsriMembershipPlanBody = styled('div')`
   flex-grow: 1;
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing(2)};
-  padding: ${({ theme }) => theme.spacing(3, 3, 2)};
+  padding: ${({ theme }) => theme.spacing(3, 5.5, 2)};
 `;
 
 export const TsriMembershipPlanPrice = styled('div')`
@@ -138,7 +138,7 @@ export const TsriMembershipPlanUnit = styled('span')`
 
 export const TsriMembershipPlanDetails = styled('div')`
   display: grid;
-  gap: ${({ theme }) => theme.spacing(2)};
+  gap: ${({ theme }) => theme.spacing(2.5)};
   align-content: start;
   font-size: 1rem;
   line-height: 1.4;
@@ -159,7 +159,7 @@ export const TsriMembershipPlanDetails = styled('div')`
 
   ul {
     display: grid;
-    gap: ${({ theme }) => theme.spacing(1.5)};
+    gap: ${({ theme }) => theme.spacing(2)};
     margin: 0;
     padding: 0;
     list-style: none;

@@ -33,7 +33,7 @@ export const TsriMembershipCustomAmountContext = createContext<CustomAmount>({
 
 export const TsriMembershipPlanPickerWrapper = styled('div')`
   display: grid;
-  gap: ${({ theme }) => theme.spacing(3)};
+  gap: ${({ theme }) => theme.spacing(1.5)};
 `;
 
 export const TsriMembershipPlanList = styled(MemberPlanPicker)`
