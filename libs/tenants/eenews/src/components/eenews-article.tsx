@@ -16,6 +16,7 @@ import {
   Image,
   Link,
   Paywall,
+  SITE_TIME_ZONE,
   useWebsiteBuilder,
   WebsiteBuilderProvider,
 } from '@wepublish/website/builder';
@@ -241,6 +242,7 @@ const formatDateDE = (raw: string | Date | null | undefined): string => {
     return '';
   }
   return d.toLocaleDateString('de-CH', {
+    timeZone: SITE_TIME_ZONE,
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',

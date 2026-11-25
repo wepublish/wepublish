@@ -1,6 +1,9 @@
 import styled from '@emotion/styled';
 import { alpha, Button, Typography } from '@mui/material';
-import { BuilderInvoiceListItemProps } from '@wepublish/website/builder';
+import {
+  BuilderInvoiceListItemProps,
+  SITE_TIME_ZONE,
+} from '@wepublish/website/builder';
 
 const Row = styled('div')`
   display: flex;
@@ -53,6 +56,7 @@ const formatDateDE = (raw: string | null | undefined): string => {
     return '';
   }
   return d.toLocaleDateString('de-CH', {
+    timeZone: SITE_TIME_ZONE,
     day: '2-digit',
     month: '2-digit',
     year: '2-digit',

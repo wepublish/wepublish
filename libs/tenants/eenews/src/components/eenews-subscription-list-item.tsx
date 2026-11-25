@@ -3,6 +3,7 @@ import { Typography } from '@mui/material';
 import {
   BuilderSubscriptionListItemProps,
   Link,
+  SITE_TIME_ZONE,
 } from '@wepublish/website/builder';
 
 const Row = styled(Link)`
@@ -74,6 +75,7 @@ const formatDateDE = (raw: string | null | undefined): string => {
     return '';
   }
   return d.toLocaleDateString('de-CH', {
+    timeZone: SITE_TIME_ZONE,
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',

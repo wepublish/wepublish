@@ -10,6 +10,7 @@ import {
   BuilderNavbarProps,
   BuilderRouterContext,
   Link,
+  SITE_TIME_ZONE,
 } from '@wepublish/website/builder';
 import {
   useCallback,
@@ -41,6 +42,7 @@ const navigationLinkToUrl = (
 
 const formatDateDE = (d: Date) =>
   d.toLocaleDateString('de-CH', {
+    timeZone: SITE_TIME_ZONE,
     weekday: 'long',
     day: 'numeric',
     month: 'long',

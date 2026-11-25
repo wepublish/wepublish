@@ -7,7 +7,12 @@ import {
   selectTeaserTitle,
   selectTeaserUrl,
 } from '@wepublish/block-content/website';
-import { BuilderTeaserProps, Image, Link } from '@wepublish/website/builder';
+import {
+  BuilderTeaserProps,
+  Image,
+  Link,
+  SITE_TIME_ZONE,
+} from '@wepublish/website/builder';
 import { useContext } from 'react';
 
 import skeleton from '../../assets/skeleton.gif';
@@ -132,6 +137,7 @@ const formatDateDE = (raw: string | Date | null | undefined): string => {
     return '';
   }
   return d.toLocaleDateString('de-CH', {
+    timeZone: SITE_TIME_ZONE,
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',

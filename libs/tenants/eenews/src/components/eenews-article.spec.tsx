@@ -42,6 +42,47 @@ describe('EenewsArticle', () => {
     expect(container.innerHTML).toBe('');
   });
 
+  it('shows the publication date in Zurich time, also when rendered on a UTC server', () => {
+    const article = {
+      __typename: 'Article',
+      id: 'article',
+      url: 'https://ee-news.ch/a/article',
+      publishedAt: '2025-12-31T23:30:00.000Z',
+      disableComments: true,
+      paywall: null,
+      tags: [],
+      trackingPixels: [],
+      latest: {
+        __typename: 'ArticleRevision',
+        title: 'Title',
+        lead: 'Lead',
+        preTitle: null,
+        breaking: false,
+        image: null,
+        authors: [],
+        properties: [],
+        blocks: [],
+      },
+    } as unknown as ArticleQuery['article'];
+
+    render(
+      <MockedProvider>
+        <SessionTokenContext.Provider value={[null, false, vi.fn()]}>
+          <ThemeProvider theme={createTheme()}>
+            <EenewsArticle
+              data={{ __typename: 'Query', article }}
+              loading={false}
+              showPaywall={false}
+              hideContent={false}
+            />
+          </ThemeProvider>
+        </SessionTokenContext.Provider>
+      </MockedProvider>
+    );
+
+    expect(screen.getByText(/01\.01\.2026/)).toBeInTheDocument();
+  });
+
   it('renders the ProLitteris tracking pixel so the visit is counted', () => {
     const uri = 'https://pl02.owen.prolitteris.ch/na/plzm.abc';
     const article = {

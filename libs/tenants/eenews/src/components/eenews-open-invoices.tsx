@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
 import { InvoiceListContainer } from '@wepublish/membership/website';
 import { FullInvoiceFragment, InvoicesDocument } from '@wepublish/website/api';
-import { Link } from '@wepublish/website/builder';
+import { Link, SITE_TIME_ZONE } from '@wepublish/website/builder';
 import { MdChevronLeft } from 'react-icons/md';
 
 import {
@@ -35,7 +35,11 @@ const formatDeadline = (raw: string | null | undefined): string => {
   if (Number.isNaN(d.getTime())) {
     return '';
   }
-  return d.toLocaleDateString('de-CH', { day: 'numeric', month: 'long' });
+  return d.toLocaleDateString('de-CH', {
+    timeZone: SITE_TIME_ZONE,
+    day: 'numeric',
+    month: 'long',
+  });
 };
 
 export const OpenInvoicesCard = () => {

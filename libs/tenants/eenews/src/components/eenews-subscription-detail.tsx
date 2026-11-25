@@ -8,7 +8,11 @@ import {
   ProductType,
   SubscriptionsDocument,
 } from '@wepublish/website/api';
-import { BuilderRouterContext, Link } from '@wepublish/website/builder';
+import {
+  BuilderRouterContext,
+  Link,
+  SITE_TIME_ZONE,
+} from '@wepublish/website/builder';
 import { useContext } from 'react';
 import { MdChevronLeft } from 'react-icons/md';
 
@@ -137,6 +141,7 @@ const formatDate = (raw: string | null | undefined): string => {
     return '–';
   }
   return d.toLocaleDateString('de-CH', {
+    timeZone: SITE_TIME_ZONE,
     day: 'numeric',
     month: 'long',
     year: 'numeric',

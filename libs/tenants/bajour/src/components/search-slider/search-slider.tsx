@@ -16,8 +16,10 @@ import {
   SlimArticleFragment,
   SortOrder,
 } from '@wepublish/website/api';
-import { useWebsiteBuilder } from '@wepublish/website/builder';
-import { format } from 'date-fns';
+import {
+  formatInSiteTimeZone,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
 import {
   KeenSliderInstance,
   TrackDetails,
@@ -503,11 +505,11 @@ export function SearchSlider(props: SearchSliderProps) {
   );
   const publicationDate =
     mainArticle?.publishedAt ?
-      format(new Date(mainArticle?.publishedAt), 'd. MMM yyyy')
+      formatInSiteTimeZone(new Date(mainArticle?.publishedAt), 'd. MMM yyyy')
     : '';
   const publicationDay =
     mainArticle?.publishedAt ?
-      format(new Date(mainArticle?.publishedAt), 'eeee')
+      formatInSiteTimeZone(new Date(mainArticle?.publishedAt), 'eeee')
     : '';
 
   const articlesWithVideos = sliderArticles
