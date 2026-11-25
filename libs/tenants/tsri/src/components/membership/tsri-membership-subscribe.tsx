@@ -193,6 +193,7 @@ export const TsriMembershipPeriodicityToggle = styled(PeriodicityPicker)`
 `;
 
 export const TsriMembershipTransactionFee = styled(TransactionFee)`
+  align-items: flex-start;
   justify-self: stretch;
   max-width: none;
   padding: 0;
@@ -205,6 +206,12 @@ export const TsriMembershipTransactionFee = styled(TransactionFee)`
 
   .MuiFormControlLabel-label {
     font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  .MuiCheckbox-root {
+    padding-top: 0;
+    padding-bottom: 0;
   }
 
   .MuiCheckbox-root,
