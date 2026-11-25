@@ -6403,7 +6403,8 @@
         "audienceExcept": "Exclure",
         "audienceUtm": "Paramètres UTM",
         "audienceUtmHint": "Autant que tu veux, chacun sous la forme key=value ; appuie sur Entrée après chacun. Il en faut un seul, majuscules ou minuscules.",
-        "audienceNewsletterImplied": "Qui a déjà donné son e-mail ne voit jamais une règle newsletter."
+        "audienceNewsletterImplied": "Qui a déjà donné son e-mail ne voit jamais une règle newsletter.",
+        "newBlockTemplate": "Nouveau modèle de blocs"
       },
       "validation": {
         "required": "Obligatoire",

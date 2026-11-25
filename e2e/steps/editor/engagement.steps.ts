@@ -104,9 +104,7 @@ async function announce(
   if (memberPlanSlug) {
     const plan = await data.memberPlan(memberPlanSlug);
 
-    await page
-      .getByLabel('Readers with a specific subscription')
-      .check();
+    await page.getByRole('radio', { name: /^Members\b/ }).check();
     await page.getByLabel('Member plans').fill(plan.name);
     await page.getByRole('option', { name: plan.name, exact: true }).click();
   }

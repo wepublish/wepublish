@@ -36,7 +36,7 @@ import {
   ImageSelectPanel,
   RichTextBlock,
 } from '@wepublish/ui/editor';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Controller,
   useFieldArray,
@@ -45,7 +45,7 @@ import {
   useWatch,
 } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { MdAdd, MdDelete, MdExpandMore } from 'react-icons/md';
+import { MdAdd, MdDelete, MdEdit, MdExpandMore } from 'react-icons/md';
 import {
   EngagementRuleValues,
   actionDefaults,
@@ -245,11 +245,20 @@ const BlockTemplateField = ({
 }) => {
   const { t } = useTranslation();
   const { control } = useFormContext<EngagementRuleValues>();
-  const { data } = useQuery(BlockTemplateListDocument, {
+  const { data, refetch } = useQuery(BlockTemplateListDocument, {
     variables: { take: 100 },
     fetchPolicy: 'cache-and-network',
   });
   const templates = data?.blockTemplates.nodes ?? [];
+
+  // Templates are edited in a new tab: back here, the list may have changed.
+  useEffect(() => {
+    const reload = () => refetch().catch(() => undefined);
+
+    window.addEventListener('focus', reload);
+
+    return () => window.removeEventListener('focus', reload);
+  }, [refetch]);
 
   return (
     <Controller
@@ -293,6 +302,31 @@ const BlockTemplateField = ({
               ))}
             </TextField>
           )}
+
+          <Stack
+            direction="row"
+            sx={{ flexWrap: 'wrap', gap: 1 }}
+          >
+            {!!field.value && (
+              <Button
+                variant="text"
+                startIcon={<MdEdit />}
+                href={`/block-content/templates/edit/${field.value}`}
+                target="_blank"
+              >
+                {t('blocks.blockTemplate.editTemplate')}
+              </Button>
+            )}
+
+            <Button
+              variant="text"
+              startIcon={<MdAdd />}
+              href="/block-content/templates/create"
+              target="_blank"
+            >
+              {t('engagement.form.newBlockTemplate')}
+            </Button>
+          </Stack>
         </>
       )}
     />

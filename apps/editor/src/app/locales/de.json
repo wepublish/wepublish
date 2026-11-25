@@ -6403,7 +6403,8 @@
         "audienceExcept": "Ausschliessen",
         "audienceUtm": "UTM-Parameter",
         "audienceUtmHint": "So viele du willst, je als key=value; drück nach jedem Enter. Leser*innen brauchen einen davon, Gross- und Kleinschreibung egal.",
-        "audienceNewsletterImplied": "Wer die E-Mail-Adresse schon angegeben hat, sieht eine Newsletter-Regel nie."
+        "audienceNewsletterImplied": "Wer die E-Mail-Adresse schon angegeben hat, sieht eine Newsletter-Regel nie.",
+        "newBlockTemplate": "Neue Block-Vorlage"
       },
       "validation": {
         "required": "Pflichtfeld",

@@ -446,6 +446,44 @@ describe('EngagementRuleForm', () => {
     expect(stage).toHaveTextContent('engagement.form.description');
   });
 
+  it('opens the chosen block template, or a new one, in the template editor', async () => {
+    renderForm(ENGAGEMENT_PRESETS.promoteMemberships(), undefined, [
+      blockTemplatesMock,
+    ]);
+    const [stage] = screen.getAllByTestId(/^stage-/);
+    const newTemplate = within(stage).getByRole('link', {
+      name: 'engagement.form.newBlockTemplate',
+    });
+
+    expect(newTemplate).toHaveAttribute(
+      'href',
+      '/block-content/templates/create'
+    );
+    expect(newTemplate).toHaveAttribute('target', '_blank');
+    expect(
+      within(stage).queryByRole('link', {
+        name: 'blocks.blockTemplate.editTemplate',
+      })
+    ).toBeNull();
+
+    const useTemplate = within(stage).getByRole('switch', {
+      name: /engagement.form.useBlockTemplate/,
+    });
+
+    await waitFor(() => expect(useTemplate).toBeEnabled());
+    fireEvent.click(useTemplate);
+
+    const edit = within(stage).getByRole('link', {
+      name: 'blocks.blockTemplate.editTemplate',
+    });
+
+    expect(edit).toHaveAttribute(
+      'href',
+      '/block-content/templates/edit/template-1'
+    );
+    expect(edit).toHaveAttribute('target', '_blank');
+  });
+
   it('can not switch to a block template while there is none', () => {
     renderForm(ENGAGEMENT_PRESETS.promoteMemberships());
     const [stage] = screen.getAllByTestId(/^stage-/);
