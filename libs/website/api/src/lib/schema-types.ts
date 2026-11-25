@@ -31,6 +31,13 @@ export enum AiProviderType {
   V0 = 'V0'
 }
 
+/** The API key that did something on behalf of the user named next to it. */
+export type ActingApiToken = {
+  __typename: 'ActingApiToken';
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+};
+
 export type Action = ArticleCreatedAction | AuthorCreatedAction | CommentCreatedAction | EventCreatedAction | PageCreatedAction | PollStartedAction | SubscriptionCreatedAction | UserCreatedAction;
 
 /** The mail an admin action in the editor would send to the user, or why it sends none, so the editor can ask the admin before running the action. */
@@ -84,6 +91,8 @@ export type ApiToken = {
   /** The user who created this token. Null once that user is deleted. */
   createdBy?: Maybe<User>;
   createdById?: Maybe<Scalars['String']['output']>;
+  /** Whether the user who created this key still allows it to work, checked the way a call with the key is. A key list asks this once per row. */
+  creatorState: ApiTokenCreatorState;
   /** When the token stops working. */
   expiresAt: Scalars['DateTime']['output'];
   id: Scalars['String']['output'];
@@ -97,10 +106,37 @@ export type ApiToken = {
   scopes: Array<Scalars['String']['output']>;
 };
 
+export enum ApiTokenBlockedReason {
+  CreatorInactive = 'CreatorInactive',
+  CreatorMayNotCreateApiTokens = 'CreatorMayNotCreateApiTokens',
+  CreatorMissing = 'CreatorMissing'
+}
+
+/** A key acts on behalf of the user who created it. This is the check every call with the key goes through; expiry and revocation are separate. */
+export type ApiTokenCreatorState = {
+  __typename: 'ApiTokenCreatorState';
+  blockedReason?: Maybe<ApiTokenBlockedReason>;
+  /** Permissions of the key its creator no longer holds; calls that need one are refused. */
+  missingScopes: Array<Scalars['String']['output']>;
+  state: ApiTokenCreatorStateKind;
+};
+
+/** What the user who created a key still allows it: everything it holds (ok), nothing (blocked: every call is refused), or only some of its permissions (limited). */
+export enum ApiTokenCreatorStateKind {
+  Blocked = 'Blocked',
+  Limited = 'Limited',
+  Ok = 'Ok'
+}
+
+/** Status sorts working keys before expired and revoked ones (ascending). Owner sorts by the creator's name, then first name. */
 export enum ApiTokenSort {
   CreatedAt = 'CreatedAt',
+  ExpiresAt = 'ExpiresAt',
   LastUsedAt = 'LastUsedAt',
-  Name = 'Name'
+  Name = 'Name',
+  Owner = 'Owner',
+  ScopeCount = 'ScopeCount',
+  Status = 'Status'
 }
 
 /** A revoked token counts as revoked even once it has also expired. */
@@ -1328,6 +1364,8 @@ export type DeliveryChannelUserModel = {
   canReceiveLetters: Scalars['Boolean']['output'];
   changedAt?: Maybe<Scalars['DateTime']['output']>;
   changedBy?: Maybe<MailLogRecipient>;
+  /** Set when an API key made the change on behalf of `changedBy`. */
+  changedByApiToken?: Maybe<ActingApiToken>;
   /** How automated subscription mails reach this user. */
   channel: MailChannel;
   /** How the email address fares: a placeholder or dead address is not reached by email, though email may still be chosen. */
@@ -1354,6 +1392,8 @@ export type DeliveryModeBulkChangeModel = {
   audience: Scalars['JSONObject']['output'];
   changed: Scalars['Int']['output'];
   changedBy?: Maybe<MailLogRecipient>;
+  /** Set when an API key made the change on behalf of `changedBy`. */
+  changedByApiToken?: Maybe<ActingApiToken>;
   channel: MailChannel;
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['String']['output'];
@@ -1394,6 +1434,19 @@ export type DeliverySuggestionEmailQuality = {
   since: Scalars['DateTime']['output'];
 };
 
+export type DeliverySuggestionFilter = {
+  /** Suggested since, from. */
+  createdFrom?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Suggested since, to. */
+  createdTo?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Email status since, from. */
+  emailSinceFrom?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Email status since, to. */
+  emailSinceTo?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Any of these reasons: placeholderEmail, the evidence type behind the email status (e.g. hardBounce, login), or none. */
+  reasons?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
 /** toLetter: move to printed letters. toMail: move back to mail. */
 export enum DeliverySuggestionKind {
   ToLetter = 'toLetter',
@@ -1410,6 +1463,13 @@ export type DeliverySuggestionModel = {
   /** Why, e.g. emailQuality:dead or placeholderEmail. */
   reason: Scalars['String']['output'];
   user: MailLogRecipient;
+};
+
+export type DeliverySuggestionReasonCount = {
+  __typename: 'DeliverySuggestionReasonCount';
+  count: Scalars['Int']['output'];
+  /** A reason as DeliverySuggestionFilter.reasons takes it. */
+  reason: Scalars['String']['output'];
 };
 
 export type DeliverySuggestionRecomputeResult = {
@@ -2404,6 +2464,8 @@ export type Invoice = HasOptionalSubscription & {
   id: Scalars['String']['output'];
   items: Array<InvoiceItem>;
   mail: Scalars['String']['output'];
+  /** Set when an API key marked the invoice as paid on behalf of `manuallySetAsPaidByUser`. */
+  manuallySetAsPaidByApiTokenId?: Maybe<Scalars['String']['output']>;
   manuallySetAsPaidByUser?: Maybe<User>;
   manuallySetAsPaidByUserId?: Maybe<Scalars['String']['output']>;
   modifiedAt: Scalars['DateTime']['output'];
@@ -2862,6 +2924,14 @@ export enum MailSendJobState {
   Running = 'running'
 }
 
+export type MailSendPreviewAttachment = {
+  __typename: 'MailSendPreviewAttachment';
+  /** The name the pdf is attached under. */
+  filename: Scalars['String']['output'];
+  /** The document filled in for the recipient, as pdf, base64 encoded, exactly as the mail carries it. */
+  pdf: Scalars['String']['output'];
+};
+
 export type MailSendPreviewInput = {
   audience: MailAudienceInput;
   /** Defaults to mail. A letter preview renders the pdf. */
@@ -2874,6 +2944,8 @@ export type MailSendPreviewInput = {
 
 export type MailSendPreviewModel = {
   __typename: 'MailSendPreviewModel';
+  /** Mail previews only: the template's attachments, in their order. A letter preview prints them inside its pdf. */
+  attachments: Array<MailSendPreviewAttachment>;
   /** Empty for a letter preview. */
   html: Scalars['String']['output'];
   /** Letter previews only: the rendered pdf, base64 encoded, exactly as it would be printed. */
@@ -2932,15 +3004,13 @@ export enum MailTemplateContext {
 }
 
 export type MailTemplateInput = {
+  /** Word documents (.docx) filled in with the same placeholders, converted to pdf and attached to every mail sent from this template, in this order. A printed letter carries them after its pages. Left out, the attachments stay as they are. */
+  attachmentIds?: InputMaybe<Array<Scalars['String']['input']>>;
   context?: InputMaybe<MailTemplateContext>;
   description?: InputMaybe<Scalars['String']['input']>;
-  htmlContent: Scalars['String']['input'];
-  /** Uploaded pdf printed after the letter pages, e.g. a QR-bill. */
-  letterAppendixId?: InputMaybe<Scalars['String']['input']>;
-  letterLayoutId?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
-  subject: Scalars['String']['input'];
-  textContent?: InputMaybe<Scalars['String']['input']>;
+  /** The versions to write, one per channel. A version left out stays as it is; removing one is `deleteMailTemplateVariant`. */
+  variants: Array<MailTemplateVariantInput>;
 };
 
 export type MailTemplateLetterPreviewModel = {
@@ -2949,23 +3019,49 @@ export type MailTemplateLetterPreviewModel = {
   pdf: Scalars['String']['output'];
 };
 
+/** A member plan whose communication flow sends a template. */
+export type MailTemplateMemberPlanModel = {
+  __typename: 'MailTemplateMemberPlanModel';
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+};
+
 export type MailTemplateModel = {
   __typename: 'MailTemplateModel';
+  /** Word documents (.docx) filled in with the same placeholders, converted to pdf and attached to every mail sent from this template, in this order. A printed letter carries them after its pages. */
+  attachmentIds: Array<Scalars['String']['output']>;
+  /** Title, or else the filename, of each attached document, in their order. For the template table. */
+  attachmentNames: Array<Scalars['String']['output']>;
+  /** The channels this template is written for, the email first. */
+  channels: Array<MailChannel>;
   context?: Maybe<MailTemplateContext>;
   description?: Maybe<Scalars['String']['output']>;
+  /** @deprecated Use `variants`: a template has a body per channel. */
   htmlContent: Scalars['String']['output'];
   id: Scalars['String']['output'];
-  /** Uploaded pdf printed after the letter pages, e.g. a QR-bill. */
+  /** @deprecated Use the letter entry of `variants`. */
   letterAppendixId?: Maybe<Scalars['String']['output']>;
-  /** Stationery a letter printed from this template is set on; null means the default. */
+  /** Title, or else the filename, of the pdf printed after the letter pages. Null without one. */
+  letterAppendixName?: Maybe<Scalars['String']['output']>;
+  /** @deprecated Use the letter entry of `variants`. */
   letterLayoutId?: Maybe<Scalars['String']['output']>;
+  /** Name of the stationery the letter version is set on. Null for the default stationery and for a template without a letter version. */
+  letterLayoutName?: Maybe<Scalars['String']['output']>;
+  /** The member plans whose communication flow sends this template, by name. The default flow belongs to no plan and is not listed. */
+  memberPlans: Array<MailTemplateMemberPlanModel>;
   name: Scalars['String']['output'];
   status: Scalars['String']['output'];
+  /** The subject of the email version; the title of the letter for a template written as a letter only. */
   subject: Scalars['String']['output'];
+  /** @deprecated Use `variants`: a template has a body per channel. */
   textContent?: Maybe<Scalars['String']['output']>;
+  /** What the template says on each channel, bodies included. Ask for it on a single template, not on a list. */
+  variants: Array<MailTemplateVariantModel>;
 };
 
 export type MailTemplatePreviewInput = {
+  /** Attachments chosen on the draft, possibly not saved yet. */
+  attachmentIds?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Mail type / context id, e.g. "renewal". */
   contextId: Scalars['String']['input'];
   htmlContent: Scalars['String']['input'];
@@ -2996,6 +3092,36 @@ export type MailTemplateSubscriptionOption = {
   __typename: 'MailTemplateSubscriptionOption';
   id: Scalars['String']['output'];
   label: Scalars['String']['output'];
+};
+
+export type MailTemplateVariantInput = {
+  channel: MailChannel;
+  htmlContent: Scalars['String']['input'];
+  /** Uploaded pdf printed after the letter pages, e.g. a QR-bill. */
+  letterAppendixId?: InputMaybe<Scalars['String']['input']>;
+  letterLayoutId?: InputMaybe<Scalars['String']['input']>;
+  /** Letter only: take subject and body from the email version, which the template must have. The subject and body handed in are ignored. */
+  sameAsMail?: InputMaybe<Scalars['Boolean']['input']>;
+  subject: Scalars['String']['input'];
+  textContent?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** What a template says on one channel. */
+export type MailTemplateVariantModel = {
+  __typename: 'MailTemplateVariantModel';
+  channel: MailChannel;
+  htmlContent: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  /** Letter only: uploaded pdf printed after the letter pages, e.g. a QR-bill. */
+  letterAppendixId?: Maybe<Scalars['String']['output']>;
+  /** Letter only: stationery the letter is set on; null means the default. */
+  letterLayoutId?: Maybe<Scalars['String']['output']>;
+  /** Letter only: the letter says what the email says. Its own subject and body are empty then; sends read the email version. */
+  sameAsMail: Scalars['Boolean']['output'];
+  /** The email's subject line; for a letter the title its log entry carries. */
+  subject: Scalars['String']['output'];
+  /** Plain-text alternative of an email. Unused for a letter. */
+  textContent?: Maybe<Scalars['String']['output']>;
 };
 
 /** The audience webhook the api registered at Mailchimp; the URL carries the secret. */
@@ -3558,7 +3684,7 @@ export type Mutation = {
   closePrintIssue: PrintIssue;
   /** Compute the list and store it for checking. What exporting it does follows from the state: the first delivery, the delivery not handed over yet written anew, or the next Nachlieferung. Replaces a stored list. */
   computePrintIssueRun: PrintIssueRun;
-  /** Apply every open suggestion of a direction */
+  /** Apply every open suggestion of a direction, or only those the filter keeps */
   confirmAllDeliverySuggestions: DeliverySuggestionConfirmAllResult;
   /** Confirms that the manual action required by a changelog entry has been completed. Requires the permission to update settings. */
   confirmChangelogEntry: ChangelogEntry;
@@ -3733,6 +3859,8 @@ export type Mutation = {
   deleteLetterProviderSetting: SettingLetterProvider;
   /** Delete an existing mail template */
   deleteMailTemplate?: Maybe<Scalars['Boolean']['output']>;
+  /** Remove what a template says on one channel. Refused while something still sends the template on that channel, and for its last version. */
+  deleteMailTemplateVariant?: Maybe<Scalars['Boolean']['output']>;
   /** Deletes a single sync error so the contact will be retried. */
   deleteMailchimpSyncError: Scalars['Boolean']['output'];
   /** Deletes an existing memberplan. */
@@ -4140,6 +4268,7 @@ export type MutationComputePrintIssueRunArgs = {
 
 
 export type MutationConfirmAllDeliverySuggestionsArgs = {
+  filter?: InputMaybe<DeliverySuggestionFilter>;
   kind: DeliverySuggestionKind;
 };
 
@@ -4855,6 +4984,12 @@ export type MutationDeleteLetterProviderSettingArgs = {
 
 export type MutationDeleteMailTemplateArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteMailTemplateVariantArgs = {
+  channel: MailChannel;
+  templateId: Scalars['String']['input'];
 };
 
 
@@ -7166,6 +7301,8 @@ export type PrintIssue = HasImageLc & {
   __typename: 'PrintIssue';
   closedAt?: Maybe<Scalars['DateTime']['output']>;
   closedBy?: Maybe<PrintIssueUser>;
+  /** Set when an API key did it on behalf of `closedBy`. */
+  closedByApiToken?: Maybe<PrintIssueApiToken>;
   /** How many issues it counts as against a reader's period: the numbers it covers, or fewer. */
   countsAs: Scalars['Int']['output'];
   createdAt: Scalars['DateTime']['output'];
@@ -7188,6 +7325,13 @@ export type PrintIssue = HasImageLc & {
   /** The issue's topic. */
   title?: Maybe<Scalars['String']['output']>;
   year: Scalars['Int']['output'];
+};
+
+/** The API key that did something on behalf of the user named next to it. */
+export type PrintIssueApiToken = {
+  __typename: 'PrintIssueApiToken';
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
 };
 
 export type PrintIssueBexioStats = {
@@ -7231,9 +7375,13 @@ export type PrintIssueDelivery = {
   /** When the list was exported. */
   createdAt: Scalars['DateTime']['output'];
   createdBy?: Maybe<PrintIssueUser>;
+  /** Set when an API key did it on behalf of `createdBy`. */
+  createdByApiToken?: Maybe<PrintIssueApiToken>;
   /** «übergeben»: when the file went to the printshop. */
   deliveredAt?: Maybe<Scalars['DateTime']['output']>;
   deliveredBy?: Maybe<PrintIssueUser>;
+  /** Set when an API key did it on behalf of `deliveredBy`. */
+  deliveredByApiToken?: Maybe<PrintIssueApiToken>;
   filename: Scalars['String']['output'];
   id: Scalars['String']['output'];
   /** The options this list was computed with. */
@@ -7326,6 +7474,8 @@ export type PrintIssueRun = {
   /** Pass it back when exporting: a run computed again in between is refused. */
   computedAt: Scalars['DateTime']['output'];
   computedBy?: Maybe<PrintIssueUser>;
+  /** Set when an API key did it on behalf of `computedBy`. */
+  computedByApiToken?: Maybe<PrintIssueApiToken>;
   /** The delivery a replace run writes anew. */
   deliveryId?: Maybe<Scalars['String']['output']>;
   /** The CSV file name the delivery gets. */
@@ -7577,6 +7727,8 @@ export type Query = {
   deliveryModeBulkChanges: PaginatedDeliveryModeBulkChanges;
   /** How many suggestions are open, per direction */
   deliverySuggestionCounts: DeliverySuggestionCounts;
+  /** The reasons among the open suggestions of a direction, most first */
+  deliverySuggestionReasons: Array<DeliverySuggestionReasonCount>;
   /** Open suggestions to move users to letters or back to mail */
   deliverySuggestions: PaginatedDeliverySuggestions;
   /** Returns an discountCode by id or discountCode. */
@@ -7689,7 +7841,7 @@ export type Query = {
   mailSendRecipientPreview: MailSendRecipientPreview;
   /** The concrete recipients an audience resolves to */
   mailSendRecipients: PaginatedMailSendRecipient;
-  /** Return a single mail template, including its html and text body. */
+  /** Return a single mail template; its `variants` carry the html and text bodies. */
   mailTemplate?: Maybe<MailTemplateModel>;
   /** Render a draft mail template as the letter a send would print */
   mailTemplateLetterPreview: MailTemplateLetterPreviewModel;
@@ -8159,7 +8311,13 @@ export type QueryDeliveryModeBulkChangesArgs = {
 };
 
 
+export type QueryDeliverySuggestionReasonsArgs = {
+  kind: DeliverySuggestionKind;
+};
+
+
 export type QueryDeliverySuggestionsArgs = {
+  filter?: InputMaybe<DeliverySuggestionFilter>;
   kind: DeliverySuggestionKind;
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
@@ -8401,6 +8559,7 @@ export type QueryMailTemplateLetterPreviewArgs = {
 
 
 export type QueryMailTemplateMissingPlaceholdersArgs = {
+  channel?: InputMaybe<MailChannel>;
   templateId: Scalars['String']['input'];
   withSubscriptionData: Scalars['Boolean']['input'];
 };
@@ -8977,6 +9136,8 @@ export type RichTextBlockInput = {
 };
 
 export type SendTestMailTemplateInput = {
+  /** Attachments chosen on the draft, possibly not saved yet. */
+  attachmentIds?: InputMaybe<Array<Scalars['String']['input']>>;
   contextId: Scalars['String']['input'];
   htmlContent: Scalars['String']['input'];
   subject: Scalars['String']['input'];
@@ -10064,6 +10225,20 @@ export type TwitterTweetBlockInput = {
   userID?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type UmamiAnalytics = {
+  __typename: 'UmamiAnalytics';
+  enabled: Scalars['Boolean']['output'];
+  /** Search params removed from the url and referrer before they are sent to Umami. */
+  excludedSearchParams: Array<Scalars['String']['output']>;
+  key?: Maybe<Scalars['String']['output']>;
+};
+
+export type UmamiAnalyticsInput = {
+  enabled: Scalars['Boolean']['input'];
+  excludedSearchParams?: InputMaybe<Array<Scalars['String']['input']>>;
+  key?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type UnknownBlock = {
   __typename: 'UnknownBlock';
   blockStyle?: Maybe<Scalars['String']['output']>;
@@ -10186,6 +10361,8 @@ export type UserDeliveryPreferenceModel = {
   canReceiveLetters: Scalars['Boolean']['output'];
   changedAt?: Maybe<Scalars['DateTime']['output']>;
   changedBy?: Maybe<MailLogRecipient>;
+  /** Set when an API key made the change on behalf of `changedBy`. */
+  changedByApiToken?: Maybe<ActingApiToken>;
   /** How automated subscription mails reach this user. */
   channel: MailChannel;
   /** How the email address fares: a placeholder or dead address is not reached by email, though email may still be chosen. */
@@ -10352,7 +10529,7 @@ export type WebsiteAnalytics = {
   googleTagManager: KeyEnabled;
   piwik: KeyEnabled;
   plausible: KeyEnabled;
-  umami: KeyEnabled;
+  umami: UmamiAnalytics;
 };
 
 export type WebsiteAnalyticsInput = {
@@ -10360,7 +10537,7 @@ export type WebsiteAnalyticsInput = {
   googleTagManager: KeyEnabledInput;
   piwik: KeyEnabledInput;
   plausible: KeyEnabledInput;
-  umami: KeyEnabledInput;
+  umami: UmamiAnalyticsInput;
 };
 
 /** A single-use grant the website redeems through createSessionWithJWT within a minute. */

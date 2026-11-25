@@ -37,6 +37,7 @@ const mockRead = {
 };
 
 const mockSession = {
+  type: 'user',
   user: {
     id: 'user-1',
   },

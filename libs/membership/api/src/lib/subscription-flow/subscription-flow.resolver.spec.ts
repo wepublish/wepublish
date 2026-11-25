@@ -470,6 +470,31 @@ describe('Subscription Flow Resolver', () => {
         });
       });
 
+      it('lets a flow without an auto-renewal option cover no subscription next to other flows', async () => {
+        prisma.subscriptionFlow.findMany.mockResolvedValue([
+          { ...customFlow, autoRenewal: [] },
+        ]);
+
+        await resolver.numberOfSubscriptions(mockSubscriptionFlow as any);
+
+        expect(prisma.subscription.count).toHaveBeenCalledWith({
+          where: {
+            NOT: {
+              OR: [
+                {
+                  memberPlanID: 'plan-1',
+                  paymentMethodID: { in: ['payment-1'] },
+                  paymentPeriodicity: {
+                    in: [PaymentPeriodicity.monthly, PaymentPeriodicity.yearly],
+                  },
+                  id: { in: [] },
+                },
+              ],
+            },
+          },
+        });
+      });
+
       it('counts only the subscriptions of a member plan for the default flow when asked for one', async () => {
         prisma.subscriptionFlow.findMany.mockResolvedValue([customFlow]);
         prisma.subscription.count.mockResolvedValue(3);

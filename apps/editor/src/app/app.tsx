@@ -62,6 +62,7 @@ import { EditorCommandPaletteSurface } from './commandPalette/editorCommandPalet
 import { EditorGlobalStyles } from './editorGlobalStyles';
 import { Login } from './login';
 import { LoginJwt } from './loginJwt';
+import { loginRedirectUrl } from './loginRedirect';
 import { LoginWepublish } from './loginWepublish';
 import { DocumentTitle } from './pageTitle/documentTitle';
 import { ResetPassword } from './resetPassword';
@@ -1398,7 +1399,7 @@ export function App() {
 
   useEffect(() => {
     if (session === null && !window.location.pathname.startsWith('/login')) {
-      window.location.href = `/login?next=${window.location.pathname}`;
+      window.location.href = loginRedirectUrl(window.location);
     }
   }, [session]);
 

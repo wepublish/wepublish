@@ -1,6 +1,9 @@
 import { FeaturesService } from '@wepublish/features/api';
 import type { Mock } from 'vitest';
-import { GatedLetterSender } from './gated-letter-sender';
+import {
+  GatedLetterSender,
+  mailAttachmentsEnabled,
+} from './gated-letter-sender';
 import { LetterContext } from './letter-context';
 
 function setup(enabled: string[], configured = true) {
@@ -54,5 +57,24 @@ describe('GatedLetterSender', () => {
     expect(sender.canReceiveLetters(user)).toBe(true);
     expect(await sender.sendLetter(props)).toBe('log-1');
     expect((context.sendLetter as Mock).mock.calls[0][0]).toBe(props);
+  });
+});
+
+describe('mailAttachmentsEnabled', () => {
+  it('switches attachments on with paper letters', async () => {
+    const { features } = setup(['paper-letters']);
+
+    expect(
+      await mailAttachmentsEnabled(features as unknown as FeaturesService)()
+    ).toBe(true);
+    expect(features.isEnabled).toHaveBeenCalledWith('paper-letters');
+  });
+
+  it('keeps attachments off without paper letters', async () => {
+    const { features } = setup(['paper-letter-flow']);
+
+    expect(
+      await mailAttachmentsEnabled(features as unknown as FeaturesService)()
+    ).toBe(false);
   });
 });

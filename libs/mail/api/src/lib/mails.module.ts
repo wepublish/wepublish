@@ -20,6 +20,10 @@ import {
   EmailQualityRecorder,
 } from './email-quality-recorder';
 import { LETTER_SENDER, LetterSender } from './letter-sender';
+import {
+  MAIL_ATTACHMENT_RENDERER,
+  MailAttachmentRenderer,
+} from './mail-attachment';
 
 @Module({
   imports: [PrismaModule],
@@ -57,7 +61,8 @@ export class MailsModule {
           prisma: PrismaClient,
           kv: NamespacedCache,
           emailQualityRecorder?: EmailQualityRecorder,
-          letterSender?: LetterSender
+          letterSender?: LetterSender,
+          attachmentRenderer?: MailAttachmentRenderer
         ) =>
           new MailContext({
             prisma,
@@ -66,6 +71,7 @@ export class MailsModule {
             jwtGenerator,
             emailQualityRecorder,
             letterSender,
+            attachmentRenderer,
           }),
         inject: [
           MAILS_MODULE_OPTIONS,
@@ -73,6 +79,7 @@ export class MailsModule {
           NamespacedCache,
           { token: EMAIL_QUALITY_RECORDER, optional: true },
           { token: LETTER_SENDER, optional: true },
+          { token: MAIL_ATTACHMENT_RENDERER, optional: true },
         ],
       },
     ];

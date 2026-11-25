@@ -669,6 +669,7 @@ export class PeriodicJobService {
       prisma: this.prismaService,
       letterSender: this.mailContext.letterSender,
       recipient: subscription.user,
+      mailTemplateId: creationEvent.mailTemplateId,
       asLetter: true,
       withPaymentSlip: true,
       logger: this.logger,

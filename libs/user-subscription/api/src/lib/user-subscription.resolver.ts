@@ -10,7 +10,9 @@ import {
   Authenticated,
   CurrentUser,
   Public,
-  UserSession,
+  userSessionOf,
+  requireSessionUser,
+  AuthSession,
 } from '@wepublish/authentication/api';
 import { UserSubscriptionService } from './user-subscription.service';
 import {
@@ -34,8 +36,10 @@ export class UserSubscriptionResolver {
   @Query(() => [PublicSubscription], {
     description: `This query returns the subscriptions of the authenticated user.`,
   })
-  async userSubscriptions(@CurrentUser() session: UserSession) {
-    return this.userSubscriptionService.getUserSubscriptions(session.user.id);
+  async userSubscriptions(@CurrentUser() session: AuthSession) {
+    return this.userSubscriptionService.getUserSubscriptions(
+      requireSessionUser(session).id
+    );
   }
 
   @Public()
@@ -74,8 +78,10 @@ export class UserSubscriptionResolver {
   })
   async createUserSubscription(
     @Args() args: CreateSubscriptionArgs,
-    @CurrentUser() { user }: UserSession
+    @CurrentUser() session: AuthSession
   ) {
+    const user = requireSessionUser(session);
+
     return this.userSubscriptionService.createSubscription(user.id, args);
   }
 
@@ -85,10 +91,12 @@ export class UserSubscriptionResolver {
   })
   async createUserSubscriptionWithConfirmation(
     @Args() { userId, ...args }: CreateSubscriptionWithConfirmationArgs,
-    @CurrentUser() session?: UserSession
+    @CurrentUser() session?: AuthSession
   ) {
     const user =
-      userId ? await this.userDataloader.load(userId) : session?.user;
+      userId ?
+        await this.userDataloader.load(userId)
+      : userSessionOf(session)?.user;
 
     if (!user) {
       throw new BadRequestException('User not found');
@@ -107,8 +115,10 @@ export class UserSubscriptionResolver {
   })
   async extendUserSubscription(
     @Args() args: ExtendSubscriptionArgs,
-    @CurrentUser() { user }: UserSession
+    @CurrentUser() session: AuthSession
   ) {
+    const user = requireSessionUser(session);
+
     return this.userSubscriptionService.extendSubscription(user.id, args);
   }
 
@@ -120,8 +130,10 @@ export class UserSubscriptionResolver {
   async updateUserSubscription(
     @Args('id') id: string,
     @Args('input') input: UpdateUserSubscriptionInput,
-    @CurrentUser() { user }: UserSession
+    @CurrentUser() session: AuthSession
   ) {
+    const user = requireSessionUser(session);
+
     return this.userSubscriptionService.updateSubscription(id, {
       ...input,
       userID: user.id,
@@ -134,8 +146,10 @@ export class UserSubscriptionResolver {
   })
   async reactivateUserSubscription(
     @Args('id') id: string,
-    @CurrentUser() { user }: UserSession
+    @CurrentUser() session: AuthSession
   ) {
+    const user = requireSessionUser(session);
+
     return this.userSubscriptionService.reactivateUserSubscription(user.id, id);
   }
 
@@ -146,8 +160,10 @@ export class UserSubscriptionResolver {
   })
   async cancelUserSubscription(
     @Args('id') id: string,
-    @CurrentUser() { user }: UserSession
+    @CurrentUser() session: AuthSession
   ) {
+    const user = requireSessionUser(session);
+
     return this.userSubscriptionService.cancelUserSubscription(user.id, id);
   }
 }

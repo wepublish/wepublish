@@ -1370,8 +1370,24 @@ describe('audience filtering (semantics)', () => {
       expect(matches(placeholderDead, deadWhere)).toBe(true);
     });
 
+    it('offers no placeholder segment without a configured pattern', async () => {
+      const service = makeService({});
+      vi.spyOn(service, 'placeholderPatterns').mockResolvedValue([]);
+      vi.spyOn(service, 'countUsers').mockResolvedValue(1);
+
+      const segments = await service.countUsersBySegment({
+        base: MailRecipientBase.allUsers,
+      });
+
+      expect(segments.map(({ segment }) => segment)).not.toContain(
+        MailEmailSegment.placeholder
+      );
+      expect(segments).toHaveLength(Object.values(MailEmailSegment).length - 1);
+    });
+
     it('counts the people of every segment, whatever segments are picked', async () => {
       const service = makeService({});
+      vi.spyOn(service, 'placeholderPatterns').mockResolvedValue([PATTERN]);
       const countUsers = vi
         .spyOn(service, 'countUsers')
         .mockImplementation(async ({ emailSegments }) =>

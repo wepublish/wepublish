@@ -117,6 +117,23 @@ describe('BrevoMailProvider', () => {
       });
     });
 
+    it('sends each attachment base64-encoded under its file name', async () => {
+      const content = Buffer.from('%PDF-1.7');
+
+      await (
+        await makeProvider()
+      ).sendMail({
+        ...sendProps,
+        attachments: [
+          { filename: 'Vertrag.pdf', contentType: 'application/pdf', content },
+        ],
+      });
+
+      expect(JSON.parse(calls[0].init.body as string).attachment).toEqual([
+        { name: 'Vertrag.pdf', content: content.toString('base64') },
+      ]);
+    });
+
     it('says what Brevo answered when it refuses a mail', async () => {
       answers.push({
         status: 400,

@@ -318,6 +318,16 @@ describe('renderLlmsTxt', () => {
     expect(txt).toContain(`(${siteUrl}/en/about)`);
   });
 
+  it('applies the same page filter as the sitemap', async () => {
+    const txt = await render(
+      { title: 'Example', filterPage: ({ slug }) => slug !== 'spende' },
+      clientWith({ pages: [page('about'), page('spende')] })
+    );
+
+    expect(txt).toContain(`(${siteUrl}/about)`);
+    expect(txt).not.toContain(`(${siteUrl}/spende)`);
+  });
+
   it('keeps the list curated: ten articles and twenty pages unless configured', async () => {
     const client = clientWith();
     await render({ title: 'Example' }, client);

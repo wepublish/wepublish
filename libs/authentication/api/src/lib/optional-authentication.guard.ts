@@ -1,7 +1,7 @@
 import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GqlExecutionContext } from '@nestjs/graphql';
-import { EXPIRED_API_TOKEN } from './auth-session';
+import { BLOCKED_API_TOKEN, EXPIRED_API_TOKEN } from './auth-session';
 import { INVALID_PEER_TOKEN } from './session.strategy';
 
 /**
@@ -29,7 +29,9 @@ export class OptionalAuthenticationGuard extends AuthGuard([
           throw e;
         }
 
-        if (e.cause === EXPIRED_API_TOKEN) {
+        // A key that is refused must stop the request: running it
+        // anonymously would hide why from the integrator.
+        if (e.cause === EXPIRED_API_TOKEN || e.cause === BLOCKED_API_TOKEN) {
           throw e;
         }
 

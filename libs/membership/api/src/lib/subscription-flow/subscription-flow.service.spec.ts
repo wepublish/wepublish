@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import {
+  MailChannel,
   PaymentPeriodicity,
   PrismaClient,
   SubscriptionEvent,
@@ -18,6 +19,7 @@ describe('SubscriptionFlowService', () => {
       [method in keyof PrismaClient['subscriptionInterval']]?: Mock;
     };
     memberPlan: { [method in keyof PrismaClient['memberPlan']]?: Mock };
+    mailTemplateVariant: { findMany: Mock };
     paymentMethod: {
       [method in keyof PrismaClient['paymentMethod']]?: Mock;
     };
@@ -85,6 +87,13 @@ describe('SubscriptionFlowService', () => {
       },
       mailTemplate: {
         findUnique: vi.fn(),
+      },
+      // Every template is written for both channels unless a test says otherwise.
+      mailTemplateVariant: {
+        findMany: vi.fn(async () => [
+          { channel: MailChannel.mail },
+          { channel: MailChannel.letter },
+        ]),
       },
     } as any;
 
@@ -557,6 +566,138 @@ describe('SubscriptionFlowService', () => {
       expect(lastUpdateData()).toEqual(
         expect.objectContaining({ sendAsLetter: true })
       );
+    });
+
+    // The switch is sent on its own: days and template stay as they are.
+    it('keeps the template when only the switch is sent', async () => {
+      await service.updateInterval({
+        id: existingInterval.id,
+        sendAsLetter: true,
+      });
+
+      for (const [{ data }] of prismaMock.subscriptionInterval.update!.mock
+        .calls) {
+        expect(data).not.toHaveProperty('mailTemplate');
+      }
+    });
+
+    it('takes the template off the event when told so, and the letter with it', async () => {
+      prismaMock.subscriptionInterval.findUnique!.mockResolvedValue({
+        ...existingInterval,
+        sendAsLetter: true,
+      });
+
+      await service.updateInterval({
+        id: existingInterval.id,
+        daysAwayFromEnding: -3,
+        mailTemplateId: null as any,
+      });
+
+      expect(lastUpdateData()).toEqual(
+        expect.objectContaining({
+          mailTemplate: { disconnect: true },
+          sendAsLetter: false,
+        })
+      );
+    });
+
+    describe('a template written for one channel only', () => {
+      const writtenFor = (...channels: MailChannel[]) =>
+        prismaMock.mailTemplateVariant.findMany.mockResolvedValue(
+          channels.map(channel => ({ channel }))
+        );
+
+      it('refuses a letter-only template for a new interval: a flow always mails', async () => {
+        writtenFor(MailChannel.letter);
+        prismaMock.subscriptionInterval.findFirst!.mockResolvedValue(null);
+
+        await expect(
+          service.createInterval({
+            subscriptionFlowId: flow.id,
+            mailTemplateId: mockMailTemplate.id,
+            event: SubscriptionEvent.SUBSCRIBE,
+          })
+        ).rejects.toThrow(/email version/);
+        expect(prismaMock.subscriptionInterval.create).not.toHaveBeenCalled();
+      });
+
+      it('refuses to move an interval to a letter-only template', async () => {
+        writtenFor(MailChannel.letter);
+
+        await expect(
+          service.updateInterval({
+            id: existingInterval.id,
+            daysAwayFromEnding: -3,
+            mailTemplateId: 'letter-only',
+          })
+        ).rejects.toThrow(/email version/);
+        expect(prismaMock.subscriptionInterval.update).not.toHaveBeenCalled();
+      });
+
+      it('refuses to switch letters on for a new interval without a letter version', async () => {
+        writtenFor(MailChannel.mail);
+        prismaMock.subscriptionInterval.findFirst!.mockResolvedValue(null);
+
+        await expect(
+          service.createInterval({
+            subscriptionFlowId: flow.id,
+            mailTemplateId: mockMailTemplate.id,
+            event: SubscriptionEvent.SUBSCRIBE,
+            sendAsLetter: true,
+          })
+        ).rejects.toThrow(/letter version/);
+      });
+
+      it('refuses to switch letters on for an interval whose template has no letter version', async () => {
+        writtenFor(MailChannel.mail);
+
+        await expect(
+          service.updateInterval({
+            id: existingInterval.id,
+            sendAsLetter: true,
+          })
+        ).rejects.toThrow(/letter version/);
+        expect(prismaMock.mailTemplateVariant.findMany).toHaveBeenCalledWith({
+          where: { templateId: mockMailTemplate.id },
+          select: { channel: true },
+        });
+      });
+
+      it('switches letters off when the interval moves to a template without a letter version', async () => {
+        writtenFor(MailChannel.mail);
+        prismaMock.subscriptionInterval.findUnique!.mockResolvedValue({
+          ...existingInterval,
+          sendAsLetter: true,
+        });
+
+        await service.updateInterval({
+          id: existingInterval.id,
+          daysAwayFromEnding: -3,
+          mailTemplateId: 'mail-only',
+        });
+
+        expect(lastUpdateData()).toEqual(
+          expect.objectContaining({
+            sendAsLetter: false,
+            mailTemplate: { connect: { id: 'mail-only' } },
+          })
+        );
+      });
+
+      it('leaves letters on when the new template has a letter version too', async () => {
+        prismaMock.subscriptionInterval.findUnique!.mockResolvedValue({
+          ...existingInterval,
+          sendAsLetter: true,
+        });
+
+        await service.updateInterval({
+          id: existingInterval.id,
+          daysAwayFromEnding: -3,
+          mailTemplateId: 'both',
+        });
+
+        expect(lastUpdateData()).not.toHaveProperty('sendAsLetter');
+      });
     });
 
     // The flow editor updates days and template without mentioning the switch.

@@ -8,7 +8,11 @@ import {
 } from '@prisma/client';
 import { LetterSender } from '@wepublish/mail/api';
 import { MailSendRecipientService } from '../mail-send/mail-send-recipient.service';
-import { DeliverySuggestionService } from './delivery-suggestion.service';
+import {
+  DeliverySuggestionService,
+  suggestionFilterWhere,
+  suggestionReasonOf,
+} from './delivery-suggestion.service';
 import { UserDeliveryPreferenceService } from './user-delivery-preference.service';
 
 const address = {
@@ -135,6 +139,12 @@ function setup({
 
   return { service, prisma, preferences, letterSender };
 }
+
+/** Who did it: a signed-in user, or an API key on behalf of its creator. */
+const by = (userId: string, apiTokenId: string | null = null) => ({
+  userId,
+  apiTokenId,
+});
 
 describe('DeliverySuggestionService.recomputeAll', () => {
   it('does nothing while letters are not enabled', async () => {
@@ -311,18 +321,37 @@ describe('DeliverySuggestionService.confirm', () => {
     reason: 'emailQuality:dead',
   };
 
+  it('records the api key that applied a suggestion next to its creator', async () => {
+    const { service, preferences } = setup({
+      users: [fakeUser('dead')],
+      suggestions: [suggestion],
+    });
+
+    await service.confirm('s1', by('creator-1', 'key-1'));
+
+    expect(preferences.set).toHaveBeenCalledWith(
+      'dead',
+      MailChannel.letter,
+      expect.objectContaining({
+        changedByUserId: 'creator-1',
+        changedByApiTokenId: 'key-1',
+      })
+    );
+  });
+
   it('applies a suggestion that still holds, as a suggestion-made switch', async () => {
     const { service, preferences } = setup({
       users: [fakeUser('dead')],
       suggestions: [suggestion],
     });
 
-    await service.confirm('s1', 'admin');
+    await service.confirm('s1', by('admin'));
 
     expect(preferences.set).toHaveBeenCalledWith('dead', MailChannel.letter, {
       origin: DeliveryPreferenceOrigin.suggestion,
       reason: 'emailQuality:dead',
       changedByUserId: 'admin',
+      changedByApiTokenId: null,
     });
   });
 
@@ -340,7 +369,7 @@ describe('DeliverySuggestionService.confirm', () => {
       suggestions: [suggestion],
     });
 
-    await expect(service.confirm('s1', 'admin')).rejects.toThrow(
+    await expect(service.confirm('s1', by('admin'))).rejects.toThrow(
       BadRequestException
     );
     expect(preferences.set).not.toHaveBeenCalled();
@@ -374,12 +403,13 @@ describe('DeliverySuggestionService.confirm', () => {
       ],
     });
 
-    await service.confirm('s2', 'admin');
+    await service.confirm('s2', by('admin'));
 
     expect(preferences.set).toHaveBeenCalledWith('back', MailChannel.mail, {
       origin: DeliveryPreferenceOrigin.suggestion,
       reason: 'emailQuality:active',
       changedByUserId: 'admin',
+      changedByApiTokenId: null,
     });
   });
 
@@ -407,7 +437,7 @@ describe('DeliverySuggestionService.confirm', () => {
     });
 
     await expect(
-      service.confirmAll(DeliverySuggestionKind.toLetter, 'admin')
+      service.confirmAll(DeliverySuggestionKind.toLetter, by('admin'))
     ).resolves.toEqual({ confirmed: 1, skipped: 1 });
     expect(preferences.set).toHaveBeenCalledTimes(1);
   });
@@ -428,13 +458,14 @@ describe('DeliverySuggestionService.keep', () => {
     });
     preferences.get.mockResolvedValue({ channel: MailChannel.mail });
 
-    await service.keep('s1', 'admin');
+    await service.keep('s1', by('admin'));
 
     expect(preferences.get).toHaveBeenCalledWith('dead');
     expect(preferences.set).toHaveBeenCalledWith('dead', MailChannel.mail, {
       origin: DeliveryPreferenceOrigin.manual,
       reason: 'kept',
       changedByUserId: 'admin',
+      changedByApiTokenId: null,
     });
   });
 
@@ -452,7 +483,7 @@ describe('DeliverySuggestionService.keep', () => {
     });
     preferences.get.mockResolvedValue({ channel: MailChannel.letter });
 
-    await service.keep('s2', 'admin');
+    await service.keep('s2', by('admin'));
 
     expect(preferences.set).toHaveBeenCalledWith(
       'back',
@@ -464,7 +495,7 @@ describe('DeliverySuggestionService.keep', () => {
   it('refuses an unknown suggestion', async () => {
     const { service, preferences } = setup();
 
-    await expect(service.keep('missing', 'admin')).rejects.toBeInstanceOf(
+    await expect(service.keep('missing', by('admin'))).rejects.toBeInstanceOf(
       BadRequestException
     );
     expect(preferences.set).not.toHaveBeenCalled();
@@ -554,5 +585,183 @@ describe('DeliverySuggestionService lists', () => {
         }),
       ],
     });
+  });
+});
+
+describe('suggestionReasonOf', () => {
+  it('names a placeholder suggestion by itself', () => {
+    expect(
+      suggestionReasonOf({
+        reason: 'placeholderEmail',
+        user: { emailQuality: { reason: 'hardBounce' } },
+      })
+    ).toBe('placeholderEmail');
+  });
+
+  it('names the others by the evidence type, without its detail', () => {
+    expect(
+      suggestionReasonOf({
+        reason: 'emailQuality:dead',
+        user: { emailQuality: { reason: 'hardBounce: 550 no such user' } },
+      })
+    ).toBe('hardBounce');
+    expect(
+      suggestionReasonOf({
+        reason: 'emailQuality:active',
+        user: { emailQuality: { reason: 'login' } },
+      })
+    ).toBe('login');
+  });
+
+  it('says none when the email quality is gone', () => {
+    expect(
+      suggestionReasonOf({
+        reason: 'emailQuality:dead',
+        user: { emailQuality: null },
+      })
+    ).toBe('none');
+  });
+});
+
+describe('suggestionFilterWhere', () => {
+  it('filters nothing without a filter', () => {
+    expect(suggestionFilterWhere()).toEqual({});
+    expect(suggestionFilterWhere({ reasons: [] })).toEqual({});
+  });
+
+  it('matches any of the picked reasons', () => {
+    expect(
+      suggestionFilterWhere({ reasons: ['placeholderEmail', 'hardBounce'] })
+    ).toEqual({
+      AND: [
+        {
+          OR: [
+            { reason: 'placeholderEmail' },
+            {
+              reason: { not: 'placeholderEmail' },
+              user: {
+                emailQuality: {
+                  is: {
+                    OR: [
+                      { reason: 'hardBounce' },
+                      { reason: { startsWith: 'hardBounce:' } },
+                    ],
+                  },
+                },
+              },
+            },
+          ],
+        },
+      ],
+    });
+  });
+
+  it('matches a missing email quality as none', () => {
+    expect(suggestionFilterWhere({ reasons: ['none'] })).toEqual({
+      AND: [
+        {
+          OR: [
+            {
+              reason: { not: 'placeholderEmail' },
+              user: { emailQuality: null },
+            },
+          ],
+        },
+      ],
+    });
+  });
+
+  it('limits the email status date and the date added', () => {
+    const from = new Date('2026-09-01T00:00:00.000Z');
+    const to = new Date('2026-09-30T23:59:59.999Z');
+
+    expect(
+      suggestionFilterWhere({
+        emailSinceFrom: from,
+        emailSinceTo: to,
+        createdFrom: from,
+      })
+    ).toEqual({
+      AND: [
+        { user: { emailQuality: { is: { since: { gte: from, lte: to } } } } },
+        { createdAt: { gte: from } },
+      ],
+    });
+  });
+});
+
+describe('DeliverySuggestionService filters', () => {
+  const filter = { reasons: ['hardBounce'] };
+
+  it('lists and counts only the filtered suggestions', async () => {
+    const { service, prisma } = setup({ users: [fakeUser('dead')] });
+
+    await service.list(DeliverySuggestionKind.toLetter, 0, 20, filter);
+
+    const where = {
+      kind: DeliverySuggestionKind.toLetter,
+      ...suggestionFilterWhere(filter),
+    };
+    expect(prisma.deliverySuggestion.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where })
+    );
+    expect(prisma.deliverySuggestion.count).toHaveBeenCalledWith({ where });
+  });
+
+  it('confirms all only of the filtered suggestions', async () => {
+    const { service, prisma } = setup({ users: [fakeUser('dead')] });
+
+    await service.confirmAll(
+      DeliverySuggestionKind.toLetter,
+      by('admin'),
+      filter
+    );
+
+    expect(prisma.deliverySuggestion.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: {
+          kind: DeliverySuggestionKind.toLetter,
+          ...suggestionFilterWhere(filter),
+        },
+      })
+    );
+  });
+
+  it('counts the open suggestions of a kind per reason, most first', async () => {
+    const quality = (reason: string) => ({
+      emailQuality: { level: EmailQualityLevel.dead, reason, since },
+    });
+    const { service } = setup({
+      users: [
+        fakeUser('a', quality('hardBounce: 550')),
+        fakeUser('b', quality('hardBounce')),
+        fakeUser('c', quality('spamComplaint')),
+        fakeUser('d'),
+        fakeUser('e', { emailQuality: null }),
+      ],
+      suggestions: [
+        ...['a', 'b', 'c', 'e'].map(userId => ({
+          id: `s-${userId}`,
+          userId,
+          kind: DeliverySuggestionKind.toLetter,
+          reason: 'emailQuality:dead',
+        })),
+        {
+          id: 's-d',
+          userId: 'd',
+          kind: DeliverySuggestionKind.toLetter,
+          reason: 'placeholderEmail',
+        },
+      ],
+    });
+
+    await expect(
+      service.reasons(DeliverySuggestionKind.toLetter)
+    ).resolves.toEqual([
+      { reason: 'hardBounce', count: 2 },
+      { reason: 'none', count: 1 },
+      { reason: 'placeholderEmail', count: 1 },
+      { reason: 'spamComplaint', count: 1 },
+    ]);
   });
 });

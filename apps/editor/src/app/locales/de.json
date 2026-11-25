@@ -19,9 +19,10 @@
       "mobile": "Mobil",
       "desktop": "Desktop",
       "tablet": "Tablet",
-      "copyUrl": "Vorschau-URL kopieren",
-      "urlCopied": "Vorschau-URL in die Zwischenablage kopiert",
-      "urlCopyFailed": "Vorschau-URL konnte nicht kopiert werden",
+      "copyUrl": "Link zur Vorschau kopieren",
+      "urlCopied": "Link kopiert. Er öffnet diese Vorschau im Editor.",
+      "urlCopyFailed": "Link zur Vorschau konnte nicht kopiert werden",
+      "openInNewTab": "Vorschau in neuem Tab öffnen",
       "loading": "Vorschau wird geladen …"
     },
     "previewHandshake": {
@@ -1597,14 +1598,63 @@
       "goToLogin": "Zum Login"
     },
     "mailTemplates": {
+      "list": {
+        "attachments": "Anhänge",
+        "attachmentsFilter": {
+          "with": "Mit Anhang",
+          "without": "Ohne Anhang"
+        },
+        "search": "Suchen",
+        "channels": "Zustellkanäle",
+        "letterLayout": "Briefpapier",
+        "letterLayoutDefault": "Standard",
+        "letterAppendix": "Zusatzseiten",
+        "letterAppendixNone": "Keine",
+        "memberPlans": "Abo-Pläne",
+        "memberPlansHint": "Abo-Pläne, deren Kommunikationsablauf diese Vorlage verschickt. Der Standard-Ablauf gehört zu keinem Abo-Plan und erscheint hier nicht.",
+        "noMatch": "Keine Vorlage passt zu den Filtern.",
+        "statuses": {
+          "ok": "Verwendet",
+          "unused": "Nicht verwendet"
+        }
+      },
       "availableTemplates": "Mitteilungsvorlagen",
       "cancel": "Abbrechen",
       "content": "Inhalt",
       "create": "Vorlage erstellen",
       "description": "Beschreibung",
       "edit": {
-        "createHeader": "E-Mail-Vorlage erstellen",
-        "editHeader": "E-Mail-Vorlage bearbeiten",
+        "versions": "Versionen pro Zustellkanal",
+        "addVersion": {
+          "mail": "E-Mail-Version hinzufügen",
+          "letter": "Brief-Version hinzufügen"
+        },
+        "removeVersion": "Diese Version entfernen",
+        "letterText": {
+          "label": "Text",
+          "same": "Wie E-Mail",
+          "own": "Eigener Text",
+          "sameNote": "Dieser Brief verwendet Betreff und Text der E-Mail. Bearbeite sie im Tab «E-Mail».",
+          "confirm": {
+            "title": "Eigenen Brieftext verwerfen?",
+            "text": "Der Brief verwendet danach wieder Betreff und Text der E-Mail. Sein eigener Text geht verloren.",
+            "confirm": "Verwerfen"
+          }
+        },
+        "removeVersionConfirm": {
+          "title": {
+            "mail": "E-Mail-Version entfernen?",
+            "letter": "Brief-Version entfernen?"
+          },
+          "text": {
+            "mail": "Das E-Mail-Template dieser Vorlage wird gelöscht.",
+            "letter": "Das Brief-Template dieser Vorlage wird gelöscht."
+          },
+          "confirm": "Entfernen"
+        },
+        "letterNotForPurpose": "Für diesen Verwendungszweck gibt es keine Brief-Version: Die Mitteilung enthält einen Login-Link und geht sofort per E-Mail raus.",
+        "createHeader": "Mitteilungsvorlage erstellen",
+        "editHeader": "Mitteilungsvorlage bearbeiten",
         "saveAndClose": "Speichern & schliessen",
         "nameRequired": "Name ist erforderlich.",
         "testSent": "Test-E-Mail gesendet.",
@@ -1617,29 +1667,37 @@
         "testRecipientPlaceholder": "Deine Konto-E-Mail",
         "preview": "Vorschau",
         "sendTest": "Test senden",
-        "previewLetter": "Als Brief anzeigen",
-        "letterAppendix": "QR-Einzahlungsschein (PDF)",
-        "letterAppendixNone": "Keiner",
-        "letterAppendixHelp": "PDF aus «Dokumente», das nach den Briefseiten gedruckt wird, z. B. ein QR-Einzahlungsschein (A4, Schein am unteren Rand). Nur für Adressen in der Schweiz; bei Duplexdruck wird bei Bedarf eine leere Seite eingefügt, damit der Schein auf einer Vorderseite liegt.",
+        "previewLetter": "Vorschau",
+        "letterAppendix": "Zusatzseiten (PDF)",
+        "letterAppendixNone": "Keine",
+        "letterAppendixHelp": "Die Seiten werden dem Brief am Ende hinzugefügt. Wähle aus den PDF-Dateien, die unter «Dokumente» hochgeladen wurden.",
+        "attachments": "Anhänge (Word)",
+        "attachmentsHelp": "Word-Dokumente (.docx) aus «Dokumente», höchstens 5 und zusammen 15 MB. Sie werden mit denselben Platzhaltern wie die E-Mail ausgefüllt (im Text und in Link-Adressen, nicht in Feldfunktionen), als PDF angehängt und in dieser Reihenfolge mit jeder E-Mail dieser Vorlage versandt, auch mit automatischen Abo-E-Mails. System-E-Mails (Login, Passwort) können keine Anhänge haben. Ein Brief druckt sie nach seinen Seiten (A4). Lässt sich ein Anhang nicht erstellen, wird die E-Mail nicht versandt. Ein persönliches Dokument wird für jeden Empfänger einzeln umgewandelt, und PDF-Anhänge lassen E-Mails eher im Spam landen: lieber wenige und kleine. Benötigt Gotenberg als PDF-Renderer.",
+        "attachmentsNone": "Keine",
+        "attachmentsNoDocuments": "Keine Word-Dokumente (.docx) unter «Dokumente»",
         "letterPreviewTitle": "Briefvorschau",
         "selectMailType": "Bitte zuerst einen Verwendungszweck wählen.",
         "selectMailTypePlaceholder": "Verwendungszweck wählen …",
         "testRecipientHint": "Test-E-Mails werden immer an dein eigenes Konto gesendet.",
         "generateTextFromHtml": "Aus HTML erzeugen",
-        "textContentReadonlyHint": "Wird automatisch aus dem Inhalt erzeugt. Bearbeite den Visuell- oder HTML-Tab, um ihn zu ändern.",
         "background": "Hintergrund",
         "contentWidth": "Breite (px)",
         "purposeHint": "Der Verwendungszweck legt fest, in welcher Situation diese Vorlage verschickt wird. Davon hängt ab, welche Daten – und damit welche Platzhalter – zur Verfügung stehen: Nur eine Rechnungs-Vorlage kennt z.B. den Rechnungsbetrag.",
         "descriptionHelp": "Nur intern sichtbar: Hilft dir und deinem Team, die Vorlage in der Liste wiederzufinden. Erscheint nicht in der E-Mail.",
         "sampleSubscriptionHelp": "Wähle ein bestehendes Abo, damit Vorschau und Test-E-Mail mit dessen echten Daten gefüllt werden. Ohne Auswahl werden erfundene Beispieldaten verwendet. Die Test-E-Mail geht trotzdem nur an dich.",
-        "bodyModeHelp": "Visuell: Inhalt wie in einem Textprogramm bearbeiten. HTML: den Quellcode direkt bearbeiten – nur für Fortgeschrittene. Text-Inhalt: die reine Textversion für E-Mail-Programme ohne HTML; sie wird automatisch erzeugt.",
+        "textContentGenerated": "Automatisch generiert aus dem HTML-/Visuell-Inhalt",
+        "bodyModeHints": {
+          "visual": "Inhalt wie in einem Textprogramm bearbeiten.",
+          "html": "Den Quellcode direkt bearbeiten – nur für Fortgeschrittene.",
+          "text": "Die reine Textversion für E-Mail-Programme ohne HTML. Sie wird automatisch aus dem Inhalt erzeugt; bearbeite den Visuell- oder HTML-Tab, um sie zu ändern."
+        },
         "backgroundHelp": "Farbe der Fläche rund um den Inhalt der E-Mail.",
         "contentWidthHelp": "Maximale Breite des Inhalts in Pixeln. 600 px ist ein bewährter Wert, der in den meisten E-Mail-Programmen gut aussieht. Auf schmalen Bildschirmen wird der Inhalt automatisch schmaler.",
         "bodyMode": "Bearbeitungsmodus",
         "letterLayout": "Briefpapier",
         "letterLayoutDefault": "Standard ({{name}})",
         "letterLayoutNone": "Standard (keines vorhanden)",
-        "letterLayoutHelp": "Kopf- und Fusszeile, wenn diese Vorlage als Brief gedruckt wird. Für E-Mails ohne Bedeutung."
+        "letterLayoutHelp": "Kopf- und Fusszeile"
       },
       "editor": {
         "undo": "Rückgängig",
@@ -1661,6 +1719,8 @@
         "desktop": "Desktop",
         "tablet": "Tablet",
         "mobile": "Mobil",
+        "attachments": "Anhänge",
+        "close": "Schliessen",
         "linkTitle": "Link",
         "linkUrl": "URL",
         "linkText": "Linktext",
@@ -1695,7 +1755,7 @@
       "htmlContent": "HTML-Inhalt",
       "name": "Name",
       "placeholders": "Platzhalter",
-      "placeholdersHint": "Zum Einfügen ins gewählte Feld klicken",
+      "placeholdersHint": "Ein Klick auf einen Platzhalter fügt ihn ins Template ein.",
       "placeholderSelectType": "Wähle oben einen Verwendungszweck, um dessen Platzhalter zu sehen.",
       "mailTypes": {
         "account": "Konto & Login",
@@ -1706,9 +1766,9 @@
         "custom": "Freie E-Mail (Abo)",
         "customNoSubscription": "Freie E-Mail (ohne Abo)"
       },
-      "placeholderAlways": "Immer verfügbar – in jeder E-Mail",
+      "placeholderAlways": "Immer verfügbar",
       "placeholderAlwaysHint": "Diese Empfänger-Felder funktionieren in jeder Vorlage, unabhängig vom gewählten Verwendungszweck.",
-      "searchPlaceholders": "Platzhalter suchen …",
+      "searchPlaceholders": "Platzhalter filtern …",
       "noPlaceholders": "Keine passenden Platzhalter.",
       "placeholderExample": "Beispiel",
       "placeholderContextLabel": "Zusätzliche Felder für diesen Verwendungszweck",
@@ -1729,13 +1789,18 @@
         "rappen": "Rappen"
       },
       "placeholderContexts": {
-        "account": "Konto & Login (Registrierung, Login-Link, Passwort-Reset)",
+        "account": "Konto & Login",
         "emailChange": "E-Mail-Änderung",
-        "subscription": "Abo (neu, bestätigt, Deaktivierung)",
-        "renewal": "Verlängerung – automatisch (Erfolg / Fehlschlag)",
+        "subscription": "Abo",
+        "renewal": "Automatische Verlängerung",
         "invoiceCreation": "Rechnung erstellt",
         "custom": "Freie E-Mail an Abonnent:in",
         "customNoSubscription": "Freie E-Mail an Nicht-Abonnent:in"
+      },
+      "placeholderGroups": {
+        "user": "Benutzer",
+        "person": "Person",
+        "general": "Allgemein"
       },
       "placeholderNames": {
         "user_fullName": "Vollständiger Name",
@@ -1797,7 +1862,7 @@
       "textContent": "Textinhalt (Fallback)",
       "wysiwyg": "Visuell",
       "delete": "Löschen",
-      "deleteConfirm": "Diese E-Mail-Vorlage löschen?",
+      "deleteConfirm": "Diese Mitteilungsvorlage löschen?",
       "importFromProvider": "Vom Provider importieren",
       "importConfirm": "Importieren & überschreiben",
       "importWarning": "Dies importiert alle Vorlagen des E-Mail-Providers. Noch unbekannte werden neu angelegt, bereits importierte werden mit HTML und Betreff des Providers überschrieben. Lokale Änderungen daran gehen verloren.",
@@ -1866,13 +1931,14 @@
         "optional_invoices_0_description": "Beschreibung der neuesten Rechnung."
       },
       "statusHelp": "Ein Häkchen bedeutet: Eine automatische E-Mail verwendet diese Vorlage. «Nicht verwendet» bedeutet: Keine automatische E-Mail nutzt sie – über «Manuelle Mitteilungen» kannst du sie trotzdem von Hand verschicken.",
-      "placeholdersInfo": "Platzhalter werden beim Versand automatisch durch die Daten der jeweiligen Person ersetzt, z. B. durch ihren Vornamen. So wird jede E-Mail persönlich.",
-      "searchPlaceholdersLabel": "Platzhalter suchen",
-      "empty": "Noch keine E-Mail-Vorlagen."
+      "placeholdersInfo": "Platzhalter werden beim Versand automatisch durch die entsprechenden Daten ersetzt, z. B. durch den Vornamen der Empfänger:in.",
+      "searchPlaceholdersLabel": "Platzhalter filtern",
+      "empty": "Noch keine Mitteilungsvorlagen."
     },
     "mailTemplateSelect": {
-      "sendAsLetter": "Auch per Brief",
-      "sendAsLetterHint": "Personen mit Zustellkanal Brief bekommen diese Mitteilung gedruckt statt per E-Mail.",
+      "channels": "Zustellkanäle",
+      "noLetterVersion": "Diese Vorlage hat keine Brief-Version. Füge sie in der Vorlage hinzu, damit Personen mit Zustellkanal Brief diese Mitteilung gedruckt bekommen; bis dahin erhalten sie die E-Mail.",
+      "sendAsLetterHint": "Die E-Mail geht immer raus. Ist Brief angewählt, bekommen Personen mit Zustellkanal Brief diese Mitteilung gedruckt statt per E-Mail.",
       "noMailSentSelectNow": "Keine E-Mail senden"
     },
     "memberPlanEdit": {
@@ -1936,6 +2002,7 @@
       "paymentProviderStatusInfo": "✅ heisst, alle Zahlungsmethoden dieses Abo-Plans sind mit einem Zahlungsanbieter verbunden. ❌ heisst, mindestens einer Zahlungsmethode fehlt der Anbieter – damit können Leser:innen nicht bezahlen."
     },
     "deliveryMode": {
+      "viaApiKey": "via API-Schlüssel «{{key}}»",
       "panelTitle": "Zustellkanal",
       "channel": {
         "mail": "E-Mail",
@@ -2044,7 +2111,30 @@
           "unresponsive": "Reagiert nicht seit {{date}}",
           "unknown": "Unbekannt seit {{date}}"
         },
-        "recomputedDaily": "(täglich automatisch neu berechnet)"
+        "recomputedDaily": "(täglich automatisch neu berechnet)",
+        "filter": {
+          "reason": "Grund",
+          "emailSince": "E-Mail-Status seit",
+          "created": "Vorgeschlagen seit"
+        },
+        "reasonFilter": {
+          "placeholderEmail": "Platzhalter-Adresse",
+          "hardBounce": "Hard Bounce",
+          "invalid": "Ungültige Adresse",
+          "blocked": "Vom E-Mail-Dienst gesperrt",
+          "spamComplaint": "Spam-Beschwerde",
+          "unsubscribed": "Beim E-Mail-Dienst abgemeldet",
+          "clicked": "Link angeklickt",
+          "verified": "Adresse geprüft",
+          "login": "Eingeloggt",
+          "emailVerified": "E-Mail-Adresse bestätigt",
+          "noInteraction": "Keine Reaktion",
+          "noEvidence": "Keine Hinweise",
+          "none": "Kein E-Mail-Status"
+        },
+        "confirmAllFiltered": "Alle {{count}} gefilterten übernehmen",
+        "confirmAllFilteredText": "Übernommen werden nur die Vorschläge, die dem Filter entsprechen.",
+        "emptyFiltered": "Keine Vorschläge entsprechen dem Filter."
       },
       "assign": {
         "steps": {
@@ -2083,7 +2173,7 @@
         "emailUnreachable": "E-Mail-Adresse nicht erreichbar ({{segment}}) – Mitteilungen per E-Mail kommen nicht an."
       },
       "flows": {
-        "letterHint": "Mitteilungen mit «Auch per Brief» erreichen User mit Zustellkanal Brief in gedruckter Form; alle anderen gehen per E-Mail.",
+        "letterHint": "Mitteilungen, bei denen «Brief» angewählt ist, erreichen User mit Zustellkanal Brief in gedruckter Form; alle anderen gehen per E-Mail.",
         "manage": "Zustellkanäle verwalten"
       }
     },
@@ -2269,9 +2359,9 @@
       "userConsentCreate": "Neue Benutzer-Einwilligung",
       "userConsentEdit": "Benutzer-Einwilligung bearbeiten",
       "automaticEmails": "Automatische E-Mails",
-      "mailTemplates": "E-Mail-Vorlagen",
-      "mailTemplateCreate": "Neue E-Mail-Vorlage",
-      "mailTemplateEdit": "E-Mail-Vorlage bearbeiten",
+      "mailTemplates": "Mitteilungsvorlagen",
+      "mailTemplateCreate": "Neue Mitteilungsvorlage",
+      "mailTemplateEdit": "Mitteilungsvorlage bearbeiten",
       "letterLayouts": "Briefpapier",
       "letterLayoutCreate": "Neues Briefpapier",
       "letterLayoutEdit": "Briefpapier bearbeiten",
@@ -2825,7 +2915,7 @@
     },
     "automaticMails": {
       "title": "Automatische Mitteilungen",
-      "intro": "Hier legst du fest, welche E-Mail-Vorlage bei welchem Ereignis automatisch verschickt wird. Wähle pro Ereignis eine Vorlage – oder lass das Feld auf «Keine E-Mail senden», wenn nichts verschickt werden soll. Das ⓘ-Symbol erklärt jedes Ereignis.",
+      "intro": "Hier legst du fest, welche Mitteilungsvorlage bei welchem Ereignis automatisch verschickt wird. Wähle pro Ereignis eine Vorlage – oder lass das Feld auf «Keine E-Mail senden», wenn nichts verschickt werden soll. Das ⓘ-Symbol erklärt jedes Ereignis.",
       "example": "Beispiel: {{example}}"
     },
     "subscriptionFlow": {
@@ -3916,10 +4006,12 @@
         "mergeFieldExpression": "Ausdruck (z.B. user.firstName)",
         "addMergeField": "Merge-Feld hinzufügen",
         "interestGroupMappings": "Interessengruppen-Zuordnungen",
-        "interestGroupHelp": "Bestimmt anhand des Abos, ob ein Kontakt einer Mailchimp-Interessengruppe zugeordnet wird. Für Gruppen, die immer aktiv sein sollen, nutze stattdessen die Standard-Interessengruppen unten.\n\nVerfügbare Ausdrücke:\n• slug:equals:wert – aktiv bei exakter Übereinstimmung des Abo-Slugs\n• slug:contains:wert – aktiv, wenn der Abo-Slug «wert» enthält\n• slug:contains_any:w1,w2 – aktiv, wenn einer der Werte enthalten ist",
+        "interestGroupHelp": "Bestimmt anhand des Abos, ob ein Kontakt einer Mailchimp-Interessengruppe zugeordnet wird. Für Gruppen, die immer aktiv sein sollen, nutze stattdessen die Standard-Interessengruppen unten.\n\nVerfügbare Ausdrücke:\n• slug:equals:wert – aktiv bei exakter Übereinstimmung des Abo-Slugs\n• slug:contains:wert – aktiv, wenn der Abo-Slug «wert» enthält\n• slug:contains_any:w1,w2 – aktiv, wenn einer der Werte enthalten ist\n\nAutom. hinzufügen setzt die Gruppe, sobald ein neues passendes Abo beginnt; autom. entfernen nimmt sie weg, sobald alle passenden Abos beendet sind. Deaktiviere eine der beiden Optionen, um diese Richtung von Hand in Mailchimp zu pflegen.",
         "interestGroupId": "Interessengruppen-ID",
         "interestGroupExpression": "Ausdruck (z.B. always)",
         "addInterestGroup": "Interessengruppe hinzufügen",
+        "interestGroupAutoAdd": "Autom. hinzufügen",
+        "interestGroupAutoRemove": "Autom. entfernen",
         "op_contains": "Slug enthält",
         "op_equals": "Slug ist gleich",
         "op_contains_any": "Slug enthält eines von",
@@ -4059,7 +4151,12 @@
           "enable": "Umami aktivieren",
           "um": "<url>Umami</url> ist eine datenschutzfreundliche Open-Source-Alternative zu Google Analytics.",
           "umLocator": "Du findest sie in den <url>Website-Einstellungen</url> deines Umami-Dashboards",
-          "umInvalid": "Muss eine gültige Website-ID sein (z.B. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)"
+          "umInvalid": "Muss eine gültige Website-ID sein (z.B. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)",
+          "advanced": "Erweitert",
+          "excludedSearchParams": "Ausgeschlossene URL-Parameter",
+          "excludedSearchParamsHelp": "Diese URL-Parameter werden aus der Seiten-URL und dem Referrer entfernt, bevor sie an Umami gehen, z.B. persönliche Daten, die ein Newsletter an seine Links hängt (mail, firstName). Alle anderen Parameter, etwa die utm-Parameter, bleiben erhalten. Gross- und Kleinschreibung spielt keine Rolle.",
+          "excludedSearchParam": "Parametername",
+          "addExcludedSearchParam": "Parameter hinzufügen"
         }
       },
       "ads": {
@@ -4504,6 +4601,8 @@
       },
       "missingPlaceholders": "Achtung: Diese Platzhalter werden für diese Empfänger nicht gefüllt: {{placeholders}}",
       "createTemplate": "Neue Vorlage",
+      "attachments_one": "Jede E-Mail enthält {{count}} Anhang als PDF: {{names}}",
+      "attachments_other": "Jede E-Mail enthält {{count}} Anhänge als PDF: {{names}}",
       "editTemplate": "Vorlage bearbeiten",
       "showRecipients": "Empfänger anzeigen",
       "recipientList": {
@@ -4527,6 +4626,7 @@
         "unknown": "Unbekannt",
         "active": "Aktiv",
         "hint": "Mehrere Status gelten als «oder». «Reagiert nicht»: Mails wurden zugestellt, aber seit längerem kein Login und kein Klick (Einstellung «E-Mail-Qualität»). Per Brief erreichen: Platzhalter + Nicht erreichbar.",
+        "hintWithoutPlaceholder": "Mehrere Status gelten als «oder». «Reagiert nicht»: Mails wurden zugestellt, aber seit längerem kein Login und kein Klick (Einstellung «E-Mail-Qualität»).",
         "overview": "User dieser Zielgruppe nach E-Mail-Status (unabhängig von der Auswahl)",
         "refresh": "Status aktualisieren",
         "refreshing": "Status werden aktualisiert …",
@@ -4575,6 +4675,10 @@
         "label": "Zustellkanal",
         "mail": "E-Mail",
         "letter": "Brief",
+        "noVersion": {
+          "mail": "Diese Vorlage hat keine E-Mail-Version.",
+          "letter": "Diese Vorlage hat keine Brief-Version."
+        },
         "withoutAddress": "{{count}} der Empfänger:innen haben keine brauchbare Postadresse und werden übersprungen."
       },
       "print": {
@@ -4666,8 +4770,6 @@
         "job": "Versand",
         "jobAll": "Alle Versände",
         "all": "Alle",
-        "title": "Filter",
-        "reset": "Filter zurücksetzen",
         "typeHint": "Wodurch der Versand angestossen wurde.",
         "channel": "Versand",
         "jobHelp": "Ein Versand fasst alle E-Mails zusammen, die mit einem Klick über «Manuelle Mitteilungen» verschickt wurden. Wähle einen aus, um nur dessen E-Mails zu sehen."
@@ -5111,6 +5213,7 @@
         "failed": "Fehlgeschlagen",
         "filterBySession": "Nach dieser Session filtern",
         "tokenActor": "API-Token: {{name}}",
+        "tokenActorOnBehalf": "API-Schlüssel: {{name}} · {{user}}",
         "impersonatedActor": "{{impersonator}} als {{actor}}",
         "unknownActor": "Unbekannt",
         "notSupported": "Diese Installation führt kein Audit-Log. Sobald die Migration eingespielt ist, erscheinen hier die Einträge.",
@@ -5256,7 +5359,7 @@
       "headerHeight": "Höhe Kopfzeile (mm)",
       "footerHeight": "Höhe Fusszeile (mm)",
       "headerHeightHint": "Höchstens 40 mm, damit die Kopfzeile nicht in die Frankierzone reicht. Sie erscheint auf jeder Seite; 0 mm lässt sie weg.",
-      "footerHeightHint": "Höchstens 40 mm. Der Brieftext hält so viel Abstand zum unteren Rand. Die Fusszeile erscheint auf jeder Seite; 0 mm lässt sie weg.",
+      "footerHeightHint": "Höchstens 40 mm. Der Brieftext hält so viel Abstand zum unteren Rand, mindestens aber 20 mm. Die Fusszeile erscheint auf jeder Seite; 0 mm lässt sie weg.",
       "htmlHint": "HTML mit Platzhaltern wie {{user_firstName}}. Grössen in mm angeben, Bilder mit fester Breite und Höhe.",
       "insertImage": "Bild einfügen",
       "preview": "Vorschau",
@@ -5268,6 +5371,7 @@
       "noLayouts": "Noch kein Briefpapier. Erstelle eines, damit Briefe eine Kopf- und Fusszeile bekommen."
     },
     "printIssues": {
+      "viaApiKey": "via API-Schlüssel «{{key}}»",
       "title": "Druckausgaben",
       "intro": "Die gedruckten Ausgaben mit den zugehörigen Empfänger:innen als Drucklisten aus allen Daten zusammengezogen und exportiert.<br /><br />Ein Exemplar kann in einigen Fällen auch noch jemand empfangen, mit einem am Erscheinungsdatum bereits inaktiven digitalen Abo, falls gleichzeitig die pro Abo-Dauer garantierte Anzahl gedruckter Ausgaben noch nicht vollständig erhalten wurde.<br/><br/>Die an die Druckerei übermittelten Drucklisten bilden die Basis sowohl für den Versand an die Leser:innen als auch für die Ermittlung, ob die garantierte Anzahl Ausgaben empfangen wurde.",
       "create": "Neue Ausgabe",
@@ -5656,7 +5760,7 @@
         "subscription": "Abo erstellen",
         "consent": "Einwilligung erstellen",
         "userConsent": "Benutzer-Einwilligung erstellen",
-        "mailTemplate": "E-Mail-Vorlage erstellen",
+        "mailTemplate": "Mitteilungsvorlage erstellen",
         "letterLayout": "Briefpapier erstellen",
         "memberPlan": "Abo-Plan erstellen",
         "paymentMethod": "Zahlungsmethode erstellen",
@@ -5679,7 +5783,7 @@
     "apiTokenList": {
       "overview": {
         "apiTokens": "API-Schlüssel",
-        "apiTokensInfo": "Mit einem API-Schlüssel kann ein Skript oder ein anderes System die API nutzen, ohne sich als Person anzumelden. Ein Schlüssel hat nur die Rechte, die Sie ihm geben.",
+        "apiTokensInfo": "Mit einem API-Schlüssel kann ein Skript oder ein anderes System die API nutzen, ohne sich als User anzumelden. Ein Schlüssel hat nur die Rechte, die Sie ihm geben.",
         "generateToken": "API-Schlüssel erstellen",
         "name": "Name",
         "prefix": "Schlüssel",
@@ -5689,6 +5793,15 @@
         "lastUsed": "Zuletzt verwendet",
         "never": "Nie verwendet",
         "status": "Status",
+        "blocked": "Blockiert",
+        "blockedReason": {
+          "CreatorMissing": "Der User, der diesen Schlüssel erstellt hat, existiert nicht mehr. Der Schlüssel funktioniert nicht mehr; erstellen Sie einen neuen.",
+          "CreatorInactive": "Der User, der diesen Schlüssel erstellt hat, ist deaktiviert. Solange funktioniert der Schlüssel nicht.",
+          "CreatorMayNotCreateApiTokens": "Der User, der diesen Schlüssel erstellt hat, darf keine API-Schlüssel mehr erstellen. Solange funktioniert der Schlüssel nicht."
+        },
+        "missingScopes_one": "{{count}} Recht fehlt",
+        "missingScopes_other": "{{count}} Rechte fehlen",
+        "missingScopesHelp": "Der User, der diesen Schlüssel erstellt hat, hat diese Rechte nicht mehr. Aufrufe, die sie brauchen, werden abgelehnt: {{scopes}}",
         "active": "Aktiv",
         "revoked": "Widerrufen",
         "revoke": "Widerrufen",
@@ -5699,7 +5812,7 @@
         "expiresInDays_other": "Läuft in {{count}} Tagen ab",
         "expiresDate": "{{expiresDate, ccc PP p}}",
         "owner": "Besitzer",
-        "ownerUnknown": "Gelöschte Person",
+        "ownerUnknown": "Gelöschter User",
         "filterByOwner": "Nach Besitzer filtern",
         "anyStatus": "Jeder Status"
       },

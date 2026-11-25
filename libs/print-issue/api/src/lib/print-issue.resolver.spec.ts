@@ -1,9 +1,27 @@
-import type { UserSession } from '@wepublish/authentication/api';
+import {
+  type ApiTokenSession,
+  AuthSessionType,
+  type UserSession,
+} from '@wepublish/authentication/api';
 import type { BexioPrintSourceService } from './bexio/bexio-print-source.service';
 import { PrintIssueResolver } from './print-issue.resolver';
 import type { PrintIssueService } from './print-issue.service';
 
-const session = { user: { id: 'editor-1' } } as unknown as UserSession;
+const session = {
+  type: AuthSessionType.User,
+  user: { id: 'editor-1' },
+} as unknown as UserSession;
+
+const editor = { userId: 'editor-1', apiTokenId: null };
+
+const apiKey: ApiTokenSession = {
+  type: AuthSessionType.ApiToken,
+  id: 'key-1',
+  name: 'e2e',
+  token: 'secret',
+  permissions: [],
+  createdBy: { id: 'creator-1', email: 'creator@example.test' },
+};
 const computedAt = new Date('2026-12-20T09:00:00.000Z');
 const run = {
   mode: 'export',
@@ -66,12 +84,23 @@ describe('PrintIssueResolver', () => {
 
     const result = await resolver.computePrintIssueRun('issue-1', session);
 
-    expect(issues.computeRun).toHaveBeenCalledWith('issue-1', 'editor-1');
+    expect(issues.computeRun).toHaveBeenCalledWith('issue-1', editor);
     expect(result).toMatchObject({
       mode: 'export',
       batch: 0,
       computedAt,
       summary: { byPlan: [{ key: 'Jahresabo', count: 2 }] },
+    });
+  });
+
+  it('computes the run on behalf of the creator of an api key', async () => {
+    const { resolver, issues } = makeResolver();
+
+    await resolver.computePrintIssueRun('issue-1', apiKey);
+
+    expect(issues.computeRun).toHaveBeenCalledWith('issue-1', {
+      userId: 'creator-1',
+      apiTokenId: 'key-1',
     });
   });
 
@@ -93,7 +122,7 @@ describe('PrintIssueResolver', () => {
 
     expect(issues.exportRun).toHaveBeenCalledWith(
       'issue-1',
-      'editor-1',
+      editor,
       computedAt
     );
     expect(result).toMatchObject({ label: '1.27', issueDate: '2027-01-15' });
@@ -108,9 +137,9 @@ describe('PrintIssueResolver', () => {
     await resolver.reopenPrintIssue('issue-1');
     await resolver.duplicatePrintIssue('issue-1');
 
-    expect(issues.deliver).toHaveBeenCalledWith('del-0', 'editor-1');
+    expect(issues.deliver).toHaveBeenCalledWith('del-0', editor);
     expect(issues.deleteDelivery).toHaveBeenCalledWith('del-0');
-    expect(issues.close).toHaveBeenCalledWith('issue-1', 'editor-1');
+    expect(issues.close).toHaveBeenCalledWith('issue-1', editor);
     expect(issues.reopen).toHaveBeenCalledWith('issue-1');
     expect(issues.duplicate).toHaveBeenCalledWith('issue-1');
   });

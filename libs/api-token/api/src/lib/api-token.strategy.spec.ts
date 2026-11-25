@@ -24,22 +24,42 @@ const apiToken = {
   createdById: null,
 } as any;
 
+const resolved = {
+  apiToken,
+  creator: { id: 'u1', email: 'u1@example.test' },
+  permissions: ['CAN_GET_EVENT'],
+};
+
 describe('apiTokenSession', () => {
+  it('carries the creator the key acts on behalf of', () => {
+    expect(apiTokenSession(resolved, 'wep_secret').createdBy).toEqual({
+      id: 'u1',
+      email: 'u1@example.test',
+    });
+  });
+
+  it('takes the permissions its creator still holds, not the stored scopes', () => {
+    expect(
+      apiTokenSession({ ...resolved, permissions: [] }, 'wep_secret')
+        .permissions
+    ).toEqual([]);
+  });
+
   it('is its own session type, not a user or peer token session', () => {
-    expect(apiTokenSession(apiToken, 'wep_secret').type).toBe(
+    expect(apiTokenSession(resolved, 'wep_secret').type).toBe(
       AuthSessionType.ApiToken
     );
   });
 
   it('carries permissions directly rather than through a synthetic role', () => {
-    const session = apiTokenSession(apiToken, 'wep_secret');
+    const session = apiTokenSession(resolved, 'wep_secret');
 
     expect(session.permissions).toEqual(['CAN_GET_EVENT']);
     expect(session).not.toHaveProperty('roles');
   });
 
   it('names the key, so the audit log can attribute actions to it', () => {
-    expect(apiTokenSession(apiToken, 'wep_secret').name).toBe('Print Import');
+    expect(apiTokenSession(resolved, 'wep_secret').name).toBe('Print Import');
   });
 });
 
@@ -52,7 +72,7 @@ describe('ApiTokenStrategy', () => {
   it('tells the integrator when the key expires on every response', async () => {
     const req = request();
 
-    await strategy(async () => apiToken).validate(req, 'wep_secret');
+    await strategy(async () => resolved).validate(req, 'wep_secret');
 
     expect(req.res.setHeader).toHaveBeenCalledWith(
       API_KEY_EXPIRATION_HEADER,
@@ -82,7 +102,7 @@ describe('ApiTokenStrategy', () => {
     const req = request();
 
     expect(
-      await strategy(async () => apiToken).validate(req, 'session-token')
+      await strategy(async () => resolved).validate(req, 'session-token')
     ).toBe(false);
     expect(req.res.setHeader).not.toHaveBeenCalled();
   });

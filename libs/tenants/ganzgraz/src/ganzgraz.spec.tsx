@@ -1,15 +1,21 @@
-import { screen } from '@testing-library/react';
+import { renderHook, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { usePaymentText } from '@wepublish/membership/website';
 import {
+  applyTenantTranslations,
   mockArticleTeaser,
   mockTeaserSlotsBlock,
   mockTitleBlock,
-  applyTenantTranslations,
   renderWithProviders,
   resetTranslations,
   setTestViewportWidth,
 } from '@wepublish/mocks/website';
-import { FullBlockFragment } from '@wepublish/website/api';
+import {
+  Currency,
+  FullBlockFragment,
+  PaymentPeriodicity,
+  ProductType,
+} from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 
 import { GanzGrazBlockStyles } from './components/block-styles/ganzgraz-block-styles';
@@ -59,6 +65,31 @@ describe('ganzgraz tenant', () => {
 
     expect(onChange).toHaveBeenCalledWith(true);
   });
+
+  it.each([
+    [true, PaymentPeriodicity.Yearly, 'Jährlich für CHF 60.- unterstützen'],
+    [true, PaymentPeriodicity.Monthly, 'Monatlich für CHF 5.- unterstützen'],
+    [false, PaymentPeriodicity.Yearly, '1 Jahr für CHF 60.- unterstützen'],
+  ])(
+    'words the subscribe button as "unterstützen" (autoRenew %s, %s)',
+    (autoRenew, paymentPeriodicity, expected) => {
+      const { result } = renderHook(() =>
+        usePaymentText({
+          autoRenew,
+          extendable: true,
+          memberPlan: 'Mitgliedschaft',
+          productType: ProductType.Subscription,
+          paymentPeriodicity,
+          monthlyAmount: 500,
+          currency: Currency.Chf,
+          siteTitle: 'ganzgraz',
+          locale: 'de-CH',
+        })
+      );
+
+      expect(result.current.replace(/\s/g, ' ')).toBe(expected);
+    }
+  );
 
   it.each([
     [400, '24px'],

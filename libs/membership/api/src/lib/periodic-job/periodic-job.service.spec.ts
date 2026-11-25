@@ -29,6 +29,7 @@ import type { Mock } from 'vitest';
 import {
   MailContext,
   MailProviderError,
+  MailAttachmentError,
   MailProviderRecipientError,
 } from '@wepublish/mail/api';
 
@@ -645,6 +646,32 @@ describe('PeriodicJobService', () => {
       );
     });
 
+    // A broken Word attachment, or a pdf renderer that is down, concerns the
+    // mails of one template; the renewals of everyone else still go out.
+    it('lets the run finish when the attachments of a mail cannot be rendered', async () => {
+      mockPrisma.subscription.findMany.mockResolvedValue([
+        customMailSubscription(),
+      ]);
+      mockMailContext.sendComposedMail.mockRejectedValue(
+        new MailAttachmentError(
+          'Attachment "Vertrag" could not be rendered: Gotenberg is down'
+        )
+      );
+
+      await expect(service.execute()).resolves.toBeUndefined();
+
+      expect(successfulRuns()).toHaveLength(1);
+      expect(mockPrisma.mailLog.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            state: 'rejected',
+            error:
+              'Attachment "Vertrag" could not be rendered: Gotenberg is down',
+          }),
+        })
+      );
+    });
+
     it('still fails the run when the provider itself refuses to send', async () => {
       mockPrisma.subscription.findMany.mockResolvedValue([
         customMailSubscription(),
@@ -863,6 +890,9 @@ describe('PeriodicJobService', () => {
       (mockPrisma as any).userDeliveryPreference = {
         findUnique: vi.fn(async () => ({ channel: 'letter' })),
       };
+      (mockPrisma as any).mailTemplateVariant = {
+        findUnique: vi.fn(async () => ({ id: 'variant-1' })),
+      };
       (mockPrisma as any).user = {
         findUnique: vi.fn(async () => ({ ...user, address: { city: 'Bern' } })),
       };
@@ -998,6 +1028,9 @@ describe('PeriodicJobService', () => {
       (mockPrisma as any).userDeliveryPreference = {
         findUnique: vi.fn(async () => ({ channel: MailChannel.letter })),
         findMany: vi.fn(async () => [{ userId: 'user-1' }]),
+      };
+      (mockPrisma as any).mailTemplateVariant = {
+        findUnique: vi.fn(async () => ({ id: 'variant-1' })),
       };
       (mockPrisma as any).user = {
         findUnique: vi.fn(async () => ({

@@ -39,4 +39,40 @@ describe('HtmlSourceEditor', () => {
 
     expect(getComputedStyle(wrapperOf(container)).minHeight).toBe('240px');
   });
+
+  describe('colour mode', () => {
+    const schemeTheme = createTheme({
+      cssVariables: { colorSchemeSelector: 'data-mui-color-scheme' },
+      colorSchemes: { light: true, dark: true },
+    });
+
+    const renderIn = (mode: 'light' | 'dark') =>
+      render(
+        <ThemeProvider
+          theme={schemeTheme}
+          defaultMode={mode}
+        >
+          <HtmlSourceEditor
+            value="<p>Hallo</p>"
+            onChange={vi.fn()}
+          />
+        </ThemeProvider>
+      );
+
+    beforeEach(() => localStorage.clear());
+
+    // The light highlighting on the dark surface left the markup unreadable.
+    it('highlights for a dark surface in dark mode', () => {
+      const { container } = renderIn('dark');
+
+      expect(container.querySelector('.cm-theme-dark')).toBeTruthy();
+      expect(container.querySelector('.cm-theme-light')).toBeNull();
+    });
+
+    it('highlights for a light surface in light mode', () => {
+      const { container } = renderIn('light');
+
+      expect(container.querySelector('.cm-theme-light')).toBeTruthy();
+    });
+  });
 });
