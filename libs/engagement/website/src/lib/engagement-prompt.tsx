@@ -286,15 +286,15 @@ export const EngagementPrompt = ({
         title={modalTitle}
         submitText={primary ? actionLabel(primary, t) : t('engagement.dismiss')}
         cancelText={t('engagement.dismiss')}
-        onCancel={dismiss}
-        onSubmit={() => {
-          if (!primary) {
-            return dismiss();
-          }
-
-          follow(primary);
-          window.location.assign(actionHref(primary));
-        }}
+        onCancel={onDismiss && dismiss}
+        onSubmit={
+          primary ?
+            () => {
+              follow(primary);
+              window.location.assign(actionHref(primary));
+            }
+          : onDismiss && dismiss
+        }
       >
         {content(true)}
       </Modal>

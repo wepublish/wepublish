@@ -257,6 +257,36 @@ describe('EngagementPrompt', () => {
     }
   });
 
+  it('keeps a pop-up that can not be dismissed open', async () => {
+    renderWithProviders(
+      <EngagementPrompt
+        prompt={mockEngagementPrompt({ stage: { dismissible: false } })}
+      />
+    );
+
+    expect(
+      screen.queryByRole('button', { name: t('engagement.dismiss') })
+    ).toBeNull();
+
+    await userEvent.keyboard('{Escape}');
+
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+  });
+
+  it('offers no way out of a pop-up that can not be dismissed and has no action', () => {
+    renderWithProviders(
+      <EngagementPrompt
+        prompt={mockEngagementPrompt({
+          stage: { dismissible: false, actions: [] },
+        })}
+      />
+    );
+
+    expect(within(screen.getByRole('dialog')).queryAllByRole('button')).toEqual(
+      []
+    );
+  });
+
   it('offers no dismissal when the prompt can not be dismissed', () => {
     renderWithProviders(
       <EngagementPrompt

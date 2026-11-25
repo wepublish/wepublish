@@ -111,4 +111,24 @@ describe('Modal', () => {
       screen.queryByRole('button', { name: 'Submit Text' })
     ).not.toBeInTheDocument();
   });
+
+  it('can not be closed without onCancel', async () => {
+    renderModal({ onCancel: undefined });
+
+    expect(
+      screen.queryByRole('button', { name: 'Cancel Text' })
+    ).not.toBeInTheDocument();
+
+    await userEvent.keyboard('{Escape}');
+
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+  });
+
+  it('has no submit button without onSubmit', () => {
+    renderModal({ onSubmit: undefined });
+
+    expect(
+      screen.queryByRole('button', { name: 'Submit Text' })
+    ).not.toBeInTheDocument();
+  });
 });
