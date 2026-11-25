@@ -4,6 +4,7 @@ import { ImageWrapper } from '@wepublish/image/website';
 import {
   BuilderEventListItemProps,
   BuilderEventListProps,
+  isSameDayInSiteTimeZone,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { useState } from 'react';
@@ -364,8 +365,7 @@ export const TsriEventListItem = ({
           </time>
 
           {endsAt &&
-            new Date(endsAt).toDateString() !==
-              new Date(startsAt).toDateString() && (
+            !isSameDayInSiteTimeZone(new Date(startsAt), new Date(endsAt)) && (
               <span>
                 {' '}
                 &ndash;{' '}

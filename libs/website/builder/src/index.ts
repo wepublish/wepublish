@@ -17,6 +17,7 @@ export * from './lib/website-tenant.interface';
 export * from './lib/hooks/use-async-action';
 export * from './lib/hooks/use-page-shell';
 export * from './lib/api-alert';
+export * from './lib/site-time-zone';
 
 export * from './lib/richText.interface';
 export * from './lib/richText.components';

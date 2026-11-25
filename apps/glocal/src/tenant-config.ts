@@ -1,13 +1,15 @@
 import { createTheme, ThemeOptions } from '@mui/material';
 import { minimalTheme } from '@wepublish/ui';
-import { WebsiteTenantConfig } from '@wepublish/website/builder';
-import { format } from 'date-fns';
+import {
+  formatInSiteTimeZone,
+  WebsiteTenantConfig,
+} from '@wepublish/website/builder';
 import { de } from 'date-fns/locale';
 
 const dateFormatter = (date: Date, includeTime = true) =>
   includeTime ?
-    `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
-  : format(date, 'dd. MMMM yyyy');
+    `${formatInSiteTimeZone(date, 'dd. MMMM yyyy')} um ${formatInSiteTimeZone(date, 'HH:mm')}`
+  : formatInSiteTimeZone(date, 'dd. MMMM yyyy');
 
 /**
  * What the Next `pages/_app.tsx` set up inline. glocal has no tenant lib: the

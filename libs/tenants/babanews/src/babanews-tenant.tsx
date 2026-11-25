@@ -1,6 +1,8 @@
 import { NextWepublishLink } from '@wepublish/utils/website/link';
-import { WebsiteTenantConfig } from '@wepublish/website/builder';
-import { format } from 'date-fns';
+import {
+  formatInSiteTimeZone,
+  WebsiteTenantConfig,
+} from '@wepublish/website/builder';
 import { de } from 'date-fns/locale';
 
 import { BabanewsBlockRenderer } from './components/website-builder-overwrites/block-renderer/block-renderer';
@@ -10,8 +12,8 @@ import theme from './theme';
 
 const dateFormatter = (date: Date, includeTime = true) =>
   includeTime ?
-    `${format(date, 'dd. MMMM yyyy', { locale: de })} um ${format(date, 'HH:mm', { locale: de })}`
-  : format(date, 'dd. MMMM yyyy', { locale: de });
+    `${formatInSiteTimeZone(date, 'dd. MMMM yyyy', { locale: de })} um ${formatInSiteTimeZone(date, 'HH:mm', { locale: de })}`
+  : formatInSiteTimeZone(date, 'dd. MMMM yyyy', { locale: de });
 
 export const babanewsTenant: WebsiteTenantConfig = {
   id: 'babanews',

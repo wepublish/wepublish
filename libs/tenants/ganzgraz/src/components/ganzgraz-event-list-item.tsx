@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { css } from '@mui/material';
 import {
   BuilderEventListItemProps,
+  isSameDayInSiteTimeZone,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { CiCalendar, CiHashtag, CiLocationOn } from 'react-icons/ci';
@@ -147,8 +148,10 @@ export const GanzGrazEventListItem = ({
             </EventListItemDate>
 
             {endsAt &&
-              new Date(endsAt).toDateString() !==
-                new Date(startsAt).toDateString() && (
+              !isSameDayInSiteTimeZone(
+                new Date(startsAt),
+                new Date(endsAt)
+              ) && (
                 <>
                   &ndash;{' '}
                   <time

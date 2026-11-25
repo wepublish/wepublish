@@ -1,5 +1,7 @@
-import { WebsiteTenantConfig } from '@wepublish/website/builder';
-import { format } from 'date-fns';
+import {
+  formatInSiteTimeZone,
+  WebsiteTenantConfig,
+} from '@wepublish/website/builder';
 import { fr } from 'date-fns/locale';
 
 import { CourantArticleAuthors } from './components/courant-article-authors';
@@ -21,8 +23,8 @@ import { createCourantTheme } from './theme';
 
 const dateFormatter = (date: Date, includeTime = true) =>
   includeTime ?
-    `${format(date, 'dd. MMMM yyyy', { locale: fr })} à ${format(date, 'HH:mm', { locale: fr })}`
-  : format(date, 'dd. MMMM yyyy', { locale: fr });
+    `${formatInSiteTimeZone(date, 'dd. MMMM yyyy', { locale: fr })} à ${formatInSiteTimeZone(date, 'HH:mm', { locale: fr })}`
+  : formatInSiteTimeZone(date, 'dd. MMMM yyyy', { locale: fr });
 
 /**
  * Framework-neutral tenant config: no `next/link` so the TanStack Start app

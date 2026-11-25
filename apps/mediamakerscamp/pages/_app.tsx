@@ -39,8 +39,11 @@ import {
   WebsiteSettingsFragment,
   createWithApiClient,
 } from '@wepublish/website/api';
-import { WebsiteBuilderProvider } from '@wepublish/website/builder';
-import { format, setDefaultOptions } from 'date-fns';
+import {
+  formatInSiteTimeZone,
+  WebsiteBuilderProvider,
+} from '@wepublish/website/builder';
+import { setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
@@ -83,8 +86,8 @@ const NavBar = styled(NavbarContainer)`
 
 const dateFormatter = (date: Date, includeTime = true) =>
   includeTime ?
-    `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
-  : format(date, 'dd. MMMM yyyy');
+    `${formatInSiteTimeZone(date, 'dd. MMMM yyyy')} um ${formatInSiteTimeZone(date, 'HH:mm')}`
+  : formatInSiteTimeZone(date, 'dd. MMMM yyyy');
 
 export type CustomAppProps = AppProps<
   {

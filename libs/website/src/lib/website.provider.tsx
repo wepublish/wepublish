@@ -131,8 +131,11 @@ import {
   UnorderedList,
 } from '@wepublish/ui';
 import { ImageUpload, PersonalDataForm } from '@wepublish/user/website';
-import { WebsiteBuilderProvider } from '@wepublish/website/builder';
-import { format, getDefaultOptions, Locale } from 'date-fns';
+import {
+  formatInSiteTimeZone,
+  WebsiteBuilderProvider,
+} from '@wepublish/website/builder';
+import { getDefaultOptions, Locale } from 'date-fns';
 import { memo, PropsWithChildren } from 'react';
 import { IconContext } from 'react-icons';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -145,7 +148,7 @@ import { TypographyVariantsOptions } from '@mui/material/styles';
 export type WebsiteProps = PropsWithChildren;
 
 const dateFormatter = (date: Date, includeTime = true) =>
-  format(date, includeTime ? 'dd.MM.yyyy HH:mm' : 'dd.MM.yyyy', {
+  formatInSiteTimeZone(date, includeTime ? 'dd.MM.yyyy HH:mm' : 'dd.MM.yyyy', {
     locale: (getDefaultOptions() as { locale: Locale }).locale,
   });
 

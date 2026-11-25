@@ -47,7 +47,7 @@ describe('reflektTenant', () => {
   });
 
   it('formats dates the reflekt way', () => {
-    const date = new Date(2024, 0, 5, 9, 7);
+    const date = new Date('2024-01-05T08:07:00.000Z'); // 09:07 in Zurich
 
     expect(reflektTenant.builder.date?.format?.(date)).toBe(
       '05. Januar 2024 um 09:07'

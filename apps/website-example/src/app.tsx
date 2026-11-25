@@ -19,8 +19,10 @@ import {
 } from '@wepublish/utils/website/tanstack';
 import { WebsiteProvider } from '@wepublish/website';
 import { WebsiteSettingsFragment } from '@wepublish/website/api';
-import { WebsiteBuilderProvider } from '@wepublish/website/builder';
-import { format } from 'date-fns';
+import {
+  formatInSiteTimeZone,
+  WebsiteBuilderProvider,
+} from '@wepublish/website/builder';
 import { PropsWithChildren } from 'react';
 
 import { siteTitle } from './integration/default-head';
@@ -51,8 +53,8 @@ const NavBar = styled(NavbarContainer)`
 
 const dateFormatter = (date: Date, includeTime = true) =>
   includeTime ?
-    `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
-  : format(date, 'dd. MMMM yyyy');
+    `${formatInSiteTimeZone(date, 'dd. MMMM yyyy')} um ${formatInSiteTimeZone(date, 'HH:mm')}`
+  : formatInSiteTimeZone(date, 'dd. MMMM yyyy');
 
 type AppShellProps = PropsWithChildren<{
   websiteSettings: WebsiteSettingsFragment | undefined;

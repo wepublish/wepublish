@@ -9,6 +9,8 @@ import { EventSEO } from '@wepublish/event/website';
 import { ImageWrapper } from '@wepublish/image/website';
 import {
   BuilderEventProps,
+  formatInSiteTimeZone,
+  isSameDayInSiteTimeZone,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { CiCalendar, CiHashtag, CiLocationOn } from 'react-icons/ci';
@@ -195,18 +197,12 @@ export const GanzGrazEvent = ({
   const event = data.event;
   const startDate = new Date(event.startsAt);
   const endDate = event.endsAt ? new Date(event.endsAt) : null;
-  const isSameDay =
-    !!endDate && startDate.toDateString() === endDate.toDateString();
+  const isSameDay = !!endDate && isSameDayInSiteTimeZone(startDate, endDate);
   const showInlineEndTime = !!endDate && isSameDay;
   const showSiblingEndTime = !!endDate && !isSameDay;
 
   const endTime = endDate && (
-    <EventEndTime>
-      {endDate.toLocaleTimeString('de-AT', {
-        hour: '2-digit',
-        minute: '2-digit',
-      })}
-    </EventEndTime>
+    <EventEndTime>{formatInSiteTimeZone(endDate, 'HH:mm')}</EventEndTime>
   );
 
   return (
@@ -249,10 +245,7 @@ export const GanzGrazEvent = ({
 
           <EventTimeSameDay data-show-dash={showInlineEndTime}>
             <EventStartTime>
-              {startDate.toLocaleTimeString('de-AT', {
-                hour: '2-digit',
-                minute: '2-digit',
-              })}
+              {formatInSiteTimeZone(startDate, 'HH:mm')}
             </EventStartTime>
 
             {showInlineEndTime && endTime}

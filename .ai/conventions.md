@@ -211,6 +211,15 @@ the page `PageContainer` loaded in the browser win (`usePageShell`): the
 server query is anonymous, so an unpublished page is `null` there and the
 editor preview would otherwise always show header and footer.
 
+### Website dates
+
+Format dates on the website in `SITE_TIME_ZONE` (Europe/Zurich) with
+`formatInSiteTimeZone` / `isSameDayInSiteTimeZone` from
+`@wepublish/website/builder`, or `toLocale*String({timeZone: SITE_TIME_ZONE})`.
+Never use plain date-fns `format`, `toDateString` or zone-less `toLocale*`: the
+server renders in UTC, and `suppressHydrationWarning` keeps that text, so
+visitors would see different days or times for the same date.
+
 ## File naming
 
 - Nest: `<name>.module.ts`, `<name>.service.ts`, `<name>.resolver.ts`,

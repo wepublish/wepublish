@@ -1,8 +1,8 @@
 import {
   BuilderBlockRendererProps,
+  formatInSiteTimeZone,
   WebsiteTenantConfig,
 } from '@wepublish/website/builder';
-import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { uniq } from 'ramda';
 import { ComponentType } from 'react';
@@ -61,8 +61,8 @@ import theme from './theme';
 
 const dateFormatter = (date: Date, includeTime = true) =>
   includeTime ?
-    `${format(date, 'dd. MMMM yyyy', { locale: de })} | ${format(date, 'HH:mm', { locale: de })}`
-  : format(date, 'dd. MMMM yyyy', { locale: de });
+    `${formatInSiteTimeZone(date, 'dd. MMMM yyyy', { locale: de })} | ${formatInSiteTimeZone(date, 'HH:mm', { locale: de })}`
+  : formatInSiteTimeZone(date, 'dd. MMMM yyyy', { locale: de });
 
 export const tsriTenant: WebsiteTenantConfig = {
   id: 'tsri',

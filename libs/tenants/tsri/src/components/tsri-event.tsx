@@ -4,6 +4,8 @@ import { EventSEO, EventWrapper } from '@wepublish/event/website';
 import { ImageWrapper } from '@wepublish/image/website';
 import {
   BuilderEventProps,
+  formatInSiteTimeZone,
+  isSameDayInSiteTimeZone,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { MdCalendarToday, MdLocationOn, MdTag } from 'react-icons/md';
@@ -82,7 +84,7 @@ export const TsriEvent = ({ data, className }: BuilderEventProps) => {
   const startDate = new Date(event.startsAt);
   const endDate = event.endsAt ? new Date(event.endsAt) : null;
   const endsOnOtherDay =
-    !!endDate && startDate.toDateString() !== endDate.toDateString();
+    !!endDate && !isSameDayInSiteTimeZone(startDate, endDate);
 
   return (
     <TsriEventWrapper
@@ -117,11 +119,7 @@ export const TsriEvent = ({ data, className }: BuilderEventProps) => {
                 >
                   {endsOnOtherDay ?
                     date.format(endDate)
-                  : endDate.toLocaleTimeString('de-CH', {
-                      hour: '2-digit',
-                      minute: '2-digit',
-                    })
-                  }
+                  : formatInSiteTimeZone(endDate, 'HH:mm')}
                 </time>
               </>
             )}
