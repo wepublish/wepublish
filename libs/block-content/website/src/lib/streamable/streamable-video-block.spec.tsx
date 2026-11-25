@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { screen, waitFor } from '@testing-library/react';
 import {
   mockStreamableVideoBlock,
@@ -13,7 +14,7 @@ const oEmbedUrl = (videoID: string) =>
 const playerAspectRatio = () =>
   parseFloat(
     getComputedStyle(
-      screen.getByTitle('Embedded Streamable Video')
+      screen.getByTitle(t('embed.title', { provider: 'Streamable' }))
         .parentElement as HTMLElement
     ).aspectRatio
   );
@@ -46,10 +47,9 @@ describe('StreamableVideoBlock', () => {
       />
     );
 
-    expect(screen.getByTitle('Embedded Streamable Video')).toHaveAttribute(
-      'src',
-      'https://streamable.com/e/abc123'
-    );
+    expect(
+      screen.getByTitle(t('embed.title', { provider: 'Streamable' }))
+    ).toHaveAttribute('src', 'https://streamable.com/e/abc123');
   });
 
   it('asks Streamable oEmbed for the video size', () => {
@@ -97,7 +97,9 @@ describe('StreamableVideoBlock', () => {
     await expect(fetchMock.mock.results[0].value).rejects.toThrow(
       'Failed to fetch'
     );
-    expect(screen.getByTitle('Embedded Streamable Video')).toBeInTheDocument();
+    expect(
+      screen.getByTitle(t('embed.title', { provider: 'Streamable' }))
+    ).toBeInTheDocument();
     expect(playerAspectRatio()).toBeCloseTo(16 / 9);
   });
 
@@ -124,10 +126,9 @@ describe('StreamableVideoBlock', () => {
       <StreamableVideoBlock {...mockStreamableVideoBlock({ videoID: 'a/b' })} />
     );
 
-    expect(screen.getByTitle('Embedded Streamable Video')).toHaveAttribute(
-      'src',
-      'https://streamable.com/e/a%2Fb'
-    );
+    expect(
+      screen.getByTitle(t('embed.title', { provider: 'Streamable' }))
+    ).toHaveAttribute('src', 'https://streamable.com/e/a%2Fb');
     expect(fetchMock).toHaveBeenCalledWith(oEmbedUrl('a%2Fb'), {
       signal: expect.any(AbortSignal),
     });

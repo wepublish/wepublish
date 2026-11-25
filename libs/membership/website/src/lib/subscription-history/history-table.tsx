@@ -317,7 +317,7 @@ export function HistoryDate({ date: value }: { date: string }) {
         data-date="short"
         suppressHydrationWarning
       >
-        {format(day, 'dd.MM.yyyy')}
+        {format(day, 'P')}
       </span>
     </time>
   );

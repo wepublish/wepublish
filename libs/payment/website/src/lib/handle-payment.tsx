@@ -12,6 +12,7 @@ import {
   UpgradeMutation,
   UpgradeMutationVariables,
 } from '@wepublish/website/api';
+import { ErrorCode } from '@wepublish/errors';
 import { useCallback, useState } from 'react';
 import { RedirectPages } from './payment-form';
 
@@ -217,9 +218,7 @@ const handlePayment = ({
   setStripeClientSecret?: (secret: string | undefined) => void;
 }) => {
   if (!intent) {
-    window.location.href = `${failUrl}?error=${encodeURIComponent(
-      'Intent konnte nicht gefunden werden.'
-    )}`;
+    window.location.href = `${failUrl}?error=${ErrorCode.PaymentIntentNotFound}`;
     return;
   }
 

@@ -20,4 +20,7 @@ export enum ErrorCode {
   ChallengeFailed = 'ChallengeFailed',
   InvalidSettingData = 'INVALID_SETTING_DATA',
   PaymentAlreadyRunning = 'PAYMENT_ALREADY_RUNNING',
+  // Website-only: passed through ?error= to the login/payment pages
+  LinkExpired = 'LINK_EXPIRED',
+  PaymentIntentNotFound = 'PAYMENT_INTENT_NOT_FOUND',
 }

@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { screen } from '@testing-library/react';
 import {
   mockSoundCloudTrackBlock,
@@ -12,7 +13,9 @@ describe('SoundCloudTrackBlock', () => {
     );
 
     const src = new URL(
-      screen.getByTitle('Embedded SoundCloud Track').getAttribute('src') ?? ''
+      screen
+        .getByTitle(t('embed.title', { provider: 'SoundCloud' }))
+        .getAttribute('src') ?? ''
     );
 
     expect(src.origin + src.pathname).toBe('https://w.soundcloud.com/player/');

@@ -1,4 +1,5 @@
 import { AuthTokenStorageKey } from '@wepublish/authentication/website';
+import { ErrorCode } from '@wepublish/errors';
 import {
   FullSessionWithTokenWithoutUserFragment,
   LoginWithJwtDocument,
@@ -6,7 +7,6 @@ import {
 import { ApolloClient, CombinedGraphQLErrors } from '@apollo/client';
 import { setCookie } from 'cookies-next';
 import { NextPageContext } from 'next';
-import { EXPIRED_JWT_MESSAGE } from '../lib/with-jwt-handler';
 
 /**
  * Handles JWT login from query params in getInitialProps (server-side).
@@ -75,7 +75,7 @@ export async function handleJwtLogin(
 function redirectToLoginWithError(ctx: NextPageContext) {
   if (ctx.res && !ctx.res.headersSent) {
     ctx.res.writeHead(302, {
-      Location: `/login?error=${encodeURIComponent(EXPIRED_JWT_MESSAGE)}`,
+      Location: `/login?error=${ErrorCode.LinkExpired}`,
     });
 
     ctx.res.end();

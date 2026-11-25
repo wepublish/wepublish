@@ -4,6 +4,7 @@ import {
   FullSoundCloudTrackBlockFragment,
 } from '@wepublish/website/api';
 import { BuilderSoundCloudTrackBlockProps } from '@wepublish/website/builder';
+import { useTranslation } from 'react-i18next';
 
 export const isSoundCloudTrackBlock = (
   block: Partial<Pick<FullBlockFragment, '__typename'>>
@@ -21,14 +22,18 @@ export const SoundCloudTrackBlockPlayer = styled('iframe')`
 export const SoundCloudTrackBlock = ({
   trackID,
   className,
-}: BuilderSoundCloudTrackBlockProps) => (
-  <SoundCloudTrackBlockWrapper className={className}>
-    <SoundCloudTrackBlockPlayer
-      src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(
-        `https://api.soundcloud.com/tracks/${trackID}`
-      )}&visual=true`}
-      title="Embedded SoundCloud Track"
-      allow="autoplay"
-    />
-  </SoundCloudTrackBlockWrapper>
-);
+}: BuilderSoundCloudTrackBlockProps) => {
+  const { t } = useTranslation();
+
+  return (
+    <SoundCloudTrackBlockWrapper className={className}>
+      <SoundCloudTrackBlockPlayer
+        src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(
+          `https://api.soundcloud.com/tracks/${trackID}`
+        )}&visual=true`}
+        title={t('embed.title', { provider: 'SoundCloud' })}
+        allow="autoplay"
+      />
+    </SoundCloudTrackBlockWrapper>
+  );
+};

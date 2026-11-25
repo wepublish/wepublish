@@ -347,7 +347,7 @@ export const MailchimpFormBlock = ({
     event.preventDefault();
 
     if (!syncProviderId || !listId) {
-      setError('Form is not configured.');
+      setError(t('errors.formNotConfigured'));
 
       return;
     }
@@ -406,12 +406,12 @@ export const MailchimpFormBlock = ({
       const data = result.data?.addMailchimpContact;
 
       if (!data?.success) {
-        setError(data?.error ?? 'Unknown error');
+        setError(data?.error ?? t('errors.unknown'));
 
         return;
       }
     } catch {
-      setError('Unknown error');
+      setError(t('errors.unknown'));
 
       return;
     } finally {

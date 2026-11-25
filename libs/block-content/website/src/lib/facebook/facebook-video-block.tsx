@@ -4,6 +4,7 @@ import {
   FullFacebookVideoBlockFragment,
 } from '@wepublish/website/api';
 import { BuilderFacebookVideoBlockProps } from '@wepublish/website/builder';
+import { useTranslation } from 'react-i18next';
 
 export const isFacebookVideoBlock = (
   block: Partial<Pick<FullBlockFragment, '__typename'>>
@@ -26,13 +27,14 @@ export const FacebookVideoBlock = ({
   videoID,
   className,
 }: BuilderFacebookVideoBlockProps) => {
+  const { t } = useTranslation();
   const videoUrl = `https://www.facebook.com/${userID}/videos/${videoID}/`;
 
   return (
     <FacebookVideoBlockWrapper className={className}>
       <FacebookVideoBlockPlayer
         src={`https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(videoUrl)}&show_text=false`}
-        title="Embedded Facebook Video"
+        title={t('embed.title', { provider: 'Facebook' })}
         allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
         allowFullScreen
       />

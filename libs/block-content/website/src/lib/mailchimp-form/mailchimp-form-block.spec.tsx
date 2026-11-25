@@ -174,7 +174,9 @@ describe('MailchimpFormBlock', () => {
     await user.type(emailInput(), EMAIL);
     await user.click(submitButton());
 
-    expect(await screen.findByRole('alert')).toHaveTextContent('Unknown error');
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      t('errors.unknown')
+    );
     expect(submitButton()).toBeEnabled();
   });
 
@@ -185,7 +187,7 @@ describe('MailchimpFormBlock', () => {
     await user.click(submitButton());
 
     expect(await screen.findByRole('alert')).toHaveTextContent(
-      'Form is not configured.'
+      t('errors.formNotConfigured')
     );
   });
 

@@ -68,7 +68,7 @@ describe('NavbarContainer', () => {
     const user = userEvent.setup();
     renderContainer({ mocks: [navigationList, mockPeerProfileQuery()] });
 
-    await user.click(screen.getByRole('button', { name: 'Menu' }));
+    await user.click(screen.getByRole('button', { name: t('navbar.menu') }));
 
     expect(
       await screen.findByRole('link', { name: 'Mobilität' })
@@ -288,7 +288,7 @@ describe('NavbarContainer', () => {
       ],
     });
 
-    await user.click(screen.getByRole('button', { name: 'Menu' }));
+    await user.click(screen.getByRole('button', { name: t('navbar.menu') }));
     await screen.findByRole('link', { name: 'Mobilität' });
 
     rerender(

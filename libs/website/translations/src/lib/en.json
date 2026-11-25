@@ -7,7 +7,9 @@
     "logout": "Log out",
     "login": "Log in",
     "backToProfile": "Back to profile",
-    "profile": "Profile"
+    "profile": "Profile",
+    "menu": "Menu",
+    "home": "Home"
   },
   "banner": {
     "close": "Close banner"
@@ -17,7 +19,8 @@
     "login": "Log in"
   },
   "paymentAmountPicker": {
-    "manual": "Custom"
+    "manual": "Custom",
+    "min": "Min. {amount}"
   },
   "teaser": {
     "author": {
@@ -81,7 +84,8 @@
       "confirmationTitle": "Are you sure?",
       "openInvoices": "You already have a subscription with unpaid invoices. You can view your unpaid invoices in your <Link href=\"/profile\">profile</Link>.",
       "alreadyHasSubscription": "You already have this subscription, are you sure? You can view your subscriptions in your <Link href=\"/profile\">profile</Link>."
-    }
+    },
+    "autoRenew": "Renew automatically"
   },
   "login": {
     "email": "Email",
@@ -290,7 +294,9 @@
   },
   "article": {
     "noArticles": "No articles available",
-    "toOriginal": "To the original article"
+    "toOriginal": "To the original article",
+    "related": "You might also be interested in",
+    "comments": "Comments"
   },
   "commentEditor": {
     "comment": "Comment",
@@ -530,5 +536,42 @@
     "stripe-checkout": "Credit card",
     "mollie": "Online payment",
     "no-charge": "Free"
+  },
+  "event": {
+    "locationUnknown": "Venue not yet known"
+  },
+  "eventList": {
+    "from": "From",
+    "to": "To",
+    "upcomingOnly": "Upcoming only"
+  },
+  "author": {
+    "allArticles": "All articles by {name}"
+  },
+  "errorPage": {
+    "title": "Something went wrong.",
+    "text": "The page could not be loaded. Please try again.",
+    "retry": "Try again"
+  },
+  "preview": {
+    "contentUnavailableTitle": "This content is not available",
+    "contentUnavailableText": "It has been removed or is not published yet.",
+    "unavailableTitle": "Preview not available",
+    "unavailableText": "This preview can only be shown with an authorised login. Open the preview directly from the editor or <Link href=\"/login\">log in</Link> and reload the page afterwards.",
+    "loading": "Loading preview …",
+    "bannerHint": "You are seeing the published version, not the preview. To see the preview, open it in the editor or <Link href=\"/login\">log in</Link> and reload."
+  },
+  "errors": {
+    "emailAlreadyInUse": "An account with this email already exists.",
+    "pleaseLogin": "Please log in",
+    "paymentAlreadyRunning": "A payment for this invoice is already in progress. Please wait at least a minute before trying again.",
+    "linkExpired": "This link is no longer valid. Please request a new link here or log in with your username and password.",
+    "paymentIntentNotFound": "The payment could not be found.",
+    "paymentProviderNotFound": "The required payment provider could not be found.",
+    "formNotConfigured": "The form is not set up.",
+    "unknown": "Unknown error"
+  },
+  "embed": {
+    "title": "Embedded content from {provider}"
   }
 }

@@ -283,7 +283,9 @@ export const PaymentAmountPicker = forwardRef<
                   min={periodMin / 100}
                   snap={periodSnap}
                   arrows={arrows}
-                  helperText={`Min ${formatCurrency(periodMin / 100, currency, locale)}`}
+                  helperText={t('paymentAmountPicker.min', {
+                    amount: formatCurrency(periodMin / 100, currency, locale),
+                  })}
                   onValueChange={v => {
                     setHasInteracted(true);
                     if (typeof v === 'number' && v >= 0) {

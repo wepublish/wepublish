@@ -1051,7 +1051,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
                             }
                           />
                         }
-                        label="Automatisch erneuern"
+                        label={t('subscribe.autoRenew')}
                       />
                     )}
                   />

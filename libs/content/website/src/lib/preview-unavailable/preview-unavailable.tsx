@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { CircularProgress } from '@mui/material';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
+import { Trans, useTranslation } from 'react-i18next';
 
 import { usePreviewAuthState } from './use-preview-auth-state';
 
@@ -62,15 +63,17 @@ const PreviewHintContent = () => {
   const {
     elements: { H5, Paragraph, Link },
   } = useWebsiteBuilder();
+  const { t } = useTranslation();
 
   return (
     <>
-      <H5 component="h1">Vorschau nicht verf&uuml;gbar</H5>
+      <H5 component="h1">{t('preview.unavailableTitle')}</H5>
 
       <Paragraph>
-        Diese Vorschau kann nur mit einer berechtigten Anmeldung angezeigt
-        werden. &Ouml;ffne die Vorschau direkt aus dem Editor oder{' '}
-        <Link href="/login">melde dich an</Link> und lade die Seite danach neu.
+        <Trans
+          i18nKey="preview.unavailableText"
+          components={{ Link: <Link /> }}
+        />
       </Paragraph>
     </>
   );
@@ -82,6 +85,7 @@ export function PreviewUnavailable() {
   const {
     elements: { Paragraph },
   } = useWebsiteBuilder();
+  const { t } = useTranslation();
 
   if (!previewRequested) {
     return null;
@@ -105,7 +109,7 @@ export function PreviewUnavailable() {
       <PreviewPending swapDelay={swapDelay}>
         <CircularProgress size={24} />
 
-        <Paragraph>Vorschau wird geladen &hellip;</Paragraph>
+        <Paragraph>{t('preview.loading')}</Paragraph>
       </PreviewPending>
 
       <PreviewHintDelayed swapDelay={swapDelay}>

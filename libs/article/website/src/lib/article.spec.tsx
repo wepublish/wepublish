@@ -184,11 +184,11 @@ describe('Article', () => {
       })
     );
 
-    expect(screen.getAllByAltText('tracking pixel')).toHaveLength(1);
-    expect(screen.getByAltText('tracking pixel')).toHaveAttribute(
-      'src',
-      'https://pixel.example.com/1.gif'
-    );
+    // decorative: empty alt keeps screen readers from announcing it
+    const pixels = document.querySelectorAll('img[alt=""][width="1"]');
+
+    expect(pixels).toHaveLength(1);
+    expect(pixels[0]).toHaveAttribute('src', 'https://pixel.example.com/1.gif');
   });
 
   it('renders what is passed as children after the article', () => {

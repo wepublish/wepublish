@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { BuilderTikTokVideoBlockProps } from '@wepublish/website/builder';
+import { useTranslation } from 'react-i18next';
 import {
   FullBlockFragment,
   FullTikTokVideoBlockFragment,
@@ -27,12 +28,14 @@ export function TikTokVideoBlock({
   videoID,
   className,
 }: BuilderTikTokVideoBlockProps) {
+  const { t } = useTranslation();
+
   return (
     <TikTokVideoBlockWrapper className={className}>
       <TikTokVideoBlockPlayer
         src={`https://www.tiktok.com/embed/v2/${videoID}`}
         allowFullScreen
-        title="Embedded TikTok Video"
+        title={t('embed.title', { provider: 'TikTok' })}
         allow="encrypted-media;"
       />
     </TikTokVideoBlockWrapper>

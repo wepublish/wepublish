@@ -14,6 +14,7 @@ import {
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
 import { useQueryParams, useReplaceSearch } from '../router-hooks';
@@ -86,6 +87,7 @@ export function AuthorPage({ className }: { className?: string }) {
     Head,
     elements: { Pagination, H3 },
   } = useWebsiteBuilder();
+  const { t } = useTranslation();
 
   const replaceSearch = useReplaceSearch();
   const { page, slug } = pageSchema.parse(useQueryParams());
@@ -125,7 +127,9 @@ export function AuthorPage({ className }: { className?: string }) {
       {data?.author && (
         <>
           {!!articleListData?.articles.nodes.length && (
-            <H3 component={'h2'}>Alle Artikel von {data.author.name}</H3>
+            <H3 component={'h2'}>
+              {t('author.allArticles', { name: data.author.name })}
+            </H3>
           )}
           <ArticleListContainer variables={variables} />
 
