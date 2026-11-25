@@ -546,9 +546,9 @@
       }
     },
     "purchase": {
-      "chooseOffer": "Geschenk wählen",
+      "chooseOffer": "Geschenk-Abo wählen",
       "recipientName": "Name der beschenkten Person",
-      "submit": "Geschenk für {amount} kaufen"
+      "submit": "Geschenk-Abo für {amount} kaufen"
     }
   }
 }
