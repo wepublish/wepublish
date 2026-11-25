@@ -128,6 +128,21 @@ describe('Banner', () => {
     expect(localStorage.getItem(BANNER_STORAGE_KEY)).not.toBeNull();
   });
 
+  it('offers no way to close a banner that can not be dismissed', async () => {
+    localStorage.setItem(BANNER_STORAGE_KEY, minutesAgo(10));
+    const banner = mockBanner({ hideForMinutes: 60 });
+    renderBanner(banner, { dismissible: false });
+
+    expect(await findBanner(banner)).toHaveAttribute('data-collapsed', 'false');
+    expect(
+      screen.queryByRole('button', { name: t('banner.close') })
+    ).toBeNull();
+    expect(screen.queryByRole('link', { name: 'Später' })).toBeNull();
+    expect(
+      screen.getByRole('link', { name: 'Jetzt abonnieren' })
+    ).toBeInTheDocument();
+  });
+
   it('collapses a collapsible banner instead of removing it', async () => {
     const user = userEvent.setup();
     const banner = mockBanner({ collapsible: true });

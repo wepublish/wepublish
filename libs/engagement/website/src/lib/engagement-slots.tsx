@@ -176,6 +176,7 @@ export function EngagementBannerSlot({
         loading={false}
         tags={tags}
         className={className}
+        dismissible={prompt.stage.dismissible}
       >
         {prompt.stage.blockTemplate && (
           <EngagementTemplateBlocks template={prompt.stage.blockTemplate} />

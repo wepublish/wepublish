@@ -1,4 +1,5 @@
 import { act, renderHook, screen } from '@testing-library/react';
+import { t } from 'i18next';
 import {
   mockAnnouncementPrompt,
   mockEngagementPrompt,
@@ -130,5 +131,20 @@ describe('EngagementBannerSlot', () => {
     ).toBeInTheDocument();
     expect(screen.getByText('From the template')).toBeInTheDocument();
     expect(screen.queryByText('Help us reach 1000 members.')).toBeNull();
+  });
+
+  it('can not be closed when the stage can not be dismissed', async () => {
+    renderWithProviders(
+      <EngagementBannerSlot
+        prompt={mockAnnouncementPrompt({ dismissible: false })}
+      />
+    );
+
+    expect(
+      await screen.findByText('Our annual crowdfunding')
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: t('banner.close') })
+    ).toBeNull();
   });
 });

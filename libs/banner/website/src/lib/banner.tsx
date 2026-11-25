@@ -147,6 +147,7 @@ export const Banner = ({
   tags,
   className,
   children,
+  dismissible = true,
 }: BuilderBannerProps) => {
   const [showBanner, setShowBanner] = useState(false);
   const [collapsed, setCollapsed] = useState(true);
@@ -178,8 +179,8 @@ export const Banner = ({
       differenceInMinutes(currentTime, lastClosedTime) <
       (data?.primaryBanner?.hideForMinutes ?? 24 * 60);
 
-    setCollapsed(isClosedRecently);
-  }, [data]);
+    setCollapsed(dismissible && isClosedRecently);
+  }, [data, dismissible]);
 
   useEffect(() => {
     const embedUrl = data?.primaryBanner?.embedUrl;
@@ -265,13 +266,15 @@ export const Banner = ({
       data-embed={!!embedSrc}
       data-banner
     >
-      <BannerCloseButton
-        type="button"
-        aria-label={t('banner.close')}
-        onClick={handleClose}
-      >
-        &#x2715;
-      </BannerCloseButton>
+      {dismissible && (
+        <BannerCloseButton
+          type="button"
+          aria-label={t('banner.close')}
+          onClick={handleClose}
+        >
+          &#x2715;
+        </BannerCloseButton>
+      )}
 
       {data.primaryBanner.image && (
         <BannerImage
@@ -327,22 +330,24 @@ export const Banner = ({
             )}
 
             <BannerActions>
-              {data.primaryBanner.actions?.map(a => (
-                <Button
-                  color={
-                    a.role === BannerActionRole.Primary ?
-                      'primary'
-                    : 'secondary'
-                  }
-                  data-role={a.role}
-                  LinkComponent={Link}
-                  href={a.url}
-                  key={a.url}
-                  onClick={e => handleActionClick(e, a)}
-                >
-                  {a.label}
-                </Button>
-              ))}
+              {data.primaryBanner.actions
+                ?.filter(a => dismissible || a.role !== BannerActionRole.Cancel)
+                .map(a => (
+                  <Button
+                    color={
+                      a.role === BannerActionRole.Primary ?
+                        'primary'
+                      : 'secondary'
+                    }
+                    data-role={a.role}
+                    LinkComponent={Link}
+                    href={a.url}
+                    key={a.url}
+                    onClick={e => handleActionClick(e, a)}
+                  >
+                    {a.label}
+                  </Button>
+                ))}
             </BannerActions>
           </BannerCta>
         </BannerContentWrapper>

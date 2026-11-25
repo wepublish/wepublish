@@ -14,5 +14,7 @@ export type BuilderBannerProps = PropsWithChildren<
   > & {
     className?: string;
     tags?: string[];
+    /** False: no close button or cancel actions, and closing other banners does not hide it. */
+    dismissible?: boolean;
   }
 >;
