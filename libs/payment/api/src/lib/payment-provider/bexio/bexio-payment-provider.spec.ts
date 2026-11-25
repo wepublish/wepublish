@@ -55,6 +55,11 @@ vi.mock('@wepublish/utils/api', async importOriginal => ({
   logger: () => ({ error: mockLoggerError, warn: vi.fn(), info: vi.fn() }),
 }));
 
+const mockBexioInvoiceCreate = vi.fn().mockImplementation(() => ({
+  id: 'testid',
+  intentID: '12345',
+  state: PaymentState.submitted,
+}));
 const mockBexioInvoiceCancel = vi.fn();
 const mockBexioInvoiceSend = vi.fn();
 const mockBexioInvoiceIssue = vi.fn();
@@ -80,11 +85,7 @@ vi.mock('bexio', () => {
         show: mockBexioContactShow,
       },
       invoices: {
-        create: vi.fn().mockImplementation(() => ({
-          id: 'testid',
-          intentID: '12345',
-          state: PaymentState.submitted,
-        })),
+        create: mockBexioInvoiceCreate,
         send: mockBexioInvoiceSend,
         issue: mockBexioInvoiceIssue,
         showPdf: mockBexioInvoiceShowPdf,
@@ -517,7 +518,28 @@ describe('BexioPaymentProvider', () => {
   });
 
   describe('Test intent creation', () => {
-    it('should throw error if subscriptionId is null', async () => {
+    it('bills a purchase without a subscription to its buyer', async () => {
+      mockFindUnique.mockResolvedValue({
+        id: '123',
+        items: [
+          { name: 'Jahresabo verschenken', amount: 6000, quantity: 1 },
+          { name: 'Jahresabo verschenken', amount: 6000, quantity: 1 },
+        ] as InvoiceItem[],
+        subscription: null,
+        user: {
+          id: 'buyer',
+          email: 'buyer@wepublish.ch',
+          name: 'Muster',
+          firstName: 'Anna',
+          paymentProviderCustomers: [],
+        },
+      });
+      mockBexioContactSearch.mockResolvedValue([]);
+      mockBexioContactCreate.mockResolvedValue({
+        id: 123,
+        mail: 'buyer@wepublish.ch',
+      });
+
       const props: CreatePaymentIntentProps = {
         invoice: {
           description: '',
@@ -527,6 +549,8 @@ describe('BexioPaymentProvider', () => {
           manuallySetAsPaidByUserId: null,
           renewalSuccessMailSentAt: null,
           suppressRenewalSuccessMail: false,
+          userID: 'buyer',
+          sellableKind: 'giftCode',
           subscriptionID: null,
           createdAt: new Date(),
           dueAt: new Date(),
@@ -553,11 +577,23 @@ describe('BexioPaymentProvider', () => {
         saveCustomer: true,
         currency: Currency.EUR,
       };
-      await expect(async () => {
-        const bexioPaymentProvider = new BexioPaymentProvider(mockProps);
-        await bexioPaymentProvider.createIntent(props);
-      }).rejects.toThrow(
-        'No subscriptionID associated with the provided invoice'
+      const intent = await new BexioPaymentProvider(mockProps).createIntent(
+        props
+      );
+
+      expect(intent.state).toBe(PaymentState.submitted);
+      expect(mockBexioContactCreate).toHaveBeenCalledWith(
+        expect.objectContaining({ mail: 'buyer@wepublish.ch' })
+      );
+      expect(mockBexioInvoiceCreate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          positions: [
+            expect.objectContaining({
+              text: 'Jahresabo verschenken',
+              unit_price: '120',
+            }),
+          ],
+        })
       );
     });
   });
@@ -574,6 +610,8 @@ describe('BexioPaymentProvider', () => {
         manuallySetAsPaidByUserId: null,
         renewalSuccessMailSentAt: null,
         suppressRenewalSuccessMail: false,
+        userID: null,
+        sellableKind: null,
         subscriptionID: '123',
         createdAt: new Date(),
         dueAt: new Date(),
@@ -653,6 +691,8 @@ describe('BexioPaymentProvider', () => {
         manuallySetAsPaidByUserId: null,
         renewalSuccessMailSentAt: null,
         suppressRenewalSuccessMail: false,
+        userID: null,
+        sellableKind: null,
         subscriptionID: '123',
         createdAt: new Date(),
         dueAt: new Date(),
@@ -734,6 +774,8 @@ describe('BexioPaymentProvider', () => {
         manuallySetAsPaidByUserId: null,
         renewalSuccessMailSentAt: null,
         suppressRenewalSuccessMail: false,
+        userID: null,
+        sellableKind: null,
         subscriptionID: '123',
         createdAt: new Date(),
         dueAt: new Date(),

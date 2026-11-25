@@ -1,4 +1,9 @@
-import { PrismaClient, SettingMailProvider, UserEvent } from '@prisma/client';
+import {
+  MailChannel,
+  PrismaClient,
+  SettingMailProvider,
+  UserEvent,
+} from '@prisma/client';
 import { BaseMailProvider } from './mail-provider/base-mail-provider';
 
 import { Injectable } from '@nestjs/common';
@@ -8,9 +13,9 @@ import { SecretCrypto } from '@wepublish/settings/api';
 import { composeMail, MailTemplateContent } from './mail-renderer';
 import { EmailQualityRecorder } from './email-quality-recorder';
 import { LetterSender } from './letter-sender';
+import { requireTemplateVariant } from './template-variant';
 import {
-  attachmentIdsOf,
-  MAIL_TEMPLATE_ATTACHMENT_IDS,
+  loadAttachmentIds,
   MailAttachment,
   MailAttachmentError,
   MailAttachmentRenderer,
@@ -183,14 +188,11 @@ export class MailContext implements MailContextInterface {
       throw new Error('MailProvider is not set!');
     }
 
-    const template = await this.prisma.mailTemplate.findUnique({
-      where: { id: mailTemplateId },
-      include: MAIL_TEMPLATE_ATTACHMENT_IDS,
-    });
-
-    if (!template) {
-      throw new Error(`MailTemplate <${mailTemplateId}> not found!`);
-    }
+    const template = await requireTemplateVariant(
+      this.prisma as PrismaClient,
+      mailTemplateId,
+      MailChannel.mail
+    );
 
     const config = await new MailContextConfig(
       this.prisma,
@@ -202,7 +204,9 @@ export class MailContext implements MailContextInterface {
     // Rendered before anything is handed over: a mail whose documents cannot
     // be rendered fails as a whole rather than going out without them.
     const attachments = await this.renderAttachments(
-      withAttachments ? attachmentIdsOf(template) : [],
+      withAttachments ?
+        await loadAttachmentIds(this.prisma as PrismaClient, mailTemplateId)
+      : [],
       data
     );
 
@@ -318,15 +322,15 @@ export class MailContext implements MailContextInterface {
   }
 
   /**
-   * Ids of every mail template referenced by a subscription interval or a user
-   * flow mail.
+   * Ids of every mail template referenced by a subscription interval, a user
+   * flow mail or a gift code offer.
    *
    * Selects the foreign key rather than joining the template: only the id is
    * ever read, and joining pulled each row's full `htmlContent`/`textContent`
    * along with it.
    */
   async getUsedTemplateIdentifiers(): Promise<string[]> {
-    const [intervals, userFlowMails] = await Promise.all([
+    const [intervals, userFlowMails, giftCodeOffers] = await Promise.all([
       this.prisma.subscriptionInterval.findMany({
         select: {
           mailTemplateId: true,
@@ -337,6 +341,12 @@ export class MailContext implements MailContextInterface {
           mailTemplateId: true,
         },
       }),
+      this.prisma.giftCodeOffer.findMany({
+        select: {
+          purchaseMailTemplateId: true,
+          redemptionMailTemplateId: true,
+        },
+      }),
     ]);
 
     return [
@@ -344,6 +354,12 @@ export class MailContext implements MailContextInterface {
       ...userFlowMails.flatMap(
         userFlowMail => userFlowMail.mailTemplateId ?? []
       ),
+      ...giftCodeOffers.flatMap(offer => [
+        ...(offer.purchaseMailTemplateId ? [offer.purchaseMailTemplateId] : []),
+        ...(offer.redemptionMailTemplateId ?
+          [offer.redemptionMailTemplateId]
+        : []),
+      ]),
     ];
   }
 }

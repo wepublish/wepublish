@@ -3,6 +3,7 @@ import {
   mockArticleTeaser,
   mockBreakBlock,
   mockCustomTeaser,
+  mockIFrameBlock,
   mockTeaserGridBlock,
   mockTeaserListBlock,
   renderWithProviders,
@@ -146,6 +147,42 @@ describe('bajour tenant', () => {
     expect(backgroundsOf(screen.getByText('Werde Member'))).toContain(
       theme.palette.accent.main
     );
+  });
+
+  it('widens embeds with the "Breit" block style to the image column on desktop', () => {
+    const ArticlePage = ({ blocks }: { blocks: FullBlockFragment[] }) => {
+      const {
+        ContentWrapper,
+        blocks: { Blocks },
+      } = useWebsiteBuilder();
+
+      return (
+        <ContentWrapper>
+          <Blocks
+            blocks={blocks}
+            type="Article"
+          />
+        </ContentWrapper>
+      );
+    };
+
+    renderWithProviders(
+      <ArticlePage
+        blocks={[
+          mockIFrameBlock({ blockStyle: 'Breit', title: 'Breites Embed' }),
+          mockIFrameBlock({ title: 'Schmales Embed' }),
+        ]}
+      />,
+      { tenant: bajourTenant }
+    );
+
+    const gridColumnOf = (title: string) =>
+      getComputedStyle(
+        screen.getByTitle(title).closest('article > *') as HTMLElement
+      ).gridColumn;
+
+    expect(gridColumnOf('Breites Embed')).toBe('2/12');
+    expect(gridColumnOf('Schmales Embed')).toBe('4/10');
   });
 
   it('renders unstyled teaser lists without the teaser rendering itself', () => {

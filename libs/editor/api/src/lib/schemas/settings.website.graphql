@@ -23,6 +23,7 @@ fragment FullWebsiteSettings on WebsiteSettings {
     umami {
       enabled
       key
+      excludedSearchParams
     }
   }
 
