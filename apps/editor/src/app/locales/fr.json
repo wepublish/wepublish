@@ -472,6 +472,11 @@
         "cherryPickInfo": "Si cette option est activée, le bloc affiche uniquement les événements que vous cochez dans la liste ci-dessous. Si elle est désactivée, il affiche tous les événements correspondant au filtre de tags.",
         "chooseEvents": "Choisir des événements"
       },
+      "authors": {
+        "label": "Personnes",
+        "title": "Titre",
+        "addAuthor": "Personnes"
+      },
       "flexTeaser": {
         "addBlock": "Ajouter un bloc",
         "chooseTeaser": "Choisir un teaser",

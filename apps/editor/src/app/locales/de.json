@@ -472,6 +472,11 @@
         "cherryPickInfo": "Wenn eingeschaltet, zeigt der Block nur die Events, die du in der Liste unten ankreuzt. Wenn ausgeschaltet, zeigt er alle Events, die zum Tag-Filter passen.",
         "chooseEvents": "Events wählen"
       },
+      "authors": {
+        "label": "Personen",
+        "title": "Titel",
+        "addAuthor": "Personen"
+      },
       "flexTeaser": {
         "addBlock": "Block hinzufügen",
         "chooseTeaser": "Teaser wählen",

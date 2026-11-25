@@ -98,6 +98,19 @@ fragment BlockWithoutTeaser on BlockContent {
     }
   }
 
+  ... on AuthorsBlock {
+    disabled
+    blockStyle
+    blockStyleName
+    type
+    title
+    authorIds
+
+    authors {
+      ...FullAuthor
+    }
+  }
+
   ... on CommentBlock {
     disabled
     blockStyle

@@ -5,6 +5,7 @@ import {
   BuilderCommentBlockProps,
   BuilderCrowdfundingBlockProps,
   BuilderEventBlockProps,
+  BuilderAuthorsBlockProps,
   BuilderFlexBlockProps,
   BuilderHTMLBlockProps,
   BuilderMailchimpFormBlockProps,
@@ -43,6 +44,7 @@ import { isImageGalleryBlock } from './image-gallery/image-gallery-block';
 import { isPollBlock } from './poll/poll-block';
 import { isListicleBlock } from './listicle/listicle-block';
 import { isEventBlock } from './event/event-block';
+import { isAuthorsBlock } from './authors/authors-block';
 import { isPolisConversationBlock } from './polis-conversation/polis-conversation-block';
 import { isBreakBlock } from './break/break-block';
 import { memo } from 'react';
@@ -429,6 +431,15 @@ export const BlockRenderer = memo(
           block => (
             <blocks.Event
               {...(block as BuilderEventBlockProps)}
+              className={className}
+            />
+          ),
+        ],
+        [
+          isAuthorsBlock,
+          block => (
+            <blocks.Authors
+              {...(block as BuilderAuthorsBlockProps)}
               className={className}
             />
           ),

@@ -7,6 +7,7 @@ import {
   FullFlexBlockFragment,
   FullBildwurfAdBlockFragment,
   FullCrowdfundingBlockFragment,
+  FullAuthorsBlockFragment,
   FullEventBlockFragment,
   FullFacebookPostBlockFragment,
   FullFacebookVideoBlockFragment,
@@ -78,6 +79,7 @@ export type BuilderImageGalleryBlockProps =
   WithBlockProps<FullImageGalleryBlockFragment>;
 export type BuilderQuoteBlockProps = WithBlockProps<FullQuoteBlockFragment>;
 export type BuilderEventBlockProps = WithBlockProps<FullEventBlockFragment>;
+export type BuilderAuthorsBlockProps = WithBlockProps<FullAuthorsBlockFragment>;
 export type BuilderRichTextBlockProps =
   WithBlockProps<FullRichTextBlockFragment>;
 export type BuilderHTMLBlockProps = WithBlockProps<FullHtmlBlockFragment>;

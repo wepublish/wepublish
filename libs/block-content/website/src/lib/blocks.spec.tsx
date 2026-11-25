@@ -1,5 +1,6 @@
 import { screen } from '@testing-library/react';
 import {
+  mockAuthorsBlock,
   mockChallenge,
   mockCrowdfunding,
   mockCrowdfundingBlock,
@@ -51,6 +52,7 @@ describe('Blocks', () => {
             poll: mockPoll({ question: 'Poll question?', closedAt: null }),
           }),
           mockEventBlock({ events: [mockEvent({ name: 'Concert' })] }),
+          mockAuthorsBlock({ title: 'Our team' }),
           mockCrowdfundingBlock({
             crowdfunding: mockCrowdfunding({
               activeGoal: mockCrowdfundingGoal({ title: 'Crowdfunding goal' }),
@@ -86,6 +88,7 @@ describe('Blocks', () => {
       'Article title',
       'Poll question?',
       'Concert',
+      'Our team',
       'Nested title',
       t('subscribe.chooseSubscription'),
     ];
