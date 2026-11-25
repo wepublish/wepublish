@@ -49,8 +49,11 @@ export type EngagementRuleValues = {
   goal: EngagementGoal;
   active: boolean;
   priority: number;
-  audience: EngagementAudience;
-  /** Only saved for the member plans audience. */
+  audiences: EngagementAudience[];
+  excludedAudiences: EngagementAudience[];
+  /** Only saved while readers from a link are chosen. */
+  audienceUtm: string[];
+  /** Only saved while members are chosen. */
   audienceMemberPlanIds: string[];
   showOnArticles: boolean;
   showOnPageIds: string[];
@@ -278,15 +281,32 @@ export function engagementRuleProblems(
     problem('meterWindowDays', 'min');
   }
 
+  if (usesAudience(rule, EngagementAudience.Utm)) {
+    if (!rule.audienceUtm.length) {
+      problem('audienceUtm', 'required');
+    } else if (!rule.audienceUtm.every(param => UTM_PARAM.test(param))) {
+      problem('audienceUtm', 'utmFormat');
+    }
+  }
+
   if (
-    rule.audience === EngagementAudience.MemberPlans &&
-    !rule.audienceMemberPlanIds.length
+    rule.audiences.some(audience => rule.excludedAudiences.includes(audience))
   ) {
-    problem('audienceMemberPlanIds', 'required');
+    problem('excludedAudiences', 'bothAudiences');
   }
 
   return problems;
 }
+
+const UTM_PARAM = /^[^=\s]+=[^=\s]+$/;
+
+/** Whether the rule shows to the audience or leaves it out. */
+export const usesAudience = (
+  rule: Pick<EngagementRuleValues, 'audiences' | 'excludedAudiences'>,
+  audience: EngagementAudience
+) =>
+  rule.audiences.includes(audience) ||
+  rule.excludedAudiences.includes(audience);
 
 const actionSchema = z.object({
   type: z.nativeEnum(EngagementActionType),
@@ -331,7 +351,9 @@ export const createEngagementRuleSchema = (
       goal: z.nativeEnum(EngagementGoal),
       active: z.boolean(),
       priority: z.number().int(),
-      audience: z.nativeEnum(EngagementAudience),
+      audiences: z.array(z.nativeEnum(EngagementAudience)),
+      excludedAudiences: z.array(z.nativeEnum(EngagementAudience)),
+      audienceUtm: z.array(z.string()),
       audienceMemberPlanIds: z.array(z.string()),
       showOnArticles: z.boolean(),
       showOnPageIds: z.array(z.string()),
@@ -354,13 +376,13 @@ export const createEngagementRuleSchema = (
 export const toEngagementRuleInput = ({
   stages,
   audienceMemberPlanIds,
+  audienceUtm,
   ...rule
 }: EngagementRuleValues): CreateEngagementRuleInput => ({
   ...rule,
   audienceMemberPlanIds:
-    rule.audience === EngagementAudience.MemberPlans ?
-      audienceMemberPlanIds
-    : [],
+    usesAudience(rule, EngagementAudience.Members) ? audienceMemberPlanIds : [],
+  audienceUtm: usesAudience(rule, EngagementAudience.Utm) ? audienceUtm : [],
   stages: stages.map(({ image: _image, actions, ...stage }) => ({
     ...stage,
     actions: actions.map(action => ({ ...action })),
@@ -372,7 +394,9 @@ export const engagementRuleToValues = ({
   goal,
   active,
   priority,
-  audience,
+  audiences,
+  excludedAudiences,
+  audienceUtm,
   audienceMemberPlanIds,
   showOnArticles,
   showOnPageIds,
@@ -384,7 +408,9 @@ export const engagementRuleToValues = ({
   goal,
   active,
   priority,
-  audience,
+  audiences,
+  excludedAudiences,
+  audienceUtm,
   audienceMemberPlanIds,
   showOnArticles,
   showOnPageIds,

@@ -6069,20 +6069,17 @@
         "MEMBERSHIPInfo": "Des invitations à l’abonnement, échelonnées selon les articles lus."
       },
       "audience": {
-        "ALL": "Tout le monde",
-        "ALLInfo": "Tou·te·s les lecteur·rice·s.",
-        "ANONYMOUS": "Lecteur·rice·s anonymes",
-        "ANONYMOUSInfo": "Les lecteur·rice·s non connecté·e·s.",
-        "REGISTERED": "Lecteur·rice·s connecté·e·s",
-        "REGISTEREDInfo": "Les lecteur·rice·s connecté·e·s, avec ou sans abonnement.",
-        "NON_MEMBERS": "Lecteur·rice·s sans abonnement",
-        "NON_MEMBERSInfo": "Les lecteur·rice·s anonymes et connecté·e·s sans abonnement actif.",
-        "MEMBERS": "Membres",
-        "MEMBERSInfo": "Les lecteur·rice·s avec un abonnement actif, gratuit ou payant.",
-        "PAYWALL_BYPASSED": "Lecteur·rice·s avec un lien de déblocage",
-        "PAYWALL_BYPASSEDInfo": "Les lecteur·rice·s qui ont ouvert un lien de déblocage d’une paywall active.",
-        "MEMBER_PLANS": "Lecteur·rice·s avec un abonnement précis",
-        "MEMBER_PLANSInfo": "Lecteur·rice·s avec un abonnement actif à l’un des plans que tu choisis, p. ex. pour proposer une mise à niveau."
+        "ANONYMOUS": "lecteur·rice·s anonymes",
+        "ANONYMOUSInfo": "Lecteur·rice·s non connecté·e·s.",
+        "MEMBERS": "membres",
+        "MEMBERSInfo": "Lecteur·rice·s avec une adhésion active, gratuite ou payante. Choisis des abonnements ci-dessous pour restreindre.",
+        "PAYWALL_BYPASSED": "lecteur·rice·s avec un lien de contournement",
+        "PAYWALL_BYPASSEDInfo": "Lecteur·rice·s qui ont ouvert un lien de contournement d’un paywall actif.",
+        "UTM": "lecteur·rice·s venu·e·s par un lien",
+        "UTMInfo": "Lecteur·rice·s arrivé·e·s par un lien avec l’un des paramètres UTM ci-dessous, p. ex. depuis la newsletter. Cela vaut pour toute leur visite. N’importe qui peut ajouter ces paramètres à un lien : c’est une incitation, pas un verrou.",
+        "everyone": "tout le monde",
+        "allExcept": "tout le monde sauf {{except}}",
+        "onlyExcept": "{{only}}, sauf {{except}}"
       },
       "placement": {
         "BANNER": "Bannière en haut de la page",
@@ -6169,6 +6166,7 @@
         "image": "Image",
         "dismissible": "Peut être fermée",
         "dismissibleInfo": "Les lecteur·rice·s peuvent la fermer, elle disparaît ensuite pendant la durée ci-dessous.",
+        "noWayOut": "Les lecteur·rice·s ne peuvent pas fermer ce pop-up et il n’a aucun bouton pour continuer : la seule issue est de quitter la page.",
         "hideForMinutes": "Masquer … minutes après fermeture",
         "hideForMinutesInfo": "Une règle modifiée réapparaît immédiatement.",
         "delaySeconds": "Afficher après … secondes",
@@ -6193,7 +6191,13 @@
         "blockTemplate": "Modèle de blocs",
         "useBlockTemplate": "Afficher plutôt un modèle de blocs",
         "useBlockTemplateInfo": "Remplace les textes ci-dessous par les blocs d’un modèle. Le titre et les boutons restent.",
-        "noBlockTemplates": "Il n’y a pas encore de modèle de blocs : crée-en d’abord un sous Modèles de blocs."
+        "noBlockTemplates": "Il n’y a pas encore de modèle de blocs : crée-en d’abord un sous Modèles de blocs.",
+        "audienceHint": "Rien de choisi : tout le monde voit la règle.",
+        "audienceOnly": "Montrer à",
+        "audienceExcept": "Exclure",
+        "audienceUtm": "Paramètres UTM",
+        "audienceUtmHint": "Autant que tu veux, chacun sous la forme key=value ; appuie sur Entrée après chacun. Il en faut un seul, majuscules ou minuscules.",
+        "audienceNewsletterImplied": "Qui a déjà donné son e-mail ne voit jamais une règle newsletter."
       },
       "validation": {
         "required": "Obligatoire",
@@ -6207,7 +6211,9 @@
         "announcementSoft": "Une annonce ne peut pas restreindre l’article",
         "announcementNoMeter": "Une annonce ne compte pas les articles",
         "newsletterWallRequired": "Une règle newsletter demande l’inscription à la newsletter",
-        "wholeNumber": "Saisis un nombre entier"
+        "wholeNumber": "Saisis un nombre entier",
+        "utmFormat": "Écris chacun sous la forme key=value, p. ex. utm_medium=email",
+        "bothAudiences": "Un public ne peut pas être montré et exclu à la fois"
       },
       "copyName": "{{name}} (copie)",
       "view": {

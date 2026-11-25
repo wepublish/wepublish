@@ -1132,9 +1132,14 @@ export type CreateCrowdfundingMemberPlan = {
 
 export type CreateEngagementRuleInput = {
   active?: Scalars['Boolean']['input'];
-  audience?: EngagementAudience;
-  /** Only for the MEMBER_PLANS audience, which needs at least one. */
+  /** Narrows the MEMBERS audience to these plans. */
   audienceMemberPlanIds?: Array<Scalars['String']['input']>;
+  /** key=value url params of the UTM audience, which needs at least one. */
+  audienceUtm?: Array<Scalars['String']['input']>;
+  /** Only readers in one of these, everyone when empty. */
+  audiences?: Array<EngagementAudience>;
+  /** Never readers in one of these. */
+  excludedAudiences?: Array<EngagementAudience>;
   goal: EngagementGoal;
   includePeeredArticles?: Scalars['Boolean']['input'];
   meterWindowDays?: InputMaybe<Scalars['Int']['input']>;
@@ -1655,13 +1660,10 @@ export enum EngagementActionType {
 
 /** Who a rule is for, decided from the session. */
 export enum EngagementAudience {
-  All = 'ALL',
   Anonymous = 'ANONYMOUS',
   Members = 'MEMBERS',
-  MemberPlans = 'MEMBER_PLANS',
-  NonMembers = 'NON_MEMBERS',
   PaywallBypassed = 'PAYWALL_BYPASSED',
-  Registered = 'REGISTERED'
+  Utm = 'UTM'
 }
 
 export enum EngagementDocumentType {
@@ -1708,10 +1710,15 @@ export enum EngagementRequirement {
 export type EngagementRule = {
   __typename?: 'EngagementRule';
   active: Scalars['Boolean']['output'];
-  audience: EngagementAudience;
-  /** The plans of the MEMBER_PLANS audience. */
+  /** Narrows the MEMBERS audience to these plans. */
   audienceMemberPlanIds: Array<Scalars['String']['output']>;
+  /** key=value url params of the UTM audience, e.g. utm_medium=email. */
+  audienceUtm: Array<Scalars['String']['output']>;
+  /** Only readers in one of these, everyone when empty. */
+  audiences: Array<EngagementAudience>;
   createdAt: Scalars['DateTime']['output'];
+  /** Never readers in one of these. */
+  excludedAudiences: Array<EngagementAudience>;
   goal: EngagementGoal;
   id: Scalars['String']['output'];
   includePeeredArticles: Scalars['Boolean']['output'];
@@ -8359,6 +8366,7 @@ export type QueryEngagementPromptsArgs = {
   documentType: EngagementDocumentType;
   newsletterToken?: InputMaybe<Scalars['String']['input']>;
   paywallBypassToken?: InputMaybe<Scalars['String']['input']>;
+  utm?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 
@@ -10270,9 +10278,14 @@ export type UpdateCrowdfundingInput = {
 
 export type UpdateEngagementRuleInput = {
   active?: Scalars['Boolean']['input'];
-  audience?: EngagementAudience;
-  /** Only for the MEMBER_PLANS audience, which needs at least one. */
+  /** Narrows the MEMBERS audience to these plans. */
   audienceMemberPlanIds?: Array<Scalars['String']['input']>;
+  /** key=value url params of the UTM audience, which needs at least one. */
+  audienceUtm?: Array<Scalars['String']['input']>;
+  /** Only readers in one of these, everyone when empty. */
+  audiences?: Array<EngagementAudience>;
+  /** Never readers in one of these. */
+  excludedAudiences?: Array<EngagementAudience>;
   goal: EngagementGoal;
   id: Scalars['String']['input'];
   includePeeredArticles?: Scalars['Boolean']['input'];
@@ -10490,6 +10503,8 @@ export type ViewArticleInput = {
   /** The newsletterToken of signUpForNewsletter, for newsletter walls. */
   newsletterToken?: InputMaybe<Scalars['String']['input']>;
   paywallBypassToken?: InputMaybe<Scalars['String']['input']>;
+  /** key=value utm params of the link the reader came by, kept by the website for the visit. Not checked: anyone can send them. */
+  utm?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export type VimeoVideoBlock = BaseBlock & {

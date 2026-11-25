@@ -23,7 +23,9 @@ const rule = (values: Partial<EngagementRuleValues>): EngagementRuleValues => ({
   goal: EngagementGoal.Announcement,
   active: false,
   priority: 0,
-  audience: EngagementAudience.All,
+  audiences: [],
+  excludedAudiences: [],
+  audienceUtm: [],
   audienceMemberPlanIds: [],
   showOnArticles: true,
   showOnPageIds: [],
@@ -45,7 +47,7 @@ export const ENGAGEMENT_PRESETS: Record<
   growNewsletter: () =>
     rule({
       goal: EngagementGoal.Newsletter,
-      audience: EngagementAudience.Anonymous,
+      audiences: [EngagementAudience.Anonymous],
       meterWindowDays: 30,
       stages: [
         stageDefaults({
@@ -64,7 +66,7 @@ export const ENGAGEMENT_PRESETS: Record<
   promoteMemberships: () =>
     rule({
       goal: EngagementGoal.Membership,
-      audience: EngagementAudience.NonMembers,
+      excludedAudiences: [EngagementAudience.Members],
       meterWindowDays: 30,
       stages: [
         stageDefaults({

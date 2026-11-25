@@ -20,7 +20,11 @@ import {
   EngagementRuleValues,
   EngagementStageValues,
 } from './engagement-rule-values';
-import { summarizeStages, summarizeWhere } from './summarize-rule';
+import {
+  summarizeAudience,
+  summarizeStages,
+  summarizeWhere,
+} from './summarize-rule';
 
 const GOAL_COLOR: Record<EngagementGoal, 'info' | 'success' | 'secondary'> = {
   [EngagementGoal.Newsletter]: 'info',
@@ -190,7 +194,7 @@ export const EngagementRuleOverview = ({
                 icon={MdPeopleOutline}
                 label={t('engagement.review.who')}
               >
-                {t(`engagement.audience.${rule.audience}`)}
+                {summarizeAudience(rule, t)}
               </Fact>
               <Fact
                 icon={MdOutlinePlace}

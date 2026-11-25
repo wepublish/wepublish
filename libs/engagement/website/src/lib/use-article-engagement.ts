@@ -14,6 +14,7 @@ import { useEffect, useState } from 'react';
 import { readMeterToken, storeMeterToken } from './engagement-storage';
 import { useNewsletterToken } from './newsletter-signup';
 import { useHydrated } from './use-hydrated';
+import { utmOfVisit } from './utm';
 
 /**
  * Tells the server that the reader opens an article (`viewArticle`): it meters
@@ -58,6 +59,7 @@ export function useArticleEngagement(article?: { id: string } | null) {
           meterToken: readMeterToken(),
           paywallBypassToken: getPaywallBypassToken(),
           newsletterToken,
+          utm: utmOfVisit(),
         },
       },
     })

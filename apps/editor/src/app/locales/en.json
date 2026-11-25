@@ -6069,20 +6069,17 @@
         "MEMBERSHIPInfo": "Prompts that promote memberships, counted by the articles a reader read."
       },
       "audience": {
-        "ALL": "Everyone",
-        "ALLInfo": "Every reader.",
-        "ANONYMOUS": "Anonymous readers",
+        "ANONYMOUS": "anonymous readers",
         "ANONYMOUSInfo": "Readers who are not logged in.",
-        "REGISTERED": "Logged-in readers",
-        "REGISTEREDInfo": "Readers who are logged in, with or without a membership.",
-        "NON_MEMBERS": "Readers without a membership",
-        "NON_MEMBERSInfo": "Anonymous readers and logged-in readers without an active membership.",
-        "MEMBERS": "Members",
-        "MEMBERSInfo": "Readers with an active membership, free or paid.",
-        "PAYWALL_BYPASSED": "Readers with a paywall bypass link",
+        "MEMBERS": "members",
+        "MEMBERSInfo": "Readers with an active membership, free or paid. Choose plans below to narrow it down.",
+        "PAYWALL_BYPASSED": "readers with a paywall bypass link",
         "PAYWALL_BYPASSEDInfo": "Readers who opened a bypass link of an active paywall.",
-        "MEMBER_PLANS": "Readers with a specific subscription",
-        "MEMBER_PLANSInfo": "Readers with an active subscription to one of the plans you choose, e.g. to offer an upgrade."
+        "UTM": "readers from a link",
+        "UTMInfo": "Readers who came by a link with one of the utm params below, e.g. from the newsletter. It counts for their whole visit. Anyone can add the params to a link, so it is an incentive, not a lock.",
+        "everyone": "everyone",
+        "allExcept": "everyone except {{except}}",
+        "onlyExcept": "{{only}}, except {{except}}"
       },
       "placement": {
         "BANNER": "Banner at the top of the page",
@@ -6169,6 +6166,7 @@
         "image": "Image",
         "dismissible": "Can be dismissed",
         "dismissibleInfo": "Readers can close it, it then stays away for the time below.",
+        "noWayOut": "Readers can not close this pop-up and it has no button to go on: the only way out is leaving the page.",
         "hideForMinutes": "Hide for … minutes after dismissing",
         "hideForMinutesInfo": "A changed rule shows again right away.",
         "delaySeconds": "Show after … seconds",
@@ -6193,7 +6191,13 @@
         "blockTemplate": "Block template",
         "useBlockTemplate": "Show a block template instead",
         "useBlockTemplateInfo": "Replaces the texts below with the blocks of a template. The title and buttons stay.",
-        "noBlockTemplates": "There are no block templates yet: create one under Block templates first."
+        "noBlockTemplates": "There are no block templates yet: create one under Block templates first.",
+        "audienceHint": "Nothing chosen: everyone sees the rule.",
+        "audienceOnly": "Show to",
+        "audienceExcept": "Exclude",
+        "audienceUtm": "Utm params",
+        "audienceUtmHint": "As many as you like, each as key=value; press Enter after each. A reader needs any one of them, upper or lower case.",
+        "audienceNewsletterImplied": "Readers who already gave their email never see a newsletter rule."
       },
       "validation": {
         "required": "Required",
@@ -6207,7 +6211,9 @@
         "announcementSoft": "An announcement can not restrict the article",
         "announcementNoMeter": "An announcement does not count articles",
         "newsletterWallRequired": "A newsletter rule asks for the newsletter signup",
-        "wholeNumber": "Enter a whole number"
+        "wholeNumber": "Enter a whole number",
+        "utmFormat": "Write each as key=value, e.g. utm_medium=email",
+        "bothAudiences": "An audience can not be shown the rule and left out at once"
       },
       "copyName": "{{name}} (copy)",
       "view": {

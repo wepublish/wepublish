@@ -1,11 +1,16 @@
 import {
+  EngagementAudience,
   EngagementGoal,
   EngagementPlacement,
   EngagementRequirement,
 } from '@wepublish/editor/api';
 import { TFunction } from 'i18next';
 import { hardStage, stageDefaults } from './engagement-rule-values';
-import { summarizeStages, summarizeWhere } from './summarize-rule';
+import {
+  summarizeAudience,
+  summarizeStages,
+  summarizeWhere,
+} from './summarize-rule';
 
 const en: Record<string, string> = {
   'engagement.summary.announcement': 'From the first visit: {{placement}}',
@@ -19,6 +24,12 @@ const en: Record<string, string> = {
   'engagement.summary.placement.BANNER': 'banner',
   'engagement.summary.placement.INLINE': 'box in the article',
   'engagement.summary.requirement.REGISTRATION': 'Registration',
+  'engagement.audience.everyone': 'Everyone',
+  'engagement.audience.allExcept': 'Everyone except {{except}}',
+  'engagement.audience.onlyExcept': '{{only}}, except {{except}}',
+  'engagement.audience.ANONYMOUS': 'anonymous readers',
+  'engagement.audience.MEMBERS': 'members',
+  'engagement.audience.UTM': 'readers from a link',
 };
 
 const t = ((key: string, params: Record<string, unknown> = {}) =>
@@ -179,5 +190,18 @@ describe('summarizeWhere', () => {
         keys
       )
     ).toBe('engagement.list.pages:1');
+  });
+});
+
+describe('summarizeAudience', () => {
+  const { Anonymous, Members, Utm } = EngagementAudience;
+
+  it.each([
+    [[], [], 'Everyone'],
+    [[Anonymous, Members], [], 'Anonymous readers, members'],
+    [[], [Members], 'Everyone except members'],
+    [[Anonymous], [Utm], 'Anonymous readers, except readers from a link'],
+  ])('sums up only %j, except %j', (audiences, excludedAudiences, text) => {
+    expect(summarizeAudience({ audiences, excludedAudiences }, t)).toBe(text);
   });
 });

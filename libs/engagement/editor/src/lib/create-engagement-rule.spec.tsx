@@ -6,7 +6,6 @@ import {
   CreateEngagementRuleDocument,
   EngagementActionRole,
   EngagementActionType,
-  EngagementAudience,
   EngagementEnforcement,
   EngagementGoal,
   EngagementPlacement,
@@ -28,7 +27,9 @@ const rule: FullEngagementRuleFragment = {
   active: true,
   priority: 0,
   version: 1,
-  audience: EngagementAudience.All,
+  audiences: [],
+  excludedAudiences: [],
+  audienceUtm: [],
   audienceMemberPlanIds: [],
   showOnArticles: true,
   showOnPageIds: [],
@@ -198,7 +199,7 @@ describe('CreateEngagementRule', () => {
     const review = await screen.findByTestId('rule-review');
 
     expect(review).toHaveTextContent('Crowdfunding');
-    expect(review).toHaveTextContent('engagement.audience.ALL');
+    expect(review).toHaveTextContent('Engagement.audience.everyone');
     expect(review).toHaveTextContent('engagement.summary.announcement');
     expect(review).toHaveTextContent('Help us');
     expect(

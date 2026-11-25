@@ -23,7 +23,7 @@ BEGIN;
 CREATE TYPE "EngagementGoal" AS ENUM ('ANNOUNCEMENT', 'NEWSLETTER', 'MEMBERSHIP');
 
 -- CreateEnum
-CREATE TYPE "EngagementAudience" AS ENUM ('ALL', 'ANONYMOUS', 'REGISTERED', 'NON_MEMBERS', 'MEMBERS', 'PAYWALL_BYPASSED', 'MEMBER_PLANS');
+CREATE TYPE "EngagementAudience" AS ENUM ('ANONYMOUS', 'MEMBERS', 'PAYWALL_BYPASSED', 'UTM');
 
 -- CreateEnum
 CREATE TYPE "EngagementPlacement" AS ENUM ('BANNER', 'MODAL', 'INLINE', 'CUTOFF');
@@ -60,7 +60,9 @@ CREATE TABLE "engagement_rules" (
     "active" BOOLEAN NOT NULL DEFAULT true,
     "priority" INTEGER NOT NULL DEFAULT 0,
     "version" INTEGER NOT NULL DEFAULT 1,
-    "audience" "EngagementAudience" NOT NULL DEFAULT 'ALL',
+    "audiences" "EngagementAudience"[] DEFAULT ARRAY[]::"EngagementAudience"[],
+    "excludedAudiences" "EngagementAudience"[] DEFAULT ARRAY[]::"EngagementAudience"[],
+    "audienceUtm" TEXT[] DEFAULT ARRAY[]::TEXT[],
     "showOnArticles" BOOLEAN NOT NULL DEFAULT true,
     "includePeeredArticles" BOOLEAN NOT NULL DEFAULT false,
     "meterWindowDays" INTEGER,
@@ -349,18 +351,21 @@ DROP TYPE "LoginStatus";
 -- primaryBanner did (bypassed, then logged out or subscribed, then the rest).
 INSERT INTO "engagement_rules" (
     "id", "createdAt", "modifiedAt", "name", "goal", "active",
-    "audience", "showOnArticles", "includePeeredArticles"
+    "audiences", "excludedAudiences", "showOnArticles", "includePeeredArticles"
 )
 SELECT
     "id", "createdAt", "modifiedAt", COALESCE(NULLIF("title", ''), 'Banner'), 'ANNOUNCEMENT', "active",
     CASE "loginStatus"
-        WHEN 'paywall_bypassed' THEN 'PAYWALL_BYPASSED'
-        WHEN 'logged_out' THEN 'ANONYMOUS'
-        WHEN 'subscribed' THEN 'MEMBERS'
-        WHEN 'unsubscribed' THEN 'NON_MEMBERS'
-        WHEN 'logged_in' THEN 'REGISTERED'
-        ELSE 'ALL'
-    END::"EngagementAudience",
+        WHEN 'paywall_bypassed' THEN ARRAY['PAYWALL_BYPASSED']
+        WHEN 'logged_out' THEN ARRAY['ANONYMOUS']
+        WHEN 'subscribed' THEN ARRAY['MEMBERS']
+        ELSE ARRAY[]::TEXT[]
+    END::"EngagementAudience"[],
+    CASE "loginStatus"
+        WHEN 'unsubscribed' THEN ARRAY['MEMBERS']
+        WHEN 'logged_in' THEN ARRAY['ANONYMOUS']
+        ELSE ARRAY[]::TEXT[]
+    END::"EngagementAudience"[],
     "showOnArticles", true
 FROM "_m_banners";
 
@@ -387,12 +392,13 @@ SELECT "bannerId", "pageId" FROM "_m_banner_pages";
 -- read, then a hard cutoff after the soft ones. Logged out gates ask for a
 -- registration, unsubscribed gates for a membership.
 INSERT INTO "engagement_rules" (
-    "id", "createdAt", "modifiedAt", "name", "goal", "active", "audience",
+    "id", "createdAt", "modifiedAt", "name", "goal", "active", "audiences", "excludedAudiences",
     "showOnArticles", "meterWindowDays"
 )
 SELECT
     "id", "createdAt", "modifiedAt", COALESCE(NULLIF("name", ''), 'Content gate'), 'MEMBERSHIP', "active",
-    CASE WHEN "anonymousOnly" THEN 'ANONYMOUS' ELSE 'NON_MEMBERS' END::"EngagementAudience",
+    CASE WHEN "anonymousOnly" THEN ARRAY['ANONYMOUS'] ELSE ARRAY[]::TEXT[] END::"EngagementAudience"[],
+    CASE WHEN "anonymousOnly" THEN ARRAY[]::TEXT[] ELSE ARRAY['MEMBERS'] END::"EngagementAudience"[],
     true, GREATEST(COALESCE("meterWindowDays", 30), 1)
 FROM "_m_content_gates";
 

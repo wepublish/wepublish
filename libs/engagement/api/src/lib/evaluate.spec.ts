@@ -51,7 +51,8 @@ const rule = (overrides: Partial<EvaluatedRule> = {}): EvaluatedRule => ({
   goal: EngagementGoal.NEWSLETTER,
   active: true,
   priority: 0,
-  audience: EngagementAudience.ALL,
+  audiences: [],
+  excludedAudiences: [],
   showOnArticles: true,
   showOnPageIds: [],
   includePeeredArticles: false,
@@ -114,22 +115,25 @@ describe('matchingRules', () => {
   });
 
   it.each([
-    [EngagementAudience.ANONYMOUS, ['anonymous']],
-    [EngagementAudience.REGISTERED, ['registered', 'member']],
-    [EngagementAudience.NON_MEMBERS, ['anonymous', 'registered']],
-    [EngagementAudience.MEMBERS, ['member']],
-  ])('matches %s to %j', (audience, expected) => {
-    const readers = { anonymous, registered, member };
-    const announcementFor = announcement({ audience });
+    [[EngagementAudience.ANONYMOUS], [], ['anonymous']],
+    [[], [EngagementAudience.ANONYMOUS], ['registered', 'member']],
+    [[], [EngagementAudience.MEMBERS], ['anonymous', 'registered']],
+    [[EngagementAudience.MEMBERS], [], ['member']],
+  ])(
+    'matches only %j, all but %j to %j',
+    (audiences, excludedAudiences, expected) => {
+      const readers = { anonymous, registered, member };
+      const announcementFor = announcement({ audiences, excludedAudiences });
 
-    expect(
-      Object.entries(readers)
-        .filter(
-          ([, r]) => matchingRules([announcementFor], r, article()).length
-        )
-        .map(([name]) => name)
-    ).toEqual(expected);
-  });
+      expect(
+        Object.entries(readers)
+          .filter(
+            ([, r]) => matchingRules([announcementFor], r, article()).length
+          )
+          .map(([name]) => name)
+      ).toEqual(expected);
+    }
+  );
 
   it('leaves out newsletter rules once the reader gave their email', () => {
     const subscribed = reader({ newsletter: 'subscribed' });
@@ -164,12 +168,12 @@ describe('matchingRules', () => {
 
   it('matches subscribers of the chosen plans', () => {
     const forPlan = announcement({
-      audience: EngagementAudience.MEMBER_PLANS,
+      audiences: [EngagementAudience.MEMBERS],
       audienceMemberPlanIds: ['plan'],
     });
     const forOtherPlan = announcement({
       id: 'other',
-      audience: EngagementAudience.MEMBER_PLANS,
+      audiences: [EngagementAudience.MEMBERS],
       audienceMemberPlanIds: ['other-plan'],
     });
 
@@ -442,21 +446,25 @@ describe('resolvePrompts', () => {
     const everyone = announcement({ id: 'everyone' });
     const anonymousOnly = announcement({
       id: 'anonymous',
-      audience: EngagementAudience.ANONYMOUS,
+      audiences: [EngagementAudience.ANONYMOUS],
     });
     const plans = announcement({
       id: 'plans',
-      audience: EngagementAudience.MEMBER_PLANS,
+      audiences: [EngagementAudience.MEMBERS],
       audienceMemberPlanIds: ['plan'],
+    });
+    const allButMembers = announcement({
+      id: 'all-but-members',
+      excludedAudiences: [EngagementAudience.MEMBERS],
     });
 
     expect(
       resolvePrompts({
-        rules: [everyone, anonymousOnly, plans],
+        rules: [everyone, allButMembers, anonymousOnly, plans],
         articleId: 'x',
         now,
       }).map(({ rule }) => rule.id)
-    ).toEqual(['plans', 'anonymous', 'everyone']);
+    ).toEqual(['plans', 'anonymous', 'all-but-members', 'everyone']);
   });
 
   it('puts rules for chosen pages before rules for every article', () => {

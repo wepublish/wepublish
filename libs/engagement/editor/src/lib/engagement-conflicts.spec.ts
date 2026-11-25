@@ -28,7 +28,7 @@ describe('findConflicts', () => {
       {
         rule: expect.objectContaining({ name: 'Crowdfunding launch' }),
         slots: ['banner'],
-        audience: EngagementAudience.All,
+        audience: expect.objectContaining({ audiences: [] }),
         first: true,
         settled: false,
       },
@@ -52,8 +52,11 @@ describe('findConflicts', () => {
   });
 
   it('ignores rules for other readers', () => {
-    const anonymous = banner({ audience: EngagementAudience.Anonymous });
-    const members = banner({ id: 'new', audience: EngagementAudience.Members });
+    const anonymous = banner({ audiences: [EngagementAudience.Anonymous] });
+    const members = banner({
+      id: 'new',
+      audiences: [EngagementAudience.Members],
+    });
 
     expect(findConflicts(members, [anonymous])).toEqual([]);
   });
@@ -70,26 +73,48 @@ describe('findConflicts', () => {
         }),
       ],
     });
-    const forRegistered = (audience: EngagementAudience) =>
-      banner({ audience });
-
     expect(
       findConflicts(askToRegister, [
-        forRegistered(EngagementAudience.Registered),
+        banner({ excludedAudiences: [EngagementAudience.Anonymous] }),
       ])
     ).toEqual([]);
     expect(
       findConflicts(askToRegister, [
-        forRegistered(EngagementAudience.NonMembers),
+        banner({ excludedAudiences: [EngagementAudience.Members] }),
       ])
     ).toHaveLength(1);
   });
 
   it('names the narrower of the two audiences', () => {
-    const anonymous = banner({ audience: EngagementAudience.Anonymous });
+    const anonymous = banner({ audiences: [EngagementAudience.Anonymous] });
 
     expect(findConflicts(banner({ id: 'new' }), [anonymous])).toMatchObject([
-      { audience: EngagementAudience.Anonymous, first: false },
+      {
+        audience: expect.objectContaining({
+          audiences: [EngagementAudience.Anonymous],
+        }),
+        first: false,
+      },
+    ]);
+  });
+
+  it('knows who is left after leaving some readers out', () => {
+    const allButAnonymous = banner({
+      id: 'new',
+      excludedAudiences: [EngagementAudience.Anonymous],
+    });
+    const fromNewsletter = banner({
+      audiences: [EngagementAudience.Utm],
+      audienceUtm: ['utm_medium=email'],
+    });
+
+    expect(
+      findConflicts(allButAnonymous, [
+        banner({ audiences: [EngagementAudience.Anonymous] }),
+      ])
+    ).toEqual([]);
+    expect(names(findConflicts(allButAnonymous, [fromNewsletter]))).toEqual([
+      'Crowdfunding launch',
     ]);
   });
 
@@ -97,7 +122,7 @@ describe('findConflicts', () => {
     const plans = (id: string, audienceMemberPlanIds: string[]) =>
       banner({
         id,
-        audience: EngagementAudience.MemberPlans,
+        audiences: [EngagementAudience.Members],
         audienceMemberPlanIds,
       });
 
@@ -110,7 +135,7 @@ describe('findConflicts', () => {
     expect(
       names(
         findConflicts(plans('new', ['a']), [
-          banner({ audience: EngagementAudience.Members }),
+          banner({ audiences: [EngagementAudience.Members] }),
         ])
       )
     ).toEqual(['Crowdfunding launch']);
@@ -140,7 +165,7 @@ describe('findConflicts', () => {
 
   it('puts the rule shown first by priority, specificity, then age', () => {
     const [byPriority] = findConflicts(banner({ id: 'new', priority: 10 }), [
-      banner({ audience: EngagementAudience.Anonymous }),
+      banner({ audiences: [EngagementAudience.Anonymous] }),
     ]);
     const [byAge] = findConflicts(
       banner({ id: 'new', createdAt: '2025-01-01T00:00:00.000Z' }),

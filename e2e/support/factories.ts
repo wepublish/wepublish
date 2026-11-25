@@ -777,7 +777,7 @@ export class TestData {
           goal: 'MEMBERSHIP',
           active: true,
           priority: Math.floor(Date.now() / 1000),
-          audience: 'ANONYMOUS',
+          audiences: ['ANONYMOUS'],
           showOnArticles: true,
           meterWindowDays: 30,
           stages: [
@@ -831,7 +831,7 @@ export class TestData {
           name,
           goal: 'ANNOUNCEMENT',
           active: true,
-          audience: 'ALL',
+          audiences: [],
           showOnArticles: false,
           showOnPageIds: [page.id],
           stages: [

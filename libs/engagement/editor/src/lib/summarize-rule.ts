@@ -1,4 +1,5 @@
 import { TFunction } from 'i18next';
+import { EngagementAudience } from '@wepublish/editor/api';
 import {
   EngagementRuleValues,
   isAnnouncement,
@@ -79,4 +80,28 @@ export function summarizeWhere(
   ]
     .filter(Boolean)
     .join(', ');
+}
+
+/** Who a rule is for, e.g. "Anonymous readers, except readers from a link". */
+export function summarizeAudience(
+  {
+    audiences,
+    excludedAudiences,
+  }: {
+    audiences: EngagementAudience[];
+    excludedAudiences: EngagementAudience[];
+  },
+  t: TFunction
+) {
+  const list = (segments: EngagementAudience[]) =>
+    segments.map(segment => t(`engagement.audience.${segment}`)).join(', ');
+  const only = list(audiences);
+  const except = list(excludedAudiences);
+
+  const text =
+    only && except ? t('engagement.audience.onlyExcept', { only, except })
+    : except ? t('engagement.audience.allExcept', { except })
+    : only || t('engagement.audience.everyone');
+
+  return text.charAt(0).toUpperCase() + text.slice(1);
 }

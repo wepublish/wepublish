@@ -1159,10 +1159,18 @@ input CreateCrowdfundingMemberPlan {
 
 input CreateEngagementRuleInput {
   active: Boolean! = true
-  audience: EngagementAudience! = ALL
 
-  """Only for the MEMBER_PLANS audience, which needs at least one."""
+  """Narrows the MEMBERS audience to these plans."""
   audienceMemberPlanIds: [String!]! = []
+
+  """key=value url params of the UTM audience, which needs at least one."""
+  audienceUtm: [String!]! = []
+
+  """Only readers in one of these, everyone when empty."""
+  audiences: [EngagementAudience!]! = []
+
+  """Never readers in one of these."""
+  excludedAudiences: [EngagementAudience!]! = []
   goal: EngagementGoal!
   includePeeredArticles: Boolean! = false
   meterWindowDays: Int
@@ -1726,13 +1734,10 @@ enum EngagementActionType {
 
 """Who a rule is for, decided from the session."""
 enum EngagementAudience {
-  ALL
   ANONYMOUS
   MEMBERS
-  MEMBER_PLANS
-  NON_MEMBERS
   PAYWALL_BYPASSED
-  REGISTERED
+  UTM
 }
 
 enum EngagementDocumentType {
@@ -1783,11 +1788,19 @@ enum EngagementRequirement {
 
 type EngagementRule {
   active: Boolean!
-  audience: EngagementAudience!
 
-  """The plans of the MEMBER_PLANS audience."""
+  """Narrows the MEMBERS audience to these plans."""
   audienceMemberPlanIds: [String!]!
+
+  """key=value url params of the UTM audience, e.g. utm_medium=email."""
+  audienceUtm: [String!]!
+
+  """Only readers in one of these, everyone when empty."""
+  audiences: [EngagementAudience!]!
   createdAt: DateTime!
+
+  """Never readers in one of these."""
+  excludedAudiences: [EngagementAudience!]!
   goal: EngagementGoal!
   id: String!
   includePeeredArticles: Boolean!
@@ -6798,6 +6811,11 @@ type Query {
     A paywall bypass token, checked on the server, for rules shown to readers with a bypass.
     """
     paywallBypassToken: String
+
+    """
+    key=value utm params of the link the reader came by, kept by the website for the visit. Not checked: anyone can send them.
+    """
+    utm: [String!]
   ): [EngagementPrompt!]!
   engagementRule(id: String!): EngagementRule!
 
@@ -8598,10 +8616,18 @@ input UpdateCrowdfundingInput {
 
 input UpdateEngagementRuleInput {
   active: Boolean! = true
-  audience: EngagementAudience! = ALL
 
-  """Only for the MEMBER_PLANS audience, which needs at least one."""
+  """Narrows the MEMBERS audience to these plans."""
   audienceMemberPlanIds: [String!]! = []
+
+  """key=value url params of the UTM audience, which needs at least one."""
+  audienceUtm: [String!]! = []
+
+  """Only readers in one of these, everyone when empty."""
+  audiences: [EngagementAudience!]! = []
+
+  """Never readers in one of these."""
+  excludedAudiences: [EngagementAudience!]! = []
   goal: EngagementGoal!
   id: String!
   includePeeredArticles: Boolean! = false
@@ -8825,6 +8851,11 @@ input ViewArticleInput {
   """The newsletterToken of signUpForNewsletter, for newsletter walls."""
   newsletterToken: String
   paywallBypassToken: String
+
+  """
+  key=value utm params of the link the reader came by, kept by the website for the visit. Not checked: anyone can send them.
+  """
+  utm: [String!]
 }
 
 type VimeoVideoBlock implements BaseBlock {

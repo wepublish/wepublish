@@ -2004,14 +2004,12 @@ enum EngagementGoal {
 }
 
 enum EngagementAudience {
-  ALL
   ANONYMOUS
-  REGISTERED
-  NON_MEMBERS
+  /// Any active membership, or only the `audienceMemberPlans` when there are some.
   MEMBERS
   PAYWALL_BYPASSED
-  /// Readers with an active subscription to one of `audienceMemberPlans`.
-  MEMBER_PLANS
+  /// Readers who arrived through a link with one of the `audienceUtm` params.
+  UTM
 }
 
 enum EngagementPlacement {
@@ -2061,14 +2059,19 @@ model EngagementRule {
   /// Bumped on every update, so readers see a changed prompt again.
   version  Int            @default(1)
 
-  audience              EngagementAudience @default(ALL)
-  /// Only for the MEMBER_PLANS audience.
-  audienceMemberPlans   MemberPlan[]       @relation("EngagementRuleAudienceMemberPlans")
-  showOnArticles        Boolean            @default(true)
+  /// Only readers in one of these, everyone when empty.
+  audiences             EngagementAudience[] @default([])
+  /// Never readers in one of these.
+  excludedAudiences     EngagementAudience[] @default([])
+  /// `key=value` url params of the UTM audience, e.g. `utm_medium=email`.
+  audienceUtm           String[]             @default([])
+  /// Narrows the MEMBERS audience to these plans.
+  audienceMemberPlans   MemberPlan[]         @relation("EngagementRuleAudienceMemberPlans")
+  showOnArticles        Boolean              @default(true)
   showOnPages           Page[]
-  includePeeredArticles Boolean            @default(false)
+  includePeeredArticles Boolean              @default(false)
 
-  meterWindowDays       Int?
+  meterWindowDays Int?
 
   stages EngagementStage[]
 

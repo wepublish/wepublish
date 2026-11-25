@@ -1,7 +1,6 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import {
-  EngagementAudience,
   EngagementEnforcement,
   EngagementGoal,
   EngagementPlacement,
@@ -74,7 +73,8 @@ const meteredRule = (
   active: true,
   priority: 0,
   version: 2,
-  audience: EngagementAudience.ALL,
+  audiences: [],
+  excludedAudiences: [],
   showOnArticles: true,
   showOnPageIds: [],
   includePeeredArticles: false,

@@ -58,6 +58,12 @@ export class ViewArticleInput {
     description: `The newsletterToken of signUpForNewsletter, for newsletter walls.`,
   })
   newsletterToken?: string;
+
+  @Field(() => [String], {
+    nullable: true,
+    description: `key=value utm params of the link the reader came by, kept by the website for the visit. Not checked: anyone can send them.`,
+  })
+  utm?: string[];
 }
 
 @ObjectType()

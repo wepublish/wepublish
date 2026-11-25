@@ -41,6 +41,7 @@ export class EngagementPromptsResolver {
       documentId,
       paywallBypassToken,
       newsletterToken,
+      utm,
     }: EngagementPromptsArgs,
     @CurrentUser() session: AuthSession | undefined,
     @Context('req') req: ReaderRequest
@@ -62,6 +63,7 @@ export class EngagementPromptsResolver {
         {
           ...reader,
           paywallBypassed,
+          utm,
           newsletter:
             this.signups.statusOf(newsletterToken) ?? reader.newsletter,
         },

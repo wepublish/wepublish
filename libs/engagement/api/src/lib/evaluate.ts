@@ -35,12 +35,14 @@ export type EvaluatedRule<Stage extends EvaluatedStage = EvaluatedStage> = Pick<
   | 'goal'
   | 'active'
   | 'priority'
-  | 'audience'
+  | 'audiences'
+  | 'excludedAudiences'
   | 'showOnArticles'
   | 'includePeeredArticles'
   | 'meterWindowDays'
 > & {
   showOnPageIds: string[];
+  audienceUtm?: string[];
   audienceMemberPlanIds?: string[];
   /** A string once the rule came back from the cache. */
   createdAt?: Date | string;
@@ -123,10 +125,7 @@ export function matchingRules<Rule extends EvaluatedRule<EvaluatedStage>>(
   target: EngagementTarget
 ): Rule[] {
   return rules.filter(rule => {
-    if (
-      !rule.active ||
-      !matchesAudience(rule.audience, reader, rule.audienceMemberPlanIds)
-    ) {
+    if (!rule.active || !matchesAudience(rule, reader)) {
       return false;
     }
 
@@ -160,14 +159,33 @@ export const currentStage = <Stage extends EvaluatedStage>(
  * `engagement-conflicts.ts`.
  */
 export const AUDIENCE_SPECIFICITY: Record<EngagementAudience, number> = {
-  ALL: 0,
-  NON_MEMBERS: 1,
-  REGISTERED: 1,
   ANONYMOUS: 2,
   MEMBERS: 2,
   PAYWALL_BYPASSED: 3,
-  MEMBER_PLANS: 4,
+  UTM: 3,
 };
+
+/** Everyone 0, everyone but some 1, else its narrowest segment; chosen plans narrow members further. */
+export const audienceSpecificity = ({
+  audiences,
+  excludedAudiences,
+  audienceMemberPlanIds = [],
+}: Pick<
+  EvaluatedRule,
+  'audiences' | 'excludedAudiences' | 'audienceMemberPlanIds'
+>) =>
+  audiences.length ?
+    Math.max(
+      ...audiences.map(audience =>
+        (
+          audience === EngagementAudience.MEMBERS &&
+          audienceMemberPlanIds.length
+        ) ?
+          4
+        : AUDIENCE_SPECIFICITY[audience]
+      )
+    )
+  : Number(excludedAudiences.length > 0);
 
 const createdAtOf = (rule: EvaluatedRule) =>
   rule.createdAt ? new Date(rule.createdAt).getTime() : 0;
@@ -183,8 +201,7 @@ const byPromptOrder = (
 ) =>
   b.rule.priority - a.rule.priority ||
   Number(!!b.stage && isHard(b.stage)) - Number(!!a.stage && isHard(a.stage)) ||
-  AUDIENCE_SPECIFICITY[b.rule.audience] -
-    AUDIENCE_SPECIFICITY[a.rule.audience] ||
+  audienceSpecificity(b.rule) - audienceSpecificity(a.rule) ||
   Number(a.rule.showOnArticles) - Number(b.rule.showOnArticles) ||
   createdAtOf(b.rule) - createdAtOf(a.rule) ||
   a.rule.id.localeCompare(b.rule.id);

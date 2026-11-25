@@ -54,7 +54,7 @@ import {
   TextFieldControl,
 } from './rule-form-controls';
 import {
-  MemberPlansField,
+  AudienceFields,
   NewsletterSignupWarning,
   RuleProblems,
   ShowFirstField,
@@ -87,9 +87,9 @@ export const EngagementRuleForm = ({ ruleId }: { ruleId?: string }) => {
     useStickyWhenFits<HTMLDivElement>(STICKY_OFFSET);
   const { control, setValue, getValues, formState } =
     useFormContext<EngagementRuleValues>();
-  const [goal, stages, audience, includePeeredArticles] = useWatch({
+  const [goal, stages, includePeeredArticles] = useWatch({
     control,
-    name: ['goal', 'stages', 'audience', 'includePeeredArticles'],
+    name: ['goal', 'stages', 'includePeeredArticles'],
   });
   const announcement = isAnnouncement({ goal });
   const {
@@ -119,6 +119,23 @@ export const EngagementRuleForm = ({ ruleId }: { ruleId?: string }) => {
     const current = getValues();
 
     setValue('goal', next, { shouldDirty: true });
+
+    // Membership prompts are for readers who are no members yet.
+    if (
+      (next === EngagementGoal.Membership) !==
+        (current.goal === EngagementGoal.Membership) &&
+      !current.audiences.includes(EngagementAudience.Members)
+    ) {
+      setValue(
+        'excludedAudiences',
+        Object.values(EngagementAudience).filter(audience =>
+          audience === EngagementAudience.Members ?
+            next === EngagementGoal.Membership
+          : current.excludedAudiences.includes(audience)
+        ),
+        { shouldDirty: true }
+      );
+    }
 
     if (next === EngagementGoal.Announcement) {
       // One message from the first article on, without a meter.
@@ -234,32 +251,7 @@ export const EngagementRuleForm = ({ ruleId }: { ruleId?: string }) => {
                   {t('engagement.form.audience')}
                 </Typography>
 
-                <Controller
-                  control={control}
-                  name="audience"
-                  render={({ field }) => (
-                    <RadioGroup
-                      {...field}
-                      onChange={(_event, value) => field.onChange(value)}
-                    >
-                      {Object.values(EngagementAudience).map(value => (
-                        <FormControlLabel
-                          key={value}
-                          value={value}
-                          control={<Radio />}
-                          label={label(
-                            t(`engagement.audience.${value}`),
-                            t(`engagement.audience.${value}Info`)
-                          )}
-                        />
-                      ))}
-                    </RadioGroup>
-                  )}
-                />
-
-                {audience === EngagementAudience.MemberPlans && (
-                  <MemberPlansField />
-                )}
+                <AudienceFields />
               </FormFields>
             </CardContent>
           </Card>

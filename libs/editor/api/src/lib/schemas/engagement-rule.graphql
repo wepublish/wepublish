@@ -42,7 +42,9 @@ fragment FullEngagementRule on EngagementRule {
   active
   priority
   version
-  audience
+  audiences
+  excludedAudiences
+  audienceUtm
   audienceMemberPlanIds
   showOnArticles
   showOnPageIds

@@ -53,7 +53,8 @@ const storedRule = {
   active: true,
   priority: 0,
   version: 1,
-  audience: EngagementAudience.ALL,
+  audiences: [],
+  excludedAudiences: [],
   showOnArticles: true,
   includePeeredArticles: false,
   meterWindowDays: null,
@@ -67,7 +68,7 @@ const metered: CreateEngagementRuleInput = {
   goal: EngagementGoal.NEWSLETTER,
   active: true,
   priority: 1,
-  audience: EngagementAudience.ANONYMOUS,
+  audiences: [EngagementAudience.ANONYMOUS],
   showOnArticles: true,
   showOnPageIds: ['page-1'],
   includePeeredArticles: false,
@@ -219,7 +220,7 @@ describe('EngagementRuleService', () => {
   it('connects the plans of a member plans audience', async () => {
     await service.create({
       ...metered,
-      audience: EngagementAudience.MEMBER_PLANS,
+      audiences: [EngagementAudience.MEMBERS],
       audienceMemberPlanIds: ['plan-1'],
     });
 

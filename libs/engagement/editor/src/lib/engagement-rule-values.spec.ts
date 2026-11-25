@@ -37,7 +37,9 @@ const rule: FullEngagementRuleFragment = {
   active: true,
   priority: 2,
   version: 3,
-  audience: EngagementAudience.Anonymous,
+  audiences: [EngagementAudience.Anonymous],
+  excludedAudiences: [],
+  audienceUtm: [],
   audienceMemberPlanIds: [],
   showOnArticles: true,
   showOnPageIds: ['page-1'],
@@ -90,7 +92,9 @@ describe('engagement rule values', () => {
       goal: EngagementGoal.Newsletter,
       active: true,
       priority: 2,
-      audience: EngagementAudience.Anonymous,
+      audiences: [EngagementAudience.Anonymous],
+      excludedAudiences: [],
+      audienceUtm: [],
       audienceMemberPlanIds: [],
       showOnArticles: true,
       showOnPageIds: ['page-1'],
@@ -128,42 +132,58 @@ describe('engagement rule values', () => {
     });
   });
 
-  it('needs member plans for the member plans audience', () => {
+  it('needs key=value utm params for readers from a link', () => {
     expect(
       engagementRuleProblems(
-        metered({ audience: EngagementAudience.MemberPlans })
+        metered({ excludedAudiences: [EngagementAudience.Utm] })
       )
-    ).toContainEqual({ path: 'audienceMemberPlanIds', code: 'required' });
+    ).toContainEqual({ path: 'audienceUtm', code: 'required' });
     expect(
       engagementRuleProblems(
         metered({
-          audience: EngagementAudience.MemberPlans,
-          audienceMemberPlanIds: ['plan-1'],
+          excludedAudiences: [EngagementAudience.Utm],
+          audienceUtm: ['utm_medium'],
         })
       )
-    ).not.toContainEqual(
-      expect.objectContaining({ path: 'audienceMemberPlanIds' })
-    );
+    ).toContainEqual({ path: 'audienceUtm', code: 'utmFormat' });
+    expect(
+      engagementRuleProblems(
+        metered({
+          excludedAudiences: [EngagementAudience.Utm],
+          audienceUtm: ['utm_medium=email'],
+        })
+      )
+    ).not.toContainEqual(expect.objectContaining({ path: 'audienceUtm' }));
   });
 
-  it('only sends member plans for the member plans audience', () => {
+  it('can not show a rule to an audience and leave it out at once', () => {
+    expect(
+      engagementRuleProblems(
+        metered({
+          audiences: [EngagementAudience.Members],
+          excludedAudiences: [EngagementAudience.Members],
+        })
+      )
+    ).toContainEqual({ path: 'excludedAudiences', code: 'bothAudiences' });
+  });
+
+  it('only sends plans and utm params for the audiences that use them', () => {
     const values = engagementRuleToValues({
       ...rule,
-      audience: EngagementAudience.MemberPlans,
+      audiences: [EngagementAudience.Members],
+      excludedAudiences: [EngagementAudience.Utm],
       audienceMemberPlanIds: ['plan-1'],
+      audienceUtm: ['utm_medium=email'],
     });
 
-    expect(values.audienceMemberPlanIds).toEqual(['plan-1']);
-    expect(toEngagementRuleInput(values).audienceMemberPlanIds).toEqual([
-      'plan-1',
-    ]);
-    // Switching the audience keeps the selection in the form, not on save.
+    expect(toEngagementRuleInput(values)).toMatchObject({
+      audienceMemberPlanIds: ['plan-1'],
+      audienceUtm: ['utm_medium=email'],
+    });
+    // Dropping an audience keeps its settings in the form, not on save.
     expect(
-      toEngagementRuleInput({
-        ...values,
-        audience: EngagementAudience.Members,
-      }).audienceMemberPlanIds
-    ).toEqual([]);
+      toEngagementRuleInput({ ...values, audiences: [], excludedAudiences: [] })
+    ).toMatchObject({ audienceMemberPlanIds: [], audienceUtm: [] });
   });
 
   it('finds what the server would refuse, with its codes', () => {

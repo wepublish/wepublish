@@ -73,13 +73,13 @@ describe('EngagementPresetCards', () => {
 
     const newsletter = within(card('growNewsletter'));
     expect(
-      newsletter.getByText('engagement.audience.ANONYMOUS')
+      newsletter.getByText('Engagement.audience.ANONYMOUS')
     ).toBeInTheDocument();
     expect(newsletter.getAllByRole('listitem')).toHaveLength(2);
 
     const announcement = within(card('displayAnnouncement'));
     expect(
-      announcement.getByText('engagement.audience.ALL')
+      announcement.getByText('Engagement.audience.everyone')
     ).toBeInTheDocument();
     expect(announcement.getAllByRole('listitem')).toHaveLength(1);
 

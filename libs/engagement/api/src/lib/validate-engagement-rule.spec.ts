@@ -257,14 +257,11 @@ describe('validateEngagementRule', () => {
     ).toEqual([]);
   });
 
-  it('needs plans for the member plans audience, and only there', () => {
-    expect(
-      codes(metered({ audience: EngagementAudience.MEMBER_PLANS }))
-    ).toEqual(['audienceMemberPlanIds: required']);
+  it('only takes plans for the members audience', () => {
     expect(
       codes(
         metered({
-          audience: EngagementAudience.MEMBER_PLANS,
+          audiences: [EngagementAudience.MEMBERS],
           audienceMemberPlanIds: ['plan-1'],
         })
       )
@@ -272,10 +269,51 @@ describe('validateEngagementRule', () => {
     expect(
       codes(
         metered({
-          audience: EngagementAudience.MEMBERS,
+          excludedAudiences: [EngagementAudience.MEMBERS],
+          audienceMemberPlanIds: ['plan-1'],
+        })
+      )
+    ).toEqual([]);
+    expect(
+      codes(
+        metered({
+          audiences: [EngagementAudience.ANONYMOUS],
           audienceMemberPlanIds: ['plan-1'],
         })
       )
     ).toEqual(['audienceMemberPlanIds: onlyMemberPlans']);
+  });
+
+  it('needs key=value utm params for the utm audience', () => {
+    expect(
+      codes(metered({ excludedAudiences: [EngagementAudience.UTM] }))
+    ).toEqual(['audienceUtm: required']);
+    expect(
+      codes(
+        metered({
+          excludedAudiences: [EngagementAudience.UTM],
+          audienceUtm: ['utm_medium=email', 'utm_source'],
+        })
+      )
+    ).toEqual(['audienceUtm: utmFormat']);
+    expect(
+      codes(
+        metered({
+          excludedAudiences: [EngagementAudience.UTM],
+          audienceUtm: ['utm_medium=email'],
+        })
+      )
+    ).toEqual([]);
+  });
+
+  it('can not show a rule to an audience and exclude it at once', () => {
+    expect(
+      codes(
+        metered({
+          audiences: [EngagementAudience.ANONYMOUS],
+          excludedAudiences: [EngagementAudience.ANONYMOUS],
+        })
+      )
+    ).toEqual(['excludedAudiences: bothAudiences']);
   });
 });

@@ -10,6 +10,7 @@ import {
   isAnnouncement,
   isHard,
 } from './engagement-rule-values';
+import { summarizeAudience } from './summarize-rule';
 
 export type ConflictRule = Pick<
   EngagementRuleValues,
@@ -17,7 +18,8 @@ export type ConflictRule = Pick<
   | 'goal'
   | 'active'
   | 'priority'
-  | 'audience'
+  | 'audiences'
+  | 'excludedAudiences'
   | 'audienceMemberPlanIds'
   | 'showOnArticles'
   | 'showOnPageIds'
@@ -44,7 +46,7 @@ export type EngagementConflict<Rule extends ConflictRule = ConflictRule> = {
   rule: Rule;
   slots: EngagementSlot[];
   /** The readers both rules want: the narrower audience of the two. */
-  audience: EngagementAudience;
+  audience: Pick<ConflictRule, 'audiences' | 'excludedAudiences'>;
   /** Whether the rule the conflicts were found for is shown first. */
   first: boolean;
   /**
@@ -54,28 +56,45 @@ export type EngagementConflict<Rule extends ConflictRule = ConflictRule> = {
   settled: boolean;
 };
 
-/** Mirrors `AUDIENCE_SPECIFICITY` in `engagement-api`'s `evaluate.ts`. */
-export const AUDIENCE_SPECIFICITY: Record<EngagementAudience, number> = {
-  [EngagementAudience.All]: 0,
-  [EngagementAudience.NonMembers]: 1,
-  [EngagementAudience.Registered]: 1,
+/** Mirrors `audienceSpecificity` in `engagement-api`'s `evaluate.ts`. */
+const AUDIENCE_SPECIFICITY: Record<EngagementAudience, number> = {
   [EngagementAudience.Anonymous]: 2,
   [EngagementAudience.Members]: 2,
   [EngagementAudience.PaywallBypassed]: 3,
-  [EngagementAudience.MemberPlans]: 4,
+  [EngagementAudience.Utm]: 3,
 };
+
+export const audienceSpecificity = ({
+  audiences,
+  excludedAudiences,
+  audienceMemberPlanIds,
+}: Pick<
+  ConflictRule,
+  'audiences' | 'excludedAudiences' | 'audienceMemberPlanIds'
+>) =>
+  audiences.length ?
+    Math.max(
+      ...audiences.map(audience =>
+        (
+          audience === EngagementAudience.Members &&
+          audienceMemberPlanIds.length
+        ) ?
+          4
+        : AUDIENCE_SPECIFICITY[audience]
+      )
+    )
+  : Number(excludedAudiences.length > 0);
 
 type Reader = 'anonymous' | 'registered' | 'member';
 
-// Who an audience can be. A paywall bypass link can be opened by anyone.
+const EVERYONE: Reader[] = ['anonymous', 'registered', 'member'];
+
+// Who an audience can be. Anyone can open a bypass link or a link with utm params.
 const READERS: Record<EngagementAudience, Reader[]> = {
-  [EngagementAudience.All]: ['anonymous', 'registered', 'member'],
   [EngagementAudience.Anonymous]: ['anonymous'],
-  [EngagementAudience.Registered]: ['registered', 'member'],
-  [EngagementAudience.NonMembers]: ['anonymous', 'registered'],
   [EngagementAudience.Members]: ['member'],
-  [EngagementAudience.PaywallBypassed]: ['anonymous', 'registered', 'member'],
-  [EngagementAudience.MemberPlans]: ['member'],
+  [EngagementAudience.PaywallBypassed]: EVERYONE,
+  [EngagementAudience.Utm]: EVERYONE,
 };
 
 const slotOf = (
@@ -151,13 +170,35 @@ const readersOf = (rule: ConflictRule) => {
   const requirement = rule.stages.find(isHard)?.requirement;
   const meet = requirement ? MEETS[requirement] : [];
 
-  return READERS[rule.audience].filter(reader => !meet.includes(reader));
+  const shown =
+    rule.audiences.length ?
+      rule.audiences.flatMap(audience => READERS[audience])
+    : EVERYONE;
+  // Only leaving out every anonymous reader or every member removes a kind of reader.
+  const left = rule.excludedAudiences.flatMap(audience =>
+    (
+      audience === EngagementAudience.Anonymous ||
+      (audience === EngagementAudience.Members &&
+        !rule.audienceMemberPlanIds.length)
+    ) ?
+      READERS[audience]
+    : []
+  );
+
+  return shown.filter(
+    reader => !left.includes(reader) && !meet.includes(reader)
+  );
 };
 
 const audiencesOverlap = (a: ConflictRule, b: ConflictRule) => {
+  const onlyPlans = (rule: ConflictRule) =>
+    rule.audiences.length === 1 &&
+    rule.audiences[0] === EngagementAudience.Members &&
+    rule.audienceMemberPlanIds.length > 0;
+
   if (
-    a.audience === EngagementAudience.MemberPlans &&
-    b.audience === EngagementAudience.MemberPlans &&
+    onlyPlans(a) &&
+    onlyPlans(b) &&
     !a.audienceMemberPlanIds.some(id => b.audienceMemberPlanIds.includes(id))
   ) {
     return false;
@@ -179,7 +220,7 @@ const createdAtOf = (rule: ConflictRule) =>
 /** Mirrors the prompt order of `engagement-api`'s `evaluate.ts`. */
 const showsBefore = (a: ConflictRule, b: ConflictRule) =>
   (b.priority - a.priority ||
-    AUDIENCE_SPECIFICITY[b.audience] - AUDIENCE_SPECIFICITY[a.audience] ||
+    audienceSpecificity(b) - audienceSpecificity(a) ||
     Number(a.showOnArticles) - Number(b.showOnArticles) ||
     createdAtOf(b) - createdAtOf(a)) < 0;
 
@@ -211,12 +252,7 @@ export function findConflicts<Rule extends ConflictRule>(
         rule: other,
         slots: shared,
         audience:
-          (
-            AUDIENCE_SPECIFICITY[other.audience] >
-            AUDIENCE_SPECIFICITY[rule.audience]
-          ) ?
-            other.audience
-          : rule.audience,
+          audienceSpecificity(other) > audienceSpecificity(rule) ? other : rule,
         first: showsBefore(rule, other),
         settled: rule.priority !== other.priority,
       },
@@ -238,7 +274,7 @@ export function describeConflict(
       slots: slots
         .map(slot => t(`engagement.conflict.slot.${slot}`))
         .join(', '),
-      audience: t(`engagement.audience.${audience}`),
+      audience: summarizeAudience(audience, t),
     }),
     first ?
       t('engagement.conflict.thisFirst')

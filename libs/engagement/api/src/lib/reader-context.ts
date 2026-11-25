@@ -28,6 +28,8 @@ export type ReaderContext = {
   newsletter: NewsletterStatus;
   /** A paywall bypass token the server checked. */
   paywallBypassed?: boolean;
+  /** `key=value` utm params of the link the reader came by, as the website sent them. */
+  utm?: string[];
 };
 
 export type ReaderSubscription = {
@@ -88,29 +90,48 @@ export function readerContextFrom({
   };
 }
 
-export function matchesAudience(
-  audience: EngagementAudience,
-  reader: ReaderContext,
-  memberPlanIds: string[] = []
-): boolean {
-  const member = reader.activeMemberPlanIds.length > 0;
+export type AudienceOf = {
+  audiences: EngagementAudience[];
+  excludedAudiences: EngagementAudience[];
+  audienceUtm?: string[];
+  audienceMemberPlanIds?: string[];
+};
 
-  switch (audience) {
-    case EngagementAudience.ALL:
-      return true;
+const inSegment = (
+  segment: EngagementAudience,
+  reader: ReaderContext,
+  { audienceUtm = [], audienceMemberPlanIds = [] }: AudienceOf
+) => {
+  switch (segment) {
     case EngagementAudience.ANONYMOUS:
       return !reader.loggedIn;
-    case EngagementAudience.REGISTERED:
-      return reader.loggedIn;
-    case EngagementAudience.NON_MEMBERS:
-      return !member;
     case EngagementAudience.MEMBERS:
-      return member;
+      return audienceMemberPlanIds.length ?
+          audienceMemberPlanIds.some(id =>
+            reader.activeMemberPlanIds.includes(id)
+          )
+        : reader.activeMemberPlanIds.length > 0;
     case EngagementAudience.PAYWALL_BYPASSED:
       return !!reader.paywallBypassed;
-    case EngagementAudience.MEMBER_PLANS:
-      return memberPlanIds.some(id => reader.activeMemberPlanIds.includes(id));
+    case EngagementAudience.UTM: {
+      const params = (reader.utm ?? []).map(param => param.toLowerCase());
+
+      return audienceUtm.some(param => params.includes(param.toLowerCase()));
+    }
   }
+};
+
+export function matchesAudience(
+  audience: AudienceOf,
+  reader: ReaderContext
+): boolean {
+  const isIn = (segment: EngagementAudience) =>
+    inSegment(segment, reader, audience);
+
+  return (
+    (!audience.audiences.length || audience.audiences.some(isIn)) &&
+    !audience.excludedAudiences.some(isIn)
+  );
 }
 
 export function meetsRequirement(

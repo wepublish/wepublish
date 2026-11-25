@@ -6069,20 +6069,17 @@
         "MEMBERSHIPInfo": "Hinweise für Mitgliedschaften, nach den gelesenen Artikeln gestaffelt."
       },
       "audience": {
-        "ALL": "Alle",
-        "ALLInfo": "Alle Leser*innen.",
-        "ANONYMOUS": "Anonyme Leser*innen",
+        "ANONYMOUS": "anonyme Leser*innen",
         "ANONYMOUSInfo": "Leser*innen, die nicht eingeloggt sind.",
-        "REGISTERED": "Eingeloggte Leser*innen",
-        "REGISTEREDInfo": "Eingeloggte Leser*innen, mit oder ohne Mitgliedschaft.",
-        "NON_MEMBERS": "Leser*innen ohne Mitgliedschaft",
-        "NON_MEMBERSInfo": "Anonyme und eingeloggte Leser*innen ohne aktive Mitgliedschaft.",
         "MEMBERS": "Mitglieder",
-        "MEMBERSInfo": "Leser*innen mit aktiver Mitgliedschaft, gratis oder bezahlt.",
-        "PAYWALL_BYPASSED": "Leser*innen mit Paywall-Freischaltlink",
-        "PAYWALL_BYPASSEDInfo": "Leser*innen, die einen Freischaltlink einer aktiven Paywall geöffnet haben.",
-        "MEMBER_PLANS": "Leser:innen mit einem bestimmten Abo",
-        "MEMBER_PLANSInfo": "Leser:innen mit einem aktiven Abo eines der Pläne, die du wählst, z. B. um ein Upgrade anzubieten."
+        "MEMBERSInfo": "Leser*innen mit einer aktiven Mitgliedschaft, gratis oder bezahlt. Wähl unten Abos, um es einzugrenzen.",
+        "PAYWALL_BYPASSED": "Leser*innen mit einem Paywall-Umgehungslink",
+        "PAYWALL_BYPASSEDInfo": "Leser*innen, die einen Umgehungslink einer aktiven Paywall geöffnet haben.",
+        "UTM": "Leser*innen über einen Link",
+        "UTMInfo": "Leser*innen, die über einen Link mit einem der UTM-Parameter unten kamen, z. B. aus dem Newsletter. Das gilt für ihren ganzen Besuch. Alle können die Parameter an einen Link hängen: Es ist ein Anreiz, keine Sperre.",
+        "everyone": "alle",
+        "allExcept": "alle ausser {{except}}",
+        "onlyExcept": "{{only}}, ausser {{except}}"
       },
       "placement": {
         "BANNER": "Banner oben auf der Seite",
@@ -6169,6 +6166,7 @@
         "image": "Bild",
         "dismissible": "Kann geschlossen werden",
         "dismissibleInfo": "Leser*innen können ihn schliessen, danach bleibt er für die unten angegebene Zeit weg.",
+        "noWayOut": "Leser*innen können dieses Pop-up nicht schliessen und es hat keinen Button zum Weitergehen: Raus kommen sie nur, indem sie die Seite verlassen.",
         "hideForMinutes": "Nach dem Schliessen … Minuten ausblenden",
         "hideForMinutesInfo": "Eine geänderte Regel erscheint sofort wieder.",
         "delaySeconds": "Nach … Sekunden anzeigen",
@@ -6193,7 +6191,13 @@
         "blockTemplate": "Block-Vorlage",
         "useBlockTemplate": "Stattdessen eine Block-Vorlage zeigen",
         "useBlockTemplateInfo": "Ersetzt die Texte unten durch die Blöcke einer Vorlage. Titel und Buttons bleiben.",
-        "noBlockTemplates": "Es gibt noch keine Block-Vorlagen: leg zuerst eine unter Block-Vorlagen an."
+        "noBlockTemplates": "Es gibt noch keine Block-Vorlagen: leg zuerst eine unter Block-Vorlagen an.",
+        "audienceHint": "Nichts gewählt: Alle sehen die Regel.",
+        "audienceOnly": "Zeigen für",
+        "audienceExcept": "Ausschliessen",
+        "audienceUtm": "UTM-Parameter",
+        "audienceUtmHint": "So viele du willst, je als key=value; drück nach jedem Enter. Leser*innen brauchen einen davon, Gross- und Kleinschreibung egal.",
+        "audienceNewsletterImplied": "Wer die E-Mail-Adresse schon angegeben hat, sieht eine Newsletter-Regel nie."
       },
       "validation": {
         "required": "Pflichtfeld",
@@ -6207,7 +6211,9 @@
         "announcementSoft": "Eine Ankündigung kann den Artikel nicht einschränken",
         "announcementNoMeter": "Eine Ankündigung zählt keine Artikel",
         "newsletterWallRequired": "Eine Newsletter-Regel verlangt die Newsletter-Anmeldung",
-        "wholeNumber": "Gib eine ganze Zahl ein"
+        "wholeNumber": "Gib eine ganze Zahl ein",
+        "utmFormat": "Schreib jeden als key=value, z. B. utm_medium=email",
+        "bothAudiences": "Ein Publikum kann nicht zugleich gezeigt und ausgenommen werden"
       },
       "copyName": "{{name}} (Kopie)",
       "view": {

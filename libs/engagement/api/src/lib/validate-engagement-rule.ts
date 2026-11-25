@@ -24,7 +24,9 @@ export type EngagementStageDraft = {
 
 export type EngagementRuleDraft = {
   goal: EngagementGoal;
-  audience?: EngagementAudience;
+  audiences?: EngagementAudience[];
+  excludedAudiences?: EngagementAudience[];
+  audienceUtm?: string[];
   audienceMemberPlanIds?: string[];
   meterWindowDays?: number | null;
   stages: EngagementStageDraft[];
@@ -136,14 +138,26 @@ export function validateEngagementRule(
     problem('meterWindowDays', 'min');
   }
 
-  const memberPlans = rule.audienceMemberPlanIds ?? [];
+  const { audiences = [], excludedAudiences = [], audienceUtm = [] } = rule;
+  const segments = [...audiences, ...excludedAudiences];
 
-  if (rule.audience === EngagementAudience.MEMBER_PLANS) {
-    if (!memberPlans.length) {
-      problem('audienceMemberPlanIds', 'required');
-    }
-  } else if (memberPlans.length) {
+  if (
+    rule.audienceMemberPlanIds?.length &&
+    !segments.includes(EngagementAudience.MEMBERS)
+  ) {
     problem('audienceMemberPlanIds', 'onlyMemberPlans');
+  }
+
+  if (segments.includes(EngagementAudience.UTM)) {
+    if (!audienceUtm.length) {
+      problem('audienceUtm', 'required');
+    } else if (!audienceUtm.every(param => /^[^=\s]+=[^=\s]+$/.test(param))) {
+      problem('audienceUtm', 'utmFormat');
+    }
+  }
+
+  if (audiences.some(audience => excludedAudiences.includes(audience))) {
+    problem('excludedAudiences', 'bothAudiences');
   }
 
   return problems;

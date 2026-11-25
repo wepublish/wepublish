@@ -33,6 +33,7 @@ import {
   actionDefaults,
   SHOW_FIRST_PRIORITY,
   createEngagementRuleSchema,
+  engagementRuleProblems,
 } from './engagement-rule-values';
 import { ENGAGEMENT_PRESETS } from './presets';
 
@@ -48,7 +49,9 @@ const competing: FullEngagementRuleFragment = {
   active: true,
   priority: 0,
   version: 1,
-  audience: EngagementAudience.All,
+  audiences: [],
+  excludedAudiences: [],
+  audienceUtm: [],
   audienceMemberPlanIds: [],
   showOnArticles: true,
   showOnPageIds: [],
@@ -471,6 +474,30 @@ describe('EngagementRuleForm', () => {
     expect(stage).toHaveTextContent('engagement.form.title');
   });
 
+  it('warns about a pop-up readers can not leave, but keeps it', () => {
+    const rule = ENGAGEMENT_PRESETS.promoteMemberships();
+    const trap = {
+      ...rule,
+      stages: [
+        {
+          ...rule.stages[0],
+          placement: EngagementPlacement.Modal,
+          dismissible: false,
+          actions: [],
+        },
+      ],
+    };
+    const { unmount } = renderForm(trap);
+
+    expect(screen.getByText('engagement.form.noWayOut')).toBeInTheDocument();
+    expect(engagementRuleProblems(trap)).toEqual([]);
+    unmount();
+
+    renderForm({ ...trap, stages: [{ ...trap.stages[0], dismissible: true }] });
+
+    expect(screen.queryByText('engagement.form.noWayOut')).toBeNull();
+  });
+
   it('keeps rarely needed stage options behind more options', () => {
     renderForm(ENGAGEMENT_PRESETS.promoteMemberships());
 
@@ -722,18 +749,67 @@ describe('EngagementRuleForm', () => {
     expect(screen.getByLabelText('engagement.form.showFirst')).toBeChecked();
   });
 
-  it('asks for the member plans when the rule is for specific plans', () => {
-    renderForm(ENGAGEMENT_PRESETS.promoteMemberships());
+  it('shows a rule to one audience and excludes others', async () => {
+    renderForm(ENGAGEMENT_PRESETS.growNewsletter());
 
+    expect(values().audiences).toEqual([EngagementAudience.Anonymous]);
     expect(
       screen.queryByLabelText('engagement.form.audienceMemberPlans')
     ).toBeNull();
+    expect(screen.queryByPlaceholderText('utm_medium=email')).toBeNull();
 
-    fireEvent.click(screen.getByDisplayValue('MEMBER_PLANS'));
+    fireEvent.click(screen.getByDisplayValue(EngagementAudience.Members));
 
+    const exclude = screen.getByRole('combobox', {
+      name: 'engagement.form.audienceExcept',
+    });
+
+    fireEvent.mouseDown(exclude);
+
+    expect(
+      await screen.findByRole('option', {
+        name: /^Engagement.audience.MEMBERS/,
+      })
+    ).toHaveAttribute('aria-disabled', 'true');
+
+    fireEvent.click(
+      screen.getByRole('option', { name: /^Engagement.audience.UTM/ })
+    );
+
+    expect(values().audiences).toEqual([EngagementAudience.Members]);
+    expect(values().excludedAudiences).toEqual([EngagementAudience.Utm]);
     expect(
       screen.getByLabelText('engagement.form.audienceMemberPlans')
     ).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('utm_medium=email')).toBeInTheDocument();
+    expect(screen.getByDisplayValue(EngagementAudience.Utm)).toBeDisabled();
+
+    fireEvent.click(screen.getByLabelText('Engagement.audience.everyone'));
+
+    expect(values().audiences).toEqual([]);
+  });
+
+  it('excludes members while the goal is memberships', () => {
+    renderForm(ENGAGEMENT_PRESETS.growNewsletter());
+
+    expect(
+      screen.getByText('engagement.form.audienceNewsletterImplied')
+    ).toBeInTheDocument();
+
+    fireEvent.click(
+      screen.getByRole('radio', { name: /^engagement\.goal\.MEMBERSHIP\b/ })
+    );
+
+    expect(values().excludedAudiences).toEqual([EngagementAudience.Members]);
+    expect(
+      screen.queryByText('engagement.form.audienceNewsletterImplied')
+    ).toBeNull();
+
+    fireEvent.click(
+      screen.getByRole('radio', { name: /^engagement\.goal\.NEWSLETTER\b/ })
+    );
+
+    expect(values().excludedAudiences).toEqual([]);
   });
 
   it('saves a consistent rule', async () => {

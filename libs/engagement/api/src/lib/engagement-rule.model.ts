@@ -220,11 +220,23 @@ export class EngagementRule {
   })
   version!: number;
 
-  @Field(() => EngagementAudience)
-  audience!: EngagementAudience;
+  @Field(() => [EngagementAudience], {
+    description: `Only readers in one of these, everyone when empty.`,
+  })
+  audiences!: EngagementAudience[];
+
+  @Field(() => [EngagementAudience], {
+    description: `Never readers in one of these.`,
+  })
+  excludedAudiences!: EngagementAudience[];
 
   @Field(() => [String], {
-    description: `The plans of the MEMBER_PLANS audience.`,
+    description: `key=value url params of the UTM audience, e.g. utm_medium=email.`,
+  })
+  audienceUtm!: string[];
+
+  @Field(() => [String], {
+    description: `Narrows the MEMBERS audience to these plans.`,
   })
   audienceMemberPlanIds!: string[];
 
@@ -258,12 +270,27 @@ export class CreateEngagementRuleInput {
   @Field(() => Int, { defaultValue: 0 })
   priority!: number;
 
-  @Field(() => EngagementAudience, { defaultValue: EngagementAudience.ALL })
-  audience!: EngagementAudience;
+  @Field(() => [EngagementAudience], {
+    defaultValue: [],
+    description: `Only readers in one of these, everyone when empty.`,
+  })
+  audiences!: EngagementAudience[];
+
+  @Field(() => [EngagementAudience], {
+    defaultValue: [],
+    description: `Never readers in one of these.`,
+  })
+  excludedAudiences!: EngagementAudience[];
 
   @Field(() => [String], {
     defaultValue: [],
-    description: `Only for the MEMBER_PLANS audience, which needs at least one.`,
+    description: `key=value url params of the UTM audience, which needs at least one.`,
+  })
+  audienceUtm!: string[];
+
+  @Field(() => [String], {
+    defaultValue: [],
+    description: `Narrows the MEMBERS audience to these plans.`,
   })
   audienceMemberPlanIds?: string[];
 
@@ -325,4 +352,10 @@ export class EngagementPromptsArgs {
     description: `The newsletterToken of signUpForNewsletter, checked on the server: newsletter prompts leave readers who signed up alone.`,
   })
   newsletterToken?: string;
+
+  @Field(() => [String], {
+    nullable: true,
+    description: `key=value utm params of the link the reader came by, kept by the website for the visit. Not checked: anyone can send them.`,
+  })
+  utm?: string[];
 }

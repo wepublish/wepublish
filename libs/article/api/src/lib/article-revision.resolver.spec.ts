@@ -16,7 +16,6 @@ import {
 import type { ArticleRevision } from './article.model';
 import type { Mock } from 'vitest';
 import {
-  EngagementAudience,
   EngagementEnforcement,
   EngagementGoal,
   EngagementPlacement,
@@ -171,7 +170,8 @@ const hardMeter = (
   active: true,
   priority: 0,
   version: 1,
-  audience: EngagementAudience.ALL,
+  audiences: [],
+  excludedAudiences: [],
   showOnArticles: true,
   showOnPageIds: [],
   includePeeredArticles: false,

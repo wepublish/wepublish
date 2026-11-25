@@ -27,7 +27,7 @@ import {
   EngagementPresetId,
   RESTRICT_PREMIUM_PATH,
 } from './presets';
-import { summarizeStages } from './summarize-rule';
+import { summarizeAudience, summarizeStages } from './summarize-rule';
 
 const PRESET_ORDER: EngagementPresetId[] = [
   'growNewsletter',
@@ -286,7 +286,7 @@ const usePresetFacts = (): Record<EngagementPresetId, PresetFacts> => {
 
       return {
         placement: rule.stages[0]?.placement ?? EngagementPlacement.Banner,
-        audience: t(`engagement.audience.${rule.audience}`),
+        audience: summarizeAudience(rule, t),
         steps: summarizeStages(rule, t),
       };
     };

@@ -49,7 +49,7 @@ import {
 } from './engagement-rule-values';
 import { describeConflict, findConflicts } from './engagement-conflicts';
 import { StageSummary } from './stage-summary';
-import { summarizeWhere } from './summarize-rule';
+import { summarizeAudience, summarizeWhere } from './summarize-rule';
 
 export const ENGAGEMENT_PATH = '/audience-engagement';
 
@@ -175,7 +175,7 @@ function EngagementRuleList() {
             {
               id: 'audience',
               label: t('engagement.list.audience'),
-              render: rule => t(`engagement.audience.${rule.audience}`),
+              render: rule => summarizeAudience(rule, t),
             },
             {
               id: 'where',

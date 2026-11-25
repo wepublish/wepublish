@@ -127,6 +127,7 @@ describe('useArticleEngagement', () => {
           meterToken: 'token-0',
           paywallBypassToken: undefined,
           newsletterToken: undefined,
+          utm: [],
         },
       },
     ]);

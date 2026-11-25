@@ -94,6 +94,7 @@ export class ArticleAccessService {
     meterToken,
     paywallBypassToken,
     newsletterToken,
+    utm,
   }: {
     req: ArticleRequest;
     session: AuthSession | null | undefined;
@@ -101,6 +102,7 @@ export class ArticleAccessService {
     meterToken?: string | null;
     paywallBypassToken?: string | null;
     newsletterToken?: string | null;
+    utm?: string[] | null;
   }) {
     const article = await this.articles.load(articleId);
 
@@ -119,6 +121,7 @@ export class ArticleAccessService {
     ]);
     const reader = {
       ...requestReader,
+      utm: utm ?? undefined,
       newsletter:
         this.signups.statusOf(newsletterToken) ?? requestReader.newsletter,
     };

@@ -7,10 +7,15 @@ import {
   FormControlLabel,
   FormHelperText,
   Link,
+  Radio,
+  RadioGroup,
   Switch,
   TextField,
+  Typography,
 } from '@mui/material';
 import {
+  EngagementAudience,
+  EngagementGoal,
   EngagementRulesDocument,
   MemberPlanListDocument,
   NewsletterSignupProblemDocument,
@@ -29,7 +34,9 @@ import {
   SHOW_FIRST_PRIORITY,
   engagementRuleToValues,
   showsFirst,
+  usesAudience,
 } from './engagement-rule-values';
+import { label } from './rule-form-controls';
 import { EngagementConflictNotice } from './engagement-conflict-notice';
 import { findConflicts } from './engagement-conflicts';
 
@@ -58,6 +65,159 @@ export const NewsletterSignupWarning = () => {
         {t('engagement.form.newsletterProblemLink')}
       </Link>
     </Alert>
+  );
+};
+
+/** Who sees the rule (everyone, or one audience), and who of them is excluded. */
+export const AudienceFields = () => {
+  const { t } = useTranslation();
+  const { control } = useFormContext<EngagementRuleValues>();
+  const [goal, audiences, excludedAudiences] = useWatch({
+    control,
+    name: ['goal', 'audiences', 'excludedAudiences'],
+  });
+  const labelOf = (audience: EngagementAudience | 'everyone') => {
+    const text = t(`engagement.audience.${audience}`);
+
+    return text.charAt(0).toUpperCase() + text.slice(1);
+  };
+
+  const field = (
+    name: 'excludedAudiences',
+    fieldLabel: string,
+    other: EngagementAudience[]
+  ) => (
+    <Controller
+      control={control}
+      name={name}
+      render={({ field: { value, onChange } }) => (
+        <Autocomplete
+          multiple
+          disableCloseOnSelect
+          options={Object.values(EngagementAudience)}
+          getOptionLabel={labelOf}
+          getOptionDisabled={audience => other.includes(audience)}
+          value={value}
+          // Kept in the order of the options, whatever order they were picked in.
+          onChange={(_event, picked) =>
+            onChange(
+              Object.values(EngagementAudience).filter(audience =>
+                picked.includes(audience)
+              )
+            )
+          }
+          renderOption={({ key, ...props }, audience) => (
+            <li
+              key={key}
+              {...props}
+            >
+              <Box>
+                {labelOf(audience)}
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                >
+                  {t(`engagement.audience.${audience}Info`)}
+                </Typography>
+              </Box>
+            </li>
+          )}
+          renderInput={params => (
+            <TextField
+              {...params}
+              label={fieldLabel}
+              helperText={
+                goal === EngagementGoal.Newsletter ?
+                  t('engagement.form.audienceNewsletterImplied')
+                : undefined
+              }
+            />
+          )}
+        />
+      )}
+    />
+  );
+
+  return (
+    <>
+      <Controller
+        control={control}
+        name="audiences"
+        render={({ field: { value, onChange } }) => (
+          <RadioGroup
+            value={value[0] ?? ''}
+            onChange={(_event, audience) =>
+              onChange(audience ? [audience] : [])
+            }
+          >
+            <FormControlLabel
+              value=""
+              control={<Radio />}
+              label={labelOf('everyone')}
+            />
+            {Object.values(EngagementAudience).map(audience => (
+              <FormControlLabel
+                key={audience}
+                value={audience}
+                disabled={excludedAudiences.includes(audience)}
+                control={<Radio />}
+                label={label(
+                  labelOf(audience),
+                  t(`engagement.audience.${audience}Info`)
+                )}
+              />
+            ))}
+          </RadioGroup>
+        )}
+      />
+
+      {field(
+        'excludedAudiences',
+        t('engagement.form.audienceExcept'),
+        audiences
+      )}
+
+      {usesAudience(
+        { audiences, excludedAudiences },
+        EngagementAudience.Members
+      ) && <MemberPlansField />}
+      {usesAudience(
+        { audiences, excludedAudiences },
+        EngagementAudience.Utm
+      ) && <UtmField />}
+    </>
+  );
+};
+
+const UtmField = () => {
+  const { t } = useTranslation();
+  const { control } = useFormContext<EngagementRuleValues>();
+
+  return (
+    <Controller
+      control={control}
+      name="audienceUtm"
+      render={({ field, fieldState: { error } }) => (
+        <Autocomplete
+          multiple
+          freeSolo
+          options={[]}
+          value={field.value}
+          onChange={(_event, params) => field.onChange(params)}
+          renderInput={params => (
+            <TextField
+              {...params}
+              label={t('engagement.form.audienceUtm')}
+              placeholder="utm_medium=email"
+              error={Boolean(error)}
+              helperText={
+                error?.message ?? t('engagement.form.audienceUtmHint')
+              }
+            />
+          )}
+        />
+      )}
+    />
   );
 };
 
@@ -184,6 +344,8 @@ const PROBLEM_FIELD_LABELS: Record<string, string> = {
   name: 'engagement.form.name',
   meterWindowDays: 'engagement.form.meterWindowDays',
   audienceMemberPlanIds: 'engagement.form.audienceMemberPlans',
+  audienceUtm: 'engagement.form.audienceUtm',
+  excludedAudiences: 'engagement.form.audience',
 };
 
 /**

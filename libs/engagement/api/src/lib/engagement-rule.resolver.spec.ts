@@ -6,7 +6,6 @@ import { APP_GUARD } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 import { Test } from '@nestjs/testing';
 import {
-  EngagementAudience,
   EngagementEnforcement,
   EngagementGoal,
   EngagementPlacement,
@@ -27,7 +26,8 @@ const rule = {
   active: true,
   priority: 0,
   version: 1,
-  audience: EngagementAudience.ALL,
+  audiences: [],
+  excludedAudiences: [],
   showOnArticles: true,
   showOnPageIds: [],
   includePeeredArticles: false,
@@ -208,7 +208,8 @@ describe('EngagementRuleResolver', () => {
       expect.objectContaining({
         name: 'Announcement',
         active: true,
-        audience: EngagementAudience.ALL,
+        audiences: [],
+        excludedAudiences: [],
         showOnPageIds: [],
         stages: [
           expect.objectContaining({

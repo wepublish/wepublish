@@ -88,12 +88,14 @@ query EngagementPrompts(
   $documentId: String!
   $paywallBypassToken: String
   $newsletterToken: String
+  $utm: [String!]
 ) {
   engagementPrompts(
     documentType: $documentType
     documentId: $documentId
     paywallBypassToken: $paywallBypassToken
     newsletterToken: $newsletterToken
+    utm: $utm
   ) {
     ...FullEngagementPrompt
   }

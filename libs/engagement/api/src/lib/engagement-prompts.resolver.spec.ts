@@ -72,7 +72,8 @@ const rule = (
   active: true,
   priority: 0,
   version: 3,
-  audience: EngagementAudience.ALL,
+  audiences: [],
+  excludedAudiences: [],
   showOnArticles: true,
   showOnPageIds: ['page-1'],
   includePeeredArticles: false,
@@ -244,8 +245,8 @@ describe('EngagementPromptsResolver', () => {
 
   it('takes the audience from the session, not from the client', async () => {
     rules = [
-      rule('anonymous', { audience: EngagementAudience.ANONYMOUS }),
-      rule('registered', { audience: EngagementAudience.REGISTERED }),
+      rule('anonymous', { audiences: [EngagementAudience.ANONYMOUS] }),
+      rule('registered', { excludedAudiences: [EngagementAudience.ANONYMOUS] }),
     ];
 
     expect(
@@ -275,9 +276,36 @@ describe('EngagementPromptsResolver', () => {
     expect(body.errors?.[0]?.message).toMatch(/Unknown argument "loggedIn"/);
   });
 
+  it('shows rules for readers from a link by the utm params the website sends', async () => {
+    rules = [
+      rule('newsletter-readers', {
+        audiences: [EngagementAudience.UTM],
+        audienceUtm: ['utm_medium=email'],
+      }),
+    ];
+
+    expect(
+      titles(
+        (await send(promptsQuery('documentType: PAGE, documentId: "page-1"')))
+          .body
+      )
+    ).toEqual([]);
+    expect(
+      titles(
+        (
+          await send(
+            promptsQuery(
+              'documentType: PAGE, documentId: "page-1", utm: ["utm_medium=email"]'
+            )
+          )
+        ).body
+      )
+    ).toEqual(['newsletter-readers-stage']);
+  });
+
   it('shows rules for bypassed readers only with a valid bypass token', async () => {
     rules = [
-      rule('bypassed', { audience: EngagementAudience.PAYWALL_BYPASSED }),
+      rule('bypassed', { audiences: [EngagementAudience.PAYWALL_BYPASSED] }),
     ];
 
     expect(

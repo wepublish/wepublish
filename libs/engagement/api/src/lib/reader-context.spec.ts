@@ -8,6 +8,7 @@ import {
 import {
   ReaderContext,
   ReaderSubscription,
+  AudienceOf,
   matchesAudience,
   meetsRequirement,
   readerContextFrom,
@@ -161,46 +162,68 @@ const payingMember = reader({
 });
 
 describe('matchesAudience', () => {
+  const { ANONYMOUS, MEMBERS, PAYWALL_BYPASSED, UTM } = EngagementAudience;
+  const readers = [anonymous, registered, freeMember, payingMember];
+  const audience = (
+    audiences: EngagementAudience[] = [],
+    excludedAudiences: EngagementAudience[] = [],
+    more: Partial<AudienceOf> = {}
+  ): AudienceOf => ({ audiences, excludedAudiences, ...more });
+
   it.each([
-    [EngagementAudience.ALL, [true, true, true, true]],
-    [EngagementAudience.ANONYMOUS, [true, false, false, false]],
-    [EngagementAudience.REGISTERED, [false, true, true, true]],
-    [EngagementAudience.NON_MEMBERS, [true, true, false, false]],
-    [EngagementAudience.MEMBERS, [false, false, true, true]],
-    [EngagementAudience.PAYWALL_BYPASSED, [false, false, false, false]],
-    [EngagementAudience.MEMBER_PLANS, [false, false, false, false]],
+    ['everyone', audience(), [true, true, true, true]],
+    ['only anonymous', audience([ANONYMOUS]), [true, false, false, false]],
+    ['all but anonymous', audience([], [ANONYMOUS]), [false, true, true, true]],
+    ['only members', audience([MEMBERS]), [false, false, true, true]],
+    ['all but members', audience([], [MEMBERS]), [true, true, false, false]],
+    [
+      'only members of chosen plans',
+      audience([MEMBERS], [], { audienceMemberPlanIds: ['paid', 'other'] }),
+      [false, false, false, true],
+    ],
+    [
+      'all but anonymous and members',
+      audience([], [ANONYMOUS, MEMBERS]),
+      [false, true, false, false],
+    ],
   ])(
-    '%s matches [anonymous, registered, free member, paying member] = %j',
-    (audience, expected) => {
-      expect(
-        [anonymous, registered, freeMember, payingMember].map(r =>
-          matchesAudience(audience, r)
-        )
-      ).toEqual(expected);
+    '%s matches [anonymous, registered, free member, paying member]',
+    (_name, rule, expected) => {
+      expect(readers.map(r => matchesAudience(rule, r))).toEqual(expected);
     }
   );
 
-  it('matches readers with a subscription to one of the plans', () => {
-    expect(
-      [anonymous, registered, freeMember, payingMember].map(r =>
-        matchesAudience(EngagementAudience.MEMBER_PLANS, r, ['paid', 'other'])
-      )
-    ).toEqual([false, false, false, true]);
-  });
-
-  it('ignores plans for the other audiences', () => {
-    expect(
-      matchesAudience(EngagementAudience.ANONYMOUS, anonymous, ['paid'])
-    ).toBe(true);
-  });
-
   it('matches readers with a valid paywall bypass', () => {
-    expect(
-      matchesAudience(
-        EngagementAudience.PAYWALL_BYPASSED,
-        reader({ paywallBypassed: true })
-      )
-    ).toBe(true);
+    const rule = audience([PAYWALL_BYPASSED]);
+
+    expect(matchesAudience(rule, anonymous)).toBe(false);
+    expect(matchesAudience(rule, reader({ paywallBypassed: true }))).toBe(true);
+  });
+
+  it('matches readers who came from a link with one of the utm params', () => {
+    const rule = audience([UTM], [], {
+      audienceUtm: ['utm_medium=email', 'utm_source=newsletter'],
+    });
+
+    expect(matchesAudience(rule, reader({ utm: ['utm_medium=Email'] }))).toBe(
+      true
+    );
+    expect(matchesAudience(rule, reader({ utm: ['utm_medium=social'] }))).toBe(
+      false
+    );
+    expect(matchesAudience(rule, anonymous)).toBe(false);
+  });
+
+  it('leaves out excluded readers of an included segment', () => {
+    const rule = audience([ANONYMOUS], [UTM], {
+      audienceUtm: ['utm_medium=email'],
+    });
+
+    expect(matchesAudience(rule, anonymous)).toBe(true);
+    expect(matchesAudience(rule, reader({ utm: ['utm_medium=email'] }))).toBe(
+      false
+    );
+    expect(matchesAudience(rule, registered)).toBe(false);
   });
 });
 

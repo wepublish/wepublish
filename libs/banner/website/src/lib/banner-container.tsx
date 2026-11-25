@@ -6,6 +6,7 @@ import {
   resolveEngagement,
   useEngagementDismissals,
   useHydrated,
+  utmOfVisit,
   useNewsletterToken,
 } from '@wepublish/engagement/website';
 import { getPaywallBypassToken } from '@wepublish/paywall/website';
@@ -41,6 +42,7 @@ export function BannerContainer({
   // The cookies are read once hydrated, so the first request carries them.
   const hydrated = useHydrated();
   const paywallBypassToken = hydrated ? getPaywallBypassToken() : undefined;
+  const utm = useMemo(() => (hydrated ? utmOfVisit() : undefined), [hydrated]);
 
   const { data, refetch } = useQuery(EngagementPromptsDocument, {
     skip: !documentId || !hydrated,
@@ -52,6 +54,7 @@ export function BannerContainer({
         : EngagementDocumentType.Page,
       paywallBypassToken,
       newsletterToken,
+      utm,
     },
   });
 

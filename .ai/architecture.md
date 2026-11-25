@@ -87,7 +87,12 @@ newsletter/membership prompts and metered content gates are one
 `EngagementRule` model with ordered `EngagementStage`s (by `afterArticles`,
 the articles a reader already read in `meterWindowDays`) and their actions.
 Only the last stage may be `HARD` (cut the article to `previewBlocks`). A stage can show a
-block template (`blockTemplateId`) instead of its texts, except in banners.
+block template (`blockTemplateId`) instead of its texts, banners included.
+A rule's readers are `audiences` (shown to, everyone when empty) minus
+`excludedAudiences`, from the segments `ANONYMOUS`, `MEMBERS` (narrowed by
+`audienceMemberPlans`), `PAYWALL_BYPASSED` and `UTM` (`audienceUtm`
+`key=value` params; the website keeps the landing page's `utm_*` params in the
+session cookie `wep_utm` and sends them as `utm` — client-sent on purpose).
 `evaluate.ts` orders the prompts: `priority` (an editor "show this first"
 override), then the more specific rule (narrower audience, pages only), then
 the newest; the website shows at most one per slot (banner, modal, in-article)

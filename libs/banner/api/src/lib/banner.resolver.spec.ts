@@ -79,7 +79,8 @@ const announcement = (
   active: true,
   priority: 0,
   version: 1,
-  audience: EngagementAudience.ALL,
+  audiences: [],
+  excludedAudiences: [],
   showOnArticles: true,
   showOnPageIds: ['page-1'],
   includePeeredArticles: true,
@@ -89,25 +90,25 @@ const announcement = (
 });
 
 const migrated = {
-  all: announcement('all', { audience: EngagementAudience.ALL, priority: 0 }),
+  all: announcement('all', { audiences: [], priority: 0 }),
   loggedIn: announcement('logged-in', {
-    audience: EngagementAudience.REGISTERED,
+    excludedAudiences: [EngagementAudience.ANONYMOUS],
     priority: 1,
   }),
   unsubscribed: announcement('unsubscribed', {
-    audience: EngagementAudience.NON_MEMBERS,
+    excludedAudiences: [EngagementAudience.MEMBERS],
     priority: 2,
   }),
   loggedOut: announcement('logged-out', {
-    audience: EngagementAudience.ANONYMOUS,
+    audiences: [EngagementAudience.ANONYMOUS],
     priority: 3,
   }),
   subscribed: announcement('subscribed', {
-    audience: EngagementAudience.MEMBERS,
+    audiences: [EngagementAudience.MEMBERS],
     priority: 3,
   }),
   bypassed: announcement('bypassed', {
-    audience: EngagementAudience.PAYWALL_BYPASSED,
+    audiences: [EngagementAudience.PAYWALL_BYPASSED],
     priority: 4,
   }),
 };
@@ -239,7 +240,7 @@ describe('BannerResolver', () => {
 describe('toBanner', () => {
   it('shows a rule for specific plans to subscribers on older websites', () => {
     const rule = announcement('plans', {
-      audience: EngagementAudience.MEMBER_PLANS,
+      audiences: [EngagementAudience.MEMBERS],
     });
 
     expect(toBanner(rule, rule.stages[0]).showForLoginStatus).toBe(

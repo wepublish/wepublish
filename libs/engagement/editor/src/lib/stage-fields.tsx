@@ -17,6 +17,7 @@ import {
   Switch,
   TextField,
   Typography,
+  Alert,
 } from '@mui/material';
 import {
   EngagementActionRole,
@@ -586,6 +587,16 @@ export const StageFields = ({
             )}
 
             <ActionList stageIndex={index} />
+
+            {stage?.placement === EngagementPlacement.Modal &&
+              !stage.dismissible &&
+              !stage.actions.some(
+                ({ role }) => role !== EngagementActionRole.Cancel
+              ) && (
+                <Alert severity="warning">
+                  {t('engagement.form.noWayOut')}
+                </Alert>
+              )}
 
             <MoreOptions
               inUse={moreOptionsInUse}

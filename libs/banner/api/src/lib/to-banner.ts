@@ -19,16 +19,25 @@ import {
   PrimaryBannerArgs,
 } from './banner.model';
 
-const LOGIN_STATUS: Record<EngagementAudience, LoginStatus> = {
-  ALL: LoginStatus.ALL,
+const ONLY: Partial<Record<EngagementAudience, LoginStatus>> = {
   ANONYMOUS: LoginStatus.LOGGED_OUT,
-  REGISTERED: LoginStatus.LOGGED_IN,
-  NON_MEMBERS: LoginStatus.UNSUBSCRIBED,
   MEMBERS: LoginStatus.SUBSCRIBED,
   PAYWALL_BYPASSED: LoginStatus.PAYWALL_BYPASSED,
-  // Older websites can not tell plans apart.
-  MEMBER_PLANS: LoginStatus.SUBSCRIBED,
 };
+
+const EXCEPT: Partial<Record<EngagementAudience, LoginStatus>> = {
+  ANONYMOUS: LoginStatus.LOGGED_IN,
+  MEMBERS: LoginStatus.UNSUBSCRIBED,
+};
+
+// Older websites know one login status, so mixed audiences read as everyone.
+const loginStatusOf = ({
+  audiences: [only, ...moreOnly],
+  excludedAudiences: [except, ...moreExcept],
+}: EngagementRuleWithStages) =>
+  (only ?
+    !moreOnly.length && !except && ONLY[only]
+  : except && !moreExcept.length && EXCEPT[except]) || LoginStatus.ALL;
 
 const ROLE: Record<EngagementActionRole, BannerActionRole> = {
   PRIMARY: BannerActionRole.PRIMARY,
@@ -60,7 +69,7 @@ export const toBanner = (
   showOnArticles: rule.showOnArticles,
   imageId: stage.imageId,
   showOnPages: rule.showOnPageIds.map(id => ({ id })),
-  showForLoginStatus: LOGIN_STATUS[rule.audience],
+  showForLoginStatus: loginStatusOf(rule),
   actions: stage.actions.map(({ id, label, url, style, role, type }) => ({
     id,
     label,
