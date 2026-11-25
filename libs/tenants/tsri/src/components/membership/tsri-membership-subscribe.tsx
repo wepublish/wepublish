@@ -12,6 +12,7 @@ import {
   Subscribe,
   SubscribeButton,
   SubscribeCancelable,
+  SubscribePayment,
   TransactionFee,
   TransactionFeeIcon,
 } from '@wepublish/membership/website';
@@ -142,20 +143,28 @@ export const TsriMembershipSubscribeBlock = styled(SubscribeBlock)`
     border-color: ${({ theme }) => theme.palette.common.black};
   }
 
-  [data-area='paymentPeriodicity'] .MuiFormControlLabel-root {
+  ${SubscribePayment} > .MuiFormControl-root {
+    margin-left: ${({ theme }) => theme.spacing(2)};
+  }
+
+  ${SubscribePayment} > .MuiFormControlLabel-root {
     flex-basis: 100%;
     align-items: flex-start;
     margin: 0;
   }
 
-  [data-area='paymentPeriodicity'] .MuiFormControlLabel-label {
+  ${SubscribePayment} > .MuiFormControlLabel-root .MuiFormControlLabel-label {
     font-size: 1rem;
     line-height: 1.5;
   }
 
-  [data-area='paymentPeriodicity'] .MuiCheckbox-root {
-    padding-top: 0;
-    padding-bottom: 0;
+  /* the box of the checkbox icon starts 3px into it */
+  .MuiCheckbox-root {
+    padding: 0 9px 0 calc(${({ theme }) => theme.spacing(2)} - 3px);
+  }
+
+  .MuiCheckbox-root,
+  .MuiCheckbox-root.Mui-checked {
     color: ${({ theme }) => theme.palette.common.black};
   }
 
@@ -224,16 +233,6 @@ export const TsriMembershipTransactionFee = styled(TransactionFee)`
   .MuiFormControlLabel-label {
     font-size: 1rem;
     line-height: 1.5;
-  }
-
-  .MuiCheckbox-root {
-    padding-top: 0;
-    padding-bottom: 0;
-  }
-
-  .MuiCheckbox-root,
-  .MuiCheckbox-root.Mui-checked {
-    color: ${({ theme }) => theme.palette.common.black};
   }
 `;
 
