@@ -248,6 +248,62 @@ const INVOICE_SCALARS: MailPlaceholder[] = [
   },
 ];
 
+const GIFT_CODE_SCALARS: MailPlaceholder[] = [
+  {
+    key: 'optional_giftCode_code',
+    label: 'Gift code',
+    description: 'Der Code, mit dem das Geschenk eingelöst wird.',
+    example: 'ABCD-EFGH-JKMN',
+  },
+  {
+    key: 'optional_giftCode_recipientName',
+    label: 'Recipient name',
+    description:
+      'Name der beschenkten Person, wie beim Kauf angegeben. Kann leer sein.',
+    example: 'Max Muster',
+  },
+  {
+    key: 'optional_giftCode_offer_name',
+    label: 'Gift offer',
+    description: 'Name des Geschenkangebots.',
+    example: 'Jahres-Abo verschenken',
+  },
+  {
+    key: 'optional_giftCode_memberPlan_name',
+    label: 'Membership plan name',
+    description: 'Abo-Plan, den der Code bezahlt.',
+    example: 'Jahres-Abo',
+  },
+  {
+    key: 'optional_giftCode_periodicity',
+    label: 'Payment periodicity (raw)',
+    description:
+      'Laufzeit, die der Code bezahlt (Rohwert): yearly, biannual, quarterly, monthly, biennial.',
+    example: 'yearly',
+  },
+  {
+    key: 'optional_giftCode_redemptionWindowMonths',
+    label: 'Redemption window (months)',
+    description:
+      'Monate, in denen der Code eingelöst werden kann. Leer, wenn unbeschränkt.',
+    example: '12',
+  },
+  {
+    key: 'optional_giftCode_issuedAt',
+    label: 'Issued at',
+    description: 'Ausgestellt, d.h. bezahlt am. Wähle ein Format.',
+    example: '12.01.2026',
+    kind: 'date',
+  },
+  {
+    key: 'optional_giftCode_expiresAt',
+    label: 'Redeemable until',
+    description: 'Einlösbar bis. Leer, wenn unbeschränkt. Wähle ein Format.',
+    example: '12.01.2027',
+    kind: 'date',
+  },
+];
+
 export const MAIL_PLACEHOLDER_CONTEXTS: MailPlaceholderContext[] = [
   {
     id: 'account',
@@ -400,6 +456,43 @@ export const MAIL_PLACEHOLDER_CONTEXTS: MailPlaceholderContext[] = [
     note: 'Nur Empfänger-Felder verfügbar — diese Mail geht an Personen ohne Abo.',
     placeholders: [],
   },
+  {
+    id: 'giftCodePurchase',
+    titleKey: 'mailTemplates.placeholderContexts.giftCodePurchase',
+    title: 'Gift code bought',
+    note: 'Geht an die Käufer:in, sobald der Geschenkcode bezahlt ist. Die Rechnung ist die des Geschenkcodes.',
+    placeholders: [...GIFT_CODE_SCALARS, ...INVOICE_SCALARS],
+  },
+  {
+    id: 'giftCodeRedemption',
+    titleKey: 'mailTemplates.placeholderContexts.giftCodeRedemption',
+    title: 'Gift code redeemed',
+    note: 'Geht an die Person, die den Geschenkcode eingelöst hat. Abo und Rechnung sind die, die der Code bezahlt hat.',
+    placeholders: [
+      ...GIFT_CODE_SCALARS,
+      {
+        key: 'optional_giftCode_redeemedAt',
+        label: 'Redeemed at',
+        description: 'Eingelöst am. Wähle ein Format.',
+        example: '01.02.2026',
+        kind: 'date',
+      },
+      ...SUBSCRIPTION_SCALARS,
+      {
+        key: 'optional_subscription_memberPlan_name',
+        label: 'Membership plan name',
+        description: 'Name des Abo-Plans, z.B. Jahres-Abo.',
+        example: 'Jahres-Abo',
+      },
+      {
+        key: 'optional_subscription_paymentMethod_name',
+        label: 'Payment method name',
+        description: 'Name der Zahlungsmethode des Abos.',
+        example: 'Rechnung',
+      },
+      ...INVOICE_SCALARS,
+    ],
+  },
 ];
 
 /** Short, human-readable label per mail type (for lists and inline names). */
@@ -411,6 +504,8 @@ export const MAIL_TYPE_LABEL_KEYS: Record<string, string> = {
   invoiceCreation: 'mailTemplates.mailTypes.invoiceCreation',
   custom: 'mailTemplates.mailTypes.custom',
   customNoSubscription: 'mailTemplates.mailTypes.customNoSubscription',
+  giftCodePurchase: 'mailTemplates.mailTypes.giftCodePurchase',
+  giftCodeRedemption: 'mailTemplates.mailTypes.giftCodeRedemption',
 };
 
 /** Resolve a mail type to its short label, or `null` when no type is set. */

@@ -9,6 +9,7 @@ import {
 import nanoid from 'nanoid';
 import {
   MdAccountBox,
+  MdCardGiftcard,
   MdCode,
   MdCoffee,
   MdComment,
@@ -27,6 +28,7 @@ import {
   MdPhoto,
   MdPhotoLibrary,
   MdQueryStats,
+  MdRedeem,
   MdTitle,
   MdViewList,
   MdViewQuilt,
@@ -40,6 +42,7 @@ import { CrowdfundingBlock } from './CrowdfundingBlock';
 import { EmbedBlock } from './embedBlock';
 import { EventBlock } from './eventBlock';
 import { FlexBlock } from './flexBlock';
+import { GiftCodeOffersBlock } from './giftCodeOffersBlock';
 import { HTMLBlock } from './htmlBlock';
 import { ImageBlock } from './imageBlock';
 import { ImageGalleryBlock } from './imageGalleryBlock';
@@ -48,6 +51,7 @@ import { ListicleBlock } from './listicleBlock';
 import { MailchimpFormBlock } from './mailchimpFormBlock';
 import { PollBlock } from './pollBlock';
 import { QuoteBlock } from './quoteBlock';
+import { RedeemGiftCodeBlock } from './redeemGiftCodeBlock';
 import { RichTextBlock } from './richTextBlock/rich-text-block';
 import { SubscribeBlock } from './subscribeBlock';
 import { TeaserGridBlock } from './teaserGridBlock';
@@ -299,9 +303,49 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
       goodieMinValue: null,
       goodieMinValueAppliesToUpgrade: false,
       hideRepeatGoodieOnUpgrade: false,
+      showGiftCodeRedemption: false,
+      giftCodeRedemptionPageId: null,
+      giftCodeRedemptionLinkText: null,
     },
     label: 'blocks.subscribe.label',
     icon: <MdAccountBox />,
+  },
+
+  [EditorBlockType.GiftCodeOffers]: {
+    group: 'interaction',
+    feature: 'gift-codes',
+    field: props => <GiftCodeOffersBlock {...props} />,
+    defaultValue: {
+      blockStyle: undefined,
+      fields: [
+        SubscribeBlockField.FirstName,
+        SubscribeBlockField.Password,
+        SubscribeBlockField.PasswordRepeated,
+        SubscribeBlockField.Address,
+      ],
+      giftCodeOfferIds: [],
+      defaultGiftCodeOfferId: null,
+      showDiscountCodes: false,
+      askRecipientName: true,
+    },
+    label: 'blocks.giftCodeOffers.label',
+    icon: <MdCardGiftcard />,
+  },
+
+  [EditorBlockType.RedeemGiftCode]: {
+    group: 'interaction',
+    feature: 'gift-codes',
+    field: props => <RedeemGiftCodeBlock {...props} />,
+    defaultValue: {
+      blockStyle: undefined,
+      fields: [
+        SubscribeBlockField.FirstName,
+        SubscribeBlockField.Password,
+        SubscribeBlockField.PasswordRepeated,
+      ],
+    },
+    label: 'blocks.redeemGiftCode.label',
+    icon: <MdRedeem />,
   },
 
   [EditorBlockType.MailchimpForm]: {

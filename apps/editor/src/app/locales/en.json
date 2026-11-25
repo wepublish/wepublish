@@ -525,6 +525,11 @@
         "discountCodesHeading": "Discount codes",
         "showGoodies": "Show goodie selection",
         "showDiscountCodes": "Show discount code input",
+        "giftCodeRedemptionHeading": "Gift codes",
+        "showGiftCodeRedemption": "Show gift code redemption link",
+        "giftCodeRedemptionPage": "Redemption page",
+        "giftCodeRedemptionLinkText": "Link text",
+        "giftCodeRedemptionLinkTextHelp": "Leave empty to use the default text.",
         "goodieMinValue": {
           "label": "Minimum amount for a goodie",
           "hint": "Readers who pay less do not get to choose a goodie. Leave empty for no minimum."
@@ -656,6 +661,20 @@
         "leadText": "Lead Text",
         "title": "Title",
         "preTitle": "Pre-title"
+      },
+      "redeemGiftCode": {
+        "label": "Redeem gift code"
+      },
+      "giftCodeOffers": {
+        "label": "Sell gift codes",
+        "selectOffers": "Gift offers on sale",
+        "selectOffersHint": "Only active offers are shown to readers, in this order.",
+        "displayHeading": "Display",
+        "askRecipientName": "Ask for the recipient’s name",
+        "defaultOfferTitle": "Selected by default — this offer is preselected when the page loads.",
+        "orderHeading": "Gift offer order",
+        "orderHelp": "Drag the offers into the order in which they appear on the website and choose which offer is preselected.",
+        "showDiscountCodes": "Show discount code input (only for offers that allow discount codes)"
       },
       "mailchimpForm": {
         "label": "Newsletter form",
@@ -1763,7 +1782,9 @@
         "renewal": "Renewal",
         "invoiceCreation": "Invoice",
         "custom": "Free mail (subscriber)",
-        "customNoSubscription": "Free mail (no subscription)"
+        "customNoSubscription": "Free mail (no subscription)",
+        "giftCodePurchase": "Gift code bought",
+        "giftCodeRedemption": "Gift code redeemed"
       },
       "placeholderAlways": "Always available",
       "placeholderContextLabel": "Additional fields for this purpose",
@@ -1774,7 +1795,9 @@
         "renewal": "Automated renewal",
         "invoiceCreation": "Invoice created",
         "custom": "Free mail to a subscriber",
-        "customNoSubscription": "Free mail to a non-subscriber"
+        "customNoSubscription": "Free mail to a non-subscriber",
+        "giftCodePurchase": "Gift code bought",
+        "giftCodeRedemption": "Gift code redeemed"
       },
       "rawHtml": "HTML",
       "save": "Save",
@@ -1844,7 +1867,16 @@
         "optional_invoice_items_0_name": "Invoice item 1 — name",
         "optional_invoice_items_0_amount": "Invoice item 1 — amount (Rappen)",
         "optional_invoices_0_id": "Latest invoice — ID",
-        "optional_invoices_0_description": "Latest invoice — description"
+        "optional_invoices_0_description": "Latest invoice — description",
+        "optional_giftCode_code": "Gift code",
+        "optional_giftCode_recipientName": "Recipient name",
+        "optional_giftCode_offer_name": "Gift offer",
+        "optional_giftCode_memberPlan_name": "Membership plan name",
+        "optional_giftCode_periodicity": "Payment periodicity (raw)",
+        "optional_giftCode_redemptionWindowMonths": "Redemption window (months)",
+        "optional_giftCode_issuedAt": "Issued at",
+        "optional_giftCode_expiresAt": "Redeemable until",
+        "optional_giftCode_redeemedAt": "Redeemed at"
       },
       "dateFormat": {
         "iso": "ISO",
@@ -1869,7 +1901,9 @@
         "renewal": "Additionally includes plan/payment-method names and invoice data.",
         "invoiceCreation": "Note: subscription fields here use the prefix optional_subscriptionToCreateInvoice_*.",
         "custom": "Invoices come as an array: optional_invoices_0_* (newest first).",
-        "customNoSubscription": "Only recipient fields are available — this mail goes to people without a subscription."
+        "customNoSubscription": "Only recipient fields are available — this mail goes to people without a subscription.",
+        "giftCodePurchase": "Goes to the buyer once the gift code is paid. The invoice is the gift code’s.",
+        "giftCodeRedemption": "Goes to the reader who redeemed the gift code. Subscription and invoice are the ones the code paid."
       },
       "searchPlaceholders": "Filter placeholders…",
       "noPlaceholders": "No matching placeholders.",
@@ -1881,7 +1915,9 @@
         "renewal": "Automatic renewal — successful or failed. Additionally available: plan and payment method names plus the invoice data.",
         "invoiceCreation": "As soon as a new invoice has been created. Additionally available: the invoice and its subscription.",
         "custom": "A mail you send freely to subscribers, e.g. a newsletter via “Manual messages”. Additionally available: the subscription and the latest invoices.",
-        "customNoSubscription": "A mail you send freely to people without a subscription, e.g. an invitation or win-back. Only the recipient fields are available — subscription placeholders stay empty."
+        "customNoSubscription": "A mail you send freely to people without a subscription, e.g. an invitation or win-back. Only the recipient fields are available — subscription placeholders stay empty.",
+        "giftCodePurchase": "Sent to the buyer once a gift code is paid; choose it on the gift code offer. Additionally available: the code, the offer and the invoice.",
+        "giftCodeRedemption": "Sent to the reader who redeemed a gift code; choose it on the gift code offer. Additionally available: the code and the subscription it paid."
       },
       "placeholderDescriptions": {
         "user_fullName": "First and last name together (e.g. for the salutation).",
@@ -1927,7 +1963,16 @@
         "optional_invoice_items_0_name": "Name of the first invoice item (array, index 0).",
         "optional_invoice_items_0_amount": "Amount of the first invoice item in Rappen.",
         "optional_invoices_0_id": "ID of the latest invoice (array, index 0).",
-        "optional_invoices_0_description": "Description of the latest invoice."
+        "optional_invoices_0_description": "Description of the latest invoice.",
+        "optional_giftCode_code": "The code that redeems the gift.",
+        "optional_giftCode_recipientName": "Name of the person the gift is for, as entered when buying. Can be empty.",
+        "optional_giftCode_offer_name": "Name of the gift offer.",
+        "optional_giftCode_memberPlan_name": "Membership plan the code pays for.",
+        "optional_giftCode_periodicity": "Duration the code pays for (raw value): yearly, biannual, quarterly, monthly, biennial.",
+        "optional_giftCode_redemptionWindowMonths": "Months in which the code can be redeemed. Empty when unlimited.",
+        "optional_giftCode_issuedAt": "Issued, i.e. paid, at. Choose a format.",
+        "optional_giftCode_expiresAt": "Redeemable until. Empty when unlimited. Choose a format.",
+        "optional_giftCode_redeemedAt": "Redeemed at. Choose a format."
       },
       "statusHelp": "A check mark means an automatic email uses this template. «Unused» means no automatic email uses it — you can still send it by hand via «Manual messages».",
       "placeholdersInfo": "Placeholders are replaced automatically with the matching data when the message is sent, e.g. the recipient's first name.",
@@ -2227,6 +2272,7 @@
       "peers": "Peers",
       "settings": "Settings",
       "subscriptionPlans": "Subscription Plans",
+      "gifts": "Gifts",
       "subscriptions": "Subscriptions",
       "subscriptionSettings": "Automated messages",
       "tokens": "Tokens",
@@ -2354,6 +2400,10 @@
       "goodies": "Goodies",
       "goodieCreate": "New goodie",
       "goodieEdit": "Edit goodie",
+      "giftCodes": "Gift codes",
+      "giftCodeOffers": "Gift offers",
+      "giftCodeOfferCreate": "New gift offer",
+      "giftCodeOfferEdit": "Edit gift offer",
       "consents": "Consents",
       "consentCreate": "New consent",
       "consentEdit": "Edit consent",
@@ -3838,6 +3888,159 @@
         "availableStockInfo": "How many pieces can still be given away: the stock minus the goodies already chosen by subscribers. ∞ means unlimited."
       }
     },
+    "giftCodeOffer": {
+      "navbar": "Gift offers",
+      "form": {
+        "createTitle": "Create gift offer",
+        "editTitle": "Edit gift offer \"{{ offer }}\"",
+        "name": "Name",
+        "description": "Description",
+        "image": "Image",
+        "active": "Active",
+        "memberPlan": "Subscription plan",
+        "periodicity": "Duration",
+        "periodicityHelp": "Only durations the subscription plan has a price for can be chosen.",
+        "price": "Price",
+        "priceHelp": "What the buyer pays for the gift",
+        "priceSameAsPlan": "Same price as subscribing",
+        "priceBelowPlan": "Cheaper than subscribing (plan price {{ price }})",
+        "priceAbovePlan": "More expensive than subscribing (plan price {{ price }})",
+        "priceInvalid": "Enter a price above 0",
+        "redemptionWindowMonths": "Redeemable for (months)",
+        "redemptionWindowMonthsHelp": "Counted from the payment. Leave empty to let the code be redeemed at any time.",
+        "redemptionWindowMonthsInvalid": "Enter a whole number of at least 1",
+        "paymentMethods": "Payment methods",
+        "paymentMethodsHelp": "Buyers can pay for the gift with these methods. Not every payment provider supports single purchases.",
+        "paymentMethodsRequired": "Choose at least one payment method",
+        "allowDiscountCodes": "Allow discount codes",
+        "allowDiscountCodesHelp": "Buyers can enter a discount code for this member plan when buying the gift.",
+        "autoRenew": "Renew automatically",
+        "autoRenewHelp": "The subscription started with a code renews automatically once the gift period ends.",
+        "autoRenewNotExtendable": "This member plan cannot be extended, so it cannot renew automatically.",
+        "renewalPaymentMethod": "Payment method for the renewal",
+        "renewalPaymentMethodHelp": "The member plan's payment methods for this duration.",
+        "renewalPaymentMethodRequired": "Choose the payment method for the renewal",
+        "sections": {
+          "details": "Offer",
+          "sale": "Sale",
+          "mails": "Emails",
+          "mailsDescription": "Without a template, no mail is sent. Documents attached to the template are filled in like the mail itself."
+        },
+        "purchaseMailTemplate": "Mail when bought",
+        "purchaseMailTemplateHelp": "Sent to the buyer once the payment is confirmed, with the code.",
+        "redemptionMailTemplate": "Mail when redeemed",
+        "redemptionMailTemplateHelp": "Sent to the reader who redeemed the code."
+      },
+      "overview": {
+        "title": "Gift offers",
+        "createOffer": "New gift offer",
+        "active": "Active",
+        "name": "Name",
+        "memberPlan": "Subscription plan",
+        "periodicity": "Duration",
+        "price": "Price",
+        "redemptionWindow": "Redeemable for",
+        "months_one": "{{ count }} month",
+        "months_other": "{{ count }} months",
+        "unlimited": "Unlimited",
+        "allowDiscountCodes": "Discount codes",
+        "autoRenew": "Renews automatically",
+        "paymentMethods": "Payment methods",
+        "modifiedAt": "Last edited",
+        "modifiedAtDate": "{{modifiedAt, ccc PP p}}",
+        "areYouSure": "Delete gift offer?",
+        "areYouSureBody": "The gift offer \"{{ offer }}\" will be deleted permanently. Offers that already have codes cannot be deleted; set them inactive instead.",
+        "areYouSureConfirmation": "Delete gift offer"
+      }
+    },
+    "giftCode": {
+      "navbar": "Gift codes",
+      "list": {
+        "title": "Gift codes",
+        "code": "Code",
+        "noCodeYet": "Not issued yet",
+        "status": "Status",
+        "unpaid": "Unpaid",
+        "paid": "Paid",
+        "buyer": "Buyer",
+        "redeemedBy": "Redeemed by",
+        "paidInvoice": "Paid invoice",
+        "paidInvoiceLink": "Invoice of {{date, PP}}",
+        "source": "Source",
+        "createdBy": "Creator",
+        "recipientName": "Recipient name",
+        "offer": "Offer",
+        "amount": "Amount",
+        "createdAt": "Created",
+        "issuedAt": "Issued",
+        "expiresAt": "Expires",
+        "redeemedAt": "Redeemed",
+        "canceledAt": "Canceled",
+        "date": "{{date, PP}}"
+      },
+      "filters": {
+        "search": "Code, recipient or buyer email",
+        "status": "Status",
+        "payment": "Payment",
+        "allPayments": "All",
+        "paid": "Paid",
+        "unpaid": "Unpaid",
+        "offer": "Offer",
+        "memberPlan": "Subscription plan",
+        "source": "Source",
+        "allSources": "All",
+        "createdAt": "Created between"
+      },
+      "status": {
+        "ordered": "Ordered",
+        "issued": "Issued",
+        "redeemed": "Redeemed",
+        "expired": "Expired",
+        "canceled": "Canceled"
+      },
+      "source": {
+        "purchase": "Purchase",
+        "admin": "Created by an admin"
+      },
+      "create": {
+        "open": "Create codes",
+        "title": "Create gift codes",
+        "body": "The codes are issued right away, without an invoice or payment, e.g. to hand out at events.",
+        "offer": "Offer",
+        "offerRequired": "Choose an offer",
+        "inactiveOffer": "inactive",
+        "count": "Number of codes",
+        "countHelp": "1 to 500 codes",
+        "countInvalid": "Enter a whole number from 1 to 500",
+        "recipientName": "Recipient name (optional)",
+        "recipientNameHelp": "Stored on every code. Leave empty for codes without a name.",
+        "recipientNameTooLong": "At most {{maximum}} characters",
+        "submit": "Create codes",
+        "createdTitle_one": "{{count}} gift code created",
+        "createdTitle_other": "{{count}} gift codes created",
+        "createdBody": "The codes are issued. You can also find them in the list.",
+        "copy": "Copy codes",
+        "copied": "Codes copied to the clipboard",
+        "close": "Done"
+      },
+      "cancellationReason": {
+        "manual": "Canceled by an editor",
+        "invoiceCanceled": "Not paid in time",
+        "chargeback": "Payment reversed"
+      },
+      "actions": {
+        "cancel": "Cancel gift code",
+        "markAsPaid": "Mark as paid"
+      },
+      "dialogs": {
+        "cancelTitle": "Cancel gift code?",
+        "cancelBody": "The gift code for {{ giftCode }} can no longer be redeemed. Handle refunds with the payment provider.",
+        "cancelConfirm": "Cancel gift code",
+        "markAsPaidTitle": "Mark as paid?",
+        "markAsPaidBody": "The invoice for {{ giftCode }} is marked as paid. If the code has not been issued yet, it is issued now. Only do this once the money has arrived.",
+        "markAsPaidConfirm": "Mark as paid"
+      }
+    },
     "paymentMethodEditPanel": {
       "gracePeriod": "Grace Period",
       "gracePeriodHelpText": "If you use the paywall, allow users to read immediately after ordering a subscription, even if they have not paid yet. This is useful for payments via bank transfer, for instance.",
@@ -4794,14 +4997,16 @@
         "subscriptionFlow": "Subscription mailing",
         "userFlow": "Event mail",
         "systemMail": "System mail",
-        "manual": "Manual"
+        "manual": "Manual",
+        "giftCode": "Gift code"
       },
       "error": "Error",
       "typeDescriptions": {
         "manual": "Sent by hand via “Manual messages” or “Send test”. Example: a newsletter to all subscribers.",
         "subscriptionFlow": "Time-based, from “Automated messages”, scheduled off the subscription date. Examples: reminder 14 days before it ends, dunning after an unpaid invoice.",
         "userFlow": "Triggered immediately by a concrete action or event. Examples: login link requested, email address changed, renewal payment failed.",
-        "systemMail": "Account mails, configured under “Automated messages” in the “Account & login” section. Examples: welcome mail after registration, password reset."
+        "systemMail": "Account mails, configured under “Automated messages” in the “Account & login” section. Examples: welcome mail after registration, password reset.",
+        "giftCode": "Sent when a gift code is bought or redeemed, with the templates chosen on the gift code offer."
       },
       "errorHelp": {
         "causeTitle": "What happened?",
@@ -5766,7 +5971,8 @@
         "peer": "Create peer",
         "userRole": "Create user role",
         "token": "Generate token",
-        "apiToken": "Generate API key"
+        "apiToken": "Generate API key",
+        "giftCodeOffer": "Create gift offer"
       },
       "trigger": "Search or jump to…",
       "keys": {

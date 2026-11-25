@@ -1,6 +1,8 @@
 import {
   Currency,
   FullAvailablePaymentMethodFragment,
+  FullGiftCodeOfferFragment,
+  FullGiftCodeRedemptionFragment,
   FullGoodieFragment,
   FullInvoiceFragment,
   FullInvoiceItemFragment,
@@ -10,6 +12,7 @@ import {
   FullSubscriptionDeactivationFragment,
   FullSubscriptionFragment,
   FullSubscriptionPaymentMethodChangeFragment,
+  GiftCodeRedemptionAction,
   PaymentMethodChangeKind,
   PaymentMethodChangeState,
   PaymentPeriodicity,
@@ -262,5 +265,44 @@ export const mockUpgradeSubscriptionInfo = (
   discountAmount: 0,
   discountCodeValid: null,
   discountPercent: null,
+  ...definedOnly(overrides),
+});
+
+export const mockGiftCodeOffer = ({
+  image = mockImage(),
+  paymentMethods = [mockPaymentMethod(), mockPaymentMethod()],
+  ...overrides
+}: Partial<FullGiftCodeOfferFragment> = {}): FullGiftCodeOfferFragment => ({
+  __typename: 'GiftCodeOffer',
+  id: faker.string.nanoid(),
+  name: 'Jahresabo verschenken',
+  description: mockShortRichText(),
+  image,
+  periodicity: PaymentPeriodicity.Yearly,
+  redemptionWindowMonths: 12,
+  allowDiscountCodes: false,
+  price: 12000,
+  memberPlan: {
+    __typename: 'MemberPlan',
+    id: faker.string.nanoid(),
+    name: 'Standard',
+    currency: Currency.Chf,
+  },
+  paymentMethods,
+  ...definedOnly(overrides),
+});
+
+export const mockGiftCodeRedemption = ({
+  subscription = mockSubscription(),
+  ...overrides
+}: Partial<FullGiftCodeRedemptionFragment> = {}): FullGiftCodeRedemptionFragment => ({
+  __typename: 'GiftCodeRedemption',
+  action: GiftCodeRedemptionAction.CreatedSubscription,
+  subscription,
+  invoice: {
+    __typename: 'Invoice',
+    id: faker.string.nanoid(),
+    paidAt: MOCK_REFERENCE_DATE,
+  },
   ...definedOnly(overrides),
 });

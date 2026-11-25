@@ -38,6 +38,7 @@ import {
   assembleSampleMailData,
   MailTemplateContextId,
   MAIL_TEMPLATE_CONTEXT_IDS,
+  SAMPLE_GIFT_CODES,
   SAMPLE_JWT,
   SAMPLE_LETTER_ADDRESS,
 } from './mail-template-data';
@@ -388,8 +389,9 @@ export class MailTemplateService {
   }
 
   /**
-   * Delete a template, but refuse if it is still wired to a subscription flow
-   * or a system mail, or if it has already sent mails (referenced by logs).
+   * Delete a template, but refuse if it is still wired to a subscription flow,
+   * a system mail or a gift code offer, or if it has already sent mails
+   * (referenced by logs).
    */
   async deleteMailTemplate(id: string): Promise<void> {
     const template = await this.prisma.mailTemplate.findUnique({
@@ -399,6 +401,8 @@ export class MailTemplateService {
           select: {
             subscriptionIntervals: true,
             userFlowMails: true,
+            giftCodeOfferPurchaseMails: true,
+            giftCodeOfferRedemptionMails: true,
             mailLog: true,
           },
         },
@@ -418,6 +422,15 @@ export class MailTemplateService {
     if (template._count.userFlowMails > 0) {
       throw new BadRequestException(
         'This template is still assigned to a system mail. Please unassign it before deleting.'
+      );
+    }
+
+    if (
+      template._count.giftCodeOfferPurchaseMails > 0 ||
+      template._count.giftCodeOfferRedemptionMails > 0
+    ) {
+      throw new BadRequestException(
+        'This template is still assigned to a gift code offer. Please unassign it before deleting.'
       );
     }
 
@@ -543,7 +556,12 @@ export class MailTemplateService {
 
     return assembleMailData(
       contextId,
-      { user: subscription.user ?? {}, subscription, invoice },
+      {
+        user: subscription.user ?? {},
+        subscription,
+        invoice,
+        giftCode: SAMPLE_GIFT_CODES[contextId]?.giftCode,
+      },
       jwt
     );
   }
