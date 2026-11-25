@@ -326,6 +326,9 @@ describe('TsriMembershipSubscribe', () => {
       screen.getByLabelText(t('tsri.membership.transactionFee') as string)
     ).toBeInTheDocument();
     expect(screen.getByLabelText(t('user.form.email'))).toBeInTheDocument();
+    expect(
+      screen.queryByRole('heading', { name: t('subscribe.spamProtection') })
+    ).not.toBeInTheDocument();
 
     const benefits = within(
       screen.getByRole('list', {

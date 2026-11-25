@@ -70,7 +70,8 @@ export const TsriMembershipSubscribeBlock = styled(SubscribeBlock)`
     margin-bottom: ${({ theme }) => theme.spacing(5)};
   }
 
-  [data-area='memberPlans'] > h2 {
+  [data-area='memberPlans'] > h2,
+  [data-area='challenge'] > h2 {
     display: none;
   }
 
