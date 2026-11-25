@@ -59,6 +59,7 @@ export const bajourTenant: WebsiteTenantConfig = {
     'Light',
     'Sponsored',
     'News',
+    'Breit',
   ],
   translations: { lng: 'de' },
   dateLocale: de,

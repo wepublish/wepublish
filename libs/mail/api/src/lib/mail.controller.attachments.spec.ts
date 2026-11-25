@@ -44,6 +44,8 @@ describe('MailController attachments', () => {
   it.each([
     ['subscription mails', mailLogType.SubscriptionFlow],
     ['mails sent by hand', mailLogType.Manual],
+    // The buyer's certificate and the redeemer's welcome pack.
+    ['gift code mails', mailLogType.GiftCode],
   ])('sends %s with their attachments', async (_name, mailType) => {
     expect(await composedAs(mailType)).toMatchObject({
       withAttachments: true,

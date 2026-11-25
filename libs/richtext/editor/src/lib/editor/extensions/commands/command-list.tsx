@@ -1,6 +1,6 @@
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import type { CommandSuggestion } from './command-suggestions';
-import { MenuItem, Popper } from '@mui/material';
+import { MenuItem, MenuList, Paper, Popper } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
 export const CommandList = forwardRef<
@@ -57,19 +57,23 @@ export const CommandList = forwardRef<
       anchorEl={props.decorationNode}
       placement={'bottom-start'}
       modifiers={[{ name: 'shift' }, { name: 'flip' }]}
-      sx={{ bgcolor: 'background.default', border: 1, zIndex: 10000 }}
+      sx={{ zIndex: 10000 }}
     >
-      {props.items.length ?
-        props.items.map((item, index) => (
-          <MenuItem
-            key={index}
-            onClick={() => selectItem(index)}
-            selected={index === selectedIndex}
-          >
-            {item.title}
-          </MenuItem>
-        ))
-      : <MenuItem>{t('richtext.commands.noResult')}</MenuItem>}
+      <Paper variant="outlined">
+        <MenuList>
+          {props.items.length ?
+            props.items.map((item, index) => (
+              <MenuItem
+                key={index}
+                onClick={() => selectItem(index)}
+                selected={index === selectedIndex}
+              >
+                {item.title}
+              </MenuItem>
+            ))
+          : <MenuItem disabled>{t('richtext.commands.noResult')}</MenuItem>}
+        </MenuList>
+      </Paper>
     </Popper>
   );
 });

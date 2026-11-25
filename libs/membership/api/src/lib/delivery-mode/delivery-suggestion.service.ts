@@ -19,11 +19,14 @@ import { MailEmailSegment } from '../mail-send/mail-send.model';
 import {
   emailSegmentOf,
   MailSendRecipientService,
+  placeholderEmailWhere,
 } from '../mail-send/mail-send-recipient.service';
 import {
   DeliverySuggestionConfirmAllResult,
   DeliverySuggestionCounts,
+  DeliverySuggestionFilter,
   DeliverySuggestionModel,
+  DeliverySuggestionReasonCount,
   DeliverySuggestionRecomputeResult,
   PaginatedDeliverySuggestions,
 } from './delivery-mode.model';
@@ -35,17 +38,69 @@ const CHUNK = 500;
 
 type Desired = { kind: DeliverySuggestionKind; reason: string };
 
-/** Users whose address matches one of the placeholder patterns; null without patterns. */
-export const placeholderEmailWhere = (
-  patterns: readonly string[]
-): Prisma.UserWhereInput | null =>
-  patterns.length ?
-    {
-      OR: patterns.map(pattern => ({
-        email: { contains: pattern, mode: 'insensitive' as const },
-      })),
-    }
+const PLACEHOLDER_REASON = 'placeholderEmail';
+
+/**
+ * What makes suggestions «the same ones»: a placeholder address, or the
+ * evidence type that decided the email status (`hardBounce: 550 …` →
+ * `hardBounce`). `none` when the status is gone.
+ */
+export const suggestionReasonOf = (row: {
+  reason: string;
+  user: { emailQuality: { reason: string } | null };
+}): string =>
+  row.reason === PLACEHOLDER_REASON ? PLACEHOLDER_REASON
+  : row.user.emailQuality ? row.user.emailQuality.reason.split(':')[0].trim()
+  : 'none';
+
+const range = (from?: Date | null, to?: Date | null) =>
+  from || to ?
+    { ...(from ? { gte: from } : {}), ...(to ? { lte: to } : {}) }
   : null;
+
+/** The suggestions a filter keeps; the same for the list and confirm-all. */
+export const suggestionFilterWhere = (
+  filter?: DeliverySuggestionFilter | null
+): Prisma.DeliverySuggestionWhereInput => {
+  const and: Prisma.DeliverySuggestionWhereInput[] = [];
+
+  if (filter?.reasons?.length) {
+    and.push({
+      OR: filter.reasons.map(reason =>
+        reason === PLACEHOLDER_REASON ? { reason: PLACEHOLDER_REASON }
+        : reason === 'none' ?
+          {
+            reason: { not: PLACEHOLDER_REASON },
+            user: { emailQuality: null },
+          }
+        : {
+            reason: { not: PLACEHOLDER_REASON },
+            user: {
+              emailQuality: {
+                is: {
+                  OR: [{ reason }, { reason: { startsWith: `${reason}:` } }],
+                },
+              },
+            },
+          }
+      ),
+    });
+  }
+
+  const emailSince = range(filter?.emailSinceFrom, filter?.emailSinceTo);
+
+  if (emailSince) {
+    and.push({ user: { emailQuality: { is: { since: emailSince } } } });
+  }
+
+  const created = range(filter?.createdFrom, filter?.createdTo);
+
+  if (created) {
+    and.push({ createdAt: created });
+  }
+
+  return and.length ? { AND: and } : {};
+};
 
 const userSelect = {
   id: true,
@@ -215,20 +270,45 @@ export class DeliverySuggestionService {
     };
   }
 
+  /** The reasons among the open suggestions of a kind, most first. */
+  async reasons(
+    kind: DeliverySuggestionKind
+  ): Promise<DeliverySuggestionReasonCount[]> {
+    const rows = await this.prisma.deliverySuggestion.findMany({
+      where: { kind },
+      select: {
+        reason: true,
+        user: { select: { emailQuality: { select: { reason: true } } } },
+      },
+    });
+    const counts = new Map<string, number>();
+
+    for (const row of rows) {
+      const reason = suggestionReasonOf(row);
+      counts.set(reason, (counts.get(reason) ?? 0) + 1);
+    }
+
+    return [...counts]
+      .map(([reason, count]) => ({ reason, count }))
+      .sort((a, b) => b.count - a.count || a.reason.localeCompare(b.reason));
+  }
+
   async list(
     kind: DeliverySuggestionKind,
     skip: number,
-    take: number
+    take: number,
+    filter?: DeliverySuggestionFilter | null
   ): Promise<PaginatedDeliverySuggestions> {
+    const where = { kind, ...suggestionFilterWhere(filter) };
     const [rows, totalCount] = await Promise.all([
       this.prisma.deliverySuggestion.findMany({
-        where: { kind },
+        where,
         include: { user: { select: userSelect } },
         orderBy: { createdAt: 'asc' },
         skip,
         take,
       }),
-      this.prisma.deliverySuggestion.count({ where: { kind } }),
+      this.prisma.deliverySuggestion.count({ where }),
     ]);
 
     return { totalCount, nodes: rows.map(toSuggestionModel) };
@@ -315,12 +395,14 @@ export class DeliverySuggestionService {
     );
   }
 
+  /** Apply every open suggestion of a kind the filter keeps. */
   async confirmAll(
     kind: DeliverySuggestionKind,
-    changedBy: SessionActor
+    changedBy: SessionActor,
+    filter?: DeliverySuggestionFilter | null
   ): Promise<DeliverySuggestionConfirmAllResult> {
     const ids = await this.prisma.deliverySuggestion.findMany({
-      where: { kind },
+      where: { kind, ...suggestionFilterWhere(filter) },
       select: { id: true },
       orderBy: { createdAt: 'asc' },
     });

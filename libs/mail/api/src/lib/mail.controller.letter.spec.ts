@@ -75,6 +75,9 @@ function setup({
       })),
     },
     userDeliveryPreference: { findUnique: vi.fn(async () => preference) },
+    mailTemplateVariant: {
+      findUnique: vi.fn(async () => ({ id: 'variant-1' })),
+    },
   };
 
   const mailContext = {

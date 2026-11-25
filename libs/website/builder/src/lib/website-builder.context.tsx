@@ -52,6 +52,8 @@ import {
   BuilderRichTextBlockProps,
   BuilderSoundCloudTrackBlockProps,
   BuilderSubscribeBlockProps,
+  BuilderRedeemGiftCodeBlockProps,
+  BuilderGiftCodeOffersBlockProps,
   BuilderTeaserGridBlockProps,
   BuilderTeaserGridFlexBlockProps,
   BuilderFlexBlockProps,
@@ -97,6 +99,8 @@ import {
   BuilderPaymentMethodPickerProps,
   BuilderPeriodicityPickerProps,
   BuilderSubscribeProps,
+  BuilderGiftCodeRedeemProps,
+  BuilderGiftCodePurchaseProps,
   BuilderSubscribeSummaryProps,
   BuilderSubscriptionListItemProps,
   BuilderSubscriptionListProps,
@@ -194,6 +198,8 @@ export type WebsiteBuilderProps = {
   PeriodicityPicker: ComponentType<BuilderPeriodicityPickerProps>;
   TransactionFee: ComponentType<BuilderTransactionFeeProps>;
   Subscribe: ComponentType<BuilderSubscribeProps>;
+  GiftCodeRedeem: ComponentType<BuilderGiftCodeRedeemProps>;
+  GiftCodePurchase: ComponentType<BuilderGiftCodePurchaseProps>;
   SubscribeSummary: ComponentType<BuilderSubscribeSummaryProps>;
   Upgrade: ComponentType<BuilderUpgradeProps>;
   ContentWrapper: ComponentType<BuilderContentWrapperProps>;
@@ -241,6 +247,8 @@ export type WebsiteBuilderProps = {
     RichText: ComponentType<BuilderRichTextBlockProps>;
     HTML: ComponentType<BuilderHTMLBlockProps>;
     Subscribe: ComponentType<BuilderSubscribeBlockProps>;
+    RedeemGiftCode: ComponentType<BuilderRedeemGiftCodeBlockProps>;
+    GiftCodeOffers: ComponentType<BuilderGiftCodeOffersBlockProps>;
     MailchimpForm: ComponentType<BuilderMailchimpFormBlockProps>;
     FacebookPost: ComponentType<BuilderFacebookPostBlockProps>;
     FacebookVideo: ComponentType<BuilderFacebookVideoBlockProps>;
@@ -299,6 +307,8 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   InvoiceList: NoComponent,
   InvoiceListItem: NoComponent,
   Subscribe: NoComponent,
+  GiftCodeRedeem: NoComponent,
+  GiftCodePurchase: NoComponent,
   SubscribeSummary: NoComponent,
   Upgrade: NoComponent,
   TransactionFee: NoComponent,
@@ -387,6 +397,8 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     RichText: NoComponent,
     HTML: NoComponent,
     Subscribe: NoComponent,
+    RedeemGiftCode: NoComponent,
+    GiftCodeOffers: NoComponent,
     MailchimpForm: NoComponent,
     FacebookPost: NoComponent,
     FacebookVideo: NoComponent,

@@ -980,6 +980,24 @@ async function seedMemberPlans(prisma: PrismaClient) {
   await Promise.all([testAbo1, testAbo2, testAbo3]);
 }
 
+const DEMO_GIFT_CODE_OFFER_ID = 'demo-gift-code-offer';
+
+async function seedGiftCodeOffers(prisma: PrismaClient) {
+  await prisma.giftCodeOffer.upsert({
+    where: { id: DEMO_GIFT_CODE_OFFER_ID },
+    update: {},
+    create: {
+      id: DEMO_GIFT_CODE_OFFER_ID,
+      name: 'Test-Abo CHF verschenken',
+      memberPlan: { connect: { slug: MEMBER_PLAN_SLUGS.chfYearly } },
+      periodicity: 'yearly',
+      redemptionWindowMonths: 12,
+      price: 12000,
+      paymentMethods: { connect: [{ id: 'simulated' }] },
+    },
+  });
+}
+
 // All test subscriptions are positioned relative to the moment of seeding, so
 // re-running the seed always produces a current data set instead of dates that
 // silently expired since the last run.
@@ -1814,11 +1832,25 @@ Du erhältst diese Nachricht an {{user_email}}.`,
 ];
 
 async function seedMailTemplates(prisma: PrismaClient) {
-  for (const { id, ...content } of SEED_MAIL_TEMPLATES) {
+  for (const {
+    id,
+    subject,
+    htmlContent,
+    textContent,
+    ...content
+  } of SEED_MAIL_TEMPLATES) {
+    // The seeded templates are emails; a letter version is written in the
+    // editor where a medium prints.
     await prisma.mailTemplate.upsert({
       where: { id },
       update: {},
-      create: { id, ...content },
+      create: {
+        id,
+        ...content,
+        variants: {
+          create: { channel: 'mail', subject, htmlContent, textContent },
+        },
+      },
     });
 
     console.log(`  ${content.name} — ${content.description}`);
@@ -2115,6 +2147,7 @@ export async function runExampleSeed(prisma: PrismaClient): Promise<void> {
     // re-seed brings an existing database back to a current test data set.
     await seedPaymentMethods(prisma);
     await seedMemberPlans(prisma);
+    await seedGiftCodeOffers(prisma);
     console.log('Refreshing test subscribers');
     await seedSubscribers(prisma);
     console.log('Refreshing demo notifications');
@@ -2217,6 +2250,7 @@ export async function runExampleSeed(prisma: PrismaClient): Promise<void> {
 
   console.log('Seeding Member Plans');
   await seedMemberPlans(prisma);
+  await seedGiftCodeOffers(prisma);
 
   console.log('Seeding test subscribers');
   await seedSubscribers(prisma);

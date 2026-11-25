@@ -12,6 +12,7 @@ import {
 import { InvoicePaidNotifier } from './invoice-paid.listener';
 import { PaymentAuthorizationNotifier } from './payment-authorization.notifier';
 import { BexioContactSyncService } from './payment-provider/bexio/bexio-contact-sync.service';
+import { SellableRegistry } from './sellable/sellable-registry.service';
 
 @Module({
   imports: [PrismaModule, PaymentMethodModule],
@@ -22,6 +23,7 @@ import { BexioContactSyncService } from './payment-provider/bexio/bexio-contact-
     InvoicePaidNotifier,
     PaymentAuthorizationNotifier,
     BexioContactSyncService,
+    SellableRegistry,
   ],
   controllers: [PaymentWebhookController],
   exports: [
@@ -30,6 +32,7 @@ import { BexioContactSyncService } from './payment-provider/bexio/bexio-contact-
     InvoicePaidNotifier,
     PaymentAuthorizationNotifier,
     BexioContactSyncService,
+    SellableRegistry,
   ],
 })
 export class PaymentsModule {

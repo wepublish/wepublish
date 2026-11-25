@@ -637,7 +637,7 @@ export type BildwurfAdBlockInput = {
   zoneID?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type BlockContent = BildwurfAdBlock | BlockTemplateBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HtmlBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | MailchimpFormBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock;
+export type BlockContent = BildwurfAdBlock | BlockTemplateBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | GiftCodeOffersBlock | HtmlBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | MailchimpFormBlock | PolisConversationBlock | PollBlock | QuoteBlock | RedeemGiftCodeBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock;
 
 export type BlockContentInput = {
   bildwurfAd?: InputMaybe<BildwurfAdBlockInput>;
@@ -649,6 +649,7 @@ export type BlockContentInput = {
   facebookPost?: InputMaybe<FacebookPostBlockInput>;
   facebookVideo?: InputMaybe<FacebookVideoBlockInput>;
   flexBlock?: InputMaybe<FlexBlockInput>;
+  giftCodeOffers?: InputMaybe<GiftCodeOffersBlockInput>;
   html?: InputMaybe<HtmlBlockInput>;
   image?: InputMaybe<ImageBlockInput>;
   imageGallery?: InputMaybe<ImageGalleryBlockInput>;
@@ -659,6 +660,7 @@ export type BlockContentInput = {
   polisConversation?: InputMaybe<PolisConversationBlockInput>;
   poll?: InputMaybe<PollBlockInput>;
   quote?: InputMaybe<QuoteBlockInput>;
+  redeemGiftCode?: InputMaybe<RedeemGiftCodeBlockInput>;
   richText?: InputMaybe<RichTextBlockInput>;
   soundCloudTrack?: InputMaybe<SoundCloudTrackBlockInput>;
   streamableVideo?: InputMaybe<StreamableVideoBlockInput>;
@@ -778,6 +780,7 @@ export enum BlockType {
   FacebookPost = 'FacebookPost',
   FacebookVideo = 'FacebookVideo',
   FlexBlock = 'FlexBlock',
+  GiftCodeOffers = 'GiftCodeOffers',
   Html = 'HTML',
   Image = 'Image',
   ImageGallery = 'ImageGallery',
@@ -788,6 +791,7 @@ export enum BlockType {
   PolisConversation = 'PolisConversation',
   Poll = 'Poll',
   Quote = 'Quote',
+  RedeemGiftCode = 'RedeemGiftCode',
   RichText = 'RichText',
   SoundCloudTrack = 'SoundCloudTrack',
   StreamableVideo = 'StreamableVideo',
@@ -1410,6 +1414,19 @@ export type DeliverySuggestionEmailQuality = {
   since: Scalars['DateTime']['output'];
 };
 
+export type DeliverySuggestionFilter = {
+  /** Suggested since, from. */
+  createdFrom?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Suggested since, to. */
+  createdTo?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Email status since, from. */
+  emailSinceFrom?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Email status since, to. */
+  emailSinceTo?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Any of these reasons: placeholderEmail, the evidence type behind the email status (e.g. hardBounce, login), or none. */
+  reasons?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
 /** toLetter: move to printed letters. toMail: move back to mail. */
 export enum DeliverySuggestionKind {
   ToLetter = 'toLetter',
@@ -1426,6 +1443,13 @@ export type DeliverySuggestionModel = {
   /** Why, e.g. emailQuality:dead or placeholderEmail. */
   reason: Scalars['String']['output'];
   user: MailLogRecipient;
+};
+
+export type DeliverySuggestionReasonCount = {
+  __typename?: 'DeliverySuggestionReasonCount';
+  count: Scalars['Int']['output'];
+  /** A reason as DeliverySuggestionFilter.reasons takes it. */
+  reason: Scalars['String']['output'];
 };
 
 export type DeliverySuggestionRecomputeResult = {
@@ -1503,6 +1527,7 @@ export enum EditorBlockType {
   Embed = 'Embed',
   Event = 'Event',
   FlexBlock = 'FlexBlock',
+  GiftCodeOffers = 'GiftCodeOffers',
   Html = 'HTML',
   Image = 'Image',
   ImageGallery = 'ImageGallery',
@@ -1511,6 +1536,7 @@ export enum EditorBlockType {
   MailchimpForm = 'MailchimpForm',
   Poll = 'Poll',
   Quote = 'Quote',
+  RedeemGiftCode = 'RedeemGiftCode',
   RichText = 'RichText',
   Subscribe = 'Subscribe',
   TeaserGrid1 = 'TeaserGrid1',
@@ -1870,6 +1896,173 @@ export type FullPoll = {
   opensAt: Scalars['DateTime']['output'];
   question?: Maybe<Scalars['String']['output']>;
 };
+
+export type GiftCode = HasMemberPlanLc & {
+  __typename?: 'GiftCode';
+  /** Null for codes created by an admin. */
+  amount?: Maybe<Scalars['Int']['output']>;
+  autoRenew: Scalars['Boolean']['output'];
+  /** Only visible to admins. */
+  buyer?: Maybe<SensitiveDataUser>;
+  buyerId?: Maybe<Scalars['String']['output']>;
+  canceledAt?: Maybe<Scalars['DateTime']['output']>;
+  cancellationReason?: Maybe<GiftCodeCancellationReason>;
+  /** Only visible to admins and to the buyer of an issued, uncanceled code whose purchase is paid. */
+  code?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  /** The admin who created the code. Only visible to admins. */
+  createdBy?: Maybe<SensitiveDataUser>;
+  currency?: Maybe<Currency>;
+  expiresAt?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['String']['output'];
+  invoiceId?: Maybe<Scalars['String']['output']>;
+  issuedAt?: Maybe<Scalars['DateTime']['output']>;
+  memberPlan: MemberPlan;
+  memberPlanId: Scalars['String']['output'];
+  offer: GiftCodeOffer;
+  offerId: Scalars['String']['output'];
+  /** Whether the invoice of the purchase is paid. Null for codes created by an admin. */
+  paid?: Maybe<Scalars['Boolean']['output']>;
+  periodicity: PaymentPeriodicity;
+  recipientName?: Maybe<Scalars['String']['output']>;
+  redeemedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** Only visible to admins. */
+  redeemedBy?: Maybe<SensitiveDataUser>;
+  /** The subscription invoice the code paid. Only visible to admins. */
+  redeemedInvoice?: Maybe<Invoice>;
+  redemptionWindowMonths?: Maybe<Scalars['Int']['output']>;
+  renewalPaymentMethodId?: Maybe<Scalars['String']['output']>;
+  source: GiftCodeSource;
+  status: GiftCodeStatus;
+};
+
+export enum GiftCodeCancellationReason {
+  Chargeback = 'chargeback',
+  InvoiceCanceled = 'invoiceCanceled',
+  Manual = 'manual'
+}
+
+export type GiftCodeFilter = {
+  buyerId?: InputMaybe<Scalars['String']['input']>;
+  createdFrom?: InputMaybe<Scalars['DateTime']['input']>;
+  createdTo?: InputMaybe<Scalars['DateTime']['input']>;
+  memberPlanId?: InputMaybe<Scalars['String']['input']>;
+  offerId?: InputMaybe<Scalars['String']['input']>;
+  /** True lists codes with a paid invoice, false codes whose invoice is not paid. */
+  paid?: InputMaybe<Scalars['Boolean']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  source?: InputMaybe<GiftCodeSource>;
+  status?: InputMaybe<GiftCodeStatus>;
+};
+
+export type GiftCodeOffer = HasImage & HasMemberPlanLc & {
+  __typename?: 'GiftCodeOffer';
+  active: Scalars['Boolean']['output'];
+  allowDiscountCodes: Scalars['Boolean']['output'];
+  /** Whether subscriptions started with codes of this offer renew automatically. */
+  autoRenew: Scalars['Boolean']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  description?: Maybe<Scalars['RichText']['output']>;
+  id: Scalars['String']['output'];
+  image?: Maybe<Image>;
+  imageID?: Maybe<Scalars['String']['output']>;
+  memberPlan: MemberPlan;
+  memberPlanId: Scalars['String']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  name: Scalars['String']['output'];
+  /** The payment methods configured on this offer. */
+  paymentMethodIds: Array<Scalars['String']['output']>;
+  /** The payment methods a buyer can use for this offer. */
+  paymentMethods: Array<PaymentMethod>;
+  periodicity: PaymentPeriodicity;
+  /** What the buyer pays, in cents of the member plan currency. The redeemed subscription keeps the plan price. */
+  price: Scalars['Int']['output'];
+  /** Mail template sent to the buyer once the code is issued. None, no mail. */
+  purchaseMailTemplateId?: Maybe<Scalars['String']['output']>;
+  /** Mail template sent to the reader who redeemed a code. None, no mail. */
+  redemptionMailTemplateId?: Maybe<Scalars['String']['output']>;
+  redemptionWindowMonths?: Maybe<Scalars['Int']['output']>;
+  /** The payment method of subscriptions that renew automatically. */
+  renewalPaymentMethod?: Maybe<PaymentMethod>;
+  renewalPaymentMethodId?: Maybe<Scalars['String']['output']>;
+};
+
+export type GiftCodeOfferFilter = {
+  active?: InputMaybe<Scalars['Boolean']['input']>;
+  memberPlanId?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+export enum GiftCodeOfferSort {
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
+  Name = 'Name'
+}
+
+export type GiftCodeOffersBlock = BaseBlock & {
+  __typename?: 'GiftCodeOffersBlock';
+  askRecipientName: Scalars['Boolean']['output'];
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
+  defaultGiftCodeOfferId?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
+  fields: Array<SubscribeBlockField>;
+  giftCodeOfferIds: Array<Scalars['String']['output']>;
+  giftCodeOffers: Array<GiftCodeOffer>;
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
+  showDiscountCodes: Scalars['Boolean']['output'];
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
+  type: BlockType;
+};
+
+export type GiftCodeOffersBlockInput = {
+  askRecipientName?: Scalars['Boolean']['input'];
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
+  defaultGiftCodeOfferId?: InputMaybe<Scalars['String']['input']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
+  fields?: Array<SubscribeBlockField>;
+  giftCodeOfferIds?: Array<Scalars['String']['input']>;
+  showDiscountCodes?: Scalars['Boolean']['input'];
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: InputMaybe<BlockTimingInput>;
+};
+
+export type GiftCodeRedemption = {
+  __typename?: 'GiftCodeRedemption';
+  action: GiftCodeRedemptionAction;
+  invoice: Invoice;
+  subscription: PublicSubscription;
+};
+
+export enum GiftCodeRedemptionAction {
+  /** The code started a new subscription and paid its first period. */
+  CreatedSubscription = 'createdSubscription',
+  /** The code paid the next period of an existing subscription. */
+  ExtendedSubscription = 'extendedSubscription',
+  /** The code paid the open invoice of an existing subscription. */
+  PaidInvoice = 'paidInvoice'
+}
+
+export enum GiftCodeSort {
+  CreatedAt = 'CreatedAt',
+  IssuedAt = 'IssuedAt'
+}
+
+export enum GiftCodeSource {
+  Admin = 'admin',
+  Purchase = 'purchase'
+}
+
+export enum GiftCodeStatus {
+  Canceled = 'canceled',
+  Expired = 'expired',
+  Issued = 'issued',
+  Ordered = 'ordered',
+  Redeemed = 'redeemed'
+}
 
 export type Goodie = HasImage & {
   __typename?: 'Goodie';
@@ -2274,9 +2467,11 @@ export type Invoice = HasOptionalSubscription & {
   /** The payments made or attempted for this invoice, oldest first. Invoices imported from another system have none. */
   payments: Array<Payment>;
   scheduledDeactivationAt: Scalars['DateTime']['output'];
+  sellableKind?: Maybe<SellableKind>;
   subscription?: Maybe<PublicSubscription>;
   subscriptionID?: Maybe<Scalars['String']['output']>;
   total: Scalars['Int']['output'];
+  userID?: Maybe<Scalars['String']['output']>;
 };
 
 export type InvoiceConnection = {
@@ -2616,6 +2811,7 @@ export type MailLogTemplate = {
 
 /** Origin of a sent mail. */
 export enum MailLogType {
+  GiftCode = 'giftCode',
   Manual = 'manual',
   SubscriptionFlow = 'subscriptionFlow',
   SystemMail = 'systemMail',
@@ -2808,6 +3004,8 @@ export enum MailTemplateContext {
   Custom = 'custom',
   CustomNoSubscription = 'customNoSubscription',
   EmailChange = 'emailChange',
+  GiftCodePurchase = 'giftCodePurchase',
+  GiftCodeRedemption = 'giftCodeRedemption',
   InvoiceCreation = 'invoiceCreation',
   Renewal = 'renewal',
   Subscription = 'subscription'
@@ -2818,13 +3016,9 @@ export type MailTemplateInput = {
   attachmentIds?: InputMaybe<Array<Scalars['String']['input']>>;
   context?: InputMaybe<MailTemplateContext>;
   description?: InputMaybe<Scalars['String']['input']>;
-  htmlContent: Scalars['String']['input'];
-  /** Uploaded pdf printed after the letter pages, e.g. a QR-bill. */
-  letterAppendixId?: InputMaybe<Scalars['String']['input']>;
-  letterLayoutId?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
-  subject: Scalars['String']['input'];
-  textContent?: InputMaybe<Scalars['String']['input']>;
+  /** The versions to write, one per channel. A version left out stays as it is; removing one is `deleteMailTemplateVariant`. */
+  variants: Array<MailTemplateVariantInput>;
 };
 
 export type MailTemplateLetterPreviewModel = {
@@ -2833,22 +3027,44 @@ export type MailTemplateLetterPreviewModel = {
   pdf: Scalars['String']['output'];
 };
 
+/** A member plan whose communication flow sends a template. */
+export type MailTemplateMemberPlanModel = {
+  __typename?: 'MailTemplateMemberPlanModel';
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+};
+
 export type MailTemplateModel = {
   __typename?: 'MailTemplateModel';
   /** Word documents (.docx) filled in with the same placeholders, converted to pdf and attached to every mail sent from this template, in this order. A printed letter carries them after its pages. */
   attachmentIds: Array<Scalars['String']['output']>;
+  /** Title, or else the filename, of each attached document, in their order. For the template table. */
+  attachmentNames: Array<Scalars['String']['output']>;
+  /** The channels this template is written for, the email first. */
+  channels: Array<MailChannel>;
   context?: Maybe<MailTemplateContext>;
   description?: Maybe<Scalars['String']['output']>;
+  /** @deprecated Use `variants`: a template has a body per channel. */
   htmlContent: Scalars['String']['output'];
   id: Scalars['String']['output'];
-  /** Uploaded pdf printed after the letter pages, e.g. a QR-bill. */
+  /** @deprecated Use the letter entry of `variants`. */
   letterAppendixId?: Maybe<Scalars['String']['output']>;
-  /** Stationery a letter printed from this template is set on; null means the default. */
+  /** Title, or else the filename, of the pdf printed after the letter pages. Null without one. */
+  letterAppendixName?: Maybe<Scalars['String']['output']>;
+  /** @deprecated Use the letter entry of `variants`. */
   letterLayoutId?: Maybe<Scalars['String']['output']>;
+  /** Name of the stationery the letter version is set on. Null for the default stationery and for a template without a letter version. */
+  letterLayoutName?: Maybe<Scalars['String']['output']>;
+  /** The member plans whose communication flow sends this template, by name. The default flow belongs to no plan and is not listed. */
+  memberPlans: Array<MailTemplateMemberPlanModel>;
   name: Scalars['String']['output'];
   status: Scalars['String']['output'];
+  /** The subject of the email version; the title of the letter for a template written as a letter only. */
   subject: Scalars['String']['output'];
+  /** @deprecated Use `variants`: a template has a body per channel. */
   textContent?: Maybe<Scalars['String']['output']>;
+  /** What the template says on each channel, bodies included. Ask for it on a single template, not on a list. */
+  variants: Array<MailTemplateVariantModel>;
 };
 
 export type MailTemplatePreviewInput = {
@@ -2884,6 +3100,36 @@ export type MailTemplateSubscriptionOption = {
   __typename?: 'MailTemplateSubscriptionOption';
   id: Scalars['String']['output'];
   label: Scalars['String']['output'];
+};
+
+export type MailTemplateVariantInput = {
+  channel: MailChannel;
+  htmlContent: Scalars['String']['input'];
+  /** Uploaded pdf printed after the letter pages, e.g. a QR-bill. */
+  letterAppendixId?: InputMaybe<Scalars['String']['input']>;
+  letterLayoutId?: InputMaybe<Scalars['String']['input']>;
+  /** Letter only: take subject and body from the email version, which the template must have. The subject and body handed in are ignored. */
+  sameAsMail?: InputMaybe<Scalars['Boolean']['input']>;
+  subject: Scalars['String']['input'];
+  textContent?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** What a template says on one channel. */
+export type MailTemplateVariantModel = {
+  __typename?: 'MailTemplateVariantModel';
+  channel: MailChannel;
+  htmlContent: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  /** Letter only: uploaded pdf printed after the letter pages, e.g. a QR-bill. */
+  letterAppendixId?: Maybe<Scalars['String']['output']>;
+  /** Letter only: stationery the letter is set on; null means the default. */
+  letterLayoutId?: Maybe<Scalars['String']['output']>;
+  /** Letter only: the letter says what the email says. Its own subject and body are empty then; sends read the email version. */
+  sameAsMail: Scalars['Boolean']['output'];
+  /** The email's subject line; for a letter the title its log entry carries. */
+  subject: Scalars['String']['output'];
+  /** Plain-text alternative of an email. Unused for a letter. */
+  textContent?: Maybe<Scalars['String']['output']>;
 };
 
 /** The audience webhook the api registered at Mailchimp; the URL carries the secret. */
@@ -3430,6 +3676,8 @@ export type Mutation = {
   approveComment: Comment;
   /** Hides the campaign from the default list. Campaigns are never deleted. */
   archiveNewsletterCampaign: NewsletterCampaign;
+  /** Cancels a gift code. Refunds of paid codes happen outside We.Publish. */
+  cancelGiftCode: GiftCode;
   /** Stop a running send job. Unsent recipients stay open and can be continued. */
   cancelMailSendJob: MailSendJobModel;
   /** Cancels a subscription. */
@@ -3446,7 +3694,7 @@ export type Mutation = {
   closePrintIssue: PrintIssue;
   /** Compute the list and store it for checking. What exporting it does follows from the state: the first delivery, the delivery not handed over yet written anew, or the next Nachlieferung. Replaces a stored list. */
   computePrintIssueRun: PrintIssueRun;
-  /** Apply every open suggestion of a direction */
+  /** Apply every open suggestion of a direction, or only those the filter keeps */
   confirmAllDeliverySuggestions: DeliverySuggestionConfirmAllResult;
   /** Confirms that the manual action required by a changelog entry has been completed. Requires the permission to update settings. */
   confirmChangelogEntry: ChangelogEntry;
@@ -3493,6 +3741,10 @@ export type Mutation = {
   createExternalApp: ExternalApp;
   /** Generates a short-lived JWT token for authenticating with an external app. */
   createExternalAppToken: ExternalAppToken;
+  /** Creates a gift code offer. */
+  createGiftCodeOffer: GiftCodeOffer;
+  /** Creates issued gift codes without a purchase, e.g. to hand out at events. */
+  createGiftCodes: Array<GiftCode>;
   /** Creates a new goodie. */
   createGoodie: Goodie;
   /** Creates a new invoice. */
@@ -3611,6 +3863,8 @@ export type Mutation = {
   deleteEvent: Event;
   /** Deletes an external app. */
   deleteExternalApp: ExternalApp;
+  /** Deletes a gift code offer that has not sold any codes. */
+  deleteGiftCodeOffer: GiftCodeOffer;
   /** Deletes an existing goodie. */
   deleteGoodie: Goodie;
   /** Deletes an existing image. */
@@ -3623,6 +3877,8 @@ export type Mutation = {
   deleteLetterProviderSetting: SettingLetterProvider;
   /** Delete an existing mail template */
   deleteMailTemplate?: Maybe<Scalars['Boolean']['output']>;
+  /** Remove what a template says on one channel. Refused while something still sends the template on that channel, and for its last version. */
+  deleteMailTemplateVariant?: Maybe<Scalars['Boolean']['output']>;
   /** Deletes a single sync error so the contact will be retried. */
   deleteMailchimpSyncError: Scalars['Boolean']['output'];
   /** Deletes an existing memberplan. */
@@ -3731,11 +3987,15 @@ export type Mutation = {
   markInvoiceAsPaid: Invoice;
   /** Marks a notification as read for the current user. Requires authentication. */
   markNotificationRead: NotificationRead;
+  /** Starts a new payment for an unpaid gift code. */
+  payGiftCode: Payment;
   /** Publishes an article at the given time. */
   publishArticle: Article;
   publishNewsletterCampaign: NewsletterPublishResult;
   /** Publishes an page at the given time. */
   publishPage: Page;
+  /** Buys a gift code and starts its payment. */
+  purchaseGiftCode: Payment;
   /** This mutation allows to rate a comment. Supports logged in and anonymous */
   rateComment: Comment;
   /** Reactivates a deactivated subscription. */
@@ -3744,6 +4004,8 @@ export type Mutation = {
   reactivateUserSubscription: PublicSubscription;
   /** Rebuild the suggestions now instead of waiting for the night */
   recomputeDeliverySuggestions: DeliverySuggestionRecomputeResult;
+  /** Redeems a gift code for your own subscriptions. It pays the open invoice of a subscription with the same member plan and payment periodicity, pays the next period of such a subscription, or starts a new subscription. */
+  redeemGiftCode: GiftCodeRedemption;
   /** Pull late delivery states from the mail provider, then re-evaluate everyone's email quality. The nightly job does the same; this is for looking at a campaign's result now. */
   refreshEmailQuality: EmailQualityRefreshModel;
   /** Registers (or renews) the audience webhook at Mailchimp, so cleaned and unsubscribed members reach the email quality as they happen. */
@@ -3858,6 +4120,8 @@ export type Mutation = {
   updateEvent: Event;
   /** Updates an existing external app. */
   updateExternalApp: ExternalApp;
+  /** Updates a gift code offer. */
+  updateGiftCodeOffer: GiftCodeOffer;
   /** Updates an existing goodie. */
   updateGoodie: Goodie;
   /** Updates an existing image. */
@@ -3985,6 +4249,11 @@ export type MutationArchiveNewsletterCampaignArgs = {
 };
 
 
+export type MutationCancelGiftCodeArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationCancelMailSendJobArgs = {
   id: Scalars['String']['input'];
 };
@@ -4031,6 +4300,7 @@ export type MutationComputePrintIssueRunArgs = {
 
 
 export type MutationConfirmAllDeliverySuggestionsArgs = {
+  filter?: InputMaybe<DeliverySuggestionFilter>;
   kind: DeliverySuggestionKind;
 };
 
@@ -4212,6 +4482,31 @@ export type MutationCreateExternalAppArgs = {
 
 export type MutationCreateExternalAppTokenArgs = {
   externalAppId: Scalars['String']['input'];
+};
+
+
+export type MutationCreateGiftCodeOfferArgs = {
+  active: Scalars['Boolean']['input'];
+  allowDiscountCodes?: InputMaybe<Scalars['Boolean']['input']>;
+  autoRenew?: InputMaybe<Scalars['Boolean']['input']>;
+  description?: InputMaybe<Scalars['RichText']['input']>;
+  imageID?: InputMaybe<Scalars['String']['input']>;
+  memberPlanId: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  paymentMethodIds: Array<Scalars['String']['input']>;
+  periodicity: PaymentPeriodicity;
+  price: Scalars['Int']['input'];
+  purchaseMailTemplateId?: InputMaybe<Scalars['String']['input']>;
+  redemptionMailTemplateId?: InputMaybe<Scalars['String']['input']>;
+  redemptionWindowMonths?: InputMaybe<Scalars['Int']['input']>;
+  renewalPaymentMethodId?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationCreateGiftCodesArgs = {
+  count: Scalars['Int']['input'];
+  offerId: Scalars['String']['input'];
+  recipientName?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -4724,6 +5019,11 @@ export type MutationDeleteExternalAppArgs = {
 };
 
 
+export type MutationDeleteGiftCodeOfferArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationDeleteGoodieArgs = {
   id: Scalars['String']['input'];
 };
@@ -4751,6 +5051,12 @@ export type MutationDeleteLetterProviderSettingArgs = {
 
 export type MutationDeleteMailTemplateArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteMailTemplateVariantArgs = {
+  channel: MailChannel;
+  templateId: Scalars['String']['input'];
 };
 
 
@@ -5014,6 +5320,15 @@ export type MutationMarkNotificationReadArgs = {
 };
 
 
+export type MutationPayGiftCodeArgs = {
+  failureURL?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
+  paymentMethodId?: InputMaybe<Scalars['String']['input']>;
+  paymentMethodSlug?: InputMaybe<Scalars['Slug']['input']>;
+  successURL?: InputMaybe<Scalars['String']['input']>;
+};
+
+
 export type MutationPublishArticleArgs = {
   id: Scalars['String']['input'];
   publishedAt: Scalars['DateTime']['input'];
@@ -5031,6 +5346,17 @@ export type MutationPublishPageArgs = {
 };
 
 
+export type MutationPurchaseGiftCodeArgs = {
+  discountCode?: InputMaybe<Scalars['String']['input']>;
+  failureURL?: InputMaybe<Scalars['String']['input']>;
+  offerId: Scalars['String']['input'];
+  paymentMethodId?: InputMaybe<Scalars['String']['input']>;
+  paymentMethodSlug?: InputMaybe<Scalars['Slug']['input']>;
+  recipientName?: InputMaybe<Scalars['String']['input']>;
+  successURL?: InputMaybe<Scalars['String']['input']>;
+};
+
+
 export type MutationRateCommentArgs = {
   answerId: Scalars['String']['input'];
   commentId: Scalars['String']['input'];
@@ -5045,6 +5371,11 @@ export type MutationReactivateSubscriptionArgs = {
 
 export type MutationReactivateUserSubscriptionArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type MutationRedeemGiftCodeArgs = {
+  code: Scalars['String']['input'];
 };
 
 
@@ -5417,6 +5748,25 @@ export type MutationUpdateExternalAppArgs = {
   name?: InputMaybe<Scalars['String']['input']>;
   target?: InputMaybe<ExternalAppsTarget>;
   url?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationUpdateGiftCodeOfferArgs = {
+  active?: InputMaybe<Scalars['Boolean']['input']>;
+  allowDiscountCodes?: InputMaybe<Scalars['Boolean']['input']>;
+  autoRenew?: InputMaybe<Scalars['Boolean']['input']>;
+  description?: InputMaybe<Scalars['RichText']['input']>;
+  id: Scalars['String']['input'];
+  imageID?: InputMaybe<Scalars['String']['input']>;
+  memberPlanId?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  paymentMethodIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  periodicity?: InputMaybe<PaymentPeriodicity>;
+  price?: InputMaybe<Scalars['Int']['input']>;
+  purchaseMailTemplateId?: InputMaybe<Scalars['String']['input']>;
+  redemptionMailTemplateId?: InputMaybe<Scalars['String']['input']>;
+  redemptionWindowMonths?: InputMaybe<Scalars['Int']['input']>;
+  renewalPaymentMethodId?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -6357,6 +6707,20 @@ export type PaginatedEvents = {
 export type PaginatedEventsFromSources = {
   __typename?: 'PaginatedEventsFromSources';
   nodes: Array<EventFromSource>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type PaginatedGiftCodeOffers = {
+  __typename?: 'PaginatedGiftCodeOffers';
+  nodes: Array<GiftCodeOffer>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type PaginatedGiftCodes = {
+  __typename?: 'PaginatedGiftCodes';
+  nodes: Array<GiftCode>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int']['output'];
 };
@@ -7477,6 +7841,8 @@ export type Query = {
   deliveryModeBulkChanges: PaginatedDeliveryModeBulkChanges;
   /** How many suggestions are open, per direction */
   deliverySuggestionCounts: DeliverySuggestionCounts;
+  /** The reasons among the open suggestions of a direction, most first */
+  deliverySuggestionReasons: Array<DeliverySuggestionReasonCount>;
   /** Open suggestions to move users to letters or back to mail */
   deliverySuggestions: PaginatedDeliverySuggestions;
   /** Returns an discountCode by id or discountCode. */
@@ -7516,6 +7882,14 @@ export type Query = {
   features: Array<Scalars['String']['output']>;
   /** Returns images by tag. */
   getImagesByTag: Array<Image>;
+  /** Returns a gift code. */
+  giftCode: GiftCode;
+  /** Returns a gift code offer. */
+  giftCodeOffer: GiftCodeOffer;
+  /** Returns a list of gift code offers. */
+  giftCodeOffers: PaginatedGiftCodeOffers;
+  /** Returns a list of gift codes. */
+  giftCodes: PaginatedGiftCodes;
   /** Returns a goodie by id. */
   goodie: Goodie;
   /** This query returns a list of goodies */
@@ -7584,7 +7958,7 @@ export type Query = {
   mailSendRecipientPreview: MailSendRecipientPreview;
   /** The concrete recipients an audience resolves to */
   mailSendRecipients: PaginatedMailSendRecipient;
-  /** Return a single mail template, including its html and text body. */
+  /** Return a single mail template; its `variants` carry the html and text bodies. */
   mailTemplate?: Maybe<MailTemplateModel>;
   /** Render a draft mail template as the letter a send would print */
   mailTemplateLetterPreview: MailTemplateLetterPreviewModel;
@@ -7616,6 +7990,8 @@ export type Query = {
   memberPlan: MemberPlan;
   /** Returns a paginated list of memberplans based on the filters given. */
   memberPlans: PaginatedMemberPlans;
+  /** Returns the gift codes the current user bought. */
+  myGiftCodes: Array<GiftCode>;
   /** Returns a navigation by id. */
   navigation: Navigation;
   /** Returns a list of navigations. */
@@ -8063,7 +8439,13 @@ export type QueryDeliveryModeBulkChangesArgs = {
 };
 
 
+export type QueryDeliverySuggestionReasonsArgs = {
+  kind: DeliverySuggestionKind;
+};
+
+
 export type QueryDeliverySuggestionsArgs = {
+  filter?: InputMaybe<DeliverySuggestionFilter>;
   kind: DeliverySuggestionKind;
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
@@ -8133,6 +8515,36 @@ export type QueryExternalAppsArgs = {
 
 export type QueryGetImagesByTagArgs = {
   tag: Scalars['String']['input'];
+};
+
+
+export type QueryGiftCodeArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryGiftCodeOfferArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryGiftCodeOffersArgs = {
+  cursorId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<GiftCodeOfferFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: Scalars['Int']['input'];
+  sort?: GiftCodeOfferSort;
+  take?: Scalars['Int']['input'];
+};
+
+
+export type QueryGiftCodesArgs = {
+  cursorId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<GiftCodeFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: Scalars['Int']['input'];
+  sort?: GiftCodeSort;
+  take?: Scalars['Int']['input'];
 };
 
 
@@ -8292,6 +8704,7 @@ export type QueryMailTemplateLetterPreviewArgs = {
 
 
 export type QueryMailTemplateMissingPlaceholdersArgs = {
+  channel?: InputMaybe<MailChannel>;
   templateId: Scalars['String']['input'];
   withSubscriptionData: Scalars['Boolean']['input'];
 };
@@ -8826,6 +9239,28 @@ export enum RatingSystemType {
   Star = 'star'
 }
 
+export type RedeemGiftCodeBlock = BaseBlock & {
+  __typename?: 'RedeemGiftCodeBlock';
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
+  fields: Array<SubscribeBlockField>;
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
+  type: BlockType;
+};
+
+export type RedeemGiftCodeBlockInput = {
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
+  fields?: Array<SubscribeBlockField>;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: InputMaybe<BlockTimingInput>;
+};
+
 export type Registration = {
   __typename?: 'Registration';
   session: SessionWithTokenWithoutUser;
@@ -8871,6 +9306,10 @@ export type RichTextBlockInput = {
   /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
   timing?: InputMaybe<BlockTimingInput>;
 };
+
+export enum SellableKind {
+  GiftCode = 'giftCode'
+}
 
 export type SendTestMailTemplateInput = {
   /** Attachments chosen on the draft, possibly not saved yet. */
@@ -9423,6 +9862,9 @@ export type SubscribeBlock = BaseBlock & {
   blockStyleName?: Maybe<Scalars['String']['output']>;
   disabled?: Maybe<Scalars['Boolean']['output']>;
   fields: Array<SubscribeBlockField>;
+  giftCodeRedemptionLinkText?: Maybe<Scalars['String']['output']>;
+  giftCodeRedemptionPage?: Maybe<Page>;
+  giftCodeRedemptionPageId?: Maybe<Scalars['String']['output']>;
   goodieMinValue?: Maybe<Scalars['Int']['output']>;
   goodieMinValueAppliesToUpgrade: Scalars['Boolean']['output'];
   hideRepeatGoodieOnUpgrade: Scalars['Boolean']['output'];
@@ -9433,6 +9875,7 @@ export type SubscribeBlock = BaseBlock & {
   /** Whether the block should display. */
   shouldDisplay: Scalars['Boolean']['output'];
   showDiscountCodes: Scalars['Boolean']['output'];
+  showGiftCodeRedemption: Scalars['Boolean']['output'];
   showGoodies: Scalars['Boolean']['output'];
   /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
   timing?: Maybe<BlockTiming>;
@@ -9453,6 +9896,8 @@ export type SubscribeBlockInput = {
   blockStyleName?: InputMaybe<Scalars['String']['input']>;
   disabled?: InputMaybe<Scalars['Boolean']['input']>;
   fields?: Array<SubscribeBlockField>;
+  giftCodeRedemptionLinkText?: InputMaybe<Scalars['String']['input']>;
+  giftCodeRedemptionPageId?: InputMaybe<Scalars['String']['input']>;
   goodieMinValue?: InputMaybe<Scalars['Int']['input']>;
   goodieMinValueAppliesToUpgrade?: Scalars['Boolean']['input'];
   hideRepeatGoodieOnUpgrade?: Scalars['Boolean']['input'];
@@ -9460,6 +9905,7 @@ export type SubscribeBlockInput = {
   memberPlanRenderSettings: Array<SubscribeBlockMemberPlanRenderSettingInput>;
   periodicityDisplay?: InputMaybe<SubscribePeriodicityDisplay>;
   showDiscountCodes?: Scalars['Boolean']['input'];
+  showGiftCodeRedemption?: Scalars['Boolean']['input'];
   showGoodies?: Scalars['Boolean']['input'];
   /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
   timing?: InputMaybe<BlockTimingInput>;
@@ -9993,6 +10439,20 @@ export type TwitterTweetBlockInput = {
   userID?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type UmamiAnalytics = {
+  __typename?: 'UmamiAnalytics';
+  enabled: Scalars['Boolean']['output'];
+  /** Search params removed from the url and referrer before they are sent to Umami. */
+  excludedSearchParams: Array<Scalars['String']['output']>;
+  key?: Maybe<Scalars['String']['output']>;
+};
+
+export type UmamiAnalyticsInput = {
+  enabled: Scalars['Boolean']['input'];
+  excludedSearchParams?: InputMaybe<Array<Scalars['String']['input']>>;
+  key?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type UnknownBlock = {
   __typename?: 'UnknownBlock';
   blockStyle?: Maybe<Scalars['String']['output']>;
@@ -10299,7 +10759,7 @@ export type WebsiteAnalytics = {
   googleTagManager: KeyEnabled;
   piwik: KeyEnabled;
   plausible: KeyEnabled;
-  umami: KeyEnabled;
+  umami: UmamiAnalytics;
 };
 
 export type WebsiteAnalyticsInput = {
@@ -10307,7 +10767,7 @@ export type WebsiteAnalyticsInput = {
   googleTagManager: KeyEnabledInput;
   piwik: KeyEnabledInput;
   plausible: KeyEnabledInput;
-  umami: KeyEnabledInput;
+  umami: UmamiAnalyticsInput;
 };
 
 /** A single-use grant the website redeems through createSessionWithJWT within a minute. */

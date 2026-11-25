@@ -74,6 +74,9 @@ function setup({ letters = false }: { letters?: boolean } = {}) {
         letters ? { channel: MailChannel.letter } : null
       ),
     },
+    mailTemplateVariant: {
+      findUnique: vi.fn(async () => ({ id: 'variant-1' })),
+    },
     user: {
       findUnique: vi.fn(async () => ({
         ...user,

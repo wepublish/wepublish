@@ -25,6 +25,7 @@ import {
 import { HauptstadtLightbox } from './components/hauptstadt-lightbox';
 import { HauptstadtListicle } from './components/hauptstadt-listicle';
 import {
+  HauptstadtGiftCodePurchase,
   HauptstadtMemberPlanItem,
   HauptstadtMemberPlanPicker,
 } from './components/hauptstadt-memberplan-picker';
@@ -75,6 +76,7 @@ export const hauptstadtTenant: WebsiteTenantConfig = {
     Paywall: HauptstadtPaywall,
     MemberPlanPicker: HauptstadtMemberPlanPicker,
     MemberPlanItem: HauptstadtMemberPlanItem,
+    GiftCodePurchase: HauptstadtGiftCodePurchase,
     CommentList: HauptstadtCommentList,
     SubscriptionListItem: HauptstadtSubscriptionListItem,
     PaymentMethodPicker: HauptstadtPaymentMethodPicker,

@@ -14,7 +14,7 @@ import {
   SubscriptionsDocument,
 } from '@wepublish/website/api';
 
-import { ProfileSubscription } from './subscription-page';
+import { ProfileSubscription } from './profile-subscription';
 
 const subscription = mockSubscription({ id: 'yearly' });
 

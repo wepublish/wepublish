@@ -26,6 +26,8 @@ export enum mailLogType {
   UserFlow,
   SystemMail,
   Manual,
+  /** Mails about a gift code: bought, redeemed. */
+  GiftCode,
 }
 
 /**
@@ -45,6 +47,7 @@ const MAIL_LOG_TYPE_MAP: Record<mailLogType, MailLogType> = {
   [mailLogType.UserFlow]: MailLogType.userFlow,
   [mailLogType.SystemMail]: MailLogType.systemMail,
   [mailLogType.Manual]: MailLogType.manual,
+  [mailLogType.GiftCode]: MailLogType.giftCode,
 };
 
 export type MailControllerConfig = {
@@ -294,6 +297,7 @@ export class MailController {
       prisma: this.prismaService,
       letterSender: this.mailContext.letterSender,
       recipient: this.config.recipient,
+      mailTemplateId: this.config.mailTemplateId,
       asLetter: this.config.asLetter,
       logger: this.logger,
     });

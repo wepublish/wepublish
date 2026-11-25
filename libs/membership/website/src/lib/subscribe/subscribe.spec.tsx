@@ -916,6 +916,12 @@ describe('Subscribe', () => {
       expect(subscribeButton()).toBeDisabled();
     });
 
+    it('does not wait for the challenge', () => {
+      renderLoggedIn({ challenge: loading as Props['challenge'] });
+
+      expect(subscribeButton()).toBeEnabled();
+    });
+
     it('shows the error when subscribing fails', async () => {
       const { user, onSubscribe } = renderLoggedIn();
 
@@ -1137,5 +1143,42 @@ describe('Subscribe', () => {
         })
       ).toBeInTheDocument();
     });
+  });
+});
+
+describe('Subscribe gift code redemption', () => {
+  it('links to the redemption page next to the plan heading', () => {
+    renderSubscribe({ giftCodeRedemptionUrl: '/geschenk-einloesen' });
+
+    const heading = screen.getByRole('heading', {
+      name: t('subscribe.chooseSubscription'),
+    });
+    const link = screen.getByRole('link', {
+      name: t('subscribe.giftCodeRedemption.link'),
+    });
+
+    expect(link).toHaveAttribute('href', '/geschenk-einloesen');
+    expect(heading.parentElement).toContainElement(link);
+  });
+
+  it('uses the given link text', () => {
+    renderSubscribe({
+      giftCodeRedemptionUrl: '/geschenk-einloesen',
+      giftCodeRedemptionText: 'Geschenk erhalten? Hier einlösen.',
+    });
+
+    expect(
+      screen.getByRole('link', { name: 'Geschenk erhalten? Hier einlösen.' })
+    ).toHaveAttribute('href', '/geschenk-einloesen');
+  });
+
+  it('shows no link without a redemption page', () => {
+    renderSubscribe();
+
+    expect(
+      screen.queryByRole('link', {
+        name: t('subscribe.giftCodeRedemption.link'),
+      })
+    ).not.toBeInTheDocument();
   });
 });

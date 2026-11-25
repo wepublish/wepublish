@@ -75,6 +75,7 @@
       "@wepublish/form/editor/testing": [
         "libs/form/editor/src/testing/index.tsx"
       ],
+      "@wepublish/gift-code/api": ["libs/gift-code/api/src/index.ts"],
       "@wepublish/google-analytics/api": [
         "libs/google-analytics/api/src/index.ts"
       ],
