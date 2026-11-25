@@ -11,6 +11,7 @@ import {
   FullMemberPlanFragment,
   PaymentPeriodicity,
 } from '@wepublish/website/api';
+import { BuilderMemberPlanItemProps } from '@wepublish/website/builder';
 import { t } from 'i18next';
 import { ComponentProps, useState } from 'react';
 import { MemberPlanPicker } from './memberplan-picker';
@@ -41,7 +42,10 @@ const ControlledMemberPlanPicker = (props: Props) => {
   );
 };
 
-const renderMemberPlanPicker = (props: Partial<Props> = {}) => {
+const renderMemberPlanPicker = (
+  props: Partial<Props> = {},
+  builder: Parameters<typeof renderWithProviders>[1] = {}
+) => {
   const onChange = vi.fn();
 
   renderWithProviders(
@@ -49,7 +53,8 @@ const renderMemberPlanPicker = (props: Partial<Props> = {}) => {
       memberPlans={memberPlans}
       onChange={onChange}
       {...props}
-    />
+    />,
+    builder
   );
 
   return { onChange, user: userEvent.setup() };
@@ -137,5 +142,19 @@ describe('MemberPlanPicker', () => {
       screen.getByText(t('subscribe.memberplan.periodicityUnavailable'))
     ).toBeInTheDocument();
     expect(onChange).toHaveBeenCalledWith(monthly.id);
+  });
+
+  it('hands each plan item the description and image of its plan', () => {
+    const items: BuilderMemberPlanItemProps[] = [];
+    const MemberPlanItem = (props: BuilderMemberPlanItemProps) => {
+      items.push(props);
+      return <div />;
+    };
+
+    renderMemberPlanPicker({}, { builder: { MemberPlanItem } });
+
+    const basic = items.find(({ name }) => name === 'Basic');
+    expect(basic?.image).toEqual(memberPlans[0].image);
+    expect(basic?.description).toEqual(memberPlans[0].description);
   });
 });

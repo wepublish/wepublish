@@ -437,6 +437,46 @@ describe('Subscribe', () => {
     });
   });
 
+  describe('periodicity toggle over all plans', () => {
+    const renderToggle = (periodicitiesOfAllPlans?: boolean) =>
+      renderLoggedIn({
+        periodicityDisplay: SubscribePeriodicityDisplay.Toggle,
+        periodicitiesOfAllPlans,
+        memberPlans: memberPlanList([euroPlan, lifetimeOnlyPlan]),
+      });
+    const toggle = (name: string) => screen.getByRole('button', { name });
+    const planRadio = (plan: FullMemberPlanFragment) =>
+      screen.getByLabelText(plan.name, { exact: false });
+
+    it('only offers the periodicities of the selected plan by default', () => {
+      renderToggle();
+
+      expect(toggle('Monatlich')).toBeInTheDocument();
+      expect(
+        screen.queryByRole('button', { name: 'Lebenslang' })
+      ).not.toBeInTheDocument();
+      expect(planRadio(lifetimeOnlyPlan)).toBeDisabled();
+    });
+
+    it('offers what any plan bills and switches the periodicity to a picked plan', async () => {
+      const { user } = renderToggle(true);
+
+      expect(toggle('Monatlich')).toHaveAttribute('aria-pressed', 'true');
+      expect(toggle('Lebenslang')).toBeInTheDocument();
+      expect(planRadio(lifetimeOnlyPlan)).toBeEnabled();
+
+      await user.click(planRadio(lifetimeOnlyPlan));
+
+      expect(planRadio(lifetimeOnlyPlan)).toBeChecked();
+      expect(toggle('Lebenslang')).toHaveAttribute('aria-pressed', 'true');
+
+      await user.click(toggle('Monatlich'));
+
+      expect(planRadio(euroPlan)).toBeChecked();
+      expect(toggle('Monatlich')).toHaveAttribute('aria-pressed', 'true');
+    });
+  });
+
   describe('logged out', () => {
     it('marks the required fields when submitted empty', async () => {
       const { user, onSubscribeWithRegister } = renderSubscribe();

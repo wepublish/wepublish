@@ -54,6 +54,7 @@ import {
   getPeriodPriceRange,
   getPlanPeriodicities,
   monthlyAmountFromPeriodAmount,
+  PERIODICITY_ORDER,
 } from '../formatters/format-payment-period';
 import {
   findMemberPlanRenderSetting,
@@ -218,6 +219,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   hiddenAreas = NO_HIDDEN_AREAS,
   onInvalid,
   submitText,
+  periodicitiesOfAllPlans = false,
 }: BuilderSubscribeProps<T>) => {
   const {
     meta: { locale, siteTitle },
@@ -443,6 +445,22 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     () => getPlanPeriodicities(selectedMemberPlan),
     [selectedMemberPlan]
   );
+
+  const togglePeriodicities = useMemo(() => {
+    const plans = memberPlans.data?.memberPlans.nodes ?? [];
+
+    return periodicitiesOfAllPlans ?
+        PERIODICITY_ORDER.filter(periodicity =>
+          plans.some(memberPlan =>
+            getPlanPeriodicities(memberPlan).includes(periodicity)
+          )
+        )
+      : planPeriodicities;
+  }, [
+    periodicitiesOfAllPlans,
+    memberPlans.data?.memberPlans.nodes,
+    planPeriodicities,
+  ]);
 
   const availablePaymentMethodsForPeriodicity = useMemo(
     () =>
@@ -681,6 +699,14 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   }, [setValue, allPaymentMethods, selectedPaymentMethodId]);
 
   useEffect(() => {
+    // the toggle picks another plan for a periodicity this one lacks
+    if (
+      periodicitiesOfAllPlans &&
+      togglePeriodicities.includes(selectedPaymentPeriodicity)
+    ) {
+      return;
+    }
+
     if (
       planPeriodicities.length &&
       !planPeriodicities.includes(selectedPaymentPeriodicity)
@@ -691,6 +717,8 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       );
     }
   }, [
+    periodicitiesOfAllPlans,
+    togglePeriodicities,
     planPeriodicities,
     selectedMemberPlan,
     setValue,
@@ -848,7 +876,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
                   <PeriodicityPicker
                     {...field}
                     onChange={periodicity => field.onChange(periodicity)}
-                    periodicities={planPeriodicities}
+                    periodicities={togglePeriodicities}
                     variant={usePeriodicityToggle ? 'toggle' : 'select'}
                     memberPlan={selectedMemberPlan}
                   />
@@ -895,10 +923,34 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
                 render={({ field }) => (
                   <MemberPlanPicker
                     {...field}
-                    onChange={memberPlanId => field.onChange(memberPlanId)}
+                    onChange={memberPlanId => {
+                      const memberPlan =
+                        memberPlans.data?.memberPlans.nodes.find(
+                          ({ id }) => id === memberPlanId
+                        );
+                      const periodicity = getDefaultPeriodicity(memberPlan);
+
+                      if (
+                        periodicitiesOfAllPlans &&
+                        requiredPeriodicity &&
+                        periodicity &&
+                        !getPlanPeriodicities(memberPlan).includes(
+                          requiredPeriodicity
+                        )
+                      ) {
+                        setValue<'paymentPeriodicity'>(
+                          'paymentPeriodicity',
+                          periodicity
+                        );
+                      }
+
+                      field.onChange(memberPlanId);
+                    }}
                     memberPlans={memberPlans.data?.memberPlans.nodes ?? []}
                     paymentPeriodicity={amountPeriodicity}
-                    requiredPeriodicity={requiredPeriodicity}
+                    requiredPeriodicity={
+                      periodicitiesOfAllPlans ? undefined : requiredPeriodicity
+                    }
                     memberPlanRenderSettings={memberPlanRenderSettings}
                     amount={watchedMonthlyAmount}
                     onAmountChange={monthlyAmount =>
