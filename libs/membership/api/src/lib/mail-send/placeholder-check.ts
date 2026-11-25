@@ -1,4 +1,4 @@
-import { MailTemplate } from '@prisma/client';
+import { MailTemplate, MailTemplateVariant } from '@prisma/client';
 import { extractPlaceholders, resolvableKeys } from '@wepublish/mail/api';
 import {
   assembleMailData,
@@ -32,10 +32,12 @@ const SAMPLE_RECIPIENT = {
   note: 'A note',
 };
 
+/** One version's words, with the mail type of the template it belongs to. */
 type TemplateContent = Pick<
-  MailTemplate,
-  'subject' | 'htmlContent' | 'textContent' | 'context'
->;
+  MailTemplateVariant,
+  'subject' | 'htmlContent' | 'textContent'
+> &
+  Pick<MailTemplate, 'context'>;
 
 function templateText(template: TemplateContent): string {
   return [
@@ -60,7 +62,9 @@ function templateText(template: TemplateContent): string {
  */
 export function findMissingPlaceholders(
   template: TemplateContent,
-  withSubscriptionData: boolean
+  withSubscriptionData: boolean,
+  /** Placeholders used in the documents attached to the template. */
+  attachmentPlaceholders: string[] = []
 ): string[] {
   const contextId = (template.context ?? 'custom') as MailTemplateContextId;
 
@@ -83,7 +87,10 @@ export function findMissingPlaceholders(
       };
 
   const available = new Set(resolvableKeys(data).map(key => key.toLowerCase()));
-  return extractPlaceholders(templateText(template)).filter(
-    key => !available.has(key.toLowerCase())
-  );
+  const used = new Set([
+    ...extractPlaceholders(templateText(template)),
+    ...attachmentPlaceholders,
+  ]);
+
+  return [...used].filter(key => !available.has(key.toLowerCase()));
 }

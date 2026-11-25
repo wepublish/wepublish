@@ -19,9 +19,10 @@
       "mobile": "Mobile",
       "desktop": "Desktop",
       "tablet": "Tablet",
-      "copyUrl": "Copy preview URL",
-      "urlCopied": "Preview URL copied to clipboard",
-      "urlCopyFailed": "Preview URL could not be copied",
+      "copyUrl": "Copy preview link",
+      "urlCopied": "Link copied. It opens this preview in the editor.",
+      "urlCopyFailed": "Preview link could not be copied",
+      "openInNewTab": "Open preview in a new tab",
       "loading": "Loading preview …"
     },
     "previewHandshake": {
@@ -1528,7 +1529,31 @@
       },
       "title": "Settings"
     },
+    "impersonation": {
+      "title": "Sign in as this person",
+      "info": "For We.Publish support only. The session lasts an hour, and everything you do in it is recorded in the audit log.",
+      "editor": "In the editor",
+      "website": "On the website",
+      "dialogTitle": "Sign in as {{email}}",
+      "reason": "Reason",
+      "reasonHelp": "For example the ticket number. It is stored with the session.",
+      "cancel": "Cancel",
+      "confirm": "Sign in",
+      "failed": "Signing in as this person did not work.",
+      "popupBlocked": "The browser blocked the website window. Please allow pop-ups for the editor.",
+      "active": "You are signed in as {{email}} (We.Publish support: {{supporter}}).",
+      "end": "End"
+    },
     "login": {
+      "wepublish": {
+        "backToLogin": "Back to login",
+        "button": "Sign-in for We.Publish staff",
+        "failed": "Signing in with We.Publish did not work. Please try again.",
+        "forbidden": "Your We.Publish account has no access to this editor.",
+        "only": "This account signs in with We.Publish. Please use “Sign-in for We.Publish staff” below.",
+        "pending": "Signing in with We.Publish …",
+        "unavailable": "The We.Publish login cannot be started here right now."
+      },
       "email": "Email",
       "login": "Login",
       "next": "Next",
@@ -1548,11 +1573,6 @@
         "invalidCode": "Invalid verification code. Please try again.",
         "setupError": "Failed to generate 2FA setup. Please try again.",
         "setupSuccess": "Two-factor authentication has been enabled successfully."
-      },
-      "impersonate": {
-        "pending": "Signing in as the user …",
-        "failed": "Sign-in failed. The link has expired or was already used.",
-        "notAGrant": "This link is not a valid impersonation link."
       },
       "jwt": "Signing in …"
     },
@@ -1577,14 +1597,63 @@
     },
     "name": "Name",
     "mailTemplates": {
+      "list": {
+        "attachments": "Attachments",
+        "attachmentsFilter": {
+          "with": "With attachments",
+          "without": "Without attachments"
+        },
+        "search": "Search",
+        "channels": "Delivery channels",
+        "letterLayout": "Stationery",
+        "letterLayoutDefault": "Default",
+        "letterAppendix": "Additional pages",
+        "letterAppendixNone": "None",
+        "memberPlans": "Member plans",
+        "memberPlansHint": "Member plans whose communication flow sends this template. The default flow belongs to no member plan and is not listed here.",
+        "noMatch": "No template matches the filters.",
+        "statuses": {
+          "ok": "In use",
+          "unused": "Not in use"
+        }
+      },
       "availableTemplates": "Message templates",
       "cancel": "Cancel",
       "content": "Content",
       "create": "Create template",
       "description": "Description",
       "edit": {
-        "createHeader": "Create mail template",
-        "editHeader": "Edit mail template",
+        "versions": "Versions per delivery channel",
+        "addVersion": {
+          "mail": "Add email version",
+          "letter": "Add letter version"
+        },
+        "removeVersion": "Remove this version",
+        "letterText": {
+          "label": "Text",
+          "same": "Same as email",
+          "own": "Own text",
+          "sameNote": "This letter uses the subject and text of the email. Edit them on the \"Email\" tab.",
+          "confirm": {
+            "title": "Discard the letter's own text?",
+            "text": "The letter will use the subject and text of the email again. Its own text will be lost.",
+            "confirm": "Discard"
+          }
+        },
+        "removeVersionConfirm": {
+          "title": {
+            "mail": "Remove the email version?",
+            "letter": "Remove the letter version?"
+          },
+          "text": {
+            "mail": "The email template of this template will be deleted.",
+            "letter": "The letter template of this template will be deleted."
+          },
+          "confirm": "Remove"
+        },
+        "letterNotForPurpose": "This purpose has no letter version: the message carries a login link and goes out by email at once.",
+        "createHeader": "Create message template",
+        "editHeader": "Edit message template",
         "saveAndClose": "Save & close",
         "nameRequired": "Name is required.",
         "testSent": "Test mail sent.",
@@ -1597,29 +1666,37 @@
         "testRecipientPlaceholder": "Your account email",
         "preview": "Preview",
         "sendTest": "Send test",
-        "previewLetter": "Preview as letter",
-        "letterAppendix": "QR-bill (PDF)",
+        "previewLetter": "Preview",
+        "letterAppendix": "Additional pages (PDF)",
         "letterAppendixNone": "None",
-        "letterAppendixHelp": "PDF from \"Documents\" printed after the letter pages, e.g. a QR-bill (A4, slip at the bottom edge). Only for addresses in Switzerland; with duplex printing a blank page is added when needed so the slip lands on a front page.",
+        "letterAppendixHelp": "The pages are added at the end of the letter. Choose from the PDF files uploaded under \"Documents\".",
+        "attachments": "Attachments (Word)",
+        "attachmentsHelp": "Word documents (.docx) from \"Documents\", at most 5 and 15 MB together. They are filled in with the same placeholders as the mail (in the text and in link addresses, not in field codes), attached as PDF and sent in this order with every mail from this template, automated subscription mails included. System mails (login, password) cannot have attachments. A letter prints them after its pages (A4). If an attachment cannot be created, the mail is not sent. A personal document is converted for each recipient one by one, and PDF attachments make mails more likely to land in spam: keep them few and small. Needs Gotenberg as the PDF renderer.",
+        "attachmentsNone": "None",
+        "attachmentsNoDocuments": "No Word documents (.docx) under \"Documents\"",
         "letterPreviewTitle": "Letter preview",
         "selectMailType": "Please choose a purpose first.",
         "selectMailTypePlaceholder": "Choose a purpose …",
         "testRecipientHint": "Test mails are always sent to your own account.",
         "generateTextFromHtml": "Generate from HTML",
-        "textContentReadonlyHint": "Automatically generated from the content. Edit the visual or HTML tab to change it.",
         "background": "Background",
         "contentWidth": "Width (px)",
         "purposeHint": "The purpose defines in which situation this template is sent. It determines which data — and therefore which placeholders — are available: only an invoice template knows the invoice amount, for example.",
         "descriptionHelp": "Internal only: helps you and your team find the template in the list. It does not appear in the email.",
         "sampleSubscriptionHelp": "Pick an existing subscription to fill the preview and the test mail with its real data. Without a choice, made-up sample data is used. The test mail still only goes to you.",
-        "bodyModeHelp": "Visual: edit the content like in a word processor. HTML: edit the source code directly — for advanced users. Plain text: the text-only version for email programs without HTML; it is generated automatically.",
+        "textContentGenerated": "Generated automatically from the HTML / visual content",
+        "bodyModeHints": {
+          "visual": "Edit the content like in a word processor.",
+          "html": "Edit the source code directly — for advanced users.",
+          "text": "The text-only version for email programs without HTML. It is generated automatically from the content; edit the visual or HTML tab to change it."
+        },
         "backgroundHelp": "Color of the area around the email's content.",
         "contentWidthHelp": "Maximum width of the content in pixels. 600 px is a proven value that looks good in most email programs. On narrow screens the content shrinks automatically.",
         "bodyMode": "Editor mode",
         "letterLayout": "Stationery",
         "letterLayoutDefault": "Default ({{name}})",
         "letterLayoutNone": "Default (none yet)",
-        "letterLayoutHelp": "Header and footer when this template is printed as a letter. Ignored for emails."
+        "letterLayoutHelp": "Header and footer"
       },
       "editor": {
         "undo": "Undo",
@@ -1641,6 +1718,8 @@
         "desktop": "Desktop",
         "tablet": "Tablet",
         "mobile": "Mobile",
+        "attachments": "Attachments",
+        "close": "Close",
         "linkTitle": "Link",
         "linkUrl": "URL",
         "linkText": "Link text",
@@ -1675,7 +1754,7 @@
       "htmlContent": "HTML content",
       "name": "Name",
       "placeholders": "Placeholders",
-      "placeholdersHint": "Click to insert into the selected field",
+      "placeholdersHint": "Clicking a placeholder inserts it into the template.",
       "placeholderSelectType": "Choose a purpose above to see its placeholders.",
       "mailTypes": {
         "account": "Account & login",
@@ -1686,13 +1765,13 @@
         "custom": "Free mail (subscriber)",
         "customNoSubscription": "Free mail (no subscription)"
       },
-      "placeholderAlways": "Always available — every mail",
+      "placeholderAlways": "Always available",
       "placeholderContextLabel": "Additional fields for this purpose",
       "placeholderContexts": {
-        "account": "Account & login (creation, login link, password reset)",
+        "account": "Account & login",
         "emailChange": "Email change",
-        "subscription": "Subscription (new, confirmed, deactivation)",
-        "renewal": "Renewal — automated (success / failed)",
+        "subscription": "Subscription",
+        "renewal": "Automated renewal",
         "invoiceCreation": "Invoice created",
         "custom": "Free mail to a subscriber",
         "customNoSubscription": "Free mail to a non-subscriber"
@@ -1711,11 +1790,16 @@
       "textContent": "Plain text content (fallback)",
       "wysiwyg": "Visual",
       "delete": "Delete",
-      "deleteConfirm": "Delete this mail template?",
+      "deleteConfirm": "Delete this message template?",
       "importFromProvider": "Import from provider",
       "importConfirm": "Import & overwrite",
       "importWarning": "This imports every template from the mail provider. Unknown ones are created, already imported ones have their HTML and subject overwritten. Local changes to them will be lost.",
       "importDone": "Imported {{count}} template(s) from the provider.",
+      "placeholderGroups": {
+        "user": "User",
+        "person": "Person",
+        "general": "General"
+      },
       "placeholderNames": {
         "user_fullName": "Full name",
         "user_firstName": "First name",
@@ -1787,7 +1871,7 @@
         "custom": "Invoices come as an array: optional_invoices_0_* (newest first).",
         "customNoSubscription": "Only recipient fields are available — this mail goes to people without a subscription."
       },
-      "searchPlaceholders": "Search…",
+      "searchPlaceholders": "Filter placeholders…",
       "noPlaceholders": "No matching placeholders.",
       "placeholderExample": "Example",
       "purposeDescriptions": {
@@ -1846,13 +1930,14 @@
         "optional_invoices_0_description": "Description of the latest invoice."
       },
       "statusHelp": "A check mark means an automatic email uses this template. «Unused» means no automatic email uses it — you can still send it by hand via «Manual messages».",
-      "placeholdersInfo": "Placeholders are replaced automatically with each recipient's data when the email is sent, e.g. their first name. This makes every email personal.",
-      "searchPlaceholdersLabel": "Search placeholders",
-      "empty": "No mail templates yet."
+      "placeholdersInfo": "Placeholders are replaced automatically with the matching data when the message is sent, e.g. the recipient's first name.",
+      "searchPlaceholdersLabel": "Filter placeholders",
+      "empty": "No message templates yet."
     },
     "mailTemplateSelect": {
-      "sendAsLetter": "Also by letter",
-      "sendAsLetterHint": "People on the letter channel get this message printed instead of emailed.",
+      "channels": "Delivery channels",
+      "noLetterVersion": "This template has no letter version. Add one in the template so people on the letter channel get this message printed; until then they get the email.",
+      "sendAsLetterHint": "The email always goes out. With letter ticked, people on the letter channel get this message printed instead of by email.",
       "noMailSentSelectNow": "Do not send an email"
     },
     "memberPlanEdit": {
@@ -1916,6 +2001,7 @@
       "paymentProviderStatusInfo": "✅ means every payment method of this plan is connected to a payment provider. ❌ means at least one payment method has no provider, so readers cannot pay with it."
     },
     "deliveryMode": {
+      "viaApiKey": "via API key «{{key}}»",
       "panelTitle": "Delivery channel",
       "channel": {
         "mail": "Email",
@@ -2024,7 +2110,30 @@
           "unresponsive": "Unresponsive since {{date}}",
           "unknown": "Unknown since {{date}}"
         },
-        "recomputedDaily": "(recomputed automatically every day)"
+        "recomputedDaily": "(recomputed automatically every day)",
+        "filter": {
+          "reason": "Reason",
+          "emailSince": "Email status since",
+          "created": "Suggested since"
+        },
+        "reasonFilter": {
+          "placeholderEmail": "Placeholder address",
+          "hardBounce": "Hard bounce",
+          "invalid": "Invalid address",
+          "blocked": "Blocked by the mail provider",
+          "spamComplaint": "Spam complaint",
+          "unsubscribed": "Unsubscribed at the mail provider",
+          "clicked": "Clicked a link",
+          "verified": "Address verified",
+          "login": "Logged in",
+          "emailVerified": "Email address confirmed",
+          "noInteraction": "No reaction",
+          "noEvidence": "No evidence",
+          "none": "No email status"
+        },
+        "confirmAllFiltered": "Apply all {{count}} filtered",
+        "confirmAllFilteredText": "Only the suggestions that match the filter are applied.",
+        "emptyFiltered": "No suggestions match the filter."
       },
       "assign": {
         "steps": {
@@ -2063,7 +2172,7 @@
         "emailUnreachable": "Email address unreachable ({{segment}}) – email will not reach this person."
       },
       "flows": {
-        "letterHint": "Messages marked «Also by letter» reach people on the letter channel in print; everyone else gets email.",
+        "letterHint": "Messages with «Letter» ticked reach people on the letter channel in print; everyone else gets email.",
         "manage": "Manage delivery channels"
       }
     },
@@ -2143,7 +2252,6 @@
       "printIssueCreate": "New print issue",
       "printIssueEdit": "Edit print issue",
       "login": "Log in",
-      "impersonate": "Log in as user",
       "resetPassword": "Reset password",
       "setPassword": "Set new password",
       "dashboard": "Dashboard",
@@ -2253,9 +2361,9 @@
       "userConsentCreate": "New user consent",
       "userConsentEdit": "Edit user consent",
       "automaticEmails": "Automatic emails",
-      "mailTemplates": "Email templates",
-      "mailTemplateCreate": "New email template",
-      "mailTemplateEdit": "Edit email template",
+      "mailTemplates": "Message templates",
+      "mailTemplateCreate": "New message template",
+      "mailTemplateEdit": "Edit message template",
       "letterLayouts": "Stationery",
       "letterLayoutCreate": "New stationery",
       "letterLayoutEdit": "Edit stationery",
@@ -2754,6 +2862,13 @@
       "newArticlePaywall": "Freshly created articles will require a subscription by default",
       "subscriptionPlans": "Subscription Plans",
       "subscriptionUpgradeModel": "On upgrade, bill the full price difference (instead of the pro-rated remaining credit)",
+      "feeds": "Feeds",
+      "feedPaywalledContent": "Paywalled articles in RSS, Atom and JSON feeds",
+      "feedPaywalledContentChoice": {
+        "lead": "Lead only",
+        "visible": "The part shown before the paywall",
+        "full": "The whole text"
+      },
       "subscriptionExtendWindowDays": "Renewal window (days before the end)",
       "paymentMethodChangeExpiryDays": "Payment method change waiting time (days)",
       "warnings": {
@@ -2766,6 +2881,7 @@
         "newArticlePeering": "Will not affect already created articles",
         "newArticlePaywall": "Will not affect already created articles",
         "subscriptionUpgradeModel": "When enabled, an upgrade always charges the difference between the new and current plan price, regardless of how much time is left in the current period. When disabled, only the unused (pro-rated) remainder of the current period is credited.",
+        "feedPaywalledContent": "Free articles always appear in the feeds with their whole text. This setting applies to articles behind an active paywall. Feeds are read by the Swiss media database (SMD) and feed readers, among others; changes show within ten minutes.",
         "sessionTtlDays": "How long a login stays valid before signing in again is required. Applies from the next login; sessions already open keep their lifetime.",
         "emailQualityUnresponsiveAfterDays": "An email address counts as “unresponsive” when this many days passed without a login or a click in a mail, although mails were delivered. Re-evaluated nightly and via “Refresh statuses”.",
         "emailQualityMinMailsForUnresponsive": "This many mails must have been delivered to the address before it can count as “unresponsive”.",
@@ -2799,7 +2915,7 @@
     },
     "automaticMails": {
       "title": "Automated messages",
-      "intro": "Here you decide which email template goes out automatically for which event. Pick a template per event – or leave it on “Do not send an email” if nothing should go out. The ⓘ icon explains every event.",
+      "intro": "Here you decide which message template goes out automatically for which event. Pick a template per event – or leave it on “Do not send an email” if nothing should go out. The ⓘ icon explains every event.",
       "example": "Example: {{example}}"
     },
     "subscriptionFlow": {
@@ -3036,6 +3152,7 @@
       "totpExemptInfo": "This user is exempt from the two-factor authentication requirement.",
       "totpExemptLabel": "Exempt from 2FA requirement",
       "totpExemptWarning": "⚠️ SECURITY WARNING ⚠️\n\nYou are about to DISABLE the two-factor authentication requirement for this user!\n\nThis significantly reduces the security of this account. The user will be able to log in to the editor with only a password, without any second factor.\n\nThis should only be used in exceptional circumstances.\n\nAre you sure you want to proceed?",
+      "managedByWepublishLogin": "This account belongs to We.Publish staff and is managed by the We.Publish login. It cannot be changed, deactivated or deleted here.",
       "properties": "Properties",
       "resetPassword": "Reset Password",
       "resetPasswordFor": "Reset the password for {{userName}}",
@@ -3085,6 +3202,7 @@
         "oneSubscription": "1 subscription",
         "resetPassword": "Reset Password",
         "resetTotp": "Reset 2FA",
+        "managedByWepublishLogin": "We.Publish account",
         "resetTotpTitle": "Reset Two-Factor Authentication",
         "resetTotpConfirmation": "Are you sure you want to reset the two-factor authentication for {{name}}? They will need to set up 2FA again on their next login.",
         "totpResetSuccess": "Two-factor authentication has been reset successfully.",
@@ -3973,10 +4091,12 @@
         "mergeFieldExpression": "Expression (e.g. user.firstName)",
         "addMergeField": "Add Merge Field",
         "interestGroupMappings": "Interest Group Mappings",
-        "interestGroupHelp": "Determines whether a contact is assigned to a Mailchimp interest group based on their subscription. For groups that should always be active, use the default interest groups below instead.\n\nAvailable expressions:\n• slug:equals:value – active on exact subscription slug match\n• slug:contains:value – active if the subscription slug contains \"value\"\n• slug:contains_any:v1,v2 – active if any of the values is contained",
+        "interestGroupHelp": "Determines whether a contact is assigned to a Mailchimp interest group based on their subscription. For groups that should always be active, use the default interest groups below instead.\n\nAvailable expressions:\n• slug:equals:value – active on exact subscription slug match\n• slug:contains:value – active if the subscription slug contains \"value\"\n• slug:contains_any:v1,v2 – active if any of the values is contained\n\nAuto-add sets the group when a new matching subscription starts; auto-remove clears it once all matching subscriptions have ended. Untick either to manage that direction by hand in Mailchimp.",
         "interestGroupId": "Interest Group ID",
         "interestGroupExpression": "Expression (e.g. always)",
         "addInterestGroup": "Add Interest Group",
+        "interestGroupAutoAdd": "Auto-add",
+        "interestGroupAutoRemove": "Auto-remove",
         "defaultInterestGroups": "Default Interest Groups",
         "op_contains": "Slug contains",
         "op_equals": "Slug equals",
@@ -4326,7 +4446,12 @@
           "enable": "Enable Umami",
           "um": "<url>Umami</url> is a privacy-focused, open source alternative to Google Analytics.",
           "umLocator": "You can find it in the <url>website settings</url> of your Umami dashboard",
-          "umInvalid": "Must be a valid website ID (e.g., xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)"
+          "umInvalid": "Must be a valid website ID (e.g., xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)",
+          "advanced": "Advanced",
+          "excludedSearchParams": "Excluded URL parameters",
+          "excludedSearchParamsHelp": "These URL parameters are removed from the page URL and the referrer before they are sent to Umami, e.g. personal data a newsletter adds to its links (mail, firstName). All other parameters, like the utm parameters, are kept. Upper and lower case do not matter.",
+          "excludedSearchParam": "Parameter name",
+          "addExcludedSearchParam": "Add parameter"
         }
       },
       "ads": {
@@ -4730,6 +4855,8 @@
       },
       "missingPlaceholders": "Heads up: these placeholders won't be filled for these recipients: {{placeholders}}",
       "createTemplate": "New template",
+      "attachments_one": "Every mail carries {{count}} attachment as PDF: {{names}}",
+      "attachments_other": "Every mail carries {{count}} attachments as PDF: {{names}}",
       "editTemplate": "Edit template",
       "showRecipients": "Show recipients",
       "recipientList": {
@@ -4753,6 +4880,7 @@
         "unknown": "Unknown",
         "active": "Active",
         "hint": "Several statuses mean any of them. “Unresponsive”: mails were delivered but there has been no login or click for a long time (setting “Email quality”). Reachable by letter: placeholder + dead.",
+        "hintWithoutPlaceholder": "Several statuses mean any of them. “Unresponsive”: mails were delivered but there has been no login or click for a long time (setting “Email quality”).",
         "overview": "People in this audience by email status (regardless of the selection)",
         "refresh": "Refresh statuses",
         "refreshing": "Refreshing statuses …",
@@ -4801,6 +4929,10 @@
         "label": "Delivery channel",
         "mail": "Email",
         "letter": "Letter",
+        "noVersion": {
+          "mail": "This template has no email version.",
+          "letter": "This template has no letter version."
+        },
         "withoutAddress": "{{count}} of the recipients have no usable postal address and will be skipped."
       },
       "print": {
@@ -4892,8 +5024,6 @@
         "job": "Send job",
         "jobAll": "All send jobs",
         "all": "All",
-        "title": "Filter",
-        "reset": "Reset filters",
         "typeHint": "What triggered this send.",
         "channel": "Delivery",
         "jobHelp": "A send job groups all emails sent with one click via «Manual messages». Pick one to see only its emails."
@@ -5337,6 +5467,7 @@
         "failed": "Failed",
         "filterBySession": "Filter by this session",
         "tokenActor": "API token: {{name}}",
+        "tokenActorOnBehalf": "API key: {{name}} · {{user}}",
         "impersonatedActor": "{{impersonator}} as {{actor}}",
         "unknownActor": "Unknown",
         "notSupported": "This installation does not keep an audit log. Entries will appear once the migration has been applied.",
@@ -5463,7 +5594,7 @@
       "headerHeight": "Header height (mm)",
       "footerHeight": "Footer height (mm)",
       "headerHeightHint": "At most 40 mm, so the header stays clear of the franking zone. It repeats on every page; 0 mm leaves it out.",
-      "footerHeightHint": "At most 40 mm. The letter text keeps this much space from the bottom edge. The footer repeats on every page; 0 mm leaves it out.",
+      "footerHeightHint": "At most 40 mm. The letter text keeps this much space from the bottom edge, and never less than 20 mm. The footer repeats on every page; 0 mm leaves it out.",
       "htmlHint": "HTML with placeholders such as {{user_firstName}}. Use mm for sizes and give images a fixed width and height.",
       "insertImage": "Insert image",
       "preview": "Preview",
@@ -5475,6 +5606,7 @@
       "noLayouts": "No stationery yet. Create one so letters get a header and footer."
     },
     "printIssues": {
+      "viaApiKey": "via API key «{{key}}»",
       "title": "Print issues",
       "intro": "Each printed issue with its print lists: who receives a copy is decided as of the ship day – from we.publish and bexio. Every print list delivered to the printshop counts toward the issues each reader paid for.",
       "create": "New issue",
@@ -5863,7 +5995,7 @@
         "subscription": "Create subscription",
         "consent": "Create consent",
         "userConsent": "Create user consent",
-        "mailTemplate": "Create email template",
+        "mailTemplate": "Create message template",
         "letterLayout": "Create stationery",
         "memberPlan": "Create subscription plan",
         "paymentMethod": "Create payment method",
@@ -5892,6 +6024,15 @@
         "lastUsed": "Last used",
         "never": "Never used",
         "status": "Status",
+        "blocked": "Blocked",
+        "blockedReason": {
+          "CreatorMissing": "The person who created this key no longer exists. The key no longer works; create a new one.",
+          "CreatorInactive": "The person who created this key is deactivated. The key does not work until they are active again.",
+          "CreatorMayNotCreateApiTokens": "The person who created this key may no longer create API keys. The key does not work until they may again."
+        },
+        "missingScopes_one": "{{count}} permission missing",
+        "missingScopes_other": "{{count}} permissions missing",
+        "missingScopesHelp": "The person who created this key no longer holds these permissions. Calls that need them are refused: {{scopes}}",
         "active": "Active",
         "revoked": "Revoked",
         "revoke": "Revoke",

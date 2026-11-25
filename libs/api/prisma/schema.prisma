@@ -308,7 +308,9 @@ model Document {
   fileSize    Int
   extension   String
 
-  mailTemplates MailTemplate[]
+  mailTemplates           MailTemplate[]
+  mailTemplateVariants    MailTemplateVariant[]
+  mailTemplateAttachments MailTemplateAttachment[]
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -334,6 +336,15 @@ model ApiToken {
   createdBy   User?   @relation(fields: [createdById], references: [id], onDelete: SetNull)
 
   externalApps ExternalApps[]
+
+  // What this key did on behalf of its creator; the user is on the same row.
+  paidInvoices                 Invoice[]                @relation("InvoicePaidByApiToken")
+  deliveryPreferenceChanges    UserDeliveryPreference[] @relation("DeliveryPreferenceChangedByApiToken")
+  deliveryModeBulkChanges      DeliveryModeBulkChange[] @relation("DeliveryModeBulkChangedByApiToken")
+  closedPrintIssues            PrintIssue[]             @relation("PrintIssueClosedByApiToken")
+  pendingPrintIssueRuns        PrintIssue[]             @relation("PrintIssuePendingRunByApiToken")
+  createdPrintIssueDeliveries  PrintIssueDelivery[]     @relation("PrintIssueDeliveryCreatedByApiToken")
+  deliveredPrintIssueDeliveries PrintIssueDelivery[]    @relation("PrintIssueDeliveryDeliveredByApiToken")
 
   @@index([createdAt])
   @@index([createdById])
@@ -584,6 +595,9 @@ model Invoice {
   scheduledDeactivationAt   DateTime      @db.Timestamptz(3)
   items                     InvoiceItem[]
   manuallySetAsPaidByUserId String?
+  /// Set when an API key marked it as paid, on behalf of that user.
+  manuallySetAsPaidByApiTokenId String?
+  manuallySetAsPaidByApiToken   ApiToken? @relation("InvoicePaidByApiToken", fields: [manuallySetAsPaidByApiTokenId], references: [id], onDelete: SetNull)
   currency                  Currency
   // When the RENEWAL_SUCCESS mail for this invoice went out. Claimed
   // atomically so the webhook, the nightly job and the admin path can never
@@ -1171,6 +1185,7 @@ model Session {
   impersonatedBy      String?
   impersonationReason String?
   impersonatedAt      DateTime? @db.Timestamptz(3)
+  canImpersonate      Boolean   @default(false)
 
   userID String
   user   User   @relation(fields: [userID], references: [id], onDelete: Cascade)
@@ -1394,6 +1409,7 @@ model User {
   totpSecret      String?
   totpEnabled     Boolean   @default(false)
   totpExempt      Boolean   @default(false)
+  wepublishLoginSubject String? @unique
   userImageID     String?
   userImage       Image?    @relation(fields: [userImageID], references: [id])
   note            String?
@@ -1745,6 +1761,13 @@ model MailTemplate {
 
   name        String
   description String?
+
+  // What is sent lives on the variants, one per channel. The content columns
+  // below (subject, htmlContent, textContent, letterAppendixId, letterLayoutId)
+  // are the pre-variant copy: no code reads or writes them any more, and a
+  // follow-up migration drops them.
+  variants MailTemplateVariant[]
+
   subject     String  @default("")
   htmlContent String  @default("")
   textContent String?
@@ -1761,6 +1784,11 @@ model MailTemplate {
   letterAppendixId String?
   letterAppendix   Document? @relation(fields: [letterAppendixId], references: [id], onDelete: SetNull)
 
+  // Word documents filled in with the same placeholders, converted to pdf and
+  // attached to every mail sent from this template, or printed after the
+  // letter pages.
+  attachments MailTemplateAttachment[]
+
   subscriptionIntervals SubscriptionInterval[]
 
   userFlowMails UserFlowMail[]
@@ -1775,6 +1803,57 @@ model MailTemplate {
   letterLayoutId String?
 
   @@map("mail_templates")
+}
+
+/// What a template says on one channel. A template is the group flows, logs
+/// and send jobs point at; a mail and a letter of the same template are two
+/// variants with their own words, because paper carries no links and an email
+/// no address window.
+model MailTemplateVariant {
+  id         String   @id @default(dbgenerated("uuidv7()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  template   MailTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  templateId String
+
+  channel MailChannel
+
+  // The email's subject line; for a letter the title its log entry carries.
+  subject     String  @default("")
+  htmlContent String  @default("")
+  // Plain-text alternative of an email. Unused for a letter.
+  textContent String?
+
+  // Letter only: the letter says what the email says. Subject and body are
+  // then read from the mail variant; layout and appendix stay the letter's.
+  sameAsMail Boolean @default(false)
+
+  // Letter only. Stationery the letter is set on; null means the default.
+  letterLayout   LetterLayout? @relation(fields: [letterLayoutId], references: [id])
+  letterLayoutId String?
+
+  // Letter only. Uploaded pdf printed after the letter pages (e.g. a static QR-bill).
+  letterAppendix   Document? @relation(fields: [letterAppendixId], references: [id], onDelete: SetNull)
+  letterAppendixId String?
+
+  @@unique([templateId, channel])
+  @@map("mail_templates.variants")
+}
+
+// One Word document attached to a mail template, at its place in the list.
+// A document still attached cannot be deleted: a mail would otherwise lose
+// it without anyone noticing.
+model MailTemplateAttachment {
+  mailTemplateId String
+  mailTemplate   MailTemplate @relation(fields: [mailTemplateId], references: [id], onDelete: Cascade)
+  documentId     String
+  document       Document     @relation(fields: [documentId], references: [id], onDelete: Restrict)
+  position       Int
+
+  @@id([mailTemplateId, documentId])
+  @@index([documentId])
+  @@map("mail_template_attachments")
 }
 
 // Stationery for printed letters: a header and a footer repeated on every
@@ -1798,6 +1877,7 @@ model LetterLayout {
   isDefault Boolean @default(false)
 
   mailTemplates MailTemplate[]
+  mailTemplateVariants MailTemplateVariant[]
 
   @@map("letter_layouts")
 }
@@ -2564,8 +2644,9 @@ model WebsiteSettings {
   analyticsPiwikEnabled Boolean @default(false)
   analyticsPiwikId      String?
 
-  analyticsUmamiEnabled Boolean @default(false)
-  analyticsUmamiId      String?
+  analyticsUmamiEnabled              Boolean  @default(false)
+  analyticsUmamiId                   String?
+  analyticsUmamiExcludedSearchParams String[] @default([])
 
   // Ads
   adsSparkLoopEnabled Boolean @default(false)
@@ -2870,6 +2951,9 @@ model UserDeliveryPreference {
 
   changedByUserId String?
   changedBy       User?    @relation("DeliveryPreferenceChangedBy", fields: [changedByUserId], references: [id], onDelete: SetNull)
+  /// Set when an API key made the change, on behalf of that user.
+  changedByApiTokenId String?
+  changedByApiToken   ApiToken? @relation("DeliveryPreferenceChangedByApiToken", fields: [changedByApiTokenId], references: [id], onDelete: SetNull)
   changedAt       DateTime @db.Timestamptz(3)
 
   @@index([channel, origin])
@@ -2893,6 +2977,9 @@ model DeliveryModeBulkChange {
 
   changedByUserId String?
   changedBy       User?   @relation("DeliveryModeBulkChangedBy", fields: [changedByUserId], references: [id], onDelete: SetNull)
+  /// Set when an API key made the change, on behalf of that user.
+  changedByApiTokenId String?
+  changedByApiToken   ApiToken? @relation("DeliveryModeBulkChangedByApiToken", fields: [changedByApiTokenId], references: [id], onDelete: SetNull)
 
   @@index([createdAt(sort: Desc)])
   @@map("user_delivery_bulk_changes")
@@ -2983,6 +3070,9 @@ model PrintIssue {
   closedAt       DateTime? @db.Timestamptz(3)
   closedBy       User?     @relation("PrintIssueClosedBy", fields: [closedByUserId], references: [id], onDelete: SetNull)
   closedByUserId String?
+  /// Set when an API key closed it, on behalf of that user.
+  closedByApiTokenId String?
+  closedByApiToken   ApiToken? @relation("PrintIssueClosedByApiToken", fields: [closedByApiTokenId], references: [id], onDelete: SetNull)
 
   /// The computed list waiting to be checked and exported: exporting writes
   /// exactly these rows, never a new computation. Cleared when exported.
@@ -2990,6 +3080,8 @@ model PrintIssue {
   pendingRunAt       DateTime? @db.Timestamptz(3)
   pendingRunBy       User?     @relation("PrintIssuePendingRunBy", fields: [pendingRunByUserId], references: [id], onDelete: SetNull)
   pendingRunByUserId String?
+  pendingRunByApiTokenId String?
+  pendingRunByApiToken   ApiToken? @relation("PrintIssuePendingRunByApiToken", fields: [pendingRunByApiTokenId], references: [id], onDelete: SetNull)
 
   deliveries PrintIssueDelivery[]
   recipients PrintIssueRecipient[]
@@ -3015,6 +3107,9 @@ model PrintIssueDelivery {
 
   createdBy       User?   @relation("PrintIssueDeliveryCreatedBy", fields: [createdByUserId], references: [id], onDelete: SetNull)
   createdByUserId String?
+  /// Set when an API key exported the list, on behalf of that user.
+  createdByApiTokenId String?
+  createdByApiToken   ApiToken? @relation("PrintIssueDeliveryCreatedByApiToken", fields: [createdByApiTokenId], references: [id], onDelete: SetNull)
 
   /// the options this list was computed with
   options   Json
@@ -3027,6 +3122,8 @@ model PrintIssueDelivery {
   deliveredAt       DateTime? @db.Timestamptz(3)
   deliveredBy       User?     @relation("PrintIssueDeliveryDeliveredBy", fields: [deliveredByUserId], references: [id], onDelete: SetNull)
   deliveredByUserId String?
+  deliveredByApiTokenId String?
+  deliveredByApiToken   ApiToken? @relation("PrintIssueDeliveryDeliveredByApiToken", fields: [deliveredByApiTokenId], references: [id], onDelete: SetNull)
 
   recipients PrintIssueRecipient[]
 

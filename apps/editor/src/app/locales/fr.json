@@ -19,9 +19,10 @@
       "mobile": "Mobile",
       "desktop": "Bureau",
       "tablet": "Tablette",
-      "copyUrl": "Copier l’URL d’aperçu",
-      "urlCopied": "URL d’aperçu copiée dans le presse-papiers",
-      "urlCopyFailed": "L’URL d’aperçu n’a pas pu être copiée",
+      "copyUrl": "Copier le lien vers l’aperçu",
+      "urlCopied": "Lien copié. Il ouvre cet aperçu dans l’éditeur.",
+      "urlCopyFailed": "Le lien vers l’aperçu n’a pas pu être copié",
+      "openInNewTab": "Ouvrir l’aperçu dans un nouvel onglet",
       "loading": "Chargement de l’aperçu …"
     },
     "previewHandshake": {
@@ -1528,7 +1529,31 @@
       },
       "title": "Paramètres"
     },
+    "impersonation": {
+      "title": "Se connecter en tant que cette personne",
+      "info": "Réservé au support We.Publish. La session dure une heure et tout ce que vous y faites est enregistré dans le journal d’audit.",
+      "editor": "Dans l’éditeur",
+      "website": "Sur le site",
+      "dialogTitle": "Se connecter en tant que {{email}}",
+      "reason": "Motif",
+      "reasonHelp": "Par exemple le numéro de ticket. Il est enregistré avec la session.",
+      "cancel": "Annuler",
+      "confirm": "Se connecter",
+      "failed": "La connexion en tant que cette personne n’a pas fonctionné.",
+      "popupBlocked": "Le navigateur a bloqué la fenêtre du site. Veuillez autoriser les fenêtres contextuelles pour l’éditeur.",
+      "active": "Vous êtes connecté·e en tant que {{email}} (support We.Publish : {{supporter}}).",
+      "end": "Terminer"
+    },
     "login": {
+      "wepublish": {
+        "backToLogin": "Retour à la connexion",
+        "button": "Connexion pour le personnel de We.Publish",
+        "failed": "La connexion avec We.Publish n’a pas fonctionné. Veuillez réessayer.",
+        "forbidden": "Votre compte We.Publish n’a pas accès à cet éditeur.",
+        "only": "Ce compte se connecte avec We.Publish. Veuillez utiliser « Connexion pour le personnel de We.Publish » en bas.",
+        "pending": "Connexion avec We.Publish …",
+        "unavailable": "La connexion avec We.Publish ne peut pas être lancée ici pour le moment."
+      },
       "email": "E-mail",
       "login": "Connexion",
       "next": "Suivant",
@@ -1548,11 +1573,6 @@
         "invalidCode": "Code de vérification invalide. Veuillez réessayer.",
         "setupError": "Échec de la configuration de la 2FA. Veuillez réessayer.",
         "setupSuccess": "L’authentification à deux facteurs a été activée avec succès."
-      },
-      "impersonate": {
-        "pending": "Connexion en tant qu’utilisateur …",
-        "failed": "La connexion a échoué. Le lien a expiré ou a déjà été utilisé.",
-        "notAGrant": "Ce lien n’est pas un lien d’usurpation valide."
       },
       "jwt": "Connexion en cours …"
     },
@@ -1576,14 +1596,63 @@
       "goToLogin": "Aller à la connexion"
     },
     "mailTemplates": {
+      "list": {
+        "attachments": "Pièces jointes",
+        "attachmentsFilter": {
+          "with": "Avec pièce jointe",
+          "without": "Sans pièce jointe"
+        },
+        "search": "Rechercher",
+        "channels": "Canaux de distribution",
+        "letterLayout": "Papier à lettres",
+        "letterLayoutDefault": "Standard",
+        "letterAppendix": "Pages supplémentaires",
+        "letterAppendixNone": "Aucune",
+        "memberPlans": "Plans d’abonnement",
+        "memberPlansHint": "Plans d’abonnement dont le flux de communication envoie ce modèle. Le flux standard n’appartient à aucun plan et n’apparaît pas ici.",
+        "noMatch": "Aucun modèle ne correspond aux filtres.",
+        "statuses": {
+          "ok": "Utilisé",
+          "unused": "Non utilisé"
+        }
+      },
       "availableTemplates": "Modèles de message",
       "cancel": "Annuler",
       "content": "Contenu",
       "create": "Créer un modèle",
       "description": "Description",
       "edit": {
-        "createHeader": "Créer un modèle",
-        "editHeader": "Modifier le modèle",
+        "versions": "Versions par canal de distribution",
+        "addVersion": {
+          "mail": "Ajouter la version e-mail",
+          "letter": "Ajouter la version lettre"
+        },
+        "removeVersion": "Supprimer cette version",
+        "letterText": {
+          "label": "Texte",
+          "same": "Comme l’e-mail",
+          "own": "Texte propre",
+          "sameNote": "Cette lettre utilise l’objet et le texte de l’e-mail. Modifiez-les dans l’onglet « E-mail ».",
+          "confirm": {
+            "title": "Abandonner le texte propre de la lettre ?",
+            "text": "La lettre utilisera de nouveau l’objet et le texte de l’e-mail. Son texte propre sera perdu.",
+            "confirm": "Abandonner"
+          }
+        },
+        "removeVersionConfirm": {
+          "title": {
+            "mail": "Supprimer la version e-mail ?",
+            "letter": "Supprimer la version lettre ?"
+          },
+          "text": {
+            "mail": "Le modèle e-mail de ce modèle sera supprimé.",
+            "letter": "Le modèle lettre de ce modèle sera supprimé."
+          },
+          "confirm": "Supprimer"
+        },
+        "letterNotForPurpose": "Cet usage n’a pas de version lettre : le message contient un lien de connexion et part immédiatement par e-mail.",
+        "createHeader": "Créer un modèle de message",
+        "editHeader": "Modifier le modèle de message",
         "saveAndClose": "Enregistrer et fermer",
         "nameRequired": "Le nom est requis.",
         "testSent": "E-mail de test envoyé.",
@@ -1596,29 +1665,37 @@
         "testRecipientPlaceholder": "Votre e-mail de compte",
         "preview": "Aperçu",
         "sendTest": "Envoyer un test",
-        "previewLetter": "Aperçu en lettre",
-        "letterAppendix": "Bulletin QR (PDF)",
-        "letterAppendixNone": "Aucun",
-        "letterAppendixHelp": "PDF des «Documents» imprimé après les pages de la lettre, p. ex. un bulletin QR (A4, bulletin au bord inférieur). Uniquement pour les adresses en Suisse ; en impression recto verso, une page blanche est ajoutée si nécessaire pour que le bulletin soit sur un recto.",
+        "previewLetter": "Aperçu",
+        "letterAppendix": "Pages supplémentaires (PDF)",
+        "letterAppendixNone": "Aucune",
+        "letterAppendixHelp": "Les pages sont ajoutées à la fin de la lettre. Choisissez parmi les fichiers PDF téléversés sous «Documents».",
+        "attachments": "Pièces jointes (Word)",
+        "attachmentsHelp": "Documents Word (.docx) des «Documents», 5 au plus et 15 Mo au total. Ils sont complétés avec les mêmes espaces réservés que l'e-mail (dans le texte et les adresses des liens, pas dans les champs), joints en PDF et envoyés dans cet ordre avec chaque e-mail de ce modèle, y compris les e-mails d'abonnement automatiques. Les e-mails système (connexion, mot de passe) ne peuvent pas avoir de pièces jointes. Une lettre les imprime après ses pages (A4). Si une pièce jointe ne peut pas être créée, l'e-mail n'est pas envoyé. Un document personnel est converti pour chaque destinataire, l'un après l'autre, et les PDF joints font plus facilement classer un e-mail comme spam : en joindre peu et de petits. Nécessite Gotenberg comme moteur PDF.",
+        "attachmentsNone": "Aucune",
+        "attachmentsNoDocuments": "Aucun document Word (.docx) dans «Documents»",
         "letterPreviewTitle": "Aperçu de la lettre",
         "selectMailType": "Veuillez d’abord choisir une utilisation.",
         "selectMailTypePlaceholder": "Choisir une utilisation …",
         "testRecipientHint": "Les e-mails de test sont toujours envoyés à votre propre compte.",
         "generateTextFromHtml": "Générer depuis le HTML",
-        "textContentReadonlyHint": "Généré automatiquement à partir du contenu. Modifiez l’onglet visuel ou HTML pour le changer.",
         "background": "Arrière-plan",
         "contentWidth": "Largeur (px)",
         "purposeHint": "L’utilisation définit dans quelle situation ce modèle est envoyé. Elle détermine les données — et donc les espaces réservés — disponibles : seul un modèle de facture connaît le montant de la facture, par exemple.",
         "descriptionHelp": "Visible uniquement en interne : aide votre équipe à retrouver le modèle dans la liste. N’apparaît pas dans l’e-mail.",
         "sampleSubscriptionHelp": "Choisissez un abonnement existant pour remplir l’aperçu et l’e-mail de test avec ses données réelles. Sans sélection, des données d’exemple fictives sont utilisées. L’e-mail de test n’est envoyé qu’à vous.",
-        "bodyModeHelp": "Visuel : modifiez le contenu comme dans un traitement de texte. HTML : modifiez directement le code source – pour utilisateur·trice·s avancé·e·s. Texte brut : la version texte pour les programmes de messagerie sans HTML ; elle est générée automatiquement.",
+        "textContentGenerated": "Généré automatiquement à partir du contenu HTML / visuel",
+        "bodyModeHints": {
+          "visual": "Modifiez le contenu comme dans un traitement de texte.",
+          "html": "Modifiez directement le code source – pour utilisateur·trice·s avancé·e·s.",
+          "text": "La version texte pour les programmes de messagerie sans HTML. Elle est générée automatiquement à partir du contenu ; modifiez l’onglet visuel ou HTML pour la changer."
+        },
         "backgroundHelp": "Couleur de la surface autour du contenu de l’e-mail.",
         "contentWidthHelp": "Largeur maximale du contenu en pixels. 600 px est une valeur éprouvée qui s’affiche bien dans la plupart des programmes de messagerie. Sur les petits écrans, le contenu se rétrécit automatiquement.",
         "bodyMode": "Mode d’édition",
         "letterLayout": "Papier à lettres",
         "letterLayoutDefault": "Par défaut ({{name}})",
         "letterLayoutNone": "Par défaut (aucun)",
-        "letterLayoutHelp": "En-tête et pied de page lorsque ce modèle est imprimé en lettre. Sans effet pour les e-mails."
+        "letterLayoutHelp": "En-tête et pied de page"
       },
       "editor": {
         "undo": "Annuler",
@@ -1640,6 +1717,8 @@
         "desktop": "Ordinateur",
         "tablet": "Tablette",
         "mobile": "Mobile",
+        "attachments": "Pièces jointes",
+        "close": "Fermer",
         "linkTitle": "Lien",
         "linkUrl": "URL",
         "linkText": "Texte du lien",
@@ -1674,7 +1753,7 @@
       "htmlContent": "Contenu HTML",
       "name": "Nom",
       "placeholders": "Espaces réservés",
-      "placeholdersHint": "Cliquer pour insérer dans le champ sélectionné",
+      "placeholdersHint": "Un clic sur un espace réservé l’insère dans le modèle.",
       "placeholderSelectType": "Choisissez une utilisation ci-dessus pour voir ses espaces réservés.",
       "mailTypes": {
         "account": "Compte & connexion",
@@ -1699,21 +1778,26 @@
       "textContent": "Contenu en texte brut (repli)",
       "wysiwyg": "Visuel",
       "delete": "Supprimer",
-      "deleteConfirm": "Supprimer ce modèle d’e-mail ?",
+      "deleteConfirm": "Supprimer ce modèle de message ?",
       "importFromProvider": "Importer depuis le fournisseur",
       "importConfirm": "Importer & écraser",
       "importWarning": "Cela importe tous les modèles du fournisseur de messagerie. Les modèles inconnus sont créés, ceux déjà importés voient leur HTML et leur objet écrasés. Les modifications locales seront perdues.",
       "importDone": "{{count}} modèle(s) importé(s) depuis le fournisseur.",
-      "placeholderAlways": "Toujours disponible — dans chaque e-mail",
+      "placeholderAlways": "Toujours disponible",
       "placeholderContextLabel": "Champs supplémentaires pour cette utilisation",
       "placeholderContexts": {
-        "account": "Compte & connexion (création, lien de connexion, réinitialisation du mot de passe)",
+        "account": "Compte & connexion",
         "emailChange": "Changement d’e-mail",
-        "subscription": "Abonnement (nouveau, confirmé, désactivation)",
-        "renewal": "Renouvellement — automatique (succès / échec)",
+        "subscription": "Abonnement",
+        "renewal": "Renouvellement automatique",
         "invoiceCreation": "Facture créée",
         "custom": "E-mail libre à un·e abonné·e",
         "customNoSubscription": "E-mail libre à un·e non-abonné·e"
+      },
+      "placeholderGroups": {
+        "user": "Utilisateur",
+        "person": "Personne",
+        "general": "Général"
       },
       "placeholderNames": {
         "user_fullName": "Nom complet",
@@ -1786,7 +1870,7 @@
         "custom": "Les factures arrivent sous forme de tableau : optional_invoices_0_* (la plus récente en premier).",
         "customNoSubscription": "Seuls les champs du destinataire sont disponibles — cet e-mail s’adresse à des personnes sans abonnement."
       },
-      "searchPlaceholders": "Rechercher …",
+      "searchPlaceholders": "Filtrer les espaces réservés …",
       "noPlaceholders": "Aucun espace réservé correspondant.",
       "placeholderExample": "Exemple",
       "purposeDescriptions": {
@@ -1845,13 +1929,14 @@
         "optional_invoices_0_description": "Description de la dernière facture."
       },
       "statusHelp": "Une coche signifie qu’un e-mail automatique utilise ce modèle. « Inutilisé » signifie qu’aucun e-mail automatique ne l’utilise – vous pouvez tout de même l’envoyer manuellement via « Messages manuels ».",
-      "placeholdersInfo": "Les espaces réservés sont remplacés automatiquement à l’envoi par les données de chaque destinataire, p. ex. son prénom. Chaque e-mail devient ainsi personnel.",
-      "searchPlaceholdersLabel": "Rechercher des espaces réservés",
-      "empty": "Aucun modèle d’e-mail pour le moment."
+      "placeholdersInfo": "Les espaces réservés sont remplacés automatiquement à l’envoi par les données correspondantes, p. ex. le prénom du ou de la destinataire.",
+      "searchPlaceholdersLabel": "Filtrer les espaces réservés",
+      "empty": "Aucun modèle de message pour le moment."
     },
     "mailTemplateSelect": {
-      "sendAsLetter": "Aussi par lettre",
-      "sendAsLetterHint": "Les personnes au canal lettre reçoivent ce message imprimé au lieu de l’e-mail.",
+      "channels": "Canaux de distribution",
+      "noLetterVersion": "Ce modèle n’a pas de version lettre. Ajoutez-la dans le modèle pour que les personnes au canal lettre reçoivent ce message imprimé ; d’ici là, elles reçoivent l’e-mail.",
+      "sendAsLetterHint": "L’e-mail part toujours. Si la lettre est cochée, les personnes au canal lettre reçoivent ce message imprimé au lieu de l’e-mail.",
       "noMailSentSelectNow": "Ne pas envoyer d’e-mail"
     },
     "memberPlanEdit": {
@@ -1915,6 +2000,7 @@
       "paymentProviderStatusInfo": "✅ signifie que tous les moyens de paiement de ce plan sont reliés à un prestataire de paiement. ❌ signifie qu’au moins un moyen de paiement n’a pas de prestataire et que les lecteur·rice·s ne peuvent donc pas payer avec."
     },
     "deliveryMode": {
+      "viaApiKey": "via la clé API «{{key}}»",
       "panelTitle": "Canal de distribution",
       "channel": {
         "mail": "E-mail",
@@ -2023,7 +2109,30 @@
           "unresponsive": "Sans réaction depuis le {{date}}",
           "unknown": "Inconnu depuis le {{date}}"
         },
-        "recomputedDaily": "(recalculées automatiquement chaque jour)"
+        "recomputedDaily": "(recalculées automatiquement chaque jour)",
+        "filter": {
+          "reason": "Motif",
+          "emailSince": "Statut e-mail depuis",
+          "created": "Suggérée depuis"
+        },
+        "reasonFilter": {
+          "placeholderEmail": "Adresse fictive",
+          "hardBounce": "Hard bounce",
+          "invalid": "Adresse invalide",
+          "blocked": "Bloquée par le service e-mail",
+          "spamComplaint": "Plainte pour spam",
+          "unsubscribed": "Désabonné auprès du service e-mail",
+          "clicked": "A cliqué sur un lien",
+          "verified": "Adresse vérifiée",
+          "login": "Connecté",
+          "emailVerified": "Adresse e-mail confirmée",
+          "noInteraction": "Aucune réaction",
+          "noEvidence": "Aucun indice",
+          "none": "Aucun statut e-mail"
+        },
+        "confirmAllFiltered": "Appliquer les {{count}} filtrées",
+        "confirmAllFilteredText": "Seules les suggestions correspondant au filtre sont appliquées.",
+        "emptyFiltered": "Aucune suggestion ne correspond au filtre."
       },
       "assign": {
         "steps": {
@@ -2062,7 +2171,7 @@
         "emailUnreachable": "Adresse e-mail injoignable ({{segment}}) – les e-mails ne parviendront pas à cette personne."
       },
       "flows": {
-        "letterHint": "Les messages marqués « Aussi par lettre » parviennent imprimés aux personnes au canal lettre ; les autres reçoivent un e-mail.",
+        "letterHint": "Les messages dont la case « Lettre » est cochée parviennent imprimés aux personnes au canal lettre ; les autres reçoivent un e-mail.",
         "manage": "Gérer les canaux de distribution"
       }
     },
@@ -2142,7 +2251,6 @@
       "printIssueCreate": "Nouveau numéro imprimé",
       "printIssueEdit": "Modifier le numéro imprimé",
       "login": "Connexion",
-      "impersonate": "Se connecter en tant qu’utilisateur·trice",
       "resetPassword": "Réinitialiser le mot de passe",
       "setPassword": "Définir un nouveau mot de passe",
       "dashboard": "Tableau de bord",
@@ -2252,9 +2360,9 @@
       "userConsentCreate": "Nouveau consentement d’utilisateur·trice",
       "userConsentEdit": "Modifier le consentement d’utilisateur·trice",
       "automaticEmails": "E-mails automatiques",
-      "mailTemplates": "Modèles d’e-mail",
-      "mailTemplateCreate": "Nouveau modèle d’e-mail",
-      "mailTemplateEdit": "Modifier le modèle d’e-mail",
+      "mailTemplates": "Modèles de message",
+      "mailTemplateCreate": "Nouveau modèle de message",
+      "mailTemplateEdit": "Modifier le modèle de message",
       "letterLayouts": "Papier à lettres",
       "letterLayoutCreate": "Nouveau papier à lettres",
       "letterLayoutEdit": "Modifier le papier à lettres",
@@ -2738,6 +2846,13 @@
       "successTitle": "Enregistré",
       "subscriptionPlans": "Plans d’abonnement",
       "subscriptionUpgradeModel": "Lors d’une mise à niveau, facturer la différence de prix complète (au lieu du crédit restant au prorata)",
+      "feeds": "Flux",
+      "feedPaywalledContent": "Articles payants dans les flux RSS, Atom et JSON",
+      "feedPaywalledContentChoice": {
+        "lead": "Le chapeau uniquement",
+        "visible": "La partie visible avant le paywall",
+        "full": "Le texte intégral"
+      },
       "subscriptionExtendWindowDays": "Fenêtre de renouvellement (jours avant l’échéance)",
       "paymentMethodChangeExpiryDays": "Délai pour un changement de moyen de paiement (jours)",
       "warnings": {
@@ -2747,6 +2862,7 @@
         "guestPollVote": "Autoriser les votes des utilisateur·trice·s non authentifié·e·s pour les sondages.",
         "invoiceReminders": "Nombre de rappels de paiement par facture (un rappel par jour).",
         "subscriptionUpgradeModel": "Lorsque cette option est activée, une mise à niveau facture toujours la différence entre le prix du nouveau plan et celui du plan actuel, quel que soit le temps restant dans la période en cours. Lorsqu’elle est désactivée, seul le solde restant (au prorata) non utilisé de la période en cours est crédité.",
+        "feedPaywalledContent": "Les articles gratuits figurent toujours dans les flux avec leur texte intégral. Ce réglage concerne les articles derrière un paywall actif. Les flux sont lus notamment par la Banque de données suisse des médias (SMD) et les lecteurs de flux ; les changements apparaissent en dix minutes au plus.",
         "sessionTtlDays": "Combien de temps une connexion reste valable avant de devoir se reconnecter. S’applique dès la prochaine connexion ; les sessions ouvertes gardent leur durée.",
         "emailQualityUnresponsiveAfterDays": "Une adresse e-mail est considérée « sans réaction » lorsque ce nombre de jours s’est écoulé sans connexion ni clic dans un e-mail, alors que des e-mails ont été remis. Réévalué chaque nuit et via « Actualiser les statuts ».",
         "emailQualityMinMailsForUnresponsive": "Ce nombre d’e-mails doit avoir été remis à l’adresse avant qu’elle puisse être considérée « sans réaction ».",
@@ -2798,7 +2914,7 @@
     },
     "automaticMails": {
       "title": "Messages automatiques",
-      "intro": "Définissez ici quel modèle d’e-mail est envoyé automatiquement pour quel événement. Choisissez un modèle par événement – ou laissez « Ne pas envoyer d’e-mail » si rien ne doit partir. L’icône ⓘ explique chaque événement.",
+      "intro": "Définissez ici quel modèle de message est envoyé automatiquement pour quel événement. Choisissez un modèle par événement – ou laissez « Ne pas envoyer d’e-mail » si rien ne doit partir. L’icône ⓘ explique chaque événement.",
       "example": "Exemple : {{example}}"
     },
     "subscriptionFlow": {
@@ -2988,6 +3104,7 @@
       "totpExemptInfo": "Cet utilisateur est exempté de l’exigence d’authentification à deux facteurs.",
       "totpExemptLabel": "Exempter de l’exigence 2FA",
       "totpExemptWarning": "⚠️ AVERTISSEMENT DE SÉCURITÉ ⚠️\n\nVous êtes sur le point de DÉSACTIVER l’exigence d’authentification à deux facteurs pour cet utilisateur !\n\nCela réduit considérablement la sécurité de ce compte. L’utilisateur pourra se connecter à l’éditeur avec un simple mot de passe, sans second facteur.\n\nCela ne devrait être utilisé que dans des circonstances exceptionnelles.\n\nÊtes-vous sûr·e de vouloir continuer ?",
+      "managedByWepublishLogin": "Ce compte appartient au personnel de We.Publish et est géré par la connexion We.Publish. Il ne peut pas être modifié, désactivé ou supprimé ici.",
       "resetPassword": "Réinitialiser le mot de passe",
       "resetPasswordFor": "Réinitialiser le mot de passe de {{userName}}",
       "selectUserImage": "Choisir une photo de profil",
@@ -3037,6 +3154,7 @@
         "oneSubscription": "1 abonnement",
         "resetPassword": "Réinitialiser le mot de passe",
         "resetTotp": "Réinitialiser la 2FA",
+        "managedByWepublishLogin": "Compte We.Publish",
         "resetTotpTitle": "Réinitialiser l’authentification à deux facteurs",
         "resetTotpConfirmation": "Êtes-vous sûr·e de vouloir réinitialiser l’authentification à deux facteurs pour {{name}} ? L’utilisateur devra configurer à nouveau la 2FA lors de sa prochaine connexion.",
         "totpResetSuccess": "L’authentification à deux facteurs a été réinitialisée avec succès.",
@@ -3883,10 +4001,12 @@
         "mergeFieldExpression": "Expression (p. ex. user.firstName)",
         "addMergeField": "Ajouter un champ de fusion",
         "interestGroupMappings": "Correspondances des groupes d’intérêt",
-        "interestGroupHelp": "Détermine si un contact est attribué à un groupe d’intérêt Mailchimp en fonction de son abonnement. Pour les groupes toujours actifs, utilise les groupes d’intérêt par défaut ci-dessous.\n\nExpressions disponibles :\n• slug:equals:valeur – actif en cas de correspondance exacte du slug d’abonnement\n• slug:contains:valeur – actif si le slug d’abonnement contient « valeur »\n• slug:contains_any:v1,v2 – actif si l’une des valeurs est contenue",
+        "interestGroupHelp": "Détermine si un contact est attribué à un groupe d’intérêt Mailchimp en fonction de son abonnement. Pour les groupes toujours actifs, utilise les groupes d’intérêt par défaut ci-dessous.\n\nExpressions disponibles :\n• slug:equals:valeur – actif en cas de correspondance exacte du slug d’abonnement\n• slug:contains:valeur – actif si le slug d’abonnement contient « valeur »\n• slug:contains_any:v1,v2 – actif si l’une des valeurs est contenue\n\nL’ajout auto attribue le groupe dès qu’un nouvel abonnement correspondant commence ; le retrait auto le retire une fois tous les abonnements correspondants terminés. Décoche l’une des options pour gérer ce sens manuellement dans Mailchimp.",
         "interestGroupId": "ID du groupe d’intérêt",
         "interestGroupExpression": "Expression (p. ex. always)",
         "addInterestGroup": "Ajouter un groupe d’intérêt",
+        "interestGroupAutoAdd": "Ajout auto",
+        "interestGroupAutoRemove": "Retrait auto",
         "defaultInterestGroups": "Groupes d’intérêt par défaut",
         "op_contains": "Slug contient",
         "op_equals": "Slug est égal à",
@@ -4258,7 +4378,12 @@
           "enable": "Activer Umami",
           "um": "<url>Umami</url> est une alternative open source et respectueuse de la vie privée à Google Analytics.",
           "umLocator": "Vous le trouverez dans les <url>paramètres du site</url> de votre tableau de bord Umami",
-          "umInvalid": "Doit être un ID de site valide (p. ex. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)"
+          "umInvalid": "Doit être un ID de site valide (p. ex. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)",
+          "advanced": "Avancé",
+          "excludedSearchParams": "Paramètres d’URL exclus",
+          "excludedSearchParamsHelp": "Ces paramètres d’URL sont retirés de l’URL de la page et du référent avant d’être envoyés à Umami, p. ex. les données personnelles qu’une newsletter ajoute à ses liens (mail, firstName). Tous les autres paramètres, comme les paramètres utm, sont conservés. La casse ne compte pas.",
+          "excludedSearchParam": "Nom du paramètre",
+          "addExcludedSearchParam": "Ajouter un paramètre"
         }
       },
       "ads": {
@@ -4703,6 +4828,8 @@
       },
       "missingPlaceholders": "Attention : ces champs ne seront pas remplis pour ces destinataires : {{placeholders}}",
       "createTemplate": "Nouveau modèle",
+      "attachments_one": "Chaque e-mail contient {{count}} pièce jointe en PDF : {{names}}",
+      "attachments_other": "Chaque e-mail contient {{count}} pièces jointes en PDF : {{names}}",
       "editTemplate": "Modifier le modèle",
       "showRecipients": "Afficher les destinataires",
       "recipientList": {
@@ -4726,6 +4853,7 @@
         "unknown": "Inconnu",
         "active": "Active",
         "hint": "Plusieurs statuts signifient « l’un ou l’autre ». « Sans réaction » : des e-mails ont été remis, mais aucune connexion ni aucun clic depuis longtemps (réglage « Qualité des e-mails »). À atteindre par courrier : substitution + injoignable.",
+        "hintWithoutPlaceholder": "Plusieurs statuts signifient « l’un ou l’autre ». « Sans réaction » : des e-mails ont été remis, mais aucune connexion ni aucun clic depuis longtemps (réglage « Qualité des e-mails »).",
         "overview": "Personnes de cette audience par statut e-mail (indépendamment de la sélection)",
         "refresh": "Actualiser les statuts",
         "refreshing": "Actualisation des statuts …",
@@ -4776,6 +4904,10 @@
         "label": "Canal de distribution",
         "mail": "E-mail",
         "letter": "Lettre",
+        "noVersion": {
+          "mail": "Ce modèle n’a pas de version e-mail.",
+          "letter": "Ce modèle n’a pas de version lettre."
+        },
         "withoutAddress": "{{count}} des destinataires n’ont pas d’adresse postale utilisable et seront ignoré·e·s."
       },
       "print": {
@@ -4865,8 +4997,6 @@
         "job": "Envoi",
         "jobAll": "Tous les envois",
         "all": "Tous",
-        "title": "Filtres",
-        "reset": "Réinitialiser les filtres",
         "typeHint": "Ce qui a déclenché l’envoi.",
         "jobHelp": "Un envoi regroupe tous les e-mails envoyés en un clic via « Messages manuels ». Sélectionnez-en un pour ne voir que ses e-mails.",
         "channel": "Envoi"
@@ -5310,6 +5440,7 @@
         "failed": "Échoué",
         "filterBySession": "Filtrer par cette session",
         "tokenActor": "Jeton API : {{name}}",
+        "tokenActorOnBehalf": "Clé API : {{name}} · {{user}}",
         "impersonatedActor": "{{impersonator}} en tant que {{actor}}",
         "unknownActor": "Inconnu",
         "notSupported": "Cette installation ne tient pas de journal d’audit. Les entrées apparaîtront une fois la migration appliquée.",
@@ -5463,7 +5594,7 @@
       "headerHeight": "Hauteur de l’en-tête (mm)",
       "footerHeight": "Hauteur du pied de page (mm)",
       "headerHeightHint": "Au maximum 40 mm, pour que l’en-tête n’empiète pas sur la zone d’affranchissement. Il se répète sur chaque page ; 0 mm le supprime.",
-      "footerHeightHint": "Au maximum 40 mm. Le texte de la lettre garde cet espace par rapport au bord inférieur. Le pied de page se répète sur chaque page ; 0 mm le supprime.",
+      "footerHeightHint": "Au maximum 40 mm. Le texte de la lettre garde cet espace par rapport au bord inférieur, et jamais moins de 20 mm. Le pied de page se répète sur chaque page ; 0 mm le supprime.",
       "htmlHint": "HTML avec des variables comme {{user_firstName}}. Indiquez les tailles en mm et donnez aux images une largeur et une hauteur fixes.",
       "insertImage": "Insérer une image",
       "preview": "Aperçu",
@@ -5475,6 +5606,7 @@
       "noLayouts": "Pas encore de papier à lettres. Créez-en un pour que les lettres aient un en-tête et un pied de page."
     },
     "printIssues": {
+      "viaApiKey": "via la clé API «{{key}}»",
       "title": "Numéros imprimés",
       "intro": "Chaque numéro imprimé avec ses listes d’impression : qui reçoit un exemplaire se décide à la date de parution – depuis we.publish et bexio. Chaque liste d’impression livrée à l’imprimerie compte dans les numéros payés par les lecteur·trice·s.",
       "create": "Nouveau numéro",
@@ -5863,7 +5995,7 @@
         "subscription": "Créer un abonnement",
         "consent": "Créer un consentement",
         "userConsent": "Créer un consentement utilisateur",
-        "mailTemplate": "Créer un modèle d'e-mail",
+        "mailTemplate": "Créer un modèle de message",
         "letterLayout": "Créer un papier à lettres",
         "memberPlan": "Créer un plan d'abonnement",
         "paymentMethod": "Créer un moyen de paiement",
@@ -5892,6 +6024,15 @@
         "lastUsed": "Dernière utilisation",
         "never": "Jamais utilisée",
         "status": "Statut",
+        "blocked": "Bloquée",
+        "blockedReason": {
+          "CreatorMissing": "La personne qui a créé cette clé n’existe plus. La clé ne fonctionne plus ; créez-en une nouvelle.",
+          "CreatorInactive": "La personne qui a créé cette clé est désactivée. La clé ne fonctionne pas tant qu’elle le reste.",
+          "CreatorMayNotCreateApiTokens": "La personne qui a créé cette clé ne peut plus créer de clés API. La clé ne fonctionne pas tant que c’est le cas."
+        },
+        "missingScopes_one": "{{count}} droit manquant",
+        "missingScopes_other": "{{count}} droits manquants",
+        "missingScopesHelp": "La personne qui a créé cette clé n’a plus ces droits. Les appels qui en ont besoin sont refusés : {{scopes}}",
         "active": "Active",
         "revoked": "Révoquée",
         "revoke": "Révoquer",
@@ -5902,7 +6043,7 @@
         "expiresInDays_other": "Expire dans {{count}} jours",
         "expiresDate": "{{expiresDate, ccc PP p}}",
         "owner": "Propriétaire",
-        "ownerUnknown": "Personne supprimée",
+        "ownerUnknown": "Utilisateur supprimé",
         "filterByOwner": "Filtrer par propriétaire",
         "anyStatus": "Tout statut"
       },

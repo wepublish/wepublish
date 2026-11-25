@@ -193,7 +193,14 @@ started (nor migrated) for a URL you override (`BASE_URL`, `E2E_EDITOR_URL`,
   `CAN_UPDATE_SYSTEM_MAILS`, `CAN_CREATE_ARTICLE`, `CAN_PUBLISH_ARTICLE`,
   `CAN_DELETE_ARTICLE`, `CAN_CREATE_PAYWALL`, `CAN_DELETE_PAYWALL`,
   `CAN_CREATE_PAGE`, `CAN_PUBLISH_PAGE`,
-  `CAN_UPDATE_CHALLENGE_PROVIDER_SETTINGS`.
+  `CAN_UPDATE_CHALLENGE_PROVIDER_SETTINGS`. The API-key journeys
+  (`api-keys.feature`) also need `CAN_CREATE_USER_ROLE`,
+  `CAN_DELETE_USER_ROLE`, `CAN_CREATE_INVOICE`, `CAN_GET_INVOICE` and
+  `CAN_GET_AUDIT_LOGS`: they give a test editor a role of their own, have
+  them create a key, then take the role's permissions, the account's active
+  flag and finally the account away. The key acts for the person who created
+  it, so the `E2E_API_TOKEN` key also stops working if its own creator is
+  deleted, deactivated or loses `CAN_CREATE_API_TOKEN`.
 - `@mail` journeys read the mailbox the review's mail provider sends to,
   over IMAP (`support/imap-inbox.ts`): `E2E_IMAP_USER` and
   `E2E_IMAP_PASSWORD` (secrets of the same names in CI), optional

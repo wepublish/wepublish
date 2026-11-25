@@ -59,8 +59,9 @@ import { Base } from './base';
 import { EditorCommandPaletteSurface } from './commandPalette/editorCommandPalette';
 import { EditorGlobalStyles } from './editorGlobalStyles';
 import { Login } from './login';
-import { LoginImpersonate } from './loginImpersonate';
 import { LoginJwt } from './loginJwt';
+import { loginRedirectUrl } from './loginRedirect';
+import { LoginWepublish } from './loginWepublish';
 import { DocumentTitle } from './pageTitle/documentTitle';
 import { ResetPassword } from './resetPassword';
 import { ArticleTemplateEditView } from './routes/articleTemplate/articleTemplateEditView';
@@ -217,8 +218,8 @@ function AppRoutes() {
           element={<LoginJwt />}
         />
         <Route
-          path="login/impersonate/:jwt"
-          element={<LoginImpersonate />}
+          path="login/wepublish"
+          element={<LoginWepublish />}
         />
         <Route
           path="login/reset-password"
@@ -1356,7 +1357,7 @@ export function App() {
 
   useEffect(() => {
     if (session === null && !window.location.pathname.startsWith('/login')) {
-      window.location.href = `/login?next=${window.location.pathname}`;
+      window.location.href = loginRedirectUrl(window.location);
     }
   }, [session]);
 

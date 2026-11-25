@@ -1,6 +1,12 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import { createTheme, ThemeProvider } from '@mui/material';
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from '@testing-library/react';
 import { SyncProviderType } from '@wepublish/editor/api';
 import type { Mock } from 'vitest';
 
@@ -109,6 +115,149 @@ describe('MailchimpSyncIntegrationForm', () => {
         name: 'integrations.mailchimpSyncSettings.extensions',
       })
     ).toBeInTheDocument();
+  });
+
+  describe('interest group mappings', () => {
+    const AUTO_ADD = 'integrations.mailchimpSyncSettings.interestGroupAutoAdd';
+    const AUTO_REMOVE =
+      'integrations.mailchimpSyncSettings.interestGroupAutoRemove';
+
+    // The interest groups are mapped on the wizard's "map" step.
+    const renderForm = () => {
+      render(
+        <ThemeProvider theme={createTheme({ cssVariables: true })}>
+          <MailchimpSyncIntegrationForm />
+        </ThemeProvider>
+      );
+      fireEvent.click(step('map'));
+    };
+
+    beforeEach(() => {
+      (useQuery as unknown as Mock).mockReturnValue({
+        data: {
+          syncProviderSettings: [
+            {
+              id: 'mailchimp-sync',
+              type: SyncProviderType.Mailchimp,
+              name: 'Mailchimp',
+              enabled: false,
+              mailchimp_isApiKeySet: true,
+              mailchimp_listId: 'list-1',
+              mailchimp_mergeFieldMappings: [],
+              mailchimp_interestGroupMappings: [
+                {
+                  groupId: 'grp-1',
+                  expression: 'slug:contains:abo',
+                  autoAdd: true,
+                  autoRemove: true,
+                },
+              ],
+              mailchimp_defaultInterestGroupIds: [],
+              mailchimp_extensions: {},
+              lastSyncAt: null,
+              lastSyncError: null,
+            },
+          ],
+        },
+        loading: false,
+      });
+    });
+
+    it('adds and removes interest groups automatically unless told otherwise', () => {
+      renderForm();
+
+      fireEvent.click(
+        screen.getByRole('button', {
+          name: 'integrations.mailchimpSyncSettings.addInterestGroup',
+        })
+      );
+
+      const checkboxes = [
+        ...screen.getAllByRole('checkbox', { name: AUTO_ADD }),
+        ...screen.getAllByRole('checkbox', { name: AUTO_REMOVE }),
+      ];
+      expect(checkboxes).toHaveLength(4);
+      for (const checkbox of checkboxes) {
+        expect(checkbox).toBeChecked();
+      }
+    });
+
+    it('saves an interest group stored without the automatic flags as neither adding nor removing automatically', async () => {
+      (useQuery as unknown as Mock).mockReturnValue({
+        data: {
+          syncProviderSettings: [
+            {
+              id: 'mailchimp-sync',
+              type: SyncProviderType.Mailchimp,
+              name: 'Mailchimp',
+              enabled: false,
+              mailchimp_isApiKeySet: true,
+              mailchimp_listId: 'list-1',
+              mailchimp_mergeFieldMappings: [],
+              mailchimp_interestGroupMappings: [
+                { groupId: 'grp-1', expression: 'slug:contains:abo' },
+              ],
+              mailchimp_defaultInterestGroupIds: [],
+              mailchimp_extensions: {},
+              lastSyncAt: null,
+              lastSyncError: null,
+            },
+          ],
+        },
+        loading: false,
+      });
+      renderForm();
+
+      expect(
+        screen.getByRole('checkbox', { name: AUTO_ADD })
+      ).not.toBeChecked();
+      expect(
+        screen.getByRole('checkbox', { name: AUTO_REMOVE })
+      ).not.toBeChecked();
+
+      fireEvent.click(step('connect'));
+      fireEvent.change(screen.getByRole('textbox', { name: 'name' }), {
+        target: { value: 'Mailchimp Newsletter' },
+      });
+      fireEvent.click(screen.getByRole('button', { name: 'save' }));
+
+      await waitFor(() =>
+        expect(create).toHaveBeenCalledWith({
+          variables: expect.objectContaining({
+            mailchimp_interestGroupMappings: [
+              {
+                groupId: 'grp-1',
+                expression: 'slug:contains:abo',
+                autoAdd: false,
+                autoRemove: false,
+              },
+            ],
+          }),
+        })
+      );
+    });
+
+    it('saves an interest group that is no longer removed automatically', async () => {
+      renderForm();
+
+      fireEvent.click(screen.getByRole('checkbox', { name: AUTO_REMOVE }));
+      fireEvent.click(screen.getByRole('button', { name: 'save' }));
+
+      await waitFor(() =>
+        expect(create).toHaveBeenCalledWith({
+          variables: expect.objectContaining({
+            mailchimp_interestGroupMappings: [
+              {
+                groupId: 'grp-1',
+                expression: 'slug:contains:abo',
+                autoAdd: true,
+                autoRemove: false,
+              },
+            ],
+          }),
+        })
+      );
+    });
   });
 });
 

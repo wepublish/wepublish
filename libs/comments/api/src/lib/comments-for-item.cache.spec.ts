@@ -1,3 +1,4 @@
+import { AuthSessionType } from '@wepublish/authentication/api';
 import { Test, type TestingModule } from '@nestjs/testing';
 import { CommentItemType, CommentState } from '@prisma/client';
 import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
@@ -357,6 +358,7 @@ describe('commentsForItem resolver', () => {
     };
 
     await resolver(commentService).commentsForItem(args(), {
+      type: AuthSessionType.User,
       user: { id: 'reader-1' },
       roles: [],
     } as any);

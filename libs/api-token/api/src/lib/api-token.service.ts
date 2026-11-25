@@ -4,8 +4,16 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { ApiToken, Prisma, PrismaClient } from '@prisma/client';
-import { EXPIRED_API_TOKEN } from '@wepublish/authentication/api';
+import { ApiToken, Prisma, PrismaClient, User } from '@prisma/client';
+import {
+  BLOCKED_API_TOKEN,
+  EXPIRED_API_TOKEN,
+} from '@wepublish/authentication/api';
+import { CanCreateApiToken } from '@wepublish/permissions';
+import {
+  addPredefinedPermissions,
+  permissionsOf,
+} from '@wepublish/permissions/api';
 import {
   getMaxTake,
   graphQLSortOrderToPrisma,
@@ -19,6 +27,8 @@ import {
   verifyApiToken,
 } from './api-token.crypto';
 import {
+  ApiTokenBlockedReason,
+  ApiTokenCreatorStateKind,
   ApiTokenListArgs,
   ApiTokenSort,
   ApiTokenStatus,
@@ -44,6 +54,34 @@ export interface ApiTokenRevoker {
   userId: string;
   canRevokeAll: boolean;
 }
+
+/**
+ * A token acts on behalf of the user who created it: `permissions` are the
+ * token's scopes that this user still holds right now.
+ */
+export interface ResolvedApiToken {
+  apiToken: ApiToken;
+  creator: Pick<User, 'id' | 'email'>;
+  permissions: string[];
+}
+
+export interface ApiTokenCreatorCheck {
+  state: ApiTokenCreatorStateKind;
+  blockedReason: ApiTokenBlockedReason | null;
+  /** Scopes of the key its creator no longer holds. */
+  missingScopes: string[];
+  creator: Pick<User, 'id' | 'email'> | null;
+}
+
+const blocked = (
+  blockedReason: ApiTokenBlockedReason,
+  creator: ApiTokenCreatorCheck['creator'] = null
+): ApiTokenCreatorCheck => ({
+  state: ApiTokenCreatorStateKind.Blocked,
+  blockedReason,
+  missingScopes: [],
+  creator,
+});
 
 const LAST_USED_RESOLUTION_MS = 60_000;
 
@@ -121,7 +159,7 @@ export class ApiTokenService {
     return { apiToken, token };
   }
 
-  async resolveToken(token: string): Promise<ApiToken | null> {
+  async resolveToken(token: string): Promise<ResolvedApiToken | null> {
     const candidates = await this.prisma.apiToken.findMany({
       where: { prefix: prefixOf(token) },
     });
@@ -146,9 +184,82 @@ export class ApiTokenService {
       );
     }
 
+    const check = await this.creatorCheck(apiToken);
+
+    if (!check.creator || check.state === ApiTokenCreatorStateKind.Blocked) {
+      throw new UnauthorizedException(
+        (
+          check.blockedReason ===
+            ApiTokenBlockedReason.CreatorMayNotCreateApiTokens
+        ) ?
+          `The user who created the API key "${apiToken.name}" may no longer create API keys (${CanCreateApiToken.id}).`
+        : `The user who created the API key "${apiToken.name}" no longer exists or is inactive.`,
+        { cause: BLOCKED_API_TOKEN }
+      );
+    }
+
     await this.touch(apiToken);
 
-    return apiToken;
+    return {
+      apiToken,
+      creator: check.creator,
+      permissions: apiToken.scopes.filter(
+        scope => !check.missingScopes.includes(scope)
+      ),
+    };
+  }
+
+  /**
+   * What the creator still allows this key. The one check behind both the
+   * calls made with a key and what the key list shows, so they cannot differ.
+   * Never cached: deleting, deactivating or demoting a user takes effect on
+   * their keys at once.
+   */
+  async creatorCheck(
+    apiToken: Pick<ApiToken, 'createdById' | 'scopes'>
+  ): Promise<ApiTokenCreatorCheck> {
+    const user =
+      apiToken.createdById ?
+        await this.prisma.user.findUnique({
+          where: { id: apiToken.createdById },
+        })
+      : null;
+
+    if (!user) {
+      return blocked(ApiTokenBlockedReason.CreatorMissing);
+    }
+
+    const creator = { id: user.id, email: user.email };
+
+    if (!user.active) {
+      return blocked(ApiTokenBlockedReason.CreatorInactive, creator);
+    }
+
+    const roles = (
+      await this.prisma.userRole.findMany({
+        where: { id: { in: user.roleIDs } },
+      })
+    ).map(addPredefinedPermissions);
+    const held = new Set(permissionsOf({ roles }));
+
+    if (!held.has(CanCreateApiToken.id)) {
+      return blocked(
+        ApiTokenBlockedReason.CreatorMayNotCreateApiTokens,
+        creator
+      );
+    }
+
+    const missingScopes = apiToken.scopes.filter(scope => !held.has(scope));
+
+    return {
+      state:
+        missingScopes.length ?
+          ApiTokenCreatorStateKind.Limited
+        : ApiTokenCreatorStateKind.Ok,
+      blockedReason: null,
+      missingScopes,
+      creator,
+    };
   }
 
   async getApiTokens(
@@ -163,7 +274,6 @@ export class ApiTokenService {
     }: ApiTokenListArgs,
     reader: ApiTokenReader
   ) {
-    const orderBy = createApiTokenOrder(sort, order);
     const where: Prisma.ApiTokenWhereInput = {
       ...(reader.canSeeAll ?
         createdById ? { createdById }
@@ -173,14 +283,16 @@ export class ApiTokenService {
     };
 
     const [totalCount, apiTokens] = await Promise.all([
-      this.prisma.apiToken.count({ where, orderBy }),
-      this.prisma.apiToken.findMany({
-        where,
-        skip,
-        take: getMaxTake(take) + 1,
-        orderBy,
-        cursor: cursorId ? { id: cursorId } : undefined,
-      }),
+      this.prisma.apiToken.count({ where }),
+      sort === ApiTokenSort.ScopeCount ?
+        this.byScopeCount(where, order, { cursorId, skip, take })
+      : this.prisma.apiToken.findMany({
+          where,
+          skip,
+          take: getMaxTake(take) + 1,
+          orderBy: createApiTokenOrder(sort, order),
+          cursor: cursorId ? { id: cursorId } : undefined,
+        }),
     ]);
 
     const nodes = apiTokens.slice(0, getMaxTake(take));
@@ -197,6 +309,38 @@ export class ApiTokenService {
         endCursor: lastToken?.id,
       },
     };
+  }
+
+  /**
+   * The database cannot order by the length of `scopes`, so the matching keys
+   * are sorted here. A medium has a few dozen keys at most.
+   */
+  private async byScopeCount(
+    where: Prisma.ApiTokenWhereInput,
+    order: SortOrder,
+    {
+      cursorId,
+      skip = 0,
+      take = 10,
+    }: Pick<ApiTokenListArgs, 'cursorId' | 'skip' | 'take'>
+  ) {
+    const direction = order === SortOrder.Ascending ? 1 : -1;
+    // Newest first among keys with as many permissions, as without sorting.
+    const sorted = (
+      await this.prisma.apiToken.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+      })
+    ).sort((a, b) => direction * (a.scopes.length - b.scopes.length));
+    const start =
+      cursorId ?
+        Math.max(
+          0,
+          sorted.findIndex(({ id }) => id === cursorId)
+        )
+      : 0;
+
+    return sorted.slice(start + skip, start + skip + getMaxTake(take) + 1);
   }
 
   async revokeToken(id: string, revoker: ApiTokenRevoker): Promise<ApiToken> {
@@ -243,5 +387,33 @@ export const createApiTokenOrder = (
 
     case ApiTokenSort.Name:
       return { name: graphQLSortOrderToPrisma(sortOrder) };
+
+    case ApiTokenSort.ExpiresAt:
+      return { expiresAt: graphQLSortOrderToPrisma(sortOrder) };
+
+    case ApiTokenSort.Owner: {
+      const direction = graphQLSortOrderToPrisma(sortOrder);
+
+      return [
+        { createdBy: { name: direction } },
+        { createdBy: { firstName: direction } },
+      ];
+    }
+
+    // Active (not revoked, expiring later) < expired < revoked.
+    case ApiTokenSort.Status:
+      return sortOrder === SortOrder.Ascending ?
+          [
+            { revokedAt: { sort: 'asc', nulls: 'first' } },
+            { expiresAt: 'desc' },
+          ]
+        : [
+            { revokedAt: { sort: 'desc', nulls: 'last' } },
+            { expiresAt: 'asc' },
+          ];
+
+    // Sorted in memory, see `byScopeCount`.
+    case ApiTokenSort.ScopeCount:
+      return { createdAt: 'desc' };
   }
 };

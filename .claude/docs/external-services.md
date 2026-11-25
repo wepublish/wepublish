@@ -196,6 +196,23 @@ Automated subscription mails can reach a user as a printed letter. The pieces:
   mail|letter, `origin` manual|suggestion, reason, who/when. No row = mail.
   Service `libs/membership/api/src/lib/delivery-mode/`, permission
   `CanManageUserDeliveryMode`, resolver gated by both letter features.
+- A template is written per channel: `MailTemplate` is the group,
+  `MailTemplateVariant` (`mail_templates.variants`, unique per template +
+  `MailChannel`) holds subject, body and — letter only — layout and appendix.
+  Sends read the variant of their channel (`requireTemplateVariant`); the
+  content columns left on `mail_templates` are dead until a follow-up
+  migration drops them. Routing, not fan-out: a letter reader whose template
+  has no letter variant gets the email. A flow or system mail needs a mail
+  variant; letter-only templates are for manual sends. Removing a variant is
+  `deleteMailTemplateVariant` — `updateMailTemplate` never drops one. A
+  letter variant with `sameAsMail` keeps no subject/body: `findTemplateVariant`
+  hands back the mail variant's on the letter's layout and appendix, so read
+  variants through it, never the row. The editor gives a new template such a
+  letter by default. The template table sorts, filters and pages in the
+  browser (`template-table.ts`) over `MailTemplateList`; its extra row fields
+  (`letterLayoutName`, `letterAppendixName`, `memberPlans`,
+  `attachmentNames`) are batched and
+  stay out of `TinyMailTemplate`, which every picker loads.
 - `SubscriptionInterval.sendAsLetter`: only events switched on in the flow
   editor («Auch per Brief») print; user-flow mails (login, password, email
   change) never do. The three senders (periodic job, legacy `member-context`,
@@ -249,6 +266,12 @@ Automated subscription mails can reach a user as a printed letter. The pieces:
   dropped and refused) or `keepDeliverySuggestion`, which stores the user's
   current channel as a manual decision with reason `kept` — that is what makes
   «Beibehalten» survive the nightly recompute without a column of its own.
+  `deliverySuggestions` and `confirmAllDeliverySuggestions` take the same
+  `DeliverySuggestionFilter` (`suggestionFilterWhere`), so «apply all» only
+  touches what the filtered card lists. Its reason is not the stored
+  `reason` but `suggestionReasonOf`: `placeholderEmail`, else the evidence
+  type before the `:` in `UserEmailQuality.reason` (`hardBounce`, `login`…),
+  else `none`; `deliverySuggestionReasons` counts them per kind.
 - Editor: one area, «Zustellkanal», at `/deliverychannel/:view`
   (`libs/membership/editor/src/lib/delivery-mode/delivery-channel-page.tsx`,
   `/deliverysuggestions` redirects). Views: `overview` (default; counts per
@@ -284,6 +307,44 @@ A document the sender hands in (`attachment`, e.g. the Bexio invoice with its
 per-invoice QR-bill) is appended the same way and takes the static appendix's
 place.
 
+### Template attachments (Word → pdf)
+
+`MailTemplateAttachment` rows (ordered by `position`) attach `.docx` documents
+to a template. Every send of it — `/mailsend`, test mails and the subscription
+flows — fills each one in with the template's `{{placeholders}}`
+(`renderDocxTemplate`, `libs/template/api`: joins the runs Word splits a
+placeholder into, per paragraph, xml-escapes values, turns their newlines into
+`<w:br/>`, fills link addresses in the `.rels` parts, and drops every other
+`TargetMode="External"` relationship so LibreOffice fetches nothing; field
+codes and custom-xml content controls are not filled), converts it through
+Gotenberg's LibreOffice route (`PdfRenderer.convertDocument`; Cloudflare
+refuses, `canConvertDocuments()` says so) and attaches the pdf. A letter prints
+them after its pages and before the appendix or the sender's document above (A4
+only, each on its own sheet in duplex). The work is `DocumentAttachmentRenderer` (`libs/letter/api`),
+handed to `MailContext` through the `MAIL_ATTACHMENT_RENDERER` token the way
+`LETTER_SENDER` is; while `paper-letters` is off it attaches nothing. An
+attachment that cannot be rendered fails its mail with a `MailAttachmentError`
+(logged `rejected`); the nightly job skips that recipient like a
+`LetterDeliveryError` instead of stopping the run, and a `/mailsend` job stops
+after three in a row (the rest stays pending). After three failed conversions
+in a row the renderer pauses conversions for a minute, failing at once instead
+of waiting for Gotenberg's 60 s timeout. Saving attachments needs
+`isAvailable()` (the flag and a converting renderer), at most 5 documents and
+15 MB (`MAX_TEMPLATE_ATTACHMENTS`, `MAX_ATTACHMENT_BYTES`, also checked on the
+rendered pdfs), and a template that is no system mail. `UserFlow`/`SystemMail`
+sends (login link, password reset, …) never render attachments, and
+`updateSystemMail` refuses a template with any. A document still attached
+cannot be deleted. Rendered files are cached by content hash (20 files and
+50 MB per cache and API instance), so a document without per-recipient
+placeholders is converted once per send job, not once per recipient; one with
+them (`{{purl}}`, a name) costs a LibreOffice conversion per recipient (a send
+job converts one after the other, ~1–3 s each), so a large send keeps
+LibreOffice busy for hours; Chromium (html letters) has its own queue
+(`--chromium-max-queue-size` vs. `--libreoffice-max-queue-size`). Run
+Gotenberg with `--libreoffice-deny-private-ips` so nothing a document points
+at (e.g. an `INCLUDEPICTURE` field) reaches internal networks; the `.rels`
+stripping is only defence in depth.
+
 ### Letter layouts (Briefpapier)
 
 `LetterLayout` rows (`letter_layouts`, CRUD in `libs/letter/api/src/lib/letter-layout/`,
@@ -311,7 +372,9 @@ add a new script to both):
 - Google Tag Manager
 - Plausible
 - Piwik PRO
-- Umami (Umami Cloud script, key = website ID)
+- Umami (Umami Cloud script, key = website ID; optional `excludedSearchParams`
+  are stripped from `url`/`referrer` by an inline `data-before-send` hook from
+  `libs/utils/website/src/lib/umami-before-send.ts`, rendered before the tag)
 
 Hot & Trending (analytics integrations, `settings.analyticsProvider`):
 
@@ -327,6 +390,68 @@ query (`AnalyticsProviderHotAndTrendingDataSource` in `libs/article/api`);
 setting it on one row clears it on the others. Plausible and Umami keep their
 api key encrypted in `credentials` and take an optional `url` for self-hosting.
 
+## We.Publish login (auth.wepublish.cloud)
+
+We.Publish staff sign in to any editor through Zitadel at
+`auth.wepublish.cloud` ("Anmeldung für We.Publish-Mitarbeitende", a quiet
+link below the login card via `LoginTemplate`'s `footer`). Code
+in `libs/session/api/src/lib/wepublish-*.ts`, editor side in
+`apps/editor/src/app/wepublishLogin.ts`.
+
+- `APP_ENVIRONMENT` picks client and Zitadel role: `production` → client
+  `399257510109839364` + `login-cms-admin-production`; `staging` / `review` →
+  client `399257571782819844` + `login-cms-admin-staging` / `-review`; any
+  other value (e.g. `local`) → staging client + review role. Unset
+  `APP_ENVIRONMENT` or `EDITOR_URL` turns the login off (`wepublishLogin` is
+  null, the button hides).
+- The redirect URI is always `EDITOR_URL/login/wepublish`, built by the API —
+  each editor URL must be registered in the Zitadel app.
+- Authorization code + PKCE, public client (no secret). The code comes back in
+  the fragment, which `captureWepublishLoginResult()` in `main.tsx` removes
+  before Sentry starts. `createSessionWithWepublishLogin(code, codeVerifier)`
+  redeems it, verifies the ID token (issuer, audience, `azp`, JWKS), and reads
+  email, names and `urn:zitadel:iam:org:project:roles` from userinfo.
+- Refused unless the role for this environment is present, the ID token's
+  `amr` contains `mfa` and the email is verified.
+- The account is found by `users.wepublishLoginSubject` (Zitadel `sub`), else
+  by email, else created (`admin`, no welcome mail). Every login resets it to
+  `roleIDs: ['admin']`, `active: true` and Zitadel's names. Connecting an
+  account ends all its other sessions.
+- A connected account is read-only: `assertNotManagedByWepublishLogin`
+  (`libs/user/api`) refuses `updateUser`, `resetPassword`, `deleteUser`,
+  `resetUserTotp` and the person's own `updateCurrentUser`, `updatePassword`,
+  `uploadUserProfileImage` and email change. `SensitiveDataUser.managedByWepublishLogin`
+  tells the editor, which shows the account read-only. Internal code calling
+  `UserService` directly (the login's own reset) is not affected.
+- A connected account (`wepublishLoginSubject` set) can sign in no other way:
+  `createSession` and website-audience `createSessionWithJWT` throw
+  `WepublishLoginOnlyError`. Only the editor's own preview JWT
+  (`createJWTForWebsiteLogin`, audience `preview`) still works.
+- Sign-ins, refusals, user creation and resets are written to the audit log
+  under `createSessionWithWepublishLogin`.
+- **Impersonation.** The Zitadel role `impersonate-cms` (any environment) marks
+  the session `sessions.canImpersonate`; `currentSession` reports it. The user
+  view then offers "Als diese Person anmelden": `impersonateUser(userId,
+  reason)` returns an editor session of the user, and
+  `createWebsiteImpersonation(userId, reason)` a 60-second single-use grant
+  (`impersonation_grants`, audience `impersonation`) that the website redeems
+  through `createSessionWithJWT`, handed over by the preview handshake
+  (`startPreviewHandshake`). Both sessions last an hour, carry
+  `impersonatedBy` (the supporter's email) and `impersonationReason`, cannot
+  impersonate themselves and are refused for inactive and We.Publish
+  accounts. The editor keeps the supporter's token under
+  `wepublish/impersonator-session` and shows `ImpersonationBar`; the website
+  shows its own bar from `withJwtHandler`. Every action in such a session
+  carries `impersonatedBy` in the audit log.
+- An impersonation cannot outlive itself or leave access behind:
+  `createJWTForWebsiteLogin` (the editor preview) in an impersonated session
+  hands the website a grant for the same supporter, reason and remaining time
+  (`ImpersonationService.continueOnWebsite`) instead of an ordinary preview
+  JWT, and `assertNotImpersonating` (`libs/authentication/api`) refuses
+  password and email changes, API tokens, external-app tokens and 2FA setup.
+- We.Publish login sessions last 12 hours (`WEPUBLISH_LOGIN_SESSION_MS`), so
+  removing a Zitadel role takes effect within half a day.
+
 ## We.Publish One
 
 The One dashboard (`WEP_ONE_URL`) and the API authenticate each other with EdDSA
@@ -335,11 +460,8 @@ credentials. `libs/one/api` holds the client, the heartbeat and the guards;
 `@OneScopedJwt(scope)` is the only way into a One-facing resolver, and the
 global guard denies anything without it.
 
-Impersonation (One signs in as a user of this medium) is off unless
-`WEP_ONE_IMPERSONATION=true`. A grant is a 60-second single-use JWT that the
-editor redeems at `/login/impersonate/:jwt` — a route that accepts nothing but
-an impersonation grant, since it skips TOTP and any other JWT pointed at it
-would be a way around two-factor.
+One has no impersonation API any more. We.Publish support impersonates from
+the editor instead (see the We.Publish login below).
 
 **Feature toggles** come from One too: per medium, staff-only (One's
 `ClientFeatures`).

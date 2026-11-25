@@ -226,6 +226,7 @@ import {
 } from 'react-icons/md';
 import { useLocation } from 'react-router-dom';
 
+import { ImpersonationBar } from './impersonationBar';
 import { ColorModePreference, useColorMode } from './colorMode';
 import { useMobileNavigation } from './mobileNavigation';
 import { useSidebarMenu } from './sidebarMenu';
@@ -1736,6 +1737,7 @@ export function Base({ children }: BaseProps) {
           tabIndex={-1}
           inert={sidebarIsModal}
         >
+          <ImpersonationBar />
           {children}
         </ChildrenContainer>
       </Layout>

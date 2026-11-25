@@ -1,4 +1,8 @@
 import { WebsiteSettingsFragment } from '@wepublish/website/api';
+import {
+  UMAMI_BEFORE_SEND,
+  umamiBeforeSendScript,
+} from '../lib/umami-before-send';
 
 /**
  * Replacement for `@next/third-parties/google` and `next-plausible`.
@@ -45,12 +49,45 @@ const Plausible = ({ src }: { src: string }) => (
     <script
       id="plausible-init"
       dangerouslySetInnerHTML={{
-        __html:
-          'window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }',
+        __html: `;(window.plausible = window.plausible || function () {
+  ;(plausible.q = plausible.q || []).push(arguments)
+}), (plausible.init = plausible.init || function (i) {
+  plausible.o = i || {}
+})
+plausible.init()`,
       }}
     />
   </>
 );
+
+const Umami = ({
+  websiteId,
+  excludedSearchParams,
+}: {
+  websiteId: string;
+  excludedSearchParams?: string[] | null;
+}) => {
+  const hasHook = !!excludedSearchParams?.length;
+
+  return (
+    <>
+      {hasHook && (
+        <script
+          id="umami-before-send"
+          dangerouslySetInnerHTML={{
+            __html: umamiBeforeSendScript(excludedSearchParams),
+          }}
+        />
+      )}
+      <script
+        defer
+        src="https://cloud.umami.is/script.js"
+        data-website-id={websiteId}
+        data-before-send={hasHook ? UMAMI_BEFORE_SEND : undefined}
+      />
+    </>
+  );
+};
 
 export const Analytics = ({
   websiteSettings: settings,
@@ -85,10 +122,9 @@ export const Analytics = ({
     )}
 
     {settings?.analytics.umami.enabled && !!settings.analytics.umami.key && (
-      <script
-        defer
-        src="https://cloud.umami.is/script.js"
-        data-website-id={settings.analytics.umami.key}
+      <Umami
+        websiteId={settings.analytics.umami.key}
+        excludedSearchParams={settings.analytics.umami.excludedSearchParams}
       />
     )}
 

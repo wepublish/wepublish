@@ -27,7 +27,7 @@ import {
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdOutput, MdPlayArrow, MdRefresh, MdRestartAlt } from 'react-icons/md';
-import { day, FlowKind, personName, time } from './common';
+import { actorName, day, FlowKind, time } from './common';
 import { RunRowsTable } from './print-issue-run';
 import { PrintIssueSummary } from './print-issue-summary';
 
@@ -233,7 +233,7 @@ export function PrintIssueFlow({
                 {t('printIssues.computedLine', {
                   date: day(run.computedAt),
                   time: time(run.computedAt),
-                  name: personName(run.computedBy),
+                  name: actorName(t, run.computedBy, run.computedByApiToken),
                 })}
               </Typography>
 

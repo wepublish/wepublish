@@ -31,6 +31,13 @@ export enum AiProviderType {
   V0 = 'V0'
 }
 
+/** The API key that did something on behalf of the user named next to it. */
+export type ActingApiToken = {
+  __typename?: 'ActingApiToken';
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+};
+
 export type Action = ArticleCreatedAction | AuthorCreatedAction | CommentCreatedAction | EventCreatedAction | PageCreatedAction | PollStartedAction | SubscriptionCreatedAction | UserCreatedAction;
 
 /** The mail an admin action in the editor would send to the user, or why it sends none, so the editor can ask the admin before running the action. */
@@ -84,6 +91,8 @@ export type ApiToken = {
   /** The user who created this token. Null once that user is deleted. */
   createdBy?: Maybe<User>;
   createdById?: Maybe<Scalars['String']['output']>;
+  /** Whether the user who created this key still allows it to work, checked the way a call with the key is. A key list asks this once per row. */
+  creatorState: ApiTokenCreatorState;
   /** When the token stops working. */
   expiresAt: Scalars['DateTime']['output'];
   id: Scalars['String']['output'];
@@ -97,10 +106,37 @@ export type ApiToken = {
   scopes: Array<Scalars['String']['output']>;
 };
 
+export enum ApiTokenBlockedReason {
+  CreatorInactive = 'CreatorInactive',
+  CreatorMayNotCreateApiTokens = 'CreatorMayNotCreateApiTokens',
+  CreatorMissing = 'CreatorMissing'
+}
+
+/** A key acts on behalf of the user who created it. This is the check every call with the key goes through; expiry and revocation are separate. */
+export type ApiTokenCreatorState = {
+  __typename?: 'ApiTokenCreatorState';
+  blockedReason?: Maybe<ApiTokenBlockedReason>;
+  /** Permissions of the key its creator no longer holds; calls that need one are refused. */
+  missingScopes: Array<Scalars['String']['output']>;
+  state: ApiTokenCreatorStateKind;
+};
+
+/** What the user who created a key still allows it: everything it holds (ok), nothing (blocked: every call is refused), or only some of its permissions (limited). */
+export enum ApiTokenCreatorStateKind {
+  Blocked = 'Blocked',
+  Limited = 'Limited',
+  Ok = 'Ok'
+}
+
+/** Status sorts working keys before expired and revoked ones (ascending). Owner sorts by the creator's name, then first name. */
 export enum ApiTokenSort {
   CreatedAt = 'CreatedAt',
+  ExpiresAt = 'ExpiresAt',
   LastUsedAt = 'LastUsedAt',
-  Name = 'Name'
+  Name = 'Name',
+  Owner = 'Owner',
+  ScopeCount = 'ScopeCount',
+  Status = 'Status'
 }
 
 /** A revoked token counts as revoked even once it has also expired. */
@@ -1196,6 +1232,16 @@ export enum Currency {
   Eur = 'EUR'
 }
 
+/** What the current session may do and whether it is an impersonation. */
+export type CurrentSession = {
+  __typename?: 'CurrentSession';
+  /** Whether the session may impersonate users: a We.Publish login with the impersonate-cms role. */
+  canImpersonate: Scalars['Boolean']['output'];
+  expiresAt?: Maybe<Scalars['DateTime']['output']>;
+  /** Who is signed in as this user, if the session is an impersonation. */
+  impersonatedBy?: Maybe<Scalars['String']['output']>;
+};
+
 export type CustomTeaser = BaseTeaser & HasImage & {
   __typename?: 'CustomTeaser';
   contentUrl?: Maybe<Scalars['String']['output']>;
@@ -1310,6 +1356,8 @@ export type DeliveryChannelUserModel = {
   canReceiveLetters: Scalars['Boolean']['output'];
   changedAt?: Maybe<Scalars['DateTime']['output']>;
   changedBy?: Maybe<MailLogRecipient>;
+  /** Set when an API key made the change on behalf of `changedBy`. */
+  changedByApiToken?: Maybe<ActingApiToken>;
   /** How automated subscription mails reach this user. */
   channel: MailChannel;
   /** How the email address fares: a placeholder or dead address is not reached by email, though email may still be chosen. */
@@ -1336,6 +1384,8 @@ export type DeliveryModeBulkChangeModel = {
   audience: Scalars['JSONObject']['output'];
   changed: Scalars['Int']['output'];
   changedBy?: Maybe<MailLogRecipient>;
+  /** Set when an API key made the change on behalf of `changedBy`. */
+  changedByApiToken?: Maybe<ActingApiToken>;
   channel: MailChannel;
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['String']['output'];
@@ -1376,6 +1426,19 @@ export type DeliverySuggestionEmailQuality = {
   since: Scalars['DateTime']['output'];
 };
 
+export type DeliverySuggestionFilter = {
+  /** Suggested since, from. */
+  createdFrom?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Suggested since, to. */
+  createdTo?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Email status since, from. */
+  emailSinceFrom?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Email status since, to. */
+  emailSinceTo?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Any of these reasons: placeholderEmail, the evidence type behind the email status (e.g. hardBounce, login), or none. */
+  reasons?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
 /** toLetter: move to printed letters. toMail: move back to mail. */
 export enum DeliverySuggestionKind {
   ToLetter = 'toLetter',
@@ -1392,6 +1455,13 @@ export type DeliverySuggestionModel = {
   /** Why, e.g. emailQuality:dead or placeholderEmail. */
   reason: Scalars['String']['output'];
   user: MailLogRecipient;
+};
+
+export type DeliverySuggestionReasonCount = {
+  __typename?: 'DeliverySuggestionReasonCount';
+  count: Scalars['Int']['output'];
+  /** A reason as DeliverySuggestionFilter.reasons takes it. */
+  reason: Scalars['String']['output'];
 };
 
 export type DeliverySuggestionRecomputeResult = {
@@ -2178,35 +2248,6 @@ export type ImageTransformation = {
   width?: InputMaybe<Scalars['Int']['input']>;
 };
 
-export type ImpersonationGrantResult = {
-  __typename?: 'ImpersonationGrantResult';
-  durationMinutes: Scalars['Int']['output'];
-  email: Scalars['String']['output'];
-  expiresAt: Scalars['DateTime']['output'];
-  token: Scalars['String']['output'];
-};
-
-export type ImpersonationSessionInfo = {
-  __typename?: 'ImpersonationSessionInfo';
-  createdAt: Scalars['DateTime']['output'];
-  expiresAt: Scalars['DateTime']['output'];
-  id: Scalars['String']['output'];
-  impersonatedBy?: Maybe<Scalars['String']['output']>;
-  impersonationReason?: Maybe<Scalars['String']['output']>;
-  userEmail: Scalars['String']['output'];
-  userId: Scalars['String']['output'];
-  userName?: Maybe<Scalars['String']['output']>;
-};
-
-export type ImpersonationUser = {
-  __typename?: 'ImpersonationUser';
-  active: Scalars['Boolean']['output'];
-  email: Scalars['String']['output'];
-  id: Scalars['String']['output'];
-  name?: Maybe<Scalars['String']['output']>;
-  roles: Array<Scalars['String']['output']>;
-};
-
 export type ImportArticleOptions = {
   importAuthors?: InputMaybe<Scalars['Boolean']['input']>;
   importContentImages?: InputMaybe<Scalars['Boolean']['input']>;
@@ -2260,6 +2301,8 @@ export type Invoice = HasOptionalSubscription & {
   id: Scalars['String']['output'];
   items: Array<InvoiceItem>;
   mail: Scalars['String']['output'];
+  /** Set when an API key marked the invoice as paid on behalf of `manuallySetAsPaidByUser`. */
+  manuallySetAsPaidByApiTokenId?: Maybe<Scalars['String']['output']>;
   manuallySetAsPaidByUser?: Maybe<User>;
   manuallySetAsPaidByUserId?: Maybe<Scalars['String']['output']>;
   modifiedAt: Scalars['DateTime']['output'];
@@ -2718,6 +2761,14 @@ export enum MailSendJobState {
   Running = 'running'
 }
 
+export type MailSendPreviewAttachment = {
+  __typename?: 'MailSendPreviewAttachment';
+  /** The name the pdf is attached under. */
+  filename: Scalars['String']['output'];
+  /** The document filled in for the recipient, as pdf, base64 encoded, exactly as the mail carries it. */
+  pdf: Scalars['String']['output'];
+};
+
 export type MailSendPreviewInput = {
   audience: MailAudienceInput;
   /** Defaults to mail. A letter preview renders the pdf. */
@@ -2730,6 +2781,8 @@ export type MailSendPreviewInput = {
 
 export type MailSendPreviewModel = {
   __typename?: 'MailSendPreviewModel';
+  /** Mail previews only: the template's attachments, in their order. A letter preview prints them inside its pdf. */
+  attachments: Array<MailSendPreviewAttachment>;
   /** Empty for a letter preview. */
   html: Scalars['String']['output'];
   /** Letter previews only: the rendered pdf, base64 encoded, exactly as it would be printed. */
@@ -2788,15 +2841,13 @@ export enum MailTemplateContext {
 }
 
 export type MailTemplateInput = {
+  /** Word documents (.docx) filled in with the same placeholders, converted to pdf and attached to every mail sent from this template, in this order. A printed letter carries them after its pages. Left out, the attachments stay as they are. */
+  attachmentIds?: InputMaybe<Array<Scalars['String']['input']>>;
   context?: InputMaybe<MailTemplateContext>;
   description?: InputMaybe<Scalars['String']['input']>;
-  htmlContent: Scalars['String']['input'];
-  /** Uploaded pdf printed after the letter pages, e.g. a QR-bill. */
-  letterAppendixId?: InputMaybe<Scalars['String']['input']>;
-  letterLayoutId?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
-  subject: Scalars['String']['input'];
-  textContent?: InputMaybe<Scalars['String']['input']>;
+  /** The versions to write, one per channel. A version left out stays as it is; removing one is `deleteMailTemplateVariant`. */
+  variants: Array<MailTemplateVariantInput>;
 };
 
 export type MailTemplateLetterPreviewModel = {
@@ -2805,23 +2856,49 @@ export type MailTemplateLetterPreviewModel = {
   pdf: Scalars['String']['output'];
 };
 
+/** A member plan whose communication flow sends a template. */
+export type MailTemplateMemberPlanModel = {
+  __typename?: 'MailTemplateMemberPlanModel';
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+};
+
 export type MailTemplateModel = {
   __typename?: 'MailTemplateModel';
+  /** Word documents (.docx) filled in with the same placeholders, converted to pdf and attached to every mail sent from this template, in this order. A printed letter carries them after its pages. */
+  attachmentIds: Array<Scalars['String']['output']>;
+  /** Title, or else the filename, of each attached document, in their order. For the template table. */
+  attachmentNames: Array<Scalars['String']['output']>;
+  /** The channels this template is written for, the email first. */
+  channels: Array<MailChannel>;
   context?: Maybe<MailTemplateContext>;
   description?: Maybe<Scalars['String']['output']>;
+  /** @deprecated Use `variants`: a template has a body per channel. */
   htmlContent: Scalars['String']['output'];
   id: Scalars['String']['output'];
-  /** Uploaded pdf printed after the letter pages, e.g. a QR-bill. */
+  /** @deprecated Use the letter entry of `variants`. */
   letterAppendixId?: Maybe<Scalars['String']['output']>;
-  /** Stationery a letter printed from this template is set on; null means the default. */
+  /** Title, or else the filename, of the pdf printed after the letter pages. Null without one. */
+  letterAppendixName?: Maybe<Scalars['String']['output']>;
+  /** @deprecated Use the letter entry of `variants`. */
   letterLayoutId?: Maybe<Scalars['String']['output']>;
+  /** Name of the stationery the letter version is set on. Null for the default stationery and for a template without a letter version. */
+  letterLayoutName?: Maybe<Scalars['String']['output']>;
+  /** The member plans whose communication flow sends this template, by name. The default flow belongs to no plan and is not listed. */
+  memberPlans: Array<MailTemplateMemberPlanModel>;
   name: Scalars['String']['output'];
   status: Scalars['String']['output'];
+  /** The subject of the email version; the title of the letter for a template written as a letter only. */
   subject: Scalars['String']['output'];
+  /** @deprecated Use `variants`: a template has a body per channel. */
   textContent?: Maybe<Scalars['String']['output']>;
+  /** What the template says on each channel, bodies included. Ask for it on a single template, not on a list. */
+  variants: Array<MailTemplateVariantModel>;
 };
 
 export type MailTemplatePreviewInput = {
+  /** Attachments chosen on the draft, possibly not saved yet. */
+  attachmentIds?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Mail type / context id, e.g. "renewal". */
   contextId: Scalars['String']['input'];
   htmlContent: Scalars['String']['input'];
@@ -2852,6 +2929,36 @@ export type MailTemplateSubscriptionOption = {
   __typename?: 'MailTemplateSubscriptionOption';
   id: Scalars['String']['output'];
   label: Scalars['String']['output'];
+};
+
+export type MailTemplateVariantInput = {
+  channel: MailChannel;
+  htmlContent: Scalars['String']['input'];
+  /** Uploaded pdf printed after the letter pages, e.g. a QR-bill. */
+  letterAppendixId?: InputMaybe<Scalars['String']['input']>;
+  letterLayoutId?: InputMaybe<Scalars['String']['input']>;
+  /** Letter only: take subject and body from the email version, which the template must have. The subject and body handed in are ignored. */
+  sameAsMail?: InputMaybe<Scalars['Boolean']['input']>;
+  subject: Scalars['String']['input'];
+  textContent?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** What a template says on one channel. */
+export type MailTemplateVariantModel = {
+  __typename?: 'MailTemplateVariantModel';
+  channel: MailChannel;
+  htmlContent: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  /** Letter only: uploaded pdf printed after the letter pages, e.g. a QR-bill. */
+  letterAppendixId?: Maybe<Scalars['String']['output']>;
+  /** Letter only: stationery the letter is set on; null means the default. */
+  letterLayoutId?: Maybe<Scalars['String']['output']>;
+  /** Letter only: the letter says what the email says. Its own subject and body are empty then; sends read the email version. */
+  sameAsMail: Scalars['Boolean']['output'];
+  /** The email's subject line; for a letter the title its log entry carries. */
+  subject: Scalars['String']['output'];
+  /** Plain-text alternative of an email. Unused for a letter. */
+  textContent?: Maybe<Scalars['String']['output']>;
 };
 
 /** The audience webhook the api registered at Mailchimp; the URL carries the secret. */
@@ -3414,7 +3521,7 @@ export type Mutation = {
   closePrintIssue: PrintIssue;
   /** Compute the list and store it for checking. What exporting it does follows from the state: the first delivery, the delivery not handed over yet written anew, or the next Nachlieferung. Replaces a stored list. */
   computePrintIssueRun: PrintIssueRun;
-  /** Apply every open suggestion of a direction */
+  /** Apply every open suggestion of a direction, or only those the filter keeps */
   confirmAllDeliverySuggestions: DeliverySuggestionConfirmAllResult;
   /** Confirms that the manual action required by a changelog entry has been completed. Requires the permission to update settings. */
   confirmChangelogEntry: ChangelogEntry;
@@ -3463,7 +3570,6 @@ export type Mutation = {
   createExternalAppToken: ExternalAppToken;
   /** Creates a new goodie. */
   createGoodie: Goodie;
-  createImpersonationGrant: ImpersonationGrantResult;
   /** Creates a new invoice. */
   createInvoice: Invoice;
   /** Returns a JWT that is valid for 1min for the current logged in user. */
@@ -3513,6 +3619,8 @@ export type Mutation = {
   createRatingSystemAnswer: CommentRatingSystemAnswer;
   createSession: SessionWithToken;
   createSessionWithJWT: SessionWithToken;
+  /** Signs a We.Publish admin in with the code auth.wepublish.cloud returned: as the account connected to that We.Publish identity, else the one with its email, else a new one. The account becomes an admin with the names from We.Publish and can only sign in this way from then on. */
+  createSessionWithWepublishLogin: SessionWithToken;
   /** Creates a new subscription. */
   createSubscription: PublicSubscription;
   /** Create a new subscription flow */
@@ -3542,6 +3650,8 @@ export type Mutation = {
   createUserSubscription: Payment;
   /** Allows guests and authenticated users to create additional subscriptions */
   createUserSubscriptionWithConfirmation: Scalars['Boolean']['output'];
+  /** Lets a We.Publish supporter open the website as the given user for an hour. Needs a We.Publish login with the impersonate-cms role. */
+  createWebsiteImpersonation: WebsiteImpersonation;
   /** Deletes all sync errors for a config so all contacts will be retried. */
   deleteAllMailchimpSyncErrors: Scalars['Boolean']['output'];
   /** Deletes an article. */
@@ -3586,6 +3696,8 @@ export type Mutation = {
   deleteLetterProviderSetting: SettingLetterProvider;
   /** Delete an existing mail template */
   deleteMailTemplate?: Maybe<Scalars['Boolean']['output']>;
+  /** Remove what a template says on one channel. Refused while something still sends the template on that channel, and for its last version. */
+  deleteMailTemplateVariant?: Maybe<Scalars['Boolean']['output']>;
   /** Deletes a single sync error so the contact will be retried. */
   deleteMailchimpSyncError: Scalars['Boolean']['output'];
   /** Deletes an existing memberplan. */
@@ -3671,6 +3783,8 @@ export type Mutation = {
   extendUserSubscription: Payment;
   /** Generates a TOTP setup for the current user. Returns a QR code and secret for authenticator app configuration. */
   generateTotpSetup: TotpSetup;
+  /** Signs a We.Publish supporter in to the editor as the given user for an hour. Needs a We.Publish login with the impersonate-cms role. */
+  impersonateUser: SessionWithToken;
   /**
    *
    *       Creates and event based on data from importable events list and an id and provider.
@@ -3745,7 +3859,6 @@ export type Mutation = {
   revokeActiveSession: Scalars['Boolean']['output'];
   /** Revokes one of your api tokens, or anyone's with CAN_REVOKE_ALL_API_TOKENS. The token stops working immediately. */
   revokeApiToken: ApiToken;
-  revokeImpersonationSessions: Scalars['Int']['output'];
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendJWTLogin: Scalars['String']['output'];
   /** Manually send a mail template to a single user */
@@ -3987,6 +4100,7 @@ export type MutationComputePrintIssueRunArgs = {
 
 
 export type MutationConfirmAllDeliverySuggestionsArgs = {
+  filter?: InputMaybe<DeliverySuggestionFilter>;
   kind: DeliverySuggestionKind;
 };
 
@@ -4179,14 +4293,6 @@ export type MutationCreateGoodieArgs = {
   name: Scalars['String']['input'];
   paymentPeriodicities?: InputMaybe<Array<PaymentPeriodicity>>;
   stock?: InputMaybe<Scalars['Int']['input']>;
-};
-
-
-export type MutationCreateImpersonationGrantArgs = {
-  durationMinutes: Scalars['Int']['input'];
-  impersonatedBy: Scalars['String']['input'];
-  reason: Scalars['String']['input'];
-  userId: Scalars['String']['input'];
 };
 
 
@@ -4456,6 +4562,12 @@ export type MutationCreateSessionWithJwtArgs = {
 };
 
 
+export type MutationCreateSessionWithWepublishLoginArgs = {
+  code: Scalars['String']['input'];
+  codeVerifier: Scalars['String']['input'];
+};
+
+
 export type MutationCreateSubscriptionArgs = {
   autoRenew: Scalars['Boolean']['input'];
   extendable: Scalars['Boolean']['input'];
@@ -4594,6 +4706,12 @@ export type MutationCreateUserSubscriptionWithConfirmationArgs = {
 };
 
 
+export type MutationCreateWebsiteImpersonationArgs = {
+  reason: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
+};
+
+
 export type MutationDeleteAllMailchimpSyncErrorsArgs = {
   configId: Scalars['String']['input'];
 };
@@ -4696,6 +4814,12 @@ export type MutationDeleteLetterProviderSettingArgs = {
 
 export type MutationDeleteMailTemplateArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteMailTemplateVariantArgs = {
+  channel: MailChannel;
+  templateId: Scalars['String']['input'];
 };
 
 
@@ -4903,6 +5027,12 @@ export type MutationGenerateTotpSetupArgs = {
 };
 
 
+export type MutationImpersonateUserArgs = {
+  reason: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
+};
+
+
 export type MutationImportEventArgs = {
   id: Scalars['String']['input'];
   source: Scalars['String']['input'];
@@ -5078,11 +5208,6 @@ export type MutationRevertUserSubscriptionUpgradeArgs = {
 
 export type MutationRevokeApiTokenArgs = {
   id: Scalars['String']['input'];
-};
-
-
-export type MutationRevokeImpersonationSessionsArgs = {
-  ids?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 
@@ -6982,6 +7107,8 @@ export type PrintIssue = HasImageLc & {
   __typename?: 'PrintIssue';
   closedAt?: Maybe<Scalars['DateTime']['output']>;
   closedBy?: Maybe<PrintIssueUser>;
+  /** Set when an API key did it on behalf of `closedBy`. */
+  closedByApiToken?: Maybe<PrintIssueApiToken>;
   /** How many issues it counts as against a reader's period: the numbers it covers, or fewer. */
   countsAs: Scalars['Int']['output'];
   createdAt: Scalars['DateTime']['output'];
@@ -7004,6 +7131,13 @@ export type PrintIssue = HasImageLc & {
   /** The issue's topic. */
   title?: Maybe<Scalars['String']['output']>;
   year: Scalars['Int']['output'];
+};
+
+/** The API key that did something on behalf of the user named next to it. */
+export type PrintIssueApiToken = {
+  __typename?: 'PrintIssueApiToken';
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
 };
 
 export type PrintIssueBexioStats = {
@@ -7047,9 +7181,13 @@ export type PrintIssueDelivery = {
   /** When the list was exported. */
   createdAt: Scalars['DateTime']['output'];
   createdBy?: Maybe<PrintIssueUser>;
+  /** Set when an API key did it on behalf of `createdBy`. */
+  createdByApiToken?: Maybe<PrintIssueApiToken>;
   /** «übergeben»: when the file went to the printshop. */
   deliveredAt?: Maybe<Scalars['DateTime']['output']>;
   deliveredBy?: Maybe<PrintIssueUser>;
+  /** Set when an API key did it on behalf of `deliveredBy`. */
+  deliveredByApiToken?: Maybe<PrintIssueApiToken>;
   filename: Scalars['String']['output'];
   id: Scalars['String']['output'];
   /** The options this list was computed with. */
@@ -7142,6 +7280,8 @@ export type PrintIssueRun = {
   /** Pass it back when exporting: a run computed again in between is refused. */
   computedAt: Scalars['DateTime']['output'];
   computedBy?: Maybe<PrintIssueUser>;
+  /** Set when an API key did it on behalf of `computedBy`. */
+  computedByApiToken?: Maybe<PrintIssueApiToken>;
   /** The delivery a replace run writes anew. */
   deliveryId?: Maybe<Scalars['String']['output']>;
   /** The CSV file name the delivery gets. */
@@ -7382,6 +7522,7 @@ export type Query = {
   crowdfunding: Crowdfunding;
   /** Returns a list of crowdfundings. */
   crowdfundings: Array<Crowdfunding>;
+  currentSession: CurrentSession;
   /**
    *
    *       Returns daily stats in a given timeframe.
@@ -7396,6 +7537,8 @@ export type Query = {
   deliveryModeBulkChanges: PaginatedDeliveryModeBulkChanges;
   /** How many suggestions are open, per direction */
   deliverySuggestionCounts: DeliverySuggestionCounts;
+  /** The reasons among the open suggestions of a direction, most first */
+  deliverySuggestionReasons: Array<DeliverySuggestionReasonCount>;
   /** Open suggestions to move users to letters or back to mail */
   deliverySuggestions: PaginatedDeliverySuggestions;
   /** Returns an discountCode by id or discountCode. */
@@ -7449,9 +7592,6 @@ export type Query = {
   image: Image;
   /** Returns a paginated list of images based on the filters given. */
   images: PaginatedImages;
-  impersonationEnabled: Scalars['Boolean']['output'];
-  impersonationSearchUsers: Array<ImpersonationUser>;
-  impersonationSessions: Array<ImpersonationSessionInfo>;
   /**
    *
    *       Returns a more detailed version of a single importable event, by id and source.
@@ -7506,7 +7646,7 @@ export type Query = {
   mailSendRecipientPreview: MailSendRecipientPreview;
   /** The concrete recipients an audience resolves to */
   mailSendRecipients: PaginatedMailSendRecipient;
-  /** Return a single mail template, including its html and text body. */
+  /** Return a single mail template; its `variants` carry the html and text bodies. */
   mailTemplate?: Maybe<MailTemplateModel>;
   /** Render a draft mail template as the letter a send would print */
   mailTemplateLetterPreview: MailTemplateLetterPreviewModel;
@@ -7735,6 +7875,8 @@ export type Query = {
   videos: PaginatedVideos;
   /** Returns the website settings, requires authentication to get sensitive settings. */
   websiteSettings: WebsiteSettings;
+  /** How the editor starts the We.Publish login, or null where it is off. */
+  wepublishLogin?: Maybe<WepublishLoginClient>;
 };
 
 
@@ -7984,7 +8126,13 @@ export type QueryDeliveryModeBulkChangesArgs = {
 };
 
 
+export type QueryDeliverySuggestionReasonsArgs = {
+  kind: DeliverySuggestionKind;
+};
+
+
 export type QueryDeliverySuggestionsArgs = {
+  filter?: InputMaybe<DeliverySuggestionFilter>;
   kind: DeliverySuggestionKind;
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
@@ -8090,12 +8238,6 @@ export type QueryImagesArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<ImageSort>;
   take?: InputMaybe<Scalars['Int']['input']>;
-};
-
-
-export type QueryImpersonationSearchUsersArgs = {
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  query: Scalars['String']['input'];
 };
 
 
@@ -8219,6 +8361,7 @@ export type QueryMailTemplateLetterPreviewArgs = {
 
 
 export type QueryMailTemplateMissingPlaceholdersArgs = {
+  channel?: InputMaybe<MailChannel>;
   templateId: Scalars['String']['input'];
   withSubscriptionData: Scalars['Boolean']['input'];
 };
@@ -8795,6 +8938,8 @@ export type RichTextBlockInput = {
 };
 
 export type SendTestMailTemplateInput = {
+  /** Attachments chosen on the draft, possibly not saved yet. */
+  attachmentIds?: InputMaybe<Array<Scalars['String']['input']>>;
   contextId: Scalars['String']['input'];
   htmlContent: Scalars['String']['input'];
   subject: Scalars['String']['input'];
@@ -8817,6 +8962,8 @@ export type SensitiveDataUser = BaseUser & {
   id: Scalars['String']['output'];
   image?: Maybe<Image>;
   lastLogin?: Maybe<Scalars['DateTime']['output']>;
+  /** Whether the account signs in with the We.Publish login. We.Publish manages it, so it cannot be changed or deleted. */
+  managedByWepublishLogin: Scalars['Boolean']['output'];
   modifiedAt: Scalars['DateTime']['output'];
   name: Scalars['String']['output'];
   note?: Maybe<Scalars['String']['output']>;
@@ -9048,6 +9195,7 @@ export enum SettingName {
   EmailQualityEvidenceWarnAfterDays = 'EMAIL_QUALITY_EVIDENCE_WARN_AFTER_DAYS',
   EmailQualityMinMailsForUnresponsive = 'EMAIL_QUALITY_MIN_MAILS_FOR_UNRESPONSIVE',
   EmailQualityUnresponsiveAfterDays = 'EMAIL_QUALITY_UNRESPONSIVE_AFTER_DAYS',
+  FeedPaywalledContent = 'FEED_PAYWALLED_CONTENT',
   MailProviderName = 'MAIL_PROVIDER_NAME',
   MakeActiveSubscribersApiPublic = 'MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC',
   MakeExpectedRevenueApiPublic = 'MAKE_EXPECTED_REVENUE_API_PUBLIC',
@@ -9879,6 +10027,20 @@ export type TwitterTweetBlockInput = {
   userID?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type UmamiAnalytics = {
+  __typename?: 'UmamiAnalytics';
+  enabled: Scalars['Boolean']['output'];
+  /** Search params removed from the url and referrer before they are sent to Umami. */
+  excludedSearchParams: Array<Scalars['String']['output']>;
+  key?: Maybe<Scalars['String']['output']>;
+};
+
+export type UmamiAnalyticsInput = {
+  enabled: Scalars['Boolean']['input'];
+  excludedSearchParams?: InputMaybe<Array<Scalars['String']['input']>>;
+  key?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type UnknownBlock = {
   __typename?: 'UnknownBlock';
   blockStyle?: Maybe<Scalars['String']['output']>;
@@ -10003,6 +10165,8 @@ export type UserDeliveryPreferenceModel = {
   canReceiveLetters: Scalars['Boolean']['output'];
   changedAt?: Maybe<Scalars['DateTime']['output']>;
   changedBy?: Maybe<MailLogRecipient>;
+  /** Set when an API key made the change on behalf of `changedBy`. */
+  changedByApiToken?: Maybe<ActingApiToken>;
   /** How automated subscription mails reach this user. */
   channel: MailChannel;
   /** How the email address fares: a placeholder or dead address is not reached by email, though email may still be chosen. */
@@ -10160,7 +10324,7 @@ export type WebsiteAnalytics = {
   googleTagManager: KeyEnabled;
   piwik: KeyEnabled;
   plausible: KeyEnabled;
-  umami: KeyEnabled;
+  umami: UmamiAnalytics;
 };
 
 export type WebsiteAnalyticsInput = {
@@ -10168,7 +10332,14 @@ export type WebsiteAnalyticsInput = {
   googleTagManager: KeyEnabledInput;
   piwik: KeyEnabledInput;
   plausible: KeyEnabledInput;
-  umami: KeyEnabledInput;
+  umami: UmamiAnalyticsInput;
+};
+
+/** A single-use grant the website redeems through createSessionWithJWT within a minute. */
+export type WebsiteImpersonation = {
+  __typename?: 'WebsiteImpersonation';
+  token: Scalars['String']['output'];
+  url: Scalars['String']['output'];
 };
 
 export type WebsiteRemoteFont = {
@@ -10202,6 +10373,15 @@ export enum Weekday {
   Tuesday = 'Tuesday',
   Wednesday = 'Wednesday'
 }
+
+/** Where the editor sends a We.Publish admin to sign in with auth.wepublish.cloud. */
+export type WepublishLoginClient = {
+  __typename?: 'WepublishLoginClient';
+  authorizationUrl: Scalars['String']['output'];
+  clientId: Scalars['String']['output'];
+  redirectUri: Scalars['String']['output'];
+  scope: Scalars['String']['output'];
+};
 
 export type YouTubeVideoBlock = BaseBlock & {
   __typename?: 'YouTubeVideoBlock';

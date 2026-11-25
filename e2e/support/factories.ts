@@ -89,13 +89,40 @@ export type PaymentProvider = {
   id: string;
 };
 
-export type Entity = Reader | Article | Paywall | Staff | PaymentProvider;
+/** An API key («API-Schlüssel», `wep_…`) and the user who created it. */
+export type ApiKey = {
+  kind: 'apiKey';
+  id: string;
+  name: string;
+  token: string;
+  creator: Reader;
+};
+
+export type AuditLogEntry = {
+  mutation: string;
+  tokenName: string | null;
+  userId: string | null;
+  userEmail: string | null;
+  success: boolean;
+};
+
+export type Entity =
+  | Reader
+  | Article
+  | Paywall
+  | Staff
+  | PaymentProvider
+  | ApiKey;
 
 type Cleanup = { label: string; run: () => Promise<unknown> };
 
 export class TestData {
   private readonly cleanups: Cleanup[] = [];
   private readonly memberPlans = new Map<string, MemberPlan>();
+  /** Users a step deleted on purpose; their cleanup has nothing left to do. */
+  private readonly deletedUsers = new Set<string>();
+  /** The role a user created by `createStaff` holds, by user id. */
+  private readonly staffRoles = new Map<string, string>();
 
   constructor(
     private readonly api: () => Promise<ApiClient>,
@@ -147,7 +174,10 @@ export class TestData {
   }
 
   /** `emailDomain`: a mailbox outside servers can deliver to, e.g. the Resend domain. */
-  async createUser(alias?: string, { emailDomain = 'example.test' } = {}) {
+  async createUser(
+    alias?: string,
+    { emailDomain = 'example.test', roleIDs = [] as string[] } = {}
+  ) {
     const api = await this.api();
     const runId = this.runId();
     const firstName = this.faker.person.firstName();
@@ -156,15 +186,19 @@ export class TestData {
     const email = `e2e+${runId}@${emailDomain}`;
 
     const { createUser } = await api.gql<{ createUser: { id: string } }>(
-      `mutation CreateUser($email: String!, $firstName: String, $name: String!, $password: String) {
+      `mutation CreateUser($email: String!, $firstName: String, $name: String!, $password: String, $roleIDs: [String!]!) {
         createUser(email: $email, firstName: $firstName, name: $name, password: $password,
           active: true, emailVerifiedAt: "${new Date().toISOString()}",
-          properties: [], roleIDs: [], skipMail: true) { id }
+          properties: [], roleIDs: $roleIDs, skipMail: true) { id }
       }`,
-      { email, firstName, name, password }
+      { email, firstName, name, password, roleIDs }
     );
 
-    this.onCleanup(`user ${email}`, () => this.deleteUser(createUser.id));
+    this.onCleanup(`user ${email}`, async () => {
+      if (!this.deletedUsers.has(createUser.id)) {
+        await this.deleteUser(createUser.id);
+      }
+    });
 
     return this.remember(alias, {
       kind: 'reader',
@@ -332,6 +366,151 @@ export class TestData {
     }
 
     await api.gql(`mutation { deleteUser(id: "${userID}") { id } }`);
+  }
+
+  /**
+   * A user with a role of their own holding exactly `permissionIDs`, so a step
+   * can take a permission away from them alone (`setStaffPermissions`).
+   */
+  async createStaff(alias: string, permissionIDs: string[]) {
+    const api = await this.api();
+    const { createUserRole } = await api.gql<{ createUserRole: { id: string } }>(
+      `mutation CreateRole($name: String!, $permissionIDs: [String!]!) {
+        createUserRole(name: $name, permissionIDs: $permissionIDs) { id }
+      }`,
+      { name: this.runId(), permissionIDs }
+    );
+
+    // Registered first, so it runs after the user is gone.
+    this.onCleanup(`role ${createUserRole.id}`, () =>
+      api.gql(`mutation { deleteUserRole(id: "${createUserRole.id}") { id } }`)
+    );
+
+    const staff = await this.createUser(alias, { roleIDs: [createUserRole.id] });
+    this.staffRoles.set(staff.id, createUserRole.id);
+
+    return staff;
+  }
+
+  async setStaffPermissions(staff: Reader, permissionIDs: string[]) {
+    const api = await this.api();
+    const roleId = this.staffRoles.get(staff.id);
+
+    if (!roleId) {
+      throw new Error(`${staff.email} was not created with createStaff.`);
+    }
+
+    await api.gql(
+      `mutation UpdateRole($id: String!, $permissionIDs: [String!]) {
+        updateUserRole(id: $id, permissionIDs: $permissionIDs) { id }
+      }`,
+      { id: roleId, permissionIDs }
+    );
+  }
+
+  async setUserActive(user: Reader, active: boolean) {
+    const api = await this.api();
+
+    await api.gql(
+      `mutation SetActive($id: String, $active: Boolean) { updateUser(id: $id, active: $active) { id } }`,
+      { id: user.id, active }
+    );
+  }
+
+  /** Deletes a user as part of the journey, not as cleanup. */
+  async deleteUserNow(user: Reader) {
+    this.deletedUsers.add(user.id);
+    await this.deleteUser(user.id);
+  }
+
+  /**
+   * An API key the user creates for themself, as in the editor. It runs out
+   * after a day; cleanup revokes it while its creator still exists.
+   */
+  async createApiKey(alias: string, creator: Reader, scopes: string[]) {
+    const asCreator = await (await this.api()).as(creator.email, creator.password);
+    const name = `${alias} ${this.runId()}`;
+    const { createApiToken } = await asCreator.gql<{
+      createApiToken: { token: string; apiToken: { id: string } };
+    }>(
+      `mutation CreateKey($name: String!, $scopes: [String!]!, $expiresAt: DateTime!) {
+        createApiToken(name: $name, scopes: $scopes, expiresAt: $expiresAt) { token apiToken { id } }
+      }`,
+      { name, scopes, expiresAt: new Date(Date.now() + 86_400_000).toISOString() }
+    );
+    const id = createApiToken.apiToken.id;
+
+    this.onCleanup(`api key ${name}`, async () => {
+      if (!this.deletedUsers.has(creator.id)) {
+        const again = await (await this.api()).as(creator.email, creator.password);
+        await again.gql(`mutation { revokeApiToken(id: "${id}") { id } }`);
+      }
+    });
+
+    return this.remember(alias, {
+      kind: 'apiKey',
+      id,
+      name,
+      token: createApiToken.token,
+      creator,
+    } satisfies ApiKey);
+  }
+
+  /** A client that authenticates with the API key, as an integration would. */
+  async withApiKey(key: ApiKey) {
+    return (await this.api()).withToken(key.token);
+  }
+
+  /** What the creator's key list says about the key (`creatorState`). */
+  async apiKeyCreatorState(key: ApiKey) {
+    const asCreator = await (await this.api()).as(key.creator.email, key.creator.password);
+    const { apiTokens } = await asCreator.gql<{
+      apiTokens: {
+        nodes: {
+          id: string;
+          creatorState: { state: string; blockedReason: string | null; missingScopes: string[] };
+        }[];
+      };
+    }>(`query { apiTokens(take: 50) { nodes { id creatorState { state blockedReason missingScopes } } } }`);
+    const listed = apiTokens.nodes.find(({ id }) => id === key.id);
+
+    if (!listed) {
+      throw new Error(`The key list of ${key.creator.email} does not show ${key.name}.`);
+    }
+
+    return listed.creatorState;
+  }
+
+  /** Who the invoice says marked it as paid. */
+  async invoicePaidBy(invoiceId: string) {
+    const api = await this.api();
+    const { invoice } = await api.gql<{
+      invoice: {
+        paidAt: string | null;
+        manuallySetAsPaidByUserId: string | null;
+        manuallySetAsPaidByApiTokenId: string | null;
+      };
+    }>(
+      `query Invoice($id: String!) {
+        invoice(id: $id) { paidAt manuallySetAsPaidByUserId manuallySetAsPaidByApiTokenId }
+      }`,
+      { id: invoiceId }
+    );
+
+    return invoice;
+  }
+
+  /** The audit log entries an API key left for one mutation, newest first. */
+  async auditLogOf(key: ApiKey, mutation: string) {
+    const api = await this.api();
+    const { auditLogs } = await api.gql<{ auditLogs: { nodes: AuditLogEntry[] } }>(
+      `query AuditLogs($filter: AuditLogFilter) {
+        auditLogs(filter: $filter, take: 10) { nodes { mutation tokenName userId userEmail success } }
+      }`,
+      { filter: { sessionId: key.id, mutation } }
+    );
+
+    return auditLogs.nodes;
   }
 
   async memberPlan(slug: string) {

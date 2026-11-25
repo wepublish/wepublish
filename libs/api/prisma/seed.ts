@@ -214,6 +214,19 @@ const seedSettings = (prisma: PrismaClient) =>
     }),
     prisma.setting.upsert({
       where: {
+        name: SettingName.FEED_PAYWALLED_CONTENT,
+      },
+      update: {},
+      create: {
+        name: SettingName.FEED_PAYWALLED_CONTENT,
+        value: 'lead',
+        settingRestriction: {
+          allowedValues: { stringChoice: ['lead', 'visible', 'full'] },
+        },
+      },
+    }),
+    prisma.setting.upsert({
+      where: {
         name: SettingName.EMAIL_QUALITY_UNRESPONSIVE_AFTER_DAYS,
       },
       update: {},

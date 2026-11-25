@@ -24,18 +24,23 @@ import {
   ConfirmAllDeliverySuggestionsDocument,
   ConfirmDeliverySuggestionDocument,
   DeliverySuggestionCountsDocument,
+  DeliverySuggestionFilter,
   DeliverySuggestionKind,
+  DeliverySuggestionReasonsDocument,
   DeliverySuggestionsDocument,
   KeepDeliverySuggestionDocument,
   RecomputeDeliverySuggestionsDocument,
 } from '@wepublish/editor/api';
 import {
+  DateRange,
+  DateRangeFilter,
   enqueueSnackbar,
   humanizeError,
+  MultiSelectFilter,
   Pagination,
   useAuthorisation,
 } from '@wepublish/ui/editor';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdRefresh } from 'react-icons/md';
 import { Link } from 'react-router-dom';
@@ -48,6 +53,7 @@ const PAGE_SIZE = 20;
 /** Everything a decision changes: both cards, the counts, the overview. */
 const REFRESH = [
   'DeliverySuggestions',
+  'DeliverySuggestionReasons',
   'DeliverySuggestionCounts',
   'DeliveryChannelCounts',
   'UsersByDeliveryChannel',
@@ -147,6 +153,47 @@ export function DeliverySuggestionsView() {
   );
 }
 
+const NO_RANGE: DateRange = { from: null, to: null };
+
+/** Whole days: from the start of the first to the end of the last. */
+const dayRange = ({ from, to }: DateRange) => {
+  const start = from && new Date(from);
+  const end = to && new Date(to);
+  start?.setHours(0, 0, 0, 0);
+  end?.setHours(23, 59, 59, 999);
+
+  return { from: start?.toISOString(), to: end?.toISOString() };
+};
+
+type Filters = { reasons: string[]; emailSince: DateRange; created: DateRange };
+
+const NO_FILTERS: Filters = {
+  reasons: [],
+  emailSince: NO_RANGE,
+  created: NO_RANGE,
+};
+
+/** The filter as the API takes it; undefined when nothing is picked. */
+const toApiFilter = ({
+  reasons,
+  emailSince,
+  created,
+}: Filters): DeliverySuggestionFilter | undefined => {
+  const since = dayRange(emailSince);
+  const added = dayRange(created);
+  const filter = Object.fromEntries(
+    Object.entries({
+      reasons: reasons.length ? reasons : undefined,
+      emailSinceFrom: since.from,
+      emailSinceTo: since.to,
+      createdFrom: added.from,
+      createdTo: added.to,
+    }).filter(([, value]) => value !== undefined)
+  );
+
+  return Object.keys(filter).length ? filter : undefined;
+};
+
 type Row = {
   id: string;
   user: { id: string; email: string; name: string; firstName?: string | null };
@@ -170,10 +217,36 @@ function SuggestionCard({
   const [limit, setLimit] = useState(PAGE_SIZE);
   const [askAll, setAskAll] = useState(false);
   const [keeping, setKeeping] = useState<Row | null>(null);
+  const [filters, setFilters] = useState<Filters>(NO_FILTERS);
+  const filter = useMemo(() => toApiFilter(filters), [filters]);
+
+  const changeFilters = (change: Partial<Filters>) => {
+    setFilters(current => ({ ...current, ...change }));
+    setPage(1);
+  };
 
   const list = useQuery(DeliverySuggestionsDocument, {
-    variables: { kind, skip: (page - 1) * limit, take: limit },
+    variables: { kind, skip: (page - 1) * limit, take: limit, filter },
   });
+  const reasons = useQuery(DeliverySuggestionReasonsDocument, {
+    variables: { kind },
+  });
+
+  // A picked reason stays listed after its suggestions are gone, so the
+  // filter never hides what it does.
+  const reasonOptions = useMemo(() => {
+    const counts = reasons.data?.deliverySuggestionReasons ?? [];
+    const gone = filters.reasons
+      .filter(reason => !counts.some(entry => entry.reason === reason))
+      .map(reason => ({ reason, count: 0 }));
+
+    return [...counts, ...gone].map(({ reason, count }) => ({
+      value: reason,
+      label: `${t(`deliveryChannel.suggestions.reasonFilter.${reason}`, {
+        defaultValue: reason,
+      })} (${count})`,
+    }));
+  }, [reasons.data, filters.reasons, t]);
 
   const [confirmOne, { loading: confirming }] = useMutation(
     ConfirmDeliverySuggestionDocument,
@@ -198,6 +271,8 @@ function SuggestionCard({
 
   const nodes = list.data?.deliverySuggestions.nodes ?? [];
   const totalCount = list.data?.deliverySuggestions.totalCount ?? 0;
+  // With a filter, «apply all» means all that the filter lists.
+  const applyCount = filter ? totalCount : count;
 
   return (
     <Card variant="outlined">
@@ -209,28 +284,67 @@ function SuggestionCard({
         slotProps={{ title: { variant: 'h6' } }}
         action={
           canManage &&
-          count > 0 && (
+          applyCount > 0 && (
             <Button
               variant="contained"
               size="small"
               loading={confirmingAll}
               onClick={() => setAskAll(true)}
             >
-              {t('deliveryMode.confirmAll', { count })}
+              {filter ?
+                t('deliveryChannel.suggestions.confirmAllFiltered', {
+                  count: applyCount,
+                })
+              : t('deliveryMode.confirmAll', { count: applyCount })}
             </Button>
           )
         }
       />
 
       <CardContent>
+        {(count > 0 || filter) && (
+          <Stack
+            direction="row"
+            spacing={1.5}
+            useFlexGap
+            sx={{ flexWrap: 'wrap', marginBottom: 2 }}
+          >
+            <MultiSelectFilter
+              label={t('deliveryChannel.suggestions.filter.reason')}
+              options={reasonOptions}
+              value={filters.reasons}
+              onChange={value => changeFilters({ reasons: value })}
+            />
+            <Box sx={{ minWidth: 220 }}>
+              <DateRangeFilter
+                label={t('deliveryChannel.suggestions.filter.emailSince')}
+                value={filters.emailSince}
+                onChange={value => changeFilters({ emailSince: value })}
+                disableFuture
+              />
+            </Box>
+            <Box sx={{ minWidth: 220 }}>
+              <DateRangeFilter
+                label={t('deliveryChannel.suggestions.filter.created')}
+                value={filters.created}
+                onChange={value => changeFilters({ created: value })}
+                disableFuture
+              />
+            </Box>
+          </Stack>
+        )}
+
         {!list.loading && !nodes.length ?
           <Typography
             variant="body2"
             sx={{ color: 'text.secondary' }}
           >
-            {t('deliveryChannel.suggestions.empty', {
-              channel: t(to.labelKey),
-            })}
+            {filter ?
+              t('deliveryChannel.suggestions.emptyFiltered')
+            : t('deliveryChannel.suggestions.empty', {
+                channel: t(to.labelKey),
+              })
+            }
           </Typography>
         : <TableContainer>
             <Table size="small">
@@ -342,7 +456,15 @@ function SuggestionCard({
       >
         <DialogTitle>{t('deliveryMode.confirmAllTitle')}</DialogTitle>
         <DialogContent>
-          {t(`deliveryMode.confirmAllText.${kind}`, { count })}
+          {t(`deliveryMode.confirmAllText.${kind}`, { count: applyCount })}
+          {filter && (
+            <Typography
+              variant="body2"
+              sx={{ marginTop: 1, color: 'text.secondary' }}
+            >
+              {t('deliveryChannel.suggestions.confirmAllFilteredText')}
+            </Typography>
+          )}
         </DialogContent>
         <DialogActions>
           <Button
@@ -355,7 +477,9 @@ function SuggestionCard({
             variant="contained"
             onClick={() => {
               setAskAll(false);
-              confirmAll({ variables: { kind } });
+              confirmAll({
+                variables: filter ? { kind, filter } : { kind },
+              });
             }}
           >
             {t('deliveryMode.confirmAllYes')}

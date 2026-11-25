@@ -31,6 +31,7 @@ export type SitemapSiteConfig = {
   newsMaxAgeDays?: number;
   maxArticles?: number;
   filterArticle?: (article: SitemapArticleFragment) => boolean;
+  filterPage?: (page: SitemapPageFragment) => boolean;
   articleUrl?: (article: SitemapArticleFragment, siteUrl: string) => string;
   pageUrl?: (page: SitemapPageFragment, siteUrl: string) => string;
 };
@@ -142,7 +143,8 @@ const fetchPages = ({ client }: SitemapContext) =>
     return data?.pages;
   }, MAX_URLS);
 
-type Optional = 'description' | 'filterArticle' | 'articleUrl' | 'pageUrl';
+type Optional =
+  'description' | 'filterArticle' | 'filterPage' | 'articleUrl' | 'pageUrl';
 
 type Resolved = Required<Omit<SitemapSiteConfig, Optional>> &
   Pick<SitemapSiteConfig, Optional>;
@@ -210,6 +212,7 @@ const pageUrls = async (
     })),
     ...pages
       .filter(({ slug }) => slug !== config.homepageSlug)
+      .filter(page => config.filterPage?.(page) ?? true)
       .map(page => ({
         loc: config.pageUrl?.(page, siteUrl) ?? page.url,
         lastmod: page.latest.publishedAt,
