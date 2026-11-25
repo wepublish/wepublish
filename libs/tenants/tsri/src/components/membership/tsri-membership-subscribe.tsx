@@ -61,64 +61,53 @@ export const isTsriMembershipSubscribe = (
 const AMOUNT_HIDDEN: readonly SubscribeArea[] = ['monthlyAmount'];
 const NOTHING_HIDDEN: readonly SubscribeArea[] = [];
 
-const BOX_AREAS: SubscribeArea[] = [
-  'summary',
-  'userForm',
-  'paymentPeriodicity',
-  'goodie',
-  'discountCode',
-  'challenge',
-  'transactionFee',
-  'submit',
-];
-
-const boxWidth = '560px';
-
-const boxSelector = [
-  ...BOX_AREAS.map(area => `& > [data-area='${area}']`),
-  '& > :not([data-area])',
-].join(', ');
-
 export const TsriMembershipWrapper = styled('div')`
   --tsri-membership-box: ${({ theme }) =>
     lighten(theme.palette.primary.light, 0.6)};
+  --tsri-membership-box-width: 560px;
   display: grid;
   align-content: start;
 `;
 
-const StyledSubscribeBlock = styled(SubscribeBlock)`
-  && {
-    row-gap: 0;
-  }
+export const TsriMembershipSubscribeBlock = styled(SubscribeBlock)`
+  row-gap: 0;
 
-  & > [data-area='periodicity'] {
+  [data-area='periodicity'] {
     margin-bottom: ${({ theme }) => theme.spacing(2)};
   }
 
-  & > [data-area='memberPlans'],
-  & > [data-area='monthlyAmount'] {
+  [data-area='memberPlans'],
+  [data-area='monthlyAmount'] {
     margin-bottom: ${({ theme }) => theme.spacing(5)};
   }
 
-  & > [data-area='memberPlans'] > h2 {
+  [data-area='memberPlans'] > h2 {
     display: none;
   }
 
-  & > [data-area='monthlyAmount'] {
+  [data-area='monthlyAmount'] {
     justify-self: center;
     width: 100%;
-    max-width: ${boxWidth};
+    max-width: var(--tsri-membership-box-width);
   }
 
-  ${boxSelector} {
+  [data-area='summary'],
+  [data-area='userForm'],
+  [data-area='paymentPeriodicity'],
+  [data-area='goodie'],
+  [data-area='discountCode'],
+  [data-area='challenge'],
+  [data-area='transactionFee'],
+  [data-area='submit'],
+  & > :not([data-area]) {
     justify-self: center;
     width: 100%;
-    max-width: ${boxWidth};
+    max-width: var(--tsri-membership-box-width);
     padding: ${({ theme }) => theme.spacing(1, 2)};
     background-color: var(--tsri-membership-box);
   }
 
-  & > [data-area='summary'] {
+  [data-area='summary'] {
     padding-top: ${({ theme }) => theme.spacing(2.5)};
     border-radius: ${({ theme }) => theme.spacing(0.5, 0.5, 0, 0)};
   }
@@ -150,35 +139,33 @@ const StyledSubscribeBlock = styled(SubscribeBlock)`
   }
 `;
 
-const StyledPeriodicityPicker = styled(PeriodicityPicker)`
-  && {
-    justify-self: end;
-    gap: ${({ theme }) => theme.spacing(0.5)};
-    padding: ${({ theme }) => theme.spacing(0.5)};
-    border: 1px solid ${({ theme }) => theme.palette.common.black};
-    border-radius: 999px;
-    background-color: ${({ theme }) => theme.palette.primary.light};
-  }
+export const TsriMembershipPeriodicityToggle = styled(PeriodicityPicker)`
+  justify-self: end;
+  gap: ${({ theme }) => theme.spacing(0.5)};
+  padding: ${({ theme }) => theme.spacing(0.5)};
+  border: 1px solid ${({ theme }) => theme.palette.common.black};
+  border-radius: 999px;
+  background-color: ${({ theme }) => theme.palette.primary.light};
 
-  && .MuiToggleButton-root {
+  .MuiToggleButton-root {
     margin: 0;
-    padding: ${({ theme }) => theme.spacing(0.5, 2.5)};
+    padding: ${({ theme }) => theme.spacing(0.5, 1.5)};
     border: 0;
     border-radius: 999px;
     color: ${({ theme }) => theme.palette.common.black};
     font-weight: 700;
-    font-size: 1rem;
+    font-size: 0.875rem;
     text-transform: none;
     white-space: nowrap;
     hyphens: manual;
 
-    ${({ theme }) => theme.breakpoints.down('sm')} {
-      padding: ${({ theme }) => theme.spacing(0.5, 1.5)};
-      font-size: 0.875rem;
+    ${({ theme }) => theme.breakpoints.up('sm')} {
+      padding: ${({ theme }) => theme.spacing(0.5, 2.5)};
+      font-size: 1rem;
     }
   }
 
-  && .MuiToggleButton-root.Mui-selected {
+  .MuiToggleButton-root.Mui-selected {
     background-color: ${({ theme }) => theme.palette.common.black};
     color: ${({ theme }) => theme.palette.common.white};
   }
@@ -208,7 +195,7 @@ const MembershipPeriodicityPicker = forwardRef<
   );
 
   return (
-    <StyledPeriodicityPicker
+    <TsriMembershipPeriodicityToggle
       {...props}
       ref={ref}
       periodicities={periodicities.length ? periodicities : props.periodicities}
@@ -230,14 +217,12 @@ const MembershipPeriodicityPicker = forwardRef<
   );
 });
 
-const MembershipTransactionFee = styled(TransactionFee)`
-  && {
-    justify-self: stretch;
-    max-width: none;
-    padding: 0;
-    background: none;
-    color: inherit;
-  }
+export const TsriMembershipTransactionFee = styled(TransactionFee)`
+  justify-self: stretch;
+  max-width: none;
+  padding: 0;
+  background: none;
+  color: inherit;
 
   ${TransactionFeeIcon} {
     display: none;
@@ -249,7 +234,7 @@ const MembershipTransactionFee = styled(TransactionFee)`
   }
 `;
 
-const SummaryText = styled('p')`
+export const TsriMembershipSummaryText = styled('p')`
   margin: 0;
   font-weight: 700;
   text-align: center;
@@ -272,13 +257,13 @@ export const TsriMembershipSummary = ({
   }
 
   return (
-    <SummaryText className={className}>
+    <TsriMembershipSummaryText className={className}>
       {t('tsri.membership.summary', {
         memberPlan: memberPlan.name,
         price: formatMembershipPrice(periodAmount, currency, locale),
         unit: formatPeriodUnit(paymentPeriodicity),
       })}
-    </SummaryText>
+    </TsriMembershipSummaryText>
   );
 };
 
@@ -299,14 +284,14 @@ const MembershipSubscribe = (props: BuilderSubscribeProps) => {
   );
 };
 
-const Benefits = styled('ul')`
+export const TsriMembershipBenefits = styled('ul')`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   justify-self: center;
   gap: ${({ theme }) => theme.spacing(1, 3)};
   width: 100%;
-  max-width: ${boxWidth};
+  max-width: var(--tsri-membership-box-width);
   margin: 0;
   padding: ${({ theme }) => theme.spacing(1, 2, 2.5)};
   border-radius: ${({ theme }) => theme.spacing(0, 0, 0.5, 0.5)};
@@ -339,10 +324,10 @@ export const TsriMembershipSubscribe = (props: BuilderSubscribeBlockProps) => {
           MemberPlanPicker={TsriMembershipPlanPicker}
           PeriodicityPicker={MembershipPeriodicityPicker}
           SubscribeSummary={TsriMembershipSummary}
-          TransactionFee={MembershipTransactionFee}
+          TransactionFee={TsriMembershipTransactionFee}
         >
           <TsriMembershipWrapper className={props.className}>
-            <StyledSubscribeBlock
+            <TsriMembershipSubscribeBlock
               {...props}
               className={undefined}
               periodicityDisplay={SubscribePeriodicityDisplay.Toggle}
@@ -350,14 +335,16 @@ export const TsriMembershipSubscribe = (props: BuilderSubscribeBlockProps) => {
             />
 
             {!upgradeSubscriptionId && (
-              <Benefits aria-label={t('tsri.membership.benefits.label')}>
+              <TsriMembershipBenefits
+                aria-label={t('tsri.membership.benefits.label')}
+              >
                 {BENEFITS.map(benefit => (
                   <li key={benefit}>
                     <MdCheck aria-hidden />
                     {t(`tsri.membership.benefits.${benefit}`)}
                   </li>
                 ))}
-              </Benefits>
+              </TsriMembershipBenefits>
             )}
           </TsriMembershipWrapper>
         </WebsiteBuilderProvider>

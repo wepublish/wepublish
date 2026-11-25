@@ -44,8 +44,6 @@ export const TsriMembershipCustomAmountContext = createContext<CustomAmount>({
   setOpen: () => undefined,
 });
 
-const black = ({ theme }: { theme: Theme }) => theme.palette.common.black;
-
 export const TsriMembershipPlans = styled(RadioGroup)`
   display: grid;
   grid-auto-flow: column;
@@ -59,10 +57,10 @@ export const TsriMembershipPlans = styled(RadioGroup)`
 
 const cardStyles = ({
   theme,
-  checked,
+  isChecked,
 }: {
   theme: Theme;
-  checked: boolean;
+  isChecked: boolean;
 }) => css`
   position: relative;
   display: flex;
@@ -82,7 +80,7 @@ const cardStyles = ({
   overflow-wrap: break-word;
 
   ${
-    checked &&
+    isChecked &&
     css`
       border-color: ${theme.palette.common.black};
     `
@@ -90,8 +88,8 @@ const cardStyles = ({
 `;
 
 export const TsriMembershipPlanCard = styled('label', {
-  shouldForwardProp: prop => prop !== 'checked',
-})<{ checked: boolean }>`
+  shouldForwardProp: prop => prop !== 'isChecked',
+})<{ isChecked: boolean }>`
   ${cardStyles}
   cursor: pointer;
 
@@ -112,8 +110,8 @@ export const TsriMembershipPlanCard = styled('label', {
 `;
 
 export const TsriMembershipSelectedPlan = styled('section', {
-  shouldForwardProp: prop => prop !== 'checked',
-})<{ checked: boolean }>`
+  shouldForwardProp: prop => prop !== 'isChecked',
+})<{ isChecked: boolean }>`
   ${cardStyles}
 
   ${({ theme }) => theme.breakpoints.up('md')} {
@@ -127,7 +125,7 @@ export const TsriMembershipPlanHeader = styled('div')`
   justify-content: space-between;
   gap: ${({ theme }) => theme.spacing(1)};
   padding: ${({ theme }) => theme.spacing(0.5, 1.5)};
-  background-color: ${black};
+  background-color: ${({ theme }) => theme.palette.common.black};
   color: ${({ theme }) => theme.palette.common.white};
   font-weight: 700;
   font-size: 1.125rem;
@@ -218,8 +216,8 @@ export const TsriMembershipPlanShortDescription = styled('div')`
 `;
 
 export const TsriMembershipPlanSelect = styled('span', {
-  shouldForwardProp: prop => prop !== 'checked',
-})<{ checked: boolean }>`
+  shouldForwardProp: prop => prop !== 'isChecked',
+})<{ isChecked: boolean }>`
   align-self: center;
   margin-top: auto;
   padding: ${({ theme }) => theme.spacing(0.5, 2)};
@@ -227,22 +225,22 @@ export const TsriMembershipPlanSelect = styled('span', {
   font-weight: 700;
   white-space: nowrap;
   background-color: ${({ theme }) => theme.palette.common.white};
-  color: ${black};
+  color: ${({ theme }) => theme.palette.common.black};
 
   ${({ theme }) => theme.breakpoints.up('md')} {
     padding: ${({ theme }) => theme.spacing(0.75, 3)};
     font-size: 1.125rem;
   }
 
-  ${({ checked, theme }) =>
-    checked &&
+  ${({ isChecked, theme }) =>
+    isChecked &&
     css`
       background-color: ${theme.palette.common.black};
       color: ${theme.palette.common.white};
     `}
 `;
 
-const OptionCard = styled(TsriMembershipPlanCard)`
+export const TsriMembershipPlanOption = styled(TsriMembershipPlanCard)`
   ${({ theme }) => theme.breakpoints.down('md')} {
     ${TsriMembershipPlanDetails} {
       display: none;
@@ -274,7 +272,7 @@ const OptionCard = styled(TsriMembershipPlanCard)`
   }
 `;
 
-const PickerWrapper = styled('div')`
+export const TsriMembershipPlanPickerWrapper = styled('div')`
   display: grid;
   gap: ${({ theme }) => theme.spacing(3)};
 `;
@@ -282,10 +280,10 @@ const PickerWrapper = styled('div')`
 export const TsriMembershipCustomAmountButton = styled('button')`
   justify-self: center;
   padding: ${({ theme }) => theme.spacing(1, 2.5)};
-  border: 1px solid ${black};
+  border: 1px solid ${({ theme }) => theme.palette.common.black};
   border-radius: 999px;
   background: transparent;
-  color: ${black};
+  color: ${({ theme }) => theme.palette.common.black};
   font: inherit;
   font-size: 1rem;
   cursor: pointer;
@@ -295,7 +293,7 @@ export const TsriMembershipCustomAmountButton = styled('button')`
   }
 
   &:focus-visible {
-    outline: 2px solid ${black};
+    outline: 2px solid ${({ theme }) => theme.palette.common.black};
     outline-offset: 2px;
   }
 `;
@@ -372,7 +370,7 @@ const PlanContent = ({
         </TsriMembershipPlanDetails>
 
         <TsriMembershipPlanSelect
-          checked={checked}
+          isChecked={checked}
           aria-hidden
         >
           {checked ?
@@ -391,7 +389,7 @@ const OptionPlan = ({
   const detailsId = useId();
 
   return (
-    <OptionCard checked={props.checked}>
+    <TsriMembershipPlanOption isChecked={props.checked}>
       <Radio
         value={memberPlan.id}
         disableRipple
@@ -408,7 +406,7 @@ const OptionPlan = ({
         detailsId={detailsId}
         {...props}
       />
-    </OptionCard>
+    </TsriMembershipPlanOption>
   );
 };
 
@@ -485,7 +483,7 @@ export const TsriMembershipPlanPicker = ({
   }, [memberPlans, onChange, selectedMemberPlan, isUnavailable]);
 
   return (
-    <PickerWrapper className={className}>
+    <TsriMembershipPlanPickerWrapper className={className}>
       <TsriMembershipPlans
         name={name}
         value={value ?? ''}
@@ -503,7 +501,7 @@ export const TsriMembershipPlanPicker = ({
 
       {selectedMemberPlan && (
         <TsriMembershipSelectedPlan
-          checked
+          isChecked
           aria-label={t('tsri.membership.selectedPlan')}
         >
           <PlanContent
@@ -528,6 +526,6 @@ export const TsriMembershipPlanPicker = ({
             {t('tsri.membership.customAmount')}
           </TsriMembershipCustomAmountButton>
         )}
-    </PickerWrapper>
+    </TsriMembershipPlanPickerWrapper>
   );
 };
