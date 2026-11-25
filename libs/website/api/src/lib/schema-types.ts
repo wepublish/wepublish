@@ -73,13 +73,6 @@ export enum ActionType {
   UserCreated = 'UserCreated'
 }
 
-export type ActiveSubscriberFirstName = {
-  __typename: 'ActiveSubscriberFirstName';
-  /** When the subscription was created. */
-  createdAt: Scalars['DateTime']['output'];
-  firstName?: Maybe<Scalars['String']['output']>;
-};
-
 export type AllowedSettingVals = {
   __typename: 'AllowedSettingVals';
   boolChoice?: Maybe<Scalars['Boolean']['output']>;
@@ -91,6 +84,13 @@ export enum AnalyticsProviderType {
   Plausible = 'PLAUSIBLE',
   Umami = 'UMAMI'
 }
+
+export type AnonymousSubscriber = {
+  __typename: 'AnonymousSubscriber';
+  /** When the subscription was created. */
+  createdAt: Scalars['DateTime']['output'];
+  firstName?: Maybe<Scalars['String']['output']>;
+};
 
 export type ApiToken = {
   __typename: 'ApiToken';
@@ -7719,7 +7719,7 @@ export type Query = {
    *       Active means the same as for activeSubscribers. Nothing else about the subscriber is exposed.
    *
    */
-  activeSubscriberFirstNames: Array<ActiveSubscriberFirstName>;
+  activeSubscriberFirstNames: Array<AnonymousSubscriber>;
   /**
    *
    *       Returns all active subscribers.

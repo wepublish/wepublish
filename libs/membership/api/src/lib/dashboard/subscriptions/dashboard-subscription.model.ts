@@ -46,7 +46,7 @@ export class DashboardSubscription {
 }
 
 @ObjectType()
-export class ActiveSubscriberFirstName {
+export class AnonymousSubscriber {
   @Field(() => String, { nullable: true })
   firstName!: string | null;
 

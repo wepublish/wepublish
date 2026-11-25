@@ -6,7 +6,7 @@ import {
 } from '@prisma/client';
 import { ok } from 'assert';
 import {
-  ActiveSubscriberFirstName,
+  AnonymousSubscriber,
   DailySubscriptionStats,
   DashboardSubscription,
 } from './dashboard-subscription.model';
@@ -138,7 +138,7 @@ export class DashboardSubscriptionService {
     };
   }
 
-  async activeSubscriberFirstNames(): Promise<ActiveSubscriberFirstName[]> {
+  async activeSubscriberFirstNames(): Promise<AnonymousSubscriber[]> {
     const data = await this.prisma.subscription.findMany({
       where: this.activeSubscriptionsWhere(),
       orderBy: {

@@ -56,12 +56,6 @@ enum ActionType {
   UserCreated
 }
 
-type ActiveSubscriberFirstName {
-  """When the subscription was created."""
-  createdAt: DateTime!
-  firstName: String
-}
-
 type AllowedSettingVals {
   boolChoice: Boolean
   stringChoice: [String!]
@@ -71,6 +65,12 @@ enum AnalyticsProviderType {
   GOOGLE
   PLAUSIBLE
   UMAMI
+}
+
+type AnonymousSubscriber {
+  """When the subscription was created."""
+  createdAt: DateTime!
+  firstName: String
 }
 
 type ApiToken {
@@ -6588,7 +6588,7 @@ type Query {
   ): [Action!]!
 
   "\n      Returns the first name and creation date of every active subscription, newest first.\n      Active means the same as for activeSubscribers. Nothing else about the subscriber is exposed.\n    "
-  activeSubscriberFirstNames: [ActiveSubscriberFirstName!]!
+  activeSubscriberFirstNames: [AnonymousSubscriber!]!
 
   "\n      Returns all active subscribers.\n      Includes subscribers with a cancelled but not run out subscription.\n    "
   activeSubscribers: [DashboardSubscription!]!

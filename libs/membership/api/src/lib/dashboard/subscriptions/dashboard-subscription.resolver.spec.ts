@@ -283,9 +283,9 @@ const activeSubscriberFirstNamesQuery = `
   }
 `;
 
-const activeSubscriberFirstNameFieldsQuery = `
-  query ActiveSubscriberFirstNameFields {
-    __type(name: "ActiveSubscriberFirstName") {
+const anonymousSubscriberFieldsQuery = `
+  query AnonymousSubscriberFields {
+    __type(name: "AnonymousSubscriber") {
       fields {
         name
       }
@@ -407,7 +407,7 @@ describe('DashboardSubscriptionResolver.activeSubscriberFirstNames', () => {
   test('exposes nothing but the first name and the creation date', () =>
     request(app.getHttpServer())
       .post('/')
-      .send({ query: activeSubscriberFirstNameFieldsQuery })
+      .send({ query: anonymousSubscriberFieldsQuery })
       .expect(200)
       .expect(({ body }) => {
         expect(
