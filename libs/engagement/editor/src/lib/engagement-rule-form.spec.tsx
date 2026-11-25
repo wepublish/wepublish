@@ -219,6 +219,24 @@ describe('EngagementRuleForm', () => {
     expect(last).toHaveTextContent('engagement.form.previewBlocks');
   });
 
+  it('restricts the article again once switched back on', () => {
+    renderForm(ENGAGEMENT_PRESETS.growNewsletter());
+
+    const last = () => screen.getByTestId('stage-1');
+    const restrict = () =>
+      within(last()).getByRole('switch', { name: /engagement.form.hard/ });
+
+    fireEvent.click(restrict());
+
+    expect(restrict()).not.toBeChecked();
+    expect(last()).not.toHaveTextContent('engagement.form.requirement');
+
+    fireEvent.click(restrict());
+
+    expect(restrict()).toBeChecked();
+    expect(last()).toHaveTextContent('engagement.form.requirement');
+  });
+
   it('adds a stage before the stage that restricts the article, which stays last', () => {
     renderForm(ENGAGEMENT_PRESETS.growNewsletter());
 

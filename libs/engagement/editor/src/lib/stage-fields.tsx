@@ -357,6 +357,8 @@ export const StageFields = ({
       makeHard ?
         hardStage({
           ...current,
+          enforcement: EngagementEnforcement.Hard,
+          dismissible: false,
           requirement:
             current.requirement ??
             (getValues('goal') === EngagementGoal.Newsletter ?
