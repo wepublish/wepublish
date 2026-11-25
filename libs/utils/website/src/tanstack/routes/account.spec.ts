@@ -42,3 +42,45 @@ describe('profileRoute', () => {
     ).toMatchObject({ emailConfirmed: '1' });
   });
 });
+
+// Mails sent before the confirmation moved to /confirm-email link to the
+// profile with `?jwt=…&confirmEmailChange=…`; the token confirms the address
+// and no longer logs anyone in.
+describe('profileRoute and confirmation links of the old kind', () => {
+  const route = profileRoute();
+
+  it('passes them on to /confirm-email', () => {
+    let thrown: unknown;
+
+    try {
+      route.beforeLoad({
+        search: { jwt: 'confirm token', confirmEmailChange: 'new@example.com' },
+      });
+    } catch (error) {
+      thrown = error;
+    }
+
+    expect(isRedirect(thrown)).toBe(true);
+    expect((thrown as { options: { href: string } }).options.href).toBe(
+      '/confirm-email?token=confirm%20token'
+    );
+  });
+
+  it('leaves a login link alone', () => {
+    expect(() =>
+      route.beforeLoad({ search: { jwt: 'login-jwt' } })
+    ).not.toThrow();
+  });
+
+  it('keeps both parameters of such a link', () => {
+    expect(
+      route.validateSearch.parse({
+        jwt: 'confirm-token',
+        confirmEmailChange: 'new@example.com',
+      })
+    ).toMatchObject({
+      jwt: 'confirm-token',
+      confirmEmailChange: 'new@example.com',
+    });
+  });
+});

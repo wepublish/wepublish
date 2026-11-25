@@ -118,7 +118,7 @@ describe('LoginCodeService', () => {
 
     expect(first.purlCode).toBe('ABCDE-FGHJK');
     expect(second.purl).toBe(first.purl);
-    expect(first.purl).toBe('https://example.com/l/ABCDE-FGHJK');
+    expect(first.purl).toBe('https://example.com/code/ABCDE-FGHJK');
     expect(first.purlQr).toMatch(/^<svg/);
     expect(prisma.userLoginCode.create).not.toHaveBeenCalled();
   });

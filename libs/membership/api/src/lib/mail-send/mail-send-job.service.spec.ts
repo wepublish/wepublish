@@ -56,7 +56,7 @@ const withPurl = vi.fn(
     optional: optionalData,
     jwt: '',
     currentDate: new Date(),
-    purl: 'https://zwoelf.example/l/ABCDE-FGHJK',
+    purl: 'https://zwoelf.example/code/ABCDE-FGHJK',
     purlCode: 'ABCDE-FGHJK',
     purlQr: '<svg/>',
   })

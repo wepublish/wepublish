@@ -50,6 +50,7 @@ const mockUser: User = {
   pendingEmail: null,
   pendingEmailAt: null,
   pendingEmailTokenHash: null,
+  pendingEmailSessionId: null,
   name: 'Test User',
   firstName: 'Test',
   flair: null,

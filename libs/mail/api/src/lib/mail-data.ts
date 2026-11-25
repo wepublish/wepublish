@@ -14,7 +14,7 @@ export interface PurlProvider {
 }
 
 export const SAMPLE_PURL_CODE = 'ABCDE-FGHJK';
-export const SAMPLE_PURL = 'https://example.com/l/ABCDE-FGHJK';
+export const SAMPLE_PURL = 'https://example.com/code/ABCDE-FGHJK';
 export const SAMPLE_PURL_DATA: PurlData = {
   purl: SAMPLE_PURL,
   purlCode: SAMPLE_PURL_CODE,
@@ -29,6 +29,7 @@ const SENSITIVE_RECIPIENT_FIELDS = [
   'totpEnabled',
   'totpExempt',
   'pendingEmailTokenHash',
+  'pendingEmailSessionId',
 ] as const;
 
 export const sanitizeRecipient = <T extends object>(recipient: T): T => {

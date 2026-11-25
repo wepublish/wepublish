@@ -39,7 +39,22 @@ export const profileRoute = () => ({
   validateSearch: jwtSearchSchema.extend({
     // Set by the confirm-email page once the new address is in place.
     emailConfirmed: z.string().optional(),
+    // Only in confirmation mails sent before /confirm-email existed.
+    confirmEmailChange: z.string().optional(),
   }),
+  // Such a mail links here with the address to confirm. Its token confirms
+  // that address and logs nobody in, so the page made for it takes over.
+  beforeLoad: ({
+    search: { jwt, confirmEmailChange },
+  }: {
+    search: { jwt?: string; confirmEmailChange?: string };
+  }) => {
+    if (jwt && confirmEmailChange) {
+      throw redirect({
+        href: `/confirm-email?token=${encodeURIComponent(jwt)}`,
+      });
+    }
+  },
   loaderDeps: ({ search: { jwt } }: { search: { jwt?: string } }) => ({ jwt }),
   loader: async ({
     context: { apolloClient },

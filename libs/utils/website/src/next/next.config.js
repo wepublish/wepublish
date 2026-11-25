@@ -134,7 +134,7 @@ const nextConfig = {
       '/login',
       '/confirm-email',
       '/welcome',
-      '/l/:path*',
+      '/code/:path*',
       '/profile',
       '/profile/:path*',
     ].map(source => ({

@@ -8,6 +8,7 @@ import {
   CommentItemType,
   Prisma,
   PrismaClient,
+  SessionOrigin,
   UserEvent,
 } from '@prisma/client';
 import { hash as argon2Hash } from '@node-rs/argon2';
@@ -398,7 +399,8 @@ export class UserService {
   private async sendEmailConfirmation(
     userId: string,
     targetEmail: string,
-    event: typeof UserEvent.EMAIL_CHANGE | typeof UserEvent.EMAIL_VERIFICATION
+    event: typeof UserEvent.EMAIL_CHANGE | typeof UserEvent.EMAIL_VERIFICATION,
+    sessionId: string | undefined
   ) {
     const mailTemplateId = await this.mailContext.getUserTemplateId(
       event,
@@ -434,6 +436,8 @@ export class UserService {
         pendingEmail: targetEmail,
         pendingEmailAt: new Date(),
         pendingEmailTokenHash: this.hashEmailChangeToken(token),
+        // Only this session becomes a full one when the link is opened.
+        pendingEmailSessionId: sessionId ?? null,
       },
       include: { address: true, paymentProviderCustomers: true },
     });
@@ -452,7 +456,11 @@ export class UserService {
   }
 
   @PrimeDataLoader(UserDataloaderService)
-  async requestEmailChange(userId: string, newEmail: string) {
+  async requestEmailChange(
+    userId: string,
+    newEmail: string,
+    sessionId?: string
+  ) {
     newEmail = newEmail.toLowerCase();
     await Validator.login.parse({ email: newEmail });
 
@@ -466,11 +474,16 @@ export class UserService {
       throw new BadRequestException('Email is already in use.');
     }
 
-    return this.sendEmailConfirmation(userId, newEmail, UserEvent.EMAIL_CHANGE);
+    return this.sendEmailConfirmation(
+      userId,
+      newEmail,
+      UserEvent.EMAIL_CHANGE,
+      sessionId
+    );
   }
 
   @PrimeDataLoader(UserDataloaderService)
-  async requestEmailVerification(userId: string) {
+  async requestEmailVerification(userId: string, sessionId?: string) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       select: { email: true },
@@ -483,14 +496,18 @@ export class UserService {
     return this.sendEmailConfirmation(
       userId,
       user.email,
-      UserEvent.EMAIL_VERIFICATION
+      UserEvent.EMAIL_VERIFICATION,
+      sessionId
     );
   }
 
   @PrimeDataLoader(UserDataloaderService)
   async confirmEmailChange(
     token: string,
-    options?: { exceptSessionToken?: string }
+    options?: {
+      /** The session that opened the link, if it is signed in. */
+      session?: { id: string; userId: string; origin: SessionOrigin };
+    }
   ) {
     const user = await this.prisma.user.findUnique({
       where: { pendingEmailTokenHash: this.hashEmailChangeToken(token) },
@@ -509,6 +526,7 @@ export class UserService {
           pendingEmail: null,
           pendingEmailAt: null,
           pendingEmailTokenHash: null,
+          pendingEmailSessionId: null,
         },
       });
       await this.sessionCache.invalidate();
@@ -529,6 +547,7 @@ export class UserService {
           pendingEmail: null,
           pendingEmailAt: null,
           pendingEmailTokenHash: null,
+          pendingEmailSessionId: null,
         },
         include: { address: true, paymentProviderCustomers: true },
       });
@@ -543,14 +562,32 @@ export class UserService {
       throw error;
     }
 
-    // A new address ends the other sessions, in case someone else got in.
-    // Merely confirming the address on file changes nothing that would need
-    // it, and the session waiting on the welcome page has to stay alive.
-    if (user.email !== updatedUser.email) {
-      await this.authenticationService.revokeUserSessions(user.id, {
-        exceptToken: options?.exceptSessionToken,
+    const own =
+      options?.session?.userId === user.id ? options.session : undefined;
+    // The confirmation says that whoever opened the link reads this inbox.
+    // It frees the session that asked for it and opens it itself, and no
+    // other: someone else may hold the same login code.
+    const asking =
+      own && own.id === user.pendingEmailSessionId ? own : undefined;
+    const kept =
+      asking ?? (own && own.origin !== SessionOrigin.purl ? own : undefined);
+
+    if (asking) {
+      await this.prisma.session.updateMany({
+        where: { id: asking.id, userID: user.id },
+        data: { emailConfirmedAt: new Date() },
       });
     }
+
+    // A new address ends every other session, in case someone else got in.
+    // Confirming the address on file ends the other login-code sessions: they
+    // would otherwise wait to be freed by a confirmation that is not theirs.
+    await this.authenticationService.revokeUserSessions(user.id, {
+      exceptSessionId: kept?.id,
+      ...(user.email === updatedUser.email ?
+        { origin: SessionOrigin.purl }
+      : {}),
+    });
     // Cached sessions still carry the old restriction and address.
     await this.sessionCache.invalidate();
 

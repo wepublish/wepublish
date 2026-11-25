@@ -26,10 +26,7 @@ import {
 } from '@wepublish/utils/api';
 import { JwtService } from './jwt.service';
 import { TotpService } from './totp.service';
-import {
-  AuthenticationService,
-  isSessionRestricted,
-} from '@wepublish/authentication/api';
+import { AuthenticationService } from '@wepublish/authentication/api';
 import { ChallengeInput, ChallengeService } from '@wepublish/challenge/api';
 import {
   LoginCodeDisabledError,
@@ -363,8 +360,12 @@ export class SessionService {
       }),
     ]);
 
-    const placeholderEmail =
-      await this.authenticationService.isPlaceholderEmail(user.email);
+    // A new session has confirmed nothing yet, whatever the account has.
+    const { restricted } = await this.authenticationService.sessionRestriction({
+      origin,
+      emailConfirmedAt: null,
+      user,
+    });
 
     return {
       user,
@@ -375,12 +376,7 @@ export class SessionService {
       totpEnabled: user.totpEnabled,
       impersonated: !!options?.impersonatedBy,
       origin,
-      restricted: isSessionRestricted({
-        origin,
-        placeholderEmail,
-        emailVerifiedAt: user.emailVerifiedAt,
-        sessionCreatedAt: createdAt,
-      }),
+      restricted,
     };
   }
 

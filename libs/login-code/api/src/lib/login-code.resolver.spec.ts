@@ -11,7 +11,7 @@ describe('LoginCodeResolver', () => {
     reissue: vi.fn().mockResolvedValue({
       status: { id: 'code-1' },
       code: 'ABCDE-FGHJK',
-      purl: 'https://example.com/l/ABCDEFGHJK',
+      purl: 'https://example.com/code/ABCDEFGHJK',
     }),
   };
   const secondFactor = {

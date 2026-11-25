@@ -1191,6 +1191,9 @@ model Session {
   token     String        @unique
   origin    SessionOrigin @default(password)
 
+  // Set once, when this very session confirmed the email address it asked to confirm.
+  emailConfirmedAt DateTime? @db.Timestamptz(3)
+
   impersonatedBy      String?
   impersonationReason String?
   impersonatedAt      DateTime? @db.Timestamptz(3)
@@ -1433,6 +1436,8 @@ model User {
   pendingEmail          String?
   pendingEmailAt        DateTime? @db.Timestamptz(3)
   pendingEmailTokenHash String?   @unique
+  // The session that asked for the confirmation; only it becomes a full session.
+  pendingEmailSessionId String?
   name                  String
   firstName             String?
   flair                 String?

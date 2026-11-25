@@ -2,6 +2,7 @@ import { ForbiddenException } from '@nestjs/common';
 import { User } from '@prisma/client';
 
 import { AuthSession, AuthSessionType, UserSession } from './auth-session';
+import { SESSION_RESTRICTED } from './session-restriction';
 
 /** Who answers for an action: a user, and the api key if one was used. */
 export type SessionActor = {
@@ -53,6 +54,23 @@ export function userSessionOf(
   session: AuthSession | null | undefined
 ): UserSession | undefined {
   return session?.type === AuthSessionType.User ? session : undefined;
+}
+
+/**
+ * Like `userSessionOf`, for public operations that act under the name of the
+ * signed-in user (commenting, voting, subscribing). The guard lets a
+ * restricted session into everything public, so these refuse it here.
+ */
+export function fullUserSessionOf(
+  session: AuthSession | null | undefined
+): UserSession | undefined {
+  const userSession = userSessionOf(session);
+
+  if (userSession?.restricted) {
+    throw new ForbiddenException(SESSION_RESTRICTED);
+  }
+
+  return userSession;
 }
 
 /**

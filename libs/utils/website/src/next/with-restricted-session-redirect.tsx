@@ -13,7 +13,7 @@ export const RESTRICTED_SESSION_ALLOWED_PATHS = [
   '/welcome',
   '/confirm-email',
   '/login',
-  '/l/[code]',
+  '/code/[code]',
 ];
 
 type RestrictedSessionRedirectProps = PropsWithChildren<{

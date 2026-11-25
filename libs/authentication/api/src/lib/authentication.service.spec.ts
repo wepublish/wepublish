@@ -157,6 +157,92 @@ describe('AuthenticationService', () => {
     expect(result).toBeFalsy();
   });
 
+  describe('restricted sessions', () => {
+    const codeSession = (overrides: Record<string, unknown> = {}) => ({
+      id: 'session-1',
+      token: 'secret-token',
+      origin: 'purl',
+      createdAt: new Date('2026-01-01T00:00:00.000Z'),
+      expiresAt: new Date('2030-01-01T00:00:00.000Z'),
+      emailConfirmedAt: null,
+      user: {
+        id: 'user-1',
+        email: 'reader@example.com',
+        roleIDs: [],
+        // Confirmed after the session started, by whoever owns the inbox.
+        emailVerifiedAt: new Date('2026-06-01T00:00:00.000Z'),
+      },
+      ...overrides,
+    });
+
+    beforeEach(() => {
+      vi.spyOn(prisma.userRole, 'findMany').mockResolvedValue([]);
+    });
+
+    it('keeps a login-code session restricted when the account was confirmed by someone else', async () => {
+      vi.spyOn(prisma.session, 'findFirst').mockResolvedValue(
+        codeSession() as any
+      );
+
+      expect(await service.getUserSession('secret-token')).toMatchObject({
+        restricted: true,
+      });
+    });
+
+    it('frees a login-code session that confirmed an address itself', async () => {
+      vi.spyOn(prisma.session, 'findFirst').mockResolvedValue(
+        codeSession({ emailConfirmedAt: new Date() }) as any
+      );
+
+      expect(await service.getUserSession('secret-token')).toMatchObject({
+        restricted: false,
+      });
+    });
+
+    it('does not send staff with a placeholder address through the account setup', async () => {
+      vi.spyOn(prisma.setting, 'findUnique').mockResolvedValue({
+        value: '@placeholder.example',
+      } as any);
+      vi.spyOn(prisma.userRole, 'findMany').mockResolvedValue([
+        { id: 'editors', permissionIDs: ['CAN_CREATE_ARTICLE'] },
+      ] as any);
+      vi.spyOn(prisma.session, 'findFirst').mockResolvedValue(
+        codeSession({
+          origin: 'password',
+          user: {
+            id: 'user-1',
+            email: 'staff@placeholder.example',
+            roleIDs: ['editors'],
+          },
+        }) as any
+      );
+
+      expect(await service.getUserSession('secret-token')).toMatchObject({
+        placeholderEmail: true,
+        restricted: false,
+      });
+    });
+
+    it('ends only the sessions of one kind of login, sparing one of them', async () => {
+      const deleteMany = vi
+        .spyOn(prisma.session, 'deleteMany')
+        .mockResolvedValue({ count: 2 });
+
+      await service.revokeUserSessions('user-1', {
+        exceptSessionId: 'session-1',
+        origin: 'purl',
+      });
+
+      expect(deleteMany).toHaveBeenCalledWith({
+        where: {
+          userID: 'user-1',
+          id: { not: 'session-1' },
+          origin: 'purl',
+        },
+      });
+    });
+  });
+
   describe('session cache', () => {
     it("drops cached sessions when a user's sessions are revoked", async () => {
       const sessionSpy = vi

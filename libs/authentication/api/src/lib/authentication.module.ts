@@ -7,7 +7,7 @@ import { AuthenticationService } from './authentication.service';
 import { OneOfGuard, PrismaModule } from '@wepublish/nest-modules';
 import { PublicGuard } from './public.guard';
 import { AuthenticatedGuard } from './authenticated.guard';
-import { FullSessionGuard } from './full-session.guard';
+import { RestrictedSessionGuard } from './restricted-session.guard';
 import { SessionCacheModule } from './session-cache';
 
 @Module({
@@ -32,7 +32,7 @@ import { SessionCacheModule } from './session-cache';
     },
     {
       provide: APP_GUARD,
-      useClass: FullSessionGuard,
+      useClass: RestrictedSessionGuard,
     },
     PublicGuard,
     AuthenticatedGuard,

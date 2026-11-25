@@ -32,7 +32,7 @@ import {
 } from '@wepublish/permissions/api';
 import { NotFoundException } from '@nestjs/common';
 import {
-  RequiresFullSession,
+  Authenticated,
   CurrentUser,
   AuthSession,
   requireSessionUser,
@@ -99,7 +99,7 @@ export class UserResolver {
     });
   }
 
-  @RequiresFullSession()
+  @Authenticated()
   @Mutation(() => SensitiveDataUser, {
     description: `Updates the current logged in user.`,
   })

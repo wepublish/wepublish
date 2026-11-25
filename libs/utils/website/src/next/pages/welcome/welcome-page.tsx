@@ -1,3 +1,4 @@
+import { CombinedGraphQLErrors } from '@apollo/client';
 import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
@@ -25,7 +26,8 @@ import { WelcomeIntro } from './welcome-intro';
 import { WelcomeText } from './welcome-text';
 import { useResendCountdown } from './use-resend-countdown';
 
-type Step = 'intro' | 'email' | 'emailSent' | 'password' | 'done';
+type Step =
+  'intro' | 'email' | 'emailSent' | 'sessionEnded' | 'password' | 'done';
 
 const SECOND_FACTOR_AUTOCOMPLETE: Record<LoginCodeSecondFactor, string> = {
   [LoginCodeSecondFactor.None]: 'off',
@@ -71,12 +73,13 @@ function WelcomePageComponent({
   } = useWebsiteBuilder();
   const { t } = useTranslation();
   const router = useRouter();
-  const { refreshUser } = useUser();
+  const { refreshUser, setToken } = useUser();
   const { data: meData } = useQuery(MeDocument);
-  const { data: sessionData, refetch: refetchSession } = useQuery(
-    SessionInfoDocument,
-    { fetchPolicy: 'network-only' }
-  );
+  const {
+    data: sessionData,
+    error: sessionError,
+    refetch: refetchSession,
+  } = useQuery(SessionInfoDocument, { fetchPolicy: 'network-only' });
   const [requestEmailChange, emailChange] = useMutation(
     RequestEmailChangeDocument
   );
@@ -130,6 +133,15 @@ function WelcomePageComponent({
       setStep('password');
     }
   }, [step, session, restricted]);
+
+  // The confirmation frees only the session that opens the link itself; opened
+  // in another browser it ends this one. The API then refuses the session,
+  // which is not the same as a request that never reached it.
+  useEffect(() => {
+    if (step === 'emailSent' && CombinedGraphQLErrors.is(sessionError)) {
+      setStep('sessionEnded');
+    }
+  }, [step, sessionError]);
 
   // The profile reads the user from the session provider, which fetched them
   // when this page opened; the address confirmed since then is not in there.
@@ -342,6 +354,22 @@ function WelcomePageComponent({
               {resendSeconds > 0 ?
                 t('welcome.resendIn', { seconds: resendSeconds })
               : t('welcome.resend')}
+            </Button>
+          </WelcomeActions>
+        </>
+      )}
+
+      {step === 'sessionEnded' && (
+        <>
+          <H4 component="h1">{t('welcome.sessionEndedTitle')}</H4>
+          <Paragraph>{t('welcome.sessionEnded')}</Paragraph>
+
+          <WelcomeActions>
+            {/* Dropping the dead session hands the page to the login guard,
+                which sends the reader to the login page. Not before they
+                read why: the guard shows nothing of this page. */}
+            <Button onClick={() => setToken(null)}>
+              {t('user.emailConfirmedLogin')}
             </Button>
           </WelcomeActions>
         </>

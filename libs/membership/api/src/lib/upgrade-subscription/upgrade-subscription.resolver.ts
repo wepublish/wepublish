@@ -3,7 +3,6 @@ import { UpgradeSubscription } from './upgrade-subscription.model';
 import {
   Authenticated,
   CurrentUser,
-  RequiresFullSession,
   requireSessionUser,
   AuthSession,
 } from '@wepublish/authentication/api';
@@ -17,7 +16,7 @@ import { CanCreateSubscription } from '@wepublish/permissions';
 export class UpgradeSubscriptionResolver {
   constructor(private upgradeSubscriptionService: UpgradeSubscriptionService) {}
 
-  @RequiresFullSession()
+  @Authenticated()
   @Mutation(() => Payment, {
     description: ``,
   })

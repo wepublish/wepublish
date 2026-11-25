@@ -7,7 +7,10 @@ import {
 } from '@wepublish/website/api';
 import { PropsWithChildren } from 'react';
 import { SessionTokenContext } from './session.context';
-import { useAccountSetupPending } from './use-account-setup-pending';
+import {
+  useAccountSetupPending,
+  useSessionRestricted,
+} from './use-account-setup-pending';
 
 const sessionInfo = (restricted: boolean) => ({
   request: { query: SessionInfoDocument },
@@ -103,5 +106,44 @@ describe('useAccountSetupPending', () => {
     // Give the queries time to answer before checking.
     await new Promise(resolve => setTimeout(resolve, 20));
     expect(result.current).toBe(false);
+  });
+});
+
+// Unlike the pending setup, this holds whether or not the medium has login
+// codes: a placeholder address restricts a session too.
+describe('useSessionRestricted', () => {
+  const restrictedFor = (hasUser: boolean, restricted: boolean) => {
+    const wrapper = ({ children }: PropsWithChildren) => (
+      <MockedProvider mocks={[sessionInfo(restricted)]}>
+        <SessionTokenContext.Provider
+          value={[
+            hasUser ? ({ id: 'user-1' } as never) : null,
+            hasUser,
+            async () => undefined,
+          ]}
+        >
+          {children}
+        </SessionTokenContext.Provider>
+      </MockedProvider>
+    );
+
+    return renderHook(() => useSessionRestricted(), { wrapper }).result;
+  };
+
+  it('is unknown until the API has answered, then what it says', async () => {
+    const result = restrictedFor(true, true);
+
+    expect(result.current).toBeUndefined();
+    await waitFor(() => expect(result.current).toBe(true));
+  });
+
+  it('is not restricted for a full session', async () => {
+    const result = restrictedFor(true, false);
+
+    await waitFor(() => expect(result.current).toBe(false));
+  });
+
+  it('is not restricted when nobody is logged in', () => {
+    expect(restrictedFor(false, true).current).toBe(false);
   });
 });

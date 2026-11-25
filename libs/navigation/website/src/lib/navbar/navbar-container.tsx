@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client/react';
 import {
   useAccountSetupPending,
+  useSessionRestricted,
   useUser,
 } from '@wepublish/authentication/website';
 import {
@@ -57,7 +58,11 @@ export function NavbarContainer({
   const { data: peerInfoData } = useQuery(PeerProfileDocument, {
     fetchPolicy: 'cache-first',
   });
-  const hasRunningSubscription = useHasRunningSubscription();
+  // A restricted session is refused its subscriptions and invoices.
+  const restricted = useSessionRestricted() === true;
+  const hasRunningSubscription = useHasRunningSubscription({
+    skip: restricted,
+  });
   const accountSetupPending = useAccountSetupPending();
 
   // With the subscription history, the warning is about due invoices only,
@@ -74,7 +79,10 @@ export function NavbarContainer({
   const withinHistory = !!features?.features.includes(
     'profile-subscription-history'
   );
-  const hasUnpaidInvoices = useHasUnpaidInvoices({ dueOnly: withinHistory });
+  const hasUnpaidInvoices = useHasUnpaidInvoices({
+    dueOnly: withinHistory,
+    skip: restricted,
+  });
   // null, not undefined: the navbar would fall back to its default button
   const accountBtn =
     inAccount && withinHistory && !hasUnpaidInvoices ? null : profileBtn;

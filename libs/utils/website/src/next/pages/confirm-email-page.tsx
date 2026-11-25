@@ -1,4 +1,4 @@
-import { useMutation } from '@apollo/client/react';
+import { useApolloClient, useMutation } from '@apollo/client/react';
 import { AuthTokenStorageKey } from '@wepublish/authentication/website';
 import { ConfirmEmailChangeDocument } from '@wepublish/website/api';
 import { Link, useWebsiteBuilder } from '@wepublish/website/builder';
@@ -8,6 +8,7 @@ import { NextPage, NextPageContext } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { sessionSurvivedConfirmation } from '../../lib/confirm-email-outcome';
 
 export type ConfirmEmailPageProps = {
   token?: string | null;
@@ -21,6 +22,7 @@ export type ConfirmEmailPageOptions = {
 type Outcome =
   | { state: 'confirming' }
   | { state: 'confirmed' }
+  | { state: 'signedOut' }
   | { state: 'failed'; error: string };
 
 const redirect = (ctx: NextPageContext, location: string) => {
@@ -41,7 +43,8 @@ export const createConfirmEmailPage = ({
     const { t } = useTranslation();
     const router = useRouter();
     const [confirm] = useMutation(ConfirmEmailChangeDocument);
-    const { refreshUser } = useUser();
+    const client = useApolloClient();
+    const { refreshUser, setToken } = useUser();
     const [outcome, setOutcome] = useState<Outcome>({ state: 'confirming' });
     const started = useRef(false);
 
@@ -73,9 +76,22 @@ export const createConfirmEmailPage = ({
           }
 
           if (getCookie(AuthTokenStorageKey)) {
-            // The session provider fetched the reader when this page opened,
-            // before the address changed. The next page reads them from there.
-            refreshUser().finally(() => router.replace(redirectTo));
+            // The confirmation frees the session that asked for it and ends
+            // the account's other login-code sessions, maybe this browser's.
+            sessionSurvivedConfirmation(client).then(survived => {
+              if (!survived) {
+                setToken(null).finally(() =>
+                  setOutcome({ state: 'signedOut' })
+                );
+
+                return;
+              }
+
+              // The session provider fetched the reader when this page
+              // opened, before the address changed. The next page reads them
+              // from there.
+              refreshUser().finally(() => router.replace(redirectTo));
+            });
 
             return;
           }
@@ -84,7 +100,7 @@ export const createConfirmEmailPage = ({
         },
         (error: Error) => setOutcome({ state: 'failed', error: error.message })
       );
-    }, [token, confirm, router, refreshUser]);
+    }, [token, confirm, router, refreshUser, setToken, client]);
 
     return (
       <>
@@ -94,6 +110,10 @@ export const createConfirmEmailPage = ({
 
         {outcome.state === 'confirmed' && (
           <Alert severity="success">{t('user.emailConfirmed')}</Alert>
+        )}
+
+        {outcome.state === 'signedOut' && (
+          <Alert severity="warning">{t('user.emailConfirmedSignedOut')}</Alert>
         )}
 
         {outcome.state === 'failed' && (

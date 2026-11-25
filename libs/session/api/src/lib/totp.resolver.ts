@@ -3,8 +3,8 @@ import { TotpService } from './totp.service';
 import { TotpSetup } from './totp.model';
 import {
   AuthenticationService,
+  Authenticated,
   CurrentUser,
-  RequiresFullSession,
   assertNotImpersonating,
   requireSessionUser,
   requireUserSession,
@@ -20,7 +20,7 @@ export class TotpResolver {
     private authenticationService: AuthenticationService
   ) {}
 
-  @RequiresFullSession()
+  @Authenticated()
   @Mutation(() => TotpSetup, {
     description:
       'Generates a TOTP setup for the current user. Returns a QR code and secret for authenticator app configuration.',
@@ -42,7 +42,7 @@ export class TotpResolver {
     return this.totpService.setupTotp(user.id, user.email, website ?? false);
   }
 
-  @RequiresFullSession()
+  @Authenticated()
   @Mutation(() => Boolean, {
     description:
       'Enables two-factor authentication for the current user after verifying the TOTP token.',

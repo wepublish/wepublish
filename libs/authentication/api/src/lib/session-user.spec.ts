@@ -10,10 +10,12 @@ import {
 import {
   actorOf,
   actorUserIdOf,
+  fullUserSessionOf,
   requireSessionUser,
   requireUserSession,
   userSessionOf,
 } from './session-user';
+import { SESSION_RESTRICTED } from './session-restriction';
 
 const user = { id: 'user-1', email: 'editor@example.test' } as User;
 
@@ -101,6 +103,28 @@ describe('userSessionOf', () => {
     ['no session', undefined],
   ])('is nothing for %s', (_, session) => {
     expect(userSessionOf(session)).toBeUndefined();
+  });
+});
+
+describe('fullUserSessionOf', () => {
+  it('is the session of the signed-in user', () => {
+    expect(fullUserSessionOf(userSession)).toBe(userSession);
+  });
+
+  it.each([
+    ['an api key', apiTokenSession],
+    ['a peering token', peerSession],
+    ['no session', undefined],
+  ])('is nothing for %s', (_, session) => {
+    expect(fullUserSessionOf(session)).toBeUndefined();
+  });
+
+  // Falling back to «nobody» would let the caller go on as a guest and hide
+  // that the session is the reason.
+  it('refuses a restricted session', () => {
+    expect(() =>
+      fullUserSessionOf({ ...userSession, restricted: true })
+    ).toThrow(new ForbiddenException(SESSION_RESTRICTED));
   });
 });
 

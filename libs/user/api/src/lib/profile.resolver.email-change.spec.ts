@@ -9,6 +9,8 @@ import {
 const createResolver = (secondFactor: LoginCodeSecondFactor) => {
   const userService = {
     requestEmailChange: vi.fn().mockResolvedValue(undefined),
+    requestEmailVerification: vi.fn().mockResolvedValue(undefined),
+    confirmEmailChange: vi.fn().mockResolvedValue({}),
   };
   const secondFactorService = {
     getFactor: vi.fn().mockResolvedValue(secondFactor),
@@ -33,6 +35,8 @@ const session = ({
 }) =>
   ({
     type: AuthSessionType.User,
+    id: 'session-1',
+    origin: 'purl',
     restricted,
     placeholderEmail,
     user: { id: 'user-1', email: 'old@example.com' },
@@ -58,7 +62,8 @@ describe('ProfileResolver requestEmailChange', () => {
     );
     expect(userService.requestEmailChange).toHaveBeenCalledWith(
       'user-1',
-      'new@example.com'
+      'new@example.com',
+      'session-1'
     );
   });
 
@@ -101,5 +106,51 @@ describe('ProfileResolver requestEmailChange', () => {
 
     expect(secondFactorService.assert).not.toHaveBeenCalled();
     expect(userService.requestEmailChange).toHaveBeenCalled();
+  });
+});
+
+// Only the session that asked may be freed by the confirmation, so every
+// request and every confirmation says which session it comes from.
+describe('ProfileResolver email confirmation and its session', () => {
+  it('asks to verify the address on file for the calling session', async () => {
+    const { resolver, userService } = createResolver(
+      LoginCodeSecondFactor.none
+    );
+
+    await resolver.requestEmailVerification(
+      session({ restricted: true, placeholderEmail: false })
+    );
+
+    expect(userService.requestEmailVerification).toHaveBeenCalledWith(
+      'user-1',
+      'session-1'
+    );
+  });
+
+  it('confirms with the session that opened the link', async () => {
+    const { resolver, userService } = createResolver(
+      LoginCodeSecondFactor.none
+    );
+
+    await resolver.confirmEmailChange(
+      'token',
+      session({ restricted: true, placeholderEmail: false })
+    );
+
+    expect(userService.confirmEmailChange).toHaveBeenCalledWith('token', {
+      session: { id: 'session-1', userId: 'user-1', origin: 'purl' },
+    });
+  });
+
+  it('confirms without a session when nobody is signed in', async () => {
+    const { resolver, userService } = createResolver(
+      LoginCodeSecondFactor.none
+    );
+
+    await resolver.confirmEmailChange('token', undefined);
+
+    expect(userService.confirmEmailChange).toHaveBeenCalledWith('token', {
+      session: undefined,
+    });
   });
 });

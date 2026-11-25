@@ -1,12 +1,12 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import {
+  AllowsRestrictedSession,
   assertNotImpersonating,
   AuthenticationService,
   AuthSessionType,
   Authenticated,
   CurrentUser,
   Public,
-  RequiresFullSession,
   UserSession,
   requireSessionUser,
   requireUserSession,
@@ -35,6 +35,7 @@ export class ProfileResolver {
     private authenticationService: AuthenticationService
   ) {}
 
+  @AllowsRestrictedSession()
   @Authenticated()
   @Query(() => SensitiveDataUser, {
     description: `This query returns the user.`,
@@ -50,7 +51,7 @@ export class ProfileResolver {
       : session.user;
   }
 
-  @RequiresFullSession()
+  @Authenticated()
   @Mutation(() => SensitiveDataUser, {
     description: `This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated.`,
   })
@@ -94,6 +95,7 @@ export class ProfileResolver {
     return this.profileService.uploadUserProfileImage(user, uploadImageInput);
   }
 
+  @AllowsRestrictedSession()
   @Authenticated()
   @Mutation(() => Boolean, {
     description:
@@ -122,7 +124,11 @@ export class ProfileResolver {
       await this.assertSecondFactor(session, secondFactor);
     }
 
-    await this.userService.requestEmailChange(session.user.id, newEmail);
+    await this.userService.requestEmailChange(
+      session.user.id,
+      newEmail,
+      session.id
+    );
     return true;
   }
 
@@ -141,16 +147,20 @@ export class ProfileResolver {
     }
   }
 
+  @AllowsRestrictedSession()
   @Authenticated()
   @Mutation(() => Boolean, {
     description:
       'Sends a confirmation link to the current email address to verify it.',
   })
   async requestEmailVerification(
-    @CurrentUser() session: AuthSession
+    @CurrentUser() authSession: AuthSession
   ): Promise<boolean> {
+    const session = requireUserSession(authSession);
+
     await this.userService.requestEmailVerification(
-      requireSessionUser(session).id
+      session.user.id,
+      session.id
     );
     return true;
   }
@@ -158,7 +168,7 @@ export class ProfileResolver {
   @Public()
   @Mutation(() => SensitiveDataUser, {
     description:
-      'Confirms a pending email change with the token from the confirmation email.',
+      'Confirms a pending email change with the token from the confirmation email. A session from a login code only becomes a full session when it asked for the confirmation and opens the link itself; the other login-code sessions of the account end.',
   })
   async confirmEmailChange(
     @Args('token') token: string,
@@ -167,8 +177,10 @@ export class ProfileResolver {
     assertNotImpersonating(session);
 
     return this.userService.confirmEmailChange(token, {
-      exceptSessionToken:
-        session?.type === AuthSessionType.User ? session.token : undefined,
+      session:
+        session?.type === AuthSessionType.User ?
+          { id: session.id, userId: session.user.id, origin: session.origin }
+        : undefined,
     });
   }
 }

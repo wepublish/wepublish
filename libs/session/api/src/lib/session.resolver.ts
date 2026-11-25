@@ -3,6 +3,7 @@ import { SessionService } from './session.service';
 import { ImpersonationService } from './impersonation.service';
 import { SessionInfo, SessionWithToken } from './session.model';
 import {
+  AllowsRestrictedSession,
   Authenticated,
   CurrentUser,
   Public,
@@ -44,6 +45,7 @@ export class SessionResolver {
     };
   }
 
+  @AllowsRestrictedSession()
   @Authenticated()
   @Query(() => SessionInfo, {
     description:

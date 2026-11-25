@@ -120,7 +120,7 @@ export const ALWAYS_PLACEHOLDERS: MailPlaceholder[] = [
     label: 'Personal login link',
     description:
       'Persönlicher Login-Link (PURL): meldet die Empfängerin direkt an. Begrenzte Verwendungen, läuft ab, widerrufbar. In E-Mails als Link verwenden.',
-    example: 'https://example.com/l/ABCDE-FGHJK',
+    example: 'https://example.com/code/ABCDE-FGHJK',
   },
   {
     key: 'purlCode',

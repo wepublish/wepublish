@@ -25,6 +25,7 @@ const SAMPLE_RECIPIENT = {
   pendingEmail: 'new.jane@example.com',
   pendingEmailAt: new Date('2026-06-01T12:00:00.000Z'),
   pendingEmailTokenHash: null,
+  pendingEmailSessionId: null,
   name: 'Doe',
   firstName: 'Jane',
   flair: 'Vorstandsmitglied',

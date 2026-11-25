@@ -8,6 +8,10 @@ import {
   DragonflyConnection,
   DragonflyHealth,
 } from '@wepublish/dragonfly/api';
+import {
+  ALLOWS_RESTRICTED_SESSION_METADATA_KEY,
+  PUBLIC_METADATA_KEY,
+} from '@wepublish/authentication/api';
 import { NamespacedCache, NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { PaymentMethodChangeService } from '@wepublish/membership/api';
 import { PrismaService } from '@wepublish/nest-modules';
@@ -107,6 +111,52 @@ describe('AppModule', () => {
       .map(wrapper => wrapper.name);
 
     expect(offenders).toEqual([]);
+  });
+
+  // A restricted session (a login code that confirmed no address yet) is
+  // refused everywhere except on public handlers and on these. Adding a
+  // handler here hands it to whoever holds a letter: do it on purpose.
+  it('lets a restricted session use only the handlers of the account setup', () => {
+    const scanner = new MetadataScanner();
+    const handlers = [...(module?.get(ModulesContainer).values() ?? [])]
+      .flatMap(nestModule => [
+        ...nestModule.providers.values(),
+        ...nestModule.controllers.values(),
+      ])
+      .filter(wrapper => wrapper.metatype?.prototype)
+      .flatMap(wrapper => {
+        const prototype = wrapper.metatype!.prototype as Record<string, object>;
+
+        return scanner
+          .getAllMethodNames(prototype)
+          .filter(name =>
+            Reflect.getMetadata(
+              ALLOWS_RESTRICTED_SESSION_METADATA_KEY,
+              prototype[name]
+            )
+          )
+          .map(name => ({
+            handler: `${wrapper.name}.${name}`,
+            public: !!(
+              Reflect.getMetadata(PUBLIC_METADATA_KEY, prototype[name]) ??
+              Reflect.getMetadata(PUBLIC_METADATA_KEY, wrapper.metatype!)
+            ),
+          }));
+      });
+
+    expect([...new Set(handlers.map(({ handler }) => handler))].sort()).toEqual(
+      [
+        'FeaturesResolver.features',
+        'ImpersonationResolver.currentSession',
+        'ProfileResolver.me',
+        'ProfileResolver.requestEmailChange',
+        'ProfileResolver.requestEmailVerification',
+        'SessionResolver.sessionInfo',
+      ]
+    );
+    // A public handler is open to a restricted session anyway; a marker on it
+    // would only suggest the guard looks at it.
+    expect(handlers.filter(handler => handler.public)).toEqual([]);
   });
 
   it('schedules the nightly periodic job', () => {

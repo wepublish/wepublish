@@ -3,6 +3,7 @@ import { BadRequestException } from '@nestjs/common';
 import { PrismaClient, SessionOrigin } from '@prisma/client';
 import {
   AuthenticationService,
+  isSessionRestricted,
   SessionCacheInvalidator,
 } from '@wepublish/authentication/api';
 import { ChallengeService } from '@wepublish/challenge/api';
@@ -25,6 +26,27 @@ const activeUser = (overrides: Record<string, unknown> = {}) => ({
   emailVerifiedAt: null,
   ...overrides,
 });
+
+// What the authentication service answers for a reader without a placeholder
+// address: only how the session logged in and what it confirmed count.
+const sessionRestriction = vi.fn(
+  async ({
+    origin,
+    emailConfirmedAt,
+  }: {
+    origin: SessionOrigin;
+    emailConfirmedAt: Date | null;
+  }) => ({
+    placeholderEmail: false,
+    roles: [],
+    restricted: isSessionRestricted({
+      origin,
+      placeholderEmail: false,
+      readerOnly: true,
+      emailConfirmedAt,
+    }),
+  })
+);
 
 const codeRecord = (user: ReturnType<typeof activeUser>) => ({
   id: 'code-1',
@@ -53,7 +75,7 @@ describe('SessionService.createSessionWithLoginCode', () => {
     limiter.clear!.mockResolvedValue(undefined);
     loginCodes.consume!.mockResolvedValue(undefined);
     loginCodes.isEnabled!.mockResolvedValue(true);
-    authentication.isPlaceholderEmail!.mockResolvedValue(false);
+    authentication.sessionRestriction!.mockImplementation(sessionRestriction);
 
     service = new SessionService(
       {} as never,
@@ -280,7 +302,7 @@ describe('SessionService for accounts connected to the We.Publish login', () => 
       {} as never,
       {} as never,
       {
-        isPlaceholderEmail: vi.fn().mockResolvedValue(false),
+        sessionRestriction,
       } as never,
       {} as never,
       {} as never,
@@ -389,7 +411,7 @@ describe('SessionService impersonation', () => {
       {} as never,
       {} as never,
       {
-        isPlaceholderEmail: vi.fn().mockResolvedValue(false),
+        sessionRestriction,
       } as never,
       {} as never,
       {} as never,
@@ -422,6 +444,23 @@ describe('SessionService impersonation', () => {
       origin: SessionOrigin.password,
       restricted: false,
     });
+  });
+
+  // The account's address may have been confirmed long ago, by its owner; the
+  // person holding the code now has confirmed nothing.
+  it('starts every login-code session restricted, whatever the account confirmed before', async () => {
+    const session = await service.createUserSession(
+      { ...target, emailVerifiedAt: new Date() } as never,
+      { origin: SessionOrigin.purl }
+    );
+
+    expect(sessionRestriction).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        origin: SessionOrigin.purl,
+        emailConfirmedAt: null,
+      })
+    );
+    expect(session.restricted).toBe(true);
   });
 
   it('redeems an impersonation grant once for a session of an hour, without TOTP', async () => {

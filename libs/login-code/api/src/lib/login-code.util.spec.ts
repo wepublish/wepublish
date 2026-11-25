@@ -52,10 +52,10 @@ describe('login-code util', () => {
 
   it('builds the personal url without a double slash', () => {
     expect(buildPurl('https://example.com/', 'ABCDEFGHJK')).toBe(
-      'https://example.com/l/ABCDE-FGHJK'
+      'https://example.com/code/ABCDE-FGHJK'
     );
     expect(buildPurl('https://example.com', 'ABCDEFGHJK')).toBe(
-      'https://example.com/l/ABCDE-FGHJK'
+      'https://example.com/code/ABCDE-FGHJK'
     );
   });
 });

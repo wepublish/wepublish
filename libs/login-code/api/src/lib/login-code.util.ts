@@ -45,4 +45,4 @@ export const hashLoginCode = (canonical: string, key: Buffer): string =>
   createHmac('sha256', key).update(canonical).digest('hex');
 
 export const buildPurl = (websiteURL: string, canonical: string): string =>
-  `${websiteURL.replace(/\/$/, '')}/l/${formatLoginCode(canonical)}`;
+  `${websiteURL.replace(/\/$/, '')}/code/${formatLoginCode(canonical)}`;

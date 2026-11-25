@@ -29,3 +29,17 @@ export const useAccountSetupPending = (): boolean => {
 
   return hasUser && loginCodeEnabled && !!sessionData?.sessionInfo.restricted;
 };
+
+/**
+ * Whether the session may only finish setting up the account: the API refuses
+ * it everything else that needs a login. Undefined until that is known.
+ */
+export const useSessionRestricted = (): boolean | undefined => {
+  const { hasUser } = useUser();
+  const { data } = useQuery(SessionInfoDocument, {
+    skip: !hasUser,
+    fetchPolicy: 'cache-first',
+  });
+
+  return hasUser ? data?.sessionInfo.restricted : false;
+};

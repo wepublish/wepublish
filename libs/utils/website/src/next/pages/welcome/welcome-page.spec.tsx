@@ -25,6 +25,7 @@ const me = mockOperation(MeDocument, {
 
 let query: Record<string, string> = {};
 let router: TestRouter;
+let setToken: ReturnType<typeof renderWithProviders>['setToken'];
 
 const session = (
   placeholderEmail: boolean,
@@ -70,7 +71,7 @@ const renderWelcome = async (
 ) => {
   const page = <WelcomePage />;
 
-  ({ router } = renderWithProviders(
+  ({ router, setToken } = renderWithProviders(
     refreshUser ?
       <SessionTokenContext.Provider
         value={[user, true, async () => undefined, refreshUser]}
@@ -204,6 +205,35 @@ describe('WelcomePage', () => {
       });
 
       expect(resend.hasAttribute('disabled')).toBe(true);
+    });
+
+    // The confirmation frees only the session that opens the link itself. In
+    // any other browser it ends this one, which then has nothing to wait for.
+    it('stops waiting when the address was confirmed in another browser', async () => {
+      await sendTo([
+        emailChange({ data: { requestEmailChange: true } }),
+        {
+          request: { query: SessionInfoDocument },
+          delay: 0,
+          result: { errors: [new GraphQLError('Forbidden resource')] },
+        },
+      ]);
+
+      await act(async () => {
+        window.dispatchEvent(new Event('focus'));
+      });
+      await act(() => actWait());
+      await act(() => actWait());
+
+      expect(screen.getByText(de.welcome.sessionEnded)).toBeTruthy();
+      expect(screen.queryByText(de.welcome.emailSentTitle)).toBeNull();
+      // Still signed in as far as the browser knows: the page sits behind the
+      // login guard, which would take the explanation away with the session.
+      expect(setToken).not.toHaveBeenCalled();
+
+      await click(de.user.emailConfirmedLogin);
+
+      expect(setToken).toHaveBeenCalledWith(null);
     });
 
     it('explains the wait in words instead of the API message', async () => {

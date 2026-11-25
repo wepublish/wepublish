@@ -16,7 +16,7 @@ import {
   RequestFingerprint,
   AuthSession,
   requireSessionUser,
-  userSessionOf,
+  fullUserSessionOf,
 } from '@wepublish/authentication/api';
 
 @Resolver(() => PollVote)
@@ -63,7 +63,7 @@ export class PollVoteResolver {
     return this.pollService.voteOnPoll(
       answerId,
       fingerprint,
-      userSessionOf(session)?.user.id
+      fullUserSessionOf(session)?.user.id
     );
   }
 }
