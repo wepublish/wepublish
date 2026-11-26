@@ -1,3 +1,4 @@
+import type { TFunction } from 'i18next';
 import { PrintIssueRunMode, PrintIssueStatus } from '@wepublish/editor/api';
 import { enqueueSnackbar, humanizeError } from '@wepublish/ui/editor';
 
@@ -46,6 +47,19 @@ export const time = (iso: string) =>
 export const personName = (
   person?: { firstName?: string | null; name: string } | null
 ) => [person?.firstName, person?.name].filter(Boolean).join(' ');
+
+/** Who did it, with the API key that acted on that person's behalf, if one did. */
+export const actorName = (
+  t: TFunction,
+  person?: { firstName?: string | null; name: string } | null,
+  apiToken?: { name: string } | null
+) =>
+  [
+    personName(person),
+    apiToken && t('printIssues.viaApiKey', { key: apiToken.name }),
+  ]
+    .filter(Boolean)
+    .join(' · ');
 
 export type IssueNumber = { number: number; year: number };
 

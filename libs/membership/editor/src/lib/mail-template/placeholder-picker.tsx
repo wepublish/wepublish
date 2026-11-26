@@ -22,7 +22,15 @@ const PlaceholderFormats = styled.div`
   align-items: center;
   flex-wrap: wrap;
   flex-basis: 100%;
-  gap: ${({ theme }) => theme.spacing(0.75)};
+  /* The title sits close to its own chips: little space below it, the usual
+     space beside it when a chip fits on the same line. */
+  gap: ${({ theme }) => `${theme.spacing(0.25)} ${theme.spacing(0.75)}`};
+  /* A little air above each titled set, so it reads as a block of its own. */
+  margin-top: ${({ theme }) => theme.spacing(1)};
+
+  &:first-child {
+    margin-top: 0;
+  }
 `;
 
 interface PlaceholderPickerProps {
@@ -98,6 +106,38 @@ const describePlaceholder = (t: TFunction, placeholder: MailPlaceholder) =>
     jwt: '{{jwt}}',
   });
 
+/**
+ * A group's title with what there is to know about it in a tooltip beside it,
+ * not inside: the heading keeps its own name.
+ */
+function GroupHeading({ title, hint }: { title: string; hint?: string }) {
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 0.5,
+        marginBottom: 1,
+        // A tinted bar, so the eye finds where one group ends and the next
+        // begins. A theme colour: it follows light and dark mode.
+        paddingBlock: 0.5,
+        paddingInline: 1,
+        borderRadius: 1,
+        bgcolor: 'action.hover',
+      }}
+    >
+      <Typography
+        variant="subtitle2"
+        component="h3"
+        sx={{ margin: 0 }}
+      >
+        {title}
+      </Typography>
+      {hint && <InfoTooltip text={hint} />}
+    </Box>
+  );
+}
+
 export function PlaceholderPicker({
   onInsert,
   context,
@@ -168,6 +208,10 @@ export function PlaceholderPicker({
           <Typography
             variant="caption"
             aria-hidden
+            // Level with the text inside the chips below, not with their
+            // outline, and on a line of its own even when a chip would fit
+            // beside it.
+            sx={{ paddingLeft: '8px', flexBasis: '100%' }}
           >
             {name}
           </Typography>
@@ -221,9 +265,68 @@ export function PlaceholderPicker({
     );
   };
 
+  /**
+   * The chips of a list, neighbours of the same set under a title of their
+   * own. Not for search results: there every hit stands for itself.
+   */
+  const renderPlaceholders = (
+    placeholders: MailPlaceholder[],
+    /** The set the untitled chips at the start of the list are shown as. */
+    leadingSet: string
+  ) => {
+    const runs: { set?: string; items: MailPlaceholder[] }[] = [];
+    let leading = true;
+
+    for (const placeholder of placeholders) {
+      // A placeholder with formats brings a title of its own.
+      leading &&= !placeholder.set && !placeholder.kind;
+
+      const set = leading ? leadingSet : placeholder.set;
+      const last = runs.at(-1);
+
+      if (last && set && last.set === set) {
+        last.items.push(placeholder);
+      } else {
+        runs.push({ set, items: [placeholder] });
+      }
+    }
+
+    return runs.flatMap(({ set, items }) => {
+      if (!set) {
+        return items.map(renderPlaceholder);
+      }
+
+      const title = t(`mailTemplates.placeholderGroups.${set}`, set);
+
+      return (
+        <PlaceholderFormats
+          key={`set-${set}-${items[0].key}`}
+          role="group"
+          aria-label={title}
+        >
+          <Typography
+            variant="caption"
+            aria-hidden
+            sx={{ paddingLeft: '8px', flexBasis: '100%' }}
+          >
+            {title}
+          </Typography>
+          <PlaceholderGroup>{items.map(renderPlaceholder)}</PlaceholderGroup>
+        </PlaceholderFormats>
+      );
+    });
+  };
+
   return (
     <div style={{ paddingRight: 4 }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 0.5,
+          marginBottom: 1.5,
+        }}
+      >
         <Typography
           component="h2"
           variant="body1"
@@ -231,20 +334,18 @@ export function PlaceholderPicker({
         >
           {t('mailTemplates.placeholders')}
         </Typography>
-        <InfoTooltip text={t('mailTemplates.placeholdersInfo')} />
+        {/* How to use them first, what they are below, as two bullets: the
+            tooltip keeps line breaks. */}
+        <InfoTooltip
+          text={`• ${t('mailTemplates.placeholdersHint')}\n• ${t('mailTemplates.placeholdersInfo')}`}
+        />
       </Box>
-      <Typography
-        variant="caption"
-        style={{ marginBottom: 8 }}
-        sx={{
-          display: 'block',
-        }}
-      >
-        {t('mailTemplates.placeholdersHint')}
-      </Typography>
       <TextField
         fullWidth
-        placeholder={t('mailTemplates.searchPlaceholders', 'Search…')}
+        placeholder={t(
+          'mailTemplates.searchPlaceholders',
+          'Filter placeholders…'
+        )}
         slotProps={{
           htmlInput: {
             'aria-label': t('mailTemplates.searchPlaceholdersLabel'),
@@ -267,41 +368,18 @@ export function PlaceholderPicker({
           </Typography>
 
       : <>
-          <Typography
-            variant="subtitle2"
-            component="h3"
-            style={{ marginBottom: 2 }}
-          >
-            {t(
-              'mailTemplates.placeholderAlways',
-              'Always available — every mail'
-            )}
-          </Typography>
-          <Typography
-            variant="caption"
-            color="text.secondary"
-            style={{ marginBottom: 8 }}
-            sx={{
-              display: 'block',
-            }}
-          >
-            {t(
+          <GroupHeading
+            title={t('mailTemplates.placeholderAlways', 'Always available')}
+            hint={t(
               'mailTemplates.placeholderAlwaysHint',
               'These recipient fields work in every template, no matter which purpose is selected.'
             )}
-          </Typography>
+          />
           <PlaceholderGroup>
-            {ALWAYS_PLACEHOLDERS.map(renderPlaceholder)}
+            {renderPlaceholders(ALWAYS_PLACEHOLDERS, 'person')}
           </PlaceholderGroup>
 
-          <Box
-            sx={{
-              marginTop: 2.5,
-              paddingTop: 1.5,
-              borderTop: '1px solid',
-              borderTopColor: 'divider',
-            }}
-          >
+          <Box sx={{ marginTop: 2.5 }}>
             {!selectedContext ?
               <Typography
                 variant="caption"
@@ -316,31 +394,23 @@ export function PlaceholderPicker({
                 )}
               </Typography>
             : <>
-                <Typography
-                  variant="subtitle2"
-                  component="h3"
-                  style={{ marginBottom: 2 }}
-                >
-                  {t(selectedContext.titleKey, selectedContext.title)}
-                </Typography>
-                {selectedContext.note && (
-                  <Typography
-                    variant="caption"
-                    color="text.secondary"
-                    style={{ marginBottom: 8 }}
-                    sx={{
-                      display: 'block',
-                    }}
-                  >
-                    {t(
-                      `mailTemplates.placeholderContextNotes.${selectedContext.id}`,
-                      selectedContext.note
-                    )}
-                  </Typography>
-                )}
+                <GroupHeading
+                  title={t(selectedContext.titleKey, selectedContext.title)}
+                  hint={
+                    selectedContext.note ?
+                      t(
+                        `mailTemplates.placeholderContextNotes.${selectedContext.id}`,
+                        selectedContext.note
+                      )
+                    : undefined
+                  }
+                />
                 {selectedContext.placeholders.length > 0 ?
                   <PlaceholderGroup>
-                    {selectedContext.placeholders.map(renderPlaceholder)}
+                    {renderPlaceholders(
+                      selectedContext.placeholders,
+                      'general'
+                    )}
                   </PlaceholderGroup>
                 : <Typography
                     variant="caption"

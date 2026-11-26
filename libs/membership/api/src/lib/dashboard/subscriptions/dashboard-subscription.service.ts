@@ -6,6 +6,7 @@ import {
 } from '@prisma/client';
 import { ok } from 'assert';
 import {
+  AnonymousSubscriber,
   DailySubscriptionStats,
   DashboardSubscription,
 } from './dashboard-subscription.model';
@@ -117,25 +118,51 @@ export class DashboardSubscriptionService {
     );
   }
 
-  async activeSubscribers(): Promise<DashboardSubscription[]> {
-    const data = await this.prisma.subscription.findMany({
-      where: {
-        OR: [
-          {
-            deactivation: null,
-            paidUntil: {
+  private activeSubscriptionsWhere(): Prisma.SubscriptionWhereInput {
+    return {
+      OR: [
+        {
+          deactivation: null,
+          paidUntil: {
+            gte: new Date(),
+          },
+        },
+        {
+          deactivation: {
+            date: {
               gte: new Date(),
             },
           },
-          {
-            deactivation: {
-              date: {
-                gte: new Date(),
-              },
-            },
-          },
-        ],
+        },
+      ],
+    };
+  }
+
+  async activeSubscriberFirstNames(): Promise<AnonymousSubscriber[]> {
+    const data = await this.prisma.subscription.findMany({
+      where: this.activeSubscriptionsWhere(),
+      orderBy: {
+        createdAt: 'desc',
       },
+      select: {
+        createdAt: true,
+        user: {
+          select: {
+            firstName: true,
+          },
+        },
+      },
+    });
+
+    return data.map(({ createdAt, user: { firstName } }) => ({
+      firstName,
+      createdAt,
+    }));
+  }
+
+  async activeSubscribers(): Promise<DashboardSubscription[]> {
+    const data = await this.prisma.subscription.findMany({
+      where: this.activeSubscriptionsWhere(),
       orderBy: {
         startsAt: 'desc',
       },

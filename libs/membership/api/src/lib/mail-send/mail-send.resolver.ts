@@ -9,7 +9,11 @@ import {
   formatAddressLines,
   LetterAddress,
 } from '@wepublish/letter/api';
-import { CurrentUser, UserSession } from '@wepublish/authentication/api';
+import {
+  actorOf,
+  AuthSession,
+  CurrentUser,
+} from '@wepublish/authentication/api';
 import { Permissions } from '@wepublish/permissions/api';
 import { CanGetMailLogs, CanSendMailTemplates } from '@wepublish/permissions';
 import {
@@ -138,11 +142,18 @@ export class MailSendResolver {
   async mailTemplateMissingPlaceholders(
     @Args('templateId') templateId: string,
     @Args('withSubscriptionData', { type: () => Boolean })
-    withSubscriptionData: boolean
+    withSubscriptionData: boolean,
+    @Args('channel', {
+      type: () => MailChannel,
+      nullable: true,
+      description: 'The version to check; the email when left out.',
+    })
+    channel?: MailChannel | null
   ): Promise<string[]> {
     return this.mailSendJobService.missingPlaceholders(
       templateId,
-      withSubscriptionData
+      withSubscriptionData,
+      channel ?? MailChannel.mail
     );
   }
 
@@ -163,6 +174,7 @@ export class MailSendResolver {
       html: result.html,
       text: result.text,
       pdf: result.pdf,
+      attachments: result.attachments,
       recipient:
         result.recipient ?
           {
@@ -191,12 +203,16 @@ export class MailSendResolver {
     description: `Manually send a mail template to a single user`,
   })
   async sendMailTemplateToUser(
-    @CurrentUser() user: UserSession,
+    @CurrentUser() session: AuthSession,
     @Args('templateId') templateId: string,
     @Args('userId') userId: string
   ): Promise<MailSendJobModel> {
     return this.withTemplate(
-      this.mailSendJobService.sendToUser(templateId, userId, user.user.id)
+      this.mailSendJobService.sendToUser(
+        templateId,
+        userId,
+        actorOf(session).userId
+      )
     );
   }
 
@@ -205,11 +221,11 @@ export class MailSendResolver {
     description: `Start a background job sending a template to a filtered audience`,
   })
   async createMailSendJob(
-    @CurrentUser() user: UserSession,
+    @CurrentUser() session: AuthSession,
     @Args('input') input: MailSendJobInput
   ): Promise<MailSendJobModel> {
     return this.withTemplate(
-      this.mailSendJobService.createJob(input, user.user.id)
+      this.mailSendJobService.createJob(input, actorOf(session).userId)
     );
   }
 
@@ -347,7 +363,7 @@ export class MailSendResolver {
         },
         skip,
         take: boundedTake + 1,
-        orderBy: { sentDate: 'desc' },
+        orderBy: [{ sentDate: 'desc' }, { id: 'desc' }],
       }),
     ]);
 

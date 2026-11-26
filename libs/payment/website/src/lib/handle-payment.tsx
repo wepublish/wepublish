@@ -5,6 +5,9 @@ import {
   PayInvoiceDocument,
   PayInvoiceMutation,
   PayInvoiceMutationVariables,
+  PurchaseGiftCodeDocument,
+  PurchaseGiftCodeMutation,
+  PurchaseGiftCodeMutationVariables,
   SubscribeDocument,
   SubscribeMutation,
   SubscribeMutationVariables,
@@ -197,6 +200,61 @@ export const usePayInvoice = (
           callbackParams[0]?.onCompleted?.(data);
           handlePayment({
             intent: data.createPaymentFromInvoice ?? undefined,
+            successUrl,
+            failUrl,
+            setStripeClientSecret,
+          });
+        },
+        onError: error =>
+          (window.location.href = `${failUrl}?error=${encodeURIComponent(error.message)}`),
+      });
+    },
+    [result]
+  );
+
+  return [callback, redirectPages, stripeClientSecret] as const;
+};
+
+export const usePurchaseGiftCode = (
+  ...params: [
+    options?: useMutation.Options<
+      PurchaseGiftCodeMutation,
+      PurchaseGiftCodeMutationVariables
+    >,
+  ]
+) => {
+  const [stripeClientSecret, setStripeClientSecret] = useState<string>();
+  const [redirectPages, setRedirectPages] = useState<RedirectPages>();
+
+  const [result] = useMutation(PurchaseGiftCodeDocument, {
+    ...params[0],
+  });
+
+  const callback = useCallback(
+    async (...callbackParams: Parameters<typeof result>) => {
+      const successUrl = relativeToAbsolute('/profile');
+      const failUrl = relativeToAbsolute('/profile');
+
+      setRedirectPages({
+        successUrl,
+        failUrl,
+      });
+
+      return result({
+        ...callbackParams[0],
+        ...(callbackParams[0]?.variables ?
+          {
+            variables: {
+              ...callbackParams[0].variables,
+              successURL: successUrl,
+              failureURL: failUrl,
+            },
+          }
+        : {}),
+        onCompleted: data => {
+          callbackParams[0]?.onCompleted?.(data);
+          handlePayment({
+            intent: data.purchaseGiftCode ?? undefined,
             successUrl,
             failUrl,
             setStripeClientSecret,

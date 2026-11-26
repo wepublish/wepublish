@@ -318,6 +318,15 @@ export class MailchimpMailProvider extends BaseMailProvider {
         // Carried back by the webhook, which maps the delivery events of this
         // message onto its mail log entry.
         metadata: mailLogMetadata(props.mailLogID),
+        ...(props.attachments?.length ?
+          {
+            attachments: props.attachments.map(attachment => ({
+              type: attachment.contentType,
+              name: attachment.filename,
+              content: attachment.content.toString('base64'),
+            })),
+          }
+        : {}),
       },
     });
 

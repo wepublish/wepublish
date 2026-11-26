@@ -1,17 +1,25 @@
 import { screen } from '@testing-library/react';
 import {
+  mockArticleTeaser,
   mockBreakBlock,
   mockCustomTeaser,
+  mockIFrameBlock,
   mockTeaserGridBlock,
+  mockTeaserListBlock,
   renderWithProviders,
 } from '@wepublish/mocks/website';
 import { FullBlockFragment } from '@wepublish/website/api';
-import { useWebsiteBuilder } from '@wepublish/website/builder';
+import {
+  BuilderTeaserProps,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { createContext, useContext } from 'react';
 
 import { staticImageSrc } from './assets/static-image';
 import { bajourTenant } from './bajour-tenant';
 import BaselBg from './components/briefing/basel.jpg';
 import { BriefingType } from './components/briefing/is-briefing';
+import { BajourTeaser } from './components/website-builder-overwrites/blocks/teaser';
 
 const TenantPage = ({ blocks }: { blocks: FullBlockFragment[] }) => {
   const {
@@ -139,5 +147,82 @@ describe('bajour tenant', () => {
     expect(backgroundsOf(screen.getByText('Werde Member'))).toContain(
       theme.palette.accent.main
     );
+  });
+
+  it('widens embeds with the "Breit" block style to the image column on desktop', () => {
+    const ArticlePage = ({ blocks }: { blocks: FullBlockFragment[] }) => {
+      const {
+        ContentWrapper,
+        blocks: { Blocks },
+      } = useWebsiteBuilder();
+
+      return (
+        <ContentWrapper>
+          <Blocks
+            blocks={blocks}
+            type="Article"
+          />
+        </ContentWrapper>
+      );
+    };
+
+    renderWithProviders(
+      <ArticlePage
+        blocks={[
+          mockIFrameBlock({ blockStyle: 'Breit', title: 'Breites Embed' }),
+          mockIFrameBlock({ title: 'Schmales Embed' }),
+        ]}
+      />,
+      { tenant: bajourTenant }
+    );
+
+    const gridColumnOf = (title: string) =>
+      getComputedStyle(
+        screen.getByTitle(title).closest('article > *') as HTMLElement
+      ).gridColumn;
+
+    expect(gridColumnOf('Breites Embed')).toBe('2/12');
+    expect(gridColumnOf('Schmales Embed')).toBe('4/10');
+  });
+
+  it('renders unstyled teaser lists without the teaser rendering itself', () => {
+    // Without the guard a regression loops forever (and hangs the runner)
+    // instead of failing.
+    const InsideBajourTeaser = createContext(false);
+    const GuardedBajourTeaser = (props: BuilderTeaserProps) => {
+      if (useContext(InsideBajourTeaser)) {
+        throw new Error('BajourTeaser rendered itself');
+      }
+
+      return (
+        <InsideBajourTeaser.Provider value={true}>
+          <BajourTeaser {...props} />
+        </InsideBajourTeaser.Provider>
+      );
+    };
+
+    renderWithProviders(
+      <TenantPage
+        blocks={[
+          mockTeaserListBlock({
+            teasers: [mockArticleTeaser({ title: 'Gemeindeportal' })],
+          }),
+        ]}
+      />,
+      {
+        tenant: {
+          ...bajourTenant,
+          builder: {
+            ...bajourTenant.builder,
+            blocks: {
+              ...bajourTenant.builder.blocks,
+              BaseTeaser: GuardedBajourTeaser,
+            },
+          },
+        },
+      }
+    );
+
+    expect(screen.getByText('Gemeindeportal')).toBeInTheDocument();
   });
 });

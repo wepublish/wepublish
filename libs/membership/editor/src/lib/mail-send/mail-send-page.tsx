@@ -49,11 +49,19 @@ import {
   Typography,
   useMediaQuery,
 } from '@mui/material';
-import { ReactElement, useEffect, useId, useRef, useState } from 'react';
+import {
+  ReactElement,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdEdit, MdSend } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import { useLetterChannel } from '../mail-template/use-letter-channel';
+import { sendChannelFor } from '../mail-template/template-versions';
 import { canGoToStep, StepNav, WizardStepper } from './step-nav';
 import { EmailEvidenceNotice } from './email-evidence-notice';
 import { mailErrorHelpKey } from './mail-log-common';
@@ -67,6 +75,7 @@ import {
 } from './mail-job-common';
 import { MailPreview } from '../mail-template/mail-preview';
 import { LetterPreview } from '../mail-template/letter-preview';
+import { TemplateAttachmentsNote } from './template-attachments-note';
 import { usePaperLetterFlow } from '../delivery-mode/use-paper-letter-flow';
 import { AudienceFilter } from './audience/audience-filter';
 import { useAudienceState } from './audience/audience-state';
@@ -199,7 +208,33 @@ function MailSendPage() {
     useQuery(MailTemplateDocument);
   // Without a letter integration every send is a mail, so there is no channel
   // to choose and nothing to say about it.
-  const { letterAvailable } = useLetterChannel();
+  const { letterAvailable, paperLetters } = useLetterChannel();
+  const sendableChannels = useMemo(
+    () =>
+      letterAvailable ?
+        [MailChannel.Mail, MailChannel.Letter]
+      : [MailChannel.Mail],
+    [letterAvailable]
+  );
+  // A template is written per channel, so one this medium has no channel for
+  // is not offered, and the send goes out on a channel the chosen one has.
+  const templates = (templateData?.mailTemplates ?? []).filter(
+    template =>
+      sendChannelFor(template.channels, channel, sendableChannels) !== null
+  );
+  const template = templates.find(({ id }) => id === templateId);
+
+  const pickTemplate = (id: string | null) => {
+    setTemplateId(id);
+
+    const picked = templates.find(candidate => candidate.id === id);
+    const next =
+      picked && sendChannelFor(picked.channels, channel, sendableChannels);
+
+    if (next && next !== channel) {
+      setChannel(next);
+    }
+  };
 
   const {
     data: previewData,
@@ -248,6 +283,7 @@ function MailSendPage() {
       variables: {
         templateId: templateId as string,
         withSubscriptionData: allowsSubscriptionTemplates,
+        channel,
       },
     }
   );
@@ -263,9 +299,7 @@ function MailSendPage() {
   // re-sending is a deliberate act (reload the page), never a double click.
   const canSend = !!templateId && count > 0 && !creating && !jobId;
 
-  const templateName = (templateData?.mailTemplates ?? []).find(
-    template => template.id === templateId
-  )?.name;
+  const templateName = template?.name;
 
   // What each step has to produce before the next one makes sense: a template
   // to send, then an audience with recipients.
@@ -372,7 +406,9 @@ function MailSendPage() {
                     <TextField
                       select
                       value={templateId ?? ''}
-                      onChange={event => setTemplateId(event.target.value)}
+                      onChange={event =>
+                        pickTemplate(event.target.value || null)
+                      }
                       fullWidth
                       slotProps={{
                         select: {
@@ -385,7 +421,7 @@ function MailSendPage() {
                         {t('mailSend.selectTemplate')}
                       </MenuItem>
 
-                      {(templateData?.mailTemplates ?? []).map(template => (
+                      {templates.map(template => (
                         <MenuItem
                           key={template.id}
                           value={template.id}
@@ -404,6 +440,17 @@ function MailSendPage() {
                       {t('mailSend.createTemplate')}
                     </Button>
                   </div>
+                  {/* Attachments ship with the letters; without them the
+                      api attaches nothing, whatever the template has. */}
+                  <TemplateAttachmentsNote
+                    attachmentIds={
+                      paperLetters ?
+                        ((templateData?.mailTemplates ?? []).find(
+                          template => template.id === templateId
+                        )?.attachmentIds ?? [])
+                      : []
+                    }
+                  />
                 </CardContent>
               </Card>
 
@@ -411,6 +458,7 @@ function MailSendPage() {
                 <ChannelPanel
                   channel={channel}
                   onChannelChange={setChannel}
+                  templateChannels={template?.channels}
                   print={print}
                   onPrintChange={setPrint}
                 />
@@ -619,16 +667,22 @@ function MailSendPage() {
 function ChannelPanel({
   channel,
   onChannelChange,
+  templateChannels,
   print,
   onPrintChange,
 }: {
   channel: MailChannel;
   onChannelChange: (channel: MailChannel) => void;
+  /** The channels the chosen template is written for; all before one is chosen. */
+  templateChannels?: readonly MailChannel[];
   print: PrintSettings;
   onPrintChange: (print: PrintSettings) => void;
 }) {
   const { t } = useTranslation();
   const isLetter = channel === MailChannel.Letter;
+  const missingVersions = [MailChannel.Mail, MailChannel.Letter].filter(
+    candidate => templateChannels && !templateChannels.includes(candidate)
+  );
 
   const option = <T extends string>(values: readonly T[], group: string) =>
     values.map(value => ({
@@ -652,14 +706,27 @@ function ChannelPanel({
           <FormControlLabel
             value={MailChannel.Mail}
             control={<Radio />}
+            disabled={missingVersions.includes(MailChannel.Mail)}
             label={t('mailSend.channel.mail')}
           />
           <FormControlLabel
             value={MailChannel.Letter}
             control={<Radio />}
+            disabled={missingVersions.includes(MailChannel.Letter)}
             label={t('mailSend.channel.letter')}
           />
         </RadioGroup>
+
+        {missingVersions.map(missing => (
+          <Typography
+            key={missing}
+            variant="caption"
+            color="text.secondary"
+            sx={{ display: 'block' }}
+          >
+            {t(`mailSend.channel.noVersion.${missing}`)}
+          </Typography>
+        ))}
 
         {isLetter && (
           <>
@@ -848,11 +915,12 @@ function TemplatePreview({
               <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
                 <FormLabel
                   id={recipientLabelId}
-                  style={{ margin: 0 }}
+                  style={{ margin: 0, flexShrink: 0 }}
                 >
                   {t('mailSend.preview.recipient')}
                 </FormLabel>
                 <Autocomplete
+                  style={{ flexGrow: 1, minWidth: 0 }}
                   options={options}
                   getOptionLabel={option => option.label}
                   isOptionEqualToValue={(option, selected) =>
@@ -908,6 +976,7 @@ function TemplatePreview({
               <MailPreview
                 html={preview.html}
                 subject={preview.subject}
+                attachments={preview.attachments}
                 height="max(420px, calc(100vh - 250px))"
               />
             : null}

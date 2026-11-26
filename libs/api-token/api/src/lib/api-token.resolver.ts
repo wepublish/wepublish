@@ -24,6 +24,7 @@ import { User, UserDataloaderService } from '@wepublish/user/api';
 
 import {
   ApiToken,
+  ApiTokenCreatorState,
   ApiTokenListArgs,
   CreateApiTokenArgs,
   CreatedApiToken,
@@ -48,6 +49,21 @@ export class ApiTokenResolver {
     }
 
     return this.userDataloader.load(apiToken.createdById);
+  }
+
+  @ResolveField(() => ApiTokenCreatorState, {
+    description: `Whether the user who created this key still allows it to work, checked the way a call with the key is. A key list asks this once per row.`,
+  })
+  public async creatorState(
+    @Parent() apiToken: ApiToken
+  ): Promise<ApiTokenCreatorState> {
+    const { state, blockedReason, missingScopes } =
+      await this.service.creatorCheck({
+        createdById: apiToken.createdById ?? null,
+        scopes: apiToken.scopes,
+      });
+
+    return { state, blockedReason, missingScopes };
   }
 
   @Permissions(CanGetApiTokens)

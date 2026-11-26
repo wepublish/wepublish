@@ -79,16 +79,16 @@ export class LetterLayoutService {
   async delete(id: string) {
     const layout = await this.prisma.letterLayout.findUnique({
       where: { id },
-      include: { _count: { select: { mailTemplates: true } } },
+      include: { _count: { select: { mailTemplateVariants: true } } },
     });
 
     if (!layout) {
       throw new NotFoundException(`Letter layout <${id}> not found.`);
     }
 
-    if (layout._count.mailTemplates > 0) {
+    if (layout._count.mailTemplateVariants > 0) {
       throw new BadRequestException(
-        `Letter layout is still used by ${layout._count.mailTemplates} mail template(s). Unassign it first.`
+        `Letter layout is still used by ${layout._count.mailTemplateVariants} mail template(s). Unassign it first.`
       );
     }
 

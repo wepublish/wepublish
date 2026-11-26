@@ -18,7 +18,9 @@ import {
   Authenticated,
   CurrentUser,
   Public,
-  UserSession,
+  AuthSession,
+  requireSessionUser,
+  requireUserSession,
 } from '@wepublish/authentication/api';
 import { User, UserDataloaderService } from '@wepublish/user/api';
 
@@ -60,14 +62,13 @@ export class UserConsentResolver {
     `,
   })
   createUserConsent(
-    @CurrentUser() user: UserSession,
+    @CurrentUser() session: AuthSession,
     @Args() userConsent: UserConsentInput
   ) {
+    const user = requireSessionUser(session);
+
     // only allow creating for admin or affected user
-    if (
-      !user.user.roleIDs.includes('admin') &&
-      user.user.id !== userConsent.userId
-    ) {
+    if (!user.roleIDs.includes('admin') && user.id !== userConsent.userId) {
       throw new ForbiddenException();
     }
 
@@ -83,11 +84,15 @@ export class UserConsentResolver {
     `,
   })
   updateUserConsent(
-    @CurrentUser() user: UserSession,
+    @CurrentUser() session: AuthSession,
     @Args('id') id: string,
     @Args('value', { type: () => Boolean }) value: boolean
   ) {
-    return this.userConsents.updateUserConsent(id, value, user);
+    return this.userConsents.updateUserConsent(
+      id,
+      value,
+      requireUserSession(session)
+    );
   }
 
   @Authenticated()
@@ -98,8 +103,11 @@ export class UserConsentResolver {
       Returns deleted userConsent.
     `,
   })
-  deleteUserConsent(@Args('id') id: string, @CurrentUser() user: UserSession) {
-    return this.userConsents.deleteUserConsent(id, user);
+  deleteUserConsent(
+    @Args('id') id: string,
+    @CurrentUser() session: AuthSession
+  ) {
+    return this.userConsents.deleteUserConsent(id, requireUserSession(session));
   }
 
   @ResolveField(returns => User)

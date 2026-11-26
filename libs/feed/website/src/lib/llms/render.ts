@@ -12,6 +12,7 @@ export type LlmsTxtSiteConfig = Pick<
   | 'description'
   | 'homepageSlug'
   | 'filterArticle'
+  | 'filterPage'
   | 'articleUrl'
   | 'pageUrl'
 > & {
@@ -160,6 +161,7 @@ export const renderLlmsTxt = async (
           heading: 'Pages',
           entries: (data?.pages.nodes ?? [])
             .filter(({ slug }) => slug !== homepageSlug)
+            .filter(page => config.filterPage?.(page) ?? true)
             .map(page => pageEntry(config, siteUrl, page))
             .filter(isEntry),
         },

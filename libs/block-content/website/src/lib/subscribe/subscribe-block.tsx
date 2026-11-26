@@ -34,6 +34,9 @@ export const SubscribeBlock = ({
   periodicityDisplay,
   hiddenAreas,
   onInvalid,
+  showGiftCodeRedemption,
+  giftCodeRedemptionPage,
+  giftCodeRedemptionLinkText,
 }: BuilderSubscribeBlockProps) => {
   const {
     register: [register],
@@ -136,6 +139,10 @@ export const SubscribeBlock = ({
           periodicityDisplay={periodicityDisplay}
           hiddenAreas={hiddenAreas}
           onInvalid={onInvalid}
+          giftCodeRedemptionUrl={
+            showGiftCodeRedemption ? giftCodeRedemptionPage?.url : null
+          }
+          giftCodeRedemptionText={giftCodeRedemptionLinkText}
           defaults={{
             email: mail as string | undefined,
             firstName: firstName as string | undefined,

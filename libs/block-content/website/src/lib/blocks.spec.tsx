@@ -7,12 +7,16 @@ import {
   mockEvent,
   mockEventBlock,
   mockFlexBlock,
+  mockGiftCodeOffer,
+  mockGiftCodeOffersBlock,
   mockImage,
   mockImageBlock,
   mockPoll,
   mockPollBlock,
   mockQuoteBlock,
+  mockRedeemGiftCodeBlock,
   mockRichTextBlock,
+  mockSensitiveDataUser,
   mockRichTextParagraph,
   mockSubscribeBlock,
   mockTitleBlock,
@@ -99,6 +103,28 @@ describe('Blocks', () => {
     expect(screen.getByText('Body text')).toBeInTheDocument();
     expect(screen.getByText('A quote')).toBeInTheDocument();
     expect(screen.getByText('Crowdfunding goal')).toBeInTheDocument();
+  });
+
+  it('renders the gift code blocks', () => {
+    renderWithProviders(
+      <Blocks
+        type="Page"
+        blocks={[
+          mockRedeemGiftCodeBlock(),
+          mockGiftCodeOffersBlock({
+            giftCodeOffers: [mockGiftCodeOffer({ name: 'Gift offer' })],
+          }),
+        ]}
+      />,
+      { user: mockSensitiveDataUser() }
+    );
+
+    expect(
+      screen.getByLabelText(t('giftCode.redeem.code'))
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Gift offer', { exact: false })
+    ).toBeInTheDocument();
   });
 
   it('loads the images of the first three blocks eagerly', () => {

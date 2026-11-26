@@ -1,6 +1,7 @@
 import {
   Field,
   GraphQLISODateTime,
+  InputType,
   Int,
   ObjectType,
   registerEnumType,
@@ -29,6 +30,18 @@ registerEnumType(DeliverySuggestionKind, {
   description: 'toLetter: move to printed letters. toMail: move back to mail.',
 });
 
+@ObjectType({
+  description:
+    'The API key that did something on behalf of the user named next to it.',
+})
+export class ActingApiToken {
+  @Field()
+  id!: string;
+
+  @Field()
+  name!: string;
+}
+
 @ObjectType()
 export class UserDeliveryPreferenceModel {
   @Field(() => MailChannel, {
@@ -47,6 +60,13 @@ export class UserDeliveryPreferenceModel {
 
   @Field(() => MailLogRecipient, { nullable: true })
   changedBy?: MailLogRecipient | null;
+
+  @Field(() => ActingApiToken, {
+    nullable: true,
+    description:
+      'Set when an API key made the change on behalf of `changedBy`.',
+  })
+  changedByApiToken?: ActingApiToken | null;
 
   @Field({
     description:
@@ -130,6 +150,51 @@ export class PaginatedDeliverySuggestions {
   totalCount!: number;
 }
 
+@InputType()
+export class DeliverySuggestionFilter {
+  @Field(() => [String], {
+    nullable: true,
+    description:
+      'Any of these reasons: placeholderEmail, the evidence type behind the email status (e.g. hardBounce, login), or none.',
+  })
+  reasons?: string[] | null;
+
+  @Field(() => GraphQLISODateTime, {
+    nullable: true,
+    description: 'Email status since, from.',
+  })
+  emailSinceFrom?: Date | null;
+
+  @Field(() => GraphQLISODateTime, {
+    nullable: true,
+    description: 'Email status since, to.',
+  })
+  emailSinceTo?: Date | null;
+
+  @Field(() => GraphQLISODateTime, {
+    nullable: true,
+    description: 'Suggested since, from.',
+  })
+  createdFrom?: Date | null;
+
+  @Field(() => GraphQLISODateTime, {
+    nullable: true,
+    description: 'Suggested since, to.',
+  })
+  createdTo?: Date | null;
+}
+
+@ObjectType()
+export class DeliverySuggestionReasonCount {
+  @Field({
+    description: 'A reason as DeliverySuggestionFilter.reasons takes it.',
+  })
+  reason!: string;
+
+  @Field(() => Int)
+  count!: number;
+}
+
 @ObjectType()
 export class DeliverySuggestionCounts {
   @Field(() => Int)
@@ -186,6 +251,13 @@ export class DeliveryModeBulkChangeModel {
 
   @Field(() => MailLogRecipient, { nullable: true })
   changedBy?: MailLogRecipient | null;
+
+  @Field(() => ActingApiToken, {
+    nullable: true,
+    description:
+      'Set when an API key made the change on behalf of `changedBy`.',
+  })
+  changedByApiToken?: ActingApiToken | null;
 }
 
 @ObjectType()

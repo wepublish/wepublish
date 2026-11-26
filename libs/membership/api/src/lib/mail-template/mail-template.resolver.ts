@@ -7,7 +7,12 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
-import { MailContext, MailTemplateStatus } from '@wepublish/mail/api';
+import {
+  attachmentIdsOf,
+  MAIL_TEMPLATE_ATTACHMENT_IDS,
+  MailContext,
+  MailTemplateStatus,
+} from '@wepublish/mail/api';
 import {
   CanCreateMailTemplates,
   CanDeleteMailTemplates,
@@ -17,21 +22,36 @@ import {
   CanUpdateMailTemplates,
 } from '@wepublish/permissions';
 import {
+  ATTACHMENT_IDS_DESCRIPTION,
   MailProviderModel,
   MailTemplateInput,
   MailTemplateLetterPreviewModel,
+  MailTemplateMemberPlanModel,
   MailTemplateModel,
   MailTemplatePreviewInput,
   MailTemplatePreviewModel,
   MailTemplateSubscriptionOption,
+  MailTemplateVariantModel,
   SendTestMailTemplateInput,
 } from './mail-template.model';
-import { PrismaClient } from '@prisma/client';
-import { CurrentUser, UserSession } from '@wepublish/authentication/api';
+import { MailChannel, MailTemplateVariant, PrismaClient } from '@prisma/client';
+import {
+  actorOf,
+  AuthSession,
+  CurrentUser,
+  requireSessionUser,
+} from '@wepublish/authentication/api';
 import { Feature } from '@wepublish/features/api';
 import { Permissions } from '@wepublish/permissions/api';
 import { MailTemplateService } from './mail-template.service';
 import { UsedMailTemplateDataloader } from './used-mail-template.dataloader';
+import {
+  MailTemplateLetterDetailDataloader,
+  MailTemplateVariantDataloader,
+  MailTemplateVariantSummaryDataloader,
+} from './mail-template-variant.dataloader';
+import { MailTemplateMemberPlanDataloader } from './mail-template-member-plan.dataloader';
+import { MailTemplateAttachmentNameDataloader } from './mail-template-attachment-name.dataloader';
 import { MailTemplateContextId } from './mail-template-data';
 
 @Resolver(() => MailTemplateModel)
@@ -40,7 +60,12 @@ export class MailTemplatesResolver {
     private prismaService: PrismaClient,
     private mailContext: MailContext,
     private mailTemplateService: MailTemplateService,
-    private usedMailTemplateDataloader: UsedMailTemplateDataloader
+    private usedMailTemplateDataloader: UsedMailTemplateDataloader,
+    private variantDataloader: MailTemplateVariantDataloader,
+    private variantSummaryDataloader: MailTemplateVariantSummaryDataloader,
+    private letterDetailDataloader: MailTemplateLetterDetailDataloader,
+    private memberPlanDataloader: MailTemplateMemberPlanDataloader,
+    private attachmentNameDataloader: MailTemplateAttachmentNameDataloader
   ) {}
 
   @Permissions(CanGetMailTemplates)
@@ -50,17 +75,19 @@ export class MailTemplatesResolver {
   async mailTemplates() {
     return this.prismaService.mailTemplate.findMany({
       orderBy: [{ name: 'asc' }],
+      include: MAIL_TEMPLATE_ATTACHMENT_IDS,
     });
   }
 
   @Permissions(CanGetMailTemplates)
   @Query(() => MailTemplateModel, {
     nullable: true,
-    description: `Return a single mail template, including its html and text body.`,
+    description: `Return a single mail template; its \`variants\` carry the html and text bodies.`,
   })
   async mailTemplate(@Args('id') id: string) {
     return this.prismaService.mailTemplate.findUnique({
       where: { id },
+      include: MAIL_TEMPLATE_ATTACHMENT_IDS,
     });
   }
 
@@ -109,13 +136,13 @@ export class MailTemplatesResolver {
     description: `Render a draft mail template with a mail type's sample data`,
   })
   async mailTemplatePreview(
-    @CurrentUser() user: UserSession,
+    @CurrentUser() session: AuthSession,
     @Args('input') input: MailTemplatePreviewInput
   ): Promise<MailTemplatePreviewModel> {
     const result = await this.mailTemplateService.preview({
       contextId: input.contextId as MailTemplateContextId,
       subscriptionId: input.subscriptionId,
-      currentUserId: user.user.id,
+      currentUserId: actorOf(session).userId,
       subject: input.subject,
       html: input.htmlContent,
       text: input.textContent,
@@ -141,16 +168,17 @@ export class MailTemplatesResolver {
     description: `Render a draft mail template as the letter a send would print`,
   })
   async mailTemplateLetterPreview(
-    @CurrentUser() user: UserSession,
+    @CurrentUser() session: AuthSession,
     @Args('input') input: MailTemplatePreviewInput
   ): Promise<MailTemplateLetterPreviewModel> {
     return this.mailTemplateService.previewLetter({
       contextId: input.contextId as MailTemplateContextId,
       subscriptionId: input.subscriptionId,
-      currentUserId: user.user.id,
+      currentUserId: actorOf(session).userId,
       html: input.htmlContent,
       letterLayoutId: input.letterLayoutId,
       letterAppendixId: input.letterAppendixId,
+      attachmentIds: input.attachmentIds,
     });
   }
 
@@ -159,9 +187,7 @@ export class MailTemplatesResolver {
     description: `Create a new mail template`,
   })
   async createMailTemplate(@Args('input') input: MailTemplateInput) {
-    return this.prismaService.mailTemplate.create({
-      data: input,
-    });
+    return this.mailTemplateService.createMailTemplate(input);
   }
 
   @Permissions(CanUpdateMailTemplates)
@@ -172,10 +198,22 @@ export class MailTemplatesResolver {
     @Args('id') id: string,
     @Args('input') input: MailTemplateInput
   ) {
-    return this.prismaService.mailTemplate.update({
-      where: { id },
-      data: input,
-    });
+    return this.mailTemplateService.updateMailTemplate(id, input);
+  }
+
+  @Permissions(CanUpdateMailTemplates)
+  @Mutation(() => Boolean, {
+    nullable: true,
+    description: `Remove what a template says on one channel. Refused while something still sends the template on that channel, and for its last version.`,
+  })
+  async deleteMailTemplateVariant(
+    @Args('templateId') templateId: string,
+    @Args('channel', { type: () => MailChannel }) channel: MailChannel
+  ) {
+    await this.mailTemplateService.deleteMailTemplateVariant(
+      templateId,
+      channel
+    );
   }
 
   @Permissions(CanDeleteMailTemplates)
@@ -201,20 +239,54 @@ export class MailTemplatesResolver {
     description: `Send a test mail for a draft template`,
   })
   async sendTestMailTemplate(
-    @CurrentUser() user: UserSession,
+    @CurrentUser() session: AuthSession,
     @Args('input') input: SendTestMailTemplateInput
   ) {
+    const user = requireSessionUser(session);
+
     // Test mails always go to the current editor only — never an arbitrary
     // address — and carry that user's own login token.
     await this.mailTemplateService.sendTest({
       contextId: input.contextId as MailTemplateContextId,
       subscriptionId: input.subscriptionId,
-      currentUserId: user.user.id,
-      recipient: user.user.email,
+      currentUserId: user.id,
+      recipient: user.email,
       subject: input.subject,
       html: input.htmlContent,
       text: input.textContent,
+      attachmentIds: input.attachmentIds,
     });
+  }
+
+  @ResolveField('attachmentIds', () => [String], {
+    description: ATTACHMENT_IDS_DESCRIPTION,
+  })
+  async attachmentIds(
+    @Parent()
+    template: MailTemplateModel & { attachments?: { documentId: string }[] }
+  ): Promise<string[]> {
+    // Every query here loads them along; this only covers a template that
+    // reached the field some other way.
+    if (template.attachments) {
+      return attachmentIdsOf(template);
+    }
+
+    const loaded = await this.prismaService.mailTemplate.findUnique({
+      where: { id: template.id },
+      include: MAIL_TEMPLATE_ATTACHMENT_IDS,
+    });
+
+    return loaded ? attachmentIdsOf(loaded) : [];
+  }
+
+  @ResolveField('attachmentNames', () => [String], {
+    description:
+      'Title, or else the filename, of each attached document, in their order. For the template table.',
+  })
+  async attachmentNames(
+    @Parent() template: MailTemplateModel
+  ): Promise<string[]> {
+    return (await this.attachmentNameDataloader.load(template.id)) ?? [];
   }
 
   @ResolveField('status', () => MailTemplateStatus, {
@@ -229,5 +301,129 @@ export class MailTemplatesResolver {
     const isUsed = await this.usedMailTemplateDataloader.load(template.id);
 
     return isUsed ? MailTemplateStatus.Ok : MailTemplateStatus.Unused;
+  }
+
+  @ResolveField('channels', () => [MailChannel], {
+    description: 'The channels this template is written for, the email first.',
+  })
+  async channels(
+    @Parent() template: MailTemplateModel
+  ): Promise<MailChannel[]> {
+    const variants = await this.variantSummaryDataloader.load(template.id);
+
+    return (variants ?? []).map(({ channel }) => channel);
+  }
+
+  @ResolveField('subject', () => String, {
+    description:
+      'The subject of the email version; the title of the letter for a template written as a letter only.',
+  })
+  async subject(@Parent() template: MailTemplateModel): Promise<string> {
+    const variants = await this.variantSummaryDataloader.load(template.id);
+
+    return variants?.[0]?.subject ?? '';
+  }
+
+  @ResolveField('letterLayoutName', () => String, {
+    nullable: true,
+    description:
+      'Name of the stationery the letter version is set on. Null for the default stationery and for a template without a letter version.',
+  })
+  async letterLayoutName(
+    @Parent() template: MailTemplateModel
+  ): Promise<string | null> {
+    const letter = await this.letterDetailDataloader.load(template.id);
+
+    return letter?.letterLayout?.name ?? null;
+  }
+
+  @ResolveField('letterAppendixName', () => String, {
+    nullable: true,
+    description:
+      'Title, or else the filename, of the pdf printed after the letter pages. Null without one.',
+  })
+  async letterAppendixName(
+    @Parent() template: MailTemplateModel
+  ): Promise<string | null> {
+    const appendix = (await this.letterDetailDataloader.load(template.id))
+      ?.letterAppendix;
+
+    return appendix?.title || appendix?.filename || null;
+  }
+
+  @ResolveField('memberPlans', () => [MailTemplateMemberPlanModel], {
+    description:
+      'The member plans whose communication flow sends this template, by name. The default flow belongs to no plan and is not listed.',
+  })
+  async memberPlans(
+    @Parent() template: MailTemplateModel
+  ): Promise<MailTemplateMemberPlanModel[]> {
+    return (await this.memberPlanDataloader.load(template.id)) ?? [];
+  }
+
+  @ResolveField('variants', () => [MailTemplateVariantModel], {
+    description:
+      'What the template says on each channel, bodies included. Ask for it on a single template, not on a list.',
+  })
+  async variants(
+    @Parent() template: MailTemplateModel
+  ): Promise<MailTemplateVariant[]> {
+    return (await this.variantDataloader.load(template.id)) ?? [];
+  }
+
+  private async variantOf(
+    template: MailTemplateModel,
+    channel: MailChannel
+  ): Promise<MailTemplateVariant | undefined> {
+    return (await this.variants(template)).find(
+      variant => variant.channel === channel
+    );
+  }
+
+  @ResolveField('htmlContent', () => String, {
+    deprecationReason: 'Use `variants`: a template has a body per channel.',
+  })
+  async htmlContent(@Parent() template: MailTemplateModel): Promise<string> {
+    return (
+      (await this.variantOf(template, MailChannel.mail))?.htmlContent ?? ''
+    );
+  }
+
+  @ResolveField('textContent', () => String, {
+    nullable: true,
+    deprecationReason: 'Use `variants`: a template has a body per channel.',
+  })
+  async textContent(
+    @Parent() template: MailTemplateModel
+  ): Promise<string | null> {
+    return (
+      (await this.variantOf(template, MailChannel.mail))?.textContent ?? null
+    );
+  }
+
+  @ResolveField('letterLayoutId', () => String, {
+    nullable: true,
+    deprecationReason: 'Use the letter entry of `variants`.',
+  })
+  async letterLayoutId(
+    @Parent() template: MailTemplateModel
+  ): Promise<string | null> {
+    return (
+      (await this.variantOf(template, MailChannel.letter))?.letterLayoutId ??
+      null
+    );
+  }
+
+  @ResolveField('letterAppendixId', () => String, {
+    nullable: true,
+    deprecationReason: 'Use the letter entry of `variants`.',
+  })
+  async letterAppendixId(
+    @Parent() template: MailTemplateModel
+  ): Promise<string | null> {
+    return (
+      (await this.variantOf(template, MailChannel.letter))?.letterAppendixId ??
+      null
+    );
   }
 }

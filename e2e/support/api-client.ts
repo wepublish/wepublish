@@ -49,6 +49,11 @@ export class ApiClient {
     return body.data;
   }
 
+  /** A client sending the given bearer token, e.g. an API key. */
+  withToken(token: string) {
+    return new ApiClient(this.request, token);
+  }
+
   /** A client acting as the given account, e.g. a reader. */
   async as(email: string, password: string) {
     const session = await createSession(this, email, password);
