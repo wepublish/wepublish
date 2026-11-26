@@ -637,6 +637,31 @@ describe('SubscriptionFlowService', () => {
       ).toEqual({ active: true, default: false, NOT: { id: 'flow-default' } });
     });
 
+    // Prisma 7 drops an empty OR inside an AND/OR list, which would let such a
+    // flow take every subscription of its plan from the default flow.
+    it('lets a plan flow without an auto-renewal value take no subscription from the default flow', async () => {
+      prismaMock.subscriptionFlow.findMany!.mockResolvedValue([
+        flow({ autoRenewal: [] }),
+      ]);
+
+      await service.countSubscriptions(
+        flow({ id: 'flow-default', default: true, memberPlanId: null })
+      );
+
+      expect(where()).toContainEqual({
+        NOT: {
+          OR: [
+            {
+              memberPlanID: 'plan-1',
+              paymentMethodID: { in: ['payment-1'] },
+              paymentPeriodicity: { in: [PaymentPeriodicity.yearly] },
+              id: { in: [] },
+            },
+          ],
+        },
+      });
+    });
+
     it('leaves an ended subscription uncounted that an earlier-ending flow takes, though the default flow would still message it', async () => {
       // As on review02: the flow for all plans ends 5 days after the end,
       // the default flow 90. A subscription ended 44 days ago is the other
