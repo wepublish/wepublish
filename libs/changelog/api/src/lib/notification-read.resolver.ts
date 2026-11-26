@@ -2,7 +2,8 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import {
   Authenticated,
   CurrentUser,
-  UserSession,
+  requireSessionUser,
+  AuthSession,
 } from '@wepublish/authentication/api';
 import {
   NotificationRead,
@@ -20,8 +21,10 @@ export class NotificationReadResolver {
     description:
       "Returns the current user's read notifications. Requires authentication.",
   })
-  notificationReads(@CurrentUser() session: UserSession) {
-    return this.notificationReadService.getNotificationReads(session.user.id);
+  notificationReads(@CurrentUser() session: AuthSession) {
+    return this.notificationReadService.getNotificationReads(
+      requireSessionUser(session).id
+    );
   }
 
   @Authenticated()
@@ -34,10 +37,10 @@ export class NotificationReadResolver {
     @Args('source', { type: () => NotificationSource })
     source: NotificationSource,
     @Args('itemId') itemId: string,
-    @CurrentUser() session: UserSession
+    @CurrentUser() session: AuthSession
   ) {
     return this.notificationReadService.markNotificationRead(
-      session.user.id,
+      requireSessionUser(session).id,
       source,
       itemId
     );

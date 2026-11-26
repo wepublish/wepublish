@@ -11,6 +11,8 @@ import {
 } from '@wepublish/member-plan/api';
 import { forwardRef, Inject } from '@nestjs/common';
 import { ascend, sortWith } from 'ramda';
+import { FeaturesService } from '@wepublish/features/api';
+import { Page, PageDataloaderService } from '@wepublish/page/api';
 
 @Resolver(() => SubscribeBlock)
 export class SubscribeBlockResolver {
@@ -18,8 +20,31 @@ export class SubscribeBlockResolver {
     @Inject(forwardRef(() => MemberPlanDataloader))
     private memberPlanDataloader: MemberPlanDataloader,
     @Inject(forwardRef(() => MemberPlanService))
-    private memberPlanService: MemberPlanService
+    private memberPlanService: MemberPlanService,
+    private features: FeaturesService,
+    @Inject(forwardRef(() => PageDataloaderService))
+    private pageDataloader: PageDataloaderService
   ) {}
+
+  @ResolveField(() => Boolean)
+  async showGiftCodeRedemption(@Parent() parent: SubscribeBlock) {
+    return (
+      !!parent.showGiftCodeRedemption &&
+      (await this.features.isEnabled('gift-codes'))
+    );
+  }
+
+  @ResolveField(() => Page, { nullable: true })
+  async giftCodeRedemptionPage(@Parent() parent: SubscribeBlock) {
+    if (
+      !parent.giftCodeRedemptionPageId ||
+      !(await this.showGiftCodeRedemption(parent))
+    ) {
+      return null;
+    }
+
+    return this.pageDataloader.load(parent.giftCodeRedemptionPageId);
+  }
 
   @ResolveField(() => [MemberPlan])
   async memberPlans(@Parent() parent: SubscribeBlock) {

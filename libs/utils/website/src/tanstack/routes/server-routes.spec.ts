@@ -1,8 +1,11 @@
 // @vitest-environment node
-import { captureServerError } from '../sentry/instrumentation';
+import { captureException } from '@sentry/tanstackstart-react';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
 import { feedHandler, healthHandler } from './server-routes';
 
-vi.mock('../sentry/instrumentation', () => ({ captureServerError: vi.fn() }));
+vi.mock('@sentry/tanstackstart-react', () => ({ captureException: vi.fn() }));
 
 /**
  * Byte-for-byte the policy the Next feed endpoints served, kept here so the
@@ -54,10 +57,20 @@ describe('server routes', () => {
 
     expect(response.status).toBe(502);
     expect(response.headers.get('cache-control')).toBe('no-store');
-    expect(captureServerError).toHaveBeenCalledWith(error);
+    expect(captureException).toHaveBeenCalledWith(error);
   });
 
   it('never lets the probe endpoint be cached', () => {
     expect(healthHandler().headers.get('cache-control')).toBe('no-store');
+  });
+
+  it('is exported by the server barrel only, so a server-only import here cannot reach a client bundle', () => {
+    const exportsOf = (file: string) =>
+      readFileSync(join(__dirname, file), 'utf8');
+
+    expect(exportsOf('index.ts')).not.toMatch(/['/]server-routes'/);
+    expect(exportsOf('../../tanstack-server.ts')).toMatch(
+      /export \* from '\.\/tanstack\/routes\/server-routes';/
+    );
   });
 });

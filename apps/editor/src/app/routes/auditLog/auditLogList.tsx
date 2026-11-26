@@ -30,6 +30,7 @@ import {
   Pagination,
   TableWrapper,
   PageTitle,
+  useListViewState,
   useTableExportQuery,
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
@@ -41,7 +42,6 @@ const FilterBar = styled.div`
   flex-wrap: wrap;
   gap: 8px;
   align-items: center;
-  margin-top: 12px;
   width: 100%;
 `;
 
@@ -98,14 +98,40 @@ const actionColors: Record<
   [AuditLogAction.Other]: 'secondary',
 };
 
+/**
+ * Unlike the shared `countActiveFilters`, `success: false` ("failures only")
+ * is an active filter here, and the date range counts once.
+ */
+const countAuditLogFilters = (filter: AuditLogFilter) =>
+  Object.entries(filter).filter(
+    ([key, value]) =>
+      key !== 'to' &&
+      (key === 'from' ?
+        value || filter.to
+      : value !== undefined &&
+        value !== null &&
+        value !== '' &&
+        !(Array.isArray(value) && !value.length))
+  ).length;
+
 function AuditLogList() {
   const { t } = useTranslation();
 
-  const [filter, setFilter] = useState<AuditLogFilter>({});
-  const [search, setSearch] = useState('');
+  const { filter, setFilter, sortOrder, limit, setLimit } =
+    useListViewState<AuditLogFilter>('audit-log', {
+      defaultSortField: 'createdAt',
+      defaultLimit: 20,
+    });
+  const [search, setSearch] = useState(filter.search ?? '');
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(25);
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+
+  // The stored filter arrives after the first render (and on reset); the
+  // search box follows it, or the debounce below would wipe it again.
+  const [shownSearch, setShownSearch] = useState(filter.search);
+  if (filter.search !== shownSearch) {
+    setShownSearch(filter.search);
+    setSearch(filter.search ?? '');
+  }
 
   const { data, loading: isLoading } = useQuery(AuditLogListDocument, {
     variables: {
@@ -131,13 +157,17 @@ function AuditLogList() {
   );
 
   useEffect(() => {
+    if (search === (filter.search ?? '')) {
+      return;
+    }
+
     const timeout = setTimeout(() => {
       setFilter(current => ({ ...current, search: search || undefined }));
       setPage(1);
     }, 300);
 
     return () => clearTimeout(timeout);
-  }, [search]);
+  }, [search, filter.search, setFilter]);
 
   const totalPages = Math.ceil((data?.auditLogs?.totalCount ?? 0) / limit);
   if (totalPages > 0 && page > totalPages) {
@@ -149,11 +179,24 @@ function AuditLogList() {
     setPage(1);
   };
 
+  const resetFilters = () => {
+    setSearch('');
+    setFilter({});
+    setPage(1);
+  };
+
   const describeActor = (entry: FullAuditLogFragment) => {
     if (entry.actorType === AuditLogActorType.Token) {
-      return t('auditLogList.overview.tokenActor', {
-        name: entry.tokenName ?? t('auditLogList.overview.unknownActor'),
-      });
+      const name = entry.tokenName ?? t('auditLogList.overview.unknownActor');
+
+      // An API key acts on behalf of the person who created it; a peering
+      // token has nobody behind it.
+      return entry.userEmail ?
+          t('auditLogList.overview.tokenActorOnBehalf', {
+            name,
+            user: entry.userEmail,
+          })
+        : t('auditLogList.overview.tokenActor', { name });
     }
 
     const actor = entry.userEmail ?? t('auditLogList.overview.unknownActor');
@@ -191,115 +234,120 @@ function AuditLogList() {
             <InfoTooltip text={t('auditLogList.overview.titleInfo')} />
           </PageTitle>
         </ListViewHeader>
-
-        <FilterBar>
-          <SearchInput
-            value={search}
-            label={t('auditLogList.filter.searchPlaceholder')}
-            onChange={event => setSearch(event.target.value)}
-            slotProps={{
-              input: {
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <MdPersonSearch />
-                  </InputAdornment>
-                ),
-              },
-            }}
-          />
-
-          <ActionSelect
-            select
-            label={t('auditLogList.filter.action')}
-            value={filter.actions?.[0] ?? ''}
-            onChange={event => {
-              const value = event.target.value as AuditLogAction;
-              updateFilter({ actions: value ? [value] : undefined });
-            }}
-            slotProps={{
-              select: { displayEmpty: true },
-              inputLabel: { shrink: true },
-            }}
-          >
-            <MenuItem value="">{t('auditLogList.filter.anyAction')}</MenuItem>
-
-            {Object.values(AuditLogAction).map(action => (
-              <MenuItem
-                key={action}
-                value={action}
-              >
-                {t(`auditLogList.action.${action}`)}
-              </MenuItem>
-            ))}
-          </ActionSelect>
-
-          <TextField
-            value={filter.entity ?? ''}
-            label={t('auditLogList.filter.entity')}
-            onChange={event =>
-              updateFilter({ entity: event.target.value || undefined })
-            }
-            style={{ width: 160 }}
-          />
-
-          <TextField
-            value={filter.sessionId ?? ''}
-            label={t('auditLogList.filter.session')}
-            onChange={event =>
-              updateFilter({ sessionId: event.target.value || undefined })
-            }
-            style={{ width: 240 }}
-          />
-
-          <DateRangeFilter
-            label={t('auditLogList.filter.dateFrom')}
-            value={{
-              from: filter.from ? new Date(filter.from) : null,
-              to: filter.to ? new Date(filter.to) : null,
-            }}
-            onChange={({ from, to }) =>
-              updateFilter({
-                from: from?.toISOString(),
-                to: to?.toISOString(),
-              })
-            }
-          />
-
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={filter.success === false}
-                onChange={(_event, checked) =>
-                  updateFilter({ success: checked ? false : undefined })
-                }
-              />
-            }
-            label={t('auditLogList.filter.failuresOnly')}
-          />
-
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={Boolean(filter.impersonatedOnly)}
-                onChange={(_event, checked) =>
-                  updateFilter({ impersonatedOnly: checked || undefined })
-                }
-              />
-            }
-            label={
-              <>
-                {t('auditLogList.filter.impersonatedOnly')}{' '}
-                <InfoTooltip
-                  text={t('auditLogList.filter.impersonatedOnlyInfo')}
-                />
-              </>
-            }
-          />
-        </FilterBar>
       </ListViewContainer>
 
       <TableWrapper>
         <DataTable
+          filters={
+            <FilterBar>
+              <SearchInput
+                value={search}
+                label={t('auditLogList.filter.searchPlaceholder')}
+                onChange={event => setSearch(event.target.value)}
+                slotProps={{
+                  input: {
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <MdPersonSearch />
+                      </InputAdornment>
+                    ),
+                  },
+                }}
+              />
+
+              <ActionSelect
+                select
+                label={t('auditLogList.filter.action')}
+                value={filter.actions?.[0] ?? ''}
+                onChange={event => {
+                  const value = event.target.value as AuditLogAction;
+                  updateFilter({ actions: value ? [value] : undefined });
+                }}
+                slotProps={{
+                  select: { displayEmpty: true },
+                  inputLabel: { shrink: true },
+                }}
+              >
+                <MenuItem value="">
+                  {t('auditLogList.filter.anyAction')}
+                </MenuItem>
+
+                {Object.values(AuditLogAction).map(action => (
+                  <MenuItem
+                    key={action}
+                    value={action}
+                  >
+                    {t(`auditLogList.action.${action}`)}
+                  </MenuItem>
+                ))}
+              </ActionSelect>
+
+              <TextField
+                value={filter.entity ?? ''}
+                label={t('auditLogList.filter.entity')}
+                onChange={event =>
+                  updateFilter({ entity: event.target.value || undefined })
+                }
+                style={{ width: 160 }}
+              />
+
+              <TextField
+                value={filter.sessionId ?? ''}
+                label={t('auditLogList.filter.session')}
+                onChange={event =>
+                  updateFilter({ sessionId: event.target.value || undefined })
+                }
+                style={{ width: 240 }}
+              />
+
+              <DateRangeFilter
+                label={t('auditLogList.filter.dateFrom')}
+                value={{
+                  from: filter.from ? new Date(filter.from) : null,
+                  to: filter.to ? new Date(filter.to) : null,
+                }}
+                onChange={({ from, to }) =>
+                  updateFilter({
+                    from: from?.toISOString(),
+                    to: to?.toISOString(),
+                  })
+                }
+              />
+
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={filter.success === false}
+                    onChange={(_event, checked) =>
+                      updateFilter({ success: checked ? false : undefined })
+                    }
+                  />
+                }
+                label={t('auditLogList.filter.failuresOnly')}
+              />
+
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={Boolean(filter.impersonatedOnly)}
+                    onChange={(_event, checked) =>
+                      updateFilter({ impersonatedOnly: checked || undefined })
+                    }
+                  />
+                }
+                label={
+                  <>
+                    {t('auditLogList.filter.impersonatedOnly')}{' '}
+                    <InfoTooltip
+                      text={t('auditLogList.filter.impersonatedOnlyInfo')}
+                    />
+                  </>
+                }
+              />
+            </FilterBar>
+          }
+          filterCount={countAuditLogFilters(filter)}
+          onResetFilters={resetFilters}
           storageKey="audit-log"
           exportRows={exportAuditLogs}
           exportTotalCount={data?.auditLogs.totalCount ?? 0}
@@ -434,7 +482,10 @@ function AuditLogList() {
             page,
             limit,
             setPage,
-            setLimit,
+            setLimit: limit => {
+              setLimit(limit);
+              setPage(1);
+            },
           }}
           totalCount={data?.auditLogs.totalCount ?? 0}
         />

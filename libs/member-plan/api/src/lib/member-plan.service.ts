@@ -263,11 +263,24 @@ export class MemberPlanService {
   }
 
   async deleteMemberPlan(id: string) {
-    const memberPlan = await this.prisma.memberPlan.delete({
-      where: {
-        id,
-      },
-    });
+    const memberPlan = await this.prisma.memberPlan
+      .delete({
+        where: {
+          id,
+        },
+      })
+      .catch(error => {
+        if (
+          error instanceof Prisma.PrismaClientKnownRequestError &&
+          error.code === 'P2003'
+        ) {
+          throw new BadRequestException(
+            'This member plan is still used by subscriptions or gift codes and cannot be deleted.'
+          );
+        }
+
+        throw error;
+      });
     await this.forgetMemberPlans();
 
     return memberPlan;
@@ -402,6 +415,7 @@ function toPeriodicityPriceCreate({
   amountMin,
   amountTarget,
   amountMax,
+  printIssues,
 }: PeriodicityPriceInput): Prisma.MemberPlanPeriodicityPriceCreateManyMemberPlanInput {
   return {
     periodicity,
@@ -409,6 +423,7 @@ function toPeriodicityPriceCreate({
     amountMin: amountMin ?? null,
     amountTarget: amountTarget ?? null,
     amountMax: amountMax ?? null,
+    printIssues: printIssues ?? null,
   };
 }
 

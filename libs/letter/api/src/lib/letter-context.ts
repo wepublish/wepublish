@@ -14,9 +14,17 @@ import {
   LetterAddress,
   LetterState,
 } from './letter-provider/letter-provider.interface';
-import { LetterSender } from '@wepublish/mail/api';
+import {
+  type LetterAttachment,
+  type LetterRecipientOptions,
+  LetterSender,
+  loadAttachmentIds,
+  MailAttachmentRenderer,
+  requireTemplateVariant,
+} from '@wepublish/mail/api';
 import {
   canReceiveLetters,
+  PAYMENT_SLIP_COUNTRY,
   toLetterAddress,
   UserWithAddress,
 } from './letter-recipient';
@@ -35,13 +43,9 @@ export interface LetterContextProps {
   pdfRenderer: PdfRenderer;
   /** Where an uploaded document can be downloaded, for letter appendices. */
   documentUrl?: (documentId: string) => Promise<string>;
+  /** Renders the Word documents attached to a template. */
+  attachmentRenderer?: MailAttachmentRenderer;
 }
-
-/**
- * Pingen prints Swiss QR-bills on perforated paper but only posts letters
- * carrying one within Switzerland, so the appendix is left out elsewhere.
- */
-const APPENDIX_COUNTRY = 'CH';
 
 export type { LetterPrintSettings } from './letter-print-defaults';
 
@@ -54,6 +58,11 @@ export interface RenderLetterProps {
   layout?: LetterLayoutContent | null;
   /** Duplex printing needs the appendix to start on an odd page. */
   printMode?: LetterPrintMode;
+  /**
+   * A document printed after the letter, e.g. the payment provider's invoice
+   * with its payment slip. Takes the place of the template's static appendix.
+   */
+  attachment?: LetterAttachment;
 }
 
 export interface SendTemplateLetterProps {
@@ -71,6 +80,8 @@ export interface SendTemplateLetterProps {
    * logged under its own id.
    */
   log?: { mailIdentifier?: string; type?: MailLogType };
+  /** A document printed after the letter, e.g. the invoice with its payment slip. */
+  attachment?: LetterAttachment;
 }
 
 /** The letter states that map onto a mail log state one-to-one. */
@@ -100,6 +111,7 @@ export class LetterContext implements LetterSender {
   prisma: PrismaClient;
   pdfRenderer: PdfRenderer;
   private readonly documentUrl?: LetterContextProps['documentUrl'];
+  private readonly attachmentRenderer?: MailAttachmentRenderer;
   // Uploaded documents never change under their id, so one download serves
   // every letter of a send job.
   private readonly appendices = new Map<string, Promise<Buffer>>();
@@ -109,6 +121,7 @@ export class LetterContext implements LetterSender {
     this.prisma = props.prisma;
     this.pdfRenderer = props.pdfRenderer;
     this.documentUrl = props.documentUrl;
+    this.attachmentRenderer = props.attachmentRenderer;
   }
 
   /**
@@ -140,8 +153,9 @@ export class LetterContext implements LetterSender {
     recipient,
     layout,
     printMode,
+    attachment,
   }: RenderLetterProps): Promise<Buffer> {
-    const letter = await this.pdfRenderer.render(
+    let letter = await this.pdfRenderer.render(
       composeLetter({
         template,
         data,
@@ -150,26 +164,68 @@ export class LetterContext implements LetterSender {
         layout,
       })
     );
+    const appendixId = template.letterAppendixId;
 
-    if (!template.letterAppendixId) {
+    for (const document of await this.renderAttachments(
+      template.attachmentIds ?? [],
+      data
+    )) {
+      // Duplex: each document starts on a sheet of its own, not on the back
+      // of the one before.
+      letter = await appendPdf(letter, document.content, {
+        padToOddPage: printMode === LetterPrintMode.duplex,
+        name: document.filename,
+      });
+    }
+
+    if (!attachment && !appendixId) {
       return letter;
     }
 
-    if (recipient.country !== APPENDIX_COUNTRY) {
+    // Both carry a payment slip, which is only posted within Switzerland.
+    if (recipient.country !== PAYMENT_SLIP_COUNTRY) {
       this.logger.warn(
-        `Letter appendix <${template.letterAppendixId}> left out for a recipient in ${recipient.country}`
+        `${
+          attachment ?
+            `Document <${attachment.name}>`
+          : `Letter appendix <${appendixId}>`
+        } left out for a recipient in ${recipient.country}`
       );
 
       return letter;
     }
 
-    return appendPdf(
-      letter,
-      await this.loadAppendix(template.letterAppendixId),
-      {
-        padToOddPage: printMode === LetterPrintMode.duplex,
-      }
-    );
+    // The provider's own document, with its per-invoice payment slip, takes
+    // the place of the static one.
+    const appendix =
+      attachment ? attachment.content
+      : appendixId ? await this.loadAppendix(appendixId)
+      : null;
+
+    if (!appendix) {
+      return letter;
+    }
+
+    return appendPdf(letter, appendix, {
+      padToOddPage: printMode === LetterPrintMode.duplex,
+    });
+  }
+
+  private async renderAttachments(
+    documentIds: string[],
+    data: Record<string, unknown>
+  ) {
+    if (!documentIds.length) {
+      return [];
+    }
+
+    if (!this.attachmentRenderer) {
+      throw new Error(
+        'This template has attachments, but nothing is set up to render them.'
+      );
+    }
+
+    return this.attachmentRenderer.render(documentIds, data);
   }
 
   private loadAppendix(documentId: string): Promise<Buffer> {
@@ -230,14 +286,12 @@ export class LetterContext implements LetterSender {
     );
   }
 
-  /**
-   * Render one letter, hand it to the print vendor and record the outcome in
-   * the mail log. Throws if either step fails; the log entry is written either
-   * way, so a failed letter leaves a trace like a failed mail does.
-   */
   /** Whether the user's postal address is complete enough to be posted to. */
-  canReceiveLetters(user: UserWithAddress): boolean {
-    return canReceiveLetters(user);
+  canReceiveLetters(
+    user: UserWithAddress,
+    options?: LetterRecipientOptions
+  ): boolean {
+    return canReceiveLetters(user, options);
   }
 
   /**
@@ -257,30 +311,41 @@ export class LetterContext implements LetterSender {
     });
   }
 
+  /**
+   * Render one letter, hand it to the print vendor and record the outcome in
+   * the mail log. Throws if either step fails; the log entry is written either
+   * way, so a failed letter leaves a trace like a failed mail does.
+   */
   async sendLetter(props: SendTemplateLetterProps): Promise<string> {
     const mailLogId = props.mailLogId ?? randomUUID();
     const address = toLetterAddress(props.recipient);
     const print = props.print ?? (await this.resolvePrintDefaults());
 
-    const template = await this.prisma.mailTemplate.findUnique({
-      where: { id: props.mailTemplateId },
-    });
-
-    if (!template) {
-      throw new Error(`MailTemplate <${props.mailTemplateId}> not found!`);
-    }
+    // The words on paper are the letter variant's; the email of the same
+    // template is another text. The attachments are the template's, shared
+    // by both.
+    const template = await requireTemplateVariant(
+      this.prisma,
+      props.mailTemplateId,
+      MailChannel.letter
+    );
 
     try {
       const file = await this.renderLetter({
         template: {
           htmlContent: template.htmlContent,
           letterAppendixId: template.letterAppendixId,
+          attachmentIds: await loadAttachmentIds(
+            this.prisma,
+            props.mailTemplateId
+          ),
         },
         addressPosition: print.addressPosition,
         data: props.data,
         recipient: address,
         layout: await this.resolveLayout(template.letterLayoutId),
         printMode: print.printMode,
+        attachment: props.attachment,
       });
 
       const result = await this.letterProvider.sendLetter({

@@ -1,11 +1,13 @@
 import {
   Field,
+  GraphQLISODateTime,
   InputType,
   Int,
   ObjectType,
   registerEnumType,
 } from '@nestjs/graphql';
 import {
+  EmailQualityEventSource,
   LetterAddressPosition,
   LetterDeliveryProduct,
   LetterPrintMode,
@@ -13,12 +15,16 @@ import {
   MailChannel,
   MailLogState,
   MailLogType,
+  MailProviderType,
   MailSendAudience,
   MailSendJobRecipientState,
   MailSendJobState,
   PaymentPeriodicity,
 } from '@prisma/client';
 import { PaginatedType } from '@wepublish/utils/api';
+// Registers `MailChannel` for GraphQL: a template's versions use it too, and
+// an enum is registered once.
+import '../mail-template/mail-template.model';
 
 /**
  * The base set of users an audience is drawn from. `hasSubscription` is the only
@@ -102,11 +108,6 @@ registerEnumType(MailSendAudience, {
 registerEnumType(MailSendJobRecipientState, {
   name: 'MailSendJobRecipientState',
   description: 'Where one planned mail of a send job stands.',
-});
-
-registerEnumType(MailChannel, {
-  name: 'MailChannel',
-  description: 'Whether a send goes out as an email or as a printed letter.',
 });
 
 registerEnumType(LetterAddressPosition, {
@@ -461,6 +462,82 @@ export class EmailQualityRefreshModel extends MailLogSyncModel {
   recomputed!: number;
 }
 
+registerEnumType(EmailQualityEventSource, {
+  name: 'EmailQualityEventSource',
+  description:
+    'send: the provider refused the address when a mail was sent. webhook: the provider reported it. poll: asked of the provider or read from a newsletter audience. verification: an address verification service.',
+});
+
+@ObjectType()
+export class EmailEvidenceSourceModel {
+  @Field(() => EmailQualityEventSource)
+  source!: EmailQualityEventSource;
+
+  @Field(() => Int, {
+    description: 'Events of this source in the last 30 days.',
+  })
+  count!: number;
+
+  @Field(() => GraphQLISODateTime, {
+    nullable: true,
+    description: 'When the newest event of this source arrived, ever.',
+  })
+  lastAt!: Date | null;
+}
+
+@ObjectType({
+  description:
+    'Where the email status comes from: whether the mail provider reports anything, when it last did, and how much evidence arrived lately.',
+})
+export class EmailEvidenceModel {
+  @Field(() => MailProviderType, { nullable: true })
+  providerType!: MailProviderType | null;
+
+  @Field(() => String, { nullable: true })
+  providerName!: string | null;
+
+  @Field({
+    description:
+      'Whether the configured provider reports delivery outcomes at all. SMTP never does.',
+  })
+  providerReportsDelivery!: boolean;
+
+  @Field(() => GraphQLISODateTime, {
+    nullable: true,
+    description:
+      'When the provider last called the webhook with a verified request.',
+  })
+  lastWebhookAt!: Date | null;
+
+  @Field(() => GraphQLISODateTime, {
+    nullable: true,
+    description: 'When the provider was last asked for delivery states.',
+  })
+  lastPollAt!: Date | null;
+
+  @Field(() => String, {
+    nullable: true,
+    description: 'What went wrong on the last poll; null when it succeeded.',
+  })
+  lastPollError!: string | null;
+
+  @Field(() => GraphQLISODateTime, {
+    nullable: true,
+    description:
+      'Newest evidence from any provider source. Null means the status rests on logins and confirmations alone.',
+  })
+  lastProviderEvidenceAt!: Date | null;
+
+  @Field(() => Int, {
+    description:
+      'Days without provider evidence after which the editor warns (setting emailQualityEvidenceWarnAfterDays).',
+  })
+  warnAfterDays!: number;
+
+  @Field(() => [EmailEvidenceSourceModel])
+  sources!: EmailEvidenceSourceModel[];
+}
+
 @ObjectType()
 export class MailSegmentCount {
   @Field(() => MailEmailSegment)
@@ -670,6 +747,18 @@ export class MailSendPreviewInput {
 }
 
 @ObjectType()
+export class MailSendPreviewAttachment {
+  @Field({ description: 'The name the pdf is attached under.' })
+  filename!: string;
+
+  @Field({
+    description:
+      'The document filled in for the recipient, as pdf, base64 encoded, exactly as the mail carries it.',
+  })
+  pdf!: string;
+}
+
+@ObjectType()
 export class MailSendPreviewModel {
   @Field()
   subject!: string;
@@ -686,6 +775,12 @@ export class MailSendPreviewModel {
       'Letter previews only: the rendered pdf, base64 encoded, exactly as it would be printed.',
   })
   pdf?: string | null;
+
+  @Field(() => [MailSendPreviewAttachment], {
+    description:
+      "Mail previews only: the template's attachments, in their order. A letter preview prints them inside its pdf.",
+  })
+  attachments!: MailSendPreviewAttachment[];
 
   @Field(() => MailSendRecipientModel, {
     nullable: true,

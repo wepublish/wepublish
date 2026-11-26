@@ -41,6 +41,7 @@ import {
   MailchimpSyncProgressDocument,
   MemberPlanListDocument,
   PaymentMethodListDocument,
+  RegisterMailchimpAudienceWebhookDocument,
   SyncProviderSettingsDocument,
   SyncProviderSettingsQuery,
   SyncProviderType,
@@ -85,6 +86,8 @@ const mergeFieldMappingSchema = z.object({
 const interestGroupMappingSchema = z.object({
   groupId: z.string().min(1),
   expression: z.string().min(1),
+  autoAdd: z.boolean(),
+  autoRemove: z.boolean(),
 });
 
 const clickTrackingExtensionSchema = z.object({
@@ -714,6 +717,24 @@ function SyncProviderSettingCard({
 
   const [triggerSync] = useMutation(TriggerMailchimpSyncDocument);
   const [dryRunSync] = useMutation(DryRunMailchimpSyncDocument);
+  const [registerWebhook, { loading: registeringWebhook }] = useMutation(
+    RegisterMailchimpAudienceWebhookDocument,
+    {
+      refetchQueries: [{ query: SyncProviderSettingsDocument }],
+      onError: error =>
+        enqueueSnackbar(
+          t('integrations.mailchimpSyncSettings.audienceWebhook.failed', {
+            error: errorDetail(error),
+          }),
+          { variant: 'error' }
+        ),
+      onCompleted: () =>
+        enqueueSnackbar(
+          t('integrations.mailchimpSyncSettings.audienceWebhook.registered'),
+          { variant: 'success' }
+        ),
+    }
+  );
 
   const [syncErrorsSkip, setSyncErrorsSkip] = useState(0);
   const { data: syncErrorsData, refetch: refetchErrors } = useQuery(
@@ -789,9 +810,16 @@ function SyncProviderSettingCard({
       mailchimp_listId: setting.mailchimp_listId ?? '',
       mailchimp_mergeFieldMappings: (setting.mailchimp_mergeFieldMappings ??
         []) as SyncProviderFormValues['mailchimp_mergeFieldMappings'],
-      mailchimp_interestGroupMappings:
-        (setting.mailchimp_interestGroupMappings ??
-          []) as SyncProviderFormValues['mailchimp_interestGroupMappings'],
+      mailchimp_interestGroupMappings: (
+        (setting.mailchimp_interestGroupMappings ?? []) as NonNullable<
+          SyncProviderFormValues['mailchimp_interestGroupMappings']
+        >
+      ).map(mapping => ({
+        ...mapping,
+        // A missing flag means off, like in the sync.
+        autoAdd: mapping.autoAdd ?? false,
+        autoRemove: mapping.autoRemove ?? false,
+      })),
       mailchimp_defaultInterestGroupIds:
         setting.mailchimp_defaultInterestGroupIds ?? [],
       mailchimp_extensions: {
@@ -1342,6 +1370,44 @@ function SyncProviderSettingCard({
                       />
                     )}
                   />
+                  <Controller
+                    name={`mailchimp_interestGroupMappings.${index}.autoAdd`}
+                    control={control}
+                    render={({ field: { value, onChange } }) => (
+                      <FormControlLabel
+                        sx={{ whiteSpace: 'nowrap', mr: 0 }}
+                        control={
+                          <Checkbox
+                            size="small"
+                            checked={value}
+                            onChange={(_event, checked) => onChange(checked)}
+                          />
+                        }
+                        label={t(
+                          'integrations.mailchimpSyncSettings.interestGroupAutoAdd'
+                        )}
+                      />
+                    )}
+                  />
+                  <Controller
+                    name={`mailchimp_interestGroupMappings.${index}.autoRemove`}
+                    control={control}
+                    render={({ field: { value, onChange } }) => (
+                      <FormControlLabel
+                        sx={{ whiteSpace: 'nowrap', mr: 0 }}
+                        control={
+                          <Checkbox
+                            size="small"
+                            checked={value}
+                            onChange={(_event, checked) => onChange(checked)}
+                          />
+                        }
+                        label={t(
+                          'integrations.mailchimpSyncSettings.interestGroupAutoRemove'
+                        )}
+                      />
+                    )}
+                  />
                   <IconButtonTooltip caption={t('delete')}>
                     <IconButton
                       size="small"
@@ -1362,6 +1428,8 @@ function SyncProviderSettingCard({
                   appendInterestGroup({
                     groupId: '',
                     expression: 'slug:contains:',
+                    autoAdd: true,
+                    autoRemove: true,
                   })
                 }
               >
@@ -1639,6 +1707,81 @@ function SyncProviderSettingCard({
                   />
                 )}
               </SyncStatusWrapper>
+
+              {/* Cleaned and unsubscribed members as they happen, instead of
+                  with the next night's sync. The api registers the webhook at
+                  Mailchimp itself; nobody pastes a URL anywhere. */}
+              <SectionTitle variant="subtitle1">
+                {t('integrations.mailchimpSyncSettings.audienceWebhook.title')}{' '}
+                <InfoTooltip
+                  text={t(
+                    'integrations.mailchimpSyncSettings.audienceWebhook.info'
+                  )}
+                />
+              </SectionTitle>
+              <Typography
+                variant="body2"
+                color="textSecondary"
+              >
+                {setting.mailchimp_webhookRegisteredAt ?
+                  t(
+                    'integrations.mailchimpSyncSettings.audienceWebhook.registeredAt',
+                    {
+                      date: new Intl.DateTimeFormat('de-CH', {
+                        dateStyle: 'short',
+                        timeStyle: 'short',
+                      }).format(
+                        new Date(setting.mailchimp_webhookRegisteredAt)
+                      ),
+                    }
+                  )
+                : t(
+                    'integrations.mailchimpSyncSettings.audienceWebhook.notRegistered'
+                  )
+                }
+              </Typography>
+              {setting.mailchimp_webhookRegisteredAt && (
+                <Typography
+                  variant="body2"
+                  color="textSecondary"
+                >
+                  {t(
+                    'integrations.mailchimpSyncSettings.audienceWebhook.lastReceived'
+                  )}
+                  :{' '}
+                  {setting.lastWebhookAt ?
+                    new Intl.DateTimeFormat('de-CH', {
+                      dateStyle: 'short',
+                      timeStyle: 'short',
+                    }).format(new Date(setting.lastWebhookAt))
+                  : t(
+                      'integrations.mailchimpSyncSettings.audienceWebhook.never'
+                    )
+                  }
+                </Typography>
+              )}
+              <Button
+                variant="outlined"
+                size="small"
+                sx={{ mt: 1 }}
+                disabled={registeringWebhook || !setting.mailchimp_listId}
+                onClick={() =>
+                  registerWebhook({ variables: { id: setting.id } })
+                }
+              >
+                {registeringWebhook && (
+                  <CircularProgress
+                    size={14}
+                    color="inherit"
+                    sx={{ mr: 1 }}
+                  />
+                )}
+                {t(
+                  setting.mailchimp_webhookRegisteredAt ?
+                    'integrations.mailchimpSyncSettings.audienceWebhook.renew'
+                  : 'integrations.mailchimpSyncSettings.audienceWebhook.register'
+                )}
+              </Button>
             </CardContent>
 
             <CardActions sx={{ flexWrap: 'wrap', gap: 1 }}>

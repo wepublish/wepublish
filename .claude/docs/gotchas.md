@@ -10,6 +10,16 @@ gets refactored away by the next agent.
 
 ---
 
+### ⚠️ `tsc -p apps/editor` checks nothing and exits 0
+
+`apps/editor`, `apps/media` and `apps/api-example` have a solution-style
+`tsconfig.json` (`"files": []`, only `references`), so `pnpm tsc -p apps/editor
+--noEmit` compiles zero files and reports success. CI's `website-typecheck.yml`
+runs `tsc --noEmit -p apps/editor/tsconfig.app.json` inside the editor build and
+fails (2026-11-09: a `printIssues` field missing from three `libs/membership/editor`
+call sites, green locally on Vitest and on the useless `tsc`). Run
+`pnpm nx run editor:typecheck` after touching the editor or any `libs/*/editor`.
+
 ### ⚠️ Prisma helpers are deliberately absent from the `@wepublish/testing` barrel
 
 [libs/testing/src/index.ts](../../libs/testing/src/index.ts) exports `act-wait`,
@@ -167,6 +177,22 @@ therefore imports the CommonJS build; `i18next-icu-cjs.d.ts` next to it types
 the subpath, which `moduleResolution: node` cannot see. Don't inline
 `i18next-icu` in Vitest again: its spec has to run the package the way Node
 loads it.
+
+---
+
+### ⚠️ Prisma 7 drops empty filters inside an `AND`/`OR` list
+
+Prisma 7.10 compiles a top-level `OR: []` to "nobody", but silently drops every
+empty entry (`{}`, `{ OR: [] }`, `{ AND: [] }`) of an `AND`/`OR` list:
+`{ AND: [base, { OR: [] }] }` is just `base`, and `{ OR: [{}, x] }` is just `x`.
+Field filters such as `in: []` are never dropped. The mail-send "Platzhalter"
+segment put `{ OR: patterns.map(…) }` without patterns into an `AND` and counted
+(and would have mailed) the whole audience (TSRI, 2026-11).
+[where-matcher.ts](../../libs/membership/api/src/lib/mail-send/where-matcher.ts)
+now throws on an empty `AND`/`OR` and on `{}` inside an `OR`. Never build an
+`OR` from a list that can be empty: say "nobody" as `{ id: { in: [] } }`
+(`NOBODY` in `mail-send-recipient.service.ts`, `NO_SUBSCRIPTION` in
+`subscription-flow.resolver.ts`), and keep `{}` out of `OR` lists.
 
 ---
 
@@ -336,6 +362,33 @@ mode) after logging out in one.
 `sessionStorage.removeItem` on logout.
 
 Pinned by `session.provider.spec.tsx` and `preview-status-banner.spec.tsx`.
+
+The same reason makes a bare `…?preview` website URL useless anywhere else (new
+tab, the editor tab, a colleague): no opener, no frame, so no handshake and no
+login. The editor's "copy preview link" therefore copies an **editor** link
+(`/articles/edit/:id?preview=<device>`, `editorPreviewLink` in
+`apps/editor/src/app/previewFrame.tsx`). Don't switch it back to the website
+URL or put the JWT into a URL; a login token in history and chat is the leak
+the handshake exists to avoid.
+
+---
+
+### ⚠️ The content wrapper's column is `minmax(0, 1fr)`, not the implicit `auto`
+
+The editor preview loads at desktop width and its mobile/tablet buttons only
+shrink the same iframe. `ImageBlock` pins each caption to a measured px width;
+with an `auto` column, every other block's still-wide caption holds the column
+open while one re-measures, so they settle on viewport − left padding. Verified
+2026-11-19 on a hauptstadt article: 1000 → 390px left the page 406px wide
+(captions 374px, right padding gone); a fresh 390px load and a one-image article
+were fine. Real phones never shrink, so only the preview showed it.
+
+Remounting the iframe per device would reload it and lose the scroll position.
+
+**Load-bearing:** `grid-template-columns: minmax(0, 1fr)` in
+[`content-wrapper.tsx`](../../libs/content/website/src/lib/content-wrapper/content-wrapper.tsx).
+
+Pinned by `content-wrapper.spec.tsx`.
 
 ---
 
@@ -633,6 +686,20 @@ trick or nothing catches it before `nx serve api-example`.
 
 ---
 
+### ⚠️ A tenant `BaseTeaser` override must fall back to block-content's `BaseTeaser`, never `Teaser`
+
+`Teaser` from `@wepublish/block-content/website` is a dispatcher: it renders
+the builder's `blocks.BaseTeaser`. An override registered as `BaseTeaser` that
+falls back to `<Teaser>` renders itself forever. Server rendering never ends,
+the pod's memory climbs until it is killed, and Cloudflare shows 504 for the
+page and 502 for everything else in the meantime (2026-11-18, bajour: every
+unstyled teaser-list block, because `TeaserListBlock` passes no `numColumns`).
+Fall back to the concrete `BaseTeaser` export instead, as munotgloeggli does.
+`bajour.spec.tsx` shows how to test it without hanging the runner: a context
+guard that throws if the override re-enters itself.
+
+---
+
 ### ⚠️ A service with `@PrimeDataLoader` makes everything that injects it request-scoped
 
 `@PrimeDataLoader(X)` property-injects the request-scoped dataloader `X`, so the
@@ -704,6 +771,11 @@ and the nightly `MailLogSyncService` poll reconciles what a webhook missed.
 Providers must throw `MailWebhookSignatureError`, not a plain `Error`, for a
 failed signature.
 
+Mandrill checks the URL while a webhook is being **created** with an empty
+batch (`mandrill_events=[]`) signed with the fixed key `test-webhook` — the
+webhook's own key does not exist yet. The Mailchimp provider lets exactly that
+through; refusing it makes Mandrill reject the webhook URL.
+
 Pinned by `libs/mail/api/src/lib/mail.webhook.spec.ts` ("refuses a call that
 does not come from the provider", "answers 200 to a payload it cannot handle").
 
@@ -723,8 +795,13 @@ the top margin and Pingen rejects the letter; a fixed box offset into the
 margin area is clipped by Chromium. The band cap of 40mm (`LAYOUT_BAND_MAX_MM`)
 keeps a header out of the franking zone, whose bottom edge is at 87.5mm.
 
-**Load-bearing:** `margin: 0` in the `@page` rule, the thead/tfoot spacer rows,
-and `CONTENT_TOP_MM - headerSpace` for the body padding.
+The same spacers are the page margin of every page: they are never lower than
+`PAGE_MARGIN_MM` (20mm), also without stationery or with a band of height 0.
+At 0 a letter running onto a second page started at the very edge of the sheet
+there, which Pingen holds back («Validation failed»).
+
+**Load-bearing:** `margin: 0` in the `@page` rule, the thead/tfoot spacer rows
+and their floor, and `CONTENT_TOP_MM - headerSpace` for the body padding.
 
 Pinned by `libs/letter/api/src/lib/letter-renderer.spec.ts`.
 
@@ -1355,6 +1432,92 @@ Only `ganzgraz` and `munotgloeggli` take `settingsTheme`; every other tenant's
 elsewhere is a behaviour change, not a fix.
 
 ---
+
+### ⚠️ Cancelling an unsent renewal invoice does not make the nightly job create it again
+
+`PeriodicJobService.createRemoteInvoice`
+(`libs/membership/api/src/lib/periodic-job/periodic-job.service.ts`)
+hard-deletes the we.publish invoice — payment, `subscriptionPeriod`,
+`invoiceItem`, invoice, in that order — when the payment provider could not
+create its side of it.
+
+`getActiveSubscriptionsWithoutInvoice` (`subscription.service.ts`) requires not
+only no open invoice but `periods: { none: { startsAt: { gt: runDate } } }`.
+The invoice's period starts in the future (the invoice is created up to 90 days
+ahead), so `canceledAt` alone keeps the subscription excluded until `paidUntil`,
+and `getNextPeriod` then continues after the orphaned period: a whole
+periodicity of coverage is skipped.
+
+**Load-bearing:** all four deletes. `SubscriptionPeriod.invoiceID` has no
+cascade and `InvoiceItem.invoiceId` is `SetNull`, so each must go explicitly,
+as `upgrade-subscription.service.ts` does.
+
+Pinned by `periodic-job.service.spec.ts` («removes the invoice when the
+provider could not create it»).
+
+---
+
+### ⚠️ Apollo Client 4's `useLazyQuery` ignores `onCompleted` / `onError` without a type error
+
+The editor runs `@apollo/client` 4. Its lazy queries no longer call
+`onCompleted` or `onError`, yet passing them still typechecks. A download
+written as `useLazyQuery(Doc, { onCompleted: data => download(data) })` runs
+the query and then does nothing (2026-11-08: the print-issue «CSV
+herunterladen» buttons; the API answered correctly the whole time).
+
+Await the trigger instead: it resolves with `{ data }` and rejects on an
+error, as `libs/ui/editor/src/lib/panel/exportSubscriptions.tsx` and
+`libs/print-issue/editor/src/lib/print-issue-list-view.tsx` do. A spec that mocks
+`useLazyQuery` must not call `onCompleted` either, or it hides the bug.
+
+Pinned by `libs/print-issue/editor/src/lib/print-issue-list-view.spec.tsx`
+(«lists the draft with its options, CSV, edit, delivered and delete, and the merged list»).
+
+### ⚠️ `prisma migrate deploy` targets `DIRECT_DATABASE_URL` from `.env`, not the `DATABASE_URL` you pass
+
+[prisma.config.ts](../../prisma.config.ts) loads `.env` and takes
+`process.env['DIRECT_DATABASE_URL'] || process.env['DATABASE_URL']` as the
+datasource («DIRECT_DATABASE_URL bypasses PgBouncer»). So
+`DATABASE_URL=postgresql://…/throwaway pnpm prisma migrate deploy` still
+migrates whatever `.env`'s `DIRECT_DATABASE_URL` points at.
+
+Verified 2026-11-08 in a worktree: the command printed «All migrations have
+been successfully applied» while the throwaway database stayed empty, and 12
+migrations (11 from master plus the branch's own) had landed in the shared
+`wepublish` database of another checkout's Docker stack. The API booted
+against the throwaway database then died with `relation
+"public.settings.analyticsProvider" does not exist`.
+
+Override **both** variables for any Prisma CLI call that must hit another
+database: `DATABASE_URL=… DIRECT_DATABASE_URL=… pnpm prisma migrate deploy`.
+The running API reads only `DATABASE_URL`
+(`libs/nest-modules/src/lib/database/prisma.service.ts`), which is why the
+boot and the migration disagreed.
+
+**Load-bearing:** the `DIRECT_DATABASE_URL` preference in `prisma.config.ts`
+is what production relies on for advisory locks through PgBouncer; do not
+"fix" it by dropping the fallback order.
+
+Nothing guards this — a regression here is silent: the CLI reports success
+against the wrong database.
+
+### ⚠️ Feeds must load `FeedArticleList`; with `ArticleList` they shrink to the lead
+
+`generateFeed` serialises `latest.blocks` into `content:encoded`, but
+`ArticleList`/`SlimArticle` never selects blocks. Every tenant feed shipped
+lead-only for years while `feed-generator.spec.ts` stayed green, because
+`mockArticle()` carries blocks the production query never fetched. Found
+2026-11-12: the Schweizer Mediendatenbank, which ingests online sources from
+publisher feeds, showed reflekt articles with their lead only.
+
+Widening `SlimArticle` is the wrong fix: every list on every site would fetch
+bodies.
+
+**Load-bearing:** `feed.graphql` (`FeedBlock`, `paywall { active
+hideContentAfter }`); `generateFeed` typed on `FeedArticleFragment` without a
+cast, so a tenant on the wrong document fails `tsc`. Pinned by
+`libs/feed/website/src/lib/feed-article-list.spec.ts`, which runs the real
+document against `schema-v2.graphql`.
 
 ## Adding an entry
 

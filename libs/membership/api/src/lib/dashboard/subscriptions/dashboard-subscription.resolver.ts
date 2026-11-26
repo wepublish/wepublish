@@ -1,12 +1,16 @@
 import { Args, Query, Resolver } from '@nestjs/graphql';
 import { Permissions } from '@wepublish/permissions/api';
 import {
+  AnonymousSubscriber,
   DailySubscriptionStats,
   DashboardSubscription,
 } from './dashboard-subscription.model';
 import { DashboardSubscriptionService } from './dashboard-subscription.service';
 import { SettingName, Settings } from '@wepublish/settings/api';
-import { CanGetSubscriptions } from '@wepublish/permissions';
+import {
+  CanGetActiveSubscriberFirstNames,
+  CanGetSubscriptions,
+} from '@wepublish/permissions';
 
 @Resolver()
 export class DashboardSubscriptionResolver {
@@ -39,6 +43,18 @@ export class DashboardSubscriptionResolver {
   })
   activeSubscribers() {
     return this.subscriptions.activeSubscribers();
+  }
+
+  @Permissions(CanGetActiveSubscriberFirstNames)
+  @Query(returns => [AnonymousSubscriber], {
+    name: 'activeSubscriberFirstNames',
+    description: `
+      Returns the first name and creation date of every active subscription, newest first.
+      Active means the same as for activeSubscribers. Nothing else about the subscriber is exposed.
+    `,
+  })
+  activeSubscriberFirstNames() {
+    return this.subscriptions.activeSubscriberFirstNames();
   }
 
   @Permissions(CanGetSubscriptions)

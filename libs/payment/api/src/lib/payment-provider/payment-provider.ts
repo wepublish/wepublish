@@ -2,6 +2,7 @@ import {
   Currency,
   Invoice,
   InvoiceItem,
+  MailChannel,
   PaymentProviderType,
   Payment,
   PaymentState,
@@ -19,6 +20,10 @@ import { sub } from 'date-fns';
 import { NamespacedCache, NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { SESSION_CACHE_NAMESPACE } from '@wepublish/authentication/api';
 import { SecretCrypto } from '@wepublish/settings/api';
+import {
+  isSellableInvoice,
+  settleSellableInvoice,
+} from '../sellable/sellable-invoice';
 
 export type InvoiceWithItems = Invoice & {
   items: InvoiceItem[];
@@ -67,6 +72,36 @@ export interface CancelRemoteSubscriptionProps {
 export interface CreateRemoteInvoiceProps {
   subscription: Subscription;
   invoice: Invoice & { items: InvoiceItem[] };
+  /**
+   * How the reader gets the invoice: emailed by the provider (the default) or
+   * printed by we.publish, in which case the provider hands back the pdf
+   * instead of sending anything.
+   */
+  channel?: MailChannel;
+}
+
+/** A file the provider rendered for the invoice, for we.publish to deliver. */
+export interface RemoteInvoiceDocument {
+  content: Buffer;
+  name: string;
+  mime: string;
+}
+
+/**
+ * What a provider created for a renewal invoice. The intent carries the
+ * provider's invoice id so the payment can be polled; `deliveryError` is set
+ * when the invoice exists at the provider but could not be issued, rendered or
+ * sent — the caller must not create it again.
+ */
+export interface RemoteInvoiceResult {
+  intent: Intent;
+  document?: RemoteInvoiceDocument;
+  deliveryError?: string;
+}
+
+export interface RenderRemoteInvoiceProps {
+  /** Holds the provider's id of the invoice, see `createRemoteInvoice`. */
+  payment: Payment;
 }
 
 export interface UpdatePaymentWithIntentStateProps {
@@ -155,6 +190,7 @@ export type WebhookResponse = {
 export interface PaymentProvider {
   id: string;
   remoteManagedSubscription: boolean;
+  readonly supportsStandaloneInvoices: boolean;
 
   incomingRequestHandler: NextHandleFunction;
 
@@ -176,7 +212,14 @@ export interface PaymentProvider {
 
   cancelRemoteSubscription(props: CancelRemoteSubscriptionProps): Promise<void>;
 
-  createRemoteInvoice(props: CreateRemoteInvoiceProps): Promise<void>;
+  createRemoteInvoice(
+    props: CreateRemoteInvoiceProps
+  ): Promise<RemoteInvoiceResult | undefined>;
+
+  /** The provider's own pdf of an invoice it created earlier, to print again. */
+  renderRemoteInvoice(
+    props: RenderRemoteInvoiceProps
+  ): Promise<RemoteInvoiceDocument | undefined>;
 
   getConfig(): Promise<SettingPaymentProvider | null>;
 
@@ -216,6 +259,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
   readonly kv: NamespacedCache;
   readonly resets: Pick<NamespaceResets, 'reset'>;
   readonly remoteManagedSubscription: boolean = false;
+  readonly supportsStandaloneInvoices: boolean = false;
 
   readonly incomingRequestHandler: NextHandleFunction;
 
@@ -307,8 +351,16 @@ export abstract class BasePaymentProvider implements PaymentProvider {
     return;
   }
 
-  async createRemoteInvoice(props: CreateRemoteInvoiceProps): Promise<void> {
-    return;
+  async createRemoteInvoice(
+    props: CreateRemoteInvoiceProps
+  ): Promise<RemoteInvoiceResult | undefined> {
+    return undefined;
+  }
+
+  async renderRemoteInvoice(
+    props: RenderRemoteInvoiceProps
+  ): Promise<RemoteInvoiceDocument | undefined> {
+    return undefined;
   }
 
   supportsAuthorization(): boolean {
@@ -364,6 +416,11 @@ export abstract class BasePaymentProvider implements PaymentProvider {
     const invoice = await this.prisma.invoice.findUnique({
       where: { id: payment.invoiceID },
     });
+
+    if (invoice && isSellableInvoice(invoice)) {
+      await settleSellableInvoice(this.prisma, invoice.id, intentState.state);
+      return updatedPayment;
+    }
 
     if (!invoice || !invoice.subscriptionID) {
       throw new Error(`Invoice with ID ${payment.invoiceID} does not exist`);
@@ -472,6 +529,16 @@ export abstract class BasePaymentProvider implements PaymentProvider {
     });
 
     if (!user) throw new Error(`User with ID ${userID} does not exist`);
+
+    // The nightly poll reports the customer with every open invoice. An
+    // unchanged id must neither touch the user nor flush every cached session.
+    const stored = user.paymentProviderCustomers.filter(
+      customer => customer.paymentProviderID === this.id
+    );
+
+    if (stored.length === 1 && stored[0].customerID === customerID) {
+      return;
+    }
 
     await this.prisma.user.update({
       where: {

@@ -1,5 +1,8 @@
 import { ForbiddenException, UnauthorizedException } from '@nestjs/common';
-import { EXPIRED_API_TOKEN } from '@wepublish/authentication/api';
+import {
+  BLOCKED_API_TOKEN,
+  EXPIRED_API_TOKEN,
+} from '@wepublish/authentication/api';
 
 import {
   API_TOKEN_PREFIX,
@@ -7,14 +10,42 @@ import {
   prefixOf,
   verifyApiToken,
 } from './api-token.crypto';
-import { ApiTokenStatus } from './api-token.model';
-import { ApiTokenService } from './api-token.service';
+import { SortOrder } from '@wepublish/utils/api';
 
-const prismaMock = () => {
+import { ApiTokenSort, ApiTokenStatus } from './api-token.model';
+import { ApiTokenService, createApiTokenOrder } from './api-token.service';
+
+const creatorRole = (permissionIDs: string[]) => ({
+  id: 'r1',
+  permissionIDs,
+});
+
+const prismaMock = ({
+  users = [
+    { id: 'u1', email: 'u1@example.test', active: true, roleIDs: ['r1'] },
+  ],
+  roles = [
+    creatorRole([
+      'CAN_CREATE_API_TOKEN',
+      'CAN_GET_EVENTS',
+      'CAN_DELETE_ARTICLE',
+    ]),
+  ],
+}: { users?: any[]; roles?: any[] } = {}) => {
   const store: any[] = [];
 
   return {
     store,
+    user: {
+      findUnique: vi.fn(
+        async ({ where }: any) => users.find(u => u.id === where.id) ?? null
+      ),
+    },
+    userRole: {
+      findMany: vi.fn(async ({ where }: any) =>
+        roles.filter(r => where.id.in.includes(r.id))
+      ),
+    },
     apiToken: {
       create: vi.fn(async ({ data }: any) => {
         const row = { id: `id-${store.length}`, ...data };
@@ -141,7 +172,99 @@ describe('resolveToken', () => {
     scopes: ['CAN_GET_EVENTS'],
     expiresAt: inDays(30),
     revokedAt: null,
+    createdById: 'u1',
   };
+
+  const stored = async (prisma: any, over: Record<string, unknown> = {}) => {
+    prisma.store.push({
+      ...valid,
+      id: 'a',
+      prefix: prefixOf('wep_x'),
+      tokenHash: await hashApiToken('wep_x'),
+      ...over,
+    });
+
+    return service(prisma).resolveToken('wep_x');
+  };
+
+  it('names the creator, so actions can be attributed to them', async () => {
+    const resolved = await stored(prismaMock());
+
+    expect(resolved?.creator).toEqual({ id: 'u1', email: 'u1@example.test' });
+  });
+
+  it('refuses a token whose creator was deleted', async () => {
+    const resolving = stored(prismaMock(), { createdById: null });
+
+    await expect(resolving).rejects.toThrow(UnauthorizedException);
+    await expect(resolving).rejects.toThrow(/created .* no longer exists/);
+  });
+
+  it('marks a refusal for its creator, so the request stops instead of running anonymously', async () => {
+    await expect(stored(prismaMock({ users: [] }))).rejects.toMatchObject({
+      cause: BLOCKED_API_TOKEN,
+    });
+  });
+
+  it('refuses a token whose creator is inactive', async () => {
+    const prisma = prismaMock({
+      users: [
+        { id: 'u1', email: 'u1@example.test', active: false, roleIDs: ['r1'] },
+      ],
+    });
+
+    await expect(stored(prisma)).rejects.toThrow(UnauthorizedException);
+  });
+
+  it('refuses a token whose creator may no longer create api tokens', async () => {
+    const prisma = prismaMock({ roles: [creatorRole(['CAN_GET_EVENTS'])] });
+    const resolving = stored(prisma);
+
+    await expect(resolving).rejects.toThrow(UnauthorizedException);
+    await expect(resolving).rejects.toThrow(/CAN_CREATE_API_TOKEN/);
+  });
+
+  it('drops a scope its creator no longer holds and keeps the rest', async () => {
+    const prisma = prismaMock({
+      roles: [creatorRole(['CAN_CREATE_API_TOKEN', 'CAN_GET_EVENTS'])],
+    });
+
+    const resolved = await stored(prisma, {
+      scopes: ['CAN_GET_EVENTS', 'CAN_DELETE_ARTICLE'],
+    });
+
+    expect(resolved?.permissions).toEqual(['CAN_GET_EVENTS']);
+  });
+
+  it('lets an admin‘s token keep every scope', async () => {
+    const prisma = prismaMock({
+      users: [
+        {
+          id: 'u1',
+          email: 'u1@example.test',
+          active: true,
+          roleIDs: ['admin'],
+        },
+      ],
+      roles: [{ id: 'admin', permissionIDs: [] }],
+    });
+
+    const resolved = await stored(prisma, {
+      scopes: ['CAN_CREATE_ARTICLE', 'CAN_DELETE_ARTICLE'],
+    });
+
+    expect(resolved?.permissions).toEqual([
+      'CAN_CREATE_ARTICLE',
+      'CAN_DELETE_ARTICLE',
+    ]);
+  });
+
+  it('does not count a refused call as a use of the token', async () => {
+    const prisma = prismaMock({ users: [] });
+
+    await expect(stored(prisma)).rejects.toThrow(UnauthorizedException);
+    expect(prisma.apiToken.update).not.toHaveBeenCalled();
+  });
 
   it('resolves a live token to its own scopes, not its creator‘s', async () => {
     const prisma = prismaMock();
@@ -152,7 +275,7 @@ describe('resolveToken', () => {
 
     const resolved = await service(prisma).resolveToken(token);
 
-    expect(resolved?.scopes).toEqual(['CAN_GET_EVENTS']);
+    expect(resolved?.permissions).toEqual(['CAN_GET_EVENTS']);
   });
 
   it('rejects an unknown token', async () => {
@@ -190,7 +313,9 @@ describe('resolveToken', () => {
       }
     );
 
-    expect((await service(prisma).resolveToken('wep_x'))?.id).toBe('mine');
+    expect((await service(prisma).resolveToken('wep_x'))?.apiToken.id).toBe(
+      'mine'
+    );
   });
 
   it('rejects a revoked token', async () => {
@@ -263,6 +388,62 @@ describe('resolveToken', () => {
     await service(prisma).resolveToken('wep_x');
 
     expect(prisma.apiToken.update).toHaveBeenCalled();
+  });
+});
+
+describe('creatorCheck', () => {
+  const key = (over: Record<string, unknown> = {}) => ({
+    createdById: 'u1',
+    scopes: ['CAN_GET_EVENTS', 'CAN_DELETE_ARTICLE'],
+    ...over,
+  });
+
+  it('is ok while the creator holds every scope of the key', async () => {
+    expect(await service(prismaMock()).creatorCheck(key())).toMatchObject({
+      state: 'Ok',
+      blockedReason: null,
+      missingScopes: [],
+    });
+  });
+
+  it('is blocked once the creator is deleted', async () => {
+    expect(
+      await service(prismaMock()).creatorCheck(key({ createdById: null }))
+    ).toMatchObject({ state: 'Blocked', blockedReason: 'CreatorMissing' });
+  });
+
+  it('is blocked while the creator is inactive', async () => {
+    const prisma = prismaMock({
+      users: [
+        { id: 'u1', email: 'u1@example.test', active: false, roleIDs: ['r1'] },
+      ],
+    });
+
+    expect(await service(prisma).creatorCheck(key())).toMatchObject({
+      state: 'Blocked',
+      blockedReason: 'CreatorInactive',
+    });
+  });
+
+  it('is blocked when the creator may no longer create api keys', async () => {
+    const prisma = prismaMock({ roles: [creatorRole(['CAN_GET_EVENTS'])] });
+
+    expect(await service(prisma).creatorCheck(key())).toMatchObject({
+      state: 'Blocked',
+      blockedReason: 'CreatorMayNotCreateApiTokens',
+    });
+  });
+
+  it('is limited by the scopes the creator no longer holds, and names them', async () => {
+    const prisma = prismaMock({
+      roles: [creatorRole(['CAN_CREATE_API_TOKEN', 'CAN_GET_EVENTS'])],
+    });
+
+    expect(await service(prisma).creatorCheck(key())).toMatchObject({
+      state: 'Limited',
+      blockedReason: null,
+      missingScopes: ['CAN_DELETE_ARTICLE'],
+    });
   });
 });
 
@@ -417,5 +598,66 @@ describe('ownership scoping', () => {
     });
 
     expect(prisma.apiToken.update).toHaveBeenCalled();
+  });
+});
+
+describe('sorting the key list', () => {
+  it('sorts by status: working keys, then expired, then revoked', () => {
+    expect(
+      createApiTokenOrder(ApiTokenSort.Status, SortOrder.Ascending)
+    ).toEqual([
+      { revokedAt: { sort: 'asc', nulls: 'first' } },
+      { expiresAt: 'desc' },
+    ]);
+    expect(
+      createApiTokenOrder(ApiTokenSort.Status, SortOrder.Descending)
+    ).toEqual([
+      { revokedAt: { sort: 'desc', nulls: 'last' } },
+      { expiresAt: 'asc' },
+    ]);
+  });
+
+  it('sorts by the expiry date', () => {
+    expect(
+      createApiTokenOrder(ApiTokenSort.ExpiresAt, SortOrder.Ascending)
+    ).toEqual({ expiresAt: 'asc' });
+  });
+
+  it('sorts by the owner‘s name, then first name', () => {
+    expect(
+      createApiTokenOrder(ApiTokenSort.Owner, SortOrder.Descending)
+    ).toEqual([
+      { createdBy: { name: 'desc' } },
+      { createdBy: { firstName: 'desc' } },
+    ]);
+  });
+
+  it('sorts by the number of permissions, across pages', async () => {
+    const store = [
+      { id: 'two', scopes: ['A', 'B'], createdAt: new Date(3) },
+      { id: 'none', scopes: [], createdAt: new Date(2) },
+      { id: 'three', scopes: ['A', 'B', 'C'], createdAt: new Date(1) },
+    ];
+    const prisma = {
+      apiToken: {
+        count: vi.fn(async () => store.length),
+        findMany: vi.fn(async () => store),
+      },
+    };
+
+    const page = (skip: number) =>
+      service(prisma).getApiTokens(
+        {
+          sort: ApiTokenSort.ScopeCount,
+          order: SortOrder.Descending,
+          take: 2,
+          skip,
+        },
+        { userId: 'u1', canSeeAll: true }
+      );
+
+    expect((await page(0)).nodes.map(n => n.id)).toEqual(['three', 'two']);
+    expect((await page(0)).pageInfo.hasNextPage).toBe(true);
+    expect((await page(2)).nodes.map(n => n.id)).toEqual(['none']);
   });
 });

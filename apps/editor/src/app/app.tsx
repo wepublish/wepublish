@@ -59,8 +59,9 @@ import { Base } from './base';
 import { EditorCommandPaletteSurface } from './commandPalette/editorCommandPalette';
 import { EditorGlobalStyles } from './editorGlobalStyles';
 import { Login } from './login';
-import { LoginImpersonate } from './loginImpersonate';
 import { LoginJwt } from './loginJwt';
+import { loginRedirectUrl } from './loginRedirect';
+import { LoginWepublish } from './loginWepublish';
 import { DocumentTitle } from './pageTitle/documentTitle';
 import { ResetPassword } from './resetPassword';
 import { ArticleTemplateEditView } from './routes/articleTemplate/articleTemplateEditView';
@@ -97,6 +98,10 @@ import { ExternalApps } from './routes/externalApps/externalAppsEdit';
 import { GoodieCreateView } from './routes/goodie/goodieCreateView';
 import { GoodieEditView } from './routes/goodie/goodieEditView';
 import { GoodieList } from './routes/goodie/goodieList';
+import { GiftCodeList as GiftCodeListRoute } from './routes/giftCode/giftCodeList';
+import { GiftCodeOfferCreateView as GiftCodeOfferCreateRoute } from './routes/giftCode/giftCodeOfferCreateView';
+import { GiftCodeOfferEditView as GiftCodeOfferEditRoute } from './routes/giftCode/giftCodeOfferEditView';
+import { GiftCodeOfferList as GiftCodeOfferListRoute } from './routes/giftCode/giftCodeOfferList';
 import { ImageList } from './routes/images/imageList';
 import { IntegrationEditView } from './routes/integrations/integrationEditView';
 import { IntegrationList } from './routes/integrations/integrationList';
@@ -148,11 +153,26 @@ const NewsletterCampaignPreview = withNewsletterFeature(
   lazy(() => newsletter().then(m => ({ default: m.NewsletterCampaignPreview })))
 );
 
+// The print export ships dark too; its chunk is only fetched where it is on.
+const printIssue = () => import('@wepublish/print-issue/editor');
+const withPrintExport = createCheckedFeatureComponent('print-export');
+const PrintIssueList = withPrintExport(
+  lazy(() => printIssue().then(m => ({ default: m.PrintIssueList })))
+);
+const PrintIssueListView = withPrintExport(
+  lazy(() => printIssue().then(m => ({ default: m.PrintIssueListView })))
+);
+
 const withMediaUploadsFeature = createCheckedFeatureComponent(
   'video-audio-uploads'
 );
 const VideoList = withMediaUploadsFeature(UncheckedVideoList);
 const AudioList = withMediaUploadsFeature(UncheckedAudioList);
+const withGiftCodesFeature = createCheckedFeatureComponent('gift-codes');
+const GiftCodeOfferList = withGiftCodesFeature(GiftCodeOfferListRoute);
+const GiftCodeOfferCreateView = withGiftCodesFeature(GiftCodeOfferCreateRoute);
+const GiftCodeOfferEditView = withGiftCodesFeature(GiftCodeOfferEditRoute);
+const GiftCodeList = withGiftCodesFeature(GiftCodeListRoute);
 
 const LogoutMutation = gql`
   mutation Logout {
@@ -207,8 +227,8 @@ function AppRoutes() {
           element={<LoginJwt />}
         />
         <Route
-          path="login/impersonate/:jwt"
-          element={<LoginImpersonate />}
+          path="login/wepublish"
+          element={<LoginWepublish />}
         />
         <Route
           path="login/reset-password"
@@ -770,6 +790,39 @@ function AppRoutes() {
             </Base>
           }
         />
+        {/* Print issues: the issue form is a drawer over the list */}
+        <Route
+          path="print-issues"
+          element={
+            <Base>
+              <PrintIssueList />
+            </Base>
+          }
+        />
+        <Route
+          path="print-issues/create"
+          element={
+            <Base>
+              <PrintIssueList />
+            </Base>
+          }
+        />
+        <Route
+          path="print-issues/edit/:id"
+          element={
+            <Base>
+              <PrintIssueList />
+            </Base>
+          }
+        />
+        <Route
+          path="print-issues/:id/list"
+          element={
+            <Base>
+              <PrintIssueListView />
+            </Base>
+          }
+        />
         {/* Authors Routes */}
         <Route
           path="authors"
@@ -1011,6 +1064,38 @@ function AppRoutes() {
           element={
             <Base>
               <GoodieCreateView />
+            </Base>
+          }
+        />
+        <Route
+          path="gift-codes/offers"
+          element={
+            <Base>
+              <GiftCodeOfferList />
+            </Base>
+          }
+        />
+        <Route
+          path="gift-codes/offers/create"
+          element={
+            <Base>
+              <GiftCodeOfferCreateView />
+            </Base>
+          }
+        />
+        <Route
+          path="gift-codes/offers/edit/:id"
+          element={
+            <Base>
+              <GiftCodeOfferEditView />
+            </Base>
+          }
+        />
+        <Route
+          path="gift-codes"
+          element={
+            <Base>
+              <GiftCodeList />
             </Base>
           }
         />
@@ -1313,7 +1398,7 @@ export function App() {
 
   useEffect(() => {
     if (session === null && !window.location.pathname.startsWith('/login')) {
-      window.location.href = `/login?next=${window.location.pathname}`;
+      window.location.href = loginRedirectUrl(window.location);
     }
   }, [session]);
 

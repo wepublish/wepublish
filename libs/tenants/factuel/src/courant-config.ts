@@ -6,6 +6,7 @@ import { CourantArticleAuthors } from './components/courant-article-authors';
 import { CourantArticleList } from './components/courant-article-list';
 import { CourantAuthorChip } from './components/courant-author-chip';
 import { CourantBlocks } from './components/courant-blocks';
+import { CourantBreakBlock } from './components/courant-break-block';
 import { CourantCommentList } from './components/courant-comment-list';
 import { CourantContentWrapper } from './components/courant-content-wrapper';
 import { CourantFooter } from './components/courant-footer';
@@ -43,6 +44,7 @@ export const courantConfig: WebsiteTenantConfig = {
     blocks: {
       BaseTeaser: CourantTeaser,
       Blocks: CourantBlocks,
+      Break: CourantBreakBlock,
       RichText: CourantRichTextBlock,
       Subscribe: CourantSubscribeBlock,
       Title: CourantTitleBlock,
@@ -50,6 +52,7 @@ export const courantConfig: WebsiteTenantConfig = {
     date: { format: dateFormatter },
     meta: { siteTitle: 'Courant', locale: 'fr-CH' },
   },
+  blockStyles: ['TeamMember'],
   translations: {
     lng: 'fr',
     overrides: { fr: frOverridden },

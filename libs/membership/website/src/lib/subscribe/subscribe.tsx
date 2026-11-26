@@ -185,6 +185,14 @@ export const SubscribeNarrowSection = styled(SubscribeSection)`
 
 export const SubscribeOpenInvoicesNotice = styled('div')``;
 
+export const SubscribeMemberPlansHeading = styled('div')`
+  display: flex;
+  flex-flow: row wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: ${({ theme }) => theme.spacing(1, 3)};
+`;
+
 export const SubscribeExistingSubscriptionNotice = styled('div')``;
 
 export const clampMonthlyAmount = (amount: number, min: number, max?: number) =>
@@ -217,6 +225,8 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   periodicityDisplay,
   hiddenAreas = NO_HIDDEN_AREAS,
   onInvalid,
+  giftCodeRedemptionUrl,
+  giftCodeRedemptionText,
 }: BuilderSubscribeProps<T>) => {
   const {
     meta: { locale, siteTitle },
@@ -270,7 +280,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       result = zodAlwaysRefine(result).refine(
         data => data.password === data.passwordRepeated,
         {
-          message: 'Passwörter stimmen nicht überein.',
+          message: t('user.form.passwordsDoNotMatch'),
           path: ['passwordRepeated'],
         }
       );
@@ -280,14 +290,14 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       result = zodAlwaysRefine(result).refine(
         data => data.email === data.emailRepeated,
         {
-          message: 'E-Mailadressen stimmen nicht überein.',
+          message: t('user.form.emailsDoNotMatch'),
           path: ['emailRepeated'],
         }
       );
     }
 
     return result;
-  }, [fieldsToDisplay, schema]);
+  }, [fieldsToDisplay, schema, t]);
 
   const loggedInSchema = subscribeSchema;
   const schem = useMemo(
@@ -312,7 +322,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             );
           },
           {
-            message: `Betrag kleiner wie der Mindestbetrag.`,
+            message: t('subscribe.errors.amountBelowMin'),
             path: ['monthlyAmount'],
           }
         )
@@ -329,7 +339,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           );
         },
         {
-          message: `Dieser Abo-Plan ist für dieses Zahlungsintervall nicht verfügbar.`,
+          message: t('subscribe.errors.memberPlanUnavailableForPeriodicity'),
           path: ['memberPlanId'],
         }
       ),
@@ -339,6 +349,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       loggedOutSchema,
       memberPlans.data?.memberPlans.nodes,
       usesMonthlyOnlyDisplay,
+      t,
     ]
   );
 
@@ -856,9 +867,21 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           )}
 
           <SubscribeSection area="memberPlans">
-            {(memberPlans.data?.memberPlans.nodes.length ?? 0) > 1 && (
-              <H5 component="h2">{t('subscribe.chooseSubscription')}</H5>
-            )}
+            {giftCodeRedemptionUrl ?
+              <SubscribeMemberPlansHeading>
+                {(memberPlans.data?.memberPlans.nodes.length ?? 0) > 1 && (
+                  <H5 component="h2">{t('subscribe.chooseSubscription')}</H5>
+                )}
+
+                <Link href={giftCodeRedemptionUrl}>
+                  {giftCodeRedemptionText ||
+                    t('subscribe.giftCodeRedemption.link')}
+                </Link>
+              </SubscribeMemberPlansHeading>
+            : (memberPlans.data?.memberPlans.nodes.length ?? 0) > 1 && (
+                <H5 component="h2">{t('subscribe.chooseSubscription')}</H5>
+              )
+            }
 
             {useOfferCards ?
               <Controller
@@ -1204,7 +1227,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             <SubscribeButton
               size={'large'}
               disabled={
-                challenge.loading ||
+                (!hasUserContext && challenge.loading) ||
                 userInvoices.loading ||
                 userSubscriptions.loading ||
                 loading ||

@@ -60,8 +60,10 @@ vi.mock('@wepublish/ui/editor', async importOriginal => ({
   ),
 }));
 
+const letterChannel = { paperLetters: true, letterAvailable: true };
+
 vi.mock('../mail-template/use-letter-channel', () => ({
-  useLetterChannel: () => ({ paperLetters: true, letterAvailable: true }),
+  useLetterChannel: () => letterChannel,
 }));
 
 vi.mock('../delivery-mode/use-paper-letter-flow', () => ({
@@ -96,8 +98,34 @@ const answer = (name: string) => {
       return {
         data: {
           mailTemplates: [
-            { id: 'tpl-1', name: 'Rechnung', context: 'custom' },
-            { id: 'tpl-2', name: 'Erinnerung', context: 'custom' },
+            {
+              id: 'tpl-1',
+              name: 'Rechnung',
+              context: 'custom',
+              channels: ['mail', 'letter'],
+              attachmentIds: [],
+            },
+            {
+              id: 'tpl-2',
+              name: 'Erinnerung',
+              context: 'custom',
+              channels: ['mail'],
+              attachmentIds: [],
+            },
+            {
+              id: 'tpl-3',
+              name: 'Begleitbrief',
+              context: 'custom',
+              channels: ['letter'],
+              attachmentIds: [],
+            },
+            {
+              id: 'tpl-4',
+              name: 'Vertrag',
+              context: 'custom',
+              channels: ['mail'],
+              attachmentIds: ['terms', 'contract'],
+            },
           ],
         },
         refetch: vi.fn(async () => undefined),
@@ -118,6 +146,17 @@ const answer = (name: string) => {
       return {
         data: { mailTemplateMissingPlaceholders: [] },
         refetch: vi.fn(async () => undefined),
+      };
+    case 'DocumentList':
+      return {
+        data: {
+          documents: {
+            nodes: [
+              { id: 'contract', title: 'Vertrag 2026', filename: 'vertrag' },
+              { id: 'terms', title: null, filename: 'agb.docx' },
+            ],
+          },
+        },
       };
     case 'MailSendRecipients':
       return {
@@ -163,6 +202,19 @@ const pickTemplate = () => {
   fireEvent.mouseDown(screen.getAllByRole('combobox')[0]);
   fireEvent.click(screen.getByRole('option', { name: 'Rechnung' }));
 };
+
+const pickTemplateNamed = (name: string) => {
+  fireEvent.mouseDown(screen.getAllByRole('combobox')[0]);
+  fireEvent.click(screen.getByRole('option', { name }));
+};
+
+const channelRadio = (channel: string) =>
+  screen.getByRole('radio', { name: `mailSend.channel.${channel}` });
+
+const lastMissingPlaceholders = () =>
+  queries.mock.calls
+    .filter(([name]) => name === 'MailTemplateMissingPlaceholders')
+    .at(-1)?.[1].variables;
 
 const goToAudience = () => {
   pickTemplate();
@@ -406,6 +458,95 @@ describe('MailSendPage (accessibility)', () => {
     expect(screen.queryByRole('alert')).toBeNull();
   });
 
+  it('names the documents the chosen template attaches, in their order', () => {
+    renderPage();
+
+    fireEvent.mouseDown(screen.getAllByRole('combobox')[0]);
+    fireEvent.click(screen.getByRole('option', { name: 'Vertrag' }));
+
+    expect(
+      screen.getByText(
+        `mailSend.attachments:${JSON.stringify({
+          count: 2,
+          names: 'agb.docx, Vertrag 2026',
+        })}`
+      )
+    ).toBeTruthy();
+  });
+
+  // Nothing is attached while the feature is off, whatever the template has.
+  it('names no attachments while the medium has them switched off', () => {
+    letterChannel.paperLetters = false;
+    letterChannel.letterAvailable = false;
+
+    try {
+      renderPage();
+
+      fireEvent.mouseDown(screen.getAllByRole('combobox')[0]);
+      fireEvent.click(screen.getByRole('option', { name: 'Vertrag' }));
+
+      expect(screen.queryByText(/^mailSend\.attachments/)).toBeNull();
+    } finally {
+      letterChannel.paperLetters = true;
+      letterChannel.letterAvailable = true;
+    }
+  });
+
+  it('previews the attachments the mail carries for the recipient', () => {
+    queries.mockImplementation((name: string) =>
+      name === 'MailSendPreview' ?
+        {
+          data: {
+            mailSendPreview: {
+              subject: 'Ihr Vertrag',
+              html: '<p>Hallo</p>',
+              pdf: null,
+              attachments: [{ filename: 'Vertrag 2026.pdf', pdf: 'JVBERi0=' }],
+              recipient: null,
+            },
+          },
+          loading: false,
+          refetch: vi.fn(async () => undefined),
+        }
+      : answer(name)
+    );
+    renderPage();
+    goToAudience();
+    fireEvent.click(screen.getByRole('button', { name: /mailSend\.next/ }));
+
+    expect(
+      screen.getByRole('button', { name: 'Vertrag 2026.pdf' })
+    ).toBeTruthy();
+  });
+
+  // Its options are long (address · member plan); shrunk to its content the
+  // picker shows only a sliver of the chosen one.
+  it('lets the recipient picker take the width beside its label', () => {
+    renderPage();
+    goToAudience();
+    fireEvent.click(screen.getByRole('button', { name: /mailSend\.next/ }));
+
+    const picker = screen
+      .getByRole('combobox', { name: 'mailSend.preview.recipient' })
+      .closest<HTMLElement>('.MuiAutocomplete-root');
+    const label = screen.getByText('mailSend.preview.recipient');
+
+    expect(picker?.style.flexGrow).toBe('1');
+    expect(label.style.flexShrink).toBe('0');
+  });
+
+  it('looks no documents up for a template without attachments', () => {
+    renderPage();
+    pickTemplate();
+
+    expect(screen.queryByText(/^mailSend\.attachments/)).toBeNull();
+    expect(
+      queries.mock.calls.filter(
+        ([name, options]) => name === 'DocumentList' && !options?.skip
+      )
+    ).toEqual([]);
+  });
+
   it('labels the template select of the first step', () => {
     renderPage();
 
@@ -447,5 +588,63 @@ describe('MailSendPage (accessibility)', () => {
     ]) {
       expect(screen.getByRole('combobox', { name })).toBeTruthy();
     }
+  });
+
+  describe('the version of the template that goes out', () => {
+    it('offers both channels for a template written for both', () => {
+      renderPage();
+      pickTemplateNamed('Rechnung');
+
+      expect(channelRadio('mail')).toBeEnabled();
+      expect(channelRadio('letter')).toBeEnabled();
+    });
+
+    it('offers no letter for a template without a letter version', () => {
+      renderPage();
+      pickTemplateNamed('Erinnerung');
+
+      expect(channelRadio('mail')).toBeChecked();
+      expect(channelRadio('letter')).toBeDisabled();
+      expect(
+        screen.getByText('mailSend.channel.noVersion.letter')
+      ).toBeTruthy();
+    });
+
+    it('sends a template written as a letter only as a letter', () => {
+      renderPage();
+      pickTemplateNamed('Begleitbrief');
+
+      expect(channelRadio('letter')).toBeChecked();
+      expect(channelRadio('mail')).toBeDisabled();
+      expect(lastPreviewAudience().channel).toBe('letter');
+    });
+
+    it('falls back to the email when the next template has no letter', () => {
+      renderPage();
+      pickTemplateNamed('Rechnung');
+      fireEvent.click(channelRadio('letter'));
+
+      expect(lastPreviewAudience().channel).toBe('letter');
+
+      pickTemplateNamed('Erinnerung');
+
+      expect(channelRadio('mail')).toBeChecked();
+      expect(lastPreviewAudience().channel).toBe('mail');
+    });
+
+    it('checks the placeholders of the version being sent', () => {
+      renderPage();
+      pickTemplateNamed('Rechnung');
+
+      expect(lastMissingPlaceholders()).toEqual(
+        expect.objectContaining({ templateId: 'tpl-1', channel: 'mail' })
+      );
+
+      fireEvent.click(channelRadio('letter'));
+
+      expect(lastMissingPlaceholders()).toEqual(
+        expect.objectContaining({ templateId: 'tpl-1', channel: 'letter' })
+      );
+    });
   });
 });

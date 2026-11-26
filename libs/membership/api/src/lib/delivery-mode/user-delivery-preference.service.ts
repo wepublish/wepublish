@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import type { SessionActor } from '@wepublish/authentication/api';
 import {
   DeliveryPreferenceOrigin,
   MailChannel,
@@ -48,10 +49,17 @@ export type DeliveryPreferenceChange = {
   origin: DeliveryPreferenceOrigin;
   reason?: string | null;
   changedByUserId?: string | null;
+  /** The API key that made the change on behalf of that user. */
+  changedByApiTokenId?: string | null;
 };
 
 const changedBySelect = {
   select: { id: true, email: true, name: true, firstName: true },
+} as const;
+
+const changedByInclude = {
+  changedBy: changedBySelect,
+  changedByApiToken: { select: { id: true, name: true } },
 } as const;
 
 /**
@@ -73,7 +81,7 @@ export class UserDeliveryPreferenceService {
       }),
       this.prisma.userDeliveryPreference.findUnique({
         where: { userId },
-        include: { changedBy: changedBySelect },
+        include: changedByInclude,
       }),
       this.recipients.placeholderPatterns(),
     ]);
@@ -84,6 +92,7 @@ export class UserDeliveryPreferenceService {
       reason: preference?.reason ?? null,
       changedAt: preference?.changedAt ?? null,
       changedBy: preference?.changedBy ?? null,
+      changedByApiToken: preference?.changedByApiToken ?? null,
       canReceiveLetters: !!user && canReceiveLetters(user),
       // Email can always be chosen; whether it reaches anyone is worth a word.
       emailSegment:
@@ -122,7 +131,7 @@ export class UserDeliveryPreferenceService {
   async setForAudience(
     audience: MailAudienceInput,
     channel: MailChannel,
-    changedByUserId: string
+    changedBy: SessionActor
   ): Promise<DeliveryModeBulkResult> {
     let skip = 0;
     let userCount = 0;
@@ -153,7 +162,8 @@ export class UserDeliveryPreferenceService {
         await this.store(user.id, channel, {
           origin: DeliveryPreferenceOrigin.manual,
           reason: 'bulk',
-          changedByUserId,
+          changedByUserId: changedBy.userId,
+          changedByApiTokenId: changedBy.apiTokenId,
         });
         changed++;
       }
@@ -170,7 +180,8 @@ export class UserDeliveryPreferenceService {
         userCount,
         changed,
         skippedWithoutAddress,
-        changedByUserId,
+        changedByUserId: changedBy.userId,
+        changedByApiTokenId: changedBy.apiTokenId,
       },
     });
 
@@ -220,7 +231,7 @@ export class UserDeliveryPreferenceService {
         include: {
           address: true,
           emailQuality: { select: { level: true } },
-          deliveryPreference: { include: { changedBy: changedBySelect } },
+          deliveryPreference: { include: changedByInclude },
         },
       }),
       this.prisma.user.count({ where }),
@@ -241,6 +252,7 @@ export class UserDeliveryPreferenceService {
         reason: user.deliveryPreference?.reason ?? null,
         changedAt: user.deliveryPreference?.changedAt ?? null,
         changedBy: user.deliveryPreference?.changedBy ?? null,
+        changedByApiToken: user.deliveryPreference?.changedByApiToken ?? null,
         canReceiveLetters: canReceiveLetters(user),
         emailSegment: emailSegmentOf(user, patterns),
       })),
@@ -259,7 +271,7 @@ export class UserDeliveryPreferenceService {
         orderBy: { createdAt: 'desc' },
         skip,
         take,
-        include: { changedBy: changedBySelect },
+        include: changedByInclude,
       }),
       this.prisma.deliveryModeBulkChange.count({ where }),
     ]);
@@ -298,6 +310,7 @@ export class UserDeliveryPreferenceService {
       origin: change.origin,
       reason: change.reason ?? null,
       changedByUserId: change.changedByUserId ?? null,
+      changedByApiTokenId: change.changedByApiTokenId ?? null,
       changedAt: new Date(),
     };
 

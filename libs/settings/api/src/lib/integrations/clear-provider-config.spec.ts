@@ -1,7 +1,7 @@
 import { clearProviderConfig } from './clear-provider-config';
 
 describe('clearProviderConfig', () => {
-  test('nulls every credential of a mail provider', () => {
+  test('nulls every credential of a mail provider, and what the old provider reported', () => {
     const patch = clearProviderConfig('SettingMailProvider');
 
     expect(patch).toEqual({
@@ -17,6 +17,10 @@ describe('clearProviderConfig', () => {
       smtp_port: null,
       smtp_secure: null,
       smtp_user: null,
+      // the new provider has not reached us yet
+      lastWebhookAt: null,
+      lastPollAt: null,
+      lastPollError: null,
     });
   });
 

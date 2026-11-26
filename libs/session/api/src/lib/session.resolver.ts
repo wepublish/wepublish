@@ -1,17 +1,23 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { SessionService } from './session.service';
+import { ImpersonationService } from './impersonation.service';
 import { SessionWithToken } from './session.model';
 import {
   CurrentUser,
   Public,
-  UserSession,
+  requireSessionUser,
+  AuthSession,
+  AuthSessionType,
 } from '@wepublish/authentication/api';
 import { Permissions } from '@wepublish/permissions/api';
 import { CanPreview, CanSendJWTLogin } from '@wepublish/permissions';
 
 @Resolver()
 export class SessionResolver {
-  constructor(private sessionService: SessionService) {}
+  constructor(
+    private sessionService: SessionService,
+    private impersonationService: ImpersonationService
+  ) {}
 
   @Public()
   @Query(() => Boolean, {
@@ -50,7 +56,7 @@ export class SessionResolver {
     description: 'This mutation revokes and deletes the active session.',
   })
   async revokeActiveSession(
-    @CurrentUser() session: UserSession | null
+    @CurrentUser() session: AuthSession | null
   ): Promise<boolean> {
     return await this.sessionService.revokeSession(session);
   }
@@ -103,7 +109,13 @@ export class SessionResolver {
     description:
       'Returns a JWT that is valid for 1min for the current logged in user.',
   })
-  async createJWTForWebsiteLogin(@CurrentUser() user: UserSession) {
-    return this.sessionService.createJWTForWebsiteLogin(user.user.id);
+  async createJWTForWebsiteLogin(@CurrentUser() session: AuthSession) {
+    const user = requireSessionUser(session);
+
+    if (session.type === AuthSessionType.User && session.impersonatedBy) {
+      return this.impersonationService.continueOnWebsite(session);
+    }
+
+    return this.sessionService.createJWTForWebsiteLogin(user.id);
   }
 }

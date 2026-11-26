@@ -1,6 +1,7 @@
 import type { Mock } from 'vitest';
+import { BadRequestException } from '@nestjs/common';
 import { Test, type TestingModule } from '@nestjs/testing';
-import { PaymentPeriodicity, PrismaClient } from '@prisma/client';
+import { PaymentPeriodicity, Prisma, PrismaClient } from '@prisma/client';
 import {
   NamespacedCache,
   NamespaceResets,
@@ -139,6 +140,41 @@ describe('MemberPlanService cache', () => {
     expect(prisma.memberPlan.findMany).toHaveBeenCalledTimes(2);
   });
 
+  it('stores the printed issues with each periodicity price', async () => {
+    await service.updateMemberPlan({
+      id: 'plan-1',
+      periodicityPricing: [
+        {
+          periodicity: PaymentPeriodicity.yearly,
+          amountMin: 9000,
+          printIssues: 6,
+        },
+        { periodicity: PaymentPeriodicity.monthly, amountMin: 900 },
+      ],
+    } as never);
+
+    expect(prisma.memberPlan.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          periodicityPricing: expect.objectContaining({
+            createMany: {
+              data: [
+                expect.objectContaining({
+                  periodicity: PaymentPeriodicity.yearly,
+                  printIssues: 6,
+                }),
+                expect.objectContaining({
+                  periodicity: PaymentPeriodicity.monthly,
+                  printIssues: null,
+                }),
+              ],
+            },
+          }),
+        }),
+      })
+    );
+  });
+
   it('loads member plans again after one was deleted', async () => {
     await service.getActiveMemberPlans();
     await service.deleteMemberPlan('plan-1');
@@ -162,6 +198,52 @@ describe('MemberPlanService cache', () => {
       expect(loader).toHaveBeenCalledTimes(2);
     }
   );
+
+  it('refuses to delete a member plan that is still referenced', async () => {
+    prisma.memberPlan.delete.mockRejectedValue(
+      new Prisma.PrismaClientKnownRequestError(
+        'Foreign key constraint violated',
+        { code: 'P2003', clientVersion: 'test' }
+      )
+    );
+
+    await expect(service.deleteMemberPlan('plan-1')).rejects.toThrow(
+      new BadRequestException(
+        'This member plan is still used by subscriptions or gift codes and cannot be deleted.'
+      )
+    );
+  });
+
+  it('keeps the cached member plans when the delete was refused', async () => {
+    prisma.memberPlan.delete.mockRejectedValue(
+      new Prisma.PrismaClientKnownRequestError(
+        'Foreign key constraint violated',
+        { code: 'P2003', clientVersion: 'test' }
+      )
+    );
+    const before = await versions.current(PUBLIC_CONTENT_NAMESPACE);
+    await service.getActiveMemberPlans();
+
+    await expect(service.deleteMemberPlan('plan-1')).rejects.toBeInstanceOf(
+      BadRequestException
+    );
+    await service.getActiveMemberPlans();
+
+    expect(prisma.memberPlan.findMany).toHaveBeenCalledTimes(1);
+    await expect(versions.current(PUBLIC_CONTENT_NAMESPACE)).resolves.toBe(
+      before
+    );
+  });
+
+  it('passes other delete errors through', async () => {
+    const error = new Prisma.PrismaClientKnownRequestError('Not found', {
+      code: 'P2025',
+      clientVersion: 'test',
+    });
+    prisma.memberPlan.delete.mockRejectedValue(error);
+
+    await expect(service.deleteMemberPlan('plan-1')).rejects.toBe(error);
+  });
 
   it('retires anonymous answers after a member plan changed', async () => {
     const before = await versions.current(PUBLIC_CONTENT_NAMESPACE);

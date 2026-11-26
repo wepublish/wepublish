@@ -5,6 +5,7 @@ import {
 } from '@prisma/client';
 import { NextHandleFunction } from 'connect';
 import type { NodeRequest } from '@nestjs/platform-node';
+import { MailAttachment } from '../mail-attachment';
 
 export interface WebhookForSendMailProps {
   req: NodeRequest;
@@ -17,6 +18,8 @@ export interface SendMailProps {
   subject: string;
   message?: string;
   messageHtml?: string;
+  /** Files to send along; absent when the template attaches none. */
+  attachments?: MailAttachment[];
 }
 
 /** Evidence about the recipient's address a provider reports for a mail. */
@@ -129,6 +132,15 @@ export interface MailProvider {
   getMessageStates(
     providerMessageIDs: string[]
   ): Promise<MailProviderMessageState[]>;
+
+  /**
+   * The addresses the provider refuses to deliver to and why: its rejection
+   * denylist, bounce and complaint lists. These are kept per account or
+   * domain, so they cover mails sent outside We.Publish too. Each signal
+   * carries the address and a provider event id for deduplication. Providers
+   * without such lists return an empty list.
+   */
+  listSuppressions(): Promise<MailQualitySignal[]>;
 
   /** Fetch a template's content from the remote provider (for import/migration). */
   getTemplateContent(

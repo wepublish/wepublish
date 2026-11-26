@@ -134,6 +134,8 @@ export class SubscriptionFlowResolver {
   }
 }
 
+const NO_SUBSCRIPTION: Prisma.SubscriptionWhereInput = { id: { in: [] } };
+
 function subscriptionsOfFlow(flow: {
   memberPlanId?: string | null;
   paymentMethods: { id: string }[];
@@ -146,6 +148,8 @@ function subscriptionsOfFlow(flow: {
       in: flow.paymentMethods.map(paymentMethod => paymentMethod.id),
     },
     paymentPeriodicity: { in: flow.periodicities },
-    OR: flow.autoRenewal.map(autoRenew => ({ autoRenew })),
+    ...(flow.autoRenewal.length ?
+      { OR: flow.autoRenewal.map(autoRenew => ({ autoRenew })) }
+    : NO_SUBSCRIPTION),
   };
 }

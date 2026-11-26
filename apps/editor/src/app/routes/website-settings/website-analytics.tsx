@@ -2,10 +2,14 @@ import { useLazyQuery, useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Button,
   Checkbox,
   CircularProgress,
   FormControlLabel,
+  IconButton,
   InputAdornment,
   Link as MuiLink,
   TextField,
@@ -15,8 +19,13 @@ import {
   UpdateWebsiteSettingsDocument,
   WebsiteSettingsDocument,
 } from '@wepublish/editor/api';
-import { enqueueSnackbar, humanizeError } from '@wepublish/ui/editor';
-import { Controller, useForm, useWatch } from 'react-hook-form';
+import {
+  enqueueSnackbar,
+  humanizeError,
+  IconButtonTooltip,
+} from '@wepublish/ui/editor';
+import { Controller, useFieldArray, useForm, useWatch } from 'react-hook-form';
+import { MdAdd, MdDelete, MdExpandMore } from 'react-icons/md';
 import { Trans, useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
@@ -73,8 +82,51 @@ const analyticsSchema = z.object({
       .uuid()
       .or(z.literal(''))
       .nullish(),
+    // Objects, because useFieldArray can't hold plain strings
+    excludedSearchParams: z.array(z.object({ name: z.string() })),
   }),
 });
+
+type AnalyticsFormValues = z.infer<typeof analyticsSchema>;
+
+const toFormValues = (
+  analytics: Omit<AnalyticsFormValues, 'umami'> & {
+    umami: Omit<AnalyticsFormValues['umami'], 'excludedSearchParams'> & {
+      excludedSearchParams?: string[] | null;
+    };
+  }
+): AnalyticsFormValues => ({
+  ...analytics,
+  umami: {
+    ...analytics.umami,
+    excludedSearchParams: (analytics.umami.excludedSearchParams ?? []).map(
+      name => ({ name })
+    ),
+  },
+});
+
+const fromFormValues = ({ umami, ...analytics }: AnalyticsFormValues) => ({
+  ...analytics,
+  umami: {
+    ...umami,
+    excludedSearchParams: umami.excludedSearchParams
+      .map(({ name }) => name.trim())
+      .filter(Boolean),
+  },
+});
+
+const ExcludedSearchParams = styled(AccordionDetails)`
+  display: grid;
+  gap: 24px;
+  justify-items: start;
+`;
+
+const ExcludedSearchParamRow = styled.div`
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-self: stretch;
+`;
 
 export const WebsiteAnalyticsWrapper = styled.form`
   display: grid;
@@ -110,16 +162,16 @@ export const WebsiteAnalytics = () => {
     control,
     handleSubmit,
     formState: { isLoading },
-  } = useForm<z.infer<typeof analyticsSchema>>({
+  } = useForm<AnalyticsFormValues>({
     resolver: zodResolver(analyticsSchema),
     mode: 'onTouched',
     defaultValues: async payload => {
       const data = await loadSettings();
+      const analytics = data.data?.websiteSettings.analytics;
 
-      return (
-        data.data?.websiteSettings.analytics ??
-        (payload as z.infer<typeof analyticsSchema>)
-      );
+      return analytics ?
+          toFormValues(analytics)
+        : (payload as AnalyticsFormValues);
     },
   });
 
@@ -134,11 +186,16 @@ export const WebsiteAnalytics = () => {
   const plausibleEnabled = useWatch({ control, name: 'plausible.enabled' });
   const piwikEnabled = useWatch({ control, name: 'piwik.enabled' });
   const umamiEnabled = useWatch({ control, name: 'umami.enabled' });
+  const {
+    fields: excludedSearchParams,
+    append: appendExcludedSearchParam,
+    remove: removeExcludedSearchParam,
+  } = useFieldArray({ control, name: 'umami.excludedSearchParams' });
 
   const onSubmit = handleSubmit(data => {
     updateWebsiteSettings({
       variables: {
-        analytics: data,
+        analytics: fromFormValues(data),
       },
     });
   }, console.warn);
@@ -587,6 +644,75 @@ export const WebsiteAnalytics = () => {
           : <></>
         }
       />
+      {umamiEnabled && (
+        <Accordion>
+          <AccordionSummary expandIcon={<MdExpandMore />}>
+            <Typography
+              variant="subtitle1"
+              component="span"
+            >
+              {t('websiteSettings.analytics.umami.advanced')}
+            </Typography>
+          </AccordionSummary>
+          <ExcludedSearchParams>
+            <div>
+              <Typography
+                variant="subtitle2"
+                gutterBottom
+              >
+                {t('websiteSettings.analytics.umami.excludedSearchParams')}
+              </Typography>
+              <Typography
+                variant="body2"
+                color="textSecondary"
+                component={Explainer}
+                sx={{ m: 0 }}
+              >
+                {t('websiteSettings.analytics.umami.excludedSearchParamsHelp')}
+              </Typography>
+            </div>
+
+            {excludedSearchParams.map((field, index) => (
+              <ExcludedSearchParamRow key={field.id}>
+                <Controller
+                  name={`umami.excludedSearchParams.${index}.name`}
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      size="small"
+                      sx={{ flex: 1 }}
+                      label={t(
+                        'websiteSettings.analytics.umami.excludedSearchParam'
+                      )}
+                      placeholder="mail"
+                      autoComplete="off"
+                    />
+                  )}
+                />
+                <IconButtonTooltip caption={t('delete')}>
+                  <IconButton
+                    size="small"
+                    color="error"
+                    aria-label={t('delete')}
+                    onClick={() => removeExcludedSearchParam(index)}
+                  >
+                    <MdDelete />
+                  </IconButton>
+                </IconButtonTooltip>
+              </ExcludedSearchParamRow>
+            ))}
+
+            <Button
+              size="small"
+              startIcon={<MdAdd />}
+              onClick={() => appendExcludedSearchParam({ name: '' })}
+            >
+              {t('websiteSettings.analytics.umami.addExcludedSearchParam')}
+            </Button>
+          </ExcludedSearchParams>
+        </Accordion>
+      )}
     </WebsiteAnalyticsWrapper>
   );
 };

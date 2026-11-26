@@ -1,11 +1,13 @@
 import {
+  BadRequestException,
   Inject,
   Injectable,
   InternalServerErrorException,
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { Prisma, PrismaClient } from '@prisma/client';
+import type { SessionActor } from '@wepublish/authentication/api';
+import { PaymentState, Prisma, PrismaClient } from '@prisma/client';
 import {
   getMaxTake,
   graphQLSortOrderToPrisma,
@@ -23,8 +25,10 @@ import {
 } from './invoice.model';
 import {
   InvoicePaidNotifier,
+  isSellableInvoice,
   PAYMENT_METHOD_CONFIG,
   PaymentMethodConfig,
+  settleSellableInvoice,
 } from '@wepublish/payment/api';
 
 @Injectable()
@@ -85,6 +89,14 @@ export class InvoiceService {
 
   @PrimeDataLoader(InvoiceDataloader)
   async updateInvoice({ id, items, ...input }: UpdateInvoiceInput) {
+    if ((items || input.subscriptionID) && (await this.sellsProducts(id))) {
+      throw new BadRequestException(
+        items ?
+          'The items of invoices that sell products cannot be changed.'
+        : 'Invoices that sell products cannot be linked to a subscription.'
+      );
+    }
+
     return this.prisma.invoice.update({
       where: { id },
       data: {
@@ -125,6 +137,12 @@ export class InvoiceService {
   }
 
   async deleteInvoice(id: string) {
+    if (await this.sellsProducts(id)) {
+      throw new BadRequestException(
+        'Invoices that sell products cannot be deleted. Cancel them instead.'
+      );
+    }
+
     return this.prisma.invoice.delete({
       where: {
         id,
@@ -132,8 +150,17 @@ export class InvoiceService {
     });
   }
 
+  private async sellsProducts(invoiceId: string) {
+    const invoice = await this.prisma.invoice.findUnique({
+      where: { id: invoiceId },
+      select: { sellableKind: true },
+    });
+
+    return invoice?.sellableKind != null;
+  }
+
   @PrimeDataLoader(InvoiceDataloader)
-  async markInvoiceAsPaid(id: string, userId: string, sendMail = true) {
+  async markInvoiceAsPaid(id: string, actor: SessionActor, sendMail = true) {
     const invoice = await this.prisma.invoice.findUnique({
       where: {
         id,
@@ -148,7 +175,26 @@ export class InvoiceService {
     }
 
     if (!invoice.subscriptionID) {
-      throw new NotFoundException('Subscription not found');
+      if (!isSellableInvoice(invoice)) {
+        throw new NotFoundException('Subscription not found');
+      }
+
+      if (invoice.canceledAt) {
+        throw new BadRequestException(
+          'Canceled invoices cannot be marked as paid.'
+        );
+      }
+
+      await settleSellableInvoice(this.prisma, id, PaymentState.paid, {
+        manuallySetAsPaidByUserId: actor.userId,
+        manuallySetAsPaidByApiTokenId: actor.apiTokenId,
+      });
+      await this.invoicePaidNotifier.notify(id);
+
+      return this.prisma.invoice.findUnique({
+        where: { id },
+        include: { items: true },
+      });
     }
 
     await this.prisma.subscription.update({
@@ -181,7 +227,8 @@ export class InvoiceService {
     const invoiceMarkedAsPaid = await this.prisma.invoice.update({
       where: { id },
       data: {
-        manuallySetAsPaidByUserId: userId,
+        manuallySetAsPaidByUserId: actor.userId,
+        manuallySetAsPaidByApiTokenId: actor.apiTokenId,
         paidAt: new Date(),
         ...(sendMail ? {} : { suppressRenewalSuccessMail: true }),
       },
@@ -224,11 +271,10 @@ export class InvoiceService {
       },
     });
 
-    if (
-      !invoice ||
-      !invoice.subscription ||
-      invoice.subscription.userID !== userId
-    ) {
+    const ownerId =
+      invoice?.subscription ? invoice.subscription.userID : invoice?.userID;
+
+    if (!invoice || !ownerId || ownerId !== userId) {
       throw new NotFoundException(`Invoice with id ${id} was not found`);
     }
 
@@ -335,9 +381,16 @@ const createUserFilter = (
 ): Prisma.InvoiceWhereInput => {
   if (filter?.userID) {
     return {
-      subscription: {
-        userID: filter.userID,
-      },
+      OR: [
+        {
+          subscription: {
+            userID: filter.userID,
+          },
+        },
+        {
+          userID: filter.userID,
+        },
+      ],
     };
   }
 

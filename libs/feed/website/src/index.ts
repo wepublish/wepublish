@@ -1,4 +1,6 @@
 export * from './lib/feed-generator';
+export * from './lib/blocks-to-feed-html';
+export * from './lib/query-feed';
 export * from './lib/sitemap-generator';
 export * from './lib/sitemap';
 export * from './lib/feed-handler';

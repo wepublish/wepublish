@@ -12,6 +12,7 @@ import {
 import { Currency } from '@prisma/client';
 import { DateFilter, PaginatedType, SortOrder } from '@wepublish/utils/api';
 import { User } from '@wepublish/user/api';
+import { SellableKind } from '@wepublish/payment/api';
 import { HasOptionalSubscription } from '../subscription/has-subscription/has-subscription.model';
 
 export enum InvoiceSort {
@@ -72,9 +73,21 @@ export class Invoice extends HasOptionalSubscription {
   modifiedAt!: Date;
 
   @Field({ nullable: true })
+  userID?: string;
+
+  @Field(() => SellableKind, { nullable: true })
+  sellableKind?: SellableKind;
+
+  @Field({ nullable: true })
   manuallySetAsPaidByUserId?: string;
   @Field(() => User, { nullable: true })
   manuallySetAsPaidByUser?: User;
+  @Field(() => String, {
+    nullable: true,
+    description:
+      'Set when an API key marked the invoice as paid on behalf of `manuallySetAsPaidByUser`.',
+  })
+  manuallySetAsPaidByApiTokenId?: string | null;
 
   @Field(() => Date, { nullable: true })
   paidAt?: Date;

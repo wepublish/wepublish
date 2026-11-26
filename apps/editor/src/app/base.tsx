@@ -53,6 +53,7 @@ import {
   CanGetVideos,
   CanDeleteEvent,
   CanDeleteExternalApp,
+  CanDeleteGiftCodes,
   CanDeleteImage,
   CanDeleteMemberPlan,
   CanDeleteNavigation,
@@ -73,6 +74,7 @@ import {
   CanGetArticle,
   CanGetArticles,
   CanGetAudienceStats,
+  CanGetPrintIssues,
   CanGetAuditLogs,
   CanGetAuthor,
   CanGetAuthors,
@@ -86,6 +88,8 @@ import {
   CanGetDocument,
   CanGetDocuments,
   CanGetEvent,
+  CanGetGiftCodes,
+  CanUpdateGiftCodes,
   CanGetImage,
   CanGetImages,
   CanGetMailLogs,
@@ -168,6 +172,7 @@ import { useTranslation } from 'react-i18next';
 import {
   MdAccountCircle,
   MdApproval,
+  MdPrint,
   MdAutoFixHigh,
   MdAutorenew,
   MdBadge,
@@ -176,6 +181,7 @@ import {
   MdCardGiftcard,
   MdChat,
   MdContentCopy,
+  MdConfirmationNumber,
   MdCountertops,
   MdCreditCard,
   MdDarkMode,
@@ -210,6 +216,7 @@ import {
   MdPieChartOutline,
   MdPower,
   MdQueryStats,
+  MdRedeem,
   MdSell,
   MdSend,
   MdSettings,
@@ -224,6 +231,7 @@ import {
 } from 'react-icons/md';
 import { useLocation } from 'react-router-dom';
 
+import { ImpersonationBar } from './impersonationBar';
 import { ColorModePreference, useColorMode } from './colorMode';
 import { useMobileNavigation } from './mobileNavigation';
 import { useSidebarMenu } from './sidebarMenu';
@@ -1140,6 +1148,19 @@ export function Base({ children }: BaseProps) {
                 </SidebarNavItem>
               </PermissionControl>
 
+              <FeatureControl feature="print-export">
+                <PermissionControl
+                  qualifyingPermissions={[CanGetPrintIssues.id]}
+                >
+                  <SidebarNavItem
+                    href="/print-issues"
+                    icon={<MdPrint />}
+                  >
+                    {t('navbar.printIssues')}
+                  </SidebarNavItem>
+                </PermissionControl>
+              </FeatureControl>
+
               <PermissionControl
                 qualifyingPermissions={[CanGetAuthors.id, CanGetTags.id]}
               >
@@ -1466,6 +1487,50 @@ export function Base({ children }: BaseProps) {
                 </SidebarNavMenu>
               </PermissionControl>
 
+              <FeatureControl feature="gift-codes">
+                <PermissionControl
+                  qualifyingPermissions={[
+                    CanGetGiftCodes.id,
+                    CanUpdateGiftCodes.id,
+                    CanDeleteGiftCodes.id,
+                  ]}
+                >
+                  <SidebarNavMenu
+                    title={t('navbar.gifts')}
+                    icon={<MdRedeem />}
+                    open={openMenus.includes('gifts')}
+                    openIfCurrent={followsRoute}
+                    onToggle={wasOpen => toggleMenu('gifts', wasOpen)}
+                  >
+                    <PermissionControl
+                      qualifyingPermissions={[CanGetGiftCodes.id]}
+                    >
+                      <SidebarNavItem
+                        href="/gift-codes"
+                        icon={<MdConfirmationNumber />}
+                      >
+                        {t('giftCode.navbar')}
+                      </SidebarNavItem>
+                    </PermissionControl>
+
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        CanGetGiftCodes.id,
+                        CanUpdateGiftCodes.id,
+                        CanDeleteGiftCodes.id,
+                      ]}
+                    >
+                      <SidebarNavItem
+                        href="/gift-codes/offers"
+                        icon={<MdCardGiftcard />}
+                      >
+                        {t('giftCodeOffer.navbar')}
+                      </SidebarNavItem>
+                    </PermissionControl>
+                  </SidebarNavMenu>
+                </PermissionControl>
+              </FeatureControl>
+
               <PermissionControl
                 qualifyingPermissions={[
                   CanGetPeers.id,
@@ -1721,6 +1786,7 @@ export function Base({ children }: BaseProps) {
           tabIndex={-1}
           inert={sidebarIsModal}
         >
+          <ImpersonationBar />
           {children}
         </ChildrenContainer>
       </Layout>

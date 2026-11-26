@@ -75,6 +75,7 @@
       "@wepublish/form/editor/testing": [
         "libs/form/editor/src/testing/index.tsx"
       ],
+      "@wepublish/gift-code/api": ["libs/gift-code/api/src/index.ts"],
       "@wepublish/google-analytics/api": [
         "libs/google-analytics/api/src/index.ts"
       ],
@@ -105,6 +106,8 @@
       "@wepublish/features": ["libs/features/src/index.ts"],
       "@wepublish/features/api": ["libs/features/api/src/index.ts"],
       "@wepublish/newsletter/api": ["libs/newsletter/api/src/index.ts"],
+      "@wepublish/print-issue/api": ["libs/print-issue/api/src/index.ts"],
+      "@wepublish/print-issue/editor": ["libs/print-issue/editor/src/index.ts"],
       "@wepublish/newsletter/editor": ["libs/newsletter/editor/src/index.ts"],
       "@wepublish/newsletter/email": ["libs/newsletter/email/src/index.ts"],
       "@wepublish/newsletter/email/render": [

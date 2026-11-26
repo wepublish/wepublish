@@ -349,6 +349,53 @@ describe('PayrexxPaymentProvider', () => {
     });
   });
 
+  describe('createIntent tokenization', () => {
+    const invoice = {
+      items: [{ amount: 120, quantity: 3 }],
+    } as unknown as InvoiceWithItems;
+
+    beforeEach(() => {
+      gatewayClient.createGateway = vi.fn().mockResolvedValue({
+        id: 5,
+        link: 'https://payrexx/gateway-link',
+      } as Partial<Gateway>);
+    });
+
+    it('does not pre-authorize a one-time purchase in off-session mode', async () => {
+      await payrexx.createIntent({
+        invoice,
+        paymentID: '456',
+        successURL: 'https://success',
+        failureURL: 'https://failure',
+        currency: Currency.CHF,
+        saveCustomer: false,
+      });
+
+      const [gateway] = vi.mocked(gatewayClient.createGateway).mock.calls[0];
+
+      expect(gateway).not.toHaveProperty('preAuthorization');
+      expect(gateway).not.toHaveProperty('chargeOnAuthorization');
+    });
+
+    it('pre-authorizes when the customer is saved in off-session mode', async () => {
+      await payrexx.createIntent({
+        invoice,
+        paymentID: '456',
+        successURL: 'https://success',
+        failureURL: 'https://failure',
+        currency: Currency.CHF,
+        saveCustomer: true,
+      });
+
+      expect(gatewayClient.createGateway).toHaveBeenCalledWith(
+        expect.objectContaining({
+          preAuthorization: true,
+          chargeOnAuthorization: true,
+        })
+      );
+    });
+  });
+
   describe('checkIntentStatus', () => {
     it('should return null on an unmappable transaction status instead of throwing', async () => {
       const transaction = {
