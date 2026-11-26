@@ -46,10 +46,12 @@ export const mockArticleRevision = ({
   socialMediaImage,
   image,
   authors,
+  blocksChangeAt: null,
   blocks,
   properties: [],
   canonicalUrl: 'https://example.com',
   breaking: false,
+  restricted: false,
   hideAuthor: false,
   ...definedOnly(overrides),
 });

@@ -1,0 +1,324 @@
+import {
+  EngagementAudience,
+  EngagementEnforcement,
+  EngagementGoal,
+  EngagementRequirement,
+  EngagementRule,
+  EngagementStage,
+} from '@prisma/client';
+import { Meter, countedReads, emptyMeter, hasRead } from './meter';
+import {
+  ReaderContext,
+  matchesAudience,
+  meetsRequirement,
+} from './reader-context';
+
+/**
+ * Pure decisions about engagement rules: which rules apply, which stage a
+ * reader reached and whether a metered rule restricts an article. Paywalls are
+ * decided in `article-api` (`evaluateArticleAccess`), which calls in here.
+ */
+
+export type EvaluatedStage = Pick<
+  EngagementStage,
+  | 'id'
+  | 'afterArticles'
+  | 'placement'
+  | 'enforcement'
+  | 'requirement'
+  | 'previewBlocks'
+>;
+
+export type EvaluatedRule<Stage extends EvaluatedStage = EvaluatedStage> = Pick<
+  EngagementRule,
+  | 'id'
+  | 'goal'
+  | 'active'
+  | 'priority'
+  | 'audiences'
+  | 'excludedAudiences'
+  | 'showOnArticles'
+  | 'includePeeredArticles'
+  | 'meterWindowDays'
+> & {
+  showOnPageIds: string[];
+  audienceUtm?: string[];
+  audienceMemberPlanIds?: string[];
+  /** A string once the rule came back from the cache. */
+  createdAt?: Date | string;
+  /** Ordered by `afterArticles`. */
+  stages: Stage[];
+};
+
+export type EngagementTarget =
+  | {
+      kind: 'article';
+      articleId: string;
+      /** "Exclude from metered engagement rules" on the article. */
+      contentGateDisabled: boolean;
+      peered: boolean;
+    }
+  | { kind: 'page'; pageId: string };
+
+export type MeteredRestriction = {
+  granted: false;
+  ruleId: string;
+  stageId: string;
+  requirement: EngagementRequirement;
+  previewBlocks: number;
+};
+
+export type MeteredAccess =
+  | {
+      granted: true;
+      /** Whether the read goes on the meter: a metered rule targets it. */
+      record: boolean;
+    }
+  | MeteredRestriction;
+
+export const isMeteredRestriction = (
+  access: MeteredAccess
+): access is MeteredRestriction => !access.granted;
+
+/** Rules without a window (should not exist past validation) use this one. */
+const FALLBACK_WINDOW_DAYS = 30;
+
+export const isMetered = (rule: Pick<EvaluatedRule, 'goal'>) =>
+  rule.goal !== EngagementGoal.ANNOUNCEMENT;
+
+const windowOf = (rule: EvaluatedRule) =>
+  rule.meterWindowDays ?? FALLBACK_WINDOW_DAYS;
+
+const isHard = (stage: EvaluatedStage) =>
+  stage.enforcement === EngagementEnforcement.HARD;
+
+export const hardStageOf = <Stage extends EvaluatedStage>(
+  rule: EvaluatedRule<Stage>
+): Stage | undefined => {
+  const last = rule.stages.at(-1);
+
+  return last && isHard(last) ? last : undefined;
+};
+
+export const maxMeterWindowDays = (rules: EvaluatedRule[]) =>
+  Math.max(0, ...rules.filter(isMetered).map(windowOf));
+
+const targets = (rule: EvaluatedRule, target: EngagementTarget) => {
+  if (target.kind === 'page') {
+    return rule.showOnPageIds.includes(target.pageId);
+  }
+
+  if (!rule.showOnArticles) {
+    return false;
+  }
+
+  if (target.peered && !rule.includePeeredArticles) {
+    return false;
+  }
+
+  return !(target.contentGateDisabled && isMetered(rule));
+};
+
+export function matchingRules<Rule extends EvaluatedRule<EvaluatedStage>>(
+  rules: Rule[],
+  reader: ReaderContext,
+  target: EngagementTarget
+): Rule[] {
+  return rules.filter(rule => {
+    if (!rule.active || !matchesAudience(rule, reader)) {
+      return false;
+    }
+
+    if (!targets(rule, target)) {
+      return false;
+    }
+
+    // Readers who gave their email are not asked for it again.
+    if (
+      rule.goal === EngagementGoal.NEWSLETTER &&
+      reader.newsletter === 'subscribed'
+    ) {
+      return false;
+    }
+
+    const requirement = hardStageOf(rule)?.requirement;
+
+    return !(requirement && meetsRequirement(requirement, reader));
+  });
+}
+
+export const currentStage = <Stage extends EvaluatedStage>(
+  rule: EvaluatedRule<Stage>,
+  count: number
+): Stage | undefined =>
+  rule.stages.filter(stage => stage.afterArticles <= count).at(-1);
+
+/**
+ * How narrow an audience is: at the same priority the narrower one goes
+ * first, a rule for everyone last. The editor mirrors this in
+ * `engagement-conflicts.ts`.
+ */
+export const AUDIENCE_SPECIFICITY: Record<EngagementAudience, number> = {
+  ANONYMOUS: 2,
+  MEMBERS: 2,
+  PAYWALL_BYPASSED: 3,
+  UTM: 3,
+};
+
+/** Everyone 0, everyone but some 1, else its narrowest segment; chosen plans narrow members further. */
+export const audienceSpecificity = ({
+  audiences,
+  excludedAudiences,
+  audienceMemberPlanIds = [],
+}: Pick<
+  EvaluatedRule,
+  'audiences' | 'excludedAudiences' | 'audienceMemberPlanIds'
+>) =>
+  audiences.length ?
+    Math.max(
+      ...audiences.map(audience =>
+        (
+          audience === EngagementAudience.MEMBERS &&
+          audienceMemberPlanIds.length
+        ) ?
+          4
+        : AUDIENCE_SPECIFICITY[audience]
+      )
+    )
+  : Number(excludedAudiences.length > 0);
+
+const createdAtOf = (rule: EvaluatedRule) =>
+  rule.createdAt ? new Date(rule.createdAt).getTime() : 0;
+
+/**
+ * Priority is an override; without one the more specific rule goes first (a
+ * narrower audience, then chosen pages only over every article) and then the
+ * newest rule.
+ */
+const byPromptOrder = (
+  a: { rule: EvaluatedRule; stage?: EvaluatedStage },
+  b: { rule: EvaluatedRule; stage?: EvaluatedStage }
+) =>
+  b.rule.priority - a.rule.priority ||
+  Number(!!b.stage && isHard(b.stage)) - Number(!!a.stage && isHard(a.stage)) ||
+  audienceSpecificity(b.rule) - audienceSpecificity(a.rule) ||
+  Number(a.rule.showOnArticles) - Number(b.rule.showOnArticles) ||
+  createdAtOf(b.rule) - createdAtOf(a.rule) ||
+  a.rule.id.localeCompare(b.rule.id);
+
+const restrictedBy = (
+  rule: EvaluatedRule,
+  stage: EvaluatedStage
+): MeteredRestriction => ({
+  granted: false,
+  ruleId: rule.id,
+  stageId: stage.id,
+  requirement: stage.requirement ?? EngagementRequirement.REGISTRATION,
+  previewBlocks: stage.previewBlocks ?? 0,
+});
+
+/**
+ * Whether the matching metered rules let the reader read the article.
+ *
+ * Without a meter (ISR, RSS, API consumers: anyone `viewArticle` did not place
+ * on the meter) every matching hard stage restricts. With one, an article is
+ * granted when it was already read in the window or while the counted reads
+ * are below the hard stage.
+ */
+export function meteredAccess({
+  rules,
+  meter,
+  articleId,
+  now,
+}: {
+  rules: EvaluatedRule[];
+  meter?: Meter;
+  articleId: string;
+  now: Date;
+}): MeteredAccess {
+  const metered = rules
+    .filter(isMetered)
+    .map(rule => ({ rule, stage: hardStageOf(rule) }))
+    .sort(byPromptOrder);
+
+  // Without a meter (server rendering, feeds, API) nothing was read yet.
+  const reads = meter ?? emptyMeter();
+
+  for (const { rule, stage } of metered) {
+    if (!stage) {
+      continue;
+    }
+
+    const window = windowOf(rule);
+
+    if (hasRead(reads, articleId, window, now)) {
+      continue;
+    }
+
+    if (countedReads(reads, window, now, articleId) >= stage.afterArticles) {
+      return restrictedBy(rule, stage);
+    }
+  }
+
+  return { granted: true, record: metered.length > 0 };
+}
+
+/**
+ * At most one stage per rule, in the order the website fills its slots. A hard
+ * stage only shows when it is the one restricting the article; otherwise the
+ * reader sees the last soft stage they reached.
+ */
+export function resolvePrompts<Rule extends EvaluatedRule<EvaluatedStage>>({
+  rules,
+  meter,
+  articleId,
+  now,
+  restriction,
+}: {
+  rules: Rule[];
+  meter?: Meter;
+  articleId?: string;
+  now: Date;
+  restriction?: Pick<MeteredRestriction, 'ruleId' | 'stageId'>;
+}): Array<{ rule: Rule; stage: Rule['stages'][number] }> {
+  return rules
+    .map(rule => {
+      const count =
+        meter && isMetered(rule) ?
+          countedReads(meter, windowOf(rule), now, articleId)
+        : 0;
+      const stage = currentStage(rule, count);
+
+      if (!stage || !isHard(stage) || restriction?.stageId === stage.id) {
+        return { rule, stage };
+      }
+
+      return {
+        rule,
+        stage: rule.stages
+          .filter(soft => !isHard(soft) && soft.afterArticles <= count)
+          .at(-1),
+      };
+    })
+    .filter(
+      (prompt): prompt is { rule: Rule; stage: Rule['stages'][number] } =>
+        !!prompt.stage
+    )
+    .sort(byPromptOrder);
+}
+
+/**
+ * Articles with an active paywall are left to the paywall: metered rules
+ * neither restrict nor prompt there, like on articles excluded from them.
+ */
+export const articleTarget = (article: {
+  id: string;
+  contentGateDisabled: boolean;
+  peerId?: string | null;
+  hasActivePaywall: boolean;
+}): EngagementTarget => ({
+  kind: 'article',
+  articleId: article.id,
+  contentGateDisabled: article.contentGateDisabled || article.hasActivePaywall,
+  peered: !!article.peerId,
+});

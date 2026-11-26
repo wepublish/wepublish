@@ -41,10 +41,11 @@ export type ModalProps = PropsWithChildren<{
   className?: string;
   open: boolean;
   title: ReactNode;
-  submitText: string;
+  submitText?: string;
   cancelText?: string;
-  onCancel: () => void;
-  onSubmit: () => void;
+  /** Without it the modal can not be closed: no cancel button, no escape. */
+  onCancel?: () => void;
+  onSubmit?: () => void;
 }>;
 
 export const Modal = ({
@@ -85,21 +86,25 @@ export const Modal = ({
         </ModalContent>
 
         <ModalActions>
-          <Button
-            onClick={onCancel}
-            variant="text"
-            color="secondary"
-          >
-            {cancelText}
-          </Button>
+          {onCancel && (
+            <Button
+              onClick={onCancel}
+              variant="text"
+              color="secondary"
+            >
+              {cancelText}
+            </Button>
+          )}
 
-          <Button
-            variant={'contained'}
-            color="primary"
-            onClick={onSubmit}
-          >
-            {submitText}
-          </Button>
+          {onSubmit && (
+            <Button
+              variant={'contained'}
+              color="primary"
+              onClick={onSubmit}
+            >
+              {submitText}
+            </Button>
+          )}
         </ModalActions>
       </ModalWrapper>
     </MuiModal>

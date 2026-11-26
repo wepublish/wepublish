@@ -390,6 +390,43 @@ describe('ArticleService', () => {
     expect(prismaMock.articleTrackingPixels.createMany).not.toHaveBeenCalled();
   });
 
+  it.each([true, false])(
+    'stores whether the article is excluded from metered engagement rules (%s)',
+    async contentGateDisabled => {
+      prismaMock.article.create?.mockResolvedValue({
+        id: '1234',
+      } as Partial<Article>);
+      prismaMock.article.findUnique?.mockResolvedValue({
+        id: '1234',
+        tags: [],
+      });
+
+      const input = {
+        contentGateDisabled,
+        breaking: false,
+        disableComments: false,
+        hidden: false,
+        hideAuthor: false,
+        shared: false,
+        properties: [],
+        socialMediaAuthorIds: [],
+        tagIds: [],
+        authors: [],
+        blocks: [],
+      };
+
+      await service.createArticle(input, '1234');
+      await service.updateArticle({ ...input, id: '1234' }, '1234');
+
+      expect(
+        prismaMock.article.create?.mock.calls[0][0].data.contentGateDisabled
+      ).toBe(contentGateDisabled);
+      expect(
+        prismaMock.article.update?.mock.calls[0][0].data.contentGateDisabled
+      ).toBe(contentGateDisabled);
+    }
+  );
+
   it('should lowercase the slug when creating an article', async () => {
     prismaMock.article.create?.mockResolvedValue({
       id: '1234',

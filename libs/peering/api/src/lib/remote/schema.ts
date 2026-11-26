@@ -155,6 +155,7 @@ export enum ApiTokenStatus {
 
 export type Article = HasOptionalPaywall & HasOptionalPeerLc & {
   __typename?: 'Article';
+  contentGateDisabled: Scalars['Boolean']['output'];
   createdAt: Scalars['DateTime']['output'];
   disableComments: Scalars['Boolean']['output'];
   draft?: Maybe<ArticleRevision>;
@@ -178,6 +179,23 @@ export type Article = HasOptionalPaywall & HasOptionalPeerLc & {
   trackingPixels: Array<TrackingPixel>;
   url: Scalars['String']['output'];
 };
+
+export type ArticleAccess = {
+  __typename?: 'ArticleAccess';
+  granted: Scalars['Boolean']['output'];
+  paywallId?: Maybe<Scalars['String']['output']>;
+  previewBlocks?: Maybe<Scalars['Int']['output']>;
+  requirement?: Maybe<EngagementRequirement>;
+  ruleId?: Maybe<Scalars['String']['output']>;
+  source?: Maybe<ArticleAccessSource>;
+  stageId?: Maybe<Scalars['String']['output']>;
+};
+
+/** What keeps a reader from the full article: a paywall or a metered engagement rule. */
+export enum ArticleAccessSource {
+  EngagementRule = 'ENGAGEMENT_RULE',
+  Paywall = 'PAYWALL'
+}
 
 export type ArticleCreatedAction = BaseAction & HasArticleLc & {
   __typename?: 'ArticleCreatedAction';
@@ -225,6 +243,7 @@ export type ArticleRevision = HasBlockContent & HasOptionalUserLc & {
   __typename?: 'ArticleRevision';
   archivedAt?: Maybe<Scalars['DateTime']['output']>;
   authors: Array<ArticleRevisionAuthor>;
+  /** Readers without access only get the preview blocks: the server cuts paywalled and metered articles, the website does not hide them. viewArticle grants access for the article it returns. Feeds pass forFeed and get every block. */
   blocks: Array<BlockContent>;
   /** When the set of displayed blocks changes next, so caches can expire in time. Null while no block is timed. */
   blocksChangeAt?: Maybe<Scalars['DateTime']['output']>;
@@ -239,6 +258,8 @@ export type ArticleRevision = HasBlockContent & HasOptionalUserLc & {
   preTitle?: Maybe<Scalars['String']['output']>;
   properties: Array<Property>;
   publishedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** Whether the reader has no access to the article and only gets its preview blocks. */
+  restricted: Scalars['Boolean']['output'];
   seoDescription?: Maybe<Scalars['String']['output']>;
   seoTitle?: Maybe<Scalars['String']['output']>;
   socialMediaAuthors: Array<Author>;
@@ -253,6 +274,7 @@ export type ArticleRevision = HasBlockContent & HasOptionalUserLc & {
 
 
 export type ArticleRevisionBlocksArgs = {
+  forFeed?: Scalars['Boolean']['input'];
   onlyDisplayed?: Scalars['Boolean']['input'];
 };
 
@@ -342,6 +364,7 @@ export type ArticleTemplateMetadataInput = {
   authors: Array<ArticleRevisionAuthorInput>;
   breaking: Scalars['Boolean']['input'];
   canonicalUrl?: InputMaybe<Scalars['String']['input']>;
+  contentGateDisabled?: InputMaybe<Scalars['Boolean']['input']>;
   disableComments: Scalars['Boolean']['input'];
   hidden: Scalars['Boolean']['input'];
   hideAuthor: Scalars['Boolean']['input'];
@@ -366,6 +389,16 @@ export enum ArticleTemplateSort {
   ModifiedAt = 'ModifiedAt',
   Name = 'Name'
 }
+
+export type ArticleView = {
+  __typename?: 'ArticleView';
+  access: ArticleAccess;
+  /** The article, with every block when access was granted. */
+  article: Article;
+  /** The anonymous reader's meter, signed. Keep it and send it with the next viewArticle. Null for logged-in readers, whose meter stays on the server. */
+  meterToken?: Maybe<Scalars['String']['output']>;
+  prompts: Array<EngagementPrompt>;
+};
 
 export type Audio = {
   __typename?: 'Audio';
@@ -1088,30 +1121,6 @@ export type ConsentFilter = {
   slug?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type CreateBannerActionInput = {
-  label: Scalars['String']['input'];
-  role: BannerActionRole;
-  style: Scalars['String']['input'];
-  url: Scalars['String']['input'];
-};
-
-export type CreateBannerInput = {
-  actions?: InputMaybe<Array<CreateBannerActionInput>>;
-  active: Scalars['Boolean']['input'];
-  collapsible: Scalars['Boolean']['input'];
-  cta?: InputMaybe<Scalars['String']['input']>;
-  delay: Scalars['Int']['input'];
-  embedUrl?: InputMaybe<Scalars['String']['input']>;
-  hideForMinutes: Scalars['Int']['input'];
-  html?: InputMaybe<Scalars['String']['input']>;
-  imageId?: InputMaybe<Scalars['String']['input']>;
-  showForLoginStatus: LoginStatus;
-  showOnArticles: Scalars['Boolean']['input'];
-  showOnPages?: InputMaybe<Array<PageModelInput>>;
-  text: Scalars['String']['input'];
-  title: Scalars['String']['input'];
-};
-
 export type CreateCrowdfundingGoalInput = {
   amount: Scalars['Float']['input'];
   description?: InputMaybe<Scalars['String']['input']>;
@@ -1130,6 +1139,26 @@ export type CreateCrowdfundingInput = {
 
 export type CreateCrowdfundingMemberPlan = {
   id: Scalars['String']['input'];
+};
+
+export type CreateEngagementRuleInput = {
+  active?: Scalars['Boolean']['input'];
+  /** Narrows the MEMBERS audience to these plans. */
+  audienceMemberPlanIds?: Array<Scalars['String']['input']>;
+  /** key=value url params of the UTM audience, which needs at least one. */
+  audienceUtm?: Array<Scalars['String']['input']>;
+  /** Only readers in one of these, everyone when empty. */
+  audiences?: Array<EngagementAudience>;
+  /** Never readers in one of these. */
+  excludedAudiences?: Array<EngagementAudience>;
+  goal: EngagementGoal;
+  includePeeredArticles?: Scalars['Boolean']['input'];
+  meterWindowDays?: InputMaybe<Scalars['Int']['input']>;
+  name: Scalars['String']['input'];
+  priority?: Scalars['Int']['input'];
+  showOnArticles?: Scalars['Boolean']['input'];
+  showOnPageIds?: Array<Scalars['String']['input']>;
+  stages: Array<EngagementStageInput>;
 };
 
 export type CreateExternalAppInput = {
@@ -1607,6 +1636,163 @@ export type EmailQualityRefreshModel = {
   recomputed: Scalars['Int']['output'];
   /** Mails whose state the provider reported differently. */
   updated: Scalars['Int']['output'];
+};
+
+export type EngagementAction = {
+  __typename?: 'EngagementAction';
+  id: Scalars['String']['output'];
+  /** Empty for the website's default label of the type. */
+  label: Scalars['String']['output'];
+  role: EngagementActionRole;
+  style: Scalars['String']['output'];
+  type: EngagementActionType;
+  url: Scalars['String']['output'];
+};
+
+export type EngagementActionInput = {
+  label?: Scalars['String']['input'];
+  role?: EngagementActionRole;
+  style?: Scalars['String']['input'];
+  type?: EngagementActionType;
+  url?: Scalars['String']['input'];
+};
+
+export enum EngagementActionRole {
+  Cancel = 'CANCEL',
+  Other = 'OTHER',
+  Primary = 'PRIMARY'
+}
+
+export enum EngagementActionType {
+  Login = 'LOGIN',
+  Membership = 'MEMBERSHIP',
+  Newsletter = 'NEWSLETTER',
+  Register = 'REGISTER',
+  Url = 'URL'
+}
+
+/** Who a rule is for, decided from the session. */
+export enum EngagementAudience {
+  Anonymous = 'ANONYMOUS',
+  Members = 'MEMBERS',
+  PaywallBypassed = 'PAYWALL_BYPASSED',
+  Utm = 'UTM'
+}
+
+export enum EngagementDocumentType {
+  Article = 'ARTICLE',
+  Page = 'PAGE'
+}
+
+/** A soft stage can be dismissed, a hard stage cuts the article down to its preview blocks. */
+export enum EngagementEnforcement {
+  Hard = 'HARD',
+  Soft = 'SOFT'
+}
+
+/** What a rule promotes. An announcement is one soft stage from the first article on. */
+export enum EngagementGoal {
+  Announcement = 'ANNOUNCEMENT',
+  Membership = 'MEMBERSHIP',
+  Newsletter = 'NEWSLETTER'
+}
+
+export enum EngagementPlacement {
+  Banner = 'BANNER',
+  Cutoff = 'CUTOFF',
+  Inline = 'INLINE',
+  Modal = 'MODAL'
+}
+
+/** One stage of a rule that applies to the reader, as the website shows it. */
+export type EngagementPrompt = {
+  __typename?: 'EngagementPrompt';
+  goal: EngagementGoal;
+  ruleId: Scalars['String']['output'];
+  ruleVersion: Scalars['Int']['output'];
+  stage: EngagementStage;
+};
+
+/** What a reader needs to get past a hard stage. */
+export enum EngagementRequirement {
+  Membership = 'MEMBERSHIP',
+  Newsletter = 'NEWSLETTER',
+  Registration = 'REGISTRATION'
+}
+
+export type EngagementRule = {
+  __typename?: 'EngagementRule';
+  active: Scalars['Boolean']['output'];
+  /** Narrows the MEMBERS audience to these plans. */
+  audienceMemberPlanIds: Array<Scalars['String']['output']>;
+  /** key=value url params of the UTM audience, e.g. utm_medium=email. */
+  audienceUtm: Array<Scalars['String']['output']>;
+  /** Only readers in one of these, everyone when empty. */
+  audiences: Array<EngagementAudience>;
+  createdAt: Scalars['DateTime']['output'];
+  /** Never readers in one of these. */
+  excludedAudiences: Array<EngagementAudience>;
+  goal: EngagementGoal;
+  id: Scalars['String']['output'];
+  includePeeredArticles: Scalars['Boolean']['output'];
+  meterWindowDays?: Maybe<Scalars['Int']['output']>;
+  modifiedAt: Scalars['DateTime']['output'];
+  name: Scalars['String']['output'];
+  /** Higher priorities fill the website's slots first. */
+  priority: Scalars['Int']['output'];
+  showOnArticles: Scalars['Boolean']['output'];
+  showOnPageIds: Array<Scalars['String']['output']>;
+  stages: Array<EngagementStage>;
+  /** Bumped on every update, so dismissed prompts show again. */
+  version: Scalars['Int']['output'];
+};
+
+export type EngagementStage = {
+  __typename?: 'EngagementStage';
+  actions: Array<EngagementAction>;
+  /** Shown once the reader read this many other articles in the window. */
+  afterArticles: Scalars['Int']['output'];
+  blockTemplate?: Maybe<BlockTemplate>;
+  /** A block template shown instead of the texts. */
+  blockTemplateId?: Maybe<Scalars['String']['output']>;
+  cta?: Maybe<Scalars['String']['output']>;
+  delaySeconds: Scalars['Int']['output'];
+  description?: Maybe<Scalars['RichText']['output']>;
+  dismissible: Scalars['Boolean']['output'];
+  embedUrl?: Maybe<Scalars['String']['output']>;
+  enforcement: EngagementEnforcement;
+  hideForMinutes: Scalars['Int']['output'];
+  html?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  image?: Maybe<Image>;
+  imageId?: Maybe<Scalars['String']['output']>;
+  placement: EngagementPlacement;
+  previewBlocks?: Maybe<Scalars['Int']['output']>;
+  requirement?: Maybe<EngagementRequirement>;
+  text?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+};
+
+export type EngagementStageInput = {
+  actions?: Array<EngagementActionInput>;
+  /** Shown once the reader read this many other articles in the window. */
+  afterArticles: Scalars['Int']['input'];
+  /** A block template shown instead of the texts. */
+  blockTemplateId?: InputMaybe<Scalars['String']['input']>;
+  cta?: InputMaybe<Scalars['String']['input']>;
+  delaySeconds?: Scalars['Int']['input'];
+  description?: InputMaybe<Scalars['RichText']['input']>;
+  dismissible?: Scalars['Boolean']['input'];
+  embedUrl?: InputMaybe<Scalars['String']['input']>;
+  enforcement: EngagementEnforcement;
+  hideForMinutes?: Scalars['Int']['input'];
+  html?: InputMaybe<Scalars['String']['input']>;
+  imageId?: InputMaybe<Scalars['String']['input']>;
+  placement: EngagementPlacement;
+  previewBlocks?: InputMaybe<Scalars['Int']['input']>;
+  requirement?: InputMaybe<EngagementRequirement>;
+  text?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Event = {
@@ -3714,7 +3900,6 @@ export type Mutation = {
   createArticleTemplate: ArticleTemplate;
   /** Creates a new author. */
   createAuthor: Author;
-  createBanner: Banner;
   /** Creates a new block style. */
   createBlockStyle: BlockStyle;
   /** Creates a new block template. */
@@ -3733,6 +3918,7 @@ export type Mutation = {
   createCrowdfunding: Crowdfunding;
   /** Creates a new discountCode. */
   createDiscountCode: DiscountCode;
+  createEngagementRule: EngagementRule;
   /** Creates a new event. */
   createEvent: Event;
   /** Creates a new external app. */
@@ -3837,7 +4023,6 @@ export type Mutation = {
   deleteAudio: Scalars['String']['output'];
   /** Deletes an existing author. */
   deleteAuthor: Author;
-  deleteBanner?: Maybe<Scalars['Boolean']['output']>;
   /** Deletes an existing block style. */
   deleteBlockStyle: BlockStyle;
   /** Deletes an existing block template. */
@@ -3855,6 +4040,7 @@ export type Mutation = {
   deleteDiscountCode: DiscountCode;
   /** Deletes an existing document. */
   deleteDocument: Scalars['String']['output'];
+  deleteEngagementRule: EngagementRule;
   /** Deletes an existing event. */
   deleteEvent: Event;
   /** Deletes an external app. */
@@ -4058,6 +4244,8 @@ export type Mutation = {
   setPaymentProviderCustomers: Scalars['Int']['output'];
   /** Switch a user between mailed and printed subscription mails */
   setUserDeliveryMode: UserDeliveryPreferenceModel;
+  /** Signs an email up for the newsletter, pending its confirmation by mail. Newsletter walls only ask for this. Readers who are not logged in solve the challenge first, so no script sends confirmation mails to other people's addresses. */
+  signUpForNewsletter: NewsletterSignup;
   /** Ask the mail provider for the current delivery state of mails that are still open. Complements the provider webhook, which is not reachable in local development. */
   syncMailLogStates: MailLogSyncModel;
   /** Sends a test email for the given event */
@@ -4083,7 +4271,6 @@ export type Mutation = {
   updateAudio: Audio;
   /** Updates an existing author. */
   updateAuthor: Author;
-  updateBanner: Banner;
   /** Updates an existing block style. */
   updateBlockStyle: BlockStyle;
   /** Updates an existing block template. */
@@ -4106,6 +4293,8 @@ export type Mutation = {
   updateDiscountCode: DiscountCode;
   /** Updates an existing document. */
   updateDocument: Document;
+  /** Replaces the rule's stages and bumps its version. */
+  updateEngagementRule: EngagementRule;
   /** Updates an existing event. */
   updateEvent: Event;
   /** Updates an existing external app. */
@@ -4203,6 +4392,8 @@ export type Mutation = {
   uploadUserProfileImage?: Maybe<SensitiveDataUser>;
   /** Uploads a new video. */
   uploadVideo: Video;
+  /** Records that the reader opens an article and decides their access: the only way past a hard engagement stage or an enforced paywall. A mutation on purpose, so it is never cached or prefetched. */
+  viewArticle: ArticleView;
   /** This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous */
   voteOnPoll?: Maybe<PollVote>;
 };
@@ -4351,6 +4542,7 @@ export type MutationCreateArticleArgs = {
   blocks: Array<BlockContentInput>;
   breaking: Scalars['Boolean']['input'];
   canonicalUrl?: InputMaybe<Scalars['String']['input']>;
+  contentGateDisabled?: InputMaybe<Scalars['Boolean']['input']>;
   disableComments: Scalars['Boolean']['input'];
   hidden: Scalars['Boolean']['input'];
   hideAuthor: Scalars['Boolean']['input'];
@@ -4391,11 +4583,6 @@ export type MutationCreateAuthorArgs = {
   name: Scalars['String']['input'];
   slug: Scalars['Slug']['input'];
   tagIds: Array<Scalars['String']['input']>;
-};
-
-
-export type MutationCreateBannerArgs = {
-  input: CreateBannerInput;
 };
 
 
@@ -4449,6 +4636,11 @@ export type MutationCreateDiscountCodeArgs = {
   memberPlanId: Scalars['String']['input'];
   validFrom: Scalars['DateTime']['input'];
   validTo: Scalars['DateTime']['input'];
+};
+
+
+export type MutationCreateEngagementRuleArgs = {
+  input: CreateEngagementRuleInput;
 };
 
 
@@ -4701,6 +4893,7 @@ export type MutationCreatePaywallArgs = {
   bypassTokens: Array<Scalars['String']['input']>;
   circumventDescription?: InputMaybe<Scalars['RichText']['input']>;
   description?: InputMaybe<Scalars['RichText']['input']>;
+  enforced?: Scalars['Boolean']['input'];
   fadeout: Scalars['Boolean']['input'];
   hideContentAfter: Scalars['Int']['input'];
   memberPlanIds: Array<Scalars['String']['input']>;
@@ -4953,11 +5146,6 @@ export type MutationDeleteAuthorArgs = {
 };
 
 
-export type MutationDeleteBannerArgs = {
-  id: Scalars['String']['input'];
-};
-
-
 export type MutationDeleteBlockStyleArgs = {
   id: Scalars['String']['input'];
 };
@@ -4989,6 +5177,11 @@ export type MutationDeleteDiscountCodeArgs = {
 
 
 export type MutationDeleteDocumentArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteEngagementRuleArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -5502,6 +5695,12 @@ export type MutationSetUserDeliveryModeArgs = {
 };
 
 
+export type MutationSignUpForNewsletterArgs = {
+  challengeAnswer?: InputMaybe<ChallengeInput>;
+  email: Scalars['String']['input'];
+};
+
+
 export type MutationSyncMailLogStatesArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
 };
@@ -5563,6 +5762,7 @@ export type MutationUpdateArticleArgs = {
   blocks: Array<BlockContentInput>;
   breaking: Scalars['Boolean']['input'];
   canonicalUrl?: InputMaybe<Scalars['String']['input']>;
+  contentGateDisabled?: InputMaybe<Scalars['Boolean']['input']>;
   disableComments: Scalars['Boolean']['input'];
   hidden: Scalars['Boolean']['input'];
   hideAuthor: Scalars['Boolean']['input'];
@@ -5616,11 +5816,6 @@ export type MutationUpdateAuthorArgs = {
   name?: InputMaybe<Scalars['String']['input']>;
   slug?: InputMaybe<Scalars['Slug']['input']>;
   tagIds?: InputMaybe<Array<Scalars['String']['input']>>;
-};
-
-
-export type MutationUpdateBannerArgs = {
-  input: UpdateBannerInput;
 };
 
 
@@ -5696,6 +5891,11 @@ export type MutationUpdateDocumentArgs = {
   description?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['String']['input'];
   title?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationUpdateEngagementRuleArgs = {
+  input: UpdateEngagementRuleInput;
 };
 
 
@@ -5956,6 +6156,7 @@ export type MutationUpdatePaywallArgs = {
   bypassTokens?: InputMaybe<Array<Scalars['String']['input']>>;
   circumventDescription?: InputMaybe<Scalars['RichText']['input']>;
   description?: InputMaybe<Scalars['RichText']['input']>;
+  enforced?: InputMaybe<Scalars['Boolean']['input']>;
   fadeout?: InputMaybe<Scalars['Boolean']['input']>;
   hideContentAfter?: InputMaybe<Scalars['Int']['input']>;
   id: Scalars['String']['input'];
@@ -6250,6 +6451,11 @@ export type MutationUploadVideoArgs = {
 };
 
 
+export type MutationViewArticleArgs = {
+  input: ViewArticleInput;
+};
+
+
 export type MutationVoteOnPollArgs = {
   answerId: Scalars['String']['input'];
 };
@@ -6332,6 +6538,19 @@ export type NewsletterReport = {
   missingArticles: Array<Scalars['String']['output']>;
   missingFooter: Array<Scalars['String']['output']>;
 };
+
+export type NewsletterSignup = {
+  __typename?: 'NewsletterSignup';
+  /** Keep it (the website uses a cookie) and send it with viewArticle and engagementPrompts: it gets the reader past newsletter walls and keeps newsletter prompts away. */
+  newsletterToken: Scalars['String']['output'];
+};
+
+/** Why newsletter sign-ups can not reach Mailchimp: no integration, one that is switched off, or one without an API key or audience. */
+export enum NewsletterSignupProblem {
+  Disabled = 'disabled',
+  Incomplete = 'incomplete',
+  NoIntegration = 'noIntegration'
+}
 
 export type NotificationConfirmation = {
   __typename?: 'NotificationConfirmation';
@@ -6435,10 +6654,6 @@ export type PageInfo = {
 export type PageModel = {
   __typename?: 'PageModel';
   id: Scalars['String']['output'];
-};
-
-export type PageModelInput = {
-  id: Scalars['String']['input'];
 };
 
 export type PageNavigationLink = BaseNavigationLink & HasPage & {
@@ -7037,6 +7252,8 @@ export type Paywall = {
   circumventDescription?: Maybe<Scalars['RichText']['output']>;
   createdAt: Scalars['DateTime']['output'];
   description?: Maybe<Scalars['RichText']['output']>;
+  /** Cut the blocks after hideContentAfter on the server, instead of hiding them on the website. */
+  enforced: Scalars['Boolean']['output'];
   fadeout: Scalars['Boolean']['output'];
   hideContentAfter: Scalars['Int']['output'];
   id: Scalars['String']['output'];
@@ -7789,8 +8006,6 @@ export type Query = {
   author?: Maybe<Author>;
   /** Get a paginated list of authors with optional filtering and sorting */
   authors: PaginatedAuthors;
-  banner: Banner;
-  banners: Array<Banner>;
   /** Returns a list of block styles. */
   blockStyles: Array<BlockStyle>;
   /** Returns a single block template by ID. */
@@ -7864,6 +8079,11 @@ export type Query = {
   documents: PaginatedDocuments;
   /** Where the email status comes from: whether and when the mail provider reported anything. The editor warns when no provider evidence arrived for a while. */
   emailEvidence: EmailEvidenceModel;
+  /** The prompts for the reader on a page or article, without placing them on the meter: soft stages only, no cutoff. Articles use the viewArticle mutation, which meters and decides access. */
+  engagementPrompts: Array<EngagementPrompt>;
+  engagementRule: EngagementRule;
+  /** All engagement rules, highest priority first. */
+  engagementRules: Array<EngagementRule>;
   /** Returns an event by id. */
   event: Event;
   /**
@@ -8023,6 +8243,8 @@ export type Query = {
   newsletterCampaignReport: NewsletterReport;
   newsletterCampaigns: Array<NewsletterCampaign>;
   newsletterMergeFields: NewsletterMergeFields;
+  /** Why newsletter sign-ups (newsletter walls, newsletter actions without a url) can not reach Mailchimp; null when they can. */
+  newsletterSignupProblem?: Maybe<NewsletterSignupProblem>;
   /** Returns the instance-wide notification confirmations. Requires authentication. */
   notificationConfirmations: Array<NotificationConfirmation>;
   /** Returns the current user's read notifications. Requires authentication. */
@@ -8076,6 +8298,10 @@ export type Query = {
   pollVotes: PaginatedPollVotes;
   /** Returns a paginated list of polls based on the filters given. */
   polls: PaginatedPolls;
+  /**
+   * The announcement engagement rule that fits the reader best, as a banner.
+   * @deprecated Use engagementPrompts.
+   */
   primaryBanner?: Maybe<Banner>;
   /** What the options can do here, and the medium's defaults for a new issue. */
   printExportContext: PrintExportContext;
@@ -8324,17 +8550,6 @@ export type QueryAuthorsArgs = {
 };
 
 
-export type QueryBannerArgs = {
-  id: Scalars['String']['input'];
-};
-
-
-export type QueryBannersArgs = {
-  skip: Scalars['Int']['input'];
-  take: Scalars['Int']['input'];
-};
-
-
 export type QueryBlockTemplateArgs = {
   id: Scalars['String']['input'];
 };
@@ -8482,6 +8697,20 @@ export type QueryDocumentsArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<DocumentSort>;
   take?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryEngagementPromptsArgs = {
+  documentId: Scalars['String']['input'];
+  documentType: EngagementDocumentType;
+  newsletterToken?: InputMaybe<Scalars['String']['input']>;
+  paywallBypassToken?: InputMaybe<Scalars['String']['input']>;
+  utm?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+
+export type QueryEngagementRuleArgs = {
+  id: Scalars['String']['input'];
 };
 
 
@@ -10433,24 +10662,6 @@ export type UnknownBlock = {
   type: BlockType;
 };
 
-export type UpdateBannerInput = {
-  actions?: InputMaybe<Array<CreateBannerActionInput>>;
-  active: Scalars['Boolean']['input'];
-  collapsible: Scalars['Boolean']['input'];
-  cta?: InputMaybe<Scalars['String']['input']>;
-  delay: Scalars['Int']['input'];
-  embedUrl?: InputMaybe<Scalars['String']['input']>;
-  hideForMinutes: Scalars['Int']['input'];
-  html?: InputMaybe<Scalars['String']['input']>;
-  id: Scalars['String']['input'];
-  imageId?: InputMaybe<Scalars['String']['input']>;
-  showForLoginStatus: LoginStatus;
-  showOnArticles: Scalars['Boolean']['input'];
-  showOnPages?: InputMaybe<Array<PageModelInput>>;
-  text: Scalars['String']['input'];
-  title: Scalars['String']['input'];
-};
-
 export type UpdateCommentRatingSystemAnswerInput = {
   answer?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['String']['input'];
@@ -10466,6 +10677,27 @@ export type UpdateCrowdfundingInput = {
   id: Scalars['String']['input'];
   memberPlans?: InputMaybe<Array<CreateCrowdfundingMemberPlan>>;
   name?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateEngagementRuleInput = {
+  active?: Scalars['Boolean']['input'];
+  /** Narrows the MEMBERS audience to these plans. */
+  audienceMemberPlanIds?: Array<Scalars['String']['input']>;
+  /** key=value url params of the UTM audience, which needs at least one. */
+  audienceUtm?: Array<Scalars['String']['input']>;
+  /** Only readers in one of these, everyone when empty. */
+  audiences?: Array<EngagementAudience>;
+  /** Never readers in one of these. */
+  excludedAudiences?: Array<EngagementAudience>;
+  goal: EngagementGoal;
+  id: Scalars['String']['input'];
+  includePeeredArticles?: Scalars['Boolean']['input'];
+  meterWindowDays?: InputMaybe<Scalars['Int']['input']>;
+  name: Scalars['String']['input'];
+  priority?: Scalars['Int']['input'];
+  showOnArticles?: Scalars['Boolean']['input'];
+  showOnPageIds?: Array<Scalars['String']['input']>;
+  stages: Array<EngagementStageInput>;
 };
 
 export type UpdateUserSubscriptionInput = {
@@ -10665,6 +10897,17 @@ export type VideoStorageUsage = {
   limitBytes: Scalars['Float']['output'];
   usedBytes: Scalars['Float']['output'];
   videoCount: Scalars['Int']['output'];
+};
+
+export type ViewArticleInput = {
+  articleId: Scalars['String']['input'];
+  /** The meterToken the last viewArticle answered, for anonymous readers. */
+  meterToken?: InputMaybe<Scalars['String']['input']>;
+  /** The newsletterToken of signUpForNewsletter, for newsletter walls. */
+  newsletterToken?: InputMaybe<Scalars['String']['input']>;
+  paywallBypassToken?: InputMaybe<Scalars['String']['input']>;
+  /** key=value utm params of the link the reader came by, kept by the website for the visit. Not checked: anyone can send them. */
+  utm?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export type VimeoVideoBlock = BaseBlock & {

@@ -45,10 +45,21 @@ describe('editor command registry', () => {
     );
 
     const dangling = commandPaths().filter(
-      path => !patterns.some(pattern => pattern.test(path))
+      path => !patterns.some(pattern => pattern.test(path.split('?')[0]))
     );
 
     expect(dangling).toEqual([]);
+  });
+
+  it('starts each audience engagement preset in one step', () => {
+    expect(commandPaths()).toEqual(
+      expect.arrayContaining([
+        '/audience-engagement/create?preset=growNewsletter',
+        '/audience-engagement/create?preset=promoteMemberships',
+        '/audience-engagement/create?preset=displayAnnouncement',
+        '/audience-engagement/paywalls/create?enforced=true',
+      ])
+    );
   });
 
   it('hides the newsletter while its feature is off, as the sidebar does', () => {

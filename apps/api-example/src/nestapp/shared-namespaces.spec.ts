@@ -1,4 +1,3 @@
-import { BANNER_CACHE_NAMESPACE } from '@wepublish/banner/api';
 import { assertShareableNamespaces } from '@wepublish/kv-ttl-cache/api';
 import { MEMBER_PLAN_CACHE_NAMESPACE } from '@wepublish/member-plan/api';
 import { NAVIGATION_CACHE_NAMESPACE } from '@wepublish/navigation/api';
@@ -27,12 +26,13 @@ describe('API_SHARED_NAMESPACES', () => {
       'content:authors',
       'content:images',
       'content:paywalls',
+      'content:engagement',
       'content:polls',
       'graphql:comments',
       'settings',
       'website-settings',
       'navigations',
-      'banners',
+      'engagement:meters',
       'member-plans',
       'peer-profile',
       'peering:remote-profiles',
@@ -56,7 +56,7 @@ describe('website page namespaces', () => {
     expect(PAGE_CONTENT_NAMESPACES).toEqual([
       PUBLIC_CONTENT_NAMESPACE,
       NAVIGATION_CACHE_NAMESPACE,
-      BANNER_CACHE_NAMESPACE,
+      contentCacheNamespace('engagement'),
       SETTINGS_CACHE_NAMESPACE,
       WEBSITE_SETTINGS_CACHE_NAMESPACE,
       LOCAL_PEER_PROFILE_CACHE_NAMESPACE,
@@ -69,7 +69,7 @@ describe('website page namespaces', () => {
   it('rebuilds the website layout under the namespaces their owners cache in', () => {
     expect(WEBSITE_LAYOUT_NAMESPACES).toEqual([
       NAVIGATION_CACHE_NAMESPACE,
-      BANNER_CACHE_NAMESPACE,
+      contentCacheNamespace('engagement'),
       SETTINGS_CACHE_NAMESPACE,
       WEBSITE_SETTINGS_CACHE_NAMESPACE,
       LOCAL_PEER_PROFILE_CACHE_NAMESPACE,

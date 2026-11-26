@@ -297,7 +297,7 @@ function websiteServer(
  * Local dev servers the run needs, for Playwright's `webServer`: reused when
  * already up, otherwise started and stopped after the run. Only for
  * `E2E_ENV=local`, only for the selected projects (`E2E_PROJECTS`, set by
- * run.ts from `--project`), and never for a URL that was overridden — that
+ * run.ts from `--only` / `--project`), and never for a URL that was overridden — that
  * server is yours to run. They form the `localStack`: website and editor talk
  * to its API, the API to its database. Docker services (database, mailpit, …)
  * are not started; see the local-stack recipe in e2e/README.md.
@@ -316,7 +316,8 @@ export function localDevServers(
   const servers: WebServer[] = [];
   const apiEnv = { API_URL: target.apiUrl ?? '', API_URL_INTERNAL: '' };
 
-  if (selected('website') && !env.BASE_URL) {
+  // The editor needs the website too: its scenarios check what readers see.
+  if ((selected('website') || selected('editor')) && !env.BASE_URL) {
     servers.push(websiteServer(target, apiEnv, env));
   }
 

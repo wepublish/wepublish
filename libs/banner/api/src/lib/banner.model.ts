@@ -1,15 +1,25 @@
 import {
   ArgsType,
   Field,
-  InputType,
   Int,
   ObjectType,
-  OmitType,
   registerEnumType,
 } from '@nestjs/graphql';
-import { BannerAction, CreateBannerActionInput } from './banner-action.model';
+import { BannerAction } from './banner-action.model';
 import { Image } from '@wepublish/image/api';
-import { LoginStatus } from '@prisma/client';
+
+/**
+ * Banners are announcement engagement rules now. This keeps `primaryBanner`
+ * and its types for websites that still ask for it.
+ */
+export enum LoginStatus {
+  PAYWALL_BYPASSED = 'PAYWALL_BYPASSED',
+  UNSUBSCRIBED = 'UNSUBSCRIBED',
+  SUBSCRIBED = 'SUBSCRIBED',
+  LOGGED_IN = 'LOGGED_IN',
+  LOGGED_OUT = 'LOGGED_OUT',
+  ALL = 'ALL',
+}
 
 registerEnumType(LoginStatus, {
   name: 'LoginStatus',
@@ -25,12 +35,6 @@ export class PageModel {
   id!: string;
 }
 
-@InputType()
-export class PageModelInput {
-  @Field()
-  id!: string;
-}
-
 @ObjectType()
 export class Banner {
   @Field()
@@ -42,14 +46,14 @@ export class Banner {
   @Field()
   text!: string;
 
-  @Field({ nullable: true })
-  cta?: string;
+  @Field(() => String, { nullable: true })
+  cta?: string | null;
 
-  @Field({ nullable: true })
-  html?: string;
+  @Field(() => String, { nullable: true })
+  html?: string | null;
 
-  @Field({ nullable: true })
-  embedUrl?: string;
+  @Field(() => String, { nullable: true })
+  embedUrl?: string | null;
 
   @Field()
   active!: boolean;
@@ -66,8 +70,8 @@ export class Banner {
   @Field()
   showOnArticles!: boolean;
 
-  @Field({ nullable: true })
-  imageId?: string;
+  @Field(() => String, { nullable: true })
+  imageId?: string | null;
 
   @Field(() => Image, { nullable: true })
   image?: Image;
@@ -80,32 +84,6 @@ export class Banner {
 
   @Field(() => [BannerAction], { nullable: true })
   actions?: BannerAction[];
-}
-
-@InputType()
-export class CreateBannerInput extends OmitType(
-  Banner,
-  ['id', 'image', 'actions', 'showOnPages'],
-  InputType
-) {
-  @Field(() => [CreateBannerActionInput], { nullable: true })
-  actions?: CreateBannerActionInput[];
-
-  @Field(() => [PageModelInput], { nullable: true })
-  showOnPages?: PageModelInput[];
-}
-
-@InputType()
-export class UpdateBannerInput extends OmitType(
-  Banner,
-  ['image', 'actions', 'showOnPages'],
-  InputType
-) {
-  @Field(() => [CreateBannerActionInput], { nullable: true })
-  actions!: CreateBannerActionInput[];
-
-  @Field(() => [PageModelInput], { nullable: true })
-  showOnPages?: PageModelInput[];
 }
 
 export enum BannerDocumentType {

@@ -10,6 +10,8 @@ import type { MockLink } from '@apollo/client/testing';
 import {
   ChallengeDocument,
   ChallengeQuery,
+  EngagementPromptsDocument,
+  FullEngagementPromptFragment,
   CheckLoginOtpDocument,
   FullBannerFragment,
   FullPeerProfileFragment,
@@ -76,6 +78,15 @@ export const mockPrimaryBannerQuery = (
     variables: anyVariables,
     maxUsageCount: Number.POSITIVE_INFINITY,
     data: { __typename: 'Query', primaryBanner },
+  });
+
+export const mockEngagementPromptsQuery = (
+  engagementPrompts: FullEngagementPromptFragment[] = []
+) =>
+  mockOperation(EngagementPromptsDocument, {
+    variables: anyVariables,
+    maxUsageCount: Number.POSITIVE_INFINITY,
+    data: { __typename: 'Query', engagementPrompts },
   });
 
 export const mockPeerProfileQuery = (

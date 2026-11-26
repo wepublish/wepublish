@@ -3,7 +3,7 @@ import {
   CanCreateArticle,
   CanCreateArticleTemplate,
   CanCreateAuthor,
-  CanCreateBanner,
+  CanCreateEngagementRule,
   CanCreateBlockTemplate,
   CanCreateConsent,
   CanCreateCrowdfunding,
@@ -36,7 +36,9 @@ import {
   MdAutorenew,
   MdBadge,
   MdBookOnline,
+  MdCampaign,
   MdCardGiftcard,
+  MdCardMembership,
   MdContentCopy,
   MdCountertops,
   MdCreditCard,
@@ -48,6 +50,7 @@ import {
   MdGroup,
   MdKey,
   MdLocationPin,
+  MdLock,
   MdMail,
   MdMoney,
   MdNoteAdd,
@@ -90,7 +93,7 @@ export const CREATE_COMMANDS: CommandDefinition[] = [
     titleKey: 'commandPalette.create.paywall',
     icon: <MdPayment />,
     permissions: [CanCreatePaywall.id],
-    perform: ({ navigate }) => navigate('/articles/paywalls/create'),
+    perform: ({ navigate }) => navigate('/audience-engagement/paywalls/create'),
   },
   {
     id: 'createPage',
@@ -186,11 +189,43 @@ export const CREATE_COMMANDS: CommandDefinition[] = [
     perform: ({ navigate }) => navigate('/navigations/create'),
   },
   {
-    id: 'createBanner',
-    titleKey: 'commandPalette.create.banner',
+    id: 'createEngagementRule',
+    titleKey: 'commandPalette.create.engagementRule',
     icon: <MdSignpost />,
-    permissions: [CanCreateBanner.id],
-    perform: ({ navigate }) => navigate('/banners/create'),
+    permissions: [CanCreateEngagementRule.id],
+    perform: ({ navigate }) => navigate('/audience-engagement/create'),
+  },
+  {
+    id: 'createNewsletterPrompt',
+    titleKey: 'commandPalette.create.newsletterPrompt',
+    icon: <MdMail />,
+    permissions: [CanCreateEngagementRule.id],
+    perform: ({ navigate }) =>
+      navigate('/audience-engagement/create?preset=growNewsletter'),
+  },
+  {
+    id: 'createMembershipPrompt',
+    titleKey: 'commandPalette.create.membershipPrompt',
+    icon: <MdCardMembership />,
+    permissions: [CanCreateEngagementRule.id],
+    perform: ({ navigate }) =>
+      navigate('/audience-engagement/create?preset=promoteMemberships'),
+  },
+  {
+    id: 'createAnnouncement',
+    titleKey: 'commandPalette.create.announcement',
+    icon: <MdCampaign />,
+    permissions: [CanCreateEngagementRule.id],
+    perform: ({ navigate }) =>
+      navigate('/audience-engagement/create?preset=displayAnnouncement'),
+  },
+  {
+    id: 'restrictPremiumContent',
+    titleKey: 'commandPalette.create.restrictPremium',
+    icon: <MdLock />,
+    permissions: [CanCreatePaywall.id],
+    perform: ({ navigate }) =>
+      navigate('/audience-engagement/paywalls/create?enforced=true'),
   },
   {
     id: 'createAuthor',

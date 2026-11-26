@@ -1,10 +1,10 @@
 import { screen, waitFor } from '@testing-library/react';
 import {
   mockChallengeQuery,
+  mockEngagementPromptsQuery,
   mockOperation,
   mockPage,
   mockPageRevision,
-  mockPrimaryBannerQuery,
   mockSettingListQuery,
   mockTitleBlock,
   renderWithProviders,
@@ -21,7 +21,7 @@ const page = mockPage({
 });
 
 const providerMocks = () => [
-  mockPrimaryBannerQuery(),
+  mockEngagementPromptsQuery(),
   mockSettingListQuery(),
   mockChallengeQuery(),
 ];

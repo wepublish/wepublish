@@ -62,6 +62,18 @@ describe('Banner', () => {
     );
   });
 
+  it('shows its children instead of the text, title and actions stay', async () => {
+    const banner = mockBanner({ cta: 'Werde Mitglied' });
+    renderBanner(banner, { children: <p>From the template</p> });
+
+    expect(await screen.findByText(banner.title)).toBeInTheDocument();
+    expect(screen.getByText('From the template')).toBeInTheDocument();
+    expect(screen.queryByText(banner.text)).toBeNull();
+    expect(
+      screen.getByRole('link', { name: 'Jetzt abonnieren' })
+    ).toBeInTheDocument();
+  });
+
   it('shows the banner image as background', async () => {
     const banner = mockBanner();
     renderBanner(banner);
@@ -114,6 +126,21 @@ describe('Banner', () => {
 
     expect(screen.queryByText(banner.title)).not.toBeInTheDocument();
     expect(localStorage.getItem(BANNER_STORAGE_KEY)).not.toBeNull();
+  });
+
+  it('offers no way to close a banner that can not be dismissed', async () => {
+    localStorage.setItem(BANNER_STORAGE_KEY, minutesAgo(10));
+    const banner = mockBanner({ hideForMinutes: 60 });
+    renderBanner(banner, { dismissible: false });
+
+    expect(await findBanner(banner)).toHaveAttribute('data-collapsed', 'false');
+    expect(
+      screen.queryByRole('button', { name: t('banner.close') })
+    ).toBeNull();
+    expect(screen.queryByRole('link', { name: 'Später' })).toBeNull();
+    expect(
+      screen.getByRole('link', { name: 'Jetzt abonnieren' })
+    ).toBeInTheDocument();
   });
 
   it('collapses a collapsible banner instead of removing it', async () => {
