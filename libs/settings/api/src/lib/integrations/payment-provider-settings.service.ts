@@ -16,6 +16,7 @@ import {
 } from './payment-provider-settings.model';
 import {
   isSimulatedPaymentAllowed,
+  isTestEnvironment,
   PrimeDataLoader,
 } from '@wepublish/utils/api';
 import { PaymentProviderSettingsDataloaderService } from './payment-provider-settings-dataloader.service';
@@ -24,6 +25,17 @@ import { SecretCrypto } from './secrets-crypto';
 import { ProviderSettingsChanged } from './provider-settings-changed';
 import * as Sentry from '@sentry/nestjs';
 import { encryptSecrets } from './encrypt-secrets';
+
+// Clearing it stays possible, so a value that reached production can go.
+const assertTestMailboxAllowed = (input: {
+  bexio_testMailbox?: string | null;
+}) => {
+  if (input.bexio_testMailbox && !isTestEnvironment()) {
+    throw new BadRequestException(
+      'The bexio test mailbox is not available on production.'
+    );
+  }
+};
 
 @Injectable()
 export class PaymentProviderSettingsService {
@@ -84,6 +96,7 @@ export class PaymentProviderSettingsService {
       );
     }
 
+    assertTestMailboxAllowed(input);
     const output = this.encryptSecretsIfPresent(input);
 
     const returnValue = await this.prisma.settingPaymentProvider.upsert({
@@ -102,6 +115,7 @@ export class PaymentProviderSettingsService {
   async updatePaymentProviderSetting(
     input: UpdateSettingPaymentProviderInput
   ): Promise<SettingPaymentProvider> {
+    assertTestMailboxAllowed(input);
     const output = this.encryptSecretsIfPresent(input);
     const { id, ...updateData } = output;
 
