@@ -2862,7 +2862,7 @@ describe('PeriodicJobService', () => {
       });
 
       it("runs today's job again although tonight's run succeeded", async () => {
-        const tonight = set(daysAgo(0), { hours: 3 });
+        const tonight = minutesAgo(5);
         seed({
           date: daysAgo(0),
           executionTime: tonight,
