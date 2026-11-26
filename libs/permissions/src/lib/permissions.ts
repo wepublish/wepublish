@@ -605,6 +605,13 @@ export const CanGetSubscriptions: Permission = {
   deprecated: false,
 };
 
+export const CanGetActiveSubscriberFirstNames: Permission = {
+  id: 'CAN_GET_ACTIVE_SUBSCRIBER_FIRST_NAMES',
+  description:
+    'Allows to get the first name and creation date of every active subscription, and nothing else about it',
+  deprecated: false,
+};
+
 export const CanDeleteSubscription: Permission = {
   id: 'CAN_DELETE_SUBSCRIPTION',
   description: 'Allows to delete a subscription',
@@ -1557,6 +1564,7 @@ export const AllPermissions = [
   CanCreateSubscription,
   CanGetSubscription,
   CanGetSubscriptions,
+  CanGetActiveSubscriberFirstNames,
   CanDeleteSubscription,
   CanGetGoodie,
   CanCreateGoodie,
