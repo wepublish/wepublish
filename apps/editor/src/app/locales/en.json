@@ -2260,6 +2260,12 @@
         "system": "Match system"
       },
       "logout": "Logout",
+      "websiteLogin": "Open the website, signed in",
+      "logoutConfirm": {
+        "title": "Log out",
+        "message": "Are you sure?",
+        "confirm": "Log out"
+      },
       "mailTemplates": "Message templates",
       "memberPlans": "Subscription Plans",
       "navigations": "Navigations",
