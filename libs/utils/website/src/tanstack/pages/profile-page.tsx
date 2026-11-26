@@ -74,9 +74,16 @@ export const loadProfile = createServerFn({ method: 'GET' })
     return { sessionToken, apollo: extractCache(client) };
   });
 
-type ProfilePageProps = ProfileDetailsProps & { className?: string };
+type ProfilePageProps = ProfileDetailsProps & {
+  className?: string;
+  subscribeAnotherUrl?: string;
+};
 
-function ProfilePageComponent({ className, ...props }: ProfilePageProps) {
+function ProfilePageComponent({
+  className,
+  subscribeAnotherUrl,
+  ...props
+}: ProfilePageProps) {
   const {
     elements: { Alert },
   } = useWebsiteBuilder();
@@ -125,7 +132,10 @@ function ProfilePageComponent({ className, ...props }: ProfilePageProps) {
 
       {confirmError && <Alert severity="error">{confirmError.message}</Alert>}
 
-      <ProfileSubscriptions className={className} />
+      <ProfileSubscriptions
+        className={className}
+        subscribeAnotherUrl={subscribeAnotherUrl}
+      />
 
       <ProfileDetails
         className={className}
