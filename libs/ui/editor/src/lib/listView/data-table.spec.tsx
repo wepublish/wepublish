@@ -995,6 +995,19 @@ describe('DataTable filters', () => {
     expect(screen.getByLabelText('Title filter')).toBeVisible();
   });
 
+  it('remembers that the user left them open', async () => {
+    localStorage.clear();
+    const { unmount } = renderFiltered({ storageKey: 'test-list' });
+
+    fireEvent.click(
+      screen.getByRole('button', { name: /filterableList.filter.label/ })
+    );
+    unmount();
+    renderFiltered({ storageKey: 'test-list' });
+
+    expect(await screen.findByLabelText('Title filter')).toBeVisible();
+  });
+
   it('says how many filters are on', () => {
     renderFiltered({ filterCount: 2 });
 
