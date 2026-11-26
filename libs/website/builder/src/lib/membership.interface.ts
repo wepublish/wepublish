@@ -28,6 +28,7 @@ import {
 import { BuilderRegistrationFormProps } from './authentication.interface';
 import { BuilderUserFormFields } from './user.interface';
 import { FieldError, FieldErrors } from 'react-hook-form';
+import { ReactNode } from 'react';
 
 export type BuilderMemberPlanRenderSetting =
   FullSubscribeBlockFragment['memberPlanRenderSettings'][number];
@@ -123,7 +124,10 @@ export type BuilderMemberPlanItemProps = Pick<
   Partial<
     Pick<
       FullMemberPlanFragment,
-      'availablePaymentMethods' | 'defaultPaymentPeriodicity'
+      | 'availablePaymentMethods'
+      | 'defaultPaymentPeriodicity'
+      | 'description'
+      | 'image'
     >
   > &
   Omit<RadioProps, 'ref'> & { className?: string } & {
@@ -326,6 +330,13 @@ export type BuilderSubscribeProps<
   hiddenAreas?: readonly SubscribeArea[];
   /** Called when a submit fails validation, e.g. because of a hidden section. */
   onInvalid?: (errors: FieldErrors) => void;
+  /** Replaces the price text on the submit button, e.g. when a summary already tells it. */
+  submitText?: ReactNode;
+  /**
+   * The periodicity toggle offers what any plan bills, and picking a plan
+   * switches to a periodicity it offers instead of disabling the plan.
+   */
+  periodicitiesOfAllPlans?: boolean;
   giftCodeRedemptionUrl?: string | null;
   giftCodeRedemptionText?: string | null;
 } & Pick<BuilderRegistrationFormProps<T>, 'schema' | 'fields'>;

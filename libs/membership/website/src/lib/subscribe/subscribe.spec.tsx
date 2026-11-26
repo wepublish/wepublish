@@ -407,6 +407,22 @@ describe('Subscribe', () => {
       );
     });
 
+    it('labels the submit button with the given text instead of the price', async () => {
+      const onInvalid = vi.fn();
+      const { user } = renderSubscribe({ submitText: 'Weiter', onInvalid });
+
+      await screen.findByRole('group', { name: TEST_CAPTCHA_LABEL });
+      expect(
+        screen.queryByRole('button', {
+          name: name => name.includes(price(7)),
+        })
+      ).not.toBeInTheDocument();
+
+      await user.click(screen.getByRole('button', { name: 'Weiter' }));
+
+      await waitFor(() => expect(onInvalid).toHaveBeenCalled());
+    });
+
     it('reports the validation errors of a failed submit', async () => {
       const onInvalid = vi.fn();
       const { user } = renderSubscribe({ onInvalid });
@@ -418,6 +434,46 @@ describe('Subscribe', () => {
           expect.objectContaining({ email: expect.anything() })
         )
       );
+    });
+  });
+
+  describe('periodicity toggle over all plans', () => {
+    const renderToggle = (periodicitiesOfAllPlans?: boolean) =>
+      renderLoggedIn({
+        periodicityDisplay: SubscribePeriodicityDisplay.Toggle,
+        periodicitiesOfAllPlans,
+        memberPlans: memberPlanList([euroPlan, lifetimeOnlyPlan]),
+      });
+    const toggle = (name: string) => screen.getByRole('button', { name });
+    const planRadio = (plan: FullMemberPlanFragment) =>
+      screen.getByLabelText(plan.name, { exact: false });
+
+    it('only offers the periodicities of the selected plan by default', () => {
+      renderToggle();
+
+      expect(toggle('Monatlich')).toBeInTheDocument();
+      expect(
+        screen.queryByRole('button', { name: 'Lebenslang' })
+      ).not.toBeInTheDocument();
+      expect(planRadio(lifetimeOnlyPlan)).toBeDisabled();
+    });
+
+    it('offers what any plan bills and switches the periodicity to a picked plan', async () => {
+      const { user } = renderToggle(true);
+
+      expect(toggle('Monatlich')).toHaveAttribute('aria-pressed', 'true');
+      expect(toggle('Lebenslang')).toBeInTheDocument();
+      expect(planRadio(lifetimeOnlyPlan)).toBeEnabled();
+
+      await user.click(planRadio(lifetimeOnlyPlan));
+
+      expect(planRadio(lifetimeOnlyPlan)).toBeChecked();
+      expect(toggle('Lebenslang')).toHaveAttribute('aria-pressed', 'true');
+
+      await user.click(toggle('Monatlich'));
+
+      expect(planRadio(euroPlan)).toBeChecked();
+      expect(toggle('Monatlich')).toHaveAttribute('aria-pressed', 'true');
     });
   });
 

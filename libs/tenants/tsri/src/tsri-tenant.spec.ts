@@ -2,6 +2,7 @@ import { de } from 'date-fns/locale';
 
 import { TsriTabbedContentType } from './components/block-layouts/tsri-base-tabbed-content';
 import { TsriBreakBlockType } from './components/break-blocks/tsri-base-break-block';
+import { TsriSubscribeType } from './components/membership/tsri-subscribe-type';
 import { TsriLayoutType } from './components/teaser-layouts/tsri-layout';
 import { TsriTeaserType } from './components/teasers/tsri-base-teaser';
 import { TsriV2Navbar } from './components/tsri-v2-navbar';
@@ -43,6 +44,7 @@ describe('tsriTenant', () => {
         TsriLayoutType.Dossier,
         TsriLayoutType.XLFullsizeImage,
         TsriTabbedContentType.TabbedMainContent,
+        TsriSubscribeType.Membership,
       ])
     );
     expect(new Set(tsriTenant.blockStyles).size).toBe(

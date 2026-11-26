@@ -110,6 +110,8 @@ export const MemberPlanItem = forwardRef<
       name,
       slug,
       shortDescription,
+      description,
+      image,
       periodicityPricing,
       paymentPeriodicity,
       showPeriodicity,

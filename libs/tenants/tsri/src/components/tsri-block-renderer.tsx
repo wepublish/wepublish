@@ -17,6 +17,10 @@ import {
   isTsriSidebarContentAltColor,
   TsriSidebarContentAltColor,
 } from './break-blocks/tsri-sidebar-content-alt-color';
+import {
+  isTsriMembershipSubscribe,
+  TsriMembershipSubscribe,
+} from './membership/tsri-membership-subscribe';
 import { isTabbedContentBlockStyle } from './tabbed-content/tabbed-content';
 
 export const TsriBlockRenderer = (
@@ -25,6 +29,10 @@ export const TsriBlockRenderer = (
   const extraBlockMap = useMemo(
     () =>
       cond([
+        [
+          isTsriMembershipSubscribe,
+          block => <TsriMembershipSubscribe {...block} />,
+        ],
         [
           isTabbedContentBlockStyle,
           block => (

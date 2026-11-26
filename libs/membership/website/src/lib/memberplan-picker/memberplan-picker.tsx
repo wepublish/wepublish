@@ -131,6 +131,8 @@ export const MemberPlanPicker = forwardRef<
                   }
                   extendable={memberPlan.extendable}
                   shortDescription={memberPlan.shortDescription}
+                  description={memberPlan.description}
+                  image={memberPlan.image}
                   tags={memberPlan.tags}
                   goodies={memberPlan.goodies}
                 />

@@ -14,6 +14,7 @@ import {
   TsriBreakBlockType,
 } from './components/break-blocks/tsri-base-break-block';
 import { TsriContextBox } from './components/break-blocks/tsri-context-box';
+import { TsriSubscribeType } from './components/membership/tsri-subscribe-type';
 import { TsriRenderElement } from './components/richtext/tsri-render-element';
 import { TsriBaseTeaserSlots } from './components/teaser-layouts/tsri-base-teaser-slots';
 import { TsriLayoutType } from './components/teaser-layouts/tsri-layout';
@@ -117,6 +118,7 @@ export const tsriTenant: WebsiteTenantConfig = {
     ...Object.values(TsriTeaserType),
     ...Object.values(TsriBreakBlockType),
     ...Object.values(TsriTabbedContentType),
+    ...Object.values(TsriSubscribeType),
   ]),
   translations: {
     lng: 'de',
