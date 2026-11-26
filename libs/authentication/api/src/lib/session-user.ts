@@ -57,9 +57,23 @@ export function userSessionOf(
 }
 
 /**
+ * Like `userSessionOf`, for public operations a guest may take too
+ * (commenting, rating, voting). The guard lets a restricted session into
+ * everything public; these treat it as a guest, never as the reader.
+ */
+export function unrestrictedUserSessionOf(
+  session: AuthSession | null | undefined
+): UserSession | undefined {
+  const userSession = userSessionOf(session);
+
+  return userSession?.restricted ? undefined : userSession;
+}
+
+/**
  * Like `userSessionOf`, for public operations that act under the name of the
- * signed-in user (commenting, voting, subscribing). The guard lets a
- * restricted session into everything public, so these refuse it here.
+ * signed-in user and have no guest path to fall back to (subscribing without
+ * naming a user). The guard lets a restricted session into everything public,
+ * so these refuse it here.
  */
 export function fullUserSessionOf(
   session: AuthSession | null | undefined

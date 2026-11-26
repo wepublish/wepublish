@@ -26,7 +26,7 @@ import {
   RequestFingerprint,
   AuthSession,
   requireUserSession,
-  fullUserSessionOf,
+  unrestrictedUserSessionOf,
   userSessionOf,
 } from '@wepublish/authentication/api';
 import { Image, ImageDataloaderService } from '@wepublish/image/api';
@@ -112,7 +112,7 @@ export class CommentResolver {
   ) {
     return await this.commentService.addUserComment(
       input,
-      fullUserSessionOf(session)
+      unrestrictedUserSessionOf(session)
     );
   }
 
@@ -174,7 +174,7 @@ export class CommentResolver {
       answerId,
       value,
       fingerprint,
-      fullUserSessionOf(session) ?? null
+      unrestrictedUserSessionOf(session) ?? null
     );
   }
 

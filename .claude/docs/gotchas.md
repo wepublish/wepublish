@@ -1533,8 +1533,11 @@ email address **itself** (`Session.emailConfirmedAt`; the account's
   list is pinned in `app.module.boot.spec.ts`; extending it hands the handler
   to whoever holds a letter, so do it on purpose.
 - The guard does not look at `@Public` handlers. One that acts under the
-  signed-in reader's name (comment, vote, subscribe) reads the session with
-  `fullUserSessionOf`, never `userSessionOf`.
+  signed-in reader's name never reads the session with `userSessionOf`. If a
+  guest may do the same (comment, rate, vote), use `unrestrictedUserSessionOf`:
+  a restricted session goes on as a guest. If there is no guest path
+  (subscribing without naming a user), use `fullUserSessionOf`, which refuses
+  with `SESSION_RESTRICTED`. The website shows that code untranslated.
 - The website never redeems a code or confirms an address on a plain GET: mail
   scanners open every link. Both happen from the browser, on a click or in an
   effect.

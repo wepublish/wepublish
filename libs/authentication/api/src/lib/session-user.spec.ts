@@ -12,6 +12,7 @@ import {
   actorUserIdOf,
   fullUserSessionOf,
   requireSessionUser,
+  unrestrictedUserSessionOf,
   requireUserSession,
   userSessionOf,
 } from './session-user';
@@ -125,6 +126,28 @@ describe('fullUserSessionOf', () => {
     expect(() =>
       fullUserSessionOf({ ...userSession, restricted: true })
     ).toThrow(new ForbiddenException(SESSION_RESTRICTED));
+  });
+});
+
+describe('unrestrictedUserSessionOf', () => {
+  it('is the session of the signed-in user', () => {
+    expect(unrestrictedUserSessionOf(userSession)).toBe(userSession);
+  });
+
+  it.each([
+    ['an api key', apiTokenSession],
+    ['a peering token', peerSession],
+    ['no session', undefined],
+  ])('is nothing for %s', (_, session) => {
+    expect(unrestrictedUserSessionOf(session)).toBeUndefined();
+  });
+
+  // Public actions a guest may take too (commenting, rating, voting): a
+  // restricted session takes them as a guest, never under the reader's name.
+  it('is nothing for a restricted session', () => {
+    expect(
+      unrestrictedUserSessionOf({ ...userSession, restricted: true })
+    ).toBeUndefined();
   });
 });
 
