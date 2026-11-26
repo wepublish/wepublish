@@ -4,6 +4,7 @@ import ts from 'typescript';
 
 import de from '../locales/de.json';
 import en from '../locales/en.json';
+import es from '../locales/es.json';
 import fr from '../locales/fr.json';
 
 type Catalog = { [key: string]: string | Catalog };
@@ -12,6 +13,7 @@ export const catalogs = {
   en: en.translation as Catalog,
   de: de.translation as Catalog,
   fr: fr.translation as Catalog,
+  es: es.translation as Catalog,
 };
 
 export const lookup = (catalog: Catalog, key: string) =>

@@ -158,7 +158,7 @@ import {
   SidebarNavMenu,
   Version,
 } from '@wepublish/ui/editor';
-import { de, enUS, fr } from 'date-fns/locale';
+import { de, enUS, es, fr } from 'date-fns/locale';
 import {
   ElementType,
   ReactNode,
@@ -245,6 +245,7 @@ export const AVAILABLE_LANG = [
   { id: 'en', lang: 'en_US', name: 'English', locale: enUS },
   { id: 'fr', lang: 'fr_FR', name: 'Français', locale: fr },
   { id: 'de', lang: 'de_CH', name: 'Deutsch', locale: de },
+  { id: 'es', lang: 'es_ES', name: 'Español', locale: es },
 ];
 
 function useStickyState(defaultValue: string, key: string) {

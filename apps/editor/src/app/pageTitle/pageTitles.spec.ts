@@ -15,7 +15,7 @@ describe('editor page titles', () => {
     expect(dangling).toEqual([]);
   });
 
-  it.each(['en', 'de', 'fr'] as const)(
+  it.each(['en', 'de', 'fr', 'es'] as const)(
     'has every page title translated in %s',
     language => {
       const untranslated = Object.values(PAGE_TITLES).filter(

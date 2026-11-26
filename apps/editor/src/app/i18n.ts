@@ -3,6 +3,7 @@ import { format as formatDate, isDate, Locale } from 'date-fns';
 import {
   de as deLocale,
   enGB as enLocale,
+  es as esLocale,
   fr as frLocale,
 } from 'date-fns/locale';
 import i18n from 'i18next';
@@ -11,12 +12,14 @@ import { initReactI18next } from 'react-i18next';
 
 import de from './locales/de.json';
 import en from './locales/en.json';
+import es from './locales/es.json';
 import fr from './locales/fr.json';
 
 const dateFormatMap = new Map<string, Locale>([
   ['de', deLocale],
   ['en', enLocale],
   ['fr', frLocale],
+  ['es', esLocale],
 ]);
 
 export const initI18N = () => {
@@ -44,6 +47,7 @@ export const initI18N = () => {
       en,
       de,
       fr,
+      es,
     },
   });
 };
