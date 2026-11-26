@@ -243,6 +243,23 @@ describe('MemberPlanService cache', () => {
     );
   });
 
+  // Prisma rejects the transaction as a whole, and rolls the flows back with
+  // the plan: the plan stays, and so do its flows.
+  it('refuses to delete a member plan whose transaction was refused', async () => {
+    prisma.$transaction.mockRejectedValue(
+      new Prisma.PrismaClientKnownRequestError(
+        'Foreign key constraint violated',
+        { code: 'P2003', clientVersion: 'test' }
+      )
+    );
+
+    await expect(service.deleteMemberPlan('plan-1')).rejects.toThrow(
+      new BadRequestException(
+        'This member plan is still used by subscriptions or gift codes and cannot be deleted.'
+      )
+    );
+  });
+
   it('keeps the cached member plans when the delete was refused', async () => {
     prisma.memberPlan.delete.mockRejectedValue(
       new Prisma.PrismaClientKnownRequestError(
