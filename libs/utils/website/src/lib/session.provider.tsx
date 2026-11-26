@@ -30,14 +30,27 @@ export const SessionProvider = memo<
     fetchPolicy: 'network-only',
   });
 
+  const clearSession = useCallback(() => {
+    setToken(null);
+    setUser(null);
+    sessionStorage.removeItem(AuthTokenStorageKey);
+    deleteCookie(AuthTokenStorageKey);
+  }, []);
+
   const fetchMe = useCallback(async () => {
     try {
       const { data } = await getMe();
+
+      if (data && !data.me) {
+        clearSession();
+        return;
+      }
+
       setUser((data?.me as FullSensitiveDataUserFragment) ?? null);
     } catch {
       setUser(null);
     }
-  }, [getMe]);
+  }, [getMe, clearSession]);
 
   const setCookieAndToken = useCallback(
     async (newToken: FullSessionWithTokenWithoutUserFragment | null) => {
@@ -59,12 +72,10 @@ export const SessionProvider = memo<
         });
         fetchMe();
       } else {
-        setUser(null);
-        sessionStorage.removeItem(AuthTokenStorageKey);
-        deleteCookie(AuthTokenStorageKey);
+        clearSession();
       }
     },
-    [fetchMe]
+    [fetchMe, clearSession]
   );
 
   useEffect(() => {

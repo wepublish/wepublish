@@ -18,6 +18,7 @@ import {
   extractCache,
   getRequestSessionToken,
   handleJwtLogin,
+  withAcceptedSession,
 } from '../ssr';
 import { withAuthGuard } from '../auth-guard';
 
@@ -54,7 +55,10 @@ export const loadDeactivatedSubscriptions = createServerFn({ method: 'GET' })
       ]);
     }
 
-    return { sessionToken, apollo: extractCache(client) };
+    return {
+      sessionToken: withAcceptedSession(client, sessionToken),
+      apollo: extractCache(client),
+    };
   });
 
 function DeactivatedSubscriptions() {

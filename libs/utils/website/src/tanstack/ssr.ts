@@ -1,5 +1,6 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
+  deleteCookie,
   getCookie,
   getRequestHeader,
   setCookie,
@@ -10,6 +11,7 @@ import {
   FullSessionWithTokenWithoutUserFragment,
   getApiClient,
   LoginWithJwtDocument,
+  MeDocument,
 } from '@wepublish/website/api';
 
 import { getApiUrl } from '../lib/api-url';
@@ -121,6 +123,25 @@ export const getPublicEnv = (): RuntimePublicEnv => {
     // keeps it correct without every deployment having to set the variable.
     WEBSITE_URL: getSiteUrl(),
   };
+};
+
+export const withAcceptedSession = (
+  client: ApolloClient,
+  sessionToken: FullSessionWithTokenWithoutUserFragment | null
+): FullSessionWithTokenWithoutUserFragment | null => {
+  if (!sessionToken) {
+    return null;
+  }
+
+  const cached = client.readQuery({ query: MeDocument });
+
+  if (cached && !cached.me) {
+    deleteCookie(AuthTokenStorageKey, { path: '/' });
+
+    return null;
+  }
+
+  return sessionToken;
 };
 
 /** Shape returned by the authenticated loaders, merged into the router client. */

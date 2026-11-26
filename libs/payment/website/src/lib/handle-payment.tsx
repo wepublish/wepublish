@@ -1,3 +1,4 @@
+import { CombinedGraphQLErrors } from '@apollo/client';
 import { useMutation } from '@apollo/client/react';
 import {
   FullMemberPlanFragment,
@@ -26,6 +27,10 @@ export const relativeToAbsolute = (url: string) => {
 
   return `${window.location.origin}${url}`;
 };
+
+export const isForbiddenError = (error: unknown) =>
+  CombinedGraphQLErrors.is(error) &&
+  error.errors.some(({ extensions }) => extensions?.['code'] === 'FORBIDDEN');
 
 export const useSubscribe = (
   ...params: [
@@ -79,8 +84,19 @@ export const useSubscribe = (
             setStripeClientSecret,
           });
         },
-        onError: error =>
-          (window.location.href = `${failUrl}?error=${encodeURIComponent(error.message)}`),
+        onError: error => {
+          if (isForbiddenError(error)) {
+            return;
+          }
+
+          window.location.href = `${failUrl}?error=${encodeURIComponent(error.message)}`;
+        },
+      }).catch(error => {
+        if (isForbiddenError(error)) {
+          return { data: undefined, error };
+        }
+
+        throw error;
       });
     },
     [result]

@@ -70,6 +70,7 @@
     "ariaLabel": "{hasTitle, select, true {{title}. } other {}}{hasLead, select, true {{lead}. } other {}}{hasAuthors, select, true {Von {authors}} other {}}"
   },
   "subscribe": {
+    "sessionExpired": "Deine Sitzung ist abgelaufen. Bitte melde dich erneut an oder gib deine Angaben ein.",
     "memberplan": {
       "price": "{offerAmountMin, select, 0 {Gratis} other {{offerExactAmount, select, true {} other {Ab }}{offerPrice} {offerPeriodicity, select, lifetime {einmalig} other {{extendable, select, true {{offerPeriodicity, select, monthly {pro Monat} quarterly {pro Quartal} biannual {pro Halbjahr} yearly {pro Jahr} biennial {pro 2 Jahre} other {}}} other {}}}}}}",
       "offerPrice": "{amountMin, select, 0 {Gratis} other {{exactAmount, select, true {} other {Ab }}{periodPrice} {periodicity, select, monthly {pro Monat} quarterly {pro Quartal} biannual {pro Halbjahr} yearly {pro Jahr} biennial {pro 2 Jahre} lifetime {einmalig} other {}}}}",
