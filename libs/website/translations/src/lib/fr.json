@@ -31,6 +31,7 @@
     "ariaLabel": "{hasTitle, select, true {{title}. } other {}}{hasLead, select, true {{lead}. } other {}}{hasAuthors, select, true {Par {authors}} other {}}"
   },
   "subscribe": {
+    "sessionExpired": "Votre session a expiré. Veuillez vous reconnecter ou saisir vos données.",
     "memberplan": {
       "price": "{amountPerMonthMin, select, 0 {Gratuit} other {À partir de {monthlyPrice} {extendable, select, true {par mois} other {}}}}",
       "offerPrice": "{amountMin, select, 0 {Gratuit} other {{exactAmount, select, true {} other {À partir de }}{periodPrice} {periodicity, select, monthly {par mois} quarterly {par trimestre} biannual {par semestre} yearly {par an} biennial {par 2 ans} lifetime {une seule fois} other {}}}}",

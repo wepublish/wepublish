@@ -22,6 +22,7 @@ import {
   extractCache,
   getRequestSessionToken,
   handleJwtLogin,
+  withAcceptedSession,
 } from '../ssr';
 import { useQueryParams } from '../router-hooks';
 
@@ -61,7 +62,10 @@ export const loadSubscribe = createServerFn({ method: 'GET' })
 
     await Promise.all(queries);
 
-    return { sessionToken, apollo: extractCache(client) };
+    return {
+      sessionToken: withAcceptedSession(client, sessionToken),
+      apollo: extractCache(client),
+    };
   });
 
 type SubscribePageProps = Omit<ComponentProps<typeof SubscribeContainer>, ''>;

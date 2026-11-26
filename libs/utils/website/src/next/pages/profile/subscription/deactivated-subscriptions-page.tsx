@@ -1,7 +1,10 @@
 import styled from '@emotion/styled';
 import { withAuthGuard } from '../../../auth-guard';
 import { ssrAuthLink } from '../../../../lib/auth-link';
-import { getSessionTokenProps } from '../../../get-session-token-props';
+import {
+  getSessionTokenProps,
+  withAcceptedSessionProps,
+} from '../../../get-session-token-props';
 import { handleJwtLogin } from '../../../handle-jwt-login';
 import { NextPage, NextPageContext } from 'next';
 import { ComponentProps } from 'react';
@@ -81,7 +84,10 @@ GuardedDeactivatedSubscriptions.getInitialProps = async (
     ]);
   }
 
-  const props = addClientCacheToProps(client, sessionProps);
+  const props = addClientCacheToProps(
+    client,
+    withAcceptedSessionProps(ctx, client, sessionProps)
+  );
 
   return props;
 };

@@ -26,6 +26,7 @@ import {
   Currency,
   FullMemberPlanFragment,
   InvoicesDocument,
+  MeDocument,
   MemberPlanListDocument,
   PaymentPeriodicity,
   PaymentState,
@@ -342,6 +343,89 @@ describe('SubscribeContainer', () => {
         `${redirectUrl('/abo/fehler')}?error=Card%20declined`
       )
     );
+  });
+
+  it('keeps a reader whose session the api no longer accepts on the form, logged out', async () => {
+    const user = userEvent.setup();
+    renderContainer(
+      [
+        memberPlanListQuery,
+        ...userDataQueries,
+        subscribeInfoQuery(standardPlan),
+        mockChallengeQuery(challenge),
+        mockOperation(SubscribeDocument, {
+          variables: {
+            ...subscribeVariables,
+            deactivateSubscriptionId: subscription.id,
+            successURL: redirectUrl('/abo/danke?wepConversion=subscription'),
+            failureURL: redirectUrl('/abo/fehler'),
+          },
+          errors: [
+            {
+              message: 'Forbidden resource',
+              extensions: { code: 'FORBIDDEN' },
+            },
+          ],
+        }),
+        mockOperation(MeDocument, {
+          data: { __typename: 'Query', me: null },
+        }),
+        memberPlanListQuery,
+        ...userDataQueries,
+        subscribeInfoQuery(standardPlan),
+      ],
+      { deactivateSubscriptionId: subscription.id },
+      true
+    );
+
+    await user.click(await subscribeButton());
+
+    expect(
+      await screen.findByText(t('subscribe.sessionExpired'))
+    ).toBeInTheDocument();
+    expect(screen.getByText('logged out')).toBeInTheDocument();
+    expect(
+      await screen.findByLabelText(t('user.form.lastName'))
+    ).toBeInTheDocument();
+    expect(window.location.href).not.toContain('/abo/fehler');
+  });
+
+  it('shows a refusal on the form when the session is still accepted', async () => {
+    const user = userEvent.setup();
+    renderContainer(
+      [
+        memberPlanListQuery,
+        ...userDataQueries,
+        subscribeInfoQuery(standardPlan),
+        mockOperation(SubscribeDocument, {
+          variables: {
+            ...subscribeVariables,
+            deactivateSubscriptionId: subscription.id,
+            successURL: redirectUrl('/abo/danke?wepConversion=subscription'),
+            failureURL: redirectUrl('/abo/fehler'),
+          },
+          errors: [
+            {
+              message: 'This purchase is currently not available',
+              extensions: { code: 'FORBIDDEN' },
+            },
+          ],
+        }),
+        mockOperation(MeDocument, {
+          data: { __typename: 'Query', me: mockSensitiveDataUser() },
+        }),
+      ],
+      { deactivateSubscriptionId: subscription.id },
+      true
+    );
+
+    await user.click(await subscribeButton());
+
+    expect(
+      await screen.findByText('This purchase is currently not available')
+    ).toBeInTheDocument();
+    expect(screen.getByText('logged in')).toBeInTheDocument();
+    expect(window.location.href).not.toContain('/abo/fehler');
   });
 
   it('resubscribes a returning reader and sends them to the confirmation page', async () => {
