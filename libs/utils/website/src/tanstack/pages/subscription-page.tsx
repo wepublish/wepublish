@@ -26,7 +26,10 @@ import { useQueryParams } from '../router-hooks';
  * plans are the edit page's upgrade options. A subscription counts as missing
  * only when the list loaded and does not have it.
  */
-export const prefetchSubscription = async (client: ApolloClient, id: string) => {
+export const prefetchSubscription = async (
+  client: ApolloClient,
+  id: string
+) => {
   const [subscriptions] = await Promise.all([
     client.query<SubscriptionsQuery>({ query: SubscriptionsDocument }),
     client.query({ query: InvoicesDocument }),

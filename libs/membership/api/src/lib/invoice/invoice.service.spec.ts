@@ -288,7 +288,11 @@ describe('InvoiceService.markInvoiceAsPaid for a sellable invoice', () => {
     const { service, prisma, invoicePaidNotifier, reloaded } =
       await setupSellable();
 
-    const result = await service.markInvoiceAsPaid('inv-9', by('admin-1'), false);
+    const result = await service.markInvoiceAsPaid(
+      'inv-9',
+      by('admin-1'),
+      false
+    );
 
     expect(prisma.invoice.updateMany).toHaveBeenCalledWith({
       where: { id: 'inv-9', paidAt: null, canceledAt: null },
@@ -355,7 +359,9 @@ describe('InvoiceService.markInvoiceAsPaid for a sellable invoice', () => {
       subscriptionPeriods: [],
     });
 
-    await expect(service.markInvoiceAsPaid('inv-9', by('admin-1'))).rejects.toThrow(
+    await expect(
+      service.markInvoiceAsPaid('inv-9', by('admin-1'))
+    ).rejects.toThrow(
       new BadRequestException('Canceled invoices cannot be marked as paid.')
     );
     expect(prisma.invoice.updateMany).not.toHaveBeenCalled();
@@ -365,9 +371,9 @@ describe('InvoiceService.markInvoiceAsPaid for a sellable invoice', () => {
   it('keeps rejecting a subscription-less invoice that sells nothing', async () => {
     const { service, prisma, invoicePaidNotifier } = await setupSellable(null);
 
-    await expect(service.markInvoiceAsPaid('inv-9', by('admin-1'))).rejects.toThrow(
-      new NotFoundException('Subscription not found')
-    );
+    await expect(
+      service.markInvoiceAsPaid('inv-9', by('admin-1'))
+    ).rejects.toThrow(new NotFoundException('Subscription not found'));
     expect(prisma.invoice.updateMany).not.toHaveBeenCalled();
     expect(invoicePaidNotifier.notify).not.toHaveBeenCalled();
   });
