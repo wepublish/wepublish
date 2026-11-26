@@ -19,7 +19,10 @@ import { useTranslation } from 'react-i18next';
 import { handleJwtLogin } from '../../handle-jwt-login';
 import { withAuthGuard } from '../../auth-guard';
 import { ssrAuthLink } from '../../../lib/auth-link';
-import { getSessionTokenProps } from '../../get-session-token-props';
+import {
+  getSessionTokenProps,
+  withAcceptedSessionProps,
+} from '../../get-session-token-props';
 
 import { getApiUrl } from '../../../lib/api-url';
 import { ProfileDetails } from '../../../lib/components/profile/profile-details';
@@ -117,7 +120,10 @@ GuardedProfile.getInitialProps = async (ctx: NextPageContext) => {
     ]);
   }
 
-  const props = addClientCacheToProps(client, sessionProps);
+  const props = addClientCacheToProps(
+    client,
+    withAcceptedSessionProps(ctx, client, sessionProps)
+  );
 
   return props;
 };
