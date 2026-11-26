@@ -5,25 +5,21 @@ import {
   FormControlLabel,
   Radio,
   RadioGroup,
-  Typography,
 } from '@mui/material';
 import { FullImageFragment } from '@wepublish/website/api';
 import {
   BuilderPaymentMethodPickerProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { forwardRef, useEffect, useId } from 'react';
+import { forwardRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+
+import { euclidCircularB } from '../theme';
 
 const PickerWrapper = styled(FormControl)`
   display: grid;
   gap: ${({ theme }) => theme.spacing(1.5)};
   width: 100%;
-`;
-
-const PickerQuestion = styled(Typography)`
-  font-weight: 600;
-  text-align: center;
 `;
 
 const PickerOptions = styled(RadioGroup)`
@@ -42,23 +38,14 @@ const MethodCard = styled(FormControlLabel, {
   align-items: center;
   gap: ${({ theme }) => theme.spacing(1)};
   padding: ${({ theme }) => theme.spacing(1.5, 2, 1.5, 1)};
-  background-color: ${({ theme }) => theme.palette.common.white};
-  border: 1px solid ${({ theme }) => theme.palette.grey[400]};
-  opacity: 0.6;
+  border: none;
+  background-color: ${({ theme }) => theme.palette.common.black};
+  color: ${({ theme }) => theme.palette.common.white};
+  box-shadow: none;
   transition:
-    opacity 150ms,
-    border-color 150ms,
+    background-color 150ms,
+    color 150ms,
     box-shadow 150ms;
-
-  img {
-    filter: grayscale(1);
-  }
-
-  &:hover,
-  &:focus-within {
-    opacity: 1;
-    border-color: ${({ theme }) => theme.palette.common.black};
-  }
 
   &:has(input:focus-visible) {
     outline: 2px solid ${({ theme }) => theme.palette.common.black};
@@ -68,20 +55,19 @@ const MethodCard = styled(FormControlLabel, {
   ${({ active, theme }) =>
     active &&
     css`
-      opacity: 1;
-      border-color: ${theme.palette.common.black};
-      box-shadow:
-        0 0 0 1px ${theme.palette.common.black},
-        0 6px 16px rgba(0, 0, 0, 0.18);
-
-      img {
-        filter: none;
-      }
+      background-color: ${theme.palette.common.white};
+      color: ${theme.palette.common.black};
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
     `}
 `;
 
 const MethodRadio = styled(Radio)`
-  color: ${({ theme }) => theme.palette.common.black};
+  color: ${({ theme }) => theme.palette.common.white};
+
+  &:not(.Mui-checked) .MuiSvgIcon-root:first-of-type {
+    border-radius: 50%;
+    background-color: ${({ theme }) => theme.palette.common.black};
+  }
 
   &.Mui-checked {
     color: ${({ theme }) => theme.palette.common.black};
@@ -95,7 +81,9 @@ const MethodContent = styled('span')`
 `;
 
 const MethodName = styled('span')`
-  font-weight: 600;
+  font-family: ${euclidCircularB.family}, sans-serif;
+  font-weight: 500;
+  font-size: 0.75rem;
 `;
 
 const methodLogo = css`
@@ -117,7 +105,6 @@ export const ReflektPaymentMethodPicker = forwardRef<
   { paymentMethods, onChange, value, className, name },
   ref
 ) {
-  const questionId = useId();
   const { t } = useTranslation();
   const {
     elements: { Image },
@@ -152,18 +139,12 @@ export const ReflektPaymentMethodPicker = forwardRef<
 
   return (
     <PickerWrapper className={className}>
-      {offeredMethods.length > 1 && (
-        <PickerQuestion id={questionId}>
-          {t('subscribe.choosePaymentMethod')}
-        </PickerQuestion>
-      )}
-
       <PickerOptions
         ref={ref}
         name={name}
         value={value ?? ''}
         onChange={event => onChange(event.target.value)}
-        aria-labelledby={questionId}
+        aria-label={t('subscribe.choosePaymentMethod')}
       >
         {offeredMethods.map(method => (
           <MethodCard

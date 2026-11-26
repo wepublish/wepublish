@@ -11,6 +11,7 @@ import { FullPaymentMethodFragment } from '@wepublish/website/api';
 import { BuilderPaymentMethodPickerProps } from '@wepublish/website/builder';
 
 import { reflektTenant } from '../reflekt-tenant';
+import { euclidCircularB } from '../theme';
 import { ReflektPaymentMethodPicker } from './reflekt-payment-method-picker';
 
 const cards = mockPaymentMethod({
@@ -33,7 +34,8 @@ const noCharge = mockPaymentMethod({
   paymentProviderID: 'no-charge',
 });
 
-const question = 'Wie möchtest du bezahlen?';
+const question = 'Zahlungsmittel wählen';
+const { white, black } = reflektTenant.createTheme().palette.common;
 
 const renderPicker = (props: Partial<BuilderPaymentMethodPickerProps> = {}) => {
   const onChange = vi.fn();
@@ -60,10 +62,10 @@ describe('ReflektPaymentMethodPicker', () => {
   beforeAll(() => applyTenantTranslations(reflektTenant));
   afterAll(() => resetTranslations());
 
-  it('asks the reader how they want to pay and labels the choice with it', () => {
+  it('labels the choice for screen readers without a visible heading', () => {
     renderPicker({ value: 'payrexx' });
 
-    expect(screen.getByText(question)).toBeVisible();
+    expect(screen.queryByText(question)).not.toBeInTheDocument();
     expect(screen.getByRole('radiogroup', { name: question })).toBeVisible();
   });
 
@@ -86,11 +88,32 @@ describe('ReflektPaymentMethodPicker', () => {
     expect(onChange).not.toHaveBeenCalled();
   });
 
-  it('greys out the payment method that is not chosen', () => {
+  it('shows the chosen payment method white on black and the other inverted', () => {
     renderPicker({ value: 'payrexx' });
 
-    expect(getComputedStyle(methodCard(cards)).opacity).toBe('1');
-    expect(getComputedStyle(methodCard(invoice)).opacity).toBe('0.6');
+    const chosen = getComputedStyle(methodCard(cards));
+    const other = getComputedStyle(methodCard(invoice));
+
+    expect(chosen.backgroundColor).toBe(white);
+    expect(chosen.color).toBe(black);
+    expect(chosen.borderStyle).toBe('none');
+    expect(chosen.boxShadow).not.toBe('none');
+
+    expect(other.backgroundColor).toBe(black);
+    expect(other.color).toBe(white);
+    expect(other.boxShadow).toBe('none');
+  });
+
+  it('sets the payment method names in Euclid Circular B at 12px', () => {
+    renderPicker({ value: 'payrexx' });
+
+    const name = getComputedStyle(screen.getByText(invoice.name));
+
+    expect(name.fontFamily).toMatch(
+      new RegExp(`^"?${euclidCircularB.family}"?, ?sans-serif$`)
+    );
+    expect(name.fontWeight).toBe('500');
+    expect(name.fontSize).toBe('12px');
   });
 
   it('reports the id of the picked payment method', async () => {
