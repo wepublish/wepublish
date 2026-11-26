@@ -4675,6 +4675,7 @@ export type MutationCreatePaymentProviderSettingArgs = {
   bexio_invoiceTitleRenewalMembership?: InputMaybe<Scalars['String']['input']>;
   bexio_markInvoiceAsOpen?: InputMaybe<Scalars['Boolean']['input']>;
   bexio_taxId?: InputMaybe<Scalars['Float']['input']>;
+  bexio_testMailbox?: InputMaybe<Scalars['String']['input']>;
   bexio_unitId?: InputMaybe<Scalars['Float']['input']>;
   bexio_userId?: InputMaybe<Scalars['Float']['input']>;
   id: Scalars['String']['input'];
@@ -5930,6 +5931,7 @@ export type MutationUpdatePaymentProviderSettingArgs = {
   bexio_invoiceTitleRenewalMembership?: InputMaybe<Scalars['String']['input']>;
   bexio_markInvoiceAsOpen?: InputMaybe<Scalars['Boolean']['input']>;
   bexio_taxId?: InputMaybe<Scalars['Float']['input']>;
+  bexio_testMailbox?: InputMaybe<Scalars['String']['input']>;
   bexio_unitId?: InputMaybe<Scalars['Float']['input']>;
   bexio_userId?: InputMaybe<Scalars['Float']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
@@ -7180,9 +7182,35 @@ export type PeriodicJob = {
   id: Scalars['String']['output'];
   modifiedAt: Scalars['DateTime']['output'];
   running: Scalars['Boolean']['output'];
+  steps: Array<PeriodicJobStep>;
   successfullyFinished?: Maybe<Scalars['DateTime']['output']>;
   tries: Scalars['Float']['output'];
 };
+
+/** What one step of a night did: the job's own steps and the syncs after it. */
+export type PeriodicJobStep = {
+  __typename: 'PeriodicJobStep';
+  counts: Array<PeriodicJobStepCount>;
+  error?: Maybe<Scalars['String']['output']>;
+  finishedAt: Scalars['DateTime']['output'];
+  key: Scalars['String']['output'];
+  startedAt: Scalars['DateTime']['output'];
+  status: PeriodicJobStepStatus;
+};
+
+/** One number a step of the night reports. */
+export type PeriodicJobStepCount = {
+  __typename: 'PeriodicJobStepCount';
+  name: Scalars['String']['output'];
+  value: Scalars['Int']['output'];
+};
+
+export enum PeriodicJobStepStatus {
+  Error = 'error',
+  Ok = 'ok',
+  Skipped = 'skipped',
+  Warning = 'warning'
+}
 
 export type PeriodicityPrice = {
   __typename: 'PeriodicityPrice';
@@ -9579,6 +9607,7 @@ export type SettingPaymentProvider = SettingProvider & {
   bexio_invoiceTitleRenewalMembership?: Maybe<Scalars['String']['output']>;
   bexio_markInvoiceAsOpen?: Maybe<Scalars['Boolean']['output']>;
   bexio_taxId?: Maybe<Scalars['Float']['output']>;
+  bexio_testMailbox?: Maybe<Scalars['String']['output']>;
   bexio_unitId?: Maybe<Scalars['Float']['output']>;
   bexio_userId?: Maybe<Scalars['Float']['output']>;
   createdAt: Scalars['DateTime']['output'];
