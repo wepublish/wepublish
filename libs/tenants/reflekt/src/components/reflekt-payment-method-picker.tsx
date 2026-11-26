@@ -37,7 +37,7 @@ const MethodCard = styled(FormControlLabel, {
   max-width: 22rem;
   align-items: center;
   gap: ${({ theme }) => theme.spacing(1)};
-  padding: ${({ theme }) => theme.spacing(1.5, 2, 1.5, 1)};
+  padding: ${({ theme }) => theme.spacing(1, 1.5, 1, 0.5)};
   border: none;
   background-color: ${({ theme }) => theme.palette.common.black};
   color: ${({ theme }) => theme.palette.common.white};
