@@ -769,7 +769,7 @@ export class MailSendRecipientService {
   private idsWhere(
     condition: MailHistoryCondition,
     by: CountedBy
-  ): { id?: { in: string[] } | { notIn: string[] } } {
+  ): { id: { in: string[] } | { notIn: string[] } } {
     const counted = this.counted.get(condition);
 
     if (counted?.by !== by) {
@@ -778,13 +778,11 @@ export class MailSendRecipientService {
       );
     }
 
-    if (!condition.negate) {
-      // An empty list is "nobody", said explicitly.
-      return { id: { in: counted.ids } };
-    }
-
-    // Nobody got it that often: everybody got it less often.
-    return counted.ids.length ? { id: { notIn: counted.ids } } : {};
+    // Both say an empty list explicitly: `in: []` is nobody, `notIn: []` is
+    // everybody. Never `{}`, which Prisma 7 drops inside the `OR` of "any".
+    return condition.negate ?
+        { id: { notIn: counted.ids } }
+      : { id: { in: counted.ids } };
   }
 
   /** The mails a condition asks about. */

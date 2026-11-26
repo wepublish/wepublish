@@ -1828,6 +1828,46 @@ describe('audience filtering by mail history', () => {
       expect(matches({ id: 'u1' }, where)).toBe(true);
     });
 
+    // Prisma 7 drops `{}` inside an `OR`, which would leave "any" with only
+    // the other conditions instead of everybody.
+    it('keeps everybody with "any" when negated and nobody got it that often', async () => {
+      const where = await userWhere(counting([]), {
+        match: MailHistoryMatch.any,
+        conditions: [
+          condition({ minCount: 2, negate: true }),
+          condition({ mailTemplateId: 'welcome' }),
+        ],
+      });
+
+      expect(matches({ id: 'u1', mailSent: [] }, where)).toBe(true);
+    });
+
+    it('keeps every subscription with "any" when negated and no subscription got it that often', async () => {
+      const prisma = counting([], 'subscriptionId');
+
+      await makeService(prisma).count({
+        base: MailRecipientBase.hasSubscription,
+        mailHistory: {
+          match: MailHistoryMatch.any,
+          conditions: [
+            condition({
+              minCount: 2,
+              negate: true,
+              scope: MailHistoryScope.subscription,
+            }),
+            condition({
+              mailTemplateId: 'welcome',
+              scope: MailHistoryScope.subscription,
+            }),
+          ],
+        },
+      });
+
+      const where = (prisma.subscription.count as Mock).mock.calls[0][0].where;
+
+      expect(matches({ id: 'sub-1', mailLogs: [] }, where)).toBe(true);
+    });
+
     it('does not count for "at least once"', async () => {
       const prisma = counting(['u1']);
 
