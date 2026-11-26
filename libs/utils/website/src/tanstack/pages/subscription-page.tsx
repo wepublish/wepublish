@@ -16,6 +16,7 @@ import {
   extractCache,
   getRequestSessionToken,
   handleJwtLogin,
+  withAcceptedSession,
 } from '../ssr';
 import { withAuthGuard } from '../auth-guard';
 import { useQueryParams } from '../router-hooks';
@@ -26,7 +27,10 @@ import { useQueryParams } from '../router-hooks';
  * plans are the edit page's upgrade options. A subscription counts as missing
  * only when the list loaded and does not have it.
  */
-export const prefetchSubscription = async (client: ApolloClient, id: string) => {
+export const prefetchSubscription = async (
+  client: ApolloClient,
+  id: string
+) => {
   const [subscriptions] = await Promise.all([
     client.query<SubscriptionsQuery>({ query: SubscriptionsDocument }),
     client.query({ query: InvoicesDocument }),
@@ -79,7 +83,7 @@ export const loadSubscription = createServerFn({ method: 'GET' })
       : { subscriptionMissing: false };
 
     return {
-      sessionToken,
+      sessionToken: withAcceptedSession(client, sessionToken),
       subscriptionMissing,
       apollo: extractCache(client),
     };

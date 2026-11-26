@@ -28,10 +28,29 @@ export const AsyncSessionProvider = memo<
 
   const [getMe] = useLazyQuery(MeDocument);
 
+  const clearSession = useCallback(async () => {
+    setToken(null);
+    sessionStorage.removeItem(AuthTokenStorageKey);
+    setUser(null);
+    await fetch('/api/cookie', {
+      method: 'DELETE',
+    });
+  }, []);
+
   const fetchMe = useCallback(async () => {
-    const { data } = await getMe();
-    setUser((data?.me as FullSensitiveDataUserFragment) ?? null);
-  }, [getMe]);
+    try {
+      const { data } = await getMe();
+
+      if (data && !data.me) {
+        await clearSession();
+        return;
+      }
+
+      setUser((data?.me as FullSensitiveDataUserFragment) ?? null);
+    } catch {
+      setUser(null);
+    }
+  }, [getMe, clearSession]);
 
   const setCookieAndToken = useCallback(
     async (newToken: FullSessionWithTokenWithoutUserFragment | null) => {
@@ -49,14 +68,10 @@ export const AsyncSessionProvider = memo<
         });
         await fetchMe();
       } else {
-        sessionStorage.removeItem(AuthTokenStorageKey);
-        setUser(null);
-        await fetch('/api/cookie', {
-          method: 'DELETE',
-        });
+        await clearSession();
       }
     },
-    [fetchMe]
+    [fetchMe, clearSession]
   );
 
   const setupInitialSessionToken = useCallback(async () => {

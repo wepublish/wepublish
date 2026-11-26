@@ -2,7 +2,10 @@ import { NextPage, NextPageContext } from 'next';
 import { useRouter } from 'next/router';
 import { withAuthGuard } from '../../../auth-guard';
 import { ssrAuthLink } from '../../../../lib/auth-link';
-import { getSessionTokenProps } from '../../../get-session-token-props';
+import {
+  getSessionTokenProps,
+  withAcceptedSessionProps,
+} from '../../../get-session-token-props';
 import { handleJwtLogin } from '../../../handle-jwt-login';
 import { ComponentProps } from 'react';
 import {
@@ -84,7 +87,10 @@ GuardedSubscription.getInitialProps = async (ctx: NextPageContext) => {
     }
   }
 
-  const props = addClientCacheToProps(client, sessionProps);
+  const props = addClientCacheToProps(
+    client,
+    withAcceptedSessionProps(ctx, client, sessionProps)
+  );
 
   return props;
 };
