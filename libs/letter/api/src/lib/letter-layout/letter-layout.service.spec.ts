@@ -28,7 +28,9 @@ const makePrisma = () => {
   const prisma = {
     letterLayout: {
       findMany: vi.fn(async () => [layout()]),
-      findUnique: vi.fn(async () => layout({ _count: { mailTemplates: 0 } })),
+      findUnique: vi.fn(async () =>
+        layout({ _count: { mailTemplateVariants: 0 } })
+      ),
       create: vi.fn(async ({ data }: any) => layout(data)),
       update: vi.fn(async ({ data }: any) => layout(data)),
       updateMany: vi.fn(async () => ({ count: 1 })),
@@ -133,12 +135,16 @@ describe('LetterLayoutService', () => {
   it('refuses to delete stationery templates still print on', async () => {
     const { service, prisma } = makeService();
     prisma.letterLayout.findUnique.mockResolvedValue(
-      layout({ _count: { mailTemplates: 2 } }) as never
+      layout({ _count: { mailTemplateVariants: 2 } }) as never
     );
 
     await expect(service.delete('layout-1')).rejects.toThrow(
       BadRequestException
     );
+    expect(prisma.letterLayout.findUnique).toHaveBeenCalledWith({
+      where: { id: 'layout-1' },
+      include: { _count: { select: { mailTemplateVariants: true } } },
+    });
     expect(prisma.letterLayout.delete).not.toHaveBeenCalled();
   });
 

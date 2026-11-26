@@ -14,7 +14,7 @@ import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import { tsriTenant } from '@wepublish/tenant/tsri';
 import {
   authLink,
-  getWebsiteShell,
+  useLiveWebsiteShell,
   initWePublishTranslator,
   WebsiteShellProps,
   withJwtHandler,
@@ -107,7 +107,7 @@ function CustomApp({
       (window.PUBLIC_ENV as typeof publicEnv)
     : undefined);
 
-  const shell = getWebsiteShell(pageProps);
+  const shell = useLiveWebsiteShell(pageProps);
 
   return (
     <PlausibleProvider

@@ -48,7 +48,7 @@ master before trusting it**, because the drift is the whole problem (§6.1).
 @wepublish/utils/website            framework-neutral core   <- no next/*, ever
 @wepublish/utils/website/next       Next pages router
 @wepublish/utils/website/tanstack   TanStack Router/Start
-@wepublish/utils/website/tanstack/server   server-only (cookies, headers, SSR Apollo)
+@wepublish/utils/website/tanstack/server   server-only (cookies, headers, SSR Apollo, server-route handlers)
 ```
 
 The two framework barrels **do not re-export the core**. That is deliberate: an
@@ -264,6 +264,19 @@ src: url('${plainLight}') format('opentype');
 Vite rewrites a static asset import to the built URL at bundle time,
 identically in the client and the server build. Verify on the output, not in
 dev: `grep -r "file://" dist/apps/<tenant>/.output/server` must find nothing.
+
+### 6.18 A shared page shows an old version on the TanStack tenants
+
+The `tanstack/pages/*` ports are copies of the Next pages taken at migration
+time. A later change to the Next page (a new layout, a feature flag, one more
+prefetched query) does not reach them, and nothing fails. Seen with the reader
+profile: the TanStack tenants kept the old cards after #3251, flag or not.
+
+Keep a page's body in the core (`lib/components/…`) and let the `next/` and
+`tanstack/` pages only fetch and wrap it, as the profile does now. When you
+change a Next page, diff its `tanstack/pages/` twin — including the prefetch:
+a flag read with `useWebsiteFeature` needs `FeaturesDocument` fetched on the
+server, or SSR renders the "off" state.
 
 
 ### 6.1 "it worked last time" — master drifted

@@ -1,10 +1,20 @@
-import { useLazyQuery, useMutation, useQuery } from '@apollo/client/react';
+import {
+  useApolloClient,
+  useLazyQuery,
+  useMutation,
+  useQuery,
+} from '@apollo/client/react';
 import { useRegister, useUser } from '@wepublish/authentication/website';
-import { PaymentForm, useSubscribe } from '@wepublish/payment/website';
+import {
+  isForbiddenError,
+  PaymentForm,
+  useSubscribe,
+} from '@wepublish/payment/website';
 import {
   CreateSubscriptionInfoDocument,
   FullMemberPlanFragment,
   InvoicesDocument,
+  MeDocument,
   MemberPlanListDocument,
   ResubscribeDocument,
   SubscriptionsDocument,
@@ -19,6 +29,7 @@ import { produce } from 'immer';
 import { getMonthlyEquivalentRange } from '../formatters/format-payment-period';
 import { sortBy } from 'ramda';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 /**
  * If you pass the "deactivateSubscriptionId" prop, this specific subscription will be canceled when
@@ -59,8 +70,10 @@ export const SubscribeContainer = <
   deactivateSubscriptionId,
   ...props
 }: SubscribeContainerProps<T>) => {
-  const { hasUser } = useUser();
+  const { hasUser, logout } = useUser();
   const { Subscribe } = useWebsiteBuilder();
+  const client = useApolloClient();
+  const { t } = useTranslation();
 
   const userSubscriptions = useQuery(SubscriptionsDocument, {
     skip: !hasUser,
@@ -129,6 +142,17 @@ export const SubscribeContainer = <
               deactivateSubscriptionId,
             },
           });
+
+          if (isForbiddenError(result.error)) {
+            const { data } = await client
+              .query({ query: MeDocument, fetchPolicy: 'network-only' })
+              .catch(() => ({ data: undefined }));
+
+            if (data && !data.me) {
+              await logout();
+              throw new Error(t('subscribe.sessionExpired'));
+            }
+          }
 
           if (result.error) {
             throw result.error;

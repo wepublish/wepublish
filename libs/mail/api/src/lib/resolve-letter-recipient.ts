@@ -1,12 +1,18 @@
 import { Logger } from '@nestjs/common';
 import { MailChannel, PrismaClient, User } from '@prisma/client';
 import { LetterRecipient, LetterSender } from './letter-sender';
+import { findTemplateVariant } from './template-variant';
 
 export interface ResolveLetterRecipientProps {
   prisma: PrismaClient;
   /** Absent without letters: everything goes out as mail. */
   letterSender?: LetterSender;
   recipient: User;
+  /**
+   * The template the send goes out with; it has to be written as a letter
+   * too. An event without a template sends nothing, on paper or otherwise.
+   */
+  mailTemplateId: string | null;
   /** The event is switched to letters. */
   asLetter?: boolean;
   /** The letter will carry a payment slip, which needs a Swiss address. */
@@ -16,18 +22,20 @@ export interface ResolveLetterRecipientProps {
 
 /**
  * The user with their address when a send goes to paper: the event is
- * switched to letters, the user prefers them, letters can be printed and the
- * address is usable. Anything missing means the mail goes out as usual.
+ * switched to letters, the user prefers them, the template has a letter
+ * version, letters can be printed and the address is usable. Anything missing
+ * means the mail goes out as usual.
  */
 export async function resolveLetterRecipient({
   prisma,
   letterSender,
   recipient,
+  mailTemplateId,
   asLetter,
   withPaymentSlip = false,
   logger,
 }: ResolveLetterRecipientProps): Promise<LetterRecipient | null> {
-  if (!asLetter || !letterSender) {
+  if (!asLetter || !letterSender || !mailTemplateId) {
     return null;
   }
 
@@ -36,6 +44,18 @@ export async function resolveLetterRecipient({
   });
 
   if (preference?.channel !== MailChannel.letter) {
+    return null;
+  }
+
+  // The editor keeps an event from being switched to letters without a
+  // letter version; this is for whatever slipped past it.
+  if (
+    !(await findTemplateVariant(prisma, mailTemplateId, MailChannel.letter))
+  ) {
+    logger?.warn(
+      `MailTemplate <${mailTemplateId}> has no letter version; mailing <${recipient.email}> instead.`
+    );
+
     return null;
   }
 

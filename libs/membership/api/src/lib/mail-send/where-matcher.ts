@@ -106,11 +106,28 @@ const matchesOperators = (value: unknown, condition: Where): boolean =>
 
 export const matches = (row: Row, where: Where): boolean =>
   Object.entries(where).every(([key, condition]) => {
+    if ((key === 'AND' || key === 'OR') && !(condition as Where[]).length) {
+      // Prisma 7 reads a top-level `OR: []` as "nothing" but drops an empty
+      // `OR`/`AND` that sits in a list, so `{ AND: [base, { OR: [] }] }` is
+      // just `base` (a mail-send placeholder segment counted a whole tenant
+      // that way). Rejected like `NOT`, so a filter must say "nobody" or
+      // "everybody" explicitly instead of a spec quietly picking one of the two.
+      throw new Error(
+        `where-matcher: empty "${key}" — Prisma drops it inside a list. Build an explicit filter instead.`
+      );
+    }
+
     if (key === 'AND') {
       return (condition as Where[]).every(part => matches(row, part));
     }
 
     if (key === 'OR') {
+      if ((condition as Where[]).some(part => !Object.keys(part).length)) {
+        throw new Error(
+          'where-matcher: "{}" inside "OR" — Prisma drops it instead of matching everybody. Build an explicit filter instead.'
+        );
+      }
+
       return (condition as Where[]).some(part => matches(row, part));
     }
 

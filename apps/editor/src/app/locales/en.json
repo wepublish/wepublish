@@ -19,9 +19,10 @@
       "mobile": "Mobile",
       "desktop": "Desktop",
       "tablet": "Tablet",
-      "copyUrl": "Copy preview URL",
-      "urlCopied": "Preview URL copied to clipboard",
-      "urlCopyFailed": "Preview URL could not be copied",
+      "copyUrl": "Copy preview link",
+      "urlCopied": "Link copied. It opens this preview in the editor.",
+      "urlCopyFailed": "Preview link could not be copied",
+      "openInNewTab": "Open preview in a new tab",
       "loading": "Loading preview …"
     },
     "previewHandshake": {
@@ -524,6 +525,11 @@
         "discountCodesHeading": "Discount codes",
         "showGoodies": "Show goodie selection",
         "showDiscountCodes": "Show discount code input",
+        "giftCodeRedemptionHeading": "Gift codes",
+        "showGiftCodeRedemption": "Show gift code redemption link",
+        "giftCodeRedemptionPage": "Redemption page",
+        "giftCodeRedemptionLinkText": "Link text",
+        "giftCodeRedemptionLinkTextHelp": "Leave empty to use the default text.",
         "goodieMinValue": {
           "label": "Minimum amount for a goodie",
           "hint": "Readers who pay less do not get to choose a goodie. Leave empty for no minimum."
@@ -655,6 +661,20 @@
         "leadText": "Lead Text",
         "title": "Title",
         "preTitle": "Pre-title"
+      },
+      "redeemGiftCode": {
+        "label": "Redeem gift code"
+      },
+      "giftCodeOffers": {
+        "label": "Sell gift codes",
+        "selectOffers": "Gift offers on sale",
+        "selectOffersHint": "Only active offers are shown to readers, in this order.",
+        "displayHeading": "Display",
+        "askRecipientName": "Ask for the recipient’s name",
+        "defaultOfferTitle": "Selected by default — this offer is preselected when the page loads.",
+        "orderHeading": "Gift offer order",
+        "orderHelp": "Drag the offers into the order in which they appear on the website and choose which offer is preselected.",
+        "showDiscountCodes": "Show discount code input (only for offers that allow discount codes)"
       },
       "mailchimpForm": {
         "label": "Newsletter form",
@@ -1596,14 +1616,63 @@
     },
     "name": "Name",
     "mailTemplates": {
+      "list": {
+        "attachments": "Attachments",
+        "attachmentsFilter": {
+          "with": "With attachments",
+          "without": "Without attachments"
+        },
+        "search": "Search",
+        "channels": "Delivery channels",
+        "letterLayout": "Stationery",
+        "letterLayoutDefault": "Default",
+        "letterAppendix": "Additional pages",
+        "letterAppendixNone": "None",
+        "memberPlans": "Member plans",
+        "memberPlansHint": "Member plans whose communication flow sends this template. The default flow belongs to no member plan and is not listed here.",
+        "noMatch": "No template matches the filters.",
+        "statuses": {
+          "ok": "In use",
+          "unused": "Not in use"
+        }
+      },
       "availableTemplates": "Message templates",
       "cancel": "Cancel",
       "content": "Content",
       "create": "Create template",
       "description": "Description",
       "edit": {
-        "createHeader": "Create mail template",
-        "editHeader": "Edit mail template",
+        "versions": "Versions per delivery channel",
+        "addVersion": {
+          "mail": "Add email version",
+          "letter": "Add letter version"
+        },
+        "removeVersion": "Remove this version",
+        "letterText": {
+          "label": "Text",
+          "same": "Same as email",
+          "own": "Own text",
+          "sameNote": "This letter uses the subject and text of the email. Edit them on the \"Email\" tab.",
+          "confirm": {
+            "title": "Discard the letter's own text?",
+            "text": "The letter will use the subject and text of the email again. Its own text will be lost.",
+            "confirm": "Discard"
+          }
+        },
+        "removeVersionConfirm": {
+          "title": {
+            "mail": "Remove the email version?",
+            "letter": "Remove the letter version?"
+          },
+          "text": {
+            "mail": "The email template of this template will be deleted.",
+            "letter": "The letter template of this template will be deleted."
+          },
+          "confirm": "Remove"
+        },
+        "letterNotForPurpose": "This purpose has no letter version: the message carries a login link and goes out by email at once.",
+        "createHeader": "Create message template",
+        "editHeader": "Edit message template",
         "saveAndClose": "Save & close",
         "nameRequired": "Name is required.",
         "testSent": "Test mail sent.",
@@ -1616,10 +1685,10 @@
         "testRecipientPlaceholder": "Your account email",
         "preview": "Preview",
         "sendTest": "Send test",
-        "previewLetter": "Preview as letter",
-        "letterAppendix": "QR-bill (PDF)",
+        "previewLetter": "Preview",
+        "letterAppendix": "Additional pages (PDF)",
         "letterAppendixNone": "None",
-        "letterAppendixHelp": "PDF from \"Documents\" printed after the letter pages, e.g. a QR-bill (A4, slip at the bottom edge). Only for addresses in Switzerland; with duplex printing a blank page is added when needed so the slip lands on a front page.",
+        "letterAppendixHelp": "The pages are added at the end of the letter. Choose from the PDF files uploaded under \"Documents\".",
         "attachments": "Attachments (Word)",
         "attachmentsHelp": "Word documents (.docx) from \"Documents\", at most 5 and 15 MB together. They are filled in with the same placeholders as the mail (in the text and in link addresses, not in field codes), attached as PDF and sent in this order with every mail from this template, automated subscription mails included. System mails (login, password) cannot have attachments. A letter prints them after its pages (A4). If an attachment cannot be created, the mail is not sent. A personal document is converted for each recipient one by one, and PDF attachments make mails more likely to land in spam: keep them few and small. Needs Gotenberg as the PDF renderer.",
         "attachmentsNone": "None",
@@ -1629,20 +1698,24 @@
         "selectMailTypePlaceholder": "Choose a purpose …",
         "testRecipientHint": "Test mails are always sent to your own account.",
         "generateTextFromHtml": "Generate from HTML",
-        "textContentReadonlyHint": "Automatically generated from the content. Edit the visual or HTML tab to change it.",
         "background": "Background",
         "contentWidth": "Width (px)",
         "purposeHint": "The purpose defines in which situation this template is sent. It determines which data — and therefore which placeholders — are available: only an invoice template knows the invoice amount, for example.",
         "descriptionHelp": "Internal only: helps you and your team find the template in the list. It does not appear in the email.",
         "sampleSubscriptionHelp": "Pick an existing subscription to fill the preview and the test mail with its real data. Without a choice, made-up sample data is used. The test mail still only goes to you.",
-        "bodyModeHelp": "Visual: edit the content like in a word processor. HTML: edit the source code directly — for advanced users. Plain text: the text-only version for email programs without HTML; it is generated automatically.",
+        "textContentGenerated": "Generated automatically from the HTML / visual content",
+        "bodyModeHints": {
+          "visual": "Edit the content like in a word processor.",
+          "html": "Edit the source code directly — for advanced users.",
+          "text": "The text-only version for email programs without HTML. It is generated automatically from the content; edit the visual or HTML tab to change it."
+        },
         "backgroundHelp": "Color of the area around the email's content.",
         "contentWidthHelp": "Maximum width of the content in pixels. 600 px is a proven value that looks good in most email programs. On narrow screens the content shrinks automatically.",
         "bodyMode": "Editor mode",
         "letterLayout": "Stationery",
         "letterLayoutDefault": "Default ({{name}})",
         "letterLayoutNone": "Default (none yet)",
-        "letterLayoutHelp": "Header and footer when this template is printed as a letter. Ignored for emails."
+        "letterLayoutHelp": "Header and footer"
       },
       "editor": {
         "undo": "Undo",
@@ -1700,7 +1773,7 @@
       "htmlContent": "HTML content",
       "name": "Name",
       "placeholders": "Placeholders",
-      "placeholdersHint": "Click to insert into the selected field",
+      "placeholdersHint": "Clicking a placeholder inserts it into the template.",
       "placeholderSelectType": "Choose a purpose above to see its placeholders.",
       "mailTypes": {
         "account": "Account & login",
@@ -1709,18 +1782,22 @@
         "renewal": "Renewal",
         "invoiceCreation": "Invoice",
         "custom": "Free mail (subscriber)",
-        "customNoSubscription": "Free mail (no subscription)"
+        "customNoSubscription": "Free mail (no subscription)",
+        "giftCodePurchase": "Gift code bought",
+        "giftCodeRedemption": "Gift code redeemed"
       },
-      "placeholderAlways": "Always available — every mail",
+      "placeholderAlways": "Always available",
       "placeholderContextLabel": "Additional fields for this purpose",
       "placeholderContexts": {
-        "account": "Account & login (creation, login link, password reset)",
+        "account": "Account & login",
         "emailChange": "Email change",
-        "subscription": "Subscription (new, confirmed, deactivation)",
-        "renewal": "Renewal — automated (success / failed)",
+        "subscription": "Subscription",
+        "renewal": "Automated renewal",
         "invoiceCreation": "Invoice created",
         "custom": "Free mail to a subscriber",
-        "customNoSubscription": "Free mail to a non-subscriber"
+        "customNoSubscription": "Free mail to a non-subscriber",
+        "giftCodePurchase": "Gift code bought",
+        "giftCodeRedemption": "Gift code redeemed"
       },
       "rawHtml": "HTML",
       "save": "Save",
@@ -1736,11 +1813,16 @@
       "textContent": "Plain text content (fallback)",
       "wysiwyg": "Visual",
       "delete": "Delete",
-      "deleteConfirm": "Delete this mail template?",
+      "deleteConfirm": "Delete this message template?",
       "importFromProvider": "Import from provider",
       "importConfirm": "Import & overwrite",
       "importWarning": "This imports every template from the mail provider. Unknown ones are created, already imported ones have their HTML and subject overwritten. Local changes to them will be lost.",
       "importDone": "Imported {{count}} template(s) from the provider.",
+      "placeholderGroups": {
+        "user": "User",
+        "person": "Person",
+        "general": "General"
+      },
       "placeholderNames": {
         "user_fullName": "Full name",
         "user_firstName": "First name",
@@ -1785,7 +1867,16 @@
         "optional_invoice_items_0_name": "Invoice item 1 — name",
         "optional_invoice_items_0_amount": "Invoice item 1 — amount (Rappen)",
         "optional_invoices_0_id": "Latest invoice — ID",
-        "optional_invoices_0_description": "Latest invoice — description"
+        "optional_invoices_0_description": "Latest invoice — description",
+        "optional_giftCode_code": "Gift code",
+        "optional_giftCode_recipientName": "Recipient name",
+        "optional_giftCode_offer_name": "Gift offer",
+        "optional_giftCode_memberPlan_name": "Membership plan name",
+        "optional_giftCode_periodicity": "Payment periodicity (raw)",
+        "optional_giftCode_redemptionWindowMonths": "Redemption window (months)",
+        "optional_giftCode_issuedAt": "Issued at",
+        "optional_giftCode_expiresAt": "Redeemable until",
+        "optional_giftCode_redeemedAt": "Redeemed at"
       },
       "dateFormat": {
         "iso": "ISO",
@@ -1810,9 +1901,11 @@
         "renewal": "Additionally includes plan/payment-method names and invoice data.",
         "invoiceCreation": "Note: subscription fields here use the prefix optional_subscriptionToCreateInvoice_*.",
         "custom": "Invoices come as an array: optional_invoices_0_* (newest first).",
-        "customNoSubscription": "Only recipient fields are available — this mail goes to people without a subscription."
+        "customNoSubscription": "Only recipient fields are available — this mail goes to people without a subscription.",
+        "giftCodePurchase": "Goes to the buyer once the gift code is paid. The invoice is the gift code’s.",
+        "giftCodeRedemption": "Goes to the reader who redeemed the gift code. Subscription and invoice are the ones the code paid."
       },
-      "searchPlaceholders": "Search…",
+      "searchPlaceholders": "Filter placeholders…",
       "noPlaceholders": "No matching placeholders.",
       "placeholderExample": "Example",
       "purposeDescriptions": {
@@ -1822,7 +1915,9 @@
         "renewal": "Automatic renewal — successful or failed. Additionally available: plan and payment method names plus the invoice data.",
         "invoiceCreation": "As soon as a new invoice has been created. Additionally available: the invoice and its subscription.",
         "custom": "A mail you send freely to subscribers, e.g. a newsletter via “Manual messages”. Additionally available: the subscription and the latest invoices.",
-        "customNoSubscription": "A mail you send freely to people without a subscription, e.g. an invitation or win-back. Only the recipient fields are available — subscription placeholders stay empty."
+        "customNoSubscription": "A mail you send freely to people without a subscription, e.g. an invitation or win-back. Only the recipient fields are available — subscription placeholders stay empty.",
+        "giftCodePurchase": "Sent to the buyer once a gift code is paid; choose it on the gift code offer. Additionally available: the code, the offer and the invoice.",
+        "giftCodeRedemption": "Sent to the reader who redeemed a gift code; choose it on the gift code offer. Additionally available: the code and the subscription it paid."
       },
       "placeholderDescriptions": {
         "user_fullName": "First and last name together (e.g. for the salutation).",
@@ -1868,16 +1963,26 @@
         "optional_invoice_items_0_name": "Name of the first invoice item (array, index 0).",
         "optional_invoice_items_0_amount": "Amount of the first invoice item in Rappen.",
         "optional_invoices_0_id": "ID of the latest invoice (array, index 0).",
-        "optional_invoices_0_description": "Description of the latest invoice."
+        "optional_invoices_0_description": "Description of the latest invoice.",
+        "optional_giftCode_code": "The code that redeems the gift.",
+        "optional_giftCode_recipientName": "Name of the person the gift is for, as entered when buying. Can be empty.",
+        "optional_giftCode_offer_name": "Name of the gift offer.",
+        "optional_giftCode_memberPlan_name": "Membership plan the code pays for.",
+        "optional_giftCode_periodicity": "Duration the code pays for (raw value): yearly, biannual, quarterly, monthly, biennial.",
+        "optional_giftCode_redemptionWindowMonths": "Months in which the code can be redeemed. Empty when unlimited.",
+        "optional_giftCode_issuedAt": "Issued, i.e. paid, at. Choose a format.",
+        "optional_giftCode_expiresAt": "Redeemable until. Empty when unlimited. Choose a format.",
+        "optional_giftCode_redeemedAt": "Redeemed at. Choose a format."
       },
       "statusHelp": "A check mark means an automatic email uses this template. «Unused» means no automatic email uses it — you can still send it by hand via «Manual messages».",
-      "placeholdersInfo": "Placeholders are replaced automatically with each recipient's data when the email is sent, e.g. their first name. This makes every email personal.",
-      "searchPlaceholdersLabel": "Search placeholders",
-      "empty": "No mail templates yet."
+      "placeholdersInfo": "Placeholders are replaced automatically with the matching data when the message is sent, e.g. the recipient's first name.",
+      "searchPlaceholdersLabel": "Filter placeholders",
+      "empty": "No message templates yet."
     },
     "mailTemplateSelect": {
-      "sendAsLetter": "Also by letter",
-      "sendAsLetterHint": "People on the letter channel get this message printed instead of emailed.",
+      "channels": "Delivery channels",
+      "noLetterVersion": "This template has no letter version. Add one in the template so people on the letter channel get this message printed; until then they get the email.",
+      "sendAsLetterHint": "The email always goes out. With letter ticked, people on the letter channel get this message printed instead of by email.",
       "noMailSentSelectNow": "Do not send an email"
     },
     "memberPlanEdit": {
@@ -2050,7 +2155,30 @@
           "unresponsive": "Unresponsive since {{date}}",
           "unknown": "Unknown since {{date}}"
         },
-        "recomputedDaily": "(recomputed automatically every day)"
+        "recomputedDaily": "(recomputed automatically every day)",
+        "filter": {
+          "reason": "Reason",
+          "emailSince": "Email status since",
+          "created": "Suggested since"
+        },
+        "reasonFilter": {
+          "placeholderEmail": "Placeholder address",
+          "hardBounce": "Hard bounce",
+          "invalid": "Invalid address",
+          "blocked": "Blocked by the mail provider",
+          "spamComplaint": "Spam complaint",
+          "unsubscribed": "Unsubscribed at the mail provider",
+          "clicked": "Clicked a link",
+          "verified": "Address verified",
+          "login": "Logged in",
+          "emailVerified": "Email address confirmed",
+          "noInteraction": "No reaction",
+          "noEvidence": "No evidence",
+          "none": "No email status"
+        },
+        "confirmAllFiltered": "Apply all {{count}} filtered",
+        "confirmAllFilteredText": "Only the suggestions that match the filter are applied.",
+        "emptyFiltered": "No suggestions match the filter."
       },
       "assign": {
         "steps": {
@@ -2089,7 +2217,7 @@
         "emailUnreachable": "Email address unreachable ({{segment}}) – email will not reach this person."
       },
       "flows": {
-        "letterHint": "Messages marked «Also by letter» reach people on the letter channel in print; everyone else gets email.",
+        "letterHint": "Messages with «Letter» ticked reach people on the letter channel in print; everyone else gets email.",
         "manage": "Manage delivery channels"
       }
     },
@@ -2144,6 +2272,7 @@
       "peers": "Peers",
       "settings": "Settings",
       "subscriptionPlans": "Subscription Plans",
+      "gifts": "Gifts",
       "subscriptions": "Subscriptions",
       "subscriptionSettings": "Automated messages",
       "tokens": "Tokens",
@@ -2271,6 +2400,10 @@
       "goodies": "Goodies",
       "goodieCreate": "New goodie",
       "goodieEdit": "Edit goodie",
+      "giftCodes": "Gift codes",
+      "giftCodeOffers": "Gift offers",
+      "giftCodeOfferCreate": "New gift offer",
+      "giftCodeOfferEdit": "Edit gift offer",
       "consents": "Consents",
       "consentCreate": "New consent",
       "consentEdit": "Edit consent",
@@ -2278,9 +2411,9 @@
       "userConsentCreate": "New user consent",
       "userConsentEdit": "Edit user consent",
       "automaticEmails": "Automatic emails",
-      "mailTemplates": "Email templates",
-      "mailTemplateCreate": "New email template",
-      "mailTemplateEdit": "Edit email template",
+      "mailTemplates": "Message templates",
+      "mailTemplateCreate": "New message template",
+      "mailTemplateEdit": "Edit message template",
       "letterLayouts": "Stationery",
       "letterLayoutCreate": "New stationery",
       "letterLayoutEdit": "Edit stationery",
@@ -2622,7 +2755,8 @@
         "mailLogSync": "Mail delivery states",
         "suppressionSync": "Suppressed addresses",
         "emailQuality": "Email quality",
-        "deliverySuggestions": "Delivery channel suggestions"
+        "deliverySuggestions": "Delivery channel suggestions",
+        "sellableReconciliation": "Sold gift codes reconciliation"
       },
       "stepsLabel": "Tonight's steps"
     },
@@ -2882,7 +3016,7 @@
     },
     "automaticMails": {
       "title": "Automated messages",
-      "intro": "Here you decide which email template goes out automatically for which event. Pick a template per event – or leave it on “Do not send an email” if nothing should go out. The ⓘ icon explains every event.",
+      "intro": "Here you decide which message template goes out automatically for which event. Pick a template per event – or leave it on “Do not send an email” if nothing should go out. The ⓘ icon explains every event.",
       "example": "Example: {{example}}"
     },
     "subscriptionFlow": {
@@ -3805,6 +3939,159 @@
         "availableStockInfo": "How many pieces can still be given away: the stock minus the goodies already chosen by subscribers. ∞ means unlimited."
       }
     },
+    "giftCodeOffer": {
+      "navbar": "Gift offers",
+      "form": {
+        "createTitle": "Create gift offer",
+        "editTitle": "Edit gift offer \"{{ offer }}\"",
+        "name": "Name",
+        "description": "Description",
+        "image": "Image",
+        "active": "Active",
+        "memberPlan": "Subscription plan",
+        "periodicity": "Duration",
+        "periodicityHelp": "Only durations the subscription plan has a price for can be chosen.",
+        "price": "Price",
+        "priceHelp": "What the buyer pays for the gift",
+        "priceSameAsPlan": "Same price as subscribing",
+        "priceBelowPlan": "Cheaper than subscribing (plan price {{ price }})",
+        "priceAbovePlan": "More expensive than subscribing (plan price {{ price }})",
+        "priceInvalid": "Enter a price above 0",
+        "redemptionWindowMonths": "Redeemable for (months)",
+        "redemptionWindowMonthsHelp": "Counted from the payment. Leave empty to let the code be redeemed at any time.",
+        "redemptionWindowMonthsInvalid": "Enter a whole number of at least 1",
+        "paymentMethods": "Payment methods",
+        "paymentMethodsHelp": "Buyers can pay for the gift with these methods. Not every payment provider supports single purchases.",
+        "paymentMethodsRequired": "Choose at least one payment method",
+        "allowDiscountCodes": "Allow discount codes",
+        "allowDiscountCodesHelp": "Buyers can enter a discount code for this member plan when buying the gift.",
+        "autoRenew": "Renew automatically",
+        "autoRenewHelp": "The subscription started with a code renews automatically once the gift period ends.",
+        "autoRenewNotExtendable": "This member plan cannot be extended, so it cannot renew automatically.",
+        "renewalPaymentMethod": "Payment method for the renewal",
+        "renewalPaymentMethodHelp": "The member plan's payment methods for this duration.",
+        "renewalPaymentMethodRequired": "Choose the payment method for the renewal",
+        "sections": {
+          "details": "Offer",
+          "sale": "Sale",
+          "mails": "Emails",
+          "mailsDescription": "Without a template, no mail is sent. Documents attached to the template are filled in like the mail itself."
+        },
+        "purchaseMailTemplate": "Mail when bought",
+        "purchaseMailTemplateHelp": "Sent to the buyer once the payment is confirmed, with the code.",
+        "redemptionMailTemplate": "Mail when redeemed",
+        "redemptionMailTemplateHelp": "Sent to the reader who redeemed the code."
+      },
+      "overview": {
+        "title": "Gift offers",
+        "createOffer": "New gift offer",
+        "active": "Active",
+        "name": "Name",
+        "memberPlan": "Subscription plan",
+        "periodicity": "Duration",
+        "price": "Price",
+        "redemptionWindow": "Redeemable for",
+        "months_one": "{{ count }} month",
+        "months_other": "{{ count }} months",
+        "unlimited": "Unlimited",
+        "allowDiscountCodes": "Discount codes",
+        "autoRenew": "Renews automatically",
+        "paymentMethods": "Payment methods",
+        "modifiedAt": "Last edited",
+        "modifiedAtDate": "{{modifiedAt, ccc PP p}}",
+        "areYouSure": "Delete gift offer?",
+        "areYouSureBody": "The gift offer \"{{ offer }}\" will be deleted permanently. Offers that already have codes cannot be deleted; set them inactive instead.",
+        "areYouSureConfirmation": "Delete gift offer"
+      }
+    },
+    "giftCode": {
+      "navbar": "Gift codes",
+      "list": {
+        "title": "Gift codes",
+        "code": "Code",
+        "noCodeYet": "Not issued yet",
+        "status": "Status",
+        "unpaid": "Unpaid",
+        "paid": "Paid",
+        "buyer": "Buyer",
+        "redeemedBy": "Redeemed by",
+        "paidInvoice": "Paid invoice",
+        "paidInvoiceLink": "Invoice of {{date, PP}}",
+        "source": "Source",
+        "createdBy": "Creator",
+        "recipientName": "Recipient name",
+        "offer": "Offer",
+        "amount": "Amount",
+        "createdAt": "Created",
+        "issuedAt": "Issued",
+        "expiresAt": "Expires",
+        "redeemedAt": "Redeemed",
+        "canceledAt": "Canceled",
+        "date": "{{date, PP}}"
+      },
+      "filters": {
+        "search": "Code, recipient or buyer email",
+        "status": "Status",
+        "payment": "Payment",
+        "allPayments": "All",
+        "paid": "Paid",
+        "unpaid": "Unpaid",
+        "offer": "Offer",
+        "memberPlan": "Subscription plan",
+        "source": "Source",
+        "allSources": "All",
+        "createdAt": "Created between"
+      },
+      "status": {
+        "ordered": "Ordered",
+        "issued": "Issued",
+        "redeemed": "Redeemed",
+        "expired": "Expired",
+        "canceled": "Canceled"
+      },
+      "source": {
+        "purchase": "Purchase",
+        "admin": "Created by an admin"
+      },
+      "create": {
+        "open": "Create codes",
+        "title": "Create gift codes",
+        "body": "The codes are issued right away, without an invoice or payment, e.g. to hand out at events.",
+        "offer": "Offer",
+        "offerRequired": "Choose an offer",
+        "inactiveOffer": "inactive",
+        "count": "Number of codes",
+        "countHelp": "1 to 500 codes",
+        "countInvalid": "Enter a whole number from 1 to 500",
+        "recipientName": "Recipient name (optional)",
+        "recipientNameHelp": "Stored on every code. Leave empty for codes without a name.",
+        "recipientNameTooLong": "At most {{maximum}} characters",
+        "submit": "Create codes",
+        "createdTitle_one": "{{count}} gift code created",
+        "createdTitle_other": "{{count}} gift codes created",
+        "createdBody": "The codes are issued. You can also find them in the list.",
+        "copy": "Copy codes",
+        "copied": "Codes copied to the clipboard",
+        "close": "Done"
+      },
+      "cancellationReason": {
+        "manual": "Canceled by an editor",
+        "invoiceCanceled": "Not paid in time",
+        "chargeback": "Payment reversed"
+      },
+      "actions": {
+        "cancel": "Cancel gift code",
+        "markAsPaid": "Mark as paid"
+      },
+      "dialogs": {
+        "cancelTitle": "Cancel gift code?",
+        "cancelBody": "The gift code for {{ giftCode }} can no longer be redeemed. Handle refunds with the payment provider.",
+        "cancelConfirm": "Cancel gift code",
+        "markAsPaidTitle": "Mark as paid?",
+        "markAsPaidBody": "The invoice for {{ giftCode }} is marked as paid. If the code has not been issued yet, it is issued now. Only do this once the money has arrived.",
+        "markAsPaidConfirm": "Mark as paid"
+      }
+    },
     "paymentMethodEditPanel": {
       "gracePeriod": "Grace Period",
       "gracePeriodHelpText": "If you use the paywall, allow users to read immediately after ordering a subscription, even if they have not paid yet. This is useful for payments via bank transfer, for instance.",
@@ -4177,7 +4464,12 @@
           "enable": "Enable Umami",
           "um": "<url>Umami</url> is a privacy-focused, open source alternative to Google Analytics.",
           "umLocator": "You can find it in the <url>website settings</url> of your Umami dashboard",
-          "umInvalid": "Must be a valid website ID (e.g., xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)"
+          "umInvalid": "Must be a valid website ID (e.g., xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)",
+          "advanced": "Advanced",
+          "excludedSearchParams": "Excluded URL parameters",
+          "excludedSearchParamsHelp": "These URL parameters are removed from the page URL and the referrer before they are sent to Umami, e.g. personal data a newsletter adds to its links (mail, firstName). All other parameters, like the utm parameters, are kept. Upper and lower case do not matter.",
+          "excludedSearchParam": "Parameter name",
+          "addExcludedSearchParam": "Add parameter"
         }
       },
       "ads": {
@@ -4606,6 +4898,7 @@
         "unknown": "Unknown",
         "active": "Active",
         "hint": "Several statuses mean any of them. “Unresponsive”: mails were delivered but there has been no login or click for a long time (setting “Email quality”). Reachable by letter: placeholder + dead.",
+        "hintWithoutPlaceholder": "Several statuses mean any of them. “Unresponsive”: mails were delivered but there has been no login or click for a long time (setting “Email quality”).",
         "overview": "People in this audience by email status (regardless of the selection)",
         "refresh": "Refresh statuses",
         "refreshing": "Refreshing statuses …",
@@ -4654,6 +4947,10 @@
         "label": "Delivery channel",
         "mail": "Email",
         "letter": "Letter",
+        "noVersion": {
+          "mail": "This template has no email version.",
+          "letter": "This template has no letter version."
+        },
         "withoutAddress": "{{count}} of the recipients have no usable postal address and will be skipped."
       },
       "print": {
@@ -4745,8 +5042,6 @@
         "job": "Send job",
         "jobAll": "All send jobs",
         "all": "All",
-        "title": "Filter",
-        "reset": "Reset filters",
         "typeHint": "What triggered this send.",
         "channel": "Delivery",
         "jobHelp": "A send job groups all emails sent with one click via «Manual messages». Pick one to see only its emails."
@@ -4755,14 +5050,16 @@
         "subscriptionFlow": "Subscription mailing",
         "userFlow": "Event mail",
         "systemMail": "System mail",
-        "manual": "Manual"
+        "manual": "Manual",
+        "giftCode": "Gift code"
       },
       "error": "Error",
       "typeDescriptions": {
         "manual": "Sent by hand via “Manual messages” or “Send test”. Example: a newsletter to all subscribers.",
         "subscriptionFlow": "Time-based, from “Automated messages”, scheduled off the subscription date. Examples: reminder 14 days before it ends, dunning after an unpaid invoice.",
         "userFlow": "Triggered immediately by a concrete action or event. Examples: login link requested, email address changed, renewal payment failed.",
-        "systemMail": "Account mails, configured under “Automated messages” in the “Account & login” section. Examples: welcome mail after registration, password reset."
+        "systemMail": "Account mails, configured under “Automated messages” in the “Account & login” section. Examples: welcome mail after registration, password reset.",
+        "giftCode": "Sent when a gift code is bought or redeemed, with the templates chosen on the gift code offer."
       },
       "errorHelp": {
         "causeTitle": "What happened?",
@@ -5317,7 +5614,7 @@
       "headerHeight": "Header height (mm)",
       "footerHeight": "Footer height (mm)",
       "headerHeightHint": "At most 40 mm, so the header stays clear of the franking zone. It repeats on every page; 0 mm leaves it out.",
-      "footerHeightHint": "At most 40 mm. The letter text keeps this much space from the bottom edge. The footer repeats on every page; 0 mm leaves it out.",
+      "footerHeightHint": "At most 40 mm. The letter text keeps this much space from the bottom edge, and never less than 20 mm. The footer repeats on every page; 0 mm leaves it out.",
       "htmlHint": "HTML with placeholders such as {{user_firstName}}. Use mm for sizes and give images a fixed width and height.",
       "insertImage": "Insert image",
       "preview": "Preview",
@@ -5718,7 +6015,7 @@
         "subscription": "Create subscription",
         "consent": "Create consent",
         "userConsent": "Create user consent",
-        "mailTemplate": "Create email template",
+        "mailTemplate": "Create message template",
         "letterLayout": "Create stationery",
         "memberPlan": "Create subscription plan",
         "paymentMethod": "Create payment method",
@@ -5727,7 +6024,8 @@
         "peer": "Create peer",
         "userRole": "Create user role",
         "token": "Generate token",
-        "apiToken": "Generate API key"
+        "apiToken": "Generate API key",
+        "giftCodeOffer": "Create gift offer"
       },
       "trigger": "Search or jump to…",
       "keys": {

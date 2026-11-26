@@ -15,6 +15,7 @@ import { DeliverySuggestionService } from '../delivery-mode/delivery-suggestion.
 import {
   BexioContactSyncResult,
   BexioContactSyncService,
+  SellableReconciliationService,
 } from '@wepublish/payment/api';
 import { describeError } from '@wepublish/utils/api';
 import type { MailchimpSyncRunResult } from '../mailchimp-sync/mailchimp-sync.service';
@@ -182,6 +183,19 @@ export class PeriodicJobExecutor {
       'deliverySuggestions',
       DeliverySuggestionService,
       service => service.recomputeAll()
+    );
+    await this.runStep(
+      'sellableReconciliation',
+      SellableReconciliationService,
+      async service => {
+        const result = await service.reconcile();
+        const { polled, canceled, resynced, failed } = result;
+        this.logger.log(
+          `Sellable reconciliation: ${polled} polled, ${canceled} canceled, ${resynced} resynced, ${failed} failed`
+        );
+
+        return result;
+      }
     );
   }
 

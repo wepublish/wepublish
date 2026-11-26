@@ -30,7 +30,6 @@ import {
   InvoiceDeliveryError,
   InvoiceNotFoundError,
   IssuingInvoiceError,
-  NoSubscriptionIdInInvoice,
   ResponseNOK,
   SendingInvoiceError,
   UnknownIntentState,
@@ -81,6 +80,8 @@ export class BexioPaymentProvider extends BasePaymentProvider {
   // The name that signs the invoices, of the bexio user `bexio_userId`.
   private signer?: { loadedAt: number; userId: number; name: string };
 
+  override readonly supportsStandaloneInvoices = true;
+
   constructor(props: PaymentProviderProps) {
     super(props);
   }
@@ -100,19 +101,14 @@ export class BexioPaymentProvider extends BasePaymentProvider {
   }
 
   /**
-   * Creates a payment intent based on the provided invoice details.
-   * If the invoice has an associated subscription ID, it throws an error.
-   * Otherwise, it proceeds to create a payment intent using Bexio's API.
+   * Creates the invoice in Bexio and hands it back as a payment intent. The
+   * invoice goes to the subscriber, or to the buyer of a purchase without a
+   * subscription.
    *
    * @param {CreatePaymentIntentProps} props - The properties required to create the payment intent.
    * @returns {Promise<Intent>} A promise that resolves to the created payment intent object.
-   * @throws {NoSubscriptionIdInInvoice} Throws an error if the invoice contains a subscription ID.
    */
   async createIntent(props: CreatePaymentIntentProps): Promise<Intent> {
-    if (!props.invoice.subscriptionID) {
-      throw new NoSubscriptionIdInInvoice();
-    }
-
     const { intent, deliveryError } = await this.bexioCreate(
       props.invoice.id,
       false,
@@ -340,18 +336,25 @@ export class BexioPaymentProvider extends BasePaymentProvider {
               },
             },
           },
+          user: {
+            include: {
+              address: true,
+              paymentProviderCustomers: true,
+            },
+          },
           items: true,
         },
       });
 
-      if (!invoice || !invoice.subscription || !invoice.subscription.user) {
+      const user = invoice?.subscription?.user ?? invoice?.user;
+
+      if (!invoice || !user) {
         throw new InvoiceNotFoundError(invoice);
       }
 
       step = 'loading its settings';
       const bexio = await this.getBexioGateway();
       step = 'searching the contact';
-      const user = invoice.subscription.user;
       const storedContactId = user.paymentProviderCustomers.find(
         customer => customer.paymentProviderID === this.id
       )?.customerID;
@@ -367,7 +370,12 @@ export class BexioPaymentProvider extends BasePaymentProvider {
         invoice: newInvoice,
         document,
         deliveryError,
-      } = await this.createInvoice(updatedContact, invoice, isRenewal, channel);
+      } = await this.createInvoice(
+        updatedContact,
+        { ...invoice, user },
+        isRenewal,
+        channel
+      );
 
       // The email can differ between we.publish and bexio, so the next
       // invoice finds this contact by its id. Only a convenience: the
@@ -669,7 +677,8 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     invoice: Invoice & {
       items: InvoiceItem[];
       subscription:
-        (Subscription & { memberPlan: MemberPlan; user: User }) | null;
+        (Subscription & { memberPlan: MemberPlan; user?: User }) | null;
+      user?: User | null;
     },
     isRenewal: boolean,
     channel: MailChannel = MailChannel.mail
@@ -678,21 +687,26 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     document?: RemoteInvoiceDocument;
     deliveryError?: string;
   }> {
-    if (!invoice || !invoice.subscription || !invoice.subscription.user) {
+    const user = invoice?.user ?? invoice?.subscription?.user;
+
+    if (!invoice || !user) {
       throw new InvoiceNotFoundError(invoice);
     }
     const stringReplaceMap = new MappedReplacer();
-    addToStringReplaceMap(
-      stringReplaceMap,
-      'subscription',
-      invoice.subscription
-    );
-    addToStringReplaceMap(stringReplaceMap, 'user', invoice.subscription.user);
-    addToStringReplaceMap(
-      stringReplaceMap,
-      'memberPlan',
-      invoice.subscription.memberPlan
-    );
+    addToStringReplaceMap(stringReplaceMap, 'user', user);
+
+    if (invoice.subscription) {
+      addToStringReplaceMap(
+        stringReplaceMap,
+        'subscription',
+        invoice.subscription
+      );
+      addToStringReplaceMap(
+        stringReplaceMap,
+        'memberPlan',
+        invoice.subscription.memberPlan
+      );
+    }
     const config = await this.getConfig();
     const userId = this.assertProperty('bexio_userId', config.bexio_userId);
     const footer = await this.invoiceFooter(config.apiKey, userId);
@@ -721,7 +735,9 @@ export class BexioPaymentProvider extends BasePaymentProvider {
             config.bexio_accountId
           ),
           tax_id: this.assertProperty('bexio_taxId', config.bexio_taxId),
-          text: invoice.subscription.memberPlan.name,
+          text:
+            invoice.subscription?.memberPlan.name ??
+            [...new Set(invoice.items.map(({ name }) => name))].join(', '),
           unit_price: `${invoice.items.reduce((total, item) => total + item.amount * item.quantity, 0) / 100}`,
           type: 'KbPositionCustom',
         },

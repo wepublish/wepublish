@@ -894,6 +894,9 @@ describe('PeriodicJobService', () => {
       (mockPrisma as any).userDeliveryPreference = {
         findUnique: vi.fn(async () => ({ channel: 'letter' })),
       };
+      (mockPrisma as any).mailTemplateVariant = {
+        findUnique: vi.fn(async () => ({ id: 'variant-1' })),
+      };
       (mockPrisma as any).user = {
         findUnique: vi.fn(async () => ({ ...user, address: { city: 'Bern' } })),
       };
@@ -1029,6 +1032,9 @@ describe('PeriodicJobService', () => {
       (mockPrisma as any).userDeliveryPreference = {
         findUnique: vi.fn(async () => ({ channel: MailChannel.letter })),
         findMany: vi.fn(async () => [{ userId: 'user-1' }]),
+      };
+      (mockPrisma as any).mailTemplateVariant = {
+        findUnique: vi.fn(async () => ({ id: 'variant-1' })),
       };
       (mockPrisma as any).user = {
         findUnique: vi.fn(async () => ({

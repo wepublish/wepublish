@@ -31,6 +31,7 @@
     "ariaLabel": "{hasTitle, select, true {{title}. } other {}}{hasLead, select, true {{lead}. } other {}}{hasAuthors, select, true {Von {authors}} other {}}"
   },
   "subscribe": {
+    "sessionExpired": "Deine Sitzung ist abgelaufen. Bitte melde dich erneut an oder gib deine Angaben ein.",
     "memberplan": {
       "price": "{offerAmountMin, select, 0 {Gratis} other {{offerExactAmount, select, true {} other {Ab }}{offerPrice} {offerPeriodicity, select, lifetime {einmalig} other {{extendable, select, true {{offerPeriodicity, select, monthly {pro Monat} quarterly {pro Quartal} biannual {pro Halbjahr} yearly {pro Jahr} biennial {pro 2 Jahre} other {}}} other {}}}}}}",
       "offerPrice": "{amountMin, select, 0 {Gratis} other {{exactAmount, select, true {} other {Ab }}{periodPrice} {periodicity, select, monthly {pro Monat} quarterly {pro Quartal} biannual {pro Halbjahr} yearly {pro Jahr} biennial {pro 2 Jahre} lifetime {einmalig} other {}}}}",
@@ -81,6 +82,9 @@
       "confirmationTitle": "Bist du dir sicher?",
       "openInvoices": "Du hast bereits schon ein Abo mit offenen Rechnungen. Du kannst deine offenen Rechnungen in deinem <Link href=\"/profile\">Profil</Link> anschauen.",
       "alreadyHasSubscription": "Du hast dieses Abo schon, bist du dir sicher? Du kannst deine Abos in deinem <Link href=\"/profile\">Profil</Link> anschauen."
+    },
+    "giftCodeRedemption": {
+      "link": "Willst du ein Geschenkabo einlösen? Hier klicken."
     }
   },
   "login": {
@@ -530,5 +534,22 @@
     "stripe-checkout": "Kreditkarte",
     "mollie": "Online-Zahlung",
     "no-charge": "Kostenlos"
+  },
+  "giftCode": {
+    "redeem": {
+      "code": "Geschenkcode",
+      "submit": "Code einlösen",
+      "loginLink": "Du hast schon ein Konto? Hier anmelden.",
+      "success": {
+        "createdSubscription": "Dein Abo «{memberPlan}» ist jetzt aktiv.",
+        "extendedSubscription": "Dein Abo «{memberPlan}» wurde verlängert.",
+        "paidInvoice": "Die offene Rechnung deines Abos «{memberPlan}» ist bezahlt."
+      }
+    },
+    "purchase": {
+      "chooseOffer": "Geschenk-Abo wählen",
+      "recipientName": "Name der beschenkten Person",
+      "submit": "Geschenk-Abo für {amount} kaufen"
+    }
   }
 }

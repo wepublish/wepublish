@@ -76,13 +76,14 @@ of the current year in `index` mode) through
 `createSitemapHandlers` from `@wepublish/feed/website` — TanStack tenants serve
 `/sitemap.xml` + `/sitemap/<chunk>` through its Fetch API twin
 `createSitemapFetchHandlers`, with `/api/sitemap` 301ing there. Per-media settings
-(`mode: 'single' | 'index'`, `pageUrls`, `homepageSlug`, `filterArticle`, url
-hooks) live in `apps/<app>/src/sitemap.ts`. Fetch with the lean `Sitemap*`
+(`mode: 'single' | 'index'`, `pageUrls`, `homepageSlug`, `filterArticle`,
+`filterPage`, url hooks) live in `apps/<app>/src/sitemap.ts`. Fetch with the lean `Sitemap*`
 documents (`libs/website/api/src/lib/schemas/sitemap.graphql`), never
-`ArticleList`, and leave peered articles out. `generateSitemap` is deprecated.
+`ArticleList`, and leave peered articles out. `<loc>` urls are percent-encoded
+in `xml.ts`, because the API returns page and article urls with raw slugs. `generateSitemap` is deprecated.
 
 **llms.txt:** every website serves `/llms.txt` from the same `src/sitemap.ts`
-config, so its `filterArticle` and url hooks apply. It follows
+config, so its `filterArticle`, `filterPage` and url hooks apply. It follows
 llmtxt.info/best-practices: one H1, a factual `description` blockquote (an
 encyclopedia opener, not a slogan), a "Last updated" line, one H2 per CMS
 navigation (published pages only when there is none), the 10 latest articles,
@@ -98,7 +99,7 @@ oversized bodies) so they do not reach Sentry.
 **Feeds:** Next tenants export `createFeedHandler(getFeed, format)` from
 `@wepublish/feed/website` in `pages/api/{rss,atom,json}-feed.ts` (with
 `api: { bodyParser: false }` in `config`); TanStack tenants use `feedHandler`
-from `@wepublish/utils/website/tanstack`. Both answer a failed feed query with
+from `@wepublish/utils/website/tanstack/server`. Both answer a failed feed query with
 an uncached 502 and report the error to Sentry instead of throwing.
 Every `apps/<app>/src/feed.ts` loads its items with `queryFeed`
 (`FeedArticleList`, `libs/website/api/src/lib/schemas/feed.graphql`), never
@@ -112,7 +113,9 @@ Mediendatenbank ingests online sources from these feeds.
 
 ### Business Domain Libraries
 
-`membership`, `payment`, `user-subscription`, `member-plan`, `crowdfunding`, `mail`, `event`, `consent`, `print-issue`
+`membership`, `payment`, `user-subscription`, `member-plan`, `crowdfunding`, `mail`, `event`, `consent`, `print-issue`, `gift-code`
+
+One-off products (gift codes, behind the `gift-codes` feature; API and editor only so far, the website and a gift block come later) sell through the sellable contract in `libs/payment/api/src/lib/sellable/`: an invoice with `sellableKind` set and no subscription, one `SellableHandler` per kind registered in `SellableRegistry`, fulfilled and revoked by listeners added with `InvoicePaidNotifier.register()` (the `INVOICE_PAID_LISTENER` token is gone). See [docs/gift-codes/01-selling-things.md](../docs/gift-codes/01-selling-things.md).
 
 ### Infrastructure Libraries
 

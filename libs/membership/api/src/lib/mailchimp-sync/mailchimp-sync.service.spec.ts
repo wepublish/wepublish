@@ -546,15 +546,28 @@ describe('MailchimpSyncService', () => {
     });
 
     it('reads the clicks of the last week of campaigns on a real run', async () => {
-      const before = Date.now();
+      // The service reads the clock itself, after this test does. Frozen, both
+      // see the same instant. The slow evidence step makes a real clock here
+      // fail on every run instead of only when the millisecond happens to tick.
+      const now = new Date();
+      vi.useFakeTimers({ toFake: ['Date'] });
+      vi.setSystemTime(now);
+      audienceEvidence.record.mockImplementationOnce(async () => {
+        await new Promise(resolve => setTimeout(resolve, 2));
+        return { recorded: 0 };
+      });
 
-      await service.executeSyncById(CONFIG_ID);
+      try {
+        await service.executeSyncById(CONFIG_ID);
+      } finally {
+        vi.useRealTimers();
+      }
 
       expect(campaignClicks.record).toHaveBeenCalledTimes(1);
-      const [listId, since] = campaignClicks.record.mock.calls[0];
-      expect(listId).toBe(syncConfig.mailchimp_listId);
-      expect(before - since.getTime()).toBeGreaterThanOrEqual(7 * DAY_MS);
-      expect(before - since.getTime()).toBeLessThan(7 * DAY_MS + 60_000);
+      expect(campaignClicks.record).toHaveBeenCalledWith(
+        syncConfig.mailchimp_listId,
+        new Date(now.getTime() - 7 * DAY_MS)
+      );
     });
 
     it('records nothing on a dry run', async () => {

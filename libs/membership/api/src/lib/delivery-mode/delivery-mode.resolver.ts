@@ -19,7 +19,9 @@ import {
   DeliveryModeBulkResult,
   DeliverySuggestionConfirmAllResult,
   DeliverySuggestionCounts,
+  DeliverySuggestionFilter,
   DeliverySuggestionModel,
+  DeliverySuggestionReasonCount,
   DeliverySuggestionRecomputeResult,
   PaginatedDeliveryChannelUsers,
   PaginatedDeliveryModeBulkChanges,
@@ -89,9 +91,22 @@ export class DeliveryModeResolver {
     @Args('kind', { type: () => DeliverySuggestionKind })
     kind: DeliverySuggestionKind,
     @Args('skip', { type: () => Int, nullable: true }) skip = 0,
-    @Args('take', { type: () => Int, nullable: true }) take = 20
+    @Args('take', { type: () => Int, nullable: true }) take = 20,
+    @Args('filter', { type: () => DeliverySuggestionFilter, nullable: true })
+    filter?: DeliverySuggestionFilter
   ) {
-    return this.suggestions.list(kind, skip, take);
+    return this.suggestions.list(kind, skip, take, filter);
+  }
+
+  @Permissions(CanGetUsers)
+  @Query(() => [DeliverySuggestionReasonCount], {
+    description: `The reasons among the open suggestions of a direction, most first`,
+  })
+  deliverySuggestionReasons(
+    @Args('kind', { type: () => DeliverySuggestionKind })
+    kind: DeliverySuggestionKind
+  ) {
+    return this.suggestions.reasons(kind);
   }
 
   @Permissions(CanGetUsers)
@@ -176,14 +191,16 @@ export class DeliveryModeResolver {
 
   @Permissions(CanManageUserDeliveryMode)
   @Mutation(() => DeliverySuggestionConfirmAllResult, {
-    description: `Apply every open suggestion of a direction`,
+    description: `Apply every open suggestion of a direction, or only those the filter keeps`,
   })
   confirmAllDeliverySuggestions(
     @CurrentUser() session: AuthSession,
     @Args('kind', { type: () => DeliverySuggestionKind })
-    kind: DeliverySuggestionKind
+    kind: DeliverySuggestionKind,
+    @Args('filter', { type: () => DeliverySuggestionFilter, nullable: true })
+    filter?: DeliverySuggestionFilter
   ) {
-    return this.suggestions.confirmAll(kind, actorOf(session));
+    return this.suggestions.confirmAll(kind, actorOf(session), filter);
   }
 
   @Permissions(CanManageUserDeliveryMode)

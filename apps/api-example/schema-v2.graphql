@@ -67,6 +67,12 @@ enum AnalyticsProviderType {
   UMAMI
 }
 
+type AnonymousSubscriber {
+  """When the subscription was created."""
+  createdAt: DateTime!
+  firstName: String
+}
+
 type ApiToken {
   createdAt: DateTime!
 
@@ -634,7 +640,7 @@ input BildwurfAdBlockInput {
   zoneID: String
 }
 
-union BlockContent = BildwurfAdBlock | BlockTemplateBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | MailchimpFormBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
+union BlockContent = BildwurfAdBlock | BlockTemplateBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | GiftCodeOffersBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | MailchimpFormBlock | PolisConversationBlock | PollBlock | QuoteBlock | RedeemGiftCodeBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
 
 input BlockContentInput {
   bildwurfAd: BildwurfAdBlockInput
@@ -646,6 +652,7 @@ input BlockContentInput {
   facebookPost: FacebookPostBlockInput
   facebookVideo: FacebookVideoBlockInput
   flexBlock: FlexBlockInput
+  giftCodeOffers: GiftCodeOffersBlockInput
   html: HTMLBlockInput
   image: ImageBlockInput
   imageGallery: ImageGalleryBlockInput
@@ -656,6 +663,7 @@ input BlockContentInput {
   polisConversation: PolisConversationBlockInput
   poll: PollBlockInput
   quote: QuoteBlockInput
+  redeemGiftCode: RedeemGiftCodeBlockInput
   richText: RichTextBlockInput
   soundCloudTrack: SoundCloudTrackBlockInput
   streamableVideo: StreamableVideoBlockInput
@@ -789,6 +797,7 @@ enum BlockType {
   FacebookPost
   FacebookVideo
   FlexBlock
+  GiftCodeOffers
   HTML
   Image
   ImageGallery
@@ -799,6 +808,7 @@ enum BlockType {
   PolisConversation
   Poll
   Quote
+  RedeemGiftCode
   RichText
   SoundCloudTrack
   StreamableVideo
@@ -1443,6 +1453,25 @@ type DeliverySuggestionEmailQuality {
   since: DateTime!
 }
 
+input DeliverySuggestionFilter {
+  """Suggested since, from."""
+  createdFrom: DateTime
+
+  """Suggested since, to."""
+  createdTo: DateTime
+
+  """Email status since, from."""
+  emailSinceFrom: DateTime
+
+  """Email status since, to."""
+  emailSinceTo: DateTime
+
+  """
+  Any of these reasons: placeholderEmail, the evidence type behind the email status (e.g. hardBounce, login), or none.
+  """
+  reasons: [String!]
+}
+
 """toLetter: move to printed letters. toMail: move back to mail."""
 enum DeliverySuggestionKind {
   toLetter
@@ -1459,6 +1488,13 @@ type DeliverySuggestionModel {
   """Why, e.g. emailQuality:dead or placeholderEmail."""
   reason: String!
   user: MailLogRecipient!
+}
+
+type DeliverySuggestionReasonCount {
+  count: Int!
+
+  """A reason as DeliverySuggestionFilter.reasons takes it."""
+  reason: String!
 }
 
 type DeliverySuggestionRecomputeResult {
@@ -1534,6 +1570,7 @@ enum EditorBlockType {
   Embed
   Event
   FlexBlock
+  GiftCodeOffers
   HTML
   Image
   ImageGallery
@@ -1542,6 +1579,7 @@ enum EditorBlockType {
   MailchimpForm
   Poll
   Quote
+  RedeemGiftCode
   RichText
   Subscribe
   TeaserGrid1
@@ -1935,6 +1973,204 @@ type FullPoll {
   infoText: RichText
   opensAt: DateTime!
   question: String
+}
+
+type GiftCode implements HasMemberPlanLc {
+  """Null for codes created by an admin."""
+  amount: Int
+  autoRenew: Boolean!
+
+  """Only visible to admins."""
+  buyer: SensitiveDataUser
+  buyerId: String
+  canceledAt: DateTime
+  cancellationReason: GiftCodeCancellationReason
+
+  """
+  Only visible to admins and to the buyer of an issued, uncanceled code whose purchase is paid.
+  """
+  code: String
+  createdAt: DateTime!
+
+  """The admin who created the code. Only visible to admins."""
+  createdBy: SensitiveDataUser
+  currency: Currency
+  expiresAt: DateTime
+  id: String!
+  invoiceId: String
+  issuedAt: DateTime
+  memberPlan: MemberPlan!
+  memberPlanId: String!
+  offer: GiftCodeOffer!
+  offerId: String!
+
+  """
+  Whether the invoice of the purchase is paid. Null for codes created by an admin.
+  """
+  paid: Boolean
+  periodicity: PaymentPeriodicity!
+  recipientName: String
+  redeemedAt: DateTime
+
+  """Only visible to admins."""
+  redeemedBy: SensitiveDataUser
+
+  """The subscription invoice the code paid. Only visible to admins."""
+  redeemedInvoice: Invoice
+  redemptionWindowMonths: Int
+  renewalPaymentMethodId: String
+  source: GiftCodeSource!
+  status: GiftCodeStatus!
+}
+
+enum GiftCodeCancellationReason {
+  chargeback
+  invoiceCanceled
+  manual
+}
+
+input GiftCodeFilter {
+  buyerId: String
+  createdFrom: DateTime
+  createdTo: DateTime
+  memberPlanId: String
+  offerId: String
+
+  """
+  True lists codes with a paid invoice, false codes whose invoice is not paid.
+  """
+  paid: Boolean
+  search: String
+  source: GiftCodeSource
+  status: GiftCodeStatus
+}
+
+type GiftCodeOffer implements HasImage & HasMemberPlanLc {
+  active: Boolean!
+  allowDiscountCodes: Boolean!
+
+  """
+  Whether subscriptions started with codes of this offer renew automatically.
+  """
+  autoRenew: Boolean!
+  createdAt: DateTime!
+  description: RichText
+  id: String!
+  image: Image
+  imageID: String
+  memberPlan: MemberPlan!
+  memberPlanId: String!
+  modifiedAt: DateTime!
+  name: String!
+
+  """The payment methods configured on this offer."""
+  paymentMethodIds: [String!]!
+
+  """The payment methods a buyer can use for this offer."""
+  paymentMethods: [PaymentMethod!]!
+  periodicity: PaymentPeriodicity!
+
+  """
+  What the buyer pays, in cents of the member plan currency. The redeemed subscription keeps the plan price.
+  """
+  price: Int!
+
+  """
+  Mail template sent to the buyer once the code is issued. None, no mail.
+  """
+  purchaseMailTemplateId: String
+
+  """Mail template sent to the reader who redeemed a code. None, no mail."""
+  redemptionMailTemplateId: String
+  redemptionWindowMonths: Int
+
+  """The payment method of subscriptions that renew automatically."""
+  renewalPaymentMethod: PaymentMethod
+  renewalPaymentMethodId: String
+}
+
+input GiftCodeOfferFilter {
+  active: Boolean
+  memberPlanId: String
+  name: String
+}
+
+enum GiftCodeOfferSort {
+  CreatedAt
+  ModifiedAt
+  Name
+}
+
+type GiftCodeOffersBlock implements BaseBlock {
+  askRecipientName: Boolean!
+  blockStyle: String
+  blockStyleName: String
+  defaultGiftCodeOfferId: String
+  disabled: Boolean
+  fields: [SubscribeBlockField!]!
+  giftCodeOfferIds: [String!]!
+  giftCodeOffers: [GiftCodeOffer!]!
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+  showDiscountCodes: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
+  type: BlockType!
+}
+
+input GiftCodeOffersBlockInput {
+  askRecipientName: Boolean! = true
+  blockStyle: String
+  blockStyleName: String
+  defaultGiftCodeOfferId: String
+  disabled: Boolean
+  fields: [SubscribeBlockField!]! = [FirstName, Password, PasswordRepeated, Address]
+  giftCodeOfferIds: [String!]! = []
+  showDiscountCodes: Boolean! = false
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
+}
+
+type GiftCodeRedemption {
+  action: GiftCodeRedemptionAction!
+  invoice: Invoice!
+  subscription: PublicSubscription!
+}
+
+enum GiftCodeRedemptionAction {
+  """The code started a new subscription and paid its first period."""
+  createdSubscription
+
+  """The code paid the next period of an existing subscription."""
+  extendedSubscription
+
+  """The code paid the open invoice of an existing subscription."""
+  paidInvoice
+}
+
+enum GiftCodeSort {
+  CreatedAt
+  IssuedAt
+}
+
+enum GiftCodeSource {
+  admin
+  purchase
+}
+
+enum GiftCodeStatus {
+  canceled
+  expired
+  issued
+  ordered
+  redeemed
 }
 
 type Goodie implements HasImage {
@@ -2373,9 +2609,11 @@ type Invoice implements HasOptionalSubscription {
   """
   payments: [Payment!]!
   scheduledDeactivationAt: DateTime!
+  sellableKind: SellableKind
   subscription: PublicSubscription
   subscriptionID: String
   total: Int!
+  userID: String
 }
 
 type InvoiceConnection {
@@ -2769,6 +3007,7 @@ type MailLogTemplate {
 
 """Origin of a sent mail."""
 enum MailLogType {
+  giftCode
   manual
   subscriptionFlow
   systemMail
@@ -3003,6 +3242,8 @@ enum MailTemplateContext {
   custom
   customNoSubscription
   emailChange
+  giftCodePurchase
+  giftCodeRedemption
   invoiceCreation
   renewal
   subscription
@@ -3015,14 +3256,12 @@ input MailTemplateInput {
   attachmentIds: [String!]
   context: MailTemplateContext
   description: String
-  htmlContent: String!
-
-  """Uploaded pdf printed after the letter pages, e.g. a QR-bill."""
-  letterAppendixId: String
-  letterLayoutId: String
   name: String!
-  subject: String!
-  textContent: String
+
+  """
+  The versions to write, one per channel. A version left out stays as it is; removing one is `deleteMailTemplateVariant`.
+  """
+  variants: [MailTemplateVariantInput!]!
 }
 
 type MailTemplateLetterPreviewModel {
@@ -3030,27 +3269,59 @@ type MailTemplateLetterPreviewModel {
   pdf: String!
 }
 
+"""A member plan whose communication flow sends a template."""
+type MailTemplateMemberPlanModel {
+  id: String!
+  name: String!
+}
+
 type MailTemplateModel {
   """
   Word documents (.docx) filled in with the same placeholders, converted to pdf and attached to every mail sent from this template, in this order. A printed letter carries them after its pages.
   """
   attachmentIds: [String!]!
+
+  """
+  Title, or else the filename, of each attached document, in their order. For the template table.
+  """
+  attachmentNames: [String!]!
+
+  """The channels this template is written for, the email first."""
+  channels: [MailChannel!]!
   context: MailTemplateContext
   description: String
-  htmlContent: String!
+  htmlContent: String! @deprecated(reason: "Use `variants`: a template has a body per channel.")
   id: String!
-
-  """Uploaded pdf printed after the letter pages, e.g. a QR-bill."""
-  letterAppendixId: String
+  letterAppendixId: String @deprecated(reason: "Use the letter entry of `variants`.")
 
   """
-  Stationery a letter printed from this template is set on; null means the default.
+  Title, or else the filename, of the pdf printed after the letter pages. Null without one.
   """
-  letterLayoutId: String
+  letterAppendixName: String
+  letterLayoutId: String @deprecated(reason: "Use the letter entry of `variants`.")
+
+  """
+  Name of the stationery the letter version is set on. Null for the default stationery and for a template without a letter version.
+  """
+  letterLayoutName: String
+
+  """
+  The member plans whose communication flow sends this template, by name. The default flow belongs to no plan and is not listed.
+  """
+  memberPlans: [MailTemplateMemberPlanModel!]!
   name: String!
   status: String!
+
+  """
+  The subject of the email version; the title of the letter for a template written as a letter only.
+  """
   subject: String!
-  textContent: String
+  textContent: String @deprecated(reason: "Use `variants`: a template has a body per channel.")
+
+  """
+  What the template says on each channel, bodies included. Ask for it on a single template, not on a list.
+  """
+  variants: [MailTemplateVariantModel!]!
 }
 
 input MailTemplatePreviewInput {
@@ -3087,6 +3358,50 @@ type MailTemplateRef {
 type MailTemplateSubscriptionOption {
   id: String!
   label: String!
+}
+
+input MailTemplateVariantInput {
+  channel: MailChannel!
+  htmlContent: String!
+
+  """Uploaded pdf printed after the letter pages, e.g. a QR-bill."""
+  letterAppendixId: String
+  letterLayoutId: String
+
+  """
+  Letter only: take subject and body from the email version, which the template must have. The subject and body handed in are ignored.
+  """
+  sameAsMail: Boolean
+  subject: String!
+  textContent: String
+}
+
+"""What a template says on one channel."""
+type MailTemplateVariantModel {
+  channel: MailChannel!
+  htmlContent: String!
+  id: String!
+
+  """
+  Letter only: uploaded pdf printed after the letter pages, e.g. a QR-bill.
+  """
+  letterAppendixId: String
+
+  """Letter only: stationery the letter is set on; null means the default."""
+  letterLayoutId: String
+
+  """
+  Letter only: the letter says what the email says. Its own subject and body are empty then; sends read the email version.
+  """
+  sameAsMail: Boolean!
+
+  """
+  The email's subject line; for a letter the title its log entry carries.
+  """
+  subject: String!
+
+  """Plain-text alternative of an email. Unused for a letter."""
+  textContent: String
 }
 
 """
@@ -3652,6 +3967,9 @@ type Mutation {
   """Hides the campaign from the default list. Campaigns are never deleted."""
   archiveNewsletterCampaign(id: String!): NewsletterCampaign!
 
+  """Cancels a gift code. Refunds of paid codes happen outside We.Publish."""
+  cancelGiftCode(id: String!): GiftCode!
+
   """
   Stop a running send job. Unsent recipients stay open and can be continued.
   """
@@ -3698,8 +4016,10 @@ type Mutation {
   """
   computePrintIssueRun(id: String!): PrintIssueRun!
 
-  """Apply every open suggestion of a direction"""
-  confirmAllDeliverySuggestions(kind: DeliverySuggestionKind!): DeliverySuggestionConfirmAllResult!
+  """
+  Apply every open suggestion of a direction, or only those the filter keeps
+  """
+  confirmAllDeliverySuggestions(filter: DeliverySuggestionFilter, kind: DeliverySuggestionKind!): DeliverySuggestionConfirmAllResult!
 
   """
   Confirms that the manual action required by a changelog entry has been completed. Requires the permission to update settings.
@@ -3792,6 +4112,44 @@ type Mutation {
   Generates a short-lived JWT token for authenticating with an external app.
   """
   createExternalAppToken(externalAppId: String!): ExternalAppToken!
+
+  """Creates a gift code offer."""
+  createGiftCodeOffer(
+    active: Boolean!
+    allowDiscountCodes: Boolean
+    autoRenew: Boolean
+    description: RichText
+    imageID: String
+    memberPlanId: String!
+    name: String!
+    paymentMethodIds: [String!]!
+    periodicity: PaymentPeriodicity!
+
+    """
+    What the buyer pays, in cents of the member plan currency. The redeemed subscription keeps the plan price.
+    """
+    price: Int!
+
+    """
+    Mail template sent to the buyer once the code is issued. None, no mail.
+    """
+    purchaseMailTemplateId: String
+
+    """Mail template sent to the reader who redeemed a code. None, no mail."""
+    redemptionMailTemplateId: String
+    redemptionWindowMonths: Int
+    renewalPaymentMethodId: String
+  ): GiftCodeOffer!
+
+  """
+  Creates issued gift codes without a purchase, e.g. to hand out at events.
+  """
+  createGiftCodes(
+    """Number of codes to create, 1 to 500."""
+    count: Int!
+    offerId: String!
+    recipientName: String
+  ): [GiftCode!]!
 
   """Creates a new goodie."""
   createGoodie(
@@ -4031,6 +4389,9 @@ type Mutation {
   """Deletes an external app."""
   deleteExternalApp(id: String!): ExternalApp!
 
+  """Deletes a gift code offer that has not sold any codes."""
+  deleteGiftCodeOffer(id: String!): GiftCodeOffer!
+
   """Deletes an existing goodie."""
   deleteGoodie(id: String!): Goodie!
 
@@ -4050,6 +4411,11 @@ type Mutation {
 
   """Delete an existing mail template"""
   deleteMailTemplate(id: String!): Boolean
+
+  """
+  Remove what a template says on one channel. Refused while something still sends the template on that channel, and for its last version.
+  """
+  deleteMailTemplateVariant(channel: MailChannel!, templateId: String!): Boolean
 
   """Deletes a single sync error so the contact will be retried."""
   deleteMailchimpSyncError(id: String!): Boolean!
@@ -4243,12 +4609,18 @@ type Mutation {
   """
   markNotificationRead(itemId: String!, source: NotificationSource!): NotificationRead!
 
+  """Starts a new payment for an unpaid gift code."""
+  payGiftCode(failureURL: String, id: String!, paymentMethodId: String, paymentMethodSlug: Slug, successURL: String): Payment!
+
   """Publishes an article at the given time."""
   publishArticle(id: String!, publishedAt: DateTime!): Article!
   publishNewsletterCampaign(id: String!): NewsletterPublishResult!
 
   """Publishes an page at the given time."""
   publishPage(id: String!, publishedAt: DateTime!): Page!
+
+  """Buys a gift code and starts its payment."""
+  purchaseGiftCode(discountCode: String, failureURL: String, offerId: String!, paymentMethodId: String, paymentMethodSlug: Slug, recipientName: String, successURL: String): Payment!
 
   """
   This mutation allows to rate a comment. Supports logged in and anonymous
@@ -4265,6 +4637,11 @@ type Mutation {
 
   """Rebuild the suggestions now instead of waiting for the night"""
   recomputeDeliverySuggestions: DeliverySuggestionRecomputeResult!
+
+  """
+  Redeems a gift code for your own subscriptions. It pays the open invoice of a subscription with the same member plan and payment periodicity, pays the next period of such a subscription, or starts a new subscription.
+  """
+  redeemGiftCode(code: String!): GiftCodeRedemption!
 
   """
   Pull late delivery states from the mail provider, then re-evaluate everyone's email quality. The nightly job does the same; this is for looking at a campaign's result now.
@@ -4485,6 +4862,35 @@ type Mutation {
     target: ExternalAppsTarget
     url: String
   ): ExternalApp!
+
+  """Updates a gift code offer."""
+  updateGiftCodeOffer(
+    active: Boolean
+    allowDiscountCodes: Boolean
+    autoRenew: Boolean
+    description: RichText
+    id: String!
+    imageID: String
+    memberPlanId: String
+    name: String
+    paymentMethodIds: [String!]
+    periodicity: PaymentPeriodicity
+
+    """
+    What the buyer pays, in cents of the member plan currency. The redeemed subscription keeps the plan price.
+    """
+    price: Int
+
+    """
+    Mail template sent to the buyer once the code is issued. None, no mail.
+    """
+    purchaseMailTemplateId: String
+
+    """Mail template sent to the reader who redeemed a code. None, no mail."""
+    redemptionMailTemplateId: String
+    redemptionWindowMonths: Int
+    renewalPaymentMethodId: String
+  ): GiftCodeOffer!
 
   """Updates an existing goodie."""
   updateGoodie(
@@ -5093,6 +5499,18 @@ type PaginatedEvents {
 
 type PaginatedEventsFromSources {
   nodes: [EventFromSource!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedGiftCodeOffers {
+  nodes: [GiftCodeOffer!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedGiftCodes {
+  nodes: [GiftCode!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
@@ -6195,6 +6613,9 @@ type Query {
     types: [ActionType!]
   ): [Action!]!
 
+  "\n      Returns the first name and creation date of every active subscription, newest first.\n      Active means the same as for activeSubscribers. Nothing else about the subscriber is exposed.\n    "
+  activeSubscriberFirstNames: [AnonymousSubscriber!]!
+
   "\n      Returns all active subscribers.\n      Includes subscribers with a cancelled but not run out subscription.\n    "
   activeSubscribers: [DashboardSubscription!]!
 
@@ -6407,8 +6828,11 @@ type Query {
   """How many suggestions are open, per direction"""
   deliverySuggestionCounts: DeliverySuggestionCounts!
 
+  """The reasons among the open suggestions of a direction, most first"""
+  deliverySuggestionReasons(kind: DeliverySuggestionKind!): [DeliverySuggestionReasonCount!]!
+
   """Open suggestions to move users to letters or back to mail"""
-  deliverySuggestions(kind: DeliverySuggestionKind!, skip: Int, take: Int): PaginatedDeliverySuggestions!
+  deliverySuggestions(filter: DeliverySuggestionFilter, kind: DeliverySuggestionKind!, skip: Int, take: Int): PaginatedDeliverySuggestions!
 
   """Returns an discountCode by id or discountCode."""
   discountCode(id: String!): DiscountCode!
@@ -6473,6 +6897,54 @@ type Query {
 
   """Returns images by tag."""
   getImagesByTag(tag: String!): [Image!]!
+
+  """Returns a gift code."""
+  giftCode(id: String!): GiftCode!
+
+  """Returns a gift code offer."""
+  giftCodeOffer(id: String!): GiftCodeOffer!
+
+  """Returns a list of gift code offers."""
+  giftCodeOffers(
+    """Cursor for pagination"""
+    cursorId: String
+
+    """Filter for gift code offers"""
+    filter: GiftCodeOfferFilter
+
+    """Sort order"""
+    order: SortOrder = Descending
+
+    """Number of items to skip"""
+    skip: Int! = 0
+
+    """Field to sort by"""
+    sort: GiftCodeOfferSort! = ModifiedAt
+
+    """Number of items to fetch"""
+    take: Int! = 10
+  ): PaginatedGiftCodeOffers!
+
+  """Returns a list of gift codes."""
+  giftCodes(
+    """Cursor for pagination"""
+    cursorId: String
+
+    """Filter for gift codes"""
+    filter: GiftCodeFilter
+
+    """Sort order"""
+    order: SortOrder = Descending
+
+    """Number of items to skip"""
+    skip: Int! = 0
+
+    """Field to sort by"""
+    sort: GiftCodeSort! = CreatedAt
+
+    """Number of items to fetch"""
+    take: Int! = 10
+  ): PaginatedGiftCodes!
 
   """Returns a goodie by id."""
   goodie(id: String!): Goodie!
@@ -6576,7 +7048,9 @@ type Query {
   """The concrete recipients an audience resolves to"""
   mailSendRecipients(audience: MailAudienceInput!, channel: MailChannel, skip: Int, take: Int): PaginatedMailSendRecipient!
 
-  """Return a single mail template, including its html and text body."""
+  """
+  Return a single mail template; its `variants` carry the html and text bodies.
+  """
   mailTemplate(id: String!): MailTemplateModel
 
   """Render a draft mail template as the letter a send would print"""
@@ -6585,7 +7059,12 @@ type Query {
   """
   Placeholders a template uses that would render empty for the given send (empty = none missing)
   """
-  mailTemplateMissingPlaceholders(templateId: String!, withSubscriptionData: Boolean!): [String!]!
+  mailTemplateMissingPlaceholders(
+    """The version to check; the email when left out."""
+    channel: MailChannel
+    templateId: String!
+    withSubscriptionData: Boolean!
+  ): [String!]!
 
   """Render a draft mail template with a mail type's sample data"""
   mailTemplatePreview(input: MailTemplatePreviewInput!): MailTemplatePreviewModel!
@@ -6623,6 +7102,9 @@ type Query {
 
   """Returns a paginated list of memberplans based on the filters given."""
   memberPlans(cursorId: String, filter: MemberPlanFilter, order: SortOrder = Ascending, skip: Int = 0, sort: MemberPlanSort = ModifiedAt, take: Int = 10): PaginatedMemberPlans!
+
+  """Returns the gift codes the current user bought."""
+  myGiftCodes: [GiftCode!]!
 
   """Returns a navigation by id."""
   navigation(id: String!): Navigation!
@@ -6963,6 +7445,34 @@ enum RatingSystemType {
   star
 }
 
+type RedeemGiftCodeBlock implements BaseBlock {
+  blockStyle: String
+  blockStyleName: String
+  disabled: Boolean
+  fields: [SubscribeBlockField!]!
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
+  type: BlockType!
+}
+
+input RedeemGiftCodeBlockInput {
+  blockStyle: String
+  blockStyleName: String
+  disabled: Boolean
+  fields: [SubscribeBlockField!]! = [FirstName, Password, PasswordRepeated]
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
+}
+
 type Registration {
   session: SessionWithTokenWithoutUser!
   user: SensitiveDataUser!
@@ -7013,6 +7523,10 @@ input RichTextBlockInput {
   The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
   """
   timing: BlockTimingInput
+}
+
+enum SellableKind {
+  giftCode
 }
 
 input SendTestMailTemplateInput {
@@ -7574,6 +8088,9 @@ type SubscribeBlock implements BaseBlock {
   blockStyleName: String
   disabled: Boolean
   fields: [SubscribeBlockField!]!
+  giftCodeRedemptionLinkText: String
+  giftCodeRedemptionPage: Page
+  giftCodeRedemptionPageId: String
   goodieMinValue: Int
   goodieMinValueAppliesToUpgrade: Boolean!
   hideRepeatGoodieOnUpgrade: Boolean!
@@ -7585,6 +8102,7 @@ type SubscribeBlock implements BaseBlock {
   """Whether the block should display."""
   shouldDisplay: Boolean!
   showDiscountCodes: Boolean!
+  showGiftCodeRedemption: Boolean!
   showGoodies: Boolean!
 
   """
@@ -7608,6 +8126,8 @@ input SubscribeBlockInput {
   blockStyleName: String
   disabled: Boolean
   fields: [SubscribeBlockField!]! = [FirstName, Password, PasswordRepeated, Address]
+  giftCodeRedemptionLinkText: String
+  giftCodeRedemptionPageId: String
   goodieMinValue: Int
   goodieMinValueAppliesToUpgrade: Boolean! = false
   hideRepeatGoodieOnUpgrade: Boolean! = false
@@ -7615,6 +8135,7 @@ input SubscribeBlockInput {
   memberPlanRenderSettings: [SubscribeBlockMemberPlanRenderSettingInput!]!
   periodicityDisplay: SubscribePeriodicityDisplay
   showDiscountCodes: Boolean! = false
+  showGiftCodeRedemption: Boolean! = false
   showGoodies: Boolean! = false
 
   """
@@ -8177,6 +8698,22 @@ input TwitterTweetBlockInput {
   userID: String
 }
 
+type UmamiAnalytics {
+  enabled: Boolean!
+
+  """
+  Search params removed from the url and referrer before they are sent to Umami.
+  """
+  excludedSearchParams: [String!]!
+  key: String
+}
+
+input UmamiAnalyticsInput {
+  enabled: Boolean!
+  excludedSearchParams: [String!]
+  key: String
+}
+
 type UnknownBlock {
   blockStyle: String
   blockStyleName: String
@@ -8474,7 +9011,7 @@ type WebsiteAnalytics {
   googleTagManager: KeyEnabled!
   piwik: KeyEnabled!
   plausible: KeyEnabled!
-  umami: KeyEnabled!
+  umami: UmamiAnalytics!
 }
 
 input WebsiteAnalyticsInput {
@@ -8482,7 +9019,7 @@ input WebsiteAnalyticsInput {
   googleTagManager: KeyEnabledInput!
   piwik: KeyEnabledInput!
   plausible: KeyEnabledInput!
-  umami: KeyEnabledInput!
+  umami: UmamiAnalyticsInput!
 }
 
 """
