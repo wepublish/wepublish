@@ -1,5 +1,6 @@
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { reportRenderError } from '../sentry/report-error';
 
@@ -28,6 +29,7 @@ export const ErrorPage = ({ error, reset }: ErrorPageProps) => {
   const {
     elements: { H3, Paragraph, Button },
   } = useWebsiteBuilder();
+  const { t } = useTranslation();
 
   useEffect(() => {
     reportRenderError(error);
@@ -35,13 +37,11 @@ export const ErrorPage = ({ error, reset }: ErrorPageProps) => {
 
   return (
     <>
-      <H3 component="h1">Da ist etwas schiefgelaufen.</H3>
+      <H3 component="h1">{t('errorPage.title')}</H3>
 
-      <Paragraph>
-        Die Seite konnte nicht geladen werden. Versuche es bitte noch einmal.
-      </Paragraph>
+      <Paragraph>{t('errorPage.text')}</Paragraph>
 
-      <Button onClick={reset}>Erneut versuchen</Button>
+      <Button onClick={reset}>{t('errorPage.retry')}</Button>
     </>
   );
 };

@@ -1,0 +1,597 @@
+{
+  "navbar": {
+    "subscribe": "Become a member",
+    "unpaid": "Unpaid",
+    "invoice": "Invoice",
+    "myAccount": "My account",
+    "logout": "Log out",
+    "login": "Log in",
+    "backToProfile": "Back to profile",
+    "profile": "Profile",
+    "menu": "Menu",
+    "home": "Home"
+  },
+  "banner": {
+    "close": "Close banner"
+  },
+  "paywall": {
+    "subscribe": "Subscribe",
+    "login": "Log in"
+  },
+  "paymentAmountPicker": {
+    "manual": "Custom",
+    "min": "Min. {amount}"
+  },
+  "teaser": {
+    "author": {
+      "text": "By {authors}",
+      "seperator": ", ",
+      "lastSeperator": ", "
+    },
+    "meta": {
+      "seperator": " | "
+    },
+    "ariaLabel": "{hasTitle, select, true {{title}. } other {}}{hasLead, select, true {{lead}. } other {}}{hasAuthors, select, true {By {authors}} other {}}"
+  },
+  "subscribe": {
+    "memberplan": {
+      "price": "{offerAmountMin, select, 0 {Free} other {{offerExactAmount, select, true {} other {From }}{offerPrice} {offerPeriodicity, select, lifetime {one-off} other {{extendable, select, true {{offerPeriodicity, select, monthly {per month} quarterly {per quarter} biannual {per half-year} yearly {per year} biennial {per 2 years} other {}}} other {}}}}}}",
+      "offerPrice": "{amountMin, select, 0 {Free} other {{exactAmount, select, true {} other {From }}{periodPrice} {periodicity, select, monthly {per month} quarterly {per quarter} biannual {per half-year} yearly {per year} biennial {per 2 years} lifetime {one-off} other {}}}}",
+      "amountMin": "At least {amount}",
+      "periodicityUnavailable": "Not available for this payment interval"
+    },
+    "periodicity": "Payment interval",
+    "continuation": "After {afterFirstPaymentPeriod} {formattedAmount} {renewalPeriodL}.",
+    "cancellable": "Cancel anytime",
+    "captcha": "Captcha",
+    "chooseSubscription": "Choose a subscription",
+    "choosePaymentMethod": "Choose a payment method",
+    "greeting": "Hello {name}, welcome back!",
+    "spamProtection": "Spam protection",
+    "upgrade": {
+      "infoTitle": "Your upgrade",
+      "info": "Upgrade now from your {oldMemberPlan} to the {newMemberPlan}. <bold>The remaining credit of {discount} on your {oldMemberPlan} will be counted towards it.</bold> Below you can see the upgrade price still to be paid for switching to the {newMemberPlan}.",
+      "button": "Upgrade to {memberPlan} now for {formattedAmount}"
+    },
+    "support": {
+      "subscribeForPeriod": "I support {siteTitle} {monthlyAmount, select, 0 {for free} other {with {formattedAmount} {renewalPeriodL}}}",
+      "payForPeriod": "I support {siteTitle} {monthlyAmount, select, 0 {for free} other {with {formattedAmount} for {paymentPeriodL}}}",
+      "pay": "I support {siteTitle} {monthlyAmount, select, 0 {for free} other {with {formattedAmount}}}"
+    },
+    "button": {
+      "subscribeForPeriod": "{productType, select, Donation {Donate {monthlyAmount, select, 0 {for free} other {{formattedAmount} {renewalPeriodL}}}} other {Subscribe {monthlyAmount, select, 0 {for free} other {for {formattedAmount} {renewalPeriodL}}}}}",
+      "payForPeriod": "{productType, select, Donation {Donate {monthlyAmount, select, 0 {for free} other {{formattedAmount} for {paymentPeriodL}}}} other {Subscribe {monthlyAmount, select, 0 {for free} other {for {paymentPeriodL} for {formattedAmount}}}}}",
+      "pay": "{productType, select, Donation {Donate {monthlyAmount, select, 0 {for free} other {{formattedAmount}}}} other {Subscribe {monthlyAmount, select, 0 {for free} other {for {formattedAmount}}}}}"
+    },
+    "transactionFee": {
+      "label": "Yes, I want to cover the 2% processing fees and support {siteTitle} even more."
+    },
+    "discountCode": {
+      "discountApplied": "{discountPercent}% discount applied",
+      "invalid": "Invalid discount code",
+      "label": "Discount code"
+    },
+    "goodie": {
+      "title": "Choose a goodie",
+      "none": "No goodie",
+      "soldOut": "Sorry, this goodie is sold out. Please choose another one."
+    },
+    "errors": {
+      "amountBelowMin": "Amount is below the minimum amount.",
+      "memberPlanUnavailableForPeriodicity": "This plan is not available for this payment interval."
+    },
+    "warning": {
+      "confirmationTitle": "Are you sure?",
+      "openInvoices": "You already have a subscription with unpaid invoices. You can view your unpaid invoices in your <Link href=\"/profile\">profile</Link>.",
+      "alreadyHasSubscription": "You already have this subscription, are you sure? You can view your subscriptions in your <Link href=\"/profile\">profile</Link>."
+    },
+    "autoRenew": "Renew automatically",
+    "giftCodeRedemption": {
+      "link": "Want to redeem a gift subscription? Click here."
+    }
+  },
+  "login": {
+    "email": "Email",
+    "password": "Password",
+    "loginWithLink": "Log in with link",
+    "loginWithPassword": "Log in with password",
+    "loginLinkSent": "Login link sent",
+    "requestNewLinkIn": "New link in {seconds} s",
+    "submit": "Log in",
+    "useLinkInstead": "Email me a login link instead",
+    "verifyingCredentials": "One moment please, your login details are being verified...",
+    "alertLoginLinkSent": "If an account exists for the email \"{email}\", a login link should arrive in your inbox shortly. This may take a moment. Please also check your spam folder. If no email arrives, you can request a new link in a minute.",
+    "impersonation": {
+      "active": "You are logged in as {name} (We.Publish support: {supporter}).",
+      "end": "End"
+    },
+    "totp": {
+      "code": "Verification code (2FA)",
+      "emailLoginDisabled": "Logging in with an email link is not available for this account. If an account with this address exists, please log in with your password and verification code.",
+      "verifyTitle": "Two-factor authentication",
+      "verifyDescription": "Please enter the 6-digit code from your authenticator app.",
+      "verify": "Verify",
+      "invalidCode": "Invalid code. Please try again."
+    }
+  },
+  "newsletter": {
+    "back": "Back",
+    "next": "Next",
+    "submit": "Finish",
+    "noInterestSelected": "Please select at least one newsletter."
+  },
+  "crowdfunding": {
+    "goal": "{type, select, Revenue {<bold>{revenue}</bold> already raised} other {<bold>{subscriptions, number}</bold> {subscriptions, plural, =1 {person has} other {people have}} already subscribed}}"
+  },
+  "image": {
+    "caption": "{caption} {source, select, EMPTY {} other {<ImageSource>(Image: {source})</ImageSource>}}"
+  },
+  "subscription": {
+    "renewPaymentMethod": "Update existing payment method",
+    "renewPaymentMethodHint": "e.g. add a new card",
+    "renewPaymentMethodTitle": "Update existing payment method",
+    "renewPaymentMethodConfirmation": "You confirm {paymentMethod} again, for example with a new card or a new TWINT account. Until then, the current payment details stay active.",
+    "paymentMethod": "Payment method: {paymentMethod}",
+    "changePaymentMethod": "Change payment method",
+    "changePaymentMethodTitle": "Change payment method",
+    "changePaymentMethodCurrent": "Current payment method: <strong>{paymentMethod}</strong>",
+    "changePaymentMethodChoose": "Change payment method to:",
+    "changePaymentMethodNew": "Change payment method to: <strong>{paymentMethod}</strong>",
+    "changePaymentMethodSubmit": "Next",
+    "changePaymentMethodOpenInvoice": "You pay the open invoice of {amount} with the new payment method. Only then will it be used for your {type, select, Donation {donation} other {subscription}}.",
+    "changePaymentMethodAuthorization": "You confirm an online payment method once with the payment provider. An amount of {amount} may be reserved for this, which will never be charged. Until then, your current payment method stays active.",
+    "paymentMethodChangePending": "Switch to {paymentMethod} pending: {kind, select, invoicePayment {becomes active once the open invoice is paid} other {becomes active once you have confirmed the payment method}}. Possible until {expiresAt}.",
+    "paymentMethodChangePendingShort": "Payment method change pending",
+    "paymentMethodChangeContinue": "Continue",
+    "paymentMethodChangeCancel": "Cancel change",
+    "extendChargedWith": "Paid with: <strong>{paymentMethod}</strong>",
+    "externalReward": "{isLink, select, true {Link to external reward} other {{externalReward}}}",
+    "unpaid": "{type, select, Donation {Donation} other {Subscription}} is unpaid",
+    "cancel": "Cancel {type, select, Donation {donation} other {subscription}}",
+    "cancelConfirmation": "{type, select, Donation {By cancelling, you end valuable support. Any open invoices for the donation will be cancelled.} other {By cancelling, you end valuable support. Your subscription will no longer be renewed, but stays valid until its expiry date. Any open invoices for the subscription will be cancelled.}}",
+    "costs": "Costs {amount} {extendable, select, true {{periodicity, select, monthly {per month} quarterly {per quarter} biannual {per half-year} yearly {per year} biennial {per 2 years} lifetime {one-off} other {}}} other {}}",
+    "extendNow": "Extend now",
+    "extendBy": "Extend by {subscriptionDuration} now",
+    "extendEarly": "Extend {type, select, Donation {donation} other {subscription}}",
+    "extendEarlyConfirmation": "Extending your {type, select, Donation {donation} other {subscription}} early by {subscriptionDuration} makes it easier for us to plan ahead. Thank you for your support!",
+    "noActiveSubscriptions": "You don't have an active subscription yet.",
+    "subscribeNow": "Subscribe now.",
+    "startsAt": "Started on <time>{startsAt}</time>",
+    "detailsAndPayments": "Details & payments",
+    "paidUntil": "Paid until",
+    "cancelledOn": "Cancelled on",
+    "cancelledDueToInvoiceNotPaid": "Cancelled automatically",
+    "cancelledDueToUnknownReason": "Reason for cancellation is unknown",
+    "autoRenew": "Renews automatically {periodicityTimeline}",
+    "validFor": "Valid for {subscriptionDuration}",
+    "cancelProduct": "Do you really want to cancel {productName, select, Donation {your donation} other {your subscription}}?",
+    "reactivate": "Reactivate {type, select, Donation {donation} other {subscription}}",
+    "reactivateProduct": "Reactivate {productName, select, Donation {donation} other {subscription}}",
+    "revertUpgrade": "Undo upgrade",
+    "revertUpgradeTitle": "Really undo the upgrade?",
+    "revertUpgradeConfirmation": "{type, select, Donation {The new donation is removed together with its open invoice and the previous donation continues as before.} other {The new subscription is removed together with its open invoice and your previous subscription continues as before.}}",
+    "reactivateConfirmation": "{type, select, Donation {The donation continues as before.} other {The cancellation is withdrawn and the subscription continues as before. If it has already expired, you will receive a new invoice.}}",
+    "afterFirstPaymentPeriod": {
+      "monthly": "the first month",
+      "quarterly": "the first 3 months",
+      "biannual": "the first 6 months",
+      "yearly": "the first year",
+      "biennial": "the first 2 years",
+      "lifetime": "Lifetime"
+    },
+    "paymentPeriod": {
+      "monthly": "1 month",
+      "quarterly": "3 months",
+      "biannual": "6 months",
+      "yearly": "1 year",
+      "biennial": "2 years",
+      "lifetime": "Lifetime"
+    },
+    "paymentTimeline": {
+      "monthly": "monthly",
+      "quarterly": "quarterly",
+      "biannual": "every six months",
+      "yearly": "yearly",
+      "biennial": "every two years",
+      "lifetime": "Lifetime"
+    },
+    "renewalPeriod": {
+      "monthly": "Monthly",
+      "quarterly": "Quarterly",
+      "biannual": "Every six months",
+      "yearly": "Yearly",
+      "biennial": "Every two years",
+      "lifetime": "Lifetime"
+    }
+  },
+  "invoice": {
+    "invoices": "Invoices",
+    "noOpenInvoices": "No unpaid invoices",
+    "openInvoices": "Unpaid invoices",
+    "unpaid": "Unpaid invoice",
+    "paid": "Paid invoice",
+    "canceled": "Cancelled invoice",
+    "forPlan": "for {plan}",
+    "number": "Invoice no.",
+    "completedAt": "Completed on",
+    "dueAt": "Due on",
+    "amount": "Amount of",
+    "paidAt": "Paid on",
+    "canceledAt": "Cancelled on",
+    "sepaWarning": "The invoice will be settled automatically by direct debit. This may take a few days.",
+    "bexioWarning": "You will find the payment details on your invoice.",
+    "payrexxWarning": "We changed our membership system a while ago and your subscription is outdated. It will be updated automatically when you click \"Pay now\".",
+    "payNow": "Pay now"
+  },
+  "user": {
+    "authorize": "Confirm",
+    "changeEmailRequest": "Click here to change your email",
+    "email": "Email",
+    "changeEmail": "Change email address",
+    "newEmail": "New email address",
+    "password": "Set new password",
+    "passwordRepeat": "Repeat new password",
+    "requestEmailChange": "Request change",
+    "emailChangeRequested": "A confirmation email has been sent to your current email address. Please click the link in the email to confirm the change.",
+    "pendingEmailChange": "A change to {email} is awaiting confirmation. Please check your inbox.",
+    "emailChangeConfirmed": "Your email address has been changed successfully.",
+    "emailChangeExpired": "The confirmation has expired. Please request the change again.",
+    "activeSubscriptions": "Active {type, select, Donation {donations} other {subscriptions}}",
+    "cancelledSubscriptions": "Cancelled subscriptions & inactive donations",
+    "subscriptionsDetail": "{type, select, Donation {Donation} other {Subscription}}",
+    "viewCancelledSubscriptions": "Show cancelled subscriptions & inactive donations",
+    "subscribeAnother": "Take out another subscription",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "save": "Save",
+    "saveSuccess": "Changes saved successfully!",
+    "passwordWarning": "Only fill in if you want to change your password. Otherwise leave empty.",
+    "pay": "Pay",
+    "imageUpload": {
+      "delete": "Delete image",
+      "replace": "Upload new image",
+      "upload": "Upload image"
+    },
+    "totp": {
+      "title": "Two-factor authentication",
+      "enabled": "Two-factor authentication is enabled.",
+      "optionalDescription": "Protect your account with an additional security code from an authenticator app.",
+      "downloadApp": "Download Proton Authenticator:",
+      "setup": "Set up 2FA",
+      "setupDescription": "Scan the QR code with your authenticator app and enter the 6-digit code.",
+      "backupHint": "Turn on backup or sync in the app so you don't get locked out if you lose your device.",
+      "manualEntry": "Or enter this code manually in your authenticator app:",
+      "code": "Verification code",
+      "activate": "Enable 2FA",
+      "setupError": "Error setting up 2FA. Please try again.",
+      "invalidCode": "Invalid verification code. Please try again.",
+      "setupSuccess": "Two-factor authentication has been enabled successfully."
+    },
+    "form": {
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email",
+      "emailRepeated": "Repeat email",
+      "birthday": "Birthday",
+      "password": "Password",
+      "passwordRepeated": "Repeat password",
+      "street": "Street",
+      "houseNumber": "House number",
+      "zipCode": "Postcode",
+      "city": "City / town",
+      "country": "Country",
+      "suggested": "Suggested",
+      "occupation": "Role / occupation",
+      "passwordsDoNotMatch": "Passwords do not match.",
+      "emailsDoNotMatch": "Email addresses do not match.",
+      "errors": {
+        "minLength": "{minimum, plural, one {Must not be empty} other {At least # characters}}",
+        "chooseOption": "Please choose an option"
+      }
+    },
+    "sections": {
+      "personalData": "Personal data",
+      "security": "Security"
+    },
+    "changePassword": "Change password"
+  },
+  "article": {
+    "noArticles": "No articles available",
+    "toOriginal": "To the original article",
+    "related": "You might also be interested in",
+    "comments": "Comments"
+  },
+  "commentEditor": {
+    "comment": "Comment",
+    "cancel": "Cancel",
+    "captcha": "Captcha",
+    "guestComment": "Comment as guest",
+    "loginRegister": "Log in/Register",
+    "loginForReaders": "Login for readers",
+    "noAccountYet": "No account yet?",
+    "registerNow": "Register now",
+    "notLoggedIn": "You are not logged in",
+    "name": "Name",
+    "namePlaceholder": "Your name",
+    "title": "Title",
+    "titlePlaceholder": "Give your comment a title.",
+    "text": "Comment",
+    "textPlaceholder": "Write a comment",
+    "characterCount": "{{length}} / {{max}} characters"
+  },
+  "comments": {
+    "list": {
+      "readMore": "Join the discussion",
+      "noComments": "No comments yet.",
+      "pendingApproval": "Comment is awaiting approval",
+      "pendingUserChanges": "Comment must be edited before it can be approved.",
+      "rejected": "Comment was not approved.",
+      "reply": "Reply",
+      "edit": "Edit"
+    }
+  },
+  "poll": {
+    "totalVotes": "{count} votes",
+    "closesAt": "Closes on <time>{date}</time>",
+    "closed": "Poll closed."
+  },
+  "registrationForm": {
+    "register": "Register",
+    "captcha": "Captcha"
+  },
+  "search": {
+    "search": "Search",
+    "searchPlaceholder": "Search for articles and pages",
+    "searchResults": "Search results",
+    "noResultsFound": "No search results found"
+  },
+  "zod": {
+    "errors": {
+      "invalid_type": "Expected {expected}, received {received}",
+      "invalid_type_received_undefined": "Must not be empty",
+      "invalid_type_received_null": "Must not be empty",
+      "invalid_literal": "Invalid literal value, expected {expected}",
+      "unrecognized_keys": "Unrecognized key(s) in object: {keys}",
+      "invalid_union": "Invalid input",
+      "invalid_union_discriminator": "Invalid discriminator value, expected {options}",
+      "invalid_enum_value": "Invalid enum value. Expected {options}, received \"{received}\"",
+      "invalid_arguments": "Invalid function arguments",
+      "invalid_return_type": "Invalid function return type",
+      "invalid_date": "Invalid date",
+      "custom": "Invalid input",
+      "invalid_intersection_types": "Intersection results could not be merged",
+      "not_multiple_of": "Number must be a multiple of {multipleOf}",
+      "not_finite": "Number must be finite",
+      "invalid_string": {
+        "email": "Invalid {validation}",
+        "url": "Invalid {validation}",
+        "uuid": "Invalid {validation}",
+        "cuid": "Invalid {validation}",
+        "regex": "Invalid",
+        "datetime": "Invalid {validation}",
+        "startsWith": "Invalid input: must start with \"{startsWith}\"",
+        "endsWith": "Invalid input: must end with \"{endsWith}\""
+      },
+      "too_small": {
+        "array": {
+          "exact": "Array must contain exactly {minimum} element(s)",
+          "inclusive": "Array must contain at least {minimum} element(s)",
+          "not_inclusive": "Array must contain more than {minimum} element(s)"
+        },
+        "string": {
+          "exact": "String must contain exactly {minimum} character(s)",
+          "inclusive": "String must contain at least {minimum} character(s)",
+          "not_inclusive": "String must contain over {minimum} character(s)"
+        },
+        "number": {
+          "exact": "Number must be exactly {minimum}",
+          "inclusive": "Number must be greater than or equal to {minimum}",
+          "not_inclusive": "Number must be greater than {minimum}"
+        },
+        "set": {
+          "exact": "Invalid input",
+          "inclusive": "Invalid input",
+          "not_inclusive": "Invalid input"
+        },
+        "date": {
+          "exact": "Date must be exactly {minimum, date, medium}",
+          "inclusive": "Date must be greater than or equal to {minimum, date, medium}",
+          "not_inclusive": "Date must be greater than {minimum, date, medium}"
+        }
+      },
+      "too_big": {
+        "array": {
+          "exact": "Array must contain exactly {maximum} element(s)",
+          "inclusive": "Array must contain at most {maximum} element(s)",
+          "not_inclusive": "Array must contain less than {maximum} element(s)"
+        },
+        "string": {
+          "exact": "String must contain exactly {maximum} character(s)",
+          "inclusive": "String must contain at most {maximum} character(s)",
+          "not_inclusive": "String must contain under {maximum} character(s)"
+        },
+        "number": {
+          "exact": "Number must be exactly {maximum}",
+          "inclusive": "Number must be less than or equal to {maximum}",
+          "not_inclusive": "Number must be less than {maximum}"
+        },
+        "set": {
+          "exact": "Invalid input",
+          "inclusive": "Invalid input",
+          "not_inclusive": "Invalid input"
+        },
+        "date": {
+          "exact": "Date must be exactly {maximum, date, medium}",
+          "inclusive": "Date must be smaller than or equal to {maximum, date, medium}",
+          "not_inclusive": "Date must be smaller than {maximum, date, medium}"
+        }
+      }
+    },
+    "validations": {
+      "email": "email address",
+      "url": "URL",
+      "uuid": "UUID",
+      "cuid": "CUID",
+      "regex": "regex",
+      "datetime": "date and time"
+    },
+    "types": {
+      "function": "function",
+      "number": "number",
+      "string": "string",
+      "nan": "NaN",
+      "integer": "integer",
+      "float": "float",
+      "boolean": "boolean",
+      "date": "date",
+      "bigint": "bigint",
+      "undefined": "undefined",
+      "symbol": "symbol",
+      "null": "null",
+      "array": "array",
+      "object": "object",
+      "unknown": "unknown",
+      "promise": "promise",
+      "void": "void",
+      "never": "never",
+      "map": "map",
+      "set": "set"
+    }
+  },
+  "contextBox": {
+    "defaultTitle": "What it's about",
+    "readMore": "Read all",
+    "readLess": "Read less"
+  },
+  "slider": {
+    "previous": "Previous",
+    "next": "Next",
+    "slide": "Slide {index}"
+  },
+  "lightbox": {
+    "previous": "Previous image",
+    "next": "Next image",
+    "fullscreen": "Fullscreen",
+    "exitFullscreen": "Exit fullscreen"
+  },
+  "subscriptionHistory": {
+    "title": "{type, select, Donation {Donations and invoices} other {Subscriptions and invoices}}",
+    "plan": "{type, select, Donation {Donation} other {Subscription}}",
+    "state": "Status",
+    "startsAt": "Start",
+    "paidUntil": "Paid until",
+    "amount": "Amount",
+    "amountPerPeriod": "{amount} {periodicity, select, monthly {per month} quarterly {per quarter} biannual {per half-year} yearly {per year} biennial {per 2 years} lifetime {one-off} other {}}",
+    "paymentMethod": "Payment method",
+    "renewal": "Renewal",
+    "renews": "Automatic",
+    "ends": "Ends",
+    "showInvoices": "Show invoices",
+    "hideInvoices": "Hide invoices",
+    "ended": "{type, select, Donation {Ended donations} other {Ended subscriptions}} ({count})",
+    "noSubscriptions": "You don't have a subscription yet.",
+    "invoice": "Invoice",
+    "createdAt": "Created on",
+    "dueAt": "Due on",
+    "total": "Amount",
+    "noInvoices": "No invoices yet",
+    "allInvoices": "All invoices ({count})",
+    "showCanceled": "Show cancelled invoices ({count})",
+    "hideCanceled": "Hide cancelled invoices",
+    "states": {
+      "active": "Active",
+      "planned": "Planned",
+      "unpaid": "Unpaid",
+      "expired": "Expired",
+      "deactivated": "Cancelled"
+    },
+    "invoiceStates": {
+      "paid": "Paid on {date}",
+      "canceled": "Cancelled on {date}",
+      "unpaid": "Open"
+    },
+    "endsOn": "on {date}",
+    "invoiceStateNames": {
+      "paid": "Paid",
+      "canceled": "Cancelled",
+      "unpaid": "Open"
+    },
+    "edit": "{type, select, Donation {Edit donation} other {Edit subscription}}",
+    "moreInvoices": "{count, plural, one {# more invoice} other {# more invoices}}",
+    "hideMoreInvoices": "Hide invoices"
+  },
+  "subscriptionEdit": {
+    "title": "{type, select, Donation {Edit donation} other {Edit subscription}}",
+    "sections": {
+      "plan": "{type, select, Donation {Donation} other {Subscription}}",
+      "payment": "Payment",
+      "renewal": "Renewal & cancellation",
+      "invoices": "Invoices"
+    },
+    "upgrade": "Upgrade subscription",
+    "paymentMethodNotChangeable": "The payment method of this {type, select, Donation {donation} other {subscription}} cannot be changed online."
+  },
+  "paymentMethodLabels": {
+    "bexio": "Invoice",
+    "payrexx": "Online payment",
+    "payrexx-subscription": "Online payment",
+    "stripe": "Credit card",
+    "stripe-checkout": "Credit card",
+    "mollie": "Online payment",
+    "no-charge": "Free"
+  },
+  "event": {
+    "locationUnknown": "Venue not yet known"
+  },
+  "eventList": {
+    "from": "From",
+    "to": "To",
+    "upcomingOnly": "Upcoming only"
+  },
+  "author": {
+    "allArticles": "All articles by {name}"
+  },
+  "errorPage": {
+    "title": "Something went wrong.",
+    "text": "The page could not be loaded. Please try again.",
+    "retry": "Try again"
+  },
+  "preview": {
+    "contentUnavailableTitle": "This content is not available",
+    "contentUnavailableText": "It has been removed or is not published yet.",
+    "unavailableTitle": "Preview not available",
+    "unavailableText": "This preview can only be shown with an authorised login. Open the preview directly from the editor or <Link href=\"/login\">log in</Link> and reload the page afterwards.",
+    "loading": "Loading preview …",
+    "bannerHint": "You are seeing the published version, not the preview. To see the preview, open it in the editor or <Link href=\"/login\">log in</Link> and reload."
+  },
+  "errors": {
+    "emailAlreadyInUse": "An account with this email already exists.",
+    "pleaseLogin": "Please log in",
+    "paymentAlreadyRunning": "A payment for this invoice is already in progress. Please wait at least a minute before trying again.",
+    "linkExpired": "This link is no longer valid. Please request a new link here or log in with your username and password.",
+    "paymentIntentNotFound": "The payment could not be found.",
+    "paymentProviderNotFound": "The required payment provider could not be found.",
+    "formNotConfigured": "The form is not set up.",
+    "unknown": "Unknown error"
+  },
+  "embed": {
+    "title": "Embedded content from {provider}"
+  },
+  "giftCode": {
+    "redeem": {
+      "code": "Gift code",
+      "submit": "Redeem code",
+      "loginLink": "Already have an account? Log in here.",
+      "success": {
+        "createdSubscription": "Your “{memberPlan}” subscription is now active.",
+        "extendedSubscription": "Your “{memberPlan}” subscription has been extended.",
+        "paidInvoice": "The open invoice of your “{memberPlan}” subscription has been paid."
+      }
+    },
+    "purchase": {
+      "chooseOffer": "Choose a gift subscription",
+      "recipientName": "Name of the recipient",
+      "submit": "Buy gift subscription for {amount}"
+    }
+  }
+}

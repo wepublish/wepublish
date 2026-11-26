@@ -43,6 +43,21 @@ describe('PeriodicityPicker', () => {
     ]);
   });
 
+  it('names the periodicities in the language of the site', () => {
+    renderWithProviders(
+      <PeriodicityPicker
+        periodicities={periodicities}
+        value={PaymentPeriodicity.Monthly}
+        onChange={vi.fn()}
+      />,
+      { locale: 'en' }
+    );
+
+    expect(
+      screen.getAllByRole('option').map(option => option.textContent)
+    ).toEqual(['Monthly', 'Quarterly', 'Yearly']);
+  });
+
   it('picks the first periodicity when nothing is chosen yet', () => {
     const { onChange } = renderPeriodicityPicker();
 

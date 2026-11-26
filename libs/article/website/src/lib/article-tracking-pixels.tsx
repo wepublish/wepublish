@@ -16,7 +16,7 @@ export const ArticleTrackingPixels = ({
             src={trackingPixel.uri}
             width="1"
             height="1"
-            alt="tracking pixel"
+            alt=""
           />
         );
       }

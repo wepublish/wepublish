@@ -8,13 +8,17 @@ import {
 import { FullEventFragment } from '@wepublish/website/api';
 import { Event } from './event';
 
-const renderEvent = (event: FullEventFragment | null) =>
+const renderEvent = (
+  event: FullEventFragment | null,
+  options: Parameters<typeof renderWithProviders>[1] = {}
+) =>
   renderWithProviders(
     <Event
       data={event ? { __typename: 'Query', event } : undefined}
       loading={false}
       error={undefined}
-    />
+    />,
+    options
   );
 
 const times = (container: HTMLElement) =>
@@ -71,6 +75,12 @@ describe('Event', () => {
     expect(
       screen.getByText('Veranstaltungsort noch nicht bekannt')
     ).toBeInTheDocument();
+  });
+
+  it('says the venue is not known yet in the language of the site', () => {
+    renderEvent(mockEvent({ location: null }), { locale: 'en' });
+
+    expect(screen.getByText('Venue not yet known')).toBeInTheDocument();
   });
 
   it('leaves out the image when the event has none', () => {

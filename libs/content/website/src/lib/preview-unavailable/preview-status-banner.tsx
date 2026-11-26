@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { CircularProgress } from '@mui/material';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
+import { Trans, useTranslation } from 'react-i18next';
 
 import { usePreviewAuthState } from './use-preview-auth-state';
 
@@ -71,11 +72,10 @@ const BannerHintContent = () => {
   } = useWebsiteBuilder();
 
   return (
-    <>
-      Du siehst die ver&ouml;ffentlichte Version, nicht die Vorschau. F&uuml;r
-      die Vorschau im Editor &ouml;ffnen oder{' '}
-      <Link href="/login">anmelden</Link> und neu laden.
-    </>
+    <Trans
+      i18nKey="preview.bannerHint"
+      components={{ Link: <Link /> }}
+    />
   );
 };
 
@@ -86,6 +86,7 @@ export function PreviewStatusBanner() {
     editorAuthPossible,
     sessionAuthPossible,
   } = usePreviewAuthState();
+  const { t } = useTranslation();
 
   if (!previewRequested || canPreview) {
     return null;
@@ -111,7 +112,7 @@ export function PreviewStatusBanner() {
           size={16}
           color="inherit"
         />
-        Vorschau wird geladen &hellip;
+        {t('preview.loading')}
       </BannerPending>
 
       <BannerHintDelayed swapDelay={swapDelay}>

@@ -1,4 +1,5 @@
 import { useWebsiteBuilder } from '@wepublish/website/builder';
+import { useTranslation } from 'react-i18next';
 
 import {
   PreviewUnavailable,
@@ -12,6 +13,7 @@ export function ContentUnavailable() {
   const {
     elements: { H5, Paragraph },
   } = useWebsiteBuilder();
+  const { t } = useTranslation();
 
   const mayPreview =
     previewRequested || previewModeStored || sessionAuthPossible;
@@ -25,11 +27,9 @@ export function ContentUnavailable() {
 
       {mounted && !mayPreview ?
         <PreviewUnavailableWrapper>
-          <H5 component="h1">Dieser Inhalt ist nicht verf&uuml;gbar</H5>
+          <H5 component="h1">{t('preview.contentUnavailableTitle')}</H5>
 
-          <Paragraph>
-            Er wurde entfernt oder ist noch nicht ver&ouml;ffentlicht.
-          </Paragraph>
+          <Paragraph>{t('preview.contentUnavailableText')}</Paragraph>
         </PreviewUnavailableWrapper>
       : <PreviewUnavailable />}
     </>

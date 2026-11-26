@@ -13,6 +13,7 @@ import {
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { EventListContainer } from '@wepublish/event/website';
 import { Suspense, lazy, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
 import { useQueryParams, useReplaceSearch } from '../router-hooks';
@@ -119,7 +120,7 @@ export const loadEvent = createServerFn({ method: 'GET' })
 export function EventListPage({
   take = DEFAULT_EVENT_LIST_TAKE,
   canonicalUrl = '/event',
-  labels = { from: 'Von', to: 'Bis', upcomingOnly: 'Nur bevorstehende' },
+  labels,
 }: {
   take?: number;
   canonicalUrl?: string;
@@ -133,6 +134,7 @@ export function EventListPage({
     Head,
     elements: { Pagination },
   } = useWebsiteBuilder();
+  const { t } = useTranslation();
 
   const variables = useMemo(() => listVariables(search, take), [search, take]);
 
@@ -154,7 +156,7 @@ export function EventListPage({
       <Filter>
         <Suspense fallback={null}>
           <DateTimePicker
-            label={labels.from}
+            label={labels?.from ?? t('eventList.from')}
             value={from ?? null}
             onChange={value =>
               replaceSearch(previous => ({
@@ -165,7 +167,7 @@ export function EventListPage({
           />
 
           <DateTimePicker
-            label={labels.to}
+            label={labels?.to ?? t('eventList.to')}
             value={to ?? null}
             onChange={value =>
               replaceSearch(previous => ({
@@ -189,7 +191,7 @@ export function EventListPage({
                 }
               />
             }
-            label={labels.upcomingOnly}
+            label={labels?.upcomingOnly ?? t('eventList.upcomingOnly')}
           />
         </FormGroup>
       </Filter>

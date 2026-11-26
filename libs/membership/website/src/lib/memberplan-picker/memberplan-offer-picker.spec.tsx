@@ -8,9 +8,9 @@ import {
   renderWithProviders,
 } from '@wepublish/mocks/website';
 import { PaymentPeriodicity } from '@wepublish/website/api';
+import { t } from 'i18next';
 import { RichtextJSONDocument } from '@wepublish/richtext';
 import { ComponentProps, useState } from 'react';
-import { formatRenewalPeriod } from '../formatters/format-renewal-period';
 import { MemberPlanOfferPicker } from './memberplan-offer-picker';
 
 // What the editor saves for a cleared richtext field
@@ -84,9 +84,12 @@ const renderOfferPicker = (props: Partial<Props> = {}) => {
 };
 
 const offerRadio = (name: string, periodicity: PaymentPeriodicity) =>
-  screen.getByLabelText(`${name} ${formatRenewalPeriod(periodicity)}`, {
-    exact: false,
-  });
+  screen.getByLabelText(
+    `${name} ${t(`subscription.renewalPeriod.${periodicity}`)}`,
+    {
+      exact: false,
+    }
+  );
 
 describe('MemberPlanOfferPicker', () => {
   it('offers every periodicity of a plan as its own card with its marketing label', () => {
@@ -147,7 +150,7 @@ describe('MemberPlanOfferPicker', () => {
       offerRadio(yearlyOnlyMemberPlan.name, PaymentPeriodicity.Yearly)
     ).toBeInTheDocument();
     expect(
-      screen.getAllByText(formatRenewalPeriod(PaymentPeriodicity.Yearly))
+      screen.getAllByText(t('subscription.renewalPeriod.yearly'))
     ).toHaveLength(1);
   });
 

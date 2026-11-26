@@ -5,6 +5,7 @@ import {
 } from '@wepublish/website/api';
 import { BuilderStreamableVideoBlockProps } from '@wepublish/website/builder';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export const isStreamableVideoBlock = (
   block: Partial<Pick<FullBlockFragment, '__typename'>>
@@ -32,6 +33,7 @@ export function StreamableVideoBlock({
   videoID,
   className,
 }: BuilderStreamableVideoBlockProps) {
+  const { t } = useTranslation();
   const [aspectRatio, setAspectRatio] = useState<number>(16 / 9);
 
   const streamableUrl =
@@ -75,7 +77,7 @@ export function StreamableVideoBlock({
       <AspectBox $aspectRatio={aspectRatio}>
         <StreamableVideoBlockPlayer
           src={`https://streamable.com/e/${encodeURIComponent(videoID ?? '')}`}
-          title="Embedded Streamable Video"
+          title={t('embed.title', { provider: 'Streamable' })}
           allow="autoplay; encrypted-media"
           allowFullScreen
         />

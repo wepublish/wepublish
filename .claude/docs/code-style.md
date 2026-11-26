@@ -203,8 +203,11 @@ literal counts as a key. Classic-zod schemas of forms not yet migrated that
 live at module level use `lazyMessage('key')` from
 `apps/editor/src/app/utility.ts` instead of `t()`.
 
-Website copy lives in `libs/website/translations/src/lib/{de,fr}.json`, and
-`catalogs.spec.ts` fails when the two drift apart. A tenant overrides single
+Website copy lives in `libs/website/translations/src/lib/{de,en,fr}.json`, and
+`catalogs.spec.ts` fails when they drift apart. Shared website libs never
+hard-code copy, aria labels or locales (`'de'`, `'dd.MM.yyyy'`); errors passed
+through `?error=` are `ErrorCode`s that `translateApolloErrorMessage` maps to
+`errors.*` keys. A tenant overrides single
 keys in `libs/tenants/<tenant>/src/locales/*.json` through its config's
 `translations.overrides`; the app passes them to `initWePublishTranslator`, and
 specs load them with `applyTenantTranslations(tenant)`. Override a key there rather than editing the shared catalog for one

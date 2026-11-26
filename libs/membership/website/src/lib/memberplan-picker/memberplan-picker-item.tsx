@@ -15,7 +15,6 @@ import {
   getPeriodPriceRange,
   monthlyAmountFromPeriodAmount,
 } from '../formatters/format-payment-period';
-import { formatRenewalPeriod } from '../formatters/format-renewal-period';
 import { CurrencyNumberSpinner } from '../payment-amount/payment-amount-picker/currency-number-spinner';
 import {
   getLowestSelectableAmount,
@@ -203,7 +202,7 @@ export const MemberPlanItem = forwardRef<
 
             {showPeriodicity && paymentPeriodicity && (
               <MemberPlanItemPeriodicity>
-                {formatRenewalPeriod(paymentPeriodicity)}
+                {t(`subscription.renewalPeriod.${paymentPeriodicity}`)}
               </MemberPlanItemPeriodicity>
             )}
 

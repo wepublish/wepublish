@@ -70,7 +70,7 @@ export const createTestRouter = ({
     asPath: asPath ?? pathname ?? '/',
     basePath: '',
     locale,
-    locales: ['de', 'fr'],
+    locales: ['de', 'en', 'fr'],
     defaultLocale: 'de',
     isLocaleDomain: false,
     isReady: true,

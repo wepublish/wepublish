@@ -4,6 +4,7 @@ import {
   BuilderEventProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
+import { useTranslation } from 'react-i18next';
 import { MdDateRange, MdLocationCity } from 'react-icons/md';
 import { EventSEO } from './event-seo';
 import { ContentWrapper } from '@wepublish/content/website';
@@ -58,6 +59,7 @@ export const Event = ({
     blocks: { RichText, Title, Image },
     date,
   } = useWebsiteBuilder();
+  const { t } = useTranslation();
 
   return (
     <EventWrapper className={className}>
@@ -99,7 +101,7 @@ export const Event = ({
 
           <MetaWrapper>
             <MdLocationCity />{' '}
-            {data.event.location ?? 'Veranstaltungsort noch nicht bekannt'}
+            {data.event.location ?? t('event.locationUnknown')}
           </MetaWrapper>
         </EventMeta>
       )}

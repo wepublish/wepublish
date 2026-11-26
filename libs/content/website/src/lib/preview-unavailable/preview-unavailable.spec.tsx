@@ -8,6 +8,8 @@ import { FullSensitiveDataUserFragment } from '@wepublish/website/api';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
 import { ComponentProps, PropsWithChildren, ReactNode } from 'react';
 
+import { setTestLocale } from '@wepublish/mocks/website';
+
 import { PreviewUnavailable } from './preview-unavailable';
 
 type BuilderElements = ComponentProps<
@@ -51,6 +53,19 @@ describe('PreviewUnavailable', () => {
     document.cookie = 'auth.token=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
     setPreviewHandshakeState('unknown');
     vi.restoreAllMocks();
+  });
+
+  it('shows the login hint in the language of the site', () => {
+    window.history.replaceState(null, '', '/a/foobar?preview');
+    setTestLocale('en');
+
+    renderWithTheme(<PreviewUnavailable />);
+
+    expect(screen.getByText('Preview not available')).toBeDefined();
+    expect(screen.getByRole('link', { name: 'log in' })).toHaveAttribute(
+      'href',
+      '/login'
+    );
   });
 
   it('renders nothing without ?preview in the url', () => {

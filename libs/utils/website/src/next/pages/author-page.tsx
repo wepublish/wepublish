@@ -20,6 +20,7 @@ import { GetStaticProps, InferGetStaticPropsType } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
 import { getApiUrl } from '../../lib/api-url';
@@ -39,6 +40,7 @@ export function AuthorPage({
   const {
     elements: { Pagination, H3 },
   } = useWebsiteBuilder();
+  const { t } = useTranslation();
 
   const { query, replace } = useRouter();
   const { page, slug } = pageSchema.parse(query);
@@ -87,7 +89,9 @@ export function AuthorPage({
       {data?.author && (
         <>
           {!!articleListData?.articles.nodes.length && (
-            <H3 component={'h2'}>Alle Artikel von {data.author.name}</H3>
+            <H3 component={'h2'}>
+              {t('author.allArticles', { name: data.author.name })}
+            </H3>
           )}
           <ArticleListContainer variables={variables} />
 

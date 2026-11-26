@@ -1,8 +1,5 @@
 import styled from '@emotion/styled';
-import {
-  formatRenewalPeriod,
-  getPeriodicityLabel,
-} from '@wepublish/membership/website';
+import { getPeriodicityLabel } from '@wepublish/membership/website';
 import { PaymentPeriodicity } from '@wepublish/website/api';
 import {
   BuilderPeriodicityPickerProps,
@@ -82,7 +79,7 @@ export const ZwoelfPeriodicityPicker = ({
             key={periodicity}
             value={periodicity}
             title={t(`zwoelf.subscribe.periodicity.${periodicity}`, {
-              defaultValue: formatRenewalPeriod(periodicity),
+              defaultValue: t(`subscription.renewalPeriod.${periodicity}`),
             })}
             description={describe(periodicity)}
           />

@@ -71,7 +71,7 @@ const renderNavbar = (
 const link = (name: string | RegExp) => screen.getByRole('link', { name });
 const queryLink = (name: string | RegExp) =>
   screen.queryByRole('link', { name });
-const menuButton = () => screen.getByRole('button', { name: 'Menu' });
+const menuButton = () => screen.getByRole('button', { name: t('navbar.menu') });
 
 describe('Navbar', () => {
   it('opens the menu with the main and category links and closes it again', async () => {
@@ -137,6 +137,13 @@ describe('Navbar', () => {
     expect(link('Agenda')).toHaveAttribute('href', '/agenda');
     expect(link('Dossier')).toHaveAttribute('href', '/a/dossier');
     expect(link(t('navbar.subscribe'))).toHaveAttribute('href', '/mitmachen');
+  });
+
+  it('names the menu button and the start page link in the language of the site', () => {
+    renderNavbar({}, { locale: 'en' });
+
+    expect(screen.getByRole('button', { name: 'Menu' })).toBeInTheDocument();
+    expect(link('Home')).toHaveAttribute('href', '/');
   });
 
   it('links the logo to the start page', () => {
@@ -279,7 +286,7 @@ describe('Navbar', () => {
     renderNavbar({ hideMenu: true });
 
     expect(
-      screen.queryByRole('button', { name: 'Menu' })
+      screen.queryByRole('button', { name: t('navbar.menu') })
     ).not.toBeInTheDocument();
     expect(queryLink('Agenda')).not.toBeInTheDocument();
     expect(queryLink(t('navbar.subscribe'))).not.toBeInTheDocument();

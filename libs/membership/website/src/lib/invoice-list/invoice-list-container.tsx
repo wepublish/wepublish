@@ -24,6 +24,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 import { isPayrexxSubscription } from './invoice-list';
 
 const isInNeedOfMigration = anyPass([
@@ -57,6 +58,7 @@ export function InvoiceListContainer({
   const { InvoiceList: BuilderInvoiceList } = useWebsiteBuilder();
   const InvoiceList = List ?? BuilderInvoiceList;
   const client = useApolloClient();
+  const { t } = useTranslation();
   const requestedChecks = useRef(new Set<string>());
   const [checkedInvoices, setCheckedInvoices] = useState<ReadonlySet<string>>(
     () => new Set()
@@ -125,9 +127,7 @@ export function InvoiceListContainer({
           )?.id;
 
         if (!newPaymentMethodId) {
-          throw new Error(
-            'Der benötigte Payment-Adapter konnte nicht gefunden werden.'
-          );
+          throw new Error(t('errors.paymentProviderNotFound'));
         }
 
         return migrate(memberPlan, {
@@ -152,7 +152,7 @@ export function InvoiceListContainer({
         },
       });
     },
-    [migrate, pay]
+    [migrate, pay, t]
   );
 
   return (

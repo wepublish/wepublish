@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { screen } from '@testing-library/react';
 import {
   mockFacebookVideoBlock,
@@ -13,7 +14,9 @@ describe('FacebookVideoBlock', () => {
       />
     );
 
-    const player = screen.getByTitle('Embedded Facebook Video');
+    const player = screen.getByTitle(
+      t('embed.title', { provider: 'Facebook' })
+    );
     const src = new URL(player.getAttribute('src') ?? '');
 
     expect(src.origin + src.pathname).toBe(

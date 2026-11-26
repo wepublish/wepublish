@@ -1,12 +1,12 @@
 import { applyTranslationOverrides } from '@wepublish/utils/website/i18n';
 import { WebsiteTenantConfig } from '@wepublish/website/builder';
 import { setDefaultOptions } from 'date-fns';
-import { de, fr } from 'date-fns/locale';
+import { de, enGB, fr } from 'date-fns/locale';
 import i18next from 'i18next';
 
-export type TestLocale = 'de' | 'fr';
+export type TestLocale = 'de' | 'en' | 'fr';
 
-const dateLocales = { de, fr };
+const dateLocales = { de, en: enGB, fr };
 
 export const setTestLocale = (locale: TestLocale) => {
   if (i18next.language !== locale) {

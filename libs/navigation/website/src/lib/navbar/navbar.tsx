@@ -322,7 +322,7 @@ export function Navbar({
                 <NavbarIconButtonWrapper>
                   <IconButton
                     size="large"
-                    aria-label="Menu"
+                    aria-label={t('navbar.menu')}
                     onClick={toggleMenu}
                     color={'inherit'}
                   >
@@ -349,7 +349,7 @@ export function Navbar({
 
           <NavbarLoginLink
             href="/"
-            aria-label="Startseite"
+            aria-label={t('navbar.home')}
             isMenuOpen={isMenuOpen}
           >
             <NavbarLogoWrapper>

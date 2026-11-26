@@ -93,7 +93,7 @@ describe('PaymentAmountPicker', () => {
   it('shows the minimum below the manual amount', () => {
     renderPicker();
 
-    expect(screen.getByText('Min EUR 10.00')).toBeInTheDocument();
+    expect(screen.getByText('Min. EUR 10.00')).toBeInTheDocument();
   });
 
   it('shows the amounts per period and reports the amount per month', async () => {
@@ -103,7 +103,7 @@ describe('PaymentAmountPicker', () => {
     });
 
     expect(presetRadio('EUR 180')).toBeChecked();
-    expect(screen.getByText('Min EUR 120.00')).toBeInTheDocument();
+    expect(screen.getByText('Min. EUR 120.00')).toBeInTheDocument();
 
     await user.click(presetRadio('EUR 240'));
 

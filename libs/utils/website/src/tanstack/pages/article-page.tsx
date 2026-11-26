@@ -16,6 +16,7 @@ import {
   FullTagFragment,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
+import { useTranslation } from 'react-i18next';
 
 import { runContentQueries } from '../ssr';
 import { isNotFoundError } from '../prefetch';
@@ -98,14 +99,15 @@ export type ArticlePageProps = {
  * mounted it — both come through the merged route params.
  */
 export function ArticlePage({
-  relatedTitle = 'Das könnte dich auch interessieren',
-  commentsTitle = 'Kommentare',
+  relatedTitle,
+  commentsTitle,
   relatedTake = 4,
   relatedShown = 3,
 }: ArticlePageProps) {
   const {
     elements: { H3 },
   } = useWebsiteBuilder();
+  const { t } = useTranslation();
 
   const { slug, id } = useQueryParams() as ArticleIdentifier;
 
@@ -125,7 +127,7 @@ export function ArticlePage({
         <>
           {relatedTitle !== null && (
             <ArticleWrapper>
-              <H3 component={'h2'}>{relatedTitle}</H3>
+              <H3 component={'h2'}>{relatedTitle ?? t('article.related')}</H3>
               <ArticleListContainer
                 variables={{
                   filter: { tags: data.article.tags.map(tag => tag.id) },
@@ -142,7 +144,7 @@ export function ArticlePage({
 
           {commentsTitle !== null && !data.article.disableComments && (
             <ArticleWrapper>
-              <H3 component={'h2'}>{commentsTitle}</H3>
+              <H3 component={'h2'}>{commentsTitle ?? t('article.comments')}</H3>
               <CommentListContainer
                 id={data.article.id}
                 type={CommentItemType.Article}

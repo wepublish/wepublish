@@ -23,7 +23,7 @@ z.setErrorMap(zodI18nMap);
 setDefaultOptions({ locale: de });
 
 beforeAll(async () => {
-  await i18next.loadLanguages(['de', 'fr']);
+  await i18next.loadLanguages(['de', 'en', 'fr']);
 
   if (i18next.language !== 'de') {
     await i18next.changeLanguage('de');

@@ -5,6 +5,7 @@ import {
   setPreviewHandshakeState,
   useUser,
 } from '@wepublish/authentication/website';
+import { ErrorCode } from '@wepublish/errors';
 import { LoginWithJwtDocument } from '@wepublish/website/api';
 import styled from '@emotion/styled';
 import {
@@ -17,9 +18,6 @@ import {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ImpersonationBar } from './impersonation-bar';
-
-export const EXPIRED_JWT_MESSAGE =
-  'Dieser Link ist nicht mehr gültig. Bitte hier einen neuen Link anfordern oder mit Benutzernamen und Passwort anmelden.';
 
 const TotpOverlay = styled('div')`
   position: fixed;
@@ -141,9 +139,7 @@ export const withJwtHandler = <P extends object>(
               return;
             }
 
-            window.location.href = `/login?error=${encodeURIComponent(
-              EXPIRED_JWT_MESSAGE
-            )}`;
+            window.location.href = `/login?error=${ErrorCode.LinkExpired}`;
           });
       },
       [loginWithJwt, setToken, hasUser, refreshStore]
@@ -178,13 +174,13 @@ export const withJwtHandler = <P extends object>(
         setError(
           err?.message?.includes('TOTP_REQUIRED') ?
             undefined
-          : (err?.message ?? 'Invalid code. Please try again.')
+          : (err?.message ?? t('login.totp.invalidCode'))
         );
         setTotpToken('');
       } finally {
         setLoading(false);
       }
-    }, [pendingJwt, totpToken, loginWithJwt, setToken, refreshStore]);
+    }, [pendingJwt, totpToken, loginWithJwt, setToken, refreshStore, t]);
 
     const handleCancel = useCallback(() => {
       setShowTotpPrompt(false);

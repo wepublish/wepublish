@@ -7,7 +7,9 @@
     "logout": "Logout",
     "login": "Login",
     "backToProfile": "Retour au profil",
-    "profile": "Profil"
+    "profile": "Profil",
+    "menu": "Menu",
+    "home": "Page d’accueil"
   },
   "banner": {
     "close": "Fermer la bannière"
@@ -17,7 +19,8 @@
     "login": "Login"
   },
   "paymentAmountPicker": {
-    "manual": "Manuel"
+    "manual": "Manuel",
+    "min": "Min. {amount}"
   },
   "teaser": {
     "author": {
@@ -82,6 +85,7 @@
       "openInvoices": "Vous avez déjà un abonnement avec des factures impayées. Vous pouvez consulter vos factures impayées dans votre <Link href=\"/profile\">profil</Link>.",
       "alreadyHasSubscription": "Vous avez déjà cet abonnement, êtes-vous sûr ? Vous pouvez consulter vos abonnements dans votre <Link href=\"/profile\">profil</Link>."
     },
+    "autoRenew": "Renouveler automatiquement",
     "giftCodeRedemption": {
       "link": "Vous souhaitez utiliser un abonnement cadeau ? Cliquez ici."
     }
@@ -293,7 +297,9 @@
   },
   "article": {
     "noArticles": "Aucun article disponible",
-    "toOriginal": "Vers l'article original"
+    "toOriginal": "Vers l'article original",
+    "related": "Cela pourrait aussi vous intéresser",
+    "comments": "Commentaires"
   },
   "commentEditor": {
     "comment": "Commenter",
@@ -533,6 +539,43 @@
     "stripe-checkout": "Carte de crédit",
     "mollie": "Paiement en ligne",
     "no-charge": "Gratuit"
+  },
+  "event": {
+    "locationUnknown": "Lieu pas encore connu"
+  },
+  "eventList": {
+    "from": "Du",
+    "to": "Au",
+    "upcomingOnly": "À venir uniquement"
+  },
+  "author": {
+    "allArticles": "Tous les articles de {name}"
+  },
+  "errorPage": {
+    "title": "Une erreur s’est produite.",
+    "text": "La page n’a pas pu être chargée. Veuillez réessayer.",
+    "retry": "Réessayer"
+  },
+  "preview": {
+    "contentUnavailableTitle": "Ce contenu n’est pas disponible",
+    "contentUnavailableText": "Il a été supprimé ou n’est pas encore publié.",
+    "unavailableTitle": "Aperçu non disponible",
+    "unavailableText": "Cet aperçu ne peut être affiché qu’avec une connexion autorisée. Ouvrez l’aperçu directement depuis l’éditeur ou <Link href=\"/login\">connectez-vous</Link> puis rechargez la page.",
+    "loading": "Chargement de l’aperçu …",
+    "bannerHint": "Vous voyez la version publiée, pas l’aperçu. Pour voir l’aperçu, ouvrez-le dans l’éditeur ou <Link href=\"/login\">connectez-vous</Link> et rechargez."
+  },
+  "errors": {
+    "emailAlreadyInUse": "Un compte existe déjà avec cette adresse e-mail.",
+    "pleaseLogin": "Veuillez vous connecter",
+    "paymentAlreadyRunning": "Un paiement pour cette facture est déjà en cours. Veuillez attendre au moins une minute avant de réessayer.",
+    "linkExpired": "Ce lien n’est plus valide. Veuillez demander un nouveau lien ici ou vous connecter avec votre nom d’utilisateur et votre mot de passe.",
+    "paymentIntentNotFound": "Le paiement est introuvable.",
+    "paymentProviderNotFound": "Le prestataire de paiement requis est introuvable.",
+    "formNotConfigured": "Le formulaire n’est pas configuré.",
+    "unknown": "Erreur inconnue"
+  },
+  "embed": {
+    "title": "Contenu intégré de {provider}"
   },
   "giftCode": {
     "redeem": {
