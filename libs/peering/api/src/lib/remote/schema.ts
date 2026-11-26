@@ -10053,6 +10053,7 @@ export type SubscriptionPeriod = {
   endsAt: Scalars['DateTime']['output'];
   id: Scalars['String']['output'];
   invoiceID: Scalars['String']['output'];
+  isCanceled: Scalars['Boolean']['output'];
   isPaid: Scalars['Boolean']['output'];
   modifiedAt: Scalars['DateTime']['output'];
   paymentPeriodicity: PaymentPeriodicity;

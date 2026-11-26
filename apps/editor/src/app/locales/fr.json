@@ -3394,6 +3394,7 @@
       "invoiceNr": "N° de facture {{invoiceId}}",
       "invoicePaid": "payée",
       "invoiceUnpaid": "non payée",
+      "invoiceCanceled": "annulée",
       "confirmed": "confirmé",
       "unconfirmed": "non confirmé",
       "monthlyAmount": "Montant mensuel : {{monthlyAmount}} {{currency}}",

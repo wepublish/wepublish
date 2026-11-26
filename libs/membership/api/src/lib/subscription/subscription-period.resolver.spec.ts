@@ -70,4 +70,45 @@ describe('SubscriptionPeriodResolver', () => {
       expect(result).toBe(false);
     });
   });
+
+  describe('isCanceled', () => {
+    const invoices = [
+      { id: 'canceled-invoice', paidAt: null, canceledAt: new Date() },
+      { id: 'paid-invoice', paidAt: new Date(), canceledAt: null },
+      { id: 'open-invoice', paidAt: null, canceledAt: null },
+      {
+        id: 'paid-then-canceled-invoice',
+        paidAt: new Date(),
+        canceledAt: new Date(),
+      },
+    ];
+
+    it('reports whether the period invoice was canceled without being paid', async () => {
+      const prisma = {
+        invoice: { findMany: vi.fn(async () => invoices) },
+      };
+      const resolver = makeResolver(prisma);
+
+      const [canceled, paid, open, paidThenCanceled] = await Promise.all(
+        invoices.map(({ id }) => resolver.isCanceled({ invoiceID: id } as any))
+      );
+
+      expect(canceled).toBe(true);
+      expect(paid).toBe(false);
+      expect(open).toBe(false);
+      expect(paidThenCanceled).toBe(false);
+    });
+
+    it('reports false when the period has no invoice', async () => {
+      const prisma = {
+        invoice: { findMany: vi.fn(async () => []) },
+      };
+
+      const result = await makeResolver(prisma).isCanceled({
+        invoiceID: 'missing-invoice',
+      } as any);
+
+      expect(result).toBe(false);
+    });
+  });
 });

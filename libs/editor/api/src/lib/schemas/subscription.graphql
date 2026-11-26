@@ -279,6 +279,7 @@ fragment UserSubscription on PublicSubscription {
     amount
     invoiceID
     isPaid
+    isCanceled
   }
 }
 

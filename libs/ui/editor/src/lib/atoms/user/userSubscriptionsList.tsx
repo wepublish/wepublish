@@ -454,6 +454,11 @@ function UserSubscriptionsList({
                           status: 'paid' as const,
                           title: t('userSubscriptionList.invoicePaid'),
                         }
+                      : period.isCanceled ?
+                        {
+                          status: 'canceled' as const,
+                          title: t('userSubscriptionList.invoiceCanceled'),
+                        }
                       : {
                           status: 'unpaid' as const,
                           title: t('userSubscriptionList.invoiceUnpaid'),
