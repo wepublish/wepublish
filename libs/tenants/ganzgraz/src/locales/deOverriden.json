@@ -1,6 +1,9 @@
 {
   "subscribe": {
     "chooseSubscription": "Beitrag wählen",
+    "memberplan": {
+      "price": ""
+    },
     "support": {
       "subscribeForPeriod": "Ich unterstütze ganzgraz {monthlyAmount, select, 0 {gratis} other {{renewalPeriodL} mit {formattedAmount}}}",
       "payForPeriod": "Ich unterstütze ganzgraz {monthlyAmount, select, 0 {gratis} other {{paymentPeriodL} mit {formattedAmount}}}",

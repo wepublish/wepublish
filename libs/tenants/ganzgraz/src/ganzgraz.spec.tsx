@@ -1,9 +1,13 @@
 import { renderHook, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { usePaymentText } from '@wepublish/membership/website';
+import {
+  MemberPlanPicker,
+  usePaymentText,
+} from '@wepublish/membership/website';
 import {
   applyTenantTranslations,
   mockArticleTeaser,
+  mockMemberPlan,
   mockTeaserSlotsBlock,
   mockTitleBlock,
   renderWithProviders,
@@ -90,6 +94,29 @@ describe('ganzgraz tenant', () => {
       expect(result.current.replace(/\s/g, ' ')).toBe(expected);
     }
   );
+
+  it('shows only the plan names in the subscription grid, without a price hint', () => {
+    renderWithProviders(
+      <MemberPlanPicker
+        memberPlans={[
+          mockMemberPlan({ name: 'Mitgliedschaft' }),
+          mockMemberPlan({ name: 'Gönnerschaft' }),
+        ]}
+        onChange={vi.fn()}
+      />,
+      { tenant: ganzgrazTenant }
+    );
+
+    expect(
+      screen.getByLabelText('Mitgliedschaft', { exact: false })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Gönnerschaft', { exact: false })
+    ).toBeInTheDocument();
+    expect(screen.queryAllByText(/CHF|Gratis|pro (Monat|Jahr)/)).toHaveLength(
+      0
+    );
+  });
 
   it.each([
     [400, '24px'],
