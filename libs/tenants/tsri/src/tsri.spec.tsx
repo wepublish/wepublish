@@ -1,13 +1,18 @@
 import { screen } from '@testing-library/react';
 import {
   mockBreakBlock,
+  mockInterestsMailchimpFormBlock,
+  mockMailchimpFormBlock,
   mockNavigations,
   mockTeaserSlotsBlock,
   applyTenantTranslations,
   renderWithProviders,
   resetTranslations,
 } from '@wepublish/mocks/website';
-import { FullBlockFragment } from '@wepublish/website/api';
+import {
+  FullBlockFragment,
+  MailchimpFormOptionsLayout,
+} from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { t } from 'i18next';
 
@@ -15,6 +20,7 @@ import logo from './assets/logo.svg';
 import logoBlue from './assets/logo_blue.svg';
 import { staticImageSrc } from './assets/static-image';
 import { TsriBreakBlockType } from './components/break-blocks/tsri-base-break-block';
+import { TsriMailchimpFormBlockType } from './components/newsletter/tsri-mailchimp-form-block';
 import { TsriLayoutType } from './components/teaser-layouts/tsri-layout';
 import { tsriTenant } from './tsri-tenant';
 
@@ -131,5 +137,81 @@ describe('tsri tenant', () => {
     expect(
       getComputedStyle(screen.getByText('Gut zu wissen')).backgroundColor
     ).not.toBe(theme.palette.common.black);
+  });
+
+  it('subscribes to the newsletter with the tsri blue button, whatever colour the editor picked', () => {
+    renderTenantPage([
+      mockMailchimpFormBlock({
+        buttonColor: '#ffd60a',
+        buttonFontColor: '#000000',
+        submitButtonLabel: 'Abonnieren',
+      }),
+    ]);
+
+    const submit = getComputedStyle(
+      screen.getByRole('button', { name: 'Abonnieren' })
+    );
+
+    expect(submit.backgroundColor).toBe(theme.palette.primary.main);
+    expect(submit.color).toBe(theme.palette.common.white);
+    expect(submit.fontWeight).toBe('700');
+  });
+
+  it('rounds the newsletter cards like the tsri newsletter popup', () => {
+    renderTenantPage([
+      mockInterestsMailchimpFormBlock(
+        {},
+        { optionsLayout: MailchimpFormOptionsLayout.Grid }
+      ),
+    ]);
+
+    const card = screen
+      .getByRole('checkbox', { name: /Weekly Culture/ })
+      .closest('label');
+
+    expect(getComputedStyle(card as HTMLElement).borderRadius).toBe('12px');
+  });
+
+  it('gives the minimal newsletter block a white e-mail pill and a black full width button', () => {
+    renderTenantPage([
+      mockMailchimpFormBlock({
+        blockStyle: TsriMailchimpFormBlockType.Minimal,
+        buttonColor: '#ffd60a',
+        submitButtonLabel: 'Kostenlos abonnieren!',
+      }),
+    ]);
+
+    const button = getComputedStyle(
+      screen.getByRole('button', { name: 'Kostenlos abonnieren!' })
+    );
+    const field = getComputedStyle(
+      screen
+        .getByRole('textbox', { name: 'Email' })
+        .closest('.MuiInputBase-root') as HTMLElement
+    );
+
+    expect(button.backgroundColor).toBe(theme.palette.common.black);
+    expect(button.color).toBe(theme.palette.common.white);
+    expect(button.width).toBe('100%');
+    expect(button.borderRadius).toBe('999px');
+    expect(field.backgroundColor).toBe(theme.palette.common.white);
+    expect(field.borderRadius).toBe('999px');
+  });
+
+  it('keeps the regular newsletter block on the tsri blue button', () => {
+    renderTenantPage([
+      mockMailchimpFormBlock({ submitButtonLabel: 'Abonnieren' }),
+    ]);
+
+    expect(
+      getComputedStyle(screen.getByRole('button', { name: 'Abonnieren' }))
+        .borderRadius
+    ).not.toBe('999px');
+  });
+
+  it('lists the minimal newsletter style among its block styles', () => {
+    expect(tsriTenant.blockStyles).toContain(
+      TsriMailchimpFormBlockType.Minimal
+    );
   });
 });
