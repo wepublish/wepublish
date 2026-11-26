@@ -91,6 +91,7 @@ const flow = (overrides: Record<string, unknown>) =>
     periodicities: [],
     intervals: [],
     numberOfSubscriptions: 0,
+    earliestDay: { days: -360, periodicity: null },
     ...overrides,
   }) as unknown as SubscriptionFlowFragment;
 

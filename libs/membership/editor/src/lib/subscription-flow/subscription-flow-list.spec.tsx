@@ -102,6 +102,7 @@ const flow = (
     periodicities: [],
     intervals,
     numberOfSubscriptions: 3,
+    earliestDay: { days: -25, periodicity: null },
   }) as unknown as SubscriptionFlowFragment;
 
 const defaultFlow = flow('flow-default', true, [
@@ -247,6 +248,16 @@ describe('SubscriptionFlowPage', () => {
       );
       expect(
         screen.getByText('subscriptionFlow.subscriptionsAffected(3)')
+      ).toBeTruthy();
+    });
+
+    it('says next to the invoice day that the default flow never acts earlier than 25 days', () => {
+      renderPage();
+
+      expect(
+        screen.getByRole('button', {
+          name: 'subscriptionFlow.earliestDay.defaultFlow(25)',
+        })
       ).toBeTruthy();
     });
 
@@ -525,6 +536,75 @@ describe('SubscriptionFlowPage', () => {
       expect(screen.getByRole('alert').textContent).toContain(
         'subscriptionFlow.overview.warnings.noMemberPlan'
       );
+    });
+
+    describe('the earliest day of its events', () => {
+      const yearlyHint =
+        'subscriptionFlow.earliestDay.byConditions(360,memberPlanList.paymentPeriodicity.yearly)';
+
+      const withEarliestDay = (
+        earliestDay: Record<string, unknown>,
+        intervals = customFlow.intervals
+      ) =>
+        mockQueries([
+          defaultFlow,
+          { ...customFlow, earliestDay, intervals } as SubscriptionFlowFragment,
+        ]);
+
+      beforeEach(() => withEarliestDay({ days: -360, periodicity: 'yearly' }));
+
+      it('is explained next to the day of the invoice creation', () => {
+        renderPage();
+
+        const invoiceDay = screen
+          .getByText(dayLabel(0))
+          .closest('li') as HTMLElement;
+        const customMailDay = screen
+          .getByText(dayLabel(-25))
+          .closest('li') as HTMLElement;
+
+        expect(
+          within(invoiceDay).getByRole('button', { name: yearlyHint })
+        ).toBeTruthy();
+        expect(
+          within(customMailDay).queryByRole('button', { name: yearlyHint })
+        ).toBeNull();
+      });
+
+      it('bounds the day input of «change day» and says why', async () => {
+        renderAuthorised();
+
+        fireEvent.click(
+          screen.getAllByRole('button', {
+            name: 'subscriptionFlow.editDay',
+          })[0]
+        );
+
+        const dialog = await screen.findByRole('dialog');
+        const input = within(dialog).getByRole('spinbutton', {
+          name: 'subscriptionFlow.editDay',
+        });
+
+        expect(input.getAttribute('min')).toBe('-360');
+        expect(input.getAttribute('max')).toBe('90');
+        expect(within(dialog).getByText(yearlyHint)).toBeTruthy();
+      });
+
+      it('bounds the day input of «add day»', async () => {
+        renderAuthorised();
+
+        fireEvent.click(
+          screen.getByText('subscriptionFlow.addDay', { selector: 'button' })
+        );
+
+        const input = within(await screen.findByRole('dialog')).getByRole(
+          'spinbutton',
+          { name: 'subscriptionFlow.newDayTitle' }
+        );
+
+        expect(input.getAttribute('min')).toBe('-360');
+        expect(input.getAttribute('max')).toBe('90');
+      });
     });
 
     it('shows this flow only, not the default flow next to it', () => {

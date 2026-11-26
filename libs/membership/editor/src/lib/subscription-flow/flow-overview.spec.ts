@@ -6,6 +6,7 @@ import {
 
 import {
   conditionsSummary,
+  earliestDayHint,
   filterFlowRows,
   flowPath,
   flowRows,
@@ -35,6 +36,7 @@ const flow = (overrides: Record<string, unknown>) =>
     periodicities: [],
     intervals: [],
     numberOfSubscriptions: 0,
+    earliestDay: { days: -360, periodicity: null },
     ...overrides,
   }) as unknown as SubscriptionFlowFragment;
 
@@ -265,5 +267,33 @@ describe('flowWarnings', () => {
     ).toEqual([
       'subscriptionFlow.overview.warnings.notOffered(subscriptionFlow.overview.renewal.false)',
     ]);
+  });
+});
+
+describe('earliestDayHint', () => {
+  const translate = (key: string, options?: Record<string, unknown>) =>
+    options ? `${key}(${Object.values(options).join(',')})` : key;
+
+  it('explains a plan flow by the shortest periodicity of its conditions', () => {
+    expect(
+      earliestDayHint(
+        flow({
+          default: false,
+          earliestDay: { days: -85, periodicity: PaymentPeriodicity.Quarterly },
+        }),
+        translate
+      )
+    ).toBe(
+      'subscriptionFlow.earliestDay.byConditions(85,memberPlanList.paymentPeriodicity.quarterly)'
+    );
+  });
+
+  it('says of the default flow that its day is fixed: it is the fallback of every subscription', () => {
+    expect(
+      earliestDayHint(
+        flow({ default: true, earliestDay: { days: -25, periodicity: null } }),
+        translate
+      )
+    ).toBe('subscriptionFlow.earliestDay.defaultFlow(25)');
   });
 });
