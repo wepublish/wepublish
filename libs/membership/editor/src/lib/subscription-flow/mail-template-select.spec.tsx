@@ -51,12 +51,16 @@ const client = {
   deleteSubscriptionInterval: vi.fn(),
 };
 
-const interval = (sendAsLetter: boolean, templateId = 'mt-1') =>
+const interval = (
+  sendAsLetter: boolean,
+  templateId = 'mt-1',
+  event: SubscriptionEvent = SubscriptionEvent.InvoiceCreation
+) =>
   ({
     object: {
       id: 'interval-1',
       daysAwayFromEnding: -14,
-      event: SubscriptionEvent.InvoiceCreation,
+      event,
       sendAsLetter,
       mailTemplate: { id: templateId, name: 'Invoice' },
     },
@@ -88,7 +92,11 @@ const channelBox = (channel: MailChannel) =>
     screen.getByRole('group', { name: 'mailTemplateSelect.channels' })
   ).getByRole('checkbox', { name: `deliveryMode.channel.${channel}` });
 
-const renderSelect = (subscriptionInterval?: any) =>
+const renderSelect = (
+  subscriptionInterval?: any,
+  event: SubscriptionEvent = SubscriptionEvent.InvoiceCreation,
+  label = 'Invoice creation'
+) =>
   render(
     // The tooltip reads the theme, as it does in the app.
     <ThemeProvider theme={createTheme({ cssVariables: true })}>
@@ -97,8 +105,8 @@ const renderSelect = (subscriptionInterval?: any) =>
           mailTemplates={templates}
           subscriptionInterval={subscriptionInterval}
           subscriptionFlow={{ id: 'flow-1' } as any}
-          event={SubscriptionEvent.InvoiceCreation}
-          label="Invoice creation"
+          event={event}
+          label={label}
         />
       </SubscriptionClientContext.Provider>
     </ThemeProvider>
@@ -212,15 +220,38 @@ describe('MailTemplateSelect channels', () => {
     });
   });
 
-  it('removes the interval when the event is to send nothing', () => {
-    renderSelect(interval(false));
+  // Every flow needs «create invoice» and «deactivate unpaid»; the API
+  // refuses to delete them. «No mail» there takes the template off and keeps
+  // the event; on any other event the event goes.
+  it.each([
+    SubscriptionEvent.InvoiceCreation,
+    SubscriptionEvent.DeactivationUnpaid,
+  ])('keeps the required event %s and only takes its template off', event => {
+    renderSelect(interval(true, 'mt-1', event), event);
 
     fireEvent.click(screen.getByRole('button', { name: /Invoice creation/ }));
+    fireEvent.click(screen.getByRole('button', { name: 'pick none' }));
+
+    expect(client.updateSubscriptionInterval).toHaveBeenCalledWith({
+      variables: { id: 'interval-1', mailTemplateId: null },
+    });
+    expect(client.deleteSubscriptionInterval).not.toHaveBeenCalled();
+  });
+
+  it('removes any other event when it is to send nothing', () => {
+    renderSelect(
+      interval(false, 'mt-1', SubscriptionEvent.RenewalSuccess),
+      SubscriptionEvent.RenewalSuccess,
+      'Renewal success'
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: /Renewal success/ }));
     fireEvent.click(screen.getByRole('button', { name: 'pick none' }));
 
     expect(client.deleteSubscriptionInterval).toHaveBeenCalledWith({
       variables: { id: 'interval-1' },
     });
+    expect(client.updateSubscriptionInterval).not.toHaveBeenCalled();
   });
 
   it('has no channels to choose before a template is chosen', () => {

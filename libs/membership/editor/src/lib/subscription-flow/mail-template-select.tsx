@@ -21,6 +21,12 @@ import { useDeliveryChannels } from '../delivery-mode/channels';
 import { usePaperLetterFlow } from '../delivery-mode/use-paper-letter-flow';
 import { CanUpdateSubscriptionFlow } from '@wepublish/permissions';
 
+// Every flow keeps these events; the API refuses to delete them.
+const REQUIRED_EVENTS: SubscriptionEvent[] = [
+  SubscriptionEvent.InvoiceCreation,
+  SubscriptionEvent.DeactivationUnpaid,
+];
+
 interface MailTemplateSelectProps {
   mailTemplates: TinyMailTemplateFragment[];
   subscriptionInterval?: DecoratedSubscriptionInterval<
@@ -74,9 +80,17 @@ export function MailTemplateSelect({
     });
   };
 
-  const deleteInterval = () => {
+  // «No mail»: a required event stays and only loses its template (and
+  // with it the letter), any other event is removed.
+  const removeTemplate = () => {
     if (!subscriptionInterval) {
       return;
+    }
+
+    if (REQUIRED_EVENTS.includes(subscriptionInterval.object.event)) {
+      return client.updateSubscriptionInterval({
+        variables: { id: subscriptionInterval.object.id, mailTemplateId: null },
+      });
     }
 
     return client.deleteSubscriptionInterval({
@@ -109,7 +123,7 @@ export function MailTemplateSelect({
           if (mailTemplateId) {
             createOrUpdateInterval(mailTemplateId);
           } else {
-            deleteInterval();
+            removeTemplate();
           }
         }}
       />
