@@ -1372,12 +1372,29 @@ describe('PeriodicJobService', () => {
             await service.postMissingInvoiceLetters(runDate);
 
             expect(letterSender.withdrawHeldLetter).toHaveBeenCalledWith(
-              'log-held'
+              'log-held',
+              expect.any(String)
             );
             expect(letterSender.sendLetter).toHaveBeenCalledWith(
               expect.objectContaining({
                 attachment: { content: Buffer.from('pdf'), name: 'RE-1.pdf' },
               })
+            );
+          });
+
+          // Recorded as not handed over yet when the held one went: whatever
+          // stops the replacement, the next night posts it again.
+          it('posts the replacement under the entry written with the withdrawal', async () => {
+            letterSender.withdrawHeldLetter.mockResolvedValue('withdrawn');
+
+            await service.postMissingInvoiceLetters(runDate);
+
+            const [[, replacementLogId]] =
+              letterSender.withdrawHeldLetter.mock.calls;
+
+            expect(replacementLogId).toEqual(expect.any(String));
+            expect(letterSender.sendLetter).toHaveBeenCalledWith(
+              expect.objectContaining({ mailLogId: replacementLogId })
             );
           });
 

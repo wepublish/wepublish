@@ -344,7 +344,10 @@ Pingen keeps no track of duplicates, so the nightly `invoiceLetters` step
 (`postInvoiceLetter`) never uploads again what Pingen stores. It retries only
 uploads that failed outright, and, with the integration's «send letters
 automatically» on, replaces a held letter on a later night after
-`LetterSender.withdrawHeldLetter` re-read its status and deleted it at Pingen.
+`LetterSender.withdrawHeldLetter` re-read its status and deleted it at Pingen;
+it writes the replacement's entry (`rejected`, no `providerLetterID`) in the
+same transaction, and the replacement is posted under that id, so a send that
+dies on the way is retried instead of the cancelled one reading as settled.
 With that setting off a held letter is left to the people confirming letters
 in Pingen.
 

@@ -58,12 +58,21 @@ export interface LetterSender {
    * Take back a letter the vendor holds for someone to act on, so another
    * one can be posted in its place. The vendor is asked first: a letter
    * somebody fixed, sent or removed there is left alone, and so is one the
-   * vendor does not let go. Only `withdrawn` allows a new letter.
+   * vendor does not let go. Only `withdrawn` allows a new letter, which is
+   * then to be posted under `replacementLogId`: its entry is written with the
+   * withdrawal, as not handed over yet, so a replacement that never gets
+   * through is posted again like any other.
    */
-  withdrawHeldLetter(mailLogId: string): Promise<HeldLetterOutcome>;
+  withdrawHeldLetter(
+    mailLogId: string,
+    replacementLogId: string
+  ): Promise<HeldLetterOutcome>;
 }
 
-/** `withdrawn`: gone at the vendor, its entry cancelled. `left`: untouched. */
+/**
+ * `withdrawn`: gone at the vendor, its entry cancelled and the replacement's
+ * entry written. `left`: untouched.
+ */
 export type HeldLetterOutcome = 'withdrawn' | 'left';
 
 /** A letter that could not be rendered or posted; the log entry is written. */

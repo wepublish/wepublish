@@ -42,6 +42,7 @@ import {
   sub,
   subMinutes,
 } from 'date-fns';
+import { v7 as uuidv7 } from 'uuid';
 import { inspect } from 'util';
 import { SubscriptionEventDictionary } from '../subscription-event-dictionary/subscription-event-dictionary';
 import { Action } from '../subscription-event-dictionary/subscription-event-dictionary.type';
@@ -880,11 +881,16 @@ export class PeriodicJobService {
     }
 
     // Only now, with the new letter ready: the held one is taken back, and
-    // without it gone no other may follow.
+    // without it gone no other may follow. Its replacement is on record from
+    // then on, so the next night posts again whatever stops it tonight.
+    const replacementLogId = held ? uuidv7() : undefined;
+
     if (
       held &&
-      (await this.mailContext.letterSender!.withdrawHeldLetter(held.id)) !==
-        'withdrawn'
+      (await this.mailContext.letterSender!.withdrawHeldLetter(
+        held.id,
+        replacementLogId!
+      )) !== 'withdrawn'
     ) {
       return;
     }
@@ -895,7 +901,7 @@ export class PeriodicJobService {
       false,
       { subscriptionToCreateInvoice: subscription, invoice },
       runDate,
-      { letterRecipient, letterAttachment }
+      { letterRecipient, letterAttachment, mailLogId: replacementLogId }
     );
   }
 

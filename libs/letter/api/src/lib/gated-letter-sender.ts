@@ -42,8 +42,11 @@ export class GatedLetterSender implements LetterSender {
     return this.context.sendsAutomatically();
   }
 
-  withdrawHeldLetter(mailLogId: string): Promise<HeldLetterOutcome> {
-    return this.context.withdrawHeldLetter(mailLogId);
+  withdrawHeldLetter(
+    mailLogId: string,
+    replacementLogId: string
+  ): Promise<HeldLetterOutcome> {
+    return this.context.withdrawHeldLetter(mailLogId, replacementLogId);
   }
 }
 

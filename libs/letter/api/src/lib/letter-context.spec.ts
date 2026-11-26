@@ -88,6 +88,9 @@ function createContext(
   };
 
   const create = vi.fn();
+  // The log entry may exist already, written for a replacement before it was
+  // posted. What an upsert would create is what a new entry holds.
+  const upsert = vi.fn(async ({ create: data }) => create({ data }));
   const documentUrl = vi.fn(async (id: string) => `https://media/${id}.pdf`);
 
   const layouts = {
@@ -118,7 +121,7 @@ function createContext(
     },
     letterLayout: layouts,
     settingLetterProvider: providerSettings,
-    mailLog: { create },
+    mailLog: { create, upsert },
   } as unknown as PrismaClient;
 
   const context = new LetterContext({
@@ -137,6 +140,7 @@ function createContext(
     context,
     rendered,
     create,
+    upsert,
     prisma,
     layouts,
     documentUrl,
@@ -601,6 +605,32 @@ describe('LetterContext.sendLetter', () => {
     });
   });
 
+  it('writes over the entry a replacement was given before it was posted', async () => {
+    const { context, upsert } = createContext();
+
+    await context.sendLetter({
+      mailTemplateId: 'template-1',
+      recipient: user,
+      data: { user },
+      print,
+      mailLogId: 'log-2',
+    });
+
+    expect(upsert).toHaveBeenCalledWith({
+      where: { id: 'log-2' },
+      create: expect.objectContaining({
+        id: 'log-2',
+        state: MailLogState.submitted,
+        providerLetterID: 'pingen-1',
+      }),
+      update: expect.objectContaining({
+        state: MailLogState.submitted,
+        providerLetterID: 'pingen-1',
+        error: null,
+      }),
+    });
+  });
+
   it('logs a rejected letter and rethrows when the vendor fails', async () => {
     const { context, create } = createContext(
       vi.fn().mockRejectedValue(new Error('vendor down'))
@@ -654,6 +684,11 @@ describe('LetterContext.withdrawHeldLetter', () => {
     id: 'log-1',
     state: MailLogState.actionRequired,
     providerLetterID: 'pingen-1',
+    recipientID: 'user-1',
+    mailTemplateId: 'template-1',
+    mailIdentifier: 'subscriptionFlow-run-3-template-1-user-1',
+    type: MailLogType.subscriptionFlow,
+    subject: 'Ihre Rechnung',
   };
 
   const setup = (
@@ -661,18 +696,29 @@ describe('LetterContext.withdrawHeldLetter', () => {
     remote: unknown[] | Error = [],
     deleteLetter = vi.fn().mockResolvedValue(undefined)
   ) => {
-    const { context, prisma } = createContext();
+    const { context, prisma, create } = createContext();
     const findUnique = vi.fn().mockResolvedValue(log);
     const update = vi.fn().mockResolvedValue({});
+    const $transaction = vi.fn(async (steps: Promise<unknown>[]) =>
+      Promise.all(steps)
+    );
     const getMessageStates =
       remote instanceof Error ?
         vi.fn().mockRejectedValue(remote)
       : vi.fn().mockResolvedValue(remote);
 
     Object.assign(prisma.mailLog, { findUnique, update });
+    Object.assign(prisma, { $transaction });
     Object.assign(context.letterProvider, { getMessageStates, deleteLetter });
 
-    return { context, update, getMessageStates, deleteLetter };
+    return {
+      context,
+      update,
+      create,
+      $transaction,
+      getMessageStates,
+      deleteLetter,
+    };
   };
 
   it('removes a letter the vendor still holds and settles its entry', async () => {
@@ -680,7 +726,7 @@ describe('LetterContext.withdrawHeldLetter', () => {
       { providerLetterID: 'pingen-1', state: LetterState.actionRequired },
     ]);
 
-    await expect(context.withdrawHeldLetter('log-1')).resolves.toBe(
+    await expect(context.withdrawHeldLetter('log-1', 'log-2')).resolves.toBe(
       'withdrawn'
     );
     expect(getMessageStates).toHaveBeenCalledWith(['pingen-1']);
@@ -688,6 +734,34 @@ describe('LetterContext.withdrawHeldLetter', () => {
     expect(update).toHaveBeenCalledWith({
       where: { id: 'log-1' },
       data: { state: MailLogState.canceled },
+    });
+  });
+
+  // Should the replacement die on its way, the next night finds an attempt
+  // that never reached the vendor and posts again, instead of a held letter
+  // taken back for nothing that reads as settled there.
+  it('records the replacement as not handed over yet, in the same step', async () => {
+    const { context, update, create, $transaction } = setup(held, [
+      { providerLetterID: 'pingen-1', state: LetterState.actionRequired },
+    ]);
+
+    await context.withdrawHeldLetter('log-1', 'log-2');
+
+    expect($transaction).toHaveBeenCalledTimes(1);
+    expect(update).toHaveBeenCalledTimes(1);
+    expect(create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        id: 'log-2',
+        channel: MailChannel.letter,
+        state: MailLogState.rejected,
+        providerLetterID: null,
+        recipient: { connect: { id: 'user-1' } },
+        mailTemplate: { connect: { id: 'template-1' } },
+        mailIdentifier: 'subscriptionFlow-run-3-template-1-user-1',
+        type: MailLogType.subscriptionFlow,
+        mailProviderID: 'pingen',
+        error: expect.stringContaining('log-1'),
+      }),
     });
   });
 
@@ -707,7 +781,9 @@ describe('LetterContext.withdrawHeldLetter', () => {
         },
       ]);
 
-      await expect(context.withdrawHeldLetter('log-1')).resolves.toBe('left');
+      await expect(context.withdrawHeldLetter('log-1', 'log-2')).resolves.toBe(
+        'left'
+      );
       expect(deleteLetter).not.toHaveBeenCalled();
       expect(update).toHaveBeenCalledWith({
         where: { id: 'log-1' },
@@ -721,7 +797,9 @@ describe('LetterContext.withdrawHeldLetter', () => {
       { providerLetterID: 'pingen-1', state: LetterState.canceled, gone: true },
     ]);
 
-    await expect(context.withdrawHeldLetter('log-1')).resolves.toBe('left');
+    await expect(context.withdrawHeldLetter('log-1', 'log-2')).resolves.toBe(
+      'left'
+    );
     expect(deleteLetter).not.toHaveBeenCalled();
     expect(update).toHaveBeenCalledWith({
       where: { id: 'log-1' },
@@ -732,7 +810,9 @@ describe('LetterContext.withdrawHeldLetter', () => {
   it('leaves a letter alone whose state the vendor does not tell', async () => {
     const { context, update, deleteLetter } = setup(held, []);
 
-    await expect(context.withdrawHeldLetter('log-1')).resolves.toBe('left');
+    await expect(context.withdrawHeldLetter('log-1', 'log-2')).resolves.toBe(
+      'left'
+    );
     expect(deleteLetter).not.toHaveBeenCalled();
     expect(update).not.toHaveBeenCalled();
   });
@@ -740,21 +820,26 @@ describe('LetterContext.withdrawHeldLetter', () => {
   it('leaves a letter alone while the vendor cannot be asked', async () => {
     const { context, update, deleteLetter } = setup(held, new Error('down'));
 
-    await expect(context.withdrawHeldLetter('log-1')).resolves.toBe('left');
+    await expect(context.withdrawHeldLetter('log-1', 'log-2')).resolves.toBe(
+      'left'
+    );
     expect(deleteLetter).not.toHaveBeenCalled();
     expect(update).not.toHaveBeenCalled();
   });
 
   // Never a second copy: without the old one gone, no new one may follow.
   it('leaves a letter alone the vendor does not let go', async () => {
-    const { context, update } = setup(
+    const { context, update, create } = setup(
       held,
       [{ providerLetterID: 'pingen-1', state: LetterState.actionRequired }],
       vi.fn().mockRejectedValue(new Error('409'))
     );
 
-    await expect(context.withdrawHeldLetter('log-1')).resolves.toBe('left');
+    await expect(context.withdrawHeldLetter('log-1', 'log-2')).resolves.toBe(
+      'left'
+    );
     expect(update).not.toHaveBeenCalled();
+    expect(create).not.toHaveBeenCalled();
   });
 
   it.each([
@@ -764,7 +849,9 @@ describe('LetterContext.withdrawHeldLetter', () => {
   ])('does not ask the vendor about an entry that %s', async (_, log) => {
     const { context, getMessageStates, deleteLetter } = setup(log);
 
-    await expect(context.withdrawHeldLetter('log-1')).resolves.toBe('left');
+    await expect(context.withdrawHeldLetter('log-1', 'log-2')).resolves.toBe(
+      'left'
+    );
     expect(getMessageStates).not.toHaveBeenCalled();
     expect(deleteLetter).not.toHaveBeenCalled();
   });
