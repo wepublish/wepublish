@@ -99,7 +99,7 @@ oversized bodies) so they do not reach Sentry.
 **Feeds:** Next tenants export `createFeedHandler(getFeed, format)` from
 `@wepublish/feed/website` in `pages/api/{rss,atom,json}-feed.ts` (with
 `api: { bodyParser: false }` in `config`); TanStack tenants use `feedHandler`
-from `@wepublish/utils/website/tanstack`. Both answer a failed feed query with
+from `@wepublish/utils/website/tanstack/server`. Both answer a failed feed query with
 an uncached 502 and report the error to Sentry instead of throwing.
 Every `apps/<app>/src/feed.ts` loads its items with `queryFeed`
 (`FeedArticleList`, `libs/website/api/src/lib/schemas/feed.graphql`), never
@@ -113,7 +113,9 @@ Mediendatenbank ingests online sources from these feeds.
 
 ### Business Domain Libraries
 
-`membership`, `payment`, `user-subscription`, `member-plan`, `crowdfunding`, `mail`, `event`, `consent`, `print-issue`
+`membership`, `payment`, `user-subscription`, `member-plan`, `crowdfunding`, `mail`, `event`, `consent`, `print-issue`, `gift-code`
+
+One-off products (gift codes, behind the `gift-codes` feature; API and editor only so far, the website and a gift block come later) sell through the sellable contract in `libs/payment/api/src/lib/sellable/`: an invoice with `sellableKind` set and no subscription, one `SellableHandler` per kind registered in `SellableRegistry`, fulfilled and revoked by listeners added with `InvoicePaidNotifier.register()` (the `INVOICE_PAID_LISTENER` token is gone). See [docs/gift-codes/01-selling-things.md](../docs/gift-codes/01-selling-things.md).
 
 ### Infrastructure Libraries
 

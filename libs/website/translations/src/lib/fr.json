@@ -85,7 +85,10 @@
       "openInvoices": "Vous avez déjà un abonnement avec des factures impayées. Vous pouvez consulter vos factures impayées dans votre <Link href=\"/profile\">profil</Link>.",
       "alreadyHasSubscription": "Vous avez déjà cet abonnement, êtes-vous sûr ? Vous pouvez consulter vos abonnements dans votre <Link href=\"/profile\">profil</Link>."
     },
-    "autoRenew": "Renouveler automatiquement"
+    "autoRenew": "Renouveler automatiquement",
+    "giftCodeRedemption": {
+      "link": "Vous souhaitez utiliser un abonnement cadeau ? Cliquez ici."
+    }
   },
   "login": {
     "email": "E-mail",
@@ -573,5 +576,22 @@
   },
   "embed": {
     "title": "Contenu intégré de {provider}"
+  },
+  "giftCode": {
+    "redeem": {
+      "code": "Code cadeau",
+      "submit": "Utiliser le code",
+      "loginLink": "Vous avez déjà un compte ? Connectez-vous ici.",
+      "success": {
+        "createdSubscription": "Votre abonnement « {memberPlan} » est maintenant actif.",
+        "extendedSubscription": "Votre abonnement « {memberPlan} » a été prolongé.",
+        "paidInvoice": "La facture ouverte de votre abonnement « {memberPlan} » est payée."
+      }
+    },
+    "purchase": {
+      "chooseOffer": "Choisir un cadeau",
+      "recipientName": "Nom du destinataire",
+      "submit": "Acheter le cadeau pour {amount}"
+    }
   }
 }

@@ -15,6 +15,7 @@ import {
   EditorBlockType,
   FullBlockStyleFragment,
 } from '@wepublish/editor/api';
+import type { FeatureKey } from '@wepublish/features';
 import nanoid from 'nanoid';
 import {
   Dispatch,
@@ -47,6 +48,7 @@ import {
   UnionToIntersection,
   ValueConstructor,
 } from '../utility';
+import { useFeatures } from '../featureContext';
 import { AddBlockInput, AddBlockMenuItem } from './addBlockInput';
 import { BlockTimingButton } from './blockTiming';
 import { BlockGroup } from './blockGroups';
@@ -181,6 +183,7 @@ export interface BlockCaseProps<V = any> {
   defaultValue: ValueConstructor<V>;
   field: BlockConstructorFn<V>;
   bare?: boolean;
+  feature?: FeatureKey;
 }
 
 export interface BlockListValue<T extends string = string, V = any> {
@@ -489,15 +492,18 @@ export function BlockList<V extends BlockListValue>({
     [handleMoveIndex]
   );
 
+  const features = useFeatures();
   const menuItems = useMemo(
     () =>
-      Object.entries(blockMap).map(([type, { icon, label, group }]) => ({
-        id: type,
-        icon,
-        label,
-        group,
-      })),
-    [blockMap]
+      Object.entries(blockMap)
+        .filter(([, { feature }]) => !feature || features?.has(feature))
+        .map(([type, { icon, label, group }]) => ({
+          id: type,
+          icon,
+          label,
+          group,
+        })),
+    [blockMap, features]
   );
 
   function addButtonForIndex(index: number) {

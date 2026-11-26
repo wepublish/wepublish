@@ -17,6 +17,10 @@ export * from './lib/subscribe/member-plan-render-settings';
 export * from './lib/goodie-picker/goodie-picker';
 export * from './lib/subscribe/subscribe-container';
 
+export * from './lib/gift-code/gift-code-redeem';
+export * from './lib/gift-code/gift-code-redeem-container';
+export * from './lib/gift-code/gift-code-purchase';
+export * from './lib/gift-code/gift-code-purchase-container';
 export * from './lib/upgrade/upgrade';
 export * from './lib/upgrade/upgrade-container';
 

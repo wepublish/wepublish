@@ -12,6 +12,7 @@ import {
   TestSubscribeBlockOptions,
 } from '@wepublish/mocks/website';
 import {
+  FullSubscribeBlockFragment,
   FullSubscriptionFragment,
   PaymentPeriodicity,
   SubscribeBlockField,
@@ -61,8 +62,10 @@ const renderSubscribeBlock = ({
   loggedIn = false,
   subscriptions = [],
   query,
+  block,
   ...context
 }: TestSubscribeBlockOptions & {
+  block?: Partial<FullSubscribeBlockFragment>;
   fields?: SubscribeBlockField[];
   memberPlans?: ReturnType<typeof mockMemberPlan>[];
   loggedIn?: boolean;
@@ -80,7 +83,9 @@ const renderSubscribeBlock = ({
   });
 
   const result = renderWithProviders(
-    <SubscribeBlock {...mockSubscribeBlock({ memberPlans, fields })} />,
+    <SubscribeBlock
+      {...mockSubscribeBlock({ memberPlans, fields, ...block })}
+    />,
     {
       subscribeBlock,
       user: loggedIn ? mockSensitiveDataUser() : null,
@@ -230,6 +235,62 @@ describe('SubscribeBlock', () => {
     ).toBeInTheDocument();
     expect(
       screen.queryByText(t('subscribe.upgrade.infoTitle'))
+    ).not.toBeInTheDocument();
+  });
+
+  it('links to the gift code redemption page when the block offers it', () => {
+    renderSubscribeBlock({
+      block: {
+        showGiftCodeRedemption: true,
+        giftCodeRedemptionPage: {
+          __typename: 'Page',
+          id: 'redeem-page',
+          url: '/geschenk-einloesen',
+        },
+      },
+    });
+
+    expect(
+      screen.getByRole('link', {
+        name: t('subscribe.giftCodeRedemption.link'),
+      })
+    ).toHaveAttribute('href', '/geschenk-einloesen');
+  });
+
+  it('uses the link text of the block', () => {
+    renderSubscribeBlock({
+      block: {
+        showGiftCodeRedemption: true,
+        giftCodeRedemptionLinkText: 'Geschenk erhalten? Hier einlösen.',
+        giftCodeRedemptionPage: {
+          __typename: 'Page',
+          id: 'redeem-page',
+          url: '/geschenk-einloesen',
+        },
+      },
+    });
+
+    expect(
+      screen.getByRole('link', { name: 'Geschenk erhalten? Hier einlösen.' })
+    ).toHaveAttribute('href', '/geschenk-einloesen');
+  });
+
+  it('hides the gift code redemption link when the option is off', () => {
+    renderSubscribeBlock({
+      block: {
+        showGiftCodeRedemption: false,
+        giftCodeRedemptionPage: {
+          __typename: 'Page',
+          id: 'redeem-page',
+          url: '/geschenk-einloesen',
+        },
+      },
+    });
+
+    expect(
+      screen.queryByRole('link', {
+        name: t('subscribe.giftCodeRedemption.link'),
+      })
     ).not.toBeInTheDocument();
   });
 });

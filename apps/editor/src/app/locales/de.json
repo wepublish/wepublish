@@ -525,6 +525,11 @@
         "discountCodesHeading": "Rabattcodes",
         "showGoodies": "Goodie-Auswahl anzeigen",
         "showDiscountCodes": "Rabattcode-Eingabe anzeigen",
+        "giftCodeRedemptionHeading": "Geschenkcodes",
+        "showGiftCodeRedemption": "Link zum Einlösen von Geschenkcodes anzeigen",
+        "giftCodeRedemptionPage": "Seite zum Einlösen",
+        "giftCodeRedemptionLinkText": "Linktext",
+        "giftCodeRedemptionLinkTextHelp": "Leer lassen, um den Standardtext zu verwenden.",
         "goodieMinValue": {
           "label": "Mindestbetrag für ein Goodie",
           "hint": "Wer weniger bezahlt, kann kein Goodie auswählen. Leer lassen für keinen Mindestbetrag."
@@ -656,6 +661,20 @@
         "leadText": "Lead-Text",
         "title": "Titel",
         "preTitle": "Oberzeile"
+      },
+      "redeemGiftCode": {
+        "label": "Geschenkcode einlösen"
+      },
+      "giftCodeOffers": {
+        "label": "Geschenkcodes verkaufen",
+        "selectOffers": "Geschenkangebote im Verkauf",
+        "selectOffersHint": "Leserinnen und Leser sehen nur aktive Angebote, in dieser Reihenfolge.",
+        "displayHeading": "Darstellung",
+        "askRecipientName": "Nach dem Namen der beschenkten Person fragen",
+        "defaultOfferTitle": "Standardmässig ausgewählt – dieses Angebot ist nach dem Laden der Seite vorausgewählt.",
+        "orderHeading": "Reihenfolge der Geschenkangebote",
+        "orderHelp": "Ziehe die Angebote in die Reihenfolge, in der sie auf der Website erscheinen, und wähle, welches Angebot vorausgewählt ist.",
+        "showDiscountCodes": "Rabattcode-Eingabe anzeigen (nur bei Angeboten, die Rabattcodes erlauben)"
       },
       "mailchimpForm": {
         "label": "Newsletter-Formular",
@@ -1762,7 +1781,9 @@
         "renewal": "Verlängerung",
         "invoiceCreation": "Rechnung",
         "custom": "Freie E-Mail (Abo)",
-        "customNoSubscription": "Freie E-Mail (ohne Abo)"
+        "customNoSubscription": "Freie E-Mail (ohne Abo)",
+        "giftCodePurchase": "Geschenkcode gekauft",
+        "giftCodeRedemption": "Geschenkcode eingelöst"
       },
       "placeholderAlways": "Immer verfügbar",
       "placeholderAlwaysHint": "Diese Empfänger-Felder funktionieren in jeder Vorlage, unabhängig vom gewählten Verwendungszweck.",
@@ -1793,7 +1814,9 @@
         "renewal": "Automatische Verlängerung",
         "invoiceCreation": "Rechnung erstellt",
         "custom": "Freie E-Mail an Abonnent:in",
-        "customNoSubscription": "Freie E-Mail an Nicht-Abonnent:in"
+        "customNoSubscription": "Freie E-Mail an Nicht-Abonnent:in",
+        "giftCodePurchase": "Geschenkcode gekauft",
+        "giftCodeRedemption": "Geschenkcode eingelöst"
       },
       "placeholderGroups": {
         "user": "Benutzer",
@@ -1844,7 +1867,16 @@
         "optional_invoice_items_0_name": "Rechnungsposten 1 – Name",
         "optional_invoice_items_0_amount": "Rechnungsposten 1 – Betrag (Rappen)",
         "optional_invoices_0_id": "Neueste Rechnung – ID",
-        "optional_invoices_0_description": "Neueste Rechnung – Beschreibung"
+        "optional_invoices_0_description": "Neueste Rechnung – Beschreibung",
+        "optional_giftCode_code": "Geschenkcode",
+        "optional_giftCode_recipientName": "Name der beschenkten Person",
+        "optional_giftCode_offer_name": "Geschenkangebot",
+        "optional_giftCode_memberPlan_name": "Abo-Plan",
+        "optional_giftCode_periodicity": "Laufzeit (Rohwert)",
+        "optional_giftCode_redemptionWindowMonths": "Einlösefrist (Monate)",
+        "optional_giftCode_issuedAt": "Ausgestellt am",
+        "optional_giftCode_expiresAt": "Einlösbar bis",
+        "optional_giftCode_redeemedAt": "Eingelöst am"
       },
       "rawHtml": "HTML",
       "save": "Speichern",
@@ -1871,7 +1903,9 @@
         "renewal": "Enthält zusätzlich Plan-/Zahlungsmethoden-Namen und Rechnungsdaten.",
         "invoiceCreation": "Achtung: Abo-Felder hier unter dem Präfix optional_subscriptionToCreateInvoice_*.",
         "custom": "Rechnungen kommen als Array: optional_invoices_0_* (neueste zuerst).",
-        "customNoSubscription": "Nur Empfänger-Felder verfügbar – diese E-Mail geht an Personen ohne Abo."
+        "customNoSubscription": "Nur Empfänger-Felder verfügbar – diese E-Mail geht an Personen ohne Abo.",
+        "giftCodePurchase": "Geht an die Käufer:in, sobald der Geschenkcode bezahlt ist. Die Rechnung ist die des Geschenkcodes.",
+        "giftCodeRedemption": "Geht an die Person, die den Geschenkcode eingelöst hat. Abo und Rechnung sind die, die der Code bezahlt hat."
       },
       "purposeDescriptions": {
         "account": "Rund um das Benutzerkonto: Registrierung bestätigen, Login-Link senden, Passwort zurücksetzen. Verfügbar sind nur die Empfänger-Felder.",
@@ -1880,7 +1914,9 @@
         "renewal": "Automatische Verlängerung – erfolgreich oder fehlgeschlagen. Zusätzlich verfügbar: Plan- und Zahlungsmethoden-Name sowie die Rechnungsdaten.",
         "invoiceCreation": "Sobald eine neue Rechnung erstellt wurde. Zusätzlich verfügbar: die Rechnung und das zugehörige Abo.",
         "custom": "Frei verschickbare E-Mail an Abonnent:innen, z.B. ein Newsletter über «Manuelle Mitteilungen». Zusätzlich verfügbar: das Abo und die letzten Rechnungen.",
-        "customNoSubscription": "Frei verschickbare E-Mail an Personen ohne Abo, z.B. eine Einladung oder Reaktivierung. Verfügbar sind nur die Empfänger-Felder – Abo-Platzhalter bleiben leer."
+        "customNoSubscription": "Frei verschickbare E-Mail an Personen ohne Abo, z.B. eine Einladung oder Reaktivierung. Verfügbar sind nur die Empfänger-Felder – Abo-Platzhalter bleiben leer.",
+        "giftCodePurchase": "Geht an die Käufer:in, sobald ein Geschenkcode bezahlt ist; wird beim Geschenkangebot gewählt. Zusätzlich verfügbar: der Code, das Angebot und die Rechnung.",
+        "giftCodeRedemption": "Geht an die Person, die einen Geschenkcode eingelöst hat; wird beim Geschenkangebot gewählt. Zusätzlich verfügbar: der Code und das Abo, das er bezahlt hat."
       },
       "placeholderDescriptions": {
         "user_fullName": "Vor- und Nachname zusammen (z.B. für die Anrede).",
@@ -1926,7 +1962,16 @@
         "optional_invoice_items_0_name": "Name der ersten Rechnungsposition (Array, Index 0).",
         "optional_invoice_items_0_amount": "Betrag der ersten Rechnungsposition in Rappen.",
         "optional_invoices_0_id": "ID der neuesten Rechnung (Array, Index 0).",
-        "optional_invoices_0_description": "Beschreibung der neuesten Rechnung."
+        "optional_invoices_0_description": "Beschreibung der neuesten Rechnung.",
+        "optional_giftCode_code": "Der Code, mit dem das Geschenk eingelöst wird.",
+        "optional_giftCode_recipientName": "Name der beschenkten Person, wie beim Kauf angegeben. Kann leer sein.",
+        "optional_giftCode_offer_name": "Name des Geschenkangebots.",
+        "optional_giftCode_memberPlan_name": "Abo-Plan, den der Code bezahlt.",
+        "optional_giftCode_periodicity": "Laufzeit, die der Code bezahlt (Rohwert): yearly, biannual, quarterly, monthly, biennial.",
+        "optional_giftCode_redemptionWindowMonths": "Monate, in denen der Code eingelöst werden kann. Leer, wenn unbeschränkt.",
+        "optional_giftCode_issuedAt": "Ausgestellt, d.h. bezahlt am. Wähle ein Format.",
+        "optional_giftCode_expiresAt": "Einlösbar bis. Leer, wenn unbeschränkt. Wähle ein Format.",
+        "optional_giftCode_redeemedAt": "Eingelöst am. Wähle ein Format."
       },
       "statusHelp": "Ein Häkchen bedeutet: Eine automatische E-Mail verwendet diese Vorlage. «Nicht verwendet» bedeutet: Keine automatische E-Mail nutzt sie – über «Manuelle Mitteilungen» kannst du sie trotzdem von Hand verschicken.",
       "placeholdersInfo": "Platzhalter werden beim Versand automatisch durch die entsprechenden Daten ersetzt, z. B. durch den Vornamen der Empfänger:in.",
@@ -2226,6 +2271,7 @@
       "peers": "Peers",
       "settings": "Einstellungen",
       "subscriptionPlans": "Abo-Pläne",
+      "gifts": "Geschenke",
       "subscriptions": "Abonnements",
       "subscriptionSettings": "Automatische Mitteilungen",
       "tokens": "Tokens",
@@ -2353,6 +2399,10 @@
       "goodies": "Goodies",
       "goodieCreate": "Neues Goodie",
       "goodieEdit": "Goodie bearbeiten",
+      "giftCodes": "Geschenkcodes",
+      "giftCodeOffers": "Geschenkangebote",
+      "giftCodeOfferCreate": "Neues Geschenkangebot",
+      "giftCodeOfferEdit": "Geschenkangebot bearbeiten",
       "consents": "Einwilligungen",
       "consentCreate": "Neue Einwilligung",
       "consentEdit": "Einwilligung bearbeiten",
@@ -3778,6 +3828,159 @@
         "availableStockInfo": "So viele Stück können noch vergeben werden: Lagerbestand minus die Goodies, die Abonnent:innen bereits gewählt haben. ∞ bedeutet unbegrenzt."
       }
     },
+    "giftCodeOffer": {
+      "navbar": "Geschenkangebote",
+      "form": {
+        "createTitle": "Geschenkangebot erstellen",
+        "editTitle": "Geschenkangebot «{{ offer }}» bearbeiten",
+        "name": "Name",
+        "description": "Beschreibung",
+        "image": "Bild",
+        "active": "Aktiv",
+        "memberPlan": "Abo-Plan",
+        "periodicity": "Laufzeit",
+        "periodicityHelp": "Es stehen nur Laufzeiten zur Wahl, für die der Abo-Plan einen Preis hat.",
+        "price": "Preis",
+        "priceHelp": "Was Käufer:innen für das Geschenk zahlen",
+        "priceSameAsPlan": "Gleicher Preis wie beim Abo",
+        "priceBelowPlan": "Günstiger als das Abo (Abopreis {{ price }})",
+        "priceAbovePlan": "Teurer als das Abo (Abopreis {{ price }})",
+        "priceInvalid": "Gib einen Preis über 0 ein",
+        "redemptionWindowMonths": "Einlösbar während (Monate)",
+        "redemptionWindowMonthsHelp": "Ab der Zahlung gerechnet. Leer lassen, damit der Code jederzeit eingelöst werden kann.",
+        "redemptionWindowMonthsInvalid": "Gib eine ganze Zahl ab 1 ein",
+        "paymentMethods": "Zahlungsmethoden",
+        "paymentMethodsHelp": "Mit diesen Methoden können Käufer:innen das Geschenk bezahlen. Nicht jeder Zahlungsanbieter unterstützt Einzelkäufe.",
+        "paymentMethodsRequired": "Wähle mindestens eine Zahlungsmethode",
+        "allowDiscountCodes": "Rabattcodes erlauben",
+        "allowDiscountCodesHelp": "Käufer:innen können beim Kauf des Geschenks einen Rabattcode dieses Abos eingeben.",
+        "autoRenew": "Automatisch verlängern",
+        "autoRenewHelp": "Das mit einem Code gestartete Abo verlängert sich automatisch, wenn die geschenkte Laufzeit endet.",
+        "autoRenewNotExtendable": "Dieses Abo kann nicht verlängert werden und deshalb auch nicht automatisch.",
+        "renewalPaymentMethod": "Zahlungsmethode für die Verlängerung",
+        "renewalPaymentMethodHelp": "Die Zahlungsmethoden des Abos für diese Laufzeit.",
+        "renewalPaymentMethodRequired": "Wähle die Zahlungsmethode für die Verlängerung",
+        "sections": {
+          "details": "Angebot",
+          "sale": "Verkauf",
+          "mails": "E-Mails",
+          "mailsDescription": "Ohne Vorlage wird keine E-Mail verschickt. Dokumente im Anhang der Vorlage werden wie die E-Mail selbst ausgefüllt."
+        },
+        "purchaseMailTemplate": "E-Mail nach dem Kauf",
+        "purchaseMailTemplateHelp": "Geht mit dem Code an die Käufer:in, sobald die Zahlung bestätigt ist.",
+        "redemptionMailTemplate": "E-Mail nach dem Einlösen",
+        "redemptionMailTemplateHelp": "Geht an die Person, die den Code eingelöst hat."
+      },
+      "overview": {
+        "title": "Geschenkangebote",
+        "createOffer": "Neues Geschenkangebot",
+        "active": "Aktiv",
+        "name": "Name",
+        "memberPlan": "Abo-Plan",
+        "periodicity": "Laufzeit",
+        "price": "Preis",
+        "redemptionWindow": "Einlösbar während",
+        "months_one": "{{ count }} Monat",
+        "months_other": "{{ count }} Monate",
+        "unlimited": "Unbegrenzt",
+        "allowDiscountCodes": "Rabattcodes",
+        "autoRenew": "Automatische Verlängerung",
+        "paymentMethods": "Zahlungsmethoden",
+        "modifiedAt": "Zuletzt bearbeitet",
+        "modifiedAtDate": "{{modifiedAt, ccc PP p}}",
+        "areYouSure": "Geschenkangebot löschen?",
+        "areYouSureBody": "Das Geschenkangebot «{{ offer }}» wird unwiderruflich gelöscht. Angebote, zu denen es schon Codes gibt, lassen sich nicht löschen; setze sie stattdessen inaktiv.",
+        "areYouSureConfirmation": "Geschenkangebot löschen"
+      }
+    },
+    "giftCode": {
+      "navbar": "Geschenkcodes",
+      "list": {
+        "title": "Geschenkcodes",
+        "code": "Code",
+        "noCodeYet": "Noch nicht ausgestellt",
+        "status": "Status",
+        "unpaid": "Unbezahlt",
+        "paid": "Bezahlt",
+        "buyer": "Käufer:in",
+        "redeemedBy": "Eingelöst von",
+        "paidInvoice": "Bezahlte Rechnung",
+        "paidInvoiceLink": "Rechnung vom {{date, PP}}",
+        "source": "Herkunft",
+        "createdBy": "Ersteller:in",
+        "recipientName": "Name der beschenkten Person",
+        "offer": "Angebot",
+        "amount": "Betrag",
+        "createdAt": "Erstellt",
+        "issuedAt": "Ausgestellt",
+        "expiresAt": "Läuft ab",
+        "redeemedAt": "Eingelöst",
+        "canceledAt": "Storniert",
+        "date": "{{date, PP}}"
+      },
+      "filters": {
+        "search": "Code, Empfänger:in oder E-Mail der Käufer:in",
+        "status": "Status",
+        "payment": "Zahlung",
+        "allPayments": "Alle",
+        "paid": "Bezahlt",
+        "unpaid": "Unbezahlt",
+        "offer": "Angebot",
+        "memberPlan": "Abo-Plan",
+        "source": "Herkunft",
+        "allSources": "Alle",
+        "createdAt": "Erstellt zwischen"
+      },
+      "status": {
+        "ordered": "Bestellt",
+        "issued": "Ausgestellt",
+        "redeemed": "Eingelöst",
+        "expired": "Abgelaufen",
+        "canceled": "Storniert"
+      },
+      "source": {
+        "purchase": "Kauf",
+        "admin": "Von Admin erstellt"
+      },
+      "create": {
+        "open": "Codes erstellen",
+        "title": "Geschenkcodes erstellen",
+        "body": "Die Codes werden sofort ausgestellt, ohne Rechnung und ohne Zahlung, z.B. zum Verteilen an Anlässen.",
+        "offer": "Angebot",
+        "offerRequired": "Wähle ein Angebot",
+        "inactiveOffer": "inaktiv",
+        "count": "Anzahl Codes",
+        "countHelp": "1 bis 500 Codes",
+        "countInvalid": "Gib eine ganze Zahl von 1 bis 500 ein",
+        "recipientName": "Name der beschenkten Person (optional)",
+        "recipientNameHelp": "Wird bei jedem Code gespeichert. Leer lassen für Codes ohne Namen.",
+        "recipientNameTooLong": "Höchstens {{maximum}} Zeichen",
+        "submit": "Codes erstellen",
+        "createdTitle_one": "{{count}} Geschenkcode erstellt",
+        "createdTitle_other": "{{count}} Geschenkcodes erstellt",
+        "createdBody": "Die Codes sind ausgestellt. Du findest sie auch in der Liste.",
+        "copy": "Codes kopieren",
+        "copied": "Codes in die Zwischenablage kopiert",
+        "close": "Fertig"
+      },
+      "cancellationReason": {
+        "manual": "Von der Redaktion storniert",
+        "invoiceCanceled": "Nicht rechtzeitig bezahlt",
+        "chargeback": "Zahlung zurückgebucht"
+      },
+      "actions": {
+        "cancel": "Geschenkcode stornieren",
+        "markAsPaid": "Als bezahlt markieren"
+      },
+      "dialogs": {
+        "cancelTitle": "Geschenkcode stornieren?",
+        "cancelBody": "Der Geschenkcode für {{ giftCode }} kann danach nicht mehr eingelöst werden. Rückerstattungen laufen über den Zahlungsanbieter.",
+        "cancelConfirm": "Geschenkcode stornieren",
+        "markAsPaidTitle": "Als bezahlt markieren?",
+        "markAsPaidBody": "Die Rechnung für {{ giftCode }} wird als bezahlt markiert. Ist der Code noch nicht ausgestellt, wird er jetzt ausgestellt. Mach das erst, wenn das Geld eingegangen ist.",
+        "markAsPaidConfirm": "Als bezahlt markieren"
+      }
+    },
     "paymentMethodEditPanel": {
       "gracePeriod": "Zahlungsfrist",
       "gracePeriodHelpText": "Wenn deine Website eine Paywall verwendet, können die Nutzer alle Inhalte auch bei unbezahlten Abos sofort oder weiterhin lesen – innerhalb der Zahlungsfrist. Dies ist etwa bei Banküberweisung nützlich.",
@@ -4775,14 +4978,16 @@
         "subscriptionFlow": "Abo-E-Mail",
         "userFlow": "Ereignis-E-Mail",
         "systemMail": "System-E-Mail",
-        "manual": "Manuell"
+        "manual": "Manuell",
+        "giftCode": "Geschenkcode"
       },
       "error": "Fehler",
       "typeDescriptions": {
         "manual": "Von Hand über «Manuelle Mitteilungen» oder «Test senden» verschickt. Beispiel: Newsletter an alle Abonnent:innen.",
         "subscriptionFlow": "Zeitgesteuert aus «Automatische Mitteilungen», berechnet ab dem Abo-Datum. Beispiele: Erinnerung 14 Tage vor Ablauf, Mahnung nach unbezahlter Rechnung.",
         "userFlow": "Sofort ausgelöst durch eine konkrete Aktion oder ein Ereignis. Beispiele: Login-Link angefordert, E-Mail-Adresse geändert, Zahlung für die Verlängerung fehlgeschlagen.",
-        "systemMail": "Konto-E-Mails, konfiguriert unter «Automatische Mitteilungen» im Abschnitt «Konto & Login». Beispiele: Willkommens-E-Mail nach Registrierung, Passwort zurücksetzen."
+        "systemMail": "Konto-E-Mails, konfiguriert unter «Automatische Mitteilungen» im Abschnitt «Konto & Login». Beispiele: Willkommens-E-Mail nach Registrierung, Passwort zurücksetzen.",
+        "giftCode": "Beim Kauf oder Einlösen eines Geschenkcodes, mit den Vorlagen aus dem Geschenkangebot."
       },
       "errorHelp": {
         "causeTitle": "Was ist passiert?",
@@ -5766,7 +5971,8 @@
         "peer": "Peer erstellen",
         "userRole": "Benutzerrolle erstellen",
         "token": "Token generieren",
-        "apiToken": "API-Schlüssel generieren"
+        "apiToken": "API-Schlüssel generieren",
+        "giftCodeOffer": "Geschenkangebot erstellen"
       },
       "trigger": "Suchen oder springen…",
       "keys": {
