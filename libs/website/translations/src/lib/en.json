@@ -85,7 +85,10 @@
       "openInvoices": "You already have a subscription with unpaid invoices. You can view your unpaid invoices in your <Link href=\"/profile\">profile</Link>.",
       "alreadyHasSubscription": "You already have this subscription, are you sure? You can view your subscriptions in your <Link href=\"/profile\">profile</Link>."
     },
-    "autoRenew": "Renew automatically"
+    "autoRenew": "Renew automatically",
+    "giftCodeRedemption": {
+      "link": "Want to redeem a gift subscription? Click here."
+    }
   },
   "login": {
     "email": "Email",
@@ -573,5 +576,22 @@
   },
   "embed": {
     "title": "Embedded content from {provider}"
+  },
+  "giftCode": {
+    "redeem": {
+      "code": "Gift code",
+      "submit": "Redeem code",
+      "loginLink": "Already have an account? Log in here.",
+      "success": {
+        "createdSubscription": "Your “{memberPlan}” subscription is now active.",
+        "extendedSubscription": "Your “{memberPlan}” subscription has been extended.",
+        "paidInvoice": "The open invoice of your “{memberPlan}” subscription has been paid."
+      }
+    },
+    "purchase": {
+      "chooseOffer": "Choose a gift subscription",
+      "recipientName": "Name of the recipient",
+      "submit": "Buy gift subscription for {amount}"
+    }
   }
 }
