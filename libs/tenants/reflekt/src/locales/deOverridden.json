@@ -7,6 +7,7 @@
     }
   },
   "subscribe": {
+    "choosePaymentMethod": "Wie möchtest du bezahlen?",
     "cancellable": "Jederzeit kündbar\n * Versand innerhalb der Schweiz",
     "button": {
       "subscribeForPeriod": "Jetzt unterstützen",

@@ -2,7 +2,6 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { SubscribeBlock } from '@wepublish/block-content/website';
 import {
-  PaymentRadioWrapper,
   Subscribe,
   SubscribeButton,
   SubscribeCancelable,
@@ -43,7 +42,7 @@ export const ReflektSubscribeForm = styled(
   background-color: orange;
 `;
 
-const subscribeGridAreas = (
+export const subscribeGridAreas = (
   showGoodies?: boolean,
   showDiscountCodes?: boolean,
   withNotices?: boolean,
@@ -59,8 +58,8 @@ const subscribeGridAreas = (
     ${withNotices ? "'notices'" : ''}
     ${withError ? "'error'" : ''}
     ${withChallenge ? "'challenge'" : ''}
-    'submit'
     'paymentPeriodicity'
+    'submit'
     ${showGoodies ? "'goodieSlider'" : ''}
   `;
 
@@ -122,11 +121,6 @@ export const StyledReflektSubscribeBlock = styled(SubscribeBlock)`
     > div > .MuiFormHelperText-root {
       grid-area: goodieError;
     }
-  }
-
-  [data-area='paymentPeriodicity'] ${PaymentRadioWrapper} {
-    outline: none;
-    border: none;
   }
 
   [data-area='paymentPeriodicity'] ${SubscribePayment} {
