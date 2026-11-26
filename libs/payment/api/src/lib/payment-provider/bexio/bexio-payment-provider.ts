@@ -30,6 +30,7 @@ import {
   InvoiceDeliveryError,
   InvoiceNotFoundError,
   IssuingInvoiceError,
+  MarkingInvoiceAsSentError,
   NoSubscriptionIdInInvoice,
   ResponseNOK,
   SendingInvoiceError,
@@ -167,6 +168,25 @@ export class BexioPaymentProvider extends BasePaymentProvider {
       await this.getBexioGateway(),
       Number(payment.intentID)
     );
+  }
+
+  /**
+   * Sets Bexio's «sent» mark on an invoice we.publish delivered; Bexio sets
+   * it only for the invoices it emails itself.
+   */
+  override async markRemoteInvoiceSent({
+    payment,
+  }: RenderRemoteInvoiceProps): Promise<void> {
+    if (!payment.intentID || !/^\d+$/.test(payment.intentID)) {
+      return;
+    }
+
+    const bexio = await this.getBexioGateway();
+    const marked = await bexio.invoices.markAsSent(Number(payment.intentID));
+
+    if (!marked.success) {
+      throw new MarkingInvoiceAsSentError(marked);
+    }
   }
 
   /**

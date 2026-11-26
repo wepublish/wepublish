@@ -121,6 +121,7 @@ export function LetterIntegrationForm() {
           type: 'checkbox',
           name: 'autoSend',
           label: t('integrations.letterSettings.autoSend'),
+          info: t('integrations.letterSettings.autoSendInfo'),
         });
 
         commonFields.push({

@@ -2667,7 +2667,7 @@ export type MailLogModel = {
   address?: Maybe<Scalars['String']['output']>;
   channel: MailChannel;
   createdAt: Scalars['DateTime']['output'];
-  /** Why a rejected mail could not be delivered. */
+  /** Why the mail could not be delivered: the error of a rejected one, or what the mail provider said about a bounced or held-back one (its bounce description and the receiving server's answer). */
   error?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
   /** The invoice the mail is about, for invoice mails. Null otherwise and for mails sent before this was recorded. */
@@ -2696,6 +2696,7 @@ export type MailLogRecipient = {
 
 export enum MailLogState {
   Accepted = 'accepted',
+  ActionRequired = 'actionRequired',
   Bounced = 'bounced',
   Canceled = 'canceled',
   Deferred = 'deferred',
@@ -10420,6 +10421,20 @@ export type TwitterTweetBlockInput = {
   userID?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type UmamiAnalytics = {
+  __typename?: 'UmamiAnalytics';
+  enabled: Scalars['Boolean']['output'];
+  /** Search params removed from the url and referrer before they are sent to Umami. */
+  excludedSearchParams: Array<Scalars['String']['output']>;
+  key?: Maybe<Scalars['String']['output']>;
+};
+
+export type UmamiAnalyticsInput = {
+  enabled: Scalars['Boolean']['input'];
+  excludedSearchParams?: InputMaybe<Array<Scalars['String']['input']>>;
+  key?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type UnknownBlock = {
   __typename?: 'UnknownBlock';
   blockStyle?: Maybe<Scalars['String']['output']>;
@@ -10739,7 +10754,7 @@ export type WebsiteAnalytics = {
   googleTagManager: KeyEnabled;
   piwik: KeyEnabled;
   plausible: KeyEnabled;
-  umami: KeyEnabled;
+  umami: UmamiAnalytics;
 };
 
 export type WebsiteAnalyticsInput = {
@@ -10747,7 +10762,7 @@ export type WebsiteAnalyticsInput = {
   googleTagManager: KeyEnabledInput;
   piwik: KeyEnabledInput;
   plausible: KeyEnabledInput;
-  umami: KeyEnabledInput;
+  umami: UmamiAnalyticsInput;
 };
 
 /** A single-use grant the website redeems through createSessionWithJWT within a minute. */

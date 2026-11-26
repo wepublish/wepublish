@@ -96,12 +96,18 @@ function MailTemplateList() {
   const matching = useMemo(
     () =>
       sortTemplates(
-        filterTemplates(templates, filter),
+        // A saved letter filter must not narrow the list while it is hidden.
+        filterTemplates(
+          templates,
+          paperLetters ? filter : (
+            { ...filter, channels: [], layouts: [], appendices: [] }
+          )
+        ),
         sortField,
         sortOrder,
         sortLabels
       ),
-    [templates, filter, sortField, sortOrder, sortLabels]
+    [templates, filter, paperLetters, sortField, sortOrder, sortLabels]
   );
 
   // A filter can leave fewer pages than the one that was open.

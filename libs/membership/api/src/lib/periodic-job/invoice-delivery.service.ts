@@ -354,6 +354,32 @@ export class InvoiceDeliveryService {
   }
 
   /**
+   * Has the provider note that its invoice went out. The reader has it by
+   * then, so a provider that cannot be told is logged and nothing more.
+   */
+  private async markRemoteInvoiceSent(invoice: Invoice) {
+    try {
+      const payments = await this.payments.findByInvoiceId(invoice.id);
+      const payment = payments.find(({ intentID }) => intentID);
+
+      if (!payment) {
+        return;
+      }
+
+      const paymentProvider =
+        await this.payments.findPaymentProviderByPaymentMethodeId(
+          payment.paymentMethodID
+        );
+
+      await paymentProvider?.markRemoteInvoiceSent({ payment });
+    } catch (error) {
+      this.logger.warn(
+        `Invoice ${invoice.id} was delivered but the payment provider could not be told: ${describeError(error)}`
+      );
+    }
+  }
+
+  /**
    * Send a subscription-flow template as mail or, for a reader in letter mode,
    * as a letter. A refused address or a print vendor outage concerns this
    * recipient only and is logged; anything else is thrown.
@@ -382,6 +408,10 @@ export class InvoiceDeliveryService {
         asLetter: action.sendAsLetter,
         ...delivery,
       }).sendMail();
+
+      if (delivery.attachment && optionalData['invoice']) {
+        await this.markRemoteInvoiceSent(optionalData['invoice']);
+      }
     } catch (error) {
       // A refused address, a print vendor outage or attachments that cannot
       // be rendered concern this recipient only; the run goes on with the

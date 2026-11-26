@@ -19,9 +19,10 @@
       "mobile": "Mobile",
       "desktop": "Desktop",
       "tablet": "Tablet",
-      "copyUrl": "Copy preview URL",
-      "urlCopied": "Preview URL copied to clipboard",
-      "urlCopyFailed": "Preview URL could not be copied",
+      "copyUrl": "Copy preview link",
+      "urlCopied": "Link copied. It opens this preview in the editor.",
+      "urlCopyFailed": "Preview link could not be copied",
+      "openInNewTab": "Open preview in a new tab",
       "loading": "Loading preview …"
     },
     "previewHandshake": {
@@ -4193,6 +4194,7 @@
         "organisationId": "Organisation ID",
         "webhookSigningKey": "Webhook Signing Key",
         "autoSend": "Send letters automatically",
+        "autoSendInfo": "On: the print vendor prints and posts every letter as soon as it is handed over. If it holds a letter back because of a problem, We.Publish replaces the letter itself the following night, unless someone has dealt with it by then. Off: every letter waits at the print vendor until someone releases it there; a letter that is held back stays there until someone deals with it.",
         "placeholderEmailContains": "Placeholder email contains",
         "defaultAddressPosition": "Address window (automated letters)",
         "defaultDeliveryProduct": "Delivery (automated letters)",
@@ -4444,7 +4446,12 @@
           "enable": "Enable Umami",
           "um": "<url>Umami</url> is a privacy-focused, open source alternative to Google Analytics.",
           "umLocator": "You can find it in the <url>website settings</url> of your Umami dashboard",
-          "umInvalid": "Must be a valid website ID (e.g., xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)"
+          "umInvalid": "Must be a valid website ID (e.g., xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)",
+          "advanced": "Advanced",
+          "excludedSearchParams": "Excluded URL parameters",
+          "excludedSearchParamsHelp": "These URL parameters are removed from the page URL and the referrer before they are sent to Umami, e.g. personal data a newsletter adds to its links (mail, firstName). All other parameters, like the utm parameters, are kept. Upper and lower case do not matter.",
+          "excludedSearchParam": "Parameter name",
+          "addExcludedSearchParam": "Add parameter"
         }
       },
       "ads": {
@@ -5037,7 +5044,8 @@
           "rejected": "Rejected",
           "dispatched": "Dispatched",
           "undeliverable": "Undeliverable",
-          "canceled": "Canceled"
+          "canceled": "Canceled",
+          "actionRequired": "Action required"
         }
       },
       "audienceSummary": {
@@ -5145,6 +5153,18 @@
           "cause": "The mailing template used here no longer exists.",
           "fix": "Pick an existing template under “Message templates” or create it again, then start the send once more."
         },
+        "mailboxGone": {
+          "cause": "The recipient's mail server refused the message because the mailbox or the domain does not exist. The address is therefore rated unreachable.",
+          "fix": "1. Check the person's email address for typos and correct it.\n2. If no valid address is known, switch the person to letters: they are suggested under the delivery channel for automated messages, provided a postal address is on file."
+        },
+        "mailboxFull": {
+          "cause": "The recipient's mailbox is full. The message did not arrive; the address is still rated reachable.",
+          "fix": "1. Send the message again later.\n2. If the mailbox stays full, reach the person another way."
+        },
+        "bounce": {
+          "cause": "The recipient's mail server did not accept the message. Its answer is shown below.",
+          "fix": "1. Read the original message: it names the reason, e.g. a temporary failure, a blocked mailbox or suspected spam.\n2. For a temporary failure, send the message again later.\n3. If the address keeps bouncing, check it with the person."
+        },
         "generic": {
           "cause": "The mail server rejected the send with the message below.",
           "fix": "1. Check the configuration under Settings › Integrations › Mail.\n2. Look into the server log for the full error.\n3. Send a test mail from the template to check the connection."
@@ -5211,6 +5231,11 @@
           "name": "Canceled",
           "meaning": "The letter was withdrawn before it was printed.",
           "next": "Nothing to do. Nothing was printed and nothing was charged."
+        },
+        "actionRequired": {
+          "name": "Action required",
+          "meaning": "The print vendor took the letter but does not print it: it holds the letter until someone deals with it there, for example because its check of the pdf failed. The letter is at the print vendor; the column «Error» gives the reason.",
+          "next": "Open the letter at the print vendor and fix, release or delete it there. The state here follows on its own. Do not send it again: that creates a duplicate at the print vendor. Where letters are sent automatically, We.Publish replaces an invoice letter itself the following night, unless someone has dealt with it by then."
         }
       },
       "channel": "Delivery",
@@ -5662,7 +5687,7 @@
       "headerHeight": "Header height (mm)",
       "footerHeight": "Footer height (mm)",
       "headerHeightHint": "At most 40 mm, so the header stays clear of the franking zone. It repeats on every page; 0 mm leaves it out.",
-      "footerHeightHint": "At most 40 mm. The letter text keeps this much space from the bottom edge. The footer repeats on every page; 0 mm leaves it out.",
+      "footerHeightHint": "At most 40 mm. The letter text keeps this much space from the bottom edge, and never less than 20 mm. The footer repeats on every page; 0 mm leaves it out.",
       "htmlHint": "Edit visually or as HTML, both with placeholders such as {{user_firstName}}. Anything below the red line is not printed. In HTML, use mm for sizes and give images a fixed width and height.",
       "insertImage": "Insert image",
       "preview": "Preview",

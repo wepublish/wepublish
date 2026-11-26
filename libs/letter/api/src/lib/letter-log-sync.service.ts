@@ -6,6 +6,8 @@ import { LetterContext, toProviderState } from './letter-context';
 const PENDING_STATES: MailLogState[] = [
   MailLogState.submitted,
   MailLogState.accepted,
+  // Held at the vendor: whatever someone does with it there has to come back.
+  MailLogState.actionRequired,
 ];
 
 /**
@@ -20,14 +22,16 @@ const DEFAULT_LIMIT = 100;
 const MAX_LIMIT = 2000;
 
 /**
- * `rejected` shares a rank with `accepted`: the provider reports a problem
- * with a letter as an issue, and once it is resolved there the letter is
- * printed after all.
+ * `actionRequired` shares a rank with `accepted`: the provider holds a letter
+ * with an issue, and once it is resolved there the letter is printed after
+ * all. `rejected` sits there too, for letters logged before the two were told
+ * apart.
  */
 const LETTER_LOG_STATE_RANK: Partial<Record<MailLogState, number>> = {
   [MailLogState.submitted]: 0,
   [MailLogState.accepted]: 1,
   [MailLogState.rejected]: 1,
+  [MailLogState.actionRequired]: 1,
   [MailLogState.dispatched]: 2,
   [MailLogState.delivered]: 3,
   [MailLogState.undeliverable]: 3,
@@ -44,6 +48,19 @@ export const shouldUpdateLetterLogState = (
   next: MailLogState
 ) =>
   (LETTER_LOG_STATE_RANK[next] ?? 0) >= (LETTER_LOG_STATE_RANK[current] ?? 0);
+
+/**
+ * What a new state does to the entry's reason: the issue a held letter was
+ * logged with is over once the letter is no longer held. Any other change
+ * leaves the reason alone.
+ */
+export const reasonAfterLetterState = (
+  current: MailLogState,
+  next: MailLogState
+): { error?: null } =>
+  current === MailLogState.actionRequired && next !== current ?
+    { error: null }
+  : {};
 
 export interface LetterLogSyncResult {
   /** Letters the provider was asked about. */
@@ -139,9 +156,19 @@ export class LetterLogSyncService {
         continue;
       }
 
+      // A letter with the post that the vendor has forgotten was printed
+      // all the same; only one it still held can have been taken back.
+      if (remote.gone && log.state === MailLogState.dispatched) {
+        continue;
+      }
+
       await this.prisma.mailLog.update({
         where: { id: log.id },
-        data: { state, mailData: remote.letterData },
+        data: {
+          state,
+          mailData: remote.letterData,
+          ...reasonAfterLetterState(log.state, state),
+        },
       });
       updated++;
     }

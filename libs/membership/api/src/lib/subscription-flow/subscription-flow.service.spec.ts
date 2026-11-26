@@ -561,6 +561,23 @@ describe('SubscriptionFlowService', () => {
       });
     });
 
+    // Prisma drops an empty `OR` inside a list instead of matching nothing.
+    it('a flow of a member plan without an auto-renewal option matches no subscription', () => {
+      expect(
+        subscriptionsOfFlow({
+          memberPlanId: 'plan-1',
+          paymentMethods: [{ id: 'payment-1' }],
+          periodicities: [PaymentPeriodicity.yearly],
+          autoRenewal: [],
+        })
+      ).toEqual({
+        memberPlanID: 'plan-1',
+        paymentMethodID: { in: ['payment-1'] },
+        paymentPeriodicity: { in: [PaymentPeriodicity.yearly] },
+        id: { in: [] },
+      });
+    });
+
     it('a flow of a member plan still needs all three conditions', async () => {
       await expect(
         service.createFlow({

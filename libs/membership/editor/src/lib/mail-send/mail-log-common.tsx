@@ -27,15 +27,18 @@ const STATE_COLORS: Record<
   [MailLogState.Dispatched]: 'primary',
   [MailLogState.Undeliverable]: 'error',
   [MailLogState.Canceled]: 'warning',
+  // Not lost, but it will not go out until someone looks at it.
+  [MailLogState.ActionRequired]: 'warning',
 };
 
 /**
  * Order the states follow along a delivery, so the legend reads as the path a
  * mail takes rather than as an alphabetical list.
  */
-const STATE_ORDER: MailLogState[] = [
+export const MAIL_LOG_STATE_ORDER: MailLogState[] = [
   MailLogState.Submitted,
   MailLogState.Accepted,
+  MailLogState.ActionRequired,
   MailLogState.Dispatched,
   MailLogState.Delivered,
   MailLogState.Deferred,
@@ -137,7 +140,7 @@ export function MailLogStateLegend() {
         {t('mailLog.stateHelp.legendIntro')}
       </Typography>
 
-      {STATE_ORDER.map(state => (
+      {MAIL_LOG_STATE_ORDER.map(state => (
         <div
           key={state}
           style={{ marginBottom: 10 }}
@@ -230,18 +233,51 @@ const ERROR_HELP_RULES: ReadonlyArray<{ pattern: RegExp; key: string }> = [
   },
 ];
 
-export const mailErrorHelpKey = (error: string): string =>
-  ERROR_HELP_RULES.find(rule => rule.pattern.test(error))?.key ?? 'generic';
+/**
+ * A bounce is the receiving server's answer, reported by the provider after
+ * the mail left: its words say something about the recipient's mailbox, never
+ * about the sending setup the rules above diagnose.
+ */
+const BOUNCE_HELP_RULES: ReadonlyArray<{ pattern: RegExp; key: string }> = [
+  {
+    pattern:
+      /bad_mailbox|invalid_domain|user unknown|no such user|unknown user|does not exist|domain not found/i,
+    key: 'mailboxGone',
+  },
+  {
+    pattern: /mailbox_full|mailbox (is )?full|over quota|quota exceeded/i,
+    key: 'mailboxFull',
+  },
+];
+
+const BOUNCE_STATES: ReadonlySet<MailLogState> = new Set([
+  MailLogState.Bounced,
+  MailLogState.Deferred,
+]);
+
+export const mailErrorHelpKey = (
+  error: string,
+  state?: MailLogState | null
+): string =>
+  state && BOUNCE_STATES.has(state) ?
+    (BOUNCE_HELP_RULES.find(rule => rule.pattern.test(error))?.key ?? 'bounce')
+  : (ERROR_HELP_RULES.find(rule => rule.pattern.test(error))?.key ?? 'generic');
 
 /** The raw error plus a hover explanation of cause and remedy. */
-export function MailErrorCell({ error }: { error?: string | null }) {
+export function MailErrorCell({
+  error,
+  state,
+}: {
+  error?: string | null;
+  state?: MailLogState | null;
+}) {
   const { t } = useTranslation();
 
   if (!error) {
     return <>—</>;
   }
 
-  const key = mailErrorHelpKey(error);
+  const key = mailErrorHelpKey(error, state);
 
   return (
     <ClickPopover

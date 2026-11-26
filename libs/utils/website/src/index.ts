@@ -37,3 +37,4 @@ export * from './lib/components/profile/profile-subscription';
 export * from './lib/website-token';
 export * from './lib/revalidate-for';
 export * from './lib/use-website-feature';
+export * from './lib/umami-before-send';

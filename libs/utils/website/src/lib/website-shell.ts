@@ -1,3 +1,5 @@
+import { PageShellFlags, usePageShell } from '@wepublish/website/builder';
+
 export type WebsiteShell = {
   showNavigation: boolean;
   showFooter: boolean;
@@ -16,8 +18,23 @@ export const getWebsiteShell = (
 });
 
 export const getPageShell = (
-  page: { hideHeader?: boolean; hideFooter?: boolean } | null | undefined
+  page:
+    | { hideHeader?: boolean | null; hideFooter?: boolean | null }
+    | null
+    | undefined
 ): WebsiteShell => ({
   showNavigation: !page?.hideHeader,
   showFooter: !page?.hideFooter,
 });
+
+export const getLiveWebsiteShell = (
+  pageProps: WebsiteShellProps | undefined,
+  livePage: PageShellFlags | undefined
+): WebsiteShell =>
+  pageProps?.shell && livePage ?
+    getPageShell(livePage)
+  : getWebsiteShell(pageProps);
+
+export const useLiveWebsiteShell = (
+  pageProps: WebsiteShellProps | undefined
+): WebsiteShell => getLiveWebsiteShell(pageProps, usePageShell());

@@ -19,9 +19,10 @@
       "mobile": "Mobile",
       "desktop": "Bureau",
       "tablet": "Tablette",
-      "copyUrl": "Copier l’URL d’aperçu",
-      "urlCopied": "URL d’aperçu copiée dans le presse-papiers",
-      "urlCopyFailed": "L’URL d’aperçu n’a pas pu être copiée",
+      "copyUrl": "Copier le lien vers l’aperçu",
+      "urlCopied": "Lien copié. Il ouvre cet aperçu dans l’éditeur.",
+      "urlCopyFailed": "Le lien vers l’aperçu n’a pas pu être copié",
+      "openInNewTab": "Ouvrir l’aperçu dans un nouvel onglet",
       "loading": "Chargement de l’aperçu …"
     },
     "previewHandshake": {
@@ -4317,6 +4318,7 @@
         "organisationId": "ID d’organisation",
         "webhookSigningKey": "Clé de signature du webhook",
         "autoSend": "Envoyer les lettres automatiquement",
+        "autoSendInfo": "Activé : le prestataire d'impression imprime et expédie chaque lettre dès qu'elle lui est remise. S'il retient une lettre à cause d'un problème, We.Publish la remplace lui-même la nuit suivante, si personne ne s'en est occupé d'ici là. Désactivé : chaque lettre attend chez le prestataire jusqu'à ce que quelqu'un la valide ; une lettre retenue y reste jusqu'à ce que quelqu'un s'en occupe.",
         "placeholderEmailContains": "L’e-mail de substitution contient",
         "defaultAddressPosition": "Fenêtre d’adresse (lettres automatiques)",
         "defaultDeliveryProduct": "Distribution (lettres automatiques)",
@@ -4365,7 +4367,12 @@
           "enable": "Activer Umami",
           "um": "<url>Umami</url> est une alternative open source et respectueuse de la vie privée à Google Analytics.",
           "umLocator": "Vous le trouverez dans les <url>paramètres du site</url> de votre tableau de bord Umami",
-          "umInvalid": "Doit être un ID de site valide (p. ex. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)"
+          "umInvalid": "Doit être un ID de site valide (p. ex. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)",
+          "advanced": "Avancé",
+          "excludedSearchParams": "Paramètres d’URL exclus",
+          "excludedSearchParamsHelp": "Ces paramètres d’URL sont retirés de l’URL de la page et du référent avant d’être envoyés à Umami, p. ex. les données personnelles qu’une newsletter ajoute à ses liens (mail, firstName). Tous les autres paramètres, comme les paramètres utm, sont conservés. La casse ne compte pas.",
+          "excludedSearchParam": "Nom du paramètre",
+          "addExcludedSearchParam": "Ajouter un paramètre"
         }
       },
       "ads": {
@@ -5010,7 +5017,8 @@
           "rejected": "Refusé",
           "dispatched": "Posté",
           "undeliverable": "Non distribuable",
-          "canceled": "Annulé"
+          "canceled": "Annulé",
+          "actionRequired": "Action requise"
         }
       },
       "audienceSummary": {
@@ -5118,6 +5126,18 @@
           "cause": "Le modèle d’envoi utilisé n’existe plus.",
           "fix": "Choisissez un modèle existant sous « Modèles de message » ou recréez-le, puis relancez l’envoi."
         },
+        "mailboxGone": {
+          "cause": "Le serveur de messagerie du destinataire a refusé le message, car la boîte ou le domaine n’existe pas. L’adresse est donc considérée comme injoignable.",
+          "fix": "1. Vérifiez l’adresse e-mail de la personne et corrigez les fautes de frappe.\n2. Si aucune adresse valable n’est connue, passez la personne au courrier postal : elle est proposée sous le canal de distribution des messages automatiques, pour autant qu’une adresse postale soit enregistrée."
+        },
+        "mailboxFull": {
+          "cause": "La boîte du destinataire est pleine. Le message n’est pas arrivé ; l’adresse reste considérée comme joignable.",
+          "fix": "1. Renvoyez le message plus tard.\n2. Si la boîte reste pleine, contactez la personne par un autre moyen."
+        },
+        "bounce": {
+          "cause": "Le serveur de messagerie du destinataire n’a pas accepté le message. Sa réponse figure ci-dessous.",
+          "fix": "1. Lisez le message d’origine : il indique la raison, p. ex. une panne passagère, une boîte bloquée ou un soupçon de spam.\n2. En cas de panne passagère, renvoyez le message plus tard.\n3. Si l’adresse rebondit à répétition, vérifiez-la avec la personne."
+        },
         "generic": {
           "cause": "Le serveur a refusé l’envoi avec le message ci-dessous.",
           "fix": "1. Vérifiez la configuration sous Paramètres › Intégrations › Fournisseur de messagerie.\n2. Consultez le journal du serveur pour l’erreur complète.\n3. Envoyez un e-mail de test depuis le modèle pour vérifier la connexion."
@@ -5184,6 +5204,11 @@
           "name": "Annulée",
           "meaning": "La lettre a été retirée avant d’être imprimée.",
           "next": "Rien à faire. Rien n’a été imprimé ni facturé."
+        },
+        "actionRequired": {
+          "name": "Action requise",
+          "meaning": "Le prestataire d'impression a accepté la lettre mais ne l'imprime pas : il la retient jusqu'à ce que quelqu'un s'en occupe chez lui, par exemple parce que sa vérification du PDF a échoué. La lettre se trouve chez le prestataire ; la colonne « Erreur » en indique la raison.",
+          "next": "Ouvrir la lettre chez le prestataire d'impression et l'y corriger, la valider ou la supprimer. Le statut suit ici de lui-même. Ne pas la renvoyer : cela crée un doublon chez le prestataire. Lorsque les lettres sont envoyées automatiquement, We.Publish remplace lui-même une lettre de facture la nuit suivante, si personne ne s'en est occupé d'ici là."
         }
       },
       "channel": "Envoi",
@@ -5662,7 +5687,7 @@
       "headerHeight": "Hauteur de l’en-tête (mm)",
       "footerHeight": "Hauteur du pied de page (mm)",
       "headerHeightHint": "Au maximum 40 mm, pour que l’en-tête n’empiète pas sur la zone d’affranchissement. Il se répète sur chaque page ; 0 mm le supprime.",
-      "footerHeightHint": "Au maximum 40 mm. Le texte de la lettre garde cet espace par rapport au bord inférieur. Le pied de page se répète sur chaque page ; 0 mm le supprime.",
+      "footerHeightHint": "Au maximum 40 mm. Le texte de la lettre garde cet espace par rapport au bord inférieur, et jamais moins de 20 mm. Le pied de page se répète sur chaque page ; 0 mm le supprime.",
       "htmlHint": "Modifiez en mode visuel ou en HTML, tous deux avec des variables comme {{user_firstName}}. Ce qui se trouve sous la ligne rouge n’est pas imprimé. En HTML, indiquez les tailles en mm et donnez aux images une largeur et une hauteur fixes.",
       "insertImage": "Insérer une image",
       "preview": "Aperçu",

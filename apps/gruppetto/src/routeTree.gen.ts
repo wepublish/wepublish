@@ -16,6 +16,7 @@ import { Route as AboRouteImport } from './routes/abo'
 import { Route as AtomDotxmlRouteImport } from './routes/atom[.]xml'
 import { Route as ConfirmEmailRouteImport } from './routes/confirm-email'
 import { Route as FeedDotjsonRouteImport } from './routes/feed[.]json'
+import { Route as GeschenkaboRouteImport } from './routes/geschenkabo'
 import { Route as LlmsDottxtRouteImport } from './routes/llms[.]txt'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as MitmachenRouteImport } from './routes/mitmachen'
@@ -76,6 +77,11 @@ const ConfirmEmailRoute = ConfirmEmailRouteImport.update({
 const FeedDotjsonRoute = FeedDotjsonRouteImport.update({
   id: '/feed.json',
   path: '/feed.json',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GeschenkaboRoute = GeschenkaboRouteImport.update({
+  id: '/geschenkabo',
+  path: '/geschenkabo',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LlmsDottxtRoute = LlmsDottxtRouteImport.update({
@@ -219,6 +225,7 @@ export interface FileRoutesByFullPath {
   '/atom.xml': typeof AtomDotxmlRoute
   '/confirm-email': typeof ConfirmEmailRoute
   '/feed.json': typeof FeedDotjsonRoute
+  '/geschenkabo': typeof GeschenkaboRoute
   '/llms.txt': typeof LlmsDottxtRoute
   '/login': typeof LoginRoute
   '/mitmachen': typeof MitmachenRoute
@@ -254,6 +261,7 @@ export interface FileRoutesByTo {
   '/atom.xml': typeof AtomDotxmlRoute
   '/confirm-email': typeof ConfirmEmailRoute
   '/feed.json': typeof FeedDotjsonRoute
+  '/geschenkabo': typeof GeschenkaboRoute
   '/llms.txt': typeof LlmsDottxtRoute
   '/login': typeof LoginRoute
   '/mitmachen': typeof MitmachenRoute
@@ -290,6 +298,7 @@ export interface FileRoutesById {
   '/atom.xml': typeof AtomDotxmlRoute
   '/confirm-email': typeof ConfirmEmailRoute
   '/feed.json': typeof FeedDotjsonRoute
+  '/geschenkabo': typeof GeschenkaboRoute
   '/llms.txt': typeof LlmsDottxtRoute
   '/login': typeof LoginRoute
   '/mitmachen': typeof MitmachenRoute
@@ -327,6 +336,7 @@ export interface FileRouteTypes {
     | '/atom.xml'
     | '/confirm-email'
     | '/feed.json'
+    | '/geschenkabo'
     | '/llms.txt'
     | '/login'
     | '/mitmachen'
@@ -362,6 +372,7 @@ export interface FileRouteTypes {
     | '/atom.xml'
     | '/confirm-email'
     | '/feed.json'
+    | '/geschenkabo'
     | '/llms.txt'
     | '/login'
     | '/mitmachen'
@@ -397,6 +408,7 @@ export interface FileRouteTypes {
     | '/atom.xml'
     | '/confirm-email'
     | '/feed.json'
+    | '/geschenkabo'
     | '/llms.txt'
     | '/login'
     | '/mitmachen'
@@ -433,6 +445,7 @@ export interface RootRouteChildren {
   AtomDotxmlRoute: typeof AtomDotxmlRoute
   ConfirmEmailRoute: typeof ConfirmEmailRoute
   FeedDotjsonRoute: typeof FeedDotjsonRoute
+  GeschenkaboRoute: typeof GeschenkaboRoute
   LlmsDottxtRoute: typeof LlmsDottxtRoute
   LoginRoute: typeof LoginRoute
   MitmachenRoute: typeof MitmachenRoute
@@ -510,6 +523,13 @@ declare module '@tanstack/react-router' {
       path: '/feed.json'
       fullPath: '/feed.json'
       preLoaderRoute: typeof FeedDotjsonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/geschenkabo': {
+      id: '/geschenkabo'
+      path: '/geschenkabo'
+      fullPath: '/geschenkabo'
+      preLoaderRoute: typeof GeschenkaboRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/llms.txt': {
@@ -705,6 +725,7 @@ const rootRouteChildren: RootRouteChildren = {
   AtomDotxmlRoute: AtomDotxmlRoute,
   ConfirmEmailRoute: ConfirmEmailRoute,
   FeedDotjsonRoute: FeedDotjsonRoute,
+  GeschenkaboRoute: GeschenkaboRoute,
   LlmsDottxtRoute: LlmsDottxtRoute,
   LoginRoute: LoginRoute,
   MitmachenRoute: MitmachenRoute,

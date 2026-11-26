@@ -48,6 +48,7 @@ function setup() {
         textContent: null,
       })),
     },
+    // A letter is only printed for a template that has a letter version.
     mailTemplateVariant: {
       findUnique: vi.fn(async () => ({ id: 'variant-1' })),
     },

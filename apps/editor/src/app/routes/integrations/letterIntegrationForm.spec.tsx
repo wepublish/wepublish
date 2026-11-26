@@ -1,5 +1,6 @@
 import type { Mock } from 'vitest';
 import { useQuery } from '@apollo/client/react';
+import { createTheme, ThemeProvider } from '@mui/material';
 import { render, screen } from '@testing-library/react';
 
 import { LetterIntegrationForm } from './letterIntegrationForm';
@@ -19,6 +20,14 @@ vi.mock('react-i18next', () => ({
 
 const mockedUseQuery = useQuery as unknown as Mock;
 
+// The info triggers read their colours from the theme's css variables.
+const renderForm = () =>
+  render(
+    <ThemeProvider theme={createTheme({ cssVariables: true })}>
+      <LetterIntegrationForm />
+    </ThemeProvider>
+  );
+
 describe('LetterIntegrationForm', () => {
   it('offers the print defaults for automated letters', () => {
     mockedUseQuery.mockReturnValue({
@@ -30,7 +39,7 @@ describe('LetterIntegrationForm', () => {
       loading: false,
     });
 
-    render(<LetterIntegrationForm />);
+    renderForm();
 
     for (const field of [
       'defaultAddressPosition',
@@ -42,5 +51,24 @@ describe('LetterIntegrationForm', () => {
         screen.getByText(`integrations.letterSettings.${field}`)
       ).toBeTruthy();
     }
+  });
+
+  // What the switch means is not obvious from its label: it also decides
+  // what happens to a letter the print vendor holds back.
+  it('explains what sending automatically means', () => {
+    mockedUseQuery.mockReturnValue({
+      data: {
+        letterProviderSettings: [
+          { id: 'pingen', type: 'pingen', name: 'Pingen', autoSend: false },
+        ],
+      },
+      loading: false,
+    });
+
+    renderForm();
+
+    expect(
+      screen.getByLabelText('integrations.letterSettings.autoSendInfo')
+    ).toBeTruthy();
   });
 });

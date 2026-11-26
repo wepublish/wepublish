@@ -29,6 +29,11 @@
   mails readers with only deferred/rejected entries (≤3 refusals), which is
   what keeps checkout invoices (no entry) out. Bexio then shows no email
   history for the invoice.
+  **«Sent» in Bexio:** once a mail or letter carrying the pdf was handed to
+  the mail provider / print vendor, `InvoiceDeliveryService.sendFlowMail`
+  calls `markRemoteInvoiceSent` (Bexio: `POST kb_invoice/{id}/mark_as_sent`,
+  nothing is emailed). A deferred or refused delivery stays unsent; a failing
+  call is logged, never thrown. The API does not return the mark.
   **Contact sync (opt-in):** `SettingPaymentProvider.bexio_contactSync` has
   `BexioContactSyncService` (`libs/payment/api/.../bexio/`, a `runNight`
   step before the Mailchimp sync) push reader data to bexio every night:
@@ -256,7 +261,7 @@ Automated subscription mails can reach a user as a printed letter. The pieces:
   `created`/`failed` and turns `warning` with the first provider error, so a
   provider refusing every invoice no longer reads «OK». A reader in
   letter mode whose pdf the provider could not render gets no cover letter
-  that night. The sweep `postMissingInvoiceLetters` (after invoice creation)
+  that night. The sweep `postMissingInvoiceDeliveries` (after invoice creation)
   posts the invoice letter for every
   open invoice of a reader in letter mode that has no non-rejected letter log
   for the template since the invoice was created — refused letters, a missing
@@ -374,12 +379,25 @@ provider's webhook at `/letter-webhooks/<settingLetterProvider id>` (register
 that URL at Pingen, with the signing key from the integration form). The
 fallback is `LetterLogSyncService` (`libs/letter/api`), called by the mail
 log's `syncMailLogStates` mutation and by the nightly step `letterLogSync`: it
-asks the provider about letters still `submitted`/`accepted`, and about
-`dispatched` ones for 30 days after `sentDate` (returned post is reported
-late). One GET per letter, so the nightly limit (2000) is what bounds the
-calls. Webhook and poll share `shouldUpdateLetterLogState`: a state only moves
-forward, and `rejected` ranks with `accepted` because a Pingen issue can be
-resolved and the letter printed after all.
+asks the provider about letters still `submitted`/`accepted`/`actionRequired`,
+and about `dispatched` ones for 30 days after `sentDate` (returned post is
+reported late). One GET per letter, so the nightly limit (2000) is what bounds
+the calls. Webhook and poll share `shouldUpdateLetterLogState`: a state only
+moves forward, and `actionRequired` ranks with `accepted` because a Pingen
+issue can be resolved and the letter printed after all.
+
+`actionRequired` vs `rejected`: Pingen's `issues` webhook (and the polled
+statuses `action_required`/`invalid`) mean Pingen **has** the letter and holds
+it until someone deals with it there; `rejected` means it never got in (upload
+failed, no account, pdf not rendered). A letter Pingen no longer knows (404 on
+the poll) that was not printed yet becomes `canceled`: someone removed it there.
+Pingen keeps no track of duplicates, so the nightly `invoiceLetters` step
+(`postInvoiceLetter`) never uploads again what Pingen stores. It retries only
+uploads that failed outright, and, with the integration's «send letters
+automatically» on, replaces a held letter on a later night after
+`LetterSender.withdrawHeldLetter` re-read its status and deleted it at Pingen.
+With that setting off a held letter is left to the people confirming letters
+in Pingen.
 
 ### Template attachments (Word → pdf)
 
@@ -446,7 +464,9 @@ add a new script to both):
 - Google Tag Manager
 - Plausible
 - Piwik PRO
-- Umami (Umami Cloud script, key = website ID)
+- Umami (Umami Cloud script, key = website ID; optional `excludedSearchParams`
+  are stripped from `url`/`referrer` by an inline `data-before-send` hook from
+  `libs/utils/website/src/lib/umami-before-send.ts`, rendered before the tag)
 
 Hot & Trending (analytics integrations, `settings.analyticsProvider`):
 

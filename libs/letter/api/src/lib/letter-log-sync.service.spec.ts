@@ -102,8 +102,38 @@ describe('shouldUpdateLetterLogState', () => {
   // there the letter is printed after all.
   it('lets a letter with a resolved issue be dispatched', () => {
     expect(
+      shouldUpdateLetterLogState(
+        MailLogState.actionRequired,
+        MailLogState.dispatched
+      )
+    ).toBe(true);
+    expect(
       shouldUpdateLetterLogState(MailLogState.rejected, MailLogState.dispatched)
     ).toBe(true);
+  });
+
+  it('follows a letter into and out of being held at the vendor', () => {
+    expect(
+      shouldUpdateLetterLogState(
+        MailLogState.accepted,
+        MailLogState.actionRequired
+      )
+    ).toBe(true);
+    expect(
+      shouldUpdateLetterLogState(
+        MailLogState.actionRequired,
+        MailLogState.accepted
+      )
+    ).toBe(true);
+  });
+
+  it('does not hold a letter back that is already with the post', () => {
+    expect(
+      shouldUpdateLetterLogState(
+        MailLogState.dispatched,
+        MailLogState.actionRequired
+      )
+    ).toBe(false);
   });
 });
 
@@ -146,7 +176,15 @@ describe('LetterLogSyncService', () => {
         channel: MailChannel.letter,
         providerLetterID: { not: null },
         mailProviderID: 'pingen',
-        state: { in: [MailLogState.submitted, MailLogState.accepted] },
+        state: {
+          in: [
+            MailLogState.submitted,
+            MailLogState.accepted,
+            // Held at the vendor: whatever someone does with it there has
+            // to come back.
+            MailLogState.actionRequired,
+          ],
+        },
       },
       orderBy: { sentDate: 'desc' },
     });
@@ -273,6 +311,66 @@ describe('LetterLogSyncService', () => {
       updated: 0,
     });
     expect(update).not.toHaveBeenCalled();
+  });
+
+  it('drops the reason once a held letter moves on', async () => {
+    const { service, update } = makeService({
+      pending: [
+        {
+          id: 'log1',
+          state: MailLogState.actionRequired,
+          providerLetterID: 'l1',
+        },
+      ],
+      getMessageStates: vi.fn(async () => [
+        {
+          providerLetterID: 'l1',
+          state: LetterState.dispatched,
+          letterData: '{"status":"sent"}',
+        },
+      ]),
+    });
+
+    await service.syncOpenStates();
+
+    expect(update).toHaveBeenCalledWith({
+      where: { id: 'log1' },
+      data: {
+        state: MailLogState.dispatched,
+        mailData: '{"status":"sent"}',
+        error: null,
+      },
+    });
+  });
+
+  it('settles a letter someone removed at the vendor before it was printed', async () => {
+    const { service, update } = makeService({
+      pending: [
+        {
+          id: 'log1',
+          state: MailLogState.actionRequired,
+          providerLetterID: 'l1',
+        },
+      ],
+      dispatched: [
+        { id: 'log2', state: MailLogState.dispatched, providerLetterID: 'l2' },
+      ],
+      getMessageStates: vi.fn(async () => [
+        { providerLetterID: 'l1', state: LetterState.canceled, gone: true },
+        // A printed letter the vendor has forgotten was still printed.
+        { providerLetterID: 'l2', state: LetterState.canceled, gone: true },
+      ]),
+    });
+
+    await expect(service.syncOpenStates()).resolves.toEqual({
+      checked: 2,
+      updated: 1,
+    });
+    expect(update).toHaveBeenCalledTimes(1);
+    expect(update).toHaveBeenCalledWith({
+      where: { id: 'log1' },
+      data: { state: MailLogState.canceled, mailData: undefined, error: null },
+    });
   });
 
   it('fails when the provider cannot be asked', async () => {

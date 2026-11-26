@@ -2878,7 +2878,9 @@ type MailLogModel {
   channel: MailChannel!
   createdAt: DateTime!
 
-  """Why a rejected mail could not be delivered."""
+  """
+  Why the mail could not be delivered: the error of a rejected one, or what the mail provider said about a bounced or held-back one (its bounce description and the receiving server's answer).
+  """
   error: String
   id: String!
 
@@ -2913,6 +2915,7 @@ type MailLogRecipient {
 
 enum MailLogState {
   accepted
+  actionRequired
   bounced
   canceled
   deferred
@@ -8873,6 +8876,22 @@ input TwitterTweetBlockInput {
   userID: String
 }
 
+type UmamiAnalytics {
+  enabled: Boolean!
+
+  """
+  Search params removed from the url and referrer before they are sent to Umami.
+  """
+  excludedSearchParams: [String!]!
+  key: String
+}
+
+input UmamiAnalyticsInput {
+  enabled: Boolean!
+  excludedSearchParams: [String!]
+  key: String
+}
+
 type UnknownBlock {
   blockStyle: String
   blockStyleName: String
@@ -9210,7 +9229,7 @@ type WebsiteAnalytics {
   googleTagManager: KeyEnabled!
   piwik: KeyEnabled!
   plausible: KeyEnabled!
-  umami: KeyEnabled!
+  umami: UmamiAnalytics!
 }
 
 input WebsiteAnalyticsInput {
@@ -9218,7 +9237,7 @@ input WebsiteAnalyticsInput {
   googleTagManager: KeyEnabledInput!
   piwik: KeyEnabledInput!
   plausible: KeyEnabledInput!
-  umami: KeyEnabledInput!
+  umami: UmamiAnalyticsInput!
 }
 
 """

@@ -363,6 +363,14 @@ mode) after logging out in one.
 
 Pinned by `session.provider.spec.tsx` and `preview-status-banner.spec.tsx`.
 
+The same reason makes a bare `…?preview` website URL useless anywhere else (new
+tab, the editor tab, a colleague): no opener, no frame, so no handshake and no
+login. The editor's "copy preview link" therefore copies an **editor** link
+(`/articles/edit/:id?preview=<device>`, `editorPreviewLink` in
+`apps/editor/src/app/previewFrame.tsx`). Don't switch it back to the website
+URL or put the JWT into a URL; a login token in history and chat is the leak
+the handshake exists to avoid.
+
 ---
 
 ### ⚠️ The content wrapper's column is `minmax(0, 1fr)`, not the implicit `auto`
@@ -787,8 +795,13 @@ the top margin and Pingen rejects the letter; a fixed box offset into the
 margin area is clipped by Chromium. The band cap of 40mm (`LAYOUT_BAND_MAX_MM`)
 keeps a header out of the franking zone, whose bottom edge is at 87.5mm.
 
-**Load-bearing:** `margin: 0` in the `@page` rule, the thead/tfoot spacer rows,
-and `CONTENT_TOP_MM - headerSpace` for the body padding.
+The same spacers are the page margin of every page: they are never lower than
+`PAGE_MARGIN_MM` (20mm), also without stationery or with a band of height 0.
+At 0 a letter running onto a second page started at the very edge of the sheet
+there, which Pingen holds back («Validation failed»).
+
+**Load-bearing:** `margin: 0` in the `@page` rule, the thead/tfoot spacer rows
+and their floor, and `CONTENT_TOP_MM - headerSpace` for the body padding.
 
 Pinned by `libs/letter/api/src/lib/letter-renderer.spec.ts`.
 
@@ -1212,6 +1225,27 @@ only there because undici's types and `@types/node`'s don't line up.
 Pinned by `storage-fetch.spec.ts`, which checks the cap and the timeouts through
 the real `fetch` against a local server. The wiring in `app.module.ts` is not tested.
 
+---
+
+### ⚠️ R2 deletes every transformed object after 30 days
+
+A lifecycle rule on each `*-transformed` bucket (`storage.tf` in
+application-configuration: 30 days in production, 7 in staging) deletes every
+object by upload age. This covers image variants, document/video/audio copies
+and thumbnails. The link cache (`LINK_TTL`, 3 days) and the CDN's cached 301
+(12 h + 1 day stale-while-revalidate) keep pointing at an object after
+`MediaService` checked it. So `MediaService` serves only objects that outlive
+both, and writes older ones again (`transformationRefreshAge`). Without that
+check, every variant 404s for up to ~4.5 days about 30 days after it was first
+rendered (reflekt, 2026-11). Since the R2 404 is final, it looked like an R2
+outage, but it wasn't one.
+
+**Load-bearing:** `S3_TRANSFORMATION_MAX_AGE_DAYS` (default 30) must equal the
+bucket's lifecycle age. Set it to `7` for staging media.
+`saveVideoPoster` stores posters _only_ in the transformed bucket, so they
+expire for good. Pinned by "MediaService transformation lifetime" in
+`media.service.spec.ts`.
+
 ### ⚠️ cache-manager 7: TTLs are milliseconds, `max` is ignored, tiers don't backfill
 
 `CacheModule.register({ttl, max})` without `stores` builds a plain Keyv `Map`.
@@ -1241,12 +1275,14 @@ against Apollo and Prisma. The profiles behind
 shared one kept locally for 2 s:
 - `media:links` (`val:media:links:<sha>`): objects that exist. Shared, across
   releases. Documents, video and audio: 3 days, written by the controller.
-  Image variants: written by `MediaService` when it transforms, and live
-  exactly as long as the transformed object: 30 days from its
-  `lastModified` (`TRANSFORMED_IMAGE_TTL`, the transformation bucket's
-  lifecycle rule; change both together). A link that outlived its object
-  redirected to a deleted file and never triggered a new transform. An
-  object past 30 days the bucket has not deleted yet is transformed again.
+  Image variants: written by `MediaService` when it transforms or finds a
+  fresh object, and end 36 h (the CDN's cached redirect) before the bucket's
+  lifecycle rule deletes the object: `S3_TRANSFORMATION_MAX_AGE_DAYS` (default
+  30) from its `lastModified`, minus those 36 h. A link that outlived its
+  object redirected to a deleted file and never triggered a new transform.
+  See "R2 deletes every transformed object after 30 days" for when an object
+  is written again. `TRANSFORMED_IMAGE_TTL` (30 days) only bounds
+  `media:generations`.
 - `media:rejected-variants` (`val:<release>:media:rejected-variants:<sha>`):
   variants the guard rejects (400), 1 h, per release since a deploy can change
   the guard's limits. Only signed requests get that far.

@@ -72,6 +72,7 @@ const lettersMock = {
   create: vi.fn(),
   send: vi.fn(),
   cancel: vi.fn(),
+  delete: vi.fn(),
   getDetails: vi.fn(),
 };
 
@@ -84,7 +85,7 @@ const oauthMock = {
   invalidate: vi.fn(),
 };
 
-function createProvider() {
+function createProvider(overrides: Partial<typeof config> = {}) {
   const kv = {
     getOrLoadNs: vi.fn(),
     delNs: vi.fn(),
@@ -96,7 +97,10 @@ function createProvider() {
     kv,
   });
 
-  vi.spyOn(provider, 'getConfig').mockResolvedValue(config);
+  vi.spyOn(provider, 'getConfig').mockResolvedValue({
+    ...config,
+    ...overrides,
+  });
 
   return provider;
 }
@@ -342,6 +346,40 @@ describe('PingenLetterProvider', () => {
     });
   });
 
+  describe('deleteLetter', () => {
+    it('removes the letter at Pingen', async () => {
+      const provider = createProvider();
+
+      lettersMock.delete.mockResolvedValue(pingenResponse({}));
+
+      await provider.deleteLetter('letter-1');
+
+      expect(lettersMock.delete).toHaveBeenCalledWith('letter-1');
+    });
+
+    it('fails when Pingen does not let the letter go', async () => {
+      const provider = createProvider();
+
+      lettersMock.delete.mockRejectedValue(new PingenError('Conflict', 409));
+
+      await expect(provider.deleteLetter('letter-1')).rejects.toMatchObject({
+        name: 'LetterProviderError',
+        statusCode: 409,
+      });
+    });
+  });
+
+  describe('sendsAutomatically', () => {
+    it.each([true, false])(
+      'answers the auto send setting %s',
+      async autoSend => {
+        const provider = createProvider({ autoSend });
+
+        await expect(provider.sendsAutomatically()).resolves.toBe(autoSend);
+      }
+    );
+  });
+
   describe('webhookForSendLetter', () => {
     it('maps a sent webhook to the dispatched state', async () => {
       const provider = createProvider();
@@ -386,6 +424,28 @@ describe('PingenLetterProvider', () => {
         providerLetterID: 'letter-2',
         state: LetterState.undeliverable,
         error: 'Recipient unknown',
+      });
+    });
+
+    // Pingen took the letter and keeps it until someone looks at it: that is
+    // not a refusal, the letter exists there.
+    it('reports a letter with an issue as held for someone to act on, with the reason', async () => {
+      const provider = createProvider();
+
+      const statuses = await provider.webhookForSendLetter({
+        req: webhookRequest({
+          data: {
+            type: 'webhook_issues',
+            attributes: { reason: 'Validation failed' },
+            relationships: { letter: { data: { id: 'letter-3' } } },
+          },
+        }),
+      });
+
+      expect(statuses[0]).toMatchObject({
+        providerLetterID: 'letter-3',
+        state: LetterState.actionRequired,
+        error: 'Validation failed',
       });
     });
 
@@ -463,7 +523,7 @@ describe('PingenLetterProvider', () => {
       ]);
     });
 
-    it('skips a letter Pingen no longer knows', async () => {
+    it('reports a letter Pingen no longer knows as gone, and keeps going', async () => {
       const provider = createProvider();
 
       lettersMock.getDetails
@@ -481,6 +541,12 @@ describe('PingenLetterProvider', () => {
       const states = await provider.getMessageStates(['letter-1', 'letter-2']);
 
       expect(states).toEqual([
+        // Someone deleted it there: withdrawn before it was printed.
+        {
+          providerLetterID: 'letter-1',
+          state: LetterState.canceled,
+          gone: true,
+        },
         {
           providerLetterID: 'letter-2',
           state: LetterState.dispatched,
@@ -514,6 +580,13 @@ describe('PingenLetterProvider', () => {
       ['undeliverable', LetterState.undeliverable],
       ['cancelled', LetterState.canceled],
       ['processing', LetterState.accepted],
+      // Pingen's own word once a letter is released for printing.
+      ['accepted', LetterState.accepted],
+      // Checked and waiting to be sent, e.g. after an issue was fixed.
+      ['valid', LetterState.accepted],
+      ['action_required', LetterState.actionRequired],
+      ['invalid', LetterState.actionRequired],
+      ['failed', LetterState.rejected],
     ])('maps %s', (status, expected) => {
       expect(mapPingenStatusToLetterState(status)).toBe(expected);
     });

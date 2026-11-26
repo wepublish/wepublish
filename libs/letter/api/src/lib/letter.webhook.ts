@@ -15,7 +15,10 @@ import { Public } from '@wepublish/authentication/api';
 import type { NextFunction } from 'connect';
 import type { NodeRequest, NodeResponse } from '@nestjs/platform-node';
 import { toProviderState } from './letter-context';
-import { shouldUpdateLetterLogState } from './letter-log-sync.service';
+import {
+  reasonAfterLetterState,
+  shouldUpdateLetterLogState,
+} from './letter-log-sync.service';
 import {
   LETTERS_MODULE_OPTIONS,
   LettersModuleOptions,
@@ -82,6 +85,11 @@ export class LetterWebhookController {
           state,
           mailData: status.letterData,
           error: status.error ?? letterLog.error,
+          // Without a reason of its own, a letter that is no longer held
+          // drops the issue it was held for.
+          ...(status.error ?
+            {}
+          : reasonAfterLetterState(letterLog.state, state)),
         },
       });
     }
