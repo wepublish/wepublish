@@ -24,6 +24,7 @@ import {
   extractCache,
   getRequestSessionToken,
   handleJwtLogin,
+  withAcceptedSession,
 } from '../ssr';
 import { withAuthGuard } from '../auth-guard';
 import { useQueryParams } from '../router-hooks';
@@ -71,7 +72,10 @@ export const loadProfile = createServerFn({ method: 'GET' })
       await prefetchProfile(client);
     }
 
-    return { sessionToken, apollo: extractCache(client) };
+    return {
+      sessionToken: withAcceptedSession(client, sessionToken),
+      apollo: extractCache(client),
+    };
   });
 
 type ProfilePageProps = ProfileDetailsProps & { className?: string };

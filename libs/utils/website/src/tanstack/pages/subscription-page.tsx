@@ -16,6 +16,7 @@ import {
   extractCache,
   getRequestSessionToken,
   handleJwtLogin,
+  withAcceptedSession,
 } from '../ssr';
 import { withAuthGuard } from '../auth-guard';
 import { useQueryParams } from '../router-hooks';
@@ -82,7 +83,7 @@ export const loadSubscription = createServerFn({ method: 'GET' })
       : { subscriptionMissing: false };
 
     return {
-      sessionToken,
+      sessionToken: withAcceptedSession(client, sessionToken),
       subscriptionMissing,
       apollo: extractCache(client),
     };

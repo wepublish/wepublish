@@ -1,14 +1,16 @@
 import { MockedProvider } from '@apollo/client/testing/react';
+import { MockedResponse } from '@apollo/client/testing';
 import { act, render, waitFor } from '@testing-library/react';
 import {
   AuthTokenStorageKey,
   SessionTokenContext,
 } from '@wepublish/authentication/website';
+import { mockSensitiveDataUser } from '@wepublish/mocks/website';
 import {
   MeDocument,
   SessionWithTokenWithoutUser,
 } from '@wepublish/website/api';
-import { deleteCookie } from 'cookies-next';
+import { deleteCookie, getCookie } from 'cookies-next';
 import { ContextType, useContext } from 'react';
 
 import { SessionProvider } from './session.provider';
@@ -35,15 +37,15 @@ const Consumer = () => {
   return null;
 };
 
-const meMock = {
+const meMock: MockedResponse = {
   request: { query: MeDocument },
-  result: { data: { me: null } },
+  result: { data: { me: mockSensitiveDataUser() } },
   maxUsageCount: Number.POSITIVE_INFINITY,
 };
 
-const renderProvider = () =>
+const renderProvider = (mocks: MockedResponse[] = [meMock]) =>
   render(
-    <MockedProvider mocks={[meMock]}>
+    <MockedProvider mocks={mocks}>
       <SessionProvider sessionToken={null}>
         <Consumer />
       </SessionProvider>
@@ -108,6 +110,37 @@ describe('SessionProvider', () => {
       await act(async () => undefined);
 
       expect(context?.[1]).toBe(false);
+    });
+  });
+
+  describe('with a session the api no longer accepts', () => {
+    it('drops the session, so the reader counts as logged out', async () => {
+      renderProvider([
+        {
+          request: { query: MeDocument },
+          result: { data: { me: null } },
+          maxUsageCount: Number.POSITIVE_INFINITY,
+        },
+      ]);
+      await setToken(session);
+
+      await waitFor(() => expect(context?.[1]).toBe(false));
+      expect(getCookie(AuthTokenStorageKey)).toBeUndefined();
+    });
+
+    it('keeps the session when the user could not be fetched', async () => {
+      renderProvider([
+        {
+          request: { query: MeDocument },
+          error: new Error('Network down'),
+          maxUsageCount: Number.POSITIVE_INFINITY,
+        },
+      ]);
+      await setToken(session);
+      await act(async () => undefined);
+
+      expect(context?.[1]).toBe(true);
+      expect(getCookie(AuthTokenStorageKey)).toBe(JSON.stringify(session));
     });
   });
 });
