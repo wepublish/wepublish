@@ -1,7 +1,6 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
-  MailChannel,
   MailTemplateDocument,
   SystemMailsDocument,
   SystemMailsQuery,
@@ -18,16 +17,15 @@ import {
 } from '@wepublish/ui/editor';
 import { useId, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdUnsubscribe } from 'react-icons/md';
 import { RiTestTubeLine } from 'react-icons/ri';
 import {
   DEFAULT_MUTATION_OPTIONS,
   MUTATION_OPTIONS_WITH_SUCCESS_MESSAGE,
 } from '../common';
 import { InfoTooltip } from '../mail-settings-layout';
-import { formatTemplateLabel } from '../mail-template/mail-placeholders';
-import { templatesForChannel } from '../mail-template/template-versions';
-import { Button, MenuItem, TextField, Typography } from '@mui/material';
+import { purposeOfEvent } from '../mail-template/event-purpose';
+import { MailTemplateField } from '../mail-template/mail-template-field';
+import { Button, Typography } from '@mui/material';
 import {
   CanGetSystemMails,
   CanTestSystemMails,
@@ -116,23 +114,6 @@ function SystemMailSection() {
     });
   }, [systemMails]);
 
-  const templateOptions = useMemo(
-    () =>
-      // A system mail answers a request at once and is never printed.
-      templatesForChannel(
-        mailTemplates?.mailTemplates || [],
-        MailChannel.Mail
-      ).map(mailTemplate => ({
-        label: formatTemplateLabel(
-          mailTemplate.name,
-          mailTemplate.context,
-          (k, f) => t(k, f)
-        ),
-        value: mailTemplate.id,
-      })),
-    [mailTemplates, t]
-  );
-
   function assignedTemplateId(event: UserEvent, mailTemplateId?: string) {
     if (event in assignedTemplates) {
       return assignedTemplates[event];
@@ -198,43 +179,17 @@ function SystemMailSection() {
       label: t('systemMails.columns.template'),
       width: 320,
       render: systemMail => (
-        <TextField
-          select
-          size="small"
+        <MailTemplateField
+          value={assignedTemplateId(
+            systemMail.event,
+            systemMail.mailTemplate?.id
+          )}
+          templates={mailTemplates?.mailTemplates ?? []}
+          purpose={purposeOfEvent(systemMail.event)}
+          label={t(`systemMails.events.${systemMail.event.toLowerCase()}`)}
           disabled={!canUpdateSystemMails}
-          value={systemMail.mailTemplate?.id ?? ''}
-          onChange={event =>
-            assignTemplate(systemMail.event, event.target.value || null)
-          }
-          slotProps={{
-            select: {
-              displayEmpty: true,
-              SelectDisplayProps: {
-                'aria-label': t(
-                  `systemMails.events.${systemMail.event.toLowerCase()}`
-                ),
-              } as object,
-            },
-          }}
-          fullWidth
-        >
-          <MenuItem value="">
-            <MdUnsubscribe
-              size={16}
-              style={{ marginRight: '5px' }}
-            />
-            {t('mailTemplateSelect.noMailSentSelectNow')}
-          </MenuItem>
-
-          {templateOptions.map(option => (
-            <MenuItem
-              key={option.value}
-              value={option.value}
-            >
-              {option.label}
-            </MenuItem>
-          ))}
-        </TextField>
+          onChange={id => assignTemplate(systemMail.event, id)}
+        />
       ),
     },
     {
