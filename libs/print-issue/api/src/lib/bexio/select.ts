@@ -413,7 +413,9 @@ function receivedItsNumber(
 ): boolean {
   const { delivered, entitled } = owedCopies(entry, topUp);
 
-  return delivered >= entitled;
+  // A share that rounds to 0 (a short period at a few issues a year) is no
+  // number to have received.
+  return entitled > 0 && delivered >= entitled;
 }
 
 /** What a period is worth (its share of the issues per year) and what it got. */

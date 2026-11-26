@@ -541,6 +541,26 @@ describe('classifySubscription — counting per copy (B)', () => {
     );
   });
 
+  // At four a year a monthly period is worth a third of an issue, which
+  // rounds to 0: that is no number to have received from day one.
+  it('does not stop a period whose share of the issues rounds to nothing', () => {
+    const month = period({
+      id: 'pOct',
+      startsAt: '2026-10-01T00:00:00.000Z',
+      endsAt: '2026-10-31T00:00:00.000Z',
+      paymentPeriodicity: 'monthly',
+      invoiceId: 'iOct',
+    });
+
+    expect(
+      classifySubscription(
+        subscription({ periods: [month], deliveries: [] }),
+        ISSUE,
+        { ...PER_COPY, issuesPerYear: 4 }
+      )
+    ).toMatchObject({ include: true, reason: 'paid', periodId: 'pOct' });
+  });
+
   it('counts the historic issues inside the period too', () => {
     expect(
       classifySubscription(paidQuarter(1), ISSUE, {

@@ -258,8 +258,11 @@ function receivedItsNumber(
 
   const entitled = entitledIssues(period, sub.memberPlan, quota.issuesPerYear);
 
+  // A share that rounds to 0 (a monthly period at a few issues a year) is no
+  // number to have received; a plan set to 0 is left out before this.
   return (
     entitled !== null &&
+    entitled > 0 &&
     deliveredIssues(sub, period, quota.historicIssues) >= entitled
   );
 }

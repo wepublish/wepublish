@@ -488,6 +488,23 @@ describe('selectBexioOrders — counting per copy (B)', () => {
     expect(stats.exhausted).toBe(1);
   });
 
+  // At four a year a one-month period is worth a third of an issue, which
+  // rounds to 0: that is no number to have received from day one.
+  it('does not skip a recipient whose period is worth less than one issue', async () => {
+    const { selected, stats } = await selectBexioOrders(
+      [invoice(1, { title: 'Monatsabo 01.01.2027–31.01.2027' })],
+      {
+        ...BASE,
+        links: links([[101, [gift(201)]]]),
+        fetchPositions: positions({}),
+        topUp: { ...counting('perCopy', {}), issuesPerYear: 4 },
+      }
+    );
+
+    expect(selected.map(s => s.recipientId)).toEqual([201]);
+    expect(stats.exhausted).toBe(0);
+  });
+
   it('caps nothing while counting per period, or while the quota is off', async () => {
     const full = { '1:201:2027-01-01': 6, '1:202:2027-01-01': 6 };
 
