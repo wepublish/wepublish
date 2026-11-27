@@ -9,6 +9,8 @@ import {
   DialogTitle,
   Drawer,
   MenuItem,
+  Tab,
+  Tabs,
   TextField,
   Typography,
 } from '@mui/material';
@@ -17,6 +19,7 @@ import {
   DeleteSubscriptionFlowDocument,
   ListPaymentMethodsDocument,
   MemberPlanListDocument,
+  PaymentPeriodicity,
   SubscriptionFlowsDocument,
 } from '@wepublish/editor/api';
 import {
@@ -53,11 +56,13 @@ import { usePaperLetterFlow } from '../delivery-mode/use-paper-letter-flow';
 import { SystemMailSection } from '../system-mail/system-mail-section';
 import { FlowFilters } from './filter/flow-filters';
 import {
+  countFlowFilters,
   filterFlowRows,
+  FLOW_FILTER_PARAMS,
+  FlowFilter,
   flowPath,
   FlowRow,
   flowRows,
-  MEMBER_PLAN_PARAM,
   newFlowId,
 } from './flow-overview';
 import { SubscriptionClientContext } from './graphql-client-context';
@@ -86,8 +91,15 @@ const Warning = styled.span`
   }
 `;
 
-const PlanFilter = styled.div`
-  max-width: 360px;
+const Filters = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${({ theme }) => theme.spacing(2)};
+
+  & > * {
+    flex: 1 1 220px;
+    max-width: 360px;
+  }
 `;
 
 const PanelFields = styled.div`
@@ -102,9 +114,13 @@ type CreateFlowPanelProps = {
   onClose(): void;
 };
 
+// Chosen in place of a member plan: the flow is for all of them.
+const ALL_MEMBER_PLANS = '__all';
+
 /**
- * A new flow for a member plan: which plan, and which of its subscriptions.
- * The page of the new flow opens once it exists; its messages are set there.
+ * A new flow: for which member plan, or for all of them, and which of their
+ * subscriptions. The page of the new flow opens once it exists; its messages
+ * are set there.
  */
 function CreateFlowPanel({
   memberPlanId: initialMemberPlanId,
@@ -170,6 +186,10 @@ function CreateFlowPanel({
             onChange={event => setMemberPlanId(event.target.value)}
             fullWidth
           >
+            <MenuItem value={ALL_MEMBER_PLANS}>
+              {t('subscriptionFlow.overview.allMemberPlans')}
+            </MenuItem>
+
             {(memberPlans?.memberPlans.nodes ?? []).map(memberPlan => (
               <MenuItem
                 key={memberPlan.id}
@@ -201,7 +221,11 @@ function CreateFlowPanel({
                   picked for. */}
               <FlowFilters
                 key={memberPlanId}
-                memberPlan={{ id: memberPlanId }}
+                memberPlan={
+                  memberPlanId === ALL_MEMBER_PLANS ? undefined : (
+                    { id: memberPlanId }
+                  )
+                }
                 createNewFlow
                 paymentMethods={paymentMethods}
               />
@@ -221,7 +245,14 @@ function FlowTable() {
   const canDelete = useAuthorisation(CanDeleteSubscriptionFlow.id);
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const memberPlanIds = searchParams.getAll(MEMBER_PLAN_PARAM);
+  // The filters live in the address, so a narrowed list can be linked.
+  const filter = Object.fromEntries(
+    Object.entries(FLOW_FILTER_PARAMS).map(([field, param]) => [
+      field,
+      searchParams.getAll(param),
+    ])
+  ) as FlowFilter;
+  const { memberPlanIds } = filter;
 
   const { data, loading, refetch } = useQuery(SubscriptionFlowsDocument, {
     variables: { defaultFlowOnly: false },
@@ -239,7 +270,7 @@ function FlowTable() {
     () => flowRows(data?.subscriptionFlows ?? [], t),
     [data, t]
   );
-  const rows = filterFlowRows(allRows, memberPlanIds);
+  const rows = filterFlowRows(allRows, filter);
 
   const memberPlanOptions = useMemo(
     () =>
@@ -255,17 +286,45 @@ function FlowTable() {
     [allRows]
   );
 
-  const setMemberPlanIds = (ids: string[]) =>
+  // The payment methods some flow names; the other conditions have a fixed
+  // set of values.
+  const paymentMethodOptions = useMemo(
+    () =>
+      [
+        ...new Map(
+          allRows.flatMap(row =>
+            row.flow.paymentMethods.map(
+              paymentMethod =>
+                [paymentMethod.id, paymentMethod.name] as [string, string]
+            )
+          )
+        ),
+      ].map(([value, label]) => ({ value, label })),
+    [allRows]
+  );
+
+  const setFilter = (change: Partial<FlowFilter>) =>
     setSearchParams(
       params => {
         const next = new URLSearchParams(params);
-        next.delete(MEMBER_PLAN_PARAM);
-        ids.forEach(id => next.append(MEMBER_PLAN_PARAM, id));
+
+        for (const [field, values] of Object.entries(change)) {
+          const param = FLOW_FILTER_PARAMS[field as keyof FlowFilter];
+
+          next.delete(param);
+          values.forEach(value => next.append(param, value));
+        }
 
         return next;
       },
       { replace: true }
     );
+
+  const withOrWithout = (kind: 'warnings' | 'subscriptions') =>
+    ['with', 'without'].map(value => ({
+      value,
+      label: t(`subscriptionFlow.overview.filter.${kind}Options.${value}`),
+    }));
 
   const confirmDelete = async () => {
     if (!flowToDelete) {
@@ -414,18 +473,69 @@ function FlowTable() {
         loading={loading && !data}
         getRowId={row => row.id}
         columns={columns}
+        rowGroup={row => row.group}
         filters={
-          <PlanFilter>
+          <Filters>
             <MultiSelectFilter
               label={t('subscriptionFlow.overview.memberPlan')}
               options={memberPlanOptions}
               value={memberPlanIds}
-              onChange={setMemberPlanIds}
+              onChange={memberPlanIds => setFilter({ memberPlanIds })}
             />
-          </PlanFilter>
+
+            <MultiSelectFilter
+              label={t('subscriptionFlow.paymentMethod')}
+              options={paymentMethodOptions}
+              value={filter.paymentMethodIds}
+              onChange={paymentMethodIds => setFilter({ paymentMethodIds })}
+            />
+
+            <MultiSelectFilter
+              label={t('subscriptionFlow.periodicity')}
+              options={Object.values(PaymentPeriodicity).map(value => ({
+                value,
+                label: t(`memberPlanList.paymentPeriodicity.${value}`),
+              }))}
+              value={filter.periodicities}
+              onChange={periodicities => setFilter({ periodicities })}
+            />
+
+            <MultiSelectFilter
+              label={t('subscriptionFlow.autoRenewal')}
+              options={['true', 'false'].map(value => ({
+                value,
+                label: t(`subscriptionFlow.overview.renewal.${value}`),
+              }))}
+              value={filter.renewal}
+              onChange={renewal => setFilter({ renewal })}
+            />
+
+            <MultiSelectFilter
+              label={t('subscriptionFlow.overview.filter.warnings')}
+              options={withOrWithout('warnings')}
+              value={filter.warnings}
+              onChange={warnings => setFilter({ warnings })}
+            />
+
+            <MultiSelectFilter
+              label={t('subscriptionFlow.overview.filter.subscriptions')}
+              options={withOrWithout('subscriptions')}
+              value={filter.subscriptions}
+              onChange={subscriptions => setFilter({ subscriptions })}
+            />
+          </Filters>
         }
-        filterCount={memberPlanIds.length ? 1 : 0}
-        onResetFilters={() => setMemberPlanIds([])}
+        filterCount={countFlowFilters(filter)}
+        onResetFilters={() =>
+          setFilter({
+            memberPlanIds: [],
+            paymentMethodIds: [],
+            periodicities: [],
+            renewal: [],
+            warnings: [],
+            subscriptions: [],
+          })
+        }
       />
 
       <Drawer
@@ -495,25 +605,81 @@ function FlowTable() {
  * default one and those of member plans, and the account mails. Each part
  * gates itself, so a user only sees what their permissions allow.
  */
+/** The address parameter of the tab; the flows tab is the default. */
+const TAB_PARAM = 'tab';
+const ACCOUNT_TAB = 'account';
+
 export function SubscriptionFlowOverview() {
   const { t } = useTranslation();
   const canSeeFlows = useAuthorisation(CanGetSubscriptionFlows.id);
   const canChangeFlows = useAuthorisation(CanUpdateSubscriptionFlow.id);
+  const showFlows = canSeeFlows || canChangeFlows;
+
+  // Two tabs, so that a long list of flows never pushes the account mails
+  // out of sight. The flow filters stay in the address across a switch.
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tab =
+    showFlows && searchParams.get(TAB_PARAM) !== ACCOUNT_TAB ?
+      'flows'
+    : ACCOUNT_TAB;
+
+  // Shared with the flow table through the Apollo cache.
+  const { data: flows } = useQuery(SubscriptionFlowsDocument, {
+    variables: { defaultFlowOnly: false },
+    skip: !showFlows,
+  });
+
+  const switchTo = (next: string) =>
+    setSearchParams(
+      params => {
+        const changed = new URLSearchParams(params);
+
+        if (next === ACCOUNT_TAB) {
+          changed.set(TAB_PARAM, ACCOUNT_TAB);
+        } else {
+          changed.delete(TAB_PARAM);
+        }
+
+        return changed;
+      },
+      { replace: true }
+    );
 
   return (
     <>
       <PageTitle>{t('automaticMails.title')}</PageTitle>
 
-      <Intro
-        variant="body1"
-        color="textSecondary"
-      >
-        {t('subscriptionFlow.overview.intro')}
-      </Intro>
+      {showFlows && (
+        <Tabs
+          value={tab}
+          onChange={(_event, next: string) => switchTo(next)}
+          sx={{ marginBottom: 2 }}
+        >
+          <Tab
+            value="flows"
+            label={t('subscriptionFlow.overview.tabs.flows', {
+              count: flows?.subscriptionFlows.length ?? 0,
+            })}
+          />
+          <Tab
+            value={ACCOUNT_TAB}
+            label={t('subscriptionFlow.overview.tabs.account')}
+          />
+        </Tabs>
+      )}
 
-      {(canSeeFlows || canChangeFlows) && <FlowTable />}
+      {tab === 'flows' ?
+        <>
+          <Intro
+            variant="body1"
+            color="textSecondary"
+          >
+            {t('subscriptionFlow.overview.intro')}
+          </Intro>
 
-      <SystemMailSection />
+          <FlowTable />
+        </>
+      : <SystemMailSection />}
     </>
   );
 }

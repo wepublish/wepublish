@@ -239,6 +239,8 @@ function SubscriptionFlow() {
               t('subscriptionFlow.defaultFlow')
             : subscriptionFlow.memberPlan ?
               `«${subscriptionFlow.memberPlan.name}»`
+            : subscriptionFlow.allMemberPlans ?
+              t('subscriptionFlow.overview.allMemberPlans')
             : t('subscriptionFlow.overview.noMemberPlan')}
           </Typography>
 
@@ -264,6 +266,8 @@ function SubscriptionFlow() {
                   t('subscriptionFlow.planFlowDescriptionFor', {
                     memberPlan: subscriptionFlow.memberPlan.name,
                   })
+                : subscriptionFlow.allMemberPlans ?
+                  t('subscriptionFlow.allPlansFlowDescription')
                 : t('subscriptionFlow.planFlowDescription'),
                 t('subscriptionFlow.noFallback'),
               ].join(' ')
@@ -316,9 +320,10 @@ function SubscriptionFlow() {
               title={t('subscriptionFlow.flow')}
               icon={<MdAltRoute size={20} />}
               filters={
-                subscriptionFlow.memberPlan && (
+                (subscriptionFlow.memberPlan ||
+                  subscriptionFlow.allMemberPlans) && (
                   <FlowFilters
-                    memberPlan={subscriptionFlow.memberPlan}
+                    memberPlan={subscriptionFlow.memberPlan ?? undefined}
                     subscriptionFlow={subscriptionFlow}
                     paymentMethods={paymentMethods}
                   />

@@ -450,6 +450,40 @@ describe('Subscription Flow Resolver', () => {
         });
       });
 
+      // A flow for all plans takes what the plans' own flows leave it.
+      it('counts the matching subscriptions of every plan that no plan flow takes, for a flow for all plans', async () => {
+        prisma.subscriptionFlow.findMany.mockResolvedValue([customFlow]);
+        prisma.subscription.count.mockResolvedValue(7);
+
+        const count = await resolver.numberOfSubscriptions({
+          id: 'flow-all',
+          default: false,
+          allMemberPlans: true,
+          paymentMethods: [{ id: 'payment-1' }],
+          periodicities: [PaymentPeriodicity.yearly],
+          autoRenewal: [true],
+        } as any);
+
+        expect(count).toBe(7);
+        expect(prisma.subscriptionFlow.findMany).toHaveBeenCalledWith({
+          where: {
+            default: false,
+            allMemberPlans: false,
+            memberPlanId: { not: null },
+          },
+          include: { paymentMethods: true },
+        });
+        expect(prisma.subscription.count).toHaveBeenCalledWith({
+          where: {
+            memberPlanID: undefined,
+            paymentMethodID: { in: ['payment-1'] },
+            paymentPeriodicity: { in: [PaymentPeriodicity.yearly] },
+            OR: [{ autoRenew: true }],
+            NOT: { OR: [subscriptionsOfCustomFlow] },
+          },
+        });
+      });
+
       it('counts every subscription no other flow covers for the default flow', async () => {
         prisma.subscriptionFlow.findMany.mockResolvedValue([customFlow]);
         prisma.subscription.count.mockResolvedValue(30);
@@ -507,7 +541,10 @@ describe('Subscription Flow Resolver', () => {
 
         expect(count).toBe(3);
         expect(prisma.subscriptionFlow.findMany).toHaveBeenCalledWith({
-          where: { default: false, memberPlanId: 'plan-1' },
+          where: {
+            default: false,
+            OR: [{ memberPlanId: 'plan-1' }, { allMemberPlans: true }],
+          },
           include: { paymentMethods: true },
         });
         expect(prisma.subscription.count).toHaveBeenCalledWith({

@@ -1750,6 +1750,8 @@ model SubscriptionFlow {
 
   memberPlan   MemberPlan? @relation(fields: [memberPlanId], references: [id])
   memberPlanId String?
+  /// A flow for the matching subscriptions of every member plan. Comes after a plan's own flows and before the default flow. Has no memberPlan.
+  allMemberPlans Boolean @default(false)
 
   paymentMethods PaymentMethod[]
   periodicities  PaymentPeriodicity[]

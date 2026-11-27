@@ -153,6 +153,57 @@ describe('DataTable', () => {
   });
 });
 
+describe('DataTable row groups', () => {
+  const grouped: Row[] = [
+    { id: '1', title: 'Alpha', author: 'Ada' },
+    { id: '2', title: 'Beta', author: 'Ada' },
+    { id: '3', title: 'Gamma', author: 'Grace' },
+  ];
+
+  const renderGrouped = (props = {}) =>
+    renderTable({
+      data: grouped,
+      rowGroup: (row: Row) => `By ${row.author}`,
+      ...props,
+    });
+
+  it('puts a heading above each run of rows of the same group', () => {
+    renderGrouped();
+
+    expect(
+      screen
+        .getAllByRole('row')
+        .slice(1)
+        .map(row => row.textContent)
+    ).toEqual(['By Ada', 'AlphaAda', 'BetaAda', 'By Grace', 'GammaGrace']);
+  });
+
+  it('spans the heading across the columns shown, as a heading of its rows', () => {
+    renderGrouped({ hiddenColumns: ['author'] });
+
+    const heading = screen.getByRole('rowheader', { name: 'By Ada' });
+
+    expect(heading.getAttribute('colspan')).toBe('1');
+    expect(heading.getAttribute('scope')).toBe('rowgroup');
+  });
+
+  it('has no heading for rows without a group, and none without the option', () => {
+    renderGrouped({ rowGroup: () => undefined });
+
+    expect(screen.getAllByRole('row')).toHaveLength(4);
+    expect(screen.queryByRole('rowheader')).toBeNull();
+  });
+
+  it('does not make a group heading clickable like a row', () => {
+    const onRowClick = vi.fn();
+    renderGrouped({ onRowClick });
+
+    fireEvent.click(screen.getByRole('rowheader', { name: 'By Ada' }));
+
+    expect(onRowClick).not.toHaveBeenCalled();
+  });
+});
+
 describe('DataTable header names', () => {
   it('names a header without a visible label after its column label', () => {
     renderTable({

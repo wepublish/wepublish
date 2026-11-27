@@ -24,6 +24,7 @@ import {
 import { useVirtualizer } from '@tanstack/react-virtual';
 import {
   CSSProperties,
+  Fragment,
   ReactNode,
   useCallback,
   useEffect,
@@ -105,6 +106,24 @@ const BodyCell = styled(TableCell)`
 
   [data-mui-color-scheme='dark'] &[data-pin-edge='true']::before {
     background: linear-gradient(to left, rgba(0, 0, 0, 0.6), transparent);
+  }
+`;
+
+// The heading of a group of rows. It stays at the left edge when the table
+// scrolls sideways, so it is readable whatever columns are in view.
+const GroupCell = styled(TableCell)`
+  padding: ${({ theme }) => theme.spacing(1.5, 2, 0.75)};
+  border-bottom: 1px solid ${({ theme }) => theme.vars.palette.divider};
+  background-color: ${({ theme }) => theme.vars.palette.action.hover};
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
+
+  > span {
+    position: sticky;
+    left: ${({ theme }) => theme.spacing(2)};
   }
 `;
 
@@ -256,6 +275,12 @@ export type DataTableProps<Row> = {
   rowClassName?: (row: Row) => string | undefined;
   /** A hint shown while pointing at a row, e.g. what a click on it does. */
   rowTitle?: (row: Row) => string | undefined;
+  /**
+   * The group a row belongs to. Each run of rows of the same group gets a
+   * heading above it; the caller keeps the rows of a group together. Not
+   * for a virtualized table.
+   */
+  rowGroup?: (row: Row) => string | undefined;
   virtualize?: boolean;
   maxHeight?: number | string;
   exportRows?: () => Row[] | Promise<Row[]>;
@@ -281,6 +306,7 @@ export function DataTable<Row>({
   getRowId,
   rowClassName,
   rowTitle,
+  rowGroup,
   virtualize,
   maxHeight,
   exportRows,
@@ -523,6 +549,10 @@ export function DataTable<Row>({
     [orderedColumns]
   );
 
+  // Hidden columns are hidden by a style, so the rows need not render again
+  // when one is; only a group heading has to span the columns that are left.
+  const groupSpan = rowGroup ? visibleColumnCount : 0;
+
   const tableBody = useMemo(
     () => (
       <TableBody>
@@ -535,39 +565,64 @@ export function DataTable<Row>({
         )}
 
         {!loading &&
-          renderedRows.map(row => (
-            <TableRow
-              key={row.id}
-              className={rowClassName?.(row.original)}
-              title={rowTitle?.(row.original)}
-              hover={Boolean(onRowClick)}
-              onClick={onRowClick ? () => onRowClick(row.original) : undefined}
-              sx={onRowClick ? { cursor: 'pointer' } : undefined}
-            >
-              {row.getVisibleCells().map(cell => {
-                const meta = cell.column.columnDef.meta as
-                  | { align?: 'left' | 'center' | 'right'; fixed?: boolean }
-                  | undefined;
+          renderedRows.map((row, index) => {
+            const group = rowGroup?.(row.original);
+            const startsGroup =
+              group !== undefined &&
+              (index === 0 ||
+                group !== rowGroup?.(renderedRows[index - 1].original));
 
-                const pin = pinProps(cell.column.id, meta?.fixed);
+            return (
+              <Fragment key={row.id}>
+                {startsGroup && (
+                  <TableRow data-row-group>
+                    <GroupCell
+                      component="th"
+                      scope="rowgroup"
+                      colSpan={groupSpan}
+                    >
+                      <span>{group}</span>
+                    </GroupCell>
+                  </TableRow>
+                )}
 
-                return (
-                  <BodyCell
-                    key={cell.id}
-                    data-col={cell.column.id}
-                    align={meta?.align ?? 'left'}
-                    {...pin}
-                    style={{
-                      width: `var(--col-${cell.column.id}-size)`,
-                      ...pin?.style,
-                    }}
-                  >
-                    {orderedColumnsById[cell.column.id]?.render(row.original)}
-                  </BodyCell>
-                );
-              })}
-            </TableRow>
-          ))}
+                <TableRow
+                  className={rowClassName?.(row.original)}
+                  title={rowTitle?.(row.original)}
+                  hover={Boolean(onRowClick)}
+                  onClick={
+                    onRowClick ? () => onRowClick(row.original) : undefined
+                  }
+                  sx={onRowClick ? { cursor: 'pointer' } : undefined}
+                >
+                  {row.getVisibleCells().map(cell => {
+                    const meta = cell.column.columnDef.meta as
+                      | { align?: 'left' | 'center' | 'right'; fixed?: boolean }
+                      | undefined;
+
+                    const pin = pinProps(cell.column.id, meta?.fixed);
+
+                    return (
+                      <BodyCell
+                        key={cell.id}
+                        data-col={cell.column.id}
+                        align={meta?.align ?? 'left'}
+                        {...pin}
+                        style={{
+                          width: `var(--col-${cell.column.id}-size)`,
+                          ...pin?.style,
+                        }}
+                      >
+                        {orderedColumnsById[cell.column.id]?.render(
+                          row.original
+                        )}
+                      </BodyCell>
+                    );
+                  })}
+                </TableRow>
+              </Fragment>
+            );
+          })}
 
         {!loading && paddingBottom > 0 && (
           <TableRow
@@ -587,6 +642,8 @@ export function DataTable<Row>({
       onRowClick,
       rowClassName,
       rowTitle,
+      rowGroup,
+      groupSpan,
       pinProps,
       columnDefs,
       orderedColumnsById,

@@ -339,6 +339,42 @@ describe('SubscriptionFlowOverview', () => {
     ]);
   });
 
+  it('heads the flows by what they are for: standard, then each member plan', () => {
+    renderOverview();
+
+    expect(
+      screen.getAllByRole('rowheader').map(heading => heading.textContent)
+    ).toEqual([
+      'subscriptionFlow.overview.group.default',
+      'subscriptionFlow.overview.group.memberPlan(Digital)',
+      'subscriptionFlow.overview.group.memberPlan(Print)',
+    ]);
+  });
+
+  it('narrows to the flows for a term given in the address', () => {
+    renderOverview('/communicationflows?term=monthly');
+
+    expect(flowLinks().map(link => link.textContent)).toEqual([
+      'subscriptionFlow.overview.defaultFlow',
+      'Digital',
+    ]);
+  });
+
+  it('offers filters by member plan, by each condition and by state', () => {
+    renderOverview('/communicationflows?term=monthly');
+
+    for (const label of [
+      'subscriptionFlow.overview.memberPlan',
+      'subscriptionFlow.paymentMethod',
+      'subscriptionFlow.periodicity',
+      'subscriptionFlow.autoRenewal',
+      'subscriptionFlow.overview.filter.warnings',
+      'subscriptionFlow.overview.filter.subscriptions',
+    ]) {
+      expect(screen.getAllByLabelText(label).length).toBeGreaterThan(0);
+    }
+  });
+
   it('offers to delete the flows of member plans, never the default flow', () => {
     renderOverview();
 
@@ -379,20 +415,66 @@ describe('SubscriptionFlowOverview', () => {
     });
   });
 
-  it('shows the account mails below the flows, as a second table under a heading of the same kind', () => {
-    renderOverview();
+  // However long the flows get, the account mails stay one click away.
+  describe('tabs', () => {
+    const tab = (name: RegExp) => screen.getByRole('tab', { name });
 
-    const [flows, account] = screen.getAllByRole('table');
+    it('opens on the flows, the tab counting them, and leaves the account mails out', () => {
+      renderOverview();
 
-    expect(
-      within(account).getByText('systemMails.events.login_link')
-    ).toBeTruthy();
-    expect(
-      flows.compareDocumentPosition(account) & Node.DOCUMENT_POSITION_FOLLOWING
-    ).toBeTruthy();
-    expect(
-      screen.getAllByRole('heading', { level: 2 }).map(h => h.textContent)
-    ).toEqual(['subscriptionFlow.overview.title', 'systemMails.title']);
+      expect(tab(/subscriptionFlow\.overview\.tabs\.flows/).textContent).toBe(
+        'subscriptionFlow.overview.tabs.flows(3)'
+      );
+      expect(
+        tab(/subscriptionFlow\.overview\.tabs\.flows/).getAttribute(
+          'aria-selected'
+        )
+      ).toBe('true');
+      expect(screen.getAllByRole('table')).toHaveLength(1);
+      expect(screen.queryByText('systemMails.events.login_link')).toBeNull();
+    });
+
+    it('names the account tab without a count', () => {
+      renderOverview();
+
+      expect(tab(/subscriptionFlow\.overview\.tabs\.account/).textContent).toBe(
+        'subscriptionFlow.overview.tabs.account'
+      );
+    });
+
+    it('shows the account mails alone on their tab, as given in the address', () => {
+      renderOverview('/communicationflows?tab=account');
+
+      expect(screen.getAllByRole('table')).toHaveLength(1);
+      expect(screen.getByText('systemMails.events.login_link')).toBeTruthy();
+      expect(
+        screen.queryByRole('button', { name: 'subscriptionFlow.newFlow' })
+      ).toBeNull();
+    });
+
+    // The intro explains flows; it belongs to their tab.
+    it('shows the intro on the flows tab only', () => {
+      const { unmount } = renderOverview();
+
+      expect(screen.getByText('subscriptionFlow.overview.intro')).toBeTruthy();
+      unmount();
+
+      renderOverview('/communicationflows?tab=account');
+      expect(screen.queryByText('subscriptionFlow.overview.intro')).toBeNull();
+    });
+
+    it('switches between them and keeps the flow filters for the way back', () => {
+      renderOverview('/communicationflows?term=monthly');
+
+      fireEvent.click(tab(/subscriptionFlow\.overview\.tabs\.account/));
+      expect(screen.getByText('systemMails.events.login_link')).toBeTruthy();
+
+      fireEvent.click(tab(/subscriptionFlow\.overview\.tabs\.flows/));
+      expect(flowLinks().map(link => link.textContent)).toEqual([
+        'subscriptionFlow.overview.defaultFlow',
+        'Digital',
+      ]);
+    });
   });
 
   it('keeps the edit action in the same place whether or not a row can be deleted', () => {
@@ -446,9 +528,54 @@ describe('SubscriptionFlowOverview', () => {
       expect(
         within(dialog).getByText('subscriptionFlow.paymentMethod')
       ).toBeTruthy();
+      // A member plan's flow needs every condition.
+      expect(
+        within(dialog).queryByText('subscriptionFlow.openConditionsHint')
+      ).toBeNull();
       expect(
         within(dialog).getByRole('button', { name: 'subscriptionFlow.addNew' })
       ).toBeTruthy();
+    });
+
+    it('creates a flow for all member plans when that is chosen instead of a plan', async () => {
+      mutationFor(CreateSubscriptionFlowDocument).mockResolvedValue({
+        data: { createSubscriptionFlow: [] },
+      });
+      renderOverview();
+
+      const dialog = await openPanel();
+
+      choosePlan(dialog, 'subscriptionFlow.overview.allMemberPlans');
+
+      // What an empty field means is said where the fields are.
+      expect(
+        within(dialog).getByText('subscriptionFlow.openConditionsHint')
+      ).toBeTruthy();
+
+      const [paymentMethod] = within(dialog)
+        .getAllByRole('combobox')
+        .filter(field => field.tagName === 'INPUT');
+
+      fireEvent.change(paymentMethod, { target: { value: 'Rech' } });
+      fireEvent.click(await screen.findByRole('option', { name: 'Rechnung' }));
+      fireEvent.click(
+        within(dialog).getByRole('button', { name: 'subscriptionFlow.addNew' })
+      );
+
+      await waitFor(() =>
+        expect(
+          mutationFor(CreateSubscriptionFlowDocument)
+        ).toHaveBeenCalledWith({
+          variables: expect.objectContaining({
+            allMemberPlans: true,
+            paymentMethodIds: ['bill'],
+          }),
+        })
+      );
+      expect(
+        mutationFor(CreateSubscriptionFlowDocument).mock.calls[0][0].variables
+          .memberPlanId
+      ).toBeUndefined();
     });
 
     it('starts with the member plan the list is narrowed to', async () => {
