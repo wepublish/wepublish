@@ -113,6 +113,10 @@ export class SettingPaymentProvider extends SettingProvider {
   @Field(type => String, { nullable: true })
   bexio_testMailbox?: string | null;
 
+  // We.Publish, not bexio, delivers the renewal invoice pdf to every reader.
+  @Field(type => Boolean, { nullable: true })
+  bexio_invoiceMailByWePublish?: boolean;
+
   // Nightly push of reader data to bexio contacts, and how the last run went.
   @Field(type => Boolean, { nullable: true })
   bexio_contactSync?: boolean;

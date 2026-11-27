@@ -4739,6 +4739,7 @@ export type MutationCreatePaymentProviderSettingArgs = {
   bexio_countryId?: InputMaybe<Scalars['Float']['input']>;
   bexio_invoiceMailBodyNewMembership?: InputMaybe<Scalars['String']['input']>;
   bexio_invoiceMailBodyRenewalMembership?: InputMaybe<Scalars['String']['input']>;
+  bexio_invoiceMailByWePublish?: InputMaybe<Scalars['Boolean']['input']>;
   bexio_invoiceMailSubjectNewMembership?: InputMaybe<Scalars['String']['input']>;
   bexio_invoiceMailSubjectRenewalMembership?: InputMaybe<Scalars['String']['input']>;
   bexio_invoiceTemplateNewMembership?: InputMaybe<Scalars['String']['input']>;
@@ -6017,6 +6018,7 @@ export type MutationUpdatePaymentProviderSettingArgs = {
   bexio_countryId?: InputMaybe<Scalars['Float']['input']>;
   bexio_invoiceMailBodyNewMembership?: InputMaybe<Scalars['String']['input']>;
   bexio_invoiceMailBodyRenewalMembership?: InputMaybe<Scalars['String']['input']>;
+  bexio_invoiceMailByWePublish?: InputMaybe<Scalars['Boolean']['input']>;
   bexio_invoiceMailSubjectNewMembership?: InputMaybe<Scalars['String']['input']>;
   bexio_invoiceMailSubjectRenewalMembership?: InputMaybe<Scalars['String']['input']>;
   bexio_invoiceTemplateNewMembership?: InputMaybe<Scalars['String']['input']>;
@@ -9813,6 +9815,7 @@ export type SettingPaymentProvider = SettingProvider & {
   bexio_countryId?: Maybe<Scalars['Float']['output']>;
   bexio_invoiceMailBodyNewMembership?: Maybe<Scalars['String']['output']>;
   bexio_invoiceMailBodyRenewalMembership?: Maybe<Scalars['String']['output']>;
+  bexio_invoiceMailByWePublish?: Maybe<Scalars['Boolean']['output']>;
   bexio_invoiceMailSubjectNewMembership?: Maybe<Scalars['String']['output']>;
   bexio_invoiceMailSubjectRenewalMembership?: Maybe<Scalars['String']['output']>;
   bexio_invoiceTemplateNewMembership?: Maybe<Scalars['String']['output']>;

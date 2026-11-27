@@ -17,6 +17,15 @@
   create a second invoice. Keep `offSessionPayments` **off** for Bexio: with it
   on, the due date runs `createIntent` → a second Bexio invoice plus a
   RENEWAL_FAILED mail.
+  **we.publish delivers (opt-in):** `bexio_invoiceMailByWePublish` makes
+  `deliversInvoiceItself()` false, so renewal invoices are issued + rendered
+  for every reader and the pdf goes out with the invoice-creation flow mail
+  (`MailControllerConfig.attachment`, every mail provider) or letter. Checkout
+  invoices (`createIntent`) are still emailed by Bexio. No pdf → nothing is
+  sent and a `deferred` mail-log entry is written; `postMissingInvoiceDeliveries`
+  mails readers with only deferred/rejected entries (≤3 refusals), which is
+  what keeps checkout invoices (no entry) out. Bexio then shows no email
+  history for the invoice.
   **Contact sync (opt-in):** `SettingPaymentProvider.bexio_contactSync` has
   `BexioContactSyncService` (`libs/payment/api/.../bexio/`, a `runNight`
   step before the Mailchimp sync) push reader data to bexio every night:
