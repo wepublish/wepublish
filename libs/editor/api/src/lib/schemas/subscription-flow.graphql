@@ -100,6 +100,7 @@ fragment SubscriptionFlow on SubscriptionFlowModel {
   id
   default
   allMemberPlans
+  active
   memberPlan {
     ...MemberPlanRef
   }
@@ -143,4 +144,26 @@ fragment MemberPlanRef on MemberPlan {
   currency
   extendable
   slug
+}
+
+# The flows' counts narrowed to what the overview is filtered by.
+query SubscriptionFlowCounts($filter: SubscriptionFlowCountFilter) {
+  subscriptionFlows(defaultFlowOnly: false) {
+    id
+    subscriptionCount(filter: $filter)
+  }
+}
+
+query SubscriptionFlowHandledCount($id: String!) {
+  subscriptionFlowHandledCount(id: $id)
+}
+
+mutation SetSubscriptionFlowActive(
+  $id: String!
+  $active: Boolean!
+  $memberPlanId: String
+) {
+  setSubscriptionFlowActive(id: $id, active: $active) {
+    ...SubscriptionFlow
+  }
 }

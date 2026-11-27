@@ -294,6 +294,7 @@ describe('SubscriptionFlowService', () => {
       expect(prismaMock.subscriptionFlow.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
           where: {
+            active: true,
             memberPlan: { id: mockMemberPlan.id },
             allMemberPlans: false,
           },
@@ -305,6 +306,7 @@ describe('SubscriptionFlowService', () => {
       prismaMock.subscriptionFlow.findUnique!.mockResolvedValue({
         id: 'flow-monthly',
         default: false,
+        active: true,
         memberPlanId: mockMemberPlan.id,
         paymentMethods: [{ id: mockPaymentMethod.id }],
         periodicities: [PaymentPeriodicity.monthly],
@@ -368,7 +370,9 @@ describe('SubscriptionFlowService', () => {
       await service.createFlow(allPlansInput);
 
       expect(prismaMock.subscriptionFlow.findMany).toHaveBeenCalledWith(
-        expect.objectContaining({ where: { allMemberPlans: true } })
+        expect.objectContaining({
+          where: { active: true, allMemberPlans: true },
+        })
       );
     });
 
@@ -520,6 +524,7 @@ describe('SubscriptionFlowService', () => {
         id: 'flow-all',
         default: false,
         allMemberPlans: true,
+        active: true,
         memberPlanId: null,
         paymentMethods: [{ id: mockPaymentMethod.id }],
         periodicities: [PaymentPeriodicity.yearly],
@@ -531,7 +536,316 @@ describe('SubscriptionFlowService', () => {
       await service.updateFlow({ id: 'flow-all', ...allPlansInput });
 
       expect(prismaMock.subscriptionFlow.findMany).toHaveBeenCalledWith(
-        expect.objectContaining({ where: { allMemberPlans: true } })
+        expect.objectContaining({
+          where: { active: true, allMemberPlans: true },
+        })
+      );
+    });
+  });
+
+  // Who a flow still sends to: running subscriptions, and ended ones whose
+  // end lies within the flow's latest day. Each subscription in one flow only.
+  describe('counting the subscriptions a flow handles', () => {
+    const today = new Date('2026-11-20T10:00:00Z');
+    let count: Mock;
+
+    const flow = (overrides: Record<string, unknown> = {}) => ({
+      id: 'flow-plan',
+      default: false,
+      allMemberPlans: false,
+      active: true,
+      memberPlanId: 'plan-1',
+      paymentMethods: [{ id: 'payment-1' }],
+      periodicities: [PaymentPeriodicity.yearly],
+      autoRenewal: [true],
+      intervals: [{ daysAwayFromEnding: -14 }, { daysAwayFromEnding: 5 }],
+      ...overrides,
+    });
+
+    const where = () => count.mock.calls[0][0].where.AND as unknown[];
+
+    beforeEach(() => {
+      vi.useFakeTimers();
+      vi.setSystemTime(today);
+      count = vi.fn(async () => 4);
+      (prismaMock as any).subscription = { count };
+      prismaMock.subscriptionFlow.findMany!.mockResolvedValue([]);
+    });
+
+    afterEach(() => vi.useRealTimers());
+
+    it('counts running subscriptions and those ended within the latest day of the flow', async () => {
+      await expect(service.countSubscriptions(flow())).resolves.toBe(4);
+
+      expect(where()[0]).toEqual({
+        OR: [
+          { deactivation: null },
+          { paidUntil: { gte: new Date('2026-11-15T00:00:00.000Z') } },
+        ],
+      });
+    });
+
+    it('does not reach into the past for a flow whose last event lies before the end', async () => {
+      await service.countSubscriptions(
+        flow({ intervals: [{ daysAwayFromEnding: -14 }] })
+      );
+
+      expect(where()[0]).toEqual({
+        OR: [
+          { deactivation: null },
+          { paidUntil: { gte: new Date('2026-11-20T00:00:00.000Z') } },
+        ],
+      });
+    });
+
+    it('counts what the conditions of a member plan flow match', async () => {
+      await service.countSubscriptions(flow());
+
+      expect(where()).toContainEqual(subscriptionsOfFlow(flow() as any));
+      expect(prismaMock.subscriptionFlow.findMany).not.toHaveBeenCalled();
+    });
+
+    it('leaves out of a flow for all plans what an active plan flow takes first', async () => {
+      const planFlow = flow();
+      prismaMock.subscriptionFlow.findMany!.mockResolvedValue([planFlow]);
+
+      await service.countSubscriptions(
+        flow({ id: 'flow-all', allMemberPlans: true, memberPlanId: null })
+      );
+
+      expect(prismaMock.subscriptionFlow.findMany).toHaveBeenCalledWith({
+        where: {
+          active: true,
+          default: false,
+          allMemberPlans: false,
+          NOT: { id: 'flow-all' },
+        },
+        include: { paymentMethods: true },
+      });
+      expect(where()).toContainEqual({
+        NOT: { OR: [subscriptionsOfFlow(planFlow as any)] },
+      });
+    });
+
+    it('leaves out of the default flow what any other active flow takes', async () => {
+      await service.countSubscriptions(
+        flow({ id: 'flow-default', default: true, memberPlanId: null })
+      );
+
+      expect(
+        prismaMock.subscriptionFlow.findMany!.mock.calls[0][0].where
+      ).toEqual({ active: true, default: false, NOT: { id: 'flow-default' } });
+    });
+
+    // Prisma 7 drops an empty OR inside an AND/OR list, which would let such a
+    // flow take every subscription of its plan from the default flow.
+    it('lets a plan flow without an auto-renewal value take no subscription from the default flow', async () => {
+      prismaMock.subscriptionFlow.findMany!.mockResolvedValue([
+        flow({ autoRenewal: [] }),
+      ]);
+
+      await service.countSubscriptions(
+        flow({ id: 'flow-default', default: true, memberPlanId: null })
+      );
+
+      expect(where()).toContainEqual({
+        NOT: {
+          OR: [
+            {
+              memberPlanID: 'plan-1',
+              paymentMethodID: { in: ['payment-1'] },
+              paymentPeriodicity: { in: [PaymentPeriodicity.yearly] },
+              id: { in: [] },
+            },
+          ],
+        },
+      });
+    });
+
+    it('leaves an ended subscription uncounted that an earlier-ending flow takes, though the default flow would still message it', async () => {
+      // As on review02: the flow for all plans ends 5 days after the end,
+      // the default flow 90. A subscription ended 44 days ago is the other
+      // flow's, which has nothing left for it, so neither flow counts it.
+      const allPlansFlow = flow({
+        id: 'flow-all',
+        allMemberPlans: true,
+        memberPlanId: null,
+        paymentMethods: [],
+        periodicities: [],
+      });
+      prismaMock.subscriptionFlow.findMany!.mockResolvedValue([allPlansFlow]);
+
+      await service.countSubscriptions(
+        flow({
+          id: 'flow-default',
+          default: true,
+          memberPlanId: null,
+          intervals: [{ daysAwayFromEnding: 90 }],
+        })
+      );
+
+      expect(where()).toEqual([
+        {
+          OR: [
+            { deactivation: null },
+            { paidUntil: { gte: new Date('2026-08-22T00:00:00.000Z') } },
+          ],
+        },
+        // By conditions only: the other flow's own 5 days play no part.
+        { NOT: { OR: [subscriptionsOfFlow(allPlansFlow as any)] } },
+      ]);
+    });
+
+    it('narrows to what the list is filtered by', async () => {
+      await service.countSubscriptions(flow(), {
+        memberPlanIds: ['plan-1', 'plan-2'],
+        paymentMethodIds: ['payment-1'],
+        periodicities: [PaymentPeriodicity.yearly],
+        autoRenewal: [false],
+      });
+
+      expect(where()).toEqual(
+        expect.arrayContaining([
+          { memberPlanID: { in: ['plan-1', 'plan-2'] } },
+          { paymentMethodID: { in: ['payment-1'] } },
+          { paymentPeriodicity: { in: [PaymentPeriodicity.yearly] } },
+          // A yes/no field cannot be asked for `in`.
+          { OR: [{ autoRenew: false }] },
+        ])
+      );
+    });
+
+    it('counts nothing for an inactive flow, unless asked what it would take', async () => {
+      await expect(
+        service.countSubscriptions(flow({ active: false }))
+      ).resolves.toBe(0);
+      expect(count).not.toHaveBeenCalled();
+
+      await expect(
+        service.countSubscriptions(
+          flow({ active: false }),
+          {},
+          { ifActive: true }
+        )
+      ).resolves.toBe(4);
+    });
+  });
+
+  it('tells how many subscriptions a flow would handle, whether it is on or off', async () => {
+    prismaMock.subscriptionFlow.findUnique!.mockResolvedValue({
+      id: 'flow-2',
+      default: false,
+      active: false,
+    });
+    const countSubscriptions = vi
+      .spyOn(service, 'countSubscriptions')
+      .mockResolvedValue(9);
+
+    await expect(service.handledCount('flow-2')).resolves.toBe(9);
+    expect(countSubscriptions).toHaveBeenCalledWith(
+      expect.objectContaining({ id: 'flow-2' }),
+      {},
+      { ifActive: true }
+    );
+    expect(prismaMock.subscriptionFlow.findUnique).toHaveBeenCalledWith({
+      where: { id: 'flow-2' },
+      include: { paymentMethods: true, intervals: true },
+    });
+  });
+
+  describe('switching a flow on and off', () => {
+    const stored = (overrides: Record<string, unknown> = {}) => ({
+      id: 'flow-2',
+      default: false,
+      allMemberPlans: false,
+      active: true,
+      memberPlanId: mockMemberPlan.id,
+      paymentMethods: [{ id: mockPaymentMethod.id }],
+      periodicities: [PaymentPeriodicity.yearly],
+      autoRenewal: [true],
+      ...overrides,
+    });
+
+    beforeEach(() => {
+      prismaMock.subscriptionFlow.findMany!.mockResolvedValue([]);
+      prismaMock.subscriptionFlow.update!.mockResolvedValue({});
+    });
+
+    it('switches a flow off', async () => {
+      prismaMock.subscriptionFlow.findUnique!.mockResolvedValue(stored());
+
+      await service.setFlowActive('flow-2', false);
+
+      expect(prismaMock.subscriptionFlow.update).toHaveBeenCalledWith({
+        where: { id: 'flow-2' },
+        data: { active: false },
+      });
+    });
+
+    it('never switches the default flow off: every subscription falls back to it', async () => {
+      prismaMock.subscriptionFlow.findUnique!.mockResolvedValue(
+        stored({ default: true, memberPlanId: null })
+      );
+
+      await expect(service.setFlowActive('flow-2', false)).rejects.toThrow(
+        BadRequestException
+      );
+      expect(prismaMock.subscriptionFlow.update).not.toHaveBeenCalled();
+    });
+
+    it('refuses to switch a flow on that would share subscriptions with an active one', async () => {
+      prismaMock.subscriptionFlow.findUnique!.mockResolvedValue(
+        stored({ active: false })
+      );
+      prismaMock.subscriptionFlow.findMany!.mockResolvedValue([
+        stored({ id: 'flow-1' }),
+      ]);
+
+      await expect(service.setFlowActive('flow-2', true)).rejects.toThrow(
+        /overlap/
+      );
+      expect(prismaMock.subscriptionFlow.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({ active: true }),
+        })
+      );
+    });
+
+    it('holds a new or changed flow only against the active flows', async () => {
+      prismaMock.subscriptionFlow.create!.mockResolvedValue({});
+
+      await service.createFlow({
+        memberPlanId: mockMemberPlan.id,
+        paymentMethodIds: [mockPaymentMethod.id],
+        periodicities: [PaymentPeriodicity.yearly],
+        autoRenewal: [true],
+      });
+
+      expect(prismaMock.subscriptionFlow.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({ active: true }),
+        })
+      );
+    });
+
+    it('does not hold an inactive flow against the others when its conditions change', async () => {
+      prismaMock.subscriptionFlow.findUnique!.mockResolvedValue(
+        stored({ active: false })
+      );
+      prismaMock.subscriptionInterval.findMany!.mockResolvedValue([]);
+      (prismaMock as any).$transaction.mockResolvedValue([]);
+
+      await service.updateFlow({
+        id: 'flow-2',
+        paymentMethodIds: [mockPaymentMethod.id],
+        periodicities: [PaymentPeriodicity.yearly],
+        autoRenewal: [true],
+      });
+
+      expect(prismaMock.subscriptionFlow.findMany).not.toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({ active: true }),
+        })
       );
     });
   });

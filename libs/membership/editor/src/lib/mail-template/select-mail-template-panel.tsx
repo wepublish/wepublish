@@ -21,7 +21,10 @@ import {
 } from '@wepublish/ui/editor';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { IoMdCheckmarkCircle } from 'react-icons/io';
+import {
+  IoMdCheckmarkCircle,
+  IoMdCheckmarkCircleOutline,
+} from 'react-icons/io';
 import { MdAdd, MdClose, MdUnsubscribe } from 'react-icons/md';
 import {
   TemplateFilters,
@@ -71,34 +74,22 @@ const Paging = styled.div`
 `;
 
 // The stationery and its extra pages matter when a template is written, not
-// when one is picked for an event; neither do its status and the plans that
-// send it already.
+// when one is picked for an event; neither do its status, the plans that send
+// it already and the note about it.
+// Like the row headings of the other tables in this area.
+const Name = styled.strong`
+  font-weight: 600;
+`;
+
 const LEFT_OUT = [
   'letterLayoutName',
   'letterAppendixName',
   'status',
   'memberPlans',
+  'description',
 ];
 
 const LEFT_OUT_FILTERS = ['statuses', 'memberPlans'];
-
-// What a message says comes before the note about it.
-const subjectBeforeDescription = (
-  columns: DataTableColumn<TemplateRow>[]
-): DataTableColumn<TemplateRow>[] => {
-  const subject = columns.findIndex(column => column.id === 'subject');
-  const description = columns.findIndex(column => column.id === 'description');
-
-  if (subject < 0 || description < 0) {
-    return columns;
-  }
-
-  const swapped = [...columns];
-  swapped[subject] = columns[description];
-  swapped[description] = columns[subject];
-
-  return swapped;
-};
 
 export type SelectMailTemplatePanelProps = {
   /** The template the event sends now, if any. */
@@ -107,6 +98,13 @@ export type SelectMailTemplatePanelProps = {
   purpose?: MailTemplateContext;
   /** What the template is chosen for, e.g. «Rechnungserstellung». */
   eventLabel: string;
+  /**
+   * The channel the template has to be written for. An event always sends
+   * the email; a manual send goes out on the channel picked for it.
+   */
+  channel?: MailChannel;
+  /** Whether sending nothing is a choice: for an event yes, for a send no. */
+  allowNone?: boolean;
   onSelect(mailTemplateId: string | null): void;
   onClose(): void;
 };
@@ -120,6 +118,8 @@ export function SelectMailTemplatePanel({
   selectedId,
   purpose,
   eventLabel,
+  channel = MailChannel.Mail,
+  allowNone = true,
   onSelect,
   onClose,
 }: SelectMailTemplatePanelProps) {
@@ -129,9 +129,12 @@ export function SelectMailTemplatePanel({
 
   const { data, loading } = useQuery(MailTemplateListDocument);
 
-  const [filter, setFilter] = useState<TemplateFilter>(
-    purpose ? { purposes: [purpose] } : {}
-  );
+  // The channel filter starts on the channel the template is chosen for, so
+  // the chooser's own filters say why only these templates are offered.
+  const [filter, setFilter] = useState<TemplateFilter>(() => ({
+    ...(purpose ? { purposes: [purpose] } : {}),
+    ...(paperLetters ? { channels: [channel] } : {}),
+  }));
   const [sort, setSort] = useState<{ field: string; order: 'asc' | 'desc' }>({
     field: 'name',
     order: 'asc',
@@ -139,29 +142,31 @@ export function SelectMailTemplatePanel({
   const [chosenPage, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
 
-  // The email always goes out, to everyone not on another channel, so only a
-  // template with an email version can be sent by an event. The one chosen
-  // stays listed whatever it has.
+  // Only a template with a version for the channel can be sent on it. For an
+  // event that is the email: it always goes out, to everyone not on another
+  // channel. The one chosen stays listed whatever it has.
   const offered = useMemo(
     () =>
       (data?.mailTemplates ?? []).filter(
         template =>
           template.id === selectedId ||
-          templatesForChannel([template], MailChannel.Mail).length > 0
+          templatesForChannel([template], channel).length > 0
       ),
-    [data, selectedId]
+    [data, selectedId, channel]
   );
 
-  const matching = useMemo(
-    () =>
-      sortTemplates(
-        filterTemplates(offered, filter),
-        sort.field,
-        sort.order,
-        sortLabels
-      ),
-    [offered, filter, sort, sortLabels]
-  );
+  const matching = useMemo(() => {
+    // The chosen one stays listed whatever versions it has, so the channels
+    // do not filter it out; the other filters do.
+    const { channels, ...others } = filter;
+    const filtered = filterTemplates(offered, others).filter(
+      template =>
+        template.id === selectedId ||
+        filterTemplates([template], { channels }).length > 0
+    );
+
+    return sortTemplates(filtered, sort.field, sort.order, sortLabels);
+  }, [offered, filter, selectedId, sort, sortLabels]);
 
   const { page, rows } = pageOf(matching, chosenPage, limit);
 
@@ -182,13 +187,24 @@ export function SelectMailTemplatePanel({
       t('mailTemplateSelect.chooser.selectCurrent')
     : t('mailTemplateSelect.chooser.select');
 
+  const headings: Record<string, string> = {
+    name: t('mailTemplateSelect.chooser.columns.template'),
+    context: t('mailTemplateSelect.chooser.columns.purpose'),
+  };
+
   const columns: DataTableColumn<TemplateRow>[] = [
-    ...subjectBeforeDescription(
-      useTemplateColumns({
-        paperLetters,
-        renderName: row => row.name,
-      }).filter(column => !LEFT_OUT.includes(column.id))
-    ),
+    ...useTemplateColumns({
+      paperLetters,
+      // The name is what a row is chosen by: it reads as its heading.
+      renderName: row => <Name>{row.name}</Name>,
+    })
+      .filter(column => !LEFT_OUT.includes(column.id))
+      // Shorter headings than in the template list: the drawer is narrow.
+      .map(column =>
+        column.id in headings ?
+          { ...column, label: headings[column.id], columnLabel: undefined }
+        : column
+      ),
     {
       id: 'action',
       label: t('action'),
@@ -200,13 +216,19 @@ export function SelectMailTemplatePanel({
           <IconButton
             size="small"
             aria-label={selectHint(row)}
+            aria-pressed={row.id === selectedId}
+            // Ticked for the template the event has now, an empty tick for
+            // the ones that can be chosen instead.
+            color={row.id === selectedId ? 'primary' : 'default'}
             onClick={event => {
               // The row chooses on click as well.
               event.stopPropagation();
               choose(row.id);
             }}
           >
-            <IoMdCheckmarkCircle />
+            {row.id === selectedId ?
+              <IoMdCheckmarkCircle data-checked="true" />
+            : <IoMdCheckmarkCircleOutline data-checked="false" />}
           </IconButton>
         </IconButtonTooltip>
       ),
@@ -221,7 +243,7 @@ export function SelectMailTemplatePanel({
         </DrawerTitle>
 
         <DrawerActions>
-          {selectedId && (
+          {allowNone && selectedId && (
             <Button
               variant="outlined"
               color="inherit"

@@ -26,6 +26,7 @@ import {
   earliestInvoiceDay,
   shortestPeriodicity,
 } from '@wepublish/utils/api';
+import { startOfDay, subDays } from 'date-fns';
 
 const SUBSCRIPTION_EVENT_MAX_DAYS_AFTER = 90;
 
@@ -81,9 +82,168 @@ export function subscriptionsOfFlow(
   };
 }
 
+/** What the list of flows is narrowed by; a count follows it. */
+export type SubscriptionCountFilter = {
+  memberPlanIds?: string[];
+  paymentMethodIds?: string[];
+  periodicities?: PaymentPeriodicity[];
+  autoRenewal?: boolean[];
+};
+
+/** A flow as far as counting its subscriptions goes. */
+type CountableFlow = FlowConditions & {
+  id: string;
+  active?: boolean;
+  intervals?: { daysAwayFromEnding: number | null }[];
+};
+
 @Injectable()
 export class SubscriptionFlowService {
   constructor(private prismaService: PrismaClient) {}
+
+  /**
+   * How many subscriptions a flow can still send a message to: those still
+   * running, and those ended within the flow's latest day. A subscription
+   * belongs to one flow by its conditions alone, never by time, so it is
+   * counted at most once. An ended one whose flow has nothing left for it is
+   * counted nowhere, even if a later-ending flow, such as the default one,
+   * would still message it were that flow switched off. So the counts of all
+   * flows add up to the subscriptions that can still get a message, not to
+   * every subscription. An inactive flow handles none; ifActive tells what it
+   * would take once switched on.
+   */
+  async countSubscriptions(
+    flow: CountableFlow,
+    filter: SubscriptionCountFilter = {},
+    { ifActive = false }: { ifActive?: boolean } = {}
+  ): Promise<number> {
+    if (flow.active === false && !ifActive) {
+      return 0;
+    }
+
+    const latestDay = Math.max(
+      0,
+      ...(flow.intervals ?? []).map(
+        interval => interval.daysAwayFromEnding ?? 0
+      )
+    );
+
+    // A flow comes after the flows of a plan, and the default flow after
+    // every other: what those take does not reach it.
+    const before =
+      flow.default || flow.allMemberPlans ?
+        await this.prismaService.subscriptionFlow.findMany({
+          where: {
+            active: true,
+            default: false,
+            ...(flow.allMemberPlans && { allMemberPlans: false }),
+            NOT: { id: flow.id },
+          },
+          include: { paymentMethods: true },
+        })
+      : [];
+
+    const narrowed: Prisma.SubscriptionWhereInput[] = [
+      ...(filter.memberPlanIds?.length ?
+        [{ memberPlanID: { in: filter.memberPlanIds } }]
+      : []),
+      ...(filter.paymentMethodIds?.length ?
+        [{ paymentMethodID: { in: filter.paymentMethodIds } }]
+      : []),
+      ...(filter.periodicities?.length ?
+        [{ paymentPeriodicity: { in: filter.periodicities } }]
+      : []),
+      // A boolean has no `in` filter: one alternative per value instead.
+      ...(filter.autoRenewal?.length ?
+        [{ OR: filter.autoRenewal.map(autoRenew => ({ autoRenew })) }]
+      : []),
+    ];
+
+    return this.prismaService.subscription.count({
+      where: {
+        AND: [
+          {
+            OR: [
+              { deactivation: null },
+              {
+                paidUntil: {
+                  gte: subDays(startOfDay(new Date()), latestDay),
+                },
+              },
+            ],
+          },
+          ...(flow.default ? [] : [subscriptionsOfFlow(flow)]),
+          ...(before.length ?
+            [{ NOT: { OR: before.map(subscriptionsOfFlow) } }]
+          : []),
+          ...narrowed,
+        ],
+      },
+    });
+  }
+
+  /** How many subscriptions a flow handles, or would once switched on. */
+  async handledCount(subscriptionFlowId: string) {
+    const flow = await this.prismaService.subscriptionFlow.findUnique({
+      where: { id: subscriptionFlowId },
+      include: { paymentMethods: true, intervals: true },
+    });
+
+    if (!flow) {
+      throw new NotFoundException(
+        `The subscription flow '${subscriptionFlowId}' could not be found.`
+      );
+    }
+
+    return this.countSubscriptions(flow, {}, { ifActive: true });
+  }
+
+  /**
+   * Switches a flow on or off. Off, its subscriptions fall to the next flow;
+   * the default flow is the last one and stays on. On, it must not share
+   * subscriptions with another active flow.
+   */
+  async setFlowActive(subscriptionFlowId: string, active: boolean) {
+    const flow = await this.prismaService.subscriptionFlow.findUnique({
+      where: { id: subscriptionFlowId },
+      include: { paymentMethods: true },
+    });
+
+    if (!flow) {
+      throw new NotFoundException(
+        `The subscription flow '${subscriptionFlowId}' could not be found.`
+      );
+    }
+
+    if (flow.default && !active) {
+      throw new BadRequestException(
+        'The default flow cannot be switched off: every subscription falls back to it.'
+      );
+    }
+
+    if (
+      active &&
+      (await this.filterHasOverlap(flow, {
+        id: flow.id,
+        paymentMethodIds: flow.paymentMethods.map(
+          paymentMethod => paymentMethod.id
+        ),
+        periodicities: flow.periodicities,
+        autoRenewal: flow.autoRenewal,
+      }))
+    ) {
+      throw new BadRequestException(
+        "You can't switch this flow on because there is a filter overlap with an active flow!"
+      );
+    }
+
+    await this.prismaService.subscriptionFlow.update({
+      where: { id: subscriptionFlowId },
+      data: { active },
+    });
+
+    return this.getFlows(false);
+  }
 
   async getFlows(defaultFlowOnly: boolean, memberPlanId?: string) {
     let where = {};
@@ -285,11 +445,13 @@ export class SubscriptionFlowService {
       );
     }
 
+    // An inactive flow is held against the others when it is switched on.
     if (
-      await this.filterHasOverlap(
+      originalFlow.active &&
+      (await this.filterHasOverlap(
         originalFlow,
         originalFlow.allMemberPlans ? { ...flow, ...conditions } : flow
-      )
+      ))
     ) {
       throw new BadRequestException(
         "You can't update this flow because there is a filter overlap!"
@@ -625,11 +787,14 @@ export class SubscriptionFlowService {
       (!!of.allMemberPlans && (a.size === 0 || b.size === 0)) ||
       [...a].some(value => b.has(value));
 
-    const whereClause =
-      of.allMemberPlans ? { allMemberPlans: true }
+    // Only active flows take subscriptions.
+    const whereClause = {
+      active: true,
+      ...(of.allMemberPlans ? { allMemberPlans: true }
       : of.memberPlanId ?
         { memberPlan: { id: of.memberPlanId }, allMemberPlans: false }
-      : {};
+      : {}),
+    };
     const allFlows = await this.prismaService.subscriptionFlow.findMany({
       where: whereClause,
       select: {

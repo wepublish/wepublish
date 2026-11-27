@@ -1752,6 +1752,8 @@ model SubscriptionFlow {
   memberPlanId String?
   /// A flow for the matching subscriptions of every member plan. Comes after a plan's own flows and before the default flow. Has no memberPlan.
   allMemberPlans Boolean @default(false)
+  /// An inactive flow is skipped: its subscriptions fall to the next flow. The default flow is always active.
+  active Boolean @default(true)
 
   paymentMethods PaymentMethod[]
   periodicities  PaymentPeriodicity[]

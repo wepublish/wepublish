@@ -1683,9 +1683,9 @@
         "sampleDataFallback": "Sample data (none selected)",
         "testRecipient": "Test recipient",
         "testRecipientPlaceholder": "Your account email",
-        "preview": "Preview",
+        "preview": "Email preview",
         "sendTest": "Send test",
-        "previewLetter": "Preview",
+        "previewLetter": "Letter preview",
         "letterAppendix": "Additional pages (PDF)",
         "letterAppendixNone": "None",
         "letterAppendixHelp": "The pages are added at the end of the letter. Choose from the PDF files uploaded under \"Documents\".",
@@ -1985,7 +1985,11 @@
         "select": "Choose this template",
         "selectCurrent": "Choose this template (already chosen)",
         "none": "Send no message",
-        "create": "Create new template"
+        "create": "Create new template",
+        "columns": {
+          "template": "Template",
+          "purpose": "Purpose"
+        }
       },
       "channels": "Delivery channels",
       "noLetterVersion": "This template has no letter version. Add one in the template so people on the letter channel get this message printed; until then they get the email.",
@@ -3030,7 +3034,7 @@
       "overview": {
         "back": "All flows & automated messages",
         "title": "Messages for subscription flows",
-        "intro": "A flow decides which message goes out automatically for which subscription event. The default flow applies to all subscriptions. A member plan can have flows of its own for some of its subscriptions, and a flow can be for some subscriptions of all member plans: such a flow replaces the default flow for the affected subscriptions completely. Where several match, the member plan's flow comes first, then the one for all member plans, then the default flow.",
+        "intro": "A flow decides which message goes out automatically for which subscription event. The default flow applies to all subscriptions. A member plan can have flows of its own for some of its subscriptions, and a flow can be for some subscriptions of all member plans: such a flow replaces the default flow for the affected subscriptions completely. If several flows are defined, they are applied in this order: 1. flows for a specific member plan → 2. flows for all member plans → 3. the default flow. In the table of flows, this is the direction “from the bottom up”. As soon as a flow matches a subscription, that flow is applied and the matching stops. Flows “further up” in the list are therefore never applied to that subscription.",
         "flow": "Flow for member plan",
         "defaultFlow": "All → default flow",
         "appliesTo": "Applies to",
@@ -3048,6 +3052,15 @@
         },
         "noMemberPlan": "No member plan",
         "allMemberPlans": "All member plans",
+        "subscriptionsSum": "Affected subscriptions ({{sum}})",
+        "subscriptionsHint": "Running subscriptions, and ended ones while their flow still sends them a message. Switching a flow on or off can therefore change the sum: an ended subscription may move from a flow with later messages to one without.",
+        "active": "Active",
+        "switchOff": "Switch flow off",
+        "switchOn": "Switch flow on",
+        "deactivateTitle": "Switch flow off?",
+        "activateTitle": "Switch flow on?",
+        "deactivateQuestion": "The {{count}} subscriptions handled by this flow will then be handled by other flows.",
+        "activateQuestion": "This flow will then take over {{count}} subscriptions from other flows.",
         "tabs": {
           "flows": "Subscription flows ({{count}})",
           "account": "Account & login"
@@ -3056,18 +3069,6 @@
           "default": "Default",
           "allMemberPlans": "For all member plans",
           "memberPlan": "Member plan “{{memberPlan}}”"
-        },
-        "filter": {
-          "warnings": "Warnings",
-          "warningsOptions": {
-            "with": "With a warning",
-            "without": "Without a warning"
-          },
-          "subscriptions": "Affected subscriptions",
-          "subscriptionsOptions": {
-            "with": "With subscriptions",
-            "without": "Without subscriptions"
-          }
         },
         "any": {
           "paymentMethods": "any payment method",
@@ -3088,6 +3089,7 @@
       "flow": "Flow",
       "planFlowDescription": "This flow completely replaces the default flow for the subscriptions of its member plan that match the filter criteria defined below.",
       "allPlansFlowDescription": "This flow completely replaces the default flow for the subscriptions of all member plans that match the filter criteria defined below. Where a member plan has a flow of its own for such subscriptions, that one comes first.",
+      "inactiveNotice": "This flow is switched off. Its subscriptions get the messages of the next matching flow.",
       "openConditionsHint": "An empty field does not narrow: the flow then applies to any value. At least one field must be filled in.",
       "planFlowDescriptionFor": "This flow completely replaces the default flow for the subscriptions of the member plan “{{memberPlan}}” that match the filter criteria defined below.",
       "noFallback": "Events without a template send nothing – the default flow does not step in.",
@@ -4870,8 +4872,8 @@
           "description": "Audience and filters"
         },
         "content": {
-          "title": "Content & delivery channel",
-          "description": "Template, email or letter"
+          "title": "Delivery channel & content",
+          "description": "Email or letter, template"
         },
         "send": {
           "title": "Send",
@@ -4947,7 +4949,6 @@
         "cancelled": "Canceled"
       },
       "missingPlaceholders": "Heads up: these placeholders won't be filled for these recipients: {{placeholders}}",
-      "createTemplate": "New template",
       "attachments_one": "Every mail carries {{count}} attachment as PDF: {{names}}",
       "attachments_other": "Every mail carries {{count}} attachments as PDF: {{names}}",
       "editTemplate": "Edit template",
@@ -5022,11 +5023,11 @@
         "label": "Delivery channel",
         "mail": "Email",
         "letter": "Letter",
-        "noVersion": {
-          "mail": "This template has no email version.",
-          "letter": "This template has no letter version."
-        },
-        "withoutAddress": "{{count}} of the recipients have no usable postal address and will be skipped."
+        "withoutAddress": "{{count}} of the recipients have no usable postal address and will be skipped.",
+        "templateDropped": {
+          "mail": "“{{template}}” has no email version and was therefore deselected. Choose a template for email.",
+          "letter": "“{{template}}” has no letter version and was therefore deselected. Choose a template for letter."
+        }
       },
       "print": {
         "addressPosition": {
@@ -5099,7 +5100,11 @@
         "matchAll": "all conditions",
         "more": "{{count}} more filters"
       },
-      "deliveryChannelHandOff": "Switch this user group’s delivery channel for good …"
+      "deliveryChannelHandOff": "Switch this user group’s delivery channel for good …",
+      "templateFor": {
+        "mail": "Manual message by email",
+        "letter": "Manual message by letter"
+      }
     },
     "mailLog": {
       "title": "Sent messages",

@@ -1682,9 +1682,9 @@
         "sampleDataFallback": "Beispieldaten (nichts gewählt)",
         "testRecipient": "Test-Empfänger",
         "testRecipientPlaceholder": "Deine Konto-E-Mail",
-        "preview": "Vorschau",
+        "preview": "Email Vorschau",
         "sendTest": "Test senden",
-        "previewLetter": "Vorschau",
+        "previewLetter": "Brief Vorschau",
         "letterAppendix": "Zusatzseiten (PDF)",
         "letterAppendixNone": "Keine",
         "letterAppendixHelp": "Die Seiten werden dem Brief am Ende hinzugefügt. Wähle aus den PDF-Dateien, die unter «Dokumente» hochgeladen wurden.",
@@ -1984,7 +1984,11 @@
         "select": "Diese Vorlage wählen",
         "selectCurrent": "Diese Vorlage wählen (ist bereits gewählt)",
         "none": "Keine Mitteilung senden",
-        "create": "Neue Vorlage erstellen"
+        "create": "Neue Vorlage erstellen",
+        "columns": {
+          "template": "Vorlage",
+          "purpose": "Zweck"
+        }
       },
       "channels": "Zustellkanäle",
       "noLetterVersion": "Diese Vorlage hat keine Brief-Version. Füge sie in der Vorlage hinzu, damit Personen mit Zustellkanal Brief diese Mitteilung gedruckt bekommen; bis dahin erhalten sie die E-Mail.",
@@ -3029,7 +3033,7 @@
       "overview": {
         "back": "Alle Abläufe & automatischen Mitteilungen",
         "title": "Mitteilungen zu Abo-Abläufen",
-        "intro": "Ein Ablauf legt fest, welche Mitteilung bei welchem Abo-Ereignis automatisch verschickt wird. Der Standard-Ablauf gilt für alle Abos. Ein Abo-Plan kann eigene Abläufe für bestimmte Abos haben, und ein Ablauf kann für bestimmte Abos aller Abo-Pläne gelten: Ein solcher Ablauf ersetzt den Standard-Ablauf für die betroffenen Abos vollständig. Passen mehrere, gilt zuerst der Ablauf des Abo-Plans, dann der für alle Abo-Pläne, zuletzt der Standard-Ablauf.",
+        "intro": "Ein Ablauf legt fest, welche Mitteilung bei welchem Abo-Ereignis automatisch verschickt wird. Der Standard-Ablauf gilt für alle Abos. Ein Abo-Plan kann eigene Abläufe für bestimmte Abos haben, und ein Ablauf kann für bestimmte Abos aller Abo-Pläne gelten: Ein solcher Ablauf ersetzt den Standard-Ablauf für die betroffenen Abos vollständig. Wurden mehrere Abo-Abläufe definiert, werden sie in dieser Reihenfolge angewendet: 1. Abo-Plan-spezifische Abläufe → 2. Abläufe, die für alle Abo-Pläne gelten → 3. Standard-Ablauf. In der Tabelle mit den Abläufen entspricht dies der Richtung «von unten nach oben». Sobald ein Abo-Ablauf auf ein Abo matcht, wird dieser Ablauf ausgeführt und das Matching-Verfahren abgebrochen. Abläufe «weiter oben» in der Liste werden somit für dieses Abo nie ausgeführt.",
         "flow": "Ablauf für Abo-Plan",
         "defaultFlow": "Alle → Standard-Ablauf",
         "appliesTo": "Gilt für",
@@ -3047,6 +3051,15 @@
         },
         "noMemberPlan": "Ohne Abo-Plan",
         "allMemberPlans": "Alle Abo-Pläne",
+        "subscriptionsSum": "Betroffene Abos ({{sum}})",
+        "subscriptionsHint": "Laufende Abos und beendete, solange ihr Ablauf ihnen noch eine Mitteilung schickt. Wird ein Ablauf ein- oder ausgeschaltet, kann sich die Summe deshalb ändern: Ein beendetes Abo kann von einem Ablauf mit späteren Mitteilungen zu einem ohne wechseln.",
+        "active": "Aktiv",
+        "switchOff": "Ablauf ausschalten",
+        "switchOn": "Ablauf einschalten",
+        "deactivateTitle": "Ablauf ausschalten?",
+        "activateTitle": "Ablauf einschalten?",
+        "deactivateQuestion": "Die {{count}} Abos dieses Ablaufs werden danach von anderen Abläufen übernommen.",
+        "activateQuestion": "Dieser Ablauf übernimmt danach {{count}} Abos von anderen Abläufen.",
         "tabs": {
           "flows": "Abo-Abläufe ({{count}})",
           "account": "Konto & Login"
@@ -3055,15 +3068,6 @@
           "default": "Standard",
           "allMemberPlans": "Für alle Abo-Pläne",
           "memberPlan": "Abo-Plan «{{memberPlan}}»"
-        },
-        "filter": {
-          "warnings": "Hinweise",
-          "warningsOptions": {
-            "with": "Mit Hinweis",
-            "without": "Ohne Hinweis"
-          },
-          "subscriptions": "Betroffene Abos",
-          "subscriptionsOptions": { "with": "Mit Abos", "without": "Ohne Abos" }
         },
         "any": {
           "paymentMethods": "jede Zahlungsmethode",
@@ -3084,6 +3088,7 @@
       "flow": "Ablauf",
       "planFlowDescription": "Dieser Ablauf ersetzt den Standard-Ablauf vollständig für die Abos seines Abo-Plans, welche zu den weiter unten definierten Filterkriterien passen.",
       "allPlansFlowDescription": "Dieser Ablauf ersetzt den Standard-Ablauf vollständig für die Abos aller Abo-Pläne, welche zu den weiter unten definierten Filterkriterien passen. Hat ein Abo-Plan für solche Abos einen eigenen Ablauf, geht dieser vor.",
+      "inactiveNotice": "Dieser Ablauf ist ausgeschaltet. Seine Abos erhalten die Mitteilungen des nächsten passenden Ablaufs.",
       "openConditionsHint": "Ein leeres Feld schränkt nicht ein: Der Ablauf gilt dann für jeden Wert. Mindestens ein Feld muss ausgefüllt sein.",
       "planFlowDescriptionFor": "Dieser Ablauf ersetzt den Standard-Ablauf vollständig für die Abos des Abo-Plans «{{memberPlan}}», welche zu den weiter unten definierten Filterkriterien passen.",
       "noFallback": "Ereignisse ohne Vorlage verschicken nichts – der Standard-Ablauf springt nicht ein.",
@@ -4848,8 +4853,8 @@
           "description": "Zielgruppe und Filter"
         },
         "content": {
-          "title": "Inhalt & Zustellkanal",
-          "description": "Vorlage, E-Mail oder Brief"
+          "title": "Zustellkanal & Inhalt",
+          "description": "E-Mail oder Brief, Vorlage"
         },
         "send": {
           "title": "Senden",
@@ -4925,7 +4930,6 @@
         "cancelled": "Abgebrochen"
       },
       "missingPlaceholders": "Achtung: Diese Platzhalter werden für diese Empfänger nicht gefüllt: {{placeholders}}",
-      "createTemplate": "Neue Vorlage",
       "attachments_one": "Jede E-Mail enthält {{count}} Anhang als PDF: {{names}}",
       "attachments_other": "Jede E-Mail enthält {{count}} Anhänge als PDF: {{names}}",
       "editTemplate": "Vorlage bearbeiten",
@@ -5000,11 +5004,11 @@
         "label": "Zustellkanal",
         "mail": "E-Mail",
         "letter": "Brief",
-        "noVersion": {
-          "mail": "Diese Vorlage hat keine E-Mail-Version.",
-          "letter": "Diese Vorlage hat keine Brief-Version."
-        },
-        "withoutAddress": "{{count}} der Empfänger:innen haben keine brauchbare Postadresse und werden übersprungen."
+        "withoutAddress": "{{count}} der Empfänger:innen haben keine brauchbare Postadresse und werden übersprungen.",
+        "templateDropped": {
+          "mail": "«{{template}}» hat keine E-Mail-Version und wurde deshalb abgewählt. Wähle eine Vorlage für E-Mail.",
+          "letter": "«{{template}}» hat keine Brief-Version und wurde deshalb abgewählt. Wähle eine Vorlage für Brief."
+        }
       },
       "print": {
         "addressPosition": {
@@ -5077,7 +5081,11 @@
         "matchAll": "alle Bedingungen",
         "more": "{{count}} weitere Filter"
       },
-      "deliveryChannelHandOff": "Zustellkanal dieser Benutzergruppe dauerhaft umstellen …"
+      "deliveryChannelHandOff": "Zustellkanal dieser Benutzergruppe dauerhaft umstellen …",
+      "templateFor": {
+        "mail": "Manuelle Mitteilung per E-Mail",
+        "letter": "Manuelle Mitteilung per Brief"
+      }
     },
     "mailLog": {
       "title": "Gesendete Mitteilungen",
