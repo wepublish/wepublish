@@ -64,5 +64,7 @@ export function periodicityForPlan(
 
   const planDefault = memberPlan.defaultPaymentPeriodicity;
 
-  return planDefault && offered.includes(planDefault) ? planDefault : offered[0];
+  return planDefault && offered.includes(planDefault) ?
+      planDefault
+    : offered[0];
 }

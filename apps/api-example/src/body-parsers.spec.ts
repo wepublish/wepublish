@@ -24,7 +24,10 @@ class EchoController {
   // Letter providers check a signature over the raw body, as Pingen does.
   @All('letter-webhooks/:id')
   letter(@Req() req: { body?: unknown; rawBody?: Buffer }) {
-    return { body: req.body ?? null, raw: req.rawBody?.toString('utf8') ?? null };
+    return {
+      body: req.body ?? null,
+      raw: req.rawBody?.toString('utf8') ?? null,
+    };
   }
 }
 

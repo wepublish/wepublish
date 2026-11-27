@@ -29,9 +29,11 @@ describe('formatIssueLabel', () => {
   });
 
   it('offers the three presets', () => {
-    expect(LABEL_FORMAT_PRESETS.map(f => formatIssueLabel(single, f))).toEqual(
-      ['6.26', '#6', 'Nr. 6/2026']
-    );
+    expect(LABEL_FORMAT_PRESETS.map(f => formatIssueLabel(single, f))).toEqual([
+      '6.26',
+      '#6',
+      'Nr. 6/2026',
+    ]);
   });
 });
 
@@ -61,9 +63,9 @@ describe('validateLabelFormat', () => {
     expect(validateLabelFormat('#{range} {month}', 'continuous')).toEqual([
       'unknownPlaceholder',
     ]);
-    expect(validateLabelFormat(`#{range}${'x'.repeat(40)}`, 'continuous')).toEqual(
-      ['tooLong']
-    );
+    expect(
+      validateLabelFormat(`#{range}${'x'.repeat(40)}`, 'continuous')
+    ).toEqual(['tooLong']);
     expect(validateLabelFormat('', 'continuous')).toEqual(['noNumber']);
   });
 });
