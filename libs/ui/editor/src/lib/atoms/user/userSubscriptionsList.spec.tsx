@@ -1,5 +1,6 @@
 import { createTheme, ThemeProvider } from '@mui/material';
 import { fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { UserSubscriptionFragment } from '@wepublish/editor/api';
 import { ReactNode } from 'react';
 import { MemoryRouter } from 'react-router-dom';
@@ -85,6 +86,62 @@ describe('getSubscriptionStatus', () => {
 });
 
 describe('UserSubscriptionsList', () => {
+  it('shows each period invoice as paid, canceled or unpaid', async () => {
+    const period = (
+      id: string,
+      startsAt: string,
+      state: { isPaid: boolean; isCanceled: boolean }
+    ) => ({
+      id,
+      createdAt: startsAt,
+      startsAt,
+      endsAt: startsAt,
+      amount: 12000,
+      invoiceID: `invoice-${id}`,
+      ...state,
+    });
+
+    renderWithTheme(
+      <MemoryRouter>
+        <UserSubscriptionsList
+          subscriptions={[
+            subscription('a', 'Insider', {
+              periods: [
+                period('paid', '2024-01-01T00:00:00.000Z', {
+                  isPaid: true,
+                  isCanceled: false,
+                }),
+                period('canceled', '2025-01-01T00:00:00.000Z', {
+                  isPaid: false,
+                  isCanceled: true,
+                }),
+                period('open', '2026-01-01T00:00:00.000Z', {
+                  isPaid: false,
+                  isCanceled: false,
+                }),
+              ],
+            } as unknown as Partial<UserSubscriptionFragment>),
+          ]}
+          userId="user-1"
+        />
+      </MemoryRouter>
+    );
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'userSubscriptionList.periodRange' })
+    );
+
+    expect(
+      screen.getByRole('img', { name: 'userSubscriptionList.invoicePaid' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('img', { name: 'userSubscriptionList.invoiceCanceled' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('img', { name: 'userSubscriptionList.invoiceUnpaid' })
+    ).toBeInTheDocument();
+  });
+
   it('lists active subscriptions first, then by furthest paidUntil', () => {
     renderWithTheme(
       <MemoryRouter>

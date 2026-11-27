@@ -3523,6 +3523,7 @@
       "invoiceNr": "Rechnung Nr. {{invoiceId}}",
       "invoicePaid": "bezahlt",
       "invoiceUnpaid": "unbezahlt",
+      "invoiceCanceled": "storniert",
       "confirmed": "bestätigt",
       "unconfirmed": "unbestätigt",
       "monthlyAmount": "Monatlicher Betrag: {{monthlyAmount}} {{currency}}",

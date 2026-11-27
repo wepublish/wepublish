@@ -3576,6 +3576,7 @@
       "invoiceNr": "Invoice No. {{invoiceId}}",
       "invoicePaid": "paid",
       "invoiceUnpaid": "unpaid",
+      "invoiceCanceled": "canceled",
       "confirmed": "confirmed",
       "unconfirmed": "unconfirmed",
       "monthlyAmount": "Monthly amount: {{monthlyAmount}} {{currency}}",

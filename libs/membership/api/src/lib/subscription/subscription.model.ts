@@ -76,6 +76,9 @@ export class SubscriptionPeriod {
 
   @Field()
   isPaid!: boolean;
+
+  @Field()
+  isCanceled!: boolean;
 }
 
 @ObjectType({

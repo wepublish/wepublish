@@ -8752,6 +8752,7 @@ type SubscriptionPeriod {
   endsAt: DateTime!
   id: String!
   invoiceID: String!
+  isCanceled: Boolean!
   isPaid: Boolean!
   modifiedAt: DateTime!
   paymentPeriodicity: PaymentPeriodicity!
