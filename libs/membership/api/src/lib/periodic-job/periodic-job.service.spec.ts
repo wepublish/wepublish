@@ -1131,6 +1131,7 @@ describe('PeriodicJobService', () => {
     let provider: {
       createRemoteInvoice: Mock;
       renderRemoteInvoice: Mock;
+      markRemoteInvoiceSent: Mock;
       deliversInvoiceItself: Mock;
     };
     let letterSender: {
@@ -1174,6 +1175,7 @@ describe('PeriodicJobService', () => {
       provider = {
         createRemoteInvoice: vi.fn(async () => ({ intent })),
         renderRemoteInvoice: vi.fn(async () => undefined),
+        markRemoteInvoiceSent: vi.fn(async () => undefined),
         deliversInvoiceItself: vi.fn(async () => true),
       };
       mockPaymentsService.findPaymentProviderByPaymentMethodeId.mockResolvedValue(
@@ -1397,6 +1399,9 @@ describe('PeriodicJobService', () => {
           })
         );
         expect(provider.createRemoteInvoice).not.toHaveBeenCalled();
+        expect(provider.markRemoteInvoiceSent).toHaveBeenCalledWith({
+          payment: expect.objectContaining({ intentID: '42' }),
+        });
       });
 
       // Each upload is a letter of its own at the vendor, which keeps no
