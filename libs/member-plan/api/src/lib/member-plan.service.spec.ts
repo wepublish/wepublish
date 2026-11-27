@@ -63,6 +63,8 @@ describe('MemberPlanService cache', () => {
       update: Mock;
       delete: Mock;
     };
+    subscriptionFlow: { deleteMany: Mock };
+    $transaction: Mock;
   };
 
   beforeEach(async () => {
@@ -75,6 +77,12 @@ describe('MemberPlanService cache', () => {
         update: vi.fn().mockResolvedValue(memberPlan),
         delete: vi.fn().mockResolvedValue(memberPlan),
       },
+      subscriptionFlow: {
+        deleteMany: vi.fn().mockResolvedValue({ count: 0 }),
+      },
+      $transaction: vi.fn((operations: Promise<unknown>[]) =>
+        Promise.all(operations)
+      ),
     };
 
     module = await Test.createTestingModule({
@@ -175,6 +183,27 @@ describe('MemberPlanService cache', () => {
     );
   });
 
+  it('deletes the communication flows of a member plan together with it', async () => {
+    // A flow without a member plan that is not the default one stops every
+    // automatic message, so a plan must not leave its flows behind.
+    prisma.subscriptionFlow.deleteMany.mockReturnValue('delete flows');
+    prisma.memberPlan.delete.mockReturnValue('delete plan');
+    prisma.$transaction.mockResolvedValue([{ count: 2 }, memberPlan]);
+
+    await expect(service.deleteMemberPlan('plan-1')).resolves.toBe(memberPlan);
+
+    expect(prisma.subscriptionFlow.deleteMany).toHaveBeenCalledWith({
+      where: { memberPlanId: 'plan-1', default: false },
+    });
+    expect(prisma.memberPlan.delete).toHaveBeenCalledWith({
+      where: { id: 'plan-1' },
+    });
+    expect(prisma.$transaction).toHaveBeenCalledWith([
+      'delete flows',
+      'delete plan',
+    ]);
+  });
+
   it('loads member plans again after one was deleted', async () => {
     await service.getActiveMemberPlans();
     await service.deleteMemberPlan('plan-1');
@@ -201,6 +230,23 @@ describe('MemberPlanService cache', () => {
 
   it('refuses to delete a member plan that is still referenced', async () => {
     prisma.memberPlan.delete.mockRejectedValue(
+      new Prisma.PrismaClientKnownRequestError(
+        'Foreign key constraint violated',
+        { code: 'P2003', clientVersion: 'test' }
+      )
+    );
+
+    await expect(service.deleteMemberPlan('plan-1')).rejects.toThrow(
+      new BadRequestException(
+        'This member plan is still used by subscriptions or gift codes and cannot be deleted.'
+      )
+    );
+  });
+
+  // Prisma rejects the transaction as a whole, and rolls the flows back with
+  // the plan: the plan stays, and so do its flows.
+  it('refuses to delete a member plan whose transaction was refused', async () => {
+    prisma.$transaction.mockRejectedValue(
       new Prisma.PrismaClientKnownRequestError(
         'Foreign key constraint violated',
         { code: 'P2003', clientVersion: 'test' }
