@@ -8259,9 +8259,27 @@ input SubscriptionFilter {
   userIDs: [String!]
 }
 
+"""
+The earliest day an event of a flow may lie on, and what holds it there.
+"""
+type SubscriptionFlowEarliestDay {
+  """Days away from the end of the subscription, negative: before it ends."""
+  days: Int!
+
+  """
+  The shortest periodicity a member plan flow applies to, which sets the day. Null for the default flow: its day is fixed.
+  """
+  periodicity: PaymentPeriodicity
+}
+
 type SubscriptionFlowModel {
   autoRenewal: [Boolean!]!
   default: Boolean!
+
+  """
+  The earliest day an event of this flow may lie on. Follows from the shortest periodicity the flow applies to.
+  """
+  earliestDay: SubscriptionFlowEarliestDay!
   id: String!
   intervals: [SubscriptionInterval!]!
   memberPlan: MemberPlan

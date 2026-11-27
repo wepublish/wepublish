@@ -48,6 +48,7 @@ import { Action } from '../subscription-event-dictionary/subscription-event-dict
 import { SubscriptionService } from './subscription.service';
 import { PeriodicJobRunObject } from './periodic-job.type';
 import {
+  earliestInvoiceDay,
   addErrorContext,
   describeError,
   getMaxTake,
@@ -655,10 +656,20 @@ export class PeriodicJobService {
       throw new NotFoundException('No invoice deactivation event found!');
     }
 
+    // A flow may create invoices earlier than this subscription's period is
+    // long: the invoice then waits for the earliest day its periodicity allows.
+    const creationDay =
+      creationEvent.daysAwayFromEnding === null ?
+        undefined
+      : Math.max(
+          creationEvent.daysAwayFromEnding,
+          earliestInvoiceDay([subscriptionToCreateInvoice.paymentPeriodicity])
+        );
+
     if (
       subscriptionToCreateInvoice.paidUntil &&
       add(startOfDay(subscriptionToCreateInvoice.paidUntil), {
-        days: creationEvent.daysAwayFromEnding ?? undefined,
+        days: creationDay,
       }) > periodicJobRunObject.date
     ) {
       return false;

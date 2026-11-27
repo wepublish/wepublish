@@ -10001,10 +10001,21 @@ export type SubscriptionFilter = {
   userIDs?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
+/** The earliest day an event of a flow may lie on, and what holds it there. */
+export type SubscriptionFlowEarliestDay = {
+  __typename: 'SubscriptionFlowEarliestDay';
+  /** Days away from the end of the subscription, negative: before it ends. */
+  days: Scalars['Int']['output'];
+  /** The shortest periodicity a member plan flow applies to, which sets the day. Null for the default flow: its day is fixed. */
+  periodicity?: Maybe<PaymentPeriodicity>;
+};
+
 export type SubscriptionFlowModel = {
   __typename: 'SubscriptionFlowModel';
   autoRenewal: Array<Scalars['Boolean']['output']>;
   default: Scalars['Boolean']['output'];
+  /** The earliest day an event of this flow may lie on. Follows from the shortest periodicity the flow applies to. */
+  earliestDay: SubscriptionFlowEarliestDay;
   id: Scalars['String']['output'];
   intervals: Array<SubscriptionInterval>;
   memberPlan?: Maybe<MemberPlan>;

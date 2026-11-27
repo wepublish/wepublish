@@ -109,6 +109,10 @@ fragment SubscriptionFlow on SubscriptionFlowModel {
     ...SubscriptionInterval
   }
   numberOfSubscriptions(memberPlanId: $memberPlanId)
+  earliestDay {
+    days
+    periodicity
+  }
 }
 
 fragment SubscriptionInterval on SubscriptionInterval {

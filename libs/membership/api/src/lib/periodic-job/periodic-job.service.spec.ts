@@ -389,6 +389,90 @@ describe('PeriodicJobService', () => {
     ).not.toHaveBeenCalled();
   });
 
+  describe('a flow that creates invoices 38 days ahead', () => {
+    const runDate = startOfDay(new Date());
+
+    const subscriptionEnding = (
+      daysAhead: number,
+      paymentPeriodicity: PaymentPeriodicity
+    ): any => ({
+      id: 'sub-1',
+      userID: 'user-1',
+      memberPlanID: 'plan-1',
+      paymentMethodID: 'stripe',
+      paymentPeriodicity,
+      paidUntil: add(runDate, { days: daysAhead }),
+      autoRenew: true,
+      monthlyAmount: 200,
+      currency: Currency.CHF,
+      user: { id: 'user-1', name: 'test user', email: 'reader@example.com' },
+      memberPlan: { name: 'plan', slug: 'plan' },
+      periods: [],
+    });
+
+    const createInvoiceFor = (subscription: any) =>
+      service['createInvoice']({ isRetry: false, date: runDate }, subscription);
+
+    beforeEach(() => {
+      mockPrisma.subscriptionFlow.findMany.mockResolvedValue([
+        {
+          id: 'default-flow',
+          default: true,
+          memberPlanId: null,
+          autoRenewal: [],
+          periodicities: [],
+          paymentMethods: [],
+          intervals: [
+            {
+              id: 'interval-invoice-creation',
+              event: SubscriptionEvent.INVOICE_CREATION,
+              daysAwayFromEnding: -38,
+              mailTemplate: null,
+            },
+            {
+              id: 'interval-deactivation-unpaid',
+              event: SubscriptionEvent.DEACTIVATION_UNPAID,
+              daysAwayFromEnding: 5,
+              mailTemplate: null,
+            },
+          ],
+        },
+      ]);
+      mockSubscriptionController.createInvoice.mockResolvedValue({
+        id: 'inv-new',
+        items: [],
+      });
+    });
+
+    it('invoices a yearly subscription 38 days before it ends', async () => {
+      await createInvoiceFor(subscriptionEnding(38, PaymentPeriodicity.yearly));
+
+      expect(mockSubscriptionController.createInvoice).toHaveBeenCalledTimes(1);
+    });
+
+    it('leaves a yearly subscription alone that ends later than that', async () => {
+      await createInvoiceFor(subscriptionEnding(39, PaymentPeriodicity.yearly));
+
+      expect(mockSubscriptionController.createInvoice).not.toHaveBeenCalled();
+    });
+
+    // 38 days is longer than a month: the invoice of the month after would
+    // be created the day the month before begins.
+    it('waits with a monthly subscription until 25 days before it ends', async () => {
+      await createInvoiceFor(
+        subscriptionEnding(26, PaymentPeriodicity.monthly)
+      );
+
+      expect(mockSubscriptionController.createInvoice).not.toHaveBeenCalled();
+
+      await createInvoiceFor(
+        subscriptionEnding(25, PaymentPeriodicity.monthly)
+      );
+
+      expect(mockSubscriptionController.createInvoice).toHaveBeenCalledTimes(1);
+    });
+  });
+
   it('charge invoice offsession', async () => {
     const mail = 'dev-mail@test.wepublish.com';
     const renewalDate = new Date();
