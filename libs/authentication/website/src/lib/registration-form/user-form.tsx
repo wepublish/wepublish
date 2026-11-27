@@ -1,16 +1,19 @@
 import { IconButton, InputAdornment, Theme, css } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import styled from '@emotion/styled';
-import { MobileDatePicker } from '@mui/x-date-pickers';
 import {
   BuilderUserFormFields,
   BuilderUserFormProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { useReducer } from 'react';
+import { lazy, Suspense, useReducer } from 'react';
 import { Controller } from 'react-hook-form';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import { CountrySelect } from './country-select';
+
+const BirthdayField = lazy(() =>
+  import('./birthday-field').then(mod => ({ default: mod.BirthdayField }))
+);
 
 export const UserFormWrapper = styled('div')`
   display: grid;
@@ -169,23 +172,13 @@ export function UserForm<T extends BuilderUserFormFields>({
           name={'birthday'}
           control={control}
           render={({ field, fieldState: { error } }) => (
-            <MobileDatePicker
-              {...field}
-              value={field.value ? new Date(field.value) : null}
-              onClose={field.onBlur}
-              label={t('user.form.birthday')}
-              format="PP"
-              openTo="year"
-              views={['year', 'month', 'day']}
-              disableFuture
-              slotProps={{
-                field: { clearable: true, ref: field.ref },
-                textField: {
-                  error: !!error,
-                  helperText: error?.message,
-                },
-              }}
-            />
+            <Suspense>
+              <BirthdayField
+                field={field}
+                error={error}
+                label={t('user.form.birthday')}
+              />
+            </Suspense>
           )}
         />
       )}

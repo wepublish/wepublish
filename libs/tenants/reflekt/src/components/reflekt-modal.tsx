@@ -4,7 +4,7 @@ import { Modal } from '@wepublish/ui';
 import theme from '../theme';
 
 export const ReflektModal = styled(Modal)`
-  .MuiButton-textSecondary {
+  .MuiButton-text.MuiButton-colorSecondary {
     color: ${theme.palette.text.primary};
   }
 `;

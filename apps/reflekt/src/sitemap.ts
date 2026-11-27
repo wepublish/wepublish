@@ -6,4 +6,5 @@ export const sitemapConfig: SitemapSiteConfig = {
     'Reflekt ist ein Schweizer Medium für investigativen Journalismus, das von seiner Community finanziert wird.',
   mode: 'index',
   pageUrls: ['/team', '/login', '/signup', '/mitmachen'],
+  sitemapPath: '/sitemap',
 };

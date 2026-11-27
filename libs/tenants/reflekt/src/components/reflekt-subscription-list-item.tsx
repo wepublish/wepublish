@@ -8,7 +8,7 @@ import theme from '../theme';
 
 export const ReflektSubscriptionListItem = styled(SubscriptionListItem)`
   ${SubscriptionListItemActions} {
-    .MuiButton-textSecondary {
+    .MuiButton-text.MuiButton-colorSecondary {
       color: ${theme.palette.text.primary};
     }
   }

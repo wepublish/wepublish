@@ -19,13 +19,14 @@ import { ReflektGlobalStyles } from './components/reflekt-global-styles';
 import { ReflektGoodiePicker } from './components/reflekt-goodie-picker';
 import { ReflektImageBlock } from './components/reflekt-image-block';
 import { ReflektImageSlider } from './components/reflekt-image-slider';
-import { ReflektLink } from './components/reflekt-link';
 import {
   ReflektListItem,
   ReflektUnorderedList,
 } from './components/reflekt-lists';
 import { ReflektLoginForm } from './components/reflekt-login-form';
+import { ReflektMemberPlanOfferPicker } from './components/reflekt-memberplan-offer-picker';
 import { ReflektMemberPlanPicker } from './components/reflekt-memberplan-picker';
+import { ReflektPaymentMethodPicker } from './components/reflekt-payment-method-picker';
 import { ReflektMemberPlanItem } from './components/reflekt-memberplan-picker-item';
 import { ReflektModal } from './components/reflekt-modal';
 import { ReflektNavbar } from './components/reflekt-navbar';
@@ -75,13 +76,14 @@ export const reflektTenant: WebsiteTenantConfig = {
     Upgrade: ReflektUpgrade,
     GoodiePicker: ReflektGoodiePicker,
     MemberPlanPicker: ReflektMemberPlanPicker,
+    PaymentMethodPicker: ReflektPaymentMethodPicker,
+    MemberPlanOfferPicker: ReflektMemberPlanOfferPicker,
     MemberPlanItem: ReflektMemberPlanItem,
     UserForm: ReflektUserForm,
     LoginForm: ReflektLoginForm,
     RegistrationForm: ReflektRegistrationForm,
     SubscriptionListItem: ReflektSubscriptionListItem,
     elements: {
-      Link: ReflektLink,
       UnorderedList: ReflektUnorderedList,
       ListItem: ReflektListItem,
       Modal: ReflektModal,

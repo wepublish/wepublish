@@ -6,11 +6,18 @@ import {
   isSubscribeBlock,
 } from '@wepublish/block-content/website';
 import {
+  calculatePeriodAmount,
   CurrencyNumberSpinner,
+  getPeriodPriceRange,
+  isFixedAmountLayout,
+  MemberPlanOfferPickerRadios,
   MemberPlanPickerRadios,
+  monthlyAmountFromPeriodAmount,
+  showsAmountInput,
 } from '@wepublish/membership/website';
 import {
   FullBlockFragment,
+  PaymentPeriodicity,
   SubscriptionsDocument,
 } from '@wepublish/website/api';
 import {
@@ -32,10 +39,11 @@ import {
 } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import noGoodie from '../assets/no_goodie.png';
+import noGoodie from '../assets/no_goodie.webp';
 import { staticImageSrc } from '../assets/static-image';
-import withGoodie from '../assets/with_goodie.png';
+import withGoodie from '../assets/with_goodie.webp';
 import { euclidCircularB, robotoMono } from '../theme';
+import { useForceUpgradeRedirect } from './hooks/use-force-upgrade-redirect';
 import { ReflektBlockStyles } from './block-styles/reflekt-block-styles';
 import { StyledReflektSubscribeBlock } from './reflekt-subscribe';
 
@@ -112,7 +120,7 @@ const ItemAmount = styled('div')`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: ${[euclidCircularB.style.fontFamily, 'sans-serif'].join(',')};
+  font-family: ${[euclidCircularB.family, 'sans-serif'].join(',')};
   font-weight: 500;
   font-size: clamp(3rem, 43cqi, 10rem);
   line-height: 1;
@@ -130,7 +138,7 @@ const ItemFreeAmountSlot = styled('div')`
 `;
 
 const ItemFreeAmountLabel = styled('span')`
-  font-family: ${[robotoMono.style.fontFamily, 'sans-serif'].join(',')};
+  font-family: ${[robotoMono.family, 'sans-serif'].join(',')};
   font-weight: 400;
   font-size: clamp(0.8rem, 6.5cqi, 1.4rem);
   line-height: 1.3;
@@ -155,7 +163,7 @@ const ItemFreeAmountBox = styled('div')`
   justify-items: center;
   background-color: ${({ theme }) => theme.palette.common.white};
   color: ${({ theme }) => theme.palette.common.black};
-  font-family: ${[euclidCircularB.style.fontFamily, 'sans-serif'].join(',')};
+  font-family: ${[euclidCircularB.family, 'sans-serif'].join(',')};
   font-weight: 500;
   font-size: clamp(1.25rem, 10cqi, 2.25rem);
   line-height: 1;
@@ -174,7 +182,7 @@ const ItemFreeAmountError = styled('span')`
   left: 0;
   right: 0;
   margin-top: 4px;
-  font-family: ${[robotoMono.style.fontFamily, 'sans-serif'].join(',')};
+  font-family: ${[robotoMono.family, 'sans-serif'].join(',')};
   font-size: clamp(0.65rem, 4.5cqi, 1rem);
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -221,7 +229,7 @@ const ItemFreeAmountSpinner = styled(CurrencyNumberSpinner, {
   }
 
   input {
-    font-family: ${[euclidCircularB.style.fontFamily, 'sans-serif'].join(',')};
+    font-family: ${[euclidCircularB.family, 'sans-serif'].join(',')};
     font-weight: 500;
     font-size: clamp(1.25rem, 10cqi, 2.25rem);
     line-height: 1;
@@ -245,10 +253,27 @@ const ItemFreeAmountSpinner = styled(CurrencyNumberSpinner, {
       }
     }
   }
+
+  ${({ theme }) => theme.breakpoints.down('sm')} {
+    > div > div {
+      padding-left: 4px;
+      padding-right: 4px;
+    }
+
+    button {
+      width: 28px;
+    }
+
+    input {
+      font-size: clamp(1rem, 8cqi, 1.75rem);
+      margin-left: 0;
+      padding: ${({ theme }) => theme.spacing(1)} 0;
+    }
+  }
 `;
 
 const ItemPerYear = styled('span')`
-  font-family: ${[robotoMono.style.fontFamily, 'sans-serif'].join(',')};
+  font-family: ${[robotoMono.family, 'sans-serif'].join(',')};
   font-weight: 400;
   font-size: clamp(0.65rem, 4.5cqi, 1.1rem);
   letter-spacing: 0.05em;
@@ -268,6 +293,13 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
     slug,
     shortDescription,
     periodicityPricing,
+    paymentPeriodicity,
+    showPeriodicity,
+    amountLayout,
+    amount,
+    onAmountChange,
+    availablePaymentMethods,
+    defaultPaymentPeriodicity,
     currency,
     extendable,
     goodies,
@@ -282,19 +314,23 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
   const radioGroup = useRadioGroup();
   const isChecked = props.checked ?? radioGroup?.value === id;
   const radioInputRef = useRef<HTMLInputElement>(null);
-  const {
-    formState: { errors },
-    setValue,
-  } = useFormContext();
+  const form = useFormContext() as ReturnType<typeof useFormContext> | null;
+  const errors = form?.formState.errors;
 
   const { goodieMinValue, baselineMonthlyAmount } = useContext(
     CrowdfundingGoodieContext
   );
 
-  const hasFreePricing = tags?.includes('inline-slider');
+  const hasFreePricing =
+    isFixedAmountLayout(amountLayout) && showsAmountInput(amountLayout);
   const hasMinValue = amountPerMonthMin > 0;
 
-  const yearlyMinChf = Math.round((amountPerMonthMin * 12) / 100);
+  const memberPlan = { periodicityPricing };
+  const yearlyMinCents = getPeriodPriceRange(
+    memberPlan,
+    PaymentPeriodicity.Yearly
+  ).amountMin;
+  const yearlyMinChf = Math.round(yearlyMinCents / 100);
 
   const [freeAmountYearly, setFreeAmountYearly] = useState<number | null>(
     hasMinValue ? yearlyMinChf : null
@@ -303,8 +339,8 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
   const yearlyChf =
     hasFreePricing ? (freeAmountYearly ?? yearlyMinChf) : yearlyMinChf;
   const tileYearlyValue =
-    (hasFreePricing ? (freeAmountYearly ?? 0) * 100 : amountPerMonthMin * 12) -
-    baselineMonthlyAmount * 12;
+    (hasFreePricing ? (freeAmountYearly ?? 0) * 100 : yearlyMinCents) -
+    calculatePeriodAmount(baselineMonthlyAmount, PaymentPeriodicity.Yearly);
   const hasGoodie =
     goodieMinValue != null ?
       tileYearlyValue >= goodieMinValue
@@ -316,17 +352,26 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
     }
 
     const touched = freeAmountYearly != null;
-    const monthlyAmount =
-      touched ? Math.round((freeAmountYearly * 100) / 12) : 0;
+    const targetMonthlyAmount =
+      touched ?
+        monthlyAmountFromPeriodAmount(
+          freeAmountYearly * 100,
+          PaymentPeriodicity.Yearly
+        )
+      : 0;
 
-    setValue('monthlyAmount', monthlyAmount);
-  }, [hasFreePricing, isChecked, freeAmountYearly, setValue]);
+    if (amount !== targetMonthlyAmount) {
+      onAmountChange?.(targetMonthlyAmount);
+    }
+  }, [hasFreePricing, isChecked, freeAmountYearly, amount, onAmountChange]);
 
   return (
     <ItemWrapper className={className}>
       <ItemImage
         src={staticImageSrc(hasGoodie ? withGoodie : noGoodie)}
         alt=""
+        loading="lazy"
+        decoding="async"
       />
       <ItemCard>
         <ItemAmountArea>
@@ -359,7 +404,7 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
                     </ItemFreeAmountSpinnerPlaceholder>
                   )}
 
-                  {errors.monthlyAmount && (
+                  {errors?.monthlyAmount && (
                     <ItemFreeAmountError>
                       {errors.monthlyAmount.message?.toString()}
                     </ItemFreeAmountError>
@@ -396,7 +441,8 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
 });
 
 const CrowdfundingSubscribeBlock = styled(StyledReflektSubscribeBlock)`
-  ${MemberPlanPickerRadios} {
+  ${MemberPlanPickerRadios},
+  ${MemberPlanOfferPickerRadios} {
     row-gap: ${({ theme }) => theme.spacing(8)};
     margin-top: ${({ theme }) => theme.spacing(10)};
     overflow: visible;
@@ -406,6 +452,8 @@ const CrowdfundingSubscribeBlock = styled(StyledReflektSubscribeBlock)`
 export const ReflektSubscribeCrowdfunding = (
   props: BuilderSubscribeBlockProps
 ) => {
+  useForceUpgradeRedirect(props.memberPlans);
+
   const {
     query: { upgradeSubscriptionId },
   } = useContext(BuilderRouterContext);

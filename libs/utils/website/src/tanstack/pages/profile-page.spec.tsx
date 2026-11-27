@@ -33,7 +33,16 @@ vi.mock('@apollo/client/react', async importOriginal => ({
 // The shared profile parts decide the layout from the feature flag and have
 // their own specs; here they only have to be the ones rendered.
 vi.mock('../../lib/components/profile/profile-subscriptions', () => ({
-  ProfileSubscriptions: () => <div data-testid="profile-subscriptions" />,
+  ProfileSubscriptions: ({
+    subscribeAnotherUrl,
+  }: {
+    subscribeAnotherUrl?: string;
+  }) => (
+    <div
+      data-testid="profile-subscriptions"
+      data-subscribe-another-url={subscribeAnotherUrl}
+    />
+  ),
 }));
 
 vi.mock('../../lib/components/profile/profile-details', () => ({
@@ -78,5 +87,14 @@ describe('ProfilePage', () => {
       .map(element => element.dataset['testid']);
 
     expect(parts).toEqual(['profile-subscriptions', 'profile-details']);
+  });
+
+  it('passes the url for another subscription to the subscriptions', () => {
+    render(<ProfilePage subscribeAnotherUrl="/upgrade" />);
+
+    expect(screen.getByTestId('profile-subscriptions')).toHaveAttribute(
+      'data-subscribe-another-url',
+      '/upgrade'
+    );
   });
 });

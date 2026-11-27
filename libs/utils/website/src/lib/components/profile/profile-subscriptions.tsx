@@ -91,7 +91,13 @@ const DonationHistory = (props: BuilderSubscriptionListProps) => (
   />
 );
 
-export function ProfileSubscriptions({ className }: { className?: string }) {
+export function ProfileSubscriptions({
+  className,
+  subscribeAnotherUrl = '/mitmachen',
+}: {
+  className?: string;
+  subscribeAnotherUrl?: string;
+}) {
   const {
     elements: { H4 },
   } = useWebsiteBuilder();
@@ -209,7 +215,7 @@ export function ProfileSubscriptions({ className }: { className?: string }) {
             <SubscriptionListItemContent>
               <Button
                 LinkComponent={Link}
-                href={'/mitmachen'}
+                href={subscribeAnotherUrl}
               >
                 {t('user.subscribeAnother')}
               </Button>

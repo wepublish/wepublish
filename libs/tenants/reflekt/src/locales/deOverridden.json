@@ -2,10 +2,12 @@
   "crowdfunding": {
     "stats": {
       "progressOfGoal": "{type, select, Revenue {{current} von {goal} finanziert} other {{current} von {goal} Unterstützer:innen}}",
-      "daysRemaining": "{days, plural, =0 {Kampagne beendet} =1 {1 Tag verbleibt} other {{days} Tage verbleiben}}"
+      "allGoalsReached": "{type, select, Revenue {{current} von {goal} finanziert 🎉🎉!!} other {{current} von {goal} Unterstützer:innen}}",
+      "daysRemaining": "{days, plural, =1 {1 Tag verbleibt} other {{days} Tage verbleiben}}"
     }
   },
   "subscribe": {
+    "choosePaymentMethod": "Zahlungsmittel wählen",
     "cancellable": "Jederzeit kündbar\n * Versand innerhalb der Schweiz",
     "button": {
       "subscribeForPeriod": "Jetzt unterstützen",
@@ -42,6 +44,6 @@
     "cancelledSubscriptions": "Gekündigte Mitgliedschaften & Inaktive Spenden",
     "viewCancelledSubscriptions": "Gekündigte Mitgliedschaften & Inaktive Spenden anzeigen",
     "subscriptionsDetail": "{type, select, Donation {Spende} other {Mitgliedschaft}}",
-    "subscribeAnother": "Jetzt Crowdfunding unterstützen"
+    "subscribeAnother": "Mitgliedschaft upgraden"
   }
 }

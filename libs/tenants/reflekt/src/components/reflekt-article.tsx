@@ -47,7 +47,8 @@ const fullWidthMainSpacer = (theme: Theme) => css`
   ${theme.breakpoints.up('md')} {
     main > .MuiContainer-root {
       max-width: initial;
-      padding: 0;
+      padding-left: 0;
+      padding-right: 0;
     }
   }
 `;
@@ -62,7 +63,7 @@ const articleDate = (isFlexBlockHero: boolean) => (theme: Theme) => css`
 `;
 
 const ArticleDateWrapper = styled('span')`
-  font-family: ${robotoMono.style.fontFamily};
+  font-family: ${robotoMono.family};
   font-size: 0.75rem;
   line-height: 1;
 

@@ -1,13 +1,5 @@
 import theme from './theme';
 
-vi.mock('next/font/local', () => ({
-  default: () => ({ className: '', style: { fontFamily: 'serif' } }),
-}));
-
-vi.mock('next/font/google', () => ({
-  Roboto_Mono: () => ({ className: '', style: { fontFamily: 'monospace' } }),
-}));
-
 type StyleRules = Record<string, Record<string, unknown>>;
 
 const accordionRootStyles = () =>

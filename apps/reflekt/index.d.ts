@@ -1,8 +1,15 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/// <reference types="vite/client" />
+
+// Vite returns a URL string for `import x from './x.svg'`, not Next's
+// `{ src, height, width }` StaticImageData object.
 declare module '*.svg' {
-  const content: any;
-  export const ReactComponent: any;
-  export default content;
+  const url: string;
+  export default url;
 }
 
-declare module '*.css';
+interface Window {
+  plausible?: (
+    event: string,
+    options?: { props?: Record<string, string> }
+  ) => void;
+}

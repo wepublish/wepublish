@@ -263,7 +263,7 @@ const StyledBanner = styled(BannerBase, {
 
     ${BannerText}, ${BannerCtaText} {
       text-align: center;
-      font-family: ${recife.style.fontFamily};
+      font-family: ${recife.family};
       max-width: 400px;
       margin-left: auto;
       margin-right: auto;

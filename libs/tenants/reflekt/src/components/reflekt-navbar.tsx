@@ -19,8 +19,8 @@ import {
   IconButton,
   Link,
   useWebsiteBuilder,
+  BuilderRouterContext,
 } from '@wepublish/website/builder';
-import { useRouter } from 'next/router';
 import {
   forwardRef,
   PropsWithChildren,
@@ -30,6 +30,7 @@ import {
   useMemo,
   useRef,
   useState,
+  useContext,
 } from 'react';
 import { FiMenu as FiMenuDefault } from 'react-icons/fi';
 import { MdWarning } from 'react-icons/md';
@@ -69,6 +70,7 @@ const cssVariables = (state: NavbarState[], isHomePage: boolean) => css`
       }
     `
       : `
+    --navbar-height: ${NAVBAR_HEIGHT_PX}px;
     --navbar-aspect-ratio: 3.1 / 1;
     --scrolled-navbar-aspect-ratio: 3.1 / 1;
 
@@ -648,6 +650,8 @@ export const NavbarInnerWrapper = styled(Toolbar, {
   navbarState: NavbarState[];
   isMenuOpen?: boolean;
 }>`
+  height: ${NAVBAR_HEIGHT_PX}px;
+
   ${({ isMenuOpen }) =>
     isMenuOpen &&
     css`
@@ -689,7 +693,7 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
       hasUnpaidInvoices,
       loginBtn = { href: '/login' },
       profileBtn = { href: '/profile' },
-      subscribeBtn = { href: '/crowdfunding' },
+      subscribeBtn = { href: '/mitmachen' },
       isMenuOpen: controlledIsMenuOpen,
       onMenuToggle,
       navPaperClassName,
@@ -749,7 +753,7 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
       onMenuToggle?.(newState);
     }, [isMenuOpen, controlledIsMenuOpen, onMenuToggle]);
 
-    const router = useRouter();
+    const { asPath } = useContext(BuilderRouterContext);
 
     const mainItems = data?.navigations?.find(({ key }) => key === slug);
     const iconItems = data?.navigations?.find(({ key }) => key === iconSlug);
@@ -784,7 +788,7 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
       (!hasRunningSubscription && !hasUnpaidInvoices && subscribeBtn) as boolean
     );
 
-    const isHomePage = router.pathname === '/';
+    const isHomePage = asPath.split(/[?#]/)[0] === '/';
 
     const navbarStyles = useMemo(
       () => cssVariables(navbarState, isHomePage),
