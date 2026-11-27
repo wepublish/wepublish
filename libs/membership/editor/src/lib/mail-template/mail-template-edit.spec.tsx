@@ -949,7 +949,7 @@ describe('MailTemplateEdit previews', () => {
     });
   });
 
-  it('closes the email preview with a button', async () => {
+  it('closes the email preview from the top of the dialog', async () => {
     renderPage('/mailtemplates/edit/tpl-1');
     await waitFor(() => expect(subjectField()).toHaveValue('Subject mail'));
 
@@ -957,17 +957,20 @@ describe('MailTemplateEdit previews', () => {
       screen.getByRole('button', { name: 'mailTemplates.edit.preview' })
     );
     const dialog = await screen.findByRole('dialog');
+    const close = within(dialog).getAllByRole('button', {
+      name: 'mailTemplates.editor.close',
+    });
 
-    fireEvent.click(
-      within(dialog).getByRole('button', {
-        name: 'mailTemplates.editor.close',
-      })
-    );
+    // One close button, in the title at the top, not under the preview.
+    expect(close).toHaveLength(1);
+    expect(close[0].closest('h2')).not.toBeNull();
+
+    fireEvent.click(close[0]);
 
     await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
   });
 
-  it('closes the letter preview with a button', async () => {
+  it('closes the letter preview from the top of the dialog', async () => {
     renderPage('/mailtemplates/edit/tpl-1');
     await waitFor(() => expect(subjectField()).toHaveValue('Subject mail'));
 
@@ -976,12 +979,15 @@ describe('MailTemplateEdit previews', () => {
       screen.getByRole('button', { name: 'mailTemplates.edit.previewLetter' })
     );
     const dialog = await screen.findByRole('dialog');
+    const close = within(dialog).getAllByRole('button', {
+      name: 'mailTemplates.editor.close',
+    });
 
-    fireEvent.click(
-      within(dialog).getByRole('button', {
-        name: 'mailTemplates.editor.close',
-      })
-    );
+    // One close button, in the title at the top, not under the preview.
+    expect(close).toHaveLength(1);
+    expect(close[0].closest('h2')).not.toBeNull();
+
+    fireEvent.click(close[0]);
 
     await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
   });
