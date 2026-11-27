@@ -23,6 +23,20 @@
   calls plus the direct `fetch`es) then fails every bexio call at once with
   `BexioUnavailableError` for 5 min, so an outage costs one timeout, not
   one per subscription.
+  **we.publish delivers (opt-in):** `bexio_invoiceMailByWePublish` makes
+  `deliversInvoiceItself()` false, so renewal invoices are issued + rendered
+  for every reader and the pdf goes out with the invoice-creation flow mail
+  (`MailControllerConfig.attachment`, every mail provider) or letter. Checkout
+  invoices (`createIntent`) are still emailed by Bexio. No pdf → nothing is
+  sent and a `deferred` mail-log entry is written; `postMissingInvoiceDeliveries`
+  mails readers with only deferred/rejected entries (≤3 refusals), which is
+  what keeps checkout invoices (no entry) out. Bexio then shows no email
+  history for the invoice.
+  **«Sent» in Bexio:** once a mail or letter carrying the pdf was handed to
+  the mail provider / print vendor, `InvoiceDeliveryService.sendFlowMail`
+  calls `markRemoteInvoiceSent` (Bexio: `POST kb_invoice/{id}/mark_as_sent`,
+  nothing is emailed). A deferred or refused delivery stays unsent; a failing
+  call is logged, never thrown. The API does not return the mark.
   **Contact sync (opt-in):** `SettingPaymentProvider.bexio_contactSync` has
   `BexioContactSyncService` (`libs/payment/api/.../bexio/`, a `runNight`
   step before the Mailchimp sync) push reader data to bexio every night:

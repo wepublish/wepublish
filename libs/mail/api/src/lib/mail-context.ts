@@ -37,6 +37,12 @@ export interface SendComposedMailProps {
    */
   readonly withAttachments?: boolean;
   /**
+   * Ready-made files the caller sends along, after the template's own
+   * documents — e.g. the payment provider's invoice pdf. Sent even when
+   * `withAttachments` is off: that switch only concerns the template.
+   */
+  readonly attachments?: MailAttachment[];
+  /**
    * Try again when the provider fails for a moment. Only for senders nobody
    * waits on (the nightly run): the retries take over a minute, longer than
    * a request may last.
@@ -205,6 +211,7 @@ export class MailContext implements MailContextInterface {
     data,
     mailLogID,
     withAttachments = true,
+    attachments: extraAttachments = [],
     retryTransient = false,
   }: SendComposedMailProps): Promise<{
     subject: string;
@@ -229,12 +236,15 @@ export class MailContext implements MailContextInterface {
     const composed = composeMail(template, data);
     // Rendered before anything is handed over: a mail whose documents cannot
     // be rendered fails as a whole rather than going out without them.
-    const attachments = await this.renderAttachments(
-      withAttachments ?
-        await loadAttachmentIds(this.prisma as PrismaClient, mailTemplateId)
-      : [],
-      data
-    );
+    const attachments = [
+      ...(await this.renderAttachments(
+        withAttachments ?
+          await loadAttachmentIds(this.prisma as PrismaClient, mailTemplateId)
+        : [],
+        data
+      )),
+      ...extraAttachments,
+    ];
 
     const result = await this.sendWithRetry(
       {

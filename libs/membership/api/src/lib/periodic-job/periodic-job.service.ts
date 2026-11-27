@@ -25,15 +25,16 @@ import {
   User,
 } from '@prisma/client';
 import {
-  LetterAttachment,
+  LetterRecipient,
+  MailAttachment,
   MailContext,
   resolveLetterRecipient,
 } from '@wepublish/mail/api';
 import { InvoicePaidNotifier, PaymentsService } from '@wepublish/payment/api';
 import {
   InvoiceDeliveryService,
+  DeliverySide,
   MailTrigger,
-  PaperSide,
 } from './invoice-delivery.service';
 import { PaymentMethodChangeService } from '../payment-method-change/payment-method-change.service';
 import {
@@ -72,8 +73,11 @@ export const NIGHT_CLAIM_MS = 12 * 60 * 60 * 1000;
 const RUN_LOCK = 'periodic-job-run';
 const RUN_LOCK_TTL_MS = 2 * 60 * 1000;
 
+/** How many invoices the run creates between two memory log lines. */
+const MEMORY_LOG_EVERY = 100;
+
 /** How often a refused invoice letter is offered again before someone has to look. */
-const INVOICE_LETTER_ATTEMPTS = 3;
+const INVOICE_DELIVERY_ATTEMPTS = 3;
 
 /**
  * The states of an invoice letter that is not on its way: the vendor never
@@ -278,10 +282,68 @@ export class PeriodicJobService {
     return job;
   }
 
-  private async findRunToRetry(
+  /**
+   * Runs today's job again now, also when it already ran tonight: load tests
+   * create due subscriptions and then need the nightly run. Answers once the
+   * run is taken over; it goes on in the background.
+   */
+  public async runTodayNow(): Promise<PeriodicJob> {
+    const acquired = await this.locks.acquire(RUN_LOCK, RUN_LOCK_TTL_MS);
+
+    if (acquired.status === 'taken') {
+      throw new ConflictException(
+        'A periodic job is already running. Wait until it has finished.'
+      );
+    }
+
+    const lock = heldLock(acquired);
+    // As a retry, so the mails already sent today are skipped.
+    const run: PeriodicJobRunObject = {
+      isRetry: true,
+      date: startOfDay(new Date()),
+      lastStartedAt: null,
+    };
+    let job: PeriodicJob;
+
+    try {
+      await this.refuseWhileARunGoesOn(lock, acquired.status === 'unavailable');
+      job = await this.reopenRun(run.date);
+    } catch (error) {
+      await lock?.release();
+      throw error;
+    }
+
+    this.processRun(run)
+      .catch(error =>
+        this.logger.error("Running today's periodic job again failed:", error)
+      )
+      .finally(() => lock?.release());
+
+    return job;
+  }
+
+  private async reopenRun(runDate: Date) {
+    const now = new Date();
+
+    this.runningJob = await this.prismaService.periodicJob.upsert({
+      where: { date: toDbDate(runDate) },
+      create: { date: toDbDate(runDate), executionTime: now },
+      update: {
+        executionTime: now,
+        successfullyFinished: null,
+        finishedWithError: null,
+        error: null,
+      },
+    });
+
+    return this.runningJob;
+  }
+
+  /** Without Dragonfly, the job log is all that tells a run is going on. */
+  private async refuseWhileARunGoesOn(
     lock: HeldLock | undefined,
     unavailable: boolean
-  ): Promise<RetryRun> {
+  ) {
     if (!lock) {
       if (unavailable) {
         throw new ServiceUnavailableException(
@@ -299,6 +361,13 @@ export class PeriodicJobService {
         );
       }
     }
+  }
+
+  private async findRunToRetry(
+    lock: HeldLock | undefined,
+    unavailable: boolean
+  ): Promise<RetryRun> {
+    await this.refuseWhileARunGoesOn(lock, unavailable);
 
     const [failedRun] = await this.getOutstandingRuns(new Date(), !!lock);
 
@@ -348,9 +417,9 @@ export class PeriodicJobService {
       await this.step('invoiceCreation', () =>
         this.createMissingInvoicesForActiveSubscriptions(periodicJobRunObject)
       );
-      this.logger.log('Processing invoice letters still missing...');
+      this.logger.log('Processing invoice deliveries still missing...');
       await this.step('invoiceLetters', () =>
-        this.postMissingInvoiceLetters(periodicJobRunObject.date)
+        this.postMissingInvoiceDeliveries(periodicJobRunObject.date)
       );
       this.logger.log('Processing expiry of payment method changes...');
       // by the clock, not the run date: a catch-up run of an earlier day must
@@ -449,6 +518,16 @@ export class PeriodicJobService {
         `Could not note step ${step.key} on the job log: ${describeError(saveError)}`
       );
     }
+  }
+
+  /** A busy night (all yearly subscriptions at once) is where memory shows. */
+  private logMemory(step: string) {
+    const { rss, heapUsed, external } = process.memoryUsage();
+    const mib = (bytes: number) => `${Math.round(bytes / 1024 / 1024)} MiB`;
+
+    this.logger.log(
+      `${step} · rss ${mib(rss)} · heap ${mib(heapUsed)} · external ${mib(external)}`
+    );
   }
 
   private async inContext<T>(context: string, run: () => Promise<T>) {
@@ -550,11 +629,21 @@ export class PeriodicJobService {
           periodicJobRunObject.date
         )
       );
-    for (const subscription of activeSubscriptionsWithoutInvoice) {
+    const total = activeSubscriptionsWithoutInvoice.length;
+    this.logMemory(`Creating ${total} invoices`);
+
+    for (const [
+      index,
+      subscription,
+    ] of activeSubscriptionsWithoutInvoice.entries()) {
       await this.inContext(
         `Creating the invoice for subscription ${subscription.id} failed`,
         () => this.createInvoice(periodicJobRunObject, subscription)
       );
+
+      if ((index + 1) % MEMORY_LOG_EVERY === 0 || index + 1 === total) {
+        this.logMemory(`Created ${index + 1} of ${total} invoices`);
+      }
     }
   }
 
@@ -710,7 +799,8 @@ export class PeriodicJobService {
     const outcome = await this.invoiceDelivery.createRemoteInvoice(
       subscriptionToCreateInvoice,
       invoice,
-      creationEvent
+      creationEvent,
+      periodicJobRunObject.date
     );
 
     if ('skip' in outcome) {
@@ -733,37 +823,52 @@ export class PeriodicJobService {
   }
 
   /**
-   * Post the invoice letter to every reader in letter mode whose open invoice
-   * has not been posted yet: the print vendor refused it (a rejected log entry
-   * sits under the identifier a retried run skips), its pdf could not be
-   * fetched that night, or the invoice went out by email before the reader
-   * was moved to letters. Nothing else carries the invoice to them.
+   * Deliver every open invoice whose invoice-creation mail or letter is still
+   * owed. A reader in letter mode gets the letter posted when the print vendor
+   * refused it (a rejected log entry sits under the identifier a retried run
+   * skips), its pdf could not be fetched that night, or the invoice went out
+   * by email before the reader was moved to letters. Any other reader gets the
+   * mail with the pdf when the invoice's provider leaves delivery to
+   * we.publish and the mail was held back for a missing pdf (a deferred log
+   * entry) or refused. Nothing else carries the invoice to them.
    */
-  public async postMissingInvoiceLetters(runDate: Date) {
+  public async postMissingInvoiceDeliveries(runDate: Date) {
     const letterSender = this.mailContext.letterSender;
+    const letterReaders = new Set<string>();
 
-    if (!letterSender || !(await letterSender.isConfigured())) {
-      return;
+    if (letterSender && (await letterSender.isConfigured())) {
+      const readers = await this.prismaService.userDeliveryPreference.findMany({
+        where: { channel: MailChannel.letter },
+        select: { userId: true },
+      });
+
+      readers.forEach(({ userId }) => letterReaders.add(userId));
     }
 
-    const readers = await this.prismaService.userDeliveryPreference.findMany({
-      where: { channel: MailChannel.letter },
-      select: { userId: true },
-    });
-    const userIds = new Set(readers.map(({ userId }) => userId));
+    const mailsOwed =
+      await this.invoiceDelivery.anyProviderLeavesDeliveryToUs();
 
-    if (!userIds.size) {
+    if (!letterReaders.size && !mailsOwed) {
       return;
     }
 
     const invoices = (
       await this.subscriptionController.findAllOpenInvoices()
-    ).filter(invoice => userIds.has(invoice.subscription?.user?.id ?? ''));
+    ).filter(
+      invoice =>
+        mailsOwed || letterReaders.has(invoice.subscription?.user?.id ?? '')
+    );
 
     for (const invoice of invoices) {
       await this.inContext(
-        `Posting the invoice letter for invoice ${invoice.id} failed`,
-        () => this.postInvoiceLetter(runDate, invoice)
+        `Delivering the missing invoice ${invoice.id} failed`,
+        () =>
+          this.deliverMissingInvoice(
+            runDate,
+            invoice,
+            letterReaders.has(invoice.subscription?.user?.id ?? ''),
+            mailsOwed
+          )
       );
     }
   }
@@ -789,7 +894,12 @@ export class PeriodicJobService {
       : null;
   }
 
-  private async postInvoiceLetter(runDate: Date, invoice: OpenInvoice) {
+  private async deliverMissingInvoice(
+    runDate: Date,
+    invoice: OpenInvoice,
+    inLetterMode: boolean,
+    mailsOwed: boolean
+  ) {
     const subscription = invoice.subscription;
 
     if (!subscription?.user) {
@@ -807,14 +917,48 @@ export class PeriodicJobService {
       })
     ).find(action => action.type === SubscriptionEvent.INVOICE_CREATION);
 
-    if (!creationEvent?.mailTemplateId || !creationEvent.sendAsLetter) {
+    if (!creationEvent?.mailTemplateId) {
       return;
     }
 
+    const letterRecipient =
+      inLetterMode && creationEvent.sendAsLetter ?
+        await resolveLetterRecipient({
+          prisma: this.prismaService,
+          letterSender: this.mailContext.letterSender,
+          recipient: subscription.user,
+          mailTemplateId: creationEvent.mailTemplateId,
+          asLetter: true,
+          withPaymentSlip: true,
+          logger: this.logger,
+        })
+      : null;
+
+    if (letterRecipient) {
+      return this.postInvoiceLetter(
+        runDate,
+        invoice,
+        creationEvent,
+        letterRecipient
+      );
+    }
+
+    if (mailsOwed) {
+      return this.mailOwedInvoice(runDate, invoice, creationEvent);
+    }
+  }
+
+  private async postInvoiceLetter(
+    runDate: Date,
+    invoice: OpenInvoice,
+    creationEvent: Action,
+    letterRecipient: LetterRecipient
+  ) {
+    const user = invoice.subscription!.user!;
     const attempts = await this.prismaService.mailLog.findMany({
       where: {
-        recipientID: subscription.user.id,
-        mailTemplateId: creationEvent.mailTemplateId,
+        recipientID: user.id,
+        mailTemplateId: creationEvent.mailTemplateId!,
         channel: MailChannel.letter,
         sentDate: { gte: invoice.createdAt },
       },
@@ -846,7 +990,7 @@ export class PeriodicJobService {
       return;
     }
 
-    if (attempts.length >= INVOICE_LETTER_ATTEMPTS) {
+    if (attempts.length >= INVOICE_DELIVERY_ATTEMPTS) {
       this.logger.error(
         `The invoice letter for invoice ${invoice.id} was handed over ${attempts.length} times without getting through and is not posted again`
       );
@@ -854,38 +998,15 @@ export class PeriodicJobService {
       return;
     }
 
-    const letterRecipient = await resolveLetterRecipient({
-      prisma: this.prismaService,
-      letterSender: this.mailContext.letterSender,
-      recipient: subscription.user,
-      mailTemplateId: creationEvent.mailTemplateId,
-      asLetter: true,
-      withPaymentSlip: true,
-      logger: this.logger,
-    });
+    const attachment = await this.renderOwedInvoice(invoice);
 
-    if (!letterRecipient) {
-      return;
-    }
-
-    let letterAttachment: LetterAttachment | undefined;
-
-    try {
-      letterAttachment =
-        await this.invoiceDelivery.renderRemoteInvoice(invoice);
-    } catch (error) {
-      // Another night, rather than a letter without the invoice; the
-      // provider's outage must not take the run down either.
-      this.logger.warn(
-        `Invoice ${invoice.id} is not posted tonight, the payment provider could not render it: ${describeError(error)}`
-      );
-
+    if (attachment === null) {
       return;
     }
 
     // Never posted and nothing to print: an invoice the editor created, or a
     // provider without invoices of its own.
-    if (!attempts.length && !letterAttachment) {
+    if (!attempts.length && !attachment) {
       return;
     }
 
@@ -906,18 +1027,108 @@ export class PeriodicJobService {
 
     await this.sendTemplateMail(
       creationEvent,
-      subscription.user,
+      user,
       false,
-      { subscriptionToCreateInvoice: subscription, invoice },
+      { subscriptionToCreateInvoice: invoice.subscription, invoice },
       runDate,
       {
         letterRecipient,
-        letterAttachment,
+        attachment,
         mailLogId: replacementLogId,
-        subscriptionId: subscription.id,
+        subscriptionId: invoice.subscription!.id,
         invoiceId: invoice.id,
       }
     );
+  }
+
+  /**
+   * The invoice-creation mail with the pdf, for an invoice whose provider
+   * leaves delivery to we.publish. Owed only when it was held back for a
+   * missing pdf or refused, and nothing got through or is still being retried
+   * on either channel since — a checkout's invoice, which the provider
+   * emailed, has no entry at all.
+   */
+  private async mailOwedInvoice(
+    runDate: Date,
+    invoice: OpenInvoice,
+    creationEvent: Action
+  ) {
+    if (!(await this.invoiceDelivery.leavesDeliveryToUs(invoice))) {
+      return;
+    }
+
+    const user = invoice.subscription!.user!;
+    const attempts = await this.prismaService.mailLog.findMany({
+      where: {
+        recipientID: user.id,
+        mailTemplateId: creationEvent.mailTemplateId!,
+        sentDate: { gte: invoice.createdAt },
+      },
+      select: { state: true, mailProviderMessageID: true },
+    });
+
+    // Held back by us for a missing pdf: a deferred entry no provider ever
+    // saw. A deferred entry with the provider's message id is a soft bounce
+    // the provider still retries, and counts as a mail on its way.
+    const handedOver = attempts.filter(
+      ({ state, mailProviderMessageID }) =>
+        state !== MailLogState.deferred || !!mailProviderMessageID
+    );
+
+    // Owed only while every mail handed over was refused outright.
+    if (
+      !attempts.length ||
+      handedOver.some(({ state }) => state !== MailLogState.rejected)
+    ) {
+      return;
+    }
+
+    if (handedOver.length >= INVOICE_DELIVERY_ATTEMPTS) {
+      this.logger.error(
+        `The invoice mail for invoice ${invoice.id} was refused ${handedOver.length} times and is not sent again`
+      );
+
+      return;
+    }
+
+    const attachment = await this.renderOwedInvoice(invoice);
+
+    if (!attachment) {
+      return;
+    }
+
+    await this.sendTemplateMail(
+      creationEvent,
+      user,
+      false,
+      { subscriptionToCreateInvoice: invoice.subscription, invoice },
+      runDate,
+      {
+        letterRecipient: null,
+        attachment,
+        subscriptionId: invoice.subscription!.id,
+        invoiceId: invoice.id,
+      }
+    );
+  }
+
+  /**
+   * The provider's pdf of an owed invoice; `null` when the provider cannot
+   * render it tonight — another night rather than a delivery without the
+   * invoice, and the provider's outage must not take the run down either.
+   */
+  private async renderOwedInvoice(
+    invoice: OpenInvoice
+  ): Promise<MailAttachment | undefined | null> {
+    try {
+      return await this.invoiceDelivery.renderRemoteInvoice(invoice);
+    } catch (error) {
+      this.logger.warn(
+        `Invoice ${invoice.id} is not delivered tonight, the payment provider could not render it: ${describeError(error)}`
+      );
+
+      return null;
+    }
   }
 
   private async chargeInvoice(
@@ -1277,7 +1488,7 @@ export class PeriodicJobService {
     isRetry: boolean,
     optionalData: Record<string, any>,
     periodicJobRunDate: Date,
-    delivery?: PaperSide & MailTrigger
+    delivery?: DeliverySide & MailTrigger
   ) {
     return this.invoiceDelivery.sendFlowMail(
       action,

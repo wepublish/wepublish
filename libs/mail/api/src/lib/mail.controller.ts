@@ -7,17 +7,14 @@ import {
   User,
 } from '@prisma/client';
 import { v7 as uuidv7 } from 'uuid';
+import { MailAttachment } from './mail-attachment';
 import { MailContext } from './mail-context';
 import { MailProviderRecipientError } from './mail-provider/mail-provider.interface';
 import {
   qualityTypeForRejectReason,
   recordEmailQualitySafely,
 } from './email-quality-recorder';
-import {
-  LetterAttachment,
-  LetterDeliveryError,
-  LetterRecipient,
-} from './letter-sender';
+import { LetterDeliveryError, LetterRecipient } from './letter-sender';
 import { resolveLetterRecipient } from './resolve-letter-recipient';
 
 export enum mailLogType {
@@ -86,10 +83,11 @@ export type MailControllerConfig = {
    */
   letterRecipient?: LetterRecipient | null;
   /**
-   * A pdf printed after the template, e.g. the provider's invoice with its
-   * payment slip. Nothing for a mail: the provider emails that itself.
+   * A ready-made file that goes with the template on either channel, e.g. the
+   * payment provider's invoice pdf: printed after the template in a letter,
+   * attached after the template's own documents in a mail.
    */
-  letterAttachment?: LetterAttachment;
+  attachment?: MailAttachment;
   /**
    * Try again when the mail provider fails for a moment. Only the nightly
    * run sets it; a request cannot wait the minute the retries take.
@@ -228,6 +226,9 @@ export class MailController {
           recipient: this.config.recipient.email,
           data: await this.buildData(),
           withAttachments: !SENT_WITHOUT_ATTACHMENTS.has(this.config.mailType),
+          ...(this.config.attachment && {
+            attachments: [this.config.attachment],
+          }),
           retryTransient: this.config.retryTransient ?? false,
         }
       ));
@@ -275,6 +276,23 @@ export class MailController {
   }
 
   /**
+   * Note that this mail is held back and why, without sending anything — e.g.
+   * the invoice-creation mail whose invoice pdf the payment provider could
+   * not render yet. The entry tells the editor why the reader is waiting and
+   * tells the night sweep the mail is still owed. It carries no provider
+   * message id: that is what sets it apart from a provider's own `deferred`,
+   * a soft bounce the provider is still retrying.
+   */
+  public async recordDeferred(reason: string): Promise<void> {
+    await this.writeLog(
+      this.config.mailLogId ?? uuidv7(),
+      MailLogState.deferred,
+      null,
+      reason
+    );
+  }
+
+  /**
    * The user with their address when this send goes to paper, as the caller
    * decided or as `resolveLetterRecipient` decides now.
    */
@@ -315,8 +333,11 @@ export class MailController {
           subscriptionId: this.config.subscriptionId ?? null,
           invoiceId: this.config.invoiceId ?? null,
         },
-        ...(this.config.letterAttachment && {
-          attachment: this.config.letterAttachment,
+        ...(this.config.attachment && {
+          attachment: {
+            content: this.config.attachment.content,
+            name: this.config.attachment.filename,
+          },
         }),
       });
     } catch (error) {

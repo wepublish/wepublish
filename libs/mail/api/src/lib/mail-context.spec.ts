@@ -220,6 +220,38 @@ describe('MailContext', () => {
       expect(sendMail.mock.calls[0][0]).not.toHaveProperty('attachments');
     });
 
+    it("appends the caller's files after the template's documents", async () => {
+      const { context, sendMail } = setup({ attachments: ['contract'] });
+
+      await context.sendComposedMail({
+        mailTemplateId: 'template-1',
+        recipient: 'jane@example.com',
+        mailLogID: 'log-1',
+        data,
+        attachments: [pdf('invoice')],
+      });
+
+      expect(sendMail.mock.calls[0][0].attachments).toEqual([
+        pdf('contract'),
+        pdf('invoice'),
+      ]);
+    });
+
+    it("sends the caller's files without needing a renderer", async () => {
+      // The provider's invoice pdf is ready-made; nothing has to be converted.
+      const { context, sendMail } = setup({ renderer: null });
+
+      await context.sendComposedMail({
+        mailTemplateId: 'template-1',
+        recipient: 'jane@example.com',
+        mailLogID: 'log-1',
+        data,
+        attachments: [pdf('invoice')],
+      });
+
+      expect(sendMail.mock.calls[0][0].attachments).toEqual([pdf('invoice')]);
+    });
+
     it('does not send attachments it has no renderer for', async () => {
       const { context, sendMail } = setup({
         attachments: ['contract'],
