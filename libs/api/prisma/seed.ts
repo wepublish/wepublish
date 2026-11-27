@@ -280,6 +280,19 @@ const seedSettings = (prisma: PrismaClient) =>
     }),
     prisma.setting.upsert({
       where: {
+        name: SettingName.PRINT_ISSUE_COUNTING,
+      },
+      update: {},
+      create: {
+        name: SettingName.PRINT_ISSUE_COUNTING,
+        value: 'perPeriod',
+        settingRestriction: {
+          allowedValues: { stringChoice: ['perPeriod', 'perCopy'] },
+        },
+      },
+    }),
+    prisma.setting.upsert({
+      where: {
         name: SettingName.PRINT_ISSUE_LABEL_FORMAT,
       },
       update: {},

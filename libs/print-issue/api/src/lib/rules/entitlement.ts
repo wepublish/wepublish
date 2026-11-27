@@ -62,11 +62,26 @@ export type RuleSubscription = {
   deliveries: RuleDelivery[];
 };
 
+/**
+ * How a period's copies are counted (the medium's setting):
+ * - `perPeriod`: a running period gets every issue shipped inside it.
+ * - `perCopy`: it stops once it received its number.
+ * Both send what a period is still owed after it ends.
+ */
+export type PrintIssueCounting = 'perPeriod' | 'perCopy';
+
+export const PRINT_ISSUE_COUNTINGS: readonly PrintIssueCounting[] = [
+  'perPeriod',
+  'perCopy',
+];
+
 export type QuotaConfig = {
-  /** 0 switches the owed-copies rule off */
+  /** 0 switches the owed-copies rule off, and with it the cap of `perCopy` */
   issuesPerYear: number;
   /** issues shipped before the export tracked them: presumed delivered */
   historicIssues: RuleIssue[];
+  /** default `perPeriod` */
+  counting?: PrintIssueCounting;
 };
 
 export type RuleOptions = {
@@ -229,6 +244,30 @@ export function deliveredIssues(
 }
 
 /**
+ * Counting per copy: a running period that already received its number gets
+ * no further copy. A period one copy short still gets a double issue whole.
+ */
+function receivedItsNumber(
+  sub: RuleSubscription,
+  period: RulePeriod | undefined,
+  quota: QuotaConfig
+): boolean {
+  if (quota.counting !== 'perCopy' || quota.issuesPerYear <= 0 || !period) {
+    return false;
+  }
+
+  const entitled = entitledIssues(period, sub.memberPlan, quota.issuesPerYear);
+
+  // A share that rounds to 0 (a monthly period at a few issues a year) is no
+  // number to have received; a plan set to 0 is left out before this.
+  return (
+    entitled !== null &&
+    entitled > 0 &&
+    deliveredIssues(sub, period, quota.historicIssues) >= entitled
+  );
+}
+
+/**
  * Whether a subscription receives the issue shipped on `issue.issueDate`
  * (a Zurich calendar day). Paid-up subscriptions do, renewing ones stay in
  * the run until the dunning process deactivates them, and a subscription
@@ -299,13 +338,19 @@ export function classifySubscription(
     }
   } else {
     if (paidUntil !== null && paidUntil >= day) {
+      const charged = chargedPeriod(sub.periods, day);
+
+      if (receivedItsNumber(sub, charged, quota)) {
+        return excluded('exhausted');
+      }
+
       return included(
         'paid',
         deactivatedOn ?
           `Kündigung per ${formatDe(deactivatedOn)}`
         : `bezahlt bis ${formatDe(paidUntil)}`,
         false,
-        chargedPeriod(sub.periods, day)?.id ?? null
+        charged?.id ?? null
       );
     }
 
@@ -315,12 +360,17 @@ export function classifySubscription(
           sub.openInvoiceIds.includes(period.invoiceId)
         )
       );
+      const charged = openPeriod ?? chargedPeriod(sub.periods, day);
+
+      if (receivedItsNumber(sub, charged, quota)) {
+        return excluded('exhausted');
+      }
 
       return included(
         'openInvoice',
         'offen',
         true,
-        (openPeriod ?? chargedPeriod(sub.periods, day))?.id ?? null,
+        charged?.id ?? null,
         sub.openInvoiceIds.length === 0
       );
     }

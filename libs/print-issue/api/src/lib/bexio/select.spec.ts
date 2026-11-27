@@ -459,6 +459,67 @@ describe('selectBexioOrders — copies still owed after a period', () => {
   });
 });
 
+describe('selectBexioOrders — counting per copy (B)', () => {
+  // «Jahresabos 2027» is running on 15.01.2027 and worth 6 at six a year
+  const running = () => invoice(1);
+  const counting = (
+    mode: 'perPeriod' | 'perCopy',
+    delivered: Record<string, number>
+  ) => ({
+    issuesPerYear: 6,
+    historicIssues: [],
+    delivered: new Map(Object.entries(delivered)),
+    counting: mode,
+  });
+  const select = (topUp: ReturnType<typeof counting>) =>
+    selectBexioOrders([running()], {
+      ...BASE,
+      links: links([[101, [gift(201), gift(202)]]]),
+      fetchPositions: positions({ 1: [{ text: 'Jahresabo', quantity: 2 }] }),
+      topUp,
+    });
+
+  it('skips a recipient whose running period received its number, and counts it', async () => {
+    const { selected, stats } = await select(
+      counting('perCopy', { '1:201:2027-01-01': 6, '1:202:2027-01-01': 5 })
+    );
+
+    expect(selected.map(s => s.recipientId)).toEqual([202]);
+    expect(stats.exhausted).toBe(1);
+  });
+
+  // At four a year a one-month period is worth a third of an issue, which
+  // rounds to 0: that is no number to have received from day one.
+  it('does not skip a recipient whose period is worth less than one issue', async () => {
+    const { selected, stats } = await selectBexioOrders(
+      [invoice(1, { title: 'Monatsabo 01.01.2027–31.01.2027' })],
+      {
+        ...BASE,
+        links: links([[101, [gift(201)]]]),
+        fetchPositions: positions({}),
+        topUp: { ...counting('perCopy', {}), issuesPerYear: 4 },
+      }
+    );
+
+    expect(selected.map(s => s.recipientId)).toEqual([201]);
+    expect(stats.exhausted).toBe(0);
+  });
+
+  it('caps nothing while counting per period, or while the quota is off', async () => {
+    const full = { '1:201:2027-01-01': 6, '1:202:2027-01-01': 6 };
+
+    for (const topUp of [
+      counting('perPeriod', full),
+      { ...counting('perCopy', full), issuesPerYear: 0 },
+    ]) {
+      const { selected, stats } = await select(topUp);
+
+      expect(selected.map(s => s.recipientId)).toEqual([201, 202]);
+      expect(stats.exhausted).toBe(0);
+    }
+  });
+});
+
 describe('selectBexioOrders — what is left out', () => {
   it('skips cancelled invoices and the payment provider’s own invoices', async () => {
     const fetchPositions = vi.fn(positions({}));

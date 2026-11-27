@@ -509,6 +509,143 @@ describe('classifySubscription — copies still owed (grace)', () => {
   });
 });
 
+describe('classifySubscription — counting per copy (B)', () => {
+  // a quarterly period is worth two issues at six a year
+  const QUARTER = period({
+    id: 'pQ4',
+    startsAt: '2026-10-01T00:00:00.000Z',
+    endsAt: '2026-12-31T00:00:00.000Z',
+    paymentPeriodicity: 'quarterly',
+    invoiceId: 'iQ4',
+  });
+  const PER_COPY: QuotaConfig = {
+    issuesPerYear: 6,
+    historicIssues: [],
+    counting: 'perCopy',
+  };
+  const received = (copies: number) =>
+    Array.from({ length: copies }, () => ({ periodId: 'pQ4' }));
+  const paidQuarter = (copies: number) =>
+    subscription({ periods: [QUARTER], deliveries: received(copies) });
+
+  it('stops a running paid period once it received its number', () => {
+    expect(classifySubscription(paidQuarter(2), ISSUE, PER_COPY)).toEqual({
+      include: false,
+      reason: 'exhausted',
+    });
+  });
+
+  it('keeps sending while the period has fewer copies than its number', () => {
+    expect(classifySubscription(paidQuarter(1), ISSUE, PER_COPY)).toMatchObject(
+      { include: true, reason: 'paid', periodId: 'pQ4' }
+    );
+  });
+
+  // At four a year a monthly period is worth a third of an issue, which
+  // rounds to 0: that is no number to have received from day one.
+  it('does not stop a period whose share of the issues rounds to nothing', () => {
+    const month = period({
+      id: 'pOct',
+      startsAt: '2026-10-01T00:00:00.000Z',
+      endsAt: '2026-10-31T00:00:00.000Z',
+      paymentPeriodicity: 'monthly',
+      invoiceId: 'iOct',
+    });
+
+    expect(
+      classifySubscription(
+        subscription({ periods: [month], deliveries: [] }),
+        ISSUE,
+        { ...PER_COPY, issuesPerYear: 4 }
+      )
+    ).toMatchObject({ include: true, reason: 'paid', periodId: 'pOct' });
+  });
+
+  it('counts the historic issues inside the period too', () => {
+    expect(
+      classifySubscription(paidQuarter(1), ISSUE, {
+        ...PER_COPY,
+        historicIssues: [{ issueDate: '2026-10-02' }],
+      })
+    ).toEqual({ include: false, reason: 'exhausted' });
+  });
+
+  it('stops an «offen» reader whose open period received its number', () => {
+    const open = subscription({
+      paidUntil: '2026-09-30T00:00:00.000Z',
+      periods: [QUARTER],
+      openInvoiceIds: ['iQ4'],
+      deliveries: received(2),
+    });
+
+    expect(classifySubscription(open, ISSUE, PER_COPY)).toEqual({
+      include: false,
+      reason: 'exhausted',
+    });
+  });
+
+  it('sends a double issue whole to a period one copy short', () => {
+    expect(
+      classifySubscription(paidQuarter(1), { ...ISSUE, countsAs: 2 }, PER_COPY)
+    ).toMatchObject({ include: true, reason: 'paid' });
+  });
+
+  it('never caps a lifetime period, which has no number', () => {
+    const lifetime = subscription({
+      periods: [{ ...QUARTER, paymentPeriodicity: 'lifetime' }],
+      deliveries: received(10),
+    });
+
+    expect(classifySubscription(lifetime, ISSUE, PER_COPY)).toMatchObject({
+      include: true,
+      reason: 'paid',
+    });
+  });
+
+  it('caps nothing while the quota is switched off', () => {
+    expect(
+      classifySubscription(paidQuarter(5), ISSUE, {
+        ...PER_COPY,
+        issuesPerYear: 0,
+      })
+    ).toMatchObject({ include: true, reason: 'paid' });
+  });
+
+  it('leaves counting per period (A) as it was: no cap while paid', () => {
+    for (const quota of [
+      QUOTA_6,
+      { ...PER_COPY, counting: 'perPeriod' as const },
+    ]) {
+      expect(classifySubscription(paidQuarter(4), ISSUE, quota)).toMatchObject({
+        include: true,
+        reason: 'paid',
+      });
+    }
+  });
+
+  it('still sends the copies a period is owed after it ends', () => {
+    const ended = subscription({
+      paidUntil: '2026-09-30T00:00:00.000Z',
+      autoRenew: false,
+      periods: [
+        period({
+          id: 'pQ3',
+          startsAt: '2026-07-01T00:00:00.000Z',
+          endsAt: '2026-09-30T00:00:00.000Z',
+          paymentPeriodicity: 'quarterly',
+        }),
+      ],
+      deliveries: [{ periodId: 'pQ3' }],
+    });
+
+    expect(classifySubscription(ended, ISSUE, PER_COPY)).toMatchObject({
+      include: true,
+      reason: 'grace',
+      zahlungsstatus: 'Restexemplar 2/2',
+    });
+  });
+});
+
 describe('entitledIssues', () => {
   it('derives the copies of a period from the issues per year', () => {
     const plan = { printIssues: {} };

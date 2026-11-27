@@ -163,6 +163,8 @@ describe('toRunModel', () => {
       excludedKind: 0,
       skippedOpen: 0,
       quantityMismatch: 0,
+      // counting per copy came later
+      exhausted: 0,
       // what used to be «Einzelheft ohne Ausgabe» is a selector without a valid issue
       noValidPeriod: 4,
     });
