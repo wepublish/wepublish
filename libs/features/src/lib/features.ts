@@ -63,6 +63,12 @@ export const FEATURES = [
     stage: 'alpha',
   },
   {
+    key: 'legacy-subscriptions',
+    description:
+      'Legacy subscriptions: filter imported subscriptions that were not paid for here yet, message them, and give them their own communication flow',
+    stage: 'alpha',
+  },
+  {
     key: 'gift-codes',
     description: 'Sell gift codes for member plans',
     stage: 'alpha',

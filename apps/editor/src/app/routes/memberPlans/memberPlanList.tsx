@@ -42,6 +42,7 @@ import {
   useListViewState,
   PageTitle,
 } from '@wepublish/ui/editor';
+import { flowsOfMemberPlanPath } from '@wepublish/membership/editor';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete, MdSearch } from 'react-icons/md';
@@ -213,7 +214,7 @@ function MemberPlanList() {
                 <PermissionControl
                   qualifyingPermissions={[CanGetSubscriptionFlows.id]}
                 >
-                  <Link to={`/communicationflows/edit/${rowData.id}`}>
+                  <Link to={flowsOfMemberPlanPath(rowData.id)}>
                     {t('memberPlanList.editFlow')}
                   </Link>
                 </PermissionControl>

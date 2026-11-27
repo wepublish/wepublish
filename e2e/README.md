@@ -73,7 +73,9 @@ development.
 | `E2E_IMAP_USER` + `E2E_IMAP_PASSWORD`                         | `@mail`                 | a real mailbox, Ethereal on review; Mailpit wins if both set |
 | `E2E_RESEND_API_KEY` + `E2E_RESEND_DOMAIN`                    | `@inbound-mail`         | mail from outside servers (bexio) on the Resend domain      |
 | `E2E_BEXIO_API_TOKEN` and not `production`                    | `@bexio`                | the bexio **test** company the target's provider writes to  |
+| `E2E_PINGEN_CLIENT_ID` + `_CLIENT_SECRET` + `_ORGANISATION_ID`, not `production` | `@letter` | a Pingen account; the letter provider is set to its staging environment |
 | `E2E_MAILCHIMP_API_KEY` + `_LIST_ID` + `_INTEREST_ID`        | `@mailchimp`            | a real test audience (no fake); never production            |
+| `E2E_LOAD_READERS` (`<mail>/<letter>`), not `production` or `staging` | `@load` | the renewal load test; see below                            |
 
 Every scenario carries a domain tag (`@auth`, `@paywall`, …) and the
 capability tags it needs. The `capabilities` fixture compares them with the
@@ -103,7 +105,24 @@ skip reason in the report (`pnpm run e2e:report`).
 - **`bexio`** (`support/bexio.ts`) reads the bexio test company: the invoice
   the provider created for a we.publish invoice (`api_reference`), and its
   status. Invoices a scenario records in `ctx.bexioInvoices` are canceled
-  afterwards; the contacts bexio got stay. Unit specs of this support code: `pnpm nx test e2e`.
+  afterwards; the contacts bexio got stay. `pdf(id)` downloads the invoice
+  pdf the way the provider does for We.Publish's own delivery. Unit specs of
+  this support code: `pnpm nx test e2e`.
+- **Mail attachments:** `Mail.attachments` (filename, type, bytes) from
+  Mailpit and IMAP; the Resend inbox does not read them.
+- **Letters** have no fake: `@letter` scenarios point the tenant's letter
+  provider at Pingen's **staging** environment with `autoSend` off (nothing
+  is printed) and keep it so, as the secret cannot be read back. The check is
+  the reader's mail log (`mailLogs`, channel `letter`): a `providerLetterID`
+  and the address. The renewal journey (`bexio-renewal.feature`) also
+  switches the bexio provider to `bexio_invoiceMailByWePublish` and the
+  plan's invoice-creation interval to `sendAsLetter`, restoring both
+  afterwards (`@mode:serial`), and needs the features
+  `editor-renewal-provider-invoice`, `paper-letters` and `paper-letter-flow`
+  on the target (it skips with the missing ones named). Its second scenario
+  switches the setting off, so bexio emails the renewal invoice itself, and
+  reads that mail in the Resend inbox like the checkout journey
+  (`@inbound-mail`, one mail of the daily budget).
 - **`checkout`** (`support/simulated-payment.ts`) drives the SIMULATED payment
   provider's checkout page (Pay / Decline / Cancel). It is the only payment
   fake: Stripe and Payrexx are never mocked over HTTP. `@payment` scenarios
@@ -195,6 +214,14 @@ started (nor migrated) for a URL you override (`BASE_URL`, `E2E_EDITOR_URL`,
   flag and finally the account away. The key acts for the person who created
   it, so the `E2E_API_TOKEN` key also stops working if its own creator is
   deleted, deactivated or loses `CAN_CREATE_API_TOKEN`.
+  The bexio renewal journey also
+  needs `CAN_CREATE_INVOICE` (`markInvoiceAsPaid`),
+  `CAN_GET_PAYMENT_PROVIDER_SETTINGS`, `CAN_UPDATE_PAYMENT_PROVIDER_SETTINGS`,
+  `CAN_GET_LETTER_PROVIDER_SETTINGS`, `CAN_UPDATE_LETTER_PROVIDER_SETTINGS`,
+  `CAN_RELOAD_PROVIDERS`, `CAN_GET_SUBSCRIPTION_FLOWS`,
+  `CAN_UPDATE_SUBSCRIPTION_FLOW`, `CAN_MANAGE_USER-DELIVERY-MODE` and
+  `CAN_GET_MAIL-LOGS` (the address goes through `updateUser`, covered by
+  `CAN_CREATE_USER`).
 - `@mail` journeys read the mailbox the review's mail provider sends to,
   over IMAP (`support/imap-inbox.ts`): `E2E_IMAP_USER` and
   `E2E_IMAP_PASSWORD` (secrets of the same names in CI), optional
@@ -206,7 +233,9 @@ started (nor migrated) for a URL you override (`BASE_URL`, `E2E_EDITOR_URL`,
   started (30 s slack) and deletes each mail it read. Ethereal allows 100 MB
   per account and expires mails after hours to days;
   `E2E_IMAP_PURGE_OLDER_THAN_DAYS` deletes older mails once per worker (off by
-  default, since others may use the account).
+  default, since others may use the account). `E2E_KEEP_MAILS=true` (workflow input
+  `keep_mails`) leaves the mails a scenario read in the mailbox, to look at
+  them afterwards (e.g. the bexio pdf attached to a renewal mail).
 - `@bexio` journeys check what the bexio provider did in the bexio test
   company through bexio's API (`E2E_BEXIO_API_TOKEN`, the test company's
   token as in the review seed). During its trial bexio only emails its own
@@ -223,11 +252,49 @@ started (nor migrated) for a URL you override (`BASE_URL`, `E2E_EDITOR_URL`,
   a day, and bexio emails every invoice it creates, the review's nightly
   renewals of seeded Resend readers included: one mail per bexio checkout.
   The review's own mails to a Resend reader still land in Ethereal (`inbox`).
+- `@load` is the renewal load test (`renewal-load.feature`, Neue Wege on
+  review). It creates synthetic readers by mail and by letter, e.g.
+  `E2E_LOAD_READERS=1200/300` (workflow input `load_readers`), all with a
+  bexio subscription due for its renewal invoice today. It then starts the
+  nightly run with `runPeriodicJobNow` and reads `apiProcessStats` every 10 s.
+  Both are refused outside review, development and local. The key needs
+  `CAN_RETRY_PERIODIC_JOB`, `CAN_GET_PERIODIC_JOB_LOG`,
+  `CAN_GET_MAIL_PROVIDER_SETTINGS` and `CAN_UPDATE_MAIL_PROVIDER_SETTINGS`.
+  - **Fails when:**
+    - the API pod restarts (new hostname or smaller uptime);
+    - rss passes `E2E_LOAD_MAX_RSS_MIB` (default 800; the pod's limit is
+      1024 MiB);
+    - the run fails;
+    - a reader's mail or letter is missing from the mail log, or was
+      refused.
+  - **Report:** the memory curve goes into the job summary
+    (`test-results/load-memory.md`).
+  - **Mails are only logged:** Ethereal refuses after about 200 mails
+    (`429 Rate limited`), and the run stops on that. So the test switches the
+    mail provider to `LOG` for the run. Mails are still composed with
+    bexio's pdf, just not sent. It puts the SMTP provider back afterwards, the
+    password from `E2E_IMAP_PASSWORD` (Ethereal's SMTP and IMAP logins are
+    the same). It refuses a provider it could not put back.
+    `bexio-renewal.feature` checks the pdf in a real mail.
+  - **Duration:** the 40/10 trial on review01 took about 4.6 s a reader, so
+    1500 take close to two hours. The run may take 3 h, the job 4 h. Retries
+    are off for the scenario. Try `40/10` first.
+  - **Dropped requests:** Cloudflare and the review ingress now and then
+    drop one of many requests in a row (`ECONNRESET`, HTTP 502–504 and
+    520–524), up to 5 attempts. Creating, reading and deleting readers try again
+    (`retryTransient`) without doing a write twice. A retry gets a new
+    address, and an existing subscription is taken instead of a second one.
+    Readers already created are deleted even when the step fails halfway.
+  - **Left behind:**
+    - the invoices, in the database and in the bexio test company;
+    - the letters, in Pingen staging.
+
+    `E2E_KEEP_LOAD_DATA=true` also keeps the readers.
 - `@payment` needs the `simulated` payment method on the plan used (it only
   exists on non-production instances).
 - The database is a copy of production — cleanup matters. Search the editor
   for `e2e+` users or `e2e-` slugs if a run was aborted.
 
 In GitHub: Actions → **E2E tests** → `app`, `environment` (+ `review_slot`),
-`project` (all / website / editor), optional `grep`, `allow_mutation` (on by default; ignored for production) and
-URL overrides.
+`project` (all / website / editor), optional `grep`, `allow_mutation` (on by default; ignored for production),
+`keep_mails`, `load_readers` (with `grep` `@load`) and URL overrides.

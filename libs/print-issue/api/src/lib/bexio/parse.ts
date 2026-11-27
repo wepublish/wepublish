@@ -1,4 +1,8 @@
-import { normalizeIssue } from '../rules/issue';
+import {
+  parseIssueLabel,
+  type ParsedIssueLabel,
+  PER_YEAR_LABEL_FORMAT,
+} from '@wepublish/utils';
 
 /**
  * A bexio kind as the medium configures it (setting `printBexioKinds`): what
@@ -121,13 +125,17 @@ export type IssueOrder = {
   kind: BexioKind;
   copies: number | null;
   /** «6.26»; null when the line names no valid issue */
-  issue: string | null;
+  issue: ParsedIssueLabel | null;
 };
 
-/** A single-copy line: an «issue» kind's word followed by the issue label. */
+/**
+ * A single-copy line: an «issue» kind's word followed by the issue label,
+ * written in the medium's template («Einzelheft 6.26», «Einzelheft #117»).
+ */
 export function readIssueOrder(
   text: string | null | undefined,
-  kinds: BexioKind[]
+  kinds: BexioKind[],
+  format: string = PER_YEAR_LABEL_FORMAT
 ): IssueOrder | null {
   const match = matchKind(text, kinds, 'issue');
 
@@ -135,11 +143,9 @@ export function readIssueOrder(
     return null;
   }
 
-  const label = /^\s*(\S+)/.exec(match.rest)?.[1] ?? '';
-
   return {
     kind: match.kind,
     copies: match.copies,
-    issue: normalizeIssue(label),
+    issue: parseIssueLabel(match.rest, format),
   };
 }

@@ -106,11 +106,29 @@ export class PublicSubscription
   @Field()
   startsAt!: Date;
 
+  @Field(() => Date, {
+    nullable: true,
+    description:
+      '«Abo-Start»: the first printed issue is the first one shipped on or after this day.',
+  })
+  firstPrintIssueFrom?: Date | null;
+
   @Field(() => Date, { nullable: true })
   paidUntil?: Date;
 
   @Field(() => Boolean)
   extendable!: boolean;
+
+  @Field(() => Date, {
+    nullable: true,
+    description: `When the subscription was imported from another system. Null for a subscription created here.`,
+  })
+  importedAt?: Date;
+
+  @Field(() => Boolean, {
+    description: `Imported from another system and not paid for here yet. The first payment registered here ends it.`,
+  })
+  legacy!: boolean;
 
   @Field(() => [Property])
   properties!: Property[];
@@ -159,6 +177,7 @@ export class CreatePublicSubscriptionInput extends PickType(
     'monthlyAmount',
     'autoRenew',
     'startsAt',
+    'firstPrintIssueFrom',
     'paidUntil',
     'extendable',
     // Bugged, seems like PickType ignores `implements` meta
@@ -269,6 +288,12 @@ export class SubscriptionFilter {
 
   @Field({ nullable: true })
   extendable?: boolean;
+
+  @Field({
+    nullable: true,
+    description: `true keeps only legacy subscriptions: imported from another system and not paid for here yet. false keeps the rest.`,
+  })
+  legacy?: boolean;
 }
 
 @ArgsType()

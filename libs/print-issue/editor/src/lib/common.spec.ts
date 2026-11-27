@@ -28,6 +28,20 @@ describe('nextIssue', () => {
       year: new Date().getFullYear(),
     });
   });
+
+  it('continues after the highest number of any year where numbers run on', () => {
+    const issues = [
+      { number: 2, year: 2030 },
+      { number: 116, numberTo: 117, year: 2029 },
+    ];
+
+    // per year this would be 3 of 2030
+    expect(nextIssue(issues, 'continuous')).toEqual({
+      number: 118,
+      year: new Date().getFullYear(),
+    });
+    expect(nextIssue(issues)).toEqual({ number: 3, year: 2030 });
+  });
 });
 
 describe('flowKind', () => {

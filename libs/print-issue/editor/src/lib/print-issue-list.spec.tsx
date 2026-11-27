@@ -13,14 +13,15 @@ import {
 } from './test-utils';
 
 const issuesQuery = vi.fn();
+const numberingQuery = vi.fn();
 const mutations: Record<string, ReturnType<typeof vi.fn>> = {};
 
 vi.mock('@apollo/client/react', async importOriginal => ({
   ...((await importOriginal()) as object),
   useQuery: (document: unknown) =>
-    operationName(document) === 'PrintIssues' ? issuesQuery() : (
-      { data: undefined, loading: false, refetch: vi.fn() }
-    ),
+    operationName(document) === 'PrintIssues' ? issuesQuery()
+    : operationName(document) === 'PrintIssueNumbering' ? numberingQuery()
+    : { data: undefined, loading: false, refetch: vi.fn() },
   useMutation: (document: unknown) => {
     const name = operationName(document);
     mutations[name] ??= vi.fn(async () => ({ data: {} }));
@@ -147,6 +148,7 @@ beforeEach(() => {
     loading: false,
     refetch: vi.fn(),
   });
+  numberingQuery.mockReturnValue({ data: undefined, loading: false });
 });
 
 describe('PrintIssueList', () => {
@@ -368,6 +370,29 @@ describe('PrintIssueList', () => {
     expect(form().getByLabelText('printIssues.fields.issueDate')).toHaveValue(
       '2027-03-15'
     );
+  });
+
+  it('suggests the next number of any year and asks for no year where numbers run on', () => {
+    numberingQuery.mockReturnValue({
+      data: {
+        printIssueNumbering: { counting: 'continuous', format: '#{range}' },
+      },
+      loading: false,
+    });
+    const form = () =>
+      within(screen.getByRole('region', { name: /printIssues\.drawer/ }));
+    const highest = Math.max(
+      ...issues.map(issue => issue.numberTo ?? issue.number)
+    );
+
+    renderList('/print-issues/create');
+
+    expect(form().getByLabelText('printIssues.fields.number')).toHaveValue(
+      highest + 1
+    );
+    expect(
+      form().queryByLabelText('printIssues.fields.year')
+    ).not.toBeInTheDocument();
   });
 
   it('renders the intro below the heading with markup', () => {

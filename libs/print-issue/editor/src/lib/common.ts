@@ -1,6 +1,7 @@
 import type { TFunction } from 'i18next';
 import { PrintIssueRunMode, PrintIssueStatus } from '@wepublish/editor/api';
 import { enqueueSnackbar, humanizeError } from '@wepublish/ui/editor';
+import type { IssueCounting } from '@wepublish/utils';
 
 export const PRINT_ISSUES_PATH = '/print-issues';
 export const printIssueCreatePath = () => `${PRINT_ISSUES_PATH}/create`;
@@ -65,14 +66,24 @@ export type IssueNumber = { number: number; year: number };
 
 /**
  * What a new issue is called: the next number of the latest year, the way a
- * duplicate is numbered; after the double issue 3/4 comes 5. A medium without
- * issues starts at 1 of this year.
+ * duplicate is numbered; after the double issue 3/4 comes 5. Where numbers
+ * run on, the next after the highest of any year (its year follows the ship
+ * day). A medium without issues starts at 1 of this year.
  */
 export const nextIssue = (
-  issues: (IssueNumber & { numberTo?: number | null })[]
+  issues: (IssueNumber & { numberTo?: number | null })[],
+  counting: IssueCounting = 'perYear'
 ): IssueNumber => {
   if (!issues.length) {
     return { number: 1, year: new Date().getFullYear() };
+  }
+
+  if (counting === 'continuous') {
+    return {
+      number:
+        Math.max(...issues.map(issue => issue.numberTo ?? issue.number)) + 1,
+      year: new Date().getFullYear(),
+    };
   }
 
   const year = Math.max(...issues.map(issue => issue.year));

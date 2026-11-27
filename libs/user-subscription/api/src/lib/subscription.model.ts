@@ -16,6 +16,29 @@ registerEnumType(PaymentPeriodicity, {
   name: 'PaymentPeriodicity',
 });
 
+export enum FirstPrintIssueChoice {
+  current = 'current',
+  upcoming = 'upcoming',
+}
+
+registerEnumType(FirstPrintIssueChoice, {
+  name: 'FirstPrintIssueChoice',
+  description:
+    'current: the issue shipped last is the first one. upcoming: the next one is.',
+});
+
+@InputType({
+  description:
+    'Which printed issue the subscription starts with («Abo-Start»), as the reader chose it from printIssueStart.',
+})
+export class FirstPrintIssueInput {
+  @Field({ description: 'The id of the current issue the reader was shown.' })
+  currentIssueId!: string;
+
+  @Field(() => FirstPrintIssueChoice)
+  choice!: FirstPrintIssueChoice;
+}
+
 @InputType()
 export class UpdateUserSubscriptionInput {
   @Field()
@@ -77,6 +100,9 @@ export class CreateSubscriptionArgs {
 
   @Field({ nullable: true })
   goodieId?: string;
+
+  @Field(() => FirstPrintIssueInput, { nullable: true })
+  firstPrintIssue?: FirstPrintIssueInput;
 
   @Field({ nullable: true })
   successURL?: string;

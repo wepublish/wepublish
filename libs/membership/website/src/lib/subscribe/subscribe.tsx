@@ -227,6 +227,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   onInvalid,
   giftCodeRedemptionUrl,
   giftCodeRedemptionText,
+  subscribeExtras,
 }: BuilderSubscribeProps<T>) => {
   const {
     meta: { locale, siteTitle },
@@ -568,6 +569,13 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         return;
       }
 
+      // what the tenant adds, e.g. the first printed issue; false: not yet
+      const extras = subscribeExtras?.() ?? {};
+
+      if (extras === false) {
+        return;
+      }
+
       const subscribeData: SubscribeMutationVariables = {
         monthlyAmount,
         memberPlanId: data.memberPlanId,
@@ -576,6 +584,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         autoRenew: data.autoRenew,
         discountCode: data.discountCode,
         goodieId: data.goodieId,
+        ...extras,
       };
 
       if (hasUser) {

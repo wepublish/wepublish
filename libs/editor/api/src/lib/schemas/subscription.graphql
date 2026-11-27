@@ -16,6 +16,7 @@ fragment FullSubscription on PublicSubscription {
   monthlyAmount
   autoRenew
   startsAt
+  firstPrintIssueFrom
   paidUntil
   properties {
     key
@@ -29,6 +30,8 @@ fragment FullSubscription on PublicSubscription {
     ...Deactivation
   }
   extendable
+  importedAt
+  legacy
   canRevertUpgrade
   currency
   goodie {
@@ -125,6 +128,7 @@ query SubscriptionsAsCsv(
   $autoRenew: Boolean
   $userHasAddress: Boolean
   $extendable: Boolean
+  $legacy: Boolean
   $cancellationDateTo: DateFilter
   $cancellationDateFrom: DateFilter
   $deactivationDateTo: DateFilter
@@ -146,6 +150,7 @@ query SubscriptionsAsCsv(
     autoRenew: $autoRenew
     userHasAddress: $userHasAddress
     extendable: $extendable
+    legacy: $legacy
 
     cancellationDateTo: $cancellationDateTo
     cancellationDateFrom: $cancellationDateFrom
@@ -207,6 +212,7 @@ mutation UpdateSubscription(
   $monthlyAmount: Float
   $paidUntil: DateTime
   $startsAt: DateTime
+  $firstPrintIssueFrom: DateTime
   $paymentPeriodicity: PaymentPeriodicity
   $properties: [PropertyInput!]
   $userID: String
@@ -220,6 +226,7 @@ mutation UpdateSubscription(
     monthlyAmount: $monthlyAmount
     paidUntil: $paidUntil
     startsAt: $startsAt
+    firstPrintIssueFrom: $firstPrintIssueFrom
     paymentPeriodicity: $paymentPeriodicity
     properties: $properties
     userID: $userID
@@ -279,6 +286,21 @@ fragment UserSubscription on PublicSubscription {
     amount
     invoiceID
     isPaid
+  }
+
+  printIssueProgress {
+    periodId
+    received
+    entitled
+    owed
+    relevant
+    issues {
+      label
+      issueDate
+      batch
+      deliveredAt
+      countsAs
+    }
   }
 }
 

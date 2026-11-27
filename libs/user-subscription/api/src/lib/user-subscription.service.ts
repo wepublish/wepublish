@@ -18,11 +18,26 @@ import {
   MemberPlanDataloader,
   MemberPlanService,
 } from '@wepublish/member-plan/api';
+import { formatInTimeZone } from 'date-fns-tz';
 import {
   CreateSubscriptionArgs,
   CreateSubscriptionWithConfirmationArgs,
   ExtendSubscriptionArgs,
+  FirstPrintIssueChoice,
+  FirstPrintIssueInput,
 } from './subscription.model';
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+/**
+ * Today in Zurich as a database date (midnight UTC of that calendar day), the
+ * way a print issue's ship day is stored. date-fns-tz, not Intl: the API
+ * binary has reduced ICU.
+ */
+const startOfTodayAsDbDate = (now = new Date()) =>
+  Date.parse(
+    `${formatInTimeZone(now, 'Europe/Zurich', 'yyyy-MM-dd')}T00:00:00.000Z`
+  );
 import {
   isPaymentMethodRetired,
   PaymentsService,
@@ -57,6 +72,40 @@ export class UserSubscriptionService {
     private goodieService: GoodieService,
     private subscriptionService: SubscriptionService
   ) {}
+
+  /**
+   * «Abo-Start»: the day the first printed issue ships on at the earliest.
+   * The reader chose the current issue (its ship day) or the next one (the
+   * day after). Resolved here from the issue itself, never from a date the
+   * browser sends; an unknown issue or one not shipped yet means no choice.
+   */
+  private async firstPrintIssueFrom(
+    choice: FirstPrintIssueInput | undefined
+  ): Promise<Date | null> {
+    if (!choice) {
+      return null;
+    }
+
+    // The current issue is the latest shipped by today, as the choice offered
+    // it (`PrintIssueStartService`). The one before still counts, for a page
+    // loaded just before a new issue shipped; an older id would reach back
+    // into the supplements of issues long gone out.
+    const latestShipped = await this.prisma.printIssue.findMany({
+      where: { issueDate: { lte: new Date(startOfTodayAsDbDate()) } },
+      orderBy: [{ issueDate: 'desc' }, { number: 'desc' }],
+      select: { id: true, issueDate: true },
+      take: 2,
+    });
+    const issue = latestShipped.find(({ id }) => id === choice.currentIssueId);
+
+    if (!issue) {
+      return null;
+    }
+
+    return choice.choice === FirstPrintIssueChoice.upcoming ?
+        new Date(issue.issueDate.getTime() + DAY_MS)
+      : issue.issueDate;
+  }
 
   public async getUserSubscriptions(userId: string) {
     return this.prisma.subscription.findMany({
@@ -99,6 +148,7 @@ export class UserSubscriptionService {
       monthlyAmount,
       subscriptionProperties,
       goodieId,
+      firstPrintIssue,
       successURL,
       failureURL,
       deactivateSubscriptionId,
@@ -152,6 +202,7 @@ export class UserSubscriptionService {
         discount,
         discountCodeId,
         goodieId,
+        firstPrintIssueFrom: await this.firstPrintIssueFrom(firstPrintIssue),
       });
 
     if (!invoice) {
@@ -194,6 +245,7 @@ export class UserSubscriptionService {
         monthlyAmount,
         subscriptionProperties,
         goodieId,
+        firstPrintIssue,
       } = args;
 
       if (goodieId) {
@@ -222,6 +274,7 @@ export class UserSubscriptionService {
           startsAt: undefined,
           needsConfirmation: true,
           goodieId,
+          firstPrintIssueFrom: await this.firstPrintIssueFrom(firstPrintIssue),
         });
 
       if (!invoice) {

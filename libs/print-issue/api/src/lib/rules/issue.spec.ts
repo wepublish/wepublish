@@ -1,52 +1,10 @@
-import {
-  issueFileLabel,
-  issueLabel,
-  issueNumbers,
-  issueYear,
-  normalizeIssue,
-  sameIssue,
-} from './issue';
+import { parseIssueLabel } from '@wepublish/utils';
+import { issueFileLabel, issueLabel, issueNumbers, namesIssue } from './issue';
 
-describe('normalizeIssue', () => {
-  it.each([
-    ['6.26', '6.26'],
-    ['06.26', '6.26'],
-    ['6/26', '6.26'],
-    [' 12.27 ', '12.27'],
-    ['3/4.26', '3/4.26'],
-    ['03/04.26', '3/4.26'],
-    ['3-4.26', '3/4.26'],
-    ['3/4/26', '3/4.26'],
-  ])('reads %s as %s', (input, expected) => {
-    expect(normalizeIssue(input)).toBe(expected);
-  });
-
-  it.each([
-    '6.2026',
-    'abc',
-    '',
-    '6',
-    '6.2',
-    '0.26',
-    '2026',
-    '4/3.26',
-    '3/3.26',
-    '0/1.26',
-  ])('rejects %s', input => {
-    expect(normalizeIssue(input)).toBeNull();
-  });
-});
-
-describe('issueYear', () => {
-  it('expands the two-digit year of an issue', () => {
-    expect(issueYear('6.26')).toBe(2026);
-    expect(issueYear('1.30')).toBe(2030);
-    expect(issueYear('3/4.26')).toBe(2026);
-  });
-});
+const ZWOELF = { counting: 'continuous', format: '#{range}' } as const;
 
 describe('issueLabel', () => {
-  it('writes number and two-digit year', () => {
+  it('writes number and two-digit year by default', () => {
     expect(issueLabel({ number: 1, year: 2027 })).toBe('1.27');
     expect(issueLabel({ number: 12, year: 2030 })).toBe('12.30');
     expect(issueLabel({ number: 3, year: 2105 })).toBe('3.05');
@@ -56,14 +14,22 @@ describe('issueLabel', () => {
     expect(issueLabel({ number: 3, numberTo: 4, year: 2026 })).toBe('3/4.26');
     expect(issueLabel({ number: 3, numberTo: null, year: 2026 })).toBe('3.26');
   });
+
+  it("writes the medium's template", () => {
+    expect(issueLabel({ number: 117, year: 2026 }, ZWOELF)).toBe('#117');
+    expect(issueLabel({ number: 117, numberTo: 118, year: 2026 }, ZWOELF)).toBe(
+      '#117/118'
+    );
+  });
 });
 
 describe('issueFileLabel', () => {
-  it('is the label without a slash, for file names', () => {
+  it('is the label without a slash or sign, for file names', () => {
     expect(issueFileLabel({ number: 3, numberTo: 4, year: 2026 })).toBe(
       '3-4.26'
     );
     expect(issueFileLabel({ number: 6, year: 2026 })).toBe('6.26');
+    expect(issueFileLabel({ number: 117, year: 2026 }, ZWOELF)).toBe('117');
   });
 });
 
@@ -75,24 +41,54 @@ describe('issueNumbers', () => {
   });
 });
 
-describe('sameIssue', () => {
+describe('namesIssue', () => {
+  const perYear = (text: string, issue: Parameters<typeof namesIssue>[1]) =>
+    namesIssue(parseIssueLabel(text)!, issue, 'perYear');
+
   it.each([
-    ['6.26', '6.26'],
-    ['3/4.26', '3.26'],
-    ['3/4.26', '4.26'],
-    ['3/4.26', '3/4.26'],
-    ['3.26', '3/4.26'],
-  ])('%s is %s', (a, b) => {
-    expect(sameIssue(a, b)).toBe(true);
+    ['6.26', { number: 6, year: 2026 }],
+    ['3.26', { number: 3, numberTo: 4, year: 2026 }],
+    ['4.26', { number: 3, numberTo: 4, year: 2026 }],
+    ['3/4.26', { number: 3, numberTo: 4, year: 2026 }],
+    ['3/4.26', { number: 3, year: 2026 }],
+  ])('per year, %s names %o', (text, issue) => {
+    expect(perYear(text, issue)).toBe(true);
   });
 
   it.each([
-    ['6.26', '6.27'],
-    ['3/4.26', '5.26'],
-    ['3/4.26', '2.26'],
-    ['3/4.26', '3.27'],
-    ['6.26', 'nonsense'],
-  ])('%s is not %s', (a, b) => {
-    expect(sameIssue(a, b)).toBe(false);
+    ['6.27', { number: 6, year: 2026 }],
+    ['5.26', { number: 3, numberTo: 4, year: 2026 }],
+    ['2.26', { number: 3, numberTo: 4, year: 2026 }],
+    ['3.27', { number: 3, numberTo: 4, year: 2026 }],
+  ])('per year, %s does not name %o', (text, issue) => {
+    expect(perYear(text, issue)).toBe(false);
+  });
+
+  it('counting on, matches the number whatever the year', () => {
+    const read = (text: string) => parseIssueLabel(text, '#{range}')!;
+
+    expect(
+      namesIssue(read('#117'), { number: 117, year: 2027 }, 'continuous')
+    ).toBe(true);
+    expect(
+      namesIssue(
+        read('118'),
+        { number: 117, numberTo: 118, year: 2026 },
+        'continuous'
+      )
+    ).toBe(true);
+    expect(
+      namesIssue(read('#119'), { number: 117, year: 2026 }, 'continuous')
+    ).toBe(false);
+  });
+
+  it('per year, refuses a label without a year', () => {
+    expect(
+      namesIssue(
+        { from: 6, to: 6, year: null },
+        { number: 6, year: 2026 },
+        'perYear'
+      )
+    ).toBe(false);
   });
 });

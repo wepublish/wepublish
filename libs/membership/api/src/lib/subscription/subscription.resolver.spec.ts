@@ -134,6 +134,34 @@ describe('PublicSubscriptionResolver', () => {
     });
   });
 
+  describe('legacy', () => {
+    const importedAt = new Date('2026-11-01T08:00:00Z');
+
+    it('is true for an imported subscription nobody paid for here yet', () => {
+      expect(
+        makeResolver({}).legacy({ importedAt, legacyEndedAt: null } as any)
+      ).toBe(true);
+    });
+
+    it('is false once a payment was registered here', () => {
+      expect(
+        makeResolver({}).legacy({
+          importedAt,
+          legacyEndedAt: new Date('2026-11-19T10:00:00Z'),
+        } as any)
+      ).toBe(false);
+    });
+
+    it('is false for a subscription created here', () => {
+      expect(
+        makeResolver({}).legacy({
+          importedAt: null,
+          legacyEndedAt: null,
+        } as any)
+      ).toBe(false);
+    });
+  });
+
   describe('pendingPaymentMethodChange', () => {
     it('resolves the pending payment method change of the subscription', async () => {
       const change = { id: 'change-1', state: 'pending' };

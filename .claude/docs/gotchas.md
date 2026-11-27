@@ -192,7 +192,8 @@ segment put `{ OR: patterns.map(…) }` without patterns into an `AND` and count
 now throws on an empty `AND`/`OR` and on `{}` inside an `OR`. Never build an
 `OR` from a list that can be empty: say "nobody" as `{ id: { in: [] } }`
 (`NOBODY` in `mail-send-recipient.service.ts`, `NO_SUBSCRIPTION` in
-`subscription-flow.resolver.ts`), and keep `{}` out of `OR` lists.
+`subscription-flow.resolver.ts`), and keep `{}` out of `OR` lists — say
+"everybody" as `{ id: { notIn: [] } }`, which compiles to `1=1` there too.
 
 ---
 
@@ -1518,6 +1519,41 @@ hideContentAfter }`); `generateFeed` typed on `FeedArticleFragment` without a
 cast, so a tenant on the wrong document fails `tsc`. Pinned by
 `libs/feed/website/src/lib/feed-article-list.spec.ts`, which runs the real
 document against `schema-v2.graphql`.
+
+### ⚠️ A mail flow's earliest day depends on the flow alone
+
+`daysAwayFromEnding` has two lower limits (`SubscriptionFlowService.earliestDay`):
+the **default flow** is fixed at −25 (`DEFAULT_FLOW_EARLIEST_DAY`), because every
+subscription may fall back to it; a **member plan's flow** follows the shortest
+periodicity in its own conditions (`EARLIEST_INVOICE_DAY` in
+`libs/utils/api/src/lib/earliest-invoice-day.ts`: monthly −25 … yearly −360).
+Do not make the default flow's limit depend on what member plans offer: a plan
+change could then make a saved flow wrong after the fact. That was tried and
+taken out again. The clamp in `createInvoice` (periodic job) stays as a safety
+net for legacy data.
+
+### ⚠️ A subscription's flow is looked up in two places, in a fixed order
+
+Plan flow → flow for all plans (`allMemberPlans`) → default flow. The order is
+implemented twice in `subscription-event-dictionary.ts`: in memory in
+`getActionsForSubscriptions` and as queries in `getSubscriptionTemplateAction`.
+Change both. A non-default flow with neither a `memberPlanId` nor
+`allMemberPlans` is an orphan of a deleted plan: `initialize()` throws on it and
+no message goes out, so "all plans" must never be modelled as "plan empty".
+Overlap is only refused within a kind (`filterHasOverlap`). An empty condition
+means "matches nothing" on a member plan's flow but "any value" on a flow for
+all plans (which needs at least one condition); every place that matches
+conditions has to make that distinction.
+Inactive flows (`active = false`, never the default flow) are skipped by both
+lookups and by the overlap check; switching one on runs the overlap check.
+`SubscriptionFlowService.countSubscriptions` is the one count rule: running
+subscriptions plus those ended within the flow's latest event day, minus what
+an earlier tier takes (by conditions, not by its day). The counts add up to
+the subscriptions that can still get a message, not to all of them: an ended
+subscription past its own flow's last day counts nowhere, though the default
+flow would still message it with that flow off. So switching a flow can move
+the sum (29 → 30 on review02, 2026-11-23); that is correct. Don't count
+elsewhere.
 
 ## Adding an entry
 

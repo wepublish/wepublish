@@ -1,12 +1,20 @@
 import {
   MailChannel,
+  MailEmailSegment,
   MailHistoryMatch,
+  MailHistoryScope,
+  MailRollingKind,
   MailLogState,
   MailRecipientBase,
+  MailSubscriptionState,
+  PaymentPeriodicity,
 } from '@wepublish/editor/api';
 import {
+  AudienceFilterState,
   emptyMailHistoryRow,
+  fromAudienceInput,
   INITIAL_AUDIENCE_STATE,
+  loadSavedAudience,
   toAudienceInput,
 } from './audience-state';
 
@@ -46,6 +54,62 @@ describe('toAudienceInput', () => {
         startsAtTo: endOfDay('2026-01-31T10:00:00.000Z'),
       })
     );
+  });
+
+  it('narrows subscribers and win-back to legacy subscriptions', () => {
+    for (const base of [
+      MailRecipientBase.HasSubscription,
+      MailRecipientBase.EndedSubscription,
+    ]) {
+      expect(
+        toAudienceInput({ ...INITIAL_AUDIENCE_STATE, base, isLegacy: 'true' })
+      ).toEqual(expect.objectContaining({ isLegacy: true }));
+      expect(
+        toAudienceInput({ ...INITIAL_AUDIENCE_STATE, base, isLegacy: 'false' })
+      ).toEqual(expect.objectContaining({ isLegacy: false }));
+      expect(
+        toAudienceInput({ ...INITIAL_AUDIENCE_STATE, base }).isLegacy
+      ).toBeUndefined();
+    }
+  });
+
+  it('keeps legacy out of audiences that are not about subscriptions', () => {
+    expect(
+      toAudienceInput({ ...INITIAL_AUDIENCE_STATE, isLegacy: 'true' })
+    ).not.toHaveProperty('isLegacy');
+  });
+
+  it('sends a rolling start or end in place of the fixed dates', () => {
+    const input = toAudienceInput({
+      ...INITIAL_AUDIENCE_STATE,
+      base: MailRecipientBase.HasSubscription,
+      startsAtFrom: new Date('2026-01-01T10:00:00.000Z'),
+      startsAtRolling: { kind: MailRollingKind.LastDays, days: 30 },
+      endsAtTo: new Date('2026-12-31T10:00:00.000Z'),
+      endsAtRolling: { kind: MailRollingKind.NextDays, days: 14 },
+    });
+
+    expect(input).toEqual(
+      expect.objectContaining({
+        startsAtRolling: { kind: MailRollingKind.LastDays, days: 30 },
+        startsAtFrom: undefined,
+        startsAtTo: undefined,
+        endsAtRolling: { kind: MailRollingKind.NextDays, days: 14 },
+        endsAtFrom: undefined,
+        endsAtTo: undefined,
+      })
+    );
+  });
+
+  it('keeps the fixed dates while no rolling range is on', () => {
+    const input = toAudienceInput({
+      ...INITIAL_AUDIENCE_STATE,
+      base: MailRecipientBase.HasSubscription,
+      startsAtFrom: new Date('2026-01-01T10:00:00.000Z'),
+    });
+
+    expect(input.startsAtFrom).toBe('2026-01-01T10:00:00.000Z');
+    expect(input.startsAtRolling).toBeUndefined();
   });
 
   it('sends either the rolling window or the period for win-back, never both', () => {
@@ -133,6 +197,114 @@ describe('toAudienceInput', () => {
       });
     });
 
+    it('sends a rolling range in place of the fixed dates of a row', () => {
+      const [condition] =
+        toAudienceInput({
+          ...INITIAL_AUDIENCE_STATE,
+          mailHistory: {
+            match: MailHistoryMatch.All,
+            rows: [
+              {
+                ...emptyMailHistoryRow(),
+                mailTemplateId: 'tpl-1',
+                from: new Date('2026-01-01T10:00:00.000Z'),
+                to: new Date('2026-01-31T10:00:00.000Z'),
+                rolling: { kind: MailRollingKind.OlderThanDays, days: 14 },
+              },
+            ],
+          },
+        }).mailHistory?.conditions ?? [];
+
+      expect(condition.rolling).toEqual({
+        kind: MailRollingKind.OlderThanDays,
+        days: 14,
+      });
+      expect(condition.from).toBeUndefined();
+      expect(condition.to).toBeUndefined();
+    });
+
+    it('asks for several mails only when more than one is wanted', () => {
+      const conditions =
+        toAudienceInput({
+          ...INITIAL_AUDIENCE_STATE,
+          mailHistory: {
+            match: MailHistoryMatch.All,
+            rows: [
+              {
+                ...emptyMailHistoryRow(),
+                mailTemplateId: 'tpl-1',
+                minCount: 3,
+              },
+              { ...emptyMailHistoryRow(), mailTemplateId: 'tpl-2' },
+            ],
+          },
+        }).mailHistory?.conditions ?? [];
+
+      expect(conditions.map(condition => condition.minCount)).toEqual([
+        3,
+        undefined,
+      ]);
+    });
+
+    it('binds a row to the subscription and to a still-open invoice', () => {
+      const [condition] =
+        toAudienceInput({
+          ...INITIAL_AUDIENCE_STATE,
+          base: MailRecipientBase.HasSubscription,
+          mailHistory: {
+            match: MailHistoryMatch.All,
+            rows: [
+              {
+                ...emptyMailHistoryRow(),
+                mailTemplateId: 'tpl-1',
+                onSubscription: true,
+                onlyOpenInvoice: true,
+              },
+            ],
+          },
+        }).mailHistory?.conditions ?? [];
+
+      expect(condition.scope).toBe(MailHistoryScope.Subscription);
+      expect(condition.onlyOpenInvoice).toBe(true);
+    });
+
+    it('leaves both out of a row that does not ask for them', () => {
+      const [condition] =
+        toAudienceInput({
+          ...INITIAL_AUDIENCE_STATE,
+          base: MailRecipientBase.HasSubscription,
+          mailHistory: {
+            match: MailHistoryMatch.All,
+            rows: [{ ...emptyMailHistoryRow(), mailTemplateId: 'tpl-1' }],
+          },
+        }).mailHistory?.conditions ?? [];
+
+      expect(condition.scope).toBeUndefined();
+      expect(condition.onlyOpenInvoice).toBeUndefined();
+    });
+
+    it('drops the subscription binding for an audience without subscriptions', () => {
+      const [condition] =
+        toAudienceInput({
+          ...INITIAL_AUDIENCE_STATE,
+          base: MailRecipientBase.NoActiveSubscription,
+          mailHistory: {
+            match: MailHistoryMatch.All,
+            rows: [
+              {
+                ...emptyMailHistoryRow(),
+                mailTemplateId: 'tpl-1',
+                onSubscription: true,
+                onlyOpenInvoice: true,
+              },
+            ],
+          },
+        }).mailHistory?.conditions ?? [];
+
+      expect(condition.scope).toBeUndefined();
+      expect(condition.onlyOpenInvoice).toBe(true);
+    });
+
     it('keeps mail history for every base', () => {
       const history = {
         match: MailHistoryMatch.All,
@@ -148,6 +320,176 @@ describe('toAudienceInput', () => {
           }).mailHistory?.conditions
         ).toHaveLength(1);
       }
+    });
+  });
+});
+
+describe('fromAudienceInput', () => {
+  /** What a saved filter holds: the input after a trip through JSON. */
+  const stored = (state: AudienceFilterState) =>
+    JSON.parse(JSON.stringify(toAudienceInput(state)));
+  const roundTrip = (state: AudienceFilterState) =>
+    stored(fromAudienceInput(stored(state)));
+
+  it('reads a filter of subscribers back into the same filter', () => {
+    const state: AudienceFilterState = {
+      ...INITIAL_AUDIENCE_STATE,
+      base: MailRecipientBase.HasSubscription,
+      emailSegments: [MailEmailSegment.Dead],
+      memberPlanIDs: ['plan-1'],
+      subscriptionState: MailSubscriptionState.Active,
+      autoRenew: 'true',
+      paymentMethodID: 'pm-1',
+      periodicity: PaymentPeriodicity.Yearly,
+      startsAtFrom: new Date('2026-01-01T10:00:00.000Z'),
+      startsAtTo: new Date('2026-01-31T10:00:00.000Z'),
+      endsAtRolling: { kind: MailRollingKind.NextDays, days: 14 },
+      isPaid: 'false',
+      isCanceled: 'false',
+      hasReplaced: 'true',
+      mailHistory: {
+        match: MailHistoryMatch.Any,
+        rows: [
+          {
+            ...emptyMailHistoryRow(),
+            mailTemplateId: 'tpl-1',
+            negate: true,
+            states: [MailLogState.Delivered],
+            channel: MailChannel.Letter,
+            rolling: { kind: MailRollingKind.OlderThanDays, days: 14 },
+            minCount: 2,
+            onSubscription: true,
+            onlyOpenInvoice: true,
+          },
+          {
+            ...emptyMailHistoryRow(),
+            mailTemplateId: 'tpl-2',
+            from: new Date('2026-02-01T10:00:00.000Z'),
+            to: new Date('2026-02-28T10:00:00.000Z'),
+          },
+        ],
+      },
+    };
+
+    expect(roundTrip(state)).toEqual(stored(state));
+  });
+
+  it('reads the fields of a stored filter into the controls', () => {
+    const state = fromAudienceInput({
+      base: 'hasSubscription',
+      isPaid: false,
+      startsAtRolling: { kind: 'lastDays', days: 30 },
+      endsAtFrom: '2026-03-01T00:00:00.000Z',
+      mailHistory: {
+        match: 'any',
+        conditions: [
+          { mailTemplateId: 'tpl-1', scope: 'subscription', minCount: 3 },
+        ],
+      },
+    });
+
+    expect(state.base).toBe(MailRecipientBase.HasSubscription);
+    expect(state.isPaid).toBe('false');
+    expect(state.isCanceled).toBe('any');
+    expect(state.startsAtRolling).toEqual({
+      kind: MailRollingKind.LastDays,
+      days: 30,
+    });
+    expect(state.endsAtFrom).toEqual(new Date('2026-03-01T00:00:00.000Z'));
+    expect(state.mailHistory.match).toBe(MailHistoryMatch.Any);
+    expect(state.mailHistory.rows).toHaveLength(1);
+    expect(state.mailHistory.rows[0]).toMatchObject({
+      mailTemplateId: 'tpl-1',
+      onSubscription: true,
+      onlyOpenInvoice: false,
+      minCount: 3,
+      negate: false,
+      states: [],
+    });
+    expect(state.mailHistory.rows[0].id).toBeTruthy();
+  });
+
+  it('reads a win-back window as days or as a period', () => {
+    expect(
+      roundTrip({
+        ...INITIAL_AUDIENCE_STATE,
+        base: MailRecipientBase.EndedSubscription,
+        endedWithinDays: 45,
+      })
+    ).toMatchObject({ endedWithinDays: 45 });
+
+    const period = fromAudienceInput({
+      base: 'endedSubscription',
+      endedFrom: '2026-01-01T00:00:00.000Z',
+      endedTo: '2026-01-31T22:59:59.999Z',
+    });
+
+    expect(period.endedMode).toBe('period');
+    expect(period.endedPeriod).toEqual([
+      new Date('2026-01-01T00:00:00.000Z'),
+      new Date('2026-01-31T22:59:59.999Z'),
+    ]);
+  });
+
+  it('starts from an empty filter for what a stored filter does not say', () => {
+    expect(fromAudienceInput({ base: 'allUsers' })).toEqual(
+      INITIAL_AUDIENCE_STATE
+    );
+  });
+
+  it('falls back to everyone for a base it does not know, and ignores unknown keys', () => {
+    expect(
+      fromAudienceInput({ base: 'somethingOld', neverHeardOf: true })
+    ).toEqual(INITIAL_AUDIENCE_STATE);
+  });
+
+  it('leaves out what no longer exists and says what it left out', () => {
+    const { state, dropped } = loadSavedAudience(
+      {
+        base: 'hasSubscription',
+        memberPlanIDs: ['plan-1', 'plan-gone'],
+        paymentMethodID: 'pm-gone',
+        mailHistory: {
+          conditions: [
+            { mailTemplateId: 'tpl-1' },
+            { mailTemplateId: 'tpl-gone' },
+          ],
+        },
+      },
+      {
+        memberPlans: new Map([['plan-1', 'Jahresabo']]),
+        paymentMethods: new Map([['pm-1', 'Rechnung']]),
+        templates: new Map([['tpl-1', 'Erinnerung']]),
+      }
+    );
+
+    expect(state.memberPlanIDs).toEqual(['plan-1']);
+    expect(state.paymentMethodID).toBeNull();
+    expect(state.mailHistory.rows.map(row => row.mailTemplateId)).toEqual([
+      'tpl-1',
+    ]);
+    expect(dropped).toEqual({
+      memberPlans: 1,
+      paymentMethods: 1,
+      templates: 1,
+    });
+  });
+
+  it('checks nothing against a list that has not loaded yet', () => {
+    const { state, dropped } = loadSavedAudience(
+      { base: 'hasSubscription', memberPlanIDs: ['plan-1'] },
+      {
+        memberPlans: new Map(),
+        paymentMethods: new Map(),
+        templates: new Map(),
+      }
+    );
+
+    expect(state.memberPlanIDs).toEqual(['plan-1']);
+    expect(dropped).toEqual({
+      memberPlans: 0,
+      paymentMethods: 0,
+      templates: 0,
     });
   });
 });

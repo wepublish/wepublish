@@ -19,7 +19,11 @@ import {
 } from '@prisma/client';
 import { MailSendJobService } from './mail-send-job.service';
 import { MailSendRecipientService } from './mail-send-recipient.service';
-import { MailAudienceInput, MailRecipientBase } from './mail-send.model';
+import {
+  MailAudienceInput,
+  MailRecipientBase,
+  MailRollingKind,
+} from './mail-send.model';
 import type { Mock } from 'vitest';
 import { version } from 'uuid';
 
@@ -508,6 +512,45 @@ describe('MailSendJobService', () => {
       await settle(prisma);
     });
 
+    it('keeps a rolling range as the dates it meant when the send was created', async () => {
+      vi.useFakeTimers({ toFake: ['Date'] });
+      vi.setSystemTime(new Date('2026-11-22T12:00:00.000Z'));
+
+      try {
+        const prisma = fakePrisma();
+        const recipientService = recipientServiceFor(['u1']);
+
+        await makeService(
+          prisma,
+          { sendMail: vi.fn(async () => undefined) },
+          recipientService
+        ).createJob(
+          {
+            mailTemplateId: 'tpl-1',
+            audience: {
+              base: MailRecipientBase.hasSubscription,
+              startsAtRolling: { kind: MailRollingKind.lastDays, days: 30 },
+            },
+          },
+          'editor-1'
+        );
+
+        const applied = {
+          base: MailRecipientBase.hasSubscription,
+          startsAtFrom: new Date('2026-10-23T12:00:00.000Z'),
+          startsAtTo: new Date('2026-11-22T12:00:00.000Z'),
+        };
+
+        expect(prisma.jobs[0].recipientFilter).toEqual(applied);
+        // Counted with the same dates the queue is built from.
+        expect(recipientService.count.mock.calls[0][0]).toEqual(applied);
+
+        await settle(prisma);
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
     it('sends to every recipient of the audience it resolved', async () => {
       const prisma = fakePrisma();
       const recipientService = recipientServiceFor(['u1', 'u2']);
@@ -521,6 +564,117 @@ describe('MailSendJobService', () => {
 
       expect(mailContext.sendMail).toHaveBeenCalledTimes(2);
       expect(prisma.jobs[0].status).toBe('done');
+    });
+  });
+
+  describe('what a send is about', () => {
+    const subscriptionRecipients = () => {
+      const recipient = {
+        user: { id: 'u1', email: 'u1@x.ch' },
+        subscription: { id: 'sub-1' },
+      };
+
+      return {
+        count: vi.fn(async () => 1),
+        allowsSubscriptionTemplates: () => true,
+        resolvePage: vi.fn(async (_audience: any, skip: number) =>
+          skip === 0 ? [recipient] : []
+        ),
+        loadQueued: vi.fn(
+          async (refs: any[]) =>
+            new Map(
+              refs.map(ref => [
+                `${ref.userId}:${ref.subscriptionId ?? ''}`,
+                recipient,
+              ])
+            )
+        ),
+      };
+    };
+    const subscriptionAudience = { base: MailRecipientBase.hasSubscription };
+
+    it('tells the mail log which subscription and invoice a mail is about', async () => {
+      const prisma = fakePrisma(template('renewal'));
+      prisma.invoice.findFirst.mockResolvedValue({ id: 'inv-1', items: [] });
+      const mailContext = { sendMail: vi.fn(async () => undefined) };
+
+      await makeService(
+        prisma,
+        mailContext,
+        subscriptionRecipients()
+      ).createJob(
+        { mailTemplateId: 'tpl-1', audience: subscriptionAudience },
+        'editor-1'
+      );
+      await settle(prisma);
+
+      expect((mailContext.sendMail as Mock).mock.calls[0][0]).toMatchObject({
+        subscriptionId: 'sub-1',
+        invoiceId: 'inv-1',
+      });
+    });
+
+    it('names no invoice when the template shows none', async () => {
+      const prisma = fakePrisma(template('subscription'));
+      prisma.invoice.findFirst.mockResolvedValue({ id: 'inv-1', items: [] });
+      const mailContext = { sendMail: vi.fn(async () => undefined) };
+
+      await makeService(
+        prisma,
+        mailContext,
+        subscriptionRecipients()
+      ).createJob(
+        { mailTemplateId: 'tpl-1', audience: subscriptionAudience },
+        'editor-1'
+      );
+      await settle(prisma);
+
+      const sent = (mailContext.sendMail as Mock).mock.calls[0][0];
+
+      expect(sent.subscriptionId).toBe('sub-1');
+      expect(sent.invoiceId ?? null).toBeNull();
+    });
+
+    it('tells the letter log the same', async () => {
+      const prisma = fakePrisma(template('renewal'));
+      prisma.invoice.findFirst.mockResolvedValue({ id: 'inv-1', items: [] });
+      const letterContext = { sendLetter: vi.fn(async () => 'log-1') };
+
+      await makeService(
+        prisma,
+        { sendMail: vi.fn() },
+        subscriptionRecipients(),
+        letterContext
+      ).createJob(
+        {
+          mailTemplateId: 'tpl-1',
+          audience: subscriptionAudience,
+          channel: MailChannel.letter,
+        },
+        'editor-1'
+      );
+      await settle(prisma);
+
+      expect(
+        (letterContext.sendLetter as Mock).mock.calls[0][0].log
+      ).toMatchObject({ subscriptionId: 'sub-1', invoiceId: 'inv-1' });
+    });
+
+    it('names no trigger for a send to people without a subscription', async () => {
+      const prisma = fakePrisma();
+      const mailContext = { sendMail: vi.fn(async () => undefined) };
+
+      await makeService(
+        prisma,
+        mailContext,
+        recipientServiceFor(['u1'])
+      ).createJob({ mailTemplateId: 'tpl-1', audience }, 'editor-1');
+      await settle(prisma);
+
+      const sent = (mailContext.sendMail as Mock).mock.calls[0][0];
+
+      expect(sent.subscriptionId ?? null).toBeNull();
+      expect(sent.invoiceId ?? null).toBeNull();
     });
   });
 

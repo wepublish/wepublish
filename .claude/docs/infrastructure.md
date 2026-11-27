@@ -76,6 +76,9 @@ webhooks; notes `lastPollAt`/`lastPollError` on the mail provider row) →
 email quality recompute (`EmailQualityService.recomputeAll`, the only thing
 that turns an address `unresponsive` by time passing; settings
 `emailQualityUnresponsiveAfterDays` / `emailQualityMinMailsForUnresponsive`).
+`runPeriodicJobNow` reruns today's periodic job on demand, under the same run
+lock. It is refused outside review, development and local (`isLoadTestAllowed`)
+and exists for the e2e `@load` test, which reads `apiProcessStats` meanwhile.
 Cross-replica locks (`lock:*`: jobs, the running periodic job, migrator ticks,
 tracking pixels, used TOTP codes) and counters (`count:*`: TOTP failures) live there as well.
 Websites share their rendered ISR pages there too (Next `cacheHandler`, nothing

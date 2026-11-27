@@ -12,10 +12,13 @@ import { randomUUID } from 'crypto';
 import { BaseLetterProvider } from './letter-provider/base-letter-provider';
 import {
   LetterAddress,
+  LetterProviderMessageState,
   LetterState,
 } from './letter-provider/letter-provider.interface';
 import {
+  HeldLetterOutcome,
   type LetterAttachment,
+  type LetterLogDetails,
   type LetterRecipientOptions,
   LetterSender,
   loadAttachmentIds,
@@ -76,10 +79,10 @@ export interface SendTemplateLetterProps {
   mailSendJobId?: string | null;
   /**
    * Bookkeeping an automated send hands in: the identifier a retried run
-   * recognises the letter by, and which flow it came from. A manual send is
-   * logged under its own id.
+   * recognises the letter by, which flow it came from, and the subscription
+   * and invoice it is about. A manual send is logged under its own id.
    */
-  log?: { mailIdentifier?: string; type?: MailLogType };
+  log?: LetterLogDetails;
   /** A document printed after the letter, e.g. the invoice with its payment slip. */
   attachment?: LetterAttachment;
 }
@@ -93,6 +96,7 @@ const LOG_STATES: Record<LetterState, MailLogState> = {
   [LetterState.undeliverable]: MailLogState.undeliverable,
   [LetterState.rejected]: MailLogState.rejected,
   [LetterState.canceled]: MailLogState.canceled,
+  [LetterState.actionRequired]: MailLogState.actionRequired,
 };
 
 export function toProviderState(state: LetterState): MailLogState {
@@ -143,6 +147,102 @@ export class LetterContext implements LetterSender {
     ]);
 
     return letterProvider && pdfRenderer;
+  }
+
+  sendsAutomatically(): Promise<boolean> {
+    return this.letterProvider.sendsAutomatically();
+  }
+
+  async withdrawHeldLetter(
+    mailLogId: string,
+    replacementLogId: string
+  ): Promise<HeldLetterOutcome> {
+    const log = await this.prisma.mailLog.findUnique({
+      where: { id: mailLogId },
+      select: {
+        id: true,
+        state: true,
+        providerLetterID: true,
+        recipientID: true,
+        mailTemplateId: true,
+        mailIdentifier: true,
+        type: true,
+        subject: true,
+      },
+    });
+
+    if (log?.state !== MailLogState.actionRequired || !log.providerLetterID) {
+      return 'left';
+    }
+
+    const providerLetterID = log.providerLetterID;
+    let remote: LetterProviderMessageState | undefined;
+
+    try {
+      [remote] = await this.letterProvider.getMessageStates([providerLetterID]);
+    } catch (error) {
+      this.logger.warn(
+        `Letter <${mailLogId}> stays held: the print vendor could not be asked about it: ${(error as Error).message}`
+      );
+
+      return 'left';
+    }
+
+    // A state the vendor does not tell is no licence to remove anything.
+    if (!remote) {
+      return 'left';
+    }
+
+    const state = toProviderState(remote.state);
+
+    // Somebody dealt with it at the vendor: fixed, sent, cancelled, removed.
+    if (state !== MailLogState.actionRequired) {
+      await this.prisma.mailLog.update({
+        where: { id: log.id },
+        data: { state, mailData: remote.letterData, error: null },
+      });
+
+      return 'left';
+    }
+
+    try {
+      await this.letterProvider.deleteLetter(providerLetterID);
+    } catch (error) {
+      this.logger.warn(
+        `Letter <${mailLogId}> stays held: the print vendor does not let it go: ${(error as Error).message}`
+      );
+
+      return 'left';
+    }
+
+    // The reason stays: it says why this letter was taken back. The
+    // replacement is on record from here on as not handed over yet, so a
+    // night finds an attempt to post again even if the replacement dies on
+    // its way, instead of a taken-back letter that reads as settled.
+    await this.prisma.$transaction([
+      this.prisma.mailLog.update({
+        where: { id: log.id },
+        data: { state: MailLogState.canceled },
+      }),
+      this.prisma.mailLog.create({
+        data: {
+          id: replacementLogId,
+          channel: MailChannel.letter,
+          recipient: { connect: { id: log.recipientID } },
+          mailTemplate: { connect: { id: log.mailTemplateId } },
+          state: MailLogState.rejected,
+          type: log.type,
+          sentDate: new Date(),
+          subject: log.subject,
+          mailProviderID: this.letterProvider.id,
+          mailIdentifier: log.mailIdentifier,
+          providerLetterID: null,
+          error: `Replaces the held letter <${log.id}> and was not handed over yet`,
+        },
+      }),
+    ]);
+
+    return 'withdrawn';
   }
 
   /** Render a template as the pdf that would be printed. */
@@ -384,27 +484,38 @@ export class LetterContext implements LetterSender {
       error?: string;
     }
   ): Promise<void> {
+    const data = {
+      channel: MailChannel.letter,
+      recipient: { connect: { id: props.recipient.id } },
+      mailTemplate: { connect: { id: props.mailTemplateId } },
+      ...(props.mailSendJobId ?
+        { mailSendJob: { connect: { id: props.mailSendJobId } } }
+      : {}),
+      ...(props.log?.subscriptionId ?
+        { subscription: { connect: { id: props.log.subscriptionId } } }
+      : {}),
+      ...(props.log?.invoiceId ?
+        { invoice: { connect: { id: props.log.invoiceId } } }
+      : {}),
+      state: outcome.state,
+      type: props.log?.type ?? MailLogType.manual,
+      sentDate: new Date(),
+      subject,
+      mailProviderID: this.letterProvider.id,
+      mailIdentifier: props.log?.mailIdentifier ?? mailLogId,
+      providerLetterID: outcome.providerLetterID ?? null,
+      mailData: outcome.letterData ?? null,
+      error: outcome.error ?? null,
+      addressSnapshot: address as unknown as Prisma.InputJsonValue,
+    } satisfies Prisma.MailLogUpdateInput;
+
     try {
-      await this.prisma.mailLog.create({
-        data: {
-          id: mailLogId,
-          channel: MailChannel.letter,
-          recipient: { connect: { id: props.recipient.id } },
-          mailTemplate: { connect: { id: props.mailTemplateId } },
-          ...(props.mailSendJobId ?
-            { mailSendJob: { connect: { id: props.mailSendJobId } } }
-          : {}),
-          state: outcome.state,
-          type: props.log?.type ?? MailLogType.manual,
-          sentDate: new Date(),
-          subject,
-          mailProviderID: this.letterProvider.id,
-          mailIdentifier: props.log?.mailIdentifier ?? mailLogId,
-          providerLetterID: outcome.providerLetterID ?? null,
-          mailData: outcome.letterData ?? null,
-          error: outcome.error ?? null,
-          addressSnapshot: address as unknown as Prisma.InputJsonValue,
-        },
+      // A replacement for a held letter finds its entry written already, as
+      // not handed over yet (`withdrawHeldLetter`); it now gets the outcome.
+      await this.prisma.mailLog.upsert({
+        where: { id: mailLogId },
+        create: { id: mailLogId, ...data },
+        update: data,
       });
     } catch (logError) {
       // Never let bookkeeping mask the delivery outcome.

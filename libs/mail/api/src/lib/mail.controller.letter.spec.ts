@@ -117,6 +117,8 @@ describe('MailController letter mode', () => {
       log: {
         mailIdentifier: expectedIdentifier,
         type: MailLogType.subscriptionFlow,
+        subscriptionId: null,
+        invoiceId: null,
       },
     });
     // The letter side writes its own log entry.
@@ -202,14 +204,41 @@ describe('MailController letter mode', () => {
     expect(mailContext.sendComposedMail).not.toHaveBeenCalled();
   });
 
+  const invoicePdf = {
+    filename: 'RE-1.pdf',
+    contentType: 'application/pdf',
+    content: Buffer.from('pdf'),
+  };
+
   it('prints a document the caller hands in after the template', async () => {
     const { send, letterSender } = setup();
-    const attachment = { content: Buffer.from('pdf'), name: 'RE-1.pdf' };
 
-    await send({ letterAttachment: attachment });
+    await send({ attachment: invoicePdf });
 
     expect(letterSender.sendLetter).toHaveBeenCalledWith(
-      expect.objectContaining({ attachment })
+      expect.objectContaining({
+        attachment: { content: invoicePdf.content, name: 'RE-1.pdf' },
+      })
+    );
+  });
+
+  it('attaches the document the caller hands in to a mail', async () => {
+    const { send, mailContext } = setup();
+
+    await send({ letterRecipient: null, attachment: invoicePdf });
+
+    expect(mailContext.sendComposedMail).toHaveBeenCalledWith(
+      expect.objectContaining({ attachments: [invoicePdf] })
+    );
+  });
+
+  it('attaches nothing to a mail when the caller hands in nothing', async () => {
+    const { send, mailContext } = setup();
+
+    await send({ letterRecipient: null });
+
+    expect(mailContext.sendComposedMail.mock.calls[0][0]).not.toHaveProperty(
+      'attachments'
     );
   });
 
@@ -246,5 +275,28 @@ describe('MailController letter mode', () => {
 
     expect(prisma.userDeliveryPreference.findUnique).not.toHaveBeenCalled();
     expect(mailContext.sendComposedMail).toHaveBeenCalled();
+  });
+});
+
+describe('MailController.recordDeferred', () => {
+  it('logs the mail as deferred, with why, under the identifier a send would use', async () => {
+    const { prisma, mailContext } = setup();
+
+    await new MailController(
+      prisma as any,
+      mailContext,
+      config()
+    ).recordDeferred('The invoice pdf is not available yet');
+
+    expect(prisma.mailLog.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        state: 'deferred',
+        error: 'The invoice pdf is not available yet',
+        mailIdentifier: expectedIdentifier,
+        recipientEmail: 'jane@example.com',
+        mailTemplate: { connect: { id: 'template-1' } },
+      }),
+    });
+    expect(mailContext.sendComposedMail).not.toHaveBeenCalled();
   });
 });

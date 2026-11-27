@@ -85,4 +85,21 @@ describe('LetterLayoutList', () => {
       expect.objectContaining({ variables: { id: 'layout-2' } })
     );
   });
+
+  it('puts the heading above its lead', () => {
+    renderList();
+
+    const heading = screen.getByRole('heading', {
+      name: 'letterLayouts.title',
+    });
+    const lead = screen.getByText('letterLayouts.intro');
+
+    expect(heading.parentElement).toBe(lead.parentElement);
+    expect(getComputedStyle(heading.parentElement!).flexDirection).toBe(
+      'column'
+    );
+    expect(
+      heading.compareDocumentPosition(lead) & Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
+  });
 });

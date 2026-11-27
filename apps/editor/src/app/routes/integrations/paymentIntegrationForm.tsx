@@ -32,7 +32,8 @@ const isTestEnvironment = (appEnvironment?: string) =>
 export const creatablePaymentProviderTypes = (appEnvironment?: string) =>
   Object.values(PaymentProviderType).filter(
     type =>
-      type !== PaymentProviderType.Simulated || isTestEnvironment(appEnvironment)
+      type !== PaymentProviderType.Simulated ||
+      isTestEnvironment(appEnvironment)
   );
 
 const paymentSettingsSchema = z.object({
@@ -74,6 +75,7 @@ const paymentSettingsSchema = z.object({
     .nullish()
     .or(z.literal('')),
   bexio_markInvoiceAsOpen: z.boolean().nullish(),
+  bexio_invoiceMailByWePublish: z.boolean().nullish(),
   bexio_contactSync: z.boolean().nullish(),
   bexio_testMailbox: z.string().nullish().or(z.literal('')),
   bexio_invoiceTitleNewMembership: z.string().nullish().or(z.literal('')),
@@ -288,6 +290,16 @@ export function PaymentIntegrationForm() {
               label: t('integrations.paymentSettings.bexioMarkInvoiceAsOpen'),
               info: t(
                 'integrations.paymentSettings.bexioMarkInvoiceAsOpenInfo'
+              ),
+              type: 'checkbox',
+            },
+            {
+              name: 'bexio_invoiceMailByWePublish',
+              label: t(
+                'integrations.paymentSettings.bexioInvoiceMailByWePublish'
+              ),
+              info: t(
+                'integrations.paymentSettings.bexioInvoiceMailByWePublishInfo'
               ),
               type: 'checkbox',
             },

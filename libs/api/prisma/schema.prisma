@@ -617,6 +617,7 @@ model Invoice {
   subscription   Subscription? @relation(fields: [subscriptionID], references: [id], onDelete: SetNull)
 
   subscriptionPeriods SubscriptionPeriod[]
+  mailLogs            MailLog[]
 
   userID String?
   user   User?   @relation("InvoiceBuyer", fields: [userID], references: [id], onDelete: SetNull)
@@ -646,6 +647,11 @@ enum MailLogState {
   dispatched    @map("dispatched")
   undeliverable @map("undeliverable")
   canceled      @map("canceled")
+
+  // The print vendor took the letter and holds it until someone looks at it
+  // there, e.g. because its check of the pdf failed. Not a refusal: the
+  // letter exists at the vendor and must not be handed over a second time.
+  actionRequired @map("actionRequired")
 }
 
 enum MailChannel {
@@ -711,9 +717,19 @@ model MailLog {
   mailSendJob   MailSendJob? @relation(fields: [mailSendJobId], references: [id], onDelete: SetNull)
   mailSendJobId String?
 
+  // What the mail was about: the subscription and, for invoice mails, the
+  // invoice. Null for mails with no such trigger (login link, password reset)
+  // and on rows written before the columns existed.
+  subscription   Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+  subscriptionId String?
+  invoice        Invoice?      @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
+  invoiceId      String?
+
   @@index([mailIdentifier])
   @@index([recipientID, sentDate(sort: Desc)])
   @@index([mailSendJobId])
+  @@index([subscriptionId])
+  @@index([invoiceId])
   @@index([mailProviderMessageID])
   @@index([channel])
   @@map("mail.log")
@@ -1292,6 +1308,10 @@ model Subscription {
   monthlyAmount      Float
   autoRenew          Boolean
   startsAt           DateTime                  @db.Timestamptz(3)
+  /// The first printed issue is the first one shipped on or after this Zurich
+  /// day («Abo-Start»): the ship day of the issue the reader chose, or the day
+  /// after it for the next one. Null: no choice, every issue from startsAt.
+  firstPrintIssueFrom DateTime?                @db.Date
   paidUntil          DateTime?                 @db.Timestamptz(3)
   periods            SubscriptionPeriod[]
   properties         Json                      @default("[]")
@@ -1299,6 +1319,10 @@ model Subscription {
   extendable         Boolean                   @default(true)
   currency           Currency
   confirmed          Boolean                   @default(true)
+  /// When importSubscription brought it in from another system; null when it was created here.
+  importedAt         DateTime?                 @db.Timestamptz(3)
+  /// When the first payment was registered here. Legacy = importedAt set and this null.
+  legacyEndedAt      DateTime?                 @db.Timestamptz(3)
 
   paymentMethodID String
   paymentMethod   PaymentMethod @relation(fields: [paymentMethodID], references: [id])
@@ -1315,6 +1339,7 @@ model Subscription {
 
   invoices Invoice[]
 
+  mailLogs           MailLog[]
   mailSendJobEntries MailSendJobRecipient[]
 
   paymentMethodChanges SubscriptionPaymentMethodChange[]
@@ -1475,6 +1500,7 @@ model User {
   deliverySuggestion        DeliverySuggestion?
   deliveryPreferenceChanges UserDeliveryPreference[] @relation("DeliveryPreferenceChangedBy")
   deliveryModeBulkChanges   DeliveryModeBulkChange[] @relation("DeliveryModeBulkChangedBy")
+  savedAudienceFilters      SavedAudienceFilter[]    @relation("SavedAudienceFilterCreatedBy")
   seoChecklistItems         SeoChecklistItem[]
   apiTokens                 ApiToken[]
   invoices                  Invoice[]                  @relation("InvoiceBuyer")
@@ -1750,10 +1776,16 @@ model SubscriptionFlow {
 
   memberPlan   MemberPlan? @relation(fields: [memberPlanId], references: [id])
   memberPlanId String?
+  /// A flow for the matching subscriptions of every member plan. Comes after a plan's own flows and before the default flow. Has no memberPlan.
+  allMemberPlans Boolean @default(false)
+  /// An inactive flow is skipped: its subscriptions fall to the next flow. The default flow is always active.
+  active Boolean @default(true)
 
   paymentMethods PaymentMethod[]
   periodicities  PaymentPeriodicity[]
   autoRenewal    Boolean[]
+  /// Whom the flow is for: legacy subscriptions (true), all the others (false), or both.
+  legacy         Boolean[]            @default([true, false])
 
   intervals SubscriptionInterval[]
 
@@ -2544,6 +2576,10 @@ model SettingPaymentProvider {
   bexio_invoiceMailBodyRenewalMembership    String?
   bexio_markInvoiceAsOpen                   Boolean?
   bexio_testMailbox                         String?
+  // We.Publish delivers the renewal invoice pdf to every reader (attached to
+  // the invoice-creation mail, or printed after the letter); bexio only
+  // issues it and sends nothing. Off or null: bexio emails it as before.
+  bexio_invoiceMailByWePublish              Boolean?
   // Nightly push of reader data (name, email, address) to bexio contacts;
   // when it last ran and what went wrong, for the integration form.
   bexio_contactSync                         Boolean?
@@ -3058,6 +3094,26 @@ model DeliveryModeBulkChange {
 
   @@index([createdAt(sort: Desc)])
   @@map("user_delivery_bulk_changes")
+}
+
+/// A recipient filter kept under a name, to be loaded again in the manual
+/// messages and in the manual channel assignment. Shared by everyone who may
+/// use either tool.
+model SavedAudienceFilter {
+  id         String   @id @default(dbgenerated("uuidv7()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  name        String  @unique
+  description String?
+  /// The MailAudienceInput as the editor built it, rolling dates included.
+  /// Opaque: read back whole, never queried by element.
+  audience Json
+
+  createdByUserId String?
+  createdBy       User?   @relation("SavedAudienceFilterCreatedBy", fields: [createdByUserId], references: [id], onDelete: SetNull)
+
+  @@map("mail.audience_filters")
 }
 
 enum DeliverySuggestionKind {
