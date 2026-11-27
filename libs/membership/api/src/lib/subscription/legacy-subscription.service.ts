@@ -1,4 +1,4 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import {
   InvoicePaidListener,
@@ -9,19 +9,21 @@ import { legacySubscriptionWhere } from './legacy-subscription';
 
 /**
  * Ends the legacy state of an imported subscription with the first payment
- * registered here. Registered listeners run after the renewal mail, so that
- * mail still comes from the legacy flow.
+ * registered here. It has to run after the renewal mail, so that mail still
+ * comes from the legacy flow: listeners run in the order they registered,
+ * the renewal mail registers as its module starts, and this one only once
+ * every module has started.
  */
 @Injectable()
 export class LegacySubscriptionService
-  implements InvoicePaidListener, OnModuleInit
+  implements InvoicePaidListener, OnApplicationBootstrap
 {
   constructor(
     private prisma: PrismaClient,
     private invoicePaidNotifier: InvoicePaidNotifier
   ) {}
 
-  onModuleInit() {
+  onApplicationBootstrap() {
     this.invoicePaidNotifier.register(this);
   }
 

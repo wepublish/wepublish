@@ -83,18 +83,20 @@ describe('LegacySubscriptionService', () => {
     });
   });
 
-  it('listens to paid invoices once the module is up', async () => {
+  it('listens to paid invoices once the application is up', async () => {
     const { prisma, notifier, service } = setup();
 
-    service.onModuleInit();
+    service.onApplicationBootstrap();
     await notifier.notify('invoice-1');
 
     expect(prisma.subscription.updateMany).toHaveBeenCalledTimes(1);
   });
 
   // The renewal mail of the payment that ends the legacy state still has to
-  // come from the legacy flow, so that mail is looked up first.
-  it('runs after the renewal mail listener', async () => {
+  // come from the legacy flow, so that mail is looked up first. It registers
+  // as its module starts; this service only once every module has started,
+  // whichever module Nest happens to start first.
+  it('runs after the listeners that register as their module starts', async () => {
     const order: string[] = [];
     const prisma = {
       subscription: {
@@ -104,15 +106,27 @@ describe('LegacySubscriptionService', () => {
         }),
       },
     };
-    const notifier = new InvoicePaidNotifier({
-      onInvoicePaid: async () => {
-        order.push('renewal-mail');
-      },
-    });
-    new LegacySubscriptionService(
+    const notifier = new InvoicePaidNotifier();
+    const service = new LegacySubscriptionService(
       prisma as unknown as PrismaClient,
       notifier
-    ).onModuleInit();
+    );
+    const renewalMail = {
+      onModuleInit: () =>
+        notifier.register({
+          onInvoicePaid: async () => {
+            order.push('renewal-mail');
+          },
+        }),
+    };
+
+    // Nest runs every onModuleInit, in its own order, then every
+    // onApplicationBootstrap. This service's module going first is the
+    // case that used to break the order.
+    for (const module of [service, renewalMail]) {
+      (module as { onModuleInit?: () => void }).onModuleInit?.();
+    }
+    service.onApplicationBootstrap();
 
     await notifier.notify('invoice-1');
 
