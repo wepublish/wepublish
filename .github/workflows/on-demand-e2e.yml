@@ -37,6 +37,10 @@ on:
         required: false
         type: boolean
         default: false
+      load_readers:
+        description: 'Renewal load test (grep @load, neuewege on review): readers by mail/by letter, eg. 1200/300. Empty: it skips.'
+        required: false
+        type: string
       base_url:
         description: 'Optional override of the website URL.'
         required: false
@@ -58,7 +62,8 @@ jobs:
   e2e:
     name: E2E (${{ inputs.app }} · ${{ inputs.environment }}${{ inputs.review_slot }} · ${{ inputs.project }})
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # The renewal load test alone takes up to about three hours.
+    timeout-minutes: ${{ inputs.load_readers != '' && 240 || 30 }}
     env:
       CI: true
       NX_NO_CLOUD: true
@@ -75,6 +80,7 @@ jobs:
       # mailbox over IMAP; without these secrets @mail journeys skip.
       E2E_ALLOW_MUTATION: ${{ inputs.allow_mutation }}
       E2E_KEEP_MAILS: ${{ inputs.keep_mails }}
+      E2E_LOAD_READERS: ${{ inputs.load_readers }}
       E2E_API_TOKEN: ${{ secrets.E2E_API_TOKEN }}
       E2E_MAILCHIMP_API_KEY: ${{ secrets.E2E_MAILCHIMP_API_KEY }}
       E2E_MAILCHIMP_LIST_ID: ${{ secrets.E2E_MAILCHIMP_LIST_ID }}
@@ -144,6 +150,10 @@ jobs:
               echo
               echo "### Failed scenarios"
               echo "$FAILED"
+            fi
+            if [ -f e2e/test-results/load-memory.md ]; then
+              echo
+              cat e2e/test-results/load-memory.md
             fi
             echo
             echo "Download the **e2e-report** artifact for the Playwright HTML report (with traces), the Cucumber HTML report and the raw results. Open a trace with \`pnpm exec playwright show-trace <trace.zip>\`."

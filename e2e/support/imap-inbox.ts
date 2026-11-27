@@ -175,6 +175,7 @@ export class ImapInbox implements Inbox {
     }
   }
 
+
   async close() {
     await this.client?.logout().catch(() => undefined);
     this.client = undefined;

@@ -10,3 +10,12 @@ export const isTestEnvironment = (
 };
 
 export const isSimulatedPaymentAllowed = isTestEnvironment;
+
+// Load tests start the nightly run on demand and read the API's memory. Only
+// where nothing real can be harmed: never production or staging, and — fail
+// closed again — not where the environment is not declared.
+const LOAD_TEST_ENVIRONMENTS = ['local', 'review', 'development'];
+
+export const isLoadTestAllowed = (
+  env: Record<string, string | undefined> = process.env
+): boolean => LOAD_TEST_ENVIRONMENTS.includes(env['APP_ENVIRONMENT'] ?? '');

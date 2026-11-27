@@ -2,6 +2,7 @@ import { BexioConfig } from './bexio';
 // Type only: factories → api-client → env would otherwise be a cycle.
 import type { PingenTestAccount } from './factories';
 import { ImapConfig, mailBackend } from './inbox';
+import { parseLoadReaders } from './load';
 import { ResendConfig } from './resend-inbox';
 import { resolveTarget } from './targets';
 
@@ -75,6 +76,15 @@ export const env = {
         organisationId: process.env.E2E_PINGEN_ORGANISATION_ID,
       } satisfies PingenTestAccount)
     : undefined,
+  /**
+   * The renewal load test (`@load`): how many synthetic readers get their
+   * renewal by mail and by letter, `<mail>/<letter>`, e.g. `1200/300`.
+   */
+  loadReaders: parseLoadReaders(process.env.E2E_LOAD_READERS),
+  /** `@load` fails above this resident memory of the API process (its pod's limit is 1024 MiB). */
+  loadMaxRssMib: Number(process.env.E2E_LOAD_MAX_RSS_MIB) || 800,
+  /** Leaves the load test's readers behind instead of deleting them. */
+  keepLoadData: process.env.E2E_KEEP_LOAD_DATA === 'true',
   /** A real Mailchimp test audience and one of its interests: there is no fake. */
   mailchimp:
     (
@@ -120,6 +130,12 @@ const requirements: Record<string, () => string | undefined> = {
     isProduction ? 'never sends letters from production'
     : !env.pingen ?
       'needs E2E_PINGEN_CLIENT_ID, E2E_PINGEN_CLIENT_SECRET and E2E_PINGEN_ORGANISATION_ID (Pingen staging)'
+    : undefined,
+  // Starts the nightly run on demand; the API refuses outside review/local.
+  '@load': () =>
+    isProduction || target.environment === 'staging' ?
+      'never runs a load test on production or staging'
+    : !env.loadReaders ? 'needs E2E_LOAD_READERS, e.g. 1200/300 (readers by mail/by letter)'
     : undefined,
   // Points the tenant's one sync provider at the test audience.
   '@mailchimp': () =>
