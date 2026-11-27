@@ -4,7 +4,13 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Prisma, PrismaClient, Subscription, User } from '@prisma/client';
+import {
+  PaymentState,
+  Prisma,
+  PrismaClient,
+  Subscription,
+  User,
+} from '@prisma/client';
 import {
   getMaxTake,
   graphQLSortOrderToPrisma,
@@ -203,9 +209,87 @@ export class SubscriptionService {
 
   @PrimeDataLoader(SubscriptionDataloader)
   async createSubscription(input: CreatePublicSubscriptionInput) {
-    const { subscription } = await this.memberContext.createSubscription(input);
+    const { subscription, invoice } =
+      await this.memberContext.createSubscription(input);
 
-    return subscription;
+    return (
+      (await this.settleWithoutCharge(subscription, invoice)) ?? subscription
+    );
+  }
+
+  /**
+   * A subscription an editor creates comes with an open invoice. On a payment
+   * provider that never charges nobody would ever pay it and the subscription
+   * would be deactivated as unpaid — so it is settled at once, the way the
+   * provider settles it for a reader in the checkout. Returns the subscription
+   * as paid, or nothing when the provider is one that charges.
+   */
+  private async settleWithoutCharge(
+    subscription: SubscriptionWithRelations,
+    invoice: InvoiceWithItems
+  ) {
+    const paymentMethod = await this.prisma.paymentMethod.findUnique({
+      where: { id: subscription.paymentMethodID },
+    });
+    const paymentProvider = this.paymentMethodConfig.paymentProviders.find(
+      provider => provider.id === paymentMethod?.paymentProviderID
+    );
+
+    if (!paymentMethod || !paymentProvider?.settlesWithoutCharge) {
+      return;
+    }
+
+    const period = await this.prisma.subscriptionPeriod.findFirst({
+      where: { invoiceID: invoice.id },
+    });
+
+    if (!period) {
+      return;
+    }
+
+    const payment = await this.prisma.payment.create({
+      data: {
+        paymentMethodID: paymentMethod.id,
+        invoiceID: invoice.id,
+        state: PaymentState.created,
+      },
+    });
+    const intent = await paymentProvider.createIntent({
+      paymentID: payment.id,
+      invoice,
+      currency: invoice.currency,
+      saveCustomer: false,
+      backgroundTask: true,
+    });
+
+    await this.prisma.payment.update({
+      where: { id: payment.id },
+      data: {
+        state: intent.state,
+        intentID: intent.intentID,
+        intentData: intent.intentData,
+        intentSecret: intent.intentSecret,
+        paymentData: intent.paymentData,
+      },
+    });
+
+    if (intent.state !== PaymentState.paid) {
+      return;
+    }
+
+    const [, paidSubscription] = await this.prisma.$transaction([
+      this.prisma.invoice.update({
+        where: { id: invoice.id },
+        data: { paidAt: intent.paidAt ?? new Date() },
+      }),
+      this.prisma.subscription.update({
+        where: { id: subscription.id },
+        data: { paidUntil: period.endsAt },
+        include: { deactivation: true, periods: true },
+      }),
+    ]);
+
+    return paidSubscription;
   }
 
   @PrimeDataLoader(SubscriptionDataloader)

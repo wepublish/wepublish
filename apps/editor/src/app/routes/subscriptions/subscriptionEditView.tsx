@@ -51,7 +51,6 @@ import {
   CanGetSubscriptions,
 } from '@wepublish/permissions';
 import {
-  ALL_PAYMENT_PERIODICITIES,
   createCheckedPermissionComponent,
   CurrencyInput,
   DatePicker,
@@ -88,6 +87,10 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { z } from 'zod';
 
 import { ReactivateSubscriptionModal } from './reactivateSubscriptionModal';
+import {
+  periodicityForPlan,
+  selectablePeriodicities,
+} from './subscription-periodicity';
 
 const Button = styled(RButton)`
   margin-top: 8px;
@@ -944,17 +947,26 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                                 return;
                               }
 
+                              // The plan decides the periodicity: a new
+                              // subscription takes its default, an existing
+                              // one keeps its own while the plan offers it.
+                              const planPeriodicity = periodicityForPlan(
+                                chosen,
+                                paymentPeriodicity,
+                                { isNew: !id }
+                              );
                               const planPeriodMin =
                                 chosen.periodicityPricing?.find(
-                                  price =>
-                                    price.periodicity === paymentPeriodicity
+                                  price => price.periodicity === planPeriodicity
                                 )?.amountMin;
 
                               field.onChange(chosen);
+                              setValue('paymentPeriodicity', planPeriodicity);
                               setValue(
                                 'monthlyAmount',
                                 planPeriodMin != null ?
-                                  planPeriodMin / periodicityMonths
+                                  planPeriodMin /
+                                    PAYMENT_PERIODICITY_MONTHS[planPeriodicity]
                                 : getMonthlyEquivalentRange(
                                     chosen.periodicityPricing
                                   ).amountPerMonthMin
@@ -1039,7 +1051,10 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                               },
                             }}
                           >
-                            {ALL_PAYMENT_PERIODICITIES.map(pp => (
+                            {selectablePeriodicities(
+                              memberPlan,
+                              paymentPeriodicity
+                            ).map(pp => (
                               <MenuItem
                                 key={pp}
                                 value={pp}

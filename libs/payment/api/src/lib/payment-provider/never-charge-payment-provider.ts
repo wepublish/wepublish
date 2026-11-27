@@ -11,6 +11,8 @@ import {
 import { PaymentState } from '@prisma/client';
 
 export class NeverChargePaymentProvider extends BasePaymentProvider {
+  override readonly settlesWithoutCharge = true;
+
   constructor(props: PaymentProviderProps) {
     super(props);
   }

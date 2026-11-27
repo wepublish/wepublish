@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom/vitest';
 
 import { createTheme, ThemeProvider } from '@mui/material';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import {
   InvoicesDocument,
   MemberPlanListDocument,
@@ -82,6 +82,27 @@ const memberPlan = {
   availablePaymentMethods: [],
 };
 
+const lifelongPlan = {
+  ...memberPlan,
+  id: 'plan-lifelong',
+  name: 'Lifelong',
+  slug: 'lifelong',
+  periodicityPricing: [{ periodicity: 'lifetime', amountMin: 0 }],
+  defaultPaymentPeriodicity: null,
+};
+
+const monthlyOrYearlyPlan = {
+  ...memberPlan,
+  id: 'plan-monthly-or-yearly',
+  name: 'Monthly or yearly',
+  slug: 'monthly-or-yearly',
+  periodicityPricing: [
+    { periodicity: 'yearly', amountMin: 12000 },
+    { periodicity: 'monthly', amountMin: 1100 },
+  ],
+  defaultPaymentPeriodicity: 'monthly',
+};
+
 const paymentMethod = {
   id: 'payment-method-1',
   name: 'Credit Card',
@@ -160,7 +181,11 @@ const mockQueries = (
       {
         loading: false,
         refetch,
-        data: { memberPlans: { nodes: [memberPlan] } },
+        data: {
+          memberPlans: {
+            nodes: [memberPlan, lifelongPlan, monthlyOrYearlyPlan],
+          },
+        },
       },
     ],
     [
@@ -193,6 +218,42 @@ const renderEditView = () =>
       </MemoryRouter>
     </ThemeProvider>
   );
+
+const renderCreateView = () =>
+  render(
+    <ThemeProvider theme={theme}>
+      <MemoryRouter initialEntries={['/subscriptions/create']}>
+        <Routes>
+          <Route
+            path="/subscriptions/create"
+            element={<SubscriptionEditView />}
+          />
+        </Routes>
+      </MemoryRouter>
+    </ThemeProvider>
+  );
+
+const periodicityPicker = () =>
+  screen.getByRole('combobox', {
+    name: /^memberPlanList.paymentPeriodicities/,
+  });
+
+const choosePlan = (name: string) => {
+  fireEvent.mouseDown(
+    screen.getByRole('combobox', {
+      name: /^userSubscriptionEdit.selectMemberPlan/,
+    })
+  );
+  fireEvent.click(screen.getByRole('option', { name }));
+};
+
+const offeredPeriodicities = () => {
+  fireEvent.mouseDown(periodicityPicker());
+
+  return within(screen.getByRole('listbox'))
+    .getAllByRole('option')
+    .map(option => option.textContent);
+};
 
 beforeEach(() => {
   enabledFeatures.clear();
@@ -460,5 +521,76 @@ describe('SubscriptionEditView', () => {
     expect(revert).toHaveBeenCalledWith({
       variables: { id: 'subscription-1' },
     });
+  });
+
+  it('gives a new subscription the only periodicity of the chosen plan', async () => {
+    mockQueries(null);
+    renderCreateView();
+
+    await screen.findByRole('combobox', {
+      name: /^userSubscriptionEdit.selectMemberPlan/,
+    });
+    choosePlan('Lifelong');
+
+    expect(periodicityPicker()).toHaveTextContent(
+      'memberPlanList.paymentPeriodicity.lifetime'
+    );
+    expect(offeredPeriodicities()).toEqual([
+      'memberPlanList.paymentPeriodicity.lifetime',
+    ]);
+  });
+
+  it('gives a new subscription the default periodicity of a plan that offers several', async () => {
+    mockQueries(null);
+    renderCreateView();
+
+    await screen.findByRole('combobox', {
+      name: /^userSubscriptionEdit.selectMemberPlan/,
+    });
+    choosePlan('Monthly or yearly');
+
+    expect(periodicityPicker()).toHaveTextContent(
+      'memberPlanList.paymentPeriodicity.monthly'
+    );
+    expect(offeredPeriodicities()).toEqual([
+      'memberPlanList.paymentPeriodicity.monthly',
+      'memberPlanList.paymentPeriodicity.yearly',
+    ]);
+  });
+
+  it('prices a new subscription for the periodicity the plan gave it', async () => {
+    mockQueries(null);
+    renderCreateView();
+
+    await screen.findByRole('combobox', {
+      name: /^userSubscriptionEdit.selectMemberPlan/,
+    });
+    choosePlan('Monthly or yearly');
+
+    expect(
+      screen.getByRole('textbox', {
+        name: /^userSubscriptionEdit.periodAmount/,
+      })
+    ).toHaveValue('11.00');
+  });
+
+  it('still lists the periodicity of an existing subscription its plan does not offer', async () => {
+    mockQueries(null, false, null, {
+      memberPlan: lifelongPlan,
+      paymentPeriodicity: 'yearly',
+    });
+    renderEditView();
+
+    await screen.findByRole('checkbox', {
+      name: 'userSubscriptionEdit.autoRenew',
+    });
+
+    expect(periodicityPicker()).toHaveTextContent(
+      'memberPlanList.paymentPeriodicity.yearly'
+    );
+    expect(offeredPeriodicities()).toEqual([
+      'memberPlanList.paymentPeriodicity.yearly',
+      'memberPlanList.paymentPeriodicity.lifetime',
+    ]);
   });
 });
