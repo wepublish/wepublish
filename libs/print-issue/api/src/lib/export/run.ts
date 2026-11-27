@@ -219,6 +219,7 @@ export async function runExport(
     lapsed: 0,
     exhausted: 0,
     noPrintIssues: 0,
+    beforeFirstIssue: 0,
   };
   const counters = {
     unpaid: 0,
@@ -230,7 +231,9 @@ export async function runExport(
   };
   const excludedSubscriptions = new Set(excludeSubscriptionIds);
   const excludedRecipients = new Set(excludeBexioRecipients);
-  const ruleIssue = { issueDate: date, countsAs };
+  // a Nachlieferung is evaluated later than the ship day; «Abo-Start» compares
+  // the ship day itself
+  const ruleIssue = { issueDate: date, shipDay: shipDay ?? date, countsAs };
 
   const entries = resolveGifts(
     loaded.subscriptions

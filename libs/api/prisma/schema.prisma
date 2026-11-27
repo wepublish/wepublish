@@ -1292,6 +1292,10 @@ model Subscription {
   monthlyAmount      Float
   autoRenew          Boolean
   startsAt           DateTime                  @db.Timestamptz(3)
+  /// The first printed issue is the first one shipped on or after this Zurich
+  /// day («Abo-Start»): the ship day of the issue the reader chose, or the day
+  /// after it for the next one. Null: no choice, every issue from startsAt.
+  firstPrintIssueFrom DateTime?                @db.Date
   paidUntil          DateTime?                 @db.Timestamptz(3)
   periods            SubscriptionPeriod[]
   properties         Json                      @default("[]")

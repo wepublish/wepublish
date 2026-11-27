@@ -3,6 +3,8 @@ import { PrismaModule } from '@wepublish/nest-modules';
 import { PaymentsModule } from '@wepublish/payment/api';
 import { BexioPrintSourceService } from './bexio/bexio-print-source.service';
 import { PrintIssueExportService } from './print-issue-export.service';
+import { PrintIssueStartResolver } from './print-issue-start.resolver';
+import { PrintIssueStartService } from './print-issue-start.service';
 import { PrintIssueResolver } from './print-issue.resolver';
 import {
   SubscriptionPrintIssueProgressDataloader,
@@ -28,6 +30,8 @@ import { PrintIssueService } from './print-issue.service';
     SubscriptionPrintIssueProgressDataloader,
     UserPrintIssueProgressResolver,
     SubscriptionPrintIssueProgressResolver,
+    PrintIssueStartService,
+    PrintIssueStartResolver,
   ],
   exports: [PrintIssueService, PrintIssueProgressService],
 })

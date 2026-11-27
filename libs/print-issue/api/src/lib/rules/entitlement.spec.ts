@@ -646,6 +646,132 @@ describe('classifySubscription — counting per copy (B)', () => {
   });
 });
 
+describe('classifySubscription — the first issue the reader chose («Abo-Start»)', () => {
+  // 6.26 shipped on 13.10.2026; the reader subscribed a week later
+  const SHIPPED = '2026-10-13';
+  const FIRST = period({
+    id: 'pFirst',
+    startsAt: '2026-10-20T00:00:00.000Z',
+    endsAt: '2027-10-19T00:00:00.000Z',
+    invoiceId: 'iFirst',
+  });
+  const reader = (firstIssueFrom: string | null) =>
+    subscription({
+      startsAt: '2026-10-20T00:00:00.000Z',
+      paidUntil: '2027-10-19T00:00:00.000Z',
+      periods: [FIRST],
+      firstIssueFrom,
+    });
+  // the export of 6.26, and a Nachlieferung of it evaluated on 2.11.2026
+  const exportOf = { issueDate: SHIPPED, shipDay: SHIPPED };
+  const supplementOf = { issueDate: '2026-11-02', shipDay: SHIPPED };
+
+  it('gives the current issue to a reader who chose it, though the subscription started after it shipped', () => {
+    for (const issue of [exportOf, supplementOf]) {
+      expect(
+        classifySubscription(reader(SHIPPED), issue, NO_QUOTA)
+      ).toMatchObject({ include: true, reason: 'paid', periodId: 'pFirst' });
+    }
+  });
+
+  it('counts that copy toward the first period', () => {
+    expect(
+      deliveredIssues(
+        { ...reader(SHIPPED), deliveries: [{ periodId: 'pFirst' }] },
+        FIRST,
+        []
+      )
+    ).toBe(1);
+  });
+
+  it('keeps a reader who chose the next issue out of the current one, also from its Nachlieferung', () => {
+    expect(
+      classifySubscription(reader('2026-10-14'), supplementOf, NO_QUOTA)
+    ).toEqual({ include: false, reason: 'beforeFirstIssue' });
+    // not as a Vorab-Exemplar either
+    expect(
+      classifySubscription(reader('2026-10-14'), exportOf, NO_QUOTA, {
+        includeUpcoming: true,
+      })
+    ).toEqual({ include: false, reason: 'beforeFirstIssue' });
+  });
+
+  it('gives that reader the next issue', () => {
+    expect(
+      classifySubscription(reader('2026-10-14'), { issueDate: '2026-12-04' })
+    ).toMatchObject({ include: true, reason: 'paid', periodId: 'pFirst' });
+  });
+
+  it('changes nothing without a choice: a Nachlieferung still picks the reader up', () => {
+    expect(classifySubscription(reader(null), exportOf, NO_QUOTA)).toEqual({
+      include: false,
+      reason: 'future',
+    });
+    expect(
+      classifySubscription(reader(null), supplementOf, NO_QUOTA)
+    ).toMatchObject({ include: true, reason: 'paid' });
+  });
+
+  describe('counting per copy («pro Exemplar»)', () => {
+    const PER_COPY: QuotaConfig = { ...QUOTA_6, counting: 'perCopy' };
+
+    // a free extra: the first period still gets its full number afterwards
+    it('gives the chosen issue that shipped before the start as a free extra, charged to no period', () => {
+      for (const issue of [exportOf, supplementOf]) {
+        expect(
+          classifySubscription(reader(SHIPPED), issue, PER_COPY)
+        ).toMatchObject({ include: true, reason: 'paid', periodId: null });
+      }
+    });
+
+    it('gives it free even when the first period already got its number', () => {
+      const full = {
+        ...reader(SHIPPED),
+        deliveries: Array.from({ length: 6 }, () => ({ periodId: 'pFirst' })),
+      };
+
+      expect(classifySubscription(full, exportOf, PER_COPY)).toMatchObject({
+        include: true,
+        periodId: null,
+      });
+    });
+
+    it('also for a reader whose first invoice is still open', () => {
+      const open = {
+        ...reader(SHIPPED),
+        paidUntil: null,
+        periods: [{ ...FIRST, paid: false }],
+        openInvoiceIds: ['iFirst'],
+      };
+
+      expect(classifySubscription(open, exportOf, PER_COPY)).toMatchObject({
+        include: true,
+        reason: 'openInvoice',
+        periodId: null,
+      });
+    });
+
+    it('charges the issues shipped after the start to the first period as usual', () => {
+      expect(
+        classifySubscription(
+          reader(SHIPPED),
+          { issueDate: '2026-12-04' },
+          PER_COPY
+        )
+      ).toMatchObject({ include: true, reason: 'paid', periodId: 'pFirst' });
+    });
+
+    it('leaves counting per period as it was: the copy counts toward the first period', () => {
+      expect(
+        classifySubscription(reader(SHIPPED), exportOf, {
+          ...PER_COPY,
+          counting: 'perPeriod',
+        })
+      ).toMatchObject({ include: true, periodId: 'pFirst' });
+    });
+  });
+});
+
 describe('entitledIssues', () => {
   it('derives the copies of a period from the issues per year', () => {
     const plan = { printIssues: {} };

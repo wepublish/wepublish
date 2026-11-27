@@ -3512,7 +3512,9 @@
       "startsAt": "Subscription Start",
       "uniqueSubscription": "Unique Subscription",
       "uniqueSubscriptionHelpText": "A user can only purchase one subscription per unique subscription plan. Manual renewal by the user is not possible. Automatic renewal is possible.",
-      "paidUntilInfo": "Set automatically as soon as an invoice is paid. The subscription is paid up to this date."
+      "paidUntilInfo": "Set automatically as soon as an invoice is paid. The subscription is paid up to this date.",
+      "firstPrintIssueFrom": "First printed issue from",
+      "firstPrintIssueFromInfo": "«Abo-Start»: the first printed issue is the first one shipped on or after this day. Set when subscribing on the website (current issue: its ship day; upcoming: the day after). Empty: every issue from the subscription start."
     },
     "userSubscriptionList": {
       "printIssuesReceived": "{{received}} / {{entitled}} issues",
@@ -5972,7 +5974,8 @@
           "deactivated": "Deactivated",
           "lapsed": "Lapsed",
           "exhausted": "Quota received",
-          "noPrintIssues": "No printed issues (0 on the plan)"
+          "noPrintIssues": "No printed issues (0 on the plan)",
+          "beforeFirstIssue": "Subscription starts later (chosen first issue)"
         },
         "bexio": {
           "title": "bexio",

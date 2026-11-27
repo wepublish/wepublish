@@ -1823,6 +1823,19 @@ export type FacebookVideoBlockInput = {
   videoID?: InputMaybe<Scalars['String']['input']>;
 };
 
+/** current: the issue shipped last is the first one. upcoming: the next one is. */
+export enum FirstPrintIssueChoice {
+  Current = 'current',
+  Upcoming = 'upcoming'
+}
+
+/** Which printed issue the subscription starts with («Abo-Start»), as the reader chose it from printIssueStart. */
+export type FirstPrintIssueInput = {
+  choice: FirstPrintIssueChoice;
+  /** The id of the current issue the reader was shown. */
+  currentIssueId: Scalars['String']['input'];
+};
+
 export type FlexAlignment = {
   __typename: 'FlexAlignment';
   h: Scalars['Int']['output'];
@@ -4791,6 +4804,7 @@ export type MutationCreateSessionWithWepublishLoginArgs = {
 export type MutationCreateSubscriptionArgs = {
   autoRenew: Scalars['Boolean']['input'];
   extendable: Scalars['Boolean']['input'];
+  firstPrintIssueFrom?: InputMaybe<Scalars['DateTime']['input']>;
   memberPlanID: Scalars['String']['input'];
   monthlyAmount: Scalars['Float']['input'];
   paidUntil?: InputMaybe<Scalars['DateTime']['input']>;
@@ -4901,6 +4915,7 @@ export type MutationCreateUserSubscriptionArgs = {
   deactivateSubscriptionId?: InputMaybe<Scalars['String']['input']>;
   discountCode?: InputMaybe<Scalars['String']['input']>;
   failureURL?: InputMaybe<Scalars['String']['input']>;
+  firstPrintIssue?: InputMaybe<FirstPrintIssueInput>;
   goodieId?: InputMaybe<Scalars['String']['input']>;
   memberPlanID?: InputMaybe<Scalars['String']['input']>;
   memberPlanSlug?: InputMaybe<Scalars['Slug']['input']>;
@@ -4916,6 +4931,7 @@ export type MutationCreateUserSubscriptionArgs = {
 export type MutationCreateUserSubscriptionWithConfirmationArgs = {
   autoRenew: Scalars['Boolean']['input'];
   discountCode?: InputMaybe<Scalars['String']['input']>;
+  firstPrintIssue?: InputMaybe<FirstPrintIssueInput>;
   goodieId?: InputMaybe<Scalars['String']['input']>;
   memberPlanID?: InputMaybe<Scalars['String']['input']>;
   memberPlanSlug?: InputMaybe<Scalars['Slug']['input']>;
@@ -5276,6 +5292,7 @@ export type MutationImportPeerArticleArgs = {
 export type MutationImportSubscriptionArgs = {
   autoRenew: Scalars['Boolean']['input'];
   extendable: Scalars['Boolean']['input'];
+  firstPrintIssueFrom?: InputMaybe<Scalars['DateTime']['input']>;
   memberPlanID: Scalars['String']['input'];
   monthlyAmount: Scalars['Float']['input'];
   paidUntil?: InputMaybe<Scalars['DateTime']['input']>;
@@ -6054,6 +6071,7 @@ export type MutationUpdateSettingArgs = {
 export type MutationUpdateSubscriptionArgs = {
   autoRenew?: InputMaybe<Scalars['Boolean']['input']>;
   extendable?: InputMaybe<Scalars['Boolean']['input']>;
+  firstPrintIssueFrom?: InputMaybe<Scalars['DateTime']['input']>;
   id: Scalars['String']['input'];
   memberPlanID?: InputMaybe<Scalars['String']['input']>;
   monthlyAmount?: InputMaybe<Scalars['Float']['input']>;
@@ -7652,6 +7670,8 @@ export enum PrintIssueRunMode {
 /** Subscriptions the run left out, by reason. */
 export type PrintIssueSkipped = {
   __typename: 'PrintIssueSkipped';
+  /** Shipped before the first issue the reader chose when subscribing («Abo-Start»). */
+  beforeFirstIssue: Scalars['Int']['output'];
   deactivated: Scalars['Int']['output'];
   donation: Scalars['Int']['output'];
   /** Plan not among the options' member plans. */
@@ -7669,6 +7689,15 @@ export type PrintIssueSources = {
   __typename: 'PrintIssueSources';
   bexio: Scalars['Int']['output'];
   wepublish: Scalars['Int']['output'];
+};
+
+/** The issues a new subscriber chooses the first one from: the last shipped and the next. */
+export type PrintIssueStart = {
+  __typename: 'PrintIssueStart';
+  /** Shipped today at the latest, whatever its status. */
+  current: PublicPrintIssue;
+  /** Ships later; none until staff created it. */
+  upcoming?: Maybe<PublicPrintIssue>;
 };
 
 /** open: lists can be computed, exported and handed over; closed: no more Nachlieferungen expected (reversible); historic: shipped before the export tracked issues (imported). */
@@ -7738,6 +7767,18 @@ export type PropertyInput = {
   value: Scalars['String']['input'];
 };
 
+/** A printed issue as a new subscriber sees it («Abo-Start»). */
+export type PublicPrintIssue = {
+  __typename: 'PublicPrintIssue';
+  id: Scalars['String']['output'];
+  /** The ship day (YYYY-MM-DD). */
+  issueDate: Scalars['String']['output'];
+  /** As the medium writes it, e.g. «6.26» or «#117». */
+  label: Scalars['String']['output'];
+  /** The topic. */
+  title?: Maybe<Scalars['String']['output']>;
+};
+
 export type PublicSubscription = HasMemberPlan & HasPaymentMethod & HasUser & {
   __typename: 'PublicSubscription';
   autoRenew: Scalars['Boolean']['output'];
@@ -7752,6 +7793,8 @@ export type PublicSubscription = HasMemberPlan & HasPaymentMethod & HasUser & {
   deactivation?: Maybe<SubscriptionDeactivation>;
   extendable: Scalars['Boolean']['output'];
   externalReward?: Maybe<Scalars['String']['output']>;
+  /** «Abo-Start»: the first printed issue is the first one shipped on or after this day. */
+  firstPrintIssueFrom?: Maybe<Scalars['DateTime']['output']>;
   goodie?: Maybe<Goodie>;
   id: Scalars['String']['output'];
   /** When the subscription was imported from another system. Null for a subscription created here. */
@@ -8138,6 +8181,8 @@ export type Query = {
   printIssueNumbering: PrintIssueNumbering;
   /** The computed list waiting to be checked, if any. */
   printIssueRun?: Maybe<PrintIssueRun>;
+  /** The issues a new subscriber chooses where the subscription starts from; null while the print export is off or nothing shipped yet. */
+  printIssueStart?: Maybe<PrintIssueStart>;
   /** All print issues, the newest first. */
   printIssues: Array<PrintIssue>;
   promptHTML: Chat;
@@ -10684,7 +10729,6 @@ export type UserEmailQualityModel = {
 export enum UserEvent {
   AccountCreation = 'ACCOUNT_CREATION',
   EmailChange = 'EMAIL_CHANGE',
-  EmailVerification = 'EMAIL_VERIFICATION',
   LoginLink = 'LOGIN_LINK',
   PasswordReset = 'PASSWORD_RESET',
   TestMail = 'TEST_MAIL'

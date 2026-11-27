@@ -3459,7 +3459,9 @@
       "startsAt": "Abonnements-Beginn",
       "uniqueSubscription": "Unique-Abo",
       "uniqueSubscriptionHelpText": "Ein Benutzer kann nur ein Abo pro Unique-Abo-Plan lösen. Die manuelle Verlängerung durch den Benutzer ist nicht möglich. Eine automatische Verlängerung ist möglich.",
-      "paidUntilInfo": "Wird automatisch gesetzt, sobald eine Rechnung bezahlt ist. Bis zu diesem Datum ist das Abo bezahlt."
+      "paidUntilInfo": "Wird automatisch gesetzt, sobald eine Rechnung bezahlt ist. Bis zu diesem Datum ist das Abo bezahlt.",
+      "firstPrintIssueFrom": "Erste Druckausgabe ab",
+      "firstPrintIssueFromInfo": "«Abo-Start»: Die erste gedruckte Ausgabe ist die erste, die an oder nach diesem Tag erscheint. Wird beim Abschluss auf der Website gesetzt (aktuelle Ausgabe: deren Erscheinungsdatum; kommende: der Tag danach). Leer: jede Ausgabe ab Abo-Beginn."
     },
     "userSubscriptionList": {
       "printIssuesReceived": "{{received}} / {{entitled}} Ausgaben",
@@ -5972,7 +5974,8 @@
           "deactivated": "Deaktiviert",
           "lapsed": "Abgelaufen",
           "exhausted": "Kontingent erhalten",
-          "noPrintIssues": "Keine gedruckten Ausgaben (0 im Abo-Plan)"
+          "noPrintIssues": "Keine gedruckten Ausgaben (0 im Abo-Plan)",
+          "beforeFirstIssue": "Abo startet später (gewählte Startausgabe)"
         },
         "bexio": {
           "title": "bexio",

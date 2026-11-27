@@ -191,6 +191,7 @@ export const GiftCodePurchase = <
                           amountMin: offer.price,
                           amountTarget: offer.price,
                           amountMax: offer.price,
+                          printIssues: null,
                         },
                       ]}
                       paymentPeriodicity={offer.periodicity}

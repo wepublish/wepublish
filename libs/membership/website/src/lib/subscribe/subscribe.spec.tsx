@@ -653,6 +653,55 @@ describe('Subscribe', () => {
     });
   });
 
+  describe('extras a tenant adds to the subscription', () => {
+    const extras = {
+      firstPrintIssue: { currentIssueId: 'issue-117', choice: 'current' },
+    } as never;
+
+    it('adds them to what is subscribed', async () => {
+      const { user, onSubscribe } = renderLoggedIn({
+        subscribeExtras: () => extras,
+      });
+
+      await confirm(user);
+
+      await waitFor(() =>
+        expect(onSubscribe).toHaveBeenCalledWith({
+          ...expectedSubscribe,
+          ...(extras as object),
+        })
+      );
+    });
+
+    it('adds them for a returning reader too', async () => {
+      const { user, onResubscribe } = renderSubscribe({
+        returningUserId: 'returning-user',
+        defaults: { firstName: 'Foo', name: 'Bar' },
+        subscribeExtras: () => extras,
+      });
+
+      await user.click(subscribeButton());
+
+      await waitFor(() =>
+        expect(onResubscribe).toHaveBeenCalledWith({
+          ...expectedSubscribe,
+          ...(extras as object),
+          userId: 'returning-user',
+        })
+      );
+    });
+
+    it('subscribes nothing while the tenant says something is missing', async () => {
+      const subscribeExtras = vi.fn(() => false as const);
+      const { user, onSubscribe } = renderLoggedIn({ subscribeExtras });
+
+      await confirm(user);
+
+      await waitFor(() => expect(subscribeExtras).toHaveBeenCalled());
+      expect(onSubscribe).not.toHaveBeenCalled();
+    });
+  });
+
   describe('logged in', () => {
     it('warns about open invoices and the existing subscription instead of asking for user data', () => {
       renderLoggedIn();
