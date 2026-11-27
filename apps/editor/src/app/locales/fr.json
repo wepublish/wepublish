@@ -3111,6 +3111,13 @@
       "paymentMethod": "Mode de paiement",
       "periodicity": "Durée",
       "autoRenewal": "Renouvellement automatique ?",
+      "legacy": "Anciens abonnements",
+      "legacyHint": "Ancien abonnement : importé et pas encore payé ici. Un flux réservé aux anciens abonnements doit définir chaque message lui-même ; le flux par défaut ne complète pas ceux qui manquent.",
+      "legacyFilter": {
+        "all": "Tous les abonnements",
+        "only": "Anciens abonnements uniquement",
+        "none": "Sans les anciens abonnements"
+      },
       "booleanFilter": {
         "true": "Oui",
         "false": "Non"
@@ -3396,6 +3403,10 @@
         },
         "willBeDeactivated": "L’abonnement sera désactivé le {{date, ccc PP p}}"
       },
+      "imported": {
+        "legacy": "Ancien abonnement : importé le {{date, PP}} et pas encore payé ici.",
+        "paidHere": "Importé le {{date, PP}} ; payé ici depuis."
+      },
       "revertUpgrade": {
         "title": "Annuler le changement",
         "modalTitle": "Annuler le changement ?",
@@ -3624,7 +3635,10 @@
       "renewalTitle": "Durée et renouvellement"
     },
     "subscriptionListFilter": {
-      "extendable": "Extensible"
+      "extendable": "Extensible",
+      "legacy": "Ancien abonnement",
+      "legacyHint": "Importé et pas encore payé ici",
+      "legacyAll": "Tous"
     },
     "resources": {
       "teaserType": {
@@ -4986,6 +5000,8 @@
       "isCanceledHint": "Inclut aussi les résiliations qui ne prennent effet que plus tard.",
       "hasReplacedSubscription": "A remplacé un autre abonnement (p. ex. mise à niveau)",
       "hasReplacedSubscriptionHint": "Inclut aussi les rétrogradations et les changements de plan ; les modifications manuelles ou importées ne sont pas détectées.",
+      "isLegacy": "Ancien abonnement",
+      "isLegacyHint": "Importé de l’ancien système et pas encore payé ici. Le premier paiement enregistré ici met fin à ce statut.",
       "startsAt": "Début de l’abonnement",
       "endsAt": "Fin de l’abonnement",
       "from": "À partir du",

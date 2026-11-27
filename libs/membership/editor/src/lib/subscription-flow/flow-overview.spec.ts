@@ -161,6 +161,20 @@ describe('conditionsSummary', () => {
   it('leaves out what a flow does not narrow', () => {
     expect(conditionsSummary(defaultFlow, t)).toBe('');
   });
+
+  // Shown whether or not the feature is on: a flow that is narrowed must
+  // never look like one for everybody.
+  it('says when a flow is for legacy subscriptions only', () => {
+    expect(conditionsSummary({ ...printYearly, legacy: [true] }, t)).toContain(
+      'subscriptionFlow.legacyFilter.only'
+    );
+  });
+
+  it('leaves legacy out of the summary of a flow for everybody', () => {
+    expect(
+      conditionsSummary({ ...printYearly, legacy: [true, false] }, t)
+    ).not.toContain('subscriptionFlow.legacyFilter');
+  });
 });
 
 describe('conditionsSummary of a flow for all plans', () => {

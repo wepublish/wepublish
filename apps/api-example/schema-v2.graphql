@@ -2852,6 +2852,11 @@ input MailAudienceInput {
   isCanceled: Boolean
 
   """
+  Subscribers and win-back audience: true keeps only legacy subscriptions, imported from another system and not paid for here yet; false keeps the rest.
+  """
+  isLegacy: Boolean
+
+  """
   Subscribers audience only: true keeps only subscriptions that are currently paid up (started and paidUntil in the future); false keeps the rest. Grace periods are not considered.
   """
   isPaid: Boolean
@@ -4296,6 +4301,11 @@ type Mutation {
     allMemberPlans: Boolean
     autoRenewal: [Boolean!]!
 
+    """
+    Whom the flow is for: legacy subscriptions (true), all the others (false), or both, which is the default. Anything but both needs the legacy-subscriptions feature.
+    """
+    legacy: [Boolean!]
+
     """The member plan the flow is for. Leave out with allMemberPlans."""
     memberPlanId: String
     paymentMethodIds: [String!]!
@@ -5020,7 +5030,17 @@ type Mutation {
   updateSubscription(autoRenew: Boolean, extendable: Boolean, id: String!, memberPlanID: String, monthlyAmount: Float, paidUntil: DateTime, paymentMethodID: String, paymentPeriodicity: PaymentPeriodicity, properties: [PropertyInput!], startsAt: DateTime, userID: String): PublicSubscription!
 
   """Update an existing subscription flow"""
-  updateSubscriptionFlow(autoRenewal: [Boolean!], id: String!, paymentMethodIds: [String!], periodicities: [PaymentPeriodicity!]): [SubscriptionFlowModel!]!
+  updateSubscriptionFlow(
+    autoRenewal: [Boolean!]
+    id: String!
+
+    """
+    Whom the flow is for: legacy subscriptions (true), all the others (false), or both, which is the default. Anything but both needs the legacy-subscriptions feature.
+    """
+    legacy: [Boolean!]
+    paymentMethodIds: [String!]
+    periodicities: [PaymentPeriodicity!]
+  ): [SubscriptionFlowModel!]!
 
   """Update an existing subscription interval"""
   updateSubscriptionInterval(daysAwayFromEnding: Int, id: String!, mailTemplateId: String, sendAsLetter: Boolean): [SubscriptionFlowModel!]!
@@ -6591,7 +6611,17 @@ type PublicSubscription implements HasMemberPlan & HasPaymentMethod & HasUser {
   externalReward: String
   goodie: Goodie
   id: String!
+
+  """
+  When the subscription was imported from another system. Null for a subscription created here.
+  """
+  importedAt: DateTime
   isActive: Boolean!
+
+  """
+  Imported from another system and not paid for here yet. The first payment registered here ends it.
+  """
+  legacy: Boolean!
   memberPlan: MemberPlan!
   memberPlanID: String!
   modifiedAt: DateTime!
@@ -7311,7 +7341,32 @@ type Query {
   subscriptions(cursorId: String, filter: SubscriptionFilter, order: SortOrder = Ascending, skip: Int = 0, sort: SubscriptionSort = ModifiedAt, take: Int = 10): PublicSubscriptionConnection!
 
   """Returns a paginated list of subscriptions based on the filters given."""
-  subscriptionsAsCsv(activeAt: DateTime, autoRenew: Boolean, cancellationDateFrom: DateFilter, cancellationDateTo: DateFilter, deactivationDateFrom: DateFilter, deactivationDateTo: DateFilter, deactivationReason: String, extendable: Boolean, memberPlanID: String, paidUntilFrom: DateFilter, paidUntilTo: DateFilter, paymentMethodID: String, paymentPeriodicity: PaymentPeriodicity, startsAtFrom: DateFilter, startsAtTo: DateFilter, subscriptionIDs: [String!], userHasAddress: Boolean, userID: String, userIDs: [String!]): String!
+  subscriptionsAsCsv(
+    activeAt: DateTime
+    autoRenew: Boolean
+    cancellationDateFrom: DateFilter
+    cancellationDateTo: DateFilter
+    deactivationDateFrom: DateFilter
+    deactivationDateTo: DateFilter
+    deactivationReason: String
+    extendable: Boolean
+
+    """
+    true keeps only legacy subscriptions: imported from another system and not paid for here yet. false keeps the rest.
+    """
+    legacy: Boolean
+    memberPlanID: String
+    paidUntilFrom: DateFilter
+    paidUntilTo: DateFilter
+    paymentMethodID: String
+    paymentPeriodicity: PaymentPeriodicity
+    startsAtFrom: DateFilter
+    startsAtTo: DateFilter
+    subscriptionIDs: [String!]
+    userHasAddress: Boolean
+    userID: String
+    userIDs: [String!]
+  ): String!
 
   """Returns a single sync provider setting by id."""
   syncProviderSetting(id: String!): SettingSyncProvider!
@@ -8267,6 +8322,11 @@ input SubscriptionFilter {
   deactivationDateTo: DateFilter
   deactivationReason: String
   extendable: Boolean
+
+  """
+  true keeps only legacy subscriptions: imported from another system and not paid for here yet. false keeps the rest.
+  """
+  legacy: Boolean
   memberPlanID: String
   paidUntilFrom: DateFilter
   paidUntilTo: DateFilter
@@ -8322,6 +8382,11 @@ type SubscriptionFlowModel {
   earliestDay: SubscriptionFlowEarliestDay!
   id: String!
   intervals: [SubscriptionInterval!]!
+
+  """
+  Whom the flow is for: legacy subscriptions (true, imported and not paid for here yet), all the others (false), or both.
+  """
+  legacy: [Boolean!]!
   memberPlan: MemberPlan
   numberOfSubscriptions(memberPlanId: String): Int!
   paymentMethods: [PaymentMethod!]!

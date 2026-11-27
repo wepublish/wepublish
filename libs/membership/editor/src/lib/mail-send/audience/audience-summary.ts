@@ -125,6 +125,7 @@ export function describeAudience(
     ['isPaid', 'mailSend.isPaid'],
     ['isCanceled', 'mailSend.isCanceled'],
     ['hasReplacedSubscription', 'mailSend.hasReplacedSubscription'],
+    ['isLegacy', 'mailSend.isLegacy'],
   ] as const) {
     if (typeof audience[key] === 'boolean') {
       phrases.push(labelled(t(label), yesNo(t, audience[key])));

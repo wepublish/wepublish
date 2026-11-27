@@ -48,6 +48,8 @@ export type AudienceFilterState = {
   isPaid: TriState;
   isCanceled: TriState;
   hasReplaced: TriState;
+  /** Imported from another system and not paid for here yet. */
+  isLegacy: TriState;
   endedWithinDays: number;
   endedMode: EndedMode;
   endedPeriod: DateRange | null;
@@ -81,6 +83,7 @@ export const INITIAL_AUDIENCE_STATE: AudienceFilterState = {
   isPaid: 'any',
   isCanceled: 'any',
   hasReplaced: 'any',
+  isLegacy: 'any',
   endedWithinDays: DEFAULT_ENDED_WITHIN_DAYS,
   endedMode: 'days',
   endedPeriod: null,
@@ -144,6 +147,7 @@ export function toAudienceInput(state: AudienceFilterState): MailAudienceInput {
       endedTo: usePeriod ? endOfDay(state.endedPeriod?.[1]) : undefined,
       memberPlanIDs:
         state.memberPlanIDs.length ? state.memberPlanIDs : undefined,
+      isLegacy: triState(state.isLegacy),
     };
   }
 
@@ -168,6 +172,7 @@ export function toAudienceInput(state: AudienceFilterState): MailAudienceInput {
     isPaid: triState(state.isPaid),
     isCanceled: triState(state.isCanceled),
     hasReplacedSubscription: triState(state.hasReplaced),
+    isLegacy: triState(state.isLegacy),
   };
 }
 

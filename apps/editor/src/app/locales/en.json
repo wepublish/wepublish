@@ -3112,6 +3112,13 @@
       "paymentMethod": "Payment method",
       "periodicity": "Term",
       "autoRenewal": "Auto renewal?",
+      "legacy": "Legacy subscriptions",
+      "legacyHint": "Legacy: imported and not paid for here yet. A flow for legacy subscriptions only needs every mail set up itself; the default flow does not fill in missing ones.",
+      "legacyFilter": {
+        "all": "All subscriptions",
+        "only": "Legacy subscriptions only",
+        "none": "Without legacy subscriptions"
+      },
       "booleanFilter": {
         "true": "Yes",
         "false": "No"
@@ -3449,6 +3456,10 @@
         },
         "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}"
       },
+      "imported": {
+        "legacy": "Legacy subscription: imported on {{date, PP}} and not paid for here yet.",
+        "paidHere": "Imported on {{date, PP}}; has since been paid for here."
+      },
       "revertUpgrade": {
         "title": "Undo upgrade",
         "modalTitle": "Undo the upgrade?",
@@ -3689,7 +3700,10 @@
       "renewalTitle": "Term and renewal"
     },
     "subscriptionListFilter": {
-      "extendable": "Extendable"
+      "extendable": "Extendable",
+      "legacy": "Legacy subscription",
+      "legacyHint": "Imported and not paid for here yet",
+      "legacyAll": "All"
     },
     "resources": {
       "teaserType": {
@@ -5013,6 +5027,8 @@
       "isCanceledHint": "Also includes cancellations that only take effect later.",
       "hasReplacedSubscription": "Replaced another subscription (e.g. upgrade)",
       "hasReplacedSubscriptionHint": "Also includes downgrades and plan switches; manual or imported changes are not detected.",
+      "isLegacy": "Legacy subscription",
+      "isLegacyHint": "Imported from the previous system and not paid for here yet. The first payment registered here ends it.",
       "startsAt": "Subscription start",
       "endsAt": "Subscription end",
       "from": "From",

@@ -102,6 +102,11 @@ export class SubscriptionFlowModel {
   @Field(() => [Boolean])
   autoRenewal!: boolean[];
 
+  @Field(() => [Boolean], {
+    description: `Whom the flow is for: legacy subscriptions (true, imported and not paid for here yet), all the others (false), or both.`,
+  })
+  legacy!: boolean[];
+
   @Field(() => [SubscriptionInterval])
   intervals!: SubscriptionInterval[];
 
@@ -188,6 +193,12 @@ export class SubscriptionFlowModelCreateInput {
 
   @Field(() => [Boolean])
   autoRenewal!: boolean[];
+
+  @Field(() => [Boolean], {
+    nullable: true,
+    description: `Whom the flow is for: legacy subscriptions (true), all the others (false), or both, which is the default. Anything but both needs the legacy-subscriptions feature.`,
+  })
+  legacy?: boolean[];
 }
 
 @ArgsType()

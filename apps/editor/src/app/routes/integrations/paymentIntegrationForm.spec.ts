@@ -30,9 +30,9 @@ describe('bexioTestMailboxFields', () => {
   const t = (key: string) => key;
 
   it('offers the test mailbox outside of production', () => {
-    expect(bexioTestMailboxFields('review', t).map(field => field.name)).toEqual(
-      ['bexio_testMailbox']
-    );
+    expect(
+      bexioTestMailboxFields('review', t).map(field => field.name)
+    ).toEqual(['bexio_testMailbox']);
   });
 
   it('hides the test mailbox on production', () => {
