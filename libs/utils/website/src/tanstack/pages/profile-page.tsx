@@ -1,9 +1,6 @@
 import { ApolloClient } from '@apollo/client';
-import { useApolloClient, useMutation } from '@apollo/client/react';
-import { useNavigate } from '@tanstack/react-router';
 import { createServerFn } from '@tanstack/react-start';
 import {
-  ConfirmEmailChangeDocument,
   FeaturesDocument,
   InvoicesDocument,
   MeDocument,
@@ -11,7 +8,6 @@ import {
   SubscriptionsDocument,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
-import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -85,49 +81,15 @@ function ProfilePageComponent({ className, ...props }: ProfilePageProps) {
     elements: { Alert },
   } = useWebsiteBuilder();
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  // The confirm-email page confirms the token from the confirmation link and
+  // sends the reader here once the new address is in place.
   const query = useQueryParams();
-  const client = useApolloClient();
-  const [confirmEmailChange, { data: confirmData, error: confirmError }] =
-    useMutation(ConfirmEmailChangeDocument);
-
-  const confirmEmailChangeParam = query.confirmEmailChange as
-    string | undefined;
-
-  useEffect(() => {
-    if (!confirmEmailChangeParam) {
-      return;
-    }
-
-    const clearQuery = () =>
-      navigate({
-        to: '/profile',
-        search: (previous: Record<string, unknown>) => {
-          const { confirmEmailChange: _confirm, jwt: _jwt, ...rest } = previous;
-
-          return rest;
-        },
-        replace: true,
-      });
-
-    confirmEmailChange({ variables: { newEmail: confirmEmailChangeParam } })
-      .then(async () => {
-        await clearQuery();
-        await client.refetchQueries({ include: ['Me'] });
-      })
-      .catch(async () => {
-        await clearQuery();
-      });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [confirmEmailChangeParam]);
 
   return (
     <>
-      {confirmData && (
+      {query.emailConfirmed && (
         <Alert severity="success">{t('user.emailChangeConfirmed')}</Alert>
       )}
-
-      {confirmError && <Alert severity="error">{confirmError.message}</Alert>}
 
       <ProfileSubscriptions className={className} />
 

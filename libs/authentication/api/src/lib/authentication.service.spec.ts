@@ -6,7 +6,10 @@ import { AuthSession, AuthSessionType } from './auth-session';
 import { NamespacedCache, NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { NamespacedCacheTestingModule } from '@wepublish/kv-ttl-cache/api/testing';
 import { createHash } from 'crypto';
-import { SESSION_CACHE_NAMESPACE } from './session-cache';
+import {
+  SESSION_CACHE_NAMESPACE,
+  SessionCacheInvalidator,
+} from './session-cache';
 
 describe('AuthenticationService', () => {
   let service: AuthenticationService;
@@ -17,13 +20,15 @@ describe('AuthenticationService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [PrismaModule, NamespacedCacheTestingModule.forRoot()],
-      providers: [AuthenticationService],
+      providers: [AuthenticationService, SessionCacheInvalidator],
     }).compile();
 
     prisma = module.get<PrismaClient>(PrismaClient);
     kv = module.get(NamespacedCache);
     resets = module.get(NamespaceResets);
     service = module.get<AuthenticationService>(AuthenticationService);
+
+    vi.spyOn(prisma.setting, 'findUnique').mockResolvedValue(null as any);
   });
 
   it('should return a token session', async () => {
@@ -49,8 +54,11 @@ describe('AuthenticationService', () => {
     const sessionSpy = vi.spyOn(prisma.session, 'findFirst').mockReturnValue(
       Promise.resolve({
         userID: '12345',
+        origin: 'password',
+        createdAt: new Date('2026-01-01T00:00:00.000Z'),
         user: {
           id: '12345',
+          email: 'test@example.com',
         },
       }) as any
     );
@@ -95,6 +103,21 @@ describe('AuthenticationService', () => {
     expect(result).toBeTruthy();
   });
 
+  it('should return that the session is invalid if the user is inactive', () => {
+    const today = new Date();
+    const future = new Date(today);
+    future.setDate(future.getDate() + 5000);
+
+    const session = {
+      type: AuthSessionType.User,
+      expiresAt: future,
+      user: { active: false },
+    } as AuthSession;
+
+    const result = service.isSessionValid(session);
+    expect(result).toBeFalsy();
+  });
+
   it("should return that the session is valid if it's a token session", () => {
     const session = {
       type: AuthSessionType.Token,
@@ -112,6 +135,7 @@ describe('AuthenticationService', () => {
     const session = {
       type: AuthSessionType.User,
       expiresAt: past,
+      user: { active: true },
     } as AuthSession;
 
     const result = service.isSessionValid(session);
@@ -133,7 +157,114 @@ describe('AuthenticationService', () => {
     expect(result).toBeFalsy();
   });
 
+  describe('restricted sessions', () => {
+    const codeSession = (overrides: Record<string, unknown> = {}) => ({
+      id: 'session-1',
+      token: 'secret-token',
+      origin: 'purl',
+      createdAt: new Date('2026-01-01T00:00:00.000Z'),
+      expiresAt: new Date('2030-01-01T00:00:00.000Z'),
+      emailConfirmedAt: null,
+      user: {
+        id: 'user-1',
+        email: 'reader@example.com',
+        roleIDs: [],
+        // Confirmed after the session started, by whoever owns the inbox.
+        emailVerifiedAt: new Date('2026-06-01T00:00:00.000Z'),
+      },
+      ...overrides,
+    });
+
+    beforeEach(() => {
+      vi.spyOn(prisma.userRole, 'findMany').mockResolvedValue([]);
+    });
+
+    it('keeps a login-code session restricted when the account was confirmed by someone else', async () => {
+      vi.spyOn(prisma.session, 'findFirst').mockResolvedValue(
+        codeSession() as any
+      );
+
+      expect(await service.getUserSession('secret-token')).toMatchObject({
+        restricted: true,
+      });
+    });
+
+    it('frees a login-code session that confirmed an address itself', async () => {
+      vi.spyOn(prisma.session, 'findFirst').mockResolvedValue(
+        codeSession({ emailConfirmedAt: new Date() }) as any
+      );
+
+      expect(await service.getUserSession('secret-token')).toMatchObject({
+        restricted: false,
+      });
+    });
+
+    it('does not send staff with a placeholder address through the account setup', async () => {
+      vi.spyOn(prisma.setting, 'findUnique').mockResolvedValue({
+        value: '@placeholder.example',
+      } as any);
+      vi.spyOn(prisma.userRole, 'findMany').mockResolvedValue([
+        { id: 'editors', permissionIDs: ['CAN_CREATE_ARTICLE'] },
+      ] as any);
+      vi.spyOn(prisma.session, 'findFirst').mockResolvedValue(
+        codeSession({
+          origin: 'password',
+          user: {
+            id: 'user-1',
+            email: 'staff@placeholder.example',
+            roleIDs: ['editors'],
+          },
+        }) as any
+      );
+
+      expect(await service.getUserSession('secret-token')).toMatchObject({
+        placeholderEmail: true,
+        restricted: false,
+      });
+    });
+
+    it('ends only the sessions of one kind of login, sparing one of them', async () => {
+      const deleteMany = vi
+        .spyOn(prisma.session, 'deleteMany')
+        .mockResolvedValue({ count: 2 });
+
+      await service.revokeUserSessions('user-1', {
+        exceptSessionId: 'session-1',
+        origin: 'purl',
+      });
+
+      expect(deleteMany).toHaveBeenCalledWith({
+        where: {
+          userID: 'user-1',
+          id: { not: 'session-1' },
+          origin: 'purl',
+        },
+      });
+    });
+  });
+
   describe('session cache', () => {
+    it("drops cached sessions when a user's sessions are revoked", async () => {
+      const sessionSpy = vi
+        .spyOn(prisma.session, 'findFirst')
+        .mockResolvedValue({
+          id: 'session-1',
+          token: 'secret-token',
+          createdAt: new Date('2026-01-01T00:00:00.000Z'),
+          expiresAt: new Date('2030-01-01T00:00:00.000Z'),
+          impersonatedBy: null,
+          user: { id: 'user-1', roleIDs: [] },
+        } as any);
+      vi.spyOn(prisma.userRole, 'findMany').mockResolvedValue([]);
+      vi.spyOn(prisma.session, 'deleteMany').mockResolvedValue({ count: 1 });
+
+      await service.getUserSession('secret-token');
+      await service.revokeUserSessions('user-1');
+      sessionSpy.mockResolvedValue(null);
+
+      expect(await service.getUserSession('secret-token')).toBeNull();
+    });
+
     const userSession = {
       id: 'session-1',
       token: 'secret-token',

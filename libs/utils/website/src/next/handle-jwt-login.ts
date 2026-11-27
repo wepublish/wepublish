@@ -24,6 +24,15 @@ export async function handleJwtLogin(
     return false;
   }
 
+  // A confirmation mail sent before /confirm-email existed links here with
+  // the address to confirm. Its token confirms that address and logs nobody
+  // in, so the page made for it takes over.
+  if (ctx.query.confirmEmailChange) {
+    redirectTo(ctx, legacyEmailConfirmationPath(ctx.query.jwt.toString()));
+
+    return false;
+  }
+
   try {
     const { data, error } = await client.mutate({
       mutation: LoginWithJwtDocument,
@@ -64,12 +73,38 @@ export async function handleJwtLogin(
         httpOnly: !!httpOnlyCookie,
       }
     );
+
+    redirectWithoutJwt(ctx);
   } catch {
     redirectToLoginWithError(ctx);
     return false;
   }
 
   return true;
+}
+
+export const legacyEmailConfirmationPath = (token: string) =>
+  `/confirm-email?token=${encodeURIComponent(token)}`;
+
+function redirectTo(ctx: NextPageContext, location: string) {
+  if (ctx.res && !ctx.res.headersSent) {
+    ctx.res.writeHead(302, { Location: location });
+    ctx.res.end();
+  }
+}
+
+function redirectWithoutJwt(ctx: NextPageContext) {
+  if (!ctx.res || ctx.res.headersSent) {
+    return;
+  }
+
+  const url = new URL(ctx.asPath ?? '/', 'http://localhost');
+  url.searchParams.delete('jwt');
+
+  ctx.res.writeHead(302, {
+    Location: `${url.pathname}${url.search}${url.hash}`,
+  });
+  ctx.res.end();
 }
 
 function redirectToLoginWithError(ctx: NextPageContext) {

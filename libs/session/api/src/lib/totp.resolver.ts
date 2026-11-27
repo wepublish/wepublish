@@ -2,10 +2,12 @@ import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { TotpService } from './totp.service';
 import { TotpSetup } from './totp.model';
 import {
+  AuthenticationService,
   Authenticated,
   CurrentUser,
   assertNotImpersonating,
   requireSessionUser,
+  requireUserSession,
   AuthSession,
 } from '@wepublish/authentication/api';
 import { Permissions } from '@wepublish/permissions/api';
@@ -13,7 +15,10 @@ import { CanResetUserTotp } from '@wepublish/permissions';
 
 @Resolver()
 export class TotpResolver {
-  constructor(private totpService: TotpService) {}
+  constructor(
+    private totpService: TotpService,
+    private authenticationService: AuthenticationService
+  ) {}
 
   @Authenticated()
   @Mutation(() => TotpSetup, {
@@ -48,10 +53,17 @@ export class TotpResolver {
   ) {
     assertNotImpersonating(session);
 
-    return this.totpService.enableTotp(
-      requireSessionUser(session).id,
+    const userSession = requireUserSession(session);
+    const enabled = await this.totpService.enableTotp(
+      userSession.user.id,
       totpToken
     );
+
+    await this.authenticationService.revokeUserSessions(userSession.user.id, {
+      exceptToken: userSession.token,
+    });
+
+    return enabled;
   }
 
   @Permissions(CanResetUserTotp)
@@ -60,6 +72,10 @@ export class TotpResolver {
       'Resets the two-factor authentication configuration for a user. The user will need to set up 2FA again on next login.',
   })
   async resetUserTotp(@Args('userId') userId: string) {
-    return this.totpService.resetTotp(userId);
+    const reset = await this.totpService.resetTotp(userId);
+
+    await this.authenticationService.revokeUserSessions(userId);
+
+    return reset;
   }
 }

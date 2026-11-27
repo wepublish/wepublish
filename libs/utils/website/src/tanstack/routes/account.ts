@@ -1,3 +1,4 @@
+import { redirect } from '@tanstack/react-router';
 import { z } from 'zod';
 
 import { mergeApolloCache } from '../apollo';
@@ -6,6 +7,10 @@ import {
   loadDeactivatedSubscriptions,
 } from '../pages/deactivated-subscriptions-page';
 import { FourOhFourPage } from '../pages/404-page';
+import {
+  ConfirmEmailPageOptions,
+  createConfirmEmailPage,
+} from '../pages/confirm-email-page';
 import { loadLogin } from '../pages/login-page';
 import { loadProfile, ProfilePage } from '../pages/profile-page';
 import { loadSubscribe } from '../pages/subscribe-page';
@@ -32,8 +37,24 @@ import {
 /** `pages/profile/index.tsx` */
 export const profileRoute = () => ({
   validateSearch: jwtSearchSchema.extend({
+    // Set by the confirm-email page once the new address is in place.
+    emailConfirmed: z.string().optional(),
+    // Only in confirmation mails sent before /confirm-email existed.
     confirmEmailChange: z.string().optional(),
   }),
+  // Such a mail links here with the address to confirm. Its token confirms
+  // that address and logs nobody in, so the page made for it takes over.
+  beforeLoad: ({
+    search: { jwt, confirmEmailChange },
+  }: {
+    search: { jwt?: string; confirmEmailChange?: string };
+  }) => {
+    if (jwt && confirmEmailChange) {
+      throw redirect({
+        href: `/confirm-email?token=${encodeURIComponent(jwt)}`,
+      });
+    }
+  },
   loaderDeps: ({ search: { jwt } }: { search: { jwt?: string } }) => ({ jwt }),
   loader: async ({
     context: { apolloClient },
@@ -50,6 +71,25 @@ export const profileRoute = () => ({
   },
   component: ProfilePage,
 });
+
+/**
+ * `pages/confirm-email.tsx`: the link in the email-change confirmation mail.
+ * Confirmed from the browser, so it renders nothing user-specific on the
+ * server — but its address carries the token: keep it `no-store`.
+ */
+export const confirmEmailRoute = (options: ConfirmEmailPageOptions = {}) => {
+  const loginPath = options.loginPath ?? '/login';
+
+  return {
+    validateSearch: z.object({ token: z.string().optional() }),
+    beforeLoad: ({ search }: { search: { token?: string } }) => {
+      if (!search.token) {
+        throw redirect({ href: loginPath });
+      }
+    },
+    component: createConfirmEmailPage({ ...options, loginPath }),
+  };
+};
 
 /** `pages/profile/subscription/[id].tsx` */
 export const subscriptionRoute = () => ({

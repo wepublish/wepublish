@@ -58,6 +58,7 @@ import {
   NamespacedCache,
   NamespacedCacheModule,
 } from '@wepublish/kv-ttl-cache/api';
+import { LoginCodeModule, LoginCodeService } from '@wepublish/login-code/api';
 import { prismaDecimalCodec } from '@wepublish/kv-ttl-cache/api/prisma';
 import { MailsModule } from '@wepublish/mail/api';
 import { MemberPlanModule } from '@wepublish/member-plan/api';
@@ -165,6 +166,14 @@ import { API_SHARED_NAMESPACES } from './shared-namespaces';
     }),
     AuthorModule,
     PrismaModule,
+    LoginCodeModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: (config: ConfigService) => ({
+        websiteURL: config.get('WEBSITE_URL') || 'http://localhost:3000',
+      }),
+      inject: [ConfigService],
+      global: true,
+    }),
     ProviderRegistryModule.forRootAsync({
       imports: [ConfigModule, PrismaModule],
       inject: [ConfigService, PrismaClient],
@@ -176,7 +185,8 @@ import { API_SHARED_NAMESPACES } from './shared-namespaces';
       useFactory: async (
         config: ConfigService,
         prisma: PrismaClient,
-        registry: ProviderRegistryService
+        registry: ProviderRegistryService,
+        loginCodeService: LoginCodeService
       ) => {
         await registry.ensureLoaded();
 
@@ -196,6 +206,7 @@ import { API_SHARED_NAMESPACES } from './shared-namespaces';
 
         return {
           mailProvider: registry.mailProvider,
+          purlProvider: loginCodeService,
           jwtGenerator: (userId: string) =>
             generateJWT({
               id: userId,
@@ -206,7 +217,12 @@ import { API_SHARED_NAMESPACES } from './shared-namespaces';
             }),
         };
       },
-      inject: [ConfigService, PrismaClient, ProviderRegistryService],
+      inject: [
+        ConfigService,
+        PrismaClient,
+        ProviderRegistryService,
+        LoginCodeService,
+      ],
       global: true,
     }),
     LettersModule.registerAsync({

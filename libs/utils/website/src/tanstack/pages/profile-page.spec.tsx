@@ -7,27 +7,18 @@ import {
   NavigationListDocument,
   SubscriptionsDocument,
 } from '@wepublish/website/api';
-import { ComponentType } from 'react';
+import { ComponentType, PropsWithChildren } from 'react';
 
 import { prefetchProfile, ProfilePage } from './profile-page';
+
+const query = vi.hoisted(() => ({ current: {} as Record<string, unknown> }));
 
 vi.mock('../auth-guard', () => ({
   withAuthGuard: (Cmp: ComponentType) => Cmp,
 }));
 
 vi.mock('../router-hooks', () => ({
-  useQueryParams: () => ({}),
-}));
-
-vi.mock('@tanstack/react-router', async importOriginal => ({
-  ...(await importOriginal<object>()),
-  useNavigate: () => vi.fn(),
-}));
-
-vi.mock('@apollo/client/react', async importOriginal => ({
-  ...(await importOriginal<object>()),
-  useApolloClient: () => ({ refetchQueries: vi.fn() }),
-  useMutation: () => [vi.fn(), {}],
+  useQueryParams: () => query.current,
 }));
 
 // The shared profile parts decide the layout from the feature flag and have
@@ -42,9 +33,16 @@ vi.mock('../../lib/components/profile/profile-details', () => ({
 
 vi.mock('@wepublish/website/builder', async importOriginal => ({
   ...(await importOriginal<object>()),
-  useWebsiteBuilder: () => ({ elements: { Alert: () => null } }),
+  useWebsiteBuilder: () => ({
+    elements: {
+      Alert: ({ children }: PropsWithChildren) => (
+        <div role="alert">{children}</div>
+      ),
+    },
+  }),
 }));
 
+// Without an initialised i18n instance `useTranslation` suspends.
 vi.mock('react-i18next', async importOriginal => ({
   ...(await importOriginal<object>()),
   useTranslation: () => ({ t: (key: string) => key }),
@@ -70,6 +68,10 @@ describe('prefetchProfile', () => {
 });
 
 describe('ProfilePage', () => {
+  beforeEach(() => {
+    query.current = {};
+  });
+
   it('renders the shared profile: subscriptions, then the profile details', () => {
     render(<ProfilePage />);
 
@@ -78,5 +80,22 @@ describe('ProfilePage', () => {
       .map(element => element.dataset['testid']);
 
     expect(parts).toEqual(['profile-subscriptions', 'profile-details']);
+  });
+
+  // The confirmation link opens the confirm-email page, which confirms the
+  // token and sends the reader here with `?emailConfirmed=1`.
+  it('says the new email address is confirmed after the confirmation link', () => {
+    query.current = { emailConfirmed: '1' };
+    render(<ProfilePage />);
+
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      'user.emailChangeConfirmed'
+    );
+  });
+
+  it('says nothing about the email address otherwise', () => {
+    render(<ProfilePage />);
+
+    expect(screen.queryByRole('alert')).toBeNull();
   });
 });

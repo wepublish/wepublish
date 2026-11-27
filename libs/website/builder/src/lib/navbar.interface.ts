@@ -24,6 +24,11 @@ export type BuilderNavbarProps = PropsWithChildren<
     subscribeBtn?: ButtonProps | null;
     hasUnpaidInvoices: boolean;
     hasRunningSubscription: boolean;
+    /**
+     * Logged in with a personal login code, but the account isn't set up yet
+     * (email address unconfirmed): account links are hidden until it is.
+     */
+    accountSetupPending?: boolean;
     navbarActions?: ReactNode;
     paperActions?: ReactNode;
   }

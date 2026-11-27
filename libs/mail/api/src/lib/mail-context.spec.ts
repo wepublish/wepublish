@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { MailContext } from './mail-context';
+import { EMPTY_PURL_DATA } from './mail-data';
 import {
   MailAttachment,
   MailAttachmentError,
@@ -78,6 +79,52 @@ describe('MailContext', () => {
           redemptionMailTemplateId: true,
         },
       });
+    });
+  });
+
+  describe('buildMailData', () => {
+    it('keeps the login link (jwt) while personal login codes are switched off', async () => {
+      const context = new MailContext({
+        prisma: {} as PrismaClient,
+        mailProvider: {} as any,
+        kv: {} as any,
+        jwtGenerator: async userId => `jwt-for-${userId}`,
+        // What the login code service hands out while the medium has them off.
+        purlProvider: { purlFor: async () => EMPTY_PURL_DATA },
+      });
+
+      const data = await context.buildMailData({
+        recipient: { id: 'user-1' },
+        optionalData: {},
+        mode: 'send',
+      });
+
+      expect(data.jwt).toBe('jwt-for-user-1');
+      expect(data.purl).toBe('');
+      expect(data.purlCode).toBe('');
+    });
+
+    it('issues no login code for a mail that does not show one', async () => {
+      const purlFor = vi.fn();
+      const context = new MailContext({
+        prisma: {} as PrismaClient,
+        mailProvider: {} as any,
+        kv: {} as any,
+        jwtGenerator: async () => '',
+        purlProvider: { purlFor },
+      });
+
+      const data = await context.buildMailData({
+        recipient: { id: 'user-1' },
+        optionalData: {},
+        mode: 'send',
+        mintPurl: false,
+      });
+
+      expect(purlFor).not.toHaveBeenCalled();
+      expect(data.purl).toBe('');
+      expect(data.purlCode).toBe('');
+      expect(data.purlQr).toBe('');
     });
   });
 

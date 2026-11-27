@@ -62,8 +62,9 @@ const CACHE_RULES: Array<[RegExp, string]> = [
   // auth cookie and dehydrates Me/Invoices into the HTML, so the 60s default
   // would store one visitor's subscription data and serve it to the next.
   [/^\/mitmachen(\/|$)/, NO_STORE],
-  // Login / signup write cookies and read `?jwt=`; never cache them.
-  [/^\/(login|signup)(\/|$)/, NO_STORE],
+  // Login / signup write cookies and read `?jwt=`; never cache them. The
+  // email confirmation link carries its token in the address.
+  [/^\/(login|signup|confirm-email)(\/|$)/, NO_STORE],
   // Search was `getServerSideProps`, i.e. uncached.
   [/^\/search(\/|$)/, NO_STORE],
   // Server functions default to `no-store`: most carry a session. The content

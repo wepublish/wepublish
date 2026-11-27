@@ -1,7 +1,10 @@
 import type { Mock } from 'vitest';
 import { Test } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
-import { SessionCacheInvalidator } from '@wepublish/authentication/api';
+import {
+  AuthenticationService,
+  SessionCacheInvalidator,
+} from '@wepublish/authentication/api';
 import { PublicContentCacheInvalidator } from '@wepublish/public-content-cache/api';
 import { MailContext, MailchimpContactService } from '@wepublish/mail/api';
 import { SortOrder } from '@wepublish/utils/api';
@@ -41,6 +44,7 @@ describe('UserService.getUsers', () => {
         { provide: MailContext, useValue: {} },
         { provide: HibpService, useValue: {} },
         { provide: MailchimpContactService, useValue: {} },
+        { provide: AuthenticationService, useValue: {} },
         { provide: UserDataloaderService, useValue: { prime: vi.fn() } },
         { provide: SessionCacheInvalidator, useValue: {} },
         { provide: PublicContentCacheInvalidator, useValue: {} },

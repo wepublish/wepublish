@@ -10,9 +10,12 @@ async function composedAs(mailType: mailLogType) {
   const mailContext = {
     mailProvider: { id: 'mailgun' },
     jwtGenerator: vi.fn(async () => 'jwt-1'),
+    isPlaceholderEmail: vi.fn(async () => false),
+    buildMailData: vi.fn(async () => ({ jwt: 'jwt-1' })),
     sendComposedMail,
   } as unknown as MailContext;
   const prisma = {
+    mailTemplate: { findUnique: vi.fn(async () => null) },
     mailLog: { count: vi.fn(async () => 0), create: vi.fn() },
   } as any;
 

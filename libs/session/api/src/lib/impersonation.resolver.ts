@@ -1,5 +1,6 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import {
+  AllowsRestrictedSession,
   AuthSession,
   Authenticated,
   CurrentUser,
@@ -12,6 +13,7 @@ import { SessionWithToken } from './session.model';
 export class ImpersonationResolver {
   constructor(private impersonationService: ImpersonationService) {}
 
+  @AllowsRestrictedSession()
   @Authenticated()
   @Query(() => CurrentSession)
   currentSession(@CurrentUser() session: AuthSession | null) {

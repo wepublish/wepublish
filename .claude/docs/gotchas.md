@@ -1520,6 +1520,29 @@ cast, so a tenant on the wrong document fails `tsc`. Pinned by
 `libs/feed/website/src/lib/feed-article-list.spec.ts`, which runs the real
 document against `schema-v2.graphql`.
 
+---
+
+### ⚠️ A restricted session is refused everywhere unless the handler says otherwise
+
+A session from a login code (`/code/<code>`) is `restricted` until it confirmed an
+email address **itself** (`Session.emailConfirmedAt`; the account's
+`emailVerifiedAt` does not count: someone else may hold the same letter).
+`RestrictedSessionGuard` refuses it on every handler that is not `@Public`,
+`@Permissions` ones included.
+
+- A handler the account setup needs gets `@AllowsRestrictedSession()`. The
+  list is pinned in `app.module.boot.spec.ts`; extending it hands the handler
+  to whoever holds a letter, so do it on purpose.
+- The guard does not look at `@Public` handlers. One that acts under the
+  signed-in reader's name never reads the session with `userSessionOf`. If a
+  guest may do the same (comment, rate, vote), use `unrestrictedUserSessionOf`:
+  a restricted session goes on as a guest. If there is no guest path
+  (subscribing without naming a user), use `fullUserSessionOf`, which refuses
+  with `SESSION_RESTRICTED`. The website shows that code untranslated.
+- The website never redeems a code or confirms an address on a plain GET: mail
+  scanners open every link. Both happen from the browser, on a click or in an
+  effect.
+
 ### ⚠️ A mail flow's earliest day depends on the flow alone
 
 `daysAwayFromEnding` has two lower limits (`SubscriptionFlowService.earliestDay`):

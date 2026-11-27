@@ -3,11 +3,14 @@ import { useUser } from '@wepublish/authentication/website';
 import { SubscriptionsDocument } from '@wepublish/website/api';
 import { useMemo } from 'react';
 
-export const useHasRunningSubscription = () => {
+/** `skip` leaves the API alone, for a session it would refuse anyway. */
+export const useHasRunningSubscription = ({
+  skip = false,
+}: { skip?: boolean } = {}) => {
   const { hasUser } = useUser();
   const { data } = useQuery(SubscriptionsDocument, {
     fetchPolicy: 'cache-first',
-    skip: !hasUser,
+    skip: !hasUser || skip,
   });
 
   return useMemo(

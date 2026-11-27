@@ -22,6 +22,7 @@ import {
   MAIL_TEMPLATE_ATTACHMENT_IDS,
   MailContext,
   MailTemplateContent,
+  SAMPLE_PURL_DATA,
 } from '@wepublish/mail/api';
 import {
   DocumentAttachmentRenderer,
@@ -528,7 +529,7 @@ export class MailTemplateService {
       : SAMPLE_JWT;
 
     if (!subscriptionId) {
-      return { ...assembleSampleMailData(contextId), jwt };
+      return { ...assembleSampleMailData(contextId), jwt, ...SAMPLE_PURL_DATA };
     }
 
     const subscription = await this.prisma.subscription.findUnique({

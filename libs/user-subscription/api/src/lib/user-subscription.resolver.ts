@@ -10,7 +10,7 @@ import {
   Authenticated,
   CurrentUser,
   Public,
-  userSessionOf,
+  fullUserSessionOf,
   requireSessionUser,
   AuthSession,
 } from '@wepublish/authentication/api';
@@ -96,7 +96,7 @@ export class UserSubscriptionResolver {
     const user =
       userId ?
         await this.userDataloader.load(userId)
-      : userSessionOf(session)?.user;
+      : fullUserSessionOf(session)?.user;
 
     if (!user) {
       throw new BadRequestException('User not found');

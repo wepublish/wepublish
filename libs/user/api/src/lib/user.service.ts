@@ -5,16 +5,20 @@ import {
   NotFoundException,
   Optional,
 } from '@nestjs/common';
-import { differenceInMinutes } from 'date-fns';
+import { differenceInMinutes, differenceInSeconds } from 'date-fns';
 import {
   CommentItemType,
   Prisma,
   PrismaClient,
+  SessionOrigin,
   UserEvent,
 } from '@prisma/client';
 import { hash as argon2Hash } from '@node-rs/argon2';
 import { Validator } from '@wepublish/user';
-import { SessionCacheInvalidator } from '@wepublish/authentication/api';
+import {
+  AuthenticationService,
+  SessionCacheInvalidator,
+} from '@wepublish/authentication/api';
 import { PublicContentCacheInvalidator } from '@wepublish/public-content-cache/api';
 import {
   getMaxTake,
@@ -65,6 +69,7 @@ export class UserService {
     private mailContext: MailContext,
     private hibpService: HibpService,
     private mailchimpContactService: MailchimpContactService,
+    private authenticationService: AuthenticationService,
     private sessionCache: SessionCacheInvalidator,
     private publicContentCache: PublicContentCacheInvalidator,
     @Optional()
@@ -267,7 +272,36 @@ export class UserService {
   }
 
   @PrimeDataLoader(UserDataloaderService)
-  async updateUser({ id, address, properties, ...input }: UpdateUserInput) {
+  async updateUser({
+    id,
+    address,
+    properties,
+    firstName,
+    name,
+    birthday,
+    email,
+    emailVerifiedAt,
+    userImageID,
+    roleIDs,
+    flair,
+    active,
+    note,
+    totpExempt,
+  }: UpdateUserInput) {
+    const input = {
+      firstName,
+      name,
+      birthday,
+      email,
+      emailVerifiedAt,
+      userImageID,
+      roleIDs,
+      flair,
+      active,
+      note,
+      totpExempt,
+    };
+
     if (input.email) {
       input.email = (input.email as string).toLowerCase();
     }
@@ -325,6 +359,10 @@ export class UserService {
         user.email
       );
       await this.recomputeEmailQuality(user.id);
+    }
+
+    if (active === false) {
+      await this.authenticationService.revokeUserSessions(user.id);
     }
 
     return user;
@@ -403,8 +441,77 @@ export class UserService {
 
   private static readonly EMAIL_CHANGE_EXPIRY_MINUTES = 60;
 
+  private static readonly EMAIL_CHANGE_REQUEST_COOLDOWN_SECONDS = 60;
+
+  private hashEmailChangeToken(token: string) {
+    return crypto.createHash('sha256').update(token).digest('hex');
+  }
+
+  private async sendEmailConfirmation(
+    userId: string,
+    targetEmail: string,
+    event: typeof UserEvent.EMAIL_CHANGE | typeof UserEvent.EMAIL_VERIFICATION,
+    sessionId: string | undefined
+  ) {
+    const mailTemplateId = await this.mailContext.getUserTemplateId(
+      event,
+      false
+    );
+
+    if (!mailTemplateId) {
+      throw new BadRequestException(
+        'Email confirmation is not configured. Please contact your administrator.'
+      );
+    }
+
+    const current = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { pendingEmailAt: true },
+    });
+
+    if (
+      current?.pendingEmailAt &&
+      differenceInSeconds(new Date(), current.pendingEmailAt) <
+        UserService.EMAIL_CHANGE_REQUEST_COOLDOWN_SECONDS
+    ) {
+      throw new BadRequestException(
+        'Please wait a moment before requesting another confirmation email.'
+      );
+    }
+
+    const token = crypto.randomBytes(32).toString('base64url');
+
+    const user = await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        pendingEmail: targetEmail,
+        pendingEmailAt: new Date(),
+        pendingEmailTokenHash: this.hashEmailChangeToken(token),
+        // Only this session becomes a full one when the link is opened.
+        pendingEmailSessionId: sessionId ?? null,
+      },
+      include: { address: true, paymentProviderCustomers: true },
+    });
+    await this.sessionCache.invalidate();
+
+    await this.mailContext.sendMail({
+      mailTemplateId,
+      recipient: user,
+      recipientEmailOverride: targetEmail,
+      optionalData: { newEmail: targetEmail },
+      mailType: mailLogType.UserFlow,
+      jwtOverride: token,
+    });
+
+    return user;
+  }
+
   @PrimeDataLoader(UserDataloaderService)
-  async requestEmailChange(userId: string, newEmail: string) {
+  async requestEmailChange(
+    userId: string,
+    newEmail: string,
+    sessionId?: string
+  ) {
     newEmail = newEmail.toLowerCase();
     await Validator.login.parse({ email: newEmail });
 
@@ -418,58 +525,60 @@ export class UserService {
       throw new BadRequestException('Email is already in use.');
     }
 
-    const user = await this.prisma.user.update({
-      where: { id: userId },
-      data: {
-        pendingEmail: newEmail,
-        pendingEmailAt: new Date(),
-      },
-      include: { address: true, paymentProviderCustomers: true },
-    });
-    await this.sessionCache.invalidate();
-
-    const mailTemplateId = await this.mailContext.getUserTemplateId(
+    return this.sendEmailConfirmation(
+      userId,
+      newEmail,
       UserEvent.EMAIL_CHANGE,
-      false
+      sessionId
     );
-
-    await this.mailContext.sendMail({
-      mailTemplateId,
-      recipient: user,
-      optionalData: { newEmail },
-      mailType: mailLogType.UserFlow,
-    });
-
-    return user;
   }
 
   @PrimeDataLoader(UserDataloaderService)
-  async confirmEmailChange(userId: string, newEmail: string) {
+  async requestEmailVerification(userId: string, sessionId?: string) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
-      include: { address: true, paymentProviderCustomers: true },
+      select: { email: true },
     });
 
     if (!user) {
       throw new NotFoundException('User not found.');
     }
 
-    if (!user.pendingEmail || !user.pendingEmailAt) {
-      throw new BadRequestException('No pending email change.');
-    }
+    return this.sendEmailConfirmation(
+      userId,
+      user.email,
+      UserEvent.EMAIL_VERIFICATION,
+      sessionId
+    );
+  }
 
-    if (user.pendingEmail.toLowerCase() !== newEmail.toLowerCase()) {
-      throw new BadRequestException(
-        'Email address does not match the pending email change.'
-      );
+  @PrimeDataLoader(UserDataloaderService)
+  async confirmEmailChange(
+    token: string,
+    options?: {
+      /** The session that opened the link, if it is signed in. */
+      session?: { id: string; userId: string; origin: SessionOrigin };
+    }
+  ) {
+    const user = await this.prisma.user.findUnique({
+      where: { pendingEmailTokenHash: this.hashEmailChangeToken(token) },
+    });
+
+    if (!user?.pendingEmail || !user.pendingEmailAt) {
+      throw new BadRequestException('Invalid or expired confirmation link.');
     }
 
     const minutesElapsed = differenceInMinutes(new Date(), user.pendingEmailAt);
 
     if (minutesElapsed > UserService.EMAIL_CHANGE_EXPIRY_MINUTES) {
       await this.prisma.user.update({
-        where: { id: userId },
-        data: { pendingEmail: null, pendingEmailAt: null },
+        where: { id: user.id },
+        data: {
+          pendingEmail: null,
+          pendingEmailAt: null,
+          pendingEmailTokenHash: null,
+          pendingEmailSessionId: null,
+        },
       });
       await this.sessionCache.invalidate();
 
@@ -478,23 +587,68 @@ export class UserService {
       );
     }
 
-    const updatedUser = await this.prisma.user.update({
-      where: { id: userId },
-      data: {
-        email: user.pendingEmail,
-        emailVerifiedAt: new Date(),
-        pendingEmail: null,
-        pendingEmailAt: null,
-      },
-      include: { address: true, paymentProviderCustomers: true },
+    let updatedUser;
+
+    try {
+      updatedUser = await this.prisma.user.update({
+        where: { id: user.id },
+        data: {
+          email: user.pendingEmail,
+          emailVerifiedAt: new Date(),
+          pendingEmail: null,
+          pendingEmailAt: null,
+          pendingEmailTokenHash: null,
+          pendingEmailSessionId: null,
+        },
+        include: { address: true, paymentProviderCustomers: true },
+      });
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        throw new BadRequestException('Email is already in use.');
+      }
+
+      throw error;
+    }
+
+    const own =
+      options?.session?.userId === user.id ? options.session : undefined;
+    // The confirmation says that whoever opened the link reads this inbox.
+    // It frees the session that asked for it and opens it itself, and no
+    // other: someone else may hold the same login code.
+    const asking =
+      own && own.id === user.pendingEmailSessionId ? own : undefined;
+    const kept =
+      asking ?? (own && own.origin !== SessionOrigin.purl ? own : undefined);
+
+    if (asking) {
+      await this.prisma.session.updateMany({
+        where: { id: asking.id, userID: user.id },
+        data: { emailConfirmedAt: new Date() },
+      });
+    }
+
+    // A new address ends every other session, in case someone else got in.
+    // Confirming the address on file ends the other login-code sessions: they
+    // would otherwise wait to be freed by a confirmation that is not theirs.
+    await this.authenticationService.revokeUserSessions(user.id, {
+      exceptSessionId: kept?.id,
+      ...(user.email === updatedUser.email ?
+        { origin: SessionOrigin.purl }
+      : {}),
     });
+    // Cached sessions still carry the old restriction and address.
     await this.sessionCache.invalidate();
 
-    await this.mailchimpContactService.updateContactEmail(
-      updatedUser.id,
-      user.email,
-      updatedUser.email
-    );
+    if (user.email !== updatedUser.email) {
+      await this.mailchimpContactService.updateContactEmail(
+        updatedUser.id,
+        user.email,
+        updatedUser.email
+      );
+    }
     await this.recomputeEmailQuality(updatedUser.id);
 
     return updatedUser;

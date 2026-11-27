@@ -5,6 +5,7 @@ import {
   mockChallengeToken,
   mockRichTextParagraph,
   mockSensitiveDataUser,
+  mockSettingListQuery,
   renderWithProviders,
   RenderWithProvidersOptions,
   TEST_CAPTCHA_LABEL,
@@ -42,7 +43,7 @@ type EditorOverrides = Partial<{
 
 const renderEditor = (
   props: EditorOverrides = {},
-  options: RenderWithProvidersOptions = {}
+  { mocks = [], ...options }: RenderWithProvidersOptions = {}
 ) => {
   const onSubmit = vi.fn<BuilderCommentEditorProps['onSubmit']>();
   const onCancel = vi.fn<BuilderCommentEditorProps['onCancel']>();
@@ -66,7 +67,8 @@ const renderEditor = (
         ...props,
       } as BuilderCommentEditorProps)}
     />,
-    options
+    // The login form asks whether login codes are switched on.
+    { ...options, mocks: [mockSettingListQuery(), ...mocks] }
   );
 
   return { ...result, onSubmit, onCancel };

@@ -2,6 +2,7 @@ import { MailChannel } from '@prisma/client';
 import type { Mock } from 'vitest';
 import { LetterSender } from './letter-sender';
 import { MailContext } from './mail-context';
+import { EMPTY_PURL_DATA } from './mail-data';
 import {
   MailController,
   MailControllerConfig,
@@ -34,6 +35,7 @@ function setup() {
   };
 
   const prisma = {
+    mailTemplate: { findUnique: vi.fn(async () => null) },
     mailLog: { count: vi.fn(async () => 0), create: vi.fn() },
     user: {
       findUnique: vi.fn(async () => ({ ...user(), address: { city: 'Bern' } })),
@@ -49,6 +51,9 @@ function setup() {
   const mailContext = {
     mailProvider: { id: 'mailgun' },
     jwtGenerator: vi.fn(async () => 'jwt-1'),
+    purlProvider: { purlFor: vi.fn(async () => EMPTY_PURL_DATA) },
+    isPlaceholderEmail: vi.fn(async () => false),
+    buildMailData: MailContext.prototype.buildMailData,
     sendComposedMail: vi.fn(async () => ({
       subject: 'S',
       providerMessageID: 'msg-1',

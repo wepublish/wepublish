@@ -1,26 +1,41 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import {
+  AllowsRestrictedSession,
   assertNotImpersonating,
-  Authenticated,
+  AuthenticationService,
   AuthSessionType,
+  Authenticated,
   CurrentUser,
+  Public,
+  UserSession,
   requireSessionUser,
+  requireUserSession,
   AuthSession,
 } from '@wepublish/authentication/api';
+import {
+  codeSessionMayReplaceEmail,
+  LoginCodeSecondFactorService,
+  TooManyAttemptsError,
+} from '@wepublish/login-code/api';
 import { SensitiveDataUser } from './user.model';
 import { UploadImageInput } from '@wepublish/image/api';
 import { ProfileService } from './profile.service';
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import { UserService } from './user.service';
 import { assertNotManagedByWepublishLogin } from './managed-by-wepublish-login';
+
+export const EMAIL_VERIFICATION_REQUIRED = 'EMAIL_VERIFICATION_REQUIRED';
 
 @Resolver()
 export class ProfileResolver {
   constructor(
     private userService: UserService,
-    private profileService: ProfileService
+    private profileService: ProfileService,
+    private secondFactorService: LoginCodeSecondFactorService,
+    private authenticationService: AuthenticationService
   ) {}
 
+  @AllowsRestrictedSession()
   @Authenticated()
   @Query(() => SensitiveDataUser, {
     description: `This query returns the user.`,
@@ -31,7 +46,9 @@ export class ProfileResolver {
       return null;
     }
 
-    return session.user;
+    return session.restricted ?
+        this.secondFactorService.mask(session.user)
+      : session.user;
   }
 
   @Authenticated()
@@ -78,37 +95,92 @@ export class ProfileResolver {
     return this.profileService.uploadUserProfileImage(user, uploadImageInput);
   }
 
+  @AllowsRestrictedSession()
   @Authenticated()
   @Mutation(() => Boolean, {
     description:
-      'Requests an email change. A confirmation link is sent to the current email address.',
+      'Requests an email change. A confirmation link is sent to the new email address. A restricted session must also confirm the configured second factor from the letter; without one it may only replace a placeholder address.',
   })
   async requestEmailChange(
     @Args('newEmail') newEmail: string,
-    @CurrentUser() session: AuthSession
+    @CurrentUser() authSession: AuthSession,
+    @Args('secondFactor', { nullable: true }) secondFactor?: string
   ): Promise<boolean> {
-    const user = requireSessionUser(session);
+    const session = requireUserSession(authSession);
 
-    assertNotManagedByWepublishLogin(user);
+    assertNotManagedByWepublishLogin(session.user);
     assertNotImpersonating(session);
 
-    await this.userService.requestEmailChange(user.id, newEmail);
+    if (session.restricted) {
+      const mayReplace = codeSessionMayReplaceEmail({
+        placeholderEmail: session.placeholderEmail,
+        secondFactor: await this.secondFactorService.getFactor(),
+      });
+
+      if (!mayReplace) {
+        throw new ForbiddenException(EMAIL_VERIFICATION_REQUIRED);
+      }
+
+      await this.assertSecondFactor(session, secondFactor);
+    }
+
+    await this.userService.requestEmailChange(
+      session.user.id,
+      newEmail,
+      session.id
+    );
     return true;
   }
 
+  private async assertSecondFactor(
+    session: UserSession,
+    secondFactor: string | undefined
+  ) {
+    try {
+      await this.secondFactorService.assert(session.user, secondFactor);
+    } catch (error) {
+      if (error instanceof TooManyAttemptsError) {
+        await this.authenticationService.revokeUserSessions(session.user.id);
+      }
+
+      throw error;
+    }
+  }
+
+  @AllowsRestrictedSession()
   @Authenticated()
+  @Mutation(() => Boolean, {
+    description:
+      'Sends a confirmation link to the current email address to verify it.',
+  })
+  async requestEmailVerification(
+    @CurrentUser() authSession: AuthSession
+  ): Promise<boolean> {
+    const session = requireUserSession(authSession);
+
+    await this.userService.requestEmailVerification(
+      session.user.id,
+      session.id
+    );
+    return true;
+  }
+
+  @Public()
   @Mutation(() => SensitiveDataUser, {
-    description: 'Confirms a pending email change for the logged-in user.',
+    description:
+      'Confirms a pending email change with the token from the confirmation email. A session from a login code only becomes a full session when it asked for the confirmation and opens the link itself; the other login-code sessions of the account end.',
   })
   async confirmEmailChange(
-    @Args('newEmail') newEmail: string,
-    @CurrentUser() session: AuthSession
+    @Args('token') token: string,
+    @CurrentUser() session?: AuthSession
   ) {
-    const user = requireSessionUser(session);
-
-    assertNotManagedByWepublishLogin(user);
     assertNotImpersonating(session);
 
-    return this.userService.confirmEmailChange(user.id, newEmail);
+    return this.userService.confirmEmailChange(token, {
+      session:
+        session?.type === AuthSessionType.User ?
+          { id: session.id, userId: session.user.id, origin: session.origin }
+        : undefined,
+    });
   }
 }

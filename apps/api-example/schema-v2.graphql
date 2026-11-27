@@ -2835,6 +2835,17 @@ input ListicleItemInput {
   title: String
 }
 
+"""
+Attribute printed on the letter that a restricted session must confirm before it can claim the account with a real email address.
+"""
+enum LoginCodeSecondFactor {
+  city
+  firstName
+  lastName
+  none
+  postalCode
+}
+
 enum LoginStatus {
   ALL
   LOGGED_IN
@@ -4153,8 +4164,10 @@ type Mutation {
   """Apply one suggestion; refused when it no longer holds"""
   confirmDeliverySuggestion(id: String!): Boolean!
 
-  """Confirms a pending email change for the logged-in user."""
-  confirmEmailChange(newEmail: String!): SensitiveDataUser!
+  """
+  Confirms a pending email change with the token from the confirmation email. A session from a login code only becomes a full session when it asked for the confirmation and opens the link itself; the other login-code sessions of the account end.
+  """
+  confirmEmailChange(token: String!): SensitiveDataUser!
 
   """
   Confirms a notification for the whole instance, recording who confirmed it. Requires authentication.
@@ -4385,6 +4398,11 @@ type Mutation {
   createSavedAudienceFilter(input: CreateSavedAudienceFilterInput!): SavedAudienceFilterModel!
   createSession(email: String!, password: String!, totpToken: String): SessionWithToken!
   createSessionWithJWT(jwt: String!, totpToken: String): SessionWithToken!
+
+  """
+  Logs in with a personal login code (PURL). Limited uses, expiring and revocable; rate limited per client.
+  """
+  createSessionWithLoginCode(challengeAnswer: ChallengeInput, code: String!, totpToken: String): SessionWithToken!
 
   """
   Signs a We.Publish admin in with the code auth.wepublish.cloud returned: as the account connected to that We.Publish identity, else the one with its email, else a new one. The account becomes an admin with the names from We.Publish and can only sign in this way from then on.
@@ -4814,6 +4832,11 @@ type Mutation {
   """
   registerMember(address: UserAddressInput, birthday: DateTime, challengeAnswer: ChallengeInput!, email: String!, firstName: String, flair: String, name: String!, password: String): Registration!
 
+  """
+  Revokes existing personal login links of a user and issues a new one. The code is returned exactly once.
+  """
+  reissueUserLoginCode(userId: String!): UserLoginCodeIssue!
+
   """Rejects a comment"""
   rejectComment(id: String!, rejectionReason: CommentRejectionReason!): Comment!
 
@@ -4832,9 +4855,12 @@ type Mutation {
   requestChangesOnComment(id: String!, rejectionReason: CommentRejectionReason!): Comment!
 
   """
-  Requests an email change. A confirmation link is sent to the current email address.
+  Requests an email change. A confirmation link is sent to the new email address. A restricted session must also confirm the configured second factor from the letter; without one it may only replace a placeholder address.
   """
-  requestEmailChange(newEmail: String!): Boolean!
+  requestEmailChange(newEmail: String!, secondFactor: String): Boolean!
+
+  """Sends a confirmation link to the current email address to verify it."""
+  requestEmailVerification: Boolean!
 
   """Resets the password of a user."""
   resetPassword(id: String!, password: String): SensitiveDataUser!
@@ -4882,6 +4908,9 @@ type Mutation {
   Revokes one of your api tokens, or anyone's with CAN_REVOKE_ALL_API_TOKENS. The token stops working immediately.
   """
   revokeApiToken(id: String!): ApiToken!
+
+  """Revokes all personal login links of a user."""
+  revokeUserLoginCode(userId: String!): Boolean!
 
   """
   Runs today's periodic job again now, also when it already ran tonight. For load tests: only on review, development and local instances. Answers once the run has started; it goes on in the background. Refused while a run is going on.
@@ -7572,6 +7601,11 @@ type Query {
   """Returns a checklist of the SEO setup of the website."""
   seoChecklist: SeoChecklist!
 
+  """
+  Origin and restriction state of the current session. Restricted sessions may only complete onboarding.
+  """
+  sessionInfo: SessionInfo!
+
   "\n      Returns a single setting by name.\n    "
   setting(name: String!): Setting!
 
@@ -7701,6 +7735,9 @@ type Query {
 
   """Get all invoices for the authenticated user"""
   userInvoices: [Invoice!]!
+
+  """The current personal login link of a user, without the code itself."""
+  userLoginCode(userId: String!): UserLoginCodeStatus
   userPollVote(pollId: String!): String
 
   """Returns a userrole by id."""
@@ -8010,6 +8047,32 @@ type SeoChecklistItem {
   itemId: String!
 }
 
+type SessionInfo {
+  """
+  Whether a restricted session may replace the address on file, instead of having to confirm it first.
+  """
+  canReplaceEmail: Boolean!
+  createdAt: DateTime!
+  expiresAt: DateTime!
+  origin: SessionOrigin!
+  placeholderEmail: Boolean!
+  restricted: Boolean!
+
+  """
+  Attribute from the letter a restricted session must confirm when it claims the account with a real email address.
+  """
+  secondFactor: LoginCodeSecondFactor!
+}
+
+enum SessionOrigin {
+  impersonation
+  jwt
+  password
+  preview
+  purl
+  register
+}
+
 type SessionWithToken {
   createdAt: DateTime!
   expiresAt: DateTime!
@@ -8018,6 +8081,14 @@ type SessionWithToken {
   Whether this session was created by redeeming an impersonation grant from the One dashboard. Clients must never treat an ordinary JWT login as impersonation.
   """
   impersonated: Boolean!
+
+  """How this session was created."""
+  origin: SessionOrigin!
+
+  """
+  Whether this session is limited to onboarding until a real email address has been confirmed.
+  """
+  restricted: Boolean!
   token: String!
 
   """
@@ -8198,6 +8269,10 @@ enum SettingName {
   EMAIL_QUALITY_MIN_MAILS_FOR_UNRESPONSIVE
   EMAIL_QUALITY_UNRESPONSIVE_AFTER_DAYS
   FEED_PAYWALLED_CONTENT
+  LOGIN_CODE_ENABLED
+  LOGIN_CODE_MAX_USES
+  LOGIN_CODE_SECOND_FACTOR
+  LOGIN_CODE_VALID_DAYS
   MAIL_PROVIDER_NAME
   MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC
   MAKE_EXPECTED_REVENUE_API_PUBLIC
@@ -8209,6 +8284,7 @@ enum SettingName {
   NEW_ARTICLE_PEERING
   PAYMENT_METHOD_CHANGE_EXPIRY_DAYS
   PEERING_TIMEOUT_MS
+  PLACEHOLDER_EMAIL_PATTERNS
   PRINT_BEXIO_KINDS
   PRINT_EXPORT_DEFAULTS
   PRINT_ISSUES_PER_YEAR
@@ -9322,6 +9398,7 @@ type UserEmailQualityModel {
 enum UserEvent {
   ACCOUNT_CREATION
   EMAIL_CHANGE
+  EMAIL_VERIFICATION
   LOGIN_LINK
   PASSWORD_RESET
   TEST_MAIL
@@ -9335,6 +9412,29 @@ input UserFilter {
   name: String
   text: String
   userRole: [String!]
+}
+
+type UserLoginCodeIssue {
+  code: String!
+  purl: String!
+  status: UserLoginCodeStatus!
+}
+
+type UserLoginCodeStatus {
+  createdAt: DateTime!
+  expiresAt: DateTime!
+  id: String!
+  issuedBy: String
+  lastUsedAt: DateTime
+  maxUses: Float!
+  revokedAt: DateTime
+  secondFactor: LoginCodeSecondFactor!
+
+  """
+  Whether the user record holds the attribute the configured second factor asks for.
+  """
+  secondFactorAvailable: Boolean!
+  usesRemaining: Float!
 }
 
 type UserRole {

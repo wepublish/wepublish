@@ -1,11 +1,15 @@
 import { Query, Resolver } from '@nestjs/graphql';
-import { Authenticated } from '@wepublish/authentication/api';
+import {
+  AllowsRestrictedSession,
+  Authenticated,
+} from '@wepublish/authentication/api';
 import { FeaturesService } from './features.service';
 
 @Resolver()
 export class FeaturesResolver {
   constructor(private featuresService: FeaturesService) {}
 
+  @AllowsRestrictedSession()
   @Authenticated()
   @Query(() => [String], {
     description:

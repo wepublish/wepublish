@@ -7,12 +7,14 @@ const recipient = { id: 'user-1', email: 'jane@example.com' } as User;
 async function loggedType(mailType: mailLogType) {
   const mailContext = {
     mailProvider: { id: 'mailgun' },
-    jwtGenerator: vi.fn(async () => 'jwt-1'),
+    isPlaceholderEmail: vi.fn(async () => false),
+    buildMailData: vi.fn(async () => ({ jwt: 'jwt-1' })),
     sendComposedMail: vi.fn(async () => ({ subject: 'S' })),
   } as unknown as MailContext;
   const create = vi.fn();
   const prisma = {
     mailLog: { count: vi.fn(async () => 0), create },
+    mailTemplate: { findUnique: vi.fn(async () => null) },
   } as unknown as PrismaClient;
 
   await new MailController(prisma, mailContext, {

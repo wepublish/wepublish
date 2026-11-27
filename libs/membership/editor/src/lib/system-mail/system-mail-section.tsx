@@ -40,6 +40,7 @@ const ACCOUNT_EVENT_ORDER: UserEvent[] = [
   UserEvent.AccountCreation,
   UserEvent.LoginLink,
   UserEvent.EmailChange,
+  UserEvent.EmailVerification,
   // Only people working in the editor can ask for it.
   UserEvent.PasswordReset,
   UserEvent.TestMail,

@@ -120,9 +120,15 @@ export class UserResolver {
 
     assertNotManagedByWepublishLogin(user);
 
+    const { name, firstName, birthday, flair, address } = input;
+
     return this.service.updateUser({
-      ...input,
       id: user.id,
+      name,
+      firstName,
+      birthday,
+      flair,
+      address,
     });
   }
 

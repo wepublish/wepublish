@@ -1,11 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, SessionOrigin, User } from '@prisma/client';
 import { AuthSessionType, AuthSession } from './auth-session';
+import { grantsOnlyReaderAccess } from '@wepublish/permissions';
 import { addPredefinedPermissions } from '@wepublish/permissions/api';
 import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import {
+  matchesPlaceholderEmail,
+  parsePlaceholderEmailPatterns,
+  PLACEHOLDER_EMAIL_PATTERNS_SETTING,
+} from '@wepublish/utils/api';
+import { isSessionRestricted } from './session-restriction';
+import {
   SESSION_CACHE_NAMESPACE,
   SESSION_CACHE_TTL_SECONDS,
+  SessionCacheInvalidator,
   sessionCacheKey,
 } from './session-cache';
 
@@ -21,8 +29,37 @@ const withoutToken = <T extends { token: string }>(
 export class AuthenticationService {
   constructor(
     private prisma: PrismaClient,
-    private kv: NamespacedCache
+    private kv: NamespacedCache,
+    private sessionCache: SessionCacheInvalidator
   ) {}
+
+  public async getPlaceholderEmailPatterns(): Promise<string[]> {
+    return this.kv.getOrLoadNs(
+      'placeholder-email',
+      'patterns',
+      async () => {
+        const setting = await this.prisma.setting.findUnique({
+          where: { name: PLACEHOLDER_EMAIL_PATTERNS_SETTING },
+        });
+
+        return parsePlaceholderEmailPatterns(setting?.value);
+      },
+      60
+    );
+  }
+
+  public async isPlaceholderEmail(
+    email: string | null | undefined
+  ): Promise<boolean> {
+    if (!email) {
+      return false;
+    }
+
+    return matchesPlaceholderEmail(
+      email,
+      await this.getPlaceholderEmailPatterns()
+    );
+  }
 
   public async getUserSession(token: string): Promise<AuthSession | null> {
     const session = await this.kv.getOrLoadNs(
@@ -46,6 +83,37 @@ export class AuthenticationService {
     return session && ({ ...session, token } as AuthSession);
   }
 
+  /** Whether a session of this user may only finish setting up the account. */
+  public async sessionRestriction({
+    origin,
+    emailConfirmedAt,
+    user,
+  }: {
+    origin: SessionOrigin;
+    emailConfirmedAt: Date | null | undefined;
+    user: Pick<User, 'email' | 'roleIDs'>;
+  }) {
+    const [placeholderEmail, roles] = await Promise.all([
+      this.isPlaceholderEmail(user.email),
+      this.prisma.userRole
+        .findMany({ where: { id: { in: user.roleIDs } } })
+        .then(found => found.map(addPredefinedPermissions)),
+    ]);
+
+    return {
+      placeholderEmail,
+      roles,
+      restricted: isSessionRestricted({
+        origin,
+        placeholderEmail,
+        readerOnly: grantsOnlyReaderAccess(
+          roles.flatMap(role => role.permissionIDs)
+        ),
+        emailConfirmedAt,
+      }),
+    };
+  }
+
   private async loadUserSession(token: string): Promise<AuthSession | null> {
     const session = await this.prisma.session.findFirst({
       where: {
@@ -59,24 +127,26 @@ export class AuthenticationService {
     });
 
     if (session && session.user) {
+      const { placeholderEmail, restricted, roles } =
+        await this.sessionRestriction({
+          origin: session.origin,
+          emailConfirmedAt: session.emailConfirmedAt,
+          user: session.user,
+        });
+
       return {
         type: AuthSessionType.User,
         id: session.id,
         token: session.token,
         createdAt: session.createdAt,
         expiresAt: session.expiresAt,
+        origin: session.origin,
+        placeholderEmail,
+        restricted,
         impersonatedBy: session.impersonatedBy,
         canImpersonate: session.canImpersonate ?? false,
         user: session.user,
-        roles: (
-          await this.prisma.userRole.findMany({
-            where: {
-              id: {
-                in: session.user.roleIDs,
-              },
-            },
-          })
-        ).map(addPredefinedPermissions),
+        roles,
       };
     }
 
@@ -121,5 +191,33 @@ export class AuthenticationService {
     }
 
     return true;
+  }
+
+  public async revokeUserSessions(
+    userId: string,
+    options?: {
+      exceptToken?: string;
+      exceptSessionId?: string;
+      /** Only the sessions that logged in this way. */
+      origin?: SessionOrigin;
+    }
+  ) {
+    const { count } = await this.prisma.session.deleteMany({
+      where: {
+        userID: userId,
+        ...(options?.exceptToken ?
+          { token: { not: options.exceptToken } }
+        : {}),
+        ...(options?.exceptSessionId ?
+          { id: { not: options.exceptSessionId } }
+        : {}),
+        ...(options?.origin ? { origin: options.origin } : {}),
+      },
+    });
+    // Sessions are cached by token, so a revoked one would otherwise keep
+    // working until its cache entry expires.
+    await this.sessionCache.invalidate();
+
+    return count;
   }
 }
