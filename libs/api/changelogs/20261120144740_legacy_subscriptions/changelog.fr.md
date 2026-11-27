@@ -1,11 +1,11 @@
 ---
 title: Anciens abonnements : les trouver, leur écrire, leur donner leur propre flux
-lead: Les abonnements importés de votre ancien système comptent désormais comme anciens abonnements jusqu’à leur premier paiement ici. Vous pouvez les filtrer, leur envoyer un message et leur attribuer leur propre flux de communication.
+lead: Les abonnements importés de votre ancien système à partir de maintenant comptent comme anciens abonnements jusqu’à leur premier paiement ici. Vous pouvez les filtrer, leur envoyer un message et leur attribuer leur propre flux de communication.
 ---
 
 Disponible pour les médias dont les anciens abonnements sont activés.
 
-- **Ce qu’est un ancien abonnement.** Un abonnement importé de l’ancien système reste un ancien abonnement jusqu’à ce que sa première facture soit payée ici. La date d’import reste enregistrée ensuite.
+- **Ce qu’est un ancien abonnement.** Un abonnement importé de l’ancien système reste un ancien abonnement jusqu’à ce que sa première facture soit payée ici. La date d’import reste enregistrée ensuite. Les abonnements importés avant cette mise à jour n’ont pas de date d’import et ne comptent pas comme anciens abonnements.
 - **Sur l’abonnement.** La page d’un abonnement importé indique quand il a été importé et s’il a été payé ici depuis.
 - **Dans la liste des abonnements.** Le filtre «Ancien abonnement» affiche uniquement les anciens abonnements, ou uniquement les autres. L’export CSV contient les colonnes «importedAt» et «legacy».
 - **Dans les envois manuels.** Les destinataires peuvent être limités aux anciens abonnements, par exemple pour leur expliquer comment payer la première fois.
