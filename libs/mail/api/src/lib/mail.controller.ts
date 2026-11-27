@@ -273,7 +273,9 @@ export class MailController {
    * Note that this mail is held back and why, without sending anything — e.g.
    * the invoice-creation mail whose invoice pdf the payment provider could
    * not render yet. The entry tells the editor why the reader is waiting and
-   * tells the night sweep the mail is still owed.
+   * tells the night sweep the mail is still owed. It carries no provider
+   * message id: that is what sets it apart from a provider's own `deferred`,
+   * a soft bounce the provider is still retrying.
    */
   public async recordDeferred(reason: string): Promise<void> {
     await this.writeLog(

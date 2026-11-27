@@ -1654,6 +1654,25 @@ describe('PeriodicJobService', () => {
           expect(mockMailContext.sendComposedMail).toHaveBeenCalledTimes(1);
         });
 
+        // Held back by us is a deferred entry no provider ever saw; one with a
+        // provider's message id is a soft bounce the provider still retries,
+        // and a second invoice mail could arrive next to it.
+        it('does not mail again while the mail provider still retries it', async () => {
+          mockPrisma.mailLog.findMany.mockResolvedValue([
+            { state: MailLogState.deferred, mailProviderMessageID: null },
+            { state: MailLogState.deferred, mailProviderMessageID: 'msg-1' },
+          ]);
+
+          await service.postMissingInvoiceDeliveries(runDate);
+
+          expect(mockPrisma.mailLog.findMany).toHaveBeenCalledWith(
+            expect.objectContaining({
+              select: { state: true, mailProviderMessageID: true },
+            })
+          );
+          expect(mockMailContext.sendComposedMail).not.toHaveBeenCalled();
+        });
+
         it('leaves a mail alone that got through, on either channel', async () => {
           mockPrisma.mailLog.findMany.mockResolvedValue([
             { state: MailLogState.deferred },

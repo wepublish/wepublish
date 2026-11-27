@@ -956,8 +956,9 @@ export class PeriodicJobService {
   /**
    * The invoice-creation mail with the pdf, for an invoice whose provider
    * leaves delivery to we.publish. Owed only when it was held back for a
-   * missing pdf or refused, and nothing got through on either channel since —
-   * a checkout's invoice, which the provider emailed, has no entry at all.
+   * missing pdf or refused, and nothing got through or is still being retried
+   * on either channel since — a checkout's invoice, which the provider
+   * emailed, has no entry at all.
    */
   private async mailOwedInvoice(
     runDate: Date,
@@ -975,25 +976,28 @@ export class PeriodicJobService {
         mailTemplateId: creationEvent.mailTemplateId!,
         sentDate: { gte: invoice.createdAt },
       },
-      select: { state: true },
+      select: { state: true, mailProviderMessageID: true },
     });
 
-    const owed = attempts.filter(
-      ({ state }) =>
-        state === MailLogState.deferred || state === MailLogState.rejected
+    // Held back by us for a missing pdf: a deferred entry no provider ever
+    // saw. A deferred entry with the provider's message id is a soft bounce
+    // the provider still retries, and counts as a mail on its way.
+    const handedOver = attempts.filter(
+      ({ state, mailProviderMessageID }) =>
+        state !== MailLogState.deferred || !!mailProviderMessageID
     );
 
-    if (!attempts.length || owed.length < attempts.length) {
+    // Owed only while every mail handed over was refused outright.
+    if (
+      !attempts.length ||
+      handedOver.some(({ state }) => state !== MailLogState.rejected)
+    ) {
       return;
     }
 
-    const refusals = owed.filter(
-      ({ state }) => state === MailLogState.rejected
-    ).length;
-
-    if (refusals >= INVOICE_DELIVERY_ATTEMPTS) {
+    if (handedOver.length >= INVOICE_DELIVERY_ATTEMPTS) {
       this.logger.error(
-        `The invoice mail for invoice ${invoice.id} was refused ${refusals} times and is not sent again`
+        `The invoice mail for invoice ${invoice.id} was refused ${handedOver.length} times and is not sent again`
       );
 
       return;
