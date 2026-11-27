@@ -192,7 +192,8 @@ segment put `{ OR: patterns.map(…) }` without patterns into an `AND` and count
 now throws on an empty `AND`/`OR` and on `{}` inside an `OR`. Never build an
 `OR` from a list that can be empty: say "nobody" as `{ id: { in: [] } }`
 (`NOBODY` in `mail-send-recipient.service.ts`, `NO_SUBSCRIPTION` in
-`subscription-flow.resolver.ts`), and keep `{}` out of `OR` lists.
+`subscription-flow.resolver.ts`), and keep `{}` out of `OR` lists — say
+"everybody" as `{ id: { notIn: [] } }`, which compiles to `1=1` there too.
 
 ---
 

@@ -8,6 +8,7 @@ import {
   MailEmailSegment,
   MailHistoryMatch,
   MailHistoryScope,
+  MailRollingKind,
   MailRecipientBase,
   MailSubscriptionState,
 } from './mail-send.model';
@@ -838,6 +839,32 @@ describe('audience filtering (semantics)', () => {
           ...audience,
         })
       );
+
+    it('keeps subscriptions that started in a rolling range', async () => {
+      const audience = {
+        startsAtRolling: { kind: MailRollingKind.lastDays, days: 30 },
+      };
+
+      expect(
+        await included(subscription({ startsAt: days(-10) }), audience)
+      ).toBe(true);
+      expect(
+        await included(subscription({ startsAt: days(-60) }), audience)
+      ).toBe(false);
+    });
+
+    it('keeps subscriptions that end in a rolling range', async () => {
+      const audience = {
+        endsAtRolling: { kind: MailRollingKind.nextDays, days: 30 },
+      };
+
+      expect(
+        await included(subscription({ paidUntil: days(20) }), audience)
+      ).toBe(true);
+      expect(
+        await included(subscription({ paidUntil: days(60) }), audience)
+      ).toBe(false);
+    });
 
     it('takes every subscription when nothing is narrowed', async () => {
       expect(await included(subscription({ confirmed: false }))).toBe(true);
@@ -1703,6 +1730,188 @@ describe('audience filtering by mail history', () => {
 
     expect(matches(owner([invoiceMail()]), where)).toBe(true);
     expect(matches(owner([]), where)).toBe(false);
+  });
+
+  describe('sent in a rolling range', () => {
+    const rolling = (kind: MailRollingKind, days_: number) => ({
+      conditions: [condition({ rolling: { kind, days: days_ } })],
+    });
+    const sent = (offset: number) =>
+      person([invoiceMail({ sentDate: days(offset) })]);
+
+    it('keeps mails of the last x days', async () => {
+      const history = rolling(MailRollingKind.lastDays, 7);
+
+      expect(await included(sent(-3), history)).toBe(true);
+      expect(await included(sent(-20), history)).toBe(false);
+    });
+
+    it('keeps mails older than x days', async () => {
+      const history = rolling(MailRollingKind.olderThanDays, 14);
+
+      expect(await included(sent(-20), history)).toBe(true);
+      expect(await included(sent(-3), history)).toBe(false);
+    });
+
+    it('takes the place of fixed dates given along with it', async () => {
+      const history = {
+        conditions: [
+          condition({
+            from: days(-100),
+            to: days(-90),
+            rolling: { kind: MailRollingKind.lastDays, days: 7 },
+          }),
+        ],
+      };
+
+      expect(await included(sent(-3), history)).toBe(true);
+      expect(await included(sent(-95), history)).toBe(false);
+    });
+  });
+
+  describe('sent at least x times', () => {
+    /** Prisma with a mail log that reports these ids as having enough mails. */
+    const counting = (ids: string[], by = 'recipientID') => ({
+      user: { count: vi.fn(async () => 0) },
+      subscription: { count: vi.fn(async () => 0) },
+      mailLog: {
+        groupBy: vi.fn(async () => ids.map(id => ({ [by]: id }))),
+      },
+    });
+    const twice = (overrides: Record<string, any> = {}) => ({
+      conditions: [condition({ minCount: 2, ...overrides })],
+    });
+    const userWhere = async (prisma: any, mailHistory: any) => {
+      await makeService(prisma).count({
+        base: MailRecipientBase.allUsers,
+        mailHistory,
+      });
+
+      return (prisma.user.count as Mock).mock.calls[0][0].where;
+    };
+
+    it('asks the mail log who got the template that often', async () => {
+      const prisma = counting(['u1']);
+
+      await userWhere(prisma, twice({ states: ['delivered'] }));
+
+      expect(prisma.mailLog.groupBy).toHaveBeenCalledWith({
+        by: ['recipientID'],
+        where: { mailTemplateId: 'invoice', state: { in: ['delivered'] } },
+        having: { id: { _count: { gte: 2 } } },
+      });
+    });
+
+    it('keeps exactly those people', async () => {
+      const where = await userWhere(counting(['u1']), twice());
+
+      expect(matches({ id: 'u1' }, where)).toBe(true);
+      expect(matches({ id: 'u2' }, where)).toBe(false);
+    });
+
+    it('keeps everybody else when negated', async () => {
+      const where = await userWhere(counting(['u1']), twice({ negate: true }));
+
+      expect(matches({ id: 'u1' }, where)).toBe(false);
+      expect(matches({ id: 'u2' }, where)).toBe(true);
+    });
+
+    it('keeps nobody when nobody got it that often', async () => {
+      const where = await userWhere(counting([]), twice());
+
+      expect(matches({ id: 'u1' }, where)).toBe(false);
+    });
+
+    it('keeps everybody when negated and nobody got it that often', async () => {
+      const where = await userWhere(counting([]), twice({ negate: true }));
+
+      expect(matches({ id: 'u1' }, where)).toBe(true);
+    });
+
+    // Prisma 7 drops `{}` inside an `OR`, which would leave "any" with only
+    // the other conditions instead of everybody.
+    it('keeps everybody with "any" when negated and nobody got it that often', async () => {
+      const where = await userWhere(counting([]), {
+        match: MailHistoryMatch.any,
+        conditions: [
+          condition({ minCount: 2, negate: true }),
+          condition({ mailTemplateId: 'welcome' }),
+        ],
+      });
+
+      expect(matches({ id: 'u1', mailSent: [] }, where)).toBe(true);
+    });
+
+    it('keeps every subscription with "any" when negated and no subscription got it that often', async () => {
+      const prisma = counting([], 'subscriptionId');
+
+      await makeService(prisma).count({
+        base: MailRecipientBase.hasSubscription,
+        mailHistory: {
+          match: MailHistoryMatch.any,
+          conditions: [
+            condition({
+              minCount: 2,
+              negate: true,
+              scope: MailHistoryScope.subscription,
+            }),
+            condition({
+              mailTemplateId: 'welcome',
+              scope: MailHistoryScope.subscription,
+            }),
+          ],
+        },
+      });
+
+      const where = (prisma.subscription.count as Mock).mock.calls[0][0].where;
+
+      expect(matches({ id: 'sub-1', mailLogs: [] }, where)).toBe(true);
+    });
+
+    it('does not count for "at least once"', async () => {
+      const prisma = counting(['u1']);
+
+      const where = await userWhere(prisma, {
+        conditions: [condition({ minCount: 1 })],
+      });
+
+      expect(prisma.mailLog.groupBy).not.toHaveBeenCalled();
+      expect(matches(person([invoiceMail()]), where)).toBe(true);
+    });
+
+    it('counts per subscription for a condition bound to the subscription', async () => {
+      const prisma = counting(['sub-1'], 'subscriptionId');
+
+      await makeService(prisma).count({
+        base: MailRecipientBase.hasSubscription,
+        mailHistory: twice({ scope: MailHistoryScope.subscription }),
+      });
+
+      expect(prisma.mailLog.groupBy).toHaveBeenCalledWith({
+        by: ['subscriptionId'],
+        where: { mailTemplateId: 'invoice', subscriptionId: { not: null } },
+        having: { id: { _count: { gte: 2 } } },
+      });
+
+      const where = (prisma.subscription.count as Mock).mock.calls[0][0].where;
+
+      expect(matches({ id: 'sub-1' }, where)).toBe(true);
+      expect(matches({ id: 'sub-2' }, where)).toBe(false);
+    });
+
+    it('counts once for an audience resolved page by page', async () => {
+      const prisma = counting(['u1']);
+      const service = makeService(prisma);
+      const audience = {
+        base: MailRecipientBase.allUsers,
+        mailHistory: twice(),
+      };
+
+      await service.count(audience);
+      await service.count(audience);
+
+      expect(prisma.mailLog.groupBy).toHaveBeenCalledTimes(1);
+    });
   });
 
   describe('mails about a still-open invoice', () => {

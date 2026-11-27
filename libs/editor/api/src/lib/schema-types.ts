@@ -2699,6 +2699,8 @@ export type MailAudienceInput = {
   endedWithinDays?: InputMaybe<Scalars['Int']['input']>;
   /** Subscribers audience only: only subscriptions whose effective end (cancellation date, else paidUntil) is on or after this date. */
   endsAtFrom?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Subscribers audience only: effective end within a range relative to now. Takes the place of endsAtFrom and endsAtTo when given. */
+  endsAtRolling?: InputMaybe<MailRollingRange>;
   /** Subscribers audience only: only subscriptions whose effective end (cancellation date, else paidUntil) is on or before this date. */
   endsAtTo?: InputMaybe<Scalars['DateTime']['input']>;
   /** Subscribers audience only: true keeps only subscriptions that replaced another one (typically an upgrade, but downgrades and lateral plan switches are included too, and manual or imported changes are not detected). */
@@ -2717,6 +2719,8 @@ export type MailAudienceInput = {
   paymentPeriodicity?: InputMaybe<PaymentPeriodicity>;
   /** Subscribers audience only: only subscriptions that started on or after this date. */
   startsAtFrom?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Subscribers audience only: started within a range relative to now. Takes the place of startsAtFrom and startsAtTo when given. */
+  startsAtRolling?: InputMaybe<MailRollingRange>;
   /** Subscribers audience only: only subscriptions that started on or before this date. */
   startsAtTo?: InputMaybe<Scalars['DateTime']['input']>;
   subscriptionState?: InputMaybe<MailSubscriptionState>;
@@ -2750,10 +2754,14 @@ export type MailHistoryCondition = {
   from?: InputMaybe<Scalars['DateTime']['input']>;
   /** The mail template that was, or was not, sent. */
   mailTemplateId: Scalars['String']['input'];
+  /** How many such mails it takes, at least. Defaults to 1. With negate: keeps people who got fewer. */
+  minCount?: InputMaybe<Scalars['Int']['input']>;
   /** true: keeps people who did NOT receive such a mail, including people with no mail at all. */
   negate?: InputMaybe<Scalars['Boolean']['input']>;
   /** true: only mails about an invoice that is still open (neither paid nor cancelled). Mails sent before the invoice was recorded in the mail log never match. */
   onlyOpenInvoice?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Sent within a range relative to now. Takes the place of from and to when given. */
+  rolling?: InputMaybe<MailRollingRange>;
   /** Defaults to person. Mails sent before the subscription was recorded in the mail log never match the subscription scope. */
   scope?: InputMaybe<MailHistoryScope>;
   /** Only mails that ended in one of these states. Empty or absent means any. */
@@ -2875,6 +2883,18 @@ export enum MailRecipientBase {
   HasSubscription = 'hasSubscription',
   NoActiveSubscription = 'noActiveSubscription'
 }
+
+/** lastDays: within the last x days. olderThanDays: more than x days ago. nextDays: within the next x days. */
+export enum MailRollingKind {
+  LastDays = 'lastDays',
+  NextDays = 'nextDays',
+  OlderThanDays = 'olderThanDays'
+}
+
+export type MailRollingRange = {
+  days: Scalars['Int']['input'];
+  kind: MailRollingKind;
+};
 
 export type MailSegmentCount = {
   __typename: 'MailSegmentCount';

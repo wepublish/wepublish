@@ -19,7 +19,11 @@ import {
 } from '@prisma/client';
 import { MailSendJobService } from './mail-send-job.service';
 import { MailSendRecipientService } from './mail-send-recipient.service';
-import { MailAudienceInput, MailRecipientBase } from './mail-send.model';
+import {
+  MailAudienceInput,
+  MailRecipientBase,
+  MailRollingKind,
+} from './mail-send.model';
 import type { Mock } from 'vitest';
 import { version } from 'uuid';
 
@@ -506,6 +510,45 @@ describe('MailSendJobService', () => {
       expect(job.audience).toBe('filteredSubscriptions');
 
       await settle(prisma);
+    });
+
+    it('keeps a rolling range as the dates it meant when the send was created', async () => {
+      vi.useFakeTimers({ toFake: ['Date'] });
+      vi.setSystemTime(new Date('2026-11-22T12:00:00.000Z'));
+
+      try {
+        const prisma = fakePrisma();
+        const recipientService = recipientServiceFor(['u1']);
+
+        await makeService(
+          prisma,
+          { sendMail: vi.fn(async () => undefined) },
+          recipientService
+        ).createJob(
+          {
+            mailTemplateId: 'tpl-1',
+            audience: {
+              base: MailRecipientBase.hasSubscription,
+              startsAtRolling: { kind: MailRollingKind.lastDays, days: 30 },
+            },
+          },
+          'editor-1'
+        );
+
+        const applied = {
+          base: MailRecipientBase.hasSubscription,
+          startsAtFrom: new Date('2026-10-23T12:00:00.000Z'),
+          startsAtTo: new Date('2026-11-22T12:00:00.000Z'),
+        };
+
+        expect(prisma.jobs[0].recipientFilter).toEqual(applied);
+        // Counted with the same dates the queue is built from.
+        expect(recipientService.count.mock.calls[0][0]).toEqual(applied);
+
+        await settle(prisma);
+      } finally {
+        vi.useRealTimers();
+      }
     });
 
     it('sends to every recipient of the audience it resolved', async () => {

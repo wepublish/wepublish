@@ -11,6 +11,7 @@ import {
   PaymentPeriodicity,
 } from '@wepublish/editor/api';
 import { useCallback, useMemo, useState } from 'react';
+import { RollingValue } from './date-window-filter';
 
 /** Mirrors the API default for the win-back look-back window. */
 export const DEFAULT_ENDED_WITHIN_DAYS = 90;
@@ -31,6 +32,10 @@ export type MailHistoryRow = {
   channel: MailChannel | null;
   from: Date | null;
   to: Date | null;
+  /** A range relative to today; takes the place of from/to while set. */
+  rolling: RollingValue | null;
+  /** How many such mails it takes, at least. */
+  minCount: number;
   /** Only mails about the very subscription the audience selects. */
   onSubscription: boolean;
   /** Only mails about an invoice that is still open. */
@@ -50,6 +55,9 @@ export type AudienceFilterState = {
   startsAtTo: Date | null;
   endsAtFrom: Date | null;
   endsAtTo: Date | null;
+  /** Rolling ranges; each takes the place of its fixed dates while set. */
+  startsAtRolling: RollingValue | null;
+  endsAtRolling: RollingValue | null;
   isPaid: TriState;
   isCanceled: TriState;
   hasReplaced: TriState;
@@ -71,6 +79,8 @@ export const emptyMailHistoryRow = (): MailHistoryRow => ({
   channel: null,
   from: null,
   to: null,
+  rolling: null,
+  minCount: 1,
   onSubscription: false,
   onlyOpenInvoice: false,
 });
@@ -87,6 +97,8 @@ export const INITIAL_AUDIENCE_STATE: AudienceFilterState = {
   startsAtTo: null,
   endsAtFrom: null,
   endsAtTo: null,
+  startsAtRolling: null,
+  endsAtRolling: null,
   isPaid: 'any',
   isCanceled: 'any',
   hasReplaced: 'any',
@@ -130,8 +142,11 @@ const toMailHistory = (
       negate: row.negate,
       states: row.states.length ? row.states : undefined,
       channel: row.channel ?? undefined,
-      from: row.from ? row.from.toISOString() : undefined,
-      to: endOfDay(row.to),
+      // Either the rolling range or the fixed dates, never both.
+      rolling: row.rolling ?? undefined,
+      from: !row.rolling && row.from ? row.from.toISOString() : undefined,
+      to: row.rolling ? undefined : endOfDay(row.to),
+      minCount: row.minCount > 1 ? row.minCount : undefined,
       // Left out rather than sent as "person": an audience without
       // subscriptions has nothing to bind a mail to.
       scope:
@@ -184,11 +199,19 @@ export function toAudienceInput(state: AudienceFilterState): MailAudienceInput {
     autoRenew: triState(state.autoRenew),
     paymentMethodID: state.paymentMethodID ?? undefined,
     paymentPeriodicity: state.periodicity ?? undefined,
+    // Either the rolling range or the fixed dates, never both.
+    startsAtRolling: state.startsAtRolling ?? undefined,
     startsAtFrom:
-      state.startsAtFrom ? state.startsAtFrom.toISOString() : undefined,
-    startsAtTo: endOfDay(state.startsAtTo),
-    endsAtFrom: state.endsAtFrom ? state.endsAtFrom.toISOString() : undefined,
-    endsAtTo: endOfDay(state.endsAtTo),
+      !state.startsAtRolling && state.startsAtFrom ?
+        state.startsAtFrom.toISOString()
+      : undefined,
+    startsAtTo: state.startsAtRolling ? undefined : endOfDay(state.startsAtTo),
+    endsAtRolling: state.endsAtRolling ?? undefined,
+    endsAtFrom:
+      !state.endsAtRolling && state.endsAtFrom ?
+        state.endsAtFrom.toISOString()
+      : undefined,
+    endsAtTo: state.endsAtRolling ? undefined : endOfDay(state.endsAtTo),
     isPaid: triState(state.isPaid),
     isCanceled: triState(state.isCanceled),
     hasReplacedSubscription: triState(state.hasReplaced),
