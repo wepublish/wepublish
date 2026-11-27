@@ -80,6 +80,11 @@ export type MailControllerConfig = {
    * payment slip. Nothing for a mail: the provider emails that itself.
    */
   letterAttachment?: LetterAttachment;
+  /**
+   * Try again when the mail provider fails for a moment. Only the nightly
+   * run sets it; a request cannot wait the minute the retries take.
+   */
+  retryTransient?: boolean;
 };
 
 /**
@@ -213,6 +218,7 @@ export class MailController {
           recipient: this.config.recipient.email,
           data: await this.buildData(),
           withAttachments: !SENT_WITHOUT_ATTACHMENTS.has(this.config.mailType),
+          retryTransient: this.config.retryTransient ?? false,
         }
       ));
     } catch (error) {

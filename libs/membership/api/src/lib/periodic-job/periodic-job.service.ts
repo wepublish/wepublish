@@ -1041,7 +1041,10 @@ export class PeriodicJobService {
     return dateArray;
   }
 
-  /** A subscription-flow mail or letter, through the shared invoice delivery. */
+  /**
+   * A subscription-flow mail or letter, through the shared invoice delivery.
+   * Nobody waits on the run, so a provider hiccup gets a few more tries.
+   */
   private sendTemplateMail(
     action: Action,
     user: User,
@@ -1056,7 +1059,8 @@ export class PeriodicJobService {
       isRetry,
       optionalData,
       periodicJobRunDate,
-      paper
+      paper,
+      true
     );
   }
 }

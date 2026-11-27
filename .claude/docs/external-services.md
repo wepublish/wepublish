@@ -19,7 +19,10 @@
   RENEWAL_FAILED mail. The `bexio` library has no timeout of its own: `getBexioGateway`
   wraps every call with `withRequestTimeout` (60 s, `bexio-timeout.ts`), so
   bexio not answering fails that invoice (created again the next night)
-  instead of stalling the run.
+  instead of stalling the run. The provider's `BexioBreaker` (all library
+  calls plus the direct `fetch`es) then fails every bexio call at once with
+  `BexioUnavailableError` for 5 min, so an outage costs one timeout, not
+  one per subscription.
   **Contact sync (opt-in):** `SettingPaymentProvider.bexio_contactSync` has
   `BexioContactSyncService` (`libs/payment/api/.../bexio/`, a `runNight`
   step before the Mailchimp sync) push reader data to bexio every night:
@@ -192,10 +195,12 @@ Automated subscription mails can reach a user as a printed letter. The pieces:
   `mailIdentifier`/`type` as a mail would be, so retried runs skip it. A failed
   print throws `LetterDeliveryError`; the periodic job steps over it.
   A provider that fails for a moment (no answer, HTTP 429/5xx, SMTP 4xx)
-  throws `MailProviderTransientError`. `MailContext.sendComposedMail` tries
-  again after 5, 15 and 45 s before the error reaches the caller, and any
-  other provider error ends the nightly run, so one hiccup does not leave
-  every remaining renewal to the next night.
+  throws `MailProviderTransientError`. With `retryTransient` set (only the
+  nightly run's `sendFlowMail`), `MailContext.sendComposedMail` tries again
+  after 5, 15 and 45 s before the error reaches the caller, and any other
+  provider error ends the run, so one hiccup does not leave every remaining
+  renewal to the next night. Mails someone waits for (login link, password
+  reset, editor renewals) send once: the retries outlast a request.
 - Invoice letters: the periodic job resolves the channel *before* it asks the
   payment provider (`createRemoteInvoice({ channel })`), keeps the provider's
   invoice as a `Payment`, and prints the returned pdf after the

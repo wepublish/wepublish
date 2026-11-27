@@ -123,6 +123,16 @@ describe('InvoiceDeliveryService.deliverRenewal', () => {
     expect(mailContext.sendComposedMail).toHaveBeenCalledTimes(1);
   });
 
+  it('sends the invoice-creation mail only once, the editor is waiting for it', async () => {
+    const { service, mailContext } = setup();
+
+    await service.deliverRenewal(subscription, invoice);
+
+    expect(mailContext.sendComposedMail).toHaveBeenCalledWith(
+      expect.objectContaining({ retryTransient: false })
+    );
+  });
+
   it('prints the invoice after the letter for a reader in letter mode', async () => {
     const { service, provider, letterSender, mailContext } = setup({
       letters: true,

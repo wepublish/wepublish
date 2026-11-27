@@ -240,13 +240,23 @@ describe('MailContext', () => {
         sendRetryDelaysMs: [0, 0, 0],
       });
 
-    const send = (context: MailContext) =>
+    const send = (context: MailContext, retryTransient = true) =>
       context.sendComposedMail({
         mailTemplateId: 'template-1',
         recipient: 'jane@example.com',
         mailLogID: 'log-1',
         data: {},
+        retryTransient,
       });
+
+    it('sends only once when someone is waiting for the mail (login link, password reset)', async () => {
+      const sendMail = vi
+        .fn()
+        .mockRejectedValue(new MailProviderTransientError('503'));
+
+      await expect(send(setup(sendMail), false)).rejects.toThrow('503');
+      expect(sendMail).toHaveBeenCalledTimes(1);
+    });
 
     it('tries again, so one hiccup does not stop a whole renewal run', async () => {
       const sendMail = vi

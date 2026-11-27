@@ -31,6 +31,12 @@ export interface SendComposedMailProps {
    * out; account mails send without them.
    */
   readonly withAttachments?: boolean;
+  /**
+   * Try again when the provider fails for a moment. Only for senders nobody
+   * waits on (the nightly run): the retries take over a minute, longer than
+   * a request may last.
+   */
+  readonly retryTransient?: boolean;
 }
 
 export interface SendComposedContentProps {
@@ -194,6 +200,7 @@ export class MailContext implements MailContextInterface {
     data,
     mailLogID,
     withAttachments = true,
+    retryTransient = false,
   }: SendComposedMailProps): Promise<{
     subject: string;
     providerMessageID?: string;
@@ -225,15 +232,18 @@ export class MailContext implements MailContextInterface {
       data
     );
 
-    const result = await this.sendWithRetry({
-      mailLogID,
-      recipient,
-      replyToAddress: config?.replyToAddress ?? config?.fromAddress ?? '',
-      subject: composed.subject,
-      message: composed.message,
-      messageHtml: composed.messageHtml,
-      ...(attachments.length ? { attachments } : {}),
-    });
+    const result = await this.sendWithRetry(
+      {
+        mailLogID,
+        recipient,
+        replyToAddress: config?.replyToAddress ?? config?.fromAddress ?? '',
+        subject: composed.subject,
+        message: composed.message,
+        messageHtml: composed.messageHtml,
+        ...(attachments.length ? { attachments } : {}),
+      },
+      retryTransient ? this.sendRetryDelaysMs : []
+    );
 
     return {
       subject: composed.subject,
@@ -279,18 +289,22 @@ export class MailContext implements MailContextInterface {
   }
 
   /**
-   * Sends through the provider and tries again when it fails for a moment, so
-   * one hiccup does not stop a run of many mails (the nightly renewals). Any
-   * other error, a refused recipient included, goes straight to the caller.
-   * A send that timed out may have been taken after all; that rare duplicate
-   * is the price of not leaving the remaining mails until the next night.
+   * Sends through the provider and tries again after each of `delaysMs` when
+   * it fails for a moment, so one hiccup does not stop a run of many mails
+   * (the nightly renewals). Any other error, a refused recipient included,
+   * goes straight to the caller. A send that timed out may have been taken
+   * after all; that rare duplicate is the price of not leaving the remaining
+   * mails until the next night.
    */
-  private async sendWithRetry(props: SendMailProps): Promise<SendMailResult> {
+  private async sendWithRetry(
+    props: SendMailProps,
+    delaysMs: readonly number[]
+  ): Promise<SendMailResult> {
     for (let attempt = 0; ; attempt++) {
       try {
         return await this.mailProvider.sendMail(props);
       } catch (error) {
-        const delay = this.sendRetryDelaysMs[attempt];
+        const delay = delaysMs[attempt];
 
         if (!(error instanceof MailProviderTransientError) || delay === undefined) {
           throw error;

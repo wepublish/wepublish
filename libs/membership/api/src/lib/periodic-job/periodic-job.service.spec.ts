@@ -841,6 +841,24 @@ describe('PeriodicJobService', () => {
     );
   });
 
+  it('lets the mails of the nightly run try again after a provider hiccup', async () => {
+    const action: Action = {
+      type: SubscriptionEvent.INVOICE_CREATION,
+      daysAwayFromEnding: 10,
+      mailTemplateId: 'template',
+    };
+    await service['sendTemplateMail'](
+      action,
+      { id: 'user-1', email: 'jane@example.com' } as User,
+      false,
+      {},
+      new Date()
+    );
+    expect(mockMailContext.sendComposedMail).toHaveBeenCalledWith(
+      expect.objectContaining({ retryTransient: true })
+    );
+  });
+
   it('Test Mail no template', async () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error

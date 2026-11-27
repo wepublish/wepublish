@@ -258,7 +258,8 @@ export class InvoiceDeliveryService {
   /**
    * Send a subscription-flow template as mail or, for a reader in letter mode,
    * as a letter. A refused address or a print vendor outage concerns this
-   * recipient only and is logged; anything else is thrown.
+   * recipient only and is logged; anything else is thrown. `retryTransient`
+   * lets a provider hiccup be retried, for the nightly run only.
    */
   async sendFlowMail(
     action: Action,
@@ -266,7 +267,8 @@ export class InvoiceDeliveryService {
     isRetry: boolean,
     optionalData: Record<string, any>,
     periodicJobRunDate: Date,
-    paper: PaperSide = {}
+    paper: PaperSide = {},
+    retryTransient = false
   ) {
     if (!action.mailTemplateId || !user) {
       return;
@@ -282,6 +284,7 @@ export class InvoiceDeliveryService {
         periodicJobRunDate,
         mailType: mailLogType.SubscriptionFlow,
         asLetter: action.sendAsLetter,
+        retryTransient,
         ...paper,
       }).sendMail();
     } catch (error) {
