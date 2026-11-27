@@ -254,6 +254,8 @@ export type DataTableProps<Row> = {
   emptyMessage?: ReactNode;
   getRowId?: (row: Row, index: number) => string;
   rowClassName?: (row: Row) => string | undefined;
+  /** A hint shown while pointing at a row, e.g. what a click on it does. */
+  rowTitle?: (row: Row) => string | undefined;
   virtualize?: boolean;
   maxHeight?: number | string;
   exportRows?: () => Row[] | Promise<Row[]>;
@@ -278,6 +280,7 @@ export function DataTable<Row>({
   emptyMessage,
   getRowId,
   rowClassName,
+  rowTitle,
   virtualize,
   maxHeight,
   exportRows,
@@ -536,6 +539,7 @@ export function DataTable<Row>({
             <TableRow
               key={row.id}
               className={rowClassName?.(row.original)}
+              title={rowTitle?.(row.original)}
               hover={Boolean(onRowClick)}
               onClick={onRowClick ? () => onRowClick(row.original) : undefined}
               sx={onRowClick ? { cursor: 'pointer' } : undefined}
@@ -582,6 +586,7 @@ export function DataTable<Row>({
       loading,
       onRowClick,
       rowClassName,
+      rowTitle,
       pinProps,
       columnDefs,
       orderedColumnsById,

@@ -211,7 +211,10 @@ Automated subscription mails can reach a user as a printed letter. The pieces:
   browser (`template-table.ts`) over `MailTemplateList`; its extra row fields
   (`letterLayoutName`, `letterAppendixName`, `memberPlans`,
   `attachmentNames`) are batched and
-  stay out of `TinyMailTemplate`, which every picker loads.
+  stay out of `TinyMailTemplate`, which every picker loads. Flow events and
+  system mails pick their template in a drawer with the same table
+  (`MailTemplateField` → `SelectMailTemplatePanel`, columns and filters shared
+  through `template-columns.tsx`), pre-filtered by `purposeOfEvent`.
 - `SubscriptionInterval.sendAsLetter`: only events switched on in the flow
   editor («Auch per Brief») print; user-flow mails (login, password, email
   change) never do. The three senders (periodic job, legacy `member-context`,
