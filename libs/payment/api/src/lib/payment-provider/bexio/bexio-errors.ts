@@ -51,14 +51,6 @@ class ResponseNOK extends Error {
   }
 }
 
-class NoSubscriptionIdInInvoice extends Error {
-  constructor(
-    message = 'No subscriptionID associated with the provided invoice'
-  ) {
-    super(message);
-  }
-}
-
 class PaymentNotFound extends Error {
   constructor(message = 'While checking intent, payment not found!') {
     super(message);
@@ -73,6 +65,5 @@ export {
   InvoiceDeliveryError,
   UnknownIntentState,
   ResponseNOK,
-  NoSubscriptionIdInInvoice,
   PaymentNotFound,
 };

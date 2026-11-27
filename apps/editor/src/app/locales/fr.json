@@ -525,6 +525,11 @@
         "discountCodesHeading": "Codes de réduction",
         "showGoodies": "Afficher la sélection de goodies",
         "showDiscountCodes": "Afficher le champ de code de réduction",
+        "giftCodeRedemptionHeading": "Codes cadeaux",
+        "showGiftCodeRedemption": "Afficher le lien pour utiliser un code cadeau",
+        "giftCodeRedemptionPage": "Page d’utilisation",
+        "giftCodeRedemptionLinkText": "Texte du lien",
+        "giftCodeRedemptionLinkTextHelp": "Laissez vide pour utiliser le texte par défaut.",
         "goodieMinValue": {
           "label": "Montant minimal pour un goodie",
           "hint": "Les lecteurs qui paient moins ne peuvent pas choisir de goodie. Laisser vide pour aucun minimum."
@@ -656,6 +661,20 @@
         "leadText": "Chapeau",
         "title": "Titre",
         "preTitle": "Pré-titre"
+      },
+      "redeemGiftCode": {
+        "label": "Utiliser un code cadeau"
+      },
+      "giftCodeOffers": {
+        "label": "Vendre des codes cadeaux",
+        "selectOffers": "Offres cadeaux en vente",
+        "selectOffersHint": "Seules les offres actives sont affichées, dans cet ordre.",
+        "displayHeading": "Affichage",
+        "askRecipientName": "Demander le nom du destinataire",
+        "defaultOfferTitle": "Sélectionnée par défaut — cette offre est présélectionnée au chargement de la page.",
+        "orderHeading": "Ordre des offres cadeaux",
+        "orderHelp": "Faites glisser les offres dans l’ordre où elles apparaissent sur le site et choisissez l’offre présélectionnée.",
+        "showDiscountCodes": "Afficher le champ de code de réduction (seulement pour les offres qui l’autorisent)"
       },
       "mailchimpForm": {
         "label": "Formulaire newsletter",
@@ -1762,7 +1781,9 @@
         "renewal": "Renouvellement",
         "invoiceCreation": "Facture",
         "custom": "E-mail libre (abonné·e)",
-        "customNoSubscription": "E-mail libre (sans abonnement)"
+        "customNoSubscription": "E-mail libre (sans abonnement)",
+        "giftCodePurchase": "Code cadeau acheté",
+        "giftCodeRedemption": "Code cadeau utilisé"
       },
       "rawHtml": "HTML",
       "save": "Enregistrer",
@@ -1792,7 +1813,9 @@
         "renewal": "Renouvellement automatique",
         "invoiceCreation": "Facture créée",
         "custom": "E-mail libre à un·e abonné·e",
-        "customNoSubscription": "E-mail libre à un·e non-abonné·e"
+        "customNoSubscription": "E-mail libre à un·e non-abonné·e",
+        "giftCodePurchase": "Code cadeau acheté",
+        "giftCodeRedemption": "Code cadeau utilisé"
       },
       "placeholderGroups": {
         "user": "Utilisateur",
@@ -1843,7 +1866,16 @@
         "optional_invoice_items_0_name": "Poste de facture 1 — nom",
         "optional_invoice_items_0_amount": "Poste de facture 1 — montant (centimes)",
         "optional_invoices_0_id": "Dernière facture — ID",
-        "optional_invoices_0_description": "Dernière facture — description"
+        "optional_invoices_0_description": "Dernière facture — description",
+        "optional_giftCode_code": "Code cadeau",
+        "optional_giftCode_recipientName": "Nom du·de la destinataire",
+        "optional_giftCode_offer_name": "Offre cadeau",
+        "optional_giftCode_memberPlan_name": "Plan d’abonnement",
+        "optional_giftCode_periodicity": "Durée (valeur brute)",
+        "optional_giftCode_redemptionWindowMonths": "Délai d’utilisation (mois)",
+        "optional_giftCode_issuedAt": "Émis le",
+        "optional_giftCode_expiresAt": "Utilisable jusqu’au",
+        "optional_giftCode_redeemedAt": "Utilisé le"
       },
       "dateFormat": {
         "iso": "ISO",
@@ -1868,7 +1900,9 @@
         "renewal": "Inclut en plus les noms du plan / moyen de paiement et les données de facture.",
         "invoiceCreation": "Attention : ici, les champs d’abonnement utilisent le préfixe optional_subscriptionToCreateInvoice_*.",
         "custom": "Les factures arrivent sous forme de tableau : optional_invoices_0_* (la plus récente en premier).",
-        "customNoSubscription": "Seuls les champs du destinataire sont disponibles — cet e-mail s’adresse à des personnes sans abonnement."
+        "customNoSubscription": "Seuls les champs du destinataire sont disponibles — cet e-mail s’adresse à des personnes sans abonnement.",
+        "giftCodePurchase": "Envoyé à l’acheteur·euse dès que le code cadeau est payé. La facture est celle du code cadeau.",
+        "giftCodeRedemption": "Envoyé à la personne qui a utilisé le code cadeau. L’abonnement et la facture sont ceux que le code a payés."
       },
       "searchPlaceholders": "Filtrer les espaces réservés …",
       "noPlaceholders": "Aucun espace réservé correspondant.",
@@ -1880,7 +1914,9 @@
         "renewal": "Renouvellement automatique — réussi ou échoué. En plus : le nom du plan et du moyen de paiement ainsi que les données de facturation.",
         "invoiceCreation": "Dès qu’une nouvelle facture a été créée. En plus : la facture et l’abonnement correspondant.",
         "custom": "Un e-mail libre aux abonné·e·s, p. ex. une newsletter via « Messages manuels ». En plus : l’abonnement et les dernières factures.",
-        "customNoSubscription": "Un e-mail libre aux personnes sans abonnement, p. ex. une invitation ou une relance. Seuls les champs du destinataire sont disponibles — les champs d’abonnement restent vides."
+        "customNoSubscription": "Un e-mail libre aux personnes sans abonnement, p. ex. une invitation ou une relance. Seuls les champs du destinataire sont disponibles — les champs d’abonnement restent vides.",
+        "giftCodePurchase": "Envoyé à l’acheteur·euse dès qu’un code cadeau est payé ; à choisir dans l’offre cadeau. En plus : le code, l’offre et la facture.",
+        "giftCodeRedemption": "Envoyé à la personne qui a utilisé un code cadeau ; à choisir dans l’offre cadeau. En plus : le code et l’abonnement qu’il a payé."
       },
       "placeholderDescriptions": {
         "user_fullName": "Prénom et nom ensemble (p. ex. pour la formule d’appel).",
@@ -1926,7 +1962,16 @@
         "optional_invoice_items_0_name": "Nom du premier poste de facture (tableau, index 0).",
         "optional_invoice_items_0_amount": "Montant du premier poste de facture en centimes.",
         "optional_invoices_0_id": "ID de la dernière facture (tableau, index 0).",
-        "optional_invoices_0_description": "Description de la dernière facture."
+        "optional_invoices_0_description": "Description de la dernière facture.",
+        "optional_giftCode_code": "Le code qui permet d’utiliser le cadeau.",
+        "optional_giftCode_recipientName": "Nom de la personne à qui le cadeau est destiné, tel que saisi à l’achat. Peut être vide.",
+        "optional_giftCode_offer_name": "Nom de l’offre cadeau.",
+        "optional_giftCode_memberPlan_name": "Plan d’abonnement que le code paie.",
+        "optional_giftCode_periodicity": "Durée que le code paie (valeur brute) : yearly, biannual, quarterly, monthly, biennial.",
+        "optional_giftCode_redemptionWindowMonths": "Mois pendant lesquels le code peut être utilisé. Vide si illimité.",
+        "optional_giftCode_issuedAt": "Émis, c.-à-d. payé, le. Choisir un format.",
+        "optional_giftCode_expiresAt": "Utilisable jusqu’au. Vide si illimité. Choisir un format.",
+        "optional_giftCode_redeemedAt": "Utilisé le. Choisir un format."
       },
       "statusHelp": "Une coche signifie qu’un e-mail automatique utilise ce modèle. « Inutilisé » signifie qu’aucun e-mail automatique ne l’utilise – vous pouvez tout de même l’envoyer manuellement via « Messages manuels ».",
       "placeholdersInfo": "Les espaces réservés sont remplacés automatiquement à l’envoi par les données correspondantes, p. ex. le prénom du ou de la destinataire.",
@@ -2228,6 +2273,7 @@
       "peers": "Peers",
       "settings": "Paramètres",
       "subscriptionPlans": "Plans d’abonnement",
+      "gifts": "Cadeaux",
       "subscriptions": "Abonnements",
       "subscriptionSettings": "Messages automatiques",
       "tokens": "Tokens",
@@ -2364,6 +2410,10 @@
       "goodies": "Goodies",
       "goodieCreate": "Nouveau goodie",
       "goodieEdit": "Modifier le goodie",
+      "giftCodes": "Codes cadeaux",
+      "giftCodeOffers": "Offres cadeaux",
+      "giftCodeOfferCreate": "Nouvelle offre cadeau",
+      "giftCodeOfferEdit": "Modifier l’offre cadeau",
       "consents": "Consentements",
       "consentCreate": "Nouveau consentement",
       "consentEdit": "Modifier le consentement",
@@ -2668,7 +2718,58 @@
       "startTime": "Démarré le : {{date, ccc PP p}}",
       "successTime": "Réussi le : {{date, ccc PP p}}",
       "title": "Journaux des jobs périodiques",
-      "tries": "Exécutions : {{tries}}"
+      "tries": "Exécutions : {{tries}}",
+      "counts": {
+        "readers_one": "{{count}} lecteur·rice",
+        "readers_other": "{{count}} lecteur·rices",
+        "pushed_one": "{{count}} transmis",
+        "pushed_other": "{{count}} transmis",
+        "failed_one": "{{count}} échoué",
+        "failed_other": "{{count}} échoués",
+        "synced_one": "{{count}} audience synchronisée",
+        "synced_other": "{{count}} audiences synchronisées",
+        "checked_one": "{{count}} vérifié",
+        "checked_other": "{{count}} vérifiés",
+        "updated_one": "{{count}} mis à jour",
+        "updated_other": "{{count}} mis à jour",
+        "listed_one": "{{count}} signalé",
+        "listed_other": "{{count}} signalés",
+        "recorded_one": "{{count}} nouveau",
+        "recorded_other": "{{count}} nouveaux",
+        "recomputed_one": "{{count}} réévalué",
+        "recomputed_other": "{{count}} réévalués",
+        "toLetter_one": "{{count}} vers lettre",
+        "toLetter_other": "{{count}} vers lettre",
+        "toMail_one": "{{count}} vers e-mail",
+        "toMail_other": "{{count}} vers e-mail",
+        "removed_one": "{{count}} retiré",
+        "removed_other": "{{count}} retirés"
+      },
+      "stepProblems": "Terminé, mais toutes les étapes ne se sont pas bien passées.",
+      "stepStatus": {
+        "ok": "OK",
+        "warning": "en partie échoué",
+        "error": "échoué",
+        "skipped": "non utilisé"
+      },
+      "steps": {
+        "customMails": "Mails d'abonnement",
+        "invoiceStates": "État des factures ouvertes",
+        "invoiceCreation": "Créer les factures",
+        "invoiceLetters": "Lettres de facture",
+        "paymentMethodChanges": "Changements de moyen de paiement",
+        "charging": "Débiter les factures",
+        "deactivationUnpaid": "Terminer les abonnements impayés",
+        "deactivationNotRenewed": "Terminer les abonnements expirés",
+        "bexioContactSync": "Contacts vers bexio",
+        "mailchimpSync": "Synchronisation Mailchimp",
+        "mailLogSync": "États de distribution des mails",
+        "suppressionSync": "Adresses bloquées",
+        "emailQuality": "Qualité de l'e-mail",
+        "deliverySuggestions": "Suggestions de canal",
+        "sellableReconciliation": "Rapprochement des codes cadeaux vendus"
+      },
+      "stepsLabel": "Étapes de cette nuit"
     },
     "permissions": {
       "contactAdmin": "Veuillez contacter votre administrateur pour ajouter l’une des autorisations suivantes : {{permissions}}",
@@ -3856,6 +3957,159 @@
         "availableStockInfo": "Nombre de pièces encore disponibles : le stock moins les goodies déjà choisis par les abonné·e·s. ∞ signifie illimité."
       }
     },
+    "giftCodeOffer": {
+      "navbar": "Offres cadeaux",
+      "form": {
+        "createTitle": "Créer une offre cadeau",
+        "editTitle": "Modifier l’offre cadeau « {{ offer }} »",
+        "name": "Nom",
+        "description": "Description",
+        "image": "Image",
+        "active": "Active",
+        "memberPlan": "Plan d’abonnement",
+        "periodicity": "Durée",
+        "periodicityHelp": "Seules les durées pour lesquelles le plan d’abonnement a un prix peuvent être choisies.",
+        "price": "Prix",
+        "priceHelp": "Ce que l’acheteur·euse paie pour le cadeau",
+        "priceSameAsPlan": "Même prix que l’abonnement",
+        "priceBelowPlan": "Moins cher que l’abonnement (prix de l’abonnement {{ price }})",
+        "priceAbovePlan": "Plus cher que l’abonnement (prix de l’abonnement {{ price }})",
+        "priceInvalid": "Saisissez un prix supérieur à 0",
+        "redemptionWindowMonths": "Utilisable pendant (mois)",
+        "redemptionWindowMonthsHelp": "Compté à partir du paiement. Laissez vide pour que le code puisse être utilisé à tout moment.",
+        "redemptionWindowMonthsInvalid": "Saisissez un nombre entier d’au moins 1",
+        "paymentMethods": "Méthodes de paiement",
+        "paymentMethodsHelp": "Les acheteur·euse·s peuvent payer le cadeau avec ces méthodes. Tous les fournisseurs de paiement ne prennent pas en charge les achats uniques.",
+        "paymentMethodsRequired": "Choisissez au moins une méthode de paiement",
+        "allowDiscountCodes": "Autoriser les codes de réduction",
+        "allowDiscountCodesHelp": "Les acheteur·euse·s peuvent saisir un code de réduction de cet abonnement lors de l’achat du cadeau.",
+        "autoRenew": "Renouveler automatiquement",
+        "autoRenewHelp": "L’abonnement démarré avec un code se renouvelle automatiquement à la fin de la période offerte.",
+        "autoRenewNotExtendable": "Cet abonnement ne peut pas être prolongé, il ne peut donc pas se renouveler automatiquement.",
+        "renewalPaymentMethod": "Méthode de paiement pour le renouvellement",
+        "renewalPaymentMethodHelp": "Les méthodes de paiement de l’abonnement pour cette durée.",
+        "renewalPaymentMethodRequired": "Choisissez la méthode de paiement pour le renouvellement",
+        "sections": {
+          "details": "Offre",
+          "sale": "Vente",
+          "mails": "E-mails",
+          "mailsDescription": "Sans modèle, aucun e-mail n’est envoyé. Les documents joints au modèle sont remplis comme l’e-mail lui-même."
+        },
+        "purchaseMailTemplate": "E-mail après l’achat",
+        "purchaseMailTemplateHelp": "Envoyé avec le code à l’acheteur·euse dès que le paiement est confirmé.",
+        "redemptionMailTemplate": "E-mail après l’utilisation",
+        "redemptionMailTemplateHelp": "Envoyé à la personne qui a utilisé le code."
+      },
+      "overview": {
+        "title": "Offres cadeaux",
+        "createOffer": "Nouvelle offre cadeau",
+        "active": "Active",
+        "name": "Nom",
+        "memberPlan": "Plan d’abonnement",
+        "periodicity": "Durée",
+        "price": "Prix",
+        "redemptionWindow": "Utilisable pendant",
+        "months_one": "{{ count }} mois",
+        "months_other": "{{ count }} mois",
+        "unlimited": "Illimité",
+        "allowDiscountCodes": "Codes de réduction",
+        "autoRenew": "Renouvellement automatique",
+        "paymentMethods": "Méthodes de paiement",
+        "modifiedAt": "Dernière modification",
+        "modifiedAtDate": "{{modifiedAt, ccc PP p}}",
+        "areYouSure": "Supprimer l’offre cadeau ?",
+        "areYouSureBody": "L’offre cadeau « {{ offer }} » sera supprimée définitivement. Les offres qui ont déjà des codes ne peuvent pas être supprimées ; désactivez-les plutôt.",
+        "areYouSureConfirmation": "Supprimer l’offre cadeau"
+      }
+    },
+    "giftCode": {
+      "navbar": "Codes cadeaux",
+      "list": {
+        "title": "Codes cadeaux",
+        "code": "Code",
+        "noCodeYet": "Pas encore émis",
+        "status": "Statut",
+        "unpaid": "Non payé",
+        "paid": "Payé",
+        "buyer": "Acheteur·euse",
+        "redeemedBy": "Utilisé par",
+        "paidInvoice": "Facture payée",
+        "paidInvoiceLink": "Facture du {{date, PP}}",
+        "source": "Origine",
+        "createdBy": "Créateur·rice",
+        "recipientName": "Nom du destinataire",
+        "offer": "Offre",
+        "amount": "Montant",
+        "createdAt": "Créé",
+        "issuedAt": "Émis",
+        "expiresAt": "Expire",
+        "redeemedAt": "Utilisé",
+        "canceledAt": "Annulé",
+        "date": "{{date, PP}}"
+      },
+      "filters": {
+        "search": "Code, destinataire ou e-mail de l’acheteur·euse",
+        "status": "Statut",
+        "payment": "Paiement",
+        "allPayments": "Tous",
+        "paid": "Payé",
+        "unpaid": "Non payé",
+        "offer": "Offre",
+        "memberPlan": "Plan d’abonnement",
+        "source": "Origine",
+        "allSources": "Toutes",
+        "createdAt": "Créé entre"
+      },
+      "status": {
+        "ordered": "Commandé",
+        "issued": "Émis",
+        "redeemed": "Utilisé",
+        "expired": "Expiré",
+        "canceled": "Annulé"
+      },
+      "source": {
+        "purchase": "Achat",
+        "admin": "Créé par un·e admin"
+      },
+      "create": {
+        "open": "Créer des codes",
+        "title": "Créer des codes cadeaux",
+        "body": "Les codes sont émis immédiatement, sans facture ni paiement, p.ex. pour les distribuer lors d’événements.",
+        "offer": "Offre",
+        "offerRequired": "Choisissez une offre",
+        "inactiveOffer": "inactive",
+        "count": "Nombre de codes",
+        "countHelp": "1 à 500 codes",
+        "countInvalid": "Saisissez un nombre entier de 1 à 500",
+        "recipientName": "Nom du destinataire (facultatif)",
+        "recipientNameHelp": "Enregistré sur chaque code. Laissez vide pour des codes sans nom.",
+        "recipientNameTooLong": "{{maximum}} caractères au maximum",
+        "submit": "Créer les codes",
+        "createdTitle_one": "{{count}} code cadeau créé",
+        "createdTitle_other": "{{count}} codes cadeaux créés",
+        "createdBody": "Les codes sont émis. Vous les retrouvez aussi dans la liste.",
+        "copy": "Copier les codes",
+        "copied": "Codes copiés dans le presse-papiers",
+        "close": "Terminé"
+      },
+      "cancellationReason": {
+        "manual": "Annulé par la rédaction",
+        "invoiceCanceled": "Pas payé à temps",
+        "chargeback": "Paiement contesté"
+      },
+      "actions": {
+        "cancel": "Annuler le code cadeau",
+        "markAsPaid": "Marquer comme payé"
+      },
+      "dialogs": {
+        "cancelTitle": "Annuler le code cadeau ?",
+        "cancelBody": "Le code cadeau pour {{ giftCode }} ne pourra plus être utilisé. Les remboursements se font auprès du fournisseur de paiement.",
+        "cancelConfirm": "Annuler le code cadeau",
+        "markAsPaidTitle": "Marquer comme payé ?",
+        "markAsPaidBody": "La facture pour {{ giftCode }} est marquée comme payée. Si le code n’a pas encore été émis, il l’est maintenant. Ne le faites qu’une fois l’argent reçu.",
+        "markAsPaidConfirm": "Marquer comme payé"
+      }
+    },
     "paymentMethodEditPanel": {
       "gracePeriod": "Délai de paiement",
       "gracePeriodHelpText": "Si votre site web utilise un paywall, les utilisateurs peuvent lire immédiatement après avoir commandé un abonnement, même s’ils n’ont pas encore payé, pendant le délai de paiement. Cela est utile, par exemple, en cas de virement bancaire.",
@@ -3949,6 +4203,8 @@
         "bexioInvoiceMailBodyInfo": "Le texte de l’e-mail avec lequel Bexio envoie la facture ; le PDF est joint. Les espaces réservés comme :user.firstName: ou :memberPlan.name: sont remplacés automatiquement. Bexio exige l’espace réservé [Network Link] dans le texte.",
         "bexioMarkInvoiceAsOpenInfo": "Si activé, Bexio passe la facture à « ouverte » après l’envoi, au lieu de la laisser en brouillon.",
         "bexioContactSyncInfo": "Si activé, We.Publish transmet chaque nuit le nom, l’entreprise, l’e-mail et l’adresse des lecteurs modifiés à leur contact Bexio et crée les contacts manquants pour les abonnements payés via Bexio. Les groupes, le téléphone et tout le reste du contact restent tels qu’ils sont dans Bexio.",
+        "bexioTestMailbox": "Boîte de test (instances de test uniquement)",
+        "bexioTestMailboxInfo": "Les entreprises Bexio en période d'essai n'envoient les e-mails de facture qu'à leur propre adresse d'expéditeur. Les e-mails de facture adressés au domaine de cette boîte lui sont envoyés à la place, p. ex. bexio@<id>.resend.app pour les lecteurs·rices nw-00001@<id>.resend.app. Non disponible en production.",
         "bexioContactSyncNeverRan": "N’a pas encore tourné.",
         "bexioContactSyncLastRun": "Dernière exécution : {{date}}, sans erreur.",
         "bexioContactSyncLastRunFailed": "Dernière exécution : {{date}}. Erreur : {{error}}"
@@ -4863,14 +5119,16 @@
         "subscriptionFlow": "Mailing d’abonnement",
         "userFlow": "E-mail d’événement",
         "systemMail": "E-mail système",
-        "manual": "Manuel"
+        "manual": "Manuel",
+        "giftCode": "Code cadeau"
       },
       "error": "Erreur",
       "typeDescriptions": {
         "manual": "Envoyé à la main via « Messages manuels » ou « Envoyer un test ». Exemple : newsletter à tou·te·s les abonné·e·s.",
         "subscriptionFlow": "Programmé depuis « Messages automatiques », calculé à partir de la date d’abonnement. Exemples : rappel 14 jours avant la fin, relance après une facture impayée.",
         "userFlow": "Déclenché immédiatement par une action ou un événement précis. Exemples : lien de connexion demandé, adresse e-mail modifiée, échec du paiement de renouvellement.",
-        "systemMail": "E-mails de compte, configurés sous « Messages automatiques », section « Compte et connexion ». Exemples : e-mail de bienvenue après l’inscription, réinitialisation du mot de passe."
+        "systemMail": "E-mails de compte, configurés sous « Messages automatiques », section « Compte et connexion ». Exemples : e-mail de bienvenue après l’inscription, réinitialisation du mot de passe.",
+        "giftCode": "Lors de l’achat ou de l’utilisation d’un code cadeau, avec les modèles choisis dans l’offre cadeau."
       },
       "errorHelp": {
         "causeTitle": "Que s’est-il passé ?",
@@ -5862,7 +6120,8 @@
         "peer": "Créer un peer",
         "userRole": "Créer un rôle utilisateur",
         "token": "Générer un token",
-        "apiToken": "Générer une clé API"
+        "apiToken": "Générer une clé API",
+        "giftCodeOffer": "Créer une offre cadeau"
       },
       "trigger": "Rechercher ou aller à…",
       "keys": {

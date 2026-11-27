@@ -1,6 +1,9 @@
 export * from './lib/dashboard/dashboard';
 export * from './lib/mail-template/mail-template-list';
 export * from './lib/mail-template/mail-template-edit';
+export { formatTemplateLabel } from './lib/mail-template/mail-placeholders';
+export { useLetterChannel } from './lib/mail-template/use-letter-channel';
+export { TemplateAttachmentsNote } from './lib/mail-send/template-attachments-note';
 export * from './lib/letter-layout/letter-layout-list';
 export * from './lib/letter-layout/letter-layout-edit';
 export * from './lib/mail-send/mail-send-page';

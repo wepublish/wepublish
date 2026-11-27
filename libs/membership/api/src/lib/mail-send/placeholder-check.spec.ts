@@ -30,6 +30,37 @@ describe('findMissingPlaceholders', () => {
     expect(findMissingPlaceholders(tpl, true)).toEqual([]);
   });
 
+  // A manual send has no gift code to hand in, whatever the audience.
+  it.each([false, true])(
+    'flags the gift code placeholders of a gift code template (with subscription data: %s)',
+    withSubscriptionData => {
+      const tpl = template(
+        '<p>{{optional_giftCode_code}} {{optional_giftCode_expiresAt_date}}</p>',
+        MailTemplateContext.giftCodePurchase
+      );
+
+      expect(findMissingPlaceholders(tpl, withSubscriptionData)).toEqual([
+        'optional_giftCode_code',
+        'optional_giftCode_expiresAt_date',
+      ]);
+    }
+  );
+
+  // The certificate a gift code template attaches prints the code too.
+  it('flags the gift code placeholders of its attachments', () => {
+    const tpl = template(
+      '<p>{{user_firstName}}</p>',
+      MailTemplateContext.giftCodePurchase
+    );
+
+    expect(
+      findMissingPlaceholders(tpl, true, [
+        'user_firstName',
+        'optional_giftCode_code',
+      ])
+    ).toEqual(['optional_giftCode_code']);
+  });
+
   it('recognises derived date and computed money variants as available', () => {
     const tpl = template(
       '<p>{{user_lastLogin_date}} {{optional_subscription_monthlyAmount_display}}</p>'

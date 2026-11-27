@@ -27,17 +27,31 @@ const createPrismaMock = () => ({
       { mailTemplateId: null },
     ]),
   },
+  giftCodeOffer: {
+    findMany: vi.fn((_args?: Record<string, unknown>) => [
+      { purchaseMailTemplateId: 'gift-bought', redemptionMailTemplateId: null },
+      {
+        purchaseMailTemplateId: null,
+        redemptionMailTemplateId: 'gift-redeemed',
+      },
+    ]),
+  },
 });
 
 describe('MailContext', () => {
   describe('getUsedTemplateIdentifiers', () => {
-    it('includes templates from subscription intervals and user flow mails', async () => {
+    it('includes templates from subscription intervals, user flow mails and gift code offers', async () => {
       const prismaMock = createPrismaMock();
 
       const result =
         await createContext(prismaMock).getUsedTemplateIdentifiers();
 
-      expect(result).toEqual(['renewal-success', 'login-link']);
+      expect(result).toEqual([
+        'renewal-success',
+        'login-link',
+        'gift-bought',
+        'gift-redeemed',
+      ]);
     });
 
     // Only the template id is ever read here. Joining the template in pulled
@@ -57,6 +71,13 @@ describe('MailContext', () => {
         expect(args).toHaveProperty('select', { mailTemplateId: true });
         expect(args).not.toHaveProperty('include');
       }
+
+      expect(prismaMock.giftCodeOffer.findMany.mock.calls[0]?.[0]).toEqual({
+        select: {
+          purchaseMailTemplateId: true,
+          redemptionMailTemplateId: true,
+        },
+      });
     });
   });
 

@@ -31,6 +31,7 @@
     "ariaLabel": "{hasTitle, select, true {{title}. } other {}}{hasLead, select, true {{lead}. } other {}}{hasAuthors, select, true {Par {authors}} other {}}"
   },
   "subscribe": {
+    "sessionExpired": "Votre session a expiré. Veuillez vous reconnecter ou saisir vos données.",
     "memberplan": {
       "price": "{amountPerMonthMin, select, 0 {Gratuit} other {À partir de {monthlyPrice} {extendable, select, true {par mois} other {}}}}",
       "offerPrice": "{amountMin, select, 0 {Gratuit} other {{exactAmount, select, true {} other {À partir de }}{periodPrice} {periodicity, select, monthly {par mois} quarterly {par trimestre} biannual {par semestre} yearly {par an} biennial {par 2 ans} lifetime {une seule fois} other {}}}}",
@@ -81,6 +82,9 @@
       "confirmationTitle": "Êtes-vous sûr ?",
       "openInvoices": "Vous avez déjà un abonnement avec des factures impayées. Vous pouvez consulter vos factures impayées dans votre <Link href=\"/profile\">profil</Link>.",
       "alreadyHasSubscription": "Vous avez déjà cet abonnement, êtes-vous sûr ? Vous pouvez consulter vos abonnements dans votre <Link href=\"/profile\">profil</Link>."
+    },
+    "giftCodeRedemption": {
+      "link": "Vous souhaitez utiliser un abonnement cadeau ? Cliquez ici."
     }
   },
   "login": {
@@ -530,5 +534,22 @@
     "stripe-checkout": "Carte de crédit",
     "mollie": "Paiement en ligne",
     "no-charge": "Gratuit"
+  },
+  "giftCode": {
+    "redeem": {
+      "code": "Code cadeau",
+      "submit": "Utiliser le code",
+      "loginLink": "Vous avez déjà un compte ? Connectez-vous ici.",
+      "success": {
+        "createdSubscription": "Votre abonnement « {memberPlan} » est maintenant actif.",
+        "extendedSubscription": "Votre abonnement « {memberPlan} » a été prolongé.",
+        "paidInvoice": "La facture ouverte de votre abonnement « {memberPlan} » est payée."
+      }
+    },
+    "purchase": {
+      "chooseOffer": "Choisir un cadeau",
+      "recipientName": "Nom du destinataire",
+      "submit": "Acheter le cadeau pour {amount}"
+    }
   }
 }

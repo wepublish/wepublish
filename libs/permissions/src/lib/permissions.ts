@@ -598,6 +598,13 @@ export const CanGetSubscriptions: Permission = {
   deprecated: false,
 };
 
+export const CanGetActiveSubscriberFirstNames: Permission = {
+  id: 'CAN_GET_ACTIVE_SUBSCRIBER_FIRST_NAMES',
+  description:
+    'Allows to get the first name and creation date of every active subscription, and nothing else about it',
+  deprecated: false,
+};
+
 export const CanDeleteSubscription: Permission = {
   id: 'CAN_DELETE_SUBSCRIPTION',
   description: 'Allows to delete a subscription',
@@ -655,6 +662,25 @@ export const CanUpdateDiscountCode: Permission = {
 export const CanDeleteDiscountCode: Permission = {
   id: 'CAN_DELETE_DISCOUNTCODE',
   description: 'Allows to delete a discountCode',
+  deprecated: false,
+};
+
+export const CanGetGiftCodes: Permission = {
+  id: 'CAN_GET_GIFT_CODES',
+  description: 'Allows to get gift codes and gift code offers',
+  deprecated: false,
+};
+
+export const CanUpdateGiftCodes: Permission = {
+  id: 'CAN_UPDATE_GIFT_CODES',
+  description:
+    'Allows to create and update gift code offers and to cancel gift codes',
+  deprecated: false,
+};
+
+export const CanDeleteGiftCodes: Permission = {
+  id: 'CAN_DELETE_GIFT_CODES',
+  description: 'Allows to delete gift code offers',
   deprecated: false,
 };
 
@@ -1530,6 +1556,7 @@ export const AllPermissions = [
   CanCreateSubscription,
   CanGetSubscription,
   CanGetSubscriptions,
+  CanGetActiveSubscriberFirstNames,
   CanDeleteSubscription,
   CanGetGoodie,
   CanCreateGoodie,
@@ -1539,6 +1566,9 @@ export const AllPermissions = [
   CanCreateDiscountCode,
   CanUpdateDiscountCode,
   CanDeleteDiscountCode,
+  CanGetGiftCodes,
+  CanUpdateGiftCodes,
+  CanDeleteGiftCodes,
   CanGetSettings,
   CanUpdateSettings,
   CanGetCommentRatingSystem,

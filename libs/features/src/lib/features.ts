@@ -68,6 +68,11 @@ export const FEATURES = [
       'Legacy subscriptions: filter imported subscriptions that were not paid for here yet, message them, and give them their own communication flow',
     stage: 'alpha',
   },
+  {
+    key: 'gift-codes',
+    description: 'Sell gift codes for member plans',
+    stage: 'alpha',
+  },
 ] as const satisfies readonly Feature[];
 
 export type FeatureKey = (typeof FEATURES)[number]['key'];
