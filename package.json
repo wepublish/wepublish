@@ -99,6 +99,7 @@
     "@testing-library/user-event": "^14.6.8",
     "@tiptap/extension-collaboration": "^3.32.0",
     "@tiptap/y-tiptap": "^3.0.10",
+    "@types/body-parser": "^1.19.2",
     "@types/connect": "^3.4.38",
     "@types/cors": "~2.8.19",
     "@types/cron": "^2.4.3",
