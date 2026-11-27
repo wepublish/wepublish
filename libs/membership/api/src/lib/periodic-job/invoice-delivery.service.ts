@@ -54,6 +54,9 @@ export type MailTrigger = Pick<
   'subscriptionId' | 'invoiceId'
 >;
 
+/** Retry a provider hiccup: only for the nightly run, nobody waits on it. */
+export type MailRetry = Pick<MailControllerConfig, 'retryTransient'>;
+
 /**
  * Whether the invoice-creation mail goes out now. `removed`: the provider
  * could not create the invoice and it is gone for the next attempt.
@@ -387,7 +390,7 @@ export class InvoiceDeliveryService {
     isRetry: boolean,
     optionalData: Record<string, any>,
     periodicJobRunDate: Date,
-    delivery: DeliverySide & MailTrigger = {}
+    delivery: DeliverySide & MailTrigger & MailRetry = {}
   ) {
     if (!action.mailTemplateId || !user) {
       return;

@@ -88,6 +88,11 @@ export type MailControllerConfig = {
    * attached after the template's own documents in a mail.
    */
   attachment?: MailAttachment;
+  /**
+   * Try again when the mail provider fails for a moment. Only the nightly
+   * run sets it; a request cannot wait the minute the retries take.
+   */
+  retryTransient?: boolean;
 };
 
 /**
@@ -224,6 +229,7 @@ export class MailController {
           ...(this.config.attachment && {
             attachments: [this.config.attachment],
           }),
+          retryTransient: this.config.retryTransient ?? false,
         }
       ));
     } catch (error) {

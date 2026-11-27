@@ -43,6 +43,11 @@ import {
 } from './bexio-utils';
 import fetch, { RequestInit } from 'node-fetch';
 import { bexioContactFields, ContactUser } from './bexio-contact-mapping';
+import {
+  BEXIO_REQUEST_TIMEOUT_MS,
+  BexioBreaker,
+  withRequestTimeout,
+} from './bexio-timeout';
 import { BexioCountries, BexioCountry } from './bexio-countries';
 import { invoiceMailRecipient } from './bexio-test-mailbox';
 
@@ -78,6 +83,9 @@ const isNotFound = (error: unknown): boolean => {
 export class BexioPaymentProvider extends BasePaymentProvider {
   // bexio's country list changes rarely; one load serves a whole night.
   private countryList?: { loadedAt: number; countries: BexioCountries };
+  // Every call to this account, so one call bexio did not answer pauses the
+  // rest of the run's calls instead of each waiting out its own timeout.
+  private readonly breaker = new BexioBreaker();
   // The name that signs the invoices, of the bexio user `bexio_userId`.
   private signer?: { loadedAt: number; userId: number; name: string };
 
@@ -92,7 +100,11 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     if (!config.apiKey) {
       throw new Error('Bexio missing api key');
     }
-    return new Bexio(config.apiKey);
+    return withRequestTimeout(
+      new Bexio(config.apiKey),
+      BEXIO_REQUEST_TIMEOUT_MS,
+      this.breaker
+    );
   }
 
   async webhookForPaymentIntent(
@@ -285,10 +297,17 @@ export class BexioPaymentProvider extends BasePaymentProvider {
       Authorization: `Bearer ${config.apiKey}`,
     };
 
-    const response = await fetch(`${bexioBaseUrl}/kb_invoice/${intentID}`, {
-      headers,
-      signal: AbortSignal.timeout(30_000) as unknown as RequestInit['signal'],
-    });
+    const response = await this.breaker.call(
+      'GET',
+      `/kb_invoice/${intentID}`,
+      () =>
+        fetch(`${bexioBaseUrl}/kb_invoice/${intentID}`, {
+          headers,
+          signal: AbortSignal.timeout(
+            30_000
+          ) as unknown as RequestInit['signal'],
+        })
+    );
 
     if (response.status !== 200) {
       logger('bexioPaymentProvider').error(
@@ -579,13 +598,15 @@ export class BexioPaymentProvider extends BasePaymentProvider {
   }
 
   private async fetchCountries(apiKey: string | null): Promise<BexioCountry[]> {
-    const response = await fetch(`${BEXIO_BASE_URL}/country?limit=500`, {
-      headers: {
-        Accept: 'application/json',
-        Authorization: `Bearer ${apiKey}`,
-      },
-      signal: AbortSignal.timeout(30_000) as unknown as RequestInit['signal'],
-    });
+    const response = await this.breaker.call('GET', '/country', () =>
+      fetch(`${BEXIO_BASE_URL}/country?limit=500`, {
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${apiKey}`,
+        },
+        signal: AbortSignal.timeout(30_000) as unknown as RequestInit['signal'],
+      })
+    );
 
     if (response.status !== 200) {
       throw new ResponseNOK(response.status);
@@ -636,13 +657,15 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     apiKey: string | null,
     userId: number
   ): Promise<string> {
-    const response = await fetch(`${BEXIO_USERS_URL}/${userId}`, {
-      headers: {
-        Accept: 'application/json',
-        Authorization: `Bearer ${apiKey}`,
-      },
-      signal: AbortSignal.timeout(30_000) as unknown as RequestInit['signal'],
-    });
+    const response = await this.breaker.call('GET', `/users/${userId}`, () =>
+      fetch(`${BEXIO_USERS_URL}/${userId}`, {
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${apiKey}`,
+        },
+        signal: AbortSignal.timeout(30_000) as unknown as RequestInit['signal'],
+      })
+    );
 
     if (response.status !== 200) {
       throw new ResponseNOK(response.status);

@@ -1,8 +1,5 @@
 import type { PrismaClient } from '@prisma/client';
-import {
-  type IssueNumberingConfig,
-  issueNumberingOf,
-} from '@wepublish/utils';
+import { type IssueNumberingConfig, issueNumberingOf } from '@wepublish/utils';
 
 export const PRINT_ISSUE_NUMBERING_SETTING = 'printIssueNumbering';
 export const PRINT_ISSUE_LABEL_FORMAT_SETTING = 'printIssueLabelFormat';

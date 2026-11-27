@@ -90,10 +90,7 @@ export function issueFileLabel(label: string): string {
 }
 
 export type LabelFormatError =
-  | 'unknownPlaceholder'
-  | 'noNumber'
-  | 'noYear'
-  | 'tooLong';
+  'unknownPlaceholder' | 'noNumber' | 'noYear' | 'tooLong';
 
 /**
  * What is wrong with a template for the counting. Numbers that restart every
@@ -217,10 +214,9 @@ export function parseIssueLabel(
 
   pattern += literalPattern(format.slice(last));
 
-  const found = new RegExp(
-    String.raw`^\s*${pattern}(?!\d|[./-]\d)`,
-    'iu'
-  ).exec(text);
+  const found = new RegExp(String.raw`^\s*${pattern}(?!\d|[./-]\d)`, 'iu').exec(
+    text
+  );
 
   if (!found) {
     return null;

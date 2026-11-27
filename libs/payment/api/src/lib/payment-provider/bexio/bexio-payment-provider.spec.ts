@@ -12,6 +12,7 @@ import {
 } from '@wepublish/kv-ttl-cache/api/testing';
 import { CreatePaymentIntentProps } from '../payment-provider';
 import { BexioCountries } from './bexio-countries';
+import { BexioUnavailableError } from './bexio-timeout';
 import fetch from 'node-fetch';
 
 vi.mock('axios');
@@ -350,6 +351,26 @@ describe('BexioPaymentProvider', () => {
       );
     });
 
+    it('pauses the other bexio calls when bexio does not answer the user lookup', async () => {
+      const aborted = Object.assign(new Error('The user aborted a request.'), {
+        name: 'AbortError',
+      });
+      vi.mocked(fetch).mockImplementation((async () => {
+        throw aborted;
+      }) as never);
+
+      await bexioPaymentProvider.createInvoice(mockContact, mockInvoice, false);
+      vi.mocked(fetch).mockClear();
+
+      await expect(
+        bexioPaymentProvider.checkIntentStatus({
+          intentID: '7',
+          paymentID: 'p-7',
+        })
+      ).rejects.toBeInstanceOf(BexioUnavailableError);
+      expect(fetch).not.toHaveBeenCalled();
+    });
+
     it('emails the invoice to the test mailbox when the reader is on its domain', async () => {
       const env = process.env;
       process.env = { ...env, APP_ENVIRONMENT: 'review' };
@@ -650,6 +671,28 @@ describe('BexioPaymentProvider', () => {
       expect(res.state).toEqual('paid');
       expect(res.customerID).toEqual('321');
       expect(res.paymentID).toEqual('123');
+    });
+
+    it('does not wait for every open invoice once bexio did not answer', async () => {
+      const aborted = Object.assign(new Error('The user aborted a request.'), {
+        name: 'AbortError',
+      });
+      vi.mocked(fetch).mockRejectedValueOnce(aborted);
+      vi.mocked(fetch).mockClear();
+
+      await expect(
+        bexioPaymentProvider.checkIntentStatus({
+          intentID: '7',
+          paymentID: 'p-7',
+        })
+      ).rejects.toBe(aborted);
+      await expect(
+        bexioPaymentProvider.checkIntentStatus({
+          intentID: '8',
+          paymentID: 'p-8',
+        })
+      ).rejects.toBeInstanceOf(BexioUnavailableError);
+      expect(fetch).toHaveBeenCalledTimes(1);
     });
   });
 

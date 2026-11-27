@@ -164,9 +164,9 @@ describe('PrintIssueDrawer', () => {
     expect(
       screen.queryByLabelText('printIssues.fields.year')
     ).not.toBeInTheDocument();
-    expect(screen.getByText(/printIssues\.drawer\.labelPreview/)).toHaveTextContent(
-      '#118'
-    );
+    expect(
+      screen.getByText(/printIssues\.drawer\.labelPreview/)
+    ).toHaveTextContent('#118');
 
     fireEvent.change(screen.getByLabelText('printIssues.fields.issueDate'), {
       target: { value: '2028-02-10' },

@@ -17,9 +17,9 @@ describe('issueLabel', () => {
 
   it("writes the medium's template", () => {
     expect(issueLabel({ number: 117, year: 2026 }, ZWOELF)).toBe('#117');
-    expect(
-      issueLabel({ number: 117, numberTo: 118, year: 2026 }, ZWOELF)
-    ).toBe('#117/118');
+    expect(issueLabel({ number: 117, numberTo: 118, year: 2026 }, ZWOELF)).toBe(
+      '#117/118'
+    );
   });
 });
 
@@ -84,7 +84,11 @@ describe('namesIssue', () => {
 
   it('per year, refuses a label without a year', () => {
     expect(
-      namesIssue({ from: 6, to: 6, year: null }, { number: 6, year: 2026 }, 'perYear')
+      namesIssue(
+        { from: 6, to: 6, year: null },
+        { number: 6, year: 2026 },
+        'perYear'
+      )
     ).toBe(false);
   });
 });

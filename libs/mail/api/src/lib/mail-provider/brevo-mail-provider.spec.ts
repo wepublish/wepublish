@@ -6,6 +6,7 @@ import {
 import { BrevoMailProvider } from './brevo-mail-provider';
 import {
   MailProviderError,
+  MailProviderTransientError,
   MailWebhookSignatureError,
 } from './mail-provider.interface';
 
@@ -150,6 +151,57 @@ describe('BrevoMailProvider', () => {
       expect(error.message).toBe(
         'Brevo refused the mail to user@example.com: invalid_parameter: sender email not valid'
       );
+    });
+  });
+
+  describe('sendMail when Brevo fails for a moment', () => {
+    it.each([
+      ['is rate limited', 429],
+      ['has a server error', 503],
+    ])('lets the sender try again when Brevo %s', async (_, status) => {
+      answers.push({ status, body: { message: 'try later' } });
+
+      const error = await (
+        await makeProvider()
+      )
+        .sendMail(sendProps)
+        .catch(e => e);
+
+      expect(error).toBeInstanceOf(MailProviderTransientError);
+      expect(error.message).toBe(
+        `Brevo refused the mail to user@example.com: try later`
+      );
+    });
+
+    it('lets the sender try again when Brevo does not answer', async () => {
+      fetchMock.mockRejectedValueOnce(new TypeError('fetch failed'));
+
+      const error = await (
+        await makeProvider()
+      )
+        .sendMail(sendProps)
+        .catch(e => e);
+
+      expect(error).toBeInstanceOf(MailProviderTransientError);
+      expect(error.message).toBe(
+        'Brevo did not answer the mail to user@example.com: fetch failed'
+      );
+    });
+
+    it('does not try again after a refusal that stays', async () => {
+      answers.push({
+        status: 400,
+        body: { message: 'sender email not valid' },
+      });
+
+      const error = await (
+        await makeProvider()
+      )
+        .sendMail(sendProps)
+        .catch(e => e);
+
+      expect(error).toBeInstanceOf(MailProviderError);
+      expect(error).not.toBeInstanceOf(MailProviderTransientError);
     });
   });
 

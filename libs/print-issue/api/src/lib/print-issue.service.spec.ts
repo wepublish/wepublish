@@ -617,7 +617,9 @@ describe('PrintIssueService', () => {
         where: {},
         select: { number: true, numberTo: true },
       });
-      expect(prisma.printIssue.create.mock.calls.at(-1)?.[0].data).toMatchObject(
+      expect(
+        prisma.printIssue.create.mock.calls.at(-1)?.[0].data
+      ).toMatchObject(
         // the year follows the ship day it keeps: 15.01.2027
         { number: 118, year: 2027 }
       );
@@ -633,9 +635,9 @@ describe('PrintIssueService', () => {
       await expect(service.create(input({ number: 117 }))).rejects.toThrow(
         new ConflictException('#117 overlaps issue #117.')
       );
-      expect(prisma.printIssue.findFirst.mock.calls[0]?.[0].where).not.toHaveProperty(
-        'year'
-      );
+      expect(
+        prisma.printIssue.findFirst.mock.calls[0]?.[0].where
+      ).not.toHaveProperty('year');
     });
 
     it('takes the year from the ship day, whatever the input says', async () => {
@@ -646,9 +648,9 @@ describe('PrintIssueService', () => {
         input({ number: 118, year: 1999, issueDate: '2027-03-01' })
       );
 
-      expect(prisma.printIssue.create.mock.calls.at(-1)?.[0].data).toMatchObject(
-        { number: 118, year: 2027 }
-      );
+      expect(
+        prisma.printIssue.create.mock.calls.at(-1)?.[0].data
+      ).toMatchObject({ number: 118, year: 2027 });
     });
 
     it('names a taken number as the medium writes it', async () => {

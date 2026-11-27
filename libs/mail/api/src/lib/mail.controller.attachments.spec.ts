@@ -2,7 +2,10 @@ import { MailContext, SendComposedMailProps } from './mail-context';
 import { MailController, mailLogType } from './mail.controller';
 
 /** What the controller hands to the composer for a mail of this type. */
-async function composedAs(mailType: mailLogType) {
+async function composedAs(
+  mailType: mailLogType,
+  config: { retryTransient?: boolean } = {}
+) {
   const sendComposedMail = vi.fn(async (_props: SendComposedMailProps) => ({
     subject: 'S',
     providerMessageID: 'msg-1',
@@ -21,6 +24,7 @@ async function composedAs(mailType: mailLogType) {
     recipient: { id: 'user-1', email: 'jane@example.com' } as any,
     optionalData: {},
     mailType,
+    ...config,
   }).sendMail();
 
   return sendComposedMail.mock.calls[0][0];
@@ -46,6 +50,20 @@ describe('MailController attachments', () => {
   ])('sends %s with their attachments', async (_name, mailType) => {
     expect(await composedAs(mailType)).toMatchObject({
       withAttachments: true,
+    });
+  });
+});
+
+describe('MailController retries', () => {
+  it('lets the composer retry a mail the caller can wait for', async () => {
+    expect(
+      await composedAs(mailLogType.SubscriptionFlow, { retryTransient: true })
+    ).toMatchObject({ retryTransient: true });
+  });
+
+  it('sends only once unless the caller asks for retries', async () => {
+    expect(await composedAs(mailLogType.UserFlow)).toMatchObject({
+      retryTransient: false,
     });
   });
 });
