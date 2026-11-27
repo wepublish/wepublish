@@ -21,7 +21,7 @@ const MAX_DESCRIPTION_LENGTH = 500;
 export class ErrorWithContext extends Error {
   constructor(
     message: string,
-    readonly cause: unknown
+    override readonly cause: unknown
   ) {
     super(message);
   }

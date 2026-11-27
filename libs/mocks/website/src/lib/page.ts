@@ -25,6 +25,7 @@ export const mockPageRevision = ({
   image,
   blocks,
   properties: [],
+  blocksChangeAt: null,
   ...definedOnly(overrides),
 });
 

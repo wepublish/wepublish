@@ -1239,6 +1239,9 @@ importers:
       '@tiptap/y-tiptap':
         specifier: ^3.0.10
         version: 3.0.10(prosemirror-model@1.25.12)(prosemirror-state@1.4.4)(prosemirror-view@1.42.6)(y-protocols@1.0.7(yjs@13.6.33))(yjs@13.6.33)
+      '@types/body-parser':
+        specifier: ^1.19.2
+        version: 1.19.2
       '@types/connect':
         specifier: ^3.4.38
         version: 3.4.38

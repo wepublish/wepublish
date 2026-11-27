@@ -41,7 +41,7 @@ export class SecretCrypto {
       throw new Error('SecretCrypto: masterSecret must be >= 16 characters');
     }
   }
-  encrypt(plaintext: string): EncryptedPayload {
+  encrypt(plaintext: string): string {
     if (typeof plaintext !== 'string' || plaintext.length === 0) {
       throw new Error(
         'SecretCrypto.encrypt: plaintext must be a non-empty string'
